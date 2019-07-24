@@ -67,7 +67,7 @@ class AddModule extends React.Component {
   browseFiles = () => {
     remote.dialog.showOpenDialog(
       {
-        title: _('Select module archive file'),
+        title: __('Select module archive file'),
         properties: ['openFile'],
         filters: [
           {
@@ -92,7 +92,7 @@ class AddModule extends React.Component {
   browseDirectories = () => {
     remote.dialog.showOpenDialog(
       {
-        title: _('Select module directory'),
+        title: __('Select module directory'),
         properties: ['openDirectory'],
       },
       paths => {
@@ -168,15 +168,16 @@ class AddModule extends React.Component {
   };
 
   getSelectModuleMsg = () => {
-    const enMsg =
-      'Select module %{fls}archive file%{fle} or %{dls}directory%{dle}';
-    const msg = _(enMsg, {
-      fls: '#fls#',
-      fle: '#fle#',
-      dls: '#dls#',
-      dle: '#dle#',
-    });
-    return this.msgToReact(msg) || this.msgToReact(enMsg);
+    const msg = __(
+      'Select module %{fls}archive file%{fle} or %{dls}directory%{dle}',
+      {
+        fls: '#fls#',
+        fle: '#fle#',
+        dls: '#dls#',
+        dle: '#dle#',
+      }
+    );
+    return this.msgToReact(msg);
   };
 
   /**
@@ -202,20 +203,20 @@ class AddModule extends React.Component {
             legend={
               <>
                 <Icon icon={plusCircleIcon} />
-                <span className="v-align space-left">{_('Add Module')}</span>
+                <span className="v-align space-left">{__('Add Module')}</span>
               </>
             }
             active={isDragActive || checking}
           >
             <InnerMessage noPointerEvents={isDragActive || checking}>
               {checking ? (
-                <div>{_('Checking module')}...</div>
+                <div>{__('Checking module')}...</div>
               ) : isDragActive ? (
-                <div>{_('Drop here to install')}</div>
+                <div>{__('Drop here to install')}</div>
               ) : (
                 <div>
                   <div>{this.getSelectModuleMsg()}</div>
-                  <div>{_('or drag and drop it here')}</div>
+                  <div>{__('or drag and drop it here')}</div>
                 </div>
               )}
             </InnerMessage>

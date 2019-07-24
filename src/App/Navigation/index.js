@@ -106,31 +106,31 @@ const Navigation = () => (
 
     <NavBar>
       <NavItem icon={logoIcon} exact to="/">
-        {_('Overview')}
+        {__('Overview')}
       </NavItem>
 
       <NavItem icon={sendIcon} to="/Send">
-        {_('Send NXS')}
+        {__('Send NXS')}
       </NavItem>
 
       <NavItem icon={transactionsIcon} to="/Transactions">
-        {_('Transactions')}
+        {__('Transactions')}
       </NavItem>
 
       <NavItem icon={chartIcon} to="/Market">
-        {_('Market Data')}
+        {__('Market Data')}
       </NavItem>
 
       <NavItem icon={addressBookIcon} to="/AddressBook">
-        {_('Address Book')}
+        {__('Address Book')}
       </NavItem>
 
       <NavItem icon={settingsIcon} to="/Settings">
-        {_('Settings')}
+        {__('Settings')}
       </NavItem>
 
       <NavItem icon={consoleIcon} to="/Terminal">
-        {_('Console')}
+        {__('Console')}
       </NavItem>
 
       <ModuleNavItems />

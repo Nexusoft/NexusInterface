@@ -18,21 +18,21 @@ const separator = {
 };
 
 const startCore = {
-  label: _('Start Nexus Core'),
+  label: __('Start Nexus Core'),
   click: () => {
     store.dispatch(startCoreAC());
   },
 };
 
 const stopCore = {
-  label: _('Stop Nexus Core'),
+  label: __('Stop Nexus Core'),
   click: () => {
     store.dispatch(stopCoreAC());
   },
 };
 
 const quitNexus = {
-  label: _('Quit Nexus'),
+  label: __('Quit Nexus'),
   accelerator: 'CmdOrCtrl+Q',
   click: () => {
     remote.app.quit();
@@ -40,14 +40,14 @@ const quitNexus = {
 };
 
 const about = {
-  label: _('About'),
+  label: __('About'),
   click: () => {
     history.push('/About');
   },
 };
 
 const backupWallet = {
-  label: _('Backup Wallet'),
+  label: __('Backup Wallet'),
   click: async () => {
     const state = store.getState();
     const folderPaths = await showOpenDialog({
@@ -57,7 +57,7 @@ const backupWallet = {
     });
 
     if (state.core.info.connections === undefined) {
-      store.dispatch(showNotification(_('Nexus Core is not connected')));
+      store.dispatch(showNotification(__('Nexus Core is not connected')));
       return;
     }
 
@@ -65,13 +65,13 @@ const backupWallet = {
       store.dispatch(updateSettings({ backupDirectory: folderPaths[0] }));
 
       await backup(folderPaths[0]);
-      store.dispatch(showNotification(_('Wallet backed up'), 'success'));
+      store.dispatch(showNotification(__('Wallet backed up'), 'success'));
     }
   },
 };
 
 const viewBackups = {
-  label: _('View Backups'),
+  label: __('View Backups'),
   click: () => {
     let BackupDir = process.env.HOME + '/NexusBackups';
     if (process.platform === 'win32') {
@@ -87,53 +87,53 @@ const viewBackups = {
 };
 
 const cut = {
-  label: _('Cut'),
+  label: __('Cut'),
   accelerator: 'CmdOrCtrl+X',
   role: 'cut',
 };
 
 const copy = {
-  label: _('Copy'),
+  label: __('Copy'),
   accelerator: 'CmdOrCtrl+C',
   role: 'copy',
 };
 
 const paste = {
-  label: _('Paste'),
+  label: __('Paste'),
   accelerator: 'CmdOrCtrl+V',
   role: 'paste',
 };
 
 const coreSettings = {
-  label: _('Core'),
+  label: __('Core'),
   click: () => {
     history.push('/Settings/Core');
   },
 };
 
 const appSettings = {
-  label: _('Application'),
+  label: __('Application'),
   click: () => {
     history.push('/Settings/App');
   },
 };
 
 const keyManagement = {
-  label: _('Key Management'),
+  label: __('Key Management'),
   click: () => {
     history.push('/Settings/Security');
   },
 };
 
 const styleSettings = {
-  label: _('Style'),
+  label: __('Style'),
   click: () => {
     history.push('/Settings/Style');
   },
 };
 
 const downloadRecent = {
-  label: _('Download Recent Database'),
+  label: __('Download Recent Database'),
   click: () => {
     const state = store.getState();
     if (state.settings.manualDaemon) {
@@ -156,7 +156,7 @@ const downloadRecent = {
 };
 
 const toggleFullScreen = {
-  label: _('Toggle FullScreen'),
+  label: __('Toggle FullScreen'),
   accelerator: 'F11',
   click: () => {
     remote
@@ -166,7 +166,7 @@ const toggleFullScreen = {
 };
 
 const toggleDevTools = {
-  label: _('Toggle Developer Tools'),
+  label: __('Toggle Developer Tools'),
   accelerator: 'Alt+CmdOrCtrl+I',
   click: () => {
     remote.getCurrentWindow().toggleDevTools();
@@ -174,35 +174,35 @@ const toggleDevTools = {
 };
 
 const toggleModuleDevTools = {
-  label: _("Toggle Module's Developer Tools"),
+  label: __("Toggle Module's Developer Tools"),
   click: () => {
     store.dispatch(toggleWebViewDevTools());
   },
 };
 
 const websiteLink = {
-  label: _('Nexus Website'),
+  label: __('Nexus Website'),
   click: () => {
     shell.openExternal('http://nexusearth.com');
   },
 };
 
 const gitRepoLink = {
-  label: _('Nexus Git Repository'),
+  label: __('Nexus Git Repository'),
   click: () => {
     shell.openExternal('http://github.com/Nexusoft');
   },
 };
 
 const walletGuideLink = {
-  label: _('Nexus Wallet Guide'),
+  label: __('Nexus Wallet Guide'),
   click: () => {
     shell.openExternal('https://nexusearth.com/nexus-tritium-wallet-guide/');
   },
 };
 
 const updaterIdle = {
-  label: _('Check for Updates...'),
+  label: __('Check for Updates...'),
   enabled: true,
   click: async () => {
     const result = await checkForUpdates();
@@ -211,24 +211,24 @@ const updaterIdle = {
     // any reliable results like a boolean `updateAvailable` property
     if (result.updateInfo.version === APP_VERSION) {
       store.dispatch(
-        showNotification(_('There are currently no updates available'))
+        showNotification(__('There are currently no updates available'))
       );
     }
   },
 };
 
 const updaterChecking = {
-  label: _('Checking for Updates...'),
+  label: __('Checking for Updates...'),
   enabled: false,
 };
 
 const updaterDownloading = {
-  label: _('Update available! Downloading...'),
+  label: __('Update available! Downloading...'),
   enabled: false,
 };
 
 const updaterReadyToInstall = {
-  label: _('Quit and install update...'),
+  label: __('Quit and install update...'),
   enabled: true,
   click: quitAndInstall,
 };
@@ -290,15 +290,15 @@ function buildDarwinTemplate() {
   }
 
   const subMenuFile = {
-    label: _('File'),
+    label: __('File'),
     submenu: [backupWallet, viewBackups, separator, downloadRecent],
   };
   const subMenuEdit = {
-    label: _('Edit'),
+    label: __('Edit'),
     submenu: [cut, copy, paste],
   };
   const subMenuView = {
-    label: _('Settings'),
+    label: __('Settings'),
     submenu: [
       appSettings,
       coreSettings,
@@ -309,7 +309,7 @@ function buildDarwinTemplate() {
   };
 
   const subMenuWindow = {
-    label: _('View'),
+    label: __('View'),
     submenu: [toggleFullScreen],
   };
   if (process.env.NODE_ENV === 'development' || state.settings.devMode) {
@@ -321,7 +321,7 @@ function buildDarwinTemplate() {
   }
 
   const subMenuHelp = {
-    label: _('Help'),
+    label: __('Help'),
     submenu: [
       websiteLink,
       gitRepoLink,
@@ -354,7 +354,7 @@ function buildDefaultTemplate() {
   const { webview } = state;
 
   const subMenuFile = {
-    label: _('File'),
+    label: __('File'),
     submenu: [
       backupWallet,
       viewBackups,
@@ -373,11 +373,11 @@ function buildDefaultTemplate() {
   }
 
   const subMenuSettings = {
-    label: _('Settings'),
+    label: __('Settings'),
     submenu: [appSettings, coreSettings, keyManagement, styleSettings],
   };
   const subMenuView = {
-    label: _('View'),
+    label: __('View'),
     submenu: [toggleFullScreen],
   };
   if (process.env.NODE_ENV === 'development' || state.settings.devMode) {
@@ -389,7 +389,7 @@ function buildDefaultTemplate() {
   }
 
   const subMenuHelp = {
-    label: _('Help'),
+    label: __('Help'),
     submenu: [
       about,
       websiteLink,

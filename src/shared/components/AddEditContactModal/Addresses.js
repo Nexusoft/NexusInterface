@@ -89,11 +89,11 @@ class Addresses extends React.Component {
   getAddressLabel = name =>
     this.props.isMine
       ? name
-        ? _('My Nexus address for %{name}', { name })
-        : _('My Nexus address')
+        ? __('My Nexus address for %{name}', { name })
+        : __('My Nexus address')
       : name
-      ? _("%{name}'s Nexus address", { name })
-      : _('Their Nexus address');
+      ? __("%{name}'s Nexus address", { name })
+      : __('Their Nexus address');
 
   /**
    * React Render
@@ -108,7 +108,7 @@ class Addresses extends React.Component {
       <div className="mt2">
         {fields.map((fieldName, i) => (
           <NXSAddress key={i}>
-            <Tooltip.Trigger tooltip={_('Remove address')}>
+            <Tooltip.Trigger tooltip={__('Remove address')}>
               <RemoveButton
                 onClick={() => {
                   fields.remove(i);
@@ -138,7 +138,7 @@ class Addresses extends React.Component {
               <Field
                 name={`${fieldName}.label`}
                 component={TextField.RF}
-                placeholder={_('Label (optional)')}
+                placeholder={__('Label (optional)')}
               />
             </LabelWrapper>
           </NXSAddress>

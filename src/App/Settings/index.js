@@ -105,37 +105,29 @@ export default class Settings extends Component {
     const { match } = this.props;
 
     return (
-      <Panel
-        bodyScrollable={false}
-        icon={settingsIcon}
-        title={_('Settings')}
-      >
+      <Panel bodyScrollable={false} icon={settingsIcon} title={__('Settings')}>
         <SettingsComponent>
           <SettingsTabBar>
             <Tab
               link={`${match.url}/App`}
               icon={logoIcon}
-              text={_('Application')}
+              text={__('Application')}
             />
-            <Tab
-              link={`${match.url}/Core`}
-              icon={coreIcon}
-              text={_('Core')}
-            />
+            <Tab link={`${match.url}/Core`} icon={coreIcon} text={__('Core')} />
             <Tab
               link={`${match.url}/Security`}
               icon={lockIcon}
-              text={_('Security')}
+              text={__('Security')}
             />
             <Tab
               link={`${match.url}/Style`}
               icon={leafIcon}
-              text={_('Style')}
+              text={__('Style')}
             />
             <Tab
               link={`${match.url}/Modules`}
               icon={legoIcon}
-              text={_('Modules')}
+              text={__('Modules')}
             />
           </SettingsTabBar>
 

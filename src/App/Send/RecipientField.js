@@ -89,7 +89,7 @@ class RecipientField extends Component {
         label={
           <>
             <span>
-              {_('Send to')}
+              {__('Send to')}
               &nbsp;&nbsp;
             </span>
             <RecipientName>{recipientName}</RecipientName>
@@ -100,7 +100,7 @@ class RecipientField extends Component {
           input={input}
           meta={meta}
           inputProps={{
-            placeholder: _('Recipient address'),
+            placeholder: __('Recipient address'),
           }}
           suggestions={suggestions}
           onSelect={this.handleSelect}
@@ -108,14 +108,14 @@ class RecipientField extends Component {
           emptyFiller={
             suggestions.length === 0 && (
               <EmptyMessage>
-                {_('Your address book is empty.')}
+                {__('Your address book is empty.')}
                 <Button as="a" skin="hyperlink" onClick={this.createContact}>
                   <Icon
                     icon={plusIcon}
                     className="space-right"
                     style={{ fontSize: '.8em' }}
                   />
-                  {_('Create new contact')}
+                  {__('Create new contact')}
                 </Button>
               </EmptyMessage>
             )

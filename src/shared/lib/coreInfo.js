@@ -87,25 +87,25 @@ export function initializeCoreInfo() {
           case 'receive':
             showDesktopNotif('Received', mostRecentTx.amount + ' NXS');
             store.dispatch(
-              showNotification(_('Transaction received'), 'success')
+              showNotification(__('Transaction received'), 'success')
             );
             break;
           case 'send':
             showDesktopNotif('Sent', mostRecentTx.amount + ' NXS');
             store.dispatch(
-              showNotification(_('Transaction sent'), 'success')
+              showNotification(__('Transaction sent'), 'success')
             );
             break;
           case 'genesis':
             showDesktopNotif('Genesis', mostRecentTx.amount + ' NXS');
             store.dispatch(
-              showNotification(_('Genesis transaction'), 'success')
+              showNotification(__('Genesis transaction'), 'success')
             );
             break;
           case 'trust':
             showDesktopNotif('Trust', mostRecentTx.amount + ' NXS');
             store.dispatch(
-              showNotification(_('Trust transaction'), 'success')
+              showNotification(__('Trust transaction'), 'success')
             );
             break;
         }

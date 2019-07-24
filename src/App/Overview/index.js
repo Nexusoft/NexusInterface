@@ -394,7 +394,7 @@ class Overview extends Component {
    */
   blockDate() {
     if (!this.props.blockDate) {
-      return _('Getting next block...');
+      return __('Getting next block...');
     } else {
       return this.props.blockDate.toLocaleString(this.props.settings.locale);
     }
@@ -596,7 +596,7 @@ class Overview extends Component {
         <Stat>
           <StatIcon icon={this.blockWeightIcon()} />
           <div>
-            <StatLabel>{_('Block Weight')}</StatLabel>
+            <StatLabel>{__('Block Weight')}</StatLabel>
             <StatValue>
               {this.waitForCore(this.props.coreInfo.blockweight.toFixed(4))}
             </StatValue>
@@ -606,7 +606,7 @@ class Overview extends Component {
         <Stat>
           <StatIcon icon={this.trustIcon()} />
           <div>
-            <StatLabel>{_('Trust Weight')}</StatLabel>
+            <StatLabel>{__('Trust Weight')}</StatLabel>
             <StatValue>
               {this.waitForCore(this.props.coreInfo.trustweight.toFixed(4))}
             </StatValue>
@@ -616,7 +616,7 @@ class Overview extends Component {
         <Stat>
           <StatIcon icon={stakeIcon} />
           <div>
-            <StatLabel>{_('Stake Weight')}</StatLabel>
+            <StatLabel>{__('Stake Weight')}</StatLabel>
             <StatValue>
               {this.waitForCore(this.props.coreInfo.stakeweight.toFixed(4))}
             </StatValue>
@@ -638,7 +638,7 @@ class Overview extends Component {
         <Stat>
           <StatIcon icon={this.trustIcon()} />
           <div>
-            <StatLabel>{_('Prime Difficulty')}</StatLabel>
+            <StatLabel>{__('Prime Difficulty')}</StatLabel>
             <StatValue>
               {!!difficulty ? (
                 formatDiff(difficulty.prime)
@@ -651,7 +651,7 @@ class Overview extends Component {
         <Stat>
           <StatIcon icon={stakeIcon} />
           <div>
-            <StatLabel>{_('Hash Difficulty')}</StatLabel>
+            <StatLabel>{__('Hash Difficulty')}</StatLabel>
             <StatValue>
               {!!difficulty ? (
                 formatDiff(difficulty.hash)
@@ -665,7 +665,7 @@ class Overview extends Component {
         <Stat>
           <StatIcon icon={this.blockWeightIcon()} />
           <div>
-            <StatLabel>{_('Stake Difficulty')}</StatLabel>
+            <StatLabel>{__('Stake Difficulty')}</StatLabel>
             <StatValue>
               {!!difficulty ? (
                 formatDiff(difficulty.stake)
@@ -715,7 +715,7 @@ class Overview extends Component {
                 {/* {stake > 0 ? (
                   <span>Balance and Stake</span>
                 ) : ( */}
-                {_('Balance')}
+                {__('Balance')}
                 {/* )} */}
                 (NXS) :
               </StatLabel>
@@ -724,7 +724,7 @@ class Overview extends Component {
             {/* + (stake || 0) */}
             <MinimalStat>
               <StatLabel>
-                {_('Balance')} ({settings.fiatCurrency})
+                {__('Balance')} ({settings.fiatCurrency})
               </StatLabel>
               <StatValue>
                 {this.waitForCore(this.calculateFiatvalue())}
@@ -732,13 +732,13 @@ class Overview extends Component {
             </MinimalStat>
 
             <MinimalStat>
-              <StatLabel>{_('Transactions')}</StatLabel>
+              <StatLabel>{__('Transactions')}</StatLabel>
               <StatValue>{this.waitForCore(txtotal)}</StatValue>
             </MinimalStat>
 
             <MinimalStat>
               <StatLabel>
-                {_('Market Price')} ({settings.fiatCurrency})
+                {__('Market Price')} ({settings.fiatCurrency})
               </StatLabel>
               <StatValue>
                 {!!displayNXSvalues[0] ? (
@@ -751,7 +751,7 @@ class Overview extends Component {
 
             <MinimalStat>
               <StatLabel>
-                {_('24hr Change')} ({settings.fiatCurrency} %)
+                {__('24hr Change')} ({settings.fiatCurrency} %)
               </StatLabel>
               <StatValue>
                 {!!displayNXSvalues[0] ? (
@@ -762,19 +762,19 @@ class Overview extends Component {
               </StatValue>
             </MinimalStat>
             <MinimalStat>
-              <StatLabel>{_('Connections')}</StatLabel>
+              <StatLabel>{__('Connections')}</StatLabel>
               <StatValue>{this.waitForCore(connections)}</StatValue>
             </MinimalStat>
 
             <MinimalStat>
-              <StatLabel>{_('Stake Rate')}</StatLabel>
+              <StatLabel>{__('Stake Rate')}</StatLabel>
               <StatValue>
                 {this.waitForCore(interestweight || stakerate + '%')}
               </StatValue>
             </MinimalStat>
 
             <MinimalStat className="relative">
-              <StatLabel>{_('Block Count')}</StatLabel>
+              <StatLabel>{__('Block Count')}</StatLabel>
 
               <StatValue>
                 {this.waitForCore(this.numberWithCommas(blocks))}
@@ -813,7 +813,7 @@ class Overview extends Component {
                 {!!synchronizing && (
                   <Tooltip.Trigger
                     align="start"
-                    tooltip={_(
+                    tooltip={__(
                       'The balance displayed might not be up-to-date since the wallet is not yet fully synchronized'
                     )}
                   >
@@ -821,7 +821,7 @@ class Overview extends Component {
                   </Tooltip.Trigger>
                 )}{' '}
                 <span className="v-align">
-                  {_('Balance')} (
+                  {__('Balance')} (
                   {settings.displayFiatBalance ? settings.fiatCurrency : 'NXS'})
                 </span>
               </StatLabel>
@@ -846,7 +846,7 @@ class Overview extends Component {
             to={connections ? '/Transactions' : undefined}
           >
             <div>
-              <StatLabel>{_('Stake Balance')} (NXS)</StatLabel>
+              <StatLabel>{__('Stake Balance')} (NXS)</StatLabel>
               <StatValue>
                 {settings.overviewDisplay === 'balHidden'
                   ? '-'
@@ -860,7 +860,7 @@ class Overview extends Component {
             to={connections ? '/Transactions' : undefined}
           >
             <div>
-              <StatLabel>{_('Transactions')}</StatLabel>
+              <StatLabel>{__('Transactions')}</StatLabel>
               <StatValue>{this.waitForCore(txtotal)}</StatValue>
             </div>
             <StatIcon icon={transactionIcon} />
@@ -871,7 +871,7 @@ class Overview extends Component {
           >
             <div>
               <StatLabel>
-                {_('Market Price')} ({settings.fiatCurrency})
+                {__('Market Price')} ({settings.fiatCurrency})
               </StatLabel>
               <StatValue>
                 {!!displayNXSvalues[0] ? (
@@ -889,7 +889,7 @@ class Overview extends Component {
           >
             <div>
               <StatLabel>
-                {_('Market Cap')} ({settings.fiatCurrency})
+                {__('Market Cap')} ({settings.fiatCurrency})
               </StatLabel>
               <StatValue>
                 {!!displayNXSvalues[0] ? (
@@ -907,7 +907,7 @@ class Overview extends Component {
           >
             <div>
               <StatLabel>
-                {_('24hr Change')} ({settings.fiatCurrency} %)
+                {__('24hr Change')} ({settings.fiatCurrency} %)
               </StatLabel>
               <StatValue>
                 {!!displayNXSvalues[0] ? (
@@ -925,7 +925,7 @@ class Overview extends Component {
           <Stat>
             <StatIcon icon={this.connectionsIcon()} />
             <div>
-              <StatLabel>{_('Connections')}</StatLabel>
+              <StatLabel>{__('Connections')}</StatLabel>
               <StatValue>{this.waitForCore(connections)}</StatValue>
             </div>
           </Stat>
@@ -933,7 +933,7 @@ class Overview extends Component {
           <Stat>
             <StatIcon icon={interestIcon} />
             <div>
-              <StatLabel>{_('Stake Rate')}</StatLabel>
+              <StatLabel>{__('Stake Rate')}</StatLabel>
               <StatValue>
                 {this.waitForCore(interestweight || stakerate + '%')}
               </StatValue>
@@ -944,7 +944,7 @@ class Overview extends Component {
             <Stat className="relative">
               <StatIcon icon={nxsblocksIcon} />
               <div>
-                <StatLabel>{_('Block Count')}</StatLabel>
+                <StatLabel>{__('Block Count')}</StatLabel>
 
                 <StatValue>
                   {this.waitForCore(this.numberWithCommas(blocks))}

@@ -27,7 +27,7 @@ export function bootstrap({ suggesting } = {}) {
       if (!suggesting) {
         store.dispatch(
           openErrorDialog({
-            message: _(
+            message: __(
               'Not enough disk space! Minimum 20GB of free space is required.'
             ),
           })
@@ -39,16 +39,16 @@ export function bootstrap({ suggesting } = {}) {
     dispatch(setBootstrapStatus('prompting'));
     dispatch(
       openConfirmDialog({
-        question: _('Download recent database?'),
-        note: _(
+        question: __('Download recent database?'),
+        note: __(
           'Downloading a recent version of the database might reduce the time it takes to synchronize your wallet'
         ),
-        labelYes: _("Yes, let's bootstrap it"),
+        labelYes: __("Yes, let's bootstrap it"),
         callbackYes: () => {
           startBootstrap({ dispatch, getState });
           dispatch(openModal(BootstrapModal));
         },
-        labelNo: _('No, let it sync'),
+        labelNo: __('No, let it sync'),
         skinNo: suggesting ? 'danger' : undefined,
         callbackNo: () => {
           dispatch(setBootstrapStatus('idle'));

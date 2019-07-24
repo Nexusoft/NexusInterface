@@ -126,9 +126,9 @@ class Market extends Component {
           return {
             x: e.Price,
             y: newQuantity,
-            label: `${_('Price')}: ${
+            label: `${__('Price')}: ${
               e.Price
-            } \n ${_('Volume')}: ${newQuantity}`,
+            } \n ${__('Volume')}: ${newQuantity}`,
           };
         }
       })
@@ -161,9 +161,9 @@ class Market extends Component {
           return {
             x: e.Price,
             y: newQuantity,
-            label: `${_('Price')}: ${
+            label: `${__('Price')}: ${
               e.Price
-            } \n ${_('Volume')}: ${newQuantity}`,
+            } \n ${__('Volume')}: ${newQuantity}`,
           };
         }
       })
@@ -216,25 +216,25 @@ class Market extends Component {
             verticalAlign: 'middle',
           }}
         >
-          <b>{_('24hr Change')}</b>
+          <b>{__('24hr Change')}</b>
         </div>
         <OneDay>
           <div>
-            <b>{_('High')}: </b>
+            <b>{__('High')}: </b>
             {this.props[exchangeName].info24hr.high}
             {' BTC '}
           </div>
           <div>
-            <b>{_('Price Change')}: </b>
+            <b>{__('Price Change')}: </b>
             {this.props[exchangeName].info24hr.change}
             {' %'}
           </div>
           <div>
-            <b>{_('Low')}: </b> {this.props[exchangeName].info24hr.low}
+            <b>{__('Low')}: </b> {this.props[exchangeName].info24hr.low}
             {' BTC '}
           </div>
           <div>
-            <b>{_('Volume')}: </b>
+            <b>{__('Volume')}: </b>
             {this.props[exchangeName].info24hr.volume}
             {' NXS '}
           </div>
@@ -249,7 +249,7 @@ class Market extends Component {
    */
   refreshMarket() {
     this.refresher();
-    this.props.showNotification(_('Refreshing market data...'), 'success');
+    this.props.showNotification(__('Refreshing market data...'), 'success');
   }
 
   // Mandatory React method
@@ -263,14 +263,14 @@ class Market extends Component {
     return (
       <Panel
         controls={
-          <Tooltip.Trigger tooltip={_('Refresh')}>
+          <Tooltip.Trigger tooltip={__('Refresh')}>
             <Button square skin="primary" onClick={() => this.refreshMarket()}>
               <Icon icon={syncingIcon} />
             </Button>
           </Tooltip.Trigger>
         }
         icon={chartIcon}
-        title={_('Market Data')}
+        title={__('Market Data')}
       >
         {/* <div className="alertbox">{this.arbitageAlert()}</div> */}
 

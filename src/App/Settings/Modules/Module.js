@@ -121,10 +121,10 @@ class Module extends React.Component {
     if (module.invalid) return;
     if (active) {
       this.props.openConfirmDialog({
-        question: _('Disable %{moduleName}?', {
+        question: __('Disable %{moduleName}?', {
           moduleName: module.displayName,
         }),
-        note: _(
+        note: __(
           'Wallet will be automatically refreshed for the change to take effect'
         ),
         callbackYes: () => {
@@ -134,10 +134,10 @@ class Module extends React.Component {
       });
     } else {
       this.props.openConfirmDialog({
-        question: _('Enable %{moduleName}?', {
+        question: __('Enable %{moduleName}?', {
           moduleName: module.displayName,
         }),
-        note: _(
+        note: __(
           'Wallet will be automatically refreshed for the change to take effect'
         ),
         callbackYes: () => {
@@ -183,19 +183,19 @@ class Module extends React.Component {
             <span className="error">
               {!!module.deprecated && (
                 <Tooltip.Trigger
-                  tooltip={_('Deprecated Specification version')}
+                  tooltip={__('Deprecated Specification version')}
                 >
                   <Icon icon={warningIcon} className="space-left" />
                 </Tooltip.Trigger>
               )}
               {(!module.repository || !module.repoOnline) && (
-                <Tooltip.Trigger tooltip={_('Module is not open source')}>
+                <Tooltip.Trigger tooltip={__('Module is not open source')}>
                   <Icon icon={warningIcon} className="space-left" />
                 </Tooltip.Trigger>
               )}
               {!!module.repository && !module.repoVerified && (
                 <Tooltip.Trigger
-                  tooltip={_(
+                  tooltip={__(
                     'The provided repository is not verified to be the real source code of this module'
                   )}
                 >

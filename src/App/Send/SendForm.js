@@ -95,12 +95,12 @@ const mapDispatchToProps = {
   validate: ({ sendFrom, recipients }) => {
     const errors = {};
     if (!sendFrom) {
-      errors.sendFrom = _('No accounts selected');
+      errors.sendFrom = __('No accounts selected');
     }
 
     if (!recipients || !recipients.length) {
       errors.recipients = {
-        _error: _('There must be at least one recipient'),
+        _error: __('There must be at least one recipient'),
       };
     } else {
       const recipientsErrors = [];
@@ -108,11 +108,11 @@ const mapDispatchToProps = {
       recipients.forEach(({ address, amount }, i) => {
         const recipientErrors = {};
         if (!address) {
-          recipientErrors.address = _('Address is required');
+          recipientErrors.address = __('Address is required');
         }
         const floatAmount = parseFloat(amount);
         if (!floatAmount || floatAmount < 0) {
-          recipientErrors.amount = _('Invalid amount');
+          recipientErrors.amount = __('Invalid amount');
         }
         if (Object.keys(recipientErrors).length) {
           recipientsErrors[i] = recipientErrors;
@@ -135,17 +135,17 @@ const mapDispatchToProps = {
           .then(result => {
             if (!result.isvalid) {
               recipientsErrors[i] = {
-                address: _('Invalid address'),
+                address: __('Invalid address'),
               };
             } else if (result.ismine) {
               recipientsErrors[i] = {
-                address: _('This is an address registered to this wallet.'),
+                address: __('This is an address registered to this wallet.'),
               };
             }
           })
           .catch(err => {
             recipientsErrors[i] = {
-              address: _('Invalid address'),
+              address: __('Invalid address'),
             };
           })
       )
@@ -183,10 +183,10 @@ const mapDispatchToProps = {
     props.reset();
     props.loadMyAccounts();
     props.openSuccessDialog({
-      message: _('Transaction sent'),
+      message: __('Transaction sent'),
     });
   },
-  onSubmitFail: rpcErrorHandler(_('Error sending NXS')),
+  onSubmitFail: rpcErrorHandler(__('Error sending NXS')),
 })
 class SendForm extends Component {
   /**
@@ -214,7 +214,7 @@ class SendForm extends Component {
         note: (
           <>
             <p>
-              {_(
+              {__(
                 'You need to log in to your wallet before sending transactions'
               )}
             </p>
@@ -224,7 +224,7 @@ class SendForm extends Component {
                 this.props.removeModal(modalId);
               }}
             >
-              {_('Log in now')}
+              {__('Log in now')}
             </Link>
           </>
         ),
@@ -233,7 +233,7 @@ class SendForm extends Component {
     }
 
     this.props.openConfirmDialog({
-      question: _('Send transaction?'),
+      question: __('Send transaction?'),
       callbackYes: handleSubmit,
     });
   };
@@ -259,7 +259,7 @@ class SendForm extends Component {
   renderAddRecipientButton = ({ fields }) =>
     fields.length === 1 ? (
       <Button onClick={this.addRecipient}>
-        {_('Send To multiple recipients')}
+        {__('Send To multiple recipients')}
       </Button>
     ) : (
       <div />
@@ -276,11 +276,11 @@ class SendForm extends Component {
 
     return (
       <SendFormComponent onSubmit={this.confirmSend}>
-        <FormField label={_('Send from')}>
+        <FormField label={__('Send from')}>
           <Field
             component={Select.RF}
             name="sendFrom"
-            placeholder={_('Select an account')}
+            placeholder={__('Select an account')}
             options={accountOptions}
           />
         </FormField>
@@ -292,13 +292,13 @@ class SendForm extends Component {
           addRecipient={this.addRecipient}
         />
 
-        <FormField connectLabel label={_('Message')}>
+        <FormField connectLabel label={__('Message')}>
           <Field
             component={TextField.RF}
             name="message"
             multiline
             rows={1}
-            placeholder={_('Enter your message')}
+            placeholder={__('Enter your message')}
           />
         </FormField>
 
@@ -310,7 +310,7 @@ class SendForm extends Component {
 
           <Button type="submit" skin="primary">
             <Icon icon={sendIcon} className="space-right" />
-            {_('Send')}
+            {__('Send')}
           </Button>
         </SendFormButtons>
       </SendFormComponent>

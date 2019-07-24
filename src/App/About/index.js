@@ -169,21 +169,21 @@ class About extends Component {
    */
   render() {
     return (
-      <Panel title={_('About')}>
+      <Panel title={__('About')}>
         <NexusLogoimg src={nexusLogo} />
         <br />
         <Column>
           <Row>
             <Column>
-              <b>{_('Interface Version')}:</b>{' '}
+              <b>{__('Interface Version')}:</b>{' '}
               {this.getInterfaceVersionNumber()}
               <br />
-              <b>{_('Build Date')}: </b> July 19th 2019 <br />
+              <b>{__('Build Date')}: </b> July 19th 2019 <br />
             </Column>
             <Column>
-              <b>{_('Nexus Core Version')}:</b> {this.getDaemonVersionNumber()}{' '}
+              <b>{__('Nexus Core Version')}:</b> {this.getDaemonVersionNumber()}{' '}
               <br />
-              <b>{_('Build Date')}: </b> July 19th 2019 <br />
+              <b>{__('Build Date')}: </b> July 19th 2019 <br />
             </Column>
           </Row>
           <CenterText>

@@ -43,17 +43,17 @@ class ExperimentalWarningModal extends React.Component {
       >
         <Modal.Body style={{ fontSize: 18 }}>
           <p>
-            {_(
+            {__(
               'IMPROPER USE OF THIS SOFTWARE COULD LEAD TO PERMANENT LOSS OF COIN.'
             )}
           </p>
-          <p>{_('BACKUP OFTEN AND KEEP ENCRYPTION KEY SAFE.')}</p>
+          <p>{__('BACKUP OFTEN AND KEEP ENCRYPTION KEY SAFE.')}</p>
           <p className="flex space-between" style={{ marginTop: '2em' }}>
             <Button onClick={this.dontShowAgain}>
-              {_("Don't show this again")}
+              {__("Don't show this again")}
             </Button>
             <Button skin="primary" onClick={() => this.closeModal()}>
-              {_('OK')}
+              {__('OK')}
             </Button>
           </p>
         </Modal.Body>

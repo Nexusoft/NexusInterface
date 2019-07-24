@@ -41,7 +41,7 @@ class AddEditContactModal extends Component {
         {closeModal => (
           <>
             <Modal.Header>
-              {edit ? _('Edit contact') : _('Create new contact')}
+              {edit ? __('Edit contact') : __('Create new contact')}
             </Modal.Header>
             <Modal.Body>
               <AddEditContactForm

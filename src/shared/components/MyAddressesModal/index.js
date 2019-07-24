@@ -68,10 +68,10 @@ class MyAddressesModal extends React.Component {
       await rpc('checkwallet', []);
     } catch (err) {
       console.log(err);
-      this.props.showNotification(_('Check wallet failed'), 'error');
+      this.props.showNotification(__('Check wallet failed'), 'error');
       return;
     }
-    this.props.showNotification(_('Check wallet pass'), 'success');
+    this.props.showNotification(__('Check wallet pass'), 'success');
   };
 
   /**
@@ -82,7 +82,7 @@ class MyAddressesModal extends React.Component {
   filteredAccounts = () => {
     const allAccounts = this.props.myAccounts || [];
     return allAccounts.filter(acc => {
-      const accName = acc.account || _('My Account');
+      const accName = acc.account || __('My Account');
       const searchedName = accName.toLowerCase();
       const query = this.state.searchQuery.toLowerCase();
       return searchedName.indexOf(query) >= 0;
@@ -130,9 +130,9 @@ class MyAddressesModal extends React.Component {
               onChange={this.handleChange}
               style={{ width: 300 }}
             />
-            <Tooltip.Trigger tooltip={_("Check wallet's integerty")}>
+            <Tooltip.Trigger tooltip={__("Check wallet's integerty")}>
               <Button fitHeight onClick={this.checkwallet}>
-                {_('Check wallet')}
+                {__('Check wallet')}
               </Button>
             </Tooltip.Trigger>
           </Search>
@@ -150,7 +150,7 @@ class MyAddressesModal extends React.Component {
             <Buttons>
               <Button onClick={this.startCreating}>
                 <Icon icon={plusIcon} className="space-right" />
-                {_('Create new address')}
+                {__('Create new address')}
               </Button>
             </Buttons>
           )}

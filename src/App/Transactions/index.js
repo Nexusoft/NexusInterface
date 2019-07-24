@@ -51,58 +51,58 @@ let tempaddpress = new Map();
 const categories = [
   {
     value: 'all',
-    display: _('All'),
+    display: __('All'),
   },
   {
     value: 'receive', // Should be made credit with tritium.
-    display: _('Receive'),
+    display: __('Receive'),
   },
   {
     value: 'debit',
-    display: _('Sent'),
+    display: __('Sent'),
   },
   {
     value: 'stake',
-    display: _('Stake'),
+    display: __('Stake'),
   },
   {
     value: 'generate',
-    display: _('Generate'),
+    display: __('Generate'),
   },
   {
     value: 'immature',
-    display: _('Immature'),
+    display: __('Immature'),
   },
   {
     value: 'orphan',
-    display: _('Orphan'),
+    display: __('Orphan'),
   },
   {
     value: 'genesis',
-    display: _('Genesis'),
+    display: __('Genesis'),
   },
   {
     value: 'trust',
-    display: _('Trust'),
+    display: __('Trust'),
   },
 ];
 
 const timeFrames = [
   {
     value: 'All',
-    display: _('All'),
+    display: __('All'),
   },
   {
     value: 'Year',
-    display: _('Past Year'),
+    display: __('Past Year'),
   },
   {
     value: 'Month',
-    display: _('Past Month'),
+    display: __('Past Month'),
   },
   {
     value: 'Week',
-    display: _('Past Week'),
+    display: __('Past Week'),
   },
 ];
 
@@ -470,7 +470,7 @@ class Transactions extends Component {
 
     transactiontablecontextmenu.append(
       new remote.MenuItem({
-        label: _('More details'),
+        label: __('More details'),
         click: this.openTxDetailsModal,
       })
     );
@@ -504,23 +504,23 @@ class Transactions extends Component {
 
     transactiontablecontextmenu.append(
       new remote.MenuItem({
-        label: _('Copy'),
+        label: __('Copy'),
         submenu: [
           {
-            label: _('Address'),
+            label: __('Address'),
             click() {
               tablecopyaddresscallback();
             },
           },
           {
-            label: _('Account'),
+            label: __('Account'),
 
             click() {
               tablecopyaccountcallback();
             },
           },
           {
-            label: _('Amount'),
+            label: __('Amount'),
             click() {
               tablecopyamountcallback();
             },
@@ -1362,13 +1362,13 @@ class Transactions extends Component {
     let tempColumns = [];
 
     tempColumns.push({
-      Header: _('TX Number'),
+      Header: __('TX Number'),
       accessor: 'transactionnumber',
       maxWidth: 100,
     });
 
     tempColumns.push({
-      Header: _('Time span'),
+      Header: __('Time span'),
       id: 'time',
       Cell: d => (
         <div>
@@ -1384,47 +1384,47 @@ class Transactions extends Component {
       id: 'category',
       Cell: q => {
         if (q.value === 'debit' || q.value === 'send') {
-          return _('Sent');
+          return __('Sent');
         } else if (q.value === 'credit' || q.value === 'receive') {
-          return _('Receive');
+          return __('Receive');
         } else if (q.value === 'genesis') {
-          return _('Genesis');
+          return __('Genesis');
         } else if (q.value === 'trust') {
-          return _('Trust');
+          return __('Trust');
         } else if (q.value.endsWith('(Pending)')) {
-          return _('(Pending)');
+          return __('(Pending)');
         } else if (q.value === 'generate') {
-          return _('Generate');
+          return __('Generate');
         } else if (q.value === 'immature') {
-          return _('Immature');
+          return __('Immature');
         } else if (q.value === 'stake') {
-          return _('Stake');
+          return __('Stake');
         } else if ((q.value = 'orphan')) {
-          return _('Orphan');
+          return __('Orphan');
         } else {
-          return _('Unknown');
+          return __('Unknown');
         }
       },
-      Header: _('CATEGORY'),
+      Header: __('CATEGORY'),
       accessor: 'category',
 
       maxWidth: 85,
     });
 
     tempColumns.push({
-      Header: _('AMOUNT'),
+      Header: __('AMOUNT'),
       accessor: 'amount',
       maxWidth: 100,
     });
 
     tempColumns.push({
-      Header: _('ACCOUNT'),
+      Header: __('ACCOUNT'),
       accessor: 'account',
       maxWidth: 150,
     });
 
     tempColumns.push({
-      Header: _('ADDRESS'),
+      Header: __('ADDRESS'),
       accessor: 'address',
     });
     return tempColumns;
@@ -1537,29 +1537,29 @@ class Transactions extends Component {
     };
 
     if (inData.category == 'credit' || inData.category === 'receive') {
-      inData.category = _('Receive');
+      inData.category = __('Receive');
     } else if (inData.category == 'debit' || inData.category === 'send') {
-      inData.category = _('Sent');
+      inData.category = __('Sent');
     } else if (inData.category == 'genesis') {
-      inData.category = _('Genesis');
+      inData.category = __('Genesis');
     } else if (inData.category == 'trust') {
-      inData.category = _('Trust');
+      inData.category = __('Trust');
     } else if (inData.category == 'generate') {
-      inData.category = _('Generate');
+      inData.category = __('Generate');
     } else if (inData.category == 'immature') {
-      inData.category = _('Immature');
+      inData.category = __('Immature');
     } else if (inData.category == 'stake') {
-      inData.category = _('Stake');
+      inData.category = __('Stake');
     } else if (inData.category == 'orphan') {
-      inData.category = _('Orphan');
+      inData.category = __('Orphan');
     } else {
-      inData.category = _('Unknown');
+      inData.category = __('Unknown');
     }
     return (
       inData.category +
-      `\n ${_('Amount: ')}` +
+      `\n ${__('Amount: ')}` +
       inData.b +
-      `\n ${_('Time: ')}` +
+      `\n ${__('Time: ')}` +
       inData.a
     );
   };
@@ -1890,7 +1890,7 @@ class Transactions extends Component {
         display: e.account,
       }));
       return [
-        { value: 0, display: _('All Accounts') },
+        { value: 0, display: __('All Accounts') },
         ...accounts,
       ];
     }
@@ -2047,7 +2047,7 @@ class Transactions extends Component {
     return (
       <Panel
         icon={transactionIcon}
-        title={_('Transaction details')}
+        title={__('Transaction details')}
         controls={
           <Select
             value={this.props.selectedAccount}
@@ -2059,7 +2059,7 @@ class Transactions extends Component {
       >
         {this.props.connections === undefined ? (
           <WaitingMessage>
-            {_('Connecting to Nexus Core')}
+            {__('Connecting to Nexus Core')}
             ...
           </WaitingMessage>
         ) : (
@@ -2100,7 +2100,7 @@ class Transactions extends Component {
               <div style={{ fontSize: '75%' }}>Show Transaction Chart</div>
             )}
             <Filters>
-              <FormField connectLabel label={_('Search Address')}>
+              <FormField connectLabel label={__('Search Address')}>
                 <TextField
                   inputProps={{
                     type: 'search',
@@ -2112,7 +2112,7 @@ class Transactions extends Component {
                 />
               </FormField>
 
-              <FormField label={_('Type')}>
+              <FormField label={__('Type')}>
                 <Select
                   value={this.state.categoryFilter}
                   onChange={this.transactiontypefiltercallback.bind(this)}
@@ -2120,7 +2120,7 @@ class Transactions extends Component {
                 />
               </FormField>
 
-              <FormField connectLabel label={_('Min amount')}>
+              <FormField connectLabel label={__('Min amount')}>
                 <TextField
                   type="number"
                   min="0"
@@ -2129,7 +2129,7 @@ class Transactions extends Component {
                 />
               </FormField>
 
-              <FormField label={_('Time span')}>
+              <FormField label={__('Time span')}>
                 <Select
                   value={this.state.displayTimeFrame}
                   onChange={this.transactionTimeframeChange.bind(this)}
@@ -2137,7 +2137,7 @@ class Transactions extends Component {
                 />
               </FormField>
 
-              <Tooltip.Trigger tooltip={_('Download')}>
+              <Tooltip.Trigger tooltip={__('Download')}>
                 <Button
                   square
                   className="relative"

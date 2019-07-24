@@ -84,7 +84,7 @@ export default class Candlestick extends Component {
           }}
         >
           <VictoryAxis
-            label={_('Date')}
+            label={__('Date')}
             style={{ color: '#000', padding: 10 }}
             tickFormat={t =>
               `${new Date(t).toLocaleDateString(this.props.locale, {
@@ -100,7 +100,7 @@ export default class Candlestick extends Component {
           />
 
           <VictoryAxis
-            label={_('Price')}
+            label={__('Price')}
             dependentAxis
             style={{ tickLabels: { angle: -60 }, axisLabel: { padding: 35 } }}
           />

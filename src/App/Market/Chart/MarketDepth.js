@@ -69,7 +69,7 @@ export default class MarketDepth extends Component {
           containerComponent={<VictoryVoronoiContainer />}
         >
           <VictoryAxis
-            label={_('Volume')}
+            label={__('Volume')}
             dependentAxis
             tickFormat={tick => {
               if (tick % 1000000 === 0) {
@@ -131,7 +131,7 @@ export default class MarketDepth extends Component {
             data={[...this.props.chartSellData]}
           />
           <VictoryAxis
-            label={_('Price')}
+            label={__('Price')}
             independentAxis
             style={{ tickLabels: { angle: -15 } }}
             tickLabelComponent={

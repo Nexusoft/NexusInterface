@@ -52,19 +52,19 @@ const Characters = styled.span({
   validate: ({ password, passwordRepeat }) => {
     const errors = {};
     if (!password) {
-      errors.password = _('Password is required');
+      errors.password = __('Password is required');
     }
     if (passwordInvalidChars.test(password)) {
-      errors.password = _(
+      errors.password = __(
         'Password cannot contain these characters: - $ / & * | < >'
       );
     } else if (!password || password.length < 8) {
-      errors.password = _('Password must be at least 8 characters');
+      errors.password = __('Password must be at least 8 characters');
     } else if (password !== password.trim()) {
-      errors.password = _('Password cannot start or end with spaces');
+      errors.password = __('Password cannot start or end with spaces');
     }
     if (passwordRepeat !== password) {
-      errors.passwordRepeat = _('Passwords do not match');
+      errors.passwordRepeat = __('Passwords do not match');
     }
     return errors;
   },
@@ -72,7 +72,7 @@ const Characters = styled.span({
   onSubmitSuccess: (result, dispatch, props) => {
     props.reset();
     props.openSuccessDialog({
-      message: _('Wallet has been encrypted.'),
+      message: __('Wallet has been encrypted.'),
       onClose: () => {
         // In some old version, core stops after wallet is encrypted
         // So start the core here for legacy support
@@ -80,7 +80,7 @@ const Characters = styled.span({
       },
     });
   },
-  onSubmitFail: rpcErrorHandler(_('Error encrypting wallet')),
+  onSubmitFail: rpcErrorHandler(__('Error encrypting wallet')),
 })
 class EncryptWallet extends Component {
   /**
@@ -93,26 +93,26 @@ class EncryptWallet extends Component {
     const { handleSubmit, submitting } = this.props;
     return (
       <EncryptWalletForm onSubmit={handleSubmit}>
-        <FieldSet legend={_('Encrypt wallet')}>
+        <FieldSet legend={__('Encrypt wallet')}>
           <Note>
-            {_('Password cannot contain these characters')}
+            {__('Password cannot contain these characters')}
             :<br />
             <Characters>{' -$/&*|<>'}</Characters>
           </Note>
-          <FormField connectLabel label={_('Password')}>
+          <FormField connectLabel label={__('Password')}>
             <Field
               component={TextField.RF}
               name="password"
               type="password"
-              placeholder={_('New password')}
+              placeholder={__('New password')}
             />
           </FormField>
-          <FormField connectLabel label={_('Re-enter password')}>
+          <FormField connectLabel label={__('Re-enter password')}>
             <Field
               component={TextField.RF}
               name="passwordRepeat"
               type="password"
-              placeholder={_('Confirm password')}
+              placeholder={__('Confirm password')}
             />
           </FormField>
 
@@ -124,7 +124,7 @@ class EncryptWallet extends Component {
             waiting={submitting}
             style={{ marginTop: '2em' }}
           >
-            {_('Encrypt and restart')}
+            {__('Encrypt and restart')}
           </Button>
         </FieldSet>
       </EncryptWalletForm>

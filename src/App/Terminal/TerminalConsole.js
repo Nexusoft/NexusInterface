@@ -313,7 +313,7 @@ class TerminalConsole extends Component {
     if (connections === undefined) {
       return (
         <WaitingMessage>
-          {_('Connecting to Nexus Core')}
+          {__('Connecting to Nexus Core')}
           ...
         </WaitingMessage>
       );
@@ -334,7 +334,7 @@ class TerminalConsole extends Component {
                   autoFocus: true,
                   skin: 'filled-inverted',
                   value: consoleInput,
-                  placeholder: _(
+                  placeholder: __(
                     'Enter console commands here (ex: getinfo, help)'
                   ),
                   onChange: e => {
@@ -348,7 +348,7 @@ class TerminalConsole extends Component {
                       grouped="right"
                       onClick={this.execute}
                     >
-                      {_('Execute')}
+                      {__('Execute')}
                     </ExecuteButton>
                   ),
                 }}
@@ -386,7 +386,7 @@ class TerminalConsole extends Component {
               grouped="bottom"
               onClick={resetConsoleOutput}
             >
-              {_('Clear console')}
+              {__('Clear console')}
             </Button>
           </Console>
         </TerminalContent>

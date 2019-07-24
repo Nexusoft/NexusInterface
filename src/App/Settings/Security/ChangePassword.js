@@ -50,19 +50,19 @@ const ChangePasswordComponent = styled.form({
   validate: ({ password, newPassword, newPasswordRepeat }) => {
     const errors = {};
     if (!password) {
-      errors.password = _('Password is required');
+      errors.password = __('Password is required');
     }
     if (passwordInvalidChars.test(newPassword)) {
-      errors.newPassword = _(
+      errors.newPassword = __(
         'Password cannot contain these characters: - $ / & * | < >'
       );
     } else if (!newPassword || newPassword.length < 8) {
-      errors.newPassword = _('Password must be at least 8 characters');
+      errors.newPassword = __('Password must be at least 8 characters');
     } else if (newPassword !== newPassword.trim()) {
-      errors.newPassword = _('Password cannot start or end with spaces');
+      errors.newPassword = __('Password cannot start or end with spaces');
     }
     if (newPasswordRepeat !== newPassword) {
-      errors.newPasswordRepeat = _('Passwords do not match');
+      errors.newPasswordRepeat = __('Passwords do not match');
     }
     return errors;
   },
@@ -71,10 +71,10 @@ const ChangePasswordComponent = styled.form({
   onSubmitSuccess: (result, dispatch, props) => {
     props.reset();
     props.openSuccessDialog({
-      message: _('Password has been changed.'),
+      message: __('Password has been changed.'),
     });
   },
-  onSubmitFail: rpcErrorHandler(_('Error changing password')),
+  onSubmitFail: rpcErrorHandler(__('Error changing password')),
 })
 class ChangePassword extends Component {
   /**
@@ -84,7 +84,7 @@ class ChangePassword extends Component {
    */
   confirmLogout = () => {
     this.props.openConfirmDialog({
-      question: _('Are you sure you want to log out?'),
+      question: __('Are you sure you want to log out?'),
       callbackYes: async () => {
         try {
           await rpc('walletlock', []);
@@ -92,7 +92,7 @@ class ChangePassword extends Component {
         } catch (err) {
           const note = (err & err.error && err.error.message) || err;
           this.props.openErrorDialog({
-            message: _('Error logging out'),
+            message: __('Error logging out'),
             note,
           });
         }
@@ -110,29 +110,29 @@ class ChangePassword extends Component {
     const { handleSubmit, submitting } = this.props;
     return (
       <ChangePasswordComponent onSubmit={handleSubmit}>
-        <FieldSet legend={_('Change password')}>
-          <FormField connectLabel label={_('Previous password')}>
+        <FieldSet legend={__('Change password')}>
+          <FormField connectLabel label={__('Previous password')}>
             <Field
               component={TextField.RF}
               name="password"
               type="password"
-              placeholder={_('Password')}
+              placeholder={__('Password')}
             />
           </FormField>
-          <FormField connectLabel label={_('New password')}>
+          <FormField connectLabel label={__('New password')}>
             <Field
               component={TextField.RF}
               name="newPassword"
               type="password"
-              placeholder={_('New password')}
+              placeholder={__('New password')}
             />
           </FormField>
-          <FormField connectLabel label={_('Re-enter password:')}>
+          <FormField connectLabel label={__('Re-enter password:')}>
             <Field
               component={TextField.RF}
               name="newPasswordRepeat"
               type="password"
-              placeholder={_('Confirm password')}
+              placeholder={__('Confirm password')}
             />
           </FormField>
 
@@ -143,12 +143,12 @@ class ChangePassword extends Component {
             disabled={submitting}
             style={{ marginTop: '2em' }}
           >
-            {_('Change password')}
+            {__('Change password')}
           </Button>
         </FieldSet>
 
         <Button wide onClick={this.confirmLogout}>
-          {_('Log out')}
+          {__('Log out')}
         </Button>
       </ChangePasswordComponent>
     );

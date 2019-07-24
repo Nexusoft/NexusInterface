@@ -91,7 +91,7 @@ class Terminal extends Component {
     return (
       <Panel
         icon={consoleIcon}
-        title={_('Console')}
+        title={__('Console')}
         bodyScrollable={false}
       >
         <TerminalComponent>
@@ -99,12 +99,12 @@ class Terminal extends Component {
             <Tab
               link={`${match.url}/Console`}
               icon={logoIcon}
-              text={_('Console')}
+              text={__('Console')}
             />
             <Tab
               link={`${match.url}/Core`}
               icon={coreIcon}
-              text={_('Core output')}
+              text={__('Core output')}
             />
           </TerminalTabBar>
 

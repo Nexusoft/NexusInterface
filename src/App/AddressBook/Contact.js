@@ -88,7 +88,9 @@ class Contact extends React.PureComponent {
    */
   confirmDelete = () => {
     this.props.openConfirmDialog({
-      question: _('Delete contact %{name}?', { name: this.props.contact.name }),
+      question: __('Delete contact %{name}?', {
+        name: this.props.contact.name,
+      }),
       skinYes: 'danger',
       callbackYes: () => {
         this.props.deleteContact(this.props.contact.name);
@@ -119,12 +121,12 @@ class Contact extends React.PureComponent {
     const template = [...new ContextMenuBuilder().defaultContext];
     if (this.props.connections !== undefined) {
       template.push({
-        label: _('Edit contact'),
+        label: __('Edit contact'),
         click: this.editContact,
       });
     }
     template.push({
-      label: _('Delete Contact'),
+      label: __('Delete Contact'),
       click: this.confirmDelete,
     });
     let contextMenu = remote.Menu.buildFromTemplate(template);
@@ -167,7 +169,7 @@ class Contact extends React.PureComponent {
         <ContactAvatar>{this.getinitial(contact.name)}</ContactAvatar>
         <ContactName>{contact.name}</ContactName>
         <Tooltip.Trigger
-          tooltip={_(
+          tooltip={__(
             '%{smart_count} address |||| %{smart_count} addresses',
             contact.addresses.length
           )}
@@ -192,7 +194,7 @@ const NewContactButton = props => (
     <ContactAvatar>
       <Icon icon={plusIcon} style={{ fontSize: '.8em', opacity: 0.7 }} />
     </ContactAvatar>
-    <ContactName style={{ opacity: 0.7 }}>{_('New contact')}</ContactName>
+    <ContactName style={{ opacity: 0.7 }}>{__('New contact')}</ContactName>
   </ContactComponent>
 );
 

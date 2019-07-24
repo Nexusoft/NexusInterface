@@ -112,7 +112,7 @@ class ModuleDetailsModal extends React.Component {
     return (
       <Modal>
         <Modal.Header className="relative">
-          {_('Module Details')}
+          {__('Module Details')}
           {!forInstall && (
             <DeleteModule>
               <DeleteButton skin="plain" onClick={this.confirmDelete}>
@@ -122,11 +122,11 @@ class ModuleDetailsModal extends React.Component {
           )}
         </Modal.Header>
         <Modal.Body>
-          <Field label={_('Module name')}>{module.name}</Field>
-          <Field label={_('Display name')}>{module.displayName}</Field>
-          <Field label={_('Module type')}>{module.type}</Field>
-          <Field label={_('Version')}>{module.version}</Field>
-          <Field label={_('Module Specifications version')}>
+          <Field label={__('Module name')}>{module.name}</Field>
+          <Field label={__('Display name')}>{module.displayName}</Field>
+          <Field label={__('Module type')}>{module.type}</Field>
+          <Field label={__('Version')}>{module.version}</Field>
+          <Field label={__('Module Specifications version')}>
             {
               <span className={module.deprecated ? 'error' : undefined}>
                 <span className="v-align">{module.specVersion}</span>
@@ -139,12 +139,12 @@ class ModuleDetailsModal extends React.Component {
               </span>
             }
           </Field>
-          <Field label={_('Description')}>
+          <Field label={__('Description')}>
             {module.description || (
-              <span className="dim">{_('Not provided')}</span>
+              <span className="dim">{__('Not provided')}</span>
             )}
           </Field>
-          <Field label={_('Author')}>
+          <Field label={__('Author')}>
             {module.author ? (
               <div>
                 <span>{module.author.name}</span>
@@ -161,22 +161,22 @@ class ModuleDetailsModal extends React.Component {
                 )}
               </div>
             ) : (
-              <span className="dim">{_('No information')}</span>
+              <span className="dim">{__('No information')}</span>
             )}
           </Field>
-          <Field label={_('Source code')}>
+          <Field label={__('Source code')}>
             {module.repository ? (
               <div>
                 <Tooltip.Trigger tooltip={repoUrl}>
                   <ExternalLink href={repoUrl}>
-                    <span className="v-align">{_('Visit repository')}</span>
+                    <span className="v-align">{__('Visit repository')}</span>
                     <Icon icon={linkIcon} className="space-left" />
                   </ExternalLink>
                 </Tooltip.Trigger>
 
                 {module.isFromNexus && (
                   <Tooltip.Trigger
-                    tooltip={_('This module is developed by Nexus')}
+                    tooltip={__('This module is developed by Nexus')}
                   >
                     <CheckMark>&nbsp;&nbsp;✔</CheckMark>
                   </Tooltip.Trigger>
@@ -186,7 +186,7 @@ class ModuleDetailsModal extends React.Component {
                   <div className="error">
                     <Icon icon={warningIcon} />
                     <span className="v-align space-left">
-                      {_('This repository does not exist or is private')}
+                      {__('This repository does not exist or is private')}
                     </span>
                   </div>
                 )}
@@ -194,7 +194,7 @@ class ModuleDetailsModal extends React.Component {
                   <div className="error">
                     <Icon icon={warningIcon} />
                     <span className="v-align space-left">
-                      {_(
+                      {__(
                         'This repository is not verified to be the real source code of this module'
                       )}
                     </span>
@@ -205,16 +205,16 @@ class ModuleDetailsModal extends React.Component {
               <div className="error">
                 <Icon icon={warningIcon} />
                 <span className="v-align space-left">
-                  {_('No information')}
+                  {__('No information')}
                 </span>
               </div>
             )}
           </Field>
-          <Field label={_('Module hash')}>
+          <Field label={__('Module hash')}>
             {module.hash ? (
               <span className="monospace">{module.hash}</span>
             ) : (
-              <span className="dim">{_('Not available')}</span>
+              <span className="dim">{__('Not available')}</span>
             )}
           </Field>
         </Modal.Body>
@@ -277,10 +277,10 @@ class Installer extends React.Component {
     const { module } = this.props;
     const { installing } = this.state;
     const btnLabel = module.invalid
-      ? _('Module is invalid')
+      ? __('Module is invalid')
       : installing
-      ? _('Installing Module...')
-      : _('Install Module');
+      ? __('Installing Module...')
+      : __('Install Module');
 
     return (
       <Modal.Footer>

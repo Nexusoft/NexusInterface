@@ -37,7 +37,7 @@ class SettingsApp extends Component {
   browseBackupDir = () => {
     remote.dialog.showOpenDialog(
       {
-        title: _('Select backup directory'),
+        title: __('Select backup directory'),
         defaultPath: this.props.backupDir,
         properties: ['openDirectory'],
       },
@@ -59,7 +59,7 @@ class SettingsApp extends Component {
    */
   render() {
     return (
-      <SettingsField connectLabel label={_('Backup directory')}>
+      <SettingsField connectLabel label={__('Backup directory')}>
         {inputId => (
           <div className="flex stretch">
             <TextField
@@ -73,7 +73,7 @@ class SettingsApp extends Component {
               onClick={this.browseBackupDir}
               style={{ marginLeft: '1em' }}
             >
-              {_('Browse')}
+              {__('Browse')}
             </Button>
           </div>
         )}

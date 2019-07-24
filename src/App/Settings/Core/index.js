@@ -74,19 +74,19 @@ const actionCreators = {
     const errors = {};
     if (props.settings.manualDaemon) {
       if (!manualDaemonUser) {
-        errors.manualDaemonUser = _('Manual Core username is required');
+        errors.manualDaemonUser = __('Manual Core username is required');
       }
       if (!manualDaemonPassword) {
-        errors.manualDaemonPassword = _('Manual Core password is required');
+        errors.manualDaemonPassword = __('Manual Core password is required');
       }
       if (!manualDaemonIP) {
-        errors.manualDaemonIP = _('Manual Core IP is required');
+        errors.manualDaemonIP = __('Manual Core IP is required');
       }
       if (!manualDaemonPort) {
-        errors.manualDaemonPort = _('Manual Core port is required');
+        errors.manualDaemonPort = __('Manual Core port is required');
       }
       if (!manualDaemonDataDir) {
-        errors.manualDaemonDataDir = _('Data directory is required');
+        errors.manualDaemonDataDir = __('Data directory is required');
       }
     }
     return errors;
@@ -113,7 +113,7 @@ const actionCreators = {
     }
   },
   onSubmitSuccess: (result, dispatch, props) => {
-    props.showNotification(_('Core settings saved'), 'success');
+    props.showNotification(__('Core settings saved'), 'success');
   },
   onSubmitFail: rpcErrorHandler('Error Saving Settings'),
 })
@@ -146,8 +146,8 @@ class SettingsCore extends Component {
 
     if (settings.manualDaemon) {
       openConfirmDialog({
-        question: _('Exit manual Core mode?'),
-        note: _('(This will restart your Core)'),
+        question: __('Exit manual Core mode?'),
+        note: __('(This will restart your Core)'),
         callbackYes: async () => {
           try {
             await stopCore();
@@ -159,8 +159,8 @@ class SettingsCore extends Component {
       });
     } else {
       openConfirmDialog({
-        question: _('Enter manual Core mode?'),
-        note: _('(This will restart your Core)'),
+        question: __('Enter manual Core mode?'),
+        note: __('(This will restart your Core)'),
         callbackYes: async () => {
           updateSettings({ manualDaemon: true });
           await stopCore();
@@ -176,7 +176,7 @@ class SettingsCore extends Component {
    */
   restartCore = () => {
     this.props.restartCore();
-    this.props.showNotification(_('Core restarting'));
+    this.props.showNotification(__('Core restarting'));
   };
 
   /**
@@ -187,7 +187,7 @@ class SettingsCore extends Component {
   moveDataDir = () => {
     remote.dialog.showOpenDialog(
       {
-        title: _('Select a directory'),
+        title: __('Select a directory'),
         defaultPath: this.props.backupDir,
         properties: ['openDirectory'],
       },
@@ -214,8 +214,8 @@ class SettingsCore extends Component {
   updateStaking(input) {
     let value = form.resolveValue(input);
     this.props.openConfirmDialog({
-      question: _('Restart Core?'),
-      note: _(
+      question: __('Restart Core?'),
+      note: __(
         'This setting change will only take effect after Core is restarted. Do you want to restart the Core now?'
       ),
       labelYes: 'Restart now',
@@ -237,8 +237,8 @@ class SettingsCore extends Component {
   updateMining(input) {
     let value = form.resolveValue(input);
     this.props.openConfirmDialog({
-      question: _('Restart Core?'),
-      note: _(
+      question: __('Restart Core?'),
+      note: __(
         'This setting change will only take effect after Core is restarted. Do you want to restart the Core now?'
       ),
       labelYes: 'Restart now',
@@ -305,7 +305,7 @@ class SettingsCore extends Component {
     if (connections === undefined && !settings.manualDaemon) {
       return (
         <WaitingMessage>
-          {_('Connecting to Nexus Core')}
+          {__('Connecting to Nexus Core')}
           ...
         </WaitingMessage>
       );
@@ -316,8 +316,8 @@ class SettingsCore extends Component {
         <form onSubmit={handleSubmit}>
           <SettingsField
             connectLabel
-            label={_('Enable mining')}
-            subLabel={_('Enable/Disable mining to the wallet.')}
+            label={__('Enable mining')}
+            subLabel={__('Enable/Disable mining to the wallet.')}
           >
             <Switch
               checked={settings.enableMining}
@@ -327,8 +327,8 @@ class SettingsCore extends Component {
 
           <SettingsField
             connectLabel
-            label={_('Enable staking')}
-            subLabel={_('Enable/Disable staking on the wallet.')}
+            label={__('Enable staking')}
+            subLabel={__('Enable/Disable staking on the wallet.')}
           >
             <Switch
               checked={settings.enableStaking}
@@ -338,8 +338,8 @@ class SettingsCore extends Component {
 
           <SettingsField
             connectLabel
-            label={_('Rescan wallet')}
-            subLabel={_(
+            label={__('Rescan wallet')}
+            subLabel={__(
               'Used to correct transaction/balance issues, scans over every block in the database. Could take up to 10 minutes.'
             )}
           >
@@ -348,8 +348,8 @@ class SettingsCore extends Component {
 
           <SettingsField
             connectLabel
-            label={_('Verbose level')}
-            subLabel={_('Verbose level for logs.')}
+            label={__('Verbose level')}
+            subLabel={__('Verbose level for logs.')}
           >
             <TextField
               type="number"
@@ -363,8 +363,8 @@ class SettingsCore extends Component {
 
           <SettingsField
             connectLabel
-            label={_('Manual Core mode')}
-            subLabel={_(
+            label={__('Manual Core mode')}
+            subLabel={__(
               'Enable manual Core mode if you are running the Nexus Core manually outside of the wallet.'
             )}
           >
@@ -378,8 +378,8 @@ class SettingsCore extends Component {
             <SettingsField
               indent={1}
               connectLabel
-              label={_('Username')}
-              subLabel={_('Username configured for manual Core.')}
+              label={__('Username')}
+              subLabel={__('Username configured for manual Core.')}
             >
               <Field
                 component={TextField.RF}
@@ -391,8 +391,8 @@ class SettingsCore extends Component {
             <SettingsField
               indent={1}
               connectLabel
-              label={_('Password')}
-              subLabel={_('Password configured for manual Core.')}
+              label={__('Password')}
+              subLabel={__('Password configured for manual Core.')}
             >
               <Field
                 component={TextField.RF}
@@ -404,8 +404,8 @@ class SettingsCore extends Component {
             <SettingsField
               indent={1}
               connectLabel
-              label={_('IP address')}
-              subLabel={_('IP address configured for manual Core.')}
+              label={__('IP address')}
+              subLabel={__('IP address configured for manual Core.')}
             >
               <Field component={TextField.RF} name="manualDaemonIP" size="12" />
             </SettingsField>
@@ -413,8 +413,8 @@ class SettingsCore extends Component {
             <SettingsField
               indent={1}
               connectLabel
-              label={_('Port')}
-              subLabel={_('Port configured for manual Core.')}
+              label={__('Port')}
+              subLabel={__('Port configured for manual Core.')}
             >
               <Field
                 component={TextField.RF}
@@ -426,8 +426,8 @@ class SettingsCore extends Component {
             <SettingsField
               indent={1}
               connectLabel
-              label={_('Data directory name')}
-              subLabel={_('Data directory configured for manual Core.')}
+              label={__('Data directory name')}
+              subLabel={__('Data directory configured for manual Core.')}
             >
               <Field
                 component={TextField.RF}
@@ -454,7 +454,7 @@ class SettingsCore extends Component {
             */}
 
           <div className="flex space-between" style={{ marginTop: '2em' }}>
-            <Button onClick={this.restartCore}>{_('Restart Core')}</Button>
+            <Button onClick={this.restartCore}>{__('Restart Core')}</Button>
 
             {/* <Button
               type="submit"
@@ -462,7 +462,7 @@ class SettingsCore extends Component {
               disabled={pristine || submitting}
             >
               {pristine ? (
-                _('Settings saved')
+                __('Settings saved')
               ) : submitting ? (
                 <Text id="SavingSettings" />
               ) : (

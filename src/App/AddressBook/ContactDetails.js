@@ -74,7 +74,7 @@ const Field = ({ label, content }) => (
   <div className="flex mt1">
     <FieldLabel>{label}</FieldLabel>
     <FieldContent>
-      {content || <span className="dim">{_('No information')}</span>}
+      {content || <span className="dim">{__('No information')}</span>}
     </FieldContent>
   </div>
 );
@@ -136,7 +136,7 @@ class ContactDetails extends React.Component {
    */
   confirmDelete = () => {
     this.props.openConfirmDialog({
-      question: _('Delete contact %{name}?', { name: this.props.contact.name }),
+      question: __('Delete contact %{name}?', { name: this.props.contact.name }),
       skinYes: 'danger',
       callbackYes: () => {
         this.props.deleteContact(this.props.contact.name);
@@ -174,14 +174,14 @@ class ContactDetails extends React.Component {
     return (
       <ContactDetailsComponent>
         <Header>
-          <Tooltip.Trigger tooltip={_('Delete')}>
+          <Tooltip.Trigger tooltip={__('Delete')}>
             <HeaderAction danger onClick={this.confirmDelete}>
               <Icon icon={trashIcon} />
             </HeaderAction>
           </Tooltip.Trigger>
           <ContactName>{contact.name}</ContactName>
           {connections !== undefined ? (
-            <Tooltip.Trigger tooltip={_('Edit')}>
+            <Tooltip.Trigger tooltip={__('Edit')}>
               <HeaderAction onClick={this.editContact}>
                 <Icon icon={editIcon} />
               </HeaderAction>
@@ -191,7 +191,7 @@ class ContactDetails extends React.Component {
           )}
         </Header>
 
-        <SectionHeader>{_('NXS addresses')}</SectionHeader>
+        <SectionHeader>{__('NXS addresses')}</SectionHeader>
 
         {contact.addresses.map(({ address, label, isMine }, i) => (
           <NexusAddress
@@ -209,10 +209,10 @@ class ContactDetails extends React.Component {
           />
         ))}
 
-        <SectionHeader>{_('Contact info')}</SectionHeader>
+        <SectionHeader>{__('Contact info')}</SectionHeader>
 
         <Field
-          label={_('Email')}
+          label={__('Email')}
           content={
             contact.email && (
               <ExternalLink href={`mailto:${contact.email}`}>
@@ -221,12 +221,12 @@ class ContactDetails extends React.Component {
             )
           }
         />
-        <Field label={_('Phone Number')} content={contact.phoneNumber} />
+        <Field label={__('Phone Number')} content={contact.phoneNumber} />
         <Field
-          label={_('Local Time')}
+          label={__('Local Time')}
           content={tz && `${getLocalTime(tz.value)} (${tz.offset})`}
         />
-        <Field label={_('Notes')} content={contact.notes} />
+        <Field label={__('Notes')} content={contact.notes} />
       </ContactDetailsComponent>
     );
   }

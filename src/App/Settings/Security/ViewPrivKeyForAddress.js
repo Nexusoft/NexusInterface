@@ -36,7 +36,7 @@ import { rpcErrorHandler } from 'utils/form';
   validate: ({ address }) => {
     const errors = {};
     if (!address) {
-      errors.address = _('Address cannot be empty');
+      errors.address = __('Address cannot be empty');
     }
     return errors;
   },
@@ -44,7 +44,7 @@ import { rpcErrorHandler } from 'utils/form';
   onSubmitSuccess: (result, dispatch, props) => {
     props.change('privateKey', result);
   },
-  onSubmitFail: rpcErrorHandler(_('Error getting private key')),
+  onSubmitFail: rpcErrorHandler(__('Error getting private key')),
 })
 class ViewPrivKeyForAddress extends Component {
   privKeyRef = React.createRef();
@@ -82,7 +82,7 @@ class ViewPrivKeyForAddress extends Component {
   copyPrivkey = () => {
     const privKey = this.privKeyRef.current.value;
     clipboard.writeText(privKey);
-    this.props.showNotification(_('Copied to clipboard'), 'success');
+    this.props.showNotification(__('Copied to clipboard'), 'success');
   };
 
   /**
@@ -104,15 +104,15 @@ class ViewPrivKeyForAddress extends Component {
     const { handleSubmit, submitting } = this.props;
     return (
       <form onSubmit={handleSubmit}>
-        <FieldSet legend={_('View private key for address')}>
-          <FormField connectLabel label={_('Address')}>
+        <FieldSet legend={__('View private key for address')}>
+          <FormField connectLabel label={__('Address')}>
             {inputId => (
               <InputGroup>
                 <Field
                   component={TextField.RF}
                   name="address"
                   id={inputId}
-                  placeholder={_('Enter address here')}
+                  placeholder={__('Enter address here')}
                   onChange={this.resetPrivateKey}
                 />
 
@@ -123,25 +123,25 @@ class ViewPrivKeyForAddress extends Component {
                   disabled={submitting}
                   waiting={submitting}
                 >
-                  {_('View private key')}
+                  {__('View private key')}
                 </Button>
               </InputGroup>
             )}
           </FormField>
 
-          <FormField label={_('Private key')}>
+          <FormField label={__('Private key')}>
             <InputGroup>
               <Field
                 component={TextField.RF}
                 name="privateKey"
                 readOnly
                 type="password"
-                placeholder={_('Private key will be displayed here')}
+                placeholder={__('Private key will be displayed here')}
                 ref={this.privKeyRef}
               />
               <Button fitHeight className="relative" onClick={this.copyPrivkey}>
                 <Icon icon={copyIcon} className="space-right" />
-                {_('Copy')}
+                {__('Copy')}
               </Button>
             </InputGroup>
           </FormField>

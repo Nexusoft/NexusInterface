@@ -24,7 +24,7 @@ const ErrorDialog = ({ message, note, ...rest }) => (
           {!!note && <Dialog.Note>{note}</Dialog.Note>}
         </Modal.Body>
         <Dialog.Button skin="filled-danger" onClick={closeModal}>
-          {_('Dismiss')}
+          {__('Dismiss')}
         </Dialog.Button>
       </>
     )}

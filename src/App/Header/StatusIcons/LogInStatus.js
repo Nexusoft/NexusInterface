@@ -82,28 +82,28 @@ class LogInStatus extends Component {
     if (connections === undefined) {
       return (
         <div>
-          <div>{_('Unknown login status')}</div>
-          <div>{_('Waiting for Nexus Core to load')}...</div>
+          <div>{__('Unknown login status')}</div>
+          <div>{__('Waiting for Nexus Core to load')}...</div>
         </div>
       );
     }
 
     if (locked === undefined) {
-      return _('Wallet Unencrypted');
+      return __('Wallet Unencrypted');
     } else if (locked) {
-      return _('Not logged in');
+      return __('Not logged in');
     } else if (locked === false) {
       if (!unlocked_until) {
         return (
           <>
-            {_('Logged in')} {!!minting_only && _('for staking only')}
+            {__('Logged in')} {!!minting_only && __('for staking only')}
           </>
         );
       } else {
         return (
           <>
-            {_('Logged in until %{unlockDate}', { unlockDate })}{' '}
-            {!!minting_only && _('for staking only')}
+            {__('Logged in until %{unlockDate}', { unlockDate })}{' '}
+            {!!minting_only && __('for staking only')}
           </>
         );
       }

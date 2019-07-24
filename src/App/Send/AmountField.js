@@ -103,7 +103,7 @@ class AmountField extends Component {
         <SendAmountField>
           <FormField
             connectLabel
-            label={<span className="v-align">{_('NXS Amount')}</span>}
+            label={<span className="v-align">{__('NXS Amount')}</span>}
           >
             <Field
               component={TextField.RF}

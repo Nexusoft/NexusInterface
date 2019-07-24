@@ -52,7 +52,7 @@ export default merge.smart(baseConfig, {
 
   plugins: [
     new webpack.ProvidePlugin({
-      _: [
+      __: [
         path.join(process.cwd(), 'src', 'shared', 'lib', 'translation.js'),
         'translate',
       ],

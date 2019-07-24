@@ -55,7 +55,7 @@ class SearchBox extends Component {
     return (
       <SearchInput
         left={<Icon icon={searchIcon} className="space-right" />}
-        placeholder={_('Search contact')}
+        placeholder={__('Search contact')}
         value={this.props.searchQuery}
         onChange={e => this.props.searchContact(e.target.value)}
       />
@@ -161,7 +161,7 @@ class PanelControls extends Component {
     return (
       <div className="flex center">
         {this.props.connections !== undefined && (
-          <Tooltip.Trigger tooltip={_('My Addresses')}>
+          <Tooltip.Trigger tooltip={__('My Addresses')}>
             <Button
               skin="plain"
               className="relative"
@@ -173,7 +173,7 @@ class PanelControls extends Component {
         )}
 
         {this.props.connections !== undefined && (
-          <Tooltip.Trigger tooltip={_('New contact')}>
+          <Tooltip.Trigger tooltip={__('New contact')}>
             <Button
               skin="plain"
               className="relative"
@@ -184,7 +184,7 @@ class PanelControls extends Component {
           </Tooltip.Trigger>
         )}
 
-        <Tooltip.Trigger tooltip={_('Export contacts')}>
+        <Tooltip.Trigger tooltip={__('Export contacts')}>
           <Button
             skin="plain"
             className="relative"

@@ -45,20 +45,20 @@ function getPercentage({ step, details }) {
 function getStatusMsg({ step, details }) {
   switch (step) {
     case 'backing_up':
-      return _('Backing up...');
+      return __('Backing up...');
     case 'downloading':
       const percentage = getPercentage({ step, details });
-      return `${_('Downloading')}... ${percentage}%`;
+      return `${__('Downloading')}... ${percentage}%`;
     case 'extracting':
-      return _('Decompressing...');
+      return __('Decompressing...');
     case 'stopping_core':
-      return _('Stopping Core...');
+      return __('Stopping Core...');
     case 'moving_db':
-      return _('Moving...');
+      return __('Moving...');
     case 'restarting_core':
-      return _('Restarting Core...');
+      return __('Restarting Core...');
     case 'rescanning':
-      return _('Rescanning Wallet...');
+      return __('Rescanning Wallet...');
     default:
       return '';
   }

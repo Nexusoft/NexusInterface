@@ -59,7 +59,7 @@ export default class RawAddress extends React.Component {
     clipboard.writeText(this.props.address);
     this.inputRef.current.select();
     this.props.showNotification(
-      _('Address has been copied to clipboard'),
+      __('Address has been copied to clipboard'),
       'success'
     );
   };
@@ -81,7 +81,7 @@ export default class RawAddress extends React.Component {
           value={address}
           inputRef={this.inputRef}
           right={
-            <Tooltip.Trigger tooltip={_('Copy to clipboard')}>
+            <Tooltip.Trigger tooltip={__('Copy to clipboard')}>
               <CopyButton
                 skin="filled-inverted"
                 fitHeight
