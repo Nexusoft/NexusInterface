@@ -16,6 +16,7 @@ import { getDifficulty } from 'actions/core';
 import * as helpers from 'scripts/helper.js';
 import { updateSettings } from 'actions/settings';
 import { timing, consts, animations } from 'styles';
+import { isCoreConnected } from 'selectors';
 import Globe from './Globe';
 import { webGLAvailable } from 'consts/misc';
 
@@ -97,12 +98,13 @@ const blockWeightIcons = [
 const formatDiff = diff => (diff || 0).toFixed(3);
 
 // React-Redux mandatory methods
-const mapStateToProps = ({
-  core: { info, difficulty },
-  common: { blockDate, rawNXSvalues, displayNXSvalues, highestPeerBlock },
-  settings,
-  theme,
-}) => {
+const mapStateToProps = state => {
+  const {
+    core: { info, difficulty },
+    common: { blockDate, rawNXSvalues, displayNXSvalues, highestPeerBlock },
+    settings,
+    theme,
+  } = state;
   const { synccomplete, blocks } = info;
   const syncUnknown =
     ((!synccomplete && synccomplete !== 0) ||
@@ -110,6 +112,7 @@ const mapStateToProps = ({
       synccomplete > 100) &&
     !highestPeerBlock;
   return {
+    coreConnected: isCoreConnected(state),
     difficulty,
     blockDate,
     rawNXSvalues,
@@ -576,11 +579,7 @@ class Overview extends Component {
    * @memberof Overview
    */
   waitForCore = stat =>
-    this.props.coreInfo.connections !== undefined ? (
-      stat
-    ) : (
-      <span className="dim">-</span>
-    );
+    this.props.coreConnected ? stat : <span className="dim">-</span>;
 
   /**
    * Returns the weight stats for the overview page
@@ -689,6 +688,7 @@ class Overview extends Component {
   render() {
     const {
       coreInfo: {
+        coreConnected,
         connections,
         balance,
         stake,
@@ -806,7 +806,7 @@ class Overview extends Component {
                 displayFiatBalance: !settings.displayFiatBalance,
               });
             }}
-            to={connections ? 'HackToGetProperStyling' : undefined}
+            to={coreConnected ? 'HackToGetProperStyling' : undefined}
           >
             <div>
               <StatLabel>
@@ -842,8 +842,8 @@ class Overview extends Component {
             />
           </Stat>
           <Stat
-            as={connections ? Link : undefined}
-            to={connections ? '/Transactions' : undefined}
+            as={coreConnected ? Link : undefined}
+            to={coreConnected ? '/Transactions' : undefined}
           >
             <div>
               <StatLabel>{__('Stake Balance')} (NXS)</StatLabel>
@@ -856,8 +856,8 @@ class Overview extends Component {
             <StatIcon icon={nxsStakeIcon} />
           </Stat>
           <Stat
-            as={connections ? Link : undefined}
-            to={connections ? '/Transactions' : undefined}
+            as={coreConnected ? Link : undefined}
+            to={coreConnected ? '/Transactions' : undefined}
           >
             <div>
               <StatLabel>{__('Transactions')}</StatLabel>

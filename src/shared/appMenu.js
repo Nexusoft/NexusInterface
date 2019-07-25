@@ -10,6 +10,7 @@ import { startCore as startCoreAC, stopCore as stopCoreAC } from 'actions/core';
 import { backupWallet as backup } from 'lib/wallet';
 import { showNotification, openErrorDialog } from 'actions/overlays';
 import { bootstrap } from 'actions/bootstrap';
+import { isCoreConnected } from 'selectors';
 import showOpenDialog from 'utils/promisified/showOpenDialog';
 import { checkForUpdates, quitAndInstall } from 'lib/updater';
 
@@ -56,7 +57,7 @@ const backupWallet = {
       properties: ['openDirectory'],
     });
 
-    if (state.core.info.connections === undefined) {
+    if (!isCoreConnected(state)) {
       store.dispatch(showNotification(__('Nexus Core is not connected')));
       return;
     }
@@ -146,7 +147,7 @@ const downloadRecent = {
       return;
     }
 
-    if (state.core.info.connections === undefined) {
+    if (!isCoreConnected(state)) {
       store.dispatch(showNotification('Please wait for Nexus Core to start.'));
       return;
     }
@@ -271,7 +272,7 @@ function updaterMenuItem() {
  */
 function buildDarwinTemplate() {
   const state = store.getState();
-  const coreRunning = state.core.info.connections !== undefined;
+  const coreConnected = isCoreConnected(state);
   const { manualDaemon } = state.settings;
   const { webview } = state;
 
@@ -285,8 +286,8 @@ function buildDarwinTemplate() {
   };
   // If it's in manual core mode and core is not running, don't show
   // Start Core option because it does nothing
-  if (!manualDaemon || coreRunning) {
-    subMenuAbout.submenu.splice(1, 0, coreRunning ? stopCore : startCore);
+  if (!manualDaemon || coreConnected) {
+    subMenuAbout.submenu.splice(1, 0, coreConnected ? stopCore : startCore);
   }
 
   const subMenuFile = {
@@ -349,7 +350,7 @@ function buildDarwinTemplate() {
  */
 function buildDefaultTemplate() {
   const state = store.getState();
-  const coreRunning = state.core.info.connections !== undefined;
+  const coreConnected = isCoreConnected(state);
   const { manualDaemon } = state.settings;
   const { webview } = state;
 
@@ -368,8 +369,8 @@ function buildDefaultTemplate() {
   };
   // If it's in manual core mode and core is not running, don't show
   // Start Core option because it does nothing
-  if (!manualDaemon || coreRunning) {
-    subMenuFile.submenu.splice(5, 0, coreRunning ? stopCore : startCore);
+  if (!manualDaemon || coreConnected) {
+    subMenuFile.submenu.splice(5, 0, coreConnected ? stopCore : startCore);
   }
 
   const subMenuSettings = {
@@ -439,10 +440,7 @@ function rebuildMenu() {
 export function initializeMenu() {
   buildMenu();
   observeStore(state => state.updater.state, rebuildMenu);
-  observeStore(
-    state => state.core && state.core.info && state.core.info.connections,
-    rebuildMenu
-  );
+  observeStore(isCoreConnected, rebuildMenu);
   observeStore(state => state.settings && state.settings.devMode, rebuildMenu);
   observeStore(state => state.webview, rebuildMenu);
   observeStore(state => state.settings.manualDaemon, rebuildMenu);

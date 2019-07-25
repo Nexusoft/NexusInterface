@@ -21,6 +21,7 @@ import {
 import SettingsContainer from 'components/SettingsContainer';
 import * as color from 'utils/color';
 import * as form from 'utils/form';
+import { isCoreConnected } from 'selectors';
 import warningIcon from 'images/warning.sprite.svg';
 import { startAutoUpdate, stopAutoUpdate } from 'lib/updater';
 
@@ -61,7 +62,7 @@ const fiatCurrencies = [
 ];
 
 const mapStateToProps = state => ({
-  connections: state.core.info.connections,
+  coreConnected: isCoreConnected(state),
   settings: state.settings,
 });
 
@@ -102,7 +103,7 @@ class SettingsApp extends Component {
     this.props.openConfirmDialog({
       question: __('Backup wallet'),
       callbackYes: () => {
-        if (this.props.connections !== undefined) {
+        if (this.props.coreConnected) {
           backupWallet(this.props.settings.backupDirectory);
           this.props.showNotification(__('Wallet backed up'), 'success');
         } else {
@@ -214,7 +215,7 @@ class SettingsApp extends Component {
    * @memberof SettingsApp
    */
   render() {
-    const { connections, settings } = this.props;
+    const { coreConnected, settings } = this.props;
     return (
       <SettingsContainer>
         <LanguageSetting />
@@ -351,7 +352,7 @@ class SettingsApp extends Component {
         </div>
 
         <Button
-          disabled={connections === undefined}
+          disabled={!coreConnected}
           style={{ marginTop: '2em' }}
           onClick={this.confirmBackupWallet}
         >

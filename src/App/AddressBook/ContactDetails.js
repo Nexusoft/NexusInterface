@@ -11,6 +11,7 @@ import Tooltip from 'components/Tooltip';
 import NexusAddress from 'components/NexusAddress';
 import { openConfirmDialog, openModal } from 'actions/overlays';
 import AddEditContactModal from 'components/AddEditContactModal';
+import { isCoreConnected } from 'selectors';
 import timeZones from 'data/timeZones';
 import { timing } from 'styles';
 import trashIcon from 'images/trash.sprite.svg';
@@ -114,18 +115,18 @@ const getLocalTime = tz => {
  * @extends {Component}
  */
 @connect(
-  ({
-    addressBook,
-    ui: {
-      addressBook: { selectedContactName },
-    },
-    core: {
-      info: { connections },
-    },
-  }) => ({
-    contact: addressBook[selectedContactName] || null,
-    connections,
-  }),
+  state => {
+    const {
+      addressBook,
+      ui: {
+        addressBook: { selectedContactName },
+      },
+    } = state;
+    return {
+      contact: addressBook[selectedContactName] || null,
+      coreConnected: isCoreConnected(state),
+    };
+  },
   { deleteContact, openConfirmDialog, openModal }
 )
 class ContactDetails extends React.Component {
@@ -165,7 +166,7 @@ class ContactDetails extends React.Component {
    * @memberof ContactDetails
    */
   render() {
-    const { contact, connections } = this.props;
+    const { contact, coreConnected } = this.props;
     if (!contact) return null;
 
     const tz =
@@ -182,7 +183,7 @@ class ContactDetails extends React.Component {
             </HeaderAction>
           </Tooltip.Trigger>
           <ContactName>{contact.name}</ContactName>
-          {connections !== undefined ? (
+          {coreConnected ? (
             <Tooltip.Trigger tooltip={__('Edit')}>
               <HeaderAction onClick={this.editContact}>
                 <Icon icon={editIcon} />

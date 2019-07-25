@@ -12,6 +12,7 @@ import TextField from 'components/TextField';
 import Tooltip from 'components/Tooltip';
 import MyAddressesModal from 'components/MyAddressesModal';
 import { openModal } from 'actions/overlays';
+import { isCoreConnected } from 'selectors';
 import AddEditContactModal from 'components/AddEditContactModal';
 
 // Icons
@@ -72,7 +73,7 @@ class SearchBox extends Component {
 @connect(
   state => ({
     addressBook: state.addressBook,
-    connections: state.core.info.connections,
+    coreConnected: isCoreConnected(state),
   }),
   { openModal }
 )
@@ -160,7 +161,7 @@ class PanelControls extends Component {
   render() {
     return (
       <div className="flex center">
-        {this.props.connections !== undefined && (
+        {this.props.coreConnected && (
           <Tooltip.Trigger tooltip={__('My Addresses')}>
             <Button
               skin="plain"
@@ -172,7 +173,7 @@ class PanelControls extends Component {
           </Tooltip.Trigger>
         )}
 
-        {this.props.connections !== undefined && (
+        {this.props.coreConnected && (
           <Tooltip.Trigger tooltip={__('New contact')}>
             <Button
               skin="plain"

@@ -32,6 +32,7 @@ import * as TYPE from 'consts/actionTypes';
 import ContextMenuBuilder from 'contextmenu';
 import { walletDataDir } from 'consts/paths';
 import { openModal } from 'actions/overlays';
+import { isCoreConnected } from 'selectors';
 import TransactionDetailsModal from './TransactionDetailsModal';
 import styles from './style.css';
 import CSVDownloadModal from './TransactionCSVDownloadModal';
@@ -126,6 +127,7 @@ const mapStateToProps = state => {
     addressBook: state.addressBook,
     settings: state.settings,
     theme: state.theme,
+    coreConnected: isCoreConnected(state),
   };
 };
 const mapDispatchToProps = dispatch => ({
@@ -1889,10 +1891,7 @@ class Transactions extends Component {
         value: i + 1,
         display: e.account,
       }));
-      return [
-        { value: 0, display: __('All Accounts') },
-        ...accounts,
-      ];
+      return [{ value: 0, display: __('All Accounts') }, ...accounts];
     }
     return [];
   };
@@ -2057,7 +2056,7 @@ class Transactions extends Component {
           />
         }
       >
-        {this.props.connections === undefined ? (
+        {!this.props.coreConnected ? (
           <WaitingMessage>
             {__('Connecting to Nexus Core')}
             ...

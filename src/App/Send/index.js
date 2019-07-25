@@ -12,6 +12,7 @@ import Button from 'components/Button';
 import WaitingMessage from 'components/WaitingMessage';
 import Tooltip from 'components/Tooltip';
 import { openModal } from 'actions/overlays';
+import { isCoreConnected } from 'selectors';
 
 // Internal Local Dependencies
 import MoveBetweenAccountsModal from './MoveBetweenAccountsModal';
@@ -22,7 +23,7 @@ import sendIcon from 'images/send.sprite.svg';
 import swapIcon from 'images/swap.sprite.svg';
 
 const mapStateToProps = state => ({
-  connections: state.core.info.connections,
+  coreConnected: isCoreConnected(state),
 });
 
 const actionCreators = { openModal };
@@ -92,7 +93,7 @@ class Send extends Component {
         icon={sendIcon}
         title={__('Send NXS')}
         controls={
-          this.props.connections !== undefined && (
+          this.props.coreConnected && (
             <Tooltip.Trigger tooltip={__('Move NXS between accounts')}>
               <Button
                 square
@@ -106,7 +107,7 @@ class Send extends Component {
           )
         }
       >
-        {!true || this.props.connections === undefined ? (
+        {!this.props.coreConnected ? (
           <WaitingMessage>
             {__('Connecting to Nexus Core')}
             ...

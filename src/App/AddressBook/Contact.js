@@ -10,6 +10,7 @@ import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import { openConfirmDialog, openModal } from 'actions/overlays';
 import AddEditContactModal from 'components/AddEditContactModal';
+import { isCoreConnected } from 'selectors';
 import { timing } from 'styles';
 import * as color from 'utils/color';
 import ContextMenuBuilder from 'contextmenu';
@@ -76,7 +77,7 @@ const AddressesCount = styled.div(({ theme }) => ({
   state => ({
     selectedContactName: state.ui.addressBook.selectedContactName,
     locale: state.settings.locale,
-    connections: state.core.info.connections,
+    coreConnected: isCoreConnected(state),
   }),
   { selectContact, deleteContact, openModal, openConfirmDialog }
 )
@@ -119,7 +120,7 @@ class Contact extends React.PureComponent {
     e.preventDefault();
     e.stopPropagation();
     const template = [...new ContextMenuBuilder().defaultContext];
-    if (this.props.connections !== undefined) {
+    if (this.props.coreConnected) {
       template.push({
         label: __('Edit contact'),
         click: this.editContact,

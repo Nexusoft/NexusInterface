@@ -11,6 +11,7 @@ import Button from 'components/Button';
 import Panel from 'components/Panel';
 import { openModal } from 'actions/overlays';
 import AddEditContactModal from 'components/AddEditContactModal';
+import { isCoreConnected } from 'selectors';
 import ContextMenuBuilder from 'contextmenu';
 
 // Internal Local
@@ -32,7 +33,7 @@ const AddressBookLayout = styled.div({
 
 const mapStateToProps = state => ({
   addressBook: state.addressBook,
-  connections: state.core.info.connections,
+  coreConnected: isCoreConnected(state),
 });
 
 const actionCreators = { openModal };
@@ -101,7 +102,7 @@ class AddressBook extends Component {
    * @memberof AddressBook
    */
   render() {
-    const { addressBook, connections } = this.props;
+    const { addressBook, coreConnected } = this.props;
 
     return (
       <Panel
@@ -118,7 +119,7 @@ class AddressBook extends Component {
         ) : (
           <div style={{ marginTop: 50, textAlign: 'center' }}>
             <div className="dim">{__('Your address book is empty')}</div>
-            {connections !== undefined && (
+            {coreConnected && (
               <Button
                 skin="plain"
                 onClick={this.showAddContact}

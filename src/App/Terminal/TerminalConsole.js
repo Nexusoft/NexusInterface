@@ -9,6 +9,7 @@ import memoize from 'memoize-one';
 import WaitingMessage from 'components/WaitingMessage';
 import Button from 'components/Button';
 import AutoSuggest from 'components/AutoSuggest';
+import { isCoreConnected } from 'selectors';
 import rpc from 'lib/rpc';
 import {
   switchConsoleTab,
@@ -34,31 +35,31 @@ const consoleInputSelector = memoize(
     historyIndex === -1 ? currentCommand : commandHistory[historyIndex]
 );
 
-const mapStateToProps = ({
-  ui: {
-    console: {
+const mapStateToProps = state => {
+  const {
+    ui: {
       console: {
-        currentCommand,
-        commandHistory,
-        historyIndex,
-        commandList,
-        output,
+        console: {
+          currentCommand,
+          commandHistory,
+          historyIndex,
+          commandList,
+          output,
+        },
       },
     },
-  },
-  core: {
-    info: { connections },
-  },
-}) => ({
-  consoleInput: consoleInputSelector(
-    currentCommand,
-    commandHistory,
-    historyIndex
-  ),
-  commandList,
-  output,
-  connections,
-});
+  } = state;
+  return {
+    coreConnected: isCoreConnected(state),
+    consoleInput: consoleInputSelector(
+      currentCommand,
+      commandHistory,
+      historyIndex
+    ),
+    commandList,
+    output,
+  };
+};
 
 const actionCreators = {
   switchConsoleTab,
@@ -302,7 +303,7 @@ class TerminalConsole extends Component {
    */
   render() {
     const {
-      connections,
+      coreConnected,
       commandList,
       consoleInput,
       updateConsoleInput,
@@ -310,7 +311,7 @@ class TerminalConsole extends Component {
       resetConsoleOutput,
     } = this.props;
 
-    if (connections === undefined) {
+    if (!coreConnected) {
       return (
         <WaitingMessage>
           {__('Connecting to Nexus Core')}

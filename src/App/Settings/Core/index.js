@@ -18,26 +18,24 @@ import SettingsContainer from 'components/SettingsContainer';
 import { updateSettings } from 'actions/settings';
 import * as form from 'utils/form';
 import { rpcErrorHandler } from 'utils/form';
+import { isCoreConnected } from 'selectors';
 import ReScanButton from './RescanButton.js';
 import { coreDataDir } from 'consts/paths';
 
-const mapStateToProps = ({
-  settings,
-  core: {
-    info: { connections, version },
-  },
-}) => ({
-  connections,
-  version,
-  settings,
-  initialValues: {
-    manualDaemonUser: settings.manualDaemonUser,
-    manualDaemonPassword: settings.manualDaemonPassword,
-    manualDaemonIP: settings.manualDaemonIP,
-    manualDaemonPort: settings.manualDaemonPort,
-    manualDaemonDataDir: settings.manualDaemonDataDir,
-  },
-});
+const mapStateToProps = state => {
+  const { settings } = state;
+  return {
+    coreConnected: isCoreConnected(state),
+    settings,
+    initialValues: {
+      manualDaemonUser: settings.manualDaemonUser,
+      manualDaemonPassword: settings.manualDaemonPassword,
+      manualDaemonIP: settings.manualDaemonIP,
+      manualDaemonPort: settings.manualDaemonPort,
+      manualDaemonDataDir: settings.manualDaemonDataDir,
+    },
+  };
+};
 const actionCreators = {
   updateSettings,
   switchSettingsTab,
@@ -295,14 +293,14 @@ class SettingsCore extends Component {
    */
   render() {
     const {
-      connections,
+      coreConnected,
       handleSubmit,
       settings,
       pristine,
       submitting,
     } = this.props;
 
-    if (connections === undefined && !settings.manualDaemon) {
+    if (!coreConnected && !settings.manualDaemon) {
       return (
         <WaitingMessage>
           {__('Connecting to Nexus Core')}
