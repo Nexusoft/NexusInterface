@@ -1,4 +1,4 @@
-const { extractFromFiles } = require('i18n-extract');
+import { extractFromFiles } from 'i18n-extract';
 
 const keys = extractFromFiles('src/**/*.js', {
   marker: '__',
