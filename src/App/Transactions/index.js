@@ -1329,7 +1329,7 @@ class Transactions extends Component {
       txCounter++;
       let isPending = '';
       let tempCategory = ele.category;
-      if (ele.confirmations <= this.props.settings.minConfirmations) {
+      if (ele.confirmations <= this.props.settings.minConfirmations && ele.category != 'orphan') {
         isPending = '(Pending)';
       }
 

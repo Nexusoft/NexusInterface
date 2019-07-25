@@ -14,6 +14,7 @@
 #### Fixes
 
 - Stake and Trust transactions now properly show on the transaction page
+- Orphans no longer show as `(Pending)`
 
 # 1.1.0 (2019.7.19)
 

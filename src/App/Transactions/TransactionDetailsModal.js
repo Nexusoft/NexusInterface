@@ -80,13 +80,14 @@ class TransactionDetailsModal extends Component {
         <Modal>
           <Modal.Header>Transaction Details</Modal.Header>
           <Modal.Body>
-            {tx.confirmations <= settings.minConfirmations && (
-              <div>
-                <a>
-                  <Text id="transactions.PENDINGTR" />
-                </a>
-              </div>
-            )}
+            {tx.category != 'orphan' &&
+              tx.confirmations <= settings.minConfirmations && (
+                <div>
+                  <a>
+                    <Text id="transactions.PENDINGTR" />
+                  </a>
+                </div>
+              )}
 
             <div key="modal_amount" className="detailCat">
               <Text id="transactions.AMOUNT" />
