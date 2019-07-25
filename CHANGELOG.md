@@ -1,3 +1,15 @@
+# 1.1.1 (2019.7.x)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/1.1.0)
+
+#### Additions
+
+#### Adjustments
+
+- Staking status icon now indicates clearly whether wallet is staking
+
+#### Fixes
+
 # 1.1.0 (2019.7.19)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/1.1.0)
