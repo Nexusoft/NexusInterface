@@ -28,7 +28,7 @@ export function bootstrap({ suggesting } = {}) {
         store.dispatch(
           openErrorDialog({
             message: __(
-              'Not enough disk space! Minimum 20GB of free space is required.'
+              'Not enough disk space! Minimum 12GB of free space is required.'
             ),
           })
         );

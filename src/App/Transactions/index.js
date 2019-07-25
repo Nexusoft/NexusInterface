@@ -2099,7 +2099,7 @@ class Transactions extends Component {
               <div style={{ fontSize: '75%' }}>Show Transaction Chart</div>
             )}
             <Filters>
-              <FormField connectLabel label={__('Search Address')}>
+              <FormField connectLabel label={__('Search address')}>
                 <TextField
                   inputProps={{
                     type: 'search',

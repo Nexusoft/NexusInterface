@@ -108,7 +108,7 @@ class RecipientField extends Component {
           emptyFiller={
             suggestions.length === 0 && (
               <EmptyMessage>
-                {__('Your address book is empty.')}
+                {__('Your address book is empty')}
                 <Button as="a" skin="hyperlink" onClick={this.createContact}>
                   <Icon
                     icon={plusIcon}

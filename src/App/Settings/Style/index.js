@@ -477,10 +477,10 @@ class SettingsStyle extends Component {
         <SettingsField indent={1} label={__('Primary Color Accent')}>
           <ColorPicker colorName="primaryAccent" onChange={this.setColor} />
         </SettingsField>
-        <SettingsField indent={1} label={__('Error Color')}>
+        <SettingsField indent={1} label={__('Danger Color')}>
           <ColorPicker colorName="danger" onChange={this.setColor} />
         </SettingsField>
-        <SettingsField indent={1} label={__('Error Color Accent')}>
+        <SettingsField indent={1} label={__('Danger Color Accent')}>
           <ColorPicker colorName="dangerAccent" onChange={this.setColor} />
         </SettingsField>
         <SettingsField indent={1} label={__('Globe Color')}>

@@ -105,7 +105,10 @@ class SettingsApp extends Component {
       callbackYes: () => {
         if (this.props.coreConnected) {
           backupWallet(this.props.settings.backupDirectory);
-          this.props.showNotification(__('Wallet backed up'), 'success');
+          this.props.showNotification(
+            __('Wallet has been backed up'),
+            'success'
+          );
         } else {
           this.props.openErrorDialog({
             message: __('Connecting to Nexus Core'),

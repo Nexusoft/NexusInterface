@@ -140,7 +140,7 @@ const downloadRecent = {
     if (state.settings.manualDaemon) {
       store.dispatch(
         showNotification(
-          'Cannot bootstrap recent database in manual mode',
+          __('Cannot bootstrap recent database in manual mode'),
           'error'
         )
       );
@@ -148,7 +148,9 @@ const downloadRecent = {
     }
 
     if (!isCoreConnected(state)) {
-      store.dispatch(showNotification('Please wait for Nexus Core to start.'));
+      store.dispatch(
+        showNotification(__('Please wait for Nexus Core to start.'))
+      );
       return;
     }
 

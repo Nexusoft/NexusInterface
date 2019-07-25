@@ -200,7 +200,7 @@ class AddEditContactForm extends Component {
           <Field
             name="name"
             component={TextField.RF}
-            placeholder={__('Contact Name')}
+            placeholder={__('Contact name')}
             inputRef={this.inputRef}
           />
         </FormField>
@@ -212,7 +212,7 @@ class AddEditContactForm extends Component {
         {error && <div className="error mt1">{error}</div>}
 
         <div className="mt2">
-          <FormField connectLabel label={__('Email Address')}>
+          <FormField connectLabel label={__('Email address')}>
             <Field
               name="email"
               component={TextField.RF}
@@ -221,15 +221,15 @@ class AddEditContactForm extends Component {
             />
           </FormField>
 
-          <FormField connectLabel label={__('Phone Number')}>
+          <FormField connectLabel label={__('Phone number')}>
             <Field
               name="phoneNumber"
               component={TextField.RF}
-              placeholder={__('Phone Number')}
+              placeholder={__('Phone number')}
             />
           </FormField>
 
-          <FormField connectLabel label={__('Time Zone')}>
+          <FormField connectLabel label={__('Time zone')}>
             <Field
               name="timeZone"
               component={Select.RF}

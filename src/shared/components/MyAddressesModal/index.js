@@ -31,6 +31,7 @@ const Search = styled.div({
 
 const Buttons = styled.div({
   marginTop: '2em',
+  marginBottom: '1em',
 });
 
 /**

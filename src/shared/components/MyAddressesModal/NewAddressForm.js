@@ -90,7 +90,7 @@ class NewAddressForm extends React.Component {
         <Buttons>
           <Button onClick={finish}>{__('Cancel')}</Button>
           <Button type="submit" skin="primary" disabled={submitting}>
-            {__('Create Address')}
+            {__('New address')}
           </Button>
         </Buttons>
       </NewAddressFormComponent>

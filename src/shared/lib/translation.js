@@ -28,19 +28,3 @@ const translate =
   locale === 'en' ? engTranslate : (string, data) => polyglot.t(string, data);
 
 export { translate };
-
-// function joinKey(strings) {
-//   let key = '';
-//   strings.forEach((str, i) => {
-//     key += str + `{{${i + 1}}}`;
-//   });
-//   return key;
-// }
-
-// export function translate(strings, ...values) {
-//   const key = values.length ? joinKey(strings) : strings[0];
-//   const params = values.length
-//     ? values.reduce((obj, value, i) => ({ ...obj, [String(i)]: value }), {})
-//     : undefined;
-//   return polyglot.t(key, params);
-// }

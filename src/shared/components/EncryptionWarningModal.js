@@ -66,7 +66,7 @@ class EncryptionWarningModal extends React.Component {
               {__('Ignore')}
             </Button>
             <Button skin="primary" onClick={this.goToSecuritySettings}>
-              {__('Take me there')}
+              {__('Encrypt wallet')}
             </Button>
           </div>
         </Modal.Body>
