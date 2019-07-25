@@ -79,10 +79,7 @@ class StakingStatus extends React.Component {
         }
         style={{ textAlign: 'left' }}
       >
-        <StatusIcon
-          icon={stakingIcon}
-          className={staking ? undefined : 'dim'}
-        />
+        <StatusIcon icon={stakingIcon} style={{ opacity: staking ? 1 : 0.7 }} />
       </Tooltip.Trigger>
     );
   }
