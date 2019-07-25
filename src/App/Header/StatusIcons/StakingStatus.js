@@ -62,9 +62,6 @@ class StakingStatus extends React.Component {
             {staking && (
               <>
                 <div>
-                  {__('Stake Weight')}: {limitDecimal(stakeweight, 2)}%
-                </div>
-                <div>
                   {__('Stake Rate')}: {limitDecimal(stakerate, 2)}%
                 </div>
                 <div>
@@ -72,6 +69,9 @@ class StakingStatus extends React.Component {
                 </div>
                 <div>
                   {__('Block Weight')}: {limitDecimal(blockweight, 2)}%
+                </div>
+                <div>
+                  {__('Stake Weight')}: {limitDecimal(stakeweight, 2)}%
                 </div>
               </>
             )}
