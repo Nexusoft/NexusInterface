@@ -4,11 +4,11 @@ import { connect } from 'react-redux';
 
 // Internal Dependencies
 import Tooltip from 'components/Tooltip';
-import StatusIcon from 'components/StatusIcon';
 import { limitDecimal } from 'utils/etc';
 import { isStaking } from 'selectors';
-
 import stakingIcon from 'images/staking.sprite.svg';
+
+import StatusIcon from './StatusIcon';
 
 /**
  * Handles the Staking Status

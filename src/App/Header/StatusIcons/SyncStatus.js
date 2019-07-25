@@ -6,10 +6,10 @@ import styled from '@emotion/styled';
 // Internal Global Dependencies
 import { animations } from 'styles';
 import Tooltip from 'components/Tooltip';
-import StatusIcon from 'components/StatusIcon';
-
 import checkIcon from 'images/check.sprite.svg';
 import syncingIcon from 'images/syncing.sprite.svg';
+
+import StatusIcon from './StatusIcon';
 
 const SpinningIcon = styled(StatusIcon)({
   animation: `${animations.spin} 2s linear infinite`,

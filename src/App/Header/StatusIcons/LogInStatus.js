@@ -6,10 +6,10 @@ import { push } from 'connected-react-router';
 
 // Internal Dependencies
 import Tooltip from 'components/Tooltip';
-import StatusIcon from 'components/StatusIcon';
 import { isCoreConnected } from 'selectors';
 import { timing } from 'styles';
 import * as color from 'utils/color';
+import StatusIcon from './StatusIcon';
 
 // Images
 import questionMarkIcon from 'images/question-mark.sprite.svg';
