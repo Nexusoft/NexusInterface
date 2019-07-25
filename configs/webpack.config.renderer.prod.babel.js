@@ -3,7 +3,6 @@
  */
 
 import path from 'path';
-import webpack from 'webpack';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
@@ -12,6 +11,7 @@ import TerserPlugin from 'terser-webpack-plugin';
 
 import baseConfig from './webpack.config.base.renderer';
 import CheckNodeEnv from '../internals/scripts/CheckNodeEnv';
+import { babelLoaderRenderer } from './babelLoaderConfig';
 
 CheckNodeEnv('production');
 
@@ -25,6 +25,7 @@ export default merge.smart(baseConfig, {
 
   module: {
     rules: [
+      babelLoaderRenderer(),
       // Extract all .global.css to style.css as is
       {
         test: /\.global\.css$/,

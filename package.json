@@ -32,7 +32,6 @@
     "update-translations": "node ./internals/scripts/updateTranslations.js",
     "update-documentation": "./UpdateDocumentation.sh"
   },
-  "browserslist": "electron 5.0.6",
   "main": "./build/main.prod.js",
   "build": {
     "productName": "Nexus Wallet",
