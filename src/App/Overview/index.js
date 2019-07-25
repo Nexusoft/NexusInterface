@@ -15,6 +15,7 @@ import ContextMenuBuilder from 'contextmenu';
 import { getDifficulty } from 'actions/core';
 import * as helpers from 'scripts/helper.js';
 import { updateSettings } from 'actions/settings';
+import { limitDecimal } from 'utils/etc';
 import { timing, consts, animations } from 'styles';
 import { isCoreConnected } from 'selectors';
 import Globe from './Globe';
@@ -587,9 +588,7 @@ class Overview extends Component {
    * @memberof Overview
    */
   returnWeightStats = () => {
-    if (Object.keys(this.props.coreInfo).length === 0) {
-      return;
-    }
+    const { coreInfo } = this.props;
     return (
       <React.Fragment>
         <Stat>
@@ -597,7 +596,7 @@ class Overview extends Component {
           <div>
             <StatLabel>{__('Block Weight')}</StatLabel>
             <StatValue>
-              {this.waitForCore(this.props.coreInfo.blockweight.toFixed(4))}
+              {this.waitForCore(limitDecimal(coreInfo.blockweight, 2) + '%')}
             </StatValue>
           </div>
         </Stat>
@@ -607,7 +606,7 @@ class Overview extends Component {
           <div>
             <StatLabel>{__('Trust Weight')}</StatLabel>
             <StatValue>
-              {this.waitForCore(this.props.coreInfo.trustweight.toFixed(4))}
+              {this.waitForCore(limitDecimal(coreInfo.trustweight, 2) + '%')}
             </StatValue>
           </div>
         </Stat>
@@ -617,7 +616,7 @@ class Overview extends Component {
           <div>
             <StatLabel>{__('Stake Weight')}</StatLabel>
             <StatValue>
-              {this.waitForCore(this.props.coreInfo.stakeweight.toFixed(4))}
+              {this.waitForCore(limitDecimal(coreInfo.stakeweight, 2) + '%')}
             </StatValue>
           </div>
         </Stat>
@@ -769,7 +768,9 @@ class Overview extends Component {
             <MinimalStat>
               <StatLabel>{__('Stake Rate')}</StatLabel>
               <StatValue>
-                {this.waitForCore(interestweight || stakerate + '%')}
+                {this.waitForCore(
+                  limitDecimal(interestweight || stakerate, 2) + '%'
+                )}
               </StatValue>
             </MinimalStat>
 
@@ -935,7 +936,9 @@ class Overview extends Component {
             <div>
               <StatLabel>{__('Stake Rate')}</StatLabel>
               <StatValue>
-                {this.waitForCore(interestweight || stakerate + '%')}
+                {this.waitForCore(
+                  limitDecimal(interestweight || stakerate, 2) + '%'
+                )}
               </StatValue>
             </div>
           </Stat>
