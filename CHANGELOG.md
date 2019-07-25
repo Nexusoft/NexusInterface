@@ -9,6 +9,7 @@
 #### Adjustments
 
 - Stake Rate now rounded to 6 significant digits
+- Removed Trust on the category dropdown
 
 #### Fixes
 

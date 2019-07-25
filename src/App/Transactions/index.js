@@ -82,10 +82,6 @@ const categories = [
     value: 'genesis',
     display: <Text id="transactions.Genesis" />,
   },
-  {
-    value: 'trust',
-    display: <Text id="transactions.Trust" />,
-  },
 ];
 
 const timeFrames = [
@@ -1139,7 +1135,11 @@ class Transactions extends Component {
       tx =>
         tx &&
         ((tx.address == undefined &&
-          (tx.category == 'generate' || tx.category == 'immature'|| tx.category == 'trust'|| tx.category == 'stake')) ||
+          (tx.category == 'generate' ||
+            tx.category == 'immature' ||
+            tx.category == 'trust' ||
+            tx.category == 'stake' ||
+            tx.category == 'orphan')) ||
           (tx.address && tx.address.toLowerCase().includes(addressFilter)))
     );
   }
