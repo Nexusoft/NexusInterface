@@ -28,6 +28,15 @@ const reactOptimizePreset = [
   'babel-plugin-transform-react-pure-class-to-function',
 ];
 
+const presetEnv = [
+  '@babel/preset-env',
+  {
+    targets: { electron: require('electron/package.json').version },
+    useBuiltIns: 'usage',
+    corejs: require('core-js/package.json').version,
+  },
+];
+
 const devPlugins = [];
 
 const prodPlugins = ['babel-plugin-dev-expression'];
@@ -40,17 +49,7 @@ const rendererBabelConfig = hot => {
       ...stage0Preset,
       ...(development ? devPlugins : [...prodPlugins, ...reactOptimizePreset]),
     ],
-    presets: [
-      [
-        '@babel/preset-env',
-        {
-          targets: { electron: require('electron/package.json').version },
-          useBuiltIns: 'usage',
-          corejs: require('core-js/package.json').version,
-        },
-      ],
-      ['@babel/preset-react', { development }],
-    ],
+    presets: [presetEnv, ['@babel/preset-react', { development }]],
   };
 
   if (hot) {
@@ -61,16 +60,7 @@ const rendererBabelConfig = hot => {
 
 const mainBabelConfig = () => ({
   plugins: [...stage0Preset, ...(development ? devPlugins : prodPlugins)],
-  presets: [
-    [
-      '@babel/preset-env',
-      {
-        targets: { electron: require('electron/package.json').version },
-        useBuiltIns: 'usage',
-        corejs: require('core-js/package.json').version,
-      },
-    ],
-  ],
+  presets: [presetEnv],
 });
 
 const loaderConfig = options => ({

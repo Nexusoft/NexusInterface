@@ -126,7 +126,7 @@ class Contact extends React.PureComponent {
       });
     }
     template.push({
-      label: __('Delete Contact'),
+      label: __('Delete contact'),
       click: this.confirmDelete,
     });
     let contextMenu = remote.Menu.buildFromTemplate(template);
