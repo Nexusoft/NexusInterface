@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import Tooltip from 'components/Tooltip';
 import StatusIcon from 'components/StatusIcon';
 import { limitDecimal } from 'utils/etc';
+import { isStaking } from 'selectors';
 
 import stakingIcon from 'images/staking.sprite.svg';
 
@@ -15,19 +16,23 @@ import stakingIcon from 'images/staking.sprite.svg';
  * @class StakingStatus
  * @extends {React.Component}
  */
-@connect(
-  ({
+@connect(state => {
+  const {
     core: {
       info: { stakeweight, stakerate, trustweight, blockweight },
     },
-  }) => ({
+  } = state;
+  return {
+    staking: isStaking(state),
     stakeweight,
     stakerate,
     trustweight,
     blockweight,
-  })
-)
+  };
+})
 class StakingStatus extends React.Component {
+  renderTooltip = () => {};
+
   /**
    * Component's Renderable JSX
    *
@@ -35,29 +40,49 @@ class StakingStatus extends React.Component {
    * @memberof StakingStatus
    */
   render() {
-    const { stakeweight, stakerate, trustweight, blockweight } = this.props;
+    const {
+      staking,
+      stakeweight,
+      stakerate,
+      trustweight,
+      blockweight,
+    } = this.props;
 
     return (
       <Tooltip.Trigger
         tooltip={
-          <div>
+          <>
             <div>
-              {__('Stake Weight')}: {limitDecimal(stakeweight, 2)}%
+              {staking ? (
+                <strong>{__('Wallet is staking')}</strong>
+              ) : (
+                __('Wallet is not staking')
+              )}
             </div>
-            <div>
-              {__('Stake Rate')}: {limitDecimal(stakerate, 2)}%
-            </div>
-            <div>
-              {__('Trust Weight')}: {limitDecimal(trustweight, 2)}%
-            </div>
-            <div>
-              {__('Block Weight')}: {limitDecimal(blockweight, 2)}%
-            </div>
-          </div>
+            {staking && (
+              <>
+                <div>
+                  {__('Stake Weight')}: {limitDecimal(stakeweight, 2)}%
+                </div>
+                <div>
+                  {__('Stake Rate')}: {limitDecimal(stakerate, 2)}%
+                </div>
+                <div>
+                  {__('Trust Weight')}: {limitDecimal(trustweight, 2)}%
+                </div>
+                <div>
+                  {__('Block Weight')}: {limitDecimal(blockweight, 2)}%
+                </div>
+              </>
+            )}
+          </>
         }
         style={{ textAlign: 'left' }}
       >
-        <StatusIcon icon={stakingIcon} />
+        <StatusIcon
+          icon={stakingIcon}
+          className={staking ? undefined : 'dim'}
+        />
       </Tooltip.Trigger>
     );
   }
