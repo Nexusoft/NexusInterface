@@ -874,7 +874,14 @@ class Overview extends Component {
             </div>
           </Stat>
 
-          <Tooltip.Trigger position="left" tooltip={this.blockDate()}>
+          <Tooltip.Trigger
+            position="left"
+            tooltip={
+              <div style={{ textAlign: 'center' }}>
+                {__('Last updated\n%{time}', { time: this.blockDate() })}
+              </div>
+            }
+          >
             <Stat className="relative">
               <StatIcon icon={nxsblocksIcon} />
               <div>

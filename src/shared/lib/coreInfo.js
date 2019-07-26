@@ -4,6 +4,7 @@ import { isCoreConnected } from 'selectors';
 import { loadMyAccounts } from 'actions/account';
 import { showNotification } from 'actions/overlays';
 import { bootstrap } from 'actions/bootstrap';
+import { BlockDate } from 'actions/setupApp';
 import { getInfo } from 'actions/core';
 import showDesktopNotif from 'utils/showDesktopNotif';
 import { showEncryptionWarningModal } from 'actions/setupApp';
@@ -116,6 +117,15 @@ export function initializeCoreInfo() {
         info.synccomplete < 50
       ) {
         store.dispatch(bootstrap({ suggesting: true }));
+      }
+    }
+  );
+
+  observeStore(
+    ({ core: { info } }) => info && info.blocks,
+    blocks => {
+      if (blocks) {
+        store.dispatch(BlockDate(new Date()));
       }
     }
   );
