@@ -1,9 +1,11 @@
+import React from 'react';
 import fs from 'fs';
 import path from 'path';
 import Polyglot from 'node-polyglot';
 
 import { assetsDir } from 'consts/paths';
 import { LoadSettings } from 'lib/settings';
+import { escapeRegExp } from 'utils/etc';
 
 const locales = ['de', 'es', 'fr', 'ja', 'ko', 'nl', 'pl', 'pt', 'ru'];
 const { locale: loc } = LoadSettings();
@@ -24,7 +26,45 @@ const polyglot = new Polyglot({
   onMissingKey: engTranslate,
 });
 
-const translate =
+const rawTranslate =
   locale === 'en' ? engTranslate : (string, data) => polyglot.t(string, data);
 
-export { translate };
+function inject(string, injections) {
+  if (injections) {
+    // Process from the first match in the string
+    let firstMatch = null;
+    for (let key in injections) {
+      const escaped = escapeRegExp(String(key));
+      const regex = new RegExp(`<${escaped}>(.*?)<\/${escaped}>`, 'm');
+      const match = string.match(regex);
+      if (match && (!firstMatch || match.index < firstMatch.index)) {
+        firstMatch = { ...match, key };
+      }
+    }
+    if (firstMatch) {
+      const before = string.slice(0, firstMatch.index);
+      const after = string.slice(firstMatch.index + firstMatch[0].length);
+      const inner = inject(firstMatch[1], injections);
+      const injection = injections[firstMatch.key];
+      const replacement =
+        typeof injection === 'function'
+          ? injection(inner)
+          : injection
+          ? inner
+          : '';
+      return (
+        <>
+          {before}
+          {replacement}
+          {inject(after, injections)}
+        </>
+      );
+    }
+  }
+  return string;
+}
+
+const translate = (string, data, injections) =>
+  inject(rawTranslate(string, data), injections);
+
+export default translate;

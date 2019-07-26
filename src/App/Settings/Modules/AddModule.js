@@ -143,43 +143,6 @@ class AddModule extends React.Component {
     }
   };
 
-  msgToReact = msg => {
-    const [t1, archiveFile] = /#fls#(.*)#fle#/.exec(msg) || [];
-    const [t2, directory] = /#dls#(.*)#dle#/.exec(msg) || [];
-    if (archiveFile && directory) {
-      const string = msg.replace(t1, '|#f#|').replace(t2, '|#d#|');
-      const segments = string.split('|');
-      return segments.map(t =>
-        t === '#f#' ? (
-          <Button skin="hyperlink" onClick={this.browseFiles}>
-            {archiveFile}
-          </Button>
-        ) : t === '#d#' ? (
-          <Button skin="hyperlink" onClick={this.browseDirectories}>
-            {directory}
-          </Button>
-        ) : (
-          t
-        )
-      );
-    } else {
-      return null;
-    }
-  };
-
-  getSelectModuleMsg = () => {
-    const msg = __(
-      'Select module %{fls}archive file%{fle} or %{dls}directory%{dle}',
-      {
-        fls: '#fls#',
-        fle: '#fle#',
-        dls: '#dls#',
-        dle: '#dle#',
-      }
-    );
-    return this.msgToReact(msg);
-  };
-
   /**
    * Component's Renderable JSX
    *
@@ -215,7 +178,27 @@ class AddModule extends React.Component {
                 <div>{__('Drop here to install')}</div>
               ) : (
                 <div>
-                  <div>{this.getSelectModuleMsg()}</div>
+                  <div>
+                    {__(
+                      'Select module <file>archive file</file> or <dir>directory</dir>',
+                      undefined,
+                      {
+                        file: txt => (
+                          <Button skin="hyperlink" onClick={this.browseFiles}>
+                            {txt}
+                          </Button>
+                        ),
+                        dir: txt => (
+                          <Button
+                            skin="hyperlink"
+                            onClick={this.browseDirectories}
+                          >
+                            {txt}
+                          </Button>
+                        ),
+                      }
+                    )}
+                  </div>
                   <div>{__('or drag and drop it here')}</div>
                 </div>
               )}

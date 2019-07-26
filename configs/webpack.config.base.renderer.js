@@ -54,7 +54,7 @@ export default merge.smart(baseConfig, {
     new webpack.ProvidePlugin({
       __: [
         path.join(process.cwd(), 'src', 'shared', 'lib', 'translation.js'),
-        'translate',
+        'default',
       ],
     }),
   ],
