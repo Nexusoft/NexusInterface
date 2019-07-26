@@ -231,7 +231,7 @@ class SettingsStyle extends Component {
             response.pipe(file);
             let onFinish = () => {
               file.close(response => {
-                console.log('FInished Downloading');
+                console.log('Finished Downloading');
                 this.setWallpaper(file.path);
               });
             };
@@ -417,8 +417,8 @@ class SettingsStyle extends Component {
         </SettingsField>
 
         <SettingsField
-          label="Nexus Addresses format"
-          subLabel="Choose your Nexus Address display preference"
+          label={__('Nexus Addresses format')}
+          subLabel={__('Choose your Nexus Address display preference')}
         >
           <div>
             <Select
@@ -430,16 +430,18 @@ class SettingsStyle extends Component {
           <div className="mt1">
             <NexusAddress
               address={this.state.sampleAddress}
-              label="Sample Address"
+              label={__('Sample Address')}
             />
             <AddressStyleNote>
               <Icon icon={warningIcon} className="space-right" />
-              <span className="v-align">This is your Default Address</span>
+              <span className="v-align">
+                {__('This is your Default Address')}
+              </span>
             </AddressStyleNote>
           </div>
         </SettingsField>
 
-        <SettingsField label="Theme" subLabel="Select Wallet Theme">
+        <SettingsField label={__('Theme')} subLabel={__('Select Wallet Theme')}>
           <ThemePicker
             parentTheme={theme}
             darkCallback={this.pressDarkTheme}

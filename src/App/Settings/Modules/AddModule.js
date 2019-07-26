@@ -180,7 +180,7 @@ class AddModule extends React.Component {
                 <div>
                   <div>
                     {__(
-                      'Select module <file>archive file</file> or <dir>directory</dir>',
+                      "Select module's <file>archive file</file> or <dir>directory</dir>",
                       undefined,
                       {
                         file: txt => (
