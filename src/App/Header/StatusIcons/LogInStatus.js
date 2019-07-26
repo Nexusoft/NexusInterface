@@ -104,8 +104,8 @@ class LogInStatus extends Component {
               unlockDate,
             },
             {
-              if_timed: txt => (unlocked_until ? txt : ''),
-              if_minting_only: txt => (minting_only ? txt : ''),
+              if_timed: !!unlocked_until,
+              if_minting_only: !!minting_only,
             }
           )}
         </>
