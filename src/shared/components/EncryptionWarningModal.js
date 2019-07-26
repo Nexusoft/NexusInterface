@@ -58,7 +58,9 @@ class EncryptionWarningModal extends React.Component {
           <WarningIcon icon={warningIcon} />
           <WarningMessage>{__('Your wallet is not encrypted!')}</WarningMessage>
           <p>
-            {__('You really should encrypt your wallet to keep your NXS safe.')}
+            {__(
+              'It is highly recommended that you should encrypt your wallet to keep your NXS safe.'
+            )}
           </p>
           <br />
           <div className="flex space-between">
