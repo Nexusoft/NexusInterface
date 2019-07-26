@@ -14,7 +14,7 @@ import Tooltip from 'components/Tooltip';
 import ContextMenuBuilder from 'contextmenu';
 import { getDifficulty } from 'actions/core';
 import { updateSettings } from 'actions/settings';
-import { formatNumber, formatPercent, formatCurrency } from 'lib/intl';
+import { formatNumber, formatCurrency } from 'lib/intl';
 import { timing, consts } from 'styles';
 import { isCoreConnected } from 'selectors';
 import Globe from './Globe';
@@ -666,14 +666,14 @@ class Overview extends Component {
                 {__('24hr Change')} ({fiatCurrency} %)
               </StatLabel>
               <StatValue>
-                {market ? (
+                {market && typeof market.changePct24Hr === 'number' ? (
                   <>
                     {market.changePct24Hr > 0
                       ? '+ '
                       : market.changePct24Hr < 0
                       ? '- '
                       : ''}
-                    {formatPercent(market.changePct24Hr)}
+                    {formatNumber(market.changePct24Hr, 2) + '%'}
                   </>
                 ) : (
                   <span className="dim">-</span>
@@ -837,8 +837,15 @@ class Overview extends Component {
                 {__('24hr Change')} ({fiatCurrency} %)
               </StatLabel>
               <StatValue>
-                {market ? (
-                  formatPercent(market.changePct24Hr)
+                {market && typeof market.changePct24Hr === 'number' ? (
+                  <>
+                    {market.changePct24Hr > 0
+                      ? '+ '
+                      : market.changePct24Hr < 0
+                      ? '- '
+                      : ''}
+                    {formatNumber(market.changePct24Hr, 2) + '%'}
+                  </>
                 ) : (
                   <span className="dim">-</span>
                 )}
