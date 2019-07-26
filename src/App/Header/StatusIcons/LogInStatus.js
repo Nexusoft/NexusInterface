@@ -98,11 +98,16 @@ class LogInStatus extends Component {
         });
       return (
         <>
-          {__('Logged in')}
-          {!!unlocked_until && (
-            <> {__('until %{unlockDate}', { unlockDate })}</>
+          {__(
+            'Logged in<if_timed> until %{unlockDate}</if_timed><if_minting_only> for staking & mining</if_minting_only>',
+            {
+              unlockDate,
+            },
+            {
+              if_timed: txt => (unlocked_until ? txt : ''),
+              if_minting_only: txt => (minting_only ? txt : ''),
+            }
           )}
-          {!!minting_only && <> {__('for staking & mining')}</>}
         </>
       );
     }
