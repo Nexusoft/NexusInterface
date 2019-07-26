@@ -21,28 +21,17 @@ const SpinningIcon = styled(StatusIcon)({
  * @class SyncStatus
  * @extends {React.Component}
  */
-@connect(
-  ({
-    core: {
-      info: { blocks, synccomplete },
-    },
-    common: { highestPeerBlock },
-  }) => {
-    const synccompleteUnknown =
-      (!synccomplete && synccomplete !== 0) ||
-      synccomplete < 0 ||
-      synccomplete > 100;
-    return {
-      syncUnknown: synccompleteUnknown && !highestPeerBlock,
-      synchronizing: synccomplete !== 100 || highestPeerBlock > blocks,
-      percentSynced: !synccompleteUnknown
-        ? synccomplete
-        : highestPeerBlock
-        ? Math.floor((100 * blocks) / highestPeerBlock)
-        : 0,
-    };
-  }
-)
+@connect(({ core: { info: { synccomplete } } }) => {
+  const syncUnknown =
+    (!synccomplete && synccomplete !== 0) ||
+    synccomplete < 0 ||
+    synccomplete > 100;
+  return {
+    syncUnknown,
+    synchronizing: synccomplete !== 100,
+    percentSynced: !syncUnknown ? synccomplete : 0,
+  };
+})
 class SyncStatus extends React.Component {
   /**
    * Component's Renderable JSX

@@ -101,16 +101,15 @@ const formatDiff = diff => (diff || 0).toFixed(3);
 const mapStateToProps = state => {
   const {
     core: { info, difficulty },
-    common: { blockDate, rawNXSvalues, displayNXSvalues, highestPeerBlock },
+    common: { blockDate, rawNXSvalues, displayNXSvalues },
     settings,
     theme,
   } = state;
   const { synccomplete, blocks } = info;
   const syncUnknown =
-    ((!synccomplete && synccomplete !== 0) ||
-      synccomplete < 0 ||
-      synccomplete > 100) &&
-    !highestPeerBlock;
+    (!synccomplete && synccomplete !== 0) ||
+    synccomplete < 0 ||
+    synccomplete > 100;
   const displayValues =
     displayNXSvalues &&
     displayNXSvalues.find(e => e.name === settings.fiatCurrency);
@@ -126,8 +125,7 @@ const mapStateToProps = state => {
     settings,
     theme,
     coreInfo: info,
-    synchronizing:
-      !syncUnknown && (synccomplete !== 100 || highestPeerBlock > blocks),
+    synchronizing: !syncUnknown && synccomplete !== 100,
   };
 };
 const mapDispatchToProps = dispatch => ({

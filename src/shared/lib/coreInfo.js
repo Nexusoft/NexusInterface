@@ -6,11 +6,7 @@ import { showNotification } from 'actions/overlays';
 import { bootstrap } from 'actions/bootstrap';
 import { getInfo } from 'actions/core';
 import showDesktopNotif from 'utils/showDesktopNotif';
-import {
-  showEncryptionWarningModal,
-  SetHighestPeerBlock,
-  BlockDate,
-} from 'actions/setupApp';
+import { showEncryptionWarningModal } from 'actions/setupApp';
 
 const incStep = 1000;
 const maxTime = 10000;
@@ -110,38 +106,16 @@ export function initializeCoreInfo() {
   );
 
   observeStore(
-    ({ core: { info } }) => info && info.blocks,
-    async blocks => {
+    ({ core: { info } }) => info,
+    info => {
       const state = store.getState();
-
-      if (blocks) {
-        store.dispatch(BlockDate(new Date()));
-
-        // TODO: Legacy method, should drop support in a few versions
-        const peerresponse = await rpc('getpeerinfo', []);
-        if (peerresponse) {
-          const highestPeerBlock = peerresponse.reduce(
-            (highest, element) =>
-              element.height >= highest ? element.height : highest,
-            0
-          );
-          store.dispatch(SetHighestPeerBlock(highestPeerBlock));
-
-          const {
-            settings: { manualDaemon, bootstrapSuggestionDisabled },
-          } = state;
-          // 172800 = (100 * 24 * 60 * 60) / 50
-          // which is the approximate number of blocks produced in 100 days
-          const isFarBehind = highestPeerBlock - blocks > 172800;
-          if (
-            isFarBehind &&
-            !bootstrapSuggestionDisabled &&
-            !manualDaemon &&
-            isCoreConnected(state)
-          ) {
-            store.dispatch(bootstrap({ suggesting: true }));
-          }
-        }
+      if (
+        isCoreConnected(state) &&
+        !state.settings.bootstrapSuggestionDisabled &&
+        !state.settings.manualDaemon &&
+        info.synccomplete < 50
+      ) {
+        store.dispatch(bootstrap({ suggesting: true }));
       }
     }
   );
