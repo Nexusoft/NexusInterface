@@ -15,8 +15,8 @@ import ContextMenuBuilder from 'contextmenu';
 import { getDifficulty } from 'actions/core';
 import * as helpers from 'scripts/helper.js';
 import { updateSettings } from 'actions/settings';
-import { limitDecimal } from 'utils/etc';
-import { timing, consts, animations } from 'styles';
+import { formatNumber, formatCurrency } from 'lib/intl';
+import { timing, consts } from 'styles';
 import { isCoreConnected } from 'selectors';
 import Globe from './Globe';
 import { webGLAvailable } from 'consts/misc';
@@ -496,19 +496,9 @@ class Overview extends Component {
         });
       }
 
-      let currencyValue =
-        this.props.coreInfo.balance * selectedCurrancyValue[0].price;
-      if (currencyValue === 0) {
-        currencyValue = `${currencyValue}.00`;
-      } else {
-        currencyValue = currencyValue.toFixed(2);
-      }
-
-      return `${helpers.ReturnCurrencySymbol(
-        this.props.settings.fiatCurrency
-      )} ${currencyValue}`;
+      return this.props.coreInfo.balance * selectedCurrancyValue[0].price;
     } else {
-      return '$0';
+      return 0;
     }
   }
 
@@ -596,7 +586,7 @@ class Overview extends Component {
           <div>
             <StatLabel>{__('Block Weight')}</StatLabel>
             <StatValue>
-              {this.waitForCore(limitDecimal(coreInfo.blockweight, 2) + '%')}
+              {this.waitForCore(formatNumber(coreInfo.blockweight, 2) + '%')}
             </StatValue>
           </div>
         </Stat>
@@ -606,7 +596,7 @@ class Overview extends Component {
           <div>
             <StatLabel>{__('Trust Weight')}</StatLabel>
             <StatValue>
-              {this.waitForCore(limitDecimal(coreInfo.trustweight, 2) + '%')}
+              {this.waitForCore(formatNumber(coreInfo.trustweight, 2) + '%')}
             </StatValue>
           </div>
         </Stat>
@@ -616,7 +606,7 @@ class Overview extends Component {
           <div>
             <StatLabel>{__('Stake Weight')}</StatLabel>
             <StatValue>
-              {this.waitForCore(limitDecimal(coreInfo.stakeweight, 2) + '%')}
+              {this.waitForCore(formatNumber(coreInfo.stakeweight, 2) + '%')}
             </StatValue>
           </div>
         </Stat>
@@ -702,6 +692,7 @@ class Overview extends Component {
       theme,
       synchronizing,
     } = this.props;
+    const { fiatCurrency } = settings;
     if (settings.overviewDisplay === 'none') {
       return <OverviewPage />;
     }
@@ -718,15 +709,17 @@ class Overview extends Component {
                 {/* )} */}
                 (NXS) :
               </StatLabel>
-              <StatValue>{this.waitForCore(balance)}</StatValue>
+              <StatValue>{this.waitForCore(formatNumber(balance))}</StatValue>
             </MinimalStat>
             {/* + (stake || 0) */}
             <MinimalStat>
               <StatLabel>
-                {__('Balance')} ({settings.fiatCurrency})
+                {__('Balance')} ({fiatCurrency})
               </StatLabel>
               <StatValue>
-                {this.waitForCore(this.calculateFiatvalue())}
+                {this.waitForCore(
+                  formatCurrency(this.calculateFiatvalue(), fiatCurrency)
+                )}
               </StatValue>
             </MinimalStat>
 
@@ -737,7 +730,7 @@ class Overview extends Component {
 
             <MinimalStat>
               <StatLabel>
-                {__('Market Price')} ({settings.fiatCurrency})
+                {__('Market Price')} ({fiatCurrency})
               </StatLabel>
               <StatValue>
                 {!!displayNXSvalues[0] ? (
@@ -750,7 +743,7 @@ class Overview extends Component {
 
             <MinimalStat>
               <StatLabel>
-                {__('24hr Change')} ({settings.fiatCurrency} %)
+                {__('24hr Change')} ({fiatCurrency} %)
               </StatLabel>
               <StatValue>
                 {!!displayNXSvalues[0] ? (
@@ -769,7 +762,7 @@ class Overview extends Component {
               <StatLabel>{__('Stake Rate')}</StatLabel>
               <StatValue>
                 {this.waitForCore(
-                  limitDecimal(interestweight || stakerate, 2) + '%'
+                  formatNumber(interestweight || stakerate, 2) + '%'
                 )}
               </StatValue>
             </MinimalStat>
@@ -823,21 +816,23 @@ class Overview extends Component {
                 )}{' '}
                 <span className="v-align">
                   {__('Balance')} (
-                  {settings.displayFiatBalance ? settings.fiatCurrency : 'NXS'})
+                  {settings.displayFiatBalance ? fiatCurrency : 'NXS'})
                 </span>
               </StatLabel>
               <StatValue>
                 {settings.overviewDisplay === 'balHidden'
                   ? '-'
                   : settings.displayFiatBalance
-                  ? this.waitForCore(this.calculateFiatvalue())
-                  : this.waitForCore(balance)}
+                  ? this.waitForCore(
+                      formatCurrency(this.calculateFiatvalue(), fiatCurrency)
+                    )
+                  : this.waitForCore(formatNumber(balance))}
               </StatValue>
             </div>
             <StatIcon
               icon={
                 settings.displayFiatBalance
-                  ? CurrencyIcon(this.props.settings.fiatCurrency)
+                  ? CurrencyIcon(this.props.fiatCurrency)
                   : logoIcon
               }
             />
@@ -872,7 +867,7 @@ class Overview extends Component {
           >
             <div>
               <StatLabel>
-                {__('Market Price')} ({settings.fiatCurrency})
+                {__('Market Price')} ({fiatCurrency})
               </StatLabel>
               <StatValue>
                 {!!displayNXSvalues[0] ? (
@@ -890,7 +885,7 @@ class Overview extends Component {
           >
             <div>
               <StatLabel>
-                {__('Market Cap')} ({settings.fiatCurrency})
+                {__('Market Cap')} ({fiatCurrency})
               </StatLabel>
               <StatValue>
                 {!!displayNXSvalues[0] ? (
@@ -908,7 +903,7 @@ class Overview extends Component {
           >
             <div>
               <StatLabel>
-                {__('24hr Change')} ({settings.fiatCurrency} %)
+                {__('24hr Change')} ({fiatCurrency} %)
               </StatLabel>
               <StatValue>
                 {!!displayNXSvalues[0] ? (
@@ -937,7 +932,7 @@ class Overview extends Component {
               <StatLabel>{__('Stake Rate')}</StatLabel>
               <StatValue>
                 {this.waitForCore(
-                  limitDecimal(interestweight || stakerate, 2) + '%'
+                  formatNumber(interestweight || stakerate, 2) + '%'
                 )}
               </StatValue>
             </div>

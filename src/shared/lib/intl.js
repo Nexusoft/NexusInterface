@@ -67,4 +67,18 @@ function inject(string, injections) {
 const translate = (string, data, injections) =>
   inject(rawTranslate(string, data), injections);
 
-export default translate;
+export { translate };
+
+export const formatNumber = (num, maxDecimalDigits) =>
+  new Intl.NumberFormat(locale, {
+    maximumFractionDigits: maxDecimalDigits,
+  }).format(num);
+
+export const formatCurrency = (num, currency = 'USD') =>
+  new Intl.NumberFormat(locale, { style: 'currency', currency }).format(num);
+
+export const formatPercent = (num, maxDecimalDigits) =>
+  new Intl.NumberFormat(locale, {
+    style: 'percent',
+    maximumFractionDigits: maxDecimalDigits,
+  }).format(num);

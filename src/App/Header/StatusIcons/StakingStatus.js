@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 // Internal Dependencies
 import Tooltip from 'components/Tooltip';
-import { limitDecimal } from 'utils/etc';
+import { formatPercent } from 'lib/intl';
 import { isStaking } from 'selectors';
 import stakingIcon from 'images/staking.sprite.svg';
 
@@ -62,16 +62,16 @@ class StakingStatus extends React.Component {
             {staking && (
               <>
                 <div>
-                  {__('Stake Rate')}: {limitDecimal(stakerate, 2)}%
+                  {__('Stake Rate')}: {formatPercent(stakerate)}%
                 </div>
                 <div>
-                  {__('Trust Weight')}: {limitDecimal(trustweight, 2)}%
+                  {__('Trust Weight')}: {formatPercent(trustweight)}%
                 </div>
                 <div>
-                  {__('Block Weight')}: {limitDecimal(blockweight, 2)}%
+                  {__('Block Weight')}: {formatPercent(blockweight)}%
                 </div>
                 <div>
-                  {__('Stake Weight')}: {limitDecimal(stakeweight, 2)}%
+                  {__('Stake Weight')}: {formatPercent(stakeweight)}%
                 </div>
               </>
             )}
