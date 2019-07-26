@@ -21,7 +21,7 @@ import {
 } from 'actions/overlays';
 import extractTarball from 'utils/promisified/extractTarball';
 import sleep from 'utils/promisified/sleep';
-import { throttled } from 'utils/etc';
+import { throttled } from 'utils/misc';
 
 const fileLocation = path.join(walletDataDir, 'recent.tar.gz');
 const extractDest = path.join(coreDataDir, 'recent');
@@ -43,7 +43,9 @@ export const bootstrapEvents = new EventEmitter();
  */
 export function initializeBootstrapEvents({ dispatch }) {
   bootstrapEvents.on('abort', () =>
-    dispatch(showNotification(__('Bootstrap process has been aborted'), 'error'))
+    dispatch(
+      showNotification(__('Bootstrap process has been aborted'), 'error')
+    )
   );
   bootstrapEvents.on('error', err =>
     dispatch(

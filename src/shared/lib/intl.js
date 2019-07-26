@@ -5,7 +5,7 @@ import Polyglot from 'node-polyglot';
 
 import { assetsDir } from 'consts/paths';
 import { LoadSettings } from 'lib/settings';
-import { escapeRegExp } from 'utils/etc';
+import { escapeRegExp } from 'utils/misc';
 
 const locales = ['de', 'es', 'fr', 'ja', 'ko', 'nl', 'pl', 'pt', 'ru'];
 const { locale: loc } = LoadSettings();

@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 
 // Internal
 import { timing } from 'styles';
-import { newUID } from 'utils/etc';
+import { newUID } from 'utils/misc';
 import * as color from 'utils/color';
 
 const Option = styled.label(
