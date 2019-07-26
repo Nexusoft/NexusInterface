@@ -35,7 +35,7 @@ export default {
    */
   resolve: {
     extensions: ['.js', '.jsx', '.json'],
-    modules: ['shared', 'node_modules'],
+    modules: [path.join(process.cwd(), 'src/shared'), 'node_modules'],
   },
 
   plugins: [
