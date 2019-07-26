@@ -12,7 +12,6 @@ import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
 import InputGroup from 'components/InputGroup';
 import { openErrorDialog, showNotification } from 'actions/overlays';
-import Text from 'components/Text';
 import rpc from 'lib/rpc';
 import copyIcon from 'images/copy.sprite.svg';
 import { rpcErrorHandler } from 'utils/form';
@@ -37,7 +36,7 @@ import { rpcErrorHandler } from 'utils/form';
   validate: ({ address }) => {
     const errors = {};
     if (!address) {
-      errors.address = <Text id="Settings.Errors.AddressEmpty" />;
+      errors.address = __('Address cannot be empty');
     }
     return errors;
   },
@@ -45,7 +44,7 @@ import { rpcErrorHandler } from 'utils/form';
   onSubmitSuccess: (result, dispatch, props) => {
     props.change('privateKey', result);
   },
-  onSubmitFail: rpcErrorHandler(<Text id="Settings.Errors.ViewPrivKey" />),
+  onSubmitFail: rpcErrorHandler(__('Error getting private key')),
 })
 class ViewPrivKeyForAddress extends Component {
   privKeyRef = React.createRef();
@@ -83,7 +82,7 @@ class ViewPrivKeyForAddress extends Component {
   copyPrivkey = () => {
     const privKey = this.privKeyRef.current.value;
     clipboard.writeText(privKey);
-    this.props.showNotification(<Text id="Alert.Copied" />, 'success');
+    this.props.showNotification(__('Copied to clipboard'), 'success');
   };
 
   /**
@@ -105,21 +104,17 @@ class ViewPrivKeyForAddress extends Component {
     const { handleSubmit, submitting } = this.props;
     return (
       <form onSubmit={handleSubmit}>
-        <FieldSet legend={<Text id="Settings.ViewPrivateKeyForAddress" />}>
-          <FormField connectLabel label={<Text id="Settings.Address" />}>
+        <FieldSet legend={__('View private key for address')}>
+          <FormField connectLabel label={__('Address')}>
             {inputId => (
               <InputGroup>
-                <Text id="Settings.EnterAddressHere">
-                  {placeholder => (
-                    <Field
-                      component={TextField.RF}
-                      name="address"
-                      id={inputId}
-                      placeholder={placeholder}
-                      onChange={this.resetPrivateKey}
-                    />
-                  )}
-                </Text>
+                <Field
+                  component={TextField.RF}
+                  name="address"
+                  id={inputId}
+                  placeholder={__('Enter address here')}
+                  onChange={this.resetPrivateKey}
+                />
 
                 <Button
                   type="submit"
@@ -128,29 +123,25 @@ class ViewPrivKeyForAddress extends Component {
                   disabled={submitting}
                   waiting={submitting}
                 >
-                  <Text id="Settings.ViewPrivateKey" />
+                  {__('View private key')}
                 </Button>
               </InputGroup>
             )}
           </FormField>
 
-          <FormField label={<Text id="Settings.PrivateKey" />}>
+          <FormField label={__('Private key')}>
             <InputGroup>
-              <Text id="Settings.KeyDisplayHere">
-                {placeholder => (
-                  <Field
-                    component={TextField.RF}
-                    name="privateKey"
-                    readOnly
-                    type="password"
-                    placeholder={placeholder}
-                    ref={this.privKeyRef}
-                  />
-                )}
-              </Text>
+              <Field
+                component={TextField.RF}
+                name="privateKey"
+                readOnly
+                type="password"
+                placeholder={__('Private key will be displayed here')}
+                ref={this.privKeyRef}
+              />
               <Button fitHeight className="relative" onClick={this.copyPrivkey}>
                 <Icon icon={copyIcon} className="space-right" />
-                <Text id="Settings.Copy" />
+                {__('Copy')}
               </Button>
             </InputGroup>
           </FormField>

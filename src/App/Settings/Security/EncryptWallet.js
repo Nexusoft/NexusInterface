@@ -5,7 +5,6 @@ import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
 
 // Internal
-import Text from 'components/Text';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import Button from 'components/Button';
@@ -53,17 +52,19 @@ const Characters = styled.span({
   validate: ({ password, passwordRepeat }) => {
     const errors = {};
     if (!password) {
-      errors.password = <Text id="Settings.Errors.PasswordRequired" />;
+      errors.password = __('Password is required');
     }
     if (passwordInvalidChars.test(password)) {
-      errors.password = <Text id="Settings.Errors.PasswordInvalidChars" />;
+      errors.password = __(
+        __('Password cannot contain these characters:') + ' - $ / & * | < >'
+      );
     } else if (!password || password.length < 8) {
-      errors.password = <Text id="Settings.Errors.PasswordMinLength" />;
+      errors.password = __('Password must be at least 8 characters');
     } else if (password !== password.trim()) {
-      errors.password = <Text id="Settings.Errors.PasswordSpaces" />;
+      errors.password = __('Password cannot start or end with spaces');
     }
     if (passwordRepeat !== password) {
-      errors.passwordRepeat = <Text id="Settings.Errors.PasswordsNoMatch" />;
+      errors.passwordRepeat = __('Passwords do not match');
     }
     return errors;
   },
@@ -71,7 +72,7 @@ const Characters = styled.span({
   onSubmitSuccess: (result, dispatch, props) => {
     props.reset();
     props.openSuccessDialog({
-      message: <Text id="Alert.WalletHasBeenEncrypted" />,
+      message: __('Wallet has been encrypted.'),
       onClose: () => {
         // In some old version, core stops after wallet is encrypted
         // So start the core here for legacy support
@@ -79,7 +80,7 @@ const Characters = styled.span({
       },
     });
   },
-  onSubmitFail: rpcErrorHandler(<Text id="Settings.Errors.EncryptingWallet" />),
+  onSubmitFail: rpcErrorHandler(__('Error encrypting wallet')),
 })
 class EncryptWallet extends Component {
   /**
@@ -92,36 +93,28 @@ class EncryptWallet extends Component {
     const { handleSubmit, submitting } = this.props;
     return (
       <EncryptWalletForm onSubmit={handleSubmit}>
-        <FieldSet legend={<Text id="Settings.EncryptWallet" />}>
+        <FieldSet legend={__('Encrypt wallet')}>
           <Note>
-            <Text id="Settings.CannotContain" />
-            :<br />
+            {__('Password cannot contain these characters:')}
+            <br />
             <Characters>{' -$/&*|<>'}</Characters>
           </Note>
-          <Text id="Settings.NewPassword">
-            {p => (
-              <FormField connectLabel label={<Text id="Settings.Password" />}>
-                <Field
-                  component={TextField.RF}
-                  name="password"
-                  type="password"
-                  placeholder={p}
-                />
-              </FormField>
-            )}
-          </Text>
-          <Text id="Settings.ConfirmPassword">
-            {text => (
-              <FormField connectLabel label={<Text id="Settings.Re-Enter" />}>
-                <Field
-                  component={TextField.RF}
-                  name="passwordRepeat"
-                  type="password"
-                  placeholder={text}
-                />
-              </FormField>
-            )}
-          </Text>
+          <FormField connectLabel label={__('Password')}>
+            <Field
+              component={TextField.RF}
+              name="password"
+              type="password"
+              placeholder={__('New password')}
+            />
+          </FormField>
+          <FormField connectLabel label={__('Re-enter password')}>
+            <Field
+              component={TextField.RF}
+              name="passwordRepeat"
+              type="password"
+              placeholder={__('Confirm password')}
+            />
+          </FormField>
 
           <Button
             type="submit"
@@ -131,7 +124,7 @@ class EncryptWallet extends Component {
             waiting={submitting}
             style={{ marginTop: '2em' }}
           >
-            <Text id="Settings.EncryptRestart" />
+            {__('Encrypt and restart')}
           </Button>
         </FieldSet>
       </EncryptWalletForm>

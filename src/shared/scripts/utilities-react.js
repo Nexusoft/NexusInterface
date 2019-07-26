@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import ReactTable from 'react-table';
-import Text from 'components/Text';
 
 /**
  * Table for the transaction page
@@ -47,54 +46,50 @@ export default class Table extends Component {
       ];
     }
     return (
-      <Text id="transactions.Rows">
-        {R => (
-          <ReactTable
-            className="-striped -highlight"
-            noDataText={<Text id="transactions.NoRowsFound" />}
-            key="ReactTable"
-            data={data}
-            pageText={<Text id="transactions.Page" />}
-            columns={columns}
-            minRows={minRows}
-            defaultSorted={defaultsorting}
-            defaultPageSize={10}
-            rowsText={R}
-            previousText={<Text id="transactions.Previous" />}
-            nextText={<Text id="transactions.Next" />}
-            getTrProps={(state, rowInfo) => {
-              return {
-                onClick: e => {
-                  this.props.onMouseOverCallback(e, rowInfo);
-                  this.props.selectCallback(e, rowInfo);
-                  this.setState({
-                    selected: rowInfo.index,
-                  });
-                },
-                onContextMenu: e => {
-                  this.props.selectCallback(e, rowInfo);
-                },
-                onMouseDown: e => {
-                  this.props.onMouseOverCallback(e, rowInfo);
-                },
-                onMouseOver: e => {
-                  this.props.onMouseOverCallback(e, rowInfo);
-                },
-                onMouseOut: e => {
-                  this.props.onMouseOutCallback(e);
-                },
-              };
-            }}
-            style={{
-              overscrollBehavior: 'contain',
-              height: '400px',
-              '--colorPrimary': this.props.style.background,
-              '--colorAccent': this.props.style.primary,
-              '--colorSecondary': this.props.style.foreground,
-            }}
-          />
-        )}
-      </Text>
+      <ReactTable
+        className="-striped -highlight"
+        noDataText={__('No Rows Found')}
+        key="ReactTable"
+        data={data}
+        pageText={__('Page')}
+        columns={columns}
+        minRows={minRows}
+        defaultSorted={defaultsorting}
+        defaultPageSize={10}
+        rowsText={__('Rows')}
+        previousText={__('Previous')}
+        nextText={__('Next')}
+        getTrProps={(state, rowInfo) => {
+          return {
+            onClick: e => {
+              this.props.onMouseOverCallback(e, rowInfo);
+              this.props.selectCallback(e, rowInfo);
+              this.setState({
+                selected: rowInfo.index,
+              });
+            },
+            onContextMenu: e => {
+              this.props.selectCallback(e, rowInfo);
+            },
+            onMouseDown: e => {
+              this.props.onMouseOverCallback(e, rowInfo);
+            },
+            onMouseOver: e => {
+              this.props.onMouseOverCallback(e, rowInfo);
+            },
+            onMouseOut: e => {
+              this.props.onMouseOutCallback(e);
+            },
+          };
+        }}
+        style={{
+          overscrollBehavior: 'contain',
+          height: '400px',
+          '--colorPrimary': this.props.style.background,
+          '--colorAccent': this.props.style.primary,
+          '--colorSecondary': this.props.style.foreground,
+        }}
+      />
     );
   }
 }

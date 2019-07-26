@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
 // Internal Global
-import Text from 'components/Text';
 import { updateSettings } from 'actions/settings';
 import { switchSettingsTab } from 'actions/ui';
 import { backupWallet } from 'lib/wallet';
@@ -19,9 +18,9 @@ import {
   openErrorDialog,
   showNotification,
 } from 'actions/overlays';
-import SettingsContainer from 'components/SettingsContainer';
 import * as color from 'utils/color';
 import * as form from 'utils/form';
+import { isCoreConnected } from 'selectors';
 import warningIcon from 'images/warning.sprite.svg';
 import { startAutoUpdate, stopAutoUpdate } from 'lib/updater';
 
@@ -62,7 +61,7 @@ const fiatCurrencies = [
 ];
 
 const mapStateToProps = state => ({
-  connections: state.core.info.connections,
+  coreConnected: isCoreConnected(state),
   settings: state.settings,
 });
 
@@ -101,17 +100,17 @@ class SettingsApp extends Component {
    */
   confirmBackupWallet = () => {
     this.props.openConfirmDialog({
-      question: <Text id="Settings.BackupWallet" />,
+      question: __('Backup wallet'),
       callbackYes: () => {
-        if (this.props.connections !== undefined) {
+        if (this.props.coreConnected) {
           backupWallet(this.props.settings.backupDirectory);
           this.props.showNotification(
-            <Text id="Alert.WalletBackedUp" />,
+            __('Wallet has been backed up'),
             'success'
           );
         } else {
           this.props.openErrorDialog({
-            message: <Text id="Settings.DaemonLoading" />,
+            message: __('Connecting to Nexus Core'),
           });
         }
       },
@@ -126,9 +125,10 @@ class SettingsApp extends Component {
   toggleVerifyModuleSource = e => {
     if (e.target.checked) {
       this.props.openConfirmDialog({
-        question: 'Turn module open source policy on?',
-        note:
-          'All modules without open source verifications, possibly including your own under-development modules, will become invalid. Wallet must be refreshed for the change to take effect.',
+        question: __('Turn module open source policy on?'),
+        note: __(
+          'All modules without open source verifications, possibly including your own under-development modules, will become invalid. Wallet must be refreshed for the change to take effect.'
+        ),
         callbackYes: () => {
           this.props.updateSettings({ verifyModuleSource: true });
           location.reload();
@@ -136,29 +136,29 @@ class SettingsApp extends Component {
       });
     } else {
       this.props.openConfirmDialog({
-        question: 'Turn module open source policy off?',
+        question: __('Turn module open source policy off?'),
         note: (
           <div>
             <p>
-              This is only for module developers and can be dangerous for
-              regular users. Please make sure you know what you are doing!
+              {_(`This is only for module developers and can be dangerous for
+              regular users. Please make sure you know what you are doing!`)}
             </p>
             <p>
-              It would be much easier for a closed source module to hide
+              {_(`It would be much easier for a closed source module to hide
               malicious code than for an open source one. Therefore, in case you
               still want to disable this setting, it is highly recommended that
               you only install and run closed source modules that you are
-              developing yourself.
+              developing yourself.`)}
             </p>
           </div>
         ),
-        labelYes: 'Turn policy off',
+        labelYes: __('Turn policy off'),
         skinYes: 'danger',
         callbackYes: () => {
           this.props.updateSettings({ verifyModuleSource: false });
           location.reload();
         },
-        labelNo: 'Keep policy on',
+        labelNo: __('Keep policy on'),
         skinNo: 'primary',
         style: { width: 600 },
       });
@@ -191,10 +191,12 @@ class SettingsApp extends Component {
   handleAutoUpdateChange = e => {
     if (!e.target.checked) {
       this.props.openConfirmDialog({
-        question: <Text id="Settings.DisableAutoUpdate" />,
-        note: <Text id="Settings.DisableAutoUpdateNote" />,
-        labelYes: <Text id="Settings.KeepAutoUpdate" />,
-        labelNo: <Text id="Settings.TurnOffAutoUpdate" />,
+        question: __('Are you sure you want to disable auto update?'),
+        note: __(
+          'Keeping your wallet up-to-date is important for your security and will ensure that you get the best possible user experience.'
+        ),
+        labelYes: __('Keep auto update On'),
+        labelNo: __('Turn auto update Off'),
         skinNo: 'danger',
         callbackNo: () => {
           this.props.updateSettings({ autoUpdate: false });
@@ -215,15 +217,17 @@ class SettingsApp extends Component {
    * @memberof SettingsApp
    */
   render() {
-    const { connections, settings } = this.props;
+    const { coreConnected, settings } = this.props;
     return (
-      <SettingsContainer>
+      <>
         <LanguageSetting />
 
         <SettingsField
           connectLabel
-          label={<Text id="Settings.MinimizeClose" />}
-          subLabel={<Text id="ToolTip.MinimizeOnClose" />}
+          label={__('Minimize on close')}
+          subLabel={__(
+            'Minimize the wallet when closing the window instead of closing it.'
+          )}
         >
           <Switch
             checked={settings.minimizeOnClose}
@@ -236,7 +240,7 @@ class SettingsApp extends Component {
           label={
             <span>
               <span className="v-align">
-                <Text id="Settings.AutoUpdate" />{' '}
+                {__('Auto update (Recommended)')}{' '}
                 {!settings.autoUpdate && (
                   <WarningIcon spaceLeft icon={warningIcon} />
                 )}
@@ -245,10 +249,14 @@ class SettingsApp extends Component {
           }
           subLabel={
             <div>
-              <Text id="Settings.AutoUpdateNote" />
+              {__(
+                'Automatically check for new versions and notify if a new version is available.'
+              )}
               {process.platform === 'darwin' && (
                 <div className="error">
-                  <Text id="Settings.AutoUpdateDisabled" />
+                  {__(
+                    'Auto Update is not yet available on Mac, please update the wallet manually for the time being'
+                  )}
                 </div>
               )}
             </div>
@@ -263,8 +271,10 @@ class SettingsApp extends Component {
 
         <SettingsField
           connectLabel
-          label={<Text id="Settings.UsageData" />}
-          subLabel={<Text id="ToolTip.Usage" />}
+          label={__('Send anonymous usage data')}
+          subLabel={__(
+            'Send anonymous usage data to allow the Nexus developers to improve the wallet.'
+          )}
         >
           <Switch
             checked={settings.sendUsageData}
@@ -272,7 +282,7 @@ class SettingsApp extends Component {
           />
         </SettingsField>
 
-        <SettingsField label={<Text id="Settings.Fiat" />}>
+        <SettingsField label={__('Fiat currency')}>
           <Select
             value={settings.fiatCurrency}
             onChange={this.updateHandlers('fiatCurrency')}
@@ -283,8 +293,10 @@ class SettingsApp extends Component {
 
         <SettingsField
           connectLabel
-          label={<Text id="Settings.MinimumConfirmations" />}
-          subLabel={<Text id="ToolTip.MinimumConfirmations" />}
+          label={__('Minimum confirmations')}
+          subLabel={__(
+            'Minimum amount of confirmations before a block is accepted. Local only.'
+          )}
         >
           <TextField
             type="number"
@@ -303,8 +315,10 @@ class SettingsApp extends Component {
 
         <SettingsField
           connectLabel
-          label={<Text id="Settings.DeveloperMode" />}
-          subLabel={<Text id="ToolTip.DevMode" />}
+          label={__('Developer mode')}
+          subLabel={__(
+            'Development mode enables advanced features to aid in development. After enabling the wallet must be closed and reopened to enable those features.'
+          )}
         >
           <Switch
             checked={settings.devMode}
@@ -316,8 +330,10 @@ class SettingsApp extends Component {
           <SettingsField
             indent={1}
             connectLabel
-            label={<Text id="Settings.EnforceOpenSourceModules" />}
-            subLabel={<Text id="Settings.EnforceOpenSourceModulesNote" />}
+            label={__('Module open source policy')}
+            subLabel={__(
+              "Only modules which have valid open source repositories are allowed to be installed and run. You can disable this option to test run the modules that you're developing"
+            )}
           >
             <Switch
               checked={settings.verifyModuleSource}
@@ -327,8 +343,8 @@ class SettingsApp extends Component {
           <SettingsField
             indent={1}
             connectLabel
-            label={<Text id="Settings.FakeTransactions" />}
-            subLabel={<Text id="Settings.FakeTransactionsNote" />}
+            label={__('Fake Test Transactions')}
+            subLabel={__('Display Test Transactions on the Transactions page')}
           >
             <Switch
               checked={settings.fakeTransactions}
@@ -338,13 +354,13 @@ class SettingsApp extends Component {
         </div>
 
         <Button
-          disabled={connections === undefined}
+          disabled={!coreConnected}
           style={{ marginTop: '2em' }}
           onClick={this.confirmBackupWallet}
         >
-          <Text id="Settings.BackupWallet" />
+          {__('Backup wallet')}
         </Button>
-      </SettingsContainer>
+      </>
     );
   }
 }

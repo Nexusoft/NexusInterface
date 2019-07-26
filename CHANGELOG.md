@@ -10,6 +10,7 @@
 
 - Stake Rate now rounded to 6 significant digits
 - Removed Trust on the category dropdown
+- Staking status icon now indicates clearly whether wallet is staking
 
 #### Fixes
 

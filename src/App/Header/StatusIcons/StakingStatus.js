@@ -3,12 +3,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 // Internal Dependencies
-import Text from 'components/Text';
 import Tooltip from 'components/Tooltip';
-import StatusIcon from 'components/StatusIcon';
-import { limitDecimal } from 'utils/etc';
-
+import { formatPercent } from 'lib/intl';
+import { isStaking } from 'selectors';
 import stakingIcon from 'images/staking.sprite.svg';
+
+import StatusIcon from './StatusIcon';
 
 /**
  * Handles the Staking Status
@@ -16,19 +16,23 @@ import stakingIcon from 'images/staking.sprite.svg';
  * @class StakingStatus
  * @extends {React.Component}
  */
-@connect(
-  ({
+@connect(state => {
+  const {
     core: {
       info: { stakeweight, stakerate, trustweight, blockweight },
     },
-  }) => ({
+  } = state;
+  return {
+    staking: isStaking(state),
     stakeweight,
     stakerate,
     trustweight,
     blockweight,
-  })
-)
+  };
+})
 class StakingStatus extends React.Component {
+  renderTooltip = () => {};
+
   /**
    * Component's Renderable JSX
    *
@@ -36,27 +40,46 @@ class StakingStatus extends React.Component {
    * @memberof StakingStatus
    */
   render() {
-    const { stakeweight, stakerate, trustweight, blockweight } = this.props;
+    const {
+      staking,
+      stakeweight,
+      stakerate,
+      trustweight,
+      blockweight,
+    } = this.props;
 
     return (
       <Tooltip.Trigger
         tooltip={
-          <div>
+          <>
             <div>
-              <Text id="Header.StakeWeight" />: {limitDecimal(stakeweight, 2)}%
+              {staking ? (
+                <strong>{__('Wallet is staking')}</strong>
+              ) : (
+                __('Wallet is not staking')
+              )}
             </div>
-            <div>Stake Rate: {limitDecimal(stakerate, 2)}%</div>
-            <div>
-              <Text id="Header.TrustWeight" />: {limitDecimal(trustweight, 2)}%
-            </div>
-            <div>
-              <Text id="Header.BlockWeight" />: {limitDecimal(blockweight, 2)}%
-            </div>
-          </div>
+            {staking && (
+              <>
+                <div>
+                  {__('Stake Rate')}: {formatPercent(stakerate)}%
+                </div>
+                <div>
+                  {__('Trust Weight')}: {formatPercent(trustweight)}%
+                </div>
+                <div>
+                  {__('Block Weight')}: {formatPercent(blockweight)}%
+                </div>
+                <div>
+                  {__('Stake Weight')}: {formatPercent(stakeweight)}%
+                </div>
+              </>
+            )}
+          </>
         }
         style={{ textAlign: 'left' }}
       >
-        <StatusIcon icon={stakingIcon} />
+        <StatusIcon icon={stakingIcon} style={{ opacity: staking ? 1 : 0.7 }} />
       </Tooltip.Trigger>
     );
   }

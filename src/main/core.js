@@ -121,9 +121,14 @@ class Core {
       log.info(
         'Core Manager: Nexux Core Process already running. Skipping starting core'
       );
+      this._config = customConfig(loadNexusConf());
       return null;
     }
 
+    const conf = (this._config = customConfig({
+      ...loadNexusConf(),
+      verbose: settings.verboseLevel,
+    }));
     if (!coreBinaryExists()) {
       log.info(
         'Core Manager: Core not found, please run in manual deamon mode'
@@ -131,10 +136,6 @@ class Core {
       throw 'Core not found';
     }
 
-    const conf = customConfig({
-      ...loadNexusConf(),
-      verbose: settings.verboseLevel,
-    });
     if (!fs.existsSync(conf.dataDir)) {
       log.info(
         'Core Manager: Data Directory path not found. Creating folder: ' +
@@ -189,7 +190,6 @@ class Core {
         log.info(
           `Core Manager: Core has started (process id: ${coreProcess.pid})`
         );
-        this._config = conf;
         return coreProcess.pid;
       } else {
         throw 'Core failed to start';

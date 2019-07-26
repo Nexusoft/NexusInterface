@@ -5,7 +5,6 @@ import styled from '@emotion/styled';
 // Internal
 import Modal from 'components/Modal';
 import Button from 'components/Button';
-import Text from 'components/Text';
 import { timing } from 'styles';
 
 const CSVDownloadModalComponent = styled(Modal)(
@@ -79,12 +78,10 @@ class CSVDownloadModal extends PureComponent {
         {...this.props}
       >
         <Modal.Body>
-          <Title>
-            <Text id="transactions.CSVDownloadModalTitle" />
-          </Title>
+          <Title>{__('Processing CSV')}</Title>
           <ProgressBar percentage={processProgress} />
           <Button skin="danger" onClick={() => this.closeModal()}>
-            <Text id="transactions.CSVDownloadModalCancel" />
+            {__('Cancel')}
           </Button>
         </Modal.Body>
       </CSVDownloadModalComponent>

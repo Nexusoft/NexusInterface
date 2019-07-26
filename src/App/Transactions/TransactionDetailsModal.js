@@ -1,6 +1,5 @@
 // External
 import React, { Component } from 'react';
-import Text from 'components/Text';
 import styled from '@emotion/styled';
 
 // Internal
@@ -83,55 +82,52 @@ class TransactionDetailsModal extends Component {
             {tx.category != 'orphan' &&
               tx.confirmations <= settings.minConfirmations && (
                 <div>
-                  <a>
-                    <Text id="transactions.PENDINGTR" />
-                  </a>
+                  <a>{__('PENDING TRANSACTION')}</a>
                 </div>
               )}
 
             <div key="modal_amount" className="detailCat">
-              <Text id="transactions.AMOUNT" />
+              {__('Amount: ')}
               <span className="TXdetails">{tx.amount}</span>
             </div>
 
             {(tx.category === 'debit' || tx.category === 'send') && (
               <div key="modal_fee" className="detailCat">
-                <Text id="transactions.fee" />:
+                {__('Fee')}:
                 <span className="TXdetails">{highlightedTxFee}</span>
               </div>
             )}
 
             <div key="modal_time" className="detailCat">
-              <Text id="transactions.TIME" />
+              {__('Time: ')}
               <span className="TXdetails">
                 {new Date(tx.time * 1000).toLocaleString(settings.locale)}
               </span>
             </div>
 
             <div key="modal_Account" className="detailCat">
-              <Text id="AddressBook.Account" />:
-              <span className="TXdetails">{tx.account}</span>
+              {__('Account')}:<span className="TXdetails">{tx.account}</span>
             </div>
 
             <div key="modal_Confirms" className="detailCat">
-              <Text id="transactions.confirmations" />:
+              {__('Confirmations')}:
               <span className="TXdetails">{tx.confirmations}</span>
             </div>
 
             <div key="modal_TXID">
-              <Text id="transactions.TX" />:
+              {__('TX Number')}:
               <div className="blockHash" style={{ wordWrap: 'break-word' }}>
                 <span>{tx.txid}</span>
               </div>
             </div>
 
             <div key="modal_BlockNumber" className="detailCat">
-              <Text id="transactions.blocknumber" />:
+              {__('Block Number')}:
               <span className="TXdetails">{highlightedBlockNum}</span>
             </div>
 
             <div key="modal_BlockHash">
-              <Text id="transactions.blockhash" />:
+              {__('Block Hash')}:
               <div className="blockHash" style={{ wordWrap: 'break-word' }}>
                 <span>{highlightedBlockHash}</span>
               </div>

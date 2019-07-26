@@ -16,7 +16,6 @@ import { showNotification } from 'actions/overlays';
 import * as TYPE from 'consts/actionTypes';
 import Icon from 'components/Icon';
 import Panel from 'components/Panel';
-import Text, { translate } from 'components/Text';
 import ContextMenuBuilder from 'contextmenu';
 import * as actionsCreators from 'actions/market';
 
@@ -127,9 +126,9 @@ class Market extends Component {
           return {
             x: e.Price,
             y: newQuantity,
-            label: `${translate('Market.Price', locale)}: ${
+            label: `${__('Price')}: ${
               e.Price
-            } \n ${translate('Market.Volume', locale)}: ${newQuantity}`,
+            } \n ${__('Volume')}: ${newQuantity}`,
           };
         }
       })
@@ -162,9 +161,9 @@ class Market extends Component {
           return {
             x: e.Price,
             y: newQuantity,
-            label: `${translate('Market.Price', locale)}: ${
+            label: `${__('Price')}: ${
               e.Price
-            } \n ${translate('Market.Volume', locale)}: ${newQuantity}`,
+            } \n ${__('Volume')}: ${newQuantity}`,
           };
         }
       })
@@ -217,36 +216,25 @@ class Market extends Component {
             verticalAlign: 'middle',
           }}
         >
-          <b>
-            <Text id="overview.24hrChange" />
-          </b>
+          <b>{__('24hr Change')}</b>
         </div>
         <OneDay>
           <div>
-            <b>
-              <Text id="Market.High" />:{' '}
-            </b>
+            <b>{__('High')}: </b>
             {this.props[exchangeName].info24hr.high}
             {' BTC '}
           </div>
           <div>
-            <b>
-              <Text id="Market.PriceChange" />:{' '}
-            </b>
+            <b>{__('Price Change')}: </b>
             {this.props[exchangeName].info24hr.change}
             {' %'}
           </div>
           <div>
-            <b>
-              <Text id="Market.Low" />:{' '}
-            </b>{' '}
-            {this.props[exchangeName].info24hr.low}
+            <b>{__('Low')}: </b> {this.props[exchangeName].info24hr.low}
             {' BTC '}
           </div>
           <div>
-            <b>
-              <Text id="Market.Volume" />:{' '}
-            </b>
+            <b>{__('Volume')}: </b>
             {this.props[exchangeName].info24hr.volume}
             {' NXS '}
           </div>
@@ -261,7 +249,7 @@ class Market extends Component {
    */
   refreshMarket() {
     this.refresher();
-    this.props.showNotification(<Text id="Market.Refreshing" />, 'success');
+    this.props.showNotification(__('Refreshing market data...'), 'success');
   }
 
   // Mandatory React method
@@ -275,14 +263,14 @@ class Market extends Component {
     return (
       <Panel
         controls={
-          <Tooltip.Trigger tooltip={<Text id="Market.Refreash" />}>
+          <Tooltip.Trigger tooltip={__('Refresh')}>
             <Button square skin="primary" onClick={() => this.refreshMarket()}>
               <Icon icon={syncingIcon} />
             </Button>
           </Tooltip.Trigger>
         }
         icon={chartIcon}
-        title={<Text id="Market.Information" />}
+        title={__('Market Data')}
       >
         {/* <div className="alertbox">{this.arbitageAlert()}</div> */}
 

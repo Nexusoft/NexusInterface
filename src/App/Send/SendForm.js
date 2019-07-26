@@ -8,7 +8,6 @@ import styled from '@emotion/styled';
 import rpc from 'lib/rpc';
 import { defaultSettings } from 'lib/settings';
 import { loadMyAccounts } from 'actions/account';
-import Text from 'components/Text';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
@@ -96,12 +95,12 @@ const mapDispatchToProps = {
   validate: ({ sendFrom, recipients }) => {
     const errors = {};
     if (!sendFrom) {
-      errors.sendFrom = <Text id="sendReceive.Messages.NoAccounts" />;
+      errors.sendFrom = __('No accounts selected');
     }
 
     if (!recipients || !recipients.length) {
       errors.recipients = {
-        _error: <Text id="sendReceive.Messages.NoRecipient" />,
+        _error: __('There must be at least one recipient'),
       };
     } else {
       const recipientsErrors = [];
@@ -109,11 +108,11 @@ const mapDispatchToProps = {
       recipients.forEach(({ address, amount }, i) => {
         const recipientErrors = {};
         if (!address) {
-          recipientErrors.address = <Text id="Alert.AddressEmpty" />;
+          recipientErrors.address = __('Address is required');
         }
         const floatAmount = parseFloat(amount);
         if (!floatAmount || floatAmount < 0) {
-          recipientErrors.amount = <Text id="Alert.InvalidAmount" />;
+          recipientErrors.amount = __('Invalid amount');
         }
         if (Object.keys(recipientErrors).length) {
           recipientsErrors[i] = recipientErrors;
@@ -136,17 +135,17 @@ const mapDispatchToProps = {
           .then(result => {
             if (!result.isvalid) {
               recipientsErrors[i] = {
-                address: <Text id="Alert.InvalidAddress" />,
+                address: __('Invalid address'),
               };
             } else if (result.ismine) {
               recipientsErrors[i] = {
-                address: <Text id="Alert.registeredToThis" />,
+                address: __('This is an address registered to this wallet.'),
               };
             }
           })
           .catch(err => {
             recipientsErrors[i] = {
-              address: <Text id="Alert.InvalidAddress" />,
+              address: __('Invalid address'),
             };
           })
       )
@@ -184,12 +183,10 @@ const mapDispatchToProps = {
     props.reset();
     props.loadMyAccounts();
     props.openSuccessDialog({
-      message: <Text id="Alert.Sent" />,
+      message: __('Transaction sent'),
     });
   },
-  onSubmitFail: rpcErrorHandler(
-    <Text id="sendReceive.Messages.ErrorSending" />
-  ),
+  onSubmitFail: rpcErrorHandler(__('Error sending NXS')),
 })
 class SendForm extends Component {
   /**
@@ -216,14 +213,18 @@ class SendForm extends Component {
         message: 'You are not logged in',
         note: (
           <>
-            <p>You need to log in to your wallet before sending transactions</p>
+            <p>
+              {__(
+                'You need to log in to your wallet before sending transactions'
+              )}
+            </p>
             <Link
               to="/Settings/Security"
               onClick={() => {
                 this.props.removeModal(modalId);
               }}
             >
-              Log in now
+              {__('Log in now')}
             </Link>
           </>
         ),
@@ -232,7 +233,7 @@ class SendForm extends Component {
     }
 
     this.props.openConfirmDialog({
-      question: <Text id="sendReceive.SendTransaction" />,
+      question: __('Send transaction?'),
       callbackYes: handleSubmit,
     });
   };
@@ -258,7 +259,7 @@ class SendForm extends Component {
   renderAddRecipientButton = ({ fields }) =>
     fields.length === 1 ? (
       <Button onClick={this.addRecipient}>
-        <Text id="sendReceive.MultipleRecipients" />
+        {__('Send To multiple recipients')}
       </Button>
     ) : (
       <div />
@@ -275,11 +276,11 @@ class SendForm extends Component {
 
     return (
       <SendFormComponent onSubmit={this.confirmSend}>
-        <FormField label={<Text id="sendReceive.SendFrom" />}>
+        <FormField label={__('Send from')}>
           <Field
             component={Select.RF}
             name="sendFrom"
-            placeholder={<Text id="sendReceive.SelectAnAccount" />}
+            placeholder={__('Select an account')}
             options={accountOptions}
           />
         </FormField>
@@ -291,19 +292,15 @@ class SendForm extends Component {
           addRecipient={this.addRecipient}
         />
 
-        <Text id="sendReceive.EnterYourMessage">
-          {placeholder => (
-            <FormField connectLabel label={<Text id="sendReceive.Message" />}>
-              <Field
-                component={TextField.RF}
-                name="message"
-                multiline
-                rows={1}
-                placeholder={placeholder}
-              />
-            </FormField>
-          )}
-        </Text>
+        <FormField connectLabel label={__('Message')}>
+          <Field
+            component={TextField.RF}
+            name="message"
+            multiline
+            rows={1}
+            placeholder={__('Enter your message')}
+          />
+        </FormField>
 
         <SendFormButtons>
           <FieldArray
@@ -313,7 +310,7 @@ class SendForm extends Component {
 
           <Button type="submit" skin="primary">
             <Icon icon={sendIcon} className="space-right" />
-            <Text id="sendReceive.SendNow" />
+            {__('Send')}
           </Button>
         </SendFormButtons>
       </SendFormComponent>

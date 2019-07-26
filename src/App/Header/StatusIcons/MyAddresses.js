@@ -7,10 +7,10 @@ import styled from '@emotion/styled';
 import Tooltip from 'components/Tooltip';
 import userIcon from 'images/user.sprite.svg';
 import { openModal } from 'actions/overlays';
-import StatusIcon from 'components/StatusIcon';
 import MyAddressesModal from 'components/MyAddressesModal';
 import { timing } from 'styles';
 import * as color from 'utils/color';
+import StatusIcon from './StatusIcon';
 
 const MyAddressesIcon = styled(StatusIcon)(({ theme }) => ({
   cursor: 'pointer',
@@ -34,7 +34,7 @@ const actionCreators = { openModal };
 const MyAddresses = ({ openModal }) => (
   <Tooltip.Trigger
     align="end"
-    tooltip="My Addresses"
+    tooltip={__('My Addresses')}
     style={{ transform: 'translateX(12px)' }}
   >
     <MyAddressesIcon

@@ -9,7 +9,7 @@ import ModalContext from 'context/modal';
 import { removeModal } from 'actions/overlays';
 import Overlay from 'components/Overlay';
 import { timing } from 'styles';
-import { passRef } from 'utils/etc';
+import { passRef } from 'utils/misc';
 import * as color from 'utils/color';
 
 const intro = keyframes`

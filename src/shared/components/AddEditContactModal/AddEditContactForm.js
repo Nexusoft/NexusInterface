@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 // Internal
 import { addNewContact, updateContact } from 'actions/addressBook';
 import rpc from 'lib/rpc';
-import Text from 'components/Text';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import Select from 'components/Select';
@@ -36,9 +35,7 @@ function validateAddresses(addresses) {
   (addresses || []).forEach(({ address }, i) => {
     const addressErrors = {};
     if (!address) {
-      addressErrors.address = (
-        <Text id="AddEditContact.Errors.InvalidAddress" />
-      );
+      addressErrors.address = __('Invalid address');
     }
     if (Object.keys(addressErrors).length) {
       addressesErrors[i] = addressErrors;
@@ -53,21 +50,21 @@ function asyncValidateAddresses(isMine, addresses, errors) {
       .then(result => {
         if (!result.isvalid) {
           errors[i] = {
-            address: <Text id="AddEditContact.Errors.InvalidAddress" />,
+            address: __('Invalid address'),
           };
         } else if (isMine && !result.ismine) {
           errors[i] = {
-            address: <Text id="AddEditContact.Errors.NotMineAddress" />,
+            address: __('This is not one of your addresses.'),
           };
         } else if (!isMine && result.ismine) {
           errors[i] = {
-            address: <Text id="AddEditContact.Errors.MineAddress" />,
+            address: __('This is one of your addresses.'),
           };
         }
       })
       .catch(err => {
         errors[i] = {
-          address: <Text id="AddEditContact.Errors.InvalidAddress" />,
+          address: __('Invalid address'),
         };
       })
   );
@@ -89,16 +86,16 @@ function asyncValidateAddresses(isMine, addresses, errors) {
     const errors = {};
 
     if (!name || !name.trim()) {
-      errors.name = <Text id="AddEditContact.Errors.NameRequired" />;
+      errors.name = __('Name is required.');
     } else if (
       (!props.edit || name !== props.oldName) &&
       props.addressBook[name]
     ) {
-      errors.name = <Text id="AddEditContact.Errors.NameExists" />;
+      errors.name = __('A contact with the same name already exists.');
     }
 
     if (mine && notMine && mine.length + notMine.length === 0) {
-      errors['_error'] = <Text id="AddEditContact.Errors.NoAddresses" />;
+      errors['_error'] = __('There must be at least one address.');
     }
 
     const mineErrors = validateAddresses(mine);
@@ -112,7 +109,7 @@ function asyncValidateAddresses(isMine, addresses, errors) {
     }
 
     if (email && !emailRegex.test(email.toLowerCase())) {
-      errors.email = <Text id="AddEditContact.Errors.InvalidEmail" />;
+      errors.email = __('Invalid email');
     }
 
     return errors;
@@ -156,13 +153,10 @@ function asyncValidateAddresses(isMine, addresses, errors) {
     props.destroy();
     props.closeModal();
     if (props.edit) {
-      props.showNotification(
-        <Text id="AddEditContact.EditSuccess" />,
-        'success'
-      );
+      props.showNotification(__('Contact has been updated'), 'success');
     } else {
       props.showNotification(
-        <Text id="AddEditContact.CreateSuccess" />,
+        __('New contact has been added to address book'),
         'success'
       );
     }
@@ -202,18 +196,14 @@ class AddEditContactForm extends Component {
 
     return (
       <form onSubmit={handleSubmit}>
-        <Text id="AddEditContact.NamePlaceholder">
-          {text => (
-            <FormField connectLabel label={<Text id="AddEditContact.Name" />}>
-              <Field
-                name="name"
-                component={TextField.RF}
-                placeholder={text}
-                inputRef={this.inputRef}
-              />
-            </FormField>
-          )}
-        </Text>
+        <FormField connectLabel label={__('Name')}>
+          <Field
+            name="name"
+            component={TextField.RF}
+            placeholder={__('Contact name')}
+            inputRef={this.inputRef}
+          />
+        </FormField>
 
         <FieldArray name="notMine" component={Addresses} isMine={false} />
 
@@ -222,83 +212,56 @@ class AddEditContactForm extends Component {
         {error && <div className="error mt1">{error}</div>}
 
         <div className="mt2">
-          <Text id="AddEditContact.EmailPlaceholder">
-            {text => (
-              <FormField
-                connectLabel
-                label={<Text id="AddEditContact.Email" />}
-              >
-                <Field
-                  name="email"
-                  component={TextField.RF}
-                  type="email"
-                  placeholder={text}
-                />
-              </FormField>
-            )}
-          </Text>
+          <FormField connectLabel label={__('Email address')}>
+            <Field
+              name="email"
+              component={TextField.RF}
+              type="email"
+              placeholder={__('Email address')}
+            />
+          </FormField>
 
-          <Text id="AddEditContact.PhonePlaceholder">
-            {text => (
-              <FormField
-                connectLabel
-                label={<Text id="AddEditContact.Phone" />}
-              >
-                <Field
-                  name="phoneNumber"
-                  component={TextField.RF}
-                  placeholder={text}
-                />
-              </FormField>
-            )}
-          </Text>
+          <FormField connectLabel label={__('Phone number')}>
+            <Field
+              name="phoneNumber"
+              component={TextField.RF}
+              placeholder={__('Phone number')}
+            />
+          </FormField>
 
-          <FormField connectLabel label={<Text id="AddEditContact.TimeZone" />}>
+          <FormField connectLabel label={__('Time zone')}>
             <Field
               name="timeZone"
               component={Select.RF}
               options={tzOptions}
-              placeholder={<Text id="AddEditContact.TimeZonePlaceholder" />}
+              placeholder={__('Select a time zone')}
             />
           </FormField>
 
-          <Text id="AddEditContact.NotesPlaceholder">
-            {text => (
-              <FormField
-                connectLabel
-                label={<Text id="AddEditContact.Notes" />}
-              >
-                <Field
-                  name="notes"
-                  component={TextField.RF}
-                  placeholder={text}
-                  multiline
-                  rows={1}
-                />
-              </FormField>
-            )}
-          </Text>
+          <FormField connectLabel label={__('Notes')}>
+            <Field
+              name="notes"
+              component={TextField.RF}
+              placeholder={__('Notes')}
+              multiline
+              rows={1}
+            />
+          </FormField>
         </div>
 
         <div className="mt2 flex space-between" style={{ marginBottom: '1em' }}>
           <div>
-            <Button onClick={closeModal}>
-              <Text id="AddEditContact.Cancel" />
-            </Button>
+            <Button onClick={closeModal}>{__('Cancel')}</Button>
             <Button
               onClick={reset}
               disabled={pristine}
               style={{ marginLeft: '1em' }}
             >
-              <Text id="AddEditContact.Reset" />
+              {__('Reset')}
             </Button>
           </div>
           <Button skin="primary" type="submit" disabled={submitting}>
-            {edit ? (
-              <Text id="AddEditContact.SaveChanges" />
-            ) : (
-              <Text id="AddEditContact.Create" />
-            )}
+            {edit ? __('Save changes') : __('Create')}
           </Button>
         </div>
       </form>

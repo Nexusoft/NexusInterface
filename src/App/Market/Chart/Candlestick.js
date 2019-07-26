@@ -7,7 +7,6 @@ Last Modified by: Brian Smith
 // External Dependencies
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import Text, { translate } from 'components/Text';
 import {
   VictoryChart,
   VictoryAxis,
@@ -85,7 +84,7 @@ export default class Candlestick extends Component {
           }}
         >
           <VictoryAxis
-            label={translate('Market.Date', this.props.locale)}
+            label={__('Date')}
             style={{ color: '#000', padding: 10 }}
             tickFormat={t =>
               `${new Date(t).toLocaleDateString(this.props.locale, {
@@ -101,7 +100,7 @@ export default class Candlestick extends Component {
           />
 
           <VictoryAxis
-            label={translate('Market.Price', this.props.locale)}
+            label={__('Price')}
             dependentAxis
             style={{ tickLabels: { angle: -60 }, axisLabel: { padding: 35 } }}
           />

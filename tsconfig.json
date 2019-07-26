@@ -2,7 +2,8 @@
   "compilerOptions": {
     "experimentalDecorators": true,
     "allowJs": true,
-    "noEmit": true
+    "noEmit": true,
+    "baseUrl": "./src/shared"
   },
   "exclude": ["node_modules", "release", "dll", "build"]
 }

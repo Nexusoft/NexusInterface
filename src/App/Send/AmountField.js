@@ -5,7 +5,6 @@ import { Field } from 'redux-form';
 import styled from '@emotion/styled';
 
 // Internal
-import Text from 'components/Text';
 import TextField from 'components/TextField';
 import FormField from 'components/FormField';
 import { getNxsFiatPrice } from './selectors';
@@ -104,11 +103,7 @@ class AmountField extends Component {
         <SendAmountField>
           <FormField
             connectLabel
-            label={
-              <span className="v-align">
-                <Text id="sendReceive.Amount" />
-              </span>
-            }
+            label={<span className="v-align">{__('NXS Amount')}</span>}
           >
             <Field
               component={TextField.RF}

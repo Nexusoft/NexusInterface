@@ -11,7 +11,7 @@ import fs from 'fs-extra';
 // Internal
 import { coreDataDir, assetsDir } from 'consts/paths';
 import { LoadSettings, UpdateSettings } from 'lib/settings';
-import { debounced } from 'utils/etc';
+import { debounced } from 'utils/misc';
 
 import core from './core';
 import fileServer from './fileServer';
@@ -142,7 +142,6 @@ function createWindow() {
 
   const updateWindowPos = debounced(() => {
     const bounds = mainWindow.getBounds();
-    console.log('pos', bounds.x, bounds.y);
     UpdateSettings({
       windowX: bounds.x,
       windowY: bounds.y,

@@ -4,7 +4,6 @@ import { Field } from 'redux-form';
 import styled from '@emotion/styled';
 
 // Internal
-import Text from 'components/Text';
 import Tooltip from 'components/Tooltip';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
@@ -82,21 +81,19 @@ class Addresses extends React.Component {
     }
   }
 
-  renderFieldLabel = ({ input, ...rest }) => {
-    const id = this.props.isMine
-      ? input.value
-        ? 'AddEditContact.MyAddressFor'
-        : 'AddEditContact.MyAddress'
-      : input.value
-      ? 'AddEditContact.TheirAddressWithName'
-      : 'AddEditContact.TheirAddress';
-    return <Text id={id} data={{ name: input.value || undefined }} {...rest} />;
-  };
-
   addNewAddress = () => {
     this.props.fields.push({ address: '', label: '' });
     this.justAdded = true;
   };
+
+  getAddressLabel = name =>
+    this.props.isMine
+      ? name
+        ? __('My Nexus address for %{name}', { name })
+        : __('My Nexus address')
+      : name
+      ? __("%{name}'s Nexus address", { name })
+      : __('Their Nexus address');
 
   /**
    * React Render
@@ -111,9 +108,7 @@ class Addresses extends React.Component {
       <div className="mt2">
         {fields.map((fieldName, i) => (
           <NXSAddress key={i}>
-            <Tooltip.Trigger
-              tooltip={<Text id="AddEditContact.RemoveAddress" />}
-            >
+            <Tooltip.Trigger tooltip={__('Remove address')}>
               <RemoveButton
                 onClick={() => {
                   fields.remove(i);
@@ -124,30 +119,27 @@ class Addresses extends React.Component {
             </Tooltip.Trigger>
 
             <AddressWrapper>
-              <Field name="name" component={this.renderFieldLabel}>
-                {text => (
+              <Field
+                name="name"
+                component={({ input }) => (
                   <Field
                     name={`${fieldName}.address`}
                     component={TextField.RF}
-                    placeholder={text}
+                    placeholder={this.getAddressLabel(input.value)}
                     inputRef={
                       i === fields.length - 1 ? this.lastInputRef : undefined
                     }
                   />
                 )}
-              </Field>
+              />
             </AddressWrapper>
 
             <LabelWrapper>
-              <Text id="AddEditContact.Label">
-                {text => (
-                  <Field
-                    name={`${fieldName}.label`}
-                    component={TextField.RF}
-                    placeholder={text}
-                  />
-                )}
-              </Text>
+              <Field
+                name={`${fieldName}.label`}
+                component={TextField.RF}
+                placeholder={__('Label (optional)')}
+              />
             </LabelWrapper>
           </NXSAddress>
         ))}
@@ -156,7 +148,10 @@ class Addresses extends React.Component {
           <AddButton skin="hyperlink" onClick={this.addNewAddress}>
             <PlusIcon icon={plusIcon} className="space-right" />
             <span className="v-align">
-              <Field name="name" component={this.renderFieldLabel} />
+              <Field
+                name="name"
+                component={({ input }) => this.getAddressLabel(input.value)}
+              />
             </span>
           </AddButton>
         </div>

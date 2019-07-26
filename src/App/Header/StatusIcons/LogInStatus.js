@@ -1,17 +1,15 @@
-// @jsx jsx
 // External Dependencies
 import React, { Component } from 'react';
-import { jsx } from '@emotion/core';
 import styled from '@emotion/styled';
 import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
 
 // Internal Dependencies
-import Text from 'components/Text';
 import Tooltip from 'components/Tooltip';
-import StatusIcon from 'components/StatusIcon';
+import { isCoreConnected } from 'selectors';
 import { timing } from 'styles';
 import * as color from 'utils/color';
+import StatusIcon from './StatusIcon';
 
 // Images
 import questionMarkIcon from 'images/question-mark.sprite.svg';
@@ -43,16 +41,22 @@ const LoginStatusIcon = styled(StatusIcon)(
     }
 );
 
-const mapStateToProps = ({
-  core: {
-    info: { connections, unlocked_until, minting_only, locked },
-  },
-}) => ({
-  connections,
-  unlocked_until,
-  minting_only,
-  locked,
-});
+const mapStateToProps = state => {
+  const {
+    core: {
+      info: { unlocked_until, minting_only, locked },
+    },
+    settings: { enableMining, enableStaking },
+  } = state;
+  return {
+    coreConnected: isCoreConnected(state),
+    unlocked_until,
+    minting_only,
+    locked,
+    enableMining,
+    enableStaking,
+  };
+};
 
 const actionCreators = { push };
 
@@ -73,42 +77,39 @@ class LogInStatus extends Component {
    * @memberof LogInStatus
    */
   signInStatusMessage = () => {
-    const { connections, unlocked_until, minting_only, locked } = this.props;
-    let unlockDate = new Date(unlocked_until * 1000).toLocaleString('en', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
-    if (connections === undefined) {
-      return (
-        <div>
-          <div>Unknown login status</div>
-          <div>Waiting for Nexus Core to load...</div>
-        </div>
-      );
+    const { coreConnected, unlocked_until, minting_only, locked } = this.props;
+
+    if (!coreConnected) {
+      return __('Unknown login status');
     }
 
     if (locked === undefined) {
-      return <Text id="Header.WalletUnencrypted" />;
+      return __('Wallet is not encrypted');
     } else if (locked) {
-      return <Text id="Header.WalletLocked" />;
+      return __('Not logged in');
     } else if (locked === false) {
-      if (!unlocked_until) {
-        return (
-          <>
-            <Text id="Header.WalletUnlocked" />{' '}
-            {!!minting_only && <Text id="Header.StakingOnly" />}
-          </>
-        );
-      } else {
-        return (
-          <>
-            <Text id="Header.UnlockedUntil" data={{ unlockDate }} />{' '}
-            {!!minting_only && <Text id="Header.StakingOnly" />}
-          </>
-        );
-      }
+      const unlockDate =
+        unlocked_until &&
+        new Date(unlocked_until * 1000).toLocaleString('en', {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        });
+      return (
+        <>
+          {__(
+            'Logged in<if_timed> until %{unlockDate}</if_timed><if_minting_only> for staking & mining</if_minting_only>',
+            {
+              unlockDate,
+            },
+            {
+              if_timed: !!unlocked_until,
+              if_minting_only: !!minting_only,
+            }
+          )}
+        </>
+      );
     }
   };
 
@@ -118,31 +119,29 @@ class LogInStatus extends Component {
    * @memberof LogInStatus
    */
   statusIcon = () => {
-    const { connections, locked } = this.props;
-    if (connections === undefined) {
-      return <StatusIcon icon={questionMarkIcon} css={{ opacity: 0.7 }} />;
-    } else {
-      if (locked === undefined) {
-        return (
-          <LoginStatusIcon
-            icon={unlockedIcon}
-            onClick={this.goToSecurity}
-            danger
-          />
-        );
-      } else if (locked === true) {
-        return (
-          <LoginStatusIcon icon={lockedIcon} onClick={this.goToSecurity} />
-        );
-      } else if (locked === false) {
-        return (
-          <LoginStatusIcon
-            icon={unlockedIcon}
-            onClick={this.goToSecurity}
-            dimmed
-          />
-        );
-      }
+    const { coreConnected, locked } = this.props;
+    if (!coreConnected) {
+      return <LoginStatusIcon icon={questionMarkIcon} dimmed />;
+    }
+
+    if (locked === undefined) {
+      return (
+        <LoginStatusIcon
+          icon={unlockedIcon}
+          onClick={this.goToSecurity}
+          danger
+        />
+      );
+    } else if (locked === true) {
+      return <LoginStatusIcon icon={lockedIcon} onClick={this.goToSecurity} />;
+    } else if (locked === false) {
+      return (
+        <LoginStatusIcon
+          icon={unlockedIcon}
+          onClick={this.goToSecurity}
+          dimmed
+        />
+      );
     }
   };
 
@@ -165,7 +164,7 @@ class LogInStatus extends Component {
     return (
       <Tooltip.Trigger
         tooltip={this.signInStatusMessage()}
-        css={{ maxWidth: 200 }}
+        style={{ maxWidth: 200 }}
       >
         {this.statusIcon()}
       </Tooltip.Trigger>

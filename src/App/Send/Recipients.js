@@ -7,7 +7,6 @@ import styled from '@emotion/styled';
 import Tooltip from 'components/Tooltip';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
-import Text from 'components/Text';
 import { timing } from 'styles';
 import plusIcon from 'images/plus.sprite.svg';
 import RecipientField from './RecipientField';
@@ -96,9 +95,7 @@ class Recipients extends React.Component {
         <>
           {fields.map((fieldName, i) => (
             <Recipient key={i}>
-              <Tooltip.Trigger
-                tooltip={<Text id="sendReceive.RemoveRecipient" />}
-              >
+              <Tooltip.Trigger tooltip={__('Remove recipient')}>
                 <RemoveButton
                   onClick={() => {
                     fields.remove(i);
@@ -125,9 +122,7 @@ class Recipients extends React.Component {
           <MoreInfo>
             <Button skin="hyperlink" onClick={addRecipient}>
               <PlusIcon icon={plusIcon} className="space-right" />
-              <span className="v-align">
-                <Text id="sendReceive.AddRecipient" />
-              </span>
+              <span className="v-align">{__('Add recipient')}</span>
             </Button>
           </MoreInfo>
         </>

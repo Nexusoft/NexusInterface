@@ -7,10 +7,10 @@ import { remote } from 'electron';
 // Internal Global
 import { selectContact, deleteContact } from 'actions/addressBook';
 import Icon from 'components/Icon';
-import Text, { translate } from 'components/Text';
 import Tooltip from 'components/Tooltip';
 import { openConfirmDialog, openModal } from 'actions/overlays';
 import AddEditContactModal from 'components/AddEditContactModal';
+import { isCoreConnected } from 'selectors';
 import { timing } from 'styles';
 import * as color from 'utils/color';
 import ContextMenuBuilder from 'contextmenu';
@@ -77,7 +77,7 @@ const AddressesCount = styled.div(({ theme }) => ({
   state => ({
     selectedContactName: state.ui.addressBook.selectedContactName,
     locale: state.settings.locale,
-    connections: state.core.info.connections,
+    coreConnected: isCoreConnected(state),
   }),
   { selectContact, deleteContact, openModal, openConfirmDialog }
 )
@@ -89,12 +89,9 @@ class Contact extends React.PureComponent {
    */
   confirmDelete = () => {
     this.props.openConfirmDialog({
-      question: (
-        <Text
-          id="AddressBook.DeleteQuestion"
-          data={{ name: this.props.contact.name }}
-        />
-      ),
+      question: __('Delete contact %{name}?', {
+        name: this.props.contact.name,
+      }),
       skinYes: 'danger',
       callbackYes: () => {
         this.props.deleteContact(this.props.contact.name);
@@ -123,14 +120,14 @@ class Contact extends React.PureComponent {
     e.preventDefault();
     e.stopPropagation();
     const template = [...new ContextMenuBuilder().defaultContext];
-    if (this.props.connections !== undefined) {
+    if (this.props.coreConnected) {
       template.push({
-        label: translate('AddressBook.EditContact', this.props.locale),
+        label: __('Edit contact'),
         click: this.editContact,
       });
     }
     template.push({
-      label: translate('AddressBook.DeleteContact', this.props.locale),
+      label: __('Delete contact'),
       click: this.confirmDelete,
     });
     let contextMenu = remote.Menu.buildFromTemplate(template);
@@ -173,16 +170,10 @@ class Contact extends React.PureComponent {
         <ContactAvatar>{this.getinitial(contact.name)}</ContactAvatar>
         <ContactName>{contact.name}</ContactName>
         <Tooltip.Trigger
-          tooltip={
-            <Text
-              id={
-                contact.addresses.length === 1
-                  ? 'AddressBook.AddressesCountSingular'
-                  : 'AddressBook.AddressesCountPlural'
-              }
-              data={{ count: contact.addresses.length }}
-            />
-          }
+          tooltip={__(
+            '%{smart_count} address |||| %{smart_count} addresses',
+            contact.addresses.length
+          )}
         >
           <AddressesCount>{contact.addresses.length}</AddressesCount>
         </Tooltip.Trigger>
@@ -204,9 +195,7 @@ const NewContactButton = props => (
     <ContactAvatar>
       <Icon icon={plusIcon} style={{ fontSize: '.8em', opacity: 0.7 }} />
     </ContactAvatar>
-    <ContactName style={{ opacity: 0.7 }}>
-      <Text id="AddressBook.NewContact" />
-    </ContactName>
+    <ContactName style={{ opacity: 0.7 }}>{__('New contact')}</ContactName>
   </ContactComponent>
 );
 

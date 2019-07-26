@@ -1,5 +1,5 @@
 import React from 'react';
-import { escapeRegExp } from 'utils/etc';
+import { escapeRegExp } from 'utils/misc';
 
 export default function highlightMatchingText(text, query, HighlightComponent) {
   if (!query) return text;

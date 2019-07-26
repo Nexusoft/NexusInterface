@@ -6,6 +6,7 @@ import styled from '@emotion/styled';
 import Highlight from 'components/Highlight';
 import NexusAddress from 'components/NexusAddress';
 import highlightMatchingText from 'utils/highlightMatchingText';
+import { formatNumber } from 'lib/intl';
 
 const AccountComponent = styled.div(({ theme }) => ({
   padding: '1em 0',
@@ -26,7 +27,7 @@ const Account = ({
       <AccountName>
         {highlightMatchingText(account, searchQuery, Highlight)}
       </AccountName>{' '}
-      ({balance} NXS)
+      ({formatNumber(balance, 20)} NXS)
     </div>
     {addresses.map(addr => (
       <NexusAddress key={addr} address={addr} />

@@ -6,7 +6,6 @@ import styled from '@emotion/styled';
 // Internal
 import Modal from 'components/Modal';
 import TextField from 'components/TextField';
-import Text, { translate } from 'components/Text';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
 import searchIcon from 'images/search.sprite.svg';
@@ -32,6 +31,7 @@ const Search = styled.div({
 
 const Buttons = styled.div({
   marginTop: '2em',
+  marginBottom: '1em',
 });
 
 /**
@@ -69,16 +69,10 @@ class MyAddressesModal extends React.Component {
       await rpc('checkwallet', []);
     } catch (err) {
       console.log(err);
-      this.props.showNotification(
-        <Text id="MyAddressesModal.CheckWalletError" />,
-        'error'
-      );
+      this.props.showNotification(__('Check wallet failed'), 'error');
       return;
     }
-    this.props.showNotification(
-      <Text id="MyAddressesModal.CheckWalletSuccess" />,
-      'success'
-    );
+    this.props.showNotification(__('Check wallet pass'), 'success');
   };
 
   /**
@@ -89,7 +83,7 @@ class MyAddressesModal extends React.Component {
   filteredAccounts = () => {
     const allAccounts = this.props.myAccounts || [];
     return allAccounts.filter(acc => {
-      const accName = acc.account || translate('AddressBook.MyAccount', locale);
+      const accName = acc.account || __('My Account');
       const searchedName = accName.toLowerCase();
       const query = this.state.searchQuery.toLowerCase();
       return searchedName.indexOf(query) >= 0;
@@ -137,11 +131,9 @@ class MyAddressesModal extends React.Component {
               onChange={this.handleChange}
               style={{ width: 300 }}
             />
-            <Tooltip.Trigger
-              tooltip={<Text id="MyAddressesModal.CheckWalletTooltip" />}
-            >
+            <Tooltip.Trigger tooltip={__("Check wallet's integerty")}>
               <Button fitHeight onClick={this.checkwallet}>
-                {<Text id="MyAddressesModal.CheckWallet" />}
+                {__('Check wallet')}
               </Button>
             </Tooltip.Trigger>
           </Search>
@@ -159,7 +151,7 @@ class MyAddressesModal extends React.Component {
             <Buttons>
               <Button onClick={this.startCreating}>
                 <Icon icon={plusIcon} className="space-right" />
-                <Text id="AddressBook.CreateAddress" />
+                {__('Create new address')}
               </Button>
             </Buttons>
           )}
