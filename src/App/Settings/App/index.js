@@ -18,7 +18,6 @@ import {
   openErrorDialog,
   showNotification,
 } from 'actions/overlays';
-import SettingsContainer from 'components/SettingsContainer';
 import * as color from 'utils/color';
 import * as form from 'utils/form';
 import { isCoreConnected } from 'selectors';
@@ -220,7 +219,7 @@ class SettingsApp extends Component {
   render() {
     const { coreConnected, settings } = this.props;
     return (
-      <SettingsContainer>
+      <>
         <LanguageSetting />
 
         <SettingsField
@@ -361,7 +360,7 @@ class SettingsApp extends Component {
         >
           {__('Backup wallet')}
         </Button>
-      </SettingsContainer>
+      </>
     );
   }
 }

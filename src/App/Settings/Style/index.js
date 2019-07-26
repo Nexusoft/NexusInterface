@@ -18,7 +18,6 @@ import Select from 'components/Select';
 import Icon from 'components/Icon';
 import { showNotification } from 'actions/overlays';
 import NexusAddress from 'components/NexusAddress';
-import SettingsContainer from 'components/SettingsContainer';
 import warningIcon from 'images/warning.sprite.svg';
 import { walletDataDir } from 'consts/paths';
 import { webGLAvailable } from 'consts/misc';
@@ -385,7 +384,7 @@ class SettingsStyle extends Component {
     } = this.props;
 
     return (
-      <SettingsContainer>
+      <>
         <SettingsField
           connectLabel
           label={__('Render globe')}
@@ -506,7 +505,7 @@ class SettingsStyle extends Component {
             {__('Export custom theme')}
           </Button>
         </div>
-      </SettingsContainer>
+      </>
     );
   }
 }

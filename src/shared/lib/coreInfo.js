@@ -1,12 +1,9 @@
-import React from 'react';
-
 import store, { observeStore } from 'store';
 import rpc from 'lib/rpc';
 import { isCoreConnected } from 'selectors';
 import { loadMyAccounts } from 'actions/account';
 import { showNotification } from 'actions/overlays';
 import { bootstrap } from 'actions/bootstrap';
-import { checkFreeSpaceForBootstrap } from 'lib/bootstrap';
 import { getInfo } from 'actions/core';
 import showDesktopNotif from 'utils/showDesktopNotif';
 import {
@@ -92,9 +89,7 @@ export function initializeCoreInfo() {
             break;
           case 'send':
             showDesktopNotif('Sent', mostRecentTx.amount + ' NXS');
-            store.dispatch(
-              showNotification(__('Transaction sent'), 'success')
-            );
+            store.dispatch(showNotification(__('Transaction sent'), 'success'));
             break;
           case 'genesis':
             showDesktopNotif('Genesis', mostRecentTx.amount + ' NXS');

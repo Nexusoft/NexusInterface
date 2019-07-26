@@ -44,6 +44,11 @@ const SettingsContent = styled.div({
   padding: '0 30px',
 });
 
+const SettingsContainer = styled.div({
+  width: 750,
+  margin: '0 auto',
+});
+
 let SettingsRedirect = ({ lastActiveTab, match }) => (
   <Redirect
     exact
@@ -132,20 +137,22 @@ export default class Settings extends Component {
           </SettingsTabBar>
 
           <SettingsContent>
-            <Switch>
-              <Route path={`${match.path}/App`} component={SettingsApp} />
-              <Route path={`${match.path}/Core`} component={SettingsCore} />
-              <Route
-                path={`${match.path}/Security`}
-                component={SettingsSecurity}
-              />
-              <Route path={`${match.path}/Style`} component={SettingsStyle} />
-              <Route
-                path={`${match.path}/Modules`}
-                component={SettingsModules}
-              />
-              <SettingsRedirect match={match} />
-            </Switch>
+            <SettingsContainer>
+              <Switch>
+                <Route path={`${match.path}/App`} component={SettingsApp} />
+                <Route path={`${match.path}/Core`} component={SettingsCore} />
+                <Route
+                  path={`${match.path}/Security`}
+                  component={SettingsSecurity}
+                />
+                <Route path={`${match.path}/Style`} component={SettingsStyle} />
+                <Route
+                  path={`${match.path}/Modules`}
+                  component={SettingsModules}
+                />
+                <SettingsRedirect match={match} />
+              </Switch>
+            </SettingsContainer>
           </SettingsContent>
         </SettingsComponent>
       </Panel>

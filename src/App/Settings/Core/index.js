@@ -14,7 +14,6 @@ import Button from 'components/Button';
 import TextField from 'components/TextField';
 import Switch from 'components/Switch';
 import { showNotification, openConfirmDialog } from 'actions/overlays';
-import SettingsContainer from 'components/SettingsContainer';
 import { updateSettings } from 'actions/settings';
 import * as form from 'utils/form';
 import { rpcErrorHandler } from 'utils/form';
@@ -310,7 +309,7 @@ class SettingsCore extends Component {
     }
 
     return (
-      <SettingsContainer>
+      <>
         <form onSubmit={handleSubmit}>
           <SettingsField
             connectLabel
@@ -469,7 +468,7 @@ class SettingsCore extends Component {
             </Button> */}
           </div>
         </form>
-      </SettingsContainer>
+      </>
     );
   }
 }
