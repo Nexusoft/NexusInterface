@@ -74,8 +74,12 @@ export const formatNumber = (num, maxDecimalDigits) =>
     maximumFractionDigits: maxDecimalDigits,
   }).format(num);
 
-export const formatCurrency = (num, currency = 'USD') =>
-  new Intl.NumberFormat(locale, { style: 'currency', currency }).format(num);
+export const formatCurrency = (num, currency = 'USD', maxDecimalDigits) =>
+  new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency,
+    maximumFractionDigits: maxDecimalDigits,
+  }).format(num);
 
 export const formatPercent = (num, maxDecimalDigits) =>
   new Intl.NumberFormat(locale, {

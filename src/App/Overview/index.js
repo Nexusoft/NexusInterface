@@ -13,9 +13,8 @@ import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import ContextMenuBuilder from 'contextmenu';
 import { getDifficulty } from 'actions/core';
-import * as helpers from 'scripts/helper.js';
 import { updateSettings } from 'actions/settings';
-import { formatNumber, formatCurrency } from 'lib/intl';
+import { formatNumber, formatPercent, formatCurrency } from 'lib/intl';
 import { timing, consts } from 'styles';
 import { isCoreConnected } from 'selectors';
 import Globe from './Globe';
@@ -112,12 +111,18 @@ const mapStateToProps = state => {
       synccomplete < 0 ||
       synccomplete > 100) &&
     !highestPeerBlock;
+  const displayValues =
+    displayNXSvalues &&
+    displayNXSvalues.find(e => e.name === settings.fiatCurrency);
   return {
     coreConnected: isCoreConnected(state),
     difficulty,
     blockDate,
-    rawNXSvalues,
-    displayNXSvalues,
+    market: {
+      ...(rawNXSvalues &&
+        rawNXSvalues.find(e => e.name === settings.fiatCurrency)),
+      displayMarketCap: displayValues && displayValues.marketCap,
+    },
     settings,
     theme,
     coreInfo: info,
@@ -476,95 +481,6 @@ class Overview extends Component {
   }
 
   /**
-   * Calculate the value based on the User's Currency
-   *
-   * @returns
-   * @memberof Overview
-   */
-  calculateFiatvalue() {
-    if (this.props.rawNXSvalues[0]) {
-      let selectedCurrancyValue = this.props.rawNXSvalues.filter(ele => {
-        if (ele.name === this.props.settings.fiatCurrency) {
-          return ele;
-        }
-      });
-      if (selectedCurrancyValue[0] === undefined) {
-        selectedCurrancyValue = this.props.rawNXSvalues.filter(ele => {
-          if (ele.name === 'USD') {
-            return ele;
-          }
-        });
-      }
-
-      return this.props.coreInfo.balance * selectedCurrancyValue[0].price;
-    } else {
-      return 0;
-    }
-  }
-
-  /**
-   * Formats the Market Price
-   *
-   * @returns
-   * @memberof Overview
-   */
-  marketPriceFormatter() {
-    if (this.props.displayNXSvalues[0]) {
-      let selectedCurrancyValue = this.props.displayNXSvalues.filter(ele => {
-        if (ele.name === this.props.settings.fiatCurrency) {
-          return ele;
-        }
-      });
-      return selectedCurrancyValue[0].price;
-    } else {
-      return '$0';
-    }
-  }
-
-  /**
-   * Formats the Market Cap
-   *
-   * @returns
-   * @memberof Overview
-   */
-  marketCapFormatter() {
-    if (this.props.displayNXSvalues[0]) {
-      let selectedCurrancyValue = this.props.displayNXSvalues.filter(ele => {
-        if (ele.name === this.props.settings.fiatCurrency) {
-          return ele;
-        }
-      });
-      return selectedCurrancyValue[0].marketCap;
-    } else {
-      return '$0';
-    }
-  }
-
-  /**
-   * Returns the percentile changed in 24 hrs
-   *
-   * @returns
-   * @memberof Overview
-   */
-  pctChange24hrFormatter() {
-    if (this.props.displayNXSvalues[0]) {
-      let selectedCurrancyValue = this.props.displayNXSvalues.filter(ele => {
-        if (ele.name === this.props.settings.fiatCurrency) {
-          return ele;
-        }
-      });
-      // return selectedCurrancyValue[0].changePct24Hr;
-      if (selectedCurrancyValue[0].changePct24Hr > 0) {
-        return `+ ${selectedCurrancyValue[0].changePct24Hr}`;
-      } else {
-        return selectedCurrancyValue[0].changePct24Hr;
-      }
-    } else {
-      return '0';
-    }
-  }
-
-  /**
    * Displays Wait for Core
    *
    * @memberof Overview
@@ -686,7 +602,7 @@ class Overview extends Component {
         stakerate,
         blocks,
       },
-      displayNXSvalues,
+      market,
       difficulty,
       settings,
       theme,
@@ -717,8 +633,12 @@ class Overview extends Component {
                 {__('Balance')} ({fiatCurrency})
               </StatLabel>
               <StatValue>
-                {this.waitForCore(
-                  formatCurrency(this.calculateFiatvalue(), fiatCurrency)
+                {market && market.price ? (
+                  this.waitForCore(
+                    formatCurrency(balance * market.price, fiatCurrency)
+                  )
+                ) : (
+                  <span className="dim">-</span>
                 )}
               </StatValue>
             </MinimalStat>
@@ -733,8 +653,8 @@ class Overview extends Component {
                 {__('Market Price')} ({fiatCurrency})
               </StatLabel>
               <StatValue>
-                {!!displayNXSvalues[0] ? (
-                  this.marketPriceFormatter()
+                {market && market.price ? (
+                  formatCurrency(market.price, fiatCurrency, 4)
                 ) : (
                   <span className="dim">-</span>
                 )}
@@ -746,8 +666,15 @@ class Overview extends Component {
                 {__('24hr Change')} ({fiatCurrency} %)
               </StatLabel>
               <StatValue>
-                {!!displayNXSvalues[0] ? (
-                  this.pctChange24hrFormatter() + '%'
+                {market ? (
+                  <>
+                    {market.changePct24Hr > 0
+                      ? '+ '
+                      : market.changePct24Hr < 0
+                      ? '- '
+                      : ''}
+                    {formatPercent(market.changePct24Hr)}
+                  </>
                 ) : (
                   <span className="dim">-</span>
                 )}
@@ -820,13 +747,17 @@ class Overview extends Component {
                 </span>
               </StatLabel>
               <StatValue>
-                {settings.overviewDisplay === 'balHidden'
-                  ? '-'
-                  : settings.displayFiatBalance
-                  ? this.waitForCore(
-                      formatCurrency(this.calculateFiatvalue(), fiatCurrency)
-                    )
-                  : this.waitForCore(formatNumber(balance))}
+                {settings.overviewDisplay === 'balHidden' ? (
+                  '-'
+                ) : !settings.displayFiatBalance ? (
+                  this.waitForCore(formatNumber(balance))
+                ) : market && market.price ? (
+                  this.waitForCore(
+                    formatCurrency(balance * market.price, fiatCurrency)
+                  )
+                ) : (
+                  <span className="dim">-</span>
+                )}
               </StatValue>
             </div>
             <StatIcon
@@ -862,16 +793,16 @@ class Overview extends Component {
             <StatIcon icon={transactionIcon} />
           </Stat>
           <Stat
-            as={displayNXSvalues[0] ? Link : undefined}
-            to={displayNXSvalues[0] ? '/Market' : undefined}
+            as={market ? Link : undefined}
+            to={market ? '/Market' : undefined}
           >
             <div>
               <StatLabel>
                 {__('Market Price')} ({fiatCurrency})
               </StatLabel>
               <StatValue>
-                {!!displayNXSvalues[0] ? (
-                  this.marketPriceFormatter()
+                {market && market.price ? (
+                  formatCurrency(market.price, fiatCurrency, 4)
                 ) : (
                   <span className="dim">-</span>
                 )}
@@ -880,16 +811,16 @@ class Overview extends Component {
             <StatIcon icon={chartIcon} />
           </Stat>
           <Stat
-            as={displayNXSvalues[0] ? Link : undefined}
-            to={displayNXSvalues[0] ? '/Market' : undefined}
+            as={market ? Link : undefined}
+            to={market ? '/Market' : undefined}
           >
             <div>
               <StatLabel>
                 {__('Market Cap')} ({fiatCurrency})
               </StatLabel>
               <StatValue>
-                {!!displayNXSvalues[0] ? (
-                  this.marketCapFormatter()
+                {market && market.displayMarketCap ? (
+                  market.displayMarketCap
                 ) : (
                   <span className="dim">-</span>
                 )}
@@ -898,16 +829,16 @@ class Overview extends Component {
             <StatIcon icon={supplyIcon} />
           </Stat>
           <Stat
-            as={displayNXSvalues[0] ? Link : undefined}
-            to={displayNXSvalues[0] ? '/Market' : undefined}
+            as={market ? Link : undefined}
+            to={market ? '/Market' : undefined}
           >
             <div>
               <StatLabel>
                 {__('24hr Change')} ({fiatCurrency} %)
               </StatLabel>
               <StatValue>
-                {!!displayNXSvalues[0] ? (
-                  this.pctChange24hrFormatter() + '%'
+                {market ? (
+                  formatPercent(market.changePct24Hr)
                 ) : (
                   <span className="dim">-</span>
                 )}
