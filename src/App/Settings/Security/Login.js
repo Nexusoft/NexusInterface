@@ -7,7 +7,6 @@ import { connect } from 'react-redux';
 // Internal Dependencies
 import { getInfo } from 'actions/core';
 import rpc from 'lib/rpc';
-import Text from 'components/Text';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import Button from 'components/Button';
@@ -55,10 +54,10 @@ const Buttons = styled.div({
 
     if (!props.tritium || setLoginTimeOut) {
       if (!date) {
-        errors.date = <Text id="Settings.Errors.LoginDate" />;
+        errors.date = __('Date is required');
       }
       if (!time) {
-        errors.time = <Text id="Settings.Errors.LoginTime" />;
+        errors.time = __('Time is required');
       }
       if (date && time) {
         let unlockUntil = 0;
@@ -70,13 +69,13 @@ const Buttons = styled.div({
         unlockUntil = Math.round((unlockDate.getTime() - now.getTime()) / 1000);
 
         if (unlockUntil < 3600) {
-          errors.time = <Text id="Settings.Errors.LoginTimeTooClose" />;
+          errors.time = __('Time must be at least one hour in the future');
         }
       }
     }
 
     if (!password) {
-      errors.password = <Text id="Settings.Errors.LoginPassword" />;
+      errors.password = __('Password is required');
     }
     return errors;
   },
@@ -96,21 +95,23 @@ const Buttons = styled.div({
   },
   onSubmitSuccess: async (result, dispatch, props) => {
     props.reset();
-    props.showNotification(<Text id="Settings.LoggedIn" />, 'success');
+    props.showNotification(__('Logged in successfully'), 'success');
     dispatch(getInfo());
   },
   onSubmitFail: (errors, dispatch, submitError, props) => {
     if (!errors || !Object.keys(errors).length) {
-      let note = submitError || <Text id="Common.UnknownError" />;
+      let note = submitError || __('An unknown error occurred');
       if (
         submitError === 'Error: The wallet passphrase entered was incorrect.'
       ) {
-        note = <Text id="Alert.IncorrectPasssword" />;
+        note = __('Incorrect passsword');
       } else if (submitError === 'value is type null, expected int') {
-        note = <Text id="Alert.FutureDate" />;
+        note = __(
+          'Unlock until date/time must be at least an hour in the future'
+        );
       }
       props.openErrorDialog({
-        message: <Text id="Settings.Errors.LoggingIn" />,
+        message: __('Error logging in'),
         note: note,
       });
     }
@@ -126,7 +127,7 @@ class Login extends Component {
   renderTimeInputs = ({ input }) =>
     !this.props.tritium || input.value ? (
       <div>
-        <FormField connectLabel label={<Text id="Settings.LoginDate" />}>
+        <FormField connectLabel label={__('Login until date')}>
           <Field
             component={TextField.RF}
             name="date"
@@ -134,7 +135,7 @@ class Login extends Component {
             min={new Date().toISOString().slice(0, 10)}
           />
         </FormField>
-        <FormField connectLabel label={<Text id="Settings.LoginTime" />}>
+        <FormField connectLabel label={__('Login until time')}>
           <Field component={TextField.RF} name="time" type="time" />
         </FormField>
       </div>
@@ -153,27 +154,27 @@ class Login extends Component {
       <div>
         <form onSubmit={handleSubmit}>
           <LoginFieldSet legend="Login">
-            <Text id="Settings.PasswordPlaceholder">
-              {text => (
-                <FormField connectLabel label={<Text id="Settings.Password" />}>
-                  <Field
-                    component={TextField.RF}
-                    name="password"
-                    type="password"
-                    placeholder={text}
-                  />
-                </FormField>
-              )}
-            </Text>
+            <FormField connectLabel label={__('Password')}>
+              <Field
+                component={TextField.RF}
+                name="password"
+                type="password"
+                placeholder={__('Your wallet password')}
+              />
+            </FormField>
             <FormField
               inline
               connectLabel
-              label={<Text id="Settings.StakingOnly" />}
+              label={__('Login for staking & mining only')}
             >
               <Field component={Switch.RF} name="stakingOnly" />
             </FormField>
             {tritium && (
-              <FormField inline connectLabel label={'SET TIMEOUT FOR LOGIN'}>
+              <FormField
+                inline
+                connectLabel
+                label={__('SET TIMEOUT FOR LOGIN')}
+              >
                 <Field component={Switch.RF} name="setLoginTimeOut" />
               </FormField>
             )}

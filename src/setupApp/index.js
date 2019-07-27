@@ -56,15 +56,13 @@ export function preRender() {
 }
 
 export function postRender() {
-  const {
-    settings: { autoUpdate },
-  } = store.getState();
+  const state = store.getState();
 
   startCoreOuputWatch();
 
   initializeMenu();
   initializeWebView();
-  initializeUpdater(autoUpdate);
+  initializeUpdater(state.settings.autoUpdate);
   initializeBootstrapEvents(store);
 }
 

@@ -56,13 +56,3 @@ export function throttled(fn, ms) {
     return lastTimerId;
   };
 }
-
-export function limitDecimal(num, dec) {
-  if (typeof num === 'number' && typeof dec === 'number') {
-    const [int, decimal] = String(num).split('.');
-    if (decimal && decimal.length > dec) {
-      return num.toFixed(dec);
-    }
-  }
-  return num;
-}

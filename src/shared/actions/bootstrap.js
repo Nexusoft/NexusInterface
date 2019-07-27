@@ -1,5 +1,3 @@
-import React from 'react';
-
 import * as TYPE from 'consts/actionTypes';
 import { openConfirmDialog, openModal } from 'actions/overlays';
 import { updateSettings } from 'actions/settings';
@@ -29,7 +27,9 @@ export function bootstrap({ suggesting } = {}) {
       if (!suggesting) {
         store.dispatch(
           openErrorDialog({
-            message: <Text id="ToolTip.NotEnoughSpace" />,
+            message: __(
+              'Not enough disk space! Minimum 12GB of free space is required.'
+            ),
           })
         );
       }
@@ -39,15 +39,16 @@ export function bootstrap({ suggesting } = {}) {
     dispatch(setBootstrapStatus('prompting'));
     dispatch(
       openConfirmDialog({
-        question: 'Download recent database?',
-        note:
-          'Downloading a recent version of the database might reduce the time it takes to synchronize your wallet',
-        labelYes: "Yes, let's bootstrap it",
+        question: __('Download recent database?'),
+        note: __(
+          'Downloading a recent version of the database might reduce the time it takes to synchronize your wallet'
+        ),
+        labelYes: __("Yes, let's bootstrap it"),
         callbackYes: () => {
           startBootstrap({ dispatch, getState });
           dispatch(openModal(BootstrapModal));
         },
-        labelNo: 'No, let it sync',
+        labelNo: __('No, let it sync'),
         skinNo: suggesting ? 'danger' : undefined,
         callbackNo: () => {
           dispatch(setBootstrapStatus('idle'));

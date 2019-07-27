@@ -4,12 +4,10 @@ import { connect } from 'react-redux';
 import { shell } from 'electron';
 // Internal Dependencies
 import Panel from 'components/Panel';
-import Text from 'components/Text';
 import styled from '@emotion/styled';
 
 // Images
 import nexusLogo from 'images/logo-full.svg';
-import updateicon from 'images/unlock.png';
 
 const Column = styled.div({
   flex: '50%',
@@ -171,19 +169,21 @@ class About extends Component {
    */
   render() {
     return (
-      <Panel title={<Text id="About" />}>
+      <Panel title={__('About')}>
         <NexusLogoimg src={nexusLogo} />
         <br />
         <Column>
           <Row>
             <Column>
-              <b>Interface Version:</b> {this.getInterfaceVersionNumber()}
+              <b>{__('Interface Version')}:</b>{' '}
+              {this.getInterfaceVersionNumber()}
               <br />
-              <b>Build Date: </b> July 19th 2019 <br />
+              <b>{__('Build Date')}: </b> July 19th 2019 <br />
             </Column>
             <Column>
-              <b>Nexus Core Version:</b> {this.getDaemonVersionNumber()} <br />
-              <b>Build Date: </b> July 19th 2019 <br />
+              <b>{__('Nexus Core Version')}:</b> {this.getDaemonVersionNumber()}{' '}
+              <br />
+              <b>{__('Build Date')}: </b> July 19th 2019 <br />
             </Column>
           </Row>
           <CenterText>

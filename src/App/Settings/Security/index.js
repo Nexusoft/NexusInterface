@@ -3,9 +3,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 // Internal
-import Text from 'components/Text';
 import WaitingMessage from 'components/WaitingMessage';
 import { switchSettingsTab } from 'actions/ui';
+import { isCoreConnected } from 'selectors';
 import Login from './Login';
 import Encrypted from './Encrypted';
 import Unencrypted from './Unencrypted';
@@ -17,13 +17,9 @@ import Unencrypted from './Unencrypted';
  * @extends {React.Component}
  */
 @connect(
-  ({
-    core: {
-      info: { connections, locked },
-    },
-  }) => ({
-    locked,
-    connections,
+  state => ({
+    locked: state.core.info.locked,
+    coreConnected: isCoreConnected(state),
   }),
   { switchSettingsTab }
 )
@@ -45,11 +41,11 @@ class SettingsSecurity extends React.Component {
    * @memberof SettingsSecurity
    */
   render() {
-    const { locked, connections } = this.props;
-    if (connections === undefined) {
+    const { locked, coreConnected } = this.props;
+    if (!coreConnected) {
       return (
         <WaitingMessage>
-          <Text id="transactions.Loading" />
+          {__('Connecting to Nexus Core')}
           ...
         </WaitingMessage>
       );

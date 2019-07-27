@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
 // Internal
-import Text from 'components/Text';
 import * as FlagFile from 'images/LanguageFlags';
 import { updateSettings } from 'actions/settings';
 import SettingsField from 'components/SettingsField';
@@ -132,7 +131,10 @@ class LanguageSetting extends Component {
    *
    * @memberof LanguageSetting
    */
-  handleChange = locale => this.props.updateSettings({ locale });
+  handleChange = locale => {
+    this.props.updateSettings({ locale });
+    location.reload();
+  };
 
   /**
    * Component's Renderable JSX
@@ -142,7 +144,7 @@ class LanguageSetting extends Component {
    */
   render() {
     return (
-      <SettingsField label={<Text id="Settings.Language" />}>
+      <SettingsField label={__('Language')}>
         <Select
           options={languages}
           value={this.props.locale}

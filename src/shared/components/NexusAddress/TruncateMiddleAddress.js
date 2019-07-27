@@ -5,7 +5,6 @@ import { clipboard } from 'electron';
 import styled from '@emotion/styled';
 
 // Internal
-import Text from 'components/Text';
 import Tooltip from 'components/Tooltip';
 import { showNotification } from 'actions/overlays';
 import { timing, consts } from 'styles';
@@ -162,7 +161,10 @@ export default class TruncateMiddleAddress extends React.Component {
    */
   copyAddress = () => {
     clipboard.writeText(this.props.address);
-    this.props.showNotification(<Text id="Alert.AddressCopied" />, 'success');
+    this.props.showNotification(
+      __('Address has been copied to clipboard'),
+      'success'
+    );
   };
 
   /**
@@ -178,7 +180,7 @@ export default class TruncateMiddleAddress extends React.Component {
       <TruncateMiddleAddressComponent {...rest}>
         {!!label && <Label>{label}</Label>}
 
-        <Tooltip.Trigger tooltip="Click to copy to clipboard">
+        <Tooltip.Trigger tooltip={__('Click to copy to clipboard')}>
           <AddressWrapper
             hasLabel={!!label}
             inputProps={{

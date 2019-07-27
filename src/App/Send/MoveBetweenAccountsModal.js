@@ -6,7 +6,6 @@ import { reduxForm, Field } from 'redux-form';
 
 // Internal
 import rpc from 'lib/rpc';
-import Text from 'components/Text';
 import Select from 'components/Select';
 import Button from 'components/Button';
 import Modal from 'components/Modal';
@@ -87,15 +86,15 @@ const acctionCreators = {
   validate: ({ moveFrom, moveTo, amount }) => {
     const errors = {};
     if (!moveFrom) {
-      errors.moveFrom = <Text id="sendReceive.Messages.NoAccounts" />;
+      errors.moveFrom = __('No accounts selected');
     }
     if (!moveTo) {
-      errors.moveTo = <Text id="sendReceive.Messages.NoAccounts" />;
+      errors.moveTo = __('No accounts selected');
     } else if (moveTo === moveFrom) {
-      errors.moveTo = <Text id="sendReceive.Messages.SameAccount" />;
+      errors.moveTo = __('Cannot move to the same account');
     }
     if (!amount || parseFloat(amount) <= 0) {
-      errors.amount = <Text id="Alert.InvalidAmount" />;
+      errors.amount = __('Invalid amount');
     }
     return errors;
   },
@@ -105,13 +104,13 @@ const acctionCreators = {
       try {
         const result = await rpc('validateaddress', [sendTo]);
         if (!result.isvalid) {
-          throw { sendTo: <Text id="Alert.InvalidAddress" /> };
+          throw { sendTo: __('Invalid address') };
         }
         if (result.ismine) {
-          throw { sendTo: <Text id="Alert.registeredToThis" /> };
+          throw { sendTo: __('This is an address registered to this wallet.') };
         }
       } catch (err) {
-        throw { sendTo: <Text id="Alert.InvalidAddress" /> };
+        throw { sendTo: __('Invalid address') };
       }
     }
     return null;
@@ -130,10 +129,10 @@ const acctionCreators = {
     props.reset();
     props.loadMyAccounts();
     props.openSuccessDialog({
-      message: <Text id="sendReceive.Messages.Success" />,
+      message: __('NXS moved successfully'),
     });
   },
-  onSubmitFail: rpcErrorHandler(<Text id="sendReceive.Messages.ErrorMoving" />),
+  onSubmitFail: rpcErrorHandler(__('Error moving NXS')),
 })
 class MoveBetweenAccountsForm extends Component {
   /**
@@ -157,11 +156,13 @@ class MoveBetweenAccountsForm extends Component {
       const {
         payload: { id: modalId },
       } = this.props.openErrorDialog({
-        message: <Text id="sendReceive.Messages.NotLoggedIn" />,
+        message: __('You are not logged in'),
         note: (
           <>
             <p>
-              <Text id="sendReceive.Messages.NotLoggedInNote" />
+              {__(
+                'You need to log in to your wallet before sending transactions'
+              )}
             </p>
             <Link
               to="/Settings/Security"
@@ -170,7 +171,7 @@ class MoveBetweenAccountsForm extends Component {
                 this.props.closeModal();
               }}
             >
-              <Text id="sendReceive.Messages.LogInNow" />
+              {__('Log in now')}
             </Link>
           </>
         ),
@@ -179,7 +180,7 @@ class MoveBetweenAccountsForm extends Component {
     }
 
     this.props.openConfirmDialog({
-      question: <Text id="sendReceive.MoveNXS" />,
+      question: __('Move NXS'),
       callbackYes: handleSubmit,
     });
   };
@@ -194,24 +195,20 @@ class MoveBetweenAccountsForm extends Component {
     return (
       <form onSubmit={this.confirmMove}>
         <AccountSelectors>
-          <Label>
-            <Text id="sendReceive.FromAccount" />
-          </Label>
+          <Label>{__('From account')}</Label>
           <Field
             component={Select.RF}
             name="moveFrom"
             options={this.props.accountOptions}
-            placeholder={<Text id="sendReceive.SelectAnAccount" />}
+            placeholder={__('Select an account')}
           />
 
-          <Label>
-            <Text id="sendReceive.ToAccount" />
-          </Label>
+          <Label>{__('To account')}</Label>
           <Field
             component={Select.RF}
             name="moveTo"
             options={this.props.accountOptions}
-            placeholder={<Text id="sendReceive.SelectAnAccount" />}
+            placeholder={__('Select an account')}
           />
         </AccountSelectors>
 
@@ -219,7 +216,7 @@ class MoveBetweenAccountsForm extends Component {
 
         <Buttons>
           <Button skin="primary" type="submit" disabled={this.props.submitting}>
-            <Text id="sendReceive.MoveNXS" />
+            {__('Move NXS')}
           </Button>
         </Buttons>
       </form>
@@ -237,9 +234,7 @@ const MoveBetweenAccountsModal = () => (
   <Modal style={{ maxWidth: 650 }}>
     {closeModal => (
       <>
-        <Modal.Header>
-          <Text id="sendReceive.MoveNxsBetweenAccount" />
-        </Modal.Header>
+        <Modal.Header>{__('Move NXS between accounts')}</Modal.Header>
 
         <Modal.Body>
           <MoveBetweenAccountsForm closeModal={closeModal} />

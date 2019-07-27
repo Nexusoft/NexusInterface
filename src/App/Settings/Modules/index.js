@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 // Internal
 import { getAllModules } from 'lib/modules';
 import { switchSettingsTab } from 'actions/ui';
-import SettingsContainer from 'components/SettingsContainer';
 import Module from './Module';
 import AddModule from './AddModule';
 
@@ -40,7 +39,7 @@ class SettingsModules extends React.Component {
    */
   render() {
     return (
-      <SettingsContainer>
+      <>
         <AddModule />
         {this.props.modules.map((module, i) => (
           <Module
@@ -49,7 +48,7 @@ class SettingsModules extends React.Component {
             last={i === this.props.modules.length - 1}
           />
         ))}
-      </SettingsContainer>
+      </>
     );
   }
 }

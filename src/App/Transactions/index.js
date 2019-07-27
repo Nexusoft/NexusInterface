@@ -25,7 +25,6 @@ import TextField from 'components/TextField';
 import FormField from 'components/FormField';
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
-import Text, { translate } from 'components/Text';
 import Table from 'scripts/utilities-react';
 import { loadMyAccounts } from 'actions/account';
 import rpc from 'lib/rpc';
@@ -33,6 +32,7 @@ import * as TYPE from 'consts/actionTypes';
 import ContextMenuBuilder from 'contextmenu';
 import { walletDataDir } from 'consts/paths';
 import { openModal } from 'actions/overlays';
+import { isCoreConnected } from 'selectors';
 import TransactionDetailsModal from './TransactionDetailsModal';
 import styles from './style.css';
 import CSVDownloadModal from './TransactionCSVDownloadModal';
@@ -52,58 +52,54 @@ let tempaddpress = new Map();
 const categories = [
   {
     value: 'all',
-    display: <Text id="transactions.All" />,
+    display: __('All'),
   },
   {
     value: 'receive', // Should be made credit with tritium.
-    display: <Text id="transactions.Receive" />,
+    display: __('Receive'),
   },
   {
     value: 'debit',
-    display: <Text id="transactions.Sent" />,
+    display: __('Sent'),
   },
   {
     value: 'stake',
-    display: <Text id="transactions.Stake" />,
+    display: __('Stake'),
   },
   {
     value: 'generate',
-    display: <Text id="transactions.Generate" />,
+    display: __('Generate'),
   },
   {
     value: 'immature',
-    display: <Text id="transactions.Immature" />,
+    display: __('Immature'),
   },
   {
     value: 'orphan',
-    display: <Text id="transactions.Orphan" />,
+    display: __('Orphan'),
   },
   {
     value: 'genesis',
-    display: <Text id="transactions.Genesis" />,
-  },
-  {
-    value: 'trust',
-    display: <Text id="transactions.Trust" />,
+    display: __('Genesis'),
   },
 ];
 
 const timeFrames = [
   {
     value: 'All',
-    display: <Text id="transactions.All" />,
+    display: __('All'),
   },
   {
     value: 'Year',
-    display: <Text id="transactions.PastYear" />,
+    display: __('Past Year'),
   },
   {
     value: 'Month',
-    display: <Text id="transactions.PastMonth" />,
+    display: __('Past Month'),
   },
   {
     value: 'Week',
-    display: <Text id="transactions.PastWeek" />,
+    display: __('Past Week'),
   },
 ];
 
@@ -127,6 +123,7 @@ const mapStateToProps = state => {
     addressBook: state.addressBook,
     settings: state.settings,
     theme: state.theme,
+    coreConnected: isCoreConnected(state),
   };
 };
 const mapDispatchToProps = dispatch => ({
@@ -471,7 +468,7 @@ class Transactions extends Component {
 
     transactiontablecontextmenu.append(
       new remote.MenuItem({
-        label: translate('transactions.MoreDetails', locale),
+        label: __('More details'),
         click: this.openTxDetailsModal,
       })
     );
@@ -505,23 +502,23 @@ class Transactions extends Component {
 
     transactiontablecontextmenu.append(
       new remote.MenuItem({
-        label: translate('Settings.Copy', locale),
+        label: __('Copy'),
         submenu: [
           {
-            label: translate('AddressBook.Address', locale),
+            label: __('Address'),
             click() {
               tablecopyaddresscallback();
             },
           },
           {
-            label: translate('AddressBook.Account', locale),
+            label: __('Account'),
 
             click() {
               tablecopyaccountcallback();
             },
           },
           {
-            label: translate('sendReceive.TableAmount', locale),
+            label: __('Amount'),
             click() {
               tablecopyamountcallback();
             },
@@ -1139,7 +1136,11 @@ class Transactions extends Component {
       tx =>
         tx &&
         ((tx.address == undefined &&
-          (tx.category == 'generate' || tx.category == 'immature')) ||
+          (tx.category == 'generate' ||
+            tx.category == 'immature' ||
+            tx.category == 'trust' ||
+            tx.category == 'stake' ||
+            tx.category == 'orphan')) ||
           (tx.address && tx.address.toLowerCase().includes(addressFilter)))
     );
   }
@@ -1329,7 +1330,10 @@ class Transactions extends Component {
       txCounter++;
       let isPending = '';
       let tempCategory = ele.category;
-      if (ele.confirmations <= this.props.settings.minConfirmations) {
+      if (
+        ele.confirmations <= this.props.settings.minConfirmations &&
+        ele.category != 'orphan'
+      ) {
         isPending = '(Pending)';
       }
 
@@ -1363,13 +1367,13 @@ class Transactions extends Component {
     let tempColumns = [];
 
     tempColumns.push({
-      Header: <Text id="transactions.TX" />,
+      Header: __('TX Number'),
       accessor: 'transactionnumber',
       maxWidth: 100,
     });
 
     tempColumns.push({
-      Header: <Text id="transactions.Time" />,
+      Header: __('Time span'),
       id: 'time',
       Cell: d => (
         <div>
@@ -1385,47 +1389,47 @@ class Transactions extends Component {
       id: 'category',
       Cell: q => {
         if (q.value === 'debit' || q.value === 'send') {
-          return <Text id="transactions.Sent" />;
+          return __('Sent');
         } else if (q.value === 'credit' || q.value === 'receive') {
-          return <Text id="transactions.Receive" />;
+          return __('Receive');
         } else if (q.value === 'genesis') {
-          return <Text id="transactions.Genesis" />;
+          return __('Genesis');
         } else if (q.value === 'trust') {
-          return <Text id="transactions.Trust" />;
+          return __('Trust');
         } else if (q.value.endsWith('(Pending)')) {
-          return <Text id="transactions.Pending" />;
+          return __('(Pending)');
         } else if (q.value === 'generate') {
-          return <Text id="transactions.Generate" />;
+          return __('Generate');
         } else if (q.value === 'immature') {
-          return <Text id="transactions.Immature" />;
+          return __('Immature');
         } else if (q.value === 'stake') {
-          return <Text id="transactions.Stake" />;
+          return __('Stake');
         } else if ((q.value = 'orphan')) {
-          return <Text id="transactions.Orphan" />;
+          return __('Orphan');
         } else {
-          return <Text id="transactions.UnknownCategory" />;
+          return __('Unknown');
         }
       },
-      Header: <Text id="transactions.Category" />,
+      Header: __('CATEGORY'),
       accessor: 'category',
 
       maxWidth: 85,
     });
 
     tempColumns.push({
-      Header: <Text id="transactions.Amount" />,
+      Header: __('AMOUNT'),
       accessor: 'amount',
       maxWidth: 100,
     });
 
     tempColumns.push({
-      Header: <Text id="transactions.Account" />,
+      Header: __('ACCOUNT'),
       accessor: 'account',
       maxWidth: 150,
     });
 
     tempColumns.push({
-      Header: <Text id="transactions.Address" />,
+      Header: __('ADDRESS'),
       accessor: 'address',
     });
     return tempColumns;
@@ -1538,29 +1542,29 @@ class Transactions extends Component {
     };
 
     if (inData.category == 'credit' || inData.category === 'receive') {
-      inData.category = translate('transactions.Receive', locale);
+      inData.category = __('Receive');
     } else if (inData.category == 'debit' || inData.category === 'send') {
-      inData.category = translate('transactions.Sent', locale);
+      inData.category = __('Sent');
     } else if (inData.category == 'genesis') {
-      inData.category = translate('transactions.Genesis', locale);
+      inData.category = __('Genesis');
     } else if (inData.category == 'trust') {
-      inData.category = translate('transactions.Trust', locale);
+      inData.category = __('Trust');
     } else if (inData.category == 'generate') {
-      inData.category = translate('transactions.Generate', locale);
+      inData.category = __('Generate');
     } else if (inData.category == 'immature') {
-      inData.category = translate('transactions.Immature', locale);
+      inData.category = __('Immature');
     } else if (inData.category == 'stake') {
-      inData.category = translate('transactions.Stake', locale);
+      inData.category = __('Stake');
     } else if (inData.category == 'orphan') {
-      inData.category = translate('transactions.Orphan', locale);
+      inData.category = __('Orphan');
     } else {
-      inData.category = translate('transactions.UnknownCategory', locale);
+      inData.category = __('Unknown');
     }
     return (
       inData.category +
-      `\n ${translate('transactions.AMOUNT', locale)}` +
+      `\n ${__('Amount: ')}` +
       inData.b +
-      `\n ${translate('transactions.TIME', locale)}` +
+      `\n ${__('Time: ')}` +
       inData.a
     );
   };
@@ -1890,10 +1894,7 @@ class Transactions extends Component {
         value: i + 1,
         display: e.account,
       }));
-      return [
-        { value: 0, display: translate('transactions.AllAccounts', locale) },
-        ...accounts,
-      ];
+      return [{ value: 0, display: __('All Accounts') }, ...accounts];
     }
     return [];
   };
@@ -2048,7 +2049,7 @@ class Transactions extends Component {
     return (
       <Panel
         icon={transactionIcon}
-        title={<Text id="transactions.Details" />}
+        title={__('Transaction details')}
         controls={
           <Select
             value={this.props.selectedAccount}
@@ -2058,9 +2059,9 @@ class Transactions extends Component {
           />
         }
       >
-        {this.props.connections === undefined ? (
+        {!this.props.coreConnected ? (
           <WaitingMessage>
-            <Text id="transactions.Loading" />
+            {__('Connecting to Nexus Core')}
             ...
           </WaitingMessage>
         ) : (
@@ -2101,10 +2102,7 @@ class Transactions extends Component {
               <div style={{ fontSize: '75%' }}>Show Transaction Chart</div>
             )}
             <Filters>
-              <FormField
-                connectLabel
-                label={<Text id="transactions.SearchAddress" />}
-              >
+              <FormField connectLabel label={__('Search address')}>
                 <TextField
                   inputProps={{
                     type: 'search',
@@ -2116,7 +2114,7 @@ class Transactions extends Component {
                 />
               </FormField>
 
-              <FormField label={<Text id="transactions.Type" />}>
+              <FormField label={__('Type')}>
                 <Select
                   value={this.state.categoryFilter}
                   onChange={this.transactiontypefiltercallback.bind(this)}
@@ -2124,10 +2122,7 @@ class Transactions extends Component {
                 />
               </FormField>
 
-              <FormField
-                connectLabel
-                label={<Text id="transactions.MinimumAmount" />}
-              >
+              <FormField connectLabel label={__('Min amount')}>
                 <TextField
                   type="number"
                   min="0"
@@ -2136,7 +2131,7 @@ class Transactions extends Component {
                 />
               </FormField>
 
-              <FormField label={<Text id="transactions.Time" />}>
+              <FormField label={__('Time span')}>
                 <Select
                   value={this.state.displayTimeFrame}
                   onChange={this.transactionTimeframeChange.bind(this)}
@@ -2144,7 +2139,7 @@ class Transactions extends Component {
                 />
               </FormField>
 
-              <Tooltip.Trigger tooltip={<Text id="transactions.Download" />}>
+              <Tooltip.Trigger tooltip={__('Download')}>
                 <Button
                   square
                   className="relative"

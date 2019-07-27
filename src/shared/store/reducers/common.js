@@ -1,7 +1,6 @@
 import * as TYPE from 'consts/actionTypes';
 
 const initialState = {
-  highestPeerBlock: null,
   blockDate: null,
   rpcCallList: [],
   rawBTCvalues: [],
@@ -17,12 +16,6 @@ export default (state = initialState, action) => {
       return {
         ...state,
         blockDate: action.payload,
-      };
-
-    case TYPE.SET_HIGHEST_PEER_BLOCK:
-      return {
-        ...state,
-        highestPeerBlock: action.payload,
       };
 
     case TYPE.ADD_RPC_CALL:

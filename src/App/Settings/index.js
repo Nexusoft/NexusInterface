@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Route, Redirect, Switch } from 'react-router';
 import { remote } from 'electron';
-import Text from 'components/Text';
 import styled from '@emotion/styled';
 import googleanalytics from 'scripts/googleanalytics';
 
@@ -43,6 +42,11 @@ const SettingsContent = styled.div({
   overflow: 'auto',
   margin: '0 -30px',
   padding: '0 30px',
+});
+
+const SettingsContainer = styled.div({
+  width: 750,
+  margin: '0 auto',
 });
 
 let SettingsRedirect = ({ lastActiveTab, match }) => (
@@ -106,55 +110,49 @@ export default class Settings extends Component {
     const { match } = this.props;
 
     return (
-      <Panel
-        bodyScrollable={false}
-        icon={settingsIcon}
-        title={<Text id="Settings.Settings" />}
-      >
+      <Panel bodyScrollable={false} icon={settingsIcon} title={__('Settings')}>
         <SettingsComponent>
           <SettingsTabBar>
             <Tab
               link={`${match.url}/App`}
               icon={logoIcon}
-              text={<Text id="Settings.Application" />}
+              text={__('Application')}
             />
-            <Tab
-              link={`${match.url}/Core`}
-              icon={coreIcon}
-              text={<Text id="Settings.Core" />}
-            />
+            <Tab link={`${match.url}/Core`} icon={coreIcon} text={__('Core')} />
             <Tab
               link={`${match.url}/Security`}
               icon={lockIcon}
-              text={<Text id="Settings.Security" />}
+              text={__('Security')}
             />
             <Tab
               link={`${match.url}/Style`}
               icon={leafIcon}
-              text={<Text id="Settings.Style" />}
+              text={__('Style')}
             />
             <Tab
               link={`${match.url}/Modules`}
               icon={legoIcon}
-              text={<Text id="Settings.Modules" />}
+              text={__('Modules')}
             />
           </SettingsTabBar>
 
           <SettingsContent>
-            <Switch>
-              <Route path={`${match.path}/App`} component={SettingsApp} />
-              <Route path={`${match.path}/Core`} component={SettingsCore} />
-              <Route
-                path={`${match.path}/Security`}
-                component={SettingsSecurity}
-              />
-              <Route path={`${match.path}/Style`} component={SettingsStyle} />
-              <Route
-                path={`${match.path}/Modules`}
-                component={SettingsModules}
-              />
-              <SettingsRedirect match={match} />
-            </Switch>
+            <SettingsContainer>
+              <Switch>
+                <Route path={`${match.path}/App`} component={SettingsApp} />
+                <Route path={`${match.path}/Core`} component={SettingsCore} />
+                <Route
+                  path={`${match.path}/Security`}
+                  component={SettingsSecurity}
+                />
+                <Route path={`${match.path}/Style`} component={SettingsStyle} />
+                <Route
+                  path={`${match.path}/Modules`}
+                  component={SettingsModules}
+                />
+                <SettingsRedirect match={match} />
+              </Switch>
+            </SettingsContainer>
           </SettingsContent>
         </SettingsComponent>
       </Panel>

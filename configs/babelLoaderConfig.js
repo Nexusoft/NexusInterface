@@ -28,30 +28,54 @@ const reactOptimizePreset = [
   'babel-plugin-transform-react-pure-class-to-function',
 ];
 
+const presetEnv = [
+  '@babel/preset-env',
+  {
+    targets: { electron: require('electron/package.json').version },
+    useBuiltIns: 'usage',
+    corejs: require('core-js/package.json').version,
+  },
+];
+
 const devPlugins = [];
 
-const prodPlugins = ['babel-plugin-dev-expression', ...reactOptimizePreset];
+const prodPlugins = ['babel-plugin-dev-expression'];
+const development = process.env.NODE_ENV === 'development';
 
-module.exports = function(api) {
-  const development = process.env.NODE_ENV === 'development';
-  api.cache(true);
-
-  return {
-    presets: [
-      [
-        '@babel/preset-env',
-        {
-          targets: { electron: require('electron/package.json').version },
-          useBuiltIns: 'usage',
-          corejs: require('core-js/package.json').version,
-        },
-      ],
-      ['@babel/preset-react', { development }],
-    ],
+const rendererBabelConfig = hot => {
+  const config = {
     plugins: [
       ['emotion', { sourceMap: development }],
       ...stage0Preset,
-      ...(development ? devPlugins : prodPlugins),
+      ...(development ? devPlugins : [...prodPlugins, ...reactOptimizePreset]),
     ],
+    presets: [presetEnv, ['@babel/preset-react', { development }]],
   };
+
+  if (hot) {
+    config.plugins.push('react-hot-loader/babel');
+  }
+  return config;
 };
+
+const mainBabelConfig = () => ({
+  plugins: [...stage0Preset, ...(development ? devPlugins : prodPlugins)],
+  presets: [presetEnv],
+});
+
+const loaderConfig = options => ({
+  test: /\.js$/,
+  exclude: /node_modules/,
+  use: {
+    loader: 'babel-loader',
+    options: {
+      cacheDirectory: true,
+      ...options,
+    },
+  },
+});
+
+export const babelLoaderMain = () => loaderConfig(mainBabelConfig());
+
+export const babelLoaderRenderer = hot =>
+  loaderConfig(rendererBabelConfig(hot));

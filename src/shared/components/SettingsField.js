@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import styled from '@emotion/styled';
 
 // Internal
-import { newUID } from 'utils/etc';
+import { newUID } from 'utils/misc';
 
 const indentSpace = 20;
 
