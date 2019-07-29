@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 // Internal Dependencies
 import Tooltip from 'components/Tooltip';
-import { formatPercent } from 'lib/intl';
+import { formatNumber } from 'lib/intl';
 import { isStaking } from 'selectors';
 import stakingIcon from 'images/staking.sprite.svg';
 
@@ -19,15 +19,12 @@ import StatusIcon from './StatusIcon';
 @connect(state => {
   const {
     core: {
-      info: { stakeweight, stakerate, trustweight, blockweight },
+      info: { stakerate },
     },
   } = state;
   return {
     staking: isStaking(state),
-    stakeweight,
     stakerate,
-    trustweight,
-    blockweight,
   };
 })
 class StakingStatus extends React.Component {
@@ -40,13 +37,7 @@ class StakingStatus extends React.Component {
    * @memberof StakingStatus
    */
   render() {
-    const {
-      staking,
-      stakeweight,
-      stakerate,
-      trustweight,
-      blockweight,
-    } = this.props;
+    const { staking, stakerate } = this.props;
 
     return (
       <Tooltip.Trigger
@@ -60,20 +51,9 @@ class StakingStatus extends React.Component {
               )}
             </div>
             {staking && (
-              <>
-                <div>
-                  {__('Stake Rate')}: {formatPercent(stakerate)}%
-                </div>
-                <div>
-                  {__('Trust Weight')}: {formatPercent(trustweight)}%
-                </div>
-                <div>
-                  {__('Block Weight')}: {formatPercent(blockweight)}%
-                </div>
-                <div>
-                  {__('Stake Weight')}: {formatPercent(stakeweight)}%
-                </div>
-              </>
+              <div>
+                {__('Stake Rate')}: {formatNumber(stakerate, 2)}%
+              </div>
             )}
           </>
         }
