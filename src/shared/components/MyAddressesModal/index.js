@@ -131,7 +131,7 @@ class MyAddressesModal extends React.Component {
               onChange={this.handleChange}
               style={{ width: 300 }}
             />
-            <Tooltip.Trigger tooltip={__("Check wallet's integerty")}>
+            <Tooltip.Trigger tooltip={__("Check wallet's integrity")}>
               <Button fitHeight onClick={this.checkwallet}>
                 {__('Check wallet')}
               </Button>
