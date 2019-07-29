@@ -89,3 +89,32 @@ export const formatPercent = (num, maxDecimalDigits) =>
 
 export const formatDateTime = (date, options) =>
   new Intl.DateTimeFormat(locale, options).format(date);
+
+const relativeTimeUnit = [
+  [1000, 'second'],
+  [1000 * 60, 'minute'],
+  [1000 * 60 * 60, 'hour'],
+  [1000 * 60 * 60 * 24, 'day'],
+  [1000 * 60 * 60 * 24 * 7, 'week'],
+];
+const toRelativeTime = timestamp => {
+  const ms = new Date(timestamp).valueOf() - Date.now();
+  let count = Math.round(ms / 1000);
+  let unit = 'second';
+  for (let [threshold, tempUnit] of relativeTimeUnit) {
+    const tempCount = Math.round(ms / threshold);
+    if (tempCount === 0) break;
+    else {
+      count = tempCount;
+      unit = tempUnit;
+    }
+  }
+  return [count, unit];
+};
+
+export const formatRelativeTime = (timestamp, options) =>
+  new Intl.RelativeTimeFormat(locale, {
+    style: 'long',
+    numeric: 'auto',
+    ...options,
+  }).format(...toRelativeTime(timestamp));

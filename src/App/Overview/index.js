@@ -14,7 +14,7 @@ import Tooltip from 'components/Tooltip';
 import ContextMenuBuilder from 'contextmenu';
 import { getDifficulty } from 'actions/core';
 import { updateSettings } from 'actions/settings';
-import { formatNumber, formatCurrency } from 'lib/intl';
+import { formatNumber, formatCurrency, formatRelativeTime } from 'lib/intl';
 import { timing, consts } from 'styles';
 import { isCoreConnected } from 'selectors';
 import Globe from './Globe';
@@ -289,6 +289,14 @@ const MaxmindLogo = styled.img({
   display: 'block',
   width: 181,
 });
+
+const BlockCountTooltip = ({ blockDate }) => (
+  <div style={{ textAlign: 'center' }}>
+    {__('Last updated\n%{time}', {
+      time: blockDate && formatRelativeTime(blockDate),
+    })}
+  </div>
+);
 
 /**
  * Overview Page, The main page
@@ -886,16 +894,7 @@ class Overview extends Component {
 
           <Tooltip.Trigger
             position="left"
-            tooltip={
-              !!blockDate && (
-                <div style={{ textAlign: 'center' }}>
-                  {__('Last updated\n%{time}', {
-                    time:
-                      blockDate && blockDate.toLocaleString(settings.locale),
-                  })}
-                </div>
-              )
-            }
+            tooltip={!!blockDate && <BlockCountTooltip blockDate={blockDate} />}
           >
             <Stat className="relative">
               <StatIcon icon={nxsblocksIcon} />
