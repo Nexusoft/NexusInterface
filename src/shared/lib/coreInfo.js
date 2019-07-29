@@ -56,7 +56,7 @@ export function initializeCoreInfo() {
   observeStore(
     ({ core: { info } }) => info && info.locked,
     locked => {
-      if (store.getState().core.info && locked === undefined) {
+      if (isCoreConnected(store.getState()) && locked === undefined) {
         store.dispatch(showEncryptionWarningModal());
       }
     }
