@@ -101,7 +101,10 @@ const formatDiff = diff => (diff || 0).toFixed(3);
 const mapStateToProps = state => {
   const {
     core: { info, difficulty },
-    common: { blockDate, rawNXSvalues, displayNXSvalues },
+    common: { blockDate },
+    market: {
+      cryptocompare: { rawNXSvalues, displayNXSvalues },
+    },
     settings,
     theme,
   } = state;

@@ -28,7 +28,9 @@ const SendAmountEqual = styled.div({
 
 const mapStateToProps = ({
   settings: { fiatCurrency },
-  common: { rawNXSvalues },
+  market: {
+    cryptocompare: { rawNXSvalues },
+  },
 }) => ({
   fiatCurrency: fiatCurrency,
   nxsFiatPrice: getNxsFiatPrice(rawNXSvalues, fiatCurrency),

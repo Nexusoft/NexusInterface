@@ -3,10 +3,6 @@ import * as TYPE from 'consts/actionTypes';
 const initialState = {
   blockDate: null,
   rpcCallList: [],
-  rawBTCvalues: [],
-  rawNXSvalues: [],
-  displayBTCvalues: [],
-  displayNXSvalues: [],
   encryptionModalShown: false,
 };
 
@@ -24,15 +20,6 @@ export default (state = initialState, action) => {
       return {
         ...state,
         rpcCallList: oldArray,
-      };
-
-    case TYPE.SET_MKT_AVE_DATA:
-      return {
-        ...state,
-        displayBTCvalues: action.payload.displayBTC,
-        rawBTCvalues: action.payload.rawBTC,
-        displayNXSvalues: action.payload.displayNXS,
-        rawNXSvalues: action.payload.rawNXS,
       };
 
     case TYPE.SHOW_ENCRYPTION_MODAL:
