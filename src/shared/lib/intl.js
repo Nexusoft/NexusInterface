@@ -86,3 +86,6 @@ export const formatPercent = (num, maxDecimalDigits) =>
     style: 'percent',
     maximumFractionDigits: maxDecimalDigits,
   }).format(num);
+
+export const formatDateTime = (date, options) =>
+  new Intl.DateTimeFormat(locale, options).format(date);

@@ -9,6 +9,7 @@ import Tooltip from 'components/Tooltip';
 import { isCoreConnected } from 'selectors';
 import { timing } from 'styles';
 import * as color from 'utils/color';
+import { formatDateTime } from 'lib/intl';
 import StatusIcon from './StatusIcon';
 
 // Images
@@ -71,6 +72,9 @@ const actionCreators = { push };
   actionCreators
 )
 class LogInStatus extends Component {
+  renderUnlockDate = () => {
+    formatDateTime;
+  };
   /**
    * Sign in Message
    *
@@ -90,11 +94,14 @@ class LogInStatus extends Component {
     } else if (locked === false) {
       const unlockDate =
         unlocked_until &&
-        new Date(unlocked_until * 1000).toLocaleString('en', {
+        formatDateTime(unlocked_until * 1000, {
           weekday: 'long',
           year: 'numeric',
-          month: 'long',
+          month: 'short',
           day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
         });
       return (
         <>
