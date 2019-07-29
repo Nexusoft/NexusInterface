@@ -1404,7 +1404,7 @@ class Transactions extends Component {
           return __('Immature');
         } else if (q.value === 'stake') {
           return __('Stake');
-        } else if ((q.value = 'orphan')) {
+        } else if (q.value === 'orphan') {
           return __('Orphan');
         } else {
           return __('Unknown');
