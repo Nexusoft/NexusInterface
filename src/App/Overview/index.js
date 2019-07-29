@@ -406,7 +406,10 @@ class Overview extends Component {
     if (!this.props.blockDate) {
       return __('Getting next block...');
     } else {
-      return this.props.blockDate.toLocaleString(this.props.settings.locale);
+      return (
+        this.props.blockDate &&
+        this.props.blockDate.toLocaleString(this.props.settings.locale)
+      );
     }
   }
 
@@ -606,6 +609,7 @@ class Overview extends Component {
         stakerate,
         blocks,
       },
+      blockDate,
       market,
       difficulty,
       settings,
@@ -883,9 +887,14 @@ class Overview extends Component {
           <Tooltip.Trigger
             position="left"
             tooltip={
-              <div style={{ textAlign: 'center' }}>
-                {__('Last updated\n%{time}', { time: this.blockDate() })}
-              </div>
+              !!blockDate && (
+                <div style={{ textAlign: 'center' }}>
+                  {__('Last updated\n%{time}', {
+                    time:
+                      blockDate && blockDate.toLocaleString(settings.locale),
+                  })}
+                </div>
+              )
             }
           >
             <Stat className="relative">
