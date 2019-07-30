@@ -97,27 +97,9 @@ const Buttons = styled.div({
   onSubmitSuccess: async (result, dispatch, props) => {
     props.reset();
     props.showNotification(__('Logged in successfully'), 'success');
-    dispatch(getInfo());
+    autoFetchCoreInfo();
   },
-  onSubmitFail: (errors, dispatch, submitError, props) => {
-    if (!errors || !Object.keys(errors).length) {
-      let note =
-        (submitError && submitError.message) || __('An unknown error occurred');
-      if (
-        submitError === 'Error: The wallet passphrase entered was incorrect.'
-      ) {
-        note = __('Incorrect password');
-      } else if (submitError === 'value is type null, expected int') {
-        note = __(
-          'Unlock until date/time must be at least an hour in the future'
-        );
-      }
-      props.openErrorDialog({
-        message: __('Error logging in'),
-        note: note,
-      });
-    }
-  },
+  onSubmitFail: rpcErrorHandler(__('Error logging in')),
 })
 class Login extends Component {
   /**
