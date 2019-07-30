@@ -855,12 +855,8 @@ class Overview extends Component {
               <StatValue>
                 {market && typeof market.changePct24Hr === 'number' ? (
                   <>
-                    {market.changePct24Hr > 0
-                      ? '+ '
-                      : market.changePct24Hr < 0
-                      ? '- '
-                      : ''}
-                    {formatNumber(market.changePct24Hr, 2) + '%'}
+                    {market.changePct24Hr > 0 && '+'}
+                    {formatNumber(market.changePct24Hr, 2)}%
                   </>
                 ) : (
                   <span className="dim">-</span>
