@@ -1,6 +1,6 @@
 // External Dependencies
 import React, { Component } from 'react';
-import { reduxForm, Field } from 'redux-form';
+import { reduxForm, Field, formValueSelector } from 'redux-form';
 import styled from '@emotion/styled';
 import { connect } from 'react-redux';
 
@@ -36,6 +36,7 @@ const Buttons = styled.div({
     tritium:
       state.core.info.version.includes('0.3') ||
       parseFloat(state.core.info.version) >= 3,
+    stakingOnly: formValueSelector('login')(state, 'stakingOnly'),
   }),
   { showNotification, openErrorDialog }
 )
@@ -82,7 +83,7 @@ const Buttons = styled.div({
   onSubmit: ({ date, time, password, stakingOnly }) => {
     let unlockUntil = 0;
 
-    if (date && time) {
+    if (date && time && !stakingOnly) {
       const now = new Date();
       let unlockDate = new Date(date);
       unlockDate = new Date(unlockDate.setMinutes(now.getTimezoneOffset()));
@@ -148,7 +149,7 @@ class Login extends Component {
    * @memberof Login
    */
   render() {
-    const { handleSubmit, submitting, tritium } = this.props;
+    const { handleSubmit, submitting, tritium, stakingOnly } = this.props;
 
     return (
       <div>
@@ -173,12 +174,18 @@ class Login extends Component {
               <FormField
                 inline
                 connectLabel
-                label={__('SET TIMEOUT FOR LOGIN')}
+                label={__('Set timeout for login')}
               >
-                <Field component={Switch.RF} name="setLoginTimeOut" />
+                <Field
+                  component={Switch.RF}
+                  name="setLoginTimeOut"
+                  disabled={!!stakingOnly}
+                />
               </FormField>
             )}
-            <Field name="setLoginTimeOut" component={this.renderTimeInputs} />
+            {!stakingOnly && (
+              <Field name="setLoginTimeOut" component={this.renderTimeInputs} />
+            )}
 
             <Buttons>
               <Button type="submit" skin="primary" disabled={submitting}>
