@@ -101,7 +101,8 @@ const Buttons = styled.div({
   },
   onSubmitFail: (errors, dispatch, submitError, props) => {
     if (!errors || !Object.keys(errors).length) {
-      let note = submitError || __('An unknown error occurred');
+      let note =
+        (submitError && submitError.message) || __('An unknown error occurred');
       if (
         submitError === 'Error: The wallet passphrase entered was incorrect.'
       ) {
