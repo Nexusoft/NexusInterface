@@ -22,7 +22,7 @@ const defaultPassword = crypto
 
 export const defaultSettings = {
   // App
-  locale: 'en',
+  locale: null,
   minimizeOnClose: false,
   autoUpdate: true,
   sendUsageData: true,
