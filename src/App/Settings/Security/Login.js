@@ -5,13 +5,14 @@ import styled from '@emotion/styled';
 import { connect } from 'react-redux';
 
 // Internal Dependencies
-import { getInfo } from 'actions/core';
+import { autoFetchCoreInfo } from 'lib/coreInfo';
 import rpc from 'lib/rpc';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
 import Switch from 'components/Switch';
+import { rpcErrorHandler } from 'utils/form';
 import { showNotification, openErrorDialog } from 'actions/overlays';
 
 const LoginFieldSet = styled(FieldSet)({
