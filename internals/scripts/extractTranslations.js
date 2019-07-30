@@ -59,3 +59,14 @@ Object.entries(newTrans).forEach(([locale, dict]) => {
   );
 });
 console.log(chalk.yellow.bold('\nTranslation files updated!'));
+
+console.log(chalk.yellow.bold('Creating Crowdin file'));
+const enDic = {};
+strings.forEach(str => {
+  enDic[str] = str;
+});
+fs.writeFileSync(
+  path.join(transDir, 'Language.json'),
+  JSON.stringify(enDic, null, 2)
+);
+console.log(chalk.yellow.bold('Finished Crowdin file'));

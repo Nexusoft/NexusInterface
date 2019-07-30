@@ -104,7 +104,7 @@ const Buttons = styled.div({
       if (
         submitError === 'Error: The wallet passphrase entered was incorrect.'
       ) {
-        note = __('Incorrect passsword');
+        note = __('Incorrect password');
       } else if (submitError === 'value is type null, expected int') {
         note = __(
           'Unlock until date/time must be at least an hour in the future'
