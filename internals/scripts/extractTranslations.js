@@ -3,9 +3,11 @@ import path from 'path';
 import chalk from 'chalk';
 import { extractFromFiles } from 'i18n-extract';
 
+import languages from '../../src/shared/data/languages';
+
 const transDir = path.join(__dirname, '../../assets/translations');
 
-const locales = ['de', 'es', 'fr', 'ja', 'ko', 'nl', 'pl', 'pt', 'ru'];
+const locales = languages.map(lang => lang.code).filter(lang => lang !== 'en');
 const oldTrans = {};
 locales.forEach(locale => {
   oldTrans[locale] = JSON.parse(
