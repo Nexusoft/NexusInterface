@@ -53,9 +53,8 @@ const ChangePasswordComponent = styled.form({
       errors.password = __('Password is required');
     }
     if (passwordInvalidChars.test(newPassword)) {
-      errors.newPassword = __(
-        'Password cannot contain these characters: - $ / & * | < >'
-      );
+      errors.newPassword =
+        __('Password cannot contain these characters:') + ' - $ / & * | < >';
     } else if (!newPassword || newPassword.length < 8) {
       errors.newPassword = __('Password must be at least 8 characters');
     } else if (newPassword !== newPassword.trim()) {

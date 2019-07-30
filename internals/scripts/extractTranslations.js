@@ -66,7 +66,7 @@ strings.forEach(str => {
   enDic[str] = str;
 });
 fs.writeFileSync(
-  path.join(transDir, 'Language.json'),
+  path.join(transDir, 'en.json'),
   JSON.stringify(enDic, null, 2)
 );
 console.log(chalk.yellow.bold('Finished Crowdin file'));
