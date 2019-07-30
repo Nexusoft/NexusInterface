@@ -55,9 +55,8 @@ const Characters = styled.span({
       errors.password = __('Password is required');
     }
     if (passwordInvalidChars.test(password)) {
-      errors.password = __(
-        __('Password cannot contain these characters:') + ' - $ / & * | < >'
-      );
+      errors.password =
+        __('Password cannot contain these characters:') + ' - $ / & * | < >';
     } else if (!password || password.length < 8) {
       errors.password = __('Password must be at least 8 characters');
     } else if (password !== password.trim()) {
