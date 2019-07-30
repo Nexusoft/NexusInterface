@@ -22,7 +22,7 @@ const FullScreenComponent = styled.div(({ theme }) => ({
   left: 0,
   right: 0,
   bottom: 0,
-  padding: '50px 30px',
+  padding: '10px 30px',
   background: color.darken(theme.background, 0.2),
   color: theme.mixer(0.75),
   animation: `${intro} ${timing.quick} ease-out`,
@@ -39,7 +39,11 @@ const ContainerComponent = styled.div(({ width }) => ({
 }));
 
 const Container = ({ width = 768, children }) =>
-  width ? <ContainerComponent>{children}</ContainerComponent> : children;
+  width ? (
+    <ContainerComponent width={width}>{children}</ContainerComponent>
+  ) : (
+    children
+  );
 
 const FullScreenHeader = styled.h2(({ theme }) => ({
   gridArea: 'header',
@@ -56,7 +60,7 @@ const InnerHeader = styled.div(({ theme }) => ({
 
 const FullScreenBody = styled.div({
   gridArea: 'body',
-  padding: '30px 0',
+  padding: '20px 0',
   overflowY: 'auto',
 });
 
