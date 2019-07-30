@@ -13,18 +13,24 @@ const breathe = keyframes`
   }
 `;
 
+const Wrapper = styled.div({
+  height: '100%',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+});
+
 const ClosingMessage = styled.div(({ theme }) => ({
-  textAlign: 'center',
   color: theme.primary,
   fontSize: 24,
   animation: `${breathe} 2s ease 0s infinite alternate`,
 }));
 
 const ClosingScreen = () => (
-  <FullScreen>
-    <div className="flex center">
+  <FullScreen width={null}>
+    <Wrapper>
       <ClosingMessage>{__('Closing Nexus Wallet')}</ClosingMessage>
-    </div>
+    </Wrapper>
   </FullScreen>
 );
 

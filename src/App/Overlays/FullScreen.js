@@ -32,11 +32,14 @@ const FullScreenComponent = styled.div(({ theme }) => ({
   gridTemplateRows: 'min-content auto min-content',
 }));
 
-const Container = styled.div(({ width = 768 }) => ({
+const ContainerComponent = styled.div(({ width }) => ({
   width,
   marginLeft: 'auto',
   marginRight: 'auto',
 }));
+
+const Container = ({ width = 768, children }) =>
+  width ? <ContainerComponent>{children}</ContainerComponent> : children;
 
 const FullScreenHeader = styled.h2(({ theme }) => ({
   gridArea: 'header',
