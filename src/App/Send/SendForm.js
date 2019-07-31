@@ -1,7 +1,7 @@
 // External
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { reduxForm, Field, FieldArray } from 'redux-form';
+import { reduxForm, Field, FieldArray, formValueSelector } from 'redux-form';
 import styled from '@emotion/styled';
 
 // Internal Global
@@ -29,6 +29,7 @@ import {
   getAccountOptions,
   getAddressNameMap,
   getRegisteredFieldNames,
+  getAccountBalance,
 } from './selectors';
 
 const SendFormComponent = styled.form({
@@ -42,23 +43,36 @@ const SendFormButtons = styled.div({
   marginTop: '2em',
 });
 
-const mapStateToProps = ({
-  addressBook,
-  myAccounts,
-  settings: { minConfirmations },
-  core: {
-    info: { locked },
-  },
-  form,
-}) => ({
-  minConfirmations,
-  locked,
-  accountOptions: getAccountOptions(myAccounts),
-  addressNameMap: getAddressNameMap(addressBook),
-  fieldNames: getRegisteredFieldNames(
-    form.sendNXS && form.sendNXS.registeredFields
-  ),
-});
+const fromName = 'sendNXS';
+const valueSelector = formValueSelector(fromName);
+const mapStateToProps = state => {
+  const {
+    addressBook,
+    myAccounts,
+    settings: { minConfirmations },
+    core: {
+      info: { locked },
+    },
+    form,
+  } = state;
+  const accountName = valueSelector(state, 'sendFrom');
+  const recipients = valueSelector(state, 'recipients');
+  const accBalance = getAccountBalance(accountName, myAccounts);
+  const hideSendAll =
+    recipients &&
+    (recipients.length > 1 ||
+      (recipients[0] && recipients[0].amount === accBalance));
+  return {
+    minConfirmations,
+    locked,
+    accountOptions: getAccountOptions(myAccounts),
+    addressNameMap: getAddressNameMap(addressBook),
+    fieldNames: getRegisteredFieldNames(
+      form[fromName] && form[fromName].registeredFields
+    ),
+    accBalance: hideSendAll ? undefined : accBalance,
+  };
+};
 
 const mapDispatchToProps = {
   loadMyAccounts,
@@ -79,7 +93,7 @@ const mapDispatchToProps = {
   mapDispatchToProps
 )
 @reduxForm({
-  form: 'sendNXS',
+  form: fromName,
   destroyOnUnmount: false,
   initialValues: {
     sendFrom: null,
@@ -272,7 +286,7 @@ class SendForm extends Component {
    * @memberof SendForm
    */
   render() {
-    const { accountOptions, change } = this.props;
+    const { accountOptions, change, accBalance } = this.props;
 
     return (
       <SendFormComponent onSubmit={this.confirmSend}>
@@ -290,6 +304,7 @@ class SendForm extends Component {
           name="recipients"
           change={change}
           addRecipient={this.addRecipient}
+          accBalance={accBalance}
         />
 
         <FormField connectLabel label={__('Message')}>

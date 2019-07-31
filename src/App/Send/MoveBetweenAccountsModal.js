@@ -39,6 +39,7 @@ const Buttons = styled.div({
   justifyContent: 'flex-end',
 });
 
+const formName = 'moveBetweenAccounts';
 const mapStateToProps = ({
   settings: { minConfirmations, fiatCurrency },
   core: {
@@ -52,7 +53,7 @@ const mapStateToProps = ({
   locked,
   accountOptions: getAccountOptions(myAccounts),
   fieldNames: getRegisteredFieldNames(
-    form.moveBetweenAccounts && form.moveBetweenAccounts.registeredFields
+    form[formName] && form[formName].registeredFields
   ),
 });
 
@@ -75,7 +76,7 @@ const acctionCreators = {
   acctionCreators
 )
 @reduxForm({
-  form: 'moveBetweenAccounts',
+  form: formName,
   destroyOnUnmount: false,
   initialValues: {
     moveFrom: null,
@@ -212,7 +213,7 @@ class MoveBetweenAccountsForm extends Component {
           />
         </AccountSelectors>
 
-        <AmountField change={this.props.change} />
+        <AmountField single change={this.props.change} />
 
         <Buttons>
           <Button skin="primary" type="submit" disabled={this.props.submitting}>
