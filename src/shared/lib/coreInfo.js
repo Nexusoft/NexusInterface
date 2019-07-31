@@ -111,10 +111,12 @@ export function initializeCoreInfo() {
     info => {
       const state = store.getState();
       if (
-        isCoreConnected(state) &&
         !state.settings.bootstrapSuggestionDisabled &&
+        isCoreConnected(state) &&
+        state.bootstrap.step === 'idle' &&
         !state.settings.manualDaemon &&
-        info.synccomplete < 50
+        info.synccomplete < 50 &&
+        info.synccomplete >= 0
       ) {
         store.dispatch(bootstrap({ suggesting: true }));
       }
