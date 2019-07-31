@@ -58,17 +58,19 @@ class SelectLanguage extends React.Component {
     return (
       <FullScreen
         width={500}
-        header={__('Language')}
+        header="Language"
         footer={
-          <Button
-            wide
-            uppercase
-            skin="primary"
-            style={{ fontSize: 16 }}
-            onClick={this.proceed}
-          >
-            {__('Select language')}
-          </Button>
+          <div>
+            <Button
+              wide
+              uppercase
+              skin="primary"
+              style={{ fontSize: 16 }}
+              onClick={this.proceed}
+            >
+              Select language
+            </Button>
+          </div>
         }
       >
         {languages.map((lang, i) => (
