@@ -101,7 +101,7 @@ function createWindow() {
     minWidth: 1022,
     minHeight: 713,
     icon: iconPath,
-    backgroundColor: '#232c39',
+    backgroundColor: '#171719',
     show: false,
     webPreferences: {
       nodeIntegration: true,
