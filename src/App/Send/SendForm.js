@@ -43,8 +43,8 @@ const SendFormButtons = styled.div({
   marginTop: '2em',
 });
 
-const fromName = 'sendNXS';
-const valueSelector = formValueSelector(fromName);
+const formName = 'sendNXS';
+const valueSelector = formValueSelector(formName);
 const mapStateToProps = state => {
   const {
     addressBook,
@@ -68,7 +68,7 @@ const mapStateToProps = state => {
     accountOptions: getAccountOptions(myAccounts),
     addressNameMap: getAddressNameMap(addressBook),
     fieldNames: getRegisteredFieldNames(
-      form[fromName] && form[fromName].registeredFields
+      form[formName] && form[formName].registeredFields
     ),
     accBalance: hideSendAll ? undefined : accBalance,
   };
@@ -93,7 +93,7 @@ const mapDispatchToProps = {
   mapDispatchToProps
 )
 @reduxForm({
-  form: fromName,
+  form: formName,
   destroyOnUnmount: false,
   initialValues: {
     sendFrom: null,
