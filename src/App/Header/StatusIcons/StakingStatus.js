@@ -19,12 +19,13 @@ import StatusIcon from './StatusIcon';
 @connect(state => {
   const {
     core: {
-      info: { stakerate },
+      info: { stakerate, genesismature },
     },
   } = state;
   return {
     staking: isStaking(state),
     stakerate,
+    genesismature,
   };
 })
 class StakingStatus extends React.Component {
@@ -37,27 +38,30 @@ class StakingStatus extends React.Component {
    * @memberof StakingStatus
    */
   render() {
-    const { staking, stakerate } = this.props;
+    const { staking, stakerate, genesismature } = this.props;
 
     return (
       <Tooltip.Trigger
         tooltip={
-          <>
-            <div>
-              {staking ? (
-                <strong>{__('Wallet is staking')}</strong>
-              ) : (
-                __('Wallet is not staking')
-              )}
-            </div>
-            {staking && (
-              <div>
-                {__('Stake Rate')}: {formatNumber(stakerate, 2)}%
-              </div>
-            )}
-          </>
+          staking ? (
+            genesismature ? (
+              <>
+                <div>
+                  <strong>{__('Wallet is staking')}</strong>
+                  <div>
+                    {__('Stake Rate')}: {formatNumber(stakerate, 2)}%
+                  </div>
+                </div>
+              </>
+            ) : (
+              __('Waiting for average age of balance to exceed 72 hours...')
+            )
+          ) : (
+            __('Wallet is not staking')
+          )
         }
         style={{ textAlign: 'left' }}
+        style={staking && !genesismature ? { maxWidth: 200 } : undefined}
       >
         <StatusIcon icon={stakingIcon} style={{ opacity: staking ? 1 : 0.7 }} />
       </Tooltip.Trigger>
