@@ -4,20 +4,18 @@ import ReactTable from 'react-table';
 const Table = ({
   data,
   columns,
-  minRows,
   defaultSortingColumnIndex,
   onMouseOverCallback,
   selectCallback,
   onMouseOutCallback,
+  ...rest
 }) => (
   <ReactTable
     className="-striped -highlight"
     noDataText={__('No Rows Found')}
-    key="ReactTable"
     data={data}
     pageText={__('Page')}
     columns={columns}
-    minRows={minRows}
     defaultSorted={
       defaultSortingColumnIndex !== null
         ? [
@@ -28,7 +26,6 @@ const Table = ({
           ]
         : []
     }
-    defaultPageSize={10}
     rowsText={__('rows')}
     previousText={__('Previous')}
     nextText={__('Next')}
@@ -55,6 +52,7 @@ const Table = ({
         },
       };
     }}
+    {...rest}
   />
 );
 

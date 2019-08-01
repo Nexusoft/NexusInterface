@@ -11,6 +11,7 @@ import {
 import Modal from 'components/Modal';
 
 import { getChartData, getFilteredTransactions } from './selectors';
+import { categoryText } from './utils';
 
 const returnCorrectFillColor = inData =>
   inData.category == 'credit'
@@ -25,31 +26,6 @@ const returnCorrectStokeColor = inData =>
     : inData.category == 'debit'
     ? '#035'
     : '#fff';
-
-const categoryText = inData => {
-  switch (inData.category) {
-    case 'credit':
-    case 'receive':
-      return __('Receive');
-    case 'debit':
-    case 'send':
-      return __('Sent');
-    case 'genesis':
-      return __('Genesis');
-    case 'trust':
-      return __('Trust');
-    case 'generate':
-      return __('Generate');
-    case 'immature':
-      return __('Immature');
-    case 'stake':
-      return __('Stake');
-    case 'orphan':
-      return __('Orphan');
-    default:
-      return __('Unknown');
-  }
-};
 
 const TransactionsChartModal = ({ theme, chartData }) => {
   const { theme, chartData } = this.props;
@@ -170,14 +146,13 @@ const mapStateToProps = ({
   theme,
   transactions,
   ui: {
-    transactions: { account, addressQuery, category, minAmount, timeSpan },
+    transactions: { addressQuery, category, minAmount, timeSpan },
   },
 }) => ({
   theme,
   chartData: getChartData(
     getFilteredTransactions(
       transactions,
-      account,
       addressQuery,
       category,
       minAmount,

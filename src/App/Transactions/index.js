@@ -18,6 +18,7 @@ import Tooltip from 'components/Tooltip';
 import Table from 'components/Table';
 import { loadMyAccounts } from 'actions/account';
 import rpc from 'lib/rpc';
+import { formatDateTime } from 'lib/intl';
 import * as TYPE from 'consts/actionTypes';
 import ContextMenuBuilder from 'contextmenu';
 import { walletDataDir } from 'consts/paths';
@@ -28,6 +29,8 @@ import TransactionDetailsModal from './TransactionDetailsModal';
 import styles from './style.css';
 import CSVDownloadModal from './TransactionCSVDownloadModal';
 import Filters from './Filters';
+import { categoryText } from './utils';
+import { getFilteredTransactions } from './selectors';
 import TransactionsChartModal from './TransactionsChartModal';
 
 // Images
@@ -38,6 +41,42 @@ import copy from 'copy-to-clipboard';
 
 // Global variables
 let tempaddpress = new Map();
+
+const tableColumns = [
+  // {
+  //   Header: '#',
+  //   accessor: 'transactionnumber',
+  //   maxWidth: 100,
+  // },
+  {
+    id: 'time',
+    Header: __('Time'),
+    accessor: 'time',
+    Cell: d => formatDateTime(d.value),
+    maxWidth: 220,
+  },
+  {
+    id: 'category',
+    Header: __('CATEGORY'),
+    accessor: 'category',
+    Cell: categoryText,
+    maxWidth: 85,
+  },
+  {
+    Header: __('AMOUNT'),
+    accessor: 'amount',
+    maxWidth: 100,
+  },
+  {
+    Header: __('ACCOUNT'),
+    accessor: 'account',
+    maxWidth: 150,
+  },
+  {
+    Header: __('ADDRESS'),
+    accessor: 'address',
+  },
+];
 
 const Filters = styled.div({
   display: 'grid',
@@ -58,7 +97,12 @@ const AccountSelect = styled(Select)({
 // React-Redux mandatory methods
 const mapStateToProps = state => {
   return {
-    ...state.transactions,
+    allTransactions: state.transactions,
+    account: state.ui.transactions.account,
+    addressQuery: state.ui.transactions.addressQuery,
+    category: state.ui.transactions.category,
+    minAmount: state.ui.transactions.minAmount,
+    timeSpan: state.ui.transactions.timeSpan,
     ...state.common,
     ...state.core.info,
     myAccounts: state.myAccounts,
@@ -1196,93 +1240,6 @@ class Transactions extends Component {
   }
 
   /**
-   * Returns the columns and their rules/formats for the Table
-   *
-   * @returns {[*]} The columns for the table
-   * @memberof Transactions
-   */
-  returnTableColumns() {
-    var options = {
-      month: 'short',
-      year: 'numeric',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric',
-      second: 'numeric',
-      timeZoneName: 'short',
-    };
-    let tempColumns = [];
-
-    tempColumns.push({
-      Header: __('TX Number'),
-      accessor: 'transactionnumber',
-      maxWidth: 100,
-    });
-
-    tempColumns.push({
-      Header: __('Time span'),
-      id: 'time',
-      Cell: d => (
-        <div>
-          {' '}
-          {d.value.toLocaleString(this.props.settings.locale, options)}{' '}
-        </div>
-      ), // We want to display the time in  a readable format
-      accessor: 'time',
-      maxWidth: 220,
-    });
-
-    tempColumns.push({
-      id: 'category',
-      Cell: q => {
-        if (q.value === 'debit' || q.value === 'send') {
-          return __('Sent');
-        } else if (q.value === 'credit' || q.value === 'receive') {
-          return __('Receive');
-        } else if (q.value === 'genesis') {
-          return __('Genesis');
-        } else if (q.value === 'trust') {
-          return __('Trust');
-        } else if (q.value.endsWith('(Pending)')) {
-          return __('(Pending)');
-        } else if (q.value === 'generate') {
-          return __('Generate');
-        } else if (q.value === 'immature') {
-          return __('Immature');
-        } else if (q.value === 'stake') {
-          return __('Stake');
-        } else if (q.value === 'orphan') {
-          return __('Orphan');
-        } else {
-          return __('Unknown');
-        }
-      },
-      Header: __('CATEGORY'),
-      accessor: 'category',
-
-      maxWidth: 85,
-    });
-
-    tempColumns.push({
-      Header: __('AMOUNT'),
-      accessor: 'amount',
-      maxWidth: 100,
-    });
-
-    tempColumns.push({
-      Header: __('ACCOUNT'),
-      accessor: 'account',
-      maxWidth: 150,
-    });
-
-    tempColumns.push({
-      Header: __('ADDRESS'),
-      accessor: 'address',
-    });
-    return tempColumns;
-  }
-
-  /**
    * Returns formated data for the Victory Chart
    *
    * @returns {[*]} The transaction data as filtered and formated to be placed in the Victory Chart
@@ -1697,22 +1654,6 @@ class Transactions extends Component {
   }
 
   /**
-   * Return Default Page Size
-   *
-   * @returns {number}
-   * @memberof Transactions
-   */
-  returnDefaultPageSize() {
-    let defPagesize = 10;
-    if (this.props.walletitems != undefined) {
-      defPagesize = this.props.walletitems.length < 10 ? 0 : 10;
-    } else {
-      defPagesize = 10;
-    }
-    return defPagesize;
-  }
-
-  /**
    * Change Account
    *
    * @memberof Transactions
@@ -1871,9 +1812,13 @@ class Transactions extends Component {
    * @memberof Transactions
    */
   render() {
-    const data = this.returnFormatedTableData();
-    const columns = this.returnTableColumns();
-    const pageSize = this.returnDefaultPageSize();
+    const {
+      allTransactions,
+      addressQuery,
+      category,
+      minAmount,
+      timeSpan,
+    } = this.props;
 
     return (
       <Panel
@@ -1907,13 +1852,17 @@ class Transactions extends Component {
             <Filters />
             <div id="transactions-details">
               <Table
-                style={this.props.theme}
-                key="table-top"
-                data={data}
-                columns={columns}
-                minRows={pageSize}
+                data={getFilteredTransactions(
+                  allTransactions,
+                  addressQuery,
+                  category,
+                  minAmount,
+                  timeSpan
+                )}
+                columns={tableColumns}
+                defaultPageSize={10}
                 selectCallback={this.tableSelectCallback.bind(this)}
-                defaultSortingColumnIndex={1}
+                defaultSortingColumnIndex={0}
                 onMouseOverCallback={this.mouseOverCallback.bind(this)}
                 onMouseOutCallback={this.mouseOutCallback.bind(this)}
               />

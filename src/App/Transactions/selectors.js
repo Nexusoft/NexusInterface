@@ -15,7 +15,8 @@ const getThresholdDate = timeSpan => {
 };
 
 export const getFilteredTransactions = memoize(
-  (allTransactions, account, addressQuery, category, minAmount, timeSpan) =>
+  (allTransactions, addressQuery, category, minAmount, timeSpan) =>
+    allTransactions &&
     allTransactions.filter(tx => {
       // Filter by Address
       if (
@@ -25,9 +26,6 @@ export const getFilteredTransactions = memoize(
       ) {
         return false;
       }
-
-      // Filter by Account
-      if (account && tx.account !== account) return false;
 
       // Filter by Category
       if (category && tx.category !== category) return false;
