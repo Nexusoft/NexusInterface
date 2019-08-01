@@ -2002,7 +2002,7 @@ class Transactions extends Component {
         title={__('Transaction details')}
         controls={
           <div className="flex center">
-            <Tooltip.Trigger tooltip={__('Show Transaction Chart')}>
+            <Tooltip.Trigger tooltip={__('Show transactions chart')}>
               <Button skin="plain">
                 <Icon icon={barChartIcon} width={20} height={20} />
               </Button>
