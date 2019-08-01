@@ -4,14 +4,6 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { remote } from 'electron';
 import fs from 'fs';
-import {
-  VictoryBar,
-  VictoryChart,
-  VictoryLabel,
-  VictoryAxis,
-  VictoryTooltip,
-  createContainer,
-} from 'victory';
 import rp from 'request-promise';
 import googleanalytics from 'scripts/googleanalytics';
 import styled from '@emotion/styled';
@@ -43,8 +35,6 @@ import transactionIcon from 'images/transaction.sprite.svg';
 import barChartIcon from 'images/bar-chart.sprite.svg';
 
 import copy from 'copy-to-clipboard';
-import Arrow from '../../shared/components/Arrow';
-import { UpdateSettings } from 'lib/settings';
 
 // Global variables
 let tempaddpress = new Map();

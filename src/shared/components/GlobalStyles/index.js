@@ -17,6 +17,7 @@ import { Global, css } from '@emotion/core';
 import * as color from 'utils/color';
 import { consts } from 'styles';
 import fontStyles from './fonts';
+import tableStyles from './tableStyles';
 
 const resetStyles = theme => ({
   '*, *::before, *::after': {
@@ -160,6 +161,7 @@ const GlobalStyles = () => (
     <Global styles={resetStyles} />
     <Global styles={customizedScrollbar} />
     <Global styles={utilityClasses} />
+    <Global styles={tableStyles} />
   </>
 );
 
