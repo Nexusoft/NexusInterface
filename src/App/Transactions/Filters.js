@@ -18,6 +18,41 @@ import {
 import downloadIcon from 'images/download.sprite.svg';
 import searchIcon from 'images/search.sprite.svg';
 
+const categories = [
+  {
+    value: 'all',
+    display: __('All'),
+  },
+  {
+    value: 'receive', // Should be made credit with tritium.
+    display: __('Receive'),
+  },
+  {
+    value: 'debit',
+    display: __('Sent'),
+  },
+  {
+    value: 'stake',
+    display: __('Stake'),
+  },
+  {
+    value: 'generate',
+    display: __('Generate'),
+  },
+  {
+    value: 'immature',
+    display: __('Immature'),
+  },
+  {
+    value: 'orphan',
+    display: __('Orphan'),
+  },
+  {
+    value: 'genesis',
+    display: __('Genesis'),
+  },
+];
+
 const timeFrames = [
   {
     value: null,

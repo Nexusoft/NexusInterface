@@ -21,8 +21,6 @@ import Icon from 'components/Icon';
 import Panel from 'components/Panel';
 import WaitingMessage from 'components/WaitingMessage';
 import Select from 'components/Select';
-import TextField from 'components/TextField';
-import FormField from 'components/FormField';
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
 import Table from 'scripts/utilities-react';
@@ -33,14 +31,14 @@ import ContextMenuBuilder from 'contextmenu';
 import { walletDataDir } from 'consts/paths';
 import { openModal } from 'actions/overlays';
 import { isCoreConnected } from 'selectors';
+
 import TransactionDetailsModal from './TransactionDetailsModal';
 import styles from './style.css';
 import CSVDownloadModal from './TransactionCSVDownloadModal';
+import Filters from './Filters';
 
 // Images
 import transactionIcon from 'images/transaction.sprite.svg';
-import downloadIcon from 'images/download.sprite.svg';
-import searchIcon from 'images/search.sprite.svg';
 import barChartIcon from 'images/bar-chart.sprite.svg';
 
 import copy from 'copy-to-clipboard';
@@ -49,60 +47,6 @@ import { UpdateSettings } from 'lib/settings';
 
 // Global variables
 let tempaddpress = new Map();
-
-const categories = [
-  {
-    value: 'all',
-    display: __('All'),
-  },
-  {
-    value: 'receive', // Should be made credit with tritium.
-    display: __('Receive'),
-  },
-  {
-    value: 'debit',
-    display: __('Sent'),
-  },
-  {
-    value: 'stake',
-    display: __('Stake'),
-  },
-  {
-    value: 'generate',
-    display: __('Generate'),
-  },
-  {
-    value: 'immature',
-    display: __('Immature'),
-  },
-  {
-    value: 'orphan',
-    display: __('Orphan'),
-  },
-  {
-    value: 'genesis',
-    display: __('Genesis'),
-  },
-];
-
-const timeFrames = [
-  {
-    value: 'All',
-    display: __('All'),
-  },
-  {
-    value: 'Year',
-    display: __('Past Year'),
-  },
-  {
-    value: 'Month',
-    display: __('Past Month'),
-  },
-  {
-    value: 'Week',
-    display: __('Past Week'),
-  },
-];
 
 const Filters = styled.div({
   display: 'grid',
@@ -1391,50 +1335,50 @@ class Transactions extends Component {
    * @returns {[*]} The transaction data as filtered and formated to be placed in the Victory Chart
    * @memberof Transactions
    */
-  returnChartData() {
-    if (this.props.walletitems == undefined) {
-      return [];
-    }
-    const difference = this.state.zoomDomain.x[1] - this.state.zoomDomain.x[0];
+  // returnChartData() {
+  //   if (this.props.walletitems == undefined) {
+  //     return [];
+  //   }
+  //   const difference = this.state.zoomDomain.x[1] - this.state.zoomDomain.x[0];
 
-    //console.log(this.state.zoomDomain.x[1] - this.state.zoomDomain.x[0]);
-    let filteredData = this.returnAllFilters([...this.props.walletitems]);
-    //console.log(filteredData.length);
-    /*
-    if (filteredData.length > 100) {
-      let arraylength = filteredData.length;
-      for (let index = 1; index < arraylength; index++) {
-        const element = filteredData[index];
-        if (element.category === filteredData[index - 1].category) {
-          const timeDif = element.time - filteredData[index - 1].time;
-          if (timeDif <= 86400000) {
-            console.log('COMBINED ITEMS: ');
+  //   //console.log(this.state.zoomDomain.x[1] - this.state.zoomDomain.x[0]);
+  //   let filteredData = this.returnAllFilters([...this.props.walletitems]);
+  //   //console.log(filteredData.length);
+  //   /*
+  //   if (filteredData.length > 100) {
+  //     let arraylength = filteredData.length;
+  //     for (let index = 1; index < arraylength; index++) {
+  //       const element = filteredData[index];
+  //       if (element.category === filteredData[index - 1].category) {
+  //         const timeDif = element.time - filteredData[index - 1].time;
+  //         if (timeDif <= 86400000) {
+  //           console.log('COMBINED ITEMS: ');
 
-            filteredData[index].amount =
-              element.amount + filteredData[index - 1].amount;
-            const removed = filteredData.splice(index - 1, 1);
-            console.log(removed);
-            arraylength = filteredData.length;
-          }
-        }
-      }
-    }
-    */
-    //console.log(filteredData);
-    return filteredData
-      .map(ele => {
-        return {
-          a: ele.time,
-          b: ele.amount,
-          fill: 'white',
-          category: ele.category,
-        };
-      })
-      .filter(
-        e =>
-          e.a > this.state.zoomDomain.x[0] && e.a < this.state.zoomDomain.x[1]
-      );
-  }
+  //           filteredData[index].amount =
+  //             element.amount + filteredData[index - 1].amount;
+  //           const removed = filteredData.splice(index - 1, 1);
+  //           console.log(removed);
+  //           arraylength = filteredData.length;
+  //         }
+  //       }
+  //     }
+  //   }
+  //   */
+  //   //console.log(filteredData);
+  //   return filteredData
+  //     .map(ele => {
+  //       return {
+  //         a: ele.time,
+  //         b: ele.amount,
+  //         fill: 'white',
+  //         category: ele.category,
+  //       };
+  //     })
+  //     .filter(
+  //       e =>
+  //         e.a > this.state.zoomDomain.x[0] && e.a < this.state.zoomDomain.x[1]
+  //     );
+  // }
 
   //
   /**
@@ -1878,110 +1822,110 @@ class Transactions extends Component {
    * @returns Victory Chart JSX
    * @memberof Transactions
    */
-  returnVictoryChart() {
-    const chartData = this.returnChartData();
-    const VictoryZoomVoronoiContainer = createContainer('voronoi', 'zoom');
-    const leftPadding =
-      parseInt(this.state.zoomDomain.y[0]).toString().length * 10;
-    return (
-      <VictoryChart
-        width={this.state.mainChartWidth}
-        height={this.state.mainChartHeight}
-        scale={{ x: 'time' }}
-        style={{
-          overflow: 'visible',
-          border: '1px solid ' + this.props.theme.primary,
-        }}
-        domainPadding={{ x: 90, y: 30 }}
-        padding={{
-          top: 6,
-          bottom: 6,
-          left: leftPadding < 30 ? 30 : leftPadding,
-          right: 0,
-        }}
-        domain={this.state.zoomDomain}
-        containerComponent={
-          <VictoryZoomVoronoiContainer
-            voronoiPadding={10}
-            zoomDimension="x"
-            zoomDomain={this.state.zoomDomain}
-            onZoomDomainChange={this.handleZoom.bind(this)}
-          />
-        }
-      >
-        <VictoryBar
-          style={{
-            data: {
-              fill: d => this.returnCorrectFillColor(d),
-              stroke: d => this.returnCorrectStokeColor(d),
-              fillOpacity: 0.85,
-              strokeWidth: 1,
-              fontSize: 3000,
-            },
-          }}
-          labelComponent={
-            <VictoryTooltip
-              orientation={incomingProp => {
-                let internalDifference =
-                  this.state.zoomDomain.x[1].getTime() -
-                  this.state.zoomDomain.x[0].getTime();
-                internalDifference = internalDifference / 2;
-                internalDifference =
-                  this.state.zoomDomain.x[0].getTime() + internalDifference;
-                if (incomingProp.a.getTime() <= internalDifference) {
-                  return 'right';
-                } else {
-                  return 'left';
-                }
-              }}
-            />
-          }
-          labels={d => this.returnToolTipLable(d)}
-          data={this.state.showTransactionChart ? chartData : []}
-          x="a"
-          y="b"
-        />
+  // returnVictoryChart() {
+  //   const chartData = this.returnChartData();
+  //   const VictoryZoomVoronoiContainer = createContainer('voronoi', 'zoom');
+  //   const leftPadding =
+  //     parseInt(this.state.zoomDomain.y[0]).toString().length * 10;
+  //   return (
+  //     <VictoryChart
+  //       width={this.state.mainChartWidth}
+  //       height={this.state.mainChartHeight}
+  //       scale={{ x: 'time' }}
+  //       style={{
+  //         overflow: 'visible',
+  //         border: '1px solid ' + this.props.theme.primary,
+  //       }}
+  //       domainPadding={{ x: 90, y: 30 }}
+  //       padding={{
+  //         top: 6,
+  //         bottom: 6,
+  //         left: leftPadding < 30 ? 30 : leftPadding,
+  //         right: 0,
+  //       }}
+  //       domain={this.state.zoomDomain}
+  //       containerComponent={
+  //         <VictoryZoomVoronoiContainer
+  //           voronoiPadding={10}
+  //           zoomDimension="x"
+  //           zoomDomain={this.state.zoomDomain}
+  //           onZoomDomainChange={this.handleZoom.bind(this)}
+  //         />
+  //       }
+  //     >
+  //       <VictoryBar
+  //         style={{
+  //           data: {
+  //             fill: d => this.returnCorrectFillColor(d),
+  //             stroke: d => this.returnCorrectStokeColor(d),
+  //             fillOpacity: 0.85,
+  //             strokeWidth: 1,
+  //             fontSize: 3000,
+  //           },
+  //         }}
+  //         labelComponent={
+  //           <VictoryTooltip
+  //             orientation={incomingProp => {
+  //               let internalDifference =
+  //                 this.state.zoomDomain.x[1].getTime() -
+  //                 this.state.zoomDomain.x[0].getTime();
+  //               internalDifference = internalDifference / 2;
+  //               internalDifference =
+  //                 this.state.zoomDomain.x[0].getTime() + internalDifference;
+  //               if (incomingProp.a.getTime() <= internalDifference) {
+  //                 return 'right';
+  //               } else {
+  //                 return 'left';
+  //               }
+  //             }}
+  //           />
+  //         }
+  //         labels={d => this.returnToolTipLable(d)}
+  //         data={this.state.showTransactionChart ? chartData : []}
+  //         x="a"
+  //         y="b"
+  //       />
 
-        <VictoryAxis
-          // label="Time"
-          independentAxis
-          style={{
-            axis: { stroke: this.props.theme.primary, strokeOpacity: 1 },
-            axisLabel: { fontSize: 16 },
-            grid: {
-              stroke: this.props.theme.primary,
-              strokeOpacity: 0.25,
-            },
-            ticks: {
-              stroke: this.props.theme.primary,
-              strokeOpacity: 0.75,
-              size: 10,
-            },
-            tickLabels: { fontSize: 11, padding: 5, fill: '#bbb' },
-          }}
-        />
+  //       <VictoryAxis
+  //         // label="Time"
+  //         independentAxis
+  //         style={{
+  //           axis: { stroke: this.props.theme.primary, strokeOpacity: 1 },
+  //           axisLabel: { fontSize: 16 },
+  //           grid: {
+  //             stroke: this.props.theme.primary,
+  //             strokeOpacity: 0.25,
+  //           },
+  //           ticks: {
+  //             stroke: this.props.theme.primary,
+  //             strokeOpacity: 0.75,
+  //             size: 10,
+  //           },
+  //           tickLabels: { fontSize: 11, padding: 5, fill: '#bbb' },
+  //         }}
+  //       />
 
-        <VictoryAxis
-          // label="Amount"
-          dependentAxis
-          style={{
-            axis: { stroke: this.props.theme.primary, strokeOpacity: 1 },
-            axisLabel: { fontSize: 16 },
-            grid: {
-              stroke: this.props.theme.primary,
-              strokeOpacity: 0.25,
-            },
-            ticks: {
-              stroke: this.props.theme.primary,
-              strokeOpacity: 0.75,
-              size: 10,
-            },
-            tickLabels: { fontSize: 11, padding: 5, fill: '#bbb' },
-          }}
-        />
-      </VictoryChart>
-    );
-  }
+  //       <VictoryAxis
+  //         // label="Amount"
+  //         dependentAxis
+  //         style={{
+  //           axis: { stroke: this.props.theme.primary, strokeOpacity: 1 },
+  //           axisLabel: { fontSize: 16 },
+  //           grid: {
+  //             stroke: this.props.theme.primary,
+  //             strokeOpacity: 0.25,
+  //           },
+  //           ticks: {
+  //             stroke: this.props.theme.primary,
+  //             strokeOpacity: 0.75,
+  //             size: 10,
+  //           },
+  //           tickLabels: { fontSize: 11, padding: 5, fill: '#bbb' },
+  //         }}
+  //       />
+  //     </VictoryChart>
+  //   );
+  // }
 
   // Mandatory React method
   /**
@@ -2057,54 +2001,7 @@ class Transactions extends Component {
             ) : (
               <div style={{ fontSize: '75%' }}>Show Transaction Chart</div>
             )}
-            <Filters>
-              <FormField connectLabel label={__('Search address')}>
-                <TextField
-                  inputProps={{
-                    type: 'search',
-                    name: 'addressfilter',
-                    placeholder: 'Search for Address',
-                    onChange: this.transactionaddressfiltercallback.bind(this),
-                  }}
-                  left={<Icon icon={searchIcon} className="space-right" />}
-                />
-              </FormField>
-
-              <FormField label={__('Type')}>
-                <Select
-                  value={this.state.categoryFilter}
-                  onChange={this.transactiontypefiltercallback.bind(this)}
-                  options={categories}
-                />
-              </FormField>
-
-              <FormField connectLabel label={__('Min amount')}>
-                <TextField
-                  type="number"
-                  min="0"
-                  placeholder="0.00"
-                  onChange={this.transactionamountfiltercallback.bind(this)}
-                />
-              </FormField>
-
-              <FormField label={__('Time span')}>
-                <Select
-                  value={this.state.displayTimeFrame}
-                  onChange={this.transactionTimeframeChange.bind(this)}
-                  options={timeFrames}
-                />
-              </FormField>
-
-              <Tooltip.Trigger tooltip={__('Download')}>
-                <Button
-                  square
-                  className="relative"
-                  onClick={() => this.DownloadCSV()}
-                >
-                  <Icon icon={downloadIcon} />
-                </Button>
-              </Tooltip.Trigger>
-            </Filters>
+            <Filters />
             <div id="transactions-details">
               <Table
                 style={this.props.theme}
