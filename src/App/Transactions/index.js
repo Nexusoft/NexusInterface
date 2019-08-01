@@ -41,6 +41,7 @@ import CSVDownloadModal from './TransactionCSVDownloadModal';
 import transactionIcon from 'images/transaction.sprite.svg';
 import downloadIcon from 'images/download.sprite.svg';
 import searchIcon from 'images/search.sprite.svg';
+import barChartIcon from 'images/bar-chart.sprite.svg';
 
 import copy from 'copy-to-clipboard';
 import Arrow from '../../shared/components/Arrow';
@@ -111,6 +112,12 @@ const Filters = styled.div({
   alignItems: 'end',
   fontSize: 15,
   marginBottom: '1em',
+});
+
+const AccountSelect = styled(Select)({
+  marginLeft: '1em',
+  minWidth: 200,
+  fontSize: 15,
 });
 
 // React-Redux mandatory methods
@@ -1994,12 +2001,18 @@ class Transactions extends Component {
         icon={transactionIcon}
         title={__('Transaction details')}
         controls={
-          <Select
-            value={this.props.selectedAccount}
-            onChange={value => this.selectAccount(value)}
-            options={this.accountChanger()}
-            style={{ minWidth: 200, fontSize: 15 }}
-          />
+          <div className="flex center">
+            <Tooltip.Trigger tooltip={__('Show Transaction Chart')}>
+              <Button skin="plain">
+                <Icon icon={barChartIcon} width={20} height={20} />
+              </Button>
+            </Tooltip.Trigger>
+            <AccountSelect
+              value={this.props.selectedAccount}
+              onChange={value => this.selectAccount(value)}
+              options={this.accountChanger()}
+            />
+          </div>
         }
       >
         {!this.props.coreConnected ? (
