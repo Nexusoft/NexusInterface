@@ -16,13 +16,13 @@ export default (state = initialState, action) => {
         account: action.payload,
       };
 
-    case TYPE.SET_TXS_SEARCH_TEXT:
+    case TYPE.SET_TXS_ADDRESS_QUERY:
       return {
         ...state,
         addressQuery: action.payload,
       };
 
-    case TYPE.SET_TXS_TYPE_FILTER:
+    case TYPE.SET_TXS_CATEGORY_FILTER:
       return {
         ...state,
         category: action.payload,

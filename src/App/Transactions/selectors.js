@@ -33,7 +33,7 @@ export const getFilteredTransactions = memoize(
       if (category && tx.category !== category) return false;
 
       // Filter by Amount
-      const min = Number(minAmount);
+      const min = Number(minAmount) || 0;
       if (min && tx.amount < min) return false;
 
       // Filter by Time
@@ -43,4 +43,13 @@ export const getFilteredTransactions = memoize(
         else return new Date(tx.time).getTime() > pastDate.getTime();
       }
     })
+);
+
+export const getChartData = memoize(transactions =>
+  transactions.map(tx => ({
+    a: tx.time,
+    b: tx.amount,
+    category: tx.category,
+    fill: 'white',
+  }))
 );
