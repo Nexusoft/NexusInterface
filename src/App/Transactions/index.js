@@ -15,7 +15,7 @@ import WaitingMessage from 'components/WaitingMessage';
 import Select from 'components/Select';
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
-import Table from 'scripts/utilities-react';
+import Table from 'components/Table';
 import { loadMyAccounts } from 'actions/account';
 import rpc from 'lib/rpc';
 import * as TYPE from 'consts/actionTypes';
@@ -1913,7 +1913,7 @@ class Transactions extends Component {
                 columns={columns}
                 minRows={pageSize}
                 selectCallback={this.tableSelectCallback.bind(this)}
-                defaultsortingid={1}
+                defaultSortingColumnIndex={1}
                 onMouseOverCallback={this.mouseOverCallback.bind(this)}
                 onMouseOutCallback={this.mouseOutCallback.bind(this)}
               />
