@@ -173,6 +173,7 @@ class Core {
     // Enable mining (default is 0)
     if (settings.enableMining == true) {
       params.push('-mining=1');
+      params.push('whitelist=' + settings.ipMineWhitelist);
     }
     // Enable staking (default is 0)
     if (settings.enableStaking == true) params.push('-stake=1');

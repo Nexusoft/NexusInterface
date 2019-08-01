@@ -255,6 +255,23 @@ class SettingsCore extends Component {
   }
 
   /**
+   * Sets the list of IPs that the daemon will send coin to when it mines.
+   *
+   * @param {*} input
+   * @memberof SettingsCore
+   */
+  updateMiningWhitelist(input) {
+    const output = form
+      .resolveValue(input)
+      .split(';')
+      .filter(e => e !== '');
+    console.log(output);
+    this.props.updateSettings({
+      ipMineWhitelist: output,
+    });
+  }
+
+  /**
    * Updates the settings
    *
    * @memberof SettingsCore
@@ -321,6 +338,27 @@ class SettingsCore extends Component {
               onChange={e => this.updateMining(e)}
             />
           </SettingsField>
+
+          {settings.enableMining ? (
+            <SettingsField
+              connectLabel
+              label={__('Mining IP Whitelist')}
+              subLabel={__(
+                'IPs allowed to mine to. Separate by <b>;</b>',
+                undefined,
+                {
+                  b: txt => <b>{txt}</b>,
+                }
+              )}
+            >
+              <Field
+                component={TextField.RF}
+                onChange={e => this.updateMiningWhitelist(e)}
+                name="ipMineWhitelist"
+                size="12"
+              />
+            </SettingsField>
+          ) : null}
 
           <SettingsField
             connectLabel

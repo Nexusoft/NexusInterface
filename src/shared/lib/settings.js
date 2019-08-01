@@ -40,6 +40,7 @@ export const defaultSettings = {
   enableStaking: true,
   verboseLevel: 0,
   avatarLevel: 1,
+  ipMineWhitelist: [],
   manualDaemon: false,
   manualDaemonUser: 'rpcserver',
   manualDaemonPassword: defaultPassword,
