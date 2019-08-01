@@ -132,12 +132,6 @@ const mapDispatchToProps = dispatch => ({
     dispatch({ type: TYPE.SET_WALL_TRANS, payload: returnData });
     dispatch({ type: TYPE.SET_TRANSACTION_MAP, payload: null });
   },
-  SetSendAgainData: returnData => {
-    dispatch({ type: TYPE.SET_TRANSACTION_SENDAGAIN, payload: returnData });
-  },
-  SetExploreInfo: returnData => {
-    dispatch({ type: TYPE.SET_TRANSACTION_EXPLOREINFO, payload: returnData });
-  },
   SetSelectedMyAccount: returnData => {
     dispatch({ type: TYPE.SET_SELECTED_MYACCOUNT, payload: returnData });
   },
@@ -149,9 +143,6 @@ const mapDispatchToProps = dispatch => ({
   },
   UpdateFeeOnTransaction: returnData => {
     dispatch({ type: TYPE.UPDATE_FEEVALUE, payload: returnData });
-  },
-  UpdateFilteredTransaction: returnData => {
-    dispatch({ type: TYPE.UPDATE_FILTERED_TRANSACTIONS, payload: returnData });
   },
   ToggleTransactionChart: inUpdate => {
     dispatch({ type: TYPE.UPDATE_SETTINGS, payload: inUpdate });
@@ -526,54 +517,6 @@ class Transactions extends Component {
         ],
       })
     );
-
-    // Additional Functions for the context menu
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // Following functions were put on hold as the sendpage was redone and the blockexploerer was removed, we should have some of this one day
-    // when these pages are better suited
-
-    let sendtoSendcallback = function() {
-      this.props.SetSendAgainData({
-        address: this.props.walletitems[this.hoveringID].address,
-        account: this.props.walletitems[this.hoveringID].account,
-        amount: this.props.walletitems[this.hoveringID].amount,
-      });
-      this.props.history.push('/Send');
-    };
-    //sendtoSendcallback = sendtoSendcallback.bind(this);
-
-    let sendtoBlockExplorercallback = function() {
-      this.props.SetExploreInfo({
-        transactionId: this.props.walletitems[this.hoveringID].txid,
-      });
-      this.props.history.push('/BlockExplorer');
-    };
-
-    //sendtoBlockExplorercallback = sendtoBlockExplorercallback.bind(this);
-
-    /* //Putting this on hold
-    //Add Resending the transaction option
-    transactiontablecontextmenu.append(
-      new remote.MenuItem({
-        label: "Send Again",
-        click() {
-
-          sendtoSendcallback();
- 
-        }
-      })
-    ); */
-    /*  Currently Block Explorer is turned off. 
-    //Add Open Explorer Option
-    transactiontablecontextmenu.append(
-      new remote.MenuItem({
-        label: "Open Explorer",
-        click() {
-          sendtoBlockExplorercallback();
-        }
-      })
-    );
-    */
 
     if (this.isHoveringOverTable) {
       transactiontablecontextmenu.popup(remote.getCurrentWindow());

@@ -23,18 +23,7 @@ export default (state = initialState, action) => {
         ...state,
         walletitemsMap: tempMap,
       };
-    case TYPE.SET_TRANSACTION_SENDAGAIN:
-      return {
-        ...state,
-        sendagain: action.payload,
-      };
-      break;
-    case TYPE.SET_TRANSACTION_EXPLOREINFO:
-      return {
-        ...state,
-        exploreinfo: action.payload,
-      };
-      break;
+
     case TYPE.SET_SELECTED_MYACCOUNT:
       return {
         ...state,
@@ -94,13 +83,6 @@ export default (state = initialState, action) => {
       return {
         ...state,
         walletitems: tempTransactionsWithfeeValues,
-      };
-      break;
-    case TYPE.UPDATE_FILTERED_TRANSACTIONS:
-      console.log('reducer');
-      return {
-        ...state,
-        filteredItems: action.payload,
       };
       break;
 
