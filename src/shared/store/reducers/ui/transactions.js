@@ -2,8 +2,8 @@ import * as TYPE from 'consts/actionTypes';
 
 const initialState = {
   account: null,
-  searchText: '',
-  type: null,
+  addressQuery: '',
+  category: null,
   minAmount: 0,
   timeSpan: null,
 };
@@ -19,13 +19,13 @@ export default (state = initialState, action) => {
     case TYPE.SET_TXS_SEARCH_TEXT:
       return {
         ...state,
-        searchText: action.payload,
+        addressQuery: action.payload,
       };
 
     case TYPE.SET_TXS_TYPE_FILTER:
       return {
         ...state,
-        type: action.payload,
+        category: action.payload,
       };
 
     case TYPE.SET_TXS_MIN_AMOUNT_FILTER:
