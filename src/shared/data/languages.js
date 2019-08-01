@@ -9,6 +9,10 @@ import PolishFlag from './flags/pl.png';
 import PortugueseFlag from './flags/pt.png';
 import USUKFlag from './flags/US-UK.png';
 
+/**
+ * NOTE: If this list is updated, also update the one in
+ * /internals/scripts/extractTransactions.js
+ */
 const languages = [
   {
     code: 'en',
