@@ -36,6 +36,7 @@ import TransactionDetailsModal from './TransactionDetailsModal';
 import styles from './style.css';
 import CSVDownloadModal from './TransactionCSVDownloadModal';
 import Filters from './Filters';
+import TransactionsChartModal from './TransactionsChartModal';
 
 // Images
 import transactionIcon from 'images/transaction.sprite.svg';
@@ -931,207 +932,169 @@ class Transactions extends Component {
     document.body.removeChild(link);
   }
 
-  //
-  /**
-   * Callback for when you change the category filter
-   *
-   * @memberof Transactions
-   */
-  transactiontypefiltercallback = categoryFilter => {
-    this.setState({
-      categoryFilter,
-    });
-  };
+  // //
+  // /**
+  //  * Filter the transactions based on the CategoryFilter
+  //  *
+  //  * @param {[*]} inTransactions Current list of transactions to filter
+  //  * @returns {[*]} List of transactions after the filtering
+  //  * @memberof Transactions
+  //  */
+  // filterByCategory(inTransactions) {
+  //   let tempTrans = [];
+  //   const categoryFilterValue = this.state.categoryFilter;
 
-  //
-  /**
-   * Callback for when you change the amount filter
-   *
-   * @memberof Transactions
-   */
-  transactionamountfiltercallback = e => {
-    const amountFilterValue = e.target.value;
-    this.setState({
-      amountFilter: amountFilterValue,
-    });
-  };
+  //   for (let index = 0; index < inTransactions.length; index++) {
+  //     const element = inTransactions[index];
+  //     if (categoryFilterValue == 'all') {
+  //       tempTrans.push(element);
+  //     } else {
+  //       if (categoryFilterValue == element.category) {
+  //         tempTrans.push(element);
+  //       }
+  //     }
+  //   }
+  //   return tempTrans;
+  // }
 
-  //
-  /**
-   * Callback for when you change the address filter
-   *
-   * @memberof Transactions
-   */
-  transactionaddressfiltercallback = e => {
-    const addressfiltervalue = e.target.value;
-    this.setState({
-      addressFilter: addressfiltervalue,
-    });
-  };
+  // //
+  // /**
+  //  * Filter the transactions based on the AmountFilter
+  //  *
+  //  * @param {[*]} inTransactions Current list of transactions to filter
+  //  * @returns {[*]} List of transactions after the filtering
+  //  * @memberof Transactions
+  //  */
+  // filterbyAmount(inTransactions) {
+  //   let tempTrans = [];
+  //   const amountFilterValue = this.state.amountFilter;
 
-  //
-  /**
-   * Filter the transactions based on the CategoryFilter
-   *
-   * @param {[*]} inTransactions Current list of transactions to filter
-   * @returns {[*]} List of transactions after the filtering
-   * @memberof Transactions
-   */
-  filterByCategory(inTransactions) {
-    let tempTrans = [];
-    const categoryFilterValue = this.state.categoryFilter;
+  //   for (let index = 0; index < inTransactions.length; index++) {
+  //     const element = inTransactions[index];
 
-    for (let index = 0; index < inTransactions.length; index++) {
-      const element = inTransactions[index];
-      if (categoryFilterValue == 'all') {
-        tempTrans.push(element);
-      } else {
-        if (categoryFilterValue == element.category) {
-          tempTrans.push(element);
-        }
-      }
-    }
-    return tempTrans;
-  }
+  //     if (Math.abs(element.amount) >= amountFilterValue) {
+  //       tempTrans.push(element);
+  //     }
+  //   }
+  //   return tempTrans;
+  // }
 
-  //
-  /**
-   * Filter the transactions based on the AmountFilter
-   *
-   * @param {[*]} inTransactions Current list of transactions to filter
-   * @returns {[*]} List of transactions after the filtering
-   * @memberof Transactions
-   */
-  filterbyAmount(inTransactions) {
-    let tempTrans = [];
-    const amountFilterValue = this.state.amountFilter;
+  // //
+  // /**
+  //  * Filter the transactions based on the AddressFilter
+  //  *
+  //  * @param {[*]} inTransactions Current list of transactions to filter
+  //  * @returns {[*]} List of transactions after the filtering
+  //  * @memberof Transactions
+  //  */
+  // filterByAddress(inTransactions) {
+  //   const addressFilter = this.state.addressFilter.toLowerCase();
+  //   return inTransactions.filter(
+  //     tx =>
+  //       tx &&
+  //       ((tx.address == undefined &&
+  //         (tx.category == 'generate' ||
+  //           tx.category == 'immature' ||
+  //           tx.category == 'trust' ||
+  //           tx.category == 'stake' ||
+  //           tx.category == 'orphan')) ||
+  //         (tx.address && tx.address.toLowerCase().includes(addressFilter)))
+  //   );
+  // }
 
-    for (let index = 0; index < inTransactions.length; index++) {
-      const element = inTransactions[index];
+  // //
+  // /**
+  //  * Filter the transactions based on the DisplayTimeFrame
+  //  *
+  //  * @param {[*]} inTransactions Current list of transactions to filter
+  //  * @returns {[*]} List of transactions after the filtering
+  //  * @memberof Transactions
+  //  */
+  // filterByTime(inTransactions) {
+  //   let tempTrans = [];
+  //   const timeFilterValue = this.state.displayTimeFrame;
+  //   let todaydate = new Date();
+  //   let pastdate = null;
 
-      if (Math.abs(element.amount) >= amountFilterValue) {
-        tempTrans.push(element);
-      }
-    }
-    return tempTrans;
-  }
+  //   if (timeFilterValue == 'Week') {
+  //     pastdate = new Date(
+  //       todaydate.getFullYear(),
+  //       todaydate.getMonth(),
+  //       todaydate.getDate() - 7
+  //     );
+  //   } else if (timeFilterValue == 'Month') {
+  //     pastdate = new Date(
+  //       todaydate.getFullYear(),
+  //       todaydate.getMonth() - 1,
+  //       todaydate.getDate()
+  //     );
+  //   } else if (timeFilterValue == 'Year') {
+  //     pastdate = new Date(
+  //       todaydate.getFullYear() - 1,
+  //       todaydate.getMonth(),
+  //       todaydate.getDate()
+  //     );
+  //   } else {
+  //     if (this.state.changeTimeFrame) {
+  //       this.handleZoom({
+  //         x: [
+  //           inTransactions[0].time,
+  //           inTransactions[inTransactions.length - 1].time,
+  //         ],
+  //         y: [0, 1],
+  //       });
+  //       this.setState({
+  //         changeTimeFrame: false,
+  //       });
+  //     }
+  //     return inTransactions;
+  //   }
+  //   todaydate = Math.round(todaydate.getTime());
+  //   pastdate = Math.round(pastdate.getTime());
 
-  //
-  /**
-   * Filter the transactions based on the AddressFilter
-   *
-   * @param {[*]} inTransactions Current list of transactions to filter
-   * @returns {[*]} List of transactions after the filtering
-   * @memberof Transactions
-   */
-  filterByAddress(inTransactions) {
-    const addressFilter = this.state.addressFilter.toLowerCase();
-    return inTransactions.filter(
-      tx =>
-        tx &&
-        ((tx.address == undefined &&
-          (tx.category == 'generate' ||
-            tx.category == 'immature' ||
-            tx.category == 'trust' ||
-            tx.category == 'stake' ||
-            tx.category == 'orphan')) ||
-          (tx.address && tx.address.toLowerCase().includes(addressFilter)))
-    );
-  }
+  //   todaydate = todaydate + 1000;
 
-  //
-  /**
-   * Filter the transactions based on the DisplayTimeFrame
-   *
-   * @param {[*]} inTransactions Current list of transactions to filter
-   * @returns {[*]} List of transactions after the filtering
-   * @memberof Transactions
-   */
-  filterByTime(inTransactions) {
-    let tempTrans = [];
-    const timeFilterValue = this.state.displayTimeFrame;
-    let todaydate = new Date();
-    let pastdate = null;
+  //   for (let index = 0; index < inTransactions.length; index++) {
+  //     //just holding this to keep it clean
+  //     const element = inTransactions[index];
 
-    if (timeFilterValue == 'Week') {
-      pastdate = new Date(
-        todaydate.getFullYear(),
-        todaydate.getMonth(),
-        todaydate.getDate() - 7
-      );
-    } else if (timeFilterValue == 'Month') {
-      pastdate = new Date(
-        todaydate.getFullYear(),
-        todaydate.getMonth() - 1,
-        todaydate.getDate()
-      );
-    } else if (timeFilterValue == 'Year') {
-      pastdate = new Date(
-        todaydate.getFullYear() - 1,
-        todaydate.getMonth(),
-        todaydate.getDate()
-      );
-    } else {
-      if (this.state.changeTimeFrame) {
-        this.handleZoom({
-          x: [
-            inTransactions[0].time,
-            inTransactions[inTransactions.length - 1].time,
-          ],
-          y: [0, 1],
-        });
-        this.setState({
-          changeTimeFrame: false,
-        });
-      }
-      return inTransactions;
-    }
-    todaydate = Math.round(todaydate.getTime());
-    pastdate = Math.round(pastdate.getTime());
+  //     //Am I in the time frame provided
+  //     if (element.time >= pastdate && element.time <= todaydate) {
+  //       tempTrans.push(element);
+  //     }
+  //   }
 
-    todaydate = todaydate + 1000;
+  //   if (this.state.changeTimeFrame) {
+  //     this.handleZoom({
+  //       x: [pastdate, new Date()],
+  //       y: [0, 1],
+  //     });
+  //     this.setState({
+  //       changeTimeFrame: false,
+  //     });
+  //   }
 
-    for (let index = 0; index < inTransactions.length; index++) {
-      //just holding this to keep it clean
-      const element = inTransactions[index];
+  //   return tempTrans;
+  // }
 
-      //Am I in the time frame provided
-      if (element.time >= pastdate && element.time <= todaydate) {
-        tempTrans.push(element);
-      }
-    }
-
-    if (this.state.changeTimeFrame) {
-      this.handleZoom({
-        x: [pastdate, new Date()],
-        y: [0, 1],
-      });
-      this.setState({
-        changeTimeFrame: false,
-      });
-    }
-
-    return tempTrans;
-  }
-
-  /**
-   * Returns all the transaction that have been filtered by the filter
-   *
-   * @param {[*]} inTransactions Current list of transactions to filter
-   * @returns {[*]} List of transactions after all the filtering is complete
-   * @memberof Transactions
-   */
-  returnAllFilters(inTransactions) {
-    if (!inTransactions || !inTransactions.length) {
-      return inTransactions;
-    }
-    let tempTrans = inTransactions;
-    tempTrans = this.filterByTime(tempTrans);
-    tempTrans = this.filterByCategory(tempTrans);
-    tempTrans = this.filterByAddress(tempTrans);
-    tempTrans = this.filterbyAmount(tempTrans);
-    return tempTrans;
-  }
+  // /**
+  //  * Returns all the transaction that have been filtered by the filter
+  //  *
+  //  * @param {[*]} inTransactions Current list of transactions to filter
+  //  * @returns {[*]} List of transactions after all the filtering is complete
+  //  * @memberof Transactions
+  //  */
+  // returnAllFilters(inTransactions) {
+  //   if (!inTransactions || !inTransactions.length) {
+  //     return inTransactions;
+  //   }
+  //   let tempTrans = inTransactions;
+  //   tempTrans = this.filterByTime(tempTrans);
+  //   tempTrans = this.filterByCategory(tempTrans);
+  //   tempTrans = this.filterByAddress(tempTrans);
+  //   tempTrans = this.filterbyAmount(tempTrans);
+  //   return tempTrans;
+  // }
 
   //
   /**
@@ -1744,23 +1707,6 @@ class Transactions extends Component {
   }
 
   /**
-   * Compares a Date to a from Date and a To Date and returns a Bool
-   *
-   * @param {*} indate Date to check
-   * @param {*} starttime Date from
-   * @param {*} endtime Date to
-   * @returns {bool} Is this true or not
-   * @memberof Transactions
-   */
-  comparedate(indate, starttime, endtime) {
-    if (starttime <= indate && indate <= endtime) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  /**
    * Return Default Page Size
    *
    * @returns {number}
@@ -1803,18 +1749,18 @@ class Transactions extends Component {
     this.props.SetSelectedMyAccount(inAccount);
   }
 
-  toggleVictoryChart() {
-    const value = !this.props.settings.showTransactionChart;
-    this.props.ToggleTransactionChart({ showTransactionChart: value });
-    //console.log(this.props.settings.showTransactionChart);
-    //console.log(this.props.settings);
-    UpdateSettings({
-      showTransactionChart: value,
-    });
-    this.setState({
-      showTransactionChart: value,
-    });
-  }
+  // toggleVictoryChart() {
+  //   const value = !this.props.settings.showTransactionChart;
+  //   this.props.ToggleTransactionChart({ showTransactionChart: value });
+  //   //console.log(this.props.settings.showTransactionChart);
+  //   //console.log(this.props.settings);
+  //   UpdateSettings({
+  //     showTransactionChart: value,
+  //   });
+  //   this.setState({
+  //     showTransactionChart: value,
+  //   });
+  // }
 
   /**
    * Return Victory Chart
@@ -1937,9 +1883,8 @@ class Transactions extends Component {
   render() {
     const data = this.returnFormatedTableData();
     const columns = this.returnTableColumns();
-    const open = this.state.open;
     const pageSize = this.returnDefaultPageSize();
-    const renderTransactionChart = this.state.showTransactionChart;
+
     return (
       <Panel
         icon={transactionIcon}
@@ -1947,7 +1892,10 @@ class Transactions extends Component {
         controls={
           <div className="flex center">
             <Tooltip.Trigger tooltip={__('Show transactions chart')}>
-              <Button skin="plain">
+              <Button
+                skin="plain"
+                onClick={() => this.props.openModal(TransactionsChartModal)}
+              >
                 <Icon icon={barChartIcon} width={20} height={20} />
               </Button>
             </Tooltip.Trigger>
@@ -1966,41 +1914,6 @@ class Transactions extends Component {
           </WaitingMessage>
         ) : (
           <div>
-            <Button
-              style={{
-                width: '16px',
-                height: '12px',
-                display: 'inline',
-                border: '2px solid ' + this.props.theme.background,
-                position: 'absolute',
-                left: '8px',
-                paddingLeft: '2px',
-                paddingRight: '15px',
-              }}
-              onClick={() => this.toggleVictoryChart()}
-            >
-              <Arrow
-                direction={renderTransactionChart ? 'up' : 'down'}
-                width={12}
-                height={8}
-              />
-            </Button>
-            {renderTransactionChart ? (
-              <div
-                id="transactions-chart"
-                style={{
-                  display: data.length === 0 ? 'none' : 'block',
-                  border: '2px solid ' + this.props.theme.background,
-                  transition: 'all 1s ease',
-                }}
-              >
-                {data.length === 0 || renderTransactionChart == false
-                  ? null
-                  : this.returnVictoryChart()}
-              </div>
-            ) : (
-              <div style={{ fontSize: '75%' }}>Show Transaction Chart</div>
-            )}
             <Filters />
             <div id="transactions-details">
               <Table
@@ -2018,19 +1931,6 @@ class Transactions extends Component {
           </div>
         )}
       </Panel>
-    );
-  }
-}
-
-//not being used save for later
-class CustomTooltip extends React.Component {
-  // Mandatory React method
-  render() {
-    return (
-      <g>
-        <VictoryLabel {...this.props} />
-        <VictoryTooltip {...this.props} orientation="right" />
-      </g>
     );
   }
 }

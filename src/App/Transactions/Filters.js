@@ -20,7 +20,7 @@ import searchIcon from 'images/search.sprite.svg';
 
 const categories = [
   {
-    value: 'all',
+    value: null,
     display: __('All'),
   },
   {
