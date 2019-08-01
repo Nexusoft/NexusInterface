@@ -22,7 +22,7 @@ const defaultPassword = crypto
 
 export const defaultSettings = {
   // App
-  locale: 'en',
+  locale: null,
   minimizeOnClose: false,
   autoUpdate: true,
   sendUsageData: true,
@@ -61,8 +61,8 @@ export const defaultSettings = {
   encryptionWarningDisabled: false,
   bootstrapSuggestionDisabled: false,
   showTransactionChart: true,
-  windowWidth: 1020,
-  windowHeight: 700,
+  windowWidth: 1200,
+  windowHeight: 800,
   windowX: undefined,
   windowY: undefined,
   forkBlocks: 0,

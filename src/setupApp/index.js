@@ -2,10 +2,10 @@
 import { remote } from 'electron';
 
 // Internal
-import { openModal } from 'actions/overlays';
 import * as ac from 'actions/setupApp';
 import { loadModules } from 'actions/module';
 import { stopCore } from 'actions/core';
+import { closeWallet } from 'actions/ui';
 import { initializeUpdater } from 'lib/updater';
 import { initializeWebView } from 'lib/modules';
 import { initializeCoreInfo } from 'lib/coreInfo';
@@ -14,15 +14,9 @@ import { initializeBootstrapEvents } from 'lib/bootstrap';
 import { initializeMenu } from 'appMenu';
 import store from 'store';
 
-import LicenseAgreementModal from './LicenseAgreementModal';
-import ExperimentalWarningModal from './ExperimentalWarningModal';
-import ClosingModal from './ClosingModal';
-
 const { dispatch } = store;
 export function preRender() {
   initializeCoreInfo();
-
-  showInitialModals();
 
   dispatch(ac.SetMarketAveData());
   setInterval(() => {
@@ -45,7 +39,7 @@ export function preRender() {
       }
     } else {
       stopCoreOuputWatch();
-      dispatch(openModal(ClosingModal));
+      dispatch(closeWallet());
 
       if (!manualDaemon) {
         await dispatch(stopCore());
@@ -64,27 +58,4 @@ export function postRender() {
   initializeWebView();
   initializeUpdater(state.settings.autoUpdate);
   initializeBootstrapEvents(store);
-}
-
-function showInitialModals() {
-  const {
-    settings: { experimentalWarningDisabled, acceptedAgreement },
-  } = store.getState();
-
-  const showExperimentalWarning = () => {
-    if (!experimentalWarningDisabled) {
-      dispatch(openModal(ExperimentalWarningModal));
-    }
-  };
-
-  if (!acceptedAgreement) {
-    dispatch(
-      openModal(LicenseAgreementModal, {
-        fullScreen: true,
-        onClose: showExperimentalWarning,
-      })
-    );
-  } else {
-    showExperimentalWarning();
-  }
 }

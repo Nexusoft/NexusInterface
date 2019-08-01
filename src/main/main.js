@@ -1,5 +1,5 @@
 // External
-import { app, BrowserWindow, Tray, Menu } from 'electron';
+import { app, BrowserWindow, Tray, Menu, screen } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import path from 'path';
 import devToolsInstall, {
@@ -92,16 +92,21 @@ function createWindow() {
     process.platform == 'darwin' ? 'nexuslogo.ico' : 'Nexus_App_Icon_64.png';
   const iconPath = path.join(assetsDir, 'tray', fileName);
 
+  const x = Math.max(0, settings.windowX);
+  const y = Math.max(0, settings.windowY);
+  const display = screen.getPrimaryDisplay().workAreaSize;
+  const width = Math.min(settings.windowWidth, display.width);
+  const height = Math.min(settings.windowHeight, display.height);
   // Create the main browser window
   mainWindow = new BrowserWindow({
-    x: settings.windowX,
-    y: settings.windowY,
-    width: settings.windowWidth,
-    height: settings.windowHeight,
+    x,
+    y,
+    width,
+    height,
     minWidth: 1022,
     minHeight: 713,
     icon: iconPath,
-    backgroundColor: '#232c39',
+    backgroundColor: '#171719',
     show: false,
     webPreferences: {
       nodeIntegration: true,

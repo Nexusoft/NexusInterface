@@ -5,13 +5,14 @@ import styled from '@emotion/styled';
 import { connect } from 'react-redux';
 
 // Internal Dependencies
-import { getInfo } from 'actions/core';
+import { autoFetchCoreInfo } from 'lib/coreInfo';
 import rpc from 'lib/rpc';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
 import Switch from 'components/Switch';
+import { rpcErrorHandler } from 'utils/form';
 import { showNotification, openErrorDialog } from 'actions/overlays';
 
 const LoginFieldSet = styled(FieldSet)({
@@ -97,26 +98,9 @@ const Buttons = styled.div({
   onSubmitSuccess: async (result, dispatch, props) => {
     props.reset();
     props.showNotification(__('Logged in successfully'), 'success');
-    dispatch(getInfo());
+    autoFetchCoreInfo();
   },
-  onSubmitFail: (errors, dispatch, submitError, props) => {
-    if (!errors || !Object.keys(errors).length) {
-      let note = submitError || __('An unknown error occurred');
-      if (
-        submitError === 'Error: The wallet passphrase entered was incorrect.'
-      ) {
-        note = __('Incorrect password');
-      } else if (submitError === 'value is type null, expected int') {
-        note = __(
-          'Unlock until date/time must be at least an hour in the future'
-        );
-      }
-      props.openErrorDialog({
-        message: __('Error logging in'),
-        note: note,
-      });
-    }
-  },
+  onSubmitFail: rpcErrorHandler(__('Error logging in')),
 })
 class Login extends Component {
   /**

@@ -22,6 +22,7 @@ export function bootstrap({ suggesting } = {}) {
     const state = getState();
     if (state.bootstrap.step !== 'idle') return;
 
+    dispatch(setBootstrapStatus('prompting'));
     const enoughSpace = await checkFreeSpaceForBootstrap();
     if (!enoughSpace) {
       if (!suggesting) {
@@ -33,10 +34,10 @@ export function bootstrap({ suggesting } = {}) {
           })
         );
       }
+      dispatch(setBootstrapStatus('idle'));
       return;
     }
 
-    dispatch(setBootstrapStatus('prompting'));
     dispatch(
       openConfirmDialog({
         question: __('Download recent database?'),
@@ -51,7 +52,6 @@ export function bootstrap({ suggesting } = {}) {
         labelNo: __('No, let it sync'),
         skinNo: suggesting ? 'danger' : undefined,
         callbackNo: () => {
-          dispatch(setBootstrapStatus('idle'));
           if (suggesting) {
             dispatch(
               updateSettings({
@@ -59,6 +59,7 @@ export function bootstrap({ suggesting } = {}) {
               })
             );
           }
+          dispatch(setBootstrapStatus('idle'));
         },
         style: { width: 530 },
       })

@@ -6,6 +6,7 @@ import console from './console';
 import modals from './modals';
 import notifications from './notifications';
 import backgroundTasks from './backgroundTasks';
+import closing from './closing';
 
 export default combineReducers({
   addressBook,
@@ -14,4 +15,5 @@ export default combineReducers({
   modals,
   notifications,
   backgroundTasks,
+  closing,
 });

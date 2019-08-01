@@ -6,7 +6,7 @@ import styled from '@emotion/styled';
 
 // Internal
 import rpc from 'lib/rpc';
-import { getInfo } from 'actions/core';
+import { autoFetchCoreInfo } from 'lib/coreInfo';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import Button from 'components/Button';
@@ -33,7 +33,6 @@ const ChangePasswordComponent = styled.form({
 @connect(
   null,
   {
-    getInfo,
     openConfirmDialog,
     openErrorDialog,
     openSuccessDialog,
@@ -87,7 +86,7 @@ class ChangePassword extends Component {
       callbackYes: async () => {
         try {
           await rpc('walletlock', []);
-          this.props.getInfo();
+          autoFetchCoreInfo();
         } catch (err) {
           const note = (err & err.error && err.error.message) || err;
           this.props.openErrorDialog({
