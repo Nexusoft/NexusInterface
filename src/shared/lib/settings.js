@@ -39,6 +39,7 @@ export const defaultSettings = {
   enableMining: false,
   enableStaking: true,
   verboseLevel: 0,
+  avatarLevel: 1,
   manualDaemon: false,
   manualDaemonUser: 'rpcserver',
   manualDaemonPassword: defaultPassword,

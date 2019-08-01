@@ -360,6 +360,21 @@ class SettingsCore extends Component {
 
           <SettingsField
             connectLabel
+            label={__('Avatar level')}
+            subLabel={__('Avatar Level')}
+          >
+            <TextField
+              type="number"
+              value={settings.avatarLevel}
+              min={0}
+              max={5}
+              onChange={this.updateHandlers('avatarLevel')}
+              style={{ maxWidth: 50 }}
+            />
+          </SettingsField>
+
+          <SettingsField
+            connectLabel
             label={__('Manual Core mode')}
             subLabel={__(
               'Enable manual Core mode if you are running the Nexus Core manually outside of the wallet.'
