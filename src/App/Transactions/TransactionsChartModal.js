@@ -10,7 +10,11 @@ import {
 
 import Modal from 'components/Modal';
 
-import { getChartData, getFilteredTransactions } from './selectors';
+import {
+  getChartData,
+  getFilteredTransactions,
+  getTransactionsList,
+} from './selectors';
 import { categoryText } from './utils';
 
 const returnCorrectFillColor = inData =>
@@ -146,13 +150,14 @@ const mapStateToProps = ({
   theme,
   transactions,
   ui: {
-    transactions: { addressQuery, category, minAmount, timeSpan },
+    transactions: { account, addressQuery, category, minAmount, timeSpan },
   },
 }) => ({
   theme,
   chartData: getChartData(
     getFilteredTransactions(
-      transactions,
+      getTransactionsList(transactions.map),
+      account,
       addressQuery,
       category,
       minAmount,
