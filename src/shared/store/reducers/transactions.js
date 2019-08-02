@@ -7,7 +7,7 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case TYPE.FETCH_TRANSACTIONS:
+    case TYPE.LOAD_TRANSACTIONS:
       return {
         ...state,
         map:
