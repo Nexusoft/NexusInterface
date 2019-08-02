@@ -19,14 +19,14 @@ import { categoryText } from './utils';
 
 const VictoryZoomVoronoiContainer = createContainer('voronoi', 'zoom');
 
-const returnCorrectFillColor = inData =>
+const barFillColor = inData =>
   inData.category == 'credit'
     ? '#0ca4fb'
     : inData.category == 'debit'
     ? '#035'
     : '#fff';
 
-const returnCorrectStokeColor = inData =>
+const barStrokeColor = inData =>
   inData.category == 'credit'
     ? '#0ca4fb'
     : inData.category == 'debit'
@@ -66,8 +66,8 @@ const TransactionsChartModal = ({ theme, chartData }) => (
         <VictoryBar
           style={{
             data: {
-              fill: d => returnCorrectFillColor(d),
-              stroke: d => returnCorrectStokeColor(d),
+              fill: d => barFillColor(d),
+              stroke: d => barStrokeColor(d),
               fillOpacity: 0.85,
               strokeWidth: 1,
               fontSize: 3000,

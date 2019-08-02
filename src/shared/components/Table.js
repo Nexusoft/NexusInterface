@@ -11,7 +11,6 @@ const Table = ({
   ...rest
 }) => (
   <ReactTable
-    className="-striped -highlight"
     noDataText={__('No Rows Found')}
     data={data}
     pageText={__('Page')}
@@ -53,6 +52,7 @@ const Table = ({
     //   };
     // }}
     {...rest}
+    className={`-striped -highlight ${rest.className}`}
   />
 );
 
