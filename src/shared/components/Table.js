@@ -1,15 +1,7 @@
 import React from 'react';
 import ReactTable from 'react-table';
 
-const Table = ({
-  data,
-  columns,
-  defaultSortingColumnIndex,
-  onMouseOverCallback,
-  selectCallback,
-  onMouseOutCallback,
-  ...rest
-}) => (
+const Table = ({ data, columns, defaultSortingColumnIndex, ...rest }) => (
   <ReactTable
     noDataText={__('No Rows Found')}
     data={data}
@@ -28,29 +20,6 @@ const Table = ({
     rowsText={__('rows')}
     previousText={'< ' + __('Previous')}
     nextText={__('Next') + ' >'}
-    // getTrProps={(state, rowInfo) => {
-    //   return {
-    //     onClick: e => {
-    //       onMouseOverCallback(e, rowInfo);
-    //       selectCallback(e, rowInfo);
-    //       this.setState({
-    //         selected: rowInfo.index,
-    //       });
-    //     },
-    //     onContextMenu: e => {
-    //       selectCallback(e, rowInfo);
-    //     },
-    //     onMouseDown: e => {
-    //       onMouseOverCallback(e, rowInfo);
-    //     },
-    //     onMouseOver: e => {
-    //       onMouseOverCallback(e, rowInfo);
-    //     },
-    //     onMouseOut: e => {
-    //       onMouseOutCallback(e);
-    //     },
-    //   };
-    // }}
     {...rest}
     className={`-striped -highlight ${rest.className}`}
   />
