@@ -6,8 +6,6 @@ import Icon from 'components/Icon';
 import Select from 'components/Select';
 import TextField from 'components/TextField';
 import FormField from 'components/FormField';
-import Button from 'components/Button';
-import Tooltip from 'components/Tooltip';
 import {
   setTxsAddressQuery,
   setTxsCategoryFilter,
@@ -15,7 +13,6 @@ import {
   setTxsTimeFilter,
 } from 'actions/ui';
 
-import downloadIcon from 'images/download.sprite.svg';
 import searchIcon from 'images/search.sprite.svg';
 
 const categories = [
@@ -73,6 +70,7 @@ const timeFrames = [
 ];
 
 const FiltersWrapper = styled.div({
+  gridArea: 'filters',
   display: 'grid',
   gridTemplateAreas: '"search type minAmount timeFrame download"',
   gridTemplateColumns: '1fr 110px 100px 140px auto',
@@ -80,6 +78,7 @@ const FiltersWrapper = styled.div({
   alignItems: 'end',
   fontSize: 15,
   marginBottom: '1em',
+  marginTop: '-1em',
 });
 
 const Filters = ({
@@ -131,12 +130,6 @@ const Filters = ({
         options={timeFrames}
       />
     </FormField>
-
-    <Tooltip.Trigger tooltip={__('Download')}>
-      <Button square className="relative" onClick={() => this.DownloadCSV()}>
-        <Icon icon={downloadIcon} />
-      </Button>
-    </Tooltip.Trigger>
   </FiltersWrapper>
 );
 

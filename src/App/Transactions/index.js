@@ -42,11 +42,21 @@ import TransactionsChartModal from './TransactionsChartModal';
 // Images
 import transactionIcon from 'images/transaction.sprite.svg';
 import barChartIcon from 'images/bar-chart.sprite.svg';
+import downloadIcon from 'images/download.sprite.svg';
 
 import copy from 'copy-to-clipboard';
 
 // Global variables
 let tempaddpress = new Map();
+
+const timeFormatOptions = {
+  year: 'numeric',
+  month: 'short',
+  day: '2-digit',
+  hour: '2-digit',
+  minute: '2-digit',
+  second: '2-digit',
+};
 
 const tableColumns = [
   // {
@@ -58,15 +68,15 @@ const tableColumns = [
     id: 'time',
     Header: __('Time'),
     accessor: 'time',
-    Cell: d => formatDateTime(d.value),
+    Cell: tx => formatDateTime(tx.value * 1000, timeFormatOptions),
     maxWidth: 220,
   },
   {
     id: 'category',
     Header: __('CATEGORY'),
     accessor: 'category',
-    Cell: categoryText,
-    maxWidth: 85,
+    Cell: tx => categoryText(tx.value),
+    maxWidth: 120,
   },
   {
     Header: __('AMOUNT'),
@@ -88,6 +98,19 @@ const AccountSelect = styled(Select)({
   marginLeft: '1em',
   minWidth: 200,
   fontSize: 15,
+});
+
+const TransactionsLayout = styled.div({
+  height: '100%',
+  display: 'grid',
+  gridTemplateAreas: '"filters" "table"',
+  gridTemplateRows: 'min-content 1fr',
+});
+
+const TransactionsTable = styled(Table)({
+  gridArea: 'table',
+  fontSize: 14,
+  overflow: 'auto',
 });
 
 // React-Redux mandatory methods
@@ -1837,6 +1860,13 @@ class Transactions extends Component {
                 <Icon icon={barChartIcon} width={20} height={20} />
               </Button>
             </Tooltip.Trigger>
+
+            <Tooltip.Trigger tooltip={__('Download as CSV')}>
+              <Button skin="plain" onClick={() => this.DownloadCSV()}>
+                <Icon icon={downloadIcon} />
+              </Button>
+            </Tooltip.Trigger>
+
             <AccountSelect
               value={account}
               onChange={setTxsAccountFilter}
@@ -1856,27 +1886,25 @@ class Transactions extends Component {
             ...
           </WaitingMessage>
         ) : (
-          <div>
+          <TransactionsLayout>
             <Filters />
-            <div id="transactions-details">
-              <Table
-                data={getFilteredTransactions(
-                  allTransactions,
-                  account,
-                  addressQuery,
-                  category,
-                  minAmount,
-                  timeSpan
-                )}
-                columns={tableColumns}
-                defaultPageSize={10}
-                // selectCallback={this.tableSelectCallback.bind(this)}
-                defaultSortingColumnIndex={0}
-                // onMouseOverCallback={this.mouseOverCallback.bind(this)}
-                // onMouseOutCallback={this.mouseOutCallback.bind(this)}
-              />
-            </div>
-          </div>
+            <TransactionsTable
+              data={getFilteredTransactions(
+                allTransactions,
+                account,
+                addressQuery,
+                category,
+                minAmount,
+                timeSpan
+              )}
+              columns={tableColumns}
+              defaultPageSize={10}
+              // selectCallback={this.tableSelectCallback.bind(this)}
+              defaultSortingColumnIndex={0}
+              // onMouseOverCallback={this.mouseOverCallback.bind(this)}
+              // onMouseOutCallback={this.mouseOutCallback.bind(this)}
+            />
+          </TransactionsLayout>
         )}
       </Panel>
     );

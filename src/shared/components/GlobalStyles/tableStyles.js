@@ -35,7 +35,7 @@ export default theme => css`
       overflow: auto;
 
       /* custom styles */
-      border: 1px solid var(${theme.background});
+      border: 1px solid ${theme.background};
       border-radius: 0.125em;
     }
 
@@ -91,7 +91,7 @@ export default theme => css`
     .rt-thead .rt-td {
       line-height: normal;
       position: relative;
-      background-color: var(${theme.background});
+      background-color: ${theme.background};
 
       padding-top: calc(
         var(--line-height) * var(--table-padded-padding-vertical)
@@ -105,16 +105,16 @@ export default theme => css`
       padding-right: calc(
         var(--line-height) * var(--table-padded-padding-horizontal)
       );
-      border-left: 1px solid var(${theme.background});
+      border-left: 1px solid ${theme.background};
     }
 
     .rt-thead .rt-th.-sort-asc,
     .rt-thead .rt-td.-sort-asc {
-      box-shadow: inset 0 3px 0 0 var(${theme.primary});
+      box-shadow: inset 0 3px 0 0 ${theme.primary};
     }
     .rt-thead .rt-th.-sort-desc,
     .rt-thead .rt-td.-sort-desc {
-      box-shadow: inset 0 -3px 0 0 var(${theme.primary});
+      box-shadow: inset 0 -3px 0 0 ${theme.primary};
     }
 
     .rt-thead .rt-th.-cursor-pointer,
@@ -186,7 +186,7 @@ export default theme => css`
     }
 
     .rt-tbody .rt-tr-group {
-      border-bottom: 1px solid var(${theme.background});
+      border-bottom: 1px solid ${theme.background};
       max-height: 2.75em;
     }
 
@@ -207,7 +207,7 @@ export default theme => css`
       padding-right: calc(
         var(--line-height) * var(--table-padded-padding-horizontal)
       );
-      border-left: 1px solid var(${theme.background});
+      border-left: 1px solid ${theme.background};
     }
 
     .rt-tbody .rt-td:first-child {
@@ -358,7 +358,7 @@ export default theme => css`
       background: rgba(255, 255, 255, 0);
       padding: 5px 7px;
       font-size: inherit;
-      color: var(${theme.foreground});
+      color: ${theme.foreground};
       border-radius: 3px;
       font-weight: normal;
       outline: none;
@@ -371,10 +371,10 @@ export default theme => css`
       bottom: 4px;
       height: 2px;
       width: 100px;
-      background: var(${theme.background});
+      background: ${theme.background};
     }
     .-pagination option {
-      background: var(${theme.background});
+      background: ${theme.background};
       background-blend-mode: difference;
       filter: invert(1);
       font-weight: normal;
@@ -448,7 +448,7 @@ export default theme => css`
     }
     .-pagination .-pageSizeOptions {
       margin: 3px 10px;
-      color: var(${theme.background});
+      color: ${theme.background};
       background: rgba(0, 0, 0, 0.02);
     }
     .rt-noData {

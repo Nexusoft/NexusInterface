@@ -27,8 +27,8 @@ const Table = ({
         : []
     }
     rowsText={__('rows')}
-    previousText={__('Previous')}
-    nextText={__('Next')}
+    previousText={'< ' + __('Previous')}
+    nextText={__('Next') + ' >'}
     // getTrProps={(state, rowInfo) => {
     //   return {
     //     onClick: e => {
