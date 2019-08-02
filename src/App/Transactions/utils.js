@@ -1,5 +1,5 @@
-export const categoryText = inData => {
-  switch (inData.category) {
+export const categoryText = category => {
+  switch (category) {
     case 'credit':
     case 'receive':
       return __('Receive');
