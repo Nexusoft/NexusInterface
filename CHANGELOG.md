@@ -4,7 +4,12 @@
 
 #### Additions
 
-- abc
+- New internal localization system
+  - Use our crowdin page to improve translations
+- New translations
+  - Simplified Chinese
+- Added Ability to use IP Whitelist for mining
+- Added Ability to turn off Avatar mode
 
 #### Adjustments
 

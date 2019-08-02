@@ -170,10 +170,18 @@ class Core {
       params.push('-forkblocks=' + settings.forkBlocks);
       UpdateSettings({ forkBlocks: 0 });
     }
+    //Avatar is default so only add it if it is off.
+    if (!settings.avatarMode) {
+      params.push('-avatar=0');
+    }
     // Enable mining (default is 0)
     if (settings.enableMining == true) {
       params.push('-mining=1');
-      params.push('whitelist=' + settings.ipMineWhitelist);
+      if (settings.ipMineWhitelist.length !== 0) {
+        settings.ipMineWhitelist.forEach(element => {
+          params.push(`-llpallowip=${element}`);
+        });
+      }
     }
     // Enable staking (default is 0)
     if (settings.enableStaking == true) params.push('-stake=1');
