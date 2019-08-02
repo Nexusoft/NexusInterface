@@ -1,7 +1,7 @@
 // External
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+// import { withRouter } from 'react-router';
 import { remote } from 'electron';
 import fs from 'fs';
 import rp from 'request-promise';
@@ -23,14 +23,20 @@ import * as TYPE from 'consts/actionTypes';
 import ContextMenuBuilder from 'contextmenu';
 import { walletDataDir } from 'consts/paths';
 import { openModal } from 'actions/overlays';
+import { setTxsAccountFilter } from 'actions/ui';
 import { isCoreConnected } from 'selectors';
+import { autoUpdateTransactions } from 'lib/transactions';
 
 import TransactionDetailsModal from './TransactionDetailsModal';
 import styles from './style.css';
 import CSVDownloadModal from './TransactionCSVDownloadModal';
 import Filters from './Filters';
 import { categoryText } from './utils';
-import { getFilteredTransactions } from './selectors';
+import {
+  getFilteredTransactions,
+  getTransactionsList,
+  getAccountOptions,
+} from './selectors';
 import TransactionsChartModal from './TransactionsChartModal';
 
 // Images
@@ -78,16 +84,6 @@ const tableColumns = [
   },
 ];
 
-const Filters = styled.div({
-  display: 'grid',
-  gridTemplateAreas: '"search type minAmount timeFrame download"',
-  gridTemplateColumns: '1fr 110px 100px 140px auto',
-  columnGap: '.75em',
-  alignItems: 'end',
-  fontSize: 15,
-  marginBottom: '1em',
-});
-
 const AccountSelect = styled(Select)({
   marginLeft: '1em',
   minWidth: 200,
@@ -97,7 +93,7 @@ const AccountSelect = styled(Select)({
 // React-Redux mandatory methods
 const mapStateToProps = state => {
   return {
-    allTransactions: state.transactions,
+    allTransactions: getTransactionsList(state.transactions.map),
     account: state.ui.transactions.account,
     addressQuery: state.ui.transactions.addressQuery,
     category: state.ui.transactions.category,
@@ -105,36 +101,37 @@ const mapStateToProps = state => {
     timeSpan: state.ui.transactions.timeSpan,
     ...state.common,
     ...state.core.info,
-    myAccounts: state.myAccounts,
+    accountOptions: getAccountOptions(state.myAccounts),
     addressBook: state.addressBook,
     settings: state.settings,
     theme: state.theme,
     coreConnected: isCoreConnected(state),
   };
 };
-const mapDispatchToProps = dispatch => ({
-  loadMyAccounts: () => dispatch(loadMyAccounts()),
-  SetWalletTransactionArray: returnData => {
-    dispatch({ type: TYPE.SET_WALL_TRANS, payload: returnData });
-    dispatch({ type: TYPE.SET_TRANSACTION_MAP, payload: null });
-  },
-  SetSelectedMyAccount: returnData => {
-    dispatch({ type: TYPE.SET_SELECTED_MYACCOUNT, payload: returnData });
-  },
-  UpdateConfirmationsOnTransactions: returnData => {
-    dispatch({ type: TYPE.UPDATE_CONFIRMATIONS, payload: returnData });
-  },
-  UpdateCoinValueOnTransaction: returnData => {
-    dispatch({ type: TYPE.UPDATE_COINVALUE, payload: returnData });
-  },
-  UpdateFeeOnTransaction: returnData => {
-    dispatch({ type: TYPE.UPDATE_FEEVALUE, payload: returnData });
-  },
-  ToggleTransactionChart: inUpdate => {
-    dispatch({ type: TYPE.UPDATE_SETTINGS, payload: inUpdate });
-  },
-  openModal: (...args) => dispatch(openModal(...args)),
-});
+const actionCreators = {
+  // loadMyAccounts: () => dispatch(loadMyAccounts()),
+  // SetWalletTransactionArray: returnData => {
+  //   dispatch({ type: TYPE.SET_WALL_TRANS, payload: returnData });
+  //   dispatch({ type: TYPE.SET_TRANSACTION_MAP, payload: null });
+  // },
+  // SetSelectedMyAccount: returnData => {
+  //   dispatch({ type: TYPE.SET_SELECTED_MYACCOUNT, payload: returnData });
+  // },
+  // UpdateConfirmationsOnTransactions: returnData => {
+  //   dispatch({ type: TYPE.UPDATE_CONFIRMATIONS, payload: returnData });
+  // },
+  // UpdateCoinValueOnTransaction: returnData => {
+  //   dispatch({ type: TYPE.UPDATE_COINVALUE, payload: returnData });
+  // },
+  // UpdateFeeOnTransaction: returnData => {
+  //   dispatch({ type: TYPE.UPDATE_FEEVALUE, payload: returnData });
+  // },
+  // ToggleTransactionChart: inUpdate => {
+  //   dispatch({ type: TYPE.UPDATE_SETTINGS, payload: inUpdate });
+  // },
+  openModal,
+  setTxsAccountFilter,
+};
 
 /**
  * Transactions Page
@@ -148,52 +145,52 @@ class Transactions extends Component {
    * @param {*} props
    * @memberof Transactions
    */
-  constructor(props) {
-    super(props);
-    this.copyRef = element => {
-      this.textCopyArea = element;
-    };
-    this.hoveringID = 999999999999;
-    this.isHoveringOverTable = false;
-    this.state = {
-      tableColumns: [],
-      displayTimeFrame: 'All',
-      changeTimeFrame: false,
-      amountFilter: 0,
-      categoryFilter: 'all',
-      showTransactionChart: true,
-      addressFilter: '',
-      zoomDomain: {
-        x: [
-          new Date(
-            new Date().getFullYear() - 1,
-            new Date().getMonth(),
-            new Date().getDate(),
-            1,
-            1,
-            1,
-            1
-          ),
-          new Date(),
-        ],
-        y: [0, 1],
-      },
-      isHoveringOverTable: false,
-      hoveringID: 999999999999,
-      open: false,
-      historyData: new Map(),
-      transactionsToCheck: [],
-      mainChartWidth: 0,
-      mainChartHeight: 0,
-      addressLabels: new Map(),
-      refreshInterval: undefined,
-      highlightedBlockNum: 'Loading',
-      highlightedBlockHash: 'Loading',
-      needsHistorySave: false,
-      copyBuffer: '',
-      CSVProgress: 0,
-    };
-  }
+  // constructor(props) {
+  //   super(props);
+  //   this.copyRef = element => {
+  //     this.textCopyArea = element;
+  //   };
+  //   this.hoveringID = 999999999999;
+  //   this.isHoveringOverTable = false;
+  //   this.state = {
+  //     tableColumns: [],
+  //     displayTimeFrame: 'All',
+  //     changeTimeFrame: false,
+  //     amountFilter: 0,
+  //     categoryFilter: 'all',
+  //     showTransactionChart: true,
+  //     addressFilter: '',
+  //     zoomDomain: {
+  //       x: [
+  //         new Date(
+  //           new Date().getFullYear() - 1,
+  //           new Date().getMonth(),
+  //           new Date().getDate(),
+  //           1,
+  //           1,
+  //           1,
+  //           1
+  //         ),
+  //         new Date(),
+  //       ],
+  //       y: [0, 1],
+  //     },
+  //     isHoveringOverTable: false,
+  //     hoveringID: 999999999999,
+  //     open: false,
+  //     historyData: new Map(),
+  //     transactionsToCheck: [],
+  //     mainChartWidth: 0,
+  //     mainChartHeight: 0,
+  //     addressLabels: new Map(),
+  //     refreshInterval: undefined,
+  //     highlightedBlockNum: 'Loading',
+  //     highlightedBlockHash: 'Loading',
+  //     needsHistorySave: false,
+  //     copyBuffer: '',
+  //     CSVProgress: 0,
+  //   };
+  // }
 
   /**
    * Component Mount Callback
@@ -201,75 +198,73 @@ class Transactions extends Component {
    * @memberof Transactions
    */
   componentDidMount() {
+    const { coreConnected, allTransactions } = this.props;
+    if (coreConnected && !allTransactions) {
+      autoUpdateTransactions();
+    }
     // console.log('mount tx');
-    const { locale } = this.props.settings;
-    this._isMounted = true; // This is used so that if you nav away for this screen the background tasks will stop.
-    this.updateChartAndTableDimensions();
-    googleanalytics.SendScreen('Transactions');
-    this.updateChartAndTableDimensions = this.updateChartAndTableDimensions.bind(
-      this
-    );
-    window.addEventListener(
-      'resize',
-      this.updateChartAndTableDimensions,
-      false
-    );
-
-    this.transactioncontextfunction = this.transactioncontextfunction.bind(
-      this
-    );
-    window.addEventListener(
-      'contextmenu',
-      this.transactioncontextfunction,
-      false
-    );
-    this.gethistorydatajson();
-    let myaddresbook = this.props.addressBook;
-    if (myaddresbook != undefined) {
-      for (let key in myaddresbook) {
-        const eachAddress = myaddresbook[key];
-        const primaryadd = eachAddress.addresses['Primary'];
-        if (primaryadd != undefined) {
-          tempaddpress.set(primaryadd, key);
-        }
-        for (let addr of eachAddress.addresses) {
-          if (!addr.isMine) {
-            tempaddpress.set(
-              addr.address,
-              eachAddress.name + (addr.label ? ` (${addr.label})` : '')
-            );
-          }
-        }
-      }
-    }
-
-    this.props.loadMyAccounts();
-
-    for (let key in this.props.myAccounts) {
-      for (let eachaddress in this.props.myAccounts[key].addresses) {
-        tempaddpress.set(
-          this.props.myAccounts[key].addresses[eachaddress],
-          this.props.myAccounts[key].account
-        );
-      }
-    }
-    this.getTransactionData(this.setOnmountTransactionsCallback.bind(this));
-
-    let interval = setInterval(() => {
-      this.getTransactionData(this.setConfirmationsCallback.bind(this));
-    }, 60000);
-    this.setState({
-      refreshInterval: interval,
-      addressLabels: tempaddpress,
-    });
-
-    this._Onprogress = () => {}; // Might not need to define this here
-
-    setTimeout(() => {
-      this.setState({
-        showTransactionChart: this.props.showTransactionChart,
-      });
-    }, 50);
+    // const { locale } = this.props.settings;
+    // this._isMounted = true; // This is used so that if you nav away for this screen the background tasks will stop.
+    // this.updateChartAndTableDimensions();
+    // googleanalytics.SendScreen('Transactions');
+    // this.updateChartAndTableDimensions = this.updateChartAndTableDimensions.bind(
+    //   this
+    // );
+    // window.addEventListener(
+    //   'resize',
+    //   this.updateChartAndTableDimensions,
+    //   false
+    // );
+    // this.transactioncontextfunction = this.transactioncontextfunction.bind(
+    //   this
+    // );
+    // window.addEventListener(
+    //   'contextmenu',
+    //   this.transactioncontextfunction,
+    //   false
+    // );
+    // this.gethistorydatajson();
+    // let myaddresbook = this.props.addressBook;
+    // if (myaddresbook != undefined) {
+    //   for (let key in myaddresbook) {
+    //     const eachAddress = myaddresbook[key];
+    //     const primaryadd = eachAddress.addresses['Primary'];
+    //     if (primaryadd != undefined) {
+    //       tempaddpress.set(primaryadd, key);
+    //     }
+    //     for (let addr of eachAddress.addresses) {
+    //       if (!addr.isMine) {
+    //         tempaddpress.set(
+    //           addr.address,
+    //           eachAddress.name + (addr.label ? ` (${addr.label})` : '')
+    //         );
+    //       }
+    //     }
+    //   }
+    // }
+    // this.props.loadMyAccounts();
+    // for (let key in this.props.myAccounts) {
+    //   for (let eachaddress in this.props.myAccounts[key].addresses) {
+    //     tempaddpress.set(
+    //       this.props.myAccounts[key].addresses[eachaddress],
+    //       this.props.myAccounts[key].account
+    //     );
+    //   }
+    // }
+    // this.getTransactionData(this.setOnmountTransactionsCallback.bind(this));
+    // let interval = setInterval(() => {
+    //   this.getTransactionData(this.setConfirmationsCallback.bind(this));
+    // }, 60000);
+    // this.setState({
+    //   refreshInterval: interval,
+    //   addressLabels: tempaddpress,
+    // });
+    // this._Onprogress = () => {}; // Might not need to define this here
+    // setTimeout(() => {
+    //   this.setState({
+    //     showTransactionChart: this.props.showTransactionChart,
+    //   });
+    // }, 50);
   }
 
   /**
@@ -280,14 +275,18 @@ class Transactions extends Component {
    * @memberof Transactions
    */
   componentDidUpdate(previousprops) {
-    if (this.props.txtotal != previousprops.txtotal) {
-      this.getTransactionData(this.setOnmountTransactionsCallback.bind(this));
-      return;
+    const { coreConnected, allTransactions } = this.props;
+    if (coreConnected && !allTransactions) {
+      autoUpdateTransactions();
     }
-    if (this.props.selectedAccount != previousprops.selectedAccount) {
-      this.getTransactionData(this.setOnmountTransactionsCallback.bind(this));
-      return;
-    }
+    // if (this.props.txtotal != previousprops.txtotal) {
+    //   this.getTransactionData(this.setOnmountTransactionsCallback.bind(this));
+    //   return;
+    // }
+    // if (this.props.selectedAccount != previousprops.selectedAccount) {
+    //   this.getTransactionData(this.setOnmountTransactionsCallback.bind(this));
+    //   return;
+    // }
   }
 
   /**
@@ -296,14 +295,14 @@ class Transactions extends Component {
    * @memberof Transactions
    */
   componentWillUnmount() {
-    this._isMounted = false;
-    this.SaveHistoryDataToJson();
-    clearInterval(this.state.refreshInterval);
-    this.setState({
-      refreshInterval: null,
-    });
-    window.removeEventListener('resize', this.updateChartAndTableDimensions);
-    window.removeEventListener('contextmenu', this.transactioncontextfunction);
+    // this._isMounted = false;
+    // this.SaveHistoryDataToJson();
+    // clearInterval(this.state.refreshInterval);
+    // this.setState({
+    //   refreshInterval: null,
+    // });
+    // window.removeEventListener('resize', this.updateChartAndTableDimensions);
+    // window.removeEventListener('contextmenu', this.transactioncontextfunction);
   }
 
   /**
@@ -1659,7 +1658,6 @@ class Transactions extends Component {
    * @memberof Transactions
    */
   accountChanger = () => {
-    const { locale } = this.props.settings;
     if (this.props.myAccounts) {
       const accounts = this.props.myAccounts.map((e, i) => ({
         value: i + 1,
@@ -1814,10 +1812,15 @@ class Transactions extends Component {
   render() {
     const {
       allTransactions,
+      account,
       addressQuery,
       category,
       minAmount,
       timeSpan,
+      coreConnected,
+      openModal,
+      setTxsAccountFilter,
+      accountOptions,
     } = this.props;
 
     return (
@@ -1829,22 +1832,27 @@ class Transactions extends Component {
             <Tooltip.Trigger tooltip={__('Show transactions chart')}>
               <Button
                 skin="plain"
-                onClick={() => this.props.openModal(TransactionsChartModal)}
+                onClick={() => openModal(TransactionsChartModal)}
               >
                 <Icon icon={barChartIcon} width={20} height={20} />
               </Button>
             </Tooltip.Trigger>
             <AccountSelect
-              value={this.props.selectedAccount}
-              onChange={value => this.selectAccount(value)}
-              options={this.accountChanger()}
+              value={account}
+              onChange={setTxsAccountFilter}
+              options={accountOptions}
             />
           </div>
         }
       >
-        {!this.props.coreConnected ? (
+        {!coreConnected ? (
           <WaitingMessage>
             {__('Connecting to Nexus Core')}
+            ...
+          </WaitingMessage>
+        ) : !allTransactions ? (
+          <WaitingMessage>
+            {__('Loading transactions')}
             ...
           </WaitingMessage>
         ) : (
@@ -1854,6 +1862,7 @@ class Transactions extends Component {
               <Table
                 data={getFilteredTransactions(
                   allTransactions,
+                  account,
                   addressQuery,
                   category,
                   minAmount,
@@ -1861,10 +1870,10 @@ class Transactions extends Component {
                 )}
                 columns={tableColumns}
                 defaultPageSize={10}
-                selectCallback={this.tableSelectCallback.bind(this)}
+                // selectCallback={this.tableSelectCallback.bind(this)}
                 defaultSortingColumnIndex={0}
-                onMouseOverCallback={this.mouseOverCallback.bind(this)}
-                onMouseOutCallback={this.mouseOutCallback.bind(this)}
+                // onMouseOverCallback={this.mouseOverCallback.bind(this)}
+                // onMouseOutCallback={this.mouseOutCallback.bind(this)}
               />
             </div>
           </div>
@@ -1875,9 +1884,7 @@ class Transactions extends Component {
 }
 
 // Mandatory React-Redux method
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(Transactions)
-);
+export default connect(
+  mapStateToProps,
+  actionCreators
+)(Transactions);

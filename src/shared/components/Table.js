@@ -29,29 +29,29 @@ const Table = ({
     rowsText={__('rows')}
     previousText={__('Previous')}
     nextText={__('Next')}
-    getTrProps={(state, rowInfo) => {
-      return {
-        onClick: e => {
-          onMouseOverCallback(e, rowInfo);
-          selectCallback(e, rowInfo);
-          this.setState({
-            selected: rowInfo.index,
-          });
-        },
-        onContextMenu: e => {
-          selectCallback(e, rowInfo);
-        },
-        onMouseDown: e => {
-          onMouseOverCallback(e, rowInfo);
-        },
-        onMouseOver: e => {
-          onMouseOverCallback(e, rowInfo);
-        },
-        onMouseOut: e => {
-          onMouseOutCallback(e);
-        },
-      };
-    }}
+    // getTrProps={(state, rowInfo) => {
+    //   return {
+    //     onClick: e => {
+    //       onMouseOverCallback(e, rowInfo);
+    //       selectCallback(e, rowInfo);
+    //       this.setState({
+    //         selected: rowInfo.index,
+    //       });
+    //     },
+    //     onContextMenu: e => {
+    //       selectCallback(e, rowInfo);
+    //     },
+    //     onMouseDown: e => {
+    //       onMouseOverCallback(e, rowInfo);
+    //     },
+    //     onMouseOver: e => {
+    //       onMouseOverCallback(e, rowInfo);
+    //     },
+    //     onMouseOut: e => {
+    //       onMouseOutCallback(e);
+    //     },
+    //   };
+    // }}
     {...rest}
   />
 );

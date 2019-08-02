@@ -4,6 +4,7 @@ import {
   updateTransaction,
 } from 'actions/transactions';
 import store, { observeStore } from 'store';
+import rpc from 'lib/rpc';
 
 const txPerCall = 100;
 const unsubscribers = {};
@@ -31,16 +32,22 @@ export async function autoUpdateTransactions() {
 
 async function fetchAllTransactions() {
   let transactions = [];
+  let results;
   do {
-    const results = await rpc('listtransactions', [
-      '*',
-      txPerCall,
-      transactions.length,
-    ]);
+    try {
+      results = await rpc('listtransactions', [
+        '*',
+        txPerCall,
+        transactions.length,
+      ]);
+    } catch (err) {
+      console.error(err);
+      return;
+    }
     if (Array.isArray(results)) {
       transactions = transactions.concat(results);
     }
-  } while (!results || results.length < txPerCall);
+  } while (results && results.length === txPerCall);
 
   const {
     core: {

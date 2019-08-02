@@ -14,7 +14,9 @@ const getThresholdDate = timeSpan => {
   }
 };
 
-export const getTransactionsList = memoize(txMap => Object.values(txMap));
+export const getTransactionsList = memoize(
+  txMap => txMap && Object.values(txMap)
+);
 
 export const getFilteredTransactions = memoize(
   (allTransactions, account, addressQuery, category, minAmount, timeSpan) =>
@@ -45,14 +47,31 @@ export const getFilteredTransactions = memoize(
         if (!pastDate) return true;
         else return new Date(tx.time).getTime() > pastDate.getTime();
       }
+
+      return true;
     })
 );
 
-export const getChartData = memoize(transactions =>
-  transactions.map(tx => ({
-    a: tx.time,
-    b: tx.amount,
-    category: tx.category,
-    fill: 'white',
-  }))
+export const getChartData = memoize(
+  transactions =>
+    transactions &&
+    transactions.map(tx => ({
+      a: tx.time,
+      b: tx.amount,
+      category: tx.category,
+      fill: 'white',
+    }))
 );
+
+export const getAccountOptions = memoize(myAccounts => [
+  {
+    value: null,
+    display: __('All Accounts'),
+  },
+  ...(myAccounts
+    ? myAccounts.map(acc => ({
+        value: acc.account,
+        display: acc.account,
+      }))
+    : []),
+]);
