@@ -35,10 +35,11 @@ const barStrokeColor = inData =>
 
 const TransactionsChartModal = ({ theme, chartData }) => (
   <Modal>
-    <Modal.Body>
+    <Modal.Header>{__('Transactions chart')}</Modal.Header>
+    <Modal.Body style={{ paddingTop: 50, paddingBottom: 50 }}>
       <VictoryChart
         width={550}
-        height={150}
+        height={200}
         scale={{ x: 'time' }}
         style={
           {

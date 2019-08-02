@@ -1,14 +1,8 @@
-// External
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-// import { withRouter } from 'react-router';
-import { remote } from 'electron';
-import fs from 'fs';
-import rp from 'request-promise';
 import googleanalytics from 'scripts/googleanalytics';
 import styled from '@emotion/styled';
 
-// Internal
 import Icon from 'components/Icon';
 import Panel from 'components/Panel';
 import WaitingMessage from 'components/WaitingMessage';
@@ -18,15 +12,12 @@ import Tooltip from 'components/Tooltip';
 import Table from 'components/Table';
 import rpc from 'lib/rpc';
 import { formatDateTime } from 'lib/intl';
-import ContextMenuBuilder from 'contextmenu';
-import { walletDataDir } from 'consts/paths';
 import { openModal } from 'actions/overlays';
 import { setTxsAccountFilter } from 'actions/ui';
 import { isCoreConnected } from 'selectors';
 import { autoUpdateTransactions } from 'lib/transactions';
 
 import TransactionDetailsModal from './TransactionDetailsModal';
-import styles from './style.css';
 import CSVDownloadModal from './TransactionCSVDownloadModal';
 import Filters from './Filters';
 import { categoryText } from './utils';
@@ -38,7 +29,6 @@ import {
 } from './selectors';
 import TransactionsChartModal from './TransactionsChartModal';
 
-// Images
 import transactionIcon from 'images/transaction.sprite.svg';
 import barChartIcon from 'images/bar-chart.sprite.svg';
 import downloadIcon from 'images/download.sprite.svg';
@@ -63,28 +53,32 @@ const tableColumns = [
     Header: __('Time'),
     accessor: 'time',
     Cell: tx => formatDateTime(tx.value * 1000, timeFormatOptions),
-    maxWidth: 220,
+    width: 220,
   },
   {
     id: 'category',
     Header: __('CATEGORY'),
     accessor: 'category',
     Cell: tx => categoryText(tx.value),
-    maxWidth: 120,
+    width: 120,
   },
   {
+    id: 'amount',
     Header: __('AMOUNT'),
     accessor: 'amount',
-    maxWidth: 100,
+    width: 100,
   },
   {
+    id: 'account',
     Header: __('ACCOUNT'),
     accessor: 'account',
-    maxWidth: 150,
+    width: 150,
   },
   {
+    id: 'address',
     Header: __('ADDRESS'),
     accessor: 'address',
+    headerStyle: { flexGrow: 1000 },
   },
 ];
 
@@ -109,19 +103,31 @@ const TransactionsTable = styled(Table)({
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
-  const txList = getTransactionsList(state.transactions.map);
-  const addFakeTxs = state.settings.devMode && state.settings.fakeTransactions;
+  const {
+    ui: {
+      transactions: { account, addressQuery, category, minAmount, timeSpan },
+    },
+    transactions: { map },
+    settings: { devMode, fakeTransactions },
+    myAccounts,
+  } = state;
+  const txList = getTransactionsList(map);
+  const addFakeTxs = devMode && fakeTransactions;
+  const allTransactions = addFakeTxs
+    ? withFakeTxs(txList, state.myAccounts)
+    : txList;
+
   return {
-    allTransactions: addFakeTxs
-      ? withFakeTxs(txList, state.myAccounts)
-      : txList,
-    account: state.ui.transactions.account,
-    addressQuery: state.ui.transactions.addressQuery,
-    category: state.ui.transactions.category,
-    minAmount: state.ui.transactions.minAmount,
-    timeSpan: state.ui.transactions.timeSpan,
-    accountOptions: getAccountOptions(state.myAccounts),
-    addressBook: state.addressBook,
+    filteredTransactions: getFilteredTransactions(
+      allTransactions,
+      account,
+      addressQuery,
+      category,
+      minAmount,
+      timeSpan
+    ),
+    account,
+    accountOptions: getAccountOptions(myAccounts),
     settings: state.settings,
     coreConnected: isCoreConnected(state),
   };
@@ -144,8 +150,8 @@ class Transactions extends Component {
    * @memberof Transactions
    */
   componentDidMount() {
-    const { coreConnected, allTransactions } = this.props;
-    if (coreConnected && !allTransactions) {
+    const { coreConnected, filteredTransactions } = this.props;
+    if (coreConnected && !filteredTransactions) {
       autoUpdateTransactions();
     }
   }
@@ -158,8 +164,8 @@ class Transactions extends Component {
    * @memberof Transactions
    */
   componentDidUpdate() {
-    const { coreConnected, allTransactions } = this.props;
-    if (coreConnected && !allTransactions) {
+    const { coreConnected, filteredTransactions } = this.props;
+    if (coreConnected && !filteredTransactions) {
       autoUpdateTransactions();
     }
   }
@@ -336,12 +342,8 @@ class Transactions extends Component {
    */
   render() {
     const {
-      allTransactions,
+      filteredTransactions,
       account,
-      addressQuery,
-      category,
-      minAmount,
-      timeSpan,
       coreConnected,
       openModal,
       setTxsAccountFilter,
@@ -382,7 +384,7 @@ class Transactions extends Component {
             {__('Connecting to Nexus Core')}
             ...
           </WaitingMessage>
-        ) : !allTransactions ? (
+        ) : !filteredTransactions ? (
           <WaitingMessage>
             {__('Loading transactions')}
             ...
@@ -391,14 +393,7 @@ class Transactions extends Component {
           <TransactionsLayout>
             <Filters />
             <TransactionsTable
-              data={getFilteredTransactions(
-                allTransactions,
-                account,
-                addressQuery,
-                category,
-                minAmount,
-                timeSpan
-              )}
+              data={filteredTransactions}
               columns={tableColumns}
               defaultPageSize={10}
               // selectCallback={this.tableSelectCallback.bind(this)}
