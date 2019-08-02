@@ -1,4 +1,5 @@
 import memoize from 'memoize-one';
+import { getFakeTransactions } from './utils';
 
 const getThresholdDate = timeSpan => {
   const now = new Date();
@@ -16,6 +17,10 @@ const getThresholdDate = timeSpan => {
 
 export const getTransactionsList = memoize(
   txMap => txMap && Object.values(txMap)
+);
+
+export const withFakeTxs = memoize(
+  (txs, accounts) => txs && [...txs, ...getFakeTransactions(accounts)]
 );
 
 export const getFilteredTransactions = memoize(

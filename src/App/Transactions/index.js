@@ -16,10 +16,8 @@ import Select from 'components/Select';
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
 import Table from 'components/Table';
-import { loadMyAccounts } from 'actions/account';
 import rpc from 'lib/rpc';
 import { formatDateTime } from 'lib/intl';
-import * as TYPE from 'consts/actionTypes';
 import ContextMenuBuilder from 'contextmenu';
 import { walletDataDir } from 'consts/paths';
 import { openModal } from 'actions/overlays';
@@ -36,6 +34,7 @@ import {
   getFilteredTransactions,
   getTransactionsList,
   getAccountOptions,
+  withFakeTxs,
 } from './selectors';
 import TransactionsChartModal from './TransactionsChartModal';
 
@@ -43,11 +42,6 @@ import TransactionsChartModal from './TransactionsChartModal';
 import transactionIcon from 'images/transaction.sprite.svg';
 import barChartIcon from 'images/bar-chart.sprite.svg';
 import downloadIcon from 'images/download.sprite.svg';
-
-import copy from 'copy-to-clipboard';
-
-// Global variables
-let tempaddpress = new Map();
 
 const timeFormatOptions = {
   year: 'numeric',
@@ -115,8 +109,12 @@ const TransactionsTable = styled(Table)({
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
+  const txList = getTransactionsList(state.transactions.map);
+  const addFakeTxs = state.settings.devMode && state.settings.fakeTransactions;
   return {
-    allTransactions: getTransactionsList(state.transactions.map),
+    allTransactions: addFakeTxs
+      ? withFakeTxs(txList, state.myAccounts)
+      : txList,
     account: state.ui.transactions.account,
     addressQuery: state.ui.transactions.addressQuery,
     category: state.ui.transactions.category,
@@ -132,26 +130,6 @@ const mapStateToProps = state => {
   };
 };
 const actionCreators = {
-  // loadMyAccounts: () => dispatch(loadMyAccounts()),
-  // SetWalletTransactionArray: returnData => {
-  //   dispatch({ type: TYPE.SET_WALL_TRANS, payload: returnData });
-  //   dispatch({ type: TYPE.SET_TRANSACTION_MAP, payload: null });
-  // },
-  // SetSelectedMyAccount: returnData => {
-  //   dispatch({ type: TYPE.SET_SELECTED_MYACCOUNT, payload: returnData });
-  // },
-  // UpdateConfirmationsOnTransactions: returnData => {
-  //   dispatch({ type: TYPE.UPDATE_CONFIRMATIONS, payload: returnData });
-  // },
-  // UpdateCoinValueOnTransaction: returnData => {
-  //   dispatch({ type: TYPE.UPDATE_COINVALUE, payload: returnData });
-  // },
-  // UpdateFeeOnTransaction: returnData => {
-  //   dispatch({ type: TYPE.UPDATE_FEEVALUE, payload: returnData });
-  // },
-  // ToggleTransactionChart: inUpdate => {
-  //   dispatch({ type: TYPE.UPDATE_SETTINGS, payload: inUpdate });
-  // },
   openModal,
   setTxsAccountFilter,
 };
@@ -164,58 +142,6 @@ const actionCreators = {
  */
 class Transactions extends Component {
   /**
-   *Creates an instance of Transactions.
-   * @param {*} props
-   * @memberof Transactions
-   */
-  // constructor(props) {
-  //   super(props);
-  //   this.copyRef = element => {
-  //     this.textCopyArea = element;
-  //   };
-  //   this.hoveringID = 999999999999;
-  //   this.isHoveringOverTable = false;
-  //   this.state = {
-  //     tableColumns: [],
-  //     displayTimeFrame: 'All',
-  //     changeTimeFrame: false,
-  //     amountFilter: 0,
-  //     categoryFilter: 'all',
-  //     showTransactionChart: true,
-  //     addressFilter: '',
-  //     zoomDomain: {
-  //       x: [
-  //         new Date(
-  //           new Date().getFullYear() - 1,
-  //           new Date().getMonth(),
-  //           new Date().getDate(),
-  //           1,
-  //           1,
-  //           1,
-  //           1
-  //         ),
-  //         new Date(),
-  //       ],
-  //       y: [0, 1],
-  //     },
-  //     isHoveringOverTable: false,
-  //     hoveringID: 999999999999,
-  //     open: false,
-  //     historyData: new Map(),
-  //     transactionsToCheck: [],
-  //     mainChartWidth: 0,
-  //     mainChartHeight: 0,
-  //     addressLabels: new Map(),
-  //     refreshInterval: undefined,
-  //     highlightedBlockNum: 'Loading',
-  //     highlightedBlockHash: 'Loading',
-  //     needsHistorySave: false,
-  //     copyBuffer: '',
-  //     CSVProgress: 0,
-  //   };
-  // }
-
-  /**
    * Component Mount Callback
    *
    * @memberof Transactions
@@ -225,69 +151,6 @@ class Transactions extends Component {
     if (coreConnected && !allTransactions) {
       autoUpdateTransactions();
     }
-    // console.log('mount tx');
-    // const { locale } = this.props.settings;
-    // this._isMounted = true; // This is used so that if you nav away for this screen the background tasks will stop.
-    // this.updateChartAndTableDimensions();
-    // googleanalytics.SendScreen('Transactions');
-    // this.updateChartAndTableDimensions = this.updateChartAndTableDimensions.bind(
-    //   this
-    // );
-    // window.addEventListener(
-    //   'resize',
-    //   this.updateChartAndTableDimensions,
-    //   false
-    // );
-    // this.transactioncontextfunction = this.transactioncontextfunction.bind(
-    //   this
-    // );
-    // window.addEventListener(
-    //   'contextmenu',
-    //   this.transactioncontextfunction,
-    //   false
-    // );
-    // this.gethistorydatajson();
-    // let myaddresbook = this.props.addressBook;
-    // if (myaddresbook != undefined) {
-    //   for (let key in myaddresbook) {
-    //     const eachAddress = myaddresbook[key];
-    //     const primaryadd = eachAddress.addresses['Primary'];
-    //     if (primaryadd != undefined) {
-    //       tempaddpress.set(primaryadd, key);
-    //     }
-    //     for (let addr of eachAddress.addresses) {
-    //       if (!addr.isMine) {
-    //         tempaddpress.set(
-    //           addr.address,
-    //           eachAddress.name + (addr.label ? ` (${addr.label})` : '')
-    //         );
-    //       }
-    //     }
-    //   }
-    // }
-    // this.props.loadMyAccounts();
-    // for (let key in this.props.myAccounts) {
-    //   for (let eachaddress in this.props.myAccounts[key].addresses) {
-    //     tempaddpress.set(
-    //       this.props.myAccounts[key].addresses[eachaddress],
-    //       this.props.myAccounts[key].account
-    //     );
-    //   }
-    // }
-    // this.getTransactionData(this.setOnmountTransactionsCallback.bind(this));
-    // let interval = setInterval(() => {
-    //   this.getTransactionData(this.setConfirmationsCallback.bind(this));
-    // }, 60000);
-    // this.setState({
-    //   refreshInterval: interval,
-    //   addressLabels: tempaddpress,
-    // });
-    // this._Onprogress = () => {}; // Might not need to define this here
-    // setTimeout(() => {
-    //   this.setState({
-    //     showTransactionChart: this.props.showTransactionChart,
-    //   });
-    // }, 50);
   }
 
   /**
@@ -297,140 +160,11 @@ class Transactions extends Component {
    * @returns
    * @memberof Transactions
    */
-  componentDidUpdate(previousprops) {
+  componentDidUpdate() {
     const { coreConnected, allTransactions } = this.props;
     if (coreConnected && !allTransactions) {
       autoUpdateTransactions();
     }
-    // if (this.props.txtotal != previousprops.txtotal) {
-    //   this.getTransactionData(this.setOnmountTransactionsCallback.bind(this));
-    //   return;
-    // }
-    // if (this.props.selectedAccount != previousprops.selectedAccount) {
-    //   this.getTransactionData(this.setOnmountTransactionsCallback.bind(this));
-    //   return;
-    // }
-  }
-
-  /**
-   * Component Unmount Callback
-   *
-   * @memberof Transactions
-   */
-  componentWillUnmount() {
-    // this._isMounted = false;
-    // this.SaveHistoryDataToJson();
-    // clearInterval(this.state.refreshInterval);
-    // this.setState({
-    //   refreshInterval: null,
-    // });
-    // window.removeEventListener('resize', this.updateChartAndTableDimensions);
-    // window.removeEventListener('contextmenu', this.transactioncontextfunction);
-  }
-
-  /**
-   * The callback for when we want to update just the confirmations
-   *
-   * @param {*} incomingData The data provided by the daemon to be used to update the confirmations
-   * @memberof Transactions
-   */
-  setConfirmationsCallback(incomingData) {
-    this.props.UpdateConfirmationsOnTransactions(incomingData);
-  }
-
-  //
-  /**
-   * The callback for the on Mount State
-   *
-   * @param {*} incomingData the data provided by the daemon to be used to update the chart
-   * @memberof Transactions
-   */
-  async setOnmountTransactionsCallback(incomingData) {
-    this.updateChartAndTableDimensions(null);
-    let objectheaders = Object.keys({
-      transactionnumber: 0,
-      confirmations: 0,
-      time: new Date(),
-      category: '',
-      amount: 0,
-      txid: 0,
-      account: '',
-      address: '',
-      value: {
-        USD: 0,
-        BTC: 0,
-      },
-      coin: 'Nexus',
-      fee: 0,
-    });
-    let tabelheaders = [];
-    objectheaders.forEach(element => {
-      tabelheaders.push({
-        Header: element,
-        accessor: element,
-      });
-    });
-
-    this.props.SetWalletTransactionArray(incomingData);
-    let tempZoomDomain = {
-      x: [new Date(), new Date(new Date().getFullYear() + 1, 1, 1, 1, 1, 1, 1)],
-      y: [0, 1],
-    };
-    if (incomingData != undefined && incomingData.length > 0) {
-      //console.log(incomingData[0]);
-      tempZoomDomain = {
-        x: [
-          new Date(incomingData[0].time.getTime() - 43200000),
-          new Date(
-            incomingData[incomingData.length - 1].time.getTime() + 43200000
-          ),
-        ],
-        y: [-1, 1],
-      };
-    }
-    this.setState(
-      {
-        tableColumns: tabelheaders,
-        zoomDomain: tempZoomDomain,
-      },
-      () => this.handleZoom(this.state.zoomDomain)
-    );
-
-    let temp = this.state.transactionsToCheck;
-    incomingData.forEach(element => {
-      let temphistoryData = this.findclosestdatapoint(
-        element.time.getTime().toString()
-      );
-      if (temphistoryData == undefined) {
-        temp.push(element.time);
-      }
-    });
-    this.setState({
-      transactionsToCheck: temp,
-    });
-    this.gothroughdatathatneedsit();
-    // console.log(temp);
-  }
-
-  //
-  /**
-   * Updates the height and width of the chart and table when you resize the window
-   *
-   * @param {*} event The event hook for changing the window dimentions
-   * @returns can return null if chart is udefined
-   * @memberof Transactions
-   */
-  updateChartAndTableDimensions(event) {
-    let chart = document.getElementById('transactions-chart');
-    if (chart === undefined || chart === null) {
-      return;
-    }
-    let parent = chart.parentNode;
-    let mainHeight = 150; // fixed height, should match CSS
-    this.setState({
-      mainChartWidth: parent.clientWidth,
-      mainChartHeight: mainHeight,
-    });
   }
 
   /**
@@ -445,103 +179,6 @@ class Transactions extends Component {
       settings: this.props.settings,
     });
   };
-
-  /**
-   * This is the method that is called when the user pressed the right click
-   *
-   * @memberof Transactions
-   * @param {*} e event hook for html for right click
-   */
-  transactioncontextfunction = e => {
-    const { locale } = this.props.settings;
-    // Prevent default action of right click
-    e.preventDefault();
-
-    const defaultcontextData = new ContextMenuBuilder().defaultContext;
-    //build default
-    let defaultcontextmenu = remote.Menu.buildFromTemplate(defaultcontextData);
-    //create new custom
-    let transactiontablecontextmenu = new remote.Menu();
-
-    // Build out the context menu
-
-    transactiontablecontextmenu.append(
-      new remote.MenuItem({
-        label: __('More details'),
-        click: this.openTxDetailsModal,
-      })
-    );
-
-    let tablecopyaddresscallback = function() {
-      if (this.hoveringID != 999999999999) {
-        this.copysomethingtotheclipboard(
-          this.props.walletitemsMap.get(this.hoveringID).address
-        );
-      }
-    };
-    tablecopyaddresscallback = tablecopyaddresscallback.bind(this);
-
-    let tablecopyamountcallback = function() {
-      if (this.hoveringID != 999999999999) {
-        this.copysomethingtotheclipboard(
-          this.props.walletitemsMap.get(this.hoveringID).amount
-        );
-      }
-    };
-    tablecopyamountcallback = tablecopyamountcallback.bind(this);
-
-    let tablecopyaccountcallback = function() {
-      if (this.hoveringID != 999999999999) {
-        this.copysomethingtotheclipboard(
-          this.props.walletitemsMap.get(this.hoveringID).account
-        );
-      }
-    };
-    tablecopyaccountcallback = tablecopyaccountcallback.bind(this);
-
-    transactiontablecontextmenu.append(
-      new remote.MenuItem({
-        label: __('Copy'),
-        submenu: [
-          {
-            label: __('Address'),
-            click() {
-              tablecopyaddresscallback();
-            },
-          },
-          {
-            label: __('Account'),
-
-            click() {
-              tablecopyaccountcallback();
-            },
-          },
-          {
-            label: __('Amount'),
-            click() {
-              tablecopyamountcallback();
-            },
-          },
-        ],
-      })
-    );
-
-    if (this.isHoveringOverTable) {
-      transactiontablecontextmenu.popup(remote.getCurrentWindow());
-    } else {
-      defaultcontextmenu.popup(remote.getCurrentWindow());
-    }
-  };
-
-  /**
-   * Copy to Clipboard
-   *
-   * @param {*} instringtocopy The string to copy to the clipboard
-   * @memberof Transactions
-   */
-  copysomethingtotheclipboard(instringtocopy) {
-    copy(instringtocopy);
-  }
 
   /**
    * Gets all the data from each account held by the wallet
