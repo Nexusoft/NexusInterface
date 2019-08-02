@@ -803,7 +803,7 @@ class Overview extends Component {
               <StatLabel>
                 <Tooltip.Trigger
                   tooltip={__(
-                    'Staking or mining rewards that need to get past 120 block-old to become available'
+                    'Staking and mining rewards that need to get past 120 block-old to become available'
                   )}
                   align="start"
                 >
