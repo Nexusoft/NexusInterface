@@ -1,7 +1,7 @@
 {
   "name": "nexus_wallet",
   "productName": "Nexus Wallet",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "moduleSpecVersion": "0.2.0",
   "supportedModuleSpecVersion": "0.1.0",
   "buildDate": "July 19th 2019",
@@ -32,8 +32,7 @@
     "update-translations": "node ./internals/scripts/updateTranslations.js",
     "update-documentation": "./UpdateDocumentation.sh"
   },
-  "browserslist": "electron 5.0.6",
-  "main": "./build/main.prod.js",
+  "browserslist": "electron "6.0.0  "main": "./build/main.prod.js",
   "build": {
     "productName": "Nexus Wallet",
     "appId": "com.nexusearth.NexusTritium",
@@ -183,8 +182,8 @@
     "cross-env": "^5.2.0",
     "cross-spawn": "^6.0.5",
     "css-loader": "^3.0.0",
-    "electron": "^5.0.6",
-    "electron-builder": "^21.0.15",
+    "electron": "^6.0.0",
+    "electron-builder": "^21.2.0",
     "electron-devtools-installer": "^2.2.4",
     "eslint": "^6.0.1",
     "express": "^4.17.1",
