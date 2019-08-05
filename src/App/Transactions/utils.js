@@ -1,3 +1,6 @@
+import store from 'store';
+import { formatDateTime } from 'lib/intl';
+
 export const categoryText = category => {
   switch (category) {
     case 'credit':
@@ -65,3 +68,67 @@ const newFakeTx = accounts => {
 
 export const isPending = (tx, minConf) =>
   !!minConf && tx.confirmations < Number(minConf) && tx.category !== 'orphan';
+
+export const saveCSV = transactions => {
+  const {
+    settings: { fiatCurrency },
+    market: {
+      cryptocompare: { rawNXSvalues },
+    },
+  } = store.getState();
+  const marketInfo = rawNXSvalues.find(e => e.name === fiatCurrency);
+  const price = marketInfo && marketInfo.price;
+  const nameRow = [
+    'Number',
+    'Account',
+    'Address',
+    'Amount',
+    fiatCurrency + ' Value',
+    // 'BTC Value',
+    'Type',
+    'Time',
+    'Transaction ID',
+    'Confirmations',
+    // 'Fee',
+  ].join(',');
+
+  const formatter = new Intl.DateTimeFormat('en', {
+    year: 'numeric',
+    month: 'short',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  });
+  const sortedTransactions = [...transactions].sort(
+    (tx1, tx2) => tx1.time - tx2.time
+  );
+  const rows = [
+    nameRow,
+    ...sortedTransactions.map((tx, i) =>
+      [
+        i + 1,
+        tx.account,
+        tx.address,
+        tx.amount,
+        price ? (tx.amount * price).toFixed(2) : 'N/A',
+        // (tx.amount * tx.value.BTC).toFixed(8),
+        tx.category,
+        formatter.format(tx.time * 1000).replace(/,/g, ''),
+        tx.txid,
+        tx.confirmations,
+        // tx.fee,
+      ].join(',')
+    ),
+  ];
+
+  const csvContent = `data:text/csv;charset=utf-8,${rows.join('\r\n')}`;
+  const encodedUri = encodeURI(csvContent); // Set up a uri, in Javascript we are basically making a Link to this file
+  const link = document.createElement('a');
+  link.setAttribute('href', encodedUri);
+  link.setAttribute('download', 'nexus-transactions.csv'); // give link an action and a default name for the file. MUST BE .csv
+
+  document.body.appendChild(link); // Required for FF
+  link.click(); // Finish by "Clicking" this link that will execute the download action we listed above
+  document.body.removeChild(link);
+};
