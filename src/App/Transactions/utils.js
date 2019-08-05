@@ -67,7 +67,10 @@ const newFakeTx = accounts => {
 };
 
 export const isPending = (tx, minConf) =>
-  !!minConf && tx.confirmations < Number(minConf) && tx.category !== 'orphan';
+  !!minConf &&
+  tx.confirmations < Number(minConf) &&
+  tx.category !== 'orphan' &&
+  (!tx.details || !tx.details[0] || tx.details[0].category !== 'orphan');
 
 export const saveCSV = transactions => {
   const {

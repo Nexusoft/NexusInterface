@@ -250,8 +250,8 @@ class Transactions extends Component {
                 style: {
                   cursor: 'pointer',
                   opacity:
-                    tx.category === 'immature' ||
-                    tx.category === 'orphan' ||
+                    (tx.category || tx.details[0].category) === 'immature' ||
+                    (tx.category || tx.details[0].category) === 'orphan' ||
                     isPending(tx, minConfirmations)
                       ? 0.5
                       : 1,
