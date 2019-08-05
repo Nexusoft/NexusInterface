@@ -209,7 +209,7 @@ class Transactions extends Component {
               </Button>
             </Tooltip.Trigger>
 
-            <Tooltip.Trigger tooltip={__('Download as CSV')}>
+            <Tooltip.Trigger tooltip={__('Download transactions history')}>
               <Button skin="plain" onClick={this.saveCSV}>
                 <Icon icon={downloadIcon} />
               </Button>
