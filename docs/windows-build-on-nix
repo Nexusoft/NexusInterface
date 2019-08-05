@@ -1,0 +1,20 @@
+## Preparing System (Ubuntu 16.04)
+1-`sudo apt update`  
+2-`sudo apt upgrade -y`  
+3-`sudo dpkg --add-architecture i386`  
+4-`sudo apt install -y curl build-essential git` <- answer yes to any popups  
+5-`curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -`  
+6-`sudo apt install -y nodejs`  
+7-`node -v` <- ensure it show 0.10 or higher  
+8-`npm -v` <- ensure it shows 6.0 or higher  
+9-`npm install concurrently`  
+10-`sudo apt-add-repository 'deb https://dl.winehq.org/wine-builds/ubuntu/ xenial main'`  
+11-`sudo apt update && sudo apt-get install --install-recommends winehq-stable`  
+
+## Building Source  
+1-`cd ~ && mkdir build && cd build`  
+2-`git clone https://github.com/Nexusoft/NexusInterface.git nexus`  
+3-`cd nexus && npm install` <- if it succeeds continue  
+4-`chmod a+x BuildStandalone-Windows.sh`  
+5-`./BuildStandalone-Windows.sh`  
+6-Find your installer file in the "Release" folder and enjoy :)
