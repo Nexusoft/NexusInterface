@@ -39,7 +39,7 @@ export default theme => css`
       border-radius: 0.125em;
     }
 
-    .rt-thread {
+    .rt-thead {
       -webkit-box-flex: 1;
       -ms-flex: 1 0 auto;
       flex: 1 0 auto;

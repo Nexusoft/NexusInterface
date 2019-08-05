@@ -53,7 +53,7 @@ const tableColumns = [
     Header: __('Time'),
     accessor: 'time',
     Cell: tx => formatDateTime(tx.value * 1000, timeFormatOptions),
-    width: 220,
+    width: 200,
   },
   {
     id: 'category',
@@ -78,7 +78,6 @@ const tableColumns = [
     id: 'address',
     Header: __('ADDRESS'),
     accessor: 'address',
-    headerStyle: { flexGrow: 1000 },
   },
 ];
 
