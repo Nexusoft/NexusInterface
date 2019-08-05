@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
 import Modal from 'components/Modal';
@@ -6,7 +7,7 @@ import WaitingMessage from 'components/WaitingMessage';
 import rpc from 'lib/rpc';
 import { formatDateTime } from 'lib/intl';
 
-import { categoryText } from './utils';
+import { categoryText, isPending } from './utils';
 
 const timeFormatOptions = {
   year: 'numeric',
@@ -44,6 +45,7 @@ const Field = ({ label, children }) => (
   </Row>
 );
 
+@connect(({ settings: { minConfirmations } }) => ({ minConfirmations }))
 export default class TransactionDetailsModal extends React.Component {
   state = {
     transaction: null,
@@ -57,6 +59,7 @@ export default class TransactionDetailsModal extends React.Component {
   }
 
   render() {
+    const { minConfirmations } = this.props;
     const { transaction } = this.state;
 
     return (
@@ -84,6 +87,8 @@ export default class TransactionDetailsModal extends React.Component {
               </Field>
               <Field label={__('Confirmations')}>
                 {transaction.confirmations}
+                {isPending(transaction, minConfirmations) &&
+                  ` (${__('Pending')})`}
               </Field>
               <Field label={__('Transaction ID')}>
                 <span className="monospace">{transaction.txid}</span>
