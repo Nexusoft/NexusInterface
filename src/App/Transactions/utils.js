@@ -62,3 +62,6 @@ const newFakeTx = accounts => {
     fake: true,
   };
 };
+
+export const isPending = (tx, minConf) =>
+  !!minConf && tx.confirmations < Number(minConf) && tx.category !== 'orphan';

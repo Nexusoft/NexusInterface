@@ -20,14 +20,15 @@ import { autoUpdateTransactions } from 'lib/transactions';
 import TransactionDetailsModal from './TransactionDetailsModal';
 import CSVDownloadModal from './TransactionCSVDownloadModal';
 import Filters from './Filters';
-import { categoryText } from './utils';
 import {
   getFilteredTransactions,
   getTransactionsList,
   getAccountOptions,
   withFakeTxs,
 } from './selectors';
+import { isPending } from './utils';
 import TransactionsChartModal from './TransactionsChartModal';
+import CategoryCell from './CategoryCell';
 
 import transactionIcon from 'images/transaction.sprite.svg';
 import barChartIcon from 'images/bar-chart.sprite.svg';
@@ -43,23 +44,18 @@ const timeFormatOptions = {
 };
 
 const tableColumns = [
-  // {
-  //   Header: '#',
-  //   accessor: 'transactionnumber',
-  //   maxWidth: 100,
-  // },
   {
     id: 'time',
     Header: __('Time'),
     accessor: 'time',
-    Cell: tx => formatDateTime(tx.value * 1000, timeFormatOptions),
+    Cell: cell => formatDateTime(cell.value * 1000, timeFormatOptions),
     width: 200,
   },
   {
     id: 'category',
     Header: __('CATEGORY'),
     accessor: 'category',
-    Cell: tx => categoryText(tx.value),
+    Cell: cell => <CategoryCell transaction={cell.original} />,
     width: 120,
   },
   {
@@ -107,7 +103,7 @@ const mapStateToProps = state => {
       transactions: { account, addressQuery, category, minAmount, timeSpan },
     },
     transactions: { map },
-    settings: { devMode, fakeTransactions },
+    settings: { devMode, fakeTransactions, minConfirmations },
     myAccounts,
   } = state;
   const txList = getTransactionsList(map);
@@ -128,6 +124,7 @@ const mapStateToProps = state => {
     account,
     accountOptions: getAccountOptions(myAccounts),
     settings: state.settings,
+    minConfirmations,
     coreConnected: isCoreConnected(state),
   };
 };
@@ -334,6 +331,7 @@ class Transactions extends Component {
       openModal,
       setTxsAccountFilter,
       accountOptions,
+      minConfirmations,
     } = this.props;
 
     return (
@@ -382,17 +380,22 @@ class Transactions extends Component {
               data={filteredTransactions}
               columns={tableColumns}
               defaultPageSize={10}
-              // selectCallback={this.tableSelectCallback.bind(this)}
               defaultSortingColumnIndex={0}
-              // onMouseOverCallback={this.mouseOverCallback.bind(this)}
-              // onMouseOutCallback={this.mouseOutCallback.bind(this)}
-              getTrProps={(state, rowInfo) => ({
+              getTrProps={(state, { original: tx }) => ({
                 onClick: () => {
                   openModal(TransactionDetailsModal, {
-                    txid: rowInfo.original.txid,
+                    txid: tx.txid,
                   });
                 },
-                style: { cursor: 'pointer' },
+                style: {
+                  cursor: 'pointer',
+                  opacity:
+                    tx.category === 'immature' ||
+                    tx.category === 'orphan' ||
+                    isPending(tx, minConfirmations)
+                      ? 0.5
+                      : 1,
+                },
               })}
             />
           </TransactionsLayout>
