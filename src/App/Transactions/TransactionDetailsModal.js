@@ -1,143 +1,104 @@
-// External
-import React, { Component } from 'react';
+import React from 'react';
 import styled from '@emotion/styled';
 
-// Internal
 import Modal from 'components/Modal';
+import WaitingMessage from 'components/WaitingMessage';
 import rpc from 'lib/rpc';
+import { formatDateTime } from 'lib/intl';
 
-/**
- * Transaction More Detail Modal
- *
- * @class TransactionDetailsModal
- * @extends {Component}
- */
-class TransactionDetailsModal extends Component {
-  /**
-   *Creates an instance of TransactionDetailsModal.
-   * @param {*} props
-   * @memberof TransactionDetailsModal
-   */
-  constructor(props) {
-    super(props);
-    this.loadData(props);
-  }
+import { categoryText } from './utils';
 
+const timeFormatOptions = {
+  year: 'numeric',
+  month: 'long',
+  day: '2-digit',
+  hour: '2-digit',
+  minute: '2-digit',
+  second: '2-digit',
+};
+
+const Row = styled.div({
+  display: 'grid',
+  gridTemplateAreas: '"label value"',
+  gridTemplateColumns: '1fr 3fr',
+  alignItems: 'start',
+  columnGap: '1em',
+  marginBottom: '.6em',
+});
+
+const Label = styled.div(({ theme }) => ({
+  gridArea: 'label',
+  textAlign: 'right',
+  color: theme.mixer(0.875),
+}));
+
+const Value = styled.div({
+  gridArea: 'value',
+  wordBreak: 'break-word',
+});
+
+const Field = ({ label, children }) => (
+  <Row>
+    <Label>{label}</Label>
+    <Value>{children}</Value>
+  </Row>
+);
+
+export default class TransactionDetailsModal extends React.Component {
   state = {
-    highlightedTxFee: 'Loading',
-    highlightedBlockHash: 'Loading',
-    highlightedBlockNum: 'Loading',
+    transaction: null,
   };
 
-  /**
-   * Load Data
-   *
-   * @param {*} { walletItems, hoveringID }
-   * @memberof TransactionDetailsModal
-   */
-  async loadData({ walletItemsMap, hoveringID }) {
-    if (
-      walletItemsMap &&
-      walletItemsMap.get(hoveringID) &&
-      walletItemsMap.get(hoveringID).confirmations
-    ) {
-      const tx = await rpc('gettransaction', [
-        walletItemsMap.get(hoveringID).txid,
-      ]);
-      this.setState({
-        highlightedBlockHash: tx.blockhash,
-        highlightedTxFee: tx.fee,
-      });
-
-      const block = await rpc('getblock', [tx.blockhash]);
-      this.setState({ highlightedBlockNum: block.height });
-    }
+  constructor(props) {
+    super(props);
+    rpc('gettransaction', [this.props.txid]).then(transaction =>
+      this.setState({ transaction })
+    );
   }
 
-  /**
-   * React Render
-   *
-   * @returns
-   * @memberof TransactionDetailsModal
-   */
   render() {
-    const { hoveringID, walletItemsMap, settings } = this.props;
-    const {
-      highlightedBlockNum,
-      highlightedBlockHash,
-      highlightedTxFee,
-    } = this.state;
+    const { transaction } = this.state;
 
-    if (
-      hoveringID != 999999999999 &&
-      !!walletItemsMap &&
-      walletItemsMap.get(hoveringID)
-    ) {
-      const tx = walletItemsMap.get(hoveringID);
-      // console.log(tx.category);
-      return (
-        <Modal>
-          <Modal.Header>Transaction Details</Modal.Header>
-          <Modal.Body>
-            {tx.category != 'orphan' &&
-              tx.confirmations <= settings.minConfirmations && (
-                <div>
-                  <a>{__('PENDING TRANSACTION')}</a>
-                </div>
-              )}
-
-            <div key="modal_amount" className="detailCat">
-              {__('Amount: ')}
-              <span className="TXdetails">{tx.amount}</span>
-            </div>
-
-            {(tx.category === 'debit' || tx.category === 'send') && (
-              <div key="modal_fee" className="detailCat">
-                {__('Fee')}:
-                <span className="TXdetails">{highlightedTxFee}</span>
-              </div>
-            )}
-
-            <div key="modal_time" className="detailCat">
-              {__('Time: ')}
-              <span className="TXdetails">
-                {new Date(tx.time * 1000).toLocaleString(settings.locale)}
-              </span>
-            </div>
-
-            <div key="modal_Account" className="detailCat">
-              {__('Account')}:<span className="TXdetails">{tx.account}</span>
-            </div>
-
-            <div key="modal_Confirms" className="detailCat">
-              {__('Confirmations')}:
-              <span className="TXdetails">{tx.confirmations}</span>
-            </div>
-
-            <div key="modal_TXID">
-              {__('TX Number')}:
-              <div className="blockHash" style={{ wordWrap: 'break-word' }}>
-                <span>{tx.txid}</span>
-              </div>
-            </div>
-
-            <div key="modal_BlockNumber" className="detailCat">
-              {__('Block Number')}:
-              <span className="TXdetails">{highlightedBlockNum}</span>
-            </div>
-
-            <div key="modal_BlockHash">
-              {__('Block Hash')}:
-              <div className="blockHash" style={{ wordWrap: 'break-word' }}>
-                <span>{highlightedBlockHash}</span>
-              </div>
-            </div>
-          </Modal.Body>
-        </Modal>
-      );
-    }
-    return null;
+    return (
+      <Modal>
+        <Modal.Header>{__('Transactions Details')}</Modal.Header>
+        <Modal.Body>
+          {transaction ? (
+            <>
+              <Field label={__('Time')}>
+                {formatDateTime(transaction.time, timeFormatOptions)}
+              </Field>
+              <Field label={__('Category')}>
+                {categoryText(transaction.details[0].category)}
+              </Field>
+              <Field label={__('Amount')}>
+                {transaction.details[0].amount}
+              </Field>
+              <Field label={__('Account')}>
+                {transaction.details[0].account}
+              </Field>
+              <Field label={__('Address')}>
+                <span className="monospace">
+                  {transaction.details[0].address}
+                </span>
+              </Field>
+              <Field label={__('Confirmations')}>
+                {transaction.confirmations}
+              </Field>
+              <Field label={__('Transaction ID')}>
+                <span className="monospace">{transaction.txid}</span>
+              </Field>
+              <Field label={__('Block hash')}>
+                <span className="monospace">{transaction.blockhash}</span>
+              </Field>
+            </>
+          ) : (
+            <WaitingMessage>
+              {__('Loading transaction details...')}
+            </WaitingMessage>
+          )}
+        </Modal.Body>
+      </Modal>
+    );
   }
 }
-
-export default TransactionDetailsModal;

@@ -94,7 +94,7 @@ async function fetchNewTransactions() {
   }
 }
 
-async function fetchTransaction(txid) {
+export async function fetchTransaction(txid) {
   const tx = await rpc('gettransaction', [txid]);
   store.dispatch(updateTransaction(tx));
 }

@@ -170,19 +170,6 @@ class Transactions extends Component {
   }
 
   /**
-   * Open Tx Detail modal
-   *
-   * @memberof Transactions
-   */
-  openTxDetailsModal = () => {
-    this.props.openModal(TransactionDetailsModal, {
-      hoveringID: this.hoveringID,
-      walletItemsMap: this.props.walletitemsMap,
-      settings: this.props.settings,
-    });
-  };
-
-  /**
    * Download CSV
    *
    * @memberof Transactions
@@ -399,6 +386,14 @@ class Transactions extends Component {
               defaultSortingColumnIndex={0}
               // onMouseOverCallback={this.mouseOverCallback.bind(this)}
               // onMouseOutCallback={this.mouseOutCallback.bind(this)}
+              getTrProps={(state, rowInfo) => ({
+                onClick: () => {
+                  openModal(TransactionDetailsModal, {
+                    txid: rowInfo.original.txid,
+                  });
+                },
+                style: { cursor: 'pointer' },
+              })}
             />
           </TransactionsLayout>
         )}
