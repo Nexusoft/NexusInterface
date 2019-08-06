@@ -1,11 +1,12 @@
 import { connect } from 'react-redux';
 
-import { categoryText, isPending } from './utils';
+import { categoryText } from './utils';
+import { isPending } from 'lib/transactions';
 
 const CategoryCell = ({ transaction, minConfirmations }) =>
   isPending(transaction, minConfirmations)
     ? `${__('Pending')} (${transaction.confirmations}/${minConfirmations})`
-    : categoryText(transaction.category || transaction.details[0].category);
+    : categoryText(transaction.category);
 
 const mapStateToProps = ({ settings: { minConfirmations } }) => ({
   minConfirmations,

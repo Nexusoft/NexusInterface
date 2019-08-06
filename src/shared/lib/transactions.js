@@ -45,7 +45,7 @@ async function fetchAllTransactions() {
       return;
     }
     if (Array.isArray(results)) {
-      transactions = transactions.concat(results);
+      transactions = transactions.concat(results.map(normalizeTransaction));
     }
   } while (results && results.length === txPerCall);
 
@@ -59,7 +59,7 @@ async function fetchAllTransactions() {
 
   if (minConfirmations) {
     transactions.forEach(tx => {
-      if (tx.confirmations < minConfirmations) {
+      if (isPending(tx, minConfirmations)) {
         autoUpdateTxConfirmations(tx.txid);
       }
     });
@@ -83,11 +83,13 @@ async function fetchNewTransactions() {
     },
     settings: { minConfirmations },
   } = store.getState();
-  store.dispatch(addTransactions(newTransactions, txtotal));
+  store.dispatch(
+    addTransactions(newTransactions.map(normalizeTransaction), txtotal)
+  );
 
   if (minConfirmations) {
     newTransactions.forEach(tx => {
-      if (tx.confirmations < minConfirmations) {
+      if (isPending(tx, minConfirmations)) {
         autoUpdateTxConfirmations(tx.txid);
       }
     });
@@ -96,7 +98,7 @@ async function fetchNewTransactions() {
 
 export async function fetchTransaction(txid) {
   const tx = await rpc('gettransaction', [txid]);
-  store.dispatch(updateTransaction(tx));
+  store.dispatch(updateTransaction(normalizeTransaction(tx)));
 }
 
 function autoUpdateTxConfirmations(txid) {
@@ -113,7 +115,7 @@ function autoUpdateTxConfirmations(txid) {
         const minConf = Number(minConfirmations);
         const tx = map[txid];
 
-        if (minConf && tx.confirmations >= minConf) {
+        if (!isPending(tx, minConf)) {
           unsubscribers[txid]();
           delete unsubscribers[txid];
         }
@@ -121,3 +123,12 @@ function autoUpdateTxConfirmations(txid) {
     }
   );
 }
+
+export const isPending = (tx, minConf) =>
+  !!minConf && tx.confirmations < Number(minConf) && tx.category !== 'orphan';
+
+// RPC commands return inconsistent transaction schemas so we have to normalize them before using
+const normalizeTransaction = tx => ({
+  ...tx,
+  ...(tx.details && tx.details[0]),
+});

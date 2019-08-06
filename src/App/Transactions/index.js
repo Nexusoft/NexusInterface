@@ -14,7 +14,7 @@ import { formatDateTime } from 'lib/intl';
 import { openModal } from 'actions/overlays';
 import { setTxsAccountFilter } from 'actions/ui';
 import { isCoreConnected } from 'selectors';
-import { autoUpdateTransactions } from 'lib/transactions';
+import { autoUpdateTransactions, isPending } from 'lib/transactions';
 
 import TransactionDetailsModal from './TransactionDetailsModal';
 import Filters from './Filters';
@@ -24,7 +24,7 @@ import {
   getAccountOptions,
   withFakeTxs,
 } from './selectors';
-import { isPending, saveCSV } from './utils';
+import { saveCSV } from './utils';
 import TransactionsChartModal from './TransactionsChartModal';
 import CategoryCell from './CategoryCell';
 
@@ -250,8 +250,8 @@ class Transactions extends Component {
                 style: {
                   cursor: 'pointer',
                   opacity:
-                    (tx.category || tx.details[0].category) === 'immature' ||
-                    (tx.category || tx.details[0].category) === 'orphan' ||
+                    tx.category === 'immature' ||
+                    tx.category === 'orphan' ||
                     isPending(tx, minConfirmations)
                       ? 0.5
                       : 1,

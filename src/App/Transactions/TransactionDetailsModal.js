@@ -6,8 +6,9 @@ import Modal from 'components/Modal';
 import WaitingMessage from 'components/WaitingMessage';
 import rpc from 'lib/rpc';
 import { formatDateTime } from 'lib/intl';
+import { isPending, fetchTransaction } from 'lib/transactions';
 
-import { categoryText, isPending } from './utils';
+import { categoryText } from './utils';
 
 const timeFormatOptions = {
   year: 'numeric',
@@ -45,22 +46,20 @@ const Field = ({ label, children }) => (
   </Row>
 );
 
-@connect(({ settings: { minConfirmations } }) => ({ minConfirmations }))
+@connect(
+  ({ settings: { minConfirmations }, transactions: { map } }, props) => ({
+    minConfirmations,
+    transaction: map[props.txid],
+  })
+)
 export default class TransactionDetailsModal extends React.Component {
-  state = {
-    transaction: null,
-  };
-
   constructor(props) {
     super(props);
-    rpc('gettransaction', [this.props.txid]).then(transaction =>
-      this.setState({ transaction })
-    );
+    fetchTransaction(this.props.txid);
   }
 
   render() {
-    const { minConfirmations } = this.props;
-    const { transaction } = this.state;
+    const { transaction, minConfirmations } = this.props;
 
     return (
       <Modal>
@@ -72,18 +71,12 @@ export default class TransactionDetailsModal extends React.Component {
                 {formatDateTime(transaction.time, timeFormatOptions)}
               </Field>
               <Field label={__('Category')}>
-                {categoryText(transaction.details[0].category)}
+                {categoryText(transaction.category)}
               </Field>
-              <Field label={__('Amount')}>
-                {transaction.details[0].amount}
-              </Field>
-              <Field label={__('Account')}>
-                {transaction.details[0].account}
-              </Field>
+              <Field label={__('Amount')}>{transaction.amount}</Field>
+              <Field label={__('Account')}>{transaction.account}</Field>
               <Field label={__('Address')}>
-                <span className="monospace">
-                  {transaction.details[0].address}
-                </span>
+                <span className="monospace">{transaction.address}</span>
               </Field>
               <Field label={__('Confirmations')}>
                 {transaction.confirmations}

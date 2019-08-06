@@ -109,7 +109,7 @@ const mapStateToProps = state => {
     settings,
     theme,
   } = state;
-  const { synccomplete, blocks } = info;
+  const { synccomplete } = info;
   const syncUnknown =
     (!synccomplete && synccomplete !== 0) ||
     synccomplete < 0 ||
