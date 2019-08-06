@@ -74,6 +74,10 @@ export default class TransactionDetailsModal extends React.Component {
                 {categoryText(transaction.category)}
               </Field>
               <Field label={__('Amount')}>{transaction.amount}</Field>
+              {!!transaction.fee &&
+                ['debit', 'credit', 'receive', 'send'].includes(
+                  transaction.category
+                ) && <Field label={__('Fee')}>{transaction.fee}</Field>}
               <Field label={__('Account')}>{transaction.account}</Field>
               <Field label={__('Address')}>
                 <span className="monospace">{transaction.address}</span>

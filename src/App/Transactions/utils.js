@@ -19,8 +19,6 @@ export const categoryText = category => {
       return __('Immature');
     case 'stake':
       return __('Stake');
-    case 'Pending':
-      return __('(Pending)');
     case 'orphan':
       return __('Orphan');
     default:
