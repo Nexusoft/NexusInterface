@@ -32,7 +32,7 @@
     "update-translations": "node ./internals/scripts/updateTranslations.js",
     "update-documentation": "./UpdateDocumentation.sh"
   },
-  "browserslist": "electron 6.0.0",
+  "browserslist": "electron "
   "main": "./build/main.prod.js",
   "build": {
     "productName": "Nexus Wallet",
@@ -183,8 +183,8 @@
     "cross-env": "^5.2.0",
     "cross-spawn": "^6.0.5",
     "css-loader": "^3.0.0",
-    "electron": "^6.0.0",
-    "electron-builder": "^21.2.0",
+    "electron": "^5.0.6",
+    "electron-builder": "^21.0.15",
     "electron-devtools-installer": "^2.2.4",
     "eslint": "^6.0.1",
     "express": "^4.17.1",
