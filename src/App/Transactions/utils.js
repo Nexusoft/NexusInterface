@@ -78,18 +78,18 @@ export const saveCSV = transactions => {
     'Account',
     'Address',
     'Amount',
-    fiatCurrency + ' Value',
+    // fiatCurrency + ' Value',
     // 'BTC Value',
     'Type',
     'Time',
     'Transaction ID',
     'Confirmations',
-    // 'Fee',
+    'Fee',
   ].join(',');
 
   const formatter = new Intl.DateTimeFormat('en', {
     year: 'numeric',
-    month: 'short',
+    month: 'long',
     day: '2-digit',
     hour: '2-digit',
     minute: '2-digit',
@@ -106,13 +106,13 @@ export const saveCSV = transactions => {
         tx.account,
         tx.address,
         tx.amount,
-        price ? (tx.amount * price).toFixed(2) : 'N/A',
+        // price ? (tx.amount * price).toFixed(2) : 'N/A',
         // (tx.amount * tx.value.BTC).toFixed(8),
         tx.category,
         formatter.format(tx.time * 1000).replace(/,/g, ''),
         tx.txid,
         tx.confirmations,
-        // tx.fee,
+        tx.fee || 0,
       ].join(',')
     ),
   ];
