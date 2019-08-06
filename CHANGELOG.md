@@ -16,11 +16,13 @@
 - Stake Rate now rounded to 6 significant digits
 - Removed Trust on the category dropdown
 - Staking status icon now indicates clearly whether wallet is staking
+- New system for changing core settings and alerting a needed core restart
 
 #### Fixes
 
 - Stake and Trust transactions now properly show on the transaction page
 - Orphans no longer show as `(Pending)`
+- Fixed a issue where the manual mode settings were not being save as the button had been removed
 
 # 1.1.0 (2019.7.19)
 

@@ -466,7 +466,9 @@ class SettingsCore extends Component {
           <SettingsField
             connectLabel
             label={__('Avatar Mode')}
-            subLabel={__('Avatar Level')}
+            subLabel={__(
+              'Disabling Avatar will make the core use a separate change key'
+            )}
           >
             <Switch
               checked={settings.avatarLevel}
