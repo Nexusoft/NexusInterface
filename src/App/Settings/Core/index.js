@@ -582,6 +582,19 @@ class SettingsCore extends Component {
               )}
             </Button> 
           </div>*/}
+          <Button
+            className="space-right"
+            style={{ marginLeft: '1em', marginTop: '1em' }}
+            type="submit"
+            skin="primary"
+            disabled={pristine || submitting}
+          >
+            {pristine
+              ? __('Settings Unchanged')
+              : submitting
+              ? __('Settings Saving')
+              : __('Save Settings')}
+          </Button>
         </form>
       </>
     );
