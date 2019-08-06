@@ -39,8 +39,8 @@ export const defaultSettings = {
   enableMining: false,
   enableStaking: true,
   verboseLevel: 0,
-  avatarLevel: 1,
-  ipMineWhitelist: [],
+  avatarMode: true,
+  ipMineWhitelist: '',
   manualDaemon: false,
   manualDaemonUser: 'rpcserver',
   manualDaemonPassword: defaultPassword,
@@ -67,6 +67,8 @@ export const defaultSettings = {
   windowY: undefined,
   forkBlocks: 0,
 };
+
+export let tempSettings = null;
 
 function readSettings() {
   return readJson(settingsFilePath);
@@ -95,5 +97,17 @@ export function LoadSettings() {
 
 export function UpdateSettings(updates) {
   const settings = readSettings();
+  if (tempSettings) {
+    tempSettings = null;
+  }
   return writeSettings({ ...settings, ...updates });
+}
+
+export function UpdateTempSettings(updates) {
+  if (tempSettings) {
+    tempSettings = { ...tempSettings, ...updates };
+  } else {
+    const settings = readSettings();
+    tempSettings = { ...settings, ...updates };
+  }
 }

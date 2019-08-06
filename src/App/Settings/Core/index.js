@@ -4,6 +4,7 @@ import { remote } from 'electron';
 import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
 import cpy from 'cpy';
+import styled from '@emotion/styled';
 
 // Internal
 import { switchSettingsTab } from 'actions/ui';
@@ -14,18 +15,29 @@ import Button from 'components/Button';
 import TextField from 'components/TextField';
 import Switch from 'components/Switch';
 import { showNotification, openConfirmDialog } from 'actions/overlays';
-import { updateSettings } from 'actions/settings';
+import { updateSettings, updateTempSettings } from 'actions/settings';
+import { tempSettings } from 'lib/settings';
 import * as form from 'utils/form';
 import { rpcErrorHandler } from 'utils/form';
 import { isCoreConnected } from 'selectors';
 import ReScanButton from './RescanButton.js';
 import { coreDataDir } from 'consts/paths';
+import * as color from 'utils/color';
+import warningIcon from 'images/warning.sprite.svg';
+import Icon from 'components/Icon';
+
+const RestartPrompt = styled.div(({ theme }) => ({
+  background: color.darken(theme.background, 0.2),
+  padding: '5px',
+  transition: 'all 0.25s linear',
+}));
 
 const mapStateToProps = state => {
   const { settings } = state;
   return {
     coreConnected: isCoreConnected(state),
     settings,
+    tempSettings,
     initialValues: {
       manualDaemonUser: settings.manualDaemonUser,
       manualDaemonPassword: settings.manualDaemonPassword,
@@ -37,6 +49,7 @@ const mapStateToProps = state => {
 };
 const actionCreators = {
   updateSettings,
+  updateTempSettings,
   switchSettingsTab,
   openConfirmDialog,
   showNotification,
@@ -125,6 +138,8 @@ class SettingsCore extends Component {
     props.switchSettingsTab('Core');
     this.updateMining = this.updateMining.bind(this);
     this.updateStaking = this.updateStaking.bind(this);
+    this.state = this.props.settings;
+    this.needsRestart = false;
   }
 
   /**
@@ -208,8 +223,14 @@ class SettingsCore extends Component {
     });
   }
 
-  updateStaking(input) {
-    let value = form.resolveValue(input);
+  /**
+   * Generic function to display the Restart core ? dialog
+   *
+   * @param {*} yesCallback
+   * @param {*} noCallback
+   * @memberof SettingsCore
+   */
+  askForCoreRestart(yesCallback, noCallback) {
     this.props.openConfirmDialog({
       question: __('Restart Core?'),
       note: __(
@@ -217,41 +238,55 @@ class SettingsCore extends Component {
       ),
       labelYes: 'Restart now',
       labelNo: "I'll restart later",
-      callbackYes: async () => {
-        this.props.updateSettings({
-          enableStaking: form.resolveValue(value),
-        });
-        this.restartCore();
-      },
-      callbackNo: () => {
-        this.props.updateSettings({
-          enableStaking: form.resolveValue(value),
-        });
-      },
+      callbackYes: yesCallback,
+      callbackNo: noCallback,
     });
   }
 
+  /**
+   * Update the staking flag
+   *
+   * @param {*} input
+   * @memberof SettingsCore
+   */
+  updateStaking(input) {
+    let value = form.resolveValue(input);
+    this.askForCoreRestart(
+      async () => {
+        this.props.updateSettings({
+          enableStaking: form.resolveValue(value),
+        });
+        this.restartCore();
+      },
+      () => {
+        this.props.updateSettings({
+          enableStaking: form.resolveValue(value),
+        });
+      }
+    );
+  }
+
+  /**
+   * Update the mining flag
+   *
+   * @param {*} input
+   * @memberof SettingsCore
+   */
   updateMining(input) {
     let value = form.resolveValue(input);
-    this.props.openConfirmDialog({
-      question: __('Restart Core?'),
-      note: __(
-        'This setting change will only take effect after Core is restarted. Do you want to restart the Core now?'
-      ),
-      labelYes: 'Restart now',
-      labelNo: "I'll restart later",
-      callbackYes: async () => {
+    this.askForCoreRestart(
+      async () => {
         this.props.updateSettings({
           enableMining: form.resolveValue(value),
         });
         this.restartCore();
       },
-      callbackNo: () => {
+      () => {
         this.props.updateSettings({
           enableMining: form.resolveValue(value),
         });
-      },
-    });
+      }
+    );
   }
 
   /**
@@ -261,12 +296,8 @@ class SettingsCore extends Component {
    * @memberof SettingsCore
    */
   updateMiningWhitelist(input) {
-    const output = form
-      .resolveValue(input)
-      .split(';')
-      .filter(e => e !== '');
-    console.log(output);
-    this.props.updateSettings({
+    const output = form.resolveValue(input).replace(' ', '');
+    this.props.updateTempSettings({
       ipMineWhitelist: output,
     });
   }
@@ -281,7 +312,10 @@ class SettingsCore extends Component {
     return settingName => {
       if (!handlers[settingName]) {
         handlers[settingName] = input =>
-          this.props.updateSettings({
+          /*this.props.updateSettings({
+            [settingName]: form.resolveValue(input),
+          }); */
+          this.props.updateTempSettings({
             [settingName]: form.resolveValue(input),
           });
       }
@@ -308,13 +342,12 @@ class SettingsCore extends Component {
    * @memberof SettingsCore
    */
   render() {
-    const {
-      coreConnected,
-      handleSubmit,
-      settings,
-      pristine,
-      submitting,
-    } = this.props;
+    const { coreConnected, handleSubmit, pristine, submitting } = this.props;
+    const settings = this.props.settings.tempSettings
+      ? { ...this.props.settings, ...this.props.settings.tempSettings }
+      : this.props.settings;
+
+    console.log(settings);
 
     if (!coreConnected && !settings.manualDaemon) {
       return (
@@ -327,6 +360,38 @@ class SettingsCore extends Component {
 
     return (
       <>
+        {this.props.settings.tempSettings ? (
+          <RestartPrompt>
+            <div className="flex space-between">
+              <div
+                style={{
+                  textDecoration: 'underline',
+                  paddingTop: '0.5em',
+                  paddingLeft: '0.25em',
+                }}
+              >
+                <Icon icon={warningIcon} className="space-right" />
+                {__('Core needs to restart for these settings to take effect!')}
+              </div>
+
+              <Button
+                onClick={() => {
+                  this.askForCoreRestart(
+                    () => {
+                      this.props.updateSettings({
+                        ...this.props.settings.tempSettings,
+                      });
+                      this.restartCore();
+                    },
+                    () => {}
+                  );
+                }}
+              >
+                {__('Restart Core')}
+              </Button>
+            </div>
+          </RestartPrompt>
+        ) : null}
         <form onSubmit={handleSubmit}>
           <SettingsField
             connectLabel
@@ -335,24 +400,26 @@ class SettingsCore extends Component {
           >
             <Switch
               checked={settings.enableMining}
-              onChange={e => this.updateMining(e)}
+              onChange={this.updateHandlers('enableMining')}
             />
           </SettingsField>
 
           {settings.enableMining ? (
             <SettingsField
               connectLabel
+              indent={1}
               label={__('Mining IP Whitelist')}
               subLabel={__(
-                'IPs allowed to mine to. Separate by <b>;</b>',
+                'IP/Ports allowed to mine to. Separate by <b>;</b> . Wildcards supported only in IP',
                 undefined,
                 {
                   b: txt => <b>{txt}</b>,
                 }
               )}
             >
-              <Field
+              <TextField
                 component={TextField.RF}
+                value={settings.ipMineWhitelist}
                 onChange={e => this.updateMiningWhitelist(e)}
                 name="ipMineWhitelist"
                 size="12"
@@ -367,7 +434,7 @@ class SettingsCore extends Component {
           >
             <Switch
               checked={settings.enableStaking}
-              onChange={e => this.updateStaking(e)}
+              onChange={this.updateHandlers('enableStaking')}
             />
           </SettingsField>
 
@@ -398,16 +465,12 @@ class SettingsCore extends Component {
 
           <SettingsField
             connectLabel
-            label={__('Avatar level')}
+            label={__('Avatar Mode')}
             subLabel={__('Avatar Level')}
           >
-            <TextField
-              type="number"
-              value={settings.avatarLevel}
-              min={0}
-              max={5}
-              onChange={this.updateHandlers('avatarLevel')}
-              style={{ maxWidth: 50 }}
+            <Switch
+              checked={settings.avatarLevel}
+              onChange={this.updateHandlers('avatarMode')}
             />
           </SettingsField>
 
@@ -503,10 +566,9 @@ class SettingsCore extends Component {
             </SettingsField>
             */}
 
-          <div className="flex space-between" style={{ marginTop: '2em' }}>
+          {/*<div className="flex space-between" style={{ marginTop: '2em' }}>
             <Button onClick={this.restartCore}>{__('Restart Core')}</Button>
-
-            {/* <Button
+* <Button
               type="submit"
               skin="primary"
               disabled={pristine || submitting}
@@ -518,8 +580,8 @@ class SettingsCore extends Component {
               ) : (
                 <Text id="SaveSettings" />
               )}
-            </Button> */}
-          </div>
+            </Button> 
+          </div>*/}
         </form>
       </>
     );

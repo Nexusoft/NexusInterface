@@ -153,7 +153,6 @@ class Core {
 
     const params = [
       '-daemon',
-      '-avatar',
       '-server',
       '-rpcthreads=4',
       '-fastsync',
@@ -177,15 +176,14 @@ class Core {
     // Enable mining (default is 0)
     if (settings.enableMining == true) {
       params.push('-mining=1');
-      if (settings.ipMineWhitelist.length !== 0) {
-        settings.ipMineWhitelist.forEach(element => {
+      if (settings.ipMineWhitelist !== '') {
+        settings.ipMineWhitelist.split(';').forEach(element => {
           params.push(`-llpallowip=${element}`);
         });
       }
     }
     // Enable staking (default is 0)
     if (settings.enableStaking == true) params.push('-stake=1');
-    // params.push('-llpallowip=127.0.0.1:9325'); // TODO: llp white list
 
     log.info('Core Parameters: ' + params.toString());
     log.info('Core Manager: Starting core');
@@ -288,8 +286,8 @@ class Core {
    * @memberof Core
    */
   restart = async () => {
-    await stopCore();
-    await startCore();
+    await this.stop();
+    await this.start();
   };
 }
 
