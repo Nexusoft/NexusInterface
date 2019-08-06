@@ -393,89 +393,92 @@ class SettingsCore extends Component {
           </RestartPrompt>
         ) : null}
         <form onSubmit={handleSubmit}>
-          <SettingsField
-            connectLabel
-            label={__('Enable mining')}
-            subLabel={__('Enable/Disable mining to the wallet.')}
-          >
-            <Switch
-              checked={settings.enableMining}
-              onChange={this.updateHandlers('enableMining')}
-            />
-          </SettingsField>
+          {!settings.manualDaemon ? (
+            <>
+              <SettingsField
+                connectLabel
+                label={__('Enable mining')}
+                subLabel={__('Enable/Disable mining to the wallet.')}
+              >
+                <Switch
+                  checked={settings.enableMining}
+                  onChange={this.updateHandlers('enableMining')}
+                />
+              </SettingsField>
 
-          {settings.enableMining ? (
-            <SettingsField
-              connectLabel
-              indent={1}
-              label={__('Mining IP Whitelist')}
-              subLabel={__(
-                'IP/Ports allowed to mine to. Separate by <b>;</b> . Wildcards supported only in IP',
-                undefined,
-                {
-                  b: txt => <b>{txt}</b>,
-                }
-              )}
-            >
-              <TextField
-                component={TextField.RF}
-                value={settings.ipMineWhitelist}
-                onChange={e => this.updateMiningWhitelist(e)}
-                name="ipMineWhitelist"
-                size="12"
-              />
-            </SettingsField>
+              {settings.enableMining ? (
+                <SettingsField
+                  connectLabel
+                  indent={1}
+                  label={__('Mining IP Whitelist')}
+                  subLabel={__(
+                    'IP/Ports allowed to mine to. Separate by <b>;</b> . Wildcards supported only in IP',
+                    undefined,
+                    {
+                      b: txt => <b>{txt}</b>,
+                    }
+                  )}
+                >
+                  <TextField
+                    component={TextField.RF}
+                    value={settings.ipMineWhitelist}
+                    onChange={e => this.updateMiningWhitelist(e)}
+                    name="ipMineWhitelist"
+                    size="12"
+                  />
+                </SettingsField>
+              ) : null}
+
+              <SettingsField
+                connectLabel
+                label={__('Enable staking')}
+                subLabel={__('Enable/Disable staking on the wallet.')}
+              >
+                <Switch
+                  checked={settings.enableStaking}
+                  onChange={this.updateHandlers('enableStaking')}
+                />
+              </SettingsField>
+
+              <SettingsField
+                connectLabel
+                label={__('Rescan wallet')}
+                subLabel={__(
+                  'Used to correct transaction/balance issues, scans over every block in the database. Could take up to 10 minutes.'
+                )}
+              >
+                <ReScanButton />
+              </SettingsField>
+
+              <SettingsField
+                connectLabel
+                label={__('Verbose level')}
+                subLabel={__('Verbose level for logs.')}
+              >
+                <TextField
+                  type="number"
+                  value={settings.verboseLevel}
+                  min={0}
+                  max={5}
+                  onChange={this.updateHandlers('verboseLevel')}
+                  style={{ maxWidth: 50 }}
+                />
+              </SettingsField>
+
+              <SettingsField
+                connectLabel
+                label={__('Avatar Mode')}
+                subLabel={__(
+                  'Disabling Avatar will make the core use a separate change key'
+                )}
+              >
+                <Switch
+                  checked={settings.avatarLevel}
+                  onChange={this.updateHandlers('avatarMode')}
+                />
+              </SettingsField>
+            </>
           ) : null}
-
-          <SettingsField
-            connectLabel
-            label={__('Enable staking')}
-            subLabel={__('Enable/Disable staking on the wallet.')}
-          >
-            <Switch
-              checked={settings.enableStaking}
-              onChange={this.updateHandlers('enableStaking')}
-            />
-          </SettingsField>
-
-          <SettingsField
-            connectLabel
-            label={__('Rescan wallet')}
-            subLabel={__(
-              'Used to correct transaction/balance issues, scans over every block in the database. Could take up to 10 minutes.'
-            )}
-          >
-            <ReScanButton />
-          </SettingsField>
-
-          <SettingsField
-            connectLabel
-            label={__('Verbose level')}
-            subLabel={__('Verbose level for logs.')}
-          >
-            <TextField
-              type="number"
-              value={settings.verboseLevel}
-              min={0}
-              max={5}
-              onChange={this.updateHandlers('verboseLevel')}
-              style={{ maxWidth: 50 }}
-            />
-          </SettingsField>
-
-          <SettingsField
-            connectLabel
-            label={__('Avatar Mode')}
-            subLabel={__(
-              'Disabling Avatar will make the core use a separate change key'
-            )}
-          >
-            <Switch
-              checked={settings.avatarLevel}
-              onChange={this.updateHandlers('avatarMode')}
-            />
-          </SettingsField>
-
           <SettingsField
             connectLabel
             label={__('Manual Core mode')}
