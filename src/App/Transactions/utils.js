@@ -1,6 +1,3 @@
-import store from 'store';
-import { formatDateTime } from 'lib/intl';
-
 export const categoryText = category => {
   switch (category) {
     case 'credit':
@@ -65,21 +62,11 @@ const newFakeTx = accounts => {
 };
 
 export const saveCSV = transactions => {
-  const {
-    settings: { fiatCurrency },
-    market: {
-      cryptocompare: { rawNXSvalues },
-    },
-  } = store.getState();
-  const marketInfo = rawNXSvalues.find(e => e.name === fiatCurrency);
-  const price = marketInfo && marketInfo.price;
   const nameRow = [
     'Number',
     'Account',
     'Address',
     'Amount',
-    // fiatCurrency + ' Value',
-    // 'BTC Value',
     'Type',
     'Time',
     'Transaction ID',
@@ -106,8 +93,6 @@ export const saveCSV = transactions => {
         tx.account,
         tx.address,
         tx.amount,
-        // price ? (tx.amount * price).toFixed(2) : 'N/A',
-        // (tx.amount * tx.value.BTC).toFixed(8),
         tx.category,
         formatter.format(tx.time * 1000).replace(/,/g, ''),
         tx.txid,
