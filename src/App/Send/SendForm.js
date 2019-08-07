@@ -18,6 +18,7 @@ import {
   openErrorDialog,
   openSuccessDialog,
   removeModal,
+  openModal,
 } from 'actions/overlays';
 import Link from 'components/Link';
 import { rpcErrorHandler } from 'utils/form';
@@ -31,6 +32,7 @@ import {
   getRegisteredFieldNames,
   getAccountBalance,
 } from './selectors';
+import PasswordModal from './PasswordModal';
 
 const SendFormComponent = styled.form({
   maxWidth: 800,
@@ -51,7 +53,7 @@ const mapStateToProps = state => {
     myAccounts,
     settings: { minConfirmations },
     core: {
-      info: { locked },
+      info: { locked, minting_only },
     },
     form,
   } = state;
@@ -65,6 +67,7 @@ const mapStateToProps = state => {
   return {
     minConfirmations,
     locked,
+    minting_only,
     accountOptions: getAccountOptions(myAccounts),
     addressNameMap: getAddressNameMap(addressBook),
     fieldNames: getRegisteredFieldNames(
@@ -80,6 +83,7 @@ const mapDispatchToProps = {
   openErrorDialog,
   openSuccessDialog,
   removeModal,
+  openModal,
 };
 
 /**
@@ -104,6 +108,7 @@ const mapDispatchToProps = {
         fiatAmount: '',
       },
     ],
+    password: null,
     message: '',
   },
   validate: ({ sendFrom, recipients }) => {
@@ -169,7 +174,7 @@ const mapDispatchToProps = {
     }
     return null;
   },
-  onSubmit: ({ sendFrom, recipients, message }, dispatch, props) => {
+  onSubmit: ({ sendFrom, recipients, message, password }, dispatch, props) => {
     let minConfirmations = parseInt(props.minConfirmations);
     if (isNaN(minConfirmations)) {
       minConfirmations = defaultSettings.minConfirmations;
@@ -182,8 +187,13 @@ const mapDispatchToProps = {
         recipient.address,
         parseFloat(recipient.amount),
         minConfirmations,
+        message || null,
+        null,
+        password || null,
       ];
-      if (message) params.push(message);
+      console.log(password);
+      console.log(params);
+      // if (message) params.push(message);
       return rpc('sendfrom', params);
     } else {
       const queue = recipients.reduce(
@@ -210,7 +220,14 @@ class SendForm extends Component {
    */
   confirmSend = e => {
     e.preventDefault();
-    const { handleSubmit, invalid, locked, touch, fieldNames } = this.props;
+    const {
+      handleSubmit,
+      invalid,
+      locked,
+      minting_only,
+      touch,
+      fieldNames,
+    } = this.props;
 
     if (invalid) {
       // Mark the form touched so that the validation errors will be shown.
@@ -220,35 +237,48 @@ class SendForm extends Component {
       return;
     }
 
-    if (locked) {
-      const {
-        payload: { id: modalId },
-      } = this.props.openErrorDialog({
-        message: 'You are not logged in',
-        note: (
-          <>
-            <p>
-              {__(
-                'You need to log in to your wallet before sending transactions'
-              )}
-            </p>
-            <Link
-              to="/Settings/Security"
-              onClick={() => {
-                this.props.removeModal(modalId);
-              }}
-            >
-              {__('Log in now')}
-            </Link>
-          </>
-        ),
-      });
-      return;
-    }
+    // if (locked) {
+    //   const {
+    //     payload: { id: modalId },
+    //   } = this.props.openErrorDialog({
+    //     message: 'You are not logged in',
+    //     note: (
+    //       <>
+    //         <p>
+    //           {__(
+    //             'You need to log in to your wallet before sending transactions'
+    //           )}
+    //         </p>
+    //         <Link
+    //           to="/Settings/Security"
+    //           onClick={() => {
+    //             this.props.removeModal(modalId);
+    //           }}
+    //         >
+    //           {__('Log in now')}
+    //         </Link>
+    //       </>
+    //     ),
+    //   });
+    //   return;
+    // }
 
     this.props.openConfirmDialog({
       question: __('Send transaction?'),
-      callbackYes: handleSubmit,
+      callbackYes: () => {
+        if (locked || minting_only) {
+          this.props.openModal(PasswordModal, {
+            onSubmit: password => {
+              this.props.change('password', password);
+              // change function seems to be asynchronous
+              // so setTimeout to wait for it to take effect
+              setTimeout(handleSubmit, 0);
+            },
+          });
+        } else {
+          handleSubmit();
+        }
+      },
     });
   };
 

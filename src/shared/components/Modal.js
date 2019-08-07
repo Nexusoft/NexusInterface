@@ -109,9 +109,17 @@ const ModalBody = styled.div({
   gridArea: 'body',
 });
 
-const ModalFooter = styled.div({
-  gridArea: 'footer',
-});
+const ModalFooter = styled.div(
+  {
+    gridArea: 'footer',
+    padding: '20px 0',
+    margin: '0 50px',
+  },
+  ({ theme, separator }) =>
+    separator && {
+      borderTop: `2px solid ${theme.primary}`,
+    }
+);
 
 /**
  * Modal Component
