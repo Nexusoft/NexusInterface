@@ -7,6 +7,9 @@ import FranceFlag from './flags/fr.png';
 import NetherlandsFlag from './flags/nl.png';
 import PolishFlag from './flags/pl.png';
 import PortugueseFlag from './flags/pt.png';
+import ChineseSimpleFlag from './flags/cn.png';
+import FinnishFlag from './flags/fi.png';
+import ArabicFlag from './flags/arabic.png';
 import USUKFlag from './flags/US-UK.png';
 
 const languages = [
@@ -14,6 +17,11 @@ const languages = [
     code: 'en',
     flag: USUKFlag,
     name: 'English',
+  },
+  {
+    code: 'ar',
+    flag: ArabicFlag,
+    name: 'العَرَبِيَّة‎',
   },
   {
     code: 'de',
@@ -24,6 +32,11 @@ const languages = [
     code: 'es',
     flag: SpainFlag,
     name: 'Español',
+  },
+  {
+    code: 'fi',
+    flag: FinnishFlag,
+    name: 'Suomi',
   },
   {
     code: 'fr',
@@ -59,6 +72,11 @@ const languages = [
     code: 'ru',
     flag: RussiaFlag,
     name: 'Pусский',
+  },
+  {
+    code: 'zh-cn',
+    flag: ChineseSimpleFlag,
+    name: '汉字',
   },
 ];
 

@@ -7,7 +7,9 @@
 - New internal localization system
   - Use our crowdin page to improve translations
 - New translations
+  - Arabic
   - Simplified Chinese
+  - Finnish
 - Added Ability to use IP Whitelist for mining
 - Added Ability to turn off Avatar mode
 

@@ -7,7 +7,20 @@ import { assetsDir } from 'consts/paths';
 import { LoadSettings } from 'lib/settings';
 import { escapeRegExp } from 'utils/misc';
 
-const locales = ['de', 'es', 'fr', 'ja', 'ko', 'nl', 'pl', 'pt', 'ru'];
+const locales = [
+  'ar',
+  'de',
+  'es',
+  'fi',
+  'fr',
+  'ja',
+  'ko',
+  'nl',
+  'pl',
+  'pt',
+  'ru',
+  'zh-cn',
+];
 const { locale: loc } = LoadSettings();
 const locale = locales.includes(loc) ? loc : 'en';
 const phrases =
