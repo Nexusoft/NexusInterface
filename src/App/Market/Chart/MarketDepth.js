@@ -5,6 +5,7 @@ Last Modified by: Brian Smith
 */
 // External Dependencies
 import React, { Component } from 'react';
+import styled from '@emotion/styled';
 import {
   VictoryArea,
   VictoryChart,
@@ -15,6 +16,14 @@ import {
   VictoryLabel,
   VictoryVoronoiContainer,
 } from 'victory';
+
+const MarketDepthInner = styled.div({
+  position: 'relative',
+  flex: 1,
+  minHeight: 300,
+  maxWidth: '50%',
+  marginLeft: 5,
+});
 
 /**
  * Creates a Victory Chart that displays the market depth
@@ -33,7 +42,7 @@ export default class MarketDepth extends Component {
    */
   render() {
     return (
-      <div className="marketDepthInner">
+      <MarketDepthInner>
         <VictoryChart
           theme={{
             axis: {
@@ -157,7 +166,7 @@ export default class MarketDepth extends Component {
             </linearGradient>
           </defs>
         </svg>
-      </div>
+      </MarketDepthInner>
     );
   }
 }

@@ -54,7 +54,6 @@ const Logo = styled(Icon)(({ theme }) => ({
   display: 'block',
   height: 50,
   width: 'auto',
-  filter: 'var(--nxs-logo)',
   fill: theme.primary,
 }));
 

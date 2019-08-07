@@ -2,6 +2,10 @@
  * Migrated from react-table
  */
 import { css } from '@emotion/core';
+import { consts } from 'styles';
+
+const paddingHorizontal = 0.5 * consts.lineHeight + 'em';
+const paddingVertical = 0.375 * consts.lineHeight + 'em';
 
 export default theme => css`
   .ReactTable {
@@ -93,18 +97,10 @@ export default theme => css`
       position: relative;
       background-color: ${theme.background};
 
-      padding-top: calc(
-        var(--line-height) * var(--table-padded-padding-vertical)
-      );
-      padding-bottom: calc(
-        var(--line-height) * var(--table-padded-padding-vertical)
-      );
-      padding-left: calc(
-        var(--line-height) * var(--table-padded-padding-horizontal)
-      );
-      padding-right: calc(
-        var(--line-height) * var(--table-padded-padding-horizontal)
-      );
+      padding-top: ${paddingVertical};
+      padding-bottom: ${paddingVertical};
+      padding-left: ${paddingHorizontal};
+      padding-right: ${paddingHorizontal};
       border-left: 1px solid ${theme.background};
     }
 
@@ -195,18 +191,10 @@ export default theme => css`
     }
 
     .rt-tbody .rt-td {
-      padding-top: calc(
-        var(--line-height) * var(--table-padded-padding-vertical)
-      );
-      padding-bottom: calc(
-        var(--line-height) * var(--table-padded-padding-vertical)
-      );
-      padding-left: calc(
-        var(--line-height) * var(--table-padded-padding-horizontal)
-      );
-      padding-right: calc(
-        var(--line-height) * var(--table-padded-padding-horizontal)
-      );
+      padding-top: ${paddingVertical};
+      padding-bottom: ${paddingVertical};
+      padding-left: ${paddingHorizontal};
+      padding-right: ${paddingHorizontal};
       border-left: 1px solid ${theme.background};
     }
 
@@ -391,7 +379,7 @@ export default theme => css`
       border-radius: 3px;
       padding: 6px;
       font-size: 1em;
-      color: var(--color-5);
+      color: ${theme.foreground};
       background: rgba(255, 255, 255, 0.1);
       transition: all 0.1s ease;
       cursor: pointer;

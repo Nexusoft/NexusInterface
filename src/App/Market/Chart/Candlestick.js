@@ -6,7 +6,7 @@ Last Modified by: Brian Smith
 
 // External Dependencies
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import styled from '@emotion/styled';
 import {
   VictoryChart,
   VictoryAxis,
@@ -16,16 +16,13 @@ import {
   VictoryTooltip,
 } from 'victory';
 
-import styled from '@emotion/styled';
-const TerminalCoreComponent = styled.div(({ theme }) => ({
-  height: '100%',
-  display: 'flex',
-  flexDirection: 'column',
-  border: `1px solid ${theme.mixer(0.125)}`,
-}));
-
-const asdas = styled();
-
+const MarketDepthInner = styled.div({
+  position: 'relative',
+  flex: 1,
+  minHeight: 300,
+  maxWidth: '50%',
+  marginLeft: 5,
+});
 /**
  * Creates a Victory Chart that uses CandleSticks
  *
@@ -44,7 +41,7 @@ export default class Candlestick extends Component {
    */
   render() {
     return (
-      <div className="marketDepthInner">
+      <MarketDepthInner>
         <VictoryChart
           domainPadding={{ x: 10 }}
           theme={{
@@ -130,7 +127,7 @@ export default class Candlestick extends Component {
             }
           />
         </VictoryChart>
-      </div>
+      </MarketDepthInner>
     );
   }
 }
