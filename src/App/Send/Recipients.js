@@ -75,7 +75,7 @@ class Recipients extends React.Component {
    * @memberof Recipients
    */
   render() {
-    const { fields, change, addRecipient } = this.props;
+    const { fields, change, addRecipient, accBalance } = this.props;
 
     if (!fields || !fields.length) return null;
 
@@ -87,7 +87,11 @@ class Recipients extends React.Component {
             component={RecipientField}
             change={change}
           />
-          <AmountField parentFieldName={`${fields.name}[0]`} change={change} />
+          <AmountField
+            fullAmount={accBalance}
+            parentFieldName={`${fields.name}[0]`}
+            change={change}
+          />
         </>
       );
     } else {

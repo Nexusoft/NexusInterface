@@ -19,12 +19,14 @@ import StatusIcon from './StatusIcon';
 @connect(state => {
   const {
     core: {
-      info: { stakerate },
+      info: { stakerate, genesismature, synccomplete },
     },
   } = state;
   return {
     staking: isStaking(state),
     stakerate,
+    genesismature,
+    synccomplete,
   };
 })
 class StakingStatus extends React.Component {
@@ -37,29 +39,42 @@ class StakingStatus extends React.Component {
    * @memberof StakingStatus
    */
   render() {
-    const { staking, stakerate } = this.props;
+    const { staking, stakerate, genesismature, synccomplete } = this.props;
 
     return (
       <Tooltip.Trigger
         tooltip={
-          <>
-            <div>
-              {staking ? (
-                <strong>{__('Wallet is staking')}</strong>
+          staking ? (
+            genesismature ? (
+              synccomplete === 100 ? (
+                <>
+                  <div>
+                    <strong>{__('Wallet is staking')}</strong>
+                    <div>
+                      {__('Stake Rate')}: {formatNumber(stakerate, 2)}%
+                    </div>
+                  </div>
+                </>
               ) : (
-                __('Wallet is not staking')
-              )}
-            </div>
-            {staking && (
-              <div>
-                {__('Stake Rate')}: {formatNumber(stakerate, 2)}%
-              </div>
-            )}
-          </>
+                __('Waiting for 100% synchronization to start staking...')
+              )
+            ) : (
+              __(
+                'Waiting for average age of balance to exceed 72 hours to start staking...'
+              )
+            )
+          ) : (
+            __('Wallet is not staking')
+          )
         }
-        style={{ textAlign: 'left' }}
+        style={{ maxWidth: 200 }}
       >
-        <StatusIcon icon={stakingIcon} style={{ opacity: staking ? 1 : 0.7 }} />
+        <StatusIcon
+          icon={stakingIcon}
+          style={{
+            opacity: staking && genesismature && synccomplete === 100 ? 1 : 0.7,
+          }}
+        />
       </Tooltip.Trigger>
     );
   }

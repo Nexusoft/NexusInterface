@@ -60,6 +60,7 @@ import nxsblocksIcon from 'images/blockexplorer-invert-white.sprite.svg';
 import interestIcon from 'images/interest.sprite.svg';
 import stakeIcon from 'images/staking-white.sprite.svg';
 import warningIcon from 'images/warning.sprite.svg';
+import questionMarkCircleIcon from 'images/question-mark-circle.sprite.svg';
 
 const trustIcons = [
   trust00,
@@ -108,7 +109,7 @@ const mapStateToProps = state => {
     settings,
     theme,
   } = state;
-  const { synccomplete, blocks } = info;
+  const { synccomplete } = info;
   const syncUnknown =
     (!synccomplete && synccomplete !== 0) ||
     synccomplete < 0 ||
@@ -611,7 +612,9 @@ class Overview extends Component {
         coreConnected,
         connections,
         balance,
+        unconfirmedbalance,
         stake,
+        newmint,
         txtotal,
         interestweight,
         stakerate,
@@ -641,7 +644,9 @@ class Overview extends Component {
                 {/* )} */}
                 (NXS) :
               </StatLabel>
-              <StatValue>{this.waitForCore(formatNumber(balance))}</StatValue>
+              <StatValue>
+                {this.waitForCore(formatNumber(balance + unconfirmedbalance))}
+              </StatValue>
             </MinimalStat>
             {/* + (stake || 0) */}
             <MinimalStat>
@@ -651,7 +656,10 @@ class Overview extends Component {
               <StatValue>
                 {market && market.price ? (
                   this.waitForCore(
-                    formatCurrency(balance * market.price, fiatCurrency)
+                    formatCurrency(
+                      (balance + unconfirmedbalance) * market.price,
+                      fiatCurrency
+                    )
                   )
                 ) : (
                   <span className="dim">-</span>
@@ -766,10 +774,13 @@ class Overview extends Component {
                 {settings.overviewDisplay === 'balHidden' ? (
                   '-'
                 ) : !settings.displayFiatBalance ? (
-                  this.waitForCore(formatNumber(balance))
+                  this.waitForCore(formatNumber(balance + unconfirmedbalance))
                 ) : market && market.price ? (
                   this.waitForCore(
-                    formatCurrency(balance * market.price, fiatCurrency)
+                    formatCurrency(
+                      (balance + unconfirmedbalance) * market.price,
+                      fiatCurrency
+                    )
                   )
                 ) : (
                   <span className="dim">-</span>
@@ -789,11 +800,21 @@ class Overview extends Component {
             to={coreConnected ? '/Transactions' : undefined}
           >
             <div>
-              <StatLabel>{__('Stake Balance')} (NXS)</StatLabel>
+              <StatLabel>
+                <Tooltip.Trigger
+                  tooltip={__(
+                    'Staking and mining rewards that need to get past 120 block-old to become available'
+                  )}
+                  align="start"
+                >
+                  <Icon icon={questionMarkCircleIcon} />
+                </Tooltip.Trigger>{' '}
+                <span className="v-align">{__('Immature Balance')} (NXS)</span>
+              </StatLabel>
               <StatValue>
                 {settings.overviewDisplay === 'balHidden'
                   ? '-'
-                  : this.waitForCore(stake)}
+                  : this.waitForCore(stake + newmint)}
               </StatValue>
             </div>
             <StatIcon icon={nxsStakeIcon} />

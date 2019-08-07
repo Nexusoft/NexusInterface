@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import styled from '@emotion/styled';
 import { connect } from 'react-redux';
-import { reduxForm, Field } from 'redux-form';
+import { reduxForm, Field, formValueSelector } from 'redux-form';
 
 // Internal
 import rpc from 'lib/rpc';
@@ -18,7 +18,11 @@ import {
 } from 'actions/overlays';
 import { loadMyAccounts } from 'actions/account';
 import { rpcErrorHandler } from 'utils/form';
-import { getAccountOptions, getRegisteredFieldNames } from './selectors';
+import {
+  getAccountOptions,
+  getRegisteredFieldNames,
+  getAccountBalance,
+} from './selectors';
 import AmountField from './AmountField';
 
 const AccountSelectors = styled.div({
@@ -39,22 +43,32 @@ const Buttons = styled.div({
   justifyContent: 'flex-end',
 });
 
-const mapStateToProps = ({
-  settings: { minConfirmations, fiatCurrency },
-  core: {
-    info: { locked },
-  },
-  myAccounts,
-  form,
-}) => ({
-  minConfirmations,
-  fiatCurrency,
-  locked,
-  accountOptions: getAccountOptions(myAccounts),
-  fieldNames: getRegisteredFieldNames(
-    form.moveBetweenAccounts && form.moveBetweenAccounts.registeredFields
-  ),
-});
+const formName = 'moveBetweenAccounts';
+const valueSelector = formValueSelector(formName);
+const mapStateToProps = state => {
+  const {
+    settings: { minConfirmations, fiatCurrency },
+    core: {
+      info: { locked },
+    },
+    myAccounts,
+    form,
+  } = state;
+  const accountName = valueSelector(state, 'moveFrom');
+  const amount = valueSelector(state, 'amount');
+  const accBalance = getAccountBalance(accountName, myAccounts);
+  const hideSendAll = amount === accBalance;
+  return {
+    minConfirmations,
+    fiatCurrency,
+    locked,
+    accountOptions: getAccountOptions(myAccounts),
+    fieldNames: getRegisteredFieldNames(
+      form[formName] && form[formName].registeredFields
+    ),
+    accBalance: hideSendAll ? undefined : accBalance,
+  };
+};
 
 const acctionCreators = {
   loadMyAccounts,
@@ -75,7 +89,7 @@ const acctionCreators = {
   acctionCreators
 )
 @reduxForm({
-  form: 'moveBetweenAccounts',
+  form: formName,
   destroyOnUnmount: false,
   initialValues: {
     moveFrom: null,
@@ -192,6 +206,7 @@ class MoveBetweenAccountsForm extends Component {
    * @memberof MoveBetweenAccountsForm
    */
   render() {
+    const { accountOptions, accBalance, change, submitting } = this.props;
     return (
       <form onSubmit={this.confirmMove}>
         <AccountSelectors>
@@ -199,7 +214,7 @@ class MoveBetweenAccountsForm extends Component {
           <Field
             component={Select.RF}
             name="moveFrom"
-            options={this.props.accountOptions}
+            options={accountOptions}
             placeholder={__('Select an account')}
           />
 
@@ -207,15 +222,15 @@ class MoveBetweenAccountsForm extends Component {
           <Field
             component={Select.RF}
             name="moveTo"
-            options={this.props.accountOptions}
+            options={accountOptions}
             placeholder={__('Select an account')}
           />
         </AccountSelectors>
 
-        <AmountField change={this.props.change} />
+        <AmountField fullAmount={accBalance} change={change} />
 
         <Buttons>
-          <Button skin="primary" type="submit" disabled={this.props.submitting}>
+          <Button skin="primary" type="submit" disabled={submitting}>
             {__('Move NXS')}
           </Button>
         </Buttons>

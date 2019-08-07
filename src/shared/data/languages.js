@@ -12,6 +12,10 @@ import FinnishFlag from './flags/fi.png';
 import ArabicFlag from './flags/arabic.png';
 import USUKFlag from './flags/US-UK.png';
 
+/**
+ * NOTE: If this list is updated, also update the one in
+ * /internals/scripts/extractTransactions.js
+ */
 const languages = [
   {
     code: 'en',
