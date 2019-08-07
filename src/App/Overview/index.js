@@ -6,7 +6,7 @@ import * as TYPE from 'consts/actionTypes';
 import { remote } from 'electron';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/core';
-import googleanalytics from 'scripts/googleanalytics';
+import GA from 'lib/googleAnalytics';
 
 // Internal
 import Icon from 'components/Icon';
@@ -323,7 +323,7 @@ class Overview extends Component {
    */
   componentDidMount() {
     window.addEventListener('contextmenu', this.setupcontextmenu, false);
-    googleanalytics.SendScreen('Overview');
+    GA.SendScreen('Overview');
   }
   /**
    * Set by {NetworkGlobe}, ReDraws all Pillars and Archs

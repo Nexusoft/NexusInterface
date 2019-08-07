@@ -1,4 +1,4 @@
-import ga from 'scripts/googleanalytics';
+import ga from 'lib/googleAnalytics';
 import { UpdateSettings } from 'lib/settings';
 import * as TYPE from 'consts/actionTypes';
 

@@ -7,7 +7,7 @@ import styled from '@emotion/styled';
 import https from 'https';
 
 // Internal
-import googleanalytics from 'scripts/googleanalytics';
+import GA from 'lib/googleAnalytics';
 import { updateSettings } from 'actions/settings';
 import { updateTheme, resetColors } from 'actions/theme';
 import { switchSettingsTab } from 'actions/ui';
@@ -56,12 +56,7 @@ const mapDispatchToProps = dispatch => ({
   setOverviewDisplay: overviewDisplay =>
     dispatch(updateSettings({ overviewDisplay })),
   setAddressStyle: addressStyle => {
-    googleanalytics.SendEvent(
-      'Settings',
-      'Style',
-      'setAddressStyle',
-      addressStyle
-    );
+    GA.SendEvent('Settings', 'Style', 'setAddressStyle', addressStyle);
     dispatch(updateSettings({ addressStyle }));
   },
   updateTheme: updates => dispatch(updateTheme(updates)),

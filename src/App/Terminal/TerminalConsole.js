@@ -2,7 +2,7 @@
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import styled from '@emotion/styled';
-import googleanalytics from 'scripts/googleanalytics';
+import GA from 'lib/googleAnalytics';
 import memoize from 'memoize-one';
 
 // Internal Global Dependencies
@@ -205,7 +205,7 @@ class TerminalConsole extends Component {
 
     const [cmd, ...chunks] = consoleInput.split(' ');
     executeCommand(consoleInput);
-    googleanalytics.SendEvent('Terminal', 'Console', 'UseCommand', 1);
+    GA.SendEvent('Terminal', 'Console', 'UseCommand', 1);
     if (!commandList.some(c => c.value.includes(cmd))) {
       printCommandError(`\`${cmd}\` is not a valid command`);
       return;

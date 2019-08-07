@@ -2,12 +2,14 @@
 // Google Analytics
 ////////////////////////
 // Script that holds on to a visitor and is referenced when a visitor makes a action
-var GA = {};
+import ua from 'universal-analytics';
+import { LoadSettings } from 'lib/settings';
 
-let ua = require('universal-analytics');
+const settings = LoadSettings();
+const GA = {};
+
 GA.visitor = null;
 GA.active = false;
-let settings = require('lib/settings').LoadSettings();
 if (
   settings.sendUsageData == null ||
   settings.sendUsageData == undefined ||
@@ -57,7 +59,4 @@ GA.EnableAnalytics = function() {
   GA.active = true;
 };
 
-module.exports = GA;
-
-// When this code is started up for the first time try and run a event to get the visitor in the system.
-GA.SendScreen('Overview');
+export default GA;

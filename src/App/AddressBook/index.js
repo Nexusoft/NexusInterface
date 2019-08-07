@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { remote } from 'electron';
 import styled from '@emotion/styled';
-import googleanalytics from 'scripts/googleanalytics';
+import GA from 'lib/googleAnalytics';
 
 // Internal Global
 import Icon from 'components/Icon';
@@ -60,7 +60,7 @@ class AddressBook extends Component {
    */
   componentDidMount() {
     window.addEventListener('contextmenu', this.setupcontextmenu, false);
-    googleanalytics.SendScreen('AddressBook');
+    GA.SendScreen('AddressBook');
   }
 
   /**

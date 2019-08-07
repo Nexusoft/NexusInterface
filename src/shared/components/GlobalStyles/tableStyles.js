@@ -198,7 +198,7 @@ export default theme => css`
       border-left: 1px solid ${theme.background};
     }
 
-    .rt-tbody .rt-td:first-child {
+    .rt-tbody .rt-td:first-of-type {
       border-left: 0;
     }
 

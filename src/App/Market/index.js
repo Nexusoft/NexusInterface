@@ -6,7 +6,7 @@ import styled from '@emotion/styled';
 import Tooltip from 'components/Tooltip';
 import Button from 'components/Button';
 import syncingIcon from 'images/syncing.sprite.svg';
-import googleanalytics from 'scripts/googleanalytics';
+import GA from 'lib/googleAnalytics';
 import { showNotification } from 'actions/overlays';
 
 // Internal Global Dependencies
@@ -67,7 +67,7 @@ class Market extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
     this.refresher();
-    googleanalytics.SendScreen('Market');
+    GA.SendScreen('Market');
     window.addEventListener('contextmenu', this.setupcontextmenu, false);
   }
   // React Method (Life cycle hook)
