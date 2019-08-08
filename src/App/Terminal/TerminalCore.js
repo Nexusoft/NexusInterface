@@ -55,6 +55,7 @@ const Output = styled.div(
     display: 'flex',
     background: theme.background,
     borderBottom: `1px solid ${theme.mixer(0.125)}`,
+    padding: '.5em',
   }),
   ({ reverse }) => ({
     flexDirection: reverse ? 'column-reverse' : 'column',
