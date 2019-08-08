@@ -50,6 +50,10 @@ const resetStyles = theme => ({
     lineHeight: 1.15,
   },
 
+  img: {
+    maxWidth: '100%',
+  },
+
   p: {
     marginTop: '1em',
     marginBottom: '1em',
