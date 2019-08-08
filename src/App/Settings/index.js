@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Route, Redirect, Switch } from 'react-router';
 import { remote } from 'electron';
 import styled from '@emotion/styled';
-import googleanalytics from 'scripts/googleanalytics';
+import GA from 'lib/googleAnalytics';
 
 // Internal Global
 import ContextMenuBuilder from 'contextmenu';
@@ -74,7 +74,7 @@ export default class Settings extends Component {
    * @memberof Settings
    */
   componentDidMount() {
-    googleanalytics.SendScreen('Settings');
+    GA.SendScreen('Settings');
     window.addEventListener('contextmenu', this.setupcontextmenu, false);
   }
   /**

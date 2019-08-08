@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import googleanalytics from 'scripts/googleanalytics';
+import GA from 'lib/googleAnalytics';
 import styled from '@emotion/styled';
 
 import Icon from 'components/Icon';
@@ -144,7 +144,7 @@ class Transactions extends Component {
    * @memberof Transactions
    */
   componentDidMount() {
-    googleanalytics.SendScreen('Transactions');
+    GA.SendScreen('Transactions');
     const { coreConnected, filteredTransactions } = this.props;
     if (coreConnected && !filteredTransactions) {
       autoUpdateTransactions();
@@ -173,7 +173,7 @@ class Transactions extends Component {
    */
   saveCSV = () => {
     saveCSV(this.props.filteredTransactions);
-    googleanalytics.SendEvent('Transaction', 'Data', 'Download CSV', 1);
+    GA.SendEvent('Transaction', 'Data', 'Download CSV', 1);
   };
 
   // Mandatory React method

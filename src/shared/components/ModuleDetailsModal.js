@@ -231,12 +231,6 @@ export default ModuleDetailsModal;
  * Module Installer
  * =============================================================================
  */
-const InstallerWrapper = styled.div(({ theme }) => ({
-  textAlign: 'center',
-  padding: '20px 0',
-  margin: '0 50px',
-  borderTop: `2px solid ${theme.primary}`,
-}));
 
 const InstallerWarning = styled.div({
   fontSize: '.9em',
@@ -283,26 +277,24 @@ class Installer extends React.Component {
       : __('Install Module');
 
     return (
-      <Modal.Footer>
-        <InstallerWrapper>
-          {!module.invalid && !module.isFromNexus && (
-            <InstallerWarning>
-              {_(`Warning: This module is written by a third party, Nexus is NOT
+      <Modal.Footer separator style={{ textAlign: 'center' }}>
+        {!module.invalid && !module.isFromNexus && (
+          <InstallerWarning>
+            {_(`Warning: This module is written by a third party, Nexus is NOT
               responsible for its quality or legitimacy. Please make sure to do
               your due diligence before installing third party modules and use
               them with your own risk.`)}
-            </InstallerWarning>
-          )}
-          <Button
-            skin="primary"
-            wide
-            className="mt1"
-            disabled={installing || !!module.invalid}
-            onClick={this.install}
-          >
-            {btnLabel}
-          </Button>
-        </InstallerWrapper>
+          </InstallerWarning>
+        )}
+        <Button
+          skin="primary"
+          wide
+          className="mt1"
+          disabled={installing || !!module.invalid}
+          onClick={this.install}
+        >
+          {btnLabel}
+        </Button>
       </Modal.Footer>
     );
   }

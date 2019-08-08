@@ -70,6 +70,7 @@ const resetStyles = theme => ({
 
   code: {
     fontFamily: consts.monoFontFamily,
+    padding: '0.1666em 0.3333em',
   },
 
   'input, textarea': {

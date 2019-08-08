@@ -26,39 +26,6 @@ export default merge.smart(baseConfig, {
   module: {
     rules: [
       babelLoaderRenderer(),
-      // Extract all .global.css to style.css as is
-      {
-        test: /\.global\.css$/,
-        use: [
-          {
-            loader: MiniCssExtractPlugin.loader,
-            options: {
-              publicPath: './',
-            },
-          },
-          {
-            loader: 'css-loader',
-            options: {
-              sourceMap: false,
-            },
-          },
-        ],
-      },
-      // Pipe other styles through css modules and append to style.css
-      {
-        test: /^((?!\.global).)*\.css$/,
-        use: [
-          {
-            loader: MiniCssExtractPlugin.loader,
-          },
-          {
-            loader: 'css-loader',
-            options: {
-              sourceMap: false,
-            },
-          },
-        ],
-      },
       {
         test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
         use: {
@@ -94,10 +61,6 @@ export default merge.smart(baseConfig, {
   },
 
   plugins: [
-    new MiniCssExtractPlugin({
-      filename: 'style.css',
-    }),
-
     new BundleAnalyzerPlugin({
       analyzerMode:
         process.env.OPEN_ANALYZER === 'true' ? 'server' : 'disabled',

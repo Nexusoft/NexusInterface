@@ -1,4 +1,4 @@
-# 1.1.1 (2019.7.XX)
+# 1.2.0 (2019.7.XX)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v1.1.1)
 
@@ -12,19 +12,35 @@
   - Finnish
 - Added Ability to use IP Whitelist for mining
 - Added Ability to turn off Avatar mode
+- New onboarding screens on the first time the wallet runs, it will prompt you to select language and accept Terms and Conditions before starting
+- Added a "Send all" option in Send NXS page
+- If you try to send NXS while you're not logged in or logged in for staking only, it will now ask you for password to send instead of having you to manually log out and log in again
 
 #### Adjustments
 
-- Stake Rate now rounded to 6 significant digits
+- Transactions page layout is cleaner, transactions chart is put into a modal
+- Transactions page performance is vastly improved
+- Transactions table: Number column is removed; Time column format is slightly shortened; pending, orphan, and immature transactions are faded; pending transactions now show the number of confirmations they have
 - Removed Trust on the category dropdown
-- Staking status icon now indicates clearly whether wallet is staking
 - New system for changing core settings and alerting a needed core restart
+- Percentage based stats (Stake Rate, Trust Weight,...) now limited to 2 decimal digits
+- Staking status icon now indicates clearly whether wallet is staking and shows less stat numbers for simplicity
+- Revamped internal translation system to enable faster development speed and higher translation coverage
+- Numbers are now also formatted depending on the selected language, e.g. if you select French for wallet interface, 1.02 will be displayed as 1,02
+- More user-friendly "Last updated" tooltip for Block count stat on Overview page
+- "Stake" stat is now more precisely called "Immature balance"
+- Login timout settings is now disabled if "staking only" option is checked
+- Download transactions history CSV no longer includes historical fiat & BTC values
 
 #### Fixes
 
 - Stake and Trust transactions now properly show on the transaction page
+- Eliminated double scrolls in Transactions page
 - Orphans no longer show as `(Pending)`
 - Fixed a issue where the manual mode settings were not being save as the button had been removed
+- Fixed error message being unclear in some cases
+- Fixed Encryption warning modal showing up on closing
+- Fixed bootstrap suggestion modal popping up twice in some cases
 
 # 1.1.0 (2019.7.19)
 

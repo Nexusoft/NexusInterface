@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from '@emotion/styled';
-import googleanalytics from 'scripts/googleanalytics';
+import GA from 'lib/googleAnalytics';
 
 // Internal Global
 import { searchContact } from 'actions/addressBook';
@@ -84,7 +84,7 @@ class PanelControls extends Component {
    * @memberof PanelControls
    */
   exportAddressBook = () => {
-    googleanalytics.SendEvent('AddressBook', 'IOAddress', 'Export', 1);
+    GA.SendEvent('AddressBook', 'IOAddress', 'Export', 1);
 
     const rows = []; //Set up a blank array for each row
     let csvContent = 'data:text/csv;charset=utf-8,'; //Set formating

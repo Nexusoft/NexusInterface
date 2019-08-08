@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { remote } from 'electron';
 
 // Internal Global Dependencies
-import googleanalytics from 'scripts/googleanalytics';
+import GA from 'lib/googleAnalytics';
 import ContextMenuBuilder from 'contextmenu';
 import Icon from 'components/Icon';
 import Panel from 'components/Panel';
@@ -46,7 +46,7 @@ class Send extends Component {
    */
   componentDidMount() {
     window.addEventListener('contextmenu', this.setupcontextmenu, false);
-    googleanalytics.SendScreen('Send');
+    GA.SendScreen('Send');
   }
 
   /**
