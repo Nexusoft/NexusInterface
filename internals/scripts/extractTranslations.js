@@ -5,7 +5,21 @@ import { extractFromFiles } from 'i18n-extract';
 
 const transDir = path.join(__dirname, '../../assets/translations');
 
-const locales = ['de', 'es', 'fr', 'ja', 'ko', 'nl', 'pl', 'pt', 'ru'];
+const locales = [
+  'ar',
+  'de',
+  'es',
+  'fi',
+  'fr',
+  'ja',
+  'hu',
+  'ko',
+  'nl',
+  'pl',
+  'pt',
+  'ru',
+  'zh-cn',
+];
 const oldTrans = {};
 locales.forEach(locale => {
   oldTrans[locale] = JSON.parse(

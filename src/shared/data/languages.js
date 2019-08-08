@@ -10,6 +10,7 @@ import PortugueseFlag from './flags/pt.png';
 import ChineseSimpleFlag from './flags/cn.png';
 import FinnishFlag from './flags/fi.png';
 import ArabicFlag from './flags/arabic.png';
+import HungarianFlag from './flags/hu.png';
 import USUKFlag from './flags/US-UK.png';
 
 /**
@@ -48,15 +49,21 @@ const languages = [
     name: 'Français',
   },
   {
-    code: 'ko',
-    flag: KoreaFlag,
-    name: '한국어',
+    code: 'hu',
+    flag: HungarianFlag,
+    name: 'Magyar Nyelv',
   },
   {
     code: 'ja',
     flag: JapanFlag,
     name: '日本語',
   },
+  {
+    code: 'ko',
+    flag: KoreaFlag,
+    name: '한국어',
+  },
+
   {
     code: 'nl',
     flag: NetherlandsFlag,

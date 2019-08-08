@@ -1,4 +1,4 @@
-# 1.2.0 (2019.7.XX)
+# 1.2.0 (2019.8.XX)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v1.1.1)
 
@@ -10,6 +10,7 @@
   - Arabic
   - Simplified Chinese
   - Finnish
+  - Hungarian
 - Added Ability to use IP Whitelist for mining
 - Added Ability to turn off Avatar mode
 - New onboarding screens on the first time the wallet runs, it will prompt you to select language and accept Terms and Conditions before starting
