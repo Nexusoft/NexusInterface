@@ -29,6 +29,7 @@
     "run-tests": "./node_modules/mocha/bin/mocha tests/test.js",
     "version2": "node ./internals/scripts/UpdateBuildDate.js",
     "trans-extract": "node -r @babel/register ./internals/scripts/extractTranslations.js",
+    "trans-update": "node -r @babel/register ./internals/scripts/UpdateLanguageFiles.js",
     "update-documentation": "./UpdateDocumentation.sh"
   },
   "main": "./build/main.prod.js",
