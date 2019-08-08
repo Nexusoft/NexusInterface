@@ -70,3 +70,18 @@ fs.writeFileSync(
   JSON.stringify(enDic, null, 2)
 );
 console.log(chalk.yellow.bold('Finished Crowdin file'));
+
+var result = Object.keys(enDic).map(function(key) {
+  return [key, enDic[key]];
+});
+
+var lineArray = [];
+result.forEach(function(infoArray, index) {
+  //console.log(infoArray);
+  //var line = infoArray.join(',');
+  var line = '"' + infoArray[0] + '","' + infoArray[1] + '"';
+  lineArray.push(line);
+});
+console.log(lineArray);
+var csvContent = lineArray.join('\n');
+fs.writeFileSync(path.join(transDir, 'en.csv'), csvContent);
