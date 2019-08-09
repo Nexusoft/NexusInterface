@@ -115,8 +115,11 @@ export async function startBootstrap({ dispatch, getState }) {
       rimraf.sync(extractDest, {}, () => console.log('done'));
       cleanUp();
     }
-    setStatus('downloading', {});
+
+    setStatus('stopping_core');
     await dispatch(stopCore());
+
+    setStatus('downloading', {});
     const downloadProgress = throttled(
       details => setStatus('downloading', details),
       1000
@@ -124,16 +127,13 @@ export async function startBootstrap({ dispatch, getState }) {
     await downloadDb(recentDbUrl, downloadProgress);
     if (aborting) {
       bootstrapEvents.emit('abort');
-      await dispatch(startCore());
       return false;
     }
 
     setStatus('extracting');
-    console.log('Extracting Database');
     await extractDb();
     if (aborting) {
       bootstrapEvents.emit('abort');
-      await dispatch(startCore());
       return false;
     }
 
@@ -141,10 +141,9 @@ export async function startBootstrap({ dispatch, getState }) {
     await moveExtractedContent();
     if (aborting) {
       bootstrapEvents.emit('abort');
-      await dispatch(startCore());
       return false;
     }
-    setStatus('stopping_core');
+
     await dispatch(stopCore());
     setStatus('restarting_core');
     await dispatch(startCore());
@@ -162,7 +161,15 @@ export async function startBootstrap({ dispatch, getState }) {
     const lastStep = getState().bootstrap.step;
     aborting = false;
     setStatus('idle');
-    if (['stopping_core', 'moving_db', 'restarting_core'].includes(lastStep)) {
+    if (
+      [
+        'stopping_core',
+        'downloading',
+        'extracting',
+        'moving_db',
+        'restarting_core',
+      ].includes(lastStep)
+    ) {
       await dispatch(startCore());
     }
   }
