@@ -1,7 +1,7 @@
 {
   "name": "nexus_wallet",
   "productName": "Nexus Wallet",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "moduleSpecVersion": "0.2.0",
   "supportedModuleSpecVersion": "0.1.0",
   "buildDate": "July 19th 2019",
@@ -109,7 +109,8 @@
     "linux": {
       "target": [
         "deb",
-        "AppImage"
+        "AppImage",
+        "snap"
       ],
       "category": "P2P",
       "extraResources": [
@@ -120,6 +121,9 @@
       "artifactName": "nexus_wallet-Linux-${version}.${ext}"
     },
     "appImage": {
+      "artifactName": "nexus_wallet-Linux-${version}.${ext}"
+    },
+    "snap": {
       "artifactName": "nexus_wallet-Linux-${version}.${ext}"
     },
     "directories": {
