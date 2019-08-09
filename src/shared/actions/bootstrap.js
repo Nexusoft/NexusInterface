@@ -1,8 +1,9 @@
 import * as TYPE from 'consts/actionTypes';
-import { openConfirmDialog, openModal } from 'actions/overlays';
+import { openConfirmDialog, openModal, openErrorDialog } from 'actions/overlays';
 import { updateSettings } from 'actions/settings';
 import { startBootstrap, checkFreeSpaceForBootstrap } from 'lib/bootstrap';
 import BootstrapModal from 'components/BootstrapModal';
+import store from 'store'; 
 
 export const setBootstrapStatus = (step, details) => ({
   type: TYPE.BOOTSTRAP_STATUS,
