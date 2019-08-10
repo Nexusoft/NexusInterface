@@ -1,4 +1,4 @@
-# 1.2.0 (2019.8.XX)
+# 1.2.0 (2019.8.09)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v1.1.1)
 
