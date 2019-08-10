@@ -473,7 +473,7 @@ class SettingsCore extends Component {
                 )}
               >
                 <Switch
-                  checked={settings.avatarLevel}
+                  checked={settings.avatarLevel != undefined ? settings.avatarLevel : true }
                   onChange={this.updateHandlers('avatarMode')}
                 />
               </SettingsField>
