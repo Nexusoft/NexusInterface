@@ -241,7 +241,7 @@ class Transactions extends Component {
               columns={tableColumns}
               defaultPageSize={10}
               defaultSortingColumnIndex={0}
-              getTrProps={(state, { original: tx }) => ({
+              getTrProps={(state,  row) => {if (row) {return ({ original: tx }) => ({
                 onClick: () => {
                   openModal(TransactionDetailsModal, {
                     txid: tx.txid,
@@ -256,7 +256,7 @@ class Transactions extends Component {
                       ? 0.5
                       : 1,
                 },
-              })}
+              })} else {return () => ({...props});}}}
             />
           </TransactionsLayout>
         )}
