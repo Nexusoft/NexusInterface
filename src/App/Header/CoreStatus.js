@@ -3,7 +3,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 // Internal
-import Text from 'components/Text';
 import { isCoreConnected } from 'selectors';
 
 /**
@@ -30,14 +29,11 @@ class CoreStatus extends React.Component {
       !coreConnected && (
         <span className="dim">
           {manualDaemon ? (
-            <Text id="Alert.ManualDaemonDown" />
+            __('Manual Core is disconnected')
           ) : autoConnect ? (
-            <>
-              <Text id="Alert.DaemonLoadingWait" />
-              ...
-            </>
+            <>{__('Connecting to Nexus Core...')}</>
           ) : (
-            'Nexus Core is stopped'
+            __('Nexus Core is stopped')
           )}
         </span>
       )

@@ -5,7 +5,6 @@ import styled from '@emotion/styled';
 import { keyframes } from '@emotion/core';
 
 // Internal Global Depnedencies
-import Text from 'components/Text';
 import HorizontalLine from 'components/HorizontalLine';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
@@ -107,42 +106,32 @@ const Navigation = () => (
 
     <NavBar>
       <NavItem icon={logoIcon} exact to="/">
-        <Text id="Footer.Overview" />
+        {__('Overview')}
       </NavItem>
 
       <NavItem icon={sendIcon} to="/Send">
-        <Text id="Footer.SendNXS" />
+        {__('Send NXS')}
       </NavItem>
 
       <NavItem icon={transactionsIcon} to="/Transactions">
-        <Text id="Footer.Transactions" />
+        {__('Transactions')}
       </NavItem>
 
       <NavItem icon={chartIcon} to="/Market">
-        <Text id="Footer.MarketData" />
+        {__('Market Data')}
       </NavItem>
 
       <NavItem icon={addressBookIcon} to="/AddressBook">
-        <Text id="Footer.AddressBook" />
+        {__('Address Book')}
       </NavItem>
 
       <NavItem icon={settingsIcon} to="/Settings">
-        <Text id="Footer.Settings" />
+        {__('Settings')}
       </NavItem>
 
       <NavItem icon={consoleIcon} to="/Terminal">
-        <Text id="Footer.Console" />
+        {__('Console')}
       </NavItem>
-      {/* 
-      <NavItem icon={shapeshiftIcon} to="/Exchange">
-        <Text id="Footer.Exchange" />
-      </NavItem> */}
-
-      {/* <NavItem icon={trustListIcon} to="/List">
-        <Text id="Footer.Trust" />
-        &nbsp;
-        <Text id="Footer.List" />
-      </NavItem> */}
 
       <ModuleNavItems />
     </NavBar>

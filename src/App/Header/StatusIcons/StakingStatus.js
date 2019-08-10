@@ -3,12 +3,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 // Internal Dependencies
-import Text from 'components/Text';
 import Tooltip from 'components/Tooltip';
-import StatusIcon from 'components/StatusIcon';
-import { limitDecimal } from 'utils/etc';
-
+import { formatNumber } from 'lib/intl';
+import { isStaking } from 'selectors';
 import stakingIcon from 'images/staking.sprite.svg';
+
+import StatusIcon from './StatusIcon';
 
 /**
  * Handles the Staking Status
@@ -16,19 +16,22 @@ import stakingIcon from 'images/staking.sprite.svg';
  * @class StakingStatus
  * @extends {React.Component}
  */
-@connect(
-  ({
+@connect(state => {
+  const {
     core: {
-      info: { stakeweight, stakerate, trustweight, blockweight },
+      info: { stakerate, genesismature, synccomplete },
     },
-  }) => ({
-    stakeweight,
+  } = state;
+  return {
+    staking: isStaking(state),
     stakerate,
-    trustweight,
-    blockweight,
-  })
-)
+    genesismature,
+    synccomplete,
+  };
+})
 class StakingStatus extends React.Component {
+  renderTooltip = () => {};
+
   /**
    * Component's Renderable JSX
    *
@@ -36,27 +39,42 @@ class StakingStatus extends React.Component {
    * @memberof StakingStatus
    */
   render() {
-    const { stakeweight, stakerate, trustweight, blockweight } = this.props;
+    const { staking, stakerate, genesismature, synccomplete } = this.props;
 
     return (
       <Tooltip.Trigger
         tooltip={
-          <div>
-            <div>
-              <Text id="Header.StakeWeight" />: {limitDecimal(stakeweight, 2)}%
-            </div>
-            <div>Stake Rate: {limitDecimal(stakerate, 2)}%</div>
-            <div>
-              <Text id="Header.TrustWeight" />: {limitDecimal(trustweight, 2)}%
-            </div>
-            <div>
-              <Text id="Header.BlockWeight" />: {limitDecimal(blockweight, 2)}%
-            </div>
-          </div>
+          staking ? (
+            genesismature ? (
+              synccomplete === 100 ? (
+                <>
+                  <div>
+                    <strong>{__('Wallet is staking')}</strong>
+                    <div>
+                      {__('Stake Rate')}: {formatNumber(stakerate, 2)}%
+                    </div>
+                  </div>
+                </>
+              ) : (
+                __('Waiting for 100% synchronization to start staking...')
+              )
+            ) : (
+              __(
+                'Waiting for average age of balance to exceed 72 hours to start staking...'
+              )
+            )
+          ) : (
+            __('Wallet is not staking')
+          )
         }
-        style={{ textAlign: 'left' }}
+        style={{ maxWidth: 200 }}
       >
-        <StatusIcon icon={stakingIcon} />
+        <StatusIcon
+          icon={stakingIcon}
+          style={{
+            opacity: staking && genesismature && synccomplete === 100 ? 1 : 0.7,
+          }}
+        />
       </Tooltip.Trigger>
     );
   }

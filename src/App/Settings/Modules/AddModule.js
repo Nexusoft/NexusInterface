@@ -67,7 +67,7 @@ class AddModule extends React.Component {
   browseFiles = () => {
     remote.dialog.showOpenDialog(
       {
-        title: 'Select module archive file',
+        title: __('Select module archive file'),
         properties: ['openFile'],
         filters: [
           {
@@ -92,7 +92,7 @@ class AddModule extends React.Component {
   browseDirectories = () => {
     remote.dialog.showOpenDialog(
       {
-        title: 'Select module directory',
+        title: __('Select module directory'),
         properties: ['openDirectory'],
       },
       paths => {
@@ -151,6 +151,7 @@ class AddModule extends React.Component {
    */
   render() {
     const { checking } = this.state;
+
     return (
       <Dropzone
         getFilesFromEvent={this.getFilesFromEvent}
@@ -165,29 +166,40 @@ class AddModule extends React.Component {
             legend={
               <>
                 <Icon icon={plusCircleIcon} />
-                <span className="v-align space-left">Add Module</span>
+                <span className="v-align space-left">{__('Add Module')}</span>
               </>
             }
             active={isDragActive || checking}
           >
             <InnerMessage noPointerEvents={isDragActive || checking}>
               {checking ? (
-                <div>Checking module...</div>
+                <div>{__('Checking module')}...</div>
               ) : isDragActive ? (
-                <div>Drop here to install</div>
+                <div>{__('Drop here to install')}</div>
               ) : (
                 <div>
                   <div>
-                    Select module{' '}
-                    <Button skin="hyperlink" onClick={this.browseFiles}>
-                      archive file
-                    </Button>{' '}
-                    or{' '}
-                    <Button skin="hyperlink" onClick={this.browseDirectories}>
-                      directory
-                    </Button>
+                    {__(
+                      "Select module's <file>archive file</file> or <dir>directory</dir>",
+                      undefined,
+                      {
+                        file: txt => (
+                          <Button skin="hyperlink" onClick={this.browseFiles}>
+                            {txt}
+                          </Button>
+                        ),
+                        dir: txt => (
+                          <Button
+                            skin="hyperlink"
+                            onClick={this.browseDirectories}
+                          >
+                            {txt}
+                          </Button>
+                        ),
+                      }
+                    )}
                   </div>
-                  <div>or drag and drop it here</div>
+                  <div>{__('or drag and drop it here')}</div>
                 </div>
               )}
             </InnerMessage>

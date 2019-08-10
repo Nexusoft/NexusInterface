@@ -1,18 +1,18 @@
 // External Dependencies
 import React, { Component } from 'react';
-import { reduxForm, Field } from 'redux-form';
+import { reduxForm, Field, formValueSelector } from 'redux-form';
 import styled from '@emotion/styled';
 import { connect } from 'react-redux';
 
 // Internal Dependencies
-import { getInfo } from 'actions/core';
+import { autoFetchCoreInfo } from 'lib/coreInfo';
 import rpc from 'lib/rpc';
-import Text from 'components/Text';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
 import Switch from 'components/Switch';
+import { rpcErrorHandler } from 'utils/form';
 import { showNotification, openErrorDialog } from 'actions/overlays';
 
 const LoginFieldSet = styled(FieldSet)({
@@ -37,6 +37,7 @@ const Buttons = styled.div({
     tritium:
       state.core.info.version.includes('0.3') ||
       parseFloat(state.core.info.version) >= 3,
+    stakingOnly: formValueSelector('login')(state, 'stakingOnly'),
   }),
   { showNotification, openErrorDialog }
 )
@@ -55,10 +56,10 @@ const Buttons = styled.div({
 
     if (!props.tritium || setLoginTimeOut) {
       if (!date) {
-        errors.date = <Text id="Settings.Errors.LoginDate" />;
+        errors.date = __('Date is required');
       }
       if (!time) {
-        errors.time = <Text id="Settings.Errors.LoginTime" />;
+        errors.time = __('Time is required');
       }
       if (date && time) {
         let unlockUntil = 0;
@@ -70,20 +71,20 @@ const Buttons = styled.div({
         unlockUntil = Math.round((unlockDate.getTime() - now.getTime()) / 1000);
 
         if (unlockUntil < 3600) {
-          errors.time = <Text id="Settings.Errors.LoginTimeTooClose" />;
+          errors.time = __('Time must be at least one hour in the future');
         }
       }
     }
 
     if (!password) {
-      errors.password = <Text id="Settings.Errors.LoginPassword" />;
+      errors.password = __('Password is required');
     }
     return errors;
   },
   onSubmit: ({ date, time, password, stakingOnly }) => {
     let unlockUntil = 0;
 
-    if (date && time) {
+    if (date && time && !stakingOnly) {
       const now = new Date();
       let unlockDate = new Date(date);
       unlockDate = new Date(unlockDate.setMinutes(now.getTimezoneOffset()));
@@ -96,25 +97,10 @@ const Buttons = styled.div({
   },
   onSubmitSuccess: async (result, dispatch, props) => {
     props.reset();
-    props.showNotification(<Text id="Settings.LoggedIn" />, 'success');
-    dispatch(getInfo());
+    props.showNotification(__('Logged in successfully'), 'success');
+    autoFetchCoreInfo();
   },
-  onSubmitFail: (errors, dispatch, submitError, props) => {
-    if (!errors || !Object.keys(errors).length) {
-      let note = submitError || <Text id="Common.UnknownError" />;
-      if (
-        submitError === 'Error: The wallet passphrase entered was incorrect.'
-      ) {
-        note = <Text id="Alert.IncorrectPasssword" />;
-      } else if (submitError === 'value is type null, expected int') {
-        note = <Text id="Alert.FutureDate" />;
-      }
-      props.openErrorDialog({
-        message: <Text id="Settings.Errors.LoggingIn" />,
-        note: note,
-      });
-    }
-  },
+  onSubmitFail: rpcErrorHandler(__('Error logging in')),
 })
 class Login extends Component {
   /**
@@ -126,7 +112,7 @@ class Login extends Component {
   renderTimeInputs = ({ input }) =>
     !this.props.tritium || input.value ? (
       <div>
-        <FormField connectLabel label={<Text id="Settings.LoginDate" />}>
+        <FormField connectLabel label={__('Login until date')}>
           <Field
             component={TextField.RF}
             name="date"
@@ -134,7 +120,7 @@ class Login extends Component {
             min={new Date().toISOString().slice(0, 10)}
           />
         </FormField>
-        <FormField connectLabel label={<Text id="Settings.LoginTime" />}>
+        <FormField connectLabel label={__('Login until time')}>
           <Field component={TextField.RF} name="time" type="time" />
         </FormField>
       </div>
@@ -147,37 +133,43 @@ class Login extends Component {
    * @memberof Login
    */
   render() {
-    const { handleSubmit, submitting, tritium } = this.props;
+    const { handleSubmit, submitting, tritium, stakingOnly } = this.props;
 
     return (
       <div>
         <form onSubmit={handleSubmit}>
           <LoginFieldSet legend="Login">
-            <Text id="Settings.PasswordPlaceholder">
-              {text => (
-                <FormField connectLabel label={<Text id="Settings.Password" />}>
-                  <Field
-                    component={TextField.RF}
-                    name="password"
-                    type="password"
-                    placeholder={text}
-                  />
-                </FormField>
-              )}
-            </Text>
+            <FormField connectLabel label={__('Password')}>
+              <Field
+                component={TextField.RF}
+                name="password"
+                type="password"
+                placeholder={__('Your wallet password')}
+              />
+            </FormField>
             <FormField
               inline
               connectLabel
-              label={<Text id="Settings.StakingOnly" />}
+              label={__('Login for staking & mining only')}
             >
               <Field component={Switch.RF} name="stakingOnly" />
             </FormField>
             {tritium && (
-              <FormField inline connectLabel label={'SET TIMEOUT FOR LOGIN'}>
-                <Field component={Switch.RF} name="setLoginTimeOut" />
+              <FormField
+                inline
+                connectLabel
+                label={__('Set timeout for login')}
+              >
+                <Field
+                  component={Switch.RF}
+                  name="setLoginTimeOut"
+                  disabled={!!stakingOnly}
+                />
               </FormField>
             )}
-            <Field name="setLoginTimeOut" component={this.renderTimeInputs} />
+            {!stakingOnly && (
+              <Field name="setLoginTimeOut" component={this.renderTimeInputs} />
+            )}
 
             <Buttons>
               <Button type="submit" skin="primary" disabled={submitting}>

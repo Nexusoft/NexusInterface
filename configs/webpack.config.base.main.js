@@ -7,11 +7,16 @@ import webpack from 'webpack';
 import merge from 'webpack-merge';
 
 import baseConfig from './webpack.config.base';
+import { babelLoaderMain } from './babelLoaderConfig';
 
 export default merge.smart(baseConfig, {
   target: 'electron-main',
 
   entry: './src/main/main.js',
+
+  module: {
+    rules: [babelLoaderMain()],
+  },
 
   // 'main.js' in root
   output: {

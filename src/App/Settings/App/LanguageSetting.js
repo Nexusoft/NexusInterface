@@ -4,8 +4,7 @@ import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
 // Internal
-import Text from 'components/Text';
-import * as FlagFile from 'images/LanguageFlags';
+import languages from 'data/languages';
 import { updateSettings } from 'actions/settings';
 import SettingsField from 'components/SettingsField';
 import Select from 'components/Select';
@@ -15,98 +14,15 @@ const Flag = styled.img({
   verticalAlign: 'middle',
 });
 
-const languages = [
-  {
-    value: 'en',
-    display: (
-      <span>
-        <Flag src={FlagFile.USAUK} />
-        <span className="v-align">English</span>
-      </span>
-    ),
-  },
-  {
-    value: 'de',
-    display: (
-      <span>
-        <Flag src={FlagFile.Germany} />
-        <span className="v-align">Deutsch</span>
-      </span>
-    ),
-  },
-  {
-    value: 'es',
-    display: (
-      <span>
-        <Flag src={FlagFile.Spain} />
-        <span className="v-align">Español</span>
-      </span>
-    ),
-  },
-  {
-    value: 'fr',
-    display: (
-      <span>
-        <Flag src={FlagFile.France} />
-        <span className="v-align">Français</span>
-      </span>
-    ),
-  },
-  {
-    value: 'ko',
-    display: (
-      <span>
-        <Flag src={FlagFile.Korea} />
-        <span className="v-align">한국어</span>
-      </span>
-    ),
-  },
-  {
-    value: 'ja',
-    display: (
-      <span>
-        <Flag src={FlagFile.Japan} />
-        <span className="v-align">日本語</span>
-      </span>
-    ),
-  },
-  {
-    value: 'nl',
-    display: (
-      <span>
-        <Flag src={FlagFile.Netherlands} />
-        <span className="v-align">Nederlands</span>
-      </span>
-    ),
-  },
-  {
-    value: 'pl',
-    display: (
-      <span>
-        <Flag src={FlagFile.Polish} />
-        <span className="v-align">Polski</span>
-      </span>
-    ),
-  },
-  {
-    value: 'pt',
-    display: (
-      <span>
-        <Flag src={FlagFile.Portuguese} />
-        <span className="v-align">Portuguese</span>
-      </span>
-    ),
-  },
-  {
-    value: 'ru',
-    display: (
-      <span>
-        <Flag src={FlagFile.Russia} />
-        <span className="v-align">Pусский</span>
-      </span>
-    ),
-  },
-];
+const languageOptions = languages.map(lang => ({
+  value: lang.code,
+  display: (
+    <span>
+      <Flag src={lang.flag} />
+      <span className="v-align">{lang.name}</span>
+    </span>
+  ),
+}));
 
 const mapStateToProps = state => ({
   locale: state.settings.locale,
@@ -132,7 +48,10 @@ class LanguageSetting extends Component {
    *
    * @memberof LanguageSetting
    */
-  handleChange = locale => this.props.updateSettings({ locale });
+  handleChange = locale => {
+    this.props.updateSettings({ locale });
+    location.reload();
+  };
 
   /**
    * Component's Renderable JSX
@@ -142,9 +61,9 @@ class LanguageSetting extends Component {
    */
   render() {
     return (
-      <SettingsField label={<Text id="Settings.Language" />}>
+      <SettingsField label={__('Language')}>
         <Select
-          options={languages}
+          options={languageOptions}
           value={this.props.locale}
           onChange={this.handleChange}
         />

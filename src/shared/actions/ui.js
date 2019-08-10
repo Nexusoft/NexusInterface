@@ -1,6 +1,43 @@
 import * as TYPE from 'consts/actionTypes';
 
 /**
+ * General
+ * ===========================
+ */
+export const closeWallet = () => ({
+  type: TYPE.CLOSE_WALLET,
+});
+
+/**
+ * Transactions
+ * ===========================
+ */
+export const setTxsAccountFilter = account => ({
+  type: TYPE.SET_TXS_ACCOUNT_FILTER,
+  payload: account,
+});
+
+export const setTxsAddressQuery = query => ({
+  type: TYPE.SET_TXS_ADDRESS_QUERY,
+  payload: query,
+});
+
+export const setTxsCategoryFilter = category => ({
+  type: TYPE.SET_TXS_CATEGORY_FILTER,
+  payload: category,
+});
+
+export const setTxsMinAmountFilter = minAmount => ({
+  type: TYPE.SET_TXS_MIN_AMOUNT_FILTER,
+  payload: minAmount,
+});
+
+export const setTxsTimeFilter = timeSpan => ({
+  type: TYPE.SET_TXS_TIME_FILTER,
+  payload: timeSpan,
+});
+
+/**
  * Address Book
  * ===========================
  */

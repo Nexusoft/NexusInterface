@@ -22,7 +22,7 @@ const defaultPassword = crypto
 
 export const defaultSettings = {
   // App
-  locale: 'en',
+  locale: null,
   minimizeOnClose: false,
   autoUpdate: true,
   sendUsageData: true,
@@ -39,6 +39,8 @@ export const defaultSettings = {
   enableMining: false,
   enableStaking: true,
   verboseLevel: 0,
+  avatarMode: true,
+  ipMineWhitelist: '',
   manualDaemon: false,
   manualDaemonUser: 'rpcserver',
   manualDaemonPassword: defaultPassword,
@@ -59,12 +61,14 @@ export const defaultSettings = {
   encryptionWarningDisabled: false,
   bootstrapSuggestionDisabled: false,
   showTransactionChart: true,
-  windowWidth: 1020,
-  windowHeight: 700,
+  windowWidth: 1200,
+  windowHeight: 800,
   windowX: undefined,
   windowY: undefined,
   forkBlocks: 0,
 };
+
+export let tempSettings = null;
 
 function readSettings() {
   return readJson(settingsFilePath);
@@ -93,5 +97,17 @@ export function LoadSettings() {
 
 export function UpdateSettings(updates) {
   const settings = readSettings();
+  if (tempSettings) {
+    tempSettings = null;
+  }
   return writeSettings({ ...settings, ...updates });
+}
+
+export function UpdateTempSettings(updates) {
+  if (tempSettings) {
+    tempSettings = { ...tempSettings, ...updates };
+  } else {
+    const settings = readSettings();
+    tempSettings = { ...settings, ...updates };
+  }
 }

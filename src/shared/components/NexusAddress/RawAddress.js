@@ -6,7 +6,6 @@ import styled from '@emotion/styled';
 
 // Internal
 import TextField from 'components/TextField';
-import Text from 'components/Text';
 import Tooltip from 'components/Tooltip';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
@@ -59,7 +58,10 @@ export default class RawAddress extends React.Component {
   copyAddress = () => {
     clipboard.writeText(this.props.address);
     this.inputRef.current.select();
-    this.props.showNotification(<Text id="Alert.AddressCopied" />, 'success');
+    this.props.showNotification(
+      __('Address has been copied to clipboard'),
+      'success'
+    );
   };
 
   /**
@@ -79,7 +81,7 @@ export default class RawAddress extends React.Component {
           value={address}
           inputRef={this.inputRef}
           right={
-            <Tooltip.Trigger tooltip="Copy to clipboard">
+            <Tooltip.Trigger tooltip={__('Copy to clipboard')}>
               <CopyButton
                 skin="filled-inverted"
                 fitHeight

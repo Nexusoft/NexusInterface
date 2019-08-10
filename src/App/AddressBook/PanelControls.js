@@ -1,9 +1,8 @@
 // External
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import Text from 'components/Text';
 import styled from '@emotion/styled';
-import googleanalytics from 'scripts/googleanalytics';
+import GA from 'lib/googleAnalytics';
 
 // Internal Global
 import { searchContact } from 'actions/addressBook';
@@ -13,6 +12,7 @@ import TextField from 'components/TextField';
 import Tooltip from 'components/Tooltip';
 import MyAddressesModal from 'components/MyAddressesModal';
 import { openModal } from 'actions/overlays';
+import { isCoreConnected } from 'selectors';
 import AddEditContactModal from 'components/AddEditContactModal';
 
 // Icons
@@ -54,16 +54,12 @@ class SearchBox extends Component {
    */
   render() {
     return (
-      <Text id="AddressBook.SearchContact">
-        {sc => (
-          <SearchInput
-            left={<Icon icon={searchIcon} className="space-right" />}
-            placeholder={sc}
-            value={this.props.searchQuery}
-            onChange={e => this.props.searchContact(e.target.value)}
-          />
-        )}
-      </Text>
+      <SearchInput
+        left={<Icon icon={searchIcon} className="space-right" />}
+        placeholder={__('Search contact')}
+        value={this.props.searchQuery}
+        onChange={e => this.props.searchContact(e.target.value)}
+      />
     );
   }
 }
@@ -77,7 +73,7 @@ class SearchBox extends Component {
 @connect(
   state => ({
     addressBook: state.addressBook,
-    connections: state.core.info.connections,
+    coreConnected: isCoreConnected(state),
   }),
   { openModal }
 )
@@ -88,7 +84,7 @@ class PanelControls extends Component {
    * @memberof PanelControls
    */
   exportAddressBook = () => {
-    googleanalytics.SendEvent('AddressBook', 'IOAddress', 'Export', 1);
+    GA.SendEvent('AddressBook', 'IOAddress', 'Export', 1);
 
     const rows = []; //Set up a blank array for each row
     let csvContent = 'data:text/csv;charset=utf-8,'; //Set formating
@@ -165,8 +161,8 @@ class PanelControls extends Component {
   render() {
     return (
       <div className="flex center">
-        {this.props.connections !== undefined && (
-          <Tooltip.Trigger tooltip={<Text id="AddressBook.MyAddresses" />}>
+        {this.props.coreConnected && (
+          <Tooltip.Trigger tooltip={__('My Addresses')}>
             <Button
               skin="plain"
               className="relative"
@@ -177,8 +173,8 @@ class PanelControls extends Component {
           </Tooltip.Trigger>
         )}
 
-        {this.props.connections !== undefined && (
-          <Tooltip.Trigger tooltip={<Text id="AddressBook.NewContact" />}>
+        {this.props.coreConnected && (
+          <Tooltip.Trigger tooltip={__('New contact')}>
             <Button
               skin="plain"
               className="relative"
@@ -189,7 +185,7 @@ class PanelControls extends Component {
           </Tooltip.Trigger>
         )}
 
-        <Tooltip.Trigger tooltip={<Text id="AddressBook.Export" />}>
+        <Tooltip.Trigger tooltip={__('Export contacts')}>
           <Button
             skin="plain"
             className="relative"

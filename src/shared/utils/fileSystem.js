@@ -1,11 +1,12 @@
 import fs from 'fs';
+import log from 'electron-log';
 
 export function readJson(path) {
   try {
     const json = fs.readFileSync(path);
     return JSON.parse(json);
   } catch (err) {
-    console.error(`Error reading JSON at ${path} : ${err}`);
+    log.warn(`Error reading JSON at ${path} : ${err}`);
     return {};
   }
 }

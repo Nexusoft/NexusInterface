@@ -6,6 +6,7 @@ import path from 'path';
 import merge from 'webpack-merge';
 
 import baseConfig from './webpack.config.base';
+import { babelLoaderRenderer } from './babelLoaderConfig';
 
 export default merge.smart(baseConfig, {
   target: 'electron-renderer',
@@ -18,6 +19,8 @@ export default merge.smart(baseConfig, {
 
   module: {
     rules: [
+      babelLoaderRenderer(),
+
       // WOFF2 Font
       {
         test: /\.woff2$/,

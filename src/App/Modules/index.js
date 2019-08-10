@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { remote } from 'electron';
 
 // Internal Global
-import googleanalytics from 'scripts/googleanalytics';
+import GA from 'lib/googleAnalytics';
 import ContextMenuBuilder from 'contextmenu';
 import { getModuleIfActive } from 'lib/modules';
 
@@ -33,7 +33,7 @@ class Modules extends React.Component {
    */
   componentDidMount() {
     window.addEventListener('contextmenu', this.setupcontextmenu, false);
-    googleanalytics.SendScreen('Module');
+    GA.SendScreen('Module');
   }
 
   /**

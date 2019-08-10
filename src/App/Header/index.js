@@ -9,6 +9,7 @@ import Icon from 'components/Icon';
 import HorizontalLine from 'components/HorizontalLine';
 import { consts, timing, animations } from 'styles';
 import * as color from 'utils/color';
+import { isCoreConnected } from 'selectors';
 
 // Internal Local
 import LogInStatus from './StatusIcons/LogInStatus';
@@ -53,7 +54,6 @@ const Logo = styled(Icon)(({ theme }) => ({
   display: 'block',
   height: 50,
   width: 'auto',
-  filter: 'var(--nxs-logo)',
   fill: theme.primary,
 }));
 
@@ -82,7 +82,7 @@ const UnderHeader = styled.div(({ theme }) => ({
  * @class Header
  * @extends {Component}
  */
-@connect(({ core: { info: { connections } } }) => ({ connections }))
+@connect(state => ({ coreConnected: isCoreConnected(state) }))
 class Header extends Component {
   /**
    * Component's Renderable JSX
@@ -91,7 +91,7 @@ class Header extends Component {
    * @memberof Header
    */
   render() {
-    const { connections } = this.props;
+    const { coreConnected } = this.props;
 
     return (
       <HeaderComponent>
@@ -104,7 +104,7 @@ class Header extends Component {
           <CoreStatus {...this.props} />
         </UnderHeader>
 
-        {connections !== undefined && (
+        {coreConnected && (
           <StatusIcons>
             <SyncStatus {...this.props} />
             <LogInStatus {...this.props} />

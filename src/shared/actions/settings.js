@@ -1,5 +1,5 @@
-import ga from 'scripts/googleanalytics';
-import { UpdateSettings } from 'lib/settings';
+import GA from 'lib/googleAnalytics';
+import { UpdateSettings, UpdateTempSettings } from 'lib/settings';
 import * as TYPE from 'consts/actionTypes';
 
 export const updateSettings = updates => (dispatch, getState) => {
@@ -12,12 +12,19 @@ export const updateSettings = updates => (dispatch, getState) => {
       settings: { sendUsageData },
     } = oldState;
     if (!sendUsageData && updates.sendUsageData) {
-      ga.EnableAnalytics();
-      ga.SendEvent('Settings', 'Analytics', 'Enabled', 1);
+      GA.EnableAnalytics();
+      GA.SendEvent('Settings', 'Analytics', 'Enabled', 1);
     }
     if (sendUsageData && !updates.sendUsageData) {
-      ga.DisableAnalytics();
-      ga.SendEvent('Settings', 'Analytics', 'Disabled', 1);
+      GA.DisableAnalytics();
+      GA.SendEvent('Settings', 'Analytics', 'Disabled', 1);
     }
   }
+};
+
+export const updateTempSettings = updates => (dispatch, getState) => {
+  const oldState = getState();
+  const tempSettings = { ...oldState.settings.tempSettings, ...updates };
+  dispatch({ type: TYPE.UPDATE_TEMP_SETTINGS, payload: tempSettings });
+  UpdateTempSettings(tempSettings);
 };

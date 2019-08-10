@@ -6,8 +6,7 @@ import styled from '@emotion/styled';
 
 // Internal
 import rpc from 'lib/rpc';
-import { getInfo } from 'actions/core';
-import Text from 'components/Text';
+import { autoFetchCoreInfo } from 'lib/coreInfo';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import Button from 'components/Button';
@@ -34,7 +33,6 @@ const ChangePasswordComponent = styled.form({
 @connect(
   null,
   {
-    getInfo,
     openConfirmDialog,
     openErrorDialog,
     openSuccessDialog,
@@ -51,17 +49,18 @@ const ChangePasswordComponent = styled.form({
   validate: ({ password, newPassword, newPasswordRepeat }) => {
     const errors = {};
     if (!password) {
-      errors.password = <Text id="Settings.Errors.PasswordRequired" />;
+      errors.password = __('Password is required');
     }
     if (passwordInvalidChars.test(newPassword)) {
-      errors.newPassword = <Text id="Settings.Errors.PasswordInvalidChars" />;
+      errors.newPassword =
+        __('Password cannot contain these characters:') + ' - $ / & * | < >';
     } else if (!newPassword || newPassword.length < 8) {
-      errors.newPassword = <Text id="Settings.Errors.PasswordMinLength" />;
+      errors.newPassword = __('Password must be at least 8 characters');
     } else if (newPassword !== newPassword.trim()) {
-      errors.newPassword = <Text id="Settings.Errors.PasswordSpaces" />;
+      errors.newPassword = __('Password cannot start or end with spaces');
     }
     if (newPasswordRepeat !== newPassword) {
-      errors.newPasswordRepeat = <Text id="Settings.Errors.PasswordsNoMatch" />;
+      errors.newPasswordRepeat = __('Passwords do not match');
     }
     return errors;
   },
@@ -70,10 +69,10 @@ const ChangePasswordComponent = styled.form({
   onSubmitSuccess: (result, dispatch, props) => {
     props.reset();
     props.openSuccessDialog({
-      message: <Text id="Alert.PasswordHasBeenChanged" />,
+      message: __('Password has been changed.'),
     });
   },
-  onSubmitFail: rpcErrorHandler(<Text id="Settings.Errors.ChangingPassword" />),
+  onSubmitFail: rpcErrorHandler(__('Error changing password')),
 })
 class ChangePassword extends Component {
   /**
@@ -83,15 +82,15 @@ class ChangePassword extends Component {
    */
   confirmLogout = () => {
     this.props.openConfirmDialog({
-      question: <Text id="Settings.ConfirmLogOut" />,
+      question: __('Are you sure you want to log out?'),
       callbackYes: async () => {
         try {
           await rpc('walletlock', []);
-          this.props.getInfo();
+          autoFetchCoreInfo();
         } catch (err) {
           const note = (err & err.error && err.error.message) || err;
           this.props.openErrorDialog({
-            message: <Text id="Settings.Errors.LoggingOut" />,
+            message: __('Error logging out'),
             note,
           });
         }
@@ -109,52 +108,31 @@ class ChangePassword extends Component {
     const { handleSubmit, submitting } = this.props;
     return (
       <ChangePasswordComponent onSubmit={handleSubmit}>
-        <FieldSet legend={<Text id="Settings.ChangePassword" />}>
-          <Text id="Settings.Password">
-            {p => (
-              <FormField
-                connectLabel
-                label={<Text id="Settings.PreviousPassword" />}
-              >
-                <Field
-                  component={TextField.RF}
-                  name="password"
-                  type="password"
-                  placeholder={p}
-                />
-              </FormField>
-            )}
-          </Text>
-          <Text id="Settings.NewPassword">
-            {np => (
-              <FormField
-                connectLabel
-                label={<Text id="Settings.NewPassword" />}
-              >
-                <Field
-                  component={TextField.RF}
-                  name="newPassword"
-                  type="password"
-                  placeholder={np}
-                />
-              </FormField>
-            )}
-          </Text>
-          <Text id="Settings.ConfirmPassword">
-            {placeholder => (
-              <FormField
-                connectLabel
-                label={<Text id="Settings.ReEnterPassword" />}
-              >
-                <Field
-                  component={TextField.RF}
-                  name="newPasswordRepeat"
-                  type="password"
-                  placeholder={placeholder}
-                />
-              </FormField>
-            )}
-          </Text>
+        <FieldSet legend={__('Change password')}>
+          <FormField connectLabel label={__('Previous password')}>
+            <Field
+              component={TextField.RF}
+              name="password"
+              type="password"
+              placeholder={__('Password')}
+            />
+          </FormField>
+          <FormField connectLabel label={__('New password')}>
+            <Field
+              component={TextField.RF}
+              name="newPassword"
+              type="password"
+              placeholder={__('New password')}
+            />
+          </FormField>
+          <FormField connectLabel label={__('Re-enter password:')}>
+            <Field
+              component={TextField.RF}
+              name="newPasswordRepeat"
+              type="password"
+              placeholder={__('Confirm password')}
+            />
+          </FormField>
 
           <Button
             type="submit"
@@ -163,12 +141,12 @@ class ChangePassword extends Component {
             disabled={submitting}
             style={{ marginTop: '2em' }}
           >
-            <Text id="Settings.ChangePassword" />
+            {__('Change password')}
           </Button>
         </FieldSet>
 
         <Button wide onClick={this.confirmLogout}>
-          <Text id="Settings.LogOut" />
+          {__('Log out')}
         </Button>
       </ChangePasswordComponent>
     );

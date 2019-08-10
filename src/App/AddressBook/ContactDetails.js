@@ -5,13 +5,13 @@ import styled from '@emotion/styled';
 
 // Internal
 import { deleteContact } from 'actions/addressBook';
-import Text from 'components/Text';
 import ExternalLink from 'components/ExternalLink';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import NexusAddress from 'components/NexusAddress';
 import { openConfirmDialog, openModal } from 'actions/overlays';
 import AddEditContactModal from 'components/AddEditContactModal';
+import { isCoreConnected } from 'selectors';
 import timeZones from 'data/timeZones';
 import { timing } from 'styles';
 import trashIcon from 'images/trash.sprite.svg';
@@ -75,11 +75,7 @@ const Field = ({ label, content }) => (
   <div className="flex mt1">
     <FieldLabel>{label}</FieldLabel>
     <FieldContent>
-      {content || (
-        <span className="dim">
-          <Text id="AddressBook.NoInfo" />
-        </span>
-      )}
+      {content || <span className="dim">{__('No information')}</span>}
     </FieldContent>
   </div>
 );
@@ -119,18 +115,18 @@ const getLocalTime = tz => {
  * @extends {Component}
  */
 @connect(
-  ({
-    addressBook,
-    ui: {
-      addressBook: { selectedContactName },
-    },
-    core: {
-      info: { connections },
-    },
-  }) => ({
-    contact: addressBook[selectedContactName] || null,
-    connections,
-  }),
+  state => {
+    const {
+      addressBook,
+      ui: {
+        addressBook: { selectedContactName },
+      },
+    } = state;
+    return {
+      contact: addressBook[selectedContactName] || null,
+      coreConnected: isCoreConnected(state),
+    };
+  },
   { deleteContact, openConfirmDialog, openModal }
 )
 class ContactDetails extends React.Component {
@@ -141,12 +137,9 @@ class ContactDetails extends React.Component {
    */
   confirmDelete = () => {
     this.props.openConfirmDialog({
-      question: (
-        <Text
-          id="AddressBook.DeleteQuestion"
-          data={{ name: this.props.contact.name }}
-        />
-      ),
+      question: __('Delete contact %{name}?', {
+        name: this.props.contact.name,
+      }),
       skinYes: 'danger',
       callbackYes: () => {
         this.props.deleteContact(this.props.contact.name);
@@ -173,7 +166,7 @@ class ContactDetails extends React.Component {
    * @memberof ContactDetails
    */
   render() {
-    const { contact, connections } = this.props;
+    const { contact, coreConnected } = this.props;
     if (!contact) return null;
 
     const tz =
@@ -184,14 +177,14 @@ class ContactDetails extends React.Component {
     return (
       <ContactDetailsComponent>
         <Header>
-          <Tooltip.Trigger tooltip={<Text id="AddressBook.Delete" />}>
+          <Tooltip.Trigger tooltip={__('Delete')}>
             <HeaderAction danger onClick={this.confirmDelete}>
               <Icon icon={trashIcon} />
             </HeaderAction>
           </Tooltip.Trigger>
           <ContactName>{contact.name}</ContactName>
-          {connections !== undefined ? (
-            <Tooltip.Trigger tooltip={<Text id="AddressBook.Edit" />}>
+          {coreConnected ? (
+            <Tooltip.Trigger tooltip={__('Edit')}>
               <HeaderAction onClick={this.editContact}>
                 <Icon icon={editIcon} />
               </HeaderAction>
@@ -201,9 +194,7 @@ class ContactDetails extends React.Component {
           )}
         </Header>
 
-        <SectionHeader>
-          <Text id="AddressBook.NexusAddresses" />
-        </SectionHeader>
+        <SectionHeader>{__('NXS addresses')}</SectionHeader>
 
         {contact.addresses.map(({ address, label, isMine }, i) => (
           <NexusAddress
@@ -212,26 +203,21 @@ class ContactDetails extends React.Component {
             label={
               label || (
                 <DefaultLabel>
-                  <Text
-                    id={
-                      isMine
-                        ? 'AddressBook.MyAddressFor'
-                        : 'AddressBook.TheirAddressWithName'
-                    }
-                    data={{ name: contact.name }}
-                  />
+                  {isMine
+                    ? _('My address for %{name}')
+                    : __("%{name}'s Address", {
+                        name: contact.name,
+                      })}
                 </DefaultLabel>
               )
             }
           />
         ))}
 
-        <SectionHeader>
-          <Text id="AddressBook.ContactInfo" />
-        </SectionHeader>
+        <SectionHeader>{__('Contact info')}</SectionHeader>
 
         <Field
-          label={<Text id="AddressBook.Email" />}
+          label={__('Email')}
           content={
             contact.email && (
               <ExternalLink href={`mailto:${contact.email}`}>
@@ -240,18 +226,12 @@ class ContactDetails extends React.Component {
             )
           }
         />
+        <Field label={__('Phone Number')} content={contact.phoneNumber} />
         <Field
-          label={<Text id="AddressBook.PhoneNo" />}
-          content={contact.phoneNumber}
-        />
-        <Field
-          label={<Text id="AddressBook.LocalTime" />}
+          label={__('Local Time')}
           content={tz && `${getLocalTime(tz.value)} (${tz.offset})`}
         />
-        <Field
-          label={<Text id="AddressBook.Notes" />}
-          content={contact.notes}
-        />
+        <Field label={__('Notes')} content={contact.notes} />
       </ContactDetailsComponent>
     );
   }

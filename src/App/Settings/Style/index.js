@@ -7,11 +7,10 @@ import styled from '@emotion/styled';
 import https from 'https';
 
 // Internal
-import googleanalytics from 'scripts/googleanalytics';
+import GA from 'lib/googleAnalytics';
 import { updateSettings } from 'actions/settings';
 import { updateTheme, resetColors } from 'actions/theme';
 import { switchSettingsTab } from 'actions/ui';
-import Text, { translate } from 'components/Text';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
 import Switch from 'components/Switch';
@@ -19,7 +18,6 @@ import Select from 'components/Select';
 import Icon from 'components/Icon';
 import { showNotification } from 'actions/overlays';
 import NexusAddress from 'components/NexusAddress';
-import SettingsContainer from 'components/SettingsContainer';
 import warningIcon from 'images/warning.sprite.svg';
 import { walletDataDir } from 'consts/paths';
 import { webGLAvailable } from 'consts/misc';
@@ -58,12 +56,7 @@ const mapDispatchToProps = dispatch => ({
   setOverviewDisplay: overviewDisplay =>
     dispatch(updateSettings({ overviewDisplay })),
   setAddressStyle: addressStyle => {
-    googleanalytics.SendEvent(
-      'Settings',
-      'Style',
-      'setAddressStyle',
-      addressStyle
-    );
+    GA.SendEvent('Settings', 'Style', 'setAddressStyle', addressStyle);
     dispatch(updateSettings({ addressStyle }));
   },
   updateTheme: updates => dispatch(updateTheme(updates)),
@@ -201,7 +194,7 @@ class SettingsStyle extends Component {
     //Dont think we need this anymore
     this.props.resetColors();
     this.props.showNotification(
-      <Text id="Settings.ResetColorNoti" />,
+      __('Color scheme has been reset to default'),
       'success'
     );
   };
@@ -232,7 +225,7 @@ class SettingsStyle extends Component {
             response.pipe(file);
             let onFinish = () => {
               file.close(response => {
-                console.log('FInished Downloading');
+                console.log('Finished Downloading');
                 this.setWallpaper(file.path);
               });
             };
@@ -248,7 +241,7 @@ class SettingsStyle extends Component {
       }
     } catch (err) {
       this.props.showNotification(
-        <Text id="Settings.Errors.InvalidJSON" />,
+        __('Invalid file format! Custom theme file must be in JSON'),
         'error'
       );
     }
@@ -264,7 +257,7 @@ class SettingsStyle extends Component {
   openPickThemeFileDialog = () => {
     remote.dialog.showOpenDialog(
       {
-        title: translate('Settings.SelectCustomTheme', this.props.locale),
+        title: __('Select custom theme file'),
         properties: ['openFile'],
         filters: [{ name: 'Theme JSON', extensions: ['json'] }],
       },
@@ -296,10 +289,7 @@ class SettingsStyle extends Component {
             console.error(err);
             this.props.showNotification(err, 'error');
           }
-          this.props.showNotification(
-            <Text id="Settings.ExportTheme" />,
-            'success'
-          );
+          this.props.showNotification(__('Theme exported'), 'success');
         });
       }
     );
@@ -340,7 +330,7 @@ class SettingsStyle extends Component {
     this.props.updateTheme(DarkTheme);
     this.setThemeSelector(0);
     this.props.showNotification(
-      <Text id="Settings.ResetThemeNoti" />,
+      __('Theme has been reset to default'),
       'success'
     );
   };
@@ -389,16 +379,16 @@ class SettingsStyle extends Component {
     } = this.props;
 
     return (
-      <SettingsContainer>
+      <>
         <SettingsField
           connectLabel
-          label={<Text id="Settings.RenderGlobe" />}
+          label={__('Render globe')}
           subLabel={
             <div>
-              <Text id="ToolTip.RenderGlobe" />
+              {__('Render the globe on the Overview page.')}
               {!webGLAvailable && (
                 <div className="error">
-                  <Text id="ToolTip.RenderGlobeOpenGLFail" />
+                  {__('Your computer does not support OPENGL 2.0')}
                 </div>
               )}
             </div>
@@ -411,7 +401,7 @@ class SettingsStyle extends Component {
           />
         </SettingsField>
 
-        <SettingsField label={<Text id="Settings.OverviewDisplay" />}>
+        <SettingsField label={__('Overview Display')}>
           <Select
             value={overviewDisplay}
             onChange={setOverviewDisplay}
@@ -421,8 +411,8 @@ class SettingsStyle extends Component {
         </SettingsField>
 
         <SettingsField
-          label="Nexus Addresses format"
-          subLabel="Choose your Nexus Address display preference"
+          label={__('Nexus Addresses format')}
+          subLabel={__('Choose your Nexus Address display preference')}
         >
           <div>
             <Select
@@ -434,16 +424,18 @@ class SettingsStyle extends Component {
           <div className="mt1">
             <NexusAddress
               address={this.state.sampleAddress}
-              label="Sample Address"
+              label={__('Sample Address')}
             />
             <AddressStyleNote>
               <Icon icon={warningIcon} className="space-right" />
-              <span className="v-align">This is your Default Address</span>
+              <span className="v-align">
+                {__('This is your Default Address')}
+              </span>
             </AddressStyleNote>
           </div>
         </SettingsField>
 
-        <SettingsField label="Theme" subLabel="Select Wallet Theme">
+        <SettingsField label={__('Theme')} subLabel={__('Select Wallet Theme')}>
           <ThemePicker
             parentTheme={theme}
             darkCallback={this.pressDarkTheme}
@@ -457,8 +449,8 @@ class SettingsStyle extends Component {
         </SettingsField>
 
         <SettingsField
-          label={<Text id="Settings.Background" />}
-          subLabel={<Text id="Settings.BackgroundSubLabel" />}
+          label={__('Background')}
+          subLabel={__('Customize your background wallpaper')}
         >
           <BackgroundPicker
             wallpaper={theme.wallpaper}
@@ -467,48 +459,48 @@ class SettingsStyle extends Component {
           />
         </SettingsField>
 
-        <SettingsField label={<Text id="Settings.ColorScheme" />} />
+        <SettingsField label={__('Color scheme')} />
 
-        <SettingsField indent={1} label={<Text id="Cp.PBC" />}>
+        <SettingsField indent={1} label={__('Background Color')}>
           <ColorPicker colorName="background" onChange={this.setColor} />
         </SettingsField>
-        <SettingsField indent={1} label={<Text id="Cp.TC" />}>
+        <SettingsField indent={1} label={__('Foreground Color')}>
           <ColorPicker colorName="foreground" onChange={this.setColor} />
         </SettingsField>
-        <SettingsField indent={1} label={<Text id="Cp.PC" />}>
+        <SettingsField indent={1} label={__('Primary Color')}>
           <ColorPicker colorName="primary" onChange={this.setColor} />
         </SettingsField>
-        <SettingsField indent={1} label={<Text id="Cp.PCA" />}>
+        <SettingsField indent={1} label={__('Primary Color Accent')}>
           <ColorPicker colorName="primaryAccent" onChange={this.setColor} />
         </SettingsField>
-        <SettingsField indent={1} label={<Text id="Cp.ER" />}>
+        <SettingsField indent={1} label={__('Danger Color')}>
           <ColorPicker colorName="danger" onChange={this.setColor} />
         </SettingsField>
-        <SettingsField indent={1} label={<Text id="Cp.ERA" />}>
+        <SettingsField indent={1} label={__('Danger Color Accent')}>
           <ColorPicker colorName="dangerAccent" onChange={this.setColor} />
         </SettingsField>
-        <SettingsField indent={1} label={<Text id="Cp.GC" />}>
+        <SettingsField indent={1} label={__('Globe Color')}>
           <ColorPicker colorName="globeColor" onChange={this.setColor} />
         </SettingsField>
-        <SettingsField indent={2} label={<Text id="Cp.GPC" />}>
+        <SettingsField indent={2} label={__('Globe Pillar Color')}>
           <ColorPicker colorName="globePillarColor" onChange={this.setColor} />
         </SettingsField>
-        <SettingsField indent={2} label={<Text id="Cp.GAC" />}>
+        <SettingsField indent={2} label={__('Globe Arch Color')}>
           <ColorPicker colorName="globeArchColor" onChange={this.setColor} />
         </SettingsField>
 
         <div style={{ marginTop: '2em' }}>
           <Button onClick={this.openPickThemeFileDialog}>
-            <Text id="Settings.PickThemeFile" />
+            {__('Import custom theme')}
           </Button>
           <Button
             style={{ marginLeft: '1em' }}
             onClick={this.exportThemeFileDialog}
           >
-            <Text id="Settings.ThemeFileExport" />
+            {__('Export custom theme')}
           </Button>
         </div>
-      </SettingsContainer>
+      </>
     );
   }
 }

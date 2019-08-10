@@ -1,19 +1,13 @@
-import React from 'react';
-
 import store, { observeStore } from 'store';
 import rpc from 'lib/rpc';
 import { isCoreConnected } from 'selectors';
 import { loadMyAccounts } from 'actions/account';
 import { showNotification } from 'actions/overlays';
 import { bootstrap } from 'actions/bootstrap';
-import { checkFreeSpaceForBootstrap } from 'lib/bootstrap';
+import { BlockDate } from 'actions/setupApp';
 import { getInfo } from 'actions/core';
 import showDesktopNotif from 'utils/showDesktopNotif';
-import {
-  showEncryptionWarningModal,
-  SetHighestPeerBlock,
-  BlockDate,
-} from 'actions/setupApp';
+import { showEncryptionWarningModal } from 'actions/setupApp';
 
 const incStep = 1000;
 const maxTime = 10000;
@@ -62,7 +56,7 @@ export function initializeCoreInfo() {
   observeStore(
     ({ core: { info } }) => info && info.locked,
     locked => {
-      if (store.getState().core.info && locked === undefined) {
+      if (isCoreConnected(store.getState()) && locked === undefined) {
         store.dispatch(showEncryptionWarningModal());
       }
     }
@@ -87,25 +81,23 @@ export function initializeCoreInfo() {
           case 'receive':
             showDesktopNotif('Received', mostRecentTx.amount + ' NXS');
             store.dispatch(
-              showNotification(<Text id="Alert.Received" />, 'success')
+              showNotification(__('Transaction received'), 'success')
             );
             break;
           case 'send':
             showDesktopNotif('Sent', mostRecentTx.amount + ' NXS');
-            store.dispatch(
-              showNotification(<Text id="Alert.Sent" />, 'success')
-            );
+            store.dispatch(showNotification(__('Transaction sent'), 'success'));
             break;
           case 'genesis':
             showDesktopNotif('Genesis', mostRecentTx.amount + ' NXS');
             store.dispatch(
-              showNotification(<Text id="Alert.Genesis" />, 'success')
+              showNotification(__('Genesis transaction'), 'success')
             );
             break;
           case 'trust':
             showDesktopNotif('Trust', mostRecentTx.amount + ' NXS');
             store.dispatch(
-              showNotification(<Text id="Alert.TrustTransaction" />, 'success')
+              showNotification(__('Trust transaction'), 'success')
             );
             break;
         }
@@ -115,38 +107,27 @@ export function initializeCoreInfo() {
   );
 
   observeStore(
-    ({ core: { info } }) => info && info.blocks,
-    async blocks => {
+    ({ core: { info } }) => info,
+    info => {
       const state = store.getState();
+      if (
+        !state.settings.bootstrapSuggestionDisabled &&
+        isCoreConnected(state) &&
+        state.bootstrap.step === 'idle' &&
+        !state.settings.manualDaemon &&
+        info.synccomplete < 50 &&
+        info.synccomplete >= 0
+      ) {
+        store.dispatch(bootstrap({ suggesting: true }));
+      }
+    }
+  );
 
+  observeStore(
+    ({ core: { info } }) => info && info.blocks,
+    blocks => {
       if (blocks) {
         store.dispatch(BlockDate(new Date()));
-
-        // TODO: Legacy method, should drop support in a few versions
-        const peerresponse = await rpc('getpeerinfo', []);
-        if (peerresponse) {
-          const highestPeerBlock = peerresponse.reduce(
-            (highest, element) =>
-              element.height >= highest ? element.height : highest,
-            0
-          );
-          store.dispatch(SetHighestPeerBlock(highestPeerBlock));
-
-          const {
-            settings: { manualDaemon, bootstrapSuggestionDisabled },
-          } = state;
-          // 172800 = (100 * 24 * 60 * 60) / 50
-          // which is the approximate number of blocks produced in 100 days
-          const isFarBehind = highestPeerBlock - blocks > 172800;
-          if (
-            isFarBehind &&
-            !bootstrapSuggestionDisabled &&
-            !manualDaemon &&
-            isCoreConnected(state)
-          ) {
-            store.dispatch(bootstrap({ suggesting: true }));
-          }
-        }
       }
     }
   );

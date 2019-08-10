@@ -55,6 +55,7 @@ const Output = styled.div(
     display: 'flex',
     background: theme.background,
     borderBottom: `1px solid ${theme.mixer(0.125)}`,
+    padding: '.5em',
   }),
   ({ reverse }) => ({
     flexDirection: reverse ? 'column-reverse' : 'column',
@@ -138,7 +139,7 @@ class TerminalCore extends Component {
       <TerminalContent>
         <TerminalCoreComponent ref={this.outputRef}>
           {settings.manualDaemon ? (
-            <div className="dim">Core in Manual Mode</div>
+            <div className="dim">{__('Core is in Manual Mode')}</div>
           ) : (
             <>
               <Output

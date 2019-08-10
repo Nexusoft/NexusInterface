@@ -1,5 +1,4 @@
 // External
-import React from 'react';
 import { shell, remote } from 'electron';
 import fs from 'fs';
 
@@ -9,9 +8,9 @@ import { toggleWebViewDevTools } from 'actions/webview';
 import { updateSettings } from 'actions/settings';
 import { startCore as startCoreAC, stopCore as stopCoreAC } from 'actions/core';
 import { backupWallet as backup } from 'lib/wallet';
-import Text from 'components/Text';
 import { showNotification, openErrorDialog } from 'actions/overlays';
 import { bootstrap } from 'actions/bootstrap';
+import { isCoreConnected } from 'selectors';
 import showOpenDialog from 'utils/promisified/showOpenDialog';
 import { checkForUpdates, quitAndInstall } from 'lib/updater';
 
@@ -20,21 +19,21 @@ const separator = {
 };
 
 const startCore = {
-  label: 'Start Nexus Core',
+  label: __('Start Nexus Core'),
   click: () => {
     store.dispatch(startCoreAC());
   },
 };
 
 const stopCore = {
-  label: 'Stop Nexus Core',
+  label: __('Stop Nexus Core'),
   click: () => {
     store.dispatch(stopCoreAC());
   },
 };
 
 const quitNexus = {
-  label: 'Quit Nexus',
+  label: __('Quit Nexus'),
   accelerator: 'CmdOrCtrl+Q',
   click: () => {
     remote.app.quit();
@@ -42,14 +41,14 @@ const quitNexus = {
 };
 
 const about = {
-  label: 'About',
+  label: __('About'),
   click: () => {
     history.push('/About');
   },
 };
 
 const backupWallet = {
-  label: 'Backup Wallet',
+  label: __('Backup Wallet'),
   click: async () => {
     const state = store.getState();
     const folderPaths = await showOpenDialog({
@@ -58,8 +57,8 @@ const backupWallet = {
       properties: ['openDirectory'],
     });
 
-    if (state.core.info.connections === undefined) {
-      store.dispatch(showNotification(<Text id="Header.DaemonNotLoaded" />));
+    if (!isCoreConnected(state)) {
+      store.dispatch(showNotification(__('Nexus Core is not connected')));
       return;
     }
 
@@ -67,15 +66,13 @@ const backupWallet = {
       store.dispatch(updateSettings({ backupDirectory: folderPaths[0] }));
 
       await backup(folderPaths[0]);
-      store.dispatch(
-        showNotification(<Text id="Alert.WalletBackedUp" />, 'success')
-      );
+      store.dispatch(showNotification(__('Wallet backed up'), 'success'));
     }
   },
 };
 
 const viewBackups = {
-  label: 'View Backups',
+  label: __('View Backups'),
   click: () => {
     let BackupDir = process.env.HOME + '/NexusBackups';
     if (process.platform === 'win32') {
@@ -91,67 +88,69 @@ const viewBackups = {
 };
 
 const cut = {
-  label: 'Cut',
+  label: __('Cut'),
   accelerator: 'CmdOrCtrl+X',
   role: 'cut',
 };
 
 const copy = {
-  label: 'Copy',
+  label: __('Copy'),
   accelerator: 'CmdOrCtrl+C',
   role: 'copy',
 };
 
 const paste = {
-  label: 'Paste',
+  label: __('Paste'),
   accelerator: 'CmdOrCtrl+V',
   role: 'paste',
 };
 
 const coreSettings = {
-  label: 'Core',
+  label: __('Core'),
   click: () => {
     history.push('/Settings/Core');
   },
 };
 
 const appSettings = {
-  label: 'Application',
+  label: __('Application'),
   click: () => {
     history.push('/Settings/App');
   },
 };
 
 const keyManagement = {
-  label: 'Key Management',
+  label: __('Key Management'),
   click: () => {
     history.push('/Settings/Security');
   },
 };
 
 const styleSettings = {
-  label: 'Style',
+  label: __('Style'),
   click: () => {
     history.push('/Settings/Style');
   },
 };
 
 const downloadRecent = {
-  label: 'Download Recent Database',
+  label: __('Download Recent Database'),
   click: () => {
     const state = store.getState();
     if (state.settings.manualDaemon) {
       store.dispatch(
         showNotification(
-          'Cannot bootstrap recent database in manual mode',
+          __('Cannot bootstrap recent database in manual mode'),
           'error'
         )
       );
       return;
     }
 
-    if (state.core.info.connections === undefined) {
-      store.dispatch(showNotification('Please wait for Nexus Core to start.'));
+    if (!isCoreConnected(state)) {
+      store.dispatch(
+        showNotification(__('Please wait for Nexus Core to start.'))
+      );
       return;
     }
 
@@ -160,7 +159,7 @@ const downloadRecent = {
 };
 
 const toggleFullScreen = {
-  label: 'Toggle FullScreen',
+  label: __('Toggle FullScreen'),
   accelerator: 'F11',
   click: () => {
     remote
@@ -170,7 +169,7 @@ const toggleFullScreen = {
 };
 
 const toggleDevTools = {
-  label: 'Toggle Developer Tools',
+  label: __('Toggle Developer Tools'),
   accelerator: 'Alt+CmdOrCtrl+I',
   click: () => {
     remote.getCurrentWindow().toggleDevTools();
@@ -178,35 +177,35 @@ const toggleDevTools = {
 };
 
 const toggleModuleDevTools = {
-  label: "Toggle Module's Developer Tools",
+  label: __("Toggle Module's Developer Tools"),
   click: () => {
     store.dispatch(toggleWebViewDevTools());
   },
 };
 
 const websiteLink = {
-  label: 'Nexus Website',
+  label: __('Nexus Website'),
   click: () => {
     shell.openExternal('http://nexusearth.com');
   },
 };
 
 const gitRepoLink = {
-  label: 'Nexus Git Repository',
+  label: __('Nexus Git Repository'),
   click: () => {
     shell.openExternal('http://github.com/Nexusoft');
   },
 };
 
 const walletGuideLink = {
-  label: 'Nexus Wallet Guide',
+  label: __('Nexus Wallet Guide'),
   click: () => {
     shell.openExternal('https://nexusearth.com/nexus-tritium-wallet-guide/');
   },
 };
 
 const updaterIdle = {
-  label: 'Check for Updates...',
+  label: __('Check for Updates...'),
   enabled: true,
   click: async () => {
     const result = await checkForUpdates();
@@ -215,24 +214,24 @@ const updaterIdle = {
     // any reliable results like a boolean `updateAvailable` property
     if (result.updateInfo.version === APP_VERSION) {
       store.dispatch(
-        showNotification('There are currently no updates available')
+        showNotification(__('There are currently no updates available'))
       );
     }
   },
 };
 
 const updaterChecking = {
-  label: 'Checking for Updates...',
+  label: __('Checking for Updates...'),
   enabled: false,
 };
 
 const updaterDownloading = {
-  label: 'Update available! Downloading...',
+  label: __('Update available! Downloading...'),
   enabled: false,
 };
 
 const updaterReadyToInstall = {
-  label: 'Quit and install update...',
+  label: __('Quit and install update...'),
   enabled: true,
   click: quitAndInstall,
 };
@@ -275,7 +274,7 @@ function updaterMenuItem() {
  */
 function buildDarwinTemplate() {
   const state = store.getState();
-  const coreRunning = state.core.info.connections !== undefined;
+  const coreConnected = isCoreConnected(state);
   const { manualDaemon } = state.settings;
   const { webview } = state;
 
@@ -289,20 +288,20 @@ function buildDarwinTemplate() {
   };
   // If it's in manual core mode and core is not running, don't show
   // Start Core option because it does nothing
-  if (!manualDaemon || coreRunning) {
-    subMenuAbout.submenu.splice(1, 0, coreRunning ? stopCore : startCore);
+  if (!manualDaemon || coreConnected) {
+    subMenuAbout.submenu.splice(1, 0, coreConnected ? stopCore : startCore);
   }
 
   const subMenuFile = {
-    label: 'File',
+    label: __('File'),
     submenu: [backupWallet, viewBackups, separator, downloadRecent],
   };
   const subMenuEdit = {
-    label: 'Edit',
+    label: __('Edit'),
     submenu: [cut, copy, paste],
   };
   const subMenuView = {
-    label: 'Settings',
+    label: __('Settings'),
     submenu: [
       appSettings,
       coreSettings,
@@ -313,7 +312,7 @@ function buildDarwinTemplate() {
   };
 
   const subMenuWindow = {
-    label: 'View',
+    label: __('View'),
     submenu: [toggleFullScreen],
   };
   if (process.env.NODE_ENV === 'development' || state.settings.devMode) {
@@ -325,7 +324,7 @@ function buildDarwinTemplate() {
   }
 
   const subMenuHelp = {
-    label: 'Help',
+    label: __('Help'),
     submenu: [
       websiteLink,
       gitRepoLink,
@@ -353,12 +352,12 @@ function buildDarwinTemplate() {
  */
 function buildDefaultTemplate() {
   const state = store.getState();
-  const coreRunning = state.core.info.connections !== undefined;
+  const coreConnected = isCoreConnected(state);
   const { manualDaemon } = state.settings;
   const { webview } = state;
 
   const subMenuFile = {
-    label: '&File',
+    label: __('File'),
     submenu: [
       backupWallet,
       viewBackups,
@@ -372,16 +371,16 @@ function buildDefaultTemplate() {
   };
   // If it's in manual core mode and core is not running, don't show
   // Start Core option because it does nothing
-  if (!manualDaemon || coreRunning) {
-    subMenuFile.submenu.splice(5, 0, coreRunning ? stopCore : startCore);
+  if (!manualDaemon || coreConnected) {
+    subMenuFile.submenu.splice(5, 0, coreConnected ? stopCore : startCore);
   }
 
   const subMenuSettings = {
-    label: 'Settings',
+    label: __('Settings'),
     submenu: [appSettings, coreSettings, keyManagement, styleSettings],
   };
   const subMenuView = {
-    label: '&View',
+    label: __('View'),
     submenu: [toggleFullScreen],
   };
   if (process.env.NODE_ENV === 'development' || state.settings.devMode) {
@@ -393,7 +392,7 @@ function buildDefaultTemplate() {
   }
 
   const subMenuHelp = {
-    label: 'Help',
+    label: __('Help'),
     submenu: [
       about,
       websiteLink,
@@ -443,10 +442,7 @@ function rebuildMenu() {
 export function initializeMenu() {
   buildMenu();
   observeStore(state => state.updater.state, rebuildMenu);
-  observeStore(
-    state => state.core && state.core.info && state.core.info.connections,
-    rebuildMenu
-  );
+  observeStore(isCoreConnected, rebuildMenu);
   observeStore(state => state.settings && state.settings.devMode, rebuildMenu);
   observeStore(state => state.webview, rebuildMenu);
   observeStore(state => state.settings.manualDaemon, rebuildMenu);

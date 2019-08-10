@@ -121,9 +121,12 @@ class Module extends React.Component {
     if (module.invalid) return;
     if (active) {
       this.props.openConfirmDialog({
-        question: `Disable ${module.displayName}?`,
-        note:
-          'Wallet will be automatically refreshed for the change to take effect',
+        question: __('Disable %{moduleName}?', {
+          moduleName: module.displayName,
+        }),
+        note: __(
+          'Wallet will be automatically refreshed for the change to take effect'
+        ),
         callbackYes: () => {
           this.disableModule();
           document.location.reload();
@@ -131,9 +134,12 @@ class Module extends React.Component {
       });
     } else {
       this.props.openConfirmDialog({
-        question: `Enable ${module.displayName}?`,
-        note:
-          'Wallet will be automatically refreshed for the change to take effect',
+        question: __('Enable %{moduleName}?', {
+          moduleName: module.displayName,
+        }),
+        note: __(
+          'Wallet will be automatically refreshed for the change to take effect'
+        ),
         callbackYes: () => {
           this.enableModule();
           document.location.reload();
@@ -176,19 +182,22 @@ class Module extends React.Component {
             <ModuleVersion>v{module.version}</ModuleVersion>
             <span className="error">
               {!!module.deprecated && (
-                <Tooltip.Trigger tooltip="Deprecated Specification version">
+                <Tooltip.Trigger
+                  tooltip={__('Deprecated Specification version')}
+                >
                   <Icon icon={warningIcon} className="space-left" />
                 </Tooltip.Trigger>
               )}
               {(!module.repository || !module.repoOnline) && (
-                <Tooltip.Trigger tooltip="Module is not open source">
+                <Tooltip.Trigger tooltip={__('Module is not open source')}>
                   <Icon icon={warningIcon} className="space-left" />
                 </Tooltip.Trigger>
               )}
               {!!module.repository && !module.repoVerified && (
                 <Tooltip.Trigger
-                  tooltip="
-                The provided repository is not verified to be the real source code of this module"
+                  tooltip={__(
+                    'The provided repository is not verified to be the real source code of this module'
+                  )}
                 >
                   <Icon icon={warningIcon} className="space-left" />
                 </Tooltip.Trigger>

@@ -134,7 +134,7 @@ export default async function rpc(cmd, args) {
         throw 'Bad Request';
       }
       if (status == 500) {
-        throw data.message;
+        throw data.error;
       }
     }
     throw err.message || err;

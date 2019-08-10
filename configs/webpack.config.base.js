@@ -25,21 +25,6 @@ try {
 export default {
   mode: process.env.NODE_ENV === 'development' ? 'development' : 'production',
 
-  module: {
-    rules: [
-      {
-        test: /\.jsx?$/,
-        exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            cacheDirectory: true,
-          },
-        },
-      },
-    ],
-  },
-
   output: {
     // https://github.com/webpack/webpack/issues/1114
     libraryTarget: 'commonjs2',
@@ -50,7 +35,7 @@ export default {
    */
   resolve: {
     extensions: ['.js', '.jsx', '.json'],
-    modules: ['shared', 'node_modules'],
+    modules: [path.join(process.cwd(), 'src/shared'), 'node_modules'],
   },
 
   plugins: [

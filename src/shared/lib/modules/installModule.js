@@ -101,8 +101,8 @@ async function installFromDirectory(path) {
           const dest = join(modulesDir, module.name);
           if (fs.existsSync(dest)) {
             const agreed = await confirm({
-              question: 'Overwrite module?',
-              note: 'A module with the same directory name already exists',
+              question: __('Overwrite module?'),
+              note: __('A module with the same directory name already exists'),
             });
             if (!agreed) return;
 
@@ -113,9 +113,10 @@ async function installFromDirectory(path) {
 
           store.dispatch(
             openSuccessDialog({
-              message: 'Module has been successfully installed',
-              note:
-                'The wallet will now be refreshed for the new module to take effect',
+              message: __('Module has been successfully installed'),
+              note: __(
+                'The wallet will now be refreshed for the new module to take effect'
+              ),
               onClose: () => {
                 location.reload();
               },
@@ -124,7 +125,7 @@ async function installFromDirectory(path) {
         } catch (err) {
           console.error(err);
           store.dispatch(
-            showNotification('Error copying module files', 'error')
+            showNotification(__('Error copying module files'), 'error')
           );
           return;
         }
@@ -145,14 +146,14 @@ async function installFromDirectory(path) {
 export async function installModule(path) {
   try {
     if (!fs.existsSync(path)) {
-      store.dispatch(showNotification('Cannot find module', 'error'));
+      store.dispatch(showNotification(__('Cannot find module'), 'error'));
       return;
     }
     let dirPath = path;
 
     if (fs.statSync(path).isFile()) {
       if (!supportedExtensions.some(ext => path.endsWith(ext))) {
-        store.dispatch(showNotification('Unsupported file type', 'error'));
+        store.dispatch(showNotification(__('Unsupported file type'), 'error'));
         return;
       }
 
@@ -179,7 +180,7 @@ export async function installModule(path) {
       const dirPath = normalize(path);
       if (dirPath.startsWith(normalize(modulesDir))) {
         store.dispatch(
-          showNotification('Cannot install from that location', 'error')
+          showNotification(__('Cannot install from that location'), 'error')
         );
         return;
       }
@@ -188,7 +189,7 @@ export async function installModule(path) {
     await installFromDirectory(dirPath);
   } catch (err) {
     console.error(err);
-    store.dispatch(showNotification('An unknown error occurred', 'error'));
+    store.dispatch(showNotification(__('An unknown error occurred'), 'error'));
     return;
   }
 }

@@ -1,41 +1,44 @@
 // External Dependencies
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import ReactTable from 'react-table';
 import { remote, shell } from 'electron';
-import { VictoryArea, VictoryChart, VictoryAnimation } from 'victory';
+import styled from '@emotion/styled';
 import Tooltip from 'components/Tooltip';
 import Button from 'components/Button';
 import syncingIcon from 'images/syncing.sprite.svg';
-import googleanalytics from 'scripts/googleanalytics';
+import GA from 'lib/googleAnalytics';
 import { showNotification } from 'actions/overlays';
 
 // Internal Global Dependencies
-import * as TYPE from 'consts/actionTypes';
 import Icon from 'components/Icon';
 import Panel from 'components/Panel';
-import Text, { translate } from 'components/Text';
 import ContextMenuBuilder from 'contextmenu';
 import * as actionsCreators from 'actions/market';
 
 // Internal Local Dependencies
 import MarketDepth from './Chart/MarketDepth';
 import Candlestick from './Chart/Candlestick';
-import styles from './style.css';
 
 // Images
 import chartIcon from 'images/chart.sprite.svg';
 import bittrexLogo from 'images/BittrexLogo.png';
 import binanceLogo from 'images/BINANCE.png';
 
-import binanceSmallLogo from 'images/binanceSmallLogo.png';
-import bittrexSmallLogo from 'images/bittrexSmallLogo.png';
+const ExchangeUnitContainer = styled.div({
+  width: '100%',
+});
 
-import arrow from 'images/arrow.svg';
+const MarketInfoContainer = styled.div({
+  display: 'flex',
+  flexDirection: 'row',
+  width: '100%',
+  margin: '1.5em 0',
+  borderTop: '1px solid #333',
+});
 
-import styled from '@emotion/styled';
+const ExchangeLogo = styled.img({
+  height: 60,
+});
 
 const OneDay = styled.div({
   display: 'grid',
@@ -64,7 +67,7 @@ class Market extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
     this.refresher();
-    googleanalytics.SendScreen('Market');
+    GA.SendScreen('Market');
     window.addEventListener('contextmenu', this.setupcontextmenu, false);
   }
   // React Method (Life cycle hook)
@@ -127,9 +130,9 @@ class Market extends Component {
           return {
             x: e.Price,
             y: newQuantity,
-            label: `${translate('Market.Price', locale)}: ${
-              e.Price
-            } \n ${translate('Market.Volume', locale)}: ${newQuantity}`,
+            label: `${__('Price')}: ${e.Price} \n ${__(
+              'Volume'
+            )}: ${newQuantity}`,
           };
         }
       })
@@ -162,9 +165,9 @@ class Market extends Component {
           return {
             x: e.Price,
             y: newQuantity,
-            label: `${translate('Market.Price', locale)}: ${
-              e.Price
-            } \n ${translate('Market.Volume', locale)}: ${newQuantity}`,
+            label: `${__('Price')}: ${e.Price} \n ${__(
+              'Volume'
+            )}: ${newQuantity}`,
           };
         }
       })
@@ -217,36 +220,25 @@ class Market extends Component {
             verticalAlign: 'middle',
           }}
         >
-          <b>
-            <Text id="overview.24hrChange" />
-          </b>
+          <b>{__('24hr Change')}</b>
         </div>
         <OneDay>
           <div>
-            <b>
-              <Text id="Market.High" />:{' '}
-            </b>
+            <b>{__('High')}: </b>
             {this.props[exchangeName].info24hr.high}
             {' BTC '}
           </div>
           <div>
-            <b>
-              <Text id="Market.PriceChange" />:{' '}
-            </b>
+            <b>{__('Price Change')}: </b>
             {this.props[exchangeName].info24hr.change}
             {' %'}
           </div>
           <div>
-            <b>
-              <Text id="Market.Low" />:{' '}
-            </b>{' '}
-            {this.props[exchangeName].info24hr.low}
+            <b>{__('Low')}: </b> {this.props[exchangeName].info24hr.low}
             {' BTC '}
           </div>
           <div>
-            <b>
-              <Text id="Market.Volume" />:{' '}
-            </b>
+            <b>{__('Volume')}: </b>
             {this.props[exchangeName].info24hr.volume}
             {' NXS '}
           </div>
@@ -261,7 +253,7 @@ class Market extends Component {
    */
   refreshMarket() {
     this.refresher();
-    this.props.showNotification(<Text id="Market.Refreshing" />, 'success');
+    this.props.showNotification(__('Refreshing market data...'), 'success');
   }
 
   // Mandatory React method
@@ -275,28 +267,25 @@ class Market extends Component {
     return (
       <Panel
         controls={
-          <Tooltip.Trigger tooltip={<Text id="Market.Refreash" />}>
+          <Tooltip.Trigger tooltip={__('Refresh')}>
             <Button square skin="primary" onClick={() => this.refreshMarket()}>
               <Icon icon={syncingIcon} />
             </Button>
           </Tooltip.Trigger>
         }
         icon={chartIcon}
-        title={<Text id="Market.Information" />}
+        title={__('Market Data')}
       >
-        {/* <div className="alertbox">{this.arbitageAlert()}</div> */}
-
         {this.props.loaded && this.props.binance.buy[0] && (
-          <div className="exchangeUnitContainer">
-            <img
-              className="exchangeLogo"
+          <ExchangeUnitContainer>
+            <ExchangeLogo
               src={binanceLogo}
               onClick={() => {
                 shell.openExternal('https://www.binance.com/en/trade/NXS_BTC');
               }}
             />
             {this.oneDayinfo('binance')}
-            <div className="marketInfoContainer">
+            <MarketInfoContainer>
               <MarketDepth
                 locale={this.props.settings.locale}
                 chartData={this.formatChartData('binanceBuy')}
@@ -310,13 +299,12 @@ class Market extends Component {
                   theme={this.props.theme}
                 />
               ) : null}
-            </div>
-          </div>
+            </MarketInfoContainer>
+          </ExchangeUnitContainer>
         )}
         {this.props.loaded && this.props.bittrex.buy[0] && (
-          <div className="exchangeUnitContainer">
-            <img
-              className="exchangeLogo"
+          <MarketInfoContainer>
+            <ExchangeLogo
               src={bittrexLogo}
               onClick={() => {
                 shell.openExternal(
@@ -325,7 +313,7 @@ class Market extends Component {
               }}
             />
             {this.oneDayinfo('bittrex')}
-            <div className="marketInfoContainer">
+            <MarketInfoContainer>
               <br />
               <MarketDepth
                 locale={this.props.settings.locale}
@@ -340,8 +328,8 @@ class Market extends Component {
                   theme={this.props.theme}
                 />
               ) : null}
-            </div>
-          </div>
+            </MarketInfoContainer>
+          </MarketInfoContainer>
         )}
       </Panel>
     );

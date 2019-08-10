@@ -6,6 +6,7 @@ import styled from '@emotion/styled';
 // Internal
 import { openModal } from 'actions/overlays';
 import AddEditContactModal from 'components/AddEditContactModal';
+import { isCoreConnected } from 'selectors';
 import Contact, { NewContactButton } from './Contact';
 
 const ContactListComponent = styled.div(({ theme }) => ({
@@ -22,19 +23,19 @@ const Separator = styled.div(({ theme }) => ({
   background: theme.mixer(0.125),
 }));
 
-const mapStateToProps = ({
-  addressBook,
-  ui: {
-    addressBook: { searchQuery },
-  },
-  core: {
-    info: { connections },
-  },
-}) => ({
-  addressBook,
-  searchQuery,
-  connections,
-});
+const mapStateToProps = state => {
+  const {
+    addressBook,
+    ui: {
+      addressBook: { searchQuery },
+    },
+  } = state;
+  return {
+    addressBook,
+    searchQuery,
+    coreConnected: isCoreConnected(state),
+  };
+};
 
 const actionCreators = { openModal };
 
@@ -60,7 +61,7 @@ class ContactList extends React.Component {
    * @memberof ContactList
    */
   render() {
-    const { addressBook, searchQuery, connections } = this.props;
+    const { addressBook, searchQuery, coreConnected } = this.props;
 
     return (
       <ContactListComponent>
@@ -70,7 +71,7 @@ class ContactList extends React.Component {
             <Contact key={contact.name} contact={contact} />
           ) : null
         )}
-        {connections !== undefined && (
+        {coreConnected && (
           <>
             <Separator />
             <NewContactButton onClick={this.createContact} />
