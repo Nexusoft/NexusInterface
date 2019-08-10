@@ -121,9 +121,14 @@ class Core {
       log.info(
         'Core Manager: Nexux Core Process already running. Skipping starting core'
       );
+      this._config = customConfig(loadNexusConf());
       return null;
     }
 
+    const conf = (this._config = customConfig({
+      ...loadNexusConf(),
+      verbose: settings.verboseLevel,
+    }));
     if (!coreBinaryExists()) {
       log.info(
         'Core Manager: Core not found, please run in manual deamon mode'
@@ -131,10 +136,6 @@ class Core {
       throw 'Core not found';
     }
 
-    const conf = customConfig({
-      ...loadNexusConf(),
-      verbose: settings.verboseLevel,
-    });
     if (!fs.existsSync(conf.dataDir)) {
       log.info(
         'Core Manager: Data Directory path not found. Creating folder: ' +
@@ -152,7 +153,6 @@ class Core {
 
     const params = [
       '-daemon',
-      '-avatar',
       '-server',
       '-rpcthreads=4',
       '-fastsync',
@@ -169,13 +169,21 @@ class Core {
       params.push('-forkblocks=' + settings.forkBlocks);
       UpdateSettings({ forkBlocks: 0 });
     }
+    //Avatar is default so only add it if it is off.
+    if (!settings.avatarMode) {
+      params.push('-avatar=0');
+    }
     // Enable mining (default is 0)
     if (settings.enableMining == true) {
       params.push('-mining=1');
+      if (settings.ipMineWhitelist !== '') {
+        settings.ipMineWhitelist.split(';').forEach(element => {
+          params.push(`-llpallowip=${element}`);
+        });
+      }
     }
     // Enable staking (default is 0)
     if (settings.enableStaking == true) params.push('-stake=1');
-    // params.push('-llpallowip=127.0.0.1:9325'); // TODO: llp white list
 
     log.info('Core Parameters: ' + params.toString());
     log.info('Core Manager: Starting core');
@@ -189,7 +197,6 @@ class Core {
         log.info(
           `Core Manager: Core has started (process id: ${coreProcess.pid})`
         );
-        this._config = conf;
         return coreProcess.pid;
       } else {
         throw 'Core failed to start';
@@ -279,8 +286,8 @@ class Core {
    * @memberof Core
    */
   restart = async () => {
-    await stopCore();
-    await startCore();
+    await this.stop();
+    await this.start();
   };
 }
 

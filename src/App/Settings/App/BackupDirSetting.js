@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { remote } from 'electron';
 
 // Internal
-import Text, { translate } from 'components/Text';
 import { updateSettings } from 'actions/settings';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
@@ -38,7 +37,7 @@ class SettingsApp extends Component {
   browseBackupDir = () => {
     remote.dialog.showOpenDialog(
       {
-        title: translate('Settings.SelectBackupDirectory', this.props.locale),
+        title: __('Select backup directory'),
         defaultPath: this.props.backupDir,
         properties: ['openDirectory'],
       },
@@ -60,7 +59,7 @@ class SettingsApp extends Component {
    */
   render() {
     return (
-      <SettingsField connectLabel label={<Text id="Settings.BackupDir" />}>
+      <SettingsField connectLabel label={__('Backup directory')}>
         {inputId => (
           <div className="flex stretch">
             <TextField
@@ -74,7 +73,7 @@ class SettingsApp extends Component {
               onClick={this.browseBackupDir}
               style={{ marginLeft: '1em' }}
             >
-              <Text id="Settings.Browse" />
+              {__('Browse')}
             </Button>
           </div>
         )}

@@ -11,6 +11,7 @@ import merge from 'webpack-merge';
 
 import baseConfig from './webpack.config.base.renderer';
 import CheckNodeEnv from '../internals/scripts/CheckNodeEnv';
+import { babelLoaderRenderer } from './babelLoaderConfig';
 
 CheckNodeEnv('development');
 
@@ -39,51 +40,7 @@ export default merge.smart(baseConfig, {
 
   module: {
     rules: [
-      {
-        test: /\.jsx?$/,
-        exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            cacheDirectory: true,
-            plugins: [
-              // Here, we include babel plugins that are only required for the
-              // renderer process. The 'transform-*' plugins must be included
-              // before react-hot-loader/babel
-              'react-hot-loader/babel',
-            ],
-          },
-        },
-      },
-      {
-        test: /\.global\.css$/,
-        use: [
-          {
-            loader: 'style-loader',
-          },
-          {
-            loader: 'css-loader',
-            options: {
-              sourceMap: true,
-            },
-          },
-        ],
-      },
-      {
-        test: /^((?!\.global).)*\.css$/,
-        use: [
-          {
-            loader: 'style-loader',
-          },
-          {
-            loader: 'css-loader',
-            options: {
-              sourceMap: true,
-              importLoaders: 1,
-            },
-          },
-        ],
-      },
+      babelLoaderRenderer(true),
       {
         test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
         use: {

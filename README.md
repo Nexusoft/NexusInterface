@@ -1,6 +1,8 @@
 # Nexus Interface
 
-### Current Version: 1.1.0
+### Current Version: 1.2.0
+
+[![Crowdin](https://badges.crowdin.net/nexus-interface/localized.svg)](https://crowdin.com/project/nexus-interface)
 
 This is an Electron and React based interface to Nexus. It is an example of what can comprise the 6th and 7th layers of the Nexus software stack, which are the Logical and Interface layers respectively.
 

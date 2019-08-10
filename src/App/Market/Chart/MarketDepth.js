@@ -5,7 +5,7 @@ Last Modified by: Brian Smith
 */
 // External Dependencies
 import React, { Component } from 'react';
-import Text, { translate } from 'components/Text';
+import styled from '@emotion/styled';
 import {
   VictoryArea,
   VictoryChart,
@@ -16,6 +16,14 @@ import {
   VictoryLabel,
   VictoryVoronoiContainer,
 } from 'victory';
+
+const MarketDepthInner = styled.div({
+  position: 'relative',
+  flex: 1,
+  minHeight: 300,
+  maxWidth: '50%',
+  marginLeft: 5,
+});
 
 /**
  * Creates a Victory Chart that displays the market depth
@@ -34,7 +42,7 @@ export default class MarketDepth extends Component {
    */
   render() {
     return (
-      <div className="marketDepthInner">
+      <MarketDepthInner>
         <VictoryChart
           theme={{
             axis: {
@@ -70,7 +78,7 @@ export default class MarketDepth extends Component {
           containerComponent={<VictoryVoronoiContainer />}
         >
           <VictoryAxis
-            label={translate('Market.Volume', this.props.locale)}
+            label={__('Volume')}
             dependentAxis
             tickFormat={tick => {
               if (tick % 1000000 === 0) {
@@ -132,7 +140,7 @@ export default class MarketDepth extends Component {
             data={[...this.props.chartSellData]}
           />
           <VictoryAxis
-            label={translate('Market.Price', this.props.locale)}
+            label={__('Price')}
             independentAxis
             style={{ tickLabels: { angle: -15 } }}
             tickLabelComponent={
@@ -158,7 +166,7 @@ export default class MarketDepth extends Component {
             </linearGradient>
           </defs>
         </svg>
-      </div>
+      </MarketDepthInner>
     );
   }
 }

@@ -86,7 +86,9 @@ export function initializeUpdater(autoUpdate) {
   mainUpdater.on('update-available', updateInfo => {
     store.dispatch(
       showNotification(
-        `New wallet version ${updateInfo.version} available. Downloading...`,
+        __('New wallet version %{version} available. Downloading...', {
+          version: updateInfo.version,
+        }),
         'work'
       )
     );

@@ -21,7 +21,7 @@ import {
 } from 'actions/overlays';
 import extractTarball from 'utils/promisified/extractTarball';
 import sleep from 'utils/promisified/sleep';
-import { throttled } from 'utils/etc';
+import { throttled } from 'utils/misc';
 
 const fileLocation = path.join(walletDataDir, 'recent.tar.gz');
 const extractDest = path.join(coreDataDir, 'recent');
@@ -43,12 +43,14 @@ export const bootstrapEvents = new EventEmitter();
  */
 export function initializeBootstrapEvents({ dispatch }) {
   bootstrapEvents.on('abort', () =>
-    dispatch(showNotification('Bootstrap process has been aborted', 'error'))
+    dispatch(
+      showNotification(__('Bootstrap process has been aborted'), 'error')
+    )
   );
-  bootstrapEvents.on('error', () =>
+  bootstrapEvents.on('error', err =>
     dispatch(
       openErrorDialog({
-        message: 'Error bootstrapping recent database',
+        message: __('Error bootstrapping recent database'),
         note: err.message || 'Unknown error',
       })
     )
@@ -56,7 +58,7 @@ export function initializeBootstrapEvents({ dispatch }) {
   bootstrapEvents.on('success', () =>
     dispatch(
       openSuccessDialog({
-        message: 'Recent database has been successfully bootstrapped',
+        message: __('Recent database has been successfully bootstrapped'),
       })
     )
   );
@@ -114,6 +116,9 @@ export async function startBootstrap({ dispatch, getState }) {
       cleanUp();
     }
 
+    setStatus('stopping_core');
+    await dispatch(stopCore());
+
     setStatus('downloading', {});
     const downloadProgress = throttled(
       details => setStatus('downloading', details),
@@ -132,9 +137,6 @@ export async function startBootstrap({ dispatch, getState }) {
       return false;
     }
 
-    setStatus('stopping_core');
-    await dispatch(stopCore());
-
     setStatus('moving_db');
     await moveExtractedContent();
     if (aborting) {
@@ -142,6 +144,7 @@ export async function startBootstrap({ dispatch, getState }) {
       return false;
     }
 
+    await dispatch(stopCore());
     setStatus('restarting_core');
     await dispatch(startCore());
 
@@ -158,7 +161,15 @@ export async function startBootstrap({ dispatch, getState }) {
     const lastStep = getState().bootstrap.step;
     aborting = false;
     setStatus('idle');
-    if (['stopping_core', 'moving_db', 'restarting_core'].includes(lastStep)) {
+    if (
+      [
+        'stopping_core',
+        'downloading',
+        'extracting',
+        'moving_db',
+        'restarting_core',
+      ].includes(lastStep)
+    ) {
       await dispatch(startCore());
     }
   }

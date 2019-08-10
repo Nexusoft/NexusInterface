@@ -9,7 +9,7 @@ import ModalContext from 'context/modal';
 import { removeModal } from 'actions/overlays';
 import Overlay from 'components/Overlay';
 import { timing } from 'styles';
-import { passRef } from 'utils/etc';
+import { passRef } from 'utils/misc';
 import * as color from 'utils/color';
 
 const intro = keyframes`
@@ -109,9 +109,17 @@ const ModalBody = styled.div({
   gridArea: 'body',
 });
 
-const ModalFooter = styled.div({
-  gridArea: 'footer',
-});
+const ModalFooter = styled.div(
+  {
+    gridArea: 'footer',
+    padding: '20px 0',
+    margin: '0 50px',
+  },
+  ({ theme, separator }) =>
+    separator && {
+      borderTop: `2px solid ${theme.primary}`,
+    }
+);
 
 /**
  * Modal Component

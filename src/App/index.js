@@ -46,8 +46,8 @@ const Main = styled.main({
 const App = ({ history }) => (
   <ThemeController>
     <ConnectedRouter history={history}>
+      <GlobalStyles />
       <Overlays>
-        <GlobalStyles />
         <AppBackground />
         <AppLayout>
           <Header />

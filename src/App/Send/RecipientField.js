@@ -7,7 +7,6 @@ import styled from '@emotion/styled';
 // Internal
 import AutoSuggest from 'components/AutoSuggest';
 import FormField from 'components/FormField';
-import Text, { translate } from 'components/Text';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
 import { openModal } from 'actions/overlays';
@@ -39,10 +38,9 @@ const filterRecipients = memoize((suggestions, inputValue) => {
   );
 });
 
-const mapStateToProps = ({ addressBook, settings: { locale } }) => ({
+const mapStateToProps = ({ addressBook }) => ({
   suggestions: getRecipientSuggestions(addressBook),
   addressNameMap: getAddressNameMap(addressBook),
-  locale,
 });
 
 const actionCreators = { openModal };
@@ -83,7 +81,7 @@ class RecipientField extends Component {
    * @memberof RecipientField
    */
   render() {
-    const { addressNameMap, input, meta, locale, suggestions } = this.props;
+    const { addressNameMap, input, meta, suggestions } = this.props;
     const recipientName = addressNameMap[input.value];
 
     return (
@@ -91,7 +89,7 @@ class RecipientField extends Component {
         label={
           <>
             <span>
-              <Text id="sendReceive.SendTo" />
+              {__('Send to')}
               &nbsp;&nbsp;
             </span>
             <RecipientName>{recipientName}</RecipientName>
@@ -102,7 +100,7 @@ class RecipientField extends Component {
           input={input}
           meta={meta}
           inputProps={{
-            placeholder: translate('sendReceive.RecipientAddress', locale),
+            placeholder: __('Recipient address'),
           }}
           suggestions={suggestions}
           onSelect={this.handleSelect}
@@ -110,14 +108,14 @@ class RecipientField extends Component {
           emptyFiller={
             suggestions.length === 0 && (
               <EmptyMessage>
-                <Text id="sendReceive.AddressBookEmpty" />
+                {__('Your address book is empty')}
                 <Button as="a" skin="hyperlink" onClick={this.createContact}>
                   <Icon
                     icon={plusIcon}
                     className="space-right"
                     style={{ fontSize: '.8em' }}
                   />
-                  <Text id="sendReceive.CreateNewContact" />
+                  {__('Create new contact')}
                 </Button>
               </EmptyMessage>
             )

@@ -1,15 +1,15 @@
 // External Dependencies
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
-import Text from 'components/Text';
 import styled from '@emotion/styled';
-import googleanalytics from 'scripts/googleanalytics';
+import GA from 'lib/googleAnalytics';
 import memoize from 'memoize-one';
 
 // Internal Global Dependencies
 import WaitingMessage from 'components/WaitingMessage';
 import Button from 'components/Button';
 import AutoSuggest from 'components/AutoSuggest';
+import { isCoreConnected } from 'selectors';
 import rpc from 'lib/rpc';
 import {
   switchConsoleTab,
@@ -35,31 +35,31 @@ const consoleInputSelector = memoize(
     historyIndex === -1 ? currentCommand : commandHistory[historyIndex]
 );
 
-const mapStateToProps = ({
-  ui: {
-    console: {
+const mapStateToProps = state => {
+  const {
+    ui: {
       console: {
-        currentCommand,
-        commandHistory,
-        historyIndex,
-        commandList,
-        output,
+        console: {
+          currentCommand,
+          commandHistory,
+          historyIndex,
+          commandList,
+          output,
+        },
       },
     },
-  },
-  core: {
-    info: { connections },
-  },
-}) => ({
-  consoleInput: consoleInputSelector(
-    currentCommand,
-    commandHistory,
-    historyIndex
-  ),
-  commandList,
-  output,
-  connections,
-});
+  } = state;
+  return {
+    coreConnected: isCoreConnected(state),
+    consoleInput: consoleInputSelector(
+      currentCommand,
+      commandHistory,
+      historyIndex
+    ),
+    commandList,
+    output,
+  };
+};
 
 const actionCreators = {
   switchConsoleTab,
@@ -205,7 +205,7 @@ class TerminalConsole extends Component {
 
     const [cmd, ...chunks] = consoleInput.split(' ');
     executeCommand(consoleInput);
-    googleanalytics.SendEvent('Terminal', 'Console', 'UseCommand', 1);
+    GA.SendEvent('Terminal', 'Console', 'UseCommand', 1);
     if (!commandList.some(c => c.value.includes(cmd))) {
       printCommandError(`\`${cmd}\` is not a valid command`);
       return;
@@ -303,7 +303,7 @@ class TerminalConsole extends Component {
    */
   render() {
     const {
-      connections,
+      coreConnected,
       commandList,
       consoleInput,
       updateConsoleInput,
@@ -311,10 +311,10 @@ class TerminalConsole extends Component {
       resetConsoleOutput,
     } = this.props;
 
-    if (connections === undefined) {
+    if (!coreConnected) {
       return (
         <WaitingMessage>
-          <Text id="transactions.Loading" />
+          {__('Connecting to Nexus Core')}
           ...
         </WaitingMessage>
       );
@@ -323,39 +323,37 @@ class TerminalConsole extends Component {
         <TerminalContent>
           <Console>
             <ConsoleInput>
-              <Text id="Console.CommandsHere">
-                {cch => (
-                  <AutoSuggest
-                    suggestions={commandList}
-                    filterSuggestions={filterCommands}
-                    onSelect={this.formateAutoSuggest}
-                    keyControl={false}
-                    suggestOn="change"
-                    ref={c => (this.inputRef = c)}
-                    inputRef={this.inputRef}
-                    inputProps={{
-                      autoFocus: true,
-                      skin: 'filled-inverted',
-                      value: consoleInput,
-                      placeholder: cch,
-                      onChange: e => {
-                        updateConsoleInput(e.target.value);
-                      },
-                      onKeyDown: this.handleKeyDown,
-                      right: (
-                        <ExecuteButton
-                          skin="filled-inverted"
-                          fitHeight
-                          grouped="right"
-                          onClick={this.execute}
-                        >
-                          <Text id="Console.Exe" />
-                        </ExecuteButton>
-                      ),
-                    }}
-                  />
-                )}
-              </Text>
+              <AutoSuggest
+                suggestions={commandList}
+                filterSuggestions={filterCommands}
+                onSelect={this.formateAutoSuggest}
+                keyControl={false}
+                suggestOn="change"
+                ref={c => (this.inputRef = c)}
+                inputRef={this.inputRef}
+                inputProps={{
+                  autoFocus: true,
+                  skin: 'filled-inverted',
+                  value: consoleInput,
+                  placeholder: __(
+                    'Enter console commands here (ex: getinfo, help)'
+                  ),
+                  onChange: e => {
+                    updateConsoleInput(e.target.value);
+                  },
+                  onKeyDown: this.handleKeyDown,
+                  right: (
+                    <ExecuteButton
+                      skin="filled-inverted"
+                      fitHeight
+                      grouped="right"
+                      onClick={this.execute}
+                    >
+                      {__('Execute')}
+                    </ExecuteButton>
+                  ),
+                }}
+              />
             </ConsoleInput>
 
             <ConsoleOutput ref={this.outputRef}>
@@ -389,7 +387,7 @@ class TerminalConsole extends Component {
               grouped="bottom"
               onClick={resetConsoleOutput}
             >
-              <Text id="Console.ClearConsole" />
+              {__('Clear console')}
             </Button>
           </Console>
         </TerminalContent>

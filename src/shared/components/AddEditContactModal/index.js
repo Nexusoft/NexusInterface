@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 
 // Internal
-import Text from 'components/Text';
 import Modal from 'components/Modal';
 import AddEditContactForm from './AddEditContactForm';
 
@@ -42,11 +41,7 @@ class AddEditContactModal extends Component {
         {closeModal => (
           <>
             <Modal.Header>
-              {edit ? (
-                <Text id="AddEditContact.EditContact" />
-              ) : (
-                <Text id="AddEditContact.CreateNewContact" />
-              )}
+              {edit ? __('Edit contact') : __('Create new contact')}
             </Modal.Header>
             <Modal.Body>
               <AddEditContactForm

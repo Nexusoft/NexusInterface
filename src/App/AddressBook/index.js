@@ -2,9 +2,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { remote } from 'electron';
-import Text from 'components/Text';
 import styled from '@emotion/styled';
-import googleanalytics from 'scripts/googleanalytics';
+import GA from 'lib/googleAnalytics';
 
 // Internal Global
 import Icon from 'components/Icon';
@@ -12,6 +11,7 @@ import Button from 'components/Button';
 import Panel from 'components/Panel';
 import { openModal } from 'actions/overlays';
 import AddEditContactModal from 'components/AddEditContactModal';
+import { isCoreConnected } from 'selectors';
 import ContextMenuBuilder from 'contextmenu';
 
 // Internal Local
@@ -33,7 +33,7 @@ const AddressBookLayout = styled.div({
 
 const mapStateToProps = state => ({
   addressBook: state.addressBook,
-  connections: state.core.info.connections,
+  coreConnected: isCoreConnected(state),
 });
 
 const actionCreators = { openModal };
@@ -60,7 +60,7 @@ class AddressBook extends Component {
    */
   componentDidMount() {
     window.addEventListener('contextmenu', this.setupcontextmenu, false);
-    googleanalytics.SendScreen('AddressBook');
+    GA.SendScreen('AddressBook');
   }
 
   /**
@@ -102,12 +102,12 @@ class AddressBook extends Component {
    * @memberof AddressBook
    */
   render() {
-    const { addressBook, connections } = this.props;
+    const { addressBook, coreConnected } = this.props;
 
     return (
       <Panel
         icon={addressBookIcon}
-        title={<Text id="AddressBook.AddressBook" />}
+        title={__('Address book')}
         controls={<PanelControls />}
         bodyScrollable={false}
       >
@@ -118,17 +118,15 @@ class AddressBook extends Component {
           </AddressBookLayout>
         ) : (
           <div style={{ marginTop: 50, textAlign: 'center' }}>
-            <div className="dim">
-              <Text id="AddressBook.Empty" />
-            </div>
-            {connections !== undefined && (
+            <div className="dim">{__('Your address book is empty')}</div>
+            {coreConnected && (
               <Button
                 skin="plain"
                 onClick={this.showAddContact}
                 className="mt1"
               >
                 <Icon icon={addContactIcon} className="space-right" />
-                <Text id="AddressBook.CreateNewContact" />
+                {__('Create new contact')}
               </Button>
             )}
           </div>

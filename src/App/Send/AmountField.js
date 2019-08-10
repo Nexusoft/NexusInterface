@@ -5,9 +5,9 @@ import { Field } from 'redux-form';
 import styled from '@emotion/styled';
 
 // Internal
-import Text from 'components/Text';
 import TextField from 'components/TextField';
 import FormField from 'components/FormField';
+import Link from 'components/Link';
 import { getNxsFiatPrice } from './selectors';
 
 const floatRegex = /^[0-9]+(.[0-9]*)?$/;
@@ -27,9 +27,18 @@ const SendAmountEqual = styled.div({
   fontSize: '1.2em',
 });
 
+const SendAllLink = styled(Link)({
+  textTransform: 'uppercase',
+  marginLeft: '1em',
+  fontSize: '.9em',
+  verticalAlign: 'middle',
+});
+
 const mapStateToProps = ({
   settings: { fiatCurrency },
-  common: { rawNXSvalues },
+  market: {
+    cryptocompare: { rawNXSvalues },
+  },
 }) => ({
   fiatCurrency: fiatCurrency,
   nxsFiatPrice: getNxsFiatPrice(rawNXSvalues, fiatCurrency),
@@ -92,6 +101,13 @@ class AmountField extends Component {
     (this.props.parentFieldName ? this.props.parentFieldName + '.' : '') +
     'fiatAmount';
 
+  sendAll = evt => {
+    evt.preventDefault();
+    const { change, fullAmount } = this.props;
+    change(this.amountFieldName(), fullAmount);
+    this.nxsToFiat(null, fullAmount);
+  };
+
   /**
    * Component's Renderable JSX
    *
@@ -105,9 +121,14 @@ class AmountField extends Component {
           <FormField
             connectLabel
             label={
-              <span className="v-align">
-                <Text id="sendReceive.Amount" />
-              </span>
+              <>
+                <span className="v-align">{__('NXS Amount')}</span>
+                {!!this.props.fullAmount && (
+                  <SendAllLink as="a" href="#" onClick={this.sendAll}>
+                    {__('Send all')}
+                  </SendAllLink>
+                )}
+              </>
             }
           >
             <Field

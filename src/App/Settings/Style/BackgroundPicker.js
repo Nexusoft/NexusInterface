@@ -3,9 +3,8 @@ import React, { Component } from 'react';
 import styled from '@emotion/styled';
 
 // Internal
-import Text from 'components/Text';
 import { timing } from 'styles';
-import { newUID } from 'utils/etc';
+import { newUID } from 'utils/misc';
 import * as color from 'utils/color';
 
 const Option = styled.label(
@@ -79,22 +78,22 @@ class BackgroundPicker extends Component {
           selected={!wallpaper && defaultStyle.startsWith('Dark')}
           style={{ display: 'inline', marginBottom: '.5em' }}
         >
-          <Text id="Settings.StarryBackground" />
+          {__('Twinkling stars')}
         </Option>
         <Option
           onClick={() => this.setDefault('Light')}
           selected={!wallpaper && defaultStyle.startsWith('Light')}
           style={{ display: 'inline', marginBottom: '.5em' }}
         >
-          <Text id="Settings.LightBackground" />
+          {__('Cosmic light')}
         </Option>
         <Option htmlFor={this.fileInputID} selected={!!wallpaper}>
           {wallpaper ? (
             <span>
-              <Text id="Settings.CustomWallpaper" />: {wallpaper}
+              {__('Custom wallpaper')}: {wallpaper}
             </span>
           ) : (
-            <Text id="Settings.SelectCustomWallpaper" />
+            __('Select a custom wallpaper')
           )}
         </Option>
         <input

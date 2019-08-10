@@ -18,7 +18,6 @@ import TerminalCore from './TerminalCore';
 import consoleIcon from 'images/console.sprite.svg';
 import logoIcon from 'images/logo.sprite.svg';
 import coreIcon from 'images/core.sprite.svg';
-import Text from 'components/Text';
 
 const TerminalComponent = styled.div({
   height: '100%',
@@ -92,7 +91,7 @@ class Terminal extends Component {
     return (
       <Panel
         icon={consoleIcon}
-        title={<Text id="Console.Console" />}
+        title={__('Console')}
         bodyScrollable={false}
       >
         <TerminalComponent>
@@ -100,12 +99,12 @@ class Terminal extends Component {
             <Tab
               link={`${match.url}/Console`}
               icon={logoIcon}
-              text={<Text id="Console.Console" />}
+              text={__('Console')}
             />
             <Tab
               link={`${match.url}/Core`}
               icon={coreIcon}
-              text={<Text id="Console.CoreOutput" />}
+              text={__('Core output')}
             />
           </TerminalTabBar>
 

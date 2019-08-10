@@ -76,11 +76,6 @@ export const SetMarketAveData = () => dispatch => {
 
 export const BlockDate = stamp => ({ type: TYPE.BLOCK_DATE, payload: stamp });
 
-export const SetHighestPeerBlock = hpb => ({
-  type: TYPE.SET_HIGHEST_PEER_BLOCK,
-  payload: hpb,
-});
-
 export const AddRPCCall = returnCall => ({
   type: TYPE.ADD_RPC_CALL,
   payload: returnCall,

@@ -19,7 +19,7 @@ import { jsx, css } from '@emotion/core';
 // Internal
 import Tooltip from 'components/Tooltip';
 import { timing, consts } from 'styles';
-import { passRef } from 'utils/etc';
+import { passRef } from 'utils/misc';
 import * as color from 'utils/color';
 
 const ErrorMessage = styled(Tooltip)(

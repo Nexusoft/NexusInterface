@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 
 import rpc from 'lib/rpc';
 import { showNotification } from 'actions/overlays';
-import Text from 'components/Text';
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
 import { consts } from 'styles';
@@ -33,18 +32,12 @@ class RescanButton extends React.Component {
       this.setState({ rescanning: true });
       await rpc('rescan', []);
     } catch (err) {
-      this.props.showNotification(
-        <Text id="MyAddressesModal.RescanError" />,
-        'error'
-      );
+      this.props.showNotification(__('Error rescanning'), 'error');
       return;
     } finally {
       this.setState({ rescanning: false });
     }
-    this.props.showNotification(
-      <Text id="MyAddressesModal.RescanSuccess" />,
-      'success'
-    );
+    this.props.showNotification(__('Rescanned successfully'), 'success');
   };
 
   /**
@@ -59,7 +52,10 @@ class RescanButton extends React.Component {
       <Tooltip.Trigger
         tooltip={
           !rescanning &&
-          this.props.tooltip && <Text id="MyAddressesModal.RescanTooltip" />
+          this.props.tooltip &&
+          __(
+            'Used to correct transaction/balance issues, scans over every block in the database. Could take up to 10 minutes.'
+          )
         }
       >
         <Button
@@ -67,11 +63,7 @@ class RescanButton extends React.Component {
           onClick={this.rescan}
           style={{ height: consts.inputHeightEm + 'em' }}
         >
-          {rescanning ? (
-            <Text id="MyAddressesModal.Rescanning" />
-          ) : (
-            <Text id="MyAddressesModal.Rescan" />
-          )}
+          {rescanning ? __('Rescanning...') : __('Rescan wallet')}
         </Button>
       </Tooltip.Trigger>
     );

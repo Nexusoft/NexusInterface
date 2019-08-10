@@ -13,10 +13,13 @@
 import React from 'react';
 import styled from '@emotion/styled';
 
+import { consts } from 'styles';
+
 const FieldSetComponent = styled.fieldset(({ theme }) => ({
   padding: '.5em 1.5em 1.5em',
   borderRadius: 4,
   border: `1px solid ${theme.mixer(0.25)}`,
+  margin: `${consts.lineHeight}em 0`,
 }));
 
 const Legend = styled.legend(({ theme }) => ({

@@ -4,15 +4,15 @@ import { connect } from 'react-redux';
 import { remote } from 'electron';
 
 // Internal Global Dependencies
-import googleanalytics from 'scripts/googleanalytics';
+import GA from 'lib/googleAnalytics';
 import ContextMenuBuilder from 'contextmenu';
-import Text from 'components/Text';
 import Icon from 'components/Icon';
 import Panel from 'components/Panel';
 import Button from 'components/Button';
 import WaitingMessage from 'components/WaitingMessage';
 import Tooltip from 'components/Tooltip';
 import { openModal } from 'actions/overlays';
+import { isCoreConnected } from 'selectors';
 
 // Internal Local Dependencies
 import MoveBetweenAccountsModal from './MoveBetweenAccountsModal';
@@ -23,7 +23,7 @@ import sendIcon from 'images/send.sprite.svg';
 import swapIcon from 'images/swap.sprite.svg';
 
 const mapStateToProps = state => ({
-  connections: state.core.info.connections,
+  coreConnected: isCoreConnected(state),
 });
 
 const actionCreators = { openModal };
@@ -46,7 +46,7 @@ class Send extends Component {
    */
   componentDidMount() {
     window.addEventListener('contextmenu', this.setupcontextmenu, false);
-    googleanalytics.SendScreen('Send');
+    GA.SendScreen('Send');
   }
 
   /**
@@ -91,12 +91,10 @@ class Send extends Component {
     return (
       <Panel
         icon={sendIcon}
-        title={<Text id="sendReceive.SendNexus" />}
+        title={__('Send NXS')}
         controls={
-          this.props.connections !== undefined && (
-            <Tooltip.Trigger
-              tooltip={<Text id="sendReceive.MoveNxsBetweenAccount" />}
-            >
+          this.props.coreConnected && (
+            <Tooltip.Trigger tooltip={__('Move NXS between accounts')}>
               <Button
                 square
                 skin="primary"
@@ -109,9 +107,9 @@ class Send extends Component {
           )
         }
       >
-        {!true || this.props.connections === undefined ? (
+        {!this.props.coreConnected ? (
           <WaitingMessage>
-            <Text id="Alert.DaemonLoadingWait" />
+            {__('Connecting to Nexus Core')}
             ...
           </WaitingMessage>
         ) : (
