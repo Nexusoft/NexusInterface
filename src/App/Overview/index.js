@@ -680,9 +680,9 @@ class Overview extends Component {
                 {market && market.price ? (
                   <>
 		    {fiatcurrency === 'BTC' 
-		      ? formatNumber(market.price, 8)
+		      ? formatCurrency(market.price, fiatCurrency, 8)
 		      : fiatcurrency !== 'BTC' 
-		      ? formatNumber(market.price, 4)
+		      ? formatCurrency(market.price, fiatCurrency, 4)
 		      : ''}
 		  </>
                 ) : (
