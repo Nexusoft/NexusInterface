@@ -13,6 +13,7 @@ import zar from './ZAR.sprite.svg';
 import chf from './CHF.sprite.svg';
 import twd from './TWD.sprite.svg';
 import aed from './AED.sprite.svg';
+import btc from './BTC.sprite.svg';
 
 const DollarSign = usd;
 const PoundSign = gbp;
@@ -29,6 +30,7 @@ const RandSign = zar;
 const FrancSign = chf;
 const TaiDollarSign = twd;
 const DirhamSign = aed;
+const Bitcoin = btc;
 
 export function CurrencyIcon(ISOValue) {
   switch (ISOValue) {
@@ -71,6 +73,8 @@ export function CurrencyIcon(ISOValue) {
       return TaiDollarSign;
     case 'AED':
       return DirhamSign;
+    case 'BTC':
+      return Bitcoin;
     default:
       return DollarSign;
   }
