@@ -680,7 +680,7 @@ class Overview extends Component {
                 {market && market.price ? (
                   <>
 		    {fiatCurrency === 'BTC' 
-		      ? formatCurrency(market.price, fiatCurrency, 8)
+		      ? formatCurrency(market.price, fiatCurrency, 9)
 		      : fiatCurrency !== 'BTC' 
 		      ? formatCurrency(market.price, fiatCurrency, 4)
 		      : ''}
@@ -847,7 +847,7 @@ class Overview extends Component {
                 {market && market.price ? (
                   <>
 		    {fiatCurrency === 'BTC' 
-		      ? formatCurrency(market.price, fiatCurrency, 8)
+		      ? formatCurrency(market.price, fiatCurrency, 9)
 		      : fiatCurrency !== 'BTC' 
 		      ? formatCurrency(market.price, fiatCurrency, 4)
 		      : ''}
