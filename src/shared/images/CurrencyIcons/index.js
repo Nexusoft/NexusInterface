@@ -43,6 +43,8 @@ export function CurrencyIcon(ISOValue) {
     case 'NZD':
     case 'SGD':
       return DollarSign;
+    case 'BTC':
+      return Bitcoin;
     case 'GBP':
       return PoundSign;
     case 'CLP':
@@ -73,8 +75,6 @@ export function CurrencyIcon(ISOValue) {
       return TaiDollarSign;
     case 'AED':
       return DirhamSign;
-    case 'BTC':
-      return Bitcoin;
     default:
       return DollarSign;
   }

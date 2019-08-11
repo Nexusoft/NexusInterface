@@ -678,7 +678,13 @@ class Overview extends Component {
               </StatLabel>
               <StatValue>
                 {market && market.price ? (
-                  formatCurrency(market.price, fiatCurrency, 4)
+                  <>
+		    {fiatcurrency === 'BTC' 
+		      ? formatNumber(market.price, 8)
+		      : fiatcurrency !== 'BTC' 
+		      ? formatNumber(market.price, 4)
+		      : ''}
+		  </>
                 ) : (
                   <span className="dim">-</span>
                 )}
