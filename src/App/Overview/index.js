@@ -679,9 +679,9 @@ class Overview extends Component {
               <StatValue>
                 {market && market.price ? (
                   <>
-		    {fiatcurrency === 'BTC' 
+		    {fiatCurrency === 'BTC' 
 		      ? formatCurrency(market.price, fiatCurrency, 8)
-		      : fiatcurrency !== 'BTC' 
+		      : fiatCurrency !== 'BTC' 
 		      ? formatCurrency(market.price, fiatCurrency, 4)
 		      : ''}
 		  </>
@@ -845,7 +845,13 @@ class Overview extends Component {
               </StatLabel>
               <StatValue>
                 {market && market.price ? (
-                  formatCurrency(market.price, fiatCurrency, 4)
+                  <>
+		    {fiatCurrency === 'BTC' 
+		      ? formatCurrency(market.price, fiatCurrency, 8)
+		      : fiatCurrency !== 'BTC' 
+		      ? formatCurrency(market.price, fiatCurrency, 4)
+		      : ''}
+		  </>
                 ) : (
                   <span className="dim">-</span>
                 )}
