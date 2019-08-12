@@ -60,7 +60,6 @@ export const defaultSettings = {
   experimentalWarningDisabled: false,
   encryptionWarningDisabled: false,
   bootstrapSuggestionDisabled: false,
-  showTransactionChart: true,
   windowWidth: 1200,
   windowHeight: 800,
   windowX: undefined,
