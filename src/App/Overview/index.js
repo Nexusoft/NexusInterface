@@ -678,7 +678,13 @@ class Overview extends Component {
               </StatLabel>
               <StatValue>
                 {market && market.price ? (
-                  formatCurrency(market.price, fiatCurrency, 4)
+                  <>
+		    {fiatCurrency === 'BTC' 
+		      ? formatCurrency(market.price, fiatCurrency, 8)
+		      : fiatCurrency !== 'BTC' 
+		      ? formatCurrency(market.price, fiatCurrency, 4)
+		      : ''}
+		  </>
                 ) : (
                   <span className="dim">-</span>
                 )}
@@ -839,7 +845,13 @@ class Overview extends Component {
               </StatLabel>
               <StatValue>
                 {market && market.price ? (
-                  formatCurrency(market.price, fiatCurrency, 4)
+                  <>
+		    {fiatCurrency === 'BTC' 
+		      ? formatCurrency(market.price, fiatCurrency, 8)
+		      : fiatCurrency !== 'BTC' 
+		      ? formatCurrency(market.price, fiatCurrency, 4)
+		      : ''}
+		  </>
                 ) : (
                   <span className="dim">-</span>
                 )}
