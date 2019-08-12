@@ -35,6 +35,7 @@ const WarningIcon = styled(Icon)(({ theme }) => ({
 
 const fiatCurrencies = [
   { value: 'AUD', display: 'Australian Dollar (AUD)' },
+  { value: 'BTC', display: 'Bitcoin (BTC)' },
   { value: 'BRL', display: 'Brazilian Real (BRL)' },
   { value: 'GBP', display: 'British Pound (GBP)' },
   { value: 'CAD', display: 'Canadian Dollar (CAD)' },
