@@ -283,7 +283,7 @@ class SettingsApp extends Component {
           />
         </SettingsField>
 
-        <SettingsField label={__('Fiat currency')}>
+        <SettingsField label={__('Base currency')}>
           <Select
             value={settings.fiatCurrency}
             onChange={this.updateHandlers('fiatCurrency')}
