@@ -6,7 +6,10 @@ export function readJson(path) {
     const json = fs.readFileSync(path);
     return JSON.parse(json);
   } catch (err) {
-    log.warn(`Error reading JSON at ${path} : ${err}`);
+    log.warn(
+      `Cannot read JSON file at ${path}, returning an empty object as fallback`,
+      err
+    );
     return {};
   }
 }

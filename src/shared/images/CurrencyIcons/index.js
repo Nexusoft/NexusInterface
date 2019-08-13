@@ -1,36 +1,19 @@
-import usd from './USD.sprite.svg';
-import gbp from './GBP.sprite.svg';
-import clp from './CLP.sprite.svg';
-import cny from './CNY.sprite.svg';
-import czk from './CZK.sprite.svg';
-import eur from './EUR.sprite.svg';
-import ils from './ILS.sprite.svg';
-import krw from './KRW.sprite.svg';
-import pkr from './PKR.sprite.svg';
-import rub from './RUB.sprite.svg';
-import sar from './SAR.sprite.svg';
-import zar from './ZAR.sprite.svg';
-import chf from './CHF.sprite.svg';
-import twd from './TWD.sprite.svg';
-import aed from './AED.sprite.svg';
-import btc from './BTC.sprite.svg';
-
-const DollarSign = usd;
-const PoundSign = gbp;
-const PesoSign = clp;
-const YenSign = cny;
-const KorunaSign = czk;
-const EuroSign = eur;
-const ShekelSign = ils;
-const WonSign = krw;
-const RubeeSign = pkr;
-const RubleSign = rub;
-const RiyalSign = sar;
-const RandSign = zar;
-const FrancSign = chf;
-const TaiDollarSign = twd;
-const DirhamSign = aed;
-const Bitcoin = btc;
+import DollarSign from './USD.sprite.svg';
+import PoundSign from './GBP.sprite.svg';
+import PesoSign from './CLP.sprite.svg';
+import YenSign from './CNY.sprite.svg';
+import KorunaSign from './CZK.sprite.svg';
+import EuroSign from './EUR.sprite.svg';
+import ShekelSign from './ILS.sprite.svg';
+import WonSign from './KRW.sprite.svg';
+import RubeeSign from './PKR.sprite.svg';
+import RubleSign from './RUB.sprite.svg';
+import RiyalSign from './SAR.sprite.svg';
+import RandSign from './ZAR.sprite.svg';
+import FrancSign from './CHF.sprite.svg';
+import TaiDollarSign from './TWD.sprite.svg';
+import DirhamSign from './AED.sprite.svg';
+import BitcoinSign from './BTC.sprite.svg';
 
 export function CurrencyIcon(ISOValue) {
   switch (ISOValue) {
@@ -44,7 +27,7 @@ export function CurrencyIcon(ISOValue) {
     case 'SGD':
       return DollarSign;
     case 'BTC':
-      return Bitcoin;
+      return BitcoinSign;
     case 'GBP':
       return PoundSign;
     case 'CLP':

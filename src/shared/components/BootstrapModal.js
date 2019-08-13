@@ -105,7 +105,6 @@ function getPercentage({ step, details }) {
         ? Math.min(Math.round((1000 * downloaded) / totalSize), 1000) / 10
         : 0;
     case 'extracting':
-    case 'stopping_core':
     case 'moving_db':
     case 'restarting_core':
     case 'rescanning':

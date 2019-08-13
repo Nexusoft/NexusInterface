@@ -11,7 +11,7 @@ const actionCreators = {
 };
 
 const LicenseAgreement = ({ acceptAgreement }) => (
-  <FullScreen header={__('License Agreement')}>
+  <FullScreen header="License Agreement">
     <p>The MIT License (MIT)</p>
     <p>Copyright {new Date().getFullYear()} Nexus</p>
     <p>
@@ -45,7 +45,7 @@ const LicenseAgreement = ({ acceptAgreement }) => (
         onClick={acceptAgreement}
         style={{ fontSize: 17 }}
       >
-        {__('I have read and Accept the Agreement')}
+        I have read and Accept the Agreement
       </Button>
     </p>
   </FullScreen>
