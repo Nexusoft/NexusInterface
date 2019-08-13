@@ -7,7 +7,7 @@ export function readJson(path) {
     return JSON.parse(json);
   } catch (err) {
     log.warn(
-      `Cannot read JSON file at ${path}, returning empty JSON as fallback`,
+      `Cannot read JSON file at ${path}, returning an empty object as fallback`,
       err
     );
     return {};
