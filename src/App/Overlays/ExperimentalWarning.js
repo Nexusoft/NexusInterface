@@ -25,7 +25,7 @@ const ExperimentalWarning = ({ disableExperimentalWarning }) => (
         'IMPROPER USE OF THIS SOFTWARE COULD LEAD TO PERMANENT LOSS OF COIN.'
       )}
     </p>
-    <p>{__('BACKUP OFTEN AND KEEP ENCRYPTION KEY SAFE.')}</p>
+    <p>{__('BACKUP YOUR WALLET OFTEN AND KEEP YOUR PASSWORDS SAFE.')}</p>
     <Buttons>
       <Button skin="primary" onClick={disableExperimentalWarning}>
         {__('I understand the risk')}
