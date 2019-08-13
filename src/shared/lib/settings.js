@@ -4,7 +4,7 @@ import macaddress from 'macaddress';
 import { walletDataDir } from 'consts/paths';
 import { homeDir } from 'consts/paths';
 import { coreDataDir } from 'consts/paths';
-import { readJson, writeJson } from 'utils/fileSystem';
+import { readJson, writeJson } from 'utils/json';
 
 const settingsFileName = 'settings.json';
 const settingsFilePath = path.join(walletDataDir, settingsFileName);
