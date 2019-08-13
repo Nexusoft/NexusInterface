@@ -141,11 +141,11 @@ class SettingsApp extends Component {
         note: (
           <div>
             <p>
-              {_(`This is only for module developers and can be dangerous for
+              {__(`This is only for module developers and can be dangerous for
               regular users. Please make sure you know what you are doing!`)}
             </p>
             <p>
-              {_(`It would be much easier for a closed source module to hide
+              {__(`It would be much easier for a closed source module to hide
               malicious code than for an open source one. Therefore, in case you
               still want to disable this setting, it is highly recommended that
               you only install and run closed source modules that you are
