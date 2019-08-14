@@ -14,6 +14,7 @@
 #### Fixes
 
 - Fixed issues with the transaction page
+- Fixed issue with auto updates with Linux-AppImage
 
 # 1.2.0 (2019.8.09)
 
