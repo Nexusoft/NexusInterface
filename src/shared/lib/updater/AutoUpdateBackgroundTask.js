@@ -5,8 +5,10 @@ import { openConfirmDialog, showBackgroundTask } from 'actions/overlays';
 
 @connect(
   null,
-  openConfirmDialog,
-  showBackgroundTask
+  {
+    openConfirmDialog,
+    showBackgroundTask,
+  }
 )
 export default class AutoUpdateBackgroundTask extends React.Component {
   confirmInstall = () => {

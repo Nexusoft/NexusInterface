@@ -1,6 +1,24 @@
+# 1.2.1 (2019.8.XX)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v1.2.1)
+
+#### Additions
+
+- Improved Translations
+- Added ability to set your Core Data Directory
+
+#### Adjustments
+
+- asd
+
+#### Fixes
+
+- Fixed issues with the transaction page
+- Fixed issue with auto updates with Linux-AppImage
+
 # 1.2.0 (2019.8.09)
 
-[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v1.1.1)
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v1.2.0)
 
 #### Additions
 
