@@ -72,7 +72,7 @@ export function initializeBootstrapEvents({ dispatch }) {
  */
 export async function checkFreeSpaceForBootstrap() {
   const diskSpace = await checkDiskSpace(coreDataDir);
-  return diskSpace.free >= 12 * 1000 * 1000 * 1000; // 12 GB
+  return diskSpace.free >= 15 * 1000 * 1000 * 1000; // 15 GB
 }
 
 /**

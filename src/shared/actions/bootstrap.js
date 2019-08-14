@@ -1,9 +1,13 @@
 import * as TYPE from 'consts/actionTypes';
-import { openConfirmDialog, openModal, openErrorDialog } from 'actions/overlays';
+import {
+  openConfirmDialog,
+  openModal,
+  openErrorDialog,
+} from 'actions/overlays';
 import { updateSettings } from 'actions/settings';
 import { startBootstrap, checkFreeSpaceForBootstrap } from 'lib/bootstrap';
 import BootstrapModal from 'components/BootstrapModal';
-import store from 'store'; 
+import store from 'store';
 
 export const setBootstrapStatus = (step, details) => ({
   type: TYPE.BOOTSTRAP_STATUS,
@@ -30,7 +34,7 @@ export function bootstrap({ suggesting } = {}) {
         store.dispatch(
           openErrorDialog({
             message: __(
-              'Not enough disk space! Minimum 12GB of free space is required.'
+              'Not enough disk space! Minimum 15GB of free space is required.'
             ),
           })
         );
