@@ -120,11 +120,14 @@ export async function startBootstrap({ dispatch, getState }) {
     await dispatch(stopCore());
 
     setStatus('downloading', {});
-    const downloadProgress = throttled(
-      details => setStatus('downloading', details),
-      1000
-    );
+    // A flag to prevent bootstrap status being set back to downloading
+    // when download is already done or aborted
+    let downloading = true;
+    const downloadProgress = throttled(details => {
+      if (downloading) setStatus('downloading', details);
+    }, 1000);
     await downloadDb(recentDbUrl, downloadProgress);
+    downloading = false;
     if (aborting) {
       bootstrapEvents.emit('abort');
       return false;
