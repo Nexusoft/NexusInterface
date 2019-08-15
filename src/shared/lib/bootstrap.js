@@ -47,14 +47,16 @@ export function initializeBootstrapEvents({ dispatch }) {
       showNotification(__('Bootstrap process has been aborted'), 'error')
     )
   );
-  bootstrapEvents.on('error', err =>
+  bootstrapEvents.on('error', err => {
+    console.error(err);
     dispatch(
       openErrorDialog({
         message: __('Error bootstrapping recent database'),
-        note: err.message || 'Unknown error',
+        note:
+          typeof err === 'string' ? err : err.message || __('Unknown error'),
       })
-    )
-  );
+    );
+  });
   bootstrapEvents.on('success', () =>
     dispatch(
       openSuccessDialog({
