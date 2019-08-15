@@ -5,7 +5,7 @@
 #### Additions
 
 - Improved Translations
-- Added ability to set your Core Data Directory
+- Added ability to use the `walletclean` core command. To use add `"walletClean": true` to settings.json
 
 #### Adjustments
 
