@@ -1,4 +1,4 @@
-# 1.2.1 (2019.8.XX)
+# 1.2.1 (2019.8.15)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v1.2.1)
 
@@ -6,15 +6,17 @@
 
 - Improved Translations
 - Added ability to use the `walletclean` core command. To use add `"walletClean": true` to settings.json
+- Included core [3.0.5](https://github.com/Nexusoft/LLL-TAO/releases/tag/3.0.4)
 
 #### Adjustments
 
-- asd
+- None
 
 #### Fixes
 
 - Fixed issues with the transaction page
 - Fixed issue with auto updates with Linux-AppImage
+- Bootsrapper will now show the correct message while the database is extracting
 
 # 1.2.0 (2019.8.09)
 
