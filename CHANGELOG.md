@@ -6,6 +6,7 @@
 
 - Improved Translations
 - Added "Reload transaction history" button to Core Settings
+- Added `walletClean` hidden setting which indicates the core should run with `-walletclean` parameter (the same as "Reload transaction history" functionality) the next time it starts up when set to true
 - Added BTC to base currencies
 
 #### Adjustments

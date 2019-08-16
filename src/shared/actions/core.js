@@ -42,13 +42,13 @@ export const stopCore = () => async (dispatch, getState) => {
   }
 };
 
-export const startCore = options => async dispatch => {
-  await remote.getGlobal('core').start(options);
+export const startCore = () => async dispatch => {
+  await remote.getGlobal('core').start();
   dispatch(startAutoConnect());
 };
 
-export const restartCore = options => async dispatch => {
+export const restartCore = () => async dispatch => {
   dispatch(clearCoreInfo());
-  await remote.getGlobal('core').restart(options);
+  await remote.getGlobal('core').restart();
   dispatch(startAutoConnect());
 };

@@ -9,24 +9,24 @@ import styled from '@emotion/styled';
 // Internal
 import { switchSettingsTab } from 'actions/ui';
 import { stopCore, startCore, restartCore } from 'actions/core';
+import { showNotification, openConfirmDialog } from 'actions/overlays';
+import { updateSettings, updateTempSettings } from 'actions/settings';
 import WaitingMessage from 'components/WaitingMessage';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
 import Switch from 'components/Switch';
-import { showNotification, openConfirmDialog } from 'actions/overlays';
-import { updateSettings, updateTempSettings } from 'actions/settings';
 import { tempSettings } from 'lib/settings';
 import { rpcErrorHandler, resolveValue } from 'utils/form';
 import confirm from 'utils/promisified/confirm';
-
 import { isCoreConnected } from 'selectors';
-import ReScanButton from './RescanButton.js';
 import { coreDataDir } from 'consts/paths';
 import * as color from 'utils/color';
 import { consts } from 'styles';
 import warningIcon from 'images/warning.sprite.svg';
 import Icon from 'components/Icon';
+
+import ReScanButton from './RescanButton.js';
 
 const RestartPrompt = styled.div(({ theme }) => ({
   background: color.darken(theme.background, 0.2),
@@ -332,7 +332,8 @@ class SettingsCore extends Component {
         'Nexus Core will be restarted, after that, it will take a while for the transaction history to be reloaded',
     });
     if (confirmed) {
-      this.props.restartCore({ walletClean: true });
+      this.props.updateSettings({ walletClean: true });
+      this.props.restartCore();
     }
   };
 

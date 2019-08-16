@@ -107,8 +107,7 @@ class Core {
    *
    * @memberof Core
    */
-  start = async options => {
-    const { walletClean } = options || {};
+  start = async () => {
     const settings = LoadSettings();
     const corePID = await getCorePID();
     this._config = null;
@@ -171,8 +170,9 @@ class Core {
       params.push('-forkblocks=' + settings.forkBlocks);
       UpdateSettings({ forkBlocks: 0 });
     }
-    if (walletClean) {
+    if (settings.walletClean) {
       params.push('-walletclean');
+      UpdateSettings({ walletClean: false });
     }
     //Avatar is default so only add it if it is off.
     if (!settings.avatarMode) {
@@ -290,9 +290,9 @@ class Core {
    *
    * @memberof Core
    */
-  restart = async options => {
+  restart = async () => {
     await this.stop();
-    await this.start(options);
+    await this.start();
   };
 }
 
