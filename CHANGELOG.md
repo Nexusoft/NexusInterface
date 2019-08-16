@@ -5,18 +5,21 @@
 #### Additions
 
 - Improved Translations
-- Added ability to use the `walletclean` core command. To use add `"walletClean": true` to settings.json
-- Included core [3.0.5](https://github.com/Nexusoft/LLL-TAO/releases/tag/3.0.4)
+- Added "Reload transaction history" button to Core Settings
+- Added BTC to base currencies
 
 #### Adjustments
 
-- None
+- Updated Nexus Core to [v3.0.5](https://github.com/Nexusoft/LLL-TAO/releases/tag/3.0.5)
 
 #### Fixes
 
 - Fixed issues with the transaction page
+- Fixed Transaction Details modal not showing up
 - Fixed issue with auto updates with Linux-AppImage
 - Bootsrapper will now show the correct message while the database is extracting
+- Fixed Market page layout
+- Immature transactions will now automatically updated when it matures
 
 # 1.2.0 (2019.8.09)
 
