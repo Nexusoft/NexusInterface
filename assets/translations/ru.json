@@ -1,6 +1,6 @@
 {
-  "%{name}'s Address": "%{name}'s Адрес",
-  "%{name}'s Nexus address": "%{name}'с Nexus адресом",
+  "%{name}'s Address": null,
+  "%{name}'s Nexus address": null,
   "%{smart_count} address |||| %{smart_count} addresses": null,
   "(This will restart your Core)": null,
   "24hr Change": "24 часа смены",
