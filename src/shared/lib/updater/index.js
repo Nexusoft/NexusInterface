@@ -2,12 +2,15 @@
 import { remote } from 'electron';
 import log from 'electron-log';
 import path from 'path';
+import fs from 'fs-extra';
+import axios from 'axios';
 
 // Internal
 import store from 'store';
 import { setUpdaterState } from 'actions/updater';
 import { showBackgroundTask, showNotification } from 'actions/overlays';
 import AutoUpdateBackgroundTask from './AutoUpdateBackgroundTask';
+import { walletDataDir } from 'consts/paths';
 
 const mainUpdater = remote.getGlobal('updater');
 const autoUpdateInterval = 2 * 60 * 60 * 1000; // 2 hours
@@ -40,17 +43,47 @@ export function quitAndInstall() {
  * @returns
  */
 export async function startAutoUpdate() {
-  if (process.platform === 'darwin') return;
+  let checkGithubManual = false;
+  if (process.platform === 'darwin') checkGithubManual = true;
+  if (process.platform === 'linux') {
+    const fileExist = fs.existsSync(path.join(walletDataDir, 'app-update.yml'));
 
-  try {
-    clearTimeout(timerId);
-    const result = await mainUpdater.checkForUpdates();
-    if (result.downloadPromise) {
-      await result.downloadPromise;
+    if (!fileExist) {
+      checkGithubManual = true;
     }
-  } finally {
-    // Check for updates every 2 hours
+  }
+
+  if (checkGithubManual) {
+    clearTimeout(timerId);
+    try {
+      const response = await axios.get(
+        'https://api.github.com/repos/Nexusoft/NexusInterface/releases/latest'
+      );
+      if (APP_VERSION !== response.data.tag_name) {
+        console.log('New Version, Click to download');
+        store.dispatch(
+          showBackgroundTask(AutoUpdateBackgroundTask, {
+            version: response.data.tag_name,
+            quitAndInstall: null,
+            gitHub: true,
+          })
+        );
+      }
+    } catch (e) {
+      console.error(e);
+    }
     timerId = setTimeout(startAutoUpdate, autoUpdateInterval);
+  } else {
+    try {
+      clearTimeout(timerId);
+      const result = await mainUpdater.checkForUpdates();
+      if (result.downloadPromise) {
+        await result.downloadPromise;
+      }
+    } finally {
+      // Check for updates every 2 hours
+      timerId = setTimeout(startAutoUpdate, autoUpdateInterval);
+    }
   }
 }
 
