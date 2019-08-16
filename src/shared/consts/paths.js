@@ -23,7 +23,7 @@ export const coreDataDir =
     ? path.join(appDataDir, 'Nexus')
     : path.join(process.env.HOME, '/.Nexus');
 
-const assetsParentDir =
+export const assetsParentDir =
   process.env.NODE_ENV === 'development'
     ? process.cwd()
     : process.platform === 'darwin'

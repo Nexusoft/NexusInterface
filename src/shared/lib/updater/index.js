@@ -10,7 +10,7 @@ import store from 'store';
 import { setUpdaterState } from 'actions/updater';
 import { showBackgroundTask, showNotification } from 'actions/overlays';
 import AutoUpdateBackgroundTask from './AutoUpdateBackgroundTask';
-import { walletDataDir } from 'consts/paths';
+import { assetsParentDir, walletDataDir } from 'consts/paths';
 
 const mainUpdater = remote.getGlobal('updater');
 const autoUpdateInterval = 2 * 60 * 60 * 1000; // 2 hours
@@ -46,8 +46,9 @@ export async function startAutoUpdate() {
   let checkGithubManual = false;
   if (process.platform === 'darwin') checkGithubManual = true;
   if (process.platform === 'linux') {
-    const fileExist = fs.existsSync(path.join(walletDataDir, 'app-update.yml'));
-
+    const fileExist = fs.existsSync(
+      path.join(assetsParentDir, 'app-update.yml')
+    );
     if (!fileExist) {
       checkGithubManual = true;
     }
@@ -59,8 +60,11 @@ export async function startAutoUpdate() {
       const response = await axios.get(
         'https://api.github.com/repos/Nexusoft/NexusInterface/releases/latest'
       );
-      if (APP_VERSION !== response.data.tag_name) {
-        console.log('New Version, Click to download');
+      if (
+        'v' + APP_VERSION !== response.data.tag_name &&
+        response.data.prerelease === false
+      ) {
+        console.log(`New Version ${response.data.tag_name}, Click to download`);
         store.dispatch(
           showBackgroundTask(AutoUpdateBackgroundTask, {
             version: response.data.tag_name,
