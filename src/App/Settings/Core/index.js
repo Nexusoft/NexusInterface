@@ -327,7 +327,7 @@ class SettingsCore extends Component {
 
   reloadTxHistory = async () => {
     const confirmed = await confirm({
-      question: __('Reload transaction history?'),
+      question: __('Reload transaction history') + '?',
       note:
         'Nexus Core will be restarted, after that, it will take a while for the transaction history to be reloaded',
     });
