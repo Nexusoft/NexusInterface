@@ -288,7 +288,7 @@
   "No, let it continue": "Nem, hagyjuk folytatni",
   "No, let it sync": "Nem, hagyja, hogy szinkronizáljon",
   "Not available": "Nem elérhető",
-  "Not enough disk space! Minimum 15GB of free space is required.": null,
+  "Not enough disk space! Minimum 15GB of free space is required.": "Nincs elég hely a merevlemezen! Legalább 15GB szabad hely szükséges.",
   "Not logged in": "Nincs belépve",
   "Not provided": "Nincs megadva",
   "Notes": "Megjegyzések",

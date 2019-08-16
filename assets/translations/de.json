@@ -288,7 +288,7 @@
   "No, let it continue": "Nein, lassen Sie es fortfahren",
   "No, let it sync": null,
   "Not available": "Nicht verfügbar",
-  "Not enough disk space! Minimum 15GB of free space is required.": null,
+  "Not enough disk space! Minimum 15GB of free space is required.": "Nicht genügend Speicherplatz! Mindestens 15GB freier Speicherplatz sind erforderlich.",
   "Not logged in": "Die Wallet ist verschlüsselt",
   "Not provided": "Nicht angegeben",
   "Notes": "Anmerkungen",
