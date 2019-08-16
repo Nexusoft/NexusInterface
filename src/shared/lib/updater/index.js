@@ -4,6 +4,7 @@ import log from 'electron-log';
 import path from 'path';
 import fs from 'fs-extra';
 import axios from 'axios';
+import semver from 'semver';
 
 // Internal
 import store from 'store';
@@ -60,8 +61,10 @@ export async function startAutoUpdate() {
       const response = await axios.get(
         'https://api.github.com/repos/Nexusoft/NexusInterface/releases/latest'
       );
+      const latestVerion = response.data.tag_name;
       if (
-        'v' + APP_VERSION !== response.data.tag_name &&
+        semver.lt( "v" + APP_VERSION, latestVerion)
+          &&
         response.data.prerelease === false
       ) {
         console.log(`New Version ${response.data.tag_name}, Click to download`);
