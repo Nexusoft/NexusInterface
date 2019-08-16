@@ -17,12 +17,14 @@ import Switch from 'components/Switch';
 import { showNotification, openConfirmDialog } from 'actions/overlays';
 import { updateSettings, updateTempSettings } from 'actions/settings';
 import { tempSettings } from 'lib/settings';
-import * as form from 'utils/form';
-import { rpcErrorHandler } from 'utils/form';
+import { rpcErrorHandler, resolveValue } from 'utils/form';
+import confirm from 'utils/promisified/confirm';
+
 import { isCoreConnected } from 'selectors';
 import ReScanButton from './RescanButton.js';
 import { coreDataDir } from 'consts/paths';
 import * as color from 'utils/color';
+import { consts } from 'styles';
 import warningIcon from 'images/warning.sprite.svg';
 import Icon from 'components/Icon';
 
@@ -250,17 +252,17 @@ class SettingsCore extends Component {
    * @memberof SettingsCore
    */
   updateStaking(input) {
-    let value = form.resolveValue(input);
+    let value = resolveValue(input);
     this.askForCoreRestart(
       async () => {
         this.props.updateSettings({
-          enableStaking: form.resolveValue(value),
+          enableStaking: resolveValue(value),
         });
         this.restartCore();
       },
       () => {
         this.props.updateSettings({
-          enableStaking: form.resolveValue(value),
+          enableStaking: resolveValue(value),
         });
       }
     );
@@ -273,17 +275,17 @@ class SettingsCore extends Component {
    * @memberof SettingsCore
    */
   updateMining(input) {
-    let value = form.resolveValue(input);
+    let value = resolveValue(input);
     this.askForCoreRestart(
       async () => {
         this.props.updateSettings({
-          enableMining: form.resolveValue(value),
+          enableMining: resolveValue(value),
         });
         this.restartCore();
       },
       () => {
         this.props.updateSettings({
-          enableMining: form.resolveValue(value),
+          enableMining: resolveValue(value),
         });
       }
     );
@@ -296,7 +298,7 @@ class SettingsCore extends Component {
    * @memberof SettingsCore
    */
   updateMiningWhitelist(input) {
-    const output = form.resolveValue(input).replace(' ', '');
+    const output = resolveValue(input).replace(' ', '');
     this.props.updateTempSettings({
       ipMineWhitelist: output,
     });
@@ -313,15 +315,26 @@ class SettingsCore extends Component {
       if (!handlers[settingName]) {
         handlers[settingName] = input =>
           /*this.props.updateSettings({
-            [settingName]: form.resolveValue(input),
+            [settingName]: resolveValue(input),
           }); */
           this.props.updateTempSettings({
-            [settingName]: form.resolveValue(input),
+            [settingName]: resolveValue(input),
           });
       }
       return handlers[settingName];
     };
   })();
+
+  reloadTxHistory = async () => {
+    const confirmed = await confirm({
+      question: __('Reload transaction history?'),
+      note:
+        'Nexus Core will be restarted, after that, it will take a while for the transaction history to be reloaded',
+    });
+    if (confirmed) {
+      this.props.restartCore({ walletClean: true });
+    }
+  };
 
   // /**
   //  * Generates the number of ip witelist feilds there are
@@ -346,8 +359,6 @@ class SettingsCore extends Component {
     const settings = this.props.settings.tempSettings
       ? { ...this.props.settings, ...this.props.settings.tempSettings }
       : this.props.settings;
-
-    console.log(settings);
 
     if (!coreConnected && !settings.manualDaemon) {
       return (
@@ -452,6 +463,21 @@ class SettingsCore extends Component {
 
               <SettingsField
                 connectLabel
+                label={__('Reload transaction history')}
+                subLabel={__(
+                  'Restart Nexus core with -walletclean parameter to clean out and reload all transaction history'
+                )}
+              >
+                <Button
+                  onClick={this.reloadTxHistory}
+                  style={{ height: consts.inputHeightEm + 'em' }}
+                >
+                  {__('Reload')}
+                </Button>
+              </SettingsField>
+
+              <SettingsField
+                connectLabel
                 label={__('Verbose level')}
                 subLabel={__('Verbose level for logs.')}
               >
@@ -473,7 +499,11 @@ class SettingsCore extends Component {
                 )}
               >
                 <Switch
-                  checked={settings.avatarLevel != undefined ? settings.avatarLevel : true }
+                  checked={
+                    settings.avatarLevel != undefined
+                      ? settings.avatarLevel
+                      : true
+                  }
                   onChange={this.updateHandlers('avatarMode')}
                 />
               </SettingsField>
@@ -589,7 +619,7 @@ class SettingsCore extends Component {
           </div>*/}
           <Button
             className="space-right"
-            style={{ marginLeft: '1em', marginTop: '1em' }}
+            style={{ marginTop: '1em' }}
             type="submit"
             skin="primary"
             disabled={pristine || submitting}
