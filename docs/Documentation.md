@@ -317,45 +317,44 @@
     -   [render][313]
 -   [TerminalConsole][314]
     -   [loadCommandList][315]
-    -   [getSnapshotBeforeUpdate][316]
-    -   [componentDidUpdate][317]
-        -   [Parameters][318]
-    -   [execute][319]
-    -   [handleKeyDown][320]
-        -   [Parameters][321]
-    -   [formateAutoSuggest][322]
-        -   [Parameters][323]
-    -   [render][324]
--   [TerminalCore][325]
-    -   [componentWillReceiveProps][326]
-        -   [Parameters][327]
-    -   [onScrollEvent][328]
-    -   [render][329]
--   [About][330]
-    -   [getCurrentYear][331]
-    -   [getInterfaceVersionNumber][332]
-    -   [getDaemonVersionNumber][333]
-    -   [render][334]
--   [Modules][335]
-    -   [componentDidMount][336]
-    -   [componentWillUnmount][337]
-    -   [setupcontextmenu][338]
-        -   [Parameters][339]
-    -   [render][340]
--   [PageModule][341]
-    -   [Parameters][342]
--   [PageModule][343]
-    -   [Parameters][344]
--   [WebView][345]
-    -   [componentDidMount][346]
-    -   [componentWillUnmount][347]
-    -   [render][348]
--   [AppBackground][349]
-    -   [render][350]
--   [StarrySky][351]
--   [CosmicLight][352]
--   [ThemeController][353]
-    -   [render][354]
+    -   [componentDidUpdate][316]
+        -   [Parameters][317]
+    -   [execute][318]
+    -   [handleKeyDown][319]
+        -   [Parameters][320]
+    -   [formateAutoSuggest][321]
+        -   [Parameters][322]
+    -   [render][323]
+-   [TerminalCore][324]
+    -   [componentWillReceiveProps][325]
+        -   [Parameters][326]
+    -   [onScrollEvent][327]
+    -   [render][328]
+-   [About][329]
+    -   [getCurrentYear][330]
+    -   [getInterfaceVersionNumber][331]
+    -   [getDaemonVersionNumber][332]
+    -   [render][333]
+-   [Modules][334]
+    -   [componentDidMount][335]
+    -   [componentWillUnmount][336]
+    -   [setupcontextmenu][337]
+        -   [Parameters][338]
+    -   [render][339]
+-   [PageModule][340]
+    -   [Parameters][341]
+-   [PageModule][342]
+    -   [Parameters][343]
+-   [WebView][344]
+    -   [componentDidMount][345]
+    -   [componentWillUnmount][346]
+    -   [render][347]
+-   [AppBackground][348]
+    -   [render][349]
+-   [StarrySky][350]
+-   [CosmicLight][351]
+-   [ThemeController][352]
+    -   [render][353]
 
 ## Wallet
 
@@ -383,7 +382,7 @@ Formats the Difficulty to 3 decimal points
 
 -   `diff` **any** 
 
-Returns **[Number][355]** Diff but with 3 decimal point places
+Returns **[Number][354]** Diff but with 3 decimal point places
 
 ### componentDidMount
 
@@ -604,11 +603,11 @@ Clamp a number between min and max
 
 #### Parameters
 
--   `num` **[Number][355]** Input Value
--   `min` **[Number][355]** Min Value
--   `max` **[Number][355]** Max Value
+-   `num` **[Number][354]** Input Value
+-   `min` **[Number][354]** Min Value
+-   `max` **[Number][354]** Max Value
 
-Returns **[Number][355]** Return Value
+Returns **[Number][354]** Return Value
 
 ### coordinateToPosition
 
@@ -616,9 +615,9 @@ Translates a Lat and Lng to a Vector3 on a sphere
 
 #### Parameters
 
--   `lat` **[Number][355]** Latitude
--   `lng` **[Number][355]** longitude
--   `radius` **[Number][355]** radius of sphere
+-   `lat` **[Number][354]** Latitude
+-   `lng` **[Number][354]** longitude
+-   `radius` **[Number][354]** radius of sphere
 
 Returns **THREE.Vector3** Point on sphere
 
@@ -644,7 +643,7 @@ Sets color of the point
 
 #### Parameters
 
--   `hex` **[string][356]** 
+-   `hex` **[string][355]** 
 
 ## Header
 
@@ -712,7 +711,7 @@ Returns JSX of My Addresses
 
 ### Parameters
 
--   `$0` **[Object][357]** 
+-   `$0` **[Object][356]** 
     -   `$0.openModal`  
 
 Returns **JSX** JSX
@@ -875,7 +874,7 @@ Return JSX for the Add Recipient Button
 
 #### Parameters
 
--   `$0` **[Object][357]** 
+-   `$0` **[Object][356]** 
     -   `$0.fields`  
 
 ### render
@@ -1212,7 +1211,7 @@ Get Local time
 
 -   `tz` **any** TimeZone
 
-Returns **[string][356]** Hours:Minutes AM/PM
+Returns **[string][355]** Hours:Minutes AM/PM
 
 ## Settings
 
@@ -1859,19 +1858,12 @@ Console Page in the Terminal Page
 
 Loadin all the usable RPC commands
 
-### getSnapshotBeforeUpdate
-
-Before component Did Update
-
-Returns **any** 
-
 ### componentDidUpdate
 
 #### Parameters
 
 -   `prevProps` **any** 
 -   `PrevState` **any** 
--   `beforeUpdate` **any** 
 
 ### execute
 
@@ -1935,19 +1927,19 @@ About Page
 
 Get Current Year
 
-Returns **[number][355]** Current Year
+Returns **[number][354]** Current Year
 
 ### getInterfaceVersionNumber
 
 Get App Version
 
-Returns **[string][356]** App version from package.json
+Returns **[string][355]** App version from package.json
 
 ### getDaemonVersionNumber
 
 Gets Version number of the Daemon
 
-Returns **[String][356]** Damon Version
+Returns **[String][355]** Damon Version
 
 ### render
 
@@ -2683,86 +2675,84 @@ Returns **any**
 
 [315]: #loadcommandlist
 
-[316]: #getsnapshotbeforeupdate
+[316]: #componentdidupdate-3
 
-[317]: #componentdidupdate-3
+[317]: #parameters-63
 
-[318]: #parameters-63
+[318]: #execute
 
-[319]: #execute
+[319]: #handlekeydown
 
-[320]: #handlekeydown
+[320]: #parameters-64
 
-[321]: #parameters-64
+[321]: #formateautosuggest
 
-[322]: #formateautosuggest
+[322]: #parameters-65
 
-[323]: #parameters-65
+[323]: #render-48
 
-[324]: #render-48
+[324]: #terminalcore
 
-[325]: #terminalcore
+[325]: #componentwillreceiveprops
 
-[326]: #componentwillreceiveprops
+[326]: #parameters-66
 
-[327]: #parameters-66
+[327]: #onscrollevent
 
-[328]: #onscrollevent
+[328]: #render-49
 
-[329]: #render-49
+[329]: #about
 
-[330]: #about
+[330]: #getcurrentyear
 
-[331]: #getcurrentyear
+[331]: #getinterfaceversionnumber
 
-[332]: #getinterfaceversionnumber
+[332]: #getdaemonversionnumber
 
-[333]: #getdaemonversionnumber
+[333]: #render-50
 
-[334]: #render-50
+[334]: #modules
 
-[335]: #modules
+[335]: #componentdidmount-8
 
-[336]: #componentdidmount-8
+[336]: #componentwillunmount-6
 
-[337]: #componentwillunmount-6
+[337]: #setupcontextmenu-6
 
-[338]: #setupcontextmenu-6
+[338]: #parameters-67
 
-[339]: #parameters-67
+[339]: #render-51
 
-[340]: #render-51
+[340]: #pagemodule
 
-[341]: #pagemodule
+[341]: #parameters-68
 
-[342]: #parameters-68
+[342]: #pagemodule-1
 
-[343]: #pagemodule-1
+[343]: #parameters-69
 
-[344]: #parameters-69
+[344]: #webview
 
-[345]: #webview
+[345]: #componentdidmount-9
 
-[346]: #componentdidmount-9
+[346]: #componentwillunmount-7
 
-[347]: #componentwillunmount-7
+[347]: #render-52
 
-[348]: #render-52
+[348]: #appbackground
 
-[349]: #appbackground
+[349]: #render-53
 
-[350]: #render-53
+[350]: #starrysky
 
-[351]: #starrysky
+[351]: #cosmiclight
 
-[352]: #cosmiclight
+[352]: #themecontroller
 
-[353]: #themecontroller
+[353]: #render-54
 
-[354]: #render-54
+[354]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
 
-[355]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
+[355]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
 
-[356]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
-
-[357]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+[356]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
