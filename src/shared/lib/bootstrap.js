@@ -47,14 +47,16 @@ export function initializeBootstrapEvents({ dispatch }) {
       showNotification(__('Bootstrap process has been aborted'), 'error')
     )
   );
-  bootstrapEvents.on('error', err =>
+  bootstrapEvents.on('error', err => {
+    console.error(err);
     dispatch(
       openErrorDialog({
         message: __('Error bootstrapping recent database'),
-        note: err.message || 'Unknown error',
+        note:
+          typeof err === 'string' ? err : err.message || __('Unknown error'),
       })
-    )
-  );
+    );
+  });
   bootstrapEvents.on('success', () =>
     dispatch(
       openSuccessDialog({
@@ -72,7 +74,7 @@ export function initializeBootstrapEvents({ dispatch }) {
  */
 export async function checkFreeSpaceForBootstrap() {
   const diskSpace = await checkDiskSpace(coreDataDir);
-  return diskSpace.free >= 12 * 1000 * 1000 * 1000; // 12 GB
+  return diskSpace.free >= 15 * 1000 * 1000 * 1000; // 15 GB
 }
 
 /**
@@ -120,11 +122,14 @@ export async function startBootstrap({ dispatch, getState }) {
     await dispatch(stopCore());
 
     setStatus('downloading', {});
-    const downloadProgress = throttled(
-      details => setStatus('downloading', details),
-      1000
-    );
+    // A flag to prevent bootstrap status being set back to downloading
+    // when download is already done or aborted
+    let downloading = true;
+    const downloadProgress = throttled(details => {
+      if (downloading) setStatus('downloading', details);
+    }, 1000);
     await downloadDb(recentDbUrl, downloadProgress);
+    downloading = false;
     if (aborting) {
       bootstrapEvents.emit('abort');
       return false;

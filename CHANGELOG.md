@@ -1,6 +1,30 @@
+# 1.2.1 (2019.8.15)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v1.2.1)
+
+#### Additions
+
+- Improved Translations
+- Added "Reload transaction history" button to Core Settings
+- Added `walletClean` hidden setting which indicates the core should run with `-walletclean` parameter (the same as "Reload transaction history" functionality) the next time it starts up when set to true
+- Added BTC to base currencies
+
+#### Adjustments
+
+- Updated Nexus Core to [v3.0.5](https://github.com/Nexusoft/LLL-TAO/releases/tag/3.0.5)
+
+#### Fixes
+
+- Fixed issues with the transaction page
+- Fixed Transaction Details modal not showing up
+- Fixed issue with auto updates with Linux-AppImage
+- Bootsrapper will now show the correct message while the database is extracting
+- Fixed Market page layout
+- Immature transactions will now automatically updated when it matures
+
 # 1.2.0 (2019.8.09)
 
-[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v1.1.1)
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v1.2.0)
 
 #### Additions
 

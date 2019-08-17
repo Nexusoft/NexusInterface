@@ -241,22 +241,29 @@ class Transactions extends Component {
               columns={tableColumns}
               defaultPageSize={10}
               defaultSortingColumnIndex={0}
-              getTrProps={(state,  row) => {if (row) {return ({ original: tx }) => ({
-                onClick: () => {
-                  openModal(TransactionDetailsModal, {
-                    txid: tx.txid,
-                  });
-                },
-                style: {
-                  cursor: 'pointer',
-                  opacity:
-                    tx.category === 'immature' ||
-                    tx.category === 'orphan' ||
-                    isPending(tx, minConfirmations)
-                      ? 0.5
-                      : 1,
-                },
-              })} else {return () => ({...props});}}}
+              getTrProps={(state, row) => {
+                const tx = row && row.original;
+                return {
+                  onClick: tx
+                    ? () => {
+                        openModal(TransactionDetailsModal, {
+                          txid: tx.txid,
+                        });
+                      }
+                    : undefined,
+                  style: tx
+                    ? {
+                        cursor: 'pointer',
+                        opacity:
+                          tx.category === 'immature' ||
+                          tx.category === 'orphan' ||
+                          isPending(tx, minConfirmations)
+                            ? 0.5
+                            : 1,
+                      }
+                    : undefined,
+                };
+              }}
             />
           </TransactionsLayout>
         )}

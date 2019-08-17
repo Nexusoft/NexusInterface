@@ -678,7 +678,13 @@ class Overview extends Component {
               </StatLabel>
               <StatValue>
                 {market && market.price ? (
-                  formatCurrency(market.price, fiatCurrency, 4)
+                  <>
+                    {fiatCurrency === 'BTC'
+                      ? formatCurrency(market.price, fiatCurrency, 8)
+                      : fiatCurrency !== 'BTC'
+                      ? formatCurrency(market.price, fiatCurrency, 2)
+                      : ''}
+                  </>
                 ) : (
                   <span className="dim">-</span>
                 )}
@@ -790,7 +796,7 @@ class Overview extends Component {
             <StatIcon
               icon={
                 settings.displayFiatBalance
-                  ? CurrencyIcon(this.props.fiatCurrency)
+                  ? CurrencyIcon(fiatCurrency)
                   : logoIcon
               }
             />
@@ -839,7 +845,13 @@ class Overview extends Component {
               </StatLabel>
               <StatValue>
                 {market && market.price ? (
-                  formatCurrency(market.price, fiatCurrency, 4)
+                  <>
+                    {fiatCurrency === 'BTC'
+                      ? formatCurrency(market.price, fiatCurrency, 8)
+                      : fiatCurrency !== 'BTC'
+                      ? formatCurrency(market.price, fiatCurrency, 2)
+                      : ''}
+                  </>
                 ) : (
                   <span className="dim">-</span>
                 )}

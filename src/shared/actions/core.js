@@ -34,8 +34,8 @@ const startAutoConnect = () => ({
 });
 
 export const stopCore = () => async (dispatch, getState) => {
-  await remote.getGlobal('core').stop();
   dispatch(clearCoreInfo());
+  await remote.getGlobal('core').stop();
   const { manualDaemon } = getState().settings;
   if (!manualDaemon) {
     dispatch(stopAutoConnect());
@@ -48,6 +48,7 @@ export const startCore = () => async dispatch => {
 };
 
 export const restartCore = () => async dispatch => {
+  dispatch(clearCoreInfo());
   await remote.getGlobal('core').restart();
   dispatch(startAutoConnect());
 };

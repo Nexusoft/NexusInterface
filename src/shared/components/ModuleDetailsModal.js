@@ -280,7 +280,7 @@ class Installer extends React.Component {
       <Modal.Footer separator style={{ textAlign: 'center' }}>
         {!module.invalid && !module.isFromNexus && (
           <InstallerWarning>
-            {_(`Warning: This module is written by a third party, Nexus is NOT
+            {__(`Warning: This module is written by a third party, Nexus is NOT
               responsible for its quality or legitimacy. Please make sure to do
               your due diligence before installing third party modules and use
               them with your own risk.`)}

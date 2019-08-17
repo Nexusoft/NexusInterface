@@ -5,7 +5,9 @@ export const loadMyAccounts = () => async dispatch => {
   const accList = await rpc('listaccounts', []);
 
   const addrList = await Promise.all(
-    Object.keys(accList).map(account => rpc('getaddressesbyaccount', [account]))
+    Object.keys(accList || {}).map(account =>
+      rpc('getaddressesbyaccount', [account])
+    )
   );
 
   const validateAddressPromises = addrList.reduce(

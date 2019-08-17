@@ -165,9 +165,14 @@ class Core {
       // '-connect=192.168.0.234',
       // //
     ];
+    //After core forksblocks clear out that field.
     if (settings.forkBlocks) {
       params.push('-forkblocks=' + settings.forkBlocks);
       UpdateSettings({ forkBlocks: 0 });
+    }
+    if (settings.walletClean) {
+      params.push('-walletclean');
+      UpdateSettings({ walletClean: false });
     }
     //Avatar is default so only add it if it is off.
     if (!settings.avatarMode) {
