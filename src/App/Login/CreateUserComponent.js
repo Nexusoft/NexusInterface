@@ -8,13 +8,17 @@ import styled from '@emotion/styled';
 import Modal from 'components/Modal';
 import Button from 'components/Button';
 import Panel from 'components/Panel';
-import Text from 'components/Text';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import FieldSet from 'components/FieldSet';
-import { updateSettings } from 'actions/settingsActionCreators';
-import * as Backend from 'scripts/backend-com';
-import UIController from 'components/UIController';
+import { updateSettings } from 'actions/settings';
+import * as Tritium from 'lib/tritium-api';
+import {
+  openConfirmDialog,
+  openModal,
+  showNotification,
+  openErrorDialog,
+} from 'actions/overlays';
 
 const CreateModalComponent = styled(Modal)({
   padding: '1px',
@@ -99,13 +103,13 @@ export default CreateUserComponent;
     console.log(`${username} , ${password} , ${pin}`);
 
     if (!username) {
-      errors.username = <Text id="Settings.Errors.LoginUsername" />;
+      errors.username = 'Username';
     }
     if (!password) {
-      errors.password = <Text id="Settings.Errors.LoginPassword" />;
+      errors.password = 'Password';
     }
     if (!pin) {
-      errors.pin = <Text id="Settings.Errors.LoginPin" />;
+      errors.pin = 'Pin';
     }
     return errors;
   },
@@ -113,14 +117,14 @@ export default CreateUserComponent;
     console.log('ONSUBMIT');
     console.log(`${username} , ${password} , ${pin}`);
     console.log(props);
-    return Backend.RunCommand(
+    return Tritium.PROMISE(
       'API',
       { api: 'users', verb: 'create', noun: 'user' },
       [{ username: username, password: password, pin: pin }]
     );
   },
   onSubmitSuccess: async (result, dispatch, props) => {
-    UIController.showNotification(<Text id="Settings.LoggedIn" />, 'success');
+     showNotification('Logged IN', 'success');
     console.log(result);
     console.log('PASS');
     props.turnOnTritium();
@@ -130,16 +134,16 @@ export default CreateUserComponent;
     console.log('FAIL');
 
     if (!errors || !Object.keys(errors).length) {
-      let note = submitError || <Text id="Common.UnknownError" />;
+      let note = submitError || 'Error';
       if (
         submitError === 'Error: The wallet passphrase entered was incorrect.'
       ) {
-        note = <Text id="Alert.IncorrectPasssword" />;
+        note = 'Bad Password';
       } else if (submitError === 'value is type null, expected int') {
-        note = <Text id="Alert.FutureDate" />;
+        note = 'Futur date';
       }
-      UIController.openErrorDialog({
-        message: <Text id="Settings.Errors.LoggingIn" />,
+       openErrorDialog({
+        message: 'Error Logging IN',
         note: note,
       });
     }
@@ -151,7 +155,7 @@ class CreateUserForm extends React.Component {
     return (
       <form onSubmit={handleSubmit}>
         <LoginFieldSet legend="Create Account">
-          <FormField connectLabel label={<Text id="Settings.Username" />}>
+          <FormField connectLabel label={'UserName'}>
             <Field
               component={TextField.RF}
               name="username"
@@ -160,7 +164,7 @@ class CreateUserForm extends React.Component {
               required
             />
           </FormField>
-          <FormField connectLabel label={<Text id="Settings.Password" />}>
+          <FormField connectLabel label={'Password'}>
             <Field
               component={TextField.RF}
               name="password"
@@ -170,7 +174,7 @@ class CreateUserForm extends React.Component {
           </FormField>
           <FormField
             connectLabel
-            label={<Text id="Settings.Pin" />}
+            label={'Pin'}
             subLable={'ASdasaddsa'}
           >
             <Field

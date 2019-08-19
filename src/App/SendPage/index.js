@@ -12,7 +12,11 @@ import Panel from 'components/Panel';
 import Button from 'components/Button';
 import WaitingMessage from 'components/WaitingMessage';
 import Tooltip from 'components/Tooltip';
-import UIController from 'components/UIController';
+import {
+  openConfirmDialog,
+  openModal,
+  openErrorDialog,
+} from 'actions/overlays';
 
 // Internal Local Dependencies
 import MoveBetweenAccountsModal from './MoveBetweenAccountsModal';
@@ -65,7 +69,7 @@ class SendPage extends Component {
    * @memberof SendPage
    */
   moveBetweenAccounts = () => {
-    UIController.openModal(MoveBetweenAccountsModal);
+     openModal(MoveBetweenAccountsModal);
   };
 
   /**

@@ -5,9 +5,13 @@ import styled from '@emotion/styled';
 import Modal from '../Modal';
 import TextField from '../TextField';
 import Button from '../Button';
-import Text from '../Text';
-import * as Backend from 'scripts/backend-com';
-import UIController from 'components/UIController';
+import * as Tritium from 'lib/tritium-api';
+import {
+  openConfirmDialog,
+  showNotification,
+  openModal,
+  openErrorDialog,
+} from 'actions/overlays';
 
 const floatRegex = /^[0-9]+(.[0-9]*)?$/;
 
@@ -48,7 +52,7 @@ export default class PinLogin extends Component {
     this.setState({ disable: true });
 
     const { api, verb, noun, callback, params } = this.props;
-    Backend.RunCommand(
+    Tritium.PROMISE(
       'API',
       {
         api: api,
@@ -64,7 +68,7 @@ export default class PinLogin extends Component {
       .catch(error => {
         if (error.response) {
           console.log(error.response);
-          UIController.showNotification(
+           showNotification(
             `${error.response.data.error.message}`,
             'error'
           );
@@ -94,7 +98,7 @@ export default class PinLogin extends Component {
       <SmallModal assignClose={closeModal => (this.closeModal = closeModal)}>
         <Container>
           <h2>
-            <Text id="Pin.Title" />
+            {'Pin'}
           </h2>
           <TextField
             // type="password"
@@ -117,14 +121,14 @@ export default class PinLogin extends Component {
               onClick={() => this.handleOnEnter()}
               disabled={this.state.disable}
             >
-              <Text id="Pin.Enter" />
+              {'Enter'}
             </EnterButton>
             <EnterButton
               skin="filled"
               onClick={() => this.closeModal()}
               disabled={this.state.disable}
             >
-              <Text id="sendReceive.Cancel" />
+              {'Cancel'}
             </EnterButton>
           </ButtonBox>
         </Container>

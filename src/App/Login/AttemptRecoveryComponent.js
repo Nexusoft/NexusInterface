@@ -9,13 +9,9 @@ import Modal from 'components/Modal';
 import Button from 'components/Button';
 import Panel from 'components/Panel';
 import Tooltip from 'components/Tooltip';
-import Text from 'components/Text';
-import FormField from 'components/FormField';
-import TextField from 'components/TextField';
 import FieldSet from 'components/FieldSet';
-import { updateSettings } from 'actions/settingsActionCreators';
-import * as Backend from 'scripts/backend-com';
-import UIController from 'components/UIController';
+import { updateSettings } from 'actions/settings';
+import * as Tritium from 'lib/tritium-api';
 
 const AttemptRecModalComponent = styled(Modal)({
   padding: '1px',

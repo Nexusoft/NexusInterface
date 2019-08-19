@@ -1,8 +1,8 @@
 import * as TYPE from './actiontypes';
-import * as Backend from 'scripts/backend-com';
+import * as Tritium from 'lib/tritium-api';
 
 export const LoadTritiumAccounts = () => dispatch => {
-  Backend.RunCommand(
+  Tritium.PROMISE(
     'API',
     {
       api: 'users',

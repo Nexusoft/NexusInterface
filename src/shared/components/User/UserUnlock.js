@@ -5,10 +5,13 @@ import styled from '@emotion/styled';
 // Internal
 import Modal from 'components/Modal';
 import Button from 'components/Button';
-import Text from '../Text';
 import Switch from 'components/Switch';
-import * as Backend from 'scripts/backend-com';
-import UIController from 'components/UIController';
+import * as Tritium from 'lib/tritium-api';
+import {
+  openConfirmDialog,
+  openModal,
+  openErrorDialog,
+} from 'actions/overlays';
 
 import PinLoginModal from 'components/User/PinLoginModal';
 
@@ -54,7 +57,7 @@ export default class UserLock extends Component {
   }
 
   launchPinModal() {
-    UIController.openModal(PinLoginModal, {
+     openModal(PinLoginModal, {
       callback: payload => this.pinCallback(payload),
       params: {
         minting: this.state.mintingEnabled,
@@ -115,14 +118,14 @@ export default class UserLock extends Component {
               onClick={() => this.closeModal()}
               style={{ margin: '.5em' }}
             >
-              <Text id="sendReceive.Cancel" />
+              {'Cancel'}
             </Button>
             <Button
               skin="filled"
               onClick={() => this.launchPinModal()}
               style={{ margin: '.5em' }}
             >
-              <Text id="Settings.LockWallet" />
+              {'Lock Wallet'}
             </Button>
           </Buttons>
         </Container>

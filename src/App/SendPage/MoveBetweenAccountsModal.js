@@ -5,13 +5,19 @@ import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
 
 // Internal
-import * as Backend from 'scripts/backend-com';
+import * as Tritium from 'lib/tritium-api';
 import Text from 'components/Text';
 import Select from 'components/Select';
 import Button from 'components/Button';
 import Modal from 'components/Modal';
 import Link from 'components/Link';
-import UIController from 'components/UIController';
+import {
+  openConfirmDialog,
+  openModal,
+  removeModal,
+  openSuccessDialog,
+  openErrorDialog,
+} from 'actions/overlays';
 import { loadMyAccounts } from 'actions/accountActionCreators';
 import { rpcErrorHandler } from 'utils/form';
 import { getAccountOptions, getRegisteredFieldNames } from './selectors';
@@ -97,7 +103,7 @@ const mapDispatchToProps = dispatch => ({
   asyncValidate: async ({ sendTo }) => {
     if (sendTo) {
       try {
-        const result = await Backend.RunCommand('RPC', 'validateaddress', [sendTo]);
+        const result = await Tritium.PROMISE('RPC', 'validateaddress', [sendTo]);
         if (!result.isvalid) {
           throw { sendTo: <Text id="Alert.InvalidAddress" /> };
         }
@@ -117,13 +123,13 @@ const mapDispatchToProps = dispatch => ({
     }
 
     const params = [moveFrom, moveTo, parseFloat(amount)];
-    return Backend.RunCommand('RPC', 'move', params, parseInt(props.minConfirmations));
+    return Tritium.PROMISE('RPC', 'move', params, parseInt(props.minConfirmations));
   },
   onSubmitSuccess: (result, dispatch, props) => {
     props.closeModal();
     props.reset();
     props.loadMyAccounts();
-    UIController.openSuccessDialog({
+     openSuccessDialog({
       message: <Text id="sendReceive.Messages.Success" />,
     });
   },
@@ -155,7 +161,7 @@ class MoveBetweenAccountsForm extends Component {
     }
 
     if (encrypted && !loggedIn) {
-      const modalId = UIController.openErrorDialog({
+      const modalId =  openErrorDialog({
         message: <Text id="sendReceive.Messages.NotLoggedIn" />,
         note: (
           <>
@@ -165,7 +171,7 @@ class MoveBetweenAccountsForm extends Component {
             <Link
               to="/Settings/Security"
               onClick={() => {
-                UIController.removeModal(modalId);
+                 removeModal(modalId);
                 this.props.closeModal();
               }}
             >
@@ -177,7 +183,7 @@ class MoveBetweenAccountsForm extends Component {
       return;
     }
 
-    UIController.openConfirmDialog({
+     openConfirmDialog({
       question: <Text id="sendReceive.MoveNXS" />,
       callbackYes: handleSubmit,
     });

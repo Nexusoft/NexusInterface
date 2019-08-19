@@ -3,21 +3,20 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
-import ReactToPrint from 'react-to-print';
+//import ReactToPrint from 'react-to-print';
 
 // Internal
 import Modal from 'components/Modal';
 import Button from 'components/Button';
 import Panel from 'components/Panel';
-import Text from 'components/Text';
-import FormField from 'components/FormField';
-import TextField from 'components/TextField';
-import FieldSet from 'components/FieldSet';
-import { updateSettings } from 'actions/settingsActionCreators';
-import * as Backend from 'scripts/backend-com';
-import UIController from 'components/UIController';
+import { updateSettings } from 'actions/settings';
+import * as Tritium from 'lib/tritium-api';
+import {
+  openConfirmDialog,
+  openModal,
+  openErrorDialog,
+} from 'actions/overlays';
 import PrintRecovery from './PrintRecovery';
-import DateField from 'components/DateField';
 
 const ShowRecModalComponent = styled(Modal)({
   padding: '1px',
@@ -87,7 +86,7 @@ class ShowRecoveryComponent extends React.Component {
   print() {}
 
   askToContinue = () => {
-    UIController.openConfirmDialog({
+     openConfirmDialog({
       question:
         'Are you sure you want to continue? You will not be shown these words again.',
       skinYes: 'danger',
@@ -113,7 +112,6 @@ class ShowRecoveryComponent extends React.Component {
         <Modal.Body>
           <Panel title={'Show Recovery'}>
             <div> {'Instructions'}</div>
-            <DateField />
             <WordBox>{this.returnWords()}</WordBox>
             <Button
               skin="primary"
@@ -122,7 +120,7 @@ class ShowRecoveryComponent extends React.Component {
             >
               Continue
             </Button>
-            <ReactToPrint
+            {/*<ReactToPrint
               trigger={() => (
                 <Button
                   skin="primary"
@@ -133,7 +131,7 @@ class ShowRecoveryComponent extends React.Component {
                 </Button>
               )}
               content={() => this.printRef}
-            />{' '}
+              />*/}{' '}
             {/*In order to print we print the whole compoenent, this component is styled for printing and is hidden*/}
             {/*Change style to display: hidden , must be done as a parent, if you display hidden PrintRecovery the print is blank*/}
             <div style={{ display: 'block' }}>

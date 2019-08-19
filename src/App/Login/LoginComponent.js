@@ -9,16 +9,19 @@ import { history } from 'store';
 import Modal from 'components/Modal';
 import Button from 'components/Button';
 import Panel from 'components/Panel';
-import Text from 'components/Text';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import FieldSet from 'components/FieldSet';
-import { updateSettings } from 'actions/settingsActionCreators';
-import * as Backend from 'scripts/backend-com';
-import UIController from 'components/UIController';
-import * as TYPE from 'actions/actiontypes';
+import { updateSettings } from 'actions/settings';
+import * as Tritium from 'lib/tritium-api';
+import {
+  openConfirmDialog,
+  openModal,
+  showNotification,
+  openErrorDialog,
+} from 'actions/overlays';
+import * as TYPE from 'consts/actionTypes';
 
-import updater from 'updater';
 
 const LoginModalComponent = styled(Modal)({
   padding: '1px',
@@ -66,7 +69,6 @@ class LoginComponent extends React.Component {
   };
 
   askdkdkdk = () => {
-    updater.rebuildMenu();
     console.log(ldldldl);
     this.props.turnOnTritium(ldldldl);
     ldldldl = !ldldldl;
@@ -168,20 +170,20 @@ export default LoginComponent;
     console.log(`${username} , ${password} , ${pin}`);
 
     if (!username) {
-      errors.username = <Text id="Settings.Errors.LoginUsername" />;
+      errors.username = 'UserName';
     }
     if (!password) {
-      errors.password = <Text id="Settings.Errors.LoginPassword" />;
+      errors.password = 'Password';
     }
     if (!pin) {
-      errors.pin = <Text id="Settings.Errors.LoginPin" />;
+      errors.pin = 'Pin';
     }
     return errors;
   },
   onSubmit: async ({ username, password, pin }, dispatch, props) => {
     console.log('ONSUBMIT');
     console.log(props);
-    const asdgh = await Backend.RunCommand(
+    const asdgh = await Tritium.PROMISE(
       'API',
       { api: 'users', verb: 'login', noun: 'user' },
       [{ username: username, password: password, pin: pin }]
@@ -193,26 +195,25 @@ export default LoginComponent;
     console.log('SUCESSS');
     props.setUserGenesis(result.data.result.genesis);
     props.setUserName(props.values.username);
-    UIController.showNotification(<Text id="Settings.LoggedIn" />, 'success');
+     showNotification('Logged In', 'success');
     console.log('PASS');
 
-    updater.rebuildMenu();
     props.turnOnTritium(true);
     props.closeModal();
   },
   onSubmitFail: (errors, dispatch, submitError) => {
     console.log('FAIL');
     if (!errors || !Object.keys(errors).length) {
-      let note = submitError || <Text id="Common.UnknownError" />;
+      let note = submitError || 'Error';
       if (
         submitError === 'Error: The wallet passphrase entered was incorrect.'
       ) {
-        note = <Text id="Alert.IncorrectPasssword" />;
+        note = 'Bad Passowrd';
       } else if (submitError === 'value is type null, expected int') {
-        note = <Text id="Alert.FutureDate" />;
+        note = 'Futur Date';
       }
-      UIController.openErrorDialog({
-        message: <Text id="Settings.Errors.LoggingIn" />,
+       openErrorDialog({
+        message: 'Logged In Error',
         note: note,
       });
     }
@@ -224,7 +225,7 @@ class LoginForm extends React.Component {
     return (
       <form onSubmit={handleSubmit}>
         <LoginFieldSet legend="Login">
-          <FormField connectLabel label={<Text id="Settings.Username" />}>
+          <FormField connectLabel label={'Username'}>
             <Field
               component={TextField.RF}
               name="username"
@@ -232,7 +233,7 @@ class LoginForm extends React.Component {
               placeholder={'Username'}
             />
           </FormField>
-          <FormField connectLabel label={<Text id="Settings.Password" />}>
+          <FormField connectLabel label={'Password'}>
             <Field
               component={TextField.RF}
               name="password"
@@ -240,7 +241,7 @@ class LoginForm extends React.Component {
               placeholder={'Password'}
             />
           </FormField>
-          <FormField connectLabel label={<Text id="Settings.Pin" />}>
+          <FormField connectLabel label={'Pin'}>
             <Field
               component={TextField.RF}
               name="pin"

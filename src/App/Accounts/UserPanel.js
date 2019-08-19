@@ -9,8 +9,12 @@ import userIcon from 'images/user.sprite.svg';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
 import NexusAddress from 'components/NexusAddress';
-import UIController from 'components/UIController';
-import * as Backend from 'scripts/backend-com';
+import {
+  openConfirmDialog,
+  openModal,
+  openErrorDialog,
+} from 'actions/overlays';
+import * as Tritium from 'lib/tritium-api';
 
 import UserLock from 'components/User/UserLock';
 import UserUnlock from 'components/User/UserUnlock';
@@ -18,7 +22,7 @@ import ChangePassword from 'components/User/ChangePassword';
 import ChangePin from 'components/User/ChangePin';
 //import ChangeRecovery from 'components/User/ChangeRecovery';
 
-import { listAccounts } from 'api/UserApi';
+import { listAccounts } from 'lib/UserApi';
 
 const PanelHolder = styled.div(({ theme }) => ({
   background: color.lighten(theme.background, 0.2),
@@ -82,20 +86,20 @@ class UserPanel extends Component {
     });
 
     if (isLocked) {
-      UIController.openModal(UserUnlock);
+       openModal(UserUnlock);
     } else {
-      UIController.openModal(UserLock);
+       openModal(UserLock);
     }
   }
 
   userChangePin = () => {
     console.log('ChangePin');
-    UIController.openModal(ChangePin);
+     openModal(ChangePin);
   };
 
   userChangePassword = () => {
     console.log('ChangePassword');
-    UIController.openModal(ChangePassword);
+     openModal(ChangePassword);
   };
 
   userChangeRecovery = () => {
@@ -104,11 +108,11 @@ class UserPanel extends Component {
 
   userLogout = () => {
     console.log('Logout');
-    UIController.openConfirmDialog({
+     openConfirmDialog({
       question: 'Are you sure you want to log out?',
       skinYes: 'danger',
       callbackYes: () => {
-        Backend.RunCommand(
+        Tritium.PROMISE(
           'API',
           {
             api: 'user',

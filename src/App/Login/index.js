@@ -3,7 +3,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 // Internal
-import UIController from 'components/UIController';
+import {
+  openConfirmDialog,
+  openModal,
+  openErrorDialog,
+} from 'actions/overlays';
 import LoginComponent from './LoginComponent';
 import CreateUserComponent from './CreateUserComponent';
 import LogoutUserComponent from './LogoutUserComponent';
@@ -11,7 +15,7 @@ import AttemptRecoveryComponent from './AttemptRecoveryComponent';
 import ShowRecoveryComponent from './ShowRecoveryComponent';
 import { history } from 'store';
 
-import { updateSettings } from 'actions/settingsActionCreators';
+import { updateSettings } from 'actions/settings';
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
@@ -27,7 +31,7 @@ class LoginPage extends Component {
   }
 
   openCreateAUser() {
-    UIController.openModal(CreateUserComponent, {
+     openModal(CreateUserComponent, {
       fullScreen: true,
       onClose: () => this.redirectToOverview(),
       onCloseLegacy: () => this.switchTolegacy(),
@@ -41,7 +45,8 @@ class LoginPage extends Component {
   }
 
   openLoginModal() {
-    UIController.openModal(LoginComponent, {
+    console.log('Open Method');
+     openModal(LoginComponent, {
       fullScreen: true,
       goBack: () => this.redirectToOverview(),
       onClose: () => {},
@@ -53,7 +58,7 @@ class LoginPage extends Component {
   }
 
   openForgot() {
-    UIController.openModal(AttemptRecoveryComponent, {
+     openModal(AttemptRecoveryComponent, {
       fullScreen: true,
       onClose: () => this.switchTolegacy(),
       onCloseBack: () => this.openLoginModal(),
@@ -61,7 +66,7 @@ class LoginPage extends Component {
   }
 
   openShowRecovery() {
-    UIController.openModal(ShowRecoveryComponent, {
+     openModal(ShowRecoveryComponent, {
       fullScreen: true,
       onClose: () => this.switchTolegacy(),
       onCloseBack: () => this.openLoginModal(),
@@ -73,7 +78,7 @@ class LoginPage extends Component {
     //this.props.turnOffTritium();
 
     if (this.props.TEMPLoggedin) {
-      UIController.openModal(LogoutUserComponent, {
+       openModal(LogoutUserComponent, {
         fullScreen: true,
         onClose: () => this.switchTolegacy(),
         onCloseLogout: () => this.openLoginModal(),
@@ -84,6 +89,7 @@ class LoginPage extends Component {
         },
       });
     } else {
+      console.log('open login');
       this.openLoginModal();
     }
   }

@@ -7,7 +7,7 @@ import TextField from 'components/TextField';
 import * as color from 'utils/color';
 import { consts, timing } from 'styles';
 import NexusAddress from 'components/NexusAddress';
-import { listAccounts, listAccountsAll } from 'api/UserApi';
+import { listAccounts, listAccountsAll } from 'lib/UserApi';
 
 const PanelHolder = styled.div(({ theme }) => ({
   background: color.lighten(theme.background, 0.2),

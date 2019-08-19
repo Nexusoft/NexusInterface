@@ -1,6 +1,9 @@
-import * as Backend from 'scripts/backend-com';
-import UIController from 'components/UIController';
-import { async } from 'q';
+import * as Tritium from './tritium-api';
+import {
+  openConfirmDialog,
+  openModal,
+  openErrorDialog,
+} from 'actions/overlays';
 
 /**
  *
@@ -40,7 +43,7 @@ export function listTransactions({
   }
 
   console.log(inputs);
-  Backend.RunCommand(
+  Tritium.PROMISE(
     'api',
     {
       api: 'users',
@@ -56,19 +59,19 @@ export function listTransactions({
     .catch(error => {
       if (error.response) {
         console.log(error.response);
-        UIController.openErrorDialog({
+         openErrorDialog({
           message: 'Error',
           note: error.response.data.error.message,
         });
       } else if (error.request) {
         console.log(error.request);
-        UIController.openErrorDialog({
+         openErrorDialog({
           message: 'Error',
           note: error.request.data.error.message,
         });
       } else {
         console.log('Error', error.message);
-        UIController.openErrorDialog({
+         openErrorDialog({
           message: 'Error',
           note: error.message.data.error.message,
         });
@@ -161,7 +164,7 @@ export function listAccounts({
 
     console.log(inputs);
     resolve(
-      Backend.RunCommand(
+      Tritium.PROMISE(
         'api',
         {
           api: 'users',
@@ -254,7 +257,7 @@ export function listNames({
 
     console.log(inputs);
     resolve(
-      Backend.RunCommand(
+      Tritium.PROMISE(
         'api',
         {
           api: 'users',
@@ -288,7 +291,7 @@ async function recursiveCommand(command, params) {
     console.log(`Passwith${params}`);
     console.log(params);
 
-    const payload = await Backend.RunCommand('Api', command, params);
+    const payload = await Tritium.PROMISE('Api', command, params);
     console.log(payload);
     if (payload.data.result.length != 0) {
       console.log(payload.data.result);
@@ -305,19 +308,19 @@ async function recursiveCommand(command, params) {
 function catchError(error) {
   if (error.response) {
     console.log(error.response);
-    UIController.openErrorDialog({
+     openErrorDialog({
       message: 'Error',
       note: error.response.data.error.message,
     });
   } else if (error.request) {
     console.log(error.request);
-    UIController.openErrorDialog({
+     openErrorDialog({
       message: 'Error',
       note: error.request.data.error.message,
     });
   } else {
     console.log('Error', error.message);
-    UIController.openErrorDialog({
+     openErrorDialog({
       message: 'Error',
       note: error.message.data.error.message,
     });

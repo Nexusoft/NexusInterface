@@ -5,7 +5,7 @@ import { reduxForm, Field, FieldArray } from 'redux-form';
 import styled from '@emotion/styled';
 
 // Internal Global
-import * as Backend from 'scripts/backend-com';
+import * as Tritium from 'lib/tritium-api';
 import { defaultSettings } from 'api/settings';
 import { loadMyAccounts } from 'actions/accountActionCreators';
 import Text from 'components/Text';
@@ -14,7 +14,13 @@ import Button from 'components/Button';
 import TextField from 'components/TextField';
 import Select from 'components/Select';
 import FormField from 'components/FormField';
-import UIController from 'components/UIController';
+import {
+  openConfirmDialog,
+  openModal,
+  removeModal,
+  openSuccessDialog,
+  openErrorDialog,
+} from 'actions/overlays';
 import Link from 'components/Link';
 import { rpcErrorHandler } from 'utils/form';
 import sendIcon from 'images/send.sprite.svg';
@@ -170,7 +176,7 @@ const mapDispatchToProps = dispatch => ({
       }
 
       if (sendFromDetails.isToken) {
-        UIController.openModal(PinLoginModal, {
+         openModal(PinLoginModal, {
           api: 'tokens',
           verb: 'debit',
           noun: 'account',
@@ -179,7 +185,7 @@ const mapDispatchToProps = dispatch => ({
         });
       } else {
         let awaitPinEntryAndApiCall = await new Promise((resolve, reject) => {
-          UIController.openModal(PinLoginModal, {
+           openModal(PinLoginModal, {
             api: 'finance',
             verb: 'debit',
             noun: 'account',
@@ -200,7 +206,7 @@ const mapDispatchToProps = dispatch => ({
     } else {
       await Promise.all(
         recipients.map(({ address }, i) =>
-          Backend.RunCommand('RPC', 'validateaddress', [address])
+          Tritium.PROMISE('RPC', 'validateaddress', [address])
             .then(result => {
               if (!result.isvalid) {
                 recipientsErrors[i] = {
@@ -245,14 +251,14 @@ const mapDispatchToProps = dispatch => ({
           minConfirmations,
         ];
         if (message) params.push(message);
-        return Backend.RunCommand('RPC', 'sendfrom', params);
+        return Tritium.PROMISE('RPC', 'sendfrom', params);
       } else {
         const queue = recipients.reduce(
           (queue, r) => ({ ...queue, [r.address]: parseFloat(r.amount) }),
           {}
         );
 
-        return Backend.RunCommand(
+        return Tritium.PROMISE(
           'RPC',
           'sendmany',
           [sendFrom, queue],
@@ -267,7 +273,7 @@ const mapDispatchToProps = dispatch => ({
     props.loadMyAccounts();
     props.loadMyTritiumAccounts();
     if (!props.tritium) {
-      UIController.openSuccessDialog({
+       openSuccessDialog({
         message: <Text id="Alert.Sent" />,
       });
     }
@@ -306,7 +312,7 @@ class SendForm extends Component {
     }
 
     if (encrypted && !loggedIn) {
-      const modalId = UIController.openErrorDialog({
+      const modalId =  openErrorDialog({
         message: 'You are not logged in',
         note: (
           <>
@@ -314,7 +320,7 @@ class SendForm extends Component {
             <Link
               to="/Settings/Security"
               onClick={() => {
-                UIController.removeModal(modalId);
+                 removeModal(modalId);
               }}
             >
               Log in now
@@ -325,7 +331,7 @@ class SendForm extends Component {
       return;
     }
 
-    UIController.openConfirmDialog({
+     openConfirmDialog({
       question: <Text id="sendReceive.SendTransaction" />,
       callbackYes: handleSubmit,
     });

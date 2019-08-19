@@ -10,7 +10,11 @@ import FormField from 'components/FormField';
 import Text, { translate } from 'components/Text';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
-import UIController from 'components/UIController';
+import {
+  openConfirmDialog,
+  openModal,
+  openErrorDialog,
+} from 'actions/overlays';
 import AddEditContactModal from 'components/AddEditContactModal';
 import plusIcon from 'images/plus.sprite.svg';
 import { getAddressNameMap, getRecipientSuggestions } from './selectors';
@@ -63,7 +67,7 @@ class RecipientField extends Component {
   };
 
   createContact = () => {
-    UIController.openModal(AddEditContactModal);
+     openModal(AddEditContactModal);
   };
 
   /**

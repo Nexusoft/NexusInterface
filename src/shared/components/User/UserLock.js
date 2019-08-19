@@ -5,10 +5,14 @@ import styled from '@emotion/styled';
 // Internal
 import Modal from 'components/Modal';
 import Button from 'components/Button';
-import Text from '../Text';
 import Switch from 'components/Switch';
-import * as Backend from 'scripts/backend-com';
-import UIController from 'components/UIController';
+import * as Tritium from 'lib/tritium-api';
+import {
+  openConfirmDialog,
+  openModal,
+  showNotification,
+  openErrorDialog,
+} from 'actions/overlays';
 
 const SmallModal = styled(Modal)(({ theme }) => ({
   width: 'auto',
@@ -65,7 +69,7 @@ export default class UserLock extends Component {
   };
 
   tryLogout = () => {
-    Backend.RunCommand(
+    Tritium.PROMISE(
       'API',
       {
         api: 'users',
@@ -81,13 +85,13 @@ export default class UserLock extends Component {
     )
       .then(({ data }) => {
         console.log(data);
-        UIController.showNotification(`Acount Locked`, 'success');
+         showNotification(`Acount Locked`, 'success');
         this.closeModal();
       })
       .catch(error => {
         if (error.response) {
           console.log(error.response);
-          UIController.showNotification(
+           showNotification(
             `${error.response.data.error.message}`,
             'error'
           );
@@ -131,14 +135,14 @@ export default class UserLock extends Component {
               onClick={() => this.closeModal()}
               style={{ margin: '.5em' }}
             >
-              <Text id="sendReceive.Cancel" />
+              {'Cancel'}
             </Button>
             <Button
               skin="filled"
               onClick={this.tryLogout}
               style={{ margin: '.5em' }}
             >
-              <Text id="Settings.LockWallet" />
+              {'Lock Wallet'}
             </Button>
           </Buttons>
         </Container>
