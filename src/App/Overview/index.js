@@ -507,9 +507,6 @@ class Overview extends Component {
    * @memberof Overview
    */
   returnWeightStats = () => {
-    if (Object.keys(this.props.coreInfo).length === 0) {
-      return;
-    }
     const { coreInfo } = this.props;
 
     return (
@@ -519,7 +516,9 @@ class Overview extends Component {
           <div>
             <StatLabel>{__('Block Weight')}</StatLabel>
             <StatValue>
-              {this.waitForCore(formatNumber(coreInfo.blockweight, 2) + '%')}
+              {this.waitForCore(
+                formatNumber(coreInfo && coreInfo.blockweight, 2) + '%'
+              )}
             </StatValue>
           </div>
         </Stat>
@@ -529,7 +528,9 @@ class Overview extends Component {
           <div>
             <StatLabel>{__('Trust Weight')}</StatLabel>
             <StatValue>
-              {this.waitForCore(formatNumber(coreInfo.trustweight, 2) + '%')}
+              {this.waitForCore(
+                formatNumber(coreInfo && coreInfo.trustweight, 2) + '%'
+              )}
             </StatValue>
           </div>
         </Stat>
@@ -539,7 +540,9 @@ class Overview extends Component {
           <div>
             <StatLabel>{__('Stake Weight')}</StatLabel>
             <StatValue>
-              {this.waitForCore(formatNumber(coreInfo.stakeweight, 2) + '%')}
+              {this.waitForCore(
+                formatNumber(coreInfo && coreInfo.stakeweight, 2) + '%'
+              )}
             </StatValue>
           </div>
         </Stat>
