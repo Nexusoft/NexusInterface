@@ -820,7 +820,7 @@ class Overview extends Component {
               <StatValue>
                 {settings.overviewDisplay === 'balHidden'
                   ? '-'
-                  : this.waitForCore(stake + newmint)}
+                  : this.waitForCore(formatNumber(stake + newmint))}
               </StatValue>
             </div>
             <StatIcon icon={nxsStakeIcon} />
