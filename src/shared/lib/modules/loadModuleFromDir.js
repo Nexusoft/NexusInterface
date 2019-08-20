@@ -105,7 +105,8 @@ export async function loadModuleFromDir(
     const nxsPackagePath = join(dirPath, 'nxs_package.json');
     if (
       !fs.existsSync(nxsPackagePath) ||
-      !fs.statSync(nxsPackagePath).isFile()
+      !fs.statSync(nxsPackagePath).isFile() ||
+      fs.lstatSync(nxsPackagePath).isSymbolicLink()
     ) {
       return null;
     }
@@ -123,7 +124,12 @@ export async function loadModuleFromDir(
       return null;
 
     const filePaths = module.files.map(file => join(dirPath, file));
-    if (filePaths.some(filePath => !fs.existsSync(filePath))) {
+    if (
+      filePaths.some(
+        filePath =>
+          !fs.existsSync(filePath) || fs.lstatSync(filePath).isSymbolicLink()
+      )
+    ) {
       console.error(
         `Module ${module.name}: Some files listed by the module does not exist`
       );
