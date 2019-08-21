@@ -7,10 +7,26 @@ import macaddress from 'macaddress';
 import { coreDataDir } from 'consts/paths';
 
 function generateDefaultPassword() {
+  let randomNumbers = ['', ''];
+  const ranByte = crypto
+    .randomBytes(Math.ceil(10 / 2))
+    .toString('hex')
+    .split('');
+  for (let index = 0; index < ranByte.length; index++) {
+    const element = ranByte[index];
+    if (index % 2) {
+      randomNumbers[0] += element.charCodeAt(0);
+    } else {
+      randomNumbers[1] += element.charCodeAt(0);
+    }
+  }
+  randomNumbers[0] = parseInt(randomNumbers[0]);
+  randomNumbers[1] = parseInt(randomNumbers[1]);
+  const randomValue = randomNumbers[0] * randomNumbers[1];
   const secret =
     process.platform === 'darwin'
-      ? process.env.USER + process.env.HOME + process.env.SHELL
-      : JSON.stringify(macaddress.networkInterfaces(), null, 2);
+      ? process.env.USER + process.env.HOME + process.env.SHELL + randomValue
+      : JSON.stringify(macaddress.networkInterfaces(), null, 2) + randomValue;
   return crypto
     .createHmac('sha256', secret)
     .update('pass')
