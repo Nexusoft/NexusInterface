@@ -508,6 +508,7 @@ class Overview extends Component {
    */
   returnWeightStats = () => {
     const { coreInfo } = this.props;
+    const { blockweight, trustweight, stakeweight } = coreInfo || {};
 
     return (
       <React.Fragment>
@@ -517,7 +518,7 @@ class Overview extends Component {
             <StatLabel>{__('Block Weight')}</StatLabel>
             <StatValue>
               {this.waitForCore(
-                formatNumber(coreInfo && coreInfo.blockweight, 2) + '%'
+                blockweight ? formatNumber(blockweight, 2) + '%' : 'N/A'
               )}
             </StatValue>
           </div>
@@ -529,7 +530,7 @@ class Overview extends Component {
             <StatLabel>{__('Trust Weight')}</StatLabel>
             <StatValue>
               {this.waitForCore(
-                formatNumber(coreInfo && coreInfo.trustweight, 2) + '%'
+                trustweight ? formatNumber(trustweight, 2) + '%' : 'N/A'
               )}
             </StatValue>
           </div>
@@ -541,7 +542,7 @@ class Overview extends Component {
             <StatLabel>{__('Stake Weight')}</StatLabel>
             <StatValue>
               {this.waitForCore(
-                formatNumber(coreInfo && coreInfo.stakeweight, 2) + '%'
+                stakeweight ? formatNumber(stakeweight, 2) + '%' : 'N/A'
               )}
             </StatValue>
           </div>
@@ -912,18 +913,6 @@ class Overview extends Component {
             </div>
           </Stat>
 
-          <Stat>
-            <StatIcon icon={interestIcon} />
-            <div>
-              <StatLabel>{__('Stake Rate')}</StatLabel>
-              <StatValue>
-                {this.waitForCore(
-                  formatNumber(interestweight || stakerate, 2) + '%'
-                )}
-              </StatValue>
-            </div>
-          </Stat>
-
           <Tooltip.Trigger
             position="left"
             tooltip={!!blockDate && <BlockCountTooltip blockDate={blockDate} />}
@@ -939,6 +928,20 @@ class Overview extends Component {
               </div>
             </Stat>
           </Tooltip.Trigger>
+
+          <Stat>
+            <StatIcon icon={interestIcon} />
+            <div>
+              <StatLabel>{__('Stake Rate')}</StatLabel>
+              <StatValue>
+                {this.waitForCore(
+                  interestweight || stakerate
+                    ? formatNumber(interestweight || stakerate, 2) + '%'
+                    : 'N/A'
+                )}
+              </StatValue>
+            </div>
+          </Stat>
 
           {settings.overviewDisplay === 'miner'
             ? this.returnDifficultyStats(difficulty)
