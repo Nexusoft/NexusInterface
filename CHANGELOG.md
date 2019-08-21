@@ -1,3 +1,21 @@
+# 1.2.2 (2019.8.15)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v1.2.2)
+
+#### Adjustments
+
+- For security, modules will fail to install if it contains a symbolic link
+- Module specification version is bumped to 0.2.1
+- Staking stats (Stake Rate, Trust Weight, etc...) in Overview page now displays "N/A" instead of "0%"
+
+#### Fixes
+
+- Transactions time filter is now working as expected
+- New transactions will now show up automatically in Transactions page
+- Immature balance now has the same number of decimal places as Balance
+- Search Address box in Transactions page is now working
+- Overview page no longer hides stats when they're unavailable
+
 # 1.2.1 (2019.8.15)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v1.2.1)
