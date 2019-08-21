@@ -2,10 +2,12 @@ import * as TYPE from 'consts/actionTypes';
 
 const initialState = {
   currentCommand: '',
+  currentTritiumCommand: '',
   historyIndex: -1,
   commandList: [],
   commandHistory: [],
   output: [],
+
 };
 
 export default (state = initialState, action) => {
@@ -16,7 +18,12 @@ export default (state = initialState, action) => {
         currentCommand: action.payload,
         historyIndex: initialState.historyIndex,
       };
-
+    case TYPE.SET_TRITIUM_CONSOLE_INPUT:
+      return {
+        ...state,
+        currentTritiumCommand: action.payload,
+        historyIndex: initialState.historyIndex,
+      };
     case TYPE.SET_COMMAND_LIST:
       return {
         ...state,

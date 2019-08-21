@@ -22,6 +22,8 @@ const defaultConfig = {
   port: '9336',
   user: 'rpcserver',
   password: generateDefaultPassword(),
+  apiUser: 'apiuser',
+  apiPassword: generateDefaultPassword(),
   dataDir: coreDataDir,
   verbose: 2,
 };
@@ -35,6 +37,8 @@ export function customConfig(config = {}) {
     host: `http://${ip}:${port}`,
     user: config.user || defaultConfig.user,
     password: config.password || defaultConfig.password,
+    apiUser: config.apiUser || defaultConfig.apiUser,
+    apiPassword: config.apiPassword || defaultConfig.apiPassword,
     dataDir: config.dataDir || defaultConfig.dataDir,
     verbose:
       config.verbose || config.verbose === 0
@@ -65,7 +69,17 @@ export function loadNexusConf() {
       .find(c => c);
     const password = passwordConfig && passwordConfig[1];
 
-    return { user, password };
+    const apiUserConfig = configs
+      .map(c => /^apiuser=(.*)/.exec(c.trim()))
+      .find(c => c);
+    const apiUser = apiUserConfig && apiUserConfig[1];
+
+    const apiPasswordConfig = configs
+      .map(c => /^apipassword=(.*)/.exec(c.trim()))
+      .find(c => c);
+    const apiPassword = apiPasswordConfig && apiPasswordConfig[1];
+
+    return { user, password, apiUser, apiPassword };
   } else {
     return {};
   }
