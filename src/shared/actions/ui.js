@@ -4,6 +4,14 @@ import * as TYPE from 'consts/actionTypes';
  * General
  * ===========================
  */
+export const turnLegacyModeOn = () => ({
+  type: TYPE.LEGACY_MODE_ON,
+});
+
+export const turnLegacyModeOff = () => ({
+  type: TYPE.LEGACY_MODE_OFF,
+});
+
 export const closeWallet = () => ({
   type: TYPE.CLOSE_WALLET,
 });
