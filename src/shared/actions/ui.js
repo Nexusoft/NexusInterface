@@ -5,11 +5,13 @@ import * as TYPE from 'consts/actionTypes';
  * ===========================
  */
 export const turnLegacyModeOn = () => ({
-  type: TYPE.LEGACY_MODE_ON,
+  type: TYPE.SET_LEGACY_MODE,
+  payload: true,
 });
 
 export const turnLegacyModeOff = () => ({
-  type: TYPE.LEGACY_MODE_OFF,
+  type: TYPE.SET_LEGACY_MODE,
+  payload: false,
 });
 
 export const closeWallet = () => ({

@@ -1,10 +1,10 @@
 import * as TYPE from 'consts/actionTypes';
 
-const initialState = false;
+const initialState = null;
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case TYPE.SET_LEGACY_MODE:
+    case TYPE.SET_CURRENT_USER:
       return action.payload;
 
     default:
