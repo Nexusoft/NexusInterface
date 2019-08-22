@@ -144,15 +144,6 @@ class Core {
       fs.mkdirSync(conf.dataDir);
     }
 
-    if (!fs.existsSync(path.join(conf.dataDir, 'nexus.conf'))) {
-      fs.writeFileSync(
-        path.join(conf.dataDir, 'nexus.conf'),
-        `rpcuser=${conf.user}\nrpcpassword=${conf.password}\napiuser=${
-          conf.apiUser
-        }\napipassword=${conf.apiPassword}`
-      );
-    }
-
     const params = [
       '-daemon',
       '-server',
