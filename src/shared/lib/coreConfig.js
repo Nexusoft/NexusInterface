@@ -33,6 +33,46 @@ function generateDefaultPassword() {
     .digest('hex');
 }
 
+/**
+ * Compare password from old style and return if match
+ *
+ * @param {*} oldPass
+ * @returns
+ */
+function compareOldAndNewPassword(oldPass) {
+  const secretOld =
+    process.platform === 'darwin'
+      ? process.env.USER + process.env.HOME + process.env.SHELL
+      : JSON.stringify(macaddress.networkInterfaces(), null, 2);
+  const hashOld = crypto
+    .createHmac('sha256', secretOld)
+    .update('pass')
+    .digest('hex');
+
+  return hashOld === oldPass;
+}
+
+/**
+ * Checks the password if it is the old style and if it is generate a new one and save it
+ *
+ * @param {*} writenConfig
+ * @returns
+ */
+function CheckPasswordUpdateAndGenerateNew(writenConfig) {
+  let passwordNew = undefined;
+  let updated = false;
+  if (compareOldAndNewPassword(writenConfig.password)) {
+    updated = true;
+    passwordNew = defaultConfig.password;
+    fs.writeFileSync(
+      path.join(coreDataDir, 'nexus.conf'),
+      `rpcuser=${writenConfig.user}\nrpcpassword=${passwordNew}\n`
+    );
+  }
+
+  return { updated, passwordNew };
+}
+
 const defaultConfig = {
   ip: '127.0.0.1',
   port: '9336',
@@ -42,6 +82,13 @@ const defaultConfig = {
   verbose: 2,
 };
 
+/**
+ * Returns either the given config or default Config
+ *
+ * @export
+ * @param {*} [config={}]
+ * @returns
+ */
 export function customConfig(config = {}) {
   const ip = config.ip || defaultConfig.ip;
   const port = config.port || defaultConfig.port;
@@ -79,8 +126,16 @@ export function loadNexusConf() {
     const passwordConfig = configs
       .map(c => /^rpcpassword=(.*)/.exec(c.trim()))
       .find(c => c);
-    const password = passwordConfig && passwordConfig[1];
 
+    const writenPassword = passwordConfig && passwordConfig[1];
+    //When Version is >1.5 remove this
+    const passwordCheck = CheckPasswordUpdateAndGenerateNew({
+      user,
+      password: writenPassword,
+    });
+    const password = passwordCheck.updated
+      ? passwordCheck.passwordNew
+      : writenPassword;
     return { user, password };
   } else {
     return {};

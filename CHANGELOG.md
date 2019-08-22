@@ -1,10 +1,12 @@
-# 1.2.2 (2019.8.15)
+# 1.2.2 (2019.8.XX)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v1.2.2)
 
 #### Adjustments
 
-- For security, modules will fail to install if it contains a symbolic link
+- **SECURITY**
+  - Modules will now fail to install if it contains a symbolic link
+  - Nexus.conf auto password generate has added additional entropy, old password style will automaticly be replaced
 - Module specification version is bumped to 0.2.1
 - Staking stats (Stake Rate, Trust Weight, etc...) in Overview page now displays "N/A" instead of "0%"
 
