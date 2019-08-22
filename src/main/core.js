@@ -147,7 +147,9 @@ class Core {
     if (!fs.existsSync(path.join(conf.dataDir, 'nexus.conf'))) {
       fs.writeFileSync(
         path.join(conf.dataDir, 'nexus.conf'),
-        `rpcuser=${conf.user}\nrpcpassword=${conf.password}\n`
+        `rpcuser=${conf.user}\nrpcpassword=${conf.password}\napiuser=${
+          conf.apiUser
+        }\napipassword=${conf.apiPassword}`
       );
     }
 

@@ -64,6 +64,7 @@ function CheckPasswordUpdateAndGenerateNew(writenConfig) {
   if (compareOldAndNewPassword(writenConfig.password)) {
     updated = true;
     passwordNew = defaultConfig.password;
+    // TODO: only replace, don't overwrite the whole file
     fs.writeFileSync(
       path.join(coreDataDir, 'nexus.conf'),
       `rpcuser=${writenConfig.user}\nrpcpassword=${passwordNew}\n`
@@ -76,8 +77,11 @@ function CheckPasswordUpdateAndGenerateNew(writenConfig) {
 const defaultConfig = {
   ip: '127.0.0.1',
   port: '9336',
+  apiPort: '8080',
   user: 'rpcserver',
   password: generateDefaultPassword(),
+  apiUser: 'apiuser',
+  apiPassword: generateDefaultPassword(),
   dataDir: coreDataDir,
   verbose: 2,
 };
@@ -92,12 +96,17 @@ const defaultConfig = {
 export function customConfig(config = {}) {
   const ip = config.ip || defaultConfig.ip;
   const port = config.port || defaultConfig.port;
+  const apiPort = config.apiPort || defaultConfig.apiPort;
   return {
     ip,
     port,
+    apiPort,
     host: `http://${ip}:${port}`,
+    apiHost: `http://${ip}:${apiPort}`,
     user: config.user || defaultConfig.user,
     password: config.password || defaultConfig.password,
+    apiUser: 'apiuser',
+    apiPassword: generateDefaultPassword(),
     dataDir: config.dataDir || defaultConfig.dataDir,
     verbose:
       config.verbose || config.verbose === 0
@@ -123,10 +132,10 @@ export function loadNexusConf() {
       .map(c => /^rpcuser=(.*)/.exec(c.trim()))
       .find(c => c);
     const user = userConfig && userConfig[1];
+
     const passwordConfig = configs
       .map(c => /^rpcpassword=(.*)/.exec(c.trim()))
       .find(c => c);
-
     const writenPassword = passwordConfig && passwordConfig[1];
     //When Version is >1.5 remove this
     const passwordCheck = CheckPasswordUpdateAndGenerateNew({
@@ -136,7 +145,18 @@ export function loadNexusConf() {
     const password = passwordCheck.updated
       ? passwordCheck.passwordNew
       : writenPassword;
-    return { user, password };
+
+    const apiUserConfig = configs
+      .map(c => /^apiuser=(.*)/.exec(c.trim()))
+      .find(c => c);
+    const apiUser = apiUserConfig && apiUserConfig[1];
+
+    const apiPasswordConfig = configs
+      .map(c => /^apipassword=(.*)/.exec(c.trim()))
+      .find(c => c);
+    const apiPassword = apiPasswordConfig && apiPasswordConfig[1];
+
+    return { user, password, apiUser, apiPassword };
   } else {
     return {};
   }
