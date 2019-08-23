@@ -119,7 +119,7 @@ class Core {
 
     if (corePID) {
       log.info(
-        'Core Manager: Nexux Core Process already running. Skipping starting core'
+        'Core Manager: Nexus Core Process already running. Skipping starting core'
       );
       this._config = customConfig(loadNexusConf());
       return null;
@@ -129,6 +129,7 @@ class Core {
       ...loadNexusConf(),
       verbose: settings.verboseLevel,
     }));
+
     if (!coreBinaryExists()) {
       log.info(
         'Core Manager: Core not found, please run in manual deamon mode'

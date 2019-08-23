@@ -36,12 +36,13 @@ function generateDefaultPassword() {
 const fromKeyValues = rawContent =>
   rawContent
     ? rawContent.split('\n').reduce((obj, line) => {
-        const equalIndex = line.findIndex('=');
+        const equalIndex = line.indexOf('=');
         if (equalIndex >= 0) {
           const key = line.substring(0, equalIndex);
           const value = line.substring(equalIndex + 1);
           if (key) obj[key] = value;
         }
+        return obj;
       }, {})
     : {};
 
