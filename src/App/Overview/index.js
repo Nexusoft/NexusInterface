@@ -507,10 +507,8 @@ class Overview extends Component {
    * @memberof Overview
    */
   returnWeightStats = () => {
-    if (Object.keys(this.props.coreInfo).length === 0) {
-      return;
-    }
     const { coreInfo } = this.props;
+    const { blockweight, trustweight, stakeweight } = coreInfo || {};
 
     return (
       <React.Fragment>
@@ -519,7 +517,9 @@ class Overview extends Component {
           <div>
             <StatLabel>{__('Block Weight')}</StatLabel>
             <StatValue>
-              {this.waitForCore(formatNumber(coreInfo.blockweight, 2) + '%')}
+              {this.waitForCore(
+                blockweight ? formatNumber(blockweight, 2) + '%' : 'N/A'
+              )}
             </StatValue>
           </div>
         </Stat>
@@ -529,7 +529,9 @@ class Overview extends Component {
           <div>
             <StatLabel>{__('Trust Weight')}</StatLabel>
             <StatValue>
-              {this.waitForCore(formatNumber(coreInfo.trustweight, 2) + '%')}
+              {this.waitForCore(
+                trustweight ? formatNumber(trustweight, 2) + '%' : 'N/A'
+              )}
             </StatValue>
           </div>
         </Stat>
@@ -539,7 +541,9 @@ class Overview extends Component {
           <div>
             <StatLabel>{__('Stake Weight')}</StatLabel>
             <StatValue>
-              {this.waitForCore(formatNumber(coreInfo.stakeweight, 2) + '%')}
+              {this.waitForCore(
+                stakeweight ? formatNumber(stakeweight, 2) + '%' : 'N/A'
+              )}
             </StatValue>
           </div>
         </Stat>
@@ -678,7 +682,13 @@ class Overview extends Component {
               </StatLabel>
               <StatValue>
                 {market && market.price ? (
-                  formatCurrency(market.price, fiatCurrency, 4)
+                  <>
+                    {fiatCurrency === 'BTC'
+                      ? formatCurrency(market.price, fiatCurrency, 8)
+                      : fiatCurrency !== 'BTC'
+                      ? formatCurrency(market.price, fiatCurrency, 2)
+                      : ''}
+                  </>
                 ) : (
                   <span className="dim">-</span>
                 )}
@@ -790,7 +800,7 @@ class Overview extends Component {
             <StatIcon
               icon={
                 settings.displayFiatBalance
-                  ? CurrencyIcon(this.props.fiatCurrency)
+                  ? CurrencyIcon(fiatCurrency)
                   : logoIcon
               }
             />
@@ -814,7 +824,7 @@ class Overview extends Component {
               <StatValue>
                 {settings.overviewDisplay === 'balHidden'
                   ? '-'
-                  : this.waitForCore(stake + newmint)}
+                  : this.waitForCore(formatNumber(stake + newmint))}
               </StatValue>
             </div>
             <StatIcon icon={nxsStakeIcon} />
@@ -839,7 +849,13 @@ class Overview extends Component {
               </StatLabel>
               <StatValue>
                 {market && market.price ? (
-                  formatCurrency(market.price, fiatCurrency, 4)
+                  <>
+                    {fiatCurrency === 'BTC'
+                      ? formatCurrency(market.price, fiatCurrency, 8)
+                      : fiatCurrency !== 'BTC'
+                      ? formatCurrency(market.price, fiatCurrency, 2)
+                      : ''}
+                  </>
                 ) : (
                   <span className="dim">-</span>
                 )}
@@ -897,18 +913,6 @@ class Overview extends Component {
             </div>
           </Stat>
 
-          <Stat>
-            <StatIcon icon={interestIcon} />
-            <div>
-              <StatLabel>{__('Stake Rate')}</StatLabel>
-              <StatValue>
-                {this.waitForCore(
-                  formatNumber(interestweight || stakerate, 2) + '%'
-                )}
-              </StatValue>
-            </div>
-          </Stat>
-
           <Tooltip.Trigger
             position="left"
             tooltip={!!blockDate && <BlockCountTooltip blockDate={blockDate} />}
@@ -924,6 +928,20 @@ class Overview extends Component {
               </div>
             </Stat>
           </Tooltip.Trigger>
+
+          <Stat>
+            <StatIcon icon={interestIcon} />
+            <div>
+              <StatLabel>{__('Stake Rate')}</StatLabel>
+              <StatValue>
+                {this.waitForCore(
+                  interestweight || stakerate
+                    ? formatNumber(interestweight || stakerate, 2) + '%'
+                    : 'N/A'
+                )}
+              </StatValue>
+            </div>
+          </Stat>
 
           {settings.overviewDisplay === 'miner'
             ? this.returnDifficultyStats(difficulty)

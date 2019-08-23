@@ -204,7 +204,7 @@ class ContactDetails extends React.Component {
               label || (
                 <DefaultLabel>
                   {isMine
-                    ? _('My address for %{name}')
+                    ? __('My address for %{name}')
                     : __("%{name}'s Address", {
                         name: contact.name,
                       })}

@@ -35,6 +35,7 @@ const WarningIcon = styled(Icon)(({ theme }) => ({
 
 const fiatCurrencies = [
   { value: 'AUD', display: 'Australian Dollar (AUD)' },
+  { value: 'BTC', display: 'Bitcoin (BTC)' },
   { value: 'BRL', display: 'Brazilian Real (BRL)' },
   { value: 'GBP', display: 'British Pound (GBP)' },
   { value: 'CAD', display: 'Canadian Dollar (CAD)' },
@@ -140,11 +141,11 @@ class SettingsApp extends Component {
         note: (
           <div>
             <p>
-              {_(`This is only for module developers and can be dangerous for
+              {__(`This is only for module developers and can be dangerous for
               regular users. Please make sure you know what you are doing!`)}
             </p>
             <p>
-              {_(`It would be much easier for a closed source module to hide
+              {__(`It would be much easier for a closed source module to hide
               malicious code than for an open source one. Therefore, in case you
               still want to disable this setting, it is highly recommended that
               you only install and run closed source modules that you are
@@ -282,7 +283,7 @@ class SettingsApp extends Component {
           />
         </SettingsField>
 
-        <SettingsField label={__('Fiat currency')}>
+        <SettingsField label={__('Base currency')}>
           <Select
             value={settings.fiatCurrency}
             onChange={this.updateHandlers('fiatCurrency')}

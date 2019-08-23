@@ -1,6 +1,50 @@
-# 1.2.0 (2019.8.XX)
+# 1.2.2 (2019.8.XX)
 
-[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v1.1.1)
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v1.2.2)
+
+#### Adjustments
+
+- **SECURITY**
+  - Modules will now fail to install if it contains a symbolic link
+  - Nexus.conf auto password generate has added additional entropy, old password style will automaticly be replaced
+- Module specification version is bumped to 0.2.1
+- Staking stats (Stake Rate, Trust Weight, etc...) in Overview page now displays "N/A" instead of "0%"
+
+#### Fixes
+
+- Transactions time filter is now working as expected
+- New transactions will now show up automatically in Transactions page
+- Immature balance now has the same number of decimal places as Balance
+- Search Address box in Transactions page is now working
+- Overview page no longer hides stats when they're unavailable
+
+# 1.2.1 (2019.8.15)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v1.2.1)
+
+#### Additions
+
+- Improved Translations
+- Added "Reload transaction history" button to Core Settings
+- Added `walletClean` hidden setting which indicates the core should run with `-walletclean` parameter (the same as "Reload transaction history" functionality) the next time it starts up when set to true
+- Added BTC to base currencies
+
+#### Adjustments
+
+- Updated Nexus Core to [v3.0.5](https://github.com/Nexusoft/LLL-TAO/releases/tag/3.0.5)
+
+#### Fixes
+
+- Fixed issues with the transaction page
+- Fixed Transaction Details modal not showing up
+- Fixed issue with auto updates with Linux-AppImage
+- Bootsrapper will now show the correct message while the database is extracting
+- Fixed Market page layout
+- Immature transactions will now automatically updated when it matures
+
+# 1.2.0 (2019.8.09)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v1.2.0)
 
 #### Additions
 

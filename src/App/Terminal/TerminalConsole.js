@@ -97,7 +97,7 @@ const ConsoleOutput = styled.code(({ theme }) => ({
   wordBreak: 'break-all',
   whiteSpace: 'pre-wrap',
   background: theme.background,
-  border: `1px solid ${theme.mixer(0.25)}`,
+  border: `1px solid ${theme.mixer(0.125)}`,
 }));
 
 const ExecuteButton = styled(Button)(({ theme }) => ({
@@ -154,37 +154,18 @@ class TerminalConsole extends Component {
     this.props.setCommandList(commandList);
   };
 
-  // Pass before update values to componentDidUpdate
-  /**
-   * Before component Did Update
-   *
-   * @returns
-   * @memberof TerminalConsole
-   */
-  getSnapshotBeforeUpdate() {
-    if (!this.outputRef.current) return null;
-    const { clientHeight, scrollTop, scrollHeight } = this.outputRef.current;
-    return {
-      scrollAtBottom: clientHeight + scrollTop === scrollHeight,
-    };
-  }
-
   /**
    *
    *
    * @param {*} prevProps
    * @param {*} PrevState
-   * @param {*} beforeUpdate
    * @memberof TerminalConsole
    */
-  componentDidUpdate(prevProps, PrevState, beforeUpdate) {
-    // If the scroll was at the bottom before the DOM is updated
-    if (beforeUpdate && beforeUpdate.scrollAtBottom) {
-      // Scroll to bottom
-      if (this.outputRef.current) {
-        const { clientHeight, scrollHeight } = this.outputRef.current;
-        this.outputRef.current.scrollTop = scrollHeight - clientHeight;
-      }
+  componentDidUpdate(prevProps, PrevState) {
+    // Scroll to bottom
+    if (this.outputRef.current && prevProps.output !== this.props.output) {
+      const { clientHeight, scrollHeight } = this.outputRef.current;
+      this.outputRef.current.scrollTop = scrollHeight - clientHeight;
     }
   }
 
@@ -215,7 +196,7 @@ class TerminalConsole extends Component {
       .filter(arg => arg)
       .map(arg => (isNaN(Number(arg)) ? arg : Number(arg)));
 
-    this.inputRef.inputRef.current.blur();
+    // this.inputRef.inputRef.current.blur();
 
     const tab = ' '.repeat(2);
     let result = null;

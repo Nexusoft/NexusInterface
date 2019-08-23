@@ -21,7 +21,7 @@ export async function autoUpdateTransactions() {
           transactions: { lastTxtotal },
         } = store.getState();
         if (txtotal && (!lastTxtotal || txtotal > lastTxtotal)) {
-          fetchNewTransactions();
+          fetchNewTransactions(txtotal - lastTxtotal);
         }
       }
     );
@@ -57,25 +57,15 @@ async function fetchAllTransactions() {
   } = store.getState();
   store.dispatch(loadTransactions(transactions, txtotal));
 
-  if (minConfirmations) {
-    transactions.forEach(tx => {
-      if (isPending(tx, minConfirmations)) {
-        autoUpdateTxConfirmations(tx.txid);
-      }
-    });
-  }
+  transactions.forEach(tx => {
+    if (needsAutoUpdate(tx, minConfirmations)) {
+      autoUpdateTxConfirmations(tx.txid);
+    }
+  });
 }
 
-async function fetchNewTransactions() {
-  const {
-    transactions: { map },
-  } = store.getState();
-  const txCount = Object.values(map || {}).length;
-  const newTransactions = await rpc('listtransactions', [
-    '*',
-    txPerCall,
-    txCount,
-  ]);
+async function fetchNewTransactions(newTxCount) {
+  const newTransactions = await rpc('listtransactions', ['*', newTxCount]);
 
   const {
     core: {
@@ -87,13 +77,11 @@ async function fetchNewTransactions() {
     addTransactions(newTransactions.map(normalizeTransaction), txtotal)
   );
 
-  if (minConfirmations) {
-    newTransactions.forEach(tx => {
-      if (isPending(tx, minConfirmations)) {
-        autoUpdateTxConfirmations(tx.txid);
-      }
-    });
-  }
+  newTransactions.forEach(tx => {
+    if (needsAutoUpdate(tx, minConfirmations)) {
+      autoUpdateTxConfirmations(tx.txid);
+    }
+  });
 }
 
 export async function fetchTransaction(txid) {
@@ -115,7 +103,7 @@ function autoUpdateTxConfirmations(txid) {
         const minConf = Number(minConfirmations);
         const tx = map[txid];
 
-        if (!isPending(tx, minConf)) {
+        if (!needsAutoUpdate(tx, minConf)) {
           unsubscribers[txid]();
           delete unsubscribers[txid];
         }
@@ -132,3 +120,6 @@ const normalizeTransaction = tx => ({
   ...tx,
   ...(tx.details && tx.details[0]),
 });
+
+const needsAutoUpdate = (tx, minConf) =>
+  (minConf && isPending(tx, minConf)) || tx.category === 'immature';

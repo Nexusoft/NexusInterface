@@ -94,12 +94,13 @@ const Filters = ({
   <FiltersWrapper>
     <FormField connectLabel label={__('Search address')}>
       <TextField
-        inputProps={{
-          type: 'search',
-          name: 'addressfilter',
-          placeholder: 'Search for Address',
-          value: addressQuery,
-          onChange: evt => setTxsAddressQuery(evt.target.value),
+        type="search"
+        name="addressfilter"
+        placeholder={__('Search for Address')}
+        value={addressQuery}
+        onChange={evt => {
+          console.log(evt.target.value);
+          setTxsAddressQuery(evt.target.value);
         }}
         left={<Icon icon={searchIcon} className="space-right" />}
       />

@@ -1,6 +1,6 @@
 import path from 'path';
 import { walletDataDir, fileExists } from 'consts/paths';
-import { readJson, writeJson } from 'utils/fileSystem';
+import { readJson, writeJson } from 'utils/json';
 
 const themeFileName = 'theme.json';
 const themeFilePath = path.join(walletDataDir, themeFileName);

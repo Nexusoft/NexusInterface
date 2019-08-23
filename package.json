@@ -1,10 +1,10 @@
 {
   "name": "nexus_wallet",
   "productName": "Nexus Wallet",
-  "version": "1.2.0",
-  "moduleSpecVersion": "0.2.0",
+  "version": "1.2.2",
+  "moduleSpecVersion": "0.2.1",
   "supportedModuleSpecVersion": "0.1.0",
-  "buildDate": "July 19th 2019",
+  "buildDate": "August 16th 2019",
   "description": "User interface for the Nexus blockchain and ecossystem.",
   "scripts": {
     "prebuild-dev": "concurrently \"npm run build-main-dev\" \"npm run build-preload-dev\" \"node -r @babel/register ./internals/scripts/checkDll.js\" ",
@@ -118,7 +118,19 @@
       ]
     },
     "deb": {
-      "artifactName": "nexus_wallet-Linux-${version}.${ext}"
+      "artifactName": "nexus_wallet-Linux-${version}.${ext}",
+      "depends": [
+        "libgtk-3-0",
+        "libnotify4",
+        "libnss3",
+        "libxss1",
+        "libxtst6",
+        "xdg-utils",
+        "libatspi2.0-0",
+        "libuuid1",
+        "libappindicator3-1",
+        "libsecret-1-0"
+      ]
     },
     "appImage": {
       "artifactName": "nexus_wallet-Linux-${version}.${ext}"

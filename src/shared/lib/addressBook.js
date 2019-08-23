@@ -3,7 +3,7 @@ import path from 'path';
 import Ajv from 'ajv';
 import { walletDataDir } from 'consts/paths';
 import { emailRegex } from 'utils/form';
-import { readJson, writeJson } from 'utils/fileSystem';
+import { readJson, writeJson } from 'utils/json';
 
 const fileName = 'addressbook.json';
 const filePath = path.join(walletDataDir, fileName);

@@ -112,7 +112,8 @@ export async function getModuleHash(dirPath, { module } = {}) {
 export async function getRepoInfo(dirPath) {
   const filePath = join(dirPath, 'repo_info.json');
   // Check repo_info.json file exists
-  if (!fs.existsSync(filePath)) return null;
+  if (!fs.existsSync(filePath) || fs.lstatSync(filePath).isSymbolicLink())
+    return null;
 
   // Check repo_info.json file schema
   try {

@@ -303,7 +303,7 @@ class Market extends Component {
           </ExchangeUnitContainer>
         )}
         {this.props.loaded && this.props.bittrex.buy[0] && (
-          <MarketInfoContainer>
+          <ExchangeUnitContainer>
             <ExchangeLogo
               src={bittrexLogo}
               onClick={() => {
@@ -329,7 +329,7 @@ class Market extends Component {
                 />
               ) : null}
             </MarketInfoContainer>
-          </MarketInfoContainer>
+          </ExchangeUnitContainer>
         )}
       </Panel>
     );

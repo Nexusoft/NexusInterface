@@ -68,7 +68,7 @@ export default class TransactionDetailsModal extends React.Component {
           {transaction ? (
             <>
               <Field label={__('Time')}>
-                {formatDateTime(transaction.time, timeFormatOptions)}
+                {formatDateTime(transaction.time * 1000, timeFormatOptions)}
               </Field>
               <Field label={__('Category')}>
                 {categoryText(transaction.category)}

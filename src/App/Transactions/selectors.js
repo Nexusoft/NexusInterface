@@ -50,7 +50,7 @@ export const getFilteredTransactions = memoize(
       if (timeSpan) {
         const pastDate = getThresholdDate(timeSpan);
         if (!pastDate) return true;
-        else return new Date(tx.time).getTime() > pastDate.getTime();
+        else return new Date(tx.time * 1000).getTime() > pastDate.getTime();
       }
 
       return true;
