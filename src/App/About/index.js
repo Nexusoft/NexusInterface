@@ -178,12 +178,12 @@ class About extends Component {
               <b>{__('Interface Version')}:</b>{' '}
               {this.getInterfaceVersionNumber()}
               <br />
-              <b>{__('Build Date')}: </b> August 16th 2019 <br />
+              <b>{__('Build Date')}: </b> August 23rd 2019 <br />
             </Column>
             <Column>
               <b>{__('Nexus Core Version')}:</b> {this.getDaemonVersionNumber()}{' '}
               <br />
-              <b>{__('Build Date')}: </b> August 16th 2019 <br />
+              <b>{__('Build Date')}: </b> August 23rd 2019 <br />
             </Column>
           </Row>
           <CenterText>
