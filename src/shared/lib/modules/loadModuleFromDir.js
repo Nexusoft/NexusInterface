@@ -89,6 +89,17 @@ const nxsPackageSchema = {
 };
 const validateNxsPackage = ajv.compile(nxsPackageSchema);
 
+function containsSymLink(dirPath) {
+  const items = fs.readdirSync(dirPath);
+  for (let item of items) {
+    const subPath = join(dirPath, item);
+    if (fs.lstatSync(subPath).isSymbolicLink()) return true;
+    if (fs.statSync(subPath).isDirectory() && containsSymLink(subPath))
+      return true;
+  }
+  return false;
+}
+
 /**
  * Check a directory path to see if it is a valid module directory.
  *
@@ -105,7 +116,8 @@ export async function loadModuleFromDir(
     const nxsPackagePath = join(dirPath, 'nxs_package.json');
     if (
       !fs.existsSync(nxsPackagePath) ||
-      !fs.statSync(nxsPackagePath).isFile()
+      !fs.statSync(nxsPackagePath).isFile() ||
+      fs.lstatSync(nxsPackagePath).isSymbolicLink()
     ) {
       return null;
     }
@@ -122,11 +134,24 @@ export async function loadModuleFromDir(
     if (module.files.some(file => reservedFileNames.includes(normalize(file))))
       return null;
 
+    // Ensure all files exist and are not directories
     const filePaths = module.files.map(file => join(dirPath, file));
-    if (filePaths.some(filePath => !fs.existsSync(filePath))) {
+    if (
+      filePaths.some(
+        filePath =>
+          !fs.existsSync(filePath) || fs.statSync(filePath).isDirectory()
+      )
+    ) {
       console.error(
         `Module ${module.name}: Some files listed by the module does not exist`
       );
+      return null;
+    }
+
+    // Ensure no symbolic links, both files and folders
+    // Need to scan the whole folder because symbolic link can link to a directory
+    if (containsSymLink(dirPath)) {
+      console.error(`Module ${module.name} contains some symbolic link!`);
       return null;
     }
 
