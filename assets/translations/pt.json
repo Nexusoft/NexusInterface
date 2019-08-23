@@ -288,7 +288,7 @@
   "No, let it continue": null,
   "No, let it sync": null,
   "Not available": null,
-  "Not enough disk space! Minimum 15GB of free space is required.": null,
+  "Not enough disk space! Minimum 15GB of free space is required.": "Não há espaço suficiente no disco! Mínimo 15GB de espaço livre é necessário.",
   "Not logged in": "Não logado",
   "Not provided": null,
   "Notes": "Notas",
