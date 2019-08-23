@@ -7,8 +7,10 @@ import styled from '@emotion/styled';
 
 // Internal
 import GlobalStyles from 'components/GlobalStyles';
+import { legacyMode } from 'consts/misc';
 import Overlays from './Overlays';
 import Overview from './Overview';
+import OverviewTritium from './OverviewTritium';
 import Header from './Header';
 import Navigation from './Navigation';
 import Send from './Send';
@@ -53,7 +55,11 @@ const App = ({ history }) => (
           <Header />
           <Main>
             <Switch>
-              <Route exact path="/" component={Overview} />
+              <Route
+                exact
+                path="/"
+                component={legacyMode ? Overview : OverviewTritium}
+              />
               <Route exact path="/Send" component={Send} />
               <Route exact path="/Transactions" component={Transactions} />
               <Route exact path="/Market" component={Market} />
