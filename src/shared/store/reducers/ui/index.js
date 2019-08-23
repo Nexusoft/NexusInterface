@@ -8,7 +8,6 @@ import notifications from './notifications';
 import backgroundTasks from './backgroundTasks';
 import closing from './closing';
 import transactions from './transactions';
-import legacyMode from './legacyMode';
 
 export default combineReducers({
   addressBook,
@@ -19,5 +18,4 @@ export default combineReducers({
   backgroundTasks,
   closing,
   transactions,
-  legacyMode,
 });
