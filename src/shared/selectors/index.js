@@ -9,5 +9,6 @@ export const isCoreConnected = legacyMode
         (systemInfo.connections || systemInfo.connections === 0)
       );
 
-export const isStaking = ({ core: { info } }) =>
-  !!info && info.staking === 'Started';
+export const isStaking = legacyMode
+  ? ({ core: { info } }) => !!info && info.staking === 'Started'
+  : ({ core: { stakeInfo } }) => !!(stakeInfo && stakeInfo.staking);
