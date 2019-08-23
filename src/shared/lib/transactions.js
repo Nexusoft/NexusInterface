@@ -21,7 +21,7 @@ export async function autoUpdateTransactions() {
           transactions: { lastTxtotal },
         } = store.getState();
         if (txtotal && (!lastTxtotal || txtotal > lastTxtotal)) {
-          fetchNewTransactions();
+          fetchNewTransactions(txtotal - lastTxtotal);
         }
       }
     );
@@ -64,16 +64,8 @@ async function fetchAllTransactions() {
   });
 }
 
-async function fetchNewTransactions() {
-  const {
-    transactions: { map },
-  } = store.getState();
-  const txCount = Object.values(map || {}).length;
-  const newTransactions = await rpc('listtransactions', [
-    '*',
-    txPerCall,
-    txCount,
-  ]);
+async function fetchNewTransactions(newTxCount) {
+  const newTransactions = await rpc('listtransactions', ['*', newTxCount]);
 
   const {
     core: {

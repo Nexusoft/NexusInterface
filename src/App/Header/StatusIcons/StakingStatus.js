@@ -50,9 +50,11 @@ class StakingStatus extends React.Component {
                 <>
                   <div>
                     <strong>{__('Wallet is staking')}</strong>
-                    <div>
-                      {__('Stake Rate')}: {formatNumber(stakerate, 2)}%
-                    </div>
+                    {!!stakerate && (
+                      <div>
+                        {__('Stake Rate')}: {formatNumber(stakerate, 2)}%
+                      </div>
+                    )}
                   </div>
                 </>
               ) : (
