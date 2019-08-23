@@ -57,8 +57,8 @@ const defaultConfig = {
   apiPort: '8080',
   user: 'rpcserver',
   password: generateDefaultPassword(),
-  apiUser: 'apiuser',
-  apiPassword: generateDefaultPassword(),
+  apiUser: '',
+  apiPassword: '',
   dataDir: coreDataDir,
   verbose: 2,
 };

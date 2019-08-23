@@ -2,9 +2,13 @@
 export const START_CORE_AUTO_CONNECT = 'START_CORE_AUTO_CONNECT';
 export const STOP_CORE_AUTO_CONNECT = 'STOP_CORE_AUTO_CONNECT';
 
-// Overview
 export const GET_INFO = 'GET_INFO';
+export const GET_SYSTEM_INFO = 'GET_SYSTEM_INFO';
+export const GET_STAKE_INFO = 'GET_STAKE_INFO';
+export const GET_BALANCES = 'GET_BALANCES';
 export const CLEAR_CORE_INFO = 'CLEAR_CORE_INFO';
+
+// Overview
 export const GET_DIFFICULTY = 'GET_DIFFICULTY';
 
 // Trust

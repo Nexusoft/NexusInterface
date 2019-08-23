@@ -1,3 +1,5 @@
+import settings from 'data/initialSettings';
+
 export const webGLAvailable = (() => {
   try {
     var canvas = document.createElement('canvas');
@@ -9,3 +11,5 @@ export const webGLAvailable = (() => {
     return false;
   }
 })();
+
+export const legacyMode = settings.legacyMode;
