@@ -33,53 +33,32 @@ function generateDefaultPassword() {
     .digest('hex');
 }
 
-/**
- * Compare password from old style and return if match
- *
- * @param {*} oldPass
- * @returns
- */
-function compareOldAndNewPassword(oldPass) {
-  const secretOld =
-    process.platform === 'darwin'
-      ? process.env.USER + process.env.HOME + process.env.SHELL
-      : JSON.stringify(macaddress.networkInterfaces(), null, 2);
-  const hashOld = crypto
-    .createHmac('sha256', secretOld)
-    .update('pass')
-    .digest('hex');
+const fromKeyValues = rawContent =>
+  rawContent
+    ? rawContent.split('\n').reduce((obj, line) => {
+        const equalIndex = line.indexOf('=');
+        if (equalIndex >= 0) {
+          const key = line.substring(0, equalIndex);
+          const value = line.substring(equalIndex + 1);
+          if (key) obj[key] = value;
+        }
+        return obj;
+      }, {})
+    : {};
 
-  return hashOld === oldPass;
-}
-
-/**
- * Checks the password if it is the old style and if it is generate a new one and save it
- *
- * @param {*} writenConfig
- * @returns
- */
-function CheckPasswordUpdateAndGenerateNew(writenConfig) {
-  let passwordNew = undefined;
-  let updated = false;
-  if (compareOldAndNewPassword(writenConfig.password)) {
-    updated = true;
-    passwordNew = defaultConfig.password;
-    fs.writeFileSync(
-      path.join(coreDataDir, 'nexus.conf'),
-      `rpcuser=${writenConfig.user}\nrpcpassword=${passwordNew}\n`
-    );
-  }
-
-  return { updated, passwordNew };
-}
+const toKeyValues = obj =>
+  Object.entries(obj)
+    .map(([key, value]) => `${key}=${value}`)
+    .join('\n');
 
 const defaultConfig = {
   ip: '127.0.0.1',
   port: '9336',
+  apiPort: '8080',
   user: 'rpcserver',
   password: generateDefaultPassword(),
-  apiUser: 'apiuser',
-  apiPassword: generateDefaultPassword(),
+  apiUser: '',
+  apiPassword: '',
   dataDir: coreDataDir,
   verbose: 2,
 };
@@ -94,10 +73,13 @@ const defaultConfig = {
 export function customConfig(config = {}) {
   const ip = config.ip || defaultConfig.ip;
   const port = config.port || defaultConfig.port;
+  const apiPort = config.apiPort || defaultConfig.apiPort;
   return {
     ip,
     port,
+    apiPort,
     host: `http://${ip}:${port}`,
+    apiHost: `http://${ip}:${apiPort}`,
     user: config.user || defaultConfig.user,
     password: config.password || defaultConfig.password,
     apiUser: config.apiUser || defaultConfig.apiUser,
@@ -116,32 +98,48 @@ export function customConfig(config = {}) {
  * @returns
  */
 export function loadNexusConf() {
-  if (fs.existsSync(path.join(coreDataDir, 'nexus.conf'))) {
-    log.info('nexus.conf exists. Importing username and password.');
+  const confPath = path.join(coreDataDir, 'nexus.conf');
+  const confContent = fs.existsSync(confPath)
+    ? fs.readFileSync(confPath).toString()
+    : '';
+  const configs = fromKeyValues(confContent);
+  log.info(
+    'nexus.conf exists. Importing username and password for RPC server and API server.'
+  );
 
-    const configs = fs
-      .readFileSync(path.join(coreDataDir, 'nexus.conf'))
-      .toString()
-      .split(`\n`);
-    const userConfig = configs
-      .map(c => /^rpcuser=(.*)/.exec(c.trim()))
-      .find(c => c);
-    const user = userConfig && userConfig[1];
-    const passwordConfig = configs
-      .map(c => /^rpcpassword=(.*)/.exec(c.trim()))
-      .find(c => c);
+  // When Version is >1.5 remove this
+  const oldSecret =
+    process.platform === 'darwin'
+      ? process.env.USER + process.env.HOME + process.env.SHELL
+      : JSON.stringify(macaddress.networkInterfaces(), null, 2);
+  const oldPassword = crypto
+    .createHmac('sha256', oldSecret)
+    .update('pass')
+    .digest('hex');
+  if (configs['rpcpassword'] === oldPassword)
+    configs['rpcpassword'] = undefined;
 
-    const writenPassword = passwordConfig && passwordConfig[1];
-    //When Version is >1.5 remove this
-    const passwordCheck = CheckPasswordUpdateAndGenerateNew({
-      user,
-      password: writenPassword,
-    });
-    const password = passwordCheck.updated
-      ? passwordCheck.passwordNew
-      : writenPassword;
-    return { user, password };
-  } else {
-    return {};
+  // Fallback to default values if empty
+  const fallbackConf = [
+    ['rpcuser', defaultConfig.user],
+    ['rpcpassword', defaultConfig.password],
+    ['apiuser', defaultConfig.apiUser],
+    ['apipassword', defaultConfig.apiPassword],
+  ];
+  let updated = false;
+  fallbackConf.forEach(([key, value]) => {
+    // Don't replace it if value is an empty string
+    if (configs[key] === undefined) {
+      configs[key] = value;
+      updated = true;
+    }
+  });
+
+  // Save nexus.conf file if there were changes
+  if (updated) {
+    log.info('Filling up some missing configurations in nexus.conf');
+    fs.writeFileSync(confPath, toKeyValues(configs));
   }
+
+  return configs;
 }

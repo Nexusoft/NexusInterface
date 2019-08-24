@@ -1,9 +1,8 @@
-import { LoadSettings } from 'lib/settings';
 import { LoadTheme } from 'lib/theme';
 import { LoadAddressBook } from 'lib/addressBook';
+import settings from 'data/initialSettings';
 
 export default function getInitialState() {
-  const settings = LoadSettings();
   const theme = LoadTheme();
   const addressBook = LoadAddressBook();
 

@@ -4,7 +4,7 @@ import path from 'path';
 import Polyglot from 'node-polyglot';
 
 import { assetsDir } from 'consts/paths';
-import { LoadSettings } from 'lib/settings';
+import settings from 'data/initialSettings';
 import { escapeRegExp } from 'utils/misc';
 
 const locales = [
@@ -21,8 +21,7 @@ const locales = [
   'ru',
   'zh-cn',
 ];
-const { locale: loc } = LoadSettings();
-const locale = locales.includes(loc) ? loc : 'en';
+const locale = locales.includes(settings.locale) ? settings.locale : 'en';
 const phrases =
   locale === 'en'
     ? null

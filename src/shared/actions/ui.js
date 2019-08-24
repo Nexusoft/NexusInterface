@@ -4,6 +4,7 @@ import * as TYPE from 'consts/actionTypes';
  * General
  * ===========================
  */
+
 export const closeWallet = () => ({
   type: TYPE.CLOSE_WALLET,
 });
