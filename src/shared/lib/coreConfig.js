@@ -78,6 +78,8 @@ const defaultConfig = {
   port: '9336',
   user: 'rpcserver',
   password: generateDefaultPassword(),
+  apiUser: 'apiuser',
+  apiPassword: generateDefaultPassword(),
   dataDir: coreDataDir,
   verbose: 2,
 };
@@ -98,6 +100,8 @@ export function customConfig(config = {}) {
     host: `http://${ip}:${port}`,
     user: config.user || defaultConfig.user,
     password: config.password || defaultConfig.password,
+    apiUser: config.apiUser || defaultConfig.apiUser,
+    apiPassword: config.apiPassword || defaultConfig.apiPassword,
     dataDir: config.dataDir || defaultConfig.dataDir,
     verbose:
       config.verbose || config.verbose === 0

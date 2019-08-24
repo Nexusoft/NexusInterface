@@ -133,6 +133,14 @@ const Navigation = () => (
         {__('Console')}
       </NavItem>
 
+      <NavItem icon={consoleIcon} to="/Accounts">
+        {__('Accounts')}
+      </NavItem>
+
+      <NavItem icon={consoleIcon} to="/Login">
+        {__('Login')}
+      </NavItem>
+
       <ModuleNavItems />
     </NavBar>
   </Nav>

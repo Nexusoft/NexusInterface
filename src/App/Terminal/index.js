@@ -12,6 +12,7 @@ import Tab from 'components/Tab';
 
 // Internal Local Dependencies
 import TerminalConsole from './TerminalConsole';
+import TritiumConsole from './TritiumConsole';
 import TerminalCore from './TerminalCore';
 
 // Images
@@ -101,6 +102,11 @@ class Terminal extends Component {
               icon={logoIcon}
               text={__('Console')}
             />
+            <Tab 
+            link={`${match.url}/TritiumConsole`}
+            icon={logoIcon}
+            text={__('Tritium Console')}
+            />
             <Tab
               link={`${match.url}/Core`}
               icon={coreIcon}
@@ -110,6 +116,7 @@ class Terminal extends Component {
 
           <Switch>
             <Route path={`${match.path}/Console`} component={TerminalConsole} />
+            <Route path={`${match.path}/TritiumConsole`} component={TritiumConsole} />
             <Route path={`${match.path}/Core`} component={TerminalCore} />
             <ConsoleRedirect match={match} />
           </Switch>
