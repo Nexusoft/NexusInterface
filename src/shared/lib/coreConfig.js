@@ -57,8 +57,8 @@ const defaultConfig = {
   apiPort: '8080',
   user: 'rpcserver',
   password: generateDefaultPassword(),
-  apiUser: '',
-  apiPassword: '',
+  apiUser: 'apiserver',
+  apiPassword: generateDefaultPassword(),
   dataDir: coreDataDir,
   verbose: 2,
 };
@@ -80,10 +80,11 @@ export function customConfig(config = {}) {
     apiPort,
     host: `http://${ip}:${port}`,
     apiHost: `http://${ip}:${apiPort}`,
-    user: config.user || defaultConfig.user,
-    password: config.password || defaultConfig.password,
-    apiUser: config.apiUser || defaultConfig.apiUser,
-    apiPassword: config.apiPassword || defaultConfig.apiPassword,
+    user: config.user || config.rpcuser || defaultConfig.user,
+    password: config.password || config.rpcpassword || defaultConfig.password,
+    apiUser: config.apiUser || config.apiuser || defaultConfig.apiUser,
+    apiPassword:
+      config.apiPassword || config.apipassword || defaultConfig.apiPassword,
     dataDir: config.dataDir || defaultConfig.dataDir,
     verbose:
       config.verbose || config.verbose === 0

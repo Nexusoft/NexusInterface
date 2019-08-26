@@ -41,7 +41,7 @@ const getDefaultOptions = ({ apiUser, apiPassword }) => ({
 export function apiPost(endpoint, params) {
   const conf = getConfig();
   return axios.post(
-    `${conf.host}/${endpoint}`,
+    `${conf.apiHost}/${endpoint}`,
     params,
     getDefaultOptions(conf)
   );
@@ -56,5 +56,10 @@ export function apiPost(endpoint, params) {
  */
 export function apiGet(url) {
   const conf = getConfig();
-  return axios.get(`${conf.host}/${url}`, getDefaultOptions(conf));
+  return axios.get(`${conf.apiHost}/${url}`, getDefaultOptions(conf));
 }
+
+(async () => {
+  const result = await apiPost('system/get/info');
+  console.log(result);
+})();
