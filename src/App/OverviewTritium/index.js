@@ -18,7 +18,7 @@ import { formatNumber, formatCurrency, formatRelativeTime } from 'lib/intl';
 import { timing, consts } from 'styles';
 import { isCoreConnected } from 'selectors';
 import Globe from './Globe';
-import { webGLAvailable, legacyMode } from 'consts/misc';
+import { webGLAvailable } from 'consts/misc';
 
 // Images
 import logoIcon from 'images/NXS_coin.sprite.svg';
@@ -651,7 +651,9 @@ class Overview extends Component {
               </StatLabel>
               <StatValue>
                 {this.waitForCore(
-                  formatNumber(available + unconfirmed + pending)
+                  available !== undefined
+                    ? formatNumber(available + unconfirmed + pending)
+                    : 'N/A'
                 )}
               </StatValue>
             </MinimalStat>
@@ -663,10 +665,12 @@ class Overview extends Component {
               <StatValue>
                 {market && market.price ? (
                   this.waitForCore(
-                    formatCurrency(
-                      (available + unconfirmed + pending) * market.price,
-                      fiatCurrency
-                    )
+                    available !== undefined
+                      ? formatCurrency(
+                          (available + unconfirmed + pending) * market.price,
+                          fiatCurrency
+                        )
+                      : 'N/A'
                   )
                 ) : (
                   <span className="dim">-</span>
@@ -788,14 +792,18 @@ class Overview extends Component {
                   '-'
                 ) : !settings.displayFiatBalance ? (
                   this.waitForCore(
-                    formatNumber(available + unconfirmed + pending)
+                    available !== undefined
+                      ? formatNumber(available + unconfirmed + pending)
+                      : 'N/A'
                   )
                 ) : market && market.price ? (
                   this.waitForCore(
-                    formatCurrency(
-                      (available + unconfirmed + pending) * market.price,
-                      fiatCurrency
-                    )
+                    available !== undefined
+                      ? formatCurrency(
+                          (available + unconfirmed + pending) * market.price,
+                          fiatCurrency
+                        )
+                      : 'N/A'
                   )
                 ) : (
                   <span className="dim">-</span>
@@ -830,7 +838,9 @@ class Overview extends Component {
                 {settings.overviewDisplay === 'balHidden'
                   ? '-'
                   : this.waitForCore(
-                      formatNumber(stake + immature_mined + immature_stake)
+                      stake !== undefined
+                        ? formatNumber(stake + immature_mined + immature_stake)
+                        : 'N/A'
                     )}
               </StatValue>
             </div>
