@@ -38,13 +38,14 @@ const getDefaultOptions = ({ apiUser, apiPassword }) => ({
  * @param {*} params
  * @returns
  */
-export function apiPost(endpoint, params) {
+export async function apiPost(endpoint, params) {
   const conf = getConfig();
-  return axios.post(
-    `${conf.host}/${endpoint}`,
+  const response = await axios.post(
+    `${conf.apiHost}/${endpoint}`,
     params,
     getDefaultOptions(conf)
   );
+  return response.data && response.data.result;
 }
 
 /**
@@ -54,7 +55,11 @@ export function apiPost(endpoint, params) {
  * @param {*} url
  * @returns
  */
-export function apiGet(url) {
+export async function apiGet(url) {
   const conf = getConfig();
-  return axios.get(`${conf.host}/${url}`, getDefaultOptions(conf));
+  const response = await axios.get(
+    `${conf.apiHost}/${url}`,
+    getDefaultOptions(conf)
+  );
+  return response.data && response.data.result;
 }

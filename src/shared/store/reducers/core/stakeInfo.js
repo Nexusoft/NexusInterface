@@ -10,6 +10,9 @@ export default (state = initialState, action) => {
     case TYPE.CLEAR_CORE_INFO:
       return initialState;
 
+    case TYPE.CLEAR_STAKE_INFO:
+      return initialState;
+
     default:
       return state;
   }

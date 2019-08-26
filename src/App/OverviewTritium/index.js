@@ -12,11 +12,12 @@ import GA from 'lib/googleAnalytics';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import ContextMenuBuilder from 'contextmenu';
-import { getDifficulty } from 'actions/core';
+import { getDifficulty, getBalances } from 'actions/core';
 import { updateSettings } from 'actions/settings';
 import { formatNumber, formatCurrency, formatRelativeTime } from 'lib/intl';
 import { timing, consts } from 'styles';
 import { isCoreConnected } from 'selectors';
+import { observeStore } from 'store';
 import Globe from './Globe';
 import { webGLAvailable } from 'consts/misc';
 
@@ -90,18 +91,10 @@ const blockWeightIcons = [
   blockweight9,
 ];
 
-/**
- * Formats the Difficulty to 3 decimal points
- * @memberof Overview
- * @param {*} diff
- * @returns {Number} Diff but with 3 decimal point places
- */
-const formatDiff = diff => (diff || 0).toFixed(3);
-
 // React-Redux mandatory methods
 const mapStateToProps = state => {
   const {
-    core: { info, difficulty },
+    core: { systemInfo, stakeInfo, balances, difficulty },
     common: { blockDate },
     market: {
       cryptocompare: { rawNXSvalues, displayNXSvalues },
@@ -109,7 +102,7 @@ const mapStateToProps = state => {
     settings,
     theme,
   } = state;
-  const { synccomplete } = info;
+  const { synccomplete } = systemInfo;
   const syncUnknown =
     (!synccomplete && synccomplete !== 0) ||
     synccomplete < 0 ||
@@ -128,14 +121,17 @@ const mapStateToProps = state => {
     },
     settings,
     theme,
-    coreInfo: info,
+    systemInfo,
+    stakeInfo,
+    balances,
     synchronizing: !syncUnknown && synccomplete !== 100,
   };
 };
-const mapDispatchToProps = dispatch => ({
-  getDifficulty: () => dispatch(getDifficulty()),
-  updateSettings: updates => dispatch(updateSettings(updates)),
-});
+const actionCreators = {
+  getDifficulty,
+  getBalances,
+  updateSettings,
+};
 
 const OverviewPage = styled.div({
   width: '100%',
@@ -276,20 +272,6 @@ const StatIcon = styled(Icon)(({ theme }) => ({
   color: theme.primary,
 }));
 
-const MaxmindCopyright = styled.div(({ theme }) => ({
-  position: 'fixed',
-  left: 6,
-  bottom: 3,
-  opacity: 0.4,
-  color: theme.primary,
-  zIndex: 1, // over the navigation bar
-}));
-
-const MaxmindLogo = styled.img({
-  display: 'block',
-  width: 181,
-});
-
 const BlockCountTooltip = ({ blockDate }) => (
   <div style={{ textAlign: 'center' }}>
     {__('Last updated\n%{time}', {
@@ -323,6 +305,16 @@ class Overview extends Component {
   componentDidMount() {
     window.addEventListener('contextmenu', this.setupcontextmenu, false);
     GA.SendScreen('Overview');
+
+    // Periodically get balances
+    this.props.getBalances();
+    this.unobserve = observeStore(
+      state => state && state.core && state.core.systemInfo,
+      this.props.getBalances,
+      (currentState, nextState) =>
+        (currentState && isCoreConnected(currentState)) ||
+        (nextState && isCoreConnected(nextState))
+    );
   }
   /**
    * Set by {NetworkGlobe}, ReDraws all Pillars and Archs
@@ -339,6 +331,9 @@ class Overview extends Component {
   componentWillUnmount() {
     clearTimeout(this.diffFetcher);
     window.removeEventListener('contextmenu', this.setupcontextmenu);
+
+    // Stop updating balances
+    if (this.unobserve) this.unobserve();
   }
 
   /**
@@ -351,7 +346,7 @@ class Overview extends Component {
   componentDidUpdate(prevProps) {
     const {
       settings,
-      coreInfo: { blocks, connections },
+      systemInfo: { blocks, connections },
     } = this.props;
     const correctView =
       settings.overviewDisplay !== 'minimalist' &&
@@ -451,7 +446,7 @@ class Overview extends Component {
    * @memberof Overview
    */
   trustIcon() {
-    const tw = Math.round((this.props.coreInfo.trustweight || 0) / 10);
+    const tw = Math.round((this.props.stakeInfo.trustweight || 0) / 10);
     return trustIcons[tw];
   }
 
@@ -462,7 +457,7 @@ class Overview extends Component {
    * @memberof Overview
    */
   blockWeightIcon() {
-    const bw = Math.round((this.props.coreInfo.blockweight || 0) / 10);
+    const bw = Math.round((this.props.stakeInfo.blockweight || 0) / 10);
     return blockWeightIcons[bw];
   }
 
@@ -506,8 +501,8 @@ class Overview extends Component {
    * @memberof Overview
    */
   returnWeightStats = () => {
-    const { coreInfo } = this.props;
-    const { blockweight, trustweight, stakeweight } = coreInfo || {};
+    const { stakeInfo } = this.props;
+    const { blockweight, trustweight, stakeweight } = stakeInfo || {};
 
     return (
       <React.Fragment>
@@ -611,17 +606,16 @@ class Overview extends Component {
    */
   render() {
     const {
-      coreInfo: {
-        coreConnected,
-        connections,
-        balance,
-        unconfirmedbalance,
+      coreConnected,
+      systemInfo: { connections, txtotal, blocks },
+      stakeInfo: { interestweight, stakerate },
+      balances: {
+        available,
+        pending,
+        unconfirmed,
         stake,
-        newmint,
-        txtotal,
-        interestweight,
-        stakerate,
-        blocks,
+        immature_mined,
+        immature_stake,
       },
       blockDate,
       market,
@@ -648,7 +642,11 @@ class Overview extends Component {
                 (NXS) :
               </StatLabel>
               <StatValue>
-                {this.waitForCore(formatNumber(balance + unconfirmedbalance))}
+                {this.waitForCore(
+                  available !== undefined
+                    ? formatNumber(available + unconfirmed + pending)
+                    : 'N/A'
+                )}
               </StatValue>
             </MinimalStat>
             {/* + (stake || 0) */}
@@ -659,10 +657,12 @@ class Overview extends Component {
               <StatValue>
                 {market && market.price ? (
                   this.waitForCore(
-                    formatCurrency(
-                      (balance + unconfirmedbalance) * market.price,
-                      fiatCurrency
-                    )
+                    available !== undefined
+                      ? formatCurrency(
+                          (available + unconfirmed + pending) * market.price,
+                          fiatCurrency
+                        )
+                      : 'N/A'
                   )
                 ) : (
                   <span className="dim">-</span>
@@ -783,13 +783,19 @@ class Overview extends Component {
                 {settings.overviewDisplay === 'balHidden' ? (
                   '-'
                 ) : !settings.displayFiatBalance ? (
-                  this.waitForCore(formatNumber(balance + unconfirmedbalance))
+                  this.waitForCore(
+                    available !== undefined
+                      ? formatNumber(available + unconfirmed + pending)
+                      : 'N/A'
+                  )
                 ) : market && market.price ? (
                   this.waitForCore(
-                    formatCurrency(
-                      (balance + unconfirmedbalance) * market.price,
-                      fiatCurrency
-                    )
+                    available !== undefined
+                      ? formatCurrency(
+                          (available + unconfirmed + pending) * market.price,
+                          fiatCurrency
+                        )
+                      : 'N/A'
                   )
                 ) : (
                   <span className="dim">-</span>
@@ -823,7 +829,11 @@ class Overview extends Component {
               <StatValue>
                 {settings.overviewDisplay === 'balHidden'
                   ? '-'
-                  : this.waitForCore(formatNumber(stake + newmint))}
+                  : this.waitForCore(
+                      stake !== undefined
+                        ? formatNumber(stake + immature_mined + immature_stake)
+                        : 'N/A'
+                    )}
               </StatValue>
             </div>
             <StatIcon icon={nxsStakeIcon} />
@@ -954,5 +964,5 @@ class Overview extends Component {
 // Mandatory React-Redux method
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  actionCreators
 )(Overview);
