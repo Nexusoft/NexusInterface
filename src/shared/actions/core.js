@@ -43,9 +43,9 @@ export const getInfo = legacyMode
   : // Tritium
     () => async dispatch => {
       // getSysmteInfo to check if core is connected first
-      await getSystemInfo();
+      await dispatch(getSystemInfo());
       // then get more detailed info later
-      await getStakeInfo();
+      await dispatch(getStakeInfo());
     };
 
 export const getBalances = () => async dispatch => {
