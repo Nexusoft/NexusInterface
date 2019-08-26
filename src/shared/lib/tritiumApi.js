@@ -58,8 +58,3 @@ export function apiGet(url) {
   const conf = getConfig();
   return axios.get(`${conf.apiHost}/${url}`, getDefaultOptions(conf));
 }
-
-(async () => {
-  const result = await apiPost('system/get/info');
-  console.log(result);
-})();

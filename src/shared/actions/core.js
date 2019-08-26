@@ -6,7 +6,7 @@ import * as TYPE from 'consts/actionTypes';
 import { legacyMode } from 'consts/misc';
 import { apiPost } from 'lib/tritiumApi';
 
-const getSystemInfo = async dispatch => {
+const getSystemInfo = () => async dispatch => {
   try {
     const systemInfo = await apiPost('system/get/info');
     dispatch({ type: TYPE.GET_SYSTEM_INFO, payload: systemInfo });
@@ -17,7 +17,7 @@ const getSystemInfo = async dispatch => {
   }
 };
 
-const getStakeInfo = async dispatch => {
+const getStakeInfo = () => async dispatch => {
   try {
     const stakeInfo = await apiPost('finance/get/stakeinfo');
     dispatch({ type: TYPE.GET_STAKE_INFO, payload: stakeInfo });
@@ -48,7 +48,7 @@ export const getInfo = legacyMode
       await getStakeInfo();
     };
 
-export const getBalances = async dispatch => {
+export const getBalances = () => async dispatch => {
   try {
     const balances = await apiPost('finance/get/balances');
     dispatch({ type: TYPE.GET_BALANCES, payload: balances });
