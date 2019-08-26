@@ -7,6 +7,8 @@ export const GET_SYSTEM_INFO = 'GET_SYSTEM_INFO';
 export const GET_STAKE_INFO = 'GET_STAKE_INFO';
 export const GET_BALANCES = 'GET_BALANCES';
 export const CLEAR_CORE_INFO = 'CLEAR_CORE_INFO';
+export const CLEAR_STAKE_INFO = 'CLEAR_STAKE_INFO';
+export const CLEAR_BALANCES = 'CLEAR_BALANCES';
 
 // Overview
 export const GET_DIFFICULTY = 'GET_DIFFICULTY';
