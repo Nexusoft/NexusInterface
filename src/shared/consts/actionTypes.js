@@ -43,7 +43,7 @@ export const UPDATE_TRANSACTION = 'UPDATE_TRANSACTION';
 
 // Common
 export const LOCK = 'LOCK';
-export const BLOCK_DATE = 'BLOCK_DATE';
+export const UPDATE_BLOCK_DATE = 'UPDATE_BLOCK_DATE';
 export const ADD_RPC_CALL = 'ADD_RPC_CALL';
 export const SET_MKT_AVE_DATA = 'SET_MKT_AVE_DATA';
 export const SHOW_ENCRYPTION_MODAL = 'SHOW_ENCRYPTION_MODAL';

@@ -27,16 +27,6 @@ const getStakeInfo = async dispatch => {
   }
 };
 
-const getBalances = async dispatch => {
-  try {
-    const balances = await apiPost('finance/get/balances');
-    dispatch({ type: TYPE.GET_BALANCES, payload: balances });
-  } catch (err) {
-    dispatch({ type: TYPE.CLEAR_BALANCES });
-    console.error('get/balances failed', err);
-  }
-};
-
 export const getInfo = legacyMode
   ? // Legacy
     () => async dispatch => {
@@ -55,8 +45,18 @@ export const getInfo = legacyMode
       // getSysmteInfo to check if core is connected first
       await getSystemInfo();
       // then get more detailed info later
-      await Promise.all(getStakeInfo(), getBalances());
+      await getStakeInfo();
     };
+
+export const getBalances = async dispatch => {
+  try {
+    const balances = await apiPost('finance/get/balances');
+    dispatch({ type: TYPE.GET_BALANCES, payload: balances });
+  } catch (err) {
+    dispatch({ type: TYPE.CLEAR_BALANCES });
+    console.error('get/balances failed', err);
+  }
+};
 
 export const getDifficulty = () => async dispatch => {
   const diff = await rpc('getdifficulty', []);

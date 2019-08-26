@@ -74,7 +74,10 @@ export const SetMarketAveData = () => dispatch => {
   );
 };
 
-export const BlockDate = stamp => ({ type: TYPE.BLOCK_DATE, payload: stamp });
+export const updateBlockDate = stamp => ({
+  type: TYPE.UPDATE_BLOCK_DATE,
+  payload: stamp,
+});
 
 export const AddRPCCall = returnCall => ({
   type: TYPE.ADD_RPC_CALL,

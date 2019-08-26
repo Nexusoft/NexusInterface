@@ -12,11 +12,12 @@ import GA from 'lib/googleAnalytics';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import ContextMenuBuilder from 'contextmenu';
-import { getDifficulty } from 'actions/core';
+import { getDifficulty, getBalances } from 'actions/core';
 import { updateSettings } from 'actions/settings';
 import { formatNumber, formatCurrency, formatRelativeTime } from 'lib/intl';
 import { timing, consts } from 'styles';
 import { isCoreConnected } from 'selectors';
+import { observeStore } from 'store';
 import Globe from './Globe';
 import { webGLAvailable } from 'consts/misc';
 
@@ -90,14 +91,6 @@ const blockWeightIcons = [
   blockweight9,
 ];
 
-/**
- * Formats the Difficulty to 3 decimal points
- * @memberof Overview
- * @param {*} diff
- * @returns {Number} Diff but with 3 decimal point places
- */
-const formatDiff = diff => (diff || 0).toFixed(3);
-
 // React-Redux mandatory methods
 const mapStateToProps = state => {
   const {
@@ -134,11 +127,11 @@ const mapStateToProps = state => {
     synchronizing: !syncUnknown && synccomplete !== 100,
   };
 };
-const mapDispatchToProps = dispatch => ({
-  BlockDate: stamp => dispatch({ type: TYPE.BLOCK_DATE, payload: stamp }),
-  getDifficulty: () => dispatch(getDifficulty()),
-  updateSettings: updates => dispatch(updateSettings(updates)),
-});
+const actionCreators = {
+  getDifficulty,
+  getBalances,
+  updateSettings,
+};
 
 const OverviewPage = styled.div({
   width: '100%',
@@ -279,20 +272,6 @@ const StatIcon = styled(Icon)(({ theme }) => ({
   color: theme.primary,
 }));
 
-const MaxmindCopyright = styled.div(({ theme }) => ({
-  position: 'fixed',
-  left: 6,
-  bottom: 3,
-  opacity: 0.4,
-  color: theme.primary,
-  zIndex: 1, // over the navigation bar
-}));
-
-const MaxmindLogo = styled.img({
-  display: 'block',
-  width: 181,
-});
-
 const BlockCountTooltip = ({ blockDate }) => (
   <div style={{ textAlign: 'center' }}>
     {__('Last updated\n%{time}', {
@@ -326,6 +305,15 @@ class Overview extends Component {
   componentDidMount() {
     window.addEventListener('contextmenu', this.setupcontextmenu, false);
     GA.SendScreen('Overview');
+
+    // Periodically get balances
+    this.props.getBalances();
+    this.unobserve = observeStore(
+      ({ core: { systemInfo } }) => systemInfo,
+      this.props.getBalances,
+      (currentState, nextState) =>
+        isCoreConnected(currentState) || isCoreConnected(nextState)
+    );
   }
   /**
    * Set by {NetworkGlobe}, ReDraws all Pillars and Archs
@@ -342,6 +330,9 @@ class Overview extends Component {
   componentWillUnmount() {
     clearTimeout(this.diffFetcher);
     window.removeEventListener('contextmenu', this.setupcontextmenu);
+
+    // Stop updating balances
+    if (this.unobserve) this.unobserve();
   }
 
   /**
@@ -972,5 +963,5 @@ class Overview extends Component {
 // Mandatory React-Redux method
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  actionCreators
 )(Overview);
