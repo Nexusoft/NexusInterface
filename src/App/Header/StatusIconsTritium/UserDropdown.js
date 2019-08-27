@@ -18,9 +18,9 @@ const UserDropdownComponent = styled.div(({ theme }) => ({
 }));
 
 const CurrentUser = styled.div(({ theme }) => ({
-  padding: '5px 12px 10px',
+  padding: '5px 15px 10px',
   textAlign: 'center',
-  borderBottom: `1px solid ${theme.mixer(0.125)}`,
+  // borderBottom: `1px solid ${theme.mixer(0.125)}`,
   color: theme.primary,
   fontWeight: 'bold',
 }));
@@ -28,7 +28,7 @@ const CurrentUser = styled.div(({ theme }) => ({
 const MenuItem = styled.div(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  padding: `0 12px`,
+  padding: `0 15px`,
   overflow: 'hidden',
   cursor: 'pointer',
   transition: `background-color ${timing.normal}`,
@@ -42,15 +42,29 @@ const MenuItem = styled.div(({ theme }) => ({
 
 const Separator = styled.div(({ theme }) => ({
   margin: '3px 0',
-  borderBottom: `1px solid ${theme.mixer(0.25)}`,
+  borderBottom: `1px solid ${theme.mixer(0.125)}`,
 }));
 
 const UserDropdown = ({ currentUser, ...rest }) => (
   <UserDropdownComponent {...rest}>
-    {!!currentUser && <CurrentUser>{currentUser}</CurrentUser>}
+    {!!currentUser && (
+      <>
+        <CurrentUser>{currentUser}</CurrentUser>
+        <Separator />
+      </>
+    )}
 
-    <MenuItem>{__('Create new user')}</MenuItem>
-    <MenuItem>{__('Log in')}</MenuItem>
+    {currentUser ? (
+      <>
+        <MenuItem>{__('My Addresses')}</MenuItem>
+        <MenuItem>{__('Log out')}</MenuItem>
+      </>
+    ) : (
+      <>
+        <MenuItem>{__('Create new user')}</MenuItem>
+        <MenuItem>{__('Log in')}</MenuItem>
+      </>
+    )}
   </UserDropdownComponent>
 );
 
