@@ -12,10 +12,7 @@ import * as color from 'utils/color';
 import { isCoreConnected } from 'selectors';
 
 // Internal Local
-import LogInStatus from './StatusIcons/LogInStatus';
-import StakingStatus from './StatusIcons/StakingStatus';
-import SyncStatus from './StatusIcons/SyncStatus';
-import MyAddresses from './StatusIcons/MyAddresses';
+import StatusIcons from './StatusIcons';
 import CoreStatus from './CoreStatus';
 import logoFull from './logo-full-beta.sprite.svg';
 
@@ -34,9 +31,7 @@ const HeaderComponent = styled.header(({ theme }) => ({
 
 const LogoLink = styled(Link)(({ theme }) => ({
   position: 'relative',
-  animation: `${animations.fadeInAndExpand} ${timing.slow} ${
-    consts.enhancedEaseOut
-  }`,
+  animation: `${animations.fadeInAndExpand} ${timing.slow} ${consts.enhancedEaseOut}`,
   transitionProperty: 'filter',
   transitionDuration: timing.normal,
   transitionTimingFunction: 'ease-out',
@@ -56,16 +51,6 @@ const Logo = styled(Icon)(({ theme }) => ({
   width: 'auto',
   fill: theme.primary,
 }));
-
-const StatusIcons = styled.div({
-  position: 'absolute',
-  top: 24,
-  right: 40,
-  animation: `${animations.fadeIn} ${timing.slow} ${consts.enhancedEaseOut}`,
-  display: 'flex',
-  alignItems: 'center',
-  fontSize: 20,
-});
 
 const UnderHeader = styled.div(({ theme }) => ({
   position: 'absolute',
@@ -104,14 +89,7 @@ class Header extends Component {
           <CoreStatus {...this.props} />
         </UnderHeader>
 
-        {coreConnected && (
-          <StatusIcons>
-            <SyncStatus {...this.props} />
-            <LogInStatus {...this.props} />
-            <StakingStatus {...this.props} />
-            <MyAddresses {...this.props} />
-          </StatusIcons>
-        )}
+        {coreConnected && <StatusIcons />}
       </HeaderComponent>
     );
   }
