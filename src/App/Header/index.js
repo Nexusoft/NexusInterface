@@ -10,9 +10,11 @@ import HorizontalLine from 'components/HorizontalLine';
 import { consts, timing, animations } from 'styles';
 import * as color from 'utils/color';
 import { isCoreConnected } from 'selectors';
+import { legacyMode } from 'consts/misc';
 
 // Internal Local
 import StatusIcons from './StatusIcons';
+import StatusIconsTritium from './StatusIconsTritium';
 import CoreStatus from './CoreStatus';
 import logoFull from './logo-full-beta.sprite.svg';
 
@@ -89,7 +91,8 @@ class Header extends Component {
           <CoreStatus {...this.props} />
         </UnderHeader>
 
-        {coreConnected && <StatusIcons />}
+        {coreConnected &&
+          (legacyMode ? <StatusIcons /> : <StatusIconsTritium />)}
       </HeaderComponent>
     );
   }
