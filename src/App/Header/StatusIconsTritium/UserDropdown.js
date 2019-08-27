@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
+import { arrowStyles } from 'components/Arrow';
 import { timing, animations, consts } from 'styles';
 
 const UserDropdownComponent = styled.div(({ theme }) => ({
@@ -15,6 +16,19 @@ const UserDropdownComponent = styled.div(({ theme }) => ({
   borderRadius: 4,
   boxShadow: '0 0 8px rgba(0,0,0,.7)',
   animation: `${animations.fadeIn} ${timing.normal} ease-out`,
+
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    bottom: '100%',
+    right: 18,
+    ...arrowStyles({
+      direction: 'up',
+      width: 15,
+      height: 8,
+      color: theme.background,
+    }),
+  },
 }));
 
 const CurrentUser = styled.div(({ theme }) => ({

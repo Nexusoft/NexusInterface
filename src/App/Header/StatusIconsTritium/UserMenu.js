@@ -53,7 +53,7 @@ class UserControl extends React.Component {
 
     const rect = el.getBoundingClientRect();
     return {
-      top: rect.bottom + 10,
+      top: rect.bottom + 18,
       right: window.innerWidth - rect.right,
     };
   };
