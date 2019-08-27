@@ -11,7 +11,7 @@ import Panel from 'components/Panel';
 import Tooltip from 'components/Tooltip';
 import FieldSet from 'components/FieldSet';
 import { updateSettings } from 'actions/settings';
-import * as Tritium from 'lib/tritium-api';
+import * as Tritium from 'lib/tritiumApi';
 
 const AttemptRecModalComponent = styled(Modal)({
   padding: '1px',

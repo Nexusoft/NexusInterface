@@ -5,7 +5,7 @@ import { reduxForm, Field, FieldArray } from 'redux-form';
 import styled from '@emotion/styled';
 
 // Internal Global
-import * as Tritium from 'lib/tritium-api';
+import * as Tritium from 'lib/tritiumApi';
 import { defaultSettings } from 'api/settings';
 import { loadMyAccounts } from 'actions/accountActionCreators';
 import Text from 'components/Text';
@@ -176,7 +176,7 @@ const mapDispatchToProps = dispatch => ({
       }
 
       if (sendFromDetails.isToken) {
-         openModal(PinLoginModal, {
+        openModal(PinLoginModal, {
           api: 'tokens',
           verb: 'debit',
           noun: 'account',
@@ -185,7 +185,7 @@ const mapDispatchToProps = dispatch => ({
         });
       } else {
         let awaitPinEntryAndApiCall = await new Promise((resolve, reject) => {
-           openModal(PinLoginModal, {
+          openModal(PinLoginModal, {
             api: 'finance',
             verb: 'debit',
             noun: 'account',
@@ -206,7 +206,7 @@ const mapDispatchToProps = dispatch => ({
     } else {
       await Promise.all(
         recipients.map(({ address }, i) =>
-          Tritium.PROMISE('RPC', 'validateaddress', [address])
+          Tritium.apiPost('RPC', 'validateaddress', [address])
             .then(result => {
               if (!result.isvalid) {
                 recipientsErrors[i] = {
@@ -251,14 +251,14 @@ const mapDispatchToProps = dispatch => ({
           minConfirmations,
         ];
         if (message) params.push(message);
-        return Tritium.PROMISE('RPC', 'sendfrom', params);
+        return Tritium.apiPost('RPC', 'sendfrom', params);
       } else {
         const queue = recipients.reduce(
           (queue, r) => ({ ...queue, [r.address]: parseFloat(r.amount) }),
           {}
         );
 
-        return Tritium.PROMISE(
+        return Tritium.apiPost(
           'RPC',
           'sendmany',
           [sendFrom, queue],
@@ -273,7 +273,7 @@ const mapDispatchToProps = dispatch => ({
     props.loadMyAccounts();
     props.loadMyTritiumAccounts();
     if (!props.tritium) {
-       openSuccessDialog({
+      openSuccessDialog({
         message: <Text id="Alert.Sent" />,
       });
     }
@@ -312,7 +312,7 @@ class SendForm extends Component {
     }
 
     if (encrypted && !loggedIn) {
-      const modalId =  openErrorDialog({
+      const modalId = openErrorDialog({
         message: 'You are not logged in',
         note: (
           <>
@@ -320,7 +320,7 @@ class SendForm extends Component {
             <Link
               to="/Settings/Security"
               onClick={() => {
-                 removeModal(modalId);
+                removeModal(modalId);
               }}
             >
               Log in now
@@ -331,7 +331,7 @@ class SendForm extends Component {
       return;
     }
 
-     openConfirmDialog({
+    openConfirmDialog({
       question: <Text id="sendReceive.SendTransaction" />,
       callbackYes: handleSubmit,
     });

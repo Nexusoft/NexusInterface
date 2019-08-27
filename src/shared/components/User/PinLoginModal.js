@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 import Modal from '../Modal';
 import TextField from '../TextField';
 import Button from '../Button';
-import * as Tritium from 'lib/tritium-api';
+import * as Tritium from 'lib/tritiumApi';
 import {
   openConfirmDialog,
   showNotification,
@@ -52,7 +52,7 @@ export default class PinLogin extends Component {
     this.setState({ disable: true });
 
     const { api, verb, noun, callback, params } = this.props;
-    Tritium.PROMISE(
+    Tritium.apiPost(
       'API',
       {
         api: api,
@@ -68,10 +68,7 @@ export default class PinLogin extends Component {
       .catch(error => {
         if (error.response) {
           console.log(error.response);
-           showNotification(
-            `${error.response.data.error.message}`,
-            'error'
-          );
+          showNotification(`${error.response.data.error.message}`, 'error');
           this.closeModal();
         } else if (error.request) {
           console.log(error.request);
@@ -97,9 +94,7 @@ export default class PinLogin extends Component {
     return (
       <SmallModal assignClose={closeModal => (this.closeModal = closeModal)}>
         <Container>
-          <h2>
-            {'Pin'}
-          </h2>
+          <h2>{'Pin'}</h2>
           <TextField
             // type="password"
             inputRef={input => {

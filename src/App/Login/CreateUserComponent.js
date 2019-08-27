@@ -12,7 +12,7 @@ import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import FieldSet from 'components/FieldSet';
 import { updateSettings } from 'actions/settings';
-import * as Tritium from 'lib/tritium-api';
+import * as Tritium from 'lib/tritiumApi';
 import {
   openConfirmDialog,
   openModal,
@@ -57,7 +57,7 @@ class CreateUserComponent extends React.Component {
   };
 
   goToRecovery = () => {
-    this.props.onFinishCreate();
+    //this.props.onFinishCreate();
     this.closeModal();
   };
 
@@ -71,7 +71,6 @@ class CreateUserComponent extends React.Component {
     console.log(this);
     return (
       <CreateModalComponent
-        fullScreen
         assignClose={close => {
           this.closeModal = close;
         }}
@@ -117,17 +116,17 @@ export default CreateUserComponent;
     console.log('ONSUBMIT');
     console.log(`${username} , ${password} , ${pin}`);
     console.log(props);
-    return Tritium.PROMISE(
-      'API',
-      { api: 'users', verb: 'create', noun: 'user' },
-      [{ username: username, password: password, pin: pin }]
-    );
+    return Tritium.apiPost('users/create/user', {
+      username: username,
+      password: password,
+      pin: pin,
+    });
   },
   onSubmitSuccess: async (result, dispatch, props) => {
-     showNotification('Logged IN', 'success');
+    showNotification('Logged IN', 'success');
     console.log(result);
     console.log('PASS');
-    props.turnOnTritium();
+    //props.turnOnTritium();
     props.closeModal();
   },
   onSubmitFail: (errors, dispatch, submitError) => {
@@ -142,7 +141,7 @@ export default CreateUserComponent;
       } else if (submitError === 'value is type null, expected int') {
         note = 'Futur date';
       }
-       openErrorDialog({
+      openErrorDialog({
         message: 'Error Logging IN',
         note: note,
       });
@@ -172,11 +171,7 @@ class CreateUserForm extends React.Component {
               placeholder={'Password'}
             />
           </FormField>
-          <FormField
-            connectLabel
-            label={'Pin'}
-            subLable={'ASdasaddsa'}
-          >
+          <FormField connectLabel label={'Pin'} subLable={'ASdasaddsa'}>
             <Field
               component={TextField.RF}
               name="pin"

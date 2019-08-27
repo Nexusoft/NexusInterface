@@ -7,7 +7,6 @@ import TextField from 'components/TextField';
 import * as color from 'utils/color';
 import { consts, timing } from 'styles';
 import NexusAddress from 'components/NexusAddress';
-import { listAccounts, listAccountsAll } from 'lib/UserApi';
 
 const PanelHolder = styled.div(({ theme }) => ({
   background: color.lighten(theme.background, 0.2),
@@ -72,9 +71,9 @@ class AccountsPanel extends Component {
   }
 
   componentDidMount() {
-    this.tempMakeAccounts();
+    // this.tempMakeAccounts();
   }
-
+  /*
   async tempMakeAccounts() {
     const sadsasad = await listAccounts({
       username: 'test',
@@ -84,7 +83,7 @@ class AccountsPanel extends Component {
       userAccounts: sadsasad,
     });
   }
-
+ */
   returnBoxes() {
     return this.state.userAccounts.map(e => {
       return this.makeBox(e);

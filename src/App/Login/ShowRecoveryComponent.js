@@ -10,7 +10,7 @@ import Modal from 'components/Modal';
 import Button from 'components/Button';
 import Panel from 'components/Panel';
 import { updateSettings } from 'actions/settings';
-import * as Tritium from 'lib/tritium-api';
+import * as Tritium from 'lib/tritiumApi';
 import {
   openConfirmDialog,
   openModal,
@@ -86,7 +86,7 @@ class ShowRecoveryComponent extends React.Component {
   print() {}
 
   askToContinue = () => {
-     openConfirmDialog({
+    openConfirmDialog({
       question:
         'Are you sure you want to continue? You will not be shown these words again.',
       skinYes: 'danger',

@@ -12,8 +12,11 @@ import Panel from 'components/Panel';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import FieldSet from 'components/FieldSet';
-import { updateSettings } from 'actions/settings';
-import * as Tritium from 'lib/tritium-api';
+
+import CreateUserComponent from './CreateUserComponent';
+
+import { UpdateSettings } from 'lib/settings';
+import * as Tritium from 'lib/tritiumApi';
 import {
   openConfirmDialog,
   openModal,
@@ -21,7 +24,6 @@ import {
   openErrorDialog,
 } from 'actions/overlays';
 import * as TYPE from 'consts/actionTypes';
-
 
 const LoginModalComponent = styled(Modal)({
   padding: '1px',
@@ -32,35 +34,33 @@ const LoginFieldSet = styled(FieldSet)({
   margin: '0 auto',
 });
 
-var ldldldl = false;
-
 @connect(
   null,
-  dispatch => ({
-    turnOnTritium: onOff => dispatch(updateSettings({ tritium: onOff })),
-    tempTurnOffLogIn: () => dispatch({ type: 'TEMP_LOG_IN', payload: true }),
-    setUserGenesis: returnData => {
-      dispatch({ type: TYPE.TRITIUM_SET_USER_GENESIS, payload: returnData });
-    },
-    setUserName: returnData => {
-      dispatch({ type: TYPE.TRITIUM_SET_USER_NAME, payload: returnData });
-    },
-  })
+  { openModal, showNotification }
 )
 class LoginComponent extends React.Component {
   close = () => {
-    this.props.goBack();
+    //this.props.goBack();
     this.closeModal();
   };
 
-  asddfgh = () => {
-    this.props.onCloseCreate();
+  createButton = () => {
+    console.log('openCreate');
+    console.log(this);
+    this.props.openModal(CreateUserComponent);
+    console.log('closing current');
     this.closeModal();
   };
 
   legacyClose = () => {
-    this.props.tempTurnOffLogIn();
-    this.props.onCloseLegacy();
+    UpdateSettings({ legacyMode: true });
+    location.reload();
+    this.closeModal();
+  };
+
+  testTurnOnTritium = () => {
+    UpdateSettings({ legacyMode: false });
+    location.reload();
     this.closeModal();
   };
 
@@ -68,18 +68,11 @@ class LoginComponent extends React.Component {
     console.log(props);
   };
 
-  askdkdkdk = () => {
-    console.log(ldldldl);
-    this.props.turnOnTritium(ldldldl);
-    ldldldl = !ldldldl;
-  };
-
   render() {
     const { handleSubmit, submitting } = this.props;
     console.log(this);
     return (
       <LoginModalComponent
-        fullScreen
         assignClose={close => {
           this.closeModal = close;
         }}
@@ -104,24 +97,33 @@ class LoginComponent extends React.Component {
                 skin="primary"
                 type="submit"
                 wide
-                onClick={this.asddfgh}
+                onClick={this.createButton}
                 style={{ fontSize: 17, marginTop: '5px' }}
               >
                 Create Account
               </Button>
-              <Button
-                skin="primary"
-                onClick={() => this.props.onCloseForgot()}
-                style={{ fontSize: 17, padding: '5px' }}
-              >
-                Forgot Password/Pin
-              </Button>
+
               <Button
                 skin="primary"
                 onClick={this.legacyClose}
                 style={{ fontSize: 17, padding: '5px' }}
               >
                 Legacy Mode
+              </Button>
+              <Button
+                skin="primary"
+                onClick={this.testTurnOnTritium}
+                style={{ fontSize: 17, padding: '5px' }}
+              >
+                Test Turn On Tritium
+              </Button>
+              {/*
+              <Button
+                skin="primary"
+                onClick={() => this.props.onCloseForgot()}
+                style={{ fontSize: 17, padding: '5px' }}
+              >
+                Forgot Password/Pin
               </Button>
               <Button
                 skin="primary"
@@ -146,6 +148,7 @@ class LoginComponent extends React.Component {
               >
                 Test toggle tritium switch
               </Button>
+              */}
             </div>
           </Panel>
         </Modal.Body>
@@ -183,26 +186,28 @@ export default LoginComponent;
   onSubmit: async ({ username, password, pin }, dispatch, props) => {
     console.log('ONSUBMIT');
     console.log(props);
-    const asdgh = await Tritium.PROMISE(
-      'API',
-      { api: 'users', verb: 'login', noun: 'user' },
-      [{ username: username, password: password, pin: pin }]
-    );
+    const asdgh = await Tritium.apiPost('users/login/user', {
+      username: username,
+      password: password,
+      pin: pin,
+    });
+
     console.log(asdgh);
     return asdgh;
   },
   onSubmitSuccess: async (result, dispatch, props) => {
     console.log('SUCESSS');
-    props.setUserGenesis(result.data.result.genesis);
-    props.setUserName(props.values.username);
-     showNotification('Logged In', 'success');
+    // props.setUserGenesis(result.data.result.genesis);
+    //props.setUserName(props.values.username);
+    props.showNotification('Logged In', 'success');
     console.log('PASS');
 
-    props.turnOnTritium(true);
+    //props.turnOnTritium(true);
     props.closeModal();
   },
   onSubmitFail: (errors, dispatch, submitError) => {
     console.log('FAIL');
+    console.log(errors);
     if (!errors || !Object.keys(errors).length) {
       let note = submitError || 'Error';
       if (
@@ -212,7 +217,7 @@ export default LoginComponent;
       } else if (submitError === 'value is type null, expected int') {
         note = 'Futur Date';
       }
-       openErrorDialog({
+      openErrorDialog({
         message: 'Logged In Error',
         note: note,
       });

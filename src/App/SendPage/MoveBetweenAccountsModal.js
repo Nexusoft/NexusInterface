@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
 
 // Internal
-import * as Tritium from 'lib/tritium-api';
+import * as Tritium from 'lib/tritiumApi';
 import Text from 'components/Text';
 import Select from 'components/Select';
 import Button from 'components/Button';
@@ -103,7 +103,9 @@ const mapDispatchToProps = dispatch => ({
   asyncValidate: async ({ sendTo }) => {
     if (sendTo) {
       try {
-        const result = await Tritium.PROMISE('RPC', 'validateaddress', [sendTo]);
+        const result = await Tritium.apiPost('RPC', 'validateaddress', [
+          sendTo,
+        ]);
         if (!result.isvalid) {
           throw { sendTo: <Text id="Alert.InvalidAddress" /> };
         }
@@ -123,13 +125,18 @@ const mapDispatchToProps = dispatch => ({
     }
 
     const params = [moveFrom, moveTo, parseFloat(amount)];
-    return Tritium.PROMISE('RPC', 'move', params, parseInt(props.minConfirmations));
+    return Tritium.apiPost(
+      'RPC',
+      'move',
+      params,
+      parseInt(props.minConfirmations)
+    );
   },
   onSubmitSuccess: (result, dispatch, props) => {
     props.closeModal();
     props.reset();
     props.loadMyAccounts();
-     openSuccessDialog({
+    openSuccessDialog({
       message: <Text id="sendReceive.Messages.Success" />,
     });
   },
@@ -161,7 +168,7 @@ class MoveBetweenAccountsForm extends Component {
     }
 
     if (encrypted && !loggedIn) {
-      const modalId =  openErrorDialog({
+      const modalId = openErrorDialog({
         message: <Text id="sendReceive.Messages.NotLoggedIn" />,
         note: (
           <>
@@ -171,7 +178,7 @@ class MoveBetweenAccountsForm extends Component {
             <Link
               to="/Settings/Security"
               onClick={() => {
-                 removeModal(modalId);
+                removeModal(modalId);
                 this.props.closeModal();
               }}
             >
@@ -183,7 +190,7 @@ class MoveBetweenAccountsForm extends Component {
       return;
     }
 
-     openConfirmDialog({
+    openConfirmDialog({
       question: <Text id="sendReceive.MoveNXS" />,
       callbackYes: handleSubmit,
     });

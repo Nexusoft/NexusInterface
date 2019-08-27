@@ -6,7 +6,7 @@ import styled from '@emotion/styled';
 import Modal from 'components/Modal';
 import Button from 'components/Button';
 import Switch from 'components/Switch';
-import * as Tritium from 'lib/tritium-api';
+import * as Tritium from 'lib/tritiumApi';
 import {
   openConfirmDialog,
   openModal,
@@ -69,7 +69,7 @@ export default class UserLock extends Component {
   };
 
   tryLogout = () => {
-    Tritium.PROMISE(
+    Tritium.apiPost(
       'API',
       {
         api: 'users',
@@ -85,16 +85,13 @@ export default class UserLock extends Component {
     )
       .then(({ data }) => {
         console.log(data);
-         showNotification(`Acount Locked`, 'success');
+        showNotification(`Acount Locked`, 'success');
         this.closeModal();
       })
       .catch(error => {
         if (error.response) {
           console.log(error.response);
-           showNotification(
-            `${error.response.data.error.message}`,
-            'error'
-          );
+          showNotification(`${error.response.data.error.message}`, 'error');
           this.closeModal();
         } else if (error.request) {
           console.log(error.request);

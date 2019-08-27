@@ -12,6 +12,9 @@ import { timing } from 'styles';
 import * as color from 'utils/color';
 import StatusIcon from './StatusIcon';
 
+//TEMP
+import LoginComponent from '../../Login/LoginComponent';
+
 const MyAddressesIcon = styled(StatusIcon)(({ theme }) => ({
   cursor: 'pointer',
   color: theme.primary,
@@ -40,7 +43,7 @@ const MyAddresses = ({ openModal }) => (
     <MyAddressesIcon
       icon={userIcon}
       onClick={() => {
-        openModal(MyAddressesModal);
+        openModal(LoginComponent);
       }}
     />
   </Tooltip.Trigger>

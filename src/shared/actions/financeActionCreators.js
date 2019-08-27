@@ -1,8 +1,8 @@
 import * as TYPE from './actiontypes';
-import * as Tritium from 'lib/tritium-api';
+import * as Tritium from 'lib/tritiumApi';
 
 export const LoadTritiumAccounts = () => dispatch => {
-  Tritium.PROMISE(
+  Tritium.apiPost(
     'API',
     {
       api: 'users',

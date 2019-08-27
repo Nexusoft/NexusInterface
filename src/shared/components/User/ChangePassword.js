@@ -7,7 +7,7 @@ import Modal from 'components/Modal';
 import Button from 'components/Button';
 import Switch from 'components/Switch';
 import TextField from 'components/TextField';
-import * as Tritium from 'lib/tritium-api';
+import * as Tritium from 'lib/tritiumApi';
 import {
   openConfirmDialog,
   openModal,

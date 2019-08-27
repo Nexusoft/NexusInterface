@@ -11,7 +11,7 @@ import Panel from 'components/Panel';
 import Tooltip from 'components/Tooltip';
 import FieldSet from 'components/FieldSet';
 import { updateSettings } from 'actions/settings';
-import * as Tritium from 'lib/tritium-api';
+import * as Tritium from 'lib/tritiumApi';
 import {
   openConfirmDialog,
   openModal,
@@ -49,7 +49,7 @@ class LogoutUserComponent extends React.Component {
   };
 
   logoutClose = () => {
-    //Tritium.PROMISE('api', { api: 'users', verb: 'logout', noun: 'user' }, [
+    //Tritium.apiPost('api', { api: 'users', verb: 'logout', noun: 'user' }, [
     //  this.props.userInfo.sessionID,
     //]);
     this.props.tempTurnOffLogIn();

@@ -14,15 +14,13 @@ import {
   openModal,
   openErrorDialog,
 } from 'actions/overlays';
-import * as Tritium from 'lib/tritium-api';
+import * as Tritium from 'lib/tritiumApi';
 
 import UserLock from 'components/User/UserLock';
 import UserUnlock from 'components/User/UserUnlock';
 import ChangePassword from 'components/User/ChangePassword';
 import ChangePin from 'components/User/ChangePin';
 //import ChangeRecovery from 'components/User/ChangeRecovery';
-
-import { listAccounts } from 'lib/UserApi';
 
 const PanelHolder = styled.div(({ theme }) => ({
   background: color.lighten(theme.background, 0.2),
@@ -86,20 +84,20 @@ class UserPanel extends Component {
     });
 
     if (isLocked) {
-       openModal(UserUnlock);
+      openModal(UserUnlock);
     } else {
-       openModal(UserLock);
+      openModal(UserLock);
     }
   }
 
   userChangePin = () => {
     console.log('ChangePin');
-     openModal(ChangePin);
+    openModal(ChangePin);
   };
 
   userChangePassword = () => {
     console.log('ChangePassword');
-     openModal(ChangePassword);
+    openModal(ChangePassword);
   };
 
   userChangeRecovery = () => {
@@ -108,11 +106,11 @@ class UserPanel extends Component {
 
   userLogout = () => {
     console.log('Logout');
-     openConfirmDialog({
+    openConfirmDialog({
       question: 'Are you sure you want to log out?',
       skinYes: 'danger',
       callbackYes: () => {
-        Tritium.PROMISE(
+        Tritium.apiPost(
           'API',
           {
             api: 'user',

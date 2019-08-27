@@ -11,7 +11,7 @@ import Button from 'components/Button';
 import AutoSuggest from 'components/AutoSuggest';
 import { isCoreConnected } from 'selectors';
 import rpc from 'lib/rpc';
-import * as Tritium from 'lib/tritium-api';
+import * as Tritium from 'lib/tritiumApi';
 import {
   switchConsoleTab,
   updateConsoleInput,
@@ -130,11 +130,7 @@ class TritiumConsole extends Component {
     this.inputRef = React.createRef();
     this.outputRef = React.createRef();
     props.switchConsoleTab('Console');
-
-   
   }
-
-
 
   /**
    *
@@ -158,7 +154,7 @@ class TritiumConsole extends Component {
    */
   execute = async () => {
     const {
-        currentTritiumCommand,
+      currentTritiumCommand,
       executeCommand,
       commandList,
       printCommandOutput,
@@ -172,14 +168,12 @@ class TritiumConsole extends Component {
     GA.SendEvent('Terminal', 'TritiumConsole', 'UseCommand', 1);
     console.log(cmd);
 
-
     // this.inputRef.inputRef.current.blur();
 
     const tab = ' '.repeat(2);
     let result = null;
     try {
-      const result2 = await Tritium.ExecuteURL(cmd);
-      result = result2.data.result;
+      result = await Tritium.apiGet(cmd);
     } catch (err) {
       console.error(err);
       if (err.message !== undefined) {
@@ -196,7 +190,6 @@ class TritiumConsole extends Component {
       }
       return;
     }
-
 
     if (typeof result === 'object') {
       const output = [];
@@ -224,7 +217,6 @@ class TritiumConsole extends Component {
       printCommandOutput(tab + result.data);
     }
   };
-
 
   /**
    * Take the Autosuggest and updateConsoleInput
