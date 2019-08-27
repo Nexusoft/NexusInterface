@@ -6,6 +6,7 @@ import styled from '@emotion/styled';
 // Internal Global Dependencies
 import { animations } from 'styles';
 import Tooltip from 'components/Tooltip';
+import Icon from 'components/Icon';
 import checkIcon from 'images/check.sprite.svg';
 import syncingIcon from 'images/syncing.sprite.svg';
 
@@ -40,7 +41,9 @@ class SyncStatus extends React.Component {
       </Tooltip.Trigger>
     ) : (
       <Tooltip.Trigger tooltip={__('Synchronized')}>
-        <StatusIcon icon={checkIcon} />
+        <StatusIcon>
+          <Icon icon={checkIcon} />
+        </StatusIcon>
       </Tooltip.Trigger>
     );
   }

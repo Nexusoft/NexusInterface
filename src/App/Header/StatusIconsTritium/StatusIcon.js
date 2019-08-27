@@ -1,8 +1,7 @@
 import styled from '@emotion/styled';
-import Icon from 'components/Icon';
 
-const StatusIcon = styled(Icon)({
-  margin: '0 7px',
+const StatusIcon = styled.div({
+  marginLeft: 20,
 });
 
 export default StatusIcon;

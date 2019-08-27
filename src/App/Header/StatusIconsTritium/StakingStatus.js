@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 
 // Internal Dependencies
 import Tooltip from 'components/Tooltip';
+import Icon from 'components/Icon';
 import { formatNumber } from 'lib/intl';
 import { isStaking } from 'selectors';
 import stakingIcon from 'images/staking.sprite.svg';
@@ -65,12 +66,14 @@ class StakingStatus extends React.Component {
         }
         style={{ maxWidth: 200 }}
       >
-        <StatusIcon
-          icon={stakingIcon}
-          style={{
-            opacity: staking && !synchronizing === 100 ? 1 : 0.7,
-          }}
-        />
+        <StatusIcon>
+          <Icon
+            icon={stakingIcon}
+            style={{
+              opacity: staking && !synchronizing === 100 ? 1 : 0.7,
+            }}
+          />
+        </StatusIcon>
       </Tooltip.Trigger>
     );
   }
