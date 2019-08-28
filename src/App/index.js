@@ -19,6 +19,7 @@ import Market from './Market';
 import AddressBook from './AddressBook';
 import Settings from './Settings';
 import Terminal from './Terminal';
+import Accounts from './Accounts';
 
 import About from './About';
 import Modules from './Modules';
@@ -66,6 +67,7 @@ const App = ({ history }) => (
               <Route exact path="/AddressBook" component={AddressBook} />
               <Route path="/Settings" component={Settings} />
               <Route path="/Terminal" component={Terminal} />
+              <Route path="/Accounts" component={Accounts} />
 
               {/* <Route path="/Exchange" component={Exchange} /> */}
               {/* <Route exact path="/List" component={TrustList} /> */}
