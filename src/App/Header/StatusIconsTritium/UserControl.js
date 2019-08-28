@@ -7,6 +7,7 @@ import styled from '@emotion/styled';
 import Icon from 'components/Icon';
 import Arrow from 'components/Arrow';
 import Overlay from 'components/Overlay';
+import { isLoggedIn } from 'selectors';
 import userIcon from 'images/user.sprite.svg';
 import { timing } from 'styles';
 import * as color from 'utils/color';
@@ -38,7 +39,7 @@ const UserControlComponent = styled(StatusIcon)(
  *
  *@returns {JSX} JSX
  */
-@connect(({ currentUser }) => ({ currentUser }))
+@connect(state => ({ loggedIn: isLoggedIn(state) }))
 class UserControl extends React.Component {
   state = {
     open: false,
@@ -71,7 +72,7 @@ class UserControl extends React.Component {
         <UserControlComponent
           ref={this.controlRef}
           onClick={this.openDropdown}
-          loggedIn={!!this.props.currentUser}
+          loggedIn={this.props.loggedIn}
         >
           <Icon icon={userIcon} />
           <Arrow

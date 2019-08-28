@@ -3,8 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 // Internal
-import Link from 'components/Link';
-import { isCoreConnected } from 'selectors';
+import { isCoreConnected, isLoggedIn } from 'selectors';
 
 /**
  * Handles the Core Status
@@ -16,7 +15,7 @@ import { isCoreConnected } from 'selectors';
   manualDaemon: state.settings.manualDaemon,
   autoConnect: state.core.autoConnect,
   coreConnected: isCoreConnected(state),
-  loggedIn: !!state.currentUser,
+  loggedIn: isLoggedIn(state),
 }))
 class WalletStatus extends React.Component {
   /**

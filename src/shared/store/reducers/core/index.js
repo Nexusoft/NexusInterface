@@ -6,6 +6,7 @@ import difficulty from './difficulty';
 import systemInfo from './systemInfo';
 import stakeInfo from './stakeInfo';
 import balances from './balances';
+import userStatus from './userStatus';
 
 export default combineReducers({
   autoConnect,
@@ -14,4 +15,5 @@ export default combineReducers({
   systemInfo,
   stakeInfo,
   balances,
+  userStatus,
 });

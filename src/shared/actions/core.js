@@ -12,7 +12,9 @@ const getSystemInfo = () => async dispatch => {
     dispatch({ type: TYPE.GET_SYSTEM_INFO, payload: systemInfo });
   } catch (err) {
     dispatch({ type: TYPE.CLEAR_CORE_INFO });
-    console.error('get/info failed', err);
+    console.error('system/get/info failed', err);
+    // Throws error so getInfo fails and autoFetchCoreInfo will
+    // switch to using dynamic interval.
     throw err;
   }
 };
@@ -23,7 +25,19 @@ const getStakeInfo = () => async dispatch => {
     dispatch({ type: TYPE.GET_STAKE_INFO, payload: stakeInfo });
   } catch (err) {
     dispatch({ type: TYPE.CLEAR_STAKE_INFO });
-    console.error('get/stakeinfo failed', err);
+    console.error('finance/get/stakeinfo failed', err);
+  }
+};
+
+const getUserStatus = () => async dispatch => {
+  try {
+    const userStatus = await apiPost('users/get/status');
+    dispatch({ type: TYPE.GET_USER_STATUS, payload: userStatus });
+
+    dispatch(getStakeInfo());
+  } catch (err) {
+    dispatch({ type: TYPE.CLEAR_USER_STATUS });
+    console.error('users/get/status failed', err);
   }
 };
 
@@ -44,8 +58,8 @@ export const getInfo = legacyMode
     () => async dispatch => {
       // getSysmteInfo to check if core is connected first
       await dispatch(getSystemInfo());
-      // then get more detailed info later
-      await dispatch(getStakeInfo());
+      // Then check user status
+      await dispatch(getUserStatus());
     };
 
 export const getBalances = () => async dispatch => {
@@ -54,7 +68,7 @@ export const getBalances = () => async dispatch => {
     dispatch({ type: TYPE.GET_BALANCES, payload: balances });
   } catch (err) {
     dispatch({ type: TYPE.CLEAR_BALANCES });
-    console.error('get/balances failed', err);
+    console.error('finance/get/balances failed', err);
   }
 };
 

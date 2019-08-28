@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
 import { arrowStyles } from 'components/Arrow';
+import { isLoggedIn } from 'selectors';
 import { timing, animations, consts } from 'styles';
 
 const UserDropdownComponent = styled.div(({ theme }) => ({
@@ -59,16 +60,16 @@ const Separator = styled.div(({ theme }) => ({
   borderBottom: `1px solid ${theme.mixer(0.125)}`,
 }));
 
-const UserDropdown = ({ currentUser, ...rest }) => (
+const UserDropdown = ({ loggedIn, currentUser, ...rest }) => (
   <UserDropdownComponent {...rest}>
-    {!!currentUser && (
+    {loggedIn && (
       <>
         <CurrentUser>{currentUser}</CurrentUser>
         <Separator />
       </>
     )}
 
-    {currentUser ? (
+    {loggedIn ? (
       <>
         <MenuItem>{__('My Addresses')}</MenuItem>
         <MenuItem>{__('Log out')}</MenuItem>
@@ -82,8 +83,9 @@ const UserDropdown = ({ currentUser, ...rest }) => (
   </UserDropdownComponent>
 );
 
-const mapStateToProps = ({ currentUser }) => ({
-  currentUser,
+const mapStateToProps = state => ({
+  loggedIn: isLoggedIn(state),
+  currentUser: state.core.userStatus && state.core.userStatus.username,
 });
 
 export default connect(mapStateToProps)(UserDropdown);
