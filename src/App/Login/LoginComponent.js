@@ -1,9 +1,8 @@
 // External
 import React from 'react';
 import { connect } from 'react-redux';
-import { reduxForm, Field, InfoForm } from 'redux-form';
+import { reduxForm, Field, InfoForm, SubmissionError } from 'redux-form';
 import styled from '@emotion/styled';
-import { history } from 'store';
 
 // Internal
 import Modal from 'components/Modal';
@@ -23,7 +22,7 @@ import {
   showNotification,
   openErrorDialog,
 } from 'actions/overlays';
-import * as TYPE from 'consts/actionTypes';
+import { logOutUser, setCurrentUserGenesis } from 'actions/user';
 
 const LoginModalComponent = styled(Modal)({
   padding: '1px',
@@ -35,8 +34,14 @@ const LoginFieldSet = styled(FieldSet)({
 });
 
 @connect(
-  null,
-  { openModal, showNotification }
+  state => ({ userGenesis: state.currentUser.userGenesis }),
+  {
+    openModal,
+    showNotification,
+    openErrorDialog,
+    setCurrentUserGenesis,
+    logOutUser,
+  }
 )
 class LoginComponent extends React.Component {
   close = () => {
@@ -45,10 +50,7 @@ class LoginComponent extends React.Component {
   };
 
   createButton = () => {
-    console.log('openCreate');
-    console.log(this);
     this.props.openModal(CreateUserComponent);
-    console.log('closing current');
     this.closeModal();
   };
 
@@ -64,12 +66,8 @@ class LoginComponent extends React.Component {
     this.closeModal();
   };
 
-  onSubmit = (values, _, props) => {
-    console.log(props);
-  };
-
   render() {
-    const { handleSubmit, submitting } = this.props;
+    const { userGenesis } = this.props;
     console.log(this);
     return (
       <LoginModalComponent
@@ -81,7 +79,11 @@ class LoginComponent extends React.Component {
         <Modal.Header>Tritium User</Modal.Header>
         <Modal.Body>
           <Panel title={'Login'}>
-            <LoginForm closeModal={this.close} {...this.props} />
+            {userGenesis ? (
+              <LogoutForm closeModal={this.close} {...this.props} />
+            ) : (
+              <LoginForm closeModal={this.close} {...this.props} />
+            )}
             <div
               style={{
                 marginLeft: 'auto',
@@ -117,38 +119,6 @@ class LoginComponent extends React.Component {
               >
                 Test Turn On Tritium
               </Button>
-              {/*
-              <Button
-                skin="primary"
-                onClick={() => this.props.onCloseForgot()}
-                style={{ fontSize: 17, padding: '5px' }}
-              >
-                Forgot Password/Pin
-              </Button>
-              <Button
-                skin="primary"
-                onClick={() => this.props.onCloseTest()}
-                style={{ fontSize: 17, padding: '5px' }}
-              >
-                Test Show recovery
-              </Button>
-              <Button
-                wide
-                skin="primary"
-                onClick={this.close}
-                style={{ fontSize: 17, padding: '5px' }}
-              >
-                Test Close Go To Overview
-              </Button>
-              <Button
-                wide
-                skin="primary"
-                onClick={this.askdkdkdk}
-                style={{ fontSize: 17, padding: '5px' }}
-              >
-                Test toggle tritium switch
-              </Button>
-              */}
             </div>
           </Panel>
         </Modal.Body>
@@ -161,7 +131,7 @@ export default LoginComponent;
 
 @reduxForm({
   form: 'login',
-  destroyOnUnmount: false,
+  destroyOnUnmount: true,
   initialValues: {
     username: '',
     password: '',
@@ -184,25 +154,15 @@ export default LoginComponent;
     return errors;
   },
   onSubmit: async ({ username, password, pin }, dispatch, props) => {
-    console.log('ONSUBMIT');
-    console.log(props);
-    const asdgh = await Tritium.apiPost('users/login/user', {
+    return await Tritium.apiPost('users/login/user', {
       username: username,
       password: password,
       pin: pin,
     });
-
-    console.log(asdgh);
-    return asdgh;
   },
   onSubmitSuccess: async (result, dispatch, props) => {
-    console.log('SUCESSS');
-    // props.setUserGenesis(result.data.result.genesis);
-    //props.setUserName(props.values.username);
     props.showNotification('Logged In', 'success');
-    console.log('PASS');
-
-    //props.turnOnTritium(true);
+    props.setCurrentUserGenesis(result.genesis);
     props.closeModal();
   },
   onSubmitFail: (errors, dispatch, submitError) => {
@@ -217,7 +177,7 @@ export default LoginComponent;
       } else if (submitError === 'value is type null, expected int') {
         note = 'Futur Date';
       }
-      openErrorDialog({
+      props.openErrorDialog({
         message: 'Logged In Error',
         note: note,
       });
@@ -265,6 +225,68 @@ class LoginForm extends React.Component {
               Login With Tritium
             </Button>
           </div>
+        </LoginFieldSet>
+      </form>
+    );
+  }
+}
+
+@reduxForm({
+  destroyOnUnmount: true,
+  form: 'logout',
+  validate: (values, props) => {
+    const errors = {};
+    return errors;
+  },
+  onSubmit: async (values, dispatch, props) => {
+    const result = await Tritium.apiPost('users/logout/user', null);
+    if (result.success) {
+      return result;
+    } else {
+      throw new SubmissionError('Logout failed!');
+    }
+  },
+  onSubmitSuccess: (result, dispatch, props) => {
+    props.showNotification('Logged Out', 'success');
+    props.logOutUser();
+    props.closeModal();
+  },
+  onSubmitFail: (errors, dispatch, submitError) => {
+    console.log('FAIL');
+    console.log(errors);
+    console.log(submitError);
+
+    if (!errors || !Object.keys(errors).length) {
+      let note = submitError || errors || 'Error';
+      if (
+        submitError === 'Error: The wallet passphrase entered was incorrect.'
+      ) {
+        note = 'Bad Passowrd';
+      } else if (submitError === 'value is type null, expected int') {
+        note = 'Futur Date';
+      }
+      props.openErrorDialog({
+        message: 'Logged In Error',
+        note: note,
+      });
+    }
+  },
+})
+class LogoutForm extends React.Component {
+  render() {
+    const { handleSubmit, submitting } = this.props;
+    return (
+      <form onSubmit={handleSubmit}>
+        <LoginFieldSet legend="Logout">
+          <Button
+            skin="primary"
+            onClick={handleSubmit}
+            wide
+            disabled={submitting}
+            style={{ fontSize: 17, padding: '5px' }}
+          >
+            Logout
+          </Button>
         </LoginFieldSet>
       </form>
     );
