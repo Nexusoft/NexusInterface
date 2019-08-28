@@ -3,7 +3,9 @@ import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
 import { arrowStyles } from 'components/Arrow';
+import LoginModal from 'components/LoginModal';
 import { isLoggedIn } from 'selectors';
+import { openModal } from 'actions/overlays';
 import { timing, animations, consts } from 'styles';
 
 const UserDropdownComponent = styled.div(({ theme }) => ({
@@ -60,7 +62,7 @@ const Separator = styled.div(({ theme }) => ({
   borderBottom: `1px solid ${theme.mixer(0.125)}`,
 }));
 
-const UserDropdown = ({ loggedIn, currentUser, ...rest }) => (
+const UserDropdown = ({ loggedIn, currentUser, openModal, ...rest }) => (
   <UserDropdownComponent {...rest}>
     {loggedIn && (
       <>
@@ -76,7 +78,13 @@ const UserDropdown = ({ loggedIn, currentUser, ...rest }) => (
       </>
     ) : (
       <>
-        <MenuItem>{__('Log in')}</MenuItem>
+        <MenuItem
+          onClick={() => {
+            openModal(LoginModal);
+          }}
+        >
+          {__('Log in')}
+        </MenuItem>
         <MenuItem>{__('Create new user')}</MenuItem>
       </>
     )}
@@ -88,4 +96,9 @@ const mapStateToProps = state => ({
   currentUser: state.core.userStatus && state.core.userStatus.username,
 });
 
-export default connect(mapStateToProps)(UserDropdown);
+const actionCreators = { openModal };
+
+export default connect(
+  mapStateToProps,
+  actionCreators
+)(UserDropdown);
