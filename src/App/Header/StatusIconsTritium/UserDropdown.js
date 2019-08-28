@@ -62,7 +62,13 @@ const Separator = styled.div(({ theme }) => ({
   borderBottom: `1px solid ${theme.mixer(0.125)}`,
 }));
 
-const UserDropdown = ({ loggedIn, currentUser, openModal, ...rest }) => (
+const UserDropdown = ({
+  loggedIn,
+  currentUser,
+  openModal,
+  closeDropdown,
+  ...rest
+}) => (
   <UserDropdownComponent {...rest}>
     {loggedIn && (
       <>
@@ -81,6 +87,7 @@ const UserDropdown = ({ loggedIn, currentUser, openModal, ...rest }) => (
         <MenuItem
           onClick={() => {
             openModal(LoginModal);
+            closeDropdown();
           }}
         >
           {__('Log in')}

@@ -84,7 +84,10 @@ class UserControl extends React.Component {
         </UserControlComponent>
         {this.state.open && (
           <Overlay onBackgroundClick={this.closeDropdown}>
-            <UserDropdown style={this.getDropdownStyle()} />
+            <UserDropdown
+              closeDropdown={this.closeDropdown}
+              style={this.getDropdownStyle()}
+            />
           </Overlay>
         )}
       </>
