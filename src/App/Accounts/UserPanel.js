@@ -16,10 +16,10 @@ import {
 } from 'actions/overlays';
 import * as Tritium from 'lib/tritiumApi';
 
-import UserLock from 'components/User/UserLock';
-import UserUnlock from 'components/User/UserUnlock';
-import ChangePassword from 'components/User/ChangePassword';
-import ChangePin from 'components/User/ChangePin';
+import UserLock from 'components/User/UserLockModal';
+import UserUnlock from 'components/User/UserUnlockModal';
+import ChangePassword from 'components/User/ChangePasswordModal';
+import ChangePin from 'components/User/ChangePinModal';
 //import ChangeRecovery from 'components/User/ChangeRecovery';
 
 const PanelHolder = styled.div(({ theme }) => ({
