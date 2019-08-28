@@ -10,8 +10,20 @@ import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import Button from 'components/Button';
 import Switch from 'components/Switch';
+import Link from 'components/Link';
 import { rpcErrorHandler } from 'utils/form';
 import { showNotification, openErrorDialog } from 'actions/overlays';
+
+const Buttons = styled.div({
+  marginTop: '1.5em',
+});
+
+const ExtraSection = styled.div({
+  marginTop: '2em',
+  display: 'flex',
+  justifyContent: 'space-between',
+  opacity: 0.9,
+});
 
 /**
  *  Login Form
@@ -36,6 +48,7 @@ import { showNotification, openErrorDialog } from 'actions/overlays';
   validate: ({ username, password, pin }, props) => {
     const errors = {};
 
+    // TODO: add length validation
     if (!username) {
       errors.username = __('Username is required');
     }
@@ -99,7 +112,11 @@ class Login extends Component {
         <Modal.Header>{__('Log in')}</Modal.Header>
         <Modal.Body>
           <form onSubmit={handleSubmit}>
-            <FormField connectLabel label={__('Username')}>
+            <FormField
+              connectLabel
+              label={__('Username')}
+              style={{ marginTop: 0 }}
+            >
               <Field
                 component={TextField.RF}
                 name="username"
@@ -142,11 +159,20 @@ class Login extends Component {
               <Field component={Switch.RF} name="unlockTransactions" />
             </FormField>
 
-            <div style={{ marginTop: '1.5em' }}>
+            <Buttons>
               <Button type="submit" wide skin="primary" disabled={submitting}>
                 {__('Log in')}
               </Button>
-            </div>
+            </Buttons>
+
+            <ExtraSection>
+              <Link as="a" href="#">
+                {__('Switch to Legacy Mode')}
+              </Link>
+              <Link as="a" href="#">
+                {__('Create new user')}
+              </Link>
+            </ExtraSection>
           </form>
         </Modal.Body>
       </Modal>
