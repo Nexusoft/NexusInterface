@@ -1,5 +1,6 @@
 // External
 import React from 'react';
+import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
 // Internal
@@ -13,25 +14,31 @@ import * as color from 'utils/color';
 import StatusIcon from './StatusIcon';
 import UserDropdown from './UserDropdown';
 
-const UserMenuComponent = styled(StatusIcon)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  cursor: 'pointer',
-  color: theme.primary,
-  transitionProperty: 'color, filter',
-  transitionDuration: timing.normal,
+const UserControlComponent = styled(StatusIcon)(
+  ({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    cursor: 'pointer',
+    color: theme.primary,
+    transitionProperty: 'color, filter',
+    transitionDuration: timing.normal,
 
-  '&:hover': {
-    color: color.lighten(theme.primary, 0.2),
-    filter: `drop-shadow(0 0 3px ${color.fade(theme.primary, 0.5)})`,
-  },
-}));
+    '&:hover': {
+      color: color.lighten(theme.primary, 0.2),
+      filter: `drop-shadow(0 0 3px ${color.fade(theme.primary, 0.5)})`,
+    },
+  }),
+  ({ loggedIn }) => ({
+    opacity: loggedIn ? 1 : 0.7,
+  })
+);
 
 /**
  * Returns JSX of My Addresses
  *
  *@returns {JSX} JSX
  */
+@connect(({ currentUser }) => ({ currentUser }))
 class UserControl extends React.Component {
   state = {
     open: false,
@@ -61,7 +68,11 @@ class UserControl extends React.Component {
   render() {
     return (
       <>
-        <UserMenuComponent ref={this.controlRef} onClick={this.openDropdown}>
+        <UserControlComponent
+          ref={this.controlRef}
+          onClick={this.openDropdown}
+          loggedIn={!!this.props.currentUser}
+        >
           <Icon icon={userIcon} />
           <Arrow
             direction="down"
@@ -69,7 +80,7 @@ class UserControl extends React.Component {
             height={6}
             style={{ marginLeft: 5 }}
           />
-        </UserMenuComponent>
+        </UserControlComponent>
         {this.state.open && (
           <Overlay onBackgroundClick={this.closeDropdown}>
             <UserDropdown style={this.getDropdownStyle()} />

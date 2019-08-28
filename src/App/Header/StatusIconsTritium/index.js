@@ -5,7 +5,7 @@ import { consts, timing, animations } from 'styles';
 
 import StakingStatus from './StakingStatus';
 import SyncStatus from './SyncStatus';
-import UserMenu from './UserMenu';
+import UserControl from './UserControl';
 
 const StatusIconsComponent = styled.div({
   position: 'absolute',
@@ -21,7 +21,7 @@ const StatusIcons = () => (
   <StatusIconsComponent>
     <SyncStatus />
     <StakingStatus />
-    <UserMenu />
+    <UserControl />
   </StatusIconsComponent>
 );
 
