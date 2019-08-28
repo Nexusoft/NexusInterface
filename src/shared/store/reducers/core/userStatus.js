@@ -4,7 +4,7 @@ const initialState = {};
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case TYPE.GET_USER_STATUS:
+    case TYPE.SET_USER_STATUS:
       return action.payload;
 
     case TYPE.CLEAR_CORE_INFO:

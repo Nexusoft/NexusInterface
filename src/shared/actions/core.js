@@ -9,7 +9,7 @@ import { apiPost } from 'lib/tritiumApi';
 const getSystemInfo = () => async dispatch => {
   try {
     const systemInfo = await apiPost('system/get/info');
-    dispatch({ type: TYPE.GET_SYSTEM_INFO, payload: systemInfo });
+    dispatch({ type: TYPE.SET_SYSTEM_INFO, payload: systemInfo });
   } catch (err) {
     dispatch({ type: TYPE.CLEAR_CORE_INFO });
     console.error('system/get/info failed', err);
@@ -22,7 +22,7 @@ const getSystemInfo = () => async dispatch => {
 const getStakeInfo = () => async dispatch => {
   try {
     const stakeInfo = await apiPost('finance/get/stakeinfo');
-    dispatch({ type: TYPE.GET_STAKE_INFO, payload: stakeInfo });
+    dispatch({ type: TYPE.SET_STAKE_INFO, payload: stakeInfo });
   } catch (err) {
     dispatch({ type: TYPE.CLEAR_STAKE_INFO });
     console.error('finance/get/stakeinfo failed', err);
@@ -32,7 +32,7 @@ const getStakeInfo = () => async dispatch => {
 const getUserStatus = () => async dispatch => {
   try {
     const userStatus = await apiPost('users/get/status');
-    dispatch({ type: TYPE.GET_USER_STATUS, payload: userStatus });
+    dispatch({ type: TYPE.SET_USER_STATUS, payload: userStatus });
 
     dispatch(getStakeInfo());
   } catch (err) {
@@ -65,7 +65,7 @@ export const getInfo = legacyMode
 export const getBalances = () => async dispatch => {
   try {
     const balances = await apiPost('finance/get/balances');
-    dispatch({ type: TYPE.GET_BALANCES, payload: balances });
+    dispatch({ type: TYPE.SET_BALANCES, payload: balances });
   } catch (err) {
     dispatch({ type: TYPE.CLEAR_BALANCES });
     console.error('finance/get/balances failed', err);

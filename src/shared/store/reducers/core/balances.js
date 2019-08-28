@@ -4,7 +4,7 @@ const initialState = {};
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case TYPE.GET_BALANCES:
+    case TYPE.SET_BALANCES:
       return action.payload;
 
     case TYPE.CLEAR_CORE_INFO:
