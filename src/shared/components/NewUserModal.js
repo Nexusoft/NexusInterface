@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { reduxForm, Field } from 'redux-form';
+import { reduxForm, Field, SubmissionError } from 'redux-form';
 import styled from '@emotion/styled';
 import { connect } from 'react-redux';
 
@@ -100,8 +100,17 @@ const ExtraSection = styled.div({
     props.reset();
     autoFetchCoreInfo();
   },
-  // TODO: replace error handler
-  onSubmitFail: rpcErrorHandler(__('Error logging in')),
+  onSubmitFail: async (errors, dispatch, submitError, props) => {
+    const note = errors
+      ? Object.keys(errors).length == 1
+        ? errors[Object.keys(errors)[0]]
+        : __('Multiple Form Input Errors')
+      : submitError;
+    props.openErrorDialog({
+      message: __('Error Creating User'),
+      note: note || 'An unknown error occurred',
+    });
+  },
 })
 class NewUserModal extends Component {
   /**

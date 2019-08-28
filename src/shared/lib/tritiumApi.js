@@ -40,12 +40,23 @@ const getDefaultOptions = ({ apiUser, apiPassword }) => ({
  */
 export async function apiPost(endpoint, params) {
   const conf = getConfig();
-  const response = await axios.post(
-    `${conf.apiHost}/${endpoint}`,
-    params,
-    getDefaultOptions(conf)
-  );
-  return response.data && response.data.result;
+  try {
+    const response = await axios.post(
+      `${conf.apiHost}/${endpoint}`,
+      params,
+      getDefaultOptions(conf)
+    );
+    return response.data && response.data.result;
+  } catch (err) {
+    console.error(err);
+    if (err.response) {
+      const { status, data } = err.response;
+      if (data.error) {
+        const { code, message } = data.error;
+        throw `${message}\nCode: ${code}`;
+      }
+    }
+  }
 }
 
 /**
@@ -57,9 +68,13 @@ export async function apiPost(endpoint, params) {
  */
 export async function apiGet(url) {
   const conf = getConfig();
-  const response = await axios.get(
-    `${conf.apiHost}/${url}`,
-    getDefaultOptions(conf)
-  );
-  return response.data && response.data.result;
+  try {
+    const response = await axios.get(
+      `${conf.apiHost}/${url}`,
+      getDefaultOptions(conf)
+    );
+    return response.data && response.data.result;
+  } catch (err) {
+    console.error(err);
+  }
 }
