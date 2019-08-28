@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { reduxForm, Field, formValueSelector } from 'redux-form';
+import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
 import { connect } from 'react-redux';
 
@@ -48,7 +48,6 @@ const ExtraSection = styled.div({
   validate: ({ username, password, pin }, props) => {
     const errors = {};
 
-    // TODO: add length validation
     if (!username) {
       errors.username = __('Username is required');
     }
@@ -63,18 +62,20 @@ const ExtraSection = styled.div({
 
     return errors;
   },
-  onSubmit: async ({
-    username,
-    password,
-    pin,
-    unlockMinting,
-    unlockTransactions,
-  }) => {
+  onSubmit: async (
+    { username, password, pin, unlockMinting, unlockTransactions },
+    dispatch,
+    props
+  ) => {
     const result = await apiPost('users/login/user', {
       username,
       password,
       PIN: pin,
     });
+    props.showNotification(
+      __('Logged in as %{username}', { username }),
+      'success'
+    );
 
     if (unlockMinting || unlockTransactions) {
       try {
@@ -91,7 +92,7 @@ const ExtraSection = styled.div({
   },
   onSubmitSuccess: async (result, dispatch, props) => {
     props.reset();
-    props.showNotification(__('Logged in successfully'), 'success');
+
     autoFetchCoreInfo();
   },
   // TODO: replace error handler
@@ -166,10 +167,10 @@ class Login extends Component {
             </Buttons>
 
             <ExtraSection>
-              <Link as="a" href="#">
+              <Link as="a" href="javascript:;">
                 {__('Switch to Legacy Mode')}
               </Link>
-              <Link as="a" href="#">
+              <Link as="a" href="javascript:;">
                 {__('Create new user')}
               </Link>
             </ExtraSection>
