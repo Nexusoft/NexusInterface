@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 // Internal Dependencies
 import Tooltip from 'components/Tooltip';
 import Icon from 'components/Icon';
+import { isSynchronized } from 'selectors';
 import { formatNumber } from 'lib/intl';
 import { isStaking } from 'selectors';
 import stakingIcon from 'images/staking.sprite.svg';
@@ -21,13 +22,13 @@ import StatusIcon from './StatusIcon';
   const {
     core: {
       stakeInfo: { stakerate },
-      systemInfo: { synchronizing },
+      systemInfo: { synchronizing, synccomplete },
     },
   } = state;
   return {
     staking: isStaking(state),
     stakerate,
-    synchronizing,
+    synchronized: isSynchronized(state),
   };
 })
 class StakingStatus extends React.Component {
@@ -40,13 +41,13 @@ class StakingStatus extends React.Component {
    * @memberof StakingStatus
    */
   render() {
-    const { staking, stakerate, synchronizing } = this.props;
+    const { staking, stakerate, synchronized } = this.props;
 
     return (
       <Tooltip.Trigger
         tooltip={
           staking ? (
-            !synchronizing ? (
+            synchronized ? (
               <>
                 <div>
                   <strong>{__('Wallet is staking')}</strong>
@@ -70,7 +71,7 @@ class StakingStatus extends React.Component {
           <Icon
             icon={stakingIcon}
             style={{
-              opacity: staking && !synchronizing === 100 ? 1 : 0.7,
+              opacity: staking && synchronized ? 1 : 0.7,
             }}
           />
         </StatusIcon>

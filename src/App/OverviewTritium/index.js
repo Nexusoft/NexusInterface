@@ -309,7 +309,7 @@ class Overview extends Component {
     // Periodically get balances
     this.props.getBalances();
     this.unobserve = observeStore(
-      state => state && state.core && state.core.systemInfo,
+      ({ core }) => core && core.systemInfo,
       this.props.getBalances,
       (currentState, nextState) =>
         (currentState && isCoreConnected(currentState)) ||
