@@ -4,6 +4,7 @@ import styled from '@emotion/styled';
 
 import { arrowStyles } from 'components/Arrow';
 import LoginModal from 'components/LoginModal';
+import NewUserModal from 'components/NewUserModal';
 import { isLoggedIn } from 'selectors';
 import { openModal } from 'actions/overlays';
 import { timing, animations, consts } from 'styles';
@@ -92,7 +93,14 @@ const UserDropdown = ({
         >
           {__('Log in')}
         </MenuItem>
-        <MenuItem>{__('Create new user')}</MenuItem>
+        <MenuItem
+          onClick={() => {
+            openModal(NewUserModal);
+            closeDropdown();
+          }}
+        >
+          {__('Create new user')}
+        </MenuItem>
       </>
     )}
   </UserDropdownComponent>
