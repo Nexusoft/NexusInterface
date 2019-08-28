@@ -10,8 +10,9 @@ import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import Button from 'components/Button';
 import Link from 'components/Link';
+import LoginModal from 'components/LoginModal';
 import { rpcErrorHandler } from 'utils/form';
-import { showNotification, openErrorDialog } from 'actions/overlays';
+import { showNotification, openErrorDialog, openModal } from 'actions/overlays';
 
 const Buttons = styled.div({
   marginTop: '1.5em',
@@ -32,7 +33,7 @@ const ExtraSection = styled.div({
  */
 @connect(
   null,
-  { showNotification, openErrorDialog }
+  { showNotification, openErrorDialog, openModal }
 )
 @reduxForm({
   form: 'new_user',
@@ -110,10 +111,13 @@ class NewUserModal extends Component {
    * @memberof NewUserModal
    */
   render() {
-    const { handleSubmit, submitting } = this.props;
+    const { handleSubmit, submitting, openModal } = this.props;
 
     return (
-      <Modal style={{ maxWidth: 500 }}>
+      <Modal
+        style={{ maxWidth: 500 }}
+        assignClose={closeModal => (this.closeModal = closeModal)}
+      >
         <Modal.Header>{__('Create new user')}</Modal.Header>
         <Modal.Body>
           <form onSubmit={handleSubmit}>
@@ -175,7 +179,14 @@ class NewUserModal extends Component {
               <Link as="a" href="javascript:;">
                 {__('Switch to Legacy Mode')}
               </Link>
-              <Link as="a" href="javascript:;">
+              <Link
+                as="a"
+                href="javascript:;"
+                onClick={() => {
+                  this.closeModal();
+                  openModal(LoginModal);
+                }}
+              >
                 {__('Log in')}
               </Link>
             </ExtraSection>

@@ -11,8 +11,9 @@ import TextField from 'components/TextField';
 import Button from 'components/Button';
 import Switch from 'components/Switch';
 import Link from 'components/Link';
+import NewUserModal from 'components/NewUserModal';
 import { rpcErrorHandler } from 'utils/form';
-import { showNotification, openErrorDialog } from 'actions/overlays';
+import { showNotification, openErrorDialog, openModal } from 'actions/overlays';
 
 const Buttons = styled.div({
   marginTop: '1.5em',
@@ -33,7 +34,7 @@ const ExtraSection = styled.div({
  */
 @connect(
   null,
-  { showNotification, openErrorDialog }
+  { showNotification, openErrorDialog, openModal }
 )
 @reduxForm({
   form: 'login_tritium',
@@ -106,10 +107,13 @@ class Login extends Component {
    * @memberof Login
    */
   render() {
-    const { handleSubmit, submitting } = this.props;
+    const { handleSubmit, submitting, openModal } = this.props;
 
     return (
-      <Modal style={{ maxWidth: 500 }}>
+      <Modal
+        style={{ maxWidth: 500 }}
+        assignClose={closeModal => (this.closeModal = closeModal)}
+      >
         <Modal.Header>{__('Log in')}</Modal.Header>
         <Modal.Body>
           <form onSubmit={handleSubmit}>
@@ -170,7 +174,14 @@ class Login extends Component {
               <Link as="a" href="javascript:;">
                 {__('Switch to Legacy Mode')}
               </Link>
-              <Link as="a" href="javascript:;">
+              <Link
+                as="a"
+                href="javascript:;"
+                onClick={() => {
+                  this.closeModal();
+                  openModal(NewUserModal);
+                }}
+              >
                 {__('Create new user')}
               </Link>
             </ExtraSection>

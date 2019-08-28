@@ -124,7 +124,11 @@ class AmountField extends Component {
               <>
                 <span className="v-align">{__('NXS Amount')}</span>
                 {!!this.props.fullAmount && (
-                  <SendAllLink as="a" href="#" onClick={this.sendAll}>
+                  <SendAllLink
+                    as="a"
+                    href="javascript:;"
+                    onClick={this.sendAll}
+                  >
                     {__('Send all')}
                   </SendAllLink>
                 )}
