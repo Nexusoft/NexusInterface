@@ -75,8 +75,8 @@ const UserDropdown = ({ currentUser, ...rest }) => (
       </>
     ) : (
       <>
-        <MenuItem>{__('Create new user')}</MenuItem>
         <MenuItem>{__('Log in')}</MenuItem>
+        <MenuItem>{__('Create new user')}</MenuItem>
       </>
     )}
   </UserDropdownComponent>

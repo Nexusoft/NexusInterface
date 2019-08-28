@@ -15,7 +15,7 @@ import { legacyMode } from 'consts/misc';
 // Internal Local
 import StatusIcons from './StatusIcons';
 import StatusIconsTritium from './StatusIconsTritium';
-import CoreStatus from './CoreStatus';
+import WalletStatus from './WalletStatus';
 import logoFull from './logo-full-beta.sprite.svg';
 
 const HeaderComponent = styled.header(({ theme }) => ({
@@ -88,7 +88,7 @@ class Header extends Component {
 
         <UnderHeader>
           <HorizontalLine />
-          <CoreStatus {...this.props} />
+          <WalletStatus {...this.props} />
         </UnderHeader>
 
         {coreConnected &&
