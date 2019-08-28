@@ -165,7 +165,7 @@ export default LoginComponent;
     props.setCurrentUserGenesis(result.genesis);
     props.closeModal();
   },
-  onSubmitFail: (errors, dispatch, submitError) => {
+  onSubmitFail: (errors, dispatch, submitError, props) => {
     console.log('FAIL');
     console.log(errors);
     if (!errors || !Object.keys(errors).length) {
@@ -179,7 +179,7 @@ export default LoginComponent;
       }
       props.openErrorDialog({
         message: 'Logged In Error',
-        note: note,
+        note: 'Oh no there is a error',
       });
     }
   },
