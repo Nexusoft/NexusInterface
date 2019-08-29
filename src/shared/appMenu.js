@@ -133,6 +133,13 @@ const styleSettings = {
   },
 };
 
+const moduleSettings = {
+  label: __('Modules'),
+  click: () => {
+    history.push('/Settings/Modules');
+  },
+};
+
 const downloadRecent = {
   label: __('Download Recent Database'),
   click: () => {
@@ -305,10 +312,11 @@ function buildDarwinTemplate() {
     submenu: [
       appSettings,
       coreSettings,
-      keyManagement,
+      legacyMode ? keyManagement : null,
       styleSettings,
+      moduleSettings,
       //TODO: take this out before 1.0
-    ],
+    ].filter(e => e),
   };
 
   const subMenuWindow = {
@@ -377,7 +385,13 @@ function buildDefaultTemplate() {
 
   const subMenuSettings = {
     label: __('Settings'),
-    submenu: [appSettings, coreSettings, keyManagement, styleSettings],
+    submenu: [
+      appSettings,
+      coreSettings,
+      legacyMode ? keyManagement : null,
+      styleSettings,
+      moduleSettings,
+    ].filter(e => e),
   };
   const subMenuView = {
     label: __('View'),
