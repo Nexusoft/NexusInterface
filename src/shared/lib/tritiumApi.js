@@ -51,14 +51,7 @@ export async function apiPost(endpoint, params) {
     );
     return response.data && response.data.result;
   } catch (err) {
-    console.error(err);
-    if (err.response) {
-      const { status, data } = err.response;
-      if (data.error) {
-        const { code, message } = data.error;
-        throw `${message}\nCode: ${code}`;
-      }
-    }
+    throw err.response && err.response.data && err.response.data.error;
   }
 }
 
@@ -78,6 +71,6 @@ export async function apiGet(url) {
     );
     return response.data && response.data.result;
   } catch (err) {
-    console.error(err);
+    throw err.response && err.response.data && err.response.data.error;
   }
 }
