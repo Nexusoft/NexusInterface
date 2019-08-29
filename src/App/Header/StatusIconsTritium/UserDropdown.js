@@ -70,6 +70,7 @@ const UserDropdown = ({
   currentUser,
   openModal,
   closeDropdown,
+  logOutUser,
   ...rest
 }) => (
   <UserDropdownComponent {...rest}>
@@ -84,11 +85,10 @@ const UserDropdown = ({
       <>
         <MenuItem>{__('My Addresses')}</MenuItem>
         <MenuItem
-          onClick={() => {
-            //Move this to a async action as logging out take a moment.
-            apiPost('users/logout/user', null);
-            logOutUser();
+          onClick={async () => {
             closeDropdown();
+            await apiPost('users/logout/user');
+            logOutUser();
           }}
         >
           {__('Log out')}
@@ -122,7 +122,7 @@ const mapStateToProps = state => ({
   currentUser: state.core.userStatus && state.core.userStatus.username,
 });
 
-const actionCreators = { openModal };
+const actionCreators = { openModal, logOutUser };
 
 export default connect(
   mapStateToProps,
