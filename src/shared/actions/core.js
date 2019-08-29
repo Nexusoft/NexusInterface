@@ -29,7 +29,7 @@ const getStakeInfo = () => async dispatch => {
   }
 };
 
-const getUserStatus = () => async dispatch => {
+export const getUserStatus = () => async dispatch => {
   try {
     const userStatus = await apiPost('users/get/status');
     dispatch({ type: TYPE.SET_USER_STATUS, payload: userStatus });

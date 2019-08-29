@@ -3,7 +3,6 @@ import { reduxForm, Field, SubmissionError } from 'redux-form';
 import styled from '@emotion/styled';
 import { connect } from 'react-redux';
 
-import { autoFetchCoreInfo } from 'lib/coreInfo';
 import { apiPost } from 'lib/tritiumApi';
 import Modal from 'components/Modal';
 import FormField from 'components/FormField';
@@ -11,13 +10,8 @@ import TextField from 'components/TextField';
 import Button from 'components/Button';
 import Link from 'components/Link';
 import LoginModal from 'components/LoginModal';
-import {
-  showNotification,
-  openErrorDialog,
-  openModal,
-  removeModal,
-} from 'actions/overlays';
-import { setCurrentUser } from 'actions/user';
+import { showNotification, openModal, removeModal } from 'actions/overlays';
+import { getUserStatus } from 'actions/core';
 import { errorHandler } from 'utils/form';
 
 const Buttons = styled.div({
@@ -39,7 +33,7 @@ const ExtraSection = styled.div({
  */
 @connect(
   state => ({ modalID: state.ui.modals[0].id }),
-  { showNotification, openErrorDialog, openModal, removeModal, setCurrentUser }
+  { showNotification, openModal, removeModal, getUserStatus }
 )
 @reduxForm({
   form: 'new_user',
@@ -103,7 +97,7 @@ const ExtraSection = styled.div({
     );
 
     try {
-      const result = await apiPost('users/login/user', {
+      await apiPost('users/login/user', {
         username,
         password,
         pin: pin,
@@ -114,9 +108,8 @@ const ExtraSection = styled.div({
     return result;
   },
   onSubmitSuccess: async (result, dispatch, props) => {
-    props.setCurrentUser(props.values.username, result.genesis);
+    props.getUserStatus();
     props.reset();
-    autoFetchCoreInfo();
     props.removeModal(props.modalID);
   },
   onSubmitFail: errorHandler(__('Error creating user')),

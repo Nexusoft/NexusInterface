@@ -3,7 +3,6 @@ import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
 import { connect } from 'react-redux';
 
-import { autoFetchCoreInfo } from 'lib/coreInfo';
 import { apiPost } from 'lib/tritiumApi';
 import Modal from 'components/Modal';
 import FormField from 'components/FormField';
@@ -12,13 +11,8 @@ import Button from 'components/Button';
 import Switch from 'components/Switch';
 import Link from 'components/Link';
 import NewUserModal from 'components/NewUserModal';
-import {
-  showNotification,
-  openErrorDialog,
-  openModal,
-  removeModal,
-} from 'actions/overlays';
-import { setCurrentUser } from 'actions/user';
+import { showNotification, openModal, removeModal } from 'actions/overlays';
+import { getUserStatus } from 'actions/core';
 import { errorHandler } from 'utils/form';
 
 const Buttons = styled.div({
@@ -40,7 +34,12 @@ const ExtraSection = styled.div({
  */
 @connect(
   state => ({ modalID: state.ui.modals[0].id }),
-  { showNotification, openErrorDialog, openModal, removeModal, setCurrentUser }
+  {
+    showNotification,
+    openModal,
+    removeModal,
+    getUserStatus,
+  }
 )
 @reduxForm({
   form: 'login_tritium',
@@ -98,10 +97,9 @@ const ExtraSection = styled.div({
     return result;
   },
   onSubmitSuccess: async (result, dispatch, props) => {
-    props.setCurrentUser(props.values.username, result.genesis);
+    props.getUserStatus();
     props.reset();
     props.removeModal(props.modalID);
-    autoFetchCoreInfo();
   },
   // TODO: replace error handler
   onSubmitFail: errorHandler(__('Error logging in')),
