@@ -63,6 +63,10 @@ const defaultConfig = {
   verbose: 2,
 };
 
+const LocalConfig = fs.existsSync(path.join(coreDataDir, 'nexus.conf'))
+  ? fs.readFileSync(path.join(coreDataDir, 'nexus.conf')).toString()
+  : '';
+
 /**
  * Returns either the given config or default Config
  *
@@ -99,14 +103,8 @@ export function customConfig(config = {}) {
  * @returns
  */
 export function loadNexusConf() {
-  const confPath = path.join(coreDataDir, 'nexus.conf');
-  const confContent = fs.existsSync(confPath)
-    ? fs.readFileSync(confPath).toString()
-    : '';
-  const configs = fromKeyValues(confContent);
-  log.info(
-    'nexus.conf exists. Importing username and password for RPC server and API server.'
-  );
+  //TODO: Consider keeping these values somewhere as nexus.conf is only read on core start up.
+  const configs = fromKeyValues(LocalConfig);
 
   // When Version is >1.5 remove this
   const oldSecret =
