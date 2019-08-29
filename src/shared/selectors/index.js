@@ -20,4 +20,4 @@ export const isSynchronized = legacyMode
 
 export const isLoggedIn = legacyMode
   ? () => false
-  : ({ core: { userStatus } }) => !!(userStatus && userStatus.username);
+  : ({ core }) => !!(core && core.userStatus);

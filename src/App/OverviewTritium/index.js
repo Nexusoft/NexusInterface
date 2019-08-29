@@ -16,7 +16,7 @@ import { getDifficulty, getBalances } from 'actions/core';
 import { updateSettings } from 'actions/settings';
 import { formatNumber, formatCurrency, formatRelativeTime } from 'lib/intl';
 import { timing, consts } from 'styles';
-import { isCoreConnected } from 'selectors';
+import { isCoreConnected, isLoggedIn } from 'selectors';
 import { observeStore } from 'store';
 import Globe from './Globe';
 import { webGLAvailable } from 'consts/misc';
@@ -309,11 +309,8 @@ class Overview extends Component {
     // Periodically get balances
     this.props.getBalances();
     this.unobserve = observeStore(
-      ({ core }) => core && core.systemInfo,
-      this.props.getBalances,
-      (currentState, nextState) =>
-        (currentState && isCoreConnected(currentState)) ||
-        (nextState && isCoreConnected(nextState))
+      ({ core }) => core && core.userStatus,
+      this.props.getBalances
     );
   }
   /**
