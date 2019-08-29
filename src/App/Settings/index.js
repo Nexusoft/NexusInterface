@@ -10,6 +10,7 @@ import GA from 'lib/googleAnalytics';
 import ContextMenuBuilder from 'contextmenu';
 import Panel from 'components/Panel';
 import Tab from 'components/Tab';
+import { legacyMode } from 'consts/misc';
 
 // Internal Local
 import SettingsApp from './App';
@@ -119,11 +120,13 @@ export default class Settings extends Component {
               text={__('Application')}
             />
             <Tab link={`${match.url}/Core`} icon={coreIcon} text={__('Core')} />
-            <Tab
-              link={`${match.url}/Security`}
-              icon={lockIcon}
-              text={__('Security')}
-            />
+            {legacyMode && (
+              <Tab
+                link={`${match.url}/Security`}
+                icon={lockIcon}
+                text={__('Security')}
+              />
+            )}
             <Tab
               link={`${match.url}/Style`}
               icon={leafIcon}
@@ -141,10 +144,12 @@ export default class Settings extends Component {
               <Switch>
                 <Route path={`${match.path}/App`} component={SettingsApp} />
                 <Route path={`${match.path}/Core`} component={SettingsCore} />
-                <Route
-                  path={`${match.path}/Security`}
-                  component={SettingsSecurity}
-                />
+                {legacyMode && (
+                  <Route
+                    path={`${match.path}/Security`}
+                    component={SettingsSecurity}
+                  />
+                )}
                 <Route path={`${match.path}/Style`} component={SettingsStyle} />
                 <Route
                   path={`${match.path}/Modules`}
