@@ -8,14 +8,36 @@ import { toggleWebViewDevTools } from 'actions/webview';
 import { updateSettings } from 'actions/settings';
 import { startCore as startCoreAC, stopCore as stopCoreAC } from 'actions/core';
 import { backupWallet as backup } from 'lib/wallet';
-import { showNotification, openErrorDialog } from 'actions/overlays';
+import { showNotification } from 'actions/overlays';
 import { bootstrap } from 'actions/bootstrap';
 import { isCoreConnected } from 'selectors';
+import { legacyMode } from 'consts/misc';
 import showOpenDialog from 'utils/promisified/showOpenDialog';
+import confirm from 'utils/promisified/confirm';
 import { checkForUpdates, quitAndInstall } from 'lib/updater';
 
 const separator = {
   type: 'separator',
+};
+
+const switchLegacyMode = {
+  label: __('Switch to Legacy Mode'),
+  click: async () => {
+    const confirmed = await confirm({
+      question: __('Are you sure you want to switch to Legacy Mode?'),
+      skinYes: 'danger',
+    });
+    if (confirmed) {
+      store.dispatch(updateSettings({ legacyMode: true }));
+    }
+  },
+};
+
+const switchTritiumMode = {
+  label: __('Switch to Tritium Mode'),
+  click: () => {
+    store.dispatch(updateSettings({ legacyMode: false }));
+  },
 };
 
 const startCore = {
@@ -289,15 +311,18 @@ function buildDarwinTemplate() {
     label: 'Nexus',
     submenu: [
       about,
-      /* may insert Start/Stop Core here */ separator,
+      // If it's in manual core mode and core is not running, don't show
+      // Start Core option because it does nothing
+      !manualDaemon || coreConnected
+        ? coreConnected
+          ? stopCore
+          : startCore
+        : null,
+      legacyMode ? switchTritiumMode : switchLegacyMode,
+      separator,
       quitNexus,
-    ],
+    ].filter(e => e),
   };
-  // If it's in manual core mode and core is not running, don't show
-  // Start Core option because it does nothing
-  if (!manualDaemon || coreConnected) {
-    subMenuAbout.submenu.splice(1, 0, coreConnected ? stopCore : startCore);
-  }
 
   const subMenuFile = {
     label: __('File'),
@@ -372,16 +397,18 @@ function buildDefaultTemplate() {
       separator,
       downloadRecent,
       separator,
-      /* may insert Start/Stop Core here */
+      // If it's in manual core mode and core is not running, don't show
+      // Start Core option because it does nothing
+      !manualDaemon || coreConnected
+        ? coreConnected
+          ? stopCore
+          : startCore
+        : null,
+      legacyMode ? switchTritiumMode : switchLegacyMode,
       separator,
       quitNexus,
-    ],
+    ].filter(e => e),
   };
-  // If it's in manual core mode and core is not running, don't show
-  // Start Core option because it does nothing
-  if (!manualDaemon || coreConnected) {
-    subMenuFile.submenu.splice(5, 0, coreConnected ? stopCore : startCore);
-  }
 
   const subMenuSettings = {
     label: __('Settings'),
