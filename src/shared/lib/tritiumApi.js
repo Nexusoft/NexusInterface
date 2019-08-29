@@ -1,7 +1,10 @@
 import axios from 'axios';
 import store from 'store';
+import { remote } from 'electron';
 
 import { customConfig, loadNexusConf } from 'lib/coreConfig';
+
+const core = remote.getGlobal('core');
 
 const getConfig = () => {
   const { settings } = store.getState();
