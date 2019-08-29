@@ -181,7 +181,13 @@ class NewUserModal extends Component {
             </FormField>
 
             <Buttons>
-              <Button type="submit" wide skin="primary" disabled={submitting}>
+              <Button
+                type="submit"
+                wide
+                uppercase
+                skin="primary"
+                disabled={submitting}
+              >
                 {__('Create user')}
               </Button>
             </Buttons>

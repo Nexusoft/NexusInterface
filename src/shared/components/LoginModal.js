@@ -170,7 +170,13 @@ class Login extends Component {
             </FormField>
 
             <Buttons>
-              <Button type="submit" wide skin="primary" disabled={submitting}>
+              <Button
+                type="submit"
+                wide
+                uppercase
+                skin="primary"
+                disabled={submitting}
+              >
                 {__('Log in')}
               </Button>
             </Buttons>
