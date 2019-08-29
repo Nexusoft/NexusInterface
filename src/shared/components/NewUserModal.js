@@ -11,8 +11,13 @@ import TextField from 'components/TextField';
 import Button from 'components/Button';
 import Link from 'components/Link';
 import LoginModal from 'components/LoginModal';
-import { rpcErrorHandler } from 'utils/form';
-import { showNotification, openErrorDialog, openModal } from 'actions/overlays';
+import {
+  showNotification,
+  openErrorDialog,
+  openModal,
+  removeModal,
+} from 'actions/overlays';
+import { setCurrentUser } from 'actions/user';
 
 const Buttons = styled.div({
   marginTop: '1.5em',
@@ -32,8 +37,8 @@ const ExtraSection = styled.div({
  * @extends {Component}
  */
 @connect(
-  null,
-  { showNotification, openErrorDialog, openModal }
+  state => ({ modalID: state.ui.modals[0].id }),
+  { showNotification, openErrorDialog, openModal, removeModal, setCurrentUser }
 )
 @reduxForm({
   form: 'new_user',
@@ -78,7 +83,7 @@ const ExtraSection = styled.div({
     const result = await apiPost('users/create/user', {
       username,
       password,
-      PIN: pin,
+      pin: pin,
     });
     props.showNotification(
       __('New user %{username} has been created', { username }),
@@ -86,10 +91,10 @@ const ExtraSection = styled.div({
     );
 
     try {
-      await apiPost('users/login/user', {
+      const result = await apiPost('users/login/user', {
         username,
         password,
-        PIN: pin,
+        pin: pin,
       });
     } catch (err) {
       console.error(err);
@@ -97,8 +102,10 @@ const ExtraSection = styled.div({
     return result;
   },
   onSubmitSuccess: async (result, dispatch, props) => {
+    props.setCurrentUser(props.values.username, result.genesis);
     props.reset();
     autoFetchCoreInfo();
+    props.removeModal(props.modalID);
   },
   onSubmitFail: async (errors, dispatch, submitError, props) => {
     const note = errors

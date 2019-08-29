@@ -1,8 +1,8 @@
 import * as TYPE from 'consts/actionTypes';
 
-export const setCurrentUser = username => ({
+export const setCurrentUser = (username, genesis) => ({
   type: TYPE.SET_CURRENT_USER,
-  payload: username,
+  payload: { username, genesis },
 });
 
 export const setCurrentUserGenesis = genesis => ({
@@ -11,6 +11,6 @@ export const setCurrentUserGenesis = genesis => ({
 });
 
 export const logOutUser = () => ({
-  type: TYPE.LOGOUT_USER,
+  type: TYPE.CLEAR_USER_STATUS,
   payload: null,
 });

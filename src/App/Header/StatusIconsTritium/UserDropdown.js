@@ -8,6 +8,8 @@ import NewUserModal from 'components/NewUserModal';
 import { isLoggedIn } from 'selectors';
 import { openModal } from 'actions/overlays';
 import { timing, animations, consts } from 'styles';
+import { apiPost } from 'lib/tritiumApi';
+import { logOutUser } from 'actions/user';
 
 const UserDropdownComponent = styled.div(({ theme }) => ({
   position: 'fixed',
@@ -81,7 +83,16 @@ const UserDropdown = ({
     {loggedIn ? (
       <>
         <MenuItem>{__('My Addresses')}</MenuItem>
-        <MenuItem>{__('Log out')}</MenuItem>
+        <MenuItem
+          onClick={() => {
+            //Move this to a async action as logging out take a moment.
+            apiPost('users/logout/user', null);
+            logOutUser();
+            closeDropdown();
+          }}
+        >
+          {__('Log out')}
+        </MenuItem>
       </>
     ) : (
       <>

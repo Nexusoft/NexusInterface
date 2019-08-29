@@ -12,8 +12,13 @@ import Button from 'components/Button';
 import Switch from 'components/Switch';
 import Link from 'components/Link';
 import NewUserModal from 'components/NewUserModal';
-import { rpcErrorHandler } from 'utils/form';
-import { showNotification, openErrorDialog, openModal } from 'actions/overlays';
+import {
+  showNotification,
+  openErrorDialog,
+  openModal,
+  removeModal,
+} from 'actions/overlays';
+import { setCurrentUser } from 'actions/user';
 
 const Buttons = styled.div({
   marginTop: '1.5em',
@@ -33,8 +38,8 @@ const ExtraSection = styled.div({
  * @extends {Component}
  */
 @connect(
-  null,
-  { showNotification, openErrorDialog, openModal }
+  state => ({ modalID: state.ui.modals[0].id }),
+  { showNotification, openErrorDialog, openModal, removeModal, setCurrentUser }
 )
 @reduxForm({
   form: 'login_tritium',
@@ -48,7 +53,6 @@ const ExtraSection = styled.div({
   },
   validate: ({ username, password, pin }, props) => {
     const errors = {};
-
     if (!username) {
       errors.username = __('Username is required');
     }
@@ -71,8 +75,9 @@ const ExtraSection = styled.div({
     const result = await apiPost('users/login/user', {
       username,
       password,
-      PIN: pin,
+      pin,
     });
+
     props.showNotification(
       __('Logged in as %{username}', { username }),
       'success'
@@ -81,7 +86,7 @@ const ExtraSection = styled.div({
     if (unlockMinting || unlockTransactions) {
       try {
         await apiPost('users/unlock/user', {
-          PIN: pin,
+          pin,
           minting: !!unlockMinting,
           transactions: !!unlockTransactions,
         });
@@ -92,12 +97,23 @@ const ExtraSection = styled.div({
     return result;
   },
   onSubmitSuccess: async (result, dispatch, props) => {
+    props.setCurrentUser(props.values.username, result.genesis);
     props.reset();
-
+    props.removeModal(props.modalID);
     autoFetchCoreInfo();
   },
   // TODO: replace error handler
-  onSubmitFail: rpcErrorHandler(__('Error logging in')),
+  onSubmitFail: async (errors, dispatch, submitError, props) => {
+    const note = errors
+      ? Object.keys(errors).length == 1
+        ? errors[Object.keys(errors)[0]]
+        : __('Multiple Form Input Errors')
+      : submitError;
+    props.openErrorDialog({
+      message: __('Error Logging In User'),
+      note: note || 'An unknown error occurred',
+    });
+  },
 })
 class Login extends Component {
   /**
