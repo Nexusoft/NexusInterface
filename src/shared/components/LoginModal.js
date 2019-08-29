@@ -19,6 +19,7 @@ import {
   removeModal,
 } from 'actions/overlays';
 import { setCurrentUser } from 'actions/user';
+import { errorHandler } from 'utils/form';
 
 const Buttons = styled.div({
   marginTop: '1.5em',
@@ -103,17 +104,7 @@ const ExtraSection = styled.div({
     autoFetchCoreInfo();
   },
   // TODO: replace error handler
-  onSubmitFail: async (errors, dispatch, submitError, props) => {
-    const note = errors
-      ? Object.keys(errors).length == 1
-        ? errors[Object.keys(errors)[0]]
-        : __('Multiple Form Input Errors')
-      : submitError;
-    props.openErrorDialog({
-      message: __('Error Logging In User'),
-      note: note || 'An unknown error occurred',
-    });
-  },
+  onSubmitFail: errorHandler(__('Error logging in')),
 })
 class Login extends Component {
   /**

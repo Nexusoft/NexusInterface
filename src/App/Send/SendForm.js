@@ -21,7 +21,7 @@ import {
   openModal,
 } from 'actions/overlays';
 import Link from 'components/Link';
-import { rpcErrorHandler } from 'utils/form';
+import { errorHandler } from 'utils/form';
 import sendIcon from 'images/send.sprite.svg';
 
 // Internal Local
@@ -210,7 +210,7 @@ const mapDispatchToProps = {
       message: __('Transaction sent'),
     });
   },
-  onSubmitFail: rpcErrorHandler(__('Error sending NXS')),
+  onSubmitFail: errorHandler(__('Error sending NXS')),
 })
 class SendForm extends Component {
   /**

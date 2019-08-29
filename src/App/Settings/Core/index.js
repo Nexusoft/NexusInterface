@@ -17,7 +17,7 @@ import Button from 'components/Button';
 import TextField from 'components/TextField';
 import Switch from 'components/Switch';
 import { tempSettings } from 'lib/settings';
-import { rpcErrorHandler, resolveValue } from 'utils/form';
+import { errorHandler, resolveValue } from 'utils/form';
 import confirm from 'utils/promisified/confirm';
 import { isCoreConnected } from 'selectors';
 import { coreDataDir } from 'consts/paths';
@@ -127,7 +127,7 @@ const actionCreators = {
   onSubmitSuccess: (result, dispatch, props) => {
     props.showNotification(__('Core settings saved'), 'success');
   },
-  onSubmitFail: rpcErrorHandler('Error Saving Settings'),
+  onSubmitFail: errorHandler('Error Saving Settings'),
 })
 class SettingsCore extends Component {
   /**

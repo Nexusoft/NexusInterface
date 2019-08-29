@@ -14,7 +14,7 @@ import InputGroup from 'components/InputGroup';
 import { openErrorDialog, showNotification } from 'actions/overlays';
 import rpc from 'lib/rpc';
 import copyIcon from 'images/copy.sprite.svg';
-import { rpcErrorHandler } from 'utils/form';
+import { errorHandler } from 'utils/form';
 
 /**
  * View Private Keys for Address JSX
@@ -44,7 +44,7 @@ import { rpcErrorHandler } from 'utils/form';
   onSubmitSuccess: (result, dispatch, props) => {
     props.change('privateKey', result);
   },
-  onSubmitFail: rpcErrorHandler(__('Error getting private key')),
+  onSubmitFail: errorHandler(__('Error getting private key')),
 })
 class ViewPrivKeyForAddress extends Component {
   privKeyRef = React.createRef();

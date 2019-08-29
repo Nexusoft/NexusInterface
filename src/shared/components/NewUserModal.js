@@ -18,6 +18,7 @@ import {
   removeModal,
 } from 'actions/overlays';
 import { setCurrentUser } from 'actions/user';
+import { errorHandler } from 'utils/form';
 
 const Buttons = styled.div({
   marginTop: '1.5em',
@@ -118,17 +119,7 @@ const ExtraSection = styled.div({
     autoFetchCoreInfo();
     props.removeModal(props.modalID);
   },
-  onSubmitFail: async (errors, dispatch, submitError, props) => {
-    const note = errors
-      ? Object.keys(errors).length == 1
-        ? errors[Object.keys(errors)[0]]
-        : __('Multiple Form Input Errors')
-      : submitError;
-    props.openErrorDialog({
-      message: __('Error Creating User'),
-      note: note || 'An unknown error occurred',
-    });
-  },
+  onSubmitFail: errorHandler(__('Error creating user')),
 })
 class NewUserModal extends Component {
   /**

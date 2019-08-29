@@ -15,7 +15,7 @@ import {
   showNotification,
 } from 'actions/overlays';
 import rpc from 'lib/rpc';
-import { rpcErrorHandler, trimText } from 'utils/form';
+import { errorHandler, trimText } from 'utils/form';
 
 const ImportPrivKeyForm = styled.form({
   flex: 3,
@@ -70,7 +70,7 @@ const ImportPrivKeyForm = styled.form({
       });
     }
   },
-  onSubmitFail: rpcErrorHandler(__('Error importing private key')),
+  onSubmitFail: errorHandler(__('Error importing private key')),
 })
 class ImportPrivKey extends Component {
   /**

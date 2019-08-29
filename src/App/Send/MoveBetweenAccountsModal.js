@@ -17,7 +17,7 @@ import {
   removeModal,
 } from 'actions/overlays';
 import { loadMyAccounts } from 'actions/account';
-import { rpcErrorHandler } from 'utils/form';
+import { errorHandler } from 'utils/form';
 import {
   getAccountOptions,
   getRegisteredFieldNames,
@@ -146,7 +146,7 @@ const acctionCreators = {
       message: __('NXS moved successfully'),
     });
   },
-  onSubmitFail: rpcErrorHandler(__('Error moving NXS')),
+  onSubmitFail: errorHandler(__('Error moving NXS')),
 })
 class MoveBetweenAccountsForm extends Component {
   /**

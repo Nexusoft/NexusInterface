@@ -10,7 +10,7 @@ import Button from 'components/Button';
 import { showNotification } from 'actions/overlays';
 import rpc from 'lib/rpc';
 import { loadMyAccounts } from 'actions/account';
-import { rpcErrorHandler } from 'utils/form';
+import { errorHandler } from 'utils/form';
 
 const NewAddressFormComponent = styled.form({
   marginTop: '2em',
@@ -55,7 +55,7 @@ const Buttons = styled.div({
     props.finish();
     props.showNotification(__('New address has been created'), 'success');
   },
-  onSubmitFail: rpcErrorHandler(__('Error creating new address')),
+  onSubmitFail: errorHandler(__('Error creating new address')),
 })
 class NewAddressForm extends React.Component {
   /**

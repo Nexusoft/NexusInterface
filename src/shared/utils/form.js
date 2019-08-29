@@ -15,8 +15,8 @@ export function resolveValue(input) {
   return input;
 }
 
-export function rpcErrorHandler(message) {
-  return (errors, dispatch, submitError, ...more) => {
+export function errorHandler(message) {
+  return (errors, dispatch, submitError) => {
     // If errors object has some values it means the form validation failed
     // In that case, no need to open an error dialog
     if (!errors || !Object.keys(errors).length) {

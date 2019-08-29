@@ -16,7 +16,7 @@ import {
   openErrorDialog,
   openSuccessDialog,
 } from 'actions/overlays';
-import { rpcErrorHandler } from 'utils/form';
+import { errorHandler } from 'utils/form';
 import passwordInvalidChars from './passwordInvalidChars';
 
 const ChangePasswordComponent = styled.form({
@@ -72,7 +72,7 @@ const ChangePasswordComponent = styled.form({
       message: __('Password has been changed.'),
     });
   },
-  onSubmitFail: rpcErrorHandler(__('Error changing password')),
+  onSubmitFail: errorHandler(__('Error changing password')),
 })
 class ChangePassword extends Component {
   /**

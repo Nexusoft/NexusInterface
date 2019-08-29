@@ -13,7 +13,7 @@ import { openSuccessDialog } from 'actions/overlays';
 import rpc from 'lib/rpc';
 import { startCore } from 'actions/core';
 import { consts } from 'styles';
-import { rpcErrorHandler } from 'utils/form';
+import { errorHandler } from 'utils/form';
 import passwordInvalidChars from './passwordInvalidChars';
 
 const EncryptWalletForm = styled.form({
@@ -79,7 +79,7 @@ const Characters = styled.span({
       },
     });
   },
-  onSubmitFail: rpcErrorHandler(__('Error encrypting wallet')),
+  onSubmitFail: errorHandler(__('Error encrypting wallet')),
 })
 class EncryptWallet extends Component {
   /**

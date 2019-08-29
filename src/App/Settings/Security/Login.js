@@ -12,7 +12,7 @@ import TextField from 'components/TextField';
 import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
 import Switch from 'components/Switch';
-import { rpcErrorHandler } from 'utils/form';
+import { errorHandler } from 'utils/form';
 import { showNotification, openErrorDialog } from 'actions/overlays';
 
 const LoginFieldSet = styled(FieldSet)({
@@ -100,7 +100,7 @@ const Buttons = styled.div({
     props.showNotification(__('Logged in successfully'), 'success');
     autoFetchCoreInfo();
   },
-  onSubmitFail: rpcErrorHandler(__('Error logging in')),
+  onSubmitFail: errorHandler(__('Error logging in')),
 })
 class Login extends Component {
   /**
