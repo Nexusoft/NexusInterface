@@ -43,7 +43,7 @@ const ExtraSection = styled.div({
 )
 @reduxForm({
   form: 'login_tritium',
-  destroyOnUnmount: false,
+  destroyOnUnmount: true,
   initialValues: {
     username: '',
     password: '',

@@ -37,7 +37,7 @@ const ExtraSection = styled.div({
 )
 @reduxForm({
   form: 'new_user',
-  destroyOnUnmount: false,
+  destroyOnUnmount: true,
   initialValues: {
     username: '',
     password: '',
@@ -75,7 +75,7 @@ const ExtraSection = styled.div({
       errors.pin = __('PIN is required');
     } else {
       if (pin.length < 4) {
-        errors.pin = __('Pin must be at least 4 characters');
+        errors.pin = __('PIN must be at least 4 characters');
       }
     }
 
