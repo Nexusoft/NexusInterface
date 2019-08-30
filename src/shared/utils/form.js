@@ -15,18 +15,21 @@ export function resolveValue(input) {
   return input;
 }
 
+export function handleError(error, message = __('Error')) {
+  store.dispatch(
+    openErrorDialog({
+      message,
+      note: (error && error.message) || __('Unknown error'),
+    })
+  );
+}
+
 export function errorHandler(message) {
   return (errors, dispatch, submitError) => {
     // If errors object has some values it means the form validation failed
     // In that case, no need to open an error dialog
     if (!errors || !Object.keys(errors).length) {
-      store.dispatch(
-        openErrorDialog({
-          message,
-          note:
-            (submitError && submitError.message) || 'An unknown error occurred',
-        })
-      );
+      handleError(submitError, message);
     }
   };
 }

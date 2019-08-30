@@ -5,17 +5,20 @@ import styled from '@emotion/styled';
 import { arrowStyles } from 'components/Arrow';
 import LoginModal from 'components/LoginModal';
 import NewUserModal from 'components/NewUserModal';
+import PinDialog from 'components/PinDialog';
 import { isLoggedIn } from 'selectors';
 import { openModal } from 'actions/overlays';
+import { getUserStatus } from 'actions/core';
 import { timing, animations, consts } from 'styles';
 import { apiPost } from 'lib/tritiumApi';
 import { logOutUser } from 'actions/user';
+import { handleError } from 'utils/form';
+import confirm from 'utils/promisified/confirm';
 
 const UserDropdownComponent = styled.div(({ theme }) => ({
   position: 'fixed',
   background: theme.background,
   color: theme.foreground,
-  maxWidth: 250,
   width: 'max-content',
   padding: '5px 0',
   fontSize: 15,
@@ -67,36 +70,77 @@ const Separator = styled.div(({ theme }) => ({
   borderBottom: `1px solid ${theme.mixer(0.125)}`,
 }));
 
-const LoggedInDropdown = connect(
+@connect(
   state => ({
     currentUser: state.core.userStatus && state.core.userStatus.username,
     unlocked: state.core.userStatus && state.core.userStatus.unlocked,
   }),
-  { logOutUser }
-)(({ currentUser, closeDropdown, logOutUser, unlocked }) => (
-  <>
-    <CurrentUser>
-      <Username>{currentUser}</Username>
-    </CurrentUser>
-    <Separator />
-    <MenuItem>{__('My Addresses')}</MenuItem>
-    <Separator />
-    {unlocked && unlocked.minting ? (
-      <MenuItem>{__('Lock for staking & mining')}</MenuItem>
-    ) : (
-      <MenuItem>{__('Unlock for staking & mining')}</MenuItem>
-    )}
-    <MenuItem
-      onClick={async () => {
-        closeDropdown();
-        await apiPost('users/logout/user');
-        logOutUser();
-      }}
-    >
-      {__('Log out')}
-    </MenuItem>
-  </>
-));
+  { logOutUser, getUserStatus, openModal }
+)
+class LoggedInDropdown extends React.Component {
+  unlockMinting = () => {
+    this.props.closeDropdown();
+    this.props.openModal(PinDialog, {
+      confirmLabel: __('Unlock'),
+      onConfirm: async pin => {
+        try {
+          await apiPost('users/unlock/user', { pin, minting: true });
+          this.props.getUserStatus();
+        } catch (err) {
+          handleError(err);
+        }
+      },
+    });
+  };
+
+  lockMinting = async () => {
+    this.props.closeDropdown();
+    const confirmed = await confirm({
+      question: __('Lock wallet for staking & mining?'),
+      note: __("You won't be able to stake or solo mine to this wallet"),
+    });
+    if (confirmed) {
+      try {
+        await apiPost('users/unlock/user', { minting: true });
+        this.props.getUserStatus();
+      } catch (err) {
+        handleError(err);
+      }
+    }
+  };
+
+  render() {
+    const { currentUser, closeDropdown, logOutUser, unlocked } = this.props;
+    return (
+      <>
+        <CurrentUser>
+          <Username>{currentUser}</Username>
+        </CurrentUser>
+        <Separator />
+        <MenuItem>{__('My Addresses')}</MenuItem>
+        <Separator />
+        {unlocked && unlocked.minting ? (
+          <MenuItem onClick={this.lockMinting}>
+            {__('Lock for staking & mining')}
+          </MenuItem>
+        ) : (
+          <MenuItem onClick={this.unlockMinting}>
+            {__('Unlock for staking & mining')}
+          </MenuItem>
+        )}
+        <MenuItem
+          onClick={async () => {
+            closeDropdown();
+            await apiPost('users/logout/user');
+            logOutUser();
+          }}
+        >
+          {__('Log out')}
+        </MenuItem>
+      </>
+    );
+  }
+}
 
 const NotLoggedInDropdown = connect(
   null,
