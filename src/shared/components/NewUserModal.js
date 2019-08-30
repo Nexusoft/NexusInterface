@@ -12,7 +12,7 @@ import Link from 'components/Link';
 import LoginModal from 'components/LoginModal';
 import { showNotification, openModal, removeModal } from 'actions/overlays';
 import { getUserStatus } from 'actions/core';
-import { errorHandler } from 'utils/form';
+import { errorHandler, numericOnly } from 'utils/form';
 
 const Buttons = styled.div({
   marginTop: '1.5em',
@@ -167,7 +167,8 @@ class NewUserModal extends Component {
                 component={TextField.RF}
                 name="pin"
                 type="password"
-                placeholder={__('Enter your PIN')}
+                normalize={numericOnly}
+                placeholder={__('Enter your PIN number')}
               />
             </FormField>
 
@@ -176,7 +177,8 @@ class NewUserModal extends Component {
                 component={TextField.RF}
                 name="pinConfirm"
                 type="password"
-                placeholder={__('Re-enter your PIN')}
+                normalize={numericOnly}
+                placeholder={__('Re-enter your PIN number')}
               />
             </FormField>
 

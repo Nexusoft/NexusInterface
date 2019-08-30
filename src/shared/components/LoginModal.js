@@ -13,7 +13,7 @@ import Link from 'components/Link';
 import NewUserModal from 'components/NewUserModal';
 import { showNotification, openModal, removeModal } from 'actions/overlays';
 import { getUserStatus } from 'actions/core';
-import { errorHandler } from 'utils/form';
+import { errorHandler, numericOnly } from 'utils/form';
 
 const Buttons = styled.div({
   marginTop: '1.5em',
@@ -148,7 +148,8 @@ class Login extends Component {
                 component={TextField.RF}
                 name="pin"
                 type="password"
-                placeholder={__('Pin')}
+                normalize={numericOnly}
+                placeholder={__('Enter your PIN number')}
               />
             </FormField>
 
