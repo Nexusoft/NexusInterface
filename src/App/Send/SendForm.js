@@ -189,8 +189,8 @@ const mapDispatchToProps = {
         minConfirmations,
         message || null,
         null,
-        password || null,
       ];
+      if (password) params.push(password);
       console.log(password);
       console.log(params);
       // if (message) params.push(message);

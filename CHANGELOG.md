@@ -12,7 +12,7 @@
 
 #### Fixes
 
-- none
+- Fixed a issue where a send would not send if your wallet was not encrypted
 
 # 1.2.2 (2019.8.23)
 
