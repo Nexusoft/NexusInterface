@@ -122,7 +122,7 @@ const NotLoggedInDropdown = connect(
   </>
 ));
 
-const UserDropdown = (loggedIn, closeDropdown, ...rest) => (
+const UserDropdown = ({ loggedIn, closeDropdown, ...rest }) => (
   <UserDropdownComponent {...rest}>
     {loggedIn ? (
       <LoggedInDropdown closeDropdown={closeDropdown} />
