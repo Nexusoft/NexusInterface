@@ -15,7 +15,7 @@ const UserDropdownComponent = styled.div(({ theme }) => ({
   position: 'fixed',
   background: theme.background,
   color: theme.foreground,
-  maxWidth: 220,
+  maxWidth: 250,
   width: 'max-content',
   padding: '5px 0',
   fontSize: 15,
@@ -37,10 +37,12 @@ const UserDropdownComponent = styled.div(({ theme }) => ({
   },
 }));
 
-const CurrentUser = styled.div(({ theme }) => ({
+const CurrentUser = styled.div({
   padding: '5px 15px 10px',
   textAlign: 'center',
-  // borderBottom: `1px solid ${theme.mixer(0.125)}`,
+});
+
+const Username = styled.div(({ theme }) => ({
   color: theme.primary,
   fontWeight: 'bold',
 }));
@@ -65,66 +67,73 @@ const Separator = styled.div(({ theme }) => ({
   borderBottom: `1px solid ${theme.mixer(0.125)}`,
 }));
 
-const UserDropdown = ({
-  loggedIn,
-  currentUser,
-  openModal,
-  closeDropdown,
-  logOutUser,
-  ...rest
-}) => (
-  <UserDropdownComponent {...rest}>
-    {loggedIn && (
-      <>
-        <CurrentUser>{currentUser}</CurrentUser>
-        <Separator />
-      </>
-    )}
-
-    {loggedIn ? (
-      <>
-        <MenuItem>{__('My Addresses')}</MenuItem>
-        <MenuItem
-          onClick={async () => {
-            closeDropdown();
-            await apiPost('users/logout/user');
-            logOutUser();
-          }}
-        >
-          {__('Log out')}
-        </MenuItem>
-      </>
+const LoggedInDropdown = connect(
+  state => ({
+    currentUser: state.core.userStatus && state.core.userStatus.username,
+    unlocked: state.core.userStatus && state.core.userStatus.unlocked,
+  }),
+  { logOutUser }
+)(({ currentUser, closeDropdown, logOutUser, unlocked }) => (
+  <>
+    <CurrentUser>
+      <Username>{currentUser}</Username>
+    </CurrentUser>
+    <Separator />
+    <MenuItem>{__('My Addresses')}</MenuItem>
+    <Separator />
+    {unlocked && unlocked.minting ? (
+      <MenuItem>{__('Lock for staking & mining')}</MenuItem>
     ) : (
-      <>
-        <MenuItem
-          onClick={() => {
-            openModal(LoginModal);
-            closeDropdown();
-          }}
-        >
-          {__('Log in')}
-        </MenuItem>
-        <MenuItem
-          onClick={() => {
-            openModal(NewUserModal);
-            closeDropdown();
-          }}
-        >
-          {__('Create new user')}
-        </MenuItem>
-      </>
+      <MenuItem>{__('Unlock for staking & mining')}</MenuItem>
+    )}
+    <MenuItem
+      onClick={async () => {
+        closeDropdown();
+        await apiPost('users/logout/user');
+        logOutUser();
+      }}
+    >
+      {__('Log out')}
+    </MenuItem>
+  </>
+));
+
+const NotLoggedInDropdown = connect(
+  null,
+  { openModal }
+)(({ openModal, closeDropdown }) => (
+  <>
+    <MenuItem
+      onClick={() => {
+        openModal(LoginModal);
+        closeDropdown();
+      }}
+    >
+      {__('Log in')}
+    </MenuItem>
+    <MenuItem
+      onClick={() => {
+        openModal(NewUserModal);
+        closeDropdown();
+      }}
+    >
+      {__('Create new user')}
+    </MenuItem>
+  </>
+));
+
+const UserDropdown = (loggedIn, closeDropdown, ...rest) => (
+  <UserDropdownComponent {...rest}>
+    {loggedIn ? (
+      <LoggedInDropdown closeDropdown={closeDropdown} />
+    ) : (
+      <NotLoggedInDropdown closeDropdown={closeDropdown} />
     )}
   </UserDropdownComponent>
 );
 
 const mapStateToProps = state => ({
   loggedIn: isLoggedIn(state),
-  currentUser: state.core.userStatus && state.core.userStatus.username,
 });
 
-const actionCreators = { openModal, logOutUser };
-
-export default connect(
-  mapStateToProps,
-  actionCreators
-)(UserDropdown);
+export default connect(mapStateToProps)(UserDropdown);
