@@ -29,6 +29,7 @@ const switchLegacyMode = {
     });
     if (confirmed) {
       store.dispatch(updateSettings({ legacyMode: true }));
+      location.reload();
     }
   },
 };
@@ -37,6 +38,7 @@ const switchTritiumMode = {
   label: __('Switch to Tritium Mode'),
   click: () => {
     store.dispatch(updateSettings({ legacyMode: false }));
+    location.reload();
   },
 };
 
