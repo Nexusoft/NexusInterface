@@ -3,6 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 // Internal
+import { legacyMode } from 'consts/misc';
 import { isCoreConnected, isLoggedIn } from 'selectors';
 
 /**
@@ -35,7 +36,9 @@ class WalletStatus extends React.Component {
           : __('Nexus Core is stopped')}
       </span>
     ) : (
-      !loggedIn && <span className="dim">{__("You're not logged in")}. </span>
+      legacyMode && !loggedIn && (
+        <span className="dim">{__("You're not logged in")}. </span>
+      )
     );
   }
 }
