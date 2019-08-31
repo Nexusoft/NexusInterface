@@ -26,6 +26,7 @@ export async function autoFetchCoreInfo() {
     // the autoFetching is already running
     clearTimeout(timerId);
     await store.dispatch(getInfo());
+    await store.dispatch(loadMyAccounts());
     connected = true;
     waitTime = maxTime;
   } catch (err) {
@@ -64,6 +65,7 @@ export function initializeCoreInfo() {
 
   observeStore(isCoreConnected, connected => {
     if (connected) {
+      console.error('LOAD ACCOUNT');
       store.dispatch(loadMyAccounts());
     }
   });

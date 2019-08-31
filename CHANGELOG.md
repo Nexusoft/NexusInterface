@@ -14,6 +14,7 @@
 
 - Fixed a issue where a send would not send if your wallet was not encrypted
 - Fixed issue with send all not taking into account network fee
+- Send Page now properly refreshes after your balance has been confirmed after a transaction
 
 # 1.2.2 (2019.8.23)
 
