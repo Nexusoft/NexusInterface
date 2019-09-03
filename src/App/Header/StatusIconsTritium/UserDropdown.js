@@ -86,7 +86,7 @@ class LoggedInDropdown extends React.Component {
         try {
           const result = await apiPost('users/unlock/user', {
             pin,
-            minting: 'true',
+            minting: true,
           });
           this.props.setUnlockedStatus(result.unlocked);
           this.props.showNotification('Unlocked for staking & mining');
