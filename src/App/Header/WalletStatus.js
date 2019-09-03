@@ -36,7 +36,7 @@ class WalletStatus extends React.Component {
           : __('Nexus Core is stopped')}
       </span>
     ) : (
-      legacyMode && !loggedIn && (
+      !legacyMode && !loggedIn && (
         <span className="dim">{__("You're not logged in")}. </span>
       )
     );
