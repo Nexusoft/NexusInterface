@@ -30,7 +30,7 @@ const formOptions = {
     if (props.onConfirm) {
       props.onConfirm(pin);
     }
-    props.removeModal(props.modalID);
+    props.removeModal(props.modalId);
   },
 };
 
