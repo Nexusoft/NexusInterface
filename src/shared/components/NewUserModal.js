@@ -32,7 +32,7 @@ const ExtraSection = styled.div({
  * @extends {Component}
  */
 @connect(
-  state => ({ modalID: state.ui.modals[0].id }),
+  null,
   { showNotification, openModal, removeModal, getUserStatus }
 )
 @reduxForm({
@@ -89,7 +89,7 @@ const ExtraSection = styled.div({
     const result = await apiPost('users/create/user', {
       username,
       password,
-      pin: pin,
+      pin,
     });
     props.showNotification(
       __('New user %{username} has been created', { username }),
@@ -100,7 +100,7 @@ const ExtraSection = styled.div({
       await apiPost('users/login/user', {
         username,
         password,
-        pin: pin,
+        pin,
       });
     } catch (err) {
       console.error(err);
@@ -110,7 +110,7 @@ const ExtraSection = styled.div({
   onSubmitSuccess: async (result, dispatch, props) => {
     props.getUserStatus();
     props.reset();
-    props.removeModal(props.modalID);
+    props.removeModal(props.modalId);
   },
   onSubmitFail: errorHandler(__('Error creating user')),
 })

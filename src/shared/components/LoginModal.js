@@ -27,13 +27,13 @@ const ExtraSection = styled.div({
 });
 
 /**
- *  Login Form
+ * Login Form
  *
  * @class Login
  * @extends {Component}
  */
 @connect(
-  state => ({ modalID: state.ui.modals[0].id }),
+  null,
   {
     showNotification,
     openModal,
@@ -99,7 +99,7 @@ const ExtraSection = styled.div({
   onSubmitSuccess: async (result, dispatch, props) => {
     props.getUserStatus();
     props.reset();
-    props.removeModal(props.modalID);
+    props.removeModal(props.modalId);
   },
   // TODO: replace error handler
   onSubmitFail: errorHandler(__('Error logging in')),

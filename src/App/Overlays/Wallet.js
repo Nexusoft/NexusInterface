@@ -20,7 +20,7 @@ const Modals = ({ modals }) => (
   <>
     {modals.map(({ id, component: Comp, props }) => (
       <ModalContext.Provider key={id} value={id}>
-        <Comp {...props} />
+        <Comp {...props} modalId={id} />
       </ModalContext.Provider>
     ))}
   </>
@@ -30,7 +30,7 @@ const BackgroundTasks = ({ tasks }) => (
   <SnackBars>
     {tasks.map(({ id, component: Comp, props }, i) => (
       <TaskContext.Provider key={id} value={id}>
-        <Comp index={i} {...props} />
+        <Comp index={i} {...props} taskId={id} />
       </TaskContext.Provider>
     ))}
   </SnackBars>
