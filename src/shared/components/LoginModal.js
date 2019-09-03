@@ -87,8 +87,8 @@ const ExtraSection = styled.div({
       try {
         await apiPost('users/unlock/user', {
           pin,
-          minting: !!unlockMinting,
-          transactions: !!unlockTransactions,
+          minting: String(!!unlockMinting),
+          transactions: String(!!unlockTransactions),
         });
       } catch (err) {
         console.error(err);
