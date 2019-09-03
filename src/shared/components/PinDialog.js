@@ -27,9 +27,7 @@ const formOptions = {
     return errors;
   },
   onSubmit: ({ pin }, dispatch, props) => {
-    console.log('onSubmit');
     if (props.onConfirm) {
-      console.log('pin', pin);
       props.onConfirm(pin);
     }
     props.removeModal(props.modalID);

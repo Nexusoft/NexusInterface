@@ -5,11 +5,6 @@ export const setCurrentUser = (username, genesis) => ({
   payload: { username, genesis },
 });
 
-export const setCurrentUserGenesis = genesis => ({
-  type: TYPE.SET_CURRENT_USER_GENESIS,
-  payload: genesis,
-});
-
 export const logOutUser = () => ({
   type: TYPE.CLEAR_USER_STATUS,
   payload: null,
