@@ -7,11 +7,11 @@ import LoginModal from 'components/LoginModal';
 import NewUserModal from 'components/NewUserModal';
 import PinDialog from 'components/PinDialog';
 import { isLoggedIn } from 'selectors';
-import { openModal } from 'actions/overlays';
+import { openModal, showNotification } from 'actions/overlays';
 import { getUserStatus } from 'actions/core';
 import { timing, animations, consts } from 'styles';
 import { apiPost } from 'lib/tritiumApi';
-import { logOutUser } from 'actions/user';
+import { logOutUser, setUnlockedStatus } from 'actions/user';
 import { handleError } from 'utils/form';
 import confirm from 'utils/promisified/confirm';
 
@@ -75,7 +75,7 @@ const Separator = styled.div(({ theme }) => ({
     currentUser: state.core.userStatus && state.core.userStatus.username,
     unlocked: state.core.userStatus && state.core.userStatus.unlocked,
   }),
-  { logOutUser, getUserStatus, openModal }
+  { logOutUser, setUnlockedStatus, getUserStatus, openModal, showNotification }
 )
 class LoggedInDropdown extends React.Component {
   unlockMinting = () => {
@@ -84,8 +84,12 @@ class LoggedInDropdown extends React.Component {
       confirmLabel: __('Unlock'),
       onConfirm: async pin => {
         try {
-          await apiPost('users/unlock/user', { pin, minting: true });
-          this.props.getUserStatus();
+          const result = await apiPost('users/unlock/user', {
+            pin,
+            minting: 'true',
+          });
+          this.props.setUnlockedStatus(result.unlocked);
+          this.props.showNotification('Unlocked for staking & mining');
         } catch (err) {
           handleError(err);
         }
@@ -101,7 +105,7 @@ class LoggedInDropdown extends React.Component {
     });
     if (confirmed) {
       try {
-        await apiPost('users/unlock/user', { minting: true });
+        await apiPost('users/lock/user');
         this.props.getUserStatus();
       } catch (err) {
         handleError(err);
@@ -109,8 +113,15 @@ class LoggedInDropdown extends React.Component {
     }
   };
 
+  logout = async () => {
+    this.props.closeDropdown();
+    await apiPost('users/logout/user');
+    this.props.logOutUser();
+    this.props.showNotification('Logged out');
+  };
+
   render() {
-    const { currentUser, closeDropdown, logOutUser, unlocked } = this.props;
+    const { currentUser, unlocked } = this.props;
     return (
       <>
         <CurrentUser>
@@ -128,15 +139,7 @@ class LoggedInDropdown extends React.Component {
             {__('Unlock for staking & mining')}
           </MenuItem>
         )}
-        <MenuItem
-          onClick={async () => {
-            closeDropdown();
-            await apiPost('users/logout/user');
-            logOutUser();
-          }}
-        >
-          {__('Log out')}
-        </MenuItem>
+        <MenuItem onClick={this.logout}>{__('Log out')}</MenuItem>
       </>
     );
   }
