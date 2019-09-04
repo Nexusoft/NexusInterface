@@ -54,6 +54,7 @@ export const defaultSettings = {
 
   // Modules
   disabledModules: [],
+  allowSymLink: false,
 
   // Hidden settings
   acceptedAgreement: false,
@@ -65,7 +66,7 @@ export const defaultSettings = {
   windowX: undefined,
   windowY: undefined,
   forkBlocks: 0,
-  walletClean: false
+  walletClean: false,
 };
 
 export let tempSettings = null;

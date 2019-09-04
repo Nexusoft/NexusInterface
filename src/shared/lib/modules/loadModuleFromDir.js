@@ -110,7 +110,7 @@ function containsSymLink(dirPath) {
  */
 export async function loadModuleFromDir(
   dirPath,
-  { devMode, verifyModuleSource }
+  { devMode, verifyModuleSource, allowSymLink }
 ) {
   try {
     const nxsPackagePath = join(dirPath, 'nxs_package.json');
@@ -150,7 +150,7 @@ export async function loadModuleFromDir(
 
     // Ensure no symbolic links, both files and folders
     // Need to scan the whole folder because symbolic link can link to a directory
-    if (containsSymLink(dirPath)) {
+    if ((!devMode || !allowSymLink) && containsSymLink(dirPath)) {
       console.error(`Module ${module.name} contains some symbolic link!`);
       return null;
     }

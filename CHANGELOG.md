@@ -8,7 +8,7 @@
 
 #### Adjustments
 
-- none
+- New Developer setting to allow for SymLinks in a modules directory
 
 #### Fixes
 
