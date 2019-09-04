@@ -32,7 +32,7 @@ const ExtraSection = styled.div({
  * @extends {Component}
  */
 @connect(
-  null,
+  ({ enableMining, enableStaking }) => ({ enableMining, enableStaking }),
   { showNotification, openModal, removeModal, getUserStatus }
 )
 @reduxForm({
@@ -91,26 +91,30 @@ const ExtraSection = styled.div({
       password,
       pin,
     });
+  },
+  onSubmitSuccess: async (result, dispatch, props) => {
+    props.removeModal(props.modalId);
+    props.reset();
     props.showNotification(
-      __('New user %{username} has been created', { username }),
+      __('New user %{username} has been created', {
+        username: props.values.username,
+      }),
       'success'
     );
 
-    try {
-      await apiPost('users/login/user', {
-        username,
-        password,
-        pin,
+    await apiPost('users/login/user', {
+      username,
+      password,
+      pin,
+    });
+    if (props.enableMining || props.enableStaking) {
+      await apiPost('users/unlock/user', {
+        pin: props.values.pin,
+        mining: !!props.enableMining,
+        staking: !!props.enableStaking,
       });
-    } catch (err) {
-      console.error(err);
     }
-    return result;
-  },
-  onSubmitSuccess: async (result, dispatch, props) => {
     props.getUserStatus();
-    props.reset();
-    props.removeModal(props.modalId);
   },
   onSubmitFail: errorHandler(__('Error creating user')),
 })

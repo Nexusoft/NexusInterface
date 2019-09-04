@@ -138,8 +138,6 @@ class SettingsCore extends Component {
   constructor(props) {
     super(props);
     props.switchSettingsTab('Core');
-    this.updateMining = this.updateMining.bind(this);
-    this.updateStaking = this.updateStaking.bind(this);
     this.state = this.props.settings;
     this.needsRestart = false;
   }
@@ -243,52 +241,6 @@ class SettingsCore extends Component {
       callbackYes: yesCallback,
       callbackNo: noCallback,
     });
-  }
-
-  /**
-   * Update the staking flag
-   *
-   * @param {*} input
-   * @memberof SettingsCore
-   */
-  updateStaking(input) {
-    let value = resolveValue(input);
-    this.askForCoreRestart(
-      async () => {
-        this.props.updateSettings({
-          enableStaking: resolveValue(value),
-        });
-        this.restartCore();
-      },
-      () => {
-        this.props.updateSettings({
-          enableStaking: resolveValue(value),
-        });
-      }
-    );
-  }
-
-  /**
-   * Update the mining flag
-   *
-   * @param {*} input
-   * @memberof SettingsCore
-   */
-  updateMining(input) {
-    let value = resolveValue(input);
-    this.askForCoreRestart(
-      async () => {
-        this.props.updateSettings({
-          enableMining: resolveValue(value),
-        });
-        this.restartCore();
-      },
-      () => {
-        this.props.updateSettings({
-          enableMining: resolveValue(value),
-        });
-      }
-    );
   }
 
   /**
