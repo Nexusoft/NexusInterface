@@ -14,7 +14,7 @@
 
 - Fixed a issue where a send would not send if your wallet was not encrypted
 - Fixed issue with send all not taking into account network fee
-- Send Page now properly refreshes after your balance has been confirmed after a transaction
+- Send Page / My Addresses now properly refreshes after your balance has been confirmed after a transaction
 - Fixed an error in the terminal console which would not return the correct error message
 
 # 1.2.2 (2019.8.23)
