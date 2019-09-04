@@ -14,21 +14,46 @@ const XMark = styled(Dialog.Icon)(({ theme }) => ({
   filter: `drop-shadow(0 0 5px ${color.fade(theme.danger, 0.5)})`,
 }));
 
-const ErrorDialog = ({ message, note, ...rest }) => (
-  <Dialog {...rest}>
-    {closeModal => (
-      <>
+class ErrorDialog extends React.Component {
+  buttonRef = React.createRef();
+
+  componentDidMount() {
+    if (this.buttonRef.current) {
+      this.buttonRef.current.focus();
+    }
+  }
+
+  handleKeyDown = e => {
+    if (e.key === 'Escape') {
+      this.closeModal();
+    }
+  };
+
+  render() {
+    const { message, note, ...rest } = this.props;
+    return (
+      <Dialog
+        assignClose={closeModal => {
+          this.closeModal = closeModal;
+        }}
+        {...rest}
+      >
         <Modal.Body>
           <XMark>✕</XMark>
           <Dialog.Message>{message}</Dialog.Message>
           {!!note && <Dialog.Note>{note}</Dialog.Note>}
         </Modal.Body>
-        <Dialog.Button skin="filled-danger" onClick={closeModal}>
+        <Dialog.Button
+          ref={this.buttonRef}
+          skin="filled-danger"
+          onClick={() => this.closeModal()}
+          onKeyDown={this.handleKeyDown}
+        >
           {__('Dismiss')}
         </Dialog.Button>
-      </>
-    )}
-  </Dialog>
-);
+      </Dialog>
+    );
+  }
+}
 
 export default ErrorDialog;

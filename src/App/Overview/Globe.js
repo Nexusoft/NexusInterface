@@ -204,10 +204,11 @@ export default class Globe extends Component {
   componentWillUnmount() {
     this.stop();
     window.removeEventListener('resize', this.onWindowResize, false);
-    this.controls.dispose();
+
     if (this.threeRootElement.children.length > 0) {
       this.threeRootElement.removeChild(this.renderer.domElement);
     }
+    if (this.controls) this.controls.dispose();
   }
 
   /**
@@ -218,10 +219,11 @@ export default class Globe extends Component {
    */
   async pointRegister() {
     const peerInfo = await rpc('getpeerinfo', []);
+    if (!peerInfo) return;
     if (peerInfo.length > MaxDisplayPoints) {
       peerInfo.length = MaxDisplayPoints;
     }
-    if (!peerInfo) return;
+
     // take the peerInfo look up the Geo Data in the maxmind DB
     // and if there are any points that exist and match coords
     // update the registery entry data
