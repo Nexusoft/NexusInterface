@@ -8,7 +8,6 @@ import Modal from 'components/Modal';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import Button from 'components/Button';
-import Switch from 'components/Switch';
 import Link from 'components/Link';
 import NewUserModal from 'components/NewUserModal';
 import { showNotification, openModal, removeModal } from 'actions/overlays';
@@ -16,7 +15,7 @@ import { getUserStatus } from 'actions/core';
 import { errorHandler, numericOnly } from 'utils/form';
 
 const Buttons = styled.div({
-  marginTop: '1.5em',
+  marginTop: '2em',
 });
 
 const ExtraSection = styled.div({
@@ -33,7 +32,10 @@ const ExtraSection = styled.div({
  * @extends {Component}
  */
 @connect(
-  null,
+  ({ settings: { enableMining, enableStaking } }) => ({
+    enableMining,
+    enableStaking,
+  }),
   {
     showNotification,
     openModal,
@@ -48,8 +50,6 @@ const ExtraSection = styled.div({
     username: '',
     password: '',
     pin: '',
-    unlockMinting: false,
-    unlockTransactions: false,
   },
   validate: ({ username, password, pin }, props) => {
     const errors = {};
@@ -67,39 +67,28 @@ const ExtraSection = styled.div({
 
     return errors;
   },
-  onSubmit: async (
-    { username, password, pin, unlockMinting, unlockTransactions },
-    dispatch,
-    props
-  ) => {
-    const result = await apiPost('users/login/user', {
+  onSubmit: ({ username, password, pin }) =>
+    apiPost('users/login/user', {
       username,
       password,
       pin,
-    });
-
+    }),
+  onSubmitSuccess: async (result, dispatch, props) => {
+    props.removeModal(props.modalId);
+    props.reset();
     props.showNotification(
-      __('Logged in as %{username}', { username }),
+      __('Logged in as %{username}', { username: props.values.username }),
       'success'
     );
 
-    if (unlockMinting || unlockTransactions) {
-      try {
-        await apiPost('users/unlock/user', {
-          pin,
-          minting: !!unlockMinting,
-          transactions: !!unlockTransactions,
-        });
-      } catch (err) {
-        console.error(err);
-      }
+    if (props.enableMining || props.enableStaking) {
+      await apiPost('users/unlock/user', {
+        pin: props.values.pin,
+        mining: !!props.enableMining,
+        staking: !!props.enableStaking,
+      });
     }
-    return result;
-  },
-  onSubmitSuccess: async (result, dispatch, props) => {
     props.getUserStatus();
-    props.reset();
-    props.removeModal(props.modalId);
   },
   // TODO: replace error handler
   onSubmitFail: errorHandler(__('Error logging in')),
@@ -151,23 +140,6 @@ class Login extends Component {
                 normalize={numericOnly}
                 placeholder={__('Enter your PIN number')}
               />
-            </FormField>
-
-            <FormField
-              inline
-              connectLabel
-              label={__('Unlock for staking & mining')}
-              style={{ marginTop: '1.5em' }}
-            >
-              <Field component={Switch.RF} name="unlockMinting" />
-            </FormField>
-
-            <FormField
-              inline
-              connectLabel
-              label={__('Unlock for sending transactions')}
-            >
-              <Field component={Switch.RF} name="unlockTransactions" />
             </FormField>
 
             <Buttons>
