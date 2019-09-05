@@ -2,12 +2,14 @@ import store, { observeStore } from 'store';
 import rpc from 'lib/rpc';
 import { isCoreConnected } from 'selectors';
 import { loadMyAccounts } from 'actions/account';
-import { showNotification } from 'actions/overlays';
+import { showNotification, openModal } from 'actions/overlays';
 import { bootstrap } from 'actions/bootstrap';
 import { updateBlockDate } from 'actions/setupApp';
 import { getInfo } from 'actions/core';
 import showDesktopNotif from 'utils/showDesktopNotif';
 import { showEncryptionWarningModal } from 'actions/setupApp';
+import LoginModal from 'components/LoginModal';
+import { legacyMode } from 'consts/misc';
 
 const incStep = 1000;
 const maxTime = 10000;
@@ -65,6 +67,10 @@ export function initializeCoreInfo() {
   observeStore(isCoreConnected, connected => {
     if (connected) {
       store.dispatch(loadMyAccounts());
+
+      if (!legacyMode) {
+        store.dispatch(openModal(LoginModal));
+      }
     }
   });
 
