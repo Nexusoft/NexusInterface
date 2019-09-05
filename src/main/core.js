@@ -153,6 +153,9 @@ class Core {
       `-datadir=${conf.dataDir}`,
       `-rpcport=${conf.port}`,
       `-verbose=${conf.verbose}`,
+      '-testnet=2525',
+      `-private=1`,
+      `-generate=password`,
       // //
       // '-testnet',
       // '-manager=false',

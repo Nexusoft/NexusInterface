@@ -18,6 +18,7 @@ import core from './core';
 import updater from './updater';
 import webview from './webview';
 import bootstrap from './bootstrap';
+import myTritiumAccounts from './myTritiumAccounts';
 
 export default function createRootReducer(history) {
   const routerReducer = connectRouter(history);
@@ -32,6 +33,7 @@ export default function createRootReducer(history) {
       common,
       addressBook,
       myAccounts,
+      myTritiumAccounts,
       settings,
       theme,
       ui,

@@ -1,4 +1,5 @@
 import rpc from 'lib/rpc';
+import { apiPost } from 'lib/tritiumApi';
 import * as TYPE from 'consts/actionTypes';
 
 export const loadMyAccounts = () => async dispatch => {
@@ -60,4 +61,25 @@ export const loadMyAccounts = () => async dispatch => {
   });
 
   dispatch({ type: TYPE.MY_ACCOUNTS_LIST, payload: accountList });
+};
+
+export const updateAccountBalances = () => async dispatch => {
+  const accList = await rpc('listaccounts', []);
+  dispatch({ type: TYPE.UPDATE_MY_ACCOUNTS, payload: accList });
+};
+
+//////////////////////
+// TRITIUM
+//////////////////////
+export const LoadTritiumAccounts = () => async dispatch => {
+  const accList = await apiPost('users/list/accounts', { username: 'test' });
+
+  const defaultAccount = accList.splice(
+    accList.findIndex(e => e.name === 'default'),
+    1
+  );
+  //Move default account to the top
+  accList.unshift(defaultAccount[0]);
+  console.log(accList);
+  dispatch({ type: TYPE.MY_TRITIUM_ACCOUNTS, payload: accList });
 };
