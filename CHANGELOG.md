@@ -1,4 +1,4 @@
-# 1.2.3 (2019.8.XX)
+# 1.2.3 (2019.9.5)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v1.2.3)
 
