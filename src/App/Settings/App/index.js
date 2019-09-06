@@ -344,6 +344,19 @@ class SettingsApp extends Component {
           <SettingsField
             indent={1}
             connectLabel
+            label={__('Allow SymLink')}
+            subLabel={__(
+              'Allow the presence of SymLinks in the module directory'
+            )}
+          >
+            <Switch
+              checked={settings.allowSymLink}
+              onChange={this.updateHandlers('allowSymLink')}
+            />
+          </SettingsField>
+          <SettingsField
+            indent={1}
+            connectLabel
             label={__('Fake Test Transactions')}
             subLabel={__('Display Test Transactions on the Transactions page')}
           >

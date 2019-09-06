@@ -15,6 +15,7 @@ import Account from './Account';
 import NewAddressForm from './NewAddressForm';
 import Tooltip from 'components/Tooltip';
 import { showNotification } from 'actions/overlays';
+import { loadMyAccounts, updateAccountBalances } from 'actions/account';
 import rpc from 'lib/rpc';
 
 const MyAddressesModalComponent = styled(Modal)({
@@ -44,8 +45,9 @@ const Buttons = styled.div({
   state => ({
     myAccounts: state.myAccounts,
     locale: state.settings.locale,
+    blockCount: state.core.info.blocks,
   }),
-  { showNotification }
+  { showNotification, loadMyAccounts, updateAccountBalances }
 )
 class MyAddressesModal extends React.Component {
   state = {
@@ -53,6 +55,15 @@ class MyAddressesModal extends React.Component {
     creatingAddress: false,
   };
 
+  componentDidMount() {
+    this.props.loadMyAccounts();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.blockCount !== this.props.blockCount) {
+      this.props.updateAccountBalances();
+    }
+  }
   /**
    * Handle search changes
    *

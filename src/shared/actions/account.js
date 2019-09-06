@@ -61,3 +61,8 @@ export const loadMyAccounts = () => async dispatch => {
 
   dispatch({ type: TYPE.MY_ACCOUNTS_LIST, payload: accountList });
 };
+
+export const updateAccountBalances = () => async dispatch => {
+  const accList = await rpc('listaccounts', []);
+  dispatch({ type: TYPE.UPDATE_MY_ACCOUNTS, payload: accList });
+};

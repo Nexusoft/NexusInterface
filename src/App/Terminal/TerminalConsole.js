@@ -205,9 +205,7 @@ class TerminalConsole extends Component {
     } catch (err) {
       console.error(err);
       if (err.message !== undefined) {
-        printCommandError(
-          `Error: ${err.err.message}(errorcode ${err.err.code})`
-        );
+        printCommandError(`Error: ${err.message}(errorcode ${err.code})`);
       } else {
         // This is the error if the rpc is unavailable
         try {
