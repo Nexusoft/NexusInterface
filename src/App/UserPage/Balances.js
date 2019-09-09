@@ -19,9 +19,10 @@ const Line = styled.div(
     justifyContent: 'space-between',
     marginTop: '.4em',
   },
-  ({ bold }) =>
+  ({ bold, theme }) =>
     bold && {
       fontWeight: 'bold',
+      color: theme.foreground,
     }
 );
 

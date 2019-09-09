@@ -4,6 +4,7 @@ import styled from '@emotion/styled';
 import { Route, Redirect, Switch } from 'react-router';
 
 import Balances from './Balances';
+import Staking from './Staking';
 
 const TabContentComponent = styled.div({
   flexGrow: 1,
@@ -25,6 +26,7 @@ const TabContent = ({ match }) => (
   <TabContentComponent>
     <Switch>
       <Route path={`${match.url}/Balances`} component={Balances} />
+      <Route path={`${match.url}/Staking`} component={Staking} />
       <SettingsRedirect match={match} />
     </Switch>
   </TabContentComponent>
