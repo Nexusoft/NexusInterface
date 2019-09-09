@@ -23,6 +23,7 @@ import transactionsIcon from 'images/transaction.sprite.svg';
 import addressBookIcon from 'images/address-book.sprite.svg';
 import settingsIcon from 'images/settings.sprite.svg';
 import consoleIcon from 'images/console.sprite.svg';
+import userIcon from 'images/user.sprite.svg';
 // import shapeshiftIcon from 'images/shapeshift.sprite.svg';
 // import trustListIcon from 'images/trust-list.sprite.svg';
 
@@ -98,7 +99,7 @@ const ModuleNavItems = connect(
  * Returns the Navigation Bar
  *  @memberof Navigation
  */
-const Navigation = () => (
+const Navigation = ({ username }) => (
   <Nav>
     <AboveNav>
       <HorizontalLine />
@@ -107,6 +108,10 @@ const Navigation = () => (
     <NavBar>
       <NavItem icon={logoIcon} exact to="/">
         {__('Overview')}
+      </NavItem>
+
+      <NavItem icon={userIcon} to="/User">
+        {username || __('User')}
       </NavItem>
 
       <NavItem icon={sendIcon} to="/Send">
@@ -133,16 +138,16 @@ const Navigation = () => (
         {__('Console')}
       </NavItem>
 
-      <NavItem icon={consoleIcon} to="/Accounts">
-        {__('Accounts')}
-      </NavItem>
-
       <ModuleNavItems />
     </NavBar>
   </Nav>
 );
 
+const mapStateToProps = state => ({
+  username: state.core.userStatus && state.core.userStatus.username,
+});
+
 /**
  *  @class Navigation
  */
-export default Navigation;
+export default connect(mapStateToProps)(Navigation);
