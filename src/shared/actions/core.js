@@ -3,6 +3,9 @@ import { remote } from 'electron';
 import rpc from 'lib/rpc';
 import * as ac from 'actions/setupApp';
 import * as TYPE from 'consts/actionTypes';
+import LoginModal from 'components/LoginModal';
+import { openModal } from 'actions/overlays';
+import { isCoreConnected, isLoggedIn } from 'selectors';
 import { legacyMode } from 'consts/misc';
 import { apiPost } from 'lib/tritiumApi';
 
@@ -55,11 +58,18 @@ export const getInfo = legacyMode
       }
     }
   : // Tritium
-    () => async dispatch => {
-      // getSysmteInfo to check if core is connected first
+    () => async (dispatch, getState) => {
+      const coreConnected = isCoreConnected(getState());
+      // getSystemInfo to check if core is connected first
       await dispatch(getSystemInfo());
       // Then check user status
       await dispatch(getUserStatus());
+      // If core turned from disconnected to connected and user is not logged in
+      // then show LoginModal
+      const loggedIn = isLoggedIn(getState());
+      if (!coreConnected && !loggedIn) {
+        dispatch(openModal(LoginModal));
+      }
     };
 
 export const getBalances = () => async dispatch => {

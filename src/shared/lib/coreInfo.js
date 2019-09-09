@@ -68,10 +68,7 @@ export function initializeCoreInfo() {
     if (connected) {
       store.dispatch(loadMyAccounts());
 
-      if (!legacyMode) {
-        store.dispatch(openModal(LoginModal));
       }
-    }
   });
 
   observeStore(
