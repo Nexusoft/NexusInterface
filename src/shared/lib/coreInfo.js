@@ -1,6 +1,6 @@
 import store, { observeStore } from 'store';
 import rpc from 'lib/rpc';
-import { isCoreConnected } from 'selectors';
+import { isCoreConnected, isLoggedIn } from 'selectors';
 import { loadMyAccounts } from 'actions/account';
 import { showNotification, openModal } from 'actions/overlays';
 import { bootstrap } from 'actions/bootstrap';
@@ -140,6 +140,27 @@ export function initializeCoreInfo() {
     );
   } else {
     // Tritium mode
+    let justConnected = false;
+    observeStore(
+      ({ core: { systemInfo } }) => systemInfo,
+      async () => {
+        if (isCoreConnected(store.getState())) {
+          await store.dispatch(getUserStatus());
+          if (justConnected) {
+            justConnected = false;
+            if (!isLoggedIn(store.getState())) {
+              store.dispatch(openModal(LoginModal));
+            }
+          }
+        }
+      }
+    );
+    observeStore(isCoreConnected, coreConnected => {
+      if (coreConnected) {
+        justConnected = true;
+      }
+    });
+
     observeStore(
       ({ core: { systemInfo } }) => systemInfo,
       systemInfo => {
