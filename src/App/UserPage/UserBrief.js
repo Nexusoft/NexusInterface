@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 import { NavLink } from 'react-router-dom';
 
-import { timing } from 'styles';
+import { timing, consts } from 'styles';
 import * as color from 'utils/color';
 
 const UserBriefComponent = styled.div(({ theme }) => ({
@@ -33,8 +33,12 @@ const Genesis = styled.div({
   textAlign: 'center',
   opacity: 0.7,
   fontSize: '.8em',
+  padding: '10px',
+});
+
+const GenesisId = styled.div({
   wordBreak: 'break-all',
-  padding: '10px 20px',
+  fontFamily: consts.monoFontFamily,
 });
 
 const MenuItem = styled(NavLink)(
@@ -71,7 +75,7 @@ const UserBrief = ({ userStatus, match }) => (
     <Separator />
     <Genesis>
       <div>{__('Genesis ID')}:</div>
-      {userStatus.genesis}
+      <GenesisId>{userStatus.genesis}</GenesisId>
     </Genesis>
     <Separator />
     <MenuItem to={`${match.url}/Balances`}>{__('Balances')}</MenuItem>
