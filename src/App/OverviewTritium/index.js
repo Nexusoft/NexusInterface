@@ -606,14 +606,7 @@ class Overview extends Component {
       coreConnected,
       systemInfo: { connections, txtotal, blocks },
       stakeInfo: { interestweight, stakerate },
-      balances: {
-        available,
-        pending,
-        unconfirmed,
-        stake,
-        immature_mined,
-        immature_stake,
-      },
+      balances,
       blockDate,
       market,
       difficulty,
@@ -621,7 +614,16 @@ class Overview extends Component {
       theme,
       synchronizing,
     } = this.props;
+    const {
+      available,
+      pending,
+      unconfirmed,
+      stake,
+      immature_mined,
+      immature_stake,
+    } = balances || {};
     const { fiatCurrency } = settings;
+
     if (settings.overviewDisplay === 'none') {
       return <OverviewPage />;
     }
