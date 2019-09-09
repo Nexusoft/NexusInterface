@@ -179,8 +179,8 @@ export function initializeCoreInfo() {
     );
   }
 
+  // All modes
   autoFetchCoreInfo();
-
   observeStore(
     state => state.core.autoConnect,
     autoConnect => {

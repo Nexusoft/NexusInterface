@@ -99,7 +99,7 @@ const ModuleNavItems = connect(
  * Returns the Navigation Bar
  *  @memberof Navigation
  */
-const Navigation = ({ username }) => (
+const Navigation = () => (
   <Nav>
     <AboveNav>
       <HorizontalLine />
@@ -111,7 +111,7 @@ const Navigation = ({ username }) => (
       </NavItem>
 
       <NavItem icon={userIcon} to="/User">
-        {username || __('User')}
+        {__('User')}
       </NavItem>
 
       <NavItem icon={sendIcon} to="/Send">
@@ -143,11 +143,7 @@ const Navigation = ({ username }) => (
   </Nav>
 );
 
-const mapStateToProps = state => ({
-  username: state.core.userStatus && state.core.userStatus.username,
-});
-
 /**
  *  @class Navigation
  */
-export default connect(mapStateToProps)(Navigation);
+export default Navigation;
