@@ -5,7 +5,7 @@ import { loadMyAccounts } from 'actions/account';
 import { showNotification, openModal } from 'actions/overlays';
 import { bootstrap } from 'actions/bootstrap';
 import { updateBlockDate } from 'actions/setupApp';
-import { getInfo } from 'actions/core';
+import { getInfo, getUserStatus } from 'actions/core';
 import showDesktopNotif from 'utils/showDesktopNotif';
 import { showEncryptionWarningModal } from 'actions/setupApp';
 import LoginModal from 'components/LoginModal';
@@ -55,85 +55,108 @@ export function stopFetchingCoreInfo() {
  * @export
  */
 export function initializeCoreInfo() {
-  observeStore(
-    ({ core: { info } }) => info && info.locked,
-    locked => {
-      if (isCoreConnected(store.getState()) && locked === undefined) {
-        store.dispatch(showEncryptionWarningModal());
-      }
-    }
-  );
-
-  observeStore(isCoreConnected, connected => {
-    if (connected) {
-      store.dispatch(loadMyAccounts());
-
-      }
-  });
-
-  observeStore(
-    ({ core: { info } }) => info && info.txtotal,
-    async () => {
-      // TODO: Find a more efficient way than fetching ALL the transactions
-      const txList = await rpc('listtransactions', []);
-      if (txList) {
-        // TODO: notify ALL new transactions, not just the newest
-        const mostRecentTx = txList.reduce((a, b) => (a.time > b.time ? a : b));
-
-        switch (mostRecentTx.category) {
-          case 'receive':
-            showDesktopNotif('Received', mostRecentTx.amount + ' NXS');
-            store.dispatch(
-              showNotification(__('Transaction received'), 'success')
-            );
-            break;
-          case 'send':
-            showDesktopNotif('Sent', mostRecentTx.amount + ' NXS');
-            store.dispatch(showNotification(__('Transaction sent'), 'success'));
-            break;
-          case 'genesis':
-            showDesktopNotif('Genesis', mostRecentTx.amount + ' NXS');
-            store.dispatch(
-              showNotification(__('Genesis transaction'), 'success')
-            );
-            break;
-          case 'trust':
-            showDesktopNotif('Trust', mostRecentTx.amount + ' NXS');
-            store.dispatch(
-              showNotification(__('Trust transaction'), 'success')
-            );
-            break;
+  if (legacyMode) {
+    observeStore(
+      ({ core: { info } }) => info && info.locked,
+      locked => {
+        if (isCoreConnected(store.getState()) && locked === undefined) {
+          store.dispatch(showEncryptionWarningModal());
         }
       }
-    },
-    (oldTotal, newTotal) => newTotal > oldTotal
-  );
+    );
 
-  observeStore(
-    ({ core: { info } }) => info,
-    info => {
-      const state = store.getState();
-      if (
-        !state.settings.bootstrapSuggestionDisabled &&
-        isCoreConnected(state) &&
-        state.bootstrap.step === 'idle' &&
-        !state.settings.manualDaemon &&
-        info.synccomplete < 50 &&
-        info.synccomplete >= 0
-      ) {
-        store.dispatch(bootstrap({ suggesting: true }));
+    observeStore(isCoreConnected, connected => {
+      if (connected) {
+        store.dispatch(loadMyAccounts());
       }
-    }
-  );
+    });
 
-  observeStore(
-    ({ core: { info } }) => info && info.blocks,
-    blocks => {
-      if (blocks) {
-        store.dispatch(updateBlockDate(new Date()));
+    observeStore(
+      ({ core: { info } }) => info && info.txtotal,
+      async () => {
+        // TODO: Find a more efficient way than fetching ALL the transactions
+        const txList = await rpc('listtransactions', []);
+        if (txList) {
+          // TODO: notify ALL new transactions, not just the newest
+          const mostRecentTx = txList.reduce((a, b) =>
+            a.time > b.time ? a : b
+          );
+
+          switch (mostRecentTx.category) {
+            case 'receive':
+              showDesktopNotif('Received', mostRecentTx.amount + ' NXS');
+              store.dispatch(
+                showNotification(__('Transaction received'), 'success')
+              );
+              break;
+            case 'send':
+              showDesktopNotif('Sent', mostRecentTx.amount + ' NXS');
+              store.dispatch(
+                showNotification(__('Transaction sent'), 'success')
+              );
+              break;
+            case 'genesis':
+              showDesktopNotif('Genesis', mostRecentTx.amount + ' NXS');
+              store.dispatch(
+                showNotification(__('Genesis transaction'), 'success')
+              );
+              break;
+            case 'trust':
+              showDesktopNotif('Trust', mostRecentTx.amount + ' NXS');
+              store.dispatch(
+                showNotification(__('Trust transaction'), 'success')
+              );
+              break;
+          }
+        }
+      },
+      (oldTotal, newTotal) => newTotal > oldTotal
+    );
+
+    observeStore(
+      ({ core: { info } }) => info,
+      info => {
+        const state = store.getState();
+        if (
+          !state.settings.bootstrapSuggestionDisabled &&
+          isCoreConnected(state) &&
+          state.bootstrap.step === 'idle' &&
+          !state.settings.manualDaemon &&
+          info.synccomplete < 50 &&
+          info.synccomplete >= 0
+        ) {
+          store.dispatch(bootstrap({ suggesting: true }));
+        }
       }
-    }
-  );
+    );
+
+    observeStore(
+      ({ core: { info } }) => info && info.blocks,
+      blocks => {
+        if (blocks) {
+          store.dispatch(updateBlockDate(new Date()));
+        }
+      }
+    );
+  } else {
+    // Tritium mode
+    observeStore(
+      ({ core: { systemInfo } }) => systemInfo,
+      systemInfo => {
+        const state = store.getState();
+        if (
+          !state.settings.bootstrapSuggestionDisabled &&
+          isCoreConnected(state) &&
+          state.bootstrap.step === 'idle' &&
+          !state.settings.manualDaemon &&
+          systemInfo.synccomplete < 50 &&
+          systemInfo.synccomplete >= 0
+        ) {
+          store.dispatch(bootstrap({ suggesting: true }));
+        }
+      }
+    );
+  }
 
   autoFetchCoreInfo();
 
