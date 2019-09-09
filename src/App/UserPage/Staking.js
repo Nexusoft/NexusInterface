@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
+import Button from 'components/Button';
 import { switchUserTab } from 'actions/ui';
 
 const StakingWrapper = styled.div(({ theme }) => ({
@@ -70,6 +71,11 @@ export default class Staking extends React.Component {
             <div>{__('Unstaked balance')}</div>
             <div>{stakeInfo.balance} NXS</div>
           </Line>
+          <div className="mt2">
+            <Button disabled={!stakeInfo.stake && !stakeInfo.balance}>
+              {__('Adjust stake balance')}
+            </Button>
+          </div>
         </StakingWrapper>
       )
     );
