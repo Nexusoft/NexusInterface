@@ -7,6 +7,7 @@ import systemInfo from './systemInfo';
 import stakeInfo from './stakeInfo';
 import balances from './balances';
 import userStatus from './userStatus';
+import accounts from './accounts';
 
 export default combineReducers({
   autoConnect,
@@ -16,4 +17,5 @@ export default combineReducers({
   stakeInfo,
   balances,
   userStatus,
+  accounts,
 });

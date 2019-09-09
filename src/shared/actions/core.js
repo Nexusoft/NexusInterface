@@ -66,6 +66,15 @@ export const getBalances = () => async dispatch => {
   }
 };
 
+export const listAccounts = () => async dispatch => {
+  try {
+    const accounts = await apiPost('users/list/accounts');
+    dispatch({ type: TYPE.SET_TRITIUM_ACCOUNTS, payload: accounts });
+  } catch (err) {
+    console.error('users/list/accounts failed', err);
+  }
+};
+
 export const getDifficulty = () => async dispatch => {
   const diff = await rpc('getdifficulty', []);
   dispatch({ type: TYPE.GET_DIFFICULTY, payload: diff });
