@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import styled from '@emotion/styled';
+import { NavLink } from 'react-router-dom';
 
 import { timing } from 'styles';
 import * as color from 'utils/color';
@@ -36,7 +37,7 @@ const Genesis = styled.div({
   padding: '10px 20px',
 });
 
-const MenuItem = styled.div(
+const MenuItem = styled(NavLink)(
   ({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
@@ -49,6 +50,11 @@ const MenuItem = styled.div(
     '&:hover': {
       background: theme.mixer(0.05),
     },
+
+    '&.active, &.active:hover': {
+      background: theme.primary,
+      color: theme.primaryAccent,
+    },
   }),
   ({ selected, theme }) =>
     selected && {
@@ -59,7 +65,7 @@ const MenuItem = styled.div(
     }
 );
 
-const UserBrief = ({ userStatus }) => (
+const UserBrief = ({ userStatus, match }) => (
   <UserBriefComponent>
     <Username>{userStatus.username}</Username>
     <Separator />
@@ -68,9 +74,9 @@ const UserBrief = ({ userStatus }) => (
       {userStatus.genesis}
     </Genesis>
     <Separator />
-    <MenuItem>{__('Balances')}</MenuItem>
-    <MenuItem>{__('Staking')}</MenuItem>
-    <MenuItem>{__('Accounts')}</MenuItem>
+    <MenuItem to={`${match.url}/Balances`}>{__('Balances')}</MenuItem>
+    <MenuItem to={`${match.url}/Staking`}>{__('Staking')}</MenuItem>
+    <MenuItem to={`${match.url}/Accounts`}>{__('Accounts')}</MenuItem>
   </UserBriefComponent>
 );
 

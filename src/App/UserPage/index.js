@@ -99,14 +99,14 @@ class UserPage extends Component {
    * @memberof UserPage
    */
   render() {
-    const { username, openModal } = this.props;
+    const { username, openModal, match } = this.props;
 
     return (
       <Panel icon={userIcon} title={__('User')} bodyScrollable={false}>
         {!!username ? (
           <UserPageLayout>
-            <UserBrief />
-            <TabContent />
+            <UserBrief match={match} />
+            <TabContent match={match} />
           </UserPageLayout>
         ) : (
           <div style={{ marginTop: 50, textAlign: 'center' }}>
