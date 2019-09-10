@@ -12,7 +12,6 @@ const BalancesWrapper = styled.div(({ theme }) => ({
   maxWidth: 300,
   margin: '0 auto',
   paddingTop: 15,
-  paddingLeft: 30,
   color: theme.mixer(0.75),
 }));
 

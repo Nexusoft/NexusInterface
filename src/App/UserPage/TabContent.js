@@ -10,6 +10,7 @@ import Accounts from './Accounts';
 const TabContentComponent = styled.div({
   flexGrow: 1,
   flexShrink: 1,
+  paddingLeft: 30,
 });
 
 let SettingsRedirect = ({ lastActiveTab, match }) => (
