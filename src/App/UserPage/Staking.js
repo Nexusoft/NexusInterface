@@ -84,7 +84,7 @@ export default class Staking extends React.Component {
               <span className="v-align">{__('Stake Rate')}</span>
               <QuestionMark
                 tooltip={__(
-                  'The current annual reward rate earned for staking as an annual percent'
+                  'The current annual reward rate earned for staking'
                 )}
               />
             </div>
@@ -95,7 +95,7 @@ export default class Staking extends React.Component {
               <span className="v-align">{__('Trust Weight')}</span>
               <QuestionMark
                 tooltip={__(
-                  'The current trust weight applied to staking as a percent of maximum'
+                  'The percentage of the maximum Trust Score, which is gradually built over time when you consistently operate your node in an honest, trustworthy, and timely manner'
                 )}
               />
             </div>
@@ -106,7 +106,7 @@ export default class Staking extends React.Component {
               <span className="v-align">{__('Block Weight')}</span>
               <QuestionMark
                 tooltip={__(
-                  'The current block weight applied to staking as a percent of maximum'
+                  'Block Weight depends on the time passed since you received a Trust transaction and will be reset everytime you receive a Trust transaction. Otherwise, Block Weight will reach 100% after 3 days and your Trust Score will start decaying until you receive another Trust transaction'
                 )}
               />
             </div>
@@ -117,7 +117,7 @@ export default class Staking extends React.Component {
               <span className="v-align">{__('Stake Weight')}</span>
               <QuestionMark
                 tooltip={__(
-                  'The current stake weight (trust weight and block weight combined) as a percent of maximum'
+                  'Stake Weight depends on Trust Weight and Block Weight. Along with your Stake balance, Stake Weight affects how frequent you receive a Trust transaction'
                 )}
               />
             </div>
@@ -128,7 +128,7 @@ export default class Staking extends React.Component {
               <span className="v-align">{__('Unstaked balance')}</span>
               <QuestionMark
                 tooltip={__(
-                  'The current stake weight (trust weight and block weight combined) as a percent of maximum'
+                  'The current NXS balance of the trust account that is not staked. You can spend this amount without affecting your Trust Score'
                 )}
               />
             </div>
