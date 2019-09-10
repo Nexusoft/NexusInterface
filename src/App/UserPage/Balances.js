@@ -10,6 +10,7 @@ const BalancesWrapper = styled.div(({ theme }) => ({
   maxWidth: 300,
   margin: '0 auto',
   paddingTop: 15,
+  paddingLeft: 30,
   color: theme.mixer(0.75),
 }));
 
@@ -70,19 +71,19 @@ export default class Balances extends React.Component {
             <div>{total} NXS</div>
           </Line>
           <Line>
-            <div>{__('Available balance')}</div>
+            <div>{__('Available')}</div>
             <div>{balances.available} NXS</div>
           </Line>
           <Line>
-            <div>{__('Pending balance')}</div>
+            <div>{__('Pending')}</div>
             <div>{balances.pending} NXS</div>
           </Line>
           <Line>
-            <div>{__('Unconfirmed balance')}</div>
+            <div>{__('Unconfirmed')}</div>
             <div>{balances.unconfirmed} NXS</div>
           </Line>
           <Line>
-            <div>{__('Staking balance')}</div>
+            <div>{__('Staking')}</div>
             <div>{balances.stake} NXS</div>
           </Line>
           <Line>
