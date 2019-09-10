@@ -4,7 +4,6 @@ import styled from '@emotion/styled';
 
 import Modal from 'components/Modal';
 import WaitingMessage from 'components/WaitingMessage';
-import rpc from 'lib/rpc';
 import { formatDateTime } from 'lib/intl';
 import { isPending, fetchTransaction } from 'lib/transactions';
 
