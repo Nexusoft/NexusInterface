@@ -46,7 +46,7 @@ export default class Accounts extends React.Component {
             <div />
             <Button>
               <Icon icon={plusIcon} className="space-right" />
-              {__('Create new address')}
+              {__('Create new account')}
             </Button>
           </div>
         </AccountsWrapper>
