@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import styled from '@emotion/styled';
+import { Link } from 'react-router-dom';
 
 import { arrowStyles } from 'components/Arrow';
 import LoginModal from 'components/LoginModal';
@@ -81,14 +82,16 @@ class LoggedInDropdown extends React.Component {
   };
 
   render() {
-    const { currentUser, unlocked } = this.props;
+    const { currentUser, closeDropdown } = this.props;
     return (
       <>
         <CurrentUser>
           <Username>{currentUser}</Username>
         </CurrentUser>
         <Separator />
-        <MenuItem>{__('My Addresses')}</MenuItem>
+        <Link to="/User/Accounts" onClick={closeDropdown}>
+          <MenuItem>{__('My Accounts')}</MenuItem>
+        </Link>
         <Separator />
         <MenuItem onClick={this.logout}>{__('Log out')}</MenuItem>
       </>
