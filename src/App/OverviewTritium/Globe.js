@@ -90,6 +90,8 @@ export default class Globe extends Component {
       controls.minDistance = 300;
       controls.maxDistance = 500;
       controls.enablePan = false;
+      // Disabled by default, fixing a bug where the LoginModal input cannot get focused
+      controls.enabled = false;
       controls.update();
       scene.add(camera);
 
