@@ -4,11 +4,14 @@ import styled from '@emotion/styled';
 
 import Button from 'components/Button';
 import { switchUserTab } from 'actions/ui';
+import { updateSettings } from 'actions/settings';
+import { restartCore } from 'actions/core';
+import confirm from 'utils/promisified/confirm';
 
 import QuestionMark from './QuestionMark';
 
 const StakingWrapper = styled.div(({ theme }) => ({
-  maxWidth: 300,
+  maxWidth: 400,
   margin: '0 auto',
   paddingTop: 15,
   paddingLeft: 30,
@@ -31,8 +34,9 @@ const Line = styled.div(
 @connect(
   state => ({
     stakeInfo: state.core.stakeInfo,
+    stakingEnabled: state.settings.enableStaking,
   }),
-  { switchUserTab }
+  { switchUserTab, updateSettings, restartCore }
 )
 export default class Staking extends React.Component {
   constructor(props) {
@@ -40,8 +44,22 @@ export default class Staking extends React.Component {
     props.switchUserTab('Staking');
   }
 
+  switchStaking = async () => {
+    const { stakingEnabled, updateSettings, restartCore } = this.props;
+    const confirmed = await confirm({
+      question: __('Restart Core?'),
+      note: __('Nexus Core needs to restart for this change to take effect'),
+      labelYes: stakingEnabled ? __('Disable staking') : __('Enable staking'),
+      labelNo: __('Cancel'),
+    });
+    if (confirmed) {
+      updateSettings({ enableStaking: !stakingEnabled });
+      restartCore();
+    }
+  };
+
   render() {
-    const { stakeInfo } = this.props;
+    const { stakeInfo, stakingEnabled } = this.props;
 
     return (
       !!stakeInfo && (
@@ -116,9 +134,15 @@ export default class Staking extends React.Component {
             </div>
             <div>{stakeInfo.balance} NXS</div>
           </Line>
-          <div className="mt2">
+          <div className="mt1 flex space-between">
             <Button disabled={!stakeInfo.stake && !stakeInfo.balance}>
               {__('Adjust stake balance')}
+            </Button>
+            <Button
+              skin={stakingEnabled ? 'default' : 'primary'}
+              onClick={this.switchStaking}
+            >
+              {stakingEnabled ? __('Disable staking') : __('Enable staking')}
             </Button>
           </div>
         </StakingWrapper>
