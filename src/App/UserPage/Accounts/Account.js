@@ -8,6 +8,7 @@ import { formatNumber } from 'lib/intl';
 import { openModal } from 'actions/overlays';
 
 import AccountDetailsModal from './AccountDetailsModal';
+import { totalBalance } from './utils';
 
 const AccountComponent = styled.div(({ theme }) => ({
   padding: '1em 0',
@@ -24,7 +25,7 @@ const Account = ({ account, openModal }) => (
     <div className="flex space-between">
       <div>
         <AccountName>{account.name}</AccountName> (
-        {formatNumber(account.balance, 20)} {account.token_name})
+        {formatNumber(totalBalance(account), 20)} {account.token_name})
       </div>
       <Link
         as="a"
