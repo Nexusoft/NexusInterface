@@ -5,6 +5,8 @@ import styled from '@emotion/styled';
 import Button from 'components/Button';
 import { switchUserTab } from 'actions/ui';
 
+import QuestionMark from './QuestionMark';
+
 const StakingWrapper = styled.div(({ theme }) => ({
   maxWidth: 300,
   margin: '0 auto',
@@ -49,27 +51,69 @@ export default class Staking extends React.Component {
             <div>{stakeInfo.staking ? __('Staking') : __('Not staking')}</div>
           </Line>
           <Line>
-            <div>{__('Stake balance')}</div>
+            <div>
+              <span className="v-align">{__('Stake balance')}</span>
+              <QuestionMark
+                tooltip={__(
+                  'The amount of NXS currently staked in the trust account'
+                )}
+              />
+            </div>
             <div>{stakeInfo.stake} NXS</div>
           </Line>
           <Line>
-            <div>{__('Stake Rate')}</div>
+            <div>
+              <span className="v-align">{__('Stake Rate')}</span>
+              <QuestionMark
+                tooltip={__(
+                  'The current annual reward rate earned for staking as an annual percent'
+                )}
+              />
+            </div>
             <div>{stakeInfo.stakerate} %</div>
           </Line>
           <Line>
-            <div>{__('Trust Weight')}</div>
+            <div>
+              <span className="v-align">{__('Trust Weight')}</span>
+              <QuestionMark
+                tooltip={__(
+                  'The current trust weight applied to staking as a percent of maximum'
+                )}
+              />
+            </div>
             <div>{stakeInfo.trustweight} %</div>
           </Line>
           <Line>
-            <div>{__('Block Weight')}</div>
+            <div>
+              <span className="v-align">{__('Block Weight')}</span>
+              <QuestionMark
+                tooltip={__(
+                  'The current block weight applied to staking as a percent of maximum'
+                )}
+              />
+            </div>
             <div>{stakeInfo.blockweight} %</div>
           </Line>
           <Line>
-            <div>{__('Stake Weight')}</div>
+            <div>
+              <span className="v-align">{__('Stake Weight')}</span>
+              <QuestionMark
+                tooltip={__(
+                  'The current stake weight (trust weight and block weight combined) as a percent of maximum'
+                )}
+              />
+            </div>
             <div>{stakeInfo.stakeweight} %</div>
           </Line>
           <Line>
-            <div>{__('Unstaked balance')}</div>
+            <div>
+              <span className="v-align">{__('Unstaked balance')}</span>
+              <QuestionMark
+                tooltip={__(
+                  'The current stake weight (trust weight and block weight combined) as a percent of maximum'
+                )}
+              />
+            </div>
             <div>{stakeInfo.balance} NXS</div>
           </Line>
           <div className="mt2">
