@@ -9,6 +9,7 @@ import TextField from 'components/TextField';
 import FormField from 'components/FormField';
 import Link from 'components/Link';
 import { getNxsFiatPrice } from './selectors';
+import Tooltip from 'components/Tooltip';
 
 const floatRegex = /^[0-9]+(.[0-9]*)?$/;
 
@@ -33,6 +34,12 @@ const SendAllLink = styled(Link)({
   fontSize: '.9em',
   verticalAlign: 'middle',
 });
+
+const TokenAddressPopup = ({ tokenAddress }) => (
+  <Tooltip.Trigger tooltip={tokenAddress} position="top">
+    <div>??????</div>
+  </Tooltip.Trigger>
+);
 
 const mapStateToProps = ({
   settings: { fiatCurrency },
@@ -115,6 +122,7 @@ class AmountField extends Component {
    * @memberof AmountField
    */
   render() {
+    const token = this.props.token;
     return (
       <SendAmount>
         <SendAmountField>
@@ -122,7 +130,14 @@ class AmountField extends Component {
             connectLabel
             label={
               <>
-                <span className="v-align">{__('NXS Amount')}</span>
+                <span className="v-align">
+                  {__('%{tokenName} Amount', {
+                    tokenName: token.name || 'Token',
+                  })}
+                </span>
+                {token.name ? null : (
+                  <TokenAddressPopup tokenAddress={token.address} />
+                )}
                 {!!this.props.fullAmount && (
                   <SendAllLink
                     as="a"
@@ -144,18 +159,22 @@ class AmountField extends Component {
           </FormField>
         </SendAmountField>
 
-        <SendAmountEqual>=</SendAmountEqual>
+        {token.address === '0' ? (
+          <>
+            <SendAmountEqual>=</SendAmountEqual>
 
-        <SendAmountField>
-          <FormField connectLabel label={this.props.fiatCurrency}>
-            <Field
-              component={TextField.RF}
-              name={this.fiatAmountFieldName()}
-              placeholder="0.00"
-              onChange={this.fiatToNxs}
-            />
-          </FormField>
-        </SendAmountField>
+            <SendAmountField>
+              <FormField connectLabel label={this.props.fiatCurrency}>
+                <Field
+                  component={TextField.RF}
+                  name={this.fiatAmountFieldName()}
+                  placeholder="0.00"
+                  onChange={this.fiatToNxs}
+                />
+              </FormField>
+            </SendAmountField>
+          </>
+        ) : null}
       </SendAmount>
     );
   }

@@ -6,6 +6,7 @@ import styled from '@emotion/styled';
 
 // Internal Global
 import { apiPost } from 'lib/tritiumApi';
+import rpc from 'lib/rpc';
 import { defaultSettings } from 'lib/settings';
 import { loadMyAccounts } from 'actions/account';
 import Icon from 'components/Icon';
@@ -112,7 +113,8 @@ const mapDispatchToProps = {
       },
     ],
     password: null,
-    message: '',
+    reference: null,
+    expires: null,
   },
   validate: ({ sendFrom, recipients }) => {
     const errors = {};
@@ -150,6 +152,7 @@ const mapDispatchToProps = {
   },
   asyncBlurFields: ['recipients[].address'],
   asyncValidate: async ({ recipients }) => {
+    return null;
     const recipientsErrors = [];
     await Promise.all(
       recipients.map(({ address }, i) =>
@@ -178,10 +181,12 @@ const mapDispatchToProps = {
     return null;
   },
   onSubmit: ({ sendFrom, recipients, message, password }, dispatch, props) => {
-    this.props.openModal(PinDialog, {
+    console.log('Submit');
+    props.openModal(PinDialog, {
       confirmLabel: __('Unlock'),
       onConfirm: async pin => {
         try {
+          console.log(pin);
           const recipient = recipients[0];
           const params = [
             sendFrom,
@@ -196,6 +201,7 @@ const mapDispatchToProps = {
           console.log(params);
           return apiPost('/finance/debit/account', params);
         } catch (err) {
+          console.error(err);
           handleError(err);
         }
       },
@@ -275,20 +281,32 @@ class SendForm extends Component {
     //   return;
     // }
 
-    this.props.openConfirmDialog({
-      question: __('Send transaction?'),
-      callbackYes: () => {
-        if (locked || minting_only) {
-          this.props.openModal(PasswordModal, {
-            onSubmit: password => {
-              this.props.change('password', password);
-              // change function seems to be asynchronous
-              // so setTimeout to wait for it to take effect
-              setTimeout(handleSubmit, 0);
+    this.props.openModal(PinDialog, {
+      confirmLabel: __('Unlock'),
+      onConfirm: async pin => {
+        try {
+          console.log(this);
+          console.log(props);
+          this.props.openConfirmDialog({
+            question: __('Send transaction?'),
+            callbackYes: () => {
+              if (locked || minting_only) {
+                this.props.openModal(PasswordModal, {
+                  onSubmit: password => {
+                    this.props.change('password', password);
+                    // change function seems to be asynchronous
+                    // so setTimeout to wait for it to take effect
+                    setTimeout(handleSubmit, 0);
+                  },
+                });
+              } else {
+                handleSubmit();
+              }
             },
           });
-        } else {
-          handleSubmit();
+        } catch (err) {
+          console.error(err);
+          handleError(err);
         }
       },
     });
@@ -348,15 +366,22 @@ class SendForm extends Component {
           change={change}
           addRecipient={this.addRecipient}
           accBalance={accBalance}
+          token={'0'}
         />
 
-        <FormField connectLabel label={__('Message')}>
+        <FormField label={__('Reference')}>
           <Field
             component={TextField.RF}
-            name="message"
-            multiline
-            rows={1}
-            placeholder={__('Enter your message')}
+            name="reference"
+            placeholder={__('ulong (Optional)')}
+          />
+        </FormField>
+
+        <FormField label={__('Expiration')}>
+          <Field
+            component={TextField.RF}
+            name="expiration"
+            placeholder={__('Seconds till experation (Optional)')}
           />
         </FormField>
 

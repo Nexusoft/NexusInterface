@@ -75,63 +75,25 @@ class Recipients extends React.Component {
    * @memberof Recipients
    */
   render() {
-    const { fields, change, addRecipient, accBalance } = this.props;
+    const { fields, change, accBalance, token } = this.props;
 
     if (!fields || !fields.length) return null;
 
-    if (fields.length === 1) {
-      return (
-        <>
-          <Field
-            name={`${fields.name}[0].address`}
-            component={RecipientField}
-            change={change}
-          />
-          <AmountField
-            fullAmount={accBalance}
-            parentFieldName={`${fields.name}[0]`}
-            change={change}
-          />
-        </>
-      );
-    } else {
-      return (
-        <>
-          {fields.map((fieldName, i) => (
-            <Recipient key={i}>
-              <Tooltip.Trigger tooltip={__('Remove recipient')}>
-                <RemoveButton
-                  onClick={() => {
-                    fields.remove(i);
-                  }}
-                >
-                  ✕
-                </RemoveButton>
-              </Tooltip.Trigger>
-
-              <AddressWrapper>
-                <Field
-                  name={`${fieldName}.address`}
-                  component={RecipientField}
-                  change={change}
-                />
-              </AddressWrapper>
-
-              <AmountWrapper>
-                <AmountField parentFieldName={fieldName} change={change} />
-              </AmountWrapper>
-            </Recipient>
-          ))}
-
-          <MoreInfo>
-            <Button skin="hyperlink" onClick={addRecipient}>
-              <PlusIcon icon={plusIcon} className="space-right" />
-              <span className="v-align">{__('Add recipient')}</span>
-            </Button>
-          </MoreInfo>
-        </>
-      );
-    }
+    return (
+      <>
+        <Field
+          name={`${fields.name}[0].address`}
+          component={RecipientField}
+          change={change}
+        />
+        <AmountField
+          fullAmount={accBalance}
+          parentFieldName={`${fields.name}[0]`}
+          change={change}
+          token={{ name: 'NXS', address: '0' }}
+        />
+      </>
+    );
   }
 }
 export default Recipients;

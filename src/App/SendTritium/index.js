@@ -16,7 +16,6 @@ import { LoadTritiumAccounts } from 'actions/account';
 import { isCoreConnected } from 'selectors';
 
 // Internal Local Dependencies
-import MoveBetweenAccountsModal from './MoveBetweenAccountsModal';
 import SendForm from './SendForm';
 
 // Resources
@@ -75,15 +74,6 @@ class Send extends Component {
   }
 
   /**
-   * Opens the Move NXS between account modal
-   *
-   * @memberof Send
-   */
-  moveBetweenAccounts = () => {
-    this.props.openModal(MoveBetweenAccountsModal);
-  };
-
-  /**
    * Component's Renderable JSX
    *
    * @returns
@@ -91,24 +81,7 @@ class Send extends Component {
    */
   render() {
     return (
-      <Panel
-        icon={sendIcon}
-        title={__('Send NXS Tritium')}
-        controls={
-          this.props.coreConnected && (
-            <Tooltip.Trigger tooltip={__('Move NXS between accounts')}>
-              <Button
-                square
-                skin="primary"
-                className="relative"
-                onClick={this.moveBetweenAccounts}
-              >
-                <Icon icon={swapIcon} />
-              </Button>
-            </Tooltip.Trigger>
-          )
-        }
-      >
+      <Panel icon={sendIcon} title={__('Send NXS Tritium')}>
         {!this.props.coreConnected ? (
           <WaitingMessage>
             {__('Connecting to Nexus Core')}
