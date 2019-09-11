@@ -39,6 +39,13 @@ const SliderWrapper = styled.div({
   marginTop: 10,
 });
 
+const StakeSlider = styled(Slider.RF)(({ theme, input, max }) => ({
+  background: `linear-gradient(to right, ${theme.primary}, ${
+    theme.primary
+  } ${(100 * input.value) / max}%, ${theme.mixer(0.5)} ${(100 * input.value) /
+    max}%)`,
+}));
+
 @connect(
   ({ core: { stakeInfo } }) => ({
     currentStake: stakeInfo && stakeInfo.stake,
@@ -112,7 +119,7 @@ export default class AdjustStakeModal extends React.Component {
               <LimitNumber align="right">{formatNumber(total)}</LimitNumber>
             </div>
             <SliderWrapper>
-              <Field name="stake" component={Slider.RF} min={0} max={total} />
+              <Field name="stake" component={StakeSlider} min={0} max={total} />
             </SliderWrapper>
             <div className="mt2 flex space-between">
               <Button
