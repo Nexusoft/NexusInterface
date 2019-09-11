@@ -38,9 +38,9 @@ const filterRecipients = memoize((suggestions, inputValue) => {
   );
 });
 
-const mapStateToProps = ({ addressBook }) => ({
-  suggestions: getRecipientSuggestions(addressBook),
-  addressNameMap: getAddressNameMap(addressBook),
+const mapStateToProps = ({ addressBook, myTritiumAccounts }) => ({
+  suggestions: getRecipientSuggestions(addressBook, myTritiumAccounts),
+  addressNameMap: getAddressNameMap(addressBook, myTritiumAccounts),
 });
 
 const actionCreators = { openModal };
@@ -84,6 +84,7 @@ class RecipientField extends Component {
     const { addressNameMap, input, meta, suggestions } = this.props;
     const recipientName = addressNameMap[input.value];
 
+    console.log(this.props);
     return (
       <FormField
         label={

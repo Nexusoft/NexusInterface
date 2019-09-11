@@ -63,6 +63,8 @@ const mapStateToProps = state => {
   } = state;
   const accountName = valueSelector(state, 'sendFrom');
   const recipients = valueSelector(state, 'recipients');
+  const reference = valueSelector(state, 'reference');
+  const expires = valueSelector(state, 'expires');
   const accBalance = getAccountBalance(accountName, myTritiumAccounts);
   const hideSendAll =
     recipients &&
@@ -71,6 +73,8 @@ const mapStateToProps = state => {
   return {
     minConfirmations,
     locked,
+    reference,
+    expires,
     minting_only,
     accountOptions: getAccountOptions(myTritiumAccounts),
     addressNameMap: getAddressNameMap(addressBook),
@@ -116,10 +120,22 @@ const mapDispatchToProps = {
     reference: null,
     expires: null,
   },
-  validate: ({ sendFrom, recipients }) => {
+  validate: ({ sendFrom, recipients, password, reference, expires }) => {
+    console.error(sendFrom);
+    console.error(recipients);
+
     const errors = {};
     if (!sendFrom) {
       errors.sendFrom = __('No accounts selected');
+    }
+    if (reference) {
+      if (!reference.match('^[0-9]+$')) {
+        errors.reference = __('Reference must be a number');
+      } else {
+        if (parseInt(reference) > 18446744073709551615) {
+          errors.reference = __('Number is too large');
+        }
+      }
     }
 
     if (!recipients || !recipients.length) {
@@ -231,6 +247,35 @@ const mapDispatchToProps = {
   onSubmitFail: errorHandler(__('Error sending NXS')),
 })
 class SendForm extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      optionalOpen: false,
+    };
+  }
+
+  componentDidUpdate(prevProps) {
+    // if you have EVER added to these items always show till form is reset.
+    if (
+      this.props.reference !== prevProps.reference ||
+      this.props.expires !== prevProps.expires
+    ) {
+      this.setState({
+        optionalOpen: true,
+      });
+    }
+  }
+
+  componentDidMount() {
+    // if ref or experation was in the form then open the optionals.
+    // form is NOT reset on component unmount so we must show it on mount
+    if (this.props.reference || this.props.expires) {
+      this.setState({
+        optionalOpen: true,
+      });
+    }
+  }
+
   /**
    * Confirm the Send
    *
@@ -312,6 +357,12 @@ class SendForm extends Component {
     });
   };
 
+  OptionalButtonClick = e => {
+    this.setState({
+      optionalOpen: true,
+    });
+  };
+
   /**
    * Add Recipient to the queue
    *
@@ -348,7 +399,7 @@ class SendForm extends Component {
    */
   render() {
     const { accountOptions, change, accBalance } = this.props;
-
+    console.error(this);
     return (
       <SendFormComponent onSubmit={this.confirmSend}>
         <FormField label={__('Send from')}>
@@ -369,21 +420,35 @@ class SendForm extends Component {
           token={'0'}
         />
 
-        <FormField label={__('Reference')}>
-          <Field
-            component={TextField.RF}
-            name="reference"
-            placeholder={__('ulong (Optional)')}
-          />
-        </FormField>
-
-        <FormField label={__('Expiration')}>
-          <Field
-            component={TextField.RF}
-            name="expiration"
-            placeholder={__('Seconds till experation (Optional)')}
-          />
-        </FormField>
+        {this.state.optionalOpen ||
+        this.props.reference ||
+        this.props.expires ? (
+          <>
+            {' '}
+            <FormField label={__('Reference')}>
+              <Field
+                component={TextField.RF}
+                name="reference"
+                placeholder={__('ulong (Optional)')}
+              />
+            </FormField>
+            <FormField label={__('Expiration')}>
+              <Field
+                component={TextField.RF}
+                name="expires"
+                placeholder={__('Seconds till experation (Optional)')}
+              />
+            </FormField>{' '}
+          </>
+        ) : (
+          <Button
+            style={{ marginTop: '1em' }}
+            onClick={this.OptionalButtonClick}
+            skin="primary"
+          >
+            {__('Options')}
+          </Button>
+        )}
 
         <SendFormButtons>
           <Button type="submit" skin="primary">
