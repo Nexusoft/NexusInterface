@@ -7,6 +7,7 @@ import Button from 'components/Button';
 import AdjustStakeModal from 'components/AdjustStakeModal';
 import { formatDateTime } from 'lib/intl';
 import { openModal } from 'actions/overlays';
+import { formatNumber } from 'lib/intl';
 
 import { totalBalance } from './utils';
 
@@ -59,25 +60,25 @@ const AccountDetailsModal = ({ account, stakeInfo, openModal }) => (
       </Field>
       <Field label={__('Token name')}>{account.token_name}</Field>
       <Field label={__('Total balance')}>
-        {totalBalance(account)} {account.token_name}
+        {formatNumber(totalBalance(account), 20)} {account.token_name}
       </Field>
       <Field label={__('Available balance')}>
-        {account.balance} {account.token_name}
+        {formatNumber(account.balance, 20)} {account.token_name}
       </Field>
       <Field label={__('Pending balance')}>
-        {account.pending} {account.token_name}
+        {formatNumber(account.pending, 20)} {account.token_name}
       </Field>
       <Field label={__('Unconfirmed balance')}>
-        {account.unconfirmed} {account.token_name}
+        {formatNumber(account.unconfirmed, 20)} {account.token_name}
       </Field>
       {account.stake !== undefined && (
         <Field label={__('Stake balance')}>
-          {account.stake} {account.token_name}
+          {formatNumber(account.stake, 20)} {account.token_name}
         </Field>
       )}
       {account.immature !== undefined && (
         <Field label={__('Immature balance')}>
-          {account.immature} {account.token_name}
+          {formatNumber(account.immature, 20)} {account.token_name}
         </Field>
       )}
       <Field label={__('Address')}>

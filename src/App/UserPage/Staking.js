@@ -9,6 +9,7 @@ import { updateSettings } from 'actions/settings';
 import { restartCore } from 'actions/core';
 import { openModal } from 'actions/overlays';
 import confirm from 'utils/promisified/confirm';
+import { formatNumber } from 'lib/intl';
 
 import QuestionMark from './QuestionMark';
 
@@ -78,7 +79,7 @@ export default class Staking extends React.Component {
                 )}
               />
             </div>
-            <div>{stakeInfo.stake} NXS</div>
+            <div>{formatNumber(stakeInfo.stake)} NXS</div>
           </Line>
           <Line>
             <div>
@@ -89,7 +90,7 @@ export default class Staking extends React.Component {
                 )}
               />
             </div>
-            <div>{stakeInfo.stakerate} %</div>
+            <div>{formatNumber(stakeInfo.stakerate, 2)} %</div>
           </Line>
           <Line>
             <div>
@@ -100,7 +101,7 @@ export default class Staking extends React.Component {
                 )}
               />
             </div>
-            <div>{stakeInfo.trustweight} %</div>
+            <div>{formatNumber(stakeInfo.trustweight, 2)} %</div>
           </Line>
           <Line>
             <div>
@@ -111,7 +112,7 @@ export default class Staking extends React.Component {
                 )}
               />
             </div>
-            <div>{stakeInfo.blockweight} %</div>
+            <div>{formatNumber(stakeInfo.blockweight, 2)} %</div>
           </Line>
           <Line>
             <div>
@@ -122,7 +123,7 @@ export default class Staking extends React.Component {
                 )}
               />
             </div>
-            <div>{stakeInfo.stakeweight} %</div>
+            <div>{formatNumber(stakeInfo.stakeweight, 2)} %</div>
           </Line>
           <Line>
             <div>
@@ -133,7 +134,7 @@ export default class Staking extends React.Component {
                 )}
               />
             </div>
-            <div>{stakeInfo.balance} NXS</div>
+            <div>{formatNumber(stakeInfo.balance)} NXS</div>
           </Line>
           <div className="mt1 flex space-between">
             <Button

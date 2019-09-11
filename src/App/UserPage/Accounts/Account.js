@@ -25,7 +25,7 @@ const Account = ({ account, openModal }) => (
     <div className="flex space-between">
       <div>
         <AccountName>{account.name}</AccountName> (
-        {formatNumber(totalBalance(account), 20)} {account.token_name})
+        {formatNumber(totalBalance(account))} {account.token_name})
       </div>
       <Link
         as="a"

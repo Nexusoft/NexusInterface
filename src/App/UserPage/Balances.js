@@ -5,11 +5,12 @@ import styled from '@emotion/styled';
 import { switchUserTab } from 'actions/ui';
 import { getBalances } from 'actions/core';
 import { observeStore } from 'store';
+import { formatNumber } from 'lib/intl';
 
 import QuestionMark from './QuestionMark';
 
 const BalancesWrapper = styled.div(({ theme }) => ({
-  maxWidth: 300,
+  maxWidth: 350,
   margin: '0 auto',
   paddingTop: 15,
   color: theme.mixer(0.75),
@@ -68,7 +69,7 @@ export default class Balances extends React.Component {
         <BalancesWrapper>
           <Line bold>
             <div>{__('Total balance')}</div>
-            <div>{total} NXS</div>
+            <div>{formatNumber(total)} NXS</div>
           </Line>
           <Line>
             <div>
@@ -80,7 +81,7 @@ export default class Balances extends React.Component {
                 )}
               />
             </div>
-            <div>{balances.available} NXS</div>
+            <div>{formatNumber(balances.available)} NXS</div>
           </Line>
           <Line>
             <div>
@@ -92,7 +93,7 @@ export default class Balances extends React.Component {
                 )}
               />
             </div>
-            <div>{balances.pending} NXS</div>
+            <div>{formatNumber(balances.pending)} NXS</div>
           </Line>
           <Line>
             <div>
@@ -104,7 +105,7 @@ export default class Balances extends React.Component {
                 )}
               />
             </div>
-            <div>{balances.unconfirmed} NXS</div>
+            <div>{formatNumber(balances.unconfirmed)} NXS</div>
           </Line>
           <Line>
             <div>
@@ -116,7 +117,7 @@ export default class Balances extends React.Component {
                 )}
               />
             </div>
-            <div>{balances.stake} NXS</div>
+            <div>{formatNumber(balances.stake)} NXS</div>
           </Line>
           <Line>
             <div>
@@ -128,7 +129,7 @@ export default class Balances extends React.Component {
                 )}
               />
             </div>
-            <div>{balances.immature} NXS</div>
+            <div>{formatNumber(balances.immature)} NXS</div>
           </Line>
         </BalancesWrapper>
       )
