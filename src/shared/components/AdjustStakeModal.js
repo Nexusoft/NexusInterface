@@ -64,9 +64,7 @@ const SliderWrapper = styled.div({
     if (stake < props.currentStake) {
       const confirmed = await confirm({
         question: __('Reduce stake amount?'),
-        note: __(
-          'Your new stake amount is less than it is currently. Reducing stake amount will make your Stake Rate will suffer'
-        ),
+        note: __('Reducing stake amount might make your Stake Rate decrease'),
         // labelYes: __('Reduce stake amount'),
         skinYes: 'danger',
         // labelNo: __('Cancel'),
@@ -106,8 +104,8 @@ export default class AdjustStakeModal extends React.Component {
                 component={StakeTextField}
                 skin="filled-inverted"
               />
-              <LimitNumber align="left">0 NXS</LimitNumber>
-              <LimitNumber align="right">{formatNumber(total)} NXS</LimitNumber>
+              <LimitNumber align="left">0</LimitNumber>
+              <LimitNumber align="right">{formatNumber(total)}</LimitNumber>
             </div>
             <SliderWrapper>
               <Field name="stake" component={Slider.RF} min={0} max={total} />
