@@ -12,6 +12,7 @@ import confirm from 'utils/promisified/confirm';
 import confirmPin from 'utils/promisified/confirmPin';
 import { errorHandler } from 'utils/form';
 import { formatNumber } from 'lib/intl';
+import { removeModal, showNotification } from 'actions/overlays';
 
 const LimitNumber = styled.span(
   {
@@ -38,13 +39,16 @@ const SliderWrapper = styled.div({
   marginTop: 10,
 });
 
-@connect(({ core: { stakeInfo } }) => ({
-  currentStake: stakeInfo && stakeInfo.stake,
-  total: stakeInfo && stakeInfo.stake + stakeInfo.balance,
-  initialValues: {
-    stake: stakeInfo && stakeInfo.stake,
-  },
-}))
+@connect(
+  ({ core: { stakeInfo } }) => ({
+    currentStake: stakeInfo && stakeInfo.stake,
+    total: stakeInfo && stakeInfo.stake + stakeInfo.balance,
+    initialValues: {
+      stake: stakeInfo && stakeInfo.stake,
+    },
+  }),
+  { removeModal, showNotification }
+)
 @reduxForm({
   form: 'adjust_stake',
   destroyOnUnmount: true,
