@@ -108,13 +108,12 @@ const ExtraSection = styled.div({
       password,
       pin,
     });
-    if (props.enableMining || props.enableStaking) {
-      await apiPost('users/unlock/user', {
-        pin,
-        mining: !!props.enableMining,
-        staking: !!props.enableStaking,
-      });
-    }
+    await apiPost('users/unlock/user', {
+      pin,
+      notifications: true,
+      mining: !!props.enableMining,
+      staking: !!props.enableStaking,
+    });
     props.getUserStatus();
   },
   onSubmitFail: errorHandler(__('Error creating user')),
