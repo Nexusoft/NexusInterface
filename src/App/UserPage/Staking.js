@@ -3,9 +3,11 @@ import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
 import Button from 'components/Button';
+import AdjustStakeModal from 'components/AdjustStakeModal';
 import { switchUserTab } from 'actions/ui';
 import { updateSettings } from 'actions/settings';
 import { restartCore } from 'actions/core';
+import { openModal } from 'actions/overlays';
 import confirm from 'utils/promisified/confirm';
 
 import QuestionMark from './QuestionMark';
@@ -35,7 +37,7 @@ const Line = styled.div(
     stakeInfo: state.core.stakeInfo,
     stakingEnabled: state.settings.enableStaking,
   }),
-  { switchUserTab, updateSettings, restartCore }
+  { switchUserTab, updateSettings, restartCore, openModal }
 )
 export default class Staking extends React.Component {
   constructor(props) {
@@ -58,7 +60,7 @@ export default class Staking extends React.Component {
   };
 
   render() {
-    const { stakeInfo, stakingEnabled } = this.props;
+    const { stakeInfo, stakingEnabled, openModal } = this.props;
 
     return (
       !!stakeInfo && (
@@ -134,7 +136,12 @@ export default class Staking extends React.Component {
             <div>{stakeInfo.balance} NXS</div>
           </Line>
           <div className="mt1 flex space-between">
-            <Button disabled={!stakeInfo.stake && !stakeInfo.balance}>
+            <Button
+              disabled={!stakeInfo.stake && !stakeInfo.balance}
+              onClick={() => {
+                openModal(AdjustStakeModal);
+              }}
+            >
               {__('Adjust stake balance')}
             </Button>
             <Button

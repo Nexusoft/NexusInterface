@@ -46,7 +46,7 @@ const SliderWrapper = styled.div({
   },
 }))
 @reduxForm({
-  form: 'stake_balance',
+  form: 'adjust_stake',
   destroyOnUnmount: true,
   validate: ({ stake }, props) => {
     const errors = {};
@@ -67,9 +67,9 @@ const SliderWrapper = styled.div({
         note: __(
           'Your new stake amount is less than it is currently. Reducing stake amount will make your Stake Rate will suffer'
         ),
-        labelYes: __('Reduce stake amount'),
+        // labelYes: __('Reduce stake amount'),
         skinYes: 'danger',
-        labelNo: __('Cancel'),
+        // labelNo: __('Cancel'),
       });
       if (!confirmed) return;
     }
@@ -85,7 +85,7 @@ const SliderWrapper = styled.div({
     props.removeModal(props.modalId);
     props.showNotification(__('Stake amount has been updated'), 'success');
   },
-  onSubmitError: errorHandler(__('Error setting stake amount')),
+  onSubmitFail: errorHandler(__('Error setting stake amount')),
 })
 export default class AdjustStakeModal extends React.Component {
   render() {

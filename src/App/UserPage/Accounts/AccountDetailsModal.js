@@ -4,7 +4,9 @@ import styled from '@emotion/styled';
 
 import Modal from 'components/Modal';
 import Button from 'components/Button';
+import AdjustStakeModal from 'components/AdjustStakeModal';
 import { formatDateTime } from 'lib/intl';
+import { openModal } from 'actions/overlays';
 
 import { totalBalance } from './utils';
 
@@ -44,7 +46,7 @@ const Field = ({ label, children }) => (
   </Row>
 );
 
-const AccountDetailsModal = ({ account, stakeInfo }) => (
+const AccountDetailsModal = ({ account, stakeInfo, openModal }) => (
   <Modal>
     <Modal.Header>{__('Account Details')}</Modal.Header>
     <Modal.Body>
@@ -87,6 +89,9 @@ const AccountDetailsModal = ({ account, stakeInfo }) => (
           <div />
           <Button
             disabled={!stakeInfo || (!stakeInfo.stake && !stakeInfo.balance)}
+            onClick={() => {
+              openModal(AdjustStakeModal);
+            }}
           >
             {__('Adjust stake balance')}
           </Button>
@@ -100,4 +105,11 @@ const mapStateToProps = state => ({
   stakeInfo: state.core.stakeInfo,
 });
 
-export default connect(mapStateToProps)(AccountDetailsModal);
+const actionCreators = {
+  openModal,
+};
+
+export default connect(
+  mapStateToProps,
+  actionCreators
+)(AccountDetailsModal);

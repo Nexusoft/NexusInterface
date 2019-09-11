@@ -27,15 +27,15 @@ const formOptions = {
     return errors;
   },
   onSubmit: ({ pin }, dispatch, props) => {
-    if (props.onConfirm) {
-      props.onConfirm(pin);
+    if (props.submitPin) {
+      props.submitPin(pin);
     }
     props.removeModal(props.modalId);
   },
 };
 
-const PinDialog = ({ handleSubmit, confirmLabel = __('Confirm') }) => (
-  <Modal style={{ maxWidth: 350 }}>
+const PinDialog = ({ handleSubmit, confirmLabel = __('Confirm'), onClose }) => (
+  <Modal style={{ maxWidth: 350 }} onClose={onClose}>
     {closeModal => (
       <>
         <Modal.Header>{__('Enter PIN number')}</Modal.Header>
