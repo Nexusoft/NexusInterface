@@ -8,6 +8,7 @@ const SliderComponent = styled.input(({ theme }) => ({
   appearance: 'none',
   width: '100%',
   height: 4,
+  margin: '15px 0',
   borderRadius: 2,
   background: theme.mixer(0.5),
   cursor: 'pointer',
@@ -33,5 +34,10 @@ const SliderComponent = styled.input(({ theme }) => ({
 }));
 
 const Slider = props => <SliderComponent type="range" {...props} />;
+
+const SliderReduxForm = ({ input, meta, ...rest }) => (
+  <Slider error={meta.touched && meta.error} {...input} {...rest} />
+);
+Slider.RF = SliderReduxForm;
 
 export default Slider;

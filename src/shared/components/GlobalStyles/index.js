@@ -121,6 +121,10 @@ const utilityClasses = theme => css`
     vertical-align: middle;
   }
 
+  .text-center {
+    text-align: center;
+  }
+
   .dim {
     opacity: 0.5;
   }
