@@ -614,14 +614,7 @@ class Overview extends Component {
       theme,
       synchronizing,
     } = this.props;
-    const {
-      available,
-      pending,
-      unconfirmed,
-      stake,
-      immature_mined,
-      immature_stake,
-    } = balances || {};
+    const { available, pending, unconfirmed, stake, immature } = balances || {};
     const { fiatCurrency } = settings;
 
     if (settings.overviewDisplay === 'none') {
@@ -830,7 +823,7 @@ class Overview extends Component {
                   ? '-'
                   : this.waitForCore(
                       stake !== undefined
-                        ? formatNumber(stake + immature_mined + immature_stake)
+                        ? formatNumber(stake + immature)
                         : 'N/A'
                     )}
               </StatValue>

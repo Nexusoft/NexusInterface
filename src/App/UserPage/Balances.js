@@ -61,8 +61,7 @@ export default class Balances extends React.Component {
         balances.pending +
         balances.unconfirmed +
         balances.stake +
-        balances.immature_mined +
-        balances.immature_stake;
+        balances.immature;
 
     return (
       !!balances && (
@@ -129,7 +128,7 @@ export default class Balances extends React.Component {
                 )}
               />
             </div>
-            <div>{balances.immature_mined} NXS</div>
+            <div>{balances.immature} NXS</div>
           </Line>
         </BalancesWrapper>
       )
