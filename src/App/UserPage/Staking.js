@@ -72,7 +72,7 @@ export default class Staking extends React.Component {
           </Line>
           <Line>
             <div>
-              <span className="v-align">{__('Stake balance')}</span>
+              <span className="v-align">{__('Stake amount')}</span>
               <QuestionMark
                 tooltip={__(
                   'The amount of NXS currently staked in the trust account'
@@ -127,7 +127,7 @@ export default class Staking extends React.Component {
           </Line>
           <Line>
             <div>
-              <span className="v-align">{__('Unstaked balance')}</span>
+              <span className="v-align">{__('Unstaked amount')}</span>
               <QuestionMark
                 tooltip={__(
                   'The current NXS balance of the trust account that is not staked. You can spend this amount without affecting your Trust Score'
@@ -143,7 +143,7 @@ export default class Staking extends React.Component {
                 openModal(AdjustStakeModal);
               }}
             >
-              {__('Adjust stake balance')}
+              {__('Adjust stake amount')}
             </Button>
             <Button
               skin={stakingEnabled ? 'default' : 'primary'}

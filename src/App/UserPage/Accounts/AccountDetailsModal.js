@@ -59,7 +59,7 @@ const AccountDetailsModal = ({ account, stakeInfo, openModal }) => (
         {formatDateTime(account.modified * 1000, timeFormatOptions)}
       </Field>
       <Field label={__('Token name')}>{account.token_name}</Field>
-      <Field label={__('Total balance')}>
+      <Field label={__('Total account balance')}>
         {formatNumber(totalBalance(account), 20)} {account.token_name}
       </Field>
       <Field label={__('Available balance')}>
@@ -94,7 +94,7 @@ const AccountDetailsModal = ({ account, stakeInfo, openModal }) => (
               openModal(AdjustStakeModal);
             }}
           >
-            {__('Adjust stake balance')}
+            {__('Adjust stake amount')}
           </Button>
         </div>
       )}

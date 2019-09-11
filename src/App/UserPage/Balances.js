@@ -109,7 +109,7 @@ export default class Balances extends React.Component {
           </Line>
           <Line>
             <div>
-              <span className="v-align">{__('Staking')}</span>
+              <span className="v-align">{__('Stake')}</span>
 
               <QuestionMark
                 tooltip={__(
