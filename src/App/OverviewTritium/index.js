@@ -771,13 +771,7 @@ class Overview extends Component {
                     )}
               </StatValue>
             </div>
-            <StatIcon
-              icon={
-                settings.displayFiatBalance
-                  ? CurrencyIcon(fiatCurrency)
-                  : logoIcon
-              }
-            />
+            <StatIcon icon={logoIcon} />
           </Stat>
           <Stat
             as={stake !== undefined ? Link : undefined}
@@ -804,7 +798,7 @@ class Overview extends Component {
                 )}
               </StatValue>
             </div>
-            <StatIcon icon={nxsStakeIcon} />
+            <StatIcon icon={CurrencyIcon(fiatCurrency)} />
           </Stat>
           <Stat
             as={stake !== undefined ? Link : undefined}
