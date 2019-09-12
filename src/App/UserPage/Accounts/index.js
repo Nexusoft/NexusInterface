@@ -6,9 +6,11 @@ import Icon from 'components/Icon';
 import Button from 'components/Button';
 import { switchUserTab } from 'actions/ui';
 import { listAccounts } from 'actions/core';
+import { openModal } from 'actions/overlays';
 import plusIcon from 'images/plus.sprite.svg';
 
 import Account from './Account';
+import NewAccountModal from './NewAccountModal';
 
 const AccountsWrapper = styled.div(({ theme }) => ({
   maxWidth: 500,
@@ -21,7 +23,7 @@ const AccountsWrapper = styled.div(({ theme }) => ({
   state => ({
     accounts: state.core.accounts,
   }),
-  { switchUserTab, listAccounts }
+  { switchUserTab, listAccounts, openModal }
 )
 export default class Accounts extends React.Component {
   constructor(props) {
@@ -34,7 +36,7 @@ export default class Accounts extends React.Component {
   }
 
   render() {
-    const { accounts } = this.props;
+    const { accounts, openModal } = this.props;
 
     return (
       !!accounts && (
@@ -44,7 +46,7 @@ export default class Accounts extends React.Component {
           ))}
           <div className="mt1 flex space-between">
             <div />
-            <Button>
+            <Button onClick={() => openModal(NewAccountModal)}>
               <Icon icon={plusIcon} className="space-right" />
               {__('Create new account')}
             </Button>

@@ -8,13 +8,10 @@ import * as color from 'utils/color';
 
 const UserBriefComponent = styled.div(({ theme }) => ({
   width: 300,
-  paddingRight: 30,
+  marginLeft: -30,
+  padding: '0 30px',
   borderRight: `1px solid ${theme.mixer(0.125)}`,
-}));
-
-const UserInfo = styled.div(({ theme }) => ({
-  textAlign: 'center',
-  borderBottom: `1px solid ${theme.mixer(0.125)}`,
+  overflow: 'auto',
 }));
 
 const Separator = styled.div(({ theme }) => ({

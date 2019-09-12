@@ -152,6 +152,9 @@ const utilityClasses = theme => css`
   .mt2 {
     margin-top: 2em;
   }
+  .mt3 {
+    margin-top: 3em;
+  }
 
   .space-left {
     margin-left: 0.4em;
