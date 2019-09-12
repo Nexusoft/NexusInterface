@@ -401,7 +401,6 @@ class SendForm extends Component {
    */
   render() {
     const { accountOptions, change, accBalance } = this.props;
-    console.error(this);
     return (
       <SendFormComponent onSubmit={this.confirmSend}>
         <FormField label={__('Send from')}>

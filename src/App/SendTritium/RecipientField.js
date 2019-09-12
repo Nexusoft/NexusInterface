@@ -75,7 +75,6 @@ class RecipientField extends Component {
   };
 
   returnFilteredSuggestions(suggestions) {
-    console.log(suggestions[3]);
     return suggestions.filter(
       account =>
         account.token === this.props.sendFrom.token &&

@@ -88,18 +88,6 @@ export const getRecipientSuggestions = memoize(
             </span>
           ),
         });
-
-        suggestions.push({
-          name: element.name + 'test',
-          value: element.address,
-          token: 'myToken',
-          display: (
-            <span>
-              {element.name} {'test   '}
-              <Address>{element.address}</Address>
-            </span>
-          ),
-        });
       });
     }
     return suggestions;
