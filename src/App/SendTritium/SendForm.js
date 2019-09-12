@@ -76,6 +76,7 @@ const mapStateToProps = state => {
     reference,
     expires,
     minting_only,
+    accountName,
     accountOptions: getAccountOptions(myTritiumAccounts),
     addressNameMap: getAddressNameMap(addressBook),
     fieldNames: getRegisteredFieldNames(
@@ -417,7 +418,11 @@ class SendForm extends Component {
           change={change}
           addRecipient={this.addRecipient}
           accBalance={accBalance}
-          token={'0'}
+          sendFrom={{
+            token: '0',
+            name: this.props.accountName,
+            tokenAddress: '0',
+          }}
         />
 
         {this.state.optionalOpen ||
@@ -444,14 +449,14 @@ class SendForm extends Component {
           <Button
             style={{ marginTop: '1em' }}
             onClick={this.OptionalButtonClick}
-            skin="primary"
+            skin="plain-inverted"
           >
             {__('Options')}
           </Button>
         )}
 
         <SendFormButtons>
-          <Button type="submit" skin="primary">
+          <Button type="submit" skin="primary" wide>
             <Icon icon={sendIcon} className="space-right" />
             {__('Send')}
           </Button>

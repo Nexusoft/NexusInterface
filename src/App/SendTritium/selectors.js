@@ -61,6 +61,7 @@ export const getRecipientSuggestions = memoize(
               suggestions.push({
                 name: contact.name,
                 value: address,
+                token: '0',
                 display: (
                   <span>
                     {contact.name}
@@ -79,9 +80,22 @@ export const getRecipientSuggestions = memoize(
         suggestions.push({
           name: element.name,
           value: element.address,
+          token: element.token,
           display: (
             <span>
               {element.name} {'   '}
+              <Address>{element.address}</Address>
+            </span>
+          ),
+        });
+
+        suggestions.push({
+          name: element.name + 'test',
+          value: element.address,
+          token: 'myToken',
+          display: (
+            <span>
+              {element.name} {'test   '}
               <Address>{element.address}</Address>
             </span>
           ),

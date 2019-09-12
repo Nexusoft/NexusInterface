@@ -75,7 +75,7 @@ class Recipients extends React.Component {
    * @memberof Recipients
    */
   render() {
-    const { fields, change, accBalance, token } = this.props;
+    const { fields, change, accBalance, sendFrom } = this.props;
 
     if (!fields || !fields.length) return null;
 
@@ -85,12 +85,16 @@ class Recipients extends React.Component {
           name={`${fields.name}[0].address`}
           component={RecipientField}
           change={change}
+          sendFrom={sendFrom}
         />
         <AmountField
           fullAmount={accBalance}
           parentFieldName={`${fields.name}[0]`}
           change={change}
-          token={{ name: 'NXS', address: '0' }}
+          token={{
+            name: sendFrom.token === '0' ? 'NXS' : sendFrom.token,
+            address: sendFrom.tokenAddress,
+          }}
         />
       </>
     );

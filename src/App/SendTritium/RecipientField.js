@@ -74,6 +74,15 @@ class RecipientField extends Component {
     this.props.openModal(AddEditContactModal);
   };
 
+  returnFilteredSuggestions(suggestions) {
+    console.log(suggestions[3]);
+    return suggestions.filter(
+      account =>
+        account.token === this.props.sendFrom.token &&
+        account.name !== this.props.sendFrom.name
+    );
+  }
+
   /**
    * Component's Renderable JSX
    *
@@ -81,10 +90,9 @@ class RecipientField extends Component {
    * @memberof RecipientField
    */
   render() {
-    const { addressNameMap, input, meta, suggestions } = this.props;
+    const { addressNameMap, input, meta } = this.props;
     const recipientName = addressNameMap[input.value];
-
-    console.log(this.props);
+    const suggestions = this.returnFilteredSuggestions(this.props.suggestions);
     return (
       <FormField
         label={
