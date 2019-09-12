@@ -33,6 +33,10 @@ const LimitNumber = styled.span(
 const StakeTextField = styled(TextField.RF)({
   width: 120,
   margin: '0 auto',
+
+  '& > input': {
+    textAlign: 'center',
+  },
 });
 
 const SliderWrapper = styled.div({
@@ -98,7 +102,7 @@ const StakeSlider = styled(Slider.RF)(({ theme, input, max }) => ({
 })
 export default class AdjustStakeModal extends React.Component {
   render() {
-    const { total, handleSubmit, submitting } = this.props;
+    const { total, handleSubmit, submitting, currentStake } = this.props;
     return (
       <Modal
         style={{ maxWidth: 600 }}
@@ -112,6 +116,7 @@ export default class AdjustStakeModal extends React.Component {
             <div className="relative">
               <Field
                 name="stake"
+                type="number"
                 component={StakeTextField}
                 skin="filled-inverted"
               />
@@ -129,9 +134,22 @@ export default class AdjustStakeModal extends React.Component {
               >
                 {__('Cancel')}
               </Button>
-              <Button skin="primary" type="submit" disabled={submitting}>
-                {__('Set stake amount')}
-              </Button>
+              <Field
+                name="stake"
+                component={({ input }) => (
+                  <Button
+                    skin="primary"
+                    type="submit"
+                    disabled={
+                      submitting ||
+                      // using == instead of === because input.value can be either string or number
+                      input.value == currentStake
+                    }
+                  >
+                    {__('Set stake amount')}
+                  </Button>
+                )}
+              />
             </div>
           </form>
         </Modal.Body>
