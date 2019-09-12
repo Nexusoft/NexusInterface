@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import * as TYPE from 'consts/actionTypes';
 import { remote } from 'electron';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/core';
@@ -16,7 +15,7 @@ import { getDifficulty, getBalances } from 'actions/core';
 import { updateSettings } from 'actions/settings';
 import { formatNumber, formatCurrency, formatRelativeTime } from 'lib/intl';
 import { timing, consts } from 'styles';
-import { isCoreConnected } from 'selectors';
+import { isCoreConnected, isSynchronized } from 'selectors';
 import { observeStore } from 'store';
 import Globe from './Globe';
 import { webGLAvailable } from 'consts/misc';
@@ -102,16 +101,12 @@ const mapStateToProps = state => {
     settings,
     theme,
   } = state;
-  const { synccomplete } = systemInfo;
-  const syncUnknown =
-    (!synccomplete && synccomplete !== 0) ||
-    synccomplete < 0 ||
-    synccomplete > 100;
   const displayValues =
     displayNXSvalues &&
     displayNXSvalues.find(e => e.name === settings.fiatCurrency);
   return {
     coreConnected: isCoreConnected(state),
+    synchronized: isSynchronized(state),
     difficulty,
     blockDate,
     market: {
@@ -124,7 +119,6 @@ const mapStateToProps = state => {
     systemInfo,
     stakeInfo,
     balances,
-    synchronizing: !syncUnknown && synccomplete !== 100,
   };
 };
 const actionCreators = {
@@ -620,7 +614,7 @@ class Overview extends Component {
       difficulty,
       settings,
       theme,
-      synchronizing,
+      synchronized,
     } = this.props;
     const { available, pending, unconfirmed, stake, immature } = balances || {};
     const { fiatCurrency } = settings;
@@ -755,7 +749,7 @@ class Overview extends Component {
           >
             <div>
               <StatLabel>
-                {!!synchronizing && (
+                {!synchronized && (
                   <Tooltip.Trigger
                     align="start"
                     tooltip={__(
