@@ -25,6 +25,7 @@ import Link from 'components/Link';
 import { errorHandler } from 'utils/form';
 import sendIcon from 'images/send.sprite.svg';
 import { numericOnly } from 'utils/form';
+import confirmPin from 'utils/promisified/confirmPin';
 
 import PinDialog from 'components/PinDialog';
 
@@ -118,14 +119,10 @@ const mapDispatchToProps = {
         fiatAmount: '',
       },
     ],
-    password: null,
     reference: null,
     expires: null,
   },
-  validate: ({ sendFrom, recipients, password, reference, expires }) => {
-    console.error(sendFrom);
-    console.error(recipients);
-
+  validate: ({ sendFrom, recipients, reference, expires }) => {
     const errors = {};
     if (!sendFrom) {
       errors.sendFrom = __('No accounts selected');
@@ -170,6 +167,7 @@ const mapDispatchToProps = {
   },
   asyncBlurFields: ['recipients[].address'],
   asyncValidate: async ({ recipients }) => {
+    //Issue with backend
     return null;
     const recipientsErrors = [];
     await Promise.all(
@@ -198,48 +196,33 @@ const mapDispatchToProps = {
     }
     return null;
   },
-  onSubmit: ({ sendFrom, recipients, message, password }, dispatch, props) => {
-    console.log('Submit');
-    props.openModal(PinDialog, {
-      confirmLabel: __('Unlock'),
-      onConfirm: async pin => {
-        try {
-          console.log(pin);
-          const recipient = recipients[0];
-          const params = [
-            sendFrom,
-            recipient.address,
-            parseFloat(recipient.amount),
-            minConfirmations,
-            message || null,
-            null,
-            password || null,
-          ];
-          console.log(password);
-          console.log(params);
-          return apiPost('/finance/debit/account', params);
-        } catch (err) {
-          console.error(err);
-          handleError(err);
-        }
-      },
-    });
+  onSubmit: async (
+    { sendFrom, recipients, reference, expires },
+    dispatch,
+    props
+  ) => {
+    const pin = await confirmPin();
+    if (pin) {
+      const params = {
+        pin,
+        name: sendFrom,
+        address_to: recipients[0].address,
+        amount: parseFloat(recipients[0].amount),
+      };
+      if (reference) params.reference = reference;
+      if (expires) params.expires = expires;
+      console.log(params);
+      return await apiPost('finance/debit/account', params);
+    }
 
     let minConfirmations = parseInt(props.minConfirmations);
     if (isNaN(minConfirmations)) {
       minConfirmations = defaultSettings.minConfirmations;
     }
-
-    if (recipients.length === 1) {
-    } else {
-      const queue = recipients.reduce(
-        (queue, r) => ({ ...queue, [r.address]: parseFloat(r.amount) }),
-        {}
-      );
-      //return rpc('sendmany', [sendFrom, queue], minConfirmations, message);
-    }
   },
   onSubmitSuccess: (result, dispatch, props) => {
+    if (!result) return;
+
     props.reset();
     props.loadMyAccounts();
     props.openSuccessDialog({
@@ -258,13 +241,16 @@ class SendForm extends Component {
 
   componentDidUpdate(prevProps) {
     // if you have EVER added to these items always show till form is reset.
-    if (
-      this.props.reference !== prevProps.reference ||
-      this.props.expires !== prevProps.expires
-    ) {
-      this.setState({
-        optionalOpen: true,
-      });
+
+    if (this.props.reference || this.props.expires) {
+      if (
+        this.props.reference !== prevProps.reference ||
+        this.props.expires !== prevProps.expires
+      ) {
+        this.setState({
+          optionalOpen: true,
+        });
+      }
     }
   }
 
@@ -301,62 +287,7 @@ class SendForm extends Component {
       touch(...fieldNames);
       return;
     }
-
-    // if (locked) {
-    //   const {
-    //     payload: { id: modalId },
-    //   } = this.props.openErrorDialog({
-    //     message: 'You are not logged in',
-    //     note: (
-    //       <>
-    //         <p>
-    //           {__(
-    //             'You need to log in to your wallet before sending transactions'
-    //           )}
-    //         </p>
-    //         <Link
-    //           to="/Settings/Security"
-    //           onClick={() => {
-    //             this.props.removeModal(modalId);
-    //           }}
-    //         >
-    //           {__('Log in now')}
-    //         </Link>
-    //       </>
-    //     ),
-    //   });
-    //   return;
-    // }
-
-    this.props.openModal(PinDialog, {
-      confirmLabel: __('Unlock'),
-      onConfirm: async pin => {
-        try {
-          console.log(this);
-          console.log(props);
-          this.props.openConfirmDialog({
-            question: __('Send transaction?'),
-            callbackYes: () => {
-              if (locked || minting_only) {
-                this.props.openModal(PasswordModal, {
-                  onSubmit: password => {
-                    this.props.change('password', password);
-                    // change function seems to be asynchronous
-                    // so setTimeout to wait for it to take effect
-                    setTimeout(handleSubmit, 0);
-                  },
-                });
-              } else {
-                handleSubmit();
-              }
-            },
-          });
-        } catch (err) {
-          console.error(err);
-          handleError(err);
-        }
-      },
-    });
+    handleSubmit();
   };
 
   OptionalButtonClick = e => {
