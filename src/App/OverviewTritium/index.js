@@ -503,7 +503,10 @@ class Overview extends Component {
 
     return (
       <React.Fragment>
-        <Stat>
+        <Stat
+          as={blockweight ? Link : undefined}
+          to={blockweight ? '/User/Staking' : undefined}
+        >
           <StatIcon icon={this.blockWeightIcon()} />
           <div>
             <StatLabel>{__('Block Weight')}</StatLabel>
@@ -515,7 +518,10 @@ class Overview extends Component {
           </div>
         </Stat>
 
-        <Stat>
+        <Stat
+          as={trustweight ? Link : undefined}
+          to={trustweight ? '/User/Staking' : undefined}
+        >
           <StatIcon icon={this.trustIcon()} />
           <div>
             <StatLabel>{__('Trust Weight')}</StatLabel>
@@ -527,7 +533,10 @@ class Overview extends Component {
           </div>
         </Stat>
 
-        <Stat>
+        <Stat
+          as={stakeweight ? Link : undefined}
+          to={stakeweight ? '/User/Staking' : undefined}
+        >
           <StatIcon icon={stakeIcon} />
           <div>
             <StatLabel>{__('Stake Weight')}</StatLabel>
@@ -604,7 +613,7 @@ class Overview extends Component {
   render() {
     const {
       systemInfo: { connections, txtotal, blocks },
-      stakeInfo: { interestweight, stakerate },
+      stakeInfo: { stakerate },
       balances,
       blockDate,
       market,
@@ -921,15 +930,16 @@ class Overview extends Component {
             </Stat>
           </Tooltip.Trigger>
 
-          <Stat>
+          <Stat
+            as={stakerate ? Link : undefined}
+            to={stakerate ? '/User/Staking' : undefined}
+          >
             <StatIcon icon={interestIcon} />
             <div>
               <StatLabel>{__('Stake Rate')}</StatLabel>
               <StatValue>
                 {this.waitForCore(
-                  interestweight || stakerate
-                    ? formatNumber(interestweight || stakerate, 2) + '%'
-                    : 'N/A'
+                  stakerate ? formatNumber(stakerate, 2) + '%' : 'N/A'
                 )}
               </StatValue>
             </div>

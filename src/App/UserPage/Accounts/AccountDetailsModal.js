@@ -52,7 +52,7 @@ const AccountDetailsModal = ({ account, stakeInfo, openModal }) => (
     <Modal.Header>{__('Account Details')}</Modal.Header>
     <Modal.Body>
       <Field label={__('Account name')}>{account.name}</Field>
-      <Field label={__('Created time')}>
+      <Field label={__('Created at')}>
         {formatDateTime(account.created * 1000, timeFormatOptions)}
       </Field>
       <Field label={__('Last modified')}>
