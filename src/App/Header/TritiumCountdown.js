@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from '@emotion/styled';
 
+const upgradeTime = new Date(2019, 8, 30).getTime();
+
 const Countdown = styled.div(({ theme }) => ({
   position: 'absolute',
   top: 5,
@@ -42,28 +44,66 @@ const Unit = styled.div({
   lineHeight: 1.1,
 });
 
+const addZeros = num => (num < 10 ? '0' + num : num);
+
+const secMs = 1000;
+const minMs = secMs * 60;
+const hourMs = minMs * 60;
+const dayMs = hourMs * 24;
+function diffDates(now, then) {
+  const diff = then - now;
+  let remaining = diff;
+  const days = Math.floor(remaining / dayMs);
+  remaining = remaining % dayMs;
+  const hours = Math.floor(remaining / hourMs);
+  remaining = remaining % hourMs;
+  const minutes = Math.floor(remaining / minMs);
+  remaining = remaining % minMs;
+  const seconds = Math.floor(remaining / secMs);
+  remaining = remaining % secMs;
+
+  return {
+    days: addZeros(days),
+    hours: addZeros(hours),
+    minutes: addZeros(minutes),
+    seconds: addZeros(seconds),
+  };
+}
+
 export default class TritiumCountdown extends React.Component {
-  componentDidMount() {}
+  componentDidMount() {
+    this.timer = setInterval(() => {
+      this.forceUpdate();
+    });
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timer);
+  }
 
   render() {
+    const now = Date.now();
+    if (now >= upgradeTime) return null;
+
+    const time = diffDates(now, upgradeTime);
     return (
       <Countdown>
         <CountdownLabel>Tritium network upgrade in</CountdownLabel>
         <CountdownClock>
           <Cube>
-            <Number>12</Number>
+            <Number>{time.days}</Number>
             <Unit>days</Unit>
           </Cube>
           <Cube>
-            <Number>05</Number>
+            <Number>{time.hours}</Number>
             <Unit>hours</Unit>
           </Cube>
           <Cube>
-            <Number>48</Number>
+            <Number>{time.minutes}</Number>
             <Unit>mins</Unit>
           </Cube>
           <Cube>
-            <Number>23</Number>
+            <Number>{time.seconds}</Number>
             <Unit>secs</Unit>
           </Cube>
         </CountdownClock>
