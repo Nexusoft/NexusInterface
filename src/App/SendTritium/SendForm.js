@@ -24,6 +24,7 @@ import {
 import Link from 'components/Link';
 import { errorHandler } from 'utils/form';
 import sendIcon from 'images/send.sprite.svg';
+import { numericOnly } from 'utils/form';
 
 import PinDialog from 'components/PinDialog';
 
@@ -434,6 +435,7 @@ class SendForm extends Component {
               <Field
                 component={TextField.RF}
                 name="reference"
+                normalize={numericOnly}
                 placeholder={__('ulong (Optional)')}
               />
             </FormField>
