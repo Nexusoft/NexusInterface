@@ -132,3 +132,12 @@ export const pauseCoreOutput = () => ({
 export const unpauseCoreOutput = () => ({
   type: TYPE.UNPAUSE_CORE_OUTPUT,
 });
+
+/**
+ * User
+ * ===========================
+ */
+export const switchUserTab = tab => ({
+  type: TYPE.SWITCH_USER_TAB,
+  payload: tab,
+});

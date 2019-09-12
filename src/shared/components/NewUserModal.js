@@ -93,11 +93,12 @@ const ExtraSection = styled.div({
     });
   },
   onSubmitSuccess: async (result, dispatch, props) => {
+    const { username, password, pin } = props.values;
     props.removeModal(props.modalId);
     props.reset();
     props.showNotification(
       __('New user %{username} has been created', {
-        username: props.values.username,
+        username,
       }),
       'success'
     );
@@ -107,13 +108,12 @@ const ExtraSection = styled.div({
       password,
       pin,
     });
-    if (props.enableMining || props.enableStaking) {
-      await apiPost('users/unlock/user', {
-        pin: props.values.pin,
-        mining: !!props.enableMining,
-        staking: !!props.enableStaking,
-      });
-    }
+    await apiPost('users/unlock/user', {
+      pin,
+      notifications: true,
+      mining: !!props.enableMining,
+      staking: !!props.enableStaking,
+    });
     props.getUserStatus();
   },
   onSubmitFail: errorHandler(__('Error creating user')),

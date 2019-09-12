@@ -21,6 +21,7 @@ import AddressBook from './AddressBook';
 import Settings from './Settings';
 import Terminal from './Terminal';
 import Accounts from './Accounts';
+import UserPage from './UserPage';
 
 import About from './About';
 import Modules from './Modules';
@@ -73,6 +74,7 @@ const App = ({ history }) => (
               <Route path="/Settings" component={Settings} />
               <Route path="/Terminal" component={Terminal} />
               <Route path="/Accounts" component={Accounts} />
+              <Route path="/User" component={UserPage} />
 
               {/* <Route path="/Exchange" component={Exchange} /> */}
               {/* <Route exact path="/List" component={TrustList} /> */}

@@ -17,7 +17,6 @@ import core from './core';
 import fileServer from './fileServer';
 
 let mainWindow;
-let resizeTimer;
 
 // Global Objects
 global.fileServer = fileServer;
@@ -211,7 +210,7 @@ const gotTheLock = app.requestSingleInstanceLock();
 if (!gotTheLock) {
   app.quit();
 } else {
-  app.on('second-instance', (event, commandLine, workingDirectory) => {
+  app.on('second-instance', () => {
     // Someone tried to run a second instance, we should focus our window.
     if (mainWindow) {
       mainWindow.show();

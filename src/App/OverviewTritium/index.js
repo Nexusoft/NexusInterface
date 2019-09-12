@@ -16,7 +16,7 @@ import { getDifficulty, getBalances } from 'actions/core';
 import { updateSettings } from 'actions/settings';
 import { formatNumber, formatCurrency, formatRelativeTime } from 'lib/intl';
 import { timing, consts } from 'styles';
-import { isCoreConnected, isLoggedIn } from 'selectors';
+import { isCoreConnected } from 'selectors';
 import { observeStore } from 'store';
 import Globe from './Globe';
 import { webGLAvailable } from 'consts/misc';
@@ -177,7 +177,7 @@ const Stats = styled.div(
   ({ left, compact }) =>
     left && {
       textAlign: 'right',
-      right: compact ? 'calc(56% + 80px)' : 'calc(70% + 80px)',
+      right: compact ? 'calc(56% + 40px)' : 'calc(70% + 40px)',
       animation: `${timing.slow} ${consts.enhancedEaseOut} 0s ${slideRight}`,
       [Stat]: {
         justifyContent: 'flex-end',
@@ -189,7 +189,7 @@ const Stats = styled.div(
   ({ right, compact }) =>
     right && {
       textAlign: 'left',
-      left: compact ? 'calc(56% + 80px)' : 'calc(70% + 80px)',
+      left: compact ? 'calc(56% + 40px)' : 'calc(70% + 40px)',
       animation: `${timing.slow} ${consts.enhancedEaseOut} 0s ${slideLeft}`,
       [Stat]: {
         justifyContent: 'flex-start',
@@ -603,17 +603,9 @@ class Overview extends Component {
    */
   render() {
     const {
-      coreConnected,
       systemInfo: { connections, txtotal, blocks },
       stakeInfo: { interestweight, stakerate },
-      balances: {
-        available,
-        pending,
-        unconfirmed,
-        stake,
-        immature_mined,
-        immature_stake,
-      },
+      balances,
       blockDate,
       market,
       difficulty,
@@ -621,7 +613,9 @@ class Overview extends Component {
       theme,
       synchronizing,
     } = this.props;
+    const { available, pending, unconfirmed, stake, immature } = balances || {};
     const { fiatCurrency } = settings;
+
     if (settings.overviewDisplay === 'none') {
       return <OverviewPage />;
     }
@@ -634,15 +628,13 @@ class Overview extends Component {
                 {/* {stake > 0 ? (
                   <span>Balance and Stake</span>
                 ) : ( */}
-                {__('Balance')}
+                {__('Available balance')}
                 {/* )} */}
                 (NXS) :
               </StatLabel>
               <StatValue>
                 {this.waitForCore(
-                  available !== undefined
-                    ? formatNumber(available + unconfirmed + pending)
-                    : 'N/A'
+                  available !== undefined ? formatNumber(available) : 'N/A'
                 )}
               </StatValue>
             </MinimalStat>
@@ -655,10 +647,7 @@ class Overview extends Component {
                 {market && market.price ? (
                   this.waitForCore(
                     available !== undefined
-                      ? formatCurrency(
-                          (available + unconfirmed + pending) * market.price,
-                          fiatCurrency
-                        )
+                      ? formatCurrency(available * market.price, fiatCurrency)
                       : 'N/A'
                   )
                 ) : (
@@ -752,12 +741,8 @@ class Overview extends Component {
 
         <Stats left compact={!this.showingGlobe()}>
           <Stat
-            onClick={() => {
-              this.props.updateSettings({
-                displayFiatBalance: !settings.displayFiatBalance,
-              });
-            }}
-            to={coreConnected ? 'HackToGetProperStyling' : undefined}
+            as={stake !== undefined ? Link : undefined}
+            to={stake !== undefined ? '/User/Balances' : undefined}
           >
             <div>
               <StatLabel>
@@ -771,32 +756,16 @@ class Overview extends Component {
                     <Icon icon={warningIcon} className="space-right" />
                   </Tooltip.Trigger>
                 )}{' '}
-                <span className="v-align">
-                  {__('Balance')} (
-                  {settings.displayFiatBalance ? fiatCurrency : 'NXS'})
-                </span>
+                <span className="v-align">{__('Balance')} (NXS)</span>
               </StatLabel>
               <StatValue>
-                {settings.overviewDisplay === 'balHidden' ? (
-                  '-'
-                ) : !settings.displayFiatBalance ? (
-                  this.waitForCore(
-                    available !== undefined
-                      ? formatNumber(available + unconfirmed + pending)
-                      : 'N/A'
-                  )
-                ) : market && market.price ? (
-                  this.waitForCore(
-                    available !== undefined
-                      ? formatCurrency(
-                          (available + unconfirmed + pending) * market.price,
-                          fiatCurrency
-                        )
-                      : 'N/A'
-                  )
-                ) : (
-                  <span className="dim">-</span>
-                )}
+                {settings.overviewDisplay === 'balHidden'
+                  ? '-'
+                  : this.waitForCore(
+                      available !== undefined
+                        ? formatNumber(available + stake)
+                        : 'N/A'
+                    )}
               </StatValue>
             </div>
             <StatIcon
@@ -808,42 +777,59 @@ class Overview extends Component {
             />
           </Stat>
           <Stat
-            as={coreConnected ? Link : undefined}
-            to={coreConnected ? '/Transactions' : undefined}
+            as={stake !== undefined ? Link : undefined}
+            to={stake !== undefined ? '/User/Balances' : undefined}
+          >
+            <div>
+              <StatLabel>
+                {__('balance')} ({fiatCurrency})
+              </StatLabel>
+              <StatValue>
+                {settings.overviewDisplay === 'balHidden' ? (
+                  '-'
+                ) : market && market.price ? (
+                  this.waitForCore(
+                    available !== undefined
+                      ? formatCurrency(
+                          (available + stake) * market.price,
+                          fiatCurrency
+                        )
+                      : 'N/A'
+                  )
+                ) : (
+                  <span className="dim">-</span>
+                )}
+              </StatValue>
+            </div>
+            <StatIcon icon={nxsStakeIcon} />
+          </Stat>
+          <Stat
+            as={stake !== undefined ? Link : undefined}
+            to={stake !== undefined ? '/User/Balances' : undefined}
           >
             <div>
               <StatLabel>
                 <Tooltip.Trigger
                   tooltip={__(
-                    'Staking and mining rewards that need to get past 120 block-old to become available'
+                    'This includes your pending balance, unconfirmed balance and immature balance'
                   )}
                   align="start"
                 >
                   <Icon icon={questionMarkCircleIcon} />
                 </Tooltip.Trigger>{' '}
-                <span className="v-align">{__('Immature Balance')} (NXS)</span>
+                <span className="v-align">{__('Incoming balances')} (NXS)</span>
               </StatLabel>
               <StatValue>
                 {settings.overviewDisplay === 'balHidden'
                   ? '-'
                   : this.waitForCore(
                       stake !== undefined
-                        ? formatNumber(stake + immature_mined + immature_stake)
+                        ? formatNumber(pending + unconfirmed + immature)
                         : 'N/A'
                     )}
               </StatValue>
             </div>
             <StatIcon icon={nxsStakeIcon} />
-          </Stat>
-          <Stat
-            as={coreConnected ? Link : undefined}
-            to={coreConnected ? '/Transactions' : undefined}
-          >
-            <div>
-              <StatLabel>{__('Transactions')}</StatLabel>
-              <StatValue>{this.waitForCore(txtotal)}</StatValue>
-            </div>
-            <StatIcon icon={transactionIcon} />
           </Stat>
           <Stat
             as={market ? Link : undefined}

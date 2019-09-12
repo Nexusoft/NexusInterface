@@ -149,6 +149,10 @@ export default class Modal extends PureComponent {
     props.assignClose && props.assignClose(this.animatedClose);
   }
 
+  componentWillUnmount() {
+    if (this.props.onClose) this.props.onClose();
+  }
+
   /**
    * Animate the Close event
    *
@@ -178,7 +182,6 @@ export default class Modal extends PureComponent {
   remove = () => {
     const modalID = this.context;
     this.props.removeModal(modalID);
-    this.props.onClose && this.props.onClose();
   };
 
   /**

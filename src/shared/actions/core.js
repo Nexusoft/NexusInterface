@@ -37,7 +37,6 @@ export const getUserStatus = () => async dispatch => {
     dispatch(getStakeInfo());
   } catch (err) {
     dispatch({ type: TYPE.CLEAR_USER_STATUS });
-    console.error('users/get/status failed', err);
   }
 };
 
@@ -55,12 +54,7 @@ export const getInfo = legacyMode
       }
     }
   : // Tritium
-    () => async dispatch => {
-      // getSysmteInfo to check if core is connected first
-      await dispatch(getSystemInfo());
-      // Then check user status
-      await dispatch(getUserStatus());
-    };
+    getSystemInfo;
 
 export const getBalances = () => async dispatch => {
   try {
@@ -69,6 +63,15 @@ export const getBalances = () => async dispatch => {
   } catch (err) {
     dispatch({ type: TYPE.CLEAR_BALANCES });
     console.error('finance/get/balances failed', err);
+  }
+};
+
+export const listAccounts = () => async dispatch => {
+  try {
+    const accounts = await apiPost('users/list/accounts');
+    dispatch({ type: TYPE.SET_TRITIUM_ACCOUNTS, payload: accounts });
+  } catch (err) {
+    console.error('users/list/accounts failed', err);
   }
 };
 

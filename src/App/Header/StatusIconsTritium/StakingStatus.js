@@ -1,6 +1,7 @@
 // External Dependencies
 import React from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 // Internal Dependencies
 import Tooltip from 'components/Tooltip';
@@ -68,12 +69,14 @@ class StakingStatus extends React.Component {
         style={{ maxWidth: 200 }}
       >
         <StatusIcon>
-          <Icon
-            icon={stakingIcon}
-            style={{
-              opacity: staking && synchronized ? 1 : 0.7,
-            }}
-          />
+          <Link to="/User/Staking">
+            <Icon
+              icon={stakingIcon}
+              style={{
+                opacity: staking && synchronized ? 1 : 0.7,
+              }}
+            />
+          </Link>
         </StatusIcon>
       </Tooltip.Trigger>
     );

@@ -81,13 +81,12 @@ const ExtraSection = styled.div({
       'success'
     );
 
-    if (props.enableMining || props.enableStaking) {
-      await apiPost('users/unlock/user', {
-        pin: props.values.pin,
-        mining: !!props.enableMining,
-        staking: !!props.enableStaking,
-      });
-    }
+    await apiPost('users/unlock/user', {
+      pin: props.values.pin,
+      notifications: true,
+      mining: !!props.enableMining,
+      staking: !!props.enableStaking,
+    });
     props.getUserStatus();
   },
   // TODO: replace error handler
