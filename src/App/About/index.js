@@ -5,6 +5,7 @@ import { shell } from 'electron';
 // Internal Dependencies
 import Panel from 'components/Panel';
 import styled from '@emotion/styled';
+import { legacyMode } from 'consts/misc';
 
 // Images
 import nexusLogo from 'images/logo-full.svg';
@@ -100,12 +101,10 @@ const BusinessUnits = styled.div({
 });
 
 // React-Redux mandatory methods
-const mapStateToProps = ({
-  core: {
-    info: { version },
-  },
-}) => ({
-  version,
+const mapStateToProps = ({ core: { info, systemInfo } }) => ({
+  version: legacyMode ? info && info.version : systemInfo && systemInfo.version,
+  testnet: legacyMode ? undefined : systemInfo && systemInfo.testnet,
+  privateBlockchain: legacyMode ? undefined : systemInfo && systemInfo.private,
 });
 
 /**
@@ -138,16 +137,6 @@ class About extends Component {
     return APP_VERSION;
   }
 
-  /**
-   *
-   * Gets Version number of the Daemon
-   * @returns {String} Damon Version
-   * @memberof About
-   */
-  getDaemonVersionNumber() {
-    return this.props.version;
-  }
-
   returnOpenSourceCredits() {
     return OpenSourceCredits.map(e => (
       <CenterText>
@@ -168,6 +157,7 @@ class About extends Component {
    * @memberof About
    */
   render() {
+    const { version, testnet, privateBlockchain } = this.props;
     return (
       <Panel title={__('About')}>
         <NexusLogoimg src={nexusLogo} />
@@ -179,11 +169,20 @@ class About extends Component {
               {this.getInterfaceVersionNumber()}
               <br />
               <b>{__('Build Date')}: </b> August 23rd 2019 <br />
+              {!!privateBlockchain && (
+                <>
+                  <b>{__('Private')}: </b> {String(privateBlockchain)} <br />
+                </>
+              )}
             </Column>
             <Column>
-              <b>{__('Nexus Core Version')}:</b> {this.getDaemonVersionNumber()}{' '}
-              <br />
+              <b>{__('Nexus Core Version')}:</b> {version} <br />
               <b>{__('Build Date')}: </b> August 23rd 2019 <br />
+              {!!testnet && (
+                <>
+                  <b>{__('Testnet')}: </b> {testnet} <br />
+                </>
+              )}
             </Column>
           </Row>
           <CenterText>
