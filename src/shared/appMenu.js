@@ -15,6 +15,7 @@ import { legacyMode } from 'consts/misc';
 import showOpenDialog from 'utils/promisified/showOpenDialog';
 import confirm from 'utils/promisified/confirm';
 import { checkForUpdates, quitAndInstall } from 'lib/updater';
+import { tritiumUpgradeTime } from 'consts/misc';
 
 const separator = {
   type: 'separator',
@@ -308,6 +309,7 @@ function buildDarwinTemplate() {
   const coreConnected = isCoreConnected(state);
   const { manualDaemon } = state.settings;
   const { webview } = state;
+  const now = Date.now();
 
   const subMenuAbout = {
     label: 'Nexus',
@@ -320,7 +322,11 @@ function buildDarwinTemplate() {
           ? stopCore
           : startCore
         : null,
-      legacyMode ? switchTritiumMode : switchLegacyMode,
+      now < tritiumUpgradeTime
+        ? null
+        : legacyMode
+        ? switchTritiumMode
+        : switchLegacyMode,
       separator,
       quitNexus,
     ].filter(e => e),
@@ -390,6 +396,7 @@ function buildDefaultTemplate() {
   const coreConnected = isCoreConnected(state);
   const { manualDaemon } = state.settings;
   const { webview } = state;
+  const now = Date.now();
 
   const subMenuFile = {
     label: __('File'),
@@ -406,7 +413,11 @@ function buildDefaultTemplate() {
           ? stopCore
           : startCore
         : null,
-      legacyMode ? switchTritiumMode : switchLegacyMode,
+      now < tritiumUpgradeTime
+        ? null
+        : legacyMode
+        ? switchTritiumMode
+        : switchLegacyMode,
       separator,
       quitNexus,
     ].filter(e => e),
@@ -489,4 +500,11 @@ export function initializeMenu() {
   observeStore(state => state.settings && state.settings.devMode, rebuildMenu);
   observeStore(state => state.webview, rebuildMenu);
   observeStore(state => state.settings.manualDaemon, rebuildMenu);
+
+  const now = Date.now();
+  if (now < tritiumUpgradeTime) {
+    setTimeout(() => {
+      rebuildMenu();
+    }, tritiumUpgradeTime - now);
+  }
 }
