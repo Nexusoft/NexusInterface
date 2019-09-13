@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
 
-const upgradeTime = new Date(2019, 8, 30).getTime();
+import { tritiumUpgradeTime } from 'consts/misc';
 
 const Countdown = styled.div(({ theme }) => ({
   position: 'absolute',
@@ -83,12 +83,12 @@ export default class TritiumCountdown extends React.Component {
 
   render() {
     const now = Date.now();
-    if (now >= upgradeTime) return null;
+    if (now >= tritiumUpgradeTime) return null;
 
-    const time = diffDates(now, upgradeTime);
+    const time = diffDates(now, tritiumUpgradeTime);
     return (
       <Countdown>
-        <CountdownLabel>Tritium network upgrade in</CountdownLabel>
+        <CountdownLabel>Tritium mainnet upgrade in</CountdownLabel>
         <CountdownClock>
           <Cube>
             <Number>{time.days}</Number>
