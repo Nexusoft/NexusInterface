@@ -7,7 +7,7 @@ import { timing, consts } from 'styles';
 import * as color from 'utils/color';
 
 const UserBriefComponent = styled.div(({ theme }) => ({
-  width: 300,
+  width: 307,
   marginLeft: -30,
   padding: '0 30px',
   borderRight: `1px solid ${theme.mixer(0.125)}`,
@@ -30,7 +30,7 @@ const Genesis = styled.div({
   textAlign: 'center',
   opacity: 0.7,
   fontSize: '.8em',
-  padding: '10px',
+  padding: '10px 0',
 });
 
 const GenesisId = styled.div({
