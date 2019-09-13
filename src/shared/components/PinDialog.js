@@ -19,6 +19,9 @@ const actionCreators = { removeModal };
 const formOptions = {
   form: 'pin',
   destroyOnUnmount: true,
+  initialValues: {
+    pin: '',
+  },
   validate: ({ pin }) => {
     const errors = {};
     if (!pin || pin.length < 4) {
