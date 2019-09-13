@@ -17,7 +17,7 @@ if (
 ) {
   GA.visitor = ua('UA-117808839-1');
   GA.active = true;
-  GA.visitor.set('ul', settings.local || 'en');
+  GA.visitor.set('ul', settings.locale || 'en');
 }
 
 // Send Screen
@@ -28,7 +28,6 @@ GA.SendScreen = function(ScreenTitle) {
   if (GA.active == false) return;
 
   GA.visitor.screenview(ScreenTitle, 'Nexus Wallet', APP_VERSION).send();
-  console.log(GA.visitor);
   console.log('Sent Screen: ' + ScreenTitle);
 };
 
@@ -59,7 +58,7 @@ GA.EnableAnalytics = function() {
   if (GA.visitor != null) return;
   GA.visitor = ua('UA-117808839-1');
   GA.active = true;
-  GA.visitor.set('ul', settings.local || 'en');
+  GA.visitor.set('ul', settings.locale || 'en');
 };
 
 export default GA;
