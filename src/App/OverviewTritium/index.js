@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import * as TYPE from 'consts/actionTypes';
 import { remote } from 'electron';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/core';
@@ -16,7 +15,7 @@ import { getDifficulty, getBalances } from 'actions/core';
 import { updateSettings } from 'actions/settings';
 import { formatNumber, formatCurrency, formatRelativeTime } from 'lib/intl';
 import { timing, consts } from 'styles';
-import { isCoreConnected } from 'selectors';
+import { isCoreConnected, isSynchronized } from 'selectors';
 import { observeStore } from 'store';
 import Globe from './Globe';
 import { webGLAvailable } from 'consts/misc';
@@ -102,16 +101,12 @@ const mapStateToProps = state => {
     settings,
     theme,
   } = state;
-  const { synccomplete } = systemInfo;
-  const syncUnknown =
-    (!synccomplete && synccomplete !== 0) ||
-    synccomplete < 0 ||
-    synccomplete > 100;
   const displayValues =
     displayNXSvalues &&
     displayNXSvalues.find(e => e.name === settings.fiatCurrency);
   return {
     coreConnected: isCoreConnected(state),
+    synchronized: isSynchronized(state),
     difficulty,
     blockDate,
     market: {
@@ -124,7 +119,6 @@ const mapStateToProps = state => {
     systemInfo,
     stakeInfo,
     balances,
-    synchronizing: !syncUnknown && synccomplete !== 100,
   };
 };
 const actionCreators = {
@@ -503,7 +497,10 @@ class Overview extends Component {
 
     return (
       <React.Fragment>
-        <Stat>
+        <Stat
+          as={blockweight ? Link : undefined}
+          to={blockweight ? '/User/Staking' : undefined}
+        >
           <StatIcon icon={this.blockWeightIcon()} />
           <div>
             <StatLabel>{__('Block Weight')}</StatLabel>
@@ -515,7 +512,10 @@ class Overview extends Component {
           </div>
         </Stat>
 
-        <Stat>
+        <Stat
+          as={trustweight ? Link : undefined}
+          to={trustweight ? '/User/Staking' : undefined}
+        >
           <StatIcon icon={this.trustIcon()} />
           <div>
             <StatLabel>{__('Trust Weight')}</StatLabel>
@@ -527,7 +527,10 @@ class Overview extends Component {
           </div>
         </Stat>
 
-        <Stat>
+        <Stat
+          as={stakeweight ? Link : undefined}
+          to={stakeweight ? '/User/Staking' : undefined}
+        >
           <StatIcon icon={stakeIcon} />
           <div>
             <StatLabel>{__('Stake Weight')}</StatLabel>
@@ -604,14 +607,14 @@ class Overview extends Component {
   render() {
     const {
       systemInfo: { connections, txtotal, blocks },
-      stakeInfo: { interestweight, stakerate },
+      stakeInfo: { stakerate },
       balances,
       blockDate,
       market,
       difficulty,
       settings,
       theme,
-      synchronizing,
+      synchronized,
     } = this.props;
     const { available, pending, unconfirmed, stake, immature } = balances || {};
     const { fiatCurrency } = settings;
@@ -746,7 +749,7 @@ class Overview extends Component {
           >
             <div>
               <StatLabel>
-                {!!synchronizing && (
+                {!synchronized && (
                   <Tooltip.Trigger
                     align="start"
                     tooltip={__(
@@ -768,13 +771,7 @@ class Overview extends Component {
                     )}
               </StatValue>
             </div>
-            <StatIcon
-              icon={
-                settings.displayFiatBalance
-                  ? CurrencyIcon(fiatCurrency)
-                  : logoIcon
-              }
-            />
+            <StatIcon icon={logoIcon} />
           </Stat>
           <Stat
             as={stake !== undefined ? Link : undefined}
@@ -801,7 +798,7 @@ class Overview extends Component {
                 )}
               </StatValue>
             </div>
-            <StatIcon icon={nxsStakeIcon} />
+            <StatIcon icon={CurrencyIcon(fiatCurrency)} />
           </Stat>
           <Stat
             as={stake !== undefined ? Link : undefined}
@@ -921,15 +918,16 @@ class Overview extends Component {
             </Stat>
           </Tooltip.Trigger>
 
-          <Stat>
+          <Stat
+            as={stakerate ? Link : undefined}
+            to={stakerate ? '/User/Staking' : undefined}
+          >
             <StatIcon icon={interestIcon} />
             <div>
               <StatLabel>{__('Stake Rate')}</StatLabel>
               <StatValue>
                 {this.waitForCore(
-                  interestweight || stakerate
-                    ? formatNumber(interestweight || stakerate, 2) + '%'
-                    : 'N/A'
+                  stakerate ? formatNumber(stakerate, 2) + '%' : 'N/A'
                 )}
               </StatValue>
             </div>

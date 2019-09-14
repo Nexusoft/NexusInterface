@@ -11,6 +11,7 @@ const TabContentComponent = styled.div({
   flexGrow: 1,
   flexShrink: 1,
   paddingLeft: 30,
+  overflow: 'auto',
 });
 
 let SettingsRedirect = ({ lastActiveTab, match }) => (

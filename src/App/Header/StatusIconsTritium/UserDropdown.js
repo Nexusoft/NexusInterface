@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { arrowStyles } from 'components/Arrow';
 import LoginModal from 'components/LoginModal';
 import NewUserModal from 'components/NewUserModal';
+import MigrateStakeModal from 'components/MigrateStakeModal';
 import { isLoggedIn } from 'selectors';
 import { openModal, showNotification } from 'actions/overlays';
 import { timing, animations, consts } from 'styles';
@@ -82,7 +83,7 @@ class LoggedInDropdown extends React.Component {
   };
 
   render() {
-    const { currentUser, closeDropdown } = this.props;
+    const { currentUser, closeDropdown, openModal } = this.props;
     return (
       <>
         <CurrentUser>
@@ -95,6 +96,15 @@ class LoggedInDropdown extends React.Component {
         <Link to="/User/Balances" onClick={closeDropdown}>
           <MenuItem>{__('My balances')}</MenuItem>
         </Link>
+        <Separator />
+        <MenuItem
+          onClick={() => {
+            openModal(MigrateStakeModal);
+            closeDropdown();
+          }}
+        >
+          {__('Migrate stake')}
+        </MenuItem>
         <Separator />
         <MenuItem onClick={this.logout}>{__('Log out')}</MenuItem>
       </>
