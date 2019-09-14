@@ -16,7 +16,7 @@ if (
 ) {
   GA.visitor = ua('UA-117808839-1');
   GA.active = true;
-  GA.visitor.set('ul', settings.local || 'en');
+  GA.visitor.set('ul', settings.locale || 'en');
 }
 
 // Send Screen
@@ -57,7 +57,7 @@ GA.EnableAnalytics = function() {
   if (GA.visitor != null) return;
   GA.visitor = ua('UA-117808839-1');
   GA.active = true;
-  GA.visitor.set('ul', settings.local || 'en');
+  GA.visitor.set('ul', settings.locale || 'en');
 };
 
 export default GA;
