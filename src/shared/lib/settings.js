@@ -54,6 +54,7 @@ export const defaultSettings = {
 
   // Modules
   disabledModules: [],
+  allowSymLink: false,
 
   // Hidden settings
   acceptedAgreement: false,

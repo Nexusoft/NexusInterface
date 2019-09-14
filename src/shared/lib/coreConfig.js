@@ -9,7 +9,7 @@ import { coreDataDir } from 'consts/paths';
 function generateDefaultPassword() {
   let randomNumbers = ['', ''];
   const ranByte = crypto
-    .randomBytes(Math.ceil(10 / 2))
+    .randomBytes(64)
     .toString('hex')
     .split('');
   for (let index = 0; index < ranByte.length; index++) {

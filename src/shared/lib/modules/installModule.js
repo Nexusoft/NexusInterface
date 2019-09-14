@@ -83,9 +83,13 @@ async function copyModule(files, source, dest) {
  */
 async function installFromDirectory(path) {
   const {
-    settings: { devMode, verifyModuleSource },
+    settings: { devMode, verifyModuleSource, allowSymLink },
   } = store.getState();
-  const module = await loadModuleFromDir(path, { devMode, verifyModuleSource });
+  const module = await loadModuleFromDir(path, {
+    devMode,
+    verifyModuleSource,
+    allowSymLink,
+  });
 
   if (!module) {
     store.dispatch(showNotification('Invalid Module', 'error'));

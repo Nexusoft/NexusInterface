@@ -41,14 +41,18 @@ function prepareModule(module) {
  * @param {*} { devMode, verifyModuleSource }
  * @returns {object} an object mapping module names and module data
  */
-export async function loadModules({ devMode, verifyModuleSource }) {
+export async function loadModules({
+  devMode,
+  verifyModuleSource,
+  allowSymLink,
+}) {
   try {
     if (!fs.existsSync(modulesDir)) return {};
     const dirNames = await fs.promises.readdir(modulesDir);
     const dirPaths = dirNames.map(dirName => join(modulesDir, dirName));
     const results = await Promise.all(
       dirPaths.map(path =>
-        loadModuleFromDir(path, { devMode, verifyModuleSource })
+        loadModuleFromDir(path, { devMode, verifyModuleSource, allowSymLink })
       )
     );
 

@@ -1,4 +1,23 @@
-# 1.2.2 (2019.8.XX)
+# 1.2.3 (2019.9.5)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v1.2.3)
+
+#### Additions
+
+- none
+
+#### Adjustments
+
+- New Developer setting to allow for SymLinks in a modules directory
+
+#### Fixes
+
+- Fixed a issue where a send would not send if your wallet was not encrypted
+- Fixed issue with send all not taking into account network fee
+- Send Page / My Addresses now properly refreshes after your balance has been confirmed after a transaction
+- Fixed an error in the terminal console which would not return the correct error message
+
+# 1.2.2 (2019.8.23)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v1.2.2)
 
