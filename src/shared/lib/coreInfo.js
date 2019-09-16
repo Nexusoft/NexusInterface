@@ -73,44 +73,45 @@ export function initializeCoreInfo() {
 
     observeStore(
       ({ core: { info } }) => info && info.txtotal,
-      async () => {
-        // TODO: Find a more efficient way than fetching ALL the transactions
-        const txList = await rpc('listtransactions', []);
-        if (txList) {
-          // TODO: notify ALL new transactions, not just the newest
-          const mostRecentTx = txList.reduce((a, b) =>
-            a.time > b.time ? a : b
-          );
+      async (newTotal, oldTotal) => {
+        if (newTotal > oldTotal) {
+          // TODO: Find a more efficient way than fetching ALL the transactions
+          const txList = await rpc('listtransactions', []);
+          if (txList) {
+            // TODO: notify ALL new transactions, not just the newest
+            const mostRecentTx = txList.reduce((a, b) =>
+              a.time > b.time ? a : b
+            );
 
-          switch (mostRecentTx.category) {
-            case 'receive':
-              showDesktopNotif('Received', mostRecentTx.amount + ' NXS');
-              store.dispatch(
-                showNotification(__('Transaction received'), 'success')
-              );
-              break;
-            case 'send':
-              showDesktopNotif('Sent', mostRecentTx.amount + ' NXS');
-              store.dispatch(
-                showNotification(__('Transaction sent'), 'success')
-              );
-              break;
-            case 'genesis':
-              showDesktopNotif('Genesis', mostRecentTx.amount + ' NXS');
-              store.dispatch(
-                showNotification(__('Genesis transaction'), 'success')
-              );
-              break;
-            case 'trust':
-              showDesktopNotif('Trust', mostRecentTx.amount + ' NXS');
-              store.dispatch(
-                showNotification(__('Trust transaction'), 'success')
-              );
-              break;
+            switch (mostRecentTx.category) {
+              case 'receive':
+                showDesktopNotif('Received', mostRecentTx.amount + ' NXS');
+                store.dispatch(
+                  showNotification(__('Transaction received'), 'success')
+                );
+                break;
+              case 'send':
+                showDesktopNotif('Sent', mostRecentTx.amount + ' NXS');
+                store.dispatch(
+                  showNotification(__('Transaction sent'), 'success')
+                );
+                break;
+              case 'genesis':
+                showDesktopNotif('Genesis', mostRecentTx.amount + ' NXS');
+                store.dispatch(
+                  showNotification(__('Genesis transaction'), 'success')
+                );
+                break;
+              case 'trust':
+                showDesktopNotif('Trust', mostRecentTx.amount + ' NXS');
+                store.dispatch(
+                  showNotification(__('Trust transaction'), 'success')
+                );
+                break;
+            }
           }
         }
-      },
-      (oldTotal, newTotal) => newTotal > oldTotal
+      }
     );
 
     observeStore(

@@ -1,15 +1,12 @@
-const createObserver = store => (
-  select,
-  onChange,
-  isChanged = (currentState, nextState) => currentState !== nextState
-) => {
-  let currentState;
+const createObserver = store => (select, onChange) => {
+  let currentState = undefined;
 
   function handleChange() {
     const nextState = select(store.getState());
-    if (isChanged(currentState, nextState)) {
+    if (currentState !== nextState) {
+      const oldState = currentState;
       currentState = nextState;
-      onChange(currentState, store);
+      onChange(currentState, oldState);
     }
   }
 
