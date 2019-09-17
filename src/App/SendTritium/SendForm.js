@@ -366,16 +366,16 @@ class SendForm extends Component {
                 component={TextField.RF}
                 name="reference"
                 normalize={numericOnly}
-                placeholder={__('ulong (Optional)')}
+                placeholder={__('Number, ex 123456789 (Optional)')}
               />
             </FormField>
-            <FormField label={__('Expiration')}>
+            {/*<FormField label={__('Expiration')}>
               <Field
                 component={TextField.RF}
                 name="expires"
                 placeholder={__('Seconds till experation (Optional)')}
               />
-            </FormField>{' '}
+        </FormField>{' '}*/}
           </>
         ) : (
           <Button
