@@ -108,7 +108,7 @@ class RecipientField extends Component {
           input={input}
           meta={meta}
           inputProps={{
-            placeholder: __('Recipient address'),
+            placeholder: __('Recipient Address/Name'),
           }}
           suggestions={suggestions}
           onSelect={this.handleSelect}
