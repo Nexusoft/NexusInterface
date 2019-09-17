@@ -41,15 +41,14 @@ export default class Accounts extends React.Component {
     return (
       !!accounts && (
         <AccountsWrapper>
-          {accounts.map(account => (
-            <Account key={account.name} account={account} />
-          ))}
-          <div className="mt1 flex space-between">
-            <div />
-            <Button onClick={() => openModal(NewAccountModal)}>
-              <Icon icon={plusIcon} className="space-right" />
-              {__('Create new account')}
-            </Button>
+          <Button wide onClick={() => openModal(NewAccountModal)}>
+            <Icon icon={plusIcon} className="space-right" />
+            {__('Create new account')}
+          </Button>
+          <div className="mt1">
+            {accounts.map(account => (
+              <Account key={account.name} account={account} />
+            ))}
           </div>
         </AccountsWrapper>
       )
