@@ -14,7 +14,8 @@ import { isLoggedIn } from 'selectors';
 import { fetchAllTransactions } from 'lib/tritiumTransactions';
 import { observeStore } from 'store';
 
-import { getContractList } from './selectors';
+import { getTransactionsList } from './selectors';
+import Transaction from './Transaction';
 
 import transactionIcon from 'images/transaction.sprite.svg';
 
@@ -73,6 +74,8 @@ const tableColumns = [
 
 const TransactionsLayout = styled.div({
   height: '100%',
+  maxWidth: 600,
+  margin: '0 auto',
   display: 'grid',
   gridTemplateAreas: '"table"',
   gridTemplateRows: '1fr',
@@ -94,7 +97,7 @@ const mapStateToProps = state => {
   } = state;
   return {
     loggedIn: isLoggedIn(state),
-    contracts: getContractList(map),
+    transactions: getTransactionsList(map),
     minConfirmations,
     loadedAll,
   };
@@ -145,7 +148,7 @@ class TransactionsTritium extends Component {
   render() {
     const {
       loadedAll,
-      contracts,
+      transactions,
       openModal,
       minConfirmations,
       loggedIn,
@@ -172,35 +175,10 @@ class TransactionsTritium extends Component {
           </WaitingMessage>
         ) : (
           <TransactionsLayout>
-            <TransactionsTable
-              data={contracts}
-              columns={tableColumns}
-              defaultPageSize={10}
-              defaultSorted={[{ id: 'time', desc: true }]}
-              getTrProps={(state, row) => {
-                const contract = row && row.original;
-                return {
-                  // onClick: contract
-                  //   ? () => {
-                  //       openModal(TransactionDetailsModal, {
-                  //         txid: contract.txid,
-                  //       });
-                  //     }
-                  //   : undefined,
-                  // style: contract
-                  //   ? {
-                  //       cursor: 'pointer',
-                  //       opacity:
-                  //         contract.category === 'immature' ||
-                  //         contract.category === 'orphan' ||
-                  //         isPending(contract, minConfirmations)
-                  //           ? 0.5
-                  //           : 1,
-                  //     }
-                  //   : undefined,
-                };
-              }}
-            />
+            {transactions &&
+              transactions.map(tx => (
+                <Transaction key={tx.txid} transaction={tx} />
+              ))}
           </TransactionsLayout>
         )}
       </Panel>
