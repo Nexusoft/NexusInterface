@@ -15,6 +15,7 @@ import { initializeCoreInfo } from 'lib/coreInfo';
 import { startCoreOuputWatch, stopCoreOuputWatch } from 'lib/coreOutput';
 import { initializeBootstrapEvents } from 'lib/bootstrap';
 import { initializeMenu } from 'appMenu';
+import { initializeTransactions } from 'lib/tritiumTransactions';
 import store from 'store';
 
 const { dispatch } = store;
@@ -61,6 +62,7 @@ export function postRender() {
   initializeWebView();
   initializeUpdater(state.settings.autoUpdate);
   initializeBootstrapEvents(store);
+  initializeTransactions();
 
   const now = Date.now();
   if (now < tritiumUpgradeTime) {

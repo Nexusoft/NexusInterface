@@ -20,3 +20,22 @@ export const updateTransaction = tx => ({
   type: TYPE.UPDATE_TRANSACTION,
   payload: tx,
 });
+
+export const loadTritiumTransactions = transactions => ({
+  type: TYPE.LOAD_TRITIUM_TRANSACTIONS,
+  payload: {
+    list: transactions,
+  },
+});
+
+export const addTritiumTransactions = newTransactions => ({
+  type: TYPE.ADD_TRITIUM_TRANSACTIONS,
+  payload: {
+    list: newTransactions,
+  },
+});
+
+export const updateTritiumTransaction = tx => ({
+  type: TYPE.UPDATE_TRITIUM_TRANSACTION,
+  payload: tx,
+});
