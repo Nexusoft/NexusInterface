@@ -1,6 +1,6 @@
 import { apiPost } from 'lib/tritiumApi';
 
-import store from 'store';
+import store, { observeStore } from 'store';
 import {
   loadTritiumTransactions,
   addTritiumTransactions,
@@ -26,11 +26,11 @@ export async function fetchAllTransactions() {
     limit: txCount,
   });
   store.dispatch(loadTritiumTransactions(transactions));
-  transactions.forEach(tx => {
-    if (needsAutoUpdate(tx, minConfirmations)) {
-      // autoUpdateTxConfirmations(tx.txid);
-    }
-  });
+  // transactions.forEach(tx => {
+  //   if (needsAutoUpdate(tx, minConfirmations)) {
+  //     autoUpdateTxConfirmations(tx.txid);
+  //   }
+  // });
 }
 
 export function initializeTransactions() {
