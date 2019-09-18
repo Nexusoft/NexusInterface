@@ -12,7 +12,6 @@ import WaitingMessage from 'components/WaitingMessage';
 import Button from 'components/Button';
 import AutoSuggest from 'components/AutoSuggest';
 import { isCoreConnected } from 'selectors';
-import rpc from 'lib/rpc';
 import * as Tritium from 'lib/tritiumApi';
 import {
   switchConsoleTab,
@@ -149,6 +148,27 @@ class TritiumConsole extends Component {
   }
 
   /**
+   * Handle Key Down Event
+   * @param {*} e
+   * @memberof TerminalConsole
+   */
+  handleKeyDown = e => {
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        this.props.commandHistoryDown();
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        this.props.commandHistoryUp();
+        break;
+      case 'Enter':
+        this.execute();
+        break;
+    }
+  };
+
+  /**
    * Execute a Command
    *
    * @memberof TerminalConsole
@@ -157,7 +177,6 @@ class TritiumConsole extends Component {
     const {
       currentCommand,
       executeCommand,
-      commandList,
       printCommandOutput,
       printCommandError,
     } = this.props;
@@ -165,9 +184,8 @@ class TritiumConsole extends Component {
 
     const cmd = currentCommand;
     GA.SendEvent('Terminal', 'TritiumConsole', 'UseCommand', 1);
-    console.log(cmd);
-    const cliCMDSplit = cmd.split(' ');
 
+    const cliCMDSplit = cmd.split(' ');
     let cliFormat;
     if (cliCMDSplit.length > 1) {
       cliFormat =
@@ -176,7 +194,7 @@ class TritiumConsole extends Component {
         cliCMDSplit
           .map((e, i, array) => {
             if (i == array.length - 1) return e;
-
+            //if not a param join the next elements into yourself, for spaces
             if (e.match(/(.*[a-z])=/g)) {
               const next = i + 1;
               if (array[next].match(/(.*[a-z])=/)) {
@@ -198,14 +216,12 @@ class TritiumConsole extends Component {
           .join('&');
     }
 
-    // this.inputRef.inputRef.current.blur();
-
     const tab = ' '.repeat(2);
     let result = null;
-    printCommandOutput(cmd);
+    console.log(cliFormat || cmd);
+    executeCommand(cmd);
     try {
       result = await Tritium.apiGet(cliFormat || cmd);
-      console.log(result);
     } catch (err) {
       console.error(err);
       if (err.message !== undefined) {
@@ -267,12 +283,12 @@ class TritiumConsole extends Component {
     const {
       coreConnected,
       commandList,
-      tritiumConsoleInput,
+      consoleInput,
       updateConsoleInput,
       output,
       resetConsoleOutput,
     } = this.props;
-    console.log(this.props);
+    console.log(this);
 
     if (!coreConnected) {
       return (
@@ -297,7 +313,7 @@ class TritiumConsole extends Component {
                 inputProps={{
                   autoFocus: true,
                   skin: 'filled-inverted',
-                  value: tritiumConsoleInput,
+                  value: consoleInput,
                   placeholder: __(
                     'Enter API here (ex: system/get/info, Params=?param=value)'
                   ),
@@ -336,10 +352,10 @@ class TritiumConsole extends Component {
                     return (
                       <div key={i}>
                         <span>
-                          <span style={{ color: '#0ca4fb' }}>Nexus-Core</span>
+                          <span style={{ color: '#0ca4fb' }}>Nexus-API</span>
                           <span style={{ color: '#00d850' }}>$ </span>
                           {content}
-                          <span style={{ color: '#0ca4fb' }}> ></span>
+                          <span style={{ color: '#0ca4fb' }}> ►</span>
                         </span>
                       </div>
                     );
