@@ -35,19 +35,23 @@ export async function fetchAllTransactions() {
 
 export function initializeTransactions() {
   observeStore(
-    ({core: { userStatus }}) => userStatus && userStatus.transactions,
-    (txCount, oldTxCount) => {
-      if (typeof txCount === 'number' && typeof oldTxCount === 'number' && txCount > oldTxCount) {
+    ({ core: { userStatus } }) => userStatus && userStatus.transactions,
+    async (txCount, oldTxCount) => {
+      if (
+        typeof txCount === 'number' &&
+        typeof oldTxCount === 'number' &&
+        txCount > oldTxCount
+      ) {
         const transactions = await apiPost('users/list/transactions', {
           verbose: 'summary',
           limit: txCount - oldTxCount,
         });
-        store.dispatch(addTritiumTransactions(transactions))
+        store.dispatch(addTritiumTransactions(transactions));
 
         // Show desktop notif
       }
     }
-  )
+  );
   // observeStore to load new Transactions
   // show desktop notification when there's new transactions
 }

@@ -8,7 +8,7 @@ import { stopCore } from 'actions/core';
 import { closeWallet } from 'actions/ui';
 import { openModal } from 'actions/overlays';
 import TritiumUpgradeModal from 'components/TritiumUpgradeModal';
-import { tritiumUpgradeTime } from 'consts/misc';
+import { tritiumUpgradeTime, legacyMode } from 'consts/misc';
 import { initializeUpdater } from 'lib/updater';
 import { initializeWebView } from 'lib/modules';
 import { initializeCoreInfo } from 'lib/coreInfo';
@@ -62,7 +62,9 @@ export function postRender() {
   initializeWebView();
   initializeUpdater(state.settings.autoUpdate);
   initializeBootstrapEvents(store);
-  initializeTransactions();
+  if (!legacyMode) {
+    initializeTransactions();
+  }
 
   const now = Date.now();
   if (now < tritiumUpgradeTime) {
