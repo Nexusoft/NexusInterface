@@ -1,6 +1,8 @@
 // External Dependencies
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import { shell } from 'electron';
 import styled from '@emotion/styled';
 import GA from 'lib/googleAnalytics';
 import memoize from 'memoize-one';
@@ -47,7 +49,6 @@ const mapStateToProps = state => {
           historyIndex,
           commandList,
           output,
-          currentTritiumCommand,
         },
       },
     },
@@ -59,7 +60,7 @@ const mapStateToProps = state => {
       commandHistory,
       historyIndex
     ),
-    currentTritiumCommand,
+    currentCommand,
     commandList,
     output,
   };
@@ -129,7 +130,7 @@ class TritiumConsole extends Component {
     super(props);
     this.inputRef = React.createRef();
     this.outputRef = React.createRef();
-    props.switchConsoleTab('Console');
+    props.switchConsoleTab('TritiumConsole');
   }
 
   /**
@@ -154,32 +155,61 @@ class TritiumConsole extends Component {
    */
   execute = async () => {
     const {
-      currentTritiumCommand,
+      currentCommand,
       executeCommand,
       commandList,
       printCommandOutput,
       printCommandError,
     } = this.props;
-    console.log(currentTritiumCommand);
-    if (!currentTritiumCommand || !currentTritiumCommand.trim()) return;
+    if (!currentCommand || !currentCommand.trim()) return;
 
-    const cmd = currentTritiumCommand;
-    //executeCommand(consoleInput);
+    const cmd = currentCommand;
     GA.SendEvent('Terminal', 'TritiumConsole', 'UseCommand', 1);
     console.log(cmd);
+    const cliCMDSplit = cmd.split(' ');
+
+    let cliFormat;
+    if (cliCMDSplit.length > 1) {
+      cliFormat =
+        cliCMDSplit.shift() +
+        '?' +
+        cliCMDSplit
+          .map((e, i, array) => {
+            if (i == array.length - 1) return e;
+
+            if (e.match(/(.*[a-z])=/g)) {
+              const next = i + 1;
+              if (array[next].match(/(.*[a-z])=/)) {
+                return e;
+              } else {
+                let recurIndex = 0;
+                let elementModified = e;
+                while (!array[i + recurIndex].match(/(.*[a-z])=/g)) {
+                  elementModified += ' ' + array[i + recurIndex];
+                  recurIndex++;
+                }
+                return elementModified;
+              }
+            } else {
+              return null;
+            }
+          })
+          .filter(Boolean)
+          .join('&');
+    }
 
     // this.inputRef.inputRef.current.blur();
 
     const tab = ' '.repeat(2);
     let result = null;
+    printCommandOutput(cmd);
     try {
-      result = await Tritium.apiGet(cmd);
+      result = await Tritium.apiGet(cliFormat || cmd);
+      console.log(result);
     } catch (err) {
       console.error(err);
       if (err.message !== undefined) {
-        printCommandError(
-          `Error: ${err.err.message}(errorcode ${err.err.code})`
-        );
+        printCommandError(tab + `Error: ${err.message}(errorcode ${err.code})`);
       } else {
         // This is the error if the rpc is unavailable
         try {
@@ -237,12 +267,12 @@ class TritiumConsole extends Component {
     const {
       coreConnected,
       commandList,
-      consoleInput,
       tritiumConsoleInput,
-      updateTritiumConsoleInput,
+      updateConsoleInput,
       output,
       resetConsoleOutput,
     } = this.props;
+    console.log(this.props);
 
     if (!coreConnected) {
       return (
@@ -257,7 +287,7 @@ class TritiumConsole extends Component {
           <Console>
             <ConsoleInput>
               <AutoSuggest
-                suggestions={commandList}
+                suggestions={[]}
                 filterSuggestions={filterCommands}
                 onSelect={this.formateAutoSuggest}
                 keyControl={false}
@@ -269,10 +299,10 @@ class TritiumConsole extends Component {
                   skin: 'filled-inverted',
                   value: tritiumConsoleInput,
                   placeholder: __(
-                    'Enter console commands here (ex: getinfo, help)'
+                    'Enter API here (ex: system/get/info, Params=?param=value)'
                   ),
                   onChange: e => {
-                    updateTritiumConsoleInput(e.target.value);
+                    updateConsoleInput(e.target.value);
                   },
                   onKeyDown: this.handleKeyDown,
                   right: (
@@ -288,6 +318,16 @@ class TritiumConsole extends Component {
                 }}
               />
             </ConsoleInput>
+            <Link
+              to={null}
+              onClick={() =>
+                shell.openExternal(
+                  'https://github.com/Nexusoft/LLL-TAO/tree/merging/docs/API'
+                )
+              }
+            >
+              {__('Documentation')}
+            </Link>
 
             <ConsoleOutput ref={this.outputRef}>
               {output.map(({ type, content }, i) => {
