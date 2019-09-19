@@ -137,7 +137,7 @@ class TritiumConsole extends Component {
     super(props);
     this.inputRef = React.createRef();
     this.outputRef = React.createRef();
-    props.switchConsoleTab('TritiumConsole');
+    props.switchConsoleTab('Console');
   }
 
   /**

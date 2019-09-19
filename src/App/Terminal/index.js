@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import ContextMenuBuilder from 'contextmenu';
 import Panel from 'components/Panel';
 import Tab from 'components/Tab';
+import { legacyMode } from 'consts/misc';
 
 // Internal Local Dependencies
 import TerminalConsole from './TerminalConsole';
@@ -90,22 +91,13 @@ class Terminal extends Component {
   render() {
     const { match } = this.props;
     return (
-      <Panel
-        icon={consoleIcon}
-        title={__('Console')}
-        bodyScrollable={false}
-      >
+      <Panel icon={consoleIcon} title={__('Console')} bodyScrollable={false}>
         <TerminalComponent>
           <TerminalTabBar>
             <Tab
               link={`${match.url}/Console`}
               icon={logoIcon}
               text={__('Console')}
-            />
-            <Tab 
-            link={`${match.url}/TritiumConsole`}
-            icon={logoIcon}
-            text={__('Tritium Console')}
             />
             <Tab
               link={`${match.url}/Core`}
@@ -115,8 +107,10 @@ class Terminal extends Component {
           </TerminalTabBar>
 
           <Switch>
-            <Route path={`${match.path}/Console`} component={TerminalConsole} />
-            <Route path={`${match.path}/TritiumConsole`} component={TritiumConsole} />
+            <Route
+              path={`${match.path}/Console`}
+              component={legacyMode ? TerminalConsole : TritiumConsole}
+            />
             <Route path={`${match.path}/Core`} component={TerminalCore} />
             <ConsoleRedirect match={match} />
           </Switch>
