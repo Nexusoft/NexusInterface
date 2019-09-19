@@ -55,3 +55,11 @@ export function initializeTransactions() {
   // observeStore to load new Transactions
   // show desktop notification when there's new transactions
 }
+
+export async function fetchTransaction(txid) {
+  const tx = await apiPost('ledger/get/transaction', {
+    txid,
+    verbose: 'summary',
+  });
+  store.dispatch(updateTritiumTransaction(tx));
+}

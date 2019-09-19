@@ -5,9 +5,7 @@ import styled from '@emotion/styled';
 import Modal from 'components/Modal';
 import WaitingMessage from 'components/WaitingMessage';
 import { formatDateTime } from 'lib/intl';
-import { isPending, fetchTransaction } from 'lib/transactions';
-
-import { categoryText } from './utils';
+import { fetchTransaction } from 'lib/tritiumTransactions';
 
 const timeFormatOptions = {
   year: 'numeric',
@@ -46,9 +44,17 @@ const Field = ({ label, children }) => (
 );
 
 @connect(
-  ({ settings: { minConfirmations }, transactions: { map } }, props) => ({
+  (
+    {
+      settings: { minConfirmations },
+      core: {
+        transactions: { map },
+      },
+    },
+    props
+  ) => ({
     minConfirmations,
-    transaction: map[props.txid],
+    transaction: map && map[props.txid],
   })
 )
 export default class TransactionDetailsModal extends React.Component {
@@ -67,30 +73,18 @@ export default class TransactionDetailsModal extends React.Component {
           {transaction ? (
             <>
               <Field label={__('Time')}>
-                {formatDateTime(transaction.time * 1000, timeFormatOptions)}
+                {formatDateTime(
+                  transaction.timestamp * 1000,
+                  timeFormatOptions
+                )}
               </Field>
-              <Field label={__('Category')}>
-                {categoryText(transaction.category)}
-              </Field>
-              <Field label={__('Amount')}>{transaction.amount}</Field>
-              {!!transaction.fee &&
-                ['debit', 'credit', 'receive', 'send'].includes(
-                  transaction.category
-                ) && <Field label={__('Fee')}>{transaction.fee}</Field>}
-              <Field label={__('Account')}>{transaction.account}</Field>
-              <Field label={__('Address')}>
-                <span className="monospace">{transaction.address}</span>
-              </Field>
+              <Field label={__('Sequence')}>{transaction.sequence}</Field>
+              <Field label={__('Type')}>{transaction.type}</Field>
               <Field label={__('Confirmations')}>
                 {transaction.confirmations}
-                {isPending(transaction, minConfirmations) &&
-                  ` (${__('Pending')})`}
               </Field>
               <Field label={__('Transaction ID')}>
                 <span className="monospace">{transaction.txid}</span>
-              </Field>
-              <Field label={__('Block hash')}>
-                <span className="monospace">{transaction.blockhash}</span>
               </Field>
             </>
           ) : (

@@ -6,9 +6,7 @@ import styled from '@emotion/styled';
 import Panel from 'components/Panel';
 import WaitingMessage from 'components/WaitingMessage';
 import Button from 'components/Button';
-import Table from 'components/Table';
 import LoginModal from 'components/LoginModal';
-import { formatDateTime } from 'lib/intl';
 import { openModal } from 'actions/overlays';
 import { isLoggedIn } from 'selectors';
 import { fetchAllTransactions } from 'lib/tritiumTransactions';
@@ -19,59 +17,6 @@ import Transaction from './Transaction';
 
 import transactionIcon from 'images/transaction.sprite.svg';
 
-const timeFormatOptions = {
-  year: 'numeric',
-  month: 'short',
-  day: '2-digit',
-  hour: '2-digit',
-  minute: '2-digit',
-  second: '2-digit',
-};
-
-const tableColumns = [
-  {
-    id: 'time',
-    Header: __('Time'),
-    accessor: 'txInfo.timestamp',
-    Cell: cell => formatDateTime(cell.value * 1000, timeFormatOptions),
-    width: 220,
-  },
-  {
-    id: 'type',
-    Header: __('Type'),
-    accessor: 'OP',
-    // Cell: cell => <CategoryCell transaction={cell.original} />,
-    width: 120,
-  },
-  {
-    id: 'amount',
-    Header: __('Amount'),
-    accessor: 'amount',
-    width: 150,
-  },
-  {
-    id: 'token_name',
-    Header: __('Token'),
-    accessor: 'token_name',
-    width: 100,
-  },
-  {
-    id: 'from',
-    Header: __('From'),
-    Cell: cell => cell.original.from_name || cell.original.from || '',
-  },
-  {
-    id: 'to',
-    Header: __('To'),
-    Cell: cell =>
-      cell.original.to_name ||
-      cell.original.account_name ||
-      cell.original.to ||
-      cell.original.account ||
-      '',
-  },
-];
-
 const TransactionsLayout = styled.div({
   height: '100%',
   maxWidth: 650,
@@ -79,12 +24,6 @@ const TransactionsLayout = styled.div({
   display: 'grid',
   gridTemplateAreas: '"table"',
   gridTemplateRows: '1fr',
-});
-
-const TransactionsTable = styled(Table)({
-  gridArea: 'table',
-  fontSize: 14,
-  overflow: 'auto',
 });
 
 // React-Redux mandatory methods
