@@ -64,7 +64,6 @@ class APIDocModal extends React.Component {
 
   render() {
     const { displayMD } = this.state;
-    console.log(this);
     return (
       <Modal assignClose={closeModal => (this.closeModal = closeModal)}>
         <Modal.Header>{'API Documentation'}</Modal.Header>

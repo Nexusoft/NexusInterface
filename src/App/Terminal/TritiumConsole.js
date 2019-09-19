@@ -16,7 +16,6 @@ import * as Tritium from 'lib/tritiumApi';
 import {
   switchConsoleTab,
   updateConsoleInput,
-  updateTritiumConsoleInput,
   setCommandList,
   commandHistoryUp,
   commandHistoryDown,
@@ -74,7 +73,6 @@ const actionCreators = {
   switchConsoleTab,
   setCommandList,
   updateConsoleInput,
-  updateTritiumConsoleInput,
   commandHistoryUp,
   commandHistoryDown,
   executeCommand,
