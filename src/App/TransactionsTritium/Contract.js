@@ -26,11 +26,19 @@ const ContractContent = styled.div({
   gridArea: 'content',
 });
 
-const ContractDelta = styled.div(({ theme, negative }) => ({
+const ContractDelta = styled.div(({ theme, sign }) => ({
   gridArea: 'delta',
   fontSize: '1.2em',
   justifySelf: 'end',
-  color: negative ? theme.danger : theme.primary,
+  color:
+    sign === '+'
+      ? theme.primary
+      : sign === '-'
+      ? theme.danger
+      : theme.foreground,
+  '&::before': sign && {
+    content: `"${sign}"`,
+  },
 }));
 
 const Action = styled.span(({ theme }) => ({
@@ -262,21 +270,33 @@ const contractContent = contract => {
   }
 };
 
-const negativeOperations = ['DEBIT', 'FEE'];
-const contractDelta = contract => {
-  if (!contract.amount) return;
+const deltaSign = contract => {
+  switch (contract.OP) {
+    case 'CREDIT':
+    case 'COINBASE':
+    case 'TRUST':
+    case 'GENESIS':
+    case 'MIGRATE':
+      return '+';
 
-  const sign = negativeOperations.includes(contract.OP) ? '-' : '+';
-  return `${sign}${formatNumber(contract.amount)} ${contract.token_name ||
-    'NXS'}`;
+    case 'DEBIT':
+    case 'FEE':
+    case 'LEGACY':
+      return '-';
+
+    default:
+      return '';
+  }
 };
 
 const Contract = ({ contract }) => (
   <ContractComponent>
     <ContractContent>{contractContent(contract)}</ContractContent>
-    <ContractDelta negative={negativeOperations.includes(contract.OP)}>
-      {contractDelta(contract)}
-    </ContractDelta>
+    {!!contract.amount && (
+      <ContractDelta sign={deltaSign(contract)}>
+        {contract.amount} {contract.token_name || 'NXS'}
+      </ContractDelta>
+    )}
   </ContractComponent>
 );
 
