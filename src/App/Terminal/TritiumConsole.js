@@ -25,6 +25,11 @@ import {
   printCommandError,
   resetConsoleOutput,
 } from 'actions/ui';
+import { openModal } from 'actions/overlays';
+import APIDocModal from './APIDocs/ApiDocModal';
+import questionMarkCircleIcon from 'images/question-mark-circle.sprite.svg';
+import Tooltip from 'components/Tooltip';
+import Icon from 'components/Icon';
 
 const filterCommands = memoize((commandList, inputValue) => {
   if (!commandList || !inputValue) return [];
@@ -76,6 +81,7 @@ const actionCreators = {
   printCommandOutput,
   printCommandError,
   resetConsoleOutput,
+  openModal,
 };
 
 const TerminalContent = styled.div({
@@ -106,6 +112,10 @@ const ConsoleOutput = styled.code(({ theme }) => ({
 }));
 
 const ExecuteButton = styled(Button)(({ theme }) => ({
+  borderLeft: `1px solid ${theme.mixer(0.125)}`,
+}));
+
+const HelpButton = styled(Button)(({ theme }) => ({
   borderLeft: `1px solid ${theme.mixer(0.125)}`,
 }));
 
@@ -315,35 +325,39 @@ class TritiumConsole extends Component {
                   skin: 'filled-inverted',
                   value: consoleInput,
                   placeholder: __(
-                    'Enter API here (ex: system/get/info, Params=?param=value)'
+                    'Enter API here (ex: api/verb/noun?param=value&param2=2 or param=1 param2=2)'
                   ),
                   onChange: e => {
                     updateConsoleInput(e.target.value);
                   },
                   onKeyDown: this.handleKeyDown,
                   right: (
-                    <ExecuteButton
-                      skin="filled-inverted"
-                      fitHeight
-                      grouped="right"
-                      onClick={this.execute}
-                    >
-                      {__('Execute')}
-                    </ExecuteButton>
+                    <>
+                      <ExecuteButton
+                        skin="filled-inverted"
+                        fitHeight
+                        grouped="right"
+                        onClick={this.execute}
+                      >
+                        {__('Execute')}
+                      </ExecuteButton>
+                      <Tooltip.Trigger
+                        tooltip={__('API Documentation')}
+                        position="top"
+                      >
+                        <HelpButton
+                          skin="filled-inverted"
+                          fitHeight
+                          onClick={() => this.props.openModal(APIDocModal)}
+                        >
+                          <Icon icon={questionMarkCircleIcon} />
+                        </HelpButton>
+                      </Tooltip.Trigger>
+                    </>
                   ),
                 }}
               />
             </ConsoleInput>
-            <Link
-              to={null}
-              onClick={() =>
-                shell.openExternal(
-                  'https://github.com/Nexusoft/LLL-TAO/tree/merging/docs/API'
-                )
-              }
-            >
-              {__('Documentation')}
-            </Link>
 
             <ConsoleOutput ref={this.outputRef}>
               {output.map(({ type, content }, i) => {
