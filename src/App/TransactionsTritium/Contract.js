@@ -1,52 +1,82 @@
 import React from 'react';
 import styled from '@emotion/styled';
 
+import Tooltip from 'components/Tooltip';
 import { formatNumber } from 'lib/intl';
-import { consts } from 'styles';
+import { consts, timing } from 'styles';
+import * as color from 'utils/color';
 
-const ContractComponent = styled.div({
+const ContractComponent = styled.div(({ theme }) => ({
+  flexGrow: 1,
   padding: '1em',
   width: '100%',
   display: 'grid',
-  gridTemplateAreas: '"content" "delta"',
+  gridTemplateAreas: '"content delta"',
   gridTemplateColumns: '1fr max-content',
   gridColumnGap: '1em',
   alignItems: 'center',
+  cursor: 'pointer',
+  transition: `background ${timing.normal}`,
+  '&:hover': {
+    background: color.lighten(theme.background, 0.2),
+  },
+}));
+
+const ContractContent = styled.div({
+  gridArea: 'content',
 });
 
-const ContractContent = styled.div({});
-
 const ContractDelta = styled.div(({ theme, negative }) => ({
+  gridArea: 'delta',
   fontSize: '1.2em',
   justifySelf: 'end',
   color: negative ? theme.danger : theme.primary,
 }));
 
-const OpCode = styled.span({
+const Action = styled.span(({ theme }) => ({
   fontWeight: 'bold',
-  textTransform: 'uppercase',
-});
+  color: theme.primary,
+}));
 
-const AddressComponent = styled.span({
+const AccountName = styled.span(({ theme }) => ({
+  // fontWeight: 'bold',
+  paddingBottom: '.15em ',
+  borderBottom: `1px dotted ${theme.mixer(0.25)}`,
+  color: theme.foreground,
+}));
+
+const AddressComponent = styled.span(({ theme }) => ({
   fontFamily: consts.monoFontFamily,
-});
+  paddingBottom: '.15em ',
+  borderBottom: `1px dotted ${theme.mixer(0.25)}`,
+  color: theme.foreground,
+}));
 
-const Address = ({ children }) => {
+const Address = ({ children, ...rest }) => {
   if (!children || typeof children !== 'string' || children.length <= 11)
-    return children;
+    return <span {...rest}>{children}</span>;
   return (
-    <AddressComponent>
+    <AddressComponent {...rest}>
       {children.slice(0, 6)}...{children.slice(-5)}
     </AddressComponent>
   );
 };
+
+const Account = ({ name, address }) => (
+  <>
+    {name ? 'account ' : 'address '}
+    <Tooltip.Trigger tooltip={address}>
+      {name ? <AccountName>{name}</AccountName> : <Address>{address}</Address>}
+    </Tooltip.Trigger>
+  </>
+);
 
 const contractContent = contract => {
   switch (contract.OP) {
     case 'WRITE': {
       return (
         <>
-          <OpCode>Write</OpCode> to <Address>{contract.address}</Address>
+          <Action>Write</Action> to <Account address={contract.address} />
         </>
       );
     }
@@ -54,7 +84,7 @@ const contractContent = contract => {
     case 'APPEND': {
       return (
         <>
-          <OpCode>Append</OpCode> to <Address>{contract.address}</Address>
+          <Action>Append</Action> to <Account address={contract.address} />
         </>
       );
     }
@@ -62,8 +92,8 @@ const contractContent = contract => {
     case 'CREATE': {
       return (
         <>
-          <OpCode>Create</OpCode> {contract.object_type} =>{' '}
-          <Address>{contract.address}</Address>
+          <Action>Create</Action> {contract.object_type} =>{' '}
+          <Account address={contract.address} />
         </>
       );
     }
@@ -71,8 +101,8 @@ const contractContent = contract => {
     case 'TRANSFER': {
       return (
         <>
-          <OpCode>Transfer</OpCode> <Address>{contract.address}</Address> to{' '}
-          <Address>{contract.destination}</Address>
+          <Action>Transfer</Action> <Account address={contract.address} /> to{' '}
+          <Account address={contract.destination} />
         </>
       );
     }
@@ -80,7 +110,7 @@ const contractContent = contract => {
     case 'CLAIM': {
       return (
         <>
-          <OpCode>Claim</OpCode> <Address>{contract.address}</Address>
+          <Action>Claim</Action> <Account address={contract.address} />
         </>
       );
     }
@@ -88,7 +118,7 @@ const contractContent = contract => {
     case 'COINBASE': {
       return (
         <>
-          <OpCode>Coinbase</OpCode>
+          <Action>Coinbase</Action>
         </>
       );
     }
@@ -96,7 +126,7 @@ const contractContent = contract => {
     case 'TRUST': {
       return (
         <>
-          <OpCode>Trust</OpCode>
+          <Action>Trust</Action>
         </>
       );
     }
@@ -104,7 +134,7 @@ const contractContent = contract => {
     case 'GENESIS': {
       return (
         <>
-          <OpCode>Genesis</OpCode> <Address>{contract.address}</Address>
+          <Action>Genesis</Action> <Account address={contract.address} />
         </>
       );
     }
@@ -112,8 +142,13 @@ const contractContent = contract => {
     case 'DEBIT': {
       return (
         <>
-          <OpCode>Debit</OpCode> from{' '}
-          {contract.from_name || <Address>{contract.from}</Address>}
+          <div>
+            <Action>Debit</Action> from{' '}
+            <Account name={contract.from_name} address={contract.from} />
+          </div>
+          <div>
+            to <Account name={contract.to_name} address={contract.to} />
+          </div>
         </>
       );
     }
@@ -121,8 +156,13 @@ const contractContent = contract => {
     case 'CREDIT': {
       return (
         <>
-          <OpCode>Credit</OpCode> to{' '}
-          {contract.account_name || <Address>{contract.account}</Address>}
+          <div>
+            <Action>Credit</Action> to{' '}
+            <Account name={contract.account_name} address={contract.account} />
+          </div>
+          <div>
+            from <Account name={contract.from_name} address={contract.from} />
+          </div>
         </>
       );
     }
@@ -130,8 +170,8 @@ const contractContent = contract => {
     case 'MIGRATE': {
       return (
         <>
-          <OpCode>Migrate</OpCode> to{' '}
-          {contract.account_name || <Address>{contract.account}</Address>}
+          <Action>Migrate</Action> to{' '}
+          {contract.account_name || <Account address={contract.account} />}
         </>
       );
     }
@@ -139,7 +179,7 @@ const contractContent = contract => {
     case 'AUTHORIZE': {
       return (
         <>
-          <OpCode>Authorize</OpCode> a transaction
+          <Action>Authorize</Action> a transaction
         </>
       );
     }
@@ -147,8 +187,8 @@ const contractContent = contract => {
     case 'FEE': {
       return (
         <>
-          <OpCode>Fee</OpCode> from{' '}
-          {contract.account_name || <Address>{contract.account}</Address>}
+          <Action>Fee</Action> from{' '}
+          {contract.account_name || <Account address={contract.account} />}
         </>
       );
     }
@@ -156,14 +196,14 @@ const contractContent = contract => {
     case 'LEGACY': {
       return (
         <>
-          <OpCode>Legacy Send</OpCode> from{' '}
-          {contract.from_name || <Address>{contract.from}</Address>}
+          <Action>Legacy Send</Action> from{' '}
+          {contract.from_name || <Account address={contract.from} />}
         </>
       );
     }
 
     default: {
-      return <OpCode>{contract.OP}</OpCode>;
+      return <Action>{contract.OP}</Action>;
     }
   }
   return;
