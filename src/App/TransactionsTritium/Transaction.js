@@ -27,7 +27,7 @@ const TransactionLeft = styled.div(({ theme }) => ({
   alignItems: 'center',
   color: theme.foreground,
   borderRight: `1px solid ${color.fade(theme.primary, 0.5)}`,
-  padding: '10px 24px',
+  padding: '6px 24px',
   cursor: 'pointer',
   transition: `background ${timing.normal}`,
   '&:hover': {
@@ -37,12 +37,12 @@ const TransactionLeft = styled.div(({ theme }) => ({
 
 const TransactionDate = styled.div(({ theme }) => ({
   textAlign: 'center',
-  paddingTop: 18,
+  paddingTop: 15,
   position: 'relative',
 }));
 
 const Day = styled.div({
-  fontSize: 22,
+  fontSize: 20,
   lineHeight: 1,
 });
 

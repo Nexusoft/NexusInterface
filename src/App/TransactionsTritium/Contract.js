@@ -8,7 +8,7 @@ import * as color from 'utils/color';
 
 const ContractComponent = styled.div(({ theme }) => ({
   flexGrow: 1,
-  padding: '1em',
+  padding: '.8em 1em',
   width: '100%',
   display: 'grid',
   gridTemplateAreas: '"content delta"',
@@ -36,47 +36,77 @@ const ContractDelta = styled.div(({ theme, negative }) => ({
 const Action = styled.span(({ theme }) => ({
   fontWeight: 'bold',
   color: theme.primary,
+  textTransform: 'uppercase',
 }));
 
-const AccountName = styled.span(({ theme }) => ({
+const Info = styled.span(({ theme }) => ({
+  color: theme.foreground,
+}));
+
+const AccountName = styled(Info)(({ theme }) => ({
   // fontWeight: 'bold',
   paddingBottom: '.15em ',
   borderBottom: `1px dotted ${theme.mixer(0.25)}`,
-  color: theme.foreground,
 }));
 
-const AddressComponent = styled.span(({ theme }) => ({
+const HashComponent = styled(Info)(({ theme }) => ({
   fontFamily: consts.monoFontFamily,
   paddingBottom: '.15em ',
   borderBottom: `1px dotted ${theme.mixer(0.25)}`,
-  color: theme.foreground,
 }));
 
-const Address = ({ children, ...rest }) => {
+const RegisterType = styled(Info)({
+  textTransform: 'lowercase',
+});
+
+const Hash = ({ children, ...rest }) => {
   if (!children || typeof children !== 'string' || children.length <= 11)
     return <span {...rest}>{children}</span>;
   return (
-    <AddressComponent {...rest}>
-      {children.slice(0, 6)}...{children.slice(-5)}
-    </AddressComponent>
+    <Tooltip.Trigger tooltip={children}>
+      <HashComponent {...rest}>
+        {children.slice(0, 6)}...{children.slice(-5)}
+      </HashComponent>
+    </Tooltip.Trigger>
   );
 };
 
-const Account = ({ name, address }) => (
-  <>
-    {name ? 'account ' : 'address '}
-    <Tooltip.Trigger tooltip={address}>
-      {name ? <AccountName>{name}</AccountName> : <Address>{address}</Address>}
-    </Tooltip.Trigger>
-  </>
-);
+const Account = ({ name, address }) =>
+  name ? (
+    <>
+      account{' '}
+      <Tooltip.Trigger tooltip={address}>
+        <AccountName>{name}</AccountName>
+      </Tooltip.Trigger>
+    </>
+  ) : (
+    <>
+      address <Hash>{address}</Hash>
+    </>
+  );
+
+const creditFrom = contract => {
+  switch (contract.for) {
+    case 'DEBIT':
+      return <Account name={contract.from_name} address={contract.from} />;
+
+    case 'LEGACY':
+      return <Info>{__('Legacy transaction')}</Info>;
+
+    case 'COINBASE':
+      return <Info>{__('Coinbase transaction')}</Info>;
+
+    default:
+      return '';
+  }
+};
 
 const contractContent = contract => {
   switch (contract.OP) {
     case 'WRITE': {
       return (
         <>
-          <Action>Write</Action> to <Account address={contract.address} />
+          <Action>Write</Action> data to <Account address={contract.address} />
         </>
       );
     }
@@ -84,7 +114,7 @@ const contractContent = contract => {
     case 'APPEND': {
       return (
         <>
-          <Action>Append</Action> to <Account address={contract.address} />
+          <Action>Append</Action> data to <Account address={contract.address} />
         </>
       );
     }
@@ -92,8 +122,17 @@ const contractContent = contract => {
     case 'CREATE': {
       return (
         <>
-          <Action>Create</Action> {contract.object_type} =>{' '}
-          <Account address={contract.address} />
+          <div>
+            <Action>Create</Action> new{' '}
+            <RegisterType>
+              {contract.type === 'OBJECT' && contract.object_type + ' '}
+              {contract.type}
+            </RegisterType>{' '}
+            register
+          </div>
+          <div>
+            at address <Hash>{contract.address}</Hash>
+          </div>
         </>
       );
     }
@@ -101,7 +140,8 @@ const contractContent = contract => {
     case 'TRANSFER': {
       return (
         <>
-          <Action>Transfer</Action> <Account address={contract.address} /> to{' '}
+          <Action>Transfer</Action> ownership of{' '}
+          <Account address={contract.address} /> to{' '}
           <Account address={contract.destination} />
         </>
       );
@@ -110,7 +150,8 @@ const contractContent = contract => {
     case 'CLAIM': {
       return (
         <>
-          <Action>Claim</Action> <Account address={contract.address} />
+          <Action>Claim</Action> ownership of{' '}
+          <Account address={contract.address} />
         </>
       );
     }
@@ -134,7 +175,7 @@ const contractContent = contract => {
     case 'GENESIS': {
       return (
         <>
-          <Action>Genesis</Action> <Account address={contract.address} />
+          <Action>Genesis</Action> <Hash>{contract.address}</Hash>
         </>
       );
     }
@@ -160,9 +201,7 @@ const contractContent = contract => {
             <Action>Credit</Action> to{' '}
             <Account name={contract.account_name} address={contract.account} />
           </div>
-          <div>
-            from <Account name={contract.from_name} address={contract.from} />
-          </div>
+          <div>from {creditFrom(contract)}</div>
         </>
       );
     }
@@ -170,8 +209,13 @@ const contractContent = contract => {
     case 'MIGRATE': {
       return (
         <>
-          <Action>Migrate</Action> to{' '}
-          {contract.account_name || <Account address={contract.account} />}
+          <div>
+            <Action>Migrate</Action> trust key to{' '}
+            <Account name={contract.account_name} address={contract.account} />
+          </div>
+          <div>
+            from <Hash>{contract.hashkey}</Hash>
+          </div>
         </>
       );
     }
@@ -179,7 +223,12 @@ const contractContent = contract => {
     case 'AUTHORIZE': {
       return (
         <>
-          <Action>Authorize</Action> a transaction
+          <div>
+            <Action>Authorize</Action> transaction <Hash>{contract.txid}</Hash>
+          </div>
+          <div>
+            with a temporal proof <Hash>{contract.proof}</Hash>
+          </div>
         </>
       );
     }
@@ -188,7 +237,7 @@ const contractContent = contract => {
       return (
         <>
           <Action>Fee</Action> from{' '}
-          {contract.account_name || <Account address={contract.account} />}
+          <Account name={contract.account_name} address={contract.account} />
         </>
       );
     }
@@ -196,8 +245,13 @@ const contractContent = contract => {
     case 'LEGACY': {
       return (
         <>
-          <Action>Legacy Send</Action> from{' '}
-          {contract.from_name || <Account address={contract.from} />}
+          <div>
+            <Action>Legacy</Action> debit from{' '}
+            <Account name={contract.from_name} address={contract.from} />
+          </div>
+          <div>
+            to <Account address={contract.to} />
+          </div>
         </>
       );
     }
@@ -206,7 +260,6 @@ const contractContent = contract => {
       return <Action>{contract.OP}</Action>;
     }
   }
-  return;
 };
 
 const negativeOperations = ['DEBIT', 'FEE'];
