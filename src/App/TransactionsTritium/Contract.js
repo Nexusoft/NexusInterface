@@ -52,7 +52,6 @@ const Info = styled.span(({ theme }) => ({
 }));
 
 const AccountName = styled(Info)(({ theme }) => ({
-  // fontWeight: 'bold',
   paddingBottom: '.15em ',
   borderBottom: `1px dotted ${theme.mixer(0.25)}`,
 }));
@@ -294,7 +293,7 @@ const Contract = ({ contract }) => (
     <ContractContent>{contractContent(contract)}</ContractContent>
     {!!contract.amount && (
       <ContractDelta sign={deltaSign(contract)}>
-        {contract.amount} {contract.token_name || 'NXS'}
+        {formatNumber(contract.amount)} {contract.token_name || 'NXS'}
       </ContractDelta>
     )}
   </ContractComponent>

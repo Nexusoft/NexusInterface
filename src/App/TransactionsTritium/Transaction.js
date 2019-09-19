@@ -7,9 +7,19 @@ import { timing } from 'styles';
 
 import Contract from './Contract';
 
+const dateFormat = {
+  day: '2-digit',
+  month: '2-digit',
+  year: 'numeric',
+};
+const timeFormat = {
+  hour: '2-digit',
+  minute: '2-digit',
+  second: '2-digit',
+  hour12: false,
+};
 const dayFormat = { day: '2-digit' };
 const monthFormat = { month: 'short' };
-const yearFormat = { year: 'numeric' };
 
 const TransactionComponent = styled.div(({ theme }) => ({
   margin: '10px 0',
@@ -27,7 +37,7 @@ const TransactionLeft = styled.div(({ theme }) => ({
   alignItems: 'center',
   color: theme.foreground,
   borderRight: `1px solid ${color.fade(theme.primary, 0.5)}`,
-  padding: '6px 24px',
+  padding: '12px',
   cursor: 'pointer',
   transition: `background ${timing.normal}`,
   '&:hover': {
@@ -35,29 +45,39 @@ const TransactionLeft = styled.div(({ theme }) => ({
   },
 }));
 
-const TransactionDate = styled.div(({ theme }) => ({
+const TransactionDate = styled.div({
   textAlign: 'center',
-  paddingTop: 15,
   position: 'relative',
+});
+
+const FullDateTime = styled.div({
+  fontSize: 14,
+});
+
+const ShortDate = styled.div(({ theme }) => ({
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  background: color.darken(theme.background, 0.1),
+  transition: `opacity ${timing.normal}`,
+
+  [`${TransactionLeft}:hover &`]: {
+    opacity: 0,
+  },
 }));
 
 const Day = styled.div({
-  fontSize: 20,
-  lineHeight: 1,
+  fontSize: 22,
+  lineHeight: 1.2,
 });
 
 const Month = styled.div({
   fontSize: 14,
-});
-
-const Year = styled.div({
-  letterSpacing: 0.5,
-  fontSize: 12,
-  opacity: 0,
-  transition: `opacity ${timing.normal}`,
-  [`${TransactionLeft}:hover &`]: {
-    opacity: 1,
-  },
 });
 
 const TransactionRight = styled.div({
@@ -76,9 +96,18 @@ const Transaction = ({ transaction }) => {
     <TransactionComponent>
       <TransactionLeft>
         <TransactionDate>
-          <Day>{formatDateTime(txTime, dayFormat)}</Day>
-          <Month>{formatDateTime(txTime, monthFormat)}</Month>
-          <Year>{formatDateTime(txTime, yearFormat)}</Year>
+          <FullDateTime>
+            <div>{formatDateTime(txTime, dateFormat)}</div>
+            <div style={{ letterSpacing: 1.5 }}>
+              {formatDateTime(txTime, timeFormat)}
+            </div>
+          </FullDateTime>
+          <ShortDate>
+            <div>
+              <Day>{formatDateTime(txTime, dayFormat)}</Day>
+              <Month>{formatDateTime(txTime, monthFormat)}</Month>
+            </div>
+          </ShortDate>
         </TransactionDate>
       </TransactionLeft>
       <TransactionRight>

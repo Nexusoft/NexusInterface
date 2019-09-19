@@ -74,7 +74,7 @@ const tableColumns = [
 
 const TransactionsLayout = styled.div({
   height: '100%',
-  maxWidth: 600,
+  maxWidth: 650,
   margin: '0 auto',
   display: 'grid',
   gridTemplateAreas: '"table"',
