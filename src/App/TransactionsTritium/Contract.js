@@ -1,10 +1,14 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
 import Tooltip from 'components/Tooltip';
+import { openModal } from 'actions/overlays';
 import { formatNumber } from 'lib/intl';
 import { consts, timing } from 'styles';
 import * as color from 'utils/color';
+
+import ContractDetailsModal from './ContractDetailsModal';
 
 const ContractComponent = styled.div(({ theme }) => ({
   flexGrow: 1,
@@ -288,8 +292,10 @@ const deltaSign = contract => {
   }
 };
 
-const Contract = ({ contract }) => (
-  <ContractComponent>
+const Contract = ({ contract, openModal }) => (
+  <ContractComponent
+    onClick={() => openModal(ContractDetailsModal, { contract })}
+  >
     <ContractContent>{contractContent(contract)}</ContractContent>
     {!!contract.amount && (
       <ContractDelta sign={deltaSign(contract)}>
@@ -299,4 +305,9 @@ const Contract = ({ contract }) => (
   </ContractComponent>
 );
 
-export default Contract;
+const actionCreators = { openModal };
+
+export default connect(
+  null,
+  actionCreators
+)(Contract);
