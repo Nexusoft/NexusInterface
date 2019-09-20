@@ -168,6 +168,15 @@ const mapDispatchToProps = {
   asyncBlurFields: ['recipients[].address'],
   asyncValidate: async ({ recipients }) => {
     //Issue with backend
+    console.log(recipients[0]);
+    if (
+      !recipients[0].address.startsWith('2') &&
+      !recipients[0].address.startsWith('4') &&
+      !recipients[0].address.startsWith('8')
+    ) {
+      throw { recipients: [{ address: __('Invalid address') }] };
+    }
+
     return null;
     const recipientsErrors = [];
     await Promise.all(
