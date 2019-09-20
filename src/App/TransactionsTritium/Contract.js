@@ -210,7 +210,7 @@ const contractContent = contract => {
         <>
           <div>
             <Action>Credit</Action> to{' '}
-            <Account name={contract.account_name} address={contract.account} />
+            <Account name={contract.to_name} address={contract.to} />
           </div>
           <div>from {creditFrom(contract)}</div>
         </>
@@ -248,7 +248,7 @@ const contractContent = contract => {
       return (
         <>
           <Action>Fee</Action> from{' '}
-          <Account name={contract.account_name} address={contract.account} />
+          <Account name={contract.from_name} address={contract.from} />
         </>
       );
     }
