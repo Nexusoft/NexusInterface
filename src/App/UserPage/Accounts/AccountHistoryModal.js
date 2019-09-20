@@ -5,6 +5,7 @@ import styled from '@emotion/styled';
 import Modal from 'components/Modal';
 import WaitingMessage from 'components/WaitingMessage';
 import Table from 'components/Table';
+import ContractDetailsModal from 'components/ContractDetailsModal';
 import { apiPost } from 'lib/tritiumApi';
 import { formatDateTime, formatNumber } from 'lib/intl';
 import { openModal } from 'actions/overlays';
@@ -138,7 +139,7 @@ class AccountHistoryModal extends React.Component {
   }
 
   render() {
-    const { account } = this.props;
+    const { account, openModal } = this.props;
     const { contracts } = this.state;
 
     return (
@@ -147,7 +148,9 @@ class AccountHistoryModal extends React.Component {
           this.closeModal = closeModal;
         }}
       >
-        <Modal.Header>{__('Account History')}</Modal.Header>
+        <Modal.Header>
+          {account.name} {__('Account History')}
+        </Modal.Header>
         <Modal.Body>
           {!contracts ? (
             <WaitingMessage>
@@ -160,16 +163,15 @@ class AccountHistoryModal extends React.Component {
               columns={tableColumns}
               defaultPageSize={10}
               getTrProps={(state, row) => {
-                // const contract = row && row.original;
+                const contract = row && row.original;
                 return {
-                  // onClick: tx
-                  //   ? () => {
-                  //       openModal(TransactionDetailsModal, {
-                  //         txid: tx.txid,
-                  //         timestamp: tx.timestamp,
-                  //       });
-                  //     }
-                  //   : undefined,
+                  onClick: contract
+                    ? () => {
+                        openModal(ContractDetailsModal, {
+                          contract,
+                        });
+                      }
+                    : undefined,
                   style: {
                     cursor: 'pointer',
                     fontSize: 15,
