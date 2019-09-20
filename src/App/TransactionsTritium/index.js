@@ -18,12 +18,8 @@ import Transaction from './Transaction';
 import transactionIcon from 'images/transaction.sprite.svg';
 
 const TransactionsLayout = styled.div({
-  height: '100%',
   maxWidth: 650,
   margin: '0 auto',
-  display: 'grid',
-  gridTemplateAreas: '"table"',
-  gridTemplateRows: '1fr',
 });
 
 // React-Redux mandatory methods
