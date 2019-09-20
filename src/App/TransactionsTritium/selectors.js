@@ -15,7 +15,9 @@ const getThresholdDate = timeSpan => {
 };
 
 export const getTransactionsList = memoize(
-  txMap => txMap && Object.values(txMap)
+  txMap =>
+    txMap &&
+    Object.values(txMap).sort((tx1, tx2) => tx2.timestamp - tx1.timestamp)
 );
 
 export const getFilteredTransactions = memoize(
