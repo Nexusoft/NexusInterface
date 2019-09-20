@@ -1,7 +1,7 @@
 {
   "name": "nexus_wallet",
   "productName": "Nexus Wallet",
-  "version": "1.3.0",
+  "version": "2.0.0-alpha",
   "moduleSpecVersion": "0.2.1",
   "supportedModuleSpecVersion": "0.1.0",
   "buildDate": "September 5th 2019",

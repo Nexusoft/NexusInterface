@@ -69,6 +69,22 @@ const ModeDisplay = styled.div({
   bottom: '-0px',
 });
 
+const PreReleaseTag = styled.div(({ theme }) => ({
+  fontSize: 12,
+  position: 'absolute',
+  bottom: 3,
+  right: -32,
+  letterSpacing: 1,
+  textTransform: 'uppercase',
+  color: theme.foreground,
+}));
+
+const preReleaseTag = APP_VERSION.toString().includes('alpha')
+  ? 'ALPHA'
+  : APP_VERSION.toString().includes('beta')
+  ? 'BETA'
+  : null;
+
 /**
  * Handles the App Header
  *
@@ -92,6 +108,10 @@ class Header extends Component {
 
         <LogoLink to="/">
           <Logo icon={logoFull} />
+
+          {preReleaseTag ? (
+            <PreReleaseTag>{preReleaseTag}</PreReleaseTag>
+          ) : null}
         </LogoLink>
 
         <UnderHeader>
