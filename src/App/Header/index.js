@@ -64,6 +64,11 @@ const UnderHeader = styled.div(({ theme }) => ({
   color: theme.foreground,
 }));
 
+const ModeDisplay = styled.div({
+  position: 'absolute',
+  bottom: '-0px',
+});
+
 /**
  * Handles the App Header
  *
@@ -93,7 +98,9 @@ class Header extends Component {
           <HorizontalLine />
           <WalletStatus {...this.props} />
         </UnderHeader>
-
+        <ModeDisplay>
+          {legacyMode ? 'Legacy Mode' : 'Tritium Mode'}{' '}
+        </ModeDisplay>
         {coreConnected &&
           (legacyMode ? <StatusIcons /> : <StatusIconsTritium />)}
       </HeaderComponent>
