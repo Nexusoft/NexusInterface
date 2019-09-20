@@ -16,7 +16,7 @@ export async function autoUpdateTransactions() {
 
     observeStore(
       ({ core: { info } }) => info && info.txtotal,
-      (txtotal, store) => {
+      txtotal => {
         const {
           transactions: { lastTxtotal },
         } = store.getState();
@@ -93,7 +93,7 @@ function autoUpdateTxConfirmations(txid) {
   if (unsubscribers[txid]) return;
   unsubscribers[txid] = observeStore(
     ({ core: { info } }) => info && info.blocks,
-    async (blocks, store) => {
+    async blocks => {
       if (blocks) {
         await fetchTransaction(txid);
         const {

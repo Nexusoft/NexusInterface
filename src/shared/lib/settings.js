@@ -68,6 +68,7 @@ export const defaultSettings = {
   forkBlocks: 0,
   walletClean: false,
   legacyMode: undefined,
+  tritiumModeNoticeDisabled: false,
 };
 
 export let tempSettings = null;

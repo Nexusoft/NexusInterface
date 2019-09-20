@@ -8,6 +8,7 @@ import stakeInfo from './stakeInfo';
 import balances from './balances';
 import userStatus from './userStatus';
 import accounts from './accounts';
+import transactions from './transactions';
 
 export default combineReducers({
   autoConnect,
@@ -18,4 +19,5 @@ export default combineReducers({
   balances,
   userStatus,
   accounts,
+  transactions,
 });

@@ -289,11 +289,11 @@ function updateStorage([data]) {
 export function initializeWebView() {
   observeStore(
     state => state.webview,
-    (webview, { getState }) => {
+    webview => {
       if (webview) {
         webview.addEventListener('ipc-message', handleIpcMessage);
         webview.addEventListener('dom-ready', () => {
-          const state = getState();
+          const state = store.getState();
           const activeModule = getActiveModule();
           const moduleState = state.moduleStates[activeModule.name];
           const storageData = readModuleStorage(activeModule);
@@ -309,21 +309,22 @@ export function initializeWebView() {
 
   observeStore(
     state => state.settings,
-    (settings, { getState }) => {
-      const { webview } = getState();
-      if (webview) {
-        try {
-          webview.send('settings-updated', settings);
-        } catch (err) {}
+    (settings, oldSettings) => {
+      if (settingsChanged(oldSettings, settings)) {
+        const { webview } = store.getState();
+        if (webview) {
+          try {
+            webview.send('settings-updated', settings);
+          } catch (err) {}
+        }
       }
-    },
-    settingsChanged
+    }
   );
 
   observeStore(
     state => state.theme,
-    (theme, { getState }) => {
-      const { webview } = getState();
+    theme => {
+      const { webview } = store.getState();
       if (webview) {
         try {
           webview.send('theme-updated', theme);
@@ -334,8 +335,8 @@ export function initializeWebView() {
 
   observeStore(
     state => state.coreInfo,
-    (coreInfo, { getState }) => {
-      const { webview } = getState();
+    coreInfo => {
+      const { webview } = store.getState();
       if (webview) {
         try {
           webview.send('coreInfo-updated', coreInfo);

@@ -13,9 +13,8 @@ import { apiPost } from 'lib/tritiumApi';
 import { errorHandler } from 'utils/form';
 import { coreDataDir } from 'consts/paths';
 
-const PinInput = styled(TextField.RF)({
+const PasswordInput = styled(TextField.RF)({
   margin: '1em auto 2.5em',
-  fontSize: 18,
 });
 
 const actionCreators = { removeModal, openSuccessDialog };
@@ -54,7 +53,7 @@ const MigrateStakeModal = ({ handleSubmit }) => (
         <Modal.Body>
           <div>
             {__(
-              'This will transfer your stake amount and your trust score from your legacy wallet to your new Tritium account.'
+              'This will transfer all stake amount and trust score from your legacy wallet to your new Tritium account.'
             )}
           </div>
           <div className="mt1">
@@ -66,7 +65,7 @@ const MigrateStakeModal = ({ handleSubmit }) => (
           <form onSubmit={handleSubmit} className="mt2">
             <FormField connectLabel label={__('Legacy wallet password')}>
               <Field
-                component={PinInput}
+                component={PasswordInput}
                 name="passphrase"
                 type="password"
                 skin="filled-inverted"

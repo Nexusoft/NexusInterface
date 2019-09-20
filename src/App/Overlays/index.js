@@ -1,18 +1,27 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { legacyMode } from 'consts/misc';
+
 import ClosingScreen from './ClosingScreen';
 import SelectLanguage from './SelectLanguage';
 import LicenseAgreement from './LicenseAgreement';
 import ExperimentalWarning from './ExperimentalWarning';
+import TritiumModeNotice from './TritiumModeNotice';
 import Wallet from './Wallet';
 
 const mapStateToProps = ({
-  settings: { experimentalWarningDisabled, acceptedAgreement, locale },
+  settings: {
+    experimentalWarningDisabled,
+    tritiumModeNoticeDisabled,
+    acceptedAgreement,
+    locale,
+  },
   ui: { closing },
 }) => ({
   locale,
   experimentalWarningDisabled,
+  tritiumModeNoticeDisabled,
   acceptedAgreement,
   closing,
 });
@@ -20,6 +29,7 @@ const mapStateToProps = ({
 const Overlays = ({
   locale,
   experimentalWarningDisabled,
+  tritiumModeNoticeDisabled,
   acceptedAgreement,
   closing,
   children,
@@ -38,6 +48,10 @@ const Overlays = ({
 
   if (!experimentalWarningDisabled) {
     return <ExperimentalWarning />;
+  }
+
+  if (!legacyMode && !tritiumModeNoticeDisabled) {
+    return <TritiumModeNotice />;
   }
 
   return <Wallet>{children}</Wallet>;
