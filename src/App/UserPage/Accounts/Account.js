@@ -8,6 +8,7 @@ import { formatNumber } from 'lib/intl';
 import { openModal } from 'actions/overlays';
 
 import AccountDetailsModal from './AccountDetailsModal';
+import AccountHistoryModal from './AccountHistoryModal';
 import { totalBalance } from './utils';
 
 const AccountComponent = styled.div(({ theme }) => ({
@@ -27,15 +28,27 @@ const Account = ({ account, openModal }) => (
         <AccountName>{account.name}</AccountName> (
         {formatNumber(totalBalance(account))} {account.token_name})
       </div>
-      <Link
-        as="a"
-        href="javascript:;"
-        onClick={() => {
-          openModal(AccountDetailsModal, { account });
-        }}
-      >
-        {__('Details')}
-      </Link>
+      <div>
+        <Link
+          as="a"
+          href="javascript:;"
+          onClick={() => {
+            openModal(AccountDetailsModal, { account });
+          }}
+        >
+          {__('Details')}
+        </Link>
+        &nbsp;&nbsp;
+        <Link
+          as="a"
+          href="javascript:;"
+          onClick={() => {
+            openModal(AccountHistoryModal, { account });
+          }}
+        >
+          {__('History')}
+        </Link>
+      </div>
     </div>
     <NexusAddress address={account.address} />
   </AccountComponent>
