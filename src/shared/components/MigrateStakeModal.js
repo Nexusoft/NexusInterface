@@ -53,7 +53,7 @@ const MigrateStakeModal = ({ handleSubmit }) => (
         <Modal.Body>
           <div>
             {__(
-              'This will transfer your stake amount and your trust score from your legacy wallet to your new Tritium account.'
+              'This will transfer all stake amount and trust score from your legacy wallet to your new Tritium account.'
             )}
           </div>
           <div className="mt1">

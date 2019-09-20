@@ -69,8 +69,9 @@ const Separator = styled.div(({ theme }) => ({
 }));
 
 @connect(
-  state => ({
-    currentUser: state.core.userStatus && state.core.userStatus.username,
+  ({ core: { userStatus, stakeInfo } }) => ({
+    currentUser: userStatus && userStatus.username,
+    trustIsNew: stakeInfo && stakeInfo.new,
   }),
   { logOutUser, openModal, showNotification }
 )
@@ -83,7 +84,7 @@ class LoggedInDropdown extends React.Component {
   };
 
   render() {
-    const { currentUser, closeDropdown, openModal } = this.props;
+    const { currentUser, closeDropdown, openModal, trustIsNew } = this.props;
     return (
       <>
         <CurrentUser>
@@ -97,15 +98,19 @@ class LoggedInDropdown extends React.Component {
           <MenuItem>{__('My balances')}</MenuItem>
         </Link>
         <Separator />
-        <MenuItem
-          onClick={() => {
-            openModal(MigrateStakeModal);
-            closeDropdown();
-          }}
-        >
-          {__('Migrate stake')}
-        </MenuItem>
-        <Separator />
+        {!!trustIsNew && (
+          <>
+            <MenuItem
+              onClick={() => {
+                openModal(MigrateStakeModal);
+                closeDropdown();
+              }}
+            >
+              {__('Migrate stake')}
+            </MenuItem>
+            <Separator />
+          </>
+        )}
         <MenuItem onClick={this.logout}>{__('Log out')}</MenuItem>
       </>
     );
