@@ -153,14 +153,6 @@ class Core {
       `-datadir=${conf.dataDir}`,
       `-rpcport=${conf.port}`,
       `-verbose=${conf.verbose}`,
-      '-testnet=2525',
-      `-private=1`,
-      `-generate=password`,
-      // //
-      // '-testnet',
-      // '-manager=false',
-      // '-connect=192.168.0.234',
-      // //
     ];
     //After core forksblocks clear out that field.
     if (settings.forkBlocks) {
