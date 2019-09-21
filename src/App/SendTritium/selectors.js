@@ -13,7 +13,8 @@ export const getAccountOptions = memoize(myAccounts => {
 });
 
 export const getAccountBalance = memoize((accountName, myAccounts) => {
-  const account = myAccounts.find(acc => acc.name === accountName);
+  const account =
+    myAccounts && myAccounts.find(acc => acc.name === accountName);
   return account && account.balance;
 });
 

@@ -13,6 +13,7 @@ import WaitingMessage from 'components/WaitingMessage';
 import Tooltip from 'components/Tooltip';
 import { openModal } from 'actions/overlays';
 import { LoadTritiumAccounts } from 'actions/account';
+import { listAccounts } from 'actions/core';
 import { isCoreConnected } from 'selectors';
 
 // Internal Local Dependencies
@@ -26,7 +27,7 @@ const mapStateToProps = state => ({
   coreConnected: isCoreConnected(state),
 });
 
-const actionCreators = { openModal, LoadTritiumAccounts };
+const actionCreators = { openModal, listAccounts };
 
 /**
  * Send Page
@@ -45,7 +46,7 @@ class Send extends Component {
    * @memberof Send
    */
   componentDidMount() {
-    this.props.LoadTritiumAccounts();
+    this.props.listAccounts();
     window.addEventListener('contextmenu', this.setupcontextmenu, false);
     GA.SendScreen('Send');
   }
@@ -81,7 +82,7 @@ class Send extends Component {
    */
   render() {
     return (
-      <Panel icon={sendIcon} title={__('Send NXS Tritium')}>
+      <Panel icon={sendIcon} title={__('Send NXS')}>
         {!this.props.coreConnected ? (
           <WaitingMessage>
             {__('Connecting to Nexus Core')}

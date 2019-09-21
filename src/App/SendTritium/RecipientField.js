@@ -38,9 +38,9 @@ const filterRecipients = memoize((suggestions, inputValue) => {
   );
 });
 
-const mapStateToProps = ({ addressBook, myTritiumAccounts }) => ({
-  suggestions: getRecipientSuggestions(addressBook, myTritiumAccounts),
-  addressNameMap: getAddressNameMap(addressBook, myTritiumAccounts),
+const mapStateToProps = ({ addressBook, core }) => ({
+  suggestions: getRecipientSuggestions(addressBook, core.accounts),
+  addressNameMap: getAddressNameMap(addressBook, core.accounts),
 });
 
 const actionCreators = { openModal };

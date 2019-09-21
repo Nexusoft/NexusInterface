@@ -8,7 +8,7 @@ import styled from '@emotion/styled';
 import { apiPost } from 'lib/tritiumApi';
 import rpc from 'lib/rpc';
 import { defaultSettings } from 'lib/settings';
-import { loadMyAccounts } from 'actions/account';
+import { listAccounts } from 'actions/core';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
@@ -27,8 +27,6 @@ import sendIcon from 'images/send.sprite.svg';
 import { numericOnly } from 'utils/form';
 import confirmPin from 'utils/promisified/confirmPin';
 
-import PinDialog from 'components/PinDialog';
-
 // Internal Local
 import Recipients from './Recipients';
 import {
@@ -37,7 +35,6 @@ import {
   getRegisteredFieldNames,
   getAccountBalance,
 } from './selectors';
-import PasswordModal from './PasswordModal';
 
 const SendFormComponent = styled.form({
   maxWidth: 800,
@@ -55,11 +52,10 @@ const valueSelector = formValueSelector(formName);
 const mapStateToProps = state => {
   const {
     addressBook,
-    myAccounts,
-    myTritiumAccounts,
     settings: { minConfirmations },
     core: {
       info: { locked, minting_only },
+      accounts,
     },
     form,
   } = state;
@@ -67,7 +63,7 @@ const mapStateToProps = state => {
   const recipients = valueSelector(state, 'recipients');
   const reference = valueSelector(state, 'reference');
   const expires = valueSelector(state, 'expires');
-  const accBalance = getAccountBalance(accountName, myTritiumAccounts);
+  const accBalance = getAccountBalance(accountName, accounts);
   const hideSendAll =
     recipients &&
     (recipients.length > 1 ||
@@ -79,7 +75,7 @@ const mapStateToProps = state => {
     expires,
     minting_only,
     accountName,
-    accountOptions: getAccountOptions(myTritiumAccounts),
+    accountOptions: getAccountOptions(accounts),
     addressNameMap: getAddressNameMap(addressBook),
     fieldNames: getRegisteredFieldNames(
       form[formName] && form[formName].registeredFields
@@ -89,12 +85,12 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-  loadMyAccounts,
   openConfirmDialog,
   openErrorDialog,
   openSuccessDialog,
   removeModal,
   openModal,
+  listAccounts,
 };
 
 /**
@@ -233,7 +229,7 @@ const mapDispatchToProps = {
     if (!result) return;
 
     props.reset();
-    props.loadMyAccounts();
+    props.listAccounts();
     props.openSuccessDialog({
       message: __('Transaction sent'),
     });
