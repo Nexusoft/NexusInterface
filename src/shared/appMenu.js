@@ -322,11 +322,10 @@ function buildDarwinTemplate() {
           ? stopCore
           : startCore
         : null,
-      now < tritiumUpgradeTime
-        ? null
-        : legacyMode
-        ? switchTritiumMode
-        : switchLegacyMode,
+      // now < tritiumUpgradeTime
+      //   ? null
+      //   :
+      legacyMode ? switchTritiumMode : switchLegacyMode,
       separator,
       quitNexus,
     ].filter(e => e),
@@ -413,11 +412,10 @@ function buildDefaultTemplate() {
           ? stopCore
           : startCore
         : null,
-      now < tritiumUpgradeTime
-        ? null
-        : legacyMode
-        ? switchTritiumMode
-        : switchLegacyMode,
+      // now < tritiumUpgradeTime
+      //   ? null
+      //   :
+      legacyMode ? switchTritiumMode : switchLegacyMode,
       separator,
       quitNexus,
     ].filter(e => e),
