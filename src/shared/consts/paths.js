@@ -16,12 +16,15 @@ const appDataDir = escapeSpace(
  * Exports
  * =============================================================================
  */
-export const walletDataDir = path.join(appDataDir, 'Nexus Wallet');
+export const walletDataDir = path.join(
+  appDataDir,
+  'Nexus Wallet Tritium Alpha'
+);
 
 export const coreDataDir =
   process.platform === 'win32' || process.platform === 'darwin'
-    ? path.join(appDataDir, 'Nexus')
-    : path.join(process.env.HOME, '/.Nexus');
+    ? path.join(appDataDir, 'TAO')
+    : path.join(process.env.HOME, '/.TAO');
 
 export const assetsParentDir =
   process.env.NODE_ENV === 'development'
