@@ -50,6 +50,13 @@ const StakeSlider = styled(Slider.RF)(({ theme, input, max }) => ({
     max}%)`,
 }));
 
+const Note = styled.div(({ theme }) => ({
+  fontSize: 14,
+  fontStyle: 'italic',
+  color: theme.mixer(0.75),
+  marginTop: 20,
+}));
+
 @connect(
   ({ core: { stakeInfo } }) => ({
     currentStake: stakeInfo && stakeInfo.stake,
@@ -126,6 +133,11 @@ export default class AdjustStakeModal extends React.Component {
             <SliderWrapper>
               <Field name="stake" component={StakeSlider} min={0} max={total} />
             </SliderWrapper>
+            <Note>
+              {__(
+                'Note: This change will not take effect immediately but will stay pending until you get the next Trust transaction. The pending change will be recorded locally in this machine, therefore if you switch to another machine for staking, the change will not take effect.'
+              )}
+            </Note>
             <div className="mt2 flex space-between">
               <Button
                 onClick={() => {
