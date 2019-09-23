@@ -69,6 +69,7 @@ export const defaultSettings = {
   walletClean: false,
   legacyMode: undefined,
   tritiumModeNoticeDisabled: false,
+  alphaTestNet: 17,
 };
 
 export let tempSettings = null;
