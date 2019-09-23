@@ -5,7 +5,7 @@ import { loadMyAccounts } from 'actions/account';
 import { showNotification, openModal } from 'actions/overlays';
 import { bootstrap } from 'actions/bootstrap';
 import { updateBlockDate } from 'actions/setupApp';
-import { getInfo, getUserStatus } from 'actions/core';
+import { getInfo, getUserStatus, listAccounts } from 'actions/core';
 import showDesktopNotif from 'utils/showDesktopNotif';
 import { showEncryptionWarningModal } from 'actions/setupApp';
 import LoginModal from 'components/LoginModal';
@@ -159,6 +159,8 @@ export function initializeCoreInfo() {
     observeStore(isCoreConnected, coreConnected => {
       if (coreConnected) {
         justConnected = true;
+        console.log('*********');
+        store.dispatch(listAccounts());
       }
     });
 
@@ -175,6 +177,16 @@ export function initializeCoreInfo() {
           systemInfo.synccomplete >= 0
         ) {
           store.dispatch(bootstrap({ suggesting: true }));
+        }
+      }
+    );
+
+    observeStore(
+      ({ core: { userStatus } }) => userStatus,
+      transactions => {
+        const state = store.getState();
+        if (true) {
+          store.dispatch(listAccounts());
         }
       }
     );

@@ -7,7 +7,7 @@ import styled from '@emotion/styled';
 // Internal Global
 import rpc from 'lib/rpc';
 import { defaultSettings } from 'lib/settings';
-import { loadMyAccounts } from 'actions/account';
+import { loadMyAccounts, updateAccountBalances } from 'actions/account';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
@@ -53,7 +53,7 @@ const mapStateToProps = state => {
     myAccounts,
     settings: { minConfirmations },
     core: {
-      info: { locked, minting_only },
+      info: { blocks, locked, minting_only },
     },
     form,
   } = state;
@@ -67,6 +67,7 @@ const mapStateToProps = state => {
   return {
     minConfirmations,
     locked,
+    blocks,
     minting_only,
     accountOptions: getAccountOptions(myAccounts),
     addressNameMap: getAddressNameMap(addressBook),
@@ -79,6 +80,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = {
   loadMyAccounts,
+  updateAccountBalances,
   openConfirmDialog,
   openErrorDialog,
   openSuccessDialog,
@@ -189,8 +191,8 @@ const mapDispatchToProps = {
         minConfirmations,
         message || null,
         null,
-        password || null,
       ];
+      if (password) params.push(password);
       console.log(password);
       console.log(params);
       // if (message) params.push(message);
@@ -213,6 +215,16 @@ const mapDispatchToProps = {
   onSubmitFail: errorHandler(__('Error sending NXS')),
 })
 class SendForm extends Component {
+  componentDidMount() {
+    this.props.loadMyAccounts();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.blocks !== this.props.blocks) {
+      this.props.updateAccountBalances();
+    }
+  }
+
   /**
    * Confirm the Send
    *

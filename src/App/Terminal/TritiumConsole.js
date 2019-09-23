@@ -1,6 +1,8 @@
 // External Dependencies
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import { shell } from 'electron';
 import styled from '@emotion/styled';
 import GA from 'lib/googleAnalytics';
 import memoize from 'memoize-one';
@@ -10,12 +12,10 @@ import WaitingMessage from 'components/WaitingMessage';
 import Button from 'components/Button';
 import AutoSuggest from 'components/AutoSuggest';
 import { isCoreConnected } from 'selectors';
-import rpc from 'lib/rpc';
 import * as Tritium from 'lib/tritiumApi';
 import {
   switchConsoleTab,
   updateConsoleInput,
-  updateTritiumConsoleInput,
   setCommandList,
   commandHistoryUp,
   commandHistoryDown,
@@ -24,6 +24,11 @@ import {
   printCommandError,
   resetConsoleOutput,
 } from 'actions/ui';
+import { openModal } from 'actions/overlays';
+import APIDocModal from './APIDocs/ApiDocModal';
+import questionMarkCircleIcon from 'images/question-mark-circle.sprite.svg';
+import Tooltip from 'components/Tooltip';
+import Icon from 'components/Icon';
 
 const filterCommands = memoize((commandList, inputValue) => {
   if (!commandList || !inputValue) return [];
@@ -47,7 +52,6 @@ const mapStateToProps = state => {
           historyIndex,
           commandList,
           output,
-          currentTritiumCommand,
         },
       },
     },
@@ -59,7 +63,7 @@ const mapStateToProps = state => {
       commandHistory,
       historyIndex
     ),
-    currentTritiumCommand,
+    currentCommand,
     commandList,
     output,
   };
@@ -69,13 +73,13 @@ const actionCreators = {
   switchConsoleTab,
   setCommandList,
   updateConsoleInput,
-  updateTritiumConsoleInput,
   commandHistoryUp,
   commandHistoryDown,
   executeCommand,
   printCommandOutput,
   printCommandError,
   resetConsoleOutput,
+  openModal,
 };
 
 const TerminalContent = styled.div({
@@ -106,6 +110,10 @@ const ConsoleOutput = styled.code(({ theme }) => ({
 }));
 
 const ExecuteButton = styled(Button)(({ theme }) => ({
+  borderLeft: `1px solid ${theme.mixer(0.125)}`,
+}));
+
+const HelpButton = styled(Button)(({ theme }) => ({
   borderLeft: `1px solid ${theme.mixer(0.125)}`,
 }));
 
@@ -148,38 +156,84 @@ class TritiumConsole extends Component {
   }
 
   /**
+   * Handle Key Down Event
+   * @param {*} e
+   * @memberof TerminalConsole
+   */
+  handleKeyDown = e => {
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        this.props.commandHistoryDown();
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        this.props.commandHistoryUp();
+        break;
+      case 'Enter':
+        this.execute();
+        break;
+    }
+  };
+
+  /**
    * Execute a Command
    *
    * @memberof TerminalConsole
    */
   execute = async () => {
     const {
-      currentTritiumCommand,
+      currentCommand,
       executeCommand,
-      commandList,
       printCommandOutput,
       printCommandError,
     } = this.props;
-    console.log(currentTritiumCommand);
-    if (!currentTritiumCommand || !currentTritiumCommand.trim()) return;
+    if (!currentCommand || !currentCommand.trim()) return;
 
-    const cmd = currentTritiumCommand;
-    //executeCommand(consoleInput);
+    const cmd = currentCommand;
     GA.SendEvent('Terminal', 'TritiumConsole', 'UseCommand', 1);
-    console.log(cmd);
 
-    // this.inputRef.inputRef.current.blur();
+    const cliCMDSplit = cmd.split(' ');
+    let cliFormat;
+    if (cliCMDSplit.length > 1) {
+      cliFormat =
+        cliCMDSplit.shift() +
+        '?' +
+        cliCMDSplit
+          .map((e, i, array) => {
+            if (i == array.length - 1) return e;
+            //if not a param join the next elements into yourself, for spaces
+            if (e.match(/(.*[a-z])=/g)) {
+              const next = i + 1;
+              if (array[next].match(/(.*[a-z])=/)) {
+                return e;
+              } else {
+                let recurIndex = 0;
+                let elementModified = e;
+                while (!array[i + recurIndex].match(/(.*[a-z])=/g)) {
+                  elementModified += ' ' + array[i + recurIndex];
+                  recurIndex++;
+                }
+                return elementModified;
+              }
+            } else {
+              return null;
+            }
+          })
+          .filter(Boolean)
+          .join('&');
+    }
 
     const tab = ' '.repeat(2);
     let result = null;
+    console.log(cliFormat || cmd);
+    executeCommand(cmd);
     try {
-      result = await Tritium.apiGet(cmd);
+      result = await Tritium.apiGet(cliFormat || cmd);
     } catch (err) {
       console.error(err);
       if (err.message !== undefined) {
-        printCommandError(
-          `Error: ${err.err.message}(errorcode ${err.err.code})`
-        );
+        printCommandError(tab + `Error: ${err.message}(errorcode ${err.code})`);
       } else {
         // This is the error if the rpc is unavailable
         try {
@@ -238,11 +292,11 @@ class TritiumConsole extends Component {
       coreConnected,
       commandList,
       consoleInput,
-      tritiumConsoleInput,
-      updateTritiumConsoleInput,
+      updateConsoleInput,
       output,
       resetConsoleOutput,
     } = this.props;
+    console.log(this);
 
     if (!coreConnected) {
       return (
@@ -257,7 +311,7 @@ class TritiumConsole extends Component {
           <Console>
             <ConsoleInput>
               <AutoSuggest
-                suggestions={commandList}
+                suggestions={[]}
                 filterSuggestions={filterCommands}
                 onSelect={this.formateAutoSuggest}
                 keyControl={false}
@@ -267,23 +321,37 @@ class TritiumConsole extends Component {
                 inputProps={{
                   autoFocus: true,
                   skin: 'filled-inverted',
-                  value: tritiumConsoleInput,
+                  value: consoleInput,
                   placeholder: __(
-                    'Enter console commands here (ex: getinfo, help)'
+                    'Enter API here (ex: api/verb/noun?param=value&param2=2 or param=1 param2=2)'
                   ),
                   onChange: e => {
-                    updateTritiumConsoleInput(e.target.value);
+                    updateConsoleInput(e.target.value);
                   },
                   onKeyDown: this.handleKeyDown,
                   right: (
-                    <ExecuteButton
-                      skin="filled-inverted"
-                      fitHeight
-                      grouped="right"
-                      onClick={this.execute}
-                    >
-                      {__('Execute')}
-                    </ExecuteButton>
+                    <>
+                      <ExecuteButton
+                        skin="filled-inverted"
+                        fitHeight
+                        grouped="right"
+                        onClick={this.execute}
+                      >
+                        {__('Execute')}
+                      </ExecuteButton>
+                      <Tooltip.Trigger
+                        tooltip={__('API Documentation')}
+                        position="top"
+                      >
+                        <HelpButton
+                          skin="filled-inverted"
+                          fitHeight
+                          onClick={() => this.props.openModal(APIDocModal)}
+                        >
+                          <Icon icon={questionMarkCircleIcon} />
+                        </HelpButton>
+                      </Tooltip.Trigger>
+                    </>
                   ),
                 }}
               />
@@ -296,10 +364,10 @@ class TritiumConsole extends Component {
                     return (
                       <div key={i}>
                         <span>
-                          <span style={{ color: '#0ca4fb' }}>Nexus-Core</span>
+                          <span style={{ color: '#0ca4fb' }}>Nexus-API</span>
                           <span style={{ color: '#00d850' }}>$ </span>
                           {content}
-                          <span style={{ color: '#0ca4fb' }}> ></span>
+                          <span style={{ color: '#0ca4fb' }}> ►</span>
                         </span>
                       </div>
                     );

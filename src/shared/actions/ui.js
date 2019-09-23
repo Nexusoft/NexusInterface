@@ -79,11 +79,6 @@ export const updateConsoleInput = value => ({
   payload: value,
 });
 
-export const updateTritiumConsoleInput = value => ({
-  type: TYPE.SET_TRITIUM_CONSOLE_INPUT,
-  payload: value,
-});
-
 export const setCommandList = commandList => ({
   type: TYPE.SET_COMMAND_LIST,
   payload: commandList,
@@ -116,10 +111,6 @@ export const resetConsoleOutput = () => ({
   type: TYPE.RESET_CONSOLE_OUTPUT,
 });
 
-/**
- * Console/Core
- * ===========================
- */
 export const printCoreOutput = output => ({
   type: TYPE.PRINT_CORE_OUTPUT,
   payload: output,

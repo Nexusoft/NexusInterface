@@ -14,6 +14,7 @@ import OverviewTritium from './OverviewTritium';
 import Header from './Header';
 import Navigation from './Navigation';
 import Send from './Send';
+import SendTritium from './SendTritium';
 import Transactions from './Transactions';
 import TransactionsTritium from './TransactionsTritium';
 import Market from './Market';
@@ -63,7 +64,11 @@ const App = ({ history }) => (
                 path="/"
                 component={legacyMode ? Overview : OverviewTritium}
               />
-              <Route exact path="/Send" component={Send} />
+              <Route
+                exact
+                path="/Send"
+                component={legacyMode ? Send : SendTritium}
+              />
               <Route
                 exact
                 path="/Transactions"

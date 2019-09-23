@@ -7,7 +7,6 @@ const initialState = {
   commandList: [],
   commandHistory: [],
   output: [],
-
 };
 
 export default (state = initialState, action) => {
@@ -16,12 +15,6 @@ export default (state = initialState, action) => {
       return {
         ...state,
         currentCommand: action.payload,
-        historyIndex: initialState.historyIndex,
-      };
-    case TYPE.SET_TRITIUM_CONSOLE_INPUT:
-      return {
-        ...state,
-        currentTritiumCommand: action.payload,
         historyIndex: initialState.historyIndex,
       };
     case TYPE.SET_COMMAND_LIST:

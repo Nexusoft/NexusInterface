@@ -446,6 +446,21 @@ class SettingsCore extends Component {
 
               <SettingsField
                 connectLabel
+                label={__('Test Net')}
+                subLabel={__('Alpha Test Net to connect to.')}
+              >
+                <TextField
+                  type="number"
+                  value={settings.alphaTestNet}
+                  min={17}
+                  max={9999999}
+                  onChange={this.updateHandlers('alphaTestNet')}
+                  style={{ maxWidth: 50 }}
+                />
+              </SettingsField>
+
+              <SettingsField
+                connectLabel
                 label={__('Avatar Mode')}
                 subLabel={__(
                   'Disabling Avatar will make the core use a separate change key'

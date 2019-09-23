@@ -64,6 +64,27 @@ const UnderHeader = styled.div(({ theme }) => ({
   color: theme.foreground,
 }));
 
+const ModeDisplay = styled.div({
+  position: 'absolute',
+  bottom: '-0px',
+});
+
+const PreReleaseTag = styled.div(({ theme }) => ({
+  fontSize: 12,
+  position: 'absolute',
+  bottom: 3,
+  right: -32,
+  letterSpacing: 1,
+  textTransform: 'uppercase',
+  color: theme.foreground,
+}));
+
+const preReleaseTag = APP_VERSION.toString().includes('alpha')
+  ? 'ALPHA'
+  : APP_VERSION.toString().includes('beta')
+  ? 'BETA'
+  : null;
+
 /**
  * Handles the App Header
  *
@@ -87,13 +108,19 @@ class Header extends Component {
 
         <LogoLink to="/">
           <Logo icon={logoFull} />
+
+          {preReleaseTag ? (
+            <PreReleaseTag>{preReleaseTag}</PreReleaseTag>
+          ) : null}
         </LogoLink>
 
         <UnderHeader>
           <HorizontalLine />
           <WalletStatus {...this.props} />
         </UnderHeader>
-
+        <ModeDisplay>
+          {legacyMode ? 'Legacy Mode' : 'Tritium Mode'}{' '}
+        </ModeDisplay>
         {coreConnected &&
           (legacyMode ? <StatusIcons /> : <StatusIconsTritium />)}
       </HeaderComponent>

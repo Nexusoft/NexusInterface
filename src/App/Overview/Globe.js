@@ -199,10 +199,11 @@ export default class Globe extends Component {
   componentWillUnmount() {
     this.stop();
     window.removeEventListener('resize', this.onWindowResize, false);
-    this.controls.dispose();
+
     if (this.threeRootElement.children.length > 0) {
       this.threeRootElement.removeChild(this.renderer.domElement);
     }
+    if (this.controls) this.controls.dispose();
   }
 
   /**

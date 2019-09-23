@@ -54,6 +54,7 @@ export const defaultSettings = {
 
   // Modules
   disabledModules: [],
+  allowSymLink: false,
 
   // Hidden settings
   acceptedAgreement: false,
@@ -68,6 +69,7 @@ export const defaultSettings = {
   walletClean: false,
   legacyMode: undefined,
   tritiumModeNoticeDisabled: false,
+  alphaTestNet: 17,
 };
 
 export let tempSettings = null;
