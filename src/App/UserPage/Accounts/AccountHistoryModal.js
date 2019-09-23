@@ -68,8 +68,8 @@ const tableColumns = [
     },
   },
   {
-    id: 'amount',
-    Header: __('Amount'),
+    id: 'change',
+    Header: __('Change'),
     Cell: cell =>
       cell.original.amount ? (
         <Amount possitive={cell.original.OP === 'CREDIT'}>
