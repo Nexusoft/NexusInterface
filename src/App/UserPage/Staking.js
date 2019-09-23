@@ -82,6 +82,19 @@ export default class Staking extends React.Component {
             </div>
             <div>{formatNumber(stakeInfo.stake)} NXS</div>
           </Line>
+          {!!stakeInfo.change && (
+            <Line>
+              <div>
+                <span className="v-align">{__('Pending change')}</span>
+                <QuestionMark
+                  tooltip={__(
+                    'The pending change of the stake amount that will take effect on the next Trust transaction'
+                  )}
+                />
+              </div>
+              <div>{formatNumber(stakeInfo.amount)} NXS</div>
+            </Line>
+          )}
           <Line>
             <div>
               <span className="v-align">{__('Stake Rate')}</span>
