@@ -10,9 +10,17 @@ import { updateSettings } from 'actions/settings';
 import { restartCore } from 'actions/core';
 import { openModal } from 'actions/overlays';
 import confirm from 'utils/promisified/confirm';
-import { formatNumber } from 'lib/intl';
+import { formatNumber, formatDateTime } from 'lib/intl';
 
 import QuestionMark from './QuestionMark';
+
+const dateTimeFormat = {
+  month: 'short',
+  day: '2-digit',
+  hour: '2-digit',
+  minute: '2-digit',
+  second: '2-digit',
+};
 
 const StakingWrapper = styled.div(({ theme }) => ({
   maxWidth: 400,
@@ -33,6 +41,10 @@ const Line = styled.div(
       color: theme.foreground,
     }
 );
+
+const Pending = styled.div({
+  paddingLeft: '1em',
+});
 
 @connect(
   state => ({
@@ -83,17 +95,39 @@ export default class Staking extends React.Component {
             <div>{formatNumber(stakeInfo.stake)} NXS</div>
           </Line>
           {!!stakeInfo.change && (
-            <Line>
-              <div>
-                <span className="v-align">{__('Pending change')}</span>
-                <QuestionMark
-                  tooltip={__(
-                    'The pending change of the stake amount that will take effect on the next Trust transaction'
-                  )}
-                />
-              </div>
-              <div>{formatNumber(stakeInfo.amount)} NXS</div>
-            </Line>
+            <div>
+              <Pending>
+                <Line>
+                  <div>
+                    <span className="v-align">{__('Pending change')}</span>
+                    <QuestionMark
+                      tooltip={__(
+                        'The pending stake amount change that will be applied on the next Trust transaction'
+                      )}
+                    />
+                  </div>
+                  <div>{formatNumber(stakeInfo.amount)} NXS</div>
+                </Line>
+                <Line>
+                  <div>
+                    <span className="v-align">{__('Requested in')}</span>
+                  </div>
+                  <div>
+                    {formatDateTime(stakeInfo.requested * 1000, dateTimeFormat)}
+                  </div>
+                </Line>
+                {!!stakeInfo.expires && (
+                  <Line>
+                    <div>
+                      <span className="v-align">{__('Expired in')}</span>
+                    </div>
+                    <div>
+                      {formatDateTime(stakeInfo.expires * 1000, dateTimeFormat)}{' '}
+                    </div>
+                  </Line>
+                )}
+              </Pending>
+            </div>
           )}
           <Line>
             <div>
@@ -150,6 +184,7 @@ export default class Staking extends React.Component {
             </div>
             <div>{formatNumber(stakeInfo.balance)} NXS</div>
           </Line>
+
           <div className="mt1 flex space-between">
             {!!stakeInfo.new ? (
               <Button
