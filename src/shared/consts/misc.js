@@ -14,6 +14,6 @@ export const webGLAvailable = (() => {
 
 export const legacyMode = settings.legacyMode === false ? false : true;
 
-// export const tritiumUpgradeTime = Date.now() + 5000;
+export const tritiumUpgradeTime = Date.now() + 5000;
 
-export const tritiumUpgradeTime = new Date(2019, 8, 30).getTime();
+//export const tritiumUpgradeTime = new Date(2019, 8, 24).getTime();
