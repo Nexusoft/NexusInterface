@@ -1,3 +1,9 @@
+# 2.0.0-Alpha (2019.9.24)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.0.0-alpha)
+
+First Release with Tritium
+
 # 1.2.3 (2019.9.5)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v1.2.3)
