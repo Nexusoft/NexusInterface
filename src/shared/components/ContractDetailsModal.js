@@ -52,7 +52,7 @@ const translateKey = key => {
   }
 };
 
-export default class ContractDetailsModal extends React.Component {
+class ContractDetailsModal extends React.Component {
   render() {
     const { contract } = this.props;
     if (!contract) return;
@@ -71,3 +71,4 @@ export default class ContractDetailsModal extends React.Component {
     );
   }
 }
+export default ContractDetailsModal;
