@@ -23,7 +23,6 @@ import {
   removeModal,
   openModal,
 } from 'actions/overlays';
-import Link from 'components/Link';
 import { errorHandler } from 'utils/form';
 import sendIcon from 'images/send.sprite.svg';
 import { numericOnly } from 'utils/form';

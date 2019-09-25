@@ -144,7 +144,7 @@ class Header extends Component {
 
         <UnderHeader>
           <HorizontalLine />
-          <WalletStatus {...this.props} />
+          <WalletStatus />
         </UnderHeader>
 
         {coreConnected &&
