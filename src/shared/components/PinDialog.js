@@ -49,6 +49,7 @@ const PinDialog = ({ handleSubmit, confirmLabel = __('Confirm'), onClose }) => (
               name="pin"
               normalize={numericOnly}
               type="password"
+              autoFocus
               skin="filled-inverted"
               placeholder={__('Your PIN number')}
             />

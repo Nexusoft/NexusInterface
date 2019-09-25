@@ -4,11 +4,8 @@ import { Field } from 'redux-form';
 import styled from '@emotion/styled';
 
 // Internal
-import Tooltip from 'components/Tooltip';
-import Button from 'components/Button';
 import Icon from 'components/Icon';
 import { timing } from 'styles';
-import plusIcon from 'images/plus.sprite.svg';
 import RecipientField from './RecipientField';
 import AmountField from './AmountField';
 

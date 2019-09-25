@@ -119,6 +119,7 @@ class Login extends Component {
                 component={TextField.RF}
                 name="username"
                 placeholder={__('Enter your username')}
+                autoFocus
               />
             </FormField>
 

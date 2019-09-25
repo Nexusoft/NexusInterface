@@ -66,7 +66,10 @@ const UnderHeader = styled.div(({ theme }) => ({
 
 const ModeDisplay = styled.div({
   position: 'absolute',
-  bottom: '-0px',
+  bottom: '-1px',
+  fontSize: 14,
+  fontWeight: 'bold',
+  opacity: 0.7,
 });
 
 const PreReleaseTag = styled.div(({ theme }) => ({
@@ -91,7 +94,17 @@ const preReleaseTag = APP_VERSION.toString().includes('alpha')
  * @class Header
  * @extends {Component}
  */
-@connect(state => ({ coreConnected: isCoreConnected(state) }))
+@connect(state => {
+  const {
+    core: { info, systemInfo },
+  } = state;
+  return {
+    coreConnected: isCoreConnected(state),
+    testnet: systemInfo && systemInfo.testnet,
+    privateNet: systemInfo && systemInfo.private,
+    legacyTestnet: info && info.testnet,
+  };
+})
 class Header extends Component {
   /**
    * Component's Renderable JSX
@@ -100,7 +113,7 @@ class Header extends Component {
    * @memberof Header
    */
   render() {
-    const { coreConnected } = this.props;
+    const { coreConnected, testnet, privateNet, legacyTestnet } = this.props;
 
     return (
       <HeaderComponent>
@@ -114,13 +127,26 @@ class Header extends Component {
           ) : null}
         </LogoLink>
 
+        <ModeDisplay>
+          {legacyMode ? (
+            <>
+              {__('Legacy Mode')}
+              {!!legacyTestnet && ' - testnet'}
+            </>
+          ) : (
+            <>
+              {__('Tritium Mode')}
+              {!!testnet &&
+                ` -${privateNet ? ' private' : ''} testnet ${testnet}`}
+            </>
+          )}
+        </ModeDisplay>
+
         <UnderHeader>
           <HorizontalLine />
-          <WalletStatus {...this.props} />
+          <WalletStatus />
         </UnderHeader>
-        <ModeDisplay>
-          {legacyMode ? 'Legacy Mode' : 'Tritium Mode'}{' '}
-        </ModeDisplay>
+
         {coreConnected &&
           (legacyMode ? <StatusIcons /> : <StatusIconsTritium />)}
       </HeaderComponent>
