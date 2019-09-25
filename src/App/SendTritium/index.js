@@ -6,25 +6,23 @@ import { remote } from 'electron';
 // Internal Global Dependencies
 import GA from 'lib/googleAnalytics';
 import ContextMenuBuilder from 'contextmenu';
-import Icon from 'components/Icon';
 import Panel from 'components/Panel';
-import Button from 'components/Button';
 import WaitingMessage from 'components/WaitingMessage';
-import Tooltip from 'components/Tooltip';
+import LoginModal from 'components/LoginModal';
+import Button from 'components/Button';
 import { openModal } from 'actions/overlays';
-import { LoadTritiumAccounts } from 'actions/account';
 import { listAccounts } from 'actions/core';
-import { isCoreConnected } from 'selectors';
+import { isCoreConnected, isLoggedIn } from 'selectors';
 
 // Internal Local Dependencies
 import SendForm from './SendForm';
 
 // Resources
 import sendIcon from 'images/send.sprite.svg';
-import swapIcon from 'images/swap.sprite.svg';
 
 const mapStateToProps = state => ({
   coreConnected: isCoreConnected(state),
+  loggedIn: isLoggedIn(state),
 });
 
 const actionCreators = { openModal, listAccounts };
@@ -81,13 +79,26 @@ class Send extends Component {
    * @memberof Send
    */
   render() {
+    const { coreConnected, loggedIn, openModal } = this.props;
     return (
       <Panel icon={sendIcon} title={__('Send NXS')}>
-        {!this.props.coreConnected ? (
+        {!coreConnected ? (
           <WaitingMessage>
             {__('Connecting to Nexus Core')}
             ...
           </WaitingMessage>
+        ) : !loggedIn ? (
+          <div style={{ marginTop: 50, textAlign: 'center' }}>
+            <Button
+              uppercase
+              skin="primary"
+              onClick={() => {
+                openModal(LoginModal);
+              }}
+            >
+              {__('Log in')}
+            </Button>
+          </div>
         ) : (
           <SendForm />
         )}

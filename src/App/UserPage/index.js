@@ -11,7 +11,7 @@ import Panel from 'components/Panel';
 import LoginModal from 'components/LoginModal';
 import { openModal } from 'actions/overlays';
 import AddEditContactModal from 'components/AddEditContactModal';
-import { isCoreConnected } from 'selectors';
+import { isCoreConnected, isLoggedIn } from 'selectors';
 import ContextMenuBuilder from 'contextmenu';
 
 // Internal Local
@@ -28,9 +28,9 @@ const UserPageLayout = styled.div({
 });
 
 const mapStateToProps = state => ({
-  username: state.core.userStatus && state.core.userStatus.username,
   addressBook: state.addressBook,
   coreConnected: isCoreConnected(state),
+  loggedIn: isLoggedIn(state),
 });
 
 const actionCreators = { openModal };
@@ -99,11 +99,11 @@ class UserPage extends Component {
    * @memberof UserPage
    */
   render() {
-    const { username, openModal, match } = this.props;
+    const { loggedIn, openModal, match } = this.props;
 
     return (
       <Panel icon={userIcon} title={__('User')} bodyScrollable={false}>
-        {!!username ? (
+        {loggedIn ? (
           <UserPageLayout>
             <UserBrief match={match} />
             <TabContent match={match} />
