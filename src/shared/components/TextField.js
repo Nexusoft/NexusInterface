@@ -260,6 +260,23 @@ export default class TextField extends Component {
     focus: false,
   };
 
+  inputRef = el => {
+    this.inputElem = el;
+    if (this.props.inputRef) {
+      passRef(el, this.props.inputRef);
+    }
+  };
+
+  componentDidMount() {
+    // Somehow React's autoFocus doesn't work, so handle it manually
+    if (this.props.autoFocus && this.inputElem) {
+      // This needs setTimeout to work
+      setTimeout(() => {
+        this.inputElem.focus();
+      }, 0);
+    }
+  }
+
   handleFocus = e => {
     this.setState({ focus: true });
     this.props.onFocus && this.props.onFocus(e);
@@ -281,6 +298,7 @@ export default class TextField extends Component {
       size,
       readOnly,
       inputRef,
+      autoFocus,
       error,
       ...rest
     } = this.props;
@@ -304,10 +322,10 @@ export default class TextField extends Component {
           <TextArea
             {...inputProps}
             style={{ resize: 'vertical' }}
-            inputRef={inputRef}
+            inputRef={this.inputRef}
           />
         ) : (
-          <Input {...inputProps} ref={inputRef} />
+          <Input {...inputProps} ref={this.inputRef} />
         )}
         {right}
         {!!error && (

@@ -72,6 +72,7 @@ const MigrateStakeModal = ({ handleSubmit }) => (
                 placeholder={__(
                   'Leave this blank if your legacy wallet is not encrypted'
                 )}
+                autoFocus
               />
             </FormField>
             <div className="flex space-between">

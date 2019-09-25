@@ -145,6 +145,7 @@ class NewUserModal extends Component {
                 component={TextField.RF}
                 name="username"
                 placeholder={__('A globally unique username')}
+                autoFocus
               />
             </FormField>
 
