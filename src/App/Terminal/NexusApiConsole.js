@@ -127,7 +127,7 @@ const HelpButton = styled(Button)(({ theme }) => ({
   mapStateToProps,
   actionCreators
 )
-class TritiumConsole extends Component {
+class NexusApiConsole extends Component {
   /**
    *Creates an instance of TerminalConsole.
    * @param {*} props
@@ -191,7 +191,7 @@ class TritiumConsole extends Component {
     if (!currentCommand || !currentCommand.trim()) return;
 
     const cmd = currentCommand;
-    GA.SendEvent('Terminal', 'TritiumConsole', 'UseCommand', 1);
+    GA.SendEvent('Terminal', 'NexusApiConsole', 'UseCommand', 1);
 
     const cliCMDSplit = cmd.split(' ');
     let cliFormat;
@@ -388,7 +388,7 @@ class TritiumConsole extends Component {
               grouped="bottom"
               onClick={resetConsoleOutput}
             >
-              {__('Clear console')}
+              {__('Clear')}
             </Button>
           </Console>
         </TerminalContent>
@@ -397,4 +397,4 @@ class TritiumConsole extends Component {
   }
 }
 
-export default TritiumConsole;
+export default NexusApiConsole;

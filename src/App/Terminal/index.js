@@ -13,7 +13,7 @@ import { legacyMode } from 'consts/misc';
 
 // Internal Local Dependencies
 import TerminalConsole from './TerminalConsole';
-import TritiumConsole from './TritiumConsole';
+import NexusApiConsole from './NexusApiConsole';
 import TerminalCore from './TerminalCore';
 
 // Images
@@ -97,7 +97,7 @@ class Terminal extends Component {
             <Tab
               link={`${match.url}/Console`}
               icon={logoIcon}
-              text={__('Console')}
+              text={legacyMode ? __('Console') : 'Nexus API'}
             />
             <Tab
               link={`${match.url}/Core`}
@@ -109,7 +109,7 @@ class Terminal extends Component {
           <Switch>
             <Route
               path={`${match.path}/Console`}
-              component={legacyMode ? TerminalConsole : TritiumConsole}
+              component={legacyMode ? TerminalConsole : NexusApiConsole}
             />
             <Route path={`${match.path}/Core`} component={TerminalCore} />
             <ConsoleRedirect match={match} />
