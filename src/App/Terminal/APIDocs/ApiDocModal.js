@@ -22,16 +22,16 @@ import Tokens from './TOKENS.MD';
 import Users from './USERS.MD';
 
 const Documents = [
-  { Object: Overview, Display: 'Overview' },
-  { Object: Assets, Display: 'Assets' },
-  { Object: Finance, Display: 'Finance' },
-  { Object: Ledger, Display: 'Ledger' },
-  { Object: Names, Display: 'Names' },
-  { Object: Objects, Display: 'Objects' },
-  { Object: Supply, Display: 'Supply' },
-  { Object: System, Display: 'System' },
-  { Object: Tokens, Display: 'Tokens' },
-  { Object: Users, Display: 'Users' },
+  { Path: Overview, Display: 'Overview' },
+  { Path: Assets, Display: 'Assets' },
+  { Path: Finance, Display: 'Finance' },
+  { Path: Ledger, Display: 'Ledger' },
+  { Path: Names, Display: 'Names' },
+  { Path: Objects, Display: 'Objects' },
+  { Path: Supply, Display: 'Supply' },
+  { Path: System, Display: 'System' },
+  { Path: Tokens, Display: 'Tokens' },
+  { Path: Users, Display: 'Users' },
 ];
 
 class APIDocModal extends React.Component {
@@ -53,7 +53,7 @@ class APIDocModal extends React.Component {
     return Documents.map(e => {
       return (
         <div key={e.Display}>
-          <Button skin={'hyperlink'} onClick={() => this.loadMD(e.Object)}>
+          <Button skin={'hyperlink'} onClick={() => this.loadMD(e.Path)}>
             {e.Display}
           </Button>
           <br />
