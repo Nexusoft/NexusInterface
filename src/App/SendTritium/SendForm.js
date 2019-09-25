@@ -14,6 +14,8 @@ import Button from 'components/Button';
 import TextField from 'components/TextField';
 import Select from 'components/Select';
 import FormField from 'components/FormField';
+import Tooltip from 'components/Tooltip';
+import Arrow from 'components/Arrow';
 import {
   openConfirmDialog,
   openErrorDialog,
@@ -26,6 +28,7 @@ import { errorHandler } from 'utils/form';
 import sendIcon from 'images/send.sprite.svg';
 import { numericOnly } from 'utils/form';
 import confirmPin from 'utils/promisified/confirmPin';
+import questionIcon from 'images/question-mark-circle.sprite.svg';
 
 // Internal Local
 import Recipients from './Recipients';
@@ -45,6 +48,16 @@ const SendFormButtons = styled.div({
   display: 'flex',
   justifyContent: 'space-between',
   marginTop: '2em',
+});
+
+const OptionsArrow = styled.span({
+  display: 'inline-block',
+  width: 15,
+  verticalAlign: 'middle',
+});
+
+const MoreOptions = styled.div({
+  paddingLeft: '1em',
 });
 
 const formName = 'sendNXS';
@@ -295,9 +308,9 @@ class SendForm extends Component {
     handleSubmit();
   };
 
-  OptionalButtonClick = e => {
+  toggleMoreOptions = e => {
     this.setState({
-      optionalOpen: true,
+      optionalOpen: !this.state.optionalOpen,
     });
   };
 
@@ -337,6 +350,9 @@ class SendForm extends Component {
    */
   render() {
     const { accountOptions, change, accBalance } = this.props;
+    const optionsOpen =
+      this.state.optionalOpen || this.props.reference || this.props.expires;
+
     return (
       <SendFormComponent onSubmit={this.confirmSend}>
         <FormField label={__('Send from')}>
@@ -361,17 +377,43 @@ class SendForm extends Component {
           }}
         />
 
-        {this.state.optionalOpen ||
-        this.props.reference ||
-        this.props.expires ? (
-          <>
+        <div className="mt1" style={{ opacity: 0.7 }}>
+          <Button onClick={this.toggleMoreOptions} skin="hyperlink">
+            <OptionsArrow>
+              <Arrow
+                direction={optionsOpen ? 'down' : 'right'}
+                height={8}
+                width={10}
+              />
+            </OptionsArrow>
+            <span className="v-align">{__('More options')}</span>
+          </Button>
+        </div>
+        {optionsOpen && (
+          <MoreOptions>
             {' '}
-            <FormField label={__('Reference')}>
+            <FormField
+              label={
+                <span>
+                  <span className="v-align">{__('Reference number')}</span>
+                  <Tooltip.Trigger
+                    position="right"
+                    tooltip={__(
+                      'An optional number which may be provided by the recipient to identify this transaction from the others'
+                    )}
+                  >
+                    <Icon icon={questionIcon} className="space-left" />
+                  </Tooltip.Trigger>
+                </span>
+              }
+            >
               <Field
                 component={TextField.RF}
                 name="reference"
                 normalize={numericOnly}
-                placeholder={__('Number, ex 123456789 (Optional)')}
+                placeholder={__(
+                  'Invoice number, order number, etc... (Optional)'
+                )}
               />
             </FormField>
             {/*<FormField label={__('Expiration')}>
@@ -381,15 +423,7 @@ class SendForm extends Component {
                 placeholder={__('Seconds till experation (Optional)')}
               />
         </FormField>{' '}*/}
-          </>
-        ) : (
-          <Button
-            style={{ marginTop: '1em' }}
-            onClick={this.OptionalButtonClick}
-            skin="plain-inverted"
-          >
-            {__('Options')}
-          </Button>
+          </MoreOptions>
         )}
 
         <SendFormButtons>
