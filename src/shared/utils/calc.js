@@ -1,7 +1,7 @@
 // To prevent floating point errors while dealing with nexus amounts
 
 // Max significant digits in a nexus token is 5
-const percision = 100000;
+const precision = 100000;
 
 /**
  * Subtracts all params and delivers reesult
@@ -13,9 +13,9 @@ export const Subtract = digits => {
   return (
     digits
       .map(el => {
-        return Number(parseInt(el * percision));
+        return parseInt(el) * precision;
       })
-      .reduce((a, b) => a - b) / percision
+      .reduce((a, b) => a - b) / precision
   );
 };
 
@@ -29,9 +29,9 @@ export const Add = digits => {
   return (
     digits
       .map(el => {
-        return Number(parseInt(el * percision));
+        return parseInt(el) * precision;
       })
-      .reduce((a, b) => a + b) / percision
+      .reduce((a, b) => a + b) / precision
   );
 };
 
@@ -45,9 +45,9 @@ export const Multiply = digits => {
   return (
     digits
       .map(el => {
-        return Number(parseInt(el * percision));
+        return parseInt(el) * precision;
       })
-      .reduce((a, b) => a * b) / percision
+      .reduce((a, b) => a * b) / precision
   );
 };
 
@@ -61,8 +61,8 @@ export const Divide = digits => {
   return (
     digits
       .map(el => {
-        return Number(parseInt(el * percision));
+        return parseInt(el) * precision;
       })
-      .reduce((a, b) => a / b) / percision
+      .reduce((a, b) => a / b) / precision
   );
 };
