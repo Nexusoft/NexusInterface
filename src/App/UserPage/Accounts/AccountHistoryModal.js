@@ -33,22 +33,21 @@ const tableColumns = [
     accessor: 'timestamp',
     Cell: cell =>
       cell.value ? formatDateTime(cell.value * 1000, timeFormatOptions) : '',
-    width: 200,
+    width: 180,
   },
   {
     id: 'operation',
     Header: __('Operation'),
     accessor: 'OP',
-    width: 120,
+    width: 105,
   },
   {
     id: 'from',
     Header: __('From'),
-    Cell: cell => {
-      const { from_name, from, OP } = cell.original;
+    Cell: ({ original: { from_name, from, OP } }) => {
       const content = from_name || from || '';
       if (OP === 'DEBIT' || OP === 'FEE') {
-        return <strong>{content}</strong>;
+        return <span className="dim">{content}</span>;
       } else {
         return content;
       }
@@ -57,11 +56,10 @@ const tableColumns = [
   {
     id: 'to',
     Header: __('To'),
-    Cell: cell => {
-      const { to_name, to, OP } = cell.original;
+    Cell: ({ original: { to_name, to, OP } }) => {
       const content = to_name || to || '';
       if (OP === 'CREDIT') {
-        return <strong>{content}</strong>;
+        return <span className="dim">{content}</span>;
       } else {
         return content;
       }
