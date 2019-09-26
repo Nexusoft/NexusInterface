@@ -57,6 +57,7 @@ class FileServer {
     this.server.listen(this.port, this.host, () => {
       log.info(`File server listening on port ${this.port}!`);
     });
+  }
 
   /**
    * Serve the Module files to the client
