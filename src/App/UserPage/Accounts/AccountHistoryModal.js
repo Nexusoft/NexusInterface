@@ -14,7 +14,14 @@ import { handleError } from 'utils/form';
 
 import { totalBalance } from './utils';
 
-const displayedOperations = ['DEBIT', 'CREDIT', 'FEE', 'GENESIS', 'TRUST'];
+const displayedOperations = [
+  'DEBIT',
+  'CREDIT',
+  'FEE',
+  'GENESIS',
+  'TRUST',
+  'COINBASE',
+];
 
 const timeFormatOptions = {
   year: 'numeric',
@@ -44,24 +51,47 @@ const tableColumns = [
   {
     id: 'from',
     Header: __('From'),
-    Cell: ({ original: { from_name, from, OP } }) => {
+    Cell: cell => {
+      const {
+        original: { from_name, from, OP },
+      } = cell;
       const content = from_name || from || '';
-      if (OP === 'DEBIT' || OP === 'FEE') {
-        return <span className="dim">{content}</span>;
-      } else {
-        return content;
+      switch (OP) {
+        case 'DEBIT':
+        case 'FEE':
+          return <span className="dim">{content}</span>;
+        case 'TRUST':
+        case 'GENESIS':
+          return <i className="dim">{__('staked')}</i>;
+        case 'CREDIT':
+          if (cell.original.for === 'COINBASE') {
+            return <i className="dim">{__('mined')}</i>;
+          }
+        default:
+          return content;
       }
     },
   },
   {
     id: 'to',
     Header: __('To'),
-    Cell: ({ original: { to_name, to, OP } }) => {
+    Cell: cell => {
+      console.log(cell);
+      const {
+        original: { to_name, to, OP, currentAccount },
+      } = cell;
       const content = to_name || to || '';
-      if (OP === 'CREDIT') {
-        return <span className="dim">{content}</span>;
-      } else {
-        return content;
+      switch (OP) {
+        case 'CREDIT':
+          if (cell.original.for === 'COINBASE') {
+            return <span className="dim">{currentAccount}</span>;
+          }
+          return <span className="dim">{content}</span>;
+        case 'TRUST':
+        case 'GENESIS':
+          return <span className="dim">{currentAccount}</span>;
+        default:
+          return content;
       }
     },
   },
@@ -142,6 +172,7 @@ class AccountHistoryModal extends React.Component {
                 ...contract,
                 txid: tx.txid,
                 timestamp: tx.timestamp,
+                currentAccount: account.name,
               });
             }
           });
