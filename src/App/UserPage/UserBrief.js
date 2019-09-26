@@ -71,7 +71,7 @@ const UserBrief = ({ userStatus, match }) => (
     <Username>{userStatus.username}</Username>
     <Separator />
     <Genesis>
-      <div>{__('Genesis ID')}:</div>
+      <div>{__('User ID')}:</div>
       <GenesisId>{userStatus.genesis}</GenesisId>
     </Genesis>
     <Separator />

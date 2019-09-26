@@ -14,7 +14,14 @@ import { handleError } from 'utils/form';
 
 import { totalBalance } from './utils';
 
-const displayedOperations = ['DEBIT', 'CREDIT', 'FEE'];
+const displayedOperations = [
+  'DEBIT',
+  'CREDIT',
+  'FEE',
+  'GENESIS',
+  'TRUST',
+  'COINBASE',
+];
 
 const timeFormatOptions = {
   year: 'numeric',
@@ -33,24 +40,35 @@ const tableColumns = [
     accessor: 'timestamp',
     Cell: cell =>
       cell.value ? formatDateTime(cell.value * 1000, timeFormatOptions) : '',
-    width: 200,
+    width: 180,
   },
   {
     id: 'operation',
     Header: __('Operation'),
     accessor: 'OP',
-    width: 120,
+    width: 105,
   },
   {
     id: 'from',
     Header: __('From'),
     Cell: cell => {
-      const { from_name, from, OP } = cell.original;
+      const {
+        original: { from_name, from, OP },
+      } = cell;
       const content = from_name || from || '';
-      if (OP === 'DEBIT' || OP === 'FEE') {
-        return <strong>{content}</strong>;
-      } else {
-        return content;
+      switch (OP) {
+        case 'DEBIT':
+        case 'FEE':
+          return <span className="dim">{content}</span>;
+        case 'TRUST':
+        case 'GENESIS':
+          return <i className="dim">{__('staked')}</i>;
+        case 'CREDIT':
+          if (cell.original.for === 'COINBASE') {
+            return <i className="dim">{__('mined')}</i>;
+          }
+        default:
+          return content;
       }
     },
   },
@@ -58,22 +76,34 @@ const tableColumns = [
     id: 'to',
     Header: __('To'),
     Cell: cell => {
-      const { to_name, to, OP } = cell.original;
+      console.log(cell);
+      const {
+        original: { to_name, to, OP, currentAccount },
+      } = cell;
       const content = to_name || to || '';
-      if (OP === 'CREDIT') {
-        return <strong>{content}</strong>;
-      } else {
-        return content;
+      switch (OP) {
+        case 'CREDIT':
+          if (cell.original.for === 'COINBASE') {
+            return <span className="dim">{currentAccount}</span>;
+          }
+          return <span className="dim">{content}</span>;
+        case 'TRUST':
+        case 'GENESIS':
+          return <span className="dim">{currentAccount}</span>;
+        default:
+          return content;
       }
     },
   },
   {
     id: 'change',
     Header: __('Change'),
-    Cell: cell =>
-      cell.original.amount ? (
-        <Amount possitive={cell.original.OP === 'CREDIT'}>
-          {formatNumber(cell.original.amount)} {cell.original.token_name}
+    Cell: ({ original: { OP, amount, token_name } }) =>
+      amount ? (
+        <Amount
+          possitive={OP === 'CREDIT' || OP === 'GENESIS' || OP === 'TRUST'}
+        >
+          {formatNumber(amount)} {token_name}
         </Amount>
       ) : (
         ''
@@ -142,6 +172,7 @@ class AccountHistoryModal extends React.Component {
                 ...contract,
                 txid: tx.txid,
                 timestamp: tx.timestamp,
+                currentAccount: account.name,
               });
             }
           });
