@@ -14,7 +14,7 @@ import { handleError } from 'utils/form';
 
 import { totalBalance } from './utils';
 
-const displayedOperations = ['DEBIT', 'CREDIT', 'FEE'];
+const displayedOperations = ['DEBIT', 'CREDIT', 'FEE', 'GENESIS', 'TRUST'];
 
 const timeFormatOptions = {
   year: 'numeric',
@@ -70,10 +70,12 @@ const tableColumns = [
   {
     id: 'change',
     Header: __('Change'),
-    Cell: cell =>
-      cell.original.amount ? (
-        <Amount possitive={cell.original.OP === 'CREDIT'}>
-          {formatNumber(cell.original.amount)} {cell.original.token_name}
+    Cell: ({ original: { OP, amount, token_name } }) =>
+      amount ? (
+        <Amount
+          possitive={OP === 'CREDIT' || OP === 'GENESIS' || OP === 'TRUST'}
+        >
+          {formatNumber(amount)} {token_name}
         </Amount>
       ) : (
         ''
