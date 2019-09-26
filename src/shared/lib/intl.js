@@ -110,11 +110,13 @@ export const formatCurrency = (num, currency = 'USD', maxDecimalDigits = 3) => {
   }).format(num);
 };
 
-export const formatPercent = (num, maxDecimalDigits) =>
-  new Intl.NumberFormat(locale, {
+export const formatPercent = (num, maxDecimalDigits) => {
+  const digits = ensureSignificantDigit(maxDecimalDigits, num);
+  return new Intl.NumberFormat(locale, {
     style: 'percent',
-    maximumFractionDigits: maxDecimalDigits,
+    maximumFractionDigits: digits,
   }).format(num);
+};
 
 export const formatDateTime = (date, options) =>
   new Intl.DateTimeFormat(locale, options).format(date);
