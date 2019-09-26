@@ -175,14 +175,20 @@ const mapDispatchToProps = {
   },
   asyncBlurFields: ['recipients[].address'],
   asyncValidate: async ({ recipients }) => {
-    //Issue with backend
-    console.log(recipients[0]);
-    if (
-      !recipients[0].address.startsWith('2') &&
-      !recipients[0].address.startsWith('4') &&
-      !recipients[0].address.startsWith('8')
-    ) {
-      throw { recipients: [{ address: __('Invalid address') }] };
+    const recipientInputSize = new Blob([recipients[0].address]).size;
+
+    const isAddress =
+      recipientInputSize === 51 &&
+      recipients[0].address.match(/([0OIL+/])/g) === null;
+
+    if (isAddress) {
+      if (
+        !recipients[0].address.startsWith('2') &&
+        !recipients[0].address.startsWith('4') &&
+        !recipients[0].address.startsWith('8')
+      ) {
+        throw { recipients: [{ address: __('Invalid address') }] };
+      }
     }
 
     return null;
@@ -223,12 +229,19 @@ const mapDispatchToProps = {
       const params = {
         pin,
         name: sendFrom,
-        address_to: recipients[0].address,
         amount: parseFloat(recipients[0].amount),
       };
+
+      const recipientInputSize = new Blob([recipients[0].address]).size;
+      const isAddress =
+        recipientInputSize === 51 &&
+        recipients[0].address.match(/([0OIL+/])/g) === null;
+
+      isAddress
+        ? (params.address_to = recipients[0].address)
+        : (params.name_to = recipients[0].address);
       if (reference) params.reference = reference;
       if (expires) params.expires = expires;
-      console.log(params);
       return await apiPost('finance/debit/account', params);
     }
 
@@ -288,14 +301,7 @@ class SendForm extends Component {
    */
   confirmSend = e => {
     e.preventDefault();
-    const {
-      handleSubmit,
-      invalid,
-      locked,
-      minting_only,
-      touch,
-      fieldNames,
-    } = this.props;
+    const { handleSubmit, invalid, touch, fieldNames } = this.props;
 
     if (invalid) {
       // Mark the form touched so that the validation errors will be shown.
