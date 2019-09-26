@@ -184,26 +184,15 @@ export default class Staking extends React.Component {
             </div>
             <div>{formatNumber(stakeInfo.balance)} NXS</div>
           </Line>
-
           <div className="mt1 flex space-between">
-            {!!stakeInfo.new ? (
-              <Button
-                onClick={() => {
-                  openModal(MigrateStakeModal);
-                }}
-              >
-                {__('Migrate stake')}
-              </Button>
-            ) : (
-              <Button
-                disabled={!stakeInfo.stake && !stakeInfo.balance}
-                onClick={() => {
-                  openModal(AdjustStakeModal);
-                }}
-              >
-                {__('Adjust stake amount')}
-              </Button>
-            )}
+            <Button
+              disabled={!stakeInfo.stake && !stakeInfo.balance}
+              onClick={() => {
+                openModal(AdjustStakeModal);
+              }}
+            >
+              {__('Adjust stake amount')}
+            </Button>
             <Button
               skin={stakingEnabled ? 'default' : 'primary'}
               onClick={this.switchStaking}
@@ -211,6 +200,18 @@ export default class Staking extends React.Component {
               {stakingEnabled ? __('Disable staking') : __('Enable staking')}
             </Button>
           </div>
+          {!!stakeInfo.new && (
+            <div className="mt2">
+              <Button
+                wide
+                onClick={() => {
+                  openModal(MigrateStakeModal);
+                }}
+              >
+                {__('Migrate stake')}
+              </Button>
+            </div>
+          )}
         </StakingWrapper>
       )
     );
