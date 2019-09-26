@@ -79,19 +79,36 @@ function inject(string, injections) {
 const translate = (string, data, injections) =>
   inject(rawTranslate(string, data), injections);
 
+const ensureSignificantDigit = (decimalDigits, num) => {
+  let digits = Number(decimalDigits) || 0;
+  if (num && typeof num === 'number') {
+    let threshold = 10 ** -digits;
+    num = Math.abs(num);
+    while (num < threshold) {
+      threshold /= 10;
+      ++digits;
+    }
+  }
+  return digits;
+};
+
 export { translate };
 
-export const formatNumber = (num, maxDecimalDigits) =>
-  new Intl.NumberFormat(locale, {
-    maximumFractionDigits: maxDecimalDigits,
+export const formatNumber = (num, maxDecimalDigits = 3) => {
+  const digits = ensureSignificantDigit(maxDecimalDigits, num);
+  return new Intl.NumberFormat(locale, {
+    maximumFractionDigits: digits,
   }).format(num);
+};
 
-export const formatCurrency = (num, currency = 'USD', maxDecimalDigits) =>
-  new Intl.NumberFormat(locale, {
+export const formatCurrency = (num, currency = 'USD', maxDecimalDigits = 3) => {
+  const digits = ensureSignificantDigit(maxDecimalDigits, num);
+  return new Intl.NumberFormat(locale, {
     style: 'currency',
     currency,
-    maximumFractionDigits: maxDecimalDigits,
+    maximumFractionDigits: digits,
   }).format(num);
+};
 
 export const formatPercent = (num, maxDecimalDigits) =>
   new Intl.NumberFormat(locale, {
