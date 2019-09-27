@@ -76,7 +76,6 @@ const tableColumns = [
     id: 'to',
     Header: __('To'),
     Cell: cell => {
-      console.log(cell);
       const {
         original: { to_name, to, OP, currentAccount },
       } = cell;
@@ -98,12 +97,17 @@ const tableColumns = [
   {
     id: 'change',
     Header: __('Change'),
-    Cell: ({ original: { OP, amount, token_name } }) =>
+    Cell: ({ original: { OP, amount } }) =>
       amount ? (
         <Amount
-          possitive={OP === 'CREDIT' || OP === 'GENESIS' || OP === 'TRUST'}
+          possitive={
+            OP === 'CREDIT' ||
+            OP === 'GENESIS' ||
+            OP === 'TRUST' ||
+            OP === 'COINBASE'
+          }
         >
-          {formatNumber(amount)} {token_name}
+          {formatNumber(amount)}
         </Amount>
       ) : (
         ''
