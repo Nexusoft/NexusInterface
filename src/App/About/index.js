@@ -168,7 +168,7 @@ class About extends Component {
               <b>{__('Interface Version')}:</b>{' '}
               {this.getInterfaceVersionNumber()}
               <br />
-              <b>{__('Build Date')}: </b> August 23rd 2019 <br />
+              <b>{__('Build Date')}: </b> September 27th 2019 <br />
               {!!privateBlockchain && (
                 <>
                   <b>{__('Private')}: </b> {String(privateBlockchain)} <br />
@@ -177,7 +177,7 @@ class About extends Component {
             </Column>
             <Column>
               <b>{__('Nexus Core Version')}:</b> {version} <br />
-              <b>{__('Build Date')}: </b> August 23rd 2019 <br />
+              <b>{__('Build Date')}: </b> September 27th 2019 <br />
               {!!testnet && (
                 <>
                   <b>{__('Testnet')}: </b> {testnet} <br />
