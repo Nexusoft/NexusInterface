@@ -322,6 +322,9 @@ class NexusApiConsole extends Component {
                   autoFocus: true,
                   skin: 'filled-inverted',
                   value: consoleInput,
+                  multiline: true,
+                  rows: 1,
+                  inputStyle: { resize: 'none' },
                   placeholder: __(
                     'Enter API here (ex: api/verb/noun?param=value&param2=2 or param=1 param2=2)'
                   ),

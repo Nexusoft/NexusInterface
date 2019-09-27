@@ -227,10 +227,12 @@ const multilineStyle = css({
   width: '100%',
   paddingTop: '.4em',
   paddingBottom: '.5em',
+  resize: 'vertical',
 });
 
 class TextArea extends Component {
   componentDidUpdate() {
+    this.inputElem.style.height = 'auto';
     const { scrollHeight } = this.inputElem;
     this.inputElem.style.height =
       (scrollHeight > 104 ? 104 : scrollHeight) + 'px';
@@ -291,6 +293,7 @@ export default class TextField extends Component {
     const {
       className,
       style,
+      inputStyle,
       skin = 'underline',
       multiline,
       left,
@@ -310,6 +313,7 @@ export default class TextField extends Component {
       ...rest,
       onFocus: this.handleFocus,
       onBlur: this.handleBlur,
+      style: inputStyle,
     };
 
     return (
@@ -319,11 +323,7 @@ export default class TextField extends Component {
       >
         {left}
         {multiline ? (
-          <TextArea
-            {...inputProps}
-            style={{ resize: 'vertical' }}
-            inputRef={this.inputRef}
-          />
+          <TextArea {...inputProps} inputRef={this.inputRef} />
         ) : (
           <Input {...inputProps} ref={this.inputRef} />
         )}
