@@ -11,7 +11,7 @@ import GA from 'lib/googleAnalytics';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import ContextMenuBuilder from 'contextmenu';
-import { getDifficulty, getBalances } from 'actions/core';
+import { getMiningInfo, getBalances } from 'actions/core';
 import { updateSettings } from 'actions/settings';
 import { formatNumber, formatCurrency, formatRelativeTime } from 'lib/intl';
 import { timing, consts } from 'styles';
@@ -93,7 +93,7 @@ const blockWeightIcons = [
 // React-Redux mandatory methods
 const mapStateToProps = state => {
   const {
-    core: { systemInfo, stakeInfo, balances, difficulty },
+    core: { systemInfo, stakeInfo, balances, miningInfo },
     common: { blockDate },
     market: {
       cryptocompare: { rawNXSvalues, displayNXSvalues },
@@ -107,7 +107,7 @@ const mapStateToProps = state => {
   return {
     coreConnected: isCoreConnected(state),
     synchronized: isSynchronized(state),
-    difficulty,
+    miningInfo,
     blockDate,
     market: {
       ...(rawNXSvalues &&
@@ -122,7 +122,7 @@ const mapStateToProps = state => {
   };
 };
 const actionCreators = {
-  getDifficulty,
+  getMiningInfo,
   getBalances,
   updateSettings,
 };
@@ -282,16 +282,6 @@ const BlockCountTooltip = ({ blockDate }) => (
  */
 class Overview extends Component {
   /**
-   *Creates an instance of Overview.
-   * @param {*} props
-   * @memberof Overview
-   */
-  constructor(props) {
-    super(props);
-    this.fetchDifficulty();
-  }
-
-  /**
    * Component Mount Callback
    *
    * @memberof Overview
@@ -306,6 +296,11 @@ class Overview extends Component {
       ({ core }) => core && core.userStatus,
       this.props.getBalances
     );
+
+    // Periodically get difficulty
+    if (this.props.settings.overviewDisplay === 'miner') {
+      this.fetchDifficulty();
+    }
   }
   /**
    * Set by {NetworkGlobe}, ReDraws all Pillars and Archs
@@ -325,6 +320,11 @@ class Overview extends Component {
 
     // Stop updating balances
     if (this.unobserve) this.unobserve();
+
+    // Stop updating difficulty
+    if (this.diffFetcher) {
+      clearTimeout(this.diffFetcher);
+    }
   }
 
   /**
@@ -371,7 +371,7 @@ class Overview extends Component {
    * @memberof Overview
    */
   fetchDifficulty = async () => {
-    await this.props.getDifficulty();
+    await this.props.getMiningInfo();
     this.diffFetcher = setTimeout(this.fetchDifficulty, 50000);
   };
 
@@ -550,7 +550,7 @@ class Overview extends Component {
    *
    * @memberof Overview
    */
-  returnDifficultyStats = difficulty => {
+  returnDifficultyStats = miningInfo => {
     return (
       <React.Fragment>
         <Stat>
@@ -558,8 +558,8 @@ class Overview extends Component {
           <div>
             <StatLabel>{__('Prime Difficulty')}</StatLabel>
             <StatValue>
-              {!!difficulty ? (
-                formatNumber(difficulty.prime, 6)
+              {!!miningInfo ? (
+                formatNumber(miningInfo.primeDifficulty, 6)
               ) : (
                 <span className="dim">-</span>
               )}
@@ -571,8 +571,8 @@ class Overview extends Component {
           <div>
             <StatLabel>{__('Hash Difficulty')}</StatLabel>
             <StatValue>
-              {!!difficulty ? (
-                formatNumber(difficulty.hash, 6)
+              {!!miningInfo ? (
+                formatNumber(miningInfo.hashDifficulty, 6)
               ) : (
                 <span className="dim">-</span>
               )}
@@ -585,8 +585,8 @@ class Overview extends Component {
           <div>
             <StatLabel>{__('Stake Difficulty')}</StatLabel>
             <StatValue>
-              {!!difficulty ? (
-                formatNumber(difficulty.stake, 6)
+              {!!miningInfo ? (
+                formatNumber(miningInfo.stakeDifficulty, 6)
               ) : (
                 <span className="dim">-</span>
               )}
@@ -611,7 +611,7 @@ class Overview extends Component {
       balances,
       blockDate,
       market,
-      difficulty,
+      miningInfo,
       settings,
       theme,
       synchronized,
@@ -934,7 +934,7 @@ class Overview extends Component {
           </Stat>
 
           {settings.overviewDisplay === 'miner'
-            ? this.returnDifficultyStats(difficulty)
+            ? this.returnDifficultyStats(miningInfo)
             : this.returnWeightStats()}
         </Stats>
       </OverviewPage>
