@@ -6,6 +6,7 @@ import Tooltip from 'components/Tooltip';
 import ContractDetailsModal from 'components/ContractDetailsModal';
 import { openModal } from 'actions/overlays';
 import { formatNumber } from 'lib/intl';
+import { getDeltaSign } from 'lib/tritiumTransactions';
 import { consts, timing } from 'styles';
 import * as color from 'utils/color';
 
@@ -272,32 +273,13 @@ const contractContent = contract => {
   }
 };
 
-const deltaSign = contract => {
-  switch (contract.OP) {
-    case 'CREDIT':
-    case 'COINBASE':
-    case 'TRUST':
-    case 'GENESIS':
-    case 'MIGRATE':
-      return '+';
-
-    case 'DEBIT':
-    case 'FEE':
-    case 'LEGACY':
-      return '-';
-
-    default:
-      return '';
-  }
-};
-
 const Contract = ({ contract, openModal }) => (
   <ContractComponent
     onClick={() => openModal(ContractDetailsModal, { contract })}
   >
     <ContractContent>{contractContent(contract)}</ContractContent>
     {!!contract.amount && (
-      <ContractDelta sign={deltaSign(contract)}>
+      <ContractDelta sign={getDeltaSign(contract)}>
         {formatNumber(contract.amount)} {contract.token_name || 'NXS'}
       </ContractDelta>
     )}

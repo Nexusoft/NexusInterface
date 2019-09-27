@@ -7,6 +7,9 @@ import {
   updateTritiumTransaction,
 } from 'actions/transactions';
 import { listAccounts } from 'actions/core';
+import showDesktopNotif from 'utils/showDesktopNotif';
+import { formatNumber } from 'lib/intl';
+import { showNotification } from 'actions/overlays';
 
 export async function fetchAllTransactions() {
   const {
@@ -56,9 +59,25 @@ export function initializeTransactions() {
           if (needsAutoUpdate(tx, minConfirmations)) {
             autoUpdateTransaction(tx.txid);
           }
-        });
 
-        // TODO: show desktop notification
+          const changes = getBalanceChange(tx);
+          if (Object.values(changes).some(v => v)) {
+            Object.entries(changes).forEach(([token, change]) => {
+              showDesktopNotif(
+                __('New transaction'),
+                `${change > 0 ? '+' : ''}${formatNumber(change)} ${token}`
+              );
+              store.dispatch(
+                showNotification(
+                  `${__('New transaction')}: ${
+                    change > 0 ? '+' : ''
+                  }${formatNumber(change)} ${token}`,
+                  'success'
+                )
+              );
+            });
+          }
+        });
       }
     }
   );
@@ -115,3 +134,41 @@ function autoUpdateTransaction(txid) {
     }
   );
 }
+
+export const getDeltaSign = contract => {
+  switch (contract.OP) {
+    case 'CREDIT':
+    case 'COINBASE':
+    case 'TRUST':
+    case 'GENESIS':
+    case 'MIGRATE':
+      return '+';
+
+    case 'DEBIT':
+    case 'FEE':
+    case 'LEGACY':
+      return '-';
+
+    default:
+      return '';
+  }
+};
+
+const getBalanceChange = tx =>
+  tx.contracts
+    ? tx.contracts.reduce((changes, contract) => {
+        const sign = getDeltaSign(contract);
+        const token = tx.token_name || 'NXS';
+        if (sign === '+')
+          return {
+            ...changes,
+            [token]: (changes[token] || 0) + contract.amount,
+          };
+        if (sign === '-')
+          return {
+            ...changes,
+            [token]: (changes[token] || 0) - contract.amount,
+          };
+        return changes;
+      }, {})
+    : 0;
