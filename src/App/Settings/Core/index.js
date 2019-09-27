@@ -551,6 +551,19 @@ class SettingsCore extends Component {
                 size={30}
               />
             </SettingsField>
+            <Button
+              className="space-right"
+              style={{ marginTop: '1em' }}
+              type="submit"
+              skin="primary"
+              disabled={pristine || submitting}
+            >
+              {pristine
+                ? __('Settings Unchanged')
+                : submitting
+                ? __('Settings Saving')
+                : __('Save Settings')}
+            </Button>
           </div>
 
           {/*  REMOVING THIS FOR NOW TILL I CAN CONFIRM THE SECURITY AND FUNCTION
@@ -585,19 +598,6 @@ class SettingsCore extends Component {
               )}
             </Button> 
           </div>*/}
-          <Button
-            className="space-right"
-            style={{ marginTop: '1em' }}
-            type="submit"
-            skin="primary"
-            disabled={pristine || submitting}
-          >
-            {pristine
-              ? __('Settings Unchanged')
-              : submitting
-              ? __('Settings Saving')
-              : __('Save Settings')}
-          </Button>
         </form>
       </>
     );

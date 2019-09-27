@@ -8,6 +8,7 @@ import geoip from 'lib/geoip';
 import Curve from './Curve';
 import Point from './Point';
 import rpc from 'lib/rpc';
+import { apiPost } from 'lib/tritiumApi';
 
 const OrbitControls = orbitControl(THREE);
 const MaxDisplayPoints = 64;
@@ -212,7 +213,8 @@ export default class Globe extends Component {
    * @memberof Globe
    */
   async pointRegister() {
-    const peerInfo = await rpc('getpeerinfo', []);
+    const peerInfo = await apiPost('system/list/peers', null);
+    console.log(peerInfo);
     if (!peerInfo) return;
     if (peerInfo.length > MaxDisplayPoints) {
       peerInfo.length = MaxDisplayPoints;
@@ -224,7 +226,7 @@ export default class Globe extends Component {
 
     let newRegistry = peerInfo
       .map(peer => {
-        let GeoData = geoip.get(peer.addr.split(':')[0]);
+        let GeoData = geoip.get(peer.address.split(':')[0]);
         // TODO: add checks for lisp and change color appropreately
 
         return {
