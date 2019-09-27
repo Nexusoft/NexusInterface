@@ -5,9 +5,11 @@ export const STOP_CORE_AUTO_CONNECT = 'STOP_CORE_AUTO_CONNECT';
 export const GET_INFO = 'GET_INFO';
 export const SET_SYSTEM_INFO = 'SET_SYSTEM_INFO';
 export const SET_STAKE_INFO = 'SET_STAKE_INFO';
+export const SET_MINING_INFO = 'SET_MINING_INFO';
 export const SET_BALANCES = 'SET_BALANCES';
 export const CLEAR_CORE_INFO = 'CLEAR_CORE_INFO';
 export const CLEAR_STAKE_INFO = 'CLEAR_STAKE_INFO';
+export const CLEAR_MINING_INFO = 'CLEAR_MINING_INFO';
 export const CLEAR_BALANCES = 'CLEAR_BALANCES';
 
 // Overview

@@ -66,6 +66,16 @@ export const getBalances = () => async dispatch => {
   }
 };
 
+export const getMiningInfo = () => async dispatch => {
+  try {
+    const miningInfo = await apiPost('ledger/get/mininginfo');
+    dispatch({ type: TYPE.SET_MINING_INFO, payload: miningInfo });
+  } catch (err) {
+    dispatch({ type: TYPE.CLEAR_MINING_INFO });
+    console.error('ledger/get/mininginfo failed', err);
+  }
+};
+
 export const listAccounts = () => async dispatch => {
   try {
     const accounts = await apiPost('users/list/accounts');

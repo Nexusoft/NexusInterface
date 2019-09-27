@@ -9,6 +9,7 @@ import balances from './balances';
 import userStatus from './userStatus';
 import accounts from './accounts';
 import transactions from './transactions';
+import miningInfo from './miningInfo';
 
 export default combineReducers({
   autoConnect,
@@ -20,4 +21,5 @@ export default combineReducers({
   userStatus,
   accounts,
   transactions,
+  miningInfo,
 });
