@@ -114,7 +114,7 @@ const ExecuteButton = styled(Button)(({ theme }) => ({
 }));
 
 const HelpButton = styled(Button)(({ theme }) => ({
-  borderLeft: `1px solid ${theme.mixer(0.125)}`,
+  borderRight: `1px solid ${theme.mixer(0.125)}`,
 }));
 
 /**
@@ -332,29 +332,29 @@ class NexusApiConsole extends Component {
                     updateConsoleInput(e.target.value);
                   },
                   onKeyDown: this.handleKeyDown,
-                  right: (
-                    <>
-                      <ExecuteButton
+                  left: (
+                    <Tooltip.Trigger
+                      tooltip={__('API Documentation')}
+                      position="top"
+                    >
+                      <HelpButton
                         skin="filled-inverted"
                         fitHeight
-                        grouped="right"
-                        onClick={this.execute}
+                        onClick={() => this.props.openModal(APIDocModal)}
                       >
-                        {__('Execute')}
-                      </ExecuteButton>
-                      <Tooltip.Trigger
-                        tooltip={__('API Documentation')}
-                        position="top"
-                      >
-                        <HelpButton
-                          skin="filled-inverted"
-                          fitHeight
-                          onClick={() => this.props.openModal(APIDocModal)}
-                        >
-                          <Icon icon={questionMarkCircleIcon} />
-                        </HelpButton>
-                      </Tooltip.Trigger>
-                    </>
+                        <Icon icon={questionMarkCircleIcon} />
+                      </HelpButton>
+                    </Tooltip.Trigger>
+                  ),
+                  right: (
+                    <ExecuteButton
+                      skin="filled-inverted"
+                      fitHeight
+                      grouped="right"
+                      onClick={this.execute}
+                    >
+                      {__('Execute')}
+                    </ExecuteButton>
                   ),
                 }}
               />
