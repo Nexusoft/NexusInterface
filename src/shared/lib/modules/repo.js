@@ -4,7 +4,7 @@ import crypto from 'crypto';
 import Ajv from 'ajv';
 import axios from 'axios';
 import { isText } from 'istextorbinary';
-import streamNormalizeEol from 'stream-normalize-eol';
+import normalizeEol from 'utils/normalizeEol';
 import Multistream from 'multistream';
 
 import showOpenDialog from 'utils/promisified/showOpenDialog';
@@ -58,7 +58,7 @@ const validateRepoInfo = ajv.compile(repoInfoSchema);
 function normalizeFile(path) {
   const stream = fs.createReadStream(path);
   if (isText(path, stream)) {
-    const normalizeNewline = streamNormalizeEol('\n');
+    const normalizeNewline = normalizeEol('\n');
     return stream.pipe(normalizeNewline);
   } else {
     return stream;

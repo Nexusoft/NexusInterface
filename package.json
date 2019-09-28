@@ -261,7 +261,6 @@
     "redux-form": "^8.2.6",
     "redux-thunk": "^2.3.0",
     "semver": "^6.3.0",
-    "stream-normalize-eol": "^1.0.1",
     "tar": "^4.4.13",
     "three": "^0.108.0",
     "three-orbit-controls": "^82.1.0",
