@@ -1,3 +1,5 @@
+// Source https://github.com/alexreardon/memoize-one
+
 export default function memoize(resultFn, isEqual = areInputsEqual) {
   let lastThis;
   let lastArgs = [];
