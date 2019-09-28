@@ -246,7 +246,6 @@
     "move-file": "^1.2.0",
     "multistream": "^4.0.0",
     "node-polyglot": "^2.4.0",
-    "pretty-bytes": "^5.3.0",
     "prop-types": "^15.7.2",
     "react": "^16.10.0",
     "react-color": "^2.17.3",

@@ -1,7 +1,7 @@
 // External
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import prettyBytes from 'pretty-bytes';
+import prettyBytes from 'utils/prettyBytes';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/core';
 
