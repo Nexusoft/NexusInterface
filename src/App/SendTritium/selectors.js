@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import memoize from 'memoize-one';
+import memoize from 'utils/memoize';
 
 export const getAccountOptions = memoize(myAccounts => {
   if (myAccounts) {

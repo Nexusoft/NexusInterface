@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { shell } from 'electron';
 import styled from '@emotion/styled';
 import GA from 'lib/googleAnalytics';
-import memoize from 'memoize-one';
+import memoize from 'utils/memoize';
 
 // Internal Global Dependencies
 import WaitingMessage from 'components/WaitingMessage';

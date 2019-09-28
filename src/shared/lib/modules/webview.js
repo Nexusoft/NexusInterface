@@ -1,4 +1,4 @@
-import memoize from 'memoize-one';
+import memoize from 'utils/memoize';
 import axios from 'axios';
 import { reset, initialize } from 'redux-form';
 import { createMatchSelector } from 'connected-react-router';

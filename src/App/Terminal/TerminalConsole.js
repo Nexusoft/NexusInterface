@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import styled from '@emotion/styled';
 import GA from 'lib/googleAnalytics';
-import memoize from 'memoize-one';
+import memoize from 'utils/memoize';
 
 // Internal Global Dependencies
 import WaitingMessage from 'components/WaitingMessage';

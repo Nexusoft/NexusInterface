@@ -1,5 +1,5 @@
 import semver from 'semver';
-import memoize from 'memoize-one';
+import memoize from 'utils/memoize';
 
 /**
  * Checkers

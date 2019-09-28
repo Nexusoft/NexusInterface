@@ -1,4 +1,4 @@
-import memoize from 'memoize-one';
+import memoize from 'utils/memoize';
 
 const getThresholdDate = timeSpan => {
   const now = new Date();
