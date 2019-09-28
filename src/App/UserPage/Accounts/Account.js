@@ -31,7 +31,6 @@ const Account = ({ account, openModal }) => (
       <div>
         <Link
           as="a"
-          href="javascript:;"
           onClick={() => {
             openModal(AccountDetailsModal, { account });
           }}
@@ -41,7 +40,6 @@ const Account = ({ account, openModal }) => (
         &nbsp;&nbsp;
         <Link
           as="a"
-          href="javascript:;"
           onClick={() => {
             openModal(AccountHistoryModal, { account });
           }}

@@ -155,12 +155,9 @@ class Login extends Component {
             </Buttons>
 
             <ExtraSection>
-              <Link as="a" href="javascript:;">
-                {__('Switch to Legacy Mode')}
-              </Link>
+              <Link as="a">{__('Switch to Legacy Mode')}</Link>
               <Link
                 as="a"
-                href="javascript:;"
                 onClick={() => {
                   this.closeModal();
                   openModal(NewUserModal);

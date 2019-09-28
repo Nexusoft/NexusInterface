@@ -57,9 +57,7 @@ const TritiumUpgradeModal = ({ updateSettings }) => (
                 closeModal();
               }}
             >
-              <Link as="a" href="javascript:;">
-                Stay in Legacy Mode
-              </Link>
+              <Link as="a">Stay in Legacy Mode</Link>
             </div>
           </div>
         </Modal.Body>

@@ -139,11 +139,7 @@ class AmountField extends Component {
                   <TokenAddressPopup tokenAddress={token.address} />
                 )}
                 {!!this.props.fullAmount && (
-                  <SendAllLink
-                    as="a"
-                    href="javascript:;"
-                    onClick={this.sendAll}
-                  >
+                  <SendAllLink as="a" onClick={this.sendAll}>
                     {__('Send all')}
                   </SendAllLink>
                 )}
