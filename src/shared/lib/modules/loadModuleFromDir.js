@@ -1,7 +1,7 @@
 import { join, isAbsolute, normalize } from 'path';
 import fs from 'fs';
 import Ajv from 'ajv';
-import semverRegex from 'semver-regex';
+import { semverRegex } from 'consts/misc';
 
 import { isModuleDeprecated, isModuleValid } from './utils';
 import {
@@ -34,12 +34,12 @@ const nxsPackageSchema = {
     displayName: { type: 'string', pattern: '^[^\n]*$' },
     version: {
       type: 'string',
-      pattern: semverRegex().source,
+      pattern: semverRegex.source,
     },
     // Module Specifications version that this module was built on
     specVersion: {
       type: 'string',
-      pattern: semverRegex().source,
+      pattern: semverRegex.source,
     },
     description: { type: 'string' },
     type: { type: 'string', enum: ['app'] },
