@@ -11,7 +11,7 @@ import { timing } from 'styles';
 import plusIcon from 'images/plus.sprite.svg';
 import RecipientField from './RecipientField';
 import AmountField from './AmountField';
-import { Subtract } from 'utils/calc';
+import { subtract } from 'utils/calc';
 
 const RemoveButton = styled.div(({ theme }) => ({
   position: 'absolute',
@@ -89,7 +89,7 @@ class Recipients extends React.Component {
             change={change}
           />
           <AmountField
-            fullAmount={Subtract([accBalance, 0.01])} // 0.01 = network fee
+            fullAmount={subtract(accBalance, 0.01)} // 0.01 = network fee
             parentFieldName={`${fields.name}[0]`}
             change={change}
           />
