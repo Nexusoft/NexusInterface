@@ -21,17 +21,17 @@ import System from './SYSTEM.MD';
 import Tokens from './TOKENS.MD';
 import Users from './USERS.MD';
 
-const Documents = [
-  { Path: Overview, Display: 'Overview' },
-  { Path: Assets, Display: 'Assets' },
-  { Path: Finance, Display: 'Finance' },
-  { Path: Ledger, Display: 'Ledger' },
-  { Path: Names, Display: 'Names' },
-  { Path: Objects, Display: 'Objects' },
-  { Path: Supply, Display: 'Supply' },
-  { Path: System, Display: 'System' },
-  { Path: Tokens, Display: 'Tokens' },
-  { Path: Users, Display: 'Users' },
+const documents = [
+  { path: Overview, label: 'Overview' },
+  { path: Assets, label: 'Assets' },
+  { path: Finance, label: 'Finance' },
+  { path: Ledger, label: 'Ledger' },
+  { path: Names, label: 'Names' },
+  { path: Objects, label: 'Objects' },
+  { path: Supply, label: 'Supply' },
+  { path: System, label: 'System' },
+  { path: Tokens, label: 'Tokens' },
+  { path: Users, label: 'Users' },
 ];
 
 class APIDocModal extends React.Component {
@@ -49,18 +49,15 @@ class APIDocModal extends React.Component {
       });
   }
 
-  DocumentList() {
-    return Documents.map(e => {
-      return (
-        <div key={e.Display}>
-          <Button skin={'hyperlink'} onClick={() => this.loadMD(e.Path)}>
-            {e.Display}
-          </Button>
-          <br />
-        </div>
-      );
-    });
-  }
+  renderDocList = () =>
+    documents.map(e => (
+      <div key={e.label}>
+        <Button skin={'hyperlink'} onClick={() => this.loadMD(e.path)}>
+          {e.label}
+        </Button>
+        <br />
+      </div>
+    ));
 
   render() {
     const { displayMD } = this.state;
@@ -73,7 +70,7 @@ class APIDocModal extends React.Component {
           ) : (
             <>
               <span>{'Documentation'}</span>
-              {this.DocumentList()}
+              {this.renderDocList()}
             </>
           )}
         </Modal.Body>
