@@ -20,7 +20,7 @@ import { showNotification } from 'actions/overlays';
 import NexusAddress from 'components/NexusAddress';
 import warningIcon from 'images/warning.sprite.svg';
 import { walletDataDir } from 'consts/paths';
-import { webGLAvailable } from 'consts/misc';
+import { webGLAvailable, legacyMode } from 'consts/misc';
 
 import ColorPicker from './ColorPicker';
 import BackgroundPicker from './BackgroundPicker';
@@ -38,6 +38,7 @@ const overviewDisplays = [
 ];
 
 const mapStateToProps = ({
+  core: { accounts },
   settings: { renderGlobe, locale, addressStyle, overviewDisplay },
   myAccounts,
   theme,
@@ -48,6 +49,7 @@ const mapStateToProps = ({
     locale,
     addressStyle,
     myAccounts,
+    tritiumAccounts: accounts,
     overviewDisplay,
   };
 };
@@ -102,7 +104,6 @@ class SettingsStyle extends Component {
     previousCustom: {},
     DarkTheme: DarkTheme,
     LightTheme: LightTheme,
-    sampleAddress: '000000000000000000000000000000000000000000000000000',
   };
 
   /**
@@ -118,7 +119,7 @@ class SettingsStyle extends Component {
     } else {
       this.setThemeSelector(2);
     }
-    this.GetUsersDefaultAddress();
+    this.getUsersDefaultAddress();
   }
 
   /**
@@ -126,17 +127,30 @@ class SettingsStyle extends Component {
    *
    * @memberof SettingsStyle
    */
-  GetUsersDefaultAddress() {
-    let myAddress = '000000000000000000000000000000000000000000000000000';
-    try {
-      myAddress = this.props.myAccounts[0].addresses[0];
-    } catch (e) {
-      console.error(e);
-    }
-    this.setState({
-      sampleAddress: myAddress,
-    });
-  }
+  getUsersDefaultAddress = (() => {
+    let cache = null;
+    return () => {
+      if (cache) return cache;
+      const { myAccounts, tritiumAccounts } = this.props;
+      if (legacyMode) {
+        if (myAccounts && myAccounts.length) {
+          return (cache = myAccounts[0].addresses[0]);
+        }
+      } else {
+        if (tritiumAccounts && tritiumAccounts.length) {
+          const defaultAcc = tritiumAccounts.find(
+            acc => acc.name === 'default'
+          );
+          if (defaultAcc) {
+            return (cache = defaultAcc.address);
+          } else {
+            myAddress = tritiumAccounts[0].address;
+          }
+        }
+      }
+      return null;
+    };
+  })();
 
   /**
    * Toggle The Globe
@@ -423,7 +437,10 @@ class SettingsStyle extends Component {
           </div>
           <div className="mt1">
             <NexusAddress
-              address={this.state.sampleAddress}
+              address={
+                this.getUsersDefaultAddress() ||
+                '000000000000000000000000000000000000000000000000000'
+              }
               label={__('Sample Address')}
             />
             <AddressStyleNote>
