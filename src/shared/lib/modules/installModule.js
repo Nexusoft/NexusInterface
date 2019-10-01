@@ -1,11 +1,7 @@
-import { join, extname, dirname, normalize } from 'path';
+import { join, dirname, normalize } from 'path';
 import fs from 'fs';
 
-import {
-  showNotification,
-  openModal,
-  openSuccessDialog,
-} from 'actions/overlays';
+import { showNotification, openModal, openSuccessDialog } from 'lib/overlays';
 import ModuleDetailsModal from 'components/ModuleDetailsModal';
 import store from 'store';
 import { loadModuleFromDir } from 'lib/modules';
@@ -92,50 +88,44 @@ async function installFromDirectory(path) {
   });
 
   if (!module) {
-    store.dispatch(showNotification('Invalid Module', 'error'));
+    showNotification('Invalid Module', 'error');
     return;
   }
 
-  store.dispatch(
-    openModal(ModuleDetailsModal, {
-      module,
-      forInstall: true,
-      install: async () => {
-        try {
-          const dest = join(modulesDir, module.name);
-          if (fs.existsSync(dest)) {
-            const agreed = await confirm({
-              question: __('Overwrite module?'),
-              note: __('A module with the same directory name already exists'),
-            });
-            if (!agreed) return;
+  openModal(ModuleDetailsModal, {
+    module,
+    forInstall: true,
+    install: async () => {
+      try {
+        const dest = join(modulesDir, module.name);
+        if (fs.existsSync(dest)) {
+          const agreed = await confirm({
+            question: __('Overwrite module?'),
+            note: __('A module with the same directory name already exists'),
+          });
+          if (!agreed) return;
 
-            await deleteDirectory(dest, { glob: false });
-          }
-
-          await copyModule(module.files, path, dest);
-
-          store.dispatch(
-            openSuccessDialog({
-              message: __('Module has been successfully installed'),
-              note: __(
-                'The wallet will now be refreshed for the new module to take effect'
-              ),
-              onClose: () => {
-                location.reload();
-              },
-            })
-          );
-        } catch (err) {
-          console.error(err);
-          store.dispatch(
-            showNotification(__('Error copying module files'), 'error')
-          );
-          return;
+          await deleteDirectory(dest, { glob: false });
         }
-      },
-    })
-  );
+
+        await copyModule(module.files, path, dest);
+
+        openSuccessDialog({
+          message: __('Module has been successfully installed'),
+          note: __(
+            'The wallet will now be refreshed for the new module to take effect'
+          ),
+          onClose: () => {
+            location.reload();
+          },
+        });
+      } catch (err) {
+        console.error(err);
+        showNotification(__('Error copying module files'), 'error');
+        return;
+      }
+    },
+  });
 }
 
 /**
@@ -150,14 +140,14 @@ async function installFromDirectory(path) {
 export async function installModule(path) {
   try {
     if (!fs.existsSync(path)) {
-      store.dispatch(showNotification(__('Cannot find module'), 'error'));
+      showNotification(__('Cannot find module'), 'error');
       return;
     }
     let dirPath = path;
 
     if (fs.statSync(path).isFile()) {
       if (!supportedExtensions.some(ext => path.endsWith(ext))) {
-        store.dispatch(showNotification(__('Unsupported file type'), 'error'));
+        showNotification(__('Unsupported file type'), 'error');
         return;
       }
 
@@ -183,9 +173,7 @@ export async function installModule(path) {
     } else {
       const dirPath = normalize(path);
       if (dirPath.startsWith(normalize(modulesDir))) {
-        store.dispatch(
-          showNotification(__('Cannot install from that location'), 'error')
-        );
+        showNotification(__('Cannot install from that location'), 'error');
         return;
       }
     }
@@ -193,7 +181,7 @@ export async function installModule(path) {
     await installFromDirectory(dirPath);
   } catch (err) {
     console.error(err);
-    store.dispatch(showNotification(__('An unknown error occurred'), 'error'));
+    showNotification(__('An unknown error occurred'), 'error');
     return;
   }
 }

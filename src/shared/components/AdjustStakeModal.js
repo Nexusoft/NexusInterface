@@ -12,7 +12,7 @@ import confirm from 'utils/promisified/confirm';
 import confirmPin from 'utils/promisified/confirmPin';
 import { errorHandler } from 'utils/form';
 import { formatNumber } from 'lib/intl';
-import { removeModal, showNotification } from 'actions/overlays';
+import { removeModal, showNotification } from 'lib/overlays';
 
 const LimitNumber = styled.span(
   {
@@ -57,16 +57,13 @@ const Note = styled.div(({ theme }) => ({
   marginTop: 20,
 }));
 
-@connect(
-  ({ core: { stakeInfo } }) => ({
-    currentStake: stakeInfo && stakeInfo.stake,
-    total: stakeInfo && stakeInfo.stake + stakeInfo.balance,
-    initialValues: {
-      stake: stakeInfo && stakeInfo.stake,
-    },
-  }),
-  { removeModal, showNotification }
-)
+@connect(({ core: { stakeInfo } }) => ({
+  currentStake: stakeInfo && stakeInfo.stake,
+  total: stakeInfo && stakeInfo.stake + stakeInfo.balance,
+  initialValues: {
+    stake: stakeInfo && stakeInfo.stake,
+  },
+}))
 @reduxForm({
   form: 'adjust_stake',
   destroyOnUnmount: true,
@@ -102,8 +99,8 @@ const Note = styled.div(({ theme }) => ({
   onSubmitSuccess: async (result, dispatch, props) => {
     if (!result) return; // Submission was cancelled
 
-    props.removeModal(props.modalId);
-    props.showNotification(__('Stake amount has been updated'), 'success');
+    removeModal(props.modalId);
+    showNotification(__('Stake amount has been updated'), 'success');
   },
   onSubmitFail: errorHandler(__('Error setting stake amount')),
 })

@@ -7,7 +7,7 @@ import Panel from 'components/Panel';
 import WaitingMessage from 'components/WaitingMessage';
 import Button from 'components/Button';
 import LoginModal from 'components/LoginModal';
-import { openModal } from 'actions/overlays';
+import { openModal } from 'lib/overlays';
 import { isLoggedIn } from 'selectors';
 import { fetchAllTransactions } from 'lib/tritiumTransactions';
 import { observeStore } from 'store';
@@ -36,9 +36,6 @@ const mapStateToProps = state => {
     minConfirmations,
     loadedAll,
   };
-};
-const actionCreators = {
-  openModal,
 };
 
 /**
@@ -81,13 +78,7 @@ class TransactionsTritium extends Component {
    * @memberof Transactions
    */
   render() {
-    const {
-      loadedAll,
-      transactions,
-      openModal,
-      minConfirmations,
-      loggedIn,
-    } = this.props;
+    const { loadedAll, transactions, loggedIn } = this.props;
 
     return (
       <Panel icon={transactionIcon} title={__('Transactions')}>
@@ -122,7 +113,4 @@ class TransactionsTritium extends Component {
 }
 
 // Mandatory React-Redux method
-export default connect(
-  mapStateToProps,
-  actionCreators
-)(TransactionsTritium);
+export default connect(mapStateToProps)(TransactionsTritium);

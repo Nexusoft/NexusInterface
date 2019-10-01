@@ -1,6 +1,6 @@
 // External
 import { hot } from 'react-hot-loader/root';
-import React, { Component } from 'react';
+import React from 'react';
 import { ConnectedRouter } from 'connected-react-router';
 import { Route, Switch } from 'react-router';
 import styled from '@emotion/styled';
@@ -8,6 +8,7 @@ import styled from '@emotion/styled';
 // Internal
 import GlobalStyles from 'components/GlobalStyles';
 import { legacyMode } from 'consts/misc';
+
 import Overlays from './Overlays';
 import Overview from './Overview';
 import OverviewTritium from './OverviewTritium';
@@ -21,9 +22,7 @@ import Market from './Market';
 import AddressBook from './AddressBook';
 import Settings from './Settings';
 import Terminal from './Terminal';
-import Accounts from './Accounts';
 import UserPage from './UserPage';
-
 import About from './About';
 import Modules from './Modules';
 import AppBackground from './AppBackground';
@@ -78,7 +77,6 @@ const App = ({ history }) => (
               <Route exact path="/AddressBook" component={AddressBook} />
               <Route path="/Settings" component={Settings} />
               <Route path="/Terminal" component={Terminal} />
-              <Route path="/Accounts" component={Accounts} />
               <Route path="/User" component={UserPage} />
 
               {/* <Route path="/Exchange" component={Exchange} /> */}

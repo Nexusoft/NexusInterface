@@ -1,8 +1,7 @@
 import React from 'react';
-import { connect } from 'react-redux';
 
 import rpc from 'lib/rpc';
-import { showNotification } from 'actions/overlays';
+import { showNotification } from 'lib/overlays';
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
 import { consts } from 'styles';
@@ -13,10 +12,6 @@ import { consts } from 'styles';
  * @class RescanButton
  * @extends {React.Component}
  */
-@connect(
-  null,
-  { showNotification }
-)
 class RescanButton extends React.Component {
   state = {
     rescanning: false,
@@ -32,12 +27,12 @@ class RescanButton extends React.Component {
       this.setState({ rescanning: true });
       await rpc('rescan', []);
     } catch (err) {
-      this.props.showNotification(__('Error rescanning'), 'error');
+      showNotification(__('Error rescanning'), 'error');
       return;
     } finally {
       this.setState({ rescanning: false });
     }
-    this.props.showNotification(__('Rescanned successfully'), 'success');
+    showNotification(__('Rescanned successfully'), 'success');
   };
 
   /**

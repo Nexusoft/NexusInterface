@@ -24,7 +24,7 @@ import {
   printCommandError,
   resetConsoleOutput,
 } from 'actions/ui';
-import { openModal } from 'actions/overlays';
+import { openModal } from 'lib/overlays';
 import APIDocModal from './APIDocs/ApiDocModal';
 import questionMarkCircleIcon from 'images/question-mark-circle.sprite.svg';
 import Tooltip from 'components/Tooltip';
@@ -79,7 +79,6 @@ const actionCreators = {
   printCommandOutput,
   printCommandError,
   resetConsoleOutput,
-  openModal,
 };
 
 const TerminalContent = styled.div({
@@ -340,7 +339,7 @@ class NexusApiConsole extends Component {
                       <HelpButton
                         skin="filled-inverted"
                         fitHeight
-                        onClick={() => this.props.openModal(APIDocModal)}
+                        onClick={() => openModal(APIDocModal)}
                       >
                         <Icon icon={questionMarkCircleIcon} />
                       </HelpButton>

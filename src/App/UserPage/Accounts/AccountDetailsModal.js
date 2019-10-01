@@ -6,7 +6,7 @@ import Modal from 'components/Modal';
 import Button from 'components/Button';
 import AdjustStakeModal from 'components/AdjustStakeModal';
 import { formatDateTime } from 'lib/intl';
-import { openModal } from 'actions/overlays';
+import { openModal } from 'lib/overlays';
 import { formatNumber } from 'lib/intl';
 
 import { totalBalance } from './utils';
@@ -47,7 +47,7 @@ const Field = ({ label, children }) => (
   </Row>
 );
 
-const AccountDetailsModal = ({ account, stakeInfo, openModal }) => (
+const AccountDetailsModal = ({ account, stakeInfo }) => (
   <Modal>
     <Modal.Header>{__('Account Details')}</Modal.Header>
     <Modal.Body>
@@ -106,11 +106,4 @@ const mapStateToProps = state => ({
   stakeInfo: state.core.stakeInfo,
 });
 
-const actionCreators = {
-  openModal,
-};
-
-export default connect(
-  mapStateToProps,
-  actionCreators
-)(AccountDetailsModal);
+export default connect(mapStateToProps)(AccountDetailsModal);

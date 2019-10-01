@@ -6,7 +6,7 @@ import Icon from 'components/Icon';
 import Button from 'components/Button';
 import { switchUserTab } from 'actions/ui';
 import { listAccounts } from 'actions/core';
-import { openModal } from 'actions/overlays';
+import { openModal } from 'lib/overlays';
 import plusIcon from 'images/plus.sprite.svg';
 
 import Account from './Account';
@@ -23,7 +23,7 @@ const AccountsWrapper = styled.div(({ theme }) => ({
   state => ({
     accounts: state.core.accounts,
   }),
-  { switchUserTab, listAccounts, openModal }
+  { switchUserTab, listAccounts }
 )
 export default class Accounts extends React.Component {
   constructor(props) {
@@ -36,7 +36,7 @@ export default class Accounts extends React.Component {
   }
 
   render() {
-    const { accounts, openModal } = this.props;
+    const { accounts } = this.props;
 
     return (
       !!accounts && (

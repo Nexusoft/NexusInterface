@@ -9,9 +9,9 @@ import semver from 'semver';
 // Internal
 import store from 'store';
 import { setUpdaterState } from 'actions/updater';
-import { showBackgroundTask, showNotification } from 'actions/overlays';
+import { showBackgroundTask, showNotification } from 'lib/overlays';
 import AutoUpdateBackgroundTask from './AutoUpdateBackgroundTask';
-import { assetsParentDir, walletDataDir } from 'consts/paths';
+import { assetsParentDir } from 'consts/paths';
 
 const mainUpdater = remote.getGlobal('updater');
 const autoUpdateInterval = 2 * 60 * 60 * 1000; // 2 hours
@@ -63,18 +63,15 @@ export async function startAutoUpdate() {
       );
       const latestVerion = response.data.tag_name;
       if (
-        semver.lt( "v" + APP_VERSION, latestVerion)
-          &&
+        semver.lt('v' + APP_VERSION, latestVerion) &&
         response.data.prerelease === false
       ) {
         console.log(`New Version ${response.data.tag_name}, Click to download`);
-        store.dispatch(
-          showBackgroundTask(AutoUpdateBackgroundTask, {
-            version: response.data.tag_name,
-            quitAndInstall: null,
-            gitHub: true,
-          })
-        );
+        showBackgroundTask(AutoUpdateBackgroundTask, {
+          version: response.data.tag_name,
+          quitAndInstall: null,
+          gitHub: true,
+        });
       }
     } catch (e) {
       console.error(e);
@@ -124,24 +121,20 @@ export function initializeUpdater(autoUpdate) {
   });
 
   mainUpdater.on('update-available', updateInfo => {
-    store.dispatch(
-      showNotification(
-        __('New wallet version %{version} available. Downloading...', {
-          version: updateInfo.version,
-        }),
-        'work'
-      )
+    showNotification(
+      __('New wallet version %{version} available. Downloading...', {
+        version: updateInfo.version,
+      }),
+      'work'
     );
   });
 
   mainUpdater.on('update-downloaded', updateInfo => {
     stopAutoUpdate();
-    store.dispatch(
-      showBackgroundTask(AutoUpdateBackgroundTask, {
-        version: updateInfo.version,
-        quitAndInstall: mainUpdater.quitAndInstall,
-      })
-    );
+    showBackgroundTask(AutoUpdateBackgroundTask, {
+      version: updateInfo.version,
+      quitAndInstall: mainUpdater.quitAndInstall,
+    });
   });
 
   mainUpdater.on('error', err => {

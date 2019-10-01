@@ -6,7 +6,7 @@ import * as ac from 'actions/setupApp';
 import { loadModules } from 'actions/module';
 import { stopCore } from 'actions/core';
 import { closeWallet } from 'actions/ui';
-import { openModal } from 'actions/overlays';
+import { openModal } from 'lib/overlays';
 import TritiumUpgradeModal from 'components/TritiumUpgradeModal';
 import { tritiumUpgradeTime, legacyMode } from 'consts/misc';
 import { initializeUpdater } from 'lib/updater';
@@ -61,7 +61,7 @@ export function postRender() {
   initializeMenu();
   initializeWebView();
   initializeUpdater(state.settings.autoUpdate);
-  initializeBootstrapEvents(store);
+  initializeBootstrapEvents();
   if (!legacyMode) {
     initializeTransactions();
   }
@@ -70,12 +70,12 @@ export function postRender() {
   if (now < tritiumUpgradeTime) {
     if (state.settings.legacyMode !== false) {
       setTimeout(() => {
-        store.dispatch(openModal(TritiumUpgradeModal));
+        openModal(TritiumUpgradeModal);
       }, tritiumUpgradeTime - now);
     }
   } else {
     if (state.settings.legacyMode === undefined) {
-      store.dispatch(openModal(TritiumUpgradeModal));
+      openModal(TritiumUpgradeModal);
     }
   }
 }

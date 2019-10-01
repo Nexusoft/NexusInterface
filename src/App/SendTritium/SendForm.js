@@ -16,13 +16,7 @@ import Select from 'components/Select';
 import FormField from 'components/FormField';
 import Tooltip from 'components/Tooltip';
 import Arrow from 'components/Arrow';
-import {
-  openConfirmDialog,
-  openErrorDialog,
-  openSuccessDialog,
-  removeModal,
-  openModal,
-} from 'actions/overlays';
+import { openSuccessDialog } from 'lib/overlays';
 import { errorHandler } from 'utils/form';
 import sendIcon from 'images/send.sprite.svg';
 import { numericOnly } from 'utils/form';
@@ -97,11 +91,6 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-  openConfirmDialog,
-  openErrorDialog,
-  openSuccessDialog,
-  removeModal,
-  openModal,
   listAccounts,
 };
 
@@ -255,7 +244,7 @@ const mapDispatchToProps = {
 
     props.reset();
     props.listAccounts();
-    props.openSuccessDialog({
+    openSuccessDialog({
       message: __('Transaction sent'),
     });
   },

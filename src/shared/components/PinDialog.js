@@ -1,20 +1,17 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
 
 import Modal from 'components/Modal';
 import TextField from 'components/TextField';
 import Button from 'components/Button';
-import { removeModal } from 'actions/overlays';
+import { removeModal } from 'lib/overlays';
 import { numericOnly } from 'utils/form';
 
 const PinInput = styled(TextField.RF)({
   margin: '1em auto 2.5em',
   fontSize: 18,
 });
-
-const actionCreators = { removeModal };
 
 const formOptions = {
   form: 'pin',
@@ -33,7 +30,7 @@ const formOptions = {
     if (props.submitPin) {
       props.submitPin(pin);
     }
-    props.removeModal(props.modalId);
+    removeModal(props.modalId);
   },
 };
 
@@ -66,7 +63,4 @@ const PinDialog = ({ handleSubmit, confirmLabel = __('Confirm'), onClose }) => (
   </Modal>
 );
 
-export default connect(
-  null,
-  actionCreators
-)(reduxForm(formOptions)(PinDialog));
+export default reduxForm(formOptions)(PinDialog);

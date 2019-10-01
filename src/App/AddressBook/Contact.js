@@ -8,7 +8,7 @@ import { remote } from 'electron';
 import { selectContact, deleteContact } from 'actions/addressBook';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
-import { openConfirmDialog, openModal } from 'actions/overlays';
+import { openConfirmDialog, openModal } from 'lib/overlays';
 import AddEditContactModal from 'components/AddEditContactModal';
 import { isCoreConnected } from 'selectors';
 import { timing } from 'styles';
@@ -79,7 +79,7 @@ const AddressesCount = styled.div(({ theme }) => ({
     locale: state.settings.locale,
     coreConnected: isCoreConnected(state),
   }),
-  { selectContact, deleteContact, openModal, openConfirmDialog }
+  { selectContact, deleteContact }
 )
 class Contact extends React.PureComponent {
   /**
@@ -88,7 +88,7 @@ class Contact extends React.PureComponent {
    * @memberof Contact
    */
   confirmDelete = () => {
-    this.props.openConfirmDialog({
+    openConfirmDialog({
       question: __('Delete contact %{name}?', {
         name: this.props.contact.name,
       }),
@@ -105,7 +105,7 @@ class Contact extends React.PureComponent {
    * @memberof Contact
    */
   editContact = () => {
-    this.props.openModal(AddEditContactModal, {
+    openModal(AddEditContactModal, {
       edit: true,
       contact: this.props.contact,
     });

@@ -15,7 +15,7 @@ import {
   openErrorDialog,
   openSuccessDialog,
   removeModal,
-} from 'actions/overlays';
+} from 'lib/overlays';
 import { loadMyAccounts } from 'actions/account';
 import { errorHandler } from 'utils/form';
 import {
@@ -72,10 +72,6 @@ const mapStateToProps = state => {
 
 const acctionCreators = {
   loadMyAccounts,
-  openConfirmDialog,
-  openErrorDialog,
-  openSuccessDialog,
-  removeModal,
 };
 
 /**
@@ -142,7 +138,7 @@ const acctionCreators = {
     props.closeModal();
     props.reset();
     props.loadMyAccounts();
-    props.openSuccessDialog({
+    openSuccessDialog({
       message: __('NXS moved successfully'),
     });
   },
@@ -169,7 +165,7 @@ class MoveBetweenAccountsForm extends Component {
     if (locked) {
       const {
         payload: { id: modalId },
-      } = this.props.openErrorDialog({
+      } = openErrorDialog({
         message: __('You are not logged in'),
         note: (
           <>
@@ -181,7 +177,7 @@ class MoveBetweenAccountsForm extends Component {
             <Link
               to="/Settings/Security"
               onClick={() => {
-                this.props.removeModal(modalId);
+                removeModal(modalId);
                 this.props.closeModal();
               }}
             >
@@ -193,7 +189,7 @@ class MoveBetweenAccountsForm extends Component {
       return;
     }
 
-    this.props.openConfirmDialog({
+    openConfirmDialog({
       question: __('Move NXS'),
       callbackYes: handleSubmit,
     });

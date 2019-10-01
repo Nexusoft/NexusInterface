@@ -9,7 +9,7 @@ import {
 import { listAccounts } from 'actions/core';
 import showDesktopNotif from 'utils/showDesktopNotif';
 import { formatNumber } from 'lib/intl';
-import { showNotification } from 'actions/overlays';
+import { showNotification } from 'lib/overlays';
 
 export async function fetchAllTransactions() {
   const {
@@ -67,13 +67,11 @@ export function initializeTransactions() {
                 __('New transaction'),
                 `${change > 0 ? '+' : ''}${formatNumber(change)} ${token}`
               );
-              store.dispatch(
-                showNotification(
-                  `${__('New transaction')}: ${
-                    change > 0 ? '+' : ''
-                  }${formatNumber(change)} ${token}`,
-                  'success'
-                )
+              showNotification(
+                `${__('New transaction')}: ${
+                  change > 0 ? '+' : ''
+                }${formatNumber(change)} ${token}`,
+                'success'
               );
             });
           }

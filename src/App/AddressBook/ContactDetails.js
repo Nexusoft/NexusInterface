@@ -9,7 +9,7 @@ import ExternalLink from 'components/ExternalLink';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import NexusAddress from 'components/NexusAddress';
-import { openConfirmDialog, openModal } from 'actions/overlays';
+import { openConfirmDialog, openModal } from 'lib/overlays';
 import AddEditContactModal from 'components/AddEditContactModal';
 import { isCoreConnected } from 'selectors';
 import timeZones from 'data/timeZones';
@@ -127,7 +127,7 @@ const getLocalTime = tz => {
       coreConnected: isCoreConnected(state),
     };
   },
-  { deleteContact, openConfirmDialog, openModal }
+  { deleteContact }
 )
 class ContactDetails extends React.Component {
   /**
@@ -136,7 +136,7 @@ class ContactDetails extends React.Component {
    * @memberof ContactDetails
    */
   confirmDelete = () => {
-    this.props.openConfirmDialog({
+    openConfirmDialog({
       question: __('Delete contact %{name}?', {
         name: this.props.contact.name,
       }),
@@ -153,7 +153,7 @@ class ContactDetails extends React.Component {
    * @memberof ContactDetails
    */
   editContact = () => {
-    this.props.openModal(AddEditContactModal, {
+    openModal(AddEditContactModal, {
       edit: true,
       contact: this.props.contact,
     });

@@ -1,5 +1,4 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
 
@@ -8,7 +7,7 @@ import TextField from 'components/TextField';
 import FormField from 'components/FormField';
 import Button from 'components/Button';
 import confirmPin from 'utils/promisified/confirmPin';
-import { removeModal, openSuccessDialog } from 'actions/overlays';
+import { removeModal, openSuccessDialog } from 'lib/overlays';
 import { apiPost } from 'lib/tritiumApi';
 import { errorHandler } from 'utils/form';
 import { coreDataDir } from 'consts/paths';
@@ -16,8 +15,6 @@ import { coreDataDir } from 'consts/paths';
 const PasswordInput = styled(TextField.RF)({
   margin: '1em auto 2.5em',
 });
-
-const actionCreators = { removeModal, openSuccessDialog };
 
 const formOptions = {
   form: 'migrate_stake',
@@ -37,8 +34,8 @@ const formOptions = {
   onSubmitSuccess: (result, dispatch, props) => {
     if (!result) return;
 
-    props.removeModal(props.modalId);
-    props.openSuccessDialog({
+    removeModal(props.modalId);
+    openSuccessDialog({
       message: __('Your stake has been successfully migrated'),
     });
   },
@@ -88,7 +85,4 @@ const MigrateStakeModal = ({ handleSubmit }) => (
   </Modal>
 );
 
-export default connect(
-  null,
-  actionCreators
-)(reduxForm(formOptions)(MigrateStakeModal));
+export default reduxForm(formOptions)(MigrateStakeModal);

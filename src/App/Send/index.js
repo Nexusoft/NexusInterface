@@ -11,7 +11,7 @@ import Panel from 'components/Panel';
 import Button from 'components/Button';
 import WaitingMessage from 'components/WaitingMessage';
 import Tooltip from 'components/Tooltip';
-import { openModal } from 'actions/overlays';
+import { openModal } from 'lib/overlays';
 import { isCoreConnected } from 'selectors';
 
 // Internal Local Dependencies
@@ -26,18 +26,13 @@ const mapStateToProps = state => ({
   coreConnected: isCoreConnected(state),
 });
 
-const actionCreators = { openModal };
-
 /**
  * Send Page
  *
  * @class Send
  * @extends {Component}
  */
-@connect(
-  mapStateToProps,
-  actionCreators
-)
+@connect(mapStateToProps)
 class Send extends Component {
   /**
    * Component Mount Callback
@@ -78,7 +73,7 @@ class Send extends Component {
    * @memberof Send
    */
   moveBetweenAccounts = () => {
-    this.props.openModal(MoveBetweenAccountsModal);
+    openModal(MoveBetweenAccountsModal);
   };
 
   /**

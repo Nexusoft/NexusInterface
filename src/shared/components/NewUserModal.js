@@ -10,7 +10,7 @@ import TextField from 'components/TextField';
 import Button from 'components/Button';
 import Link from 'components/Link';
 import LoginModal from 'components/LoginModal';
-import { showNotification, openModal, removeModal } from 'actions/overlays';
+import { showNotification, openModal, removeModal } from 'lib/overlays';
 import { getUserStatus } from 'actions/core';
 import { errorHandler, numericOnly } from 'utils/form';
 
@@ -33,7 +33,7 @@ const ExtraSection = styled.div({
  */
 @connect(
   ({ enableMining, enableStaking }) => ({ enableMining, enableStaking }),
-  { showNotification, openModal, removeModal, getUserStatus }
+  { getUserStatus }
 )
 @reduxForm({
   form: 'new_user',
@@ -94,9 +94,9 @@ const ExtraSection = styled.div({
   },
   onSubmitSuccess: async (result, dispatch, props) => {
     const { username, password, pin } = props.values;
-    props.removeModal(props.modalId);
+    removeModal(props.modalId);
     props.reset();
-    props.showNotification(
+    showNotification(
       __('New user %{username} has been created', {
         username,
       }),
@@ -126,7 +126,7 @@ class NewUserModal extends Component {
    * @memberof NewUserModal
    */
   render() {
-    const { handleSubmit, submitting, openModal } = this.props;
+    const { handleSubmit, submitting } = this.props;
 
     return (
       <Modal

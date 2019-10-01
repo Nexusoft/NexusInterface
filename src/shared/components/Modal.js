@@ -1,12 +1,11 @@
 // External
 import React, { PureComponent } from 'react';
-import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/core';
 
 // Internal
 import ModalContext from 'context/modal';
-import { removeModal } from 'actions/overlays';
+import { removeModal } from 'lib/overlays';
 import Overlay from 'components/Overlay';
 import { timing } from 'styles';
 import { passRef } from 'utils/misc';
@@ -128,10 +127,6 @@ const ModalFooter = styled.div(
  * @class Modal
  * @extends {PureComponent}
  */
-@connect(
-  null,
-  { removeModal }
-)
 export default class Modal extends PureComponent {
   static defaultProps = {
     dimBackground: true,
@@ -181,7 +176,7 @@ export default class Modal extends PureComponent {
    */
   remove = () => {
     const modalID = this.context;
-    this.props.removeModal(modalID);
+    removeModal(modalID);
   };
 
   /**

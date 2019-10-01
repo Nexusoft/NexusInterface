@@ -1,6 +1,5 @@
 // External
 import React from 'react';
-import { connect } from 'react-redux';
 import { clipboard } from 'electron';
 import styled from '@emotion/styled';
 
@@ -9,7 +8,7 @@ import TextField from 'components/TextField';
 import Tooltip from 'components/Tooltip';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
-import { showNotification } from 'actions/overlays';
+import { showNotification } from 'lib/overlays';
 import copyIcon from 'images/copy.sprite.svg';
 
 const RawAddressComponent = styled.div({
@@ -43,10 +42,6 @@ const CopyButton = styled(Button)(({ theme }) => ({
  * @class RawAddress
  * @extends {React.Component}
  */
-@connect(
-  null,
-  { showNotification }
-)
 export default class RawAddress extends React.Component {
   inputRef = React.createRef();
 
@@ -58,10 +53,7 @@ export default class RawAddress extends React.Component {
   copyAddress = () => {
     clipboard.writeText(this.props.address);
     this.inputRef.current.select();
-    this.props.showNotification(
-      __('Address has been copied to clipboard'),
-      'success'
-    );
+    showNotification(__('Address has been copied to clipboard'), 'success');
   };
 
   /**

@@ -7,7 +7,7 @@ import Tooltip from 'components/Tooltip';
 import Button from 'components/Button';
 import syncingIcon from 'images/syncing.sprite.svg';
 import GA from 'lib/googleAnalytics';
-import { showNotification } from 'actions/overlays';
+import { showNotification } from 'lib/overlays';
 
 // Internal Global Dependencies
 import Icon from 'components/Icon';
@@ -55,7 +55,7 @@ const mapStateToProps = state => {
     settings: state.settings,
   };
 };
-const mapDispatchToProps = { ...actionsCreators, showNotification };
+const mapDispatchToProps = { ...actionsCreators };
 
 /**
  * The Market Page
@@ -253,7 +253,7 @@ class Market extends Component {
    */
   refreshMarket() {
     this.refresher();
-    this.props.showNotification(__('Refreshing market data...'), 'success');
+    showNotification(__('Refreshing market data...'), 'success');
   }
 
   // Mandatory React method

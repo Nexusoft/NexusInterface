@@ -10,7 +10,7 @@ import Panel from 'components/Panel';
 import WaitingMessage from 'components/WaitingMessage';
 import LoginModal from 'components/LoginModal';
 import Button from 'components/Button';
-import { openModal } from 'actions/overlays';
+import { openModal } from 'lib/overlays';
 import { listAccounts } from 'actions/core';
 import { isCoreConnected, isLoggedIn } from 'selectors';
 
@@ -25,7 +25,7 @@ const mapStateToProps = state => ({
   loggedIn: isLoggedIn(state),
 });
 
-const actionCreators = { openModal, listAccounts };
+const actionCreators = { listAccounts };
 
 /**
  * Send Page
@@ -79,7 +79,7 @@ class Send extends Component {
    * @memberof Send
    */
   render() {
-    const { coreConnected, loggedIn, openModal } = this.props;
+    const { coreConnected, loggedIn } = this.props;
     return (
       <Panel icon={sendIcon} title={__('Send NXS')}>
         {!coreConnected ? (

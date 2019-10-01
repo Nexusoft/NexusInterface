@@ -9,7 +9,7 @@ import ContractDetailsModal from 'components/ContractDetailsModal';
 import FieldSet from 'components/FieldSet';
 import { apiPost } from 'lib/tritiumApi';
 import { formatDateTime, formatNumber } from 'lib/intl';
-import { openModal } from 'actions/overlays';
+import { openModal } from 'lib/overlays';
 import { handleError } from 'utils/form';
 
 import { totalBalance } from './utils';
@@ -191,7 +191,7 @@ class AccountHistoryModal extends React.Component {
   }
 
   render() {
-    const { account, openModal } = this.props;
+    const { account } = this.props;
     const { contracts } = this.state;
 
     return (
@@ -291,11 +291,4 @@ const mapStateToProps = state => ({
   stakeInfo: state.core.stakeInfo,
 });
 
-const actionCreators = {
-  openModal,
-};
-
-export default connect(
-  mapStateToProps,
-  actionCreators
-)(AccountHistoryModal);
+export default connect(mapStateToProps)(AccountHistoryModal);

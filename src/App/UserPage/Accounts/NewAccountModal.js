@@ -10,11 +10,11 @@ import confirmPin from 'utils/promisified/confirmPin';
 import { apiPost } from 'lib/tritiumApi';
 import { errorHandler } from 'utils/form';
 import { listAccounts } from 'actions/core';
-import { removeModal, showNotification } from 'actions/overlays';
+import { removeModal, showNotification } from 'lib/overlays';
 
 @connect(
   null,
-  { removeModal, showNotification, listAccounts }
+  { listAccounts }
 )
 @reduxForm({
   form: 'new_account',
@@ -40,8 +40,8 @@ import { removeModal, showNotification } from 'actions/overlays';
     if (!result) return; // Submission was cancelled
 
     props.listAccounts();
-    props.removeModal(props.modalId);
-    props.showNotification(
+    removeModal(props.modalId);
+    showNotification(
       __('New account %{account} has been created', {
         account: props.values.name,
       }),

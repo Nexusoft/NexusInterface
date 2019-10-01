@@ -9,7 +9,7 @@ import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
-import { openSuccessDialog } from 'actions/overlays';
+import { openSuccessDialog } from 'lib/overlays';
 import rpc from 'lib/rpc';
 import { startCore } from 'actions/core';
 import { consts } from 'styles';
@@ -40,7 +40,7 @@ const Characters = styled.span({
  */
 @connect(
   null,
-  { openSuccessDialog, startCore }
+  { startCore }
 )
 @reduxForm({
   form: 'encryptWallet',
@@ -70,7 +70,7 @@ const Characters = styled.span({
   onSubmit: ({ password }) => rpc('encryptwallet', [password]),
   onSubmitSuccess: (result, dispatch, props) => {
     props.reset();
-    props.openSuccessDialog({
+    openSuccessDialog({
       message: __('Wallet has been encrypted.'),
       onClose: () => {
         // In some old version, core stops after wallet is encrypted

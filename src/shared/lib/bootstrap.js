@@ -18,7 +18,7 @@ import {
   showNotification,
   openErrorDialog,
   openSuccessDialog,
-} from 'actions/overlays';
+} from 'lib/overlays';
 import extractTarball from 'utils/promisified/extractTarball';
 import sleep from 'utils/promisified/sleep';
 import { throttled } from 'utils/misc';
@@ -41,28 +41,21 @@ export const bootstrapEvents = new EventEmitter();
  * @export
  * @param {*} { dispatch }
  */
-export function initializeBootstrapEvents({ dispatch }) {
+export function initializeBootstrapEvents() {
   bootstrapEvents.on('abort', () =>
-    dispatch(
-      showNotification(__('Bootstrap process has been aborted'), 'error')
-    )
+    showNotification(__('Bootstrap process has been aborted'), 'error')
   );
   bootstrapEvents.on('error', err => {
     console.error(err);
-    dispatch(
-      openErrorDialog({
-        message: __('Error bootstrapping recent database'),
-        note:
-          typeof err === 'string' ? err : err.message || __('Unknown error'),
-      })
-    );
+    openErrorDialog({
+      message: __('Error bootstrapping recent database'),
+      note: typeof err === 'string' ? err : err.message || __('Unknown error'),
+    });
   });
   bootstrapEvents.on('success', () =>
-    dispatch(
-      openSuccessDialog({
-        message: __('Recent database has been successfully bootstrapped'),
-      })
-    )
+    openSuccessDialog({
+      message: __('Recent database has been successfully bootstrapped'),
+    })
   );
 }
 

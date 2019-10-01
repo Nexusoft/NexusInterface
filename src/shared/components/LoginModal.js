@@ -10,7 +10,7 @@ import TextField from 'components/TextField';
 import Button from 'components/Button';
 import Link from 'components/Link';
 import NewUserModal from 'components/NewUserModal';
-import { showNotification, openModal, removeModal } from 'actions/overlays';
+import { showNotification, openModal, removeModal } from 'lib/overlays';
 import { getUserStatus } from 'actions/core';
 import { errorHandler, numericOnly } from 'utils/form';
 
@@ -37,9 +37,6 @@ const ExtraSection = styled.div({
     enableStaking,
   }),
   {
-    showNotification,
-    openModal,
-    removeModal,
     getUserStatus,
   }
 )
@@ -74,9 +71,9 @@ const ExtraSection = styled.div({
       pin,
     }),
   onSubmitSuccess: async (result, dispatch, props) => {
-    props.removeModal(props.modalId);
+    removeModal(props.modalId);
     props.reset();
-    props.showNotification(
+    showNotification(
       __('Logged in as %{username}', { username: props.values.username }),
       'success'
     );
@@ -100,7 +97,7 @@ class Login extends Component {
    * @memberof Login
    */
   render() {
-    const { handleSubmit, submitting, openModal } = this.props;
+    const { handleSubmit, submitting } = this.props;
 
     return (
       <Modal

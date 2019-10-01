@@ -13,7 +13,7 @@ import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
 import Switch from 'components/Switch';
 import { errorHandler } from 'utils/form';
-import { showNotification, openErrorDialog } from 'actions/overlays';
+import { showNotification } from 'lib/overlays';
 
 const LoginFieldSet = styled(FieldSet)({
   maxWidth: 400,
@@ -32,15 +32,12 @@ const Buttons = styled.div({
  * @class Login
  * @extends {Component}
  */
-@connect(
-  state => ({
-    tritium:
-      state.core.info.version.includes('0.3') ||
-      parseFloat(state.core.info.version) >= 3,
-    stakingOnly: formValueSelector('login')(state, 'stakingOnly'),
-  }),
-  { showNotification, openErrorDialog }
-)
+@connect(state => ({
+  tritium:
+    state.core.info.version.includes('0.3') ||
+    parseFloat(state.core.info.version) >= 3,
+  stakingOnly: formValueSelector('login')(state, 'stakingOnly'),
+}))
 @reduxForm({
   form: 'login',
   destroyOnUnmount: false,
@@ -97,7 +94,7 @@ const Buttons = styled.div({
   },
   onSubmitSuccess: async (result, dispatch, props) => {
     props.reset();
-    props.showNotification(__('Logged in successfully'), 'success');
+    showNotification(__('Logged in successfully'), 'success');
     autoFetchCoreInfo();
   },
   onSubmitFail: errorHandler(__('Error logging in')),

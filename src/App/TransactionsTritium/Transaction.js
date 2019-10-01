@@ -1,11 +1,10 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
 import { formatDateTime } from 'lib/intl';
 import * as color from 'utils/color';
 import { timing } from 'styles';
-import { openModal } from 'actions/overlays';
+import { openModal } from 'lib/overlays';
 
 import TransactionDetailsModal from './TransactionDetailsModal';
 import Contract from './Contract';
@@ -92,7 +91,7 @@ const TransactionRight = styled.div({
   justifyContent: 'center',
 });
 
-const Transaction = ({ transaction, openModal }) => {
+const Transaction = ({ transaction }) => {
   const txTime = new Date(transaction.timestamp * 1000);
 
   return (
@@ -127,9 +126,4 @@ const Transaction = ({ transaction, openModal }) => {
   );
 };
 
-const actionCreators = { openModal };
-
-export default connect(
-  null,
-  actionCreators
-)(Transaction);
+export default Transaction;

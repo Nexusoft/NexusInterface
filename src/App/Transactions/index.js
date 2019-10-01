@@ -11,7 +11,7 @@ import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
 import Table from 'components/Table';
 import { formatDateTime } from 'lib/intl';
-import { openModal } from 'actions/overlays';
+import { openModal } from 'lib/overlays';
 import { setTxsAccountFilter } from 'actions/ui';
 import { isCoreConnected } from 'selectors';
 import { autoUpdateTransactions, isPending } from 'lib/transactions';
@@ -127,7 +127,6 @@ const mapStateToProps = state => {
   };
 };
 const actionCreators = {
-  openModal,
   setTxsAccountFilter,
 };
 
@@ -188,7 +187,6 @@ class Transactions extends Component {
       filteredTransactions,
       account,
       coreConnected,
-      openModal,
       setTxsAccountFilter,
       accountOptions,
       minConfirmations,

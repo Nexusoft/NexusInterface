@@ -10,7 +10,7 @@ import {
   openConfirmDialog,
   openErrorDialog,
   openSuccessDialog,
-} from 'actions/overlays';
+} from 'lib/overlays';
 import rpc from 'lib/rpc';
 import { readModuleStorage, writeModuleStorage } from './storage';
 import { getModuleIfActive } from './utils';
@@ -205,63 +205,57 @@ async function rpcCall([command, params, callId]) {
 
 function showNotif([options = {}]) {
   const { content, type, autoClose } = options;
-  store.dispatch(showNotification(content, { content, type, autoClose }));
+  showNotification(content, { content, type, autoClose });
 }
 
 function showErrorDialog([options = {}]) {
   const { message, note } = options;
-  store.dispatch(
-    openErrorDialog({
-      message,
-      note,
-    })
-  );
+  openErrorDialog({
+    message,
+    note,
+  });
 }
 
 function showSuccessDialog([options = {}]) {
   const { message, note } = options;
-  store.dispatch(
-    openSuccessDialog({
-      message,
-      note,
-    })
-  );
+  openSuccessDialog({
+    message,
+    note,
+  });
 }
 
 function confirm([options = {}, confirmationId]) {
   const { question, note, labelYes, skinYes, labelNo, skinNo } = options;
-  store.dispatch(
-    openConfirmDialog({
-      question,
-      note,
-      labelYes,
-      skinYes,
-      callbackYes: () => {
-        console.log(
-          'yes',
-          `confirm-answer${confirmationId ? `:${confirmationId}` : ''}`
+  openConfirmDialog({
+    question,
+    note,
+    labelYes,
+    skinYes,
+    callbackYes: () => {
+      console.log(
+        'yes',
+        `confirm-answer${confirmationId ? `:${confirmationId}` : ''}`
+      );
+      const { webview } = store.getState();
+      if (webview) {
+        webview.send(
+          `confirm-answer${confirmationId ? `:${confirmationId}` : ''}`,
+          true
         );
-        const { webview } = store.getState();
-        if (webview) {
-          webview.send(
-            `confirm-answer${confirmationId ? `:${confirmationId}` : ''}`,
-            true
-          );
-        }
-      },
-      labelNo,
-      skinNo,
-      callbackNo: () => {
-        const { webview } = store.getState();
-        if (webview) {
-          webview.send(
-            `confirm-answer${confirmationId ? `:${confirmationId}` : ''}`,
-            false
-          );
-        }
-      },
-    })
-  );
+      }
+    },
+    labelNo,
+    skinNo,
+    callbackNo: () => {
+      const { webview } = store.getState();
+      if (webview) {
+        webview.send(
+          `confirm-answer${confirmationId ? `:${confirmationId}` : ''}`,
+          false
+        );
+      }
+    },
+  });
 }
 
 function updateState([moduleState]) {

@@ -11,7 +11,7 @@ import Button from 'components/Button';
 import TextField from 'components/TextField';
 import Tooltip from 'components/Tooltip';
 import MyAddressesModal from 'components/MyAddressesModal';
-import { openModal } from 'actions/overlays';
+import { openModal } from 'lib/overlays';
 import { isCoreConnected } from 'selectors';
 import AddEditContactModal from 'components/AddEditContactModal';
 
@@ -70,13 +70,10 @@ class SearchBox extends Component {
  * @class PanelControls
  * @extends {Component}
  */
-@connect(
-  state => ({
-    addressBook: state.addressBook,
-    coreConnected: isCoreConnected(state),
-  }),
-  { openModal }
-)
+@connect(state => ({
+  addressBook: state.addressBook,
+  coreConnected: isCoreConnected(state),
+}))
 class PanelControls extends Component {
   /**
    * Export the Address Book to a CSV File
@@ -140,7 +137,7 @@ class PanelControls extends Component {
    * @memberof PanelControls
    */
   showAddContact = () => {
-    this.props.openModal(AddEditContactModal);
+    openModal(AddEditContactModal);
   };
 
   /**
@@ -149,7 +146,7 @@ class PanelControls extends Component {
    * @memberof PanelControls
    */
   showMyAddresses = () => {
-    this.props.openModal(MyAddressesModal);
+    openModal(MyAddressesModal);
   };
 
   /**

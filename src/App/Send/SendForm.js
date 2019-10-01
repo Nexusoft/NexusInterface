@@ -13,14 +13,7 @@ import Button from 'components/Button';
 import TextField from 'components/TextField';
 import Select from 'components/Select';
 import FormField from 'components/FormField';
-import {
-  openConfirmDialog,
-  openErrorDialog,
-  openSuccessDialog,
-  removeModal,
-  openModal,
-} from 'actions/overlays';
-import Link from 'components/Link';
+import { openConfirmDialog, openSuccessDialog, openModal } from 'lib/overlays';
 import { errorHandler } from 'utils/form';
 import sendIcon from 'images/send.sprite.svg';
 
@@ -81,11 +74,6 @@ const mapStateToProps = state => {
 const mapDispatchToProps = {
   loadMyAccounts,
   updateAccountBalances,
-  openConfirmDialog,
-  openErrorDialog,
-  openSuccessDialog,
-  removeModal,
-  openModal,
 };
 
 /**
@@ -208,7 +196,7 @@ const mapDispatchToProps = {
   onSubmitSuccess: (result, dispatch, props) => {
     props.reset();
     props.loadMyAccounts();
-    props.openSuccessDialog({
+    openSuccessDialog({
       message: __('Transaction sent'),
     });
   },
@@ -252,7 +240,7 @@ class SendForm extends Component {
     // if (locked) {
     //   const {
     //     payload: { id: modalId },
-    //   } = this.props.openErrorDialog({
+    //   } = openErrorDialog({
     //     message: 'You are not logged in',
     //     note: (
     //       <>
@@ -264,7 +252,7 @@ class SendForm extends Component {
     //         <Link
     //           to="/Settings/Security"
     //           onClick={() => {
-    //             this.props.removeModal(modalId);
+    //             removeModal(modalId);
     //           }}
     //         >
     //           {__('Log in now')}
@@ -275,11 +263,11 @@ class SendForm extends Component {
     //   return;
     // }
 
-    this.props.openConfirmDialog({
+    openConfirmDialog({
       question: __('Send transaction?'),
       callbackYes: () => {
         if (locked || minting_only) {
-          this.props.openModal(PasswordModal, {
+          openModal(PasswordModal, {
             onSubmit: password => {
               this.props.change('password', password);
               // change function seems to be asynchronous

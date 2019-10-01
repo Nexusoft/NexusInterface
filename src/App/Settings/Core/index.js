@@ -9,7 +9,7 @@ import styled from '@emotion/styled';
 // Internal
 import { switchSettingsTab } from 'actions/ui';
 import { stopCore, startCore, restartCore } from 'actions/core';
-import { showNotification, openConfirmDialog } from 'actions/overlays';
+import { showNotification, openConfirmDialog } from 'lib/overlays';
 import { updateSettings, updateTempSettings } from 'actions/settings';
 import WaitingMessage from 'components/WaitingMessage';
 import SettingsField from 'components/SettingsField';
@@ -53,8 +53,6 @@ const actionCreators = {
   updateSettings,
   updateTempSettings,
   switchSettingsTab,
-  openConfirmDialog,
-  showNotification,
   stopCore,
   startCore,
   restartCore,
@@ -125,7 +123,7 @@ const actionCreators = {
     }
   },
   onSubmitSuccess: (result, dispatch, props) => {
-    props.showNotification(__('Core settings saved'), 'success');
+    showNotification(__('Core settings saved'), 'success');
   },
   onSubmitFail: errorHandler('Error Saving Settings'),
 })
@@ -148,13 +146,7 @@ class SettingsCore extends Component {
    * @memberof SettingsCore
    */
   confirmSwitchManualDaemon = () => {
-    const {
-      settings,
-      openConfirmDialog,
-      stopCore,
-      startCore,
-      updateSettings,
-    } = this.props;
+    const { settings, stopCore, startCore, updateSettings } = this.props;
 
     if (settings.manualDaemon) {
       openConfirmDialog({
@@ -188,7 +180,7 @@ class SettingsCore extends Component {
    */
   restartCore = () => {
     this.props.restartCore();
-    this.props.showNotification(__('Core restarting'));
+    showNotification(__('Core restarting'));
   };
 
   /**
@@ -231,7 +223,7 @@ class SettingsCore extends Component {
    * @memberof SettingsCore
    */
   askForCoreRestart(yesCallback, noCallback) {
-    this.props.openConfirmDialog({
+    openConfirmDialog({
       question: __('Restart Core?'),
       note: __(
         'This setting change will only take effect after Core is restarted. Do you want to restart the Core now?'

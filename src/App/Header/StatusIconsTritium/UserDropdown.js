@@ -8,7 +8,7 @@ import LoginModal from 'components/LoginModal';
 import NewUserModal from 'components/NewUserModal';
 import MigrateStakeModal from 'components/MigrateStakeModal';
 import { isLoggedIn } from 'selectors';
-import { openModal, showNotification } from 'actions/overlays';
+import { openModal, showNotification } from 'lib/overlays';
 import { timing, animations, consts } from 'styles';
 import { apiPost } from 'lib/tritiumApi';
 import { logOutUser } from 'actions/user';
@@ -73,18 +73,18 @@ const Separator = styled.div(({ theme }) => ({
     currentUser: userStatus && userStatus.username,
     trustIsNew: stakeInfo && stakeInfo.new,
   }),
-  { logOutUser, openModal, showNotification }
+  { logOutUser }
 )
 class LoggedInDropdown extends React.Component {
   logout = async () => {
     this.props.closeDropdown();
     await apiPost('users/logout/user');
     this.props.logOutUser();
-    this.props.showNotification('Logged out');
+    showNotification('Logged out');
   };
 
   render() {
-    const { currentUser, closeDropdown, openModal, trustIsNew } = this.props;
+    const { currentUser, closeDropdown, trustIsNew } = this.props;
     return (
       <>
         <CurrentUser>
@@ -117,10 +117,7 @@ class LoggedInDropdown extends React.Component {
   }
 }
 
-const NotLoggedInDropdown = connect(
-  null,
-  { openModal }
-)(({ openModal, closeDropdown }) => (
+const NotLoggedInDropdown = ({ closeDropdown }) => (
   <>
     <MenuItem
       onClick={() => {
@@ -139,7 +136,7 @@ const NotLoggedInDropdown = connect(
       {__('Create new user')}
     </MenuItem>
   </>
-));
+);
 
 const UserDropdown = ({ loggedIn, closeDropdown, ...rest }) => (
   <UserDropdownComponent {...rest}>

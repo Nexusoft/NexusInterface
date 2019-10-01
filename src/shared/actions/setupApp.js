@@ -3,7 +3,7 @@ import Request from 'request';
 
 // Internal
 import * as TYPE from 'consts/actionTypes';
-import { openModal } from 'actions/overlays';
+import { openModal } from 'lib/overlays';
 import EncryptionWarningModal from 'components/EncryptionWarningModal';
 
 export const SetMarketAveData = () => dispatch => {
@@ -91,7 +91,7 @@ export const showEncryptionWarningModal = () => (dispatch, getState) => {
     !state.settings.encryptionWarningDisabled &&
     state.settings.acceptedAgreement
   ) {
-    dispatch(openModal(EncryptionWarningModal));
+    openModal(EncryptionWarningModal);
     dispatch({
       type: TYPE.SHOW_ENCRYPTION_MODAL,
     });

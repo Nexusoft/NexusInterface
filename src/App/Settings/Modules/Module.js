@@ -8,7 +8,7 @@ import ModuleIcon from 'components/ModuleIcon';
 import Switch from 'components/Switch';
 import Tooltip from 'components/Tooltip';
 import Icon from 'components/Icon';
-import { openConfirmDialog, openModal } from 'actions/overlays';
+import { openConfirmDialog, openModal } from 'lib/overlays';
 import ModuleDetailsModal from 'components/ModuleDetailsModal';
 import { isModuleActive } from 'lib/modules';
 import { timing } from 'styles';
@@ -72,8 +72,6 @@ const mapStateToProps = (state, props) => ({
 
 const actionCreators = {
   updateSettings,
-  openConfirmDialog,
-  openModal,
 };
 
 /**
@@ -120,7 +118,7 @@ class Module extends React.Component {
     const { module, active } = this.props;
     if (module.invalid) return;
     if (active) {
-      this.props.openConfirmDialog({
+      openConfirmDialog({
         question: __('Disable %{moduleName}?', {
           moduleName: module.displayName,
         }),
@@ -133,7 +131,7 @@ class Module extends React.Component {
         },
       });
     } else {
-      this.props.openConfirmDialog({
+      openConfirmDialog({
         question: __('Enable %{moduleName}?', {
           moduleName: module.displayName,
         }),
@@ -154,7 +152,7 @@ class Module extends React.Component {
    * @memberof Module
    */
   openModuleDetails = () => {
-    this.props.openModal(ModuleDetailsModal, {
+    openModal(ModuleDetailsModal, {
       module: this.props.module,
     });
   };

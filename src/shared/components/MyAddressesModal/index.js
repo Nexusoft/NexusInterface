@@ -14,7 +14,7 @@ import plusIcon from 'images/plus.sprite.svg';
 import Account from './Account';
 import NewAddressForm from './NewAddressForm';
 import Tooltip from 'components/Tooltip';
-import { showNotification } from 'actions/overlays';
+import { showNotification } from 'lib/overlays';
 import { loadMyAccounts, updateAccountBalances } from 'actions/account';
 import rpc from 'lib/rpc';
 
@@ -47,7 +47,7 @@ const Buttons = styled.div({
     locale: state.settings.locale,
     blockCount: state.core.info.blocks,
   }),
-  { showNotification, loadMyAccounts, updateAccountBalances }
+  { loadMyAccounts, updateAccountBalances }
 )
 class MyAddressesModal extends React.Component {
   state = {
@@ -80,10 +80,10 @@ class MyAddressesModal extends React.Component {
       await rpc('checkwallet', []);
     } catch (err) {
       console.log(err);
-      this.props.showNotification(__('Check wallet failed'), 'error');
+      showNotification(__('Check wallet failed'), 'error');
       return;
     }
-    this.props.showNotification(__('Check wallet pass'), 'success');
+    showNotification(__('Check wallet pass'), 'success');
   };
 
   /**

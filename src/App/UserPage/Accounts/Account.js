@@ -1,11 +1,10 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
 import Link from 'components/Link';
 import NexusAddress from 'components/NexusAddress';
 import { formatNumber } from 'lib/intl';
-import { openModal } from 'actions/overlays';
+import { openModal } from 'lib/overlays';
 
 import AccountDetailsModal from './AccountDetailsModal';
 import AccountHistoryModal from './AccountHistoryModal';
@@ -21,7 +20,7 @@ const AccountName = styled.span(({ theme }) => ({
   color: theme.foreground,
 }));
 
-const Account = ({ account, openModal }) => (
+const Account = ({ account }) => (
   <AccountComponent>
     <div className="flex space-between">
       <div>
@@ -52,11 +51,4 @@ const Account = ({ account, openModal }) => (
   </AccountComponent>
 );
 
-const actionCreators = {
-  openModal,
-};
-
-export default connect(
-  null,
-  actionCreators
-)(Account);
+export default Account;

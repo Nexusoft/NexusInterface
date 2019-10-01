@@ -8,7 +8,7 @@ import { toggleWebViewDevTools } from 'actions/webview';
 import { updateSettings } from 'actions/settings';
 import { startCore as startCoreAC, stopCore as stopCoreAC } from 'actions/core';
 import { backupWallet as backup } from 'lib/wallet';
-import { showNotification } from 'actions/overlays';
+import { showNotification } from 'lib/overlays';
 import { bootstrap } from 'actions/bootstrap';
 import { isCoreConnected } from 'selectors';
 import { legacyMode } from 'consts/misc';
@@ -83,7 +83,7 @@ const backupWallet = {
     });
 
     if (!isCoreConnected(state)) {
-      store.dispatch(showNotification(__('Nexus Core is not connected')));
+      showNotification(__('Nexus Core is not connected'));
       return;
     }
 
@@ -91,7 +91,7 @@ const backupWallet = {
       store.dispatch(updateSettings({ backupDirectory: folderPaths[0] }));
 
       await backup(folderPaths[0]);
-      store.dispatch(showNotification(__('Wallet backed up'), 'success'));
+      showNotification(__('Wallet backed up'), 'success');
     }
   },
 };
@@ -170,19 +170,15 @@ const downloadRecent = {
   click: () => {
     const state = store.getState();
     if (state.settings.manualDaemon) {
-      store.dispatch(
-        showNotification(
-          __('Cannot bootstrap recent database in manual mode'),
-          'error'
-        )
+      showNotification(
+        __('Cannot bootstrap recent database in manual mode'),
+        'error'
       );
       return;
     }
 
     if (!isCoreConnected(state)) {
-      store.dispatch(
-        showNotification(__('Please wait for Nexus Core to start.'))
-      );
+      showNotification(__('Please wait for Nexus Core to start.'));
       return;
     }
 
@@ -245,9 +241,7 @@ const updaterIdle = {
     // available because autoUpdater.checkForUpdates() doesn't return
     // any reliable results like a boolean `updateAvailable` property
     if (result.updateInfo.version === APP_VERSION) {
-      store.dispatch(
-        showNotification(__('There are currently no updates available'))
-      );
+      showNotification(__('There are currently no updates available'));
     }
   },
 };

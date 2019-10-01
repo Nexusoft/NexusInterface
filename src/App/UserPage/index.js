@@ -9,7 +9,7 @@ import GA from 'lib/googleAnalytics';
 import Button from 'components/Button';
 import Panel from 'components/Panel';
 import LoginModal from 'components/LoginModal';
-import { openModal } from 'actions/overlays';
+import { openModal } from 'lib/overlays';
 import AddEditContactModal from 'components/AddEditContactModal';
 import { isCoreConnected, isLoggedIn } from 'selectors';
 import ContextMenuBuilder from 'contextmenu';
@@ -33,18 +33,13 @@ const mapStateToProps = state => ({
   loggedIn: isLoggedIn(state),
 });
 
-const actionCreators = { openModal };
-
 /**
  * The Address Book Page
  *
  * @class UserPage
  * @extends {Component}
  */
-@connect(
-  mapStateToProps,
-  actionCreators
-)
+@connect(mapStateToProps)
 class UserPage extends Component {
   state = {
     activeIndex: 0,
@@ -89,7 +84,7 @@ class UserPage extends Component {
    * @memberof UserPage
    */
   showAddContact = () => {
-    this.props.openModal(AddEditContactModal);
+    openModal(AddEditContactModal);
   };
 
   /**
@@ -99,7 +94,7 @@ class UserPage extends Component {
    * @memberof UserPage
    */
   render() {
-    const { loggedIn, openModal, match } = this.props;
+    const { loggedIn, match } = this.props;
 
     return (
       <Panel icon={userIcon} title={__('User')} bodyScrollable={false}>

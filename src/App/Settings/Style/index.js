@@ -16,7 +16,7 @@ import Button from 'components/Button';
 import Switch from 'components/Switch';
 import Select from 'components/Select';
 import Icon from 'components/Icon';
-import { showNotification } from 'actions/overlays';
+import { showNotification } from 'lib/overlays';
 import NexusAddress from 'components/NexusAddress';
 import warningIcon from 'images/warning.sprite.svg';
 import { walletDataDir } from 'consts/paths';
@@ -64,7 +64,6 @@ const mapDispatchToProps = dispatch => ({
   updateTheme: updates => dispatch(updateTheme(updates)),
   resetColors: () => dispatch(resetColors()),
   switchSettingsTab: tab => dispatch(switchSettingsTab(tab)),
-  showNotification: (...args) => dispatch(showNotification(...args)),
 });
 
 const addressStyleOptions = [
@@ -207,10 +206,7 @@ class SettingsStyle extends Component {
   resetColors = () => {
     //Dont think we need this anymore
     this.props.resetColors();
-    this.props.showNotification(
-      __('Color scheme has been reset to default'),
-      'success'
-    );
+    showNotification(__('Color scheme has been reset to default'), 'success');
   };
 
   /**
@@ -254,7 +250,7 @@ class SettingsStyle extends Component {
           });
       }
     } catch (err) {
-      this.props.showNotification(
+      showNotification(
         __('Invalid file format! Custom theme file must be in JSON'),
         'error'
       );
@@ -301,9 +297,9 @@ class SettingsStyle extends Component {
         fs.copyFile(walletDataDir + '/theme.json', path, err => {
           if (err) {
             console.error(err);
-            this.props.showNotification(err, 'error');
+            showNotification(err, 'error');
           }
-          this.props.showNotification(__('Theme exported'), 'success');
+          showNotification(__('Theme exported'), 'success');
         });
       }
     );
@@ -343,10 +339,7 @@ class SettingsStyle extends Component {
   pressResetTheme = () => {
     this.props.updateTheme(DarkTheme);
     this.setThemeSelector(0);
-    this.props.showNotification(
-      __('Theme has been reset to default'),
-      'success'
-    );
+    showNotification(__('Theme has been reset to default'), 'success');
   };
 
   /**

@@ -1,5 +1,4 @@
-import store from 'store';
-import { openErrorDialog } from 'actions/overlays';
+import { openErrorDialog } from 'lib/overlays';
 
 export function resolveValue(input) {
   if (input && input.target) {
@@ -16,12 +15,10 @@ export function resolveValue(input) {
 }
 
 export function handleError(error, message = __('Error')) {
-  store.dispatch(
-    openErrorDialog({
-      message,
-      note: (error && error.message) || __('Unknown error'),
-    })
-  );
+  openErrorDialog({
+    message,
+    note: (error && error.message) || __('Unknown error'),
+  });
 }
 
 export function errorHandler(message) {

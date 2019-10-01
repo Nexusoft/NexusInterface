@@ -17,7 +17,7 @@ import {
   openConfirmDialog,
   openErrorDialog,
   showNotification,
-} from 'actions/overlays';
+} from 'lib/overlays';
 import * as color from 'utils/color';
 import * as form from 'utils/form';
 import { isCoreConnected } from 'selectors';
@@ -69,9 +69,6 @@ const mapStateToProps = state => ({
 const actionCreators = {
   updateSettings,
   switchSettingsTab,
-  openConfirmDialog,
-  openErrorDialog,
-  showNotification,
 };
 
 /**
@@ -100,17 +97,14 @@ class SettingsApp extends Component {
    * @memberof SettingsApp
    */
   confirmBackupWallet = () => {
-    this.props.openConfirmDialog({
+    openConfirmDialog({
       question: __('Backup wallet'),
       callbackYes: () => {
         if (this.props.coreConnected) {
           backupWallet(this.props.settings.backupDirectory);
-          this.props.showNotification(
-            __('Wallet has been backed up'),
-            'success'
-          );
+          showNotification(__('Wallet has been backed up'), 'success');
         } else {
-          this.props.openErrorDialog({
+          openErrorDialog({
             message: __('Connecting to Nexus Core'),
           });
         }
@@ -125,7 +119,7 @@ class SettingsApp extends Component {
    */
   toggleVerifyModuleSource = e => {
     if (e.target.checked) {
-      this.props.openConfirmDialog({
+      openConfirmDialog({
         question: __('Turn module open source policy on?'),
         note: __(
           'All modules without open source verifications, possibly including your own under-development modules, will become invalid. Wallet must be refreshed for the change to take effect.'
@@ -136,7 +130,7 @@ class SettingsApp extends Component {
         },
       });
     } else {
-      this.props.openConfirmDialog({
+      openConfirmDialog({
         question: __('Turn module open source policy off?'),
         note: (
           <div>
@@ -191,7 +185,7 @@ class SettingsApp extends Component {
    */
   handleAutoUpdateChange = e => {
     if (!e.target.checked) {
-      this.props.openConfirmDialog({
+      openConfirmDialog({
         question: __('Are you sure you want to disable auto update?'),
         note: __(
           'Keeping your wallet up-to-date is important for your security and will ensure that you get the best possible user experience.'

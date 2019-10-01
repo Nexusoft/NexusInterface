@@ -8,7 +8,7 @@ import MigrateStakeModal from 'components/MigrateStakeModal';
 import { switchUserTab } from 'actions/ui';
 import { updateSettings } from 'actions/settings';
 import { restartCore } from 'actions/core';
-import { openModal } from 'actions/overlays';
+import { openModal } from 'lib/overlays';
 import confirm from 'utils/promisified/confirm';
 import { formatNumber, formatDateTime } from 'lib/intl';
 
@@ -51,7 +51,7 @@ const Pending = styled.div({
     stakeInfo: state.core.stakeInfo,
     stakingEnabled: state.settings.enableStaking,
   }),
-  { switchUserTab, updateSettings, restartCore, openModal }
+  { switchUserTab, updateSettings, restartCore }
 )
 export default class Staking extends React.Component {
   constructor(props) {
@@ -74,7 +74,7 @@ export default class Staking extends React.Component {
   };
 
   render() {
-    const { stakeInfo, stakingEnabled, openModal } = this.props;
+    const { stakeInfo, stakingEnabled } = this.props;
 
     return (
       !!stakeInfo && (

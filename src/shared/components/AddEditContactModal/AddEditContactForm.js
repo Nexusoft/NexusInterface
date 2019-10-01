@@ -10,7 +10,7 @@ import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import Select from 'components/Select';
 import Button from 'components/Button';
-import { showNotification } from 'actions/overlays';
+import { showNotification } from 'lib/overlays';
 import { emailRegex } from 'utils/form';
 import timeZones from 'data/timeZones';
 import Addresses from './Addresses';
@@ -27,7 +27,6 @@ const mapStateToProps = state => ({
 const actionCreators = {
   addNewContact,
   updateContact,
-  showNotification,
 };
 
 function validateAddresses(addresses) {
@@ -153,9 +152,9 @@ function asyncValidateAddresses(isMine, addresses, errors) {
     props.destroy();
     props.closeModal();
     if (props.edit) {
-      props.showNotification(__('Contact has been updated'), 'success');
+      showNotification(__('Contact has been updated'), 'success');
     } else {
-      props.showNotification(
+      showNotification(
         __('New contact has been added to address book'),
         'success'
       );

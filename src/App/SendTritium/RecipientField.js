@@ -9,7 +9,7 @@ import AutoSuggest from 'components/AutoSuggest';
 import FormField from 'components/FormField';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
-import { openModal } from 'actions/overlays';
+import { openModal } from 'lib/overlays';
 import AddEditContactModal from 'components/AddEditContactModal';
 import plusIcon from 'images/plus.sprite.svg';
 import { getAddressNameMap, getRecipientSuggestions } from './selectors';
@@ -43,18 +43,13 @@ const mapStateToProps = ({ addressBook, core }) => ({
   addressNameMap: getAddressNameMap(addressBook, core.accounts),
 });
 
-const actionCreators = { openModal };
-
 /**
  * The Recipient Field in the Send Page
  *
  * @class RecipientField
  * @extends {Component}
  */
-@connect(
-  mapStateToProps,
-  actionCreators
-)
+@connect(mapStateToProps)
 class RecipientField extends Component {
   /**
    *Handle Select Address
@@ -71,7 +66,7 @@ class RecipientField extends Component {
    * @memberof RecipientField
    */
   createContact = () => {
-    this.props.openModal(AddEditContactModal);
+    openModal(AddEditContactModal);
   };
 
   returnFilteredSuggestions(suggestions) {

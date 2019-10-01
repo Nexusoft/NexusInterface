@@ -2,7 +2,7 @@ import store, { observeStore } from 'store';
 import rpc from 'lib/rpc';
 import { isCoreConnected, isLoggedIn } from 'selectors';
 import { loadMyAccounts } from 'actions/account';
-import { showNotification, openModal } from 'actions/overlays';
+import { showNotification, openModal } from 'lib/overlays';
 import { bootstrap } from 'actions/bootstrap';
 import { updateBlockDate } from 'actions/setupApp';
 import { getInfo, getUserStatus } from 'actions/core';
@@ -86,27 +86,19 @@ export function initializeCoreInfo() {
             switch (mostRecentTx.category) {
               case 'receive':
                 showDesktopNotif('Received', mostRecentTx.amount + ' NXS');
-                store.dispatch(
-                  showNotification(__('Transaction received'), 'success')
-                );
+                showNotification(__('Transaction received'), 'success');
                 break;
               case 'send':
                 showDesktopNotif('Sent', mostRecentTx.amount + ' NXS');
-                store.dispatch(
-                  showNotification(__('Transaction sent'), 'success')
-                );
+                showNotification(__('Transaction sent'), 'success');
                 break;
               case 'genesis':
                 showDesktopNotif('Genesis', mostRecentTx.amount + ' NXS');
-                store.dispatch(
-                  showNotification(__('Genesis transaction'), 'success')
-                );
+                showNotification(__('Genesis transaction'), 'success');
                 break;
               case 'trust':
                 showDesktopNotif('Trust', mostRecentTx.amount + ' NXS');
-                store.dispatch(
-                  showNotification(__('Trust transaction'), 'success')
-                );
+                showNotification(__('Trust transaction'), 'success');
                 break;
             }
           }
@@ -150,7 +142,7 @@ export function initializeCoreInfo() {
           if (justConnected) {
             justConnected = false;
             if (!isLoggedIn(store.getState())) {
-              store.dispatch(openModal(LoginModal));
+              openModal(LoginModal);
             }
           }
         }
