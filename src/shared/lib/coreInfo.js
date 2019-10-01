@@ -6,7 +6,7 @@ import { showNotification, openModal } from 'lib/overlays';
 import { bootstrap } from 'actions/bootstrap';
 import { updateBlockDate } from 'actions/setupApp';
 import { getInfo, getUserStatus } from 'actions/core';
-import showDesktopNotif from 'utils/showDesktopNotif';
+import { showDesktopNotif } from 'utils/misc';
 import { showEncryptionWarningModal } from 'actions/setupApp';
 import LoginModal from 'components/LoginModal';
 import { legacyMode } from 'consts/misc';

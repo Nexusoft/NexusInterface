@@ -7,7 +7,7 @@ import {
   updateTritiumTransaction,
 } from 'actions/transactions';
 import { listAccounts } from 'actions/core';
-import showDesktopNotif from 'utils/showDesktopNotif';
+import { showDesktopNotif } from 'utils/misc';
 import { formatNumber } from 'lib/intl';
 import { showNotification } from 'lib/overlays';
 
