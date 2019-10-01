@@ -179,7 +179,7 @@ const mapDispatchToProps = {
 
     const isAddress =
       recipientInputSize === 51 &&
-      recipients[0].address.match(/([0OIL+/])/g) === null;
+      recipients[0].address.match(/([0OIl+/])/g) === null;
 
     if (isAddress) {
       if (
@@ -235,7 +235,7 @@ const mapDispatchToProps = {
       const recipientInputSize = new Blob([recipients[0].address]).size;
       const isAddress =
         recipientInputSize === 51 &&
-        recipients[0].address.match(/([0OIL+/])/g) === null;
+        recipients[0].address.match(/([0OIl+/])/g) === null;
 
       isAddress
         ? (params.address_to = recipients[0].address)
