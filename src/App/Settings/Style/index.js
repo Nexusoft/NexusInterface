@@ -8,7 +8,7 @@ import https from 'https';
 
 // Internal
 import GA from 'lib/googleAnalytics';
-import { updateSettings } from 'actions/settings';
+import { updateSettings } from 'lib/settings';
 import { updateTheme, resetColors } from 'actions/theme';
 import { switchSettingsTab } from 'actions/ui';
 import SettingsField from 'components/SettingsField';
@@ -53,14 +53,16 @@ const mapStateToProps = ({
     overviewDisplay,
   };
 };
+
+const setRenderGlobe = renderGlobe => updateSettings({ renderGlobe });
+const setOverviewDisplay = overviewDisplay =>
+  updateSettings({ overviewDisplay });
+const setAddressStyle = addressStyle => {
+  GA.SendEvent('Settings', 'Style', 'setAddressStyle', addressStyle);
+  updateSettings({ addressStyle });
+};
+
 const mapDispatchToProps = dispatch => ({
-  setRenderGlobe: renderGlobe => dispatch(updateSettings({ renderGlobe })),
-  setOverviewDisplay: overviewDisplay =>
-    dispatch(updateSettings({ overviewDisplay })),
-  setAddressStyle: addressStyle => {
-    GA.SendEvent('Settings', 'Style', 'setAddressStyle', addressStyle);
-    dispatch(updateSettings({ addressStyle }));
-  },
   updateTheme: updates => dispatch(updateTheme(updates)),
   resetColors: () => dispatch(resetColors()),
   switchSettingsTab: tab => dispatch(switchSettingsTab(tab)),
@@ -157,7 +159,7 @@ class SettingsStyle extends Component {
    * @memberof SettingsStyle
    */
   toggleGlobeRender = e => {
-    this.props.setRenderGlobe(e.target.checked);
+    setRenderGlobe(e.target.checked);
   };
 
   /**
@@ -376,14 +378,7 @@ class SettingsStyle extends Component {
    * @memberof SettingsStyle
    */
   render() {
-    const {
-      theme,
-      renderGlobe,
-      addressStyle,
-      setAddressStyle,
-      overviewDisplay,
-      setOverviewDisplay,
-    } = this.props;
+    const { theme, renderGlobe, addressStyle, overviewDisplay } = this.props;
 
     return (
       <>

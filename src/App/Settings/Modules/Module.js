@@ -12,7 +12,7 @@ import { openConfirmDialog, openModal } from 'lib/overlays';
 import ModuleDetailsModal from 'components/ModuleDetailsModal';
 import { isModuleActive } from 'lib/modules';
 import { timing } from 'styles';
-import { updateSettings } from 'actions/settings';
+import { updateSettings } from 'lib/settings';
 import warningIcon from 'images/warning.sprite.svg';
 
 const ModuleComponent = styled.div(
@@ -70,20 +70,13 @@ const mapStateToProps = (state, props) => ({
   disabledModules: state.settings.disabledModules,
 });
 
-const actionCreators = {
-  updateSettings,
-};
-
 /**
  * Each Module On the list of installed modules
  *
  * @class Module
  * @extends {React.Component}
  */
-@connect(
-  mapStateToProps,
-  actionCreators
-)
+@connect(mapStateToProps)
 class Module extends React.Component {
   /**
    * Enable this module
@@ -91,7 +84,7 @@ class Module extends React.Component {
    * @memberof Module
    */
   enableModule = () => {
-    this.props.updateSettings({
+    updateSettings({
       disabledModules: this.props.disabledModules.filter(
         moduleName => moduleName !== this.props.module.name
       ),
@@ -104,7 +97,7 @@ class Module extends React.Component {
    * @memberof Module
    */
   disableModule = () => {
-    this.props.updateSettings({
+    updateSettings({
       disabledModules: [...this.props.disabledModules, this.props.module.name],
     });
   };

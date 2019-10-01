@@ -1,14 +1,13 @@
 import React from 'react';
-import { connect } from 'react-redux';
 
 import Modal from 'components/Modal';
 import Button from 'components/Button';
 import Link from 'components/Link';
 import Icon from 'components/Icon';
-import { updateSettings } from 'actions/settings';
+import { updateSettings } from 'lib/settings';
 import logoIcon from 'images/logo.sprite.svg';
 
-const TritiumUpgradeModal = ({ updateSettings }) => (
+const TritiumUpgradeModal = () => (
   <Modal>
     {closeModal => (
       <>
@@ -66,9 +65,4 @@ const TritiumUpgradeModal = ({ updateSettings }) => (
   </Modal>
 );
 
-const actionCreators = { updateSettings };
-
-export default connect(
-  null,
-  actionCreators
-)(TritiumUpgradeModal);
+export default TritiumUpgradeModal;

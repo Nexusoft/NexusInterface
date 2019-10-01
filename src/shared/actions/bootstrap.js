@@ -1,6 +1,6 @@
 import * as TYPE from 'consts/actionTypes';
 import { openConfirmDialog, openModal, openErrorDialog } from 'lib/overlays';
-import { updateSettings } from 'actions/settings';
+import { updateSettings } from 'lib/settings';
 import { startBootstrap, checkFreeSpaceForBootstrap } from 'lib/bootstrap';
 import BootstrapModal from 'components/BootstrapModal';
 
@@ -50,11 +50,9 @@ export function bootstrap({ suggesting } = {}) {
       skinNo: suggesting ? 'danger' : undefined,
       callbackNo: () => {
         if (suggesting) {
-          dispatch(
-            updateSettings({
-              bootstrapSuggestionDisabled: true,
-            })
-          );
+          updateSettings({
+            bootstrapSuggestionDisabled: true,
+          });
         }
         dispatch(setBootstrapStatus('idle'));
       },

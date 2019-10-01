@@ -10,7 +10,7 @@ import styled from '@emotion/styled';
 import { switchSettingsTab } from 'actions/ui';
 import { stopCore, startCore, restartCore } from 'actions/core';
 import { showNotification, openConfirmDialog } from 'lib/overlays';
-import { updateSettings, updateTempSettings } from 'actions/settings';
+import { updateSettings, updateTempSettings } from 'lib/settings';
 import WaitingMessage from 'components/WaitingMessage';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
@@ -50,8 +50,6 @@ const mapStateToProps = state => {
   };
 };
 const actionCreators = {
-  updateSettings,
-  updateTempSettings,
   switchSettingsTab,
   stopCore,
   startCore,
@@ -113,7 +111,7 @@ const actionCreators = {
     props
   ) => {
     if (props.settings.manualDaemon) {
-      props.updateSettings({
+      updateSettings({
         manualDaemonUser,
         manualDaemonPassword,
         manualDaemonIP,
@@ -146,7 +144,7 @@ class SettingsCore extends Component {
    * @memberof SettingsCore
    */
   confirmSwitchManualDaemon = () => {
-    const { settings, stopCore, startCore, updateSettings } = this.props;
+    const { settings, stopCore, startCore } = this.props;
 
     if (settings.manualDaemon) {
       openConfirmDialog({
@@ -243,7 +241,7 @@ class SettingsCore extends Component {
    */
   updateMiningWhitelist(input) {
     const output = resolveValue(input).replace(' ', '');
-    this.props.updateTempSettings({
+    updateTempSettings({
       ipMineWhitelist: output,
     });
   }
@@ -258,10 +256,10 @@ class SettingsCore extends Component {
     return settingName => {
       if (!handlers[settingName]) {
         handlers[settingName] = input =>
-          /*this.props.updateSettings({
+          /*updateSettings({
             [settingName]: resolveValue(input),
           }); */
-          this.props.updateTempSettings({
+          updateTempSettings({
             [settingName]: resolveValue(input),
           });
       }
@@ -276,7 +274,7 @@ class SettingsCore extends Component {
         'Nexus Core will be restarted, after that, it will take a while for the transaction history to be reloaded',
     });
     if (confirmed) {
-      this.props.updateSettings({ walletClean: true });
+      updateSettings({ walletClean: true });
       this.props.restartCore();
     }
   };
@@ -334,7 +332,7 @@ class SettingsCore extends Component {
                 onClick={() => {
                   this.askForCoreRestart(
                     () => {
-                      this.props.updateSettings({
+                      updateSettings({
                         ...this.props.settings.tempSettings,
                       });
                       this.restartCore();

@@ -10,7 +10,10 @@ import fs from 'fs-extra';
 
 // Internal
 import { coreDataDir, assetsDir } from 'consts/paths';
-import { LoadSettings, UpdateSettings } from 'lib/universal/settings';
+import {
+  loadSettingsFromFile,
+  updateSettingsFile,
+} from 'lib/universal/settings';
 import { debounced } from 'utils/universal';
 
 import core from './core';
@@ -86,7 +89,7 @@ function setupTray(mainWindow) {
 //
 
 function createWindow() {
-  const settings = LoadSettings();
+  const settings = loadSettingsFromFile();
   const fileName =
     process.platform == 'darwin' ? 'nexuslogo.ico' : 'Nexus_App_Icon_64.png';
   const iconPath = path.join(assetsDir, 'tray', fileName);
@@ -137,7 +140,7 @@ function createWindow() {
   const updateWindowSize = debounced(() => {
     const bounds = mainWindow.getBounds();
     // Resize event has been completed
-    UpdateSettings({
+    updateSettingsFile({
       windowWidth: bounds.width,
       windowHeight: bounds.height,
     });
@@ -146,7 +149,7 @@ function createWindow() {
 
   const updateWindowPos = debounced(() => {
     const bounds = mainWindow.getBounds();
-    UpdateSettings({
+    updateSettingsFile({
       windowX: bounds.x,
       windowY: bounds.y,
     });
@@ -174,7 +177,7 @@ async function backUpQT() {
     '__db.004',
     '__db.005',
   ];
-  const settings = LoadSettings();
+  const settings = loadSettingsFromFile();
   if (settings.acceptedAgreement) {
     return;
   }
@@ -229,7 +232,7 @@ if (!gotTheLock) {
     createWindow();
     global.core.start();
 
-    const settings = LoadSettings();
+    const settings = loadSettingsFromFile();
     if (
       process.env.NODE_ENV === 'development' ||
       process.env.DEBUG_PROD === 'true' ||

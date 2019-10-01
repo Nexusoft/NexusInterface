@@ -1,11 +1,15 @@
 import GA from 'lib/googleAnalytics';
-import { UpdateSettings, UpdateTempSettings } from 'lib/universal/settings';
+import {
+  updateSettingsFile,
+  updateTempSettings as updateTempSettingsRaw,
+} from 'lib/universal/settings';
 import * as TYPE from 'consts/actionTypes';
+import store from 'store';
 
-export const updateSettings = updates => (dispatch, getState) => {
-  const oldState = getState();
-  dispatch({ type: TYPE.UPDATE_SETTINGS, payload: updates });
-  UpdateSettings(updates);
+export const updateSettings = updates => {
+  const oldState = store.getState();
+  store.dispatch({ type: TYPE.UPDATE_SETTINGS, payload: updates });
+  updateSettingsFile(updates);
 
   if (updates.sendUsageData !== undefined) {
     const {
@@ -22,9 +26,9 @@ export const updateSettings = updates => (dispatch, getState) => {
   }
 };
 
-export const updateTempSettings = updates => (dispatch, getState) => {
-  const oldState = getState();
+export const updateTempSettings = updates => {
+  const oldState = store.getState();
   const tempSettings = { ...oldState.settings.tempSettings, ...updates };
-  dispatch({ type: TYPE.UPDATE_TEMP_SETTINGS, payload: tempSettings });
-  UpdateTempSettings(tempSettings);
+  store.dispatch({ type: TYPE.UPDATE_TEMP_SETTINGS, payload: tempSettings });
+  updateTempSettingsRaw(tempSettings);
 };

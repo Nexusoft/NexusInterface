@@ -5,7 +5,10 @@ import path from 'path';
 import axios from 'axios';
 
 import { assetsByPlatformDir } from 'consts/paths';
-import { LoadSettings, UpdateSettings } from 'lib/universal/settings';
+import {
+  loadSettingsFromFile,
+  updateSettingsFile,
+} from 'lib/universal/settings';
 import { customConfig, loadNexusConf } from 'lib/universal/coreConfig';
 import exec from 'utils/promisified/exec';
 import sleep from 'utils/promisified/sleep';
@@ -108,7 +111,7 @@ class Core {
    * @memberof Core
    */
   start = async () => {
-    const settings = LoadSettings();
+    const settings = loadSettingsFromFile();
     const corePID = await getCorePID();
     this._config = null;
 
@@ -161,7 +164,7 @@ class Core {
       !APP_VERSION.toString().includes('alpha') &&
       !APP_VERSION.toString().includes('beta')
     ) {
-      UpdateSettings({ alphaTestNet: null });
+      updateSettingsFile({ alphaTestNet: null });
       //Or Remove setting all together?
     } else {
       params.push(`-testnet=${settings.alphaTestNet || 19}`);
@@ -170,11 +173,11 @@ class Core {
     //After core forksblocks clear out that field.
     if (settings.forkBlocks) {
       params.push('-forkblocks=' + settings.forkBlocks);
-      UpdateSettings({ forkBlocks: 0 });
+      updateSettingsFile({ forkBlocks: 0 });
     }
     if (settings.walletClean) {
       params.push('-walletclean');
-      UpdateSettings({ walletClean: false });
+      updateSettingsFile({ walletClean: false });
     }
     //Avatar is default so only add it if it is off.
     if (!settings.avatarMode) {
@@ -221,7 +224,7 @@ class Core {
    */
   stop = async () => {
     log.info('Core Manager: Stop function called');
-    const settings = LoadSettings();
+    const settings = loadSettingsFromFile();
 
     let corePID;
     corePID = await getCorePID();

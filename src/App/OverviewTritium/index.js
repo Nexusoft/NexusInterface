@@ -12,7 +12,6 @@ import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import ContextMenuBuilder from 'contextmenu';
 import { getMiningInfo, getBalances } from 'actions/core';
-import { updateSettings } from 'actions/settings';
 import { formatNumber, formatCurrency, formatRelativeTime } from 'lib/intl';
 import { timing, consts } from 'styles';
 import { isCoreConnected, isSynchronized } from 'selectors';
@@ -23,7 +22,6 @@ import { webGLAvailable } from 'consts/misc';
 // Images
 import logoIcon from 'images/NXS_coin.sprite.svg';
 import { CurrencyIcon } from 'images/CurrencyIcons';
-import transactionIcon from 'images/transaction.sprite.svg';
 import chartIcon from 'images/chart.sprite.svg';
 import supplyIcon from 'images/supply.sprite.svg';
 import hours24Icon from 'images/24hr.sprite.svg';
@@ -124,7 +122,6 @@ const mapStateToProps = state => {
 const actionCreators = {
   getMiningInfo,
   getBalances,
-  updateSettings,
 };
 
 const OverviewPage = styled.div({

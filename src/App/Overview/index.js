@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import * as TYPE from 'consts/actionTypes';
 import { remote } from 'electron';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/core';
@@ -13,7 +12,7 @@ import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import ContextMenuBuilder from 'contextmenu';
 import { getDifficulty } from 'actions/core';
-import { updateSettings } from 'actions/settings';
+import { updateSettings } from 'lib/settings';
 import { formatNumber, formatCurrency, formatRelativeTime } from 'lib/intl';
 import { timing, consts } from 'styles';
 import { isCoreConnected } from 'selectors';
@@ -134,7 +133,6 @@ const mapStateToProps = state => {
 };
 const mapDispatchToProps = dispatch => ({
   getDifficulty: () => dispatch(getDifficulty()),
-  updateSettings: updates => dispatch(updateSettings(updates)),
 });
 
 const OverviewPage = styled.div({
@@ -756,7 +754,7 @@ class Overview extends Component {
         <Stats left compact={!this.showingGlobe()}>
           <Stat
             onClick={() => {
-              this.props.updateSettings({
+              updateSettings({
                 displayFiatBalance: !settings.displayFiatBalance,
               });
             }}

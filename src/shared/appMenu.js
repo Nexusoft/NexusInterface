@@ -5,7 +5,7 @@ import fs from 'fs';
 // Internal
 import store, { observeStore, history } from 'store';
 import { toggleWebViewDevTools } from 'actions/webview';
-import { updateSettings } from 'actions/settings';
+import { updateSettings } from 'lib/settings';
 import { startCore as startCoreAC, stopCore as stopCoreAC } from 'actions/core';
 import { backupWallet as backup } from 'lib/wallet';
 import { showNotification } from 'lib/overlays';
@@ -29,7 +29,7 @@ const switchLegacyMode = {
       skinYes: 'danger',
     });
     if (confirmed) {
-      store.dispatch(updateSettings({ legacyMode: true }));
+      updateSettings({ legacyMode: true });
       location.reload();
     }
   },
@@ -38,7 +38,7 @@ const switchLegacyMode = {
 const switchTritiumMode = {
   label: __('Switch to Tritium Mode'),
   click: () => {
-    store.dispatch(updateSettings({ legacyMode: false }));
+    updateSettings({ legacyMode: false });
     location.reload();
   },
 };
@@ -88,7 +88,7 @@ const backupWallet = {
     }
 
     if (folderPaths && folderPaths.length > 0) {
-      store.dispatch(updateSettings({ backupDirectory: folderPaths[0] }));
+      updateSettings({ backupDirectory: folderPaths[0] });
 
       await backup(folderPaths[0]);
       showNotification(__('Wallet backed up'), 'success');

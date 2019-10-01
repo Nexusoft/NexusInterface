@@ -94,12 +94,12 @@ export function filterValidSettings(settings) {
   return validSettings;
 }
 
-export function LoadSettings() {
+export function loadSettingsFromFile() {
   const customSettings = readSettings();
   return { ...defaultSettings, ...customSettings };
 }
 
-export function UpdateSettings(updates) {
+export function updateSettingsFile(updates) {
   const settings = readSettings();
   if (tempSettings) {
     tempSettings = null;
@@ -107,7 +107,7 @@ export function UpdateSettings(updates) {
   return writeSettings({ ...settings, ...updates });
 }
 
-export function UpdateTempSettings(updates) {
+export function updateTempSettings(updates) {
   if (tempSettings) {
     tempSettings = { ...tempSettings, ...updates };
   } else {

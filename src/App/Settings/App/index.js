@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
 // Internal Global
-import { updateSettings } from 'actions/settings';
+import { updateSettings } from 'lib/settings';
 import { switchSettingsTab } from 'actions/ui';
 import { backupWallet } from 'lib/wallet';
 import SettingsField from 'components/SettingsField';
@@ -67,7 +67,6 @@ const mapStateToProps = state => ({
 });
 
 const actionCreators = {
-  updateSettings,
   switchSettingsTab,
 };
 
@@ -125,7 +124,7 @@ class SettingsApp extends Component {
           'All modules without open source verifications, possibly including your own under-development modules, will become invalid. Wallet must be refreshed for the change to take effect.'
         ),
         callbackYes: () => {
-          this.props.updateSettings({ verifyModuleSource: true });
+          updateSettings({ verifyModuleSource: true });
           location.reload();
         },
       });
@@ -150,7 +149,7 @@ class SettingsApp extends Component {
         labelYes: __('Turn policy off'),
         skinYes: 'danger',
         callbackYes: () => {
-          this.props.updateSettings({ verifyModuleSource: false });
+          updateSettings({ verifyModuleSource: false });
           location.reload();
         },
         labelNo: __('Keep policy on'),
@@ -170,7 +169,7 @@ class SettingsApp extends Component {
     return settingName => {
       if (!handlers[settingName]) {
         handlers[settingName] = input =>
-          this.props.updateSettings({
+          updateSettings({
             [settingName]: form.resolveValue(input),
           });
       }
@@ -194,13 +193,13 @@ class SettingsApp extends Component {
         labelNo: __('Turn auto update Off'),
         skinNo: 'danger',
         callbackNo: () => {
-          this.props.updateSettings({ autoUpdate: false });
+          updateSettings({ autoUpdate: false });
           stopAutoUpdate();
         },
         style: { width: 580 },
       });
     } else {
-      this.props.updateSettings({ autoUpdate: true });
+      updateSettings({ autoUpdate: true });
       startAutoUpdate();
     }
   };

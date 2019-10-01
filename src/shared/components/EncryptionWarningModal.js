@@ -8,7 +8,7 @@ import styled from '@emotion/styled';
 import Modal from 'components/Modal';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
-import { updateSettings } from 'actions/settings';
+import { updateSettings } from 'lib/settings';
 import * as color from 'utils/color';
 import warningIcon from 'images/warning.sprite.svg';
 
@@ -31,14 +31,12 @@ const WarningMessage = styled.div({
 @connect(
   null,
   dispatch => ({
-    ignoreEncryptionWarning: () =>
-      dispatch(updateSettings({ encryptionWarningDisabled: true })),
     goTo: url => dispatch(push(url)),
   })
 )
 class EncryptionWarningModal extends React.Component {
   ignore = () => {
-    this.props.ignoreEncryptionWarning();
+    updateSettings({ encryptionWarningDisabled: true });
     this.closeModal();
   };
 

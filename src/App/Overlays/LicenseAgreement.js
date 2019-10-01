@@ -1,16 +1,13 @@
 import React from 'react';
-import { connect } from 'react-redux';
 
 import Button from 'components/Button';
-import { updateSettings } from 'actions/settings';
+import { updateSettings } from 'lib/settings';
 
 import FullScreen from './FullScreen';
 
-const actionCreators = {
-  acceptAgreement: () => updateSettings({ acceptedAgreement: true }),
-};
+const acceptAgreement = () => updateSettings({ acceptedAgreement: true });
 
-const LicenseAgreement = ({ acceptAgreement }) => (
+const LicenseAgreement = () => (
   <FullScreen header="License Agreement">
     <p>The MIT License (MIT)</p>
     <p>Copyright {new Date().getFullYear()} Nexus</p>
@@ -51,7 +48,4 @@ const LicenseAgreement = ({ acceptAgreement }) => (
   </FullScreen>
 );
 
-export default connect(
-  null,
-  actionCreators
-)(LicenseAgreement);
+export default LicenseAgreement;

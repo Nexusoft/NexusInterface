@@ -1,17 +1,14 @@
 import React from 'react';
-import { connect } from 'react-redux';
 
 import Button from 'components/Button';
-import { updateSettings } from 'actions/settings';
+import { updateSettings } from 'lib/settings';
 
 import FullScreen from './FullScreen';
 
-const actionCreators = {
-  disableTritiumModeNotice: () =>
-    updateSettings({ tritiumModeNoticeDisabled: true }),
-};
+const disableTritiumModeNotice = () =>
+  updateSettings({ tritiumModeNoticeDisabled: true });
 
-const TritiumModeNotice = ({ disableTritiumModeNotice }) => (
+const TritiumModeNotice = () => (
   <FullScreen header={__('Tritium Mode')} width={600} style={{ fontSize: 18 }}>
     <div className="mt1">{__('Your wallet is now in Tritium Mode!')}</div>
     <div className="mt1">
@@ -38,7 +35,4 @@ const TritiumModeNotice = ({ disableTritiumModeNotice }) => (
   </FullScreen>
 );
 
-export default connect(
-  null,
-  actionCreators
-)(TritiumModeNotice);
+export default TritiumModeNotice;
