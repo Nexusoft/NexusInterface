@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-import { defaultSettings } from 'lib/settings';
+import { defaultSettings } from 'lib/universal/settings';
 import rpc from 'lib/rpc';
 
 /**

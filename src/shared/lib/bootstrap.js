@@ -21,7 +21,7 @@ import {
 } from 'lib/overlays';
 import extractTarball from 'utils/promisified/extractTarball';
 import sleep from 'utils/promisified/sleep';
-import { throttled } from 'utils/misc';
+import { throttled } from 'utils/universal';
 
 const fileLocation = path.join(walletDataDir, 'recent.tar.gz');
 const extractDest = path.join(coreDataDir, 'recent');

@@ -5,8 +5,8 @@ import path from 'path';
 import axios from 'axios';
 
 import { assetsByPlatformDir } from 'consts/paths';
-import { LoadSettings, UpdateSettings } from 'lib/settings';
-import { customConfig, loadNexusConf } from 'lib/coreConfig';
+import { LoadSettings, UpdateSettings } from 'lib/universal/settings';
+import { customConfig, loadNexusConf } from 'lib/universal/coreConfig';
 import exec from 'utils/promisified/exec';
 import sleep from 'utils/promisified/sleep';
 

@@ -1,5 +1,5 @@
 import * as TYPE from 'consts/actionTypes';
-import { filterValidSettings } from 'lib/settings';
+import { filterValidSettings } from 'lib/universal/settings';
 
 const initialState = {};
 

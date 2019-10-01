@@ -10,8 +10,8 @@ import fs from 'fs-extra';
 
 // Internal
 import { coreDataDir, assetsDir } from 'consts/paths';
-import { LoadSettings, UpdateSettings } from 'lib/settings';
-import { debounced } from 'utils/misc';
+import { LoadSettings, UpdateSettings } from 'lib/universal/settings';
+import { debounced } from 'utils/universal';
 
 import core from './core';
 import fileServer from './fileServer';

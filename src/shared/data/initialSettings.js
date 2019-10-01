@@ -1,3 +1,3 @@
-import { LoadSettings } from 'lib/settings';
+import { LoadSettings } from 'lib/universal/settings';
 
 export default LoadSettings();

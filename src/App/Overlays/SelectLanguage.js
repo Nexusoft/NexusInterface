@@ -5,7 +5,7 @@ import Button from 'components/Button';
 import languages from 'data/languages';
 import { timing } from 'styles';
 import * as color from 'utils/color';
-import { UpdateSettings } from 'lib/settings';
+import { UpdateSettings } from 'lib/universal/settings';
 
 import FullScreen from './FullScreen';
 

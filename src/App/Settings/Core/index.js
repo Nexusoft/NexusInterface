@@ -16,7 +16,7 @@ import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
 import Switch from 'components/Switch';
-import { tempSettings } from 'lib/settings';
+import { tempSettings } from 'lib/universal/settings';
 import { errorHandler, resolveValue } from 'utils/form';
 import confirm from 'utils/promisified/confirm';
 import { isCoreConnected } from 'selectors';

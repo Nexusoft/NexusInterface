@@ -1,5 +1,5 @@
 import GA from 'lib/googleAnalytics';
-import { UpdateSettings, UpdateTempSettings } from 'lib/settings';
+import { UpdateSettings, UpdateTempSettings } from 'lib/universal/settings';
 import * as TYPE from 'consts/actionTypes';
 
 export const updateSettings = updates => (dispatch, getState) => {
