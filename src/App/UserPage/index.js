@@ -20,6 +20,8 @@ import TabContent from './TabContent';
 
 // Icons
 import userIcon from 'images/user.sprite.svg';
+import { legacyMode } from 'consts/misc';
+import { history } from 'store';
 
 const UserPageLayout = styled.div({
   display: 'flex',
@@ -56,6 +58,9 @@ class UserPage extends Component {
    * @memberof UserPage
    */
   componentDidMount() {
+    if (legacyMode) {
+      history.push('/');
+    }
     window.addEventListener('contextmenu', this.setupcontextmenu, false);
     GA.SendScreen('UserPage');
   }
