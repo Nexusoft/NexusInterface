@@ -118,7 +118,7 @@ const Navigation = () => (
       )}
 
       <NavItem icon={sendIcon} to="/Send">
-        {__('Send NXS')}
+        {legacyMode ? __('Send NXS') : __('Send')}
       </NavItem>
 
       <NavItem icon={transactionsIcon} to="/Transactions">
