@@ -21,7 +21,7 @@ import {
   printCommandOutput,
   printCommandError,
   resetConsoleOutput,
-} from 'actions/ui';
+} from 'lib/ui';
 
 const filterCommands = memoize((commandList, inputValue) => {
   if (!commandList || !inputValue) return [];
@@ -61,18 +61,6 @@ const mapStateToProps = state => {
   };
 };
 
-const actionCreators = {
-  switchConsoleTab,
-  setCommandList,
-  updateConsoleInput,
-  commandHistoryUp,
-  commandHistoryDown,
-  executeCommand,
-  printCommandOutput,
-  printCommandError,
-  resetConsoleOutput,
-};
-
 const TerminalContent = styled.div({
   gridArea: 'content',
   overflow: 'visible',
@@ -110,10 +98,7 @@ const ExecuteButton = styled(Button)(({ theme }) => ({
  * @class TerminalConsole
  * @extends {Component}
  */
-@connect(
-  mapStateToProps,
-  actionCreators
-)
+@connect(mapStateToProps)
 class TerminalConsole extends Component {
   /**
    *Creates an instance of TerminalConsole.
@@ -124,7 +109,7 @@ class TerminalConsole extends Component {
     super(props);
     this.inputRef = React.createRef();
     this.outputRef = React.createRef();
-    props.switchConsoleTab('Console');
+    switchConsoleTab('Console');
 
     if (!this.props.commandList.length) {
       this.loadCommandList();
@@ -151,7 +136,7 @@ class TerminalConsole extends Component {
         display: c,
         value: c.split(' ')[0],
       }));
-    this.props.setCommandList(commandList);
+    setCommandList(commandList);
   };
 
   /**
@@ -175,13 +160,7 @@ class TerminalConsole extends Component {
    * @memberof TerminalConsole
    */
   execute = async () => {
-    const {
-      consoleInput,
-      executeCommand,
-      commandList,
-      printCommandOutput,
-      printCommandError,
-    } = this.props;
+    const { consoleInput, commandList } = this.props;
     if (!consoleInput || !consoleInput.trim()) return;
 
     const [cmd, ...chunks] = consoleInput.split(' ');
@@ -253,11 +232,11 @@ class TerminalConsole extends Component {
     switch (e.key) {
       case 'ArrowDown':
         e.preventDefault();
-        this.props.commandHistoryDown();
+        commandHistoryDown();
         break;
       case 'ArrowUp':
         e.preventDefault();
-        this.props.commandHistoryUp();
+        commandHistoryUp();
         break;
       case 'Enter':
         this.execute();
@@ -271,7 +250,7 @@ class TerminalConsole extends Component {
    * @memberof TerminalConsole
    */
   formateAutoSuggest = e => {
-    this.props.updateConsoleInput(e);
+    updateConsoleInput(e);
   };
 
   /**
@@ -281,14 +260,7 @@ class TerminalConsole extends Component {
    * @memberof TerminalConsole
    */
   render() {
-    const {
-      coreConnected,
-      commandList,
-      consoleInput,
-      updateConsoleInput,
-      output,
-      resetConsoleOutput,
-    } = this.props;
+    const { coreConnected, commandList, consoleInput, output } = this.props;
 
     if (!coreConnected) {
       return (

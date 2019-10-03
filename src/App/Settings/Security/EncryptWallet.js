@@ -9,7 +9,7 @@ import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
-import { openSuccessDialog } from 'lib/overlays';
+import { openSuccessDialog } from 'lib/ui';
 import rpc from 'lib/rpc';
 import { startCore } from 'actions/core';
 import { consts } from 'styles';

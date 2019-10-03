@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 
 // Internal
 import Tooltip from 'components/Tooltip';
-import { showNotification } from 'lib/overlays';
+import { showNotification } from 'lib/ui';
 import { timing, consts } from 'styles';
 
 const TruncateMiddleAddressComponent = styled.div({

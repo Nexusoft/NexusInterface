@@ -1,7 +1,7 @@
 import React from 'react';
 
 import rpc from 'lib/rpc';
-import { showNotification } from 'lib/overlays';
+import { showNotification } from 'lib/ui';
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
 import { consts } from 'styles';

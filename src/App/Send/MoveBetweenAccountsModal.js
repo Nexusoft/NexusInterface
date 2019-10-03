@@ -15,7 +15,7 @@ import {
   openErrorDialog,
   openSuccessDialog,
   removeModal,
-} from 'lib/overlays';
+} from 'lib/ui';
 import { loadMyAccounts } from 'actions/account';
 import { errorHandler } from 'utils/form';
 import {

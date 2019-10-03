@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
 // Internal
-import { openModal } from 'lib/overlays';
+import { openModal } from 'lib/ui';
 import BackgroundTask from 'components/BackgroundTask';
 import Icon from 'components/Icon';
 import { bootstrapEvents } from 'lib/bootstrap';

@@ -10,7 +10,7 @@ import Panel from 'components/Panel';
 import WaitingMessage from 'components/WaitingMessage';
 import LoginModal from 'components/LoginModal';
 import Button from 'components/Button';
-import { openModal } from 'lib/overlays';
+import { openModal } from 'lib/ui';
 import { listAccounts } from 'actions/core';
 import { isCoreConnected, isLoggedIn } from 'selectors';
 

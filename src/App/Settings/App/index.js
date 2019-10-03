@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 
 // Internal Global
 import { updateSettings } from 'lib/settings';
-import { switchSettingsTab } from 'actions/ui';
+import { switchSettingsTab } from 'lib/ui';
 import { backupWallet } from 'lib/wallet';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
@@ -13,11 +13,7 @@ import TextField from 'components/TextField';
 import Select from 'components/Select';
 import Switch from 'components/Switch';
 import Icon from 'components/Icon';
-import {
-  openConfirmDialog,
-  openErrorDialog,
-  showNotification,
-} from 'lib/overlays';
+import { openConfirmDialog, openErrorDialog, showNotification } from 'lib/ui';
 import * as color from 'utils/color';
 import * as form from 'utils/form';
 import { isCoreConnected } from 'selectors';
@@ -66,20 +62,13 @@ const mapStateToProps = state => ({
   settings: state.settings,
 });
 
-const actionCreators = {
-  switchSettingsTab,
-};
-
 /**
  * App Page in the Setting Page
  *
  * @class SettingsApp
  * @extends {Component}
  */
-@connect(
-  mapStateToProps,
-  actionCreators
-)
+@connect(mapStateToProps)
 class SettingsApp extends Component {
   /**
    * Creates an instance of SettingsApp.
@@ -88,7 +77,7 @@ class SettingsApp extends Component {
    */
   constructor(props) {
     super(props);
-    props.switchSettingsTab('App');
+    switchSettingsTab('App');
   }
   /**
    *  Confirm Wallet Back up

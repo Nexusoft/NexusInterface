@@ -7,7 +7,7 @@ import styled from '@emotion/styled';
 // Internal
 import AutoSuggest from 'components/AutoSuggest';
 import Button from 'components/Button';
-import { showNotification } from 'lib/overlays';
+import { showNotification } from 'lib/ui';
 import rpc from 'lib/rpc';
 import { loadMyAccounts } from 'actions/account';
 import { errorHandler } from 'utils/form';

@@ -1,5 +1,7 @@
 import fs from 'fs';
 
+import * as TYPE from 'consts/actionTypes';
+import store from 'store';
 import { defaultSettings } from 'lib/settings/universal';
 import rpc from 'lib/rpc';
 
@@ -28,3 +30,9 @@ export function backupWallet(backupFolder) {
 
   return rpc('backupwallet', [backupDir + '/NexusBackup_' + now + '.dat']);
 }
+
+export const closeWallet = () => {
+  store.dispatch({
+    type: TYPE.CLOSE_WALLET,
+  });
+};

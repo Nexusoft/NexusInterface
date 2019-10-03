@@ -1,7 +1,7 @@
 import { join, dirname, normalize } from 'path';
 import fs from 'fs';
 
-import { showNotification, openModal, openSuccessDialog } from 'lib/overlays';
+import { showNotification, openModal, openSuccessDialog } from 'lib/ui';
 import ModuleDetailsModal from 'components/ModuleDetailsModal';
 import store from 'store';
 import { loadModuleFromDir } from 'lib/modules';

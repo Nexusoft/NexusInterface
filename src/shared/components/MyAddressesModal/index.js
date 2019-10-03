@@ -14,7 +14,7 @@ import plusIcon from 'images/plus.sprite.svg';
 import Account from './Account';
 import NewAddressForm from './NewAddressForm';
 import Tooltip from 'components/Tooltip';
-import { showNotification } from 'lib/overlays';
+import { showNotification } from 'lib/ui';
 import { loadMyAccounts, updateAccountBalances } from 'actions/account';
 import rpc from 'lib/rpc';
 

@@ -9,7 +9,7 @@ import semver from 'semver';
 // Internal
 import * as TYPE from 'consts/actionTypes';
 import store from 'store';
-import { showBackgroundTask, showNotification } from 'lib/overlays';
+import { showBackgroundTask, showNotification } from 'lib/ui';
 import AutoUpdateBackgroundTask from './AutoUpdateBackgroundTask';
 import { assetsParentDir } from 'consts/paths';
 

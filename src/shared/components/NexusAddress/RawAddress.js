@@ -8,7 +8,7 @@ import TextField from 'components/TextField';
 import Tooltip from 'components/Tooltip';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
-import { showNotification } from 'lib/overlays';
+import { showNotification } from 'lib/ui';
 import copyIcon from 'images/copy.sprite.svg';
 
 const RawAddressComponent = styled.div({

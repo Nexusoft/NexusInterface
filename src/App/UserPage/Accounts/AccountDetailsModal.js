@@ -6,7 +6,7 @@ import Modal from 'components/Modal';
 import Button from 'components/Button';
 import AdjustStakeModal from 'components/AdjustStakeModal';
 import { formatDateTime } from 'lib/intl';
-import { openModal } from 'lib/overlays';
+import { openModal } from 'lib/ui';
 import { formatNumber } from 'lib/intl';
 
 import { totalBalance } from './utils';

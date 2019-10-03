@@ -10,7 +10,7 @@ import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import Select from 'components/Select';
 import Button from 'components/Button';
-import { showNotification } from 'lib/overlays';
+import { showNotification } from 'lib/ui';
 import { emailRegex } from 'utils/form';
 import timeZones from 'data/timeZones';
 import Addresses from './Addresses';

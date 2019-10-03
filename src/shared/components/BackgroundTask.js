@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 
 // Internal
-import { removeBackgroundTask } from 'lib/overlays';
+import { removeBackgroundTask } from 'lib/ui';
 import SnackBar from 'components/SnackBar';
 import TaskContext from 'context/task';
 import { timing } from 'styles';

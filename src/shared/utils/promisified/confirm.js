@@ -1,4 +1,4 @@
-import { openConfirmDialog } from 'lib/overlays';
+import { openConfirmDialog } from 'lib/ui';
 
 export default function confirm(options) {
   return new Promise((resolve, reject) => {

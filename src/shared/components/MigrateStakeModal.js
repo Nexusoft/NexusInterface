@@ -7,7 +7,7 @@ import TextField from 'components/TextField';
 import FormField from 'components/FormField';
 import Button from 'components/Button';
 import confirmPin from 'utils/promisified/confirmPin';
-import { removeModal, openSuccessDialog } from 'lib/overlays';
+import { removeModal, openSuccessDialog } from 'lib/ui';
 import { apiPost } from 'lib/tritiumApi';
 import { errorHandler } from 'utils/form';
 import { coreDataDir } from 'consts/paths';

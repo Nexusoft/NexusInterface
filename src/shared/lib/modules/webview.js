@@ -10,7 +10,7 @@ import {
   openConfirmDialog,
   openErrorDialog,
   openSuccessDialog,
-} from 'lib/overlays';
+} from 'lib/ui';
 import rpc from 'lib/rpc';
 
 import { readModuleStorage, writeModuleStorage } from './storage';

@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 import Modal from 'components/Modal';
 import TextField from 'components/TextField';
 import Button from 'components/Button';
-import { removeModal } from 'lib/overlays';
+import { removeModal } from 'lib/ui';
 import { numericOnly } from 'utils/form';
 
 const PinInput = styled(TextField.RF)({

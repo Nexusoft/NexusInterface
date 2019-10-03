@@ -16,7 +16,7 @@ import Select from 'components/Select';
 import FormField from 'components/FormField';
 import Tooltip from 'components/Tooltip';
 import Arrow from 'components/Arrow';
-import { openSuccessDialog } from 'lib/overlays';
+import { openSuccessDialog } from 'lib/ui';
 import { errorHandler } from 'utils/form';
 import sendIcon from 'images/send.sprite.svg';
 import { numericOnly } from 'utils/form';

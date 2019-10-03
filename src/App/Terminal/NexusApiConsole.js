@@ -16,15 +16,14 @@ import * as Tritium from 'lib/tritiumApi';
 import {
   switchConsoleTab,
   updateConsoleInput,
-  setCommandList,
   commandHistoryUp,
   commandHistoryDown,
   executeCommand,
   printCommandOutput,
   printCommandError,
   resetConsoleOutput,
-} from 'actions/ui';
-import { openModal } from 'lib/overlays';
+} from 'lib/ui';
+import { openModal } from 'lib/ui';
 import APIDocModal from './APIDocs/ApiDocModal';
 import questionMarkCircleIcon from 'images/question-mark-circle.sprite.svg';
 import Tooltip from 'components/Tooltip';
@@ -69,18 +68,6 @@ const mapStateToProps = state => {
   };
 };
 
-const actionCreators = {
-  switchConsoleTab,
-  setCommandList,
-  updateConsoleInput,
-  commandHistoryUp,
-  commandHistoryDown,
-  executeCommand,
-  printCommandOutput,
-  printCommandError,
-  resetConsoleOutput,
-};
-
 const TerminalContent = styled.div({
   gridArea: 'content',
   overflow: 'visible',
@@ -122,10 +109,7 @@ const HelpButton = styled(Button)(({ theme }) => ({
  * @class TerminalConsole
  * @extends {Component}
  */
-@connect(
-  mapStateToProps,
-  actionCreators
-)
+@connect(mapStateToProps)
 class NexusApiConsole extends Component {
   /**
    *Creates an instance of TerminalConsole.
@@ -136,7 +120,7 @@ class NexusApiConsole extends Component {
     super(props);
     this.inputRef = React.createRef();
     this.outputRef = React.createRef();
-    props.switchConsoleTab('Console');
+    switchConsoleTab('Console');
   }
 
   /**
@@ -163,11 +147,11 @@ class NexusApiConsole extends Component {
     switch (e.key) {
       case 'ArrowDown':
         e.preventDefault();
-        this.props.commandHistoryDown();
+        commandHistoryDown();
         break;
       case 'ArrowUp':
         e.preventDefault();
-        this.props.commandHistoryUp();
+        commandHistoryUp();
         break;
       case 'Enter':
         this.execute();
@@ -181,12 +165,6 @@ class NexusApiConsole extends Component {
    * @memberof TerminalConsole
    */
   execute = async () => {
-    const {
-      currentCommand,
-      executeCommand,
-      printCommandOutput,
-      printCommandError,
-    } = this.props;
     if (!currentCommand || !currentCommand.trim()) return;
 
     const cmd = currentCommand;
@@ -277,7 +255,7 @@ class NexusApiConsole extends Component {
    * @memberof TerminalConsole
    */
   formateAutoSuggest = e => {
-    this.props.updateConsoleInput(e);
+    updateConsoleInput(e);
   };
 
   /**
@@ -287,14 +265,7 @@ class NexusApiConsole extends Component {
    * @memberof TerminalConsole
    */
   render() {
-    const {
-      coreConnected,
-      commandList,
-      consoleInput,
-      updateConsoleInput,
-      output,
-      resetConsoleOutput,
-    } = this.props;
+    const { coreConnected, consoleInput, output } = this.props;
     console.log(this);
 
     if (!coreConnected) {

@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 
 import Tooltip from 'components/Tooltip';
 import ContractDetailsModal from 'components/ContractDetailsModal';
-import { openModal } from 'lib/overlays';
+import { openModal } from 'lib/ui';
 import { formatNumber } from 'lib/intl';
 import { getDeltaSign } from 'lib/tritiumTransactions';
 import { consts, timing } from 'styles';

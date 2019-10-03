@@ -11,8 +11,8 @@ import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
 import Table from 'components/Table';
 import { formatDateTime } from 'lib/intl';
-import { openModal } from 'lib/overlays';
-import { setTxsAccountFilter } from 'actions/ui';
+import { openModal } from 'lib/ui';
+import { setTxsAccountFilter } from 'lib/ui';
 import { isCoreConnected } from 'selectors';
 import { autoUpdateTransactions, isPending } from 'lib/transactions';
 
@@ -126,9 +126,6 @@ const mapStateToProps = state => {
     coreConnected: isCoreConnected(state),
   };
 };
-const actionCreators = {
-  setTxsAccountFilter,
-};
 
 /**
  * Transactions Page
@@ -187,7 +184,6 @@ class Transactions extends Component {
       filteredTransactions,
       account,
       coreConnected,
-      setTxsAccountFilter,
       accountOptions,
       minConfirmations,
     } = this.props;
@@ -271,7 +267,4 @@ class Transactions extends Component {
 }
 
 // Mandatory React-Redux method
-export default connect(
-  mapStateToProps,
-  actionCreators
-)(Transactions);
+export default connect(mapStateToProps)(Transactions);

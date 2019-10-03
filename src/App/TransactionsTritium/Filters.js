@@ -11,7 +11,7 @@ import {
   setTxsCategoryFilter,
   setTxsMinAmountFilter,
   setTxsTimeFilter,
-} from 'actions/ui';
+} from 'lib/ui';
 
 import searchIcon from 'images/search.sprite.svg';
 
@@ -81,16 +81,7 @@ const FiltersWrapper = styled.div({
   marginTop: '-1em',
 });
 
-const Filters = ({
-  addressQuery,
-  category,
-  minAmount,
-  timeSpan,
-  setTxsAddressQuery,
-  setTxsCategoryFilter,
-  setTxsMinAmountFilter,
-  setTxsTimeFilter,
-}) => (
+const Filters = ({ addressQuery, category, minAmount, timeSpan }) => (
   <FiltersWrapper>
     <FormField connectLabel label={__('Search address')}>
       <TextField
@@ -145,14 +136,4 @@ const mapStateToProps = ({
   timeSpan,
 });
 
-const actonCreators = {
-  setTxsAddressQuery,
-  setTxsCategoryFilter,
-  setTxsMinAmountFilter,
-  setTxsTimeFilter,
-};
-
-export default connect(
-  mapStateToProps,
-  actonCreators
-)(Filters);
+export default connect(mapStateToProps)(Filters);

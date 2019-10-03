@@ -19,7 +19,7 @@ import {
   openErrorDialog,
   openSuccessDialog,
   openModal,
-} from 'lib/overlays';
+} from 'lib/ui';
 import confirm from 'utils/promisified/confirm';
 import extractTarball from 'utils/promisified/extractTarball';
 import sleep from 'utils/promisified/sleep';

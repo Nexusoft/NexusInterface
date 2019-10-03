@@ -8,7 +8,7 @@ import LoginModal from 'components/LoginModal';
 import NewUserModal from 'components/NewUserModal';
 import MigrateStakeModal from 'components/MigrateStakeModal';
 import { isLoggedIn } from 'selectors';
-import { openModal, showNotification } from 'lib/overlays';
+import { openModal, showNotification } from 'lib/ui';
 import { timing, animations, consts } from 'styles';
 import { apiPost } from 'lib/tritiumApi';
 import { logOutUser } from 'actions/user';

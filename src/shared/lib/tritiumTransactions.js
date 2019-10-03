@@ -5,7 +5,7 @@ import * as TYPE from 'consts/actionTypes';
 import { listAccounts } from 'actions/core';
 import { showDesktopNotif } from 'utils/misc';
 import { formatNumber } from 'lib/intl';
-import { showNotification } from 'lib/overlays';
+import { showNotification } from 'lib/ui';
 
 const isUnconfirmed = tx => tx.confirmations === 0;
 

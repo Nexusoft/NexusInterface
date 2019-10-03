@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 // Internal
 import { getAllModules } from 'lib/modules';
-import { switchSettingsTab } from 'actions/ui';
+import { switchSettingsTab } from 'lib/ui';
 import Module from './Module';
 import AddModule from './AddModule';
 
@@ -14,12 +14,9 @@ import AddModule from './AddModule';
  * @class SettingsModules
  * @extends {React.Component}
  */
-@connect(
-  state => ({
-    modules: getAllModules(state.modules),
-  }),
-  { switchSettingsTab }
-)
+@connect(state => ({
+  modules: getAllModules(state.modules),
+}))
 class SettingsModules extends React.Component {
   /**
    *Creates an instance of SettingsModules.
@@ -28,7 +25,7 @@ class SettingsModules extends React.Component {
    */
   constructor(props) {
     super(props);
-    props.switchSettingsTab('Modules');
+    switchSettingsTab('Modules');
   }
 
   /**

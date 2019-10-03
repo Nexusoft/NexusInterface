@@ -6,9 +6,9 @@ import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
 
 // Internal
-import { switchSettingsTab } from 'actions/ui';
+import { switchSettingsTab } from 'lib/ui';
 import { stopCore, startCore, restartCore } from 'actions/core';
-import { showNotification, openConfirmDialog } from 'lib/overlays';
+import { showNotification, openConfirmDialog } from 'lib/ui';
 import { updateSettings } from 'lib/settings';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
@@ -67,7 +67,6 @@ const mapStateToProps = state => {
   };
 };
 const actionCreators = {
-  switchSettingsTab,
   stopCore,
   startCore,
   restartCore,
@@ -151,7 +150,7 @@ class SettingsCore extends Component {
    */
   constructor(props) {
     super(props);
-    props.switchSettingsTab('Core');
+    switchSettingsTab('Core');
   }
 
   /**

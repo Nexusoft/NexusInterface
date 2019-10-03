@@ -4,12 +4,7 @@ import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
 // Internal Global Dependencies
-import {
-  switchConsoleTab,
-  printCoreOutput,
-  pauseCoreOutput,
-  unpauseCoreOutput,
-} from 'actions/ui';
+import { switchConsoleTab, pauseCoreOutput, unpauseCoreOutput } from 'lib/ui';
 import Button from 'components/Button';
 
 // React-Redux mandatory methods
@@ -27,12 +22,6 @@ const mapStateToProps = ({
   output,
   paused,
 });
-const actionCreators = {
-  switchConsoleTab,
-  printCoreOutput,
-  pauseCoreOutput,
-  unpauseCoreOutput,
-};
 
 const TerminalContent = styled.div({
   gridArea: 'content',
@@ -83,7 +72,7 @@ class TerminalCore extends Component {
    */
   constructor(props) {
     super(props);
-    props.switchConsoleTab('Core');
+    switchConsoleTab('Core');
   }
 
   /**
@@ -117,7 +106,7 @@ class TerminalCore extends Component {
       return;
     }
     if (!this.props.paused) {
-      this.props.pauseCoreOutput(true);
+      pauseCoreOutput(true);
     }
   }
 
@@ -128,13 +117,7 @@ class TerminalCore extends Component {
    * @memberof TerminalCore
    */
   render() {
-    const {
-      output,
-      paused,
-      pauseCoreOutput,
-      unpauseCoreOutput,
-      settings,
-    } = this.props;
+    const { output, paused, settings } = this.props;
     return (
       <TerminalContent>
         <TerminalCoreComponent ref={this.outputRef}>
@@ -167,7 +150,4 @@ class TerminalCore extends Component {
 }
 
 // Mandatory React-Redux method
-export default connect(
-  mapStateToProps,
-  actionCreators
-)(TerminalCore);
+export default connect(mapStateToProps)(TerminalCore);

@@ -5,8 +5,8 @@ import { remote } from 'electron';
 import { initializeMarketData } from 'lib/market';
 import { loadModules } from 'lib/modules';
 import { stopCore } from 'actions/core';
-import { closeWallet } from 'actions/ui';
-import { openModal } from 'lib/overlays';
+import { closeWallet } from 'lib/wallet';
+import { openModal } from 'lib/ui';
 import TritiumUpgradeModal from 'components/TritiumUpgradeModal';
 import { tritiumUpgradeTime, legacyMode } from 'consts/misc';
 import { initializeUpdater } from 'lib/updater';
@@ -39,7 +39,7 @@ export function preRender() {
       }
     } else {
       stopCoreOuputWatch();
-      dispatch(closeWallet());
+      closeWallet();
 
       if (!manualDaemon) {
         await dispatch(stopCore());

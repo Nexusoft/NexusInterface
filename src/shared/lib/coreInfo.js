@@ -2,7 +2,7 @@ import store, { observeStore } from 'store';
 import rpc from 'lib/rpc';
 import { isCoreConnected, isLoggedIn } from 'selectors';
 import { loadMyAccounts } from 'actions/account';
-import { showNotification, openModal } from 'lib/overlays';
+import { showNotification, openModal } from 'lib/ui';
 import { bootstrap } from 'lib/bootstrap';
 import { getInfo, getUserStatus } from 'actions/core';
 import { showDesktopNotif } from 'utils/misc';

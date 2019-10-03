@@ -10,7 +10,7 @@ import TextField from 'components/TextField';
 import Button from 'components/Button';
 import Link from 'components/Link';
 import LoginModal from 'components/LoginModal';
-import { showNotification, openModal, removeModal } from 'lib/overlays';
+import { showNotification, openModal, removeModal } from 'lib/ui';
 import { getUserStatus } from 'actions/core';
 import { errorHandler, numericOnly } from 'utils/form';
 

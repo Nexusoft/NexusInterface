@@ -4,9 +4,9 @@ import styled from '@emotion/styled';
 
 import Icon from 'components/Icon';
 import Button from 'components/Button';
-import { switchUserTab } from 'actions/ui';
+import { switchUserTab } from 'lib/ui';
 import { listAccounts } from 'actions/core';
-import { openModal } from 'lib/overlays';
+import { openModal } from 'lib/ui';
 import plusIcon from 'images/plus.sprite.svg';
 
 import Account from './Account';
@@ -23,12 +23,12 @@ const AccountsWrapper = styled.div(({ theme }) => ({
   state => ({
     accounts: state.core.accounts,
   }),
-  { switchUserTab, listAccounts }
+  { listAccounts }
 )
 export default class Accounts extends React.Component {
   constructor(props) {
     super(props);
-    props.switchUserTab('Accounts');
+    switchUserTab('Accounts');
   }
 
   componentDidMount() {

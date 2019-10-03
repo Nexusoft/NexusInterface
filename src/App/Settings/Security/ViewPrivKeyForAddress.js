@@ -10,7 +10,7 @@ import TextField from 'components/TextField';
 import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
 import InputGroup from 'components/InputGroup';
-import { openErrorDialog, showNotification } from 'lib/overlays';
+import { openErrorDialog, showNotification } from 'lib/ui';
 import rpc from 'lib/rpc';
 import copyIcon from 'images/copy.sprite.svg';
 import { errorHandler } from 'utils/form';

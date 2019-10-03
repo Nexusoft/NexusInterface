@@ -12,7 +12,7 @@ import {
   openErrorDialog,
   openSuccessDialog,
   showNotification,
-} from 'lib/overlays';
+} from 'lib/ui';
 import rpc from 'lib/rpc';
 import { errorHandler, trimText } from 'utils/form';
 

@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 import Link from 'components/Link';
 import NexusAddress from 'components/NexusAddress';
 import { formatNumber } from 'lib/intl';
-import { openModal } from 'lib/overlays';
+import { openModal } from 'lib/ui';
 
 import AccountDetailsModal from './AccountDetailsModal';
 import AccountHistoryModal from './AccountHistoryModal';

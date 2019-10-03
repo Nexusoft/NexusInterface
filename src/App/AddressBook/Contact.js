@@ -8,7 +8,7 @@ import { remote } from 'electron';
 import { selectContact, deleteContact } from 'lib/addressBook';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
-import { openConfirmDialog, openModal } from 'lib/overlays';
+import { openConfirmDialog, openModal } from 'lib/ui';
 import AddEditContactModal from 'components/AddEditContactModal';
 import { isCoreConnected } from 'selectors';
 import { timing } from 'styles';

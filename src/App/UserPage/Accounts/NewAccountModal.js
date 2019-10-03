@@ -10,7 +10,7 @@ import confirmPin from 'utils/promisified/confirmPin';
 import { apiPost } from 'lib/tritiumApi';
 import { errorHandler } from 'utils/form';
 import { listAccounts } from 'actions/core';
-import { removeModal, showNotification } from 'lib/overlays';
+import { removeModal, showNotification } from 'lib/ui';
 
 @connect(
   null,

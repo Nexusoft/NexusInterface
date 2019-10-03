@@ -1,6 +1,6 @@
 import React from 'react';
 import BackgroundTask from 'components/BackgroundTask';
-import { openConfirmDialog, showBackgroundTask } from 'lib/overlays';
+import { openConfirmDialog, showBackgroundTask } from 'lib/ui';
 import { shell, remote } from 'electron';
 
 export default class AutoUpdateBackgroundTask extends React.Component {

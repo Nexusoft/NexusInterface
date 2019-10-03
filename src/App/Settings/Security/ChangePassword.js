@@ -14,7 +14,7 @@ import {
   openConfirmDialog,
   openErrorDialog,
   openSuccessDialog,
-} from 'lib/overlays';
+} from 'lib/ui';
 import { errorHandler } from 'utils/form';
 import passwordInvalidChars from './passwordInvalidChars';
 

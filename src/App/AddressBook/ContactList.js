@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
 // Internal
-import { openModal } from 'lib/overlays';
+import { openModal } from 'lib/ui';
 import AddEditContactModal from 'components/AddEditContactModal';
 import { isCoreConnected } from 'selectors';
 import Contact, { NewContactButton } from './Contact';

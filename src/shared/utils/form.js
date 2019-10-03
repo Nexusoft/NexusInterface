@@ -1,4 +1,4 @@
-import { openErrorDialog } from 'lib/overlays';
+import { openErrorDialog } from 'lib/ui';
 
 export function resolveValue(input) {
   if (input && input.target) {

@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
-import { switchUserTab } from 'actions/ui';
+import { switchUserTab } from 'lib/ui';
 import { getBalances } from 'actions/core';
 import { observeStore } from 'store';
 import { formatNumber } from 'lib/intl';
@@ -33,12 +33,12 @@ const Line = styled.div(
   state => ({
     balances: state.core.balances,
   }),
-  { switchUserTab, getBalances }
+  { getBalances }
 )
 export default class Balances extends React.Component {
   constructor(props) {
     super(props);
-    props.switchUserTab('Balances');
+    switchUserTab('Balances');
   }
 
   componentDidMount() {

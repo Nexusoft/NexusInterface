@@ -12,7 +12,7 @@ import confirm from 'utils/promisified/confirm';
 import confirmPin from 'utils/promisified/confirmPin';
 import { errorHandler } from 'utils/form';
 import { formatNumber } from 'lib/intl';
-import { removeModal, showNotification } from 'lib/overlays';
+import { removeModal, showNotification } from 'lib/ui';
 
 const LimitNumber = styled.span(
   {

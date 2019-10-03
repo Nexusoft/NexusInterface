@@ -10,13 +10,13 @@ import https from 'https';
 import GA from 'lib/googleAnalytics';
 import { updateSettings } from 'lib/settings';
 import { updateTheme, resetColors } from 'lib/theme';
-import { switchSettingsTab } from 'actions/ui';
+import { switchSettingsTab } from 'lib/ui';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
 import Switch from 'components/Switch';
 import Select from 'components/Select';
 import Icon from 'components/Icon';
-import { showNotification } from 'lib/overlays';
+import { showNotification } from 'lib/ui';
 import NexusAddress from 'components/NexusAddress';
 import warningIcon from 'images/warning.sprite.svg';
 import { walletDataDir } from 'consts/paths';
@@ -62,10 +62,6 @@ const setAddressStyle = addressStyle => {
   updateSettings({ addressStyle });
 };
 
-const mapDispatchToProps = dispatch => ({
-  switchSettingsTab: tab => dispatch(switchSettingsTab(tab)),
-});
-
 const addressStyleOptions = [
   { value: 'segmented', display: 'Segmented' },
   { value: 'truncateMiddle', display: 'Truncate middle' },
@@ -84,10 +80,7 @@ const AddressStyleNote = styled.div(({ theme }) => ({
  * @class SettingsStyle
  * @extends {Component}
  */
-@connect(
-  mapStateToProps,
-  mapDispatchToProps
-)
+@connect(mapStateToProps)
 class SettingsStyle extends Component {
   /**
    *Creates an instance of SettingsStyle.
@@ -96,7 +89,7 @@ class SettingsStyle extends Component {
    */
   constructor(props) {
     super(props);
-    props.switchSettingsTab('Style');
+    switchSettingsTab('Style');
   }
 
   state = {

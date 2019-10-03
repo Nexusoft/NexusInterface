@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import styled from '@emotion/styled';
 
 // Internal
-import { removeNotification } from 'lib/overlays';
+import { removeNotification } from 'lib/ui';
 import SnackBar from 'components/SnackBar';
 import { timing } from 'styles';
 

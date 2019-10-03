@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 import { formatDateTime } from 'lib/intl';
 import * as color from 'utils/color';
 import { timing } from 'styles';
-import { openModal } from 'lib/overlays';
+import { openModal } from 'lib/ui';
 
 import TransactionDetailsModal from './TransactionDetailsModal';
 import Contract from './Contract';

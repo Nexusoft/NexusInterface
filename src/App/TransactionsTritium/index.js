@@ -7,7 +7,7 @@ import Panel from 'components/Panel';
 import WaitingMessage from 'components/WaitingMessage';
 import Button from 'components/Button';
 import LoginModal from 'components/LoginModal';
-import { openModal } from 'lib/overlays';
+import { openModal } from 'lib/ui';
 import { isLoggedIn } from 'selectors';
 import { fetchAllTransactions } from 'lib/tritiumTransactions';
 import { observeStore } from 'store';

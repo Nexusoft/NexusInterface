@@ -9,7 +9,7 @@ import GA from 'lib/googleAnalytics';
 import Button from 'components/Button';
 import Panel from 'components/Panel';
 import LoginModal from 'components/LoginModal';
-import { openModal } from 'lib/overlays';
+import { openModal } from 'lib/ui';
 import AddEditContactModal from 'components/AddEditContactModal';
 import { isCoreConnected, isLoggedIn } from 'selectors';
 import ContextMenuBuilder from 'contextmenu';

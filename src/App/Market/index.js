@@ -7,7 +7,7 @@ import Tooltip from 'components/Tooltip';
 import Button from 'components/Button';
 import syncingIcon from 'images/syncing.sprite.svg';
 import GA from 'lib/googleAnalytics';
-import { showNotification } from 'lib/overlays';
+import { showNotification } from 'lib/ui';
 
 // Internal Global Dependencies
 import Icon from 'components/Icon';

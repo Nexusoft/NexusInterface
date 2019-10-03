@@ -9,7 +9,7 @@ import ContractDetailsModal from 'components/ContractDetailsModal';
 import FieldSet from 'components/FieldSet';
 import { apiPost } from 'lib/tritiumApi';
 import { formatDateTime, formatNumber } from 'lib/intl';
-import { openModal } from 'lib/overlays';
+import { openModal } from 'lib/ui';
 import { handleError } from 'utils/form';
 
 import { totalBalance } from './utils';

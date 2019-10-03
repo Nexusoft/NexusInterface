@@ -11,7 +11,7 @@ import Panel from 'components/Panel';
 import Button from 'components/Button';
 import WaitingMessage from 'components/WaitingMessage';
 import Tooltip from 'components/Tooltip';
-import { openModal } from 'lib/overlays';
+import { openModal } from 'lib/ui';
 import { isCoreConnected } from 'selectors';
 
 // Internal Local Dependencies

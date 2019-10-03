@@ -11,7 +11,7 @@ import Button from 'components/Button';
 import TextField from 'components/TextField';
 import Tooltip from 'components/Tooltip';
 import MyAddressesModal from 'components/MyAddressesModal';
-import { openModal } from 'lib/overlays';
+import { openModal } from 'lib/ui';
 import { isCoreConnected } from 'selectors';
 import AddEditContactModal from 'components/AddEditContactModal';
 

@@ -8,7 +8,7 @@ import { toggleWebViewDevTools } from 'lib/modules';
 import { updateSettings } from 'lib/settings';
 import { startCore as startCoreAC, stopCore as stopCoreAC } from 'actions/core';
 import { backupWallet as backup } from 'lib/wallet';
-import { showNotification } from 'lib/overlays';
+import { showNotification } from 'lib/ui';
 import { bootstrap } from 'lib/bootstrap';
 import { isCoreConnected } from 'selectors';
 import { legacyMode } from 'consts/misc';

@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 // Internal
 import Tooltip from 'components/Tooltip';
 import userIcon from 'images/user.sprite.svg';
-import { openModal } from 'lib/overlays';
+import { openModal } from 'lib/ui';
 import MyAddressesModal from 'components/MyAddressesModal';
 import { timing } from 'styles';
 import * as color from 'utils/color';

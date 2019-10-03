@@ -5,10 +5,10 @@ import styled from '@emotion/styled';
 import Button from 'components/Button';
 import AdjustStakeModal from 'components/AdjustStakeModal';
 import MigrateStakeModal from 'components/MigrateStakeModal';
-import { switchUserTab } from 'actions/ui';
+import { switchUserTab } from 'lib/ui';
 import { updateSettings } from 'lib/settings';
 import { restartCore } from 'actions/core';
-import { openModal } from 'lib/overlays';
+import { openModal } from 'lib/ui';
 import confirm from 'utils/promisified/confirm';
 import { formatNumber, formatDateTime } from 'lib/intl';
 
@@ -51,12 +51,12 @@ const Pending = styled.div({
     stakeInfo: state.core.stakeInfo,
     stakingEnabled: state.settings.enableStaking,
   }),
-  { switchUserTab, restartCore }
+  { restartCore }
 )
 export default class Staking extends React.Component {
   constructor(props) {
     super(props);
-    props.switchUserTab('Staking');
+    switchUserTab('Staking');
   }
 
   switchStaking = async () => {

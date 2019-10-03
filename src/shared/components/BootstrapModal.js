@@ -12,7 +12,7 @@ import {
   showBackgroundTask,
   openConfirmDialog,
   removeModal,
-} from 'lib/overlays';
+} from 'lib/ui';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import ModalContext from 'context/modal';
