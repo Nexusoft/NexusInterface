@@ -6,7 +6,7 @@ import styled from '@emotion/styled';
 
 // Internal Global
 import rpc from 'lib/rpc';
-import { defaultSettings } from 'lib/universal/settings';
+import { defaultSettings } from 'lib/settings/universal';
 import { loadMyAccounts, updateAccountBalances } from 'actions/account';
 import Icon from 'components/Icon';
 import Button from 'components/Button';

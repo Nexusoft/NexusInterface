@@ -1,3 +1,8 @@
+/**
+ * Settings functionalities that can be used by both
+ * renderer process and main process code
+ */
+
 import path from 'path';
 import crypto from 'crypto';
 import macaddress from 'macaddress';
@@ -72,17 +77,15 @@ export const defaultSettings = {
   alphaTestNet: 19,
 };
 
-export let tempSettings = null;
-
 function readSettings() {
-  return readJson(settingsFilePath);
+  return filterValidSettings(readJson(settingsFilePath));
 }
 
 function writeSettings(settings) {
   return writeJson(settingsFilePath, filterValidSettings(settings));
 }
 
-export function filterValidSettings(settings) {
+function filterValidSettings(settings) {
   const validSettings = {};
   Object.keys(settings || {}).map(key => {
     if (defaultSettings.hasOwnProperty(key)) {
@@ -101,17 +104,5 @@ export function loadSettingsFromFile() {
 
 export function updateSettingsFile(updates) {
   const settings = readSettings();
-  if (tempSettings) {
-    tempSettings = null;
-  }
   return writeSettings({ ...settings, ...updates });
-}
-
-export function updateTempSettings(updates) {
-  if (tempSettings) {
-    tempSettings = { ...tempSettings, ...updates };
-  } else {
-    const settings = readSettings();
-    tempSettings = { ...settings, ...updates };
-  }
 }

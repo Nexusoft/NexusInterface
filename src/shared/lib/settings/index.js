@@ -1,10 +1,7 @@
 import GA from 'lib/googleAnalytics';
-import {
-  updateSettingsFile,
-  updateTempSettings as updateTempSettingsRaw,
-} from 'lib/universal/settings';
 import * as TYPE from 'consts/actionTypes';
 import store from 'store';
+import { updateSettingsFile } from './universal';
 
 export const updateSettings = updates => {
   const oldState = store.getState();
@@ -24,11 +21,4 @@ export const updateSettings = updates => {
       GA.SendEvent('Settings', 'Analytics', 'Disabled', 1);
     }
   }
-};
-
-export const updateTempSettings = updates => {
-  const oldState = store.getState();
-  const tempSettings = { ...oldState.settings.tempSettings, ...updates };
-  store.dispatch({ type: TYPE.UPDATE_TEMP_SETTINGS, payload: tempSettings });
-  updateTempSettingsRaw(tempSettings);
 };

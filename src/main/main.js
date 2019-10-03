@@ -13,7 +13,7 @@ import { coreDataDir, assetsDir } from 'consts/paths';
 import {
   loadSettingsFromFile,
   updateSettingsFile,
-} from 'lib/universal/settings';
+} from 'lib/settings/universal';
 import { debounced } from 'utils/universal';
 
 import core from './core';

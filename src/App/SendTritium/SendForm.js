@@ -7,7 +7,7 @@ import styled from '@emotion/styled';
 // Internal Global
 import { apiPost } from 'lib/tritiumApi';
 import rpc from 'lib/rpc';
-import { defaultSettings } from 'lib/universal/settings';
+import { defaultSettings } from 'lib/settings/universal';
 import { listAccounts } from 'actions/core';
 import Icon from 'components/Icon';
 import Button from 'components/Button';

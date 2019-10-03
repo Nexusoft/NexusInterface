@@ -70,7 +70,7 @@ import axios from 'axios';
 import { remote } from 'electron';
 
 import store from 'store';
-import { customConfig, loadNexusConf } from 'lib/universal/coreConfig';
+import { customConfig, loadNexusConf } from 'lib/coreConfig';
 
 const core = remote.getGlobal('core');
 

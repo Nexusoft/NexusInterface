@@ -8,8 +8,8 @@ import { assetsByPlatformDir } from 'consts/paths';
 import {
   loadSettingsFromFile,
   updateSettingsFile,
-} from 'lib/universal/settings';
-import { customConfig, loadNexusConf } from 'lib/universal/coreConfig';
+} from 'lib/settings/universal';
+import { customConfig, loadNexusConf } from 'lib/coreConfig';
 import exec from 'utils/promisified/exec';
 import sleep from 'utils/promisified/sleep';
 

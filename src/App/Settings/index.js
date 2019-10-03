@@ -32,6 +32,7 @@ const SettingsComponent = styled.div({
   display: 'grid',
   gridTemplateAreas: '"tab-bar" "content"',
   gridTemplateRows: 'min-content 1fr',
+  position: 'relative',
 });
 
 const SettingsTabBar = styled(Tab.Bar)({
@@ -46,7 +47,7 @@ const SettingsContent = styled.div({
 });
 
 const SettingsContainer = styled.div({
-  width: 750,
+  maxWidth: 750,
   margin: '0 auto',
 });
 

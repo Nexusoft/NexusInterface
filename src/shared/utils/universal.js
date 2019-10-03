@@ -1,3 +1,8 @@
+/**
+ * Miscellaneous utilities that can be used by both
+ * renderer process and main process code
+ */
+
 export function debounced(fn, ms) {
   let timerId;
   return function() {
