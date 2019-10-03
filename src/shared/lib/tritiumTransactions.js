@@ -1,96 +1,11 @@
 import { apiPost } from 'lib/tritiumApi';
 
 import store, { observeStore } from 'store';
-import {
-  loadTritiumTransactions,
-  addTritiumTransactions,
-  updateTritiumTransaction,
-} from 'actions/transactions';
+import * as TYPE from 'consts/actionTypes';
 import { listAccounts } from 'actions/core';
 import { showDesktopNotif } from 'utils/misc';
 import { formatNumber } from 'lib/intl';
 import { showNotification } from 'lib/overlays';
-
-export async function fetchAllTransactions() {
-  const {
-    core: { userStatus },
-    settings: { minConfirmations },
-  } = store.getState();
-  const txCount = userStatus && userStatus.transactions;
-
-  if (!txCount) {
-    if (txCount === 0) {
-      store.dispatch(loadTritiumTransactions([]));
-    }
-    return;
-  }
-
-  const transactions = await apiPost('users/list/transactions', {
-    verbose: 'summary',
-    limit: txCount,
-  });
-  store.dispatch(loadTritiumTransactions(transactions));
-  transactions.forEach(tx => {
-    if (needsAutoUpdate(tx, minConfirmations)) {
-      autoUpdateTransaction(tx.txid);
-    }
-  });
-}
-
-export function initializeTransactions() {
-  observeStore(
-    ({ core: { userStatus } }) => userStatus && userStatus.transactions,
-    async (txCount, oldTxCount) => {
-      if (
-        typeof txCount === 'number' &&
-        typeof oldTxCount === 'number' &&
-        txCount > oldTxCount
-      ) {
-        const transactions = await apiPost('users/list/transactions', {
-          verbose: 'summary',
-          limit: txCount - oldTxCount,
-        });
-        store.dispatch(addTritiumTransactions(transactions));
-
-        const {
-          settings: { minConfirmations },
-        } = store.getState();
-        transactions.forEach(tx => {
-          if (needsAutoUpdate(tx, minConfirmations)) {
-            autoUpdateTransaction(tx.txid);
-          }
-
-          const changes = getBalanceChange(tx);
-          if (Object.values(changes).some(v => v)) {
-            Object.entries(changes).forEach(([token, change]) => {
-              showDesktopNotif(
-                __('New transaction'),
-                `${change > 0 ? '+' : ''}${formatNumber(change)} ${token}`
-              );
-              showNotification(
-                `${__('New transaction')}: ${
-                  change > 0 ? '+' : ''
-                }${formatNumber(change)} ${token}`,
-                'success'
-              );
-            });
-          }
-        });
-      }
-    }
-  );
-}
-
-export async function fetchTransaction(txid) {
-  const tx = await apiPost('ledger/get/transaction', {
-    txid,
-    verbose: 'summary',
-  });
-  store.dispatch(updateTritiumTransaction(tx));
-}
-
-export const isPending = (tx, minConf) =>
-  !!minConf && tx.confirmations < Number(minConf);
 
 const isUnconfirmed = tx => tx.confirmations === 0;
 
@@ -133,6 +48,55 @@ function autoUpdateTransaction(txid) {
   );
 }
 
+const getBalanceChange = tx =>
+  tx.contracts
+    ? tx.contracts.reduce((changes, contract) => {
+        const sign = getDeltaSign(contract);
+        const token = tx.token_name || 'NXS';
+        if (sign === '+')
+          return {
+            ...changes,
+            [token]: (changes[token] || 0) + contract.amount,
+          };
+        if (sign === '-')
+          return {
+            ...changes,
+            [token]: (changes[token] || 0) - contract.amount,
+          };
+        return changes;
+      }, {})
+    : 0;
+
+export const loadTritiumTransactions = transactions => {
+  store.dispatch({
+    type: TYPE.LOAD_TRITIUM_TRANSACTIONS,
+    payload: {
+      list: transactions,
+    },
+  });
+};
+
+export const addTritiumTransactions = newTransactions => {
+  store.dispatch({
+    type: TYPE.ADD_TRITIUM_TRANSACTIONS,
+    payload: {
+      list: newTransactions,
+    },
+  });
+};
+
+export const updateTritiumTransaction = tx => {
+  store.dispatch({
+    type: TYPE.UPDATE_TRITIUM_TRANSACTION,
+    payload: tx,
+  });
+};
+
+/**
+ * Public API
+ * =============================================================================
+ */
+
 export const getDeltaSign = contract => {
   switch (contract.OP) {
     case 'CREDIT':
@@ -152,21 +116,83 @@ export const getDeltaSign = contract => {
   }
 };
 
-const getBalanceChange = tx =>
-  tx.contracts
-    ? tx.contracts.reduce((changes, contract) => {
-        const sign = getDeltaSign(contract);
-        const token = tx.token_name || 'NXS';
-        if (sign === '+')
-          return {
-            ...changes,
-            [token]: (changes[token] || 0) + contract.amount,
-          };
-        if (sign === '-')
-          return {
-            ...changes,
-            [token]: (changes[token] || 0) - contract.amount,
-          };
-        return changes;
-      }, {})
-    : 0;
+export const isPending = (tx, minConf) =>
+  !!minConf && tx.confirmations < Number(minConf);
+
+export async function fetchAllTransactions() {
+  const {
+    core: { userStatus },
+    settings: { minConfirmations },
+  } = store.getState();
+  const txCount = userStatus && userStatus.transactions;
+
+  if (!txCount) {
+    if (txCount === 0) {
+      loadTritiumTransactions([]);
+    }
+    return;
+  }
+
+  const transactions = await apiPost('users/list/transactions', {
+    verbose: 'summary',
+    limit: txCount,
+  });
+  loadTritiumTransactions(transactions);
+  transactions.forEach(tx => {
+    if (needsAutoUpdate(tx, minConfirmations)) {
+      autoUpdateTransaction(tx.txid);
+    }
+  });
+}
+
+export function initializeTransactions() {
+  observeStore(
+    ({ core: { userStatus } }) => userStatus && userStatus.transactions,
+    async (txCount, oldTxCount) => {
+      if (
+        typeof txCount === 'number' &&
+        typeof oldTxCount === 'number' &&
+        txCount > oldTxCount
+      ) {
+        const transactions = await apiPost('users/list/transactions', {
+          verbose: 'summary',
+          limit: txCount - oldTxCount,
+        });
+        addTritiumTransactions(transactions);
+
+        const {
+          settings: { minConfirmations },
+        } = store.getState();
+        transactions.forEach(tx => {
+          if (needsAutoUpdate(tx, minConfirmations)) {
+            autoUpdateTransaction(tx.txid);
+          }
+
+          const changes = getBalanceChange(tx);
+          if (Object.values(changes).some(v => v)) {
+            Object.entries(changes).forEach(([token, change]) => {
+              showDesktopNotif(
+                __('New transaction'),
+                `${change > 0 ? '+' : ''}${formatNumber(change)} ${token}`
+              );
+              showNotification(
+                `${__('New transaction')}: ${
+                  change > 0 ? '+' : ''
+                }${formatNumber(change)} ${token}`,
+                'success'
+              );
+            });
+          }
+        });
+      }
+    }
+  );
+}
+
+export async function fetchTransaction(txid) {
+  const tx = await apiPost('ledger/get/transaction', {
+    txid,
+    verbose: 'summary',
+  });
+  updateTritiumTransaction(tx);
+}
