@@ -4,7 +4,7 @@ import fs from 'fs';
 
 // Internal
 import store, { observeStore, history } from 'store';
-import { toggleWebViewDevTools } from 'actions/webview';
+import { toggleWebViewDevTools } from 'lib/modules';
 import { updateSettings } from 'lib/settings';
 import { startCore as startCoreAC, stopCore as stopCoreAC } from 'actions/core';
 import { backupWallet as backup } from 'lib/wallet';

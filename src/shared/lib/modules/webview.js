@@ -3,6 +3,7 @@ import axios from 'axios';
 import { reset, initialize } from 'redux-form';
 import { createMatchSelector } from 'connected-react-router';
 
+import * as TYPE from 'consts/actionTypes';
 import store, { history, observeStore } from 'store';
 import {
   showNotification,
@@ -11,6 +12,7 @@ import {
   openSuccessDialog,
 } from 'lib/overlays';
 import rpc from 'lib/rpc';
+
 import { readModuleStorage, writeModuleStorage } from './storage';
 import { getModuleIfActive } from './utils';
 
@@ -278,7 +280,7 @@ function updateStorage([data]) {
 }
 
 /**
- * Initialize
+ * Public API
  * ===========================================================================
  */
 
@@ -341,3 +343,21 @@ export function initializeWebView() {
     }
   );
 }
+
+export const setActiveWebView = webview => {
+  store.dispatch({
+    type: TYPE.SET_ACTIVE_WEBVIEW,
+    payload: webview,
+  });
+};
+
+export const toggleWebViewDevTools = () => {
+  const { webview } = store.getState();
+  if (webview) {
+    if (webview.isDevToolsOpened()) {
+      webview.closeDevTools();
+    } else {
+      webview.openDevTools();
+    }
+  }
+};
