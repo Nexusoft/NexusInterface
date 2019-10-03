@@ -13,7 +13,14 @@ import { showNotification } from 'lib/overlays';
 import Icon from 'components/Icon';
 import Panel from 'components/Panel';
 import ContextMenuBuilder from 'contextmenu';
-import * as actionsCreators from 'actions/market';
+import {
+  binanceDepthLoader,
+  bittrexDepthLoader,
+  binance24hrInfo,
+  bittrex24hrInfo,
+  binanceCandlestickLoader,
+  bittrexCandlestickLoader,
+} from 'lib/market';
 
 // Internal Local Dependencies
 import MarketDepth from './Chart/MarketDepth';
@@ -55,7 +62,6 @@ const mapStateToProps = state => {
     settings: state.settings,
   };
 };
-const mapDispatchToProps = { ...actionsCreators };
 
 /**
  * The Market Page
@@ -97,14 +103,14 @@ class Market extends Component {
    */
   refresher() {
     let any = this;
-    this.props.binanceDepthLoader();
-    this.props.bittrexDepthLoader();
+    binanceDepthLoader();
+    bittrexDepthLoader();
 
-    this.props.binanceCandlestickLoader(any);
-    this.props.bittrexCandlestickLoader(any);
+    binanceCandlestickLoader(any);
+    bittrexCandlestickLoader(any);
 
-    this.props.binance24hrInfo();
-    this.props.bittrex24hrInfo();
+    binance24hrInfo();
+    bittrex24hrInfo();
   }
 
   /**
@@ -337,7 +343,4 @@ class Market extends Component {
 }
 
 // Mandatory React-Redux method
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Market);
+export default connect(mapStateToProps)(Market);
