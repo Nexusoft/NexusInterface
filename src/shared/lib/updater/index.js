@@ -7,8 +7,8 @@ import axios from 'axios';
 import semver from 'semver';
 
 // Internal
+import * as TYPE from 'consts/actionTypes';
 import store from 'store';
-import { setUpdaterState } from 'actions/updater';
 import { showBackgroundTask, showNotification } from 'lib/overlays';
 import AutoUpdateBackgroundTask from './AutoUpdateBackgroundTask';
 import { assetsParentDir } from 'consts/paths';
@@ -16,6 +16,13 @@ import { assetsParentDir } from 'consts/paths';
 const mainUpdater = remote.getGlobal('updater');
 const autoUpdateInterval = 2 * 60 * 60 * 1000; // 2 hours
 let timerId = null;
+
+const setUpdaterState = state => {
+  store.dispatch({
+    type: TYPE.SET_UPDATER_STATE,
+    payload: state,
+  });
+};
 
 /**
  * Check for updates
@@ -138,22 +145,22 @@ export function initializeUpdater(autoUpdate) {
   });
 
   mainUpdater.on('error', err => {
-    store.dispatch(setUpdaterState('idle'));
+    setUpdaterState('idle');
   });
   mainUpdater.on('checking-for-update', () => {
-    store.dispatch(setUpdaterState('checking'));
+    setUpdaterState('checking');
   });
   mainUpdater.on('update-available', () => {
-    store.dispatch(setUpdaterState('downloading'));
+    setUpdaterState('downloading');
   });
   mainUpdater.on('update-not-available', () => {
-    store.dispatch(setUpdaterState('idle'));
+    setUpdaterState('idle');
   });
   mainUpdater.on('download-progress', () => {
-    store.dispatch(setUpdaterState('downloading'));
+    setUpdaterState('downloading');
   });
   mainUpdater.on('update-downloaded', () => {
-    store.dispatch(setUpdaterState('downloaded'));
+    setUpdaterState('downloaded');
   });
 
   if (autoUpdate) {
