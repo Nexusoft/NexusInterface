@@ -3,7 +3,7 @@ import rpc from 'lib/rpc';
 import { isCoreConnected, isLoggedIn } from 'selectors';
 import { loadMyAccounts } from 'actions/account';
 import { showNotification, openModal } from 'lib/overlays';
-import { bootstrap } from 'actions/bootstrap';
+import { bootstrap } from 'lib/bootstrap';
 import { updateBlockDate } from 'actions/setupApp';
 import { getInfo, getUserStatus } from 'actions/core';
 import { showDesktopNotif } from 'utils/misc';
@@ -118,7 +118,7 @@ export function initializeCoreInfo() {
           info.synccomplete < 50 &&
           info.synccomplete >= 0
         ) {
-          store.dispatch(bootstrap({ suggesting: true }));
+          bootstrap({ suggesting: true });
         }
       }
     );

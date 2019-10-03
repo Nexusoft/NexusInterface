@@ -12,16 +12,21 @@ import { coreDataDir } from 'consts/paths';
 import { walletDataDir } from 'consts/paths';
 import { backupWallet } from 'lib/wallet';
 import rpc from 'lib/rpc';
+import store from 'store';
 import { startCore, stopCore } from 'actions/core';
-import { setBootstrapStatus } from 'actions/bootstrap';
 import {
   showNotification,
   openErrorDialog,
   openSuccessDialog,
+  openModal,
 } from 'lib/overlays';
+import confirm from 'utils/promisified/confirm';
 import extractTarball from 'utils/promisified/extractTarball';
 import sleep from 'utils/promisified/sleep';
 import { throttled } from 'utils/universal';
+import * as TYPE from 'consts/actionTypes';
+import { updateSettings } from 'lib/settings';
+import BootstrapModal from 'components/BootstrapModal';
 
 const fileLocation = path.join(walletDataDir, 'recent.tar.gz');
 const extractDest = path.join(coreDataDir, 'recent');
@@ -33,39 +38,13 @@ const recentDbUrlTritium =
 let aborting = false;
 let downloadRequest = null;
 
-export const bootstrapEvents = new EventEmitter();
-
-/**
- * Register bootstrap events listeners
- *
- * @export
- * @param {*} { dispatch }
- */
-export function initializeBootstrapEvents() {
-  bootstrapEvents.on('abort', () =>
-    showNotification(__('Bootstrap process has been aborted'), 'error')
-  );
-  bootstrapEvents.on('error', err => {
-    console.error(err);
-    openErrorDialog({
-      message: __('Error bootstrapping recent database'),
-      note: typeof err === 'string' ? err : err.message || __('Unknown error'),
-    });
-  });
-  bootstrapEvents.on('success', () =>
-    openSuccessDialog({
-      message: __('Recent database has been successfully bootstrapped'),
-    })
-  );
-}
-
 /**
  * Check if there's enough free disk space to bootstrap
  *
  * @export
  * @returns
  */
-export async function checkFreeSpaceForBootstrap() {
+async function checkFreeSpaceForBootstrap() {
   const diskSpace = await checkDiskSpace(coreDataDir);
   return diskSpace.free >= 15 * 1000 * 1000 * 1000; // 15 GB
 }
@@ -74,18 +53,16 @@ export async function checkFreeSpaceForBootstrap() {
  * Start bootstrap process
  *
  * @export
- * @param {*} { dispatch, getState }
  * @returns
  */
-export async function startBootstrap({ dispatch, getState }) {
-  const setStatus = (step, details) =>
-    dispatch(setBootstrapStatus(step, details));
+async function startBootstrap() {
+  const setStatus = (step, details) => setBootstrapStatus(step, details);
 
   try {
     const {
       core: { info },
       settings: { backupDirectory },
-    } = getState();
+    } = store.getState();
     const recentDbUrl =
       info.version.includes('0.3') || parseFloat(info.version) >= 3
         ? recentDbUrlTritium
@@ -112,7 +89,7 @@ export async function startBootstrap({ dispatch, getState }) {
     }
 
     setStatus('stopping_core');
-    await dispatch(stopCore());
+    await store.dispatch(stopCore());
 
     setStatus('downloading', {});
     // A flag to prevent bootstrap status being set back to downloading
@@ -142,9 +119,9 @@ export async function startBootstrap({ dispatch, getState }) {
       return false;
     }
 
-    await dispatch(stopCore());
+    await store.dispatch(stopCore());
     setStatus('restarting_core');
-    await dispatch(startCore());
+    await store.dispatch(startCore());
 
     setStatus('rescanning');
     await rescan();
@@ -156,7 +133,7 @@ export async function startBootstrap({ dispatch, getState }) {
   } catch (err) {
     bootstrapEvents.emit('error', err);
   } finally {
-    const lastStep = getState().bootstrap.step;
+    const lastStep = store.getState().bootstrap.step;
     aborting = false;
     setStatus('idle');
     if (
@@ -168,19 +145,9 @@ export async function startBootstrap({ dispatch, getState }) {
         'restarting_core',
       ].includes(lastStep)
     ) {
-      await dispatch(startCore());
+      await store.dispatch(startCore());
     }
   }
-}
-
-/**
- * Abort the bootstrap process
- *
- * @export
- */
-export function abortBootstrap() {
-  aborting = true;
-  if (downloadRequest) downloadRequest.abort();
 }
 
 /**
@@ -338,4 +305,100 @@ function cleanUp() {
     }
   }, 0);
   return;
+}
+
+const setBootstrapStatus = (step, details) => {
+  store.dispatch({
+    type: TYPE.BOOTSTRAP_STATUS,
+    payload: { step, details },
+  });
+};
+
+/**
+ * Public API
+ * =============================================================================
+ */
+
+export const bootstrapEvents = new EventEmitter();
+
+/**
+ * Register bootstrap events listeners
+ *
+ * @export
+ */
+export function initializeBootstrapEvents() {
+  bootstrapEvents.on('abort', () =>
+    showNotification(__('Bootstrap process has been aborted'), 'error')
+  );
+  bootstrapEvents.on('error', err => {
+    console.error(err);
+    openErrorDialog({
+      message: __('Error bootstrapping recent database'),
+      note: typeof err === 'string' ? err : err.message || __('Unknown error'),
+    });
+  });
+  bootstrapEvents.on('success', () =>
+    openSuccessDialog({
+      message: __('Recent database has been successfully bootstrapped'),
+    })
+  );
+}
+
+/**
+ * Bootstrap Modal element
+ *
+ * @export
+ * @param {*} [{ suggesting }={}]
+ * @returns
+ */
+export async function bootstrap({ suggesting } = {}) {
+  // Only one instance at the same time
+  const state = store.getState();
+  if (state.bootstrap.step !== 'idle') return;
+
+  setBootstrapStatus('prompting');
+  const enoughSpace = await checkFreeSpaceForBootstrap();
+  if (!enoughSpace) {
+    if (!suggesting) {
+      openErrorDialog({
+        message: __(
+          'Not enough disk space! Minimum 15GB of free space is required.'
+        ),
+      });
+    }
+    setBootstrapStatus('idle');
+    return;
+  }
+
+  const confirmed = await confirm({
+    question: __('Download recent database?'),
+    note: __(
+      'Downloading a recent version of the database might reduce the time it takes to synchronize your wallet'
+    ),
+    labelYes: __("Yes, let's bootstrap it"),
+    labelNo: __('No, let it sync'),
+    skinNo: suggesting ? 'danger' : undefined,
+    style: { width: 530 },
+  });
+  if (confirmed) {
+    startBootstrap();
+    openModal(BootstrapModal);
+  } else {
+    if (suggesting) {
+      updateSettings({
+        bootstrapSuggestionDisabled: true,
+      });
+    }
+    setBootstrapStatus('idle');
+  }
+}
+
+/**
+ * Abort the bootstrap process
+ *
+ * @export
+ */
+export function abortBootstrap() {
+  aborting = true;
+  if (downloadRequest) downloadRequest.abort();
 }

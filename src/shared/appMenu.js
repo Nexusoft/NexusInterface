@@ -9,7 +9,7 @@ import { updateSettings } from 'lib/settings';
 import { startCore as startCoreAC, stopCore as stopCoreAC } from 'actions/core';
 import { backupWallet as backup } from 'lib/wallet';
 import { showNotification } from 'lib/overlays';
-import { bootstrap } from 'actions/bootstrap';
+import { bootstrap } from 'lib/bootstrap';
 import { isCoreConnected } from 'selectors';
 import { legacyMode } from 'consts/misc';
 import showOpenDialog from 'utils/promisified/showOpenDialog';
@@ -182,7 +182,7 @@ const downloadRecent = {
       return;
     }
 
-    store.dispatch(bootstrap());
+    bootstrap();
   },
 };
 
