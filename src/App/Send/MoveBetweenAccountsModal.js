@@ -16,7 +16,7 @@ import {
   openSuccessDialog,
   removeModal,
 } from 'lib/ui';
-import { loadMyAccounts } from 'actions/account';
+import { loadAccounts } from 'lib/user';
 import { errorHandler } from 'utils/form';
 import {
   getAccountOptions,
@@ -70,20 +70,13 @@ const mapStateToProps = state => {
   };
 };
 
-const acctionCreators = {
-  loadMyAccounts,
-};
-
 /**
  * Internal JXS for the Move Between Accounts Modal
  *
  * @class MoveBetweenAccountsForm
  * @extends {Component}
  */
-@connect(
-  mapStateToProps,
-  acctionCreators
-)
+@connect(mapStateToProps)
 @reduxForm({
   form: formName,
   destroyOnUnmount: false,
@@ -137,7 +130,7 @@ const acctionCreators = {
   onSubmitSuccess: (result, dispatch, props) => {
     props.closeModal();
     props.reset();
-    props.loadMyAccounts();
+    loadAccounts();
     openSuccessDialog({
       message: __('NXS moved successfully'),
     });

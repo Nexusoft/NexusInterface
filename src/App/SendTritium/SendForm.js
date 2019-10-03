@@ -8,7 +8,7 @@ import styled from '@emotion/styled';
 import { apiPost } from 'lib/tritiumApi';
 import rpc from 'lib/rpc';
 import { defaultSettings } from 'lib/settings/universal';
-import { listAccounts } from 'lib/user';
+import { loadAccounts } from 'lib/user';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
@@ -236,7 +236,7 @@ const mapStateToProps = state => {
     if (!result) return;
 
     props.reset();
-    listAccounts();
+    loadAccounts();
     openSuccessDialog({
       message: __('Transaction sent'),
     });

@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
 import { switchUserTab } from 'lib/ui';
-import { listAccounts } from 'lib/user';
+import { loadAccounts } from 'lib/user';
 import { openModal } from 'lib/ui';
 import plusIcon from 'images/plus.sprite.svg';
 
@@ -29,7 +29,7 @@ export default class Accounts extends React.Component {
   }
 
   componentDidMount() {
-    listAccounts();
+    loadAccounts();
   }
 
   render() {

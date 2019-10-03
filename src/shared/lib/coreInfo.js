@@ -3,7 +3,7 @@ import store, { observeStore } from 'store';
 import rpc from 'lib/rpc';
 import { apiPost } from 'lib/tritiumApi';
 import { isCoreConnected, isLoggedIn } from 'selectors';
-import { loadMyAccounts } from 'actions/account';
+import { loadAccounts } from 'lib/user';
 import { showNotification, openModal } from 'lib/ui';
 import { bootstrap } from 'lib/bootstrap';
 import { getUserStatus } from 'lib/user';
@@ -110,7 +110,7 @@ export function initializeCoreInfo() {
 
     observeStore(isCoreConnected, connected => {
       if (connected) {
-        store.dispatch(loadMyAccounts());
+        loadAccounts();
       }
     });
 

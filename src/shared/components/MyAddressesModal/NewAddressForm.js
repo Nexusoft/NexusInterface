@@ -9,7 +9,7 @@ import AutoSuggest from 'components/AutoSuggest';
 import Button from 'components/Button';
 import { showNotification } from 'lib/ui';
 import rpc from 'lib/rpc';
-import { loadMyAccounts } from 'actions/account';
+import { loadAccounts } from 'lib/user';
 import { errorHandler } from 'utils/form';
 
 const NewAddressFormComponent = styled.form({
@@ -48,7 +48,7 @@ const Buttons = styled.div({
   },
   onSubmit: ({ accountName }) => rpc('getnewaddress', [accountName]),
   onSubmitSuccess: (result, dispatch, props) => {
-    dispatch(loadMyAccounts());
+    loadAccounts();
     props.finish();
     showNotification(__('New address has been created'), 'success');
   },

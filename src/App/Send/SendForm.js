@@ -7,7 +7,7 @@ import styled from '@emotion/styled';
 // Internal Global
 import rpc from 'lib/rpc';
 import { defaultSettings } from 'lib/settings/universal';
-import { loadMyAccounts, updateAccountBalances } from 'actions/account';
+import { loadAccounts, updateAccountBalances } from 'lib/user';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
@@ -71,21 +71,13 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = {
-  loadMyAccounts,
-  updateAccountBalances,
-};
-
 /**
  * The Internal Send Form in the Send Page
  *
  * @class SendForm
  * @extends {Component}
  */
-@connect(
-  mapStateToProps,
-  mapDispatchToProps
-)
+@connect(mapStateToProps)
 @reduxForm({
   form: formName,
   destroyOnUnmount: false,
@@ -195,7 +187,7 @@ const mapDispatchToProps = {
   },
   onSubmitSuccess: (result, dispatch, props) => {
     props.reset();
-    props.loadMyAccounts();
+    loadAccounts();
     openSuccessDialog({
       message: __('Transaction sent'),
     });
@@ -204,12 +196,12 @@ const mapDispatchToProps = {
 })
 class SendForm extends Component {
   componentDidMount() {
-    this.props.loadMyAccounts();
+    loadAccounts();
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.blocks !== this.props.blocks) {
-      this.props.updateAccountBalances();
+      updateAccountBalances();
     }
   }
 

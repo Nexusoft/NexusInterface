@@ -15,7 +15,7 @@ import Account from './Account';
 import NewAddressForm from './NewAddressForm';
 import Tooltip from 'components/Tooltip';
 import { showNotification } from 'lib/ui';
-import { loadMyAccounts, updateAccountBalances } from 'actions/account';
+import { loadAccounts, updateAccountBalances } from 'lib/user';
 import rpc from 'lib/rpc';
 
 const MyAddressesModalComponent = styled(Modal)({
@@ -41,14 +41,11 @@ const Buttons = styled.div({
  * @class MyAddressesModal
  * @extends {React.Component}
  */
-@connect(
-  state => ({
-    myAccounts: state.myAccounts,
-    locale: state.settings.locale,
-    blockCount: state.core.info.blocks,
-  }),
-  { loadMyAccounts, updateAccountBalances }
-)
+@connect(state => ({
+  myAccounts: state.myAccounts,
+  locale: state.settings.locale,
+  blockCount: state.core.info.blocks,
+}))
 class MyAddressesModal extends React.Component {
   state = {
     searchQuery: '',
@@ -56,12 +53,12 @@ class MyAddressesModal extends React.Component {
   };
 
   componentDidMount() {
-    this.props.loadMyAccounts();
+    loadAccounts();
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.blockCount !== this.props.blockCount) {
-      this.props.updateAccountBalances();
+      updateAccountBalances();
     }
   }
   /**

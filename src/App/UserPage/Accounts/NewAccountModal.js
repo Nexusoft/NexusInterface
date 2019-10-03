@@ -8,7 +8,7 @@ import FormField from 'components/FormField';
 import confirmPin from 'utils/promisified/confirmPin';
 import { apiPost } from 'lib/tritiumApi';
 import { errorHandler } from 'utils/form';
-import { listAccounts } from 'lib/user';
+import { loadAccounts } from 'lib/user';
 import { removeModal, showNotification } from 'lib/ui';
 
 @reduxForm({
@@ -34,7 +34,7 @@ import { removeModal, showNotification } from 'lib/ui';
   onSubmitSuccess: (result, dispatch, props) => {
     if (!result) return; // Submission was cancelled
 
-    listAccounts();
+    loadAccounts();
     removeModal(props.modalId);
     showNotification(
       __('New account %{account} has been created', {

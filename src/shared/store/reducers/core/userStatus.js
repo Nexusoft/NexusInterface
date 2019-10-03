@@ -7,12 +7,6 @@ export default (state = initialState, action) => {
     case TYPE.SET_USER_STATUS:
       return action.payload;
 
-    case TYPE.SET_UNLOCKED_STATUS:
-      return {
-        ...state,
-        unlocked: action.payload,
-      };
-
     case TYPE.CLEAR_CORE_INFO:
     case TYPE.CLEAR_USER_STATUS:
       return initialState;
