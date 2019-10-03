@@ -1,7 +1,6 @@
 import { remote } from 'electron';
 
 import rpc from 'lib/rpc';
-import * as ac from 'actions/setupApp';
 import * as TYPE from 'consts/actionTypes';
 import { legacyMode } from 'consts/misc';
 import { apiPost } from 'lib/tritiumApi';
@@ -43,7 +42,10 @@ export const getUserStatus = () => async dispatch => {
 export const getInfo = legacyMode
   ? // Legacy
     () => async dispatch => {
-      dispatch(ac.AddRPCCall('getInfo'));
+      dispatch({
+        type: TYPE.ADD_RPC_CALL,
+        payload: 'getInfo',
+      });
       try {
         const info = await rpc('getinfo', []);
         dispatch({ type: TYPE.GET_INFO, payload: info });

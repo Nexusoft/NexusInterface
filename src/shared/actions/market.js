@@ -163,11 +163,8 @@ export const binanceCandlestickLoader = any => {
                 close: parseFloat(e[4]),
                 high: parseFloat(e[2]),
                 low: parseFloat(e[3]),
-                label: `${__('Date')}: ${new Date(
-                  e[0]
-                ).getMonth() + 1}/${new Date(e[0]).getDate()}/${new Date(
-                  e[0]
-                ).getFullYear()}
+                label: `${__('Date')}: ${new Date(e[0]).getMonth() +
+                  1}/${new Date(e[0]).getDate()}/${new Date(e[0]).getFullYear()}
              ${__('Open')}: ${parseFloat(e[1])}
              ${__('Close')}: ${parseFloat(e[4])}
              ${__('High')}: ${parseFloat(e[2])}
@@ -203,11 +200,8 @@ export const bittrexCandlestickLoader = any => {
                 close: e.C,
                 high: e.H,
                 low: e.L,
-                label: `${__('Date')}: ${new Date(
-                  e.T
-                ).getMonth() + 1}/${new Date(e.T).getDate()}/${new Date(
-                  e.T
-                ).getFullYear()}
+                label: `${__('Date')}: ${new Date(e.T).getMonth() +
+                  1}/${new Date(e.T).getDate()}/${new Date(e.T).getFullYear()}
                 ${__('Open')}: ${e.O}
                 ${__('Close')}: ${e.C}
                 ${__('High')}: ${e.H}

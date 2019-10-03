@@ -4,12 +4,11 @@ import { isCoreConnected, isLoggedIn } from 'selectors';
 import { loadMyAccounts } from 'actions/account';
 import { showNotification, openModal } from 'lib/overlays';
 import { bootstrap } from 'lib/bootstrap';
-import { updateBlockDate } from 'actions/setupApp';
 import { getInfo, getUserStatus } from 'actions/core';
 import { showDesktopNotif } from 'utils/misc';
-import { showEncryptionWarningModal } from 'actions/setupApp';
 import LoginModal from 'components/LoginModal';
 import { legacyMode } from 'consts/misc';
+import EncryptionWarningModal from 'components/EncryptionWarningModal';
 
 const incStep = 1000;
 const maxTime = 10000;
@@ -59,8 +58,18 @@ export function initializeCoreInfo() {
     observeStore(
       ({ core: { info } }) => info && info.locked,
       locked => {
-        if (isCoreConnected(store.getState()) && locked === undefined) {
-          store.dispatch(showEncryptionWarningModal());
+        const state = store.getState();
+        if (isCoreConnected(state) && locked === undefined) {
+          if (
+            !state.common.encryptionModalShown &&
+            !state.settings.encryptionWarningDisabled &&
+            state.settings.acceptedAgreement
+          ) {
+            openModal(EncryptionWarningModal);
+            store.dispatch({
+              type: TYPE.SHOW_ENCRYPTION_MODAL,
+            });
+          }
         }
       }
     );
@@ -127,7 +136,10 @@ export function initializeCoreInfo() {
       ({ core: { info } }) => info && info.blocks,
       blocks => {
         if (blocks) {
-          store.dispatch(updateBlockDate(new Date()));
+          store.dispatch({
+            type: TYPE.UPDATE_BLOCK_DATE,
+            payload: new Date(),
+          });
         }
       }
     );

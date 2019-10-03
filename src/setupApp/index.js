@@ -2,7 +2,7 @@
 import { remote } from 'electron';
 
 // Internal
-import * as ac from 'actions/setupApp';
+import { initializeMarketData } from 'lib/market';
 import { loadModules } from 'actions/module';
 import { stopCore } from 'actions/core';
 import { closeWallet } from 'actions/ui';
@@ -21,11 +21,7 @@ import store from 'store';
 const { dispatch } = store;
 export function preRender() {
   initializeCoreInfo();
-
-  dispatch(ac.SetMarketAveData());
-  setInterval(() => {
-    dispatch(ac.SetMarketAveData());
-  }, 900000);
+  initializeMarketData();
 
   dispatch(loadModules());
 
