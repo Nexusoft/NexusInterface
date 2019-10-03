@@ -18,8 +18,7 @@ export const getUserStatus = async () => {
   try {
     const userStatus = await apiPost('users/get/status');
     store.dispatch({ type: TYPE.SET_USER_STATUS, payload: userStatus });
-
-    store.dispatch(getStakeInfo());
+    getStakeInfo();
   } catch (err) {
     store.dispatch({ type: TYPE.CLEAR_USER_STATUS });
   }
