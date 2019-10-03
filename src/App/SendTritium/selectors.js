@@ -6,7 +6,7 @@ export const getAccountOptions = memoize(myAccounts => {
   if (myAccounts) {
     return myAccounts.map(acc => ({
       value: acc.name,
-      display: `${acc.name} (${acc.balance} NXS)`,
+      display: `${acc.name} (${acc.balance} ${acc.token_name || 'Tokens'})`,
     }));
   }
   return [];
