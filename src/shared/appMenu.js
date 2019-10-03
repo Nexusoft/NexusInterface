@@ -6,7 +6,7 @@ import fs from 'fs';
 import store, { observeStore, history } from 'store';
 import { toggleWebViewDevTools } from 'lib/modules';
 import { updateSettings } from 'lib/settings';
-import { startCore as startCoreAC, stopCore as stopCoreAC } from 'actions/core';
+import { startCore, stopCore } from 'lib/core';
 import { backupWallet as backup } from 'lib/wallet';
 import { showNotification } from 'lib/ui';
 import { bootstrap } from 'lib/bootstrap';
@@ -43,18 +43,14 @@ const switchTritiumMode = {
   },
 };
 
-const startCore = {
+const startCoreMenu = {
   label: __('Start Nexus Core'),
-  click: () => {
-    store.dispatch(startCoreAC());
-  },
+  click: startCore,
 };
 
-const stopCore = {
+const stopCoreMenu = {
   label: __('Stop Nexus Core'),
-  click: () => {
-    store.dispatch(stopCoreAC());
-  },
+  click: stopCore,
 };
 
 const quitNexus = {
@@ -313,8 +309,8 @@ function buildDarwinTemplate() {
       // Start Core option because it does nothing
       !manualDaemon || coreConnected
         ? coreConnected
-          ? stopCore
-          : startCore
+          ? stopCoreMenu
+          : startCoreMenu
         : null,
       now < tritiumUpgradeTime
         ? null
@@ -404,8 +400,8 @@ function buildDefaultTemplate() {
       // Start Core option because it does nothing
       !manualDaemon || coreConnected
         ? coreConnected
-          ? stopCore
-          : startCore
+          ? stopCoreMenu
+          : startCoreMenu
         : null,
       now < tritiumUpgradeTime
         ? null

@@ -13,7 +13,7 @@ import { walletDataDir } from 'consts/paths';
 import { backupWallet } from 'lib/wallet';
 import rpc from 'lib/rpc';
 import store from 'store';
-import { startCore, stopCore } from 'actions/core';
+import { startCore, stopCore } from 'lib/core';
 import {
   showNotification,
   openErrorDialog,
@@ -89,7 +89,7 @@ async function startBootstrap() {
     }
 
     setStatus('stopping_core');
-    await store.dispatch(stopCore());
+    await stopCore();
 
     setStatus('downloading', {});
     // A flag to prevent bootstrap status being set back to downloading
@@ -119,9 +119,9 @@ async function startBootstrap() {
       return false;
     }
 
-    await store.dispatch(stopCore());
+    await stopCore();
     setStatus('restarting_core');
-    await store.dispatch(startCore());
+    await startCore();
 
     setStatus('rescanning');
     await rescan();
@@ -145,7 +145,7 @@ async function startBootstrap() {
         'restarting_core',
       ].includes(lastStep)
     ) {
-      await store.dispatch(startCore());
+      await startCore();
     }
   }
 }

@@ -11,7 +11,7 @@ import GA from 'lib/googleAnalytics';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import ContextMenuBuilder from 'contextmenu';
-import { getDifficulty } from 'actions/core';
+import { getDifficulty } from 'lib/core';
 import { updateSettings } from 'lib/settings';
 import { formatNumber, formatCurrency, formatRelativeTime } from 'lib/intl';
 import { timing, consts } from 'styles';
@@ -131,9 +131,6 @@ const mapStateToProps = state => {
     synchronizing: !syncUnknown && synccomplete !== 100,
   };
 };
-const mapDispatchToProps = dispatch => ({
-  getDifficulty: () => dispatch(getDifficulty()),
-});
 
 const OverviewPage = styled.div({
   width: '100%',
@@ -383,7 +380,7 @@ class Overview extends Component {
    * @memberof Overview
    */
   fetchDifficulty = async () => {
-    await this.props.getDifficulty();
+    await getDifficulty();
     this.diffFetcher = setTimeout(this.fetchDifficulty, 50000);
   };
 
@@ -950,7 +947,4 @@ class Overview extends Component {
 }
 
 // Mandatory React-Redux method
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Overview);
+export default connect(mapStateToProps)(Overview);

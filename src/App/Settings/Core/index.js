@@ -7,7 +7,7 @@ import styled from '@emotion/styled';
 
 // Internal
 import { switchSettingsTab } from 'lib/ui';
-import { stopCore, startCore, restartCore } from 'actions/core';
+import { stopCore, startCore, restartCore } from 'lib/core';
 import { showNotification, openConfirmDialog } from 'lib/ui';
 import { updateSettings } from 'lib/settings';
 import SettingsField from 'components/SettingsField';
@@ -66,11 +66,6 @@ const mapStateToProps = state => {
     },
   };
 };
-const actionCreators = {
-  stopCore,
-  startCore,
-  restartCore,
-};
 
 /**
  * Core Settings page that is inside Settings
@@ -78,10 +73,7 @@ const actionCreators = {
  * @class SettingsCore
  * @extends {Component}
  */
-@connect(
-  mapStateToProps,
-  actionCreators
-)
+@connect(mapStateToProps)
 @reduxForm({
   form: 'coreSettings',
   destroyOnUnmount: false,
@@ -137,7 +129,7 @@ const actionCreators = {
       showNotification(__('Core settings saved'), 'success');
       showNotification(__('Restarting Core...'));
       props.reset();
-      props.restartCore();
+      restartCore();
     }
   },
   onSubmitFail: errorHandler('Error saving settings'),
@@ -159,7 +151,7 @@ class SettingsCore extends Component {
    * @memberof SettingsCore
    */
   confirmSwitchManualDaemon = () => {
-    const { manualDaemon, stopCore, startCore } = this.props;
+    const { manualDaemon } = this.props;
 
     if (manualDaemon) {
       openConfirmDialog({
@@ -226,7 +218,7 @@ class SettingsCore extends Component {
     });
     if (confirmed) {
       updateSettings({ walletClean: true });
-      this.props.restartCore();
+      restartCore();
     }
   };
 

@@ -4,7 +4,7 @@ import { remote } from 'electron';
 // Internal
 import { initializeMarketData } from 'lib/market';
 import { loadModules } from 'lib/modules';
-import { stopCore } from 'actions/core';
+import { stopCore } from 'lib/core';
 import { closeWallet } from 'lib/wallet';
 import { openModal } from 'lib/ui';
 import TritiumUpgradeModal from 'components/TritiumUpgradeModal';
@@ -42,7 +42,7 @@ export function preRender() {
       closeWallet();
 
       if (!manualDaemon) {
-        await dispatch(stopCore());
+        await stopCore();
       }
       remote.app.exit();
     }

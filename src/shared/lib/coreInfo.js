@@ -1,10 +1,12 @@
+import * as TYPE from 'consts/actionTypes';
 import store, { observeStore } from 'store';
 import rpc from 'lib/rpc';
+import { apiPost } from 'lib/tritiumApi';
 import { isCoreConnected, isLoggedIn } from 'selectors';
 import { loadMyAccounts } from 'actions/account';
 import { showNotification, openModal } from 'lib/ui';
 import { bootstrap } from 'lib/bootstrap';
-import { getInfo, getUserStatus } from 'actions/core';
+import { getUserStatus } from 'actions/core';
 import { showDesktopNotif } from 'utils/misc';
 import LoginModal from 'components/LoginModal';
 import { legacyMode } from 'consts/misc';
@@ -15,6 +17,38 @@ const maxTime = 10000;
 let waitTime = 0;
 let connected = false;
 let timerId = null;
+
+const getInfo = legacyMode
+  ? // Legacy
+    async () => {
+      store.dispatch({
+        type: TYPE.ADD_RPC_CALL,
+        payload: 'getInfo',
+      });
+      try {
+        const info = await rpc('getinfo', []);
+        store.dispatch({ type: TYPE.GET_INFO, payload: info });
+      } catch (err) {
+        store.dispatch({ type: TYPE.CLEAR_CORE_INFO });
+        console.error(err);
+        // Throws error so getInfo fails and autoFetchCoreInfo will
+        // switch to using dynamic interval.
+        throw err;
+      }
+    }
+  : // Tritium
+    async () => {
+      try {
+        const systemInfo = await apiPost('system/get/info');
+        store.dispatch({ type: TYPE.SET_SYSTEM_INFO, payload: systemInfo });
+      } catch (err) {
+        store.dispatch({ type: TYPE.CLEAR_CORE_INFO });
+        console.error('system/get/info failed', err);
+        // Throws error so getInfo fails and autoFetchCoreInfo will
+        // switch to using dynamic interval.
+        throw err;
+      }
+    };
 
 /**
  *

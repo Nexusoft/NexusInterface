@@ -11,7 +11,8 @@ import GA from 'lib/googleAnalytics';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import ContextMenuBuilder from 'contextmenu';
-import { getMiningInfo, getBalances } from 'actions/core';
+import { getBalances } from 'actions/core';
+import { getMiningInfo } from 'lib/core';
 import { formatNumber, formatCurrency, formatRelativeTime } from 'lib/intl';
 import { timing, consts } from 'styles';
 import { isCoreConnected, isSynchronized } from 'selectors';
@@ -120,7 +121,6 @@ const mapStateToProps = state => {
   };
 };
 const actionCreators = {
-  getMiningInfo,
   getBalances,
 };
 
@@ -368,7 +368,7 @@ class Overview extends Component {
    * @memberof Overview
    */
   fetchDifficulty = async () => {
-    await this.props.getMiningInfo();
+    await getMiningInfo();
     this.diffFetcher = setTimeout(this.fetchDifficulty, 50000);
   };
 

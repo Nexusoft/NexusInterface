@@ -7,7 +7,7 @@ import AdjustStakeModal from 'components/AdjustStakeModal';
 import MigrateStakeModal from 'components/MigrateStakeModal';
 import { switchUserTab } from 'lib/ui';
 import { updateSettings } from 'lib/settings';
-import { restartCore } from 'actions/core';
+import { restartCore } from 'lib/core';
 import { openModal } from 'lib/ui';
 import confirm from 'utils/promisified/confirm';
 import { formatNumber, formatDateTime } from 'lib/intl';
@@ -46,13 +46,10 @@ const Pending = styled.div({
   paddingLeft: '1em',
 });
 
-@connect(
-  state => ({
-    stakeInfo: state.core.stakeInfo,
-    stakingEnabled: state.settings.enableStaking,
-  }),
-  { restartCore }
-)
+@connect(state => ({
+  stakeInfo: state.core.stakeInfo,
+  stakingEnabled: state.settings.enableStaking,
+}))
 export default class Staking extends React.Component {
   constructor(props) {
     super(props);
@@ -60,7 +57,7 @@ export default class Staking extends React.Component {
   }
 
   switchStaking = async () => {
-    const { stakingEnabled, restartCore } = this.props;
+    const { stakingEnabled } = this.props;
     const confirmed = await confirm({
       question: __('Restart Core?'),
       note: __('Nexus Core needs to restart for this change to take effect'),

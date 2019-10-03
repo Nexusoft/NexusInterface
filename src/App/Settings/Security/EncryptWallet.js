@@ -1,6 +1,5 @@
 // External
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
 
@@ -11,7 +10,7 @@ import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
 import { openSuccessDialog } from 'lib/ui';
 import rpc from 'lib/rpc';
-import { startCore } from 'actions/core';
+import { startCore } from 'lib/core';
 import { consts } from 'styles';
 import { errorHandler } from 'utils/form';
 import passwordInvalidChars from './passwordInvalidChars';
@@ -38,10 +37,6 @@ const Characters = styled.span({
  * @class EncryptWallet
  * @extends {Component}
  */
-@connect(
-  null,
-  { startCore }
-)
 @reduxForm({
   form: 'encryptWallet',
   destroyOnUnmount: false,
@@ -75,7 +70,7 @@ const Characters = styled.span({
       onClose: () => {
         // In some old version, core stops after wallet is encrypted
         // So start the core here for legacy support
-        props.startCore();
+        startCore();
       },
     });
   },
