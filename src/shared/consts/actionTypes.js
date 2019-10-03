@@ -98,7 +98,7 @@ export const UNPAUSE_CORE_OUTPUT = 'UNPAUSE_CORE_OUTPUT';
 
 // Settings
 export const UPDATE_SETTINGS = 'UPDATE_SETTINGS';
-export const RESET_COLORS = 'RESET_COLORS';
+export const SET_THEME = 'SET_THEME';
 export const UPDATE_THEME = 'UPDATE_THEME';
 
 // UI

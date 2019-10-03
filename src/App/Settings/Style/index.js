@@ -9,7 +9,7 @@ import https from 'https';
 // Internal
 import GA from 'lib/googleAnalytics';
 import { updateSettings } from 'lib/settings';
-import { updateTheme, resetColors } from 'actions/theme';
+import { updateTheme, resetColors } from 'lib/theme';
 import { switchSettingsTab } from 'actions/ui';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
@@ -63,8 +63,6 @@ const setAddressStyle = addressStyle => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  updateTheme: updates => dispatch(updateTheme(updates)),
-  resetColors: () => dispatch(resetColors()),
   switchSettingsTab: tab => dispatch(switchSettingsTab(tab)),
 });
 
@@ -169,11 +167,11 @@ class SettingsStyle extends Component {
    */
   setWallpaper = (path, defaultStyle) => {
     defaultStyle = defaultStyle ? defaultStyle : this.props.theme.defaultStyle;
-    this.props.updateTheme({ defaultStyle: defaultStyle, wallpaper: path });
+    updateTheme({ defaultStyle: defaultStyle, wallpaper: path });
     if (path || defaultStyle.endsWith('Custom')) {
       this.setThemeSelector(2);
       if (path) {
-        this.props.updateTheme({ defaultStyle: 'Custom' });
+        updateTheme({ defaultStyle: 'Custom' });
       }
     }
   };
@@ -190,7 +188,7 @@ class SettingsStyle extends Component {
       defaultStyle === 'Dark' ||
       defaultStyle === 'Light' ||
       defaultStyle.endsWith('Custom');
-    this.props.updateTheme({
+    updateTheme({
       [key]: value,
       defaultStyle: wasOnDefault
         ? defaultStyle.endsWith('Custom')
@@ -207,7 +205,7 @@ class SettingsStyle extends Component {
    */
   resetColors = () => {
     //Dont think we need this anymore
-    this.props.resetColors();
+    resetColors();
     showNotification(__('Color scheme has been reset to default'), 'success');
   };
 
@@ -258,7 +256,7 @@ class SettingsStyle extends Component {
       );
     }
     customTheme.defaultStyle = 'Custom';
-    this.props.updateTheme(customTheme);
+    updateTheme(customTheme);
   };
 
   /**
@@ -313,7 +311,7 @@ class SettingsStyle extends Component {
    * @memberof SettingsStyle
    */
   pressDarkTheme = () => {
-    this.props.updateTheme(DarkTheme);
+    updateTheme(DarkTheme);
   };
   /**
    * Press Light Theme Button
@@ -321,7 +319,7 @@ class SettingsStyle extends Component {
    * @memberof SettingsStyle
    */
   pressLightTheme = () => {
-    this.props.updateTheme(LightTheme);
+    updateTheme(LightTheme);
   };
   /**
    * Press Custom theme button
@@ -330,7 +328,7 @@ class SettingsStyle extends Component {
    */
   pressCustomTheme = () => {
     if (this.state.previousCustom != {}) {
-      this.props.updateTheme(this.state.previousCustom);
+      updateTheme(this.state.previousCustom);
     }
   };
   /**
@@ -339,7 +337,7 @@ class SettingsStyle extends Component {
    * @memberof SettingsStyle
    */
   pressResetTheme = () => {
-    this.props.updateTheme(DarkTheme);
+    updateTheme(DarkTheme);
     this.setThemeSelector(0);
     showNotification(__('Theme has been reset to default'), 'success');
   };

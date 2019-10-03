@@ -77,14 +77,6 @@ export const defaultSettings = {
   alphaTestNet: 19,
 };
 
-function readSettings() {
-  return filterValidSettings(readJson(settingsFilePath));
-}
-
-function writeSettings(settings) {
-  return writeJson(settingsFilePath, filterValidSettings(settings));
-}
-
 function filterValidSettings(settings) {
   const validSettings = {};
   Object.keys(settings || {}).map(key => {
@@ -95,6 +87,14 @@ function filterValidSettings(settings) {
     }
   });
   return validSettings;
+}
+
+function readSettings() {
+  return filterValidSettings(readJson(settingsFilePath));
+}
+
+function writeSettings(settings) {
+  return writeJson(settingsFilePath, filterValidSettings(settings));
 }
 
 export function loadSettingsFromFile() {
