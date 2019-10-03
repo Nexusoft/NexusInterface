@@ -165,9 +165,9 @@ class NexusApiConsole extends Component {
    * @memberof TerminalConsole
    */
   execute = async () => {
-    if (!currentCommand || !currentCommand.trim()) return;
+    if (!this.props.currentCommand || !this.props.currentCommand.trim()) return;
 
-    const cmd = currentCommand;
+    const cmd = this.props.currentCommand;
     GA.SendEvent('Terminal', 'NexusApiConsole', 'UseCommand', 1);
 
     const cliCMDSplit = cmd.split(' ');
