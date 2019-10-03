@@ -9,7 +9,7 @@ import GA from 'lib/googleAnalytics';
 import Button from 'components/Button';
 import Panel from 'components/Panel';
 import LoginModal from 'components/LoginModal';
-import { openModal } from 'actions/overlays';
+import { openModal } from 'lib/ui';
 import { isCoreConnected, isLoggedIn } from 'selectors';
 import ContextMenuBuilder from 'contextmenu';
 
@@ -26,18 +26,13 @@ const mapStateToProps = state => ({
   loggedIn: isLoggedIn(state),
 });
 
-const actionCreators = { openModal };
-
 /**
  * The Address Book Page
  *
  * @class Tokens
  * @extends {Component}
  */
-@connect(
-  mapStateToProps,
-  actionCreators
-)
+@connect(mapStateToProps)
 class Tokens extends Component {
   state = {
     activeIndex: 0,
@@ -86,7 +81,7 @@ class Tokens extends Component {
    * @memberof Tokens
    */
   render() {
-    const { loggedIn, openModal, match } = this.props;
+    const { loggedIn, match } = this.props;
 
     return (
       <Panel icon={userIcon} title={__('Tokens')} bodyScrollable={false}>
