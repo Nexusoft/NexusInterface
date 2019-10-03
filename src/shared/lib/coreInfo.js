@@ -6,7 +6,7 @@ import { isCoreConnected, isLoggedIn } from 'selectors';
 import { loadMyAccounts } from 'actions/account';
 import { showNotification, openModal } from 'lib/ui';
 import { bootstrap } from 'lib/bootstrap';
-import { getUserStatus } from 'actions/core';
+import { getUserStatus } from 'lib/user';
 import { showDesktopNotif } from 'utils/misc';
 import LoginModal from 'components/LoginModal';
 import { legacyMode } from 'consts/misc';
@@ -184,7 +184,7 @@ export function initializeCoreInfo() {
       ({ core: { systemInfo } }) => systemInfo,
       async () => {
         if (isCoreConnected(store.getState())) {
-          await store.dispatch(getUserStatus());
+          await getUserStatus();
           if (justConnected) {
             justConnected = false;
             if (!isLoggedIn(store.getState())) {

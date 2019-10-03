@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
 import { switchUserTab } from 'lib/ui';
-import { getBalances } from 'actions/core';
+import { getBalances } from 'lib/user';
 import { observeStore } from 'store';
 import { formatNumber } from 'lib/intl';
 
@@ -29,12 +29,9 @@ const Line = styled.div(
     }
 );
 
-@connect(
-  state => ({
-    balances: state.core.balances,
-  }),
-  { getBalances }
-)
+@connect(state => ({
+  balances: state.core.balances,
+}))
 export default class Balances extends React.Component {
   constructor(props) {
     super(props);
@@ -43,10 +40,10 @@ export default class Balances extends React.Component {
 
   componentDidMount() {
     // Periodically get balances
-    this.props.getBalances();
+    getBalances();
     this.unobserve = observeStore(
       ({ core }) => core && core.userStatus,
-      this.props.getBalances
+      getBalances
     );
   }
 

@@ -11,7 +11,7 @@ import WaitingMessage from 'components/WaitingMessage';
 import LoginModal from 'components/LoginModal';
 import Button from 'components/Button';
 import { openModal } from 'lib/ui';
-import { listAccounts } from 'actions/core';
+import { listAccounts } from 'lib/user';
 import { isCoreConnected, isLoggedIn } from 'selectors';
 
 // Internal Local Dependencies
@@ -25,18 +25,13 @@ const mapStateToProps = state => ({
   loggedIn: isLoggedIn(state),
 });
 
-const actionCreators = { listAccounts };
-
 /**
  * Send Page
  *
  * @class Send
  * @extends {Component}
  */
-@connect(
-  mapStateToProps,
-  actionCreators
-)
+@connect(mapStateToProps)
 class Send extends Component {
   /**
    * Component Mount Callback
@@ -44,7 +39,7 @@ class Send extends Component {
    * @memberof Send
    */
   componentDidMount() {
-    this.props.listAccounts();
+    listAccounts();
     window.addEventListener('contextmenu', this.setupcontextmenu, false);
     GA.SendScreen('Send');
   }

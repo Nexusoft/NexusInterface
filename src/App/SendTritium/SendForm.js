@@ -8,7 +8,7 @@ import styled from '@emotion/styled';
 import { apiPost } from 'lib/tritiumApi';
 import rpc from 'lib/rpc';
 import { defaultSettings } from 'lib/settings/universal';
-import { listAccounts } from 'actions/core';
+import { listAccounts } from 'lib/user';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
@@ -90,20 +90,13 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = {
-  listAccounts,
-};
-
 /**
  * The Internal Send Form in the Send Page
  *
  * @class SendForm
  * @extends {Component}
  */
-@connect(
-  mapStateToProps,
-  mapDispatchToProps
-)
+@connect(mapStateToProps)
 @reduxForm({
   form: formName,
   destroyOnUnmount: false,
@@ -243,7 +236,7 @@ const mapDispatchToProps = {
     if (!result) return;
 
     props.reset();
-    props.listAccounts();
+    listAccounts();
     openSuccessDialog({
       message: __('Transaction sent'),
     });

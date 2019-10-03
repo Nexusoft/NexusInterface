@@ -1,5 +1,4 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
 
 import Modal from 'components/Modal';
@@ -9,13 +8,9 @@ import FormField from 'components/FormField';
 import confirmPin from 'utils/promisified/confirmPin';
 import { apiPost } from 'lib/tritiumApi';
 import { errorHandler } from 'utils/form';
-import { listAccounts } from 'actions/core';
+import { listAccounts } from 'lib/user';
 import { removeModal, showNotification } from 'lib/ui';
 
-@connect(
-  null,
-  { listAccounts }
-)
 @reduxForm({
   form: 'new_account',
   destroyOnUnmount: true,
@@ -39,7 +34,7 @@ import { removeModal, showNotification } from 'lib/ui';
   onSubmitSuccess: (result, dispatch, props) => {
     if (!result) return; // Submission was cancelled
 
-    props.listAccounts();
+    listAccounts();
     removeModal(props.modalId);
     showNotification(
       __('New account %{account} has been created', {

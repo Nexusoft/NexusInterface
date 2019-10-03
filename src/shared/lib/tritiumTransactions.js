@@ -2,7 +2,7 @@ import { apiPost } from 'lib/tritiumApi';
 
 import store, { observeStore } from 'store';
 import * as TYPE from 'consts/actionTypes';
-import { listAccounts } from 'actions/core';
+import { listAccounts } from 'lib/user';
 import { showDesktopNotif } from 'utils/misc';
 import { formatNumber } from 'lib/intl';
 import { showNotification } from 'lib/ui';
@@ -41,7 +41,7 @@ function autoUpdateTransaction(txid) {
         // If a transaction has just been confirmed, reload the account list
         // so that the account balances (available & unconfirmed) are up-to-date
         if (wasUnconfirmed && !isUnconfirmed(tx)) {
-          store.dispatch(listAccounts());
+          listAccounts();
         }
       }
     }

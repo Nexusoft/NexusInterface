@@ -11,7 +11,7 @@ import Button from 'components/Button';
 import Link from 'components/Link';
 import LoginModal from 'components/LoginModal';
 import { showNotification, openModal, removeModal } from 'lib/ui';
-import { getUserStatus } from 'actions/core';
+import { getUserStatus } from 'lib/user';
 import { errorHandler, numericOnly } from 'utils/form';
 
 const Buttons = styled.div({
@@ -31,10 +31,7 @@ const ExtraSection = styled.div({
  * @class NewUserModal
  * @extends {Component}
  */
-@connect(
-  ({ enableMining, enableStaking }) => ({ enableMining, enableStaking }),
-  { getUserStatus }
-)
+@connect(({ enableMining, enableStaking }) => ({ enableMining, enableStaking }))
 @reduxForm({
   form: 'new_user',
   destroyOnUnmount: true,
@@ -114,7 +111,7 @@ const ExtraSection = styled.div({
       mining: !!props.enableMining,
       staking: !!props.enableStaking,
     });
-    props.getUserStatus();
+    getUserStatus();
   },
   onSubmitFail: errorHandler(__('Error creating user')),
 })

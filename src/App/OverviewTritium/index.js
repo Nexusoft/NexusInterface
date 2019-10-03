@@ -11,7 +11,7 @@ import GA from 'lib/googleAnalytics';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import ContextMenuBuilder from 'contextmenu';
-import { getBalances } from 'actions/core';
+import { getBalances } from 'lib/user';
 import { getMiningInfo } from 'lib/core';
 import { formatNumber, formatCurrency, formatRelativeTime } from 'lib/intl';
 import { timing, consts } from 'styles';
@@ -119,9 +119,6 @@ const mapStateToProps = state => {
     stakeInfo,
     balances,
   };
-};
-const actionCreators = {
-  getBalances,
 };
 
 const OverviewPage = styled.div({
@@ -288,10 +285,10 @@ class Overview extends Component {
     GA.SendScreen('Overview');
 
     // Periodically get balances
-    this.props.getBalances();
+    getBalances();
     this.unobserve = observeStore(
       ({ core }) => core && core.userStatus,
-      this.props.getBalances
+      getBalances
     );
 
     // Periodically get difficulty
@@ -940,7 +937,4 @@ class Overview extends Component {
 }
 
 // Mandatory React-Redux method
-export default connect(
-  mapStateToProps,
-  actionCreators
-)(Overview);
+export default connect(mapStateToProps)(Overview);

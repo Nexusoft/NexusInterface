@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
 import { switchUserTab } from 'lib/ui';
-import { listAccounts } from 'actions/core';
+import { listAccounts } from 'lib/user';
 import { openModal } from 'lib/ui';
 import plusIcon from 'images/plus.sprite.svg';
 
@@ -19,12 +19,9 @@ const AccountsWrapper = styled.div(({ theme }) => ({
   color: theme.mixer(0.75),
 }));
 
-@connect(
-  state => ({
-    accounts: state.core.accounts,
-  }),
-  { listAccounts }
-)
+@connect(state => ({
+  accounts: state.core.accounts,
+}))
 export default class Accounts extends React.Component {
   constructor(props) {
     super(props);
@@ -32,7 +29,7 @@ export default class Accounts extends React.Component {
   }
 
   componentDidMount() {
-    this.props.listAccounts();
+    listAccounts();
   }
 
   render() {

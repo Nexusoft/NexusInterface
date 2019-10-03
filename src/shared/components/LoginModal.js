@@ -11,7 +11,7 @@ import Button from 'components/Button';
 import Link from 'components/Link';
 import NewUserModal from 'components/NewUserModal';
 import { showNotification, openModal, removeModal } from 'lib/ui';
-import { getUserStatus } from 'actions/core';
+import { getUserStatus } from 'lib/user';
 import { errorHandler, numericOnly } from 'utils/form';
 
 const Buttons = styled.div({
@@ -31,15 +31,10 @@ const ExtraSection = styled.div({
  * @class Login
  * @extends {Component}
  */
-@connect(
-  ({ settings: { enableMining, enableStaking } }) => ({
-    enableMining,
-    enableStaking,
-  }),
-  {
-    getUserStatus,
-  }
-)
+@connect(({ settings: { enableMining, enableStaking } }) => ({
+  enableMining,
+  enableStaking,
+}))
 @reduxForm({
   form: 'login_tritium',
   destroyOnUnmount: true,
@@ -84,7 +79,7 @@ const ExtraSection = styled.div({
       mining: !!props.enableMining,
       staking: !!props.enableStaking,
     });
-    props.getUserStatus();
+    getUserStatus();
   },
   // TODO: replace error handler
   onSubmitFail: errorHandler(__('Error logging in')),
