@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 import orbitControl from 'three-orbit-controls';
 
 import world from 'images/world-light-white.jpg';
-import geoip from 'lib/geoip';
+import geoip from 'data/geoip';
 import Curve from './Curve';
 import Point from './Point';
 import rpc from 'lib/rpc';
