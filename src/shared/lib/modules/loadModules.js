@@ -1,7 +1,9 @@
-import { join, isAbsolute, normalize } from 'path';
+import { join } from 'path';
 import fs from 'fs';
 import semver from 'semver';
 
+import * as TYPE from 'consts/actionTypes';
+import store from 'store';
 import { modulesDir } from 'consts/paths';
 import { loadModuleFromDir } from './loadModuleFromDir';
 
@@ -41,11 +43,11 @@ function prepareModule(module) {
  * @param {*} { devMode, verifyModuleSource }
  * @returns {object} an object mapping module names and module data
  */
-export async function loadModules({
-  devMode,
-  verifyModuleSource,
-  allowSymLink,
-}) {
+export async function loadModules() {
+  const {
+    settings: { devMode, verifyModuleSource, allowSymLink },
+  } = store.getState();
+
   try {
     if (!fs.existsSync(modulesDir)) return {};
     const dirNames = await fs.promises.readdir(modulesDir);
@@ -70,7 +72,10 @@ export async function loadModules({
       return map;
     }, {});
 
-    return modules;
+    store.dispatch({
+      type: TYPE.LOAD_MODULES,
+      payload: modules,
+    });
   } catch (err) {
     return {};
   }

@@ -4,7 +4,6 @@ import { reset, initialize } from 'redux-form';
 import { createMatchSelector } from 'connected-react-router';
 
 import store, { history, observeStore } from 'store';
-import { updateModuleState } from 'actions/module';
 import {
   showNotification,
   openConfirmDialog,
@@ -262,7 +261,10 @@ function updateState([moduleState]) {
   const activeModule = getActiveModule();
   const moduleName = activeModule.name;
   if (typeof moduleState === 'object') {
-    store.dispatch(updateModuleState(moduleName, moduleState));
+    store.dispatch({
+      type: TYPE.UPDATE_MODULE_STATE,
+      payload: { moduleName, moduleState },
+    });
   } else {
     console.error(
       `Module ${moduleName} is trying to update its state to a non-object value ${moduleState}`

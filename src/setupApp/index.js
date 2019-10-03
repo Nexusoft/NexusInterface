@@ -3,7 +3,7 @@ import { remote } from 'electron';
 
 // Internal
 import { initializeMarketData } from 'lib/market';
-import { loadModules } from 'actions/module';
+import { loadModules } from 'lib/modules';
 import { stopCore } from 'actions/core';
 import { closeWallet } from 'actions/ui';
 import { openModal } from 'lib/overlays';
@@ -23,7 +23,7 @@ export function preRender() {
   initializeCoreInfo();
   initializeMarketData();
 
-  dispatch(loadModules());
+  loadModules();
 
   const mainWindow = remote.getCurrentWindow();
   mainWindow.on('close', async e => {
