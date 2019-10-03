@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
 // Internal
-import { deleteContact } from 'actions/addressBook';
+import { deleteContact } from 'lib/addressBook';
 import ExternalLink from 'components/ExternalLink';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
@@ -114,21 +114,18 @@ const getLocalTime = tz => {
  * @class ContactDetails
  * @extends {Component}
  */
-@connect(
-  state => {
-    const {
-      addressBook,
-      ui: {
-        addressBook: { selectedContactName },
-      },
-    } = state;
-    return {
-      contact: addressBook[selectedContactName] || null,
-      coreConnected: isCoreConnected(state),
-    };
-  },
-  { deleteContact }
-)
+@connect(state => {
+  const {
+    addressBook,
+    ui: {
+      addressBook: { selectedContactName },
+    },
+  } = state;
+  return {
+    contact: addressBook[selectedContactName] || null,
+    coreConnected: isCoreConnected(state),
+  };
+})
 class ContactDetails extends React.Component {
   /**
    * Opens a dialog to confirm contact delete
@@ -142,7 +139,7 @@ class ContactDetails extends React.Component {
       }),
       skinYes: 'danger',
       callbackYes: () => {
-        this.props.deleteContact(this.props.contact.name);
+        deleteContact(this.props.contact.name);
       },
     });
   };

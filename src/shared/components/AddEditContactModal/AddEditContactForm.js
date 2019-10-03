@@ -4,7 +4,7 @@ import { reduxForm, Field, FieldArray } from 'redux-form';
 import { connect } from 'react-redux';
 
 // Internal
-import { addNewContact, updateContact } from 'actions/addressBook';
+import { addNewContact, updateContact } from 'lib/addressBook';
 import rpc from 'lib/rpc';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
@@ -23,11 +23,6 @@ const tzOptions = timeZones.map(tz => ({
 const mapStateToProps = state => ({
   addressBook: state.addressBook,
 });
-
-const actionCreators = {
-  addNewContact,
-  updateContact,
-};
 
 function validateAddresses(addresses) {
   const addressesErrors = [];
@@ -75,10 +70,7 @@ function asyncValidateAddresses(isMine, addresses, errors) {
  * @class AddEditContactForm
  * @extends {Component}
  */
-@connect(
-  mapStateToProps,
-  actionCreators
-)
+@connect(mapStateToProps)
 @reduxForm({
   destroyOnUnmount: false,
   validate: ({ name, mine, notMine, email }, props) => {
@@ -143,9 +135,9 @@ function asyncValidateAddresses(isMine, addresses, errors) {
     contact.addresses = addresses;
 
     if (props.edit) {
-      props.updateContact(props.oldName, contact);
+      updateContact(props.oldName, contact);
     } else {
-      props.addNewContact(contact);
+      addNewContact(contact);
     }
   },
   onSubmitSuccess: (result, dispatch, props) => {

@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 import { remote } from 'electron';
 
 // Internal Global
-import { selectContact, deleteContact } from 'actions/addressBook';
+import { selectContact, deleteContact } from 'lib/addressBook';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import { openConfirmDialog, openModal } from 'lib/overlays';
@@ -73,14 +73,11 @@ const AddressesCount = styled.div(({ theme }) => ({
  * @class Contact
  * @extends {PureComponent}
  */
-@connect(
-  state => ({
-    selectedContactName: state.ui.addressBook.selectedContactName,
-    locale: state.settings.locale,
-    coreConnected: isCoreConnected(state),
-  }),
-  { selectContact, deleteContact }
-)
+@connect(state => ({
+  selectedContactName: state.ui.addressBook.selectedContactName,
+  locale: state.settings.locale,
+  coreConnected: isCoreConnected(state),
+}))
 class Contact extends React.PureComponent {
   /**
    * Open a Dialog to confirm Contact Delete
@@ -94,7 +91,7 @@ class Contact extends React.PureComponent {
       }),
       skinYes: 'danger',
       callbackYes: () => {
-        this.props.deleteContact(this.props.contact.name);
+        deleteContact(this.props.contact.name);
       },
     });
   };
@@ -149,7 +146,7 @@ class Contact extends React.PureComponent {
    * @memberof Contact
    */
   select = () => {
-    this.props.selectContact(this.props.contact.name);
+    selectContact(this.props.contact.name);
   };
 
   /**

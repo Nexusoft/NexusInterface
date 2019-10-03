@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 import GA from 'lib/googleAnalytics';
 
 // Internal Global
-import { searchContact } from 'actions/addressBook';
+import { searchContact } from 'lib/addressBook';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
@@ -39,12 +39,9 @@ const SearchInput = styled(TextField)({
  * @extends {Component}
  * @memberof PanelControls
  */
-@connect(
-  state => ({
-    searchQuery: state.ui.addressBook.searchQuery,
-  }),
-  { searchContact }
-)
+@connect(state => ({
+  searchQuery: state.ui.addressBook.searchQuery,
+}))
 class SearchBox extends Component {
   /**
    * Component's Renderable JSX
@@ -58,7 +55,7 @@ class SearchBox extends Component {
         left={<Icon icon={searchIcon} className="space-right" />}
         placeholder={__('Search contact')}
         value={this.props.searchQuery}
-        onChange={e => this.props.searchContact(e.target.value)}
+        onChange={e => searchContact(e.target.value)}
       />
     );
   }
