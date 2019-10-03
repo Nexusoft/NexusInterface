@@ -79,8 +79,12 @@ const App = ({ history }) => (
               <Route exact path="/AddressBook" component={AddressBook} />
               <Route path="/Settings" component={Settings} />
               <Route path="/Terminal" component={Terminal} />
-              <Route path="/User" component={UserPage} />
-              <Route path="/Tokens" component={Tokens} />
+              {legacyMode && (
+                <>
+                  <Route path="/User" component={UserPage} />
+                  <Route path="/Tokens" component={Tokens} />
+                </>
+              )}
 
               {/* <Route path="/Exchange" component={Exchange} /> */}
               {/* <Route exact path="/List" component={TrustList} /> */}
