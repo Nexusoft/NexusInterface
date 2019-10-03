@@ -23,6 +23,7 @@ import Settings from './Settings';
 import Terminal from './Terminal';
 import Accounts from './Accounts';
 import UserPage from './UserPage';
+import Tokens from './Tokens';
 
 import About from './About';
 import Modules from './Modules';
@@ -80,6 +81,7 @@ const App = ({ history }) => (
               <Route path="/Terminal" component={Terminal} />
               <Route path="/Accounts" component={Accounts} />
               <Route path="/User" component={UserPage} />
+              <Route path="/Tokens" component={Tokens} />
 
               {/* <Route path="/Exchange" component={Exchange} /> */}
               {/* <Route exact path="/List" component={TrustList} /> */}
