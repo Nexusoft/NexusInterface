@@ -2,6 +2,10 @@ import React from 'react';
 import styled from '@emotion/styled';
 import memoize from 'utils/memoize';
 
+const TokenRecipientName = styled.span({
+  color: 'gray',
+});
+
 export const getAccountOptions = memoize(myAccounts => {
   if (myAccounts) {
     return myAccounts.map(acc => ({
@@ -53,6 +57,8 @@ const Address = styled.span(({ theme }) => ({
 
 export const getRecipientSuggestions = memoize(
   (addressBook, myTritiumAccounts) => {
+    console.log(myTritiumAccounts);
+    console.log(addressBook);
     const suggestions = [];
     if (addressBook) {
       Object.values(addressBook).forEach(contact => {
@@ -66,7 +72,9 @@ export const getRecipientSuggestions = memoize(
                 display: (
                   <span>
                     {contact.name}
-                    {label ? ' - ' + label : ''} <Address>{address}</Address>
+                    {label ? ' - ' + label : ''}{' '}
+                    <TokenRecipientName>{'(NXS)'}</TokenRecipientName>{' '}
+                    <Address>{address}</Address>
                   </span>
                 ),
               });
@@ -85,6 +93,8 @@ export const getRecipientSuggestions = memoize(
           display: (
             <span>
               {element.name} {'   '}
+              <TokenRecipientName>{`(${element.token_name ||
+                'Tokens'})`}</TokenRecipientName>{' '}
               <Address>{element.address}</Address>
             </span>
           ),
