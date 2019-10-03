@@ -9,25 +9,16 @@ import GA from 'lib/googleAnalytics';
 import Button from 'components/Button';
 import Panel from 'components/Panel';
 import LoginModal from 'components/LoginModal';
-import { openModal } from 'lib/ui';
-import AddEditContactModal from 'components/AddEditContactModal';
+import { openModal } from 'actions/overlays';
 import { isCoreConnected, isLoggedIn } from 'selectors';
 import ContextMenuBuilder from 'contextmenu';
 
 // Internal Local
-import UserBrief from './UserBrief';
-import TabContent from './TabContent';
 
 // Icons
 import userIcon from 'images/user.sprite.svg';
 import { legacyMode } from 'consts/misc';
 import { history } from 'store';
-
-const UserPageLayout = styled.div({
-  display: 'flex',
-  alignItems: 'stretch',
-  height: '100%',
-});
 
 const mapStateToProps = state => ({
   addressBook: state.addressBook,
@@ -35,14 +26,19 @@ const mapStateToProps = state => ({
   loggedIn: isLoggedIn(state),
 });
 
+const actionCreators = { openModal };
+
 /**
  * The Address Book Page
  *
- * @class UserPage
+ * @class Tokens
  * @extends {Component}
  */
-@connect(mapStateToProps)
-class UserPage extends Component {
+@connect(
+  mapStateToProps,
+  actionCreators
+)
+class Tokens extends Component {
   state = {
     activeIndex: 0,
   };
@@ -50,20 +46,20 @@ class UserPage extends Component {
   /**
    * componentDidMount
    *
-   * @memberof UserPage
+   * @memberof Tokens
    */
   componentDidMount() {
     if (legacyMode) {
       history.push('/');
     }
     window.addEventListener('contextmenu', this.setupcontextmenu, false);
-    GA.SendScreen('UserPage');
+    GA.SendScreen('Tokens');
   }
 
   /**
    * componentWillUnmount
    *
-   * @memberof UserPage
+   * @memberof Tokens
    */
   componentWillUnmount() {
     window.removeEventListener('contextmenu', this.setupcontextmenu);
@@ -73,7 +69,7 @@ class UserPage extends Component {
    * Set up the context menu
    *
    * @param {*} e
-   * @memberof UserPage
+   * @memberof Tokens
    */
   setupcontextmenu(e) {
     e.preventDefault();
@@ -84,30 +80,18 @@ class UserPage extends Component {
   }
 
   /**
-   * Opens Add/Edit Contact Modal
-   *
-   * @memberof UserPage
-   */
-  showAddContact = () => {
-    openModal(AddEditContactModal);
-  };
-
-  /**
    * Component's Renderable JSX
    *
    * @returns
-   * @memberof UserPage
+   * @memberof Tokens
    */
   render() {
-    const { loggedIn, match } = this.props;
+    const { loggedIn, openModal, match } = this.props;
 
     return (
-      <Panel icon={userIcon} title={__('User')} bodyScrollable={false}>
+      <Panel icon={userIcon} title={__('Tokens')} bodyScrollable={false}>
         {loggedIn ? (
-          <UserPageLayout>
-            <UserBrief match={match} />
-            <TabContent match={match} />
-          </UserPageLayout>
+          <div>{'Tokens'}</div>
         ) : (
           <div style={{ marginTop: 50, textAlign: 'center' }}>
             <Button
@@ -126,4 +110,4 @@ class UserPage extends Component {
   }
 }
 
-export default UserPage;
+export default Tokens;

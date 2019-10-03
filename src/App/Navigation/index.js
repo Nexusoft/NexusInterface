@@ -24,6 +24,8 @@ import addressBookIcon from 'images/address-book.sprite.svg';
 import settingsIcon from 'images/settings.sprite.svg';
 import consoleIcon from 'images/console.sprite.svg';
 import userIcon from 'images/user.sprite.svg';
+import tokenIcons from 'images/blockexplorer-invert-white.sprite.svg';
+import { legacyMode } from 'consts/misc';
 // import shapeshiftIcon from 'images/shapeshift.sprite.svg';
 // import trustListIcon from 'images/trust-list.sprite.svg';
 
@@ -110,16 +112,22 @@ const Navigation = () => (
         {__('Overview')}
       </NavItem>
 
-      <NavItem icon={userIcon} to="/User">
-        {__('User')}
-      </NavItem>
+      {!legacyMode && (
+        <NavItem icon={userIcon} to="/User">
+          {__('User')}
+        </NavItem>
+      )}
 
       <NavItem icon={sendIcon} to="/Send">
-        {__('Send NXS')}
+        {legacyMode ? __('Send NXS') : __('Send')}
       </NavItem>
 
       <NavItem icon={transactionsIcon} to="/Transactions">
         {__('Transactions')}
+      </NavItem>
+
+      <NavItem icon={tokenIcons} to="/Tokens">
+        {__('Tokens')}
       </NavItem>
 
       <NavItem icon={chartIcon} to="/Market">

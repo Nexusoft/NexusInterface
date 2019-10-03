@@ -76,7 +76,7 @@ class Send extends Component {
   render() {
     const { coreConnected, loggedIn } = this.props;
     return (
-      <Panel icon={sendIcon} title={__('Send NXS')}>
+      <Panel icon={sendIcon} title={__('Send')}>
         {!coreConnected ? (
           <WaitingMessage>
             {__('Connecting to Nexus Core')}
