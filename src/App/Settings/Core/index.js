@@ -18,6 +18,7 @@ import { errorHandler } from 'utils/form';
 // import { coreDataDir } from 'consts/paths';
 import * as color from 'utils/color';
 import confirm from 'utils/promisified/confirm';
+import memoize from 'utils/memoize';
 import { consts } from 'styles';
 import warningIcon from 'images/warning.sprite.svg';
 import Icon from 'components/Icon';
@@ -46,24 +47,49 @@ const RestartContainer = styled.div({
 
 const removeWhiteSpaces = value => (value || '').replace(' ', '');
 
+const formKeys = [
+  'enableMining',
+  'ipMineWhitelist',
+  'enableStaking',
+  'verboseLevel',
+  'alphaTestNet',
+  'avatarMode',
+  'manualDaemonUser',
+  'manualDaemonPassword',
+  'manualDaemonIP',
+  'manualDaemonPort',
+  'manualDaemonDataDir',
+];
+const getInitialValues = (() => {
+  let lastOutput = null;
+  let lastInput = null;
+
+  return settings => {
+    if (settings === lastInput) return lastOutput;
+
+    let changed = false;
+    const output = lastOutput || {};
+    formKeys.forEach(key => {
+      if (settings[key] !== output[key]) {
+        changed = true;
+      }
+      output[key] = settings[key];
+    });
+
+    lastInput = settings;
+    if (changed) {
+      return (lastOutput = output);
+    } else {
+      return lastOutput;
+    }
+  };
+})();
+
 const mapStateToProps = state => {
   const { settings } = state;
-  console.log('staking', settings.enableStaking);
   return {
     manualDaemon: settings.manualDaemon,
-    initialValues: {
-      enableMining: settings.enableMining,
-      ipMineWhitelist: settings.ipMineWhitelist,
-      enableStaking: settings.enableStaking,
-      verboseLevel: settings.verboseLevel,
-      alphaTestNet: settings.alphaTestNet,
-      avatarMode: settings.avatarMode,
-      manualDaemonUser: settings.manualDaemonUser,
-      manualDaemonPassword: settings.manualDaemonPassword,
-      manualDaemonIP: settings.manualDaemonIP,
-      manualDaemonPort: settings.manualDaemonPort,
-      manualDaemonDataDir: settings.manualDaemonDataDir,
-    },
+    initialValues: getInitialValues(settings),
   };
 };
 
@@ -77,6 +103,7 @@ const mapStateToProps = state => {
 @reduxForm({
   form: 'coreSettings',
   destroyOnUnmount: false,
+  enableReinitialize: true,
   validate: (
     {
       verboseLevel,
@@ -128,7 +155,6 @@ const mapStateToProps = state => {
     if (result) {
       showNotification(__('Core settings saved'), 'success');
       showNotification(__('Restarting Core...'));
-      props.reset();
       restartCore();
     }
   },
