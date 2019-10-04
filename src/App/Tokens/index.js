@@ -14,16 +14,19 @@ import { isCoreConnected, isLoggedIn } from 'selectors';
 import ContextMenuBuilder from 'contextmenu';
 
 // Internal Local
+import NewTokenModal from './NewTokenModal';
 
 // Icons
 import userIcon from 'images/user.sprite.svg';
 import { legacyMode } from 'consts/misc';
 import { history } from 'store';
+import { apiGet } from 'lib/tritiumApi';
 
 const mapStateToProps = state => ({
   addressBook: state.addressBook,
   coreConnected: isCoreConnected(state),
   loggedIn: isLoggedIn(state),
+  accounts: state.core.accounts,
 });
 
 /**
@@ -36,6 +39,7 @@ const mapStateToProps = state => ({
 class Tokens extends Component {
   state = {
     activeIndex: 0,
+    usedTokens: [],
   };
 
   /**
@@ -49,6 +53,40 @@ class Tokens extends Component {
     }
     window.addEventListener('contextmenu', this.setupcontextmenu, false);
     GA.SendScreen('Tokens');
+
+    this.gatherTokenInformation();
+  }
+
+  gatherTokenInformation() {
+    const { accounts } = this.props;
+    if (accounts === null) return;
+    let tempMap = new Map();
+    accounts.forEach(element => {
+      if (tempMap.has(element.token_name || element.token)) return;
+
+      if (!tempMap.has('NXS')) {
+        tempMap.set('NXS', { name: 'NXS', maxsupply: '100000' });
+        return;
+      }
+      const tokenInfo = this.asdfh(element);
+      tempMap.set(element.token_name || element.token, tokenInfo);
+    });
+    this.setState({
+      usedTokens: tempMap,
+    });
+  }
+
+  async asdfh(element) {
+    const info = await apiGet(
+      element.token_name
+        ? `tokens/get/token?name=${element.token_name}`
+        : `tokens/get/token?address=${element.token}`
+    );
+    this.setState(prevState => {
+      let usedTokens = prevState.usedTokens;
+      usedTokens.set(element.token_name || element.token, info);
+      return { usedTokens };
+    });
   }
 
   /**
@@ -74,6 +112,23 @@ class Tokens extends Component {
     defaultcontextmenu.popup(remote.getCurrentWindow());
   }
 
+  returnTokenList() {
+    const { usedTokens } = this.state;
+    console.log(usedTokens.keys());
+
+    return Array.from(usedTokens, ([key, value]) => {
+      console.log(key);
+      console.log(value);
+      return (
+        <div>
+          <span>{key}</span>
+          <br />
+          <span>{value.maxsupply}</span>
+        </div>
+      );
+    });
+  }
+
   /**
    * Component's Renderable JSX
    *
@@ -81,12 +136,23 @@ class Tokens extends Component {
    * @memberof Tokens
    */
   render() {
+    console.error(this);
     const { loggedIn, match } = this.props;
 
     return (
       <Panel icon={userIcon} title={__('Tokens')} bodyScrollable={false}>
         {loggedIn ? (
-          <div>{'Tokens'}</div>
+          <div>
+            {'Tokens'}
+            <Button
+              onClick={() => {
+                openModal(NewTokenModal);
+              }}
+            >
+              {'Test Open Token Creation'}
+            </Button>
+            {this.returnTokenList()}
+          </div>
         ) : (
           <div style={{ marginTop: 50, textAlign: 'center' }}>
             <Button
