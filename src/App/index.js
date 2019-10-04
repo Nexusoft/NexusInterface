@@ -79,7 +79,7 @@ const App = ({ history }) => (
               <Route exact path="/AddressBook" component={AddressBook} />
               <Route path="/Settings" component={Settings} />
               <Route path="/Terminal" component={Terminal} />
-              {legacyMode && (
+              {!legacyMode && (
                 <>
                   <Route path="/User" component={UserPage} />
                   <Route path="/Tokens" component={Tokens} />
