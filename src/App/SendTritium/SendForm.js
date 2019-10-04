@@ -30,6 +30,7 @@ import {
   getAddressNameMap,
   getRegisteredFieldNames,
   getAccountBalance,
+  getAccountInfo,
 } from './selectors';
 
 const SendFormComponent = styled.form({
@@ -70,6 +71,7 @@ const mapStateToProps = state => {
   const reference = valueSelector(state, 'reference');
   const expires = valueSelector(state, 'expires');
   const accBalance = getAccountBalance(accountName, accounts);
+  const accInfo = getAccountInfo(accountName, accounts);
   const hideSendAll =
     recipients &&
     (recipients.length > 1 ||
@@ -81,6 +83,7 @@ const mapStateToProps = state => {
     expires,
     minting_only,
     accountName,
+    accInfo,
     accountOptions: getAccountOptions(accounts),
     addressNameMap: getAddressNameMap(addressBook),
     fieldNames: getRegisteredFieldNames(
@@ -336,7 +339,14 @@ class SendForm extends Component {
    * @memberof SendForm
    */
   render() {
-    const { accountOptions, change, accBalance } = this.props;
+    console.error(this.props);
+    const {
+      accountOptions,
+      change,
+      accBalance,
+      accInfo,
+      accountName,
+    } = this.props;
     const optionsOpen =
       this.state.optionalOpen || this.props.reference || this.props.expires;
 
@@ -358,9 +368,9 @@ class SendForm extends Component {
           addRecipient={this.addRecipient}
           accBalance={accBalance}
           sendFrom={{
-            token: '0',
-            name: this.props.accountName,
-            tokenAddress: '0',
+            token: accInfo.token_name,
+            name: accountName,
+            tokenAddress: accInfo.token,
           }}
         />
 
