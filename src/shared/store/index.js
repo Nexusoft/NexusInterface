@@ -1,4 +1,4 @@
-import { configureStore } from './configureStore';
+import configureStore from './configureStore';
 import createObserver from './createObserver';
 import getInitialState from './getInitialState';
 
