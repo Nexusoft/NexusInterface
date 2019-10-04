@@ -331,7 +331,6 @@ class SendForm extends Component {
    * @memberof SendForm
    */
   render() {
-    console.error(this.props);
     const { accountOptions, change, accountInfo, accountName } = this.props;
     const optionsOpen =
       this.state.optionalOpen || this.props.reference || this.props.expires;

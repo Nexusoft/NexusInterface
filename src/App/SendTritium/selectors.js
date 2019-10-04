@@ -25,7 +25,7 @@ export const getAccountBalance = memoize((accountName, myAccounts) => {
 export const getAccountInfo = memoize((accountName, myAccounts) => {
   const account =
     myAccounts && myAccounts.find(acc => acc.name === accountName);
-  return account;
+  return account || { balance: 0 };
 });
 
 export const getNxsFiatPrice = memoize((rawNXSvalues, fiatCurrency) => {
