@@ -89,7 +89,7 @@ export default class Staking extends React.Component {
                 )}
               />
             </div>
-            <div>{formatNumber(stakeInfo.stake)} NXS</div>
+            <div>{formatNumber(stakeInfo.stake, 6)} NXS</div>
           </Line>
           {!!stakeInfo.change && (
             <div>
@@ -103,7 +103,7 @@ export default class Staking extends React.Component {
                       )}
                     />
                   </div>
-                  <div>{formatNumber(stakeInfo.amount)} NXS</div>
+                  <div>{formatNumber(stakeInfo.amount, 6)} NXS</div>
                 </Line>
                 <Line>
                   <div>
@@ -179,7 +179,7 @@ export default class Staking extends React.Component {
                 )}
               />
             </div>
-            <div>{formatNumber(stakeInfo.balance)} NXS</div>
+            <div>{formatNumber(stakeInfo.balance, 6)} NXS</div>
           </Line>
           <div className="mt1 flex space-between">
             <Button

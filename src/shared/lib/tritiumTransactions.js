@@ -173,12 +173,12 @@ export function initializeTransactions() {
             Object.entries(changes).forEach(([token, change]) => {
               showDesktopNotif(
                 __('New transaction'),
-                `${change > 0 ? '+' : ''}${formatNumber(change)} ${token}`
+                `${change > 0 ? '+' : ''}${formatNumber(change, 6)} ${token}`
               );
               showNotification(
                 `${__('New transaction')}: ${
                   change > 0 ? '+' : ''
-                }${formatNumber(change)} ${token}`,
+                }${formatNumber(change, 6)} ${token}`,
                 'success'
               );
             });
