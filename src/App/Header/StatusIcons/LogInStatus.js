@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import styled from '@emotion/styled';
 import { connect } from 'react-redux';
-import { push } from 'connected-react-router';
+import { history } from 'lib/wallet';
 
 // Internal Dependencies
 import Tooltip from 'components/Tooltip';
@@ -59,18 +59,13 @@ const mapStateToProps = state => {
   };
 };
 
-const actionCreators = { push };
-
 /**
  * Handles the Login Status
  *
  * @class LogInStatus
  * @extends {Component}
  */
-@connect(
-  mapStateToProps,
-  actionCreators
-)
+@connect(mapStateToProps)
 class LogInStatus extends Component {
   renderUnlockDate = () => {
     formatDateTime;
@@ -158,7 +153,7 @@ class LogInStatus extends Component {
    * @memberof LogInStatus
    */
   goToSecurity = () => {
-    this.props.push('/Settings/Security');
+    history.push('/Settings/Security');
   };
 
   /**

@@ -3,11 +3,11 @@ import { shell, remote } from 'electron';
 import fs from 'fs';
 
 // Internal
-import store, { observeStore, history } from 'store';
+import store, { observeStore } from 'store';
 import { toggleWebViewDevTools } from 'lib/modules';
 import { updateSettings } from 'lib/settings';
 import { startCore, stopCore } from 'lib/core';
-import { backupWallet as backup } from 'lib/wallet';
+import { backupWallet as backup, history } from 'lib/wallet';
 import { showNotification } from 'lib/ui';
 import { bootstrap } from 'lib/bootstrap';
 import { isCoreConnected } from 'selectors';
@@ -298,7 +298,7 @@ function buildDarwinTemplate() {
   const state = store.getState();
   const coreConnected = isCoreConnected(state);
   const { manualDaemon } = state.settings;
-  const { webview } = state;
+  const { activeAppModule } = state;
   const now = Date.now();
 
   const subMenuAbout = {
@@ -349,7 +349,7 @@ function buildDarwinTemplate() {
   if (process.env.NODE_ENV === 'development' || state.settings.devMode) {
     subMenuWindow.submenu.push(toggleDevTools);
 
-    if (webview) {
+    if (activeAppModule) {
       subMenuWindow.submenu.push(toggleModuleDevTools);
     }
   }
@@ -385,7 +385,7 @@ function buildDefaultTemplate() {
   const state = store.getState();
   const coreConnected = isCoreConnected(state);
   const { manualDaemon } = state.settings;
-  const { webview } = state;
+  const { activeAppModule } = state;
   const now = Date.now();
 
   const subMenuFile = {
@@ -430,7 +430,7 @@ function buildDefaultTemplate() {
   if (process.env.NODE_ENV === 'development' || state.settings.devMode) {
     subMenuView.submenu.push(separator, toggleDevTools);
 
-    if (webview) {
+    if (activeAppModule) {
       subMenuView.submenu.push(toggleModuleDevTools);
     }
   }
@@ -488,7 +488,7 @@ export function initializeMenu() {
   observeStore(state => state.updater.state, rebuildMenu);
   observeStore(isCoreConnected, rebuildMenu);
   observeStore(state => state.settings && state.settings.devMode, rebuildMenu);
-  observeStore(state => state.webview, rebuildMenu);
+  observeStore(state => state.activeAppModule, rebuildMenu);
   observeStore(state => state.settings.manualDaemon, rebuildMenu);
 
   const now = Date.now();

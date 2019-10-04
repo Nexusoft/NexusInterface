@@ -1,8 +1,6 @@
-import { configureStore, history } from './configureStore';
+import { configureStore } from './configureStore';
 import createObserver from './createObserver';
 import getInitialState from './getInitialState';
-
-export { history };
 
 const initialState = getInitialState();
 const store = configureStore(initialState);

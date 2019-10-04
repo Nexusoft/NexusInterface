@@ -6,7 +6,7 @@ import { remote } from 'electron';
 // Internal Global
 import GA from 'lib/googleAnalytics';
 import ContextMenuBuilder from 'contextmenu';
-import { getModuleIfActive } from 'lib/modules';
+import { getModuleIfEnabled } from 'lib/modules';
 
 // Internal Local
 import PageModule from './PageModule';
@@ -19,7 +19,7 @@ import PagePanelModule from './PagePanelModule';
  * @extends {Component}
  */
 @connect((state, props) => ({
-  module: getModuleIfActive(
+  module: getModuleIfEnabled(
     props.match.params.name,
     state.modules,
     state.settings.disabledModules

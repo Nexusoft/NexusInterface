@@ -4,13 +4,14 @@ export { installModule } from './installModule';
 export {
   initializeWebView,
   setActiveWebView,
+  unsetActiveWebView,
   toggleWebViewDevTools,
 } from './webview';
 export {
   isModuleDeprecated,
   isModuleValid,
-  isModuleActive,
+  isModuleEnabled,
   getAllModules,
   getActiveModules,
-  getModuleIfActive,
+  getModuleIfEnabled,
 } from './utils';

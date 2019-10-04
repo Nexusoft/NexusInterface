@@ -13,15 +13,13 @@ import { openModal } from 'lib/ui';
 import AddEditContactModal from 'components/AddEditContactModal';
 import { isCoreConnected, isLoggedIn } from 'selectors';
 import ContextMenuBuilder from 'contextmenu';
+import { history } from 'lib/wallet';
+import { legacyMode } from 'consts/misc';
+import userIcon from 'images/user.sprite.svg';
 
 // Internal Local
 import UserBrief from './UserBrief';
 import TabContent from './TabContent';
-
-// Icons
-import userIcon from 'images/user.sprite.svg';
-import { legacyMode } from 'consts/misc';
-import { history } from 'store';
 
 const UserPageLayout = styled.div({
   display: 'flex',

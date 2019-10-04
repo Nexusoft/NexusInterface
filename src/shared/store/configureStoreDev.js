@@ -1,11 +1,7 @@
 import { createStore, applyMiddleware, compose } from 'redux';
-import { createHashHistory } from 'history';
 import thunk from 'redux-thunk';
-import { routerMiddleware } from 'connected-react-router';
 
 import createRootReducer from './reducers';
-
-const history = createHashHistory();
 
 const configureStore = initialState => {
   // Redux Configuration
@@ -13,10 +9,6 @@ const configureStore = initialState => {
   const enhancers = [];
 
   middleware.push(thunk);
-
-  // Router Middleware
-  const router = routerMiddleware(history);
-  middleware.push(router);
 
   // Redux DevTools Configuration
   // const actionCreators = {
@@ -37,7 +29,7 @@ const configureStore = initialState => {
   enhancers.push(applyMiddleware(...middleware));
   const enhancer = composeEnhancers(...enhancers);
 
-  const rootReducer = createRootReducer(history);
+  const rootReducer = createRootReducer();
 
   // Create Store
   const store = createStore(rootReducer, initialState, enhancer);
@@ -45,4 +37,4 @@ const configureStore = initialState => {
   return store;
 };
 
-export default { configureStore, history };
+export default { configureStore };

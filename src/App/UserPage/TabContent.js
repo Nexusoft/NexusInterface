@@ -14,16 +14,16 @@ const TabContentComponent = styled.div({
   overflow: 'auto',
 });
 
-let SettingsRedirect = ({ lastActiveTab, match }) => (
+let UserRedirect = ({ lastActiveTab, match }) => (
   <Redirect
     exact
     from={`${match.path}/`}
     to={`${match.path}/${lastActiveTab}`}
   />
 );
-SettingsRedirect = connect(({ ui: { user: { lastActiveTab } } }) => ({
+UserRedirect = connect(({ ui: { user: { lastActiveTab } } }) => ({
   lastActiveTab,
-}))(SettingsRedirect);
+}))(UserRedirect);
 
 const TabContent = ({ match }) => (
   <TabContentComponent>
@@ -31,7 +31,7 @@ const TabContent = ({ match }) => (
       <Route path={`${match.url}/Balances`} component={Balances} />
       <Route path={`${match.url}/Staking`} component={Staking} />
       <Route path={`${match.url}/Accounts`} component={Accounts} />
-      <SettingsRedirect match={match} />
+      <UserRedirect match={match} />
     </Switch>
   </TabContentComponent>
 );

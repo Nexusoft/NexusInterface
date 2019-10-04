@@ -1,4 +1,5 @@
 import fs from 'fs';
+import { createHashHistory } from 'history';
 
 import * as TYPE from 'consts/actionTypes';
 import store from 'store';
@@ -36,3 +37,5 @@ export const closeWallet = () => {
     type: TYPE.CLOSE_WALLET,
   });
 };
+
+export const history = createHashHistory();

@@ -1,5 +1,4 @@
 import { combineReducers } from 'redux';
-import { connectRouter } from 'connected-react-router';
 import { reducer as formReducer } from 'redux-form';
 
 import list from './list';
@@ -16,32 +15,27 @@ import modules from './modules';
 import moduleStates from './moduleStates';
 import core from './core';
 import updater from './updater';
-import webview from './webview';
+import activeAppModule from './activeAppModule';
 import bootstrap from './bootstrap';
 
-export default function createRootReducer(history) {
-  const routerReducer = connectRouter(history);
-
-  return connectRouter(history)(
-    combineReducers({
-      core,
-      list,
-      market,
-      transactions,
-      exchange,
-      common,
-      addressBook,
-      myAccounts,
-      settings,
-      theme,
-      ui,
-      modules,
-      moduleStates,
-      updater,
-      webview,
-      bootstrap,
-      router: routerReducer,
-      form: formReducer,
-    })
-  );
+export default function createRootReducer() {
+  return combineReducers({
+    core,
+    list,
+    market,
+    transactions,
+    exchange,
+    common,
+    addressBook,
+    myAccounts,
+    settings,
+    theme,
+    ui,
+    modules,
+    moduleStates,
+    updater,
+    activeAppModule,
+    bootstrap,
+    form: formReducer,
+  });
 }
