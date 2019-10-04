@@ -52,7 +52,7 @@ const getBalanceChange = tx =>
   tx.contracts
     ? tx.contracts.reduce((changes, contract) => {
         const sign = getDeltaSign(contract);
-        const token = tx.token_name || 'NXS';
+        const token = contract.token_name || 'NXS';
         if (sign === '+')
           return {
             ...changes,
