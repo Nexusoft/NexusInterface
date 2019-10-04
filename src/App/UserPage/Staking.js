@@ -135,7 +135,7 @@ export default class Staking extends React.Component {
                 )}
               />
             </div>
-            <div>{formatNumber(stakeInfo.stakerate, 2)} %</div>
+            <div>{stakeInfo.stakerate} %</div>
           </Line>
           <Line>
             <div>
@@ -146,7 +146,7 @@ export default class Staking extends React.Component {
                 )}
               />
             </div>
-            <div>{formatNumber(stakeInfo.trustweight, 2)} %</div>
+            <div>{stakeInfo.trustweight} %</div>
           </Line>
           <Line>
             <div>
@@ -157,7 +157,7 @@ export default class Staking extends React.Component {
                 )}
               />
             </div>
-            <div>{formatNumber(stakeInfo.blockweight, 2)} %</div>
+            <div>{stakeInfo.blockweight} %</div>
           </Line>
           <Line>
             <div>
@@ -168,7 +168,7 @@ export default class Staking extends React.Component {
                 )}
               />
             </div>
-            <div>{formatNumber(stakeInfo.stakeweight, 2)} %</div>
+            <div>{stakeInfo.stakeweight} %</div>
           </Line>
           <Line>
             <div>
