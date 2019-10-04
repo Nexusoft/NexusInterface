@@ -35,11 +35,11 @@ const SendAllLink = styled(Link)({
   verticalAlign: 'middle',
 });
 
-const TokenAddressPopup = ({ tokenAddress }) => (
-  <Tooltip.Trigger tooltip={tokenAddress} position="top">
-    <div>??????</div>
-  </Tooltip.Trigger>
-);
+const TokenAddress = styled.a(({ theme }) => ({
+  textTransform: 'none',
+  marginLeft: '1em',
+  color: theme.mixer(0.5),
+}));
 
 const mapStateToProps = ({
   settings: { fiatCurrency },
@@ -135,9 +135,7 @@ class AmountField extends Component {
                     tokenName: token.name || 'Token',
                   })}
                 </span>
-                {token.name ? null : (
-                  <TokenAddressPopup tokenAddress={token.address} />
-                )}
+                {!token.name && <TokenAddress> {token.address} </TokenAddress>}
                 {!!this.props.fullAmount && (
                   <SendAllLink as="a" onClick={this.sendAll}>
                     {__('Send all')}

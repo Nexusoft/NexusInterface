@@ -29,7 +29,7 @@ import {
   getAccountOptions,
   getAddressNameMap,
   getRegisteredFieldNames,
-  getAccountBalance,
+  getAccountInfo,
 } from './selectors';
 
 const SendFormComponent = styled.form({
@@ -66,14 +66,9 @@ const mapStateToProps = state => {
     form,
   } = state;
   const accountName = valueSelector(state, 'sendFrom');
-  const recipients = valueSelector(state, 'recipients');
   const reference = valueSelector(state, 'reference');
   const expires = valueSelector(state, 'expires');
-  const accBalance = getAccountBalance(accountName, accounts);
-  const hideSendAll =
-    recipients &&
-    (recipients.length > 1 ||
-      (recipients[0] && recipients[0].amount === accBalance));
+  const accountInfo = getAccountInfo(accountName, accounts);
   return {
     minConfirmations,
     locked,
@@ -81,12 +76,12 @@ const mapStateToProps = state => {
     expires,
     minting_only,
     accountName,
+    accountInfo,
     accountOptions: getAccountOptions(accounts),
     addressNameMap: getAddressNameMap(addressBook),
     fieldNames: getRegisteredFieldNames(
       form[formName] && form[formName].registeredFields
     ),
-    accBalance: hideSendAll ? undefined : accBalance,
   };
 };
 
@@ -336,7 +331,7 @@ class SendForm extends Component {
    * @memberof SendForm
    */
   render() {
-    const { accountOptions, change, accBalance } = this.props;
+    const { accountOptions, change, accountInfo, accountName } = this.props;
     const optionsOpen =
       this.state.optionalOpen || this.props.reference || this.props.expires;
 
@@ -356,11 +351,11 @@ class SendForm extends Component {
           name="recipients"
           change={change}
           addRecipient={this.addRecipient}
-          accBalance={accBalance}
+          accBalance={accountInfo.balance}
           sendFrom={{
-            token: '0',
-            name: this.props.accountName,
-            tokenAddress: '0',
+            token: accountInfo.token_name,
+            name: accountName,
+            tokenAddress: accountInfo.token,
           }}
         />
 
