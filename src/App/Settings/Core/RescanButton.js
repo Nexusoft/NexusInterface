@@ -43,11 +43,12 @@ class RescanButton extends React.Component {
    */
   render() {
     const { rescanning } = this.state;
+    const { tooltip, ...rest } = this.props;
     return (
       <Tooltip.Trigger
         tooltip={
           !rescanning &&
-          this.props.tooltip &&
+          tooltip &&
           __(
             'Used to correct transaction/balance issues, scans over every block in the database. Could take up to 10 minutes.'
           )
@@ -57,6 +58,7 @@ class RescanButton extends React.Component {
           disabled={rescanning}
           onClick={this.rescan}
           style={{ height: consts.inputHeightEm + 'em' }}
+          {...rest}
         >
           {rescanning ? __('Rescanning...') : __('Rescan wallet')}
         </Button>

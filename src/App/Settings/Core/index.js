@@ -22,6 +22,7 @@ import memoize from 'utils/memoize';
 import { consts } from 'styles';
 import warningIcon from 'images/warning.sprite.svg';
 import Icon from 'components/Icon';
+import { isCoreConnected } from 'selectors';
 
 import ReScanButton from './RescanButton.js';
 
@@ -88,6 +89,7 @@ const getInitialValues = (() => {
 const mapStateToProps = state => {
   const { settings } = state;
   return {
+    coreConnected: isCoreConnected(state),
     manualDaemon: settings.manualDaemon,
     initialValues: getInitialValues(settings),
   };
@@ -267,7 +269,13 @@ class SettingsCore extends Component {
    * @memberof SettingsCore
    */
   render() {
-    const { manualDaemon, handleSubmit, dirty, submitting } = this.props;
+    const {
+      coreConnected,
+      manualDaemon,
+      handleSubmit,
+      dirty,
+      submitting,
+    } = this.props;
 
     return (
       <>
@@ -324,7 +332,7 @@ class SettingsCore extends Component {
                   'Used to correct transaction/balance issues, scans over every block in the database. Could take up to 10 minutes.'
                 )}
               >
-                <ReScanButton />
+                <ReScanButton disabled={!coreConnected} />
               </SettingsField>
 
               <SettingsField
