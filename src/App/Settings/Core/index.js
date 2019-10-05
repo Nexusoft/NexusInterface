@@ -526,6 +526,8 @@ class SettingsCore extends Component {
             <RestartPrompt>
               <RestartContainer>
                 <div className="flex center">
+                  {!manualDaemon && (
+                    <>
                       <Switch
                         id={this.switchId}
                         checked={restartCoreOnSave}
@@ -542,6 +544,8 @@ class SettingsCore extends Component {
                       >
                         {__('Restart Core for these changes to take effect')}
                       </label>
+                    </>
+                  )}
                 </div>
 
                 <Button type="submit" disabled={submitting}>
