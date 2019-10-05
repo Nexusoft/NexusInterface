@@ -6,7 +6,7 @@ import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
 
 // Internal
-import { switchSettingsTab } from 'lib/ui';
+import { switchSettingsTab, setCoreSettingsRestart } from 'lib/ui';
 import { stopCore, startCore, restartCore } from 'lib/core';
 import { showNotification, openConfirmDialog } from 'lib/ui';
 import { updateSettings } from 'lib/settings';
@@ -18,10 +18,8 @@ import { errorHandler } from 'utils/form';
 // import { coreDataDir } from 'consts/paths';
 import * as color from 'utils/color';
 import confirm from 'utils/promisified/confirm';
-import memoize from 'utils/memoize';
+import { newUID } from 'utils/misc';
 import { consts } from 'styles';
-import warningIcon from 'images/warning.sprite.svg';
-import Icon from 'components/Icon';
 import { isCoreConnected } from 'selectors';
 
 import ReScanButton from './RescanButton.js';
@@ -87,11 +85,17 @@ const getInitialValues = (() => {
 })();
 
 const mapStateToProps = state => {
-  const { settings } = state;
+  const {
+    settings,
+    ui: {
+      settings: { restartCoreOnSave },
+    },
+  } = state;
   return {
     coreConnected: isCoreConnected(state),
     manualDaemon: settings.manualDaemon,
     initialValues: getInitialValues(settings),
+    restartCoreOnSave,
   };
 };
 
@@ -141,21 +145,12 @@ const mapStateToProps = state => {
     }
     return errors;
   },
-  onSubmit: async (values, dispatch, props) => {
-    const confirmed = await confirm({
-      question: __('Restart Core?'),
-      note: __('Do you want to restart the Core now?'),
-      labelYes: __('Restart now'),
-      labelNo: __('Cancel'),
-    });
-    if (confirmed) {
-      updateSettings(values);
-      return true;
-    }
+  onSubmit: async values => {
+    return updateSettings(values);
   },
   onSubmitSuccess: (result, dispatch, props) => {
-    if (result) {
-      showNotification(__('Core settings saved'), 'success');
+    showNotification(__('Core settings saved'), 'success');
+    if (!props.manualDaemon && props.restartCoreOnSave) {
       showNotification(__('Restarting Core...'));
       restartCore();
     }
@@ -163,6 +158,12 @@ const mapStateToProps = state => {
   onSubmitFail: errorHandler('Error saving settings'),
 })
 class SettingsCore extends Component {
+  switchId = newUID();
+
+  handleRestartSwitch = e => {
+    setCoreSettingsRestart(!!e.target.checked);
+  };
+
   /**
    *Creates an instance of SettingsCore.
    * @param {*} props
@@ -275,6 +276,7 @@ class SettingsCore extends Component {
       handleSubmit,
       dirty,
       submitting,
+      restartCoreOnSave,
     } = this.props;
 
     return (
@@ -523,22 +525,27 @@ class SettingsCore extends Component {
           {!!dirty && (
             <RestartPrompt>
               <RestartContainer>
-                <div>
-                  <Icon icon={warningIcon} className="space-right" />
-                  <span
-                    style={{
-                      textDecoration: 'underline',
-                      verticalAlign: 'middle',
-                    }}
-                  >
-                    {__(
-                      'Core needs to restart for these changes to take effect!'
-                    )}
-                  </span>
+                <div className="flex center">
+                      <Switch
+                        id={this.switchId}
+                        checked={restartCoreOnSave}
+                        onChange={this.handleRestartSwitch}
+                        style={{ fontSize: '0.7em' }}
+                      />
+                      &nbsp;
+                      <label
+                        htmlFor={this.switchId}
+                        style={{
+                          cursor: 'pointer',
+                          opacity: restartCoreOnSave ? 1 : 0.7,
+                        }}
+                      >
+                        {__('Restart Core for these changes to take effect')}
+                      </label>
                 </div>
 
                 <Button type="submit" disabled={submitting}>
-                  {__('Save settings and restart Core')}
+                  {__('Save settings')}
                 </Button>
               </RestartContainer>
             </RestartPrompt>

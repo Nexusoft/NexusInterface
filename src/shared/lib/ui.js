@@ -160,6 +160,13 @@ export const switchSettingsTab = tab => {
   });
 };
 
+export const setCoreSettingsRestart = restart => {
+  store.dispatch({
+    type: TYPE.SET_CORE_SETTINGS_RESTART,
+    payload: restart,
+  });
+};
+
 /**
  * Console
  * ===========================
