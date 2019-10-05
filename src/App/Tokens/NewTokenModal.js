@@ -1,5 +1,6 @@
 import React from 'react';
 import { reduxForm, Field } from 'redux-form';
+import styled from '@emotion/styled';
 
 import Modal from 'components/Modal';
 import Button from 'components/Button';
@@ -11,6 +12,12 @@ import { errorHandler } from 'utils/form';
 import { loadAccounts } from 'lib/user';
 import { removeModal, showNotification } from 'lib/ui';
 
+const SubLable = styled.span(({ theme }) => ({
+  marginLeft: '1em',
+  fontSize: '75%',
+  color: theme.mixer(0.5),
+}));
+
 @reduxForm({
   form: 'new_account',
   destroyOnUnmount: true,
@@ -19,13 +26,13 @@ import { removeModal, showNotification } from 'lib/ui';
     supply: 0,
     decimal: 0,
   },
-  validate: ({ name }) => {
+  validate: ({ name, supply, decimal }) => {
     const errors = {};
     if (!name) {
       errors.name = __('Name is required');
     }
-    if (supply === 0) {
-      errors.supply = __('Supply can not be zero');
+    if (supply <= 0) {
+      errors.supply = __('Supply can not be zero or negative');
     }
 
     return errors;
@@ -64,40 +71,41 @@ class NewTokenModal extends React.Component {
         <Modal.Header>{__('New Token')}</Modal.Header>
         <Modal.Body>
           <form onSubmit={handleSubmit}>
-            <FormField
-              connectLabel
-              label={__('Token name')}
-              subLabel={__('Name Creation Fee: %{tokenFee}', {
-                tokenFee: tokenCreationFee,
-              })}
-            >
-              <Field
-                name="name"
-                component={TextField.RF}
-                placeholder={__("New account's name")}
-              />
+            <FormField connectLabel label={__('Token name')}>
+              <>
+                <SubLable>
+                  {__('Name Creation Fee: %{tokenFee}', {
+                    tokenFee: tokenCreationFee,
+                  })}
+                </SubLable>
+                <Field
+                  name="name"
+                  component={TextField.RF}
+                  placeholder={__("New account's name")}
+                />
+              </>
             </FormField>
-            <FormField
-              connectLabel
-              label={__('Supply')}
-              subLabel={__('Max amount of tokens available')}
-            >
-              <Field
-                name="supply"
-                component={TextField.RF}
-                placeholder={__('10000')}
-              />
+            <FormField connectLabel label={__('Supply')}>
+              <>
+                <SubLable> {__('Max amount of tokens available')}</SubLable>
+                <Field
+                  name="supply"
+                  component={TextField.RF}
+                  placeholder={__('10000')}
+                />
+              </>
             </FormField>
-            <FormField
-              connectLabel
-              label={__('Decimal')}
-              subLabel={__('Amount of significant digits a token can have')}
-            >
-              <Field
-                name="decimal"
-                component={TextField.RF}
-                placeholder={__('4')}
-              />
+            <FormField connectLabel label={__('Decimal')}>
+              <>
+                <SubLable>
+                  {__('Amount of significant digits a token can have')}{' '}
+                </SubLable>
+                <Field
+                  name="decimal"
+                  component={TextField.RF}
+                  placeholder={__('4')}
+                />
+              </>
             </FormField>
 
             <div className="mt3 flex space-between">

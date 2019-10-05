@@ -15,12 +15,15 @@ import ContextMenuBuilder from 'contextmenu';
 
 // Internal Local
 import NewTokenModal from './NewTokenModal';
+import Token from './Token';
 
 // Icons
 import userIcon from 'images/user.sprite.svg';
 import { legacyMode } from 'consts/misc';
 import { history } from 'store';
 import { apiGet } from 'lib/tritiumApi';
+
+// history.push from lib/wallet.js
 
 const mapStateToProps = state => ({
   addressBook: state.addressBook,
@@ -65,7 +68,19 @@ class Tokens extends Component {
       if (tempMap.has(element.token_name || element.token)) return;
 
       if (!tempMap.has('NXS')) {
-        tempMap.set('NXS', { name: 'NXS', maxsupply: '100000' });
+        tempMap.set('NXS', {
+          address: '0000000000000000000000000',
+          balance: 0,
+          created: 1400000000,
+          currentsupply: 1000000,
+          decimals: 6,
+          maxsupply: 1000000,
+          modified: 1400000000,
+          name: 'NXS',
+          owner: '00000000000000000000000000000',
+          pending: 0,
+          unconfirmed: 0,
+        });
         return;
       }
       const tokenInfo = this.asdfh(element);
@@ -119,13 +134,7 @@ class Tokens extends Component {
     return Array.from(usedTokens, ([key, value]) => {
       console.log(key);
       console.log(value);
-      return (
-        <div>
-          <span>{key}</span>
-          <br />
-          <span>{value.maxsupply}</span>
-        </div>
-      );
+      return <Token key={key} token={value} />;
     });
   }
 
