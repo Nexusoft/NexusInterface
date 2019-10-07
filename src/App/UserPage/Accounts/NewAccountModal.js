@@ -5,6 +5,7 @@ import Modal from 'components/Modal';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
 import FormField from 'components/FormField';
+import confirm from 'utils/promisified/confirm';
 import confirmPin from 'utils/promisified/confirmPin';
 import { apiPost } from 'lib/tritiumApi';
 import { errorHandler } from 'utils/form';
@@ -19,16 +20,27 @@ import { removeModal, showNotification } from 'lib/ui';
   },
   validate: ({ name }) => {
     const errors = {};
-    if (!name) {
-      errors.name = __('Name is required');
-    }
 
     return errors;
   },
   onSubmit: async ({ name }) => {
+    if (!name) {
+      const confirmed = await confirm({
+        question: __('Create a account without a name?'),
+        note: __('Adding a name costs a NXS fee'),
+        labelYes: __("That's Ok"),
+        labelNo: __('Cancel'),
+      });
+
+      if (!confirmed) {
+        throw { name: __('Add Name') };
+      }
+    }
     const pin = await confirmPin();
     if (pin) {
-      return await apiPost('finance/create/account', { pin, name });
+      const params = { pin };
+      if (name) params.name = name;
+      return await apiPost('finance/create/account', params);
     }
   },
   onSubmitSuccess: (result, dispatch, props) => {
@@ -58,7 +70,7 @@ export default class NewAccountModal extends React.Component {
         <Modal.Header>{__('New account')}</Modal.Header>
         <Modal.Body>
           <form onSubmit={handleSubmit}>
-            <FormField connectLabel label={__('Account name')}>
+            <FormField connectLabel label={__('Account name (1 NXS Fee)')}>
               <Field
                 name="name"
                 component={TextField.RF}

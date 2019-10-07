@@ -44,7 +44,7 @@ export default class Accounts extends React.Component {
           </Button>
           <div className="mt1">
             {accounts.map(account => (
-              <Account key={account.name} account={account} />
+              <Account key={account.name + account.address} account={account} />
             ))}
           </div>
         </AccountsWrapper>
