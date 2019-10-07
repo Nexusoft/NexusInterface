@@ -12,6 +12,7 @@ import TextField from 'components/TextField';
 import Tooltip from 'components/Tooltip';
 import MyAddressesModal from 'components/MyAddressesModal';
 import { openModal } from 'lib/ui';
+import { legacyMode } from 'consts/misc';
 import { isCoreConnected } from 'selectors';
 import AddEditContactModal from 'components/AddEditContactModal';
 
@@ -155,7 +156,7 @@ class PanelControls extends Component {
   render() {
     return (
       <div className="flex center">
-        {this.props.coreConnected && (
+        {legacyMode && this.props.coreConnected && (
           <Tooltip.Trigger tooltip={__('My Addresses')}>
             <Button
               skin="plain"

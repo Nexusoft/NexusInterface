@@ -15,6 +15,7 @@ import Button from 'components/Button';
 import TextField from 'components/TextField';
 import Switch from 'components/Switch';
 import { errorHandler } from 'utils/form';
+import { legacyMode } from 'consts/misc';
 // import { coreDataDir } from 'consts/paths';
 import * as color from 'utils/color';
 import confirm from 'utils/promisified/confirm';
@@ -327,30 +328,34 @@ class SettingsCore extends Component {
                 <Field name="enableStaking" component={Switch.RF} />
               </SettingsField>
 
-              <SettingsField
-                connectLabel
-                label={__('Rescan wallet')}
-                subLabel={__(
-                  'Used to correct transaction/balance issues, scans over every block in the database. Could take up to 10 minutes.'
-                )}
-              >
-                <ReScanButton disabled={!coreConnected} />
-              </SettingsField>
-
-              <SettingsField
-                connectLabel
-                label={__('Reload transaction history')}
-                subLabel={__(
-                  'Restart Nexus core with -walletclean parameter to clean out and reload all transaction history'
-                )}
-              >
-                <Button
-                  onClick={this.reloadTxHistory}
-                  style={{ height: consts.inputHeightEm + 'em' }}
+              {legacyMode && (
+                <SettingsField
+                  connectLabel
+                  label={__('Rescan wallet')}
+                  subLabel={__(
+                    'Used to correct transaction/balance issues, scans over every block in the database. Could take up to 10 minutes.'
+                  )}
                 >
-                  {__('Reload')}
-                </Button>
-              </SettingsField>
+                  <ReScanButton disabled={!coreConnected} />
+                </SettingsField>
+              )}
+
+              {legacyMode && (
+                <SettingsField
+                  connectLabel
+                  label={__('Reload transaction history')}
+                  subLabel={__(
+                    'Restart Nexus core with -walletclean parameter to clean out and reload all transaction history'
+                  )}
+                >
+                  <Button
+                    onClick={this.reloadTxHistory}
+                    style={{ height: consts.inputHeightEm + 'em' }}
+                  >
+                    {__('Reload')}
+                  </Button>
+                </SettingsField>
+              )}
 
               <SettingsField
                 connectLabel
