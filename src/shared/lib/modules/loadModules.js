@@ -6,6 +6,7 @@ import * as TYPE from 'consts/actionTypes';
 import store from 'store';
 import { modulesDir } from 'consts/paths';
 import { loadModuleFromDir } from './loadModuleFromDir';
+import { walletEvents } from 'lib/wallet';
 
 /**
  * Get the path of an icon if the file does exist
@@ -39,11 +40,10 @@ function prepareModule(module) {
  * Load all installed modules from the app modules directory.
  * Only called once when the wallet is started.
  *
- * @export
  * @param {*} { devMode, verifyModuleSource }
  * @returns {object} an object mapping module names and module data
  */
-export async function loadModules() {
+walletEvents.once('pre-render', async function() {
   const {
     settings: { devMode, verifyModuleSource, allowSymLink },
   } = store.getState();
@@ -79,4 +79,4 @@ export async function loadModules() {
   } catch (err) {
     return {};
   }
-}
+});

@@ -16,6 +16,7 @@ import showOpenDialog from 'utils/promisified/showOpenDialog';
 import confirm from 'utils/promisified/confirm';
 import { checkForUpdates, quitAndInstall } from 'lib/updater';
 import { tritiumUpgradeTime } from 'consts/misc';
+import { walletEvents } from 'lib/wallet';
 
 const separator = {
   type: 'separator',
@@ -483,7 +484,7 @@ function rebuildMenu() {
 
 // Update the updater menu item when the updater state changes
 // Changing menu item labels directly has no effect so we have to rebuild the whole menu
-export function initializeMenu() {
+walletEvents.once('post-render', function() {
   buildMenu();
   observeStore(state => state.updater.state, rebuildMenu);
   observeStore(isCoreConnected, rebuildMenu);
@@ -497,4 +498,4 @@ export function initializeMenu() {
       rebuildMenu();
     }, tritiumUpgradeTime - now);
   }
-}
+});

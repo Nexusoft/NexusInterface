@@ -12,6 +12,7 @@ import store from 'store';
 import { showBackgroundTask, showNotification } from 'lib/ui';
 import AutoUpdateBackgroundTask from './AutoUpdateBackgroundTask';
 import { assetsParentDir } from 'consts/paths';
+import { walletEvents } from 'lib/wallet';
 
 const mainUpdater = remote.getGlobal('updater');
 const autoUpdateInterval = 2 * 60 * 60 * 1000; // 2 hours
@@ -112,7 +113,7 @@ export function stopAutoUpdate() {
  * Initialize the Updater
  *
  */
-export function initializeUpdater(autoUpdate) {
+walletEvents.once('post-render', function() {
   mainUpdater.logger = log;
   mainUpdater.currentVersion = APP_VERSION;
   mainUpdater.autoDownload = true;
@@ -163,7 +164,10 @@ export function initializeUpdater(autoUpdate) {
     setUpdaterState('downloaded');
   });
 
+  const {
+    settings: { autoUpdate },
+  } = store.getState();
   if (autoUpdate) {
     startAutoUpdate();
   }
-}
+});

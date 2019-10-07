@@ -1,8 +1,8 @@
-export { loadModules } from './loadModules';
+import './loadModules';
+
 export { loadModuleFromDir } from './loadModuleFromDir';
 export { installModule } from './installModule';
 export {
-  initializeWebView,
   setActiveWebView,
   unsetActiveWebView,
   toggleWebViewDevTools,

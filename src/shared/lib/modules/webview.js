@@ -11,6 +11,7 @@ import {
   openErrorDialog,
   openSuccessDialog,
 } from 'lib/ui';
+import { walletEvents } from 'lib/wallet';
 import rpc from 'lib/rpc';
 
 import { readModuleStorage, writeModuleStorage } from './storage';
@@ -284,12 +285,7 @@ function updateStorage([data]) {
   writeModuleStorage(activeModule, data);
 }
 
-/**
- * Public API
- * ===========================================================================
- */
-
-export function initializeWebView() {
+walletEvents.once('post-render', function() {
   observeStore(
     state => state.activeAppModule,
     activeAppModule => {
@@ -348,7 +344,12 @@ export function initializeWebView() {
       }
     }
   );
-}
+});
+
+/**
+ * Public API
+ * ===========================================================================
+ */
 
 export const setActiveWebView = (webview, moduleName) => {
   store.dispatch({
