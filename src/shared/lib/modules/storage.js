@@ -11,11 +11,11 @@ const storageFileName = 'storage.json';
  * @param {*} module
  * @returns
  */
-export function readModuleStorage(module) {
+export async function readModuleStorage(module) {
   try {
     const storagePath = join(modulesDir, module.dirName, storageFileName);
-    if (fs.statSync(storagePath).isFile()) {
-      const content = fs.readFileSync(storagePath);
+    if ((await fs.promises.stat(storagePath)).isFile()) {
+      const content = await fs.promises.readFile(storagePath);
       const data = JSON.parse(content);
       return data;
     }

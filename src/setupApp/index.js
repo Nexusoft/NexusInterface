@@ -18,12 +18,10 @@ import { initializeMenu } from 'appMenu';
 import { initializeTransactions } from 'lib/tritiumTransactions';
 import store from 'store';
 
-const { dispatch } = store;
 export function preRender() {
+  loadModules();
   initializeCoreInfo();
   initializeMarketData();
-
-  loadModules();
 
   const mainWindow = remote.getCurrentWindow();
   mainWindow.on('close', async e => {

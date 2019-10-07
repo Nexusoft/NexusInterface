@@ -296,11 +296,11 @@ export function initializeWebView() {
       if (activeAppModule) {
         const { webview } = activeAppModule;
         webview.addEventListener('ipc-message', handleIpcMessage);
-        webview.addEventListener('dom-ready', () => {
+        webview.addEventListener('dom-ready', async () => {
           const state = store.getState();
           const activeModule = getActiveModule();
           const moduleState = state.moduleStates[activeModule.name];
-          const storageData = readModuleStorage(activeModule);
+          const storageData = await readModuleStorage(activeModule);
           webview.send('initialize', {
             ...getModuleData(state),
             moduleState,
