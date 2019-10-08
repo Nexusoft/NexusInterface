@@ -30,6 +30,7 @@ import Icon from 'components/Icon';
 import TokenDetailsModal from './TokenDetailsModal';
 import HorizontalLine from 'components/HorizontalLine';
 import ErrorDialog from 'components/Dialogs/ErrorDialog';
+import { loadOwnedTokens } from 'lib/user';
 
 // history.push from lib/wallet.js
 const LogInDiv = () => (
@@ -79,6 +80,7 @@ class Tokens extends Component {
     window.addEventListener('contextmenu', this.setupcontextmenu, false);
     GA.SendScreen('Tokens');
 
+    loadOwnedTokens();
     this.gatherTokenInformation();
   }
 
