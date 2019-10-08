@@ -26,7 +26,6 @@ import Terminal from './Terminal';
 import UserPage from './UserPage';
 import Tokens from './Tokens';
 
-import About from './About';
 import Modules from './Modules';
 import AppBackground from './AppBackground';
 import ThemeController from './ThemeController';
@@ -86,7 +85,6 @@ const App = () => (
               {/* <Route path="/Exchange" component={Exchange} /> */}
               {/* <Route exact path="/List" component={TrustList} /> */}
 
-              <Route exact path="/About" component={About} />
               <Route path="/Modules/:name" component={Modules} />
             </Switch>
           </Main>

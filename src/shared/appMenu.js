@@ -8,7 +8,7 @@ import { toggleWebViewDevTools } from 'lib/modules';
 import { updateSettings } from 'lib/settings';
 import { startCore, stopCore } from 'lib/core';
 import { backupWallet as backup, history } from 'lib/wallet';
-import { showNotification } from 'lib/ui';
+import { showNotification, openModal } from 'lib/ui';
 import { bootstrap } from 'lib/bootstrap';
 import { isCoreConnected } from 'selectors';
 import { legacyMode } from 'consts/misc';
@@ -17,6 +17,7 @@ import confirm from 'utils/promisified/confirm';
 import { checkForUpdates, quitAndInstall } from 'lib/updater';
 import { tritiumUpgradeTime } from 'consts/misc';
 import { walletEvents } from 'lib/wallet';
+import AboutModal from 'components/AboutModal';
 
 const separator = {
   type: 'separator',
@@ -65,7 +66,7 @@ const quitNexus = {
 const about = {
   label: __('About'),
   click: () => {
-    history.push('/About');
+    openModal(AboutModal);
   },
 };
 

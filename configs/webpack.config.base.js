@@ -9,6 +9,7 @@ import { readFileSync } from 'fs';
 import packageJson from '../package.json';
 
 const appVersion = packageJson.version;
+const buildDate = packageJson.buildDate;
 const moduleSpecVersion = packageJson.moduleSpecVersion;
 const supportedModuleSpecVersion = packageJson.supportedModuleSpecVersion;
 const appId = packageJson.build.appId;
@@ -44,6 +45,7 @@ export default {
         process.env.NODE_ENV || 'production'
       ),
       APP_VERSION: JSON.stringify(appVersion || ''),
+      BUILD_DATE: JSON.stringify(buildDate || ''),
       MODULE_SPEC_VERSION: JSON.stringify(moduleSpecVersion || ''),
       SUPPORTED_MODULE_SPEC_VERSION: JSON.stringify(
         supportedModuleSpecVersion || ''
