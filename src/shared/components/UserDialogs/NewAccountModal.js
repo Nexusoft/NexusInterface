@@ -23,7 +23,7 @@ import { removeModal, showNotification } from 'lib/ui';
 
     return errors;
   },
-  onSubmit: async ({ name }) => {
+  onSubmit: async ({ name }, dispatch, props) => {
     if (!name) {
       const confirmed = await confirm({
         question: __('Create a account without a name?'),
@@ -40,7 +40,15 @@ import { removeModal, showNotification } from 'lib/ui';
     if (pin) {
       const params = { pin };
       if (name) params.name = name;
-      return await apiPost('finance/create/account', params);
+
+      if (props.tokenName === 'NSX') {
+        return await apiPost('finance/create/account', params);
+      } else {
+        if (props.tokenName) params.token_name = props.tokenName;
+        if (props.tokenAddress) params.token = props.tokenAddress;
+        console.error(params);
+        return await apiPost('tokens/create/account', params);
+      }
     }
   },
   onSubmitSuccess: (result, dispatch, props) => {
@@ -60,6 +68,7 @@ import { removeModal, showNotification } from 'lib/ui';
 export default class NewAccountModal extends React.Component {
   render() {
     const { handleSubmit, submitting } = this.props;
+    console.log(this.props);
     return (
       <Modal
         assignClose={closeModal => {

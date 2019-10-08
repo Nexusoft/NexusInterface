@@ -7,7 +7,12 @@ import { formatDateTime } from 'lib/intl';
 import { openModal } from 'lib/ui';
 import { formatNumber } from 'lib/intl';
 
+import NewAccountModal from 'components/UserDialogs/NewAccountModal';
+
 import NexusAddress from 'components/NexusAddress';
+import Button from 'components/Button';
+import Icon from 'components/Icon';
+import plusIcon from 'images/plus.sprite.svg';
 
 const timeFormatOptions = {
   year: 'numeric',
@@ -38,6 +43,11 @@ const Value = styled.div({
   wordBreak: 'break-word',
 });
 
+const CloseButton = styled(Button)({
+  marginLeft: '1em',
+  width: '25%',
+});
+
 const Field = ({ label, children }) => (
   <Row>
     <Label>{label}</Label>
@@ -45,8 +55,10 @@ const Field = ({ label, children }) => (
   </Row>
 );
 
+var closeThisModal = function close() {};
+
 const TokenDetailsModal = ({ token }) => (
-  <Modal>
+  <Modal assignClose={closeModal => (closeThisModal = closeModal)}>
     <Modal.Header>{__('Token Details')}</Modal.Header>
     <Modal.Body>
       {token.name && <Field label={__('Token name')}>{token.name}</Field>}
@@ -75,12 +87,29 @@ const TokenDetailsModal = ({ token }) => (
       <Field label={__('Unconfirmed balance')}>
         {formatNumber(token.unconfirmed, token.decimals)} {token.token_name}
       </Field>
+      <div className="flex space-between">
+        <Button
+          wide
+          onClick={() =>
+            openModal(
+              NewAccountModal,
+              token.name
+                ? { tokenName: token.name }
+                : { tokenAddress: token.address }
+            )
+          }
+        >
+          <Icon icon={plusIcon} className="space-right" />
+          {__('Create new account with this token')}
+        </Button>{' '}
+        <CloseButton skin="primary" wide onClick={() => closeThisModal()}>
+          {__('Close')}
+        </CloseButton>
+      </div>
     </Modal.Body>
   </Modal>
 );
 
-const mapStateToProps = state => ({
-  stakeInfo: state.core.stakeInfo,
-});
+const mapStateToProps = state => ({});
 
 export default connect(mapStateToProps)(TokenDetailsModal);

@@ -22,8 +22,28 @@ import userIcon from 'images/user.sprite.svg';
 import { legacyMode } from 'consts/misc';
 import { history } from 'store';
 import { apiGet } from 'lib/tritiumApi';
+import FormField from 'components/FormField';
+import TextField from 'components/TextField';
+import searchIcon from 'images/search.sprite.svg';
+import Icon from 'components/Icon';
+import TokenDetailsModal from './TokenDetailsModal';
+import HorizontalLine from 'components/HorizontalLine';
+import ErrorDialog from 'components/Dialogs/ErrorDialog';
 
 // history.push from lib/wallet.js
+const LogInDiv = () => (
+  <div style={{ marginTop: 50, textAlign: 'center' }}>
+    <Button
+      uppercase
+      skin="primary"
+      onClick={() => {
+        openModal(LoginModal);
+      }}
+    >
+      {__('Log in')}
+    </Button>
+  </div>
+);
 
 const mapStateToProps = state => ({
   addressBook: state.addressBook,
@@ -43,6 +63,7 @@ class Tokens extends Component {
   state = {
     activeIndex: 0,
     usedTokens: [],
+    searchToken: '',
   };
 
   /**
@@ -138,6 +159,23 @@ class Tokens extends Component {
     });
   }
 
+  async openSearchedDetailsModal(props) {
+    try {
+      const token = await apiGet(
+        props.tokenName
+          ? `tokens/get/token?name=${props.tokenName}`
+          : `tokens/get/token?address=${props.tokenAddress}`
+      );
+      openModal(TokenDetailsModal, { token });
+    } catch (e) {
+      console.log(e);
+      openModal(ErrorDialog, {
+        message: __('Can not find Token'),
+        note: e.message + ' ' + e.code,
+      });
+    }
+  }
+
   /**
    * Component's Renderable JSX
    *
@@ -147,33 +185,58 @@ class Tokens extends Component {
   render() {
     console.error(this);
     const { loggedIn, match } = this.props;
+    const { searchToken } = this.state;
 
     return (
       <Panel icon={userIcon} title={__('Tokens')} bodyScrollable={false}>
         {loggedIn ? (
-          <div>
-            {'Tokens'}
+          <>
             <Button
+              skin="primary"
               onClick={() => {
                 openModal(NewTokenModal);
               }}
             >
               {'Test Open Token Creation'}
             </Button>
+            <FormField connectLabel label={__('Search Tokens')}>
+              <TextField
+                type="search"
+                name="tokenSearch"
+                placeholder={__('Search for Token ( Name or Address)')}
+                value={searchToken}
+                onChange={evt => {
+                  const value = evt.target.value;
+                  console.log(evt.target.value);
+                  this.setState({ searchToken: value });
+                }}
+                left={<Icon icon={searchIcon} className="space-right" />}
+                right={
+                  <Button
+                    skin="plain"
+                    onClick={() => {
+                      //Temp for testnet, need better solution
+                      this.openSearchedDetailsModal(
+                        searchToken.startsWith('8')
+                          ? {
+                              tokenAddress: searchToken,
+                            }
+                          : { tokenName: searchToken }
+                      );
+                    }}
+                  >
+                    Search
+                  </Button>
+                }
+              />
+            </FormField>
+            <br />
+            <HorizontalLine />
+            <h3>{__("User's Used Tokens")}</h3>
             {this.returnTokenList()}
-          </div>
+          </>
         ) : (
-          <div style={{ marginTop: 50, textAlign: 'center' }}>
-            <Button
-              uppercase
-              skin="primary"
-              onClick={() => {
-                openModal(LoginModal);
-              }}
-            >
-              {__('Log in')}
-            </Button>
-          </div>
+          <LogInDiv />
         )}
       </Panel>
     );

@@ -6,6 +6,7 @@ import Modal from 'components/Modal';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
 import FormField from 'components/FormField';
+import confirm from 'utils/promisified/confirm';
 import confirmPin from 'utils/promisified/confirmPin';
 import { apiPost } from 'lib/tritiumApi';
 import { errorHandler } from 'utils/form';
@@ -28,9 +29,7 @@ const SubLable = styled.span(({ theme }) => ({
   },
   validate: ({ name, supply, decimal }) => {
     const errors = {};
-    if (!name) {
-      errors.name = __('Name is required');
-    }
+
     if (supply <= 0) {
       errors.supply = __('Supply can not be zero or negative');
     }
@@ -38,6 +37,19 @@ const SubLable = styled.span(({ theme }) => ({
     return errors;
   },
   onSubmit: async ({ name }) => {
+    if (!name) {
+      const confirmed = await confirm({
+        question: __('Create a token without a name?'),
+        note: __('Adding a name costs a NXS fee'),
+        labelYes: __("That's Ok"),
+        labelNo: __('Cancel'),
+      });
+
+      if (!confirmed) {
+        throw { name: __('Add Name') };
+      }
+    }
+
     const pin = await confirmPin();
     if (pin) {
       return await apiPost('finance/create/account', { pin, name });
