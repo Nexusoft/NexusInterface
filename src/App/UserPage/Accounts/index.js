@@ -10,7 +10,7 @@ import { openModal } from 'lib/ui';
 import plusIcon from 'icons/plus.svg';
 
 import Account from './Account';
-import NewAccountModal from './NewAccountModal';
+import NewAccountModal from 'components/UserDialogs/NewAccountModal';
 
 const AccountsWrapper = styled.div(({ theme }) => ({
   maxWidth: 500,
@@ -38,13 +38,16 @@ export default class Accounts extends React.Component {
     return (
       !!accounts && (
         <AccountsWrapper>
-          <Button wide onClick={() => openModal(NewAccountModal)}>
+          <Button
+            wide
+            onClick={() => openModal(NewAccountModal, { tokenName: 'NXS' })}
+          >
             <Icon icon={plusIcon} className="space-right" />
             {__('Create new account')}
           </Button>
           <div className="mt1">
             {accounts.map(account => (
-              <Account key={account.name} account={account} />
+              <Account key={account.name + account.address} account={account} />
             ))}
           </div>
         </AccountsWrapper>

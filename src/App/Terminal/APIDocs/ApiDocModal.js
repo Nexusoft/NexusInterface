@@ -76,7 +76,7 @@ class APIDocModal extends React.Component {
         </Modal.Body>
         <Modal.Footer>
           <div className="flex space-between">
-            {displayMD ? (
+            {displayMD && (
               <>
                 <Button
                   style={{ marginRight: '1em' }}
@@ -85,7 +85,7 @@ class APIDocModal extends React.Component {
                   {'Back'}
                 </Button>
               </>
-            ) : null}
+            )}
             <Button skin="primary" wide onClick={() => this.closeModal()}>
               {__('Close')}
             </Button>
