@@ -13,7 +13,7 @@ import {
   setTxsTimeFilter,
 } from 'lib/ui';
 
-import searchIcon from 'images/search.sprite.svg';
+import searchIcon from 'icons/search.svg';
 
 const categories = [
   {

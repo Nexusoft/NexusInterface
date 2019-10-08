@@ -14,7 +14,7 @@ import { isCoreConnected } from 'selectors';
 import { timing } from 'styles';
 import * as color from 'utils/color';
 import ContextMenuBuilder from 'contextmenu';
-import plusIcon from 'images/plus.sprite.svg';
+import plusIcon from 'icons/plus.svg';
 
 const ContactComponent = styled.div(
   ({ theme }) => ({

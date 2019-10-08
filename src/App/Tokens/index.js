@@ -17,7 +17,7 @@ import ContextMenuBuilder from 'contextmenu';
 // Internal Local
 
 // Icons
-import userIcon from 'images/user.sprite.svg';
+import userIcon from 'icons/user.svg';
 import { legacyMode } from 'consts/misc';
 
 const mapStateToProps = state => ({

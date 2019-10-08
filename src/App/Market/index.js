@@ -5,7 +5,7 @@ import { remote, shell } from 'electron';
 import styled from '@emotion/styled';
 import Tooltip from 'components/Tooltip';
 import Button from 'components/Button';
-import syncingIcon from 'images/syncing.sprite.svg';
+import syncingIcon from 'icons/syncing.svg';
 import GA from 'lib/googleAnalytics';
 import { showNotification } from 'lib/ui';
 
@@ -27,9 +27,9 @@ import MarketDepth from './Chart/MarketDepth';
 import Candlestick from './Chart/Candlestick';
 
 // Images
-import chartIcon from 'images/chart.sprite.svg';
-import bittrexLogo from 'images/BittrexLogo.png';
-import binanceLogo from 'images/BINANCE.png';
+import chartIcon from 'icons/chart.svg';
+import bittrexLogo from 'icons/BittrexLogo.png';
+import binanceLogo from 'icons/BINANCE.png';
 
 const ExchangeUnitContainer = styled.div({
   width: '100%',

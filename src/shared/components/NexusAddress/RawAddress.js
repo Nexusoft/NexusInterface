@@ -9,7 +9,7 @@ import Tooltip from 'components/Tooltip';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
 import { showNotification } from 'lib/ui';
-import copyIcon from 'images/copy.sprite.svg';
+import copyIcon from 'icons/copy.svg';
 
 const RawAddressComponent = styled.div({
   marginTop: '1em',

@@ -11,7 +11,7 @@ import FieldSet from 'components/FieldSet';
 import Button from 'components/Button';
 import { consts, timing } from 'styles';
 import * as color from 'utils/color';
-import plusCircleIcon from 'images/plus.sprite.svg';
+import plusCircleIcon from 'icons/plus.svg';
 
 const AddModuleComponent = styled(FieldSet)(
   ({ theme }) => ({

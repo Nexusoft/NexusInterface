@@ -15,7 +15,7 @@ import { observeStore } from 'store';
 import { getTransactionsList } from './selectors';
 import Transaction from './Transaction';
 
-import transactionIcon from 'images/transaction.sprite.svg';
+import transactionIcon from 'icons/transaction.svg';
 
 const TransactionsLayout = styled.div({
   maxWidth: 650,

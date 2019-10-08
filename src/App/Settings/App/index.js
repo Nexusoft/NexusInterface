@@ -18,7 +18,7 @@ import * as color from 'utils/color';
 import * as form from 'utils/form';
 import { legacyMode } from 'consts/misc';
 import { isCoreConnected } from 'selectors';
-import warningIcon from 'images/warning.sprite.svg';
+import warningIcon from 'icons/warning.svg';
 import { startAutoUpdate, stopAutoUpdate } from 'lib/updater';
 
 // Internal Local

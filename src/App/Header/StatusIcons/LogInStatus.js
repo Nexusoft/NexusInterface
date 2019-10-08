@@ -13,9 +13,9 @@ import { formatDateTime } from 'lib/intl';
 import StatusIcon from './StatusIcon';
 
 // Images
-import questionMarkIcon from 'images/question-mark.sprite.svg';
-import lockedIcon from 'images/padlock.sprite.svg';
-import unlockedIcon from 'images/padlock-open.sprite.svg';
+import questionMarkIcon from 'icons/question-mark.svg';
+import lockedIcon from 'icons/padlock.svg';
+import unlockedIcon from 'icons/padlock-open.svg';
 
 const LoginStatusIcon = styled(StatusIcon)(
   ({ theme }) => ({

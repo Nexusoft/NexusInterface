@@ -8,7 +8,7 @@ import Tooltip from 'components/Tooltip';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
 import { timing } from 'styles';
-import plusIcon from 'images/plus.sprite.svg';
+import plusIcon from 'icons/plus.svg';
 import RecipientField from './RecipientField';
 import AmountField from './AmountField';
 import { subtract } from 'utils/calc';

@@ -18,7 +18,7 @@ import Select from 'components/Select';
 import Icon from 'components/Icon';
 import { showNotification } from 'lib/ui';
 import NexusAddress from 'components/NexusAddress';
-import warningIcon from 'images/warning.sprite.svg';
+import warningIcon from 'icons/warning.svg';
 import { walletDataDir } from 'consts/paths';
 import { webGLAvailable, legacyMode } from 'consts/misc';
 

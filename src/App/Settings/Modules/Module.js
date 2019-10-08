@@ -13,7 +13,7 @@ import ModuleDetailsModal from 'components/ModuleDetailsModal';
 import { isModuleEnabled } from 'lib/modules';
 import { timing } from 'styles';
 import { updateSettings } from 'lib/settings';
-import warningIcon from 'images/warning.sprite.svg';
+import warningIcon from 'icons/warning.svg';
 
 const ModuleComponent = styled.div(
   ({ theme }) => ({

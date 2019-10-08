@@ -17,10 +17,10 @@ import { isCoreConnected } from 'selectors';
 import AddEditContactModal from 'components/AddEditContactModal';
 
 // Icons
-import exportIcon from 'images/export.sprite.svg';
-import addContactIcon from 'images/add-contact.sprite.svg';
-import searchIcon from 'images/search.sprite.svg';
-import userIcon from 'images/user.sprite.svg';
+import exportIcon from 'icons/export.svg';
+import addContactIcon from 'icons/add-contact.svg';
+import searchIcon from 'icons/search.svg';
+import userIcon from 'icons/user.svg';
 
 const ControlIcon = styled(Icon)({
   width: 20,

@@ -9,7 +9,7 @@ import Icon from 'components/Icon';
 import { isSynchronized } from 'selectors';
 import { formatNumber } from 'lib/intl';
 import { isStaking } from 'selectors';
-import stakingIcon from 'images/staking.sprite.svg';
+import stakingIcon from 'icons/staking.svg';
 
 import StatusIcon from './StatusIcon';
 

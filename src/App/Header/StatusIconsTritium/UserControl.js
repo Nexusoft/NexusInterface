@@ -8,7 +8,7 @@ import Icon from 'components/Icon';
 import Arrow from 'components/Arrow';
 import Overlay from 'components/Overlay';
 import { isLoggedIn } from 'selectors';
-import userIcon from 'images/user.sprite.svg';
+import userIcon from 'icons/user.svg';
 import { timing } from 'styles';
 import * as color from 'utils/color';
 

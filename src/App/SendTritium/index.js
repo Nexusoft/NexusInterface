@@ -18,7 +18,7 @@ import { isCoreConnected, isLoggedIn } from 'selectors';
 import SendForm from './SendForm';
 
 // Resources
-import sendIcon from 'images/send.sprite.svg';
+import sendIcon from 'icons/send.svg';
 
 const mapStateToProps = state => ({
   coreConnected: isCoreConnected(state),

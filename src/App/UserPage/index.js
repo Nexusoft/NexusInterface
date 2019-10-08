@@ -15,7 +15,7 @@ import { isCoreConnected, isLoggedIn } from 'selectors';
 import ContextMenuBuilder from 'contextmenu';
 import { history } from 'lib/wallet';
 import { legacyMode } from 'consts/misc';
-import userIcon from 'images/user.sprite.svg';
+import userIcon from 'icons/user.svg';
 
 // Internal Local
 import UserBrief from './UserBrief';

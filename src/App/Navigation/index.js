@@ -16,18 +16,18 @@ import { consts, timing } from 'styles';
 import NavLinkItem from './NavLinkItem';
 
 // Images
-import logoIcon from 'images/logo.sprite.svg';
-import sendIcon from 'images/send.sprite.svg';
-import chartIcon from 'images/chart.sprite.svg';
-import transactionsIcon from 'images/transaction.sprite.svg';
-import addressBookIcon from 'images/address-book.sprite.svg';
-import settingsIcon from 'images/settings.sprite.svg';
-import consoleIcon from 'images/console.sprite.svg';
-import userIcon from 'images/user.sprite.svg';
-import tokenIcons from 'images/blockexplorer-invert-white.sprite.svg';
+import logoIcon from 'icons/logo.svg';
+import sendIcon from 'icons/send.svg';
+import chartIcon from 'icons/chart.svg';
+import transactionsIcon from 'icons/transaction.svg';
+import addressBookIcon from 'icons/address-book.svg';
+import settingsIcon from 'icons/settings.svg';
+import consoleIcon from 'icons/console.svg';
+import userIcon from 'icons/user.svg';
+import tokenIcons from 'icons/blockexplorer-invert-white.svg';
 import { legacyMode } from 'consts/misc';
-// import shapeshiftIcon from 'images/shapeshift.sprite.svg';
-// import trustListIcon from 'images/trust-list.sprite.svg';
+// import shapeshiftIcon from 'icons/shapeshift.svg';
+// import trustListIcon from 'icons/trust-list.svg';
 
 const slideUp = keyframes`
   from { opacity: 0; transform: translateY(70%) }

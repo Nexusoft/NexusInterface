@@ -7,7 +7,7 @@ import InfoField from 'components/InfoField';
 import ExternalLink from 'components/ExternalLink';
 import styled from '@emotion/styled';
 import { legacyMode } from 'consts/misc';
-import nexusLogo from 'images/logo-full.sprite.svg';
+import nexusLogo from 'icons/logo-full.svg';
 
 const Section = styled.div({
   margin: '2em 2em',
@@ -94,14 +94,10 @@ const About = ({ version, testnet, privateBlockchain }) => (
     </Modal.Header>
     <Modal.Body>
       <div>
-        <InfoField leftSize={1} rightSize={1} label={__('Interface version')}>
+        <InfoField leftSize={1} rightSize={1} label={__('Wallet version')}>
           {APP_VERSION}
         </InfoField>
-        <InfoField
-          leftSize={1}
-          rightSize={1}
-          label={__('Interface build date')}
-        >
+        <InfoField leftSize={1} rightSize={1} label={__('Wallet build date')}>
           {BUILD_DATE}
         </InfoField>
         <InfoField leftSize={1} rightSize={1} label={__('Nexus Core version')}>

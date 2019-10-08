@@ -9,7 +9,7 @@ import Icon from 'components/Icon';
 import Button from 'components/Button';
 import { updateSettings } from 'lib/settings';
 import * as color from 'utils/color';
-import warningIcon from 'images/warning.sprite.svg';
+import warningIcon from 'icons/warning.svg';
 
 const WarningModal = styled(Modal)({
   maxWidth: 500,

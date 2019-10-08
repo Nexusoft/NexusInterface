@@ -19,7 +19,7 @@ import ModalContext from 'context/modal';
 import { bootstrapEvents, abortBootstrap } from 'lib/bootstrap';
 import { timing } from 'styles';
 import BootstrapBackgroundTask from 'components/BootstrapBackgroundTask';
-import arrowUpLeftIcon from 'images/arrow-up-left.sprite.svg';
+import arrowUpLeftIcon from 'icons/arrow-up-left.svg';
 
 const maximizeAnimation = keyframes`
   from { 

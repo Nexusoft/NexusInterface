@@ -20,8 +20,8 @@ import ContactList from './ContactList';
 import ContactDetails from './ContactDetails';
 
 // Icons
-import addressBookIcon from 'images/address-book.sprite.svg';
-import addContactIcon from 'images/add-contact.sprite.svg';
+import addressBookIcon from 'icons/address-book.svg';
+import addContactIcon from 'icons/add-contact.svg';
 
 const AddressBookLayout = styled.div({
   display: 'grid',
