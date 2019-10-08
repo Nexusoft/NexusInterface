@@ -19,6 +19,7 @@ import Token from './Token';
 
 // Icons
 import userIcon from 'images/user.sprite.svg';
+import plusIcon from 'images/plus.sprite.svg';
 import { legacyMode } from 'consts/misc';
 import { history } from 'store';
 import { apiGet } from 'lib/tritiumApi';
@@ -191,19 +192,13 @@ class Tokens extends Component {
       <Panel icon={userIcon} title={__('Tokens')} bodyScrollable={false}>
         {loggedIn ? (
           <>
-            <Button
-              skin="primary"
-              onClick={() => {
-                openModal(NewTokenModal);
-              }}
-            >
-              {'Test Open Token Creation'}
-            </Button>
             <FormField connectLabel label={__('Search Tokens')}>
               <TextField
                 type="search"
                 name="tokenSearch"
-                placeholder={__('Search for Token ( Name or Address)')}
+                placeholder={__(
+                  'Search for Token on the network ( Name or Address)'
+                )}
                 value={searchToken}
                 onChange={evt => {
                   const value = evt.target.value;
@@ -234,6 +229,15 @@ class Tokens extends Component {
             <HorizontalLine />
             <h3>{__("User's Used Tokens")}</h3>
             {this.returnTokenList()}
+            <Button
+              skin="primary"
+              onClick={() => {
+                openModal(NewTokenModal);
+              }}
+            >
+              <Icon icon={plusIcon} className="space-right" />
+              {'Create New Token'}
+            </Button>
           </>
         ) : (
           <LogInDiv />

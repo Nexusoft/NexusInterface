@@ -34,7 +34,9 @@ const Token = ({ token }) => (
         </Link>
       </div>
     </div>
-    <NexusAddress address={token.address} />
+    <NexusAddress
+      address={token.address || '00000000000000000000000000000000000000000000'}
+    />
   </TokenComponent>
 );
 
