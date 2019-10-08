@@ -22,7 +22,7 @@ import { webGLAvailable } from 'consts/misc';
 
 // Images
 import logoIcon from 'icons/NXS_coin.svg';
-import { CurrencyIcon } from 'icons/CurrencyIcons';
+import currencyIcons from 'data/currencyIcons';
 import chartIcon from 'icons/chart.svg';
 import supplyIcon from 'icons/supply.svg';
 import hours24Icon from 'icons/24hr.svg';
@@ -792,7 +792,7 @@ class Overview extends Component {
                 )}
               </StatValue>
             </div>
-            <StatIcon icon={CurrencyIcon(fiatCurrency)} />
+            <StatIcon icon={currencyIcons(fiatCurrency)} />
           </Stat>
           <Stat
             as={stake !== undefined ? Link : undefined}

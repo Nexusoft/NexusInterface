@@ -21,7 +21,7 @@ import { webGLAvailable } from 'consts/misc';
 
 // Images
 import logoIcon from 'icons/NXS_coin.svg';
-import { CurrencyIcon } from 'icons/CurrencyIcons';
+import currencyIcons from 'data/currencyIcons';
 import transactionIcon from 'icons/transaction.svg';
 import chartIcon from 'icons/chart.svg';
 import supplyIcon from 'icons/supply.svg';
@@ -794,7 +794,7 @@ class Overview extends Component {
             <StatIcon
               icon={
                 settings.displayFiatBalance
-                  ? CurrencyIcon(fiatCurrency)
+                  ? currencyIcons(fiatCurrency)
                   : logoIcon
               }
             />

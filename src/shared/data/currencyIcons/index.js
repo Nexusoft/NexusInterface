@@ -15,17 +15,8 @@ import TaiDollarSign from './TWD.svg';
 import DirhamSign from './AED.svg';
 import BitcoinSign from './BTC.svg';
 
-export function CurrencyIcon(ISOValue) {
+export default function currencyIcon(ISOValue) {
   switch (ISOValue) {
-    case 'USD':
-    case 'AUD':
-    case 'BRL':
-    case 'CAD':
-    case 'HKD':
-    case 'MYR':
-    case 'NZD':
-    case 'SGD':
-      return DollarSign;
     case 'BTC':
       return BitcoinSign;
     case 'GBP':
