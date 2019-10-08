@@ -2,6 +2,7 @@ import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 
+import 'appMenu';
 import store from 'store';
 import { walletEvents } from 'lib/wallet';
 import App from './App';
