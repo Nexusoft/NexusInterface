@@ -356,7 +356,7 @@ class ShowRecoveryComponent extends React.Component {
 export default ShowRecoveryComponent;
 
 
-import logoFull from '../Header/logo-full-beta.sprite.svg';
+import logoFull from '../Header/logo-full-beta.svg';
 import Icon from 'components/Icon';
 
 const Logo = styled(Icon)(({ theme }) => ({

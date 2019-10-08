@@ -5,7 +5,7 @@ import Button from 'components/Button';
 import Link from 'components/Link';
 import Icon from 'components/Icon';
 import { updateSettings } from 'lib/settings';
-import logoIcon from 'images/logo.sprite.svg';
+import logoIcon from 'icons/logo.svg';
 
 const TritiumUpgradeModal = () => (
   <Modal>

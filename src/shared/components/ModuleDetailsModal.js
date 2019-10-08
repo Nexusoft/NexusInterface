@@ -13,9 +13,9 @@ import { openConfirmDialog } from 'lib/ui';
 import { modulesDir } from 'consts/paths';
 import { timing } from 'styles';
 import deleteDirectory from 'utils/promisified/deleteDirectory';
-import warningIcon from 'images/warning.sprite.svg';
-import linkIcon from 'images/link.sprite.svg';
-import trashIcon from 'images/trash.sprite.svg';
+import warningIcon from 'icons/warning.svg';
+import linkIcon from 'icons/link.svg';
+import trashIcon from 'icons/trash.svg';
 
 const DeleteModule = styled.div({
   position: 'absolute',

@@ -17,9 +17,9 @@ import NexusApiConsole from './NexusApiConsole';
 import TerminalCore from './TerminalCore';
 
 // Images
-import consoleIcon from 'images/console.sprite.svg';
-import logoIcon from 'images/logo.sprite.svg';
-import coreIcon from 'images/core.sprite.svg';
+import consoleIcon from 'icons/console.svg';
+import logoIcon from 'icons/logo.svg';
+import coreIcon from 'icons/core.svg';
 
 const TerminalComponent = styled.div({
   height: '100%',

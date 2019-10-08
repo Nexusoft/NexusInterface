@@ -6,7 +6,7 @@ import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
 
 // Internal
-import { switchSettingsTab } from 'lib/ui';
+import { switchSettingsTab, setCoreSettingsRestart } from 'lib/ui';
 import { stopCore, startCore, restartCore } from 'lib/core';
 import { showNotification, openConfirmDialog } from 'lib/ui';
 import { updateSettings } from 'lib/settings';
@@ -15,12 +15,13 @@ import Button from 'components/Button';
 import TextField from 'components/TextField';
 import Switch from 'components/Switch';
 import { errorHandler } from 'utils/form';
+import { legacyMode } from 'consts/misc';
 // import { coreDataDir } from 'consts/paths';
 import * as color from 'utils/color';
 import confirm from 'utils/promisified/confirm';
+import { newUID } from 'utils/misc';
 import { consts } from 'styles';
-import warningIcon from 'images/warning.sprite.svg';
-import Icon from 'components/Icon';
+import { isCoreConnected } from 'selectors';
 
 import ReScanButton from './RescanButton.js';
 
@@ -46,24 +47,56 @@ const RestartContainer = styled.div({
 
 const removeWhiteSpaces = value => (value || '').replace(' ', '');
 
+const formKeys = [
+  'enableMining',
+  'ipMineWhitelist',
+  'enableStaking',
+  'verboseLevel',
+  'alphaTestNet',
+  'avatarMode',
+  'manualDaemonUser',
+  'manualDaemonPassword',
+  'manualDaemonIP',
+  'manualDaemonPort',
+  'manualDaemonDataDir',
+];
+const getInitialValues = (() => {
+  let lastOutput = null;
+  let lastInput = null;
+
+  return settings => {
+    if (settings === lastInput) return lastOutput;
+
+    let changed = false;
+    const output = lastOutput || {};
+    formKeys.forEach(key => {
+      if (settings[key] !== output[key]) {
+        changed = true;
+      }
+      output[key] = settings[key];
+    });
+
+    lastInput = settings;
+    if (changed) {
+      return (lastOutput = output);
+    } else {
+      return lastOutput;
+    }
+  };
+})();
+
 const mapStateToProps = state => {
-  const { settings } = state;
-  console.log('staking', settings.enableStaking);
-  return {
-    manualDaemon: settings.manualDaemon,
-    initialValues: {
-      enableMining: settings.enableMining,
-      ipMineWhitelist: settings.ipMineWhitelist,
-      enableStaking: settings.enableStaking,
-      verboseLevel: settings.verboseLevel,
-      alphaTestNet: settings.alphaTestNet,
-      avatarMode: settings.avatarMode,
-      manualDaemonUser: settings.manualDaemonUser,
-      manualDaemonPassword: settings.manualDaemonPassword,
-      manualDaemonIP: settings.manualDaemonIP,
-      manualDaemonPort: settings.manualDaemonPort,
-      manualDaemonDataDir: settings.manualDaemonDataDir,
+  const {
+    settings,
+    ui: {
+      settings: { restartCoreOnSave },
     },
+  } = state;
+  return {
+    coreConnected: isCoreConnected(state),
+    manualDaemon: settings.manualDaemon,
+    initialValues: getInitialValues(settings),
+    restartCoreOnSave,
   };
 };
 
@@ -77,6 +110,7 @@ const mapStateToProps = state => {
 @reduxForm({
   form: 'coreSettings',
   destroyOnUnmount: false,
+  enableReinitialize: true,
   validate: (
     {
       verboseLevel,
@@ -112,29 +146,25 @@ const mapStateToProps = state => {
     }
     return errors;
   },
-  onSubmit: async (values, dispatch, props) => {
-    const confirmed = await confirm({
-      question: __('Restart Core?'),
-      note: __('Do you want to restart the Core now?'),
-      labelYes: __('Restart now'),
-      labelNo: __('Cancel'),
-    });
-    if (confirmed) {
-      updateSettings(values);
-      return true;
-    }
+  onSubmit: async values => {
+    return updateSettings(values);
   },
   onSubmitSuccess: (result, dispatch, props) => {
-    if (result) {
-      showNotification(__('Core settings saved'), 'success');
+    showNotification(__('Core settings saved'), 'success');
+    if (!props.manualDaemon && props.restartCoreOnSave) {
       showNotification(__('Restarting Core...'));
-      props.reset();
       restartCore();
     }
   },
   onSubmitFail: errorHandler('Error saving settings'),
 })
 class SettingsCore extends Component {
+  switchId = newUID();
+
+  handleRestartSwitch = e => {
+    setCoreSettingsRestart(!!e.target.checked);
+  };
+
   /**
    *Creates an instance of SettingsCore.
    * @param {*} props
@@ -241,7 +271,14 @@ class SettingsCore extends Component {
    * @memberof SettingsCore
    */
   render() {
-    const { manualDaemon, handleSubmit, dirty, submitting } = this.props;
+    const {
+      coreConnected,
+      manualDaemon,
+      handleSubmit,
+      dirty,
+      submitting,
+      restartCoreOnSave,
+    } = this.props;
 
     return (
       <>
@@ -291,30 +328,34 @@ class SettingsCore extends Component {
                 <Field name="enableStaking" component={Switch.RF} />
               </SettingsField>
 
-              <SettingsField
-                connectLabel
-                label={__('Rescan wallet')}
-                subLabel={__(
-                  'Used to correct transaction/balance issues, scans over every block in the database. Could take up to 10 minutes.'
-                )}
-              >
-                <ReScanButton />
-              </SettingsField>
-
-              <SettingsField
-                connectLabel
-                label={__('Reload transaction history')}
-                subLabel={__(
-                  'Restart Nexus core with -walletclean parameter to clean out and reload all transaction history'
-                )}
-              >
-                <Button
-                  onClick={this.reloadTxHistory}
-                  style={{ height: consts.inputHeightEm + 'em' }}
+              {legacyMode && (
+                <SettingsField
+                  connectLabel
+                  label={__('Rescan wallet')}
+                  subLabel={__(
+                    'Used to correct transaction/balance issues, scans over every block in the database. Could take up to 10 minutes.'
+                  )}
                 >
-                  {__('Reload')}
-                </Button>
-              </SettingsField>
+                  <ReScanButton disabled={!coreConnected} />
+                </SettingsField>
+              )}
+
+              {legacyMode && (
+                <SettingsField
+                  connectLabel
+                  label={__('Reload transaction history')}
+                  subLabel={__(
+                    'Restart Nexus core with -walletclean parameter to clean out and reload all transaction history'
+                  )}
+                >
+                  <Button
+                    onClick={this.reloadTxHistory}
+                    style={{ height: consts.inputHeightEm + 'em' }}
+                  >
+                    {__('Reload')}
+                  </Button>
+                </SettingsField>
+              )}
 
               <SettingsField
                 connectLabel
@@ -489,22 +530,31 @@ class SettingsCore extends Component {
           {!!dirty && (
             <RestartPrompt>
               <RestartContainer>
-                <div>
-                  <Icon icon={warningIcon} className="space-right" />
-                  <span
-                    style={{
-                      textDecoration: 'underline',
-                      verticalAlign: 'middle',
-                    }}
-                  >
-                    {__(
-                      'Core needs to restart for these changes to take effect!'
-                    )}
-                  </span>
+                <div className="flex center">
+                  {!manualDaemon && (
+                    <>
+                      <Switch
+                        id={this.switchId}
+                        checked={restartCoreOnSave}
+                        onChange={this.handleRestartSwitch}
+                        style={{ fontSize: '0.7em' }}
+                      />
+                      &nbsp;
+                      <label
+                        htmlFor={this.switchId}
+                        style={{
+                          cursor: 'pointer',
+                          opacity: restartCoreOnSave ? 1 : 0.7,
+                        }}
+                      >
+                        {__('Restart Core for these changes to take effect')}
+                      </label>
+                    </>
+                  )}
                 </div>
 
                 <Button type="submit" disabled={submitting}>
-                  {__('Save settings and restart Core')}
+                  {__('Save settings')}
                 </Button>
               </RestartContainer>
             </RestartPrompt>

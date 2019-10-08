@@ -6,7 +6,7 @@ import styled from '@emotion/styled';
 import Modal from 'components/Modal';
 import Icon from 'components/Icon';
 import * as color from 'utils/color';
-import checkIcon from 'images/check.sprite.svg';
+import checkIcon from 'icons/check.svg';
 import Dialog from './Dialog';
 
 const CheckMark = styled(Dialog.Icon)(({ theme }) => ({

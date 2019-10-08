@@ -28,9 +28,9 @@ import { saveCSV } from './utils';
 import TransactionsChartModal from './TransactionsChartModal';
 import CategoryCell from './CategoryCell';
 
-import transactionIcon from 'images/transaction.sprite.svg';
-import barChartIcon from 'images/bar-chart.sprite.svg';
-import downloadIcon from 'images/download.sprite.svg';
+import transactionIcon from 'icons/transaction.svg';
+import barChartIcon from 'icons/bar-chart.svg';
+import downloadIcon from 'icons/download.svg';
 
 const timeFormatOptions = {
   year: 'numeric',

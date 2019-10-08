@@ -9,6 +9,7 @@ import GA from 'lib/googleAnalytics';
 import Button from 'components/Button';
 import Panel from 'components/Panel';
 import LoginModal from 'components/LoginModal';
+import { history } from 'lib/wallet';
 import { openModal } from 'lib/ui';
 import { isCoreConnected, isLoggedIn } from 'selectors';
 import ContextMenuBuilder from 'contextmenu';
@@ -21,16 +22,19 @@ import Token from './Token';
 import userIcon from 'images/user.sprite.svg';
 import plusIcon from 'images/plus.sprite.svg';
 import { legacyMode } from 'consts/misc';
-import { history } from 'store';
 import { apiGet } from 'lib/tritiumApi';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import searchIcon from 'images/search.sprite.svg';
 import Icon from 'components/Icon';
-import TokenDetailsModal from './TokenDetailsModal';
 import HorizontalLine from 'components/HorizontalLine';
 import ErrorDialog from 'components/Dialogs/ErrorDialog';
 import { loadOwnedTokens } from 'lib/user';
+
+// Internal Local
+import TokenDetailsModal from './TokenDetailsModal';
+import NewTokenModal from './NewTokenModal';
+import Token from './Token';
 
 // history.push from lib/wallet.js
 const LogInDiv = () => (

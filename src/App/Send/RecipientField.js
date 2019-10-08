@@ -11,7 +11,7 @@ import Button from 'components/Button';
 import Icon from 'components/Icon';
 import { openModal } from 'lib/ui';
 import AddEditContactModal from 'components/AddEditContactModal';
-import plusIcon from 'images/plus.sprite.svg';
+import plusIcon from 'icons/plus.svg';
 import { getAddressNameMap, getRecipientSuggestions } from './selectors';
 
 const RecipientName = styled.span(({ theme }) => ({

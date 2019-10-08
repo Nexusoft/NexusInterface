@@ -14,8 +14,8 @@ import AddEditContactModal from 'components/AddEditContactModal';
 import { isCoreConnected } from 'selectors';
 import timeZones from 'data/timeZones';
 import { timing } from 'styles';
-import trashIcon from 'images/trash.sprite.svg';
-import editIcon from 'images/edit.sprite.svg';
+import trashIcon from 'icons/trash.svg';
+import editIcon from 'icons/edit.svg';
 
 const ContactDetailsComponent = styled.div({
   gridArea: 'details',

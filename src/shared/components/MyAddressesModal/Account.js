@@ -27,7 +27,7 @@ const Account = ({
       <AccountName>
         {highlightMatchingText(account, searchQuery, Highlight)}
       </AccountName>{' '}
-      ({formatNumber(balance, 20)} NXS)
+      ({formatNumber(balance, 6)} NXS)
     </div>
     {addresses.map(addr => (
       <NexusAddress key={addr} address={addr} />

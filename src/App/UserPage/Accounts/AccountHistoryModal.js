@@ -107,7 +107,7 @@ const tableColumns = [
             OP === 'COINBASE'
           }
         >
-          {formatNumber(amount)}
+          {formatNumber(amount, 6)}
         </Amount>
       ) : (
         ''
@@ -211,48 +211,40 @@ class AccountHistoryModal extends React.Component {
             </WaitingMessage>
           ) : (
             <Layout>
-              <BalancesFieldSet legend={__('Account balance')}>
+              <BalancesFieldSet
+                legend={`${__('Account balance')} (${account.token_name})`}
+              >
                 <div className="flex space-between">
                   <div className="text-center">
                     <div>
                       <strong>{__('Total')}</strong>
                     </div>
-                    <div>
-                      {formatNumber(totalBalance(account))} {account.token_name}
-                    </div>
+                    <div>{formatNumber(totalBalance(account, 6))}</div>
                   </div>
                   <div className="text-center">
                     <div>
                       <strong>{__('Available')}</strong>
                     </div>
-                    <div>
-                      {formatNumber(account.balance)} {account.token_name}
-                    </div>
+                    <div>{formatNumber(account.balance, 6)}</div>
                   </div>
                   <div className="text-center">
                     <div>
                       <strong>{__('Pending')}</strong>
                     </div>
-                    <div>
-                      {formatNumber(account.pending)} {account.token_name}
-                    </div>
+                    <div>{formatNumber(account.pending, 6)}</div>
                   </div>
                   <div className="text-center">
                     <div>
                       <strong>{__('Unconfirmed')}</strong>
                     </div>
-                    <div>
-                      {formatNumber(account.unconfirmed)} {account.token_name}
-                    </div>
+                    <div>{formatNumber(account.unconfirmed, 6)}</div>
                   </div>
                   {typeof account.stake === 'number' && (
                     <div className="text-center">
                       <div>
                         <strong>{__('Stake')}</strong>
                       </div>
-                      <div>
-                        {formatNumber(account.stake)} {account.token_name}
-                      </div>
+                      <div>{formatNumber(account.stake, 6)}</div>
                     </div>
                   )}
                 </div>

@@ -125,7 +125,7 @@ export default class AdjustStakeModal extends React.Component {
                 skin="filled-inverted"
               />
               <LimitNumber align="left">0</LimitNumber>
-              <LimitNumber align="right">{formatNumber(total)}</LimitNumber>
+              <LimitNumber align="right">{formatNumber(total, 6)}</LimitNumber>
             </div>
             <SliderWrapper>
               <Field name="stake" component={StakeSlider} min={0} max={total} />

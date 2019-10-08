@@ -20,12 +20,12 @@ import SettingsSecurity from './Security';
 import SettingsModules from './Modules';
 
 // Images
-import settingsIcon from 'images/settings.sprite.svg';
-import coreIcon from 'images/core.sprite.svg';
-import logoIcon from 'images/logo.sprite.svg';
-import lockIcon from 'images/padlock.sprite.svg';
-import leafIcon from 'images/leaf.sprite.svg';
-import legoIcon from 'images/lego-block.sprite.svg';
+import settingsIcon from 'icons/settings.svg';
+import coreIcon from 'icons/core.svg';
+import logoIcon from 'icons/logo.svg';
+import lockIcon from 'icons/padlock.svg';
+import leafIcon from 'icons/leaf.svg';
+import legoIcon from 'icons/lego-block.svg';
 
 const SettingsComponent = styled.div({
   height: '100%',

@@ -77,11 +77,11 @@ function normalizeFile(path) {
  * @returns
  */
 export async function getModuleHash(dirPath, { module } = {}) {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     try {
       const nxsPackagePath = join(dirPath, 'nxs_package.json');
       if (!module) {
-        const nxsPackageContent = fs.readFileSync(nxsPackagePath);
+        const nxsPackageContent = await fs.promises.readFile(nxsPackagePath);
         module = JSON.parse(nxsPackageContent);
       }
       const filePaths = module.files.sort().map(file => join(dirPath, file));
@@ -112,7 +112,10 @@ export async function getModuleHash(dirPath, { module } = {}) {
 export async function getRepoInfo(dirPath) {
   const filePath = join(dirPath, 'repo_info.json');
   // Check repo_info.json file exists
-  if (!fs.existsSync(filePath) || fs.lstatSync(filePath).isSymbolicLink())
+  if (
+    !fs.existsSync(filePath) ||
+    (await fs.promises.lstat(filePath)).isSymbolicLink()
+  )
     return null;
 
   // Check repo_info.json file schema
@@ -275,7 +278,7 @@ async function signModuleRepo(
       return;
     }
   }
-  const privKey = fs.readFileSync(privKeyPath);
+  const privKey = await fs.promises.readFile(privKeyPath);
 
   const signature = crypto
     .createSign('RSA-SHA256')
@@ -295,7 +298,7 @@ async function signModuleRepo(
     data,
   };
   const repoInfoPath = join(moduleDir, 'repo_info.json');
-  fs.writeFileSync(repoInfoPath, JSON.stringify(repoInfo, null, 2));
+  await fs.promises.writeFile(repoInfoPath, JSON.stringify(repoInfo, null, 2));
 
   console.log('Successfully generated repo_info.json file at ' + repoInfoPath);
 }

@@ -18,10 +18,10 @@ import Tooltip from 'components/Tooltip';
 import Arrow from 'components/Arrow';
 import { openSuccessDialog } from 'lib/ui';
 import { errorHandler } from 'utils/form';
-import sendIcon from 'images/send.sprite.svg';
+import sendIcon from 'icons/send.svg';
 import { numericOnly } from 'utils/form';
 import confirmPin from 'utils/promisified/confirmPin';
-import questionIcon from 'images/question-mark-circle.sprite.svg';
+import questionIcon from 'icons/question-mark-circle.svg';
 
 // Internal Local
 import Recipients from './Recipients';

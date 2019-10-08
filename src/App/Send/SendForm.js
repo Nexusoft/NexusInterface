@@ -15,7 +15,7 @@ import Select from 'components/Select';
 import FormField from 'components/FormField';
 import { openConfirmDialog, openSuccessDialog, openModal } from 'lib/ui';
 import { errorHandler } from 'utils/form';
-import sendIcon from 'images/send.sprite.svg';
+import sendIcon from 'icons/send.svg';
 
 // Internal Local
 import Recipients from './Recipients';

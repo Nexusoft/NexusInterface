@@ -16,8 +16,9 @@ import Icon from 'components/Icon';
 import { openConfirmDialog, openErrorDialog, showNotification } from 'lib/ui';
 import * as color from 'utils/color';
 import * as form from 'utils/form';
+import { legacyMode } from 'consts/misc';
 import { isCoreConnected } from 'selectors';
-import warningIcon from 'images/warning.sprite.svg';
+import warningIcon from 'icons/warning.svg';
 import { startAutoUpdate, stopAutoUpdate } from 'lib/updater';
 
 // Internal Local
@@ -336,17 +337,22 @@ class SettingsApp extends Component {
               onChange={this.updateHandlers('allowSymLink')}
             />
           </SettingsField>
-          <SettingsField
-            indent={1}
-            connectLabel
-            label={__('Fake Test Transactions')}
-            subLabel={__('Display Test Transactions on the Transactions page')}
-          >
-            <Switch
-              checked={settings.fakeTransactions}
-              onChange={this.updateHandlers('fakeTransactions')}
-            />
-          </SettingsField>
+
+          {legacyMode && (
+            <SettingsField
+              indent={1}
+              connectLabel
+              label={__('Fake Test Transactions')}
+              subLabel={__(
+                'Display Test Transactions on the Transactions page'
+              )}
+            >
+              <Switch
+                checked={settings.fakeTransactions}
+                onChange={this.updateHandlers('fakeTransactions')}
+              />
+            </SettingsField>
+          )}
         </div>
 
         <Button

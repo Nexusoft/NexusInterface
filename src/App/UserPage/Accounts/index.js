@@ -7,7 +7,7 @@ import Button from 'components/Button';
 import { switchUserTab } from 'lib/ui';
 import { loadAccounts } from 'lib/user';
 import { openModal } from 'lib/ui';
-import plusIcon from 'images/plus.sprite.svg';
+import plusIcon from 'icons/plus.svg';
 
 import Account from './Account';
 import NewAccountModal from 'components/UserDialogs/NewAccountModal';

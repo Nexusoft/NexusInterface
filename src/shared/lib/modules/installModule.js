@@ -145,7 +145,7 @@ export async function installModule(path) {
     }
     let dirPath = path;
 
-    if (fs.statSync(path).isFile()) {
+    if ((await fs.promises.stat(path)).isFile()) {
       if (!supportedExtensions.some(ext => path.endsWith(ext))) {
         showNotification(__('Unsupported file type'), 'error');
         return;
@@ -166,7 +166,7 @@ export async function installModule(path) {
       const subItems = await fs.promises.readdir(tempModuleDir);
       if (subItems.length === 1) {
         const subItemPath = join(tempModuleDir, subItems[0]);
-        if (fs.statSync(subItemPath).isDirectory()) {
+        if ((await fs.promises.stat(subItemPath)).isDirectory()) {
           dirPath = subItemPath;
         }
       }

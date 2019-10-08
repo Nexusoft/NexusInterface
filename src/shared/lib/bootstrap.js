@@ -25,6 +25,7 @@ import extractTarball from 'utils/promisified/extractTarball';
 import sleep from 'utils/promisified/sleep';
 import { throttled } from 'utils/universal';
 import * as TYPE from 'consts/actionTypes';
+import { walletEvents } from 'lib/wallet';
 import { updateSettings } from 'lib/settings';
 import BootstrapModal from 'components/BootstrapModal';
 
@@ -315,18 +316,11 @@ const setBootstrapStatus = (step, details) => {
 };
 
 /**
- * Public API
- * =============================================================================
- */
-
-export const bootstrapEvents = new EventEmitter();
-
-/**
  * Register bootstrap events listeners
  *
  * @export
  */
-export function initializeBootstrapEvents() {
+walletEvents.once('post-render', function() {
   bootstrapEvents.on('abort', () =>
     showNotification(__('Bootstrap process has been aborted'), 'error')
   );
@@ -342,7 +336,14 @@ export function initializeBootstrapEvents() {
       message: __('Recent database has been successfully bootstrapped'),
     })
   );
-}
+});
+
+/**
+ * Public API
+ * =============================================================================
+ */
+
+export const bootstrapEvents = new EventEmitter();
 
 /**
  * Bootstrap Modal element

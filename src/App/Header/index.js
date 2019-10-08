@@ -17,7 +17,7 @@ import StatusIcons from './StatusIcons';
 import StatusIconsTritium from './StatusIconsTritium';
 import WalletStatus from './WalletStatus';
 import TritiumCountdown from './TritiumCountdown';
-import logoFull from './logo-full-beta.sprite.svg';
+import logoFull from 'icons/logo-full.svg';
 
 const HeaderComponent = styled.header(({ theme }) => ({
   gridArea: 'header',

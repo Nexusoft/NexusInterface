@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
 // Internal Global Dependencies
+import 'lib/coreOutput';
 import { switchConsoleTab, pauseCoreOutput, unpauseCoreOutput } from 'lib/ui';
 import Button from 'components/Button';
 

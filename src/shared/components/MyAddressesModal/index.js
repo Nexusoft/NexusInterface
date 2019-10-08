@@ -8,8 +8,8 @@ import Modal from 'components/Modal';
 import TextField from 'components/TextField';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
-import searchIcon from 'images/search.sprite.svg';
-import plusIcon from 'images/plus.sprite.svg';
+import searchIcon from 'icons/search.svg';
+import plusIcon from 'icons/plus.svg';
 
 import Account from './Account';
 import NewAddressForm from './NewAddressForm';

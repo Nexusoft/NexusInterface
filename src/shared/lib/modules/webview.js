@@ -1,22 +1,21 @@
 import memoize from 'utils/memoize';
 import axios from 'axios';
 import { reset, initialize } from 'redux-form';
-import { createMatchSelector } from 'connected-react-router';
 
 import * as TYPE from 'consts/actionTypes';
-import store, { history, observeStore } from 'store';
+import store, { observeStore } from 'store';
+import { history } from 'lib/wallet';
 import {
   showNotification,
   openConfirmDialog,
   openErrorDialog,
   openSuccessDialog,
 } from 'lib/ui';
+import { walletEvents } from 'lib/wallet';
 import rpc from 'lib/rpc';
 
 import { readModuleStorage, writeModuleStorage } from './storage';
-import { getModuleIfActive } from './utils';
-
-const matchSelector = createMatchSelector({ path: '/Modules/:name' });
+import { getModuleIfEnabled } from './utils';
 
 const cmdWhitelist = [
   'checkwallet',
@@ -88,9 +87,9 @@ const getModuleData = ({
 
 const getActiveModule = () => {
   const state = store.getState();
-  const match = matchSelector(state);
-  return getModuleIfActive(
-    match.params.name,
+  const { activeAppModule } = state;
+  return getModuleIfEnabled(
+    activeAppModule && activeAppModule.moduleName,
     state.modules,
     state.settings.disabledModules
   );
@@ -164,9 +163,9 @@ async function proxyRequest([url, options, requestId]) {
     }
 
     const response = await axios(url, options);
-    const { webview } = store.getState();
-    if (webview) {
-      webview.send(
+    const { activeAppModule } = store.getState();
+    if (activeAppModule) {
+      activeAppModule.webview.send(
         `proxy-response${requestId ? `:${requestId}` : ''}`,
         null,
         response
@@ -174,9 +173,9 @@ async function proxyRequest([url, options, requestId]) {
     }
   } catch (err) {
     console.error(err);
-    const { webview } = store.getState();
-    if (webview) {
-      webview.send(
+    const { activeAppModule } = store.getState();
+    if (activeAppModule) {
+      activeAppModule.webview.send(
         `proxy-response${requestId ? `:${requestId}` : ''}`,
         err.toString ? err.toString() : err
       );
@@ -191,15 +190,22 @@ async function rpcCall([command, params, callId]) {
     }
 
     const response = await rpc(command, ...(params || []));
-    const { webview } = store.getState();
-    if (webview) {
-      webview.send(`rpc-return${callId ? `:${callId}` : ''}`, null, response);
+    const { activeAppModule } = store.getState();
+    if (activeAppModule) {
+      activeAppModule.webview.send(
+        `rpc-return${callId ? `:${callId}` : ''}`,
+        null,
+        response
+      );
     }
   } catch (err) {
     console.error(err);
-    const { webview } = store.getState();
-    if (webview) {
-      webview.send(`rpc-return${callId ? `:${callId}` : ''}`, err);
+    const { activeAppModule } = store.getState();
+    if (activeAppModule) {
+      activeAppModule.webview.send(
+        `rpc-return${callId ? `:${callId}` : ''}`,
+        err
+      );
     }
   }
 }
@@ -237,9 +243,9 @@ function confirm([options = {}, confirmationId]) {
         'yes',
         `confirm-answer${confirmationId ? `:${confirmationId}` : ''}`
       );
-      const { webview } = store.getState();
-      if (webview) {
-        webview.send(
+      const { activeAppModule } = store.getState();
+      if (activeAppModule) {
+        activeAppModule.webview.send(
           `confirm-answer${confirmationId ? `:${confirmationId}` : ''}`,
           true
         );
@@ -248,9 +254,9 @@ function confirm([options = {}, confirmationId]) {
     labelNo,
     skinNo,
     callbackNo: () => {
-      const { webview } = store.getState();
-      if (webview) {
-        webview.send(
+      const { activeAppModule } = store.getState();
+      if (activeAppModule) {
+        activeAppModule.webview.send(
           `confirm-answer${confirmationId ? `:${confirmationId}` : ''}`,
           false
         );
@@ -279,22 +285,18 @@ function updateStorage([data]) {
   writeModuleStorage(activeModule, data);
 }
 
-/**
- * Public API
- * ===========================================================================
- */
-
-export function initializeWebView() {
+walletEvents.once('post-render', function() {
   observeStore(
-    state => state.webview,
-    webview => {
-      if (webview) {
+    state => state.activeAppModule,
+    activeAppModule => {
+      if (activeAppModule) {
+        const { webview } = activeAppModule;
         webview.addEventListener('ipc-message', handleIpcMessage);
-        webview.addEventListener('dom-ready', () => {
+        webview.addEventListener('dom-ready', async () => {
           const state = store.getState();
           const activeModule = getActiveModule();
           const moduleState = state.moduleStates[activeModule.name];
-          const storageData = readModuleStorage(activeModule);
+          const storageData = await readModuleStorage(activeModule);
           webview.send('initialize', {
             ...getModuleData(state),
             moduleState,
@@ -309,10 +311,10 @@ export function initializeWebView() {
     state => state.settings,
     (settings, oldSettings) => {
       if (settingsChanged(oldSettings, settings)) {
-        const { webview } = store.getState();
-        if (webview) {
+        const { activeAppModule } = store.getState();
+        if (activeAppModule) {
           try {
-            webview.send('settings-updated', settings);
+            activeAppModule.webview.send('settings-updated', settings);
           } catch (err) {}
         }
       }
@@ -322,10 +324,10 @@ export function initializeWebView() {
   observeStore(
     state => state.theme,
     theme => {
-      const { webview } = store.getState();
-      if (webview) {
+      const { activeAppModule } = store.getState();
+      if (activeAppModule) {
         try {
-          webview.send('theme-updated', theme);
+          activeAppModule.webview.send('theme-updated', theme);
         } catch (err) {}
       }
     }
@@ -334,26 +336,38 @@ export function initializeWebView() {
   observeStore(
     state => state.coreInfo,
     coreInfo => {
-      const { webview } = store.getState();
-      if (webview) {
+      const { activeAppModule } = store.getState();
+      if (activeAppModule) {
         try {
-          webview.send('coreInfo-updated', coreInfo);
+          activeAppModule.webview.send('coreInfo-updated', coreInfo);
         } catch (err) {}
       }
     }
   );
-}
+});
 
-export const setActiveWebView = webview => {
+/**
+ * Public API
+ * ===========================================================================
+ */
+
+export const setActiveWebView = (webview, moduleName) => {
   store.dispatch({
-    type: TYPE.SET_ACTIVE_WEBVIEW,
-    payload: webview,
+    type: TYPE.SET_ACTIVE_APP_MODULE,
+    payload: { webview, moduleName },
+  });
+};
+
+export const unsetActiveWebView = () => {
+  store.dispatch({
+    type: TYPE.UNSET_ACTIVE_APP_MODULE,
   });
 };
 
 export const toggleWebViewDevTools = () => {
-  const { webview } = store.getState();
-  if (webview) {
+  const { activeAppModule } = store.getState();
+  if (activeAppModule) {
+    const { webview } = activeAppModule;
     if (webview.isDevToolsOpened()) {
       webview.closeDevTools();
     } else {

@@ -3,12 +3,12 @@ import { shell, remote } from 'electron';
 import fs from 'fs';
 
 // Internal
-import store, { observeStore, history } from 'store';
+import store, { observeStore } from 'store';
 import { toggleWebViewDevTools } from 'lib/modules';
 import { updateSettings } from 'lib/settings';
 import { startCore, stopCore } from 'lib/core';
-import { backupWallet as backup } from 'lib/wallet';
-import { showNotification } from 'lib/ui';
+import { backupWallet as backup, history } from 'lib/wallet';
+import { showNotification, openModal } from 'lib/ui';
 import { bootstrap } from 'lib/bootstrap';
 import { isCoreConnected } from 'selectors';
 import { legacyMode } from 'consts/misc';
@@ -16,6 +16,8 @@ import showOpenDialog from 'utils/promisified/showOpenDialog';
 import confirm from 'utils/promisified/confirm';
 import { checkForUpdates, quitAndInstall } from 'lib/updater';
 import { tritiumUpgradeTime } from 'consts/misc';
+import { walletEvents } from 'lib/wallet';
+import AboutModal from 'components/AboutModal';
 
 const separator = {
   type: 'separator',
@@ -64,7 +66,7 @@ const quitNexus = {
 const about = {
   label: __('About'),
   click: () => {
-    history.push('/About');
+    openModal(AboutModal);
   },
 };
 
@@ -298,7 +300,7 @@ function buildDarwinTemplate() {
   const state = store.getState();
   const coreConnected = isCoreConnected(state);
   const { manualDaemon } = state.settings;
-  const { webview } = state;
+  const { activeAppModule } = state;
   const now = Date.now();
 
   const subMenuAbout = {
@@ -349,7 +351,7 @@ function buildDarwinTemplate() {
   if (process.env.NODE_ENV === 'development' || state.settings.devMode) {
     subMenuWindow.submenu.push(toggleDevTools);
 
-    if (webview) {
+    if (activeAppModule) {
       subMenuWindow.submenu.push(toggleModuleDevTools);
     }
   }
@@ -385,7 +387,7 @@ function buildDefaultTemplate() {
   const state = store.getState();
   const coreConnected = isCoreConnected(state);
   const { manualDaemon } = state.settings;
-  const { webview } = state;
+  const { activeAppModule } = state;
   const now = Date.now();
 
   const subMenuFile = {
@@ -430,7 +432,7 @@ function buildDefaultTemplate() {
   if (process.env.NODE_ENV === 'development' || state.settings.devMode) {
     subMenuView.submenu.push(separator, toggleDevTools);
 
-    if (webview) {
+    if (activeAppModule) {
       subMenuView.submenu.push(toggleModuleDevTools);
     }
   }
@@ -483,12 +485,12 @@ function rebuildMenu() {
 
 // Update the updater menu item when the updater state changes
 // Changing menu item labels directly has no effect so we have to rebuild the whole menu
-export function initializeMenu() {
+walletEvents.once('post-render', function() {
   buildMenu();
   observeStore(state => state.updater.state, rebuildMenu);
   observeStore(isCoreConnected, rebuildMenu);
   observeStore(state => state.settings && state.settings.devMode, rebuildMenu);
-  observeStore(state => state.webview, rebuildMenu);
+  observeStore(state => state.activeAppModule, rebuildMenu);
   observeStore(state => state.settings.manualDaemon, rebuildMenu);
 
   const now = Date.now();
@@ -497,4 +499,4 @@ export function initializeMenu() {
       rebuildMenu();
     }, tritiumUpgradeTime - now);
   }
-}
+});

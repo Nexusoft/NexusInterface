@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
-import questionIcon from 'images/question-mark-circle.sprite.svg';
+import questionIcon from 'icons/question-mark-circle.svg';
 
 const QuestionMarkComponent = styled(Icon)({
   fontSize: '.8em',

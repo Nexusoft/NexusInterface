@@ -9,7 +9,7 @@ import BackgroundTask from 'components/BackgroundTask';
 import Icon from 'components/Icon';
 import { bootstrapEvents } from 'lib/bootstrap';
 import { animations, timing } from 'styles';
-import workIcon from 'images/work.sprite.svg';
+import workIcon from 'icons/work.svg';
 import BootstrapModal from 'components/BootstrapModal';
 
 const BootstrapBackgroundTaskComponent = styled(BackgroundTask)(

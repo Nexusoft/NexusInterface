@@ -60,25 +60,25 @@ const AccountDetailsModal = ({ account, stakeInfo }) => (
       </Field>
       <Field label={__('Token name')}>{account.token_name}</Field>
       <Field label={__('Total account balance')}>
-        {formatNumber(totalBalance(account), 20)} {account.token_name}
+        {formatNumber(totalBalance(account), 6)} {account.token_name}
       </Field>
       <Field label={__('Available balance')}>
-        {formatNumber(account.balance, 20)} {account.token_name}
+        {formatNumber(account.balance, 6)} {account.token_name}
       </Field>
       <Field label={__('Pending balance')}>
-        {formatNumber(account.pending, 20)} {account.token_name}
+        {formatNumber(account.pending, 6)} {account.token_name}
       </Field>
       <Field label={__('Unconfirmed balance')}>
-        {formatNumber(account.unconfirmed, 20)} {account.token_name}
+        {formatNumber(account.unconfirmed, 6)} {account.token_name}
       </Field>
       {account.stake !== undefined && (
         <Field label={__('Stake balance')}>
-          {formatNumber(account.stake, 20)} {account.token_name}
+          {formatNumber(account.stake, 6)} {account.token_name}
         </Field>
       )}
       {account.immature !== undefined && (
         <Field label={__('Immature balance')}>
-          {formatNumber(account.immature, 20)} {account.token_name}
+          {formatNumber(account.immature, 6)} {account.token_name}
         </Field>
       )}
       <Field label={__('Address')}>

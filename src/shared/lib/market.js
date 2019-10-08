@@ -2,6 +2,7 @@ import axios from 'axios';
 
 import * as TYPE from 'consts/actionTypes';
 import store from 'store';
+import { walletEvents } from 'lib/wallet';
 
 //action creator for loaded flag
 
@@ -59,6 +60,11 @@ async function fetchMarketData() {
     },
   });
 }
+
+walletEvents.once('pre-render', function() {
+  fetchMarketData();
+  setInterval(fetchMarketData, 900000); // 15 minutes
+});
 
 export const marketDataLoaded = () => {
   store.dispatch({ type: TYPE.MARKET_DATA_LOADED });
@@ -215,8 +221,3 @@ export const bittrexCandlestickLoader = async () => {
   store.dispatch({ type: TYPE.BITTREX_CANDLESTICK, payload: res });
   marketDataLoaded();
 };
-
-export function initializeMarketData() {
-  fetchMarketData();
-  setInterval(fetchMarketData, 900000); // 15 minutes
-}

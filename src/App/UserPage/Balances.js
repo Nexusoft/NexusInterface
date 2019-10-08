@@ -66,7 +66,7 @@ export default class Balances extends React.Component {
         <BalancesWrapper>
           <Line bold>
             <div>{__('Total balance')}</div>
-            <div>{formatNumber(total)} NXS</div>
+            <div>{formatNumber(total, 6)} NXS</div>
           </Line>
           <Line>
             <div>
@@ -78,7 +78,7 @@ export default class Balances extends React.Component {
                 )}
               />
             </div>
-            <div>{formatNumber(balances.available)} NXS</div>
+            <div>{formatNumber(balances.available, 6)} NXS</div>
           </Line>
           <Line>
             <div>
@@ -90,7 +90,7 @@ export default class Balances extends React.Component {
                 )}
               />
             </div>
-            <div>{formatNumber(balances.pending)} NXS</div>
+            <div>{formatNumber(balances.pending, 6)} NXS</div>
           </Line>
           <Line>
             <div>
@@ -102,7 +102,7 @@ export default class Balances extends React.Component {
                 )}
               />
             </div>
-            <div>{formatNumber(balances.unconfirmed)} NXS</div>
+            <div>{formatNumber(balances.unconfirmed, 6)} NXS</div>
           </Line>
           <Line>
             <div>
@@ -114,7 +114,7 @@ export default class Balances extends React.Component {
                 )}
               />
             </div>
-            <div>{formatNumber(balances.stake)} NXS</div>
+            <div>{formatNumber(balances.stake, 6)} NXS</div>
           </Line>
           <Line>
             <div>
@@ -126,7 +126,7 @@ export default class Balances extends React.Component {
                 )}
               />
             </div>
-            <div>{formatNumber(balances.immature)} NXS</div>
+            <div>{formatNumber(balances.immature, 6)} NXS</div>
           </Line>
         </BalancesWrapper>
       )

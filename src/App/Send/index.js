@@ -19,8 +19,8 @@ import MoveBetweenAccountsModal from './MoveBetweenAccountsModal';
 import SendForm from './SendForm';
 
 // Resources
-import sendIcon from 'images/send.sprite.svg';
-import swapIcon from 'images/swap.sprite.svg';
+import sendIcon from 'icons/send.svg';
+import swapIcon from 'icons/swap.svg';
 
 const mapStateToProps = state => ({
   coreConnected: isCoreConnected(state),

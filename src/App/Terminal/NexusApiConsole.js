@@ -25,7 +25,7 @@ import {
 } from 'lib/ui';
 import { openModal } from 'lib/ui';
 import APIDocModal from './APIDocs/ApiDocModal';
-import questionMarkCircleIcon from 'images/question-mark-circle.sprite.svg';
+import questionMarkCircleIcon from 'icons/question-mark-circle.svg';
 import Tooltip from 'components/Tooltip';
 import Icon from 'components/Icon';
 
