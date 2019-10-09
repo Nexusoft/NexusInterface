@@ -24,7 +24,6 @@ import AddressBook from './AddressBook';
 import Settings from './Settings';
 import Terminal from './Terminal';
 import UserPage from './UserPage';
-import Tokens from './Tokens';
 
 import Modules from './Modules';
 import AppBackground from './AppBackground';
@@ -80,7 +79,6 @@ const App = () => (
               <Route path="/Settings" component={Settings} />
               <Route path="/Terminal" component={Terminal} />
               {!legacyMode && <Route path="/User" component={UserPage} />}
-              {!legacyMode && <Route path="/Tokens" component={Tokens} />}
 
               {/* <Route path="/Exchange" component={Exchange} /> */}
               {/* <Route exact path="/List" component={TrustList} /> */}

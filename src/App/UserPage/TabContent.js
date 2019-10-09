@@ -6,7 +6,7 @@ import { Route, Redirect, Switch } from 'react-router';
 import Balances from './Balances';
 import Staking from './Staking';
 import Accounts from './Accounts';
-import Tokens from '../Tokens';
+import Tokens from './Tokens';
 
 const TabContentComponent = styled.div({
   flexGrow: 1,

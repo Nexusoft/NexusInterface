@@ -7,30 +7,28 @@ import GA from 'lib/googleAnalytics';
 
 // Internal Global
 import Button from 'components/Button';
-import Panel from 'components/Panel';
 import LoginModal from 'components/LoginModal';
 import { history } from 'lib/wallet';
 import { openModal } from 'lib/ui';
 import { isCoreConnected, isLoggedIn } from 'selectors';
 import ContextMenuBuilder from 'contextmenu';
-
-// Icons
-import userIcon from 'icons/user.svg';
-import plusIcon from 'icons/plus.svg';
 import { legacyMode } from 'consts/misc';
 import { apiGet } from 'lib/tritiumApi';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
-import searchIcon from 'icons/search.svg';
-import Icon from 'components/Icon';
 import HorizontalLine from 'components/HorizontalLine';
 import ErrorDialog from 'components/Dialogs/ErrorDialog';
 import { loadOwnedTokens } from 'lib/user';
+import Icon from 'components/Icon';
+
+// Icons
+import plusIcon from 'icons/plus.svg';
+import searchIcon from 'icons/search.svg';
 
 // Internal Local
-import TokenDetailsModal from './TokenDetailsModal';
 import NewTokenModal from './NewTokenModal';
 import Token from './Token';
+import SearchTokenModal from './SearchTokenModal';
 
 // history.push from lib/wallet.js
 const LogInDiv = () => (
@@ -171,30 +169,9 @@ class Tokens extends Component {
 
   returnTokenList() {
     const { usedTokens } = this.state;
-    console.log(usedTokens.keys());
-
     return Array.from(usedTokens, ([key, value]) => {
-      console.log(key);
-      console.log(value);
       return <Token key={key} token={value} />;
     });
-  }
-
-  async openSearchedDetailsModal(props) {
-    try {
-      const token = await apiGet(
-        props.tokenName
-          ? `tokens/get/token?name=${props.tokenName}`
-          : `tokens/get/token?address=${props.tokenAddress}`
-      );
-      openModal(TokenDetailsModal, { token });
-    } catch (e) {
-      console.log(e);
-      openModal(ErrorDialog, {
-        message: __('Can not find Token'),
-        note: e.message + ' ' + e.code,
-      });
-    }
   }
 
   /**
@@ -204,65 +181,30 @@ class Tokens extends Component {
    * @memberof Tokens
    */
   render() {
-    console.error(this);
-    const { loggedIn, match } = this.props;
     const { searchToken } = this.state;
 
     return (
-      <Panel icon={userIcon} title={__('Tokens')} bodyScrollable={false}>
-        {loggedIn ? (
-          <>
-            <FormField connectLabel label={__('Search Tokens')}>
-              <TextField
-                type="search"
-                name="tokenSearch"
-                placeholder={__(
-                  'Search for Token on the network ( Name or Address)'
-                )}
-                value={searchToken}
-                onChange={evt => {
-                  const value = evt.target.value;
-                  console.log(evt.target.value);
-                  this.setState({ searchToken: value });
-                }}
-                left={<Icon icon={searchIcon} className="space-right" />}
-                right={
-                  <Button
-                    skin="plain"
-                    onClick={() => {
-                      //Temp for testnet, need better solution
-                      this.openSearchedDetailsModal(
-                        searchToken.startsWith('8')
-                          ? {
-                              tokenAddress: searchToken,
-                            }
-                          : { tokenName: searchToken }
-                      );
-                    }}
-                  >
-                    Search
-                  </Button>
-                }
-              />
-            </FormField>
-            <br />
-            <HorizontalLine />
-            <h3>{__("User's Used Tokens")}</h3>
-            {this.returnTokenList()}
-            <Button
-              skin="primary"
-              onClick={() => {
-                openModal(NewTokenModal);
-              }}
-            >
-              <Icon icon={plusIcon} className="space-right" />
-              {'Create New Token'}
-            </Button>
-          </>
-        ) : (
-          <LogInDiv />
-        )}
-      </Panel>
+      <>
+        <Button
+          skin="primary"
+          onClick={() => {
+            openModal(NewTokenModal);
+          }}
+        >
+          <Icon icon={plusIcon} className="space-right" />
+          {'Create New Token'}
+        </Button>
+        <Button
+          skin="primary"
+          onClick={() => {
+            openModal(SearchTokenModal);
+          }}
+        >
+          <Icon icon={searchIcon} className="space-right" />
+          {'Search For Token'}
+        </Button>
+        <>{this.returnTokenList()}</>
+      </>
     );
   }
 }
