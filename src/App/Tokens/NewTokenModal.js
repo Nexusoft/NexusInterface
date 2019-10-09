@@ -12,6 +12,8 @@ import { apiPost } from 'lib/tritiumApi';
 import { errorHandler } from 'utils/form';
 import { loadAccounts } from 'lib/user';
 import { removeModal, showNotification } from 'lib/ui';
+import NewAccountModal from 'components/UserDialogs/NewAccountModal';
+import { openModal } from 'lib/ui';
 
 const SubLable = styled.span(({ theme }) => ({
   marginLeft: '1em',
@@ -36,7 +38,7 @@ const SubLable = styled.span(({ theme }) => ({
 
     return errors;
   },
-  onSubmit: async ({ name }) => {
+  onSubmit: async ({ name, supply, decimal }) => {
     if (!name) {
       const confirmed = await confirm({
         question: __('Create a token without a name?'),
@@ -52,27 +54,50 @@ const SubLable = styled.span(({ theme }) => ({
 
     const pin = await confirmPin();
     if (pin) {
-      return await apiPost('finance/create/account', { pin, name });
+      return await apiPost('tokens/create/token', {
+        pin,
+        name,
+        supply,
+        decimal,
+      });
     }
   },
-  onSubmitSuccess: (result, dispatch, props) => {
+  onSubmitSuccess: async (result, dispatch, props) => {
     if (!result) return; // Submission was cancelled
-
-    loadAccounts();
-    removeModal(props.modalId);
+    console.error(result);
+    console.error(props);
     showNotification(
-      __('New account %{account} has been created', {
-        account: props.values.name,
+      __('New token %{token} has been created', {
+        token: props.values.name,
       }),
       'success'
     );
+    removeModal(props.modalId);
+    const createAccount = await confirm({
+      question: __(
+        'You have successfully created token %{token} ! Would you like to make an account for this token?',
+        { token: props.values.name }
+      ),
+      labelYes: __('Yes'),
+      labelNo: __('No'),
+    });
+
+    if (createAccount) {
+      openModal(
+        NewAccountModal,
+        props.values.name
+          ? { tokenName: props.values.name }
+          : { tokenAddress: result.address }
+      );
+    }
+    loadAccounts();
   },
   onSubmitFail: errorHandler(__('Error creating token')),
 })
 class NewTokenModal extends React.Component {
   render() {
     const { handleSubmit, submitting } = this.props;
-    const tokenCreationFee = 10; // need to wire this in.
+    const tokenCreationFee = 300; // need to wire this in.
     return (
       <Modal
         assignClose={closeModal => {

@@ -12,7 +12,7 @@ import NewAccountModal from 'components/UserDialogs/NewAccountModal';
 import NexusAddress from 'components/NexusAddress';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
-import plusIcon from 'images/plus.sprite.svg';
+import plusIcon from 'icons/plus.svg';
 
 const timeFormatOptions = {
   year: 'numeric',

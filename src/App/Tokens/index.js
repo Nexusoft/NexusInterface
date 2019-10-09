@@ -13,15 +13,24 @@ import { history } from 'lib/wallet';
 import { openModal } from 'lib/ui';
 import { isCoreConnected, isLoggedIn } from 'selectors';
 import ContextMenuBuilder from 'contextmenu';
+
+// Icons
 import userIcon from 'icons/user.svg';
+import plusIcon from 'icons/plus.svg';
 import { legacyMode } from 'consts/misc';
 import { apiGet } from 'lib/tritiumApi';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
-import searchIcon from 'images/search.sprite.svg';
+import searchIcon from 'icons/search.svg';
 import Icon from 'components/Icon';
 import HorizontalLine from 'components/HorizontalLine';
 import ErrorDialog from 'components/Dialogs/ErrorDialog';
+import { loadOwnedTokens } from 'lib/user';
+
+// Internal Local
+import TokenDetailsModal from './TokenDetailsModal';
+import NewTokenModal from './NewTokenModal';
+import Token from './Token';
 
 // Internal Local
 import TokenDetailsModal from './TokenDetailsModal';
@@ -48,6 +57,7 @@ const mapStateToProps = state => ({
   coreConnected: isCoreConnected(state),
   loggedIn: isLoggedIn(state),
   accounts: state.core.accounts,
+  ownedTokens: state.core.tokens,
 });
 
 /**
@@ -76,41 +86,50 @@ class Tokens extends Component {
     window.addEventListener('contextmenu', this.setupcontextmenu, false);
     GA.SendScreen('Tokens');
 
-    this.gatherTokenInformation();
+    loadOwnedTokens();
+    this.gatherTokens();
   }
 
-  gatherTokenInformation() {
-    const { accounts } = this.props;
-    if (accounts === null) return;
-    let tempMap = new Map();
-    accounts.forEach(element => {
-      if (tempMap.has(element.token_name || element.token)) return;
+  gatherTokens() {
+    const { accounts, ownedTokens } = this.props;
 
-      if (!tempMap.has('NXS')) {
-        tempMap.set('NXS', {
-          address: '0000000000000000000000000',
-          balance: 0,
-          created: 1400000000,
-          currentsupply: 1000000,
-          decimals: 6,
-          maxsupply: 1000000,
-          modified: 1400000000,
-          name: 'NXS',
-          owner: '00000000000000000000000000000',
-          pending: 0,
-          unconfirmed: 0,
-        });
-        return;
-      }
-      const tokenInfo = this.asdfh(element);
-      tempMap.set(element.token_name || element.token, tokenInfo);
-    });
+    let tempMap = new Map();
+    if (accounts) {
+      accounts.forEach(element => {
+        if (tempMap.has(element.token_name || element.token)) return;
+
+        if (!tempMap.has('NXS')) {
+          tempMap.set('NXS', {
+            address: '0000000000000000000000000',
+            balance: 0,
+            created: 1400000000,
+            currentsupply: 1000000,
+            decimals: 6,
+            maxsupply: 1000000,
+            modified: 1400000000,
+            name: 'NXS',
+            owner: '00000000000000000000000000000',
+            pending: 0,
+            unconfirmed: 0,
+          });
+          return;
+        }
+        const tokenInfo = this.getTokenInfo(element);
+        tempMap.set(element.token_name || element.token, tokenInfo);
+      });
+    }
+    if (ownedTokens) {
+      ownedTokens.forEach(element => {
+        if (tempMap.has(element.name || element.address)) return;
+        tempMap.set(element.name || element.address, element);
+      });
+    }
     this.setState({
       usedTokens: tempMap,
     });
   }
 
-  async asdfh(element) {
+  async getTokenInfo(element) {
     const info = await apiGet(
       element.token_name
         ? `tokens/get/token?name=${element.token_name}`
@@ -130,6 +149,15 @@ class Tokens extends Component {
    */
   componentWillUnmount() {
     window.removeEventListener('contextmenu', this.setupcontextmenu);
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (
+      this.props.accounts !== prevProps.accounts ||
+      this.props.ownedTokens !== prevProps.ownedTokens
+    ) {
+      this.gatherTokens();
+    }
   }
 
   /**
@@ -189,19 +217,13 @@ class Tokens extends Component {
       <Panel icon={userIcon} title={__('Tokens')} bodyScrollable={false}>
         {loggedIn ? (
           <>
-            <Button
-              skin="primary"
-              onClick={() => {
-                openModal(NewTokenModal);
-              }}
-            >
-              {'Test Open Token Creation'}
-            </Button>
             <FormField connectLabel label={__('Search Tokens')}>
               <TextField
                 type="search"
                 name="tokenSearch"
-                placeholder={__('Search for Token ( Name or Address)')}
+                placeholder={__(
+                  'Search for Token on the network ( Name or Address)'
+                )}
                 value={searchToken}
                 onChange={evt => {
                   const value = evt.target.value;
@@ -232,6 +254,15 @@ class Tokens extends Component {
             <HorizontalLine />
             <h3>{__("User's Used Tokens")}</h3>
             {this.returnTokenList()}
+            <Button
+              skin="primary"
+              onClick={() => {
+                openModal(NewTokenModal);
+              }}
+            >
+              <Icon icon={plusIcon} className="space-right" />
+              {'Create New Token'}
+            </Button>
           </>
         ) : (
           <LogInDiv />
