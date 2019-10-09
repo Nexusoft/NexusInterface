@@ -74,7 +74,7 @@ const Separator = styled.div(({ theme }) => ({
 class LoggedInDropdown extends React.Component {
   logOut = async () => {
     this.props.closeDropdown();
-    logOut();
+    await logOut();
     showNotification('Logged out');
   };
 
