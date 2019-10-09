@@ -82,12 +82,12 @@ class TerminalCore extends Component {
    * @param {*} nextProps
    * @memberof TerminalCore
    */
-  componentWillReceiveProps(nextProps) {
-    if (this.props.rpcCallList.length != nextProps.rpcCallList.length) {
-      this.forceUpdate();
-    }
-    if (this.props.output.length != nextProps.output.length) {
-      this.outputRef.current.childNodes[0].scrollTop = this.outputRef.current.childNodes[0].scrollHeight;
+  componentDidUpdate(prevProps) {
+    console.log(prevProps.output.length, this.props.output.length);
+    console.log(this.outputRef.current);
+    if (this.props.output.length != prevProps.output.length) {
+      const outputElem = this.outputRef.current;
+      outputElem.scrollTop = outputElem.scrollHeight;
     }
   }
 
@@ -99,10 +99,10 @@ class TerminalCore extends Component {
    */
   onScrollEvent() {
     const bottomPos =
-      this.outputRef.current.childNodes[0].scrollHeight -
-      this.outputRef.current.childNodes[0].clientHeight -
+      this.outputRef.current.scrollHeight -
+      this.outputRef.current.clientHeight -
       2; // found a issue where the numbers would be plus or minus this do to floating point error. Just stepped back 2 it catch it.
-    const currentPos = parseInt(this.outputRef.current.childNodes[0].scrollTop);
+    const currentPos = parseInt(this.outputRef.current.scrollTop);
     if (currentPos >= bottomPos) {
       return;
     }
@@ -121,12 +121,13 @@ class TerminalCore extends Component {
     const { output, paused, settings } = this.props;
     return (
       <TerminalContent>
-        <TerminalCoreComponent ref={this.outputRef}>
+        <TerminalCoreComponent>
           {settings.manualDaemon ? (
             <div className="dim">{__('Core is in Manual Mode')}</div>
           ) : (
             <>
               <Output
+                ref={this.outputRef}
                 reverse={!settings.manualDaemon}
                 onScroll={() => this.onScrollEvent()}
               >
