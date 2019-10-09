@@ -228,6 +228,81 @@ const About = ({ version, testnet, privateBlockchain }) => (
           </div>
         </OpenSourceCreditsContainer>
       </Section>
+
+      <Section>
+        <div>Icons made by</div>
+        <div>
+          <ExternalLink
+            title="Freepik"
+            href="https://www.flaticon.com/authors/freepik"
+          >
+            Freepik
+          </ExternalLink>
+          ,&nbsp;
+          <ExternalLink
+            title="Gregor Cresnar"
+            href="https://www.flaticon.com/authors/gregor-cresnar"
+          >
+            Gregor Cresnar
+          </ExternalLink>
+          ,&nbsp;
+          <ExternalLink
+            title="Google"
+            href="https://www.flaticon.com/authors/google"
+          >
+            Google
+          </ExternalLink>
+          ,&nbsp;
+          <ExternalLink
+            title="Dave Gandy"
+            href="https://www.flaticon.com/authors/dave-gandy"
+          >
+            Dave Gandy
+          </ExternalLink>
+          ,&nbsp;
+          <ExternalLink
+            title="Pixel perfect"
+            href="https://www.flaticon.com/authors/pixel-perfect"
+          >
+            Pixel perfect
+          </ExternalLink>
+          ,&nbsp;
+          <ExternalLink
+            title="Kirill Kazachek"
+            href="https://www.flaticon.com/authors/kirill-kazachek"
+          >
+            Kirill Kazachek
+          </ExternalLink>
+          ,&nbsp;
+          <ExternalLink
+            title="srip"
+            href="https://www.flaticon.com/authors/srip"
+          >
+            srip
+          </ExternalLink>
+          ,&nbsp;
+          <ExternalLink
+            title="Kiranshastry"
+            href="https://www.flaticon.com/authors/kiranshastry"
+          >
+            Kiranshastry
+          </ExternalLink>
+          ,&nbsp;
+          <ExternalLink
+            title="Smashicons"
+            href="https://www.flaticon.com/authors/smashicons"
+          >
+            Smashicons
+          </ExternalLink>
+          ,&nbsp;
+        </div>
+        <div>
+          from{' '}
+          <ExternalLink href="https://www.flaticon.com/" title="Flaticon">
+            www.flaticon.com
+          </ExternalLink>
+        </div>
+      </Section>
     </Modal.Body>
   </Modal>
 );
