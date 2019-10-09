@@ -6,6 +6,7 @@ import { Route, Redirect, Switch } from 'react-router';
 import Balances from './Balances';
 import Staking from './Staking';
 import Accounts from './Accounts';
+import Tokens from '../Tokens';
 
 const TabContentComponent = styled.div({
   flexGrow: 1,
@@ -31,6 +32,7 @@ const TabContent = ({ match }) => (
       <Route path={`${match.url}/Balances`} component={Balances} />
       <Route path={`${match.url}/Staking`} component={Staking} />
       <Route path={`${match.url}/Accounts`} component={Accounts} />
+      <Route path={`${match.url}/Tokens`} component={Tokens} />
       <UserRedirect match={match} />
     </Switch>
   </TabContentComponent>

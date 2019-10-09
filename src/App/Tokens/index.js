@@ -32,11 +32,6 @@ import TokenDetailsModal from './TokenDetailsModal';
 import NewTokenModal from './NewTokenModal';
 import Token from './Token';
 
-// Internal Local
-import TokenDetailsModal from './TokenDetailsModal';
-import NewTokenModal from './NewTokenModal';
-import Token from './Token';
-
 // history.push from lib/wallet.js
 const LogInDiv = () => (
   <div style={{ marginTop: 50, textAlign: 'center' }}>
