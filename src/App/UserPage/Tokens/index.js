@@ -7,17 +7,13 @@ import GA from 'lib/googleAnalytics';
 
 // Internal Global
 import Button from 'components/Button';
-import LoginModal from 'components/LoginModal';
 import { history } from 'lib/wallet';
 import { openModal } from 'lib/ui';
+import { switchUserTab } from 'lib/ui';
 import { isCoreConnected, isLoggedIn } from 'selectors';
 import ContextMenuBuilder from 'contextmenu';
 import { legacyMode } from 'consts/misc';
 import { apiGet } from 'lib/tritiumApi';
-import FormField from 'components/FormField';
-import TextField from 'components/TextField';
-import HorizontalLine from 'components/HorizontalLine';
-import ErrorDialog from 'components/Dialogs/ErrorDialog';
 import { loadOwnedTokens } from 'lib/user';
 import Icon from 'components/Icon';
 
@@ -30,23 +26,7 @@ import NewTokenModal from './NewTokenModal';
 import Token from './Token';
 import SearchTokenModal from './SearchTokenModal';
 
-// history.push from lib/wallet.js
-const LogInDiv = () => (
-  <div style={{ marginTop: 50, textAlign: 'center' }}>
-    <Button
-      uppercase
-      skin="primary"
-      onClick={() => {
-        openModal(LoginModal);
-      }}
-    >
-      {__('Log in')}
-    </Button>
-  </div>
-);
-
 const mapStateToProps = state => ({
-  addressBook: state.addressBook,
   coreConnected: isCoreConnected(state),
   loggedIn: isLoggedIn(state),
   accounts: state.core.accounts,
@@ -66,6 +46,11 @@ class Tokens extends Component {
     usedTokens: [],
     searchToken: '',
   };
+
+  constructor(props) {
+    super(props);
+    switchUserTab('Tokens');
+  }
 
   /**
    * componentDidMount

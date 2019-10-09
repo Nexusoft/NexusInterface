@@ -126,12 +126,6 @@ const Navigation = () => (
         {__('Transactions')}
       </NavItem>
 
-      {!legacyMode && (
-        <NavItem icon={tokenIcons} to="/Tokens">
-          {__('Tokens')}
-        </NavItem>
-      )}
-
       <NavItem icon={chartIcon} to="/Market">
         {__('Market Data')}
       </NavItem>
