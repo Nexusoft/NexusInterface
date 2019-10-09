@@ -14,18 +14,14 @@ import { openModal } from 'lib/ui';
 import { isCoreConnected, isLoggedIn } from 'selectors';
 import ContextMenuBuilder from 'contextmenu';
 
-// Internal Local
-import NewTokenModal from './NewTokenModal';
-import Token from './Token';
-
 // Icons
-import userIcon from 'images/user.sprite.svg';
-import plusIcon from 'images/plus.sprite.svg';
+import userIcon from 'icons/user.svg';
+import plusIcon from 'icons/plus.svg';
 import { legacyMode } from 'consts/misc';
 import { apiGet } from 'lib/tritiumApi';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
-import searchIcon from 'images/search.sprite.svg';
+import searchIcon from 'icons/search.svg';
 import Icon from 'components/Icon';
 import HorizontalLine from 'components/HorizontalLine';
 import ErrorDialog from 'components/Dialogs/ErrorDialog';
@@ -56,6 +52,7 @@ const mapStateToProps = state => ({
   coreConnected: isCoreConnected(state),
   loggedIn: isLoggedIn(state),
   accounts: state.core.accounts,
+  ownedTokens: state.core.tokens,
 });
 
 /**
@@ -85,41 +82,49 @@ class Tokens extends Component {
     GA.SendScreen('Tokens');
 
     loadOwnedTokens();
-    this.gatherTokenInformation();
+    this.gatherTokens();
   }
 
-  gatherTokenInformation() {
-    const { accounts } = this.props;
-    if (accounts === null) return;
-    let tempMap = new Map();
-    accounts.forEach(element => {
-      if (tempMap.has(element.token_name || element.token)) return;
+  gatherTokens() {
+    const { accounts, ownedTokens } = this.props;
 
-      if (!tempMap.has('NXS')) {
-        tempMap.set('NXS', {
-          address: '0000000000000000000000000',
-          balance: 0,
-          created: 1400000000,
-          currentsupply: 1000000,
-          decimals: 6,
-          maxsupply: 1000000,
-          modified: 1400000000,
-          name: 'NXS',
-          owner: '00000000000000000000000000000',
-          pending: 0,
-          unconfirmed: 0,
-        });
-        return;
-      }
-      const tokenInfo = this.asdfh(element);
-      tempMap.set(element.token_name || element.token, tokenInfo);
-    });
+    let tempMap = new Map();
+    if (accounts) {
+      accounts.forEach(element => {
+        if (tempMap.has(element.token_name || element.token)) return;
+
+        if (!tempMap.has('NXS')) {
+          tempMap.set('NXS', {
+            address: '0000000000000000000000000',
+            balance: 0,
+            created: 1400000000,
+            currentsupply: 1000000,
+            decimals: 6,
+            maxsupply: 1000000,
+            modified: 1400000000,
+            name: 'NXS',
+            owner: '00000000000000000000000000000',
+            pending: 0,
+            unconfirmed: 0,
+          });
+          return;
+        }
+        const tokenInfo = this.getTokenInfo(element);
+        tempMap.set(element.token_name || element.token, tokenInfo);
+      });
+    }
+    if (ownedTokens) {
+      ownedTokens.forEach(element => {
+        if (tempMap.has(element.name || element.address)) return;
+        tempMap.set(element.name || element.address, element);
+      });
+    }
     this.setState({
       usedTokens: tempMap,
     });
   }
 
-  async asdfh(element) {
+  async getTokenInfo(element) {
     const info = await apiGet(
       element.token_name
         ? `tokens/get/token?name=${element.token_name}`
@@ -139,6 +144,15 @@ class Tokens extends Component {
    */
   componentWillUnmount() {
     window.removeEventListener('contextmenu', this.setupcontextmenu);
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (
+      this.props.accounts !== prevProps.accounts ||
+      this.props.ownedTokens !== prevProps.ownedTokens
+    ) {
+      this.gatherTokens();
+    }
   }
 
   /**
