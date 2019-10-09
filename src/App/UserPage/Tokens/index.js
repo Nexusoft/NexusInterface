@@ -185,25 +185,25 @@ class Tokens extends Component {
 
     return (
       <>
-        <Button
-          skin="primary"
-          onClick={() => {
-            openModal(NewTokenModal);
-          }}
-        >
-          <Icon icon={plusIcon} className="space-right" />
-          {'Create New Token'}
-        </Button>
-        <Button
-          skin="primary"
-          onClick={() => {
-            openModal(SearchTokenModal);
-          }}
-        >
-          <Icon icon={searchIcon} className="space-right" />
-          {'Search For Token'}
-        </Button>
-        <>{this.returnTokenList()}</>
+        <div className="flex space-between">
+          <Button
+            onClick={() => {
+              openModal(NewTokenModal);
+            }}
+          >
+            <Icon icon={plusIcon} className="space-right" />
+            {'Create New Token'}
+          </Button>
+          <Button
+            onClick={() => {
+              openModal(SearchTokenModal);
+            }}
+          >
+            <Icon icon={searchIcon} className="space-right" />
+            {'Search For Token'}
+          </Button>
+        </div>
+        <div>{this.returnTokenList()}</div>
       </>
     );
   }

@@ -88,7 +88,12 @@ class SearchTokenModal extends React.Component {
                 left={<Icon icon={searchIcon} className="space-right" />}
               />
             </FormField>
-            <Button skin="primary" type="submit" disabled={submitting}>
+            <Button
+              style={{ marginTop: '2em' }}
+              skin="primary"
+              type="submit"
+              disabled={submitting}
+            >
               {__('Search for token')}
             </Button>
           </form>

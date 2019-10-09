@@ -10,7 +10,7 @@ import confirm from 'utils/promisified/confirm';
 import confirmPin from 'utils/promisified/confirmPin';
 import { apiPost } from 'lib/tritiumApi';
 import { errorHandler } from 'utils/form';
-import { loadAccounts } from 'lib/user';
+import { loadAccounts, loadOwnedTokens } from 'lib/user';
 import { removeModal, showNotification } from 'lib/ui';
 import NewAccountModal from 'components/UserDialogs/NewAccountModal';
 import { openModal } from 'lib/ui';
@@ -54,24 +54,21 @@ const SubLable = styled.span(({ theme }) => ({
 
     const pin = await confirmPin();
     if (pin) {
-      return await apiPost('tokens/create/token', {
-        pin,
-        name,
-        supply,
-        decimal,
-      });
+      const params = { pin, supply, decimal };
+      if (name) params.name = name;
+      return await apiPost('tokens/create/token', params);
     }
   },
   onSubmitSuccess: async (result, dispatch, props) => {
     if (!result) return; // Submission was cancelled
-    console.error(result);
-    console.error(props);
+
     showNotification(
       __('New token %{token} has been created', {
         token: props.values.name,
       }),
       'success'
     );
+    loadOwnedTokens();
     removeModal(props.modalId);
     const createAccount = await confirm({
       question: __(
@@ -90,6 +87,7 @@ const SubLable = styled.span(({ theme }) => ({
           : { tokenAddress: result.address }
       );
     }
+
     loadAccounts();
   },
   onSubmitFail: errorHandler(__('Error creating token')),
@@ -97,7 +95,8 @@ const SubLable = styled.span(({ theme }) => ({
 class NewTokenModal extends React.Component {
   render() {
     const { handleSubmit, submitting } = this.props;
-    const tokenCreationFee = 300; // need to wire this in.
+    const tokenNameCreationFee = 300; // need to wire this in.
+    const tokenCreationFee = 100;
     return (
       <Modal
         assignClose={closeModal => {
@@ -108,11 +107,14 @@ class NewTokenModal extends React.Component {
         <Modal.Header>{__('New Token')}</Modal.Header>
         <Modal.Body>
           <form onSubmit={handleSubmit}>
+            {__(`There is a %{tokenfee}NXS token creation fee`, {
+              tokenfee: tokenCreationFee,
+            })}
             <FormField connectLabel label={__('Token name')}>
               <>
                 <SubLable>
                   {__('Name Creation Fee: %{tokenFee}', {
-                    tokenFee: tokenCreationFee,
+                    tokenFee: tokenNameCreationFee,
                   })}
                 </SubLable>
                 <Field
