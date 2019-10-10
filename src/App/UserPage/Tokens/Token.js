@@ -17,6 +17,11 @@ const AccountName = styled.span(({ theme }) => ({
   color: theme.foreground,
 }));
 
+const UnNamed = styled(AccountName)(({ theme }) => ({
+  fontStyle: 'italic',
+  color: theme.mixer(0.8),
+}));
+
 const Owner = styled.span(({ theme }) => ({
   color: theme.mixer(0.75),
   fontWeight: '75%',
@@ -27,7 +32,8 @@ const Token = ({ token, owner }) => (
     <div className="flex space-between">
       <div>
         <AccountName>{token.name}</AccountName>
-        {owner === token.owner && <Owner>{__('(Owned by you)')}</Owner>}
+        {!token.name && <UnNamed>{'Token'}</UnNamed>}
+        {owner === token.owner && <Owner>{__(' (Owned by you)')}</Owner>}
       </div>
       <div>
         <Link

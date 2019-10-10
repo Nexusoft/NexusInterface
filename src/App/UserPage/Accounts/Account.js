@@ -20,10 +20,16 @@ const AccountName = styled.span(({ theme }) => ({
   color: theme.foreground,
 }));
 
+const UnNamed = styled(AccountName)(({ theme }) => ({
+  fontStyle: 'italic',
+  color: theme.mixer(0.8),
+}));
+
 const Account = ({ account }) => (
   <AccountComponent>
     <div className="flex space-between">
       <div>
+        {!account.name && <UnNamed>{__('Account')}</UnNamed>}
         <AccountName>{account.name}</AccountName> (
         {formatNumber(totalBalance(account))} {account.token_name})
       </div>
