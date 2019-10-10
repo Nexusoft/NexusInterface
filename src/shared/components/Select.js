@@ -265,7 +265,7 @@ class Options extends Component {
     const { ready, styles } = this.state;
     const selectedIndex = options.findIndex(o => o.value === value);
     const anchorIndex = selectedIndex !== -1 ? selectedIndex : 0;
-
+    console.error(options);
     return (
       <Overlay onBackgroundClick={close}>
         <OptionsComponent
@@ -284,11 +284,13 @@ class Options extends Component {
             <Option
               key={option.isDummy ? i : option.value}
               skin={skin}
-              onClick={() => this.select(option)}
+              onClick={
+                !option.isSeparator ? () => this.select(option) : () => null
+              }
               selected={option.value === value && !option.isDummy}
               ref={i === anchorIndex ? this.anchorRef : undefined}
             >
-              {option.display}
+              {option.indent && <>&nbsp;&nbsp;</>} {option.display}
             </Option>
           ))}
         </OptionsComponent>

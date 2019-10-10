@@ -69,6 +69,7 @@ const mapStateToProps = state => {
   const reference = valueSelector(state, 'reference');
   const expires = valueSelector(state, 'expires');
   const accountInfo = getAccountInfo(accountName, accounts);
+  const myTokens = state.core.tokens;
   return {
     minConfirmations,
     locked,
@@ -77,7 +78,7 @@ const mapStateToProps = state => {
     minting_only,
     accountName,
     accountInfo,
-    accountOptions: getAccountOptions(accounts),
+    accountOptions: getAccountOptions(accounts, myTokens),
     addressNameMap: getAddressNameMap(addressBook),
     fieldNames: getRegisteredFieldNames(
       form[formName] && form[formName].registeredFields

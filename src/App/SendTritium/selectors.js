@@ -6,14 +6,65 @@ const TokenRecipientName = styled.span({
   color: 'gray',
 });
 
-export const getAccountOptions = memoize(myAccounts => {
+const Separator = styled.div(({ theme }) => ({
+  fontWeight: 'bold',
+}));
+
+const Dash = styled.span(({ theme }) => ({
+  fontWeight: 'bold',
+  color: theme.primary,
+}));
+
+export const getAccountOptions = memoize((myAccounts, myTokens) => {
+  let options = [];
+
   if (myAccounts) {
-    return myAccounts.map(acc => ({
-      value: acc.name,
-      display: `${acc.name} (${acc.balance} ${acc.token_name || 'Tokens'})`,
-    }));
+    options.push({
+      value: 'AccountsSeparator',
+      display: (
+        <Separator>
+          <Dash>{'-----'}</Dash>
+          {'Accounts'}
+          <Dash>{'-----'}</Dash>
+        </Separator>
+      ),
+      isSeparator: true,
+      indent: false,
+    });
+    options.push(
+      ...myAccounts.map(acc => ({
+        value: acc.name || acc.address,
+        display: `${acc.name || acc.address} (${acc.balance} ${acc.token_name ||
+          'Tokens'})`,
+        indent: true,
+      }))
+    );
   }
-  return [];
+  if (myTokens) {
+    options.push({
+      value: 'TokensSeparator',
+      display: (
+        <Separator>
+          <Dash>{'-----'}</Dash>
+          {'Tokens'}
+          <Dash>{'-----'}</Dash>
+        </Separator>
+      ),
+      isSeparator: true,
+      indent: false,
+    });
+    options.push(
+      ...myTokens.map(token => ({
+        value: token.name || token.address,
+        display: `${token.name || token.address} (${
+          token.balance
+        } ${token.name || 'Tokens'})`,
+        indent: true,
+      }))
+    );
+  }
+
+  return options;
 });
 
 export const getAccountBalance = memoize((accountName, myAccounts) => {
