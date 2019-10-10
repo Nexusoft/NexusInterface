@@ -87,10 +87,10 @@ class LoggedInDropdown extends React.Component {
         </CurrentUser>
         <Separator />
         <Link to="/User/Accounts" onClick={closeDropdown}>
-          <MenuItem>{__('My accounts')}</MenuItem>
+          <MenuItem>{__('Accounts')}</MenuItem>
         </Link>
-        <Link to="/User/Balances" onClick={closeDropdown}>
-          <MenuItem>{__('My balances')}</MenuItem>
+        <Link to="/User/Tokens" onClick={closeDropdown}>
+          <MenuItem>{__('Tokens')}</MenuItem>
         </Link>
         <Separator />
         {!!trustIsNew && (
