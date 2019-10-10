@@ -172,12 +172,14 @@ class NexusApiConsole extends Component {
 
     const cliCMDSplit = cmd.split(' ');
     let cliFormat;
+    let dirtyElements = [];
     if (cliCMDSplit.length > 1) {
       cliFormat =
         cliCMDSplit.shift() +
         '?' +
         cliCMDSplit
           .map((e, i, array) => {
+            if (dirtyElements.includes(e)) return null;
             if (i == array.length - 1) return e;
             //if not a param join the next elements into yourself, for spaces
             if (e.match(/(.*[a-z])=/g)) {
@@ -185,11 +187,17 @@ class NexusApiConsole extends Component {
               if (array[next].match(/(.*[a-z])=/)) {
                 return e;
               } else {
-                let recurIndex = 0;
+                let recurIndex = 1;
                 let elementModified = e;
-                while (!array[i + recurIndex].match(/(.*[a-z])=/g)) {
-                  elementModified += ' ' + array[i + recurIndex];
-                  recurIndex++;
+                if (array[i + recurIndex] != null) {
+                  while (
+                    array[i + recurIndex] != null &&
+                    !array[i + recurIndex].match(/(.*[a-z])=/g)
+                  ) {
+                    elementModified += ' ' + array[i + recurIndex];
+                    dirtyElements.push(array[i + recurIndex]);
+                    recurIndex++;
+                  }
                 }
                 return elementModified;
               }
@@ -207,6 +215,7 @@ class NexusApiConsole extends Component {
     executeCommand(cmd);
     try {
       result = await Tritium.apiGet(cliFormat || cmd);
+      console.log(result);
     } catch (err) {
       console.error(err);
       if (err.message !== undefined) {
@@ -224,6 +233,7 @@ class NexusApiConsole extends Component {
 
     if (typeof result === 'object') {
       const output = [];
+      console.log(output);
       const traverseOutput = (obj, depth) => {
         const tabs = tab.repeat(depth);
         Object.entries(obj).forEach(([key, value]) => {
