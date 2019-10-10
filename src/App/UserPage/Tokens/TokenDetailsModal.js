@@ -63,7 +63,7 @@ const TokenDetailsModal = ({ token }) => (
     <Modal.Body>
       {token.name && <Field label={__('Token name')}>{token.name}</Field>}
       <Field label={__('Token address')}>
-        <NexusAddress address={token.address} />
+        <NexusAddress address={token.address || '0'} />
       </Field>
       <Field label={__('Created at')}>
         {formatDateTime(token.created * 1000, timeFormatOptions)}
@@ -72,7 +72,7 @@ const TokenDetailsModal = ({ token }) => (
         {formatDateTime(token.modified * 1000, timeFormatOptions)}
       </Field>
       <Field label={__('Token Owner')}>
-        <NexusAddress address={token.owner} />
+        <NexusAddress address={token.owner || '0'} />
       </Field>
 
       <Field label={__('Current Supply')}>{token.currentsupply}</Field>

@@ -14,7 +14,7 @@ import { isCoreConnected, isLoggedIn } from 'selectors';
 import ContextMenuBuilder from 'contextmenu';
 import { legacyMode } from 'consts/misc';
 import { apiGet } from 'lib/tritiumApi';
-import { loadOwnedTokens } from 'lib/user';
+import { loadOwnedTokens, loadAccounts } from 'lib/user';
 import Icon from 'components/Icon';
 
 // Icons
@@ -65,6 +65,7 @@ class Tokens extends Component {
     GA.SendScreen('Tokens');
 
     loadOwnedTokens();
+    loadAccounts();
     this.gatherTokens();
   }
 
