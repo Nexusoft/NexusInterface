@@ -13,7 +13,9 @@ The following methods are currently supported by this API
 [`get/transaction`](#gettransaction)   
 [`submit/transaction`](#submittransaction)  
 [`void/transaction`](#voidtransaction)   
-[`get/mininginfo`](#getmininginfo)  
+[`get/mininginfo`](#getmininginfo)   
+
+
 
 
 -----------------------------------
@@ -165,25 +167,25 @@ Retrieving block data by height is only allowed if the daemon has been configure
 
 `contracts` : The array of contracts bound to this transaction and their details with opcodes.    
 {    
+&nbsp;&nbsp;&nbsp;`id` : The sequential ID of this contract within the transaction.
+
 &nbsp;&nbsp;&nbsp;`OP` : The contract operation. Can be `APPEND`, `CLAIM`, `COINBASE`, `CREATE`, `CREDIT`, `DEBIT`, `FEE`, `GENESIS`, `LEGACY`, `TRANSFER`, `TRUST`, `STAKE`, `UNSTAKE`, `WRITE`.
 
 &nbsp;&nbsp;&nbsp;`for` : For `CREDIT` transactions, the contract that this credit was created for . Can be `COINBASE`, `DEBIT`, or`LEGACY`.
 
 &nbsp;&nbsp;&nbsp;`txid` : The transaction that was credited / claimed.
 
+&nbsp;&nbsp;&nbsp;`contract` : The ID of the contract within the transaction that was credited / claimed.
+
 &nbsp;&nbsp;&nbsp;`proof` : The register address proving the credit.
 
-&nbsp;&nbsp;&nbsp;`account` : For `CREDIT` transactions, the register address of the account that the transaction relates to.
+&nbsp;&nbsp;&nbsp;`from` : For `DEBIT`, `CREDIT`, `FEE` transactions, the register address of the account that the debit is being made from.
 
-&nbsp;&nbsp;&nbsp;`account_name` : For `CREDIT` transactions, the name of the account that the transaction relates to.  Only included if the name can be resolved.
+&nbsp;&nbsp;&nbsp;`from_name` : For `DEBIT`, `CREDIT`, `FEE` transactions, the name of the account that the debit is being made from.  Only included if the name can be resolved.
 
-&nbsp;&nbsp;&nbsp;`from` : For `DEBIT` and `CREDIT` transactions, the register address of the account that the debit is being made from.
+&nbsp;&nbsp;&nbsp;`to` : For `DEBIT` and `CREDIT` transactions, the register address of the recipient account.
 
-&nbsp;&nbsp;&nbsp;`from_name` : For `DEBIT` and `CREDIT` transactions, the name of the account that the debit is being made from.  Only included if the name can be resolved.
-
-&nbsp;&nbsp;&nbsp;`to` : For `DEBIT` transactions, the register address of the account that the debit is being made to.
-
-&nbsp;&nbsp;&nbsp;`to_name` : For `DEBIT` transactions, the name of the account that the debit is being made to.  Only included if the name can be resolved.
+&nbsp;&nbsp;&nbsp;`to_name` : For `DEBIT` and `CREDIT` transactions, the name of the recipient account.  Only included if the name can be resolved.
 
 &nbsp;&nbsp;&nbsp;`amount` : the token amount of the transaction.
 
@@ -330,25 +332,25 @@ Retrieving block data by height is only allowed if the daemon has been configure
 
 `contracts` : The array of contracts bound to this transaction and their details with opcodes.    
 {    
+&nbsp;&nbsp;&nbsp;`idcontractid` : The sequential ID of this contract within the transaction.
+
 &nbsp;&nbsp;&nbsp;`OP` : The contract operation. Can be `APPEND`, `CLAIM`, `COINBASE`, `CREATE`, `CREDIT`, `DEBIT`, `FEE`, `GENESIS`, `LEGACY`, `TRANSFER`, `TRUST`, `STAKE`, `UNSTAKE`, `WRITE`.
 
 &nbsp;&nbsp;&nbsp;`for` : For `CREDIT` transactions, the contract that this credit was created for . Can be `COINBASE`, `DEBIT`, or`LEGACY`.
 
 &nbsp;&nbsp;&nbsp;`txid` : The transaction that was credited / claimed.
 
+&nbsp;&nbsp;&nbsp;`contract` : The ID of this contract within the transaction that was credited / claimed.
+
 &nbsp;&nbsp;&nbsp;`proof` : The register address proving the credit.
 
-&nbsp;&nbsp;&nbsp;`account` : For `CREDIT` transactions, the register address of the account that the transaction relates to.
+&nbsp;&nbsp;&nbsp;`from` : For `DEBIT`, `CREDIT`, `FEE` transactions, the register address of the account that the debit is being made from.
 
-&nbsp;&nbsp;&nbsp;`account_name` : For `CREDIT` transactions, the name of the account that the transaction relates to.  Only included if the name can be resolved.
+&nbsp;&nbsp;&nbsp;`from_name` : For `DEBIT`, `CREDIT`, `FEE` transactions, the name of the account that the debit is being made from.  Only included if the name can be resolved.
 
-&nbsp;&nbsp;&nbsp;`from` : For `DEBIT` and `CREDIT` transactions, the register address of the account that the debit is being made from.
+&nbsp;&nbsp;&nbsp;`to` : For `DEBIT` and `CREDIT` transactions, the register address of the recipient account.
 
-&nbsp;&nbsp;&nbsp;`from_name` : For `DEBIT` and `CREDIT` transactions, the name of the account that the debit is being made from.  Only included if the name can be resolved.
-
-&nbsp;&nbsp;&nbsp;`to` : For `DEBIT` transactions, the register address of the account that the debit is being made to.
-
-&nbsp;&nbsp;&nbsp;`to_name` : For `DEBIT` transactions, the name of the account that the debit is being made to.  Only included if the name can be resolved.
+&nbsp;&nbsp;&nbsp;`to_name` : For `DEBIT` and `CREDIT` transactions, the name of the recipient account.  Only included if the name can be resolved.
 
 &nbsp;&nbsp;&nbsp;`amount` : the token amount of the transaction.
 
@@ -445,25 +447,25 @@ Retrieves transaction data for a given transaction hash.
 
 `contracts` : The array of contracts bound to this transaction and their details with opcodes.    
 {    
+&nbsp;&nbsp;&nbsp;`id` : The sequential ID of this contract within the transaction.
+
 &nbsp;&nbsp;&nbsp;`OP` : The contract operation. Can be `APPEND`, `CLAIM`, `COINBASE`, `CREATE`, `CREDIT`, `DEBIT`, `FEE`, `GENESIS`, `LEGACY`, `TRANSFER`, `TRUST`, `STAKE`, `UNSTAKE`, `WRITE`.
 
 &nbsp;&nbsp;&nbsp;`for` : For `CREDIT` transactions, the contract that this credit was created for . Can be `COINBASE`, `DEBIT`, or`LEGACY`.
 
 &nbsp;&nbsp;&nbsp;`txid` : The transaction that was credited / claimed.
 
+&nbsp;&nbsp;&nbsp;`contract` : The ID of the contract within the transaction that was credited / claimed.
+
 &nbsp;&nbsp;&nbsp;`proof` : The register address proving the credit.
 
-&nbsp;&nbsp;&nbsp;`account` : For `CREDIT` transactions, the register address of the account that the transaction relates to.
+&nbsp;&nbsp;&nbsp;`from` : For `DEBIT`, `CREDIT`, `FEE` transactions, the register address of the account that the debit is being made from.
 
-&nbsp;&nbsp;&nbsp;`account_name` : For `CREDIT` transactions, the name of the account that the transaction relates to.  Only included if the name can be resolved.
+&nbsp;&nbsp;&nbsp;`from_name` : For `DEBIT`, `CREDIT`, `FEE` transactions, the name of the account that the debit is being made from.  Only included if the name can be resolved.
 
-&nbsp;&nbsp;&nbsp;`from` : For `DEBIT` and `CREDIT` transactions, the register address of the account that the debit is being made from.
+&nbsp;&nbsp;&nbsp;`to` : For `DEBIT` and `CREDIT` transactions, the register address of the recipient account.
 
-&nbsp;&nbsp;&nbsp;`from_name` : For `DEBIT` and `CREDIT` transactions, the name of the account that the debit is being made from.  Only included if the name can be resolved.
-
-&nbsp;&nbsp;&nbsp;`to` : For `DEBIT` transactions, the register address of the account that the debit is being made to.
-
-&nbsp;&nbsp;&nbsp;`to_name` : For `DEBIT` transactions, the name of the account that the debit is being made to.  Only included if the name can be resolved.
+&nbsp;&nbsp;&nbsp;`to_name` : For `DEBIT` and `CREDIT` transactions, the name of the recipient account.  Only included if the name can be resolved.
 
 &nbsp;&nbsp;&nbsp;`amount` : the token amount of the transaction.
 
@@ -607,3 +609,7 @@ NONE
 `hashPerSecond` : The average number of hashes per second currently being calculated by the whole network.
 
 `totalConnections` : The number of connections to the mining LLP of this node.
+
+
+
+****

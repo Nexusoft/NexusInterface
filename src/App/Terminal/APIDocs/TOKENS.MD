@@ -70,7 +70,7 @@ Create a new token object register. The API supports an alternative endpoint tha
 ```    
 {
     "txid": "f9dcd28bce2563ab288fab76cf3ee5149ea938c735894ce4833b55e474e08e8a519e8005e09e2fc19623577a8839a280ca72b6430ee0bdf13b3d9f785bc7397d",
-    "address": "f2f71204bda6e6512d21c48eb4ca98db37a25c4d152afb284f3fc36760c0c717"
+    "address": "8CvLySLAWEKDB9SJSUDdRgzAG6ALVcXLzPQREN9Nbf7AzuJkg5P"
 }
 ```   
 
@@ -218,7 +218,7 @@ Additionally the API supports passing a field name in the URL after the token na
     "created": 1566534164,
     "modified": 1566616211,
     "name": "mytoken",
-    "address": "5efc8a9437d93e894defd50f8ba73a0b2b5529cc593d5e4a7ea413022a9c35e9",
+    "address": "8CvLySLAWEKDB9SJSUDdRgzAG6ALVcXLzPQREN9Nbf7AzuJkg5P",
     "balance": 990,
     "pending": 0,
     "unconfirmed": 0,
@@ -238,7 +238,7 @@ Additionally the API supports passing a field name in the URL after the token na
 
 `name` : The name identifying the token. For privacy purposes, this is only included in the response if the caller is the owner of the token
 
-`address` : The register address of the token.  If the token was created with a token name then the address is a hash based on the owners username and token name.   
+`address` : The register address of the token.    
 
 `balance` : The available balance of this token.  Initially the balance of the token is equal to the max supply, until the tokens have been distributed to accounts. This is the last confirmed balance less any new debits that you have made since the last block.
 
@@ -302,18 +302,18 @@ This will list off all of the transactions related to a given token. You DO NOT 
             {
                 "OP": "CREDIT",
                 "txid": "01e73b498dbabbf4629ad674b9ae3824b96cca83199c25a67901db53b271d19acf1411b0c4f9a3d8ded80860ffe2dcf683d2d227a675d453303b31f86f868f9e",
-                "output": 0,
-                "proof": "a2e51edcd41a8152bfedb24e3c22ee5a65d6d7d524146b399145bced269aeff0",
-                "account": "d430231b0c1973c784cc9942daa32f704db571a5c7d2a1f091e91fdd4abe622b",
-                "account_name": "default",
+                "contract": 0,
+                "proof": "8FJxzexVDUN5YiQYK4QjvfRNrAUym8FNu4B8yvYGXgKFJL8nBse",
+                "to": "8CvLySLAWEKDB9SJSUDdRgzAG6ALVcXLzPQREN9Nbf7AzuJkg5P",
+                "to_name": "main",
                 "amount": 76.450762,
-                "token": "0",
-                "token_name": "NXS"
+                "token": "8FJxzexVDUN5YiQYK4QjvfRNrAUym8FNu4B8yvYGXgKFJL8nBse",
+                "token_name": "XXX"
             },
             {
                 "OP": "FEE",
-                "account": "d430231b0c1973c784cc9942daa32f704db571a5c7d2a1f091e91fdd4abe622b",
-                "account_name": "default",
+                "from": "8CvLySLAWEKDB9SJSUDdRgzAG6ALVcXLzPQREN9Nbf7AzuJkg5P",
+                "from_name": "default",
                 "amount": 0.1
             }
         ]
@@ -348,25 +348,25 @@ This will list off all of the transactions related to a given token. You DO NOT 
 
 `contracts` : The array of contracts bound to this transaction and their details with opcodes.    
 {    
+&nbsp;&nbsp;&nbsp;`id` : The sequential ID of this contract within the transaction.
+
 &nbsp;&nbsp;&nbsp;`OP` : The contract operation. Can be `APPEND`, `CLAIM`, `COINBASE`, `CREATE`, `CREDIT`, `DEBIT`, `FEE`, `GENESIS`, `LEGACY`, `TRANSFER`, `TRUST`, `STAKE`, `UNSTAKE`, `WRITE`.
 
 &nbsp;&nbsp;&nbsp;`for` : For `CREDIT` transactions, the contract that this credit was created for . Always `DEBIT` for token transactions.
 
 &nbsp;&nbsp;&nbsp;`txid` : The transaction that was credited / claimed.
 
+&nbsp;&nbsp;&nbsp;`contract` : The ID of the contract within the transaction that was credited / claimed.
+
 &nbsp;&nbsp;&nbsp;`proof` : The register address proving the credit.
 
-&nbsp;&nbsp;&nbsp;`account` : For `CREDIT` transactions, the register address of the account that the transaction relates to.
+&nbsp;&nbsp;&nbsp;`from` : For `DEBIT`, `CREDIT`, `FEE` transactions, the register address of the account that the debit is being made from.
 
-&nbsp;&nbsp;&nbsp;`account_name` : For `CREDIT` transactions, the name of the account that the transaction relates to.  Only included if the name can be resolved.
+&nbsp;&nbsp;&nbsp;`from_name` : For `DEBIT`, `CREDIT`, `FEE` transactions, the name of the account that the debit is being made from.  Only included if the name can be resolved.
 
-&nbsp;&nbsp;&nbsp;`from` : For `DEBIT` and `CREDIT` transactions, the register address of the account that the debit is being made from.
+&nbsp;&nbsp;&nbsp;`to` : For `DEBIT` and `CREDIT` transactions, the register address of the recipient account.
 
-&nbsp;&nbsp;&nbsp;`from_name` : For `DEBIT` and `CREDIT` transactions, the name of the account that the debit is being made from.  Only included if the name can be resolved.
-
-&nbsp;&nbsp;&nbsp;`to` : For `DEBIT` transactions, the register address of the account that the debit is being made to.
-
-&nbsp;&nbsp;&nbsp;`to_name` : For `DEBIT` transactions, the name of the account that the debit is being made to.  Only included if the name can be resolved.
+&nbsp;&nbsp;&nbsp;`to_name` : For `DEBIT` and `CREDIT` transactions, the name of the recipient account.  Only included if the name can be resolved.
 
 &nbsp;&nbsp;&nbsp;`amount` : the token amount of the transaction.
 
@@ -398,9 +398,9 @@ Create a new token account for receiving tokens. The API supports an alternative
 
 `name` : An optional name to identify the account. If provided a Name object will also be created in the users local namespace, allowing the account to be accessed/retrieved by name. If no name is provided the account will need to be accessed/retrieved by its 256-bit register address.
 
-`token_name` : This is the name of the token that the account can be used for.  The token name should be supplied in the format `username:tokenname`.  This is optional if the token_address is supplied.
+`token_name` : This is the name of the token that the account can be used for.  The token name should be supplied in the format `username:tokenname`.  This is optional if the token address is supplied.
 
-`token_addresss` : This is the address of the token that the account can be used for.  This is optional if token_name is supploed.
+`token` : This is the address of the token that the account can be used for.  This is optional if token_name is supplied.
 
 
 
@@ -424,7 +424,7 @@ This example creates a token account called "savings" for a token identified by 
 {
     "pin": "1234",
     "name": "savings",
-    "token": "5efc8a9437d93e894defd50f8ba73a0b2b5529cc593d5e4a7ea413022a9c35e9"
+    "token": "8CvLySLAWEKDB9SJSUDdRgzAG6ALVcXLzPQREN9Nbf7AzuJkg5P"
 }
 ```
 
@@ -432,7 +432,7 @@ This example creates a token account called "savings" for a token identified by 
 ```    
 {
     "txid": "f9dcd28bce2563ab288fab76cf3ee5149ea938c735894ce4833b55e474e08e8a519e8005e09e2fc19623577a8839a280ca72b6430ee0bdf13b3d9f785bc7397d",
-    "address": "f2f71204bda6e6512d21c48eb4ca98db37a25c4d152afb284f3fc36760c0c717"
+    "address": "8FJxzexVDUN5YiQYK4QjvfRNrAUym8FNu4B8yvYGXgKFJL8nBse"
 }
 ```   
 
@@ -605,7 +605,7 @@ Additionally the API supports passing a field name in the URL after the account 
 
 `name` : The name identifying the token account.  For privacy purposes, this is only included in the response if the caller is the owner of the token account
 
-`address` : The register address of the account.  The address is a hash based on the owners username and account name.
+`address` : The register address of the account.  
 
 `token_name` : The name of the token that this account can be used with.  
 
@@ -667,10 +667,10 @@ This will list off all of the transactions related to a given account. You DO NO
             {
                 "OP": "CREDIT",
                 "txid": "01e73b498dbabbf4629ad674b9ae3824b96cca83199c25a67901db53b271d19acf1411b0c4f9a3d8ded80860ffe2dcf683d2d227a675d453303b31f86f868f9e",
-                "output": 0,
+                "contract": 0,
                 "proof": "a2e51edcd41a8152bfedb24e3c22ee5a65d6d7d524146b399145bced269aeff0",
-                "account": "8CbkwEQ9S8owmX74joU6XmiwxJq1aoiqUoXc9fLCKzw15HscM99",
-                "account_name": "test",
+                "to": "8CbkwEQ9S8owmX74joU6XmiwxJq1aoiqUoXc9fLCKzw15HscM99",
+                "to_name": "test",
                 "amount": 10,
                 "token": "8EHRNnxn5qX9gMF1Jbqvo1jkAeP7XY1PETnMtegv9rdr6QG3ZJy",
                 "token_name": "TST"
@@ -707,25 +707,25 @@ This will list off all of the transactions related to a given account. You DO NO
 
 `contracts` : The array of contracts bound to this transaction and their details with opcodes.    
 {    
+&nbsp;&nbsp;&nbsp;`id` : The sequential ID of this contract within the transaction.
+
 &nbsp;&nbsp;&nbsp;`OP` : The contract operation. Can be `APPEND`, `CLAIM`, `COINBASE`, `CREATE`, `CREDIT`, `DEBIT`, `FEE`, `GENESIS`, `LEGACY`, `TRANSFER`, `TRUST`, `STAKE`, `UNSTAKE`, `WRITE`.
 
 &nbsp;&nbsp;&nbsp;`for` : For `CREDIT` transactions, the contract that this credit was created for . Always `DEBIT` for token transactions.
 
 &nbsp;&nbsp;&nbsp;`txid` : The transaction that was credited / claimed.
 
+&nbsp;&nbsp;&nbsp;`contract` : The ID of the contract within the transaction that was credited / claimed.
+
 &nbsp;&nbsp;&nbsp;`proof` : The register address proving the credit.
 
-&nbsp;&nbsp;&nbsp;`account` : For `CREDIT` transactions, the register address of the account that the transaction relates to.
+&nbsp;&nbsp;&nbsp;`from` : For `DEBIT`, `CREDIT`, `FEE` transactions, the register address of the account that the debit is being made from.
 
-&nbsp;&nbsp;&nbsp;`account_name` : For `CREDIT` transactions, the name of the account that the transaction relates to.  Only included if the name can be resolved.
+&nbsp;&nbsp;&nbsp;`from_name` : For `DEBIT`, `CREDIT`, `FEE` transactions, the name of the account that the debit is being made from.  Only included if the name can be resolved.
 
-&nbsp;&nbsp;&nbsp;`from` : For `DEBIT` and `CREDIT` transactions, the register address of the account that the debit is being made from.
+&nbsp;&nbsp;&nbsp;`to` : For `DEBIT` and `CREDIT` transactions, the register address of the recipient account.
 
-&nbsp;&nbsp;&nbsp;`from_name` : For `DEBIT` and `CREDIT` transactions, the name of the account that the debit is being made from.  Only included if the name can be resolved.
-
-&nbsp;&nbsp;&nbsp;`to` : For `DEBIT` transactions, the register address of the account that the debit is being made to.
-
-&nbsp;&nbsp;&nbsp;`to_name` : For `DEBIT` transactions, the name of the account that the debit is being made to.  Only included if the name can be resolved.
+&nbsp;&nbsp;&nbsp;`to_name` : For `DEBIT` and `CREDIT` transactions, the name of the recipient account.  Only included if the name can be resolved.
 
 &nbsp;&nbsp;&nbsp;`amount` : the token amount of the transaction.
 
