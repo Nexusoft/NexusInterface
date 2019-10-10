@@ -219,7 +219,13 @@ const mapStateToProps = state => {
         : (params.name_to = recipients[0].address);
       if (reference) params.reference = reference;
       if (expires) params.expires = expires;
-      return await apiPost('finance/debit/account', params);
+      console.log(props);
+
+      if (props.accountInfo.token_name === 'NXS') {
+        return await apiPost('finance/debit/account', params);
+      } else {
+        return await apiPost('tokens/debit/account', params);
+      }
     }
 
     let minConfirmations = parseInt(props.minConfirmations);
@@ -334,7 +340,6 @@ class SendForm extends Component {
     const { accountOptions, change, accountInfo, accountName } = this.props;
     const optionsOpen =
       this.state.optionalOpen || this.props.reference || this.props.expires;
-
     return (
       <SendFormComponent onSubmit={this.confirmSend}>
         <FormField label={__('Send from')}>
