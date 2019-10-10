@@ -28,6 +28,7 @@ import SearchTokenModal from './SearchTokenModal';
 
 const mapStateToProps = state => ({
   coreConnected: isCoreConnected(state),
+  userGenesis: state.core.userStatus.genesis,
   loggedIn: isLoggedIn(state),
   accounts: state.core.accounts,
   ownedTokens: state.core.tokens,
@@ -156,7 +157,7 @@ class Tokens extends Component {
   returnTokenList() {
     const { usedTokens } = this.state;
     return Array.from(usedTokens, ([key, value]) => {
-      return <Token key={key} token={value} />;
+      return <Token key={key} token={value} owner={this.props.userGenesis} />;
     });
   }
 

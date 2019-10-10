@@ -17,11 +17,17 @@ const AccountName = styled.span(({ theme }) => ({
   color: theme.foreground,
 }));
 
-const Token = ({ token }) => (
+const Owner = styled.span(({ theme }) => ({
+  color: theme.mixer(0.75),
+  fontWeight: '75%',
+}));
+
+const Token = ({ token, owner }) => (
   <TokenComponent>
     <div className="flex space-between">
       <div>
         <AccountName>{token.name}</AccountName>
+        {owner === token.owner && <Owner>{__('(Owned by you)')}</Owner>}
       </div>
       <div>
         <Link
