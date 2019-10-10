@@ -89,8 +89,12 @@ class Recipients extends React.Component {
           parentFieldName={`${fields.name}[0]`}
           change={change}
           token={{
-            name: sendFrom.token === '0' ? 'NXS' : sendFrom.token,
-            address: sendFrom.tokenAddress,
+            name: sendFrom.token_name
+              ? sendFrom.token_name === '0'
+                ? 'NXS'
+                : sendFrom.token_name
+              : sendFrom.name,
+            address: sendFrom.token || sendFrom.address,
           }}
         />
       </>

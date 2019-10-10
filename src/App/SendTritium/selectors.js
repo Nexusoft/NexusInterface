@@ -67,16 +67,23 @@ export const getAccountOptions = memoize((myAccounts, myTokens) => {
   return options;
 });
 
-export const getAccountBalance = memoize((accountName, myAccounts) => {
-  const account =
-    myAccounts && myAccounts.find(acc => acc.name === accountName);
-  return account && account.balance;
-});
+export const getAccountBalance = memoize(
+  (accountName, myAccounts, myTokens) => {
+    const account =
+      myAccounts && myAccounts.find(acc => acc.name === accountName);
+    console.log(account);
+    const token = myTokens && myTokens(tkn => tkn.name === accountName);
+    return account && account.balance;
+  }
+);
 
-export const getAccountInfo = memoize((accountName, myAccounts) => {
+export const getAccountInfo = memoize((accountName, myAccounts, myTokens) => {
   const account =
     myAccounts && myAccounts.find(acc => acc.name === accountName);
-  return account || { balance: 0 };
+  console.log(account);
+  const token = myTokens && myTokens.find(tkn => tkn.name === accountName);
+  console.log(token);
+  return account || token || { balance: 0 };
 });
 
 export const getNxsFiatPrice = memoize((rawNXSvalues, fiatCurrency) => {

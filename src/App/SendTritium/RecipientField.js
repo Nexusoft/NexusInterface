@@ -70,9 +70,13 @@ class RecipientField extends Component {
   };
 
   returnFilteredSuggestions(suggestions) {
-    const { name, tokenAddress } = this.props.sendFrom;
+    const { name, token: tokenAddress, address } = this.props.sendFrom;
+    console.log(this.props.sendFrom);
+    console.log(suggestions);
     return suggestions.filter(
-      account => account.token === tokenAddress && account.name !== name
+      account =>
+        (account.token === tokenAddress || account.token === address) &&
+        account.name !== name
     );
   }
 

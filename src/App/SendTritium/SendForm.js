@@ -62,14 +62,14 @@ const mapStateToProps = state => {
     core: {
       info: { locked, minting_only },
       accounts,
+      tokens,
     },
     form,
   } = state;
   const accountName = valueSelector(state, 'sendFrom');
   const reference = valueSelector(state, 'reference');
   const expires = valueSelector(state, 'expires');
-  const accountInfo = getAccountInfo(accountName, accounts);
-  const myTokens = state.core.tokens;
+  const accountInfo = getAccountInfo(accountName, accounts, tokens);
   return {
     minConfirmations,
     locked,
@@ -78,7 +78,7 @@ const mapStateToProps = state => {
     minting_only,
     accountName,
     accountInfo,
-    accountOptions: getAccountOptions(accounts, myTokens),
+    accountOptions: getAccountOptions(accounts, tokens),
     addressNameMap: getAddressNameMap(addressBook),
     fieldNames: getRegisteredFieldNames(
       form[formName] && form[formName].registeredFields
@@ -225,7 +225,11 @@ const mapStateToProps = state => {
       if (props.accountInfo.token_name === 'NXS') {
         return await apiPost('finance/debit/account', params);
       } else {
-        return await apiPost('tokens/debit/account', params);
+        if (props.accountInfo.maxsupply) {
+          return await apiPost('tokens/debit/token', params);
+        } else {
+          return await apiPost('tokens/debit/account', params);
+        }
       }
     }
 
@@ -341,6 +345,7 @@ class SendForm extends Component {
     const { accountOptions, change, accountInfo, accountName } = this.props;
     const optionsOpen =
       this.state.optionalOpen || this.props.reference || this.props.expires;
+    console.log(this.props);
     return (
       <SendFormComponent onSubmit={this.confirmSend}>
         <FormField label={__('Send from')}>
@@ -358,11 +363,7 @@ class SendForm extends Component {
           change={change}
           addRecipient={this.addRecipient}
           accBalance={accountInfo.balance}
-          sendFrom={{
-            token: accountInfo.token_name,
-            name: accountName,
-            tokenAddress: accountInfo.token,
-          }}
+          sendFrom={accountInfo}
         />
 
         <div className="mt1" style={{ opacity: 0.7 }}>
