@@ -25,7 +25,7 @@ const categories = [
     display: __('Receive'),
   },
   {
-    value: 'debit',
+    value: 'send',
     display: __('Sent'),
   },
   {
