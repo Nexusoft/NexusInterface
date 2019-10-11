@@ -133,7 +133,7 @@ const mapStateToProps = state => {
       recipients.forEach(({ address, amount }, i) => {
         const recipientErrors = {};
         if (!address) {
-          recipientErrors.address = __('Address is required');
+          recipientErrors.address = __('Address/Name is required');
         }
         const floatAmount = parseFloat(amount);
         if (!floatAmount || floatAmount < 0) {
