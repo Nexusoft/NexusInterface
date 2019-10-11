@@ -28,6 +28,7 @@ export default (state = initialState, action) => {
         ? {
             ...state,
             historyIndex: state.historyIndex + 1,
+            currentCommand: state.commandHistory[state.historyIndex + 1] || '',
           }
         : state;
 
@@ -36,6 +37,7 @@ export default (state = initialState, action) => {
         ? {
             ...state,
             historyIndex: state.historyIndex - 1,
+            currentCommand: state.commandHistory[state.historyIndex - 1] || '',
           }
         : state;
 
