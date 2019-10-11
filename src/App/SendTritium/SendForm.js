@@ -341,7 +341,7 @@ class SendForm extends Component {
    * @memberof SendForm
    */
   render() {
-    const { accountOptions, change, accountInfo, accountName } = this.props;
+    const { accountOptions, change, accountInfo, submitting } = this.props;
     const optionsOpen =
       this.state.optionalOpen || this.props.reference || this.props.expires;
     return (
@@ -414,7 +414,7 @@ class SendForm extends Component {
         )}
 
         <SendFormButtons>
-          <Button type="submit" skin="primary" wide>
+          <Button type="submit" skin="primary" wide disabled={submitting}>
             <Icon icon={sendIcon} className="space-right" />
             {__('Send')}
           </Button>
