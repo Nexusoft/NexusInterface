@@ -265,7 +265,6 @@ class Options extends Component {
     const { ready, styles } = this.state;
     const selectedIndex = options.findIndex(o => o.value === value);
     const anchorIndex = selectedIndex !== -1 ? selectedIndex : 0;
-    console.error(options);
     return (
       <Overlay onBackgroundClick={close}>
         <OptionsComponent
