@@ -220,7 +220,6 @@ const mapStateToProps = state => {
         : (params.name_to = recipients[0].address);
       if (reference) params.reference = reference;
       if (expires) params.expires = expires;
-      console.log(props);
 
       if (props.accountInfo.token_name === 'NXS') {
         return await apiPost('finance/debit/account', params);
@@ -345,7 +344,6 @@ class SendForm extends Component {
     const { accountOptions, change, accountInfo, accountName } = this.props;
     const optionsOpen =
       this.state.optionalOpen || this.props.reference || this.props.expires;
-    console.log(this.props);
     return (
       <SendFormComponent onSubmit={this.confirmSend}>
         <FormField label={__('Send from')}>

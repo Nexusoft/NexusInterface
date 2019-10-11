@@ -71,7 +71,6 @@ export const getAccountBalance = memoize(
   (accountName, myAccounts, myTokens) => {
     const account =
       myAccounts && myAccounts.find(acc => acc.name === accountName);
-    console.log(account);
     const token = myTokens && myTokens(tkn => tkn.name === accountName);
     return account && account.balance;
   }
@@ -79,10 +78,15 @@ export const getAccountBalance = memoize(
 
 export const getAccountInfo = memoize((accountName, myAccounts, myTokens) => {
   const account =
-    myAccounts && myAccounts.find(acc => acc.name === accountName);
-  console.log(account);
-  const token = myTokens && myTokens.find(tkn => tkn.name === accountName);
-  console.log(token);
+    myAccounts &&
+    myAccounts.find(
+      acc => acc.name === accountName || acc.address === accountName
+    );
+  const token =
+    myTokens &&
+    myTokens.find(
+      tkn => tkn.name === accountName || tkn.address === accountName
+    );
   return account || token || { balance: 0 };
 });
 
@@ -147,11 +151,10 @@ export const getRecipientSuggestions = memoize(
         }
       });
     }
-    console.log(myTritiumAccounts);
     if (myTritiumAccounts) {
       myTritiumAccounts.forEach(element => {
         suggestions.push({
-          name: element.name,
+          name: element.name || element.address,
           value: element.address,
           token: element.token,
           display: (

@@ -11,7 +11,7 @@ import WaitingMessage from 'components/WaitingMessage';
 import LoginModal from 'components/LoginModal';
 import Button from 'components/Button';
 import { openModal } from 'lib/ui';
-import { loadAccounts } from 'lib/user';
+import { loadAccounts, loadOwnedTokens } from 'lib/user';
 import { isCoreConnected, isLoggedIn } from 'selectors';
 
 // Internal Local Dependencies
@@ -40,6 +40,7 @@ class Send extends Component {
    */
   componentDidMount() {
     loadAccounts();
+    loadOwnedTokens();
     window.addEventListener('contextmenu', this.setupcontextmenu, false);
     GA.SendScreen('Send');
   }
