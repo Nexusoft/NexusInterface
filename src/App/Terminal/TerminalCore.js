@@ -83,8 +83,6 @@ class TerminalCore extends Component {
    * @memberof TerminalCore
    */
   componentDidUpdate(prevProps) {
-    console.log(prevProps.output.length, this.props.output.length);
-    console.log(this.outputRef.current);
     if (this.props.output.length != prevProps.output.length) {
       const outputElem = this.outputRef.current;
       outputElem.scrollTop = outputElem.scrollHeight;
