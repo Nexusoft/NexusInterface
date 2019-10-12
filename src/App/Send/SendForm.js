@@ -173,8 +173,6 @@ const mapStateToProps = state => {
         null,
       ];
       if (password) params.push(password);
-      console.log(password);
-      console.log(params);
       // if (message) params.push(message);
       return rpc('sendfrom', params);
     } else {

@@ -214,7 +214,6 @@ export default class Globe extends Component {
    */
   async pointRegister() {
     const peerInfo = await apiPost('system/list/peers', null);
-    console.log(peerInfo);
     if (!peerInfo) return;
     if (peerInfo.length > MaxDisplayPoints) {
       peerInfo.length = MaxDisplayPoints;

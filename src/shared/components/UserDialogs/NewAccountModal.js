@@ -46,7 +46,6 @@ import { removeModal, showNotification } from 'lib/ui';
       } else {
         if (props.tokenName) params.token_name = props.tokenName;
         if (props.tokenAddress) params.token = props.tokenAddress;
-        console.error(params);
         return await apiPost('tokens/create/account', params);
       }
     }
@@ -68,7 +67,6 @@ import { removeModal, showNotification } from 'lib/ui';
 export default class NewAccountModal extends React.Component {
   render() {
     const { handleSubmit, submitting } = this.props;
-    console.log(this.props);
     return (
       <Modal
         assignClose={closeModal => {
