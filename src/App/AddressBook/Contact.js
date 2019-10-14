@@ -13,7 +13,7 @@ import AddEditContactModal from 'components/AddEditContactModal';
 import { isCoreConnected } from 'selectors';
 import { timing } from 'styles';
 import * as color from 'utils/color';
-import ContextMenuBuilder from 'contextmenu';
+import { defaultMenu } from 'lib/contextMenu';
 import plusIcon from 'icons/plus.svg';
 
 const ContactComponent = styled.div(
@@ -116,7 +116,7 @@ class Contact extends React.PureComponent {
   showContextMenu = e => {
     e.preventDefault();
     e.stopPropagation();
-    const template = [...new ContextMenuBuilder().defaultContext];
+    const template = [...defaultMenu];
     if (this.props.coreConnected) {
       template.push({
         label: __('Edit contact'),

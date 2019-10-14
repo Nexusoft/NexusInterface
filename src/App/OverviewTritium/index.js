@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { remote } from 'electron';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/core';
 import GA from 'lib/googleAnalytics';
@@ -10,7 +9,6 @@ import GA from 'lib/googleAnalytics';
 // Internal
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
-import ContextMenuBuilder from 'contextmenu';
 import { getBalances } from 'lib/user';
 import { getMiningInfo } from 'lib/core';
 import { formatNumber, formatCurrency, formatRelativeTime } from 'lib/intl';
@@ -281,7 +279,6 @@ class Overview extends Component {
    * @memberof Overview
    */
   componentDidMount() {
-    window.addEventListener('contextmenu', this.setupcontextmenu, false);
     GA.SendScreen('Overview');
 
     // Periodically get balances
@@ -310,7 +307,6 @@ class Overview extends Component {
    */
   componentWillUnmount() {
     clearTimeout(this.diffFetcher);
-    window.removeEventListener('contextmenu', this.setupcontextmenu);
 
     // Stop updating balances
     if (this.unobserve) this.unobserve();
@@ -368,21 +364,6 @@ class Overview extends Component {
     await getMiningInfo();
     this.diffFetcher = setTimeout(this.fetchDifficulty, 50000);
   };
-
-  // Class methods
-  /**
-   * Sets up the context menu
-   *
-   * @param {*} e
-   * @memberof Overview
-   */
-  setupcontextmenu(e) {
-    e.preventDefault();
-    const contextmenu = new ContextMenuBuilder().defaultContext;
-
-    let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu);
-    defaultcontextmenu.popup(remote.getCurrentWindow());
-  }
 
   /**
    * Returns the Block Date of the last given block
