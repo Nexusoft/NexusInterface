@@ -13,6 +13,7 @@ import {
 } from 'lib/ui';
 import { walletEvents } from 'lib/wallet';
 import rpc from 'lib/rpc';
+import { apiPost } from 'lib/tritiumApi';
 
 import { readModuleStorage, writeModuleStorage } from './storage';
 import { getModuleIfEnabled } from './utils';
@@ -55,6 +56,45 @@ const cmdWhitelist = [
   'unspentbalance',
   'validateaddress',
   'verifymessage',
+];
+
+const apiWhiteList = [
+  'system/get/info',
+  'system/list/peers',
+  'system/list/lisp-eids',
+  'users/get/status',
+  'users/list/accounts',
+  'users/list/assets',
+  'users/list/items',
+  'users/list/names',
+  'users/list/namespaces',
+  'users/list/notifications',
+  'users/list/tokens',
+  'users/list/transactions',
+  'finance/get/account',
+  'finance/list/account',
+  'finance/list/account/transactions',
+  'finance/get/stakeinfo',
+  'finance/get/balances',
+  'finance/list/trustaccounts',
+  'ledger/get/blockhash',
+  'ledger/get/block',
+  'ledger/list/block',
+  'ledger/get/transaction',
+  'ledger/get/mininginfo',
+  'tokens/get/token',
+  'tokens/list/token/transactions',
+  'tokens/get/account',
+  'tokens/list/account/transactions',
+  'names/get/namespace',
+  'names/list/namespace/history',
+  'names/get/name',
+  'names/list/name/history',
+  'assets/get/asset',
+  'assets/list/asset/history',
+  'objects/get/schema',
+  'supply/get/item',
+  'supply/list/item/history',
 ];
 
 /**
@@ -110,6 +150,9 @@ function handleIpcMessage(event) {
       break;
     case 'rpc-call':
       rpcCall(event.args);
+      break;
+    case 'api-call':
+      apiCall(event.args);
       break;
     case 'show-notification':
       showNotif(event.args);
@@ -204,6 +247,33 @@ async function rpcCall([command, params, callId]) {
     if (activeAppModule) {
       activeAppModule.webview.send(
         `rpc-return${callId ? `:${callId}` : ''}`,
+        err
+      );
+    }
+  }
+}
+
+async function apiCall([endpoint, params, callId]) {
+  try {
+    if (!apiWhiteList.includes(endpoint)) {
+      throw 'Invalid API endpoint';
+    }
+
+    const result = await apiPost(endpoint, params);
+    const { activeAppModule } = store.getState();
+    if (activeAppModule) {
+      activeAppModule.webview.send(
+        `api-return${callId ? `:${callId}` : ''}`,
+        null,
+        result
+      );
+    }
+  } catch (err) {
+    console.error(err);
+    const { activeAppModule } = store.getState();
+    if (activeAppModule) {
+      activeAppModule.webview.send(
+        `api-return${callId ? `:${callId}` : ''}`,
         err
       );
     }
