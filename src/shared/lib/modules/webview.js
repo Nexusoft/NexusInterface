@@ -14,6 +14,7 @@ import {
 import { walletEvents } from 'lib/wallet';
 import rpc from 'lib/rpc';
 import { apiPost } from 'lib/tritiumApi';
+import { legacyMode } from 'consts/misc';
 
 import { readModuleStorage, writeModuleStorage } from './storage';
 import { getModuleIfEnabled } from './utils';
@@ -122,7 +123,7 @@ const getModuleData = ({
 }) => ({
   theme,
   settings: getSettingsForModules(locale, fiatCurrency, addressStyle),
-  coreInfo: core.info,
+  coreInfo: legacyMode ? core.info : core.systemInfo,
 });
 
 const getActiveModule = () => {
@@ -404,7 +405,7 @@ walletEvents.once('post-render', function() {
   );
 
   observeStore(
-    state => state.coreInfo,
+    state => (legacyMode ? state.core.info : state.core.systemInfo),
     coreInfo => {
       const { activeAppModule } = store.getState();
       if (activeAppModule) {
