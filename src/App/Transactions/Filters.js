@@ -25,7 +25,7 @@ const categories = [
     display: __('Receive'),
   },
   {
-    value: 'debit',
+    value: 'send',
     display: __('Sent'),
   },
   {
@@ -90,7 +90,6 @@ const Filters = ({ addressQuery, category, minAmount, timeSpan }) => (
         placeholder={__('Search for Address')}
         value={addressQuery}
         onChange={evt => {
-          console.log(evt.target.value);
           setTxsAddressQuery(evt.target.value);
         }}
         left={<Icon icon={searchIcon} className="space-right" />}

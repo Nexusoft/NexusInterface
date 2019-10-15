@@ -154,6 +154,7 @@ class NexusApiConsole extends Component {
         commandHistoryUp();
         break;
       case 'Enter':
+        e.preventDefault();
         this.execute();
         break;
     }
@@ -276,7 +277,6 @@ class NexusApiConsole extends Component {
    */
   render() {
     const { coreConnected, consoleInput, output } = this.props;
-    console.log(this);
 
     if (!coreConnected) {
       return (

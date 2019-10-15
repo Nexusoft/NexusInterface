@@ -13,6 +13,7 @@ import NewUserModal from 'components/NewUserModal';
 import { showNotification, openModal, removeModal } from 'lib/ui';
 import { getUserStatus } from 'lib/user';
 import { errorHandler, numericOnly } from 'utils/form';
+import { updateSettings } from 'lib/settings';
 
 const Buttons = styled.div({
   marginTop: '2em',
@@ -147,10 +148,21 @@ class Login extends Component {
             </Buttons>
 
             <ExtraSection>
-              <Link as="a">{__('Switch to Legacy Mode')}</Link>
               <Link
                 as="a"
-                onClick={() => {
+                onClick={e => {
+                  e.preventDefault();
+                  this.closeModal();
+                  updateSettings({ legacyMode: true });
+                  location.reload();
+                }}
+              >
+                {__('Switch to Legacy Mode')}
+              </Link>
+              <Link
+                as="a"
+                onClick={e => {
+                  e.preventDefault();
                   this.closeModal();
                   openModal(NewUserModal);
                 }}
