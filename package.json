@@ -1,7 +1,7 @@
 {
   "name": "nexus_wallet",
-  "productName": "Nexus Wallet Tritium Alpha",
-  "version": "2.0.0-alpha.3",
+  "productName": "Nexus Wallet Tritium Beta",
+  "version": "2.0.0-beta.1",
   "moduleSpecVersion": "0.2.1",
   "supportedModuleSpecVersion": "0.1.0",
   "buildDate": "October 14th 2019",

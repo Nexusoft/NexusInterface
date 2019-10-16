@@ -16,10 +16,7 @@ const appDataDir = escapeSpace(
  * Exports
  * =============================================================================
  */
-export const walletDataDir = path.join(
-  appDataDir,
-  'Nexus Wallet Tritium Alpha'
-);
+export const walletDataDir = path.join(appDataDir, 'Nexus Wallet Tritium Beta');
 
 export const coreDataDir =
   process.platform === 'win32' || process.platform === 'darwin'

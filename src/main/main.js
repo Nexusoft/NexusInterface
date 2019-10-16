@@ -227,7 +227,7 @@ if (!gotTheLock) {
 
   // Application Startup
   app.on('ready', async () => {
-    // FOR ALPHA REMOVE THIS for now
+    // FOR BETA REMOVE THIS for now
     //await backUpQT();
     createWindow();
     global.core.start();
