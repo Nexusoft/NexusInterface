@@ -47,6 +47,10 @@ const translateKey = key => {
       return 'Operation';
     case 'txid':
       return 'Transaction ID';
+    case 'token_name':
+      return 'Token Name';
+    case 'from_name':
+      return 'From Name';
     default:
       return key;
   }
