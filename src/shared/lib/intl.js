@@ -119,7 +119,7 @@ export const formatPercent = (num, maxDecimalDigits) => {
 };
 
 export const formatDateTime = (date, options) =>
-  new Intl.DateTimeFormat(locale, options).format(date);
+  date ? new Intl.DateTimeFormat(locale, options).format(date) : 'Invalid';
 
 const relativeTimeUnit = [
   [1000, 'second'],
