@@ -204,7 +204,7 @@ class NewUserModal extends Component {
                 {submitting ? (
                   <span>
                     <Spinner className="space-right" />
-                    <span className="v-align">{__('Creating user...')}</span>
+                    <span className="v-align">{__('Creating user')}...</span>
                   </span>
                 ) : (
                   __('Create user')
