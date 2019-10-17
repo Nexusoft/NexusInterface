@@ -9,7 +9,7 @@ import { showNotification } from 'lib/ui';
 import { walletEvents } from 'lib/wallet';
 import { legacyMode } from 'consts/misc';
 
-const isUnconfirmed = tx => tx.confirmations === 0;
+const isUnconfirmed = tx => (tx ? tx.confirmations === 0 : true);
 
 const needsAutoUpdate = (tx, minConf) =>
   isUnconfirmed(tx) || isPending(tx, minConf);
