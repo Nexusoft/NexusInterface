@@ -131,6 +131,13 @@ export const setTxsTimeFilter = timeSpan => {
   });
 };
 
+export const goToTxsPage = page => {
+  store.dispatch({
+    type: TYPE.SET_TXS_PAGE,
+    payload: page < 1 ? 1 : page,
+  });
+};
+
 /**
  * Address Book
  * ===========================
