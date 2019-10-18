@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 import { Route, Redirect, Switch } from 'react-router';
 
-import Balances from './Balances';
 import Staking from './Staking';
 import Accounts from './Accounts';
 import Tokens from './Tokens';
@@ -29,7 +28,6 @@ UserRedirect = connect(({ ui: { user: { lastActiveTab } } }) => ({
 const TabContent = ({ match }) => (
   <TabContentComponent>
     <Switch>
-      <Route path={`${match.url}/Balances`} component={Balances} />
       <Route path={`${match.url}/Staking`} component={Staking} />
       <Route path={`${match.url}/Accounts`} component={Accounts} />
       <Route path={`${match.url}/Tokens`} component={Tokens} />

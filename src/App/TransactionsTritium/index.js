@@ -13,6 +13,7 @@ import { isLoggedIn } from 'selectors';
 import { fetchAllTransactions } from 'lib/tritiumTransactions';
 import { observeStore } from 'store';
 import { goToTxsPage } from 'lib/ui';
+import transactionIcon from 'icons/transaction.svg';
 
 import {
   getTransactionsList,
@@ -21,8 +22,7 @@ import {
   txPerPage,
 } from './selectors';
 import Transaction from './Transaction';
-
-import transactionIcon from 'icons/transaction.svg';
+import Balances from './Balances';
 
 const PageLayout = styled.div({
   position: 'absolute',
@@ -31,9 +31,25 @@ const PageLayout = styled.div({
   right: 0,
   bottom: 0,
   display: 'grid',
-  gridTemplateAreas: '"list" "pagination"',
+  gridTemplateAreas: '"balances list" "balances pagination"',
   gridTemplateRows: '1fr min-content',
+  gridTemplateColumns: '1fr 2.5fr',
 });
+
+const BalancesColumn = styled.div(({ theme }) => ({
+  gridArea: 'balances',
+  padding: '0 30px',
+  margin: '20px 0',
+  borderRight: `1px solid ${theme.mixer(0.125)}`,
+  overflowY: 'auto',
+}));
+
+const BalancesTitle = styled.div(({ theme }) => ({
+  color: theme.primary,
+  textTransform: 'uppercase',
+  textAlign: 'center',
+  fontWeight: 'bold',
+}));
 
 const TransactionsList = styled.div({
   gridArea: 'list',
@@ -152,6 +168,10 @@ class TransactionsTritium extends Component {
           </WaitingMessage>
         ) : (
           <PageLayout>
+            <BalancesColumn>
+              <BalancesTitle>{__('NXS balances')}</BalancesTitle>
+              <Balances />
+            </BalancesColumn>
             <TransactionsList>
               <Container>
                 {transactions &&

@@ -12,7 +12,7 @@ import { openModal } from 'lib/ui';
 import confirm from 'utils/promisified/confirm';
 import { formatNumber, formatDateTime } from 'lib/intl';
 
-import QuestionMark from './QuestionMark';
+import QuestionCircle from 'components/QuestionCircle';
 
 const dateTimeFormat = {
   month: 'short',
@@ -83,7 +83,7 @@ export default class Staking extends React.Component {
           <Line>
             <div>
               <span className="v-align">{__('Stake amount')}</span>
-              <QuestionMark
+              <QuestionCircle
                 tooltip={__(
                   'The amount of NXS currently staked in the trust account'
                 )}
@@ -97,7 +97,7 @@ export default class Staking extends React.Component {
                 <Line>
                   <div>
                     <span className="v-align">{__('Pending change')}</span>
-                    <QuestionMark
+                    <QuestionCircle
                       tooltip={__(
                         'The pending stake amount change that will be applied on the next Trust transaction'
                       )}
@@ -129,7 +129,7 @@ export default class Staking extends React.Component {
           <Line>
             <div>
               <span className="v-align">{__('Stake Rate')}</span>
-              <QuestionMark
+              <QuestionCircle
                 tooltip={__(
                   'The current annual reward rate earned for staking'
                 )}
@@ -140,7 +140,7 @@ export default class Staking extends React.Component {
           <Line>
             <div>
               <span className="v-align">{__('Trust Weight')}</span>
-              <QuestionMark
+              <QuestionCircle
                 tooltip={__(
                   'The percentage of the maximum Trust Score, which is gradually built over time when you consistently operate your node in an honest, trustworthy, and timely manner'
                 )}
@@ -151,7 +151,7 @@ export default class Staking extends React.Component {
           <Line>
             <div>
               <span className="v-align">{__('Block Weight')}</span>
-              <QuestionMark
+              <QuestionCircle
                 tooltip={__(
                   'Block Weight depends on the time passed since you received a Trust transaction and will be reset everytime you receive a Trust transaction. Otherwise, Block Weight will reach 100% after 3 days and your Trust Score will start decaying until you receive another Trust transaction'
                 )}
@@ -162,7 +162,7 @@ export default class Staking extends React.Component {
           <Line>
             <div>
               <span className="v-align">{__('Stake Weight')}</span>
-              <QuestionMark
+              <QuestionCircle
                 tooltip={__(
                   'Stake Weight depends on Trust Weight and Block Weight. Along with your Stake balance, Stake Weight affects how frequent you receive a Trust transaction'
                 )}
@@ -173,7 +173,7 @@ export default class Staking extends React.Component {
           <Line>
             <div>
               <span className="v-align">{__('Unstaked amount')}</span>
-              <QuestionMark
+              <QuestionCircle
                 tooltip={__(
                   'The current NXS balance of the trust account that is not staked. You can spend this amount without affecting your Trust Score'
                 )}
