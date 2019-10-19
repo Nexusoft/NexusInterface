@@ -131,9 +131,9 @@ export const setTxsTimeFilter = timeSpan => {
   });
 };
 
-export const setTxsAccountNameFilter = accountName => {
+export const setTxsNameQuery = accountName => {
   store.dispatch({
-    type: TYPE.SET_TXS_ACCOUNT_NAME_FILTER,
+    type: TYPE.SET_TXS_NAME_QUERY,
     payload: accountName,
   });
 };

@@ -2,18 +2,15 @@ import React from 'react';
 import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
-import Icon from 'components/Icon';
 import Select from 'components/Select';
 import TextField from 'components/TextField';
 import FormField from 'components/FormField';
 import {
   setTxsAddressQuery,
-  setTxsAccountNameFilter,
+  setTxsNameQuery,
   setTxsOperationFilter,
   setTxsTimeFilter,
 } from 'lib/ui';
-
-import searchIcon from 'icons/search.svg';
 
 const operations = [
   'WRITE',
@@ -65,34 +62,33 @@ const timeFrames = [
 const FiltersWrapper = styled.div({
   gridArea: 'filters',
   display: 'grid',
-  gridTemplateAreas: '"search accountName timeFrame operation"',
-  gridTemplateColumns: '1fr 160px 140px 110px',
+  gridTemplateAreas: '"addressSearch nameSearch timeFrame operation"',
+  gridTemplateColumns: '3fr 2fr 100px 100px',
   columnGap: '.75em',
   alignItems: 'end',
   fontSize: 15,
   padding: '0 30px 10px',
 });
 
-const Filters = ({ addressQuery, operation, accountName, timeSpan }) => (
+const Filters = ({ addressQuery, operation, nameQuery, timeSpan }) => (
   <FiltersWrapper>
-    <FormField connectLabel label={__('Search address')}>
+    <FormField connectLabel label={__('Address search')}>
       <TextField
         type="search"
-        name="addressfilter"
-        placeholder={__('Search for Address')}
+        placeholder={__('Account/token address')}
         value={addressQuery}
         onChange={evt => {
           setTxsAddressQuery(evt.target.value);
         }}
-        left={<Icon icon={searchIcon} className="space-right" />}
       />
     </FormField>
 
-    <FormField connectLabel label={__('Account name')}>
+    <FormField connectLabel label={__('Name search')}>
       <TextField
-        placeholder="Account name"
-        value={accountName}
-        onChange={evt => setTxsAccountNameFilter(evt.target.value)}
+        type="search"
+        placeholder="Account/token name"
+        value={nameQuery}
+        onChange={evt => setTxsNameQuery(evt.target.value)}
       />
     </FormField>
 
@@ -116,12 +112,12 @@ const Filters = ({ addressQuery, operation, accountName, timeSpan }) => (
 
 const mapStateToProps = ({
   ui: {
-    transactionsTritium: { addressQuery, operation, accountName, timeSpan },
+    transactionsTritium: { addressQuery, operation, nameQuery, timeSpan },
   },
 }) => ({
   addressQuery,
   operation,
-  accountName,
+  nameQuery,
   timeSpan,
 });
 

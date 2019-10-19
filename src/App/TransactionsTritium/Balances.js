@@ -58,7 +58,7 @@ export default class Balances extends React.Component {
       !!balances && (
         <BalancesWrapper>
           <Line bold>
-            <div>{__('Total balance')}</div>
+            <div>{__('Total')}</div>
             <div>{formatNumber(total, 6)} NXS</div>
           </Line>
           <Line>

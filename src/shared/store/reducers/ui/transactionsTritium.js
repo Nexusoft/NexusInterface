@@ -1,7 +1,7 @@
 import * as TYPE from 'consts/actionTypes';
 
 const initialState = {
-  accountName: '',
+  nameQuery: '',
   addressQuery: '',
   operation: null,
   timeSpan: null,
@@ -10,10 +10,10 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case TYPE.SET_TXS_ACCOUNT_NAME_FILTER:
+    case TYPE.SET_TXS_NAME_QUERY:
       return {
         ...state,
-        accountName: action.payload,
+        nameQuery: action.payload,
       };
 
     case TYPE.SET_TXS_ADDRESS_QUERY:

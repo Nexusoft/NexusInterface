@@ -34,7 +34,7 @@ const PageLayout = styled.div({
   display: 'grid',
   gridTemplateAreas: '"balances filters" "balances list" "balances pagination"',
   gridTemplateRows: 'min-content 1fr min-content',
-  gridTemplateColumns: '1fr 2.5fr',
+  gridTemplateColumns: '1fr 2.7fr',
 });
 
 const BalancesColumn = styled.div(({ theme }) => ({
@@ -87,12 +87,22 @@ const mapStateToProps = state => {
       transactions: { map, loadedAll },
     },
     ui: {
-      transactionsTritium: { page },
+      transactionsTritium: {
+        page,
+        addressQuery,
+        operation,
+        nameQuery,
+        timeSpan,
+      },
     },
     settings: { minConfirmations },
   } = state;
   const filteredTransactions = getFilteredTransactions(
-    getTransactionsList(map)
+    getTransactionsList(map),
+    nameQuery,
+    addressQuery,
+    operation,
+    timeSpan
   );
   return {
     loggedIn: isLoggedIn(state),
