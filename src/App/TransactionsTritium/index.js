@@ -23,6 +23,7 @@ import {
 } from './selectors';
 import Transaction from './Transaction';
 import Balances from './Balances';
+import Filters from './Filters';
 
 const PageLayout = styled.div({
   position: 'absolute',
@@ -31,8 +32,8 @@ const PageLayout = styled.div({
   right: 0,
   bottom: 0,
   display: 'grid',
-  gridTemplateAreas: '"balances list" "balances pagination"',
-  gridTemplateRows: '1fr min-content',
+  gridTemplateAreas: '"balances filters" "balances list" "balances pagination"',
+  gridTemplateRows: 'min-content 1fr min-content',
   gridTemplateColumns: '1fr 2.5fr',
 });
 
@@ -54,7 +55,7 @@ const BalancesTitle = styled.div(({ theme }) => ({
 const TransactionsList = styled.div({
   gridArea: 'list',
   overflowY: 'auto',
-  padding: '20px 30px',
+  padding: '20px',
 });
 
 const Pagination = styled.div({
@@ -172,6 +173,7 @@ class TransactionsTritium extends Component {
               <BalancesTitle>{__('NXS balances')}</BalancesTitle>
               <Balances />
             </BalancesColumn>
+            <Filters />
             <TransactionsList>
               <Container>
                 {transactions &&

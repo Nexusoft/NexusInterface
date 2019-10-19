@@ -1,7 +1,7 @@
 import * as TYPE from 'consts/actionTypes';
 
 const initialState = {
-  accountName: null,
+  accountName: '',
   addressQuery: '',
   operation: null,
   timeSpan: null,
@@ -25,7 +25,7 @@ export default (state = initialState, action) => {
     case TYPE.SET_TXS_OP_FILTER:
       return {
         ...state,
-        category: action.payload,
+        operation: action.payload,
       };
 
     case TYPE.SET_TXS_TIME_FILTER:

@@ -131,6 +131,20 @@ export const setTxsTimeFilter = timeSpan => {
   });
 };
 
+export const setTxsAccountNameFilter = accountName => {
+  store.dispatch({
+    type: TYPE.SET_TXS_ACCOUNT_NAME_FILTER,
+    payload: accountName,
+  });
+};
+
+export const setTxsOperationFilter = operation => {
+  store.dispatch({
+    type: TYPE.SET_TXS_OP_FILTER,
+    payload: operation,
+  });
+};
+
 export const goToTxsPage = page => {
   store.dispatch({
     type: TYPE.SET_TXS_PAGE,
