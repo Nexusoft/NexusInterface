@@ -59,7 +59,7 @@ const timeFrames = [
   },
 ];
 
-const FiltersWrapper = styled.div({
+const FiltersWrapper = styled.div(({ morePadding }) => ({
   gridArea: 'filters',
   display: 'grid',
   gridTemplateAreas: '"addressSearch nameSearch timeFrame operation"',
@@ -67,12 +67,18 @@ const FiltersWrapper = styled.div({
   columnGap: '.75em',
   alignItems: 'end',
   fontSize: 15,
-  padding: '0 30px 10px',
-});
+  padding: `0 ${morePadding ? '26px' : '20px'} 10px 20px`,
+}));
 
-const Filters = ({ addressQuery, operation, nameQuery, timeSpan }) => (
-  <FiltersWrapper>
-    <FormField connectLabel label={__('Address search')}>
+const Filters = ({
+  addressQuery,
+  operation,
+  nameQuery,
+  timeSpan,
+  morePadding,
+}) => (
+  <FiltersWrapper morePadding={morePadding}>
+    <FormField connectLabel label={__('Address')}>
       <TextField
         type="search"
         placeholder={__('Account/token address')}
@@ -83,7 +89,7 @@ const Filters = ({ addressQuery, operation, nameQuery, timeSpan }) => (
       />
     </FormField>
 
-    <FormField connectLabel label={__('Name search')}>
+    <FormField connectLabel label={__('Name')}>
       <TextField
         type="search"
         placeholder="Account/token name"

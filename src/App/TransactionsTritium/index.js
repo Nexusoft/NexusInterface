@@ -55,14 +55,14 @@ const BalancesTitle = styled.div(({ theme }) => ({
 const TransactionsList = styled.div({
   gridArea: 'list',
   overflowY: 'auto',
-  padding: '20px',
+  padding: '0 20px',
 });
 
-const Pagination = styled.div({
+const Pagination = styled.div(({ morePadding }) => ({
   gridArea: 'pagination',
-  padding: '10px 0',
   fontSize: '.9em',
-});
+  padding: `10px ${morePadding ? '26px' : '20px'} 20px 20px`,
+}));
 
 const Container = styled.div({
   maxWidth: 650,
@@ -121,7 +121,12 @@ const mapStateToProps = state => {
  * @extends {Component}
  */
 class TransactionsTritium extends Component {
-  pageRef = React.createRef();
+  listRef = React.createRef();
+
+  state = {
+    // Whether transaction list is having a scrollbar
+    hasScroll: false,
+  };
 
   /**
    * Component Mount Callback
@@ -141,6 +146,8 @@ class TransactionsTritium extends Component {
         });
       }
     }
+
+    this.checkScrollbar();
   }
 
   componentWillUnmount() {
@@ -148,6 +155,27 @@ class TransactionsTritium extends Component {
       this.unobserve();
     }
   }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.transactions !== this.props.transaction) {
+      this.checkScrollbar();
+    }
+  }
+
+  // When transactions list has a scrollbar, the alignment of elements
+  // will be affected, so set a state to adjust the paddings accordingly
+  checkScrollbar = () => {
+    const listEl = this.listRef.current;
+    if (listEl) {
+      // If transactions list has a scrollbar
+      if (listEl.clientHeight < listEl.scrollHeight && !this.state.hasScroll) {
+        this.setState({ hasScroll: true });
+      }
+      if (listEl.clientHeight >= listEl.scrollHeight && this.state.hasScroll) {
+        this.setState({ hasScroll: false });
+      }
+    }
+  };
 
   /**
    * React Render
@@ -183,8 +211,8 @@ class TransactionsTritium extends Component {
               <BalancesTitle>{__('NXS balances')}</BalancesTitle>
               <Balances />
             </BalancesColumn>
-            <Filters />
-            <TransactionsList>
+            <Filters morePadding={this.state.hasScroll} />
+            <TransactionsList ref={this.listRef}>
               <Container>
                 {transactions &&
                   transactions.map(tx => (
@@ -192,7 +220,7 @@ class TransactionsTritium extends Component {
                   ))}
               </Container>
             </TransactionsList>
-            <Pagination>
+            <Pagination morePadding={this.state.hasScroll}>
               <Container className="flex center space-between">
                 <PaginationButton
                   skin="filled-inverted"
@@ -219,7 +247,6 @@ class TransactionsTritium extends Component {
                         <>
                           &nbsp;
                           <PageInput
-                            inputRef={this.pageRef}
                             type="number"
                             min={1}
                             max={totalPages}
