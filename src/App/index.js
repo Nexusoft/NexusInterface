@@ -9,6 +9,7 @@ import styled from '@emotion/styled';
 import GlobalStyles from 'components/GlobalStyles';
 import { legacyMode } from 'consts/misc';
 import { history } from 'lib/wallet';
+import { showDefaultMenu } from 'lib/contextMenu';
 
 import Overlays from './Overlays';
 import Overview from './Overview';
@@ -53,42 +54,44 @@ const App = () => (
   <Router history={history}>
     <ThemeController>
       <GlobalStyles />
-      <Overlays>
-        <AppBackground />
-        <AppLayout>
-          <Header />
-          <Main>
-            <Switch>
-              <Route
-                exact
-                path="/"
-                component={legacyMode ? Overview : OverviewTritium}
-              />
-              <Route
-                exact
-                path="/Send"
-                component={legacyMode ? Send : SendTritium}
-              />
-              <Route
-                exact
-                path="/Transactions"
-                component={legacyMode ? Transactions : TransactionsTritium}
-              />
-              <Route exact path="/Market" component={Market} />
-              <Route exact path="/AddressBook" component={AddressBook} />
-              <Route path="/Settings" component={Settings} />
-              <Route path="/Terminal" component={Terminal} />
-              {!legacyMode && <Route path="/User" component={UserPage} />}
+      <div onContextMenu={showDefaultMenu}>
+        <Overlays>
+          <AppBackground />
+          <AppLayout>
+            <Header />
+            <Main>
+              <Switch>
+                <Route
+                  exact
+                  path="/"
+                  component={legacyMode ? Overview : OverviewTritium}
+                />
+                <Route
+                  exact
+                  path="/Send"
+                  component={legacyMode ? Send : SendTritium}
+                />
+                <Route
+                  exact
+                  path="/Transactions"
+                  component={legacyMode ? Transactions : TransactionsTritium}
+                />
+                <Route exact path="/Market" component={Market} />
+                <Route exact path="/AddressBook" component={AddressBook} />
+                <Route path="/Settings" component={Settings} />
+                <Route path="/Terminal" component={Terminal} />
+                {!legacyMode && <Route path="/User" component={UserPage} />}
 
-              {/* <Route path="/Exchange" component={Exchange} /> */}
-              {/* <Route exact path="/List" component={TrustList} /> */}
+                {/* <Route path="/Exchange" component={Exchange} /> */}
+                {/* <Route exact path="/List" component={TrustList} /> */}
 
-              <Route path="/Modules/:name" component={Modules} />
-            </Switch>
-          </Main>
-          <Navigation />
-        </AppLayout>
-      </Overlays>
+                <Route path="/Modules/:name" component={Modules} />
+              </Switch>
+            </Main>
+            <Navigation />
+          </AppLayout>
+        </Overlays>
+      </div>
     </ThemeController>
   </Router>
 );

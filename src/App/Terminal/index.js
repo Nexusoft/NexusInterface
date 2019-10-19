@@ -1,12 +1,10 @@
 // External Dependencies
 import React, { Component } from 'react';
-import { remote } from 'electron';
 import { Route, Redirect, Switch } from 'react-router';
 import styled from '@emotion/styled';
 import { connect } from 'react-redux';
 
 // Internal Global Dependencies
-import ContextMenuBuilder from 'contextmenu';
 import Panel from 'components/Panel';
 import Tab from 'components/Tab';
 import { legacyMode } from 'consts/misc';
@@ -50,38 +48,6 @@ ConsoleRedirect = connect(({ ui: { console: { lastActiveTab } } }) => ({
  * @extends {Component}
  */
 class Terminal extends Component {
-  /**
-   * Component Mount Callback
-   *
-   * @memberof Terminal
-   */
-  componentDidMount() {
-    window.addEventListener('contextmenu', this.setupcontextmenu, false);
-  }
-
-  /**
-   * Component Unmount Callback
-   *
-   * @memberof Terminal
-   */
-  componentWillUnmount() {
-    window.removeEventListener('contextmenu', this.setupcontextmenu);
-  }
-
-  /**
-   * Set up context menu
-   *
-   * @param {*} e
-   * @memberof Terminal
-   */
-  setupcontextmenu(e) {
-    e.preventDefault();
-    const contextmenu = new ContextMenuBuilder().defaultContext;
-    //build default
-    let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu);
-    defaultcontextmenu.popup(remote.getCurrentWindow());
-  }
-
   /**
    * Component's Renderable JSX
    *

@@ -11,7 +11,7 @@ import * as color from 'utils/color';
 
 const ContractComponent = styled.div(({ theme }) => ({
   flexGrow: 1,
-  padding: '.8em 1em',
+  padding: '.6em 1em',
   width: '100%',
   display: 'grid',
   gridTemplateAreas: '"content delta"',

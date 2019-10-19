@@ -2,12 +2,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Route, Redirect, Switch } from 'react-router';
-import { remote } from 'electron';
 import styled from '@emotion/styled';
 import GA from 'lib/googleAnalytics';
 
 // Internal Global
-import ContextMenuBuilder from 'contextmenu';
 import Panel from 'components/Panel';
 import Tab from 'components/Tab';
 import { legacyMode } from 'consts/misc';
@@ -77,29 +75,6 @@ export default class Settings extends Component {
    */
   componentDidMount() {
     GA.SendScreen('Settings');
-    window.addEventListener('contextmenu', this.setupcontextmenu, false);
-  }
-  /**
-   * Component Unmount Callback
-   *
-   * @memberof Settings
-   */
-  componentWillUnmount() {
-    window.removeEventListener('contextmenu', this.setupcontextmenu);
-  }
-
-  /**
-   * Set up context menu
-   *
-   * @param {*} e
-   * @memberof Settings
-   */
-  setupcontextmenu(e) {
-    e.preventDefault();
-    const contextmenu = new ContextMenuBuilder().defaultContext;
-    //build default
-    let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu);
-    defaultcontextmenu.popup(remote.getCurrentWindow());
   }
 
   /**

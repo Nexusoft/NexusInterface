@@ -10,6 +10,7 @@ import TextField from 'components/TextField';
 import Button from 'components/Button';
 import Link from 'components/Link';
 import LoginModal from 'components/LoginModal';
+import Spinner from 'components/Spinner';
 import { showNotification, openModal, removeModal } from 'lib/ui';
 import { getUserStatus } from 'lib/user';
 import { errorHandler, numericOnly } from 'utils/form';
@@ -23,6 +24,14 @@ const ExtraSection = styled.div({
   display: 'flex',
   justifyContent: 'space-between',
   opacity: 0.9,
+});
+
+const Note = styled.div({
+  textAlign: 'center',
+  opacity: 0.7,
+  fontStyle: 'italic',
+  fontSize: '.9em',
+  marginTop: '.5em',
 });
 
 /**
@@ -192,9 +201,19 @@ class NewUserModal extends Component {
                 skin="primary"
                 disabled={submitting}
               >
-                {__('Create user')}
+                {submitting ? (
+                  <span>
+                    <Spinner className="space-right" />
+                    <span className="v-align">{__('Creating user')}...</span>
+                  </span>
+                ) : (
+                  __('Create user')
+                )}
               </Button>
             </Buttons>
+            {submitting && (
+              <Note>{__('Please wait, this may take up to 30 seconds')}</Note>
+            )}
 
             <ExtraSection>
               <Link as="a">{__('Switch to Legacy Mode')}</Link>

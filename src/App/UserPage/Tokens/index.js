@@ -1,8 +1,6 @@
 // External
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { remote } from 'electron';
-import styled from '@emotion/styled';
 import GA from 'lib/googleAnalytics';
 
 // Internal Global
@@ -11,7 +9,6 @@ import { history } from 'lib/wallet';
 import { openModal } from 'lib/ui';
 import { switchUserTab } from 'lib/ui';
 import { isCoreConnected, isLoggedIn } from 'selectors';
-import ContextMenuBuilder from 'contextmenu';
 import { legacyMode } from 'consts/misc';
 import { apiGet } from 'lib/tritiumApi';
 import { loadOwnedTokens, loadAccounts } from 'lib/user';
@@ -62,7 +59,6 @@ class Tokens extends Component {
     if (legacyMode) {
       history.push('/');
     }
-    window.addEventListener('contextmenu', this.setupcontextmenu, false);
     GA.SendScreen('Tokens');
 
     loadOwnedTokens();
@@ -122,15 +118,6 @@ class Tokens extends Component {
     });
   }
 
-  /**
-   * componentWillUnmount
-   *
-   * @memberof Tokens
-   */
-  componentWillUnmount() {
-    window.removeEventListener('contextmenu', this.setupcontextmenu);
-  }
-
   componentDidUpdate(prevProps, prevState) {
     if (
       this.props.accounts !== prevProps.accounts ||
@@ -138,20 +125,6 @@ class Tokens extends Component {
     ) {
       this.gatherTokens();
     }
-  }
-
-  /**
-   * Set up the context menu
-   *
-   * @param {*} e
-   * @memberof Tokens
-   */
-  setupcontextmenu(e) {
-    e.preventDefault();
-    const contextmenu = new ContextMenuBuilder().defaultContext;
-    //build default
-    let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu);
-    defaultcontextmenu.popup(remote.getCurrentWindow());
   }
 
   returnTokenList() {
