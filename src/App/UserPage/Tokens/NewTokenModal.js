@@ -1,5 +1,6 @@
 import React from 'react';
-import { reduxForm, Field } from 'redux-form';
+import { connect } from 'react-redux';
+import { reduxForm, Field, formValueSelector } from 'redux-form';
 import styled from '@emotion/styled';
 
 import Modal from 'components/Modal';
@@ -15,14 +16,26 @@ import { removeModal, showNotification } from 'lib/ui';
 import NewAccountModal from 'components/UserDialogs/NewAccountModal';
 import { openModal } from 'lib/ui';
 
+import { token, localName } from 'lib/fees';
+
 const SubLable = styled.span(({ theme }) => ({
   marginLeft: '1em',
   fontSize: '75%',
   color: theme.mixer(0.5),
 }));
 
+const mapStateToProps = state => {
+  const valueSelector = formValueSelector('new_token');
+
+  return {
+    supply: valueSelector(state, 'supply'),
+    decimal: valueSelector(state, 'decimal'),
+  };
+};
+
+@connect(mapStateToProps)
 @reduxForm({
-  form: 'new_account',
+  form: 'new_token',
   destroyOnUnmount: true,
   initialValues: {
     name: '',
@@ -94,9 +107,9 @@ const SubLable = styled.span(({ theme }) => ({
 })
 class NewTokenModal extends React.Component {
   render() {
-    const { handleSubmit, submitting } = this.props;
-    const tokenNameCreationFee = 300; // need to wire this in.
-    const tokenCreationFee = 100;
+    const { handleSubmit, submitting, supply, decimal } = this.props;
+    const tokenNameCreationFee = localName;
+    const tokenCreationFee = token(supply, decimal);
     return (
       <Modal
         assignClose={closeModal => {
@@ -107,20 +120,23 @@ class NewTokenModal extends React.Component {
         <Modal.Header>{__('New Token')}</Modal.Header>
         <Modal.Body>
           <form onSubmit={handleSubmit}>
-            {__(`There is a %{tokenfee}NXS token creation fee`, {
-              tokenfee: tokenCreationFee,
-            })}
+            {__(
+              `There is a %{tokenfee}NXS token creation fee, based on supply`,
+              {
+                tokenfee: tokenCreationFee,
+              }
+            )}
             <FormField connectLabel label={__('Token name')}>
               <>
                 <SubLable>
-                  {__('Name Creation Fee: %{tokenFee}', {
+                  {__('Name Creation Fee: %{tokenFee} NXS (Optional)', {
                     tokenFee: tokenNameCreationFee,
                   })}
                 </SubLable>
                 <Field
                   name="name"
                   component={TextField.RF}
-                  placeholder={__("New account's name")}
+                  placeholder={__("New tokens's name")}
                 />
               </>
             </FormField>

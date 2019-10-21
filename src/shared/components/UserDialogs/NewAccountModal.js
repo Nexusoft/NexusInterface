@@ -11,6 +11,7 @@ import { apiPost } from 'lib/tritiumApi';
 import { errorHandler } from 'utils/form';
 import { loadAccounts } from 'lib/user';
 import { removeModal, showNotification } from 'lib/ui';
+import { namedAccount } from 'lib/fees';
 
 @reduxForm({
   form: 'new_account',
@@ -77,7 +78,12 @@ export default class NewAccountModal extends React.Component {
         <Modal.Header>{__('New account')}</Modal.Header>
         <Modal.Body>
           <form onSubmit={handleSubmit}>
-            <FormField connectLabel label={__('Account name (1 NXS Fee)')}>
+            <FormField
+              connectLabel
+              label={__('Account name (%{nameFee} NXS Fee) (Optional)', {
+                nameFee: namedAccount,
+              })}
+            >
               <Field
                 name="name"
                 component={TextField.RF}
