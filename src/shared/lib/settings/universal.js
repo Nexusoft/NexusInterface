@@ -51,6 +51,10 @@ export const defaultSettings = {
   manualDaemonPassword: defaultPassword,
   manualDaemonIP: '127.0.0.1',
   manualDaemonPort: '9336',
+  manualDaemonApiUser: 'apiserver',
+  manualDaemonApiPassword: defaultPassword,
+  manualDaemonApiIP: '127.0.0.1',
+  manualDaemonApiPort: '8080',
   manualDaemonDataDir: coreDataDir,
 
   // Style

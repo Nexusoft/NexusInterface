@@ -59,6 +59,10 @@ const formKeys = [
   'manualDaemonIP',
   'manualDaemonPort',
   'manualDaemonDataDir',
+  'manualDaemonApiUser',
+  'manualDaemonApiPassword',
+  'manualDaemonApiIP',
+  'manualDaemonApiPort',
 ];
 const getInitialValues = (() => {
   let lastOutput = null;
@@ -422,7 +426,7 @@ class SettingsCore extends Component {
               >
                 <Field
                   component={TextField.RF}
-                  name="manualDaemonUser"
+                  name={legacyMode ? 'manualDaemonUser' : 'manualDaemonApiUser'}
                   size="12"
                 />
               </SettingsField>
@@ -435,7 +439,11 @@ class SettingsCore extends Component {
               >
                 <Field
                   component={TextField.RF}
-                  name="manualDaemonPassword"
+                  name={
+                    legacyMode
+                      ? 'manualDaemonPassword'
+                      : 'manualDaemonApiPassword'
+                  }
                   size="12"
                 />
               </SettingsField>
@@ -448,7 +456,7 @@ class SettingsCore extends Component {
               >
                 <Field
                   component={TextField.RF}
-                  name="manualDaemonIP"
+                  name={legacyMode ? 'manualDaemonIP' : 'manualDaemonApiIP'}
                   size="12"
                 />
               </SettingsField>
@@ -461,7 +469,7 @@ class SettingsCore extends Component {
               >
                 <Field
                   component={TextField.RF}
-                  name="manualDaemonPort"
+                  name={legacyMode ? 'manualDaemonPort' : 'manualDaemonApiPort'}
                   size="5"
                 />
               </SettingsField>
