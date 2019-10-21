@@ -1,9 +1,10 @@
 // External
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import GA from 'lib/googleAnalytics';
+import styled from '@emotion/styled';
 
 // Internal Global
+import GA from 'lib/googleAnalytics';
 import Button from 'components/Button';
 import { history } from 'lib/wallet';
 import { openModal } from 'lib/ui';
@@ -29,6 +30,11 @@ const mapStateToProps = state => ({
   loggedIn: isLoggedIn(state),
   accounts: state.core.accounts,
   ownedTokens: state.core.tokens,
+});
+
+const TokensWrapper = styled.div({
+  maxWidth: 500,
+  margin: '0 auto',
 });
 
 /**
@@ -144,7 +150,7 @@ class Tokens extends Component {
     const { searchToken } = this.state;
 
     return (
-      <>
+      <TokensWrapper>
         <div className="flex space-between">
           <Button
             onClick={() => {
@@ -164,7 +170,7 @@ class Tokens extends Component {
           </Button>
         </div>
         <div>{this.returnTokenList()}</div>
-      </>
+      </TokensWrapper>
     );
   }
 }
