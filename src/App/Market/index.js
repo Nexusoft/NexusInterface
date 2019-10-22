@@ -1,7 +1,7 @@
 // External Dependencies
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { remote, shell } from 'electron';
+import { shell } from 'electron';
 import styled from '@emotion/styled';
 import Tooltip from 'components/Tooltip';
 import Button from 'components/Button';
@@ -12,7 +12,6 @@ import { showNotification } from 'lib/ui';
 // Internal Global Dependencies
 import Icon from 'components/Icon';
 import Panel from 'components/Panel';
-import ContextMenuBuilder from 'contextmenu';
 import {
   binanceDepthLoader,
   bittrexDepthLoader,
@@ -74,26 +73,6 @@ class Market extends Component {
   componentDidMount() {
     this.refresher();
     GA.SendScreen('Market');
-    window.addEventListener('contextmenu', this.setupcontextmenu, false);
-  }
-  // React Method (Life cycle hook)
-  componentWillUnmount() {
-    window.removeEventListener('contextmenu', this.setupcontextmenu);
-  }
-
-  // Class Methods
-  /**
-   * Sets up the page's context menu
-   *
-   * @param {*} e
-   * @memberof Market
-   */
-  setupcontextmenu(e) {
-    e.preventDefault();
-    const contextmenu = new ContextMenuBuilder().defaultContext;
-    //build default
-    let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu);
-    defaultcontextmenu.popup(remote.getCurrentWindow());
   }
 
   /**

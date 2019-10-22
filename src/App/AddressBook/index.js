@@ -1,7 +1,6 @@
 // External
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { remote } from 'electron';
 import styled from '@emotion/styled';
 import GA from 'lib/googleAnalytics';
 
@@ -12,7 +11,6 @@ import Panel from 'components/Panel';
 import { openModal } from 'lib/ui';
 import AddEditContactModal from 'components/AddEditContactModal';
 import { isCoreConnected } from 'selectors';
-import ContextMenuBuilder from 'contextmenu';
 
 // Internal Local
 import PanelControls from './PanelControls';
@@ -54,31 +52,7 @@ class AddressBook extends Component {
    * @memberof AddressBook
    */
   componentDidMount() {
-    window.addEventListener('contextmenu', this.setupcontextmenu, false);
     GA.SendScreen('AddressBook');
-  }
-
-  /**
-   * componentWillUnmount
-   *
-   * @memberof AddressBook
-   */
-  componentWillUnmount() {
-    window.removeEventListener('contextmenu', this.setupcontextmenu);
-  }
-
-  /**
-   * Set up the context menu
-   *
-   * @param {*} e
-   * @memberof AddressBook
-   */
-  setupcontextmenu(e) {
-    e.preventDefault();
-    const contextmenu = new ContextMenuBuilder().defaultContext;
-    //build default
-    let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu);
-    defaultcontextmenu.popup(remote.getCurrentWindow());
   }
 
   /**

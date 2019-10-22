@@ -143,7 +143,7 @@ class Login extends Component {
                 skin="primary"
                 disabled={submitting}
               >
-                {__('Log in')}
+                {submitting ? __('Logging in') + '...' : __('Log in')}
               </Button>
             </Buttons>
 

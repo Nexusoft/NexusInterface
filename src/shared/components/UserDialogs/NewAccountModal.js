@@ -100,7 +100,9 @@ export default class NewAccountModal extends React.Component {
                 {__('Cancel')}
               </Button>
               <Button skin="primary" type="submit" disabled={submitting}>
-                {__('Create account')}
+                {submitting
+                  ? __('Creating account') + '...'
+                  : __('Create account')}
               </Button>
             </div>
           </form>

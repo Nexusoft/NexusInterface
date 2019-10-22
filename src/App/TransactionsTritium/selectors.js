@@ -20,38 +20,93 @@ export const getTransactionsList = memoize(
     Object.values(txMap).sort((tx1, tx2) => tx2.timestamp - tx1.timestamp)
 );
 
+export const txPerPage = 10;
+export const paginateTransactions = memoize(
+  (transactions, page) =>
+    transactions && transactions.slice((page - 1) * txPerPage, page * txPerPage)
+);
+
 export const getFilteredTransactions = memoize(
-  (allTransactions, account, addressQuery, category, minAmount, timeSpan) =>
+  (allTransactions, nameQuery, addressQuery, operation, timeSpan) =>
     allTransactions &&
-    allTransactions.filter(tx => {
-      // Filter by Address
-      if (
-        addressQuery &&
-        tx.address &&
-        !tx.address.toLowerCase().includes(addressQuery.toLowerCase())
-      ) {
-        return false;
-      }
+    allTransactions
+      .filter(tx => {
+        // Filter by Time
+        if (timeSpan) {
+          const pastDate = getThresholdDate(timeSpan);
+          if (!pastDate) return true;
+          else return tx.timestamp * 1000 > pastDate.getTime();
+        }
+        return true;
+      })
+      .map(tx => ({
+        ...tx,
+        contracts:
+          tx.contracts &&
+          tx.contracts.filter(contract => {
+            // Filter by Address
+            if (addressQuery) {
+              const address = addressQuery.toLowerCase();
+              // If no fields match the address query
+              if (
+                !(
+                  contract.address &&
+                  contract.address.toLowerCase().includes(address)
+                ) &&
+                !(
+                  contract.from && contract.from.toLowerCase().includes(address)
+                ) &&
+                !(contract.to && contract.to.toLowerCase().includes(address)) &&
+                !(
+                  contract.token &&
+                  contract.token.toLowerCase().includes(address)
+                ) &&
+                !(
+                  contract.account &&
+                  contract.account.toLowerCase().includes(address)
+                )
+              ) {
+                return false;
+              }
+            }
 
-      // Filter by Account
-      if (account && tx.account !== account) return false;
+            // Filter by Name
+            if (nameQuery) {
+              const name = nameQuery.toLowerCase();
+              // If no fields match the name query
+              if (
+                !(
+                  contract.from_name &&
+                  contract.from_name.toLowerCase().includes(name)
+                ) &&
+                !(
+                  contract.to_name &&
+                  contract.to_name.toLowerCase().includes(name)
+                ) &&
+                !(
+                  contract.account_name &&
+                  contract.account_name.toLowerCase().includes(name)
+                ) &&
+                !(
+                  contract.token_name &&
+                  contract.token_name.toLowerCase().includes(name)
+                )
+              ) {
+                return false;
+              }
+            }
 
-      // Filter by Category
-      if (category && tx.category !== category) return false;
+            // Filter by Operation
+            if (operation && contract.OP !== operation) return false;
 
-      // Filter by Amount
-      const min = Number(minAmount) || 0;
-      if (min && tx.amount < min) return false;
+            // // Filter by Amount
+            // const min = Number(minAmount) || 0;
+            // if (min && tx.amount < min) return false;
 
-      // Filter by Time
-      if (timeSpan) {
-        const pastDate = getThresholdDate(timeSpan);
-        if (!pastDate) return true;
-        else return new Date(tx.time * 1000).getTime() > pastDate.getTime();
-      }
-
-      return true;
-    })
+            return true;
+          }),
+      }))
+      .filter(tx => tx.contracts && tx.contracts.length > 0)
 );
 
 export const getContractList = memoize(txMap => {

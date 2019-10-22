@@ -75,9 +75,8 @@ const UserBrief = ({ userStatus, match }) => (
       <GenesisId>{userStatus.genesis}</GenesisId>
     </Genesis>
     <Separator />
-    <MenuItem to={`${match.url}/Balances`}>{__('Balances')}</MenuItem>
-    <MenuItem to={`${match.url}/Staking`}>{__('Staking')}</MenuItem>
     <MenuItem to={`${match.url}/Accounts`}>{__('Accounts')}</MenuItem>
+    <MenuItem to={`${match.url}/Staking`}>{__('Staking')}</MenuItem>
     <MenuItem to={`${match.url}/Tokens`}>{__('Tokens')}</MenuItem>
   </UserBriefComponent>
 );

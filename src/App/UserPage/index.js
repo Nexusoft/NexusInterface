@@ -1,7 +1,6 @@
 // External
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { remote } from 'electron';
 import styled from '@emotion/styled';
 import GA from 'lib/googleAnalytics';
 
@@ -12,7 +11,6 @@ import LoginModal from 'components/LoginModal';
 import { openModal } from 'lib/ui';
 import AddEditContactModal from 'components/AddEditContactModal';
 import { isCoreConnected, isLoggedIn } from 'selectors';
-import ContextMenuBuilder from 'contextmenu';
 import { history } from 'lib/wallet';
 import { legacyMode } from 'consts/misc';
 import userIcon from 'icons/user.svg';
@@ -54,31 +52,7 @@ class UserPage extends Component {
     if (legacyMode) {
       history.push('/');
     }
-    window.addEventListener('contextmenu', this.setupcontextmenu, false);
     GA.SendScreen('UserPage');
-  }
-
-  /**
-   * componentWillUnmount
-   *
-   * @memberof UserPage
-   */
-  componentWillUnmount() {
-    window.removeEventListener('contextmenu', this.setupcontextmenu);
-  }
-
-  /**
-   * Set up the context menu
-   *
-   * @param {*} e
-   * @memberof UserPage
-   */
-  setupcontextmenu(e) {
-    e.preventDefault();
-    const contextmenu = new ContextMenuBuilder().defaultContext;
-    //build default
-    let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu);
-    defaultcontextmenu.popup(remote.getCurrentWindow());
   }
 
   /**

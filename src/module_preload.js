@@ -127,6 +127,27 @@ global.NEXUS = {
         ipcRenderer.sendToHost('rpc-call', command, params, callId);
       });
     },
+    apiCall: (endpoint, params) => {
+      if (!endpoint) {
+        throw new Error('`endpoint` is required');
+      }
+      if (typeof endpoint !== 'string') {
+        throw new Error(
+          'Expected `endpoint` to be `string` type, found: ' + typeof endpoint
+        );
+      }
+      const callId = newId();
+      return new Promise((resolve, reject) => {
+        ipcRenderer.once(`api-return:${callId}`, (event, err, result) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(result);
+          }
+        });
+        ipcRenderer.sendToHost('api-call', endpoint, params, callId);
+      });
+    },
     proxyRequest: (url, options) => {
       if (!url) {
         throw new Error('`url` is required');

@@ -1,7 +1,7 @@
 import * as TYPE from 'consts/actionTypes';
 
 const initialState = {
-  lastActiveTab: 'Balances',
+  lastActiveTab: 'Accounts',
 };
 
 export default (state = initialState, action) => {
