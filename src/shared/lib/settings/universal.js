@@ -78,7 +78,7 @@ export const defaultSettings = {
   walletClean: false,
   legacyMode: false, // only for alpha release
   tritiumModeNoticeDisabled: false,
-  alphaTestNet: 21,
+  alphaTestNet: 22,
 };
 
 function filterValidSettings(settings) {
