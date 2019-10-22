@@ -39,8 +39,8 @@ const mapStateToProps = state => {
   destroyOnUnmount: true,
   initialValues: {
     name: '',
-    supply: 0,
-    decimal: 0,
+    supply: null,
+    decimal: null,
   },
   validate: ({ name, supply, decimal }) => {
     const errors = {};
