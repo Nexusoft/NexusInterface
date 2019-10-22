@@ -46,9 +46,7 @@ const TokensWrapper = styled.div({
 @connect(mapStateToProps)
 class Tokens extends Component {
   state = {
-    activeIndex: 0,
     usedTokens: [],
-    searchToken: '',
   };
 
   constructor(props) {
@@ -78,24 +76,11 @@ class Tokens extends Component {
     let tempMap = new Map();
     if (accounts) {
       accounts.forEach(element => {
-        if (tempMap.has(element.token_name || element.token)) return;
-
-        if (!tempMap.has('NXS')) {
-          tempMap.set('NXS', {
-            address: '0000000000000000000000000',
-            balance: 0,
-            created: 1400000000,
-            currentsupply: 1000000,
-            decimals: 6,
-            maxsupply: 1000000,
-            modified: 1400000000,
-            name: 'NXS',
-            owner: '00000000000000000000000000000',
-            pending: 0,
-            unconfirmed: 0,
-          });
+        if (
+          tempMap.has(element.token_name || element.token) ||
+          element.token_name === 'NXS'
+        )
           return;
-        }
         const tokenInfo = this.getTokenInfo(element);
         tempMap.set(element.token_name || element.token, tokenInfo);
       });
@@ -118,7 +103,6 @@ class Tokens extends Component {
         ? `tokens/get/token?name=${element.token_name}`
         : `tokens/get/token?address=${element.token}`
     );
-    console.log(info);
     this.setState(prevState => {
       let usedTokens = prevState.usedTokens;
       usedTokens.set(element.token_name || element.token, info);
@@ -143,14 +127,12 @@ class Tokens extends Component {
   }
 
   /**
-   * Component's Renderable JSX
+   * Component's Renderable JSX    const { searchToken } = this.state;
    *
    * @returns
    * @memberof Tokens
    */
   render() {
-    const { searchToken } = this.state;
-
     return (
       <TokensWrapper>
         <div className="flex space-between">
