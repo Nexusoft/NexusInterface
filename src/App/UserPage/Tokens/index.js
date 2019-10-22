@@ -102,6 +102,7 @@ class Tokens extends Component {
     }
     if (ownedTokens) {
       ownedTokens.forEach(element => {
+        element.owner = this.props.userGenesis;
         if (tempMap.has(element.name || element.address)) return;
         tempMap.set(element.name || element.address, element);
       });
