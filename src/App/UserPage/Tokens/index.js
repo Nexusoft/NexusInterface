@@ -117,6 +117,7 @@ class Tokens extends Component {
         ? `tokens/get/token?name=${element.token_name}`
         : `tokens/get/token?address=${element.token}`
     );
+    console.log(info);
     this.setState(prevState => {
       let usedTokens = prevState.usedTokens;
       usedTokens.set(element.token_name || element.token, info);

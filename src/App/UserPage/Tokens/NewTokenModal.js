@@ -29,7 +29,7 @@ const mapStateToProps = state => {
 
   return {
     supply: valueSelector(state, 'supply'),
-    decimal: valueSelector(state, 'decimal'),
+    decimal: valueSelector(state, 'decimals'),
   };
 };
 
@@ -40,9 +40,9 @@ const mapStateToProps = state => {
   initialValues: {
     name: '',
     supply: null,
-    decimal: null,
+    decimals: null,
   },
-  validate: ({ name, supply, decimal }) => {
+  validate: ({ name, supply, decimals }) => {
     const errors = {};
 
     if (supply <= 0) {
@@ -51,7 +51,7 @@ const mapStateToProps = state => {
 
     return errors;
   },
-  onSubmit: async ({ name, supply, decimal }) => {
+  onSubmit: async ({ name, supply, decimals }) => {
     if (!name) {
       const confirmed = await confirm({
         question: __('Create a token without a name?'),
@@ -67,7 +67,7 @@ const mapStateToProps = state => {
 
     const pin = await confirmPin();
     if (pin) {
-      const params = { pin, supply, decimal };
+      const params = { pin, supply, decimals };
       if (name) params.name = name;
       return await apiPost('tokens/create/token', params);
     }
@@ -156,7 +156,7 @@ class NewTokenModal extends React.Component {
                   {__('Amount of significant digits a token can have')}{' '}
                 </SubLable>
                 <Field
-                  name="decimal"
+                  name="decimals"
                   component={TextField.RF}
                   placeholder={__('4')}
                 />
