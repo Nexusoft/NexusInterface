@@ -32,7 +32,7 @@ const Token = ({ token, owner }) => (
     <div className="flex space-between">
       <div>
         <AccountName>{token.name}</AccountName>
-        {!token.name && <UnNamed>{'Token'}</UnNamed>}
+        {!token.name && <UnNamed>{__('Unnamed token')}</UnNamed>}
         {owner === token.owner && <Owner>{__(' (Owned by you)')}</Owner>}
       </div>
       <div>

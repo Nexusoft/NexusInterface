@@ -29,7 +29,7 @@ const Account = ({ account }) => (
   <AccountComponent>
     <div className="flex space-between">
       <div>
-        {!account.name && <UnNamed>{__('Account')}</UnNamed>}
+        {!account.name && <UnNamed>{__('Unnamed account')}</UnNamed>}
         <AccountName>{account.name}</AccountName> (
         {formatNumber(totalBalance(account))} {account.token_name || 'Tokens'})
       </div>

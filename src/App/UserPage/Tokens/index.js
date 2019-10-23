@@ -142,7 +142,7 @@ class Tokens extends Component {
             }}
           >
             <Icon icon={plusIcon} className="space-right" />
-            {'Create New Token'}
+            {__('Create new token')}
           </Button>
           <Button
             onClick={() => {
@@ -150,7 +150,7 @@ class Tokens extends Component {
             }}
           >
             <Icon icon={searchIcon} className="space-right" />
-            {'Search For Token'}
+            {__('Search for token')}
           </Button>
         </div>
         <div>{this.returnTokenList()}</div>
