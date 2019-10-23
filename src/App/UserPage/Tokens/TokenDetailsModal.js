@@ -54,58 +54,60 @@ const Field = ({ label, children }) => (
   </Row>
 );
 
-var closeThisModal = function close() {};
-
 const TokenDetailsModal = ({ token }) => (
-  <Modal assignClose={closeModal => (closeThisModal = closeModal)}>
-    <Modal.Header>{__('Token Details')}</Modal.Header>
-    <Modal.Body>
-      {token.name && <Field label={__('Token name')}>{token.name}</Field>}
-      <Field label={__('Token address')}>
-        <div className="monospace">{token.address || '0'}</div>
-      </Field>
-      <Field label={__('Created at')}>
-        {formatDateTime(token.created * 1000, timeFormatOptions)}
-      </Field>
-      <Field label={__('Last modified')}>
-        {formatDateTime(token.modified * 1000, timeFormatOptions)}
-      </Field>
-      <Field label={__('Token Owner')}>
-        <div className="monospace">{token.owner || '0'}</div>
-      </Field>
+  <Modal>
+    {closeModal => (
+      <>
+        <Modal.Header>{__('Token Details')}</Modal.Header>
+        <Modal.Body>
+          {token.name && <Field label={__('Token name')}>{token.name}</Field>}
+          <Field label={__('Token address')}>
+            <div className="monospace">{token.address || '0'}</div>
+          </Field>
+          <Field label={__('Created at')}>
+            {formatDateTime(token.created * 1000, timeFormatOptions)}
+          </Field>
+          <Field label={__('Last modified')}>
+            {formatDateTime(token.modified * 1000, timeFormatOptions)}
+          </Field>
+          <Field label={__('Token Owner')}>
+            <div className="monospace">{token.owner || '0'}</div>
+          </Field>
 
-      <Field label={__('Current Supply')}>{token.currentsupply}</Field>
-      <Field label={__('Max Supply')}>{token.maxsupply}</Field>
-      <Field label={__('Decimals')}>{token.decimals}</Field>
-      <Field label={__('Balance')}>
-        {formatNumber(token.balance, token.decimals)} {token.token_name}
-      </Field>
-      <Field label={__('Pending balance')}>
-        {formatNumber(token.pending, token.decimals)} {token.token_name}
-      </Field>
-      <Field label={__('Unconfirmed balance')}>
-        {formatNumber(token.unconfirmed, token.decimals)} {token.token_name}
-      </Field>
-      <div className="flex space-between">
-        <Button
-          wide
-          onClick={() =>
-            openModal(
-              NewAccountModal,
-              token.name
-                ? { tokenName: token.name }
-                : { tokenAddress: token.address }
-            )
-          }
-        >
-          <Icon icon={plusIcon} className="space-right" />
-          {__('Create new account with this token')}
-        </Button>{' '}
-        <CloseButton skin="primary" wide onClick={() => closeThisModal()}>
-          {__('Close')}
-        </CloseButton>
-      </div>
-    </Modal.Body>
+          <Field label={__('Current Supply')}>{token.currentsupply}</Field>
+          <Field label={__('Max Supply')}>{token.maxsupply}</Field>
+          <Field label={__('Decimals')}>{token.decimals}</Field>
+          <Field label={__('Balance')}>
+            {formatNumber(token.balance, token.decimals)} {token.token_name}
+          </Field>
+          <Field label={__('Pending balance')}>
+            {formatNumber(token.pending, token.decimals)} {token.token_name}
+          </Field>
+          <Field label={__('Unconfirmed balance')}>
+            {formatNumber(token.unconfirmed, token.decimals)} {token.token_name}
+          </Field>
+          <div className="flex space-between">
+            <Button
+              wide
+              onClick={() =>
+                openModal(
+                  NewAccountModal,
+                  token.name
+                    ? { tokenName: token.name }
+                    : { tokenAddress: token.address }
+                )
+              }
+            >
+              <Icon icon={plusIcon} className="space-right" />
+              {__('Create new account with this token')}
+            </Button>{' '}
+            <CloseButton skin="primary" wide onClick={closeModal}>
+              {__('Close')}
+            </CloseButton>
+          </div>
+        </Modal.Body>
+      </>
+    )}
   </Modal>
 );
 
