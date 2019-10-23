@@ -8,26 +8,16 @@ const TokenRecipientName = styled.span({
 
 const Separator = styled.div(({ theme }) => ({
   fontWeight: 'bold',
-}));
-
-const Dash = styled.span(({ theme }) => ({
-  fontWeight: 'bold',
   color: theme.primary,
 }));
 
 export const getAccountOptions = memoize((myAccounts, myTokens) => {
   let options = [];
 
-  if (myAccounts) {
+  if (myAccounts && myAccounts.length > 0) {
     options.push({
       value: 'AccountsSeparator',
-      display: (
-        <Separator>
-          <Dash>{'-----'}</Dash>
-          {'Accounts'}
-          <Dash>{'-----'}</Dash>
-        </Separator>
-      ),
+      display: <Separator>{'Accounts'}</Separator>,
       isSeparator: true,
       indent: false,
     });
@@ -40,16 +30,10 @@ export const getAccountOptions = memoize((myAccounts, myTokens) => {
       }))
     );
   }
-  if (myTokens) {
+  if (myTokens && myTokens.length > 0) {
     options.push({
       value: 'TokensSeparator',
-      display: (
-        <Separator>
-          <Dash>{'-----'}</Dash>
-          {'Tokens'}
-          <Dash>{'-----'}</Dash>
-        </Separator>
-      ),
+      display: <Separator>{'Tokens'}</Separator>,
       isSeparator: true,
       indent: false,
     });
