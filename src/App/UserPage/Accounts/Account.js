@@ -31,7 +31,7 @@ const Account = ({ account }) => (
       <div>
         {!account.name && <UnNamed>{__('Account')}</UnNamed>}
         <AccountName>{account.name}</AccountName> (
-        {formatNumber(totalBalance(account))} {account.token_name})
+        {formatNumber(totalBalance(account))} {account.token_name || 'Tokens'})
       </div>
       <div>
         <Link

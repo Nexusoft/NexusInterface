@@ -167,7 +167,7 @@ class Core {
       updateSettingsFile({ alphaTestNet: null });
       //Or Remove setting all together?
     } else {
-      params.push(`-testnet=${settings.alphaTestNet || 21}`);
+      params.push(`-testnet=${settings.alphaTestNet || 33}`);
     }
 
     //After core forksblocks clear out that field.

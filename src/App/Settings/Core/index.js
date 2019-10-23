@@ -54,10 +54,12 @@ const formKeys = [
   'verboseLevel',
   'alphaTestNet',
   'avatarMode',
+  legacyMode ? 'manualDaemonIP' : 'manualDaemonApiIP',
+  legacyMode ? 'manualDaemonPort' : 'manualDaemonApiPort',
   'manualDaemonUser',
   'manualDaemonPassword',
-  'manualDaemonIP',
-  'manualDaemonPort',
+  'manualDaemonApiUser',
+  'manualDaemonApiPassword',
   'manualDaemonDataDir',
 ];
 const getInitialValues = (() => {
@@ -118,6 +120,8 @@ const mapStateToProps = state => {
       manualDaemonPassword,
       manualDaemonIP,
       manualDaemonPort,
+      manualDaemonApiIP,
+      manualDaemonApiPort,
       manualDaemonDataDir,
     },
     props
@@ -134,11 +138,20 @@ const mapStateToProps = state => {
       if (!manualDaemonPassword) {
         errors.manualDaemonPassword = __('Manual Core password is required');
       }
-      if (!manualDaemonIP) {
-        errors.manualDaemonIP = __('Manual Core IP is required');
-      }
-      if (!manualDaemonPort) {
-        errors.manualDaemonPort = __('Manual Core port is required');
+      if (legacyMode) {
+        if (!manualDaemonIP) {
+          errors.manualDaemonIP = __('Manual Core IP is required');
+        }
+        if (!manualDaemonPort) {
+          errors.manualDaemonPort = __('Manual Core port is required');
+        }
+      } else {
+        if (!manualDaemonApiIP) {
+          errors.manualDaemonApiIP = __('Manual Core IP is required');
+        }
+        if (!manualDaemonApiPort) {
+          errors.manualDaemonApiPort = __('Manual Core port is required');
+        }
       }
       if (!manualDaemonDataDir) {
         errors.manualDaemonDataDir = __('Data directory is required');
@@ -422,7 +435,7 @@ class SettingsCore extends Component {
               >
                 <Field
                   component={TextField.RF}
-                  name="manualDaemonUser"
+                  name={legacyMode ? 'manualDaemonUser' : 'manualDaemonApiUser'}
                   size="12"
                 />
               </SettingsField>
@@ -435,7 +448,11 @@ class SettingsCore extends Component {
               >
                 <Field
                   component={TextField.RF}
-                  name="manualDaemonPassword"
+                  name={
+                    legacyMode
+                      ? 'manualDaemonPassword'
+                      : 'manualDaemonApiPassword'
+                  }
                   size="12"
                 />
               </SettingsField>
@@ -448,7 +465,7 @@ class SettingsCore extends Component {
               >
                 <Field
                   component={TextField.RF}
-                  name="manualDaemonIP"
+                  name={legacyMode ? 'manualDaemonIP' : 'manualDaemonApiIP'}
                   size="12"
                 />
               </SettingsField>
@@ -461,7 +478,7 @@ class SettingsCore extends Component {
               >
                 <Field
                   component={TextField.RF}
-                  name="manualDaemonPort"
+                  name={legacyMode ? 'manualDaemonPort' : 'manualDaemonApiPort'}
                   size="5"
                 />
               </SettingsField>

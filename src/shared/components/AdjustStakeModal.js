@@ -13,8 +13,9 @@ import confirmPin from 'utils/promisified/confirmPin';
 import { errorHandler } from 'utils/form';
 import { formatNumber } from 'lib/intl';
 import { removeModal, showNotification } from 'lib/ui';
+import Link from 'components/Link';
 
-const LimitNumber = styled.span(
+const LimitNumber = styled(Link)(
   {
     position: 'absolute',
     top: '50%',
@@ -106,7 +107,13 @@ const Note = styled.div(({ theme }) => ({
 })
 export default class AdjustStakeModal extends React.Component {
   render() {
-    const { total, handleSubmit, submitting, currentStake } = this.props;
+    const {
+      total,
+      handleSubmit,
+      submitting,
+      currentStake,
+      change,
+    } = this.props;
     return (
       <Modal
         style={{ maxWidth: 600 }}
@@ -124,8 +131,24 @@ export default class AdjustStakeModal extends React.Component {
                 component={StakeTextField}
                 skin="filled-inverted"
               />
-              <LimitNumber align="left">0</LimitNumber>
-              <LimitNumber align="right">{formatNumber(total, 6)}</LimitNumber>
+              <LimitNumber
+                as="a"
+                onClick={() => {
+                  change('stake', 0);
+                }}
+                align="left"
+              >
+                0
+              </LimitNumber>
+              <LimitNumber
+                as="a"
+                onClick={() => {
+                  change('stake', total);
+                }}
+                align="right"
+              >
+                {formatNumber(total, 6)}
+              </LimitNumber>
             </div>
             <SliderWrapper>
               <Field name="stake" component={StakeSlider} min={0} max={total} />

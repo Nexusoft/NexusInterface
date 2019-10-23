@@ -9,7 +9,6 @@ import { formatNumber } from 'lib/intl';
 
 import NewAccountModal from 'components/UserDialogs/NewAccountModal';
 
-import NexusAddress from 'components/NexusAddress';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
 import plusIcon from 'icons/plus.svg';
@@ -63,7 +62,7 @@ const TokenDetailsModal = ({ token }) => (
     <Modal.Body>
       {token.name && <Field label={__('Token name')}>{token.name}</Field>}
       <Field label={__('Token address')}>
-        <NexusAddress address={token.address || '0'} />
+        <div className="monospace">{token.address || '0'}</div>
       </Field>
       <Field label={__('Created at')}>
         {formatDateTime(token.created * 1000, timeFormatOptions)}
@@ -72,7 +71,7 @@ const TokenDetailsModal = ({ token }) => (
         {formatDateTime(token.modified * 1000, timeFormatOptions)}
       </Field>
       <Field label={__('Token Owner')}>
-        <NexusAddress address={token.owner || '0'} />
+        <div className="monospace">{token.owner || '0'}</div>
       </Field>
 
       <Field label={__('Current Supply')}>{token.currentsupply}</Field>
