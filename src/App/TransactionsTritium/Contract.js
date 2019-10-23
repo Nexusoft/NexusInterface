@@ -44,7 +44,7 @@ const ContractDelta = styled.div(({ theme, sign }) => ({
   },
 }));
 
-const Action = styled.span(({ theme }) => ({
+const Operation = styled.span(({ theme }) => ({
   fontWeight: 'bold',
   color: theme.primary,
   textTransform: 'uppercase',
@@ -116,7 +116,8 @@ const contractContent = contract => {
     case 'WRITE': {
       return (
         <>
-          <Action>Write</Action> data to <Account address={contract.address} />
+          <Operation>Write</Operation> data to{' '}
+          <Account address={contract.address} />
         </>
       );
     }
@@ -124,7 +125,8 @@ const contractContent = contract => {
     case 'APPEND': {
       return (
         <>
-          <Action>Append</Action> data to <Account address={contract.address} />
+          <Operation>Append</Operation> data to{' '}
+          <Account address={contract.address} />
         </>
       );
     }
@@ -133,7 +135,7 @@ const contractContent = contract => {
       return (
         <>
           <div>
-            <Action>Create</Action> new{' '}
+            <Operation>Create</Operation> new{' '}
             <RegisterType>
               {contract.type === 'OBJECT' && contract.object_type + ' '}
               {contract.type}
@@ -150,7 +152,7 @@ const contractContent = contract => {
     case 'TRANSFER': {
       return (
         <>
-          <Action>Transfer</Action> ownership of{' '}
+          <Operation>Transfer</Operation> ownership of{' '}
           <Account address={contract.address} /> to{' '}
           <Account address={contract.destination} />
         </>
@@ -160,7 +162,7 @@ const contractContent = contract => {
     case 'CLAIM': {
       return (
         <>
-          <Action>Claim</Action> ownership of{' '}
+          <Operation>Claim</Operation> ownership of{' '}
           <Account address={contract.address} />
         </>
       );
@@ -169,7 +171,7 @@ const contractContent = contract => {
     case 'COINBASE': {
       return (
         <>
-          <Action>Coinbase</Action>
+          <Operation>Coinbase</Operation>
         </>
       );
     }
@@ -177,7 +179,7 @@ const contractContent = contract => {
     case 'TRUST': {
       return (
         <>
-          <Action>Trust</Action>
+          <Operation>Trust</Operation>
         </>
       );
     }
@@ -185,7 +187,7 @@ const contractContent = contract => {
     case 'GENESIS': {
       return (
         <>
-          <Action>Genesis</Action> <Hash>{contract.address}</Hash>
+          <Operation>Genesis</Operation> <Hash>{contract.address}</Hash>
         </>
       );
     }
@@ -194,7 +196,7 @@ const contractContent = contract => {
       return (
         <>
           <div>
-            <Action>Debit</Action> from{' '}
+            <Operation>Debit</Operation> from{' '}
             <Account name={contract.from_name} address={contract.from} />
           </div>
           <div>
@@ -208,7 +210,7 @@ const contractContent = contract => {
       return (
         <>
           <div>
-            <Action>Credit</Action> to{' '}
+            <Operation>Credit</Operation> to{' '}
             <Account name={contract.to_name} address={contract.to} />
           </div>
           <div>from {creditFrom(contract)}</div>
@@ -220,7 +222,7 @@ const contractContent = contract => {
       return (
         <>
           <div>
-            <Action>Migrate</Action> trust key to{' '}
+            <Operation>Migrate</Operation> trust key to{' '}
             <Account name={contract.account_name} address={contract.account} />
           </div>
           <div>
@@ -234,7 +236,8 @@ const contractContent = contract => {
       return (
         <>
           <div>
-            <Action>Authorize</Action> transaction <Hash>{contract.txid}</Hash>
+            <Operation>Authorize</Operation> transaction{' '}
+            <Hash>{contract.txid}</Hash>
           </div>
           <div>
             with a temporal proof <Hash>{contract.proof}</Hash>
@@ -246,7 +249,7 @@ const contractContent = contract => {
     case 'FEE': {
       return (
         <>
-          <Action>Fee</Action> from{' '}
+          <Operation>Fee</Operation> from{' '}
           <Account name={contract.from_name} address={contract.from} />
         </>
       );
@@ -256,7 +259,7 @@ const contractContent = contract => {
       return (
         <>
           <div>
-            <Action>Legacy</Action> debit from{' '}
+            <Operation>Legacy</Operation> debit from{' '}
             <Account name={contract.from_name} address={contract.from} />
           </div>
           <div>
@@ -267,7 +270,7 @@ const contractContent = contract => {
     }
 
     default: {
-      return <Action>{contract.OP}</Action>;
+      return <Operation>{contract.OP}</Operation>;
     }
   }
 };
