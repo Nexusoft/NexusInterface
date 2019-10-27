@@ -1,3 +1,19 @@
+# 1.2.4 (2019.10.26)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v1.2.4)
+
+#### Additions
+
+- Nexus Daemon Core 3.0.6
+
+#### Adjustments
+
+- None
+
+#### Fixes
+
+- None
+
 # 1.2.3 (2019.9.5)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v1.2.3)

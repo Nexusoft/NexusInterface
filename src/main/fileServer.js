@@ -16,6 +16,7 @@ import { modulesDir } from 'consts/paths';
  */
 class FileServer {
   port = 9331;
+  host = 'localhost';
   staticMiddleware = express.static(modulesDir);
   server = null;
   moduleFiles = [];
@@ -53,7 +54,7 @@ class FileServer {
   constructor() {
     this.server = express();
     this.server.use('/modules', this.moduleMiddleware);
-    this.server.listen(this.port, () => {
+    this.server.listen(this.port, this.host, () => {
       log.info(`File server listening on port ${this.port}!`);
     });
   }
