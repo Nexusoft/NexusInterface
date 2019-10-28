@@ -79,6 +79,7 @@ export const defaultSettings = {
   legacyMode: false, // only for alpha release
   tritiumModeNoticeDisabled: false,
   alphaTestNet: 33,
+  clearPeers: false,
 };
 
 function filterValidSettings(settings) {
