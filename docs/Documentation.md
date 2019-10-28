@@ -8,353 +8,587 @@
     -   [formatDiff][4]
         -   [Parameters][5]
     -   [componentDidMount][6]
-    -   [reDrawEverything][7]
-    -   [componentWillUnmount][8]
-    -   [componentDidUpdate][9]
-        -   [Parameters][10]
-    -   [fetchDifficulty][11]
-    -   [setupcontextmenu][12]
+    -   [componentDidMount][7]
+    -   [reDrawEverything][8]
+    -   [reDrawEverything][9]
+    -   [componentWillUnmount][10]
+    -   [componentWillUnmount][11]
+    -   [componentDidUpdate][12]
         -   [Parameters][13]
-    -   [blockDate][14]
-    -   [connectionsIcon][15]
-    -   [trustIcon][16]
-    -   [blockWeightIcon][17]
-    -   [showingGlobe][18]
-    -   [numberWithCommas][19]
-        -   [Parameters][20]
-    -   [waitForCore][21]
-        -   [Parameters][22]
-    -   [returnWeightStats][23]
-    -   [returnDifficultyStats][24]
-        -   [Parameters][25]
-    -   [render][26]
--   [Globe][27]
-    -   [componentDidMount][28]
-    -   [contextRestoredHandler][29]
-    -   [contextLostHandler][30]
+    -   [componentDidUpdate][14]
+        -   [Parameters][15]
+    -   [fetchDifficulty][16]
+    -   [fetchDifficulty][17]
+    -   [blockDate][18]
+    -   [blockDate][19]
+    -   [connectionsIcon][20]
+    -   [connectionsIcon][21]
+    -   [trustIcon][22]
+    -   [trustIcon][23]
+    -   [blockWeightIcon][24]
+    -   [blockWeightIcon][25]
+    -   [showingGlobe][26]
+    -   [showingGlobe][27]
+    -   [numberWithCommas][28]
+        -   [Parameters][29]
+    -   [numberWithCommas][30]
         -   [Parameters][31]
-    -   [componentDidUpdate][32]
+    -   [waitForCore][32]
         -   [Parameters][33]
-    -   [componentWillUnmount][34]
-    -   [pointRegister][35]
-    -   [addSelfPoint][36]
-    -   [removeAllPoints][37]
-    -   [destroyPoint][38]
+    -   [waitForCore][34]
+        -   [Parameters][35]
+    -   [returnWeightStats][36]
+    -   [returnWeightStats][37]
+    -   [returnDifficultyStats][38]
         -   [Parameters][39]
-    -   [arcRegister][40]
-    -   [animateArcs][41]
-    -   [destroyArc][42]
-        -   [Parameters][43]
-    -   [onWindowResize][44]
-    -   [stop][45]
-    -   [start][46]
-    -   [animate][47]
-    -   [renderScene][48]
-    -   [render][49]
--   [Curve][50]
-    -   [getSplineFromCoords][51]
-        -   [Parameters][52]
-    -   [clamp][53]
+    -   [returnDifficultyStats][40]
+        -   [Parameters][41]
+    -   [render][42]
+    -   [render][43]
+-   [Overview][44]
+    -   [formatDiff][45]
+        -   [Parameters][46]
+    -   [componentDidMount][47]
+    -   [componentDidMount][48]
+    -   [reDrawEverything][49]
+    -   [reDrawEverything][50]
+    -   [componentWillUnmount][51]
+    -   [componentWillUnmount][52]
+    -   [componentDidUpdate][53]
         -   [Parameters][54]
-    -   [coordinateToPosition][55]
+    -   [componentDidUpdate][55]
         -   [Parameters][56]
-    -   [play][57]
-    -   [stop][58]
-    -   [restart][59]
--   [Point][60]
-    -   [setColor][61]
-        -   [Parameters][62]
--   [Header][63]
-    -   [render][64]
--   [LogInStatus][65]
-    -   [signInStatusMessage][66]
-    -   [statusIcon][67]
-    -   [goToSecurity][68]
-    -   [render][69]
--   [StakingStatus][70]
-    -   [render][71]
--   [SyncStatus][72]
-    -   [render][73]
--   [MyAddresses][74]
-    -   [Parameters][75]
--   [CoreStatus][76]
-    -   [render][77]
--   [Navigation][78]
-    -   [NavItem][79]
+    -   [fetchDifficulty][57]
+    -   [fetchDifficulty][58]
+    -   [blockDate][59]
+    -   [blockDate][60]
+    -   [connectionsIcon][61]
+    -   [connectionsIcon][62]
+    -   [trustIcon][63]
+    -   [trustIcon][64]
+    -   [blockWeightIcon][65]
+    -   [blockWeightIcon][66]
+    -   [showingGlobe][67]
+    -   [showingGlobe][68]
+    -   [numberWithCommas][69]
+        -   [Parameters][70]
+    -   [numberWithCommas][71]
+        -   [Parameters][72]
+    -   [waitForCore][73]
+        -   [Parameters][74]
+    -   [waitForCore][75]
+        -   [Parameters][76]
+    -   [returnWeightStats][77]
+    -   [returnWeightStats][78]
+    -   [returnDifficultyStats][79]
         -   [Parameters][80]
-    -   [ModuleNavItem][81]
+    -   [returnDifficultyStats][81]
         -   [Parameters][82]
-    -   [Navigation][83]
--   [Send][84]
-    -   [componentDidMount][85]
-    -   [componentWillUnmount][86]
-    -   [setupcontextmenu][87]
-        -   [Parameters][88]
-    -   [moveBetweenAccounts][89]
-    -   [render][90]
--   [MoveBetweenAccountsForm][91]
-    -   [confirmMove][92]
+    -   [render][83]
+    -   [render][84]
+-   [Globe][85]
+    -   [componentDidMount][86]
+    -   [componentDidMount][87]
+    -   [contextRestoredHandler][88]
+    -   [contextRestoredHandler][89]
+    -   [contextLostHandler][90]
+        -   [Parameters][91]
+    -   [contextLostHandler][92]
         -   [Parameters][93]
-    -   [render][94]
-    -   [MoveBetweenAccountsModal][95]
--   [AmountField][96]
-    -   [nxsToFiat][97]
-        -   [Parameters][98]
-    -   [fiatToNxs][99]
-        -   [Parameters][100]
-    -   [amountFieldName][101]
-    -   [fiatAmountFieldName][102]
-    -   [render][103]
--   [SendForm][104]
-    -   [confirmSend][105]
-        -   [Parameters][106]
-    -   [addRecipient][107]
-    -   [renderAddRecipientButton][108]
+    -   [componentDidUpdate][94]
+        -   [Parameters][95]
+    -   [componentDidUpdate][96]
+        -   [Parameters][97]
+    -   [componentWillUnmount][98]
+    -   [componentWillUnmount][99]
+    -   [pointRegister][100]
+    -   [pointRegister][101]
+    -   [addSelfPoint][102]
+    -   [addSelfPoint][103]
+    -   [removeAllPoints][104]
+    -   [removeAllPoints][105]
+    -   [destroyPoint][106]
+        -   [Parameters][107]
+    -   [destroyPoint][108]
         -   [Parameters][109]
-    -   [render][110]
--   [Recipients][111]
-    -   [render][112]
--   [RecipientField][113]
-    -   [handleSelect][114]
+    -   [arcRegister][110]
+    -   [arcRegister][111]
+    -   [animateArcs][112]
+    -   [animateArcs][113]
+    -   [destroyArc][114]
         -   [Parameters][115]
-    -   [createContact][116]
-    -   [render][117]
--   [Transactions][118]
-    -   [componentDidMount][119]
-    -   [componentDidUpdate][120]
-        -   [Parameters][121]
-    -   [saveCSV][122]
-        -   [Parameters][123]
-    -   [render][124]
--   [Market][125]
-    -   [setupcontextmenu][126]
-        -   [Parameters][127]
-    -   [refresher][128]
-    -   [formatBuyData][129]
-        -   [Parameters][130]
-    -   [formatSellData][131]
-        -   [Parameters][132]
-    -   [formatChartData][133]
-        -   [Parameters][134]
-    -   [oneDayinfo][135]
+    -   [destroyArc][116]
+        -   [Parameters][117]
+    -   [onWindowResize][118]
+    -   [onWindowResize][119]
+    -   [stop][120]
+    -   [stop][121]
+    -   [start][122]
+    -   [start][123]
+    -   [animate][124]
+    -   [animate][125]
+    -   [renderScene][126]
+    -   [renderScene][127]
+    -   [render][128]
+    -   [render][129]
+-   [Globe][130]
+    -   [componentDidMount][131]
+    -   [componentDidMount][132]
+    -   [contextRestoredHandler][133]
+    -   [contextRestoredHandler][134]
+    -   [contextLostHandler][135]
         -   [Parameters][136]
-    -   [refreshMarket][137]
-    -   [render][138]
--   [MarketDepth][139]
-    -   [render][140]
--   [Candlestick][141]
-    -   [render][142]
--   [AddressBook][143]
-    -   [componentDidMount][144]
-    -   [componentWillUnmount][145]
-    -   [setupcontextmenu][146]
-        -   [Parameters][147]
-    -   [showAddContact][148]
-    -   [render][149]
--   [PanelControls][150]
-    -   [SearchBox][151]
-    -   [exportAddressBook][152]
-    -   [showAddContact][153]
-    -   [showMyAddresses][154]
-    -   [render][155]
--   [render][156]
--   [ContactList][157]
-    -   [render][158]
--   [Contact][159]
-    -   [confirmDelete][160]
-    -   [editContact][161]
-    -   [showContextMenu][162]
-        -   [Parameters][163]
-    -   [getinitial][164]
-        -   [Parameters][165]
-    -   [select][166]
-    -   [render][167]
-    -   [NewContactButton][168]
-        -   [Parameters][169]
--   [ContactDetails][170]
-    -   [Field][171]
-        -   [Parameters][172]
-    -   [confirmDelete][173]
-    -   [editContact][174]
-    -   [render][175]
--   [getLocalTime][176]
-    -   [Parameters][177]
--   [Settings][178]
-    -   [componentDidMount][179]
-    -   [componentWillUnmount][180]
-    -   [setupcontextmenu][181]
-        -   [Parameters][182]
-    -   [render][183]
--   [SettingsApp][184]
-    -   [confirmBackupWallet][185]
-    -   [toggleVerifyModuleSource][186]
+    -   [contextLostHandler][137]
+        -   [Parameters][138]
+    -   [componentDidUpdate][139]
+        -   [Parameters][140]
+    -   [componentDidUpdate][141]
+        -   [Parameters][142]
+    -   [componentWillUnmount][143]
+    -   [componentWillUnmount][144]
+    -   [pointRegister][145]
+    -   [pointRegister][146]
+    -   [addSelfPoint][147]
+    -   [addSelfPoint][148]
+    -   [removeAllPoints][149]
+    -   [removeAllPoints][150]
+    -   [destroyPoint][151]
+        -   [Parameters][152]
+    -   [destroyPoint][153]
+        -   [Parameters][154]
+    -   [arcRegister][155]
+    -   [arcRegister][156]
+    -   [animateArcs][157]
+    -   [animateArcs][158]
+    -   [destroyArc][159]
+        -   [Parameters][160]
+    -   [destroyArc][161]
+        -   [Parameters][162]
+    -   [onWindowResize][163]
+    -   [onWindowResize][164]
+    -   [stop][165]
+    -   [stop][166]
+    -   [start][167]
+    -   [start][168]
+    -   [animate][169]
+    -   [animate][170]
+    -   [renderScene][171]
+    -   [renderScene][172]
+    -   [render][173]
+    -   [render][174]
+-   [Curve][175]
+    -   [getSplineFromCoords][176]
+        -   [Parameters][177]
+    -   [getSplineFromCoords][178]
+        -   [Parameters][179]
+    -   [clamp][180]
+        -   [Parameters][181]
+    -   [clamp][182]
+        -   [Parameters][183]
+    -   [coordinateToPosition][184]
+        -   [Parameters][185]
+    -   [coordinateToPosition][186]
         -   [Parameters][187]
-    -   [updateHandlers][188]
-    -   [handleAutoUpdateChange][189]
-        -   [Parameters][190]
-    -   [render][191]
-    -   [render][192]
-    -   [browseBackupDir][193]
--   [SettingsApp][194]
-    -   [confirmBackupWallet][195]
-    -   [toggleVerifyModuleSource][196]
-        -   [Parameters][197]
-    -   [updateHandlers][198]
-    -   [handleAutoUpdateChange][199]
+    -   [play][188]
+    -   [play][189]
+    -   [stop][190]
+    -   [stop][191]
+    -   [restart][192]
+    -   [restart][193]
+-   [Curve][194]
+    -   [getSplineFromCoords][195]
+        -   [Parameters][196]
+    -   [getSplineFromCoords][197]
+        -   [Parameters][198]
+    -   [clamp][199]
         -   [Parameters][200]
-    -   [render][201]
-    -   [render][202]
-    -   [browseBackupDir][203]
--   [LanguageSetting][204]
-    -   [handleChange][205]
+    -   [clamp][201]
+        -   [Parameters][202]
+    -   [coordinateToPosition][203]
+        -   [Parameters][204]
+    -   [coordinateToPosition][205]
         -   [Parameters][206]
-    -   [render][207]
--   [SettingsCore][208]
-    -   [confirmSwitchManualDaemon][209]
-    -   [restartCore][210]
-    -   [moveDataDir][211]
-    -   [handleFileCopy][212]
-        -   [Parameters][213]
-    -   [askForCoreRestart][214]
+    -   [play][207]
+    -   [play][208]
+    -   [stop][209]
+    -   [stop][210]
+    -   [restart][211]
+    -   [restart][212]
+-   [Point][213]
+    -   [setColor][214]
         -   [Parameters][215]
-    -   [updateStaking][216]
+    -   [setColor][216]
         -   [Parameters][217]
-    -   [updateMining][218]
-        -   [Parameters][219]
-    -   [updateMiningWhitelist][220]
-        -   [Parameters][221]
-    -   [updateHandlers][222]
-    -   [render][223]
--   [RescanButton][224]
-    -   [rescan][225]
-    -   [render][226]
--   [SettingsStyle][227]
-    -   [componentDidMount][228]
-    -   [GetUsersDefaultAddress][229]
-    -   [toggleGlobeRender][230]
-        -   [Parameters][231]
-    -   [setWallpaper][232]
-        -   [Parameters][233]
-    -   [setColor][234]
-        -   [Parameters][235]
-    -   [resetColors][236]
-    -   [loadCustomTheme][237]
-        -   [Parameters][238]
-    -   [openPickThemeFileDialog][239]
-    -   [exportThemeFileDialog][240]
-    -   [pressDarkTheme][241]
-    -   [pressLightTheme][242]
-    -   [pressCustomTheme][243]
-    -   [pressResetTheme][244]
-    -   [savePreviousCustomTheme][245]
-    -   [setToCustom][246]
-    -   [setThemeSelector][247]
+-   [Point][218]
+    -   [setColor][219]
+        -   [Parameters][220]
+    -   [setColor][221]
+        -   [Parameters][222]
+-   [Header][223]
+    -   [render][224]
+-   [LogInStatus][225]
+    -   [signInStatusMessage][226]
+    -   [statusIcon][227]
+    -   [goToSecurity][228]
+    -   [render][229]
+-   [StakingStatus][230]
+    -   [render][231]
+    -   [render][232]
+-   [StakingStatus][233]
+    -   [render][234]
+    -   [render][235]
+-   [SyncStatus][236]
+    -   [render][237]
+    -   [render][238]
+-   [SyncStatus][239]
+    -   [render][240]
+    -   [render][241]
+-   [MyAddresses][242]
+-   [UserControl][243]
+-   [WalletStatus][244]
+    -   [render][245]
+-   [Navigation][246]
+    -   [NavItem][247]
         -   [Parameters][248]
-    -   [render][249]
--   [ColorPicker][250]
-    -   [openPicker][251]
-    -   [closePicker][252]
-    -   [handleColorChange][253]
-        -   [Parameters][254]
-    -   [render][255]
--   [BackgroundPicker][256]
-    -   [setDefault][257]
-        -   [Parameters][258]
-    -   [handleFilePick][259]
-        -   [Parameters][260]
-    -   [render][261]
--   [ThemePicker][262]
-    -   [setToCustomTheme][263]
-    -   [setSelector][264]
-        -   [Parameters][265]
-    -   [render][266]
--   [SettingsSecurity][267]
-    -   [render][268]
--   [Login][269]
-    -   [renderTimeInputs][270]
+    -   [ModuleNavItem][249]
+        -   [Parameters][250]
+    -   [Navigation][251]
+-   [Send][252]
+    -   [componentDidMount][253]
+    -   [componentDidMount][254]
+    -   [moveBetweenAccounts][255]
+    -   [render][256]
+    -   [render][257]
+-   [Send][258]
+    -   [componentDidMount][259]
+    -   [componentDidMount][260]
+    -   [moveBetweenAccounts][261]
+    -   [render][262]
+    -   [render][263]
+-   [MoveBetweenAccountsForm][264]
+    -   [confirmMove][265]
+        -   [Parameters][266]
+    -   [render][267]
+    -   [MoveBetweenAccountsModal][268]
+-   [AmountField][269]
+    -   [nxsToFiat][270]
         -   [Parameters][271]
-    -   [render][272]
--   [Encrypted][273]
-    -   [render][274]
--   [ChangePassword][275]
-    -   [confirmLogout][276]
-    -   [render][277]
--   [ImportPrivKey][278]
-    -   [render][279]
--   [ViewPrivKeyForAddress][280]
-    -   [showPrivKey][281]
-        -   [Parameters][282]
-    -   [copyPrivkey][283]
-    -   [resetPrivateKey][284]
-    -   [render][285]
--   [Unencrypted][286]
-    -   [render][287]
--   [EncryptWallet][288]
-    -   [render][289]
--   [SettingsModules][290]
-    -   [render][291]
--   [Module][292]
-    -   [enableModule][293]
-    -   [disableModule][294]
-    -   [toggleModule][295]
-    -   [openModuleDetails][296]
+    -   [nxsToFiat][272]
+        -   [Parameters][273]
+    -   [fiatToNxs][274]
+        -   [Parameters][275]
+    -   [fiatToNxs][276]
+        -   [Parameters][277]
+    -   [amountFieldName][278]
+    -   [amountFieldName][279]
+    -   [fiatAmountFieldName][280]
+    -   [fiatAmountFieldName][281]
+    -   [render][282]
+    -   [render][283]
+-   [AmountField][284]
+    -   [nxsToFiat][285]
+        -   [Parameters][286]
+    -   [nxsToFiat][287]
+        -   [Parameters][288]
+    -   [fiatToNxs][289]
+        -   [Parameters][290]
+    -   [fiatToNxs][291]
+        -   [Parameters][292]
+    -   [amountFieldName][293]
+    -   [amountFieldName][294]
+    -   [fiatAmountFieldName][295]
+    -   [fiatAmountFieldName][296]
     -   [render][297]
--   [AddModule][298]
-    -   [browseFiles][299]
-    -   [browseDirectories][300]
-    -   [getFilesFromEvent][301]
-        -   [Parameters][302]
-    -   [handleDrop][303]
-        -   [Parameters][304]
-    -   [startInstall][305]
-        -   [Parameters][306]
-    -   [render][307]
--   [Terminal][308]
-    -   [componentDidMount][309]
-    -   [componentWillUnmount][310]
-    -   [setupcontextmenu][311]
-        -   [Parameters][312]
-    -   [render][313]
--   [TerminalConsole][314]
-    -   [loadCommandList][315]
-    -   [componentDidUpdate][316]
-        -   [Parameters][317]
-    -   [execute][318]
-    -   [handleKeyDown][319]
+    -   [render][298]
+-   [SendForm][299]
+    -   [confirmSend][300]
+        -   [Parameters][301]
+    -   [confirmSend][302]
+        -   [Parameters][303]
+    -   [addRecipient][304]
+    -   [addRecipient][305]
+    -   [renderAddRecipientButton][306]
+        -   [Parameters][307]
+    -   [renderAddRecipientButton][308]
+        -   [Parameters][309]
+    -   [render][310]
+    -   [render][311]
+-   [SendForm][312]
+    -   [confirmSend][313]
+        -   [Parameters][314]
+    -   [confirmSend][315]
+        -   [Parameters][316]
+    -   [addRecipient][317]
+    -   [addRecipient][318]
+    -   [renderAddRecipientButton][319]
         -   [Parameters][320]
-    -   [formateAutoSuggest][321]
+    -   [renderAddRecipientButton][321]
         -   [Parameters][322]
     -   [render][323]
--   [TerminalCore][324]
-    -   [componentWillReceiveProps][325]
-        -   [Parameters][326]
-    -   [onScrollEvent][327]
-    -   [render][328]
--   [About][329]
-    -   [getCurrentYear][330]
-    -   [getInterfaceVersionNumber][331]
-    -   [getDaemonVersionNumber][332]
-    -   [render][333]
--   [Modules][334]
-    -   [componentDidMount][335]
-    -   [componentWillUnmount][336]
-    -   [setupcontextmenu][337]
-        -   [Parameters][338]
+    -   [render][324]
+-   [Recipients][325]
+    -   [render][326]
+    -   [render][327]
+-   [Recipients][328]
+    -   [render][329]
+    -   [render][330]
+-   [RecipientField][331]
+    -   [handleSelect][332]
+        -   [Parameters][333]
+    -   [handleSelect][334]
+        -   [Parameters][335]
+    -   [createContact][336]
+    -   [createContact][337]
+    -   [render][338]
     -   [render][339]
--   [PageModule][340]
-    -   [Parameters][341]
--   [PageModule][342]
-    -   [Parameters][343]
--   [WebView][344]
-    -   [componentDidMount][345]
-    -   [componentWillUnmount][346]
+-   [RecipientField][340]
+    -   [handleSelect][341]
+        -   [Parameters][342]
+    -   [handleSelect][343]
+        -   [Parameters][344]
+    -   [createContact][345]
+    -   [createContact][346]
     -   [render][347]
--   [AppBackground][348]
-    -   [render][349]
--   [StarrySky][350]
--   [CosmicLight][351]
--   [ThemeController][352]
-    -   [render][353]
+    -   [render][348]
+-   [Transactions][349]
+    -   [componentDidMount][350]
+    -   [componentDidUpdate][351]
+        -   [Parameters][352]
+    -   [saveCSV][353]
+        -   [Parameters][354]
+    -   [render][355]
+    -   [render][356]
+-   [TransactionsTritium][357]
+    -   [componentDidMount][358]
+-   [Market][359]
+    -   [refresher][360]
+    -   [formatBuyData][361]
+        -   [Parameters][362]
+    -   [formatSellData][363]
+        -   [Parameters][364]
+    -   [formatChartData][365]
+        -   [Parameters][366]
+    -   [oneDayinfo][367]
+        -   [Parameters][368]
+    -   [refreshMarket][369]
+    -   [render][370]
+-   [MarketDepth][371]
+    -   [render][372]
+-   [Candlestick][373]
+    -   [render][374]
+-   [AddressBook][375]
+    -   [componentDidMount][376]
+    -   [showAddContact][377]
+    -   [render][378]
+-   [PanelControls][379]
+    -   [SearchBox][380]
+    -   [exportAddressBook][381]
+    -   [showAddContact][382]
+    -   [showMyAddresses][383]
+    -   [render][384]
+-   [render][385]
+-   [ContactList][386]
+    -   [render][387]
+-   [Contact][388]
+    -   [confirmDelete][389]
+    -   [editContact][390]
+    -   [showContextMenu][391]
+        -   [Parameters][392]
+    -   [getinitial][393]
+        -   [Parameters][394]
+    -   [select][395]
+    -   [render][396]
+    -   [NewContactButton][397]
+        -   [Parameters][398]
+-   [ContactDetails][399]
+    -   [Field][400]
+        -   [Parameters][401]
+    -   [confirmDelete][402]
+    -   [editContact][403]
+    -   [render][404]
+-   [getLocalTime][405]
+    -   [Parameters][406]
+-   [Settings][407]
+    -   [componentDidMount][408]
+    -   [render][409]
+-   [SettingsApp][410]
+    -   [confirmBackupWallet][411]
+    -   [toggleVerifyModuleSource][412]
+        -   [Parameters][413]
+    -   [updateHandlers][414]
+    -   [handleAutoUpdateChange][415]
+        -   [Parameters][416]
+    -   [render][417]
+    -   [render][418]
+    -   [browseBackupDir][419]
+-   [SettingsApp][420]
+    -   [confirmBackupWallet][421]
+    -   [toggleVerifyModuleSource][422]
+        -   [Parameters][423]
+    -   [updateHandlers][424]
+    -   [handleAutoUpdateChange][425]
+        -   [Parameters][426]
+    -   [render][427]
+    -   [render][428]
+    -   [browseBackupDir][429]
+-   [LanguageSetting][430]
+    -   [handleChange][431]
+        -   [Parameters][432]
+    -   [render][433]
+-   [SettingsCore][434]
+    -   [confirmSwitchManualDaemon][435]
+    -   [render][436]
+-   [RescanButton][437]
+    -   [rescan][438]
+    -   [render][439]
+-   [SettingsStyle][440]
+    -   [componentDidMount][441]
+    -   [getUsersDefaultAddress][442]
+    -   [toggleGlobeRender][443]
+        -   [Parameters][444]
+    -   [setWallpaper][445]
+        -   [Parameters][446]
+    -   [setColor][447]
+        -   [Parameters][448]
+    -   [resetColors][449]
+    -   [loadCustomTheme][450]
+        -   [Parameters][451]
+    -   [openPickThemeFileDialog][452]
+    -   [exportThemeFileDialog][453]
+    -   [pressDarkTheme][454]
+    -   [pressLightTheme][455]
+    -   [pressCustomTheme][456]
+    -   [pressResetTheme][457]
+    -   [savePreviousCustomTheme][458]
+    -   [setToCustom][459]
+    -   [setThemeSelector][460]
+        -   [Parameters][461]
+    -   [render][462]
+-   [ColorPicker][463]
+    -   [openPicker][464]
+    -   [closePicker][465]
+    -   [handleColorChange][466]
+        -   [Parameters][467]
+    -   [render][468]
+-   [BackgroundPicker][469]
+    -   [setDefault][470]
+        -   [Parameters][471]
+    -   [handleFilePick][472]
+        -   [Parameters][473]
+    -   [render][474]
+-   [ThemePicker][475]
+    -   [setToCustomTheme][476]
+    -   [setSelector][477]
+        -   [Parameters][478]
+    -   [render][479]
+-   [SettingsSecurity][480]
+    -   [render][481]
+-   [Login][482]
+    -   [renderTimeInputs][483]
+        -   [Parameters][484]
+    -   [render][485]
+-   [Encrypted][486]
+    -   [render][487]
+-   [ChangePassword][488]
+    -   [confirmLogout][489]
+    -   [render][490]
+-   [ImportPrivKey][491]
+    -   [render][492]
+-   [ViewPrivKeyForAddress][493]
+    -   [showPrivKey][494]
+        -   [Parameters][495]
+    -   [copyPrivkey][496]
+    -   [resetPrivateKey][497]
+    -   [render][498]
+-   [Unencrypted][499]
+    -   [render][500]
+-   [EncryptWallet][501]
+    -   [render][502]
+-   [SettingsModules][503]
+    -   [render][504]
+-   [Module][505]
+    -   [enableModule][506]
+    -   [disableModule][507]
+    -   [toggleModule][508]
+    -   [openModuleDetails][509]
+    -   [render][510]
+-   [AddModule][511]
+    -   [browseFiles][512]
+    -   [browseDirectories][513]
+    -   [getFilesFromEvent][514]
+        -   [Parameters][515]
+    -   [handleDrop][516]
+        -   [Parameters][517]
+    -   [startInstall][518]
+        -   [Parameters][519]
+    -   [render][520]
+-   [Terminal][521]
+    -   [render][522]
+-   [TerminalConsole][523]
+    -   [loadCommandList][524]
+    -   [componentDidUpdate][525]
+        -   [Parameters][526]
+    -   [componentDidUpdate][527]
+        -   [Parameters][528]
+    -   [execute][529]
+    -   [execute][530]
+    -   [handleKeyDown][531]
+        -   [Parameters][532]
+    -   [handleKeyDown][533]
+        -   [Parameters][534]
+    -   [formateAutoSuggest][535]
+        -   [Parameters][536]
+    -   [formateAutoSuggest][537]
+        -   [Parameters][538]
+    -   [render][539]
+    -   [render][540]
+-   [TerminalConsole][541]
+    -   [loadCommandList][542]
+    -   [componentDidUpdate][543]
+        -   [Parameters][544]
+    -   [componentDidUpdate][545]
+        -   [Parameters][546]
+    -   [execute][547]
+    -   [execute][548]
+    -   [handleKeyDown][549]
+        -   [Parameters][550]
+    -   [handleKeyDown][551]
+        -   [Parameters][552]
+    -   [formateAutoSuggest][553]
+        -   [Parameters][554]
+    -   [formateAutoSuggest][555]
+        -   [Parameters][556]
+    -   [render][557]
+    -   [render][558]
+-   [TerminalCore][559]
+    -   [componentDidUpdate][560]
+        -   [Parameters][561]
+    -   [onScrollEvent][562]
+    -   [render][563]
+-   [UserPage][564]
+    -   [componentDidMount][565]
+    -   [showAddContact][566]
+    -   [render][567]
+-   [Tokens][568]
+    -   [componentDidMount][569]
+    -   [render][570]
+-   [Modules][571]
+    -   [componentDidMount][572]
+    -   [render][573]
+-   [PageModule][574]
+    -   [Parameters][575]
+-   [PageModule][576]
+    -   [Parameters][577]
+-   [WebView][578]
+    -   [componentDidMount][579]
+    -   [componentWillUnmount][580]
+    -   [render][581]
+-   [AppBackground][582]
+    -   [render][583]
+-   [StarrySky][584]
+-   [CosmicLight][585]
+-   [ThemeController][586]
+    -   [render][587]
 
 ## Wallet
 
@@ -382,7 +616,11 @@ Formats the Difficulty to 3 decimal points
 
 -   `diff` **any** 
 
-Returns **[Number][354]** Diff but with 3 decimal point places
+Returns **[Number][588]** Diff but with 3 decimal point places
+
+### componentDidMount
+
+Component Mount Callback
 
 ### componentDidMount
 
@@ -391,6 +629,14 @@ Component Mount Callback
 ### reDrawEverything
 
 Set by {NetworkGlobe}, ReDraws all Pillars and Archs
+
+### reDrawEverything
+
+Set by {NetworkGlobe}, ReDraws all Pillars and Archs
+
+### componentWillUnmount
+
+Component Unmount Callback
 
 ### componentWillUnmount
 
@@ -406,21 +652,39 @@ Component Prop Update Callback
 
 Returns **any** 
 
+### componentDidUpdate
+
+Component Prop Update Callback
+
+#### Parameters
+
+-   `prevProps` **any** 
+
+Returns **any** 
+
 ### fetchDifficulty
 
 Get the Difficulty from the network
 
-### setupcontextmenu
+### fetchDifficulty
 
-Sets up the context menu
-
-#### Parameters
-
--   `e` **any** 
+Get the Difficulty from the network
 
 ### blockDate
 
 Returns the Block Date of the last given block
+
+Returns **any** 
+
+### blockDate
+
+Returns the Block Date of the last given block
+
+Returns **any** 
+
+### connectionsIcon
+
+Returns the Connections icon based on how many connections the user has
 
 Returns **any** 
 
@@ -436,6 +700,18 @@ Returns the trust icon
 
 Returns **any** 
 
+### trustIcon
+
+Returns the trust icon
+
+Returns **any** 
+
+### blockWeightIcon
+
+Returns the block weight icon
+
+Returns **any** 
+
 ### blockWeightIcon
 
 Returns the block weight icon
@@ -445,6 +721,22 @@ Returns **any**
 ### showingGlobe
 
 Returns if the Globe should be rendered
+
+Returns **any** 
+
+### showingGlobe
+
+Returns if the Globe should be rendered
+
+Returns **any** 
+
+### numberWithCommas
+
+Add in Commas to a number
+
+#### Parameters
+
+-   `x` **any** 
 
 Returns **any** 
 
@@ -466,6 +758,18 @@ Displays Wait for Core
 
 -   `stat`  
 
+### waitForCore
+
+Displays Wait for Core
+
+#### Parameters
+
+-   `stat`  
+
+### returnWeightStats
+
+Returns the weight stats for the overview page
+
 ### returnWeightStats
 
 Returns the weight stats for the overview page
@@ -477,6 +781,220 @@ Returns the Difficulty Stats for the Overview page when it is in Miner View
 #### Parameters
 
 -   `difficulty`  
+
+### returnDifficultyStats
+
+Returns the Difficulty Stats for the Overview page when it is in Miner View
+
+#### Parameters
+
+-   `miningInfo`  
+
+### render
+
+Component's Renderable JSX
+
+Returns **any** 
+
+### render
+
+Component's Renderable JSX
+
+Returns **any** 
+
+## Overview
+
+**Extends Component**
+
+Overview Page, The main page
+
+### formatDiff
+
+Formats the Difficulty to 3 decimal points
+
+#### Parameters
+
+-   `diff` **any** 
+
+Returns **[Number][588]** Diff but with 3 decimal point places
+
+### componentDidMount
+
+Component Mount Callback
+
+### componentDidMount
+
+Component Mount Callback
+
+### reDrawEverything
+
+Set by {NetworkGlobe}, ReDraws all Pillars and Archs
+
+### reDrawEverything
+
+Set by {NetworkGlobe}, ReDraws all Pillars and Archs
+
+### componentWillUnmount
+
+Component Unmount Callback
+
+### componentWillUnmount
+
+Component Unmount Callback
+
+### componentDidUpdate
+
+Component Prop Update Callback
+
+#### Parameters
+
+-   `prevProps` **any** 
+
+Returns **any** 
+
+### componentDidUpdate
+
+Component Prop Update Callback
+
+#### Parameters
+
+-   `prevProps` **any** 
+
+Returns **any** 
+
+### fetchDifficulty
+
+Get the Difficulty from the network
+
+### fetchDifficulty
+
+Get the Difficulty from the network
+
+### blockDate
+
+Returns the Block Date of the last given block
+
+Returns **any** 
+
+### blockDate
+
+Returns the Block Date of the last given block
+
+Returns **any** 
+
+### connectionsIcon
+
+Returns the Connections icon based on how many connections the user has
+
+Returns **any** 
+
+### connectionsIcon
+
+Returns the Connections icon based on how many connections the user has
+
+Returns **any** 
+
+### trustIcon
+
+Returns the trust icon
+
+Returns **any** 
+
+### trustIcon
+
+Returns the trust icon
+
+Returns **any** 
+
+### blockWeightIcon
+
+Returns the block weight icon
+
+Returns **any** 
+
+### blockWeightIcon
+
+Returns the block weight icon
+
+Returns **any** 
+
+### showingGlobe
+
+Returns if the Globe should be rendered
+
+Returns **any** 
+
+### showingGlobe
+
+Returns if the Globe should be rendered
+
+Returns **any** 
+
+### numberWithCommas
+
+Add in Commas to a number
+
+#### Parameters
+
+-   `x` **any** 
+
+Returns **any** 
+
+### numberWithCommas
+
+Add in Commas to a number
+
+#### Parameters
+
+-   `x` **any** 
+
+Returns **any** 
+
+### waitForCore
+
+Displays Wait for Core
+
+#### Parameters
+
+-   `stat`  
+
+### waitForCore
+
+Displays Wait for Core
+
+#### Parameters
+
+-   `stat`  
+
+### returnWeightStats
+
+Returns the weight stats for the overview page
+
+### returnWeightStats
+
+Returns the weight stats for the overview page
+
+### returnDifficultyStats
+
+Returns the Difficulty Stats for the Overview page when it is in Miner View
+
+#### Parameters
+
+-   `difficulty`  
+
+### returnDifficultyStats
+
+Returns the Difficulty Stats for the Overview page when it is in Miner View
+
+#### Parameters
+
+-   `miningInfo`  
+
+### render
+
+Component's Renderable JSX
+
+Returns **any** 
 
 ### render
 
@@ -494,9 +1012,25 @@ The 3D Globe on the overview page.
 
 Mounting event from React, used to start the globe up
 
+### componentDidMount
+
+Mounting event from React, used to start the globe up
+
 ### contextRestoredHandler
 
 Handle Webgl Context Restore Event
+
+### contextRestoredHandler
+
+Handle Webgl Context Restore Event
+
+### contextLostHandler
+
+Handle Webgl Context Lost Event
+
+#### Parameters
+
+-   `event` **any** 
 
 ### contextLostHandler
 
@@ -514,6 +1048,18 @@ Update event from React
 
 -   `prevProps` **any** 
 
+### componentDidUpdate
+
+Update event from React
+
+#### Parameters
+
+-   `prevProps` **any** 
+
+### componentWillUnmount
+
+Unmount event from React
+
 ### componentWillUnmount
 
 Unmount event from React
@@ -524,9 +1070,23 @@ Register point/pillar on the globe
 
 Returns **any** 
 
+### pointRegister
+
+Register point/pillar on the globe
+
+Returns **any** 
+
 ### addSelfPoint
 
 Add globe to the renderer
+
+### addSelfPoint
+
+Add globe to the renderer
+
+### removeAllPoints
+
+Remove all points on the globe
 
 ### removeAllPoints
 
@@ -540,9 +1100,25 @@ Remove point/pillar from the globe
 
 -   `deadPoint` **any** Point to remove
 
+### destroyPoint
+
+Remove point/pillar from the globe
+
+#### Parameters
+
+-   `deadPoint` **any** Point to remove
+
 ### arcRegister
 
 Register a arc with the globe
+
+### arcRegister
+
+Register a arc with the globe
+
+### animateArcs
+
+Animate all the Curves on the globe
 
 ### animateArcs
 
@@ -556,9 +1132,25 @@ Removes the unused Curve
 
 -   `deadCurve` **any** Curve to remove
 
+### destroyArc
+
+Removes the unused Curve
+
+#### Parameters
+
+-   `deadCurve` **any** Curve to remove
+
 ### onWindowResize
 
 Event when the window resizes
+
+### onWindowResize
+
+Event when the window resizes
+
+### stop
+
+Stop the animation
 
 ### stop
 
@@ -568,6 +1160,14 @@ Stop the animation
 
 Start the animation
 
+### start
+
+Start the animation
+
+### animate
+
+Animate the globe
+
 ### animate
 
 Animate the globe
@@ -575,6 +1175,206 @@ Animate the globe
 ### renderScene
 
 Renders the screen to the THREE's canvas
+
+### renderScene
+
+Renders the screen to the THREE's canvas
+
+### render
+
+Component's Renderable JSX
+
+Returns **JSX** JSX
+
+### render
+
+Component's Renderable JSX
+
+Returns **JSX** JSX
+
+## Globe
+
+**Extends Component**
+
+The 3D Globe on the overview page.
+
+### componentDidMount
+
+Mounting event from React, used to start the globe up
+
+### componentDidMount
+
+Mounting event from React, used to start the globe up
+
+### contextRestoredHandler
+
+Handle Webgl Context Restore Event
+
+### contextRestoredHandler
+
+Handle Webgl Context Restore Event
+
+### contextLostHandler
+
+Handle Webgl Context Lost Event
+
+#### Parameters
+
+-   `event` **any** 
+
+### contextLostHandler
+
+Handle Webgl Context Lost Event
+
+#### Parameters
+
+-   `event` **any** 
+
+### componentDidUpdate
+
+Update event from React
+
+#### Parameters
+
+-   `prevProps` **any** 
+
+### componentDidUpdate
+
+Update event from React
+
+#### Parameters
+
+-   `prevProps` **any** 
+
+### componentWillUnmount
+
+Unmount event from React
+
+### componentWillUnmount
+
+Unmount event from React
+
+### pointRegister
+
+Register point/pillar on the globe
+
+Returns **any** 
+
+### pointRegister
+
+Register point/pillar on the globe
+
+Returns **any** 
+
+### addSelfPoint
+
+Add globe to the renderer
+
+### addSelfPoint
+
+Add globe to the renderer
+
+### removeAllPoints
+
+Remove all points on the globe
+
+### removeAllPoints
+
+Remove all points on the globe
+
+### destroyPoint
+
+Remove point/pillar from the globe
+
+#### Parameters
+
+-   `deadPoint` **any** Point to remove
+
+### destroyPoint
+
+Remove point/pillar from the globe
+
+#### Parameters
+
+-   `deadPoint` **any** Point to remove
+
+### arcRegister
+
+Register a arc with the globe
+
+### arcRegister
+
+Register a arc with the globe
+
+### animateArcs
+
+Animate all the Curves on the globe
+
+### animateArcs
+
+Animate all the Curves on the globe
+
+### destroyArc
+
+Removes the unused Curve
+
+#### Parameters
+
+-   `deadCurve` **any** Curve to remove
+
+### destroyArc
+
+Removes the unused Curve
+
+#### Parameters
+
+-   `deadCurve` **any** Curve to remove
+
+### onWindowResize
+
+Event when the window resizes
+
+### onWindowResize
+
+Event when the window resizes
+
+### stop
+
+Stop the animation
+
+### stop
+
+Stop the animation
+
+### start
+
+Start the animation
+
+### start
+
+Start the animation
+
+### animate
+
+Animate the globe
+
+### animate
+
+Animate the globe
+
+### renderScene
+
+Renders the screen to the THREE's canvas
+
+### renderScene
+
+Renders the screen to the THREE's canvas
+
+### render
+
+Component's Renderable JSX
+
+Returns **JSX** JSX
 
 ### render
 
@@ -597,17 +1397,40 @@ Creates a spline from one point to the next
 
 Returns **THREE.CubicBezierCurve3** 
 
+### getSplineFromCoords
+
+Creates a spline from one point to the next
+
+#### Parameters
+
+-   `pointOne` **any** Contains {lat and lng}
+-   `pointTwo` **any** Contains {lat and lng}
+
+Returns **THREE.CubicBezierCurve3** 
+
 ### clamp
 
 Clamp a number between min and max
 
 #### Parameters
 
--   `num` **[Number][354]** Input Value
--   `min` **[Number][354]** Min Value
--   `max` **[Number][354]** Max Value
+-   `num` **[Number][588]** Input Value
+-   `min` **[Number][588]** Min Value
+-   `max` **[Number][588]** Max Value
 
-Returns **[Number][354]** Return Value
+Returns **[Number][588]** Return Value
+
+### clamp
+
+Clamp a number between min and max
+
+#### Parameters
+
+-   `num` **[Number][588]** Input Value
+-   `min` **[Number][588]** Min Value
+-   `max` **[Number][588]** Max Value
+
+Returns **[Number][588]** Return Value
 
 ### coordinateToPosition
 
@@ -615,11 +1438,27 @@ Translates a Lat and Lng to a Vector3 on a sphere
 
 #### Parameters
 
--   `lat` **[Number][354]** Latitude
--   `lng` **[Number][354]** longitude
--   `radius` **[Number][354]** radius of sphere
+-   `lat` **[Number][588]** Latitude
+-   `lng` **[Number][588]** longitude
+-   `radius` **[Number][588]** radius of sphere
 
 Returns **THREE.Vector3** Point on sphere
+
+### coordinateToPosition
+
+Translates a Lat and Lng to a Vector3 on a sphere
+
+#### Parameters
+
+-   `lat` **[Number][588]** Latitude
+-   `lng` **[Number][588]** longitude
+-   `radius` **[Number][588]** radius of sphere
+
+Returns **THREE.Vector3** Point on sphere
+
+### play
+
+Play the Animation
 
 ### play
 
@@ -628,6 +1467,112 @@ Play the Animation
 ### stop
 
 Stop the animation
+
+### stop
+
+Stop the animation
+
+### restart
+
+Restart the animation
+
+### restart
+
+Restart the animation
+
+## Curve
+
+Object for the Curves on the globe
+
+### getSplineFromCoords
+
+Creates a spline from one point to the next
+
+#### Parameters
+
+-   `pointOne` **any** Contains {lat and lng}
+-   `pointTwo` **any** Contains {lat and lng}
+
+Returns **THREE.CubicBezierCurve3** 
+
+### getSplineFromCoords
+
+Creates a spline from one point to the next
+
+#### Parameters
+
+-   `pointOne` **any** Contains {lat and lng}
+-   `pointTwo` **any** Contains {lat and lng}
+
+Returns **THREE.CubicBezierCurve3** 
+
+### clamp
+
+Clamp a number between min and max
+
+#### Parameters
+
+-   `num` **[Number][588]** Input Value
+-   `min` **[Number][588]** Min Value
+-   `max` **[Number][588]** Max Value
+
+Returns **[Number][588]** Return Value
+
+### clamp
+
+Clamp a number between min and max
+
+#### Parameters
+
+-   `num` **[Number][588]** Input Value
+-   `min` **[Number][588]** Min Value
+-   `max` **[Number][588]** Max Value
+
+Returns **[Number][588]** Return Value
+
+### coordinateToPosition
+
+Translates a Lat and Lng to a Vector3 on a sphere
+
+#### Parameters
+
+-   `lat` **[Number][588]** Latitude
+-   `lng` **[Number][588]** longitude
+-   `radius` **[Number][588]** radius of sphere
+
+Returns **THREE.Vector3** Point on sphere
+
+### coordinateToPosition
+
+Translates a Lat and Lng to a Vector3 on a sphere
+
+#### Parameters
+
+-   `lat` **[Number][588]** Latitude
+-   `lng` **[Number][588]** longitude
+-   `radius` **[Number][588]** radius of sphere
+
+Returns **THREE.Vector3** Point on sphere
+
+### play
+
+Play the Animation
+
+### play
+
+Play the Animation
+
+### stop
+
+Stop the animation
+
+### stop
+
+Stop the animation
+
+### restart
+
+Restart the animation
 
 ### restart
 
@@ -643,7 +1588,35 @@ Sets color of the point
 
 #### Parameters
 
--   `hex` **[string][355]** 
+-   `hex` **[string][589]** 
+
+### setColor
+
+Sets color of the point
+
+#### Parameters
+
+-   `hex` **[string][589]** 
+
+## Point
+
+The point/pillar on the globe
+
+### setColor
+
+Sets color of the point
+
+#### Parameters
+
+-   `hex` **[string][589]** 
+
+### setColor
+
+Sets color of the point
+
+#### Parameters
+
+-   `hex` **[string][589]** 
 
 ## Header
 
@@ -693,6 +1666,30 @@ Component's Renderable JSX
 
 Returns **JSX** JSX
 
+### render
+
+Component's Renderable JSX
+
+Returns **JSX** JSX
+
+## StakingStatus
+
+**Extends React.Component**
+
+Handles the Staking Status
+
+### render
+
+Component's Renderable JSX
+
+Returns **JSX** JSX
+
+### render
+
+Component's Renderable JSX
+
+Returns **JSX** JSX
+
 ## SyncStatus
 
 **Extends React.Component**
@@ -705,18 +1702,45 @@ Component's Renderable JSX
 
 Returns **JSX** JSX
 
+### render
+
+Component's Renderable JSX
+
+Returns **JSX** JSX
+
+## SyncStatus
+
+**Extends React.Component**
+
+Handles the Sync Status
+
+### render
+
+Component's Renderable JSX
+
+Returns **JSX** JSX
+
+### render
+
+Component's Renderable JSX
+
+Returns **JSX** JSX
+
 ## MyAddresses
 
 Returns JSX of My Addresses
 
-### Parameters
+Returns **JSX** JSX
 
--   `$0` **[Object][356]** 
-    -   `$0.openModal`  
+## UserControl
+
+**Extends React.Component**
+
+Returns JSX of My Addresses
 
 Returns **JSX** JSX
 
-## CoreStatus
+## WalletStatus
 
 **Extends React.Component**
 
@@ -766,21 +1790,49 @@ Send Page
 
 Component Mount Callback
 
-### componentWillUnmount
+### componentDidMount
 
-Component Unmount Callback
-
-### setupcontextmenu
-
-Set up the context menu
-
-#### Parameters
-
--   `e` **any** 
+Component Mount Callback
 
 ### moveBetweenAccounts
 
 Opens the Move NXS between account modal
+
+### render
+
+Component's Renderable JSX
+
+Returns **any** 
+
+### render
+
+Component's Renderable JSX
+
+Returns **any** 
+
+## Send
+
+**Extends Component**
+
+Send Page
+
+### componentDidMount
+
+Component Mount Callback
+
+### componentDidMount
+
+Component Mount Callback
+
+### moveBetweenAccounts
+
+Opens the Move NXS between account modal
+
+### render
+
+Component's Renderable JSX
+
+Returns **any** 
 
 ### render
 
@@ -827,6 +1879,24 @@ Convert the NXS to the User's currency
 -   `e`  
 -   `value`  
 
+### nxsToFiat
+
+Convert the NXS to the User's currency
+
+#### Parameters
+
+-   `e`  
+-   `value`  
+
+### fiatToNxs
+
+Returns the fiat from NXS
+
+#### Parameters
+
+-   `e`  
+-   `value`  
+
 ### fiatToNxs
 
 Returns the fiat from NXS
@@ -840,9 +1910,93 @@ Returns the fiat from NXS
 
 Returns the Amount Feild Name
 
+### amountFieldName
+
+Returns the Amount Feild Name
+
 ### fiatAmountFieldName
 
 Returns the Fiat Amount Name
+
+### fiatAmountFieldName
+
+Returns the Fiat Amount Name
+
+### render
+
+Component's Renderable JSX
+
+Returns **any** 
+
+### render
+
+Component's Renderable JSX
+
+Returns **any** 
+
+## AmountField
+
+**Extends Component**
+
+The Amount Feild on the Send Page
+
+### nxsToFiat
+
+Convert the NXS to the User's currency
+
+#### Parameters
+
+-   `e`  
+-   `value`  
+
+### nxsToFiat
+
+Convert the NXS to the User's currency
+
+#### Parameters
+
+-   `e`  
+-   `value`  
+
+### fiatToNxs
+
+Returns the fiat from NXS
+
+#### Parameters
+
+-   `e`  
+-   `value`  
+
+### fiatToNxs
+
+Returns the fiat from NXS
+
+#### Parameters
+
+-   `e`  
+-   `value`  
+
+### amountFieldName
+
+Returns the Amount Feild Name
+
+### amountFieldName
+
+Returns the Amount Feild Name
+
+### fiatAmountFieldName
+
+Returns the Fiat Amount Name
+
+### fiatAmountFieldName
+
+Returns the Fiat Amount Name
+
+### render
+
+Component's Renderable JSX
+
+Returns **any** 
 
 ### render
 
@@ -864,6 +2018,18 @@ Confirm the Send
 
 -   `e`  
 
+### confirmSend
+
+Confirm the Send
+
+#### Parameters
+
+-   `e`  
+
+### addRecipient
+
+Add Recipient to the queue
+
 ### addRecipient
 
 Add Recipient to the queue
@@ -874,8 +2040,83 @@ Return JSX for the Add Recipient Button
 
 #### Parameters
 
--   `$0` **[Object][356]** 
+-   `$0` **[Object][590]** 
     -   `$0.fields`  
+
+### renderAddRecipientButton
+
+Return JSX for the Add Recipient Button
+
+#### Parameters
+
+-   `$0` **[Object][590]** 
+    -   `$0.fields`  
+
+### render
+
+Component's Renderable JSX
+
+Returns **any** 
+
+### render
+
+Component's Renderable JSX
+
+Returns **any** 
+
+## SendForm
+
+**Extends Component**
+
+The Internal Send Form in the Send Page
+
+### confirmSend
+
+Confirm the Send
+
+#### Parameters
+
+-   `e`  
+
+### confirmSend
+
+Confirm the Send
+
+#### Parameters
+
+-   `e`  
+
+### addRecipient
+
+Add Recipient to the queue
+
+### addRecipient
+
+Add Recipient to the queue
+
+### renderAddRecipientButton
+
+Return JSX for the Add Recipient Button
+
+#### Parameters
+
+-   `$0` **[Object][590]** 
+    -   `$0.fields`  
+
+### renderAddRecipientButton
+
+Return JSX for the Add Recipient Button
+
+#### Parameters
+
+-   `$0` **[Object][590]** 
+    -   `$0.fields`  
+
+### render
+
+Component's Renderable JSX
+
+Returns **any** 
 
 ### render
 
@@ -888,6 +2129,30 @@ Returns **any**
 **Extends React.Component**
 
 Recipients Field from the Send Page
+
+### render
+
+Component's Renderable JSX
+
+Returns **any** 
+
+### render
+
+Component's Renderable JSX
+
+Returns **any** 
+
+## Recipients
+
+**Extends React.Component**
+
+Recipients Field from the Send Page
+
+### render
+
+Component's Renderable JSX
+
+Returns **any** 
 
 ### render
 
@@ -909,9 +2174,69 @@ Handle Select Address
 
 -   `address`  
 
+### handleSelect
+
+Handle Select Address
+
+#### Parameters
+
+-   `address`  
+
 ### createContact
 
 Opens the Add/Edit Contact Modal
+
+### createContact
+
+Opens the Add/Edit Contact Modal
+
+### render
+
+Component's Renderable JSX
+
+Returns **any** 
+
+### render
+
+Component's Renderable JSX
+
+Returns **any** 
+
+## RecipientField
+
+**Extends Component**
+
+The Recipient Field in the Send Page
+
+### handleSelect
+
+Handle Select Address
+
+#### Parameters
+
+-   `address`  
+
+### handleSelect
+
+Handle Select Address
+
+#### Parameters
+
+-   `address`  
+
+### createContact
+
+Opens the Add/Edit Contact Modal
+
+### createContact
+
+Opens the Add/Edit Contact Modal
+
+### render
+
+Component's Renderable JSX
+
+Returns **any** 
 
 ### render
 
@@ -953,19 +2278,27 @@ React Render
 
 Returns **any** JSX for Element
 
+### render
+
+React Render
+
+Returns **any** JSX for Element
+
+## TransactionsTritium
+
+**Extends Component**
+
+TransactionsTritium Page
+
+### componentDidMount
+
+Component Mount Callback
+
 ## Market
 
 **Extends Component**
 
 The Market Page
-
-### setupcontextmenu
-
-Sets up the page's context menu
-
-#### Parameters
-
--   `e` **any** 
 
 ### refresher
 
@@ -1052,18 +2385,6 @@ The Address Book Page
 ### componentDidMount
 
 componentDidMount
-
-### componentWillUnmount
-
-componentWillUnmount
-
-### setupcontextmenu
-
-Set up the context menu
-
-#### Parameters
-
--   `e` **any** 
 
 ### showAddContact
 
@@ -1211,7 +2532,7 @@ Get Local time
 
 -   `tz` **any** TimeZone
 
-Returns **[string][355]** Hours:Minutes AM/PM
+Returns **[string][589]** Hours:Minutes AM/PM
 
 ## Settings
 
@@ -1222,18 +2543,6 @@ Settings Page
 ### componentDidMount
 
 Component Mount Callback
-
-### componentWillUnmount
-
-Component Unmount Callback
-
-### setupcontextmenu
-
-Set up context menu
-
-#### Parameters
-
--   `e` **any** 
 
 ### render
 
@@ -1363,59 +2672,6 @@ Core Settings page that is inside Settings
 
 Confirms Switch to Manual Core
 
-### restartCore
-
-Restarts Core
-
-### moveDataDir
-
-Opens up a dialog to move the data directory
-
-### handleFileCopy
-
-Runs the file copy script
-
-#### Parameters
-
--   `newFolderDir` **any** 
-
-### askForCoreRestart
-
-Generic function to display the Restart core ? dialog
-
-#### Parameters
-
--   `yesCallback` **any** 
--   `noCallback` **any** 
-
-### updateStaking
-
-Update the staking flag
-
-#### Parameters
-
--   `input` **any** 
-
-### updateMining
-
-Update the mining flag
-
-#### Parameters
-
--   `input` **any** 
-
-### updateMiningWhitelist
-
-Sets the list of IPs that the daemon will send coin to when it mines.
-
-#### Parameters
-
--   `input` **any** 
-
-### updateHandlers
-
-Updates the settings
-
 ### render
 
 Component's Renderable JSX
@@ -1442,7 +2698,7 @@ Style Settings in the Style Page
 
 Component Mount Callback
 
-### GetUsersDefaultAddress
+### getUsersDefaultAddress
 
 Get the user's default address and save it to state, to be used on the Address Style Field
 
@@ -1826,21 +3082,81 @@ Returns **any**
 
 Terminal Page
 
-### componentDidMount
+### render
 
-Component Mount Callback
+Component's Renderable JSX
 
-### componentWillUnmount
+Returns **any** 
 
-Component Unmount Callback
+## TerminalConsole
 
-### setupcontextmenu
+**Extends Component**
 
-Set up context menu
+Console Page in the Terminal Page
+
+### loadCommandList
+
+Loadin all the usable RPC commands
+
+### componentDidUpdate
+
+#### Parameters
+
+-   `prevProps` **any** 
+-   `PrevState` **any** 
+
+### componentDidUpdate
+
+#### Parameters
+
+-   `prevProps` **any** 
+-   `PrevState` **any** 
+
+### execute
+
+Execute a Command
+
+### execute
+
+Execute a Command
+
+### handleKeyDown
+
+Handle Key Down Event
 
 #### Parameters
 
 -   `e` **any** 
+
+### handleKeyDown
+
+Handle Key Down Event
+
+#### Parameters
+
+-   `e` **any** 
+
+### formateAutoSuggest
+
+Take the Autosuggest and updateConsoleInput
+
+#### Parameters
+
+-   `e`  
+
+### formateAutoSuggest
+
+Take the Autosuggest and updateConsoleInput
+
+#### Parameters
+
+-   `e`  
+
+### render
+
+Component's Renderable JSX
+
+Returns **any** 
 
 ### render
 
@@ -1865,9 +3181,28 @@ Loadin all the usable RPC commands
 -   `prevProps` **any** 
 -   `PrevState` **any** 
 
+### componentDidUpdate
+
+#### Parameters
+
+-   `prevProps` **any** 
+-   `PrevState` **any** 
+
 ### execute
 
 Execute a Command
+
+### execute
+
+Execute a Command
+
+### handleKeyDown
+
+Handle Key Down Event
+
+#### Parameters
+
+-   `e` **any** 
 
 ### handleKeyDown
 
@@ -1885,6 +3220,20 @@ Take the Autosuggest and updateConsoleInput
 
 -   `e`  
 
+### formateAutoSuggest
+
+Take the Autosuggest and updateConsoleInput
+
+#### Parameters
+
+-   `e`  
+
+### render
+
+Component's Renderable JSX
+
+Returns **any** 
+
 ### render
 
 Component's Renderable JSX
@@ -1897,12 +3246,13 @@ Returns **any**
 
 Terminal Core page in the Terminal Page
 
-### componentWillReceiveProps
+### componentDidUpdate
 
 Component Received New Props Callback
 
 #### Parameters
 
+-   `prevProps`  
 -   `nextProps` **any** 
 
 ### onScrollEvent
@@ -1917,35 +3267,41 @@ Component's Renderable JSX
 
 Returns **any** 
 
-## About
+## UserPage
 
 **Extends Component**
 
-About Page
+The Address Book Page
 
-### getCurrentYear
+### componentDidMount
 
-Get Current Year
+componentDidMount
 
-Returns **[number][354]** Current Year
+### showAddContact
 
-### getInterfaceVersionNumber
-
-Get App Version
-
-Returns **[string][355]** App version from package.json
-
-### getDaemonVersionNumber
-
-Gets Version number of the Daemon
-
-Returns **[String][355]** Damon Version
+Opens Add/Edit Contact Modal
 
 ### render
 
 Component's Renderable JSX
 
-Returns **JSX** JSX
+Returns **any** 
+
+## Tokens
+
+**Extends Component**
+
+The Address Book Page
+
+### componentDidMount
+
+componentDidMount
+
+### render
+
+Component's Renderable JSX    const { searchToken } = this.state;
+
+Returns **any** 
 
 ## Modules
 
@@ -1956,18 +3312,6 @@ Modules
 ### componentDidMount
 
 Component Mount Callback
-
-### componentWillUnmount
-
-Component Unmount Callback
-
-### setupcontextmenu
-
-Set up the context menu
-
-#### Parameters
-
--   `e` **any** 
 
 ### render
 
@@ -2057,702 +3401,1170 @@ Returns **any**
 
 [6]: #componentdidmount
 
-[7]: #redraweverything
+[7]: #componentdidmount-1
 
-[8]: #componentwillunmount
+[8]: #redraweverything
 
-[9]: #componentdidupdate
+[9]: #redraweverything-1
 
-[10]: #parameters-1
+[10]: #componentwillunmount
 
-[11]: #fetchdifficulty
+[11]: #componentwillunmount-1
 
-[12]: #setupcontextmenu
+[12]: #componentdidupdate
 
-[13]: #parameters-2
+[13]: #parameters-1
 
-[14]: #blockdate
+[14]: #componentdidupdate-1
 
-[15]: #connectionsicon
+[15]: #parameters-2
 
-[16]: #trusticon
+[16]: #fetchdifficulty
 
-[17]: #blockweighticon
+[17]: #fetchdifficulty-1
 
-[18]: #showingglobe
+[18]: #blockdate
 
-[19]: #numberwithcommas
+[19]: #blockdate-1
 
-[20]: #parameters-3
+[20]: #connectionsicon
 
-[21]: #waitforcore
+[21]: #connectionsicon-1
 
-[22]: #parameters-4
+[22]: #trusticon
 
-[23]: #returnweightstats
+[23]: #trusticon-1
 
-[24]: #returndifficultystats
+[24]: #blockweighticon
 
-[25]: #parameters-5
+[25]: #blockweighticon-1
 
-[26]: #render-1
+[26]: #showingglobe
 
-[27]: #globe
+[27]: #showingglobe-1
 
-[28]: #componentdidmount-1
+[28]: #numberwithcommas
 
-[29]: #contextrestoredhandler
+[29]: #parameters-3
 
-[30]: #contextlosthandler
+[30]: #numberwithcommas-1
 
-[31]: #parameters-6
+[31]: #parameters-4
 
-[32]: #componentdidupdate-1
+[32]: #waitforcore
 
-[33]: #parameters-7
+[33]: #parameters-5
 
-[34]: #componentwillunmount-1
+[34]: #waitforcore-1
 
-[35]: #pointregister
+[35]: #parameters-6
 
-[36]: #addselfpoint
+[36]: #returnweightstats
 
-[37]: #removeallpoints
+[37]: #returnweightstats-1
 
-[38]: #destroypoint
+[38]: #returndifficultystats
 
-[39]: #parameters-8
+[39]: #parameters-7
 
-[40]: #arcregister
+[40]: #returndifficultystats-1
 
-[41]: #animatearcs
+[41]: #parameters-8
 
-[42]: #destroyarc
+[42]: #render-1
 
-[43]: #parameters-9
+[43]: #render-2
 
-[44]: #onwindowresize
+[44]: #overview-1
 
-[45]: #stop
+[45]: #formatdiff-1
 
-[46]: #start
+[46]: #parameters-9
 
-[47]: #animate
+[47]: #componentdidmount-2
 
-[48]: #renderscene
+[48]: #componentdidmount-3
 
-[49]: #render-2
+[49]: #redraweverything-2
 
-[50]: #curve
+[50]: #redraweverything-3
 
-[51]: #getsplinefromcoords
+[51]: #componentwillunmount-2
 
-[52]: #parameters-10
+[52]: #componentwillunmount-3
 
-[53]: #clamp
+[53]: #componentdidupdate-2
 
-[54]: #parameters-11
+[54]: #parameters-10
 
-[55]: #coordinatetoposition
+[55]: #componentdidupdate-3
 
-[56]: #parameters-12
+[56]: #parameters-11
 
-[57]: #play
+[57]: #fetchdifficulty-2
 
-[58]: #stop-1
+[58]: #fetchdifficulty-3
 
-[59]: #restart
+[59]: #blockdate-2
 
-[60]: #point
+[60]: #blockdate-3
 
-[61]: #setcolor
+[61]: #connectionsicon-2
 
-[62]: #parameters-13
+[62]: #connectionsicon-3
 
-[63]: #header
+[63]: #trusticon-2
 
-[64]: #render-3
+[64]: #trusticon-3
 
-[65]: #loginstatus
+[65]: #blockweighticon-2
 
-[66]: #signinstatusmessage
+[66]: #blockweighticon-3
 
-[67]: #statusicon
+[67]: #showingglobe-2
 
-[68]: #gotosecurity
+[68]: #showingglobe-3
 
-[69]: #render-4
+[69]: #numberwithcommas-2
 
-[70]: #stakingstatus
+[70]: #parameters-12
 
-[71]: #render-5
+[71]: #numberwithcommas-3
 
-[72]: #syncstatus
+[72]: #parameters-13
 
-[73]: #render-6
+[73]: #waitforcore-2
 
-[74]: #myaddresses
+[74]: #parameters-14
 
-[75]: #parameters-14
+[75]: #waitforcore-3
 
-[76]: #corestatus
+[76]: #parameters-15
 
-[77]: #render-7
+[77]: #returnweightstats-2
 
-[78]: #navigation
+[78]: #returnweightstats-3
 
-[79]: #navitem
+[79]: #returndifficultystats-2
 
-[80]: #parameters-15
+[80]: #parameters-16
 
-[81]: #modulenavitem
+[81]: #returndifficultystats-3
 
-[82]: #parameters-16
+[82]: #parameters-17
 
-[83]: #navigation-1
+[83]: #render-3
 
-[84]: #send
+[84]: #render-4
 
-[85]: #componentdidmount-2
+[85]: #globe
 
-[86]: #componentwillunmount-2
+[86]: #componentdidmount-4
 
-[87]: #setupcontextmenu-1
+[87]: #componentdidmount-5
 
-[88]: #parameters-17
+[88]: #contextrestoredhandler
 
-[89]: #movebetweenaccounts
+[89]: #contextrestoredhandler-1
 
-[90]: #render-8
+[90]: #contextlosthandler
 
-[91]: #movebetweenaccountsform
+[91]: #parameters-18
 
-[92]: #confirmmove
+[92]: #contextlosthandler-1
 
-[93]: #parameters-18
+[93]: #parameters-19
 
-[94]: #render-9
+[94]: #componentdidupdate-4
 
-[95]: #movebetweenaccountsmodal
+[95]: #parameters-20
 
-[96]: #amountfield
+[96]: #componentdidupdate-5
 
-[97]: #nxstofiat
+[97]: #parameters-21
 
-[98]: #parameters-19
+[98]: #componentwillunmount-4
 
-[99]: #fiattonxs
+[99]: #componentwillunmount-5
 
-[100]: #parameters-20
+[100]: #pointregister
 
-[101]: #amountfieldname
+[101]: #pointregister-1
 
-[102]: #fiatamountfieldname
+[102]: #addselfpoint
 
-[103]: #render-10
+[103]: #addselfpoint-1
 
-[104]: #sendform
+[104]: #removeallpoints
 
-[105]: #confirmsend
+[105]: #removeallpoints-1
 
-[106]: #parameters-21
+[106]: #destroypoint
 
-[107]: #addrecipient
+[107]: #parameters-22
 
-[108]: #renderaddrecipientbutton
+[108]: #destroypoint-1
 
-[109]: #parameters-22
+[109]: #parameters-23
 
-[110]: #render-11
+[110]: #arcregister
 
-[111]: #recipients
+[111]: #arcregister-1
 
-[112]: #render-12
+[112]: #animatearcs
 
-[113]: #recipientfield
+[113]: #animatearcs-1
 
-[114]: #handleselect
+[114]: #destroyarc
 
-[115]: #parameters-23
+[115]: #parameters-24
 
-[116]: #createcontact
+[116]: #destroyarc-1
 
-[117]: #render-13
+[117]: #parameters-25
 
-[118]: #transactions
+[118]: #onwindowresize
 
-[119]: #componentdidmount-3
+[119]: #onwindowresize-1
 
-[120]: #componentdidupdate-2
+[120]: #stop
 
-[121]: #parameters-24
+[121]: #stop-1
 
-[122]: #savecsv
+[122]: #start
 
-[123]: #parameters-25
+[123]: #start-1
 
-[124]: #render-14
+[124]: #animate
 
-[125]: #market
+[125]: #animate-1
 
-[126]: #setupcontextmenu-2
+[126]: #renderscene
 
-[127]: #parameters-26
+[127]: #renderscene-1
 
-[128]: #refresher
+[128]: #render-5
 
-[129]: #formatbuydata
+[129]: #render-6
 
-[130]: #parameters-27
+[130]: #globe-1
 
-[131]: #formatselldata
+[131]: #componentdidmount-6
 
-[132]: #parameters-28
+[132]: #componentdidmount-7
 
-[133]: #formatchartdata
+[133]: #contextrestoredhandler-2
 
-[134]: #parameters-29
+[134]: #contextrestoredhandler-3
 
-[135]: #onedayinfo
+[135]: #contextlosthandler-2
 
-[136]: #parameters-30
+[136]: #parameters-26
 
-[137]: #refreshmarket
+[137]: #contextlosthandler-3
 
-[138]: #render-15
+[138]: #parameters-27
 
-[139]: #marketdepth
+[139]: #componentdidupdate-6
 
-[140]: #render-16
+[140]: #parameters-28
 
-[141]: #candlestick
+[141]: #componentdidupdate-7
 
-[142]: #render-17
+[142]: #parameters-29
 
-[143]: #addressbook
+[143]: #componentwillunmount-6
 
-[144]: #componentdidmount-4
+[144]: #componentwillunmount-7
 
-[145]: #componentwillunmount-3
+[145]: #pointregister-2
 
-[146]: #setupcontextmenu-3
+[146]: #pointregister-3
 
-[147]: #parameters-31
+[147]: #addselfpoint-2
 
-[148]: #showaddcontact
+[148]: #addselfpoint-3
 
-[149]: #render-18
+[149]: #removeallpoints-2
 
-[150]: #panelcontrols
+[150]: #removeallpoints-3
 
-[151]: #searchbox
+[151]: #destroypoint-2
 
-[152]: #exportaddressbook
+[152]: #parameters-30
 
-[153]: #showaddcontact-1
+[153]: #destroypoint-3
 
-[154]: #showmyaddresses
+[154]: #parameters-31
 
-[155]: #render-19
+[155]: #arcregister-2
 
-[156]: #render-20
+[156]: #arcregister-3
 
-[157]: #contactlist
+[157]: #animatearcs-2
 
-[158]: #render-21
+[158]: #animatearcs-3
 
-[159]: #contact
+[159]: #destroyarc-2
 
-[160]: #confirmdelete
+[160]: #parameters-32
 
-[161]: #editcontact
+[161]: #destroyarc-3
 
-[162]: #showcontextmenu
+[162]: #parameters-33
 
-[163]: #parameters-32
+[163]: #onwindowresize-2
 
-[164]: #getinitial
+[164]: #onwindowresize-3
 
-[165]: #parameters-33
+[165]: #stop-2
 
-[166]: #select
+[166]: #stop-3
 
-[167]: #render-22
+[167]: #start-2
 
-[168]: #newcontactbutton
+[168]: #start-3
 
-[169]: #parameters-34
+[169]: #animate-2
 
-[170]: #contactdetails
+[170]: #animate-3
 
-[171]: #field
+[171]: #renderscene-2
 
-[172]: #parameters-35
+[172]: #renderscene-3
 
-[173]: #confirmdelete-1
+[173]: #render-7
 
-[174]: #editcontact-1
+[174]: #render-8
 
-[175]: #render-23
+[175]: #curve
 
-[176]: #getlocaltime
+[176]: #getsplinefromcoords
 
-[177]: #parameters-36
+[177]: #parameters-34
 
-[178]: #settings
+[178]: #getsplinefromcoords-1
 
-[179]: #componentdidmount-5
+[179]: #parameters-35
 
-[180]: #componentwillunmount-4
+[180]: #clamp
 
-[181]: #setupcontextmenu-4
+[181]: #parameters-36
 
-[182]: #parameters-37
+[182]: #clamp-1
 
-[183]: #render-24
+[183]: #parameters-37
 
-[184]: #settingsapp
+[184]: #coordinatetoposition
 
-[185]: #confirmbackupwallet
+[185]: #parameters-38
 
-[186]: #toggleverifymodulesource
+[186]: #coordinatetoposition-1
 
-[187]: #parameters-38
+[187]: #parameters-39
 
-[188]: #updatehandlers
+[188]: #play
 
-[189]: #handleautoupdatechange
+[189]: #play-1
 
-[190]: #parameters-39
+[190]: #stop-4
 
-[191]: #render-25
+[191]: #stop-5
 
-[192]: #render-26
+[192]: #restart
 
-[193]: #browsebackupdir
+[193]: #restart-1
 
-[194]: #settingsapp-1
+[194]: #curve-1
 
-[195]: #confirmbackupwallet-1
+[195]: #getsplinefromcoords-2
 
-[196]: #toggleverifymodulesource-1
+[196]: #parameters-40
 
-[197]: #parameters-40
+[197]: #getsplinefromcoords-3
 
-[198]: #updatehandlers-1
+[198]: #parameters-41
 
-[199]: #handleautoupdatechange-1
+[199]: #clamp-2
 
-[200]: #parameters-41
+[200]: #parameters-42
 
-[201]: #render-27
+[201]: #clamp-3
 
-[202]: #render-28
+[202]: #parameters-43
 
-[203]: #browsebackupdir-1
+[203]: #coordinatetoposition-2
 
-[204]: #languagesetting
+[204]: #parameters-44
 
-[205]: #handlechange
+[205]: #coordinatetoposition-3
 
-[206]: #parameters-42
+[206]: #parameters-45
 
-[207]: #render-29
+[207]: #play-2
 
-[208]: #settingscore
+[208]: #play-3
 
-[209]: #confirmswitchmanualdaemon
+[209]: #stop-6
 
-[210]: #restartcore
+[210]: #stop-7
 
-[211]: #movedatadir
+[211]: #restart-2
 
-[212]: #handlefilecopy
+[212]: #restart-3
 
-[213]: #parameters-43
+[213]: #point
 
-[214]: #askforcorerestart
+[214]: #setcolor
 
-[215]: #parameters-44
+[215]: #parameters-46
 
-[216]: #updatestaking
+[216]: #setcolor-1
 
-[217]: #parameters-45
+[217]: #parameters-47
 
-[218]: #updatemining
+[218]: #point-1
 
-[219]: #parameters-46
+[219]: #setcolor-2
 
-[220]: #updateminingwhitelist
+[220]: #parameters-48
 
-[221]: #parameters-47
+[221]: #setcolor-3
 
-[222]: #updatehandlers-2
+[222]: #parameters-49
 
-[223]: #render-30
+[223]: #header
 
-[224]: #rescanbutton
+[224]: #render-9
 
-[225]: #rescan
+[225]: #loginstatus
 
-[226]: #render-31
+[226]: #signinstatusmessage
 
-[227]: #settingsstyle
+[227]: #statusicon
 
-[228]: #componentdidmount-6
+[228]: #gotosecurity
 
-[229]: #getusersdefaultaddress
+[229]: #render-10
 
-[230]: #togglegloberender
+[230]: #stakingstatus
 
-[231]: #parameters-48
+[231]: #render-11
 
-[232]: #setwallpaper
+[232]: #render-12
 
-[233]: #parameters-49
+[233]: #stakingstatus-1
 
-[234]: #setcolor-1
+[234]: #render-13
 
-[235]: #parameters-50
+[235]: #render-14
 
-[236]: #resetcolors
+[236]: #syncstatus
 
-[237]: #loadcustomtheme
+[237]: #render-15
 
-[238]: #parameters-51
+[238]: #render-16
 
-[239]: #openpickthemefiledialog
+[239]: #syncstatus-1
 
-[240]: #exportthemefiledialog
+[240]: #render-17
 
-[241]: #pressdarktheme
+[241]: #render-18
 
-[242]: #presslighttheme
+[242]: #myaddresses
 
-[243]: #presscustomtheme
+[243]: #usercontrol
 
-[244]: #pressresettheme
+[244]: #walletstatus
 
-[245]: #savepreviouscustomtheme
+[245]: #render-19
 
-[246]: #settocustom
+[246]: #navigation
 
-[247]: #setthemeselector
+[247]: #navitem
 
-[248]: #parameters-52
+[248]: #parameters-50
 
-[249]: #render-32
+[249]: #modulenavitem
 
-[250]: #colorpicker
+[250]: #parameters-51
 
-[251]: #openpicker
+[251]: #navigation-1
 
-[252]: #closepicker
+[252]: #send
 
-[253]: #handlecolorchange
+[253]: #componentdidmount-8
 
-[254]: #parameters-53
+[254]: #componentdidmount-9
 
-[255]: #render-33
+[255]: #movebetweenaccounts
 
-[256]: #backgroundpicker
+[256]: #render-20
 
-[257]: #setdefault
+[257]: #render-21
 
-[258]: #parameters-54
+[258]: #send-1
 
-[259]: #handlefilepick
+[259]: #componentdidmount-10
 
-[260]: #parameters-55
+[260]: #componentdidmount-11
 
-[261]: #render-34
+[261]: #movebetweenaccounts-1
 
-[262]: #themepicker
+[262]: #render-22
 
-[263]: #settocustomtheme
+[263]: #render-23
 
-[264]: #setselector
+[264]: #movebetweenaccountsform
 
-[265]: #parameters-56
+[265]: #confirmmove
 
-[266]: #render-35
+[266]: #parameters-52
 
-[267]: #settingssecurity
+[267]: #render-24
 
-[268]: #render-36
+[268]: #movebetweenaccountsmodal
 
-[269]: #login
+[269]: #amountfield
 
-[270]: #rendertimeinputs
+[270]: #nxstofiat
 
-[271]: #parameters-57
+[271]: #parameters-53
 
-[272]: #render-37
+[272]: #nxstofiat-1
 
-[273]: #encrypted
+[273]: #parameters-54
 
-[274]: #render-38
+[274]: #fiattonxs
 
-[275]: #changepassword
+[275]: #parameters-55
 
-[276]: #confirmlogout
+[276]: #fiattonxs-1
 
-[277]: #render-39
+[277]: #parameters-56
 
-[278]: #importprivkey
+[278]: #amountfieldname
 
-[279]: #render-40
+[279]: #amountfieldname-1
 
-[280]: #viewprivkeyforaddress
+[280]: #fiatamountfieldname
 
-[281]: #showprivkey
+[281]: #fiatamountfieldname-1
 
-[282]: #parameters-58
+[282]: #render-25
 
-[283]: #copyprivkey
+[283]: #render-26
 
-[284]: #resetprivatekey
+[284]: #amountfield-1
 
-[285]: #render-41
+[285]: #nxstofiat-2
 
-[286]: #unencrypted
+[286]: #parameters-57
 
-[287]: #render-42
+[287]: #nxstofiat-3
 
-[288]: #encryptwallet
+[288]: #parameters-58
 
-[289]: #render-43
+[289]: #fiattonxs-2
 
-[290]: #settingsmodules
+[290]: #parameters-59
 
-[291]: #render-44
+[291]: #fiattonxs-3
 
-[292]: #module
+[292]: #parameters-60
 
-[293]: #enablemodule
+[293]: #amountfieldname-2
 
-[294]: #disablemodule
+[294]: #amountfieldname-3
 
-[295]: #togglemodule
+[295]: #fiatamountfieldname-2
 
-[296]: #openmoduledetails
+[296]: #fiatamountfieldname-3
 
-[297]: #render-45
+[297]: #render-27
 
-[298]: #addmodule
+[298]: #render-28
 
-[299]: #browsefiles
+[299]: #sendform
 
-[300]: #browsedirectories
+[300]: #confirmsend
 
-[301]: #getfilesfromevent
+[301]: #parameters-61
 
-[302]: #parameters-59
+[302]: #confirmsend-1
 
-[303]: #handledrop
+[303]: #parameters-62
 
-[304]: #parameters-60
+[304]: #addrecipient
 
-[305]: #startinstall
+[305]: #addrecipient-1
 
-[306]: #parameters-61
+[306]: #renderaddrecipientbutton
 
-[307]: #render-46
+[307]: #parameters-63
 
-[308]: #terminal
+[308]: #renderaddrecipientbutton-1
 
-[309]: #componentdidmount-7
+[309]: #parameters-64
 
-[310]: #componentwillunmount-5
+[310]: #render-29
 
-[311]: #setupcontextmenu-5
+[311]: #render-30
 
-[312]: #parameters-62
+[312]: #sendform-1
 
-[313]: #render-47
+[313]: #confirmsend-2
 
-[314]: #terminalconsole
+[314]: #parameters-65
 
-[315]: #loadcommandlist
+[315]: #confirmsend-3
 
-[316]: #componentdidupdate-3
+[316]: #parameters-66
 
-[317]: #parameters-63
+[317]: #addrecipient-2
 
-[318]: #execute
+[318]: #addrecipient-3
 
-[319]: #handlekeydown
+[319]: #renderaddrecipientbutton-2
 
-[320]: #parameters-64
+[320]: #parameters-67
 
-[321]: #formateautosuggest
+[321]: #renderaddrecipientbutton-3
 
-[322]: #parameters-65
+[322]: #parameters-68
 
-[323]: #render-48
+[323]: #render-31
 
-[324]: #terminalcore
+[324]: #render-32
 
-[325]: #componentwillreceiveprops
+[325]: #recipients
 
-[326]: #parameters-66
+[326]: #render-33
 
-[327]: #onscrollevent
+[327]: #render-34
 
-[328]: #render-49
+[328]: #recipients-1
 
-[329]: #about
+[329]: #render-35
 
-[330]: #getcurrentyear
+[330]: #render-36
 
-[331]: #getinterfaceversionnumber
+[331]: #recipientfield
 
-[332]: #getdaemonversionnumber
+[332]: #handleselect
 
-[333]: #render-50
+[333]: #parameters-69
 
-[334]: #modules
+[334]: #handleselect-1
 
-[335]: #componentdidmount-8
+[335]: #parameters-70
 
-[336]: #componentwillunmount-6
+[336]: #createcontact
 
-[337]: #setupcontextmenu-6
+[337]: #createcontact-1
 
-[338]: #parameters-67
+[338]: #render-37
 
-[339]: #render-51
+[339]: #render-38
 
-[340]: #pagemodule
+[340]: #recipientfield-1
 
-[341]: #parameters-68
+[341]: #handleselect-2
 
-[342]: #pagemodule-1
+[342]: #parameters-71
 
-[343]: #parameters-69
+[343]: #handleselect-3
 
-[344]: #webview
+[344]: #parameters-72
 
-[345]: #componentdidmount-9
+[345]: #createcontact-2
 
-[346]: #componentwillunmount-7
+[346]: #createcontact-3
 
-[347]: #render-52
+[347]: #render-39
 
-[348]: #appbackground
+[348]: #render-40
 
-[349]: #render-53
+[349]: #transactions
 
-[350]: #starrysky
+[350]: #componentdidmount-12
 
-[351]: #cosmiclight
+[351]: #componentdidupdate-8
 
-[352]: #themecontroller
+[352]: #parameters-73
 
-[353]: #render-54
+[353]: #savecsv
 
-[354]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
+[354]: #parameters-74
 
-[355]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+[355]: #render-41
 
-[356]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+[356]: #render-42
+
+[357]: #transactionstritium
+
+[358]: #componentdidmount-13
+
+[359]: #market
+
+[360]: #refresher
+
+[361]: #formatbuydata
+
+[362]: #parameters-75
+
+[363]: #formatselldata
+
+[364]: #parameters-76
+
+[365]: #formatchartdata
+
+[366]: #parameters-77
+
+[367]: #onedayinfo
+
+[368]: #parameters-78
+
+[369]: #refreshmarket
+
+[370]: #render-43
+
+[371]: #marketdepth
+
+[372]: #render-44
+
+[373]: #candlestick
+
+[374]: #render-45
+
+[375]: #addressbook
+
+[376]: #componentdidmount-14
+
+[377]: #showaddcontact
+
+[378]: #render-46
+
+[379]: #panelcontrols
+
+[380]: #searchbox
+
+[381]: #exportaddressbook
+
+[382]: #showaddcontact-1
+
+[383]: #showmyaddresses
+
+[384]: #render-47
+
+[385]: #render-48
+
+[386]: #contactlist
+
+[387]: #render-49
+
+[388]: #contact
+
+[389]: #confirmdelete
+
+[390]: #editcontact
+
+[391]: #showcontextmenu
+
+[392]: #parameters-79
+
+[393]: #getinitial
+
+[394]: #parameters-80
+
+[395]: #select
+
+[396]: #render-50
+
+[397]: #newcontactbutton
+
+[398]: #parameters-81
+
+[399]: #contactdetails
+
+[400]: #field
+
+[401]: #parameters-82
+
+[402]: #confirmdelete-1
+
+[403]: #editcontact-1
+
+[404]: #render-51
+
+[405]: #getlocaltime
+
+[406]: #parameters-83
+
+[407]: #settings
+
+[408]: #componentdidmount-15
+
+[409]: #render-52
+
+[410]: #settingsapp
+
+[411]: #confirmbackupwallet
+
+[412]: #toggleverifymodulesource
+
+[413]: #parameters-84
+
+[414]: #updatehandlers
+
+[415]: #handleautoupdatechange
+
+[416]: #parameters-85
+
+[417]: #render-53
+
+[418]: #render-54
+
+[419]: #browsebackupdir
+
+[420]: #settingsapp-1
+
+[421]: #confirmbackupwallet-1
+
+[422]: #toggleverifymodulesource-1
+
+[423]: #parameters-86
+
+[424]: #updatehandlers-1
+
+[425]: #handleautoupdatechange-1
+
+[426]: #parameters-87
+
+[427]: #render-55
+
+[428]: #render-56
+
+[429]: #browsebackupdir-1
+
+[430]: #languagesetting
+
+[431]: #handlechange
+
+[432]: #parameters-88
+
+[433]: #render-57
+
+[434]: #settingscore
+
+[435]: #confirmswitchmanualdaemon
+
+[436]: #render-58
+
+[437]: #rescanbutton
+
+[438]: #rescan
+
+[439]: #render-59
+
+[440]: #settingsstyle
+
+[441]: #componentdidmount-16
+
+[442]: #getusersdefaultaddress
+
+[443]: #togglegloberender
+
+[444]: #parameters-89
+
+[445]: #setwallpaper
+
+[446]: #parameters-90
+
+[447]: #setcolor-4
+
+[448]: #parameters-91
+
+[449]: #resetcolors
+
+[450]: #loadcustomtheme
+
+[451]: #parameters-92
+
+[452]: #openpickthemefiledialog
+
+[453]: #exportthemefiledialog
+
+[454]: #pressdarktheme
+
+[455]: #presslighttheme
+
+[456]: #presscustomtheme
+
+[457]: #pressresettheme
+
+[458]: #savepreviouscustomtheme
+
+[459]: #settocustom
+
+[460]: #setthemeselector
+
+[461]: #parameters-93
+
+[462]: #render-60
+
+[463]: #colorpicker
+
+[464]: #openpicker
+
+[465]: #closepicker
+
+[466]: #handlecolorchange
+
+[467]: #parameters-94
+
+[468]: #render-61
+
+[469]: #backgroundpicker
+
+[470]: #setdefault
+
+[471]: #parameters-95
+
+[472]: #handlefilepick
+
+[473]: #parameters-96
+
+[474]: #render-62
+
+[475]: #themepicker
+
+[476]: #settocustomtheme
+
+[477]: #setselector
+
+[478]: #parameters-97
+
+[479]: #render-63
+
+[480]: #settingssecurity
+
+[481]: #render-64
+
+[482]: #login
+
+[483]: #rendertimeinputs
+
+[484]: #parameters-98
+
+[485]: #render-65
+
+[486]: #encrypted
+
+[487]: #render-66
+
+[488]: #changepassword
+
+[489]: #confirmlogout
+
+[490]: #render-67
+
+[491]: #importprivkey
+
+[492]: #render-68
+
+[493]: #viewprivkeyforaddress
+
+[494]: #showprivkey
+
+[495]: #parameters-99
+
+[496]: #copyprivkey
+
+[497]: #resetprivatekey
+
+[498]: #render-69
+
+[499]: #unencrypted
+
+[500]: #render-70
+
+[501]: #encryptwallet
+
+[502]: #render-71
+
+[503]: #settingsmodules
+
+[504]: #render-72
+
+[505]: #module
+
+[506]: #enablemodule
+
+[507]: #disablemodule
+
+[508]: #togglemodule
+
+[509]: #openmoduledetails
+
+[510]: #render-73
+
+[511]: #addmodule
+
+[512]: #browsefiles
+
+[513]: #browsedirectories
+
+[514]: #getfilesfromevent
+
+[515]: #parameters-100
+
+[516]: #handledrop
+
+[517]: #parameters-101
+
+[518]: #startinstall
+
+[519]: #parameters-102
+
+[520]: #render-74
+
+[521]: #terminal
+
+[522]: #render-75
+
+[523]: #terminalconsole
+
+[524]: #loadcommandlist
+
+[525]: #componentdidupdate-9
+
+[526]: #parameters-103
+
+[527]: #componentdidupdate-10
+
+[528]: #parameters-104
+
+[529]: #execute
+
+[530]: #execute-1
+
+[531]: #handlekeydown
+
+[532]: #parameters-105
+
+[533]: #handlekeydown-1
+
+[534]: #parameters-106
+
+[535]: #formateautosuggest
+
+[536]: #parameters-107
+
+[537]: #formateautosuggest-1
+
+[538]: #parameters-108
+
+[539]: #render-76
+
+[540]: #render-77
+
+[541]: #terminalconsole-1
+
+[542]: #loadcommandlist-1
+
+[543]: #componentdidupdate-11
+
+[544]: #parameters-109
+
+[545]: #componentdidupdate-12
+
+[546]: #parameters-110
+
+[547]: #execute-2
+
+[548]: #execute-3
+
+[549]: #handlekeydown-2
+
+[550]: #parameters-111
+
+[551]: #handlekeydown-3
+
+[552]: #parameters-112
+
+[553]: #formateautosuggest-2
+
+[554]: #parameters-113
+
+[555]: #formateautosuggest-3
+
+[556]: #parameters-114
+
+[557]: #render-78
+
+[558]: #render-79
+
+[559]: #terminalcore
+
+[560]: #componentdidupdate-13
+
+[561]: #parameters-115
+
+[562]: #onscrollevent
+
+[563]: #render-80
+
+[564]: #userpage
+
+[565]: #componentdidmount-17
+
+[566]: #showaddcontact-2
+
+[567]: #render-81
+
+[568]: #tokens
+
+[569]: #componentdidmount-18
+
+[570]: #render-82
+
+[571]: #modules
+
+[572]: #componentdidmount-19
+
+[573]: #render-83
+
+[574]: #pagemodule
+
+[575]: #parameters-116
+
+[576]: #pagemodule-1
+
+[577]: #parameters-117
+
+[578]: #webview
+
+[579]: #componentdidmount-20
+
+[580]: #componentwillunmount-8
+
+[581]: #render-84
+
+[582]: #appbackground
+
+[583]: #render-85
+
+[584]: #starrysky
+
+[585]: #cosmiclight
+
+[586]: #themecontroller
+
+[587]: #render-86
+
+[588]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
+
+[589]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+
+[590]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
