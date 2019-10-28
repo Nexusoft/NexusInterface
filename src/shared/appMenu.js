@@ -12,6 +12,7 @@ import { showNotification, openErrorDialog } from 'actions/overlays';
 import { bootstrap } from 'actions/bootstrap';
 import { isCoreConnected } from 'selectors';
 import showOpenDialog from 'utils/promisified/showOpenDialog';
+import { coreDataDir, walletDataDir } from 'consts/paths';
 import { checkForUpdates, quitAndInstall } from 'lib/updater';
 
 const separator = {
@@ -204,6 +205,19 @@ const walletGuideLink = {
   },
 };
 
+const openCoreDataDir = {
+  label: __('Open Core Data Folder'),
+  click: () => {
+    shell.openItem(coreDataDir);
+  },
+};
+
+const openInterfaceDataDir = {
+  label: __('Open Interface Data Folder'),
+  click: () => {
+    shell.openItem(walletDataDir);
+  },
+};
 const updaterIdle = {
   label: __('Check for Updates...'),
   enabled: true,
@@ -329,6 +343,8 @@ function buildDarwinTemplate() {
       websiteLink,
       gitRepoLink,
       walletGuideLink,
+      openCoreDataDir,
+      openInterfaceDataDir,
       // separator,
       // Disable checking for updates on Mac until we have the developer key
       // updaterMenuItem(),
@@ -398,6 +414,8 @@ function buildDefaultTemplate() {
       websiteLink,
       gitRepoLink,
       walletGuideLink,
+      openCoreDataDir,
+      openInterfaceDataDir,
       separator,
       updaterMenuItem(),
     ],

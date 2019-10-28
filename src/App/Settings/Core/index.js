@@ -336,6 +336,18 @@ class SettingsCore extends Component {
       this.props.restartCore();
     }
   };
+  
+    clearPeerConnections = async () => {
+    const confirmed = await confirm({
+      question: __('Clear peer connections') + '?',
+      note:
+        'Nexus Core will be restarted. After that, all stored peer connections will be reset.',
+    });
+    if (confirmed) {
+      this.props.updateSettings({ clearPeers: true });
+      this.props.restartCore();
+    }
+  };
 
   // /**
   //  * Generates the number of ip witelist feilds there are
@@ -477,6 +489,21 @@ class SettingsCore extends Component {
                 </Button>
               </SettingsField>
 
+              <SettingsField
+                connectLabel
+                label={__('Clear peer connections')}
+                subLabel={__(
+                  'Clear all stored peer connections and restart Nexus'
+                )}
+              >
+                <Button
+                  onClick={this.clearPeerConnections}
+                  style={{ height: consts.inputHeightEm + 'em' }}
+                >
+                  {__('Clear')}
+                </Button>
+              </SettingsField>
+              
               <SettingsField
                 connectLabel
                 label={__('Verbose level')}

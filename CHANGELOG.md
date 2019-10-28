@@ -5,6 +5,8 @@
 #### Additions
 
 - Nexus Daemon Core 3.0.6
+- Added ability to clear peer connections
+- Added paths to core data folder
 
 #### Adjustments
 

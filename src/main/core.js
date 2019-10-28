@@ -9,6 +9,7 @@ import { LoadSettings, UpdateSettings } from 'lib/settings';
 import { customConfig, loadNexusConf } from 'lib/coreConfig';
 import exec from 'utils/promisified/exec';
 import sleep from 'utils/promisified/sleep';
+import deleteDirectory from 'utils/promisified/deleteDirectory';
 
 const coreBinaryName = `nexus-${process.platform}-${process.arch}${
   process.platform === 'win32' ? '.exe' : ''
@@ -151,6 +152,15 @@ class Core {
       );
     }
 
+    if (settings.clearPeers) {
+      if (fs.existsSync(path.join(conf.dataDir, 'addr.bak'))) {
+        await deleteDirectory(path.join(conf.dataDir, 'addr.bak'));
+      }
+      if (fs.existsSync(path.join(conf.dataDir, 'addr'))) {
+        fs.renameSync(path.join(conf.dataDir, 'addr'), path.join(conf.dataDir, 'addr.bak'));
+      }
+      UpdateSettings({ clearPeers: false});
+    }
     const params = [
       '-daemon',
       '-server',

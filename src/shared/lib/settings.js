@@ -67,6 +67,7 @@ export const defaultSettings = {
   windowY: undefined,
   forkBlocks: 0,
   walletClean: false,
+  clearPeers: false,
 };
 
 export let tempSettings = null;
