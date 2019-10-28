@@ -17,6 +17,7 @@ const locales = [
   'nl',
   'pl',
   'pt',
+  'ro',
   'ru',
   'zh-cn',
 ];

@@ -11,6 +11,7 @@ import ChineseSimpleFlag from './flags/cn.png';
 import FinnishFlag from './flags/fi.png';
 import ArabicFlag from './flags/arabic.png';
 import HungarianFlag from './flags/hu.png';
+import RomanianFlag from './flags/ro.png';
 import USUKFlag from './flags/US-UK.png';
 
 /**
@@ -78,6 +79,11 @@ const languages = [
     code: 'pt',
     flag: PortugueseFlag,
     name: 'Portuguese',
+  },
+  {
+    code: 'ro',
+    flag: RomanianFlag,
+    name: 'Romanian',
   },
   {
     code: 'ru',
