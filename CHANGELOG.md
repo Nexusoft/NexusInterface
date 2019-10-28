@@ -1,8 +1,26 @@
-# 2.0.0-Beta (2019.9.24)
+# 2.0.0-Beta.2 (2019.10.28)
 
-[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.0.0-beta.1)
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.0.0-beta.2)
 
 First Release with Tritium
+
+# 1.2.4 (2019.10.26)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v1.2.4)
+
+#### Additions
+
+- Nexus Daemon Core 3.0.6
+- Added ability to clear peer connections
+- Added paths to core data folder
+
+#### Adjustments
+
+- None
+
+#### Fixes
+
+- None
 
 # 1.2.3 (2019.9.5)
 
