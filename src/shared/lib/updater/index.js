@@ -74,7 +74,6 @@ export async function startAutoUpdate() {
         semver.lt('v' + APP_VERSION, latestVerion) &&
         response.data.prerelease === false
       ) {
-        console.log(`New Version ${response.data.tag_name}, Click to download`);
         showBackgroundTask(AutoUpdateBackgroundTask, {
           version: response.data.tag_name,
           quitAndInstall: null,

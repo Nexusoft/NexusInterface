@@ -49,7 +49,7 @@ export default class AutoUpdateBackgroundTask extends React.Component {
         }}
         onClick={gitHub ? this.exitToGitHub : this.confirmInstall}
       >
-        {__('New wallet version %{version} - Ready to install!', {
+        {__('New wallet version %{version} - Click here to install', {
           version: this.props.version,
         })}
       </BackgroundTask>
