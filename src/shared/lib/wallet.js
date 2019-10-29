@@ -38,10 +38,21 @@ export function backupWallet(backupFolder) {
   return rpc('backupwallet', [backupDir + '/NexusBackup_' + now + '.dat']);
 }
 
-export const closeWallet = () => {
+export const closeWallet = async beforeExit => {
+  const {
+    settings: { manualDaemon },
+  } = store.getState();
+
   store.dispatch({
     type: TYPE.CLOSE_WALLET,
   });
+
+  if (!manualDaemon) {
+    await stopCore();
+  }
+
+  if (beforeExit) beforeExit();
+  remote.app.exit();
 };
 
 export const history = createHashHistory();
@@ -51,7 +62,7 @@ export const walletEvents = new EventEmitter();
 walletEvents.once('pre-render', function() {
   remote.getCurrentWindow().on('close', async e => {
     const {
-      settings: { minimizeOnClose, manualDaemon },
+      settings: { minimizeOnClose },
     } = store.getState();
 
     // forceQuit is set when user clicks Quit option in the Tray context menu
@@ -61,12 +72,7 @@ walletEvents.once('pre-render', function() {
         remote.app.dock.hide();
       }
     } else {
-      closeWallet();
-
-      if (!manualDaemon) {
-        await stopCore();
-      }
-      remote.app.exit();
+      await closeWallet();
     }
   });
 });

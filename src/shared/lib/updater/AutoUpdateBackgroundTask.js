@@ -1,7 +1,9 @@
 import React from 'react';
+import { shell, remote } from 'electron';
+
 import BackgroundTask from 'components/BackgroundTask';
 import { openConfirmDialog, showBackgroundTask } from 'lib/ui';
-import { shell, remote } from 'electron';
+import { closeWallet } from 'lib/wallet';
 
 export default class AutoUpdateBackgroundTask extends React.Component {
   confirmInstall = () => {
@@ -9,7 +11,9 @@ export default class AutoUpdateBackgroundTask extends React.Component {
     openConfirmDialog({
       question: __('Close the wallet and install update now?'),
       labelYes: __('Close and install'),
-      callbackYes: this.props.quitAndInstall,
+      callbackYes: () => {
+        closeWallet(this.props.quitAndInstall);
+      },
       labelNo: __('Install it later'),
       callbackNo: () => {
         showBackgroundTask(AutoUpdateBackgroundTask, this.props);
