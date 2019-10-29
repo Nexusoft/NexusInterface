@@ -221,7 +221,7 @@
     "core-js": "^3.2.1",
     "cpy": "^7.3.0",
     "d3-geo": "^1.11.6",
-    "dompurify": "^2.0.6",
+    "dompurify": "^2.0.7",
     "electron-log": "^3.0.8",
     "electron-updater": "^4.1.2",
     "emotion-theming": "^10.0.19",
