@@ -457,6 +457,7 @@ function buildDefaultTemplate() {
     label: __('Help'),
     submenu: [
       about,
+      separator,
       websiteLink,
       gitRepoLink,
       walletGuideLink,
