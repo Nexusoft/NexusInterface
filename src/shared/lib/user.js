@@ -1,8 +1,12 @@
 import * as TYPE from 'consts/actionTypes';
-import store from 'store';
+import store, { observeStore } from 'store';
 import { apiPost } from 'lib/tritiumApi';
 import rpc from 'lib/rpc';
 import { legacyMode } from 'consts/misc';
+import { walletEvents } from 'lib/wallet';
+import { openModal } from 'lib/ui';
+import { isLoggedIn } from 'selectors';
+import MigrateAccountModal from 'components/MigrateAccountModal';
 
 const getStakeInfo = async () => {
   try {
@@ -127,3 +131,22 @@ export const updateAccountBalances = async () => {
   const accList = await rpc('listaccounts', []);
   store.dispatch({ type: TYPE.UPDATE_MY_ACCOUNTS, payload: accList });
 };
+
+if (!legacyMode) {
+  walletEvents.once('pre-render', function() {
+    observeStore(isLoggedIn, async loggedIn => {
+      if (loggedIn) {
+        const {
+          settings: { migrateSuggestionDisabled },
+        } = store.getState();
+        if (!migrateSuggestionDisabled) {
+          const coreInfo = await rpc('getinfo', []);
+          const legacyBalance = (coreInfo.balance || 0) + (coreInfo.stake || 0);
+          if (legacyBalance) {
+            openModal(MigrateAccountModal, { legacyBalance });
+          }
+        }
+      }
+    });
+  });
+}

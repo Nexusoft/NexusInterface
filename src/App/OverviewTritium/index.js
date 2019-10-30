@@ -366,23 +366,6 @@ class Overview extends Component {
   };
 
   /**
-   * Returns the Block Date of the last given block
-   *
-   * @returns
-   * @memberof Overview
-   */
-  blockDate() {
-    if (!this.props.blockDate) {
-      return __('Getting next block...');
-    } else {
-      return (
-        this.props.blockDate &&
-        this.props.blockDate.toLocaleString(this.props.settings.locale)
-      );
-    }
-  }
-
-  /**
    * Returns the Connections icon based on how many connections the user has
    *
    * @returns
@@ -720,7 +703,7 @@ class Overview extends Component {
         <Stats left compact={!this.showingGlobe()}>
           <Stat
             as={stake !== undefined ? Link : undefined}
-            to={stake !== undefined ? '/User/Balances' : undefined}
+            to={stake !== undefined ? '/Transactions' : undefined}
           >
             <div>
               <StatLabel>
@@ -750,7 +733,7 @@ class Overview extends Component {
           </Stat>
           <Stat
             as={stake !== undefined ? Link : undefined}
-            to={stake !== undefined ? '/User/Balances' : undefined}
+            to={stake !== undefined ? '/Transactions' : undefined}
           >
             <div>
               <StatLabel>
@@ -777,7 +760,7 @@ class Overview extends Component {
           </Stat>
           <Stat
             as={stake !== undefined ? Link : undefined}
-            to={stake !== undefined ? '/User/Balances' : undefined}
+            to={stake !== undefined ? '/Transactions' : undefined}
           >
             <div>
               <StatLabel>

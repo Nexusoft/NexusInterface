@@ -5,10 +5,12 @@ import { apiPost } from 'lib/tritiumApi';
 import { isCoreConnected, isLoggedIn } from 'selectors';
 import { loadAccounts } from 'lib/user';
 import { showNotification, openModal } from 'lib/ui';
+import { updateSettings } from 'lib/settings';
 import { bootstrap } from 'lib/bootstrap';
 import { getUserStatus } from 'lib/user';
 import { showDesktopNotif } from 'utils/misc';
 import LoginModal from 'components/LoginModal';
+import NewUserModal from 'components/NewUserModal';
 import { legacyMode } from 'consts/misc';
 import { walletEvents } from 'lib/wallet';
 import EncryptionWarningModal from 'components/EncryptionWarningModal';
@@ -156,8 +158,14 @@ walletEvents.once('pre-render', function() {
           await getUserStatus();
           if (justConnected) {
             justConnected = false;
-            if (!isLoggedIn(store.getState())) {
-              openModal(LoginModal);
+            const state = store.getState();
+            if (!isLoggedIn(state)) {
+              if (state.settings.firstCreateNewUserShown) {
+                openModal(LoginModal);
+              } else {
+                openModal(NewUserModal);
+                updateSettings({ firstCreateNewUserShown: true });
+              }
             }
           }
         }
@@ -182,6 +190,18 @@ walletEvents.once('pre-render', function() {
           systemInfo.synccomplete >= 0
         ) {
           store.dispatch(bootstrap({ suggesting: true }));
+        }
+      }
+    );
+
+    observeStore(
+      ({ core: { systemInfo } }) => systemInfo && systemInfo.blocks,
+      blocks => {
+        if (blocks) {
+          store.dispatch({
+            type: TYPE.UPDATE_BLOCK_DATE,
+            payload: new Date(),
+          });
         }
       }
     );

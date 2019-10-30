@@ -70,6 +70,7 @@ export const defaultSettings = {
   experimentalWarningDisabled: false,
   encryptionWarningDisabled: false,
   bootstrapSuggestionDisabled: false,
+  migrateSuggestionDisabled: false,
   windowWidth: 1200,
   windowHeight: 800,
   windowX: undefined,
@@ -80,6 +81,9 @@ export const defaultSettings = {
   tritiumModeNoticeDisabled: false,
   alphaTestNet: 34,
   clearPeers: false,
+  // If false, show Create new user modal instead of Login
+  // modal automatically when core is connected
+  firstCreateNewUserShown: false,
 };
 
 function filterValidSettings(settings) {
