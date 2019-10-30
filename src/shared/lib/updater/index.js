@@ -52,18 +52,11 @@ export function quitAndInstall() {
  * @returns
  */
 export async function startAutoUpdate() {
-  let checkGithubManual = false;
-  if (process.platform === 'darwin') checkGithubManual = true;
-  if (process.platform === 'linux') {
-    const fileExist = fs.existsSync(
-      path.join(assetsParentDir, 'app-update.yml')
-    );
-    if (!fileExist) {
-      checkGithubManual = true;
-    }
-  }
+  const checkGithubManually =
+    process.platform === 'darwin' ||
+    !fs.existsSync(path.join(assetsParentDir, 'app-update.yml'));
 
-  if (checkGithubManual) {
+  if (checkGithubManually) {
     clearTimeout(timerId);
     try {
       const response = await axios.get(
