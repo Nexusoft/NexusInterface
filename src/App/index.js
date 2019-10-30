@@ -1,7 +1,7 @@
 // External
 import { hot } from 'react-hot-loader/root';
 import React from 'react';
-import { Switch } from 'react-router';
+import { Switch, Redirect } from 'react-router';
 import { Router, Route } from 'react-router-dom';
 import styled from '@emotion/styled';
 
@@ -86,6 +86,8 @@ const App = () => (
                 {/* <Route exact path="/List" component={TrustList} /> */}
 
                 <Route path="/Modules/:name" component={Modules} />
+
+                <Redirect to="/" />
               </Switch>
             </Main>
             <Navigation />
