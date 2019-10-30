@@ -70,6 +70,7 @@ export const defaultSettings = {
   experimentalWarningDisabled: false,
   encryptionWarningDisabled: false,
   bootstrapSuggestionDisabled: false,
+  migrateSuggestionDisabled: false,
   windowWidth: 1200,
   windowHeight: 800,
   windowX: undefined,

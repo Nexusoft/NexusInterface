@@ -1,8 +1,10 @@
 // External
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import { reduxForm, Field, FieldArray, formValueSelector } from 'redux-form';
 import styled from '@emotion/styled';
+import qs from 'querystring';
 
 // Internal Global
 import rpc from 'lib/rpc';
@@ -40,7 +42,7 @@ const SendFormButtons = styled.div({
 
 const formName = 'sendNXS';
 const valueSelector = formValueSelector(formName);
-const mapStateToProps = state => {
+const mapStateToProps = (state, ownProps) => {
   const {
     addressBook,
     myAccounts,
@@ -57,6 +59,12 @@ const mapStateToProps = state => {
     recipients &&
     (recipients.length > 1 ||
       (recipients[0] && recipients[0].amount === accBalance));
+
+  // React-router's search field has a leading ? mark but
+  // qs.parse will consider it invalid, so remove it
+  const queryParams = qs.parse(ownProps.location.search.substring(1));
+  const sendTo = queryParams && queryParams.sendTo;
+
   return {
     minConfirmations,
     locked,
@@ -68,6 +76,18 @@ const mapStateToProps = state => {
       form[formName] && form[formName].registeredFields
     ),
     accBalance: hideSendAll ? undefined : accBalance,
+    initialValues: {
+      sendFrom: null,
+      recipients: [
+        {
+          address: sendTo || null,
+          amount: '',
+          fiatAmount: '',
+        },
+      ],
+      password: null,
+      message: '',
+    },
   };
 };
 
@@ -77,22 +97,11 @@ const mapStateToProps = state => {
  * @class SendForm
  * @extends {Component}
  */
+@withRouter
 @connect(mapStateToProps)
 @reduxForm({
   form: formName,
   destroyOnUnmount: false,
-  initialValues: {
-    sendFrom: null,
-    recipients: [
-      {
-        address: null,
-        amount: '',
-        fiatAmount: '',
-      },
-    ],
-    password: null,
-    message: '',
-  },
   validate: ({ sendFrom, recipients }) => {
     const errors = {};
     if (!sendFrom) {
