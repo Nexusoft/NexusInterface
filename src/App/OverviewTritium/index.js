@@ -366,23 +366,6 @@ class Overview extends Component {
   };
 
   /**
-   * Returns the Block Date of the last given block
-   *
-   * @returns
-   * @memberof Overview
-   */
-  blockDate() {
-    if (!this.props.blockDate) {
-      return __('Getting next block...');
-    } else {
-      return (
-        this.props.blockDate &&
-        this.props.blockDate.toLocaleString(this.props.settings.locale)
-      );
-    }
-  }
-
-  /**
    * Returns the Connections icon based on how many connections the user has
    *
    * @returns

@@ -180,6 +180,18 @@ walletEvents.once('pre-render', function() {
         }
       }
     );
+
+    observeStore(
+      ({ core: { systemInfo } }) => systemInfo && systemInfo.blocks,
+      blocks => {
+        if (blocks) {
+          store.dispatch({
+            type: TYPE.UPDATE_BLOCK_DATE,
+            payload: new Date(),
+          });
+        }
+      }
+    );
   }
 
   // All modes
