@@ -146,7 +146,7 @@ class NewTokenModal extends React.Component {
                 <Field
                   name="supply"
                   component={TextField.RF}
-                  placeholder={__('10000')}
+                  placeholder={'10000'}
                 />
               </>
             </FormField>
@@ -158,7 +158,7 @@ class NewTokenModal extends React.Component {
                 <Field
                   name="decimals"
                   component={TextField.RF}
-                  placeholder={__('4')}
+                  placeholder={'4'}
                 />
               </>
             </FormField>
