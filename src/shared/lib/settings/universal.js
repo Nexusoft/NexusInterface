@@ -80,6 +80,9 @@ export const defaultSettings = {
   tritiumModeNoticeDisabled: false,
   alphaTestNet: 34,
   clearPeers: false,
+  // If false, show Create new user modal instead of Login
+  // modal automatically when core is connected
+  firstCreateNewUserShown: false,
 };
 
 function filterValidSettings(settings) {
