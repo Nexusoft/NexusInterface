@@ -703,7 +703,7 @@ class Overview extends Component {
         <Stats left compact={!this.showingGlobe()}>
           <Stat
             as={stake !== undefined ? Link : undefined}
-            to={stake !== undefined ? '/User/Balances' : undefined}
+            to={stake !== undefined ? '/Transactions' : undefined}
           >
             <div>
               <StatLabel>
@@ -733,7 +733,7 @@ class Overview extends Component {
           </Stat>
           <Stat
             as={stake !== undefined ? Link : undefined}
-            to={stake !== undefined ? '/User/Balances' : undefined}
+            to={stake !== undefined ? '/Transactions' : undefined}
           >
             <div>
               <StatLabel>
@@ -760,7 +760,7 @@ class Overview extends Component {
           </Stat>
           <Stat
             as={stake !== undefined ? Link : undefined}
-            to={stake !== undefined ? '/User/Balances' : undefined}
+            to={stake !== undefined ? '/Transactions' : undefined}
           >
             <div>
               <StatLabel>
