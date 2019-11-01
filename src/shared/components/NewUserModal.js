@@ -11,6 +11,7 @@ import Button from 'components/Button';
 import Link from 'components/Link';
 import LoginModal from 'components/LoginModal';
 import Spinner from 'components/Spinner';
+import FieldSet from 'components/FieldSet';
 import { showNotification, openModal, removeModal } from 'lib/ui';
 import { getUserStatus } from 'lib/user';
 import { errorHandler, numericOnly } from 'utils/form';
@@ -192,6 +193,12 @@ class NewUserModal extends Component {
                 placeholder={__('Re-enter your PIN number')}
               />
             </FormField>
+
+            <FieldSet legend={__('Attention')}>
+              {__(
+                'Memorize or back up your username, password and PIN carefully. If you lose them, no one can help you get access to your own account.'
+              )}
+            </FieldSet>
 
             <Buttons>
               <Button
