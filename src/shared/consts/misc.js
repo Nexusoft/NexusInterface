@@ -14,11 +14,10 @@ export const webGLAvailable = (() => {
 
 export const legacyMode = settings.legacyMode === false ? false : true;
 
-//export const tritiumUpgradeTime = Date.now() + 5000;
-
-export const tritiumUpgradeTime = new Date(1572325200000);
-
-//export const tritiumUpgradeTime = new Date(2019, 8, 24).getTime();
+// 11/11/2019 11:11 PM AZ time (UTC-7)
+export const tritiumUpgradeTime = new Date(
+  Date.UTC(2019, 10, 12, 6, 11, 0)
+).getTime();
 
 // https://github.com/sindresorhus/semver-regex
 export const semverRegex = /(?<=^v?|\sv?)(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-(?:[1-9]\d*|[\da-z-]*[a-z-][\da-z-]*)(?:\.(?:[1-9]\d*|[\da-z-]*[a-z-][\da-z-]*))*)?(?:\+[\da-z-]+(?:\.[\da-z-]+)*)?(?=$|\s)/gi;
