@@ -194,7 +194,7 @@ class NewUserModal extends Component {
               />
             </FormField>
 
-            <FieldSet legend={__('Attention')}>
+            <FieldSet legend={__('Attention')} style={{ fontSize: '.9em' }}>
               {__(
                 'Memorize or back up your username, password and PIN carefully. If you lose them, no one can help you get access to your own account.'
               )}
