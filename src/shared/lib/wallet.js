@@ -84,11 +84,11 @@ walletEvents.once('post-render', function() {
 
   const now = Date.now();
   if (now < tritiumUpgradeTime) {
-    if (legacyMode !== false) {
-      setTimeout(() => {
+    setTimeout(() => {
+      if (legacyMode !== false) {
         openModal(TritiumUpgradeModal);
-      }, tritiumUpgradeTime - now);
-    }
+      }
+    }, tritiumUpgradeTime - now);
   } else {
     if (legacyMode === undefined) {
       openModal(TritiumUpgradeModal);

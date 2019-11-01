@@ -77,7 +77,7 @@ export const defaultSettings = {
   windowY: undefined,
   forkBlocks: 0,
   walletClean: false,
-  legacyMode: false, // only for alpha release
+  legacyMode: undefined,
   tritiumModeNoticeDisabled: false,
   alphaTestNet: 34,
   clearPeers: false,

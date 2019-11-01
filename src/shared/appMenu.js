@@ -354,7 +354,6 @@ function buildDarwinTemplate() {
       legacyMode ? keyManagement : null,
       styleSettings,
       moduleSettings,
-      //TODO: take this out before 1.0
     ].filter(e => e),
   };
 
