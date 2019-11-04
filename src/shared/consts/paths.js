@@ -20,8 +20,8 @@ export const walletDataDir = path.join(appDataDir, 'Nexus Wallet');
 
 export const coreDataDir =
   process.platform === 'win32' || process.platform === 'darwin'
-    ? path.join(appDataDir, 'TAO')
-    : path.join(process.env.HOME, '/.TAO');
+    ? path.join(appDataDir, 'Nexus')
+    : path.join(process.env.HOME, '/.Nexus');
 
 export const assetsParentDir =
   process.env.NODE_ENV === 'development'

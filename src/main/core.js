@@ -170,19 +170,7 @@ class Core {
       `-datadir=${conf.dataDir}`,
       `-rpcport=${conf.port}`,
       `-verbose=${conf.verbose}`,
-      `-private=0`,
-      `-generate=password`,
     ];
-
-    if (
-      !APP_VERSION.toString().includes('alpha') &&
-      !APP_VERSION.toString().includes('beta')
-    ) {
-      updateSettingsFile({ alphaTestNet: null });
-      //Or Remove setting all together?
-    } else {
-      params.push(`-testnet=${settings.alphaTestNet || 34}`);
-    }
 
     //After core forksblocks clear out that field.
     if (settings.forkBlocks) {
