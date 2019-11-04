@@ -36,6 +36,10 @@ These items will let you login to your Sig Chain. The username will be able to b
 
 Not at this time, however nexus supports these functions.
 
+#### Where is my encryption?
+
+On the chain! With sigchains your encryption is on the chain, no need to encrypt your wallet.
+
 #### What is changing with Trust and Stake?
 
 In order to stake and get trust you must use the new Tritium system. On your first start up of the wallet you will be presented our migration tool so that you may migrate your balance off your wallet.dat and on to your sig chain. Once this is complete, verify the amount you would like to stake is in your `Trust` account then enable that amount to be staked by using the adjust stake button. You may have to wait for your Genesis transaction to be confirmed before staking will be enabled.
@@ -43,6 +47,10 @@ In order to stake and get trust you must use the new Tritium system. On your fir
 #### Does staking work differently with tritium?
 
 No, staking works the same. The longer you are on the network the higher your trust score, resulting in larger payouts.
+
+#### It Says I can not stake with out a Genesis?
+
+Please allow the wallet time to generate that transaction, this will happen automatically.
 
 #### What are Names? Why can I create accounts with out a name and why do names cost NXS?
 
@@ -58,4 +66,4 @@ Namespaces like Names are just objects that point to other addresses. You can wo
 
 #### Does that mean I can send someone NXS using their username?
 
-Yes, you can send to a users default account at `users1:default`
+Yes, you can send to a users default account at `username:default`
