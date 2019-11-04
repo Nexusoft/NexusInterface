@@ -20,575 +20,573 @@
     -   [fetchDifficulty][16]
     -   [fetchDifficulty][17]
     -   [blockDate][18]
-    -   [blockDate][19]
+    -   [connectionsIcon][19]
     -   [connectionsIcon][20]
-    -   [connectionsIcon][21]
+    -   [trustIcon][21]
     -   [trustIcon][22]
-    -   [trustIcon][23]
+    -   [blockWeightIcon][23]
     -   [blockWeightIcon][24]
-    -   [blockWeightIcon][25]
+    -   [showingGlobe][25]
     -   [showingGlobe][26]
-    -   [showingGlobe][27]
-    -   [numberWithCommas][28]
-        -   [Parameters][29]
-    -   [numberWithCommas][30]
-        -   [Parameters][31]
-    -   [waitForCore][32]
-        -   [Parameters][33]
-    -   [waitForCore][34]
-        -   [Parameters][35]
+    -   [numberWithCommas][27]
+        -   [Parameters][28]
+    -   [numberWithCommas][29]
+        -   [Parameters][30]
+    -   [waitForCore][31]
+        -   [Parameters][32]
+    -   [waitForCore][33]
+        -   [Parameters][34]
+    -   [returnWeightStats][35]
     -   [returnWeightStats][36]
-    -   [returnWeightStats][37]
-    -   [returnDifficultyStats][38]
-        -   [Parameters][39]
-    -   [returnDifficultyStats][40]
-        -   [Parameters][41]
+    -   [returnDifficultyStats][37]
+        -   [Parameters][38]
+    -   [returnDifficultyStats][39]
+        -   [Parameters][40]
+    -   [render][41]
     -   [render][42]
-    -   [render][43]
--   [Overview][44]
-    -   [formatDiff][45]
-        -   [Parameters][46]
+-   [Overview][43]
+    -   [formatDiff][44]
+        -   [Parameters][45]
+    -   [componentDidMount][46]
     -   [componentDidMount][47]
-    -   [componentDidMount][48]
+    -   [reDrawEverything][48]
     -   [reDrawEverything][49]
-    -   [reDrawEverything][50]
+    -   [componentWillUnmount][50]
     -   [componentWillUnmount][51]
-    -   [componentWillUnmount][52]
-    -   [componentDidUpdate][53]
-        -   [Parameters][54]
-    -   [componentDidUpdate][55]
-        -   [Parameters][56]
+    -   [componentDidUpdate][52]
+        -   [Parameters][53]
+    -   [componentDidUpdate][54]
+        -   [Parameters][55]
+    -   [fetchDifficulty][56]
     -   [fetchDifficulty][57]
-    -   [fetchDifficulty][58]
-    -   [blockDate][59]
-    -   [blockDate][60]
-    -   [connectionsIcon][61]
-    -   [connectionsIcon][62]
-    -   [trustIcon][63]
-    -   [trustIcon][64]
-    -   [blockWeightIcon][65]
-    -   [blockWeightIcon][66]
-    -   [showingGlobe][67]
-    -   [showingGlobe][68]
+    -   [blockDate][58]
+    -   [connectionsIcon][59]
+    -   [connectionsIcon][60]
+    -   [trustIcon][61]
+    -   [trustIcon][62]
+    -   [blockWeightIcon][63]
+    -   [blockWeightIcon][64]
+    -   [showingGlobe][65]
+    -   [showingGlobe][66]
+    -   [numberWithCommas][67]
+        -   [Parameters][68]
     -   [numberWithCommas][69]
         -   [Parameters][70]
-    -   [numberWithCommas][71]
+    -   [waitForCore][71]
         -   [Parameters][72]
     -   [waitForCore][73]
         -   [Parameters][74]
-    -   [waitForCore][75]
-        -   [Parameters][76]
-    -   [returnWeightStats][77]
-    -   [returnWeightStats][78]
+    -   [returnWeightStats][75]
+    -   [returnWeightStats][76]
+    -   [returnDifficultyStats][77]
+        -   [Parameters][78]
     -   [returnDifficultyStats][79]
         -   [Parameters][80]
-    -   [returnDifficultyStats][81]
-        -   [Parameters][82]
-    -   [render][83]
-    -   [render][84]
--   [Globe][85]
-    -   [componentDidMount][86]
-    -   [componentDidMount][87]
-    -   [contextRestoredHandler][88]
-    -   [contextRestoredHandler][89]
+    -   [render][81]
+    -   [render][82]
+-   [Globe][83]
+    -   [componentDidMount][84]
+    -   [componentDidMount][85]
+    -   [contextRestoredHandler][86]
+    -   [contextRestoredHandler][87]
+    -   [contextLostHandler][88]
+        -   [Parameters][89]
     -   [contextLostHandler][90]
         -   [Parameters][91]
-    -   [contextLostHandler][92]
+    -   [componentDidUpdate][92]
         -   [Parameters][93]
     -   [componentDidUpdate][94]
         -   [Parameters][95]
-    -   [componentDidUpdate][96]
-        -   [Parameters][97]
-    -   [componentWillUnmount][98]
-    -   [componentWillUnmount][99]
-    -   [pointRegister][100]
-    -   [pointRegister][101]
-    -   [addSelfPoint][102]
-    -   [addSelfPoint][103]
-    -   [removeAllPoints][104]
-    -   [removeAllPoints][105]
+    -   [componentWillUnmount][96]
+    -   [componentWillUnmount][97]
+    -   [pointRegister][98]
+    -   [pointRegister][99]
+    -   [addSelfPoint][100]
+    -   [addSelfPoint][101]
+    -   [removeAllPoints][102]
+    -   [removeAllPoints][103]
+    -   [destroyPoint][104]
+        -   [Parameters][105]
     -   [destroyPoint][106]
         -   [Parameters][107]
-    -   [destroyPoint][108]
-        -   [Parameters][109]
-    -   [arcRegister][110]
-    -   [arcRegister][111]
-    -   [animateArcs][112]
-    -   [animateArcs][113]
+    -   [arcRegister][108]
+    -   [arcRegister][109]
+    -   [animateArcs][110]
+    -   [animateArcs][111]
+    -   [destroyArc][112]
+        -   [Parameters][113]
     -   [destroyArc][114]
         -   [Parameters][115]
-    -   [destroyArc][116]
-        -   [Parameters][117]
-    -   [onWindowResize][118]
-    -   [onWindowResize][119]
-    -   [stop][120]
-    -   [stop][121]
-    -   [start][122]
-    -   [start][123]
-    -   [animate][124]
-    -   [animate][125]
-    -   [renderScene][126]
-    -   [renderScene][127]
-    -   [render][128]
-    -   [render][129]
--   [Globe][130]
-    -   [componentDidMount][131]
-    -   [componentDidMount][132]
-    -   [contextRestoredHandler][133]
-    -   [contextRestoredHandler][134]
+    -   [onWindowResize][116]
+    -   [onWindowResize][117]
+    -   [stop][118]
+    -   [stop][119]
+    -   [start][120]
+    -   [start][121]
+    -   [animate][122]
+    -   [animate][123]
+    -   [renderScene][124]
+    -   [renderScene][125]
+    -   [render][126]
+    -   [render][127]
+-   [Globe][128]
+    -   [componentDidMount][129]
+    -   [componentDidMount][130]
+    -   [contextRestoredHandler][131]
+    -   [contextRestoredHandler][132]
+    -   [contextLostHandler][133]
+        -   [Parameters][134]
     -   [contextLostHandler][135]
         -   [Parameters][136]
-    -   [contextLostHandler][137]
+    -   [componentDidUpdate][137]
         -   [Parameters][138]
     -   [componentDidUpdate][139]
         -   [Parameters][140]
-    -   [componentDidUpdate][141]
-        -   [Parameters][142]
-    -   [componentWillUnmount][143]
-    -   [componentWillUnmount][144]
-    -   [pointRegister][145]
-    -   [pointRegister][146]
-    -   [addSelfPoint][147]
-    -   [addSelfPoint][148]
-    -   [removeAllPoints][149]
-    -   [removeAllPoints][150]
+    -   [componentWillUnmount][141]
+    -   [componentWillUnmount][142]
+    -   [pointRegister][143]
+    -   [pointRegister][144]
+    -   [addSelfPoint][145]
+    -   [addSelfPoint][146]
+    -   [removeAllPoints][147]
+    -   [removeAllPoints][148]
+    -   [destroyPoint][149]
+        -   [Parameters][150]
     -   [destroyPoint][151]
         -   [Parameters][152]
-    -   [destroyPoint][153]
-        -   [Parameters][154]
-    -   [arcRegister][155]
-    -   [arcRegister][156]
-    -   [animateArcs][157]
-    -   [animateArcs][158]
+    -   [arcRegister][153]
+    -   [arcRegister][154]
+    -   [animateArcs][155]
+    -   [animateArcs][156]
+    -   [destroyArc][157]
+        -   [Parameters][158]
     -   [destroyArc][159]
         -   [Parameters][160]
-    -   [destroyArc][161]
-        -   [Parameters][162]
-    -   [onWindowResize][163]
-    -   [onWindowResize][164]
-    -   [stop][165]
-    -   [stop][166]
-    -   [start][167]
-    -   [start][168]
-    -   [animate][169]
-    -   [animate][170]
-    -   [renderScene][171]
-    -   [renderScene][172]
-    -   [render][173]
-    -   [render][174]
--   [Curve][175]
+    -   [onWindowResize][161]
+    -   [onWindowResize][162]
+    -   [stop][163]
+    -   [stop][164]
+    -   [start][165]
+    -   [start][166]
+    -   [animate][167]
+    -   [animate][168]
+    -   [renderScene][169]
+    -   [renderScene][170]
+    -   [render][171]
+    -   [render][172]
+-   [Curve][173]
+    -   [getSplineFromCoords][174]
+        -   [Parameters][175]
     -   [getSplineFromCoords][176]
         -   [Parameters][177]
-    -   [getSplineFromCoords][178]
+    -   [clamp][178]
         -   [Parameters][179]
     -   [clamp][180]
         -   [Parameters][181]
-    -   [clamp][182]
+    -   [coordinateToPosition][182]
         -   [Parameters][183]
     -   [coordinateToPosition][184]
         -   [Parameters][185]
-    -   [coordinateToPosition][186]
-        -   [Parameters][187]
-    -   [play][188]
-    -   [play][189]
-    -   [stop][190]
-    -   [stop][191]
-    -   [restart][192]
-    -   [restart][193]
--   [Curve][194]
+    -   [play][186]
+    -   [play][187]
+    -   [stop][188]
+    -   [stop][189]
+    -   [restart][190]
+    -   [restart][191]
+-   [Curve][192]
+    -   [getSplineFromCoords][193]
+        -   [Parameters][194]
     -   [getSplineFromCoords][195]
         -   [Parameters][196]
-    -   [getSplineFromCoords][197]
+    -   [clamp][197]
         -   [Parameters][198]
     -   [clamp][199]
         -   [Parameters][200]
-    -   [clamp][201]
+    -   [coordinateToPosition][201]
         -   [Parameters][202]
     -   [coordinateToPosition][203]
         -   [Parameters][204]
-    -   [coordinateToPosition][205]
-        -   [Parameters][206]
-    -   [play][207]
-    -   [play][208]
-    -   [stop][209]
-    -   [stop][210]
-    -   [restart][211]
-    -   [restart][212]
--   [Point][213]
+    -   [play][205]
+    -   [play][206]
+    -   [stop][207]
+    -   [stop][208]
+    -   [restart][209]
+    -   [restart][210]
+-   [Point][211]
+    -   [setColor][212]
+        -   [Parameters][213]
     -   [setColor][214]
         -   [Parameters][215]
-    -   [setColor][216]
-        -   [Parameters][217]
--   [Point][218]
+-   [Point][216]
+    -   [setColor][217]
+        -   [Parameters][218]
     -   [setColor][219]
         -   [Parameters][220]
-    -   [setColor][221]
-        -   [Parameters][222]
--   [Header][223]
-    -   [render][224]
--   [LogInStatus][225]
-    -   [signInStatusMessage][226]
-    -   [statusIcon][227]
-    -   [goToSecurity][228]
+-   [Header][221]
+    -   [render][222]
+-   [LogInStatus][223]
+    -   [signInStatusMessage][224]
+    -   [statusIcon][225]
+    -   [goToSecurity][226]
+    -   [render][227]
+-   [StakingStatus][228]
     -   [render][229]
--   [StakingStatus][230]
-    -   [render][231]
+    -   [render][230]
+-   [StakingStatus][231]
     -   [render][232]
--   [StakingStatus][233]
-    -   [render][234]
+    -   [render][233]
+-   [SyncStatus][234]
     -   [render][235]
--   [SyncStatus][236]
-    -   [render][237]
+    -   [render][236]
+-   [SyncStatus][237]
     -   [render][238]
--   [SyncStatus][239]
-    -   [render][240]
-    -   [render][241]
--   [MyAddresses][242]
--   [UserControl][243]
--   [WalletStatus][244]
-    -   [render][245]
--   [Navigation][246]
-    -   [NavItem][247]
+    -   [render][239]
+-   [MyAddresses][240]
+-   [UserControl][241]
+-   [WalletStatus][242]
+    -   [render][243]
+-   [Navigation][244]
+    -   [NavItem][245]
+        -   [Parameters][246]
+    -   [ModuleNavItem][247]
         -   [Parameters][248]
-    -   [ModuleNavItem][249]
-        -   [Parameters][250]
-    -   [Navigation][251]
--   [Send][252]
-    -   [componentDidMount][253]
-    -   [componentDidMount][254]
-    -   [moveBetweenAccounts][255]
-    -   [render][256]
-    -   [render][257]
--   [Send][258]
-    -   [componentDidMount][259]
-    -   [componentDidMount][260]
-    -   [moveBetweenAccounts][261]
-    -   [render][262]
-    -   [render][263]
--   [MoveBetweenAccountsForm][264]
-    -   [confirmMove][265]
-        -   [Parameters][266]
-    -   [render][267]
-    -   [MoveBetweenAccountsModal][268]
--   [AmountField][269]
+    -   [Navigation][249]
+-   [Send][250]
+    -   [componentDidMount][251]
+    -   [componentDidMount][252]
+    -   [moveBetweenAccounts][253]
+    -   [render][254]
+    -   [render][255]
+-   [Send][256]
+    -   [componentDidMount][257]
+    -   [componentDidMount][258]
+    -   [moveBetweenAccounts][259]
+    -   [render][260]
+    -   [render][261]
+-   [MoveBetweenAccountsForm][262]
+    -   [confirmMove][263]
+        -   [Parameters][264]
+    -   [render][265]
+    -   [MoveBetweenAccountsModal][266]
+-   [AmountField][267]
+    -   [nxsToFiat][268]
+        -   [Parameters][269]
     -   [nxsToFiat][270]
         -   [Parameters][271]
-    -   [nxsToFiat][272]
+    -   [fiatToNxs][272]
         -   [Parameters][273]
     -   [fiatToNxs][274]
         -   [Parameters][275]
-    -   [fiatToNxs][276]
-        -   [Parameters][277]
-    -   [amountFieldName][278]
-    -   [amountFieldName][279]
-    -   [fiatAmountFieldName][280]
-    -   [fiatAmountFieldName][281]
-    -   [render][282]
-    -   [render][283]
--   [AmountField][284]
+    -   [amountFieldName][276]
+    -   [amountFieldName][277]
+    -   [fiatAmountFieldName][278]
+    -   [fiatAmountFieldName][279]
+    -   [render][280]
+    -   [render][281]
+-   [AmountField][282]
+    -   [nxsToFiat][283]
+        -   [Parameters][284]
     -   [nxsToFiat][285]
         -   [Parameters][286]
-    -   [nxsToFiat][287]
+    -   [fiatToNxs][287]
         -   [Parameters][288]
     -   [fiatToNxs][289]
         -   [Parameters][290]
-    -   [fiatToNxs][291]
-        -   [Parameters][292]
-    -   [amountFieldName][293]
-    -   [amountFieldName][294]
-    -   [fiatAmountFieldName][295]
-    -   [fiatAmountFieldName][296]
-    -   [render][297]
-    -   [render][298]
--   [SendForm][299]
+    -   [amountFieldName][291]
+    -   [amountFieldName][292]
+    -   [fiatAmountFieldName][293]
+    -   [fiatAmountFieldName][294]
+    -   [render][295]
+    -   [render][296]
+-   [SendForm][297]
+    -   [confirmSend][298]
+        -   [Parameters][299]
     -   [confirmSend][300]
         -   [Parameters][301]
-    -   [confirmSend][302]
-        -   [Parameters][303]
-    -   [addRecipient][304]
-    -   [addRecipient][305]
+    -   [addRecipient][302]
+    -   [addRecipient][303]
+    -   [renderAddRecipientButton][304]
+        -   [Parameters][305]
     -   [renderAddRecipientButton][306]
         -   [Parameters][307]
-    -   [renderAddRecipientButton][308]
-        -   [Parameters][309]
-    -   [render][310]
-    -   [render][311]
--   [SendForm][312]
+    -   [render][308]
+    -   [render][309]
+-   [SendForm][310]
+    -   [confirmSend][311]
+        -   [Parameters][312]
     -   [confirmSend][313]
         -   [Parameters][314]
-    -   [confirmSend][315]
-        -   [Parameters][316]
-    -   [addRecipient][317]
-    -   [addRecipient][318]
+    -   [addRecipient][315]
+    -   [addRecipient][316]
+    -   [renderAddRecipientButton][317]
+        -   [Parameters][318]
     -   [renderAddRecipientButton][319]
         -   [Parameters][320]
-    -   [renderAddRecipientButton][321]
-        -   [Parameters][322]
-    -   [render][323]
+    -   [render][321]
+    -   [render][322]
+-   [Recipients][323]
     -   [render][324]
--   [Recipients][325]
-    -   [render][326]
+    -   [render][325]
+-   [Recipients][326]
     -   [render][327]
--   [Recipients][328]
-    -   [render][329]
-    -   [render][330]
--   [RecipientField][331]
+    -   [render][328]
+-   [RecipientField][329]
+    -   [handleSelect][330]
+        -   [Parameters][331]
     -   [handleSelect][332]
         -   [Parameters][333]
-    -   [handleSelect][334]
-        -   [Parameters][335]
-    -   [createContact][336]
-    -   [createContact][337]
-    -   [render][338]
-    -   [render][339]
--   [RecipientField][340]
+    -   [createContact][334]
+    -   [createContact][335]
+    -   [render][336]
+    -   [render][337]
+-   [RecipientField][338]
+    -   [handleSelect][339]
+        -   [Parameters][340]
     -   [handleSelect][341]
         -   [Parameters][342]
-    -   [handleSelect][343]
-        -   [Parameters][344]
-    -   [createContact][345]
-    -   [createContact][346]
-    -   [render][347]
-    -   [render][348]
--   [Transactions][349]
-    -   [componentDidMount][350]
-    -   [componentDidUpdate][351]
+    -   [createContact][343]
+    -   [createContact][344]
+    -   [render][345]
+    -   [render][346]
+-   [Transactions][347]
+    -   [componentDidMount][348]
+    -   [componentDidUpdate][349]
+        -   [Parameters][350]
+    -   [saveCSV][351]
         -   [Parameters][352]
-    -   [saveCSV][353]
-        -   [Parameters][354]
-    -   [render][355]
-    -   [render][356]
--   [TransactionsTritium][357]
-    -   [componentDidMount][358]
--   [Market][359]
-    -   [refresher][360]
-    -   [formatBuyData][361]
+    -   [render][353]
+    -   [render][354]
+-   [TransactionsTritium][355]
+    -   [componentDidMount][356]
+-   [Market][357]
+    -   [refresher][358]
+    -   [formatBuyData][359]
+        -   [Parameters][360]
+    -   [formatSellData][361]
         -   [Parameters][362]
-    -   [formatSellData][363]
+    -   [formatChartData][363]
         -   [Parameters][364]
-    -   [formatChartData][365]
+    -   [oneDayinfo][365]
         -   [Parameters][366]
-    -   [oneDayinfo][367]
-        -   [Parameters][368]
-    -   [refreshMarket][369]
+    -   [refreshMarket][367]
+    -   [render][368]
+-   [MarketDepth][369]
     -   [render][370]
--   [MarketDepth][371]
+-   [Candlestick][371]
     -   [render][372]
--   [Candlestick][373]
-    -   [render][374]
--   [AddressBook][375]
-    -   [componentDidMount][376]
-    -   [showAddContact][377]
-    -   [render][378]
--   [PanelControls][379]
-    -   [SearchBox][380]
-    -   [exportAddressBook][381]
-    -   [showAddContact][382]
-    -   [showMyAddresses][383]
-    -   [render][384]
--   [render][385]
--   [ContactList][386]
-    -   [render][387]
--   [Contact][388]
-    -   [confirmDelete][389]
-    -   [editContact][390]
-    -   [showContextMenu][391]
+-   [AddressBook][373]
+    -   [componentDidMount][374]
+    -   [showAddContact][375]
+    -   [render][376]
+-   [PanelControls][377]
+    -   [SearchBox][378]
+    -   [exportAddressBook][379]
+    -   [showAddContact][380]
+    -   [showMyAddresses][381]
+    -   [render][382]
+-   [render][383]
+-   [ContactList][384]
+    -   [render][385]
+-   [Contact][386]
+    -   [confirmDelete][387]
+    -   [editContact][388]
+    -   [showContextMenu][389]
+        -   [Parameters][390]
+    -   [getinitial][391]
         -   [Parameters][392]
-    -   [getinitial][393]
-        -   [Parameters][394]
-    -   [select][395]
-    -   [render][396]
-    -   [NewContactButton][397]
-        -   [Parameters][398]
--   [ContactDetails][399]
-    -   [Field][400]
-        -   [Parameters][401]
-    -   [confirmDelete][402]
-    -   [editContact][403]
-    -   [render][404]
--   [getLocalTime][405]
-    -   [Parameters][406]
--   [Settings][407]
-    -   [componentDidMount][408]
-    -   [render][409]
--   [SettingsApp][410]
-    -   [confirmBackupWallet][411]
-    -   [toggleVerifyModuleSource][412]
-        -   [Parameters][413]
-    -   [updateHandlers][414]
-    -   [handleAutoUpdateChange][415]
-        -   [Parameters][416]
-    -   [render][417]
-    -   [render][418]
-    -   [browseBackupDir][419]
--   [SettingsApp][420]
-    -   [confirmBackupWallet][421]
-    -   [toggleVerifyModuleSource][422]
-        -   [Parameters][423]
-    -   [updateHandlers][424]
-    -   [handleAutoUpdateChange][425]
-        -   [Parameters][426]
-    -   [render][427]
-    -   [render][428]
-    -   [browseBackupDir][429]
--   [LanguageSetting][430]
-    -   [handleChange][431]
-        -   [Parameters][432]
-    -   [render][433]
--   [SettingsCore][434]
-    -   [confirmSwitchManualDaemon][435]
-    -   [render][436]
--   [RescanButton][437]
-    -   [rescan][438]
-    -   [render][439]
--   [SettingsStyle][440]
-    -   [componentDidMount][441]
-    -   [getUsersDefaultAddress][442]
-    -   [toggleGlobeRender][443]
+    -   [select][393]
+    -   [render][394]
+    -   [NewContactButton][395]
+        -   [Parameters][396]
+-   [ContactDetails][397]
+    -   [Field][398]
+        -   [Parameters][399]
+    -   [confirmDelete][400]
+    -   [editContact][401]
+    -   [render][402]
+-   [getLocalTime][403]
+    -   [Parameters][404]
+-   [Settings][405]
+    -   [componentDidMount][406]
+    -   [render][407]
+-   [SettingsApp][408]
+    -   [confirmBackupWallet][409]
+    -   [toggleVerifyModuleSource][410]
+        -   [Parameters][411]
+    -   [updateHandlers][412]
+    -   [handleAutoUpdateChange][413]
+        -   [Parameters][414]
+    -   [render][415]
+    -   [render][416]
+    -   [browseBackupDir][417]
+-   [SettingsApp][418]
+    -   [confirmBackupWallet][419]
+    -   [toggleVerifyModuleSource][420]
+        -   [Parameters][421]
+    -   [updateHandlers][422]
+    -   [handleAutoUpdateChange][423]
+        -   [Parameters][424]
+    -   [render][425]
+    -   [render][426]
+    -   [browseBackupDir][427]
+-   [LanguageSetting][428]
+    -   [handleChange][429]
+        -   [Parameters][430]
+    -   [render][431]
+-   [SettingsCore][432]
+    -   [confirmSwitchManualDaemon][433]
+    -   [render][434]
+-   [RescanButton][435]
+    -   [rescan][436]
+    -   [render][437]
+-   [SettingsStyle][438]
+    -   [componentDidMount][439]
+    -   [getUsersDefaultAddress][440]
+    -   [toggleGlobeRender][441]
+        -   [Parameters][442]
+    -   [setWallpaper][443]
         -   [Parameters][444]
-    -   [setWallpaper][445]
+    -   [setColor][445]
         -   [Parameters][446]
-    -   [setColor][447]
-        -   [Parameters][448]
-    -   [resetColors][449]
-    -   [loadCustomTheme][450]
-        -   [Parameters][451]
-    -   [openPickThemeFileDialog][452]
-    -   [exportThemeFileDialog][453]
-    -   [pressDarkTheme][454]
-    -   [pressLightTheme][455]
-    -   [pressCustomTheme][456]
-    -   [pressResetTheme][457]
-    -   [savePreviousCustomTheme][458]
-    -   [setToCustom][459]
-    -   [setThemeSelector][460]
-        -   [Parameters][461]
-    -   [render][462]
--   [ColorPicker][463]
-    -   [openPicker][464]
-    -   [closePicker][465]
-    -   [handleColorChange][466]
-        -   [Parameters][467]
-    -   [render][468]
--   [BackgroundPicker][469]
-    -   [setDefault][470]
+    -   [resetColors][447]
+    -   [loadCustomTheme][448]
+        -   [Parameters][449]
+    -   [openPickThemeFileDialog][450]
+    -   [exportThemeFileDialog][451]
+    -   [pressDarkTheme][452]
+    -   [pressLightTheme][453]
+    -   [pressCustomTheme][454]
+    -   [pressResetTheme][455]
+    -   [savePreviousCustomTheme][456]
+    -   [setToCustom][457]
+    -   [setThemeSelector][458]
+        -   [Parameters][459]
+    -   [render][460]
+-   [ColorPicker][461]
+    -   [openPicker][462]
+    -   [closePicker][463]
+    -   [handleColorChange][464]
+        -   [Parameters][465]
+    -   [render][466]
+-   [BackgroundPicker][467]
+    -   [setDefault][468]
+        -   [Parameters][469]
+    -   [handleFilePick][470]
         -   [Parameters][471]
-    -   [handleFilePick][472]
-        -   [Parameters][473]
-    -   [render][474]
--   [ThemePicker][475]
-    -   [setToCustomTheme][476]
-    -   [setSelector][477]
-        -   [Parameters][478]
+    -   [render][472]
+-   [ThemePicker][473]
+    -   [setToCustomTheme][474]
+    -   [setSelector][475]
+        -   [Parameters][476]
+    -   [render][477]
+-   [SettingsSecurity][478]
     -   [render][479]
--   [SettingsSecurity][480]
-    -   [render][481]
--   [Login][482]
-    -   [renderTimeInputs][483]
-        -   [Parameters][484]
+-   [Login][480]
+    -   [renderTimeInputs][481]
+        -   [Parameters][482]
+    -   [render][483]
+-   [Encrypted][484]
     -   [render][485]
--   [Encrypted][486]
-    -   [render][487]
--   [ChangePassword][488]
-    -   [confirmLogout][489]
+-   [ChangePassword][486]
+    -   [confirmLogout][487]
+    -   [render][488]
+-   [ImportPrivKey][489]
     -   [render][490]
--   [ImportPrivKey][491]
-    -   [render][492]
--   [ViewPrivKeyForAddress][493]
-    -   [showPrivKey][494]
-        -   [Parameters][495]
-    -   [copyPrivkey][496]
-    -   [resetPrivateKey][497]
+-   [ViewPrivKeyForAddress][491]
+    -   [showPrivKey][492]
+        -   [Parameters][493]
+    -   [copyPrivkey][494]
+    -   [resetPrivateKey][495]
+    -   [render][496]
+-   [Unencrypted][497]
     -   [render][498]
--   [Unencrypted][499]
+-   [EncryptWallet][499]
     -   [render][500]
--   [EncryptWallet][501]
+-   [SettingsModules][501]
     -   [render][502]
--   [SettingsModules][503]
-    -   [render][504]
--   [Module][505]
-    -   [enableModule][506]
-    -   [disableModule][507]
-    -   [toggleModule][508]
-    -   [openModuleDetails][509]
-    -   [render][510]
--   [AddModule][511]
-    -   [browseFiles][512]
-    -   [browseDirectories][513]
-    -   [getFilesFromEvent][514]
+-   [Module][503]
+    -   [enableModule][504]
+    -   [disableModule][505]
+    -   [toggleModule][506]
+    -   [openModuleDetails][507]
+    -   [render][508]
+-   [AddModule][509]
+    -   [browseFiles][510]
+    -   [browseDirectories][511]
+    -   [getFilesFromEvent][512]
+        -   [Parameters][513]
+    -   [handleDrop][514]
         -   [Parameters][515]
-    -   [handleDrop][516]
+    -   [startInstall][516]
         -   [Parameters][517]
-    -   [startInstall][518]
-        -   [Parameters][519]
+    -   [render][518]
+-   [Terminal][519]
     -   [render][520]
--   [Terminal][521]
-    -   [render][522]
--   [TerminalConsole][523]
-    -   [loadCommandList][524]
+-   [TerminalConsole][521]
+    -   [loadCommandList][522]
+    -   [componentDidUpdate][523]
+        -   [Parameters][524]
     -   [componentDidUpdate][525]
         -   [Parameters][526]
-    -   [componentDidUpdate][527]
-        -   [Parameters][528]
-    -   [execute][529]
-    -   [execute][530]
+    -   [execute][527]
+    -   [execute][528]
+    -   [handleKeyDown][529]
+        -   [Parameters][530]
     -   [handleKeyDown][531]
         -   [Parameters][532]
-    -   [handleKeyDown][533]
+    -   [formateAutoSuggest][533]
         -   [Parameters][534]
     -   [formateAutoSuggest][535]
         -   [Parameters][536]
-    -   [formateAutoSuggest][537]
-        -   [Parameters][538]
-    -   [render][539]
-    -   [render][540]
--   [TerminalConsole][541]
-    -   [loadCommandList][542]
+    -   [render][537]
+    -   [render][538]
+-   [TerminalConsole][539]
+    -   [loadCommandList][540]
+    -   [componentDidUpdate][541]
+        -   [Parameters][542]
     -   [componentDidUpdate][543]
         -   [Parameters][544]
-    -   [componentDidUpdate][545]
-        -   [Parameters][546]
-    -   [execute][547]
-    -   [execute][548]
+    -   [execute][545]
+    -   [execute][546]
+    -   [handleKeyDown][547]
+        -   [Parameters][548]
     -   [handleKeyDown][549]
         -   [Parameters][550]
-    -   [handleKeyDown][551]
+    -   [formateAutoSuggest][551]
         -   [Parameters][552]
     -   [formateAutoSuggest][553]
         -   [Parameters][554]
-    -   [formateAutoSuggest][555]
-        -   [Parameters][556]
-    -   [render][557]
-    -   [render][558]
--   [TerminalCore][559]
-    -   [componentDidUpdate][560]
-        -   [Parameters][561]
-    -   [onScrollEvent][562]
-    -   [render][563]
--   [UserPage][564]
-    -   [componentDidMount][565]
-    -   [showAddContact][566]
-    -   [render][567]
--   [Tokens][568]
-    -   [componentDidMount][569]
-    -   [render][570]
--   [Modules][571]
-    -   [componentDidMount][572]
-    -   [render][573]
+    -   [render][555]
+    -   [render][556]
+-   [TerminalCore][557]
+    -   [componentDidUpdate][558]
+        -   [Parameters][559]
+    -   [onScrollEvent][560]
+    -   [render][561]
+-   [UserPage][562]
+    -   [componentDidMount][563]
+    -   [showAddContact][564]
+    -   [render][565]
+-   [Tokens][566]
+    -   [componentDidMount][567]
+    -   [render][568]
+-   [Modules][569]
+    -   [componentDidMount][570]
+    -   [render][571]
+-   [PageModule][572]
+    -   [Parameters][573]
 -   [PageModule][574]
     -   [Parameters][575]
--   [PageModule][576]
-    -   [Parameters][577]
--   [WebView][578]
-    -   [componentDidMount][579]
-    -   [componentWillUnmount][580]
+-   [WebView][576]
+    -   [componentDidMount][577]
+    -   [componentWillUnmount][578]
+    -   [render][579]
+-   [AppBackground][580]
     -   [render][581]
--   [AppBackground][582]
-    -   [render][583]
--   [StarrySky][584]
--   [CosmicLight][585]
--   [ThemeController][586]
-    -   [render][587]
+-   [StarrySky][582]
+-   [CosmicLight][583]
+-   [ThemeController][584]
+    -   [render][585]
 
 ## Wallet
 
@@ -616,7 +614,7 @@ Formats the Difficulty to 3 decimal points
 
 -   `diff` **any** 
 
-Returns **[Number][588]** Diff but with 3 decimal point places
+Returns **[Number][586]** Diff but with 3 decimal point places
 
 ### componentDidMount
 
@@ -669,12 +667,6 @@ Get the Difficulty from the network
 ### fetchDifficulty
 
 Get the Difficulty from the network
-
-### blockDate
-
-Returns the Block Date of the last given block
-
-Returns **any** 
 
 ### blockDate
 
@@ -816,7 +808,7 @@ Formats the Difficulty to 3 decimal points
 
 -   `diff` **any** 
 
-Returns **[Number][588]** Diff but with 3 decimal point places
+Returns **[Number][586]** Diff but with 3 decimal point places
 
 ### componentDidMount
 
@@ -869,12 +861,6 @@ Get the Difficulty from the network
 ### fetchDifficulty
 
 Get the Difficulty from the network
-
-### blockDate
-
-Returns the Block Date of the last given block
-
-Returns **any** 
 
 ### blockDate
 
@@ -1414,11 +1400,11 @@ Clamp a number between min and max
 
 #### Parameters
 
--   `num` **[Number][588]** Input Value
--   `min` **[Number][588]** Min Value
--   `max` **[Number][588]** Max Value
+-   `num` **[Number][586]** Input Value
+-   `min` **[Number][586]** Min Value
+-   `max` **[Number][586]** Max Value
 
-Returns **[Number][588]** Return Value
+Returns **[Number][586]** Return Value
 
 ### clamp
 
@@ -1426,11 +1412,11 @@ Clamp a number between min and max
 
 #### Parameters
 
--   `num` **[Number][588]** Input Value
--   `min` **[Number][588]** Min Value
--   `max` **[Number][588]** Max Value
+-   `num` **[Number][586]** Input Value
+-   `min` **[Number][586]** Min Value
+-   `max` **[Number][586]** Max Value
 
-Returns **[Number][588]** Return Value
+Returns **[Number][586]** Return Value
 
 ### coordinateToPosition
 
@@ -1438,9 +1424,9 @@ Translates a Lat and Lng to a Vector3 on a sphere
 
 #### Parameters
 
--   `lat` **[Number][588]** Latitude
--   `lng` **[Number][588]** longitude
--   `radius` **[Number][588]** radius of sphere
+-   `lat` **[Number][586]** Latitude
+-   `lng` **[Number][586]** longitude
+-   `radius` **[Number][586]** radius of sphere
 
 Returns **THREE.Vector3** Point on sphere
 
@@ -1450,9 +1436,9 @@ Translates a Lat and Lng to a Vector3 on a sphere
 
 #### Parameters
 
--   `lat` **[Number][588]** Latitude
--   `lng` **[Number][588]** longitude
--   `radius` **[Number][588]** radius of sphere
+-   `lat` **[Number][586]** Latitude
+-   `lng` **[Number][586]** longitude
+-   `radius` **[Number][586]** radius of sphere
 
 Returns **THREE.Vector3** Point on sphere
 
@@ -1512,11 +1498,11 @@ Clamp a number between min and max
 
 #### Parameters
 
--   `num` **[Number][588]** Input Value
--   `min` **[Number][588]** Min Value
--   `max` **[Number][588]** Max Value
+-   `num` **[Number][586]** Input Value
+-   `min` **[Number][586]** Min Value
+-   `max` **[Number][586]** Max Value
 
-Returns **[Number][588]** Return Value
+Returns **[Number][586]** Return Value
 
 ### clamp
 
@@ -1524,11 +1510,11 @@ Clamp a number between min and max
 
 #### Parameters
 
--   `num` **[Number][588]** Input Value
--   `min` **[Number][588]** Min Value
--   `max` **[Number][588]** Max Value
+-   `num` **[Number][586]** Input Value
+-   `min` **[Number][586]** Min Value
+-   `max` **[Number][586]** Max Value
 
-Returns **[Number][588]** Return Value
+Returns **[Number][586]** Return Value
 
 ### coordinateToPosition
 
@@ -1536,9 +1522,9 @@ Translates a Lat and Lng to a Vector3 on a sphere
 
 #### Parameters
 
--   `lat` **[Number][588]** Latitude
--   `lng` **[Number][588]** longitude
--   `radius` **[Number][588]** radius of sphere
+-   `lat` **[Number][586]** Latitude
+-   `lng` **[Number][586]** longitude
+-   `radius` **[Number][586]** radius of sphere
 
 Returns **THREE.Vector3** Point on sphere
 
@@ -1548,9 +1534,9 @@ Translates a Lat and Lng to a Vector3 on a sphere
 
 #### Parameters
 
--   `lat` **[Number][588]** Latitude
--   `lng` **[Number][588]** longitude
--   `radius` **[Number][588]** radius of sphere
+-   `lat` **[Number][586]** Latitude
+-   `lng` **[Number][586]** longitude
+-   `radius` **[Number][586]** radius of sphere
 
 Returns **THREE.Vector3** Point on sphere
 
@@ -1588,7 +1574,7 @@ Sets color of the point
 
 #### Parameters
 
--   `hex` **[string][589]** 
+-   `hex` **[string][587]** 
 
 ### setColor
 
@@ -1596,7 +1582,7 @@ Sets color of the point
 
 #### Parameters
 
--   `hex` **[string][589]** 
+-   `hex` **[string][587]** 
 
 ## Point
 
@@ -1608,7 +1594,7 @@ Sets color of the point
 
 #### Parameters
 
--   `hex` **[string][589]** 
+-   `hex` **[string][587]** 
 
 ### setColor
 
@@ -1616,7 +1602,7 @@ Sets color of the point
 
 #### Parameters
 
--   `hex` **[string][589]** 
+-   `hex` **[string][587]** 
 
 ## Header
 
@@ -2040,7 +2026,7 @@ Return JSX for the Add Recipient Button
 
 #### Parameters
 
--   `$0` **[Object][590]** 
+-   `$0` **[Object][588]** 
     -   `$0.fields`  
 
 ### renderAddRecipientButton
@@ -2049,7 +2035,7 @@ Return JSX for the Add Recipient Button
 
 #### Parameters
 
--   `$0` **[Object][590]** 
+-   `$0` **[Object][588]** 
     -   `$0.fields`  
 
 ### render
@@ -2100,7 +2086,7 @@ Return JSX for the Add Recipient Button
 
 #### Parameters
 
--   `$0` **[Object][590]** 
+-   `$0` **[Object][588]** 
     -   `$0.fields`  
 
 ### renderAddRecipientButton
@@ -2109,7 +2095,7 @@ Return JSX for the Add Recipient Button
 
 #### Parameters
 
--   `$0` **[Object][590]** 
+-   `$0` **[Object][588]** 
     -   `$0.fields`  
 
 ### render
@@ -2532,7 +2518,7 @@ Get Local time
 
 -   `tz` **any** TimeZone
 
-Returns **[string][589]** Hours:Minutes AM/PM
+Returns **[string][587]** Hours:Minutes AM/PM
 
 ## Settings
 
@@ -3425,1146 +3411,1142 @@ Returns **any**
 
 [18]: #blockdate
 
-[19]: #blockdate-1
+[19]: #connectionsicon
 
-[20]: #connectionsicon
+[20]: #connectionsicon-1
 
-[21]: #connectionsicon-1
+[21]: #trusticon
 
-[22]: #trusticon
+[22]: #trusticon-1
 
-[23]: #trusticon-1
+[23]: #blockweighticon
 
-[24]: #blockweighticon
+[24]: #blockweighticon-1
 
-[25]: #blockweighticon-1
+[25]: #showingglobe
 
-[26]: #showingglobe
+[26]: #showingglobe-1
 
-[27]: #showingglobe-1
+[27]: #numberwithcommas
 
-[28]: #numberwithcommas
+[28]: #parameters-3
 
-[29]: #parameters-3
+[29]: #numberwithcommas-1
 
-[30]: #numberwithcommas-1
+[30]: #parameters-4
 
-[31]: #parameters-4
+[31]: #waitforcore
 
-[32]: #waitforcore
+[32]: #parameters-5
 
-[33]: #parameters-5
+[33]: #waitforcore-1
 
-[34]: #waitforcore-1
+[34]: #parameters-6
 
-[35]: #parameters-6
+[35]: #returnweightstats
 
-[36]: #returnweightstats
+[36]: #returnweightstats-1
 
-[37]: #returnweightstats-1
+[37]: #returndifficultystats
 
-[38]: #returndifficultystats
+[38]: #parameters-7
 
-[39]: #parameters-7
+[39]: #returndifficultystats-1
 
-[40]: #returndifficultystats-1
+[40]: #parameters-8
 
-[41]: #parameters-8
+[41]: #render-1
 
-[42]: #render-1
+[42]: #render-2
 
-[43]: #render-2
+[43]: #overview-1
 
-[44]: #overview-1
+[44]: #formatdiff-1
 
-[45]: #formatdiff-1
+[45]: #parameters-9
 
-[46]: #parameters-9
+[46]: #componentdidmount-2
 
-[47]: #componentdidmount-2
+[47]: #componentdidmount-3
 
-[48]: #componentdidmount-3
+[48]: #redraweverything-2
 
-[49]: #redraweverything-2
+[49]: #redraweverything-3
 
-[50]: #redraweverything-3
+[50]: #componentwillunmount-2
 
-[51]: #componentwillunmount-2
+[51]: #componentwillunmount-3
 
-[52]: #componentwillunmount-3
+[52]: #componentdidupdate-2
 
-[53]: #componentdidupdate-2
+[53]: #parameters-10
 
-[54]: #parameters-10
+[54]: #componentdidupdate-3
 
-[55]: #componentdidupdate-3
+[55]: #parameters-11
 
-[56]: #parameters-11
+[56]: #fetchdifficulty-2
 
-[57]: #fetchdifficulty-2
+[57]: #fetchdifficulty-3
 
-[58]: #fetchdifficulty-3
+[58]: #blockdate-1
 
-[59]: #blockdate-2
+[59]: #connectionsicon-2
 
-[60]: #blockdate-3
+[60]: #connectionsicon-3
 
-[61]: #connectionsicon-2
+[61]: #trusticon-2
 
-[62]: #connectionsicon-3
+[62]: #trusticon-3
 
-[63]: #trusticon-2
+[63]: #blockweighticon-2
 
-[64]: #trusticon-3
+[64]: #blockweighticon-3
 
-[65]: #blockweighticon-2
+[65]: #showingglobe-2
 
-[66]: #blockweighticon-3
+[66]: #showingglobe-3
 
-[67]: #showingglobe-2
+[67]: #numberwithcommas-2
 
-[68]: #showingglobe-3
+[68]: #parameters-12
 
-[69]: #numberwithcommas-2
+[69]: #numberwithcommas-3
 
-[70]: #parameters-12
+[70]: #parameters-13
 
-[71]: #numberwithcommas-3
+[71]: #waitforcore-2
 
-[72]: #parameters-13
+[72]: #parameters-14
 
-[73]: #waitforcore-2
+[73]: #waitforcore-3
 
-[74]: #parameters-14
+[74]: #parameters-15
 
-[75]: #waitforcore-3
+[75]: #returnweightstats-2
 
-[76]: #parameters-15
+[76]: #returnweightstats-3
 
-[77]: #returnweightstats-2
+[77]: #returndifficultystats-2
 
-[78]: #returnweightstats-3
+[78]: #parameters-16
 
-[79]: #returndifficultystats-2
+[79]: #returndifficultystats-3
 
-[80]: #parameters-16
+[80]: #parameters-17
 
-[81]: #returndifficultystats-3
+[81]: #render-3
 
-[82]: #parameters-17
+[82]: #render-4
 
-[83]: #render-3
+[83]: #globe
 
-[84]: #render-4
+[84]: #componentdidmount-4
 
-[85]: #globe
+[85]: #componentdidmount-5
 
-[86]: #componentdidmount-4
+[86]: #contextrestoredhandler
 
-[87]: #componentdidmount-5
+[87]: #contextrestoredhandler-1
 
-[88]: #contextrestoredhandler
+[88]: #contextlosthandler
 
-[89]: #contextrestoredhandler-1
+[89]: #parameters-18
 
-[90]: #contextlosthandler
+[90]: #contextlosthandler-1
 
-[91]: #parameters-18
+[91]: #parameters-19
 
-[92]: #contextlosthandler-1
+[92]: #componentdidupdate-4
 
-[93]: #parameters-19
+[93]: #parameters-20
 
-[94]: #componentdidupdate-4
+[94]: #componentdidupdate-5
 
-[95]: #parameters-20
+[95]: #parameters-21
 
-[96]: #componentdidupdate-5
+[96]: #componentwillunmount-4
 
-[97]: #parameters-21
+[97]: #componentwillunmount-5
 
-[98]: #componentwillunmount-4
+[98]: #pointregister
 
-[99]: #componentwillunmount-5
+[99]: #pointregister-1
 
-[100]: #pointregister
+[100]: #addselfpoint
 
-[101]: #pointregister-1
+[101]: #addselfpoint-1
 
-[102]: #addselfpoint
+[102]: #removeallpoints
 
-[103]: #addselfpoint-1
+[103]: #removeallpoints-1
 
-[104]: #removeallpoints
+[104]: #destroypoint
 
-[105]: #removeallpoints-1
+[105]: #parameters-22
 
-[106]: #destroypoint
+[106]: #destroypoint-1
 
-[107]: #parameters-22
+[107]: #parameters-23
 
-[108]: #destroypoint-1
+[108]: #arcregister
 
-[109]: #parameters-23
+[109]: #arcregister-1
 
-[110]: #arcregister
+[110]: #animatearcs
 
-[111]: #arcregister-1
+[111]: #animatearcs-1
 
-[112]: #animatearcs
+[112]: #destroyarc
 
-[113]: #animatearcs-1
+[113]: #parameters-24
 
-[114]: #destroyarc
+[114]: #destroyarc-1
 
-[115]: #parameters-24
+[115]: #parameters-25
 
-[116]: #destroyarc-1
+[116]: #onwindowresize
 
-[117]: #parameters-25
+[117]: #onwindowresize-1
 
-[118]: #onwindowresize
+[118]: #stop
 
-[119]: #onwindowresize-1
+[119]: #stop-1
 
-[120]: #stop
+[120]: #start
 
-[121]: #stop-1
+[121]: #start-1
 
-[122]: #start
+[122]: #animate
 
-[123]: #start-1
+[123]: #animate-1
 
-[124]: #animate
+[124]: #renderscene
 
-[125]: #animate-1
+[125]: #renderscene-1
 
-[126]: #renderscene
+[126]: #render-5
 
-[127]: #renderscene-1
+[127]: #render-6
 
-[128]: #render-5
+[128]: #globe-1
 
-[129]: #render-6
+[129]: #componentdidmount-6
 
-[130]: #globe-1
+[130]: #componentdidmount-7
 
-[131]: #componentdidmount-6
+[131]: #contextrestoredhandler-2
 
-[132]: #componentdidmount-7
+[132]: #contextrestoredhandler-3
 
-[133]: #contextrestoredhandler-2
+[133]: #contextlosthandler-2
 
-[134]: #contextrestoredhandler-3
+[134]: #parameters-26
 
-[135]: #contextlosthandler-2
+[135]: #contextlosthandler-3
 
-[136]: #parameters-26
+[136]: #parameters-27
 
-[137]: #contextlosthandler-3
+[137]: #componentdidupdate-6
 
-[138]: #parameters-27
+[138]: #parameters-28
 
-[139]: #componentdidupdate-6
+[139]: #componentdidupdate-7
 
-[140]: #parameters-28
+[140]: #parameters-29
 
-[141]: #componentdidupdate-7
+[141]: #componentwillunmount-6
 
-[142]: #parameters-29
+[142]: #componentwillunmount-7
 
-[143]: #componentwillunmount-6
+[143]: #pointregister-2
 
-[144]: #componentwillunmount-7
+[144]: #pointregister-3
 
-[145]: #pointregister-2
+[145]: #addselfpoint-2
 
-[146]: #pointregister-3
+[146]: #addselfpoint-3
 
-[147]: #addselfpoint-2
+[147]: #removeallpoints-2
 
-[148]: #addselfpoint-3
+[148]: #removeallpoints-3
 
-[149]: #removeallpoints-2
+[149]: #destroypoint-2
 
-[150]: #removeallpoints-3
+[150]: #parameters-30
 
-[151]: #destroypoint-2
+[151]: #destroypoint-3
 
-[152]: #parameters-30
+[152]: #parameters-31
 
-[153]: #destroypoint-3
+[153]: #arcregister-2
 
-[154]: #parameters-31
+[154]: #arcregister-3
 
-[155]: #arcregister-2
+[155]: #animatearcs-2
 
-[156]: #arcregister-3
+[156]: #animatearcs-3
 
-[157]: #animatearcs-2
+[157]: #destroyarc-2
 
-[158]: #animatearcs-3
+[158]: #parameters-32
 
-[159]: #destroyarc-2
+[159]: #destroyarc-3
 
-[160]: #parameters-32
+[160]: #parameters-33
 
-[161]: #destroyarc-3
+[161]: #onwindowresize-2
 
-[162]: #parameters-33
+[162]: #onwindowresize-3
 
-[163]: #onwindowresize-2
+[163]: #stop-2
 
-[164]: #onwindowresize-3
+[164]: #stop-3
 
-[165]: #stop-2
+[165]: #start-2
 
-[166]: #stop-3
+[166]: #start-3
 
-[167]: #start-2
+[167]: #animate-2
 
-[168]: #start-3
+[168]: #animate-3
 
-[169]: #animate-2
+[169]: #renderscene-2
 
-[170]: #animate-3
+[170]: #renderscene-3
 
-[171]: #renderscene-2
+[171]: #render-7
 
-[172]: #renderscene-3
+[172]: #render-8
 
-[173]: #render-7
+[173]: #curve
 
-[174]: #render-8
+[174]: #getsplinefromcoords
 
-[175]: #curve
+[175]: #parameters-34
 
-[176]: #getsplinefromcoords
+[176]: #getsplinefromcoords-1
 
-[177]: #parameters-34
+[177]: #parameters-35
 
-[178]: #getsplinefromcoords-1
+[178]: #clamp
 
-[179]: #parameters-35
+[179]: #parameters-36
 
-[180]: #clamp
+[180]: #clamp-1
 
-[181]: #parameters-36
+[181]: #parameters-37
 
-[182]: #clamp-1
+[182]: #coordinatetoposition
 
-[183]: #parameters-37
+[183]: #parameters-38
 
-[184]: #coordinatetoposition
+[184]: #coordinatetoposition-1
 
-[185]: #parameters-38
+[185]: #parameters-39
 
-[186]: #coordinatetoposition-1
+[186]: #play
 
-[187]: #parameters-39
+[187]: #play-1
 
-[188]: #play
+[188]: #stop-4
 
-[189]: #play-1
+[189]: #stop-5
 
-[190]: #stop-4
+[190]: #restart
 
-[191]: #stop-5
+[191]: #restart-1
 
-[192]: #restart
+[192]: #curve-1
 
-[193]: #restart-1
+[193]: #getsplinefromcoords-2
 
-[194]: #curve-1
+[194]: #parameters-40
 
-[195]: #getsplinefromcoords-2
+[195]: #getsplinefromcoords-3
 
-[196]: #parameters-40
+[196]: #parameters-41
 
-[197]: #getsplinefromcoords-3
+[197]: #clamp-2
 
-[198]: #parameters-41
+[198]: #parameters-42
 
-[199]: #clamp-2
+[199]: #clamp-3
 
-[200]: #parameters-42
+[200]: #parameters-43
 
-[201]: #clamp-3
+[201]: #coordinatetoposition-2
 
-[202]: #parameters-43
+[202]: #parameters-44
 
-[203]: #coordinatetoposition-2
+[203]: #coordinatetoposition-3
 
-[204]: #parameters-44
+[204]: #parameters-45
 
-[205]: #coordinatetoposition-3
+[205]: #play-2
 
-[206]: #parameters-45
+[206]: #play-3
 
-[207]: #play-2
+[207]: #stop-6
 
-[208]: #play-3
+[208]: #stop-7
 
-[209]: #stop-6
+[209]: #restart-2
 
-[210]: #stop-7
+[210]: #restart-3
 
-[211]: #restart-2
+[211]: #point
 
-[212]: #restart-3
+[212]: #setcolor
 
-[213]: #point
+[213]: #parameters-46
 
-[214]: #setcolor
+[214]: #setcolor-1
 
-[215]: #parameters-46
+[215]: #parameters-47
 
-[216]: #setcolor-1
+[216]: #point-1
 
-[217]: #parameters-47
+[217]: #setcolor-2
 
-[218]: #point-1
+[218]: #parameters-48
 
-[219]: #setcolor-2
+[219]: #setcolor-3
 
-[220]: #parameters-48
+[220]: #parameters-49
 
-[221]: #setcolor-3
+[221]: #header
 
-[222]: #parameters-49
+[222]: #render-9
 
-[223]: #header
+[223]: #loginstatus
 
-[224]: #render-9
+[224]: #signinstatusmessage
 
-[225]: #loginstatus
+[225]: #statusicon
 
-[226]: #signinstatusmessage
+[226]: #gotosecurity
 
-[227]: #statusicon
+[227]: #render-10
 
-[228]: #gotosecurity
+[228]: #stakingstatus
 
-[229]: #render-10
+[229]: #render-11
 
-[230]: #stakingstatus
+[230]: #render-12
 
-[231]: #render-11
+[231]: #stakingstatus-1
 
-[232]: #render-12
+[232]: #render-13
 
-[233]: #stakingstatus-1
+[233]: #render-14
 
-[234]: #render-13
+[234]: #syncstatus
 
-[235]: #render-14
+[235]: #render-15
 
-[236]: #syncstatus
+[236]: #render-16
 
-[237]: #render-15
+[237]: #syncstatus-1
 
-[238]: #render-16
+[238]: #render-17
 
-[239]: #syncstatus-1
+[239]: #render-18
 
-[240]: #render-17
+[240]: #myaddresses
 
-[241]: #render-18
+[241]: #usercontrol
 
-[242]: #myaddresses
+[242]: #walletstatus
 
-[243]: #usercontrol
+[243]: #render-19
 
-[244]: #walletstatus
+[244]: #navigation
 
-[245]: #render-19
+[245]: #navitem
 
-[246]: #navigation
+[246]: #parameters-50
 
-[247]: #navitem
+[247]: #modulenavitem
 
-[248]: #parameters-50
+[248]: #parameters-51
 
-[249]: #modulenavitem
+[249]: #navigation-1
 
-[250]: #parameters-51
+[250]: #send
 
-[251]: #navigation-1
+[251]: #componentdidmount-8
 
-[252]: #send
+[252]: #componentdidmount-9
 
-[253]: #componentdidmount-8
+[253]: #movebetweenaccounts
 
-[254]: #componentdidmount-9
+[254]: #render-20
 
-[255]: #movebetweenaccounts
+[255]: #render-21
 
-[256]: #render-20
+[256]: #send-1
 
-[257]: #render-21
+[257]: #componentdidmount-10
 
-[258]: #send-1
+[258]: #componentdidmount-11
 
-[259]: #componentdidmount-10
+[259]: #movebetweenaccounts-1
 
-[260]: #componentdidmount-11
+[260]: #render-22
 
-[261]: #movebetweenaccounts-1
+[261]: #render-23
 
-[262]: #render-22
+[262]: #movebetweenaccountsform
 
-[263]: #render-23
+[263]: #confirmmove
 
-[264]: #movebetweenaccountsform
+[264]: #parameters-52
 
-[265]: #confirmmove
+[265]: #render-24
 
-[266]: #parameters-52
+[266]: #movebetweenaccountsmodal
 
-[267]: #render-24
+[267]: #amountfield
 
-[268]: #movebetweenaccountsmodal
+[268]: #nxstofiat
 
-[269]: #amountfield
+[269]: #parameters-53
 
-[270]: #nxstofiat
+[270]: #nxstofiat-1
 
-[271]: #parameters-53
+[271]: #parameters-54
 
-[272]: #nxstofiat-1
+[272]: #fiattonxs
 
-[273]: #parameters-54
+[273]: #parameters-55
 
-[274]: #fiattonxs
+[274]: #fiattonxs-1
 
-[275]: #parameters-55
+[275]: #parameters-56
 
-[276]: #fiattonxs-1
+[276]: #amountfieldname
 
-[277]: #parameters-56
+[277]: #amountfieldname-1
 
-[278]: #amountfieldname
+[278]: #fiatamountfieldname
 
-[279]: #amountfieldname-1
+[279]: #fiatamountfieldname-1
 
-[280]: #fiatamountfieldname
+[280]: #render-25
 
-[281]: #fiatamountfieldname-1
+[281]: #render-26
 
-[282]: #render-25
+[282]: #amountfield-1
 
-[283]: #render-26
+[283]: #nxstofiat-2
 
-[284]: #amountfield-1
+[284]: #parameters-57
 
-[285]: #nxstofiat-2
+[285]: #nxstofiat-3
 
-[286]: #parameters-57
+[286]: #parameters-58
 
-[287]: #nxstofiat-3
+[287]: #fiattonxs-2
 
-[288]: #parameters-58
+[288]: #parameters-59
 
-[289]: #fiattonxs-2
+[289]: #fiattonxs-3
 
-[290]: #parameters-59
+[290]: #parameters-60
 
-[291]: #fiattonxs-3
+[291]: #amountfieldname-2
 
-[292]: #parameters-60
+[292]: #amountfieldname-3
 
-[293]: #amountfieldname-2
+[293]: #fiatamountfieldname-2
 
-[294]: #amountfieldname-3
+[294]: #fiatamountfieldname-3
 
-[295]: #fiatamountfieldname-2
+[295]: #render-27
 
-[296]: #fiatamountfieldname-3
+[296]: #render-28
 
-[297]: #render-27
+[297]: #sendform
 
-[298]: #render-28
+[298]: #confirmsend
 
-[299]: #sendform
+[299]: #parameters-61
 
-[300]: #confirmsend
+[300]: #confirmsend-1
 
-[301]: #parameters-61
+[301]: #parameters-62
 
-[302]: #confirmsend-1
+[302]: #addrecipient
 
-[303]: #parameters-62
+[303]: #addrecipient-1
 
-[304]: #addrecipient
+[304]: #renderaddrecipientbutton
 
-[305]: #addrecipient-1
+[305]: #parameters-63
 
-[306]: #renderaddrecipientbutton
+[306]: #renderaddrecipientbutton-1
 
-[307]: #parameters-63
+[307]: #parameters-64
 
-[308]: #renderaddrecipientbutton-1
+[308]: #render-29
 
-[309]: #parameters-64
+[309]: #render-30
 
-[310]: #render-29
+[310]: #sendform-1
 
-[311]: #render-30
+[311]: #confirmsend-2
 
-[312]: #sendform-1
+[312]: #parameters-65
 
-[313]: #confirmsend-2
+[313]: #confirmsend-3
 
-[314]: #parameters-65
+[314]: #parameters-66
 
-[315]: #confirmsend-3
+[315]: #addrecipient-2
 
-[316]: #parameters-66
+[316]: #addrecipient-3
 
-[317]: #addrecipient-2
+[317]: #renderaddrecipientbutton-2
 
-[318]: #addrecipient-3
+[318]: #parameters-67
 
-[319]: #renderaddrecipientbutton-2
+[319]: #renderaddrecipientbutton-3
 
-[320]: #parameters-67
+[320]: #parameters-68
 
-[321]: #renderaddrecipientbutton-3
+[321]: #render-31
 
-[322]: #parameters-68
+[322]: #render-32
 
-[323]: #render-31
+[323]: #recipients
 
-[324]: #render-32
+[324]: #render-33
 
-[325]: #recipients
+[325]: #render-34
 
-[326]: #render-33
+[326]: #recipients-1
 
-[327]: #render-34
+[327]: #render-35
 
-[328]: #recipients-1
+[328]: #render-36
 
-[329]: #render-35
+[329]: #recipientfield
 
-[330]: #render-36
+[330]: #handleselect
 
-[331]: #recipientfield
+[331]: #parameters-69
 
-[332]: #handleselect
+[332]: #handleselect-1
 
-[333]: #parameters-69
+[333]: #parameters-70
 
-[334]: #handleselect-1
+[334]: #createcontact
 
-[335]: #parameters-70
+[335]: #createcontact-1
 
-[336]: #createcontact
+[336]: #render-37
 
-[337]: #createcontact-1
+[337]: #render-38
 
-[338]: #render-37
+[338]: #recipientfield-1
 
-[339]: #render-38
+[339]: #handleselect-2
 
-[340]: #recipientfield-1
+[340]: #parameters-71
 
-[341]: #handleselect-2
+[341]: #handleselect-3
 
-[342]: #parameters-71
+[342]: #parameters-72
 
-[343]: #handleselect-3
+[343]: #createcontact-2
 
-[344]: #parameters-72
+[344]: #createcontact-3
 
-[345]: #createcontact-2
+[345]: #render-39
 
-[346]: #createcontact-3
+[346]: #render-40
 
-[347]: #render-39
+[347]: #transactions
 
-[348]: #render-40
+[348]: #componentdidmount-12
 
-[349]: #transactions
+[349]: #componentdidupdate-8
 
-[350]: #componentdidmount-12
+[350]: #parameters-73
 
-[351]: #componentdidupdate-8
+[351]: #savecsv
 
-[352]: #parameters-73
+[352]: #parameters-74
 
-[353]: #savecsv
+[353]: #render-41
 
-[354]: #parameters-74
+[354]: #render-42
 
-[355]: #render-41
+[355]: #transactionstritium
 
-[356]: #render-42
+[356]: #componentdidmount-13
 
-[357]: #transactionstritium
+[357]: #market
 
-[358]: #componentdidmount-13
+[358]: #refresher
 
-[359]: #market
+[359]: #formatbuydata
 
-[360]: #refresher
+[360]: #parameters-75
 
-[361]: #formatbuydata
+[361]: #formatselldata
 
-[362]: #parameters-75
+[362]: #parameters-76
 
-[363]: #formatselldata
+[363]: #formatchartdata
 
-[364]: #parameters-76
+[364]: #parameters-77
 
-[365]: #formatchartdata
+[365]: #onedayinfo
 
-[366]: #parameters-77
+[366]: #parameters-78
 
-[367]: #onedayinfo
+[367]: #refreshmarket
 
-[368]: #parameters-78
+[368]: #render-43
 
-[369]: #refreshmarket
+[369]: #marketdepth
 
-[370]: #render-43
+[370]: #render-44
 
-[371]: #marketdepth
+[371]: #candlestick
 
-[372]: #render-44
+[372]: #render-45
 
-[373]: #candlestick
+[373]: #addressbook
 
-[374]: #render-45
+[374]: #componentdidmount-14
 
-[375]: #addressbook
+[375]: #showaddcontact
 
-[376]: #componentdidmount-14
+[376]: #render-46
 
-[377]: #showaddcontact
+[377]: #panelcontrols
 
-[378]: #render-46
+[378]: #searchbox
 
-[379]: #panelcontrols
+[379]: #exportaddressbook
 
-[380]: #searchbox
+[380]: #showaddcontact-1
 
-[381]: #exportaddressbook
+[381]: #showmyaddresses
 
-[382]: #showaddcontact-1
+[382]: #render-47
 
-[383]: #showmyaddresses
+[383]: #render-48
 
-[384]: #render-47
+[384]: #contactlist
 
-[385]: #render-48
+[385]: #render-49
 
-[386]: #contactlist
+[386]: #contact
 
-[387]: #render-49
+[387]: #confirmdelete
 
-[388]: #contact
+[388]: #editcontact
 
-[389]: #confirmdelete
+[389]: #showcontextmenu
 
-[390]: #editcontact
+[390]: #parameters-79
 
-[391]: #showcontextmenu
+[391]: #getinitial
 
-[392]: #parameters-79
+[392]: #parameters-80
 
-[393]: #getinitial
+[393]: #select
 
-[394]: #parameters-80
+[394]: #render-50
 
-[395]: #select
+[395]: #newcontactbutton
 
-[396]: #render-50
+[396]: #parameters-81
 
-[397]: #newcontactbutton
+[397]: #contactdetails
 
-[398]: #parameters-81
+[398]: #field
 
-[399]: #contactdetails
+[399]: #parameters-82
 
-[400]: #field
+[400]: #confirmdelete-1
 
-[401]: #parameters-82
+[401]: #editcontact-1
 
-[402]: #confirmdelete-1
+[402]: #render-51
 
-[403]: #editcontact-1
+[403]: #getlocaltime
 
-[404]: #render-51
+[404]: #parameters-83
 
-[405]: #getlocaltime
+[405]: #settings
 
-[406]: #parameters-83
+[406]: #componentdidmount-15
 
-[407]: #settings
+[407]: #render-52
 
-[408]: #componentdidmount-15
+[408]: #settingsapp
 
-[409]: #render-52
+[409]: #confirmbackupwallet
 
-[410]: #settingsapp
+[410]: #toggleverifymodulesource
 
-[411]: #confirmbackupwallet
+[411]: #parameters-84
 
-[412]: #toggleverifymodulesource
+[412]: #updatehandlers
 
-[413]: #parameters-84
+[413]: #handleautoupdatechange
 
-[414]: #updatehandlers
+[414]: #parameters-85
 
-[415]: #handleautoupdatechange
+[415]: #render-53
 
-[416]: #parameters-85
+[416]: #render-54
 
-[417]: #render-53
+[417]: #browsebackupdir
 
-[418]: #render-54
+[418]: #settingsapp-1
 
-[419]: #browsebackupdir
+[419]: #confirmbackupwallet-1
 
-[420]: #settingsapp-1
+[420]: #toggleverifymodulesource-1
 
-[421]: #confirmbackupwallet-1
+[421]: #parameters-86
 
-[422]: #toggleverifymodulesource-1
+[422]: #updatehandlers-1
 
-[423]: #parameters-86
+[423]: #handleautoupdatechange-1
 
-[424]: #updatehandlers-1
+[424]: #parameters-87
 
-[425]: #handleautoupdatechange-1
+[425]: #render-55
 
-[426]: #parameters-87
+[426]: #render-56
 
-[427]: #render-55
+[427]: #browsebackupdir-1
 
-[428]: #render-56
+[428]: #languagesetting
 
-[429]: #browsebackupdir-1
+[429]: #handlechange
 
-[430]: #languagesetting
+[430]: #parameters-88
 
-[431]: #handlechange
+[431]: #render-57
 
-[432]: #parameters-88
+[432]: #settingscore
 
-[433]: #render-57
+[433]: #confirmswitchmanualdaemon
 
-[434]: #settingscore
+[434]: #render-58
 
-[435]: #confirmswitchmanualdaemon
+[435]: #rescanbutton
 
-[436]: #render-58
+[436]: #rescan
 
-[437]: #rescanbutton
+[437]: #render-59
 
-[438]: #rescan
+[438]: #settingsstyle
 
-[439]: #render-59
+[439]: #componentdidmount-16
 
-[440]: #settingsstyle
+[440]: #getusersdefaultaddress
 
-[441]: #componentdidmount-16
+[441]: #togglegloberender
 
-[442]: #getusersdefaultaddress
+[442]: #parameters-89
 
-[443]: #togglegloberender
+[443]: #setwallpaper
 
-[444]: #parameters-89
+[444]: #parameters-90
 
-[445]: #setwallpaper
+[445]: #setcolor-4
 
-[446]: #parameters-90
+[446]: #parameters-91
 
-[447]: #setcolor-4
+[447]: #resetcolors
 
-[448]: #parameters-91
+[448]: #loadcustomtheme
 
-[449]: #resetcolors
+[449]: #parameters-92
 
-[450]: #loadcustomtheme
+[450]: #openpickthemefiledialog
 
-[451]: #parameters-92
+[451]: #exportthemefiledialog
 
-[452]: #openpickthemefiledialog
+[452]: #pressdarktheme
 
-[453]: #exportthemefiledialog
+[453]: #presslighttheme
 
-[454]: #pressdarktheme
+[454]: #presscustomtheme
 
-[455]: #presslighttheme
+[455]: #pressresettheme
 
-[456]: #presscustomtheme
+[456]: #savepreviouscustomtheme
 
-[457]: #pressresettheme
+[457]: #settocustom
 
-[458]: #savepreviouscustomtheme
+[458]: #setthemeselector
 
-[459]: #settocustom
+[459]: #parameters-93
 
-[460]: #setthemeselector
+[460]: #render-60
 
-[461]: #parameters-93
+[461]: #colorpicker
 
-[462]: #render-60
+[462]: #openpicker
 
-[463]: #colorpicker
+[463]: #closepicker
 
-[464]: #openpicker
+[464]: #handlecolorchange
 
-[465]: #closepicker
+[465]: #parameters-94
 
-[466]: #handlecolorchange
+[466]: #render-61
 
-[467]: #parameters-94
+[467]: #backgroundpicker
 
-[468]: #render-61
+[468]: #setdefault
 
-[469]: #backgroundpicker
+[469]: #parameters-95
 
-[470]: #setdefault
+[470]: #handlefilepick
 
-[471]: #parameters-95
+[471]: #parameters-96
 
-[472]: #handlefilepick
+[472]: #render-62
 
-[473]: #parameters-96
+[473]: #themepicker
 
-[474]: #render-62
+[474]: #settocustomtheme
 
-[475]: #themepicker
+[475]: #setselector
 
-[476]: #settocustomtheme
+[476]: #parameters-97
 
-[477]: #setselector
+[477]: #render-63
 
-[478]: #parameters-97
+[478]: #settingssecurity
 
-[479]: #render-63
+[479]: #render-64
 
-[480]: #settingssecurity
+[480]: #login
 
-[481]: #render-64
+[481]: #rendertimeinputs
 
-[482]: #login
+[482]: #parameters-98
 
-[483]: #rendertimeinputs
+[483]: #render-65
 
-[484]: #parameters-98
+[484]: #encrypted
 
-[485]: #render-65
+[485]: #render-66
 
-[486]: #encrypted
+[486]: #changepassword
 
-[487]: #render-66
+[487]: #confirmlogout
 
-[488]: #changepassword
+[488]: #render-67
 
-[489]: #confirmlogout
+[489]: #importprivkey
 
-[490]: #render-67
+[490]: #render-68
 
-[491]: #importprivkey
+[491]: #viewprivkeyforaddress
 
-[492]: #render-68
+[492]: #showprivkey
 
-[493]: #viewprivkeyforaddress
+[493]: #parameters-99
 
-[494]: #showprivkey
+[494]: #copyprivkey
 
-[495]: #parameters-99
+[495]: #resetprivatekey
 
-[496]: #copyprivkey
+[496]: #render-69
 
-[497]: #resetprivatekey
+[497]: #unencrypted
 
-[498]: #render-69
+[498]: #render-70
 
-[499]: #unencrypted
+[499]: #encryptwallet
 
-[500]: #render-70
+[500]: #render-71
 
-[501]: #encryptwallet
+[501]: #settingsmodules
 
-[502]: #render-71
+[502]: #render-72
 
-[503]: #settingsmodules
+[503]: #module
 
-[504]: #render-72
+[504]: #enablemodule
 
-[505]: #module
+[505]: #disablemodule
 
-[506]: #enablemodule
+[506]: #togglemodule
 
-[507]: #disablemodule
+[507]: #openmoduledetails
 
-[508]: #togglemodule
+[508]: #render-73
 
-[509]: #openmoduledetails
+[509]: #addmodule
 
-[510]: #render-73
+[510]: #browsefiles
 
-[511]: #addmodule
+[511]: #browsedirectories
 
-[512]: #browsefiles
+[512]: #getfilesfromevent
 
-[513]: #browsedirectories
+[513]: #parameters-100
 
-[514]: #getfilesfromevent
+[514]: #handledrop
 
-[515]: #parameters-100
+[515]: #parameters-101
 
-[516]: #handledrop
+[516]: #startinstall
 
-[517]: #parameters-101
+[517]: #parameters-102
 
-[518]: #startinstall
+[518]: #render-74
 
-[519]: #parameters-102
+[519]: #terminal
 
-[520]: #render-74
+[520]: #render-75
 
-[521]: #terminal
+[521]: #terminalconsole
 
-[522]: #render-75
+[522]: #loadcommandlist
 
-[523]: #terminalconsole
+[523]: #componentdidupdate-9
 
-[524]: #loadcommandlist
+[524]: #parameters-103
 
-[525]: #componentdidupdate-9
+[525]: #componentdidupdate-10
 
-[526]: #parameters-103
+[526]: #parameters-104
 
-[527]: #componentdidupdate-10
+[527]: #execute
 
-[528]: #parameters-104
+[528]: #execute-1
 
-[529]: #execute
+[529]: #handlekeydown
 
-[530]: #execute-1
+[530]: #parameters-105
 
-[531]: #handlekeydown
+[531]: #handlekeydown-1
 
-[532]: #parameters-105
+[532]: #parameters-106
 
-[533]: #handlekeydown-1
+[533]: #formateautosuggest
 
-[534]: #parameters-106
+[534]: #parameters-107
 
-[535]: #formateautosuggest
+[535]: #formateautosuggest-1
 
-[536]: #parameters-107
+[536]: #parameters-108
 
-[537]: #formateautosuggest-1
+[537]: #render-76
 
-[538]: #parameters-108
+[538]: #render-77
 
-[539]: #render-76
+[539]: #terminalconsole-1
 
-[540]: #render-77
+[540]: #loadcommandlist-1
 
-[541]: #terminalconsole-1
+[541]: #componentdidupdate-11
 
-[542]: #loadcommandlist-1
+[542]: #parameters-109
 
-[543]: #componentdidupdate-11
+[543]: #componentdidupdate-12
 
-[544]: #parameters-109
+[544]: #parameters-110
 
-[545]: #componentdidupdate-12
+[545]: #execute-2
 
-[546]: #parameters-110
+[546]: #execute-3
 
-[547]: #execute-2
+[547]: #handlekeydown-2
 
-[548]: #execute-3
+[548]: #parameters-111
 
-[549]: #handlekeydown-2
+[549]: #handlekeydown-3
 
-[550]: #parameters-111
+[550]: #parameters-112
 
-[551]: #handlekeydown-3
+[551]: #formateautosuggest-2
 
-[552]: #parameters-112
+[552]: #parameters-113
 
-[553]: #formateautosuggest-2
+[553]: #formateautosuggest-3
 
-[554]: #parameters-113
+[554]: #parameters-114
 
-[555]: #formateautosuggest-3
+[555]: #render-78
 
-[556]: #parameters-114
+[556]: #render-79
 
-[557]: #render-78
+[557]: #terminalcore
 
-[558]: #render-79
+[558]: #componentdidupdate-13
 
-[559]: #terminalcore
+[559]: #parameters-115
 
-[560]: #componentdidupdate-13
+[560]: #onscrollevent
 
-[561]: #parameters-115
+[561]: #render-80
 
-[562]: #onscrollevent
+[562]: #userpage
 
-[563]: #render-80
+[563]: #componentdidmount-17
 
-[564]: #userpage
+[564]: #showaddcontact-2
 
-[565]: #componentdidmount-17
+[565]: #render-81
 
-[566]: #showaddcontact-2
+[566]: #tokens
 
-[567]: #render-81
+[567]: #componentdidmount-18
 
-[568]: #tokens
+[568]: #render-82
 
-[569]: #componentdidmount-18
+[569]: #modules
 
-[570]: #render-82
+[570]: #componentdidmount-19
 
-[571]: #modules
+[571]: #render-83
 
-[572]: #componentdidmount-19
+[572]: #pagemodule
 
-[573]: #render-83
+[573]: #parameters-116
 
-[574]: #pagemodule
+[574]: #pagemodule-1
 
-[575]: #parameters-116
+[575]: #parameters-117
 
-[576]: #pagemodule-1
+[576]: #webview
 
-[577]: #parameters-117
+[577]: #componentdidmount-20
 
-[578]: #webview
+[578]: #componentwillunmount-8
 
-[579]: #componentdidmount-20
+[579]: #render-84
 
-[580]: #componentwillunmount-8
+[580]: #appbackground
 
-[581]: #render-84
+[581]: #render-85
 
-[582]: #appbackground
+[582]: #starrysky
 
-[583]: #render-85
+[583]: #cosmiclight
 
-[584]: #starrysky
+[584]: #themecontroller
 
-[585]: #cosmiclight
+[585]: #render-86
 
-[586]: #themecontroller
+[586]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
 
-[587]: #render-86
+[587]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
 
-[588]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
-
-[589]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
-
-[590]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+[588]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
