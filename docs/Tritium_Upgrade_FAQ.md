@@ -14,41 +14,41 @@ You may but this step is unnecessary, 2.0.0 will install over the earlier versio
 
 #### What do I need to do with my Wallet.dat?
 
-Nothing, 2.0.0 runs on both legacy (wallet.dat) and Tritium (Sig chains). Please keep your wallet in the Nexus folder.
+Nothing, 2.0.0 runs on both legacy (wallet.dat) and Tritium (signature chains). Please keep your wallet in the Nexus folder.
 
 #### Should I backup my wallet.dat?
 
-You should always backup your wallet.dat before making a change to the interface. However after you have migrated all of your NXS to your sig chain, your wallet.dat is no longer nessesary.
+You should always backup your wallet.dat before making a change to the interface. However after you have migrated all of your NXS to a signature chain account, your wallet.dat is no longer nessesary.
 
 #### Can I send NXS to a legacy address?
 
 Yes you can send NXS to and from Legacy and Tritium address.
 
-#### What is a Sig Chain?
+#### What is a Signature Chain?
 
-A Sig Chain is you, and everything connected to you. You may think of it as a blockchain inside of a blockchain. When you add items your Sig Chain will update .
+A Signature Chain is a chain of transactions that defines your accounts, assets, tokens, and anything else that you "own". You may think of it as your own personal blockchain inside the Nexus blockchain. Every time you make a transcaction, whether to debit or credit an account, create an token, make a new account, or transfer an asset, the transaction is appended to the end of your signature chain.
 
 #### What is Username/Password/Pin
 
-These items will let you login to your Sig Chain. The username will be able to be accessed globally so it has to be unique. Password can be any 8 or more characters. A Pin must be more than 4 characters and will be used anytime you must make a encrypted action. For example, sending nexus or adjusting stake.
+The combination of username, password, and PIN are used to prove owndership of a signature chain. The username is hashed into a 256-bit number known as your genesis hash, which identifies your signature chain. Therefore your username must be unique within the Nexus blockchain. Passwords can be any 8 or more characters.  A Pin must be more than 4 characters and will be required any time you make a new transaction in your signature chain, for example sending NXS or adjusting stake.
 
 #### Can I change my Password or Pin
 
-Not at this time, however nexus supports these functions.
+The Nexus platform does allow a recovery phrase to be set on your signature chain, which can then be used at a later time to set new password and PIN.  However this function is not currently available in the Nexus Interface or API.
 
 #### Where is my encryption?
 
-On the chain! With sigchains your encryption is on the chain, no need to encrypt your wallet.
+On the chain! With signature chains your encryption is on the chain, no need to encrypt your wallet.
 
 #### What is changing with Trust and Stake?
 
-In order to stake and get trust you must use the new Tritium system. On your first start up of the wallet you will be presented our migration tool so that you may migrate your balance off your wallet.dat and on to your sig chain. Once this is complete, verify the amount you would like to stake is in your `Trust` account then enable that amount to be staked by using the adjust stake button. You may have to wait for your Genesis transaction to be confirmed before staking will be enabled.
+In order to stake and get trust you must use the new Tritium system. On your first start up of the wallet you will be presented our migration tool so that you may migrate your balance off your wallet.dat and on to your sig chain. This will automatically stake the full balance of your legacy trust key.  Once migrated, you are free to adjust the amount to be staked by using the adjust stake button. You may have to wait for your Genesis transaction to be confirmed before staking will be enabled.
 
 #### Does staking work differently with tritium?
 
 No, staking works the same. The longer you are on the network the higher your trust score, resulting in larger payouts.
 
-#### It Says I can not stake with out a Genesis?
+#### It Says I can not stake without a Genesis?
 
 Please allow the wallet time to generate that transaction, this will happen automatically.
 
@@ -58,11 +58,11 @@ Things that are named act differently in tritium then they did before. A Name is
 
 #### What do I get for free?
 
-When you create a Sig Chain you will be allocated a `default` and a `trust` nexus account
+When you create a new Signature Chain we automatically create a `default` and a `trust` NXS account.  It is free to make other accounts, but fee apply if you give them a name.
 
-#### What are NameSpaces?
+#### Should I give people my username?
 
-Namespaces like Names are just objects that point to other addresses. You can work with name spaces by using the formula `{namespace}:{name}`. For example a users default account will be at `user1:defualt`.
+This is up to you.  One neat feature of Nexus is the ability to use names instead of account addresses. For example a users default NXS account will be called `defualt`.  However if you want to have someone else send to your account then they have to prefix it with your username, e.g. `user1:defualt` which requires them to know your username.  Your username - and the genesis hash which is derived from it - allows other users visibility into your signature chain, including the accounts, tokens, assets and anything else your chain owns.  If you prefer privacy, then you may give out your account address instead (the long sequence of characters starting with an 8 that looks a lot like your old legacy addresses).
 
 #### Does that mean I can send someone NXS using their username?
 
