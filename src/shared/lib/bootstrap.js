@@ -31,8 +31,7 @@ import BootstrapModal from 'components/BootstrapModal';
 
 const fileLocation = path.join(walletDataDir, 'recent.tar.gz');
 const extractDest = path.join(coreDataDir, 'recent');
-const recentDbUrlTritium =
-  'https://nexusearth.com/bootstrap/tritium/bootstrap.tar.gz'; // Tritium Bootstrap URL
+const recentDbUrlTritium = 'https://nexus.io/bootstrap/tritium/tritium.tar.gz'; // Tritium Bootstrap URL
 
 let aborting = false;
 let downloadRequest = null;
