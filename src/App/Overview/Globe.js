@@ -1,17 +1,16 @@
 import React, { Component } from 'react';
 import * as THREE from 'three';
-import maxmind from 'maxmind';
-import path from 'path';
 import styled from '@emotion/styled';
-const OrbitControls = require('three-orbit-controls')(THREE);
+import orbitControl from 'three-orbit-controls';
 
-import world from 'images/world-light-white.jpg';
-import worldSmall from 'images/world-light-white-small.jpg';
-import { assetsDir } from 'consts/paths';
+import world from 'icons/world-light-white.jpg';
+import geoip from 'data/geoip';
 import Curve from './Curve';
 import Point from './Point';
 import rpc from 'lib/rpc';
+import { apiPost } from 'lib/tritiumApi';
 
+const OrbitControls = orbitControl(THREE);
 const MaxDisplayPoints = 64;
 
 const GlobeContainer = styled.div({
@@ -42,7 +41,6 @@ export default class Globe extends Component {
     this.pointRegister = this.pointRegister.bind(this);
     this.contextLostHandler = this.contextLostHandler.bind(this);
     this.contextRestoredHandler = this.contextRestoredHandler.bind(this);
-    this.geoiplookup = null;
     this.pointRegistry = [];
     this.curveRegistry = [];
     this.timesSkipped = 0;
@@ -53,12 +51,8 @@ export default class Globe extends Component {
    *
    * @memberof Globe
    */
-  async componentDidMount() {
+  componentDidMount() {
     try {
-      this.geoiplookup = await maxmind.open(
-        path.join(assetsDir, 'GeoLite2-City', 'GeoLite2-City.mmdb')
-      );
-
       this.props.handleOnLineRender(this.animateArcs);
       this.props.handleRemoveAllPoints(this.removeAllPoints);
 
@@ -90,6 +84,8 @@ export default class Globe extends Component {
       controls.minDistance = 300;
       controls.maxDistance = 500;
       controls.enablePan = false;
+      // Disabled by default, fixing a bug where the LoginModal input cannot get focused
+      controls.enabled = false;
       controls.update();
       scene.add(camera);
 
@@ -183,7 +179,7 @@ export default class Globe extends Component {
    * @memberof Globe
    */
   componentDidUpdate(prevProps) {
-    if (this.geoiplookup == null) {
+    if (geoip == null) {
       return;
     }
     this.timesSkipped++;
@@ -218,19 +214,18 @@ export default class Globe extends Component {
    * @memberof Globe
    */
   async pointRegister() {
-    const peerInfo = await rpc('getpeerinfo', []);
+    const peerInfo = await apiPost('system/list/peers', null);
     if (!peerInfo) return;
     if (peerInfo.length > MaxDisplayPoints) {
       peerInfo.length = MaxDisplayPoints;
     }
-
     // take the peerInfo look up the Geo Data in the maxmind DB
     // and if there are any points that exist and match coords
     // update the registery entry data
 
     let newRegistry = peerInfo
       .map(peer => {
-        let GeoData = this.geoiplookup.get(peer.addr.split(':')[0]);
+        let GeoData = geoip.get(peer.address.split(':')[0]);
         // TODO: add checks for lisp and change color appropreately
 
         return {

@@ -5,21 +5,22 @@ import styled from '@emotion/styled';
 import GA from 'lib/googleAnalytics';
 
 // Internal Global
-import { searchContact } from 'actions/addressBook';
+import { searchContact } from 'lib/addressBook';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
 import Tooltip from 'components/Tooltip';
 import MyAddressesModal from 'components/MyAddressesModal';
-import { openModal } from 'actions/overlays';
+import { openModal } from 'lib/ui';
+import { legacyMode } from 'consts/misc';
 import { isCoreConnected } from 'selectors';
 import AddEditContactModal from 'components/AddEditContactModal';
 
 // Icons
-import exportIcon from 'images/export.sprite.svg';
-import addContactIcon from 'images/add-contact.sprite.svg';
-import searchIcon from 'images/search.sprite.svg';
-import userIcon from 'images/user.sprite.svg';
+import exportIcon from 'icons/export.svg';
+import addContactIcon from 'icons/add-contact.svg';
+import searchIcon from 'icons/search.svg';
+import userIcon from 'icons/user.svg';
 
 const ControlIcon = styled(Icon)({
   width: 20,
@@ -39,12 +40,9 @@ const SearchInput = styled(TextField)({
  * @extends {Component}
  * @memberof PanelControls
  */
-@connect(
-  state => ({
-    searchQuery: state.ui.addressBook.searchQuery,
-  }),
-  { searchContact }
-)
+@connect(state => ({
+  searchQuery: state.ui.addressBook.searchQuery,
+}))
 class SearchBox extends Component {
   /**
    * Component's Renderable JSX
@@ -58,7 +56,7 @@ class SearchBox extends Component {
         left={<Icon icon={searchIcon} className="space-right" />}
         placeholder={__('Search contact')}
         value={this.props.searchQuery}
-        onChange={e => this.props.searchContact(e.target.value)}
+        onChange={e => searchContact(e.target.value)}
       />
     );
   }
@@ -70,13 +68,10 @@ class SearchBox extends Component {
  * @class PanelControls
  * @extends {Component}
  */
-@connect(
-  state => ({
-    addressBook: state.addressBook,
-    coreConnected: isCoreConnected(state),
-  }),
-  { openModal }
-)
+@connect(state => ({
+  addressBook: state.addressBook,
+  coreConnected: isCoreConnected(state),
+}))
 class PanelControls extends Component {
   /**
    * Export the Address Book to a CSV File
@@ -140,7 +135,7 @@ class PanelControls extends Component {
    * @memberof PanelControls
    */
   showAddContact = () => {
-    this.props.openModal(AddEditContactModal);
+    openModal(AddEditContactModal);
   };
 
   /**
@@ -149,7 +144,7 @@ class PanelControls extends Component {
    * @memberof PanelControls
    */
   showMyAddresses = () => {
-    this.props.openModal(MyAddressesModal);
+    openModal(MyAddressesModal);
   };
 
   /**
@@ -161,7 +156,7 @@ class PanelControls extends Component {
   render() {
     return (
       <div className="flex center">
-        {this.props.coreConnected && (
+        {legacyMode && this.props.coreConnected && (
           <Tooltip.Trigger tooltip={__('My Addresses')}>
             <Button
               skin="plain"

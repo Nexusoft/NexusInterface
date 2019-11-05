@@ -1,7 +1,6 @@
 // External
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { remote } from 'electron';
 import styled from '@emotion/styled';
 import GA from 'lib/googleAnalytics';
 
@@ -9,10 +8,9 @@ import GA from 'lib/googleAnalytics';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
 import Panel from 'components/Panel';
-import { openModal } from 'actions/overlays';
+import { openModal } from 'lib/ui';
 import AddEditContactModal from 'components/AddEditContactModal';
 import { isCoreConnected } from 'selectors';
-import ContextMenuBuilder from 'contextmenu';
 
 // Internal Local
 import PanelControls from './PanelControls';
@@ -20,8 +18,8 @@ import ContactList from './ContactList';
 import ContactDetails from './ContactDetails';
 
 // Icons
-import addressBookIcon from 'images/address-book.sprite.svg';
-import addContactIcon from 'images/add-contact.sprite.svg';
+import addressBookIcon from 'icons/address-book.svg';
+import addContactIcon from 'icons/add-contact.svg';
 
 const AddressBookLayout = styled.div({
   display: 'grid',
@@ -36,18 +34,13 @@ const mapStateToProps = state => ({
   coreConnected: isCoreConnected(state),
 });
 
-const actionCreators = { openModal };
-
 /**
  * The Address Book Page
  *
  * @class AddressBook
  * @extends {Component}
  */
-@connect(
-  mapStateToProps,
-  actionCreators
-)
+@connect(mapStateToProps)
 class AddressBook extends Component {
   state = {
     activeIndex: 0,
@@ -59,31 +52,7 @@ class AddressBook extends Component {
    * @memberof AddressBook
    */
   componentDidMount() {
-    window.addEventListener('contextmenu', this.setupcontextmenu, false);
     GA.SendScreen('AddressBook');
-  }
-
-  /**
-   * componentWillUnmount
-   *
-   * @memberof AddressBook
-   */
-  componentWillUnmount() {
-    window.removeEventListener('contextmenu', this.setupcontextmenu);
-  }
-
-  /**
-   * Set up the context menu
-   *
-   * @param {*} e
-   * @memberof AddressBook
-   */
-  setupcontextmenu(e) {
-    e.preventDefault();
-    const contextmenu = new ContextMenuBuilder().defaultContext;
-    //build default
-    let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu);
-    defaultcontextmenu.popup(remote.getCurrentWindow());
   }
 
   /**
@@ -92,7 +61,7 @@ class AddressBook extends Component {
    * @memberof AddressBook
    */
   showAddContact = () => {
-    this.props.openModal(AddEditContactModal);
+    openModal(AddEditContactModal);
   };
 
   /**

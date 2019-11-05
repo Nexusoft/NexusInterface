@@ -8,7 +8,7 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case TYPE.BLOCK_DATE:
+    case TYPE.UPDATE_BLOCK_DATE:
       return {
         ...state,
         blockDate: action.payload,

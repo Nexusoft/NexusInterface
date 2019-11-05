@@ -3,9 +3,8 @@
 ////////////////////////
 // Script that holds on to a visitor and is referenced when a visitor makes a action
 import ua from 'universal-analytics';
-import { LoadSettings } from 'lib/settings';
+import settings from 'data/initialSettings';
 
-const settings = LoadSettings();
 const GA = {};
 
 GA.visitor = null;

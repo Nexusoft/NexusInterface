@@ -2,14 +2,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Route, Redirect, Switch } from 'react-router';
-import { remote } from 'electron';
 import styled from '@emotion/styled';
 import GA from 'lib/googleAnalytics';
 
 // Internal Global
-import ContextMenuBuilder from 'contextmenu';
 import Panel from 'components/Panel';
 import Tab from 'components/Tab';
+import { legacyMode } from 'consts/misc';
 
 // Internal Local
 import SettingsApp from './App';
@@ -19,18 +18,19 @@ import SettingsSecurity from './Security';
 import SettingsModules from './Modules';
 
 // Images
-import settingsIcon from 'images/settings.sprite.svg';
-import coreIcon from 'images/core.sprite.svg';
-import logoIcon from 'images/logo.sprite.svg';
-import lockIcon from 'images/padlock.sprite.svg';
-import leafIcon from 'images/leaf.sprite.svg';
-import legoIcon from 'images/lego-block.sprite.svg';
+import settingsIcon from 'icons/settings.svg';
+import coreIcon from 'icons/core.svg';
+import logoIcon from 'icons/logo.svg';
+import lockIcon from 'icons/padlock.svg';
+import leafIcon from 'icons/leaf.svg';
+import legoIcon from 'icons/lego-block.svg';
 
 const SettingsComponent = styled.div({
   height: '100%',
   display: 'grid',
   gridTemplateAreas: '"tab-bar" "content"',
   gridTemplateRows: 'min-content 1fr',
+  position: 'relative',
 });
 
 const SettingsTabBar = styled(Tab.Bar)({
@@ -45,7 +45,7 @@ const SettingsContent = styled.div({
 });
 
 const SettingsContainer = styled.div({
-  width: 750,
+  maxWidth: 750,
   margin: '0 auto',
 });
 
@@ -75,29 +75,6 @@ export default class Settings extends Component {
    */
   componentDidMount() {
     GA.SendScreen('Settings');
-    window.addEventListener('contextmenu', this.setupcontextmenu, false);
-  }
-  /**
-   * Component Unmount Callback
-   *
-   * @memberof Settings
-   */
-  componentWillUnmount() {
-    window.removeEventListener('contextmenu', this.setupcontextmenu);
-  }
-
-  /**
-   * Set up context menu
-   *
-   * @param {*} e
-   * @memberof Settings
-   */
-  setupcontextmenu(e) {
-    e.preventDefault();
-    const contextmenu = new ContextMenuBuilder().defaultContext;
-    //build default
-    let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu);
-    defaultcontextmenu.popup(remote.getCurrentWindow());
   }
 
   /**
@@ -119,11 +96,13 @@ export default class Settings extends Component {
               text={__('Application')}
             />
             <Tab link={`${match.url}/Core`} icon={coreIcon} text={__('Core')} />
-            <Tab
-              link={`${match.url}/Security`}
-              icon={lockIcon}
-              text={__('Security')}
-            />
+            {legacyMode && (
+              <Tab
+                link={`${match.url}/Security`}
+                icon={lockIcon}
+                text={__('Security')}
+              />
+            )}
             <Tab
               link={`${match.url}/Style`}
               icon={leafIcon}
@@ -141,10 +120,12 @@ export default class Settings extends Component {
               <Switch>
                 <Route path={`${match.path}/App`} component={SettingsApp} />
                 <Route path={`${match.path}/Core`} component={SettingsCore} />
-                <Route
-                  path={`${match.path}/Security`}
-                  component={SettingsSecurity}
-                />
+                {legacyMode && (
+                  <Route
+                    path={`${match.path}/Security`}
+                    component={SettingsSecurity}
+                  />
+                )}
                 <Route path={`${match.path}/Style`} component={SettingsStyle} />
                 <Route
                   path={`${match.path}/Modules`}

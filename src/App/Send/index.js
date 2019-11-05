@@ -1,17 +1,15 @@
 // External Dependencies
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { remote } from 'electron';
 
 // Internal Global Dependencies
 import GA from 'lib/googleAnalytics';
-import ContextMenuBuilder from 'contextmenu';
 import Icon from 'components/Icon';
 import Panel from 'components/Panel';
 import Button from 'components/Button';
 import WaitingMessage from 'components/WaitingMessage';
 import Tooltip from 'components/Tooltip';
-import { openModal } from 'actions/overlays';
+import { openModal } from 'lib/ui';
 import { isCoreConnected } from 'selectors';
 
 // Internal Local Dependencies
@@ -19,14 +17,12 @@ import MoveBetweenAccountsModal from './MoveBetweenAccountsModal';
 import SendForm from './SendForm';
 
 // Resources
-import sendIcon from 'images/send.sprite.svg';
-import swapIcon from 'images/swap.sprite.svg';
+import sendIcon from 'icons/send.svg';
+import swapIcon from 'icons/swap.svg';
 
 const mapStateToProps = state => ({
   coreConnected: isCoreConnected(state),
 });
-
-const actionCreators = { openModal };
 
 /**
  * Send Page
@@ -34,10 +30,7 @@ const actionCreators = { openModal };
  * @class Send
  * @extends {Component}
  */
-@connect(
-  mapStateToProps,
-  actionCreators
-)
+@connect(mapStateToProps)
 class Send extends Component {
   /**
    * Component Mount Callback
@@ -45,31 +38,7 @@ class Send extends Component {
    * @memberof Send
    */
   componentDidMount() {
-    window.addEventListener('contextmenu', this.setupcontextmenu, false);
     GA.SendScreen('Send');
-  }
-
-  /**
-   * Component Unmount Callback
-   *
-   * @memberof Send
-   */
-  componentWillUnmount() {
-    window.removeEventListener('contextmenu', this.setupcontextmenu);
-  }
-
-  /**
-   * Set up the context menu
-   *
-   * @param {*} e
-   * @memberof Send
-   */
-  setupcontextmenu(e) {
-    e.preventDefault();
-    const contextmenu = new ContextMenuBuilder().defaultContext;
-    //build default
-    let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu);
-    defaultcontextmenu.popup(remote.getCurrentWindow());
   }
 
   /**
@@ -78,7 +47,7 @@ class Send extends Component {
    * @memberof Send
    */
   moveBetweenAccounts = () => {
-    this.props.openModal(MoveBetweenAccountsModal);
+    openModal(MoveBetweenAccountsModal);
   };
 
   /**

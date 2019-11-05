@@ -4,7 +4,7 @@ import { readFileSync } from 'fs';
 import styled from '@emotion/styled';
 
 import Icon from 'components/Icon';
-import legoBlockIcon from 'images/lego-block.sprite.svg';
+import legoBlockIcon from 'icons/lego-block.svg';
 
 const SvgWrapper = styled.span({
   display: 'inline-flex',

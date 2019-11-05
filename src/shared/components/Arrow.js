@@ -25,6 +25,7 @@ export const arrowStyles = ({ direction, width, height, color }) => {
         ...styles,
         borderBottomColor: color,
         borderBottomWidth: height,
+        borderTopWidth: 0,
         borderLeftWidth: width / 2,
         borderRightWidth: width / 2,
       };
@@ -33,6 +34,7 @@ export const arrowStyles = ({ direction, width, height, color }) => {
         ...styles,
         borderTopColor: color,
         borderTopWidth: height,
+        borderBottomWidth: 0,
         borderLeftWidth: width / 2,
         borderRightWidth: width / 2,
       };
@@ -41,6 +43,7 @@ export const arrowStyles = ({ direction, width, height, color }) => {
         ...styles,
         borderRightColor: color,
         borderRightWidth: height,
+        borderLeftWidth: 0,
         borderTopWidth: width / 2,
         borderBottomWidth: width / 2,
       };
@@ -49,6 +52,7 @@ export const arrowStyles = ({ direction, width, height, color }) => {
         ...styles,
         borderLeftColor: color,
         borderLeftWidth: height,
+        borderRightWidth: 0,
         borderTopWidth: width / 2,
         borderBottomWidth: width / 2,
       };

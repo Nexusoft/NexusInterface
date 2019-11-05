@@ -8,19 +8,19 @@ import https from 'https';
 
 // Internal
 import GA from 'lib/googleAnalytics';
-import { updateSettings } from 'actions/settings';
-import { updateTheme, resetColors } from 'actions/theme';
-import { switchSettingsTab } from 'actions/ui';
+import { updateSettings } from 'lib/settings';
+import { updateTheme, resetColors } from 'lib/theme';
+import { switchSettingsTab } from 'lib/ui';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
 import Switch from 'components/Switch';
 import Select from 'components/Select';
 import Icon from 'components/Icon';
-import { showNotification } from 'actions/overlays';
+import { showNotification } from 'lib/ui';
 import NexusAddress from 'components/NexusAddress';
-import warningIcon from 'images/warning.sprite.svg';
+import warningIcon from 'icons/warning.svg';
 import { walletDataDir } from 'consts/paths';
-import { webGLAvailable } from 'consts/misc';
+import { webGLAvailable, legacyMode } from 'consts/misc';
 
 import ColorPicker from './ColorPicker';
 import BackgroundPicker from './BackgroundPicker';
@@ -38,6 +38,7 @@ const overviewDisplays = [
 ];
 
 const mapStateToProps = ({
+  core: { accounts },
   settings: { renderGlobe, locale, addressStyle, overviewDisplay },
   myAccounts,
   theme,
@@ -48,22 +49,18 @@ const mapStateToProps = ({
     locale,
     addressStyle,
     myAccounts,
+    tritiumAccounts: accounts,
     overviewDisplay,
   };
 };
-const mapDispatchToProps = dispatch => ({
-  setRenderGlobe: renderGlobe => dispatch(updateSettings({ renderGlobe })),
-  setOverviewDisplay: overviewDisplay =>
-    dispatch(updateSettings({ overviewDisplay })),
-  setAddressStyle: addressStyle => {
-    GA.SendEvent('Settings', 'Style', 'setAddressStyle', addressStyle);
-    dispatch(updateSettings({ addressStyle }));
-  },
-  updateTheme: updates => dispatch(updateTheme(updates)),
-  resetColors: () => dispatch(resetColors()),
-  switchSettingsTab: tab => dispatch(switchSettingsTab(tab)),
-  showNotification: (...args) => dispatch(showNotification(...args)),
-});
+
+const setRenderGlobe = renderGlobe => updateSettings({ renderGlobe });
+const setOverviewDisplay = overviewDisplay =>
+  updateSettings({ overviewDisplay });
+const setAddressStyle = addressStyle => {
+  GA.SendEvent('Settings', 'Style', 'setAddressStyle', addressStyle);
+  updateSettings({ addressStyle });
+};
 
 const addressStyleOptions = [
   { value: 'segmented', display: 'Segmented' },
@@ -83,10 +80,7 @@ const AddressStyleNote = styled.div(({ theme }) => ({
  * @class SettingsStyle
  * @extends {Component}
  */
-@connect(
-  mapStateToProps,
-  mapDispatchToProps
-)
+@connect(mapStateToProps)
 class SettingsStyle extends Component {
   /**
    *Creates an instance of SettingsStyle.
@@ -95,14 +89,13 @@ class SettingsStyle extends Component {
    */
   constructor(props) {
     super(props);
-    props.switchSettingsTab('Style');
+    switchSettingsTab('Style');
   }
 
   state = {
     previousCustom: {},
     DarkTheme: DarkTheme,
     LightTheme: LightTheme,
-    sampleAddress: '000000000000000000000000000000000000000000000000000',
   };
 
   /**
@@ -118,7 +111,7 @@ class SettingsStyle extends Component {
     } else {
       this.setThemeSelector(2);
     }
-    this.GetUsersDefaultAddress();
+    this.getUsersDefaultAddress();
   }
 
   /**
@@ -126,17 +119,30 @@ class SettingsStyle extends Component {
    *
    * @memberof SettingsStyle
    */
-  GetUsersDefaultAddress() {
-    let myAddress = '000000000000000000000000000000000000000000000000000';
-    try {
-      myAddress = this.props.myAccounts[0].addresses[0];
-    } catch (e) {
-      console.error(e);
-    }
-    this.setState({
-      sampleAddress: myAddress,
-    });
-  }
+  getUsersDefaultAddress = (() => {
+    let cache = null;
+    return () => {
+      if (cache) return cache;
+      const { myAccounts, tritiumAccounts } = this.props;
+      if (legacyMode) {
+        if (myAccounts && myAccounts.length) {
+          return (cache = myAccounts[0].addresses[0]);
+        }
+      } else {
+        if (tritiumAccounts && tritiumAccounts.length) {
+          const defaultAcc = tritiumAccounts.find(
+            acc => acc.name === 'default'
+          );
+          if (defaultAcc) {
+            return (cache = defaultAcc.address);
+          } else {
+            myAddress = tritiumAccounts[0].address;
+          }
+        }
+      }
+      return null;
+    };
+  })();
 
   /**
    * Toggle The Globe
@@ -144,7 +150,7 @@ class SettingsStyle extends Component {
    * @memberof SettingsStyle
    */
   toggleGlobeRender = e => {
-    this.props.setRenderGlobe(e.target.checked);
+    setRenderGlobe(e.target.checked);
   };
 
   /**
@@ -154,11 +160,11 @@ class SettingsStyle extends Component {
    */
   setWallpaper = (path, defaultStyle) => {
     defaultStyle = defaultStyle ? defaultStyle : this.props.theme.defaultStyle;
-    this.props.updateTheme({ defaultStyle: defaultStyle, wallpaper: path });
+    updateTheme({ defaultStyle: defaultStyle, wallpaper: path });
     if (path || defaultStyle.endsWith('Custom')) {
       this.setThemeSelector(2);
       if (path) {
-        this.props.updateTheme({ defaultStyle: 'Custom' });
+        updateTheme({ defaultStyle: 'Custom' });
       }
     }
   };
@@ -175,7 +181,7 @@ class SettingsStyle extends Component {
       defaultStyle === 'Dark' ||
       defaultStyle === 'Light' ||
       defaultStyle.endsWith('Custom');
-    this.props.updateTheme({
+    updateTheme({
       [key]: value,
       defaultStyle: wasOnDefault
         ? defaultStyle.endsWith('Custom')
@@ -192,11 +198,8 @@ class SettingsStyle extends Component {
    */
   resetColors = () => {
     //Dont think we need this anymore
-    this.props.resetColors();
-    this.props.showNotification(
-      __('Color scheme has been reset to default'),
-      'success'
-    );
+    resetColors();
+    showNotification(__('Color scheme has been reset to default'), 'success');
   };
 
   /**
@@ -240,13 +243,13 @@ class SettingsStyle extends Component {
           });
       }
     } catch (err) {
-      this.props.showNotification(
+      showNotification(
         __('Invalid file format! Custom theme file must be in JSON'),
         'error'
       );
     }
     customTheme.defaultStyle = 'Custom';
-    this.props.updateTheme(customTheme);
+    updateTheme(customTheme);
   };
 
   /**
@@ -287,9 +290,9 @@ class SettingsStyle extends Component {
         fs.copyFile(walletDataDir + '/theme.json', path, err => {
           if (err) {
             console.error(err);
-            this.props.showNotification(err, 'error');
+            showNotification(err, 'error');
           }
-          this.props.showNotification(__('Theme exported'), 'success');
+          showNotification(__('Theme exported'), 'success');
         });
       }
     );
@@ -301,7 +304,7 @@ class SettingsStyle extends Component {
    * @memberof SettingsStyle
    */
   pressDarkTheme = () => {
-    this.props.updateTheme(DarkTheme);
+    updateTheme(DarkTheme);
   };
   /**
    * Press Light Theme Button
@@ -309,7 +312,7 @@ class SettingsStyle extends Component {
    * @memberof SettingsStyle
    */
   pressLightTheme = () => {
-    this.props.updateTheme(LightTheme);
+    updateTheme(LightTheme);
   };
   /**
    * Press Custom theme button
@@ -318,7 +321,7 @@ class SettingsStyle extends Component {
    */
   pressCustomTheme = () => {
     if (this.state.previousCustom != {}) {
-      this.props.updateTheme(this.state.previousCustom);
+      updateTheme(this.state.previousCustom);
     }
   };
   /**
@@ -327,12 +330,9 @@ class SettingsStyle extends Component {
    * @memberof SettingsStyle
    */
   pressResetTheme = () => {
-    this.props.updateTheme(DarkTheme);
+    updateTheme(DarkTheme);
     this.setThemeSelector(0);
-    this.props.showNotification(
-      __('Theme has been reset to default'),
-      'success'
-    );
+    showNotification(__('Theme has been reset to default'), 'success');
   };
 
   /**
@@ -369,14 +369,7 @@ class SettingsStyle extends Component {
    * @memberof SettingsStyle
    */
   render() {
-    const {
-      theme,
-      renderGlobe,
-      addressStyle,
-      setAddressStyle,
-      overviewDisplay,
-      setOverviewDisplay,
-    } = this.props;
+    const { theme, renderGlobe, addressStyle, overviewDisplay } = this.props;
 
     return (
       <>
@@ -423,7 +416,10 @@ class SettingsStyle extends Component {
           </div>
           <div className="mt1">
             <NexusAddress
-              address={this.state.sampleAddress}
+              address={
+                this.getUsersDefaultAddress() ||
+                '000000000000000000000000000000000000000000000000000'
+              }
               label={__('Sample Address')}
             />
             <AddressStyleNote>

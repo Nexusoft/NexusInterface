@@ -1,34 +1,10 @@
-import {
-  loadTransactions,
-  addTransactions,
-  updateTransaction,
-} from 'actions/transactions';
+import * as TYPE from 'consts/actionTypes';
 import store, { observeStore } from 'store';
 import rpc from 'lib/rpc';
 
 const txPerCall = 100;
 const unsubscribers = {};
 let started = false;
-
-export async function autoUpdateTransactions() {
-  if (!started) {
-    await fetchAllTransactions();
-
-    observeStore(
-      ({ core: { info } }) => info && info.txtotal,
-      (txtotal, store) => {
-        const {
-          transactions: { lastTxtotal },
-        } = store.getState();
-        if (txtotal && (!lastTxtotal || txtotal > lastTxtotal)) {
-          fetchNewTransactions(txtotal - lastTxtotal);
-        }
-      }
-    );
-
-    started = true;
-  }
-}
 
 async function fetchAllTransactions() {
   let transactions = [];
@@ -55,7 +31,7 @@ async function fetchAllTransactions() {
     },
     settings: { minConfirmations },
   } = store.getState();
-  store.dispatch(loadTransactions(transactions, txtotal));
+  loadTransactions(transactions, txtotal);
 
   transactions.forEach(tx => {
     if (needsAutoUpdate(tx, minConfirmations)) {
@@ -73,9 +49,7 @@ async function fetchNewTransactions(newTxCount) {
     },
     settings: { minConfirmations },
   } = store.getState();
-  store.dispatch(
-    addTransactions(newTransactions.map(normalizeTransaction), txtotal)
-  );
+  addTransactions(newTransactions.map(normalizeTransaction), txtotal);
 
   newTransactions.forEach(tx => {
     if (needsAutoUpdate(tx, minConfirmations)) {
@@ -84,16 +58,11 @@ async function fetchNewTransactions(newTxCount) {
   });
 }
 
-export async function fetchTransaction(txid) {
-  const tx = await rpc('gettransaction', [txid]);
-  store.dispatch(updateTransaction(normalizeTransaction(tx)));
-}
-
 function autoUpdateTxConfirmations(txid) {
   if (unsubscribers[txid]) return;
   unsubscribers[txid] = observeStore(
     ({ core: { info } }) => info && info.blocks,
-    async (blocks, store) => {
+    async blocks => {
       if (blocks) {
         await fetchTransaction(txid);
         const {
@@ -112,8 +81,32 @@ function autoUpdateTxConfirmations(txid) {
   );
 }
 
-export const isPending = (tx, minConf) =>
-  !!minConf && tx.confirmations < Number(minConf) && tx.category !== 'orphan';
+const loadTransactions = (transactions, txtotal) => {
+  store.dispatch({
+    type: TYPE.LOAD_TRANSACTIONS,
+    payload: {
+      list: transactions,
+      txtotal,
+    },
+  });
+};
+
+const addTransactions = (newTransactions, txtotal) => {
+  store.dispatch({
+    type: TYPE.ADD_TRANSACTIONS,
+    payload: {
+      list: newTransactions,
+      txtotal,
+    },
+  });
+};
+
+const updateTransaction = tx => {
+  store.dispatch({
+    type: TYPE.UPDATE_TRANSACTION,
+    payload: tx,
+  });
+};
 
 // RPC commands return inconsistent transaction schemas so we have to normalize them before using
 const normalizeTransaction = tx => ({
@@ -123,3 +116,36 @@ const normalizeTransaction = tx => ({
 
 const needsAutoUpdate = (tx, minConf) =>
   (minConf && isPending(tx, minConf)) || tx.category === 'immature';
+
+/**
+ * Public API
+ * =============================================================================
+ */
+
+export const isPending = (tx, minConf) =>
+  !!minConf && tx.confirmations < Number(minConf) && tx.category !== 'orphan';
+
+export async function fetchTransaction(txid) {
+  const tx = await rpc('gettransaction', [txid]);
+  updateTransaction(normalizeTransaction(tx));
+}
+
+export async function autoUpdateTransactions() {
+  if (!started) {
+    await fetchAllTransactions();
+
+    observeStore(
+      ({ core: { info } }) => info && info.txtotal,
+      txtotal => {
+        const {
+          transactions: { lastTxtotal },
+        } = store.getState();
+        if (txtotal && (!lastTxtotal || txtotal > lastTxtotal)) {
+          fetchNewTransactions(txtotal - lastTxtotal);
+        }
+      }
+    );
+
+    started = true;
+  }
+}

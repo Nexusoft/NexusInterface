@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import Tooltip from 'components/Tooltip';
 import { formatNumber } from 'lib/intl';
 import { isStaking } from 'selectors';
-import stakingIcon from 'images/staking.sprite.svg';
+import stakingIcon from 'icons/staking.svg';
 
 import StatusIcon from './StatusIcon';
 

@@ -121,6 +121,10 @@ const utilityClasses = theme => css`
     vertical-align: middle;
   }
 
+  .text-center {
+    text-align: center;
+  }
+
   .dim {
     opacity: 0.5;
   }
@@ -147,6 +151,9 @@ const utilityClasses = theme => css`
   }
   .mt2 {
     margin-top: 2em;
+  }
+  .mt3 {
+    margin-top: 3em;
   }
 
   .space-left {

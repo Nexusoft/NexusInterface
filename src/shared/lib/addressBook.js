@@ -1,3 +1,5 @@
+import * as TYPE from 'consts/actionTypes';
+import store from 'store';
 import fs from 'fs';
 import path from 'path';
 import Ajv from 'ajv';
@@ -12,6 +14,7 @@ const filePath = path.join(walletDataDir, fileName);
  * Convert the old addressbook.json schema
  * =============================================================================
  */
+
 function convertOldAddressBook(addressBook) {
   if (!Array.isArray(addressBook)) return [];
   return addressBook.reduce(
@@ -60,7 +63,8 @@ function convertOldAddressInfo({ label, address, isMine }) {
  * Public API
  * =============================================================================
  */
-export function LoadAddressBook() {
+
+function loadAddressBookFromFile() {
   const schema = {
     patternProperties: {
       '^.+$': {
@@ -110,7 +114,7 @@ export function LoadAddressBook() {
     if (json && json.addressbook) {
       addressBook = convertOldAddressBook(json.addressbook);
       valid = validate(addressBook);
-      if (valid) SaveAddressBook(addressBook);
+      if (valid) saveAddressBookToFile(addressBook);
     } else {
       addressBook = json.addressBook;
       valid = validate(addressBook);
@@ -132,6 +136,57 @@ export function LoadAddressBook() {
   }
 }
 
-export function SaveAddressBook(addressBook) {
+function saveAddressBookToFile(addressBook) {
   return writeJson(filePath, { addressBook });
 }
+
+/**
+ * Public API
+ * =============================================================================
+ */
+
+export const loadAddressBook = loadAddressBookFromFile;
+
+export const addNewContact = contact => {
+  const result = store.dispatch({
+    type: TYPE.ADD_NEW_CONTACT,
+    payload: contact,
+  });
+  const { addressBook } = store.getState();
+  saveAddressBookToFile(addressBook);
+  return result;
+};
+
+export const updateContact = (name, contact) => {
+  const result = store.dispatch({
+    type: TYPE.UPDATE_CONTACT,
+    payload: { name, contact },
+  });
+  const { addressBook } = store.getState();
+  saveAddressBookToFile(addressBook);
+  return result;
+};
+
+export const deleteContact = name => {
+  const result = store.dispatch({
+    type: TYPE.DELETE_CONTACT,
+    payload: name,
+  });
+  const { addressBook } = store.getState();
+  saveAddressBookToFile(addressBook);
+  return result;
+};
+
+export const searchContact = query => {
+  store.dispatch({
+    type: TYPE.CONTACT_SEARCH,
+    payload: query,
+  });
+};
+
+export const selectContact = index => {
+  store.dispatch({
+    type: TYPE.SELECT_CONTACT,
+    payload: index,
+  });
+};

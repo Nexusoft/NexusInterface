@@ -7,15 +7,23 @@ import axios from 'axios';
 import semver from 'semver';
 
 // Internal
+import * as TYPE from 'consts/actionTypes';
 import store from 'store';
-import { setUpdaterState } from 'actions/updater';
-import { showBackgroundTask, showNotification } from 'actions/overlays';
+import { showBackgroundTask, showNotification } from 'lib/ui';
 import AutoUpdateBackgroundTask from './AutoUpdateBackgroundTask';
-import { assetsParentDir, walletDataDir } from 'consts/paths';
+import { assetsParentDir } from 'consts/paths';
+import { walletEvents } from 'lib/wallet';
 
 const mainUpdater = remote.getGlobal('updater');
 const autoUpdateInterval = 2 * 60 * 60 * 1000; // 2 hours
 let timerId = null;
+
+const setUpdaterState = state => {
+  store.dispatch({
+    type: TYPE.SET_UPDATER_STATE,
+    payload: state,
+  });
+};
 
 /**
  * Check for updates
@@ -44,18 +52,11 @@ export function quitAndInstall() {
  * @returns
  */
 export async function startAutoUpdate() {
-  let checkGithubManual = false;
-  if (process.platform === 'darwin') checkGithubManual = true;
-  if (process.platform === 'linux') {
-    const fileExist = fs.existsSync(
-      path.join(assetsParentDir, 'app-update.yml')
-    );
-    if (!fileExist) {
-      checkGithubManual = true;
-    }
-  }
+  const checkGithubManually =
+    process.platform === 'darwin' ||
+    !fs.existsSync(path.join(assetsParentDir, 'app-update.yml'));
 
-  if (checkGithubManual) {
+  if (checkGithubManually) {
     clearTimeout(timerId);
     try {
       const response = await axios.get(
@@ -63,18 +64,14 @@ export async function startAutoUpdate() {
       );
       const latestVerion = response.data.tag_name;
       if (
-        semver.lt( "v" + APP_VERSION, latestVerion)
-          &&
+        semver.lt('v' + APP_VERSION, latestVerion) &&
         response.data.prerelease === false
       ) {
-        console.log(`New Version ${response.data.tag_name}, Click to download`);
-        store.dispatch(
-          showBackgroundTask(AutoUpdateBackgroundTask, {
-            version: response.data.tag_name,
-            quitAndInstall: null,
-            gitHub: true,
-          })
-        );
+        showBackgroundTask(AutoUpdateBackgroundTask, {
+          version: response.data.tag_name,
+          quitAndInstall: null,
+          gitHub: true,
+        });
       }
     } catch (e) {
       console.error(e);
@@ -108,7 +105,7 @@ export function stopAutoUpdate() {
  * Initialize the Updater
  *
  */
-export function initializeUpdater(autoUpdate) {
+walletEvents.once('post-render', function() {
   mainUpdater.logger = log;
   mainUpdater.currentVersion = APP_VERSION;
   mainUpdater.autoDownload = true;
@@ -124,46 +121,45 @@ export function initializeUpdater(autoUpdate) {
   });
 
   mainUpdater.on('update-available', updateInfo => {
-    store.dispatch(
-      showNotification(
-        __('New wallet version %{version} available. Downloading...', {
-          version: updateInfo.version,
-        }),
-        'work'
-      )
+    showNotification(
+      __('New wallet version %{version} available. Downloading...', {
+        version: updateInfo.version,
+      }),
+      'work'
     );
   });
 
   mainUpdater.on('update-downloaded', updateInfo => {
     stopAutoUpdate();
-    store.dispatch(
-      showBackgroundTask(AutoUpdateBackgroundTask, {
-        version: updateInfo.version,
-        quitAndInstall: mainUpdater.quitAndInstall,
-      })
-    );
+    showBackgroundTask(AutoUpdateBackgroundTask, {
+      version: updateInfo.version,
+      quitAndInstall: mainUpdater.quitAndInstall,
+    });
   });
 
   mainUpdater.on('error', err => {
-    store.dispatch(setUpdaterState('idle'));
+    setUpdaterState('idle');
   });
   mainUpdater.on('checking-for-update', () => {
-    store.dispatch(setUpdaterState('checking'));
+    setUpdaterState('checking');
   });
   mainUpdater.on('update-available', () => {
-    store.dispatch(setUpdaterState('downloading'));
+    setUpdaterState('downloading');
   });
   mainUpdater.on('update-not-available', () => {
-    store.dispatch(setUpdaterState('idle'));
+    setUpdaterState('idle');
   });
   mainUpdater.on('download-progress', () => {
-    store.dispatch(setUpdaterState('downloading'));
+    setUpdaterState('downloading');
   });
   mainUpdater.on('update-downloaded', () => {
-    store.dispatch(setUpdaterState('downloaded'));
+    setUpdaterState('downloaded');
   });
 
+  const {
+    settings: { autoUpdate },
+  } = store.getState();
   if (autoUpdate) {
     startAutoUpdate();
   }
-}
+});

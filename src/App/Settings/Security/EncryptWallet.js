@@ -1,6 +1,5 @@
 // External
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
 
@@ -9,11 +8,11 @@ import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
-import { openSuccessDialog } from 'actions/overlays';
+import { openSuccessDialog } from 'lib/ui';
 import rpc from 'lib/rpc';
-import { startCore } from 'actions/core';
+import { startCore } from 'lib/core';
 import { consts } from 'styles';
-import { rpcErrorHandler } from 'utils/form';
+import { errorHandler } from 'utils/form';
 import passwordInvalidChars from './passwordInvalidChars';
 
 const EncryptWalletForm = styled.form({
@@ -38,10 +37,6 @@ const Characters = styled.span({
  * @class EncryptWallet
  * @extends {Component}
  */
-@connect(
-  null,
-  { openSuccessDialog, startCore }
-)
 @reduxForm({
   form: 'encryptWallet',
   destroyOnUnmount: false,
@@ -70,16 +65,16 @@ const Characters = styled.span({
   onSubmit: ({ password }) => rpc('encryptwallet', [password]),
   onSubmitSuccess: (result, dispatch, props) => {
     props.reset();
-    props.openSuccessDialog({
+    openSuccessDialog({
       message: __('Wallet has been encrypted.'),
       onClose: () => {
         // In some old version, core stops after wallet is encrypted
         // So start the core here for legacy support
-        props.startCore();
+        startCore();
       },
     });
   },
-  onSubmitFail: rpcErrorHandler(__('Error encrypting wallet')),
+  onSubmitFail: errorHandler(__('Error encrypting wallet')),
 })
 class EncryptWallet extends Component {
   /**

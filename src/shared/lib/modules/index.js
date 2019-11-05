@@ -1,12 +1,17 @@
-export { loadModules } from './loadModules';
+import './loadModules';
+
 export { loadModuleFromDir } from './loadModuleFromDir';
 export { installModule } from './installModule';
-export { initializeWebView } from './webview';
+export {
+  setActiveWebView,
+  unsetActiveWebView,
+  toggleWebViewDevTools,
+} from './webview';
 export {
   isModuleDeprecated,
   isModuleValid,
-  isModuleActive,
+  isModuleEnabled,
   getAllModules,
   getActiveModules,
-  getModuleIfActive,
+  getModuleIfEnabled,
 } from './utils';

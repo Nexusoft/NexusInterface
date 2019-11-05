@@ -4,12 +4,12 @@ import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
 // Internal
-import { openModal } from 'actions/overlays';
+import { openModal } from 'lib/ui';
 import BackgroundTask from 'components/BackgroundTask';
 import Icon from 'components/Icon';
 import { bootstrapEvents } from 'lib/bootstrap';
 import { animations, timing } from 'styles';
-import workIcon from 'images/work.sprite.svg';
+import workIcon from 'icons/work.svg';
 import BootstrapModal from 'components/BootstrapModal';
 
 const BootstrapBackgroundTaskComponent = styled(BackgroundTask)(
@@ -71,12 +71,9 @@ function getStatusMsg({ step, details }) {
  * @class BootstrapBackgroundTask
  * @extends {Component}
  */
-@connect(
-  state => ({
-    statusMsg: getStatusMsg(state.bootstrap),
-  }),
-  { openModal }
-)
+@connect(state => ({
+  statusMsg: getStatusMsg(state.bootstrap),
+}))
 export default class BootstrapBackgroundTask extends Component {
   componentDidMount() {
     bootstrapEvents.on('abort', this.closeTask);
@@ -96,7 +93,7 @@ export default class BootstrapBackgroundTask extends Component {
    * @memberof BootstrapBackgroundTask
    */
   maximize = () => {
-    this.props.openModal(BootstrapModal, {
+    openModal(BootstrapModal, {
       bootstrapper: this.props.bootstrapper,
       maximizedFromBackground: true,
     });

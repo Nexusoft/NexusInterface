@@ -1,6 +1,5 @@
 // External
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
 
@@ -13,9 +12,9 @@ import {
   openErrorDialog,
   openSuccessDialog,
   showNotification,
-} from 'actions/overlays';
+} from 'lib/ui';
 import rpc from 'lib/rpc';
-import { rpcErrorHandler, trimText } from 'utils/form';
+import { errorHandler, trimText } from 'utils/form';
 
 const ImportPrivKeyForm = styled.form({
   flex: 3,
@@ -27,14 +26,6 @@ const ImportPrivKeyForm = styled.form({
  * @class ImportPrivKey
  * @extends {Component}
  */
-@connect(
-  null,
-  {
-    openErrorDialog,
-    openSuccessDialog,
-    showNotification,
-  }
-)
 @reduxForm({
   form: 'importPrivateKey',
   destroyOnUnmount: false,
@@ -56,21 +47,21 @@ const ImportPrivKeyForm = styled.form({
     rpc('importprivkey', [privateKey], [accountName]),
   onSubmitSuccess: async (result, dispatch, props) => {
     props.reset();
-    props.openSuccessDialog({
+    openSuccessDialog({
       message: __('Private key imported. Rescanning now'),
     });
-    props.showNotification(__('Rescanning...'));
+    showNotification(__('Rescanning...'));
     try {
       await rpc('rescan', []);
-      props.showNotification(__('Rescanning done'), 'success');
+      showNotification(__('Rescanning done'), 'success');
     } catch (err) {
-      props.openErrorDialog({
+      openErrorDialog({
         message: __('Error rescanning'),
         note: (err && err.message) || __('An unknown error occurred'),
       });
     }
   },
-  onSubmitFail: rpcErrorHandler(__('Error importing private key')),
+  onSubmitFail: errorHandler(__('Error importing private key')),
 })
 class ImportPrivKey extends Component {
   /**

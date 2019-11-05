@@ -1,6 +1,5 @@
 // External
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
 import { clipboard } from 'electron';
 
@@ -11,10 +10,10 @@ import TextField from 'components/TextField';
 import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
 import InputGroup from 'components/InputGroup';
-import { openErrorDialog, showNotification } from 'actions/overlays';
+import { openErrorDialog, showNotification } from 'lib/ui';
 import rpc from 'lib/rpc';
-import copyIcon from 'images/copy.sprite.svg';
-import { rpcErrorHandler } from 'utils/form';
+import copyIcon from 'icons/copy.svg';
+import { errorHandler } from 'utils/form';
 
 /**
  * View Private Keys for Address JSX
@@ -22,10 +21,6 @@ import { rpcErrorHandler } from 'utils/form';
  * @class ViewPrivKeyForAddress
  * @extends {Component}
  */
-@connect(
-  null,
-  { openErrorDialog, showNotification }
-)
 @reduxForm({
   form: 'viewPrivateKey',
   destroyOnUnmount: false,
@@ -44,7 +39,7 @@ import { rpcErrorHandler } from 'utils/form';
   onSubmitSuccess: (result, dispatch, props) => {
     props.change('privateKey', result);
   },
-  onSubmitFail: rpcErrorHandler(__('Error getting private key')),
+  onSubmitFail: errorHandler(__('Error getting private key')),
 })
 class ViewPrivKeyForAddress extends Component {
   privKeyRef = React.createRef();
@@ -67,7 +62,7 @@ class ViewPrivKeyForAddress extends Component {
           if (e.includes(address)) {
             e = e.replace(address + ' ', '');
           }
-          this.props.openErrorDialog({ message: e });
+          openErrorDialog({ message: e });
         });
     } else {
       this.inputRef.focus();
@@ -82,7 +77,7 @@ class ViewPrivKeyForAddress extends Component {
   copyPrivkey = () => {
     const privKey = this.privKeyRef.current.value;
     clipboard.writeText(privKey);
-    this.props.showNotification(__('Copied to clipboard'), 'success');
+    showNotification(__('Copied to clipboard'), 'success');
   };
 
   /**

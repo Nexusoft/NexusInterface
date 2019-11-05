@@ -7,16 +7,7 @@ const Table = ({ data, columns, defaultSortingColumnIndex, ...rest }) => (
     data={data}
     pageText={__('Page')}
     columns={columns}
-    defaultSorted={
-      defaultSortingColumnIndex !== null
-        ? [
-            {
-              id: columns[defaultSortingColumnIndex].accessor,
-              desc: true,
-            },
-          ]
-        : []
-    }
+    defaultSorted={[{ ...columns[defaultSortingColumnIndex], desc: true }]}
     rowsText={__('rows')}
     previousText={'< ' + __('Previous')}
     nextText={__('Next') + ' >'}

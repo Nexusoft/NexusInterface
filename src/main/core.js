@@ -5,7 +5,10 @@ import path from 'path';
 import axios from 'axios';
 
 import { assetsByPlatformDir } from 'consts/paths';
-import { LoadSettings, UpdateSettings } from 'lib/settings';
+import {
+  loadSettingsFromFile,
+  updateSettingsFile,
+} from 'lib/settings/universal';
 import { customConfig, loadNexusConf } from 'lib/coreConfig';
 import exec from 'utils/promisified/exec';
 import sleep from 'utils/promisified/sleep';
@@ -109,7 +112,7 @@ class Core {
    * @memberof Core
    */
   start = async () => {
-    const settings = LoadSettings();
+    const settings = loadSettingsFromFile();
     const corePID = await getCorePID();
     this._config = null;
 
@@ -120,7 +123,7 @@ class Core {
 
     if (corePID) {
       log.info(
-        'Core Manager: Nexux Core Process already running. Skipping starting core'
+        'Core Manager: Nexus Core Process already running. Skipping starting core'
       );
       this._config = customConfig(loadNexusConf());
       return null;
@@ -130,6 +133,7 @@ class Core {
       ...loadNexusConf(),
       verbose: settings.verboseLevel,
     }));
+
     if (!coreBinaryExists()) {
       log.info(
         'Core Manager: Core not found, please run in manual deamon mode'
@@ -145,22 +149,19 @@ class Core {
       fs.mkdirSync(conf.dataDir);
     }
 
-    if (!fs.existsSync(path.join(conf.dataDir, 'nexus.conf'))) {
-      fs.writeFileSync(
-        path.join(conf.dataDir, 'nexus.conf'),
-        `rpcuser=${conf.user}\nrpcpassword=${conf.password}\n`
-      );
-    }
-
     if (settings.clearPeers) {
       if (fs.existsSync(path.join(conf.dataDir, 'addr.bak'))) {
         await deleteDirectory(path.join(conf.dataDir, 'addr.bak'));
       }
       if (fs.existsSync(path.join(conf.dataDir, 'addr'))) {
-        fs.renameSync(path.join(conf.dataDir, 'addr'), path.join(conf.dataDir, 'addr.bak'));
+        fs.renameSync(
+          path.join(conf.dataDir, 'addr'),
+          path.join(conf.dataDir, 'addr.bak')
+        );
       }
-      UpdateSettings({ clearPeers: false});
+      UpdateSettings({ clearPeers: false });
     }
+
     const params = [
       '-daemon',
       '-server',
@@ -169,20 +170,16 @@ class Core {
       `-datadir=${conf.dataDir}`,
       `-rpcport=${conf.port}`,
       `-verbose=${conf.verbose}`,
-      // //
-      // '-testnet',
-      // '-manager=false',
-      // '-connect=192.168.0.234',
-      // //
     ];
+
     //After core forksblocks clear out that field.
     if (settings.forkBlocks) {
       params.push('-forkblocks=' + settings.forkBlocks);
-      UpdateSettings({ forkBlocks: 0 });
+      updateSettingsFile({ forkBlocks: 0 });
     }
     if (settings.walletClean) {
       params.push('-walletclean');
-      UpdateSettings({ walletClean: false });
+      updateSettingsFile({ walletClean: false });
     }
     //Avatar is default so only add it if it is off.
     if (!settings.avatarMode) {
@@ -229,7 +226,7 @@ class Core {
    */
   stop = async () => {
     log.info('Core Manager: Stop function called');
-    const settings = LoadSettings();
+    const settings = loadSettingsFromFile();
 
     let corePID;
     corePID = await getCorePID();

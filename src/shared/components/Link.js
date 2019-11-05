@@ -19,6 +19,7 @@ import { timing } from 'styles';
 
 const linkStyles = ({ theme }) => ({
   '&, &:active': {
+    cursor: 'pointer',
     display: 'inline',
     borderBottomWidth: 1,
     borderBottomStyle: 'solid',

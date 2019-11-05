@@ -1,6 +1,5 @@
 // External
 import React from 'react';
-import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 import { join } from 'path';
 
@@ -10,13 +9,13 @@ import Icon from 'components/Icon';
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
 import ExternalLink from 'components/ExternalLink';
-import { openConfirmDialog } from 'actions/overlays';
+import { openConfirmDialog } from 'lib/ui';
 import { modulesDir } from 'consts/paths';
 import { timing } from 'styles';
 import deleteDirectory from 'utils/promisified/deleteDirectory';
-import warningIcon from 'images/warning.sprite.svg';
-import linkIcon from 'images/link.sprite.svg';
-import trashIcon from 'images/trash.sprite.svg';
+import warningIcon from 'icons/warning.svg';
+import linkIcon from 'icons/link.svg';
+import trashIcon from 'icons/trash.svg';
 
 const DeleteModule = styled.div({
   position: 'absolute',
@@ -76,10 +75,6 @@ const CheckMark = styled.span({
  * @class ModuleDetailsModal
  * @extends {React.Component}
  */
-@connect(
-  null,
-  { openConfirmDialog }
-)
 class ModuleDetailsModal extends React.Component {
   /**
    *
@@ -87,7 +82,7 @@ class ModuleDetailsModal extends React.Component {
    * @memberof ModuleDetailsModal
    */
   confirmDelete = () => {
-    this.props.openConfirmDialog({
+    openConfirmDialog({
       question: `Delete ${this.props.module.displayName}?`,
       callbackYes: async () => {
         const moduleDir = join(modulesDir, this.props.module.dirName);

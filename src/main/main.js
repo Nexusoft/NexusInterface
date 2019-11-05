@@ -10,14 +10,16 @@ import fs from 'fs-extra';
 
 // Internal
 import { coreDataDir, assetsDir } from 'consts/paths';
-import { LoadSettings, UpdateSettings } from 'lib/settings';
-import { debounced } from 'utils/misc';
+import {
+  loadSettingsFromFile,
+  updateSettingsFile,
+} from 'lib/settings/universal';
+import { debounced } from 'utils/universal';
 
 import core from './core';
 import fileServer from './fileServer';
 
 let mainWindow;
-let resizeTimer;
 
 // Global Objects
 global.fileServer = fileServer;
@@ -87,7 +89,7 @@ function setupTray(mainWindow) {
 //
 
 function createWindow() {
-  const settings = LoadSettings();
+  const settings = loadSettingsFromFile();
   const fileName =
     process.platform == 'darwin' ? 'nexuslogo.ico' : 'Nexus_App_Icon_64.png';
   const iconPath = path.join(assetsDir, 'tray', fileName);
@@ -138,7 +140,7 @@ function createWindow() {
   const updateWindowSize = debounced(() => {
     const bounds = mainWindow.getBounds();
     // Resize event has been completed
-    UpdateSettings({
+    updateSettingsFile({
       windowWidth: bounds.width,
       windowHeight: bounds.height,
     });
@@ -147,7 +149,7 @@ function createWindow() {
 
   const updateWindowPos = debounced(() => {
     const bounds = mainWindow.getBounds();
-    UpdateSettings({
+    updateSettingsFile({
       windowX: bounds.x,
       windowY: bounds.y,
     });
@@ -175,7 +177,7 @@ async function backUpQT() {
     '__db.004',
     '__db.005',
   ];
-  const settings = LoadSettings();
+  const settings = loadSettingsFromFile();
   if (settings.acceptedAgreement) {
     return;
   }
@@ -211,7 +213,7 @@ const gotTheLock = app.requestSingleInstanceLock();
 if (!gotTheLock) {
   app.quit();
 } else {
-  app.on('second-instance', (event, commandLine, workingDirectory) => {
+  app.on('second-instance', () => {
     // Someone tried to run a second instance, we should focus our window.
     if (mainWindow) {
       mainWindow.show();
@@ -229,7 +231,7 @@ if (!gotTheLock) {
     createWindow();
     global.core.start();
 
-    const settings = LoadSettings();
+    const settings = loadSettingsFromFile();
     if (
       process.env.NODE_ENV === 'development' ||
       process.env.DEBUG_PROD === 'true' ||

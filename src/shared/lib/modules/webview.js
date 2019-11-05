@@ -1,21 +1,23 @@
-import memoize from 'memoize-one';
+import memoize from 'utils/memoize';
 import axios from 'axios';
 import { reset, initialize } from 'redux-form';
-import { createMatchSelector } from 'connected-react-router';
 
-import store, { history, observeStore } from 'store';
-import { updateModuleState } from 'actions/module';
+import * as TYPE from 'consts/actionTypes';
+import store, { observeStore } from 'store';
+import { history } from 'lib/wallet';
 import {
   showNotification,
   openConfirmDialog,
   openErrorDialog,
   openSuccessDialog,
-} from 'actions/overlays';
+} from 'lib/ui';
+import { walletEvents } from 'lib/wallet';
 import rpc from 'lib/rpc';
-import { readModuleStorage, writeModuleStorage } from './storage';
-import { getModuleIfActive } from './utils';
+import { apiPost } from 'lib/tritiumApi';
+import { legacyMode } from 'consts/misc';
 
-const matchSelector = createMatchSelector({ path: '/Modules/:name' });
+import { readModuleStorage, writeModuleStorage } from './storage';
+import { getModuleIfEnabled } from './utils';
 
 const cmdWhitelist = [
   'checkwallet',
@@ -57,6 +59,45 @@ const cmdWhitelist = [
   'verifymessage',
 ];
 
+const apiWhiteList = [
+  'system/get/info',
+  'system/list/peers',
+  'system/list/lisp-eids',
+  'users/get/status',
+  'users/list/accounts',
+  'users/list/assets',
+  'users/list/items',
+  'users/list/names',
+  'users/list/namespaces',
+  'users/list/notifications',
+  'users/list/tokens',
+  'users/list/transactions',
+  'finance/get/account',
+  'finance/list/account',
+  'finance/list/account/transactions',
+  'finance/get/stakeinfo',
+  'finance/get/balances',
+  'finance/list/trustaccounts',
+  'ledger/get/blockhash',
+  'ledger/get/block',
+  'ledger/list/block',
+  'ledger/get/transaction',
+  'ledger/get/mininginfo',
+  'tokens/get/token',
+  'tokens/list/token/transactions',
+  'tokens/get/account',
+  'tokens/list/account/transactions',
+  'names/get/namespace',
+  'names/list/namespace/history',
+  'names/get/name',
+  'names/list/name/history',
+  'assets/get/asset',
+  'assets/list/asset/history',
+  'objects/get/schema',
+  'supply/get/item',
+  'supply/list/item/history',
+];
+
 /**
  * Utilities
  * ===========================================================================
@@ -82,14 +123,14 @@ const getModuleData = ({
 }) => ({
   theme,
   settings: getSettingsForModules(locale, fiatCurrency, addressStyle),
-  coreInfo: core.info,
+  coreInfo: legacyMode ? core.info : core.systemInfo,
 });
 
 const getActiveModule = () => {
   const state = store.getState();
-  const match = matchSelector(state);
-  return getModuleIfActive(
-    match.params.name,
+  const { activeAppModule } = state;
+  return getModuleIfEnabled(
+    activeAppModule && activeAppModule.moduleName,
     state.modules,
     state.settings.disabledModules
   );
@@ -110,6 +151,9 @@ function handleIpcMessage(event) {
       break;
     case 'rpc-call':
       rpcCall(event.args);
+      break;
+    case 'api-call':
+      apiCall(event.args);
       break;
     case 'show-notification':
       showNotif(event.args);
@@ -163,9 +207,9 @@ async function proxyRequest([url, options, requestId]) {
     }
 
     const response = await axios(url, options);
-    const { webview } = store.getState();
-    if (webview) {
-      webview.send(
+    const { activeAppModule } = store.getState();
+    if (activeAppModule) {
+      activeAppModule.webview.send(
         `proxy-response${requestId ? `:${requestId}` : ''}`,
         null,
         response
@@ -173,9 +217,9 @@ async function proxyRequest([url, options, requestId]) {
     }
   } catch (err) {
     console.error(err);
-    const { webview } = store.getState();
-    if (webview) {
-      webview.send(
+    const { activeAppModule } = store.getState();
+    if (activeAppModule) {
+      activeAppModule.webview.send(
         `proxy-response${requestId ? `:${requestId}` : ''}`,
         err.toString ? err.toString() : err
       );
@@ -190,85 +234,116 @@ async function rpcCall([command, params, callId]) {
     }
 
     const response = await rpc(command, ...(params || []));
-    const { webview } = store.getState();
-    if (webview) {
-      webview.send(`rpc-return${callId ? `:${callId}` : ''}`, null, response);
+    const { activeAppModule } = store.getState();
+    if (activeAppModule) {
+      activeAppModule.webview.send(
+        `rpc-return${callId ? `:${callId}` : ''}`,
+        null,
+        response
+      );
     }
   } catch (err) {
     console.error(err);
-    const { webview } = store.getState();
-    if (webview) {
-      webview.send(`rpc-return${callId ? `:${callId}` : ''}`, err);
+    const { activeAppModule } = store.getState();
+    if (activeAppModule) {
+      activeAppModule.webview.send(
+        `rpc-return${callId ? `:${callId}` : ''}`,
+        err
+      );
+    }
+  }
+}
+
+async function apiCall([endpoint, params, callId]) {
+  try {
+    if (!apiWhiteList.includes(endpoint)) {
+      throw 'Invalid API endpoint';
+    }
+
+    const result = await apiPost(endpoint, params);
+    const { activeAppModule } = store.getState();
+    if (activeAppModule) {
+      activeAppModule.webview.send(
+        `api-return${callId ? `:${callId}` : ''}`,
+        null,
+        result
+      );
+    }
+  } catch (err) {
+    console.error(err);
+    const { activeAppModule } = store.getState();
+    if (activeAppModule) {
+      activeAppModule.webview.send(
+        `api-return${callId ? `:${callId}` : ''}`,
+        err
+      );
     }
   }
 }
 
 function showNotif([options = {}]) {
   const { content, type, autoClose } = options;
-  store.dispatch(showNotification(content, { content, type, autoClose }));
+  showNotification(content, { content, type, autoClose });
 }
 
 function showErrorDialog([options = {}]) {
   const { message, note } = options;
-  store.dispatch(
-    openErrorDialog({
-      message,
-      note,
-    })
-  );
+  openErrorDialog({
+    message,
+    note,
+  });
 }
 
 function showSuccessDialog([options = {}]) {
   const { message, note } = options;
-  store.dispatch(
-    openSuccessDialog({
-      message,
-      note,
-    })
-  );
+  openSuccessDialog({
+    message,
+    note,
+  });
 }
 
 function confirm([options = {}, confirmationId]) {
   const { question, note, labelYes, skinYes, labelNo, skinNo } = options;
-  store.dispatch(
-    openConfirmDialog({
-      question,
-      note,
-      labelYes,
-      skinYes,
-      callbackYes: () => {
-        console.log(
-          'yes',
-          `confirm-answer${confirmationId ? `:${confirmationId}` : ''}`
+  openConfirmDialog({
+    question,
+    note,
+    labelYes,
+    skinYes,
+    callbackYes: () => {
+      console.log(
+        'yes',
+        `confirm-answer${confirmationId ? `:${confirmationId}` : ''}`
+      );
+      const { activeAppModule } = store.getState();
+      if (activeAppModule) {
+        activeAppModule.webview.send(
+          `confirm-answer${confirmationId ? `:${confirmationId}` : ''}`,
+          true
         );
-        const { webview } = store.getState();
-        if (webview) {
-          webview.send(
-            `confirm-answer${confirmationId ? `:${confirmationId}` : ''}`,
-            true
-          );
-        }
-      },
-      labelNo,
-      skinNo,
-      callbackNo: () => {
-        const { webview } = store.getState();
-        if (webview) {
-          webview.send(
-            `confirm-answer${confirmationId ? `:${confirmationId}` : ''}`,
-            false
-          );
-        }
-      },
-    })
-  );
+      }
+    },
+    labelNo,
+    skinNo,
+    callbackNo: () => {
+      const { activeAppModule } = store.getState();
+      if (activeAppModule) {
+        activeAppModule.webview.send(
+          `confirm-answer${confirmationId ? `:${confirmationId}` : ''}`,
+          false
+        );
+      }
+    },
+  });
 }
 
 function updateState([moduleState]) {
   const activeModule = getActiveModule();
   const moduleName = activeModule.name;
   if (typeof moduleState === 'object') {
-    store.dispatch(updateModuleState(moduleName, moduleState));
+    store.dispatch({
+      type: TYPE.UPDATE_MODULE_STATE,
+      payload: { moduleName, moduleState },
+    });
   } else {
     console.error(
       `Module ${moduleName} is trying to update its state to a non-object value ${moduleState}`
@@ -281,22 +356,18 @@ function updateStorage([data]) {
   writeModuleStorage(activeModule, data);
 }
 
-/**
- * Initialize
- * ===========================================================================
- */
-
-export function initializeWebView() {
+walletEvents.once('post-render', function() {
   observeStore(
-    state => state.webview,
-    (webview, { getState }) => {
-      if (webview) {
+    state => state.activeAppModule,
+    activeAppModule => {
+      if (activeAppModule) {
+        const { webview } = activeAppModule;
         webview.addEventListener('ipc-message', handleIpcMessage);
-        webview.addEventListener('dom-ready', () => {
-          const state = getState();
+        webview.addEventListener('dom-ready', async () => {
+          const state = store.getState();
           const activeModule = getActiveModule();
           const moduleState = state.moduleStates[activeModule.name];
-          const storageData = readModuleStorage(activeModule);
+          const storageData = await readModuleStorage(activeModule);
           webview.send('initialize', {
             ...getModuleData(state),
             moduleState,
@@ -309,38 +380,69 @@ export function initializeWebView() {
 
   observeStore(
     state => state.settings,
-    (settings, { getState }) => {
-      const { webview } = getState();
-      if (webview) {
-        try {
-          webview.send('settings-updated', settings);
-        } catch (err) {}
+    (settings, oldSettings) => {
+      if (settingsChanged(oldSettings, settings)) {
+        const { activeAppModule } = store.getState();
+        if (activeAppModule) {
+          try {
+            activeAppModule.webview.send('settings-updated', settings);
+          } catch (err) {}
+        }
       }
-    },
-    settingsChanged
+    }
   );
 
   observeStore(
     state => state.theme,
-    (theme, { getState }) => {
-      const { webview } = getState();
-      if (webview) {
+    theme => {
+      const { activeAppModule } = store.getState();
+      if (activeAppModule) {
         try {
-          webview.send('theme-updated', theme);
+          activeAppModule.webview.send('theme-updated', theme);
         } catch (err) {}
       }
     }
   );
 
   observeStore(
-    state => state.coreInfo,
-    (coreInfo, { getState }) => {
-      const { webview } = getState();
-      if (webview) {
+    state => (legacyMode ? state.core.info : state.core.systemInfo),
+    coreInfo => {
+      const { activeAppModule } = store.getState();
+      if (activeAppModule) {
         try {
-          webview.send('coreInfo-updated', coreInfo);
+          activeAppModule.webview.send('coreInfo-updated', coreInfo);
         } catch (err) {}
       }
     }
   );
-}
+});
+
+/**
+ * Public API
+ * ===========================================================================
+ */
+
+export const setActiveWebView = (webview, moduleName) => {
+  store.dispatch({
+    type: TYPE.SET_ACTIVE_APP_MODULE,
+    payload: { webview, moduleName },
+  });
+};
+
+export const unsetActiveWebView = () => {
+  store.dispatch({
+    type: TYPE.UNSET_ACTIVE_APP_MODULE,
+  });
+};
+
+export const toggleWebViewDevTools = () => {
+  const { activeAppModule } = store.getState();
+  if (activeAppModule) {
+    const { webview } = activeAppModule;
+    if (webview.isDevToolsOpened()) {
+      webview.closeDevTools();
+    } else {
+      webview.openDevTools();
+    }
+  }
+};

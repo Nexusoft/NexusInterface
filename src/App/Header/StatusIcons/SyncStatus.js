@@ -6,8 +6,8 @@ import styled from '@emotion/styled';
 // Internal Global Dependencies
 import { animations } from 'styles';
 import Tooltip from 'components/Tooltip';
-import checkIcon from 'images/check.sprite.svg';
-import syncingIcon from 'images/syncing.sprite.svg';
+import checkIcon from 'icons/check.svg';
+import syncingIcon from 'icons/syncing.svg';
 
 import StatusIcon from './StatusIcon';
 

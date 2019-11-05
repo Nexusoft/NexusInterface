@@ -1,8 +1,7 @@
 import React from 'react';
-import { connect } from 'react-redux';
 
 import rpc from 'lib/rpc';
-import { showNotification } from 'actions/overlays';
+import { showNotification } from 'lib/ui';
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
 import { consts } from 'styles';
@@ -13,10 +12,6 @@ import { consts } from 'styles';
  * @class RescanButton
  * @extends {React.Component}
  */
-@connect(
-  null,
-  { showNotification }
-)
 class RescanButton extends React.Component {
   state = {
     rescanning: false,
@@ -32,12 +27,12 @@ class RescanButton extends React.Component {
       this.setState({ rescanning: true });
       await rpc('rescan', []);
     } catch (err) {
-      this.props.showNotification(__('Error rescanning'), 'error');
+      showNotification(__('Error rescanning'), 'error');
       return;
     } finally {
       this.setState({ rescanning: false });
     }
-    this.props.showNotification(__('Rescanned successfully'), 'success');
+    showNotification(__('Rescanned successfully'), 'success');
   };
 
   /**
@@ -48,11 +43,12 @@ class RescanButton extends React.Component {
    */
   render() {
     const { rescanning } = this.state;
+    const { tooltip, ...rest } = this.props;
     return (
       <Tooltip.Trigger
         tooltip={
           !rescanning &&
-          this.props.tooltip &&
+          tooltip &&
           __(
             'Used to correct transaction/balance issues, scans over every block in the database. Could take up to 10 minutes.'
           )
@@ -62,6 +58,7 @@ class RescanButton extends React.Component {
           disabled={rescanning}
           onClick={this.rescan}
           style={{ height: consts.inputHeightEm + 'em' }}
+          {...rest}
         >
           {rescanning ? __('Rescanning...') : __('Rescan wallet')}
         </Button>

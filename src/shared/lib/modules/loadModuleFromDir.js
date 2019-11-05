@@ -1,7 +1,7 @@
 import { join, isAbsolute, normalize } from 'path';
 import fs from 'fs';
 import Ajv from 'ajv';
-import semverRegex from 'semver-regex';
+import { semverRegex } from 'consts/misc';
 
 import { isModuleDeprecated, isModuleValid } from './utils';
 import {
@@ -34,12 +34,12 @@ const nxsPackageSchema = {
     displayName: { type: 'string', pattern: '^[^\n]*$' },
     version: {
       type: 'string',
-      pattern: semverRegex().source,
+      pattern: semverRegex.source,
     },
     // Module Specifications version that this module was built on
     specVersion: {
       type: 'string',
-      pattern: semverRegex().source,
+      pattern: semverRegex.source,
     },
     description: { type: 'string' },
     type: { type: 'string', enum: ['app'] },
@@ -89,13 +89,15 @@ const nxsPackageSchema = {
 };
 const validateNxsPackage = ajv.compile(nxsPackageSchema);
 
-function containsSymLink(dirPath) {
-  const items = fs.readdirSync(dirPath);
+async function containsSymLink(dirPath) {
+  const items = await fs.promises.readdir(dirPath);
   for (let item of items) {
     const subPath = join(dirPath, item);
-    if (fs.lstatSync(subPath).isSymbolicLink()) return true;
-    if (fs.statSync(subPath).isDirectory() && containsSymLink(subPath))
-      return true;
+    const stat = await fs.promises.lstat(subPath);
+    return (
+      stat.isSymbolicLink() ||
+      (stat.isDirectory() && (await containsSymLink(subPath)))
+    );
   }
   return false;
 }
@@ -114,10 +116,11 @@ export async function loadModuleFromDir(
 ) {
   try {
     const nxsPackagePath = join(dirPath, 'nxs_package.json');
+    const stat = await fs.promises.lstat(nxsPackagePath);
     if (
       !fs.existsSync(nxsPackagePath) ||
-      !fs.statSync(nxsPackagePath).isFile() ||
-      fs.lstatSync(nxsPackagePath).isSymbolicLink()
+      !stat.isFile() ||
+      stat.isSymbolicLink()
     ) {
       return null;
     }
@@ -137,9 +140,9 @@ export async function loadModuleFromDir(
     // Ensure all files exist and are not directories
     const filePaths = module.files.map(file => join(dirPath, file));
     if (
-      filePaths.some(
-        filePath =>
-          !fs.existsSync(filePath) || fs.statSync(filePath).isDirectory()
+      filePaths.some(path => !fs.existsSync(path)) ||
+      (await Promise.all(filePaths.map(path => fs.promises.stat(path)))).some(
+        stat => stat.isDirectory()
       )
     ) {
       console.error(
@@ -150,7 +153,7 @@ export async function loadModuleFromDir(
 
     // Ensure no symbolic links, both files and folders
     // Need to scan the whole folder because symbolic link can link to a directory
-    if (!(devMode && allowSymLink) && containsSymLink(dirPath)) {
+    if (!(devMode && allowSymLink) && (await containsSymLink(dirPath))) {
       console.error(`Module ${module.name} contains some symbolic link!`);
       return null;
     }

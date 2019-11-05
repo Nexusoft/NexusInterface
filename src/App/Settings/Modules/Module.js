@@ -8,12 +8,12 @@ import ModuleIcon from 'components/ModuleIcon';
 import Switch from 'components/Switch';
 import Tooltip from 'components/Tooltip';
 import Icon from 'components/Icon';
-import { openConfirmDialog, openModal } from 'actions/overlays';
+import { openConfirmDialog, openModal } from 'lib/ui';
 import ModuleDetailsModal from 'components/ModuleDetailsModal';
-import { isModuleActive } from 'lib/modules';
+import { isModuleEnabled } from 'lib/modules';
 import { timing } from 'styles';
-import { updateSettings } from 'actions/settings';
-import warningIcon from 'images/warning.sprite.svg';
+import { updateSettings } from 'lib/settings';
+import warningIcon from 'icons/warning.svg';
 
 const ModuleComponent = styled.div(
   ({ theme }) => ({
@@ -66,15 +66,9 @@ const ModuleDescription = styled.div(({ theme }) => ({
 }));
 
 const mapStateToProps = (state, props) => ({
-  active: isModuleActive(props.module, state.settings.disabledModules),
+  enabled: isModuleEnabled(props.module, state.settings.disabledModules),
   disabledModules: state.settings.disabledModules,
 });
-
-const actionCreators = {
-  updateSettings,
-  openConfirmDialog,
-  openModal,
-};
 
 /**
  * Each Module On the list of installed modules
@@ -82,10 +76,7 @@ const actionCreators = {
  * @class Module
  * @extends {React.Component}
  */
-@connect(
-  mapStateToProps,
-  actionCreators
-)
+@connect(mapStateToProps)
 class Module extends React.Component {
   /**
    * Enable this module
@@ -93,7 +84,7 @@ class Module extends React.Component {
    * @memberof Module
    */
   enableModule = () => {
-    this.props.updateSettings({
+    updateSettings({
       disabledModules: this.props.disabledModules.filter(
         moduleName => moduleName !== this.props.module.name
       ),
@@ -106,7 +97,7 @@ class Module extends React.Component {
    * @memberof Module
    */
   disableModule = () => {
-    this.props.updateSettings({
+    updateSettings({
       disabledModules: [...this.props.disabledModules, this.props.module.name],
     });
   };
@@ -117,10 +108,10 @@ class Module extends React.Component {
    * @memberof Module
    */
   toggleModule = () => {
-    const { module, active } = this.props;
+    const { module, enabled } = this.props;
     if (module.invalid) return;
-    if (active) {
-      this.props.openConfirmDialog({
+    if (enabled) {
+      openConfirmDialog({
         question: __('Disable %{moduleName}?', {
           moduleName: module.displayName,
         }),
@@ -133,7 +124,7 @@ class Module extends React.Component {
         },
       });
     } else {
-      this.props.openConfirmDialog({
+      openConfirmDialog({
         question: __('Enable %{moduleName}?', {
           moduleName: module.displayName,
         }),
@@ -154,7 +145,7 @@ class Module extends React.Component {
    * @memberof Module
    */
   openModuleDetails = () => {
-    this.props.openModal(ModuleDetailsModal, {
+    openModal(ModuleDetailsModal, {
       module: this.props.module,
     });
   };
@@ -166,7 +157,7 @@ class Module extends React.Component {
    * @memberof Module
    */
   render() {
-    const { module, active, ...rest } = this.props;
+    const { module, enabled, ...rest } = this.props;
     return (
       <ModuleComponent {...rest}>
         <ModuleLogo
@@ -213,10 +204,10 @@ class Module extends React.Component {
 
         <ModuleControls>
           <Tooltip.Trigger
-            tooltip={!module.invalid && (active ? 'Enabled' : 'Disabled')}
+            tooltip={!module.invalid && (enabled ? 'Enabled' : 'Disabled')}
           >
             <Switch
-              checked={active}
+              checked={enabled}
               onChange={this.toggleModule}
               disabled={module.invalid}
             />

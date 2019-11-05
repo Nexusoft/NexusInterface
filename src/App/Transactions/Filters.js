@@ -11,9 +11,9 @@ import {
   setTxsCategoryFilter,
   setTxsMinAmountFilter,
   setTxsTimeFilter,
-} from 'actions/ui';
+} from 'lib/ui';
 
-import searchIcon from 'images/search.sprite.svg';
+import searchIcon from 'icons/search.svg';
 
 const categories = [
   {
@@ -25,7 +25,7 @@ const categories = [
     display: __('Receive'),
   },
   {
-    value: 'debit',
+    value: 'send',
     display: __('Sent'),
   },
   {
@@ -81,16 +81,7 @@ const FiltersWrapper = styled.div({
   marginTop: '-1em',
 });
 
-const Filters = ({
-  addressQuery,
-  category,
-  minAmount,
-  timeSpan,
-  setTxsAddressQuery,
-  setTxsCategoryFilter,
-  setTxsMinAmountFilter,
-  setTxsTimeFilter,
-}) => (
+const Filters = ({ addressQuery, category, minAmount, timeSpan }) => (
   <FiltersWrapper>
     <FormField connectLabel label={__('Search address')}>
       <TextField
@@ -99,7 +90,6 @@ const Filters = ({
         placeholder={__('Search for Address')}
         value={addressQuery}
         onChange={evt => {
-          console.log(evt.target.value);
           setTxsAddressQuery(evt.target.value);
         }}
         left={<Icon icon={searchIcon} className="space-right" />}
@@ -145,14 +135,4 @@ const mapStateToProps = ({
   timeSpan,
 });
 
-const actonCreators = {
-  setTxsAddressQuery,
-  setTxsCategoryFilter,
-  setTxsMinAmountFilter,
-  setTxsTimeFilter,
-};
-
-export default connect(
-  mapStateToProps,
-  actonCreators
-)(Filters);
+export default connect(mapStateToProps)(Filters);

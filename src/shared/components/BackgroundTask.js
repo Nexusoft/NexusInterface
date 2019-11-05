@@ -1,9 +1,8 @@
 // External
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 
 // Internal
-import { removeBackgroundTask } from 'actions/overlays';
+import { removeBackgroundTask } from 'lib/ui';
 import SnackBar from 'components/SnackBar';
 import TaskContext from 'context/task';
 import { timing } from 'styles';
@@ -17,10 +16,6 @@ const outro = { opacity: [1, 0] };
  * @class BackgroundTask
  * @extends {Component}
  */
-@connect(
-  null,
-  { removeBackgroundTask }
-)
 export default class BackgroundTask extends Component {
   static contextType = TaskContext;
 
@@ -64,7 +59,7 @@ export default class BackgroundTask extends Component {
    */
   remove = () => {
     const taskID = this.context;
-    this.props.removeBackgroundTask(taskID);
+    removeBackgroundTask(taskID);
   };
 
   /**

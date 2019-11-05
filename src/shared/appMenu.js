@@ -3,34 +3,57 @@ import { shell, remote } from 'electron';
 import fs from 'fs';
 
 // Internal
-import store, { observeStore, history } from 'store';
-import { toggleWebViewDevTools } from 'actions/webview';
-import { updateSettings } from 'actions/settings';
-import { startCore as startCoreAC, stopCore as stopCoreAC } from 'actions/core';
-import { backupWallet as backup } from 'lib/wallet';
-import { showNotification, openErrorDialog } from 'actions/overlays';
-import { bootstrap } from 'actions/bootstrap';
+import store, { observeStore } from 'store';
+import { toggleWebViewDevTools } from 'lib/modules';
+import { updateSettings } from 'lib/settings';
+import { startCore, stopCore } from 'lib/core';
+import { backupWallet as backup, history } from 'lib/wallet';
+import { showNotification, openModal } from 'lib/ui';
+import { bootstrap } from 'lib/bootstrap';
 import { isCoreConnected } from 'selectors';
+import { legacyMode } from 'consts/misc';
 import showOpenDialog from 'utils/promisified/showOpenDialog';
+import confirm from 'utils/promisified/confirm';
 import { coreDataDir, walletDataDir } from 'consts/paths';
 import { checkForUpdates, quitAndInstall } from 'lib/updater';
+import { tritiumUpgradeTime } from 'consts/misc';
+import { walletEvents } from 'lib/wallet';
+import AboutModal from 'components/AboutModal';
 
 const separator = {
   type: 'separator',
 };
 
-const startCore = {
-  label: __('Start Nexus Core'),
-  click: () => {
-    store.dispatch(startCoreAC());
+const switchLegacyMode = {
+  label: __('Switch to Legacy Mode'),
+  click: async () => {
+    const confirmed = await confirm({
+      question: __('Are you sure you want to switch to Legacy Mode?'),
+      skinYes: 'danger',
+    });
+    if (confirmed) {
+      updateSettings({ legacyMode: true });
+      location.reload();
+    }
   },
 };
 
-const stopCore = {
-  label: __('Stop Nexus Core'),
+const switchTritiumMode = {
+  label: __('Switch to Tritium Mode'),
   click: () => {
-    store.dispatch(stopCoreAC());
+    updateSettings({ legacyMode: false });
+    location.reload();
   },
+};
+
+const startCoreMenu = {
+  label: __('Start Nexus Core'),
+  click: startCore,
+};
+
+const stopCoreMenu = {
+  label: __('Stop Nexus Core'),
+  click: stopCore,
 };
 
 const quitNexus = {
@@ -44,7 +67,7 @@ const quitNexus = {
 const about = {
   label: __('About'),
   click: () => {
-    history.push('/About');
+    openModal(AboutModal);
   },
 };
 
@@ -59,15 +82,15 @@ const backupWallet = {
     });
 
     if (!isCoreConnected(state)) {
-      store.dispatch(showNotification(__('Nexus Core is not connected')));
+      showNotification(__('Nexus Core is not connected'));
       return;
     }
 
     if (folderPaths && folderPaths.length > 0) {
-      store.dispatch(updateSettings({ backupDirectory: folderPaths[0] }));
+      updateSettings({ backupDirectory: folderPaths[0] });
 
       await backup(folderPaths[0]);
-      store.dispatch(showNotification(__('Wallet backed up'), 'success'));
+      showNotification(__('Wallet backed up'), 'success');
     }
   },
 };
@@ -134,28 +157,31 @@ const styleSettings = {
   },
 };
 
+const moduleSettings = {
+  label: __('Modules'),
+  click: () => {
+    history.push('/Settings/Modules');
+  },
+};
+
 const downloadRecent = {
   label: __('Download Recent Database'),
   click: () => {
     const state = store.getState();
     if (state.settings.manualDaemon) {
-      store.dispatch(
-        showNotification(
-          __('Cannot bootstrap recent database in manual mode'),
-          'error'
-        )
+      showNotification(
+        __('Cannot bootstrap recent database in manual mode'),
+        'error'
       );
       return;
     }
 
     if (!isCoreConnected(state)) {
-      store.dispatch(
-        showNotification(__('Please wait for Nexus Core to start.'))
-      );
+      showNotification(__('Please wait for Nexus Core to start.'));
       return;
     }
 
-    store.dispatch(bootstrap());
+    bootstrap();
   },
 };
 
@@ -227,9 +253,7 @@ const updaterIdle = {
     // available because autoUpdater.checkForUpdates() doesn't return
     // any reliable results like a boolean `updateAvailable` property
     if (result.updateInfo.version === APP_VERSION) {
-      store.dispatch(
-        showNotification(__('There are currently no updates available'))
-      );
+      showNotification(__('There are currently no updates available'));
     }
   },
 };
@@ -290,21 +314,29 @@ function buildDarwinTemplate() {
   const state = store.getState();
   const coreConnected = isCoreConnected(state);
   const { manualDaemon } = state.settings;
-  const { webview } = state;
+  const { activeAppModule } = state;
+  const now = Date.now();
 
   const subMenuAbout = {
     label: 'Nexus',
     submenu: [
       about,
-      /* may insert Start/Stop Core here */ separator,
+      // If it's in manual core mode and core is not running, don't show
+      // Start Core option because it does nothing
+      !manualDaemon || coreConnected
+        ? coreConnected
+          ? stopCoreMenu
+          : startCoreMenu
+        : null,
+      now < tritiumUpgradeTime
+        ? null
+        : legacyMode
+        ? switchTritiumMode
+        : switchLegacyMode,
+      separator,
       quitNexus,
-    ],
+    ].filter(e => e),
   };
-  // If it's in manual core mode and core is not running, don't show
-  // Start Core option because it does nothing
-  if (!manualDaemon || coreConnected) {
-    subMenuAbout.submenu.splice(1, 0, coreConnected ? stopCore : startCore);
-  }
 
   const subMenuFile = {
     label: __('File'),
@@ -319,10 +351,10 @@ function buildDarwinTemplate() {
     submenu: [
       appSettings,
       coreSettings,
-      keyManagement,
+      legacyMode ? keyManagement : null,
       styleSettings,
-      //TODO: take this out before 1.0
-    ],
+      moduleSettings,
+    ].filter(e => e),
   };
 
   const subMenuWindow = {
@@ -332,7 +364,7 @@ function buildDarwinTemplate() {
   if (process.env.NODE_ENV === 'development' || state.settings.devMode) {
     subMenuWindow.submenu.push(toggleDevTools);
 
-    if (webview) {
+    if (activeAppModule) {
       subMenuWindow.submenu.push(toggleModuleDevTools);
     }
   }
@@ -370,7 +402,8 @@ function buildDefaultTemplate() {
   const state = store.getState();
   const coreConnected = isCoreConnected(state);
   const { manualDaemon } = state.settings;
-  const { webview } = state;
+  const { activeAppModule } = state;
+  const now = Date.now();
 
   const subMenuFile = {
     label: __('File'),
@@ -380,20 +413,32 @@ function buildDefaultTemplate() {
       separator,
       downloadRecent,
       separator,
-      /* may insert Start/Stop Core here */
+      // If it's in manual core mode and core is not running, don't show
+      // Start Core option because it does nothing
+      !manualDaemon || coreConnected
+        ? coreConnected
+          ? stopCoreMenu
+          : startCoreMenu
+        : null,
+      now < tritiumUpgradeTime
+        ? null
+        : legacyMode
+        ? switchTritiumMode
+        : switchLegacyMode,
       separator,
       quitNexus,
-    ],
+    ].filter(e => e),
   };
-  // If it's in manual core mode and core is not running, don't show
-  // Start Core option because it does nothing
-  if (!manualDaemon || coreConnected) {
-    subMenuFile.submenu.splice(5, 0, coreConnected ? stopCore : startCore);
-  }
 
   const subMenuSettings = {
     label: __('Settings'),
-    submenu: [appSettings, coreSettings, keyManagement, styleSettings],
+    submenu: [
+      appSettings,
+      coreSettings,
+      legacyMode ? keyManagement : null,
+      styleSettings,
+      moduleSettings,
+    ].filter(e => e),
   };
   const subMenuView = {
     label: __('View'),
@@ -402,7 +447,7 @@ function buildDefaultTemplate() {
   if (process.env.NODE_ENV === 'development' || state.settings.devMode) {
     subMenuView.submenu.push(separator, toggleDevTools);
 
-    if (webview) {
+    if (activeAppModule) {
       subMenuView.submenu.push(toggleModuleDevTools);
     }
   }
@@ -411,6 +456,7 @@ function buildDefaultTemplate() {
     label: __('Help'),
     submenu: [
       about,
+      separator,
       websiteLink,
       gitRepoLink,
       walletGuideLink,
@@ -457,11 +503,18 @@ function rebuildMenu() {
 
 // Update the updater menu item when the updater state changes
 // Changing menu item labels directly has no effect so we have to rebuild the whole menu
-export function initializeMenu() {
+walletEvents.once('post-render', function() {
   buildMenu();
   observeStore(state => state.updater.state, rebuildMenu);
   observeStore(isCoreConnected, rebuildMenu);
   observeStore(state => state.settings && state.settings.devMode, rebuildMenu);
-  observeStore(state => state.webview, rebuildMenu);
+  observeStore(state => state.activeAppModule, rebuildMenu);
   observeStore(state => state.settings.manualDaemon, rebuildMenu);
-}
+
+  const now = Date.now();
+  if (now < tritiumUpgradeTime) {
+    setTimeout(() => {
+      rebuildMenu();
+    }, tritiumUpgradeTime - now);
+  }
+});

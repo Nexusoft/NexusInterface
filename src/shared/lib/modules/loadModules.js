@@ -1,9 +1,12 @@
-import { join, isAbsolute, normalize } from 'path';
+import { join } from 'path';
 import fs from 'fs';
 import semver from 'semver';
 
+import * as TYPE from 'consts/actionTypes';
+import store from 'store';
 import { modulesDir } from 'consts/paths';
 import { loadModuleFromDir } from './loadModuleFromDir';
+import { walletEvents } from 'lib/wallet';
 
 /**
  * Get the path of an icon if the file does exist
@@ -37,15 +40,14 @@ function prepareModule(module) {
  * Load all installed modules from the app modules directory.
  * Only called once when the wallet is started.
  *
- * @export
  * @param {*} { devMode, verifyModuleSource }
  * @returns {object} an object mapping module names and module data
  */
-export async function loadModules({
-  devMode,
-  verifyModuleSource,
-  allowSymLink,
-}) {
+walletEvents.once('pre-render', async function() {
+  const {
+    settings: { devMode, verifyModuleSource, allowSymLink },
+  } = store.getState();
+
   try {
     if (!fs.existsSync(modulesDir)) return {};
     const dirNames = await fs.promises.readdir(modulesDir);
@@ -70,8 +72,11 @@ export async function loadModules({
       return map;
     }, {});
 
-    return modules;
+    store.dispatch({
+      type: TYPE.LOAD_MODULES,
+      payload: modules,
+    });
   } catch (err) {
     return {};
   }
-}
+});

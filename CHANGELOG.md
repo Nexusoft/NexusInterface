@@ -1,3 +1,9 @@
+# 2.0.0 (2019.11.05)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.0.0)
+
+First Release with Tritium
+
 # 1.2.4 (2019.10.26)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v1.2.4)
@@ -43,7 +49,7 @@
 
 - **SECURITY**
   - Modules will now fail to install if it contains a symbolic link
-  - Nexus.conf auto password generate has added additional entropy, old password style will automaticly be replaced
+  - Nexus.conf auto password generate has added additional entropy, old password style will automatically be replaced
 - Module specification version is bumped to 0.2.1
 - Staking stats (Stake Rate, Trust Weight, etc...) in Overview page now displays "N/A" instead of "0%"
 
