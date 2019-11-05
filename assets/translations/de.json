@@ -255,7 +255,7 @@
   "IP/Ports allowed to mine to. Separate by <b>;</b> . Wildcards supported only in IP": "IP/Ports dürfen abgebaut werden. Separate von <b>;</b> . Wildcards werden nur in IP unterstützt",
   "If you have been staking with your legacy account, click Migrate stake button below to move both your stake amount and your trust score to this new Tritium user.": null,
   "If you have never started staking, or have already migrated your stake, you can manually send your funds from legacy account to this new Tritium user.": null,
-  "If you need to switch back to Legacy Mode, you can select \"%{menu}\" menu option at any time.": null,
+  "If you need to switch back to Legacy Mode, you can select %{menu}\" menu option at any time.\"": null,
   "Ignore": "Ignorieren",
   "Immature": "Unreif",
   "Immature Balance": "Unreife Saldo",
