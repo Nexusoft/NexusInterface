@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 
 // Internal
 import languages from 'data/languages';
-import { updateSettings } from 'actions/settings';
+import { updateSettings } from 'lib/settings';
 import SettingsField from 'components/SettingsField';
 import Select from 'components/Select';
 
@@ -28,20 +28,13 @@ const mapStateToProps = state => ({
   locale: state.settings.locale,
 });
 
-const mapDispatchToProps = dispatch => ({
-  updateSettings: updates => dispatch(updateSettings(updates)),
-});
-
 /**
  * Internal JSX for Language Settings
  *
  * @class LanguageSetting
  * @extends {Component}
  */
-@connect(
-  mapStateToProps,
-  mapDispatchToProps
-)
+@connect(mapStateToProps)
 class LanguageSetting extends Component {
   /**
    * Handle Change
@@ -49,7 +42,7 @@ class LanguageSetting extends Component {
    * @memberof LanguageSetting
    */
   handleChange = locale => {
-    this.props.updateSettings({ locale });
+    updateSettings({ locale });
     location.reload();
   };
 

@@ -1,7 +1,7 @@
 // External
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import prettyBytes from 'pretty-bytes';
+import prettyBytes from 'utils/prettyBytes';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/core';
 
@@ -12,14 +12,14 @@ import {
   showBackgroundTask,
   openConfirmDialog,
   removeModal,
-} from 'actions/overlays';
+} from 'lib/ui';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import ModalContext from 'context/modal';
 import { bootstrapEvents, abortBootstrap } from 'lib/bootstrap';
 import { timing } from 'styles';
 import BootstrapBackgroundTask from 'components/BootstrapBackgroundTask';
-import arrowUpLeftIcon from 'images/arrow-up-left.sprite.svg';
+import arrowUpLeftIcon from 'icons/arrow-up-left.svg';
 
 const maximizeAnimation = keyframes`
   from { 
@@ -151,17 +151,10 @@ function getStatusMsg({ step, details }, locale) {
  * @class BootstrapModal
  * @extends {PureComponent}
  */
-@connect(
-  state => ({
-    statusMsg: getStatusMsg(state.bootstrap, state.settings.locale),
-    percentage: getPercentage(state.bootstrap),
-  }),
-  {
-    showBackgroundTask,
-    openConfirmDialog,
-    removeModal,
-  }
-)
+@connect(state => ({
+  statusMsg: getStatusMsg(state.bootstrap, state.settings.locale),
+  percentage: getPercentage(state.bootstrap),
+}))
 class BootstrapModal extends PureComponent {
   static contextType = ModalContext;
 
@@ -186,7 +179,7 @@ class BootstrapModal extends PureComponent {
    * @memberof BootstrapModal
    */
   confirmAbort = () => {
-    this.props.openConfirmDialog({
+    openConfirmDialog({
       question: __('Are you sure you want to abort the process?'),
       labelYes: __('Yes, abort'),
       skinYes: 'danger',
@@ -202,7 +195,7 @@ class BootstrapModal extends PureComponent {
    * @memberof BootstrapModal
    */
   minimize = () => {
-    this.props.showBackgroundTask(BootstrapBackgroundTask);
+    showBackgroundTask(BootstrapBackgroundTask);
 
     const duration = parseInt(timing.quick);
     const options = { duration, easing: 'linear', fill: 'both' };
@@ -218,7 +211,7 @@ class BootstrapModal extends PureComponent {
    */
   remove = () => {
     const modalID = this.context;
-    this.props.removeModal(modalID);
+    removeModal(modalID);
   };
 
   /**

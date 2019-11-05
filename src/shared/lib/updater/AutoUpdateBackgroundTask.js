@@ -1,46 +1,31 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import BackgroundTask from 'components/BackgroundTask';
-import { openConfirmDialog, showBackgroundTask } from 'actions/overlays';
-import { shell, remote } from 'electron';
+import { shell } from 'electron';
 
-@connect(
-  null,
-  {
-    openConfirmDialog,
-    showBackgroundTask,
-  }
-)
+import BackgroundTask from 'components/BackgroundTask';
+import { openConfirmDialog, showBackgroundTask } from 'lib/ui';
+import { closeWallet } from 'lib/wallet';
+
 export default class AutoUpdateBackgroundTask extends React.Component {
   confirmInstall = () => {
     this.closeTask();
-    this.props.openConfirmDialog({
+    openConfirmDialog({
       question: __('Close the wallet and install update now?'),
       labelYes: __('Close and install'),
-      callbackYes: this.props.quitAndInstall,
+      callbackYes: () => {
+        closeWallet(this.props.quitAndInstall);
+      },
       labelNo: __('Install it later'),
       callbackNo: () => {
-        this.props.showBackgroundTask(AutoUpdateBackgroundTask, this.props);
+        showBackgroundTask(AutoUpdateBackgroundTask, this.props);
       },
     });
   };
 
-  exitToGitHub = () => {
+  goToGitHub = () => {
     this.closeTask();
-    this.props.openConfirmDialog({
-      question: __('Close the wallet and go to GitHub?'),
-      labelYes: __('Close and go to Github'),
-      callbackYes: () => {
-        shell.openExternal(
-          'https://github.com/Nexusoft/NexusInterface/releases'
-        );
-        remote.app.quit();
-      },
-      labelNo: __('Install it later'),
-      callbackNo: () => {
-        this.props.showBackgroundTask(AutoUpdateBackgroundTask, this.props);
-      },
-    });
+    shell.openExternal(
+      `https://github.com/Nexusoft/NexusInterface/releases/tag/${this.props.version}`
+    );
   };
 
   render() {
@@ -51,11 +36,15 @@ export default class AutoUpdateBackgroundTask extends React.Component {
         assignClose={close => {
           this.closeTask = close;
         }}
-        onClick={gitHub ? this.exitToGitHub : this.confirmInstall}
+        onClick={gitHub ? this.goToGitHub : this.confirmInstall}
       >
-        {__('New wallet version %{version} - Ready to install!', {
-          version: this.props.version,
-        })}
+        {gitHub
+          ? __('New wallet version %{version} - Click here to download', {
+              version: this.props.version,
+            })
+          : __('New wallet version %{version} - Click here to update', {
+              version: this.props.version,
+            })}
       </BackgroundTask>
     );
   }

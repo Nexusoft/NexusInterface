@@ -4,13 +4,13 @@ import { reduxForm, Field, FieldArray } from 'redux-form';
 import { connect } from 'react-redux';
 
 // Internal
-import { addNewContact, updateContact } from 'actions/addressBook';
+import { addNewContact, updateContact } from 'lib/addressBook';
 import rpc from 'lib/rpc';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import Select from 'components/Select';
 import Button from 'components/Button';
-import { showNotification } from 'actions/overlays';
+import { showNotification } from 'lib/ui';
 import { emailRegex } from 'utils/form';
 import timeZones from 'data/timeZones';
 import Addresses from './Addresses';
@@ -23,12 +23,6 @@ const tzOptions = timeZones.map(tz => ({
 const mapStateToProps = state => ({
   addressBook: state.addressBook,
 });
-
-const actionCreators = {
-  addNewContact,
-  updateContact,
-  showNotification,
-};
 
 function validateAddresses(addresses) {
   const addressesErrors = [];
@@ -76,10 +70,7 @@ function asyncValidateAddresses(isMine, addresses, errors) {
  * @class AddEditContactForm
  * @extends {Component}
  */
-@connect(
-  mapStateToProps,
-  actionCreators
-)
+@connect(mapStateToProps)
 @reduxForm({
   destroyOnUnmount: false,
   validate: ({ name, mine, notMine, email }, props) => {
@@ -144,18 +135,18 @@ function asyncValidateAddresses(isMine, addresses, errors) {
     contact.addresses = addresses;
 
     if (props.edit) {
-      props.updateContact(props.oldName, contact);
+      updateContact(props.oldName, contact);
     } else {
-      props.addNewContact(contact);
+      addNewContact(contact);
     }
   },
   onSubmitSuccess: (result, dispatch, props) => {
     props.destroy();
     props.closeModal();
     if (props.edit) {
-      props.showNotification(__('Contact has been updated'), 'success');
+      showNotification(__('Contact has been updated'), 'success');
     } else {
-      props.showNotification(
+      showNotification(
         __('New contact has been added to address book'),
         'success'
       );

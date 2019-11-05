@@ -1,5 +1,5 @@
 import semver from 'semver';
-import memoize from 'memoize-one';
+import memoize from 'utils/memoize';
 
 /**
  * Checkers
@@ -17,7 +17,7 @@ export const isModuleValid = (module, { devMode, verifyModuleSource }) =>
     (module.repository && module.repoOnline && module.repoVerified));
 
 // Check if a module is active, which means it's valid and not disabled by user
-export const isModuleActive = (module, disabledModules) =>
+export const isModuleEnabled = (module, disabledModules) =>
   !module.invalid && !disabledModules.includes(module.name);
 
 /**
@@ -29,13 +29,13 @@ export const getAllModules = memoize(modules => Object.values(modules));
 
 export const getActiveModules = memoize((modules, disabledModules) =>
   Object.values(modules).filter(module =>
-    isModuleActive(module, disabledModules)
+    isModuleEnabled(module, disabledModules)
   )
 );
 
-export const getModuleIfActive = memoize(
+export const getModuleIfEnabled = memoize(
   (moduleName, modules, disabledModules) => {
     const module = modules[moduleName];
-    return module && isModuleActive(module, disabledModules) ? module : null;
+    return module && isModuleEnabled(module, disabledModules) ? module : null;
   }
 );

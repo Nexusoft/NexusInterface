@@ -227,10 +227,12 @@ const multilineStyle = css({
   width: '100%',
   paddingTop: '.4em',
   paddingBottom: '.5em',
+  resize: 'vertical',
 });
 
 class TextArea extends Component {
   componentDidUpdate() {
+    this.inputElem.style.height = 'auto';
     const { scrollHeight } = this.inputElem;
     this.inputElem.style.height =
       (scrollHeight > 104 ? 104 : scrollHeight) + 'px';
@@ -260,6 +262,23 @@ export default class TextField extends Component {
     focus: false,
   };
 
+  inputRef = el => {
+    this.inputElem = el;
+    if (this.props.inputRef) {
+      passRef(el, this.props.inputRef);
+    }
+  };
+
+  componentDidMount() {
+    // Somehow React's autoFocus doesn't work, so handle it manually
+    if (this.props.autoFocus && this.inputElem) {
+      // This needs setTimeout to work
+      setTimeout(() => {
+        this.inputElem.focus();
+      }, 0);
+    }
+  }
+
   handleFocus = e => {
     this.setState({ focus: true });
     this.props.onFocus && this.props.onFocus(e);
@@ -274,6 +293,7 @@ export default class TextField extends Component {
     const {
       className,
       style,
+      inputStyle,
       skin = 'underline',
       multiline,
       left,
@@ -281,6 +301,7 @@ export default class TextField extends Component {
       size,
       readOnly,
       inputRef,
+      autoFocus,
       error,
       ...rest
     } = this.props;
@@ -292,6 +313,7 @@ export default class TextField extends Component {
       ...rest,
       onFocus: this.handleFocus,
       onBlur: this.handleBlur,
+      style: inputStyle,
     };
 
     return (
@@ -301,13 +323,9 @@ export default class TextField extends Component {
       >
         {left}
         {multiline ? (
-          <TextArea
-            {...inputProps}
-            style={{ resize: 'vertical' }}
-            inputRef={inputRef}
-          />
+          <TextArea {...inputProps} inputRef={this.inputRef} />
         ) : (
-          <Input {...inputProps} ref={inputRef} />
+          <Input {...inputProps} ref={this.inputRef} />
         )}
         {right}
         {!!error && (

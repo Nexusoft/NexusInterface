@@ -9,7 +9,7 @@ import Icon from 'components/Icon';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
 import { timing } from 'styles';
-import plusIcon from 'images/plus.sprite.svg';
+import plusIcon from 'icons/plus.svg';
 
 const RemoveButton = styled.div(({ theme }) => ({
   position: 'absolute',

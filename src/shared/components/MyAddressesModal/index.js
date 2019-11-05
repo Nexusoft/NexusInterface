@@ -8,13 +8,14 @@ import Modal from 'components/Modal';
 import TextField from 'components/TextField';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
-import searchIcon from 'images/search.sprite.svg';
-import plusIcon from 'images/plus.sprite.svg';
+import searchIcon from 'icons/search.svg';
+import plusIcon from 'icons/plus.svg';
 
 import Account from './Account';
 import NewAddressForm from './NewAddressForm';
 import Tooltip from 'components/Tooltip';
-import { showNotification } from 'actions/overlays';
+import { showNotification } from 'lib/ui';
+import { loadAccounts, updateAccountBalances } from 'lib/user';
 import rpc from 'lib/rpc';
 
 const MyAddressesModalComponent = styled(Modal)({
@@ -40,19 +41,26 @@ const Buttons = styled.div({
  * @class MyAddressesModal
  * @extends {React.Component}
  */
-@connect(
-  state => ({
-    myAccounts: state.myAccounts,
-    locale: state.settings.locale,
-  }),
-  { showNotification }
-)
+@connect(state => ({
+  myAccounts: state.myAccounts,
+  locale: state.settings.locale,
+  blockCount: state.core.info.blocks,
+}))
 class MyAddressesModal extends React.Component {
   state = {
     searchQuery: '',
     creatingAddress: false,
   };
 
+  componentDidMount() {
+    loadAccounts();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.blockCount !== this.props.blockCount) {
+      updateAccountBalances();
+    }
+  }
   /**
    * Handle search changes
    *
@@ -69,10 +77,10 @@ class MyAddressesModal extends React.Component {
       await rpc('checkwallet', []);
     } catch (err) {
       console.log(err);
-      this.props.showNotification(__('Check wallet failed'), 'error');
+      showNotification(__('Check wallet failed'), 'error');
       return;
     }
-    this.props.showNotification(__('Check wallet pass'), 'success');
+    showNotification(__('Check wallet pass'), 'success');
   };
 
   /**

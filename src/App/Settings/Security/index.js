@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 // Internal
 import WaitingMessage from 'components/WaitingMessage';
-import { switchSettingsTab } from 'actions/ui';
+import { switchSettingsTab } from 'lib/ui';
 import { isCoreConnected } from 'selectors';
 import Login from './Login';
 import Encrypted from './Encrypted';
@@ -16,13 +16,10 @@ import Unencrypted from './Unencrypted';
  * @class SettingsSecurity
  * @extends {React.Component}
  */
-@connect(
-  state => ({
-    locked: state.core.info.locked,
-    coreConnected: isCoreConnected(state),
-  }),
-  { switchSettingsTab }
-)
+@connect(state => ({
+  locked: state.core.info.locked,
+  coreConnected: isCoreConnected(state),
+}))
 class SettingsSecurity extends React.Component {
   /**
    *Creates an instance of SettingsSecurity.
@@ -31,7 +28,7 @@ class SettingsSecurity extends React.Component {
    */
   constructor(props) {
     super(props);
-    props.switchSettingsTab('Security');
+    switchSettingsTab('Security');
   }
 
   /**

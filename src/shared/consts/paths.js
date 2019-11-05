@@ -58,6 +58,9 @@ if (!fs.existsSync(assetsDir)) {
 if (!fs.existsSync(modulesDir)) {
   fs.mkdirSync(modulesDir);
 }
+if (!fs.existsSync(coreDataDir)) {
+  fs.mkdirSync(coreDataDir);
+}
 
 //TODO: REMOVE THIS AFTER >1.3
 if (fse.existsSync(walletDataDir.replace('Nexus Wallet', 'Nexus_Wallet'))) {

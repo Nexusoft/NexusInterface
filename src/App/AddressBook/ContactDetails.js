@@ -4,18 +4,18 @@ import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
 // Internal
-import { deleteContact } from 'actions/addressBook';
+import { deleteContact } from 'lib/addressBook';
 import ExternalLink from 'components/ExternalLink';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import NexusAddress from 'components/NexusAddress';
-import { openConfirmDialog, openModal } from 'actions/overlays';
+import { openConfirmDialog, openModal } from 'lib/ui';
 import AddEditContactModal from 'components/AddEditContactModal';
 import { isCoreConnected } from 'selectors';
 import timeZones from 'data/timeZones';
 import { timing } from 'styles';
-import trashIcon from 'images/trash.sprite.svg';
-import editIcon from 'images/edit.sprite.svg';
+import trashIcon from 'icons/trash.svg';
+import editIcon from 'icons/edit.svg';
 
 const ContactDetailsComponent = styled.div({
   gridArea: 'details',
@@ -114,21 +114,18 @@ const getLocalTime = tz => {
  * @class ContactDetails
  * @extends {Component}
  */
-@connect(
-  state => {
-    const {
-      addressBook,
-      ui: {
-        addressBook: { selectedContactName },
-      },
-    } = state;
-    return {
-      contact: addressBook[selectedContactName] || null,
-      coreConnected: isCoreConnected(state),
-    };
-  },
-  { deleteContact, openConfirmDialog, openModal }
-)
+@connect(state => {
+  const {
+    addressBook,
+    ui: {
+      addressBook: { selectedContactName },
+    },
+  } = state;
+  return {
+    contact: addressBook[selectedContactName] || null,
+    coreConnected: isCoreConnected(state),
+  };
+})
 class ContactDetails extends React.Component {
   /**
    * Opens a dialog to confirm contact delete
@@ -136,13 +133,13 @@ class ContactDetails extends React.Component {
    * @memberof ContactDetails
    */
   confirmDelete = () => {
-    this.props.openConfirmDialog({
+    openConfirmDialog({
       question: __('Delete contact %{name}?', {
         name: this.props.contact.name,
       }),
       skinYes: 'danger',
       callbackYes: () => {
-        this.props.deleteContact(this.props.contact.name);
+        deleteContact(this.props.contact.name);
       },
     });
   };
@@ -153,7 +150,7 @@ class ContactDetails extends React.Component {
    * @memberof ContactDetails
    */
   editContact = () => {
-    this.props.openModal(AddEditContactModal, {
+    openModal(AddEditContactModal, {
       edit: true,
       contact: this.props.contact,
     });

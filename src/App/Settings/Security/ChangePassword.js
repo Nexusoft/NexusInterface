@@ -1,6 +1,5 @@
 // External
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
 
@@ -15,8 +14,8 @@ import {
   openConfirmDialog,
   openErrorDialog,
   openSuccessDialog,
-} from 'actions/overlays';
-import { rpcErrorHandler } from 'utils/form';
+} from 'lib/ui';
+import { errorHandler } from 'utils/form';
 import passwordInvalidChars from './passwordInvalidChars';
 
 const ChangePasswordComponent = styled.form({
@@ -30,14 +29,6 @@ const ChangePasswordComponent = styled.form({
  * @class ChangePassword
  * @extends {Component}
  */
-@connect(
-  null,
-  {
-    openConfirmDialog,
-    openErrorDialog,
-    openSuccessDialog,
-  }
-)
 @reduxForm({
   form: 'changePassword',
   destroyOnUnmount: false,
@@ -68,11 +59,11 @@ const ChangePasswordComponent = styled.form({
     rpc('walletpassphrasechange', [password, newPassword]),
   onSubmitSuccess: (result, dispatch, props) => {
     props.reset();
-    props.openSuccessDialog({
+    openSuccessDialog({
       message: __('Password has been changed.'),
     });
   },
-  onSubmitFail: rpcErrorHandler(__('Error changing password')),
+  onSubmitFail: errorHandler(__('Error changing password')),
 })
 class ChangePassword extends Component {
   /**
@@ -81,7 +72,7 @@ class ChangePassword extends Component {
    * @memberof ChangePassword
    */
   confirmLogout = () => {
-    this.props.openConfirmDialog({
+    openConfirmDialog({
       question: __('Are you sure you want to log out?'),
       callbackYes: async () => {
         try {
@@ -89,7 +80,7 @@ class ChangePassword extends Component {
           autoFetchCoreInfo();
         } catch (err) {
           const note = (err & err.error && err.error.message) || err;
-          this.props.openErrorDialog({
+          openErrorDialog({
             message: __('Error logging out'),
             note,
           });

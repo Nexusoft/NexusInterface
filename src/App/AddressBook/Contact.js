@@ -5,16 +5,16 @@ import styled from '@emotion/styled';
 import { remote } from 'electron';
 
 // Internal Global
-import { selectContact, deleteContact } from 'actions/addressBook';
+import { selectContact, deleteContact } from 'lib/addressBook';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
-import { openConfirmDialog, openModal } from 'actions/overlays';
+import { openConfirmDialog, openModal } from 'lib/ui';
 import AddEditContactModal from 'components/AddEditContactModal';
 import { isCoreConnected } from 'selectors';
 import { timing } from 'styles';
 import * as color from 'utils/color';
-import ContextMenuBuilder from 'contextmenu';
-import plusIcon from 'images/plus.sprite.svg';
+import { defaultMenu } from 'lib/contextMenu';
+import plusIcon from 'icons/plus.svg';
 
 const ContactComponent = styled.div(
   ({ theme }) => ({
@@ -73,14 +73,11 @@ const AddressesCount = styled.div(({ theme }) => ({
  * @class Contact
  * @extends {PureComponent}
  */
-@connect(
-  state => ({
-    selectedContactName: state.ui.addressBook.selectedContactName,
-    locale: state.settings.locale,
-    coreConnected: isCoreConnected(state),
-  }),
-  { selectContact, deleteContact, openModal, openConfirmDialog }
-)
+@connect(state => ({
+  selectedContactName: state.ui.addressBook.selectedContactName,
+  locale: state.settings.locale,
+  coreConnected: isCoreConnected(state),
+}))
 class Contact extends React.PureComponent {
   /**
    * Open a Dialog to confirm Contact Delete
@@ -88,13 +85,13 @@ class Contact extends React.PureComponent {
    * @memberof Contact
    */
   confirmDelete = () => {
-    this.props.openConfirmDialog({
+    openConfirmDialog({
       question: __('Delete contact %{name}?', {
         name: this.props.contact.name,
       }),
       skinYes: 'danger',
       callbackYes: () => {
-        this.props.deleteContact(this.props.contact.name);
+        deleteContact(this.props.contact.name);
       },
     });
   };
@@ -105,7 +102,7 @@ class Contact extends React.PureComponent {
    * @memberof Contact
    */
   editContact = () => {
-    this.props.openModal(AddEditContactModal, {
+    openModal(AddEditContactModal, {
       edit: true,
       contact: this.props.contact,
     });
@@ -119,7 +116,7 @@ class Contact extends React.PureComponent {
   showContextMenu = e => {
     e.preventDefault();
     e.stopPropagation();
-    const template = [...new ContextMenuBuilder().defaultContext];
+    const template = [...defaultMenu];
     if (this.props.coreConnected) {
       template.push({
         label: __('Edit contact'),
@@ -149,7 +146,7 @@ class Contact extends React.PureComponent {
    * @memberof Contact
    */
   select = () => {
-    this.props.selectContact(this.props.contact.name);
+    selectContact(this.props.contact.name);
   };
 
   /**

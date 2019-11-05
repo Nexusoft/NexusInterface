@@ -4,8 +4,8 @@ import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
 // Internal Global
-import { updateSettings } from 'actions/settings';
-import { switchSettingsTab } from 'actions/ui';
+import { updateSettings } from 'lib/settings';
+import { switchSettingsTab } from 'lib/ui';
 import { backupWallet } from 'lib/wallet';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
@@ -13,15 +13,12 @@ import TextField from 'components/TextField';
 import Select from 'components/Select';
 import Switch from 'components/Switch';
 import Icon from 'components/Icon';
-import {
-  openConfirmDialog,
-  openErrorDialog,
-  showNotification,
-} from 'actions/overlays';
+import { openConfirmDialog, openErrorDialog, showNotification } from 'lib/ui';
 import * as color from 'utils/color';
 import * as form from 'utils/form';
+import { legacyMode } from 'consts/misc';
 import { isCoreConnected } from 'selectors';
-import warningIcon from 'images/warning.sprite.svg';
+import warningIcon from 'icons/warning.svg';
 import { startAutoUpdate, stopAutoUpdate } from 'lib/updater';
 
 // Internal Local
@@ -66,24 +63,13 @@ const mapStateToProps = state => ({
   settings: state.settings,
 });
 
-const actionCreators = {
-  updateSettings,
-  switchSettingsTab,
-  openConfirmDialog,
-  openErrorDialog,
-  showNotification,
-};
-
 /**
  * App Page in the Setting Page
  *
  * @class SettingsApp
  * @extends {Component}
  */
-@connect(
-  mapStateToProps,
-  actionCreators
-)
+@connect(mapStateToProps)
 class SettingsApp extends Component {
   /**
    * Creates an instance of SettingsApp.
@@ -92,7 +78,7 @@ class SettingsApp extends Component {
    */
   constructor(props) {
     super(props);
-    props.switchSettingsTab('App');
+    switchSettingsTab('App');
   }
   /**
    *  Confirm Wallet Back up
@@ -100,17 +86,14 @@ class SettingsApp extends Component {
    * @memberof SettingsApp
    */
   confirmBackupWallet = () => {
-    this.props.openConfirmDialog({
+    openConfirmDialog({
       question: __('Backup wallet'),
       callbackYes: () => {
         if (this.props.coreConnected) {
           backupWallet(this.props.settings.backupDirectory);
-          this.props.showNotification(
-            __('Wallet has been backed up'),
-            'success'
-          );
+          showNotification(__('Wallet has been backed up'), 'success');
         } else {
-          this.props.openErrorDialog({
+          openErrorDialog({
             message: __('Connecting to Nexus Core'),
           });
         }
@@ -125,18 +108,18 @@ class SettingsApp extends Component {
    */
   toggleVerifyModuleSource = e => {
     if (e.target.checked) {
-      this.props.openConfirmDialog({
+      openConfirmDialog({
         question: __('Turn module open source policy on?'),
         note: __(
           'All modules without open source verifications, possibly including your own under-development modules, will become invalid. Wallet must be refreshed for the change to take effect.'
         ),
         callbackYes: () => {
-          this.props.updateSettings({ verifyModuleSource: true });
+          updateSettings({ verifyModuleSource: true });
           location.reload();
         },
       });
     } else {
-      this.props.openConfirmDialog({
+      openConfirmDialog({
         question: __('Turn module open source policy off?'),
         note: (
           <div>
@@ -156,7 +139,7 @@ class SettingsApp extends Component {
         labelYes: __('Turn policy off'),
         skinYes: 'danger',
         callbackYes: () => {
-          this.props.updateSettings({ verifyModuleSource: false });
+          updateSettings({ verifyModuleSource: false });
           location.reload();
         },
         labelNo: __('Keep policy on'),
@@ -176,7 +159,7 @@ class SettingsApp extends Component {
     return settingName => {
       if (!handlers[settingName]) {
         handlers[settingName] = input =>
-          this.props.updateSettings({
+          updateSettings({
             [settingName]: form.resolveValue(input),
           });
       }
@@ -191,7 +174,7 @@ class SettingsApp extends Component {
    */
   handleAutoUpdateChange = e => {
     if (!e.target.checked) {
-      this.props.openConfirmDialog({
+      openConfirmDialog({
         question: __('Are you sure you want to disable auto update?'),
         note: __(
           'Keeping your wallet up-to-date is important for your security and will ensure that you get the best possible user experience.'
@@ -200,13 +183,13 @@ class SettingsApp extends Component {
         labelNo: __('Turn auto update Off'),
         skinNo: 'danger',
         callbackNo: () => {
-          this.props.updateSettings({ autoUpdate: false });
+          updateSettings({ autoUpdate: false });
           stopAutoUpdate();
         },
         style: { width: 580 },
       });
     } else {
-      this.props.updateSettings({ autoUpdate: true });
+      updateSettings({ autoUpdate: true });
       startAutoUpdate();
     }
   };
@@ -344,14 +327,32 @@ class SettingsApp extends Component {
           <SettingsField
             indent={1}
             connectLabel
-            label={__('Fake Test Transactions')}
-            subLabel={__('Display Test Transactions on the Transactions page')}
+            label={__('Allow SymLink')}
+            subLabel={__(
+              'Allow the presence of SymLinks in the module directory'
+            )}
           >
             <Switch
-              checked={settings.fakeTransactions}
-              onChange={this.updateHandlers('fakeTransactions')}
+              checked={settings.allowSymLink}
+              onChange={this.updateHandlers('allowSymLink')}
             />
           </SettingsField>
+
+          {legacyMode && (
+            <SettingsField
+              indent={1}
+              connectLabel
+              label={__('Fake Test Transactions')}
+              subLabel={__(
+                'Display Test Transactions on the Transactions page'
+              )}
+            >
+              <Switch
+                checked={settings.fakeTransactions}
+                onChange={this.updateHandlers('fakeTransactions')}
+              />
+            </SettingsField>
+          )}
         </div>
 
         <Button

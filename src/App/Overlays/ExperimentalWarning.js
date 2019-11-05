@@ -1,9 +1,8 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { connect } from 'react-redux';
 
 import Button from 'components/Button';
-import { updateSettings } from 'actions/settings';
+import { updateSettings } from 'lib/settings';
 
 import FullScreen from './FullScreen';
 
@@ -13,12 +12,10 @@ const Buttons = styled.p({
   justifyContent: 'center',
 });
 
-const actionCreators = {
-  disableExperimentalWarning: () =>
-    updateSettings({ experimentalWarningDisabled: true }),
-};
+const disableExperimentalWarning = () =>
+  updateSettings({ experimentalWarningDisabled: true });
 
-const ExperimentalWarning = ({ disableExperimentalWarning }) => (
+const ExperimentalWarning = () => (
   <FullScreen header={__('Warning')} width={600} style={{ fontSize: 18 }}>
     <p>
       {__(
@@ -34,7 +31,4 @@ const ExperimentalWarning = ({ disableExperimentalWarning }) => (
   </FullScreen>
 );
 
-export default connect(
-  null,
-  actionCreators
-)(ExperimentalWarning);
+export default ExperimentalWarning;

@@ -1,4 +1,47 @@
-# 1.2.2 (2019.8.XX)
+# 2.0.0 (2019.11.05)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.0.0)
+
+First Release with Tritium
+
+# 1.2.4 (2019.10.26)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v1.2.4)
+
+#### Additions
+
+- Nexus Daemon Core 3.0.6
+- Added ability to clear peer connections
+- Added paths to core data folder
+
+#### Adjustments
+
+- None
+
+#### Fixes
+
+- None
+
+# 1.2.3 (2019.9.5)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v1.2.3)
+
+#### Additions
+
+- none
+
+#### Adjustments
+
+- New Developer setting to allow for SymLinks in a modules directory
+
+#### Fixes
+
+- Fixed a issue where a send would not send if your wallet was not encrypted
+- Fixed issue with send all not taking into account network fee
+- Send Page / My Addresses now properly refreshes after your balance has been confirmed after a transaction
+- Fixed an error in the terminal console which would not return the correct error message
+
+# 1.2.2 (2019.8.23)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v1.2.2)
 
@@ -6,7 +49,7 @@
 
 - **SECURITY**
   - Modules will now fail to install if it contains a symbolic link
-  - Nexus.conf auto password generate has added additional entropy, old password style will automaticly be replaced
+  - Nexus.conf auto password generate has added additional entropy, old password style will automatically be replaced
 - Module specification version is bumped to 0.2.1
 - Staking stats (Stake Rate, Trust Weight, etc...) in Overview page now displays "N/A" instead of "0%"
 

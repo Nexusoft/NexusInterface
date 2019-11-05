@@ -1,16 +1,15 @@
 // External
 import React from 'react';
-import { connect } from 'react-redux';
-import { push } from 'connected-react-router';
+import { history } from 'lib/wallet';
 import styled from '@emotion/styled';
 
 // Internal
 import Modal from 'components/Modal';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
-import { updateSettings } from 'actions/settings';
+import { updateSettings } from 'lib/settings';
 import * as color from 'utils/color';
-import warningIcon from 'images/warning.sprite.svg';
+import warningIcon from 'icons/warning.svg';
 
 const WarningModal = styled(Modal)({
   maxWidth: 500,
@@ -28,23 +27,15 @@ const WarningMessage = styled.div({
   fontSize: 28,
 });
 
-@connect(
-  null,
-  dispatch => ({
-    ignoreEncryptionWarning: () =>
-      dispatch(updateSettings({ encryptionWarningDisabled: true })),
-    goTo: url => dispatch(push(url)),
-  })
-)
 class EncryptionWarningModal extends React.Component {
   ignore = () => {
-    this.props.ignoreEncryptionWarning();
+    updateSettings({ encryptionWarningDisabled: true });
     this.closeModal();
   };
 
   goToSecuritySettings = () => {
     this.closeModal();
-    this.props.goTo('/Settings/Security');
+    history.push('/Settings/Security');
   };
 
   render() {

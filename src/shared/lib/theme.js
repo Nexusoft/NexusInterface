@@ -1,3 +1,5 @@
+import * as TYPE from 'consts/actionTypes';
+import store from 'store';
 import path from 'path';
 import { walletDataDir, fileExists } from 'consts/paths';
 import { readJson, writeJson } from 'utils/json';
@@ -5,7 +7,7 @@ import { readJson, writeJson } from 'utils/json';
 const themeFileName = 'theme.json';
 const themeFilePath = path.join(walletDataDir, themeFileName);
 
-export const defaultTheme = {
+const defaultTheme = {
   defaultStyle: 'Dark',
   wallpaper: null,
   background: '#1c1d1f',
@@ -19,19 +21,7 @@ export const defaultTheme = {
   globeArchColor: '#00ffff',
 };
 
-function readTheme() {
-  if (fileExists(themeFilePath)) {
-    return readJson(themeFilePath);
-  } else {
-    return defaultTheme;
-  }
-}
-
-function writeTheme(theme) {
-  return writeJson(themeFilePath, filterValidTheme(theme));
-}
-
-export function filterValidTheme(theme) {
+function filterValidTheme(theme) {
   const validTheme = {};
   Object.keys(theme || {}).map(key => {
     if (defaultTheme.hasOwnProperty(key)) {
@@ -43,19 +33,39 @@ export function filterValidTheme(theme) {
   return validTheme;
 }
 
-export function LoadTheme() {
+function readTheme() {
+  if (fileExists(themeFilePath)) {
+    return filterValidTheme(readJson(themeFilePath));
+  } else {
+    return defaultTheme;
+  }
+}
+
+function writeTheme(theme) {
+  return writeJson(themeFilePath, filterValidTheme(theme));
+}
+
+function loadThemeFromFile() {
   const customTheme = readTheme();
   return { ...defaultTheme, ...customTheme };
 }
 
-export function UpdateTheme(updates) {
+function updateThemeFile(updates) {
   const theme = readTheme();
   return writeTheme({ ...theme, ...updates });
 }
 
-export function ResetColors() {
+export const loadTheme = loadThemeFromFile;
+
+export const updateTheme = updates => {
+  store.dispatch({ type: TYPE.UPDATE_THEME, payload: updates });
+  updateThemeFile(updates);
+};
+
+export const resetColors = () => {
   const theme = readTheme();
   const newTheme = {};
   if (theme.wallpaper) newTheme.wallpaper = theme.wallpaper;
+  store.dispatch({ type: TYPE.SET_THEME, payload: newTheme });
   return writeTheme(newTheme);
-}
+};

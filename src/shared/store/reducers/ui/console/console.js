@@ -2,6 +2,7 @@ import * as TYPE from 'consts/actionTypes';
 
 const initialState = {
   currentCommand: '',
+  currentTritiumCommand: '',
   historyIndex: -1,
   commandList: [],
   commandHistory: [],
@@ -16,7 +17,6 @@ export default (state = initialState, action) => {
         currentCommand: action.payload,
         historyIndex: initialState.historyIndex,
       };
-
     case TYPE.SET_COMMAND_LIST:
       return {
         ...state,
@@ -28,6 +28,7 @@ export default (state = initialState, action) => {
         ? {
             ...state,
             historyIndex: state.historyIndex + 1,
+            currentCommand: state.commandHistory[state.historyIndex + 1] || '',
           }
         : state;
 
@@ -36,6 +37,7 @@ export default (state = initialState, action) => {
         ? {
             ...state,
             historyIndex: state.historyIndex - 1,
+            currentCommand: state.commandHistory[state.historyIndex - 1] || '',
           }
         : state;
 

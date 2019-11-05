@@ -1,12 +1,11 @@
 // External
 import React from 'react';
-import { connect } from 'react-redux';
 import { clipboard } from 'electron';
 import styled from '@emotion/styled';
 
 // Internal
 import Tooltip from 'components/Tooltip';
-import { showNotification } from 'actions/overlays';
+import { showNotification } from 'lib/ui';
 import { consts, timing } from 'styles';
 
 const SegmentedAddressComponent = styled.div({
@@ -55,10 +54,6 @@ const Label = styled.div(({ theme }) => ({
  * @class SegmentedAddress
  * @extends {React.Component}
  */
-@connect(
-  null,
-  { showNotification }
-)
 export default class SegmentedAddress extends React.Component {
   addressRef = React.createRef();
 
@@ -69,10 +64,7 @@ export default class SegmentedAddress extends React.Component {
    */
   copyAddress = () => {
     clipboard.writeText(this.props.address);
-    this.props.showNotification(
-      __('Address has been copied to clipboard'),
-      'success'
-    );
+    showNotification(__('Address has been copied to clipboard'), 'success');
   };
 
   /**

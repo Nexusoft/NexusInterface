@@ -3,9 +3,8 @@
 ////////////////////////
 // Script that holds on to a visitor and is referenced when a visitor makes a action
 import ua from 'universal-analytics';
-import { LoadSettings } from 'lib/settings';
+import settings from 'data/initialSettings';
 
-const settings = LoadSettings();
 const GA = {};
 
 GA.visitor = null;
@@ -17,6 +16,7 @@ if (
 ) {
   GA.visitor = ua('UA-117808839-1');
   GA.active = true;
+  GA.visitor.set('ul', settings.locale || 'en');
 }
 
 // Send Screen
@@ -57,6 +57,7 @@ GA.EnableAnalytics = function() {
   if (GA.visitor != null) return;
   GA.visitor = ua('UA-117808839-1');
   GA.active = true;
+  GA.visitor.set('ul', settings.locale || 'en');
 };
 
 export default GA;

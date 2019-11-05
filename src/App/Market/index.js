@@ -1,28 +1,34 @@
 // External Dependencies
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { remote, shell } from 'electron';
+import { shell } from 'electron';
 import styled from '@emotion/styled';
 import Tooltip from 'components/Tooltip';
 import Button from 'components/Button';
-import syncingIcon from 'images/syncing.sprite.svg';
+import syncingIcon from 'icons/syncing.svg';
 import GA from 'lib/googleAnalytics';
-import { showNotification } from 'actions/overlays';
+import { showNotification } from 'lib/ui';
 
 // Internal Global Dependencies
 import Icon from 'components/Icon';
 import Panel from 'components/Panel';
-import ContextMenuBuilder from 'contextmenu';
-import * as actionsCreators from 'actions/market';
+import {
+  binanceDepthLoader,
+  bittrexDepthLoader,
+  binance24hrInfo,
+  bittrex24hrInfo,
+  binanceCandlestickLoader,
+  bittrexCandlestickLoader,
+} from 'lib/market';
 
 // Internal Local Dependencies
 import MarketDepth from './Chart/MarketDepth';
 import Candlestick from './Chart/Candlestick';
 
 // Images
-import chartIcon from 'images/chart.sprite.svg';
-import bittrexLogo from 'images/BittrexLogo.png';
-import binanceLogo from 'images/BINANCE.png';
+import chartIcon from 'icons/chart.svg';
+import bittrexLogo from 'icons/BittrexLogo.png';
+import binanceLogo from 'icons/BINANCE.png';
 
 const ExchangeUnitContainer = styled.div({
   width: '100%',
@@ -55,7 +61,6 @@ const mapStateToProps = state => {
     settings: state.settings,
   };
 };
-const mapDispatchToProps = { ...actionsCreators, showNotification };
 
 /**
  * The Market Page
@@ -68,26 +73,6 @@ class Market extends Component {
   componentDidMount() {
     this.refresher();
     GA.SendScreen('Market');
-    window.addEventListener('contextmenu', this.setupcontextmenu, false);
-  }
-  // React Method (Life cycle hook)
-  componentWillUnmount() {
-    window.removeEventListener('contextmenu', this.setupcontextmenu);
-  }
-
-  // Class Methods
-  /**
-   * Sets up the page's context menu
-   *
-   * @param {*} e
-   * @memberof Market
-   */
-  setupcontextmenu(e) {
-    e.preventDefault();
-    const contextmenu = new ContextMenuBuilder().defaultContext;
-    //build default
-    let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu);
-    defaultcontextmenu.popup(remote.getCurrentWindow());
   }
 
   /**
@@ -97,14 +82,14 @@ class Market extends Component {
    */
   refresher() {
     let any = this;
-    this.props.binanceDepthLoader();
-    this.props.bittrexDepthLoader();
+    binanceDepthLoader();
+    bittrexDepthLoader();
 
-    this.props.binanceCandlestickLoader(any);
-    this.props.bittrexCandlestickLoader(any);
+    binanceCandlestickLoader(any);
+    bittrexCandlestickLoader(any);
 
-    this.props.binance24hrInfo();
-    this.props.bittrex24hrInfo();
+    binance24hrInfo();
+    bittrex24hrInfo();
   }
 
   /**
@@ -253,7 +238,7 @@ class Market extends Component {
    */
   refreshMarket() {
     this.refresher();
-    this.props.showNotification(__('Refreshing market data...'), 'success');
+    showNotification(__('Refreshing market data...'), 'success');
   }
 
   // Mandatory React method
@@ -337,7 +322,4 @@ class Market extends Component {
 }
 
 // Mandatory React-Redux method
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Market);
+export default connect(mapStateToProps)(Market);

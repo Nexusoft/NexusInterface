@@ -17,6 +17,7 @@ const locales = [
   { nxsCode: 'nl', crowdinCode: 'nl', crowdinFolder: 'nl' },
   { nxsCode: 'pl', crowdinCode: 'pl', crowdinFolder: 'pl' },
   { nxsCode: 'pt', crowdinCode: 'pt', crowdinFolder: 'pt-PT' },
+  { nxsCode: 'ro', crowdinCode: 'ro', crowdinFolder: 'ro' },
   { nxsCode: 'ru', crowdinCode: 'ru', crowdinFolder: 'ru' },
   { nxsCode: 'zh-cn', crowdinCode: 'zh-Hans', crowdinFolder: 'zh-CN' },
 ];

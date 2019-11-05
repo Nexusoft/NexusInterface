@@ -1,63 +1,105 @@
 // External
 import React, { Component } from 'react';
-import { remote } from 'electron';
 import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
-import cpy from 'cpy';
+// import cpy from 'cpy';
 import styled from '@emotion/styled';
 
 // Internal
-import { switchSettingsTab } from 'actions/ui';
-import { stopCore, startCore, restartCore } from 'actions/core';
-import { showNotification, openConfirmDialog } from 'actions/overlays';
-import { updateSettings, updateTempSettings } from 'actions/settings';
-import WaitingMessage from 'components/WaitingMessage';
+import { switchSettingsTab, setCoreSettingsRestart } from 'lib/ui';
+import { stopCore, startCore, restartCore } from 'lib/core';
+import { showNotification, openConfirmDialog } from 'lib/ui';
+import { updateSettings } from 'lib/settings';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
 import Switch from 'components/Switch';
-import { tempSettings } from 'lib/settings';
-import { rpcErrorHandler, resolveValue } from 'utils/form';
-import confirm from 'utils/promisified/confirm';
-import { isCoreConnected } from 'selectors';
-import { coreDataDir } from 'consts/paths';
+import { errorHandler } from 'utils/form';
+import { legacyMode } from 'consts/misc';
+// import { coreDataDir } from 'consts/paths';
 import * as color from 'utils/color';
+import confirm from 'utils/promisified/confirm';
+import { newUID } from 'utils/misc';
 import { consts } from 'styles';
-import warningIcon from 'images/warning.sprite.svg';
-import Icon from 'components/Icon';
+import { isCoreConnected } from 'selectors';
 
 import ReScanButton from './RescanButton.js';
 
 const RestartPrompt = styled.div(({ theme }) => ({
-  background: color.darken(theme.background, 0.2),
-  padding: '5px',
-  transition: 'all 0.25s linear',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  right: 0,
+  background: color.darken(theme.background, 0.3),
+  borderTop: `1px solid ${theme.mixer(0.5)}`,
+  paddingTop: 10,
+  marginRight: 6,
+  zIndex: 1,
 }));
 
+const RestartContainer = styled.div({
+  maxWidth: 750,
+  margin: '0 auto',
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+});
+
+const removeWhiteSpaces = value => (value || '').replace(' ', '');
+
+const formKeys = [
+  'enableMining',
+  'ipMineWhitelist',
+  'enableStaking',
+  'verboseLevel',
+  'alphaTestNet',
+  'avatarMode',
+  legacyMode ? 'manualDaemonIP' : 'manualDaemonApiIP',
+  legacyMode ? 'manualDaemonPort' : 'manualDaemonApiPort',
+  'manualDaemonUser',
+  'manualDaemonPassword',
+  'manualDaemonApiUser',
+  'manualDaemonApiPassword',
+  'manualDaemonDataDir',
+];
+const getInitialValues = (() => {
+  let lastOutput = null;
+  let lastInput = null;
+
+  return settings => {
+    if (settings === lastInput) return lastOutput;
+
+    let changed = false;
+    const output = lastOutput || {};
+    formKeys.forEach(key => {
+      if (settings[key] !== output[key]) {
+        changed = true;
+      }
+      output[key] = settings[key];
+    });
+
+    lastInput = settings;
+    if (changed) {
+      return (lastOutput = output);
+    } else {
+      return lastOutput;
+    }
+  };
+})();
+
 const mapStateToProps = state => {
-  const { settings } = state;
+  const {
+    settings,
+    ui: {
+      settings: { restartCoreOnSave },
+    },
+  } = state;
   return {
     coreConnected: isCoreConnected(state),
-    settings,
-    tempSettings,
-    initialValues: {
-      manualDaemonUser: settings.manualDaemonUser,
-      manualDaemonPassword: settings.manualDaemonPassword,
-      manualDaemonIP: settings.manualDaemonIP,
-      manualDaemonPort: settings.manualDaemonPort,
-      manualDaemonDataDir: settings.manualDaemonDataDir,
-    },
+    manualDaemon: settings.manualDaemon,
+    initialValues: getInitialValues(settings),
+    restartCoreOnSave,
   };
-};
-const actionCreators = {
-  updateSettings,
-  updateTempSettings,
-  switchSettingsTab,
-  openConfirmDialog,
-  showNotification,
-  stopCore,
-  startCore,
-  restartCore,
 };
 
 /**
@@ -66,36 +108,50 @@ const actionCreators = {
  * @class SettingsCore
  * @extends {Component}
  */
-@connect(
-  mapStateToProps,
-  actionCreators
-)
+@connect(mapStateToProps)
 @reduxForm({
   form: 'coreSettings',
   destroyOnUnmount: false,
+  enableReinitialize: true,
   validate: (
     {
+      verboseLevel,
       manualDaemonUser,
       manualDaemonPassword,
       manualDaemonIP,
       manualDaemonPort,
+      manualDaemonApiIP,
+      manualDaemonApiPort,
       manualDaemonDataDir,
     },
     props
   ) => {
     const errors = {};
-    if (props.settings.manualDaemon) {
+    if (!verboseLevel && verboseLevel !== 0) {
+      errors.verboseLevel = __('Verbose level is required');
+    }
+
+    if (props.manualDaemon) {
       if (!manualDaemonUser) {
         errors.manualDaemonUser = __('Manual Core username is required');
       }
       if (!manualDaemonPassword) {
         errors.manualDaemonPassword = __('Manual Core password is required');
       }
-      if (!manualDaemonIP) {
-        errors.manualDaemonIP = __('Manual Core IP is required');
-      }
-      if (!manualDaemonPort) {
-        errors.manualDaemonPort = __('Manual Core port is required');
+      if (legacyMode) {
+        if (!manualDaemonIP) {
+          errors.manualDaemonIP = __('Manual Core IP is required');
+        }
+        if (!manualDaemonPort) {
+          errors.manualDaemonPort = __('Manual Core port is required');
+        }
+      } else {
+        if (!manualDaemonApiIP) {
+          errors.manualDaemonApiIP = __('Manual Core IP is required');
+        }
+        if (!manualDaemonApiPort) {
+          errors.manualDaemonApiPort = __('Manual Core port is required');
+        }
       }
       if (!manualDaemonDataDir) {
         errors.manualDaemonDataDir = __('Data directory is required');
@@ -103,33 +159,25 @@ const actionCreators = {
     }
     return errors;
   },
-  onSubmit: (
-    {
-      manualDaemonUser,
-      manualDaemonPassword,
-      manualDaemonIP,
-      manualDaemonPort,
-      manualDaemonDataDir,
-    },
-    dispatch,
-    props
-  ) => {
-    if (props.settings.manualDaemon) {
-      props.updateSettings({
-        manualDaemonUser,
-        manualDaemonPassword,
-        manualDaemonIP,
-        manualDaemonPort,
-        manualDaemonDataDir,
-      });
-    }
+  onSubmit: async values => {
+    return updateSettings(values);
   },
   onSubmitSuccess: (result, dispatch, props) => {
-    props.showNotification(__('Core settings saved'), 'success');
+    showNotification(__('Core settings saved'), 'success');
+    if (!props.manualDaemon && props.restartCoreOnSave) {
+      showNotification(__('Restarting Core...'));
+      restartCore();
+    }
   },
-  onSubmitFail: rpcErrorHandler('Error Saving Settings'),
+  onSubmitFail: errorHandler('Error saving settings'),
 })
 class SettingsCore extends Component {
+  switchId = newUID();
+
+  handleRestartSwitch = e => {
+    setCoreSettingsRestart(!!e.target.checked);
+  };
+
   /**
    *Creates an instance of SettingsCore.
    * @param {*} props
@@ -137,11 +185,7 @@ class SettingsCore extends Component {
    */
   constructor(props) {
     super(props);
-    props.switchSettingsTab('Core');
-    this.updateMining = this.updateMining.bind(this);
-    this.updateStaking = this.updateStaking.bind(this);
-    this.state = this.props.settings;
-    this.needsRestart = false;
+    switchSettingsTab('Core');
   }
 
   /**
@@ -150,15 +194,9 @@ class SettingsCore extends Component {
    * @memberof SettingsCore
    */
   confirmSwitchManualDaemon = () => {
-    const {
-      settings,
-      openConfirmDialog,
-      stopCore,
-      startCore,
-      updateSettings,
-    } = this.props;
+    const { manualDaemon } = this.props;
 
-    if (settings.manualDaemon) {
+    if (manualDaemon) {
       openConfirmDialog({
         question: __('Exit manual Core mode?'),
         note: __('(This will restart your Core)'),
@@ -183,147 +221,37 @@ class SettingsCore extends Component {
     }
   };
 
-  /**
-   * Restarts Core
-   *
-   * @memberof SettingsCore
-   */
-  restartCore = () => {
-    this.props.restartCore();
-    this.props.showNotification(__('Core restarting'));
-  };
+  // /**
+  //  * Opens up a dialog to move the data directory
+  //  *
+  //  * @memberof SettingsCore
+  //  */
+  // moveDataDir = () => {
+  //   remote.dialog.showOpenDialog(
+  //     {
+  //       title: __('Select a directory'),
+  //       defaultPath: this.props.backupDir,
+  //       properties: ['openDirectory'],
+  //     },
+  //     folderPaths => {
+  //       if (folderPaths && folderPaths.length > 0) {
+  //         this.handleFileCopy(folderPaths[0]);
+  //       }
+  //     }
+  //   );
+  // };
 
-  /**
-   * Opens up a dialog to move the data directory
-   *
-   * @memberof SettingsCore
-   */
-  moveDataDir = () => {
-    remote.dialog.showOpenDialog(
-      {
-        title: __('Select a directory'),
-        defaultPath: this.props.backupDir,
-        properties: ['openDirectory'],
-      },
-      folderPaths => {
-        if (folderPaths && folderPaths.length > 0) {
-          this.handleFileCopy(folderPaths[0]);
-        }
-      }
-    );
-  };
-
-  /**
-   * Runs the file copy script
-   *
-   * @param {*} newFolderDir
-   * @memberof SettingsCore
-   */
-  async handleFileCopy(newFolderDir) {
-    await cpy(coreDataDir, newFolderDir).on('progress', progress => {
-      console.log(progress);
-    });
-  }
-
-  /**
-   * Generic function to display the Restart core ? dialog
-   *
-   * @param {*} yesCallback
-   * @param {*} noCallback
-   * @memberof SettingsCore
-   */
-  askForCoreRestart(yesCallback, noCallback) {
-    this.props.openConfirmDialog({
-      question: __('Restart Core?'),
-      note: __(
-        'This setting change will only take effect after Core is restarted. Do you want to restart the Core now?'
-      ),
-      labelYes: 'Restart now',
-      labelNo: "I'll restart later",
-      callbackYes: yesCallback,
-      callbackNo: noCallback,
-    });
-  }
-
-  /**
-   * Update the staking flag
-   *
-   * @param {*} input
-   * @memberof SettingsCore
-   */
-  updateStaking(input) {
-    let value = resolveValue(input);
-    this.askForCoreRestart(
-      async () => {
-        this.props.updateSettings({
-          enableStaking: resolveValue(value),
-        });
-        this.restartCore();
-      },
-      () => {
-        this.props.updateSettings({
-          enableStaking: resolveValue(value),
-        });
-      }
-    );
-  }
-
-  /**
-   * Update the mining flag
-   *
-   * @param {*} input
-   * @memberof SettingsCore
-   */
-  updateMining(input) {
-    let value = resolveValue(input);
-    this.askForCoreRestart(
-      async () => {
-        this.props.updateSettings({
-          enableMining: resolveValue(value),
-        });
-        this.restartCore();
-      },
-      () => {
-        this.props.updateSettings({
-          enableMining: resolveValue(value),
-        });
-      }
-    );
-  }
-
-  /**
-   * Sets the list of IPs that the daemon will send coin to when it mines.
-   *
-   * @param {*} input
-   * @memberof SettingsCore
-   */
-  updateMiningWhitelist(input) {
-    const output = resolveValue(input).replace(' ', '');
-    this.props.updateTempSettings({
-      ipMineWhitelist: output,
-    });
-  }
-
-  /**
-   * Updates the settings
-   *
-   * @memberof SettingsCore
-   */
-  updateHandlers = (() => {
-    const handlers = [];
-    return settingName => {
-      if (!handlers[settingName]) {
-        handlers[settingName] = input =>
-          /*this.props.updateSettings({
-            [settingName]: resolveValue(input),
-          }); */
-          this.props.updateTempSettings({
-            [settingName]: resolveValue(input),
-          });
-      }
-      return handlers[settingName];
-    };
-  })();
+  // /**
+  //  * Runs the file copy script
+  //  *
+  //  * @param {*} newFolderDir
+  //  * @memberof SettingsCore
+  //  */
+  // async handleFileCopy(newFolderDir) {
+  //   await cpy(coreDataDir, newFolderDir).on('progress', progress => {
+  //     console.log(progress);
+  //   });
+  // }
 
   reloadTxHistory = async () => {
     const confirmed = await confirm({
@@ -332,7 +260,19 @@ class SettingsCore extends Component {
         'Nexus Core will be restarted, after that, it will take a while for the transaction history to be reloaded',
     });
     if (confirmed) {
-      this.props.updateSettings({ walletClean: true });
+      updateSettings({ walletClean: true });
+      restartCore();
+    }
+  };
+  
+    clearPeerConnections = async () => {
+    const confirmed = await confirm({
+      question: __('Clear peer connections') + '?',
+      note:
+        'Nexus Core will be restarted. After that, all stored peer connections will be reset.',
+    });
+    if (confirmed) {
+      this.props.updateSettings({ clearPeers: true });
       this.props.restartCore();
     }
   };
@@ -356,138 +296,133 @@ class SettingsCore extends Component {
    * @memberof SettingsCore
    */
   render() {
-    const { coreConnected, handleSubmit, pristine, submitting } = this.props;
-    const settings = this.props.settings.tempSettings
-      ? { ...this.props.settings, ...this.props.settings.tempSettings }
-      : this.props.settings;
-
-    if (!coreConnected && !settings.manualDaemon) {
-      return (
-        <WaitingMessage>
-          {__('Connecting to Nexus Core')}
-          ...
-        </WaitingMessage>
-      );
-    }
+    const {
+      coreConnected,
+      manualDaemon,
+      handleSubmit,
+      dirty,
+      submitting,
+      restartCoreOnSave,
+    } = this.props;
 
     return (
       <>
-        {this.props.settings.tempSettings ? (
-          <RestartPrompt>
-            <div className="flex space-between">
-              <div
-                style={{
-                  textDecoration: 'underline',
-                  paddingTop: '0.5em',
-                  paddingLeft: '0.25em',
-                }}
-              >
-                <Icon icon={warningIcon} className="space-right" />
-                {__('Core needs to restart for these settings to take effect!')}
-              </div>
-
-              <Button
-                onClick={() => {
-                  this.askForCoreRestart(
-                    () => {
-                      this.props.updateSettings({
-                        ...this.props.settings.tempSettings,
-                      });
-                      this.restartCore();
-                    },
-                    () => {}
-                  );
-                }}
-              >
-                {__('Restart Core')}
-              </Button>
-            </div>
-          </RestartPrompt>
-        ) : null}
-        <form onSubmit={handleSubmit}>
-          {!settings.manualDaemon ? (
+        <form onSubmit={handleSubmit} style={{ paddingBottom: dirty ? 55 : 0 }}>
+          {!manualDaemon && (
             <>
               <SettingsField
                 connectLabel
                 label={__('Enable mining')}
                 subLabel={__('Enable/Disable mining to the wallet.')}
               >
-                <Switch
-                  checked={settings.enableMining}
-                  onChange={this.updateHandlers('enableMining')}
-                />
+                <Field name="enableMining" component={Switch.RF} />
               </SettingsField>
 
-              {settings.enableMining ? (
-                <SettingsField
-                  connectLabel
-                  indent={1}
-                  label={__('Mining IP Whitelist')}
-                  subLabel={__(
-                    'IP/Ports allowed to mine to. Separate by <b>;</b> . Wildcards supported only in IP',
-                    undefined,
-                    {
-                      b: txt => <b>{txt}</b>,
-                    }
-                  )}
-                >
-                  <TextField
-                    component={TextField.RF}
-                    value={settings.ipMineWhitelist}
-                    onChange={e => this.updateMiningWhitelist(e)}
-                    name="ipMineWhitelist"
-                    size="12"
-                  />
-                </SettingsField>
-              ) : null}
+              <Field
+                name="enableMining"
+                component={({ input }) =>
+                  !!input.value && (
+                    <SettingsField
+                      connectLabel
+                      indent={1}
+                      label={__('Mining IP Whitelist')}
+                      subLabel={__(
+                        'IP/Ports allowed to mine to. Separate by <b>;</b> . Wildcards supported only in IP',
+                        undefined,
+                        {
+                          b: txt => <b>{txt}</b>,
+                        }
+                      )}
+                    >
+                      <Field
+                        name="ipMineWhitelist"
+                        component={TextField.RF}
+                        normalize={removeWhiteSpaces}
+                        size="12"
+                      />
+                    </SettingsField>
+                  )
+                }
+              />
 
               <SettingsField
                 connectLabel
                 label={__('Enable staking')}
                 subLabel={__('Enable/Disable staking on the wallet.')}
               >
-                <Switch
-                  checked={settings.enableStaking}
-                  onChange={this.updateHandlers('enableStaking')}
-                />
+                <Field name="enableStaking" component={Switch.RF} />
               </SettingsField>
+
+              {legacyMode && (
+                <SettingsField
+                  connectLabel
+                  label={__('Rescan wallet')}
+                  subLabel={__(
+                    'Used to correct transaction/balance issues, scans over every block in the database. Could take up to 10 minutes.'
+                  )}
+                >
+                  <ReScanButton disabled={!coreConnected} />
+                </SettingsField>
+              )}
+
+              {legacyMode && (
+                <SettingsField
+                  connectLabel
+                  label={__('Reload transaction history')}
+                  subLabel={__(
+                    'Restart Nexus core with -walletclean parameter to clean out and reload all transaction history'
+                  )}
+                >
+                  <Button
+                    onClick={this.reloadTxHistory}
+                    style={{ height: consts.inputHeightEm + 'em' }}
+                  >
+                    {__('Reload')}
+                  </Button>
+                </SettingsField>
+              )}
 
               <SettingsField
                 connectLabel
-                label={__('Rescan wallet')}
+                label={__('Clear peer connections')}
                 subLabel={__(
-                  'Used to correct transaction/balance issues, scans over every block in the database. Could take up to 10 minutes.'
-                )}
-              >
-                <ReScanButton />
-              </SettingsField>
-
-              <SettingsField
-                connectLabel
-                label={__('Reload transaction history')}
-                subLabel={__(
-                  'Restart Nexus core with -walletclean parameter to clean out and reload all transaction history'
+                  'Clear all stored peer connections and restart Nexus'
                 )}
               >
                 <Button
-                  onClick={this.reloadTxHistory}
+                  onClick={this.clearPeerConnections}
                   style={{ height: consts.inputHeightEm + 'em' }}
                 >
-                  {__('Reload')}
+                  {__('Clear')}
                 </Button>
               </SettingsField>
-
+              
               <SettingsField
                 connectLabel
                 label={__('Verbose level')}
                 subLabel={__('Verbose level for logs.')}
               >
-                <TextField
+                <Field
+                  name="verboseLevel"
+                  component={TextField.RF}
                   type="number"
-                  value={settings.verboseLevel}
                   min={0}
                   max={5}
-                  onChange={this.updateHandlers('verboseLevel')}
+                  style={{ maxWidth: 50 }}
+                />
+              </SettingsField>
+
+              <SettingsField
+                connectLabel
+                label={__('Test Net')}
+                subLabel={__('Alpha Test Net to connect to.')}
+              >
+                <Field
+                  name="alphaTestNet"
+                  component={TextField.RF}
+                  type="number"
+                  min={17}
+                  max={9999999}
                   style={{ maxWidth: 50 }}
                 />
               </SettingsField>
@@ -499,17 +434,11 @@ class SettingsCore extends Component {
                   'Disabling Avatar will make the core use a separate change key'
                 )}
               >
-                <Switch
-                  checked={
-                    settings.avatarLevel != undefined
-                      ? settings.avatarLevel
-                      : true
-                  }
-                  onChange={this.updateHandlers('avatarMode')}
-                />
+                <Field name="avatarMode" component={Switch.RF} />
               </SettingsField>
             </>
-          ) : null}
+          )}
+
           <SettingsField
             connectLabel
             label={__('Manual Core mode')}
@@ -518,73 +447,96 @@ class SettingsCore extends Component {
             )}
           >
             <Switch
-              checked={settings.manualDaemon}
+              checked={manualDaemon}
               onChange={this.confirmSwitchManualDaemon}
             />
           </SettingsField>
 
-          <div style={{ display: settings.manualDaemon ? 'block' : 'none' }}>
-            <SettingsField
-              indent={1}
-              connectLabel
-              label={__('Username')}
-              subLabel={__('Username configured for manual Core.')}
-            >
-              <Field
-                component={TextField.RF}
-                name="manualDaemonUser"
-                size="12"
-              />
-            </SettingsField>
+          {!!manualDaemon && (
+            <>
+              <SettingsField
+                indent={1}
+                connectLabel
+                label={__('Username')}
+                subLabel={__('Username configured for manual Core.')}
+              >
+                <Field
+                  component={TextField.RF}
+                  name={legacyMode ? 'manualDaemonUser' : 'manualDaemonApiUser'}
+                  size="12"
+                />
+              </SettingsField>
 
-            <SettingsField
-              indent={1}
-              connectLabel
-              label={__('Password')}
-              subLabel={__('Password configured for manual Core.')}
-            >
-              <Field
-                component={TextField.RF}
-                name="manualDaemonPassword"
-                size="12"
-              />
-            </SettingsField>
+              <SettingsField
+                indent={1}
+                connectLabel
+                label={__('Password')}
+                subLabel={__('Password configured for manual Core.')}
+              >
+                <Field
+                  component={TextField.RF}
+                  name={
+                    legacyMode
+                      ? 'manualDaemonPassword'
+                      : 'manualDaemonApiPassword'
+                  }
+                  size="12"
+                />
+              </SettingsField>
 
-            <SettingsField
-              indent={1}
-              connectLabel
-              label={__('IP address')}
-              subLabel={__('IP address configured for manual Core.')}
-            >
-              <Field component={TextField.RF} name="manualDaemonIP" size="12" />
-            </SettingsField>
+              <SettingsField
+                indent={1}
+                connectLabel
+                label={__('IP address')}
+                subLabel={__('IP address configured for manual Core.')}
+              >
+                <Field
+                  component={TextField.RF}
+                  name={legacyMode ? 'manualDaemonIP' : 'manualDaemonApiIP'}
+                  size="12"
+                />
+              </SettingsField>
 
-            <SettingsField
-              indent={1}
-              connectLabel
-              label={__('Port')}
-              subLabel={__('Port configured for manual Core.')}
-            >
-              <Field
-                component={TextField.RF}
-                name="manualDaemonPort"
-                size="5"
-              />
-            </SettingsField>
+              <SettingsField
+                indent={1}
+                connectLabel
+                label={__('Port')}
+                subLabel={__('Port configured for manual Core.')}
+              >
+                <Field
+                  component={TextField.RF}
+                  name={legacyMode ? 'manualDaemonPort' : 'manualDaemonApiPort'}
+                  size="5"
+                />
+              </SettingsField>
 
-            <SettingsField
-              indent={1}
-              connectLabel
-              label={__('Data directory name')}
-              subLabel={__('Data directory configured for manual Core.')}
+              <SettingsField
+                indent={1}
+                connectLabel
+                label={__('Data directory name')}
+                subLabel={__('Data directory configured for manual Core.')}
+              >
+                <Field
+                  component={TextField.RF}
+                  name="manualDaemonDataDir"
+                  size={30}
+                />
+              </SettingsField>
+              {/* <Button
+              className="space-right"
+              style={{ marginTop: '1em' }}
+              type="submit"
+              skin="primary"
+              disabled={pristine || submitting}
             >
-              <Field
-                component={TextField.RF}
-                name="manualDaemonDataDir"
-                size={30}
-              />
-            </SettingsField>
-          </div>
+              {pristine
+                ? __('Settings Unchanged')
+                : submitting
+                ? __('Settings Saving')
+                : __('Save Settings')}
+            </Button> */}
+            </>
+          )}
 
           {/*  REMOVING THIS FOR NOW TILL I CAN CONFIRM THE SECURITY AND FUNCTION
             <SettingsField
@@ -618,19 +570,39 @@ class SettingsCore extends Component {
               )}
             </Button> 
           </div>*/}
-          <Button
-            className="space-right"
-            style={{ marginTop: '1em' }}
-            type="submit"
-            skin="primary"
-            disabled={pristine || submitting}
-          >
-            {pristine
-              ? __('Settings Unchanged')
-              : submitting
-              ? __('Settings Saving')
-              : __('Save Settings')}
-          </Button>
+
+          {!!dirty && (
+            <RestartPrompt>
+              <RestartContainer>
+                <div className="flex center">
+                  {!manualDaemon && (
+                    <>
+                      <Switch
+                        id={this.switchId}
+                        checked={restartCoreOnSave}
+                        onChange={this.handleRestartSwitch}
+                        style={{ fontSize: '0.7em' }}
+                      />
+                      &nbsp;
+                      <label
+                        htmlFor={this.switchId}
+                        style={{
+                          cursor: 'pointer',
+                          opacity: restartCoreOnSave ? 1 : 0.7,
+                        }}
+                      >
+                        {__('Restart Core for these changes to take effect')}
+                      </label>
+                    </>
+                  )}
+                </div>
+
+                <Button type="submit" disabled={submitting}>
+                  {__('Save settings')}
+                </Button>
+              </RestartContainer>
+            </RestartPrompt>
+          )}
         </form>
       </>
     );

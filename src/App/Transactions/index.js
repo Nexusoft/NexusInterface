@@ -11,8 +11,8 @@ import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
 import Table from 'components/Table';
 import { formatDateTime } from 'lib/intl';
-import { openModal } from 'actions/overlays';
-import { setTxsAccountFilter } from 'actions/ui';
+import { openModal } from 'lib/ui';
+import { setTxsAccountFilter } from 'lib/ui';
 import { isCoreConnected } from 'selectors';
 import { autoUpdateTransactions, isPending } from 'lib/transactions';
 
@@ -28,9 +28,9 @@ import { saveCSV } from './utils';
 import TransactionsChartModal from './TransactionsChartModal';
 import CategoryCell from './CategoryCell';
 
-import transactionIcon from 'images/transaction.sprite.svg';
-import barChartIcon from 'images/bar-chart.sprite.svg';
-import downloadIcon from 'images/download.sprite.svg';
+import transactionIcon from 'icons/transaction.svg';
+import barChartIcon from 'icons/bar-chart.svg';
+import downloadIcon from 'icons/download.svg';
 
 const timeFormatOptions = {
   year: 'numeric',
@@ -126,10 +126,6 @@ const mapStateToProps = state => {
     coreConnected: isCoreConnected(state),
   };
 };
-const actionCreators = {
-  openModal,
-  setTxsAccountFilter,
-};
 
 /**
  * Transactions Page
@@ -188,8 +184,6 @@ class Transactions extends Component {
       filteredTransactions,
       account,
       coreConnected,
-      openModal,
-      setTxsAccountFilter,
       accountOptions,
       minConfirmations,
     } = this.props;
@@ -273,7 +267,4 @@ class Transactions extends Component {
 }
 
 // Mandatory React-Redux method
-export default connect(
-  mapStateToProps,
-  actionCreators
-)(Transactions);
+export default connect(mapStateToProps)(Transactions);

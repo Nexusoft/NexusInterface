@@ -173,26 +173,32 @@ const Option = styled.div(
     alignItems: 'center',
     padding: `0 ${optionHPadding}px`,
     overflow: 'hidden',
-    cursor: 'pointer',
     transition: `background-color ${timing.normal}`,
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
     height: consts.inputHeightEm + 'em',
   },
-  ({ skin, selected, theme }) => {
+  ({ selectable }) => ({
+    cursor: selectable ? 'pointer' : undefined,
+  }),
+  ({ skin, selected, theme, selectable }) => {
     switch (skin) {
       case 'underline':
         return {
           background: selected ? theme.primary : undefined,
           color: selected ? theme.primaryAccent : undefined,
           '&:hover': {
-            background: selected ? theme.primary : theme.mixer(0.125),
+            background: selected
+              ? theme.primary
+              : selectable
+              ? theme.mixer(0.125)
+              : undefined,
           },
         };
       case 'filled':
         return {
           '&:hover': {
-            background: theme.mixer(0.875),
+            background: selectable ? theme.mixer(0.875) : undefined,
           },
         };
     }
@@ -265,7 +271,6 @@ class Options extends Component {
     const { ready, styles } = this.state;
     const selectedIndex = options.findIndex(o => o.value === value);
     const anchorIndex = selectedIndex !== -1 ? selectedIndex : 0;
-
     return (
       <Overlay onBackgroundClick={close}>
         <OptionsComponent
@@ -284,11 +289,14 @@ class Options extends Component {
             <Option
               key={option.isDummy ? i : option.value}
               skin={skin}
-              onClick={() => this.select(option)}
+              onClick={
+                !option.isSeparator ? () => this.select(option) : () => null
+              }
               selected={option.value === value && !option.isDummy}
+              selectable={!option.isSeparator}
               ref={i === anchorIndex ? this.anchorRef : undefined}
             >
-              {option.display}
+              {option.indent && <>&nbsp;&nbsp;</>} {option.display}
             </Option>
           ))}
         </OptionsComponent>

@@ -1,7 +1,7 @@
 // External
 import React from 'react';
 import { findDOMNode } from 'react-dom';
-import memoize from 'memoize-one';
+import memoize from 'utils/memoize';
 import styled from '@emotion/styled';
 
 // Internal
@@ -47,9 +47,7 @@ const SuggestionComponent = styled.div(
       zIndex: 1,
     },
     '&::before': {
-      background: `linear-gradient(to right, transparent, ${
-        theme.background
-      } 50%, ${theme.background})`,
+      background: `linear-gradient(to right, transparent, ${theme.background} 50%, ${theme.background})`,
       opacity: 1,
     },
     '&::after': {
@@ -196,7 +194,7 @@ export default class AutoSuggest extends React.Component {
 
   /**
    * React Did Get Updated Props
-   * 
+   *
    * @param {*} prevProps
    * @memberof AutoSuggest
    */

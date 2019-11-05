@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { remote } from 'electron';
 
 // Internal
-import { updateSettings } from 'actions/settings';
+import { updateSettings } from 'lib/settings';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
@@ -14,20 +14,13 @@ const mapStateToProps = state => ({
   locale: state.settings.locale,
 });
 
-const mapDispatchToProps = dispatch => ({
-  updateSettings: updates => dispatch(updateSettings(updates)),
-});
-
 /**
  * Backup Directory in Settings Page
  *
  * @class SettingsApp
  * @extends {Component}
  */
-@connect(
-  mapStateToProps,
-  mapDispatchToProps
-)
+@connect(mapStateToProps)
 class SettingsApp extends Component {
   /**
    * Open up Dialoge
@@ -43,7 +36,7 @@ class SettingsApp extends Component {
       },
       folderPaths => {
         if (folderPaths && folderPaths.length > 0) {
-          this.props.updateSettings({
+          updateSettings({
             backupDirectory: folderPaths[0],
           });
         }

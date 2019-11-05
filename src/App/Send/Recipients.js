@@ -8,9 +8,10 @@ import Tooltip from 'components/Tooltip';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
 import { timing } from 'styles';
-import plusIcon from 'images/plus.sprite.svg';
+import plusIcon from 'icons/plus.svg';
 import RecipientField from './RecipientField';
 import AmountField from './AmountField';
+import { subtract } from 'utils/calc';
 
 const RemoveButton = styled.div(({ theme }) => ({
   position: 'absolute',
@@ -88,7 +89,7 @@ class Recipients extends React.Component {
             change={change}
           />
           <AmountField
-            fullAmount={accBalance}
+            fullAmount={subtract(accBalance, 0.01)} // 0.01 = network fee
             parentFieldName={`${fields.name}[0]`}
             change={change}
           />

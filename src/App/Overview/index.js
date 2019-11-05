@@ -2,8 +2,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import * as TYPE from 'consts/actionTypes';
-import { remote } from 'electron';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/core';
 import GA from 'lib/googleAnalytics';
@@ -11,9 +9,8 @@ import GA from 'lib/googleAnalytics';
 // Internal
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
-import ContextMenuBuilder from 'contextmenu';
-import { getDifficulty } from 'actions/core';
-import { updateSettings } from 'actions/settings';
+import { getDifficulty } from 'lib/core';
+import { updateSettings } from 'lib/settings';
 import { formatNumber, formatCurrency, formatRelativeTime } from 'lib/intl';
 import { timing, consts } from 'styles';
 import { isCoreConnected } from 'selectors';
@@ -21,46 +18,46 @@ import Globe from './Globe';
 import { webGLAvailable } from 'consts/misc';
 
 // Images
-import logoIcon from 'images/NXS_coin.sprite.svg';
-import { CurrencyIcon } from 'images/CurrencyIcons';
-import transactionIcon from 'images/transaction.sprite.svg';
-import chartIcon from 'images/chart.sprite.svg';
-import supplyIcon from 'images/supply.sprite.svg';
-import hours24Icon from 'images/24hr.sprite.svg';
-import nxsStakeIcon from 'images/nxs-staking.sprite.svg';
+import logoIcon from 'icons/NXS_coin.svg';
+import currencyIcons from 'data/currencyIcons';
+import transactionIcon from 'icons/transaction.svg';
+import chartIcon from 'icons/chart.svg';
+import supplyIcon from 'icons/supply.svg';
+import hours24Icon from 'icons/24hr.svg';
+import nxsStakeIcon from 'icons/nxs-staking.svg';
 
-import Connections0 from 'images/Connections0.sprite.svg';
-import Connections4 from 'images/Connections4.sprite.svg';
-import Connections8 from 'images/Connections8.sprite.svg';
-import Connections12 from 'images/Connections12.sprite.svg';
-import Connections14 from 'images/Connections14.sprite.svg';
-import Connections16 from 'images/Connections16.sprite.svg';
-import blockweight0 from 'images/BlockWeight-0.sprite.svg';
-import blockweight1 from 'images/BlockWeight-1.sprite.svg';
-import blockweight2 from 'images/BlockWeight-2.sprite.svg';
-import blockweight3 from 'images/BlockWeight-3.sprite.svg';
-import blockweight4 from 'images/BlockWeight-4.sprite.svg';
-import blockweight5 from 'images/BlockWeight-5.sprite.svg';
-import blockweight6 from 'images/BlockWeight-6.sprite.svg';
-import blockweight7 from 'images/BlockWeight-7.sprite.svg';
-import blockweight8 from 'images/BlockWeight-8.sprite.svg';
-import blockweight9 from 'images/BlockWeight-9.sprite.svg';
-import trust00 from 'images/trust00.sprite.svg';
-import trust10 from 'images/trust00.sprite.svg';
-import trust20 from 'images/trust00.sprite.svg';
-import trust30 from 'images/trust00.sprite.svg';
-import trust40 from 'images/trust00.sprite.svg';
-import trust50 from 'images/trust00.sprite.svg';
-import trust60 from 'images/trust00.sprite.svg';
-import trust70 from 'images/trust00.sprite.svg';
-import trust80 from 'images/trust00.sprite.svg';
-import trust90 from 'images/trust00.sprite.svg';
-import trust100 from 'images/trust00.sprite.svg';
-import nxsblocksIcon from 'images/blockexplorer-invert-white.sprite.svg';
-import interestIcon from 'images/interest.sprite.svg';
-import stakeIcon from 'images/staking-white.sprite.svg';
-import warningIcon from 'images/warning.sprite.svg';
-import questionMarkCircleIcon from 'images/question-mark-circle.sprite.svg';
+import Connections0 from 'icons/Connections0.svg';
+import Connections4 from 'icons/Connections4.svg';
+import Connections8 from 'icons/Connections8.svg';
+import Connections12 from 'icons/Connections12.svg';
+import Connections14 from 'icons/Connections14.svg';
+import Connections16 from 'icons/Connections16.svg';
+import blockweight0 from 'icons/BlockWeight-0.svg';
+import blockweight1 from 'icons/BlockWeight-1.svg';
+import blockweight2 from 'icons/BlockWeight-2.svg';
+import blockweight3 from 'icons/BlockWeight-3.svg';
+import blockweight4 from 'icons/BlockWeight-4.svg';
+import blockweight5 from 'icons/BlockWeight-5.svg';
+import blockweight6 from 'icons/BlockWeight-6.svg';
+import blockweight7 from 'icons/BlockWeight-7.svg';
+import blockweight8 from 'icons/BlockWeight-8.svg';
+import blockweight9 from 'icons/BlockWeight-9.svg';
+import trust00 from 'icons/trust00.svg';
+import trust10 from 'icons/trust00.svg';
+import trust20 from 'icons/trust00.svg';
+import trust30 from 'icons/trust00.svg';
+import trust40 from 'icons/trust00.svg';
+import trust50 from 'icons/trust00.svg';
+import trust60 from 'icons/trust00.svg';
+import trust70 from 'icons/trust00.svg';
+import trust80 from 'icons/trust00.svg';
+import trust90 from 'icons/trust00.svg';
+import trust100 from 'icons/trust00.svg';
+import nxsblocksIcon from 'icons/blockexplorer-invert-white.svg';
+import interestIcon from 'icons/interest.svg';
+import stakeIcon from 'icons/staking-white.svg';
+import warningIcon from 'icons/warning.svg';
+import questionMarkCircleIcon from 'icons/question-mark-circle.svg';
 
 const trustIcons = [
   trust00,
@@ -132,11 +129,6 @@ const mapStateToProps = state => {
     synchronizing: !syncUnknown && synccomplete !== 100,
   };
 };
-const mapDispatchToProps = dispatch => ({
-  BlockDate: stamp => dispatch({ type: TYPE.BLOCK_DATE, payload: stamp }),
-  getDifficulty: () => dispatch(getDifficulty()),
-  updateSettings: updates => dispatch(updateSettings(updates)),
-});
 
 const OverviewPage = styled.div({
   width: '100%',
@@ -322,7 +314,6 @@ class Overview extends Component {
    * @memberof Overview
    */
   componentDidMount() {
-    window.addEventListener('contextmenu', this.setupcontextmenu, false);
     GA.SendScreen('Overview');
   }
   /**
@@ -339,7 +330,6 @@ class Overview extends Component {
    */
   componentWillUnmount() {
     clearTimeout(this.diffFetcher);
-    window.removeEventListener('contextmenu', this.setupcontextmenu);
   }
 
   /**
@@ -386,24 +376,9 @@ class Overview extends Component {
    * @memberof Overview
    */
   fetchDifficulty = async () => {
-    await this.props.getDifficulty();
+    await getDifficulty();
     this.diffFetcher = setTimeout(this.fetchDifficulty, 50000);
   };
-
-  // Class methods
-  /**
-   * Sets up the context menu
-   *
-   * @param {*} e
-   * @memberof Overview
-   */
-  setupcontextmenu(e) {
-    e.preventDefault();
-    const contextmenu = new ContextMenuBuilder().defaultContext;
-
-    let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu);
-    defaultcontextmenu.popup(remote.getCurrentWindow());
-  }
 
   /**
    * Returns the Block Date of the last given block
@@ -757,7 +732,7 @@ class Overview extends Component {
         <Stats left compact={!this.showingGlobe()}>
           <Stat
             onClick={() => {
-              this.props.updateSettings({
+              updateSettings({
                 displayFiatBalance: !settings.displayFiatBalance,
               });
             }}
@@ -800,7 +775,7 @@ class Overview extends Component {
             <StatIcon
               icon={
                 settings.displayFiatBalance
-                  ? CurrencyIcon(fiatCurrency)
+                  ? currencyIcons(fiatCurrency)
                   : logoIcon
               }
             />
@@ -953,7 +928,4 @@ class Overview extends Component {
 }
 
 // Mandatory React-Redux method
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Overview);
+export default connect(mapStateToProps)(Overview);

@@ -1,7 +1,7 @@
 // External
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import memoize from 'memoize-one';
+import memoize from 'utils/memoize';
 import styled from '@emotion/styled';
 
 // Internal
@@ -9,9 +9,9 @@ import AutoSuggest from 'components/AutoSuggest';
 import FormField from 'components/FormField';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
-import { openModal } from 'actions/overlays';
+import { openModal } from 'lib/ui';
 import AddEditContactModal from 'components/AddEditContactModal';
-import plusIcon from 'images/plus.sprite.svg';
+import plusIcon from 'icons/plus.svg';
 import { getAddressNameMap, getRecipientSuggestions } from './selectors';
 
 const RecipientName = styled.span(({ theme }) => ({
@@ -43,18 +43,13 @@ const mapStateToProps = ({ addressBook }) => ({
   addressNameMap: getAddressNameMap(addressBook),
 });
 
-const actionCreators = { openModal };
-
 /**
  * The Recipient Field in the Send Page
  *
  * @class RecipientField
  * @extends {Component}
  */
-@connect(
-  mapStateToProps,
-  actionCreators
-)
+@connect(mapStateToProps)
 class RecipientField extends Component {
   /**
    *Handle Select Address
@@ -71,7 +66,7 @@ class RecipientField extends Component {
    * @memberof RecipientField
    */
   createContact = () => {
-    this.props.openModal(AddEditContactModal);
+    openModal(AddEditContactModal);
   };
 
   /**

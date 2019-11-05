@@ -5,7 +5,7 @@ import Button from 'components/Button';
 import languages from 'data/languages';
 import { timing } from 'styles';
 import * as color from 'utils/color';
-import { UpdateSettings } from 'lib/settings';
+import { updateSettingsFile } from 'lib/settings/universal';
 
 import FullScreen from './FullScreen';
 
@@ -50,7 +50,7 @@ class SelectLanguage extends React.Component {
   };
 
   proceed = () => {
-    UpdateSettings({ locale: this.state.selection });
+    updateSettingsFile({ locale: this.state.selection });
     location.reload();
   };
 

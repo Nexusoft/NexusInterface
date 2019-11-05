@@ -15,9 +15,9 @@ import {
   openErrorDialog,
   openSuccessDialog,
   removeModal,
-} from 'actions/overlays';
-import { loadMyAccounts } from 'actions/account';
-import { rpcErrorHandler } from 'utils/form';
+} from 'lib/ui';
+import { loadAccounts } from 'lib/user';
+import { errorHandler } from 'utils/form';
 import {
   getAccountOptions,
   getRegisteredFieldNames,
@@ -70,24 +70,13 @@ const mapStateToProps = state => {
   };
 };
 
-const acctionCreators = {
-  loadMyAccounts,
-  openConfirmDialog,
-  openErrorDialog,
-  openSuccessDialog,
-  removeModal,
-};
-
 /**
  * Internal JXS for the Move Between Accounts Modal
  *
  * @class MoveBetweenAccountsForm
  * @extends {Component}
  */
-@connect(
-  mapStateToProps,
-  acctionCreators
-)
+@connect(mapStateToProps)
 @reduxForm({
   form: formName,
   destroyOnUnmount: false,
@@ -141,12 +130,12 @@ const acctionCreators = {
   onSubmitSuccess: (result, dispatch, props) => {
     props.closeModal();
     props.reset();
-    props.loadMyAccounts();
-    props.openSuccessDialog({
+    loadAccounts();
+    openSuccessDialog({
       message: __('NXS moved successfully'),
     });
   },
-  onSubmitFail: rpcErrorHandler(__('Error moving NXS')),
+  onSubmitFail: errorHandler(__('Error moving NXS')),
 })
 class MoveBetweenAccountsForm extends Component {
   /**
@@ -169,7 +158,7 @@ class MoveBetweenAccountsForm extends Component {
     if (locked) {
       const {
         payload: { id: modalId },
-      } = this.props.openErrorDialog({
+      } = openErrorDialog({
         message: __('You are not logged in'),
         note: (
           <>
@@ -181,7 +170,7 @@ class MoveBetweenAccountsForm extends Component {
             <Link
               to="/Settings/Security"
               onClick={() => {
-                this.props.removeModal(modalId);
+                removeModal(modalId);
                 this.props.closeModal();
               }}
             >
@@ -193,7 +182,7 @@ class MoveBetweenAccountsForm extends Component {
       return;
     }
 
-    this.props.openConfirmDialog({
+    openConfirmDialog({
       question: __('Move NXS'),
       callbackYes: handleSubmit,
     });
