@@ -31,8 +31,6 @@ import BootstrapModal from 'components/BootstrapModal';
 
 const fileLocation = path.join(walletDataDir, 'recent.tar.gz');
 const extractDest = path.join(coreDataDir, 'recent');
-const recentDbUrlLegacy =
-  'https://nexusearth.com/bootstrap/LLD-Database/recent.tar.gz';
 const recentDbUrlTritium =
   'https://nexusearth.com/bootstrap/tritium/bootstrap.tar.gz'; // Tritium Bootstrap URL
 
@@ -64,10 +62,7 @@ async function startBootstrap() {
       core: { info },
       settings: { backupDirectory },
     } = store.getState();
-    const recentDbUrl =
-      info.version.includes('0.3') || parseFloat(info.version) >= 3
-        ? recentDbUrlTritium
-        : recentDbUrlLegacy;
+    const recentDbUrl = recentDbUrlTritium;
 
     aborting = false;
     setStatus('backing_up');
