@@ -1,3 +1,19 @@
+# 2.0.1 (2019.11.07)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.0.1)
+
+#### Additions
+
+- Nexus Core 4.0.1
+
+#### Adjustments
+
+- Removed Alpha Testnet and replaced it with normal Testnet.
+
+#### Fixes
+
+- Minimize on close now works as intented
+
 # 2.0.0 (2019.11.05)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.0.0)
