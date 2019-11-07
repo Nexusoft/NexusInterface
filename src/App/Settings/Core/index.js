@@ -1,7 +1,7 @@
 // External
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { reduxForm, Field } from 'redux-form';
+import { reduxForm, Field, formValueSelector } from 'redux-form';
 // import cpy from 'cpy';
 import styled from '@emotion/styled';
 
@@ -94,7 +94,13 @@ const mapStateToProps = state => {
       settings: { restartCoreOnSave },
     },
   } = state;
+  const formTestnetIteration = formValueSelector('coreSettings')(
+    state,
+    'testnetIteration'
+  );
+  const settingTestnetIteration = settings.testnetIteration;
   return {
+    showTestnetOff: formTestnetIteration || settingTestnetIteration,
     coreConnected: isCoreConnected(state),
     manualDaemon: settings.manualDaemon,
     initialValues: getInitialValues(settings),
@@ -264,30 +270,23 @@ class SettingsCore extends Component {
       restartCore();
     }
   };
-  
-    clearPeerConnections = async () => {
+
+  clearPeerConnections = async () => {
     const confirmed = await confirm({
       question: __('Clear peer connections') + '?',
       note:
         'Nexus Core will be restarted. After that, all stored peer connections will be reset.',
     });
     if (confirmed) {
-      this.props.updateSettings({ clearPeers: true });
+      updateSettings({ clearPeers: true });
       this.props.restartCore();
     }
   };
 
-  // /**
-  //  * Generates the number of ip witelist feilds there are
-  //  *
-  //  * @memberof SettingsCore
-  //  */
-  // ipWhiteListFeild=()=>{
-  //   <TextField
-  //               value={settings.verboseLevel}
-  //               onChange={this.updateHandlers('verboseLevel')}
-  //             />
-  // }
+  turnOffTestNet = e => {
+    this.props.change('testnetIteration', null);
+    updateSettings({ testnetIteration: null });
+  };
 
   /**
    * Component's Renderable JSX
@@ -303,6 +302,7 @@ class SettingsCore extends Component {
       dirty,
       submitting,
       restartCoreOnSave,
+      showTestnetOff,
     } = this.props;
 
     return (
@@ -396,7 +396,7 @@ class SettingsCore extends Component {
                   {__('Clear')}
                 </Button>
               </SettingsField>
-              
+
               <SettingsField
                 connectLabel
                 label={__('Verbose level')}
@@ -414,15 +414,27 @@ class SettingsCore extends Component {
 
               <SettingsField
                 connectLabel
-                label={__('Test Net')}
-                subLabel={__('Alpha Test Net to connect to.')}
+                label={__('Testnet Iteration')}
+                subLabel={
+                  <>
+                    {__('The iteration of Testnet to connect to.')}{' '}
+                    {showTestnetOff && (
+                      <Button
+                        style={{ height: '25%', width: '25%' }}
+                        onClick={this.turnOffTestNet}
+                      >
+                        {__('Turn Off')}
+                      </Button>
+                    )}
+                  </>
+                }
               >
                 <Field
-                  name="alphaTestNet"
+                  name="testnetIteration"
                   component={TextField.RF}
                   type="number"
-                  min={17}
-                  max={9999999}
+                  min={1}
+                  max={99999999}
                   style={{ maxWidth: 50 }}
                 />
               </SettingsField>

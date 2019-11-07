@@ -172,6 +172,11 @@ class Core {
       `-verbose=${conf.verbose}`,
     ];
 
+    //Check for Testnet
+    if (settings.testnetIteration) {
+      params.push('-testnet=' + settings.testnetIteration);
+    }
+
     //After core forksblocks clear out that field.
     if (settings.forkBlocks) {
       params.push('-forkblocks=' + settings.forkBlocks);

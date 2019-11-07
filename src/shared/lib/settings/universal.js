@@ -46,6 +46,7 @@ export const defaultSettings = {
   verboseLevel: 0,
   avatarMode: true,
   ipMineWhitelist: '',
+  testnetIteration: 0,
   manualDaemon: false,
   manualDaemonUser: 'rpcserver',
   manualDaemonPassword: defaultPassword,
