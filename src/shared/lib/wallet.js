@@ -60,7 +60,8 @@ export const history = createHashHistory();
 export const walletEvents = new EventEmitter();
 
 walletEvents.once('pre-render', function() {
-  remote.getCurrentWindow().on('close', async e => {
+  const mainWindow = remote.getCurrentWindow();
+  mainWindow.on('close', async e => {
     const {
       settings: { minimizeOnClose },
     } = store.getState();

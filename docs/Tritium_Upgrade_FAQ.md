@@ -20,6 +20,14 @@ Nothing, 2.0.0 runs on both legacy (wallet.dat) and Tritium (signature chains). 
 
 You should always backup your wallet.dat before making a change to the interface. However after you have migrated all of your NXS to a signature chain account, your wallet.dat is no longer nessesary.
 
+#### I am in sync but my balance is still 0
+
+We have made wholesale changes to the way everything works. If you get this issue, please go terminal and enter these commands in this order (It may that a few seconds for these commands to finish). `checkwallet`, `repairwallet` , than `rescan` . Any other issues please contact us in our slack.
+
+#### I am staking but it says `Waiting for average age of balance to exceede 72 hours...`
+
+This is a display issue, this is being resolved in the next release. You are still staking and you will still gain trust.
+
 #### Can I send NXS to a legacy address?
 
 Yes you can send NXS to and from Legacy and Tritium address.
