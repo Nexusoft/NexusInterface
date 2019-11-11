@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import chalk from 'chalk';
-import { extractFromFiles } from 'i18n-extract';
+import extractFromFiles from './i18nExtract';
 
 const transDir = path.join(__dirname, '../../assets/translations');
 
@@ -34,14 +34,9 @@ Object.values(oldTrans).forEach(translations =>
 
 const keys = extractFromFiles('src/**/*.js', {
   marker: '__',
-  babelOptions: {
-    ast: true,
-    plugins: [
-      '@babel/plugin-syntax-jsx',
-      ['@babel/plugin-syntax-class-properties', { loose: true }],
-      ['@babel/plugin-syntax-decorators', { legacy: true }],
-    ],
-  },
+});
+keys.forEach(key => {
+  console.log(key);
 });
 const strings = [...new Set(keys.map(e => e.key))].sort();
 
