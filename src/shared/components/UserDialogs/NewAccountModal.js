@@ -1,10 +1,12 @@
 import React from 'react';
 import { reduxForm, Field } from 'redux-form';
+import { connect } from 'react-redux';
 
 import Modal from 'components/Modal';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
 import FormField from 'components/FormField';
+import SelectField from 'components/Select';
 import confirm from 'utils/promisified/confirm';
 import confirmPin from 'utils/promisified/confirmPin';
 import { apiPost } from 'lib/tritiumApi';
@@ -13,15 +15,30 @@ import { loadAccounts } from 'lib/user';
 import { removeModal, showNotification } from 'lib/ui';
 import { namedAccount } from 'lib/fees';
 
+const mapStateToProps = state => {
+  return {
+    userTokens: state.core.tokens,
+  };
+};
+@connect(
+  mapStateToProps,
+  null,
+  (stateProps, dispatchProps, ownProps) => ({
+    ...stateProps,
+    ...dispatchProps,
+    ...ownProps,
+    initialValues: {
+      name: '',
+      token: ownProps.tokenName,
+    },
+  })
+)
 @reduxForm({
   form: 'new_account',
   destroyOnUnmount: true,
-  initialValues: {
-    name: '',
-  },
-  validate: ({ name }) => {
+  validate: ({ name, token }) => {
     const errors = {};
-
+    console.log(token);
     return errors;
   },
   onSubmit: async ({ name }, dispatch, props) => {
@@ -66,6 +83,15 @@ import { namedAccount } from 'lib/fees';
   onSubmitFail: errorHandler(__('Error creating account')),
 })
 export default class NewAccountModal extends React.Component {
+  returnTokenSelect = event => {
+    let values = [];
+    values.push({ value: { Name: 'NXS', address: '0' }, display: 'NXS' });
+    values.forEach(e => {
+      values.push({ value: e.name || e.address, display: e.name || e.address });
+    });
+    return values;
+  };
+
   render() {
     const { handleSubmit, submitting } = this.props;
     return (
@@ -88,6 +114,15 @@ export default class NewAccountModal extends React.Component {
                 name="name"
                 component={TextField.RF}
                 placeholder={__("New account's name")}
+              />
+            </FormField>
+
+            <FormField connectLabel label={'asdasdasd'}>
+              <Field
+                name="token"
+                component={SelectField.RF}
+                placeholder={__('token')}
+                options={this.returnTokenSelect()}
               />
             </FormField>
 
