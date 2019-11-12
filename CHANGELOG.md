@@ -1,3 +1,20 @@
+# 2.0.3 (2019.11.12)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.0.3)
+
+#### Additions
+
+- Nexus Core 4.0.3
+
+#### Adjustments
+
+- none
+
+#### Fixes
+
+- Fixed Migrating Stake
+- Fixed bug with clear peers
+
 # 2.0.2 (2019.11.10)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.0.2)
