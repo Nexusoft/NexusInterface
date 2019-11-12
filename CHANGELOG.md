@@ -1,3 +1,19 @@
+# 2.0.2 (2019.11.10)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.0.2)
+
+#### Additions
+
+- Nexus Core 4.0.2
+
+#### Adjustments
+
+- Updated Languages
+
+#### Fixes
+
+- none
+
 # 2.0.1 (2019.11.07)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.0.1)
