@@ -1,10 +1,10 @@
 {
   "name": "nexus_wallet",
   "productName": "Nexus Wallet",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "moduleSpecVersion": "0.3.0",
   "supportedModuleSpecVersion": "0.1.0",
-  "buildDate": "November 7th 2019",
+  "buildDate": "November 10th 2019",
   "description": "User interface for the Nexus blockchain and ecossystem.",
   "scripts": {
     "prebuild-dev": "concurrently \"npm run build-main-dev\" \"npm run build-preload-dev\" \"node -r @babel/register ./internals/scripts/checkDll.js\" ",
@@ -59,6 +59,7 @@
       "owner": "Nexusoft",
       "repo": "NexusInterface"
     },
+    "afterSign": "internals/aftersign.js",
     "mac": {
       "target": [
         "dmg",
@@ -68,7 +69,10 @@
       "extraResources": [
         "./assets/darwin/cores/**/*"
       ],
-      "identity": null
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "entitlements": "internals/entitlements.mac.plist",
+      "entitlementsInherit": "internals/entitlements.mac.plist"
     },
     "dmg": {
       "artifactName": "nexus_wallet-MacOSX-${version}.${ext}",
@@ -223,6 +227,7 @@
     "d3-geo": "^1.11.6",
     "dompurify": "^2.0.7",
     "electron-log": "^3.0.8",
+    "electron-notarize": "^0.2.0",
     "electron-updater": "^4.1.2",
     "emotion-theming": "^10.0.19",
     "extract-zip": "^1.6.7",
