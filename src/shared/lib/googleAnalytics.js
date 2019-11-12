@@ -10,9 +10,10 @@ const GA = {};
 GA.visitor = null;
 GA.active = false;
 if (
-  settings.sendUsageData == null ||
-  settings.sendUsageData == undefined ||
-  Boolean(settings.sendUsageData) == true
+  (settings.sendUsageData == null ||
+    settings.sendUsageData == undefined ||
+    Boolean(settings.sendUsageData) == true) &&
+  process.env.NODE_ENV !== 'development'
 ) {
   GA.visitor = ua('UA-117808839-1');
   GA.active = true;
