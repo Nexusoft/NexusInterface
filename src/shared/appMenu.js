@@ -340,7 +340,12 @@ function buildDarwinTemplate() {
 
   const subMenuFile = {
     label: __('File'),
-    submenu: [backupWallet, viewBackups, separator, downloadRecent],
+    submenu: [
+      legacyMode ? backupWallet : null,
+      legacyMode ? viewBackups : null,
+      separator,
+      downloadRecent,
+    ],
   };
   const subMenuEdit = {
     label: __('Edit'),
@@ -408,8 +413,8 @@ function buildDefaultTemplate() {
   const subMenuFile = {
     label: __('File'),
     submenu: [
-      backupWallet,
-      viewBackups,
+      legacyMode ? backupWallet : null,
+      legacyMode ? viewBackups : null,
       separator,
       downloadRecent,
       separator,
