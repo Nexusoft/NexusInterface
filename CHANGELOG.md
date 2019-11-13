@@ -1,3 +1,53 @@
+# 2.0.5 (2019.11.12)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.0.5)
+
+#### Additions
+
+- Nexus Core 4.0.5
+
+#### Adjustments
+
+- none
+
+#### Fixes
+
+- none
+
+# 2.0.4 (2019.11.12)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.0.4)
+
+#### Additions
+
+- Nexus Core 4.0.4
+- Added Auto Updates for Mac
+
+#### Adjustments
+
+- Removed `Backup Wallet` from file menu.
+
+#### Fixes
+
+- none
+
+# 2.0.3 (2019.11.12)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.0.3)
+
+#### Additions
+
+- Nexus Core 4.0.3
+
+#### Adjustments
+
+- none
+
+#### Fixes
+
+- Fixed Migrating Stake
+- Fixed bug with clear peers
+
 # 2.0.2 (2019.11.10)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.0.2)

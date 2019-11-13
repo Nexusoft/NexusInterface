@@ -42,7 +42,7 @@ const devPlugins = [];
 const prodPlugins = ['babel-plugin-dev-expression'];
 const development = process.env.NODE_ENV === 'development';
 
-const rendererBabelConfig = hot => {
+export const rendererBabelConfig = hot => {
   const config = {
     plugins: [
       ['emotion', { sourceMap: development }],
