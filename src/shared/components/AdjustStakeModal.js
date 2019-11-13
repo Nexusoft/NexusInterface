@@ -14,6 +14,7 @@ import { errorHandler } from 'utils/form';
 import { formatNumber } from 'lib/intl';
 import { removeModal, showNotification } from 'lib/ui';
 import Link from 'components/Link';
+import GA from 'lib/googleAnalytics';
 
 const LimitNumber = styled(Link)(
   {
@@ -99,6 +100,12 @@ const Note = styled.div(({ theme }) => ({
   },
   onSubmitSuccess: async (result, dispatch, props) => {
     if (!result) return; // Submission was cancelled
+
+    if (stake < props.currentStake) {
+      GA.SendEvent('Users', 'ReduceStake', 'Staking', 1);
+    } else {
+      GA.SendEvent('Users', 'IncreaseStake', 'Staking', 1);
+    }
 
     removeModal(props.modalId);
     showNotification(__('Stake amount has been updated'), 'success');

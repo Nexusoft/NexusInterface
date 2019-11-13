@@ -14,6 +14,7 @@ import { errorHandler } from 'utils/form';
 import { loadAccounts } from 'lib/user';
 import { removeModal, showNotification } from 'lib/ui';
 import { namedAccount } from 'lib/fees';
+import GA from 'lib/googleAnalytics';
 
 const mapStateToProps = state => {
   return {
@@ -70,7 +71,7 @@ const mapStateToProps = state => {
   },
   onSubmitSuccess: (result, dispatch, props) => {
     if (!result) return; // Submission was cancelled
-
+    GA.SendEvent('Users', 'NewAccount', 'Accounts', 1);
     loadAccounts();
     removeModal(props.modalId);
     showNotification(
