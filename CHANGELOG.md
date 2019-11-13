@@ -1,3 +1,20 @@
+# 2.0.4 (2019.11.12)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.0.4)
+
+#### Additions
+
+- Nexus Core 4.0.4
+- Added Auto Updates for Mac
+
+#### Adjustments
+
+- Removed `Backup Wallet` from file menu.
+
+#### Fixes
+
+- none
+
 # 2.0.3 (2019.11.12)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.0.3)
