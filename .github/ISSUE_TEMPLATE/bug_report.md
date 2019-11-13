@@ -26,7 +26,7 @@ If applicable, add screenshots to help explain your problem.
 **Desktop (please complete the following information):**
 
 - OS: [e.g. iOS]
-- Wallet Version [e.g. 2.0.2]
+- Wallet Version [e.g. 2.0.3]
 - Daemon Version [e.g. 3.0.5]
 
 **Additional context**
