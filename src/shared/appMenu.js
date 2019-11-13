@@ -377,9 +377,8 @@ function buildDarwinTemplate() {
       walletGuideLink,
       openCoreDataDir,
       openInterfaceDataDir,
-      // separator,
-      // Disable checking for updates on Mac until we have the developer key
-      // updaterMenuItem(),
+      separator,
+      updaterMenuItem(),
     ],
   };
 

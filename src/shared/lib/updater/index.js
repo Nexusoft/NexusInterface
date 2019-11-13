@@ -52,9 +52,9 @@ export function quitAndInstall() {
  * @returns
  */
 export async function startAutoUpdate() {
-  const checkGithubManually =
-    process.platform === 'darwin' ||
-    !fs.existsSync(path.join(assetsParentDir, 'app-update.yml'));
+  const checkGithubManually = !fs.existsSync(
+    path.join(assetsParentDir, 'app-update.yml')
+  );
 
   if (checkGithubManually) {
     clearTimeout(timerId);

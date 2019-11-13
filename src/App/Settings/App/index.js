@@ -236,20 +236,12 @@ class SettingsApp extends Component {
               {__(
                 'Automatically check for new versions and notify if a new version is available.'
               )}
-              {process.platform === 'darwin' && (
-                <div className="error">
-                  {__(
-                    'Auto Update is not yet available on Mac, please update the wallet manually for the time being'
-                  )}
-                </div>
-              )}
             </div>
           }
         >
           <Switch
-            checked={settings.autoUpdate && process.platform !== 'darwin'}
+            checked={settings.autoUpdate}
             onChange={this.handleAutoUpdateChange}
-            disabled={process.platform === 'darwin'}
           />
         </SettingsField>
 

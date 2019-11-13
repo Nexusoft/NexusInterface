@@ -65,6 +65,7 @@
         "dmg",
         "zip"
       ],
+      "artifactName": "nexus_wallet-MacOSX-${version}.${ext}",
       "category": "public.app-category.utilities",
       "extraResources": [
         "./assets/darwin/cores/**/*"
