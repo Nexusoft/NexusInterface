@@ -338,11 +338,12 @@ function buildDarwinTemplate() {
     ].filter(e => e),
   };
 
+  //TODO: darwin does not like null here , so I replaced it with separator which will colapse into nothing. But rework this for next build.
   const subMenuFile = {
     label: __('File'),
     submenu: [
-      legacyMode ? backupWallet : null,
-      legacyMode ? viewBackups : null,
+      legacyMode ? backupWallet : separator,
+      legacyMode ? viewBackups : separator,
       separator,
       downloadRecent,
     ],
