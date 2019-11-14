@@ -18,6 +18,7 @@ if (
   GA.visitor = ua('UA-117808839-1');
   GA.active = true;
   GA.visitor.set('ul', settings.locale || 'en');
+  GA.visitor.set('aiid', process.platform);
 }
 
 // Send Screen
@@ -59,6 +60,7 @@ GA.EnableAnalytics = function() {
   GA.visitor = ua('UA-117808839-1');
   GA.active = true;
   GA.visitor.set('ul', settings.locale || 'en');
+  GA.visitor.set('aiid', process.platform);
 };
 
 export default GA;
