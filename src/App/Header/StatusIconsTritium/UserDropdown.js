@@ -93,6 +93,9 @@ class LoggedInDropdown extends React.Component {
           <MenuItem>{__('Tokens')}</MenuItem>
         </Link>
         <Separator />
+        <Link to="/User/Tokens" onClick={closeDropdown}>
+          <MenuItem>{__('Set recovery phrase')}</MenuItem>
+        </Link>
         {!!trustIsNew && (
           <>
             <MenuItem
