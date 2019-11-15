@@ -4,7 +4,7 @@
 
 #### Additions
 
-- Nexus Core 4.0.5
+- Nexus Core 4.0.6
 - Ability to select the token when creating a account
 - Added Migrate transactions to the transactions history
 
