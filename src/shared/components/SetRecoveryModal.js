@@ -7,6 +7,7 @@ import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import Button from 'components/Button';
 import Select from 'components/Select';
+import { errorHandler, numericOnly } from 'utils/form';
 
 const options = [
   {
@@ -81,6 +82,7 @@ export default class SetRecoveryModal extends React.Component {
               type="password"
               name="pin"
               component={TextField.RF}
+              normalize={numericOnly}
               placeholder={__('Your current PIN number')}
             />
           </FormField>
