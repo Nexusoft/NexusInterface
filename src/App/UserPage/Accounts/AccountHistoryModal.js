@@ -181,7 +181,7 @@ class AccountHistoryModal extends React.Component {
             }
           });
         }
-        return contracts;
+        return contracts.sort((c1, c2) => c1.timestamp - c2.timestamp);
       }, []);
       this.setState({ contracts });
     } catch (err) {
