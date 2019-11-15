@@ -1,5 +1,5 @@
 import React from 'react';
-import { reduxForm, Field } from 'redux-form';
+import { reduxForm, Field, change, formValueSelector } from 'redux-form';
 import { connect } from 'react-redux';
 
 import Modal from 'components/Modal';
@@ -30,7 +30,7 @@ const mapStateToProps = state => {
     ...ownProps,
     initialValues: {
       name: '',
-      token: ownProps.tokenName,
+      token: ownProps.tokenAddress,
     },
   })
 )
@@ -39,10 +39,9 @@ const mapStateToProps = state => {
   destroyOnUnmount: true,
   validate: ({ name, token }) => {
     const errors = {};
-    console.log(token);
     return errors;
   },
-  onSubmit: async ({ name }, dispatch, props) => {
+  onSubmit: async ({ name, token }, dispatch, props) => {
     if (!name) {
       const confirmed = await confirm({
         question: __('Create a account without a name?'),
@@ -60,11 +59,11 @@ const mapStateToProps = state => {
       const params = { pin };
       if (name) params.name = name;
 
-      if (props.tokenName === 'NSX') {
+      if (token === '0') {
+        //run NXS
         return await apiPost('finance/create/account', params);
       } else {
-        if (props.tokenName) params.token_name = props.tokenName;
-        if (props.tokenAddress) params.token = props.tokenAddress;
+        if (props.tokenAddress) params.token = token;
         return await apiPost('tokens/create/account', params);
       }
     }
@@ -84,11 +83,19 @@ const mapStateToProps = state => {
   onSubmitFail: errorHandler(__('Error creating account')),
 })
 export default class NewAccountModal extends React.Component {
+  componentDidMount() {}
+
   returnTokenSelect = event => {
     let values = [];
-    values.push({ value: { Name: 'NXS', address: '0' }, display: 'NXS' });
-    values.forEach(e => {
-      values.push({ value: e.name || e.address, display: e.name || e.address });
+    values.push({
+      value: '0',
+      display: 'NXS',
+    });
+    this.props.userTokens.forEach(e => {
+      values.push({
+        value: e.address,
+        display: e.name || e.address,
+      });
     });
     return values;
   };
@@ -100,7 +107,7 @@ export default class NewAccountModal extends React.Component {
         assignClose={closeModal => {
           this.closeModal = closeModal;
         }}
-        style={{ maxWidth: 400 }}
+        style={{ maxWidth: 700 }}
       >
         <Modal.Header>{__('New account')}</Modal.Header>
         <Modal.Body>
@@ -118,11 +125,10 @@ export default class NewAccountModal extends React.Component {
               />
             </FormField>
 
-            <FormField connectLabel label={'asdasdasd'}>
+            <FormField connectLabel label={__('Token')}>
               <Field
                 name="token"
                 component={SelectField.RF}
-                placeholder={__('token')}
                 options={this.returnTokenSelect()}
               />
             </FormField>
