@@ -115,19 +115,21 @@ export default class Globe extends Component {
       this.addSelfPoint();
       this.pointRegister();
 
-      this.renderer.context.canvas.addEventListener(
+      const context = this.renderer.getContext();
+
+      context.canvas.addEventListener(
         'webglcontextlost',
         this.contextLostHandler,
         false
       );
 
-      this.renderer.context.canvas.addEventListener(
+      context.canvas.addEventListener(
         'webglcontextrestored',
         this.contextRestoredHandler,
         false
       );
 
-      this.renderer.context.canvas.addEventListener(
+      context.canvas.addEventListener(
         'mouseout',
         () => {
           this.controls.enabled = false;
@@ -135,7 +137,7 @@ export default class Globe extends Component {
         false
       );
 
-      this.renderer.context.canvas.addEventListener(
+      context.canvas.addEventListener(
         'mouseover',
         () => {
           this.controls.enabled = true;

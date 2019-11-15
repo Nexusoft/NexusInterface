@@ -90,12 +90,7 @@ const TokenDetailsModal = ({ token }) => (
             <Button
               wide
               onClick={() =>
-                openModal(
-                  NewAccountModal,
-                  token.name
-                    ? { tokenName: token.name }
-                    : { tokenAddress: token.address }
-                )
+                openModal(NewAccountModal, { tokenAddress: token.address })
               }
             >
               <Icon icon={plusIcon} className="space-right" />
