@@ -4,6 +4,7 @@
 // Script that holds on to a visitor and is referenced when a visitor makes a action
 import ua from 'universal-analytics';
 import settings from 'data/initialSettings';
+import os from 'os';
 
 const GA = {};
 
@@ -19,6 +20,13 @@ if (
   GA.active = true;
   GA.visitor.set('ul', settings.locale || 'en');
   GA.visitor.set('aiid', process.platform);
+  try {
+    const osVer = os.platform() + ' ' + os.release();
+    GA.visitor.set('cd1', osVer);
+    GA.visitor.set('cd2', os.cpus()[0].model);
+  } catch (e) {
+    console.error(e);
+  }
 }
 
 // Send Screen
@@ -61,6 +69,13 @@ GA.EnableAnalytics = function() {
   GA.active = true;
   GA.visitor.set('ul', settings.locale || 'en');
   GA.visitor.set('aiid', process.platform);
+  try {
+    const osVer = os.platform() + ' ' + os.release();
+    GA.visitor.set('cd1', osVer);
+    GA.visitor.set('cd2', os.cpus()[0].model);
+  } catch (e) {
+    console.error(e);
+  }
 };
 
 export default GA;
