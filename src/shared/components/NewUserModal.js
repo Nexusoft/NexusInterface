@@ -60,18 +60,14 @@ const Note = styled.div({
 
     if (!username) {
       errors.username = __('Username is required');
-    } else {
-      if (username.length < 3) {
-        errors.username = __('Username must be at least 3 characters');
-      }
+    } else if (username.length < 3) {
+      errors.username = __('Username must be at least 3 characters');
     }
 
     if (!password) {
       errors.password = __('Password is required');
-    } else {
-      if (password.length < 8) {
-        errors.password = __('Password must be at least 8 characters');
-      }
+    } else if (password.length < 8) {
+      errors.password = __('Password must be at least 8 characters');
     }
 
     if (passwordConfirm !== password) {
@@ -80,10 +76,8 @@ const Note = styled.div({
 
     if (!pin) {
       errors.pin = __('PIN is required');
-    } else {
-      if (pin.length < 4) {
-        errors.pin = __('PIN must be at least 4 characters');
-      }
+    } else if (pin.length < 4) {
+      errors.pin = __('PIN must be at least 4 characters');
     }
 
     if (pinConfirm !== pin) {

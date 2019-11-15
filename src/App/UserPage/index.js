@@ -10,6 +10,7 @@ import Panel from 'components/Panel';
 import Icon from 'components/Icon';
 import LoginModal from 'components/LoginModal';
 import Tooltip from 'components/Tooltip';
+import SetRecoveryModal from 'components/SetRecoveryModal';
 import { openModal } from 'lib/ui';
 import AddEditContactModal from 'components/AddEditContactModal';
 import { isCoreConnected, isLoggedIn } from 'selectors';
@@ -83,7 +84,7 @@ class UserPage extends Component {
         bodyScrollable={false}
         controls={
           <Tooltip.Trigger tooltip={__('Set recovery phrase')}>
-            <Button skin="plain">
+            <Button skin="plain" onClick={() => openModal(SetRecoveryModal)}>
               <Icon icon={recoveryIcon} style={{ width: 20, height: 20 }} />
             </Button>
           </Tooltip.Trigger>

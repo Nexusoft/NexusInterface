@@ -7,6 +7,7 @@ import { arrowStyles } from 'components/Arrow';
 import LoginModal from 'components/LoginModal';
 import NewUserModal from 'components/NewUserModal';
 import MigrateStakeModal from 'components/MigrateStakeModal';
+import SetRecoveryModal from 'components/SetRecoveryModal';
 import { isLoggedIn } from 'selectors';
 import { openModal, showNotification } from 'lib/ui';
 import { timing, animations, consts } from 'styles';
@@ -93,9 +94,14 @@ class LoggedInDropdown extends React.Component {
           <MenuItem>{__('Tokens')}</MenuItem>
         </Link>
         <Separator />
-        <Link to="/User/Tokens" onClick={closeDropdown}>
-          <MenuItem>{__('Set recovery phrase')}</MenuItem>
-        </Link>
+        <MenuItem
+          onClick={() => {
+            openModal(SetRecoveryModal);
+            closeDropdown();
+          }}
+        >
+          {__('Set recovery phrase')}
+        </MenuItem>
         {!!trustIsNew && (
           <>
             <MenuItem
