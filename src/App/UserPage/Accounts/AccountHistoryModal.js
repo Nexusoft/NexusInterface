@@ -21,6 +21,7 @@ const displayedOperations = [
   'GENESIS',
   'TRUST',
   'COINBASE',
+  'MIGRATE',
 ];
 
 const timeFormatOptions = {
@@ -53,7 +54,7 @@ const tableColumns = [
     Header: __('From'),
     Cell: cell => {
       const {
-        original: { from_name, from, OP },
+        original: { from_name, from, trustkey, OP },
       } = cell;
       const content = from_name || from || '';
       switch (OP) {
@@ -67,6 +68,8 @@ const tableColumns = [
           if (cell.original.for === 'COINBASE') {
             return <i className="dim">{__('mined')}</i>;
           }
+        case 'MIGRATE':
+          return trustkey;
         default:
           return content;
       }
@@ -77,7 +80,7 @@ const tableColumns = [
     Header: __('To'),
     Cell: cell => {
       const {
-        original: { to_name, to, OP, currentAccount },
+        original: { to_name, to, account_name, account, OP, currentAccount },
       } = cell;
       const content = to_name || to || '';
       switch (OP) {
@@ -89,6 +92,8 @@ const tableColumns = [
         case 'TRUST':
         case 'GENESIS':
           return <span className="dim">{currentAccount}</span>;
+        case 'MIGRATE':
+          return <span className="dim">{account_name || account || ''}</span>;
         default:
           return content;
       }
@@ -104,7 +109,8 @@ const tableColumns = [
             OP === 'CREDIT' ||
             OP === 'GENESIS' ||
             OP === 'TRUST' ||
-            OP === 'COINBASE'
+            OP === 'COINBASE' ||
+            OP === 'MIGRATE'
           }
         >
           {formatNumber(amount, 6)}
