@@ -1,10 +1,12 @@
 import React from 'react';
-import { reduxForm, Field } from 'redux-form';
+import { reduxForm, Field, change, formValueSelector } from 'redux-form';
+import { connect } from 'react-redux';
 
 import Modal from 'components/Modal';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
 import FormField from 'components/FormField';
+import SelectField from 'components/Select';
 import confirm from 'utils/promisified/confirm';
 import confirmPin from 'utils/promisified/confirmPin';
 import { apiPost } from 'lib/tritiumApi';
@@ -12,19 +14,34 @@ import { errorHandler } from 'utils/form';
 import { loadAccounts } from 'lib/user';
 import { removeModal, showNotification } from 'lib/ui';
 import { namedAccount } from 'lib/fees';
+import GA from 'lib/googleAnalytics';
 
+const mapStateToProps = state => {
+  return {
+    userTokens: state.core.tokens,
+  };
+};
+@connect(
+  mapStateToProps,
+  null,
+  (stateProps, dispatchProps, ownProps) => ({
+    ...stateProps,
+    ...dispatchProps,
+    ...ownProps,
+    initialValues: {
+      name: '',
+      token: ownProps.tokenAddress,
+    },
+  })
+)
 @reduxForm({
   form: 'new_account',
   destroyOnUnmount: true,
-  initialValues: {
-    name: '',
-  },
-  validate: ({ name }) => {
+  validate: ({ name, token }) => {
     const errors = {};
-
     return errors;
   },
-  onSubmit: async ({ name }, dispatch, props) => {
+  onSubmit: async ({ name, token }, dispatch, props) => {
     if (!name) {
       const confirmed = await confirm({
         question: __('Create a account without a name?'),
@@ -42,18 +59,18 @@ import { namedAccount } from 'lib/fees';
       const params = { pin };
       if (name) params.name = name;
 
-      if (props.tokenName === 'NSX') {
+      if (token === '0') {
+        //run NXS
         return await apiPost('finance/create/account', params);
       } else {
-        if (props.tokenName) params.token_name = props.tokenName;
-        if (props.tokenAddress) params.token = props.tokenAddress;
+        if (props.tokenAddress) params.token = token;
         return await apiPost('tokens/create/account', params);
       }
     }
   },
   onSubmitSuccess: (result, dispatch, props) => {
     if (!result) return; // Submission was cancelled
-
+    GA.SendEvent('Users', 'NewAccount', 'Accounts', 1);
     loadAccounts();
     removeModal(props.modalId);
     showNotification(
@@ -66,6 +83,23 @@ import { namedAccount } from 'lib/fees';
   onSubmitFail: errorHandler(__('Error creating account')),
 })
 export default class NewAccountModal extends React.Component {
+  componentDidMount() {}
+
+  returnTokenSelect = event => {
+    let values = [];
+    values.push({
+      value: '0',
+      display: 'NXS',
+    });
+    this.props.userTokens.forEach(e => {
+      values.push({
+        value: e.address,
+        display: e.name || e.address,
+      });
+    });
+    return values;
+  };
+
   render() {
     const { handleSubmit, submitting } = this.props;
     return (
@@ -73,7 +107,7 @@ export default class NewAccountModal extends React.Component {
         assignClose={closeModal => {
           this.closeModal = closeModal;
         }}
-        style={{ maxWidth: 400 }}
+        style={{ maxWidth: 700 }}
       >
         <Modal.Header>{__('New account')}</Modal.Header>
         <Modal.Body>
@@ -88,6 +122,14 @@ export default class NewAccountModal extends React.Component {
                 name="name"
                 component={TextField.RF}
                 placeholder={__("New account's name")}
+              />
+            </FormField>
+
+            <FormField connectLabel label={__('Token')}>
+              <Field
+                name="token"
+                component={SelectField.RF}
+                options={this.returnTokenSelect()}
               />
             </FormField>
 

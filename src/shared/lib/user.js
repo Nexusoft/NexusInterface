@@ -48,7 +48,6 @@ export const logOut = async () => {
 
 export const loadOwnedTokens = async () => {
   const result = await apiPost('users/list/tokens');
-  console.error(result);
   store.dispatch({
     type: TYPE.SET_USER_OWNED_TOKENS,
     payload: result,

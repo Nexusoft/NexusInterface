@@ -17,6 +17,7 @@ import NewAccountModal from 'components/UserDialogs/NewAccountModal';
 import { openModal } from 'lib/ui';
 
 import { token, localName } from 'lib/fees';
+import GA from 'lib/googleAnalytics';
 
 const SubLable = styled.span(({ theme }) => ({
   marginLeft: '1em',
@@ -74,7 +75,7 @@ const mapStateToProps = state => {
   },
   onSubmitSuccess: async (result, dispatch, props) => {
     if (!result) return; // Submission was cancelled
-
+    GA.SendEvent('Users', 'NewToken', 'Token', 1);
     showNotification(
       __('New token %{token} has been created', {
         token: props.values.name,
