@@ -1,3 +1,21 @@
+# 2.0.6 (2019.11.15)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.0.6)
+
+#### Additions
+
+- Nexus Core 4.0.6
+- Ability to select the token when creating a account
+- Added Migrate transactions to the transactions history
+
+#### Adjustments
+
+- none
+
+#### Fixes
+
+- History now sorting newest first.
+
 # 2.0.5 (2019.11.12)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.0.5)

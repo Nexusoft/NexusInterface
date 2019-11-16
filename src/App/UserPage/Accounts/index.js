@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
 import { switchUserTab } from 'lib/ui';
-import { loadAccounts } from 'lib/user';
+import { loadAccounts, loadOwnedTokens } from 'lib/user';
 import { openModal } from 'lib/ui';
 import plusIcon from 'icons/plus.svg';
 
@@ -30,6 +30,7 @@ export default class Accounts extends React.Component {
 
   componentDidMount() {
     loadAccounts();
+    loadOwnedTokens();
   }
 
   render() {
@@ -40,7 +41,12 @@ export default class Accounts extends React.Component {
         <AccountsWrapper>
           <Button
             wide
-            onClick={() => openModal(NewAccountModal, { tokenName: 'NXS' })}
+            onClick={() =>
+              openModal(NewAccountModal, {
+                tokenName: 'NXS',
+                tokenAddress: '0',
+              })
+            }
           >
             <Icon icon={plusIcon} className="space-right" />
             {__('Create new account')}
