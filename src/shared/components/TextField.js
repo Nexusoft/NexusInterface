@@ -18,9 +18,13 @@ import { jsx, css } from '@emotion/core';
 
 // Internal
 import Tooltip from 'components/Tooltip';
+import Icon from 'components/Icon';
+import Button from 'components/Button';
 import { timing, consts } from 'styles';
 import { passRef } from 'utils/misc';
 import * as color from 'utils/color';
+import visibleIcon from 'icons/visible.svg';
+import invisibleIcon from 'icons/invisible.svg';
 
 const ErrorMessage = styled(Tooltip)(
   {
@@ -260,6 +264,7 @@ class TextArea extends Component {
 export default class TextField extends Component {
   state = {
     focus: false,
+    unmasked: false,
   };
 
   inputRef = el => {
@@ -288,7 +293,11 @@ export default class TextField extends Component {
     this.setState({ focus: false });
     this.props.onBlur && this.props.onBlur(e);
   };
-  //
+
+  toggleUnmasked = () => {
+    this.setState({ unmasked: !this.state.unmasked });
+  };
+
   render() {
     const {
       className,
@@ -303,14 +312,17 @@ export default class TextField extends Component {
       inputRef,
       autoFocus,
       error,
+      maskable,
       ...rest
     } = this.props;
+    const { unmasked } = this.state;
 
     const inputProps = {
       skin,
       size,
       readOnly,
       ...rest,
+      type: maskable ? (unmasked ? 'text' : 'password') : rest.type,
       onFocus: this.handleFocus,
       onBlur: this.handleBlur,
       style: inputStyle,
@@ -326,6 +338,11 @@ export default class TextField extends Component {
           <TextArea {...inputProps} inputRef={this.inputRef} />
         ) : (
           <Input {...inputProps} ref={this.inputRef} />
+        )}
+        {!!maskable && (
+          <Button skin="plain" onClick={this.toggleUnmasked}>
+            <Icon icon={unmasked ? invisibleIcon : visibleIcon} />
+          </Button>
         )}
         {right}
         {!!error && (
