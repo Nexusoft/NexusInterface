@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 
 // Internal
+import TextField from 'components/TextField';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
 import visibleIcon from 'icons/visible.svg';
@@ -21,7 +22,7 @@ export default class MaskableTextField extends Component {
 
     return (
       <TextField
-        {...rest}
+        {...this.props}
         type={unmasked ? 'text' : 'password'}
         right={
           <Button skin="plain" onClick={this.toggleUnmasked}>

@@ -7,6 +7,7 @@ import { apiPost } from 'lib/tritiumApi';
 import Modal from 'components/Modal';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
+import MaskableTextField from 'components/MaskableTextField';
 import Button from 'components/Button';
 import Link from 'components/Link';
 import LoginModal from 'components/LoginModal';
@@ -48,14 +49,9 @@ const Note = styled.div({
   initialValues: {
     username: '',
     password: '',
-    passwordConfirm: '',
     pin: '',
-    pinConfirm: '',
   },
-  validate: (
-    { username, password, passwordConfirm, pin, pinConfirm },
-    props
-  ) => {
+  validate: ({ username, password, pin }) => {
     const errors = {};
 
     if (!username) {
@@ -70,29 +66,20 @@ const Note = styled.div({
       errors.password = __('Password must be at least 8 characters');
     }
 
-    if (passwordConfirm !== password) {
-      errors.passwordConfirm = __('Password does not match');
-    }
-
     if (!pin) {
       errors.pin = __('PIN is required');
     } else if (pin.length < 4) {
       errors.pin = __('PIN must be at least 4 characters');
     }
 
-    if (pinConfirm !== pin) {
-      errors.pinConfirm = __('PIN does not match');
-    }
-
     return errors;
   },
-  onSubmit: async ({ username, password, pin }, dispatch, props) => {
-    const result = await apiPost('users/create/user', {
+  onSubmit: ({ username, password, pin }) =>
+    apiPost('users/create/user', {
       username,
       password,
       pin,
-    });
-  },
+    }),
   onSubmitSuccess: async (result, dispatch, props) => {
     const { username, password, pin } = props.values;
     removeModal(props.modalId);
@@ -152,39 +139,20 @@ class NewUserModal extends Component {
 
             <FormField connectLabel label={__('Password')}>
               <Field
-                component={TextField.RF}
+                component={MaskableTextField.RF}
                 name="password"
                 type="password"
                 placeholder={__('Enter your password')}
               />
             </FormField>
 
-            <FormField connectLabel label={__('Confirm password')}>
-              <Field
-                component={TextField.RF}
-                name="passwordConfirm"
-                type="password"
-                placeholder={__('Re-enter your password')}
-              />
-            </FormField>
-
             <FormField connectLabel label={__('PIN')}>
               <Field
-                component={TextField.RF}
+                component={MaskableTextField.RF}
                 name="pin"
                 type="password"
                 normalize={numericOnly}
                 placeholder={__('Enter your PIN number')}
-              />
-            </FormField>
-
-            <FormField connectLabel label={__('Confirm PIN')}>
-              <Field
-                component={TextField.RF}
-                name="pinConfirm"
-                type="password"
-                normalize={numericOnly}
-                placeholder={__('Re-enter your PIN number')}
               />
             </FormField>
 

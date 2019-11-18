@@ -7,6 +7,7 @@ import { apiPost } from 'lib/tritiumApi';
 import Modal from 'components/Modal';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
+import MaskableTextField from 'components/MaskableTextField';
 import Button from 'components/Button';
 import Link from 'components/Link';
 import NewUserModal from 'components/NewUserModal';
@@ -118,7 +119,7 @@ class Login extends Component {
 
             <FormField connectLabel label={__('Password')}>
               <Field
-                component={TextField.RF}
+                component={MaskableTextField.RF}
                 name="password"
                 type="password"
                 placeholder={__('Enter your password')}
@@ -127,7 +128,7 @@ class Login extends Component {
 
             <FormField connectLabel label={__('PIN')}>
               <Field
-                component={TextField.RF}
+                component={MaskableTextField.RF}
                 name="pin"
                 type="password"
                 normalize={numericOnly}
