@@ -439,15 +439,17 @@ class SettingsCore extends Component {
                 />
               </SettingsField>
 
-              <SettingsField
-                connectLabel
-                label={__('Avatar Mode')}
-                subLabel={__(
-                  'Disabling Avatar will make the core use a separate change key'
-                )}
-              >
-                <Field name="avatarMode" component={Switch.RF} />
-              </SettingsField>
+              {legacyMode && (
+                <SettingsField
+                  connectLabel
+                  label={__('Avatar Mode')}
+                  subLabel={__(
+                    'Disabling Avatar will make the core use a separate change key'
+                  )}
+                >
+                  <Field name="avatarMode" component={Switch.RF} />
+                </SettingsField>
+              )}
             </>
           )}
 

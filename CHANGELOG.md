@@ -1,3 +1,19 @@
+# 2.0.8 (2019.11.17)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.0.8)
+
+#### Additions
+
+-
+
+#### Adjustments
+
+- Removed Option for Avatar mode while in Tritium Mode
+
+#### Fixes
+
+-
+
 # 2.0.7 (2019.11.17)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.0.7)
