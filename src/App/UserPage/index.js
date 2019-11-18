@@ -83,11 +83,15 @@ class UserPage extends Component {
         title={__('User')}
         bodyScrollable={false}
         controls={
-          <Tooltip.Trigger tooltip={__('Set recovery phrase')}>
-            <Button skin="plain" onClick={() => openModal(SetRecoveryModal)}>
-              <Icon icon={recoveryIcon} style={{ width: 20, height: 20 }} />
-            </Button>
-          </Tooltip.Trigger>
+          loggedIn ? (
+            <Tooltip.Trigger tooltip={__('Set recovery phrase')}>
+              <Button skin="plain" onClick={() => openModal(SetRecoveryModal)}>
+                <Icon icon={recoveryIcon} style={{ width: 20, height: 20 }} />
+              </Button>
+            </Tooltip.Trigger>
+          ) : (
+            undefined
+          )
         }
       >
         {loggedIn ? (
