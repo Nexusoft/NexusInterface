@@ -25,7 +25,7 @@ export default class MaskableTextField extends Component {
         {...this.props}
         type={unmasked ? 'text' : 'password'}
         right={
-          <Button skin="plain" onClick={this.toggleUnmasked}>
+          <Button skin="plain" onClick={this.toggleUnmasked} tabIndex="-1">
             <Icon icon={unmasked ? invisibleIcon : visibleIcon} />
           </Button>
         }
