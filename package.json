@@ -20,6 +20,7 @@
     "package-all": "npm run build && electron-builder build -mwl",
     "package-linux": "npm run build && electron-builder build --linux",
     "package-mac": "npm run build && electron-builder build --mac",
+    "package-mac-unsigned": "npm run build && electron-builder build --macunsigned",
     "package-win": "npm run build && electron-builder build --win --x64",
     "preprod": "cross-env NODE_ENV_RUN=production_test npm run build",
     "prod-test": "cross-env NODE_ENV=production NODE_ENV_RUN=production-test electron ./src/",
@@ -74,6 +75,17 @@
       "gatekeeperAssess": false,
       "entitlements": "internals/entitlements.mac.plist",
       "entitlementsInherit": "internals/entitlements.mac.plist"
+    },
+    "macunsigned": {
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "artifactName": "nexus_wallet-MacOSX-${version}.${ext}",
+      "category": "public.app-category.utilities",
+      "extraResources": [
+        "./assets/darwin/cores/**/*"
+      ]
     },
     "dmg": {
       "artifactName": "nexus_wallet-MacOSX-${version}.${ext}",
