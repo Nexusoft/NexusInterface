@@ -69,7 +69,7 @@ const tableColumns = [
             return <i className="dim">{__('mined')}</i>;
           }
         case 'MIGRATE':
-          return trustkey;
+          return trustkey || '';
         default:
           return content;
       }

@@ -1,10 +1,26 @@
+# 2.0.7 (2019.11.17)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.0.7)
+
+#### Additions
+
+- Nexus Core 4.0.7
+
+#### Adjustments
+
+- none
+
+#### Fixes
+
+- Fixed issue with opening trust accout history
+
 # 2.0.6 (2019.11.15)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.0.6)
 
 #### Additions
 
-- Nexus Core 4.0.5
+- Nexus Core 4.0.6
 - Ability to select the token when creating a account
 - Added Migrate transactions to the transactions history
 
