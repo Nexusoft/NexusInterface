@@ -1,3 +1,5 @@
+import fs from 'fs';
+import path from 'path';
 import React from 'react';
 import { reduxForm, Field } from 'redux-form';
 
@@ -9,6 +11,7 @@ import MaskableTextField from 'components/MaskableTextField';
 import Button from 'components/Button';
 import Select from 'components/Select';
 import { errorHandler, numericOnly } from 'utils/form';
+import { assetsDir } from 'consts/paths';
 
 const options = [
   {
@@ -52,7 +55,30 @@ const options = [
 })
 export default class SetRecoveryModal extends React.Component {
   state = {
-    words: 20,
+    wordCount: 20,
+  };
+
+  wordlist = null;
+
+  async componentDidMount() {
+    const allWords = await fs.promises.readFile(
+      path.join(assetsDir, 'misc', 'wordlist.txt')
+    );
+    this.wordlist = allWords
+      .toString()
+      .split('\n')
+      .map(w => w.trim())
+      .filter(w => w);
+  }
+
+  generatePhrase = () => {
+    if (!this.wordlist) return;
+    const words = [];
+    for (let i = 0; i < this.state.wordCount; i++) {
+      const randomIndex = Math.floor(Math.random() * this.wordlist.length);
+      words.push(this.wordlist[randomIndex]);
+    }
+    this.props.change('phrase', words.join(' '));
   };
 
   render() {
@@ -87,12 +113,14 @@ export default class SetRecoveryModal extends React.Component {
           </FormField>
 
           <div className="mt1 flex center space-between">
-            <Button skin="hyperlink">{__('Generate a recovery phrase')}</Button>
+            <Button skin="hyperlink" onClick={this.generatePhrase}>
+              {__('Generate a recovery phrase')}
+            </Button>
             <Select
               options={options}
-              value={this.state.words}
-              onChange={words => {
-                this.setState({ words });
+              value={this.state.wordCount}
+              onChange={wordCount => {
+                this.setState({ wordCount });
               }}
             />
           </div>

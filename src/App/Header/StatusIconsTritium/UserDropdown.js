@@ -109,7 +109,7 @@ class LoggedInDropdown extends React.Component {
             closeDropdown();
           }}
         >
-          {__('Change password')}
+          {__('Change password & PIN')}
         </MenuItem>
         <Separator />
         {!!trustIsNew && (
