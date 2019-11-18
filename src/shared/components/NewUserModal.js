@@ -141,7 +141,6 @@ class NewUserModal extends Component {
               <Field
                 component={MaskableTextField.RF}
                 name="password"
-                type="password"
                 placeholder={__('Enter your password')}
               />
             </FormField>
@@ -150,7 +149,6 @@ class NewUserModal extends Component {
               <Field
                 component={MaskableTextField.RF}
                 name="pin"
-                type="password"
                 normalize={numericOnly}
                 placeholder={__('Enter your PIN number')}
               />

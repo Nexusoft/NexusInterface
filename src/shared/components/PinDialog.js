@@ -3,12 +3,12 @@ import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
 
 import Modal from 'components/Modal';
-import TextField from 'components/TextField';
+import MaskableTextField from 'components/MaskableTextField';
 import Button from 'components/Button';
 import { removeModal } from 'lib/ui';
 import { numericOnly } from 'utils/form';
 
-const PinInput = styled(TextField.RF)({
+const PinInput = styled(MaskableTextField.RF)({
   margin: '1em auto 2.5em',
   fontSize: 18,
 });
@@ -45,7 +45,6 @@ const PinDialog = ({ handleSubmit, confirmLabel = __('Confirm'), onClose }) => (
               component={PinInput}
               name="pin"
               normalize={numericOnly}
-              type="password"
               autoFocus
               skin="filled-inverted"
               placeholder={__('Your PIN number')}

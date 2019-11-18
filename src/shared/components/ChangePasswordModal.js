@@ -5,6 +5,7 @@ import { apiPost } from 'lib/tritiumApi';
 import Modal from 'components/Modal';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
+import MaskableTextField from 'components/MaskableTextField';
 import Button from 'components/Button';
 import Select from 'components/Select';
 import { errorHandler, numericOnly } from 'utils/form';
@@ -21,16 +22,14 @@ const options = [
 ];
 
 @reduxForm({
-  form: 'set-recovery-phrase',
+  form: 'change-password',
   initialValues: {
     useRecoveryPhrase: true,
     password: '',
     pin: '',
     recoveryPhrase: '',
     newPassword: '',
-    passwordConfirm: '',
     newPin: '',
-    pinConfirm: '',
   },
   validate: ({
     useRecoveryPhrase,
@@ -38,9 +37,7 @@ const options = [
     pin,
     recoveryPhrase,
     newPassword,
-    passwordConfirm,
     newPin,
-    pinConfirm,
   }) => {
     const errors = {};
 
@@ -60,16 +57,8 @@ const options = [
       errors.newPassword = __('New password is required');
     }
 
-    if (passwordConfirm !== newPassword) {
-      errors.passwordConfirm = __('Password does not match');
-    }
-
     if (!newPin) {
       errors.newPin = __('New PIN is required');
-    }
-
-    if (pinConfirm !== newPin) {
-      errors.pinConfirm = __('PIN does not match');
     }
 
     return errors;
@@ -96,9 +85,10 @@ export default class ChangePasswordModal extends React.Component {
               input.value ? (
                 <FormField label={__('Recovery phrase')}>
                   <Field
-                    type="password"
+                    multiline
+                    rows={1}
                     name="recoveryPhrase"
-                    component={TextField.RF}
+                    component={MaskableTextField.RF}
                     placeholder={__('Your recovery phrase')}
                   />
                 </FormField>
@@ -106,18 +96,16 @@ export default class ChangePasswordModal extends React.Component {
                 <>
                   <FormField label={__('Current password')}>
                     <Field
-                      type="password"
                       name="password"
-                      component={TextField.RF}
+                      component={MaskableTextField.RF}
                       placeholder={__('Your current password')}
                     />
                   </FormField>
 
                   <FormField label={__('Current PIN')}>
                     <Field
-                      type="password"
                       name="pin"
-                      component={TextField.RF}
+                      component={MaskableTextField.RF}
                       placeholder={__('Your current PIN number')}
                     />
                   </FormField>
@@ -129,39 +117,18 @@ export default class ChangePasswordModal extends React.Component {
           <div className="mt2">
             <FormField connectLabel label={__('New Password')}>
               <Field
-                component={TextField.RF}
+                component={MaskableTextField.RF}
                 name="newPassword"
-                type="password"
                 placeholder={__('Enter your new password')}
-              />
-            </FormField>
-
-            <FormField connectLabel label={__('Confirm password')}>
-              <Field
-                component={TextField.RF}
-                name="passwordConfirm"
-                type="password"
-                placeholder={__('Re-enter your new password')}
               />
             </FormField>
 
             <FormField connectLabel label={__('New PIN')}>
               <Field
-                component={TextField.RF}
+                component={MaskableTextField.RF}
                 name="newPin"
-                type="password"
                 normalize={numericOnly}
                 placeholder={__('Enter your new PIN number')}
-              />
-            </FormField>
-
-            <FormField connectLabel label={__('Confirm PIN')}>
-              <Field
-                component={TextField.RF}
-                name="pinConfirm"
-                type="password"
-                normalize={numericOnly}
-                placeholder={__('Re-enter your new PIN number')}
               />
             </FormField>
           </div>

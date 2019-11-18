@@ -8,6 +8,7 @@ import LoginModal from 'components/LoginModal';
 import NewUserModal from 'components/NewUserModal';
 import MigrateStakeModal from 'components/MigrateStakeModal';
 import SetRecoveryModal from 'components/SetRecoveryModal';
+import ChangePasswordModal from 'components/ChangePasswordModal';
 import { isLoggedIn } from 'selectors';
 import { openModal, showNotification } from 'lib/ui';
 import { timing, animations, consts } from 'styles';
@@ -102,6 +103,15 @@ class LoggedInDropdown extends React.Component {
         >
           {__('Set recovery phrase')}
         </MenuItem>
+        <MenuItem
+          onClick={() => {
+            openModal(ChangePasswordModal);
+            closeDropdown();
+          }}
+        >
+          {__('Change password')}
+        </MenuItem>
+        <Separator />
         {!!trustIsNew && (
           <>
             <MenuItem
