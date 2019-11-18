@@ -228,6 +228,7 @@ const multilineStyle = css({
   paddingTop: '.4em',
   paddingBottom: '.5em',
   resize: 'vertical',
+  lineHeight: 1.28,
 });
 
 class TextArea extends Component {
@@ -235,7 +236,7 @@ class TextArea extends Component {
     this.inputElem.style.height = 'auto';
     const { scrollHeight } = this.inputElem;
     this.inputElem.style.height =
-      (scrollHeight > 104 ? 104 : scrollHeight) + 'px';
+      (scrollHeight > 114 ? 114 : scrollHeight) + 'px';
   }
 
   inputRef = el => {
