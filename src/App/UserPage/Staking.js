@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
 import Button from 'components/Button';
+import Tooltip from 'components/Tooltip';
 import AdjustStakeModal from 'components/AdjustStakeModal';
 import MigrateStakeModal from 'components/MigrateStakeModal';
 import { switchUserTab } from 'lib/ui';
@@ -72,7 +73,7 @@ export default class Staking extends React.Component {
 
   render() {
     const { stakeInfo, stakingEnabled } = this.props;
-
+    console.log(this.props);
     return (
       !!stakeInfo && (
         <StakingWrapper>
@@ -182,17 +183,29 @@ export default class Staking extends React.Component {
             <div>{formatNumber(stakeInfo.balance, 6)} NXS</div>
           </Line>
           <div className="mt1 flex space-between">
-            <Button
-              disabled={!stakeInfo.stake && !stakeInfo.balance}
-              onClick={() => {
-                openModal(AdjustStakeModal);
-              }}
+            <Tooltip.Trigger
+              position="top"
+              tooltip={
+                !stakeInfo.stake && !stakeInfo.balance
+                  ? __('Trust Account is empty.')
+                  : __('Trust Account must mature for 72 hours before staking')
+              }
             >
-              {__('Adjust stake amount')}
-            </Button>
+              <Button
+                disabled={
+                  (!stakeInfo.stake && !stakeInfo.balance) || stakeInfo.new
+                }
+                onClick={() => {
+                  openModal(AdjustStakeModal);
+                }}
+              >
+                {__('Adjust stake amount')}
+              </Button>
+            </Tooltip.Trigger>
             <Button
               skin={stakingEnabled ? 'default' : 'primary'}
               onClick={this.switchStaking}
+              tooltip={'ADADADA'}
             >
               {stakingEnabled ? __('Disable staking') : __('Enable staking')}
             </Button>
