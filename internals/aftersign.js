@@ -6,6 +6,12 @@ exports.default = async function notarizing(context) {
     return;
   }
 
+  //If no identity then reject trying to notarize
+  const macSignIdentity = context.packager.info._configuration.mac.identity;
+  if (macSignIdentity === null) {
+    return;
+  }
+
   const appName = context.packager.appInfo.productFilename;
 
   return await notarize({
