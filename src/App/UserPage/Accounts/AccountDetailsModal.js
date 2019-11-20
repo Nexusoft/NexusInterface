@@ -87,9 +87,20 @@ const AccountDetailsModal = ({ account, stakeInfo }) => (
 
       {account.stake !== undefined && (
         <div className="mt1 flex space-between">
-          <div />
+          <div />{' '}
+          {!stakeInfo.stake && !stakeInfo.balance ? (
+            <div className="error">{__('Trust Account is empty.')}</div>
+          ) : (
+            <div className="error">
+              {__('Trust Account must mature for 72 hours before staking')}
+            </div>
+          )}
           <Button
-            disabled={!stakeInfo || (!stakeInfo.stake && !stakeInfo.balance)}
+            disabled={
+              !stakeInfo ||
+              (!stakeInfo.stake && !stakeInfo.balance) ||
+              stakeInfo.new
+            }
             onClick={() => {
               openModal(AdjustStakeModal);
             }}

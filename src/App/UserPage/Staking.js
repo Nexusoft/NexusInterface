@@ -183,14 +183,7 @@ export default class Staking extends React.Component {
             <div>{formatNumber(stakeInfo.balance, 6)} NXS</div>
           </Line>
           <div className="mt1 flex space-between">
-            <Tooltip.Trigger
-              position="top"
-              tooltip={
-                !stakeInfo.stake && !stakeInfo.balance
-                  ? __('Trust Account is empty.')
-                  : __('Trust Account must mature for 72 hours before staking')
-              }
-            >
+            <div>
               <Button
                 disabled={
                   (!stakeInfo.stake && !stakeInfo.balance) || stakeInfo.new
@@ -201,11 +194,17 @@ export default class Staking extends React.Component {
               >
                 {__('Adjust stake amount')}
               </Button>
-            </Tooltip.Trigger>
+              {!stakeInfo.stake && !stakeInfo.balance ? (
+                <div className="error">{__('Trust Account is empty.')}</div>
+              ) : (
+                <div className="error">
+                  {__('Trust Account must mature for 72 hours before staking')}
+                </div>
+              )}
+            </div>
             <Button
               skin={stakingEnabled ? 'default' : 'primary'}
               onClick={this.switchStaking}
-              tooltip={'ADADADA'}
             >
               {stakingEnabled ? __('Disable staking') : __('Enable staking')}
             </Button>
