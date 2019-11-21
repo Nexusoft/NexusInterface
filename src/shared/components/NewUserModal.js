@@ -13,9 +13,16 @@ import Link from 'components/Link';
 import LoginModal from 'components/LoginModal';
 import Spinner from 'components/Spinner';
 import FieldSet from 'components/FieldSet';
-import { showNotification, openModal, removeModal } from 'lib/ui';
+import BackgroundTask from 'components/BackgroundTask';
+import {
+  showNotification,
+  openModal,
+  removeModal,
+  showBackgroundTask,
+} from 'lib/ui';
 import { getUserStatus } from 'lib/user';
 import { errorHandler, numericOnly } from 'utils/form';
+import { observeStore } from 'store';
 
 const Buttons = styled.div({
   marginTop: '1.5em',
@@ -81,32 +88,16 @@ const Note = styled.div({
       pin,
     }),
   onSubmitSuccess: async (result, dispatch, props) => {
-    const { username, password, pin } = props.values;
+    const { username } = props.values;
     removeModal(props.modalId);
     props.reset();
-    showNotification(
-      __('New user %{username} has been created', {
-        username,
-      }),
-      'success'
-    );
-
-    await apiPost('users/login/user', {
+    showBackgroundTask(UserConfirmBackgroundTask, {
       username,
-      password,
-      pin,
     });
-    await apiPost('users/unlock/user', {
-      pin,
-      notifications: true,
-      mining: !!props.enableMining,
-      staking: !!props.enableStaking,
-    });
-    getUserStatus();
   },
   onSubmitFail: errorHandler(__('Error creating user')),
 })
-class NewUserModal extends Component {
+export default class NewUserModal extends Component {
   /**
    * Component's Renderable JSX
    *
@@ -201,7 +192,54 @@ class NewUserModal extends Component {
   }
 }
 
-export default NewUserModal;
+class UserConfirmBackgroundTask extends React.Component {
+  componentDidMount() {
+    const { username } = this.props;
+    this.unobserve = observeStore(
+      ({ core: { systemInfo } }) => systemInfo && systemInfo.blocks,
+      async () => {
+        const txs = await apiPost('users/list/transactions', {
+          username,
+          order: 'asc',
+          limit: 1,
+          verbose: 'summary',
+        });
+        if (txs && txs[0] && txs[0].confirmations) {
+          this.closeTask();
+          showNotification(
+            __('User registration for %{username} has been confirmed', {
+              username,
+            }),
+            'success'
+          );
+          openModal(LoginModal);
+        }
+      }
+    );
+  }
+
+  componentWillUnmount() {
+    this.unobserve();
+  }
+
+  render() {
+    const { username } = this.props;
+    return (
+      <BackgroundTask
+        assignClose={close => (this.closeTask = close)}
+        onClick={null}
+        style={{ cursor: 'default' }}
+      >
+        {__(
+          'User registration for %{username} is waiting to be confirmed on Nexus blockchain...',
+          {
+            username,
+          }
+        )}
+      </BackgroundTask>
+    );
+  }
+}
 
 /*
 
