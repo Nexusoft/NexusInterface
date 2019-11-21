@@ -11,6 +11,7 @@ import MaskableTextField from 'components/MaskableTextField';
 import Button from 'components/Button';
 import Link from 'components/Link';
 import NewUserModal from 'components/NewUserModal';
+import RecoverPasswordModal from 'components/RecoverPasswordModal';
 import { showNotification, openModal, removeModal } from 'lib/ui';
 import { getUserStatus } from 'lib/user';
 import { errorHandler, numericOnly } from 'utils/form';
@@ -147,27 +148,24 @@ class Login extends Component {
             </Buttons>
 
             <ExtraSection>
-              <Link
-                as="a"
-                onClick={e => {
-                  e.preventDefault();
+              <Button
+                skin="hyperlink"
+                onClick={() => {
                   this.closeModal();
-                  updateSettings({ legacyMode: true });
-                  location.reload();
+                  openModal(RecoverPasswordModal);
                 }}
               >
-                {__('Switch to Legacy Mode')}
-              </Link>
-              <Link
-                as="a"
-                onClick={e => {
-                  e.preventDefault();
+                {__('Forgot password?')}
+              </Button>
+              <Button
+                skin="hyperlink"
+                onClick={() => {
                   this.closeModal();
                   openModal(NewUserModal);
                 }}
               >
                 {__('Create new user')}
-              </Link>
+              </Button>
             </ExtraSection>
           </form>
         </Modal.Body>
