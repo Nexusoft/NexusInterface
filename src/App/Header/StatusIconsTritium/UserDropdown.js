@@ -111,7 +111,6 @@ class LoggedInDropdown extends React.Component {
         >
           {__('Change password & PIN')}
         </MenuItem>
-        <Separator />
         {!!trustIsNew && (
           <>
             <MenuItem
@@ -122,9 +121,9 @@ class LoggedInDropdown extends React.Component {
             >
               {__('Migrate stake')}
             </MenuItem>
-            <Separator />
           </>
         )}
+        <Separator />
         <MenuItem onClick={this.logOut}>{__('Log out')}</MenuItem>
       </>
     );

@@ -4,10 +4,8 @@ import { reduxForm, Field } from 'redux-form';
 import { apiPost } from 'lib/tritiumApi';
 import Modal from 'components/Modal';
 import FormField from 'components/FormField';
-import TextField from 'components/TextField';
 import MaskableTextField from 'components/MaskableTextField';
 import Button from 'components/Button';
-import Select from 'components/Select';
 import { errorHandler, numericOnly } from 'utils/form';
 
 const options = [
@@ -24,33 +22,20 @@ const options = [
 @reduxForm({
   form: 'change-password',
   initialValues: {
-    useRecoveryPhrase: true,
     password: '',
     pin: '',
-    recoveryPhrase: '',
     newPassword: '',
     newPin: '',
   },
-  validate: ({
-    useRecoveryPhrase,
-    password,
-    pin,
-    recoveryPhrase,
-    newPassword,
-    newPin,
-  }) => {
+  validate: ({ password, pin, newPassword, newPin }) => {
     const errors = {};
 
-    if (!useRecoveryPhrase && !password) {
-      errors.password = __('Password is required');
+    if (!password) {
+      errors.password = __('Current password is required');
     }
 
-    if (!useRecoveryPhrase && !pin) {
-      errors.pin = __('PIN is required');
-    }
-
-    if (useRecoveryPhrase && !recoveryPhrase) {
-      errors.recoveryPhrase = __('Recovery phrase is required');
+    if (!pin) {
+      errors.pin = __('Current PIN is required');
     }
 
     if (!newPassword) {
@@ -73,46 +58,21 @@ export default class ChangePasswordModal extends React.Component {
       >
         <Modal.Header>{__('Change password and PIN')}</Modal.Header>
         <Modal.Body>
-          <Field
-            name="useRecoveryPhrase"
-            component={Select.RF}
-            options={options}
-          />
+          <FormField label={__('Current password')}>
+            <Field
+              name="password"
+              component={MaskableTextField.RF}
+              placeholder={__('Your current password')}
+            />
+          </FormField>
 
-          <Field
-            name="useRecoveryPhrase"
-            component={({ input }) =>
-              input.value ? (
-                <FormField label={__('Recovery phrase')}>
-                  <Field
-                    multiline
-                    rows={1}
-                    name="recoveryPhrase"
-                    component={MaskableTextField.RF}
-                    placeholder={__('Your recovery phrase')}
-                  />
-                </FormField>
-              ) : (
-                <>
-                  <FormField label={__('Current password')}>
-                    <Field
-                      name="password"
-                      component={MaskableTextField.RF}
-                      placeholder={__('Your current password')}
-                    />
-                  </FormField>
-
-                  <FormField label={__('Current PIN')}>
-                    <Field
-                      name="pin"
-                      component={MaskableTextField.RF}
-                      placeholder={__('Your current PIN number')}
-                    />
-                  </FormField>
-                </>
-              )
-            }
-          />
+          <FormField label={__('Current PIN')}>
+            <Field
+              name="pin"
+              component={MaskableTextField.RF}
+              placeholder={__('Your current PIN number')}
+            />
+          </FormField>
 
           <div className="mt2">
             <FormField connectLabel label={__('New Password')}>
@@ -135,7 +95,7 @@ export default class ChangePasswordModal extends React.Component {
 
           <div className="mt2">
             <Button skin="primary" wide>
-              {__('Change password & PIN')}
+              {__('Set new password & PIN')}
             </Button>
           </div>
         </Modal.Body>
