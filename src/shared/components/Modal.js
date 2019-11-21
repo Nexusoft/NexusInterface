@@ -70,6 +70,7 @@ const ModalComponent = styled.div(
     gridTemplateAreas: '"header" "body" "footer"',
     gridTemplateColumns: '1fr',
     gridTemplateRows: 'auto 1fr auto',
+    outline: 'none',
   }),
   ({ fullScreen }) =>
     fullScreen && {
@@ -130,6 +131,7 @@ const ModalFooter = styled.div(
 export default class Modal extends PureComponent {
   static defaultProps = {
     dimBackground: true,
+    escToClose: true,
   };
 
   static contextType = ModalContext;
@@ -142,6 +144,10 @@ export default class Modal extends PureComponent {
   constructor(props) {
     super(props);
     props.assignClose && props.assignClose(this.animatedClose);
+  }
+
+  componentDidMount() {
+    this.modalElem.focus();
   }
 
   componentWillUnmount() {
@@ -203,6 +209,12 @@ export default class Modal extends PureComponent {
     }
   };
 
+  handleKeyDown = e => {
+    if (this.props.escToClose && e.key === 'Escape') {
+      this.animatedClose();
+    }
+  };
+
   /**
    * Component's Renderable JSX
    *
@@ -220,6 +232,7 @@ export default class Modal extends PureComponent {
       assignClose,
       modalRef,
       backgroundRef,
+      escToClose,
       ...rest
     } = this.props;
 
@@ -230,7 +243,13 @@ export default class Modal extends PureComponent {
         backgroundRef={this.backgroundRef}
         zPriority={fullScreen ? 1 : 0}
       >
-        <ModalComponent ref={this.modalRef} fullScreen={fullScreen} {...rest}>
+        <ModalComponent
+          ref={this.modalRef}
+          fullScreen={fullScreen}
+          tabIndex="0"
+          onKeyDown={this.handleKeyDown}
+          {...rest}
+        >
           {typeof children === 'function'
             ? children(this.animatedClose)
             : children}
