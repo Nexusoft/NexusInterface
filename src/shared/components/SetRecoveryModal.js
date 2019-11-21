@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { connect } from 'react-redux';
 import React from 'react';
 import { reduxForm, Field } from 'redux-form';
 
@@ -28,14 +29,18 @@ const options = [
   },
 ];
 
+@connect(({ core: { userStatus } }) => ({
+  hasRecoveryPhrase: !!(userStatus && userStatus.recovery),
+}))
 @reduxForm({
   form: 'set-recovery-phrase',
   initialValues: {
     password: '',
     pin: '',
     phrase: '',
+    newPhrase: '',
   },
-  validate: ({ password, pin, phrase }) => {
+  validate: ({ password, pin, phrase, newPhrase }, props) => {
     const errors = {};
 
     if (!password) {
@@ -46,8 +51,14 @@ const options = [
       errors.pin = __('PIN is required');
     }
 
-    if (!phrase) {
-      errors.phrase = __('Recovery phrase is required');
+    if (props.hasRecoveryPhrase && !phrase) {
+      errors.phrase = __('Current recovery phrase is required');
+    }
+
+    if (!newPhrase) {
+      errors.newPhrase = __('Recovery phrase is required');
+    } else if (newPhrase.length < 8) {
+      errors.newPhrase = __('Recovery phrase must be at least 40 characters');
     }
 
     return errors;
@@ -78,7 +89,7 @@ export default class SetRecoveryModal extends React.Component {
       const randomIndex = Math.floor(Math.random() * this.wordlist.length);
       words.push(this.wordlist[randomIndex]);
     }
-    this.props.change('phrase', words.join(' '));
+    this.props.change('newPhrase', words.join(' '));
   };
 
   render() {
@@ -91,7 +102,7 @@ export default class SetRecoveryModal extends React.Component {
         <Modal.Body>
           <div>
             {__(
-              'You will be able to use this recovery phrase to change your password and PIN in the future'
+              'You will be able to use this recovery phrase to change your password and PIN in the future.'
             )}
           </div>
 
@@ -112,28 +123,42 @@ export default class SetRecoveryModal extends React.Component {
             />
           </FormField>
 
-          <div className="mt1 flex center space-between">
-            <Button skin="hyperlink" onClick={this.generatePhrase}>
-              {__('Generate a recovery phrase')}
-            </Button>
-            <Select
-              options={options}
-              value={this.state.wordCount}
-              onChange={wordCount => {
-                this.setState({ wordCount });
-              }}
-            />
-          </div>
+          {this.props.hasRecoveryPhrase && (
+            <FormField label={__('Current recovery phrase')}>
+              <Field
+                multiline
+                name="phrase"
+                component={TextField.RF}
+                placeholder={__('Enter your recovery phrase')}
+                rows={1}
+              />
+            </FormField>
+          )}
 
-          <FormField label={__('New recovery phrase')}>
-            <Field
-              multiline
-              name="phrase"
-              component={TextField.RF}
-              placeholder={__('Enter your recovery phrase')}
-              rows={1}
-            />
-          </FormField>
+          <div className="mt2">
+            <FormField label={__('New recovery phrase')}>
+              <Field
+                multiline
+                name="newPhrase"
+                component={TextField.RF}
+                placeholder={__('Enter your new recovery phrase')}
+                rows={1}
+              />
+            </FormField>
+
+            <div className="mt1 flex center space-between">
+              <Button skin="hyperlink" onClick={this.generatePhrase}>
+                {__('Generate a recovery phrase')}
+              </Button>
+              <Select
+                options={options}
+                value={this.state.wordCount}
+                onChange={wordCount => {
+                  this.setState({ wordCount });
+                }}
+              />
+            </div>
+          </div>
 
           <div className="mt2">
             <Button skin="primary" wide>

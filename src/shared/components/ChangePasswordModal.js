@@ -40,10 +40,14 @@ const options = [
 
     if (!newPassword) {
       errors.newPassword = __('New password is required');
+    } else if (password.length < 8) {
+      errors.password = __('Password must be at least 8 characters');
     }
 
     if (!newPin) {
       errors.newPin = __('New PIN is required');
+    } else if (pin.length < 4) {
+      errors.pin = __('PIN must be at least 4 characters');
     }
 
     return errors;
