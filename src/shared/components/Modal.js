@@ -146,24 +146,7 @@ export default class Modal extends PureComponent {
 
   componentWillUnmount() {
     if (this.props.onClose) this.props.onClose();
-    document.removeEventListener('keydown', this.handleKeyDown);
   }
-
-  componentDidMount() {
-    const { onBackgroundClick = this.animatedClose } = this.props;
-    /// If you can close with click on backgroud then allow Escape close
-    if (onBackgroundClick) {
-      document.addEventListener('keydown', this.handleKeyDown);
-    }
-  }
-
-  handleKeyDown = e => {
-    switch (e.key) {
-      case 'Escape':
-        this.animatedClose();
-        break;
-    }
-  };
 
   /**
    * Animate the Close event
