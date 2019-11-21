@@ -231,6 +231,7 @@ class BootstrapModal extends PureComponent {
         onBackgroundClick={this.minimize}
         onKeyDown={this.handleKeyDown}
         assignClose={closeModal => (this.closeModal = closeModal)}
+        escToClose={false}
         {...rest}
       >
         <Modal.Body>
