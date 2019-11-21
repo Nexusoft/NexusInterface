@@ -12,6 +12,7 @@ import Button from 'components/Button';
 import Link from 'components/Link';
 import NewUserModal from 'components/NewUserModal';
 import RecoverPasswordModal from 'components/RecoverPasswordModal';
+import Spinner from 'components/Spinner';
 import { showNotification, openModal, removeModal } from 'lib/ui';
 import { getUserStatus } from 'lib/user';
 import { errorHandler, numericOnly } from 'utils/form';
@@ -143,7 +144,14 @@ class Login extends Component {
                 skin="primary"
                 disabled={submitting}
               >
-                {submitting ? __('Logging in') + '...' : __('Log in')}
+                {submitting ? (
+                  <span>
+                    <Spinner className="space-right" />
+                    <span className="v-align">{__('Logging in')}...</span>
+                  </span>
+                ) : (
+                  __('Log in')
+                )}
               </Button>
             </Buttons>
 
