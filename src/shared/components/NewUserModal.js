@@ -20,9 +20,9 @@ import {
   removeModal,
   showBackgroundTask,
 } from 'lib/ui';
-import { getUserStatus } from 'lib/user';
 import { errorHandler, numericOnly } from 'utils/form';
-import { observeStore } from 'store';
+import store, { observeStore } from 'store';
+import { isLoggedIn } from 'selectors';
 
 const Buttons = styled.div({
   marginTop: '1.5em',
@@ -212,7 +212,9 @@ class UserConfirmBackgroundTask extends React.Component {
             }),
             'success'
           );
-          openModal(LoginModal);
+          if (!isLoggedIn(store.getState())) {
+            openModal(LoginModal);
+          }
         }
       }
     );
