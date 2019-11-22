@@ -14,6 +14,7 @@ import { handleError } from 'utils/form';
 
 import { totalBalance } from './utils';
 import Link from 'components/Link';
+import Tooltip from 'components/Tooltip';
 
 const displayedOperations = [
   'DEBIT',
@@ -230,15 +231,22 @@ class AccountHistoryModal extends React.Component {
                   account.token_name === 'NXS' ? (
                     <>
                       {__('Account balance(')}
-                      <Link
-                        as={''}
-                        to={''}
-                        onClick={e =>
-                          toggleUserBalanceDisplayFiat(!this.props.showFiat)
-                        }
+                      <Tooltip.Trigger
+                        tooltip={__('Show %{tokenName}', {
+                          tokenName: showFiat ? 'NXS' : 'Fiat',
+                        })}
+                        position="top"
                       >
-                        {showFiat ? fiatCurrency : 'NXS'}
-                      </Link>
+                        <Link
+                          as={''}
+                          to={''}
+                          onClick={e =>
+                            toggleUserBalanceDisplayFiat(!this.props.showFiat)
+                          }
+                        >
+                          {showFiat ? fiatCurrency : 'NXS'}
+                        </Link>
+                      </Tooltip.Trigger>
                       {')'}
                     </>
                   ) : (
