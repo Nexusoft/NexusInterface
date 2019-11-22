@@ -15,6 +15,7 @@ import confirmPasswordPin from 'utils/promisified/confirmPasswordPin';
 
 @reduxForm({
   form: 'recover-password',
+  destroyOnUnmount: true,
   initialValues: {
     username: '',
     recoveryPhrase: '',

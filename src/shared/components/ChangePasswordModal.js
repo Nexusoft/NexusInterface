@@ -13,6 +13,7 @@ import confirmPasswordPin from 'utils/promisified/confirmPasswordPin';
 
 @reduxForm({
   form: 'change-password',
+  destroyOnUnmount: true,
   initialValues: {
     password: '',
     pin: '',

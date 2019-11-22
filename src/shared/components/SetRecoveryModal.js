@@ -36,6 +36,7 @@ const options = [
 }))
 @reduxForm({
   form: 'set-recovery-phrase',
+  destroyOnUnmount: true,
   initialValues: {
     password: '',
     pin: '',
