@@ -11,6 +11,7 @@ import LoginModal from 'components/LoginModal';
 import Spinner from 'components/Spinner';
 import { showNotification, removeModal, openModal } from 'lib/ui';
 import { errorHandler, numericOnly } from 'utils/form';
+import confirmPasswordPin from 'utils/promisified/confirmPasswordPin';
 
 @reduxForm({
   form: 'recover-password',
@@ -45,17 +46,28 @@ import { errorHandler, numericOnly } from 'utils/form';
 
     return errors;
   },
-  onSubmit: ({ username, recoveryPhrase, newPassword, newPin }) =>
-    apiPost('users/recover/user', {
-      username,
-      recovery: recoveryPhrase,
+  onSubmit: async ({ username, recoveryPhrase, newPassword, newPin }) => {
+    const correct = await confirmPasswordPin({
       password: newPassword,
       pin: newPin,
-    }),
+    });
+
+    if (correct) {
+      return await apiPost('users/recover/user', {
+        username,
+        recovery: recoveryPhrase,
+        password: newPassword,
+        pin: newPin,
+      });
+    } else {
+      return null;
+    }
+  },
   onSubmitSuccess: async (result, dispatch, props) => {
+    if (!result) return;
     removeModal(props.modalId);
     props.reset();
-    showNotification(__('Password & PIN has been updated'), 'success');
+    showNotification(__('Password & PIN have been updated'), 'success');
     openModal(LoginModal);
   },
   onSubmitFail: errorHandler(__('Error updating password & PIN')),
@@ -68,7 +80,7 @@ export default class RecoverPasswordModal extends React.Component {
         assignClose={closeModal => (this.closeModal = closeModal)}
         style={{ maxWidth: 500 }}
       >
-        <Modal.Header>{__('Reset password and PIN')}</Modal.Header>
+        <Modal.Header>{__('Recover password and PIN')}</Modal.Header>
         <Modal.Body>
           <form onSubmit={handleSubmit}>
             <FormField label={__('Username')}>
@@ -76,6 +88,7 @@ export default class RecoverPasswordModal extends React.Component {
                 name="username"
                 component={TextField.RF}
                 placeholder={__('Your username')}
+                autoFocus
               />
             </FormField>
 
@@ -114,11 +127,11 @@ export default class RecoverPasswordModal extends React.Component {
                   <span>
                     <Spinner className="space-right" />
                     <span className="v-align">
-                      {__('Resetting password & PIN')}...
+                      {__('Recovering password & PIN')}...
                     </span>
                   </span>
                 ) : (
-                  __('Reset password & PIN')
+                  __('Recover password & PIN')
                 )}
               </Button>
             </div>

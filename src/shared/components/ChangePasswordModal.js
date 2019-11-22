@@ -7,7 +7,6 @@ import FormField from 'components/FormField';
 import MaskableTextField from 'components/MaskableTextField';
 import Button from 'components/Button';
 import Spinner from 'components/Spinner';
-import ConfirmPasswordPinModal from 'components/ConfirmPasswordPinModal';
 import { errorHandler, numericOnly } from 'utils/form';
 import { showNotification, removeModal, openModal } from 'lib/ui';
 import confirmPasswordPin from 'utils/promisified/confirmPasswordPin';
