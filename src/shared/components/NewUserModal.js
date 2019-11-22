@@ -23,6 +23,7 @@ import {
 import { errorHandler, numericOnly } from 'utils/form';
 import store, { observeStore } from 'store';
 import { isLoggedIn } from 'selectors';
+import confirmPasswordPin from 'utils/promisified/confirmPasswordPin';
 
 const Buttons = styled.div({
   marginTop: '1.5em',
@@ -81,13 +82,24 @@ const Note = styled.div({
 
     return errors;
   },
-  onSubmit: ({ username, password, pin }) =>
-    apiPost('users/create/user', {
-      username,
+  onSubmit: async ({ username, password, pin }) => {
+    const correct = await confirmPasswordPin({
       password,
       pin,
-    }),
+    });
+
+    if (correct) {
+      return await apiPost('users/create/user', {
+        username,
+        password,
+        pin,
+      });
+    } else {
+      return null;
+    }
+  },
   onSubmitSuccess: async (result, dispatch, props) => {
+    if (!result) return;
     const { username } = props.values;
     removeModal(props.modalId);
     props.reset();
