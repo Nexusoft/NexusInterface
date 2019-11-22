@@ -71,6 +71,7 @@ const Separator = styled.div(({ theme }) => ({
 
 @connect(({ core: { userStatus, stakeInfo } }) => ({
   currentUser: userStatus && userStatus.username,
+  hasRecoveryPhrase: !!(userStatus && userStatus.recovery),
   trustIsNew: stakeInfo && stakeInfo.new,
 }))
 class LoggedInDropdown extends React.Component {
@@ -81,7 +82,12 @@ class LoggedInDropdown extends React.Component {
   };
 
   render() {
-    const { currentUser, closeDropdown, trustIsNew } = this.props;
+    const {
+      currentUser,
+      hasRecoveryPhrase,
+      closeDropdown,
+      trustIsNew,
+    } = this.props;
     return (
       <>
         <CurrentUser>
@@ -95,14 +101,16 @@ class LoggedInDropdown extends React.Component {
           <MenuItem>{__('Tokens')}</MenuItem>
         </Link>
         <Separator />
-        <MenuItem
-          onClick={() => {
-            openModal(SetRecoveryModal);
-            closeDropdown();
-          }}
-        >
-          {__('Set recovery phrase')}
-        </MenuItem>
+        {!hasRecoveryPhrase && (
+          <MenuItem
+            onClick={() => {
+              openModal(SetRecoveryModal);
+              closeDropdown();
+            }}
+          >
+            {__('Set recovery phrase')}
+          </MenuItem>
+        )}
         <MenuItem
           onClick={() => {
             openModal(ChangePasswordModal);
@@ -112,16 +120,14 @@ class LoggedInDropdown extends React.Component {
           {__('Change password & PIN')}
         </MenuItem>
         {!!trustIsNew && (
-          <>
-            <MenuItem
-              onClick={() => {
-                openModal(MigrateStakeModal);
-                closeDropdown();
-              }}
-            >
-              {__('Migrate stake')}
-            </MenuItem>
-          </>
+          <MenuItem
+            onClick={() => {
+              openModal(MigrateStakeModal);
+              closeDropdown();
+            }}
+          >
+            {__('Migrate stake')}
+          </MenuItem>
         )}
         <Separator />
         <MenuItem onClick={this.logOut}>{__('Log out')}</MenuItem>
