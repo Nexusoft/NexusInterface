@@ -111,14 +111,6 @@ class LoggedInDropdown extends React.Component {
             {__('Set recovery phrase')}
           </MenuItem>
         )}
-        <MenuItem
-          onClick={() => {
-            openModal(ChangePasswordModal);
-            closeDropdown();
-          }}
-        >
-          {__('Change password & PIN')}
-        </MenuItem>
         {!!trustIsNew && (
           <MenuItem
             onClick={() => {
@@ -129,7 +121,7 @@ class LoggedInDropdown extends React.Component {
             {__('Migrate stake')}
           </MenuItem>
         )}
-        <Separator />
+        {(!hasRecoveryPhrase || !!trustIsNew) && <Separator />}
         <MenuItem onClick={this.logOut}>{__('Log out')}</MenuItem>
       </>
     );
