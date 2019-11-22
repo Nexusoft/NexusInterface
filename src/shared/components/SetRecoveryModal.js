@@ -119,7 +119,7 @@ export default class SetRecoveryModal extends React.Component {
           <form onSubmit={handleSubmit}>
             <div>
               {__(
-                'You will be able to use this recovery phrase to change your password and PIN in the future.'
+                'Save this new recovery phrase in a safe place. You will be able to use it to change your password and PIN, even reset your recovery phrase in the future.'
               )}
             </div>
 
@@ -158,7 +158,9 @@ export default class SetRecoveryModal extends React.Component {
                   multiline
                   name="newPhrase"
                   component={TextField.RF}
-                  placeholder={__('Enter your new recovery phrase')}
+                  placeholder={__(
+                    'Enter your new recovery phrase or click Generate'
+                  )}
                   rows={1}
                 />
               </FormField>
