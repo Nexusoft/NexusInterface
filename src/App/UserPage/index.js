@@ -7,21 +7,18 @@ import GA from 'lib/googleAnalytics';
 // Internal Global
 import Button from 'components/Button';
 import Panel from 'components/Panel';
-import Icon from 'components/Icon';
 import LoginModal from 'components/LoginModal';
-import Tooltip from 'components/Tooltip';
-import SetRecoveryModal from 'components/SetRecoveryModal';
 import { openModal } from 'lib/ui';
 import AddEditContactModal from 'components/AddEditContactModal';
 import { isCoreConnected, isLoggedIn } from 'selectors';
 import { history } from 'lib/wallet';
 import { legacyMode } from 'consts/misc';
 import userIcon from 'icons/user.svg';
-import recoveryIcon from 'icons/recovery.svg';
 
 // Internal Local
 import UserBrief from './UserBrief';
 import TabContent from './TabContent';
+import UserOptions from './UserOptions';
 
 const UserPageLayout = styled.div({
   display: 'flex',
@@ -82,17 +79,7 @@ class UserPage extends Component {
         icon={userIcon}
         title={__('User')}
         bodyScrollable={false}
-        controls={
-          loggedIn ? (
-            <Tooltip.Trigger tooltip={__('Set recovery phrase')}>
-              <Button skin="plain" onClick={() => openModal(SetRecoveryModal)}>
-                <Icon icon={recoveryIcon} style={{ width: 20, height: 20 }} />
-              </Button>
-            </Tooltip.Trigger>
-          ) : (
-            undefined
-          )
-        }
+        controls={loggedIn ? <UserOptions /> : undefined}
       >
         {loggedIn ? (
           <UserPageLayout>
