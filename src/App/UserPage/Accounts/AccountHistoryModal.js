@@ -8,11 +8,12 @@ import Table from 'components/Table';
 import ContractDetailsModal from 'components/ContractDetailsModal';
 import FieldSet from 'components/FieldSet';
 import { apiPost } from 'lib/tritiumApi';
-import { formatDateTime, formatNumber } from 'lib/intl';
-import { openModal } from 'lib/ui';
+import { formatDateTime, formatNumber, formatCurrency } from 'lib/intl';
+import { openModal, toggleUserBalanceDisplayFiat } from 'lib/ui';
 import { handleError } from 'utils/form';
 
 import { totalBalance } from './utils';
+import Link from 'components/Link';
 
 const displayedOperations = [
   'DEBIT',
@@ -148,7 +149,15 @@ const Amount = styled.span(({ theme, possitive }) => ({
     content: possitive ? '"+"' : '"-"',
   },
 }));
-
+@connect(state => ({
+  showFiat: state.ui.user.balancesShowFiat,
+  fiatCurrency: state.settings.fiatCurrency,
+  market:
+    state.market.cryptocompare.rawNXSvalues &&
+    state.market.cryptocompare.rawNXSvalues.find(
+      e => e.name === state.settings.fiatCurrency
+    ).price,
+}))
 class AccountHistoryModal extends React.Component {
   state = {
     contracts: null,
@@ -197,9 +206,8 @@ class AccountHistoryModal extends React.Component {
   }
 
   render() {
-    const { account } = this.props;
+    const { account, balances, showFiat, market, fiatCurrency } = this.props;
     const { contracts } = this.state;
-
     return (
       <Modal
         assignClose={closeModal => {
@@ -218,39 +226,83 @@ class AccountHistoryModal extends React.Component {
           ) : (
             <Layout>
               <BalancesFieldSet
-                legend={`${__('Account balance')} (${account.token_name})`}
+                legend={
+                  account.token_name === 'NXS' ? (
+                    <>
+                      {__('Account balance(')}
+                      <Link
+                        as={''}
+                        to={''}
+                        onClick={e =>
+                          toggleUserBalanceDisplayFiat(!this.props.showFiat)
+                        }
+                      >
+                        {showFiat ? fiatCurrency : 'NXS'}
+                      </Link>
+                      {')'}
+                    </>
+                  ) : (
+                    `${__('Account balance')} (${account.token_name})`
+                  )
+                }
               >
                 <div className="flex space-between">
                   <div className="text-center">
                     <div>
                       <strong>{__('Total')}</strong>
                     </div>
-                    <div>{formatNumber(totalBalance(account, 6))}</div>
+                    <div>
+                      {showFiat && account.token_name === 'NXS'
+                        ? formatCurrency(
+                            totalBalance(account, 6) * market,
+                            fiatCurrency
+                          )
+                        : formatNumber(totalBalance(account, 6))}
+                    </div>
                   </div>
                   <div className="text-center">
                     <div>
                       <strong>{__('Available')}</strong>
                     </div>
-                    <div>{formatNumber(account.balance, 6)}</div>
+                    <div>
+                      {showFiat && account.token_name === 'NXS'
+                        ? formatCurrency(account.balance * market, fiatCurrency)
+                        : formatNumber(account.balance, 6)}
+                    </div>
                   </div>
                   <div className="text-center">
                     <div>
                       <strong>{__('Pending')}</strong>
                     </div>
-                    <div>{formatNumber(account.pending, 6)}</div>
+                    <div>
+                      {showFiat && account.token_name === 'NXS'
+                        ? formatCurrency(account.pending * market, fiatCurrency)
+                        : formatNumber(account.pending, 6)}
+                    </div>
                   </div>
                   <div className="text-center">
                     <div>
                       <strong>{__('Unconfirmed')}</strong>
                     </div>
-                    <div>{formatNumber(account.unconfirmed, 6)}</div>
+                    <div>
+                      {showFiat && account.token_name === 'NXS'
+                        ? formatCurrency(
+                            account.unconfirmed * market,
+                            fiatCurrency
+                          )
+                        : formatNumber(account.unconfirmed, 6)}
+                    </div>
                   </div>
                   {typeof account.stake === 'number' && (
                     <div className="text-center">
                       <div>
                         <strong>{__('Stake')}</strong>
                       </div>
-                      <div>{formatNumber(account.stake, 6)}</div>
+                      <div>
+                        {showFiat && account.token_name === 'NXS'
+                          ? formatCurrency(account.stake * market, fiatCurrency)
+                          : formatNumber(account.stake, 6)}
+                      </div>
                     </div>
                   )}
                 </div>
