@@ -7,6 +7,9 @@ import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import MaskableTextField from 'components/MaskableTextField';
 import Button from 'components/Button';
+import LoginModal from 'components/LoginModal';
+import Spinner from 'components/Spinner';
+import { showNotification, removeModal, openModal } from 'lib/ui';
 import { errorHandler, numericOnly } from 'utils/form';
 
 @reduxForm({
@@ -30,70 +33,96 @@ import { errorHandler, numericOnly } from 'utils/form';
 
     if (!newPassword) {
       errors.newPassword = __('New password is required');
-    } else if (password.length < 8) {
-      errors.password = __('Password must be at least 8 characters');
+    } else if (newPassword.length < 8) {
+      errors.newPassword = __('Password must be at least 8 characters');
     }
 
     if (!newPin) {
       errors.newPin = __('New PIN is required');
-    } else if (pin.length < 4) {
-      errors.pin = __('PIN must be at least 4 characters');
+    } else if (newPin.length < 4) {
+      errors.newPin = __('PIN must be at least 4 characters');
     }
 
     return errors;
   },
+  onSubmit: ({ username, recoveryPhrase, newPassword, newPin }) =>
+    apiPost('users/recover/user', {
+      username,
+      recovery: recoveryPhrase,
+      password: newPassword,
+      pin: newPin,
+    }),
+  onSubmitSuccess: async (result, dispatch, props) => {
+    removeModal(props.modalId);
+    props.reset();
+    showNotification(__('Password & PIN has been updated'), 'success');
+    openModal(LoginModal);
+  },
+  onSubmitFail: errorHandler(__('Error updating password & PIN')),
 })
 export default class RecoverPasswordModal extends React.Component {
   render() {
+    const { handleSubmit, submitting } = this.props;
     return (
       <Modal
         assignClose={closeModal => (this.closeModal = closeModal)}
         style={{ maxWidth: 500 }}
       >
-        <Modal.Header>{__('Recover password and PIN')}</Modal.Header>
+        <Modal.Header>{__('Reset password and PIN')}</Modal.Header>
         <Modal.Body>
-          <FormField label={__('Username')}>
-            <Field
-              name="username"
-              component={TextField.RF}
-              placeholder={__('Your username')}
-            />
-          </FormField>
-
-          <FormField label={__('Recovery phrase')}>
-            <Field
-              multiline
-              rows={1}
-              name="recoveryPhrase"
-              component={TextField.RF}
-              placeholder={__('Your recovery phrase')}
-            />
-          </FormField>
-
-          <div className="mt2">
-            <FormField connectLabel label={__('New Password')}>
+          <form onSubmit={handleSubmit}>
+            <FormField label={__('Username')}>
               <Field
-                component={MaskableTextField.RF}
-                name="newPassword"
-                placeholder={__('Enter your new password')}
+                name="username"
+                component={TextField.RF}
+                placeholder={__('Your username')}
               />
             </FormField>
 
-            <FormField connectLabel label={__('New PIN')}>
+            <FormField label={__('Recovery phrase')}>
               <Field
-                component={MaskableTextField.RF}
-                name="newPin"
-                normalize={numericOnly}
-                placeholder={__('Enter your new PIN number')}
+                multiline
+                rows={1}
+                name="recoveryPhrase"
+                component={TextField.RF}
+                placeholder={__('Your recovery phrase')}
               />
             </FormField>
-          </div>
 
-          <div className="mt2">
-            <Button skin="primary" wide>
-              {__('Set new password & PIN')}
-            </Button>
-          </div>
+            <div className="mt2">
+              <FormField connectLabel label={__('New Password')}>
+                <Field
+                  component={MaskableTextField.RF}
+                  name="newPassword"
+                  placeholder={__('Enter your new password')}
+                />
+              </FormField>
+
+              <FormField connectLabel label={__('New PIN')}>
+                <Field
+                  component={MaskableTextField.RF}
+                  name="newPin"
+                  normalize={numericOnly}
+                  placeholder={__('Enter your new PIN number')}
+                />
+              </FormField>
+            </div>
+
+            <div className="mt2">
+              <Button skin="primary" wide type="submit" disabled={submitting}>
+                {submitting ? (
+                  <span>
+                    <Spinner className="space-right" />
+                    <span className="v-align">
+                      {__('Resetting password & PIN')}...
+                    </span>
+                  </span>
+                ) : (
+                  __('Reset password & PIN')
+                )}
+              </Button>
+            </div>
+          </form>
         </Modal.Body>
       </Modal>
     );
