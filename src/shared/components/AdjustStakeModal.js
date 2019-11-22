@@ -101,7 +101,7 @@ const Note = styled.div(({ theme }) => ({
   onSubmitSuccess: async (result, dispatch, props) => {
     if (!result) return; // Submission was cancelled
 
-    if (stake < props.currentStake) {
+    if (props.values.stake < props.currentStake) {
       GA.SendEvent('Users', 'ReduceStake', 'Staking', 1);
     } else {
       GA.SendEvent('Users', 'IncreaseStake', 'Staking', 1);

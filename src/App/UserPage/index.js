@@ -18,6 +18,7 @@ import userIcon from 'icons/user.svg';
 // Internal Local
 import UserBrief from './UserBrief';
 import TabContent from './TabContent';
+import UserOptions from './UserOptions';
 
 const UserPageLayout = styled.div({
   display: 'flex',
@@ -74,7 +75,12 @@ class UserPage extends Component {
     const { loggedIn, match } = this.props;
 
     return (
-      <Panel icon={userIcon} title={__('User')} bodyScrollable={false}>
+      <Panel
+        icon={userIcon}
+        title={__('User')}
+        bodyScrollable={false}
+        controls={loggedIn ? <UserOptions /> : undefined}
+      >
         {loggedIn ? (
           <UserPageLayout>
             <UserBrief match={match} />

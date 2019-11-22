@@ -7,9 +7,12 @@ import { apiPost } from 'lib/tritiumApi';
 import Modal from 'components/Modal';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
+import MaskableTextField from 'components/MaskableTextField';
 import Button from 'components/Button';
 import Link from 'components/Link';
 import NewUserModal from 'components/NewUserModal';
+import RecoverPasswordModal from 'components/RecoverPasswordModal';
+import Spinner from 'components/Spinner';
 import { showNotification, openModal, removeModal } from 'lib/ui';
 import { getUserStatus } from 'lib/user';
 import { errorHandler, numericOnly } from 'utils/form';
@@ -118,18 +121,16 @@ class Login extends Component {
 
             <FormField connectLabel label={__('Password')}>
               <Field
-                component={TextField.RF}
+                component={MaskableTextField.RF}
                 name="password"
-                type="password"
                 placeholder={__('Enter your password')}
               />
             </FormField>
 
             <FormField connectLabel label={__('PIN')}>
               <Field
-                component={TextField.RF}
+                component={MaskableTextField.RF}
                 name="pin"
-                type="password"
                 normalize={numericOnly}
                 placeholder={__('Enter your PIN number')}
               />
@@ -143,32 +144,36 @@ class Login extends Component {
                 skin="primary"
                 disabled={submitting}
               >
-                {submitting ? __('Logging in') + '...' : __('Log in')}
+                {submitting ? (
+                  <span>
+                    <Spinner className="space-right" />
+                    <span className="v-align">{__('Logging in')}...</span>
+                  </span>
+                ) : (
+                  __('Log in')
+                )}
               </Button>
             </Buttons>
 
             <ExtraSection>
-              <Link
-                as="a"
-                onClick={e => {
-                  e.preventDefault();
+              <Button
+                skin="hyperlink"
+                onClick={() => {
                   this.closeModal();
-                  updateSettings({ legacyMode: true });
-                  location.reload();
+                  openModal(RecoverPasswordModal);
                 }}
               >
-                {__('Switch to Legacy Mode')}
-              </Link>
-              <Link
-                as="a"
-                onClick={e => {
-                  e.preventDefault();
+                {__('Forgot password?')}
+              </Button>
+              <Button
+                skin="hyperlink"
+                onClick={() => {
                   this.closeModal();
                   openModal(NewUserModal);
                 }}
               >
                 {__('Create new user')}
-              </Link>
+              </Button>
             </ExtraSection>
           </form>
         </Modal.Body>

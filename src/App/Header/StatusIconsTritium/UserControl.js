@@ -61,6 +61,7 @@ class UserControl extends React.Component {
 
     const rect = el.getBoundingClientRect();
     return {
+      minWidth: 120,
       top: rect.bottom + 18,
       right: window.innerWidth - rect.right,
     };

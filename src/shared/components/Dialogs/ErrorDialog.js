@@ -23,12 +23,6 @@ class ErrorDialog extends React.Component {
     }
   }
 
-  handleKeyDown = e => {
-    if (e.key === 'Escape') {
-      this.closeModal();
-    }
-  };
-
   render() {
     const { message, note, ...rest } = this.props;
     return (
@@ -47,7 +41,6 @@ class ErrorDialog extends React.Component {
           ref={this.buttonRef}
           skin="filled-danger"
           onClick={() => this.closeModal()}
-          onKeyDown={this.handleKeyDown}
         >
           {__('Dismiss')}
         </Dialog.Button>

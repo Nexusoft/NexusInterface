@@ -25,12 +25,6 @@ class SuccessDialog extends React.Component {
     }
   }
 
-  handleKeyDown = e => {
-    if (e.key === 'Escape') {
-      this.closeModal();
-    }
-  };
-
   render() {
     const { message, note, ...rest } = this.props;
     return (
@@ -51,7 +45,6 @@ class SuccessDialog extends React.Component {
           ref={this.buttonRef}
           skin="filled-primary"
           onClick={() => this.closeModal()}
-          onKeyDown={this.handleKeyDown}
         >
           {__('Dismiss')}
         </Dialog.Button>

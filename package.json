@@ -53,7 +53,8 @@
     "extraResources": [
       "./assets/GeoLite2-City/**/*",
       "./assets/translations/*",
-      "./assets/tray/**/*"
+      "./assets/tray/**/*",
+      "./assets/misc/**/*"
     ],
     "publish": {
       "provider": "github",

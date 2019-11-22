@@ -3,7 +3,7 @@ import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
 
 import Modal from 'components/Modal';
-import TextField from 'components/TextField';
+import MaskableTextField from 'components/MaskableTextField';
 import FormField from 'components/FormField';
 import Button from 'components/Button';
 import confirmPin from 'utils/promisified/confirmPin';
@@ -12,7 +12,7 @@ import { apiPost } from 'lib/tritiumApi';
 import { errorHandler } from 'utils/form';
 import { coreDataDir } from 'consts/paths';
 
-const PasswordInput = styled(TextField.RF)({
+const PasswordInput = styled(MaskableTextField.RF)({
   margin: '1em auto 2.5em',
 });
 
@@ -64,7 +64,6 @@ const MigrateStakeModal = ({ handleSubmit }) => (
               <Field
                 component={PasswordInput}
                 name="passphrase"
-                type="password"
                 skin="filled-inverted"
                 placeholder={__(
                   'Leave this blank if your legacy wallet is not encrypted'

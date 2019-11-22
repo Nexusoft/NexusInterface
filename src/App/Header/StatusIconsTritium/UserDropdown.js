@@ -7,6 +7,8 @@ import { arrowStyles } from 'components/Arrow';
 import LoginModal from 'components/LoginModal';
 import NewUserModal from 'components/NewUserModal';
 import MigrateStakeModal from 'components/MigrateStakeModal';
+import SetRecoveryModal from 'components/SetRecoveryModal';
+import ChangePasswordModal from 'components/ChangePasswordModal';
 import { isLoggedIn } from 'selectors';
 import { openModal, showNotification } from 'lib/ui';
 import { timing, animations, consts } from 'styles';
@@ -69,6 +71,7 @@ const Separator = styled.div(({ theme }) => ({
 
 @connect(({ core: { userStatus, stakeInfo } }) => ({
   currentUser: userStatus && userStatus.username,
+  hasRecoveryPhrase: !!(userStatus && userStatus.recovery),
   trustIsNew: stakeInfo && stakeInfo.new,
 }))
 class LoggedInDropdown extends React.Component {
@@ -79,7 +82,12 @@ class LoggedInDropdown extends React.Component {
   };
 
   render() {
-    const { currentUser, closeDropdown, trustIsNew } = this.props;
+    const {
+      currentUser,
+      hasRecoveryPhrase,
+      closeDropdown,
+      trustIsNew,
+    } = this.props;
     return (
       <>
         <CurrentUser>
@@ -93,19 +101,27 @@ class LoggedInDropdown extends React.Component {
           <MenuItem>{__('Tokens')}</MenuItem>
         </Link>
         <Separator />
-        {!!trustIsNew && (
-          <>
-            <MenuItem
-              onClick={() => {
-                openModal(MigrateStakeModal);
-                closeDropdown();
-              }}
-            >
-              {__('Migrate stake')}
-            </MenuItem>
-            <Separator />
-          </>
+        {!hasRecoveryPhrase && (
+          <MenuItem
+            onClick={() => {
+              openModal(SetRecoveryModal);
+              closeDropdown();
+            }}
+          >
+            {__('Set recovery phrase')}
+          </MenuItem>
         )}
+        {!!trustIsNew && (
+          <MenuItem
+            onClick={() => {
+              openModal(MigrateStakeModal);
+              closeDropdown();
+            }}
+          >
+            {__('Migrate stake')}
+          </MenuItem>
+        )}
+        {(!hasRecoveryPhrase || !!trustIsNew) && <Separator />}
         <MenuItem onClick={this.logOut}>{__('Log out')}</MenuItem>
       </>
     );

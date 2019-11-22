@@ -287,7 +287,7 @@ class SettingsApp extends Component {
           />
         </SettingsField>
 
-        <BackupDirSetting />
+        {legacyMode && <BackupDirSetting />}
 
         <SettingsField
           connectLabel
