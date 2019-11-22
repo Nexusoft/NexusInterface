@@ -7,19 +7,10 @@ import FormField from 'components/FormField';
 import MaskableTextField from 'components/MaskableTextField';
 import Button from 'components/Button';
 import Spinner from 'components/Spinner';
+import ConfirmPasswordPinModal from 'components/ConfirmPasswordPinModal';
 import { errorHandler, numericOnly } from 'utils/form';
-import { showNotification, removeModal } from 'lib/ui';
-
-const options = [
-  {
-    value: false,
-    display: __('Use current password & PIN'),
-  },
-  {
-    value: true,
-    display: __('Use recovery phrase'),
-  },
-];
+import { showNotification, removeModal, openModal } from 'lib/ui';
+import confirmPasswordPin from 'utils/promisified/confirmPasswordPin';
 
 @reduxForm({
   form: 'change-password',
@@ -54,17 +45,28 @@ const options = [
 
     return errors;
   },
-  onSubmit: ({ password, pin, newPassword, newPin }) =>
-    apiPost('users/update/user', {
-      password,
-      pin,
-      new_password: newPassword,
-      new_pin: newPin,
-    }),
+  onSubmit: async ({ password, pin, newPassword, newPin }) => {
+    const correct = await confirmPasswordPin({
+      password: newPassword,
+      pin: newPin,
+    });
+
+    if (correct) {
+      return await apiPost('users/update/user', {
+        password,
+        pin,
+        new_password: newPassword,
+        new_pin: newPin,
+      });
+    } else {
+      return null;
+    }
+  },
   onSubmitSuccess: async (result, dispatch, props) => {
+    if (!result) return;
     removeModal(props.modalId);
     props.reset();
-    showNotification(__('Password & PIN has been updated'), 'success');
+    showNotification(__('Password & PIN have been updated'), 'success');
   },
   onSubmitFail: errorHandler(__('Error updating password & PIN')),
 })
@@ -84,6 +86,7 @@ export default class ChangePasswordModal extends React.Component {
                 name="password"
                 component={MaskableTextField.RF}
                 placeholder={__('Your current password')}
+                autoFocus
               />
             </FormField>
 
