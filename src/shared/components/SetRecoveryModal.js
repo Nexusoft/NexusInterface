@@ -11,7 +11,9 @@ import TextField from 'components/TextField';
 import MaskableTextField from 'components/MaskableTextField';
 import Button from 'components/Button';
 import Select from 'components/Select';
+import Spinner from 'components/Spinner';
 import { errorHandler, numericOnly } from 'utils/form';
+import { showNotification, removeModal } from 'lib/ui';
 import { assetsDir } from 'consts/paths';
 
 const options = [
@@ -63,6 +65,19 @@ const options = [
 
     return errors;
   },
+  onSubmit: ({ password, pin, phrase, newPhrase }, dispatch, props) =>
+    apiPost('users/update/user', {
+      password,
+      pin,
+      recovery: props.hasRecoveryPhrase ? phrase : undefined,
+      new_recovery: newPhrase,
+    }),
+  onSubmitSuccess: async (result, dispatch, props) => {
+    removeModal(props.modalId);
+    props.reset();
+    showNotification(__('Recovery phrase has been updated'), 'success');
+  },
+  onSubmitFail: errorHandler(__('Error setting recovery phrase')),
 })
 export default class SetRecoveryModal extends React.Component {
   state = {
@@ -93,6 +108,7 @@ export default class SetRecoveryModal extends React.Component {
   };
 
   render() {
+    const { handleSubmit, submitting } = this.props;
     return (
       <Modal
         assignClose={closeModal => (this.closeModal = closeModal)}
@@ -100,71 +116,82 @@ export default class SetRecoveryModal extends React.Component {
       >
         <Modal.Header>{__('Recovery phrase')}</Modal.Header>
         <Modal.Body>
-          <div>
-            {__(
-              'You will be able to use this recovery phrase to change your password and PIN in the future.'
-            )}
-          </div>
-
-          <FormField label={__('Password')}>
-            <Field
-              name="password"
-              component={MaskableTextField.RF}
-              placeholder={__('Your current password')}
-            />
-          </FormField>
-
-          <FormField label={__('PIN')}>
-            <Field
-              name="pin"
-              component={MaskableTextField.RF}
-              normalize={numericOnly}
-              placeholder={__('Your current PIN number')}
-            />
-          </FormField>
-
-          {this.props.hasRecoveryPhrase && (
-            <FormField label={__('Current recovery phrase')}>
-              <Field
-                multiline
-                name="phrase"
-                component={TextField.RF}
-                placeholder={__('Enter your recovery phrase')}
-                rows={1}
-              />
-            </FormField>
-          )}
-
-          <div className="mt2">
-            <FormField label={__('New recovery phrase')}>
-              <Field
-                multiline
-                name="newPhrase"
-                component={TextField.RF}
-                placeholder={__('Enter your new recovery phrase')}
-                rows={1}
-              />
-            </FormField>
-
-            <div className="mt1 flex center space-between">
-              <Button skin="hyperlink" onClick={this.generatePhrase}>
-                {__('Generate a recovery phrase')}
-              </Button>
-              <Select
-                options={options}
-                value={this.state.wordCount}
-                onChange={wordCount => {
-                  this.setState({ wordCount });
-                }}
-              />
+          <form onSubmit={handleSubmit}>
+            <div>
+              {__(
+                'You will be able to use this recovery phrase to change your password and PIN in the future.'
+              )}
             </div>
-          </div>
 
-          <div className="mt2">
-            <Button skin="primary" wide>
-              {__('Set recovery phrase')}
-            </Button>
-          </div>
+            <FormField label={__('Password')}>
+              <Field
+                name="password"
+                component={MaskableTextField.RF}
+                placeholder={__('Your current password')}
+              />
+            </FormField>
+
+            <FormField label={__('PIN')}>
+              <Field
+                name="pin"
+                component={MaskableTextField.RF}
+                normalize={numericOnly}
+                placeholder={__('Your current PIN number')}
+              />
+            </FormField>
+
+            {this.props.hasRecoveryPhrase && (
+              <FormField label={__('Current recovery phrase')}>
+                <Field
+                  multiline
+                  name="phrase"
+                  component={TextField.RF}
+                  placeholder={__('Enter your recovery phrase')}
+                  rows={1}
+                />
+              </FormField>
+            )}
+
+            <div className="mt2">
+              <FormField label={__('New recovery phrase')}>
+                <Field
+                  multiline
+                  name="newPhrase"
+                  component={TextField.RF}
+                  placeholder={__('Enter your new recovery phrase')}
+                  rows={1}
+                />
+              </FormField>
+
+              <div className="mt1 flex center space-between">
+                <Button skin="hyperlink" onClick={this.generatePhrase}>
+                  {__('Generate a recovery phrase')}
+                </Button>
+                <Select
+                  options={options}
+                  value={this.state.wordCount}
+                  onChange={wordCount => {
+                    this.setState({ wordCount });
+                  }}
+                />
+              </div>
+            </div>
+
+            <div className="mt2">
+              <Button skin="primary" wide type="submit" disabled={submitting}>
+                {submitting ? (
+                  <span>
+                    <Spinner className="space-right" />
+                    <span className="v-align">
+                      {__('Setting recovery phrase')}...
+                    </span>
+                  </span>
+                ) : (
+                  __('Set recovery phrase')
+                )}
+              </Button>
+            </div>
+          </form>
         </Modal.Body>
       </Modal>
     );
