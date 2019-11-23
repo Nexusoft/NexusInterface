@@ -47,6 +47,15 @@ const Pending = styled.div({
   paddingLeft: '1em',
 });
 
+const BalanceTooltip = staking =>
+  staking
+    ? __(
+        'The current NXS balance of the trust account that is not staked. You can spend this amount without affecting your Trust Score'
+      )
+    : __(
+        'Balance that will be staked after the 72 holding period, any change to this balance will reset the hold timer'
+      );
+
 @connect(state => ({
   stakeInfo: state.core.stakeInfo,
   stakingEnabled: state.settings.enableStaking,
@@ -173,35 +182,40 @@ export default class Staking extends React.Component {
           </Line>
           <Line>
             <div>
-              <span className="v-align">{__('Unstaked amount')}</span>
-              <QuestionCircle
-                tooltip={__(
-                  'The current NXS balance of the trust account that is not staked. You can spend this amount without affecting your Trust Score'
-                )}
-              />
+              <span className="v-align">{__('Available Balance')}</span>
+              <QuestionCircle tooltip={BalanceTooltip(!stakeInfo.new)} />
             </div>
             <div>{formatNumber(stakeInfo.balance, 6)} NXS</div>
           </Line>
           <div className="mt1 flex space-between">
-            <div>
-              <Button
-                disabled={
-                  (!stakeInfo.stake && !stakeInfo.balance) || stakeInfo.new
-                }
-                onClick={() => {
-                  openModal(AdjustStakeModal);
-                }}
-              >
-                {__('Adjust stake amount')}
-              </Button>
-              {!stakeInfo.stake && !stakeInfo.balance ? (
-                <div className="error">{__('Trust Account is empty.')}</div>
-              ) : (
-                <div className="error">
-                  {__('Trust Account must mature for 72 hours before staking')}
-                </div>
-              )}
-            </div>
+            {stakeInfo.staking && stakeInfo.balance && (
+              <div>
+                <Button
+                  disabled={
+                    (!stakeInfo.stake && !stakeInfo.balance) || stakeInfo.new
+                  }
+                  onClick={() => {
+                    openModal(AdjustStakeModal);
+                  }}
+                >
+                  {__('Adjust stake amount')}
+                </Button>
+                {stakeInfo.new && (
+                  <div className="error">
+                    {__(
+                      'Waiting For genesis. Time dependent on balance and difficulty.'
+                    )}
+                  </div>
+                )}
+                {stakeInfo.onHold && (
+                  <div className="error">
+                    {__('Account on hold for another %{stakeSeconds} Seconds', {
+                      stakeSeconds: stakeInfo.holdtime,
+                    })}
+                  </div>
+                )}
+              </div>
+            )}
             <Button
               skin={stakingEnabled ? 'default' : 'primary'}
               onClick={this.switchStaking}
