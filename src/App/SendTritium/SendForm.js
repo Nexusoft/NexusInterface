@@ -206,7 +206,7 @@ const mapStateToProps = state => {
     if (pin) {
       const params = {
         pin,
-        name: sendFrom,
+        address: props.accountInfo.address,
         amount: parseFloat(recipients[0].amount),
       };
 

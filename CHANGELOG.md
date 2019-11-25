@@ -12,7 +12,7 @@
 
 #### Fixes
 
--
+- Fixed issue with sending from unnamed accounts
 
 # 2.0.7 (2019.11.17)
 
