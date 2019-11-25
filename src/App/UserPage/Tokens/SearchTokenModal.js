@@ -6,13 +6,9 @@ import Modal from 'components/Modal';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
 import FormField from 'components/FormField';
-import confirm from 'utils/promisified/confirm';
-import confirmPin from 'utils/promisified/confirmPin';
 import { apiPost } from 'lib/tritiumApi';
 import { errorHandler } from 'utils/form';
-import { loadAccounts } from 'lib/user';
 import { removeModal, showNotification } from 'lib/ui';
-import NewAccountModal from 'components/UserDialogs/NewAccountModal';
 import { openModal } from 'lib/ui';
 import searchIcon from 'icons/search.svg';
 import Icon from 'components/Icon';
@@ -75,16 +71,14 @@ class SearchTokenModal extends React.Component {
         }}
         style={{ maxWidth: 800 }}
       >
-        <Modal.Header>{__('Search Tokens')}</Modal.Header>
+        <Modal.Header>{__('Lookup Token')}</Modal.Header>
         <Modal.Body>
           <form onSubmit={handleSubmit}>
-            <FormField connectLabel label={__('Search Tokens')}>
+            <FormField connectLabel label={__('Name/Address')}>
               <Field
                 name="searchValue"
                 component={TextField.RF}
-                placeholder={__(
-                  'Search for Token on the network ( Name or Address)'
-                )}
+                placeholder={__('Lookup a Token on the network')}
                 left={<Icon icon={searchIcon} className="space-right" />}
               />
             </FormField>
@@ -94,7 +88,7 @@ class SearchTokenModal extends React.Component {
               type="submit"
               disabled={submitting}
             >
-              {__('Search for token')}
+              {__('Lookup this token')}
             </Button>
           </form>
         </Modal.Body>

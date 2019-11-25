@@ -9,6 +9,7 @@
 #### Adjustments
 
 - Removed Option for Avatar mode while in Tritium Mode
+- Changed terminology of Search Token to Lookup Token to better illustrate the function
 
 #### Fixes
 
