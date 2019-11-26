@@ -49,6 +49,7 @@ import confirmPasswordPin from 'utils/promisified/confirmPasswordPin';
   },
   onSubmit: async ({ username, recoveryPhrase, newPassword, newPin }) => {
     const correct = await confirmPasswordPin({
+      isNew: true,
       password: newPassword,
       pin: newPin,
     });

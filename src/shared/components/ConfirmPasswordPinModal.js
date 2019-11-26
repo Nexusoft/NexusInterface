@@ -31,7 +31,7 @@ export default class ConfirmPasswordPinModal extends React.Component {
   };
 
   render() {
-    const { password, pin, onConfirm, ...rest } = this.props;
+    const { isNew, password, pin, onConfirm, ...rest } = this.props;
     return (
       <Modal
         assignClose={closeModal => (this.closeModal = closeModal)}
@@ -42,9 +42,13 @@ export default class ConfirmPasswordPinModal extends React.Component {
         <Modal.Body>
           <form onSubmit={this.confirm}>
             <div>
-              {__(
-                'Enter your password & PIN once again to make sure you have entered them correctly'
-              )}
+              {isNew
+                ? __(
+                    'Enter your new password & new PIN once again to make sure you have entered them correctly'
+                  )
+                : __(
+                    'Enter your password & PIN once again to make sure you have entered them correctly'
+                  )}
             </div>
 
             <FormField label={__('Password')}>
@@ -53,7 +57,11 @@ export default class ConfirmPasswordPinModal extends React.Component {
                 onChange={e => {
                   this.setState({ password: e.target.value });
                 }}
-                placeholder={__('Re-enter your password')}
+                placeholder={
+                  isNew
+                    ? __('Re-enter your new password')
+                    : __('Re-enter your password')
+                }
                 autoFocus
               />
             </FormField>
@@ -64,7 +72,11 @@ export default class ConfirmPasswordPinModal extends React.Component {
                 onChange={e => {
                   this.setState({ pin: e.target.value });
                 }}
-                placeholder={__('Re-enter your PIN number')}
+                placeholder={
+                  isNew
+                    ? __('Re-enter your new PIN number')
+                    : __('Re-enter your PIN number')
+                }
               />
             </FormField>
 
