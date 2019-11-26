@@ -73,7 +73,7 @@ import confirmPasswordPin from 'utils/promisified/confirmPasswordPin';
   },
   onSubmitFail: errorHandler(__('Error updating password & PIN')),
 })
-export default class RecoverPasswordModal extends React.Component {
+export default class RecoverPasswordPinModal extends React.Component {
   render() {
     const { handleSubmit, submitting } = this.props;
     return (

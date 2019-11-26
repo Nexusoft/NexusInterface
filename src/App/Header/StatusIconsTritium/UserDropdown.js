@@ -8,7 +8,6 @@ import LoginModal from 'components/LoginModal';
 import NewUserModal from 'components/NewUserModal';
 import MigrateStakeModal from 'components/MigrateStakeModal';
 import SetRecoveryModal from 'components/SetRecoveryModal';
-import ChangePasswordModal from 'components/ChangePasswordModal';
 import { isLoggedIn } from 'selectors';
 import { openModal, showNotification } from 'lib/ui';
 import { timing, animations, consts } from 'styles';
