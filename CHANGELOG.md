@@ -14,6 +14,7 @@
 #### Fixes
 
 - Fixed issue with sending from unnamed accounts
+- Fixed core settings not repecting testnet iteration off button
 
 # 2.0.7 (2019.11.17)
 

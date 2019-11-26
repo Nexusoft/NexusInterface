@@ -52,7 +52,7 @@ const formKeys = [
   'ipMineWhitelist',
   'enableStaking',
   'verboseLevel',
-  'alphaTestNet',
+  'testnetIteration',
   'avatarMode',
   legacyMode ? 'manualDaemonIP' : 'manualDaemonApiIP',
   legacyMode ? 'manualDaemonPort' : 'manualDaemonApiPort',
