@@ -16,7 +16,6 @@ import TextField from 'components/TextField';
 import Switch from 'components/Switch';
 import { errorHandler } from 'utils/form';
 import { legacyMode } from 'consts/misc';
-// import { coreDataDir } from 'consts/paths';
 import * as color from 'utils/color';
 import confirm from 'utils/promisified/confirm';
 import { newUID } from 'utils/misc';
@@ -227,38 +226,6 @@ class SettingsCore extends Component {
       });
     }
   };
-
-  // /**
-  //  * Opens up a dialog to move the data directory
-  //  *
-  //  * @memberof SettingsCore
-  //  */
-  // moveDataDir = () => {
-  //   remote.dialog.showOpenDialog(
-  //     {
-  //       title: __('Select a directory'),
-  //       defaultPath: this.props.backupDir,
-  //       properties: ['openDirectory'],
-  //     },
-  //     folderPaths => {
-  //       if (folderPaths && folderPaths.length > 0) {
-  //         this.handleFileCopy(folderPaths[0]);
-  //       }
-  //     }
-  //   );
-  // };
-
-  // /**
-  //  * Runs the file copy script
-  //  *
-  //  * @param {*} newFolderDir
-  //  * @memberof SettingsCore
-  //  */
-  // async handleFileCopy(newFolderDir) {
-  //   await cpy(coreDataDir, newFolderDir).on('progress', progress => {
-  //     console.log(progress);
-  //   });
-  // }
 
   reloadTxHistory = async () => {
     const confirmed = await confirm({
@@ -547,55 +514,8 @@ class SettingsCore extends Component {
                   size={30}
                 />
               </SettingsField>
-              {/* <Button
-              className="space-right"
-              style={{ marginTop: '1em' }}
-              type="submit"
-              skin="primary"
-              disabled={pristine || submitting}
-            >
-              {pristine
-                ? __('Settings Unchanged')
-                : submitting
-                ? __('Settings Saving')
-                : __('Save Settings')}
-            </Button> */}
             </>
           )}
-
-          {/*  REMOVING THIS FOR NOW TILL I CAN CONFIRM THE SECURITY AND FUNCTION
-            <SettingsField
-              indent={1}
-              connectLabel
-              label={'Move Data Dir'}
-              subLabel={'Move the daemon data directory to a different folder'}
-            >
-              <div>
-                <a>{'Current: ' + coreDataDir}</a>
-                <Button onClick={this.moveDataDir}>
-                  <Text id="Settings.MoveDataDirButton" />
-                </Button>
-              </div>
-            </SettingsField>
-            */}
-
-          {/*<div className="flex space-between" style={{ marginTop: '2em' }}>
-            <Button onClick={this.restartCore}>{__('Restart Core')}</Button>
-* <Button
-              type="submit"
-              skin="primary"
-              disabled={pristine || submitting}
-            >
-              {pristine ? (
-                __('Settings saved')
-              ) : submitting ? (
-                <Text id="SavingSettings" />
-              ) : (
-                <Text id="SaveSettings" />
-              )}
-            </Button> 
-          </div>*/}
-
           {!!dirty && (
             <RestartPrompt>
               <RestartContainer>
