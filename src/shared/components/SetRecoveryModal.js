@@ -122,7 +122,7 @@ export default class SetRecoveryModal extends React.Component {
           <form onSubmit={handleSubmit}>
             <div>
               {__(
-                'Save this new recovery phrase in a safe place. You will be able to use it to change your password and PIN, even reset your recovery phrase in the future.'
+                'The recovery phrase can be used to recover your account and set a new password and PIN in the event that you lose or forget them. Your recovery phrase must be a minimum of 40 characters, and should ideally be made up of random words. Save this new recovery phrase in a safe place.'
               )}
             </div>
 
@@ -156,18 +156,6 @@ export default class SetRecoveryModal extends React.Component {
             )}
 
             <div className="mt2">
-              <FormField label={__('New recovery phrase')}>
-                <Field
-                  multiline
-                  name="newPhrase"
-                  component={TextField.RF}
-                  placeholder={__(
-                    'Enter your new recovery phrase or click Generate'
-                  )}
-                  rows={1}
-                />
-              </FormField>
-
               <div className="mt1 flex center space-between">
                 <Button skin="hyperlink" onClick={this.generatePhrase}>
                   {__('Generate a recovery phrase')}
@@ -180,6 +168,18 @@ export default class SetRecoveryModal extends React.Component {
                   }}
                 />
               </div>
+
+              <FormField label={__('New recovery phrase')}>
+                <Field
+                  multiline
+                  name="newPhrase"
+                  component={TextField.RF}
+                  placeholder={__(
+                    'Enter your new recovery phrase or click Generate'
+                  )}
+                  rows={1}
+                />
+              </FormField>
             </div>
 
             <div className="mt2">
