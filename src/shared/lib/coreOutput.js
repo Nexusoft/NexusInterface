@@ -3,7 +3,7 @@ import path from 'path';
 import EventEmitter from 'events';
 
 import store, { observeStore } from 'store';
-import { coreDataDir } from 'consts/paths';
+import { returnCoreDataDir } from 'consts/paths';
 import { printCoreOutput } from 'lib/ui';
 import { walletEvents } from 'lib/wallet';
 import { legacyMode } from 'consts/misc';
@@ -246,7 +246,7 @@ export function startCoreOuputWatch() {
   if (state.settings.manualDaemon) {
     return;
   }
-  let datadir = coreDataDir;
+  let datadir = returnCoreDataDir();
 
   const calcDebugFileLocation = () => {
     if (fs.existsSync(path.join(datadir, subFolder, 'log', '0.log'))) {

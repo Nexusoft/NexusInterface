@@ -14,7 +14,7 @@ import { isCoreConnected } from 'selectors';
 import { legacyMode } from 'consts/misc';
 import showOpenDialog from 'utils/promisified/showOpenDialog';
 import confirm from 'utils/promisified/confirm';
-import { coreDataDir, walletDataDir } from 'consts/paths';
+import { returnCoreDataDir, walletDataDir } from 'consts/paths';
 import { checkForUpdates, quitAndInstall } from 'lib/updater';
 import { tritiumUpgradeTime } from 'consts/misc';
 import { walletEvents } from 'lib/wallet';
@@ -234,7 +234,7 @@ const walletGuideLink = {
 const openCoreDataDir = {
   label: __('Open Core Data Folder'),
   click: () => {
-    shell.openItem(coreDataDir);
+    shell.openItem(returnCoreDataDir());
   },
 };
 

@@ -28,21 +28,14 @@ export const defaultCoreDataDir =
     ? path.join(appDataDir, 'Nexus')
     : path.join(process.env.HOME, '/.Nexus');
 
-//const { dataDirOverride } = savedSettings();
-
-export const coreDataDirP = () => {
+export const returnCoreDataDir = () => {
   const { dataDirOverride } = savedSettings();
-  console.log(dataDirOverride);
-  const asdfgg = dataDirOverride
+  return dataDirOverride
     ? dataDirOverride === defaultCoreDataDir
       ? defaultCoreDataDir
       : dataDirOverride
     : defaultCoreDataDir;
-  console.log(asdfgg);
-  return asdfgg;
 };
-
-console.log(coreDataDir());
 
 export const assetsParentDir =
   process.env.NODE_ENV === 'development'
@@ -79,6 +72,6 @@ if (!fs.existsSync(assetsDir)) {
 if (!fs.existsSync(modulesDir)) {
   fs.mkdirSync(modulesDir);
 }
-if (!fs.existsSync(coreDataDir)) {
-  fs.mkdirSync(coreDataDir);
+if (!fs.existsSync(returnCoreDataDir())) {
+  fs.mkdirSync(returnCoreDataDir());
 }

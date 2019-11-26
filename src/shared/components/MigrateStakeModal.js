@@ -10,7 +10,7 @@ import confirmPin from 'utils/promisified/confirmPin';
 import { removeModal, openSuccessDialog } from 'lib/ui';
 import { apiPost } from 'lib/tritiumApi';
 import { errorHandler } from 'utils/form';
-import { coreDataDir } from 'consts/paths';
+import { returnCoreDataDir } from 'consts/paths';
 
 const PasswordInput = styled(MaskableTextField.RF)({
   margin: '1em auto 2.5em',
@@ -56,7 +56,7 @@ const MigrateStakeModal = ({ handleSubmit }) => (
           <div className="mt1">
             {__(
               'Please make sure that you are using the same machine that you used to stake with your legacy wallet, or you have put your staking wallet.dat file into %{path}',
-              { path: coreDataDir }
+              { path: returnCoreDataDir() }
             )}
           </div>
           <form onSubmit={handleSubmit} className="mt2">

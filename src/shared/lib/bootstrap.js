@@ -8,7 +8,7 @@ import moveFile from 'move-file';
 import rimraf from 'rimraf';
 
 // Internal
-import { coreDataDir } from 'consts/paths';
+import { returnCoreDataDir } from 'consts/paths';
 import { walletDataDir } from 'consts/paths';
 import { backupWallet } from 'lib/wallet';
 import rpc from 'lib/rpc';
@@ -30,7 +30,7 @@ import { updateSettings } from 'lib/settings';
 import BootstrapModal from 'components/BootstrapModal';
 
 const fileLocation = path.join(walletDataDir, 'recent.tar.gz');
-const extractDest = path.join(coreDataDir, 'recent');
+const extractDest = path.join(returnCoreDataDir(), 'recent');
 const recentDbUrlTritium = 'https://nexus.io/bootstrap/tritium/tritium.tar.gz'; // Tritium Bootstrap URL
 
 let aborting = false;
@@ -43,7 +43,7 @@ let downloadRequest = null;
  * @returns
  */
 async function checkFreeSpaceForBootstrap() {
-  const diskSpace = await checkDiskSpace(coreDataDir);
+  const diskSpace = await checkDiskSpace(returnCoreDataDir());
   return diskSpace.free >= 15 * 1000 * 1000 * 1000; // 15 GB
 }
 
@@ -233,20 +233,20 @@ async function moveExtractedContent() {
             for (let evenDeeperEle of newerContents) {
               moveFile.sync(
                 path.join(extractDest, element, deeperEle, evenDeeperEle),
-                path.join(coreDataDir, element, deeperEle, evenDeeperEle)
+                path.join(returnCoreDataDir(), element, deeperEle, evenDeeperEle)
               );
             }
           } else {
             moveFile.sync(
               path.join(extractDest, element, deeperEle),
-              path.join(coreDataDir, element, deeperEle)
+              path.join(returnCoreDataDir(), element, deeperEle)
             );
           }
         }
       } else {
         moveFile.sync(
           path.join(extractDest, element),
-          path.join(coreDataDir, element)
+          path.join(returnCoreDataDir(), element)
         );
       }
     }

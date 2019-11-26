@@ -6,7 +6,7 @@
 import path from 'path';
 import crypto from 'crypto';
 import macaddress from 'macaddress';
-import { homeDir, settingsFilePath, coreDataDir } from 'consts/paths';
+import { homeDir, settingsFilePath, defaultCoreDataDir } from 'consts/paths';
 import { readJson, writeJson } from 'utils/json';
 
 const defaultBackupDir = path.join(homeDir, '/NexusBackups');
@@ -52,7 +52,7 @@ export const defaultSettings = {
   manualDaemonApiPassword: defaultPassword,
   manualDaemonApiIP: '127.0.0.1',
   manualDaemonApiPort: '8080',
-  manualDaemonDataDir: coreDataDir,
+  manualDaemonDataDir: defaultCoreDataDir,
 
   // Style
   renderGlobe: true,

@@ -4,7 +4,7 @@ import log from 'electron-log';
 import crypto from 'crypto';
 import macaddress from 'macaddress';
 
-import { coreDataDir } from 'consts/paths';
+import { returnCoreDataDir } from 'consts/paths';
 
 function generateDefaultPassword() {
   let randomNumbers = ['', ''];
@@ -59,7 +59,7 @@ const defaultConfig = {
   password: generateDefaultPassword(),
   apiUser: 'apiserver',
   apiPassword: generateDefaultPassword(),
-  dataDir: coreDataDir,
+  dataDir: returnCoreDataDir(),
   verbose: 2,
 };
 
@@ -99,7 +99,7 @@ export function customConfig(config = {}) {
  * @returns
  */
 export function loadNexusConf() {
-  const confPath = path.join(coreDataDir, 'nexus.conf');
+  const confPath = path.join(returnCoreDataDir(), 'nexus.conf');
   const confContent = fs.existsSync(confPath)
     ? fs.readFileSync(confPath).toString()
     : '';
