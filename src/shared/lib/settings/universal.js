@@ -6,13 +6,8 @@
 import path from 'path';
 import crypto from 'crypto';
 import macaddress from 'macaddress';
-import { walletDataDir } from 'consts/paths';
-import { homeDir } from 'consts/paths';
-import { coreDataDir } from 'consts/paths';
+import { homeDir, settingsFilePath, coreDataDir } from 'consts/paths';
 import { readJson, writeJson } from 'utils/json';
-
-const settingsFileName = 'settings.json';
-const settingsFilePath = path.join(walletDataDir, settingsFileName);
 
 const defaultBackupDir = path.join(homeDir, '/NexusBackups');
 
@@ -46,6 +41,7 @@ export const defaultSettings = {
   verboseLevel: 0,
   avatarMode: true,
   ipMineWhitelist: '',
+  dataDirOverride: '',
   testnetIteration: 0,
   manualDaemon: false,
   manualDaemonUser: 'rpcserver',
