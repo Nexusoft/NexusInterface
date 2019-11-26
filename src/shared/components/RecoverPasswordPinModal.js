@@ -9,7 +9,7 @@ import MaskableTextField from 'components/MaskableTextField';
 import Button from 'components/Button';
 import LoginModal from 'components/LoginModal';
 import Spinner from 'components/Spinner';
-import { showNotification, removeModal, openModal } from 'lib/ui';
+import { openSuccessDialog, removeModal, openModal } from 'lib/ui';
 import { errorHandler, numericOnly } from 'utils/form';
 import confirmPasswordPin from 'utils/promisified/confirmPasswordPin';
 
@@ -69,8 +69,12 @@ import confirmPasswordPin from 'utils/promisified/confirmPasswordPin';
     if (!result) return;
     removeModal(props.modalId);
     props.reset();
-    showNotification(__('Password & PIN have been updated'), 'success');
-    openModal(LoginModal);
+    openSuccessDialog({
+      message: __('Password & PIN have been updated'),
+      onClose: () => {
+        openModal(LoginModal);
+      },
+    });
   },
   onSubmitFail: errorHandler(__('Error updating password & PIN')),
 })

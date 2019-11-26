@@ -13,7 +13,7 @@ import Button from 'components/Button';
 import Select from 'components/Select';
 import Spinner from 'components/Spinner';
 import { errorHandler, numericOnly } from 'utils/form';
-import { showNotification, removeModal } from 'lib/ui';
+import { openSuccessDialog, removeModal } from 'lib/ui';
 import { assetsDir } from 'consts/paths';
 
 const options = [
@@ -76,7 +76,9 @@ const options = [
   onSubmitSuccess: async (result, dispatch, props) => {
     removeModal(props.modalId);
     props.reset();
-    showNotification(__('Recovery phrase has been updated'), 'success');
+    openSuccessDialog({
+      message: __('Recovery phrase has been updated'),
+    });
   },
   onSubmitFail: errorHandler(__('Error setting recovery phrase')),
 })

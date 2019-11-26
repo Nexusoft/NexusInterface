@@ -8,7 +8,7 @@ import MaskableTextField from 'components/MaskableTextField';
 import Button from 'components/Button';
 import Spinner from 'components/Spinner';
 import { errorHandler, numericOnly } from 'utils/form';
-import { showNotification, removeModal, openModal } from 'lib/ui';
+import { openSuccessDialog, removeModal, openModal } from 'lib/ui';
 import confirmPasswordPin from 'utils/promisified/confirmPasswordPin';
 
 @reduxForm({
@@ -67,7 +67,9 @@ import confirmPasswordPin from 'utils/promisified/confirmPasswordPin';
     if (!result) return;
     removeModal(props.modalId);
     props.reset();
-    showNotification(__('Password & PIN have been updated'), 'success');
+    openSuccessDialog({
+      message: __('Password & PIN have been updated'),
+    });
   },
   onSubmitFail: errorHandler(__('Error updating password & PIN')),
 })
