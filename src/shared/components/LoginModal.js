@@ -11,7 +11,7 @@ import MaskableTextField from 'components/MaskableTextField';
 import Button from 'components/Button';
 import Link from 'components/Link';
 import NewUserModal from 'components/NewUserModal';
-import RecoverPasswordModal from 'components/RecoverPasswordModal';
+import RecoverPasswordPinModal from 'components/RecoverPasswordPinModal';
 import Spinner from 'components/Spinner';
 import { showNotification, openModal, removeModal } from 'lib/ui';
 import { getUserStatus } from 'lib/user';
@@ -160,7 +160,7 @@ class Login extends Component {
                 skin="hyperlink"
                 onClick={() => {
                   this.closeModal();
-                  openModal(RecoverPasswordModal);
+                  openModal(RecoverPasswordPinModal);
                 }}
               >
                 {__('Forgot password?')}

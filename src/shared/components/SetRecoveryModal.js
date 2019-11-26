@@ -13,7 +13,7 @@ import Button from 'components/Button';
 import Select from 'components/Select';
 import Spinner from 'components/Spinner';
 import { errorHandler, numericOnly } from 'utils/form';
-import { showNotification, removeModal } from 'lib/ui';
+import { openSuccessDialog, removeModal } from 'lib/ui';
 import { assetsDir } from 'consts/paths';
 
 const options = [
@@ -76,7 +76,9 @@ const options = [
   onSubmitSuccess: async (result, dispatch, props) => {
     removeModal(props.modalId);
     props.reset();
-    showNotification(__('Recovery phrase has been updated'), 'success');
+    openSuccessDialog({
+      message: __('Recovery phrase has been updated'),
+    });
   },
   onSubmitFail: errorHandler(__('Error setting recovery phrase')),
 })
@@ -120,7 +122,7 @@ export default class SetRecoveryModal extends React.Component {
           <form onSubmit={handleSubmit}>
             <div>
               {__(
-                'Save this new recovery phrase in a safe place. You will be able to use it to change your password and PIN, even reset your recovery phrase in the future.'
+                'The recovery phrase can be used to recover your account and set a new password and PIN in the event that you lose or forget them. Your recovery phrase must be a minimum of 40 characters, and should ideally be made up of random words. Save this new recovery phrase in a safe place.'
               )}
             </div>
 
@@ -154,18 +156,6 @@ export default class SetRecoveryModal extends React.Component {
             )}
 
             <div className="mt2">
-              <FormField label={__('New recovery phrase')}>
-                <Field
-                  multiline
-                  name="newPhrase"
-                  component={TextField.RF}
-                  placeholder={__(
-                    'Enter your new recovery phrase or click Generate'
-                  )}
-                  rows={1}
-                />
-              </FormField>
-
               <div className="mt1 flex center space-between">
                 <Button skin="hyperlink" onClick={this.generatePhrase}>
                   {__('Generate a recovery phrase')}
@@ -178,6 +168,18 @@ export default class SetRecoveryModal extends React.Component {
                   }}
                 />
               </div>
+
+              <FormField label={__('New recovery phrase')}>
+                <Field
+                  multiline
+                  name="newPhrase"
+                  component={TextField.RF}
+                  placeholder={__(
+                    'Enter your new recovery phrase or click Generate'
+                  )}
+                  rows={1}
+                />
+              </FormField>
             </div>
 
             <div className="mt2">

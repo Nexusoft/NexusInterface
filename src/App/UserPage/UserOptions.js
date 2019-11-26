@@ -5,7 +5,7 @@ import DropdownMenu from 'components/DropdownMenu';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
 import SetRecoveryModal from 'components/SetRecoveryModal';
-import ChangePasswordModal from 'components/ChangePasswordModal';
+import ChangePasswordPinModal from 'components/ChangePasswordPinModal';
 import { openModal } from 'lib/ui';
 import menuIcon from 'icons/menu.svg';
 
@@ -31,7 +31,7 @@ const UserOptions = () => {
           <DropdownMenu.MenuItem
             onClick={() => {
               closeDropdown();
-              openModal(ChangePasswordModal);
+              openModal(ChangePasswordPinModal);
             }}
           >
             {__('Change password & PIN')}

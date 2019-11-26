@@ -84,6 +84,7 @@ const Note = styled.div({
   },
   onSubmit: async ({ username, password, pin }) => {
     const correct = await confirmPasswordPin({
+      isNew: false,
       password,
       pin,
     });

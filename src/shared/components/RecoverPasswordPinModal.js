@@ -4,59 +4,62 @@ import { reduxForm, Field } from 'redux-form';
 import { apiPost } from 'lib/tritiumApi';
 import Modal from 'components/Modal';
 import FormField from 'components/FormField';
+import TextField from 'components/TextField';
 import MaskableTextField from 'components/MaskableTextField';
 import Button from 'components/Button';
+import LoginModal from 'components/LoginModal';
 import Spinner from 'components/Spinner';
+import { openSuccessDialog, removeModal, openModal } from 'lib/ui';
 import { errorHandler, numericOnly } from 'utils/form';
-import { showNotification, removeModal, openModal } from 'lib/ui';
 import confirmPasswordPin from 'utils/promisified/confirmPasswordPin';
 
 @reduxForm({
-  form: 'change-password',
+  form: 'recover-password',
   destroyOnUnmount: true,
   initialValues: {
-    password: '',
-    pin: '',
+    username: '',
+    recoveryPhrase: '',
     newPassword: '',
     newPin: '',
   },
-  validate: ({ password, pin, newPassword, newPin }) => {
+  validate: ({ username, recoveryPhrase, newPassword, newPin }) => {
     const errors = {};
 
-    if (!password) {
-      errors.password = __('Current password is required');
+    if (!username) {
+      errors.username = __('Username is required');
     }
 
-    if (!pin) {
-      errors.pin = __('Current PIN is required');
+    if (!recoveryPhrase) {
+      errors.recoveryPhrase = __('Recovery phrase is required');
     }
 
     if (!newPassword) {
       errors.newPassword = __('New password is required');
-    } else if (password.length < 8) {
-      errors.password = __('Password must be at least 8 characters');
+    } else if (newPassword.length < 8) {
+      errors.newPassword = __('Password must be at least 8 characters');
     }
 
     if (!newPin) {
       errors.newPin = __('New PIN is required');
-    } else if (pin.length < 4) {
-      errors.pin = __('PIN must be at least 4 characters');
+    } else if (newPin.length < 4) {
+      errors.newPin = __('PIN must be at least 4 characters');
     }
 
     return errors;
   },
-  onSubmit: async ({ password, pin, newPassword, newPin }) => {
+  onSubmit: async ({ username, recoveryPhrase, newPassword, newPin }) => {
     const correct = await confirmPasswordPin({
+      isNew: true,
       password: newPassword,
       pin: newPin,
     });
 
     if (correct) {
-      return await apiPost('users/update/user', {
-        password,
-        pin,
-        new_password: newPassword,
-        new_pin: newPin,
+      return await apiPost('users/recover/user', {
+        username,
+        recovery: recoveryPhrase,
+        password: newPassword,
+        pin: newPin,
       });
     } else {
       return null;
@@ -66,11 +69,16 @@ import confirmPasswordPin from 'utils/promisified/confirmPasswordPin';
     if (!result) return;
     removeModal(props.modalId);
     props.reset();
-    showNotification(__('Password & PIN have been updated'), 'success');
+    openSuccessDialog({
+      message: __('Password & PIN have been updated'),
+      onClose: () => {
+        openModal(LoginModal);
+      },
+    });
   },
   onSubmitFail: errorHandler(__('Error updating password & PIN')),
 })
-export default class ChangePasswordModal extends React.Component {
+export default class RecoverPasswordPinModal extends React.Component {
   render() {
     const { handleSubmit, submitting } = this.props;
     return (
@@ -78,23 +86,25 @@ export default class ChangePasswordModal extends React.Component {
         assignClose={closeModal => (this.closeModal = closeModal)}
         style={{ maxWidth: 500 }}
       >
-        <Modal.Header>{__('Change password and PIN')}</Modal.Header>
+        <Modal.Header>{__('Recover password and PIN')}</Modal.Header>
         <Modal.Body>
           <form onSubmit={handleSubmit}>
-            <FormField label={__('Current password')}>
+            <FormField label={__('Username')}>
               <Field
-                name="password"
-                component={MaskableTextField.RF}
-                placeholder={__('Your current password')}
+                name="username"
+                component={TextField.RF}
+                placeholder={__('Your username')}
                 autoFocus
               />
             </FormField>
 
-            <FormField label={__('Current PIN')}>
+            <FormField label={__('Recovery phrase')}>
               <Field
-                name="pin"
-                component={MaskableTextField.RF}
-                placeholder={__('Your current PIN number')}
+                multiline
+                rows={1}
+                name="recoveryPhrase"
+                component={TextField.RF}
+                placeholder={__('Your recovery phrase')}
               />
             </FormField>
 
@@ -122,10 +132,12 @@ export default class ChangePasswordModal extends React.Component {
                 {submitting ? (
                   <span>
                     <Spinner className="space-right" />
-                    <span className="v-align">{__('Updating')}...</span>
+                    <span className="v-align">
+                      {__('Recovering password & PIN')}...
+                    </span>
                   </span>
                 ) : (
-                  __('Update')
+                  __('Recover password & PIN')
                 )}
               </Button>
             </div>
