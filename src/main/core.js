@@ -129,6 +129,8 @@ class Core {
       return null;
     }
 
+    //Settings will override config
+    //Need to be set if changed in the settings so it can be reloaded.
     const conf = (this._config = customConfig({
       ...loadNexusConf(),
       verbose: settings.verboseLevel,
