@@ -9,6 +9,7 @@
 - Added Recover Password & PIN functionality
 - Added the ability to toggle masked/unmasked content in secure textbox (e.g. password, PIN)
 - Added the ability to change the data directory for the core
+- Added fiat balance to NXS account's history modal.
 
 #### Adjustments
 
