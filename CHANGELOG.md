@@ -4,17 +4,26 @@
 
 #### Additions
 
--
+- Added Change Password & PIN functionality
+- Added Set Recovery Phrase functionality
+- Added Recover Password & PIN functionality
+- Added the ability to toggle masked/unmasked content in secure textbox (e.g. password, PIN)
 
 #### Adjustments
 
 - Removed Option for Avatar mode while in Tritium Mode
+- Removed Option for Backup Directory while in Tritium Mode
 - Changed terminology of Search Token to Lookup Token to better illustrate the function
+- Improved balances UI in Transactions page
+- Disallowed logging in to your sigchain before the sigchain creation is confirmed on the blockchain
+- You can now use Escape key to close most pop-up modals
 
 #### Fixes
 
 - Fixed issue with sending from unnamed accounts
 - Fixed core settings not repecting testnet iteration off button
+- Fixed the error opening trust account's history
+- Fixed Adjust Stake modal not closing on success
 
 # 2.0.7 (2019.11.17)
 
