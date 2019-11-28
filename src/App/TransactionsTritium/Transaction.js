@@ -23,14 +23,20 @@ const timeFormat = {
 const dayFormat = { day: '2-digit' };
 const monthFormat = { month: 'short' };
 
-const TransactionComponent = styled.div(({ theme }) => ({
-  margin: '10px 0',
-  color: theme.mixer(0.75),
-  background: color.darken(theme.background, 0.1),
-  boxShadow: '0 0 5px 0 rgba(0,0,0,.5)',
-  display: 'flex',
-  alignItems: 'stretch',
-}));
+const TransactionComponent = styled.div(
+  ({ theme }) => ({
+    margin: '10px 0',
+    color: theme.mixer(0.75),
+    background: color.darken(theme.background, 0.1),
+    boxShadow: '0 0 5px 0 rgba(0,0,0,.5)',
+    display: 'flex',
+    alignItems: 'stretch',
+  }),
+  ({ unconfirmed }) =>
+    unconfirmed && {
+      opacity: 0.5,
+    }
+);
 
 const TransactionLeft = styled.div(({ theme }) => ({
   flexGrow: 0,
@@ -95,7 +101,7 @@ const Transaction = ({ transaction }) => {
   const txTime = new Date(transaction.timestamp * 1000);
 
   return (
-    <TransactionComponent>
+    <TransactionComponent unconfirmed={transaction.confirmations === 0}>
       <TransactionLeft
         onClick={() =>
           openModal(TransactionDetailsModal, { txid: transaction.txid })
