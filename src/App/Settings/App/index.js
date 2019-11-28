@@ -267,25 +267,27 @@ class SettingsApp extends Component {
           />
         </SettingsField>
 
-        <SettingsField
-          connectLabel
-          label={__('Minimum confirmations')}
-          subLabel={__(
-            'Minimum amount of confirmations before a block is accepted. Local only.'
-          )}
-        >
-          <TextField
-            type="number"
-            value={settings.minConfirmations}
-            step="1"
-            min="1"
-            onChange={this.updateHandlers('minConfirmations')}
-            onKeyPress={e => {
-              e.preventDefault();
-            }}
-            style={{ width: 75 }}
-          />
-        </SettingsField>
+        {legacyMode && (
+          <SettingsField
+            connectLabel
+            label={__('Minimum confirmations')}
+            subLabel={__(
+              'Minimum amount of confirmations before a block is accepted. Local only.'
+            )}
+          >
+            <TextField
+              type="number"
+              value={settings.minConfirmations}
+              step="1"
+              min="1"
+              onChange={this.updateHandlers('minConfirmations')}
+              onKeyPress={e => {
+                e.preventDefault();
+              }}
+              style={{ width: 75 }}
+            />
+          </SettingsField>
+        )}
 
         {legacyMode && <BackupDirSetting />}
 
