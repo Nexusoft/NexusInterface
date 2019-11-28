@@ -183,7 +183,6 @@ if (!gotTheLock) {
 
   // Application Startup
   app.on('ready', async () => {
-    await backUpQT();
     createWindow();
     global.core.start();
 
