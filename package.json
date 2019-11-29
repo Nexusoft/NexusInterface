@@ -5,7 +5,7 @@
   "moduleSpecVersion": "0.3.0",
   "supportedModuleSpecVersion": "0.1.0",
   "buildDate": "November 17th 2019",
-  "description": "User interface for the Nexus blockchain and ecossystem.",
+  "description": "User interface for the Nexus blockchain and ecosystem.",
   "scripts": {
     "prebuild-dev": "concurrently \"npm run build-main-dev\" \"npm run build-preload-dev\" \"node -r @babel/register ./internals/scripts/checkDll.js\" ",
     "dev": "npm run prebuild-dev && concurrently \"npm run start-renderer-dev\" \"npm run start-main-dev\"",
