@@ -107,6 +107,14 @@ function extractFromCode(code) {
       } = node;
 
       if (
+        (type === 'Identifier' && name === withContextMarker) ||
+        path.get('callee').matchesPattern(withContextMarker)
+      ) {
+        const contextNode = node.arguments && node.arguments[0];
+        context = (contextNode && contextNode.value) || '';
+      }
+
+      if (
         (type === 'Identifier' && name === translateMarker) ||
         path.get('callee').matchesPattern(translateMarker)
       ) {
@@ -121,13 +129,6 @@ function extractFromCode(code) {
             });
           }
         });
-      }
-
-      if (
-        (type === 'Identifier' && name === withContextMarker) ||
-        path.get('callee').matchesPattern(withContextMarker)
-      ) {
-        context = node.arguments[0] || '';
       }
     },
   });
