@@ -1,16 +1,11 @@
 // External Dependencies
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 
 // Internal Global Dependencies
 import GA from 'lib/googleAnalytics';
 import Panel from 'components/Panel';
-import WaitingMessage from 'components/WaitingMessage';
-import LoginModal from 'components/LoginModal';
-import Button from 'components/Button';
-import { openModal } from 'lib/ui';
+import RequireLoggedIn from 'components/RequireLoggedIn';
 import { loadAccounts, loadOwnedTokens } from 'lib/user';
-import { isCoreConnected, isLoggedIn } from 'selectors';
 
 // Internal Local Dependencies
 import SendForm from './SendForm';
@@ -20,18 +15,12 @@ import sendIcon from 'icons/send.svg';
 
 __ = __context('Send');
 
-const mapStateToProps = state => ({
-  coreConnected: isCoreConnected(state),
-  loggedIn: isLoggedIn(state),
-});
-
 /**
  * Send Page
  *
  * @class Send
  * @extends {Component}
  */
-@connect(mapStateToProps)
 class Send extends Component {
   /**
    * Component Mount Callback
@@ -51,29 +40,11 @@ class Send extends Component {
    * @memberof Send
    */
   render() {
-    const { coreConnected, loggedIn } = this.props;
     return (
       <Panel icon={sendIcon} title={__('Send')}>
-        {!coreConnected ? (
-          <WaitingMessage>
-            {___('', 'Connecting to Nexus Core')}
-            ...
-          </WaitingMessage>
-        ) : !loggedIn ? (
-          <div style={{ marginTop: 50, textAlign: 'center' }}>
-            <Button
-              uppercase
-              skin="primary"
-              onClick={() => {
-                openModal(LoginModal);
-              }}
-            >
-              {__('Log in')}
-            </Button>
-          </div>
-        ) : (
+        <RequireLoggedIn>
           <SendForm />
-        )}
+        </RequireLoggedIn>
       </Panel>
     );
   }

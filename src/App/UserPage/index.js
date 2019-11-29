@@ -5,12 +5,10 @@ import styled from '@emotion/styled';
 import GA from 'lib/googleAnalytics';
 
 // Internal Global
-import Button from 'components/Button';
 import Panel from 'components/Panel';
-import LoginModal from 'components/LoginModal';
 import { openModal } from 'lib/ui';
 import AddEditContactModal from 'components/AddEditContactModal';
-import { isCoreConnected, isLoggedIn } from 'selectors';
+import { isCoreConnected } from 'selectors';
 import { history } from 'lib/wallet';
 import { legacyMode } from 'consts/misc';
 import userIcon from 'icons/user.svg';
@@ -31,7 +29,6 @@ const UserPageLayout = styled.div({
 const mapStateToProps = state => ({
   addressBook: state.addressBook,
   coreConnected: isCoreConnected(state),
-  loggedIn: isLoggedIn(state),
 });
 
 /**
@@ -83,24 +80,12 @@ class UserPage extends Component {
         bodyScrollable={false}
         controls={loggedIn ? <UserOptions /> : undefined}
       >
-        {loggedIn ? (
+        <RequireLoggedIn>
           <UserPageLayout>
             <UserBrief match={match} />
             <TabContent match={match} />
           </UserPageLayout>
-        ) : (
-          <div style={{ marginTop: 50, textAlign: 'center' }}>
-            <Button
-              uppercase
-              skin="primary"
-              onClick={() => {
-                openModal(LoginModal);
-              }}
-            >
-              {__('Log in')}
-            </Button>
-          </div>
-        )}
+        </RequireLoggedIn>
       </Panel>
     );
   }

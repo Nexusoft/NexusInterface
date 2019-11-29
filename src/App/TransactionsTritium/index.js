@@ -6,9 +6,8 @@ import styled from '@emotion/styled';
 import Panel from 'components/Panel';
 import WaitingMessage from 'components/WaitingMessage';
 import Button from 'components/Button';
-import LoginModal from 'components/LoginModal';
 import TextField from 'components/TextField';
-import { openModal } from 'lib/ui';
+import RequireLoggedIn from 'components/RequireLoggedIn';
 import { isLoggedIn } from 'selectors';
 import { fetchAllTransactions } from 'lib/tritiumTransactions';
 import { observeStore } from 'store';
@@ -107,7 +106,6 @@ const mapStateToProps = state => {
     timeSpan
   );
   return {
-    loggedIn: isLoggedIn(state),
     transactions: paginateTransactions(filteredTransactions, page),
     minConfirmations,
     loadedAll,
@@ -186,101 +184,88 @@ class TransactionsTritium extends Component {
    * @memberof Transactions
    */
   render() {
-    const { loadedAll, transactions, loggedIn, page, totalPages } = this.props;
+    const { loadedAll, transactions, page, totalPages } = this.props;
 
     return (
       <Panel icon={transactionIcon} title={__('Transactions')}>
-        {!loggedIn ? (
-          <div style={{ marginTop: 50, textAlign: 'center' }}>
-            <Button
-              uppercase
-              skin="primary"
-              onClick={() => {
-                openModal(LoginModal);
-              }}
-            >
-              {__('Log in')}
-            </Button>
-          </div>
-        ) : !loadedAll ? (
-          <WaitingMessage>
-            {__('Loading transactions')}
-            ...
-          </WaitingMessage>
-        ) : (
-          <PageLayout>
-            <BalancesColumn>
-              <BalancesTitle>{__('NXS balances')}</BalancesTitle>
-              <Balances />
-            </BalancesColumn>
-            <Filters morePadding={this.state.hasScroll} />
-            <TransactionsList ref={this.listRef}>
-              <Container>
-                {transactions &&
-                  transactions.map(tx => (
-                    <Transaction key={tx.txid} transaction={tx} />
-                  ))}
-              </Container>
-            </TransactionsList>
-            <Pagination morePadding={this.state.hasScroll}>
-              <Container className="flex center space-between">
-                <PaginationButton
-                  skin="filled-inverted"
-                  disabled={page <= 1}
-                  onClick={
-                    page > 1
-                      ? () => {
-                          goToTxsPage(page - 1);
-                        }
-                      : undefined
-                  }
-                >
-                  &lt; {__('Previous')}
-                </PaginationButton>
-
-                <div className="flex center">
-                  {__(
-                    'Page <page></page> of %{total}',
-                    {
-                      total: totalPages,
-                    },
-                    {
-                      page: () => (
-                        <>
-                          &nbsp;
-                          <PageInput
-                            type="number"
-                            min={1}
-                            max={totalPages}
-                            value={page}
-                            onChange={e => {
-                              goToTxsPage(e.target.current.value);
-                            }}
-                          />
-                          &nbsp;
-                        </>
-                      ),
+        <RequireLoggedIn>
+          {!loadedAll ? (
+            <WaitingMessage>{__('Loading transactions...')}</WaitingMessage>
+          ) : (
+            <PageLayout>
+              <BalancesColumn>
+                <BalancesTitle>{__('NXS balances')}</BalancesTitle>
+                <Balances />
+              </BalancesColumn>
+              <Filters morePadding={this.state.hasScroll} />
+              <TransactionsList ref={this.listRef}>
+                <Container>
+                  {transactions &&
+                    transactions.map(tx => (
+                      <Transaction key={tx.txid} transaction={tx} />
+                    ))}
+                </Container>
+              </TransactionsList>
+              <Pagination morePadding={this.state.hasScroll}>
+                <Container className="flex center space-between">
+                  <PaginationButton
+                    skin="filled-inverted"
+                    disabled={page <= 1}
+                    onClick={
+                      page > 1
+                        ? () => {
+                            goToTxsPage(page - 1);
+                          }
+                        : undefined
                     }
-                  )}
-                </div>
+                  >
+                    &lt; {__('Previous')}
+                  </PaginationButton>
 
-                <PaginationButton
-                  skin="filled-inverted"
-                  disabled={page >= totalPages}
-                  onClick={
-                    page < totalPages
-                      ? () => {
-                          goToTxsPage(page + 1);
-                        }
-                      : undefined
-                  }
-                >
-                  {__('Next')} &gt;
-                </PaginationButton>
-              </Container>
-            </Pagination>
-          </PageLayout>
-        )}
+                  <div className="flex center">
+                    {__(
+                      'Page <page></page> of %{total}',
+                      {
+                        total: totalPages,
+                      },
+                      {
+                        page: () => (
+                          <>
+                            &nbsp;
+                            <PageInput
+                              type="number"
+                              min={1}
+                              max={totalPages}
+                              value={page}
+                              onChange={e => {
+                                goToTxsPage(e.target.current.value);
+                              }}
+                            />
+                            &nbsp;
+                          </>
+                        ),
+                      }
+                    )}
+                  </div>
+
+                  <PaginationButton
+                    skin="filled-inverted"
+                    disabled={page >= totalPages}
+                    onClick={
+                      page < totalPages
+                        ? () => {
+                            goToTxsPage(page + 1);
+                          }
+                        : undefined
+                    }
+                  >
+                    {__('Next')} &gt;
+                  </PaginationButton>
+                </Container>
+              </Pagination>
+            </PageLayout>
+          )}
+        </RequireLoggedIn>
       </Panel>
     );
   }
