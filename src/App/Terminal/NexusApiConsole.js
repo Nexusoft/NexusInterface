@@ -29,6 +29,8 @@ import questionMarkCircleIcon from 'icons/question-mark-circle.svg';
 import Tooltip from 'components/Tooltip';
 import Icon from 'components/Icon';
 
+__ = __context('Console.NexusAPI');
+
 const filterCommands = memoize((commandList, inputValue) => {
   if (!commandList || !inputValue) return [];
   return commandList.filter(

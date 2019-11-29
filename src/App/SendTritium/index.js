@@ -18,6 +18,8 @@ import SendForm from './SendForm';
 // Resources
 import sendIcon from 'icons/send.svg';
 
+__ = __context('Send');
+
 const mapStateToProps = state => ({
   coreConnected: isCoreConnected(state),
   loggedIn: isLoggedIn(state),

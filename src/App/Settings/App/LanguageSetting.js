@@ -9,6 +9,8 @@ import { updateSettings } from 'lib/settings';
 import SettingsField from 'components/SettingsField';
 import Select from 'components/Select';
 
+__ = __context('Settings.Application');
+
 const Flag = styled.img({
   marginRight: '.5em',
   verticalAlign: 'middle',

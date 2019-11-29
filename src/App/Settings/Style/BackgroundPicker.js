@@ -7,6 +7,8 @@ import { timing } from 'styles';
 import { newUID } from 'utils/misc';
 import * as color from 'utils/color';
 
+__ = __context('Settings.Style');
+
 const Option = styled.label(
   ({ theme }) => ({
     display: 'block',

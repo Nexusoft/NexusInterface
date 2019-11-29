@@ -32,6 +32,8 @@ import transactionIcon from 'icons/transaction.svg';
 import barChartIcon from 'icons/bar-chart.svg';
 import downloadIcon from 'icons/download.svg';
 
+__ = __context('Transactions');
+
 const timeFormatOptions = {
   year: 'numeric',
   month: 'short',

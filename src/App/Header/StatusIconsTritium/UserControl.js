@@ -15,6 +15,8 @@ import * as color from 'utils/color';
 import StatusIcon from './StatusIcon';
 import UserDropdown from './UserDropdown';
 
+__ = __context('Header');
+
 const UserControlComponent = styled(StatusIcon)(
   ({ theme }) => ({
     display: 'flex',

@@ -2,16 +2,8 @@ import React from 'react';
 import styled from '@emotion/styled';
 
 import Modal from 'components/Modal';
-import { formatDateTime } from 'lib/intl';
 
-const timeFormatOptions = {
-  year: 'numeric',
-  month: 'long',
-  day: '2-digit',
-  hour: '2-digit',
-  minute: '2-digit',
-  second: '2-digit',
-};
+__ = __context('ContractDetails');
 
 const Row = styled.div({
   display: 'grid',

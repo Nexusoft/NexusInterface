@@ -15,6 +15,8 @@ import Switch from 'components/Switch';
 import { errorHandler } from 'utils/form';
 import { showNotification } from 'lib/ui';
 
+__ = __context('Settings.Security');
+
 const LoginFieldSet = styled(FieldSet)({
   maxWidth: 400,
   margin: '0 auto',

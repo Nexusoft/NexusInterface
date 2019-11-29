@@ -17,6 +17,8 @@ import { timing } from 'styles';
 import BootstrapBackgroundTask from 'components/BootstrapBackgroundTask';
 import arrowUpLeftIcon from 'icons/arrow-up-left.svg';
 
+__ = __context('Bootstrap');
+
 const maximizeAnimation = keyframes`
   from { 
     transform: translate(-50%, -50%) scale(0.5);

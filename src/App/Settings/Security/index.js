@@ -10,6 +10,8 @@ import Login from './Login';
 import Encrypted from './Encrypted';
 import Unencrypted from './Unencrypted';
 
+__ = __context('Settings.Security');
+
 /**
  * SettingsSecurity Page on Settings Page
  *

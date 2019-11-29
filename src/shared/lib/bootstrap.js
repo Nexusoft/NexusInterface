@@ -29,6 +29,8 @@ import { walletEvents } from 'lib/wallet';
 import { updateSettings } from 'lib/settings';
 import BootstrapModal from 'components/BootstrapModal';
 
+__ = __context('Bootstrap');
+
 const fileLocation = path.join(walletDataDir, 'recent.tar.gz');
 const extractDest = path.join(coreDataDir, 'recent');
 const recentDbUrlTritium = 'https://nexus.io/bootstrap/tritium/tritium.tar.gz'; // Tritium Bootstrap URL

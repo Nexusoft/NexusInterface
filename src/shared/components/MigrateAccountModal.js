@@ -10,6 +10,8 @@ import { openModal } from 'lib/ui';
 import { loadAccounts } from 'lib/user';
 import { updateSettings } from 'lib/settings';
 
+__ = __context('MigrateAccount');
+
 const MigrateAccountModal = ({ legacyBalance, isNewAccount, accounts }) => {
   useEffect(() => {
     if (!accounts) loadAccounts();

@@ -16,6 +16,8 @@ import { totalBalance } from './utils';
 import Link from 'components/Link';
 import Tooltip from 'components/Tooltip';
 
+__ = __context('User.Accounts.AccountHistory');
+
 const displayedOperations = [
   'DEBIT',
   'CREDIT',

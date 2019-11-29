@@ -10,6 +10,8 @@ import Button from 'components/Button';
 import Overlay from 'components/Overlay';
 import * as color from 'utils/color';
 
+__ = __context('Settings.Style');
+
 const ColorButton = styled(Button)(({ color: c, open }) => {
   const contrastColor = color.isDark(c) ? '#fff' : '#000';
   return {

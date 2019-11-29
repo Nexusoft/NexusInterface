@@ -15,6 +15,8 @@ import { formatNumber, formatDateTime } from 'lib/intl';
 
 import QuestionCircle from 'components/QuestionCircle';
 
+__ = __context('User.Staking');
+
 const dateTimeFormat = {
   month: 'short',
   day: '2-digit',

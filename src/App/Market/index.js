@@ -30,6 +30,8 @@ import chartIcon from 'icons/chart.svg';
 import bittrexLogo from 'icons/BittrexLogo.png';
 import binanceLogo from 'icons/BINANCE.png';
 
+__ = __context('MarketData');
+
 const ExchangeUnitContainer = styled.div({
   width: '100%',
 });

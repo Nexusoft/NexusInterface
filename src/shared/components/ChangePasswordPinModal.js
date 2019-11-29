@@ -11,6 +11,8 @@ import { errorHandler, numericOnly } from 'utils/form';
 import { openSuccessDialog, removeModal, openModal } from 'lib/ui';
 import confirmPasswordPin from 'utils/promisified/confirmPasswordPin';
 
+__ = __context('ChangePassword&PIN');
+
 @reduxForm({
   form: 'change-password',
   destroyOnUnmount: true,

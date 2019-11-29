@@ -29,6 +29,8 @@ import ThemePicker from './ThemePicker';
 import DarkTheme from './Dark.json';
 import LightTheme from './Light.json';
 
+__ = __context('Settings.Style');
+
 const overviewDisplays = [
   { value: 'standard', display: 'Standard' },
   { value: 'miner', display: 'Miner' },

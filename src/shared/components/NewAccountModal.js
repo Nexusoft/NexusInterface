@@ -16,24 +16,22 @@ import { removeModal, showNotification } from 'lib/ui';
 import { namedAccount } from 'lib/fees';
 import GA from 'lib/googleAnalytics';
 
+__ = __context('NewAccount');
+
 const mapStateToProps = state => {
   return {
     userTokens: state.core.tokens,
   };
 };
-@connect(
-  mapStateToProps,
-  null,
-  (stateProps, dispatchProps, ownProps) => ({
-    ...stateProps,
-    ...dispatchProps,
-    ...ownProps,
-    initialValues: {
-      name: '',
-      token: ownProps.tokenAddress,
-    },
-  })
-)
+@connect(mapStateToProps, null, (stateProps, dispatchProps, ownProps) => ({
+  ...stateProps,
+  ...dispatchProps,
+  ...ownProps,
+  initialValues: {
+    name: '',
+    token: ownProps.tokenAddress,
+  },
+}))
 @reduxForm({
   form: 'new_account',
   destroyOnUnmount: true,

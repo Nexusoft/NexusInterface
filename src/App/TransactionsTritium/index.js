@@ -25,6 +25,8 @@ import Transaction from './Transaction';
 import Balances from './Balances';
 import Filters from './Filters';
 
+__ = __context('Transactions');
+
 const PageLayout = styled.div({
   position: 'absolute',
   top: 0,

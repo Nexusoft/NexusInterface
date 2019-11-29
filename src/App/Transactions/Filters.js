@@ -15,6 +15,8 @@ import {
 
 import searchIcon from 'icons/search.svg';
 
+__ = __context('Transactions');
+
 const categories = [
   {
     value: null,

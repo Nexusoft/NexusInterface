@@ -13,6 +13,8 @@ import { openSuccessDialog, removeModal, openModal } from 'lib/ui';
 import { errorHandler, numericOnly } from 'utils/form';
 import confirmPasswordPin from 'utils/promisified/confirmPasswordPin';
 
+__ = __context('RecoverPassword&PIN');
+
 @reduxForm({
   form: 'recover-password',
   destroyOnUnmount: true,

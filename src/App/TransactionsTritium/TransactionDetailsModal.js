@@ -7,6 +7,8 @@ import WaitingMessage from 'components/WaitingMessage';
 import { formatDateTime } from 'lib/intl';
 import { fetchTransaction } from 'lib/tritiumTransactions';
 
+__ = __context('Transactions.TransactionDetails');
+
 const timeFormatOptions = {
   year: 'numeric',
   month: 'long',

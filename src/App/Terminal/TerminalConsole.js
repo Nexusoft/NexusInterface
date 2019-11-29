@@ -23,6 +23,8 @@ import {
   resetConsoleOutput,
 } from 'lib/ui';
 
+__ = __context('Console.Console');
+
 const filterCommands = memoize((commandList, inputValue) => {
   if (!commandList || !inputValue) return [];
   return commandList.filter(

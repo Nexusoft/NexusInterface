@@ -1,6 +1,8 @@
 import memoize from 'utils/memoize';
 import { getFakeTransactions } from './utils';
 
+__ = __context('Transactions');
+
 const getThresholdDate = timeSpan => {
   const now = new Date();
   switch (timeSpan) {

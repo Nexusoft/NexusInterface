@@ -15,6 +15,8 @@ import rpc from 'lib/rpc';
 import copyIcon from 'icons/copy.svg';
 import { errorHandler } from 'utils/form';
 
+__ = __context('Settings.Security');
+
 /**
  * View Private Keys for Address JSX
  *

@@ -11,6 +11,8 @@ import { updateSettings } from 'lib/settings';
 import * as color from 'utils/color';
 import warningIcon from 'icons/warning.svg';
 
+__ = __context('EncryptionWarning');
+
 const WarningModal = styled(Modal)({
   maxWidth: 500,
   textAlign: 'center',

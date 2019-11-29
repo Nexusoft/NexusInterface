@@ -13,6 +13,8 @@ import { consts, timing } from 'styles';
 import * as color from 'utils/color';
 import plusCircleIcon from 'icons/plus.svg';
 
+__ = __context('Settings.Modules');
+
 const AddModuleComponent = styled(FieldSet)(
   ({ theme }) => ({
     textAlign: 'center',

@@ -17,6 +17,8 @@ import {
   VictoryVoronoiContainer,
 } from 'victory';
 
+__ = __context('MarketData');
+
 const MarketDepthInner = styled.div({
   position: 'relative',
   flex: 1,

@@ -21,6 +21,8 @@ import ContactDetails from './ContactDetails';
 import addressBookIcon from 'icons/address-book.svg';
 import addContactIcon from 'icons/add-contact.svg';
 
+__ = __context('AddressBook');
+
 const AddressBookLayout = styled.div({
   display: 'grid',
   gridTemplateAreas: '"list details"',

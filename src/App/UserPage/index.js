@@ -20,6 +20,8 @@ import UserBrief from './UserBrief';
 import TabContent from './TabContent';
 import UserOptions from './UserOptions';
 
+__ = __context('User');
+
 const UserPageLayout = styled.div({
   display: 'flex',
   alignItems: 'stretch',

@@ -25,6 +25,8 @@ import { startAutoUpdate, stopAutoUpdate } from 'lib/updater';
 import LanguageSetting from './LanguageSetting';
 import BackupDirSetting from './BackupDirSetting';
 
+__ = __context('Settings.Application');
+
 const WarningIcon = styled(Icon)(({ theme }) => ({
   color: color.lighten(theme.danger, 0.3),
   fontSize: '1.1em',

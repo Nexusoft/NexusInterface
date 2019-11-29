@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { categoryText } from './utils';
 import { isPending } from 'lib/transactions';
 
+__ = __context('Transactions');
+
 const CategoryCell = ({ transaction, minConfirmations }) =>
   isPending(transaction, minConfirmations)
     ? `${__('Pending')} (${transaction.confirmations}/${minConfirmations})`

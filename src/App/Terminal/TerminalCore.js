@@ -8,6 +8,8 @@ import 'lib/coreOutput';
 import { switchConsoleTab, pauseCoreOutput, unpauseCoreOutput } from 'lib/ui';
 import Button from 'components/Button';
 
+__ = __context('Console.CoreOutput');
+
 // React-Redux mandatory methods
 const mapStateToProps = ({
   settings,

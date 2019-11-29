@@ -13,6 +13,8 @@ import syncingIcon from 'icons/syncing.svg';
 
 import StatusIcon from './StatusIcon';
 
+__ = __context('Header');
+
 const SpinningIcon = styled(Icon)({
   animation: `${animations.spin} 2s linear infinite`,
 });

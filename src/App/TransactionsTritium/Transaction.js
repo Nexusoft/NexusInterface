@@ -9,6 +9,8 @@ import { openModal } from 'lib/ui';
 import TransactionDetailsModal from './TransactionDetailsModal';
 import Contract from './Contract';
 
+__ = __context('Transactions');
+
 const dateFormat = {
   day: '2-digit',
   month: '2-digit',

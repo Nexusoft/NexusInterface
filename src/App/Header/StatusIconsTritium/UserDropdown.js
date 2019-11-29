@@ -13,6 +13,8 @@ import { openModal, showNotification } from 'lib/ui';
 import { timing, animations, consts } from 'styles';
 import { logOut } from 'lib/user';
 
+__ = __context('Header.UserDropdown');
+
 const UserDropdownComponent = styled.div(({ theme }) => ({
   position: 'fixed',
   background: theme.background,

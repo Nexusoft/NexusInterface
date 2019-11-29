@@ -6,6 +6,8 @@ import { connect } from 'react-redux';
 import { legacyMode } from 'consts/misc';
 import { isCoreConnected, isLoggedIn } from 'selectors';
 
+__ = __context('Header');
+
 /**
  * Handles the Core Status
  *

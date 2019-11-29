@@ -20,6 +20,8 @@ import SendForm from './SendForm';
 import sendIcon from 'icons/send.svg';
 import swapIcon from 'icons/swap.svg';
 
+__ = __context('Send');
+
 const mapStateToProps = state => ({
   coreConnected: isCoreConnected(state),
 });

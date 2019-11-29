@@ -9,6 +9,8 @@ import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
 
+__ = __context('Settings.Application');
+
 const mapStateToProps = state => ({
   backupDir: state.settings.backupDirectory,
   locale: state.settings.locale,

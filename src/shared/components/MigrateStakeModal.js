@@ -12,6 +12,8 @@ import { apiPost } from 'lib/tritiumApi';
 import { errorHandler } from 'utils/form';
 import { coreDataDir } from 'consts/paths';
 
+__ = __context('MigrateStake');
+
 const PasswordInput = styled(MaskableTextField.RF)({
   margin: '1em auto 2.5em',
 });
