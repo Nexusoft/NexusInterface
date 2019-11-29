@@ -2,6 +2,7 @@ import React from 'react';
 import fs from 'fs';
 import path from 'path';
 import Polyglot from 'node-polyglot';
+import csvParse from 'csv-parse/lib/sync';
 
 import { assetsDir } from 'consts/paths';
 import settings from 'data/initialSettings';
@@ -21,13 +22,24 @@ const locales = [
   'ru',
   'zh-cn',
 ];
+
+function loadDict(loc) {
+  const csv = fs.readFileSync(
+    path.join(assetsDir, 'translations', `${locale}.csv`)
+  );
+  const records = csvParse(csv);
+  const dict = {};
+  records.forEach(([key, translation, context]) => {
+    if (!dict[context]) {
+      dict[context] = {};
+    }
+    dict[context][key] = translation;
+  });
+  return dict;
+}
+
 const locale = locales.includes(settings.locale) ? settings.locale : 'en';
-const translations =
-  locale === 'en'
-    ? null
-    : JSON.parse(
-        fs.readFileSync(path.join(assetsDir, 'translations', `${locale}.json`))
-      );
+const dict = locale === 'en' ? null : loadDict(locale);
 const engTranslate = (phrase, data) =>
   Polyglot.transformPhrase(phrase, data, 'en');
 
@@ -35,7 +47,7 @@ const rawTranslate =
   locale === 'en'
     ? engTranslate
     : (context, string, data) => {
-        const phrases = translations[context];
+        const phrases = dict[context];
         const phrase = (phrases && phrases[string]) || string;
         return Polyglot.transformPhrase(phrase, data, locale);
       };
