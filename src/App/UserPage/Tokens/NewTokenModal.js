@@ -122,7 +122,7 @@ class NewTokenModal extends React.Component {
         <Modal.Body>
           <form onSubmit={handleSubmit}>
             {__(
-              `There is a %{tokenfee}NXS token creation fee, based on supply`,
+              `There is a %{tokenfee} NXS token creation fee, based on supply`,
               {
                 tokenfee: tokenCreationFee,
               }
