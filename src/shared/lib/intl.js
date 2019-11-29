@@ -22,24 +22,23 @@ const locales = [
   'zh-cn',
 ];
 const locale = locales.includes(settings.locale) ? settings.locale : 'en';
-const phrases =
+const translations =
   locale === 'en'
     ? null
     : JSON.parse(
         fs.readFileSync(path.join(assetsDir, 'translations', `${locale}.json`))
       );
-const engTranslate = (string, data) =>
-  Polyglot.transformPhrase(string, data, 'en');
-
-const polyglot = new Polyglot({
-  locale,
-  phrases,
-  allowMissing: true,
-  onMissingKey: engTranslate,
-});
+const engTranslate = (phrase, data) =>
+  Polyglot.transformPhrase(phrase, data, 'en');
 
 const rawTranslate =
-  locale === 'en' ? engTranslate : (string, data) => polyglot.t(string, data);
+  locale === 'en'
+    ? engTranslate
+    : (context, string, data) => {
+        const phrases = translations[context];
+        const phrase = (phrases && phrases[string]) || string;
+        return Polyglot.transformPhrase(phrase, data, locale);
+      };
 
 function inject(string, injections) {
   if (injections) {
@@ -76,8 +75,14 @@ function inject(string, injections) {
   return string;
 }
 
+const translateWithContext = (context = '', string, data, injections) =>
+  inject(rawTranslate(context, string, data), injections);
+
 const translate = (string, data, injections) =>
-  inject(rawTranslate(string, data), injections);
+  translateWithContext('', string, data, injections);
+
+const withContext = context => (string, data, injections) =>
+  translateWithContext(context, string, data, injections);
 
 const ensureSignificantDigit = (decimalDigits, num) => {
   let digits = Number(decimalDigits) || 0;
@@ -92,7 +97,7 @@ const ensureSignificantDigit = (decimalDigits, num) => {
   return digits;
 };
 
-export { translate };
+export { translate, translateWithContext, withContext };
 
 export const formatNumber = (num, maxDecimalDigits = 3) => {
   const digits = ensureSignificantDigit(maxDecimalDigits, num);
