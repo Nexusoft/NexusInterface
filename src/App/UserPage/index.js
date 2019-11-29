@@ -7,6 +7,7 @@ import GA from 'lib/googleAnalytics';
 // Internal Global
 import Panel from 'components/Panel';
 import { openModal } from 'lib/ui';
+import RequireLoggedIn from 'components/RequireLoggedIn';
 import AddEditContactModal from 'components/AddEditContactModal';
 import { isCoreConnected } from 'selectors';
 import { history } from 'lib/wallet';

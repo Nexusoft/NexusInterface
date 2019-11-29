@@ -40,7 +40,7 @@ function loadDict(loc) {
 
 const locale = locales.includes(settings.locale) ? settings.locale : 'en';
 const dict = locale === 'en' ? null : loadDict(locale);
-const engTranslate = (phrase, data) =>
+const engTranslate = (context, phrase, data) =>
   Polyglot.transformPhrase(phrase, data, 'en');
 
 const rawTranslate =
