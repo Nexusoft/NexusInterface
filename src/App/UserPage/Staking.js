@@ -207,7 +207,7 @@ export default class Staking extends React.Component {
                     )}
                   </div>
                 )}
-                {stakeInfo.onHold && (
+                {stakeInfo.onhold && (
                   <div className="error">
                     {__('Account on hold for another %{stakeSeconds} Seconds', {
                       stakeSeconds: stakeInfo.holdtime,
