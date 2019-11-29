@@ -1,16 +1,14 @@
 // External Dependencies
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 
 // Internal Global Dependencies
 import GA from 'lib/googleAnalytics';
 import Icon from 'components/Icon';
 import Panel from 'components/Panel';
 import Button from 'components/Button';
-import WaitingMessage from 'components/WaitingMessage';
 import Tooltip from 'components/Tooltip';
+import RequireCoreConnected from 'components/RequireCoreConnected';
 import { openModal } from 'lib/ui';
-import { isCoreConnected } from 'selectors';
 
 // Internal Local Dependencies
 import MoveBetweenAccountsModal from './MoveBetweenAccountsModal';
@@ -22,17 +20,12 @@ import swapIcon from 'icons/swap.svg';
 
 __ = __context('Send');
 
-const mapStateToProps = state => ({
-  coreConnected: isCoreConnected(state),
-});
-
 /**
  * Send Page
  *
  * @class Send
  * @extends {Component}
  */
-@connect(mapStateToProps)
 class Send extends Component {
   /**
    * Component Mount Callback
@@ -78,14 +71,9 @@ class Send extends Component {
           )
         }
       >
-        {!this.props.coreConnected ? (
-          <WaitingMessage>
-            {__('Connecting to Nexus Core')}
-            ...
-          </WaitingMessage>
-        ) : (
+        <RequireCoreConnected>
           <SendForm />
-        )}
+        </RequireCoreConnected>
       </Panel>
     );
   }

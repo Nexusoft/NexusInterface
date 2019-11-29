@@ -56,7 +56,7 @@ class Send extends Component {
       <Panel icon={sendIcon} title={__('Send')}>
         {!coreConnected ? (
           <WaitingMessage>
-            {__('Connecting to Nexus Core')}
+            {___('', 'Connecting to Nexus Core')}
             ...
           </WaitingMessage>
         ) : !loggedIn ? (

@@ -6,10 +6,9 @@ import GA from 'lib/googleAnalytics';
 import memoize from 'utils/memoize';
 
 // Internal Global Dependencies
-import WaitingMessage from 'components/WaitingMessage';
 import Button from 'components/Button';
 import AutoSuggest from 'components/AutoSuggest';
-import { isCoreConnected } from 'selectors';
+import RequireCoreConnected from 'components/RequireCoreConnected';
 import rpc from 'lib/rpc';
 import {
   switchConsoleTab,
@@ -52,7 +51,6 @@ const mapStateToProps = state => {
     },
   } = state;
   return {
-    coreConnected: isCoreConnected(state),
     consoleInput: consoleInputSelector(
       currentCommand,
       commandHistory,
@@ -262,17 +260,10 @@ class TerminalConsole extends Component {
    * @memberof TerminalConsole
    */
   render() {
-    const { coreConnected, commandList, consoleInput, output } = this.props;
+    const { commandList, consoleInput, output } = this.props;
 
-    if (!coreConnected) {
-      return (
-        <WaitingMessage>
-          {__('Connecting to Nexus Core')}
-          ...
-        </WaitingMessage>
-      );
-    } else {
-      return (
+    return (
+      <RequireCoreConnected>
         <TerminalContent>
           <Console>
             <ConsoleInput>
@@ -344,8 +335,8 @@ class TerminalConsole extends Component {
             </Button>
           </Console>
         </TerminalContent>
-      );
-    }
+      </RequireCoreConnected>
+    );
   }
 }
 

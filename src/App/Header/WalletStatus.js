@@ -3,6 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 // Internal
+import CoreStatus from 'components/CoreStatus';
 import { legacyMode } from 'consts/misc';
 import { isCoreConnected, isLoggedIn } from 'selectors';
 
@@ -28,14 +29,10 @@ class WalletStatus extends React.Component {
    * @memberof WalletStatus
    */
   render() {
-    const { manualDaemon, coreConnected, autoConnect, loggedIn } = this.props;
+    const { coreConnected, loggedIn } = this.props;
     return !coreConnected ? (
       <span className="dim">
-        {manualDaemon
-          ? __('Manual Core is disconnected')
-          : autoConnect
-          ? __('Connecting to Nexus Core...')
-          : __('Nexus Core is stopped')}
+        <CoreStatus />
       </span>
     ) : (
       !legacyMode && !loggedIn && (
