@@ -16,6 +16,10 @@ To test a production build run `npm run package` and navigate to the _release_ d
 
 Or use the _BuildStandalone-{platform}.sh_ files that include cleaning out old builds.
 
+## Help translating Nexus Wallet interface
+
+See the [Translation Guide](docs/Translation.md).
+
 ## License
 
 Nexus is released under the terms of the MIT license. See [COPYING](COPYING.MD) for more

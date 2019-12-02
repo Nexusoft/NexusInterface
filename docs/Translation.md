@@ -1,0 +1,22 @@
+# Translating Nexus Wallet interface
+
+You can help Nexus team [translating the wallet interface into your language](https://crowdin.com/project/nexus-interface). All contributions are very appreciated.
+
+## General notices
+
+- Keep the special snippets enclosed in %{...}, <...> and </...> whole, intact and at the right positions corresponding to their positions in the original text. They will be replaced with appropriate values by the wallet code.
+- Keep the spacing, punctuation marks, and capitalization as identical to the original text as possible.
+
+## Pluralization
+
+Different plural forms of the same translation should be separated by 4 vertical pipe characters ||||, for example:
+
+```
+%{smart_count} message |||| %{smart_count} messages
+```
+
+Which translation is used will be determined automatically by the code depending on the value of smart_count. Some languages may have more or less than 2 plural forms, in that case, just provide the appropriate number or phrases/sentences separated by |||| corresponding to the number of plural forms your language has, ordered from low (e.g. 0, 1) to high (e.g. many), for example:
+
+```
+"%{smart_count} message |||| %{smart_count} messages": ""%{smart_count} zpráva |||| "%{smart_count} zprávy |||| "%{smart_count} zpráv"
+```
