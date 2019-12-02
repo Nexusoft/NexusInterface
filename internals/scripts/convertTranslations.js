@@ -1,3 +1,6 @@
+/**
+ * Convert translations from old json format to the new csv format supporting context
+ */
 import fs from 'fs';
 import path from 'path';
 import chalk from 'chalk';

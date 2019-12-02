@@ -566,7 +566,7 @@ Trust Weight,Trust Weight,User.Staking
 Block Weight,Block Weight,User.Staking
 "Block Weight depends on the time passed since you received a Trust transaction and will be reset everytime you receive a Trust transaction. Otherwise, Block Weight will reach 100% after 3 days and your Trust Score will start decaying until you receive another Trust transaction","Block Weight depends on the time passed since you received a Trust transaction and will be reset everytime you receive a Trust transaction. Otherwise, Block Weight will reach 100% after 3 days and your Trust Score will start decaying until you receive another Trust transaction",User.Staking
 Stake Weight,Stake Weight,User.Staking
-"Stake Weight depends on Trust Weight and Block Weight. Along with your Stake balance, Stake Weight affects how frequent you receive a Trust transaction","Stake Weight depends on Trust Weight and Block Weight. Along with your Stake balance, Stake Weight affects how frequent you receive a Trust transaction",User.Staking
+"Stake Weight depends on Trust Weight and Block Weight. Along with your Stake amount, Stake Weight affects how frequent you receive a Trust transaction","Stake Weight depends on Trust Weight and Block Weight. Along with your Stake amount, Stake Weight affects how frequent you receive a Trust transaction",User.Staking
 Available Balance,Available Balance,User.Staking
 Adjust stake amount,Adjust stake amount,User.Staking
 Waiting For genesis. Time dependent on balance and difficulty.,Waiting For genesis. Time dependent on balance and difficulty.,User.Staking

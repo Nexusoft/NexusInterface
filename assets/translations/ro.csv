@@ -565,7 +565,7 @@ Trust Weight,Greutate acreditare,User.Staking
 Block Weight,Greutate bloc,User.Staking
 "Block Weight depends on the time passed since you received a Trust transaction and will be reset everytime you receive a Trust transaction. Otherwise, Block Weight will reach 100% after 3 days and your Trust Score will start decaying until you receive another Trust transaction","Indicatorul Greutate Bloc este influenţat de timpul scurs între Tranzacţiile de Încredere şi se va reseta atunci când minezi/validezi o astfel de tranzacţie. În caz contrar, incicatorul Greutate Bloc va ajunge la 100% după 3 zile iar scorul tău de încredere va începe să scadă până când vei primi o nouă Tranzacţie de Încredere",User.Staking
 Stake Weight,Greutate miză,User.Staking
-"Stake Weight depends on Trust Weight and Block Weight. Along with your Stake balance, Stake Weight affects how frequent you receive a Trust transaction","Indicatorul Greutate Cotă Parte depinde de indicatorii Greutate Încredere şi Greutate Bloc. Împreună cu soldul tău Cotă Parte, indicatorul Greutate Cotă Parte determină cât de des primeşti o Tranzacţie de Încredere",User.Staking
+"Stake Weight depends on Trust Weight and Block Weight. Along with your Stake amount, Stake Weight affects how frequent you receive a Trust transaction",,User.Staking
 Available Balance,,User.Staking
 Adjust stake amount,Ajustează cantitatea mizei,User.Staking
 Waiting For genesis. Time dependent on balance and difficulty.,,User.Staking
