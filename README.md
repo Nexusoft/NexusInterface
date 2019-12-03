@@ -16,7 +16,7 @@ To test a production build run `npm run package` and navigate to the _release_ d
 
 Or use the _BuildStandalone-{platform}.sh_ files that include cleaning out old builds.
 
-## Help translating Nexus Wallet interface
+## Help translating Nexus Wallet
 
 See the [Translation Guide](docs/Translation.md).
 
