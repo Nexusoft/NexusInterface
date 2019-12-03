@@ -55,15 +55,15 @@ Refresh,Обновить,MarketData
 Market Data,Информация о рынке,MarketData
 Open,Открыть,MarketData
 Close,Закрыть,MarketData
-Overview,Обзор,Navigation
-User,,Navigation
-Send NXS,Послать NXS,Navigation
-Send,Послать,Navigation
-Transactions,Операций,Navigation
-Market Data,Информация о рынке,Navigation
-Address Book,,Navigation
-Settings,Настройки,Navigation
-Console,Консоль,Navigation
+Overview,Обзор,NavigationBar
+User,,NavigationBar
+Send NXS,Послать NXS,NavigationBar
+Send,Послать,NavigationBar
+Transactions,Операций,NavigationBar
+Market Data,Информация о рынке,NavigationBar
+Address Book,,NavigationBar
+Settings,Настройки,NavigationBar
+Console,Консоль,NavigationBar
 Closing Nexus Wallet,,
 Warning,,
 IMPROPER USE OF THIS SOFTWARE COULD LEAD TO PERMANENT LOSS OF COIN.,,

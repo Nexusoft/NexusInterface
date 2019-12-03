@@ -55,15 +55,15 @@ Refresh,Reactualizează,MarketData
 Market Data,Date Piață,MarketData
 Open,Deschide,MarketData
 Close,Închide,MarketData
-Overview,Prezentare generală,Navigation
-User,Utilizator,Navigation
-Send NXS,Trimite NXS,Navigation
-Send,Trimite,Navigation
-Transactions,Tranzacţii,Navigation
-Market Data,Date Piață,Navigation
-Address Book,Agendă,Navigation
-Settings,Setări,Navigation
-Console,Consolă,Navigation
+Overview,Prezentare generală,NavigationBar
+User,Utilizator,NavigationBar
+Send NXS,Trimite NXS,NavigationBar
+Send,Trimite,NavigationBar
+Transactions,Tranzacţii,NavigationBar
+Market Data,Date Piață,NavigationBar
+Address Book,Agendă,NavigationBar
+Settings,Setări,NavigationBar
+Console,Consolă,NavigationBar
 Closing Nexus Wallet,Portofelul Nexus se închide,
 Warning,Avertisment,
 IMPROPER USE OF THIS SOFTWARE COULD LEAD TO PERMANENT LOSS OF COIN.,FOLOSIREA NECONFORMĂ A ACESTUI SOFTWARE POATE DUCE LA PIERDEREA MONEDELOR.,

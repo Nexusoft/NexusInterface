@@ -29,7 +29,7 @@ import { legacyMode } from 'consts/misc';
 // import shapeshiftIcon from 'icons/shapeshift.svg';
 // import trustListIcon from 'icons/trust-list.svg';
 
-__ = __context('Navigation');
+__ = __context('NavigationBar');
 
 const slideUp = keyframes`
   from { opacity: 0; transform: translateY(70%) }

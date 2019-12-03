@@ -55,15 +55,15 @@ Refresh,Päivitä,MarketData
 Market Data,Markkina Data,MarketData
 Open,Avaa,MarketData
 Close,Sulje,MarketData
-Overview,Yleiskatsaus,Navigation
-User,,Navigation
-Send NXS,Lähetä NXS,Navigation
-Send,Lähetä,Navigation
-Transactions,Maksutapahtumat,Navigation
-Market Data,Markkina Data,Navigation
-Address Book,Osoitekirja,Navigation
-Settings,Asetukset,Navigation
-Console,Konsoli,Navigation
+Overview,Yleiskatsaus,NavigationBar
+User,,NavigationBar
+Send NXS,Lähetä NXS,NavigationBar
+Send,Lähetä,NavigationBar
+Transactions,Maksutapahtumat,NavigationBar
+Market Data,Markkina Data,NavigationBar
+Address Book,Osoitekirja,NavigationBar
+Settings,Asetukset,NavigationBar
+Console,Konsoli,NavigationBar
 Closing Nexus Wallet,Suljetaan Nexus Lompakko,
 Warning,Varoitus,
 IMPROPER USE OF THIS SOFTWARE COULD LEAD TO PERMANENT LOSS OF COIN.,TÄMÄN OHJELMISTON SOPIMATON KÄYTTÖ VOI JOHTAA RAHOJESI PYSYVÄÄN KADOTUKSEEN.,

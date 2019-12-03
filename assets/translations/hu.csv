@@ -55,15 +55,15 @@ Refresh,Frissítés,MarketData
 Market Data,Piaci Adatok,MarketData
 Open,Megnyit,MarketData
 Close,Bezár,MarketData
-Overview,Áttekintés,Navigation
-User,,Navigation
-Send NXS,NXS Küldése,Navigation
-Send,Küldés,Navigation
-Transactions,Tranzakciók,Navigation
-Market Data,Piaci Adatok,Navigation
-Address Book,Címjegyzék,Navigation
-Settings,Beállítások,Navigation
-Console,Konzol,Navigation
+Overview,Áttekintés,NavigationBar
+User,,NavigationBar
+Send NXS,NXS Küldése,NavigationBar
+Send,Küldés,NavigationBar
+Transactions,Tranzakciók,NavigationBar
+Market Data,Piaci Adatok,NavigationBar
+Address Book,Címjegyzék,NavigationBar
+Settings,Beállítások,NavigationBar
+Console,Konzol,NavigationBar
 Closing Nexus Wallet,Kilépés a Nexus Pénztárcából,
 Warning,Figyelem,
 IMPROPER USE OF THIS SOFTWARE COULD LEAD TO PERMANENT LOSS OF COIN.,E SZOFTVER HELYTELEN HASZNÁLATA A COINOK TARTÓS VESZTESÉGÉHEZ VEZETHET.,

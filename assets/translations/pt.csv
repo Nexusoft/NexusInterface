@@ -55,15 +55,15 @@ Refresh,Atualizar,MarketData
 Market Data,Info do Mercado,MarketData
 Open,Aberto,MarketData
 Close,Fecho,MarketData
-Overview,Visão geral,Navigation
-User,,Navigation
-Send NXS,Enviar NXS,Navigation
-Send,Enviar,Navigation
-Transactions,Transações,Navigation
-Market Data,Info do Mercado,Navigation
-Address Book,Livro de endereços,Navigation
-Settings,Configurações,Navigation
-Console,Consola,Navigation
+Overview,Visão geral,NavigationBar
+User,,NavigationBar
+Send NXS,Enviar NXS,NavigationBar
+Send,Enviar,NavigationBar
+Transactions,Transações,NavigationBar
+Market Data,Info do Mercado,NavigationBar
+Address Book,Livro de endereços,NavigationBar
+Settings,Configurações,NavigationBar
+Console,Consola,NavigationBar
 Closing Nexus Wallet,Fechando a carteira da Nexus,
 Warning,,
 IMPROPER USE OF THIS SOFTWARE COULD LEAD TO PERMANENT LOSS OF COIN.,,

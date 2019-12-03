@@ -55,15 +55,15 @@ Refresh,マーケットデータをリフレッシュする,MarketData
 Market Data,市場情報,MarketData
 Open,開いた,MarketData
 Close,閉じる,MarketData
-Overview,概要,Navigation
-User,,Navigation
-Send NXS,送信 NXS,Navigation
-Send,送信,Navigation
-Transactions,トランザクション,Navigation
-Market Data,市場情報,Navigation
-Address Book,,Navigation
-Settings,設定,Navigation
-Console,コンソール,Navigation
+Overview,概要,NavigationBar
+User,,NavigationBar
+Send NXS,送信 NXS,NavigationBar
+Send,送信,NavigationBar
+Transactions,トランザクション,NavigationBar
+Market Data,市場情報,NavigationBar
+Address Book,,NavigationBar
+Settings,設定,NavigationBar
+Console,コンソール,NavigationBar
 Closing Nexus Wallet,,
 Warning,,
 IMPROPER USE OF THIS SOFTWARE COULD LEAD TO PERMANENT LOSS OF COIN.,,

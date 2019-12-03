@@ -55,15 +55,15 @@ Refresh,更新,MarketData
 Market Data,市场数据,MarketData
 Open,打开,MarketData
 Close,关闭,MarketData
-Overview,综述,Navigation
-User,,Navigation
-Send NXS,发送NXS,Navigation
-Send,发送,Navigation
-Transactions,交易记录（Transaction）,Navigation
-Market Data,市场数据,Navigation
-Address Book,通訊錄,Navigation
-Settings,设置,Navigation
-Console,控制台,Navigation
+Overview,综述,NavigationBar
+User,,NavigationBar
+Send NXS,发送NXS,NavigationBar
+Send,发送,NavigationBar
+Transactions,交易记录（Transaction）,NavigationBar
+Market Data,市场数据,NavigationBar
+Address Book,通訊錄,NavigationBar
+Settings,设置,NavigationBar
+Console,控制台,NavigationBar
 Closing Nexus Wallet,关闭Nexus钱包,
 Warning,警告,
 IMPROPER USE OF THIS SOFTWARE COULD LEAD TO PERMANENT LOSS OF COIN.,不正确使用本软件可能导致永久性的货币损失。,

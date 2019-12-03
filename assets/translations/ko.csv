@@ -55,15 +55,15 @@ Refresh,시장 데이터 새로 고침,MarketData
 Market Data,시장 정보,MarketData
 Open,열다,MarketData
 Close,닫기,MarketData
-Overview,개요,Navigation
-User,,Navigation
-Send NXS,NXS 보내기,Navigation
-Send,보내다,Navigation
-Transactions,업무,Navigation
-Market Data,시장 정보,Navigation
-Address Book,,Navigation
-Settings,설정,Navigation
-Console,콘솔,Navigation
+Overview,개요,NavigationBar
+User,,NavigationBar
+Send NXS,NXS 보내기,NavigationBar
+Send,보내다,NavigationBar
+Transactions,업무,NavigationBar
+Market Data,시장 정보,NavigationBar
+Address Book,,NavigationBar
+Settings,설정,NavigationBar
+Console,콘솔,NavigationBar
 Closing Nexus Wallet,,
 Warning,,
 IMPROPER USE OF THIS SOFTWARE COULD LEAD TO PERMANENT LOSS OF COIN.,,
