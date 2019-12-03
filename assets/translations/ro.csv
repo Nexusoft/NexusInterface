@@ -271,6 +271,8 @@ Clear all stored peer connections and restart Nexus,Şterge toate conexiunile st
 Clear,Șterge,Settings.Core
 Verbose level,Nivel prolix,Settings.Core
 Verbose level for logs.,Nivel prolix pentru jurnale.,Settings.Core
+Wallet Data Directory Override,,Settings.Core
+Change where the data directory is. This is where the wallet.dat and database are located. Default is blank.,,Settings.Core
 Testnet Iteration,,Settings.Core
 The iteration of Testnet to connect to.,,Settings.Core
 Turn Off,,Settings.Core
@@ -577,7 +579,7 @@ Unnamed token,Monedă fără nume,User.Tokens
  (Owned by you), (Deţinut de tine),User.Tokens
 Details,Detalii,User.Tokens
 New Token,Monedă nouă,User.Tokens.NewToken
-"There is a %{tokenfee}NXS token creation fee, based on supply","Există o taxă de %{tokenfee}NXS pentru crearea de monede, în funcţie de rezervă",User.Tokens.NewToken
+"There is a %{tokenfee} NXS token creation fee, based on supply",,User.Tokens.NewToken
 Token name,Nume monedă,User.Tokens.NewToken
 Name Creation Fee: %{tokenFee} NXS (Optional),Taxă creare nume: %{tokenFee} NXS (Opţional),User.Tokens.NewToken
 New tokens's name,Nume monedă nouă,User.Tokens.NewToken

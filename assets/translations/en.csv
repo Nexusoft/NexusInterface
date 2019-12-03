@@ -272,6 +272,8 @@ Clear all stored peer connections and restart Nexus,Clear all stored peer connec
 Clear,Clear,Settings.Core
 Verbose level,Verbose level,Settings.Core
 Verbose level for logs.,Verbose level for logs.,Settings.Core
+Wallet Data Directory Override,Wallet Data Directory Override,Settings.Core
+Change where the data directory is. This is where the wallet.dat and database are located. Default is blank.,Change where the data directory is. This is where the wallet.dat and database are located. Default is blank.,Settings.Core
 Testnet Iteration,Testnet Iteration,Settings.Core
 The iteration of Testnet to connect to.,The iteration of Testnet to connect to.,Settings.Core
 Turn Off,Turn Off,Settings.Core
@@ -578,7 +580,7 @@ Unnamed token,Unnamed token,User.Tokens
  (Owned by you), (Owned by you),User.Tokens
 Details,Details,User.Tokens
 New Token,New Token,User.Tokens.NewToken
-"There is a %{tokenfee}NXS token creation fee, based on supply","There is a %{tokenfee}NXS token creation fee, based on supply",User.Tokens.NewToken
+"There is a %{tokenfee} NXS token creation fee, based on supply","There is a %{tokenfee} NXS token creation fee, based on supply",User.Tokens.NewToken
 Token name,Token name,User.Tokens.NewToken
 Name Creation Fee: %{tokenFee} NXS (Optional),Name Creation Fee: %{tokenFee} NXS (Optional),User.Tokens.NewToken
 New tokens's name,New tokens's name,User.Tokens.NewToken
