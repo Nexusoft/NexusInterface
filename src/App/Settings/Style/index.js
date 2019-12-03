@@ -288,6 +288,7 @@ class SettingsStyle extends Component {
         filters: [{ name: 'Theme JSON', extensions: ['json'] }],
       },
       path => {
+        if (!path) return;
         console.log(path);
         fs.copyFile(walletDataDir + '/theme.json', path, err => {
           if (err) {
