@@ -54,6 +54,7 @@ const commentRegExp = /i18n-extract (.+)/;
 const commentIgnoreRegExp = /i18n-extract-disable-line/;
 
 const translateMarker = '__';
+const translateWithContextMarker = '___';
 const withContextMarker = '__context';
 
 function extractFromCode(code) {
@@ -106,6 +107,7 @@ function extractFromCode(code) {
         callee: { name, type },
       } = node;
 
+      // withContext(context) calls
       if (
         (type === 'Identifier' && name === withContextMarker) ||
         path.get('callee').matchesPattern(withContextMarker)
@@ -114,6 +116,7 @@ function extractFromCode(code) {
         context = (contextNode && contextNode.value) || '';
       }
 
+      // default translate(string) calls
       if (
         (type === 'Identifier' && name === translateMarker) ||
         path.get('callee').matchesPattern(translateMarker)
@@ -125,6 +128,26 @@ function extractFromCode(code) {
             keys.push({
               key,
               context,
+              loc: node.loc,
+            });
+          }
+        });
+      }
+
+      // translateWithContext(context, string) calls
+      if (
+        (type === 'Identifier' && name === translateWithContextMarker) ||
+        path.get('callee').matchesPattern(translateWithContextMarker)
+      ) {
+        const contextNode = node.arguments && node.arguments[0];
+        const tempContext = (contextNode && contextNode.value) || '';
+        const foundKeys = getKeys(node.arguments[1]);
+
+        foundKeys.forEach(key => {
+          if (key) {
+            keys.push({
+              key,
+              context: tempContext,
               loc: node.loc,
             });
           }
