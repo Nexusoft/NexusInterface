@@ -11,6 +11,8 @@ import { formatNumber } from 'lib/intl';
 
 import { totalBalance } from './utils';
 
+__ = __context('User.Accounts.AccountDetails');
+
 const timeFormatOptions = {
   year: 'numeric',
   month: 'long',

@@ -15,6 +15,8 @@ import { formatNumber, formatDateTime } from 'lib/intl';
 
 import QuestionCircle from 'components/QuestionCircle';
 
+__ = __context('User.Staking');
+
 const dateTimeFormat = {
   month: 'short',
   day: '2-digit',
@@ -174,7 +176,7 @@ export default class Staking extends React.Component {
               <span className="v-align">{__('Stake Weight')}</span>
               <QuestionCircle
                 tooltip={__(
-                  'Stake Weight depends on Trust Weight and Block Weight. Along with your Stake balance, Stake Weight affects how frequent you receive a Trust transaction'
+                  'Stake Weight depends on Trust Weight and Block Weight. Along with your Stake amount, Stake Weight affects how frequent you receive a Trust transaction'
                 )}
               />
             </div>

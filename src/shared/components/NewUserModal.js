@@ -25,6 +25,8 @@ import store, { observeStore } from 'store';
 import { isLoggedIn } from 'selectors';
 import confirmPasswordPin from 'utils/promisified/confirmPasswordPin';
 
+__ = __context('NewUser');
+
 const Buttons = styled.div({
   marginTop: '1.5em',
 });

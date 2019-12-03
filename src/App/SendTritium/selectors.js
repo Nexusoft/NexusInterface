@@ -2,6 +2,8 @@ import React from 'react';
 import styled from '@emotion/styled';
 import memoize from 'utils/memoize';
 
+__ = __context('Send');
+
 const TokenRecipientName = styled.span({
   color: 'gray',
 });
@@ -17,7 +19,7 @@ export const getAccountOptions = memoize((myAccounts, myTokens) => {
   if (myAccounts && myAccounts.length > 0) {
     options.push({
       value: 'AccountsSeparator',
-      display: <Separator>{'Accounts'}</Separator>,
+      display: <Separator>{__('Accounts')}</Separator>,
       isSeparator: true,
       indent: false,
     });
@@ -33,7 +35,7 @@ export const getAccountOptions = memoize((myAccounts, myTokens) => {
   if (myTokens && myTokens.length > 0) {
     options.push({
       value: 'TokensSeparator',
-      display: <Separator>{'Tokens'}</Separator>,
+      display: <Separator>{__('Tokens')}</Separator>,
       isSeparator: true,
       indent: false,
     });

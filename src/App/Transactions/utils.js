@@ -1,3 +1,5 @@
+__ = __context('Transactions');
+
 export const categoryText = category => {
   switch (category) {
     case 'credit':

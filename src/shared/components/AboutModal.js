@@ -9,6 +9,8 @@ import styled from '@emotion/styled';
 import { legacyMode } from 'consts/misc';
 import nexusLogo from 'icons/logo-full.svg';
 
+__ = __context('About');
+
 const Section = styled.div({
   margin: '2em 2em',
   textAlign: 'center',

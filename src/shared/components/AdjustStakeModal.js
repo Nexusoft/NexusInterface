@@ -16,6 +16,8 @@ import { removeModal, showNotification } from 'lib/ui';
 import Link from 'components/Link';
 import GA from 'lib/googleAnalytics';
 
+__ = __context('AdjustStake');
+
 const LimitNumber = styled(Link)(
   {
     position: 'absolute',

@@ -19,6 +19,7 @@
 - Improved balances UI in Transactions page
 - Disallowed logging in to your sigchain before the sigchain creation is confirmed on the blockchain
 - You can now use Escape key to close most pop-up modals
+- Unconfirmed transactions are now dimmed on Transactions page
 
 #### Fixes
 

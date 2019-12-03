@@ -9,6 +9,8 @@ import ChangePasswordPinModal from 'components/ChangePasswordPinModal';
 import { openModal } from 'lib/ui';
 import menuIcon from 'icons/menu.svg';
 
+__ = __context('User');
+
 const UserOptions = () => {
   const hasRecoveryPhrase = useSelector(
     ({ core: { userStatus } }) => !!(userStatus && userStatus.recovery)

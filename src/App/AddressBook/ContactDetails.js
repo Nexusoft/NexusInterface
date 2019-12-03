@@ -17,6 +17,8 @@ import { timing } from 'styles';
 import trashIcon from 'icons/trash.svg';
 import editIcon from 'icons/edit.svg';
 
+__ = __context('AddressBook');
+
 const ContactDetailsComponent = styled.div({
   gridArea: 'details',
   maxHeight: '100%',

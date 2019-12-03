@@ -24,6 +24,8 @@ import { isCoreConnected } from 'selectors';
 
 import ReScanButton from './RescanButton.js';
 
+__ = __context('Settings.Core');
+
 const RestartPrompt = styled.div(({ theme }) => ({
   position: 'absolute',
   bottom: 0,

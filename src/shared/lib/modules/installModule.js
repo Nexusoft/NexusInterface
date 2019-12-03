@@ -12,6 +12,8 @@ import extractZip from 'utils/promisified/extractZip';
 import extractTarball from 'utils/promisified/extractTarball';
 import confirm from 'utils/promisified/confirm';
 
+__ = __context('Settings.Modules');
+
 // Temp directory for extracting module before installing
 const tempModuleDir = join(walletDataDir, '.temp_module');
 const supportedExtensions = ['.zip', '.tar.gz'];

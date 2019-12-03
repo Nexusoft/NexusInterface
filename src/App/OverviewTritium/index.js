@@ -59,6 +59,8 @@ import stakeIcon from 'icons/staking-white.svg';
 import warningIcon from 'icons/warning.svg';
 import questionMarkCircleIcon from 'icons/question-mark-circle.svg';
 
+__ = __context('Overview');
+
 const trustIcons = [
   trust00,
   trust10,

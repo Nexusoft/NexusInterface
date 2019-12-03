@@ -17,6 +17,8 @@ import questionMarkIcon from 'icons/question-mark.svg';
 import lockedIcon from 'icons/padlock.svg';
 import unlockedIcon from 'icons/padlock-open.svg';
 
+__ = __context('Header');
+
 const LoginStatusIcon = styled(StatusIcon)(
   ({ theme }) => ({
     cursor: 'pointer',

@@ -24,6 +24,8 @@ import NewTokenModal from './NewTokenModal';
 import Token from './Token';
 import SearchTokenModal from './SearchTokenModal';
 
+__ = __context('User.Tokens');
+
 const mapStateToProps = state => ({
   coreConnected: isCoreConnected(state),
   userGenesis: state.core.userStatus.genesis,

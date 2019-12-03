@@ -10,7 +10,9 @@ import { openModal } from 'lib/ui';
 import plusIcon from 'icons/plus.svg';
 
 import Account from './Account';
-import NewAccountModal from 'components/UserDialogs/NewAccountModal';
+import NewAccountModal from 'components/NewAccountModal';
+
+__ = __context('User.Accounts');
 
 const AccountsWrapper = styled.div(({ theme }) => ({
   maxWidth: 500,

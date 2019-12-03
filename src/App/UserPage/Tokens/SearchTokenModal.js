@@ -16,6 +16,8 @@ import Icon from 'components/Icon';
 // Internal Local
 import TokenDetailsModal from './TokenDetailsModal';
 
+__ = __context('User.Tokens.SearchToken');
+
 @reduxForm({
   form: 'search_tokens',
   destroyOnUnmount: true,

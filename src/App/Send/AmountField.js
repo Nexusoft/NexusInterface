@@ -10,6 +10,8 @@ import FormField from 'components/FormField';
 import Link from 'components/Link';
 import { getNxsFiatPrice } from './selectors';
 
+__ = __context('Send');
+
 const floatRegex = /^[0-9]+(.[0-9]*)?$/;
 
 const SendAmount = styled.div({

@@ -12,6 +12,8 @@ import {
   setTxsTimeFilter,
 } from 'lib/ui';
 
+__ = __context('Transactions');
+
 const operations = [
   'WRITE',
   'APPEND',

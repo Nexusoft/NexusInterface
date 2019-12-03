@@ -8,6 +8,8 @@ import { switchSettingsTab } from 'lib/ui';
 import Module from './Module';
 import AddModule from './AddModule';
 
+__ = __context('Settings.Modules');
+
 /**
  * The Module's Settings Page
  *

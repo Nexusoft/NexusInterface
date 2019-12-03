@@ -12,6 +12,8 @@ import { animations, timing } from 'styles';
 import workIcon from 'icons/work.svg';
 import BootstrapModal from 'components/BootstrapModal';
 
+__ = __context('Bootstrap');
+
 const BootstrapBackgroundTaskComponent = styled(BackgroundTask)(
   {
     animation: `${animations.fadeIn} ${timing.normal} ease-out`,

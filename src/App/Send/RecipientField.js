@@ -14,6 +14,8 @@ import AddEditContactModal from 'components/AddEditContactModal';
 import plusIcon from 'icons/plus.svg';
 import { getAddressNameMap, getRecipientSuggestions } from './selectors';
 
+__ = __context('Send');
+
 const RecipientName = styled.span(({ theme }) => ({
   textTransform: 'none',
   color: theme.primary,

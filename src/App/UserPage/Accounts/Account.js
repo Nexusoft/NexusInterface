@@ -10,6 +10,8 @@ import AccountDetailsModal from './AccountDetailsModal';
 import AccountHistoryModal from './AccountHistoryModal';
 import { totalBalance } from './utils';
 
+__ = __context('User.Accounts');
+
 const AccountComponent = styled.div(({ theme }) => ({
   padding: '1em 0',
   borderBottom: `1px solid ${theme.mixer(0.125)}`,

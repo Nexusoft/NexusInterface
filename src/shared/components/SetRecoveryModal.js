@@ -16,6 +16,8 @@ import { errorHandler, numericOnly } from 'utils/form';
 import { openSuccessDialog, removeModal } from 'lib/ui';
 import { assetsDir } from 'consts/paths';
 
+__ = __context('SetRecoveryPhrase');
+
 const options = [
   {
     value: 10,

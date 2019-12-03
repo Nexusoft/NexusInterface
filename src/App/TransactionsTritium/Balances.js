@@ -7,6 +7,8 @@ import { getBalances } from 'lib/user';
 import { observeStore } from 'store';
 import { formatNumber } from 'lib/intl';
 
+__ = __context('Transactions.Balances');
+
 const BalancesWrapper = styled.div(({ theme }) => ({
   maxWidth: 350,
   margin: '0 auto',
