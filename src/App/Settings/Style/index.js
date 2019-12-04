@@ -373,6 +373,7 @@ class SettingsStyle extends Component {
    */
   render() {
     const { theme, renderGlobe, addressStyle, overviewDisplay } = this.props;
+    const defaultAddress = this.getUsersDefaultAddress();
 
     return (
       <>
@@ -420,17 +421,19 @@ class SettingsStyle extends Component {
           <div className="mt1">
             <NexusAddress
               address={
-                this.getUsersDefaultAddress() ||
+                defaultAddress ||
                 '000000000000000000000000000000000000000000000000000'
               }
               label={__('Sample Address')}
             />
-            <AddressStyleNote>
-              <Icon icon={warningIcon} className="space-right" />
-              <span className="v-align">
-                {__('This is your Default Address')}
-              </span>
-            </AddressStyleNote>
+            {!!defaultAddress && (
+              <AddressStyleNote>
+                <Icon icon={warningIcon} className="space-right" />
+                <span className="v-align">
+                  {__('This is your Default Address')}
+                </span>
+              </AddressStyleNote>
+            )}
           </div>
         </SettingsField>
 
