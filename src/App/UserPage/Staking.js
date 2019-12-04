@@ -119,7 +119,7 @@ export default class Staking extends React.Component {
                 </Line>
                 <Line>
                   <div>
-                    <span className="v-align">{__('Requested in')}</span>
+                    <span className="v-align">{__('Requested at')}</span>
                   </div>
                   <div>
                     {formatDateTime(stakeInfo.requested * 1000, dateTimeFormat)}
