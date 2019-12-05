@@ -26,6 +26,7 @@ const displayedOperations = [
   'TRUST',
   'COINBASE',
   'MIGRATE',
+  'LEGACY',
 ];
 
 const timeFormatOptions = {
@@ -114,7 +115,8 @@ const tableColumns = [
             OP === 'GENESIS' ||
             OP === 'TRUST' ||
             OP === 'COINBASE' ||
-            OP === 'MIGRATE'
+            OP === 'MIGRATE' ||
+            OP === 'LEGACY'
           }
         >
           {formatNumber(amount, 6)}
