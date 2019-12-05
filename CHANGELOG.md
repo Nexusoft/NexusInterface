@@ -1,6 +1,6 @@
-# 2.0.8 (2019.11.17)
+# 2.1.0 (2019.12.XX)
 
-[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.0.8)
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.1.0)
 
 #### Additions
 
