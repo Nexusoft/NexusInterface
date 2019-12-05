@@ -1,3 +1,19 @@
+# 2.0.8 (2019.12.04)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.0.8)
+
+#### Additions
+
+- Nexus Core 4.0.8
+
+#### Adjustments
+
+- none
+
+#### Fixes
+
+- none
+
 # 2.0.7 (2019.11.17)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.0.7)
