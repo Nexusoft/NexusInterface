@@ -1,6 +1,6 @@
 # Nexus Interface
 
-### Current Version: 2.0.7
+### Current Version: 2.0.8
 
 [![Crowdin](https://badges.crowdin.net/nexus-interface/localized.svg)](https://crowdin.com/project/nexus-interface)
 
