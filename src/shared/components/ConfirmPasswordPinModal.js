@@ -6,6 +6,8 @@ import MaskableTextField from 'components/MaskableTextField';
 import Button from 'components/Button';
 import { openErrorDialog } from 'lib/ui';
 
+__ = __context('ConfirmPassword&PIN');
+
 export default class ConfirmPasswordPinModal extends React.Component {
   state = {
     password: '',

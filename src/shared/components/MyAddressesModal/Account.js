@@ -8,6 +8,8 @@ import NexusAddress from 'components/NexusAddress';
 import highlightMatchingText from 'utils/highlightMatchingText';
 import { formatNumber } from 'lib/intl';
 
+__ = __context('MyAddresses');
+
 const AccountComponent = styled.div(({ theme }) => ({
   padding: '1em 0',
   borderBottom: `1px solid ${theme.mixer(0.125)}`,

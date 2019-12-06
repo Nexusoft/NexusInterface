@@ -7,6 +7,8 @@ import Modal from 'components/Modal';
 import * as color from 'utils/color';
 import Dialog from './Dialog';
 
+__ = __context('ErrorDialog');
+
 const XMark = styled(Dialog.Icon)(({ theme }) => ({
   fontSize: 56,
   color: theme.danger,

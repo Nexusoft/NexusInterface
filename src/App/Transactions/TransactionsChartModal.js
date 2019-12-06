@@ -17,6 +17,8 @@ import {
 } from './selectors';
 import { categoryText } from './utils';
 
+__ = __context('Transactions.TransactionsChart');
+
 const VictoryZoomVoronoiContainer = createContainer('voronoi', 'zoom');
 
 const barFillColor = inData =>

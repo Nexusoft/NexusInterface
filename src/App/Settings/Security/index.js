@@ -3,12 +3,14 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 // Internal
-import WaitingMessage from 'components/WaitingMessage';
+import RequireCoreConnected from 'components/RequireCoreConnected';
 import { switchSettingsTab } from 'lib/ui';
-import { isCoreConnected } from 'selectors';
+
 import Login from './Login';
 import Encrypted from './Encrypted';
 import Unencrypted from './Unencrypted';
+
+__ = __context('Settings.Security');
 
 /**
  * SettingsSecurity Page on Settings Page
@@ -18,7 +20,6 @@ import Unencrypted from './Unencrypted';
  */
 @connect(state => ({
   locked: state.core.info.locked,
-  coreConnected: isCoreConnected(state),
 }))
 class SettingsSecurity extends React.Component {
   /**
@@ -38,23 +39,19 @@ class SettingsSecurity extends React.Component {
    * @memberof SettingsSecurity
    */
   render() {
-    const { locked, coreConnected } = this.props;
-    if (!coreConnected) {
-      return (
-        <WaitingMessage>
-          {__('Connecting to Nexus Core')}
-          ...
-        </WaitingMessage>
-      );
-    }
+    const { locked } = this.props;
 
-    if (locked === undefined) {
-      return <Unencrypted />;
-    } else if (locked) {
-      return <Login />;
-    } else {
-      return <Encrypted />;
-    }
+    return (
+      <RequireCoreConnected>
+        {locked === undefined ? (
+          <Unencrypted />
+        ) : locked ? (
+          <Login />
+        ) : (
+          <Encrypted />
+        )}
+      </RequireCoreConnected>
+    );
   }
 }
 export default SettingsSecurity;

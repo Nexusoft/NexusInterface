@@ -11,6 +11,8 @@ import { timing } from 'styles';
 import * as color from 'utils/color';
 import StatusIcon from './StatusIcon';
 
+__ = __context('Header');
+
 const MyAddressesIcon = styled(StatusIcon)(({ theme }) => ({
   cursor: 'pointer',
   color: theme.primary,

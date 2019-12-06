@@ -32,6 +32,8 @@ import {
   getAccountInfo,
 } from './selectors';
 
+__ = __context('Send');
+
 const SendFormComponent = styled.form({
   maxWidth: 800,
   margin: '-.5em auto 0',

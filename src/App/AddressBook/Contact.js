@@ -16,6 +16,8 @@ import * as color from 'utils/color';
 import { defaultMenu } from 'lib/contextMenu';
 import plusIcon from 'icons/plus.svg';
 
+__ = __context('AddressBook');
+
 const ContactComponent = styled.div(
   ({ theme }) => ({
     display: 'flex',

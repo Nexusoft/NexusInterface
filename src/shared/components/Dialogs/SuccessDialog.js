@@ -9,6 +9,8 @@ import * as color from 'utils/color';
 import checkIcon from 'icons/check.svg';
 import Dialog from './Dialog';
 
+__ = __context('SuccessDialog');
+
 const CheckMark = styled(Dialog.Icon)(({ theme }) => ({
   fontSize: 44,
   color: theme.primary,

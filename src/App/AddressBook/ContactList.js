@@ -9,6 +9,8 @@ import AddEditContactModal from 'components/AddEditContactModal';
 import { isCoreConnected } from 'selectors';
 import Contact, { NewContactButton } from './Contact';
 
+__ = __context('AddressBook');
+
 const ContactListComponent = styled.div(({ theme }) => ({
   gridArea: 'list',
   maxHeight: '100%',

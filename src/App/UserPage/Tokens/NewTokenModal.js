@@ -13,11 +13,13 @@ import { apiPost } from 'lib/tritiumApi';
 import { errorHandler } from 'utils/form';
 import { loadAccounts, loadOwnedTokens } from 'lib/user';
 import { removeModal, showNotification } from 'lib/ui';
-import NewAccountModal from 'components/UserDialogs/NewAccountModal';
+import NewAccountModal from 'components/NewAccountModal';
 import { openModal } from 'lib/ui';
 
 import { token, localName } from 'lib/fees';
 import GA from 'lib/googleAnalytics';
+
+__ = __context('User.Tokens.NewToken');
 
 const SubLable = styled.span(({ theme }) => ({
   marginLeft: '1em',
@@ -122,7 +124,7 @@ class NewTokenModal extends React.Component {
         <Modal.Body>
           <form onSubmit={handleSubmit}>
             {__(
-              `There is a %{tokenfee}NXS token creation fee, based on supply`,
+              `There is a %{tokenfee} NXS token creation fee, based on supply`,
               {
                 tokenfee: tokenCreationFee,
               }

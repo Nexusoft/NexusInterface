@@ -8,6 +8,8 @@ import Button from 'components/Button';
 import { removeModal } from 'lib/ui';
 import { numericOnly } from 'utils/form';
 
+__ = __context('PinDialog');
+
 const PinInput = styled(MaskableTextField.RF)({
   margin: '1em auto 2.5em',
   fontSize: 18,

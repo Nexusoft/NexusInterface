@@ -9,6 +9,8 @@ import { getDeltaSign } from 'lib/tritiumTransactions';
 import { consts, timing } from 'styles';
 import * as color from 'utils/color';
 
+__ = __context('Transactions');
+
 const ContractComponent = styled.div(({ theme }) => ({
   flexGrow: 1,
   padding: '.6em 1em',

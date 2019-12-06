@@ -5,6 +5,8 @@ import BackgroundTask from 'components/BackgroundTask';
 import { openConfirmDialog, showBackgroundTask } from 'lib/ui';
 import { closeWallet } from 'lib/wallet';
 
+__ = __context('AutoUpdate');
+
 export default class AutoUpdateBackgroundTask extends React.Component {
   confirmInstall = () => {
     this.closeTask();

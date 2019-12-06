@@ -8,6 +8,8 @@ import merge from 'webpack-merge';
 
 import baseConfig from './webpack.config.base';
 
+const intlPath = path.join(process.cwd(), 'src', 'shared', 'lib', 'intl.js');
+
 export default merge.smart(baseConfig, {
   target: 'electron-renderer',
 
@@ -42,10 +44,9 @@ export default merge.smart(baseConfig, {
 
   plugins: [
     new webpack.ProvidePlugin({
-      __: [
-        path.join(process.cwd(), 'src', 'shared', 'lib', 'intl.js'),
-        'translate',
-      ],
+      __: [intlPath, 'translate'],
+      ___: [intlPath, 'translateWithContext'],
+      __context: [intlPath, 'withContext'],
     }),
   ],
 });

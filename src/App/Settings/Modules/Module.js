@@ -15,6 +15,8 @@ import { timing } from 'styles';
 import { updateSettings } from 'lib/settings';
 import warningIcon from 'icons/warning.svg';
 
+__ = __context('Settings.Modules');
+
 const ModuleComponent = styled.div(
   ({ theme }) => ({
     display: 'grid',

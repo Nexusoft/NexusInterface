@@ -5,6 +5,7 @@ import styled from '@emotion/styled';
 
 import Icon from 'components/Icon';
 import Panel from 'components/Panel';
+import RequireCoreConnected from 'components/RequireCoreConnected';
 import WaitingMessage from 'components/WaitingMessage';
 import Select from 'components/Select';
 import Button from 'components/Button';
@@ -13,7 +14,6 @@ import Table from 'components/Table';
 import { formatDateTime } from 'lib/intl';
 import { openModal } from 'lib/ui';
 import { setTxsAccountFilter } from 'lib/ui';
-import { isCoreConnected } from 'selectors';
 import { autoUpdateTransactions, isPending } from 'lib/transactions';
 
 import TransactionDetailsModal from './TransactionDetailsModal';
@@ -31,6 +31,8 @@ import CategoryCell from './CategoryCell';
 import transactionIcon from 'icons/transaction.svg';
 import barChartIcon from 'icons/bar-chart.svg';
 import downloadIcon from 'icons/download.svg';
+
+__ = __context('Transactions');
 
 const timeFormatOptions = {
   year: 'numeric',
@@ -123,7 +125,6 @@ const mapStateToProps = state => {
     accountOptions: getAccountOptions(myAccounts),
     settings: state.settings,
     minConfirmations,
-    coreConnected: isCoreConnected(state),
   };
 };
 
@@ -183,7 +184,6 @@ class Transactions extends Component {
     const {
       filteredTransactions,
       account,
-      coreConnected,
       accountOptions,
       minConfirmations,
     } = this.props;
@@ -217,50 +217,47 @@ class Transactions extends Component {
           </div>
         }
       >
-        {!coreConnected ? (
-          <WaitingMessage>
-            {__('Connecting to Nexus Core')}
-            ...
-          </WaitingMessage>
-        ) : !filteredTransactions ? (
-          <WaitingMessage>
-            {__('Loading transactions')}
-            ...
-          </WaitingMessage>
-        ) : (
-          <TransactionsLayout>
-            <Filters />
-            <TransactionsTable
-              data={filteredTransactions}
-              columns={tableColumns}
-              defaultPageSize={10}
-              defaultSortingColumnIndex={0}
-              getTrProps={(state, row) => {
-                const tx = row && row.original;
-                return {
-                  onClick: tx
-                    ? () => {
-                        openModal(TransactionDetailsModal, {
-                          txid: tx.txid,
-                        });
-                      }
-                    : undefined,
-                  style: tx
-                    ? {
-                        cursor: 'pointer',
-                        opacity:
-                          tx.category === 'immature' ||
-                          tx.category === 'orphan' ||
-                          isPending(tx, minConfirmations)
-                            ? 0.5
-                            : 1,
-                      }
-                    : undefined,
-                };
-              }}
-            />
-          </TransactionsLayout>
-        )}
+        <RequireCoreConnected>
+          {!filteredTransactions ? (
+            <WaitingMessage>
+              {__('Loading transactions')}
+              ...
+            </WaitingMessage>
+          ) : (
+            <TransactionsLayout>
+              <Filters />
+              <TransactionsTable
+                data={filteredTransactions}
+                columns={tableColumns}
+                defaultPageSize={10}
+                defaultSortingColumnIndex={0}
+                getTrProps={(state, row) => {
+                  const tx = row && row.original;
+                  return {
+                    onClick: tx
+                      ? () => {
+                          openModal(TransactionDetailsModal, {
+                            txid: tx.txid,
+                          });
+                        }
+                      : undefined,
+                    style: tx
+                      ? {
+                          cursor: 'pointer',
+                          opacity:
+                            tx.category === 'immature' ||
+                            tx.category === 'orphan' ||
+                            isPending(tx, minConfirmations)
+                              ? 0.5
+                              : 1,
+                        }
+                      : undefined,
+                  };
+                }}
+              />
+            </TransactionsLayout>
+          )}
+        </RequireCoreConnected>
       </Panel>
     );
   }

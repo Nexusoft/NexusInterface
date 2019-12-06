@@ -4,6 +4,8 @@ import * as TYPE from 'consts/actionTypes';
 import store from 'store';
 import { walletEvents } from 'lib/wallet';
 
+__ = __context('MarketData');
+
 //action creator for loaded flag
 
 async function fetchMarketData() {

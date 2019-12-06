@@ -16,6 +16,8 @@ import { totalBalance } from './utils';
 import Link from 'components/Link';
 import Tooltip from 'components/Tooltip';
 
+__ = __context('User.Accounts.AccountHistory');
+
 const displayedOperations = [
   'DEBIT',
   'CREDIT',
@@ -24,6 +26,7 @@ const displayedOperations = [
   'TRUST',
   'COINBASE',
   'MIGRATE',
+  'LEGACY',
 ];
 
 const timeFormatOptions = {
@@ -112,7 +115,8 @@ const tableColumns = [
             OP === 'GENESIS' ||
             OP === 'TRUST' ||
             OP === 'COINBASE' ||
-            OP === 'MIGRATE'
+            OP === 'MIGRATE' ||
+            OP === 'LEGACY'
           }
         >
           {formatNumber(amount, 6)}

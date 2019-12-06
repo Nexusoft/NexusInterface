@@ -11,6 +11,8 @@ import TextField from 'components/TextField';
 import { timing } from 'styles';
 import plusIcon from 'icons/plus.svg';
 
+__ = __context('AddEditContact');
+
 const RemoveButton = styled.div(({ theme }) => ({
   position: 'absolute',
   left: 3,

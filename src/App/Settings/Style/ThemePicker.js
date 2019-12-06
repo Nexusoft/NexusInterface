@@ -6,6 +6,8 @@ import styled from '@emotion/styled';
 import { timing } from 'styles';
 import * as color from 'utils/color';
 
+__ = __context('Settings.Style');
+
 const OptionButton = styled.button(
   ({ theme }) => ({
     display: 'inline-flex',

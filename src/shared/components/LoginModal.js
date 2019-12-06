@@ -18,6 +18,8 @@ import { getUserStatus } from 'lib/user';
 import { errorHandler, numericOnly } from 'utils/form';
 import { updateSettings } from 'lib/settings';
 
+__ = __context('Login');
+
 const Buttons = styled.div({
   marginTop: '2em',
 });

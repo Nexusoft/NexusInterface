@@ -1,6 +1,6 @@
-# 2.0.8 (2019.11.17)
+# 2.1.0 (2019.12.XX)
 
-[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.0.8)
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.1.0)
 
 #### Additions
 
@@ -19,6 +19,7 @@
 - Improved balances UI in Transactions page
 - Disallowed logging in to your sigchain before the sigchain creation is confirmed on the blockchain
 - You can now use Escape key to close most pop-up modals
+- Unconfirmed transactions are now dimmed on Transactions page
 
 #### Fixes
 
@@ -26,6 +27,7 @@
 - Fixed core settings not repecting testnet iteration off button
 - Fixed the error opening trust account's history
 - Fixed Adjust Stake modal not closing on success
+- Fixed issue where Legacy transactions did not display in Account History
 
 # 2.0.7 (2019.11.17)
 

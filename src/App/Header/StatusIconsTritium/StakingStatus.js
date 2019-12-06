@@ -13,6 +13,8 @@ import stakingIcon from 'icons/staking.svg';
 
 import StatusIcon from './StatusIcon';
 
+__ = __context('Header');
+
 /**
  * Handles the Staking Status
  *
