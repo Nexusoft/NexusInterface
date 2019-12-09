@@ -559,7 +559,7 @@ Stake amount,,User.Staking
 The amount of NXS currently staked in the trust account,,User.Staking
 Pending change,,User.Staking
 The pending stake amount change that will be applied on the next Trust transaction,,User.Staking
-Requested in,,User.Staking
+Requested at,,User.Staking
 Expired in,,User.Staking
 Stake Rate,Panostus Kurssi,User.Staking
 The current annual reward rate earned for staking,,User.Staking
@@ -570,10 +570,9 @@ Block Weight,Lohko Paino,User.Staking
 Stake Weight,Panostuksen Paino,User.Staking
 "Stake Weight depends on Trust Weight and Block Weight. Along with your Stake amount, Stake Weight affects how frequent you receive a Trust transaction",,User.Staking
 Available Balance,,User.Staking
-Adjust stake amount,Muuta panostuksen määrää,User.Staking
-Waiting For genesis. Time dependent on balance and difficulty.,,User.Staking
-Account on hold for another %{stakeSeconds} Seconds,,User.Staking
 Migrate stake,,User.Staking
+Adjust stake amount,Muuta panostuksen määrää,User.Staking
+Account on hold for another %{stakeSeconds} Seconds,,User.Staking
 Create new token,,User.Tokens
 Lookup a token,,User.Tokens
 Unnamed token,,User.Tokens

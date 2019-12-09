@@ -559,7 +559,7 @@ Stake amount,Stake amount,User.Staking
 The amount of NXS currently staked in the trust account,The amount of NXS currently staked in the trust account,User.Staking
 Pending change,Pending change,User.Staking
 The pending stake amount change that will be applied on the next Trust transaction,The pending stake amount change that will be applied on the next Trust transaction,User.Staking
-Requested in,Requested in,User.Staking
+Requested at,Requested at,User.Staking
 Expired in,Expired in,User.Staking
 Stake Rate,Stake Rate,User.Staking
 The current annual reward rate earned for staking,The current annual reward rate earned for staking,User.Staking
@@ -570,10 +570,9 @@ Block Weight,Block Weight,User.Staking
 Stake Weight,Stake Weight,User.Staking
 "Stake Weight depends on Trust Weight and Block Weight. Along with your Stake amount, Stake Weight affects how frequent you receive a Trust transaction","Stake Weight depends on Trust Weight and Block Weight. Along with your Stake amount, Stake Weight affects how frequent you receive a Trust transaction",User.Staking
 Available Balance,Available Balance,User.Staking
-Adjust stake amount,Adjust stake amount,User.Staking
-Waiting For genesis. Time dependent on balance and difficulty.,Waiting For genesis. Time dependent on balance and difficulty.,User.Staking
-Account on hold for another %{stakeSeconds} Seconds,Account on hold for another %{stakeSeconds} Seconds,User.Staking
 Migrate stake,Migrate stake,User.Staking
+Adjust stake amount,Adjust stake amount,User.Staking
+Account on hold for another %{stakeSeconds} Seconds,Account on hold for another %{stakeSeconds} Seconds,User.Staking
 Create new token,Create new token,User.Tokens
 Lookup a token,Lookup a token,User.Tokens
 Unnamed token,Unnamed token,User.Tokens
