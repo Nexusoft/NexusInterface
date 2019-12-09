@@ -695,6 +695,7 @@ class Overview extends Component {
             handleOnLineRender={e => (this.redrawCurves = e)}
             handleRemoveAllPoints={e => (this.removeAllPoints = e)}
             connections={connections}
+            blocks={blocks}
             pillarColor={theme.globePillarColor}
             archColor={theme.globeArchColor}
             globeColor={theme.globeColor}
