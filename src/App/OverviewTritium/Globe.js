@@ -414,7 +414,6 @@ export default class Globe extends Component {
         ) {
           return;
         } else {
-          //console.log(point.params.outgoing);
           let temp = new Curve(point, self, {
             color: this.props.archColor,
             forward: point.params.outgoing,
@@ -424,10 +423,8 @@ export default class Globe extends Component {
           this.curveRegistry.push(temp);
         }
       });
-      //console.log(this.allArcs);
     } else {
       this.addSelfPoint();
-      //this.animateArcs();
     }
   }
 
@@ -439,20 +436,14 @@ export default class Globe extends Component {
   animateArcs() {
     if (this.curveRegistry.length <= 0) return;
     if (this.curveRegistry[0].isPlaying) return;
-    console.log(this.curveRegistry);
     this.curveRegistry.map(arc => {
-      console.error(arc);
       if (arc.forward) {
         arc.play();
       }
     });
     setTimeout(() => {
       this.curveRegistry.map(arc => {
-        console.error(arc);
-        console.error(arc.forward);
-        console.error('&&&&&&&&@#@!#!@@!@!#@#');
         if (!arc.forward) {
-          console.log('playing');
           arc.play();
         }
       });
