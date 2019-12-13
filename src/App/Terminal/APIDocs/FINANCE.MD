@@ -27,7 +27,8 @@ The following methods are currently supported by this API
 [`list/account/transactions`](#listaccounttransactions)    
 [`get/stakeinfo`](#getstakeinfo)    
 [`set/stake`](#setstake)    
-[`migrate/stake`](#migratestake)    
+[`migrate/stake`](#migratestake)  
+[`migrate/accounts`](#migrateaccounts)    
 [`get/balances`](#getbalances)    
 [`list/trustaccounts`](#listtrustaccounts)
 
@@ -51,6 +52,8 @@ Create a new account for receiving NXS. The API supports an alternative endpoint
 `session` : For multi-user API mode, (configured with multiuser=1) the session is required to identify which session (sig-chain) the account should be created with. For single-user API mode the session should not be supplied.
 
 `name` : An optional name to identify the account. If provided a Name object will also be created in the users local namespace, allowing the account to be accessed/retrieved by name. If no name is provided the account will need to be accessed/retrieved by its 256-bit register address.
+
+`data` : This optional field allows callers to add arbitrary data to an account register.  
 
 
 ### Example:
@@ -87,6 +90,10 @@ This example creates an account called "main".
 
 Deduct an amount of NXS from an account and send it to another account or legacy UTXO address. The API supports an alternative endpoint that can include the account name in the URL.  For example `/finance/debit/account/savings` will resolve to `finance/debit/account?name=savings`.
 
+Any fee that is applicable fo this transaction is deducted from the sending account, NOT the default account.
+
+The method supports the ability to send to multiple recipients in one transaction by supplying a `recipients` array instead of the single `name_to`/`address_to`/`amount`. The method allows up to 99 recipients to be supplied.  
+
 
 ### Endpoint:
 
@@ -111,7 +118,9 @@ Deduct an amount of NXS from an account and send it to another account or legacy
 
 `reference` : This optional field allows callers to provide a reference, which the recipient can then use to relate the transaction to an order number, invoice number etc.  The reference is be a `64-bit unsigned integer` in the range of 0 to 18446744073709551615
 
-`expires` : This optional field allows callers to specify an expiration for the debit transaction. The expires value is the `number of seconds` from the transaction creation time after which the transaction can no longer be credited by the recipient.  Conversely, when you apply an expiration to a transaction, you are unable to void the transaction until after the expiration time.  If omitted, a default expiration of 1 day (86400 seconds) is applied    
+`expires` : This optional field allows callers to specify an expiration for the debit transaction. The expires value is the `number of seconds` from the transaction creation time after which the transaction can no longer be credited by the recipient.  Conversely, when you apply an expiration to a transaction, you are unable to void the transaction until after the expiration time.  If omitted, a default expiration of 1 day (86400 seconds) is applied
+
+`recipients` : This optional array can be provided as an alternative to the single `name_to`/`address_to`, `amount`, `reference`, and `expires` fields.  Each object in the array can have `name_to`/`address_to`, `amount`, `reference`, and `expires` fields, as described above. Up to 99 recipients can be included in the array.
 
 
 ### Example:
@@ -125,6 +134,34 @@ The following example shows the json payload for a debit of 10.5 NXS from an acc
     "name": "main",
     "amount": 10.5,
     "name_to": "bob:savings"
+}
+```
+
+### Example Multiple Recipients:
+
+The following example shows the json payload for a debit from an account called "default" made to 3 separate recipients, each receiving 5 NXS, and each with a different reference  
+
+```
+{
+    "pin": "1234",
+    "name": "default"
+    "recipients" :
+    [
+        {
+            "name_to": "bob:savings",
+            "amount": 5,
+            "reference": 1234
+        },
+        {
+            "address_to": "8CHjS5Qe7Mghgrqb6NeEaVxjexbdp9p2QVdRTt8W4rzbWhu3fL8",
+            "amount": 5,
+            "reference": 5678
+        },
+        {
+            "address_to": "4kYv4Xft6wufMVi191nQDNprgkK6kzy6gqWRpmfMxyx9KMfEV1u",
+            "amount": 5
+        }
+    ]
 }
 ```
 
@@ -231,6 +268,7 @@ Additionally the API supports passing a field name in the URL after the account 
     "address": "8CbkwEQ9S8owmX74joU6XmiwxJq1aoiqUoXc9fLCKzw15HscM99",
     "token_name": "NXS",
     "token": "0",
+    "data": "abcd1234"
     "balance": 2903.239792,
     "pending": 0.0,
     "unconfirmed": 76.492244
@@ -252,6 +290,8 @@ Additionally the API supports passing a field name in the URL after the account 
 `address` : The register address of the account.  
 
 `token` : This will always be set to 0 for NXS accounts.
+
+`data` : The arbitrary data included in the account register.  If no data was included during the account creation then this field will be omitted.  
 
 `balance` : The available balance of this account.  This is the last confirmed balance less any new debits that you have made since the last block
 
@@ -321,6 +361,8 @@ This will list off all of the NXS accounts belonging to the currently logged in 
 `token_name` : This will always be set to `NXS`.
 
 `token` : This will always be set to 0 for NXS accounts.
+
+`data` : The arbitrary data included in the account register.  If no data was included during the account creation then this field will be omitted.
 
 `balance` : The available balance of this account.  This is the last confirmed balance less any new debits that you have made since the last block
 
@@ -487,6 +529,7 @@ This will retrieve account values and staking metrics for the trust account belo
     "trust": 54322,
     "new": false,
     "staking": true
+    "onhold": false
     "stakerate": 1.97,
     "trustweight": 58.97,
     "blockweight": 47.62,
@@ -510,6 +553,10 @@ This will retrieve account values and staking metrics for the trust account belo
 
 `staking` : Indicates whether staking is actively running for user account (when false, weight metrics will be 0).
 
+`onhold` : When trust account is new, any change to balance requires a minimum wait period before staking begins. During this period, staking is on hold and this field returns true. "staking" field will still be true when on hold.
+
+`holdtime` : Conditional field. Only appears when onhold=true and will contain number of seconds remaining in hold period. 
+
 `stakerate` : The current annual reward rate earned for staking as an annual percent.
 
 `trustweight` : The current trust weight applied to staking as a percent of maximum.
@@ -519,14 +566,14 @@ This will retrieve account values and staking metrics for the trust account belo
 `stakeweight` : The current stake weight (trust weight and block weight combined) as a percent of maximum.
 
 `change` : Indicates whether or not there is a pending request to change stake. The remaining fields only appear when this one is true.   
-{    
-&nbsp;&nbsp;&nbsp;`amount` : Amount of stake change. Positive will be added to stake (moved from balance) and negative will unstake (move to balance).
 
-&nbsp;&nbsp;&nbsp;`requested` : Timestamp when the stake change request was created.
+`amount` : Amount of stake change. Positive will be added to stake (moved from balance) and negative will unstake (move to balance).
 
-&nbsp;&nbsp;&nbsp;`expires`: Timestamp when the stake change request expires, if assigned. Zero indicates does not expire. 
+`requested` : Timestamp when the stake change request was created.
 
-} 
+`expires`: Timestamp when the stake change request expires, if assigned. Zero indicates does not expire. 
+
+ 
 
 ***
 
@@ -605,6 +652,62 @@ The transaction created by migrate/stake is a special form of debit, and it will
 ### Return values:
 
 `txid` : The ID (hash) of the migrate transaction.
+
+***
+
+# `migrate/accounts`
+
+This method will migrate your legacy accounts to signature chain accounts, sending the balance across in the process.  A new account will be created in your signature chain for each legacy account, with a corresponding matching name (unless flagged not to create names).  The balance of each legacy account is sent to the newly created signature chain account in individual transactions.  As such, each transaction incurs the default legacy fee of 0.01 NXS, which is deducted from the amount being migrated.  
+
+The method uses the arbitrary `data` field in the account object register to track which legacy account it was created from.  As a result, it is possible to invoke this method multiple times, and each time it will sweep any NXS from legacy accounts to existing signature chain accounts (as well as creating any necessary new accounts).  
+
+
+### Endpoint:
+
+`/finance/migrate/accounts`
+
+
+### Parameters:
+
+`pin` : The PIN for the signature chain.
+
+`session` : For multi-user API mode, (configured with multiuser=1) the session is required to identify which session (sig-chain) owns the trust account. For single-user API mode the session should not be supplied.
+
+`walletpassphrase` : Optional field to provide the wallet passphrase. This value is required if the wallet is not currently unlocked.
+
+`createname` : Optional boolean field indicating whether to create a Name record for the newly created signature chain accounts.  If omitted, the default behaviour is to create a Name record, which incurs a fee of 1 NXS per account.  
+
+
+### Return value JSON object:
+```
+[
+    {
+        "account": "default",
+        "address": "8BzPhYgcHAP26CYnCvHTQmPiBH7FBC2PAB4rR9YgWxcK7L4c46X",
+        "amount": 44.9,
+        "txid": "022fed45add52c82110411c703c070519ef1136f3fe401def06a9fe29b0fe378935f17c3846c8824410e197f1caea2aaae5e994530cf6ee3d06207dd46126171"
+    },
+    {
+        "account": "test1",
+        "address": "8CEwJUPAkQQuBbAoQtiiswwk38ASuUZ63JQ2yLakV2cEXPbsmsd",
+        "amount": 1.0,
+        "txid": "02b88a4a9972aafdf09461bd976617162b8f8df853f46a5e0d98d608b987d5d52a3cb67c3861e6b47b65721d83b4b47c851af32b01df3292d1e814242966b658"
+    }
+]
+```
+
+
+### Return values:
+
+`account` : The legacy account name (and tritium account name, unless `createname=false` was explicitly set in the request)
+
+`address` :  The register address of the signature chain account that the legacy funds have been migrated to.
+
+`amount` : The NXS amount transferred from the legacy account to the signature chain account.
+
+`txid` : If the the legacy send was successful, the ID (hash) of the legacy transaction. 
+
+`error` : If the legacy send failed, this field includes the legacy send error message
 
 ***
 
