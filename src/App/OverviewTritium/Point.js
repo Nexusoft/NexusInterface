@@ -12,9 +12,9 @@ export default class Point {
     this.lng = lng;
     this.params = params || {};
     const geometry = new THREE.BoxGeometry(
-      0.75 * this.params.ddddd,
-      17 * this.params.ddddd,
-      0.75 * this.params.ddddd
+      0.25 * this.params.peerConnections,
+      10 + 2 * this.params.peerConnections,
+      0.25 * this.params.peerConnections
     );
     this.pillar = new THREE.Mesh(geometry);
 

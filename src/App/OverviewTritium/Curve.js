@@ -118,8 +118,10 @@ export default class Curve {
     if (this.forward) {
       if (this.index > this.curveSegments) {
         this.index = 0;
+        this.isPlaying = false;
         return;
       }
+      this.isPlaying = true;
       this.index += 1;
       this.curveGeometry.setDrawRange(0, this.index);
       this.curveGeometry.attributes.position.needsUpdate = true;
@@ -127,11 +129,13 @@ export default class Curve {
         this.play();
       }, millisecondsPerFrame);
     } else {
-      if (this.index < 0) {
+      if (this.index <= 0) {
         this.index = this.curveSegments;
+        this.isPlaying = false;
         return;
       }
       this.index -= 1;
+      this.isPlaying = true;
       this.curveGeometry.setDrawRange(this.index, this.curveSegments);
       this.curveGeometry.attributes.position.needsUpdate = true;
       setTimeout(() => {
