@@ -1,15 +1,17 @@
-# 2.1.0 (2019.12.XX)
+# 2.1.0 (2019.12.13)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.1.0)
 
 #### Additions
 
+- Nexus Core 4.1.0
 - Added Change Password & PIN functionality
 - Added Set Recovery Phrase functionality
 - Added Recover Password & PIN functionality
 - Added the ability to toggle masked/unmasked content in secure textbox (e.g. password, PIN)
 - Added the ability to change the data directory for the core
-- Added fiat balance to NXS account's history modal.
+- Added fiat balance to NXS account's history modal
+- Added feature where if more than one peer is located in a city, that pillar gets larger
 
 #### Adjustments
 
@@ -21,6 +23,9 @@
 - You can now use Escape key to close most pop-up modals
 - Unconfirmed transactions are now dimmed on Transactions page
 - Allow setting stake amount to the current amount (for the case you want to undo the change you made)
+- Added Damper to the globe controls
+- Added equator to the globe
+- Incoming connections now animate to the peer
 
 #### Fixes
 
