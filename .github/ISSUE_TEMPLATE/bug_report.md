@@ -27,7 +27,7 @@ If applicable, add screenshots to help explain your problem.
 
 - OS: [e.g. iOS]
 - Wallet Version [e.g. 2.1.0]
-- Daemon Version [e.g. 3.0.5]
+- Daemon Version [e.g. 4.1.0]
 
 **Additional context**
 Add any other context about the problem here.
