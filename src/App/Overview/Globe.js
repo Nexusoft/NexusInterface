@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import * as THREE from 'three';
 import styled from '@emotion/styled';
-import orbitControl from 'three-orbit-controls';
+import OrbitControls from 'three-orbitcontrols';
 
 import world from 'icons/world-light-white.jpg';
 import geoip from 'data/geoip';
@@ -10,7 +10,6 @@ import Point from './Point';
 import rpc from 'lib/rpc';
 import { apiPost } from 'lib/tritiumApi';
 
-const OrbitControls = orbitControl(THREE);
 const MaxDisplayPoints = 64;
 
 const GlobeContainer = styled.div({
@@ -70,7 +69,7 @@ export default class Globe extends Component {
       const camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
       const scene = new THREE.Scene();
 
-      const controls = new OrbitControls(camera);
+      const controls = new OrbitControls(camera, renderer.domElement);
       const globe = new THREE.Group();
       const sphere = new THREE.SphereGeometry(125, 50, 50);
       const allPoints = new THREE.Group();
@@ -81,6 +80,8 @@ export default class Globe extends Component {
       camera.position.set(0, 235, 500);
       controls.autoRotate = true;
       controls.autoRotateSpeed = 0.8;
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.25;
       controls.minDistance = 300;
       controls.maxDistance = 500;
       controls.enablePan = false;
