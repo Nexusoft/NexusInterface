@@ -16,7 +16,6 @@ import { legacyMode } from 'consts/misc';
 import StatusIcons from './StatusIcons';
 import StatusIconsTritium from './StatusIconsTritium';
 import WalletStatus from './WalletStatus';
-import TritiumCountdown from './TritiumCountdown';
 import logoFull from 'icons/logo-full.svg';
 
 __ = __context('Header');
@@ -119,8 +118,6 @@ class Header extends Component {
 
     return (
       <HeaderComponent>
-        {legacyMode && <TritiumCountdown />}
-
         <LogoLink to="/">
           <Logo icon={logoFull} />
 
