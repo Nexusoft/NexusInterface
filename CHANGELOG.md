@@ -1,4 +1,4 @@
-# 2.1.0 (2019.12.13)
+# 2.1.0 (2019.12.16)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.1.0)
 
@@ -12,6 +12,7 @@
 - Added the ability to change the data directory for the core
 - Added fiat balance to NXS account's history modal
 - Added feature where if more than one peer is located in a city, that pillar gets larger
+- Added Wallet Health Status to Market Page
 
 #### Adjustments
 

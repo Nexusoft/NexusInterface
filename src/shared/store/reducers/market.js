@@ -2,6 +2,7 @@ import * as TYPE from 'consts/actionTypes';
 
 const initialState = {
   binance: {
+    walletStatus: 'Gray',
     info24hr: {
       change: 0,
       high: 0,
@@ -14,6 +15,7 @@ const initialState = {
   },
 
   bittrex: {
+    walletStatus: 'Gray',
     info24hr: {
       change: 0,
       high: 0,
@@ -93,6 +95,24 @@ export default (state = initialState, action) => {
         bittrex: {
           ...state.bittrex,
           candlesticks: [...action.payload],
+        },
+      };
+
+    case TYPE.BINANCE_WALLET_STATUS:
+      return {
+        ...state,
+        binance: {
+          ...state.binance,
+          walletStatus: action.payload,
+        },
+      };
+
+    case TYPE.BITTREX_WALLET_STATUS:
+      return {
+        ...state,
+        bittrex: {
+          ...state.bittrex,
+          walletStatus: action.payload,
         },
       };
 

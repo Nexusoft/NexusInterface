@@ -144,6 +144,35 @@ export const binanceDepthLoader = async () => {
   marketDataLoaded();
 };
 
+export const binanceWalletStatus = async () => {
+  const { data } = await axios.get(
+    'https://www.binance.com/assetWithdraw/getAllAsset.html'
+  );
+  const nxsStatus = data.filter(element => element.assetCode === 'NXS')[0];
+  const walletOnline = nxsStatus.enableCharge && nxsStatus.enableWithdraw;
+
+  store.dispatch({
+    type: TYPE.BINANCE_WALLET_STATUS,
+    payload: walletOnline ? 'Green' : 'Red',
+  });
+};
+
+export const bittrexWalletStatus = async () => {
+  const { data } = await axios.get(
+    'https://bittrex.com/api/v2.0/pub/currencies/GetWalletHealth'
+  );
+  const nxsStatus = data.result.filter(
+    element => element.Health.Currency === 'NXS'
+  )[0];
+  const walletOnline = nxsStatus.Health.IsActive;
+  console.error(nxsStatus);
+
+  store.dispatch({
+    type: TYPE.BITTREX_WALLET_STATUS,
+    payload: walletOnline ? 'Green' : 'Red',
+  });
+};
+
 export const bittrexDepthLoader = async () => {
   const { data } = await axios.get(
     'https://bittrex.com/api/v1.1/public/getorderbook?market=BTC-NXS&type=both'
