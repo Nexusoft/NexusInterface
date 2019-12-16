@@ -9,14 +9,12 @@ import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import MaskableTextField from 'components/MaskableTextField';
 import Button from 'components/Button';
-import Link from 'components/Link';
 import NewUserModal from 'components/NewUserModal';
 import RecoverPasswordPinModal from 'components/RecoverPasswordPinModal';
 import Spinner from 'components/Spinner';
 import { showNotification, openModal, removeModal } from 'lib/ui';
 import { getUserStatus } from 'lib/user';
 import { errorHandler, numericOnly } from 'utils/form';
-import { updateSettings } from 'lib/settings';
 
 __ = __context('Login');
 
@@ -87,7 +85,6 @@ const ExtraSection = styled.div({
     });
     getUserStatus();
   },
-  // TODO: replace error handler
   onSubmitFail: errorHandler(__('Error logging in')),
 })
 class Login extends Component {

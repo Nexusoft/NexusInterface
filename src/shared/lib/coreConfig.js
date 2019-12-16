@@ -108,18 +108,6 @@ export function loadNexusConf() {
     'nexus.conf exists. Importing username and password for RPC server and API server.'
   );
 
-  // When Version is >1.5 remove this
-  const oldSecret =
-    process.platform === 'darwin'
-      ? process.env.USER + process.env.HOME + process.env.SHELL
-      : JSON.stringify(macaddress.networkInterfaces(), null, 2);
-  const oldPassword = crypto
-    .createHmac('sha256', oldSecret)
-    .update('pass')
-    .digest('hex');
-  if (configs['rpcpassword'] === oldPassword)
-    configs['rpcpassword'] = undefined;
-
   // Fallback to default values if empty
   const fallbackConf = [
     ['rpcuser', defaultConfig.user],

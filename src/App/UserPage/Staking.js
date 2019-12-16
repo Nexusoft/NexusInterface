@@ -221,7 +221,7 @@ export default class Staking extends React.Component {
               skin={stakingEnabled ? 'default' : 'primary'}
               onClick={this.switchStaking}
             >
-              {stakingEnabled ? __('Disable staking') : __('Enable staking')}
+              {stakingEnabled ? __('Stop staking') : __('Start staking')}
             </Button>
           </div>
         </StakingWrapper>

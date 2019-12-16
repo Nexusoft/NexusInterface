@@ -16,7 +16,6 @@ import showOpenDialog from 'utils/promisified/showOpenDialog';
 import confirm from 'utils/promisified/confirm';
 import { returnCoreDataDir, walletDataDir } from 'consts/paths';
 import { checkForUpdates, quitAndInstall } from 'lib/updater';
-import { tritiumUpgradeTime } from 'consts/misc';
 import { walletEvents } from 'lib/wallet';
 import AboutModal from 'components/AboutModal';
 
@@ -328,11 +327,7 @@ function buildDarwinTemplate() {
           ? stopCoreMenu
           : startCoreMenu
         : null,
-      now < tritiumUpgradeTime
-        ? null
-        : legacyMode
-        ? switchTritiumMode
-        : switchLegacyMode,
+      legacyMode ? switchTritiumMode : switchLegacyMode,
       separator,
       quitNexus,
     ].filter(e => e),
@@ -425,11 +420,7 @@ function buildDefaultTemplate() {
           ? stopCoreMenu
           : startCoreMenu
         : null,
-      now < tritiumUpgradeTime
-        ? null
-        : legacyMode
-        ? switchTritiumMode
-        : switchLegacyMode,
+      legacyMode ? switchTritiumMode : switchLegacyMode,
       separator,
       quitNexus,
     ].filter(e => e),
@@ -515,11 +506,4 @@ walletEvents.once('post-render', function() {
   observeStore(state => state.settings && state.settings.devMode, rebuildMenu);
   observeStore(state => state.activeAppModule, rebuildMenu);
   observeStore(state => state.settings.manualDaemon, rebuildMenu);
-
-  const now = Date.now();
-  if (now < tritiumUpgradeTime) {
-    setTimeout(() => {
-      rebuildMenu();
-    }, tritiumUpgradeTime - now);
-  }
 });
