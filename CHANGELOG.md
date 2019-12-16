@@ -4,7 +4,7 @@
 
 #### Additions
 
-- Nexus Core 4.1.0
+- Nexus Core 4.1.1
 - Added Change Password & PIN functionality
 - Added Set Recovery Phrase functionality
 - Added Recover Password & PIN functionality
