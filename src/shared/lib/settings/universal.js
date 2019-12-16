@@ -74,7 +74,7 @@ export const defaultSettings = {
   windowY: undefined,
   forkBlocks: 0,
   walletClean: false,
-  legacyMode: undefined,
+  legacyMode: false,
   tritiumModeNoticeDisabled: false,
   clearPeers: false,
   // If false, show Create new user modal instead of Login
