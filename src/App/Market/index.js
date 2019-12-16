@@ -286,7 +286,7 @@ class Market extends Component {
       case 'Yellow':
         return __('Wallet Partially Active');
       case 'Red':
-        return __('Wallet Inactive');
+        return __('Wallet Under Maintenance');
 
       default:
         return __('Wallet Status Unknown');

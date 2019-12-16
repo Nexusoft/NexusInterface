@@ -150,7 +150,7 @@ export const binanceWalletStatus = async () => {
   );
   const nxsStatus = data.filter(element => element.assetCode === 'NXS')[0];
   const walletOnline = nxsStatus.enableCharge && nxsStatus.enableWithdraw;
-
+  //Add stuff to catch error and make this a bit more robust.
   store.dispatch({
     type: TYPE.BINANCE_WALLET_STATUS,
     payload: walletOnline ? 'Green' : 'Red',
