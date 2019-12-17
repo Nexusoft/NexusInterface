@@ -31,7 +31,7 @@
 #### Fixes
 
 - Fixed issue with sending from unnamed accounts
-- Fixed core settings not repecting testnet iteration off button
+- Fixed core settings not respecting testnet iteration off button
 - Fixed the error opening trust account's history
 - Fixed Adjust Stake modal not closing on success
 - Fixed issue where Legacy transactions did not display in Account History
