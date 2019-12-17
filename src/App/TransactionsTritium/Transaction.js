@@ -6,7 +6,7 @@ import * as color from 'utils/color';
 import { timing } from 'styles';
 import { openModal } from 'lib/ui';
 
-import TransactionDetailsModal from './TransactionDetailsModal';
+import TransactionDetailsModal from 'components/TransactionDetailsModal';
 import Contract from './Contract';
 
 __ = __context('Transactions');
@@ -127,7 +127,7 @@ const Transaction = ({ transaction }) => {
       <TransactionRight>
         {transaction.contracts &&
           transaction.contracts.map((contract, i) => (
-            <Contract key={i} contract={contract} />
+            <Contract key={i} contract={contract} txid={transaction.txid} />
           ))}
       </TransactionRight>
     </TransactionComponent>
