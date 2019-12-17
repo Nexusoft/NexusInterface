@@ -45,20 +45,9 @@ const Field = ({ label, children }) => (
   </Row>
 );
 
-@connect(
-  (
-    {
-      settings: { minConfirmations },
-      core: {
-        transactions: { map },
-      },
-    },
-    props
-  ) => ({
-    minConfirmations,
-    transaction: map && map[props.txid],
-  })
-)
+@connect(({ core: { transactions: { map } } }, props) => ({
+  transaction: map && map[props.txid],
+}))
 export default class TransactionDetailsModal extends React.Component {
   constructor(props) {
     super(props);
@@ -66,7 +55,7 @@ export default class TransactionDetailsModal extends React.Component {
   }
 
   render() {
-    const { transaction, minConfirmations } = this.props;
+    const { transaction } = this.props;
 
     return (
       <Modal>

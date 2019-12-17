@@ -60,7 +60,6 @@ const valueSelector = formValueSelector(formName);
 const mapStateToProps = state => {
   const {
     addressBook,
-    settings: { minConfirmations },
     core: {
       info: { locked, minting_only },
       accounts,
@@ -73,7 +72,6 @@ const mapStateToProps = state => {
   const expires = valueSelector(state, 'expires');
   const accountInfo = getAccountInfo(accountName, accounts, tokens);
   return {
-    minConfirmations,
     locked,
     reference,
     expires,
@@ -232,11 +230,6 @@ const mapStateToProps = state => {
           return await apiPost('tokens/debit/account', params);
         }
       }
-    }
-
-    let minConfirmations = parseInt(props.minConfirmations);
-    if (isNaN(minConfirmations)) {
-      minConfirmations = defaultSettings.minConfirmations;
     }
   },
   onSubmitSuccess: (result, dispatch, props) => {

@@ -9,42 +9,29 @@ import { showNotification } from 'lib/ui';
 import { walletEvents } from 'lib/wallet';
 import { legacyMode } from 'consts/misc';
 
-const isUnconfirmed = tx => (tx ? tx.confirmations === 0 : true);
-
-const needsAutoUpdate = (tx, minConf) =>
-  isUnconfirmed(tx) || isPending(tx, minConf);
+const isConfirmed = tx => !!tx.confirmations;
 
 const unsubscribers = {};
-function autoUpdateTransaction(txid) {
+function startWatchingTransaction(txid) {
   if (unsubscribers[txid]) return;
+  // Update everytime a new block is received
   unsubscribers[txid] = observeStore(
     ({ core: { systemInfo } }) => systemInfo && systemInfo.blocks,
     async blocks => {
-      if (blocks) {
-        const oldTx = store.getState().core.transactions.map[txid];
-        const wasUnconfirmed = isUnconfirmed(oldTx);
+      // Skip because core is most likely disconnected
+      if (!blocks) return;
 
-        await fetchTransaction(txid);
-        const {
-          core: {
-            transactions: { map },
-          },
-          settings: { minConfirmations },
-        } = store.getState();
-        const minConf = Number(minConfirmations);
-        const tx = map[txid];
+      // Fetch the updated transaction info
+      await fetchTransaction(txid);
 
-        // If this transaction no longer needs auto update, unobserve the store
-        if (tx && !needsAutoUpdate(tx, minConf)) {
-          unsubscribers[txid]();
-          delete unsubscribers[txid];
-        }
-
-        // If a transaction has just been confirmed, reload the account list
+      const tx = store.getState().core.transactions.map[txid];
+      if (tx && isConfirmed(tx)) {
+        // If this transaction is already confirmed, unobserve the store
+        unsubscribers[txid]();
+        delete unsubscribers[txid];
+        // Reload the account list
         // so that the account balances (available & unconfirmed) are up-to-date
-        if (wasUnconfirmed && !isUnconfirmed(tx)) {
-          loadAccounts();
-        }
+        loadAccounts();
       }
     }
   );
@@ -85,12 +72,9 @@ if (!legacyMode) {
           });
           addTritiumTransactions(transactions);
 
-          const {
-            settings: { minConfirmations },
-          } = store.getState();
           transactions.forEach(tx => {
-            if (needsAutoUpdate(tx, minConfirmations)) {
-              autoUpdateTransaction(tx.txid);
+            if (!isConfirmed(tx)) {
+              startWatchingTransaction(tx.txid);
             }
 
             const changes = getBalanceChange(tx);
@@ -164,13 +148,9 @@ export const getDeltaSign = contract => {
   }
 };
 
-export const isPending = (tx, minConf) =>
-  !!minConf && tx.confirmations < Number(minConf);
-
 export async function fetchAllTransactions() {
   const {
     core: { userStatus },
-    settings: { minConfirmations },
   } = store.getState();
   const txCount = userStatus && userStatus.transactions;
 
@@ -187,8 +167,8 @@ export async function fetchAllTransactions() {
   });
   loadTritiumTransactions(transactions);
   transactions.forEach(tx => {
-    if (needsAutoUpdate(tx, minConfirmations)) {
-      autoUpdateTransaction(tx.txid);
+    if (!isConfirmed(tx)) {
+      startWatchingTransaction(tx.txid);
     }
   });
 }
