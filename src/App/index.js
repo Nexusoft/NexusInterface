@@ -25,6 +25,7 @@ import AddressBook from './AddressBook';
 import Settings from './Settings';
 import Terminal from './Terminal';
 import UserPage from './UserPage';
+import Invoice from './Invoice';
 
 import Modules from './Modules';
 import AppBackground from './AppBackground';
@@ -84,7 +85,7 @@ const App = () => (
 
                 {/* <Route path="/Exchange" component={Exchange} /> */}
                 {/* <Route exact path="/List" component={TrustList} /> */}
-
+                <Route path="/Invoice" component={Invoice} />
                 <Route path="/Modules/:name" component={Modules} />
 
                 <Redirect to="/" />

@@ -144,6 +144,10 @@ const Navigation = () => (
         {__('Console')}
       </NavItem>
 
+      <NavItem icon={consoleIcon} to="/Invoice">
+        {__('Invoice')}
+      </NavItem>
+
       <ModuleNavItems />
     </NavBar>
   </Nav>
