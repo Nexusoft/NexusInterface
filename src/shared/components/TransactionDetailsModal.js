@@ -70,7 +70,7 @@ export default class TransactionDetailsModal extends React.Component {
 
     return (
       <Modal>
-        <Modal.Header>{__('Transactions Details')}</Modal.Header>
+        <Modal.Header>{__('Transaction Details')}</Modal.Header>
         <Modal.Body>
           {transaction ? (
             <>
