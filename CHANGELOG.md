@@ -12,6 +12,7 @@
 - Added the ability to change the data directory for the core
 - Added fiat balance to NXS account's history modal
 - Added feature where if more than one peer is located in a city, that pillar gets larger
+- Added the ability to open Transaction details from Contract Details modal
 
 #### Adjustments
 
