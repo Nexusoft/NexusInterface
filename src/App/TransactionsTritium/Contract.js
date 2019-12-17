@@ -277,9 +277,9 @@ const contractContent = contract => {
   }
 };
 
-const Contract = ({ contract }) => (
+const Contract = ({ contract, txid }) => (
   <ContractComponent
-    onClick={() => openModal(ContractDetailsModal, { contract })}
+    onClick={() => openModal(ContractDetailsModal, { contract, txid })}
   >
     <ContractContent>{contractContent(contract)}</ContractContent>
     {!!contract.amount && (

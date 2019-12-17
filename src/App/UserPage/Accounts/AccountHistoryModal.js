@@ -331,6 +331,7 @@ class AccountHistoryModal extends React.Component {
                       ? () => {
                           openModal(ContractDetailsModal, {
                             contract,
+                            txid: contract.txid,
                           });
                         }
                       : undefined,

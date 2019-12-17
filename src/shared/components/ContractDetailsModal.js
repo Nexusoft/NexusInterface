@@ -2,6 +2,9 @@ import React from 'react';
 import styled from '@emotion/styled';
 
 import Modal from 'components/Modal';
+import Button from 'components/Button';
+import TransactionDetailsModal from 'components/TransactionDetailsModal';
+import { openModal } from 'lib/ui';
 
 __ = __context('ContractDetails');
 
@@ -50,11 +53,15 @@ const translateKey = key => {
 
 class ContractDetailsModal extends React.Component {
   render() {
-    const { contract } = this.props;
+    const { contract, txid } = this.props;
     if (!contract) return;
 
     return (
-      <Modal>
+      <Modal
+        assignClose={close => {
+          this.closeModal = close;
+        }}
+      >
         <Modal.Header>{__('Contract Details')}</Modal.Header>
         <Modal.Body>
           {Object.entries(contract).map(([key, value]) => (
@@ -62,6 +69,17 @@ class ContractDetailsModal extends React.Component {
               {value}
             </Field>
           ))}
+          <Field label="">
+            <Button
+              skin="hyperlink"
+              onClick={() => {
+                this.closeModal();
+                openModal(TransactionDetailsModal, { txid });
+              }}
+            >
+              {__('View transaction details')}
+            </Button>
+          </Field>
         </Modal.Body>
       </Modal>
     );
