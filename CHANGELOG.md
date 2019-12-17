@@ -1,3 +1,42 @@
+# 2.1.0 (2019.12.16)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.1.0)
+
+#### Additions
+
+- Nexus Core 4.1.1
+- Added Change Password & PIN functionality
+- Added Set Recovery Phrase functionality
+- Added Recover Password & PIN functionality
+- Added the ability to toggle masked/unmasked content in secure textbox (e.g. password, PIN)
+- Added the ability to change the data directory for the core
+- Added fiat balance to NXS account's history modal
+- Added feature where if more than one peer is located in a city, that pillar gets larger
+- Added Wallet Health Status to Market Page
+- Added the ability to open Transaction details from Contract Details modal
+
+#### Adjustments
+
+- Removed Option for Avatar mode while in Tritium Mode
+- Removed Option for Backup Directory while in Tritium Mode
+- Changed terminology of Search Token to Lookup Token to better illustrate the function
+- Improved balances UI in Transactions page
+- Disallowed logging in to your sigchain before the sigchain creation is confirmed on the blockchain
+- You can now use Escape key to close most pop-up modals
+- Unconfirmed transactions are now dimmed on Transactions page
+- Allow setting stake amount to the current amount (for the case you want to undo the change you made)
+- Added Damper to the globe controls
+- Added equator to the globe
+- Incoming connections now animate to the peer
+
+#### Fixes
+
+- Fixed issue with sending from unnamed accounts
+- Fixed core settings not respecting testnet iteration off button
+- Fixed the error opening trust account's history
+- Fixed Adjust Stake modal not closing on success
+- Fixed issue where Legacy transactions did not display in Account History
+
 # 2.0.8 (2019.12.04)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.0.8)

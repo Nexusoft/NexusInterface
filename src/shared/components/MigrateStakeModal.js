@@ -3,16 +3,18 @@ import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
 
 import Modal from 'components/Modal';
-import TextField from 'components/TextField';
+import MaskableTextField from 'components/MaskableTextField';
 import FormField from 'components/FormField';
 import Button from 'components/Button';
 import confirmPin from 'utils/promisified/confirmPin';
 import { removeModal, openSuccessDialog } from 'lib/ui';
 import { apiPost } from 'lib/tritiumApi';
 import { errorHandler } from 'utils/form';
-import { coreDataDir } from 'consts/paths';
+import { returnCoreDataDir } from 'consts/paths';
 
-const PasswordInput = styled(TextField.RF)({
+__ = __context('MigrateStake');
+
+const PasswordInput = styled(MaskableTextField.RF)({
   margin: '1em auto 2.5em',
 });
 
@@ -56,7 +58,7 @@ const MigrateStakeModal = ({ handleSubmit }) => (
           <div className="mt1">
             {__(
               'Please make sure that you are using the same machine that you used to stake with your legacy wallet, or you have put your staking wallet.dat file into %{path}',
-              { path: coreDataDir }
+              { path: returnCoreDataDir() }
             )}
           </div>
           <form onSubmit={handleSubmit} className="mt2">
@@ -64,7 +66,6 @@ const MigrateStakeModal = ({ handleSubmit }) => (
               <Field
                 component={PasswordInput}
                 name="passphrase"
-                type="password"
                 skin="filled-inverted"
                 placeholder={__(
                   'Leave this blank if your legacy wallet is not encrypted'

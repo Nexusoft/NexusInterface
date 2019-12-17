@@ -24,6 +24,8 @@ import NewTokenModal from './NewTokenModal';
 import Token from './Token';
 import SearchTokenModal from './SearchTokenModal';
 
+__ = __context('User.Tokens');
+
 const mapStateToProps = state => ({
   coreConnected: isCoreConnected(state),
   userGenesis: state.core.userStatus.genesis,
@@ -150,7 +152,7 @@ class Tokens extends Component {
             }}
           >
             <Icon icon={searchIcon} className="space-right" />
-            {__('Search for token')}
+            {__('Lookup a token')}
           </Button>
         </div>
         <div>{this.returnTokenList()}</div>

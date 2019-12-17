@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
 import Button from 'components/Button';
+import Tooltip from 'components/Tooltip';
 import AdjustStakeModal from 'components/AdjustStakeModal';
 import MigrateStakeModal from 'components/MigrateStakeModal';
 import { switchUserTab } from 'lib/ui';
@@ -13,6 +14,8 @@ import confirm from 'utils/promisified/confirm';
 import { formatNumber, formatDateTime } from 'lib/intl';
 
 import QuestionCircle from 'components/QuestionCircle';
+
+__ = __context('User.Staking');
 
 const dateTimeFormat = {
   month: 'short',
@@ -46,6 +49,15 @@ const Pending = styled.div({
   paddingLeft: '1em',
 });
 
+const BalanceTooltip = staking =>
+  staking
+    ? __(
+        'The current NXS balance of the trust account that is not staked. You can spend this amount without affecting your Trust Score'
+      )
+    : __(
+        'Balance that will be staked after the 72 holding period, any change to this balance will reset the hold timer'
+      );
+
 @connect(state => ({
   stakeInfo: state.core.stakeInfo,
   stakingEnabled: state.settings.enableStaking,
@@ -72,7 +84,7 @@ export default class Staking extends React.Component {
 
   render() {
     const { stakeInfo, stakingEnabled } = this.props;
-
+    console.log(this.props);
     return (
       !!stakeInfo && (
         <StakingWrapper>
@@ -107,7 +119,7 @@ export default class Staking extends React.Component {
                 </Line>
                 <Line>
                   <div>
-                    <span className="v-align">{__('Requested in')}</span>
+                    <span className="v-align">{__('Requested at')}</span>
                   </div>
                   <div>
                     {formatDateTime(stakeInfo.requested * 1000, dateTimeFormat)}
@@ -135,7 +147,7 @@ export default class Staking extends React.Component {
                 )}
               />
             </div>
-            <div>{stakeInfo.stakerate} %</div>
+            <div>{formatNumber(stakeInfo.stakerate, 3)} %</div>
           </Line>
           <Line>
             <div>
@@ -146,7 +158,7 @@ export default class Staking extends React.Component {
                 )}
               />
             </div>
-            <div>{stakeInfo.trustweight} %</div>
+            <div>{formatNumber(stakeInfo.trustweight, 3)} %</div>
           </Line>
           <Line>
             <div>
@@ -157,58 +169,61 @@ export default class Staking extends React.Component {
                 )}
               />
             </div>
-            <div>{stakeInfo.blockweight} %</div>
+            <div>{formatNumber(stakeInfo.blockweight, 3)} %</div>
           </Line>
           <Line>
             <div>
               <span className="v-align">{__('Stake Weight')}</span>
               <QuestionCircle
                 tooltip={__(
-                  'Stake Weight depends on Trust Weight and Block Weight. Along with your Stake balance, Stake Weight affects how frequent you receive a Trust transaction'
+                  'Stake Weight depends on Trust Weight and Block Weight. Along with your Stake amount, Stake Weight affects how frequent you receive a Trust transaction'
                 )}
               />
             </div>
-            <div>{stakeInfo.stakeweight} %</div>
+            <div>{formatNumber(stakeInfo.stakeweight, 3)} %</div>
           </Line>
           <Line>
             <div>
-              <span className="v-align">{__('Unstaked amount')}</span>
-              <QuestionCircle
-                tooltip={__(
-                  'The current NXS balance of the trust account that is not staked. You can spend this amount without affecting your Trust Score'
-                )}
-              />
+              <span className="v-align">{__('Available Balance')}</span>
+              <QuestionCircle tooltip={BalanceTooltip(!stakeInfo.new)} />
             </div>
             <div>{formatNumber(stakeInfo.balance, 6)} NXS</div>
           </Line>
           <div className="mt1 flex space-between">
-            <Button
-              disabled={!stakeInfo.stake && !stakeInfo.balance}
-              onClick={() => {
-                openModal(AdjustStakeModal);
-              }}
-            >
-              {__('Adjust stake amount')}
-            </Button>
-            <Button
-              skin={stakingEnabled ? 'default' : 'primary'}
-              onClick={this.switchStaking}
-            >
-              {stakingEnabled ? __('Disable staking') : __('Enable staking')}
-            </Button>
-          </div>
-          {!!stakeInfo.new && (
-            <div className="mt2">
+            {stakeInfo.new ? (
               <Button
-                wide
                 onClick={() => {
                   openModal(MigrateStakeModal);
                 }}
               >
                 {__('Migrate stake')}
               </Button>
-            </div>
-          )}
+            ) : (
+              <div>
+                <Button
+                  disabled={!stakeInfo.stake && !stakeInfo.balance}
+                  onClick={() => {
+                    openModal(AdjustStakeModal);
+                  }}
+                >
+                  {__('Adjust stake amount')}
+                </Button>
+                {stakeInfo.onhold && (
+                  <div className="error">
+                    {__('Account on hold for another %{stakeSeconds} Seconds', {
+                      stakeSeconds: stakeInfo.holdtime,
+                    })}
+                  </div>
+                )}
+              </div>
+            )}
+            <Button
+              skin={stakingEnabled ? 'default' : 'primary'}
+              onClick={this.switchStaking}
+            >
+              {stakingEnabled ? __('Stop staking') : __('Start staking')}
+            </Button>
+          </div>
         </StakingWrapper>
       )
     );

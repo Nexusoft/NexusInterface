@@ -21,6 +21,7 @@ The following methods are currently supported by this API
 [`logout/user`](#logoutuser)   
 [`unlock/user`](#unlockuser)  
 [`lock/user`](#lockuser)  
+[`update/user`](#updateuser)  
 [`get/status`](#getstatus)  
 [`list/accounts`](#listaccounts)   
 [`list/assets`](#listassets)    
@@ -284,6 +285,79 @@ The mining/staking/transactions/notifications parameters are optional and, if su
 ****
 
 
+# `update/user`
+
+This method provides the user with the ability to change the password, pin, or recovery seed for this signature chain.
+
+Updating the credentials will also result in each of the keys in the sig chain's Crypto object being regenerated based on the new password / pin.   
+
+If setting a recovery....
+
+This method requires the user to already be logged in. 
+
+### Endpoint:
+
+`/users/update/user`
+
+
+### Parameters:
+
+`session` : When using multi-user API mode the session parameter must be supplied to identify which user to update.
+
+`password` : The existing password for this signature chain.
+
+`pin` : The existing pin for this signature chain.
+
+`recovery` : The existing recovery seed for this signature chain.  This is only required if an existing recovery seed is being updated via `new_recovery` 
+
+`new_password` : The new password to set for for this signature chain.  This is optional if new_pin is provided
+
+`new_pin` : The new pin to set for this signature chain.  This is optional if new_password is provided.
+
+`new_recovery` : The new recovery seed to set on this sig chain.  This is optional if new_pin or new_password is provided.  The recovery seed must be a minimum of 40 characters. **NOTE**: the recovery seed is case sensitive. 
+
+### Example 1:
+
+The following example changes the existing password from `password1` to `password1234` and existing pin from `1234` to `12345`
+
+```
+{
+    "password": "password1",
+    "pin": "1234",
+    "new_password": "password12345",
+    "new_pin": "12345"
+}
+
+```
+
+### Example 2:
+
+The following example sets the initial recovery seed on the sig chain
+
+```
+{
+    "password": "password1",
+    "pin": "1234",
+    "new_recovery": "this is the recovery seed that I wish to use"
+}
+
+```
+
+### Return value JSON object:
+```
+{
+    "txid": "f9dcd28bce2563ab288fab76cf3ee5149ea938c735894ce4833b55e474e08e8a519e8005e09e2fc19623577a8839a280ca72b6430ee0bdf13b3d9f785bc7397d"
+}
+```
+
+
+### Return values:
+
+`txid` : The ID (hash) of the transaction that includes the update to the signature chain credentials.
+
+****
+
+
 # `get/status`
 
 Only available in single-user API mode (multiuser=0), this method will return status information for the currently logged in user
@@ -306,6 +380,7 @@ NONE
 {
     "username": "bob",
     "genesis": "a2e51edcd41a8152bfedb24e3c22ee5a65d6d7d524146b399145bced269ae000",
+    "recovery": true,
     "transactions": 272,
     "notifications": 10,
     "unlocked": {
@@ -323,6 +398,8 @@ NONE
 `username` : The username of the currently logged in user
 
 `genesis` : The signature chain genesis hash for the currently logged in user.
+
+`recovery` : Flag indicating whether the recovery seed has been set for this user. 
 
 `transactions` : The total transaction count in this sig chain
 
@@ -820,6 +897,8 @@ This will list off all of the transactions for the requested signature chain gen
 `page` : Allows the results to be returned by page (zero based). E.g. passing in page=1 will return the second set of (limit) transactions. The default value is 0 if not supplied.
 
 `limit` : The number of transactions to return for the current page. The default is 100.
+
+`order` : The transaction order, based on signature chain sequence. 'asc' for oldest first, 'desc' for most recent first. The default is 'desc'.
 
 `verbose` : Optional, determines how much transaction data to include in the response. Supported values are :
  - `default` : hash

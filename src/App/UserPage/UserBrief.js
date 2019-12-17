@@ -5,6 +5,9 @@ import { NavLink } from 'react-router-dom';
 
 import { timing, consts } from 'styles';
 import * as color from 'utils/color';
+import Button from 'components/Button';
+
+__ = __context('User');
 
 const UserBriefComponent = styled.div(({ theme }) => ({
   width: 307,

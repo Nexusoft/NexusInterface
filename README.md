@@ -1,6 +1,6 @@
 # Nexus Interface
 
-### Current Version: 2.0.8
+### Current Version: 2.1.0
 
 [![Crowdin](https://badges.crowdin.net/nexus-interface/localized.svg)](https://crowdin.com/project/nexus-interface)
 
@@ -15,6 +15,10 @@ To get started, you will first need to set up node.js (version 10 or higher) and
 To test a production build run `npm run package` and navigate to the _release_ directory in the root of the project and install as you would any other program.
 
 Or use the _BuildStandalone-{platform}.sh_ files that include cleaning out old builds.
+
+## Help translating Nexus Wallet
+
+See the [Translation Guide](docs/Translation.md).
 
 ## License
 

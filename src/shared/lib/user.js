@@ -39,11 +39,11 @@ export const getBalances = async () => {
 };
 
 export const logOut = async () => {
-  await apiPost('users/logout/user');
   store.dispatch({
     type: TYPE.CLEAR_USER_STATUS,
     payload: null,
   });
+  await apiPost('users/logout/user');
 };
 
 export const loadOwnedTokens = async () => {

@@ -21,6 +21,8 @@ import NexusAddress from 'components/NexusAddress';
 import warningIcon from 'icons/warning.svg';
 import { walletDataDir } from 'consts/paths';
 import { webGLAvailable, legacyMode } from 'consts/misc';
+import memoize from 'utils/memoize';
+import { loadAccounts } from 'lib/user';
 
 import ColorPicker from './ColorPicker';
 import BackgroundPicker from './BackgroundPicker';
@@ -29,6 +31,8 @@ import ThemePicker from './ThemePicker';
 import DarkTheme from './Dark.json';
 import LightTheme from './Light.json';
 
+__ = __context('Settings.Style');
+
 const overviewDisplays = [
   { value: 'standard', display: 'Standard' },
   { value: 'miner', display: 'Miner' },
@@ -36,6 +40,15 @@ const overviewDisplays = [
   { value: 'balHidden', display: 'Hidden Balance' },
   { value: 'none', display: 'None' },
 ];
+
+const getLegacyDefaultAddress = memoize(myAccounts => {
+  const acc = myAccounts && myAccounts.find(a => a.account === 'default');
+  return acc && acc.addresses && acc.addresses[0];
+});
+const getTritiumDefaultAddress = memoize(accounts => {
+  const acc = accounts && accounts.find(a => a.name === 'default');
+  return acc && acc.address;
+});
 
 const mapStateToProps = ({
   core: { accounts },
@@ -48,8 +61,9 @@ const mapStateToProps = ({
     theme,
     locale,
     addressStyle,
-    myAccounts,
-    tritiumAccounts: accounts,
+    defaultAddress: legacyMode
+      ? getLegacyDefaultAddress(myAccounts)
+      : getTritiumDefaultAddress(accounts),
     overviewDisplay,
   };
 };
@@ -111,38 +125,11 @@ class SettingsStyle extends Component {
     } else {
       this.setThemeSelector(2);
     }
-    this.getUsersDefaultAddress();
-  }
 
-  /**
-   * Get the user's default address and save it to state, to be used on the Address Style Field
-   *
-   * @memberof SettingsStyle
-   */
-  getUsersDefaultAddress = (() => {
-    let cache = null;
-    return () => {
-      if (cache) return cache;
-      const { myAccounts, tritiumAccounts } = this.props;
-      if (legacyMode) {
-        if (myAccounts && myAccounts.length) {
-          return (cache = myAccounts[0].addresses[0]);
-        }
-      } else {
-        if (tritiumAccounts && tritiumAccounts.length) {
-          const defaultAcc = tritiumAccounts.find(
-            acc => acc.name === 'default'
-          );
-          if (defaultAcc) {
-            return (cache = defaultAcc.address);
-          } else {
-            myAddress = tritiumAccounts[0].address;
-          }
-        }
-      }
-      return null;
-    };
-  })();
+    if (!this.props.defaultAddress) {
+      loadAccounts();
+    }
+  }
 
   /**
    * Toggle The Globe
@@ -286,6 +273,7 @@ class SettingsStyle extends Component {
         filters: [{ name: 'Theme JSON', extensions: ['json'] }],
       },
       path => {
+        if (!path) return;
         console.log(path);
         fs.copyFile(walletDataDir + '/theme.json', path, err => {
           if (err) {
@@ -369,7 +357,13 @@ class SettingsStyle extends Component {
    * @memberof SettingsStyle
    */
   render() {
-    const { theme, renderGlobe, addressStyle, overviewDisplay } = this.props;
+    const {
+      theme,
+      renderGlobe,
+      defaultAddress,
+      addressStyle,
+      overviewDisplay,
+    } = this.props;
 
     return (
       <>
@@ -417,17 +411,19 @@ class SettingsStyle extends Component {
           <div className="mt1">
             <NexusAddress
               address={
-                this.getUsersDefaultAddress() ||
+                defaultAddress ||
                 '000000000000000000000000000000000000000000000000000'
               }
               label={__('Sample Address')}
             />
-            <AddressStyleNote>
-              <Icon icon={warningIcon} className="space-right" />
-              <span className="v-align">
-                {__('This is your Default Address')}
-              </span>
-            </AddressStyleNote>
+            {!!defaultAddress && (
+              <AddressStyleNote>
+                <Icon icon={warningIcon} className="space-right" />
+                <span className="v-align">
+                  {__('This is your Default Address')}
+                </span>
+              </AddressStyleNote>
+            )}
           </div>
         </SettingsField>
 

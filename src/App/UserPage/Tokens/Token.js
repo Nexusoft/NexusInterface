@@ -7,6 +7,8 @@ import { openModal } from 'lib/ui';
 
 import TokenDetailsModal from './TokenDetailsModal';
 
+__ = __context('User.Tokens');
+
 const TokenComponent = styled.div(({ theme }) => ({
   padding: '1em 0',
   borderBottom: `1px solid ${theme.mixer(0.125)}`,

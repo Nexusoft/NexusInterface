@@ -16,7 +16,6 @@ import TextField from 'components/TextField';
 import Switch from 'components/Switch';
 import { errorHandler } from 'utils/form';
 import { legacyMode } from 'consts/misc';
-// import { coreDataDir } from 'consts/paths';
 import * as color from 'utils/color';
 import confirm from 'utils/promisified/confirm';
 import { newUID } from 'utils/misc';
@@ -24,6 +23,8 @@ import { consts } from 'styles';
 import { isCoreConnected } from 'selectors';
 
 import ReScanButton from './RescanButton.js';
+
+__ = __context('Settings.Core');
 
 const RestartPrompt = styled.div(({ theme }) => ({
   position: 'absolute',
@@ -52,8 +53,9 @@ const formKeys = [
   'ipMineWhitelist',
   'enableStaking',
   'verboseLevel',
-  'alphaTestNet',
+  'testnetIteration',
   'avatarMode',
+  'dataDirOverride',
   legacyMode ? 'manualDaemonIP' : 'manualDaemonApiIP',
   legacyMode ? 'manualDaemonPort' : 'manualDaemonApiPort',
   'manualDaemonUser',
@@ -227,38 +229,6 @@ class SettingsCore extends Component {
     }
   };
 
-  // /**
-  //  * Opens up a dialog to move the data directory
-  //  *
-  //  * @memberof SettingsCore
-  //  */
-  // moveDataDir = () => {
-  //   remote.dialog.showOpenDialog(
-  //     {
-  //       title: __('Select a directory'),
-  //       defaultPath: this.props.backupDir,
-  //       properties: ['openDirectory'],
-  //     },
-  //     folderPaths => {
-  //       if (folderPaths && folderPaths.length > 0) {
-  //         this.handleFileCopy(folderPaths[0]);
-  //       }
-  //     }
-  //   );
-  // };
-
-  // /**
-  //  * Runs the file copy script
-  //  *
-  //  * @param {*} newFolderDir
-  //  * @memberof SettingsCore
-  //  */
-  // async handleFileCopy(newFolderDir) {
-  //   await cpy(coreDataDir, newFolderDir).on('progress', progress => {
-  //     console.log(progress);
-  //   });
-  // }
-
   reloadTxHistory = async () => {
     const confirmed = await confirm({
       question: __('Reload transaction history') + '?',
@@ -414,6 +384,16 @@ class SettingsCore extends Component {
 
               <SettingsField
                 connectLabel
+                label={__('Wallet Data Directory Override')}
+                subLabel={__(
+                  'Change where the data directory is. This is where the wallet.dat and database are located. Default is blank.'
+                )}
+              >
+                <Field name="dataDirOverride" component={TextField.RF} />
+              </SettingsField>
+
+              <SettingsField
+                connectLabel
                 label={__('Testnet Iteration')}
                 subLabel={
                   <>
@@ -439,15 +419,17 @@ class SettingsCore extends Component {
                 />
               </SettingsField>
 
-              <SettingsField
-                connectLabel
-                label={__('Avatar Mode')}
-                subLabel={__(
-                  'Disabling Avatar will make the core use a separate change key'
-                )}
-              >
-                <Field name="avatarMode" component={Switch.RF} />
-              </SettingsField>
+              {legacyMode && (
+                <SettingsField
+                  connectLabel
+                  label={__('Avatar Mode')}
+                  subLabel={__(
+                    'Disabling Avatar will make the core use a separate change key'
+                  )}
+                >
+                  <Field name="avatarMode" component={Switch.RF} />
+                </SettingsField>
+              )}
             </>
           )}
 
@@ -534,55 +516,8 @@ class SettingsCore extends Component {
                   size={30}
                 />
               </SettingsField>
-              {/* <Button
-              className="space-right"
-              style={{ marginTop: '1em' }}
-              type="submit"
-              skin="primary"
-              disabled={pristine || submitting}
-            >
-              {pristine
-                ? __('Settings Unchanged')
-                : submitting
-                ? __('Settings Saving')
-                : __('Save Settings')}
-            </Button> */}
             </>
           )}
-
-          {/*  REMOVING THIS FOR NOW TILL I CAN CONFIRM THE SECURITY AND FUNCTION
-            <SettingsField
-              indent={1}
-              connectLabel
-              label={'Move Data Dir'}
-              subLabel={'Move the daemon data directory to a different folder'}
-            >
-              <div>
-                <a>{'Current: ' + coreDataDir}</a>
-                <Button onClick={this.moveDataDir}>
-                  <Text id="Settings.MoveDataDirButton" />
-                </Button>
-              </div>
-            </SettingsField>
-            */}
-
-          {/*<div className="flex space-between" style={{ marginTop: '2em' }}>
-            <Button onClick={this.restartCore}>{__('Restart Core')}</Button>
-* <Button
-              type="submit"
-              skin="primary"
-              disabled={pristine || submitting}
-            >
-              {pristine ? (
-                __('Settings saved')
-              ) : submitting ? (
-                <Text id="SavingSettings" />
-              ) : (
-                <Text id="SaveSettings" />
-              )}
-            </Button> 
-          </div>*/}
-
           {!!dirty && (
             <RestartPrompt>
               <RestartContainer>

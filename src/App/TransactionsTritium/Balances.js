@@ -7,6 +7,8 @@ import { getBalances } from 'lib/user';
 import { observeStore } from 'store';
 import { formatNumber } from 'lib/intl';
 
+__ = __context('Transactions.Balances');
+
 const BalancesWrapper = styled.div(({ theme }) => ({
   maxWidth: 350,
   margin: '0 auto',
@@ -16,9 +18,12 @@ const BalancesWrapper = styled.div(({ theme }) => ({
 
 const Line = styled.div(
   {
-    display: 'flex',
-    justifyContent: 'space-between',
-    marginTop: '.4em',
+    marginTop: '.6em',
+    '&::after': {
+      content: '""',
+      display: 'block',
+      clear: 'both',
+    },
   },
   ({ bold, theme }) =>
     bold && {
@@ -26,6 +31,16 @@ const Line = styled.div(
       color: theme.foreground,
     }
 );
+
+const Label = styled.div({
+  whiteSpace: 'nowrap',
+  float: 'left',
+});
+
+const Value = styled.div({
+  whiteSpace: 'nowrap',
+  float: 'right',
+});
 
 @connect(state => ({
   balances: state.core.balances,
@@ -58,68 +73,68 @@ export default class Balances extends React.Component {
       !!balances && (
         <BalancesWrapper>
           <Line bold>
-            <div>{__('Total')}</div>
-            <div>{formatNumber(total, 6)} NXS</div>
+            <Label>{__('Total')}</Label>
+            <Value>{formatNumber(total, 6)} NXS</Value>
           </Line>
-          <Line>
-            <div>
-              <span className="v-align">{__('Available')}</span>
 
+          <Line>
+            <Label>
+              <span className="v-align">{__('Available')}</span>
               <QuestionCircle
                 tooltip={__(
                   'The current balance across all NXS accounts that is available to be spent'
                 )}
               />
-            </div>
-            <div>{formatNumber(balances.available, 6)} NXS</div>
+            </Label>
+            <Value>{formatNumber(balances.available, 6)} NXS</Value>
           </Line>
-          <Line>
-            <div>
-              <span className="v-align">{__('Pending')}</span>
 
+          <Line>
+            <Label>
+              <span className="v-align">{__('Pending')}</span>
               <QuestionCircle
                 tooltip={__(
                   'The sum of all debit and coinbase transactions made to your NXS accounts that are confirmed but have not yet been credited. This does NOT include immature and unconfirmed amounts'
                 )}
               />
-            </div>
-            <div>{formatNumber(balances.pending, 6)} NXS</div>
+            </Label>
+            <Value>{formatNumber(balances.pending, 6)} NXS</Value>
           </Line>
-          <Line>
-            <div>
-              <span className="v-align">{__('Unconfirmed')}</span>
 
+          <Line>
+            <Label>
+              <span className="v-align">{__('Unconfirmed')}</span>
               <QuestionCircle
                 tooltip={__(
                   'The sum of all debit transactions made to your NXS accounts that are not confirmed, or credits you have made to your accounts that are not yet confirmed (not yet included in a block)'
                 )}
               />
-            </div>
-            <div>{formatNumber(balances.unconfirmed, 6)} NXS</div>
+            </Label>
+            <Value>{formatNumber(balances.unconfirmed, 6)} NXS</Value>
           </Line>
-          <Line>
-            <div>
-              <span className="v-align">{__('Stake')}</span>
 
+          <Line>
+            <Label>
+              <span className="v-align">{__('Stake')}</span>
               <QuestionCircle
                 tooltip={__(
                   'The amount of NXS currently staked in the trust account'
                 )}
               />
-            </div>
-            <div>{formatNumber(balances.stake, 6)} NXS</div>
+            </Label>
+            <Value>{formatNumber(balances.stake, 6)} NXS</Value>
           </Line>
-          <Line>
-            <div>
-              <span className="v-align">{__('Immature')}</span>
 
+          <Line>
+            <Label>
+              <span className="v-align">{__('Immature')}</span>
               <QuestionCircle
                 tooltip={__(
                   'The sum of all coinbase transactions that have not yet reached maturity'
                 )}
               />
-            </div>
-            <div>{formatNumber(balances.immature, 6)} NXS</div>
+            </Label>
+            <Value>{formatNumber(balances.immature, 6)} NXS</Value>
           </Line>
         </BalancesWrapper>
       )

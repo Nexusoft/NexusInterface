@@ -19,6 +19,8 @@ import {
   bittrex24hrInfo,
   binanceCandlestickLoader,
   bittrexCandlestickLoader,
+  binanceWalletStatus,
+  bittrexWalletStatus,
 } from 'lib/market';
 
 // Internal Local Dependencies
@@ -29,6 +31,8 @@ import Candlestick from './Chart/Candlestick';
 import chartIcon from 'icons/chart.svg';
 import bittrexLogo from 'icons/BittrexLogo.png';
 import binanceLogo from 'icons/BINANCE.png';
+
+__ = __context('MarketData');
 
 const ExchangeUnitContainer = styled.div({
   width: '100%',
@@ -50,6 +54,37 @@ const OneDay = styled.div({
   display: 'grid',
   gridTemplateColumns: 'auto auto',
 });
+
+const StatusIcon = styled.div(
+  {
+    height: '14px',
+    width: '14px',
+    borderRadius: '50%',
+    display: 'inline-block',
+    marginBottom: '18px',
+  },
+  ({ status }) => {
+    switch (status) {
+      case 'Green':
+        return {
+          backgroundColor: 'limegreen',
+        };
+      case 'Yellow':
+        return {
+          backgroundColor: 'yellow',
+        };
+      case 'Red':
+        return {
+          backgroundColor: 'red',
+        };
+
+      default:
+        return {
+          backgroundColor: 'gray',
+        };
+    }
+  }
+);
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
@@ -90,6 +125,9 @@ class Market extends Component {
 
     binance24hrInfo();
     bittrex24hrInfo();
+
+    binanceWalletStatus();
+    bittrexWalletStatus();
   }
 
   /**
@@ -241,6 +279,20 @@ class Market extends Component {
     showNotification(__('Refreshing market data...'), 'success');
   }
 
+  returnWalletStatusTooltip(status) {
+    switch (status) {
+      case 'Green':
+        return __('Wallet Active');
+      case 'Yellow':
+        return __('Wallet Partially Active');
+      case 'Red':
+        return __('Wallet Under Maintenance');
+
+      default:
+        return __('Wallet Status Unknown');
+    }
+  }
+
   // Mandatory React method
   /**
    * Component's Renderable JSX
@@ -249,6 +301,7 @@ class Market extends Component {
    * @memberof Market
    */
   render() {
+    const { binance, bittrex } = this.props;
     return (
       <Panel
         controls={
@@ -261,7 +314,7 @@ class Market extends Component {
         icon={chartIcon}
         title={__('Market Data')}
       >
-        {this.props.loaded && this.props.binance.buy[0] && (
+        {this.props.loaded && binance.buy[0] && (
           <ExchangeUnitContainer>
             <ExchangeLogo
               src={binanceLogo}
@@ -269,6 +322,12 @@ class Market extends Component {
                 shell.openExternal('https://www.binance.com/en/trade/NXS_BTC');
               }}
             />
+            <Tooltip.Trigger
+              tooltip={this.returnWalletStatusTooltip(binance.walletStatus)}
+            >
+              <StatusIcon status={binance.walletStatus} />
+            </Tooltip.Trigger>
+
             {this.oneDayinfo('binance')}
             <MarketInfoContainer>
               <MarketDepth
@@ -277,17 +336,17 @@ class Market extends Component {
                 chartSellData={this.formatChartData('binanceSell')}
                 theme={this.props.theme}
               />
-              {this.props.binance.candlesticks[0] !== undefined ? (
+              {binance.candlesticks[0] !== undefined ? (
                 <Candlestick
                   locale={this.props.settings.locale}
-                  data={this.props.binance.candlesticks}
+                  data={binance.candlesticks}
                   theme={this.props.theme}
                 />
               ) : null}
             </MarketInfoContainer>
           </ExchangeUnitContainer>
         )}
-        {this.props.loaded && this.props.bittrex.buy[0] && (
+        {this.props.loaded && bittrex.buy[0] && (
           <ExchangeUnitContainer>
             <ExchangeLogo
               src={bittrexLogo}
@@ -297,6 +356,12 @@ class Market extends Component {
                 );
               }}
             />
+            <Tooltip.Trigger
+              tooltip={this.returnWalletStatusTooltip(bittrex.walletStatus)}
+            >
+              <StatusIcon status={bittrex.walletStatus} />
+            </Tooltip.Trigger>
+
             {this.oneDayinfo('bittrex')}
             <MarketInfoContainer>
               <br />
@@ -306,10 +371,10 @@ class Market extends Component {
                 chartSellData={this.formatChartData('bittrexSell')}
                 theme={this.props.theme}
               />
-              {this.props.bittrex.candlesticks[0] !== undefined ? (
+              {bittrex.candlesticks[0] !== undefined ? (
                 <Candlestick
                   locale={this.props.settings.locale}
-                  data={this.props.bittrex.candlesticks}
+                  data={bittrex.candlesticks}
                   theme={this.props.theme}
                 />
               ) : null}

@@ -7,6 +7,8 @@ import Modal from 'components/Modal';
 import * as color from 'utils/color';
 import Dialog from './Dialog';
 
+__ = __context('ErrorDialog');
+
 const XMark = styled(Dialog.Icon)(({ theme }) => ({
   fontSize: 56,
   color: theme.danger,
@@ -22,12 +24,6 @@ class ErrorDialog extends React.Component {
       this.buttonRef.current.focus();
     }
   }
-
-  handleKeyDown = e => {
-    if (e.key === 'Escape') {
-      this.closeModal();
-    }
-  };
 
   render() {
     const { message, note, ...rest } = this.props;
@@ -47,7 +43,6 @@ class ErrorDialog extends React.Component {
           ref={this.buttonRef}
           skin="filled-danger"
           onClick={() => this.closeModal()}
-          onKeyDown={this.handleKeyDown}
         >
           {__('Dismiss')}
         </Dialog.Button>

@@ -8,6 +8,8 @@ import Button from 'components/Button';
 import * as color from 'utils/color';
 import Dialog from './Dialog';
 
+__ = __context('ConfirmDialog');
+
 const QuestionMark = styled(Dialog.Icon)(({ theme }) => ({
   fontSize: 56,
   color: theme.foreground,
@@ -29,7 +31,7 @@ const ConfirmDialog = ({
   callbackNo,
   ...rest
 }) => (
-  <Dialog onBackgroundClick={null} {...rest}>
+  <Dialog onBackgroundClick={null} escToClose={false} {...rest}>
     {closeModal => (
       <Modal.Body>
         <QuestionMark>?</QuestionMark>

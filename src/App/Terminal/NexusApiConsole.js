@@ -1,17 +1,14 @@
 // External Dependencies
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import { shell } from 'electron';
 import styled from '@emotion/styled';
 import GA from 'lib/googleAnalytics';
 import memoize from 'utils/memoize';
 
 // Internal Global Dependencies
-import WaitingMessage from 'components/WaitingMessage';
 import Button from 'components/Button';
 import AutoSuggest from 'components/AutoSuggest';
-import { isCoreConnected } from 'selectors';
+import RequireCoreConnected from 'components/RequireCoreConnected';
 import * as Tritium from 'lib/tritiumApi';
 import {
   switchConsoleTab,
@@ -28,6 +25,8 @@ import APIDocModal from './APIDocs/ApiDocModal';
 import questionMarkCircleIcon from 'icons/question-mark-circle.svg';
 import Tooltip from 'components/Tooltip';
 import Icon from 'components/Icon';
+
+__ = __context('Console.NexusAPI');
 
 const filterCommands = memoize((commandList, inputValue) => {
   if (!commandList || !inputValue) return [];
@@ -56,7 +55,6 @@ const mapStateToProps = state => {
     },
   } = state;
   return {
-    coreConnected: isCoreConnected(state),
     consoleInput: consoleInputSelector(
       currentCommand,
       commandHistory,
@@ -276,17 +274,10 @@ class NexusApiConsole extends Component {
    * @memberof TerminalConsole
    */
   render() {
-    const { coreConnected, consoleInput, output } = this.props;
+    const { consoleInput, output } = this.props;
 
-    if (!coreConnected) {
-      return (
-        <WaitingMessage>
-          {__('Connecting to Nexus Core')}
-          ...
-        </WaitingMessage>
-      );
-    } else {
-      return (
+    return (
+      <RequireCoreConnected>
         <TerminalContent>
           <Console>
             <ConsoleInput>
@@ -375,8 +366,8 @@ class NexusApiConsole extends Component {
             </Button>
           </Console>
         </TerminalContent>
-      );
-    }
+      </RequireCoreConnected>
+    );
   }
 }
 

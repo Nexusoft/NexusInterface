@@ -9,6 +9,8 @@ import styled from '@emotion/styled';
 import { legacyMode } from 'consts/misc';
 import nexusLogo from 'icons/logo-full.svg';
 
+__ = __context('About');
+
 const Section = styled.div({
   margin: '2em 2em',
   textAlign: 'center',
@@ -104,7 +106,7 @@ const About = ({ version, testnet, privateBlockchain }) => (
           {version}
         </InfoField>
         <InfoField leftSize={1} rightSize={1} label={__('Core build date')}>
-          December 4th 2019
+          December 16th 2019
         </InfoField>
         {!!testnet && (
           <InfoField leftSize={1} rightSize={1} label={__('Testnet')}>
@@ -126,21 +128,34 @@ const About = ({ version, testnet, privateBlockchain }) => (
         <Strong> Copyright {new Date().getFullYear()}</Strong>{' '}
         {'NEXUS DEVELOPMENT, U.S. LLC.'}
         <br />
+        <ExternalLink href={'https://nexus.io/'}>Nexus.io</ExternalLink>
       </Section>
 
       <BusinessUnits>
         <div>
-          <Strong>Nexus Embassy USA</Strong>
+          <Strong>
+            <ExternalLink href={'https://nexus.io/embassies'}>
+              Nexus Embassy USA
+            </ExternalLink>
+          </Strong>
           <br />
           Tempe, Arizona, United States Of America
         </div>
         <div>
-          <Strong>Nexus Embassy UK</Strong>
+          <Strong>
+            <ExternalLink href={'https://nexus.io/embassies'}>
+              Nexus Embassy UK
+            </ExternalLink>
+          </Strong>
           <br />
           London, England, United Kingdom
         </div>
         <div>
-          <Strong>Nexus Embassy Australia</Strong>
+          <Strong>
+            <ExternalLink href={'https://nexus.io/embassies'}>
+              Nexus Embassy Australia
+            </ExternalLink>
+          </Strong>
           <br />
           Sydney, New South Wales, Australia
         </div>

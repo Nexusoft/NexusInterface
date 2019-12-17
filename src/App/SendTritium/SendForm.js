@@ -32,6 +32,8 @@ import {
   getAccountInfo,
 } from './selectors';
 
+__ = __context('Send');
+
 const SendFormComponent = styled.form({
   maxWidth: 800,
   margin: '-.5em auto 0',
@@ -206,7 +208,7 @@ const mapStateToProps = state => {
     if (pin) {
       const params = {
         pin,
-        name: sendFrom,
+        address: props.accountInfo.address,
         amount: parseFloat(recipients[0].amount),
       };
 

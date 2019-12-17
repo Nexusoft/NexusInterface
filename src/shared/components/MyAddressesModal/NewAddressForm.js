@@ -12,6 +12,8 @@ import rpc from 'lib/rpc';
 import { loadAccounts } from 'lib/user';
 import { errorHandler } from 'utils/form';
 
+__ = __context('MyAddresses.NewAddressForm');
+
 const NewAddressFormComponent = styled.form({
   marginTop: '2em',
 });

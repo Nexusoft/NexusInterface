@@ -13,6 +13,8 @@ import RecipientField from './RecipientField';
 import AmountField from './AmountField';
 import { subtract } from 'utils/calc';
 
+__ = __context('Send');
+
 const RemoveButton = styled.div(({ theme }) => ({
   position: 'absolute',
   left: 3,

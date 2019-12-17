@@ -25,6 +25,8 @@ import lockIcon from 'icons/padlock.svg';
 import leafIcon from 'icons/leaf.svg';
 import legoIcon from 'icons/lego-block.svg';
 
+__ = __context('Settings');
+
 const SettingsComponent = styled.div({
   height: '100%',
   display: 'grid',

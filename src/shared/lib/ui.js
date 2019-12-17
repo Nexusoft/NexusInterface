@@ -280,3 +280,10 @@ export const switchUserTab = tab => {
     payload: tab,
   });
 };
+
+export const toggleUserBalanceDisplayFiat = toggleBool => {
+  store.dispatch({
+    type: TYPE.USERS_BALANCE_DISPLAY_FIAT,
+    payload: toggleBool,
+  });
+};

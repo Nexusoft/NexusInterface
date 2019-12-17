@@ -7,14 +7,25 @@ import { apiPost } from 'lib/tritiumApi';
 import Modal from 'components/Modal';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
+import MaskableTextField from 'components/MaskableTextField';
 import Button from 'components/Button';
 import Link from 'components/Link';
 import LoginModal from 'components/LoginModal';
 import Spinner from 'components/Spinner';
 import FieldSet from 'components/FieldSet';
-import { showNotification, openModal, removeModal } from 'lib/ui';
-import { getUserStatus } from 'lib/user';
+import BackgroundTask from 'components/BackgroundTask';
+import {
+  showNotification,
+  openModal,
+  removeModal,
+  showBackgroundTask,
+} from 'lib/ui';
 import { errorHandler, numericOnly } from 'utils/form';
+import store, { observeStore } from 'store';
+import { isLoggedIn } from 'selectors';
+import confirmPasswordPin from 'utils/promisified/confirmPasswordPin';
+
+__ = __context('NewUser');
 
 const Buttons = styled.div({
   marginTop: '1.5em',
@@ -48,84 +59,60 @@ const Note = styled.div({
   initialValues: {
     username: '',
     password: '',
-    passwordConfirm: '',
     pin: '',
-    pinConfirm: '',
   },
-  validate: (
-    { username, password, passwordConfirm, pin, pinConfirm },
-    props
-  ) => {
+  validate: ({ username, password, pin }) => {
     const errors = {};
 
     if (!username) {
       errors.username = __('Username is required');
-    } else {
-      if (username.length < 3) {
-        errors.username = __('Username must be at least 3 characters');
-      }
+    } else if (username.length < 3) {
+      errors.username = __('Username must be at least 3 characters');
     }
 
     if (!password) {
       errors.password = __('Password is required');
-    } else {
-      if (password.length < 8) {
-        errors.password = __('Password must be at least 8 characters');
-      }
-    }
-
-    if (passwordConfirm !== password) {
-      errors.passwordConfirm = __('Password does not match');
+    } else if (password.length < 8) {
+      errors.password = __('Password must be at least 8 characters');
     }
 
     if (!pin) {
       errors.pin = __('PIN is required');
-    } else {
-      if (pin.length < 4) {
-        errors.pin = __('PIN must be at least 4 characters');
-      }
-    }
-
-    if (pinConfirm !== pin) {
-      errors.pinConfirm = __('PIN does not match');
+    } else if (pin.length < 4) {
+      errors.pin = __('PIN must be at least 4 characters');
     }
 
     return errors;
   },
-  onSubmit: async ({ username, password, pin }, dispatch, props) => {
-    const result = await apiPost('users/create/user', {
-      username,
+  onSubmit: async ({ username, password, pin }) => {
+    const correct = await confirmPasswordPin({
+      isNew: false,
       password,
       pin,
     });
+
+    if (correct) {
+      return await apiPost('users/create/user', {
+        username,
+        password,
+        pin,
+      });
+    } else {
+      return null;
+    }
   },
   onSubmitSuccess: async (result, dispatch, props) => {
-    const { username, password, pin } = props.values;
+    if (!result) return;
+    const { username } = props.values;
     removeModal(props.modalId);
     props.reset();
-    showNotification(
-      __('New user %{username} has been created', {
-        username,
-      }),
-      'success'
-    );
-
-    await apiPost('users/login/user', {
+    showBackgroundTask(UserConfirmBackgroundTask, {
       username,
-      password,
-      pin,
     });
-    await apiPost('users/unlock/user', {
-      pin,
-      notifications: true,
-      mining: !!props.enableMining,
-      staking: !!props.enableStaking,
-    });
-    getUserStatus();
   },
   onSubmitFail: errorHandler(__('Error creating user')),
 })
-class NewUserModal extends Component {
+export default class NewUserModal extends Component {
   /**
    * Component's Renderable JSX
    *
@@ -158,39 +145,18 @@ class NewUserModal extends Component {
 
             <FormField connectLabel label={__('Password')}>
               <Field
-                component={TextField.RF}
+                component={MaskableTextField.RF}
                 name="password"
-                type="password"
                 placeholder={__('Enter your password')}
-              />
-            </FormField>
-
-            <FormField connectLabel label={__('Confirm password')}>
-              <Field
-                component={TextField.RF}
-                name="passwordConfirm"
-                type="password"
-                placeholder={__('Re-enter your password')}
               />
             </FormField>
 
             <FormField connectLabel label={__('PIN')}>
               <Field
-                component={TextField.RF}
+                component={MaskableTextField.RF}
                 name="pin"
-                type="password"
                 normalize={numericOnly}
                 placeholder={__('Enter your PIN number')}
-              />
-            </FormField>
-
-            <FormField connectLabel label={__('Confirm PIN')}>
-              <Field
-                component={TextField.RF}
-                name="pinConfirm"
-                type="password"
-                normalize={numericOnly}
-                placeholder={__('Re-enter your PIN number')}
               />
             </FormField>
 
@@ -241,7 +207,56 @@ class NewUserModal extends Component {
   }
 }
 
-export default NewUserModal;
+class UserConfirmBackgroundTask extends React.Component {
+  componentDidMount() {
+    const { username } = this.props;
+    this.unobserve = observeStore(
+      ({ core: { systemInfo } }) => systemInfo && systemInfo.blocks,
+      async () => {
+        const txs = await apiPost('users/list/transactions', {
+          username,
+          order: 'asc',
+          limit: 1,
+          verbose: 'summary',
+        });
+        if (txs && txs[0] && txs[0].confirmations) {
+          this.closeTask();
+          showNotification(
+            __('User registration for %{username} has been confirmed', {
+              username,
+            }),
+            'success'
+          );
+          if (!isLoggedIn(store.getState())) {
+            openModal(LoginModal);
+          }
+        }
+      }
+    );
+  }
+
+  componentWillUnmount() {
+    this.unobserve();
+  }
+
+  render() {
+    const { username } = this.props;
+    return (
+      <BackgroundTask
+        assignClose={close => (this.closeTask = close)}
+        onClick={null}
+        style={{ cursor: 'default' }}
+      >
+        {__(
+          'User registration for %{username} is waiting to be confirmed on Nexus blockchain...',
+          {
+            username,
+          }
+        )}
+      </BackgroundTask>
+    );
+  }
+}
 
 /*
 

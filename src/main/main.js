@@ -9,7 +9,7 @@ import devToolsInstall, {
 import fs from 'fs-extra';
 
 // Internal
-import { coreDataDir, assetsDir } from 'consts/paths';
+import { assetsDir } from 'consts/paths';
 import {
   loadSettingsFromFile,
   updateSettingsFile,
@@ -163,50 +163,6 @@ function createWindow() {
   });
 }
 
-//If you have a QT folder, back up that data just in case.
-async function backUpQT() {
-  const doNotCopyList = [
-    'blk0001.dat',
-    'blk0002.dat',
-    'database',
-    'keychain',
-    'datachain',
-    '__db.001',
-    '__db.002',
-    '__db.003',
-    '__db.004',
-    '__db.005',
-  ];
-  const settings = loadSettingsFromFile();
-  if (settings.acceptedAgreement) {
-    return;
-  }
-  const exists = await fs.pathExists(coreDataDir);
-  if (exists) {
-    const backupexists = await fs.pathExists(coreDataDir + '_OldQtBackUp');
-    if (!backupexists) {
-      const filterFunc = (src, dest) => {
-        const filename = src && src.replace(/^.*[\\\/]/, '');
-        if (doNotCopyList.includes(filename)) {
-          return false;
-        } else {
-          return true;
-        }
-      };
-      fs.copy(
-        coreDataDir,
-        coreDataDir + '_OldQtBackUp',
-        { filter: filterFunc },
-        err => {
-          if (err) return console.error(err);
-
-          console.log('QT Backup success!');
-        }
-      );
-    }
-  }
-}
-
 // Ensure only one instance of the wallet is run
 const gotTheLock = app.requestSingleInstanceLock();
 
@@ -227,7 +183,6 @@ if (!gotTheLock) {
 
   // Application Startup
   app.on('ready', async () => {
-    await backUpQT();
     createWindow();
     global.core.start();
 

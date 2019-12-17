@@ -15,6 +15,8 @@ import * as color from 'utils/color';
 import StatusIcon from './StatusIcon';
 import UserDropdown from './UserDropdown';
 
+__ = __context('Header');
+
 const UserControlComponent = styled(StatusIcon)(
   ({ theme }) => ({
     display: 'flex',
@@ -61,6 +63,7 @@ class UserControl extends React.Component {
 
     const rect = el.getBoundingClientRect();
     return {
+      minWidth: 120,
       top: rect.bottom + 18,
       right: window.innerWidth - rect.right,
     };

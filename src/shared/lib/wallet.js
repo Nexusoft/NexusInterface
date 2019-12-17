@@ -8,9 +8,6 @@ import store from 'store';
 import { defaultSettings } from 'lib/settings/universal';
 import rpc from 'lib/rpc';
 import { stopCore } from 'lib/core';
-import { openModal } from 'lib/ui';
-import { tritiumUpgradeTime } from 'consts/misc';
-import TritiumUpgradeModal from 'components/TritiumUpgradeModal';
 
 /**
  * Backs up wallet
@@ -76,23 +73,4 @@ walletEvents.once('pre-render', function() {
       await closeWallet();
     }
   });
-});
-
-walletEvents.once('post-render', function() {
-  const {
-    settings: { legacyMode },
-  } = store.getState();
-
-  const now = Date.now();
-  if (now < tritiumUpgradeTime) {
-    setTimeout(() => {
-      if (legacyMode !== false) {
-        openModal(TritiumUpgradeModal);
-      }
-    }, tritiumUpgradeTime - now);
-  } else {
-    if (legacyMode === undefined) {
-      openModal(TritiumUpgradeModal);
-    }
-  }
 });

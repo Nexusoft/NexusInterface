@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import * as THREE from 'three';
 import styled from '@emotion/styled';
-import orbitControl from 'three-orbit-controls';
+import OrbitControls from 'three-orbitcontrols';
 
 import world from 'icons/world-light-white.jpg';
 import geoip from 'data/geoip';
@@ -10,7 +10,6 @@ import Point from './Point';
 import rpc from 'lib/rpc';
 import { apiPost } from 'lib/tritiumApi';
 
-const OrbitControls = orbitControl(THREE);
 const MaxDisplayPoints = 64;
 
 const GlobeContainer = styled.div({
@@ -70,7 +69,7 @@ export default class Globe extends Component {
       const camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
       const scene = new THREE.Scene();
 
-      const controls = new OrbitControls(camera);
+      const controls = new OrbitControls(camera, renderer.domElement);
       const globe = new THREE.Group();
       const sphere = new THREE.SphereGeometry(125, 50, 50);
       const allPoints = new THREE.Group();
@@ -81,6 +80,8 @@ export default class Globe extends Component {
       camera.position.set(0, 235, 500);
       controls.autoRotate = true;
       controls.autoRotateSpeed = 0.8;
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.25;
       controls.minDistance = 300;
       controls.maxDistance = 500;
       controls.enablePan = false;
@@ -186,11 +187,16 @@ export default class Globe extends Component {
     }
     this.timesSkipped++;
     if (
-      this.props.connections !== prevProps.connections ||
+      this.props.connections !== prevProps.connections &&
       this.timesSkipped > 15
     ) {
       this.pointRegister();
       this.timesSkipped = 0;
+    } else if (
+      this.timesSkipped > 5 &&
+      this.props.blocks !== prevProps.blocks
+    ) {
+      this.animateArcs();
     }
   }
 
@@ -221,6 +227,8 @@ export default class Globe extends Component {
       peerInfo.length = MaxDisplayPoints;
     }
 
+    //console.error(peerInfo);
+
     // take the peerInfo look up the Geo Data in the maxmind DB
     // and if there are any points that exist and match coords
     // update the registery entry data
@@ -229,14 +237,33 @@ export default class Globe extends Component {
       .map(peer => {
         let GeoData = geoip.get(peer.address.split(':')[0]);
         // TODO: add checks for lisp and change color appropreately
-
+        //console.log(this.props.pillarColor);
         return {
           lat: GeoData.location.latitude,
           lng: GeoData.location.longitude,
           params: {
             type: peer.type,
+            outgoing: peer.outgoing,
             name: GeoData.location.time_zone,
             color: this.props.pillarColor,
+            peerConnections: 1,
+          },
+        };
+      })
+      .map((peer, i, array) => {
+        ///Find out how many peers will be on pillar
+        let duplicateIndex = array
+          .map(
+            internalPoint =>
+              peer.lat === internalPoint.lat && peer.lng === internalPoint.lng
+          )
+          .filter(e => e);
+
+        return {
+          ...peer,
+          params: {
+            ...peer.params,
+            peerConnections: 1 + duplicateIndex.length,
           },
         };
       })
@@ -254,10 +281,7 @@ export default class Globe extends Component {
           return this.pointRegistry[existIndex];
         } else if (duplicateIndex === i) {
           let newPoint = new Point(peer.lat, peer.lng, peer.params);
-          // console.log(this.allPoints);
-          //if (this.allPoints.children.length <= 10) {
           this.allPoints.add(newPoint.pillar);
-          //}
           return newPoint;
         }
       })
@@ -272,7 +296,7 @@ export default class Globe extends Component {
         this.destroyPoint(point);
       }
     });
-
+    //console.error(newRegistry);
     this.pointRegistry = newRegistry;
     this.arcRegister();
   }
@@ -298,6 +322,7 @@ export default class Globe extends Component {
               color: '#44EB08',
               name: data.geoplugin_timezone,
               type: 'SELF',
+              peerConnections: 1.5,
             }
           );
           this.pointRegistry.push(self);
@@ -391,6 +416,7 @@ export default class Globe extends Component {
         } else {
           let temp = new Curve(point, self, {
             color: this.props.archColor,
+            forward: point.params.outgoing,
           });
           this.allArcs.add(temp.arc);
           temp.play();
@@ -408,9 +434,20 @@ export default class Globe extends Component {
    * @memberof Globe
    */
   animateArcs() {
+    if (this.curveRegistry.length <= 0) return;
+    if (this.curveRegistry[0].isPlaying) return;
     this.curveRegistry.map(arc => {
-      arc.play();
+      if (arc.forward) {
+        arc.play();
+      }
     });
+    setTimeout(() => {
+      this.curveRegistry.map(arc => {
+        if (!arc.forward) {
+          arc.play();
+        }
+      });
+    }, 2040);
   }
 
   /**
@@ -456,6 +493,7 @@ export default class Globe extends Component {
    * @memberof Globe
    */
   start() {
+    this.animateArcs();
     if (!this.frameId) {
       this.frameId = requestAnimationFrame(this.animate);
     }

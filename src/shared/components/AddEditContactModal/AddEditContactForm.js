@@ -15,6 +15,8 @@ import { emailRegex } from 'utils/form';
 import timeZones from 'data/timeZones';
 import Addresses from './Addresses';
 
+__ = __context('AddEditContact');
+
 const tzOptions = timeZones.map(tz => ({
   value: tz.value,
   display: `(${tz.offset}) ${tz.description}`,

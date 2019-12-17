@@ -15,6 +15,8 @@ import { consts } from 'styles';
 import { errorHandler } from 'utils/form';
 import passwordInvalidChars from './passwordInvalidChars';
 
+__ = __context('Settings.Security');
+
 const EncryptWalletForm = styled.form({
   flex: 2,
   marginRight: '1em',

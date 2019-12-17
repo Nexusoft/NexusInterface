@@ -4,6 +4,8 @@ import * as TYPE from 'consts/actionTypes';
 import store from 'store';
 import { walletEvents } from 'lib/wallet';
 
+__ = __context('MarketData');
+
 //action creator for loaded flag
 
 async function fetchMarketData() {
@@ -140,6 +142,35 @@ export const binanceDepthLoader = async () => {
 
   store.dispatch({ type: TYPE.BINANCE_ORDERBOOK, payload: res });
   marketDataLoaded();
+};
+
+export const binanceWalletStatus = async () => {
+  const { data } = await axios.get(
+    'https://www.binance.com/assetWithdraw/getAllAsset.html'
+  );
+  const nxsStatus = data.filter(element => element.assetCode === 'NXS')[0];
+  const walletOnline = nxsStatus.enableCharge && nxsStatus.enableWithdraw;
+  //Add stuff to catch error and make this a bit more robust.
+  store.dispatch({
+    type: TYPE.BINANCE_WALLET_STATUS,
+    payload: walletOnline ? 'Green' : 'Red',
+  });
+};
+
+export const bittrexWalletStatus = async () => {
+  const { data } = await axios.get(
+    'https://bittrex.com/api/v2.0/pub/currencies/GetWalletHealth'
+  );
+  const nxsStatus = data.result.filter(
+    element => element.Health.Currency === 'NXS'
+  )[0];
+  const walletOnline = nxsStatus.Health.IsActive;
+  console.error(nxsStatus);
+
+  store.dispatch({
+    type: TYPE.BITTREX_WALLET_STATUS,
+    payload: walletOnline ? 'Green' : 'Red',
+  });
 };
 
 export const bittrexDepthLoader = async () => {

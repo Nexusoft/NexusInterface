@@ -9,6 +9,8 @@ import { getDeltaSign } from 'lib/tritiumTransactions';
 import { consts, timing } from 'styles';
 import * as color from 'utils/color';
 
+__ = __context('Transactions');
+
 const ContractComponent = styled.div(({ theme }) => ({
   flexGrow: 1,
   padding: '.6em 1em',
@@ -275,9 +277,9 @@ const contractContent = contract => {
   }
 };
 
-const Contract = ({ contract }) => (
+const Contract = ({ contract, txid }) => (
   <ContractComponent
-    onClick={() => openModal(ContractDetailsModal, { contract })}
+    onClick={() => openModal(ContractDetailsModal, { contract, txid })}
   >
     <ContractContent>{contractContent(contract)}</ContractContent>
     {!!contract.amount && (

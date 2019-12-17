@@ -9,6 +9,8 @@ import { timing } from 'styles';
 import RecipientField from './RecipientField';
 import AmountField from './AmountField';
 
+__ = __context('Send');
+
 const RemoveButton = styled.div(({ theme }) => ({
   position: 'absolute',
   left: 3,

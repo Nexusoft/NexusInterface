@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import styled from '@emotion/styled';
 
 import { timing } from 'styles';
@@ -33,7 +33,19 @@ const SliderComponent = styled.input(({ theme }) => ({
   },
 }));
 
-const Slider = props => <SliderComponent type="range" {...props} />;
+const Slider = props => {
+  const sliderRef = useRef();
+  return (
+    <SliderComponent
+      type="range"
+      ref={sliderRef}
+      onMouseUp={() => {
+        sliderRef.current && sliderRef.current.blur();
+      }}
+      {...props}
+    />
+  );
+};
 
 const SliderReduxForm = ({ input, meta, ...rest }) => (
   <Slider error={meta.touched && meta.error} {...input} {...rest} />

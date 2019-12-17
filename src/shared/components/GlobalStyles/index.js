@@ -42,6 +42,7 @@ const resetStyles = theme => ({
     outline: 'none',
     color: 'inherit',
     textDecoration: 'none',
+    userDrag: 'none',
   },
 
   'button, input, textarea, select, optgroup': {
@@ -52,6 +53,7 @@ const resetStyles = theme => ({
 
   img: {
     maxWidth: '100%',
+    userDrag: 'none',
   },
 
   p: {

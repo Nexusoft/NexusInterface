@@ -6,6 +6,8 @@ import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
 import { consts } from 'styles';
 
+__ = __context('Settings.Core');
+
 /**
  *
  *

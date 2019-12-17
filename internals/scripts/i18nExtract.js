@@ -53,8 +53,11 @@ function getKeys(node) {
 const commentRegExp = /i18n-extract (.+)/;
 const commentIgnoreRegExp = /i18n-extract-disable-line/;
 
-function extractFromCode(code, options = {}) {
-  const { marker = '__', keyLoc = 0 } = options;
+const translateMarker = '__';
+const translateWithContextMarker = '___';
+const withContextMarker = '__context';
+
+function extractFromCode(code) {
   const babelOptions = {
     ast: true,
     plugins: [
@@ -86,6 +89,8 @@ function extractFromCode(code, options = {}) {
     }
   });
 
+  let context = '';
+
   // Look for keys in the source code.
   traverse(ast, {
     CallExpression(path) {
@@ -102,20 +107,47 @@ function extractFromCode(code, options = {}) {
         callee: { name, type },
       } = node;
 
+      // withContext(context) calls
       if (
-        (type === 'Identifier' && name === marker) ||
-        path.get('callee').matchesPattern(marker)
+        (type === 'Identifier' && name === withContextMarker) ||
+        path.get('callee').matchesPattern(withContextMarker)
       ) {
-        const foundKeys = getKeys(
-          keyLoc < 0
-            ? node.arguments[node.arguments.length + keyLoc]
-            : node.arguments[keyLoc]
-        );
+        const contextNode = node.arguments && node.arguments[0];
+        context = (contextNode && contextNode.value) || '';
+      }
+
+      // default translate(string) calls
+      if (
+        (type === 'Identifier' && name === translateMarker) ||
+        path.get('callee').matchesPattern(translateMarker)
+      ) {
+        const foundKeys = getKeys(node.arguments[0]);
 
         foundKeys.forEach(key => {
           if (key) {
             keys.push({
               key,
+              context,
+              loc: node.loc,
+            });
+          }
+        });
+      }
+
+      // translateWithContext(context, string) calls
+      if (
+        (type === 'Identifier' && name === translateWithContextMarker) ||
+        path.get('callee').matchesPattern(translateWithContextMarker)
+      ) {
+        const contextNode = node.arguments && node.arguments[0];
+        const tempContext = (contextNode && contextNode.value) || '';
+        const foundKeys = getKeys(node.arguments[1]);
+
+        foundKeys.forEach(key => {
+          if (key) {
+            keys.push({
+              key,
+              context: tempContext,
               loc: node.loc,
             });
           }

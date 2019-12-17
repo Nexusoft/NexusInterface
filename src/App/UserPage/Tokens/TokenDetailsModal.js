@@ -7,11 +7,13 @@ import { formatDateTime } from 'lib/intl';
 import { openModal } from 'lib/ui';
 import { formatNumber } from 'lib/intl';
 
-import NewAccountModal from 'components/UserDialogs/NewAccountModal';
+import NewAccountModal from 'components/NewAccountModal';
 
 import Button from 'components/Button';
 import Icon from 'components/Icon';
 import plusIcon from 'icons/plus.svg';
+
+__ = __context('User.Tokens.TokenDetails');
 
 const timeFormatOptions = {
   year: 'numeric',

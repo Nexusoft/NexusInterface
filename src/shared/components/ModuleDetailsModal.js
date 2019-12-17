@@ -17,6 +17,8 @@ import warningIcon from 'icons/warning.svg';
 import linkIcon from 'icons/link.svg';
 import trashIcon from 'icons/trash.svg';
 
+__ = __context('ModuleDetails');
+
 const DeleteModule = styled.div({
   position: 'absolute',
   top: 0,

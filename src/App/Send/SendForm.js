@@ -29,6 +29,8 @@ import {
 } from './selectors';
 import PasswordModal from './PasswordModal';
 
+__ = __context('Send');
+
 const SendFormComponent = styled.form({
   maxWidth: 800,
   margin: '-.5em auto 0',

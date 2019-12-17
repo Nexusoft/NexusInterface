@@ -9,6 +9,8 @@ import * as color from 'utils/color';
 import checkIcon from 'icons/check.svg';
 import Dialog from './Dialog';
 
+__ = __context('SuccessDialog');
+
 const CheckMark = styled(Dialog.Icon)(({ theme }) => ({
   fontSize: 44,
   color: theme.primary,
@@ -24,12 +26,6 @@ class SuccessDialog extends React.Component {
       this.buttonRef.current.focus();
     }
   }
-
-  handleKeyDown = e => {
-    if (e.key === 'Escape') {
-      this.closeModal();
-    }
-  };
 
   render() {
     const { message, note, ...rest } = this.props;
@@ -51,7 +47,6 @@ class SuccessDialog extends React.Component {
           ref={this.buttonRef}
           skin="filled-primary"
           onClick={() => this.closeModal()}
-          onKeyDown={this.handleKeyDown}
         >
           {__('Dismiss')}
         </Dialog.Button>

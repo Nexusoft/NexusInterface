@@ -9,6 +9,8 @@ import { isPending, fetchTransaction } from 'lib/transactions';
 
 import { categoryText } from './utils';
 
+__ = __context('Transactions.TransactionDetails');
+
 const timeFormatOptions = {
   year: 'numeric',
   month: 'long',

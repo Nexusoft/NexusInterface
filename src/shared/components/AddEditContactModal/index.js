@@ -5,6 +5,8 @@ import React, { Component } from 'react';
 import Modal from 'components/Modal';
 import AddEditContactForm from './AddEditContactForm';
 
+__ = __context('AddEditContact');
+
 const initialContact = {
   name: '',
   notMine: [

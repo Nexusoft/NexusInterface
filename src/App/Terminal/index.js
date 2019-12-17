@@ -19,6 +19,8 @@ import consoleIcon from 'icons/console.svg';
 import logoIcon from 'icons/logo.svg';
 import coreIcon from 'icons/core.svg';
 
+__ = __context('Console');
+
 const TerminalComponent = styled.div({
   height: '100%',
   display: 'grid',

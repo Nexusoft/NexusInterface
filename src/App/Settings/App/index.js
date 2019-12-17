@@ -25,6 +25,8 @@ import { startAutoUpdate, stopAutoUpdate } from 'lib/updater';
 import LanguageSetting from './LanguageSetting';
 import BackupDirSetting from './BackupDirSetting';
 
+__ = __context('Settings.Application');
+
 const WarningIcon = styled(Icon)(({ theme }) => ({
   color: color.lighten(theme.danger, 0.3),
   fontSize: '1.1em',
@@ -267,27 +269,29 @@ class SettingsApp extends Component {
           />
         </SettingsField>
 
-        <SettingsField
-          connectLabel
-          label={__('Minimum confirmations')}
-          subLabel={__(
-            'Minimum amount of confirmations before a block is accepted. Local only.'
-          )}
-        >
-          <TextField
-            type="number"
-            value={settings.minConfirmations}
-            step="1"
-            min="1"
-            onChange={this.updateHandlers('minConfirmations')}
-            onKeyPress={e => {
-              e.preventDefault();
-            }}
-            style={{ width: 75 }}
-          />
-        </SettingsField>
+        {legacyMode && (
+          <SettingsField
+            connectLabel
+            label={__('Minimum confirmations')}
+            subLabel={__(
+              'Minimum amount of confirmations before a block is accepted. Local only.'
+            )}
+          >
+            <TextField
+              type="number"
+              value={settings.minConfirmations}
+              step="1"
+              min="1"
+              onChange={this.updateHandlers('minConfirmations')}
+              onKeyPress={e => {
+                e.preventDefault();
+              }}
+              style={{ width: 75 }}
+            />
+          </SettingsField>
+        )}
 
-        <BackupDirSetting />
+        {legacyMode && <BackupDirSetting />}
 
         <SettingsField
           connectLabel

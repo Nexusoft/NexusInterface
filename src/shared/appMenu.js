@@ -14,9 +14,8 @@ import { isCoreConnected } from 'selectors';
 import { legacyMode } from 'consts/misc';
 import showOpenDialog from 'utils/promisified/showOpenDialog';
 import confirm from 'utils/promisified/confirm';
-import { coreDataDir, walletDataDir } from 'consts/paths';
+import { returnCoreDataDir, walletDataDir } from 'consts/paths';
 import { checkForUpdates, quitAndInstall } from 'lib/updater';
-import { tritiumUpgradeTime } from 'consts/misc';
 import { walletEvents } from 'lib/wallet';
 import AboutModal from 'components/AboutModal';
 
@@ -234,7 +233,7 @@ const walletGuideLink = {
 const openCoreDataDir = {
   label: __('Open Core Data Folder'),
   click: () => {
-    shell.openItem(coreDataDir);
+    shell.openItem(returnCoreDataDir());
   },
 };
 
@@ -328,11 +327,7 @@ function buildDarwinTemplate() {
           ? stopCoreMenu
           : startCoreMenu
         : null,
-      now < tritiumUpgradeTime
-        ? null
-        : legacyMode
-        ? switchTritiumMode
-        : switchLegacyMode,
+      legacyMode ? switchTritiumMode : switchLegacyMode,
       separator,
       quitNexus,
     ].filter(e => e),
@@ -425,11 +420,7 @@ function buildDefaultTemplate() {
           ? stopCoreMenu
           : startCoreMenu
         : null,
-      now < tritiumUpgradeTime
-        ? null
-        : legacyMode
-        ? switchTritiumMode
-        : switchLegacyMode,
+      legacyMode ? switchTritiumMode : switchLegacyMode,
       separator,
       quitNexus,
     ].filter(e => e),
@@ -515,11 +506,4 @@ walletEvents.once('post-render', function() {
   observeStore(state => state.settings && state.settings.devMode, rebuildMenu);
   observeStore(state => state.activeAppModule, rebuildMenu);
   observeStore(state => state.settings.manualDaemon, rebuildMenu);
-
-  const now = Date.now();
-  if (now < tritiumUpgradeTime) {
-    setTimeout(() => {
-      rebuildMenu();
-    }, tritiumUpgradeTime - now);
-  }
 });

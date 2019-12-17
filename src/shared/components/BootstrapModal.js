@@ -8,11 +8,7 @@ import { keyframes } from '@emotion/core';
 // Internal
 import Modal from 'components/Modal';
 import Button from 'components/Button';
-import {
-  showBackgroundTask,
-  openConfirmDialog,
-  removeModal,
-} from 'lib/ui';
+import { showBackgroundTask, openConfirmDialog, removeModal } from 'lib/ui';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import ModalContext from 'context/modal';
@@ -20,6 +16,8 @@ import { bootstrapEvents, abortBootstrap } from 'lib/bootstrap';
 import { timing } from 'styles';
 import BootstrapBackgroundTask from 'components/BootstrapBackgroundTask';
 import arrowUpLeftIcon from 'icons/arrow-up-left.svg';
+
+__ = __context('Bootstrap');
 
 const maximizeAnimation = keyframes`
   from { 
@@ -214,6 +212,12 @@ class BootstrapModal extends PureComponent {
     removeModal(modalID);
   };
 
+  handleKeyDown = e => {
+    if (e.key === 'Escape') {
+      this.minimize();
+    }
+  };
+
   /**
    * Component's Renderable JSX
    *
@@ -227,7 +231,9 @@ class BootstrapModal extends PureComponent {
         modalRef={this.modalRef}
         backgroundRef={this.backgroundRef}
         onBackgroundClick={this.minimize}
+        onKeyDown={this.handleKeyDown}
         assignClose={closeModal => (this.closeModal = closeModal)}
+        escToClose={false}
         {...rest}
       >
         <Modal.Body>

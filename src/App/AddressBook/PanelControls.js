@@ -22,6 +22,8 @@ import addContactIcon from 'icons/add-contact.svg';
 import searchIcon from 'icons/search.svg';
 import userIcon from 'icons/user.svg';
 
+__ = __context('AddressBook');
+
 const ControlIcon = styled(Icon)({
   width: 20,
   height: 20,

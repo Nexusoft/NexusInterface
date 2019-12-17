@@ -18,6 +18,8 @@ import { showNotification } from 'lib/ui';
 import { loadAccounts, updateAccountBalances } from 'lib/user';
 import rpc from 'lib/rpc';
 
+__ = __context('MyAddresses');
+
 const MyAddressesModalComponent = styled(Modal)({
   // set a fixed height so that the modal won't jump when the search query changes
   height: '80%',

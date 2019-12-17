@@ -29,6 +29,8 @@ import { legacyMode } from 'consts/misc';
 // import shapeshiftIcon from 'icons/shapeshift.svg';
 // import trustListIcon from 'icons/trust-list.svg';
 
+__ = __context('NavigationBar');
+
 const slideUp = keyframes`
   from { opacity: 0; transform: translateY(70%) }
     to { opacity: 1; transform: translateY(0) }

@@ -25,6 +25,8 @@ import {
 } from './selectors';
 import AmountField from './AmountField';
 
+__ = __context('Send');
+
 const AccountSelectors = styled.div({
   display: 'grid',
   gridTemplateColumns: 'auto 1fr',

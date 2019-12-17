@@ -11,6 +11,8 @@ import Link from 'components/Link';
 import { getNxsFiatPrice } from './selectors';
 import Tooltip from 'components/Tooltip';
 
+__ = __context('Send');
+
 const floatRegex = /^[0-9]+(.[0-9]*)?$/;
 
 const SendAmount = styled.div({
