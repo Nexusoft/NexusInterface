@@ -7,8 +7,8 @@ import styled from '@emotion/styled';
 // Internal Global
 import { apiPost } from 'lib/tritiumApi';
 import rpc from 'lib/rpc';
-import { defaultSettings } from 'lib/settings/universal';
 import { loadAccounts } from 'lib/user';
+import { formName, defaultValues } from 'lib/finance';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
@@ -55,7 +55,6 @@ const MoreOptions = styled.div({
   paddingLeft: '1em',
 });
 
-const formName = 'sendNXS';
 const valueSelector = formValueSelector(formName);
 const mapStateToProps = state => {
   const {
@@ -96,18 +95,7 @@ const mapStateToProps = state => {
 @reduxForm({
   form: formName,
   destroyOnUnmount: false,
-  initialValues: {
-    sendFrom: null,
-    recipients: [
-      {
-        address: null,
-        amount: '',
-        fiatAmount: '',
-      },
-    ],
-    reference: null,
-    expires: null,
-  },
+  initialValues: defaultValues,
   validate: ({ sendFrom, recipients, reference, expires }) => {
     const errors = {};
     if (!sendFrom) {
