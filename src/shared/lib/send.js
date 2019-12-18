@@ -18,8 +18,8 @@ export const defaultValues = {
   expires: null,
 };
 
-export function send(formValues) {
-  store.dispatch(initialize('send', { ...formValues, ...defaultValues }));
-  store.dispatch(reset('send'));
+export function goToSend(formValues) {
+  store.dispatch(initialize(formName, { ...defaultValues, ...formValues }));
+  store.dispatch(reset(formName));
   history.push('/Send');
 }

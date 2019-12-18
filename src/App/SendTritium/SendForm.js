@@ -8,7 +8,7 @@ import styled from '@emotion/styled';
 import { apiPost } from 'lib/tritiumApi';
 import rpc from 'lib/rpc';
 import { loadAccounts } from 'lib/user';
-import { formName, defaultValues } from 'lib/finance';
+import { formName, defaultValues } from 'lib/send';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
