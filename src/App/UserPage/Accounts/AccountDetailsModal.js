@@ -5,6 +5,7 @@ import styled from '@emotion/styled';
 import Modal from 'components/Modal';
 import Button from 'components/Button';
 import AdjustStakeModal from 'components/AdjustStakeModal';
+import { goToSend } from 'lib/send';
 import { formatDateTime } from 'lib/intl';
 import { openModal } from 'lib/ui';
 import { formatNumber } from 'lib/intl';
@@ -51,67 +52,86 @@ const Field = ({ label, children }) => (
 
 const AccountDetailsModal = ({ account, stakeInfo }) => (
   <Modal>
-    <Modal.Header>{__('Account Details')}</Modal.Header>
-    <Modal.Body>
-      <Field label={__('Account name')}>{account.name}</Field>
-      <Field label={__('Created at')}>
-        {formatDateTime(account.created * 1000, timeFormatOptions)}
-      </Field>
-      <Field label={__('Last modified')}>
-        {formatDateTime(account.modified * 1000, timeFormatOptions)}
-      </Field>
-      <Field label={__('Token name')}>{account.token_name}</Field>
-      <Field label={__('Total account balance')}>
-        {formatNumber(totalBalance(account), 6)} {account.token_name}
-      </Field>
-      <Field label={__('Available balance')}>
-        {formatNumber(account.balance, 6)} {account.token_name}
-      </Field>
-      <Field label={__('Pending balance')}>
-        {formatNumber(account.pending, 6)} {account.token_name}
-      </Field>
-      <Field label={__('Unconfirmed balance')}>
-        {formatNumber(account.unconfirmed, 6)} {account.token_name}
-      </Field>
-      {account.stake !== undefined && (
-        <Field label={__('Stake balance')}>
-          {formatNumber(account.stake, 6)} {account.token_name}
-        </Field>
-      )}
-      {account.immature !== undefined && (
-        <Field label={__('Immature balance')}>
-          {formatNumber(account.immature, 6)} {account.token_name}
-        </Field>
-      )}
-      <Field label={__('Address')}>
-        <span className="monospace">{account.address}</span>
-      </Field>
+    {closeModal => (
+      <>
+        <Modal.Header>{__('Account Details')}</Modal.Header>
+        <Modal.Body>
+          <Field label={__('Account name')}>{account.name}</Field>
+          <Field label={__('Created at')}>
+            {formatDateTime(account.created * 1000, timeFormatOptions)}
+          </Field>
+          <Field label={__('Last modified')}>
+            {formatDateTime(account.modified * 1000, timeFormatOptions)}
+          </Field>
+          <Field label={__('Token name')}>{account.token_name}</Field>
+          <Field label={__('Total account balance')}>
+            {formatNumber(totalBalance(account), 6)} {account.token_name}
+          </Field>
+          <Field label={__('Available balance')}>
+            <span className="v-align">
+              {formatNumber(account.balance, 6)} {account.token_name}
+            </span>
+            &nbsp;&nbsp;
+            {account.balance > 0 && (
+              <Button
+                skin="hyperlink"
+                className="v-align"
+                onClick={() => {
+                  closeModal();
+                  goToSend({ sendFrom: account.name });
+                }}
+              >
+                {__('Send %{token_name}', { token_name: account.token_name })}
+              </Button>
+            )}
+          </Field>
+          <Field label={__('Pending balance')}>
+            {formatNumber(account.pending, 6)} {account.token_name}
+          </Field>
+          <Field label={__('Unconfirmed balance')}>
+            {formatNumber(account.unconfirmed, 6)} {account.token_name}
+          </Field>
+          {account.stake !== undefined && (
+            <Field label={__('Stake balance')}>
+              {formatNumber(account.stake, 6)} {account.token_name}
+            </Field>
+          )}
+          {account.immature !== undefined && (
+            <Field label={__('Immature balance')}>
+              {formatNumber(account.immature, 6)} {account.token_name}
+            </Field>
+          )}
+          <Field label={__('Address')}>
+            <span className="monospace">{account.address}</span>
+          </Field>
 
-      {account.stake !== undefined && (
-        <div className="mt1 flex space-between">
-          <div />{' '}
-          {!stakeInfo.stake && !stakeInfo.balance ? (
-            <div className="error">{__('Trust Account is empty.')}</div>
-          ) : (
-            <div className="error">
-              {__('Trust Account must mature for 72 hours before staking')}
+          {account.stake !== undefined && (
+            <div className="mt1 flex space-between">
+              <div />{' '}
+              {!stakeInfo.stake && !stakeInfo.balance ? (
+                <div className="error">{__('Trust Account is empty.')}</div>
+              ) : (
+                <div className="error">
+                  {__('Trust Account must mature for 72 hours before staking')}
+                </div>
+              )}
+              <Button
+                disabled={
+                  !stakeInfo ||
+                  (!stakeInfo.stake && !stakeInfo.balance) ||
+                  stakeInfo.new
+                }
+                onClick={() => {
+                  openModal(AdjustStakeModal);
+                }}
+              >
+                {__('Adjust stake amount')}
+              </Button>
             </div>
           )}
-          <Button
-            disabled={
-              !stakeInfo ||
-              (!stakeInfo.stake && !stakeInfo.balance) ||
-              stakeInfo.new
-            }
-            onClick={() => {
-              openModal(AdjustStakeModal);
-            }}
-          >
-            {__('Adjust stake amount')}
-          </Button>
-        </div>
-      )}
-    </Modal.Body>
+        </Modal.Body>
+      </>
+    )}
   </Modal>
 );
 

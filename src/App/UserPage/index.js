@@ -9,7 +9,7 @@ import Panel from 'components/Panel';
 import { openModal } from 'lib/ui';
 import RequireLoggedIn from 'components/RequireLoggedIn';
 import AddEditContactModal from 'components/AddEditContactModal';
-import { isCoreConnected } from 'selectors';
+import { isCoreConnected, isLoggedIn } from 'selectors';
 import { history } from 'lib/wallet';
 import { legacyMode } from 'consts/misc';
 import userIcon from 'icons/user.svg';
@@ -30,6 +30,7 @@ const UserPageLayout = styled.div({
 const mapStateToProps = state => ({
   addressBook: state.addressBook,
   coreConnected: isCoreConnected(state),
+  loggedIn: isLoggedIn(state),
 });
 
 /**

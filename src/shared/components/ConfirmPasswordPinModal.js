@@ -75,9 +75,7 @@ export default class ConfirmPasswordPinModal extends React.Component {
                   this.setState({ pin: e.target.value });
                 }}
                 placeholder={
-                  isNew
-                    ? __('Re-enter your new PIN number')
-                    : __('Re-enter your PIN number')
+                  isNew ? __('Re-enter your new PIN') : __('Re-enter your PIN')
                 }
               />
             </FormField>

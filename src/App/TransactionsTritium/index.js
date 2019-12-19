@@ -96,7 +96,6 @@ const mapStateToProps = state => {
         timeSpan,
       },
     },
-    settings: { minConfirmations },
   } = state;
   const filteredTransactions = getFilteredTransactions(
     getTransactionsList(map),
@@ -107,7 +106,6 @@ const mapStateToProps = state => {
   );
   return {
     transactions: paginateTransactions(filteredTransactions, page),
-    minConfirmations,
     loadedAll,
     page,
     totalPages: Math.ceil(filteredTransactions.length / txPerPage),

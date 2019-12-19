@@ -6,7 +6,6 @@ import Modal from 'components/Modal';
 import MaskableTextField from 'components/MaskableTextField';
 import Button from 'components/Button';
 import { removeModal } from 'lib/ui';
-import { numericOnly } from 'utils/form';
 
 __ = __context('PinDialog');
 
@@ -40,16 +39,15 @@ const PinDialog = ({ handleSubmit, confirmLabel = __('Confirm'), onClose }) => (
   <Modal style={{ maxWidth: 350 }} onClose={onClose}>
     {closeModal => (
       <>
-        <Modal.Header>{__('Enter PIN number')}</Modal.Header>
+        <Modal.Header>{__('Enter PIN')}</Modal.Header>
         <Modal.Body>
           <form onSubmit={handleSubmit}>
             <Field
               component={PinInput}
               name="pin"
-              normalize={numericOnly}
               autoFocus
               skin="filled-inverted"
-              placeholder={__('Your PIN number')}
+              placeholder={__('Your PIN')}
             />
             <div className="flex space-between">
               <Button onClick={closeModal}>{__('Cancel')}</Button>

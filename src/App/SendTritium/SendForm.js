@@ -7,8 +7,8 @@ import styled from '@emotion/styled';
 // Internal Global
 import { apiPost } from 'lib/tritiumApi';
 import rpc from 'lib/rpc';
-import { defaultSettings } from 'lib/settings/universal';
 import { loadAccounts } from 'lib/user';
+import { formName, defaultValues } from 'lib/send';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
@@ -55,12 +55,10 @@ const MoreOptions = styled.div({
   paddingLeft: '1em',
 });
 
-const formName = 'sendNXS';
 const valueSelector = formValueSelector(formName);
 const mapStateToProps = state => {
   const {
     addressBook,
-    settings: { minConfirmations },
     core: {
       info: { locked, minting_only },
       accounts,
@@ -73,7 +71,6 @@ const mapStateToProps = state => {
   const expires = valueSelector(state, 'expires');
   const accountInfo = getAccountInfo(accountName, accounts, tokens);
   return {
-    minConfirmations,
     locked,
     reference,
     expires,
@@ -98,18 +95,7 @@ const mapStateToProps = state => {
 @reduxForm({
   form: formName,
   destroyOnUnmount: false,
-  initialValues: {
-    sendFrom: null,
-    recipients: [
-      {
-        address: null,
-        amount: '',
-        fiatAmount: '',
-      },
-    ],
-    reference: null,
-    expires: null,
-  },
+  initialValues: defaultValues,
   validate: ({ sendFrom, recipients, reference, expires }) => {
     const errors = {};
     if (!sendFrom) {
@@ -162,11 +148,10 @@ const mapStateToProps = state => {
       recipients[0].address.match(/([0OIl+/])/g) === null;
 
     if (isAddress) {
-      if (
-        !recipients[0].address.startsWith('2') &&
-        !recipients[0].address.startsWith('4') &&
-        !recipients[0].address.startsWith('8')
-      ) {
+      const isAddressResult = await apiPost('system/validate/address', {
+        address: recipients[0].address,
+      });
+      if (!isAddressResult.is_valid) {
         throw { recipients: [{ address: __('Invalid address') }] };
       }
     }
@@ -232,11 +217,6 @@ const mapStateToProps = state => {
           return await apiPost('tokens/debit/account', params);
         }
       }
-    }
-
-    let minConfirmations = parseInt(props.minConfirmations);
-    if (isNaN(minConfirmations)) {
-      minConfirmations = defaultSettings.minConfirmations;
     }
   },
   onSubmitSuccess: (result, dispatch, props) => {
