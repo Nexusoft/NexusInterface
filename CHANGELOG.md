@@ -1,20 +1,21 @@
-# 2.1.1 (2019.12.13)
+# 2.1.1 (2019.12.18)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.1.1)
 
 #### Additions
 
 - Added a link to Account Details modal for sending funds from that account
+- PINs now support all alphanumeric characters
 
 #### Adjustments
 
-N/A
+- Address validation now uses backend api
 
 #### Fixes
 
 - Fixed the option for Change password & PIN and Change recovery phrase not being shown in User page
 
-# 2.1.0 (2019.12.13)
+# 2.1.0 (2019.12.16)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.1.0)
 
