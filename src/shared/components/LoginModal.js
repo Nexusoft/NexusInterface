@@ -14,7 +14,7 @@ import RecoverPasswordPinModal from 'components/RecoverPasswordPinModal';
 import Spinner from 'components/Spinner';
 import { showNotification, openModal, removeModal } from 'lib/ui';
 import { getUserStatus } from 'lib/user';
-import { errorHandler, numericOnly } from 'utils/form';
+import { errorHandler } from 'utils/form';
 
 __ = __context('Login');
 
@@ -130,8 +130,7 @@ class Login extends Component {
               <Field
                 component={MaskableTextField.RF}
                 name="pin"
-                normalize={numericOnly}
-                placeholder={__('Enter your PIN number')}
+                placeholder={__('Enter your PIN')}
               />
             </FormField>
 

@@ -10,7 +10,7 @@ import Button from 'components/Button';
 import LoginModal from 'components/LoginModal';
 import Spinner from 'components/Spinner';
 import { openSuccessDialog, removeModal, openModal } from 'lib/ui';
-import { errorHandler, numericOnly } from 'utils/form';
+import { errorHandler } from 'utils/form';
 import confirmPasswordPin from 'utils/promisified/confirmPasswordPin';
 
 __ = __context('RecoverPassword&PIN');
@@ -123,8 +123,7 @@ export default class RecoverPasswordPinModal extends React.Component {
                 <Field
                   component={MaskableTextField.RF}
                   name="newPin"
-                  normalize={numericOnly}
-                  placeholder={__('Enter your new PIN number')}
+                  placeholder={__('Enter your new PIN')}
                 />
               </FormField>
             </div>

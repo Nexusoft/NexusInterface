@@ -20,7 +20,7 @@ import {
   removeModal,
   showBackgroundTask,
 } from 'lib/ui';
-import { errorHandler, numericOnly } from 'utils/form';
+import { errorHandler } from 'utils/form';
 import store, { observeStore } from 'store';
 import { isLoggedIn } from 'selectors';
 import confirmPasswordPin from 'utils/promisified/confirmPasswordPin';
@@ -155,8 +155,7 @@ export default class NewUserModal extends Component {
               <Field
                 component={MaskableTextField.RF}
                 name="pin"
-                normalize={numericOnly}
-                placeholder={__('Enter your PIN number')}
+                placeholder={__('Enter your PIN')}
               />
             </FormField>
 
