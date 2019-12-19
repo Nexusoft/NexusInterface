@@ -7,6 +7,9 @@ import GA from 'lib/googleAnalytics';
 import Icon from 'components/Icon';
 import Panel from 'components/Panel';
 
+//Invoice
+import InvoiceForm from './InvoiceForm';
+
 import nexusIcon from 'icons/NXS_coin.svg';
 
 __ = __context('Invoice');
@@ -34,6 +37,7 @@ class Invoice extends Component {
     return (
       <Panel icon={nexusIcon} title={__('Invoice')}>
         {'Test Body'}
+        <InvoiceForm />
       </Panel>
     );
   }
