@@ -12,7 +12,7 @@ import MaskableTextField from 'components/MaskableTextField';
 import Button from 'components/Button';
 import Select from 'components/Select';
 import Spinner from 'components/Spinner';
-import { errorHandler, numericOnly } from 'utils/form';
+import { errorHandler } from 'utils/form';
 import { openSuccessDialog, removeModal } from 'lib/ui';
 import { assetsDir } from 'consts/paths';
 
@@ -140,8 +140,7 @@ export default class SetRecoveryModal extends React.Component {
               <Field
                 name="pin"
                 component={MaskableTextField.RF}
-                normalize={numericOnly}
-                placeholder={__('Your current PIN number')}
+                placeholder={__('Your current PIN')}
               />
             </FormField>
 

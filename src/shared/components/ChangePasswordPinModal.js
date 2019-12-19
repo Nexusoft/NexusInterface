@@ -7,7 +7,7 @@ import FormField from 'components/FormField';
 import MaskableTextField from 'components/MaskableTextField';
 import Button from 'components/Button';
 import Spinner from 'components/Spinner';
-import { errorHandler, numericOnly } from 'utils/form';
+import { errorHandler } from 'utils/form';
 import { openSuccessDialog, removeModal, openModal } from 'lib/ui';
 import confirmPasswordPin from 'utils/promisified/confirmPasswordPin';
 
@@ -99,7 +99,7 @@ export default class ChangePasswordPinModal extends React.Component {
               <Field
                 name="pin"
                 component={MaskableTextField.RF}
-                placeholder={__('Your current PIN number')}
+                placeholder={__('Your current PIN')}
               />
             </FormField>
 
@@ -116,8 +116,7 @@ export default class ChangePasswordPinModal extends React.Component {
                 <Field
                   component={MaskableTextField.RF}
                   name="newPin"
-                  normalize={numericOnly}
-                  placeholder={__('Enter your new PIN number')}
+                  placeholder={__('Enter your new PIN')}
                 />
               </FormField>
             </div>
