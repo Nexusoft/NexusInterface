@@ -148,11 +148,10 @@ const mapStateToProps = state => {
       recipients[0].address.match(/([0OIl+/])/g) === null;
 
     if (isAddress) {
-      if (
-        !recipients[0].address.startsWith('2') &&
-        !recipients[0].address.startsWith('4') &&
-        !recipients[0].address.startsWith('8')
-      ) {
+      const isAddressResult = await apiPost('system/validate/address', {
+        address: recipients[0].address,
+      });
+      if (!isAddressResult.is_valid) {
         throw { recipients: [{ address: __('Invalid address') }] };
       }
     }
