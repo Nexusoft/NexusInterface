@@ -2,13 +2,13 @@
 import React from 'react';
 import { existsSync } from 'fs';
 import { join } from 'path';
-import { remote } from 'electron';
+import { ipcRenderer } from 'electron';
 
 // Internal Global
 import { modulesDir } from 'consts/paths';
 import { setActiveWebView, unsetActiveWebView } from 'lib/modules';
 
-const fileServer = remote.getGlobal('fileServer');
+const domain = ipcRenderer.invoke('get-file-server-domain');
 
 /**
  * WebView
@@ -28,7 +28,7 @@ class WebView extends React.Component {
     super(props);
     const { module } = this.props;
     const moduleFiles = module.files.map(file => join(module.dirName, file));
-    fileServer.serveModuleFiles(moduleFiles);
+    ipcRenderer.invoke('serve-module-files', moduleFiles);
   }
 
   /**
@@ -61,7 +61,7 @@ class WebView extends React.Component {
     const entryPath = join(modulesDir, module.dirName, entry);
     if (!existsSync(entryPath)) return null;
 
-    const entryUrl = `${fileServer.domain}/modules/${module.name}/${entry}`;
+    const entryUrl = `${domain}/modules/${module.name}/${entry}`;
     const preloadUrl =
       process.env.NODE_ENV === 'development'
         ? `file://${process.cwd()}/build/module_preload.dev.js`
