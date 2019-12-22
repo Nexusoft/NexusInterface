@@ -45,3 +45,13 @@ class Invoice extends Component {
 
 // Mandatory React-Redux method
 export default connect(mapStateToProps)(Invoice);
+
+/*
+
+-invoiceNumber = int
+-from = string
+-to = string
+-total = float
+-items = []
+
+*/

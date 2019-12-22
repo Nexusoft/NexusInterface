@@ -9,8 +9,9 @@ import Button from 'components/Button';
 import Icon from 'components/Icon';
 import { timing } from 'styles';
 import plusIcon from 'icons/plus.svg';
-import RecipientField from './RecipientField';
-import AmountField from './AmountField';
+import RecipientField from '../SendTritium/RecipientField';
+import InvoiceItem from './invoiceItem';
+import AmountField from '../SendTritium/AmountField';
 import { subtract } from 'utils/calc';
 
 __ = __context('Send');
@@ -80,21 +81,14 @@ class InvoiceItems extends React.Component {
   render() {
     const { fields, change, addRecipient, accBalance } = this.props;
 
-    if (!fields || !fields.length) return null;
+    console.error(this.props);
+
+    if (!fields) return null;
 
     if (fields.length === 1) {
       return (
         <>
-          <Field
-            name={`${fields.name}[0].address`}
-            component={RecipientField}
-            change={change}
-          />
-          <AmountField
-            fullAmount={subtract(accBalance, 0.01)} // 0.01 = network fee
-            parentFieldName={`${fields.name}[0]`}
-            change={change}
-          />
+          <Field name={`NAME`} component={InvoiceItem} change={change} />
         </>
       );
     } else {
@@ -112,17 +106,11 @@ class InvoiceItems extends React.Component {
                 </RemoveButton>
               </Tooltip.Trigger>
 
-              <AddressWrapper>
-                <Field
-                  name={`${fieldName}.address`}
-                  component={RecipientField}
-                  change={change}
-                />
-              </AddressWrapper>
-
-              <AmountWrapper>
-                <AmountField parentFieldName={fieldName} change={change} />
-              </AmountWrapper>
+              <Field
+                name={`InvoiceItem${i}`}
+                component={InvoiceItem}
+                change={change}
+              />
             </Recipient>
           ))}
 

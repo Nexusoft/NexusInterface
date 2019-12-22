@@ -59,7 +59,9 @@ const InvoiceDataSection = styled(SectionBase)({});
 @reduxForm({
   form: 'InvoiceForm',
   destroyOnUnmount: false,
-  initialValues: defaultValues,
+  initialValues: {
+    Items: [{ description: '', units: 1, unitPrice: 1 }],
+  },
   validate: ({ sendFrom }) => {
     const errors = {};
     return errors;
@@ -92,10 +94,11 @@ class InvoiceForm extends Component {
    * @memberof SendForm
    */
   addRecipient = () => {
-    this.props.array.push('recipients', {
-      address: null,
-      amount: '',
-      fiatAmount: '',
+    console.log('Add Item');
+    this.props.array.push('Items', {
+      description: '',
+      units: 1,
+      unitPrice: 1,
     });
   };
 
@@ -104,14 +107,9 @@ class InvoiceForm extends Component {
    *
    * @memberof SendForm
    */
-  renderAddItemButton = ({ fields }) =>
-    fields.length === 1 ? (
-      <Button onClick={this.addRecipient}>
-        {__('Send To multiple recipients')}
-      </Button>
-    ) : (
-      <div />
-    );
+  renderAddItemButton = ({ fields }) => (
+    <Button onClick={this.addRecipient}>{__('Add Item')}</Button>
+  );
 
   render() {
     return (
@@ -162,12 +160,11 @@ class InvoiceForm extends Component {
           </FormField>
         </FromSection>
         <ItemListSection>
-          <div>{'Item1'}</div>
-          <div>{'Item2'}</div>
-          <div>{'Item3'}</div>
-          <div>{'Item4'}</div>
-          <div>{'Item5'}</div>
-          <FieldArray component={InvoiceItems} name="invoiceItems"></FieldArray>
+          <FieldArray
+            component={InvoiceItems}
+            name="Items"
+            addRecipient={this.addRecipient}
+          ></FieldArray>
           <FieldArray
             component={this.renderAddItemButton}
             name="addItemsButton"
