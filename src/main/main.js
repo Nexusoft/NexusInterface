@@ -66,6 +66,9 @@ ipcMain.handle('show-open-dialog', async (event, options) =>
 ipcMain.handle('show-save-dialog', async (event, options) =>
   dialog.showSaveDialogSync(mainWindow, options)
 );
+ipcMain.handle('quit-app', app.quit);
+ipcMain.handle('exit-app', app.exit);
+ipcMain.handle('hide-dock', app.dock.hide);
 
 // START RENDERER
 // =============================================================================

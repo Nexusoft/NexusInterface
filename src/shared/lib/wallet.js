@@ -49,7 +49,7 @@ export const closeWallet = async beforeExit => {
   }
 
   if (beforeExit) beforeExit();
-  remote.app.exit();
+  ipcRenderer.invoke('exit-app');
 };
 
 export const history = createHashHistory();
@@ -69,7 +69,7 @@ walletEvents.once('pre-render', function() {
       if (!forceQuit) {
         mainWindow.hide();
         if (process.platform === 'darwin') {
-          remote.app.dock.hide();
+          ipcRenderer.invoke('hide-dock');
         }
         return;
       }

@@ -1,5 +1,5 @@
 // External
-import { shell, remote, ipcRenderer } from 'electron';
+import { shell, remote, ipcRenderer, ipcRenderer } from 'electron';
 import fs from 'fs';
 
 // Internal
@@ -58,7 +58,7 @@ const quitNexus = {
   label: __('Quit Nexus'),
   accelerator: 'CmdOrCtrl+Q',
   click: () => {
-    remote.app.quit();
+    ipcRenderer.invoke('quit-app');
   },
 };
 
