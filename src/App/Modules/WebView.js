@@ -8,7 +8,10 @@ import { ipcRenderer } from 'electron';
 import { modulesDir } from 'consts/paths';
 import { setActiveWebView, unsetActiveWebView } from 'lib/modules';
 
-const domain = ipcRenderer.invoke('get-file-server-domain');
+let domain = '';
+(async () => {
+  domain = await ipcRenderer.invoke('get-file-server-domain');
+})();
 
 /**
  * WebView

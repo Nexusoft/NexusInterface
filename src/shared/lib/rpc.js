@@ -67,12 +67,10 @@ Available RPC methods:
 **/
 
 import axios from 'axios';
-import { remote } from 'electron';
+import { ipcRenderer } from 'electron';
 
 import store from 'store';
 import { customConfig, loadNexusConf } from 'lib/coreConfig';
-
-const core = remote.getGlobal('core');
 
 // export const GET = (cmd, args, Callback) => {
 //   var PostData = JSON.stringify({
@@ -100,7 +98,7 @@ export default async function rpc(cmd, args) {
         password: settings.manualDaemonPassword,
         dataDir: settings.manualDaemonDataDir,
       })
-    : core.config || customConfig(loadNexusConf());
+    : ipcRenderer.invoke('get-core-config') || customConfig(loadNexusConf());
   try {
     const response = await axios.post(
       conf.host,

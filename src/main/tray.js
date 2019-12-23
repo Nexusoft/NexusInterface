@@ -1,3 +1,9 @@
+import { app, Tray, Menu } from 'electron';
+import path from 'path';
+
+// Internal
+import { assetsDir } from 'consts/paths';
+
 /**
  * Setup tray icon
  *

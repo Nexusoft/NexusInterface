@@ -1,10 +1,8 @@
 import axios from 'axios';
 import store from 'store';
-import { remote } from 'electron';
+import { ipcRenderer } from 'electron';
 
 import { customConfig, loadNexusConf } from 'lib/coreConfig';
-
-const core = remote.getGlobal('core');
 
 const getConfig = () => {
   const { settings } = store.getState();
@@ -16,7 +14,7 @@ const getConfig = () => {
         apiPassword: settings.manualDaemonApiPassword,
         dataDir: settings.manualDaemonDataDir,
       })
-    : core.config || customConfig(loadNexusConf());
+    : ipcRenderer.invoke('get-core-config') || customConfig(loadNexusConf());
 };
 
 const getDefaultOptions = ({ apiUser, apiPassword }) => ({
