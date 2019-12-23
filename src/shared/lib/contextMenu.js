@@ -1,4 +1,4 @@
-import { remote } from 'electron';
+import { ipcRenderer } from 'electron';
 
 export const defaultMenu = [
   {
@@ -15,5 +15,5 @@ export const defaultMenu = [
 
 export function showDefaultMenu(e) {
   e.preventDefault();
-  remote.Menu.buildFromTemplate(defaultMenu).popup();
+  ipcRenderer.invoke('popup-context-menu', defaultMenu);
 }

@@ -1,5 +1,5 @@
 // External
-import { app, ipcMain, dialog } from 'electron';
+import { app, ipcMain, dialog, Menu } from 'electron';
 import { autoUpdater } from 'electron-updater';
 
 import { startCore, stopCore, restartCore, getCoreConfig } from './core';
@@ -69,6 +69,14 @@ ipcMain.handle('show-save-dialog', async (event, options) =>
 ipcMain.handle('quit-app', app.quit);
 ipcMain.handle('exit-app', app.exit);
 ipcMain.handle('hide-dock', app.dock.hide);
+ipcMain.handle('popup-context-menu', (event, menuTemplate) => {
+  const menu = Menu.buildFromTemplate(menuTemplate);
+  menu.popup({ window: mainWindow });
+});
+ipcMain.handle('set-app-menu', (event, menuTemplate) => {
+  const menu = Menu.buildFromTemplate(menuTemplate);
+  Menu.setApplicationMenu(menu);
+});
 
 // START RENDERER
 // =============================================================================

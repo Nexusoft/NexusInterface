@@ -1,5 +1,4 @@
 import fs from 'fs';
-import fse from 'fs-extra';
 import path from 'path';
 import electron from 'electron';
 import { readJson } from 'utils/json';

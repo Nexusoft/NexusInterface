@@ -479,8 +479,7 @@ function buildMenu() {
     template = buildDefaultTemplate();
   }
 
-  const menu = remote.Menu.buildFromTemplate(template);
-  remote.Menu.setApplicationMenu(menu);
+  ipcRenderer.invoke('set-app-menu', template);
   return menu;
 }
 

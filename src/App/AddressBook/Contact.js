@@ -2,7 +2,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import styled from '@emotion/styled';
-import { remote } from 'electron';
+import { ipcRenderer } from 'electron';
 
 // Internal Global
 import { selectContact, deleteContact } from 'lib/addressBook';
@@ -129,8 +129,7 @@ class Contact extends React.PureComponent {
       label: __('Delete contact'),
       click: this.confirmDelete,
     });
-    let contextMenu = remote.Menu.buildFromTemplate(template);
-    contextMenu.popup(remote.getCurrentWindow());
+    ipcRenderer.invoke('popup-context-menu', template);
   };
 
   /**
