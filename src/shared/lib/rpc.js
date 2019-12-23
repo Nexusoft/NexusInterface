@@ -98,7 +98,8 @@ export default async function rpc(cmd, args) {
         password: settings.manualDaemonPassword,
         dataDir: settings.manualDaemonDataDir,
       })
-    : ipcRenderer.invoke('get-core-config') || customConfig(loadNexusConf());
+    : (await ipcRenderer.invoke('get-core-config')) ||
+      customConfig(loadNexusConf());
   try {
     const response = await axios.post(
       conf.host,

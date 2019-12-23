@@ -1,5 +1,5 @@
 // External
-import { shell, remote, ipcRenderer, ipcRenderer } from 'electron';
+import { shell, remote, ipcRenderer } from 'electron';
 import fs from 'fs';
 
 // Internal

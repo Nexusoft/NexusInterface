@@ -7,7 +7,7 @@ import { getDomain, serveModuleFiles } from './fileServer';
 import { createWindow } from './renderer';
 import { setupTray } from './tray';
 
-let mainWindow;
+let mainWindow, tray;
 // Global Objects
 global.forceQuit = false;
 
@@ -29,7 +29,7 @@ ipcMain.handle('serve-module-files', (event, ...args) =>
 ipcMain.handle('start-core', (event, ...args) => startCore(...args));
 ipcMain.handle('stop-core', (event, ...args) => stopCore(...args));
 ipcMain.handle('restart-core', (event, ...args) => restartCore(...args));
-ipcMain.handle('get-core-config', (event, ...args) => getCoreConfig(...args));
+ipcMain.handle('get-core-config', async () => getCoreConfig());
 
 // Auto update
 const updaterEvents = [
@@ -66,9 +66,9 @@ ipcMain.handle('show-open-dialog', async (event, options) =>
 ipcMain.handle('show-save-dialog', async (event, options) =>
   dialog.showSaveDialogSync(mainWindow, options)
 );
-ipcMain.handle('quit-app', app.quit);
-ipcMain.handle('exit-app', app.exit);
-ipcMain.handle('hide-dock', app.dock.hide);
+ipcMain.handle('quit-app', () => app.quit());
+ipcMain.handle('exit-app', () => app.exit());
+ipcMain.handle('hide-dock', () => app.dock.hide());
 ipcMain.handle('popup-context-menu', (event, menuTemplate) => {
   const menu = Menu.buildFromTemplate(menuTemplate);
   menu.popup({ window: mainWindow });
@@ -101,7 +101,8 @@ if (!gotTheLock) {
   // Application Startup
   app.on('ready', async () => {
     mainWindow = await createWindow();
-    start();
-    setupTray(mainWindow);
+    mainWindow.toggleDevTools();
+    startCore();
+    tray = setupTray(mainWindow);
   });
 }
