@@ -4,7 +4,6 @@ import fs from 'fs';
 import path from 'path';
 import axios from 'axios';
 
-import { assetsByPlatformDir, returnCoreDataDir } from 'consts/paths';
 import {
   loadSettingsFromFile,
   updateSettingsFile,
@@ -13,6 +12,7 @@ import { customConfig, loadNexusConf } from 'lib/coreConfig';
 import exec from 'utils/promisified/exec';
 import sleep from 'utils/promisified/sleep';
 import deleteDirectory from 'utils/promisified/deleteDirectory';
+import { assetsByPlatformDir } from 'consts/paths';
 
 const coreBinaryName = `nexus-${process.platform}-${process.arch}${
   process.platform === 'win32' ? '.exe' : ''
@@ -134,7 +134,7 @@ export async function startCore() {
   const conf = (config = customConfig({
     ...loadNexusConf(),
     verbose: settings.verboseLevel,
-    dataDir: returnCoreDataDir(),
+    dataDir: settings.coreDataDir,
   }));
 
   if (!coreBinaryExists()) {

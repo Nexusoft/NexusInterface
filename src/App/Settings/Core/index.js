@@ -55,7 +55,7 @@ const formKeys = [
   'verboseLevel',
   'testnetIteration',
   'avatarMode',
-  'dataDirOverride',
+  'coreDataDir',
   legacyMode ? 'manualDaemonIP' : 'manualDaemonApiIP',
   legacyMode ? 'manualDaemonPort' : 'manualDaemonApiPort',
   'manualDaemonUser',
@@ -384,12 +384,12 @@ class SettingsCore extends Component {
 
               <SettingsField
                 connectLabel
-                label={__('Wallet Data Directory Override')}
+                label={__('Core Data Directory')}
                 subLabel={__(
-                  'Change where the data directory is. This is where the wallet.dat and database are located. Default is blank.'
+                  'Where the blockchain data and your legacy wallet.dat are stored'
                 )}
               >
-                <Field name="dataDirOverride" component={TextField.RF} />
+                <Field name="coreDataDir" component={TextField.RF} />
               </SettingsField>
 
               <SettingsField

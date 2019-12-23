@@ -8,7 +8,6 @@ import moveFile from 'move-file';
 import rimraf from 'rimraf';
 
 // Internal
-import { returnCoreDataDir } from 'consts/paths';
 import { walletDataDir } from 'consts/paths';
 import { backupWallet } from 'lib/wallet';
 import rpc from 'lib/rpc';
@@ -31,8 +30,14 @@ import BootstrapModal from 'components/BootstrapModal';
 
 __ = __context('Bootstrap');
 
+const minFreeSpace = 15 * 1000 * 1000 * 1000; // 15 GB
 const fileLocation = path.join(walletDataDir, 'recent.tar.gz');
-const extractDest = path.join(returnCoreDataDir(), 'recent');
+const getExtractDest = () => {
+  const {
+    settings: { coreDataDir },
+  } = store.getState();
+  return path.join(coreDataDir, 'recent');
+};
 const recentDbUrlTritium = 'https://nexus.io/bootstrap/tritium/tritium.tar.gz'; // Tritium Bootstrap URL
 
 let aborting = false;
@@ -45,8 +50,8 @@ let downloadRequest = null;
  * @returns
  */
 async function checkFreeSpaceForBootstrap() {
-  const diskSpace = await checkDiskSpace(returnCoreDataDir());
-  return diskSpace.free >= 15 * 1000 * 1000 * 1000; // 15 GB
+  const diskSpace = await checkDiskSpace(getExtractDest());
+  return diskSpace.free >= minFreeSpace;
 }
 
 /**
@@ -57,10 +62,10 @@ async function checkFreeSpaceForBootstrap() {
  */
 async function startBootstrap() {
   const setStatus = (step, details) => setBootstrapStatus(step, details);
+  const extractDest = getExtractDest();
 
   try {
     const {
-      core: { info },
       settings: { backupDirectory },
     } = store.getState();
     const recentDbUrl = recentDbUrlTritium;
@@ -210,7 +215,7 @@ async function downloadDb(recentDbUrl, downloadProgress) {
  * @returns
  */
 function extractDb() {
-  return extractTarball(fileLocation, extractDest);
+  return extractTarball(fileLocation, getExtractDest());
 }
 
 /**
@@ -218,6 +223,10 @@ function extractDb() {
  *
  */
 async function moveExtractedContent() {
+  const {
+    settings: { coreDataDir },
+  } = store.getState();
+  const extractDest = getExtractDest();
   const recentContents = fs.readdirSync(extractDest);
   try {
     for (let element of recentContents) {
@@ -235,20 +244,20 @@ async function moveExtractedContent() {
             for (let evenDeeperEle of newerContents) {
               moveFile.sync(
                 path.join(extractDest, element, deeperEle, evenDeeperEle),
-                path.join(returnCoreDataDir(), element, deeperEle, evenDeeperEle)
+                path.join(coreDataDir, element, deeperEle, evenDeeperEle)
               );
             }
           } else {
             moveFile.sync(
               path.join(extractDest, element, deeperEle),
-              path.join(returnCoreDataDir(), element, deeperEle)
+              path.join(coreDataDir, element, deeperEle)
             );
           }
         }
       } else {
         moveFile.sync(
           path.join(extractDest, element),
-          path.join(returnCoreDataDir(), element)
+          path.join(coreDataDir, element)
         );
       }
     }
@@ -297,6 +306,7 @@ function cleanUp() {
       });
     }
 
+    const extractDest = getExtractDest();
     if (fs.existsSync(extractDest)) {
       rimraf.sync(extractDest, {}, () => console.log('done'));
     }

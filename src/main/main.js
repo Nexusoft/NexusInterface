@@ -78,6 +78,11 @@ ipcMain.handle('set-app-menu', (event, menuTemplate) => {
   Menu.setApplicationMenu(menu);
 });
 
+// Sync message handlers
+ipcMain.on('get-path', (event, name) => {
+  event.returnValue = app.getPath(name);
+});
+
 // START RENDERER
 // =============================================================================
 // Ensure only one instance of the wallet is run

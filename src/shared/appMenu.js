@@ -13,7 +13,7 @@ import { bootstrap } from 'lib/bootstrap';
 import { isCoreConnected } from 'selectors';
 import { legacyMode } from 'consts/misc';
 import confirm from 'utils/promisified/confirm';
-import { returnCoreDataDir, walletDataDir } from 'consts/paths';
+import { walletDataDir } from 'consts/paths';
 import { checkForUpdates, quitAndInstall } from 'lib/updater';
 import { walletEvents } from 'lib/wallet';
 import AboutModal from 'components/AboutModal';
@@ -232,7 +232,8 @@ const walletGuideLink = {
 const openCoreDataDir = {
   label: __('Open Core Data Folder'),
   click: () => {
-    shell.openItem(returnCoreDataDir());
+    const state = store.getState();
+    shell.openItem(state.settings.coreDataDir);
   },
 };
 
