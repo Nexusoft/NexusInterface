@@ -1,4 +1,4 @@
-import { join, isAbsolute } from 'path';
+import { join } from 'path';
 import fs from 'fs';
 import crypto from 'crypto';
 import Ajv from 'ajv';
@@ -6,8 +6,7 @@ import axios from 'axios';
 import { isText } from 'istextorbinary';
 import normalizeEol from 'utils/normalizeEol';
 import Multistream from 'multistream';
-
-import showOpenDialog from 'utils/promisified/showOpenDialog';
+import { ipcRenderer } from 'electron';
 
 const ajv = new Ajv();
 
@@ -248,7 +247,7 @@ async function signModuleRepo(
   };
 
   if (!moduleDir) {
-    const paths = await showOpenDialog({
+    const paths = await ipcRenderer.invoke('show-open-dialog', {
       title: 'Select module directory',
       properties: ['openDirectory'],
     });
@@ -267,7 +266,7 @@ async function signModuleRepo(
   const serializedData = JSON.stringify(data);
 
   if (!privKeyPath) {
-    const paths = await showOpenDialog({
+    const paths = await ipcRenderer.invoke('show-open-dialog', {
       title: 'Select private key file',
       properties: ['openFile'],
       filters: { extensions: ['pem'] },

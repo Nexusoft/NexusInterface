@@ -1,5 +1,5 @@
 // External
-import { shell, remote } from 'electron';
+import { shell, remote, ipcRenderer } from 'electron';
 import fs from 'fs';
 
 // Internal
@@ -12,7 +12,6 @@ import { showNotification, openModal } from 'lib/ui';
 import { bootstrap } from 'lib/bootstrap';
 import { isCoreConnected } from 'selectors';
 import { legacyMode } from 'consts/misc';
-import showOpenDialog from 'utils/promisified/showOpenDialog';
 import confirm from 'utils/promisified/confirm';
 import { returnCoreDataDir, walletDataDir } from 'consts/paths';
 import { checkForUpdates, quitAndInstall } from 'lib/updater';
@@ -74,7 +73,7 @@ const backupWallet = {
   label: __('Backup Wallet'),
   click: async () => {
     const state = store.getState();
-    const folderPaths = await showOpenDialog({
+    const folderPaths = await ipcRenderer.invoke('show-open-dialog', {
       title: 'Select a folder',
       defaultPath: state.settings.backupDirectory,
       properties: ['openDirectory'],

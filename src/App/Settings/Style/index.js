@@ -1,7 +1,7 @@
 // External
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { remote } from 'electron';
+import { ipcRenderer } from 'electron';
 import fs from 'fs';
 import styled from '@emotion/styled';
 import https from 'https';
@@ -244,19 +244,15 @@ class SettingsStyle extends Component {
    *
    * @memberof SettingsStyle
    */
-  openPickThemeFileDialog = () => {
-    remote.dialog.showOpenDialog(
-      {
-        title: __('Select custom theme file'),
-        properties: ['openFile'],
-        filters: [{ name: 'Theme JSON', extensions: ['json'] }],
-      },
-      files => {
-        if (files && files.length > 0) {
-          this.loadCustomTheme(files[0]);
-        }
-      }
-    );
+  openPickThemeFileDialog = async () => {
+    const files = await ipcRenderer.invoke('show-open-dialog', {
+      title: __('Select custom theme file'),
+      properties: ['openFile'],
+      filters: [{ name: 'Theme JSON', extensions: ['json'] }],
+    });
+    if (files && files.length > 0) {
+      this.loadCustomTheme(files[0]);
+    }
   };
 
   /**
@@ -264,26 +260,20 @@ class SettingsStyle extends Component {
    *
    * @memberof SettingsStyle
    */
-  exportThemeFileDialog = () => {
-    remote.dialog.showSaveDialog(
-      null,
-      {
-        title: 'Save Theme File',
-        properties: ['saveFile'],
-        filters: [{ name: 'Theme JSON', extensions: ['json'] }],
-      },
-      path => {
-        if (!path) return;
-        console.log(path);
-        fs.copyFile(walletDataDir + '/theme.json', path, err => {
-          if (err) {
-            console.error(err);
-            showNotification(err, 'error');
-          }
-          showNotification(__('Theme exported'), 'success');
-        });
+  exportThemeFileDialog = async () => {
+    const path = await ipcRenderer.invoke('show-save-dialog', {
+      title: 'Save Theme File',
+      properties: ['saveFile'],
+      filters: [{ name: 'Theme JSON', extensions: ['json'] }],
+    });
+    if (!path) return;
+    fs.copyFile(walletDataDir + '/theme.json', path, err => {
+      if (err) {
+        console.error(err);
+        showNotification(err, 'error');
       }
-    );
+      showNotification(__('Theme exported'), 'success');
+    });
   };
 
   /**

@@ -1,7 +1,7 @@
 // External
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { remote } from 'electron';
+import { ipcRenderer } from 'electron';
 
 // Internal
 import { updateSettings } from 'lib/settings';
@@ -29,21 +29,17 @@ class SettingsApp extends Component {
    *
    * @memberof SettingsApp
    */
-  browseBackupDir = () => {
-    remote.dialog.showOpenDialog(
-      {
-        title: __('Select backup directory'),
-        defaultPath: this.props.backupDir,
-        properties: ['openDirectory'],
-      },
-      folderPaths => {
-        if (folderPaths && folderPaths.length > 0) {
-          updateSettings({
-            backupDirectory: folderPaths[0],
-          });
-        }
-      }
-    );
+  browseBackupDir = async () => {
+    const folderPaths = await ipcRenderer.invoke('show-open-dialog', {
+      title: __('Select backup directory'),
+      defaultPath: this.props.backupDir,
+      properties: ['openDirectory'],
+    });
+    if (folderPaths && folderPaths.length > 0) {
+      updateSettings({
+        backupDirectory: folderPaths[0],
+      });
+    }
   };
 
   /**

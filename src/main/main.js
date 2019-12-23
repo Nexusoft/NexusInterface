@@ -1,5 +1,5 @@
 // External
-import { app, ipcMain, BrowserWindow, Tray, Menu, screen } from 'electron';
+import { app, ipcMain, dialog } from 'electron';
 import { autoUpdater } from 'electron-updater';
 
 import { startCore, stopCore, restartCore, getCoreConfig } from './core';
@@ -58,6 +58,14 @@ ipcMain.handle('initialize-updater', (event, configs) => {
     autoUpdater[key] = value;
   });
 });
+
+// Others
+ipcMain.handle('show-open-dialog', async (event, options) =>
+  dialog.showOpenDialogSync(mainWindow, options)
+);
+ipcMain.handle('show-save-dialog', async (event, options) =>
+  dialog.showSaveDialogSync(mainWindow, options)
+);
 
 // START RENDERER
 // =============================================================================
