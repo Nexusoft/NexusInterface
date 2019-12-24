@@ -68,6 +68,7 @@ ipcMain.handle('show-save-dialog', async (event, options) =>
 );
 ipcMain.handle('quit-app', () => app.quit());
 ipcMain.handle('exit-app', () => app.exit());
+ipcMain.handle('hide-window', () => mainWindow.hide());
 ipcMain.handle('hide-dock', () => app.dock.hide());
 ipcMain.handle('popup-context-menu', (event, menuTemplate) => {
   const menu = Menu.buildFromTemplate(menuTemplate);
@@ -106,6 +107,9 @@ if (!gotTheLock) {
   // Application Startup
   app.on('ready', async () => {
     mainWindow = await createWindow();
+    mainWindow.on('close', (...args) =>
+      mainWindow.webContents.send('window-close', ...args)
+    );
     mainWindow.toggleDevTools();
     startCore();
     tray = setupTray(mainWindow);

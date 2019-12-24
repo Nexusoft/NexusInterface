@@ -1,7 +1,7 @@
 import fs from 'fs';
 import EventEmitter from 'events';
 import { createHashHistory } from 'history';
-import { remote, ipcRenderer } from 'electron';
+import { ipcRenderer } from 'electron';
 
 import * as TYPE from 'consts/actionTypes';
 import store from 'store';
@@ -57,8 +57,7 @@ export const history = createHashHistory();
 export const walletEvents = new EventEmitter();
 
 walletEvents.once('pre-render', function() {
-  const mainWindow = remote.getCurrentWindow();
-  mainWindow.on('close', async e => {
+  ipcRenderer.on('window-close', async () => {
     const {
       settings: { minimizeOnClose },
     } = store.getState();
@@ -67,7 +66,7 @@ walletEvents.once('pre-render', function() {
     if (minimizeOnClose) {
       const forceQuit = await ipcRenderer.invoke('is-force-quit');
       if (!forceQuit) {
-        mainWindow.hide();
+        ipcRenderer.invoke('hide-window');
         if (process.platform === 'darwin') {
           ipcRenderer.invoke('hide-dock');
         }
