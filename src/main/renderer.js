@@ -56,6 +56,7 @@ export async function createWindow() {
     webPreferences: {
       nodeIntegration: true,
       webviewTag: true,
+      enableRemoteModule: false,
     },
   });
 
