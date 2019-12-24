@@ -1,7 +1,9 @@
 import { Menu } from 'electron';
 
 function handleClick(menuItem) {
-  mainWindow.webContents.send('menu-click:' + menuItem.id);
+  if (global.mainWindow) {
+    global.mainWindow.webContents.send('menu-click:' + menuItem.id);
+  }
 }
 
 function refillClick(template) {

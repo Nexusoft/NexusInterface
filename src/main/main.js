@@ -6,17 +6,35 @@ import { getDomain, serveModuleFiles } from './fileServer';
 import { createWindow } from './renderer';
 import { setupTray } from './tray';
 import { setApplicationMenu } from './menu';
+import './updater';
 
 let mainWindow;
-// Global Objects
 global.forceQuit = false;
-
 app.setAppUserModelId(APP_ID);
 
 // HANDLERS
 // =============================================================================
 
+// App
 ipcMain.handle('is-force-quit', async () => global.forceQuit);
+ipcMain.handle('quit-app', () => app.quit());
+ipcMain.handle('exit-app', () => app.exit());
+ipcMain.handle('hide-window', () => mainWindow.hide());
+ipcMain.handle('hide-dock', () => app.dock.hide());
+ipcMain.handle('show-open-dialog', async (event, options) =>
+  dialog.showOpenDialogSync(mainWindow, options)
+);
+ipcMain.handle('show-save-dialog', async (event, options) =>
+  dialog.showSaveDialogSync(mainWindow, options)
+);
+ipcMain.handle('popup-context-menu', (event, menuTemplate) => {
+  const menu = Menu.buildFromTemplate(menuTemplate);
+  menu.popup({ window: mainWindow });
+});
+ipcMain.handle('set-app-menu', (event, menuTemplate) => {
+  setApplicationMenu(menuTemplate);
+});
+
 // File server
 ipcMain.handle('get-file-server-domain', async (event, ...args) =>
   getDomain(...args)
@@ -32,21 +50,6 @@ ipcMain.handle('restart-core', (event, ...args) => restartCore(...args));
 ipcMain.handle('get-core-config', async () => getCoreConfig());
 
 // Auto update
-const updaterEvents = [
-  'error',
-  'checking-for-update',
-  'update-available',
-  'update-not-available',
-  'download-progress',
-  'update-downloaded',
-];
-updaterEvents.forEach(eventName => {
-  autoUpdater.on(eventName, (...args) => {
-    if (mainWindow) {
-      mainWindow.webContents.send('updater-' + eventName, ...args);
-    }
-  });
-});
 ipcMain.handle('check-for-updates', (event, ...args) =>
   autoUpdater.checkForUpdates(...args)
 );
@@ -57,25 +60,6 @@ ipcMain.handle('initialize-updater', (event, configs) => {
   Object.entries(configs).forEach(([key, value]) => {
     autoUpdater[key] = value;
   });
-});
-
-// Others
-ipcMain.handle('show-open-dialog', async (event, options) =>
-  dialog.showOpenDialogSync(mainWindow, options)
-);
-ipcMain.handle('show-save-dialog', async (event, options) =>
-  dialog.showSaveDialogSync(mainWindow, options)
-);
-ipcMain.handle('quit-app', () => app.quit());
-ipcMain.handle('exit-app', () => app.exit());
-ipcMain.handle('hide-window', () => mainWindow.hide());
-ipcMain.handle('hide-dock', () => app.dock.hide());
-ipcMain.handle('popup-context-menu', (event, menuTemplate) => {
-  const menu = Menu.buildFromTemplate(menuTemplate);
-  menu.popup({ window: mainWindow });
-});
-ipcMain.handle('set-app-menu', (event, menuTemplate) => {
-  setApplicationMenu(menuTemplate);
 });
 
 // Sync message handlers
@@ -109,7 +93,6 @@ if (!gotTheLock) {
     mainWindow.on('close', (...args) =>
       mainWindow.webContents.send('window-close', ...args)
     );
-    mainWindow.toggleDevTools();
     startCore();
     global.tray = setupTray(mainWindow);
   });

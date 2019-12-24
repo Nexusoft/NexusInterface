@@ -1,6 +1,5 @@
 // External
 import { ipcRenderer } from 'electron';
-import log from 'electron-log';
 import path from 'path';
 import fs from 'fs-extra';
 import axios from 'axios';
@@ -107,25 +106,11 @@ export function stopAutoUpdate() {
  *
  */
 walletEvents.once('post-render', function() {
-  const updaterConfig = {
-    logger: log,
-    currentVersion: APP_VERSION,
-    autoDownload: true,
-    autoInstallOnAppQuit: false,
-  };
-  if (process.env.NODE_ENV === 'development') {
-    updaterConfig.updateConfigPath = path.join(
-      process.cwd(),
-      'dev-app-update.yml'
-    );
-  }
-  ipcRenderer.invoke('initialize-updater', updaterConfig);
-
-  ipcRenderer.on('updater-error', (event, err) => {
+  ipcRenderer.on('updater:error', (event, err) => {
     console.error(err);
   });
 
-  ipcRenderer.on('updater-update-available', (event, updateInfo) => {
+  ipcRenderer.on('updater:update-available', (event, updateInfo) => {
     showNotification(
       __('New wallet version %{version} available. Downloading...', {
         version: updateInfo.version,
@@ -134,7 +119,7 @@ walletEvents.once('post-render', function() {
     );
   });
 
-  ipcRenderer.on('updater-update-downloaded', (event, updateInfo) => {
+  ipcRenderer.on('updater:update-downloaded', (event, updateInfo) => {
     stopAutoUpdate();
     showBackgroundTask(AutoUpdateBackgroundTask, {
       version: updateInfo.version,
@@ -142,22 +127,22 @@ walletEvents.once('post-render', function() {
     });
   });
 
-  ipcRenderer.on('updater-error', (event, err) => {
+  ipcRenderer.on('updater:error', (event, err) => {
     setUpdaterState('idle');
   });
-  ipcRenderer.on('updater-checking-for-update', () => {
+  ipcRenderer.on('updater:checking-for-update', () => {
     setUpdaterState('checking');
   });
-  ipcRenderer.on('updater-update-available', () => {
+  ipcRenderer.on('updater:update-available', () => {
     setUpdaterState('downloading');
   });
-  ipcRenderer.on('updater-update-not-available', () => {
+  ipcRenderer.on('updater:update-not-available', () => {
     setUpdaterState('idle');
   });
-  ipcRenderer.on('updater-download-progress', () => {
+  ipcRenderer.on('updater:download-progress', () => {
     setUpdaterState('downloading');
   });
-  ipcRenderer.on('updater-update-downloaded', () => {
+  ipcRenderer.on('updater:update-downloaded', () => {
     setUpdaterState('downloaded');
   });
 
