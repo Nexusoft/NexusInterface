@@ -1,4 +1,3 @@
-// External
 import { app, ipcMain, dialog, Menu } from 'electron';
 import { autoUpdater } from 'electron-updater';
 
@@ -6,8 +5,9 @@ import { startCore, stopCore, restartCore, getCoreConfig } from './core';
 import { getDomain, serveModuleFiles } from './fileServer';
 import { createWindow } from './renderer';
 import { setupTray } from './tray';
+import { setApplicationMenu } from './menu';
 
-let mainWindow, tray;
+let mainWindow;
 // Global Objects
 global.forceQuit = false;
 
@@ -75,8 +75,7 @@ ipcMain.handle('popup-context-menu', (event, menuTemplate) => {
   menu.popup({ window: mainWindow });
 });
 ipcMain.handle('set-app-menu', (event, menuTemplate) => {
-  const menu = Menu.buildFromTemplate(menuTemplate);
-  Menu.setApplicationMenu(menu);
+  setApplicationMenu(menuTemplate);
 });
 
 // Sync message handlers
@@ -106,12 +105,12 @@ if (!gotTheLock) {
 
   // Application Startup
   app.on('ready', async () => {
-    mainWindow = await createWindow();
+    global.mainWindow = mainWindow = await createWindow();
     mainWindow.on('close', (...args) =>
       mainWindow.webContents.send('window-close', ...args)
     );
     mainWindow.toggleDevTools();
     startCore();
-    tray = setupTray(mainWindow);
+    global.tray = setupTray(mainWindow);
   });
 }
