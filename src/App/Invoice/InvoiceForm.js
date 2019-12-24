@@ -60,13 +60,19 @@ const InvoiceDataSection = styled(SectionBase)({});
   form: 'InvoiceForm',
   destroyOnUnmount: false,
   initialValues: {
-    Items: [{ description: '', units: 1, unitPrice: 1 }],
+    invoiceNumber: 0,
+    sendFrom: '',
+    sendDetail: '',
+    recipiantAddress: '',
+    recipiantDetail: '',
+    items: [{ description: '', units: 1, unitPrice: 1 }],
   },
   validate: ({ sendFrom }) => {
     const errors = {};
     return errors;
   },
-  asyncValidate: async ({ recipients }) => {
+  asyncValidate: async values => {
+    console.log(values);
     return null;
   },
   onSubmit: async ({ sendFrom }, dispatch, props) => {
@@ -75,6 +81,7 @@ const InvoiceDataSection = styled(SectionBase)({});
       const params = {
         pin,
       };
+      console.log(params);
     }
   },
   onSubmitSuccess: (result, dispatch, props) => {
@@ -95,7 +102,7 @@ class InvoiceForm extends Component {
    */
   addRecipient = () => {
     console.log('Add Item');
-    this.props.array.push('Items', {
+    this.props.array.push('items', {
       description: '',
       units: 1,
       unitPrice: 1,
@@ -112,11 +119,10 @@ class InvoiceForm extends Component {
   );
 
   render() {
+    const { change } = this.props;
     return (
       <FormComponent onSubmit={this.confirmSend}>
-        {'Form'}
         <InvoiceDataSection>
-          <div>{'Data'}</div>
           <FormField label={__('Invoice Number')}>
             <Field
               component={TextField.RF}
@@ -162,7 +168,8 @@ class InvoiceForm extends Component {
         <ItemListSection>
           <FieldArray
             component={InvoiceItems}
-            name="Items"
+            name="items"
+            change={change}
             addRecipient={this.addRecipient}
           ></FieldArray>
           <FieldArray
@@ -170,6 +177,9 @@ class InvoiceForm extends Component {
             name="addItemsButton"
           ></FieldArray>
         </ItemListSection>
+        <Button type="submit" skin="primary">
+          {__('Submit')}
+        </Button>
       </FormComponent>
     );
   }

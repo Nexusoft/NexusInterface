@@ -15,6 +15,7 @@ import { openModal } from 'lib/ui';
 import AddEditContactModal from 'components/AddEditContactModal';
 import plusIcon from 'icons/plus.svg';
 import { getAddressNameMap, getRecipientSuggestions } from './selectors';
+import { formatNumber } from 'lib/intl';
 
 __ = __context('Send');
 
@@ -40,6 +41,13 @@ const filterRecipients = memoize((suggestions, inputValue) => {
       value === query ||
       (!!name && name.toLowerCase().includes(query.toLowerCase()))
   );
+});
+
+const ItemLine = styled.div({
+  display: 'grid',
+  gridTemplateColumns: 'auto auto auto auto',
+  gridTemplateRows: 'auto',
+  gridGap: '1em 1em',
 });
 
 /**
@@ -74,14 +82,40 @@ class InvoiceItem extends Component {
    * @memberof RecipientField
    */
   render() {
+    console.log(this.props);
+    const { input, meta } = this.props;
+
+    const total = input.value && input.value.unitPrice * input.value.units;
+    console.log(total);
+
     return (
-      <FormField label={__('Sender Details')}>
-        <Field
-          component={TextField.RF}
-          name="sendDetail"
-          placeholder="Name/Address/phoneNumber etc"
-        />
-      </FormField>
+      <ItemLine input={input} meta={meta}>
+        {' '}
+        <FormField label={__('Description')}>
+          <Field
+            component={TextField.RF}
+            name={`${input.name}.description`}
+            placeholder="Description"
+          />
+        </FormField>
+        <FormField label={__('Unit Cost')}>
+          <Field
+            component={TextField.RF}
+            name={`${input.name}.unitPrice`}
+            type="number"
+            placeholder="Unit Costs"
+          />
+        </FormField>
+        <FormField label={__('Units')}>
+          <Field
+            component={TextField.RF}
+            name={`${input.name}.units`}
+            type="number"
+            placeholder="Units"
+          />
+        </FormField>
+        {`Total ${formatNumber(total, 6)} NXS`}
+      </ItemLine>
     );
   }
 }

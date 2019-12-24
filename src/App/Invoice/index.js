@@ -36,7 +36,6 @@ class Invoice extends Component {
   render() {
     return (
       <Panel icon={nexusIcon} title={__('Invoice')}>
-        {'Test Body'}
         <InvoiceForm />
       </Panel>
     );

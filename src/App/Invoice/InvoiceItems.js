@@ -88,7 +88,7 @@ class InvoiceItems extends React.Component {
     if (fields.length === 1) {
       return (
         <>
-          <Field name={`NAME`} component={InvoiceItem} change={change} />
+          <Field name={`items[0]`} component={InvoiceItem} change={change} />
         </>
       );
     } else {
@@ -96,7 +96,7 @@ class InvoiceItems extends React.Component {
         <>
           {fields.map((fieldName, i) => (
             <Recipient key={i}>
-              <Tooltip.Trigger tooltip={__('Remove recipient')}>
+              <Tooltip.Trigger tooltip={__('Remove Item')}>
                 <RemoveButton
                   onClick={() => {
                     fields.remove(i);
@@ -107,7 +107,7 @@ class InvoiceItems extends React.Component {
               </Tooltip.Trigger>
 
               <Field
-                name={`InvoiceItem${i}`}
+                name={`items[${i}]`}
                 component={InvoiceItem}
                 change={change}
               />
@@ -117,7 +117,7 @@ class InvoiceItems extends React.Component {
           <MoreInfo>
             <Button skin="hyperlink" onClick={addRecipient}>
               <PlusIcon icon={plusIcon} className="space-right" />
-              <span className="v-align">{__('Add recipient')}</span>
+              <span className="v-align">{__('Add Item')}</span>
             </Button>
           </MoreInfo>
         </>
