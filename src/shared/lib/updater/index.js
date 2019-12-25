@@ -11,7 +11,7 @@ import store from 'store';
 import { showBackgroundTask, showNotification } from 'lib/ui';
 import AutoUpdateBackgroundTask from './AutoUpdateBackgroundTask';
 import { assetsParentDir } from 'consts/paths';
-import { walletEvents } from 'lib/wallet';
+import { walletEvents, closeWallet } from 'lib/wallet';
 
 __ = __context('AutoUpdate');
 
@@ -42,7 +42,7 @@ export function checkForUpdates() {
  * @returns
  */
 export function quitAndInstall() {
-  return ipcRenderer.invoke('quit-and-install-update');
+  closeWallet(() => ipcRenderer.invoke('quit-and-install-update'));
 }
 
 /**
@@ -81,7 +81,7 @@ export async function startAutoUpdate() {
     try {
       clearTimeout(timerId);
       const result = await checkForUpdates();
-      if (result.downloadPromise) {
+      if (result && result.downloadPromise) {
         await result.downloadPromise;
       }
     } finally {
@@ -106,10 +106,6 @@ export function stopAutoUpdate() {
  *
  */
 walletEvents.once('post-render', function() {
-  ipcRenderer.on('updater:error', (event, err) => {
-    console.error(err);
-  });
-
   ipcRenderer.on('updater:update-available', (event, updateInfo) => {
     showNotification(
       __('New wallet version %{version} available. Downloading...', {
