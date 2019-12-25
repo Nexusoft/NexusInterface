@@ -56,7 +56,7 @@ export async function startAutoUpdate() {
     path.join(assetsParentDir, 'app-update.yml')
   );
 
-  if (checkGithubManually) {
+  if (process.env.NODE_ENV !== 'development' && checkGithubManually) {
     clearTimeout(timerId);
     try {
       const response = await axios.get(
