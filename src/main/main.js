@@ -12,6 +12,14 @@ let mainWindow;
 global.forceQuit = false;
 app.setAppUserModelId(APP_ID);
 
+// Temporarily add this because there are some errors in autoUpdater.checkForUpdates
+// cannot be caught (net::ERR_HTTP_RESPONSE_CODE_FAILURE).
+// This should be removed when the issue is resolved.
+// A similar issue: https://github.com/electron-userland/electron-builder/issues/2451
+process.on('uncaughtException', err => {
+  console.error('Uncaught exception:', err);
+});
+
 // HANDLERS
 // =============================================================================
 
@@ -56,11 +64,6 @@ ipcMain.handle('check-for-updates', (event, ...args) =>
 ipcMain.handle('quit-and-install-update', (event, ...args) =>
   autoUpdater.quitAndInstall(...args)
 );
-ipcMain.handle('initialize-updater', (event, configs) => {
-  Object.entries(configs).forEach(([key, value]) => {
-    autoUpdater[key] = value;
-  });
-});
 
 // Sync message handlers
 ipcMain.on('get-path', (event, name) => {
