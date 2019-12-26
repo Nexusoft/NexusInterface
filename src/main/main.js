@@ -5,7 +5,7 @@ import { startCore, stopCore, restartCore, getCoreConfig } from './core';
 import { getDomain, serveModuleFiles } from './fileServer';
 import { createWindow } from './renderer';
 import { setupTray } from './tray';
-import { setApplicationMenu } from './menu';
+import { setApplicationMenu, popupContextMenu } from './menu';
 import './updater';
 
 let mainWindow;
@@ -29,16 +29,15 @@ ipcMain.handle('quit-app', () => app.quit());
 ipcMain.handle('exit-app', () => app.exit());
 ipcMain.handle('hide-window', () => mainWindow.hide());
 ipcMain.handle('hide-dock', () => app.dock.hide());
-ipcMain.handle('show-open-dialog', async (event, options) =>
+ipcMain.handle('show-open-dialog', (event, options) =>
   dialog.showOpenDialogSync(mainWindow, options)
 );
 ipcMain.handle('show-save-dialog', async (event, options) =>
   dialog.showSaveDialogSync(mainWindow, options)
 );
-ipcMain.handle('popup-context-menu', (event, menuTemplate) => {
-  const menu = Menu.buildFromTemplate(menuTemplate);
-  menu.popup({ window: mainWindow });
-});
+ipcMain.handle('popup-context-menu', (event, menuTemplate) =>
+  popupContextMenu(menuTemplate)
+);
 ipcMain.handle('set-app-menu', (event, menuTemplate) => {
   setApplicationMenu(menuTemplate);
 });

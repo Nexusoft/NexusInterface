@@ -9,6 +9,7 @@ import { selectContact, deleteContact } from 'lib/addressBook';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import { openConfirmDialog, openModal } from 'lib/ui';
+import { popupContextMenu } from 'lib/contextMenu';
 import AddEditContactModal from 'components/AddEditContactModal';
 import { isCoreConnected } from 'selectors';
 import { timing } from 'styles';
@@ -121,15 +122,17 @@ class Contact extends React.PureComponent {
     const template = [...defaultMenu];
     if (this.props.coreConnected) {
       template.push({
+        id: 'edit-contact',
         label: __('Edit contact'),
         click: this.editContact,
       });
     }
     template.push({
+      id: 'delete-contact',
       label: __('Delete contact'),
       click: this.confirmDelete,
     });
-    ipcRenderer.invoke('popup-context-menu', template);
+    popupContextMenu(template);
   };
 
   /**
