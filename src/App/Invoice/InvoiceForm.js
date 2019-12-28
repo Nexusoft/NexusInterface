@@ -23,11 +23,23 @@ import confirmPin from 'utils/promisified/confirmPin';
 import questionIcon from 'icons/question-mark-circle.svg';
 
 import InvoiceItems from './InvoiceItems';
+import { formatNumber } from 'lib/intl';
+
+import {
+  getAccountOptions,
+  getAddressNameMap,
+  getRegisteredFieldNames,
+  getAccountInfo,
+} from './selectors';
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
+  const valueSelector = formValueSelector('InvoiceForm');
   return {
     ...state.core,
+
+    accountOptions: getAccountOptions(state.core.accounts),
+    items: valueSelector(state, 'items') || [],
   };
 };
 
@@ -49,6 +61,8 @@ const ItemListSection = styled(SectionBase)({});
 
 const InvoiceDataSection = styled(SectionBase)({});
 
+const Footer = styled.div({});
+
 /**
  * The Internal Send Form in the Send Page
  *
@@ -65,7 +79,7 @@ const InvoiceDataSection = styled(SectionBase)({});
     sendDetail: '',
     recipiantAddress: '',
     recipiantDetail: '',
-    items: [{ description: '', units: 1, unitPrice: 1 }],
+    items: [{ description: '', units: 1, unitPrice: 0 }],
   },
   validate: ({ sendFrom }) => {
     const errors = {};
@@ -75,7 +89,9 @@ const InvoiceDataSection = styled(SectionBase)({});
     console.log(values);
     return null;
   },
-  onSubmit: async ({ sendFrom }, dispatch, props) => {
+  onSubmit: async ({ name, supply, decimals }) => {
+    console.error('AAAA');
+
     const pin = await confirmPin();
     if (pin) {
       const params = {
@@ -95,6 +111,10 @@ class InvoiceForm extends Component {
     this.state = {};
   }
 
+  componentDidMount() {
+    loadAccounts();
+  }
+
   /**
    * Add Recipient to the queue
    *
@@ -105,7 +125,7 @@ class InvoiceForm extends Component {
     this.props.array.push('items', {
       description: '',
       units: 1,
-      unitPrice: 1,
+      unitPrice: 0,
     });
   };
 
@@ -118,10 +138,16 @@ class InvoiceForm extends Component {
     <Button onClick={this.addRecipient}>{__('Add Item')}</Button>
   );
 
+  gatherTotal() {
+    return this.props.items.reduce((total, element) => {
+      return total + element.units * element.unitPrice;
+    }, 0);
+  }
+
   render() {
-    const { change } = this.props;
+    const { accountOptions, change, handleSubmit, submitting } = this.props;
     return (
-      <FormComponent onSubmit={this.confirmSend}>
+      <FormComponent onSubmit={handleSubmit}>
         <InvoiceDataSection>
           <FormField label={__('Invoice Number')}>
             <Field
@@ -135,32 +161,35 @@ class InvoiceForm extends Component {
           <div>{'ToSection'}</div>
           <FormField label={__('Account Payable')}>
             <Field
-              component={TextField.RF}
+              component={Select.RF}
               name="sendFrom"
-              placeholder="Send From"
+              placeholder={__('Select an account')}
+              options={accountOptions}
             />
           </FormField>
           <FormField label={__('Sender Details')}>
             <Field
               component={TextField.RF}
               name="sendDetail"
+              props={{ ...this.props, multiline: true, rows: 1 }}
               placeholder="Name/Address/phoneNumber etc"
             />
           </FormField>
         </ToSection>
         <FromSection>
           <div>{'From Section'}</div>
-          <FormField label={__('Recipiant')}>
+          <FormField label={__('Recipient')}>
             <Field
               component={TextField.RF}
               name="recipiantAddress"
               placeholder="Recipient Address"
             />
           </FormField>
-          <FormField label={__('Recipiant Details')}>
+          <FormField label={__('Recipient Details')}>
             <Field
               component={TextField.RF}
               name="recipiantDetail"
+              props={{ ...this.props, multiline: true, rows: 1 }}
               placeholder="Name/Address/phoneNumber etc"
             />
           </FormField>
@@ -177,9 +206,15 @@ class InvoiceForm extends Component {
             name="addItemsButton"
           ></FieldArray>
         </ItemListSection>
-        <Button type="submit" skin="primary">
-          {__('Submit')}
-        </Button>
+
+        <Footer className="mt3 flex space-between">
+          <Button type="submit" skin="primary" disabled={submitting}>
+            {__('Submit')}
+          </Button>
+          {__('Total: %{total} NXS', {
+            total: formatNumber(this.gatherTotal(), 6),
+          })}
+        </Footer>
       </FormComponent>
     );
   }

@@ -95,7 +95,7 @@ class InvoiceItems extends React.Component {
       return (
         <>
           {fields.map((fieldName, i) => (
-            <Recipient key={i}>
+            <div key={i}>
               <Tooltip.Trigger tooltip={__('Remove Item')}>
                 <RemoveButton
                   onClick={() => {
@@ -111,7 +111,7 @@ class InvoiceItems extends React.Component {
                 component={InvoiceItem}
                 change={change}
               />
-            </Recipient>
+            </div>
           ))}
 
           <MoreInfo>

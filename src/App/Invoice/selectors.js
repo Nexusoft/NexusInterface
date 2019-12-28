@@ -24,29 +24,15 @@ export const getAccountOptions = memoize((myAccounts, myTokens) => {
       indent: false,
     });
     options.push(
-      ...myAccounts.map(acc => ({
-        value: acc.name || acc.address,
-        display: `${acc.name || acc.address} (${acc.balance} ${acc.token_name ||
-          'Tokens'})`,
-        indent: true,
-      }))
-    );
-  }
-  if (myTokens && myTokens.length > 0) {
-    options.push({
-      value: 'TokensSeparator',
-      display: <Separator>{__('Tokens')}</Separator>,
-      isSeparator: true,
-      indent: false,
-    });
-    options.push(
-      ...myTokens.map(token => ({
-        value: token.name || token.address,
-        display: `${token.name || token.address} (${
-          token.balance
-        } ${token.name || 'Tokens'})`,
-        indent: true,
-      }))
+      ...myAccounts
+        .filter(acc => acc.token_name === 'NXS')
+        .map(acc => ({
+          value: acc.name || acc.address,
+          display: `${acc.name || acc.address} (${
+            acc.balance
+          } ${acc.token_name || 'Tokens'})`,
+          indent: true,
+        }))
     );
   }
 
