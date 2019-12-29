@@ -11,6 +11,7 @@ import { formName, defaultValues } from 'lib/send';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
+import AutoSuggest from 'components/AutoSuggest';
 import Select from 'components/Select';
 import FormField from 'components/FormField';
 import Tooltip from 'components/Tooltip';
@@ -30,6 +31,7 @@ import {
   getAddressNameMap,
   getRegisteredFieldNames,
   getAccountInfo,
+  getRecipientSuggestions,
 } from './selectors';
 
 // React-Redux mandatory methods
@@ -37,7 +39,10 @@ const mapStateToProps = state => {
   const valueSelector = formValueSelector('InvoiceForm');
   return {
     ...state.core,
-
+    suggestions: getRecipientSuggestions(
+      state.addressBook,
+      state.core.accounts
+    ),
     accountOptions: getAccountOptions(state.core.accounts),
     items: valueSelector(state, 'items') || [],
   };
@@ -62,6 +67,27 @@ const ItemListSection = styled(SectionBase)({});
 const InvoiceDataSection = styled(SectionBase)({});
 
 const Footer = styled.div({});
+
+class RecipientField extends Component {
+  handleSelect = element => {
+    this.props.change(this.props.input.name, element);
+  };
+
+  render() {
+    const { input, meta, suggestions } = this.props;
+    return (
+      <AutoSuggest.RF
+        input={input}
+        meta={meta}
+        onSelect={this.handleSelect}
+        inputProps={{
+          placeholder: __('Recipient Address/Name'),
+        }}
+        suggestions={suggestions}
+      />
+    );
+  }
+}
 
 /**
  * The Internal Send Form in the Send Page
@@ -145,7 +171,17 @@ class InvoiceForm extends Component {
   }
 
   render() {
-    const { accountOptions, change, handleSubmit, submitting } = this.props;
+    const {
+      accountOptions,
+      change,
+      handleSubmit,
+      submitting,
+      input,
+      meta,
+      suggestions,
+    } = this.props;
+
+    console.log(this.props);
     return (
       <FormComponent onSubmit={handleSubmit}>
         <InvoiceDataSection>
@@ -180,8 +216,10 @@ class InvoiceForm extends Component {
           <div>{'From Section'}</div>
           <FormField label={__('Recipient')}>
             <Field
-              component={TextField.RF}
+              component={RecipientField}
               name="recipiantAddress"
+              change={change}
+              suggestions={suggestions}
               placeholder="Recipient Address"
             />
           </FormField>

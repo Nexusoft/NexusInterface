@@ -124,21 +124,23 @@ export const getRecipientSuggestions = memoize(
       });
     }
     if (myTritiumAccounts) {
-      myTritiumAccounts.forEach(element => {
-        suggestions.push({
-          name: element.name || element.address,
-          value: element.address,
-          token: element.token,
-          display: (
-            <span>
-              {element.name} {'   '}
-              <TokenRecipientName>{`(${element.token_name ||
-                'Tokens'})`}</TokenRecipientName>{' '}
-              <Address>{element.address}</Address>
-            </span>
-          ),
+      myTritiumAccounts
+        .filter(element => element.token_name === 'NXS')
+        .forEach(element => {
+          suggestions.push({
+            name: element.name || element.address,
+            value: element.address,
+            token: element.token,
+            display: (
+              <span>
+                {element.name} {'   '}
+                <TokenRecipientName>{`(${element.token_name ||
+                  'Tokens'})`}</TokenRecipientName>{' '}
+                <Address>{element.address}</Address>
+              </span>
+            ),
+          });
         });
-      });
     }
     return suggestions;
   }
