@@ -45,9 +45,16 @@ const filterRecipients = memoize((suggestions, inputValue) => {
 
 const ItemLine = styled.div({
   display: 'grid',
-  gridTemplateColumns: 'auto auto auto auto',
+  gridTemplateColumns: 'auto 8em 5em 10em',
   gridTemplateRows: 'auto',
   gridGap: '1em 1em',
+});
+
+const TotalField = styled.div({
+  width: '10em',
+  position: 'relative',
+  top: '100%',
+  marginTop: '-1.5em',
 });
 
 /**
@@ -67,15 +74,6 @@ class InvoiceItem extends Component {
   };
 
   /**
-   * Opens the Add/Edit Contact Modal
-   *
-   * @memberof RecipientField
-   */
-  createContact = () => {
-    openModal(AddEditContactModal);
-  };
-
-  /**
    * Component's Renderable JSX
    *
    * @returns
@@ -91,14 +89,14 @@ class InvoiceItem extends Component {
     return (
       <ItemLine input={input} meta={meta}>
         {' '}
-        <FormField label={__('Description')}>
+        <FormField>
           <Field
             component={TextField.RF}
             name={`${input.name}.description`}
             placeholder="Description"
           />
         </FormField>
-        <FormField label={__('Unit Cost')}>
+        <FormField>
           <Field
             component={TextField.RF}
             name={`${input.name}.unitPrice`}
@@ -106,7 +104,7 @@ class InvoiceItem extends Component {
             placeholder="Unit Costs"
           />
         </FormField>
-        <FormField label={__('Units')}>
+        <FormField>
           <Field
             component={TextField.RF}
             name={`${input.name}.units`}
@@ -114,7 +112,7 @@ class InvoiceItem extends Component {
             placeholder="Units"
           />
         </FormField>
-        {`Total ${formatNumber(total, 6)} NXS`}
+        <TotalField> {`${formatNumber(total, 6)} NXS`}</TotalField>
       </ItemLine>
     );
   }

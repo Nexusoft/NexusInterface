@@ -65,6 +65,13 @@ const PlusIcon = styled(Icon)({
   fontSize: '.8em',
 });
 
+const TableHeader = styled.div({
+  display: 'grid',
+  gridTemplateColumns: 'auto 8em 5em 10em',
+  gridTemplateRows: 'auto',
+  gridGap: '1em 1em',
+});
+
 /**
  * Recipients Field from the Send Page
  *
@@ -72,6 +79,17 @@ const PlusIcon = styled(Icon)({
  * @extends {React.Component}
  */
 class InvoiceItems extends React.Component {
+  returnHeader() {
+    return (
+      <TableHeader>
+        <div style={{ width: '5em' }}>{__('Description')}</div>
+        <div>{__('Unit Cost')}</div>
+        <div>{__('Units')}</div>
+        <div>{__('Total')}</div>
+      </TableHeader>
+    );
+  }
+
   /**
    * Component's Renderable JSX
    *
@@ -88,6 +106,7 @@ class InvoiceItems extends React.Component {
     if (fields.length === 1) {
       return (
         <>
+          {this.returnHeader()}
           <Field name={`items[0]`} component={InvoiceItem} change={change} />
           <MoreInfo>
             <Button skin="hyperlink" onClick={addInvoiceItem}>
@@ -100,6 +119,7 @@ class InvoiceItems extends React.Component {
     } else {
       return (
         <>
+          {this.returnHeader()}
           {fields.map((fieldName, i) => (
             <div key={i}>
               <Tooltip.Trigger tooltip={__('Remove Item')}>

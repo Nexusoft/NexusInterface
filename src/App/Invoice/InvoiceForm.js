@@ -22,6 +22,8 @@ import sendIcon from 'icons/send.svg';
 import { numericOnly } from 'utils/form';
 import confirmPin from 'utils/promisified/confirmPin';
 import questionIcon from 'icons/question-mark-circle.svg';
+import FieldSet from 'components/FieldSet';
+import * as color from 'utils/color';
 
 import InvoiceItems from './InvoiceItems';
 import { formatNumber } from 'lib/intl';
@@ -50,23 +52,37 @@ const mapStateToProps = state => {
 
 const FormComponent = styled.form({});
 
-const SectionBase = styled.div(({ theme }) => ({
-  padding: '1em',
+const SectionBase = styled(FieldSet)(({ theme }) => ({
+  padding: '0em 1em 1em 1em',
   margin: '0.25em 0 0.25em 0',
   border: `1px solid ${theme.primary}`,
   borderRadius: '5px',
   background: theme.mixer(0.1),
+
+  '& > legend': {
+    backgroundColor: color.darken(theme.background, 0.3),
+    border: `1px solid ${theme.primary}`,
+    borderRadius: '5px',
+  },
 }));
 
-const ToSection = styled(SectionBase)({});
+const ToSection = styled(SectionBase)({
+  flex: '0 0 50%',
+  marginRight: '.25em',
+});
 
-const FromSection = styled(SectionBase)({});
+const FromSection = styled(SectionBase)({
+  marginLeft: '.25em',
+  flex: '1',
+});
 
 const ItemListSection = styled(SectionBase)({});
 
 const InvoiceDataSection = styled(SectionBase)({});
 
-const Footer = styled.div({});
+const Footer = styled.div({
+  marginTop: '1em',
+});
 
 class RecipientField extends Component {
   handleSelect = element => {
@@ -100,7 +116,9 @@ class RecipientField extends Component {
   form: 'InvoiceForm',
   destroyOnUnmount: false,
   initialValues: {
+    invoiceDescription: '',
     invoiceNumber: 0,
+    invoiceReference: '',
     sendFrom: '',
     sendDetail: '',
     recipientAddress: '',
@@ -114,7 +132,9 @@ class RecipientField extends Component {
   asyncValidate: async values => {
     console.log(values);
     const {
+      invoicDescription,
       invoiceNumber,
+      invoiceReference,
       sendFrom,
       sendDetail,
       recipientAddress,
@@ -140,7 +160,9 @@ class RecipientField extends Component {
     return null;
   },
   onSubmit: async ({
+    invoicDescription,
     invoiceNumber,
+    invoiceReference,
     sendFrom,
     sendDetail,
     recipientAddress,
@@ -216,55 +238,79 @@ class InvoiceForm extends Component {
 
     return (
       <FormComponent onSubmit={handleSubmit}>
-        <InvoiceDataSection>
-          <FormField label={__('Invoice Number')}>
+        <InvoiceDataSection legend={__('Details')}>
+          <FormField label={__('Description')}>
             <Field
               component={TextField.RF}
-              name="invoiceNumber"
-              placeholder="Number"
+              props={{ ...this.props, multiline: true, rows: 1 }}
+              name="invoiceDescription"
+              placeholder="Description"
             />
           </FormField>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'auto auto',
+              gridTemplateRows: 'auto',
+              gridGap: '1em 1em',
+            }}
+          >
+            <FormField label={__('Reference')}>
+              <Field
+                component={TextField.RF}
+                name="invoiceReference"
+                placeholder="Reference"
+              />
+            </FormField>
+            <FormField label={__('Number')}>
+              <Field
+                component={TextField.RF}
+                name="invoiceNumber"
+                placeholder="Number"
+              />
+            </FormField>
+          </div>
         </InvoiceDataSection>
-        <ToSection>
-          <div>{'ToSection'}</div>
-          <FormField label={__('Account Payable')}>
-            <Field
-              component={Select.RF}
-              name="sendFrom"
-              placeholder={__('Select an account')}
-              options={accountOptions}
-            />
-          </FormField>
-          <FormField label={__('Sender Details')}>
-            <Field
-              component={TextField.RF}
-              name="sendDetail"
-              props={{ ...this.props, multiline: true, rows: 1 }}
-              placeholder="Name/Address/phoneNumber etc"
-            />
-          </FormField>
-        </ToSection>
-        <FromSection>
-          <div>{'From Section'}</div>
-          <FormField label={__('Recipient')}>
-            <Field
-              component={RecipientField}
-              name="recipientAddress"
-              change={change}
-              suggestions={suggestions}
-              placeholder="Recipient Address"
-            />
-          </FormField>
-          <FormField label={__('Recipient Details')}>
-            <Field
-              component={TextField.RF}
-              name="recipientDetail"
-              props={{ ...this.props, multiline: true, rows: 1 }}
-              placeholder="Name/Address/phoneNumber etc"
-            />
-          </FormField>
-        </FromSection>
-        <ItemListSection>
+        <div style={{ display: 'flex' }}>
+          <ToSection legend={__('To')}>
+            <FormField label={__('Account Payable')}>
+              <Field
+                component={Select.RF}
+                name="sendFrom"
+                placeholder={__('Select an account')}
+                options={accountOptions}
+              />
+            </FormField>
+            <FormField label={__('Sender Details')}>
+              <Field
+                component={TextField.RF}
+                name="sendDetail"
+                props={{ ...this.props, multiline: true, rows: 1 }}
+                placeholder="Name/Address/phoneNumber etc"
+              />
+            </FormField>
+          </ToSection>
+          <FromSection legend={__('From')}>
+            <FormField label={__('Recipient')}>
+              <Field
+                component={RecipientField}
+                name="recipientAddress"
+                change={change}
+                suggestions={suggestions}
+                placeholder="Recipient Address"
+              />
+            </FormField>
+            <FormField label={__('Recipient Details')}>
+              <Field
+                component={TextField.RF}
+                name="recipientDetail"
+                props={{ ...this.props, multiline: true, rows: 1 }}
+                placeholder="Name/Address/phoneNumber etc"
+              />
+            </FormField>
+          </FromSection>
+        </div>
+        <ItemListSection legend={__('Items')}>
           <FieldArray
             component={InvoiceItems}
             name="items"
