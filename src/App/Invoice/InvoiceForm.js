@@ -103,8 +103,8 @@ class RecipientField extends Component {
     invoiceNumber: 0,
     sendFrom: '',
     sendDetail: '',
-    recipiantAddress: '',
-    recipiantDetail: '',
+    recipientAddress: '',
+    recipientDetail: '',
     items: [{ description: '', units: 1, unitPrice: 0 }],
   },
   validate: ({ sendFrom }) => {
@@ -113,10 +113,43 @@ class RecipientField extends Component {
   },
   asyncValidate: async values => {
     console.log(values);
+    const {
+      invoiceNumber,
+      sendFrom,
+      sendDetail,
+      recipientAddress,
+      recipientDetail,
+      items,
+    } = values;
+
+    const recipientInputSize = new Blob(recipientAddress).size;
+
+    const isAddress =
+      recipientInputSize === 51 &&
+      recipientAddress.match(/([0OIl+/])/g) === null;
+
+    if (isAddress) {
+      const isAddressResult = await apiPost('system/validate/address', {
+        address: recipientAddress,
+      });
+      if (!isAddressResult.is_valid) {
+        throw { recipientAddress: [{ address: __('Invalid address') }] };
+      }
+    }
+
     return null;
   },
-  onSubmit: async ({ name, supply, decimals }) => {
+  onSubmit: async ({
+    invoiceNumber,
+    sendFrom,
+    sendDetail,
+    recipientAddress,
+    recipientDetail,
+    items,
+  }) => {
     console.error('AAAA');
+
+    const jsonItems = JSON.stringify(items);
 
     const pin = await confirmPin();
     if (pin) {
@@ -146,7 +179,7 @@ class InvoiceForm extends Component {
    *
    * @memberof SendForm
    */
-  addRecipient = () => {
+  addInvoiceItem = () => {
     console.log('Add Item');
     this.props.array.push('items', {
       description: '',
@@ -161,7 +194,7 @@ class InvoiceForm extends Component {
    * @memberof SendForm
    */
   renderAddItemButton = ({ fields }) => (
-    <Button onClick={this.addRecipient}>{__('Add Item')}</Button>
+    <Button onClick={this.addInvoiceItem}>{__('Add Item')}</Button>
   );
 
   gatherTotal() {
@@ -181,7 +214,6 @@ class InvoiceForm extends Component {
       suggestions,
     } = this.props;
 
-    console.log(this.props);
     return (
       <FormComponent onSubmit={handleSubmit}>
         <InvoiceDataSection>
@@ -217,7 +249,7 @@ class InvoiceForm extends Component {
           <FormField label={__('Recipient')}>
             <Field
               component={RecipientField}
-              name="recipiantAddress"
+              name="recipientAddress"
               change={change}
               suggestions={suggestions}
               placeholder="Recipient Address"
@@ -226,7 +258,7 @@ class InvoiceForm extends Component {
           <FormField label={__('Recipient Details')}>
             <Field
               component={TextField.RF}
-              name="recipiantDetail"
+              name="recipientDetail"
               props={{ ...this.props, multiline: true, rows: 1 }}
               placeholder="Name/Address/phoneNumber etc"
             />
@@ -237,11 +269,7 @@ class InvoiceForm extends Component {
             component={InvoiceItems}
             name="items"
             change={change}
-            addRecipient={this.addRecipient}
-          ></FieldArray>
-          <FieldArray
-            component={this.renderAddItemButton}
-            name="addItemsButton"
+            addInvoiceItem={this.addInvoiceItem}
           ></FieldArray>
         </ItemListSection>
 

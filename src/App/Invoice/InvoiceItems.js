@@ -79,7 +79,7 @@ class InvoiceItems extends React.Component {
    * @memberof Recipients
    */
   render() {
-    const { fields, change, addRecipient, accBalance } = this.props;
+    const { fields, change, addInvoiceItem, accBalance } = this.props;
 
     console.error(this.props);
 
@@ -89,6 +89,12 @@ class InvoiceItems extends React.Component {
       return (
         <>
           <Field name={`items[0]`} component={InvoiceItem} change={change} />
+          <MoreInfo>
+            <Button skin="hyperlink" onClick={addInvoiceItem}>
+              <PlusIcon icon={plusIcon} className="space-right" />
+              <span className="v-align">{__('Add Item')}</span>
+            </Button>
+          </MoreInfo>
         </>
       );
     } else {
@@ -115,7 +121,7 @@ class InvoiceItems extends React.Component {
           ))}
 
           <MoreInfo>
-            <Button skin="hyperlink" onClick={addRecipient}>
+            <Button skin="hyperlink" onClick={addInvoiceItem}>
               <PlusIcon icon={plusIcon} className="space-right" />
               <span className="v-align">{__('Add Item')}</span>
             </Button>
