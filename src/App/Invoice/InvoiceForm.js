@@ -67,13 +67,13 @@ const SectionBase = styled(FieldSet)(({ theme }) => ({
 }));
 
 const ToSection = styled(SectionBase)({
-  flex: '0 0 50%',
-  marginRight: '.25em',
+  marginLeft: '.25em',
+  flex: '1',
 });
 
 const FromSection = styled(SectionBase)({
-  marginLeft: '.25em',
-  flex: '1',
+  flex: '0 0 50%',
+  marginRight: '.25em',
 });
 
 const ItemListSection = styled(SectionBase)({});
@@ -272,7 +272,7 @@ class InvoiceForm extends Component {
           </div>
         </InvoiceDataSection>
         <div style={{ display: 'flex' }}>
-          <ToSection legend={__('To')}>
+          <FromSection legend={__('From')}>
             <FormField label={__('Account Payable')}>
               <Field
                 component={Select.RF}
@@ -289,8 +289,8 @@ class InvoiceForm extends Component {
                 placeholder="Name/Address/phoneNumber etc"
               />
             </FormField>
-          </ToSection>
-          <FromSection legend={__('From')}>
+          </FromSection>
+          <ToSection legend={__('To')}>
             <FormField label={__('Recipient')}>
               <Field
                 component={RecipientField}
@@ -308,7 +308,7 @@ class InvoiceForm extends Component {
                 placeholder="Name/Address/phoneNumber etc"
               />
             </FormField>
-          </FromSection>
+          </ToSection>
         </div>
         <ItemListSection legend={__('Items')}>
           <FieldArray
