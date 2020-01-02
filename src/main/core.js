@@ -303,7 +303,7 @@ export async function stopCore() {
  *
  * @memberof Core
  */
-export async function restart() {
+export async function restartCore() {
   await stopCore();
   await startCore();
 }
