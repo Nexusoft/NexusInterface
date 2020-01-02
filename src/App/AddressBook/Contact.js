@@ -2,13 +2,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import styled from '@emotion/styled';
-import { remote } from 'electron';
+import { ipcRenderer } from 'electron';
 
 // Internal Global
 import { selectContact, deleteContact } from 'lib/addressBook';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import { openConfirmDialog, openModal } from 'lib/ui';
+import { popupContextMenu } from 'lib/contextMenu';
 import AddEditContactModal from 'components/AddEditContactModal';
 import { isCoreConnected } from 'selectors';
 import { timing } from 'styles';
@@ -121,16 +122,17 @@ class Contact extends React.PureComponent {
     const template = [...defaultMenu];
     if (this.props.coreConnected) {
       template.push({
+        id: 'edit-contact',
         label: __('Edit contact'),
         click: this.editContact,
       });
     }
     template.push({
+      id: 'delete-contact',
       label: __('Delete contact'),
       click: this.confirmDelete,
     });
-    let contextMenu = remote.Menu.buildFromTemplate(template);
-    contextMenu.popup(remote.getCurrentWindow());
+    popupContextMenu(template);
   };
 
   /**

@@ -41,7 +41,7 @@ export const defaultSettings = {
   verboseLevel: 0,
   avatarMode: true,
   ipMineWhitelist: '',
-  dataDirOverride: '',
+  coreDataDir: defaultCoreDataDir,
   testnetIteration: 0,
   manualDaemon: false,
   manualDaemonUser: 'rpcserver',

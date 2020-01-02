@@ -197,7 +197,7 @@
     "cross-env": "^6.0.3",
     "cross-spawn": "^7.0.1",
     "csv-stringify": "^5.3.4",
-    "electron": "^7.1.3",
+    "electron": "^7.1.2",
     "electron-builder": "^21.2.0",
     "electron-devtools-installer": "^2.2.4",
     "express": "^4.17.1",
