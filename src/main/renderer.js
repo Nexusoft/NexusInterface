@@ -18,12 +18,12 @@ import { debounced } from 'utils/universal';
  *
  * @returns
  */
-async function installExtensions() {
+function installExtensions() {
   const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
   return Promise.all([
     devToolsInstall(REACT_DEVELOPER_TOOLS, forceDownload),
     devToolsInstall(REDUX_DEVTOOLS, forceDownload),
-  ]).catch();
+  ]);
 }
 
 /**
@@ -109,7 +109,11 @@ export async function createWindow() {
     process.env.DEBUG_PROD === 'true' ||
     settings.devMode
   ) {
-    await installExtensions();
+    try {
+      await installExtensions();
+    } catch (err) {
+      console.error('Failed to install extensions', err);
+    }
   }
 
   return mainWindow;
