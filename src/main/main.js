@@ -1,4 +1,4 @@
-import { app, ipcMain, dialog, Menu } from 'electron';
+import { app, ipcMain, dialog } from 'electron';
 import { autoUpdater } from 'electron-updater';
 
 import { startCore, stopCore, restartCore, getCoreConfig } from './core';
