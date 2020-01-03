@@ -204,7 +204,7 @@ const Stat = styled.div(
     margin: '1.7em 0',
     display: 'flex',
     alignItems: 'center',
-    filter: `drop-shadow(0 0 5px #000)`,
+    filter: `drop-shadow(0 0 8px ${theme.mixer(-0.5)}) brightness(100%)`,
     color: theme.foreground,
   }),
   ({ to, theme }) =>
@@ -214,7 +214,7 @@ const Stat = styled.div(
       transitionDuration: timing.normal,
       transitionTimingFunction: 'ease-out',
       '&:hover': {
-        filter: `drop-shadow(0 0 8px ${theme.primary}) brightness(120%)`,
+        filter: `drop-shadow(0 0 8px ${theme.mixer(0.5)}) brightness(120%)`,
       },
     }
 );

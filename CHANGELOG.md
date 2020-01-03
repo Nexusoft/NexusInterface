@@ -1,3 +1,19 @@
+# 2.1.2 (2020.1.02)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.1.2)
+
+#### Additions
+
+- Nexus Core 4.1.2
+
+#### Adjustments
+
+- none
+
+#### Fixes
+
+- Fixed Auto Update on all platforms
+
 # 2.1.1 (2019.12.18)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.1.1)

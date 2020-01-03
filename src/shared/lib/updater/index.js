@@ -1,6 +1,5 @@
 // External
-import { remote } from 'electron';
-import log from 'electron-log';
+import { ipcRenderer } from 'electron';
 import path from 'path';
 import fs from 'fs-extra';
 import axios from 'axios';
@@ -12,11 +11,10 @@ import store from 'store';
 import { showBackgroundTask, showNotification } from 'lib/ui';
 import AutoUpdateBackgroundTask from './AutoUpdateBackgroundTask';
 import { assetsParentDir } from 'consts/paths';
-import { walletEvents } from 'lib/wallet';
+import { walletEvents, closeWallet } from 'lib/wallet';
 
 __ = __context('AutoUpdate');
 
-const mainUpdater = remote.getGlobal('updater');
 const autoUpdateInterval = 2 * 60 * 60 * 1000; // 2 hours
 let timerId = null;
 
@@ -34,7 +32,7 @@ const setUpdaterState = state => {
  * @returns
  */
 export function checkForUpdates() {
-  return mainUpdater.checkForUpdates();
+  return ipcRenderer.invoke('check-for-updates');
 }
 
 /**
@@ -44,7 +42,7 @@ export function checkForUpdates() {
  * @returns
  */
 export function quitAndInstall() {
-  return mainUpdater.quitAndInstall();
+  closeWallet(() => ipcRenderer.invoke('quit-and-install-update'));
 }
 
 /**
@@ -58,7 +56,7 @@ export async function startAutoUpdate() {
     path.join(assetsParentDir, 'app-update.yml')
   );
 
-  if (checkGithubManually) {
+  if (process.env.NODE_ENV !== 'development' && checkGithubManually) {
     clearTimeout(timerId);
     try {
       const response = await axios.get(
@@ -82,8 +80,8 @@ export async function startAutoUpdate() {
   } else {
     try {
       clearTimeout(timerId);
-      const result = await mainUpdater.checkForUpdates();
-      if (result.downloadPromise) {
+      const result = await checkForUpdates();
+      if (result && result.downloadPromise) {
         await result.downloadPromise;
       }
     } finally {
@@ -108,21 +106,7 @@ export function stopAutoUpdate() {
  *
  */
 walletEvents.once('post-render', function() {
-  mainUpdater.logger = log;
-  mainUpdater.currentVersion = APP_VERSION;
-  mainUpdater.autoDownload = true;
-  mainUpdater.autoInstallOnAppQuit = false;
-  if (process.env.NODE_ENV === 'development') {
-    mainUpdater.updateConfigPath = path.join(
-      process.cwd(),
-      'dev-app-update.yml'
-    );
-  }
-  mainUpdater.on('error', err => {
-    console.error(err);
-  });
-
-  mainUpdater.on('update-available', updateInfo => {
+  ipcRenderer.on('updater:update-available', (event, updateInfo) => {
     showNotification(
       __('New wallet version %{version} available. Downloading...', {
         version: updateInfo.version,
@@ -131,30 +115,30 @@ walletEvents.once('post-render', function() {
     );
   });
 
-  mainUpdater.on('update-downloaded', updateInfo => {
+  ipcRenderer.on('updater:update-downloaded', (event, updateInfo) => {
     stopAutoUpdate();
     showBackgroundTask(AutoUpdateBackgroundTask, {
       version: updateInfo.version,
-      quitAndInstall: mainUpdater.quitAndInstall,
+      quitAndInstall: quitAndInstall,
     });
   });
 
-  mainUpdater.on('error', err => {
+  ipcRenderer.on('updater:error', (event, err) => {
     setUpdaterState('idle');
   });
-  mainUpdater.on('checking-for-update', () => {
+  ipcRenderer.on('updater:checking-for-update', () => {
     setUpdaterState('checking');
   });
-  mainUpdater.on('update-available', () => {
+  ipcRenderer.on('updater:update-available', () => {
     setUpdaterState('downloading');
   });
-  mainUpdater.on('update-not-available', () => {
+  ipcRenderer.on('updater:update-not-available', () => {
     setUpdaterState('idle');
   });
-  mainUpdater.on('download-progress', () => {
+  ipcRenderer.on('updater:download-progress', () => {
     setUpdaterState('downloading');
   });
-  mainUpdater.on('update-downloaded', () => {
+  ipcRenderer.on('updater:update-downloaded', () => {
     setUpdaterState('downloaded');
   });
 

@@ -1,7 +1,7 @@
 import fs from 'fs';
 import EventEmitter from 'events';
 import { createHashHistory } from 'history';
-import { remote } from 'electron';
+import { ipcRenderer } from 'electron';
 
 import * as TYPE from 'consts/actionTypes';
 import store from 'store';
@@ -49,7 +49,7 @@ export const closeWallet = async beforeExit => {
   }
 
   if (beforeExit) beforeExit();
-  remote.app.exit();
+  ipcRenderer.invoke('exit-app');
 };
 
 export const history = createHashHistory();
@@ -57,20 +57,23 @@ export const history = createHashHistory();
 export const walletEvents = new EventEmitter();
 
 walletEvents.once('pre-render', function() {
-  const mainWindow = remote.getCurrentWindow();
-  mainWindow.on('close', async e => {
+  ipcRenderer.on('window-close', async () => {
     const {
       settings: { minimizeOnClose },
     } = store.getState();
 
     // forceQuit is set when user clicks Quit option in the Tray context menu
-    if (minimizeOnClose && !remote.getGlobal('forceQuit')) {
-      mainWindow.hide();
-      if (process.platform === 'darwin') {
-        remote.app.dock.hide();
+    if (minimizeOnClose) {
+      const forceQuit = await ipcRenderer.invoke('is-force-quit');
+      if (!forceQuit) {
+        ipcRenderer.invoke('hide-window');
+        if (process.platform === 'darwin') {
+          ipcRenderer.invoke('hide-dock');
+        }
+        return;
       }
-    } else {
-      await closeWallet();
     }
+
+    await closeWallet();
   });
 });

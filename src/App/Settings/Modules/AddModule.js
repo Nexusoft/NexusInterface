@@ -2,7 +2,7 @@
 import React from 'react';
 import Dropzone from 'react-dropzone';
 import styled from '@emotion/styled';
-import { remote } from 'electron';
+import { ipcRenderer } from 'electron';
 
 // Internal
 import { installModule } from 'lib/modules';
@@ -66,24 +66,20 @@ class AddModule extends React.Component {
    *
    * @memberof AddModule
    */
-  browseFiles = () => {
-    remote.dialog.showOpenDialog(
-      {
-        title: __('Select module archive file'),
-        properties: ['openFile'],
-        filters: [
-          {
-            name: 'Archive',
-            extensions: ['zip', 'tar.gz'],
-          },
-        ],
-      },
-      paths => {
-        if (paths && paths[0]) {
-          this.startInstall(paths[0]);
-        }
-      }
-    );
+  browseFiles = async () => {
+    const paths = await ipcRenderer.invoke('show-open-dialog', {
+      title: __('Select module archive file'),
+      properties: ['openFile'],
+      filters: [
+        {
+          name: 'Archive',
+          extensions: ['zip', 'tar.gz'],
+        },
+      ],
+    });
+    if (paths && paths[0]) {
+      this.startInstall(paths[0]);
+    }
   };
 
   /**
@@ -91,18 +87,14 @@ class AddModule extends React.Component {
    *
    * @memberof AddModule
    */
-  browseDirectories = () => {
-    remote.dialog.showOpenDialog(
-      {
-        title: __('Select module directory'),
-        properties: ['openDirectory'],
-      },
-      paths => {
-        if (paths && paths[0]) {
-          this.startInstall(paths[0]);
-        }
-      }
-    );
+  browseDirectories = async () => {
+    const paths = await ipcRenderer.invoke('show-open-dialog', {
+      title: __('Select module directory'),
+      properties: ['openDirectory'],
+    });
+    if (paths && paths[0]) {
+      this.startInstall(paths[0]);
+    }
   };
 
   /**
