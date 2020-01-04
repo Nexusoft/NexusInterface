@@ -106,7 +106,7 @@ const About = ({ version, testnet, privateBlockchain }) => (
           {version}
         </InfoField>
         <InfoField leftSize={1} rightSize={1} label={__('Core build date')}>
-          December 16th 2019
+          January 4th 2020
         </InfoField>
         {!!testnet && (
           <InfoField leftSize={1} rightSize={1} label={__('Testnet')}>
