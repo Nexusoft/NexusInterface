@@ -11,9 +11,9 @@ import { modulesDir } from 'consts/paths';
 
 const port = 9331;
 const host = 'localhost';
-const moduleFiles = [];
 const server = express();
 const staticMiddleware = express.static(modulesDir);
+let moduleFiles = [];
 
 server.use('/modules', () => (req, res, next) => {
   if (moduleFiles.includes(normalize(req.path))) {
