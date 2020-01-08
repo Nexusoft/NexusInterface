@@ -15,6 +15,7 @@ import { formatDateTime } from 'lib/intl';
 import { openModal } from 'lib/ui';
 import { setTxsAccountFilter } from 'lib/ui';
 import { autoUpdateTransactions, isPending } from 'lib/transactions';
+import { isCoreConnected } from 'selectors';
 
 import TransactionDetailsModal from './TransactionDetailsModal';
 import Filters from './Filters';
@@ -113,6 +114,7 @@ const mapStateToProps = state => {
     : txList;
 
   return {
+    coreConnected: isCoreConnected(state),
     filteredTransactions: getFilteredTransactions(
       allTransactions,
       account,
