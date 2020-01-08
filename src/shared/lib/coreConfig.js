@@ -4,7 +4,8 @@ import log from 'electron-log';
 import crypto from 'crypto';
 import macaddress from 'macaddress';
 
-import { returnCoreDataDir } from 'consts/paths';
+import { defaultCoreDataDir } from 'consts/paths';
+import { loadSettingsFromFile } from 'lib/settings/universal';
 
 function generateDefaultPassword() {
   let randomNumbers = ['', ''];
@@ -59,7 +60,7 @@ const defaultConfig = {
   password: generateDefaultPassword(),
   apiUser: 'apiserver',
   apiPassword: generateDefaultPassword(),
-  dataDir: returnCoreDataDir(),
+  dataDir: defaultCoreDataDir,
   verbose: 2,
 };
 
@@ -99,7 +100,16 @@ export function customConfig(config = {}) {
  * @returns
  */
 export function loadNexusConf() {
-  const confPath = path.join(returnCoreDataDir(), 'nexus.conf');
+  const { coreDataDir } = loadSettingsFromFile();
+  if (!fs.existsSync(coreDataDir)) {
+    log.info(
+      'Core Manager: Data Directory path not found. Creating folder: ' +
+        coreDataDir
+    );
+    fs.mkdirSync(coreDataDir);
+  }
+
+  const confPath = path.join(coreDataDir, 'nexus.conf');
   const confContent = fs.existsSync(confPath)
     ? fs.readFileSync(confPath).toString()
     : '';

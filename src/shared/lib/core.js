@@ -1,11 +1,9 @@
-import { remote } from 'electron';
+import { ipcRenderer } from 'electron';
 
 import rpc from 'lib/rpc';
 import * as TYPE from 'consts/actionTypes';
 import store from 'store';
 import { apiPost } from 'lib/tritiumApi';
-
-const core = remote.getGlobal('core');
 
 const stopAutoConnect = () => ({
   type: TYPE.STOP_CORE_AUTO_CONNECT,
@@ -32,7 +30,7 @@ export const getDifficulty = async () => {
 
 export const stopCore = async () => {
   store.dispatch({ type: TYPE.CLEAR_CORE_INFO });
-  await core.stop();
+  await ipcRenderer.invoke('stop-core');
   const { manualDaemon } = store.getState().settings;
   if (!manualDaemon) {
     store.dispatch(stopAutoConnect());
@@ -40,12 +38,12 @@ export const stopCore = async () => {
 };
 
 export const startCore = async () => {
-  await core.start();
+  await ipcRenderer.invoke('start-core');
   store.dispatch(startAutoConnect());
 };
 
 export const restartCore = async () => {
   store.dispatch({ type: TYPE.CLEAR_CORE_INFO });
-  await core.restart();
+  await ipcRenderer.invoke('restart-core');
   store.dispatch(startAutoConnect());
 };

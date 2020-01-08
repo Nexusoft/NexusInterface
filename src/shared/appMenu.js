@@ -1,5 +1,5 @@
 // External
-import { shell, remote } from 'electron';
+import { shell, ipcRenderer } from 'electron';
 import fs from 'fs';
 
 // Internal
@@ -12,283 +12,268 @@ import { showNotification, openModal } from 'lib/ui';
 import { bootstrap } from 'lib/bootstrap';
 import { isCoreConnected } from 'selectors';
 import { legacyMode } from 'consts/misc';
-import showOpenDialog from 'utils/promisified/showOpenDialog';
 import confirm from 'utils/promisified/confirm';
-import { returnCoreDataDir, walletDataDir } from 'consts/paths';
+import { walletDataDir } from 'consts/paths';
 import { checkForUpdates, quitAndInstall } from 'lib/updater';
 import { walletEvents } from 'lib/wallet';
 import AboutModal from 'components/AboutModal';
 
-const separator = {
-  type: 'separator',
+// Because functions can't be passed through IPC messages so we have
+// to preprocess menu template so that click handlers function properly
+const preprocess = menuItems => {
+  Object.entries(menuItems).forEach(([id, item]) => {
+    // Only add id if menu item has a click handler
+    if (item.click) {
+      item.id = id;
+      const handleClick = item.click;
+      ipcRenderer.on('menu-click:' + id, (event, ...args) => {
+        handleClick(...args);
+      });
+      item.click = true;
+    }
+  });
+  return menuItems;
 };
 
-const switchLegacyMode = {
-  label: __('Switch to Legacy Mode'),
-  click: async () => {
-    const confirmed = await confirm({
-      question: __('Are you sure you want to switch to Legacy Mode?'),
-      skinYes: 'danger',
-    });
-    if (confirmed) {
-      updateSettings({ legacyMode: true });
+const menuItems = preprocess({
+  separator: {
+    type: 'separator',
+  },
+  switchLegacyMode: {
+    label: __('Switch to Legacy Mode'),
+    click: async () => {
+      const confirmed = await confirm({
+        question: __('Are you sure you want to switch to Legacy Mode?'),
+        skinYes: 'danger',
+      });
+      if (confirmed) {
+        updateSettings({ legacyMode: true });
+        location.reload();
+      }
+    },
+  },
+  switchTritiumMode: {
+    label: __('Switch to Tritium Mode'),
+    click: () => {
+      updateSettings({ legacyMode: false });
       location.reload();
-    }
+    },
   },
-};
-
-const switchTritiumMode = {
-  label: __('Switch to Tritium Mode'),
-  click: () => {
-    updateSettings({ legacyMode: false });
-    location.reload();
+  startCoreMenu: {
+    label: __('Start Nexus Core'),
+    click: startCore,
   },
-};
-
-const startCoreMenu = {
-  label: __('Start Nexus Core'),
-  click: startCore,
-};
-
-const stopCoreMenu = {
-  label: __('Stop Nexus Core'),
-  click: stopCore,
-};
-
-const quitNexus = {
-  label: __('Quit Nexus'),
-  accelerator: 'CmdOrCtrl+Q',
-  click: () => {
-    remote.app.quit();
+  stopCoreMenu: {
+    label: __('Stop Nexus Core'),
+    click: stopCore,
   },
-};
-
-const about = {
-  label: __('About'),
-  click: () => {
-    openModal(AboutModal);
+  quitNexus: {
+    label: __('Quit Nexus'),
+    accelerator: 'CmdOrCtrl+Q',
+    click: () => {
+      ipcRenderer.invoke('quit-app');
+    },
   },
-};
-
-const backupWallet = {
-  label: __('Backup Wallet'),
-  click: async () => {
-    const state = store.getState();
-    const folderPaths = await showOpenDialog({
-      title: 'Select a folder',
-      defaultPath: state.settings.backupDirectory,
-      properties: ['openDirectory'],
-    });
-
-    if (!isCoreConnected(state)) {
-      showNotification(__('Nexus Core is not connected'));
-      return;
-    }
-
-    if (folderPaths && folderPaths.length > 0) {
-      updateSettings({ backupDirectory: folderPaths[0] });
-
-      await backup(folderPaths[0]);
-      showNotification(__('Wallet backed up'), 'success');
-    }
+  about: {
+    label: __('About'),
+    click: () => {
+      openModal(AboutModal);
+    },
   },
-};
+  backupWallet: {
+    label: __('Backup Wallet'),
+    click: async () => {
+      const state = store.getState();
+      const folderPaths = await ipcRenderer.invoke('show-open-dialog', {
+        title: 'Select a folder',
+        defaultPath: state.settings.backupDirectory,
+        properties: ['openDirectory'],
+      });
 
-const viewBackups = {
-  label: __('View Backups'),
-  click: () => {
-    let BackupDir = process.env.HOME + '/NexusBackups';
-    if (process.platform === 'win32') {
-      BackupDir = process.env.USERPROFILE + '/NexusBackups';
-      BackupDir = BackupDir.replace(/\\/g, '/');
-    }
-    let backupDirExists = fs.existsSync(BackupDir);
-    if (!backupDirExists) {
-      fs.mkdirSync(BackupDir);
-    }
-    shell.openItem(BackupDir);
+      if (!isCoreConnected(state)) {
+        showNotification(__('Nexus Core is not connected'));
+        return;
+      }
+
+      if (folderPaths && folderPaths.length > 0) {
+        updateSettings({ backupDirectory: folderPaths[0] });
+
+        await backup(folderPaths[0]);
+        showNotification(__('Wallet backed up'), 'success');
+      }
+    },
   },
-};
-
-const cut = {
-  label: __('Cut'),
-  accelerator: 'CmdOrCtrl+X',
-  role: 'cut',
-};
-
-const copy = {
-  label: __('Copy'),
-  accelerator: 'CmdOrCtrl+C',
-  role: 'copy',
-};
-
-const paste = {
-  label: __('Paste'),
-  accelerator: 'CmdOrCtrl+V',
-  role: 'paste',
-};
-
-const coreSettings = {
-  label: __('Core'),
-  click: () => {
-    history.push('/Settings/Core');
+  viewBackups: {
+    label: __('View Backups'),
+    click: () => {
+      let BackupDir = process.env.HOME + '/NexusBackups';
+      if (process.platform === 'win32') {
+        BackupDir = process.env.USERPROFILE + '/NexusBackups';
+        BackupDir = BackupDir.replace(/\\/g, '/');
+      }
+      let backupDirExists = fs.existsSync(BackupDir);
+      if (!backupDirExists) {
+        fs.mkdirSync(BackupDir);
+      }
+      shell.openItem(BackupDir);
+    },
   },
-};
-
-const appSettings = {
-  label: __('Application'),
-  click: () => {
-    history.push('/Settings/App');
+  cut: {
+    label: __('Cut'),
+    accelerator: 'CmdOrCtrl+X',
+    role: 'cut',
   },
-};
-
-const keyManagement = {
-  label: __('Key Management'),
-  click: () => {
-    history.push('/Settings/Security');
+  copy: {
+    label: __('Copy'),
+    accelerator: 'CmdOrCtrl+C',
+    role: 'copy',
   },
-};
-
-const styleSettings = {
-  label: __('Style'),
-  click: () => {
-    history.push('/Settings/Style');
+  paste: {
+    label: __('Paste'),
+    accelerator: 'CmdOrCtrl+V',
+    role: 'paste',
   },
-};
-
-const moduleSettings = {
-  label: __('Modules'),
-  click: () => {
-    history.push('/Settings/Modules');
+  coreSettings: {
+    label: __('Core'),
+    click: () => {
+      history.push('/Settings/Core');
+    },
   },
-};
-
-const downloadRecent = {
-  label: __('Download Recent Database'),
-  click: () => {
-    const state = store.getState();
-    if (state.settings.manualDaemon) {
-      showNotification(
-        __('Cannot bootstrap recent database in manual mode'),
-        'error'
-      );
-      return;
-    }
-
-    if (!isCoreConnected(state)) {
-      showNotification(__('Please wait for Nexus Core to start.'));
-      return;
-    }
-
-    bootstrap();
+  appSettings: {
+    label: __('Application'),
+    click: () => {
+      history.push('/Settings/App');
+    },
   },
-};
-
-const toggleFullScreen = {
-  label: __('Toggle FullScreen'),
-  accelerator: 'F11',
-  click: () => {
-    remote
-      .getCurrentWindow()
-      .setFullScreen(!remote.getCurrentWindow().isFullScreen());
+  keyManagement: {
+    label: __('Key Management'),
+    click: () => {
+      history.push('/Settings/Security');
+    },
   },
-};
-
-const toggleDevTools = {
-  label: __('Toggle Developer Tools'),
-  accelerator: 'Alt+CmdOrCtrl+I',
-  click: () => {
-    remote.getCurrentWindow().toggleDevTools();
+  styleSettings: {
+    label: __('Style'),
+    click: () => {
+      history.push('/Settings/Style');
+    },
   },
-};
-
-const toggleModuleDevTools = {
-  label: __("Toggle Module's Developer Tools"),
-  click: () => {
-    store.dispatch(toggleWebViewDevTools());
+  moduleSettings: {
+    label: __('Modules'),
+    click: () => {
+      history.push('/Settings/Modules');
+    },
   },
-};
+  downloadRecent: {
+    label: __('Download Recent Database'),
+    click: () => {
+      const state = store.getState();
+      if (state.settings.manualDaemon) {
+        showNotification(
+          __('Cannot bootstrap recent database in manual mode'),
+          'error'
+        );
+        return;
+      }
 
-const websiteLink = {
-  label: __('Nexus Website'),
-  click: () => {
-    shell.openExternal('http://nexusearth.com');
+      if (!isCoreConnected(state)) {
+        showNotification(__('Please wait for Nexus Core to start.'));
+        return;
+      }
+
+      bootstrap();
+    },
   },
-};
-
-const gitRepoLink = {
-  label: __('Nexus Git Repository'),
-  click: () => {
-    shell.openExternal('http://github.com/Nexusoft');
+  toggleFullScreen: {
+    label: __('Toggle FullScreen'),
+    accelerator: 'F11',
+    role: 'togglefullscreen',
   },
-};
-
-const walletGuideLink = {
-  label: __('Nexus Wallet Guide'),
-  click: () => {
-    shell.openExternal('https://nexusearth.com/nexus-tritium-wallet-guide/');
+  toggleDevTools: {
+    label: __('Toggle Developer Tools'),
+    accelerator: 'Alt+CmdOrCtrl+I',
+    role: 'toggleDevTools',
   },
-};
-
-const openCoreDataDir = {
-  label: __('Open Core Data Folder'),
-  click: () => {
-    shell.openItem(returnCoreDataDir());
+  toggleModuleDevTools: {
+    label: __("Toggle Module's Developer Tools"),
+    click: () => {
+      store.dispatch(toggleWebViewDevTools());
+    },
   },
-};
-
-const openInterfaceDataDir = {
-  label: __('Open Interface Data Folder'),
-  click: () => {
-    shell.openItem(walletDataDir);
+  websiteLink: {
+    label: __('Nexus Website'),
+    click: () => {
+      shell.openExternal('http://nexusearth.com');
+    },
   },
-};
-const updaterIdle = {
-  label: __('Check for Updates...'),
-  enabled: true,
-  click: async () => {
-    const result = await checkForUpdates();
-    // Not sure if this is the best way to check if there's an update
-    // available because autoUpdater.checkForUpdates() doesn't return
-    // any reliable results like a boolean `updateAvailable` property
-    if (result.updateInfo.version === APP_VERSION) {
-      showNotification(__('There are currently no updates available'));
-    }
+  gitRepoLink: {
+    label: __('Nexus Git Repository'),
+    click: () => {
+      shell.openExternal('http://github.com/Nexusoft');
+    },
   },
-};
-
-const updaterChecking = {
-  label: __('Checking for Updates...'),
-  enabled: false,
-};
-
-const updaterDownloading = {
-  label: __('Update available! Downloading...'),
-  enabled: false,
-};
-
-const updaterReadyToInstall = {
-  label: __('Quit and install update...'),
-  enabled: true,
-  click: quitAndInstall,
-};
+  walletGuideLink: {
+    label: __('Nexus Wallet Guide'),
+    click: () => {
+      shell.openExternal('https://nexusearth.com/nexus-tritium-wallet-guide/');
+    },
+  },
+  openCoreDataDir: {
+    label: __('Open Core Data Folder'),
+    click: () => {
+      const state = store.getState();
+      shell.openItem(state.settings.coreDataDir);
+    },
+  },
+  openInterfaceDataDir: {
+    label: __('Open Interface Data Folder'),
+    click: () => {
+      shell.openItem(walletDataDir);
+    },
+  },
+  updaterIdle: {
+    label: __('Check for Updates...'),
+    enabled: true,
+    click: async () => {
+      const result = await checkForUpdates();
+      // Not sure if this is the best way to check if there's an update
+      // available because autoUpdater.checkForUpdates() doesn't return
+      // any reliable results like a boolean `updateAvailable` property
+      if (result.updateInfo.version === APP_VERSION) {
+        showNotification(__('There are currently no updates available'));
+      }
+    },
+  },
+  updaterChecking: {
+    label: __('Checking for Updates...'),
+    enabled: false,
+  },
+  updaterDownloading: {
+    label: __('Update available! Downloading...'),
+    enabled: false,
+  },
+  updaterReadyToInstall: {
+    label: __('Quit and install update...'),
+    enabled: true,
+    click: quitAndInstall,
+  },
+});
 
 /**
  * Get the Updater
  *
  * @memberof AppMenu
  */
-function updaterMenuItem() {
+function buildUpdaterMenu() {
   const updaterState = store.getState().updater.state;
   switch (updaterState) {
     case 'idle':
-      return updaterIdle;
+      return menuItems.updaterIdle;
     case 'checking':
-      return updaterChecking;
+      return menuItems.updaterChecking;
     case 'downloading':
-      return updaterDownloading;
+      return menuItems.updaterDownloading;
     case 'downloaded':
-      return updaterReadyToInstall;
+      return menuItems.updaterReadyToInstall;
   }
 }
 
@@ -314,22 +299,21 @@ function buildDarwinTemplate() {
   const coreConnected = isCoreConnected(state);
   const { manualDaemon } = state.settings;
   const { activeAppModule } = state;
-  const now = Date.now();
 
   const subMenuAbout = {
     label: 'Nexus',
     submenu: [
-      about,
+      menuItems.about,
       // If it's in manual core mode and core is not running, don't show
       // Start Core option because it does nothing
       !manualDaemon || coreConnected
         ? coreConnected
-          ? stopCoreMenu
-          : startCoreMenu
+          ? menuItems.stopCoreMenu
+          : menuItems.startCoreMenu
         : null,
-      legacyMode ? switchTritiumMode : switchLegacyMode,
-      separator,
-      quitNexus,
+      legacyMode ? menuItems.switchTritiumMode : menuItems.switchLegacyMode,
+      menuItems.separator,
+      menuItems.quitNexus,
     ].filter(e => e),
   };
 
@@ -337,49 +321,49 @@ function buildDarwinTemplate() {
   const subMenuFile = {
     label: __('File'),
     submenu: [
-      legacyMode ? backupWallet : separator,
-      legacyMode ? viewBackups : separator,
-      separator,
-      downloadRecent,
+      legacyMode ? menuItems.backupWallet : menuItems.separator,
+      legacyMode ? menuItems.viewBackups : menuItems.separator,
+      menuItems.separator,
+      menuItems.downloadRecent,
     ],
   };
   const subMenuEdit = {
     label: __('Edit'),
-    submenu: [cut, copy, paste],
+    submenu: [menuItems.cut, menuItems.copy, menuItems.paste],
   };
   const subMenuView = {
     label: __('Settings'),
     submenu: [
-      appSettings,
-      coreSettings,
-      legacyMode ? keyManagement : null,
-      styleSettings,
-      moduleSettings,
+      menuItems.appSettings,
+      menuItems.coreSettings,
+      legacyMode ? menuItems.keyManagement : null,
+      menuItems.styleSettings,
+      menuItems.moduleSettings,
     ].filter(e => e),
   };
 
   const subMenuWindow = {
     label: __('View'),
-    submenu: [toggleFullScreen],
+    submenu: [menuItems.toggleFullScreen],
   };
   if (process.env.NODE_ENV === 'development' || state.settings.devMode) {
-    subMenuWindow.submenu.push(toggleDevTools);
+    subMenuWindow.submenu.push(menuItems.toggleDevTools);
 
     if (activeAppModule) {
-      subMenuWindow.submenu.push(toggleModuleDevTools);
+      subMenuWindow.submenu.push(menuItems.toggleModuleDevTools);
     }
   }
 
   const subMenuHelp = {
     label: __('Help'),
     submenu: [
-      websiteLink,
-      gitRepoLink,
-      walletGuideLink,
-      openCoreDataDir,
-      openInterfaceDataDir,
-      separator,
-      updaterMenuItem(),
+      menuItems.websiteLink,
+      menuItems.gitRepoLink,
+      menuItems.walletGuideLink,
+      menuItems.openCoreDataDir,
+      menuItems.openInterfaceDataDir,
+      menuItems.separator,
+      buildUpdaterMenu(),
     ],
   };
 
@@ -403,63 +387,62 @@ function buildDefaultTemplate() {
   const coreConnected = isCoreConnected(state);
   const { manualDaemon } = state.settings;
   const { activeAppModule } = state;
-  const now = Date.now();
 
   const subMenuFile = {
     label: __('File'),
     submenu: [
-      legacyMode ? backupWallet : null,
-      legacyMode ? viewBackups : null,
-      separator,
-      downloadRecent,
-      separator,
+      legacyMode ? menuItems.backupWallet : null,
+      legacyMode ? menuItems.viewBackups : null,
+      menuItems.separator,
+      menuItems.downloadRecent,
+      menuItems.separator,
       // If it's in manual core mode and core is not running, don't show
       // Start Core option because it does nothing
       !manualDaemon || coreConnected
         ? coreConnected
-          ? stopCoreMenu
-          : startCoreMenu
+          ? menuItems.stopCoreMenu
+          : menuItems.startCoreMenu
         : null,
-      legacyMode ? switchTritiumMode : switchLegacyMode,
-      separator,
-      quitNexus,
+      legacyMode ? menuItems.switchTritiumMode : menuItems.switchLegacyMode,
+      menuItems.separator,
+      menuItems.quitNexus,
     ].filter(e => e),
   };
 
   const subMenuSettings = {
     label: __('Settings'),
     submenu: [
-      appSettings,
-      coreSettings,
-      legacyMode ? keyManagement : null,
-      styleSettings,
-      moduleSettings,
+      menuItems.appSettings,
+      menuItems.coreSettings,
+      legacyMode ? menuItems.keyManagement : null,
+      menuItems.styleSettings,
+      menuItems.moduleSettings,
     ].filter(e => e),
   };
   const subMenuView = {
     label: __('View'),
-    submenu: [toggleFullScreen],
+    submenu: [menuItems.toggleFullScreen],
   };
   if (process.env.NODE_ENV === 'development' || state.settings.devMode) {
-    subMenuView.submenu.push(separator, toggleDevTools);
+    subMenuView.submenu.push(menuItems.separator, menuItems.toggleDevTools);
 
     if (activeAppModule) {
-      subMenuView.submenu.push(toggleModuleDevTools);
+      subMenuView.submenu.push(menuItems.toggleModuleDevTools);
     }
   }
 
   const subMenuHelp = {
     label: __('Help'),
     submenu: [
-      about,
-      separator,
-      websiteLink,
-      gitRepoLink,
-      walletGuideLink,
-      openCoreDataDir,
-      openInterfaceDataDir,
-      separator,
-      updaterMenuItem(),
+      menuItems.about,
+      menuItems.separator,
+      menuItems.websiteLink,
+      menuItems.gitRepoLink,
+      menuItems.walletGuideLink,
+      menuItems.openCoreDataDir,
+      menuItems.openInterfaceDataDir,
+      menuItems.separator,
+      buildUpdaterMenu(),
     ],
   };
 
@@ -480,8 +463,7 @@ function buildMenu() {
     template = buildDefaultTemplate();
   }
 
-  const menu = remote.Menu.buildFromTemplate(template);
-  remote.Menu.setApplicationMenu(menu);
+  ipcRenderer.invoke('set-app-menu', template);
   return menu;
 }
 

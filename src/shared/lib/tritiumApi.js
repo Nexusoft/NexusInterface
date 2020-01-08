@@ -1,12 +1,10 @@
 import axios from 'axios';
 import store from 'store';
-import { remote } from 'electron';
+import { ipcRenderer } from 'electron';
 
 import { customConfig, loadNexusConf } from 'lib/coreConfig';
 
-const core = remote.getGlobal('core');
-
-const getConfig = () => {
+const getConfig = async () => {
   const { settings } = store.getState();
   return settings.manualDaemon
     ? customConfig({
@@ -16,7 +14,8 @@ const getConfig = () => {
         apiPassword: settings.manualDaemonApiPassword,
         dataDir: settings.manualDaemonDataDir,
       })
-    : core.config || customConfig(loadNexusConf());
+    : (await ipcRenderer.invoke('get-core-config')) ||
+        customConfig(loadNexusConf());
 };
 
 const getDefaultOptions = ({ apiUser, apiPassword }) => ({
@@ -42,7 +41,7 @@ const getDefaultOptions = ({ apiUser, apiPassword }) => ({
  * @returns
  */
 export async function apiPost(endpoint, params) {
-  const conf = getConfig();
+  const conf = await getConfig();
   try {
     const response = await axios.post(
       `${conf.apiHost}/${endpoint}`,
@@ -63,7 +62,7 @@ export async function apiPost(endpoint, params) {
  * @returns
  */
 export async function apiGet(url) {
-  const conf = getConfig();
+  const conf = await getConfig();
   try {
     const response = await axios.get(
       `${conf.apiHost}/${url}`,

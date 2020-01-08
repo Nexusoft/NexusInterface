@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
 
@@ -10,7 +11,6 @@ import confirmPin from 'utils/promisified/confirmPin';
 import { removeModal, openSuccessDialog } from 'lib/ui';
 import { apiPost } from 'lib/tritiumApi';
 import { errorHandler } from 'utils/form';
-import { returnCoreDataDir } from 'consts/paths';
 
 __ = __context('MigrateStake');
 
@@ -44,46 +44,49 @@ const formOptions = {
   onSubmitFail: errorHandler(__('Error migrating stake')),
 };
 
-const MigrateStakeModal = ({ handleSubmit }) => (
-  <Modal style={{ maxWidth: 600 }}>
-    {closeModal => (
-      <>
-        <Modal.Header>{__('Migrate stake')}</Modal.Header>
-        <Modal.Body>
-          <div>
-            {__(
-              'This will transfer all stake amount and trust score from your legacy wallet to your new Tritium account.'
-            )}
-          </div>
-          <div className="mt1">
-            {__(
-              'Please make sure that you are using the same machine that you used to stake with your legacy wallet, or you have put your staking wallet.dat file into %{path}',
-              { path: returnCoreDataDir() }
-            )}
-          </div>
-          <form onSubmit={handleSubmit} className="mt2">
-            <FormField connectLabel label={__('Legacy wallet password')}>
-              <Field
-                component={PasswordInput}
-                name="passphrase"
-                skin="filled-inverted"
-                placeholder={__(
-                  'Leave this blank if your legacy wallet is not encrypted'
-                )}
-                autoFocus
-              />
-            </FormField>
-            <div className="flex space-between">
-              <Button onClick={closeModal}>{__('Cancel')}</Button>
-              <Button type="submit" skin="primary">
-                {__('Migrate stake')}
-              </Button>
+const MigrateStakeModal = ({ handleSubmit }) => {
+  const coreDataDir = useSelector(state => state.settings.coreDataDir);
+  return (
+    <Modal style={{ maxWidth: 600 }}>
+      {closeModal => (
+        <>
+          <Modal.Header>{__('Migrate stake')}</Modal.Header>
+          <Modal.Body>
+            <div>
+              {__(
+                'This will transfer all stake amount and trust score from your legacy wallet to your new Tritium account.'
+              )}
             </div>
-          </form>
-        </Modal.Body>
-      </>
-    )}
-  </Modal>
-);
+            <div className="mt1">
+              {__(
+                'Please make sure that you are using the same machine that you used to stake with your legacy wallet, or you have put your staking wallet.dat file into %{path}',
+                { path: coreDataDir }
+              )}
+            </div>
+            <form onSubmit={handleSubmit} className="mt2">
+              <FormField connectLabel label={__('Legacy wallet password')}>
+                <Field
+                  component={PasswordInput}
+                  name="passphrase"
+                  skin="filled-inverted"
+                  placeholder={__(
+                    'Leave this blank if your legacy wallet is not encrypted'
+                  )}
+                  autoFocus
+                />
+              </FormField>
+              <div className="flex space-between">
+                <Button onClick={closeModal}>{__('Cancel')}</Button>
+                <Button type="submit" skin="primary">
+                  {__('Migrate stake')}
+                </Button>
+              </div>
+            </form>
+          </Modal.Body>
+        </>
+      )}
+    </Modal>
+  );
+};
 
 export default reduxForm(formOptions)(MigrateStakeModal);
