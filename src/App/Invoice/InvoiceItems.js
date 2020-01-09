@@ -18,8 +18,8 @@ __ = __context('Send');
 
 const RemoveButton = styled.div(({ theme }) => ({
   position: 'absolute',
-  left: 3,
-  bottom: 8,
+  left: `1.75em`,
+  marginTop: '1.5em',
   cursor: 'pointer',
   width: '1.5em',
   height: '1.5em',
@@ -34,25 +34,6 @@ const RemoveButton = styled.div(({ theme }) => ({
     color: theme.mixer(0.875),
   },
 }));
-
-const Recipient = styled.div({
-  display: 'flex',
-  alignItems: 'center',
-  margin: '0 -30px',
-  padding: '0 30px',
-  position: 'relative',
-});
-
-const AddressWrapper = styled.div({
-  flexGrow: 5,
-  flexBasis: 0,
-  marginRight: '1em',
-});
-
-const AmountWrapper = styled.div({
-  flexGrow: 2,
-  flexBasis: 0,
-});
 
 const MoreInfo = styled.div({
   marginTop: '1em',
@@ -82,10 +63,12 @@ class InvoiceItems extends React.Component {
   returnHeader() {
     return (
       <TableHeader>
-        <div style={{ width: '5em' }}>{__('Description')}</div>
-        <div>{__('Unit Cost')}</div>
-        <div>{__('Units')}</div>
-        <div>{__('Total')}</div>
+        <div style={{ width: '5em', textAlign: 'center' }}>
+          {__('Description')}
+        </div>
+        <div style={{ textAlign: 'center' }}>{__('Unit Cost')}</div>
+        <div style={{ textAlign: 'center' }}>{__('Units')}</div>
+        <div style={{ textAlign: 'center' }}>{__('Total')}</div>
       </TableHeader>
     );
   }
@@ -98,8 +81,6 @@ class InvoiceItems extends React.Component {
    */
   render() {
     const { fields, change, addInvoiceItem, accBalance } = this.props;
-
-    console.error(this.props);
 
     if (!fields) return null;
 

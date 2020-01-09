@@ -19,30 +19,6 @@ import { formatNumber } from 'lib/intl';
 
 __ = __context('Send');
 
-const RecipientName = styled.span(({ theme }) => ({
-  textTransform: 'none',
-  color: theme.primary,
-}));
-
-const EmptyMessage = styled.div(({ theme }) => ({
-  fontSize: '.9em',
-  color: theme.mixer(0.625),
-  width: '100%',
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-}));
-
-const filterRecipients = memoize((suggestions, inputValue) => {
-  if (!suggestions) return [];
-  const query = inputValue || '';
-  return suggestions.filter(
-    ({ value, name }) =>
-      value === query ||
-      (!!name && name.toLowerCase().includes(query.toLowerCase()))
-  );
-});
-
 const ItemLine = styled.div({
   display: 'grid',
   gridTemplateColumns: 'auto 8em 5em 10em',
@@ -50,11 +26,14 @@ const ItemLine = styled.div({
   gridGap: '1em 1em',
 });
 
-const TotalField = styled.div({
+const TotalField = styled(TextField)({
   width: '10em',
   position: 'relative',
   top: '100%',
-  marginTop: '-1.5em',
+  marginTop: '-2.25em',
+  input: {
+    textAlign: 'right',
+  },
 });
 
 /**
@@ -80,11 +59,8 @@ class InvoiceItem extends Component {
    * @memberof RecipientField
    */
   render() {
-    console.log(this.props);
     const { input, meta } = this.props;
-
     const total = input.value && input.value.unitPrice * input.value.units;
-    console.log(total);
 
     return (
       <ItemLine input={input} meta={meta}>
@@ -112,7 +88,10 @@ class InvoiceItem extends Component {
             placeholder="Units"
           />
         </FormField>
-        <TotalField> {`${formatNumber(total, 6)} NXS`}</TotalField>
+        <TotalField
+          disabled={true}
+          value={`${formatNumber(total, 6)} NXS`}
+        ></TotalField>
       </ItemLine>
     );
   }

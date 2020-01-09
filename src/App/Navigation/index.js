@@ -143,10 +143,11 @@ const Navigation = () => (
       <NavItem icon={consoleIcon} to="/Terminal">
         {__('Console')}
       </NavItem>
-
-      <NavItem icon={consoleIcon} to="/Invoice">
-        {__('Invoice')}
-      </NavItem>
+      {process.env.NODE_ENV !== 'production' && (
+        <NavItem icon={consoleIcon} to="/Invoice">
+          {__('Invoice')}
+        </NavItem>
+      )}
 
       <ModuleNavItems />
     </NavBar>
