@@ -11,7 +11,7 @@ import accounts from './accounts';
 import transactions from './transactions';
 import miningInfo from './miningInfo';
 import tokens from './tokens';
-import names from './names';
+import nameRecords from './nameRecords';
 import namespaces from './namespaces';
 
 export default combineReducers({
@@ -26,6 +26,6 @@ export default combineReducers({
   transactions,
   miningInfo,
   tokens,
-  names,
+  nameRecords,
   namespaces,
 });

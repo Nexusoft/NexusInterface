@@ -131,10 +131,10 @@ export const updateAccountBalances = async () => {
   store.dispatch({ type: TYPE.UPDATE_MY_ACCOUNTS, payload: accList });
 };
 
-export const loadNames = async () => {
+export const loadNameRecords = async () => {
   try {
-    const names = await apiPost('users/list/names');
-    store.dispatch({ type: TYPE.SET_NAMES, payload: names });
+    const nameRecords = await apiPost('users/list/names');
+    store.dispatch({ type: TYPE.SET_NAME_RECORDS, payload: nameRecords });
   } catch (err) {
     console.error('users/list/names failed', err);
   }
@@ -143,7 +143,7 @@ export const loadNames = async () => {
 export const loadNamespaces = async () => {
   try {
     const namespaces = await apiPost('users/list/namespaces');
-    store.dispatch({ type: TYPE.SET_NAMESPACES, payload: namespaces });
+    store.dispatch({ type: TYPE.SET_NAME_RECORDSPACES, payload: namespaces });
   } catch (err) {
     console.error('users/list/namespaces failed', err);
   }
