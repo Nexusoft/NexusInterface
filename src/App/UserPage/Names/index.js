@@ -29,6 +29,9 @@ const Title = styled(Item)(({ theme }) => ({
 }));
 
 const Record = styled(Item)(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
   color: theme.foreground,
   transitionProperty: 'background, color',
   transitionDuration: timing.normal,
@@ -38,7 +41,27 @@ const Record = styled(Item)(({ theme }) => ({
   },
 }));
 
+const Type = styled.span(({ theme }) => ({
+  textTransform: 'uppercase',
+  fontSize: '.75em',
+  color: theme.mixer(0.75),
+  background: theme.mixer(0.05),
+  padding: '.1em .3em',
+  borderRadius: 4,
+  whiteSpace: 'nowrap',
+  flexShrink: 0,
+  marginLeft: '1em',
+}));
+
+const Namespace = styled.span(({ theme }) => ({
+  color: theme.mixer(0.5),
+  '&::after': {
+    content: '"::"',
+  },
+}));
+
 const CreateButton = styled(Record)(({ theme }) => ({
+  display: 'block',
   color: theme.mixer(0.75),
   '&:hover': {
     color: theme.foreground,
@@ -76,7 +99,21 @@ export default class Names extends React.Component {
             <div>
               {!!nameRecords && nameRecords.length > 0 ? (
                 nameRecords.map(nameRecord => (
-                  <Record key={nameRecord.name}>{nameRecord.name}</Record>
+                  <Record key={nameRecord.name}>
+                    <span>
+                      {!!nameRecord.namespace && (
+                        <Namespace>{nameRecord.namespace}</Namespace>
+                      )}
+                      {nameRecord.name}
+                    </span>
+                    <Type>
+                      {nameRecord.global
+                        ? 'global'
+                        : nameRecord.namespace
+                        ? 'namespaced'
+                        : 'local'}
+                    </Type>
+                  </Record>
                 ))
               ) : (
                 <EmptyMessage>{__("You don't own any names")}</EmptyMessage>
