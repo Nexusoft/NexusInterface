@@ -31,7 +31,8 @@
     "version2": "node ./internals/scripts/UpdateBuildDate.js",
     "trans-extract": "node -r @babel/register ./internals/scripts/extractTranslations.js",
     "trans-update": "node -r @babel/register ./internals/scripts/UpdateLanguageFiles.js",
-    "update-documentation": "./UpdateDocumentation.sh"
+    "update-documentation": "./UpdateDocumentation.sh",
+    "update-maxmind": "node -r @babel/register ./internals/scripts/UpdateMaxMind.js"
   },
   "main": "./build/main.prod.js",
   "build": {
