@@ -69,10 +69,10 @@ export default class NameDetailsModal extends React.Component {
           <Field label={__('Name')}>{nameRecord.name}</Field>
           <Field label={__('Type')}>
             {nameRecord.global
-              ? __('global')
+              ? __('Global')
               : nameRecord.namespace
-              ? __('namespaced')
-              : __('local')}
+              ? __('Namespaced')
+              : __('Local')}
           </Field>
           {!!nameRecord.namespace && (
             <Field label={__('Namespace')}>{nameRecord.namespace}</Field>

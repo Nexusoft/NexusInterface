@@ -10,6 +10,7 @@ import { timing } from 'styles';
 import plusIcon from 'icons/plus.svg';
 
 import NameDetailsModal from './NameDetailsModal';
+import CreateNameModal from './CreateNameModal';
 import TabContentWrapper from '../TabContentWrapper';
 
 __ = __context('User.Names');
@@ -56,9 +57,6 @@ const Type = styled.span(({ theme }) => ({
 
 const Namespace = styled.span(({ theme }) => ({
   color: theme.mixer(0.5),
-  '&::after': {
-    content: '"::"',
-  },
 }));
 
 const CreateButton = styled(Record)(({ theme }) => ({
@@ -77,6 +75,7 @@ const EmptyMessage = styled(Item)(({ theme }) => ({
 @connect(state => ({
   nameRecords: state.core.nameRecords,
   namespaces: state.core.namespaces,
+  username: state.core.userStatus && state.core.userStatus.username,
 }))
 export default class Names extends React.Component {
   constructor(props) {
@@ -90,7 +89,7 @@ export default class Names extends React.Component {
   }
 
   render() {
-    const { nameRecords, namespaces } = this.props;
+    const { nameRecords, namespaces, username } = this.props;
 
     return (
       <TabContentWrapper maxWidth={600}>
@@ -109,17 +108,19 @@ export default class Names extends React.Component {
                     }}
                   >
                     <span>
-                      {!!nameRecord.namespace && (
-                        <Namespace>{nameRecord.namespace}</Namespace>
-                      )}
+                      {!!nameRecord.namespace ? (
+                        <Namespace>{nameRecord.namespace}::</Namespace>
+                      ) : !nameRecord.global ? (
+                        <Namespace>{username}:</Namespace>
+                      ) : null}
                       {nameRecord.name}
                     </span>
                     <Type>
                       {nameRecord.global
-                        ? __('global')
+                        ? __('Global')
                         : nameRecord.namespace
-                        ? __('namespaced')
-                        : __('local')}
+                        ? __('Namespaced')
+                        : __('Local')}
                     </Type>
                   </Record>
                 ))
@@ -127,7 +128,11 @@ export default class Names extends React.Component {
                 <EmptyMessage>{__("You don't own any names")}</EmptyMessage>
               )}
             </div>
-            <CreateButton>
+            <CreateButton
+              onClick={() => {
+                openModal(CreateNameModal);
+              }}
+            >
               <Icon
                 icon={plusIcon}
                 className="space-right"
