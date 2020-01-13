@@ -9,6 +9,7 @@ import { openModal } from 'lib/ui';
 import { timing } from 'styles';
 import plusIcon from 'icons/plus.svg';
 
+import NameDetailsModal from './NameDetailsModal';
 import TabContentWrapper from '../TabContentWrapper';
 
 __ = __context('User.Names');
@@ -99,7 +100,14 @@ export default class Names extends React.Component {
             <div>
               {!!nameRecords && nameRecords.length > 0 ? (
                 nameRecords.map(nameRecord => (
-                  <Record key={nameRecord.name}>
+                  <Record
+                    key={nameRecord.name}
+                    onClick={() => {
+                      openModal(NameDetailsModal, {
+                        nameRecord,
+                      });
+                    }}
+                  >
                     <span>
                       {!!nameRecord.namespace && (
                         <Namespace>{nameRecord.namespace}</Namespace>
@@ -108,10 +116,10 @@ export default class Names extends React.Component {
                     </span>
                     <Type>
                       {nameRecord.global
-                        ? 'global'
+                        ? __('global')
                         : nameRecord.namespace
-                        ? 'namespaced'
-                        : 'local'}
+                        ? __('namespaced')
+                        : __('local')}
                     </Type>
                   </Record>
                 ))
