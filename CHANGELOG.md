@@ -4,6 +4,23 @@
 
 #### Additions
 
+- Added warning message when staking is enabled but have not received a block in 30 minutes
+
+#### Adjustments
+
+- none
+
+#### Fixes
+
+- Fixed core failing to start if Nexus folder was not created
+- Fixed issue with modules not starting
+
+# 2.1.3 (2020.1.03)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.1.3)
+
+#### Additions
+
 - Nexus Core 4.1.3
 
 #### Adjustments
