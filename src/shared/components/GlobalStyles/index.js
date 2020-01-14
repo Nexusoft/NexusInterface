@@ -148,6 +148,9 @@ const utilityClasses = theme => css`
     color: ${theme.danger};
   }
 
+  .mt0_4 {
+    margin-top: 0.4em;
+  }
   .mt1 {
     margin-top: 1em;
   }

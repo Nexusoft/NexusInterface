@@ -7,30 +7,53 @@ import Modal from 'components/Modal';
 import Button from 'components/Button';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
-import Select from 'components/Select';
 
 __ = __context('CreateName');
-
-const typeOptions = [
-  {
-    value: 'local',
-    display: __('Local'),
-  },
-  {
-    value: 'namespaced',
-    display: __('Namespaced'),
-  },
-  {
-    value: 'global',
-    display: __('Global'),
-  },
-];
 
 const Prefix = styled.span(({ theme }) => ({
   color: theme.mixer(0.5),
   paddingLeft: '0.8em',
   marginRight: '-0.8em',
 }));
+
+const NameTypes = styled.div({
+  display: 'grid',
+  fontSize: '.9em',
+  columnGap: '1em',
+  gridTemplateColumns: '1fr 1fr 1fr',
+});
+
+const NameTypeSelect = ({ input }) => (
+  <NameTypes>
+    <Button
+      uppercase
+      skin={input.value === 'local' ? 'filled-primary' : 'default'}
+      onClick={() => {
+        input.onChange('local');
+      }}
+    >
+      {__('Local')}
+    </Button>
+    <Button
+      uppercase
+      skin={input.value === 'namespaced' ? 'filled-primary' : 'default'}
+      onClick={() => {
+        input.onChange('namespaced');
+      }}
+    >
+      {__('Namespaced')}
+    </Button>
+    <Button
+      uppercase
+      skin={input.value === 'global' ? 'filled-primary' : 'default'}
+      onClick={() => {
+        input.onChange('global');
+      }}
+    >
+      {__('Global')}
+    </Button>
+  </NameTypes>
+);
 
 @connect(state => ({
   username: state.core.userStatus && state.core.userStatus.username,
@@ -63,26 +86,7 @@ class CreateNameForm extends React.Component {
     const { handleSubmit, username } = this.props;
     return (
       <form onSubmit={handleSubmit}>
-        <FormField connectLabel label={__('Name type')}>
-          <Field name="type" component={Select.RF} options={typeOptions} />
-        </FormField>
-
-        <div className="mt2">
-          <Field
-            name="type"
-            component={({ input }) =>
-              input.value === 'namespaced' && (
-                <FormField connectLabel label={__('Namespace')}>
-                  <Field
-                    name="namespace"
-                    component={TextField.RF}
-                    placeholder={__('Namespace')}
-                  />
-                </FormField>
-              )
-            }
-          />
-        </div>
+        <Field name="type" component={NameTypeSelect} />
 
         <div className="mt2">
           <FormField connectLabel label={__('Name')}>
@@ -90,7 +94,7 @@ class CreateNameForm extends React.Component {
               name="name"
               component={TextField.RF}
               skin="filled-inverted"
-              style={{ marginTop: '.4em' }}
+              className="mt0_4"
               placeholder={__('name')}
               left={
                 <Field
@@ -118,19 +122,46 @@ class CreateNameForm extends React.Component {
               }
             />
           </FormField>
-        </div>
 
-        <div className="mt2">
+          <Field
+            name="type"
+            component={({ input }) =>
+              input.value === 'namespaced' && (
+                <FormField connectLabel label={__('Namespace')}>
+                  <Field
+                    name="namespace"
+                    component={TextField.RF}
+                    skin="filled-inverted"
+                    className="mt0_4"
+                    placeholder={__('Namespace')}
+                  />
+                </FormField>
+              )
+            }
+          />
+
           <FormField connectLabel label={__('Register address')}>
             <Field
               name="registerAddress"
               component={TextField.RF}
+              skin="filled-inverted"
+              className="mt0_4"
               placeholder={__('Register address that this name points to')}
             />
           </FormField>
+
+          <Field
+            name="type"
+            component={({ input }) => (
+              <div className="mt2" style={{ textAlign: 'left' }}>
+                {__('Name creation fee')}: {input.value === 'global' ? 2000 : 1}{' '}
+                NXS
+              </div>
+            )}
+          />
         </div>
 
-        <Button skin="primary" wide uppercase className="mt2">
+        <Button skin="primary" wide uppercase className="mt3">
           {__('Create name')}
         </Button>
       </form>
