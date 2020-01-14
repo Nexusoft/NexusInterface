@@ -7,6 +7,10 @@ import Modal from 'components/Modal';
 import Button from 'components/Button';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
+import confirmPin from 'utils/promisified/confirmPin';
+import { errorHandler } from 'utils/form';
+import { openSuccessDialog } from 'lib/ui';
+import { loadNameRecords } from 'lib/user';
 
 __ = __context('CreateName');
 
@@ -60,6 +64,7 @@ const NameTypeSelect = ({ input }) => (
 }))
 @reduxForm({
   form: 'create-name',
+  destroyOnUnmount: false,
   initialValues: {
     type: 'local',
     namespace: '',
@@ -80,10 +85,33 @@ const NameTypeSelect = ({ input }) => (
 
     return errors;
   },
+  onSubmit: async ({ type, name, namespace, registerAddress }) => {
+    const pin = await confirmPin();
+
+    if (pin) {
+      return await apiPost('names/create/name', {
+        pin,
+        name,
+        global: type === 'global',
+        namespace: type === 'namespaced' ? namespace : undefined,
+        register_address: registerAddress,
+      });
+    }
+  },
+  onSubmitSuccess: async (result, dispatch, props) => {
+    if (!result) return; // Submission was cancelled
+    loadNameRecords();
+    props.reset();
+    props.closeModal();
+    openSuccessDialog({
+      message: __('New name has been created'),
+    });
+  },
+  onSubmitFail: errorHandler(__('Error creating name')),
 })
 class CreateNameForm extends React.Component {
   render() {
-    const { handleSubmit, username } = this.props;
+    const { handleSubmit, username, submitting } = this.props;
     return (
       <form onSubmit={handleSubmit}>
         <Field name="type" component={NameTypeSelect} />
@@ -133,7 +161,7 @@ class CreateNameForm extends React.Component {
                     component={TextField.RF}
                     skin="filled-inverted"
                     className="mt0_4"
-                    placeholder={__('Namespace')}
+                    placeholder={__('A namespace you own')}
                   />
                 </FormField>
               )
@@ -161,8 +189,22 @@ class CreateNameForm extends React.Component {
           />
         </div>
 
-        <Button skin="primary" wide uppercase className="mt3">
-          {__('Create name')}
+        <Button
+          skin="primary"
+          wide
+          uppercase
+          className="mt3"
+          type="submit"
+          disabled={submitting}
+        >
+          {submitting ? (
+            <span>
+              <Spinner className="space-right" />
+              <span className="v-align">{__('Creating name')}...</span>
+            </span>
+          ) : (
+            __('Create name')
+          )}
         </Button>
       </form>
     );
