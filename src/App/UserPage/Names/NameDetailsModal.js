@@ -1,10 +1,10 @@
 // External
 import React from 'react';
-import styled from '@emotion/styled';
 import { join } from 'path';
 
 // Internal
 import Modal from 'components/Modal';
+import InfoField from 'components/InfoField';
 import { openConfirmDialog } from 'lib/ui';
 import { modulesDir } from 'consts/paths';
 import { formatDateTime } from 'lib/intl';
@@ -20,33 +20,6 @@ const timeFormatOptions = {
   minute: '2-digit',
   second: '2-digit',
 };
-
-const Row = styled.div({
-  display: 'grid',
-  gridTemplateAreas: '"label value"',
-  gridTemplateColumns: '1fr 2fr',
-  alignItems: 'start',
-  columnGap: '1em',
-  marginBottom: '.6em',
-});
-
-const Label = styled.div(({ theme }) => ({
-  gridArea: 'label',
-  textAlign: 'right',
-  color: theme.mixer(0.875),
-}));
-
-const Value = styled.div({
-  gridArea: 'value',
-  wordBreak: 'break-word',
-});
-
-const Field = ({ label, children }) => (
-  <Row>
-    <Label>{label}</Label>
-    <Value>{children}</Value>
-  </Row>
-);
 
 export default class NameDetailsModal extends React.Component {
   confirmDelete = () => {
@@ -66,25 +39,29 @@ export default class NameDetailsModal extends React.Component {
       <Modal>
         <Modal.Header className="relative">{__('Name Details')}</Modal.Header>
         <Modal.Body>
-          <Field label={__('Name')}>{nameRecord.name}</Field>
-          <Field label={__('Type')}>
+          <InfoField label={__('Name')}>{nameRecord.name}</InfoField>
+          <InfoField label={__('Type')}>
             {nameRecord.global
               ? __('Global')
               : nameRecord.namespace
               ? __('Namespaced')
               : __('Local')}
-          </Field>
+          </InfoField>
           {!!nameRecord.namespace && (
-            <Field label={__('Namespace')}>{nameRecord.namespace}</Field>
+            <InfoField label={__('Namespace')}>
+              {nameRecord.namespace}
+            </InfoField>
           )}
-          <Field label={__('Name address')}>{nameRecord.address}</Field>
-          <Field label={__('Points to')}>{nameRecord.register_address}</Field>
-          <Field label={__('Created at')}>
+          <InfoField label={__('Name address')}>{nameRecord.address}</InfoField>
+          <InfoField label={__('Points to')}>
+            {nameRecord.register_address}
+          </InfoField>
+          <InfoField label={__('Created at')}>
             {formatDateTime(nameRecord.created * 1000, timeFormatOptions)}
-          </Field>
-          <Field label={__('Last modified')}>
+          </InfoField>
+          <InfoField label={__('Last modified')}>
             {formatDateTime(nameRecord.modified * 1000, timeFormatOptions)}
-          </Field>
+          </InfoField>
         </Modal.Body>
       </Modal>
     );
