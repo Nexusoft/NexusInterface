@@ -106,7 +106,7 @@ const NameTypeSelect = ({ input }) => (
     props.reset();
     props.closeModal();
     openSuccessDialog({
-      message: __('New name has been created'),
+      message: __('Name has been created'),
     });
   },
   onSubmitFail: errorHandler(__('Error creating name')),

@@ -11,6 +11,7 @@ import plusIcon from 'icons/plus.svg';
 
 import NameDetailsModal from './NameDetailsModal';
 import CreateNameModal from './CreateNameModal';
+import CreateNamespaceModal from './CreateNamespaceModal';
 import TabContentWrapper from '../TabContentWrapper';
 
 __ = __context('User.Names');
@@ -157,7 +158,11 @@ export default class Names extends React.Component {
                     </EmptyMessage>
                   )}
                 </div>
-                <CreateButton>
+                <CreateButton
+                  onClick={() => {
+                    openModal(CreateNamespaceModal);
+                  }}
+                >
                   <Icon
                     icon={plusIcon}
                     className="space-right"
