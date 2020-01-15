@@ -51,7 +51,7 @@ const namespaceRegex = /^[a-z\d\.]+$/;
     props.reset();
     props.closeModal();
     openSuccessDialog({
-      message: __('Namespace has been created'),
+      message: __('New namespace has been created'),
     });
   },
   onSubmitFail: errorHandler(__('Error creating namespace')),

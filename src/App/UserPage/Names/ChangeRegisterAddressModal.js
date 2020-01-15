@@ -50,12 +50,21 @@ const Prefix = styled.span(({ theme }) => ({
     loadNameRecords();
     props.closeModal();
     openSuccessDialog({
-      message: __('Name updated successfully'),
+      message: __('Name has been updated'),
     });
   },
   onSubmitFail: errorHandler(__('Error updating name')),
 })
 class ChangeRegisterAddressForm extends React.Component {
+  inputRef = React.createRef();
+
+  componentDidMount() {
+    setTimeout(() => {
+      // Select all register address
+      this.inputRef.current.select();
+    }, 0);
+  }
+
   render() {
     const { handleSubmit, username, nameRecord, submitting } = this.props;
     return (
@@ -71,6 +80,7 @@ class ChangeRegisterAddressForm extends React.Component {
 
         <FormField connectLabel label={__('Register address')}>
           <Field
+            inputRef={this.inputRef}
             name="registerAddress"
             component={TextField.RF}
             placeholder={__('Register address that this name points to')}
