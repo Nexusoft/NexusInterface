@@ -57,7 +57,7 @@ const Type = styled.span(({ theme }) => ({
   marginLeft: '1em',
 }));
 
-const Namespace = styled.span(({ theme }) => ({
+const Prefix = styled.span(({ theme }) => ({
   color: theme.mixer(0.5),
 }));
 
@@ -73,6 +73,44 @@ const EmptyMessage = styled(Item)(({ theme }) => ({
   fontStyle: 'italic',
   color: theme.mixer(0.5),
 }));
+
+const Name = ({ nameRecord, username }) => (
+  <Record
+    onClick={() => {
+      openModal(NameDetailsModal, {
+        nameRecord,
+      });
+    }}
+  >
+    <span>
+      {!!nameRecord.namespace ? (
+        <Prefix>{nameRecord.namespace}::</Prefix>
+      ) : !nameRecord.global ? (
+        <Prefix>{username}:</Prefix>
+      ) : null}
+      {nameRecord.name}
+    </span>
+    <Type>
+      {nameRecord.global
+        ? __('Global')
+        : nameRecord.namespace
+        ? __('Namespaced')
+        : __('Local')}
+    </Type>
+  </Record>
+);
+
+const Namespace = ({ namespace }) => (
+  <Record
+    onClick={() => {
+      openModal(NamespaceDetailsModal, {
+        namespace,
+      });
+    }}
+  >
+    {namespace.name}
+  </Record>
+);
 
 @connect(state => ({
   nameRecords: state.core.nameRecords,
@@ -101,30 +139,11 @@ export default class Names extends React.Component {
             <div>
               {!!nameRecords && nameRecords.length > 0 ? (
                 nameRecords.map(nameRecord => (
-                  <Record
+                  <Name
                     key={nameRecord.name}
-                    onClick={() => {
-                      openModal(NameDetailsModal, {
-                        nameRecord,
-                      });
-                    }}
-                  >
-                    <span>
-                      {!!nameRecord.namespace ? (
-                        <Namespace>{nameRecord.namespace}::</Namespace>
-                      ) : !nameRecord.global ? (
-                        <Namespace>{username}:</Namespace>
-                      ) : null}
-                      {nameRecord.name}
-                    </span>
-                    <Type>
-                      {nameRecord.global
-                        ? __('Global')
-                        : nameRecord.namespace
-                        ? __('Namespaced')
-                        : __('Local')}
-                    </Type>
-                  </Record>
+                    nameRecord={nameRecord}
+                    username={username}
+                  />
                 ))
               ) : (
                 <EmptyMessage>{__("You don't own any names")}</EmptyMessage>
@@ -149,16 +168,7 @@ export default class Names extends React.Component {
             <div>
               {!!namespaces && namespaces.length > 0 ? (
                 namespaces.map(namespace => (
-                  <Record
-                    key={namespace.name}
-                    onClick={() => {
-                      openModal(NamespaceDetailsModal, {
-                        namespace,
-                      });
-                    }}
-                  >
-                    {namespace.name}
-                  </Record>
+                  <Namespace key={namespace.name} namespace={namespace} />
                 ))
               ) : (
                 <EmptyMessage>
