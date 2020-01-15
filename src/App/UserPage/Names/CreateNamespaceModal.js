@@ -65,6 +65,8 @@ class CreateNamespaceForm extends React.Component {
           <Field
             name="name"
             component={TextField.RF}
+            skin="filled-inverted"
+            className="mt0_4"
             placeholder={__('Namespace name')}
           />
         </FormField>
@@ -96,7 +98,7 @@ class CreateNamespaceForm extends React.Component {
 }
 
 const CreateNamespaceModal = () => (
-  <Modal style={{ maxWidth: 500 }}>
+  <Modal style={{ maxWidth: 450 }}>
     {closeModal => (
       <>
         <Modal.Header>{__('Create a new namespace')}</Modal.Header>

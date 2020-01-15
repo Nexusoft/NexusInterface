@@ -10,6 +10,7 @@ import { timing } from 'styles';
 import plusIcon from 'icons/plus.svg';
 
 import NameDetailsModal from './NameDetailsModal';
+import NamespaceDetailsModal from './NamespaceDetailsModal';
 import CreateNameModal from './CreateNameModal';
 import CreateNamespaceModal from './CreateNamespaceModal';
 import TabContentWrapper from '../TabContentWrapper';
@@ -144,34 +145,39 @@ export default class Names extends React.Component {
           </div>
 
           <div>
-            {!!nameRecords && (
-              <>
-                <Title>{__('Namespaces')}</Title>
-                <div>
-                  {!!namespaces && namespaces.length > 0 ? (
-                    namespaces.map(namespace => (
-                      <Record key={namespace.name}>{namespace.name}</Record>
-                    ))
-                  ) : (
-                    <EmptyMessage>
-                      {__("You don't own any namespaces")}
-                    </EmptyMessage>
-                  )}
-                </div>
-                <CreateButton
-                  onClick={() => {
-                    openModal(CreateNamespaceModal);
-                  }}
-                >
-                  <Icon
-                    icon={plusIcon}
-                    className="space-right"
-                    style={{ fontSize: '.8em' }}
-                  />
-                  <span className="v-align">{__('Create new namespace')}</span>
-                </CreateButton>
-              </>
-            )}
+            <Title>{__('Namespaces')}</Title>
+            <div>
+              {!!namespaces && namespaces.length > 0 ? (
+                namespaces.map(namespace => (
+                  <Record
+                    key={namespace.name}
+                    onClick={() => {
+                      openModal(NamespaceDetailsModal, {
+                        namespace,
+                      });
+                    }}
+                  >
+                    {namespace.name}
+                  </Record>
+                ))
+              ) : (
+                <EmptyMessage>
+                  {__("You don't own any namespaces")}
+                </EmptyMessage>
+              )}
+            </div>
+            <CreateButton
+              onClick={() => {
+                openModal(CreateNamespaceModal);
+              }}
+            >
+              <Icon
+                icon={plusIcon}
+                className="space-right"
+                style={{ fontSize: '.8em' }}
+              />
+              <span className="v-align">{__('Create new namespace')}</span>
+            </CreateButton>
           </div>
         </NamesLayout>
       </TabContentWrapper>
