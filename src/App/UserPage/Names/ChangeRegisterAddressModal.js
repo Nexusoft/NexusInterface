@@ -77,15 +77,9 @@ class ChangeRegisterAddressForm extends React.Component {
           />
         </FormField>
 
-        {/* <Field
-          name="type"
-          component={({ input }) => (
-            <div className="mt2" style={{ textAlign: 'left' }}>
-              {__('Name creation fee')}: {input.value === 'global' ? 2000 : 1}{' '}
-              NXS
-            </div>
-          )}
-        /> */}
+        <div className="mt1" style={{ textAlign: 'left' }}>
+          {__('Name update fee')}: 1 NXS
+        </div>
 
         <Button
           skin="primary"
