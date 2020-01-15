@@ -73,7 +73,7 @@ const NameTypeSelect = ({ input }) => (
     name: '',
     registerAddress: '',
   },
-  validate: ({ name, registerAddress }) => {
+  validate: ({ name, namespace, type }) => {
     const errors = {};
     if (!name || !name.trim()) {
       errors.name = __('Name is required');
@@ -81,8 +81,8 @@ const NameTypeSelect = ({ input }) => (
       errors.name = __('Name cannot start with a colon character');
     }
 
-    if (!registerAddress) {
-      errors.registerAddress = __('Register address is required');
+    if (type === 'namespaced' && (!namespace || !namespace.trim())) {
+      errors.namespace = __('Namespace is required');
     }
 
     return errors;

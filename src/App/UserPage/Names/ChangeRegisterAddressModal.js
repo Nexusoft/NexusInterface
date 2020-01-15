@@ -26,14 +26,6 @@ const Prefix = styled.span(({ theme }) => ({
 @reduxForm({
   form: 'change-register-address',
   destroyOnUnmount: true,
-  validate: ({ registerAddress }) => {
-    const errors = {};
-    if (!registerAddress) {
-      errors.registerAddress = __('Register address is required');
-    }
-
-    return errors;
-  },
   onSubmit: async ({ registerAddress }, dispatch, { nameRecord }) => {
     const pin = await confirmPin();
 
