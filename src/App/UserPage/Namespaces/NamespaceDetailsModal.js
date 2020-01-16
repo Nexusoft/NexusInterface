@@ -31,7 +31,7 @@ const NamespaceDetailsModal = ({ namespace }) => (
 
       <div className="mt2 flex space-between">
         <div />
-        <Button>{__('Transfer namespace ownership')}</Button>
+        <Button>{__('Transfer ownership')}</Button>
       </div>
     </Modal.Body>
   </Modal>

@@ -80,7 +80,7 @@ const NameDetailsModal = ({ nameRecord }) => (
 
           <div className="mt2 flex space-between">
             <div />
-            <Button>{__('Transfer name ownership')}</Button>
+            <Button>{__('Transfer ownership')}</Button>
           </div>
         </Modal.Body>
       </>
