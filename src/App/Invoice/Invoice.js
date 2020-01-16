@@ -1,48 +1,35 @@
 // External
-import React, { Component } from 'react';
+import React from 'react';
 import { Field } from 'redux-form';
-import { connect } from 'react-redux';
-import memoize from 'utils/memoize';
 import styled from '@emotion/styled';
 
 // Internal
-import AutoSuggest from 'components/AutoSuggest';
-import FormField from 'components/FormField';
-import TextField from 'components/TextField';
+import Tooltip from 'components/Tooltip';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
-import { openModal } from 'lib/ui';
-import AddEditContactModal from 'components/AddEditContactModal';
+import { timing } from 'styles';
 import plusIcon from 'icons/plus.svg';
-import { getAddressNameMap, getRecipientSuggestions } from './selectors';
-import { formatNumber } from 'lib/intl';
-
-__ = __context('Invoice Item');
-
-const ItemLine = styled.div({
-  display: 'grid',
-  gridTemplateColumns: 'auto 8em 5em 10em',
-  gridTemplateRows: 'auto',
-  gridGap: '1em 1em',
-});
-
-const TotalField = styled(TextField)({
-  width: '10em',
-  position: 'relative',
-  top: '100%',
-  marginTop: '-2.25em',
-  input: {
-    textAlign: 'right',
-  },
-});
+import RecipientField from '../SendTritium/RecipientField';
+import InvoiceItem from './invoiceItem';
+import AmountField from '../SendTritium/AmountField';
+import { subtract } from 'utils/calc';
 
 /**
- * Each item in the  invoice
+ * Each Invoice Item  on the Invoice Page list
  *
  * @class RecipientField
  * @extends {Component}
  */
-class InvoiceItem extends Component {
+class Invoice extends Component {
+  /**
+   *Handle Select Address
+   *
+   * @memberof RecipientField
+   */
+  handleSelect = address => {
+    this.props.change(this.props.input.name, address);
+  };
+
   /**
    * Component's Renderable JSX
    *
@@ -87,4 +74,5 @@ class InvoiceItem extends Component {
     );
   }
 }
-export default InvoiceItem;
+
+export default Invoice;

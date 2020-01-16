@@ -35,6 +35,9 @@ import {
   getAccountInfo,
   getRecipientSuggestions,
 } from './selectors';
+import DateTime from 'components/DateTimePicker';
+
+__ = __context('Invoice Form');
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
@@ -119,22 +122,44 @@ class RecipientField extends Component {
     invoiceDescription: '',
     invoiceNumber: 0,
     invoiceReference: '',
+    invoiceDueDate: '',
     sendFrom: '',
     sendDetail: '',
     recipientAddress: '',
     recipientDetail: '',
     items: [{ description: '', units: 1, unitPrice: 0 }],
   },
-  validate: ({ sendFrom }) => {
+  validate: values => {
     const errors = {};
+    const {
+      invoiceDescription,
+      invoiceNumber,
+      invoiceReference,
+      invoiceDueDate,
+      sendFrom,
+      sendDetail,
+      recipientAddress,
+      recipientDetail,
+      items,
+    } = values;
+    if (!invoiceDescription)
+      errors.invoiceDescription = __('Description Needed');
+    if (!invoiceNumber || !isNaN(invoiceNumber))
+      errors.invoiceNumber = __('Invalid Number');
+    if (!invoiceReference) errors.invoiceReference = __('Reference Needed');
+    if (!sendFrom) errors.sendFrom = __('Account Payable Needed');
+    if (!recipientAddress) errors.recipientAddress = __('Address Needed');
+    if (items && items.length == 0) errors.items = __('Items Needed');
+    console.log(errors);
     return errors;
   },
   asyncValidate: async values => {
     console.log(values);
     const {
-      invoicDescription,
+      invoiceDescription,
       invoiceNumber,
       invoiceReference,
+      invoiceDueDate,
       sendFrom,
       sendDetail,
       recipientAddress,
@@ -160,8 +185,9 @@ class RecipientField extends Component {
     return null;
   },
   onSubmit: async ({
-    invoicDescription,
+    invoiceDescription,
     invoiceNumber,
+    invoiceDueDate,
     invoiceReference,
     sendFrom,
     sendDetail,
@@ -169,8 +195,8 @@ class RecipientField extends Component {
     recipientDetail,
     items,
   }) => {
-    console.error('AAAA');
-
+    const creationDate = Date.now();
+    const dueDate = new Date(invoiceDueDate);
     const jsonItems = JSON.stringify(items);
 
     const pin = await confirmPin();
@@ -236,13 +262,15 @@ class InvoiceForm extends Component {
       suggestions,
     } = this.props;
 
+    const { onSubmitSuccess, onSubmitFail, ...other } = this.props;
+
     return (
       <FormComponent onSubmit={handleSubmit}>
         <InvoiceDataSection legend={__('Details')}>
           <FormField label={__('Description')}>
             <Field
               component={TextField.RF}
-              props={{ ...this.props, multiline: true, rows: 1 }}
+              props={{ ...other, multiline: true, rows: 1 }}
               name="invoiceDescription"
               placeholder="Description"
             />
@@ -250,7 +278,7 @@ class InvoiceForm extends Component {
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'auto auto',
+              gridTemplateColumns: 'auto auto auto',
               gridTemplateRows: 'auto',
               gridGap: '1em 1em',
             }}
@@ -269,6 +297,16 @@ class InvoiceForm extends Component {
                 placeholder="Number"
               />
             </FormField>
+            <FormField label={__('Due Date')}>
+              <Field
+                component={TextField.RF}
+                type="datetime-local"
+                name="invoiceDueDate"
+              />
+            </FormField>
+            <FormField label={__('Due Date2')}>
+              <Field component={DateTime.RF} name="invoiceDueDateP" />
+            </FormField>
           </div>
         </InvoiceDataSection>
         <div style={{ display: 'flex' }}>
@@ -285,7 +323,7 @@ class InvoiceForm extends Component {
               <Field
                 component={TextField.RF}
                 name="sendDetail"
-                props={{ ...this.props, multiline: true, rows: 1 }}
+                props={{ ...other, multiline: true, rows: 1 }}
                 placeholder="Name/Address/phoneNumber etc"
               />
             </FormField>
@@ -304,7 +342,7 @@ class InvoiceForm extends Component {
               <Field
                 component={TextField.RF}
                 name="recipientDetail"
-                props={{ ...this.props, multiline: true, rows: 1 }}
+                props={{ ...other, multiline: true, rows: 1 }}
                 placeholder="Name/Address/phoneNumber etc"
               />
             </FormField>

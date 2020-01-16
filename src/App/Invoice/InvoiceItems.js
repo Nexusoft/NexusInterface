@@ -14,7 +14,7 @@ import InvoiceItem from './invoiceItem';
 import AmountField from '../SendTritium/AmountField';
 import { subtract } from 'utils/calc';
 
-__ = __context('Send');
+__ = __context('Invoice Item List');
 
 const RemoveButton = styled.div(({ theme }) => ({
   position: 'absolute',
@@ -84,52 +84,37 @@ class InvoiceItems extends React.Component {
 
     if (!fields) return null;
 
-    if (fields.length === 1) {
-      return (
-        <>
-          {this.returnHeader()}
-          <Field name={`items[0]`} component={InvoiceItem} change={change} />
-          <MoreInfo>
-            <Button skin="hyperlink" onClick={addInvoiceItem}>
-              <PlusIcon icon={plusIcon} className="space-right" />
-              <span className="v-align">{__('Add Item')}</span>
-            </Button>
-          </MoreInfo>
-        </>
-      );
-    } else {
-      return (
-        <>
-          {this.returnHeader()}
-          {fields.map((fieldName, i) => (
-            <div key={i}>
-              <Tooltip.Trigger tooltip={__('Remove Item')}>
-                <RemoveButton
-                  onClick={() => {
-                    fields.remove(i);
-                  }}
-                >
-                  ✕
-                </RemoveButton>
-              </Tooltip.Trigger>
+    return (
+      <>
+        {this.returnHeader()}
+        {fields.map((fieldName, i) => (
+          <div key={i}>
+            <Tooltip.Trigger tooltip={__('Remove Item')}>
+              <RemoveButton
+                onClick={() => {
+                  fields.remove(i);
+                }}
+              >
+                ✕
+              </RemoveButton>
+            </Tooltip.Trigger>
 
-              <Field
-                name={`items[${i}]`}
-                component={InvoiceItem}
-                change={change}
-              />
-            </div>
-          ))}
+            <Field
+              name={`items[${i}]`}
+              component={InvoiceItem}
+              change={change}
+            />
+          </div>
+        ))}
 
-          <MoreInfo>
-            <Button skin="hyperlink" onClick={addInvoiceItem}>
-              <PlusIcon icon={plusIcon} className="space-right" />
-              <span className="v-align">{__('Add Item')}</span>
-            </Button>
-          </MoreInfo>
-        </>
-      );
-    }
+        <MoreInfo>
+          <Button skin="hyperlink" onClick={addInvoiceItem}>
+            <PlusIcon icon={plusIcon} className="space-right" />
+            <span className="v-align">{__('Add Item')}</span>
+          </Button>
+        </MoreInfo>
+      </>
+    );
   }
 }
 export default InvoiceItems;
