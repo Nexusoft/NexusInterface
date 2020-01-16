@@ -5,6 +5,7 @@ import styled from '@emotion/styled';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
 import { switchUserTab } from 'lib/ui';
+import { popupContextMenu } from 'lib/contextMenu';
 import { loadNamespaces } from 'lib/user';
 import { openModal } from 'lib/ui';
 import { timing } from 'styles';
@@ -44,6 +45,18 @@ const Namespace = ({ namespace }) => (
       openModal(NamespaceDetailsModal, {
         namespace,
       });
+    }}
+    onContextMenu={e => {
+      e.stopPropagation();
+      popupContextMenu([
+        {
+          id: 'view-details',
+          label: __('View name details'),
+          click: () => {
+            openModal(NamespaceDetailsModal, { namespace });
+          },
+        },
+      ]);
     }}
   >
     {namespace.name}

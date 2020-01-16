@@ -3,7 +3,9 @@ import styled from '@emotion/styled';
 
 import Tooltip from 'components/Tooltip';
 import ContractDetailsModal from 'components/ContractDetailsModal';
+import TransactionDetailsModal from 'components/TransactionDetailsModal';
 import { openModal } from 'lib/ui';
+import { popupContextMenu } from 'lib/contextMenu';
 import { formatNumber } from 'lib/intl';
 import { getDeltaSign } from 'lib/tritiumTransactions';
 import { consts, timing } from 'styles';
@@ -280,6 +282,25 @@ const contractContent = contract => {
 const Contract = ({ contract, txid }) => (
   <ContractComponent
     onClick={() => openModal(ContractDetailsModal, { contract, txid })}
+    onContextMenu={e => {
+      e.stopPropagation();
+      popupContextMenu([
+        {
+          id: 'contract-details',
+          label: __('View contract details'),
+          click: () => {
+            openModal(ContractDetailsModal, { contract, txid });
+          },
+        },
+        {
+          id: 'tx-details',
+          label: __('View transaction details'),
+          click: () => {
+            openModal(TransactionDetailsModal, { txid });
+          },
+        },
+      ]);
+    }}
   >
     <ContractContent>{contractContent(contract)}</ContractContent>
     {!!contract.amount && (

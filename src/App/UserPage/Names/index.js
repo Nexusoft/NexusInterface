@@ -8,10 +8,12 @@ import { switchUserTab } from 'lib/ui';
 import { loadNameRecords } from 'lib/user';
 import { openModal } from 'lib/ui';
 import { timing } from 'styles';
+import { popupContextMenu } from 'lib/contextMenu';
 import plusIcon from 'icons/plus.svg';
 
 import NameDetailsModal from './NameDetailsModal';
 import CreateNameModal from './CreateNameModal';
+import ChangeRegisterAddressModal from './ChangeRegisterAddressModal';
 import TabContentWrapper from '../TabContentWrapper';
 
 __ = __context('User.Names');
@@ -60,6 +62,25 @@ const Name = ({ nameRecord, username }) => (
       openModal(NameDetailsModal, {
         nameRecord,
       });
+    }}
+    onContextMenu={e => {
+      e.stopPropagation();
+      popupContextMenu([
+        {
+          id: 'view-details',
+          label: __('View name details'),
+          click: () => {
+            openModal(NameDetailsModal, { nameRecord });
+          },
+        },
+        {
+          id: 'change-register-address',
+          label: __('Change register address'),
+          click: () => {
+            openModal(ChangeRegisterAddressModal, { nameRecord });
+          },
+        },
+      ]);
     }}
   >
     <span>
