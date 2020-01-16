@@ -2,12 +2,12 @@ import { ipcRenderer } from 'electron';
 
 export const defaultMenu = [
   {
-    label: 'Copy',
+    label: __('Copy'),
     accelerator: 'CmdOrCtrl+C',
     role: 'copy',
   },
   {
-    label: 'Paste',
+    label: __('Paste'),
     accelerator: 'CmdOrCtrl+V',
     role: 'paste',
   },

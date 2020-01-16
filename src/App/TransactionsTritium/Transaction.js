@@ -2,6 +2,7 @@ import React from 'react';
 import styled from '@emotion/styled';
 
 import { formatDateTime } from 'lib/intl';
+import { popupContextMenu } from 'lib/contextMenu';
 import * as color from 'utils/color';
 import { timing } from 'styles';
 import { openModal } from 'lib/ui';
@@ -108,6 +109,18 @@ const Transaction = ({ transaction }) => {
         onClick={() =>
           openModal(TransactionDetailsModal, { txid: transaction.txid })
         }
+        onContextMenu={e => {
+          e.stopPropagation();
+          popupContextMenu([
+            {
+              id: 'tx-details',
+              label: __('View transaction details'),
+              click: () => {
+                openModal(TransactionDetailsModal, { txid: transaction.txid });
+              },
+            },
+          ]);
+        }}
       >
         <TransactionDate>
           <FullDateTime>
