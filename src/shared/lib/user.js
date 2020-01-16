@@ -6,6 +6,7 @@ import { legacyMode } from 'consts/misc';
 import { walletEvents } from 'lib/wallet';
 import { openModal } from 'lib/ui';
 import { isLoggedIn } from 'selectors';
+import listAll from 'utils/listAll';
 import MigrateAccountModal from 'components/MigrateAccountModal';
 
 const getStakeInfo = async () => {
@@ -47,7 +48,7 @@ export const logOut = async () => {
 };
 
 export const loadOwnedTokens = async () => {
-  const result = await apiPost('users/list/tokens');
+  const result = await listAll('users/list/tokens');
   store.dispatch({
     type: TYPE.SET_USER_OWNED_TOKENS,
     payload: result,
@@ -133,7 +134,7 @@ export const updateAccountBalances = async () => {
 
 export const loadNameRecords = async () => {
   try {
-    const nameRecords = await apiPost('users/list/names');
+    const nameRecords = await listAll('users/list/names');
     store.dispatch({ type: TYPE.SET_NAME_RECORDS, payload: nameRecords });
   } catch (err) {
     console.error('users/list/names failed', err);
@@ -142,7 +143,7 @@ export const loadNameRecords = async () => {
 
 export const loadNamespaces = async () => {
   try {
-    const namespaces = await apiPost('users/list/namespaces');
+    const namespaces = await listAll('users/list/namespaces');
     store.dispatch({ type: TYPE.SET_NAME_RECORDSPACES, payload: namespaces });
   } catch (err) {
     console.error('users/list/namespaces failed', err);

@@ -7,7 +7,7 @@ import WaitingMessage from 'components/WaitingMessage';
 import Table from 'components/Table';
 import ContractDetailsModal from 'components/ContractDetailsModal';
 import FieldSet from 'components/FieldSet';
-import { apiPost } from 'lib/tritiumApi';
+import listAll from 'utils/listAll';
 import { formatDateTime, formatNumber, formatCurrency } from 'lib/intl';
 import { openModal, toggleUserBalanceDisplayFiat } from 'lib/ui';
 import { handleError } from 'utils/form';
@@ -171,22 +171,14 @@ class AccountHistoryModal extends React.Component {
   async componentDidMount() {
     const { account } = this.props;
     try {
-      const limit = 100;
-      let transactions = [];
-      let page = 0;
-      let results;
-      do {
-        results = await apiPost(
-          account.token === '0'
-            ? // A NXS account
-              'finance/list/account/transactions'
-            : // A token account
-              'tokens/list/account/transactions',
-          { page, limit, address: account.address, verbose: 'summary' }
-        );
-        transactions = [...transactions, ...results];
-        page++;
-      } while (results && results.length === limit);
+      const transactions = await listAll(
+        account.token === '0'
+          ? // A NXS account
+            'finance/list/account/transactions'
+          : // A token account
+            'tokens/list/account/transactions',
+        { address: account.address, verbose: 'summary' }
+      );
 
       const contracts = transactions.reduce((contracts, tx) => {
         if (Array.isArray(tx.contracts)) {
