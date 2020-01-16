@@ -2,24 +2,30 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import GA from 'lib/googleAnalytics';
+import styled from '@emotion/styled';
+import { formatDateTime } from 'lib/intl';
+import Button from 'components/Button';
 
 // Internal Global Dependencies
 import Icon from 'components/Icon';
 import Panel from 'components/Panel';
 import Table from 'components/Table';
 import { openModal } from 'lib/ui';
+import nexusIcon from 'icons/NXS_coin.svg';
 
 //Invoice
 import InvoiceForm from './InvoiceForm';
-
-import nexusIcon from 'icons/NXS_coin.svg';
-import styled from '@emotion/styled';
-import { formatDateTime } from 'lib/intl';
+import Filters from './Filters';
 import InvoiceDetailModal from './invoiceDetailsModal';
+
+import plusIcon from 'icons/plus.svg';
+import memoize from 'utils/memoize';
 
 __ = __context('Invoice');
 
 const contractStatus = ['Pending', 'Paid', 'Rejected'];
+
+const Header = styled.div({});
 
 const timeFormatOptions = {
   year: 'numeric',
@@ -78,10 +84,23 @@ const invoices = [
   },
 ];
 
+const memorizedFilters = memoize(
+  (invoiceList, referenceQuery, timespan, status) =>
+    invoiceList &&
+    invoiceList.filter(
+      element =>
+        (!referenceQuery || element.reference.includes(referenceQuery)) &&
+        (!status ||
+          status === 'ALL' ||
+          element.status.toLowerCase() === status.toLowerCase())
+    )
+);
+
 // React-Redux mandatory methods
 const mapStateToProps = state => {
   return {
     ...state.core,
+    ...state.ui,
   };
 };
 
@@ -98,10 +117,26 @@ class Invoice extends Component {
   }
 
   render() {
+    const { referenceQuery, status, timespan } = this.props.invoices;
+    const filteredInvoices = memorizedFilters(
+      invoices,
+      referenceQuery,
+      timespan,
+      status
+    );
+    console.log(status);
+    console.log(filteredInvoices);
     return (
       <Panel icon={nexusIcon} title={__('Invoice')}>
+        <Header>
+          <Filters></Filters>
+          <Button onClick={() => openModal(InvoiceForm)}>
+            <Icon icon={plusIcon} style={{ fontSize: '.8em', opacity: 0.7 }} />
+            {'   New Invoice'}
+          </Button>
+        </Header>
         <InvoiceTable
-          data={invoices}
+          data={filteredInvoices}
           columns={tableColumns}
           defaultPageSize={10}
           getTrProps={(state, row) => {
@@ -122,7 +157,6 @@ class Invoice extends Component {
             };
           }}
         />
-        <InvoiceForm />
       </Panel>
     );
   }

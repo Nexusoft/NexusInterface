@@ -24,6 +24,7 @@ import confirmPin from 'utils/promisified/confirmPin';
 import questionIcon from 'icons/question-mark-circle.svg';
 import FieldSet from 'components/FieldSet';
 import * as color from 'utils/color';
+import Modal from 'components/Modal';
 
 import InvoiceItems from './InvoiceItems';
 import { formatNumber } from 'lib/intl';
@@ -265,107 +266,111 @@ class InvoiceForm extends Component {
     const { onSubmitSuccess, onSubmitFail, ...other } = this.props;
 
     return (
-      <FormComponent onSubmit={handleSubmit}>
-        <InvoiceDataSection legend={__('Details')}>
-          <FormField label={__('Description')}>
-            <Field
-              component={TextField.RF}
-              props={{ ...other, multiline: true, rows: 1 }}
-              name="invoiceDescription"
-              placeholder="Description"
-            />
-          </FormField>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'auto auto auto',
-              gridTemplateRows: 'auto',
-              gridGap: '1em 1em',
-            }}
-          >
-            <FormField label={__('Reference')}>
-              <Field
-                component={TextField.RF}
-                name="invoiceReference"
-                placeholder="Reference"
-              />
-            </FormField>
-            <FormField label={__('Number')}>
-              <Field
-                component={TextField.RF}
-                name="invoiceNumber"
-                placeholder="Number"
-              />
-            </FormField>
-            <FormField label={__('Due Date')}>
-              <Field
-                component={TextField.RF}
-                type="datetime-local"
-                name="invoiceDueDate"
-              />
-            </FormField>
-            <FormField label={__('Due Date2')}>
-              <Field component={DateTime.RF} name="invoiceDueDateP" />
-            </FormField>
-          </div>
-        </InvoiceDataSection>
-        <div style={{ display: 'flex' }}>
-          <FromSection legend={__('From')}>
-            <FormField label={__('Account Payable')}>
-              <Field
-                component={Select.RF}
-                name="sendFrom"
-                placeholder={__('Select an account')}
-                options={accountOptions}
-              />
-            </FormField>
-            <FormField label={__('Sender Details')}>
-              <Field
-                component={TextField.RF}
-                name="sendDetail"
-                props={{ ...other, multiline: true, rows: 1 }}
-                placeholder="Name/Address/phoneNumber etc"
-              />
-            </FormField>
-          </FromSection>
-          <ToSection legend={__('To')}>
-            <FormField label={__('Recipient')}>
-              <Field
-                component={RecipientField}
-                name="recipientAddress"
+      <Modal
+        style={{
+          width: '90%',
+          maxHeight: '90%',
+          height: '90%',
+        }}
+      >
+        <Modal.Header>{'New Invoice'}</Modal.Header>
+        <Modal.Body>
+          <FormComponent onSubmit={handleSubmit}>
+            <InvoiceDataSection legend={__('Details')}>
+              <FormField label={__('Description')}>
+                <Field
+                  component={TextField.RF}
+                  props={{ ...other, multiline: true, rows: 1 }}
+                  name="invoiceDescription"
+                  placeholder="Description"
+                />
+              </FormField>
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'auto auto auto',
+                  gridTemplateRows: 'auto',
+                  gridGap: '1em 1em',
+                }}
+              >
+                <FormField label={__('Reference')}>
+                  <Field
+                    component={TextField.RF}
+                    name="invoiceReference"
+                    placeholder="Reference"
+                  />
+                </FormField>
+                <FormField label={__('Number')}>
+                  <Field
+                    component={TextField.RF}
+                    name="invoiceNumber"
+                    placeholder="Number"
+                  />
+                </FormField>
+                <FormField label={__('Due Date')}>
+                  <Field component={DateTime.RF} name="invoiceDueDate" />
+                </FormField>
+              </div>
+            </InvoiceDataSection>
+            <div style={{ display: 'flex' }}>
+              <FromSection legend={__('From')}>
+                <FormField label={__('Account Payable')}>
+                  <Field
+                    component={Select.RF}
+                    name="sendFrom"
+                    placeholder={__('Select an account')}
+                    options={accountOptions}
+                  />
+                </FormField>
+                <FormField label={__('Sender Details')}>
+                  <Field
+                    component={TextField.RF}
+                    name="sendDetail"
+                    props={{ ...other, multiline: true, rows: 1 }}
+                    placeholder="Name/Address/phoneNumber etc"
+                  />
+                </FormField>
+              </FromSection>
+              <ToSection legend={__('To')}>
+                <FormField label={__('Recipient')}>
+                  <Field
+                    component={RecipientField}
+                    name="recipientAddress"
+                    change={change}
+                    suggestions={suggestions}
+                    placeholder="Recipient Address"
+                  />
+                </FormField>
+                <FormField label={__('Recipient Details')}>
+                  <Field
+                    component={TextField.RF}
+                    name="recipientDetail"
+                    props={{ ...other, multiline: true, rows: 1 }}
+                    placeholder="Name/Address/phoneNumber etc"
+                  />
+                </FormField>
+              </ToSection>
+            </div>
+            <ItemListSection legend={__('Items')}>
+              <FieldArray
+                component={InvoiceItems}
+                name="items"
                 change={change}
-                suggestions={suggestions}
-                placeholder="Recipient Address"
-              />
-            </FormField>
-            <FormField label={__('Recipient Details')}>
-              <Field
-                component={TextField.RF}
-                name="recipientDetail"
-                props={{ ...other, multiline: true, rows: 1 }}
-                placeholder="Name/Address/phoneNumber etc"
-              />
-            </FormField>
-          </ToSection>
-        </div>
-        <ItemListSection legend={__('Items')}>
-          <FieldArray
-            component={InvoiceItems}
-            name="items"
-            change={change}
-            addInvoiceItem={this.addInvoiceItem}
-          ></FieldArray>
-        </ItemListSection>
+                addInvoiceItem={this.addInvoiceItem}
+              ></FieldArray>
+            </ItemListSection>
 
-        <Footer className="mt3 flex space-between">
-          <Button type="submit" skin="primary" disabled={submitting}>
-            {__('Submit')}
-          </Button>
-          {__('Total: %{total} NXS', {
-            total: formatNumber(this.gatherTotal(), 6),
-          })}
-        </Footer>
-      </FormComponent>
+            <Footer className="mt3 flex space-between">
+              <Button type="submit" skin="primary" disabled={submitting}>
+                {__('Submit')}
+              </Button>
+              {__('Total: %{total} NXS', {
+                total: formatNumber(this.gatherTotal(), 6),
+              })}
+            </Footer>
+          </FormComponent>
+        </Modal.Body>
+      </Modal>
     );
   }
 }
