@@ -66,7 +66,7 @@ const Name = ({ nameRecord, username }) => (
     }}
     onContextMenu={e => {
       e.stopPropagation();
-      popupContextMenu([
+      const template = [
         {
           id: 'view-details',
           label: __('View name details'),
@@ -81,14 +81,17 @@ const Name = ({ nameRecord, username }) => (
             openModal(ChangeRegisterAddressModal, { nameRecord });
           },
         },
-        {
+      ];
+      if (nameRecord.global || nameRecord.namespace) {
+        template.push({
           id: 'transfer',
           label: __('Transfer name'),
           click: () => {
             openModal(TransferNameModal, { nameRecord });
           },
-        },
-      ]);
+        });
+      }
+      popupContextMenu(template);
     }}
   >
     <span>

@@ -79,17 +79,19 @@ const NameDetailsModal = ({ nameRecord }) => (
             {formatDateTime(nameRecord.modified * 1000, timeFormatOptions)}
           </InfoField>
 
-          <div className="mt2 flex space-between">
-            <div />
-            <Button
-              onClick={() => {
-                closeModal();
-                openModal(TransferNameModal, { nameRecord });
-              }}
-            >
-              {__('Transfer ownership')}
-            </Button>
-          </div>
+          {(!!nameRecord.global || !!nameRecord.namespace) && (
+            <div className="mt2 flex space-between">
+              <div />
+              <Button
+                onClick={() => {
+                  closeModal();
+                  openModal(TransferNameModal, { nameRecord });
+                }}
+              >
+                {__('Transfer ownership')}
+              </Button>
+            </div>
+          )}
         </Modal.Body>
       </>
     )}
