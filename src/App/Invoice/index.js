@@ -47,10 +47,15 @@ const tableColumns = [
     width: 180,
   },
   {
+    id: 'status',
+    Header: __('Status'),
+    accessor: 'status',
+    width: 100,
+  },
+  {
     id: 'reference',
     Header: __('Reference'),
     accessor: 'reference',
-    width: 240,
   },
   {
     id: 'accountPayable',
@@ -64,12 +69,6 @@ const tableColumns = [
     accessor: 'receipiant',
     width: 240,
   },
-  {
-    id: 'status',
-    Header: __('Status'),
-    accessor: 'status',
-    width: 100,
-  },
 ];
 
 const InvoiceTable = styled(Table)({});
@@ -78,6 +77,27 @@ const invoices = [
   {
     timestamp: '199232403',
     reference: 'Test1',
+    accountPayable: '8MAF92nNAkk3288Skfn1n44kksn356n2k1',
+    receipiant: '2kaDJ92n1fj4n85Nj5n38fj28',
+    status: 'Pending',
+  },
+  {
+    timestamp: '19925562103',
+    reference: 'aTest2',
+    accountPayable: '8MAF92nNAkk3288Skfn1n44kksn356n2k1',
+    receipiant: '2kaDJ92n1fj4n85Nj5n38fj28',
+    status: 'Rejected',
+  },
+  {
+    timestamp: '1992324203',
+    reference: 'uTest3',
+    accountPayable: '8MAF92nNAkk3288Skfn1n44kksn356n2k1',
+    receipiant: '2kaDJ92n1fj4n85Nj5n38fj28',
+    status: 'Paid',
+  },
+  {
+    timestamp: '19923240993',
+    reference: 'pTest4',
     accountPayable: '8MAF92nNAkk3288Skfn1n44kksn356n2k1',
     receipiant: '2kaDJ92n1fj4n85Nj5n38fj28',
     status: 'Pending',
@@ -139,6 +159,7 @@ class Invoice extends Component {
           data={filteredInvoices}
           columns={tableColumns}
           defaultPageSize={10}
+          defaultSortingColumnIndex={0}
           getTrProps={(state, row) => {
             const invoice = row && row.original;
             return {
