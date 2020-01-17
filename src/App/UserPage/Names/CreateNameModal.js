@@ -119,6 +119,23 @@ class CreateNameForm extends React.Component {
         <Field name="type" component={NameTypeSelect} />
 
         <div className="mt2">
+          <Field
+            name="type"
+            component={({ input }) =>
+              input.value === 'namespaced' && (
+                <FormField connectLabel label={__('Namespace')}>
+                  <Field
+                    name="namespace"
+                    component={TextField.RF}
+                    skin="filled-inverted"
+                    className="mt0_4"
+                    placeholder={__('A namespace you own')}
+                  />
+                </FormField>
+              )
+            }
+          />
+
           <FormField connectLabel label={__('Name')}>
             <Field
               name="name"
@@ -152,23 +169,6 @@ class CreateNameForm extends React.Component {
               }
             />
           </FormField>
-
-          <Field
-            name="type"
-            component={({ input }) =>
-              input.value === 'namespaced' && (
-                <FormField connectLabel label={__('Namespace')}>
-                  <Field
-                    name="namespace"
-                    component={TextField.RF}
-                    skin="filled-inverted"
-                    className="mt0_4"
-                    placeholder={__('A namespace you own')}
-                  />
-                </FormField>
-              )
-            }
-          />
 
           <FormField connectLabel label={__('Register address')}>
             <Field
