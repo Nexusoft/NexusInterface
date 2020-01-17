@@ -11,6 +11,7 @@ import { openModal } from 'lib/ui';
 import editIcon from 'icons/edit.svg';
 
 import ChangeRegisterAddressModal from './ChangeRegisterAddressModal';
+import TransferNameModal from './TransferNameModal';
 
 __ = __context('NameDetails');
 
@@ -80,7 +81,14 @@ const NameDetailsModal = ({ nameRecord }) => (
 
           <div className="mt2 flex space-between">
             <div />
-            <Button>{__('Transfer ownership')}</Button>
+            <Button
+              onClick={() => {
+                closeModal();
+                openModal(TransferNameModal, { nameRecord });
+              }}
+            >
+              {__('Transfer ownership')}
+            </Button>
           </div>
         </Modal.Body>
       </>

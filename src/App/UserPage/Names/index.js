@@ -14,6 +14,7 @@ import plusIcon from 'icons/plus.svg';
 import NameDetailsModal from './NameDetailsModal';
 import CreateNameModal from './CreateNameModal';
 import ChangeRegisterAddressModal from './ChangeRegisterAddressModal';
+import TransferNameModal from './TransferNameModal';
 import TabContentWrapper from '../TabContentWrapper';
 
 __ = __context('User.Names');
@@ -78,6 +79,13 @@ const Name = ({ nameRecord, username }) => (
           label: __('Change register address'),
           click: () => {
             openModal(ChangeRegisterAddressModal, { nameRecord });
+          },
+        },
+        {
+          id: 'transfer',
+          label: __('Transfer name'),
+          click: () => {
+            openModal(TransferNameModal, { nameRecord });
           },
         },
       ]);
