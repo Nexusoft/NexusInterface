@@ -20,6 +20,10 @@ const Prefix = styled.span(({ theme }) => ({
   color: theme.mixer(0.5),
 }));
 
+const Name = styled.span(({ theme }) => ({
+  color: theme.foreground,
+}));
+
 @connect(state => ({
   username: state.core.userStatus && state.core.userStatus.username,
 }))
@@ -67,7 +71,7 @@ class ChangeRegisterAddressForm extends React.Component {
           ) : (
             <Prefix>{username + ':'}</Prefix>
           )}
-          {nameRecord.name}
+          <Name>{nameRecord.name}</Name>
         </FormField>
 
         <FormField connectLabel label={__('Register address')}>
