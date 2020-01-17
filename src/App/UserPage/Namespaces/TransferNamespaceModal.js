@@ -12,6 +12,7 @@ import { errorHandler } from 'utils/form';
 import { openSuccessDialog } from 'lib/ui';
 import { loadNamespaces } from 'lib/user';
 import { apiPost } from 'lib/tritiumApi';
+import { userIdRegex } from 'consts/misc';
 
 __ = __context('TransferNamespace');
 
@@ -23,26 +24,23 @@ const Namespace = styled.span(({ theme }) => ({
   form: 'transfer-namespace',
   destroyOnUnmount: true,
   initialValues: {
-    destination: '',
+    recipient: '',
   },
-  validate: ({ destination }) => {
+  validate: ({ recipient }) => {
     const errors = {};
-    if (!destination) {
-      errors.destination = __('Destination is required');
+    if (!recipient) {
+      errors.recipient = __('Destination is required');
     }
     return errors;
   },
-  onSubmit: async ({ destination }, dispatch, { namespace }) => {
+  onSubmit: async ({ recipient }, dispatch, { namespace }) => {
     const pin = await confirmPin();
 
     const params = { pin, address: namespace.address };
-    const validation = await apiPost('system/validate/address', {
-      address: destination,
-    });
-    if (validation.is_valid) {
-      params.destination = destination;
+    if (userIdRegex.test(recipient)) {
+      params.destination = recipient;
     } else {
-      params.username = destination;
+      params.username = recipient;
     }
 
     if (pin) {
@@ -71,10 +69,10 @@ class TransferNamespaceForm extends React.Component {
         <FormField connectLabel label={__('Transfer to')}>
           <Field
             inputRef={this.inputRef}
-            name="destination"
+            name="recipient"
             autoFocus
             component={TextField.RF}
-            placeholder={__('Destination name or address')}
+            placeholder={__('Recipient username or user ID')}
           />
         </FormField>
 

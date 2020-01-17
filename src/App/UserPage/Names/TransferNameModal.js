@@ -13,6 +13,7 @@ import { errorHandler } from 'utils/form';
 import { openSuccessDialog } from 'lib/ui';
 import { loadNameRecords } from 'lib/user';
 import { apiPost } from 'lib/tritiumApi';
+import { userIdRegex } from 'consts/misc';
 
 __ = __context('TransferName');
 
@@ -31,26 +32,23 @@ const Name = styled.span(({ theme }) => ({
   form: 'transfer-name',
   destroyOnUnmount: true,
   initialValues: {
-    destination: '',
+    recipient: '',
   },
-  validate: ({ destination }) => {
+  validate: ({ recipient }) => {
     const errors = {};
-    if (!destination) {
-      errors.destination = __('Destination is required');
+    if (!recipient) {
+      errors.recipient = __('Recipient is required');
     }
     return errors;
   },
-  onSubmit: async ({ destination }, dispatch, { nameRecord }) => {
+  onSubmit: async ({ recipient }, dispatch, { nameRecord }) => {
     const pin = await confirmPin();
 
     const params = { pin, address: nameRecord.address };
-    const validation = await apiPost('system/validate/address', {
-      address: destination,
-    });
-    if (validation.is_valid) {
-      params.destination = destination;
+    if (userIdRegex.test(recipient)) {
+      params.destination = recipient;
     } else {
-      params.username = destination;
+      params.username = recipient;
     }
 
     if (pin) {
@@ -84,10 +82,10 @@ class TransferNameForm extends React.Component {
         <FormField connectLabel label={__('Transfer to')}>
           <Field
             inputRef={this.inputRef}
-            name="destination"
+            name="recipient"
             autoFocus
             component={TextField.RF}
-            placeholder={__('Destination name or address')}
+            placeholder={__('Recipient username or user ID')}
           />
         </FormField>
 
