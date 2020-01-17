@@ -4,15 +4,15 @@ import styled from '@emotion/styled';
 
 import Icon from 'components/Icon';
 import Button from 'components/Button';
-import { switchUserTab } from 'lib/ui';
+import { switchUserTab, openModal } from 'lib/ui';
 import { popupContextMenu } from 'lib/contextMenu';
 import { loadNamespaces } from 'lib/user';
-import { openModal } from 'lib/ui';
 import { timing } from 'styles';
 import plusIcon from 'icons/plus.svg';
 
 import NamespaceDetailsModal from './NamespaceDetailsModal';
 import CreateNamespaceModal from './CreateNamespaceModal';
+import TransferNamespaceModal from './TransferNamespaceModal';
 import TabContentWrapper from '../TabContentWrapper';
 
 __ = __context('User.Namespaces');
@@ -54,6 +54,13 @@ const Namespace = ({ namespace }) => (
           label: __('View name details'),
           click: () => {
             openModal(NamespaceDetailsModal, { namespace });
+          },
+        },
+        {
+          id: 'transfer-namespace',
+          label: __('Transfer namespace'),
+          click: () => {
+            openModal(TransferNamespaceModal, { namespace });
           },
         },
       ]);
