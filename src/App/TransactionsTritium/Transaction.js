@@ -63,6 +63,7 @@ const TransactionDate = styled.div({
 
 const FullDateTime = styled.div({
   fontSize: 14,
+  padding: '0 0.1px', // fix a small display bug
 });
 
 const ShortDate = styled.div(({ theme }) => ({
