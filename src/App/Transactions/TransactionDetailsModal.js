@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import styled from '@emotion/styled';
 
 import Modal from 'components/Modal';
+import InfoField from 'components/InfoField';
 import WaitingMessage from 'components/WaitingMessage';
 import { formatDateTime } from 'lib/intl';
 import { isPending, fetchTransaction } from 'lib/transactions';
@@ -19,33 +19,6 @@ const timeFormatOptions = {
   minute: '2-digit',
   second: '2-digit',
 };
-
-const Row = styled.div({
-  display: 'grid',
-  gridTemplateAreas: '"label value"',
-  gridTemplateColumns: '1fr 3fr',
-  alignItems: 'start',
-  columnGap: '1em',
-  marginBottom: '.6em',
-});
-
-const Label = styled.div(({ theme }) => ({
-  gridArea: 'label',
-  textAlign: 'right',
-  color: theme.mixer(0.875),
-}));
-
-const Value = styled.div({
-  gridArea: 'value',
-  wordBreak: 'break-word',
-});
-
-const Field = ({ label, children }) => (
-  <Row>
-    <Label>{label}</Label>
-    <Value>{children}</Value>
-  </Row>
-);
 
 @connect(
   ({ settings: { minConfirmations }, transactions: { map } }, props) => ({
@@ -68,32 +41,32 @@ export default class TransactionDetailsModal extends React.Component {
         <Modal.Body>
           {transaction ? (
             <>
-              <Field label={__('Time')}>
+              <InfoField label={__('Time')}>
                 {formatDateTime(transaction.time * 1000, timeFormatOptions)}
-              </Field>
-              <Field label={__('Category')}>
+              </InfoField>
+              <InfoField label={__('Category')}>
                 {categoryText(transaction.category)}
-              </Field>
-              <Field label={__('Amount')}>{transaction.amount}</Field>
+              </InfoField>
+              <InfoField label={__('Amount')}>{transaction.amount}</InfoField>
               {!!transaction.fee &&
                 ['debit', 'credit', 'receive', 'send'].includes(
                   transaction.category
-                ) && <Field label={__('Fee')}>{transaction.fee}</Field>}
-              <Field label={__('Account')}>{transaction.account}</Field>
-              <Field label={__('Address')}>
+                ) && <InfoField label={__('Fee')}>{transaction.fee}</InfoField>}
+              <InfoField label={__('Account')}>{transaction.account}</InfoField>
+              <InfoField label={__('Address')}>
                 <span className="monospace">{transaction.address}</span>
-              </Field>
-              <Field label={__('Confirmations')}>
+              </InfoField>
+              <InfoField label={__('Confirmations')}>
                 {transaction.confirmations}
                 {isPending(transaction, minConfirmations) &&
                   ` (${__('Pending')})`}
-              </Field>
-              <Field label={__('Transaction ID')}>
+              </InfoField>
+              <InfoField label={__('Transaction ID')}>
                 <span className="monospace">{transaction.txid}</span>
-              </Field>
-              <Field label={__('Block hash')}>
+              </InfoField>
+              <InfoField label={__('Block hash')}>
                 <span className="monospace">{transaction.blockhash}</span>
-              </Field>
+              </InfoField>
             </>
           ) : (
             <WaitingMessage>

@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
 import Button from 'components/Button';
-import Tooltip from 'components/Tooltip';
 import AdjustStakeModal from 'components/AdjustStakeModal';
 import MigrateStakeModal from 'components/MigrateStakeModal';
 import { switchUserTab } from 'lib/ui';
@@ -12,8 +11,9 @@ import { restartCore } from 'lib/core';
 import { openModal } from 'lib/ui';
 import confirm from 'utils/promisified/confirm';
 import { formatNumber, formatDateTime } from 'lib/intl';
-
 import QuestionCircle from 'components/QuestionCircle';
+
+import TabContentWrapper from './TabContentWrapper';
 
 __ = __context('User.Staking');
 
@@ -24,13 +24,6 @@ const dateTimeFormat = {
   minute: '2-digit',
   second: '2-digit',
 };
-
-const StakingWrapper = styled.div(({ theme }) => ({
-  maxWidth: 400,
-  margin: '0 auto',
-  paddingTop: 15,
-  color: theme.mixer(0.75),
-}));
 
 const Line = styled.div(
   {
@@ -87,7 +80,7 @@ export default class Staking extends React.Component {
     console.log(this.props);
     return (
       !!stakeInfo && (
-        <StakingWrapper>
+        <TabContentWrapper maxWidth={400}>
           <Line bold>
             <div>{__('Status')}</div>
             <div>{stakeInfo.staking ? __('Staking') : __('Not staking')}</div>
@@ -224,7 +217,7 @@ export default class Staking extends React.Component {
               {stakingEnabled ? __('Stop staking') : __('Start staking')}
             </Button>
           </div>
-        </StakingWrapper>
+        </TabContentWrapper>
       )
     );
   }

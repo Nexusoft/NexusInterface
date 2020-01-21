@@ -1,9 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import styled from '@emotion/styled';
 
 import Modal from 'components/Modal';
 import Button from 'components/Button';
+import InfoField from 'components/InfoField';
 import AdjustStakeModal from 'components/AdjustStakeModal';
 import { goToSend } from 'lib/send';
 import { formatDateTime } from 'lib/intl';
@@ -23,51 +23,28 @@ const timeFormatOptions = {
   second: '2-digit',
 };
 
-const Row = styled.div({
-  display: 'grid',
-  gridTemplateAreas: '"label value"',
-  gridTemplateColumns: '1fr 2fr',
-  alignItems: 'start',
-  columnGap: '1em',
-  marginBottom: '.6em',
-});
-
-const Label = styled.div(({ theme }) => ({
-  gridArea: 'label',
-  textAlign: 'right',
-  color: theme.mixer(0.875),
-}));
-
-const Value = styled.div({
-  gridArea: 'value',
-  wordBreak: 'break-word',
-});
-
-const Field = ({ label, children }) => (
-  <Row>
-    <Label>{label}</Label>
-    <Value>{children}</Value>
-  </Row>
-);
-
 const AccountDetailsModal = ({ account, stakeInfo }) => (
   <Modal>
     {closeModal => (
       <>
         <Modal.Header>{__('Account Details')}</Modal.Header>
         <Modal.Body>
-          <Field label={__('Account name')}>{account.name}</Field>
-          <Field label={__('Created at')}>
+          <InfoField ratio={[1, 2]} label={__('Account name')}>
+            {account.name}
+          </InfoField>
+          <InfoField ratio={[1, 2]} label={__('Created at')}>
             {formatDateTime(account.created * 1000, timeFormatOptions)}
-          </Field>
-          <Field label={__('Last modified')}>
+          </InfoField>
+          <InfoField ratio={[1, 2]} label={__('Last modified')}>
             {formatDateTime(account.modified * 1000, timeFormatOptions)}
-          </Field>
-          <Field label={__('Token name')}>{account.token_name}</Field>
-          <Field label={__('Total account balance')}>
+          </InfoField>
+          <InfoField ratio={[1, 2]} label={__('Token name')}>
+            {account.token_name}
+          </InfoField>
+          <InfoField ratio={[1, 2]} label={__('Total account balance')}>
             {formatNumber(totalBalance(account), 6)} {account.token_name}
-          </Field>
-          <Field label={__('Available balance')}>
+          </InfoField>
+          <InfoField ratio={[1, 2]} label={__('Available balance')}>
             <span className="v-align">
               {formatNumber(account.balance, 6)} {account.token_name}
             </span>
@@ -84,26 +61,26 @@ const AccountDetailsModal = ({ account, stakeInfo }) => (
                 {__('Send %{token_name}', { token_name: account.token_name })}
               </Button>
             )}
-          </Field>
-          <Field label={__('Pending balance')}>
+          </InfoField>
+          <InfoField ratio={[1, 2]} label={__('Pending balance')}>
             {formatNumber(account.pending, 6)} {account.token_name}
-          </Field>
-          <Field label={__('Unconfirmed balance')}>
+          </InfoField>
+          <InfoField ratio={[1, 2]} label={__('Unconfirmed balance')}>
             {formatNumber(account.unconfirmed, 6)} {account.token_name}
-          </Field>
+          </InfoField>
           {account.stake !== undefined && (
-            <Field label={__('Stake balance')}>
+            <InfoField ratio={[1, 2]} label={__('Stake balance')}>
               {formatNumber(account.stake, 6)} {account.token_name}
-            </Field>
+            </InfoField>
           )}
           {account.immature !== undefined && (
-            <Field label={__('Immature balance')}>
+            <InfoField ratio={[1, 2]} label={__('Immature balance')}>
               {formatNumber(account.immature, 6)} {account.token_name}
-            </Field>
+            </InfoField>
           )}
-          <Field label={__('Address')}>
+          <InfoField ratio={[1, 2]} label={__('Address')}>
             <span className="monospace">{account.address}</span>
-          </Field>
+          </InfoField>
 
           {account.stake !== undefined && (
             <div className="mt1 flex space-between">

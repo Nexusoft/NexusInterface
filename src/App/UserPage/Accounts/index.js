@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import styled from '@emotion/styled';
 
 import Icon from 'components/Icon';
 import Button from 'components/Button';
@@ -11,15 +10,9 @@ import plusIcon from 'icons/plus.svg';
 
 import Account from './Account';
 import NewAccountModal from 'components/NewAccountModal';
+import TabContentWrapper from '../TabContentWrapper';
 
 __ = __context('User.Accounts');
-
-const AccountsWrapper = styled.div(({ theme }) => ({
-  maxWidth: 500,
-  margin: '0 auto',
-  paddingTop: 15,
-  color: theme.mixer(0.75),
-}));
 
 @connect(state => ({
   accounts: state.core.accounts,
@@ -40,7 +33,7 @@ export default class Accounts extends React.Component {
 
     return (
       !!accounts && (
-        <AccountsWrapper>
+        <TabContentWrapper>
           <Button
             wide
             onClick={() =>
@@ -58,7 +51,7 @@ export default class Accounts extends React.Component {
               <Account key={account.name + account.address} account={account} />
             ))}
           </div>
-        </AccountsWrapper>
+        </TabContentWrapper>
       )
     );
   }
