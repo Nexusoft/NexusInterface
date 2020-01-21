@@ -34,7 +34,7 @@ export default merge.smart(baseConfig, {
         use: 'url-loader',
       },
       {
-        test: /\.MD$/,
+        test: /\.(MD|css)$/,
         use: {
           loader: 'file-loader',
         },

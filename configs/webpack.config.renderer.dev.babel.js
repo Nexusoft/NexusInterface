@@ -30,7 +30,7 @@ export default merge.smart(baseConfig, {
       'webpack/hot/only-dev-server',
       './src/index',
     ],
-    'module_preload.dev': './src/module_preload',
+    'keyboard.dev': './src/keyboard/index.js',
   },
 
   output: {

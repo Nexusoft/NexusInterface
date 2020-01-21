@@ -254,6 +254,7 @@
     "react-redux": "^7.1.3",
     "react-router": "^5.1.2",
     "react-router-dom": "^5.1.2",
+    "react-simple-keyboard": "^2.1.96",
     "react-table": "^6.11.5",
     "redux": "^4.0.4",
     "redux-form": "^8.2.6",

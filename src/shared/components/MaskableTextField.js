@@ -1,5 +1,6 @@
 // External
 import React, { Component } from 'react';
+import { ipcRenderer } from 'electron';
 
 // Internal
 import TextField from 'components/TextField';
@@ -7,6 +8,7 @@ import Icon from 'components/Icon';
 import Button from 'components/Button';
 import visibleIcon from 'icons/visible.svg';
 import invisibleIcon from 'icons/invisible.svg';
+import keyboardIcon from 'icons/keyboard.svg';
 
 export default class MaskableTextField extends Component {
   state = {
@@ -24,6 +26,17 @@ export default class MaskableTextField extends Component {
       <TextField
         {...this.props}
         type={unmasked ? 'text' : 'password'}
+        left={
+          <Button
+            skin="plain"
+            onClick={() => {
+              ipcRenderer.invoke('open-virtual-keyboard');
+            }}
+            tabIndex="-1"
+          >
+            <Icon icon={keyboardIcon} />
+          </Button>
+        }
         right={
           <Button skin="plain" onClick={this.toggleUnmasked} tabIndex="-1">
             <Icon icon={unmasked ? visibleIcon : invisibleIcon} />

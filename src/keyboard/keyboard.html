@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Virtual keyboard</title>
+  </head>
+
+  <body>
+    <div style="overflow: hidden;" id="root"></div>
+    <script>
+      {
+        if (process.env.NODE_ENV === 'development') {
+          document.write(
+            '<script defer src="../../dll/renderer.dev.dll.js"><\/script>'
+          );
+        }
+
+        const port = process.env.PORT || 1212;
+        const script =
+          process.env.NODE_ENV === 'development'
+            ? 'http://localhost:' + port + '/keyboard.dev.js'
+            : './keyboard.prod.js';
+        document.write('<script defer src="' + script + '"><\/script>');
+      }
+    </script>
+  </body>
+</html>

@@ -6,6 +6,7 @@ import { getDomain, serveModuleFiles } from './fileServer';
 import { createWindow } from './renderer';
 import { setupTray } from './tray';
 import { setApplicationMenu, popupContextMenu } from './menu';
+import { openVirtualKeyboard } from './keyboard';
 import './updater';
 
 let mainWindow;
@@ -40,6 +41,9 @@ ipcMain.handle('popup-context-menu', (event, menuTemplate) =>
 );
 ipcMain.handle('set-app-menu', (event, menuTemplate) => {
   setApplicationMenu(menuTemplate);
+});
+ipcMain.handle('open-virtual-keyboard', (event, ...args) => {
+  openVirtualKeyboard(...args);
 });
 
 // File server
