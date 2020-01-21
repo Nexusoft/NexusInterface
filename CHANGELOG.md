@@ -1,8 +1,10 @@
-# 2.1.4 (2020.1.03)
+# 2.2.0 (2020.1.03)
 
-[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.1.3)
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.2.0)
 
 #### Additions
+
+- Added Names and Namespaces functionalities
 
 #### Adjustments
 
