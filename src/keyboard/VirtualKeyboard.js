@@ -18,8 +18,6 @@ const KeyboardWrapper = styled.div({
 
 const InputWrapper = styled.div({
   padding: 5,
-  display: 'grid',
-  gridTemplateColumns: '1fr min-content',
   columnGap: 5,
   alignItems: 'stretch',
 });
@@ -51,6 +49,7 @@ export default class App extends React.Component {
         <KeyboardWrapper>
           <GlobalStyles />
           <KeyboardStyles />
+
           <InputWrapper>
             <Input
               defaultValue={defaultText}
@@ -58,11 +57,20 @@ export default class App extends React.Component {
               skin="filled-inverted"
               style={{ borderRadius: 5, fontSize: 18 }}
             />
-            <Button skin="primary" fitHeight>
-              Submit
-            </Button>
           </InputWrapper>
-          <Keyboard />
+
+          <Keyboard
+            display={{
+              '{enter}': 'done',
+            }}
+            mergeDisplay
+            buttonTheme={[
+              {
+                class: 'btn-submit',
+                buttons: '{enter}',
+              },
+            ]}
+          />
         </KeyboardWrapper>
       </ThemeProvider>
     );
