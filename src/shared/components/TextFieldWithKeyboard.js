@@ -24,6 +24,7 @@ export default class TextFieldWithKeyboard extends Component {
     });
     ipcRenderer.invoke('open-virtual-keyboard', {
       theme: store.getState().theme,
+      defaultText: this.props.value,
       maskable: this.props.maskable,
       placeholder: this.props.placeholder,
     });
@@ -42,7 +43,12 @@ export default class TextFieldWithKeyboard extends Component {
         {...rest}
         left={
           <Tooltip.Trigger align="start" tooltip={__('Use virtual keyboard')}>
-            <Button skin="plain" onClick={this.openKeyboard} tabIndex="-1">
+            <Button
+              skin="plain"
+              onClick={this.openKeyboard}
+              tabIndex="-1"
+              style={{ paddingLeft: 0 }}
+            >
               <Icon icon={keyboardIcon} />
             </Button>
           </Tooltip.Trigger>

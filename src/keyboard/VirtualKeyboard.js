@@ -28,10 +28,12 @@ export default class App extends React.Component {
     capitalized: false,
   };
 
+  populated = false;
+
   constructor(props) {
     super(props);
     ipcRenderer.once('options', (evt, options) => {
-      this.setState({ options });
+      this.setState({ options, text: options.defaultText });
     });
   }
 
@@ -87,6 +89,11 @@ export default class App extends React.Component {
           </InputWrapper>
 
           <Keyboard
+            keyboardRef={keyboard => {
+              if (!this.populated && this.state.options) {
+                keyboard.setInput(this.state.options.defaultText);
+              }
+            }}
             layout={{
               default: [
                 '` 1 2 3 4 5 6 7 8 9 0 - = {bksp}',
@@ -116,6 +123,7 @@ export default class App extends React.Component {
             ]}
             onChange={this.handleChange}
             onKeyPress={this.handleKeyPress}
+            tabCharOnTab={false}
           />
         </KeyboardWrapper>
       </ThemeProvider>
