@@ -19,6 +19,8 @@ export async function openVirtualKeyboard(options) {
     modal: true,
     show: false,
     backgroundColor: '#171719',
+    autoHideMenuBar: true,
+    fullscreenable: false,
     webPreferences: {
       nodeIntegration: true,
       enableRemoteModule: false,
