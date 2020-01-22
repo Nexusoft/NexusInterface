@@ -48,6 +48,13 @@
         "filter": [
           "app.html"
         ]
+      },
+      {
+        "from": "src/keyboard",
+        "to": "build",
+        "filter": [
+          "keyboard.html"
+        ]
       }
     ],
     "extraResources": [
