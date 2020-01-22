@@ -1,7 +1,7 @@
 import path from 'path';
 import { BrowserWindow, screen } from 'electron';
 
-const randomRange = (min, max) => Math.random() * (max - min) + min;
+const randomRange = (min, max) => Math.floor(Math.random() * (max - min) + min);
 
 export async function openVirtualKeyboard(options) {
   const width = 750;
