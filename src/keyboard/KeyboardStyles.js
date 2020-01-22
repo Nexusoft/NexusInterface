@@ -12,7 +12,7 @@ const KeyboardStyles = () => (
         fontFamily: '"Noto Sans", sans-serif',
 
         '.hg-button': {
-          '&, &:active': {
+          '&': {
             background: theme.mixer(0.125),
             color: theme.mixer(0.875),
             borderBottomColor: theme.mixer(0.5),
@@ -21,15 +21,21 @@ const KeyboardStyles = () => (
           '&:hover': {
             background: theme.mixer(0.25),
           },
+          '&:active': {
+            background: theme.mixer(0.125),
+          },
 
           '&.btn-submit': {
-            '&, &:active': {
+            '&': {
               background: color.darken(theme.primary, 0.2),
               color: theme.primaryAccent,
               borderBottomColor: color.mix(theme.primaryAccent, theme.primary),
             },
             '&:hover': {
               background: color.darken(theme.primary, 0.1),
+            },
+            '&:active': {
+              background: color.darken(theme.primary, 0.2),
             },
           },
         },
