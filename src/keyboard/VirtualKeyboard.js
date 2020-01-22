@@ -10,6 +10,12 @@ import MaskableTextField from 'components/MaskableTextField';
 import Button from 'components/Button';
 import { getMixer } from 'utils/color';
 
+import KeyboardStyles from './KeyboardStyles';
+
+const KeyboardWrapper = styled.div({
+  padding: 5,
+});
+
 const InputWrapper = styled.div({
   padding: 5,
   display: 'grid',
@@ -42,8 +48,9 @@ export default class App extends React.Component {
 
     return (
       <ThemeProvider theme={themeWithMixer}>
-        <div>
+        <KeyboardWrapper>
           <GlobalStyles />
+          <KeyboardStyles />
           <InputWrapper>
             <Input
               defaultValue={defaultText}
@@ -56,7 +63,7 @@ export default class App extends React.Component {
             </Button>
           </InputWrapper>
           <Keyboard />
-        </div>
+        </KeyboardWrapper>
       </ThemeProvider>
     );
   }
