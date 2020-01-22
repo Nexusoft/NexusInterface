@@ -146,6 +146,16 @@ export const getRecipientSuggestions = memoize(
   }
 );
 
+export const isMyAddress = (myAccounts, myGenesis, testAddress) => {
+  if (!myGenesis || !myAccounts) return false;
+  if (myGenesis === testAddress) return true;
+
+  const foundAddress = myAccounts.find(e => e.address === testAddress);
+  if (foundAddress) return true;
+
+  return false;
+};
+
 export const getRegisteredFieldNames = memoize(registeredFields =>
   Object.keys(registeredFields || {})
 );
