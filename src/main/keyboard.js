@@ -4,8 +4,8 @@ import { BrowserWindow, screen } from 'electron';
 const randomRange = (min, max) => Math.random() * (max - min) + min;
 
 export async function openVirtualKeyboard(options) {
-  const width = 800;
-  const height = 600;
+  const width = 750;
+  const height = 330;
   const display = screen.getPrimaryDisplay().workAreaSize;
   const x = randomRange(0, display.width - width);
   const y = randomRange(0, display.height - height);

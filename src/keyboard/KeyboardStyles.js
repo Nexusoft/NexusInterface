@@ -7,6 +7,10 @@ import * as color from 'utils/color';
 const KeyboardStyles = () => (
   <Global
     styles={theme => ({
+      body: {
+        background: theme.background,
+      },
+
       '.simple-keyboard.hg-theme-default': {
         background: theme.background,
         fontFamily: '"Noto Sans", sans-serif',
