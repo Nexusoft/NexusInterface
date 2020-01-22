@@ -12,14 +12,26 @@ import store from 'store';
 import keyboardIcon from 'icons/keyboard.svg';
 
 export default class TextFieldWithKeyboard extends Component {
+  handleInputChange = (evt, text) => {
+    this.props.onChange(text);
+  };
+
   openKeyboard = () => {
+    ipcRenderer.on('keyboard-input-change', this.handleInputChange);
+    ipcRenderer.once('keyboard-closed', () => {
+      console.log('keyboard closed');
+      ipcRenderer.off('keyboard-input-change', this.handleInputChange);
+    });
     ipcRenderer.invoke('open-virtual-keyboard', {
       theme: store.getState().theme,
-      defaultText: this.props.value,
       maskable: this.props.maskable,
       placeholder: this.props.placeholder,
     });
   };
+
+  componentWillUnmount() {
+    ipcRenderer.off('keyboard-input-change', this.handleInputChange);
+  }
 
   render() {
     const { maskable, ...rest } = this.props;

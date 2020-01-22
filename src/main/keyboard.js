@@ -35,9 +35,13 @@ export async function openVirtualKeyboard(options) {
   });
   bw.webContents.on('ipc-message', (evt, channel, ...args) => {
     switch (channel) {
-      case 'submit': {
-        global.mainWindow.webContents.send('keyboard-submit', ...args);
+      case 'keyboard-input-change': {
+        global.mainWindow.webContents.send('keyboard-input-change', ...args);
+        break;
+      }
+      case 'close-keyboard': {
         bw.close();
+        break;
       }
     }
   });

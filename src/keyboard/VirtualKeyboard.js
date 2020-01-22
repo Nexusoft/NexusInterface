@@ -7,7 +7,6 @@ import styled from '@emotion/styled';
 import GlobalStyles from 'components/GlobalStyles';
 import TextField from 'components/TextField';
 import MaskableTextField from 'components/MaskableTextField';
-import Button from 'components/Button';
 import { getMixer } from 'utils/color';
 
 import KeyboardStyles from './KeyboardStyles';
@@ -25,6 +24,8 @@ const InputWrapper = styled.div({
 export default class App extends React.Component {
   state = {
     options: null,
+    text: '',
+    capitalized: false,
   };
 
   constructor(props) {
@@ -34,10 +35,22 @@ export default class App extends React.Component {
     });
   }
 
+  handleChange = text => {
+    this.setState({ text });
+    ipcRenderer.send('keyboard-input-change', text);
+  };
+
+  handleInputChange = e => {
+    this.setState({ text: e.target.value });
+  };
+
   render() {
     if (!this.state.options) return null;
 
-    const { theme, defaultText, maskable, placeholder } = this.state.options;
+    const {
+      text,
+      options: { theme, maskable, placeholder },
+    } = this.state;
     const themeWithMixer = {
       ...theme,
       mixer: getMixer(theme.background, theme.foreground),
@@ -52,7 +65,8 @@ export default class App extends React.Component {
 
           <InputWrapper>
             <Input
-              defaultValue={defaultText}
+              value={text}
+              onChange={this.handleInputChange}
               placeholder={placeholder}
               skin="filled-inverted"
               style={{ borderRadius: 5, fontSize: 18 }}
@@ -70,6 +84,7 @@ export default class App extends React.Component {
                 buttons: '{enter}',
               },
             ]}
+            onChange={this.handleChange}
           />
         </KeyboardWrapper>
       </ThemeProvider>
