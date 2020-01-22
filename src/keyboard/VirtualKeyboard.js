@@ -44,11 +44,24 @@ export default class App extends React.Component {
     this.setState({ text: e.target.value });
   };
 
+  handleKeyPress = btn => {
+    switch (btn) {
+      case '{shift}':
+      case '{lock}':
+        this.setState({ capitalized: !this.state.capitalized });
+        break;
+      case '{enter}':
+        ipcRenderer.send('close-keyboard');
+        break;
+    }
+  };
+
   render() {
     if (!this.state.options) return null;
 
     const {
       text,
+      capitalized,
       options: { theme, maskable, placeholder },
     } = this.state;
     const themeWithMixer = {
@@ -74,6 +87,23 @@ export default class App extends React.Component {
           </InputWrapper>
 
           <Keyboard
+            layout={{
+              default: [
+                '` 1 2 3 4 5 6 7 8 9 0 - = {bksp}',
+                '{tab} q w e r t y u i o p [ ] \\',
+                "{lock} a s d f g h j k l ; ' {enter}",
+                '{shift} z x c v b n m , . / {shift}',
+                '{space}',
+              ],
+              shift: [
+                '~ ! @ # $ % ^ & * ( ) _ + {bksp}',
+                '{tab} Q W E R T Y U I O P { } |',
+                '{lock} A S D F G H J K L : " {enter}',
+                '{shift} Z X C V B N M < > ? {shift}',
+                '{space}',
+              ],
+            }}
+            layoutName={capitalized ? 'shift' : 'default'}
             display={{
               '{enter}': 'done',
             }}
@@ -85,6 +115,7 @@ export default class App extends React.Component {
               },
             ]}
             onChange={this.handleChange}
+            onKeyPress={this.handleKeyPress}
           />
         </KeyboardWrapper>
       </ThemeProvider>
