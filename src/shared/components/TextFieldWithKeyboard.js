@@ -8,11 +8,17 @@ import MaskableTextField from 'components/MaskableTextField';
 import Tooltip from 'components/Tooltip';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
+import store from 'store';
 import keyboardIcon from 'icons/keyboard.svg';
 
 export default class TextFieldWithKeyboard extends Component {
   openKeyboard = () => {
-    ipcRenderer.invoke('open-virtual-keyboard');
+    ipcRenderer.invoke('open-virtual-keyboard', {
+      theme: store.getState().theme,
+      defaultText: this.props.value,
+      maskable: this.props.maskable,
+      placeholder: this.props.placeholder,
+    });
   };
 
   render() {
