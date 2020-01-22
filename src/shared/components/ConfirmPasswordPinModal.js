@@ -2,7 +2,7 @@ import React from 'react';
 
 import Modal from 'components/Modal';
 import FormField from 'components/FormField';
-import MaskableTextField from 'components/MaskableTextField';
+import TextFieldWithKeyboard from 'components/TextFieldWithKeyboard';
 import Button from 'components/Button';
 import { openErrorDialog } from 'lib/ui';
 
@@ -54,7 +54,8 @@ export default class ConfirmPasswordPinModal extends React.Component {
             </div>
 
             <FormField label={__('Password')}>
-              <MaskableTextField
+              <TextFieldWithKeyboard
+                maskable
                 value={this.state.password}
                 onChange={e => {
                   this.setState({ password: e.target.value });
@@ -69,7 +70,8 @@ export default class ConfirmPasswordPinModal extends React.Component {
             </FormField>
 
             <FormField label={__('PIN')}>
-              <MaskableTextField
+              <TextFieldWithKeyboard
+                maskable
                 value={this.state.pin}
                 onChange={e => {
                   this.setState({ pin: e.target.value });
