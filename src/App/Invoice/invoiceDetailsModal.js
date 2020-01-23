@@ -6,8 +6,11 @@ import { connect } from 'react-redux';
 import Modal from 'components/Modal';
 import styled from '@emotion/styled';
 import Button from 'components/Button';
+import Tooltip from 'components/Tooltip';
 import * as color from 'utils/color';
 import { formatDateTime } from 'lib/intl';
+import { openConfirmDialog } from 'lib/ui';
+import { apiPost } from 'lib/tritiumApi';
 
 const timeFormatOptions = {
   year: 'numeric',
@@ -138,6 +141,10 @@ const StatusTag = styled.div(
   }
 );
 
+const PastDueText = styled.a(({ theme }) => ({
+  color: theme.danger,
+}));
+
 class InvoiceDetailModal extends Component {
   componentDidMount() {}
 
@@ -145,6 +152,39 @@ class InvoiceDetailModal extends Component {
     items.reduce((total, element) => {
       return total + element.unitQuantity * element.unitPrice;
     }, 0);
+
+  clickPayNow = e => {
+    console.log('AAAAAAAAAAAA');
+    openConfirmDialog({
+      question: __('Do you want to fulfill this invoice?'),
+      note: __('Withdraw from %{accountName} account', {
+        accountName: 'default',
+      }),
+      callbackYes: () => {
+        apiPost();
+      },
+    });
+  };
+
+  clickReject = e => {
+    openConfirmDialog({
+      question: __('Are you sure you want to reject this invoice?'),
+      note: __(''),
+      callbackYes: () => {
+        apiPost();
+        this.setInvoiceStatus('Rejected');
+      },
+    });
+  };
+
+  isPastDue() {
+    const { dueDate } = this.props.invoice;
+    if (Date.now() > dueDate) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   render() {
     console.log(this.props);
@@ -162,7 +202,9 @@ class InvoiceDetailModal extends Component {
       items,
     } = this.props.invoice;
     const { isMine } = this.props;
+    const pastDue = this.isPastDue();
     console.log(isMine);
+    console.log(this.isPastDue());
     this.calculateTotal(items);
     console.log(items);
     return (
@@ -185,7 +227,18 @@ class InvoiceDetailModal extends Component {
           )}
           {dueDate && (
             <Field label={__('Due Date')}>
-              {formatDateTime(dueDate, timeFormatOptions)}
+              {pastDue ? (
+                <Tooltip.Trigger
+                  tooltip={__('Warning, Past Due!')}
+                  position={'top'}
+                >
+                  <PastDueText>
+                    {formatDateTime(dueDate, timeFormatOptions)}
+                  </PastDueText>
+                </Tooltip.Trigger>
+              ) : (
+                formatDateTime(dueDate, timeFormatOptions)
+              )}
             </Field>
           )}
           <Field label={__('Account Payable')}>{accountPayable}</Field>
@@ -210,8 +263,12 @@ class InvoiceDetailModal extends Component {
               className="mt2 flex space-between"
               style={{ marginBottom: '1em' }}
             >
-              <Button skin="primary">{'Pay'}</Button>
-              <Button skin="danger">{'Reject'}</Button>
+              <Button skin="primary" onClick={this.clickPayNow}>
+                {'Pay'}
+              </Button>
+              <Button skin="danger" onClick={this.clickReject}>
+                {'Reject'}
+              </Button>
             </div>
           )}
         </Modal.Footer>

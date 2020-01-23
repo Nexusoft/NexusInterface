@@ -49,14 +49,20 @@ const FiltersWrapper = styled.div(({ morePadding }) => ({
   gridArea: 'filters',
   display: 'grid',
   gridTemplateAreas: '"reference timeFrame operation"',
-  gridTemplateColumns: '3fr 2fr 100px 100px',
+  gridTemplateColumns: '3fr 2fr 100px auto',
   columnGap: '.75em',
   alignItems: 'end',
   fontSize: 15,
-  padding: `0 ${morePadding ? '26px' : '20px'} 10px 20px`,
+  padding: `0 0 10px 0`,
 }));
 
-const Filters = ({ referenceQuery, status, timeSpan, morePadding }) => (
+const Filters = ({
+  referenceQuery,
+  status,
+  timeSpan,
+  morePadding,
+  children,
+}) => (
   <FiltersWrapper>
     <FormField connectLabel label={__('Reference')}>
       <TextField
@@ -82,6 +88,7 @@ const Filters = ({ referenceQuery, status, timeSpan, morePadding }) => (
         options={opOptions}
       />
     </FormField>
+    {children}
   </FiltersWrapper>
 );
 

@@ -178,11 +178,20 @@ class Invoice extends Component {
     return (
       <Panel icon={nexusIcon} title={__('Invoice')}>
         <Header>
-          <Filters></Filters>
-          <Button onClick={() => openModal(InvoiceForm)}>
-            <Icon icon={plusIcon} style={{ fontSize: '.8em', opacity: 0.7 }} />
-            {'   New Invoice'}
-          </Button>
+          <Filters>
+            <Button onClick={() => openModal(InvoiceForm)}>
+              <Icon
+                icon={plusIcon}
+                style={{
+                  fontSize: '.8em',
+                  opacity: 0.7,
+                  overflow: 'visible',
+                  marginRight: '0.25em',
+                }}
+              />
+              {'   New Invoice'}
+            </Button>
+          </Filters>
         </Header>
         <InvoiceTable
           data={filteredInvoices}
