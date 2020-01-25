@@ -145,6 +145,10 @@ const PastDueText = styled.a(({ theme }) => ({
   color: theme.danger,
 }));
 
+//Allow support any addtional key/values that may be attached to the invoice
+const AdditionalKeyValues = addValues =>
+  addValues.map(e => <Field label={e.key}>{e.value}</Field>);
+
 class InvoiceDetailModal extends Component {
   componentDidMount() {}
 
@@ -154,7 +158,6 @@ class InvoiceDetailModal extends Component {
     }, 0);
 
   clickPayNow = e => {
-    console.log('AAAAAAAAAAAA');
     openConfirmDialog({
       question: __('Do you want to fulfill this invoice?'),
       note: __('Withdraw from %{accountName} account', {

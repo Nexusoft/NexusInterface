@@ -12,6 +12,7 @@ import Panel from 'components/Panel';
 import Table from 'components/Table';
 import { openModal } from 'lib/ui';
 import nexusIcon from 'icons/NXS_coin.svg';
+import Arrow from 'components/Arrow';
 
 //Invoice
 import InvoiceForm from './InvoiceForm';
@@ -130,14 +131,24 @@ const invoices = [
 const memorizedFilters = memoize(
   (invoiceList, referenceQuery, timespan, status) =>
     invoiceList &&
-    invoiceList.filter(
-      element =>
-        (!referenceQuery || element.reference.includes(referenceQuery)) &&
-        (!status ||
-          status === 'ALL' ||
-          element.status.toLowerCase() === status.toLowerCase())
-    )
+    invoiceList.filter(element => {
+      if (
+        referenceQuery &&
+        element.reference &&
+        !element.reference.toLowerCase().includes(referenceQuery.toLowerCase())
+      )
+        return false;
+
+      if (status && element.status && !element.status === status) return false;
+      return true;
+    })
 );
+
+const OptionsArrow = styled.span({
+  display: 'inline-block',
+  width: 15,
+  verticalAlign: 'middle',
+});
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
@@ -159,10 +170,23 @@ const mapStateToProps = state => {
  * @extends {Component}
  */
 class Invoice extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      optionsOpen: false,
+    };
+  }
+
   // React Method (Life cycle hook)
   componentDidMount() {
     GA.SendScreen('Invoice');
   }
+
+  toggleMoreOptions = e => {
+    this.setState({
+      optionsOpen: !this.state.optionsOpen,
+    });
+  };
 
   render() {
     const { referenceQuery, status, timespan } = this.props.invoices;
@@ -173,12 +197,12 @@ class Invoice extends Component {
       timespan,
       status
     );
-    console.log(status);
+    console.log(this.state.optionsOpen);
     console.log(filteredInvoices);
     return (
       <Panel icon={nexusIcon} title={__('Invoice')}>
         <Header>
-          <Filters>
+          <Filters optionsOpen={this.state.optionsOpen}>
             <Button onClick={() => openModal(InvoiceForm)}>
               <Icon
                 icon={plusIcon}
@@ -191,6 +215,22 @@ class Invoice extends Component {
               />
               {'   New Invoice'}
             </Button>
+            {
+              <Button
+                onClick={this.toggleMoreOptions}
+                skin="hyperlink"
+                style={{ width: '12px', height: '10px' }}
+              >
+                <OptionsArrow>
+                  <Arrow
+                    direction={this.state.optionsOpen ? 'down' : 'right'}
+                    height={8}
+                    width={10}
+                  />
+                </OptionsArrow>
+                <span className="v-align">{__('More options')}</span>
+              </Button>
+            }
           </Filters>
         </Header>
         <InvoiceTable
@@ -228,13 +268,3 @@ class Invoice extends Component {
 
 // Mandatory React-Redux method
 export default connect(mapStateToProps)(Invoice);
-
-/*
-
--invoiceNumber = int
--from = string
--to = string
--total = float
--items = []
-
-*/

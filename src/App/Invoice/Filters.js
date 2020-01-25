@@ -56,12 +56,17 @@ const FiltersWrapper = styled.div(({ morePadding }) => ({
   padding: `0 0 10px 0`,
 }));
 
+const MoreOptions = styled.div({
+  paddingLeft: '1em',
+});
+
 const Filters = ({
   referenceQuery,
   status,
   timeSpan,
   morePadding,
   children,
+  optionsOpen,
 }) => (
   <FiltersWrapper>
     <FormField connectLabel label={__('Reference')}>
@@ -88,7 +93,10 @@ const Filters = ({
         options={opOptions}
       />
     </FormField>
+
     {children}
+    {console.log(props)}
+    {optionsOpen && <MoreOptions>{'Search By asd'}</MoreOptions>}
   </FiltersWrapper>
 );
 
