@@ -219,7 +219,13 @@ class Invoice extends Component {
               <Button
                 onClick={this.toggleMoreOptions}
                 skin="hyperlink"
-                style={{ width: '12px', height: '10px' }}
+                style={{
+                  width: '12px',
+                  height: '10px',
+                  gridRowStart: 3,
+                  borderBottomStyle: 'none',
+                  paddingBottom: '1em',
+                }}
               >
                 <OptionsArrow>
                   <Arrow
@@ -228,7 +234,9 @@ class Invoice extends Component {
                     width={10}
                   />
                 </OptionsArrow>
-                <span className="v-align">{__('More options')}</span>
+                <span className="v-align">
+                  {__(this.state.optionsOpen ? 'Less options' : 'More options')}
+                </span>
               </Button>
             }
           </Filters>

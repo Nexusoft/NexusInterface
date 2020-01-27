@@ -10,6 +10,7 @@ import {
   setInvoiceStatusFilter,
   setInvoiceTimeFilter,
 } from 'lib/ui';
+import Switch from 'components/Switch';
 
 __ = __context('Transactions');
 
@@ -50,6 +51,8 @@ const FiltersWrapper = styled.div(({ morePadding }) => ({
   display: 'grid',
   gridTemplateAreas: '"reference timeFrame operation"',
   gridTemplateColumns: '3fr 2fr 100px auto',
+  gridRowStart: 1,
+  gridRowEnd: 1,
   columnGap: '.75em',
   alignItems: 'end',
   fontSize: 15,
@@ -58,6 +61,13 @@ const FiltersWrapper = styled.div(({ morePadding }) => ({
 
 const MoreOptions = styled.div({
   paddingLeft: '1em',
+  display: 'grid',
+  gridTemplateColumns: 'auto auto auto auto',
+  gridRowStart: 2,
+  gridColumnStart: 1,
+  gridColumnEnd: 4,
+  columnGap: '.75em',
+  alignItems: 'end',
 });
 
 const Filters = ({
@@ -95,8 +105,24 @@ const Filters = ({
     </FormField>
 
     {children}
-    {console.log(props)}
-    {optionsOpen && <MoreOptions>{'Search By asd'}</MoreOptions>}
+    {optionsOpen && (
+      <MoreOptions>
+        <FormField label={__('Description')}>
+          <TextField type="search" placeholder="Description Search" />
+        </FormField>
+
+        <FormField label={__('Show Only PastDue')}>
+          <Switch />
+        </FormField>
+
+        <FormField label={__('Payable')}>
+          <TextField type="search" placeholder="Search Payable" />
+        </FormField>
+        <FormField label={__('Receipiant')}>
+          <TextField type="search" placeholder="Search Receipiant" />
+        </FormField>
+      </MoreOptions>
+    )}
   </FiltersWrapper>
 );
 
