@@ -96,29 +96,25 @@ const About = ({ version, testnet, privateBlockchain }) => (
     </Modal.Header>
     <Modal.Body>
       <div>
-        <InfoField leftSize={1} rightSize={1} label={__('Wallet version')}>
+        <InfoField ratio={[1, 1]} label={__('Wallet version')}>
           {APP_VERSION}
         </InfoField>
-        <InfoField leftSize={1} rightSize={1} label={__('Wallet build date')}>
+        <InfoField ratio={[1, 1]} label={__('Wallet build date')}>
           {BUILD_DATE}
         </InfoField>
-        <InfoField leftSize={1} rightSize={1} label={__('Nexus Core version')}>
+        <InfoField ratio={[1, 1]} label={__('Nexus Core version')}>
           {version}
         </InfoField>
-        <InfoField leftSize={1} rightSize={1} label={__('Core build date')}>
+        <InfoField ratio={[1, 1]} label={__('Core build date')}>
           January 4th 2020
         </InfoField>
         {!!testnet && (
-          <InfoField leftSize={1} rightSize={1} label={__('Testnet')}>
+          <InfoField ratio={[1, 1]} label={__('Testnet')}>
             {testnet}
           </InfoField>
         )}
         {!!privateBlockchain && (
-          <InfoField
-            leftSize={1}
-            rightSize={1}
-            label={__('Private blockchain')}
-          >
+          <InfoField ratio={[1, 1]} label={__('Private blockchain')}>
             {String(privateBlockchain)}
           </InfoField>
         )}

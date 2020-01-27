@@ -1,225 +1,225 @@
-Delete contact %{name}?,%{name} névjegyet kitörölni?,AddressBook
-Edit contact,Névjegy szerkesztése,AddressBook
-Delete contact,Névjegy törlése,AddressBook
-%{smart_count} address |||| %{smart_count} addresses,%{smart_count} cím |||| %{smart_count} cím,AddressBook
-New contact,Új névjegy,AddressBook
-No information,Nincs információ,AddressBook
-Delete,Töröl,AddressBook
-Edit,Szerkeszt,AddressBook
-NXS addresses,NXS címek,AddressBook
-My address for %{name},Az én címem %{name}-nek,AddressBook
-%{name}'s Address,%{name} Címe,AddressBook
-Contact info,Névjegy,AddressBook
-Email,Email,AddressBook
-Phone Number,Telefonszám,AddressBook
-Local Time,Helyi idő,AddressBook
-Notes,Megjegyzések,AddressBook
-Address book,Címjegyzék,AddressBook
-Your address book is empty,A címjegyzéked üres,AddressBook
-Create new contact,Új névjegy létrehozása,AddressBook
-Search contact,Névjegy keresése,AddressBook
-My Addresses,Címeim,AddressBook
-Export contacts,Névjegyek exportálása,AddressBook
-Legacy Mode,,Header
-Tritium Mode,,Header
-Unknown login status,Ismeretlen bejelentkezési állapot,Header
-Wallet is not encrypted,Ez a pénztárca nincs titkosítva,Header
-Not logged in,Nincs belépve,Header
-Logged in<if_timed> until %{unlockDate}</if_timed><if_minting_only> for staking & mining</if_minting_only>,Bejelentkezve<if_timed> %{unlockDate}-ig </if_timed><if_minting_only> staking-hez és bányászathoz</if_minting_only>,Header
-My Addresses,Címeim,Header
-Wallet is staking,A pénztárca staking-el,Header
-Stake Rate,Stake Arány,Header
-Waiting for 100% synchronization to start staking...,Várakozás a 100%-os szinkronizálásra a staking megkezdéséhez...,Header
-Waiting for average age of balance to exceed 72 hours to start staking...,"Várakozás arra, hogy az egyensúly átlagos életkora meghaladja a 72 órát a staking megkezdéséhez...",Header
-Wallet is not staking,A pénztárca nem staking-el,Header
-Checking sync status,Szinkronizálási állapot ellenőrzése,Header
-Synchronizing,Szinkronizálás,Header
-Synchronized,Szinkronizálva,Header
-You're not logged in,,Header
-Accounts,,Header.UserDropdown
-Tokens,,Header.UserDropdown
-Set recovery phrase,,Header.UserDropdown
-Migrate stake,,Header.UserDropdown
-Log out,Kijelentkezés,Header.UserDropdown
-Log in,,Header.UserDropdown
-Create new user,,Header.UserDropdown
-Date,Dátum,MarketData
-Price,Ár,MarketData
-Volume,Mennyiség,MarketData
-24hr Change,24ó Változás,MarketData
-High,Magas,MarketData
-Price Change,Árváltozás,MarketData
-Low,Alacsony,MarketData
-Refreshing market data...,Piaci adatok frissítése...,MarketData
-Refresh,Frissítés,MarketData
-Market Data,Piaci Adatok,MarketData
-Open,Megnyit,MarketData
-Close,Bezár,MarketData
-Overview,Áttekintés,NavigationBar
-User,,NavigationBar
-Send NXS,NXS Küldése,NavigationBar
-Send,Küldés,NavigationBar
-Transactions,Tranzakciók,NavigationBar
-Market Data,Piaci Adatok,NavigationBar
-Address Book,Címjegyzék,NavigationBar
-Settings,Beállítások,NavigationBar
-Console,Konzol,NavigationBar
-Closing Nexus Wallet,Kilépés a Nexus Pénztárcából,
-Warning,Figyelem,
-IMPROPER USE OF THIS SOFTWARE COULD LEAD TO PERMANENT LOSS OF COIN.,E SZOFTVER HELYTELEN HASZNÁLATA A COINOK TARTÓS VESZTESÉGÉHEZ VEZETHET.,
-BACKUP YOUR WALLET OFTEN AND KEEP YOUR PASSWORDS SAFE.,GYAKRAN KÉSZÍTSEN BIZTONSÁGI MÁSOLATOT A TÁRCÁJÁRÓL ÉS TARTSA BIZTONSÁGBAN A JELSZAVAIT.,
-I understand the risk,Megértettem a kockázatokat,
-Tritium Mode,,
-Your wallet is now in Tritium Mode!,,
-"Tritium Mode is currently in early development, therefore not all Tritium features are supported by the user interface. If you want to access a Tritium feature that hasn't had a user interface yet, you can go to Console/Tritium Console, or use any HTTP client to call Nexus APIs directly.",,
-"If you need to switch back to Legacy Mode, you can select ""%{menu}"" menu option at any time.",,
-File,Fájl,
-Switch to Legacy Mode,,
-Continue to Tritium Mode,,
-Close,Bezár,
-Are you sure you want to switch to Legacy Mode?,,
-Switch to Tritium Mode,,
-Start Nexus Core,Indítsa el Nexus Core-t,
-Stop Nexus Core,Állítsa le Nexus Core-t,
-Quit Nexus,Kilépés Nexusból,
-About,A termékről,
-Backup Wallet,Biztonsági Másolat a Pénztárcáról,
-Nexus Core is not connected,Nexus Core nincs csatlakoztatva,
-Wallet backed up,Pénztárca biztonsági mentése kész,
-View Backups,Biztonsági Mentések Megtekintése,
-Cut,Kivág,
-Copy,Másolás,
-Paste,Beilleszt,
-Core,Core,
-Application,Program,
-Key Management,Kulcskezelés,
-Style,Stílus,
-Modules,Modulok,
-Download Recent Database,Friss adatbázis letöltése,
-Cannot bootstrap recent database in manual mode,Nem lehet betölteni a legutóbbi adatbázist kézi módban,
-Please wait for Nexus Core to start.,"Kérjük, várjon, amíg a Nexus Core elindul.",
-Toggle FullScreen,Váltás Teljes képernyő,
-Toggle Developer Tools,Fejlesztőeszközök ki-/ bekapcsolása,
-Toggle Module's Developer Tools,Modul Fejlesztőeszközök ki-/ bekapcsolása,
-Nexus Website,Nexus Weboldal,
-Nexus Git Repository,Nexus Git Adattár,
-Nexus Wallet Guide,Nexus Wallet Útmutató,
-Open Core Data Folder,,
-Open Interface Data Folder,,
-Check for Updates...,Frissítés Keresése...,
-There are currently no updates available,Jelenleg nincs elérhető frissítés,
-Checking for Updates...,Frissítések Ellenőrzése...,
-Update available! Downloading...,Frissítés elérhető! Letöltés...,
-Quit and install update...,Kilépés és a frissítés telepítése...,
-Edit,Szerkeszt,
-Settings,Beállítások,
-View,Nézet,
-Help,Segítség,
-Manual Core is disconnected,Kézi Core nincs csatlakoztatva,
-Connecting to Nexus Core...,Csatlakozás a Nexus Core-hoz...,
-Nexus Core is stopped,Nexus Core le van állítva,
-Address has been copied to clipboard,A cím a vágólapra lett másolva,
-Copy to clipboard,Vágólapra másolás,
-Click to copy to clipboard,Kattints ide a vágólapra helyezéshez,
-Log in,,
-No Rows Found,Nem Talált Sort,
-Page,Oldal,
-rows,sorok,
-Previous,Előző,
-Next,Tovább,
-Transaction received,Tranzakció érkezett,
-Transaction sent,Tranzakció elküldve,
-Genesis transaction,Genezis tranzakció,
-Trust transaction,Bizalmi tranzakció,
-New transaction,,
-Error,,
-Unknown error,Ismeretlen hiba,
+"Delete contact %{name}?","%{name} névjegyet kitörölni?","AddressBook"
+"Edit contact","Névjegy szerkesztése","AddressBook"
+"Delete contact","Névjegy törlése","AddressBook"
+"%{smart_count} address |||| %{smart_count} addresses","%{smart_count} cím |||| %{smart_count} cím","AddressBook"
+"New contact","Új névjegy","AddressBook"
+"No information","Nincs információ","AddressBook"
+"Delete","Töröl","AddressBook"
+"Edit","Szerkeszt","AddressBook"
+"NXS addresses","NXS címek","AddressBook"
+"My address for %{name}","Az én címem %{name}-nek","AddressBook"
+"%{name}'s Address","%{name} Címe","AddressBook"
+"Contact info","Névjegy","AddressBook"
+"Email","Email","AddressBook"
+"Phone Number","Telefonszám","AddressBook"
+"Local Time","Helyi idő","AddressBook"
+"Notes","Megjegyzések","AddressBook"
+"Address book","Címjegyzék","AddressBook"
+"Your address book is empty","A címjegyzéked üres","AddressBook"
+"Create new contact","Új névjegy létrehozása","AddressBook"
+"Search contact","Névjegy keresése","AddressBook"
+"My Addresses","Címeim","AddressBook"
+"Export contacts","Névjegyek exportálása","AddressBook"
+"Legacy Mode","","Header"
+"Tritium Mode","","Header"
+"Unknown login status","Ismeretlen bejelentkezési állapot","Header"
+"Wallet is not encrypted","Ez a pénztárca nincs titkosítva","Header"
+"Not logged in","Nincs belépve","Header"
+"Logged in<if_timed> until %{unlockDate}</if_timed><if_minting_only> for staking & mining</if_minting_only>","Bejelentkezve<if_timed> %{unlockDate}-ig </if_timed><if_minting_only> staking-hez és bányászathoz</if_minting_only>","Header"
+"My Addresses","Címeim","Header"
+"Wallet is staking","A pénztárca staking-el","Header"
+"Stake Rate","Stake Arány","Header"
+"Waiting for 100% synchronization to start staking...","Várakozás a 100%-os szinkronizálásra a staking megkezdéséhez...","Header"
+"Waiting for average age of balance to exceed 72 hours to start staking...","Várakozás arra, hogy az egyensúly átlagos életkora meghaladja a 72 órát a staking megkezdéséhez...","Header"
+"Wallet is not staking","A pénztárca nem staking-el","Header"
+"Checking sync status","Szinkronizálási állapot ellenőrzése","Header"
+"Synchronizing","Szinkronizálás","Header"
+"Synchronized","Szinkronizálva","Header"
+"You're not logged in","","Header"
+"Accounts","","Header.UserDropdown"
+"Tokens","","Header.UserDropdown"
+"Set recovery phrase","","Header.UserDropdown"
+"Migrate stake","","Header.UserDropdown"
+"Log out","Kijelentkezés","Header.UserDropdown"
+"Log in","","Header.UserDropdown"
+"Create new user","","Header.UserDropdown"
+"Date","Dátum","MarketData"
+"Price","Ár","MarketData"
+"Volume","Mennyiség","MarketData"
+"24hr Change","24ó Változás","MarketData"
+"High","Magas","MarketData"
+"Price Change","Árváltozás","MarketData"
+"Low","Alacsony","MarketData"
+"Refreshing market data...","Piaci adatok frissítése...","MarketData"
+"Refresh","Frissítés","MarketData"
+"Market Data","Piaci Adatok","MarketData"
+"Open","Megnyit","MarketData"
+"Close","Bezár","MarketData"
+"Overview","Áttekintés","NavigationBar"
+"User","","NavigationBar"
+"Send NXS","NXS Küldése","NavigationBar"
+"Send","Küldés","NavigationBar"
+"Transactions","Tranzakciók","NavigationBar"
+"Market Data","Piaci Adatok","NavigationBar"
+"Address Book","Címjegyzék","NavigationBar"
+"Settings","Beállítások","NavigationBar"
+"Console","Konzol","NavigationBar"
+"Closing Nexus Wallet","Kilépés a Nexus Pénztárcából",""
+"Warning","Figyelem",""
+"IMPROPER USE OF THIS SOFTWARE COULD LEAD TO PERMANENT LOSS OF COIN.","E SZOFTVER HELYTELEN HASZNÁLATA A COINOK TARTÓS VESZTESÉGÉHEZ VEZETHET.",""
+"BACKUP YOUR WALLET OFTEN AND KEEP YOUR PASSWORDS SAFE.","GYAKRAN KÉSZÍTSEN BIZTONSÁGI MÁSOLATOT A TÁRCÁJÁRÓL ÉS TARTSA BIZTONSÁGBAN A JELSZAVAIT.",""
+"I understand the risk","Megértettem a kockázatokat",""
+"Tritium Mode","",""
+"Your wallet is now in Tritium Mode!","",""
+"Tritium Mode is currently in early development, therefore not all Tritium features are supported by the user interface. If you want to access a Tritium feature that hasn't had a user interface yet, you can go to Console/Tritium Console, or use any HTTP client to call Nexus APIs directly.","",""
+"If you need to switch back to Legacy Mode, you can select ""%{menu}"" menu option at any time.","",""
+"File","Fájl",""
+"Switch to Legacy Mode","",""
+"Continue to Tritium Mode","",""
+"Close","Bezár",""
+"Are you sure you want to switch to Legacy Mode?","",""
+"Switch to Tritium Mode","",""
+"Start Nexus Core","Indítsa el Nexus Core-t",""
+"Stop Nexus Core","Állítsa le Nexus Core-t",""
+"Quit Nexus","Kilépés Nexusból",""
+"About","A termékről",""
+"Backup Wallet","Biztonsági Másolat a Pénztárcáról",""
+"Nexus Core is not connected","Nexus Core nincs csatlakoztatva",""
+"Wallet backed up","Pénztárca biztonsági mentése kész",""
+"View Backups","Biztonsági Mentések Megtekintése",""
+"Cut","Kivág",""
+"Copy","Másolás",""
+"Paste","Beilleszt",""
+"Core","Core",""
+"Application","Program",""
+"Key Management","Kulcskezelés",""
+"Style","Stílus",""
+"Modules","Modulok",""
+"Download Recent Database","Friss adatbázis letöltése",""
+"Cannot bootstrap recent database in manual mode","Nem lehet betölteni a legutóbbi adatbázist kézi módban",""
+"Please wait for Nexus Core to start.","Kérjük, várjon, amíg a Nexus Core elindul.",""
+"Toggle FullScreen","Váltás Teljes képernyő",""
+"Toggle Developer Tools","Fejlesztőeszközök ki-/ bekapcsolása",""
+"Toggle Module's Developer Tools","Modul Fejlesztőeszközök ki-/ bekapcsolása",""
+"Nexus Website","Nexus Weboldal",""
+"Nexus Git Repository","Nexus Git Adattár",""
+"Nexus Wallet Guide","Nexus Wallet Útmutató",""
+"Open Core Data Folder","",""
+"Open Interface Data Folder","",""
+"Check for Updates...","Frissítés Keresése...",""
+"There are currently no updates available","Jelenleg nincs elérhető frissítés",""
+"Checking for Updates...","Frissítések Ellenőrzése...",""
+"Update available! Downloading...","Frissítés elérhető! Letöltés...",""
+"Quit and install update...","Kilépés és a frissítés telepítése...",""
+"Edit","Szerkeszt",""
+"Settings","Beállítások",""
+"View","Nézet",""
+"Help","Segítség",""
+"Manual Core is disconnected","Kézi Core nincs csatlakoztatva",""
+"Connecting to Nexus Core...","Csatlakozás a Nexus Core-hoz...",""
+"Nexus Core is stopped","Nexus Core le van állítva",""
+"Address has been copied to clipboard","A cím a vágólapra lett másolva",""
+"Copy to clipboard","Vágólapra másolás",""
+"Click to copy to clipboard","Kattints ide a vágólapra helyezéshez",""
+"Log in","",""
+"No Rows Found","Nem Talált Sort",""
+"Page","Oldal",""
+"rows","sorok",""
+"Previous","Előző",""
+"Next","Tovább",""
+"Transaction received","Tranzakció érkezett",""
+"Transaction sent","Tranzakció elküldve",""
+"Genesis transaction","Genezis tranzakció",""
+"Trust transaction","Bizalmi tranzakció",""
+"New transaction","",""
+"Error","",""
+"Unknown error","Ismeretlen hiba",""
 "Last updated
 %{time}","Utolsó frissítés időpontja
-%{time}",Overview
-Getting next block...,A következő blokk beszerzése...,Overview
-Block Weight,Blokk Súly,Overview
-Trust Weight,Bizalmi Súly,Overview
-Stake Weight,Stake Súly,Overview
-Prime Difficulty,Prím Nehézség,Overview
-Hash Difficulty,Hash Nehézség,Overview
-Stake Difficulty,Stake Nehézsége,Overview
-Balance,Egyenleg,Overview
-Transactions,Tranzakciók,Overview
-Market Price,Piaci Ár,Overview
-24hr Change,24ó Változás,Overview
-Connections,Csatlakozók,Overview
-Stake Rate,Stake Arány,Overview
-Block Count,Blokkok Száma,Overview
-The balance displayed might not be up-to-date since the wallet is not yet fully synchronized,"Lehet, hogy a megjelenített egyenleg nem naprakész, mivel a pénztárca még nincs teljesen szinkronizálva",Overview
-Staking and mining rewards that need to get past 120 block-old to become available,Staking és bányászati jutalmaknak 120 visszaigazolás kell hogy elérhetővé váljanak,Overview
-Immature Balance,Éretlen egyenleg,Overview
-Market Cap,Piaci Kapitalizáció,Overview
-Available balance,,Overview
-balance,,Overview
-"This includes your pending balance, unconfirmed balance and immature balance",,Overview
-Incoming balances,,Overview
-NXS Amount,NXS Összeg,Send
-Send all,Összes küldése,Send
-Send NXS,NXS Küldése,Send
-Move NXS between accounts,NXS áthelyezése fiókok között,Send
-You are not logged in,Nem vagy bejelentkezve,Send
-You need to log in to your wallet before sending transactions,A tranzakciók küldése előtt be kell jelentkeznie a pénztárcájába,Send
-Log in now,Jelentkezz be most,Send
-Move NXS,NXS áthelyezése,Send
-From account,Kezdeményező fiók,Send
-Select an account,Válasszon fiókot,Send
-To account,Fiókba,Send
-No accounts selected,Nincs fiók kiválasztva,Send
-Cannot move to the same account,Nem lehet áthelyezni ugyanarra a fiókra,Send
-Invalid amount,Érvénytelen összeg,Send
-Invalid address,Érvénytelen cím,Send
-This is an address registered to this wallet.,Ez a cím erre a pénztárcára van regisztrálva.,Send
-NXS moved successfully,A NXS áthelyezése sikerült,Send
-Error moving NXS,A NXS áthelyezése nem sikerult,Send
-Wallet password,Pénztárca jelszava,Send
-Enter your wallet password,Adja meg a tárca jelszavát,Send
-Cancel,Mégse,Send
-Confirm,Jóváhagyás,Send
-Send to,Címzett,Send
-Recipient address,Címzett címe,Send
-Your address book is empty,A címjegyzéked üres,Send
-Create new contact,Új névjegy létrehozása,Send
-Remove recipient,Címzett eltávolítása,Send
-Add recipient,Címzett hozzáadása,Send
-Send transaction?,Tranzakciót küldeni?,Send
-Send To multiple recipients,Küldés több címzettnek,Send
-Send from,Feladó,Send
-Message,Üzenet,Send
-Enter your message,Írd be az üzeneted,Send
-Send,Küldés,Send
-There must be at least one recipient,Legalább egy címzettet adjon meg,Send
-Address is required,Egy érvényes cím szükséges,Send
-Transaction sent,Tranzakció elküldve,Send
-Error sending NXS,A NXS elküldése nem sikerult,Send
-%{tokenName} Amount,,Send
-Recipient Address/Name,,Send
-Accounts,,Send
-Tokens,,Send
-More options,,Send
-Reference number,,Send
-An optional number which may be provided by the recipient to identify this transaction from the others,,Send
-"Invoice number, order number, etc... (Optional)",,Send
-Reference must be a number,,Send
-Number is too large,,Send
-Address/Name is required,,Send
-Select backup directory,Biztonsági könyvtár kiválasztása,Settings.Application
-Backup directory,Biztonsági mentés mappája,Settings.Application
-Browse,Böngészés,Settings.Application
-Backup wallet,Biztonsági másolat a pénztárcáról,Settings.Application
-Wallet has been backed up,A pénztárcáról készült biztonsági másolat,Settings.Application
-Connecting to Nexus Core,Csatlakozás a Nexus Core-hoz,Settings.Application
-Turn module open source policy on?,Bekapcsolni a modul nyílt forráskódú irányelvet?,Settings.Application
-"All modules without open source verifications, possibly including your own under-development modules, will become invalid. Wallet must be refreshed for the change to take effect.","Minden nyílt forráskódú hitelesítés nélküli modul, beleértve a saját fejlesztés alatt álló moduljait, érvénytelenné fog válni. A pénztárcát frissíteni kell a módosítás hatálybalépéséhez.",Settings.Application
-Turn module open source policy off?,Kikapcsolni a modul nyílt forráskódú irányelvet?,Settings.Application
+%{time}","Overview"
+"Getting next block...","A következő blokk beszerzése...","Overview"
+"Block Weight","Blokk Súly","Overview"
+"Trust Weight","Bizalmi Súly","Overview"
+"Stake Weight","Stake Súly","Overview"
+"Prime Difficulty","Prím Nehézség","Overview"
+"Hash Difficulty","Hash Nehézség","Overview"
+"Stake Difficulty","Stake Nehézsége","Overview"
+"Balance","Egyenleg","Overview"
+"Transactions","Tranzakciók","Overview"
+"Market Price","Piaci Ár","Overview"
+"24hr Change","24ó Változás","Overview"
+"Connections","Csatlakozók","Overview"
+"Stake Rate","Stake Arány","Overview"
+"Block Count","Blokkok Száma","Overview"
+"The balance displayed might not be up-to-date since the wallet is not yet fully synchronized","Lehet, hogy a megjelenített egyenleg nem naprakész, mivel a pénztárca még nincs teljesen szinkronizálva","Overview"
+"Staking and mining rewards that need to get past 120 block-old to become available","Staking és bányászati jutalmaknak 120 visszaigazolás kell hogy elérhetővé váljanak","Overview"
+"Immature Balance","Éretlen egyenleg","Overview"
+"Market Cap","Piaci Kapitalizáció","Overview"
+"Available balance","","Overview"
+"balance","","Overview"
+"This includes your pending balance, unconfirmed balance and immature balance","","Overview"
+"Incoming balances","","Overview"
+"NXS Amount","NXS Összeg","Send"
+"Send all","Összes küldése","Send"
+"Send NXS","NXS Küldése","Send"
+"Move NXS between accounts","NXS áthelyezése fiókok között","Send"
+"You are not logged in","Nem vagy bejelentkezve","Send"
+"You need to log in to your wallet before sending transactions","A tranzakciók küldése előtt be kell jelentkeznie a pénztárcájába","Send"
+"Log in now","Jelentkezz be most","Send"
+"Move NXS","NXS áthelyezése","Send"
+"From account","Kezdeményező fiók","Send"
+"Select an account","Válasszon fiókot","Send"
+"To account","Fiókba","Send"
+"No accounts selected","Nincs fiók kiválasztva","Send"
+"Cannot move to the same account","Nem lehet áthelyezni ugyanarra a fiókra","Send"
+"Invalid amount","Érvénytelen összeg","Send"
+"Invalid address","Érvénytelen cím","Send"
+"This is an address registered to this wallet.","Ez a cím erre a pénztárcára van regisztrálva.","Send"
+"NXS moved successfully","A NXS áthelyezése sikerült","Send"
+"Error moving NXS","A NXS áthelyezése nem sikerult","Send"
+"Wallet password","Pénztárca jelszava","Send"
+"Enter your wallet password","Adja meg a tárca jelszavát","Send"
+"Cancel","Mégse","Send"
+"Confirm","Jóváhagyás","Send"
+"Send to","Címzett","Send"
+"Recipient address","Címzett címe","Send"
+"Your address book is empty","A címjegyzéked üres","Send"
+"Create new contact","Új névjegy létrehozása","Send"
+"Remove recipient","Címzett eltávolítása","Send"
+"Add recipient","Címzett hozzáadása","Send"
+"Send transaction?","Tranzakciót küldeni?","Send"
+"Send To multiple recipients","Küldés több címzettnek","Send"
+"Send from","Feladó","Send"
+"Message","Üzenet","Send"
+"Enter your message","Írd be az üzeneted","Send"
+"Send","Küldés","Send"
+"There must be at least one recipient","Legalább egy címzettet adjon meg","Send"
+"Address is required","Egy érvényes cím szükséges","Send"
+"Transaction sent","Tranzakció elküldve","Send"
+"Error sending NXS","A NXS elküldése nem sikerult","Send"
+"%{tokenName} Amount","","Send"
+"Recipient Address/Name","","Send"
+"Accounts","","Send"
+"Tokens","","Send"
+"More options","","Send"
+"Reference number","","Send"
+"An optional number which may be provided by the recipient to identify this transaction from the others","","Send"
+"Invoice number, order number, etc... (Optional)","","Send"
+"Reference must be a number","","Send"
+"Number is too large","","Send"
+"Address/Name is required","","Send"
+"Select backup directory","Biztonsági könyvtár kiválasztása","Settings.Application"
+"Backup directory","Biztonsági mentés mappája","Settings.Application"
+"Browse","Böngészés","Settings.Application"
+"Backup wallet","Biztonsági másolat a pénztárcáról","Settings.Application"
+"Wallet has been backed up","A pénztárcáról készült biztonsági másolat","Settings.Application"
+"Connecting to Nexus Core","Csatlakozás a Nexus Core-hoz","Settings.Application"
+"Turn module open source policy on?","Bekapcsolni a modul nyílt forráskódú irányelvet?","Settings.Application"
+"All modules without open source verifications, possibly including your own under-development modules, will become invalid. Wallet must be refreshed for the change to take effect.","Minden nyílt forráskódú hitelesítés nélküli modul, beleértve a saját fejlesztés alatt álló moduljait, érvénytelenné fog válni. A pénztárcát frissíteni kell a módosítás hatálybalépéséhez.","Settings.Application"
+"Turn module open source policy off?","Kikapcsolni a modul nyílt forráskódú irányelvet?","Settings.Application"
 "This is only for module developers and can be dangerous for
               regular users. Please make sure you know what you are doing!","Ez csak a modulfejlesztőkre vonatkozik, és veszélyes lehet a
-              normál felhasználóknak. Kérjük, győződjön meg róla, hogy tudja, mit csinál!",Settings.Application
+              normál felhasználóknak. Kérjük, győződjön meg róla, hogy tudja, mit csinál!","Settings.Application"
 "It would be much easier for a closed source module to hide
               malicious code than for an open source one. Therefore, in case you
               still want to disable this setting, it is highly recommended that
@@ -227,666 +227,667 @@ Turn module open source policy off?,Kikapcsolni a modul nyílt forráskódú ir�
               developing yourself.","Sokkal könnyebb egy zárt forrásúkódú modulban rosszindulatú
                kódot elrejteni mint egy nyílt forráskódúban. Ezért, ha Ön továbbra is le
                szeretné tiltani ezt a beállítást, erősen ajánljuk csak olyan zárt forrású 
-               modulokat telepítsen és futtasson, amelyeket Ön maga fejlesztett ki.",Settings.Application
-Turn policy off,Kikapcsolni az irányelvet,Settings.Application
-Keep policy on,Tartsa az irányelvet bekapcsolva,Settings.Application
-Are you sure you want to disable auto update?,"Biztos benne, hogy letiltja az automatikus frissítést?",Settings.Application
-Keeping your wallet up-to-date is important for your security and will ensure that you get the best possible user experience.,"A pénztárca naprakészen tartása fontos az Ön biztonsága szempontjából, és biztosítja a lehető legjobb felhasználói élmény elérését.",Settings.Application
-Keep auto update On,Tartsa az automatikus frissítést bekapcsolva,Settings.Application
-Turn auto update Off,Kapcsolja ki az automatikus frissítést,Settings.Application
-Minimize on close,Bezáráskor kis méret,Settings.Application
-Minimize the wallet when closing the window instead of closing it.,"Az ablak bezárása helyett minimalizálja a pénztárcát, amikor bezárja.",Settings.Application
-Auto update (Recommended),Automatikus frissítés (Ajánlott),Settings.Application
-Automatically check for new versions and notify if a new version is available.,"Automatikusan ellenőrizze, van-e új verzió, és értesítse, ha van új verzió.",Settings.Application
-Send anonymous usage data,Anonimizált használati adatok küldése,Settings.Application
-Send anonymous usage data to allow the Nexus developers to improve the wallet.,"Küldjön anonim használati adatokat, hogy a Nexus fejlesztők javítsák a pénztárcát.",Settings.Application
-Base currency,Bázisdeviza,Settings.Application
-Minimum confirmations,Visszaigazolások minimális száma,Settings.Application
-Minimum amount of confirmations before a block is accepted. Local only.,A visszaigazolások minimális száma a blokk elfogadása előtt. Csak helyi.,Settings.Application
-Developer mode,Fejlesztői üzemmód,Settings.Application
-Development mode enables advanced features to aid in development. After enabling the wallet must be closed and reopened to enable those features.,"A fejlesztési mód lehetővé teszi a fejlett funkciók fejlesztését. Engedélyezése után a pénztárcát le kell zárni és újra kell nyitni, hogy engedélyezze ezeket a funkciókat.",Settings.Application
-Module open source policy,Modul nyílt forráskódú irányelv,Settings.Application
-Only modules which have valid open source repositories are allowed to be installed and run. You can disable this option to test run the modules that you're developing,"Csak azok a modulok telepíthetők és futtathatók, amelyek érvényes nyílt forráskódú adattárral rendelkeznek. Letilthatja ezt a beállítást a fejlesztés alatt álló modulok teszteléséhez",Settings.Application
-Allow SymLink,,Settings.Application
-Allow the presence of SymLinks in the module directory,,Settings.Application
-Fake Test Transactions,Hamis teszt tranzakciók,Settings.Application
-Display Test Transactions on the Transactions page,A Teszt tranzakciók megjelenítése a Tranzakciók oldalon,Settings.Application
-Language,Nyelv,Settings.Application
-Exit manual Core mode?,Kilép a kézi Core módból?,Settings.Core
-(This will restart your Core),(Ez újra fogja indítani a Core-t),Settings.Core
-Enter manual Core mode?,Belép a kézi Core módba?,Settings.Core
-Reload transaction history,Korábbi tranzakciók újratöltése,Settings.Core
-Clear peer connections,,Settings.Core
-Enable mining,Engedélyezze a bányászatot,Settings.Core
-Enable/Disable mining to the wallet.,Bányászat Engedélyezése / Tiltása a pénztárcára.,Settings.Core
-Mining IP Whitelist,Bányászati IP Engedélyezési Lista,Settings.Core
-IP/Ports allowed to mine to. Separate by <b>;</b> . Wildcards supported only in IP,IP/Port-ok ahova a bányászat engedélyezett. Válaszd el <b>;</b>-vel. Helyettesítő karaktereket csak az IP-val lehet használni,Settings.Core
-Enable staking,Engedélyezze a staking-et,Settings.Core
-Enable/Disable staking on the wallet.,Staking Engedélyezése / Tiltása a pénztárcában.,Settings.Core
-Rescan wallet,Vizsgálja újra a pénztárcát,Settings.Core
-"Used to correct transaction/balance issues, scans over every block in the database. Could take up to 10 minutes.","Tranzakciós/egyenlegproblémák kijavítására szolgál, megvizsgálja az adatbázis minden blokkját. Tíz percig is eltarthat.",Settings.Core
-Restart Nexus core with -walletclean parameter to clean out and reload all transaction history,Nexus core újraindítása a -walletclean paraméterrel az összes tranzakciós előzmény tisztításához és újratöltéséhez,Settings.Core
-Reload,Újratöltés,Settings.Core
-Clear all stored peer connections and restart Nexus,,Settings.Core
-Clear,,Settings.Core
-Verbose level,Bőbeszédű szint,Settings.Core
-Verbose level for logs.,Logolás bőbeszédű szintje.,Settings.Core
-Wallet Data Directory Override,,Settings.Core
-Change where the data directory is. This is where the wallet.dat and database are located. Default is blank.,,Settings.Core
-Testnet Iteration,,Settings.Core
-The iteration of Testnet to connect to.,,Settings.Core
-Turn Off,,Settings.Core
-Avatar Mode,Avatar Mód,Settings.Core
-Disabling Avatar will make the core use a separate change key,Az Avatár letiltása esetén a Core külön módosító kulcsot fog használni,Settings.Core
-Manual Core mode,Kézi Core mód,Settings.Core
-Enable manual Core mode if you are running the Nexus Core manually outside of the wallet.,"Engedélyezze a manuális Core-t, ha a Nexus Core-t manuálisan futtatja a pénztárcán kívül.",Settings.Core
-Username,Felhasználónév,Settings.Core
-Username configured for manual Core.,Felhasználónév a kézi Core-hoz konfigurálva.,Settings.Core
-Password,Jelszó,Settings.Core
-Password configured for manual Core.,Jelszó a kézi Core-hoz konfigurálva.,Settings.Core
-IP address,IP cím,Settings.Core
-IP address configured for manual Core.,IP cím a kézi Core-hoz konfigurálva.,Settings.Core
-Port,Portszám,Settings.Core
-Port configured for manual Core.,Portszám a kézi Core-hoz konfigurálva.,Settings.Core
-Data directory name,Adat könyvtárnév,Settings.Core
-Data directory configured for manual Core.,A kézi Core-hoz konfigurálva az adatkönyvtár.,Settings.Core
-Restart Core for these changes to take effect,,Settings.Core
-Save settings,,Settings.Core
-Verbose level is required,,Settings.Core
-Manual Core username is required,Kézi Core felhasználónév kötelező,Settings.Core
-Manual Core password is required,Kézi Core jelszó kötelező,Settings.Core
-Manual Core IP is required,Kézi Core IP szükséges,Settings.Core
-Manual Core port is required,Kézi Core port szükséges,Settings.Core
-Data directory is required,Adatkönyvtár szükséges,Settings.Core
-Core settings saved,Core beállítások elmentve,Settings.Core
-Restarting Core...,Core újraindítása...,Settings.Core
-Error rescanning,Hiba újraszkennelés közben,Settings.Core
-Rescanned successfully,Újravizsgálás sikeres,Settings.Core
-Rescanning...,Újravizsgálás...,Settings.Core
-Settings,Beállítások,Settings
-Application,Program,Settings
-Core,Core,Settings
-Security,Biztonság,Settings
-Style,Stílus,Settings
-Modules,Modulok,Settings
-Select module archive file,Válassza ki a modul archívum fájlt,Settings.Modules
-Select module directory,Modul könyvtár kiválasztása,Settings.Modules
-Add Module,Modul hozzáadása,Settings.Modules
-Checking module,Modul ellenőrzése,Settings.Modules
-Drop here to install,Húzd ide a telepítéshez,Settings.Modules
-Select module's <file>archive file</file> or <dir>directory</dir>,Válassza ki a modul <file>archívum fájl</file>-ját vagy <dir>könyvtár</dir>-át,Settings.Modules
-or drag and drop it here,vagy húzza át és dobja ide,Settings.Modules
-Disable %{moduleName}?,%{moduleName}-et kikapcsolni?,Settings.Modules
-Wallet will be automatically refreshed for the change to take effect,"A pénztárca automatikusan frissül, hogy a változás hatályba lépjen",Settings.Modules
-Enable %{moduleName}?,%{moduleName}-et engedélyezni?,Settings.Modules
-Deprecated Specification version,Elavult specifikációs verzió,Settings.Modules
-Module is not open source,A modul nem nyílt forráskódú,Settings.Modules
-The provided repository is not verified to be the real source code of this module,"Nem igazolt, hogy a megadott adattár a modul valódi forráskódja",Settings.Modules
-Overwrite module?,Felülírja a modult?,Settings.Modules
-A module with the same directory name already exists,Egy modul ugyanezzel a directory névvel már létezik,Settings.Modules
-Module has been successfully installed,A modul sikeresen telepítve,Settings.Modules
-The wallet will now be refreshed for the new module to take effect,"A pénztárca most frissül, hogy az új modul életbe lépjen",Settings.Modules
-Error copying module files,Hiba a modul fájlok másolásakor,Settings.Modules
-Cannot find module,Nem található a modul,Settings.Modules
-Unsupported file type,Nem támogatott fájltípus,Settings.Modules
-Cannot install from that location,Nem lehet telepíteni innen,Settings.Modules
-An unknown error occurred,Ismeretlen hiba történt,Settings.Modules
-Are you sure you want to log out?,Biztosan ki szeretnél jelentkezni?,Settings.Security
-Error logging out,Hiba a kijelentkezéskor,Settings.Security
-Change password,Jelszó módosítása,Settings.Security
-Previous password,Előző jelszó,Settings.Security
-Password,Jelszó,Settings.Security
-New password,Új jelszó,Settings.Security
-Re-enter password:,Jelszó mégegyszer:,Settings.Security
-Confirm password,Jelszó megerősítése,Settings.Security
-Log out,Kijelentkezés,Settings.Security
-Password is required,Jelszó kötelező,Settings.Security
-Password cannot contain these characters:,A jelszó nem tartalmazhatja ezeket a karaktereket:,Settings.Security
-Password must be at least 8 characters,A jelszónak minimum 8 karakter hosszúnak kell lennie,Settings.Security
-Password cannot start or end with spaces,A jelszó nem kezdődhet vagy végződhet szóközzel,Settings.Security
-Passwords do not match,A jelszavak nem egyezőek,Settings.Security
-Password has been changed.,Megváltoztatták a jelszót.,Settings.Security
-Error changing password,Hiba történt a jelszó módosításakor,Settings.Security
-Encrypt wallet,Pénztárca titkosítása,Settings.Security
-Re-enter password,Jelszó mégegyszer,Settings.Security
-Encrypt and restart,Titkosítás és újraindítás,Settings.Security
-Wallet has been encrypted.,A pénztárca titkosítva van.,Settings.Security
-Error encrypting wallet,Hiba történt a pénztárca titkosítása során,Settings.Security
-Import private key,Privát kulcs importálása,Settings.Security
-Account name,Fiók neve,Settings.Security
-Private key,Privát kulcs,Settings.Security
-Import,Importálás,Settings.Security
-Account name is required,Fióknév megadása kötelező,Settings.Security
-Private key is required,Privát kulcs megadása szükséges,Settings.Security
-Private key imported. Rescanning now,Privát kulcs importálva. Újraszkennelés...,Settings.Security
-Rescanning...,Újravizsgálás...,Settings.Security
-Rescanning done,Újravizsgálás befejeződött,Settings.Security
-Error rescanning,Hiba újraszkennelés közben,Settings.Security
-An unknown error occurred,Ismeretlen hiba történt,Settings.Security
-Error importing private key,Hiba a privát kulcs importálásakor,Settings.Security
-Login until date,Bejelentkezés dátumig,Settings.Security
-Login until time,Bejelentkezés időpontig,Settings.Security
-Your wallet password,Pénztárcád jelszava,Settings.Security
-Login for staking & mining only,Csak staking-hez és bányászathoz jelentkezz be,Settings.Security
-Set timeout for login,Állítsa be a bejelentkezés időkorlátját,Settings.Security
-Date is required,Dátum megadása szükséges,Settings.Security
-Time is required,Idő megadása szükséges,Settings.Security
-Time must be at least one hour in the future,Az időnek legalább egy órának kell lennie a jövőben,Settings.Security
-Logged in successfully,Sikeresen belépve,Settings.Security
-Error logging in,Bejelentkezési hiba,Settings.Security
-Copied to clipboard,Vágólapra másolva,Settings.Security
-View private key for address,E cím privát kulcsának megtekintése,Settings.Security
-Address,Cím,Settings.Security
-Enter address here,Adja meg a címet,Settings.Security
-View private key,Privát kulcs megtekintése,Settings.Security
-Private key will be displayed here,Itt fog megjelenni a privát kulcs,Settings.Security
-Copy,Másolás,Settings.Security
-Address cannot be empty,A cím nem lehet üres,Settings.Security
-Error getting private key,Hiba a privát kulcs beszerzésekor,Settings.Security
-Twinkling stars,Csillogó csillagok,Settings.Style
-Cosmic light,Kozmikus fény,Settings.Style
-Custom wallpaper,Egyéni háttérkép,Settings.Style
-Select a custom wallpaper,Egyedi Háttérkép Választása,Settings.Style
-Color scheme has been reset to default,A színséma visszaállt alapértelmezettre,Settings.Style
-Invalid file format! Custom theme file must be in JSON,Érvénytelen fájlformátum! Az egyéni témafájlnak JSON-ben kell lennie,Settings.Style
-Select custom theme file,Egyéni kinézetes fájl választása,Settings.Style
-Theme exported,Kinézet exportálva,Settings.Style
-Theme has been reset to default,A kinézet visszaállt alapértelmezettre,Settings.Style
-Render globe,Földgolyó megjelenítése,Settings.Style
-Render the globe on the Overview page.,Az Áttekintő oldalon a földgolyó megjelenítése.,Settings.Style
-Your computer does not support OPENGL 2.0,A számítógéped nem támogatja az OPENGL 2.0-t,Settings.Style
-Overview Display,Áttekintés Kijelző,Settings.Style
-Nexus Addresses format,Nexus Címek formátuma,Settings.Style
-Choose your Nexus Address display preference,Válaszd ki a Nexus Cím megjelenítési preferenciát,Settings.Style
-Sample Address,Minta Cím,Settings.Style
-This is your Default Address,Ez az Ön Alapértelmezett Címe,Settings.Style
-Theme,Kinézet,Settings.Style
-Select Wallet Theme,Pénztárca Kinézetének Választása,Settings.Style
-Background,Háttérkép,Settings.Style
-Customize your background wallpaper,Háttérkép Testreszabása,Settings.Style
-Color scheme,Színséma,Settings.Style
-Background Color,Háttérszín,Settings.Style
-Foreground Color,Előtér Szín,Settings.Style
-Primary Color,Elsődleges szín,Settings.Style
-Primary Color Accent,Elsődleges Szín Nyomaték,Settings.Style
-Danger Color,Veszély Szín,Settings.Style
-Danger Color Accent,Veszély Szín Nyomaték,Settings.Style
-Globe Color,Földgolyó Színe,Settings.Style
-Globe Pillar Color,Földgolyó Pillér Színe,Settings.Style
-Globe Arch Color,Földgolyó Boltív Színe,Settings.Style
-Import custom theme,Egyedi kinézet importálása,Settings.Style
-Export custom theme,Egyedi kinézet exportálása,Settings.Style
-Dark,Sötét,Settings.Style
-Light,Világos,Settings.Style
-Custom,Egyéni,Settings.Style
-Reset,Alapállapot,Settings.Style
-Console,Konzol,Console
-Core output,Core kimenet,Console
-Enter API here (ex: api/verb/noun?param=value&param2=2 or param=1 param2=2),,Console.NexusAPI
-API Documentation,,Console.NexusAPI
-Execute,Végrehajtás,Console.NexusAPI
-Clear,,Console.NexusAPI
-"Enter console commands here (ex: getinfo, help)","Ide írja be a konzolparancsokat (pl: getinfo, help)",Console.Console
-Execute,Végrehajtás,Console.Console
-Clear console,Konzol törlése,Console.Console
-Core is in Manual Mode,A Core Kézi Üzemmódban van,Console.CoreOutput
-Pending,Függőben,Transactions
-All,Összes,Transactions
-Receive,Fogadás,Transactions
-Sent,Elküldve,Transactions
-Stake,Stake,Transactions
-Generate,Generálás,Transactions
-Immature,Éretlen,Transactions
-Orphan,Árva,Transactions
-Genesis,Genezis,Transactions
-Past Year,Múlt Évben,Transactions
-Past Month,Múlt Hónapban,Transactions
-Past Week,Múlt Héten,Transactions
-Search address,Cím keresése,Transactions
-Search for Address,Cím Keresése,Transactions
-Category,Kategória,Transactions
-Min amount,Min mennyiség,Transactions
-Time span,Időtartam,Transactions
-Time,Idő,Transactions
-CATEGORY,KATEGÓRIA,Transactions
-AMOUNT,ÖSSZEG,Transactions
-ACCOUNT,FIÓK,Transactions
-ADDRESS,CÍM,Transactions
-Transaction details,Tranzakció részletek,Transactions
-Show transactions chart,Tranzakciós táblázat megjelenítése,Transactions
-Download transactions history,Korábbi tranzakciók letöltése,Transactions
-Loading transactions,Tranzakciók betöltése,Transactions
-All Accounts,Az összes fiók,Transactions
-Send,Küldés,Transactions
-Trust,Bizalom,Transactions
-Unknown,Ismeretlen,Transactions
-Legacy transaction,,Transactions
-Coinbase transaction,,Transactions
-Address,Cím,Transactions
-Account/token address,,Transactions
-Name,Név,Transactions
-Operation,,Transactions
-Transactions,Tranzakciók,Transactions
-Loading transactions...,,Transactions
-NXS balances,,Transactions
-Previous,Előző,Transactions
-Page <page></page> of %{total},,Transactions
-Next,Tovább,Transactions
-Transactions Details,Tranzakciók Részletei,Transactions.TransactionDetails
-Time,Idő,Transactions.TransactionDetails
-Category,Kategória,Transactions.TransactionDetails
-Amount,Összeg,Transactions.TransactionDetails
-Fee,Díj,Transactions.TransactionDetails
-Account,Fiók,Transactions.TransactionDetails
-Address,Cím,Transactions.TransactionDetails
-Confirmations,Visszaigazolások,Transactions.TransactionDetails
-Pending,Függőben,Transactions.TransactionDetails
-Transaction ID,Tranzakció azanosító,Transactions.TransactionDetails
-Block hash,Blokk hash,Transactions.TransactionDetails
-Loading transaction details...,Tranzakció adatainak betöltése...,Transactions.TransactionDetails
-Sequence,,Transactions.TransactionDetails
-Type,,Transactions.TransactionDetails
-Transactions chart,Tranzakciós táblázat,Transactions.TransactionsChart
-Amount,Összeg,Transactions.TransactionsChart
-Time,Idő,Transactions.TransactionsChart
-Total,,Transactions.Balances
-Available,,Transactions.Balances
-The current balance across all NXS accounts that is available to be spent,,Transactions.Balances
-Pending,Függőben,Transactions.Balances
-The sum of all debit and coinbase transactions made to your NXS accounts that are confirmed but have not yet been credited. This does NOT include immature and unconfirmed amounts,,Transactions.Balances
-Unconfirmed,,Transactions.Balances
-"The sum of all debit transactions made to your NXS accounts that are not confirmed, or credits you have made to your accounts that are not yet confirmed (not yet included in a block)",,Transactions.Balances
-Stake,Stake,Transactions.Balances
-The amount of NXS currently staked in the trust account,,Transactions.Balances
-Immature,Éretlen,Transactions.Balances
-The sum of all coinbase transactions that have not yet reached maturity,,Transactions.Balances
-Unnamed account,,User.Accounts
-Details,,User.Accounts
-History,,User.Accounts
-Create new account,,User.Accounts
-Account Details,,User.Accounts.AccountDetails
-Account name,Fiók neve,User.Accounts.AccountDetails
-Created at,,User.Accounts.AccountDetails
-Last modified,,User.Accounts.AccountDetails
-Token name,,User.Accounts.AccountDetails
-Total account balance,,User.Accounts.AccountDetails
-Available balance,,User.Accounts.AccountDetails
-Pending balance,,User.Accounts.AccountDetails
-Unconfirmed balance,,User.Accounts.AccountDetails
-Stake balance,,User.Accounts.AccountDetails
-Immature balance,,User.Accounts.AccountDetails
-Address,Cím,User.Accounts.AccountDetails
-Trust Account is empty.,,User.Accounts.AccountDetails
-Trust Account must mature for 72 hours before staking,,User.Accounts.AccountDetails
-Adjust stake amount,,User.Accounts.AccountDetails
-Time,Idő,User.Accounts.AccountHistory
-Operation,,User.Accounts.AccountHistory
-From,,User.Accounts.AccountHistory
-staked,,User.Accounts.AccountHistory
-mined,,User.Accounts.AccountHistory
-To,,User.Accounts.AccountHistory
-Change,,User.Accounts.AccountHistory
-Account History,,User.Accounts.AccountHistory
-Loading account history,,User.Accounts.AccountHistory
-Account balance(,,User.Accounts.AccountHistory
-Show %{tokenName},,User.Accounts.AccountHistory
-Account balance,,User.Accounts.AccountHistory
-Total,,User.Accounts.AccountHistory
-Available,,User.Accounts.AccountHistory
-Pending,Függőben,User.Accounts.AccountHistory
-Unconfirmed,,User.Accounts.AccountHistory
-Stake,Stake,User.Accounts.AccountHistory
-User,,User
-User ID,,User
-Accounts,,User
-Staking,,User
-Tokens,,User
-Change password & PIN,,User
-Change recovery phrase,,User
-Set recovery phrase,,User
-The current NXS balance of the trust account that is not staked. You can spend this amount without affecting your Trust Score,,User.Staking
-"Balance that will be staked after the 72 holding period, any change to this balance will reset the hold timer",,User.Staking
-Restart Core?,Core-t újraindítani?,User.Staking
-Nexus Core needs to restart for this change to take effect,,User.Staking
-Disable staking,,User.Staking
-Enable staking,Engedélyezze a staking-et,User.Staking
-Cancel,Mégse,User.Staking
-Status,,User.Staking
-Staking,,User.Staking
-Not staking,,User.Staking
-Stake amount,,User.Staking
-The amount of NXS currently staked in the trust account,,User.Staking
-Pending change,,User.Staking
-The pending stake amount change that will be applied on the next Trust transaction,,User.Staking
-Requested at,,User.Staking
-Expired in,,User.Staking
-Stake Rate,Stake Arány,User.Staking
-The current annual reward rate earned for staking,,User.Staking
-Trust Weight,Bizalmi Súly,User.Staking
-"The percentage of the maximum Trust Score, which is gradually built over time when you consistently operate your node in an honest, trustworthy, and timely manner",,User.Staking
-Block Weight,Blokk Súly,User.Staking
-"Block Weight depends on the time passed since you received a Trust transaction and will be reset everytime you receive a Trust transaction. Otherwise, Block Weight will reach 100% after 3 days and your Trust Score will start decaying until you receive another Trust transaction",,User.Staking
-Stake Weight,Stake Súly,User.Staking
-"Stake Weight depends on Trust Weight and Block Weight. Along with your Stake amount, Stake Weight affects how frequent you receive a Trust transaction",,User.Staking
-Available Balance,,User.Staking
-Migrate stake,,User.Staking
-Adjust stake amount,,User.Staking
-Account on hold for another %{stakeSeconds} Seconds,,User.Staking
-Create new token,,User.Tokens
-Lookup a token,,User.Tokens
-Unnamed token,,User.Tokens
- (Owned by you),,User.Tokens
-Details,,User.Tokens
-New Token,,User.Tokens.NewToken
-"There is a %{tokenfee} NXS token creation fee, based on supply",,User.Tokens.NewToken
-Token name,,User.Tokens.NewToken
-Name Creation Fee: %{tokenFee} NXS (Optional),,User.Tokens.NewToken
-New tokens's name,,User.Tokens.NewToken
-Supply,,User.Tokens.NewToken
-Max amount of tokens available,,User.Tokens.NewToken
-Decimal,,User.Tokens.NewToken
-Amount of significant digits a token can have,,User.Tokens.NewToken
-Cancel,Mégse,User.Tokens.NewToken
-Create token,,User.Tokens.NewToken
-Supply can not be zero or negative,,User.Tokens.NewToken
-Create a token without a name?,,User.Tokens.NewToken
-Adding a name costs a NXS fee,,User.Tokens.NewToken
-That's Ok,,User.Tokens.NewToken
-Add Name,,User.Tokens.NewToken
-New token %{token} has been created,,User.Tokens.NewToken
-You have successfully created token %{token} ! Would you like to make an account for this token?,,User.Tokens.NewToken
-Yes,Igen,User.Tokens.NewToken
-No,Nem,User.Tokens.NewToken
-Error creating token,,User.Tokens.NewToken
-Can not find Token,,User.Tokens.SearchToken
-Lookup Token,,User.Tokens.SearchToken
-Name/Address,,User.Tokens.SearchToken
-Lookup a Token on the network,,User.Tokens.SearchToken
-Lookup this token,,User.Tokens.SearchToken
-No Value,,User.Tokens.SearchToken
-Error searching for token,,User.Tokens.SearchToken
-Token Details,,User.Tokens.TokenDetails
-Token name,,User.Tokens.TokenDetails
-Token address,,User.Tokens.TokenDetails
-Created at,,User.Tokens.TokenDetails
-Last modified,,User.Tokens.TokenDetails
-Token Owner,,User.Tokens.TokenDetails
-Current Supply,,User.Tokens.TokenDetails
-Max Supply,,User.Tokens.TokenDetails
-Decimals,,User.Tokens.TokenDetails
-Balance,Egyenleg,User.Tokens.TokenDetails
-Pending balance,,User.Tokens.TokenDetails
-Unconfirmed balance,,User.Tokens.TokenDetails
-Create new account with this token,,User.Tokens.TokenDetails
-Close,Bezár,User.Tokens.TokenDetails
-Wallet version,,About
-Wallet build date,,About
-Nexus Core version,,About
-Core build date,,About
-Testnet,,About
-Private blockchain,,About
-Invalid address,Érvénytelen cím,AddEditContact
-This is not one of your addresses.,Ez nem az Ön címe.,AddEditContact
-This is one of your addresses.,Ez az Ön címe.,AddEditContact
-Name,Név,AddEditContact
-Contact name,Kapcsolattartó neve,AddEditContact
-Email address,Email cím,AddEditContact
-Phone number,Telefonszám,AddEditContact
-Time zone,Időzóna,AddEditContact
-Select a time zone,Időzóna beállítás,AddEditContact
-Notes,Megjegyzések,AddEditContact
-Cancel,Mégse,AddEditContact
-Reset,Alapállapot,AddEditContact
-Save changes,Változások mentése,AddEditContact
-Create,Létrehozás,AddEditContact
-Name is required.,A név szükséges.,AddEditContact
-A contact with the same name already exists.,Egy kontakt ezzel a névvel már létezik.,AddEditContact
-There must be at least one address.,Legalább egy címnek kell lennie.,AddEditContact
-Invalid email,Érvénytelen e-mail,AddEditContact
-Contact has been updated,A névjegy frissítve,AddEditContact
-New contact has been added to address book,Új névjegy hozzáadva a címjegyzékhez,AddEditContact
-My Nexus address for %{name},Nexus címem %{name}-nek,AddEditContact
-My Nexus address,Nexus címeim,AddEditContact
-%{name}'s Nexus address,%{name} Nexus címe,AddEditContact
-Their Nexus address,Az Ők Nexus címe,AddEditContact
-Remove address,Cím törlése,AddEditContact
-Label (optional),Címke (opcionális),AddEditContact
-Edit contact,Névjegy szerkesztése,AddEditContact
-Create new contact,Új névjegy létrehozása,AddEditContact
-Adjust stake amount,,AdjustStake
-"Note: This change will not take effect immediately but will stay pending until you get the next Trust transaction. The pending change will be recorded locally in this machine, therefore if you switch to another machine for staking, the change will not take effect.",,AdjustStake
-Cancel,Mégse,AdjustStake
-Set stake amount,,AdjustStake
-Invalid number,,AdjustStake
-Out of range,,AdjustStake
-Reduce stake amount?,,AdjustStake
-Reducing stake amount might make your Stake Rate decrease,,AdjustStake
-Stake amount has been updated,,AdjustStake
-Error setting stake amount,,AdjustStake
-Backing up...,Biztonsági mentés...,Bootstrap
-Downloading,Letöltés,Bootstrap
-Decompressing...,Kitömörítés...,Bootstrap
-Stopping Core...,Core leállítása...,Bootstrap
-Moving...,Áthelyezés...,Bootstrap
-Restarting Core...,Core újraindítása...,Bootstrap
-Rescanning Wallet...,Pénztárca újravizsgálása...,Bootstrap
-Backing up your wallet...,Pénztárcád biztonsági mentése...,Bootstrap
-Downloading the database,Az adatbázis letöltése,Bootstrap
-Decompressing the database...,Adatbázis kitömörítése...,Bootstrap
-Stopping Nexus Core...,Nexus Core leállítása...,Bootstrap
-Moving the database...,Az adatbázis áthelyezése...,Bootstrap
-Restarting Nexus Core...,Nexus Core újraindítása...,Bootstrap
-Are you sure you want to abort the process?,Biztosan meg akarja szakítani a folyamatot?,Bootstrap
-"Yes, abort","Igen, megszakítás",Bootstrap
-"No, let it continue","Nem, hagyjuk folytatni",Bootstrap
-Bootstrap Recent Database,Tölts be Friss Adatbázist,Bootstrap
-Abort,Megszakít,Bootstrap
-Bootstrap process has been aborted,Betöltés folyamat megszakadt,Bootstrap
-Error bootstrapping recent database,Hiba történt a legutóbbi adatbázis betöltése során,Bootstrap
-Unknown error,Ismeretlen hiba,Bootstrap
-Recent database has been successfully bootstrapped,A legújabb adatbázis sikeresen betöltve,Bootstrap
-Not enough disk space! Minimum 15GB of free space is required.,Nincs elég hely a merevlemezen! Legalább 15GB szabad hely szükséges.,Bootstrap
-Download recent database?,Friss adatbázist letölteni?,Bootstrap
-Downloading a recent version of the database might reduce the time it takes to synchronize your wallet,Az adatbázis legújabb verziójának letöltése lerövidítheti a pénztárca szinkronizálásához szükséges időt,Bootstrap
-"Yes, let's bootstrap it","Igen, töltsük be",Bootstrap
-"No, let it sync","Nem, hagyja, hogy szinkronizáljon",Bootstrap
-Change password and PIN,,ChangePassword&PIN
-Current password,,ChangePassword&PIN
-Your current password,,ChangePassword&PIN
-Current PIN,,ChangePassword&PIN
-Your current PIN number,,ChangePassword&PIN
-New Password,,ChangePassword&PIN
-Enter your new password,,ChangePassword&PIN
-New PIN,,ChangePassword&PIN
-Enter your new PIN number,,ChangePassword&PIN
-Updating,,ChangePassword&PIN
-Update,,ChangePassword&PIN
-Current password is required,,ChangePassword&PIN
-Current PIN is required,,ChangePassword&PIN
-New password is required,,ChangePassword&PIN
-Password must be at least 8 characters,A jelszónak minimum 8 karakter hosszúnak kell lennie,ChangePassword&PIN
-New PIN is required,,ChangePassword&PIN
-PIN must be at least 4 characters,,ChangePassword&PIN
-Password & PIN have been updated,,ChangePassword&PIN
-Error updating password & PIN,,ChangePassword&PIN
-Password/PIN mismatch,,ConfirmPassword&PIN
-"You have entered either your password or your PIN incorrectly, please re-check",,ConfirmPassword&PIN
-Confirm password and PIN,,ConfirmPassword&PIN
-Enter your new password & new PIN once again to make sure you have entered them correctly,,ConfirmPassword&PIN
-Enter your password & PIN once again to make sure you have entered them correctly,,ConfirmPassword&PIN
-Password,Jelszó,ConfirmPassword&PIN
-Re-enter your new password,,ConfirmPassword&PIN
-Re-enter your password,,ConfirmPassword&PIN
-PIN,,ConfirmPassword&PIN
-Re-enter your new PIN number,,ConfirmPassword&PIN
-Re-enter your PIN number,,ConfirmPassword&PIN
-Confirm,Jóváhagyás,ConfirmPassword&PIN
-Contract Details,,ContractDetails
-Yes,Igen,ConfirmDialog
-No,Nem,ConfirmDialog
-Dismiss,Elutasít,ErrorDialog
-Dismiss,Elutasít,SuccessDialog
-Your wallet is not encrypted!,A tárcád nincs titkosítva!,EncryptionWarning
-It is highly recommended that you should encrypt your wallet to keep your NXS safe.,"Nagyon ajánlott, hogy titkosítsa a pénztárcáját az NXS biztonságának megőrzése érdekében.",EncryptionWarning
-Ignore,Ignorál,EncryptionWarning
-Encrypt wallet,Pénztárca titkosítása,EncryptionWarning
-Log in,,Login
-Username,Felhasználónév,Login
-Enter your username,,Login
-Password,Jelszó,Login
-Enter your password,,Login
-PIN,,Login
-Enter your PIN number,,Login
-Logging in,,Login
-Forgot password?,,Login
-Create new user,,Login
-Username is required,,Login
-Password is required,Jelszó kötelező,Login
-PIN is required,,Login
-Logged in as %{username},,Login
-Error logging in,Bejelentkezési hiba,Login
-Migrate account,,MigrateAccount
-You have %{amount} NXS in your legacy account.,,MigrateAccount
-"If you have been staking with your legacy account, click Migrate stake button below to move both your stake amount and your trust score to this new Tritium user.",,MigrateAccount
-Migrate stake,,MigrateAccount
-Cannot migrate stake since this Tritium user has already started staking before. Please create a new user if you still want to migrate your stake.,,MigrateAccount
-"If you have never started staking, or have already migrated your stake, you can manually send your funds from legacy account to this new Tritium user.",,MigrateAccount
-Please keep in mind that you may lose your legacy trust score if you send NXS manually from your legacy account without migrating your stake first,,MigrateAccount
-Send NXS manually,,MigrateAccount
-Don't show this again,,MigrateAccount
-Your stake has been successfully migrated,,MigrateStake
-Error migrating stake,,MigrateStake
-Migrate stake,,MigrateStake
-This will transfer all stake amount and trust score from your legacy wallet to your new Tritium account.,,MigrateStake
-"Please make sure that you are using the same machine that you used to stake with your legacy wallet, or you have put your staking wallet.dat file into %{path}",,MigrateStake
-Legacy wallet password,,MigrateStake
-Leave this blank if your legacy wallet is not encrypted,,MigrateStake
-Cancel,Mégse,MigrateStake
-Module Details,Modul Részletei,ModuleDetails
-Module name,Modul neve,ModuleDetails
-Display name,Megjelenítendő név,ModuleDetails
-Module type,Modul típusa,ModuleDetails
-Version,Verzió,ModuleDetails
-Module Specifications version,A Modul Specifikációinak Verziója,ModuleDetails
-Description,Leírás,ModuleDetails
-Not provided,Nincs megadva,ModuleDetails
-Author,Készítő,ModuleDetails
-No information,Nincs információ,ModuleDetails
-Source code,Forráskód,ModuleDetails
-Visit repository,Adattár meglátogatása,ModuleDetails
-This module is developed by Nexus,Ezt a modult Nexus fejlesztette ki,ModuleDetails
-This repository does not exist or is private,"Ez az adattár nem létezik, vagy privát",ModuleDetails
-This repository is not verified to be the real source code of this module,"Nem igazolt, hogy ez az adattár a modul valódi forráskódja",ModuleDetails
-Module hash,Modul hash,ModuleDetails
-Not available,Nem elérhető,ModuleDetails
-Module is invalid,A modul érvénytelen,ModuleDetails
-Installing Module...,Modul Telepítése...,ModuleDetails
-Install Module,Modul Telepítése,ModuleDetails
+               modulokat telepítsen és futtasson, amelyeket Ön maga fejlesztett ki.","Settings.Application"
+"Turn policy off","Kikapcsolni az irányelvet","Settings.Application"
+"Keep policy on","Tartsa az irányelvet bekapcsolva","Settings.Application"
+"Are you sure you want to disable auto update?","Biztos benne, hogy letiltja az automatikus frissítést?","Settings.Application"
+"Keeping your wallet up-to-date is important for your security and will ensure that you get the best possible user experience.","A pénztárca naprakészen tartása fontos az Ön biztonsága szempontjából, és biztosítja a lehető legjobb felhasználói élmény elérését.","Settings.Application"
+"Keep auto update On","Tartsa az automatikus frissítést bekapcsolva","Settings.Application"
+"Turn auto update Off","Kapcsolja ki az automatikus frissítést","Settings.Application"
+"Minimize on close","Bezáráskor kis méret","Settings.Application"
+"Minimize the wallet when closing the window instead of closing it.","Az ablak bezárása helyett minimalizálja a pénztárcát, amikor bezárja.","Settings.Application"
+"Auto update (Recommended)","Automatikus frissítés (Ajánlott)","Settings.Application"
+"Automatically check for new versions and notify if a new version is available.","Automatikusan ellenőrizze, van-e új verzió, és értesítse, ha van új verzió.","Settings.Application"
+"Send anonymous usage data","Anonimizált használati adatok küldése","Settings.Application"
+"Send anonymous usage data to allow the Nexus developers to improve the wallet.","Küldjön anonim használati adatokat, hogy a Nexus fejlesztők javítsák a pénztárcát.","Settings.Application"
+"Base currency","Bázisdeviza","Settings.Application"
+"Minimum confirmations","Visszaigazolások minimális száma","Settings.Application"
+"Minimum amount of confirmations before a block is accepted. Local only.","A visszaigazolások minimális száma a blokk elfogadása előtt. Csak helyi.","Settings.Application"
+"Developer mode","Fejlesztői üzemmód","Settings.Application"
+"Development mode enables advanced features to aid in development. After enabling the wallet must be closed and reopened to enable those features.","A fejlesztési mód lehetővé teszi a fejlett funkciók fejlesztését. Engedélyezése után a pénztárcát le kell zárni és újra kell nyitni, hogy engedélyezze ezeket a funkciókat.","Settings.Application"
+"Module open source policy","Modul nyílt forráskódú irányelv","Settings.Application"
+"Only modules which have valid open source repositories are allowed to be installed and run. You can disable this option to test run the modules that you're developing","Csak azok a modulok telepíthetők és futtathatók, amelyek érvényes nyílt forráskódú adattárral rendelkeznek. Letilthatja ezt a beállítást a fejlesztés alatt álló modulok teszteléséhez","Settings.Application"
+"Allow SymLink","","Settings.Application"
+"Allow the presence of SymLinks in the module directory","","Settings.Application"
+"Fake Test Transactions","Hamis teszt tranzakciók","Settings.Application"
+"Display Test Transactions on the Transactions page","A Teszt tranzakciók megjelenítése a Tranzakciók oldalon","Settings.Application"
+"Language","Nyelv","Settings.Application"
+"Exit manual Core mode?","Kilép a kézi Core módból?","Settings.Core"
+"(This will restart your Core)","(Ez újra fogja indítani a Core-t)","Settings.Core"
+"Enter manual Core mode?","Belép a kézi Core módba?","Settings.Core"
+"Reload transaction history","Korábbi tranzakciók újratöltése","Settings.Core"
+"Clear peer connections","","Settings.Core"
+"Enable mining","Engedélyezze a bányászatot","Settings.Core"
+"Enable/Disable mining to the wallet.","Bányászat Engedélyezése / Tiltása a pénztárcára.","Settings.Core"
+"Mining IP Whitelist","Bányászati IP Engedélyezési Lista","Settings.Core"
+"IP/Ports allowed to mine to. Separate by <b>;</b> . Wildcards supported only in IP","IP/Port-ok ahova a bányászat engedélyezett. Válaszd el <b>;</b>-vel. Helyettesítő karaktereket csak az IP-val lehet használni","Settings.Core"
+"Enable staking","Engedélyezze a staking-et","Settings.Core"
+"Enable/Disable staking on the wallet.","Staking Engedélyezése / Tiltása a pénztárcában.","Settings.Core"
+"Rescan wallet","Vizsgálja újra a pénztárcát","Settings.Core"
+"Used to correct transaction/balance issues, scans over every block in the database. Could take up to 10 minutes.","Tranzakciós/egyenlegproblémák kijavítására szolgál, megvizsgálja az adatbázis minden blokkját. Tíz percig is eltarthat.","Settings.Core"
+"Restart Nexus core with -walletclean parameter to clean out and reload all transaction history","Nexus core újraindítása a -walletclean paraméterrel az összes tranzakciós előzmény tisztításához és újratöltéséhez","Settings.Core"
+"Reload","Újratöltés","Settings.Core"
+"Clear all stored peer connections and restart Nexus","","Settings.Core"
+"Clear","","Settings.Core"
+"Verbose level","Bőbeszédű szint","Settings.Core"
+"Verbose level for logs.","Logolás bőbeszédű szintje.","Settings.Core"
+"Wallet Data Directory Override","","Settings.Core"
+"Change where the data directory is. This is where the wallet.dat and database are located. Default is blank.","","Settings.Core"
+"Testnet Iteration","","Settings.Core"
+"The iteration of Testnet to connect to.","","Settings.Core"
+"Turn Off","","Settings.Core"
+"Avatar Mode","Avatar Mód","Settings.Core"
+"Disabling Avatar will make the core use a separate change key","Az Avatár letiltása esetén a Core külön módosító kulcsot fog használni","Settings.Core"
+"Manual Core mode","Kézi Core mód","Settings.Core"
+"Enable manual Core mode if you are running the Nexus Core manually outside of the wallet.","Engedélyezze a manuális Core-t, ha a Nexus Core-t manuálisan futtatja a pénztárcán kívül.","Settings.Core"
+"Username","Felhasználónév","Settings.Core"
+"Username configured for manual Core.","Felhasználónév a kézi Core-hoz konfigurálva.","Settings.Core"
+"Password","Jelszó","Settings.Core"
+"Password configured for manual Core.","Jelszó a kézi Core-hoz konfigurálva.","Settings.Core"
+"IP address","IP cím","Settings.Core"
+"IP address configured for manual Core.","IP cím a kézi Core-hoz konfigurálva.","Settings.Core"
+"Port","Portszám","Settings.Core"
+"Port configured for manual Core.","Portszám a kézi Core-hoz konfigurálva.","Settings.Core"
+"Data directory name","Adat könyvtárnév","Settings.Core"
+"Data directory configured for manual Core.","A kézi Core-hoz konfigurálva az adatkönyvtár.","Settings.Core"
+"Restart Core for these changes to take effect","","Settings.Core"
+"Save settings","","Settings.Core"
+"Verbose level is required","","Settings.Core"
+"Manual Core username is required","Kézi Core felhasználónév kötelező","Settings.Core"
+"Manual Core password is required","Kézi Core jelszó kötelező","Settings.Core"
+"Manual Core IP is required","Kézi Core IP szükséges","Settings.Core"
+"Manual Core port is required","Kézi Core port szükséges","Settings.Core"
+"Data directory is required","Adatkönyvtár szükséges","Settings.Core"
+"Core settings saved","Core beállítások elmentve","Settings.Core"
+"Restarting Core...","Core újraindítása...","Settings.Core"
+"Error rescanning","Hiba újraszkennelés közben","Settings.Core"
+"Rescanned successfully","Újravizsgálás sikeres","Settings.Core"
+"Rescanning...","Újravizsgálás...","Settings.Core"
+"Settings","Beállítások","Settings"
+"Application","Program","Settings"
+"Core","Core","Settings"
+"Security","Biztonság","Settings"
+"Style","Stílus","Settings"
+"Modules","Modulok","Settings"
+"Select module archive file","Válassza ki a modul archívum fájlt","Settings.Modules"
+"Select module directory","Modul könyvtár kiválasztása","Settings.Modules"
+"Add Module","Modul hozzáadása","Settings.Modules"
+"Checking module","Modul ellenőrzése","Settings.Modules"
+"Drop here to install","Húzd ide a telepítéshez","Settings.Modules"
+"Select module's <file>archive file</file> or <dir>directory</dir>","Válassza ki a modul <file>archívum fájl</file>-ját vagy <dir>könyvtár</dir>-át","Settings.Modules"
+"or drag and drop it here","vagy húzza át és dobja ide","Settings.Modules"
+"Disable %{moduleName}?","%{moduleName}-et kikapcsolni?","Settings.Modules"
+"Wallet will be automatically refreshed for the change to take effect","A pénztárca automatikusan frissül, hogy a változás hatályba lépjen","Settings.Modules"
+"Enable %{moduleName}?","%{moduleName}-et engedélyezni?","Settings.Modules"
+"Deprecated Specification version","Elavult specifikációs verzió","Settings.Modules"
+"Module is not open source","A modul nem nyílt forráskódú","Settings.Modules"
+"The provided repository is not verified to be the real source code of this module","Nem igazolt, hogy a megadott adattár a modul valódi forráskódja","Settings.Modules"
+"Overwrite module?","Felülírja a modult?","Settings.Modules"
+"A module with the same directory name already exists","Egy modul ugyanezzel a directory névvel már létezik","Settings.Modules"
+"Module has been successfully installed","A modul sikeresen telepítve","Settings.Modules"
+"The wallet will now be refreshed for the new module to take effect","A pénztárca most frissül, hogy az új modul életbe lépjen","Settings.Modules"
+"Error copying module files","Hiba a modul fájlok másolásakor","Settings.Modules"
+"Cannot find module","Nem található a modul","Settings.Modules"
+"Unsupported file type","Nem támogatott fájltípus","Settings.Modules"
+"Cannot install from that location","Nem lehet telepíteni innen","Settings.Modules"
+"An unknown error occurred","Ismeretlen hiba történt","Settings.Modules"
+"Are you sure you want to log out?","Biztosan ki szeretnél jelentkezni?","Settings.Security"
+"Error logging out","Hiba a kijelentkezéskor","Settings.Security"
+"Change password","Jelszó módosítása","Settings.Security"
+"Previous password","Előző jelszó","Settings.Security"
+"Password","Jelszó","Settings.Security"
+"New password","Új jelszó","Settings.Security"
+"Re-enter password:","Jelszó mégegyszer:","Settings.Security"
+"Confirm password","Jelszó megerősítése","Settings.Security"
+"Log out","Kijelentkezés","Settings.Security"
+"Password is required","Jelszó kötelező","Settings.Security"
+"Password cannot contain these characters:","A jelszó nem tartalmazhatja ezeket a karaktereket:","Settings.Security"
+"Password must be at least 8 characters","A jelszónak minimum 8 karakter hosszúnak kell lennie","Settings.Security"
+"Password cannot start or end with spaces","A jelszó nem kezdődhet vagy végződhet szóközzel","Settings.Security"
+"Passwords do not match","A jelszavak nem egyezőek","Settings.Security"
+"Password has been changed.","Megváltoztatták a jelszót.","Settings.Security"
+"Error changing password","Hiba történt a jelszó módosításakor","Settings.Security"
+"Encrypt wallet","Pénztárca titkosítása","Settings.Security"
+"Re-enter password","Jelszó mégegyszer","Settings.Security"
+"Encrypt and restart","Titkosítás és újraindítás","Settings.Security"
+"Wallet has been encrypted.","A pénztárca titkosítva van.","Settings.Security"
+"Error encrypting wallet","Hiba történt a pénztárca titkosítása során","Settings.Security"
+"Import private key","Privát kulcs importálása","Settings.Security"
+"Account name","Fiók neve","Settings.Security"
+"Private key","Privát kulcs","Settings.Security"
+"Import","Importálás","Settings.Security"
+"Account name is required","Fióknév megadása kötelező","Settings.Security"
+"Private key is required","Privát kulcs megadása szükséges","Settings.Security"
+"Private key imported. Rescanning now","Privát kulcs importálva. Újraszkennelés...","Settings.Security"
+"Rescanning...","Újravizsgálás...","Settings.Security"
+"Rescanning done","Újravizsgálás befejeződött","Settings.Security"
+"Error rescanning","Hiba újraszkennelés közben","Settings.Security"
+"An unknown error occurred","Ismeretlen hiba történt","Settings.Security"
+"Error importing private key","Hiba a privát kulcs importálásakor","Settings.Security"
+"Login until date","Bejelentkezés dátumig","Settings.Security"
+"Login until time","Bejelentkezés időpontig","Settings.Security"
+"Your wallet password","Pénztárcád jelszava","Settings.Security"
+"Login for staking & mining only","Csak staking-hez és bányászathoz jelentkezz be","Settings.Security"
+"Set timeout for login","Állítsa be a bejelentkezés időkorlátját","Settings.Security"
+"Date is required","Dátum megadása szükséges","Settings.Security"
+"Time is required","Idő megadása szükséges","Settings.Security"
+"Time must be at least one hour in the future","Az időnek legalább egy órának kell lennie a jövőben","Settings.Security"
+"Logged in successfully","Sikeresen belépve","Settings.Security"
+"Error logging in","Bejelentkezési hiba","Settings.Security"
+"Copied to clipboard","Vágólapra másolva","Settings.Security"
+"View private key for address","E cím privát kulcsának megtekintése","Settings.Security"
+"Address","Cím","Settings.Security"
+"Enter address here","Adja meg a címet","Settings.Security"
+"View private key","Privát kulcs megtekintése","Settings.Security"
+"Private key will be displayed here","Itt fog megjelenni a privát kulcs","Settings.Security"
+"Copy","Másolás","Settings.Security"
+"Address cannot be empty","A cím nem lehet üres","Settings.Security"
+"Error getting private key","Hiba a privát kulcs beszerzésekor","Settings.Security"
+"Twinkling stars","Csillogó csillagok","Settings.Style"
+"Cosmic light","Kozmikus fény","Settings.Style"
+"Custom wallpaper","Egyéni háttérkép","Settings.Style"
+"Select a custom wallpaper","Egyedi Háttérkép Választása","Settings.Style"
+"Color scheme has been reset to default","A színséma visszaállt alapértelmezettre","Settings.Style"
+"Invalid file format! Custom theme file must be in JSON","Érvénytelen fájlformátum! Az egyéni témafájlnak JSON-ben kell lennie","Settings.Style"
+"Select custom theme file","Egyéni kinézetes fájl választása","Settings.Style"
+"Theme exported","Kinézet exportálva","Settings.Style"
+"Theme has been reset to default","A kinézet visszaállt alapértelmezettre","Settings.Style"
+"Render globe","Földgolyó megjelenítése","Settings.Style"
+"Render the globe on the Overview page.","Az Áttekintő oldalon a földgolyó megjelenítése.","Settings.Style"
+"Your computer does not support OPENGL 2.0","A számítógéped nem támogatja az OPENGL 2.0-t","Settings.Style"
+"Overview Display","Áttekintés Kijelző","Settings.Style"
+"Nexus Addresses format","Nexus Címek formátuma","Settings.Style"
+"Choose your Nexus Address display preference","Válaszd ki a Nexus Cím megjelenítési preferenciát","Settings.Style"
+"Sample Address","Minta Cím","Settings.Style"
+"This is your Default Address","Ez az Ön Alapértelmezett Címe","Settings.Style"
+"Theme","Kinézet","Settings.Style"
+"Select Wallet Theme","Pénztárca Kinézetének Választása","Settings.Style"
+"Background","Háttérkép","Settings.Style"
+"Customize your background wallpaper","Háttérkép Testreszabása","Settings.Style"
+"Color scheme","Színséma","Settings.Style"
+"Background Color","Háttérszín","Settings.Style"
+"Foreground Color","Előtér Szín","Settings.Style"
+"Primary Color","Elsődleges szín","Settings.Style"
+"Primary Color Accent","Elsődleges Szín Nyomaték","Settings.Style"
+"Danger Color","Veszély Szín","Settings.Style"
+"Danger Color Accent","Veszély Szín Nyomaték","Settings.Style"
+"Globe Color","Földgolyó Színe","Settings.Style"
+"Globe Pillar Color","Földgolyó Pillér Színe","Settings.Style"
+"Globe Arch Color","Földgolyó Boltív Színe","Settings.Style"
+"Import custom theme","Egyedi kinézet importálása","Settings.Style"
+"Export custom theme","Egyedi kinézet exportálása","Settings.Style"
+"Dark","Sötét","Settings.Style"
+"Light","Világos","Settings.Style"
+"Custom","Egyéni","Settings.Style"
+"Reset","Alapállapot","Settings.Style"
+"Console","Konzol","Console"
+"Core output","Core kimenet","Console"
+"Enter API here (ex: api/verb/noun?param=value&param2=2 or param=1 param2=2)","","Console.NexusAPI"
+"API Documentation","","Console.NexusAPI"
+"Execute","Végrehajtás","Console.NexusAPI"
+"Clear","","Console.NexusAPI"
+"Enter console commands here (ex: getinfo, help)","Ide írja be a konzolparancsokat (pl: getinfo, help)","Console.Console"
+"Execute","Végrehajtás","Console.Console"
+"Clear console","Konzol törlése","Console.Console"
+"Core is in Manual Mode","A Core Kézi Üzemmódban van","Console.CoreOutput"
+"Pending","Függőben","Transactions"
+"All","Összes","Transactions"
+"Receive","Fogadás","Transactions"
+"Sent","Elküldve","Transactions"
+"Stake","Stake","Transactions"
+"Generate","Generálás","Transactions"
+"Immature","Éretlen","Transactions"
+"Orphan","Árva","Transactions"
+"Genesis","Genezis","Transactions"
+"Past Year","Múlt Évben","Transactions"
+"Past Month","Múlt Hónapban","Transactions"
+"Past Week","Múlt Héten","Transactions"
+"Search address","Cím keresése","Transactions"
+"Search for Address","Cím Keresése","Transactions"
+"Category","Kategória","Transactions"
+"Min amount","Min mennyiség","Transactions"
+"Time span","Időtartam","Transactions"
+"Time","Idő","Transactions"
+"CATEGORY","KATEGÓRIA","Transactions"
+"AMOUNT","ÖSSZEG","Transactions"
+"ACCOUNT","FIÓK","Transactions"
+"ADDRESS","CÍM","Transactions"
+"Transaction details","Tranzakció részletek","Transactions"
+"Show transactions chart","Tranzakciós táblázat megjelenítése","Transactions"
+"Download transactions history","Korábbi tranzakciók letöltése","Transactions"
+"Loading transactions","Tranzakciók betöltése","Transactions"
+"All Accounts","Az összes fiók","Transactions"
+"Send","Küldés","Transactions"
+"Trust","Bizalom","Transactions"
+"Unknown","Ismeretlen","Transactions"
+"Legacy transaction","","Transactions"
+"Coinbase transaction","","Transactions"
+"Address","Cím","Transactions"
+"Account/token address","","Transactions"
+"Name","Név","Transactions"
+"Operation","","Transactions"
+"Transactions","Tranzakciók","Transactions"
+"Loading transactions...","","Transactions"
+"NXS balances","","Transactions"
+"Previous","Előző","Transactions"
+"Page <page></page> of %{total}","","Transactions"
+"Next","Tovább","Transactions"
+"Transactions Details","Tranzakciók Részletei","Transactions.TransactionDetails"
+"Time","Idő","Transactions.TransactionDetails"
+"Category","Kategória","Transactions.TransactionDetails"
+"Amount","Összeg","Transactions.TransactionDetails"
+"Fee","Díj","Transactions.TransactionDetails"
+"Account","Fiók","Transactions.TransactionDetails"
+"Address","Cím","Transactions.TransactionDetails"
+"Confirmations","Visszaigazolások","Transactions.TransactionDetails"
+"Pending","Függőben","Transactions.TransactionDetails"
+"Transaction ID","Tranzakció azanosító","Transactions.TransactionDetails"
+"Block hash","Blokk hash","Transactions.TransactionDetails"
+"Loading transaction details...","Tranzakció adatainak betöltése...","Transactions.TransactionDetails"
+"Sequence","","Transactions.TransactionDetails"
+"Type","","Transactions.TransactionDetails"
+"Transactions chart","Tranzakciós táblázat","Transactions.TransactionsChart"
+"Amount","Összeg","Transactions.TransactionsChart"
+"Time","Idő","Transactions.TransactionsChart"
+"Total","","Transactions.Balances"
+"Available","","Transactions.Balances"
+"The current balance across all NXS accounts that is available to be spent","","Transactions.Balances"
+"Pending","Függőben","Transactions.Balances"
+"The sum of all debit and coinbase transactions made to your NXS accounts that are confirmed but have not yet been credited. This does NOT include immature and unconfirmed amounts","","Transactions.Balances"
+"Unconfirmed","","Transactions.Balances"
+"The sum of all debit transactions made to your NXS accounts that are not confirmed, or credits you have made to your accounts that are not yet confirmed (not yet included in a block)","","Transactions.Balances"
+"Stake","Stake","Transactions.Balances"
+"The amount of NXS currently staked in the trust account","","Transactions.Balances"
+"Immature","Éretlen","Transactions.Balances"
+"The sum of all coinbase transactions that have not yet reached maturity","","Transactions.Balances"
+"Unnamed account","","User.Accounts"
+"Details","","User.Accounts"
+"History","","User.Accounts"
+"Create new account","","User.Accounts"
+"Account Details","","User.Accounts.AccountDetails"
+"Account name","Fiók neve","User.Accounts.AccountDetails"
+"Created at","","User.Accounts.AccountDetails"
+"Last modified","","User.Accounts.AccountDetails"
+"Token name","","User.Accounts.AccountDetails"
+"Total account balance","","User.Accounts.AccountDetails"
+"Available balance","","User.Accounts.AccountDetails"
+"Pending balance","","User.Accounts.AccountDetails"
+"Unconfirmed balance","","User.Accounts.AccountDetails"
+"Stake balance","","User.Accounts.AccountDetails"
+"Immature balance","","User.Accounts.AccountDetails"
+"Address","Cím","User.Accounts.AccountDetails"
+"Trust Account is empty.","","User.Accounts.AccountDetails"
+"Trust Account must mature for 72 hours before staking","","User.Accounts.AccountDetails"
+"Adjust stake amount","","User.Accounts.AccountDetails"
+"Time","Idő","User.Accounts.AccountHistory"
+"Operation","","User.Accounts.AccountHistory"
+"From","","User.Accounts.AccountHistory"
+"staked","","User.Accounts.AccountHistory"
+"mined","","User.Accounts.AccountHistory"
+"To","","User.Accounts.AccountHistory"
+"Change","","User.Accounts.AccountHistory"
+"Account History","","User.Accounts.AccountHistory"
+"Loading account history","","User.Accounts.AccountHistory"
+"Account balance(","","User.Accounts.AccountHistory"
+"Show %{tokenName}","","User.Accounts.AccountHistory"
+"Account balance","","User.Accounts.AccountHistory"
+"Total","","User.Accounts.AccountHistory"
+"Available","","User.Accounts.AccountHistory"
+"Pending","Függőben","User.Accounts.AccountHistory"
+"Unconfirmed","","User.Accounts.AccountHistory"
+"Stake","Stake","User.Accounts.AccountHistory"
+"User","","User"
+"User ID","","User"
+"Accounts","","User"
+"Staking","","User"
+"Tokens","","User"
+"Change password & PIN","","User"
+"Change recovery phrase","","User"
+"Set recovery phrase","","User"
+"The current NXS balance of the trust account that is not staked. You can spend this amount without affecting your Trust Score","","User.Staking"
+"Balance that will be staked after the 72 holding period, any change to this balance will reset the hold timer","","User.Staking"
+"Restart Core?","Core-t újraindítani?","User.Staking"
+"Nexus Core needs to restart for this change to take effect","","User.Staking"
+"Disable staking","","User.Staking"
+"Enable staking","Engedélyezze a staking-et","User.Staking"
+"Cancel","Mégse","User.Staking"
+"Status","","User.Staking"
+"Staking","","User.Staking"
+"Not staking","","User.Staking"
+"Stake amount","","User.Staking"
+"The amount of NXS currently staked in the trust account","","User.Staking"
+"Pending change","","User.Staking"
+"The pending stake amount change that will be applied on the next Trust transaction","","User.Staking"
+"Requested in","","User.Staking"
+"Expired in","","User.Staking"
+"Stake Rate","Stake Arány","User.Staking"
+"The current annual reward rate earned for staking","","User.Staking"
+"Trust Weight","Bizalmi Súly","User.Staking"
+"The percentage of the maximum Trust Score, which is gradually built over time when you consistently operate your node in an honest, trustworthy, and timely manner","","User.Staking"
+"Block Weight","Blokk Súly","User.Staking"
+"Block Weight depends on the time passed since you received a Trust transaction and will be reset everytime you receive a Trust transaction. Otherwise, Block Weight will reach 100% after 3 days and your Trust Score will start decaying until you receive another Trust transaction","","User.Staking"
+"Stake Weight","Stake Súly","User.Staking"
+"Stake Weight depends on Trust Weight and Block Weight. Along with your Stake amount, Stake Weight affects how frequent you receive a Trust transaction","","User.Staking"
+"Available Balance","","User.Staking"
+"Adjust stake amount","","User.Staking"
+"Waiting For genesis. Time dependent on balance and difficulty.","","User.Staking"
+"Account on hold for another %{stakeSeconds} Seconds","","User.Staking"
+"Migrate stake","","User.Staking"
+"Create new token","","User.Tokens"
+"Lookup a token","","User.Tokens"
+"Unnamed token","","User.Tokens"
+" (Owned by you)","","User.Tokens"
+"Details","","User.Tokens"
+"New Token","","User.Tokens.NewToken"
+"There is a %{tokenfee} NXS token creation fee, based on supply","","User.Tokens.NewToken"
+"Token name","","User.Tokens.NewToken"
+"Name Creation Fee: %{tokenFee} NXS (Optional)","","User.Tokens.NewToken"
+"New tokens's name","","User.Tokens.NewToken"
+"Supply","","User.Tokens.NewToken"
+"Max amount of tokens available","","User.Tokens.NewToken"
+"Decimal","","User.Tokens.NewToken"
+"Amount of significant digits a token can have","","User.Tokens.NewToken"
+"Cancel","Mégse","User.Tokens.NewToken"
+"Create token","","User.Tokens.NewToken"
+"Supply can not be zero or negative","","User.Tokens.NewToken"
+"Create a token without a name?","","User.Tokens.NewToken"
+"Adding a name costs a NXS fee","","User.Tokens.NewToken"
+"That's Ok","","User.Tokens.NewToken"
+"Add Name","","User.Tokens.NewToken"
+"New token %{token} has been created","","User.Tokens.NewToken"
+"You have successfully created token %{token} ! Would you like to make an account for this token?","","User.Tokens.NewToken"
+"Yes","Igen","User.Tokens.NewToken"
+"No","Nem","User.Tokens.NewToken"
+"Error creating token","","User.Tokens.NewToken"
+"Can not find Token","","User.Tokens.SearchToken"
+"Lookup Token","","User.Tokens.SearchToken"
+"Name/Address","","User.Tokens.SearchToken"
+"Lookup a Token on the network","","User.Tokens.SearchToken"
+"Lookup this token","","User.Tokens.SearchToken"
+"No Value","","User.Tokens.SearchToken"
+"Error searching for token","","User.Tokens.SearchToken"
+"Token Details","","User.Tokens.TokenDetails"
+"Token name","","User.Tokens.TokenDetails"
+"Token address","","User.Tokens.TokenDetails"
+"Created at","","User.Tokens.TokenDetails"
+"Last modified","","User.Tokens.TokenDetails"
+"Token Owner","","User.Tokens.TokenDetails"
+"Current Supply","","User.Tokens.TokenDetails"
+"Max Supply","","User.Tokens.TokenDetails"
+"Decimals","","User.Tokens.TokenDetails"
+"Balance","Egyenleg","User.Tokens.TokenDetails"
+"Pending balance","","User.Tokens.TokenDetails"
+"Unconfirmed balance","","User.Tokens.TokenDetails"
+"Create new account with this token","","User.Tokens.TokenDetails"
+"Close","Bezár","User.Tokens.TokenDetails"
+"Wallet version","","About"
+"Wallet build date","","About"
+"Nexus Core version","","About"
+"Core build date","","About"
+"Testnet","","About"
+"Private blockchain","","About"
+"Invalid address","Érvénytelen cím","AddEditContact"
+"This is not one of your addresses.","Ez nem az Ön címe.","AddEditContact"
+"This is one of your addresses.","Ez az Ön címe.","AddEditContact"
+"Name","Név","AddEditContact"
+"Contact name","Kapcsolattartó neve","AddEditContact"
+"Email address","Email cím","AddEditContact"
+"Phone number","Telefonszám","AddEditContact"
+"Time zone","Időzóna","AddEditContact"
+"Select a time zone","Időzóna beállítás","AddEditContact"
+"Notes","Megjegyzések","AddEditContact"
+"Cancel","Mégse","AddEditContact"
+"Reset","Alapállapot","AddEditContact"
+"Save changes","Változások mentése","AddEditContact"
+"Create","Létrehozás","AddEditContact"
+"Name is required.","A név szükséges.","AddEditContact"
+"A contact with the same name already exists.","Egy kontakt ezzel a névvel már létezik.","AddEditContact"
+"There must be at least one address.","Legalább egy címnek kell lennie.","AddEditContact"
+"Invalid email","Érvénytelen e-mail","AddEditContact"
+"Contact has been updated","A névjegy frissítve","AddEditContact"
+"New contact has been added to address book","Új névjegy hozzáadva a címjegyzékhez","AddEditContact"
+"My Nexus address for %{name}","Nexus címem %{name}-nek","AddEditContact"
+"My Nexus address","Nexus címeim","AddEditContact"
+"%{name}'s Nexus address","%{name} Nexus címe","AddEditContact"
+"Their Nexus address","Az Ők Nexus címe","AddEditContact"
+"Remove address","Cím törlése","AddEditContact"
+"Label (optional)","Címke (opcionális)","AddEditContact"
+"Edit contact","Névjegy szerkesztése","AddEditContact"
+"Create new contact","Új névjegy létrehozása","AddEditContact"
+"Adjust stake amount","","AdjustStake"
+"Note: This change will not take effect immediately but will stay pending until you get the next Trust transaction. The pending change will be recorded locally in this machine, therefore if you switch to another machine for staking, the change will not take effect.","","AdjustStake"
+"Cancel","Mégse","AdjustStake"
+"Set stake amount","","AdjustStake"
+"Invalid number","","AdjustStake"
+"Out of range","","AdjustStake"
+"Reduce stake amount?","","AdjustStake"
+"Reducing stake amount might make your Stake Rate decrease","","AdjustStake"
+"Stake amount has been updated","","AdjustStake"
+"Error setting stake amount","","AdjustStake"
+"Backing up...","Biztonsági mentés...","Bootstrap"
+"Downloading","Letöltés","Bootstrap"
+"Decompressing...","Kitömörítés...","Bootstrap"
+"Stopping Core...","Core leállítása...","Bootstrap"
+"Moving...","Áthelyezés...","Bootstrap"
+"Restarting Core...","Core újraindítása...","Bootstrap"
+"Rescanning Wallet...","Pénztárca újravizsgálása...","Bootstrap"
+"Backing up your wallet...","Pénztárcád biztonsági mentése...","Bootstrap"
+"Downloading the database","Az adatbázis letöltése","Bootstrap"
+"Decompressing the database...","Adatbázis kitömörítése...","Bootstrap"
+"Stopping Nexus Core...","Nexus Core leállítása...","Bootstrap"
+"Moving the database...","Az adatbázis áthelyezése...","Bootstrap"
+"Restarting Nexus Core...","Nexus Core újraindítása...","Bootstrap"
+"Are you sure you want to abort the process?","Biztosan meg akarja szakítani a folyamatot?","Bootstrap"
+"Yes, abort","Igen, megszakítás","Bootstrap"
+"No, let it continue","Nem, hagyjuk folytatni","Bootstrap"
+"Bootstrap Recent Database","Tölts be Friss Adatbázist","Bootstrap"
+"Abort","Megszakít","Bootstrap"
+"Bootstrap process has been aborted","Betöltés folyamat megszakadt","Bootstrap"
+"Error bootstrapping recent database","Hiba történt a legutóbbi adatbázis betöltése során","Bootstrap"
+"Unknown error","Ismeretlen hiba","Bootstrap"
+"Recent database has been successfully bootstrapped","A legújabb adatbázis sikeresen betöltve","Bootstrap"
+"Not enough disk space! Minimum 15GB of free space is required.","Nincs elég hely a merevlemezen! Legalább 15GB szabad hely szükséges.","Bootstrap"
+"Download recent database?","Friss adatbázist letölteni?","Bootstrap"
+"Downloading a recent version of the database might reduce the time it takes to synchronize your wallet","Az adatbázis legújabb verziójának letöltése lerövidítheti a pénztárca szinkronizálásához szükséges időt","Bootstrap"
+"Yes, let's bootstrap it","Igen, töltsük be","Bootstrap"
+"No, let it sync","Nem, hagyja, hogy szinkronizáljon","Bootstrap"
+"Change password and PIN","","ChangePassword&PIN"
+"Current password","","ChangePassword&PIN"
+"Your current password","","ChangePassword&PIN"
+"Current PIN","","ChangePassword&PIN"
+"Your current PIN number","","ChangePassword&PIN"
+"New Password","","ChangePassword&PIN"
+"Enter your new password","","ChangePassword&PIN"
+"New PIN","","ChangePassword&PIN"
+"Enter your new PIN number","","ChangePassword&PIN"
+"Updating","","ChangePassword&PIN"
+"Update","","ChangePassword&PIN"
+"Current password is required","","ChangePassword&PIN"
+"Current PIN is required","","ChangePassword&PIN"
+"New password is required","","ChangePassword&PIN"
+"Password must be at least 8 characters","A jelszónak minimum 8 karakter hosszúnak kell lennie","ChangePassword&PIN"
+"New PIN is required","","ChangePassword&PIN"
+"PIN must be at least 4 characters","","ChangePassword&PIN"
+"Password & PIN have been updated","","ChangePassword&PIN"
+"Error updating password & PIN","","ChangePassword&PIN"
+"Password/PIN mismatch","","ConfirmPassword&PIN"
+"You have entered either your password or your PIN incorrectly, please re-check","","ConfirmPassword&PIN"
+"Confirm password and PIN","","ConfirmPassword&PIN"
+"Enter your new password & new PIN once again to make sure you have entered them correctly","","ConfirmPassword&PIN"
+"Enter your password & PIN once again to make sure you have entered them correctly","","ConfirmPassword&PIN"
+"Password","Jelszó","ConfirmPassword&PIN"
+"Re-enter your new password","","ConfirmPassword&PIN"
+"Re-enter your password","","ConfirmPassword&PIN"
+"PIN","","ConfirmPassword&PIN"
+"Re-enter your new PIN number","","ConfirmPassword&PIN"
+"Re-enter your PIN number","","ConfirmPassword&PIN"
+"Confirm","Jóváhagyás","ConfirmPassword&PIN"
+"Contract Details","","ContractDetails"
+"Yes","Igen","ConfirmDialog"
+"No","Nem","ConfirmDialog"
+"Dismiss","Elutasít","ErrorDialog"
+"Dismiss","Elutasít","SuccessDialog"
+"Your wallet is not encrypted!","A tárcád nincs titkosítva!","EncryptionWarning"
+"It is highly recommended that you should encrypt your wallet to keep your NXS safe.","Nagyon ajánlott, hogy titkosítsa a pénztárcáját az NXS biztonságának megőrzése érdekében.","EncryptionWarning"
+"Ignore","Ignorál","EncryptionWarning"
+"Encrypt wallet","Pénztárca titkosítása","EncryptionWarning"
+"Log in","","Login"
+"Username","Felhasználónév","Login"
+"Enter your username","","Login"
+"Password","Jelszó","Login"
+"Enter your password","","Login"
+"PIN","","Login"
+"Enter your PIN number","","Login"
+"Logging in","","Login"
+"Forgot password?","","Login"
+"Create new user","","Login"
+"Username is required","","Login"
+"Password is required","Jelszó kötelező","Login"
+"PIN is required","","Login"
+"Logged in as %{username}","","Login"
+"Error logging in","Bejelentkezési hiba","Login"
+"Migrate account","","MigrateAccount"
+"You have %{amount} NXS in your legacy account.","","MigrateAccount"
+"If you have been staking with your legacy account, click Migrate stake button below to move both your stake amount and your trust score to this new Tritium user.","","MigrateAccount"
+"Migrate stake","","MigrateAccount"
+"Cannot migrate stake since this Tritium user has already started staking before. Please create a new user if you still want to migrate your stake.","","MigrateAccount"
+"If you have never started staking, or have already migrated your stake, you can manually send your funds from legacy account to this new Tritium user.","","MigrateAccount"
+"Please keep in mind that you may lose your legacy trust score if you send NXS manually from your legacy account without migrating your stake first","","MigrateAccount"
+"Send NXS manually","","MigrateAccount"
+"Don't show this again","","MigrateAccount"
+"Your stake has been successfully migrated","","MigrateStake"
+"Error migrating stake","","MigrateStake"
+"Migrate stake","","MigrateStake"
+"This will transfer all stake amount and trust score from your legacy wallet to your new Tritium account.","","MigrateStake"
+"Please make sure that you are using the same machine that you used to stake with your legacy wallet, or you have put your staking wallet.dat file into %{path}","","MigrateStake"
+"Legacy wallet password","","MigrateStake"
+"Leave this blank if your legacy wallet is not encrypted","","MigrateStake"
+"Cancel","Mégse","MigrateStake"
+"Module Details","Modul Részletei","ModuleDetails"
+"Module name","Modul neve","ModuleDetails"
+"Display name","Megjelenítendő név","ModuleDetails"
+"Module type","Modul típusa","ModuleDetails"
+"Version","Verzió","ModuleDetails"
+"Module Specifications version","A Modul Specifikációinak Verziója","ModuleDetails"
+"Description","Leírás","ModuleDetails"
+"Not provided","Nincs megadva","ModuleDetails"
+"Author","Készítő","ModuleDetails"
+"No information","Nincs információ","ModuleDetails"
+"Source code","Forráskód","ModuleDetails"
+"Visit repository","Adattár meglátogatása","ModuleDetails"
+"This module is developed by Nexus","Ezt a modult Nexus fejlesztette ki","ModuleDetails"
+"This repository does not exist or is private","Ez az adattár nem létezik, vagy privát","ModuleDetails"
+"This repository is not verified to be the real source code of this module","Nem igazolt, hogy ez az adattár a modul valódi forráskódja","ModuleDetails"
+"Module hash","Modul hash","ModuleDetails"
+"Not available","Nem elérhető","ModuleDetails"
+"Module is invalid","A modul érvénytelen","ModuleDetails"
+"Installing Module...","Modul Telepítése...","ModuleDetails"
+"Install Module","Modul Telepítése","ModuleDetails"
 "Warning: This module is written by a third party, Nexus is NOT
               responsible for its quality or legitimacy. Please make sure to do
               your due diligence before installing third party modules and use
               them with your own risk.","Figyelem: Ezt a modult harmadik fél írta, Nexus NEM felelős 
               annak minőségéért vagy legitimitásáért. Kérjük, kellő 
               gondossággal győződjön meg róla, mielőtt harmadik fél 
-              modulját telepíti, és használja őket a saját felelősségére.",ModuleDetails
-Check wallet failed,Pénztárca ellenőrzése sikertelen,MyAddresses
-Check wallet pass,Pénztárca ellenőrzése sikeres,MyAddresses
-My Account,Fiókom,MyAddresses
-Check wallet's integrity,Pénztárca épségének ellenőrzése,MyAddresses
-Check wallet,Pénztárca ellenőrizése,MyAddresses
-Create new address,Új cím létrehozása,MyAddresses
-Enter a new account name or pick an existing account:,"Adjon meg egy új fióknevet, vagy válasszon egy meglévő fiókot:",MyAddresses.NewAddressForm
-Account name,Fiók neve,MyAddresses.NewAddressForm
-Cancel,Mégse,MyAddresses.NewAddressForm
-New address,Új cím,MyAddresses.NewAddressForm
-Account name is required,Fióknév megadása kötelező,MyAddresses.NewAddressForm
-Invalid account name,Érvénytelen fióknév,MyAddresses.NewAddressForm
-New address has been created,Új cím jött létre,MyAddresses.NewAddressForm
-Error creating new address,Hiba az új cím létrehozásakor,MyAddresses.NewAddressForm
-New account,,NewAccount
-Account name (%{nameFee} NXS Fee) (Optional),,NewAccount
-New account's name,,NewAccount
-Token,,NewAccount
-Cancel,Mégse,NewAccount
-Creating account,,NewAccount
-Create account,,NewAccount
-Create a account without a name?,,NewAccount
-Adding a name costs a NXS fee,,NewAccount
-That's Ok,,NewAccount
-Add Name,,NewAccount
-New account %{account} has been created,,NewAccount
-Error creating account,,NewAccount
-Create new user,,NewUser
-Username,Felhasználónév,NewUser
-A globally unique username,,NewUser
-Password,Jelszó,NewUser
-Enter your password,,NewUser
-PIN,,NewUser
-Enter your PIN number,,NewUser
-Attention,,NewUser
-"Please be sure to make a note of up your username, password, and PIN, and keep it in a safe place. If you lose or forget them you will be unable to access your account.",,NewUser
-Creating user,,NewUser
-Create user,,NewUser
-"Please wait, this may take up to 30 seconds",,NewUser
-Switch to Legacy Mode,,NewUser
-Log in,,NewUser
-Username is required,,NewUser
-Username must be at least 3 characters,,NewUser
-Password is required,Jelszó kötelező,NewUser
-Password must be at least 8 characters,A jelszónak minimum 8 karakter hosszúnak kell lennie,NewUser
-PIN is required,,NewUser
-PIN must be at least 4 characters,,NewUser
-Error creating user,,NewUser
-User registration for %{username} has been confirmed,,NewUser
-User registration for %{username} is waiting to be confirmed on Nexus blockchain...,,NewUser
-Pin must be at least 4 characters,,PinDialog
-Confirm,Jóváhagyás,PinDialog
-Enter PIN number,,PinDialog
-Your PIN number,,PinDialog
-Cancel,Mégse,PinDialog
-Recover password and PIN,,RecoverPassword&PIN
-Username,Felhasználónév,RecoverPassword&PIN
-Your username,,RecoverPassword&PIN
-Recovery phrase,,RecoverPassword&PIN
-Your recovery phrase,,RecoverPassword&PIN
-New Password,,RecoverPassword&PIN
-Enter your new password,,RecoverPassword&PIN
-New PIN,,RecoverPassword&PIN
-Enter your new PIN number,,RecoverPassword&PIN
-Recovering password & PIN,,RecoverPassword&PIN
-Recover password & PIN,,RecoverPassword&PIN
-Username is required,,RecoverPassword&PIN
-Recovery phrase is required,,RecoverPassword&PIN
-New password is required,,RecoverPassword&PIN
-Password must be at least 8 characters,A jelszónak minimum 8 karakter hosszúnak kell lennie,RecoverPassword&PIN
-New PIN is required,,RecoverPassword&PIN
-PIN must be at least 4 characters,,RecoverPassword&PIN
-Password & PIN have been updated,,RecoverPassword&PIN
-Error updating password & PIN,,RecoverPassword&PIN
-%{smart_count} word |||| %{smart_count} words,,SetRecoveryPhrase
-Recovery phrase,,SetRecoveryPhrase
-"The recovery phrase can be used to recover your account and set a new password and PIN in the event that you lose or forget them. Your recovery phrase must be a minimum of 40 characters, and should ideally be made up of random words. Save this new recovery phrase in a safe place.",,SetRecoveryPhrase
-Password,Jelszó,SetRecoveryPhrase
-Your current password,,SetRecoveryPhrase
-PIN,,SetRecoveryPhrase
-Your current PIN number,,SetRecoveryPhrase
-Current recovery phrase,,SetRecoveryPhrase
-Enter your recovery phrase,,SetRecoveryPhrase
-Generate a recovery phrase,,SetRecoveryPhrase
-New recovery phrase,,SetRecoveryPhrase
-Enter your new recovery phrase or click Generate,,SetRecoveryPhrase
-Setting recovery phrase,,SetRecoveryPhrase
-Set recovery phrase,,SetRecoveryPhrase
-Password is required,Jelszó kötelező,SetRecoveryPhrase
-PIN is required,,SetRecoveryPhrase
-Current recovery phrase is required,,SetRecoveryPhrase
-Recovery phrase is required,,SetRecoveryPhrase
-Recovery phrase must be at least 40 characters,,SetRecoveryPhrase
-Recovery phrase has been updated,,SetRecoveryPhrase
-Error setting recovery phrase,,SetRecoveryPhrase
-Close the wallet and install update now?,A pénztárcából most kilépni és a frissítést telepíteni?,AutoUpdate
-Close and install,Zárja be és telepítse,AutoUpdate
-Install it later,Telepítse később,AutoUpdate
-New wallet version %{version} - Click here to download,,AutoUpdate
-New wallet version %{version} - Click here to update,,AutoUpdate
-New wallet version %{version} available. Downloading...,Új pénztárca verzió %{version} érhető el. Letöltés...,AutoUpdate
+              modulját telepíti, és használja őket a saját felelősségére.","ModuleDetails"
+"Check wallet failed","Pénztárca ellenőrzése sikertelen","MyAddresses"
+"Check wallet pass","Pénztárca ellenőrzése sikeres","MyAddresses"
+"My Account","Fiókom","MyAddresses"
+"Check wallet's integrity","Pénztárca épségének ellenőrzése","MyAddresses"
+"Check wallet","Pénztárca ellenőrizése","MyAddresses"
+"Create new address","Új cím létrehozása","MyAddresses"
+"Enter a new account name or pick an existing account:","Adjon meg egy új fióknevet, vagy válasszon egy meglévő fiókot:","MyAddresses.NewAddressForm"
+"Account name","Fiók neve","MyAddresses.NewAddressForm"
+"Cancel","Mégse","MyAddresses.NewAddressForm"
+"New address","Új cím","MyAddresses.NewAddressForm"
+"Account name is required","Fióknév megadása kötelező","MyAddresses.NewAddressForm"
+"Invalid account name","Érvénytelen fióknév","MyAddresses.NewAddressForm"
+"New address has been created","Új cím jött létre","MyAddresses.NewAddressForm"
+"Error creating new address","Hiba az új cím létrehozásakor","MyAddresses.NewAddressForm"
+"New account","","NewAccount"
+"Account name (%{nameFee} NXS Fee) (Optional)","","NewAccount"
+"New account's name","","NewAccount"
+"Token","","NewAccount"
+"Cancel","Mégse","NewAccount"
+"Creating account","","NewAccount"
+"Create account","","NewAccount"
+"Create a account without a name?","","NewAccount"
+"Adding a name costs a NXS fee","","NewAccount"
+"That's Ok","","NewAccount"
+"Add Name","","NewAccount"
+"New account %{account} has been created","","NewAccount"
+"Error creating account","","NewAccount"
+"Create new user","","NewUser"
+"Username","Felhasználónév","NewUser"
+"A globally unique username","","NewUser"
+"Password","Jelszó","NewUser"
+"Enter your password","","NewUser"
+"PIN","","NewUser"
+"Enter your PIN number","","NewUser"
+"Attention","","NewUser"
+"Please be sure to make a note of up your username, password, and PIN, and keep it in a safe place. If you lose or forget them you will be unable to access your account.","","NewUser"
+"Creating user","","NewUser"
+"Create user","","NewUser"
+"Please wait, this may take up to 30 seconds","","NewUser"
+"Switch to Legacy Mode","","NewUser"
+"Log in","","NewUser"
+"Username is required","","NewUser"
+"Username must be at least 3 characters","","NewUser"
+"Password is required","Jelszó kötelező","NewUser"
+"Password must be at least 8 characters","A jelszónak minimum 8 karakter hosszúnak kell lennie","NewUser"
+"PIN is required","","NewUser"
+"PIN must be at least 4 characters","","NewUser"
+"Error creating user","","NewUser"
+"User registration for %{username} has been confirmed","","NewUser"
+"User registration for %{username} is waiting to be confirmed on Nexus blockchain...","","NewUser"
+"Pin must be at least 4 characters","","PinDialog"
+"Confirm","Jóváhagyás","PinDialog"
+"Enter PIN number","","PinDialog"
+"Your PIN number","","PinDialog"
+"Cancel","Mégse","PinDialog"
+"Recover password and PIN","","RecoverPassword&PIN"
+"Username","Felhasználónév","RecoverPassword&PIN"
+"Your username","","RecoverPassword&PIN"
+"Recovery phrase","","RecoverPassword&PIN"
+"Your recovery phrase","","RecoverPassword&PIN"
+"New Password","","RecoverPassword&PIN"
+"Enter your new password","","RecoverPassword&PIN"
+"New PIN","","RecoverPassword&PIN"
+"Enter your new PIN number","","RecoverPassword&PIN"
+"Recovering password & PIN","","RecoverPassword&PIN"
+"Recover password & PIN","","RecoverPassword&PIN"
+"Username is required","","RecoverPassword&PIN"
+"Recovery phrase is required","","RecoverPassword&PIN"
+"New password is required","","RecoverPassword&PIN"
+"Password must be at least 8 characters","A jelszónak minimum 8 karakter hosszúnak kell lennie","RecoverPassword&PIN"
+"New PIN is required","","RecoverPassword&PIN"
+"PIN must be at least 4 characters","","RecoverPassword&PIN"
+"Password & PIN have been updated","","RecoverPassword&PIN"
+"Error updating password & PIN","","RecoverPassword&PIN"
+"%{smart_count} word |||| %{smart_count} words","","SetRecoveryPhrase"
+"Recovery phrase","","SetRecoveryPhrase"
+"The recovery phrase can be used to recover your account and set a new password and PIN in the event that you lose or forget them. Your recovery phrase must be a minimum of 40 characters, and should ideally be made up of random words. Save this new recovery phrase in a safe place.","","SetRecoveryPhrase"
+"Password","Jelszó","SetRecoveryPhrase"
+"Your current password","","SetRecoveryPhrase"
+"PIN","","SetRecoveryPhrase"
+"Your current PIN number","","SetRecoveryPhrase"
+"Current recovery phrase","","SetRecoveryPhrase"
+"Enter your recovery phrase","","SetRecoveryPhrase"
+"Generate a recovery phrase","","SetRecoveryPhrase"
+"New recovery phrase","","SetRecoveryPhrase"
+"Enter your new recovery phrase or click Generate","","SetRecoveryPhrase"
+"Setting recovery phrase","","SetRecoveryPhrase"
+"Set recovery phrase","","SetRecoveryPhrase"
+"Password is required","Jelszó kötelező","SetRecoveryPhrase"
+"PIN is required","","SetRecoveryPhrase"
+"Current recovery phrase is required","","SetRecoveryPhrase"
+"Recovery phrase is required","","SetRecoveryPhrase"
+"Recovery phrase must be at least 40 characters","","SetRecoveryPhrase"
+"Recovery phrase has been updated","","SetRecoveryPhrase"
+"Error setting recovery phrase","","SetRecoveryPhrase"
+"Close the wallet and install update now?","A pénztárcából most kilépni és a frissítést telepíteni?","AutoUpdate"
+"Close and install","Zárja be és telepítse","AutoUpdate"
+"Install it later","Telepítse később","AutoUpdate"
+"New wallet version %{version} - Click here to download","","AutoUpdate"
+"New wallet version %{version} - Click here to update","","AutoUpdate"
+"New wallet version %{version} available. Downloading...","Új pénztárca verzió %{version} érhető el. Letöltés...","AutoUpdate"

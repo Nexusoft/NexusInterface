@@ -8,6 +8,7 @@ import Modal from 'components/Modal';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
+import InfoField from 'components/InfoField';
 import ExternalLink from 'components/ExternalLink';
 import { openConfirmDialog } from 'lib/ui';
 import { modulesDir } from 'consts/paths';
@@ -37,33 +38,6 @@ const DeleteButton = styled.div(({ theme }) => ({
     color: theme.danger,
   },
 }));
-
-const Row = styled.div({
-  display: 'grid',
-  gridTemplateAreas: '"label value"',
-  gridTemplateColumns: '1fr 2fr',
-  alignItems: 'start',
-  columnGap: '1em',
-  marginBottom: '.6em',
-});
-
-const Label = styled.div(({ theme }) => ({
-  gridArea: 'label',
-  textAlign: 'right',
-  color: theme.mixer(0.875),
-}));
-
-const Value = styled.div({
-  gridArea: 'value',
-  wordBreak: 'break-word',
-});
-
-const Field = ({ label, children }) => (
-  <Row>
-    <Label>{label}</Label>
-    <Value>{children}</Value>
-  </Row>
-);
 
 const CheckMark = styled.span({
   cursor: 'default',
@@ -119,11 +93,19 @@ class ModuleDetailsModal extends React.Component {
           )}
         </Modal.Header>
         <Modal.Body>
-          <Field label={__('Module name')}>{module.name}</Field>
-          <Field label={__('Display name')}>{module.displayName}</Field>
-          <Field label={__('Module type')}>{module.type}</Field>
-          <Field label={__('Version')}>{module.version}</Field>
-          <Field label={__('Module Specifications version')}>
+          <InfoField ratio={[1, 2]} label={__('Module name')}>
+            {module.name}
+          </InfoField>
+          <InfoField ratio={[1, 2]} label={__('Display name')}>
+            {module.displayName}
+          </InfoField>
+          <InfoField ratio={[1, 2]} label={__('Module type')}>
+            {module.type}
+          </InfoField>
+          <InfoField ratio={[1, 2]} label={__('Version')}>
+            {module.version}
+          </InfoField>
+          <InfoField ratio={[1, 2]} label={__('Module Specifications version')}>
             {
               <span className={module.deprecated ? 'error' : undefined}>
                 <span className="v-align">{module.specVersion}</span>
@@ -135,13 +117,13 @@ class ModuleDetailsModal extends React.Component {
                 )}
               </span>
             }
-          </Field>
-          <Field label={__('Description')}>
+          </InfoField>
+          <InfoField ratio={[1, 2]} label={__('Description')}>
             {module.description || (
               <span className="dim">{__('Not provided')}</span>
             )}
-          </Field>
-          <Field label={__('Author')}>
+          </InfoField>
+          <InfoField ratio={[1, 2]} label={__('Author')}>
             {module.author ? (
               <div>
                 <span>{module.author.name}</span>
@@ -160,8 +142,8 @@ class ModuleDetailsModal extends React.Component {
             ) : (
               <span className="dim">{__('No information')}</span>
             )}
-          </Field>
-          <Field label={__('Source code')}>
+          </InfoField>
+          <InfoField ratio={[1, 2]} label={__('Source code')}>
             {module.repository ? (
               <div>
                 <Tooltip.Trigger tooltip={repoUrl}>
@@ -206,14 +188,14 @@ class ModuleDetailsModal extends React.Component {
                 </span>
               </div>
             )}
-          </Field>
-          <Field label={__('Module hash')}>
+          </InfoField>
+          <InfoField ratio={[1, 2]} label={__('Module hash')}>
             {module.hash ? (
               <span className="monospace">{module.hash}</span>
             ) : (
               <span className="dim">{__('Not available')}</span>
             )}
-          </Field>
+          </InfoField>
         </Modal.Body>
 
         {!!forInstall && <Installer module={module} install={install} />}

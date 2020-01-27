@@ -1,19 +1,20 @@
-# 2.1.3 (2020.1.03)
+# 2.1.4 (2020.1.25)
 
-[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.1.3)
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.1.4)
 
 #### Additions
 
-- Added warning message when staking is enabled but have not received a block in 30 minutes
+- Added Names and Namespaces functionalities
 
 #### Adjustments
 
-- none
+- Improved performance for loading a long transactions history
 
 #### Fixes
 
-- Fixed core failing to start if Nexus folder was not created
-- Fixed issue with modules not starting
+- Fixed the core failing to start when the Nexus directory doesn't exist
+- Fixed legacy transactions not being loaded
+- Fixed module file server error
 
 # 2.1.3 (2020.1.03)
 

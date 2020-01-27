@@ -1,7 +1,6 @@
 // External
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import styled from '@emotion/styled';
 
 // Internal Global
 import GA from 'lib/googleAnalytics';
@@ -23,6 +22,7 @@ import searchIcon from 'icons/search.svg';
 import NewTokenModal from './NewTokenModal';
 import Token from './Token';
 import SearchTokenModal from './SearchTokenModal';
+import TabContentWrapper from '../TabContentWrapper';
 
 __ = __context('User.Tokens');
 
@@ -32,11 +32,6 @@ const mapStateToProps = state => ({
   loggedIn: isLoggedIn(state),
   accounts: state.core.accounts,
   ownedTokens: state.core.tokens,
-});
-
-const TokensWrapper = styled.div({
-  maxWidth: 500,
-  margin: '0 auto',
 });
 
 /**
@@ -136,7 +131,7 @@ class Tokens extends Component {
    */
   render() {
     return (
-      <TokensWrapper>
+      <TabContentWrapper>
         <div className="flex space-between">
           <Button
             onClick={() => {
@@ -156,7 +151,7 @@ class Tokens extends Component {
           </Button>
         </div>
         <div>{this.returnTokenList()}</div>
-      </TokensWrapper>
+      </TabContentWrapper>
     );
   }
 }

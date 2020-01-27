@@ -1,5 +1,4 @@
 import { apiPost } from 'lib/tritiumApi';
-
 import store, { observeStore } from 'store';
 import * as TYPE from 'consts/actionTypes';
 import { loadAccounts } from 'lib/user';
@@ -8,6 +7,7 @@ import { formatNumber } from 'lib/intl';
 import { showNotification } from 'lib/ui';
 import { walletEvents } from 'lib/wallet';
 import { legacyMode } from 'consts/misc';
+import listAll from 'utils/listAll';
 
 const isConfirmed = tx => !!tx.confirmations;
 
@@ -149,21 +149,8 @@ export const getDeltaSign = contract => {
 };
 
 export async function fetchAllTransactions() {
-  const {
-    core: { userStatus },
-  } = store.getState();
-  const txCount = userStatus && userStatus.transactions;
-
-  if (!txCount) {
-    if (txCount === 0) {
-      loadTritiumTransactions([]);
-    }
-    return;
-  }
-
-  const transactions = await apiPost('users/list/transactions', {
+  const transactions = await listAll('users/list/transactions', {
     verbose: 'summary',
-    limit: txCount,
   });
   loadTritiumTransactions(transactions);
   transactions.forEach(tx => {
