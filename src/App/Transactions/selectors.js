@@ -1,5 +1,6 @@
 import memoize from 'utils/memoize';
 import { getFakeTransactions } from './utils';
+import { formatDateTime } from 'lib/intl';
 
 __ = __context('Transactions');
 
@@ -59,11 +60,21 @@ export const getFilteredTransactions = memoize(
     })
 );
 
+const timeFormatOptions = {
+  year: 'numeric',
+  month: 'short',
+  day: '2-digit',
+  hour: '2-digit',
+  minute: '2-digit',
+  second: '2-digit',
+  hour12: false,
+};
+
 export const getChartData = memoize(
   transactions =>
     transactions &&
     transactions.map(tx => ({
-      a: tx.time,
+      a: formatDateTime(tx.time * 1000, timeFormatOptions),
       b: tx.amount,
       category: tx.category,
       fill: 'white',
