@@ -1,40 +1,12 @@
 import React from 'react';
-import styled from '@emotion/styled';
 
 import Modal from 'components/Modal';
 import Button from 'components/Button';
+import InfoField from 'components/InfoField';
 import TransactionDetailsModal from 'components/TransactionDetailsModal';
 import { openModal } from 'lib/ui';
 
 __ = __context('ContractDetails');
-
-const Row = styled.div({
-  display: 'grid',
-  gridTemplateAreas: '"label value"',
-  gridTemplateColumns: '1fr 3fr',
-  alignItems: 'start',
-  columnGap: '1em',
-  marginBottom: '.6em',
-});
-
-const Label = styled.div(({ theme }) => ({
-  gridArea: 'label',
-  textAlign: 'right',
-  color: theme.mixer(0.875),
-  textTransform: 'capitalize',
-}));
-
-const Value = styled.div({
-  gridArea: 'value',
-  wordBreak: 'break-word',
-});
-
-const Field = ({ label, children }) => (
-  <Row>
-    <Label>{label}</Label>
-    <Value>{children}</Value>
-  </Row>
-);
 
 const translateKey = key => {
   switch (key) {
@@ -65,11 +37,11 @@ class ContractDetailsModal extends React.Component {
         <Modal.Header>{__('Contract Details')}</Modal.Header>
         <Modal.Body>
           {Object.entries(contract).map(([key, value]) => (
-            <Field key={key} label={translateKey(key)}>
+            <InfoField key={key} label={translateKey(key)}>
               {value}
-            </Field>
+            </InfoField>
           ))}
-          <Field label="">
+          <InfoField label="">
             <Button
               skin="hyperlink"
               onClick={() => {
@@ -79,7 +51,7 @@ class ContractDetailsModal extends React.Component {
             >
               {__('View transaction details')}
             </Button>
-          </Field>
+          </InfoField>
         </Modal.Body>
       </Modal>
     );

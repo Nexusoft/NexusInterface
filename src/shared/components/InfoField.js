@@ -21,14 +21,8 @@ const Value = styled.div({
   wordBreak: 'break-word',
 });
 
-const InfoField = ({
-  leftSize = 1,
-  rightSize = 3,
-  label,
-  children,
-  ...rest
-}) => (
-  <Row leftSize={leftSize} rightSize={rightSize} {...rest}>
+const InfoField = ({ ratio = [1, 3], label, children, ...rest }) => (
+  <Row leftSize={ratio[0]} rightSize={ratio[1]} {...rest}>
     <Label>{label}</Label>
     <Value>{children}</Value>
   </Row>

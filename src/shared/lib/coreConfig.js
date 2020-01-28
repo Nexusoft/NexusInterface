@@ -101,14 +101,23 @@ export function customConfig(config = {}) {
  */
 export function loadNexusConf() {
   const { coreDataDir } = loadSettingsFromFile();
+  if (!fs.existsSync(coreDataDir)) {
+    log.info(
+      'Core Manager: Data Directory path not found. Creating folder: ' +
+        coreDataDir
+    );
+    fs.mkdirSync(coreDataDir);
+  }
+
   const confPath = path.join(coreDataDir, 'nexus.conf');
-  const confContent = fs.existsSync(confPath)
-    ? fs.readFileSync(confPath).toString()
-    : '';
+  let confContent = '';
+  if (fs.existsSync(confPath)) {
+    log.info(
+      'nexus.conf exists. Importing username and password for RPC server and API server.'
+    );
+    confContent = fs.readFileSync(confPath).toString();
+  }
   const configs = fromKeyValues(confContent);
-  log.info(
-    'nexus.conf exists. Importing username and password for RPC server and API server.'
-  );
 
   // Fallback to default values if empty
   const fallbackConf = [

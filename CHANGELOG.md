@@ -1,3 +1,21 @@
+# 2.1.4 (2020.1.25)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.1.4)
+
+#### Additions
+
+- Added Names and Namespaces functionalities
+
+#### Adjustments
+
+- Improved performance for loading a long transactions history
+
+#### Fixes
+
+- Fixed the core failing to start when the Nexus directory doesn't exist
+- Fixed legacy transactions not being loaded
+- Fixed module file server error
+
 # 2.1.3 (2020.1.03)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.1.3)
