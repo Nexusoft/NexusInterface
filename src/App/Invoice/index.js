@@ -112,6 +112,7 @@ const invoices = [
   },
   {
     timestamp: '1992324203',
+    paidOn: '1992334203',
     reference: 'uTest3',
     accountPayable: '8MAF92nNAkk3288Skfn1n44kksn356n2k1',
     receipiant: '2kaDJ92n1fj4n85Nj5n38fj28',
@@ -197,8 +198,6 @@ class Invoice extends Component {
       timespan,
       status
     );
-    console.log(this.state.optionsOpen);
-    console.log(filteredInvoices);
     return (
       <Panel icon={nexusIcon} title={__('Invoice')}>
         <Header>

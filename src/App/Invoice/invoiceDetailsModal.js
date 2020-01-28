@@ -202,6 +202,7 @@ class InvoiceDetailModal extends Component {
       receipiant,
       receipiantDetails,
       status,
+      paidOn,
       items,
     } = this.props.invoice;
     const { isMine } = this.props;
@@ -211,7 +212,7 @@ class InvoiceDetailModal extends Component {
     this.calculateTotal(items);
     console.log(items);
     return (
-      <ModalInternal>
+      <ModalInternal assignClose={closeModal => (this.closeModal = closeModal)}>
         <StatusTag status={status}>
           <h2>{status}</h2>
         </StatusTag>
@@ -253,6 +254,11 @@ class InvoiceDetailModal extends Component {
             <Field label={__('Details')}>{receipiantDetails}</Field>
           )}
           <Field label={__('Status')}>{status}</Field>
+          {paidOn && (
+            <Field label={__('Paid On')}>
+              {formatDateTime(paidOn, timeFormatOptions)}
+            </Field>
+          )}
           <Field label={__('Total')}>{`${this.calculateTotal(
             items
           )} NXS`}</Field>
@@ -261,17 +267,38 @@ class InvoiceDetailModal extends Component {
           {items && <InvoiceItems items={items} />}
         </Modal.Body>
         <Modal.Footer>
-          {isMine && (
+          {isMine ? (
             <div
               className="mt2 flex space-between"
               style={{ marginBottom: '1em' }}
             >
+              <Button skin="primary" onClick={() => this.closeModal()}>
+                {'Close'}
+              </Button>
               <Button skin="primary" onClick={this.clickPayNow}>
                 {'Pay'}
               </Button>
-              <Button skin="danger" onClick={this.clickReject}>
-                {'Reject'}
+            </div>
+          ) : (
+            <div
+              className="mt2 flex space-between"
+              style={{ marginBottom: '1em' }}
+            >
+              <Button skin="primary" onClick={() => this.closeModal()}>
+                {'Close'}
               </Button>
+              {status !== 'Paid' && (
+                <Tooltip.Trigger
+                  tooltip={__(
+                    'Reject this invoice, preventing the receipiant from paying it.'
+                  )}
+                  position={'top'}
+                >
+                  <Button skin="danger" onClick={this.clickReject}>
+                    {'Reject'}
+                  </Button>
+                </Tooltip.Trigger>
+              )}
             </div>
           )}
         </Modal.Footer>
