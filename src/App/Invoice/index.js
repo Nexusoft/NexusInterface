@@ -23,6 +23,7 @@ import plusIcon from 'icons/plus.svg';
 import memoize from 'utils/memoize';
 import { isMyAddress } from './selectors';
 import { apiGet } from 'lib/tritiumApi';
+import { loadInvoices } from 'lib/user';
 
 __ = __context('Invoice');
 
@@ -42,9 +43,9 @@ const timeFormatOptions = {
 
 const tableColumns = [
   {
-    id: 'timestamp',
+    id: 'created',
     Header: __('Time'),
-    accessor: 'timestamp',
+    accessor: 'created',
     Cell: cell =>
       cell.value ? formatDateTime(cell.value * 1000, timeFormatOptions) : '',
     width: 180,
@@ -61,15 +62,15 @@ const tableColumns = [
     accessor: 'reference',
   },
   {
-    id: 'accountPayable',
+    id: 'address',
     Header: __('Account Payable'),
-    accessor: 'accountPayable',
+    accessor: 'address',
     width: 240,
   },
   {
-    id: 'receipiant',
+    id: 'recipient',
     Header: __('Receipiant'),
-    accessor: 'receipiant',
+    accessor: 'recipient',
     width: 240,
   },
 ];
@@ -78,55 +79,55 @@ const InvoiceTable = styled(Table)({});
 
 const invoices = [
   {
-    timestamp: '199232403',
+    created: '199232403',
     description: 'This is a  test invoice',
     dueDate: '199255403',
     reference: 'Test1',
     invoiceNumber: 2,
-    accountPayable: '8MAF92nNAkk3288Skfn1n44kksn356n2k1',
-    receipiant:
+    address: '8MAF92nNAkk3288Skfn1n44kksn356n2k1',
+    recipient:
       'a1537d5c089ebe309887bcf6a9c2e219ca64257922ce91455c2ca86617536a2d',
-    receipiantDetails: '1111 North Street \n LA California N USA',
+    recipientDetails: '1111 North Street \n LA California N USA',
     status: 'Pending',
     accountPayableDetails: '1234 Main Street \n Phx Arizona \n USA',
     items: [
-      { description: 'Item1', unitPrice: '2.0421', unitQuantity: '4' },
-      { description: 'Item2', unitPrice: '20', unitQuantity: '1' },
-      { description: 'Item3', unitPrice: '1.62342', unitQuantity: '6' },
-      { description: 'Item4', unitPrice: '0.1355', unitQuantity: '19' },
-      { description: 'Item5', unitPrice: '12', unitQuantity: '3' },
-      { description: 'Item6', unitPrice: '5.3', unitQuantity: '2' },
-      { description: 'Item2', unitPrice: '20', unitQuantity: '1' },
-      { description: 'Item3', unitPrice: '1.62342', unitQuantity: '6' },
-      { description: 'Item4', unitPrice: '0.1355', unitQuantity: '19' },
-      { description: 'Item5', unitPrice: '12', unitQuantity: '3' },
-      { description: 'Item6', unitPrice: '5.3', unitQuantity: '2' },
+      { description: 'Item1', unit_price: '2.0421', units: '4' },
+      { description: 'Item2', unit_price: '20', units: '1' },
+      { description: 'Item3', unit_price: '1.62342', units: '6' },
+      { description: 'Item4', unit_price: '0.1355', units: '19' },
+      { description: 'Item5', unit_price: '12', units: '3' },
+      { description: 'Item6', unit_price: '5.3', units: '2' },
+      { description: 'Item2', unit_price: '20', units: '1' },
+      { description: 'Item3', unit_price: '1.62342', units: '6' },
+      { description: 'Item4', unit_price: '0.1355', units: '19' },
+      { description: 'Item5', unit_price: '12', units: '3' },
+      { description: 'Item6', unit_price: '5.3', units: '2' },
     ],
   },
   {
-    timestamp: '19925562103',
+    created: '19925562103',
     reference: 'aTest2',
-    accountPayable: '8MAF92nNAkk3288Skfn1n44kksn356n2k1',
-    receipiant: '2kaDJ92n1fj4n85Nj5n38fj28',
+    address: '8MAF92nNAkk3288Skfn1n44kksn356n2k1',
+    recipient: '2kaDJ92n1fj4n85Nj5n38fj28',
     status: 'Rejected',
-    items: [{ description: 'Item1', unitPrice: '2.0421', unitQuantity: '4' }],
+    items: [{ description: 'Item1', unit_price: '2.0421', units: '4' }],
   },
   {
-    timestamp: '1992324203',
+    created: '1992324203',
     paidOn: '1992334203',
     reference: 'uTest3',
-    accountPayable: '8MAF92nNAkk3288Skfn1n44kksn356n2k1',
-    receipiant: '2kaDJ92n1fj4n85Nj5n38fj28',
+    address: '8MAF92nNAkk3288Skfn1n44kksn356n2k1',
+    recipient: '2kaDJ92n1fj4n85Nj5n38fj28',
     status: 'Paid',
-    items: [{ description: 'Item1', unitPrice: '2.0421', unitQuantity: '4' }],
+    items: [{ description: 'Item1', unit_price: '2.0421', units: '4' }],
   },
   {
-    timestamp: '19923240993',
+    created: '19923240993',
     reference: 'pTest4',
-    accountPayable: '8MAF92nNAkk3288Skfn1n44kksn356n2k1',
-    receipiant: '2kaDJ92n1fj4n85Nj5n38fj28',
+    address: '8MAF92nNAkk3288Skfn1n44kksn356n2k1',
+    recipient: '2kaDJ92n1fj4n85Nj5n38fj28',
     status: 'Pending',
-    items: [{ description: 'Item1', unitPrice: '2.0421', unitQuantity: '4' }],
+    items: [{ description: 'Item1', unit_price: '2.0421', units: '4' }],
   },
 ];
 
@@ -158,8 +159,8 @@ const mapStateToProps = state => {
   const { genesis } = userStatus || { genesis: '' };
 
   return {
-    ...state.core,
-    ...state.ui,
+    invoiceCore: state.core.invoices,
+    invoicesUI: state.ui.invoices,
     genesis: genesis,
     accounts: state.core.accounts || [],
   };
@@ -183,6 +184,7 @@ class Invoice extends Component {
   componentDidMount() {
     GA.SendScreen('Invoice');
     this.test();
+    loadInvoices();
   }
 
   async test() {
@@ -197,10 +199,13 @@ class Invoice extends Component {
   };
 
   render() {
-    const { referenceQuery, status, timespan } = this.props.invoices;
+    const { referenceQuery, status, timespan } = this.props.invoicesUI;
     const { accounts, genesis } = this.props;
+
+    const tempInvoicec = [...invoices, ...this.props.invoiceCore];
+    console.log(tempInvoicec);
     const filteredInvoices = memorizedFilters(
-      invoices,
+      tempInvoicec,
       referenceQuery,
       timespan,
       status
@@ -259,11 +264,7 @@ class Invoice extends Component {
                 ? () => {
                     openModal(InvoiceDetailModal, {
                       invoice,
-                      isMine: isMyAddress(
-                        accounts,
-                        genesis,
-                        invoice.receipiant
-                      ),
+                      isMine: isMyAddress(accounts, genesis, invoice.recipient),
                     });
                   }
                 : undefined,

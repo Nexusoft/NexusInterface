@@ -150,6 +150,15 @@ export const loadNamespaces = async () => {
   }
 };
 
+export const loadInvoices = async () => {
+  try {
+    const invoices = await listAll('users/list/invoices');
+    store.dispatch({ type: TYPE.SET_INVOICES, payload: invoices });
+  } catch (err) {
+    console.error('Failed listing Invoices', err);
+  }
+};
+
 if (!legacyMode) {
   walletEvents.once('pre-render', function() {
     observeStore(isLoggedIn, async loggedIn => {

@@ -64,7 +64,7 @@ const ItemsContainter = styled.div(({ theme }) => ({
   padding: '1em 0em 0em 0.25em',
   backgroundColor: color.darken(theme.background, 0.5),
 }));
-const InvoiceItem = ({ description, unitPrice, unitQuantity, itemTotal }) => (
+const InvoiceItem = ({ description, unit_price, units, itemTotal }) => (
   <div
     style={{
       display: 'grid',
@@ -74,8 +74,8 @@ const InvoiceItem = ({ description, unitPrice, unitQuantity, itemTotal }) => (
     }}
   >
     <div>{description}</div>
-    <div>{unitPrice}</div>
-    <div>{unitQuantity}</div>
+    <div>{unit_price}</div>
+    <div>{units}</div>
     <div>{itemTotal}</div>
   </div>
 );
@@ -101,9 +101,9 @@ const InvoiceItems = ({ items }) => {
         {items.map(e => (
           <InvoiceItem
             description={e.description}
-            unitPrice={e.unitPrice}
-            unitQuantity={e.unitQuantity}
-            itemTotal={e.unitPrice * e.unitQuantity}
+            unit_price={e.unit_price}
+            units={e.units}
+            itemTotal={e.unit_price * e.units}
           />
         ))}
       </div>
@@ -137,6 +137,8 @@ const StatusTag = styled.div(
         return { borderBottom: `70px solid ${theme.danger}` };
       case 'Paid':
         return { borderBottom: `70px solid ${theme.primary}` };
+      default:
+        return { borderBottom: `70px solid ${theme.background}` };
     }
   }
 );
@@ -154,7 +156,7 @@ class InvoiceDetailModal extends Component {
 
   calculateTotal = items =>
     items.reduce((total, element) => {
-      return total + element.unitQuantity * element.unitPrice;
+      return total + element.units * element.unit_price;
     }, 0);
 
   clickPayNow = e => {
@@ -193,17 +195,18 @@ class InvoiceDetailModal extends Component {
     console.log(this.props);
     const {
       description,
-      timestamp,
+      created,
       reference,
       invoiceNumber,
       dueDate,
-      accountPayable,
+      address,
       accountPayableDetails,
-      receipiant,
-      receipiantDetails,
+      recipient,
+      recipientDetails,
       status,
       paidOn,
       items,
+      ...rest
     } = this.props.invoice;
     const { isMine } = this.props;
     const pastDue = this.isPastDue();
@@ -223,7 +226,7 @@ class InvoiceDetailModal extends Component {
         <Modal.Body style={{ overflow: 'hidden' }}>
           <Field label={__('Created')}>
             {' '}
-            {formatDateTime(timestamp, timeFormatOptions)}{' '}
+            {formatDateTime(created * 1000, timeFormatOptions)}{' '}
           </Field>
           {reference && <Field label={__('Reference')}>{reference}</Field>}
           {invoiceNumber && (
@@ -245,13 +248,13 @@ class InvoiceDetailModal extends Component {
               )}
             </Field>
           )}
-          <Field label={__('Account Payable')}>{accountPayable}</Field>
+          <Field label={__('Account Payable')}>{address}</Field>
           {accountPayableDetails && (
             <Field label={__('Details')}>{accountPayableDetails}</Field>
           )}
-          <Field label={__('Receipiant')}>{receipiant}</Field>
-          {receipiantDetails && (
-            <Field label={__('Details')}>{receipiantDetails}</Field>
+          <Field label={__('Receipiant')}>{recipient}</Field>
+          {recipientDetails && (
+            <Field label={__('Details')}>{recipientDetails}</Field>
           )}
           <Field label={__('Status')}>{status}</Field>
           {paidOn && (
@@ -290,7 +293,7 @@ class InvoiceDetailModal extends Component {
               {status !== 'Paid' && (
                 <Tooltip.Trigger
                   tooltip={__(
-                    'Reject this invoice, preventing the receipiant from paying it.'
+                    'Reject this invoice, preventing the recipient from paying it.'
                   )}
                   position={'top'}
                 >

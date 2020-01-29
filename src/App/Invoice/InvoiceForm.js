@@ -156,6 +156,7 @@ class RecipientField extends Component {
   },
   asyncValidate: async values => {
     console.log(values);
+    return null;
     const {
       invoiceDescription,
       invoiceNumber,
@@ -200,15 +201,30 @@ class RecipientField extends Component {
     const dueDate = new Date(invoiceDueDate);
     const jsonItems = JSON.stringify(items);
 
+    //items='[{"description":"test1","units":3,"unit_price":2}]'
+
     const pin = await confirmPin();
     if (pin) {
       const params = {
         pin,
+        number: '0011',
+        terms: 'NET30',
+        PO: 'Main1234',
+        account_name: 'KendalCormany:default',
+        contact: 'paul@nexus.io',
+        sender_detail: 'Main Street 1234',
+        recipient_username: 'KendalCormany',
+        recipient_detail: '1776 White House Lane',
+        items: [{ description: 'test1', units: 3, unit_price: 2 }],
       };
       console.log(params);
+      const asd = await apiPost('invoices/create/invoice', params);
+      console.log(asd);
+      return asd;
     }
   },
   onSubmitSuccess: (result, dispatch, props) => {
+    console.error(result);
     if (!result) return;
   },
   onSubmitFail: errorHandler(__('Error sending NXS')),

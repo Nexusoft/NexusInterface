@@ -175,7 +175,7 @@ export async function startCore() {
 
   //Check for Testnet
   if (settings.testnetIteration) {
-    params.push('-testnet=' + settings.testnetIteration);
+    //params.push('-testnet=' + settings.testnetIteration);
   }
 
   //After core forksblocks clear out that field.
@@ -203,9 +203,10 @@ export async function startCore() {
   // Enable staking (default is 0)
   if (settings.enableStaking == true) params.push('-stake=1');
 
-  params.push('private=1');
-  params.push('generate=somepassword');
-  params.push('dns=0');
+  params.push('-testnet=' + '1234');
+  params.push('-private=1');
+  params.push('-generate=somepassword');
+  params.push('-dns=0');
 
   log.info('Core Parameters: ' + params.toString());
   log.info('Core Manager: Starting core');
