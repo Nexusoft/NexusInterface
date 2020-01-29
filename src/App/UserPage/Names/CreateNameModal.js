@@ -8,10 +8,11 @@ import Button from 'components/Button';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import Spinner from 'components/Spinner';
+import Select from 'components/Select';
 import confirmPin from 'utils/promisified/confirmPin';
 import { errorHandler } from 'utils/form';
 import { openSuccessDialog } from 'lib/ui';
-import { loadNameRecords } from 'lib/user';
+import { loadNameRecords, loadNamespaces } from 'lib/user';
 import { apiPost } from 'lib/tritiumApi';
 
 __ = __context('CreateName');
@@ -63,6 +64,7 @@ const NameTypeSelect = ({ input }) => (
 
 @connect(state => ({
   username: state.core.userStatus && state.core.userStatus.username,
+  namespaces: state.core.namespaces,
 }))
 @reduxForm({
   form: 'create-name',
@@ -112,8 +114,13 @@ const NameTypeSelect = ({ input }) => (
   onSubmitFail: errorHandler(__('Error creating name')),
 })
 class CreateNameForm extends React.Component {
+  constructor(props) {
+    super(props);
+    loadNamespaces();
+  }
+
   render() {
-    const { handleSubmit, username, submitting } = this.props;
+    const { handleSubmit, username, namespaces, submitting } = this.props;
     return (
       <form onSubmit={handleSubmit}>
         <Field name="type" component={NameTypeSelect} />
@@ -126,9 +133,11 @@ class CreateNameForm extends React.Component {
                 <FormField connectLabel label={__('Namespace')}>
                   <Field
                     name="namespace"
-                    component={TextField.RF}
-                    skin="filled-inverted"
-                    className="mt0_4"
+                    component={Select.RF}
+                    options={(namespaces || []).map(n => ({
+                      value: n.name,
+                      display: n.name,
+                    }))}
                     placeholder={__('A namespace you own')}
                   />
                 </FormField>
