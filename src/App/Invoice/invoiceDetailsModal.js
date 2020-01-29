@@ -11,6 +11,7 @@ import * as color from 'utils/color';
 import { formatDateTime } from 'lib/intl';
 import { openConfirmDialog } from 'lib/ui';
 import { apiPost } from 'lib/tritiumApi';
+import Arrow from 'components/Arrow';
 
 const timeFormatOptions = {
   year: 'numeric',
@@ -147,11 +148,48 @@ const PastDueText = styled.a(({ theme }) => ({
   color: theme.danger,
 }));
 
+const OptionsArrow = styled.span({
+  display: 'inline-block',
+  width: 15,
+  verticalAlign: 'middle',
+});
+
+const MoreOpenButton = (moreOpen, moreOpenToggle, children) => (
+  <>
+    {moreOpen && children}
+    <Button
+      onClick={moreOpenToggle}
+      skin="hyperlink"
+      style={{
+        width: '12px',
+        height: '10px',
+        gridRowStart: 3,
+        borderBottomStyle: 'none',
+        paddingBottom: '1em',
+      }}
+    >
+      <OptionsArrow>
+        <Arrow direction={moreOpen ? 'down' : 'right'} height={8} width={10} />
+      </OptionsArrow>
+      <span className="v-align">
+        {__(moreOpen ? __('Less Details') : __('More Details'))}
+      </span>
+    </Button>
+  </>
+);
+
 //Allow support any addtional key/values that may be attached to the invoice
 const AdditionalKeyValues = addValues =>
   addValues.map(e => <Field label={e.key}>{e.value}</Field>);
 
 class InvoiceDetailModal extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      moreOpen: false,
+    };
+  }
+
   componentDidMount() {}
 
   calculateTotal = items =>
@@ -191,6 +229,17 @@ class InvoiceDetailModal extends Component {
     }
   }
 
+  toggleMoreOpen = e => {
+    this.setState({
+      moreOpen: !this.state.moreOpen,
+    });
+  };
+
+  returnRest(rest) {
+    return Object.keys(rest).map(e => {
+      return { key: e, value: rest[e] };
+    });
+  }
   render() {
     console.log(this.props);
     const {
@@ -200,9 +249,9 @@ class InvoiceDetailModal extends Component {
       invoiceNumber,
       dueDate,
       address,
-      accountPayableDetails,
+      sender_detail,
       recipient,
-      recipientDetails,
+      recipient_detail,
       status,
       paidOn,
       items,
@@ -210,7 +259,7 @@ class InvoiceDetailModal extends Component {
     } = this.props.invoice;
     const { isMine } = this.props;
     const pastDue = this.isPastDue();
-    console.log(isMine);
+    console.log(rest);
     console.log(this.isPastDue());
     this.calculateTotal(items);
     console.log(items);
@@ -223,7 +272,7 @@ class InvoiceDetailModal extends Component {
           {'Invoice'}
           <HeaderSubtext>{description}</HeaderSubtext>
         </Modal.Header>
-        <Modal.Body style={{ overflow: 'hidden' }}>
+        <Modal.Body style={{ overflowX: 'hidden' }}>
           <Field label={__('Created')}>
             {' '}
             {formatDateTime(created * 1000, timeFormatOptions)}{' '}
@@ -249,12 +298,12 @@ class InvoiceDetailModal extends Component {
             </Field>
           )}
           <Field label={__('Account Payable')}>{address}</Field>
-          {accountPayableDetails && (
-            <Field label={__('Details')}>{accountPayableDetails}</Field>
+          {sender_detail && (
+            <Field label={__('Details')}>{sender_detail}</Field>
           )}
           <Field label={__('Receipiant')}>{recipient}</Field>
-          {recipientDetails && (
-            <Field label={__('Details')}>{recipientDetails}</Field>
+          {recipient_detail && (
+            <Field label={__('Details')}>{recipient_detail}</Field>
           )}
           <Field label={__('Status')}>{status}</Field>
           {paidOn && (
@@ -265,7 +314,11 @@ class InvoiceDetailModal extends Component {
           <Field label={__('Total')}>{`${this.calculateTotal(
             items
           )} NXS`}</Field>
-
+          {MoreOpenButton(
+            this.state.moreOpen || false,
+            this.toggleMoreOpen,
+            AdditionalKeyValues(this.returnRest(rest))
+          )}
           <CenterValue>{__('Items')}</CenterValue>
           {items && <InvoiceItems items={items} />}
         </Modal.Body>

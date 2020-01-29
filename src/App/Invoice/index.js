@@ -87,9 +87,9 @@ const invoices = [
     address: '8MAF92nNAkk3288Skfn1n44kksn356n2k1',
     recipient:
       'a1537d5c089ebe309887bcf6a9c2e219ca64257922ce91455c2ca86617536a2d',
-    recipientDetails: '1111 North Street \n LA California N USA',
+    recipient_detail: '1111 North Street \n LA California N USA',
     status: 'Pending',
-    accountPayableDetails: '1234 Main Street \n Phx Arizona \n USA',
+    sender_detail: '1234 Main Street \n Phx Arizona \n USA',
     items: [
       { description: 'Item1', unit_price: '2.0421', units: '4' },
       { description: 'Item2', unit_price: '20', units: '1' },
