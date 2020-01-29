@@ -30,7 +30,7 @@ const NameTypes = styled.div({
   gridTemplateColumns: '1fr 1fr 1fr',
 });
 
-const NameTypeSelect = ({ input }) => (
+const NameTypeSelect = ({ input, hasNamespaces }) => (
   <NameTypes>
     <Button
       uppercase
@@ -44,6 +44,7 @@ const NameTypeSelect = ({ input }) => (
     <Button
       uppercase
       skin={input.value === 'namespaced' ? 'filled-primary' : 'default'}
+      disabled={!hasNamespaces}
       onClick={() => {
         input.onChange('namespaced');
       }}
@@ -123,7 +124,11 @@ class CreateNameForm extends React.Component {
     const { handleSubmit, username, namespaces, submitting } = this.props;
     return (
       <form onSubmit={handleSubmit}>
-        <Field name="type" component={NameTypeSelect} />
+        <Field
+          name="type"
+          component={NameTypeSelect}
+          hasNamespaces={!!namespaces && namespaces.length > 0}
+        />
 
         <div className="mt2">
           <Field
