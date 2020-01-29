@@ -203,6 +203,10 @@ export async function startCore() {
   // Enable staking (default is 0)
   if (settings.enableStaking == true) params.push('-stake=1');
 
+  params.push('private=1');
+  params.push('generate=somepassword');
+  params.push('dns=0');
+
   log.info('Core Parameters: ' + params.toString());
   log.info('Core Manager: Starting core');
   try {

@@ -22,6 +22,7 @@ import InvoiceDetailModal from './invoiceDetailsModal';
 import plusIcon from 'icons/plus.svg';
 import memoize from 'utils/memoize';
 import { isMyAddress } from './selectors';
+import { apiGet } from 'lib/tritiumApi';
 
 __ = __context('Invoice');
 
@@ -181,6 +182,12 @@ class Invoice extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
     GA.SendScreen('Invoice');
+    this.test();
+  }
+
+  async test() {
+    const aaa = await apiGet('users/list/invoices');
+    console.log(aaa);
   }
 
   toggleMoreOptions = e => {
@@ -252,7 +259,6 @@ class Invoice extends Component {
                 ? () => {
                     openModal(InvoiceDetailModal, {
                       invoice,
-                      txid: invoice.txid,
                       isMine: isMyAddress(
                         accounts,
                         genesis,
