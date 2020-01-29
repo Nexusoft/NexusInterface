@@ -35,11 +35,12 @@ export default class TextFieldWithKeyboard extends Component {
   }
 
   render() {
-    const { maskable, ...rest } = this.props;
+    const { maskable, skin, ...rest } = this.props;
     const Component = this.props.maskable ? MaskableTextField : TextField;
 
     return (
       <Component
+        skin={skin}
         {...rest}
         left={
           <Tooltip.Trigger align="start" tooltip={__('Use virtual keyboard')}>
@@ -47,7 +48,11 @@ export default class TextFieldWithKeyboard extends Component {
               skin="plain"
               onClick={this.openKeyboard}
               tabIndex="-1"
-              style={{ paddingLeft: 0 }}
+              style={
+                skin === 'filled' || skin === 'filled-inverted'
+                  ? { paddingRight: 0 }
+                  : { paddingLeft: 0 }
+              }
             >
               <Icon icon={keyboardIcon} />
             </Button>
