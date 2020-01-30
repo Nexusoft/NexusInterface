@@ -127,6 +127,9 @@ const SyntaxSelect = styled(Select)(({ theme }) => ({
  */
 @connect(mapStateToProps)
 class NexusApiConsole extends Component {
+  inputRef = React.createRef();
+  outputRef = React.createRef();
+
   /**
    *Creates an instance of TerminalConsole.
    * @param {*} props
@@ -134,7 +137,6 @@ class NexusApiConsole extends Component {
    */
   constructor(props) {
     super(props);
-    this.outputRef = React.createRef();
     switchConsoleTab('Console');
   }
 
@@ -261,6 +263,7 @@ class NexusApiConsole extends Component {
             <ConsoleInput>
               <TextField
                 autoFocus
+                inputRef={this.inputRef}
                 skin="filled-inverted"
                 value={consoleInput}
                 multiline
@@ -280,7 +283,12 @@ class NexusApiConsole extends Component {
                     skin="filled-inverted"
                     options={syntaxOptions}
                     value={consoleCliSyntax}
-                    onChange={v => updateSettings({ consoleCliSyntax: v })}
+                    onChange={v => {
+                      updateSettings({ consoleCliSyntax: v });
+                      if (this.inputRef.current) {
+                        this.inputRef.current.focus();
+                      }
+                    }}
                   />
                 }
                 right={
