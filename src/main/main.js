@@ -1,7 +1,13 @@
 import { app, ipcMain, dialog } from 'electron';
 import { autoUpdater } from 'electron-updater';
 
-import { startCore, stopCore, restartCore, getCoreConfig } from './core';
+import {
+  startCore,
+  stopCore,
+  restartCore,
+  getCoreConfig,
+  executeCommand,
+} from './core';
 import { getDomain, serveModuleFiles } from './fileServer';
 import { createWindow } from './renderer';
 import { setupTray } from './tray';
@@ -58,6 +64,10 @@ ipcMain.handle('serve-module-files', (event, ...args) =>
 ipcMain.handle('start-core', (event, ...args) => startCore(...args));
 ipcMain.handle('stop-core', (event, ...args) => stopCore(...args));
 ipcMain.handle('restart-core', (event, ...args) => restartCore(...args));
+ipcMain.handle(
+  'execute-command',
+  async (event, command) => await executeCommand(command)
+);
 ipcMain.handle('get-core-config', async () => getCoreConfig());
 
 // Auto update

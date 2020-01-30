@@ -307,3 +307,7 @@ export async function restartCore() {
   await stopCore();
   await startCore();
 }
+
+export async function executeCommand(command) {
+  return await exec(`${coreBinaryPath} ${command}`);
+}
