@@ -25,7 +25,7 @@ import {
 import { openModal } from 'lib/ui';
 import { updateSettings } from 'lib/settings';
 import APIDocModal from './APIDocs/ApiDocModal';
-import questionMarkCircleIcon from 'icons/question-mark-circle.svg';
+import documentsIcon from 'icons/documents.svg';
 import Tooltip from 'components/Tooltip';
 import Icon from 'components/Icon';
 
@@ -90,6 +90,9 @@ const Console = styled.div({
 const ConsoleInput = styled.div({
   marginBottom: '1em',
   position: 'relative',
+  display: 'grid',
+  gridTemplateColumns: '1fr min-content',
+  columnGap: '1em',
 });
 
 const ConsoleOutput = styled.code(({ theme }) => ({
@@ -108,7 +111,7 @@ const ExecuteButton = styled(Button)(({ theme }) => ({
 }));
 
 const HelpButton = styled(Button)(({ theme }) => ({
-  borderRight: `1px solid ${theme.mixer(0.125)}`,
+  border: `1px solid ${theme.mixer(0.125)}`,
 }));
 
 const SyntaxSelect = styled(Select)(({ theme }) => ({
@@ -273,23 +276,12 @@ class NexusApiConsole extends Component {
                 }}
                 onKeyDown={this.handleKeyDown}
                 left={
-                  <div className="flex">
-                    <Tooltip.Trigger tooltip={__('API Documentation')}>
-                      <HelpButton
-                        skin="filled-inverted"
-                        fitHeight
-                        onClick={() => openModal(APIDocModal)}
-                      >
-                        <Icon icon={questionMarkCircleIcon} />
-                      </HelpButton>
-                    </Tooltip.Trigger>
-                    <SyntaxSelect
-                      skin="filled-inverted"
-                      options={syntaxOptions}
-                      value={consoleCliSyntax}
-                      onChange={v => updateSettings({ consoleCliSyntax: v })}
-                    />
-                  </div>
+                  <SyntaxSelect
+                    skin="filled-inverted"
+                    options={syntaxOptions}
+                    value={consoleCliSyntax}
+                    onChange={v => updateSettings({ consoleCliSyntax: v })}
+                  />
                 }
                 right={
                   <ExecuteButton
@@ -302,6 +294,16 @@ class NexusApiConsole extends Component {
                   </ExecuteButton>
                 }
               />
+
+              <Tooltip.Trigger tooltip={__('API Documentation')}>
+                <HelpButton
+                  skin="filled-inverted"
+                  fitHeight
+                  onClick={() => openModal(APIDocModal)}
+                >
+                  <Icon icon={documentsIcon} />
+                </HelpButton>
+              </Tooltip.Trigger>
             </ConsoleInput>
 
             <ConsoleOutput ref={this.outputRef}>
