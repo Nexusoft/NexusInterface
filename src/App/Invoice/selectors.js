@@ -103,26 +103,29 @@ export const getRecipientSuggestions = memoize(
     if (addressBook) {
       Object.values(addressBook).forEach(contact => {
         if (contact.addresses) {
-          contact.addresses.forEach(({ address, label, isMine }) => {
-            if (!isMine) {
-              suggestions.push({
-                name: contact.name,
-                value: address,
-                token: '0',
-                display: (
-                  <span>
-                    {contact.name}
-                    {label ? ' - ' + label : ''}{' '}
-                    <TokenRecipientName>{'(NXS)'}</TokenRecipientName>{' '}
-                    <Address>{address}</Address>
-                  </span>
-                ),
-              });
-            }
-          });
+          contact.addresses
+            .filter(e => e.address.startsWith('a'))
+            .forEach(({ address, label, isMine }) => {
+              if (!isMine) {
+                suggestions.push({
+                  name: contact.name,
+                  value: address,
+                  token: '0',
+                  display: (
+                    <span>
+                      {contact.name}
+                      {label ? ' - ' + label : ''}{' '}
+                      <TokenRecipientName>{'(NXS)'}</TokenRecipientName>{' '}
+                      <Address>{address}</Address>
+                    </span>
+                  ),
+                });
+              }
+            });
         }
       });
     }
+    /*
     if (myTritiumAccounts) {
       myTritiumAccounts
         .filter(element => element.token_name === 'NXS')
@@ -141,7 +144,7 @@ export const getRecipientSuggestions = memoize(
             ),
           });
         });
-    }
+    } */
     return suggestions;
   }
 );

@@ -55,6 +55,7 @@ const mapStateToProps = state => {
       state.addressBook,
       state.core.accounts
     ),
+    username: state.core.userStatus.username,
     accountOptions: getAccountOptions(state.core.accounts),
     items: valueSelector(state, 'items') || [],
   };
@@ -107,7 +108,7 @@ class RecipientField extends Component {
         meta={meta}
         onSelect={this.handleSelect}
         inputProps={{
-          placeholder: __('Recipient Address/Name'),
+          placeholder: __('Recipient Genesis/UserName'),
         }}
         suggestions={suggestions}
       />
@@ -192,17 +193,21 @@ class RecipientField extends Component {
 
     return null;
   },
-  onSubmit: async ({
-    invoiceDescription,
-    invoiceNumber,
-    invoiceDueDate,
-    invoiceReference,
-    sendFrom,
-    sendDetail,
-    recipientAddress,
-    recipientDetail,
-    items,
-  }) => {
+  onSubmit: async (
+    {
+      invoiceDescription,
+      invoiceNumber,
+      invoiceDueDate,
+      invoiceReference,
+      sendFrom,
+      sendDetail,
+      recipientAddress,
+      recipientDetail,
+      items,
+    },
+    dispatch,
+    props
+  ) => {
     const creationDate = Date.now();
     const dueDate = new Date(invoiceDueDate).getTime() / 1000;
     const convertedItems = items.map(e => {
@@ -214,17 +219,26 @@ class RecipientField extends Component {
     });
 
     const pin = await confirmPin();
+    const isSendAddress = await apiPost('system/validate/address', {
+      address: sendFrom,
+    });
     if (pin) {
       const params = {
         pin,
         extra_field: 'Extra',
-        account_name: 'KendalCormany:default',
         reference: invoiceReference,
         description: invoiceDescription,
         contact: 'foo@bar.com',
-        recipient_username: 'KendalCormany',
         items: convertedItems,
       };
+      isSendAddress.is_valid
+        ? (params.account = sendFrom)
+        : (params.account_name = `${props.username}:${sendFrom}`);
+      if (recipientAddress.startsWith('a') && recipientAddress.length === 64) {
+        params.recipient = recipientAddress;
+      } else {
+        params.recipient_username = recipientAddress;
+      }
       if (invoiceNumber) params.number = invoiceNumber;
       if (invoiceDueDate) params.due_date = dueDate;
       if (sendDetail) params.sender_detail = sendDetail;
