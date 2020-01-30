@@ -247,7 +247,7 @@ class InvoiceDetailModal extends Component {
       created,
       reference,
       invoiceNumber,
-      dueDate,
+      due_date,
       address,
       sender_detail,
       recipient,
@@ -281,7 +281,7 @@ class InvoiceDetailModal extends Component {
           {invoiceNumber && (
             <Field label={__('Invoice Number')}>{invoiceNumber}</Field>
           )}
-          {dueDate && (
+          {due_date && (
             <Field label={__('Due Date')}>
               {pastDue ? (
                 <Tooltip.Trigger
@@ -289,11 +289,11 @@ class InvoiceDetailModal extends Component {
                   position={'top'}
                 >
                   <PastDueText>
-                    {formatDateTime(dueDate, timeFormatOptions)}
+                    {formatDateTime(due_date * 1000, timeFormatOptions)}
                   </PastDueText>
                 </Tooltip.Trigger>
               ) : (
-                formatDateTime(dueDate, timeFormatOptions)
+                formatDateTime(due_date * 1000, timeFormatOptions)
               )}
             </Field>
           )}

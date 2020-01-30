@@ -81,7 +81,7 @@ const invoices = [
   {
     created: '199232403',
     description: 'This is a  test invoice',
-    dueDate: '199255403',
+    due_date: '199255403',
     reference: 'Test1',
     invoiceNumber: 2,
     address: '8MAF92nNAkk3288Skfn1n44kksn356n2k1',

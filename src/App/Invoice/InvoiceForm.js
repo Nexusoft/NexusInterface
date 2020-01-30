@@ -1,13 +1,18 @@
 // External
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { reduxForm, Field, FieldArray, formValueSelector } from 'redux-form';
+import {
+  reduxForm,
+  Field,
+  FieldArray,
+  formValueSelector,
+  reset,
+} from 'redux-form';
 import styled from '@emotion/styled';
 
 // Internal Global
 import { apiPost } from 'lib/tritiumApi';
-import { loadAccounts } from 'lib/user';
-import { formName, defaultValues } from 'lib/send';
+import { loadAccounts, loadInvoices } from 'lib/user';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
@@ -16,7 +21,7 @@ import Select from 'components/Select';
 import FormField from 'components/FormField';
 import Tooltip from 'components/Tooltip';
 import Arrow from 'components/Arrow';
-import { openSuccessDialog } from 'lib/ui';
+import { openSuccessDialog, openModal, removeModal } from 'lib/ui';
 import { errorHandler } from 'utils/form';
 import sendIcon from 'icons/send.svg';
 import { numericOnly } from 'utils/form';
@@ -37,6 +42,7 @@ import {
   getRecipientSuggestions,
 } from './selectors';
 import DateTime from 'components/DateTimePicker';
+import SuccessDialog from 'components/Dialogs/SuccessDialog';
 
 __ = __context('Invoice Form');
 
@@ -145,7 +151,7 @@ class RecipientField extends Component {
     } = values;
     if (!invoiceDescription)
       errors.invoiceDescription = __('Description Needed');
-    if (!invoiceNumber || !isNaN(invoiceNumber))
+    if (!invoiceNumber || isNaN(invoiceNumber))
       errors.invoiceNumber = __('Invalid Number');
     if (!invoiceReference) errors.invoiceReference = __('Reference Needed');
     if (!sendFrom) errors.sendFrom = __('Account Payable Needed');
@@ -198,25 +204,31 @@ class RecipientField extends Component {
     items,
   }) => {
     const creationDate = Date.now();
-    const dueDate = new Date(invoiceDueDate);
-    const jsonItems = JSON.stringify(items);
-
-    //items='[{"description":"test1","units":3,"unit_price":2}]'
+    const dueDate = new Date(invoiceDueDate).getTime() / 1000;
+    const convertedItems = items.map(e => {
+      return {
+        description: e.description,
+        units: e.units,
+        unit_price: e.unitPrice,
+      };
+    });
 
     const pin = await confirmPin();
     if (pin) {
       const params = {
         pin,
-        number: '0011',
-        terms: 'NET30',
-        PO: 'Main1234',
+        extra_field: 'Extra',
         account_name: 'KendalCormany:default',
-        contact: 'paul@nexus.io',
-        sender_detail: 'Main Street 1234',
+        reference: invoiceReference,
+        description: invoiceDescription,
+        contact: 'foo@bar.com',
         recipient_username: 'KendalCormany',
-        recipient_detail: '1776 White House Lane',
-        items: [{ description: 'test1', units: 3, unit_price: 2 }],
+        items: convertedItems,
       };
+      if (invoiceNumber) params.number = invoiceNumber;
+      if (invoiceDueDate) params.due_date = dueDate;
+      if (sendDetail) params.sender_detail = sendDetail;
+      if (recipientDetail) params.recipient_detail = recipientDetail;
       console.log(params);
       const asd = await apiPost('invoices/create/invoice', params);
       console.log(asd);
@@ -226,6 +238,11 @@ class RecipientField extends Component {
   onSubmitSuccess: (result, dispatch, props) => {
     console.error(result);
     if (!result) return;
+
+    removeModal(props.modalId);
+    openModal(SuccessDialog);
+    loadInvoices();
+    dispatch(reset('InvoiceForm'));
   },
   onSubmitFail: errorHandler(__('Error sending NXS')),
 })
