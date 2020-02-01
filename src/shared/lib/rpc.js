@@ -68,8 +68,7 @@ Available RPC methods:
 
 import axios from 'axios';
 
-import store from 'store';
-import { customConfig, loadNexusConf } from 'lib/coreConfig';
+import { getActiveConfig } from 'lib/coreConfig';
 
 // export const GET = (cmd, args, Callback) => {
 //   var PostData = JSON.stringify({
@@ -88,19 +87,7 @@ import { customConfig, loadNexusConf } from 'lib/coreConfig';
 // };
 
 export default async function rpc(cmd, args) {
-  const {
-    settings,
-    core: { config },
-  } = store.getState();
-  const conf = settings.manualDaemon
-    ? customConfig({
-        ip: settings.manualDaemonIP,
-        port: settings.manualDaemonPort,
-        user: settings.manualDaemonUser,
-        password: settings.manualDaemonPassword,
-        dataDir: settings.manualDaemonDataDir,
-      })
-    : config || customConfig(loadNexusConf());
+  const conf = await getActiveConfig();
   try {
     const response = await axios.post(
       conf.host,

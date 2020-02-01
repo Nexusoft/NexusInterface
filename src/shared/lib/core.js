@@ -5,7 +5,7 @@ import log from 'electron-log';
 import * as TYPE from 'consts/actionTypes';
 import store from 'store';
 import rpc from 'lib/rpc';
-import { customConfig, loadNexusConf, saveCoreConfig } from 'lib/coreConfig';
+import { loadNexusConf, saveCoreConfig } from 'lib/coreConfig';
 import { apiPost } from 'lib/tritiumApi';
 import { updateSettings } from 'lib/settings';
 import sleep from 'utils/promisified/sleep';
@@ -40,20 +40,12 @@ export const startCore = async () => {
     log.info(
       'Core Manager: Nexus Core Process already running. Skipping starting core'
     );
-    saveCoreConfig(customConfig(loadNexusConf()));
     return;
   }
   // Check if core exists
   if (!(await ipcRenderer.invoke('check-core-exists'))) {
     throw new Error('Core not found');
   }
-
-  // Load config
-  const conf = customConfig({
-    ...loadNexusConf(),
-    verbose: settings.verboseLevel,
-    dataDir: settings.coreDataDir,
-  });
   // if (settings.clearPeers) {
   //   if (fs.existsSync(path.join(conf.dataDir, 'addr.bak'))) {
   //     await deleteDirectory(path.join(conf.dataDir, 'addr.bak'));
@@ -67,14 +59,8 @@ export const startCore = async () => {
   //   updateSettingsFile({ clearPeers: false });
   // }
 
-  // Create data directory if not exist
-  if (!fs.existsSync(conf.dataDir)) {
-    log.info(
-      'Core Manager: Data Directory path not found. Creating folder: ' +
-        conf.dataDir
-    );
-    fs.mkdirSync(conf.dataDir);
-  }
+  // Load config
+  const conf = await loadNexusConf();
 
   // Prepare parameters
   const params = [
@@ -131,20 +117,22 @@ export const stopCore = async forRestart => {
   rpc('stop', []);
 
   // Wait for core to gracefully stop for 30 seconds
-  for (let i = 0; i < 30; i++) {
-    if (await ipcRenderer.invoke('check-core-running')) {
-      log.info(
-        `Core Manager: Core still running after stop command for: ${i} seconds`
-      );
+  for (let i = 0; i <= 30; i++) {
+    if (i < 30) {
+      if (await ipcRenderer.invoke('check-core-running')) {
+        log.info(
+          `Core Manager: Core still running after stop command for: ${i} seconds`
+        );
+      } else {
+        log.info(`Core Manager: Core stopped gracefully.`);
+        break;
+      }
+      await sleep(1000);
     } else {
-      log.info(`Core Manager: Core stopped gracefully.`);
-      return true;
+      // If core still doesn't stop after 30 seconds, kill the process
+      await ipcRenderer.invoke('kill-core-process');
     }
-    await sleep(1000);
   }
-
-  // If core still doesn't stop after 30 seconds, kill the process
-  await ipcRenderer.invoke('kill-core-process');
 
   if (!forRestart && !manualDaemon) {
     store.dispatch({

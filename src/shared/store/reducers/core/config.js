@@ -1,3 +1,6 @@
+/**
+ * Cache the core config used at the most recent time core was started
+ */
 import * as TYPE from 'consts/actionTypes';
 
 const initialState = null;

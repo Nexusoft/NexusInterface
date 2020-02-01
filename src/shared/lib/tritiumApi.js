@@ -1,23 +1,6 @@
 import axios from 'axios';
-import store from 'store';
 
-import { customConfig, loadNexusConf } from 'lib/coreConfig';
-
-const getConfig = () => {
-  const {
-    settings,
-    core: { config },
-  } = store.getState();
-  return settings.manualDaemon
-    ? customConfig({
-        ip: settings.manualDaemonIP,
-        apiPort: settings.manualDaemonApiPort,
-        apiUser: settings.manualDaemonApiUser,
-        apiPassword: settings.manualDaemonApiPassword,
-        dataDir: settings.manualDaemonDataDir,
-      })
-    : config || customConfig(loadNexusConf());
-};
+import { getActiveConfig } from 'lib/coreConfig';
 
 const getDefaultOptions = ({ apiUser, apiPassword }) => ({
   headers: {
@@ -42,7 +25,7 @@ const getDefaultOptions = ({ apiUser, apiPassword }) => ({
  * @returns
  */
 export async function apiPost(endpoint, params) {
-  const conf = getConfig();
+  const conf = await getActiveConfig();
   try {
     const response = await axios.post(
       `${conf.apiHost}/${endpoint}`,
@@ -63,7 +46,7 @@ export async function apiPost(endpoint, params) {
  * @returns
  */
 export async function apiGet(url) {
-  const conf = getConfig();
+  const conf = await getActiveConfig();
   try {
     const response = await axios.get(
       `${conf.apiHost}/${url}`,
