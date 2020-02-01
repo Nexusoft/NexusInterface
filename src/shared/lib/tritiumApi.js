@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { getActiveConfig } from 'lib/coreConfig';
+import { getActiveCoreConfig } from 'lib/coreConfig';
 
 const getDefaultOptions = ({ apiUser, apiPassword }) => ({
   headers: {
@@ -25,7 +25,7 @@ const getDefaultOptions = ({ apiUser, apiPassword }) => ({
  * @returns
  */
 export async function apiPost(endpoint, params) {
-  const conf = await getActiveConfig();
+  const conf = await getActiveCoreConfig();
   try {
     const response = await axios.post(
       `${conf.apiHost}/${endpoint}`,
@@ -46,7 +46,7 @@ export async function apiPost(endpoint, params) {
  * @returns
  */
 export async function apiGet(url) {
-  const conf = await getActiveConfig();
+  const conf = await getActiveCoreConfig();
   try {
     const response = await axios.get(
       `${conf.apiHost}/${url}`,

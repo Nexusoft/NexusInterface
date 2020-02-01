@@ -1,4 +1,3 @@
-import fs from 'fs';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
 
@@ -40,6 +39,7 @@ export const startCore = async () => {
     log.info(
       'Core Manager: Nexus Core Process already running. Skipping starting core'
     );
+    saveCoreConfig(await loadNexusConf());
     return;
   }
   // Check if core exists

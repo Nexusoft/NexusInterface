@@ -160,7 +160,7 @@ export function saveCoreConfig(conf) {
   });
 }
 
-export async function getActiveConfig() {
+export async function getActiveCoreConfig() {
   const {
     settings,
     core: { config },

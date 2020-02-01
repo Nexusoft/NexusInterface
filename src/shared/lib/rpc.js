@@ -68,7 +68,7 @@ Available RPC methods:
 
 import axios from 'axios';
 
-import { getActiveConfig } from 'lib/coreConfig';
+import { getActiveCoreConfig } from 'lib/coreConfig';
 
 // export const GET = (cmd, args, Callback) => {
 //   var PostData = JSON.stringify({
@@ -87,7 +87,7 @@ import { getActiveConfig } from 'lib/coreConfig';
 // };
 
 export default async function rpc(cmd, args) {
-  const conf = await getActiveConfig();
+  const conf = await getActiveCoreConfig();
   try {
     const response = await axios.post(
       conf.host,
