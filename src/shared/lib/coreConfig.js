@@ -4,6 +4,8 @@ import log from 'electron-log';
 import crypto from 'crypto';
 import macaddress from 'macaddress';
 
+import store from 'store';
+import * as TYPE from 'consts/actionTypes';
 import { defaultCoreDataDir } from 'consts/paths';
 import { loadSettingsFromFile } from 'lib/settings/universal';
 
@@ -142,4 +144,11 @@ export function loadNexusConf() {
   }
 
   return configs;
+}
+
+export function saveCoreConfig(conf) {
+  return store.dispatch({
+    type: TYPE.SET_CORE_CONFIG,
+    payload: conf,
+  });
 }

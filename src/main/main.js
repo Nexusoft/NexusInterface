@@ -3,10 +3,10 @@ import { autoUpdater } from 'electron-updater';
 
 import {
   startCore,
-  stopCore,
-  restartCore,
-  getCoreConfig,
+  coreBinaryExists,
   executeCommand,
+  isCoreRunning,
+  killCoreProcess,
 } from './core';
 import { getDomain, serveModuleFiles } from './fileServer';
 import { createWindow } from './renderer';
@@ -61,14 +61,14 @@ ipcMain.handle('serve-module-files', (event, ...args) =>
 );
 
 // Core
+ipcMain.handle('check-core-exists', async () => await coreBinaryExists());
+ipcMain.handle('check-core-running', async () => await isCoreRunning());
 ipcMain.handle('start-core', (event, ...args) => startCore(...args));
-ipcMain.handle('stop-core', (event, ...args) => stopCore(...args));
-ipcMain.handle('restart-core', (event, ...args) => restartCore(...args));
+ipcMain.handle('kill-core-process', async () => await killCoreProcess());
 ipcMain.handle(
-  'execute-command',
+  'execute-core-command',
   async (event, command) => await executeCommand(command)
 );
-ipcMain.handle('get-core-config', async () => getCoreConfig());
 
 // Auto update
 ipcMain.handle('check-for-updates', (event, ...args) =>
@@ -109,7 +109,6 @@ if (!gotTheLock) {
     mainWindow.on('close', (...args) =>
       mainWindow.webContents.send('window-close', ...args)
     );
-    startCore();
     global.tray = setupTray(mainWindow);
   });
 }

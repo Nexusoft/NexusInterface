@@ -191,7 +191,7 @@ class NexusApiConsole extends Component {
     let result = undefined;
     try {
       if (this.props.consoleCliSyntax) {
-        result = await ipcRenderer.invoke('execute-command', cmd);
+        result = await ipcRenderer.invoke('execute-core-command', cmd);
       } else {
         result = await apiGet(cmd);
       }

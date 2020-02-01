@@ -67,7 +67,6 @@ Available RPC methods:
 **/
 
 import axios from 'axios';
-import { ipcRenderer } from 'electron';
 
 import store from 'store';
 import { customConfig, loadNexusConf } from 'lib/coreConfig';
@@ -89,7 +88,10 @@ import { customConfig, loadNexusConf } from 'lib/coreConfig';
 // };
 
 export default async function rpc(cmd, args) {
-  const { settings } = store.getState();
+  const {
+    settings,
+    core: { config },
+  } = store.getState();
   const conf = settings.manualDaemon
     ? customConfig({
         ip: settings.manualDaemonIP,
@@ -98,8 +100,7 @@ export default async function rpc(cmd, args) {
         password: settings.manualDaemonPassword,
         dataDir: settings.manualDaemonDataDir,
       })
-    : (await ipcRenderer.invoke('get-core-config')) ||
-      customConfig(loadNexusConf());
+    : config || customConfig(loadNexusConf());
   try {
     const response = await axios.post(
       conf.host,
