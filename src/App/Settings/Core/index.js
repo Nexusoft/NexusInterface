@@ -413,7 +413,7 @@ class SettingsCore extends Component {
                   name="testnetIteration"
                   component={TextField.RF}
                   type="number"
-                  min={1}
+                  min={0}
                   max={99999999}
                   style={{ maxWidth: 50 }}
                 />
