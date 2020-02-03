@@ -15,7 +15,7 @@ const server = express();
 const staticMiddleware = express.static(modulesDir);
 let moduleFiles = [];
 
-server.use('/modules', () => (req, res, next) => {
+server.use('/modules', (req, res, next) => {
   if (moduleFiles.includes(normalize(req.path))) {
     return staticMiddleware(req, res, next);
   } else {
