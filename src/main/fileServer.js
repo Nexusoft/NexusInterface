@@ -9,10 +9,9 @@ import log from 'electron-log';
 
 import { modulesDir } from 'consts/paths';
 
-const port = 9331;
-const host = 'localhost';
 const server = express();
 const staticMiddleware = express.static(modulesDir);
+let port = null;
 let moduleFiles = [];
 
 server.use('/modules', (req, res, next) => {
@@ -23,7 +22,8 @@ server.use('/modules', (req, res, next) => {
   }
 });
 
-server.listen(port, host, () => {
+const listener = server.listen(() => {
+  port = listener.address().port;
   log.info(`File server listening on port ${port}!`);
 });
 
