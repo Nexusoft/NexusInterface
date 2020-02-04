@@ -108,7 +108,9 @@ class ModuleDetailsModal extends React.Component {
           <InfoField ratio={[1, 2]} label={__('Target wallet version')}>
             {
               <span className={module.incompatible ? 'error' : undefined}>
-                <span className="v-align">{module.targetWalletVersion}</span>
+                <span className="v-align">
+                  {module.targetWalletVersion || 'N/A'}
+                </span>
                 {module.incompatible && (
                   <span className="error space-left">
                     <Icon icon={warningIcon} />
