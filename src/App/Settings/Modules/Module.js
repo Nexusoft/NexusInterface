@@ -111,7 +111,7 @@ class Module extends React.Component {
    */
   toggleModule = () => {
     const { module, enabled } = this.props;
-    if (module.invalid) return;
+    if (module.disallowed) return;
     if (enabled) {
       openConfirmDialog({
         question: __('Disable %{moduleName}?', {
@@ -163,14 +163,14 @@ class Module extends React.Component {
     return (
       <ModuleComponent {...rest}>
         <ModuleLogo
-          className={module.invalid ? 'dim' : undefined}
+          className={module.disallowed ? 'dim' : undefined}
           onClick={this.openModuleDetails}
         >
           <ModuleIcon module={module} />
         </ModuleLogo>
 
         <ModuleInfo onClick={this.openModuleDetails}>
-          <div className={module.invalid ? 'dim' : undefined}>
+          <div className={module.disallowed ? 'dim' : undefined}>
             <ModuleName>{module.displayName}</ModuleName>
             <ModuleVersion>v{module.version}</ModuleVersion>
             <span className="error">
@@ -200,7 +200,9 @@ class Module extends React.Component {
             </span>
           </div>
           <div>
-            <ModuleDescription className={module.invalid ? 'dim' : undefined}>
+            <ModuleDescription
+              className={module.disallowed ? 'dim' : undefined}
+            >
               {module.description}
             </ModuleDescription>
           </div>
@@ -208,12 +210,12 @@ class Module extends React.Component {
 
         <ModuleControls>
           <Tooltip.Trigger
-            tooltip={!module.invalid && (enabled ? 'Enabled' : 'Disabled')}
+            tooltip={!module.disallowed && (enabled ? 'Enabled' : 'Disabled')}
           >
             <Switch
               checked={enabled}
               onChange={this.toggleModule}
-              disabled={module.invalid}
+              disabled={module.disallowed}
             />
           </Tooltip.Trigger>
         </ModuleControls>

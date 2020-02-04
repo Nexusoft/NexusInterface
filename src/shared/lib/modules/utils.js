@@ -14,11 +14,11 @@ export const isModuleIncompatible = module =>
   semver.lt(module.targetWalletVersion, BACKWARD_COMPATIBLE_VERSION);
 
 // Check if a module is valid
-export const isModuleValid = module => {
+export const isModuleDisallowed = module => {
   const {
     settings: { devMode, verifyModuleSource },
   } = store.getState();
-  return (
+  return !(
     (devMode && !verifyModuleSource) ||
     (module.repository && module.repoOnline && module.repoVerified)
   );
@@ -29,7 +29,7 @@ export const isModuleEnabled = module => {
   const {
     settings: { disabledModules },
   } = store.getState();
-  return !module.invalid && !disabledModules.includes(module.name);
+  return !module.disallowed && !disabledModules.includes(module.name);
 };
 
 /**

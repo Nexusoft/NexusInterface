@@ -253,15 +253,15 @@ class Installer extends React.Component {
   render() {
     const { module } = this.props;
     const { installing } = this.state;
-    const btnLabel = module.invalid
-      ? __('Module is invalid')
+    const btnLabel = module.disallowed
+      ? __('Module is disallowed')
       : installing
       ? __('Installing Module...')
       : __('Install Module');
 
     return (
       <Modal.Footer separator style={{ textAlign: 'center' }}>
-        {!module.invalid && !module.isFromNexus && (
+        {!module.disallowed && !module.isFromNexus && (
           <InstallerWarning>
             {__(`Warning: This module is written by a third party, Nexus is NOT
               responsible for its quality or legitimacy. Please make sure to do
@@ -273,7 +273,7 @@ class Installer extends React.Component {
           skin="primary"
           wide
           className="mt1"
-          disabled={installing || !!module.invalid}
+          disabled={installing || !!module.disallowed}
           onClick={this.install}
         >
           {btnLabel}

@@ -9,7 +9,7 @@ export {
 } from './webview';
 export {
   isModuleIncompatible,
-  isModuleValid,
+  isModuleDisallowed,
   isModuleEnabled,
   getAllModules,
   getActiveModules,
