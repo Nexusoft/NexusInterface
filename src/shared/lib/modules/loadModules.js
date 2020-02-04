@@ -44,18 +44,12 @@ function prepareModule(module) {
  * @returns {object} an object mapping module names and module data
  */
 walletEvents.once('pre-render', async function() {
-  const {
-    settings: { devMode, verifyModuleSource, allowSymLink },
-  } = store.getState();
-
   try {
     if (!fs.existsSync(modulesDir)) return {};
     const dirNames = await fs.promises.readdir(modulesDir);
     const dirPaths = dirNames.map(dirName => join(modulesDir, dirName));
     const results = await Promise.all(
-      dirPaths.map(path =>
-        loadModuleFromDir(path, { devMode, verifyModuleSource, allowSymLink })
-      )
+      dirPaths.map(path => loadModuleFromDir(path))
     );
 
     const modules = results.reduce((map, result, i) => {

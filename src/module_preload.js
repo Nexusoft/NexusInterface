@@ -39,7 +39,7 @@ const newId = (() => {
 })();
 
 global.NEXUS = {
-  specVersion: MODULE_SPEC_VERSION,
+  walletVersion: APP_VERSION,
   libraries: {
     React,
     ReactDOM,

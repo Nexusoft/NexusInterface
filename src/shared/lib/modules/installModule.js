@@ -3,7 +3,6 @@ import fs from 'fs';
 
 import { showNotification, openModal, openSuccessDialog } from 'lib/ui';
 import ModuleDetailsModal from 'components/ModuleDetailsModal';
-import store from 'store';
 import { loadModuleFromDir } from 'lib/modules';
 import { modulesDir } from 'consts/paths';
 import { walletDataDir } from 'consts/paths';
@@ -80,14 +79,7 @@ async function copyModule(files, source, dest) {
  * @returns
  */
 async function installFromDirectory(path) {
-  const {
-    settings: { devMode, verifyModuleSource, allowSymLink },
-  } = store.getState();
-  const module = await loadModuleFromDir(path, {
-    devMode,
-    verifyModuleSource,
-    allowSymLink,
-  });
+  const module = await loadModuleFromDir(path);
 
   if (!module) {
     showNotification('Invalid Module', 'error');

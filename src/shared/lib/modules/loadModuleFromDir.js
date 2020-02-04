@@ -1,9 +1,11 @@
 import { join, isAbsolute, normalize } from 'path';
 import fs from 'fs';
 import Ajv from 'ajv';
-import { semverRegex } from 'consts/misc';
 
-import { isModuleDeprecated, isModuleValid } from './utils';
+import { semverRegex } from 'consts/misc';
+import store from 'store';
+
+import { isModuleIncompatible, isModuleValid } from './utils';
 import {
   getRepoInfo,
   isRepoOnline,
@@ -23,7 +25,7 @@ const reservedFileNames = [
 // Schema for nxs_package.json
 const nxsPackageSchema = {
   additionalProperties: false,
-  required: ['name', 'displayName', 'version', 'specVersion', 'type', 'files'],
+  required: ['name', 'displayName', 'version', 'type', 'files'],
   properties: {
     name: {
       type: 'string',
@@ -36,7 +38,12 @@ const nxsPackageSchema = {
       type: 'string',
       pattern: semverRegex.source,
     },
-    // Module Specifications version that this module was built on
+    // Wallet version that this module was built for and tested on
+    targetWalletVersion: {
+      type: 'string',
+      pattern: semverRegex.source,
+    },
+    // DEPRECATED! This is added so that old modules is recognized
     specVersion: {
       type: 'string',
       pattern: semverRegex.source,
@@ -107,13 +114,9 @@ async function containsSymLink(dirPath) {
  *
  * @export
  * @param {*} dirPath
- * @param {*} { devMode, verifyModuleSource }
  * @returns
  */
-export async function loadModuleFromDir(
-  dirPath,
-  { devMode, verifyModuleSource, allowSymLink }
-) {
+export async function loadModuleFromDir(dirPath) {
   try {
     const nxsPackagePath = join(dirPath, 'nxs_package.json');
     const stat = await fs.promises.lstat(nxsPackagePath);
@@ -129,11 +132,13 @@ export async function loadModuleFromDir(
     const module = JSON.parse(content);
     if (!validateNxsPackage(module)) return null;
 
+    // targetWalletVersion is mandatory for modules in new schema
+    if (!module.targetWalletVersion && !module.specVersion) return null;
+
     // Ensure all file paths are relative
     if (module.entry && isAbsolute(module.entry)) return null;
     if (module.icon && isAbsolute(module.icon)) return null;
     if (module.files.some(file => isAbsolute(file))) return null;
-
     if (module.files.some(file => reservedFileNames.includes(normalize(file))))
       return null;
 
@@ -141,9 +146,9 @@ export async function loadModuleFromDir(
     const filePaths = module.files.map(file => join(dirPath, file));
     if (
       filePaths.some(path => !fs.existsSync(path)) ||
-      (await Promise.all(filePaths.map(path => fs.promises.stat(path)))).some(
-        stat => stat.isDirectory()
-      )
+      (
+        await Promise.all(filePaths.map(path => fs.promises.stat(path)))
+      ).some(stat => stat.isDirectory())
     ) {
       console.error(
         `Module ${module.name}: Some files listed by the module does not exist`
@@ -153,6 +158,9 @@ export async function loadModuleFromDir(
 
     // Ensure no symbolic links, both files and folders
     // Need to scan the whole folder because symbolic link can link to a directory
+    const {
+      settings: { devMode, allowSymLink },
+    } = store.getState();
     if (!(devMode && allowSymLink) && (await containsSymLink(dirPath))) {
       console.error(`Module ${module.name} contains some symbolic link!`);
       return null;
@@ -182,8 +190,8 @@ export async function loadModuleFromDir(
       });
     }
 
-    module.deprecated = isModuleDeprecated(module);
-    module.invalid = !isModuleValid(module, { devMode, verifyModuleSource });
+    module.incompatible = isModuleIncompatible(module);
+    module.invalid = !isModuleValid(module);
     return module;
   } catch (err) {
     console.error(err);

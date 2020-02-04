@@ -68,7 +68,7 @@ const ModuleDescription = styled.div(({ theme }) => ({
 }));
 
 const mapStateToProps = (state, props) => ({
-  enabled: isModuleEnabled(props.module, state.settings.disabledModules),
+  enabled: isModuleEnabled(props.module),
   disabledModules: state.settings.disabledModules,
 });
 
@@ -174,9 +174,11 @@ class Module extends React.Component {
             <ModuleName>{module.displayName}</ModuleName>
             <ModuleVersion>v{module.version}</ModuleVersion>
             <span className="error">
-              {!!module.deprecated && (
+              {!!module.incompatible && (
                 <Tooltip.Trigger
-                  tooltip={__('Deprecated Specification version')}
+                  tooltip={__(
+                    'The wallet version this module was built on is no longer compatible'
+                  )}
                 >
                   <Icon icon={warningIcon} className="space-left" />
                 </Tooltip.Trigger>

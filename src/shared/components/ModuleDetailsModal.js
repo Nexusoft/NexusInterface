@@ -105,14 +105,16 @@ class ModuleDetailsModal extends React.Component {
           <InfoField ratio={[1, 2]} label={__('Version')}>
             {module.version}
           </InfoField>
-          <InfoField ratio={[1, 2]} label={__('Module Specifications version')}>
+          <InfoField ratio={[1, 2]} label={__('Target wallet version')}>
             {
-              <span className={module.deprecated ? 'error' : undefined}>
-                <span className="v-align">{module.specVersion}</span>
-                {module.deprecated && (
+              <span className={module.incompatible ? 'error' : undefined}>
+                <span className="v-align">{module.targetWalletVersion}</span>
+                {module.incompatible && (
                   <span className="error space-left">
                     <Icon icon={warningIcon} />
-                    <span className="v-align space-left">(deprecated)</span>
+                    <span className="v-align space-left">
+                      ({__('incompatible')})
+                    </span>
                   </span>
                 )}
               </span>

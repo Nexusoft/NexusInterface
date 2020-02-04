@@ -1,24 +1,36 @@
 import semver from 'semver';
 import memoize from 'utils/memoize';
 
+import store from 'store';
+
 /**
  * Checkers
  * =============================================================================
  */
 
 // Check if the Module API this module was built on is still supported
-export const isModuleDeprecated = module =>
-  semver.lt(module.specVersion, SUPPORTED_MODULE_SPEC_VERSION);
+export const isModuleIncompatible = module =>
+  !module.targetWalletVersion ||
+  semver.lt(module.targetWalletVersion, BACKWARD_COMPATIBLE_VERSION);
 
 // Check if a module is valid
-export const isModuleValid = (module, { devMode, verifyModuleSource }) =>
-  !isModuleDeprecated(module) &&
-  ((devMode && !verifyModuleSource) ||
-    (module.repository && module.repoOnline && module.repoVerified));
+export const isModuleValid = module => {
+  const {
+    settings: { devMode, verifyModuleSource },
+  } = store.getState();
+  return (
+    (devMode && !verifyModuleSource) ||
+    (module.repository && module.repoOnline && module.repoVerified)
+  );
+};
 
 // Check if a module is active, which means it's valid and not disabled by user
-export const isModuleEnabled = (module, disabledModules) =>
-  !module.invalid && !disabledModules.includes(module.name);
+export const isModuleEnabled = module => {
+  const {
+    settings: { disabledModules },
+  } = store.getState();
+  return !module.invalid && !disabledModules.includes(module.name);
+};
 
 /**
  * Memoized getters

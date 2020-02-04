@@ -8,7 +8,7 @@ export {
   toggleWebViewDevTools,
 } from './webview';
 export {
-  isModuleDeprecated,
+  isModuleIncompatible,
   isModuleValid,
   isModuleEnabled,
   getAllModules,

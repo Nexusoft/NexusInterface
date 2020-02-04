@@ -2,8 +2,7 @@
   "name": "nexus_wallet",
   "productName": "Nexus Wallet",
   "version": "2.1.4",
-  "moduleSpecVersion": "0.3.0",
-  "supportedModuleSpecVersion": "0.1.0",
+  "backwardCompatible": "2.1.4",
   "buildDate": "January 25th 2020",
   "description": "User interface for the Nexus blockchain and ecosystem.",
   "scripts": {
