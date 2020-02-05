@@ -6,7 +6,7 @@ import WebView from './WebView';
  *
  * @param {*} { module }
  */
-const PageModule = ({ module }) => (
+const AppModule = ({ module }) => (
   <WebView
     /* Set key attribute here so that the WebView instance will be reset and 
       componentDidMount will be called when it navigates to another module of the same type */
@@ -16,4 +16,4 @@ const PageModule = ({ module }) => (
   />
 );
 
-export default PageModule;
+export default AppModule;

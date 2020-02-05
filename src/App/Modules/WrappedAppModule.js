@@ -8,7 +8,7 @@ import WebView from './WebView';
  *
  * @param {*} { module }
  */
-const PageModule = ({ module }) => (
+const WrappedAppModule = ({ module }) => (
   <Panel
     title={
       <>
@@ -27,4 +27,4 @@ const PageModule = ({ module }) => (
   </Panel>
 );
 
-export default PageModule;
+export default WrappedAppModule;

@@ -282,7 +282,7 @@ function buildUpdaterMenu() {
  *
  * @memberof AppMenu
  */
-// const setPageModuleActive = active => {
+// const setAppModuleActive = active => {
 //   if (pageModuleActive !== active) {
 //     pageModuleActive = active;
 //     build();

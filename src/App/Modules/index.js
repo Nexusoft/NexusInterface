@@ -6,8 +6,8 @@ import { connect } from 'react-redux';
 import GA from 'lib/googleAnalytics';
 
 // Internal Local
-import PageModule from './PageModule';
-import PagePanelModule from './PagePanelModule';
+import AppModule from './AppModule';
+import WrappedAppModule from './WrappedAppModule';
 
 /**
  * Modules
@@ -40,9 +40,9 @@ class Modules extends React.Component {
     if (!module || module.info.type !== 'app' || !module.enabled) return null;
 
     if (module.info.options && module.info.options.wrapInPanel) {
-      return <PagePanelModule module={module} />;
+      return <WrappedAppModule module={module} />;
     } else {
-      return <PageModule module={module} />;
+      return <AppModule module={module} />;
     }
   }
 }
