@@ -8,6 +8,8 @@ import normalizeEol from 'utils/normalizeEol';
 import Multistream from 'multistream';
 import { ipcRenderer } from 'electron';
 
+import Module from './Module';
+
 const ajv = new Ajv();
 
 // Schema for repo_info.json
@@ -103,24 +105,27 @@ export async function getModuleHash(dirPath, { module } = {}) {
 }
 
 /**
- * Returns the repository info including the Nexus signature if repo_info.json file does exist and is valid
+ * Returns the repository info including the Nexus signature
+ * if repo_info.json file does exist and is valid
  *
  * @param {*} dirPath
  * @returns
  */
-export async function getRepoInfo(dirPath) {
+export async function loadRepoInfo(dirPath) {
   const filePath = join(dirPath, 'repo_info.json');
   // Check repo_info.json file exists
-  if (
-    !fs.existsSync(filePath) ||
-    (await fs.promises.lstat(filePath)).isSymbolicLink()
-  )
-    return null;
+  if (!fs.existsSync(filePath)) return null;
 
-  // Check repo_info.json file schema
+  // Check repo_info.json file is a symbolic link
+  const lstat = await fs.promises.lstat(filePath);
+  if (lstat.isSymbolicLink()) return null;
+
   try {
+    // Load file content
     const fileContent = await fs.promises.readFile(filePath);
     const repoInfo = JSON.parse(fileContent);
+
+    // Validate schema
     if (validateRepoInfo(repoInfo)) {
       return repoInfo;
     }
@@ -132,41 +137,12 @@ export async function getRepoInfo(dirPath) {
 }
 
 /**
- * Check to see if Author is part of NexusSoft
- *
- * @export
- * @param {*} repoInfo
- * @returns {boolean} Is Author apart of Nexus
- */
-export async function isAuthorPartOfOrg(repoInfo) {
-  const { host, owner, repo, commit } = repoInfo.data.repository;
-  if (!host || !owner || !repo || !commit) return false;
-
-  if (owner === 'Nexusoft') return true;
-
-  try {
-    const apiUrls = {
-      'github.com': `https://api.github.com/users/${owner}/orgs`,
-    };
-    const url = apiUrls[host];
-    const response = await axios.get(url);
-    const listOfOrgs = JSON.parse(response.request.response);
-    const partOfNexus = listOfOrgs.find(e => e.login === 'Nexusoft');
-    return !!partOfNexus;
-  } catch (err) {
-    console.error(err);
-    return false;
-  }
-}
-
-/**
  * Check if the specified repository is currently still online
  *
  * @param {*} repoInfo
  * @returns
  */
-export async function isRepoOnline(repoInfo) {
-  const { host, owner, repo, commit } = repoInfo.data.repository;
+export async function isRepoOnline({ host, owner, repo, commit }) {
   if (!host || !owner || !repo || !commit) return false;
 
   try {
@@ -190,16 +166,13 @@ export async function isRepoOnline(repoInfo) {
  * @param {*} dirPath
  * @returns
  */
-export async function isRepoVerified(repoInfo, module, dirPath) {
+export async function isModuleVerified(module, repoInfo) {
   const { data, verification } = repoInfo;
+  if (!verification || !data || !data.moduleHash) return false;
 
-  // Check public key matching
-  if (!verification || !data.moduleHash) return false;
-
-  // Check hash of module files matching
   try {
-    const hash = module.hash || (await getModuleHash(dirPath, { module }));
-    if (hash !== data.moduleHash) return false;
+    // Check if hash of module files matching
+    if (data.moduleHash !== module.hash) return false;
 
     // Check signature
     const serializedData = JSON.stringify(data);
@@ -223,7 +196,36 @@ export async function isRepoVerified(repoInfo, module, dirPath) {
 }
 
 /**
+ * Check to see if Author is part of NexusSoft
+ *
+ * @export
+ * @param {*} repoInfo
+ * @returns {boolean} Is Author apart of Nexus
+ */
+export async function isRepoFromNexus({ host, owner, repo, commit }) {
+  if (!host || !owner || !repo || !commit) return false;
+
+  if (owner === 'Nexusoft') return true;
+
+  try {
+    const apiUrls = {
+      'github.com': `https://api.github.com/users/${owner}/orgs`,
+    };
+    const url = apiUrls[host];
+    const response = await axios.get(url);
+    const listOfOrgs = JSON.parse(response.request.response);
+    const partOfNexus = listOfOrgs.find(e => e.login === 'Nexusoft');
+    return !!partOfNexus;
+  } catch (err) {
+    console.error(err);
+    return false;
+  }
+}
+
+/**
+ * =============================================================================
  * This script is for Nexus team to sign the repo verification
+ * =============================================================================
  *
  * @param {*} repoUrl
  * @param {*} [{ moduleDir, privKeyPath, privKeyPassphrase }={}]
@@ -261,8 +263,8 @@ async function signModuleRepo(
     throw '`moduleDir` does not exist';
   }
 
-  const moduleHash = await getModuleHash(moduleDir);
-  const data = { repository: repo, moduleHash };
+  const module = await Module.loadFromDir(moduleDir);
+  const data = { repository: repo, moduleHash: module.hash };
   const serializedData = JSON.stringify(data);
 
   if (!privKeyPath) {

@@ -17,7 +17,6 @@ import { apiPost } from 'lib/tritiumApi';
 import { legacyMode } from 'consts/misc';
 
 import { readModuleStorage, writeModuleStorage } from './storage';
-import { getModuleIfEnabled } from './utils';
 
 const cmdWhitelist = [
   'checkwallet',
@@ -110,7 +109,7 @@ const getSettingsForModules = memoize((locale, fiatCurrency, addressStyle) => ({
 }));
 
 const settingsChanged = (settings1, settings2) =>
-  settings1 !== settings2 && (!!settings1 && !!settings2)
+  settings1 !== settings2 && !!settings1 && !!settings2
     ? settings1.locale !== settings2.locale ||
       settings1.fiatCurrency !== settings2.fiatCurrency ||
       settings1.addressStyle !== settings2.addressStyle
@@ -127,13 +126,9 @@ const getModuleData = ({
 });
 
 const getActiveModule = () => {
-  const state = store.getState();
-  const { activeAppModule } = state;
-  return getModuleIfEnabled(
-    activeAppModule && activeAppModule.moduleName,
-    state.modules,
-    state.settings.disabledModules
-  );
+  const { activeAppModule, modules } = store.getState();
+  const module = modules[activeAppModule.moduleName];
+  return module.enabled ? module : null;
 };
 
 /**
@@ -360,7 +355,7 @@ walletEvents.once('post-render', function() {
   observeStore(
     state => state.activeAppModule,
     activeAppModule => {
-      if (activeAppModule) {
+      if (activeAppModule && activeAppModule.webview) {
         const { webview } = activeAppModule;
         webview.addEventListener('ipc-message', handleIpcMessage);
         webview.addEventListener('dom-ready', async () => {
@@ -437,7 +432,7 @@ export const unsetActiveWebView = () => {
 
 export const toggleWebViewDevTools = () => {
   const { activeAppModule } = store.getState();
-  if (activeAppModule) {
+  if (activeAppModule && activeAppModule.webview) {
     const { webview } = activeAppModule;
     if (webview.isDevToolsOpened()) {
       webview.closeDevTools();

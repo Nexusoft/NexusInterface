@@ -1,7 +1,6 @@
 // External
 import React from 'react';
 import styled from '@emotion/styled';
-import { join } from 'path';
 
 // Internal
 import Modal from 'components/Modal';
@@ -11,7 +10,6 @@ import Tooltip from 'components/Tooltip';
 import InfoField from 'components/InfoField';
 import ExternalLink from 'components/ExternalLink';
 import { openConfirmDialog } from 'lib/ui';
-import { modulesDir } from 'consts/paths';
 import { timing } from 'styles';
 import deleteDirectory from 'utils/promisified/deleteDirectory';
 import warningIcon from 'icons/warning.svg';
@@ -58,11 +56,11 @@ class ModuleDetailsModal extends React.Component {
    * @memberof ModuleDetailsModal
    */
   confirmDelete = () => {
+    const { module } = this.props;
     openConfirmDialog({
-      question: `Delete ${this.props.module.displayName}?`,
+      question: `Delete ${module.info.displayName}?`,
       callbackYes: async () => {
-        const moduleDir = join(modulesDir, this.props.module.dirName);
-        await deleteDirectory(moduleDir);
+        await deleteDirectory(module.path);
         location.reload();
       },
     });
@@ -76,6 +74,7 @@ class ModuleDetailsModal extends React.Component {
    */
   render() {
     const { module, forInstall, install } = this.props;
+    const moduleInfo = module.info;
     const { host, owner, repo, commit } = module.repository || {};
     const repoUrl = module.repository
       ? `https://${host}/${owner}/${repo}/tree/${commit}`
@@ -94,22 +93,22 @@ class ModuleDetailsModal extends React.Component {
         </Modal.Header>
         <Modal.Body>
           <InfoField ratio={[1, 2]} label={__('Module name')}>
-            {module.name}
+            {moduleInfo.name}
           </InfoField>
           <InfoField ratio={[1, 2]} label={__('Display name')}>
-            {module.displayName}
+            {moduleInfo.displayName}
           </InfoField>
           <InfoField ratio={[1, 2]} label={__('Module type')}>
-            {module.type}
+            {moduleInfo.type}
           </InfoField>
           <InfoField ratio={[1, 2]} label={__('Version')}>
-            {module.version}
+            {moduleInfo.version}
           </InfoField>
           <InfoField ratio={[1, 2]} label={__('Target wallet version')}>
             {
               <span className={module.incompatible ? 'error' : undefined}>
                 <span className="v-align">
-                  {module.targetWalletVersion || 'N/A'}
+                  {moduleInfo.targetWalletVersion || 'N/A'}
                 </span>
                 {module.incompatible && (
                   <span className="error space-left">
@@ -123,22 +122,22 @@ class ModuleDetailsModal extends React.Component {
             }
           </InfoField>
           <InfoField ratio={[1, 2]} label={__('Description')}>
-            {module.description || (
+            {moduleInfo.description || (
               <span className="dim">{__('Not provided')}</span>
             )}
           </InfoField>
           <InfoField ratio={[1, 2]} label={__('Author')}>
-            {module.author ? (
+            {moduleInfo.author ? (
               <div>
-                <span>{module.author.name}</span>
-                {!!module.author.email && (
+                <span>{moduleInfo.author.name}</span>
+                {!!moduleInfo.author.email && (
                   <span className="space-left">
                     -
                     <ExternalLink
                       className="space-left"
-                      href={`mailto:${module.author.email}`}
+                      href={`mailto:${moduleInfo.author.email}`}
                     >
-                      {module.author.email}
+                      {moduleInfo.author.email}
                     </ExternalLink>
                   </span>
                 )}
@@ -157,7 +156,7 @@ class ModuleDetailsModal extends React.Component {
                   </ExternalLink>
                 </Tooltip.Trigger>
 
-                {module.isFromNexus && (
+                {module.repoVerified && module.repoFromNexus && (
                   <Tooltip.Trigger
                     tooltip={__('This module is developed by Nexus')}
                   >
@@ -261,7 +260,7 @@ class Installer extends React.Component {
 
     return (
       <Modal.Footer separator style={{ textAlign: 'center' }}>
-        {!module.disallowed && !module.isFromNexus && (
+        {!module.disallowed && !(module.repoVerified && module.repoFromNexus) && (
           <InstallerWarning>
             {__(`Warning: This module is written by a third party, Nexus is NOT
               responsible for its quality or legitimacy. Please make sure to do

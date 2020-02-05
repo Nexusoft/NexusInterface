@@ -10,7 +10,6 @@ import Tooltip from 'components/Tooltip';
 import Icon from 'components/Icon';
 import { openConfirmDialog, openModal } from 'lib/ui';
 import ModuleDetailsModal from 'components/ModuleDetailsModal';
-import { isModuleEnabled } from 'lib/modules';
 import { timing } from 'styles';
 import { updateSettings } from 'lib/settings';
 import warningIcon from 'icons/warning.svg';
@@ -54,12 +53,14 @@ const ModuleControls = styled.div({
 
 const ModuleName = styled.span(({ theme }) => ({
   color: theme.foreground,
+  verticalAlign: 'middle',
 }));
 
 const ModuleVersion = styled.span(({ theme }) => ({
   color: theme.mixer(0.75),
   fontSize: '.9em',
   marginLeft: '.7em',
+  verticalAlign: 'middle',
 }));
 
 const ModuleDescription = styled.div(({ theme }) => ({
@@ -68,7 +69,6 @@ const ModuleDescription = styled.div(({ theme }) => ({
 }));
 
 const mapStateToProps = (state, props) => ({
-  enabled: isModuleEnabled(props.module),
   disabledModules: state.settings.disabledModules,
 });
 
@@ -88,7 +88,7 @@ class Module extends React.Component {
   enableModule = () => {
     updateSettings({
       disabledModules: this.props.disabledModules.filter(
-        moduleName => moduleName !== this.props.module.name
+        moduleName => moduleName !== this.props.module.info.name
       ),
     });
   };
@@ -100,7 +100,10 @@ class Module extends React.Component {
    */
   disableModule = () => {
     updateSettings({
-      disabledModules: [...this.props.disabledModules, this.props.module.name],
+      disabledModules: [
+        ...this.props.disabledModules,
+        this.props.module.info.name,
+      ],
     });
   };
 
@@ -110,12 +113,13 @@ class Module extends React.Component {
    * @memberof Module
    */
   toggleModule = () => {
-    const { module, enabled } = this.props;
+    const { module } = this.props;
     if (module.disallowed) return;
-    if (enabled) {
+
+    if (module.enabled) {
       openConfirmDialog({
         question: __('Disable %{moduleName}?', {
-          moduleName: module.displayName,
+          moduleName: module.info.displayName,
         }),
         note: __(
           'Wallet will be automatically refreshed for the change to take effect'
@@ -128,7 +132,7 @@ class Module extends React.Component {
     } else {
       openConfirmDialog({
         question: __('Enable %{moduleName}?', {
-          moduleName: module.displayName,
+          moduleName: module.info.displayName,
         }),
         note: __(
           'Wallet will be automatically refreshed for the change to take effect'
@@ -159,7 +163,8 @@ class Module extends React.Component {
    * @memberof Module
    */
   render() {
-    const { module, enabled, ...rest } = this.props;
+    const { module, ...rest } = this.props;
+
     return (
       <ModuleComponent {...rest}>
         <ModuleLogo
@@ -171,49 +176,49 @@ class Module extends React.Component {
 
         <ModuleInfo onClick={this.openModuleDetails}>
           <div className={module.disallowed ? 'dim' : undefined}>
-            <ModuleName>{module.displayName}</ModuleName>
-            <ModuleVersion>v{module.version}</ModuleVersion>
-            <span className="error">
-              {!!module.incompatible && (
-                <Tooltip.Trigger
-                  tooltip={__(
-                    'The wallet version this module was built on is no longer compatible'
-                  )}
-                >
-                  <Icon icon={warningIcon} className="space-left" />
-                </Tooltip.Trigger>
-              )}
-              {(!module.repository || !module.repoOnline) && (
-                <Tooltip.Trigger tooltip={__('Module is not open source')}>
-                  <Icon icon={warningIcon} className="space-left" />
-                </Tooltip.Trigger>
-              )}
-              {!!module.repository && !module.repoVerified && (
-                <Tooltip.Trigger
-                  tooltip={__(
-                    'The provided repository is not verified to be the real source code of this module'
-                  )}
-                >
-                  <Icon icon={warningIcon} className="space-left" />
-                </Tooltip.Trigger>
-              )}
-            </span>
+            <ModuleName>{module.info.displayName}</ModuleName>
+            <ModuleVersion>v{module.info.version}</ModuleVersion>
+            {!!module.incompatible && (
+              <Tooltip.Trigger
+                tooltip={__(
+                  'This module was built for an incompatible wallet version'
+                )}
+              >
+                <Icon icon={warningIcon} className="error space-left" />
+              </Tooltip.Trigger>
+            )}
+            {(!module.repository || !module.repoOnline) && (
+              <Tooltip.Trigger tooltip={__('Module is not open source')}>
+                <Icon icon={warningIcon} className="error space-left" />
+              </Tooltip.Trigger>
+            )}
+            {!!module.repository && !module.repoVerified && (
+              <Tooltip.Trigger
+                tooltip={__(
+                  'The provided repository is not verified to be the real source code of this module'
+                )}
+              >
+                <Icon icon={warningIcon} className="error space-left" />
+              </Tooltip.Trigger>
+            )}
           </div>
           <div>
             <ModuleDescription
               className={module.disallowed ? 'dim' : undefined}
             >
-              {module.description}
+              {module.info.description}
             </ModuleDescription>
           </div>
         </ModuleInfo>
 
         <ModuleControls>
           <Tooltip.Trigger
-            tooltip={!module.disallowed && (enabled ? 'Enabled' : 'Disabled')}
+            tooltip={
+              !module.disallowed && (module.enabled ? 'Enabled' : 'Disabled')
+            }
           >
             <Switch
-              checked={enabled}
+              checked={module.enabled}
               onChange={this.toggleModule}
               disabled={module.disallowed}
             />

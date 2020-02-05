@@ -3,13 +3,14 @@ import fs from 'fs';
 
 import { showNotification, openModal, openSuccessDialog } from 'lib/ui';
 import ModuleDetailsModal from 'components/ModuleDetailsModal';
-import { loadModuleFromDir } from 'lib/modules';
 import { modulesDir } from 'consts/paths';
 import { walletDataDir } from 'consts/paths';
 import deleteDirectory from 'utils/promisified/deleteDirectory';
 import extractZip from 'utils/promisified/extractZip';
 import extractTarball from 'utils/promisified/extractTarball';
 import confirm from 'utils/promisified/confirm';
+
+import Module from './Module';
 
 __ = __context('Settings.Modules');
 
@@ -78,8 +79,8 @@ async function copyModule(files, source, dest) {
  * @param {string} path
  * @returns
  */
-async function installFromDirectory(path) {
-  const module = await loadModuleFromDir(path);
+async function doInstall(path) {
+  const module = await Module.loadFromDir(path);
 
   if (!module) {
     showNotification('Invalid Module', 'error');
@@ -91,7 +92,7 @@ async function installFromDirectory(path) {
     forInstall: true,
     install: async () => {
       try {
-        const dest = join(modulesDir, module.name);
+        const dest = join(modulesDir, module.info.name);
         if (fs.existsSync(dest)) {
           const agreed = await confirm({
             question: __('Overwrite module?'),
@@ -102,7 +103,7 @@ async function installFromDirectory(path) {
           await deleteDirectory(dest, { glob: false });
         }
 
-        await copyModule(module.files, path, dest);
+        await copyModule(module.info.files, path, dest);
 
         openSuccessDialog({
           message: __('Module has been successfully installed'),
@@ -137,7 +138,7 @@ export async function installModule(path) {
       showNotification(__('Cannot find module'), 'error');
       return;
     }
-    let dirPath = path;
+    let sourcePath = path;
 
     if ((await fs.promises.stat(path)).isFile()) {
       if (!supportedExtensions.some(ext => path.endsWith(ext))) {
@@ -154,25 +155,25 @@ export async function installModule(path) {
       } else if (path.endsWith('.tar.gz')) {
         await extractTarball(path, tempModuleDir);
       }
-      dirPath = tempModuleDir;
+      sourcePath = tempModuleDir;
 
       // In case the module is wrapped inside a sub directory of the archive file
       const subItems = await fs.promises.readdir(tempModuleDir);
       if (subItems.length === 1) {
         const subItemPath = join(tempModuleDir, subItems[0]);
         if ((await fs.promises.stat(subItemPath)).isDirectory()) {
-          dirPath = subItemPath;
+          sourcePath = subItemPath;
         }
       }
     } else {
-      const dirPath = normalize(path);
-      if (dirPath.startsWith(normalize(modulesDir))) {
-        showNotification(__('Cannot install from that location'), 'error');
+      const sourcePath = normalize(path);
+      if (sourcePath.startsWith(normalize(modulesDir))) {
+        showNotification(__('Cannot install from this location'), 'error');
         return;
       }
     }
 
-    await installFromDirectory(dirPath);
+    await doInstall(sourcePath);
   } catch (err) {
     console.error(err);
     showNotification(__('An unknown error occurred'), 'error');

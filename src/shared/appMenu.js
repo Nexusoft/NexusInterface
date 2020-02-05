@@ -196,7 +196,7 @@ const menuItems = preprocess({
   toggleModuleDevTools: {
     label: __("Toggle Module's Developer Tools"),
     click: () => {
-      store.dispatch(toggleWebViewDevTools());
+      toggleWebViewDevTools();
     },
   },
   websiteLink: {

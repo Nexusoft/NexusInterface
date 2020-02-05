@@ -9,7 +9,6 @@ import HorizontalLine from 'components/HorizontalLine';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import ModuleIcon from 'components/ModuleIcon';
-import { getActiveModules } from 'lib/modules';
 import { consts, timing } from 'styles';
 
 // Internal Local Dependencies
@@ -24,7 +23,6 @@ import addressBookIcon from 'icons/address-book.svg';
 import settingsIcon from 'icons/settings.svg';
 import consoleIcon from 'icons/console.svg';
 import userIcon from 'icons/user.svg';
-import tokenIcons from 'icons/blockexplorer-invert-white.svg';
 import { legacyMode } from 'consts/misc';
 // import shapeshiftIcon from 'icons/shapeshift.svg';
 // import trustListIcon from 'icons/trust-list.svg';
@@ -79,24 +77,19 @@ const NavItem = ({ icon, children, ...rest }) => (
  * @memberof Navigation
  */
 const ModuleNavItem = ({ module }) => (
-  <Tooltip.Trigger tooltip={module.displayName} position="top">
-    <NavLinkItem to={`/Modules/${module.name}`}>
+  <Tooltip.Trigger tooltip={module.info.displayName} position="top">
+    <NavLinkItem to={`/Modules/${module.info.name}`}>
       <ModuleIcon module={module} />
     </NavLinkItem>
   </Tooltip.Trigger>
 );
 
-const ModuleNavItems = connect(
-  state => ({
-    modules: getActiveModules(state.modules, state.settings.disabledModules),
-  }),
-  null,
-  null
-  // { pure: false }
-)(({ modules }) =>
-  modules
-    .filter(module => module.type === 'app')
-    .map(module => <ModuleNavItem key={module.name} module={module} />)
+const ModuleNavItems = connect(state => ({
+  modules: state.modules,
+}))(({ modules }) =>
+  Object.values(modules)
+    .filter(module => module.enabled && module.info.type === 'app')
+    .map(module => <ModuleNavItem key={module.info.name} module={module} />)
 );
 
 /**

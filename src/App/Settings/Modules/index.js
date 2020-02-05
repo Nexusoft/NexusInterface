@@ -3,7 +3,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 // Internal
-import { getAllModules } from 'lib/modules';
 import { switchSettingsTab } from 'lib/ui';
 import Module from './Module';
 import AddModule from './AddModule';
@@ -17,7 +16,7 @@ __ = __context('Settings.Modules');
  * @extends {React.Component}
  */
 @connect(state => ({
-  modules: getAllModules(state.modules),
+  modules: state.modules,
 }))
 class SettingsModules extends React.Component {
   /**
@@ -37,14 +36,15 @@ class SettingsModules extends React.Component {
    * @memberof SettingsModules
    */
   render() {
+    const list = Object.values(this.props.modules);
     return (
       <>
         <AddModule />
-        {this.props.modules.map((module, i) => (
+        {list.map((module, i) => (
           <Module
-            key={module.name}
+            key={module.info.name}
             module={module}
-            last={i === this.props.modules.length - 1}
+            last={i === list.length - 1}
           />
         ))}
       </>

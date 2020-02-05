@@ -53,9 +53,6 @@ ipcMain.handle('open-virtual-keyboard', (event, ...args) => {
 });
 
 // File server
-ipcMain.handle('get-file-server-domain', async (event, ...args) =>
-  getDomain(...args)
-);
 ipcMain.handle('serve-module-files', (event, ...args) =>
   serveModuleFiles(...args)
 );
@@ -81,6 +78,9 @@ ipcMain.handle('quit-and-install-update', (event, ...args) =>
 // Sync message handlers
 ipcMain.on('get-path', (event, name) => {
   event.returnValue = app.getPath(name);
+});
+ipcMain.on('get-file-server-domain', event => {
+  event.returnValue = getDomain();
 });
 
 // START RENDERER
