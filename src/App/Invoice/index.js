@@ -64,7 +64,7 @@ const tableColumns = [
   {
     id: 'address',
     Header: __('Account Payable'),
-    accessor: 'address',
+    accessor: 'account',
     width: 240,
   },
   {

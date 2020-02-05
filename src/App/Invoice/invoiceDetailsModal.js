@@ -248,6 +248,7 @@ class InvoiceDetailModal extends Component {
       reference,
       invoiceNumber,
       due_date,
+      account,
       address,
       sender_detail,
       recipient,
@@ -297,7 +298,8 @@ class InvoiceDetailModal extends Component {
               )}
             </Field>
           )}
-          <Field label={__('Account Payable')}>{address}</Field>
+          <Field label={__('Account Payable')}>{account}</Field>
+          <Field label={__('Address of Invoice')}>{address}</Field>
           {sender_detail && (
             <Field label={__('Details')}>{sender_detail}</Field>
           )}
