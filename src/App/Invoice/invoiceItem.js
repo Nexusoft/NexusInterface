@@ -21,7 +21,7 @@ __ = __context('Invoice Item');
 
 const ItemLine = styled.div({
   display: 'grid',
-  gridTemplateColumns: 'auto 8em 5em 10em',
+  gridTemplateColumns: '1em auto 8em 5em 10em',
   gridTemplateRows: 'auto',
   gridGap: '1em 1em',
 });
@@ -50,12 +50,13 @@ class InvoiceItem extends Component {
    * @memberof RecipientField
    */
   render() {
-    const { input, meta } = this.props;
+    const { input, meta, child } = this.props;
     const total = input.value && input.value.unitPrice * input.value.units;
 
     return (
       <ItemLine input={input} meta={meta}>
         {' '}
+        {child}
         <FormField>
           <Field
             component={TextField.RF}

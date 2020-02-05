@@ -89,20 +89,21 @@ class InvoiceItems extends React.Component {
         {this.returnHeader()}
         {fields.map((fieldName, i) => (
           <div key={i}>
-            <Tooltip.Trigger tooltip={__('Remove Item')}>
-              <RemoveButton
-                onClick={() => {
-                  fields.remove(i);
-                }}
-              >
-                ✕
-              </RemoveButton>
-            </Tooltip.Trigger>
-
             <Field
               name={`items[${i}]`}
               component={InvoiceItem}
               change={change}
+              child={
+                <Tooltip.Trigger tooltip={__('Remove Item')}>
+                  <RemoveButton
+                    onClick={() => {
+                      fields.remove(i);
+                    }}
+                  >
+                    ✕
+                  </RemoveButton>
+                </Tooltip.Trigger>
+              }
             />
           </div>
         ))}
