@@ -25,7 +25,11 @@ const reservedFileNames = [
   'storage.json',
 ];
 
-// Schema for nxs_package.json
+/**
+ * =============================================================================
+ * nxs_package.json schema
+ * =============================================================================
+ */
 const nxsPackageSchema = {
   additionalProperties: false,
   required: ['name', 'displayName', 'version', 'type', 'files'],
@@ -100,6 +104,31 @@ const nxsPackageSchema = {
 const validateNxsPackage = ajv.compile(nxsPackageSchema);
 
 /**
+ * =============================================================================
+ * nxs_package.dev.json schema
+ * =============================================================================
+ */
+const nxsPackageDevSchema = {
+  additionalProperties: true,
+  required: ['name', 'displayName', 'type'],
+  properties: {
+    name: {
+      type: 'string',
+    },
+    displayName: { type: 'string' },
+    description: { type: 'string' },
+    type: { type: 'string', enum: ['app'] },
+  },
+};
+const validateNxsPackageDev = ajv.compile(nxsPackageDevSchema);
+
+/**
+ * =============================================================================
+ * Private functions
+ * =============================================================================
+ */
+
+/**
  * Check if a directory contains symbolic links
  *
  * @param {*} dirPath
@@ -135,6 +164,18 @@ async function loadModuleInfo(dirPath) {
     return null;
   }
   const content = await fs.promises.readFile(nxsPackagePath);
+  return JSON.parse(content);
+}
+
+/**
+ * Load module dev info from nxs_package.dev.json
+ *
+ * @param {*} dirPath
+ * @returns
+ */
+async function loadModuleDevInfo(dirPath) {
+  const nxsPackageDevPath = join(dirPath, 'nxs_package.dev.json');
+  const content = await fs.promises.readFile(nxsPackageDevPath);
   return JSON.parse(content);
 }
 
@@ -199,6 +240,16 @@ async function validateModuleInfo(moduleInfo, dirPath) {
 }
 
 /**
+ * Check if module dev info is valid
+ *
+ * @param {*} moduleInfo
+ * @returns
+ */
+function validateModuleDevInfo(moduleInfo) {
+  return validateNxsPackageDev(moduleInfo);
+}
+
+/**
  * Get the path of an icon if the file does exist
  *
  * @param {*} iconName
@@ -224,8 +275,47 @@ function getModuleIconPath(module) {
 }
 
 /**
+ * Fill extra info about the module
+ *
+ * @memberof Module
+ */
+async function initializeModule(module) {
+  // Check the repository info and verification
+  module.hash = await getModuleHash(module);
+  const repoInfo = await loadRepoInfo(module.path);
+  if (repoInfo) {
+    module.repository = repoInfo.data.repository;
+    const [repoOnline, repoVerified, repoFromNexus] = await Promise.all([
+      isRepoOnline(module.repository),
+      isModuleVerified(module, repoInfo),
+      isRepoFromNexus(module.repository),
+    ]);
+    Object.assign(module, {
+      repoOnline,
+      repoVerified,
+      repoFromNexus,
+    });
+  }
+
+  const {
+    settings: { devMode, verifyModuleSource, disabledModules },
+  } = store.getState();
+  module.incompatible =
+    !module.info.targetWalletVersion ||
+    semver.lt(module.info.targetWalletVersion, BACKWARD_COMPATIBLE_VERSION);
+  module.disallowed = !(
+    (devMode && !verifyModuleSource) ||
+    (module.repo.repository && module.repo.online && module.repo.verified)
+  );
+  module.enabled =
+    !module.disallowed && !disabledModules.includes(module.info.name);
+
+  return module;
+}
+
+/**
  * =============================================================================
- * A Nexus Wallet Module
+ * Nexus Wallet Module
  * =============================================================================
  *
  * @export
@@ -235,10 +325,11 @@ export default class Module {
   constructor(moduleInfo, path) {
     this.info = moduleInfo;
     this.path = path;
+    this.iconPath = getModuleIconPath(this);
   }
 
   /**
-   * Load a module from directory
+   * Load a module from a directory
    *
    * @static
    * @param {*} dirPath
@@ -252,8 +343,7 @@ export default class Module {
       if (!isValid) return null;
 
       const module = new Module(moduleInfo, dirPath);
-      await module.initialize();
-      return module;
+      return await initializeModule(module);
     } catch (err) {
       console.error(err);
       return null;
@@ -261,50 +351,28 @@ export default class Module {
   }
 
   /**
-   * Fill in extra info about the module
+   * Load a development module from a directory
    *
+   * @static
+   * @param {*} dirPath
+   * @returns
    * @memberof Module
    */
-  async initialize() {
-    this.iconPath = getModuleIconPath(this);
+  static async loadDevFromDir(dirPath) {
+    try {
+      const moduleInfo = await loadModuleDevInfo(dirPath);
+      const isValid = await validateModuleDevInfo(moduleInfo);
+      if (!isValid) return null;
 
-    this.hash = await getModuleHash(this);
-
-    // Check the repository info and verification
-    const repoInfo = await loadRepoInfo(this.path);
-    if (repoInfo) {
-      this.repository = repoInfo.data.repository;
-
-      const [repoOnline, repoVerified, repoFromNexus] = await Promise.all([
-        isRepoOnline(this.repository),
-        isModuleVerified(this, repoInfo),
-        isRepoFromNexus(this.repository),
-      ]);
-      Object.assign(this, {
-        repoOnline,
-        repoVerified,
-        repoFromNexus,
-      });
+      const module = new Module(moduleInfo, dirPath);
+      module.development = true;
+      module.enabled = true;
+      return module;
+    } catch (err) {
+      console.error(err);
+      return null;
     }
-
-    const {
-      settings: { devMode, verifyModuleSource, disabledModules },
-    } = store.getState();
-
-    this.incompatible =
-      !this.info.targetWalletVersion ||
-      semver.lt(this.info.targetWalletVersion, BACKWARD_COMPATIBLE_VERSION);
-
-    this.disallowed = !(
-      (devMode && !verifyModuleSource) ||
-      (this.repo.repository && this.repo.online && this.repo.verified)
-    );
-
-    this.enabled =
-      !this.disallowed && !disabledModules.includes(this.info.name);
   }
-
-  async initializeDev() {}
 }
 
 /**
@@ -314,20 +382,25 @@ export default class Module {
 walletEvents.once('pre-render', async function() {
   try {
     if (!fs.existsSync(modulesDir)) return {};
+    const { devModulePaths = [] } = store.getState().settings;
     const dirNames = await fs.promises.readdir(modulesDir);
     const dirPaths = dirNames.map(dirName => join(modulesDir, dirName));
-    const modules = await Promise.all(
-      dirPaths.map(path => Module.loadFromDir(path))
-    );
+    const moduleList = await Promise.all([
+      ...devModulePaths.map(path => Module.loadDevFromDir(path)),
+      ...dirPaths.map(path => Module.loadFromDir(path)),
+    ]);
 
-    const moduleMapping = modules.reduce((map, module) => {
+    const modules = moduleList.reduce((map, module) => {
       if (module) {
-        const { info } = module;
-        if (
-          !map[info.name] ||
-          semver.gt(info.version, map[info.name].version)
-        ) {
-          map[info.name] = module;
+        const { name, version } = module.info;
+        try {
+          if (!map[name] || semver.gt(version, map[name].version)) {
+            map[name] = module;
+          }
+        } catch (err) {
+          // In case version is blank or invalid semver
+          // don't break the whole process
+          console.error(err);
         }
       }
       return map;
@@ -335,9 +408,17 @@ walletEvents.once('pre-render', async function() {
 
     store.dispatch({
       type: TYPE.LOAD_MODULES,
-      payload: moduleMapping,
+      payload: modules,
     });
   } catch (err) {
+    console.error(err);
     return {};
   }
 });
+
+export function addDevModule(module) {
+  return store.dispatch({
+    type: TYPE.ADD_DEV_MODULE,
+    payload: module,
+  });
+}

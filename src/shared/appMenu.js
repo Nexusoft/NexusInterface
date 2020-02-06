@@ -349,7 +349,7 @@ function buildDarwinTemplate() {
   if (process.env.NODE_ENV === 'development' || state.settings.devMode) {
     subMenuWindow.submenu.push(menuItems.toggleDevTools);
 
-    if (activeAppModule) {
+    if (activeAppModule && activeAppModule.webview) {
       subMenuWindow.submenu.push(menuItems.toggleModuleDevTools);
     }
   }
@@ -426,7 +426,7 @@ function buildDefaultTemplate() {
   if (process.env.NODE_ENV === 'development' || state.settings.devMode) {
     subMenuView.submenu.push(menuItems.separator, menuItems.toggleDevTools);
 
-    if (activeAppModule) {
+    if (activeAppModule && activeAppModule.webview) {
       subMenuView.submenu.push(menuItems.toggleModuleDevTools);
     }
   }

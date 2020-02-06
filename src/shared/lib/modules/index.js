@@ -1,4 +1,4 @@
-export { default as Module } from './Module';
+export { default as Module, addDevModule } from './Module';
 export { installModule } from './installModule';
 export {
   setActiveWebView,

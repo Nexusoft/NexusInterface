@@ -125,6 +125,7 @@ export const REMOVE_BACKGROUND_TASK = 'REMOVE_BACKGROUND_TASK';
 
 // Modules
 export const LOAD_MODULES = 'LOAD_MODULES';
+export const ADD_DEV_MODULE = 'ADD_DEV_MODULE';
 export const UPDATE_MODULE_STATE = 'UPDATE_MODULE_STATE';
 
 // Updater

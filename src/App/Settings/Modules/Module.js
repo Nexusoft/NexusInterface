@@ -177,31 +177,38 @@ class Module extends React.Component {
         <ModuleInfo onClick={this.openModuleDetails}>
           <div className={module.disallowed ? 'dim' : undefined}>
             <ModuleName>{module.info.displayName}</ModuleName>
-            <ModuleVersion>v{module.info.version}</ModuleVersion>
-            {!!module.incompatible && (
-              <Tooltip.Trigger
-                tooltip={__(
-                  'This module was built for an incompatible wallet version'
-                )}
-              >
-                <Icon icon={warningIcon} className="error space-left" />
-              </Tooltip.Trigger>
+            {!!module.info.version && (
+              <ModuleVersion>v{module.info.version}</ModuleVersion>
             )}
-            {(!module.repository || !module.repoOnline) && (
-              <Tooltip.Trigger tooltip={__('Module is not open source')}>
-                <Icon icon={warningIcon} className="error space-left" />
-              </Tooltip.Trigger>
-            )}
-            {!!module.repository && !module.repoVerified && (
-              <Tooltip.Trigger
-                tooltip={__(
-                  'The provided repository is not verified to be the real source code of this module'
+            {!module.development && (
+              <>
+                {module.incompatible && (
+                  <Tooltip.Trigger
+                    tooltip={__(
+                      'This module was built for an incompatible wallet version'
+                    )}
+                  >
+                    <Icon icon={warningIcon} className="error space-left" />
+                  </Tooltip.Trigger>
                 )}
-              >
-                <Icon icon={warningIcon} className="error space-left" />
-              </Tooltip.Trigger>
+                {(!module.repository || !module.repoOnline) && (
+                  <Tooltip.Trigger tooltip={__('Module is not open source')}>
+                    <Icon icon={warningIcon} className="error space-left" />
+                  </Tooltip.Trigger>
+                )}
+                {!!module.repository && !module.repoVerified && (
+                  <Tooltip.Trigger
+                    tooltip={__(
+                      'The provided repository is not verified to be the real source code of this module'
+                    )}
+                  >
+                    <Icon icon={warningIcon} className="error space-left" />
+                  </Tooltip.Trigger>
+                )}
+              </>
             )}
           </div>
+
           <div>
             <ModuleDescription
               className={module.disallowed ? 'dim' : undefined}
@@ -214,13 +221,15 @@ class Module extends React.Component {
         <ModuleControls>
           <Tooltip.Trigger
             tooltip={
-              !module.disallowed && (module.enabled ? 'Enabled' : 'Disabled')
+              !module.disallowed &&
+              !module.development &&
+              (module.enabled ? 'Enabled' : 'Disabled')
             }
           >
             <Switch
               checked={module.enabled}
               onChange={this.toggleModule}
-              disabled={module.disallowed}
+              disabled={module.disallowed || module.development}
             />
           </Tooltip.Trigger>
         </ModuleControls>

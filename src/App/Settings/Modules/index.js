@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { switchSettingsTab } from 'lib/ui';
 import Module from './Module';
 import AddModule from './AddModule';
+import AddDevModule from './AddDevModule';
 
 __ = __context('Settings.Modules');
 
@@ -17,6 +18,7 @@ __ = __context('Settings.Modules');
  */
 @connect(state => ({
   modules: state.modules,
+  devMode: state.settings.devMode,
 }))
 class SettingsModules extends React.Component {
   /**
@@ -40,6 +42,7 @@ class SettingsModules extends React.Component {
     return (
       <>
         <AddModule />
+        {this.props.devMode && <AddDevModule />}
         {list.map((module, i) => (
           <Module
             key={module.info.name}

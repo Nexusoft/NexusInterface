@@ -26,10 +26,12 @@ class WebView extends React.Component {
   constructor(props) {
     super(props);
     const { module } = this.props;
-    const moduleFiles = module.info.files.map(file =>
-      join(module.info.name, file)
-    );
-    ipcRenderer.invoke('serve-module-files', moduleFiles);
+    if (!module.development) {
+      const moduleFiles = module.info.files.map(file =>
+        join(module.info.name, file)
+      );
+      ipcRenderer.invoke('serve-module-files', moduleFiles);
+    }
   }
 
   /**

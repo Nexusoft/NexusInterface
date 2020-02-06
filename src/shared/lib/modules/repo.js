@@ -77,15 +77,13 @@ function normalizeFile(path) {
  * @param {*} dirPath
  * @returns
  */
-export async function getModuleHash(dirPath, { module } = {}) {
+export async function getModuleHash(module) {
   return new Promise(async (resolve, reject) => {
     try {
-      const nxsPackagePath = join(dirPath, 'nxs_package.json');
-      if (!module) {
-        const nxsPackageContent = await fs.promises.readFile(nxsPackagePath);
-        module = JSON.parse(nxsPackageContent);
-      }
-      const filePaths = module.files.sort().map(file => join(dirPath, file));
+      const nxsPackagePath = join(module.path, 'nxs_package.json');
+      const filePaths = module.info.files
+        .sort()
+        .map(file => join(module.path, file));
       const streams = [
         normalizeFile(nxsPackagePath),
         ...filePaths.map(normalizeFile),

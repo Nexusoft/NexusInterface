@@ -10,7 +10,9 @@ import Tooltip from 'components/Tooltip';
 import InfoField from 'components/InfoField';
 import ExternalLink from 'components/ExternalLink';
 import { openConfirmDialog } from 'lib/ui';
+import { updateSettings } from 'lib/settings';
 import { timing } from 'styles';
+import store from 'store';
 import deleteDirectory from 'utils/promisified/deleteDirectory';
 import warningIcon from 'icons/warning.svg';
 import linkIcon from 'icons/link.svg';
@@ -60,7 +62,14 @@ class ModuleDetailsModal extends React.Component {
     openConfirmDialog({
       question: `Delete ${module.info.displayName}?`,
       callbackYes: async () => {
-        await deleteDirectory(module.path);
+        if (module.development) {
+          const { devModulePaths } = store.getState().settings;
+          updateSettings({
+            devModulePaths: devModulePaths.filter(path => path !== module.path),
+          });
+        } else {
+          await deleteDirectory(module.path);
+        }
         location.reload();
       },
     });
@@ -85,9 +94,11 @@ class ModuleDetailsModal extends React.Component {
           {__('Module Details')}
           {!forInstall && (
             <DeleteModule>
-              <DeleteButton skin="plain" onClick={this.confirmDelete}>
-                <Icon icon={trashIcon} />
-              </DeleteButton>
+              <Tooltip.Trigger tooltip={__('Remove module')}>
+                <DeleteButton skin="plain" onClick={this.confirmDelete}>
+                  <Icon icon={trashIcon} />
+                </DeleteButton>
+              </Tooltip.Trigger>
             </DeleteModule>
           )}
         </Modal.Header>
@@ -102,7 +113,7 @@ class ModuleDetailsModal extends React.Component {
             {moduleInfo.type}
           </InfoField>
           <InfoField ratio={[1, 2]} label={__('Version')}>
-            {moduleInfo.version}
+            {moduleInfo.version || 'N/A'}
           </InfoField>
           <InfoField ratio={[1, 2]} label={__('Target wallet version')}>
             {

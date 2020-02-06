@@ -1,20 +1,15 @@
-// External Dependencies
 import React from 'react';
 import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/core';
 
-// Internal Global Depnedencies
 import HorizontalLine from 'components/HorizontalLine';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import ModuleIcon from 'components/ModuleIcon';
 import { consts, timing } from 'styles';
+import { legacyMode } from 'consts/misc';
 
-// Internal Local Dependencies
-import NavLinkItem from './NavLinkItem';
-
-// Images
 import logoIcon from 'icons/logo.svg';
 import sendIcon from 'icons/send.svg';
 import chartIcon from 'icons/chart.svg';
@@ -23,9 +18,8 @@ import addressBookIcon from 'icons/address-book.svg';
 import settingsIcon from 'icons/settings.svg';
 import consoleIcon from 'icons/console.svg';
 import userIcon from 'icons/user.svg';
-import { legacyMode } from 'consts/misc';
-// import shapeshiftIcon from 'icons/shapeshift.svg';
-// import trustListIcon from 'icons/trust-list.svg';
+
+import NavLinkItem from './NavLinkItem';
 
 __ = __context('NavigationBar');
 

@@ -61,6 +61,7 @@ export const defaultSettings = {
   // Modules
   disabledModules: [],
   allowSymLink: false,
+  devModulePaths: [],
 
   // Hidden settings
   acceptedAgreement: false,
