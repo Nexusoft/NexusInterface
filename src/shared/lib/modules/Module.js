@@ -211,6 +211,20 @@ function getIconPathIfExists(iconName, dirPath) {
 }
 
 /**
+ * Find the icon path for a module
+ *
+ * @param {*} moduleInfo
+ * @returns
+ */
+function getModuleIconPath(module) {
+  return module.info.icon
+    ? getIconPathIfExists(module.info.icon, module.path)
+    : getIconPathIfExists('icon.svg', module.path) ||
+        getIconPathIfExists('icon.png', module.path);
+}
+
+/**
+ * =============================================================================
  * A Nexus Wallet Module
  * =============================================================================
  *
@@ -252,14 +266,9 @@ export default class Module {
    * @memberof Module
    */
   async initialize() {
-    const { info } = this;
+    this.iconPath = getModuleIconPath(this);
 
-    this.iconPath = info.icon
-      ? getIconPathIfExists(info.icon, this.path)
-      : getIconPathIfExists('icon.svg', this.path) ||
-        getIconPathIfExists('icon.png', this.path);
-
-    this.hash = await getModuleHash(this.path, { module: info });
+    this.hash = await getModuleHash(this);
 
     // Check the repository info and verification
     const repoInfo = await loadRepoInfo(this.path);
@@ -283,16 +292,19 @@ export default class Module {
     } = store.getState();
 
     this.incompatible =
-      !info.targetWalletVersion ||
-      semver.lt(info.targetWalletVersion, BACKWARD_COMPATIBLE_VERSION);
+      !this.info.targetWalletVersion ||
+      semver.lt(this.info.targetWalletVersion, BACKWARD_COMPATIBLE_VERSION);
 
     this.disallowed = !(
       (devMode && !verifyModuleSource) ||
       (this.repo.repository && this.repo.online && this.repo.verified)
     );
 
-    this.enabled = !this.disallowed && !disabledModules.includes(info.name);
+    this.enabled =
+      !this.disallowed && !disabledModules.includes(this.info.name);
   }
+
+  async initializeDev() {}
 }
 
 /**
