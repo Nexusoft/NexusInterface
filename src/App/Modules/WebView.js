@@ -9,6 +9,17 @@ import { setActiveWebView, unsetActiveWebView } from 'lib/modules';
 
 const domain = ipcRenderer.sendSync('get-file-server-domain');
 
+const getEntryUrl = module => {
+  const entry = module.info.entry || 'index.html';
+  const entryPath = join(module.path, entry);
+  if (!existsSync(entryPath)) return null;
+  if (module.development) {
+    return `file://${entryPath}`;
+  } else {
+    return `${domain}/modules/${module.info.name}/${entry}`;
+  }
+};
+
 /**
  * WebView
  *
@@ -60,11 +71,8 @@ class WebView extends React.Component {
    */
   render() {
     const { module, className, style } = this.props;
-    const entry = module.info.entry || 'index.html';
-    const entryPath = join(module.path, entry);
-    if (!existsSync(entryPath)) return null;
+    const entryUrl = getEntryUrl(module);
 
-    const entryUrl = `${domain}/modules/${module.info.name}/${entry}`;
     const preloadUrl =
       process.env.NODE_ENV === 'development'
         ? `file://${process.cwd()}/build/module_preload.dev.js`
