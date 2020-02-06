@@ -113,13 +113,15 @@ class ModuleDetailsModal extends React.Component {
             {moduleInfo.type}
           </InfoField>
           <InfoField ratio={[1, 2]} label={__('Version')}>
-            {moduleInfo.version || 'N/A'}
+            {moduleInfo.version || <span className="dim">N/A</span>}
           </InfoField>
           <InfoField ratio={[1, 2]} label={__('Target wallet version')}>
             {
               <span className={module.incompatible ? 'error' : undefined}>
                 <span className="v-align">
-                  {moduleInfo.targetWalletVersion || 'N/A'}
+                  {moduleInfo.targetWalletVersion || (
+                    <span className="dim">N/A</span>
+                  )}
                 </span>
                 {module.incompatible && (
                   <span className="error space-left">
@@ -133,9 +135,7 @@ class ModuleDetailsModal extends React.Component {
             }
           </InfoField>
           <InfoField ratio={[1, 2]} label={__('Description')}>
-            {moduleInfo.description || (
-              <span className="dim">{__('Not provided')}</span>
-            )}
+            {moduleInfo.description || <span className="dim">N/A</span>}
           </InfoField>
           <InfoField ratio={[1, 2]} label={__('Author')}>
             {moduleInfo.author ? (
@@ -154,7 +154,7 @@ class ModuleDetailsModal extends React.Component {
                 )}
               </div>
             ) : (
-              <span className="dim">{__('No information')}</span>
+              <span className="dim">N/A</span>
             )}
           </InfoField>
           <InfoField ratio={[1, 2]} label={__('Source code')}>
@@ -195,11 +195,11 @@ class ModuleDetailsModal extends React.Component {
                 )}
               </div>
             ) : (
-              <div className="error">
-                <Icon icon={warningIcon} />
-                <span className="v-align space-left">
-                  {__('No information')}
-                </span>
+              <div className={module.development ? 'dim' : 'error'}>
+                <span className="v-align">N/A</span>
+                {!module.development && (
+                  <Icon icon={warningIcon} className="space-left" />
+                )}
               </div>
             )}
           </InfoField>
@@ -207,7 +207,7 @@ class ModuleDetailsModal extends React.Component {
             {module.hash ? (
               <span className="monospace">{module.hash}</span>
             ) : (
-              <span className="dim">{__('Not available')}</span>
+              <span className="dim">N/A</span>
             )}
           </InfoField>
         </Modal.Body>
