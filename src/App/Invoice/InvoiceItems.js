@@ -17,7 +17,6 @@ import { subtract } from 'utils/calc';
 __ = __context('Invoice Item List');
 
 const RemoveButton = styled.div(({ theme }) => ({
-  position: 'absolute',
   left: `0.75em`,
   marginTop: '1.5em',
   cursor: 'pointer',
