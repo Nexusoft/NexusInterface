@@ -10,10 +10,12 @@ import Tooltip from 'components/Tooltip';
 import InfoField from 'components/InfoField';
 import ExternalLink from 'components/ExternalLink';
 import { openConfirmDialog } from 'lib/ui';
+import { history } from 'lib/wallet';
 import { updateSettings } from 'lib/settings';
 import { timing } from 'styles';
 import store from 'store';
 import deleteDirectory from 'utils/promisified/deleteDirectory';
+
 import warningIcon from 'icons/warning.svg';
 import linkIcon from 'icons/link.svg';
 import trashIcon from 'icons/trash.svg';
@@ -89,7 +91,11 @@ class ModuleDetailsModal extends React.Component {
       ? `https://${host}/${owner}/${repo}/tree/${commit}`
       : null;
     return (
-      <Modal>
+      <Modal
+        assignClose={close => {
+          this.closeModal = close;
+        }}
+      >
         <Modal.Header className="relative">
           {__('Module Details')}
           {!forInstall && (
@@ -216,6 +222,21 @@ class ModuleDetailsModal extends React.Component {
               <span className="dim">N/A</span>
             )}
           </InfoField>
+
+          {!forInstall && module.info.type === 'app' && (
+            <div className="mt1 flex space-between">
+              <div />
+              <Button
+                skin="primary"
+                onClick={() => {
+                  this.closeModal();
+                  history.push('/Modules/' + module.info.name);
+                }}
+              >
+                {__('Open App')}
+              </Button>
+            </div>
+          )}
         </Modal.Body>
 
         {!!forInstall && <Installer module={module} install={install} />}
