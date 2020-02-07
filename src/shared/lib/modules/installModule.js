@@ -9,6 +9,7 @@ import {
   openSuccessDialog,
   openErrorDialog,
 } from 'lib/ui';
+import { updateSettings } from 'lib/settings';
 import ModuleDetailsModal from 'components/ModuleDetailsModal';
 import { modulesDir } from 'consts/paths';
 import { walletDataDir } from 'consts/paths';
