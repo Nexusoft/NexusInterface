@@ -26,7 +26,7 @@ export default merge.smart(baseConfig, {
   entry: {
     'renderer.dev': [
       'react-hot-loader/patch',
-      `webpack-dev-server/client?http://localhost:${port}/`,
+      `webpack-dev-server/client?${publicPath}`,
       'webpack/hot/only-dev-server',
       './src/index',
     ],

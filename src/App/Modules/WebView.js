@@ -1,6 +1,7 @@
 // External
 import React from 'react';
 import { existsSync } from 'fs';
+import { URL } from 'url';
 import { join } from 'path';
 import { ipcRenderer } from 'electron';
 
@@ -10,6 +11,14 @@ import { setActiveWebView, unsetActiveWebView } from 'lib/modules';
 const domain = ipcRenderer.sendSync('get-file-server-domain');
 
 const getEntryUrl = module => {
+  if (module.development) {
+    try {
+      // Check if entry is a URL itself
+      new URL(module.info.entry);
+      return module.info.entry;
+    } catch (err) {}
+  }
+
   const entry = module.info.entry || 'index.html';
   const entryPath = join(module.path, entry);
   if (!existsSync(entryPath)) return null;
