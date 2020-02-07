@@ -8,7 +8,7 @@ import normalizeEol from 'utils/normalizeEol';
 import Multistream from 'multistream';
 import { ipcRenderer } from 'electron';
 
-import Module from './Module';
+import { loadModuleFromDir } from './module';
 
 const ajv = new Ajv();
 
@@ -261,7 +261,7 @@ async function signModuleRepo(
     throw '`moduleDir` does not exist';
   }
 
-  const module = await Module.loadFromDir(moduleDir);
+  const module = await loadModuleFromDir(moduleDir);
   const data = { repository: repo, moduleHash: module.hash };
   const serializedData = JSON.stringify(data);
 

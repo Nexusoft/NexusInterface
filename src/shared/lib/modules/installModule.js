@@ -1,7 +1,14 @@
 import { join, dirname, normalize } from 'path';
 import fs from 'fs';
 
-import { showNotification, openModal, openSuccessDialog } from 'lib/ui';
+import store from 'store';
+import * as TYPE from 'consts/actionTypes';
+import {
+  showNotification,
+  openModal,
+  openSuccessDialog,
+  openErrorDialog,
+} from 'lib/ui';
 import ModuleDetailsModal from 'components/ModuleDetailsModal';
 import { modulesDir } from 'consts/paths';
 import { walletDataDir } from 'consts/paths';
@@ -10,7 +17,7 @@ import extractZip from 'utils/promisified/extractZip';
 import extractTarball from 'utils/promisified/extractTarball';
 import confirm from 'utils/promisified/confirm';
 
-import Module from './Module';
+import { loadModuleFromDir, loadDevModuleFromDir } from './module';
 
 __ = __context('Settings.Modules');
 
@@ -80,7 +87,7 @@ async function copyModule(files, source, dest) {
  * @returns
  */
 async function doInstall(path) {
-  const module = await Module.loadFromDir(path);
+  const module = await loadModuleFromDir(path);
 
   if (!module) {
     showNotification('Invalid Module', 'error');
@@ -179,4 +186,40 @@ export async function installModule(path) {
     showNotification(__('An unknown error occurred'), 'error');
     return;
   }
+}
+
+export async function addDevModule(dirPath) {
+  const {
+    modules,
+    settings: { devModulePaths },
+  } = store.getState();
+  if (devModulePaths.includes(dirPath)) {
+    openErrorDialog({
+      message: __('Directory has already been added'),
+    });
+  }
+
+  const module = await loadDevModuleFromDir(dirPath);
+  if (!module) {
+    openErrorDialog({
+      message: __('Invalid development module'),
+    });
+  }
+
+  if (modules[module.info.name]) {
+    openErrorDialog({
+      message: __('A module with the same name already exists'),
+    });
+  }
+
+  updateSettings({
+    devModulePaths: [dirPath, ...devModulePaths],
+  });
+  store.dispatch({
+    type: TYPE.ADD_DEV_MODULE,
+    payload: module,
+  });
+  openSuccessDialog({
+    message: __('Development module has been added'),
+  });
 }

@@ -3,10 +3,7 @@ import styled from '@emotion/styled';
 import { ipcRenderer } from 'electron';
 
 import Button from 'components/Button';
-import { openErrorDialog, openSuccessDialog } from 'lib/ui';
-import { updateSettings } from 'lib/settings';
-import store from 'store';
-import { Module, addDevModule } from 'lib/modules';
+import { addDevModule } from 'lib/modules';
 
 const Wrapper = styled.div(({ theme }) => ({
   margin: '1em 0',
@@ -23,36 +20,7 @@ async function handleClick() {
   const dirPath = paths && paths[0];
   if (!dirPath) return;
 
-  const {
-    modules,
-    settings: { devModulePaths },
-  } = store.getState();
-  if (devModulePaths.includes(dirPath)) {
-    openErrorDialog({
-      message: __('Directory has already been added'),
-    });
-  }
-
-  const module = await Module.loadDevFromDir(dirPath);
-  if (!module) {
-    openErrorDialog({
-      message: __('Invalid development module'),
-    });
-  }
-
-  if (modules[module.info.name]) {
-    openErrorDialog({
-      message: __('A module with the same name already exists'),
-    });
-  }
-
-  updateSettings({
-    devModulePaths: [dirPath, ...devModulePaths],
-  });
-  addDevModule(module);
-  openSuccessDialog({
-    message: __('Development module has been added'),
-  });
+  await addDevModule(dirPath);
 }
 
 const AddDevModule = () => (

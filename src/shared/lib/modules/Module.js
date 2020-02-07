@@ -315,63 +315,59 @@ async function initializeModule(module) {
 
 /**
  * =============================================================================
- * Nexus Wallet Module
+ * Public functions
  * =============================================================================
- *
- * @export
- * @class Module
  */
-export default class Module {
-  constructor(moduleInfo, path) {
-    this.info = moduleInfo;
-    this.path = path;
-    this.iconPath = getModuleIconPath(this);
+
+/**
+ * Load a module from a directory
+ *
+ * @static
+ * @param {*} dirPath
+ * @returns
+ */
+export async function loadModuleFromDir(dirPath) {
+  try {
+    const moduleInfo = await loadModuleInfo(dirPath);
+    const isValid = await validateModuleInfo(moduleInfo, dirPath);
+    if (!isValid) return null;
+
+    const module = {
+      path: dirPath,
+      info: moduleInfo,
+    };
+    module.iconPath = getModuleIconPath(module);
+    return await initializeModule(module);
+  } catch (err) {
+    console.error(err);
+    return null;
   }
+}
 
-  /**
-   * Load a module from a directory
-   *
-   * @static
-   * @param {*} dirPath
-   * @returns
-   * @memberof Module
-   */
-  static async loadFromDir(dirPath) {
-    try {
-      const moduleInfo = await loadModuleInfo(dirPath);
-      const isValid = await validateModuleInfo(moduleInfo, dirPath);
-      if (!isValid) return null;
+/**
+ * Load a development module from a directory
+ *
+ * @static
+ * @param {*} dirPath
+ * @returns
+ */
+export async function loadDevModuleFromDir(dirPath) {
+  try {
+    const moduleInfo = await loadModuleDevInfo(dirPath);
+    const isValid = await validateModuleDevInfo(moduleInfo);
+    if (!isValid) return null;
 
-      const module = new Module(moduleInfo, dirPath);
-      return await initializeModule(module);
-    } catch (err) {
-      console.error(err);
-      return null;
-    }
-  }
-
-  /**
-   * Load a development module from a directory
-   *
-   * @static
-   * @param {*} dirPath
-   * @returns
-   * @memberof Module
-   */
-  static async loadDevFromDir(dirPath) {
-    try {
-      const moduleInfo = await loadModuleDevInfo(dirPath);
-      const isValid = await validateModuleDevInfo(moduleInfo);
-      if (!isValid) return null;
-
-      const module = new Module(moduleInfo, dirPath);
-      module.development = true;
-      module.enabled = true;
-      return module;
-    } catch (err) {
-      console.error(err);
-      return null;
-    }
+    const module = {
+      path: dirPath,
+      info: moduleInfo,
+      development: true,
+      enabled: true,
+    };
+    module.iconPath = getModuleIconPath(module);
+    return module;
+  } catch (err) {
+    console.error(err);
+    return null;
   }
 }
 
@@ -386,8 +382,8 @@ walletEvents.once('pre-render', async function() {
     const dirNames = await fs.promises.readdir(modulesDir);
     const dirPaths = dirNames.map(dirName => join(modulesDir, dirName));
     const moduleList = await Promise.all([
-      ...devModulePaths.map(path => Module.loadDevFromDir(path)),
-      ...dirPaths.map(path => Module.loadFromDir(path)),
+      ...devModulePaths.map(path => loadDevModuleFromDir(path)),
+      ...dirPaths.map(path => loadModuleFromDir(path)),
     ]);
 
     const modules = moduleList.reduce((map, module) => {
@@ -415,10 +411,3 @@ walletEvents.once('pre-render', async function() {
     return {};
   }
 });
-
-export function addDevModule(module) {
-  return store.dispatch({
-    type: TYPE.ADD_DEV_MODULE,
-    payload: module,
-  });
-}
