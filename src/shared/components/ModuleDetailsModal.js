@@ -111,7 +111,13 @@ class ModuleDetailsModal extends React.Component {
           </InfoField>
           <InfoField ratio={[1, 2]} label={__('Module type')}>
             {moduleInfo.type}
+            {module.development && (
+              <span className="space-left">
+                &#x28;{__('in development')}&#x29;
+              </span>
+            )}
           </InfoField>
+
           <InfoField ratio={[1, 2]} label={__('Version')}>
             {moduleInfo.version || <span className="dim">N/A</span>}
           </InfoField>

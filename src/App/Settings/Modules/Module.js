@@ -68,6 +68,20 @@ const ModuleDescription = styled.div(({ theme }) => ({
   fontSize: '.9em',
 }));
 
+const Badge = styled.div(({ theme }) => ({
+  textTransform: 'uppercase',
+  fontSize: '.75em',
+  color: theme.mixer(0.875),
+  background: theme.mixer(0.05),
+  padding: '.2em .6em',
+  borderRadius: 4,
+  whiteSpace: 'nowrap',
+  flexShrink: 0,
+  marginLeft: '1em',
+  cursor: 'default',
+  userSelect: 'none',
+}));
+
 const mapStateToProps = (state, props) => ({
   disabledModules: state.settings.disabledModules,
 });
@@ -219,19 +233,23 @@ class Module extends React.Component {
         </ModuleInfo>
 
         <ModuleControls>
-          <Tooltip.Trigger
-            tooltip={
-              !module.disallowed &&
-              !module.development &&
-              (module.enabled ? 'Enabled' : 'Disabled')
-            }
-          >
-            <Switch
-              checked={module.enabled}
-              onChange={this.toggleModule}
-              disabled={module.disallowed || module.development}
-            />
-          </Tooltip.Trigger>
+          {module.development ? (
+            <Badge>{__('development')}</Badge>
+          ) : (
+            <Tooltip.Trigger
+              tooltip={
+                !module.disallowed &&
+                !module.development &&
+                (module.enabled ? 'Enabled' : 'Disabled')
+              }
+            >
+              <Switch
+                checked={module.enabled}
+                onChange={this.toggleModule}
+                disabled={module.disallowed || module.development}
+              />
+            </Tooltip.Trigger>
+          )}
         </ModuleControls>
       </ModuleComponent>
     );
