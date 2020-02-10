@@ -76,7 +76,9 @@ export default class Notification extends Component {
     return (
       <NotificationComponent
         ref={this.notifRef}
-        onClick={onClick ? onClick(this.animatedClose) : this.animatedClose}
+        onClick={
+          onClick ? () => onClick(this.animatedClose) : this.animatedClose
+        }
         onMouseEnter={this.stopAutoClose}
         onMouseLeave={this.startAutoClose}
         {...rest}

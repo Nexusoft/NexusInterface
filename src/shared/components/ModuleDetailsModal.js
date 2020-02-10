@@ -240,7 +240,7 @@ class ModuleDetailsModal extends React.Component {
                 >
                   <Icon icon={updateIcon} className="space-right" />
                   <span className="v-align">
-                    {__('View latest release %{version}', {
+                    {__('Download %{version} (manual)', {
                       version: 'v' + module.latestVersion,
                     })}
                   </span>
