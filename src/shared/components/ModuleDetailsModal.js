@@ -1,6 +1,7 @@
 // External
 import React from 'react';
 import styled from '@emotion/styled';
+import { shell } from 'electron';
 
 // Internal
 import Modal from 'components/Modal';
@@ -19,6 +20,7 @@ import deleteDirectory from 'utils/promisified/deleteDirectory';
 import warningIcon from 'icons/warning.svg';
 import linkIcon from 'icons/link.svg';
 import trashIcon from 'icons/trash.svg';
+import updateIcon from 'icons/update.svg';
 
 __ = __context('ModuleDetails');
 
@@ -229,7 +231,23 @@ class ModuleDetailsModal extends React.Component {
 
           {!forInstall && module.info.type === 'app' && (
             <div className="mt1 flex space-between">
-              <div />
+              {module.hasNewVersion ? (
+                <Button
+                  skin="primary"
+                  onClick={() => {
+                    shell.openExternal(module.latestRelease.html_url);
+                  }}
+                >
+                  <Icon icon={updateIcon} className="space-right" />
+                  <span className="v-align">
+                    {__('View latest release %{version}', {
+                      version: 'v' + module.latestVersion,
+                    })}
+                  </span>
+                </Button>
+              ) : (
+                <div />
+              )}
               <Button
                 skin="primary"
                 onClick={() => {

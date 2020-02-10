@@ -82,6 +82,13 @@ const Badge = styled.div(({ theme }) => ({
   userSelect: 'none',
 }));
 
+const LatestVersion = styled.span(({ theme }) => ({
+  color: theme.primary,
+  verticalAlign: 'middle',
+  marginLeft: '.7em',
+  fontSize: '.9em',
+}));
+
 const mapStateToProps = (state, props) => ({
   disabledModules: state.settings.disabledModules,
 });
@@ -218,6 +225,13 @@ class Module extends React.Component {
                   >
                     <Icon icon={warningIcon} className="error space-left" />
                   </Tooltip.Trigger>
+                )}
+                {module.hasNewVersion && (
+                  <LatestVersion>
+                    {__('%{version} update available', {
+                      version: 'v' + module.latestVersion,
+                    })}
+                  </LatestVersion>
                 )}
               </>
             )}
