@@ -13,6 +13,7 @@ import { updateSettings } from 'lib/settings';
 import ModuleDetailsModal from 'components/ModuleDetailsModal';
 import { modulesDir } from 'consts/paths';
 import { walletDataDir } from 'consts/paths';
+import ensureDirExists from 'utils/ensureDirExists';
 import deleteDirectory from 'utils/promisified/deleteDirectory';
 import extractZip from 'utils/promisified/extractZip';
 import extractTarball from 'utils/promisified/extractTarball';
@@ -39,20 +40,6 @@ function copyFile(file, source, dest) {
 }
 
 /**
- * Node.js `mkdir`'s `recursive` option doesn't work somehow (last tested on node.js v10.11.0)
- * So we need to write it manually
- *
- * @param {string} path
- */
-async function mkdirRecursive(path) {
-  const parent = dirname(path);
-  if (!fs.existsSync(parent)) {
-    await mkdirRecursive(parent);
-  }
-  await fs.promises.mkdir(path);
-}
-
-/**
  * Copy all files of a module from source to the destination
  * including nxs_package.json and repo_info.json
  *
@@ -66,9 +53,7 @@ async function copyModule(files, source, dest) {
   // The creations would be duplicated if they're parallel
   for (let file of files) {
     const dir = dirname(join(dest, file));
-    if (!fs.existsSync(dir)) {
-      await mkdirRecursive(dir);
-    }
+    await ensureDirExists(dir);
   }
 
   const promises = [

@@ -13,6 +13,25 @@ export default (state = initialState, action) => {
         ...state,
       };
 
+    case TYPE.UPDATE_MODULES_LATEST: {
+      const newState = { ...state };
+      const updates = action.payload;
+      Object.values(newState).forEach(module => {
+        const update = updates[module.info.name];
+        if (update) {
+          module = {
+            ...module,
+            hasNewVersion: true,
+            latestVersion: update.version,
+            latestRelease: update.release,
+          };
+        } else {
+          module = { ...module, hasNewVersion: false };
+        }
+      });
+      return newState;
+    }
+
     default:
       return state;
   }
