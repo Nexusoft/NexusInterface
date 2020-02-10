@@ -16,6 +16,7 @@ import {
   isRepoFromNexus,
   getModuleHash,
 } from './repo';
+import { checkForModuleUpdates } from './autoUpdate';
 
 const ajv = new Ajv();
 // Reserved file names, modules are not allowed to have one of these in their `files` field
@@ -375,7 +376,7 @@ export async function loadDevModuleFromDir(dirPath) {
  * Load all installed modules from the app modules directory.
  * Only called once when the wallet is started.
  */
-walletEvents.once('pre-render', async function() {
+walletEvents.once('post-render', async function() {
   try {
     if (!fs.existsSync(modulesDir)) return {};
     const { devModulePaths = [] } = store.getState().settings;
@@ -406,6 +407,8 @@ walletEvents.once('pre-render', async function() {
       type: TYPE.LOAD_MODULES,
       payload: modules,
     });
+
+    checkForModuleUpdates();
   } catch (err) {
     console.error(err);
     return {};

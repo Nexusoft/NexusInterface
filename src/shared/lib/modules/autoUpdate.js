@@ -78,7 +78,7 @@ export async function checkForModuleUpdates() {
   const updates = results
     .filter(({ status, value }) => value && status === 'fulfilled')
     .map(({ value }) => value)
-    .reduce((map, { module, latestVersion, release }) => {
+    .reduce((map, { module, latestVersion, latestRelease }) => {
       map[module.info.name] = {
         version: latestVersion,
         release: latestRelease,
@@ -86,20 +86,19 @@ export async function checkForModuleUpdates() {
       return map;
     }, {});
 
-  if (updates.length > 0) {
-    // let downloadedUpdates = [];
-    // for (const update of updates) {
-    //   try {
-    //     const filePath = await downloadModuleUpdate(update.asset);
-    //     downloadedUpdates.push({ ...update, filePath });
-    //   } catch (err) {
-    //     console.error(err);
-    //   }
-    // }
+  // if (updates.length > 0) {
+  // let downloadedUpdates = [];
+  // for (const update of updates) {
+  //   try {
+  //     const filePath = await downloadModuleUpdate(update.asset);
+  //     downloadedUpdates.push({ ...update, filePath });
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // }
 
-    store.dispatch({
-      type: TYPE.UPDATE_MODULES_LATEST,
-      payload: updates,
-    });
-  }
+  store.dispatch({
+    type: TYPE.UPDATE_MODULES_LATEST,
+    payload: updates,
+  });
 }

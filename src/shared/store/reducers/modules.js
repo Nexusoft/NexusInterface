@@ -19,14 +19,14 @@ export default (state = initialState, action) => {
       Object.values(newState).forEach(module => {
         const update = updates[module.info.name];
         if (update) {
-          module = {
+          newState[module.info.name] = {
             ...module,
             hasNewVersion: true,
             latestVersion: update.version,
             latestRelease: update.release,
           };
         } else {
-          module = { ...module, hasNewVersion: false };
+          newState[module.info.name] = { ...module, hasNewVersion: false };
         }
       });
       return newState;
