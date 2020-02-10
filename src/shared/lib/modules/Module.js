@@ -136,17 +136,18 @@ const validateNxsPackageDev = ajv.compile(nxsPackageDevSchema);
  * @param {*} dirPath
  * @returns
  */
-async function containsSymLink(dirPath) {
+async function findSymLink(dirPath) {
   const items = await fs.promises.readdir(dirPath);
   for (let item of items) {
     const subPath = join(dirPath, item);
     const stat = await fs.promises.lstat(subPath);
-    return (
-      stat.isSymbolicLink() ||
-      (stat.isDirectory() && (await containsSymLink(subPath)))
-    );
+    if (stat.isSymbolicLink()) return subPath;
+    if (stat.isDirectory()) {
+      const symLink = await findSymLink(subPath);
+      if (symLink) return symLink;
+    }
   }
-  return false;
+  return null;
 }
 
 /**
@@ -157,16 +158,26 @@ async function containsSymLink(dirPath) {
  */
 async function loadModuleInfo(dirPath) {
   const nxsPackagePath = join(dirPath, 'nxs_package.json');
-  const stat = await fs.promises.lstat(nxsPackagePath);
-  if (
-    !fs.existsSync(nxsPackagePath) ||
-    !stat.isFile() ||
-    stat.isSymbolicLink()
-  ) {
-    return null;
+  if (!fs.existsSync(nxsPackagePath)) {
+    throw new Error('nxs_package.json not found');
   }
-  const content = await fs.promises.readFile(nxsPackagePath);
-  return JSON.parse(content);
+
+  let content;
+  try {
+    const stat = await fs.promises.lstat(nxsPackagePath);
+    if (!stat.isFile() || stat.isSymbolicLink()) {
+      throw new Error(nxsPackagePath + ' is not a file');
+    }
+    content = await fs.promises.readFile(nxsPackagePath);
+  } catch (err) {
+    throw new Error(`Error reading file at ${nxsPackagePath}: ${err.message}`);
+  }
+
+  try {
+    return JSON.parse(content);
+  } catch (err) {
+    throw new Error('Invalid JSON at ' + nxsPackagePath);
+  }
 }
 
 /**
@@ -190,34 +201,62 @@ async function loadModuleDevInfo(dirPath) {
  */
 async function validateModuleInfo(moduleInfo, dirPath) {
   if (!validateNxsPackage(moduleInfo)) {
-    console.log(validateNxsPackage.errors);
-    return false;
+    console.log('nxs_package.json schema errors', validateNxsPackage.errors);
+    throw new Error('nxs_package.json validation error: incorrect schema');
   }
 
   // targetWalletVersion is mandatory for modules in new schema
-  if (!moduleInfo.targetWalletVersion && !moduleInfo.specVersion) return false;
+  if (!moduleInfo.targetWalletVersion && !moduleInfo.specVersion) {
+    throw new Error(
+      'nxs_package.json validation error: either `targetWalletVersion` or `specVersion` must present in nxs_package.json'
+    );
+  }
 
   // Ensure all file paths are relative
-  if (moduleInfo.entry && isAbsolute(moduleInfo.entry)) return false;
-  if (moduleInfo.icon && isAbsolute(moduleInfo.icon)) return false;
-  if (moduleInfo.files.some(file => isAbsolute(file))) return false;
-  if (
-    moduleInfo.files.some(file => reservedFileNames.includes(normalize(file)))
-  )
-    return false;
+  if (moduleInfo.entry && isAbsolute(moduleInfo.entry)) {
+    throw new Error(
+      'nxs_package.json validation error: `entry` must be a relative path. Getting ' +
+        moduleInfo.entry
+    );
+  }
+  if (moduleInfo.icon && isAbsolute(moduleInfo.icon)) {
+    throw new Error(
+      'nxs_package.json validation error: `icon` must be a relative path. Getting ' +
+        moduleInfo.icon
+    );
+  }
+  const nonRelativeFile = moduleInfo.files.find(file => isAbsolute(file));
+  if (nonRelativeFile) {
+    throw new Error(
+      'nxs_package.json validation error: `files` must contain only relative paths. Getting ' +
+        nonRelativeFile
+    );
+  }
+  const reservedFile = moduleInfo.files.find(file =>
+    reservedFileNames.includes(normalize(file))
+  );
+  if (reservedFile) {
+    throw new Error(
+      `nxs_package.json validation error: ${reservedFile} is a reserved file name`
+    );
+  }
 
   // Ensure all files exist and are not directories
   const filePaths = moduleInfo.files.map(file => join(dirPath, file));
-  if (
-    filePaths.some(path => !fs.existsSync(path)) ||
-    (
-      await Promise.all(filePaths.map(path => fs.promises.stat(path)))
-    ).some(stat => stat.isDirectory())
-  ) {
-    console.error(
-      `Module ${moduleInfo.name}: Some files listed by the module does not exist`
+  const missingFile = filePaths.find(path => !fs.existsSync(path));
+  if (missingFile) {
+    throw new Error(
+      `nxs_package.json validation error: file not found at ${missingFile}`
     );
-    return false;
+  }
+  const stats = await Promise.all(
+    filePaths.map(path => fs.promises.stat(path))
+  );
+  const dirFile = filePaths[stats.findIndex(stat => stat.isDirectory())];
+  if (dirFile) {
+    throw new Error(
+      `nxs_package.json validation error: file not found at ${missingFile}`
+    );
   }
 
   // Ensure no symbolic links, both files and folders
@@ -225,20 +264,24 @@ async function validateModuleInfo(moduleInfo, dirPath) {
   const {
     settings: { devMode, allowSymLink },
   } = store.getState();
-  if (!(devMode && allowSymLink) && (await containsSymLink(dirPath))) {
-    console.error(`Module ${moduleInfo.name} contains some symbolic link!`);
-    return false;
-  }
-
-  // Module type specific checks
-  if (moduleInfo.type === 'app') {
-    // Check entry extension corresponding to module type
-    if (moduleInfo.entry && !moduleInfo.entry.endsWith('.html')) {
-      return false;
+  if (!(devMode && allowSymLink)) {
+    const symLink = await findSymLink(dirPath);
+    if (symLink) {
+      throw new Error(
+        `Symbolic links are not allowed inside module directory. Detected symlink at ${symLink}. Remove it or turn on Allow SymLink under Application Settings`
+      );
     }
   }
 
-  return true;
+  // Module type-specific checks
+  if (moduleInfo.type === 'app') {
+    // Check entry extension corresponding to module type
+    if (moduleInfo.entry && !moduleInfo.entry.toLowerCase().endsWith('.html')) {
+      throw new Error(
+        'nxs_package.json validation error: `entry` file extension must be .html'
+      );
+    }
+  }
 }
 
 /**
@@ -329,21 +372,15 @@ async function initializeModule(module) {
  * @returns
  */
 export async function loadModuleFromDir(dirPath) {
-  try {
-    const moduleInfo = await loadModuleInfo(dirPath);
-    const isValid = await validateModuleInfo(moduleInfo, dirPath);
-    if (!isValid) return null;
+  const moduleInfo = await loadModuleInfo(dirPath);
+  await validateModuleInfo(moduleInfo, dirPath);
 
-    const module = {
-      path: dirPath,
-      info: moduleInfo,
-    };
-    module.iconPath = getModuleIconPath(module);
-    return await initializeModule(module);
-  } catch (err) {
-    console.error(err);
-    return null;
-  }
+  const module = {
+    path: dirPath,
+    info: moduleInfo,
+  };
+  module.iconPath = getModuleIconPath(module);
+  return await initializeModule(module);
 }
 
 /**
@@ -383,10 +420,13 @@ walletEvents.once('post-render', async function() {
     const { devModulePaths = [] } = store.getState().settings;
     const dirNames = await fs.promises.readdir(modulesDir);
     const dirPaths = dirNames.map(dirName => join(modulesDir, dirName));
-    const moduleList = await Promise.all([
+    const results = await Promise.allSettled([
       ...devModulePaths.map(path => loadDevModuleFromDir(path)),
       ...dirPaths.map(path => loadModuleFromDir(path)),
     ]);
+    const moduleList = results
+      .filter(({ status, value }) => value && status === 'fulfilled')
+      .map(({ value }) => value);
 
     const modules = moduleList.reduce((map, module) => {
       if (module) {

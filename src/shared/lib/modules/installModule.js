@@ -73,12 +73,17 @@ async function copyModule(files, source, dest) {
  * @returns
  */
 async function doInstall(path) {
-  const module = await loadModuleFromDir(path);
-
-  if (!module) {
-    showNotification('Invalid Module', 'error');
-    return;
+  let module;
+  try {
+    module = await loadModuleFromDir(path);
+  } catch (err) {
+    openErrorDialog({
+      message: __('Failed to load module'),
+      note: err.message,
+    });
   }
+
+  if (!module) return;
 
   openModal(ModuleDetailsModal, {
     module,
@@ -183,6 +188,7 @@ export async function addDevModule(dirPath) {
     openErrorDialog({
       message: __('Directory has already been added'),
     });
+    return;
   }
 
   const module = await loadDevModuleFromDir(dirPath);
