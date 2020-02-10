@@ -169,59 +169,63 @@ class ModuleDetailsModal extends React.Component {
               <span className="dim">N/A</span>
             )}
           </InfoField>
-          <InfoField ratio={[1, 2]} label={__('Source code')}>
-            {module.repository ? (
-              <div>
-                <Tooltip.Trigger tooltip={repoUrl}>
-                  <ExternalLink href={repoUrl}>
-                    <span className="v-align">{__('Visit repository')}</span>
-                    <Icon icon={linkIcon} className="space-left" />
-                  </ExternalLink>
-                </Tooltip.Trigger>
-
-                {module.repoVerified && module.repoFromNexus && (
-                  <Tooltip.Trigger
-                    tooltip={__('This module is developed by Nexus')}
-                  >
-                    <CheckMark>&nbsp;&nbsp;✔</CheckMark>
+          {!module.development && (
+            <InfoField ratio={[1, 2]} label={__('Source code')}>
+              {module.repository ? (
+                <div>
+                  <Tooltip.Trigger tooltip={repoUrl}>
+                    <ExternalLink href={repoUrl}>
+                      <span className="v-align">{__('Visit repository')}</span>
+                      <Icon icon={linkIcon} className="space-left" />
+                    </ExternalLink>
                   </Tooltip.Trigger>
-                )}
 
-                {!module.repoOnline && (
-                  <div className="error">
-                    <Icon icon={warningIcon} />
-                    <span className="v-align space-left">
-                      {__('This repository does not exist or is private')}
-                    </span>
-                  </div>
-                )}
-                {!module.repoVerified && (
-                  <div className="error">
-                    <Icon icon={warningIcon} />
-                    <span className="v-align space-left">
-                      {__(
-                        'This repository is not verified to be the real source code of this module'
-                      )}
-                    </span>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className={module.development ? 'dim' : 'error'}>
-                <span className="v-align">N/A</span>
-                {!module.development && (
-                  <Icon icon={warningIcon} className="space-left" />
-                )}
-              </div>
-            )}
-          </InfoField>
-          <InfoField ratio={[1, 2]} label={__('Module hash')}>
-            {module.hash ? (
-              <span className="monospace">{module.hash}</span>
-            ) : (
-              <span className="dim">N/A</span>
-            )}
-          </InfoField>
+                  {module.repoVerified && module.repoFromNexus && (
+                    <Tooltip.Trigger
+                      tooltip={__('This module is developed by Nexus')}
+                    >
+                      <CheckMark>&nbsp;&nbsp;✔</CheckMark>
+                    </Tooltip.Trigger>
+                  )}
+
+                  {!module.repoOnline && (
+                    <div className="error">
+                      <Icon icon={warningIcon} />
+                      <span className="v-align space-left">
+                        {__('This repository does not exist or is private')}
+                      </span>
+                    </div>
+                  )}
+                  {!module.repoVerified && (
+                    <div className="error">
+                      <Icon icon={warningIcon} />
+                      <span className="v-align space-left">
+                        {__(
+                          'This repository is not verified to be the real source code of this module'
+                        )}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className={module.development ? 'dim' : 'error'}>
+                  <span className="v-align">N/A</span>
+                  {!module.development && (
+                    <Icon icon={warningIcon} className="space-left" />
+                  )}
+                </div>
+              )}
+            </InfoField>
+          )}
+          {!module.development && (
+            <InfoField ratio={[1, 2]} label={__('Module hash')}>
+              {module.hash ? (
+                <span className="monospace">{module.hash}</span>
+              ) : (
+                <span className="dim">N/A</span>
+              )}
+            </InfoField>
+          )}
 
           {!forInstall && module.info.type === 'app' && (
             <div className="mt1 flex space-between">

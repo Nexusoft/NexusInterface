@@ -278,18 +278,6 @@ function buildUpdaterMenu() {
 }
 
 /**
- * Activate if Module is open
- *
- * @memberof AppMenu
- */
-// const setAppModuleActive = active => {
-//   if (pageModuleActive !== active) {
-//     pageModuleActive = active;
-//     build();
-//   }
-// };
-
-/**
  * Build Menu for OSX
  *
  * @memberof AppMenu
