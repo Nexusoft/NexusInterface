@@ -291,7 +291,13 @@ async function validateModuleInfo(moduleInfo, dirPath) {
  * @returns
  */
 function validateModuleDevInfo(moduleInfo) {
-  return validateNxsPackageDev(moduleInfo);
+  if (!validateNxsPackageDev(moduleInfo)) {
+    console.log(
+      'nxs_package.dev.json schema errors',
+      validateNxsPackage.errors
+    );
+    throw new Error('nxs_package.dev.json validation error: incorrect schema');
+  }
 }
 
 /**
@@ -391,23 +397,17 @@ export async function loadModuleFromDir(dirPath) {
  * @returns
  */
 export async function loadDevModuleFromDir(dirPath) {
-  try {
-    const moduleInfo = await loadModuleDevInfo(dirPath);
-    const isValid = await validateModuleDevInfo(moduleInfo);
-    if (!isValid) return null;
+  const moduleInfo = await loadModuleDevInfo(dirPath);
+  await validateModuleDevInfo(moduleInfo);
 
-    const module = {
-      path: dirPath,
-      info: moduleInfo,
-      development: true,
-      enabled: true,
-    };
-    module.iconPath = getModuleIconPath(module);
-    return module;
-  } catch (err) {
-    console.error(err);
-    return null;
-  }
+  const module = {
+    path: dirPath,
+    info: moduleInfo,
+    development: true,
+    enabled: true,
+  };
+  module.iconPath = getModuleIconPath(module);
+  return module;
 }
 
 /**

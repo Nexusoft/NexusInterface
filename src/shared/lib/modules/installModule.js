@@ -191,17 +191,22 @@ export async function addDevModule(dirPath) {
     return;
   }
 
-  const module = await loadDevModuleFromDir(dirPath);
-  if (!module) {
+  let module;
+  try {
+    module = await loadDevModuleFromDir(dirPath);
+  } catch (err) {
     openErrorDialog({
-      message: __('Invalid development module'),
+      message: __('Failed to load development module'),
+      note: err.message,
     });
   }
+  if (!module) return;
 
   if (modules[module.info.name]) {
     openErrorDialog({
       message: __('A module with the same name already exists'),
     });
+    return;
   }
 
   updateSettings({
