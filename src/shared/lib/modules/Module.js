@@ -432,7 +432,12 @@ walletEvents.once('post-render', async function() {
       if (module) {
         const { name, version } = module.info;
         try {
-          if (!map[name] || semver.gt(version, map[name].version)) {
+          if (
+            !map[name] ||
+            (semver.valid(version) &&
+              semver.valid(map[name].version) &&
+              semver.gt(version, map[name].version))
+          ) {
             map[name] = module;
           }
         } catch (err) {

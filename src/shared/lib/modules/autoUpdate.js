@@ -44,6 +44,7 @@ async function checkForModuleUpdate(module) {
       : release.tag_name;
     if (
       !semver.valid(latestVersion) ||
+      !semver.valid(module.info.version) ||
       !semver.gt(latestVersion, module.info.version)
     )
       return null;
