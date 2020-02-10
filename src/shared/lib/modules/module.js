@@ -418,14 +418,19 @@ walletEvents.once('post-render', async function() {
   try {
     if (!fs.existsSync(modulesDir)) return {};
     const { devModulePaths = [] } = store.getState().settings;
-    const dirNames = await fs.promises.readdir(modulesDir);
-    const dirPaths = dirNames.map(dirName => join(modulesDir, dirName));
+    const childNames = await fs.promises.readdir(modulesDir);
+    const childPaths = childNames.map(name => join(modulesDir, name));
+    const stats = await Promise.all(
+      childPaths.map(path => fs.promises.stat(path))
+    );
+    const dirNames = childNames.filter((name, i) => stats[i].isDirectory());
+    const dirPaths = dirNames.map(name => join(modulesDir, name));
     const results = await Promise.allSettled([
       ...devModulePaths.map(path => loadDevModuleFromDir(path)),
       ...dirPaths.map(path => loadModuleFromDir(path)),
     ]);
     const moduleList = results
-      .filter(({ status, value }) => value && status === 'fulfilled')
+      .filter(({ status }) => status === 'fulfilled')
       .map(({ value }) => value);
 
     const modules = moduleList.reduce((map, module) => {
@@ -453,8 +458,25 @@ walletEvents.once('post-render', async function() {
       type: TYPE.LOAD_MODULES,
       payload: modules,
     });
-
     checkForModuleUpdates();
+
+    const failedModules = [];
+    for (let i = 0; i < dirNames.length; ++i) {
+      const j = devModulePaths.length + i;
+      if (results[j].status === 'rejected') {
+        failedModules.push({
+          name: dirNames[i],
+          path: dirPaths[i],
+          message: results[j].reason.message,
+        });
+      }
+    }
+    if (failedModules.length > 0) {
+      store.dispatch({
+        type: TYPE.LOAD_MODULES_FAILED,
+        payload: failedModules,
+      });
+    }
   } catch (err) {
     console.error(err);
     return {};
