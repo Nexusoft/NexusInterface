@@ -345,7 +345,7 @@ class InvoiceDetailModal extends Component {
               <Button skin="primary" onClick={() => this.closeModal()}>
                 {'Close'}
               </Button>
-              {status !== 'Paid' && (
+              {status !== 'Paid' && status !== 'Draft' && (
                 <Tooltip.Trigger
                   tooltip={__(
                     'Reject this invoice, preventing the recipient from paying it.'
@@ -357,6 +357,13 @@ class InvoiceDetailModal extends Component {
                   </Button>
                 </Tooltip.Trigger>
               )}
+              {
+                status === 'Draft' && (
+                  <Button skin="danger" onClick={this.deleteDraft}>
+                    {'Delete Draft'}
+                  </Button>
+                )
+              }
             </div>
           )}
         </Modal.Footer>

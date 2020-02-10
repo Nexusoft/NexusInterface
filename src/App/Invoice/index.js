@@ -24,6 +24,7 @@ import memoize from 'utils/memoize';
 import { isMyAddress } from './selectors';
 import { apiGet } from 'lib/tritiumApi';
 import { loadInvoices } from 'lib/user';
+import { loadInvoiceDrafts } from 'lib/invoiceDraft';
 
 __ = __context('Invoice');
 
@@ -185,6 +186,7 @@ class Invoice extends Component {
     GA.SendScreen('Invoice');
     this.test();
     loadInvoices();
+    loadInvoiceDrafts();
   }
 
   async test() {

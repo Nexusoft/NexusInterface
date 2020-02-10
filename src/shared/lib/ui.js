@@ -2,6 +2,7 @@ import * as TYPE from 'consts/actionTypes';
 import ConfirmDialog from 'components/Dialogs/ConfirmDialog';
 import ErrorDialog from 'components/Dialogs/ErrorDialog';
 import SuccessDialog from 'components/Dialogs/SuccessDialog';
+import { reset } from 'redux-form';
 import store from 'store';
 
 const newModalId = (function() {
@@ -312,4 +313,8 @@ export const setInvoiceStatusFilter = status => {
     type: TYPE.SET_INVOICE_STATUS_FILTER,
     payload: status,
   });
+};
+
+export const resetForm = formName => {
+  store.dispatch(reset(formName));
 };

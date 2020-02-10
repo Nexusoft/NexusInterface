@@ -6,6 +6,7 @@ import {
   Field,
   FieldArray,
   formValueSelector,
+  getFormValues,
   reset,
 } from 'redux-form';
 import styled from '@emotion/styled';
@@ -21,7 +22,7 @@ import Select from 'components/Select';
 import FormField from 'components/FormField';
 import Tooltip from 'components/Tooltip';
 import Arrow from 'components/Arrow';
-import { openSuccessDialog, openModal, removeModal } from 'lib/ui';
+import { openSuccessDialog, openModal, removeModal, resetForm } from 'lib/ui';
 import { errorHandler } from 'utils/form';
 import sendIcon from 'icons/send.svg';
 import { numericOnly } from 'utils/form';
@@ -43,6 +44,7 @@ import {
 } from './selectors';
 import DateTime from 'components/DateTimePicker';
 import SuccessDialog from 'components/Dialogs/SuccessDialog';
+import { addNewDraft } from 'lib/invoiceDraft';
 
 __ = __context('Invoice Form');
 
@@ -57,6 +59,7 @@ const mapStateToProps = state => {
     ),
     username: state.core.userStatus.username,
     accountOptions: getAccountOptions(state.core.accounts),
+    copy: getFormValues('InvoiceForm')(state),
     items: valueSelector(state, 'items') || [],
   };
 };
@@ -299,6 +302,13 @@ class InvoiceForm extends Component {
     }, 0);
   }
 
+  saveAsDraft() {
+    console.error(this.props);
+    addNewDraft(this.props.copy);
+    resetForm('InvoiceForm');
+    //this.props.reset();
+  }
+
   render() {
     const {
       accountOptions,
@@ -410,6 +420,13 @@ class InvoiceForm extends Component {
             <Footer className="mt3 flex space-between">
               <Button type="submit" skin="primary" disabled={submitting}>
                 {__('Submit')}
+              </Button>
+              <Button
+                skin="primary"
+                onClick={() => this.saveAsDraft()}
+                disabled={submitting}
+              >
+                {__('Save As Draft')}
               </Button>
               {__('Total: %{total} NXS', {
                 total: formatNumber(this.gatherTotal(), 6),

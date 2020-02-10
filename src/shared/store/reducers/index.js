@@ -7,6 +7,7 @@ import transactions from './transactions';
 import common from './common';
 import exchange from './exchange';
 import addressBook from './addressBook';
+import invoiceDrafts from './invoicDrafts';
 import myAccounts from './myAccounts';
 import settings from './settings';
 import theme from './theme';
@@ -27,6 +28,7 @@ export default function createRootReducer() {
     exchange,
     common,
     addressBook,
+    invoiceDrafts,
     myAccounts,
     settings,
     theme,
