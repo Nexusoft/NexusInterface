@@ -77,7 +77,6 @@ export default class Staking extends React.Component {
 
   render() {
     const { stakeInfo, stakingEnabled } = this.props;
-    console.log(this.props);
     return (
       !!stakeInfo && (
         <TabContentWrapper maxWidth={400}>

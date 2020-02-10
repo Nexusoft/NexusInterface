@@ -22,6 +22,7 @@ const ajv = new Ajv();
 // Reserved file names, modules are not allowed to have one of these in their `files` field
 const reservedFileNames = [
   'nxs_package.json',
+  'nxs_package.dev.json',
   'repo_info.json',
   'storage.json',
 ];
