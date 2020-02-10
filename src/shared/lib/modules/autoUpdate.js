@@ -4,6 +4,8 @@ import axios from 'axios';
 
 import store from 'store';
 import * as TYPE from 'consts/actionTypes';
+import { showNotification } from 'lib/ui';
+import { history } from 'lib/wallet';
 // import { walletDataDir } from 'consts/paths';
 // import ensureDirExists from 'utils/ensureDirExists';
 // import downloadFile from 'utils/downloadFile';
@@ -86,16 +88,30 @@ export async function checkForModuleUpdates() {
       return map;
     }, {});
 
-  // if (updates.length > 0) {
-  // let downloadedUpdates = [];
-  // for (const update of updates) {
-  //   try {
-  //     const filePath = await downloadModuleUpdate(update.asset);
-  //     downloadedUpdates.push({ ...update, filePath });
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // }
+  if (updates.length > 0) {
+    // let downloadedUpdates = [];
+    // for (const update of updates) {
+    //   try {
+    //     const filePath = await downloadModuleUpdate(update.asset);
+    //     downloadedUpdates.push({ ...update, filePath });
+    //   } catch (err) {
+    //     console.error(err);
+    //   }
+    // }
+
+    showNotification(
+      __(
+        '%{smart_count} module update available |||| %{smart_count} module updates available',
+        updates.length
+      ),
+      {
+        onClick: closeNotif => {
+          history.push('/Settings/Modules');
+          closeNotif();
+        },
+      }
+    );
+  }
 
   store.dispatch({
     type: TYPE.UPDATE_MODULES_LATEST,

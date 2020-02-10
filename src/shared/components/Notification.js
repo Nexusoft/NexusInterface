@@ -72,13 +72,14 @@ export default class Notification extends Component {
   };
 
   render() {
+    const { onClick, ...rest } = this.props;
     return (
       <NotificationComponent
         ref={this.notifRef}
-        onClick={this.animatedClose}
+        onClick={onClick ? onClick(this.animatedClose) : this.animatedClose}
         onMouseEnter={this.stopAutoClose}
         onMouseLeave={this.startAutoClose}
-        {...this.props}
+        {...rest}
       />
     );
   }
