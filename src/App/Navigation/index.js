@@ -24,7 +24,6 @@ import addressBookIcon from 'icons/address-book.svg';
 import settingsIcon from 'icons/settings.svg';
 import consoleIcon from 'icons/console.svg';
 import userIcon from 'icons/user.svg';
-import tokenIcons from 'icons/blockexplorer-invert-white.svg';
 import { legacyMode } from 'consts/misc';
 // import shapeshiftIcon from 'icons/shapeshift.svg';
 // import trustListIcon from 'icons/trust-list.svg';
@@ -143,12 +142,6 @@ const Navigation = () => (
       <NavItem icon={consoleIcon} to="/Terminal">
         {__('Console')}
       </NavItem>
-      {process.env.NODE_ENV !== 'production' && (
-        <NavItem icon={consoleIcon} to="/Invoice">
-          {__('Invoice')}
-        </NavItem>
-      )}
-
       <ModuleNavItems />
     </NavBar>
   </Nav>

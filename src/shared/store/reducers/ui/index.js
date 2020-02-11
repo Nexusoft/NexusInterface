@@ -10,7 +10,6 @@ import closing from './closing';
 import transactions from './transactions';
 import transactionsTritium from './transactionsTritium';
 import user from './user';
-import invoices from './invoices';
 
 export default combineReducers({
   addressBook,
@@ -23,5 +22,4 @@ export default combineReducers({
   transactions,
   transactionsTritium,
   user,
-  invoices,
 });
