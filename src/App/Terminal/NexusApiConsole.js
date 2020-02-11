@@ -2,14 +2,16 @@
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import styled from '@emotion/styled';
+import { ipcRenderer } from 'electron';
 import GA from 'lib/googleAnalytics';
 import memoize from 'utils/memoize';
 
 // Internal Global Dependencies
 import Button from 'components/Button';
-import AutoSuggest from 'components/AutoSuggest';
+import Select from 'components/Select';
+import TextField from 'components/TextField';
 import RequireCoreConnected from 'components/RequireCoreConnected';
-import * as Tritium from 'lib/tritiumApi';
+import { apiGet } from 'lib/tritiumApi';
 import {
   switchConsoleTab,
   updateConsoleInput,
@@ -21,19 +23,25 @@ import {
   resetConsoleOutput,
 } from 'lib/ui';
 import { openModal } from 'lib/ui';
+import { updateSettings } from 'lib/settings';
 import APIDocModal from './APIDocs/ApiDocModal';
-import questionMarkCircleIcon from 'icons/question-mark-circle.svg';
+import documentsIcon from 'icons/documents.svg';
 import Tooltip from 'components/Tooltip';
 import Icon from 'components/Icon';
 
 __ = __context('Console.NexusAPI');
 
-const filterCommands = memoize((commandList, inputValue) => {
-  if (!commandList || !inputValue) return [];
-  return commandList.filter(
-    cmd => !!cmd && cmd.value.toLowerCase().startsWith(inputValue.toLowerCase())
-  );
-});
+const syntaxOptions = [
+  {
+    value: true,
+    display: __('CLI syntax'),
+  },
+  {
+    value: false,
+    display: __('URL syntax'),
+  },
+];
+const tab = ' '.repeat(2);
 
 const consoleInputSelector = memoize(
   (currentCommand, commandHistory, historyIndex) =>
@@ -53,6 +61,7 @@ const mapStateToProps = state => {
         },
       },
     },
+    settings: { consoleCliSyntax },
   } = state;
   return {
     consoleInput: consoleInputSelector(
@@ -63,6 +72,7 @@ const mapStateToProps = state => {
     currentCommand,
     commandList,
     output,
+    consoleCliSyntax,
   };
 };
 
@@ -80,6 +90,9 @@ const Console = styled.div({
 const ConsoleInput = styled.div({
   marginBottom: '1em',
   position: 'relative',
+  display: 'grid',
+  gridTemplateColumns: '1fr min-content',
+  columnGap: '1em',
 });
 
 const ConsoleOutput = styled.code(({ theme }) => ({
@@ -98,6 +111,11 @@ const ExecuteButton = styled(Button)(({ theme }) => ({
 }));
 
 const HelpButton = styled(Button)(({ theme }) => ({
+  border: `1px solid ${theme.mixer(0.125)}`,
+}));
+
+const SyntaxSelect = styled(Select)(({ theme }) => ({
+  border: 'none',
   borderRight: `1px solid ${theme.mixer(0.125)}`,
 }));
 
@@ -109,6 +127,9 @@ const HelpButton = styled(Button)(({ theme }) => ({
  */
 @connect(mapStateToProps)
 class NexusApiConsole extends Component {
+  inputRef = React.createRef();
+  outputRef = React.createRef();
+
   /**
    *Creates an instance of TerminalConsole.
    * @param {*} props
@@ -116,8 +137,6 @@ class NexusApiConsole extends Component {
    */
   constructor(props) {
     super(props);
-    this.inputRef = React.createRef();
-    this.outputRef = React.createRef();
     switchConsoleTab('Console');
   }
 
@@ -166,55 +185,16 @@ class NexusApiConsole extends Component {
   execute = async () => {
     if (!this.props.currentCommand || !this.props.currentCommand.trim()) return;
 
-    const cmd = this.props.currentCommand;
+    const cmd = this.props.currentCommand.trim();
     GA.SendEvent('Terminal', 'NexusApiConsole', 'UseCommand', 1);
-
-    const cliCMDSplit = cmd.split(' ');
-    let cliFormat;
-    let dirtyElements = [];
-    if (cliCMDSplit.length > 1) {
-      cliFormat =
-        cliCMDSplit.shift() +
-        '?' +
-        cliCMDSplit
-          .map((e, i, array) => {
-            if (dirtyElements.includes(e)) return null;
-            if (i == array.length - 1) return e;
-            //if not a param join the next elements into yourself, for spaces
-            if (e.match(/(.*[a-z])=/g)) {
-              const next = i + 1;
-              if (array[next].match(/(.*[a-z])=/)) {
-                return e;
-              } else {
-                let recurIndex = 1;
-                let elementModified = e;
-                if (array[i + recurIndex] != null) {
-                  while (
-                    array[i + recurIndex] != null &&
-                    !array[i + recurIndex].match(/(.*[a-z])=/g)
-                  ) {
-                    elementModified += ' ' + array[i + recurIndex];
-                    dirtyElements.push(array[i + recurIndex]);
-                    recurIndex++;
-                  }
-                }
-                return elementModified;
-              }
-            } else {
-              return null;
-            }
-          })
-          .filter(Boolean)
-          .join('&');
-    }
-
-    const tab = ' '.repeat(2);
-    let result = null;
-    console.log(cliFormat || cmd);
     executeCommand(cmd);
+    let result = undefined;
     try {
-      result = await Tritium.apiGet(cliFormat || cmd);
-      console.log(result);
+      if (this.props.consoleCliSyntax) {
+        result = await ipcRenderer.invoke('execute-core-command', cmd);
+      } else {
+        result = await apiGet(cmd);
+      }
     } catch (err) {
       console.error(err);
       if (err.message !== undefined) {
@@ -274,61 +254,64 @@ class NexusApiConsole extends Component {
    * @memberof TerminalConsole
    */
   render() {
-    const { consoleInput, output } = this.props;
+    const { consoleInput, output, consoleCliSyntax } = this.props;
 
     return (
       <RequireCoreConnected>
         <TerminalContent>
           <Console>
             <ConsoleInput>
-              <AutoSuggest
-                suggestions={[]}
-                filterSuggestions={filterCommands}
-                onSelect={this.formateAutoSuggest}
-                keyControl={false}
-                suggestOn="change"
-                ref={c => (this.inputRef = c)}
+              <TextField
+                autoFocus
                 inputRef={this.inputRef}
-                inputProps={{
-                  autoFocus: true,
-                  skin: 'filled-inverted',
-                  value: consoleInput,
-                  multiline: true,
-                  rows: 1,
-                  inputStyle: { resize: 'none' },
-                  placeholder: __(
-                    'Enter API here (ex: api/verb/noun?param=value&param2=2 or param=1 param2=2)'
-                  ),
-                  onChange: e => {
-                    updateConsoleInput(e.target.value);
-                  },
-                  onKeyDown: this.handleKeyDown,
-                  left: (
-                    <Tooltip.Trigger
-                      tooltip={__('API Documentation')}
-                      position="top"
-                    >
-                      <HelpButton
-                        skin="filled-inverted"
-                        fitHeight
-                        onClick={() => openModal(APIDocModal)}
-                      >
-                        <Icon icon={questionMarkCircleIcon} />
-                      </HelpButton>
-                    </Tooltip.Trigger>
-                  ),
-                  right: (
-                    <ExecuteButton
-                      skin="filled-inverted"
-                      fitHeight
-                      grouped="right"
-                      onClick={this.execute}
-                    >
-                      {__('Execute')}
-                    </ExecuteButton>
-                  ),
+                skin="filled-inverted"
+                value={consoleInput}
+                multiline
+                rows={1}
+                inputStyle={{ resize: 'none' }}
+                placeholder={
+                  consoleCliSyntax
+                    ? 'api/verb/noun param=1 param2=2'
+                    : 'api/verb/noun?param=value&param2=2'
+                }
+                onChange={e => {
+                  updateConsoleInput(e.target.value);
                 }}
+                onKeyDown={this.handleKeyDown}
+                left={
+                  <SyntaxSelect
+                    skin="filled-inverted"
+                    options={syntaxOptions}
+                    value={consoleCliSyntax}
+                    onChange={v => {
+                      updateSettings({ consoleCliSyntax: v });
+                      if (this.inputRef.current) {
+                        this.inputRef.current.focus();
+                      }
+                    }}
+                  />
+                }
+                right={
+                  <ExecuteButton
+                    skin="filled-inverted"
+                    fitHeight
+                    grouped="right"
+                    onClick={this.execute}
+                  >
+                    {__('Execute')}
+                  </ExecuteButton>
+                }
               />
+
+              <Tooltip.Trigger tooltip={__('API Documentation')}>
+                <HelpButton
+                  skin="filled-inverted"
+                  fitHeight
+                  onClick={() => openModal(APIDocModal)}
+                >
+                  <Icon icon={documentsIcon} />
+                </HelpButton>
+              </Tooltip.Trigger>
             </ConsoleInput>
 
             <ConsoleOutput ref={this.outputRef}>

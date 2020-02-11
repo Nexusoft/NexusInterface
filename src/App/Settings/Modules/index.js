@@ -1,14 +1,36 @@
 // External
 import React from 'react';
 import { connect } from 'react-redux';
+import styled from '@emotion/styled';
+import { shell } from 'electron';
 
 // Internal
-import { getAllModules } from 'lib/modules';
 import { switchSettingsTab } from 'lib/ui';
+import { timing } from 'styles';
+import Tooltip from 'components/Tooltip';
+
 import Module from './Module';
 import AddModule from './AddModule';
+import AddDevModule from './AddDevModule';
 
 __ = __context('Settings.Modules');
+
+const FailedModules = styled.div(({ theme }) => ({
+  borderTop: `1px solid ${theme.mixer(0.125)}`,
+  marginTop: '2em',
+}));
+
+const FailedModule = styled.div(({ theme }) => ({
+  padding: '1em 0',
+  fontSize: '.9em',
+  color: theme.mixer(0.75),
+  cursor: 'pointer',
+  opacity: 0.8,
+  transition: `opacity ${timing.normal}`,
+  '&:hover': {
+    opacity: 1,
+  },
+}));
 
 /**
  * The Module's Settings Page
@@ -17,7 +39,9 @@ __ = __context('Settings.Modules');
  * @extends {React.Component}
  */
 @connect(state => ({
-  modules: getAllModules(state.modules),
+  modules: state.modules,
+  failedModules: state.failedModules,
+  devMode: state.settings.devMode,
 }))
 class SettingsModules extends React.Component {
   /**
@@ -37,16 +61,37 @@ class SettingsModules extends React.Component {
    * @memberof SettingsModules
    */
   render() {
+    const { modules, devMode, failedModules } = this.props;
+    const list = Object.values(modules);
     return (
       <>
         <AddModule />
-        {this.props.modules.map((module, i) => (
+        {devMode && <AddDevModule />}
+        {list.map((module, i) => (
           <Module
-            key={module.name}
+            key={module.info.name}
             module={module}
-            last={i === this.props.modules.length - 1}
+            last={i === list.length - 1}
           />
         ))}
+        {!!failedModules && (
+          <FailedModules>
+            {failedModules.map(({ name, path, message }) => (
+              <FailedModule
+                key={name}
+                onClick={() => {
+                  shell.openItem(path);
+                }}
+              >
+                <Tooltip.Trigger tooltip={message}>
+                  <span>
+                    {__('Failed to load %{moduleName}', { moduleName: name })}
+                  </span>
+                </Tooltip.Trigger>
+              </FailedModule>
+            ))}
+          </FailedModules>
+        )}
       </>
     );
   }

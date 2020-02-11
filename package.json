@@ -1,9 +1,8 @@
 {
   "name": "nexus_wallet",
   "productName": "Nexus Wallet",
-  "version": "2.1.4",
-  "moduleSpecVersion": "0.3.0",
-  "supportedModuleSpecVersion": "0.1.0",
+  "version": "2.2.0",
+  "backwardCompatible": "2.2.0",
   "buildDate": "January 25th 2020",
   "description": "User interface for the Nexus blockchain and ecosystem.",
   "scripts": {
@@ -48,6 +47,13 @@
         "to": "build",
         "filter": [
           "app.html"
+        ]
+      },
+      {
+        "from": "src/keyboard",
+        "to": "build",
+        "filter": [
+          "keyboard.html"
         ]
       }
     ],
@@ -255,6 +261,7 @@
     "react-redux": "^7.1.3",
     "react-router": "^5.1.2",
     "react-router-dom": "^5.1.2",
+    "react-simple-keyboard": "^2.1.96",
     "react-table": "^6.11.5",
     "redux": "^4.0.4",
     "redux-form": "^8.2.6",

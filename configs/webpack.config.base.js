@@ -10,8 +10,7 @@ import packageJson from '../package.json';
 
 const appVersion = packageJson.version;
 const buildDate = packageJson.buildDate;
-const moduleSpecVersion = packageJson.moduleSpecVersion;
-const supportedModuleSpecVersion = packageJson.supportedModuleSpecVersion;
+const backwardCompatible = packageJson.backwardCompatible;
 const appId = packageJson.build.appId;
 
 let nexusPubKey = '';
@@ -46,10 +45,7 @@ export default {
       ),
       APP_VERSION: JSON.stringify(appVersion || ''),
       BUILD_DATE: JSON.stringify(buildDate || ''),
-      MODULE_SPEC_VERSION: JSON.stringify(moduleSpecVersion || ''),
-      SUPPORTED_MODULE_SPEC_VERSION: JSON.stringify(
-        supportedModuleSpecVersion || ''
-      ),
+      BACKWARD_COMPATIBLE_VERSION: JSON.stringify(backwardCompatible || ''),
       APP_ID: JSON.stringify(appId || ''),
       NEXUS_EMBASSY_PUBLIC_KEY: JSON.stringify(nexusPubKey),
     }),

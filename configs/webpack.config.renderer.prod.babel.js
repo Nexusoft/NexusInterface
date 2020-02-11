@@ -14,11 +14,14 @@ import { babelLoaderRenderer } from './babelLoaderConfig';
 CheckNodeEnv('production');
 
 export default merge.smart(baseConfig, {
-  entry: './src/index.js',
+  entry: {
+    'renderer.prod': './src/index.js',
+    'keyboard.prod': './src/keyboard/index.js',
+  },
 
   output: {
     path: path.join(process.cwd(), 'build'),
-    filename: 'renderer.prod.js',
+    filename: '[name].js',
   },
 
   module: {

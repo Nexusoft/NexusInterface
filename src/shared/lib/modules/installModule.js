@@ -1,16 +1,25 @@
 import { join, dirname, normalize } from 'path';
 import fs from 'fs';
 
-import { showNotification, openModal, openSuccessDialog } from 'lib/ui';
-import ModuleDetailsModal from 'components/ModuleDetailsModal';
 import store from 'store';
-import { loadModuleFromDir } from 'lib/modules';
+import * as TYPE from 'consts/actionTypes';
+import {
+  showNotification,
+  openModal,
+  openSuccessDialog,
+  openErrorDialog,
+} from 'lib/ui';
+import { updateSettings } from 'lib/settings';
+import ModuleDetailsModal from 'components/ModuleDetailsModal';
 import { modulesDir } from 'consts/paths';
 import { walletDataDir } from 'consts/paths';
+import ensureDirExists from 'utils/ensureDirExists';
 import deleteDirectory from 'utils/promisified/deleteDirectory';
 import extractZip from 'utils/promisified/extractZip';
 import extractTarball from 'utils/promisified/extractTarball';
 import confirm from 'utils/promisified/confirm';
+
+import { loadModuleFromDir, loadDevModuleFromDir } from './module';
 
 __ = __context('Settings.Modules');
 
@@ -31,20 +40,6 @@ function copyFile(file, source, dest) {
 }
 
 /**
- * Node.js `mkdir`'s `recursive` option doesn't work somehow (last tested on node.js v10.11.0)
- * So we need to write it manually
- *
- * @param {string} path
- */
-async function mkdirRecursive(path) {
-  const parent = dirname(path);
-  if (!fs.existsSync(parent)) {
-    await mkdirRecursive(parent);
-  }
-  await fs.promises.mkdir(path);
-}
-
-/**
  * Copy all files of a module from source to the destination
  * including nxs_package.json and repo_info.json
  *
@@ -58,9 +53,7 @@ async function copyModule(files, source, dest) {
   // The creations would be duplicated if they're parallel
   for (let file of files) {
     const dir = dirname(join(dest, file));
-    if (!fs.existsSync(dir)) {
-      await mkdirRecursive(dir);
-    }
+    await ensureDirExists(dir);
   }
 
   const promises = [
@@ -79,27 +72,25 @@ async function copyModule(files, source, dest) {
  * @param {string} path
  * @returns
  */
-async function installFromDirectory(path) {
-  const {
-    settings: { devMode, verifyModuleSource, allowSymLink },
-  } = store.getState();
-  const module = await loadModuleFromDir(path, {
-    devMode,
-    verifyModuleSource,
-    allowSymLink,
-  });
-
-  if (!module) {
-    showNotification('Invalid Module', 'error');
-    return;
+async function doInstall(path) {
+  let module;
+  try {
+    module = await loadModuleFromDir(path);
+  } catch (err) {
+    openErrorDialog({
+      message: __('Failed to load module'),
+      note: err.message,
+    });
   }
+
+  if (!module) return;
 
   openModal(ModuleDetailsModal, {
     module,
     forInstall: true,
     install: async () => {
       try {
-        const dest = join(modulesDir, module.name);
+        const dest = join(modulesDir, module.info.name);
         if (fs.existsSync(dest)) {
           const agreed = await confirm({
             question: __('Overwrite module?'),
@@ -110,7 +101,7 @@ async function installFromDirectory(path) {
           await deleteDirectory(dest, { glob: false });
         }
 
-        await copyModule(module.files, path, dest);
+        await copyModule(module.info.files, path, dest);
 
         openSuccessDialog({
           message: __('Module has been successfully installed'),
@@ -145,7 +136,7 @@ export async function installModule(path) {
       showNotification(__('Cannot find module'), 'error');
       return;
     }
-    let dirPath = path;
+    let sourcePath = path;
 
     if ((await fs.promises.stat(path)).isFile()) {
       if (!supportedExtensions.some(ext => path.endsWith(ext))) {
@@ -162,28 +153,70 @@ export async function installModule(path) {
       } else if (path.endsWith('.tar.gz')) {
         await extractTarball(path, tempModuleDir);
       }
-      dirPath = tempModuleDir;
+      sourcePath = tempModuleDir;
 
       // In case the module is wrapped inside a sub directory of the archive file
       const subItems = await fs.promises.readdir(tempModuleDir);
       if (subItems.length === 1) {
         const subItemPath = join(tempModuleDir, subItems[0]);
         if ((await fs.promises.stat(subItemPath)).isDirectory()) {
-          dirPath = subItemPath;
+          sourcePath = subItemPath;
         }
       }
     } else {
-      const dirPath = normalize(path);
-      if (dirPath.startsWith(normalize(modulesDir))) {
-        showNotification(__('Cannot install from that location'), 'error');
+      const sourcePath = normalize(path);
+      if (sourcePath.startsWith(normalize(modulesDir))) {
+        showNotification(__('Cannot install from this location'), 'error');
         return;
       }
     }
 
-    await installFromDirectory(dirPath);
+    await doInstall(sourcePath);
   } catch (err) {
     console.error(err);
     showNotification(__('An unknown error occurred'), 'error');
     return;
   }
+}
+
+export async function addDevModule(dirPath) {
+  const {
+    modules,
+    settings: { devModulePaths },
+  } = store.getState();
+  if (devModulePaths.includes(dirPath)) {
+    openErrorDialog({
+      message: __('Directory has already been added'),
+    });
+    return;
+  }
+
+  let module;
+  try {
+    module = await loadDevModuleFromDir(dirPath);
+  } catch (err) {
+    openErrorDialog({
+      message: __('Failed to load development module'),
+      note: err.message,
+    });
+  }
+  if (!module) return;
+
+  if (modules[module.info.name]) {
+    openErrorDialog({
+      message: __('A module with the same name already exists'),
+    });
+    return;
+  }
+
+  updateSettings({
+    devModulePaths: [dirPath, ...devModulePaths],
+  });
+  store.dispatch({
+    type: TYPE.ADD_DEV_MODULE,
+    payload: module,
+  });
+  openSuccessDialog({
+    message: __('Development module has been added'),
+  });
 }

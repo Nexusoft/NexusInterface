@@ -1,6 +1,5 @@
 import { join } from 'path';
 import fs from 'fs';
-import { modulesDir } from 'consts/paths';
 
 const storageFileName = 'storage.json';
 
@@ -13,7 +12,7 @@ const storageFileName = 'storage.json';
  */
 export async function readModuleStorage(module) {
   try {
-    const storagePath = join(modulesDir, module.dirName, storageFileName);
+    const storagePath = join(module.path, storageFileName);
     if ((await fs.promises.stat(storagePath)).isFile()) {
       const content = await fs.promises.readFile(storagePath);
       const data = JSON.parse(content);
@@ -53,6 +52,6 @@ export async function writeModuleStorage(module, data) {
     return;
   }
 
-  const storagePath = join(modulesDir, module.dirName, storageFileName);
+  const storagePath = join(module.path, storageFileName);
   return await fs.promises.writeFile(storagePath, content);
 }

@@ -4,8 +4,9 @@ import log from 'electron-log';
 import crypto from 'crypto';
 import macaddress from 'macaddress';
 
+import store from 'store';
+import * as TYPE from 'consts/actionTypes';
 import { defaultCoreDataDir } from 'consts/paths';
-import { loadSettingsFromFile } from 'lib/settings/universal';
 
 function generateDefaultPassword() {
   let randomNumbers = ['', ''];
@@ -67,11 +68,10 @@ const defaultConfig = {
 /**
  * Returns either the given config or default Config
  *
- * @export
  * @param {*} [config={}]
  * @returns
  */
-export function customConfig(config = {}) {
+function customConfig(config = {}) {
   const ip = config.ip || defaultConfig.ip;
   const port = config.port || defaultConfig.port;
   const apiPort = config.apiPort || defaultConfig.apiPort;
@@ -99,14 +99,16 @@ export function customConfig(config = {}) {
  *
  * @returns
  */
-export function loadNexusConf() {
-  const { coreDataDir } = loadSettingsFromFile();
+export async function loadNexusConf() {
+  const {
+    settings: { coreDataDir, verboseLevel },
+  } = store.getState();
   if (!fs.existsSync(coreDataDir)) {
     log.info(
       'Core Manager: Data Directory path not found. Creating folder: ' +
         coreDataDir
     );
-    fs.mkdirSync(coreDataDir);
+    await fs.promises.mkdir(coreDataDir);
   }
 
   const confPath = path.join(coreDataDir, 'nexus.conf');
@@ -115,7 +117,7 @@ export function loadNexusConf() {
     log.info(
       'nexus.conf exists. Importing username and password for RPC server and API server.'
     );
-    confContent = fs.readFileSync(confPath).toString();
+    confContent = (await fs.promises.readFile(confPath)).toString();
   }
   const configs = fromKeyValues(confContent);
 
@@ -138,8 +140,52 @@ export function loadNexusConf() {
   // Save nexus.conf file if there were changes
   if (updated) {
     log.info('Filling up some missing configurations in nexus.conf');
-    fs.writeFileSync(confPath, toKeyValues(configs));
+    fs.writeFile(confPath, toKeyValues(configs));
   }
 
-  return configs;
+  return customConfig({
+    rpcuser: configs.rpcuser,
+    rpcpassword: configs.rpcpassword,
+    apiuser: configs.apiuser,
+    apipassword: configs.apipassword,
+    verbose: verboseLevel,
+    dataDir: coreDataDir,
+  });
+}
+
+export function saveCoreConfig(conf) {
+  return store.dispatch({
+    type: TYPE.SET_CORE_CONFIG,
+    payload: conf,
+  });
+}
+
+export async function getActiveCoreConfig() {
+  const {
+    settings,
+    core: { config },
+  } = store.getState();
+
+  if (settings.manualDaemon) {
+    return customConfig({
+      ip: settings.manualDaemonIP,
+      port: settings.manualDaemonPort,
+      user: settings.manualDaemonUser,
+      password: settings.manualDaemonPassword,
+      apiPort: settings.manualDaemonApiPort,
+      apiUser: settings.manualDaemonApiUser,
+      apiPassword: settings.manualDaemonApiPassword,
+      dataDir: settings.manualDaemonDataDir,
+    });
+  } else {
+    if (config) {
+      // Config cached when core was started,
+      return config;
+    } else {
+      // If there's no cached config, load it from nexus.conf
+      const conf = await loadNexusConf();
+      saveCoreConfig(conf);
+      return conf;
+    }
+  }
 }

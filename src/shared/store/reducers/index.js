@@ -17,6 +17,7 @@ import core from './core';
 import updater from './updater';
 import activeAppModule from './activeAppModule';
 import bootstrap from './bootstrap';
+import failedModules from './failedModules';
 
 export default function createRootReducer() {
   return combineReducers({
@@ -33,6 +34,7 @@ export default function createRootReducer() {
     ui,
     modules,
     moduleStates,
+    failedModules,
     updater,
     activeAppModule,
     bootstrap,

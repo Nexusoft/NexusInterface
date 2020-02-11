@@ -1,7 +1,7 @@
 // External
 import React from 'react';
 import styled from '@emotion/styled';
-import { join } from 'path';
+import { shell } from 'electron';
 
 // Internal
 import Modal from 'components/Modal';
@@ -11,12 +11,16 @@ import Tooltip from 'components/Tooltip';
 import InfoField from 'components/InfoField';
 import ExternalLink from 'components/ExternalLink';
 import { openConfirmDialog } from 'lib/ui';
-import { modulesDir } from 'consts/paths';
+import { history } from 'lib/wallet';
+import { updateSettings } from 'lib/settings';
 import { timing } from 'styles';
+import store from 'store';
 import deleteDirectory from 'utils/promisified/deleteDirectory';
+
 import warningIcon from 'icons/warning.svg';
 import linkIcon from 'icons/link.svg';
 import trashIcon from 'icons/trash.svg';
+import updateIcon from 'icons/update.svg';
 
 __ = __context('ModuleDetails');
 
@@ -58,11 +62,18 @@ class ModuleDetailsModal extends React.Component {
    * @memberof ModuleDetailsModal
    */
   confirmDelete = () => {
+    const { module } = this.props;
     openConfirmDialog({
-      question: `Delete ${this.props.module.displayName}?`,
+      question: `Delete ${module.info.displayName}?`,
       callbackYes: async () => {
-        const moduleDir = join(modulesDir, this.props.module.dirName);
-        await deleteDirectory(moduleDir);
+        if (module.development) {
+          const { devModulePaths } = store.getState().settings;
+          updateSettings({
+            devModulePaths: devModulePaths.filter(path => path !== module.path),
+          });
+        } else {
+          await deleteDirectory(module.path);
+        }
         location.reload();
       },
     });
@@ -76,126 +87,178 @@ class ModuleDetailsModal extends React.Component {
    */
   render() {
     const { module, forInstall, install } = this.props;
+    const moduleInfo = module.info;
     const { host, owner, repo, commit } = module.repository || {};
     const repoUrl = module.repository
       ? `https://${host}/${owner}/${repo}/tree/${commit}`
       : null;
     return (
-      <Modal>
+      <Modal
+        assignClose={close => {
+          this.closeModal = close;
+        }}
+      >
         <Modal.Header className="relative">
           {__('Module Details')}
           {!forInstall && (
             <DeleteModule>
-              <DeleteButton skin="plain" onClick={this.confirmDelete}>
-                <Icon icon={trashIcon} />
-              </DeleteButton>
+              <Tooltip.Trigger tooltip={__('Remove module')}>
+                <DeleteButton skin="plain" onClick={this.confirmDelete}>
+                  <Icon icon={trashIcon} />
+                </DeleteButton>
+              </Tooltip.Trigger>
             </DeleteModule>
           )}
         </Modal.Header>
         <Modal.Body>
           <InfoField ratio={[1, 2]} label={__('Module name')}>
-            {module.name}
+            {moduleInfo.name}
           </InfoField>
           <InfoField ratio={[1, 2]} label={__('Display name')}>
-            {module.displayName}
+            {moduleInfo.displayName}
           </InfoField>
           <InfoField ratio={[1, 2]} label={__('Module type')}>
-            {module.type}
+            {moduleInfo.type}
+            {module.development && (
+              <span className="space-left">
+                &#x28;{__('in development')}&#x29;
+              </span>
+            )}
           </InfoField>
+
           <InfoField ratio={[1, 2]} label={__('Version')}>
-            {module.version}
+            {moduleInfo.version || <span className="dim">N/A</span>}
           </InfoField>
-          <InfoField ratio={[1, 2]} label={__('Module Specifications version')}>
+          <InfoField ratio={[1, 2]} label={__('Target wallet version')}>
             {
-              <span className={module.deprecated ? 'error' : undefined}>
-                <span className="v-align">{module.specVersion}</span>
-                {module.deprecated && (
+              <span className={module.incompatible ? 'error' : undefined}>
+                <span className="v-align">
+                  {moduleInfo.targetWalletVersion || (
+                    <span className="dim">N/A</span>
+                  )}
+                </span>
+                {module.incompatible && (
                   <span className="error space-left">
                     <Icon icon={warningIcon} />
-                    <span className="v-align space-left">(deprecated)</span>
+                    <span className="v-align space-left">
+                      ({__('incompatible')})
+                    </span>
                   </span>
                 )}
               </span>
             }
           </InfoField>
           <InfoField ratio={[1, 2]} label={__('Description')}>
-            {module.description || (
-              <span className="dim">{__('Not provided')}</span>
-            )}
+            {moduleInfo.description || <span className="dim">N/A</span>}
           </InfoField>
           <InfoField ratio={[1, 2]} label={__('Author')}>
-            {module.author ? (
+            {moduleInfo.author ? (
               <div>
-                <span>{module.author.name}</span>
-                {!!module.author.email && (
+                <span>{moduleInfo.author.name}</span>
+                {!!moduleInfo.author.email && (
                   <span className="space-left">
                     -
                     <ExternalLink
                       className="space-left"
-                      href={`mailto:${module.author.email}`}
+                      href={`mailto:${moduleInfo.author.email}`}
                     >
-                      {module.author.email}
+                      {moduleInfo.author.email}
                     </ExternalLink>
                   </span>
                 )}
               </div>
             ) : (
-              <span className="dim">{__('No information')}</span>
+              <span className="dim">N/A</span>
             )}
           </InfoField>
-          <InfoField ratio={[1, 2]} label={__('Source code')}>
-            {module.repository ? (
-              <div>
-                <Tooltip.Trigger tooltip={repoUrl}>
-                  <ExternalLink href={repoUrl}>
-                    <span className="v-align">{__('Visit repository')}</span>
-                    <Icon icon={linkIcon} className="space-left" />
-                  </ExternalLink>
-                </Tooltip.Trigger>
-
-                {module.isFromNexus && (
-                  <Tooltip.Trigger
-                    tooltip={__('This module is developed by Nexus')}
-                  >
-                    <CheckMark>&nbsp;&nbsp;✔</CheckMark>
+          {!module.development && (
+            <InfoField ratio={[1, 2]} label={__('Source code')}>
+              {module.repository ? (
+                <div>
+                  <Tooltip.Trigger tooltip={repoUrl}>
+                    <ExternalLink href={repoUrl}>
+                      <span className="v-align">{__('Visit repository')}</span>
+                      <Icon icon={linkIcon} className="space-left" />
+                    </ExternalLink>
                   </Tooltip.Trigger>
-                )}
 
-                {!module.repoOnline && (
-                  <div className="error">
-                    <Icon icon={warningIcon} />
-                    <span className="v-align space-left">
-                      {__('This repository does not exist or is private')}
-                    </span>
-                  </div>
-                )}
-                {!module.repoVerified && (
-                  <div className="error">
-                    <Icon icon={warningIcon} />
-                    <span className="v-align space-left">
-                      {__(
-                        'This repository is not verified to be the real source code of this module'
-                      )}
-                    </span>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className="error">
-                <Icon icon={warningIcon} />
-                <span className="v-align space-left">
-                  {__('No information')}
-                </span>
-              </div>
-            )}
-          </InfoField>
-          <InfoField ratio={[1, 2]} label={__('Module hash')}>
-            {module.hash ? (
-              <span className="monospace">{module.hash}</span>
-            ) : (
-              <span className="dim">{__('Not available')}</span>
-            )}
-          </InfoField>
+                  {module.repoVerified && module.repoFromNexus && (
+                    <Tooltip.Trigger
+                      tooltip={__('This module is developed by Nexus')}
+                    >
+                      <CheckMark>&nbsp;&nbsp;✔</CheckMark>
+                    </Tooltip.Trigger>
+                  )}
+
+                  {!module.repoOnline && (
+                    <div className="error">
+                      <Icon icon={warningIcon} />
+                      <span className="v-align space-left">
+                        {__('This repository does not exist or is private')}
+                      </span>
+                    </div>
+                  )}
+                  {!module.repoVerified && (
+                    <div className="error">
+                      <Icon icon={warningIcon} />
+                      <span className="v-align space-left">
+                        {__(
+                          'This repository is not verified to be the real source code of this module'
+                        )}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className={module.development ? 'dim' : 'error'}>
+                  <span className="v-align">N/A</span>
+                  {!module.development && (
+                    <Icon icon={warningIcon} className="space-left" />
+                  )}
+                </div>
+              )}
+            </InfoField>
+          )}
+          {!module.development && (
+            <InfoField ratio={[1, 2]} label={__('Module hash')}>
+              {module.hash ? (
+                <span className="monospace">{module.hash}</span>
+              ) : (
+                <span className="dim">N/A</span>
+              )}
+            </InfoField>
+          )}
+
+          {!forInstall && module.info.type === 'app' && (
+            <div className="mt1 flex space-between">
+              {module.hasNewVersion ? (
+                <Button
+                  skin="primary"
+                  onClick={() => {
+                    shell.openExternal(module.latestRelease.html_url);
+                  }}
+                >
+                  <Icon icon={updateIcon} className="space-right" />
+                  <span className="v-align">
+                    {__('Download %{version} (manual)', {
+                      version: 'v' + module.latestVersion,
+                    })}
+                  </span>
+                </Button>
+              ) : (
+                <div />
+              )}
+              <Button
+                skin="primary"
+                onClick={() => {
+                  this.closeModal();
+                  history.push('/Modules/' + module.info.name);
+                }}
+              >
+                {__('Open App')}
+              </Button>
+            </div>
+          )}
         </Modal.Body>
 
         {!!forInstall && <Installer module={module} install={install} />}
@@ -249,15 +312,15 @@ class Installer extends React.Component {
   render() {
     const { module } = this.props;
     const { installing } = this.state;
-    const btnLabel = module.invalid
-      ? __('Module is invalid')
+    const btnLabel = module.disallowed
+      ? __('Module is disallowed')
       : installing
       ? __('Installing Module...')
       : __('Install Module');
 
     return (
       <Modal.Footer separator style={{ textAlign: 'center' }}>
-        {!module.invalid && !module.isFromNexus && (
+        {!module.disallowed && !(module.repoVerified && module.repoFromNexus) && (
           <InstallerWarning>
             {__(`Warning: This module is written by a third party, Nexus is NOT
               responsible for its quality or legitimacy. Please make sure to do
@@ -269,7 +332,7 @@ class Installer extends React.Component {
           skin="primary"
           wide
           className="mt1"
-          disabled={installing || !!module.invalid}
+          disabled={installing || !!module.disallowed}
           onClick={this.install}
         >
           {btnLabel}

@@ -4,7 +4,7 @@ import { reduxForm, Field } from 'redux-form';
 import { apiPost } from 'lib/tritiumApi';
 import Modal from 'components/Modal';
 import FormField from 'components/FormField';
-import MaskableTextField from 'components/MaskableTextField';
+import TextFieldWithKeyboard from 'components/TextFieldWithKeyboard';
 import Button from 'components/Button';
 import Spinner from 'components/Spinner';
 import { errorHandler } from 'utils/form';
@@ -89,7 +89,8 @@ export default class ChangePasswordPinModal extends React.Component {
             <FormField label={__('Current password')}>
               <Field
                 name="password"
-                component={MaskableTextField.RF}
+                component={TextFieldWithKeyboard.RF}
+                maskable
                 placeholder={__('Your current password')}
                 autoFocus
               />
@@ -98,7 +99,8 @@ export default class ChangePasswordPinModal extends React.Component {
             <FormField label={__('Current PIN')}>
               <Field
                 name="pin"
-                component={MaskableTextField.RF}
+                component={TextFieldWithKeyboard.RF}
+                maskable
                 placeholder={__('Your current PIN')}
               />
             </FormField>
@@ -106,7 +108,8 @@ export default class ChangePasswordPinModal extends React.Component {
             <div className="mt2">
               <FormField connectLabel label={__('New Password')}>
                 <Field
-                  component={MaskableTextField.RF}
+                  component={TextFieldWithKeyboard.RF}
+                  maskable
                   name="newPassword"
                   placeholder={__('Enter your new password')}
                 />
@@ -114,7 +117,8 @@ export default class ChangePasswordPinModal extends React.Component {
 
               <FormField connectLabel label={__('New PIN')}>
                 <Field
-                  component={MaskableTextField.RF}
+                  component={TextFieldWithKeyboard.RF}
+                  maskable
                   name="newPin"
                   placeholder={__('Enter your new PIN')}
                 />

@@ -5,7 +5,7 @@ import { apiPost } from 'lib/tritiumApi';
 import Modal from 'components/Modal';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
-import MaskableTextField from 'components/MaskableTextField';
+import TextFieldWithKeyboard from 'components/TextFieldWithKeyboard';
 import Button from 'components/Button';
 import LoginModal from 'components/LoginModal';
 import Spinner from 'components/Spinner';
@@ -94,7 +94,7 @@ export default class RecoverPasswordPinModal extends React.Component {
             <FormField label={__('Username')}>
               <Field
                 name="username"
-                component={TextField.RF}
+                component={TextFieldWithKeyboard.RF}
                 placeholder={__('Your username')}
                 autoFocus
               />
@@ -113,7 +113,8 @@ export default class RecoverPasswordPinModal extends React.Component {
             <div className="mt2">
               <FormField connectLabel label={__('New Password')}>
                 <Field
-                  component={MaskableTextField.RF}
+                  component={TextFieldWithKeyboard.RF}
+                  maskable
                   name="newPassword"
                   placeholder={__('Enter your new password')}
                 />
@@ -121,7 +122,8 @@ export default class RecoverPasswordPinModal extends React.Component {
 
               <FormField connectLabel label={__('New PIN')}>
                 <Field
-                  component={MaskableTextField.RF}
+                  component={TextFieldWithKeyboard.RF}
+                  maskable
                   name="newPin"
                   placeholder={__('Enter your new PIN')}
                 />

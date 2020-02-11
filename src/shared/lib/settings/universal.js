@@ -61,6 +61,7 @@ export const defaultSettings = {
   // Modules
   disabledModules: [],
   allowSymLink: false,
+  devModulePaths: [],
 
   // Hidden settings
   acceptedAgreement: false,
@@ -80,6 +81,7 @@ export const defaultSettings = {
   // If false, show Create new user modal instead of Login
   // modal automatically when core is connected
   firstCreateNewUserShown: false,
+  consoleCliSyntax: true,
 };
 
 function filterValidSettings(settings) {
