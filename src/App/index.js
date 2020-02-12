@@ -20,7 +20,6 @@ import Send from './Send';
 import SendTritium from './SendTritium';
 import Transactions from './Transactions';
 import TransactionsTritium from './TransactionsTritium';
-import Market from './Market';
 import AddressBook from './AddressBook';
 import Settings from './Settings';
 import Terminal from './Terminal';
@@ -76,7 +75,6 @@ const App = () => (
                   path="/Transactions"
                   component={legacyMode ? Transactions : TransactionsTritium}
                 />
-                <Route exact path="/Market" component={Market} />
                 <Route exact path="/AddressBook" component={AddressBook} />
                 <Route path="/Settings" component={Settings} />
                 <Route path="/Terminal" component={Terminal} />
