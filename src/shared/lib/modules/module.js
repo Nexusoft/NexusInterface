@@ -1,4 +1,4 @@
-import { join, isAbsolute, normalize } from 'path';
+import { join, isAbsolute, normalize, dirname } from 'path';
 import fs from 'fs';
 import Ajv from 'ajv';
 import semver from 'semver';
@@ -131,23 +131,44 @@ const validateNxsPackageDev = ajv.compile(nxsPackageDevSchema);
  */
 
 /**
- * Check if a directory contains symbolic links
+ * Get a list of upper folders of a path including that path
  *
- * @param {*} dirPath
+ * @param {*} path
  * @returns
  */
-async function findSymLink(dirPath) {
-  const items = await fs.promises.readdir(dirPath);
-  for (let item of items) {
-    const subPath = join(dirPath, item);
-    const stat = await fs.promises.lstat(subPath);
-    if (stat.isSymbolicLink()) return subPath;
-    if (stat.isDirectory()) {
-      const symLink = await findSymLink(subPath);
-      if (symLink) return symLink;
+function getAllUpperFolders(path) {
+  const parent = dirname(path);
+  if (parent !== '.' && parent !== '/' && parent !== path) {
+    return [path, ...getAllUpperFolders(parent)];
+  } else {
+    return [path];
+  }
+}
+
+/**
+ * Check if a path exists, is accessible, and is not a symbolic link
+ *
+ * @param {*} path
+ * @param {*} isDirectory
+ */
+async function checkPath(path, checkSymLink) {
+  let stat;
+  try {
+    stat = await fs.promises.lstat(path);
+  } catch (err) {
+    if (err && err.code === 'ENOENT') {
+      throw { reason: 'not_found', path };
+    } else {
+      throw { reason: 'inaccessible', path };
     }
   }
-  return null;
+
+  if (!stat) {
+    throw { reason: 'not_found', path };
+  }
+  if (checkSymLink && stat.isSymbolicLink()) {
+    throw { reason: 'symlink', path };
+  }
 }
 
 /**
@@ -232,6 +253,8 @@ async function validateModuleInfo(moduleInfo, dirPath) {
         nonRelativeFile
     );
   }
+
+  // Ensure no file names are reserved
   const reservedFile = moduleInfo.files.find(file =>
     reservedFileNames.includes(normalize(file))
   );
@@ -242,34 +265,31 @@ async function validateModuleInfo(moduleInfo, dirPath) {
   }
 
   // Ensure all files exist and are not directories
-  const filePaths = moduleInfo.files.map(file => join(dirPath, file));
-  const missingFile = filePaths.find(path => !fs.existsSync(path));
-  if (missingFile) {
-    throw new Error(
-      `nxs_package.json validation error: file not found at ${missingFile}`
-    );
-  }
-  const stats = await Promise.all(
-    filePaths.map(path => fs.promises.stat(path))
+  // Also check upper folders of all listed files because folder can be a symlink
+  const relativePaths = [].concat(
+    ...moduleInfo.files.map(file => getAllUpperFolders(file))
   );
-  const dirFile = filePaths[stats.findIndex(stat => stat.isDirectory())];
-  if (dirFile) {
-    throw new Error(
-      `nxs_package.json validation error: file not found at ${missingFile}`
-    );
-  }
-
-  // Ensure no symbolic links, both files and folders
-  // Need to scan the whole folder because symbolic link can link to a directory
+  const filePaths = relativePaths.map(path => join(dirPath, path));
   const {
     settings: { devMode, allowSymLink },
   } = store.getState();
-  if (!(devMode && allowSymLink)) {
-    const symLink = await findSymLink(dirPath);
-    if (symLink) {
-      throw new Error(
-        `Symbolic links are not allowed inside module directory. Detected symlink at ${symLink}. Remove it or turn on Allow SymLink under Application Settings`
-      );
+  const checkSymLink = !(devMode && allowSymLink);
+  try {
+    await Promise.all(filePaths.map(path => checkPath(path, checkSymLink)));
+  } catch ({ reason, path }) {
+    switch (reason) {
+      case 'not_found':
+        throw new Error(
+          `nxs_package.json validation error: file not found at ${path}`
+        );
+      case 'inaccessible':
+        throw new Error(
+          `nxs_package.json validation error: ${path} is inaccessible`
+        );
+      case 'symlink':
+        throw new Error(
+          `nxs_package.json validation error: ${path} is a symbolic link`
+        );
     }
   }
 
