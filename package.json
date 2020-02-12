@@ -269,7 +269,8 @@
     "tar": "^5.0.5",
     "three": "^0.111.0",
     "three-orbitcontrols": "^2.110.1",
-    "universal-analytics": "^0.4.20"
+    "universal-analytics": "^0.4.20",
+    "victory": "^34.1.1"
   },
   "devEngines": {
     "node": ">=10.x",
