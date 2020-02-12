@@ -12,7 +12,6 @@ import { legacyMode } from 'consts/misc';
 
 import logoIcon from 'icons/logo.svg';
 import sendIcon from 'icons/send.svg';
-import chartIcon from 'icons/chart.svg';
 import transactionsIcon from 'icons/transaction.svg';
 import addressBookIcon from 'icons/address-book.svg';
 import settingsIcon from 'icons/settings.svg';
@@ -113,10 +112,6 @@ const Navigation = () => (
 
       <NavItem icon={transactionsIcon} to="/Transactions">
         {__('Transactions')}
-      </NavItem>
-
-      <NavItem icon={chartIcon} to="/Market">
-        {__('Market Data')}
       </NavItem>
 
       <NavItem icon={addressBookIcon} to="/AddressBook">
