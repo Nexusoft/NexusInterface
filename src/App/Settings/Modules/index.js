@@ -74,7 +74,7 @@ class SettingsModules extends React.Component {
             last={i === list.length - 1}
           />
         ))}
-        {!!failedModules && (
+        {!!failedModules && failedModules.length > 0 && (
           <FailedModules>
             {failedModules.map(({ name, path, message }) => (
               <FailedModule
