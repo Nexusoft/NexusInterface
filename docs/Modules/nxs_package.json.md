@@ -57,8 +57,11 @@ The type of your module. This decides how your module will be used in the wallet
 - Optional
 - Type: `object`
 - Constraints:
+
   - Available options:
-  ```
+
+  <!-- prettier-ignore -->
+  ```js
   {
     // Whether the module's webview is wrapped inside a panel
     // Only available with `app` type modules
@@ -107,7 +110,7 @@ Path to the icon of you module. See [Module icon](./module-icon.md) for more det
 - Type: `object`
 - Constraints:
   - Object schema:
-  ```
+  ```js
   {
     name: string,
     email: string

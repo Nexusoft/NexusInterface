@@ -1,6 +1,6 @@
 # Developer's guide to Nexus Wallet Module
 
-**Nexus Wallet Modules** are third party code packages that allows Nexus Wallet users to customize and add more functionalities to their wallets (similarly to _extensions_ or _add-ons_ in other systems). Modules can be written and distributed by anyone who has sufficient programming skills, and can be optionally installed by anyone who uses Nexus Wallet.
+**Nexus Wallet Modules** are third party code packages that allow Nexus Wallet users to customize and add more functionalities to their wallets (similarly to _extensions_ or _add-ons_ in other systems). Modules can be written and distributed by anyone who has sufficient programming skills, and can be optionally installed by anyone who uses Nexus Wallet.
 
 Nexus Wallet is a web-based desktop application built on [Electron](https://electronjs.org/), therefore you can build Nexus Wallet Modules using the **web technology**, i.e. HTML, CSS, and Javascript. You, as a module developer, have the total freedom to choose what web frameworks or libraries you like to use to build their modules, for example you can use either React, Angular or Vue for UI logic, LESS, SASS, or Stylus for styling,... or you can even just use plain HTML/CSS/Javascript if that's what you prefer.
 
@@ -46,7 +46,6 @@ Here are some topics that you can learn about:
 - [Module types](./module-types.md)
 - [Communicating between modules and the wallet](./communication.md)
 - [Module icon](./module-icon.md)
-- [Icon component](./icon-component.md)
 
 API References
 
@@ -71,7 +70,7 @@ The purpose of this verification process is to ensure that all Nexus Wallet Modu
 
 ### 5. Package & release
 
-### Packaging your module
+#### Packaging your module
 
 Once your module is verified and you've received the repo_info.json file from Nexus team, copy this repo_info.json file to a new folder together with all production files (those that are listed in [nxs_package.json's `files` field](./nxs_package.json.md#files)) including nxs_package.json itself, compress that folder (currently only 2 compression formats are supported are `.zip` and `.tar.gz`) and distribute it.
 
@@ -85,4 +84,4 @@ In order for the automatic check for module updates feature to work, in your a r
 
 ---
 
-If you have any question or idea about Nexus Wallet Module, contact us via #modules channel on Nexus Community slack.
+If you have any question or idea about Nexus Wallet Module, contact us via #modules channel on [Nexus Community slack](https://slack.nexus.io/).

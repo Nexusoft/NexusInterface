@@ -33,8 +33,11 @@ Should be the same as in [nxs_package.json](./nxs_package.json.md).
 - Optional
 - Type: `object`
 - Constraints:
+
   - Available options:
-  ```
+
+  <!-- prettier-ignore -->
+  ```js
   {
     // Whether the module's webview is wrapped inside a panel
     // Only available with `app` type modules
