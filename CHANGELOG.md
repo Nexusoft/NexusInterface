@@ -1,19 +1,30 @@
-# 2.1.4 (2020.1.25)
+# 2.2.0 (2020.1.25)
 
-[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.1.4)
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.2.0)
 
 #### Additions
 
 - Added Names and Namespaces functionalities
+- Added virtual (on-screen) keyboard
+- Added support for development modules
+- Added check for module updates feature
+- Added an Open App button on Module Details for `app` modules
+- Added logging for modules that fail to load
 
 #### Adjustments
 
+- Moved Market Data page out into a downloadable module
 - Improved performance for loading a long transactions history
+- Tritium API console now let you explicitly choose which syntax you use (URL or CLI)
+- Improved error reporting when a module fails to install
+- Deprecated module specification version, using wallet version directly instead
+- Modules that are built on a deprecated wallet version now still work, only showing a warning
 
 #### Fixes
 
 - Fixed the core failing to start when the Nexus directory doesn't exist
 - Fixed legacy transactions not being loaded
+- Fixed transactions not being loaded in some cases
 - Fixed module file server error
 
 # 2.1.3 (2020.1.03)

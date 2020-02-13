@@ -80,6 +80,7 @@ export default class App extends React.Component {
 
           <InputWrapper>
             <Input
+              readOnly
               value={text}
               onChange={this.handleInputChange}
               placeholder={placeholder}
