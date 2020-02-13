@@ -2,7 +2,7 @@
 
 Nexus Wallet Modules can be written by any third-party developers, therefore security is one of our primary concerns when we design the module system.
 
-In this article, we will talk about the main security mechanisms that we have employed to minimize the security risks of third-party modules.
+In this article, we will talk about the main security mechanisms that we have employed to minimize the security risks that third-party modules can bring to wallet users.
 
 ## `webview` security
 

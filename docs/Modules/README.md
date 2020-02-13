@@ -66,7 +66,7 @@ You can have both your development module and production module installed at the
 
 When you're already satisfied with your module, before you can distribute it to your users, you need to get your module repository verified, or people will not be able to install and run your module due to the [Module open source policy](./module-security.md#module-open-source-policy).
 
-The purpose of this verification process is to ensure that all Nexus Wallet Modules are open source, reducing the risk of malicious modules. See [Module open source policy](./module-security.md#module-open-source-policy) to learn more about the security concerns and reasonings behind this policy, and [Repository verification process](./repo_verification-process.md) to learn what steps you need to do to get your repository will be verified.
+The purpose of this verification process is to ensure that all Nexus Wallet Modules are open source, reducing the risk of malicious modules. See [Module open source policy](./module-security.md#module-open-source-policy) to learn more about the security concerns and reasonings behind this policy, and [Repository verification process](./repo-verification-process.md) to learn what steps you need to do to get your repository will be verified.
 
 ### 5. Package & release
 
