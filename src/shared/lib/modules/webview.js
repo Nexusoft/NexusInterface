@@ -17,7 +17,6 @@ import { apiPost } from 'lib/tritiumApi';
 import { legacyMode } from 'consts/misc';
 
 import { readModuleStorage, writeModuleStorage } from './storage';
-import { getModuleIfEnabled } from './utils';
 
 const cmdWhitelist = [
   'checkwallet',
@@ -110,7 +109,7 @@ const getSettingsForModules = memoize((locale, fiatCurrency, addressStyle) => ({
 }));
 
 const settingsChanged = (settings1, settings2) =>
-  settings1 !== settings2 && (!!settings1 && !!settings2)
+  settings1 !== settings2 && !!settings1 && !!settings2
     ? settings1.locale !== settings2.locale ||
       settings1.fiatCurrency !== settings2.fiatCurrency ||
       settings1.addressStyle !== settings2.addressStyle
@@ -127,13 +126,9 @@ const getModuleData = ({
 });
 
 const getActiveModule = () => {
-  const state = store.getState();
-  const { activeAppModule } = state;
-  return getModuleIfEnabled(
-    activeAppModule && activeAppModule.moduleName,
-    state.modules,
-    state.settings.disabledModules
-  );
+  const { activeAppModule, modules } = store.getState();
+  const module = modules[activeAppModule.moduleName];
+  return module.enabled ? module : null;
 };
 
 /**
@@ -208,7 +203,7 @@ async function proxyRequest([url, options, requestId]) {
 
     const response = await axios(url, options);
     const { activeAppModule } = store.getState();
-    if (activeAppModule) {
+    if (activeAppModule && activeAppModule.webview) {
       activeAppModule.webview.send(
         `proxy-response${requestId ? `:${requestId}` : ''}`,
         null,
@@ -218,7 +213,7 @@ async function proxyRequest([url, options, requestId]) {
   } catch (err) {
     console.error(err);
     const { activeAppModule } = store.getState();
-    if (activeAppModule) {
+    if (activeAppModule && activeAppModule.webview) {
       activeAppModule.webview.send(
         `proxy-response${requestId ? `:${requestId}` : ''}`,
         err.toString ? err.toString() : err
@@ -235,7 +230,7 @@ async function rpcCall([command, params, callId]) {
 
     const response = await rpc(command, ...(params || []));
     const { activeAppModule } = store.getState();
-    if (activeAppModule) {
+    if (activeAppModule && activeAppModule.webview) {
       activeAppModule.webview.send(
         `rpc-return${callId ? `:${callId}` : ''}`,
         null,
@@ -245,7 +240,7 @@ async function rpcCall([command, params, callId]) {
   } catch (err) {
     console.error(err);
     const { activeAppModule } = store.getState();
-    if (activeAppModule) {
+    if (activeAppModule && activeAppModule.webview) {
       activeAppModule.webview.send(
         `rpc-return${callId ? `:${callId}` : ''}`,
         err
@@ -262,7 +257,7 @@ async function apiCall([endpoint, params, callId]) {
 
     const result = await apiPost(endpoint, params);
     const { activeAppModule } = store.getState();
-    if (activeAppModule) {
+    if (activeAppModule && activeAppModule.webview) {
       activeAppModule.webview.send(
         `api-return${callId ? `:${callId}` : ''}`,
         null,
@@ -272,7 +267,7 @@ async function apiCall([endpoint, params, callId]) {
   } catch (err) {
     console.error(err);
     const { activeAppModule } = store.getState();
-    if (activeAppModule) {
+    if (activeAppModule && activeAppModule.webview) {
       activeAppModule.webview.send(
         `api-return${callId ? `:${callId}` : ''}`,
         err
@@ -315,7 +310,7 @@ function confirm([options = {}, confirmationId]) {
         `confirm-answer${confirmationId ? `:${confirmationId}` : ''}`
       );
       const { activeAppModule } = store.getState();
-      if (activeAppModule) {
+      if (activeAppModule && activeAppModule.webview) {
         activeAppModule.webview.send(
           `confirm-answer${confirmationId ? `:${confirmationId}` : ''}`,
           true
@@ -326,7 +321,7 @@ function confirm([options = {}, confirmationId]) {
     skinNo,
     callbackNo: () => {
       const { activeAppModule } = store.getState();
-      if (activeAppModule) {
+      if (activeAppModule && activeAppModule.webview) {
         activeAppModule.webview.send(
           `confirm-answer${confirmationId ? `:${confirmationId}` : ''}`,
           false
@@ -358,10 +353,9 @@ function updateStorage([data]) {
 
 walletEvents.once('post-render', function() {
   observeStore(
-    state => state.activeAppModule,
-    activeAppModule => {
-      if (activeAppModule) {
-        const { webview } = activeAppModule;
+    state => state.activeAppModule && state.activeAppModule.webview,
+    webview => {
+      if (webview) {
         webview.addEventListener('ipc-message', handleIpcMessage);
         webview.addEventListener('dom-ready', async () => {
           const state = store.getState();
@@ -383,7 +377,7 @@ walletEvents.once('post-render', function() {
     (settings, oldSettings) => {
       if (settingsChanged(oldSettings, settings)) {
         const { activeAppModule } = store.getState();
-        if (activeAppModule) {
+        if (activeAppModule && activeAppModule.webview) {
           try {
             activeAppModule.webview.send('settings-updated', settings);
           } catch (err) {}
@@ -396,7 +390,7 @@ walletEvents.once('post-render', function() {
     state => state.theme,
     theme => {
       const { activeAppModule } = store.getState();
-      if (activeAppModule) {
+      if (activeAppModule && activeAppModule.webview) {
         try {
           activeAppModule.webview.send('theme-updated', theme);
         } catch (err) {}
@@ -408,7 +402,7 @@ walletEvents.once('post-render', function() {
     state => (legacyMode ? state.core.info : state.core.systemInfo),
     coreInfo => {
       const { activeAppModule } = store.getState();
-      if (activeAppModule) {
+      if (activeAppModule && activeAppModule.webview) {
         try {
           activeAppModule.webview.send('coreInfo-updated', coreInfo);
         } catch (err) {}
@@ -437,7 +431,7 @@ export const unsetActiveWebView = () => {
 
 export const toggleWebViewDevTools = () => {
   const { activeAppModule } = store.getState();
-  if (activeAppModule) {
+  if (activeAppModule && activeAppModule.webview) {
     const { webview } = activeAppModule;
     if (webview.isDevToolsOpened()) {
       webview.closeDevTools();

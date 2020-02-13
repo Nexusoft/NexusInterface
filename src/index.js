@@ -3,6 +3,7 @@ import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 
 import 'appMenu';
+import 'lib/market';
 import store from 'store';
 import { walletEvents } from 'lib/wallet';
 import { startCore } from 'lib/core';

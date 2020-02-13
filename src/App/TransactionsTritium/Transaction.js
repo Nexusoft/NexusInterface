@@ -48,7 +48,6 @@ const TransactionLeft = styled.div(({ theme }) => ({
   alignItems: 'center',
   color: theme.foreground,
   borderRight: `1px solid ${color.fade(theme.primary, 0.5)}`,
-  padding: '12px',
   cursor: 'pointer',
   transition: `background ${timing.normal}`,
   '&:hover': {
@@ -58,12 +57,12 @@ const TransactionLeft = styled.div(({ theme }) => ({
 
 const TransactionDate = styled.div({
   textAlign: 'center',
+  padding: '12px',
   position: 'relative',
 });
 
 const FullDateTime = styled.div({
   fontSize: 14,
-  padding: '0 0.1px', // fix a small display bug
 });
 
 const ShortDate = styled.div(({ theme }) => ({

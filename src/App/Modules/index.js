@@ -4,11 +4,10 @@ import { connect } from 'react-redux';
 
 // Internal Global
 import GA from 'lib/googleAnalytics';
-import { getModuleIfEnabled } from 'lib/modules';
 
 // Internal Local
-import PageModule from './PageModule';
-import PagePanelModule from './PagePanelModule';
+import AppModule from './AppModule';
+import WrappedAppModule from './WrappedAppModule';
 
 /**
  * Modules
@@ -16,12 +15,8 @@ import PagePanelModule from './PagePanelModule';
  * @class Modules
  * @extends {Component}
  */
-@connect((state, props) => ({
-  module: getModuleIfEnabled(
-    props.match.params.name,
-    state.modules,
-    state.settings.disabledModules
-  ),
+@connect(state => ({
+  modules: state.modules,
 }))
 class Modules extends React.Component {
   /**
@@ -40,13 +35,14 @@ class Modules extends React.Component {
    * @memberof Modules
    */
   render() {
-    const { module } = this.props;
-    if (!module || module.type !== 'app') return null;
+    const { modules, match } = this.props;
+    const module = modules[match.params.name];
+    if (!module || module.info.type !== 'app' || !module.enabled) return null;
 
-    if (module.options && module.options.wrapInPanel) {
-      return <PagePanelModule module={module} />;
+    if (module.info.options && module.info.options.wrapInPanel) {
+      return <WrappedAppModule module={module} />;
     } else {
-      return <PageModule module={module} />;
+      return <AppModule module={module} />;
     }
   }
 }
