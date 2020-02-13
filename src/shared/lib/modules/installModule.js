@@ -9,6 +9,7 @@ import {
   openSuccessDialog,
   openErrorDialog,
 } from 'lib/ui';
+import GA from 'lib/googleAnalytics';
 import { updateSettings } from 'lib/settings';
 import ModuleDetailsModal from 'components/ModuleDetailsModal';
 import { modulesDir } from 'consts/paths';
@@ -102,6 +103,7 @@ async function doInstall(path) {
         }
 
         await copyModule(module.info.files, path, dest);
+        GA.SendEvent('Modules', 'installModule', 'name', module.info.name);
 
         openSuccessDialog({
           message: __('Module has been successfully installed'),
