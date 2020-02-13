@@ -1,12 +1,12 @@
 # Repository verification process
 
-**Important notes**:
+**Important notices**:
 
 - This repository verification process **ONLY** verifies that a module's distributed files **match the provided open source repository**. This process does **NOT** guarantee **if the module contains malicious/faulty code or not**.
 
 - **Everytime** you release new version of your module, you must go though this verification process **again**.
 
-See [Module open source policy](./module-security.md#module-open-source-policy) to learn more about the reasonings behind this.
+See [Module open source policy](./module-security.md#module-open-source-policy) to learn more about the reasonings behind this verification process.
 
 ## How to get your module verified
 
@@ -18,7 +18,7 @@ Before getting your repository verified, please ensure these prerequisites condi
 
 - You have included a well-formed and valid [nxs_package.json](./nxs_package.json.md) in your repository.
 
-When all the above prerequisites are met, send an email to [Developers](mailto:developer@nexus.io) along with the following information:
+When all the above prerequisites are met, send an email to [developer@nexus.io](mailto:developer@nexus.io) along with the following information:
 
 1. An archive file (preferably in `.zip` format) that contains your module distribution (files that you'll distribute to users). This should be attached to the email.
 
