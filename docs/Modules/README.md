@@ -27,7 +27,7 @@ Unless you're experienced with developing Nexus Wallet Modules, or you're confid
 
 - [minimal_module_example](https://github.com/Nexusoft/minimal_module_example) - A minimal "Hello World" type of module to demonstrate what a simple Nexus Wallet Module needs at minimum, written in plain HTML, CSS and Javascript.
 - [simple_react_module_example](https://github.com/Nexusoft/simple_react_module_example) - A simple example module written in React.
-- [react-redux_module_example](https://github.com/Nexusoft/react_redux_module_example) - (Most recommended) A little more complex module using React and Redux, showcasing some advanced features that Nexus Wallet Modules provide.
+- [react-redux_module_example](https://github.com/Nexusoft/react_redux_module_example) - (Most recommended) A more complex module using React and Redux, showcasing some advanced features that Nexus Wallet Modules provide.
 
 Please keep in mind that your module code needs to be open source and publicly accessible (just read access). If not, Nexus team won't be able to verify your module source code and people won't be able to run your module. Currently, github.com is the only repository hosting that is supported, Nexus team will consider supporting more hostings in the future.
 

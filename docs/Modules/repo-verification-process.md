@@ -1,8 +1,10 @@
 # Repository verification process
 
-**Important note**: This repository verification process **ONLY** verifies that a module's distributed files **match the provided open source repository**. This process does **NOT** guarantee **if the module contains malicious/faulty code or not**.
+**Important notes**:
 
-**Everytime you release new version of your module, you must go though the repository verification process again.**
+- This repository verification process **ONLY** verifies that a module's distributed files **match the provided open source repository**. This process does **NOT** guarantee **if the module contains malicious/faulty code or not**.
+
+- **Everytime** you release new version of your module, you must go though this verification process **again**.
 
 See [Module open source policy](./module-security.md#module-open-source-policy) to learn more about the reasonings behind this.
 
