@@ -36,6 +36,7 @@ Checking sync status,Checking sync status,Header
 Synchronizing,Synchronizing,Header
 Synchronized,Synchronized,Header
 You're not logged in,You're not logged in,Header
+You are staking but have not received a block in 30 minutes!,You are staking but have not received a block in 30 minutes!,Header
 Accounts,Accounts,Header.UserDropdown
 Tokens,Tokens,Header.UserDropdown
 Set recovery phrase,Set recovery phrase,Header.UserDropdown
@@ -43,24 +44,11 @@ Migrate stake,Migrate stake,Header.UserDropdown
 Log out,Log out,Header.UserDropdown
 Log in,Log in,Header.UserDropdown
 Create new user,Create new user,Header.UserDropdown
-Date,Date,MarketData
-Price,Price,MarketData
-Volume,Volume,MarketData
-24hr Change,24hr Change,MarketData
-High,High,MarketData
-Price Change,Price Change,MarketData
-Low,Low,MarketData
-Refreshing market data...,Refreshing market data...,MarketData
-Refresh,Refresh,MarketData
-Market Data,Market Data,MarketData
-Open,Open,MarketData
-Close,Close,MarketData
 Overview,Overview,NavigationBar
 User,User,NavigationBar
 Send NXS,Send NXS,NavigationBar
 Send,Send,NavigationBar
 Transactions,Transactions,NavigationBar
-Market Data,Market Data,NavigationBar
 Address Book,Address Book,NavigationBar
 Settings,Settings,NavigationBar
 Console,Console,NavigationBar
@@ -127,10 +115,12 @@ Page,Page,
 rows,rows,
 Previous,Previous,
 Next,Next,
+Use virtual keyboard,Use virtual keyboard,
 Transaction received,Transaction received,
 Transaction sent,Transaction sent,
 Genesis transaction,Genesis transaction,
 Trust transaction,Trust transaction,
+Update available for %{smart_count} module |||| Updates available for %{smart_count} modules,Update available for %{smart_count} module |||| Updates available for %{smart_count} modules,
 New transaction,New transaction,
 Error,Error,
 Unknown error,Unknown error,
@@ -272,8 +262,8 @@ Clear all stored peer connections and restart Nexus,Clear all stored peer connec
 Clear,Clear,Settings.Core
 Verbose level,Verbose level,Settings.Core
 Verbose level for logs.,Verbose level for logs.,Settings.Core
-Wallet Data Directory Override,Wallet Data Directory Override,Settings.Core
-Change where the data directory is. This is where the wallet.dat and database are located. Default is blank.,Change where the data directory is. This is where the wallet.dat and database are located. Default is blank.,Settings.Core
+Core Data Directory,Core Data Directory,Settings.Core
+Where the blockchain data and your legacy wallet.dat are stored,Where the blockchain data and your legacy wallet.dat are stored,Settings.Core
 Testnet Iteration,Testnet Iteration,Settings.Core
 The iteration of Testnet to connect to.,The iteration of Testnet to connect to.,Settings.Core
 Turn Off,Turn Off,Settings.Core
@@ -310,6 +300,8 @@ Core,Core,Settings
 Security,Security,Settings
 Style,Style,Settings
 Modules,Modules,Settings
+Select development module directory,Select development module directory,Settings.Modules
+Your module is still in development? <link>Add a development module</link>,Your module is still in development? <link>Add a development module</link>,Settings.Modules
 Select module archive file,Select module archive file,Settings.Modules
 Select module directory,Select module directory,Settings.Modules
 Add Module,Add Module,Settings.Modules
@@ -317,12 +309,16 @@ Checking module,Checking module,Settings.Modules
 Drop here to install,Drop here to install,Settings.Modules
 Select module's <file>archive file</file> or <dir>directory</dir>,Select module's <file>archive file</file> or <dir>directory</dir>,Settings.Modules
 or drag and drop it here,or drag and drop it here,Settings.Modules
+Failed to load %{moduleName},Failed to load %{moduleName},Settings.Modules
 Disable %{moduleName}?,Disable %{moduleName}?,Settings.Modules
 Wallet will be automatically refreshed for the change to take effect,Wallet will be automatically refreshed for the change to take effect,Settings.Modules
 Enable %{moduleName}?,Enable %{moduleName}?,Settings.Modules
-Deprecated Specification version,Deprecated Specification version,Settings.Modules
+This module was built for an incompatible wallet version,This module was built for an incompatible wallet version,Settings.Modules
 Module is not open source,Module is not open source,Settings.Modules
 The provided repository is not verified to be the real source code of this module,The provided repository is not verified to be the real source code of this module,Settings.Modules
+%{version} update available,%{version} update available,Settings.Modules
+development,development,Settings.Modules
+Failed to load module,Failed to load module,Settings.Modules
 Overwrite module?,Overwrite module?,Settings.Modules
 A module with the same directory name already exists,A module with the same directory name already exists,Settings.Modules
 Module has been successfully installed,Module has been successfully installed,Settings.Modules
@@ -330,8 +326,12 @@ The wallet will now be refreshed for the new module to take effect,The wallet wi
 Error copying module files,Error copying module files,Settings.Modules
 Cannot find module,Cannot find module,Settings.Modules
 Unsupported file type,Unsupported file type,Settings.Modules
-Cannot install from that location,Cannot install from that location,Settings.Modules
+Cannot install from this location,Cannot install from this location,Settings.Modules
 An unknown error occurred,An unknown error occurred,Settings.Modules
+Directory has already been added,Directory has already been added,Settings.Modules
+Failed to load development module,Failed to load development module,Settings.Modules
+A module with the same name already exists,A module with the same name already exists,Settings.Modules
+Development module has been added,Development module has been added,Settings.Modules
 Are you sure you want to log out?,Are you sure you want to log out?,Settings.Security
 Error logging out,Error logging out,Settings.Security
 Change password,Change password,Settings.Security
@@ -423,9 +423,10 @@ Custom,Custom,Settings.Style
 Reset,Reset,Settings.Style
 Console,Console,Console
 Core output,Core output,Console
-Enter API here (ex: api/verb/noun?param=value&param2=2 or param=1 param2=2),Enter API here (ex: api/verb/noun?param=value&param2=2 or param=1 param2=2),Console.NexusAPI
-API Documentation,API Documentation,Console.NexusAPI
+CLI syntax,CLI syntax,Console.NexusAPI
+URL syntax,URL syntax,Console.NexusAPI
 Execute,Execute,Console.NexusAPI
+API Documentation,API Documentation,Console.NexusAPI
 Clear,Clear,Console.NexusAPI
 "Enter console commands here (ex: getinfo, help)","Enter console commands here (ex: getinfo, help)",Console.Console
 Execute,Execute,Console.Console
@@ -463,6 +464,8 @@ Trust,Trust,Transactions
 Unknown,Unknown,Transactions
 Legacy transaction,Legacy transaction,Transactions
 Coinbase transaction,Coinbase transaction,Transactions
+View contract details,View contract details,Transactions
+View transaction details,View transaction details,Transactions
 Address,Address,Transactions
 Account/token address,Account/token address,Transactions
 Name,Name,Transactions
@@ -485,8 +488,6 @@ Pending,Pending,Transactions.TransactionDetails
 Transaction ID,Transaction ID,Transactions.TransactionDetails
 Block hash,Block hash,Transactions.TransactionDetails
 Loading transaction details...,Loading transaction details...,Transactions.TransactionDetails
-Sequence,Sequence,Transactions.TransactionDetails
-Type,Type,Transactions.TransactionDetails
 Transactions chart,Transactions chart,Transactions.TransactionsChart
 Amount,Amount,Transactions.TransactionsChart
 Time,Time,Transactions.TransactionsChart
@@ -512,6 +513,7 @@ Last modified,Last modified,User.Accounts.AccountDetails
 Token name,Token name,User.Accounts.AccountDetails
 Total account balance,Total account balance,User.Accounts.AccountDetails
 Available balance,Available balance,User.Accounts.AccountDetails
+Send %{token_name},Send %{token_name},User.Accounts.AccountDetails
 Pending balance,Pending balance,User.Accounts.AccountDetails
 Unconfirmed balance,Unconfirmed balance,User.Accounts.AccountDetails
 Stake balance,Stake balance,User.Accounts.AccountDetails
@@ -542,9 +544,96 @@ User ID,User ID,User
 Accounts,Accounts,User
 Staking,Staking,User
 Tokens,Tokens,User
+Names,Names,User
+Namespaces,Namespaces,User
 Change password & PIN,Change password & PIN,User
 Change recovery phrase,Change recovery phrase,User
 Set recovery phrase,Set recovery phrase,User
+Name,Name,ChangeRegisterAddress
+Register address,Register address,ChangeRegisterAddress
+Register address that this name points to,Register address that this name points to,ChangeRegisterAddress
+Name update fee,Name update fee,ChangeRegisterAddress
+Updating name,Updating name,ChangeRegisterAddress
+Update name,Update name,ChangeRegisterAddress
+Name has been updated,Name has been updated,ChangeRegisterAddress
+Error updating name,Error updating name,ChangeRegisterAddress
+Change register address,Change register address,ChangeRegisterAddress
+Local,Local,CreateName
+Namespaced,Namespaced,CreateName
+Global,Global,CreateName
+Namespace,Namespace,CreateName
+A namespace you own,A namespace you own,CreateName
+Name,Name,CreateName
+name,name,CreateName
+namespace,namespace,CreateName
+Register address,Register address,CreateName
+Register address that this name points to,Register address that this name points to,CreateName
+Name creation fee,Name creation fee,CreateName
+Creating name,Creating name,CreateName
+Create name,Create name,CreateName
+Name is required,Name is required,CreateName
+Name cannot start with a colon character,Name cannot start with a colon character,CreateName
+Namespace is required,Namespace is required,CreateName
+New name has been created,New name has been created,CreateName
+Error creating name,Error creating name,CreateName
+Create a new name,Create a new name,CreateName
+View name details,View name details,User.Names
+Change register address,Change register address,User.Names
+Transfer name,Transfer name,User.Names
+Global,Global,User.Names
+Namespaced,Namespaced,User.Names
+Local,Local,User.Names
+Create new name,Create new name,User.Names
+You don't own any names,You don't own any names,User.Names
+Name Details,Name Details,NameDetails
+Change register address,Change register address,NameDetails
+Name,Name,NameDetails
+Type,Type,NameDetails
+Global,Global,NameDetails
+Namespaced,Namespaced,NameDetails
+Local,Local,NameDetails
+Namespace,Namespace,NameDetails
+Address,Address,NameDetails
+Points to,Points to,NameDetails
+Created at,Created at,NameDetails
+Last modified,Last modified,NameDetails
+Transfer ownership,Transfer ownership,NameDetails
+Name,Name,TransferName
+Transfer to,Transfer to,TransferName
+Recipient username or user ID,Recipient username or user ID,TransferName
+Transferring name,Transferring name,TransferName
+Transfer name,Transfer name,TransferName
+Recipient is required,Recipient is required,TransferName
+Name has been transferred,Name has been transferred,TransferName
+Error transferring name,Error transferring name,TransferName
+Name,Name,CreateNamespace
+Namespace name,Namespace name,CreateNamespace
+Namespace creation fee,Namespace creation fee,CreateNamespace
+Creating namespace,Creating namespace,CreateNamespace
+Create namespace,Create namespace,CreateNamespace
+Name is required,Name is required,CreateNamespace
+"Namespace names can only contain lowercase letters, numbers, and periods (.)","Namespace names can only contain lowercase letters, numbers, and periods (.)",CreateNamespace
+New namespace has been created,New namespace has been created,CreateNamespace
+Error creating namespace,Error creating namespace,CreateNamespace
+Create a new namespace,Create a new namespace,CreateNamespace
+View name details,View name details,User.Namespaces
+Transfer namespace,Transfer namespace,User.Namespaces
+Create new namespace,Create new namespace,User.Namespaces
+You don't own any namespaces,You don't own any namespaces,User.Namespaces
+Namespace Details,Namespace Details,NamespaceDetails
+Name,Name,NamespaceDetails
+Address,Address,NamespaceDetails
+Created at,Created at,NamespaceDetails
+Last modified,Last modified,NamespaceDetails
+Transfer ownership,Transfer ownership,NamespaceDetails
+Namespace,Namespace,TransferNamespace
+Transfer to,Transfer to,TransferNamespace
+Recipient username or user ID,Recipient username or user ID,TransferNamespace
+Transferring namespace,Transferring namespace,TransferNamespace
+Transfer namespace,Transfer namespace,TransferNamespace
+Destination is required,Destination is required,TransferNamespace
+Namespace has been transferred,Namespace has been transferred,TransferNamespace
+Error transferring namespace,Error transferring namespace,TransferNamespace
 The current NXS balance of the trust account that is not staked. You can spend this amount without affecting your Trust Score,The current NXS balance of the trust account that is not staked. You can spend this amount without affecting your Trust Score,User.Staking
 "Balance that will be staked after the 72 holding period, any change to this balance will reset the hold timer","Balance that will be staked after the 72 holding period, any change to this balance will reset the hold timer",User.Staking
 Restart Core?,Restart Core?,User.Staking
@@ -573,6 +662,8 @@ Available Balance,Available Balance,User.Staking
 Migrate stake,Migrate stake,User.Staking
 Adjust stake amount,Adjust stake amount,User.Staking
 Account on hold for another %{stakeSeconds} Seconds,Account on hold for another %{stakeSeconds} Seconds,User.Staking
+Stop staking,Stop staking,User.Staking
+Start staking,Start staking,User.Staking
 Create new token,Create new token,User.Tokens
 Lookup a token,Lookup a token,User.Tokens
 Unnamed token,Unnamed token,User.Tokens
@@ -695,11 +786,11 @@ Change password and PIN,Change password and PIN,ChangePassword&PIN
 Current password,Current password,ChangePassword&PIN
 Your current password,Your current password,ChangePassword&PIN
 Current PIN,Current PIN,ChangePassword&PIN
-Your current PIN number,Your current PIN number,ChangePassword&PIN
+Your current PIN,Your current PIN,ChangePassword&PIN
 New Password,New Password,ChangePassword&PIN
 Enter your new password,Enter your new password,ChangePassword&PIN
 New PIN,New PIN,ChangePassword&PIN
-Enter your new PIN number,Enter your new PIN number,ChangePassword&PIN
+Enter your new PIN,Enter your new PIN,ChangePassword&PIN
 Updating,Updating,ChangePassword&PIN
 Update,Update,ChangePassword&PIN
 Current password is required,Current password is required,ChangePassword&PIN
@@ -719,10 +810,11 @@ Password,Password,ConfirmPassword&PIN
 Re-enter your new password,Re-enter your new password,ConfirmPassword&PIN
 Re-enter your password,Re-enter your password,ConfirmPassword&PIN
 PIN,PIN,ConfirmPassword&PIN
-Re-enter your new PIN number,Re-enter your new PIN number,ConfirmPassword&PIN
-Re-enter your PIN number,Re-enter your PIN number,ConfirmPassword&PIN
+Re-enter your new PIN,Re-enter your new PIN,ConfirmPassword&PIN
+Re-enter your PIN,Re-enter your PIN,ConfirmPassword&PIN
 Confirm,Confirm,ConfirmPassword&PIN
 Contract Details,Contract Details,ContractDetails
+View transaction details,View transaction details,ContractDetails
 Yes,Yes,ConfirmDialog
 No,No,ConfirmDialog
 Dismiss,Dismiss,ErrorDialog
@@ -737,7 +829,7 @@ Enter your username,Enter your username,Login
 Password,Password,Login
 Enter your password,Enter your password,Login
 PIN,PIN,Login
-Enter your PIN number,Enter your PIN number,Login
+Enter your PIN,Enter your PIN,Login
 Logging in,Logging in,Login
 Forgot password?,Forgot password?,Login
 Create new user,Create new user,Login
@@ -764,23 +856,25 @@ Legacy wallet password,Legacy wallet password,MigrateStake
 Leave this blank if your legacy wallet is not encrypted,Leave this blank if your legacy wallet is not encrypted,MigrateStake
 Cancel,Cancel,MigrateStake
 Module Details,Module Details,ModuleDetails
+Remove module,Remove module,ModuleDetails
 Module name,Module name,ModuleDetails
 Display name,Display name,ModuleDetails
 Module type,Module type,ModuleDetails
+in development,in development,ModuleDetails
 Version,Version,ModuleDetails
-Module Specifications version,Module Specifications version,ModuleDetails
+Target wallet version,Target wallet version,ModuleDetails
+incompatible,incompatible,ModuleDetails
 Description,Description,ModuleDetails
-Not provided,Not provided,ModuleDetails
 Author,Author,ModuleDetails
-No information,No information,ModuleDetails
 Source code,Source code,ModuleDetails
 Visit repository,Visit repository,ModuleDetails
 This module is developed by Nexus,This module is developed by Nexus,ModuleDetails
 This repository does not exist or is private,This repository does not exist or is private,ModuleDetails
 This repository is not verified to be the real source code of this module,This repository is not verified to be the real source code of this module,ModuleDetails
 Module hash,Module hash,ModuleDetails
-Not available,Not available,ModuleDetails
-Module is invalid,Module is invalid,ModuleDetails
+Download %{version} (manual),Download %{version} (manual),ModuleDetails
+Open App,Open App,ModuleDetails
+Module is disallowed,Module is disallowed,ModuleDetails
 Installing Module...,Installing Module...,ModuleDetails
 Install Module,Install Module,ModuleDetails
 "Warning: This module is written by a third party, Nexus is NOT
@@ -823,7 +917,7 @@ A globally unique username,A globally unique username,NewUser
 Password,Password,NewUser
 Enter your password,Enter your password,NewUser
 PIN,PIN,NewUser
-Enter your PIN number,Enter your PIN number,NewUser
+Enter your PIN,Enter your PIN,NewUser
 Attention,Attention,NewUser
 "Please be sure to make a note of up your username, password, and PIN, and keep it in a safe place. If you lose or forget them you will be unable to access your account.","Please be sure to make a note of up your username, password, and PIN, and keep it in a safe place. If you lose or forget them you will be unable to access your account.",NewUser
 Creating user,Creating user,NewUser
@@ -842,8 +936,8 @@ User registration for %{username} has been confirmed,User registration for %{use
 User registration for %{username} is waiting to be confirmed on Nexus blockchain...,User registration for %{username} is waiting to be confirmed on Nexus blockchain...,NewUser
 Pin must be at least 4 characters,Pin must be at least 4 characters,PinDialog
 Confirm,Confirm,PinDialog
-Enter PIN number,Enter PIN number,PinDialog
-Your PIN number,Your PIN number,PinDialog
+Enter PIN,Enter PIN,PinDialog
+Your PIN,Your PIN,PinDialog
 Cancel,Cancel,PinDialog
 Recover password and PIN,Recover password and PIN,RecoverPassword&PIN
 Username,Username,RecoverPassword&PIN
@@ -853,7 +947,7 @@ Your recovery phrase,Your recovery phrase,RecoverPassword&PIN
 New Password,New Password,RecoverPassword&PIN
 Enter your new password,Enter your new password,RecoverPassword&PIN
 New PIN,New PIN,RecoverPassword&PIN
-Enter your new PIN number,Enter your new PIN number,RecoverPassword&PIN
+Enter your new PIN,Enter your new PIN,RecoverPassword&PIN
 Recovering password & PIN,Recovering password & PIN,RecoverPassword&PIN
 Recover password & PIN,Recover password & PIN,RecoverPassword&PIN
 Username is required,Username is required,RecoverPassword&PIN
@@ -870,7 +964,7 @@ Recovery phrase,Recovery phrase,SetRecoveryPhrase
 Password,Password,SetRecoveryPhrase
 Your current password,Your current password,SetRecoveryPhrase
 PIN,PIN,SetRecoveryPhrase
-Your current PIN number,Your current PIN number,SetRecoveryPhrase
+Your current PIN,Your current PIN,SetRecoveryPhrase
 Current recovery phrase,Current recovery phrase,SetRecoveryPhrase
 Enter your recovery phrase,Enter your recovery phrase,SetRecoveryPhrase
 Generate a recovery phrase,Generate a recovery phrase,SetRecoveryPhrase
@@ -885,6 +979,13 @@ Recovery phrase is required,Recovery phrase is required,SetRecoveryPhrase
 Recovery phrase must be at least 40 characters,Recovery phrase must be at least 40 characters,SetRecoveryPhrase
 Recovery phrase has been updated,Recovery phrase has been updated,SetRecoveryPhrase
 Error setting recovery phrase,Error setting recovery phrase,SetRecoveryPhrase
+Transaction Details,Transaction Details,TransactionDetails
+Time,Time,TransactionDetails
+Sequence,Sequence,TransactionDetails
+Type,Type,TransactionDetails
+Confirmations,Confirmations,TransactionDetails
+Transaction ID,Transaction ID,TransactionDetails
+Loading transaction details...,Loading transaction details...,TransactionDetails
 Close the wallet and install update now?,Close the wallet and install update now?,AutoUpdate
 Close and install,Close and install,AutoUpdate
 Install it later,Install it later,AutoUpdate

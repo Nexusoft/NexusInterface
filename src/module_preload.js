@@ -17,7 +17,6 @@ import createCache from '@emotion/cache';
 import * as core from '@emotion/core';
 import styled from '@emotion/styled';
 import * as theming from 'emotion-theming';
-import * as victory from 'victory';
 import { ipcRenderer, clipboard } from 'electron';
 
 import GlobalStyles from 'components/GlobalStyles';
@@ -47,7 +46,6 @@ global.NEXUS = {
     Redux,
     ReactRedux,
     emotion: { core, styled, theming, createCache },
-    victory,
   },
   utilities: {
     color,

@@ -10,7 +10,7 @@ import { dirname } from 'path';
 export default async function ensureDirExists(path) {
   if (!fs.existsSync(path)) {
     const parent = dirname(path);
-    await ensureDirExist(parent);
+    await ensureDirExists(parent);
     await fs.promises.mkdir(path);
   }
 }

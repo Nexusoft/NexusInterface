@@ -5,6 +5,8 @@ import { ipcRenderer } from 'electron';
 import Button from 'components/Button';
 import { addDevModule } from 'lib/modules';
 
+__ = __context('Settings.Modules');
+
 const Wrapper = styled.div(({ theme }) => ({
   margin: '1em 0',
   color: theme.mixer(0.75),

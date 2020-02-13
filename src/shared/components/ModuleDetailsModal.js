@@ -10,6 +10,7 @@ import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
 import InfoField from 'components/InfoField';
 import ExternalLink from 'components/ExternalLink';
+import GA from 'lib/googleAnalytics';
 import { openConfirmDialog } from 'lib/ui';
 import { history } from 'lib/wallet';
 import { updateSettings } from 'lib/settings';
@@ -73,6 +74,7 @@ class ModuleDetailsModal extends React.Component {
           });
         } else {
           await deleteDirectory(module.path);
+          GA.SendEvent('Modules', 'uninstallModule', 'name', module.info.name);
         }
         location.reload();
       },
