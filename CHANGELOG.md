@@ -14,7 +14,6 @@
 #### Adjustments
 
 - Moved Market Data page out into a downloadable module
-- Improved performance for loading a long transactions history
 - Tritium API console now let you explicitly choose which syntax you use (URL or CLI)
 - Improved error reporting when a module fails to install
 - Deprecated module specification version, using wallet version directly instead
@@ -22,9 +21,24 @@
 
 #### Fixes
 
+- Fixed transactions not being loaded in some cases
+
+# 2.1.4 (2020.1.25)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.1.4)
+
+#### Additions
+
+- None
+
+#### Adjustments
+
+- Improved performance for loading a long transactions history
+
+#### Fixes
+
 - Fixed the core failing to start when the Nexus directory doesn't exist
 - Fixed legacy transactions not being loaded
-- Fixed transactions not being loaded in some cases
 - Fixed module file server error
 
 # 2.1.3 (2020.1.03)
