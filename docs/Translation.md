@@ -1,6 +1,6 @@
 # Translating Nexus Wallet
 
-You can help Nexus team [translating the wallet interface into your language](https://crowdin.com/project/nexus-interface). All contributions are very appreciated.
+**[Contribute your translation on crowdin](https://crowdin.com/project/nexus-interface).**
 
 ## Translation guide
 

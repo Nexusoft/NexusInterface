@@ -1,8 +1,6 @@
 # Nexus Wallet Interface
 
-![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/Nexusoft/NexusInterface?include_prereleases)
-
-[![Crowdin](https://badges.crowdin.net/nexus-interface/localized.svg)](https://crowdin.com/project/nexus-interface)
+![GitHub package.json version](https://img.shields.io/github/package-json/v/Nexusoft/NexusInterface) [![Crowdin](https://badges.crowdin.net/nexus-interface/localized.svg)](https://crowdin.com/project/nexus-interface)
 
 This is an Electron and React based interface to Nexus. It is an example of what can comprise the 6th and 7th layers of the Nexus software stack, which are the Logical and Interface layers respectively.
 
