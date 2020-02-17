@@ -37,7 +37,7 @@ Clone your repository to a folder on your computer so that you can work on it. R
 
 After your repository is initialized, the first thing you should do is to add your in-development module to the wallet so that you can see your results live on the wallet while you developing. Enable Developer mode if you haven't (in Settings/Application), go to Settings/Modules, click "Add a development module" link, and select your module repository folder.
 
-A development version of your module will appear on the wallet. But it won't be working yet, in your module repository folder, you need to run `npm run dev` to start the local development server. Now open the module on the wallet, you should see it working.
+A development version of your module will appear on the wallet. But it won't be working yet, in your module repository folder, you need to run `npm run dev` to start the local development server. Now open the module on the wallet, you should see it working. Everytime you save your code with some changes, your module will automatically reload so that you can review the changes immediately. WebView works like a separate web browser so it has a separate Developer Tools, you can open it with "View/Toggle Module's Developer Tools" menu.
 
 Now you can start to replace the example UI components and logic with your own code and add more cool stuffs.
 
