@@ -4,13 +4,13 @@ Nexus Wallet Modules can be written by any third-party developers, therefore sec
 
 In this article, we will talk about the main security mechanisms that we have employed to minimize the security risks that third-party modules can bring to wallet users.
 
-## `webview` security
+## WebView security
 
-Code inside `webview` is executed in a separate process from the base wallet, therefore there is very few things that module code can do to maliciously affect the base wallet.
+Code inside a WebView is executed in a separate process from the base wallet, therefore there is very few things that module code can do to maliciously affect the base wallet.
 
 Module's entry HTML is fetched from a static file server running locally (e.g. `http://localhost:9331/...`) that only serves exactly the files listed in [`files` field of `nxs_package.json`](./nxs_package.json.md#files) so it is not possible for modules to retrieve private files in user's computer via `file://` protocol.
 
-The only bridge that connects modules with the base wallet is the [`NEXUS` global variable](./nexus-globalvariable.md) which is injected into modules by `webview`'s `preload` script. `NEXUS` global variable provides modules with the data and functions they need, while still making sure modules don't get access to what they shouldn't be authorized to access. For example, functions that [`NEXUS.utilities`](./nexus-global-variable.md#utilities) provides use IPC messages under the hood, but wrap them all inside functions. Modules only have access to these functionaliities, and cannot send arbitrary IPC messages or get access to Electron's `remote` module. Moreover, because `NEXUS.utilities` functions use IPC messages under the hood, all arguments passed to these functions will be serialized in JSON, so only plain data (e.g. strings, numbers, objects,...) can get through and functions can't. Therefore, it's not possible for modules to pass malicious code to the base wallet to execute.
+The only bridge that connects modules with the base wallet is the [`NEXUS` global variable](./nexus-globalvariable.md) which is injected into modules by WebView's `preload` script. `NEXUS` global variable provides modules with the data and functions they need, while still making sure modules don't get access to what they shouldn't be authorized to access. For example, functions that [`NEXUS.utilities`](./nexus-global-variable.md#utilities) provides use IPC messages under the hood, but wrap them all inside functions. Modules only have access to these functionaliities, and cannot send arbitrary IPC messages or get access to Electron's `remote` module. Moreover, because `NEXUS.utilities` functions use IPC messages under the hood, all arguments passed to these functions will be serialized in JSON, so only plain data (e.g. strings, numbers, objects,...) can get through and functions can't. Therefore, it's not possible for modules to pass malicious code to the base wallet to execute.
 
 See [`NEXUS` global variable](./nexus-globalvariable.md) for more details about what modules can access to.
 
