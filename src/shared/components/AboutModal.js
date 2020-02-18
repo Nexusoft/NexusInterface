@@ -140,15 +140,6 @@ const About = ({ version, testnet, privateBlockchain }) => (
         <div>
           <Strong>
             <ExternalLink href={'https://nexus.io/embassies'}>
-              Nexus Embassy UK
-            </ExternalLink>
-          </Strong>
-          <br />
-          London, England, United Kingdom
-        </div>
-        <div>
-          <Strong>
-            <ExternalLink href={'https://nexus.io/embassies'}>
               Nexus Embassy Australia
             </ExternalLink>
           </Strong>
