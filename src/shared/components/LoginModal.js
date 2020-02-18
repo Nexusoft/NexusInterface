@@ -7,7 +7,7 @@ import { apiPost } from 'lib/tritiumApi';
 import Modal from 'components/Modal';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
-import MaskableTextField from 'components/MaskableTextField';
+import TextFieldWithKeyboard from 'components/TextFieldWithKeyboard';
 import Button from 'components/Button';
 import NewUserModal from 'components/NewUserModal';
 import RecoverPasswordPinModal from 'components/RecoverPasswordPinModal';
@@ -111,7 +111,7 @@ class Login extends Component {
               style={{ marginTop: 0 }}
             >
               <Field
-                component={TextField.RF}
+                component={TextFieldWithKeyboard.RF}
                 name="username"
                 placeholder={__('Enter your username')}
                 autoFocus
@@ -120,7 +120,8 @@ class Login extends Component {
 
             <FormField connectLabel label={__('Password')}>
               <Field
-                component={MaskableTextField.RF}
+                maskable
+                component={TextFieldWithKeyboard.RF}
                 name="password"
                 placeholder={__('Enter your password')}
               />
@@ -128,7 +129,8 @@ class Login extends Component {
 
             <FormField connectLabel label={__('PIN')}>
               <Field
-                component={MaskableTextField.RF}
+                maskable
+                component={TextFieldWithKeyboard.RF}
                 name="pin"
                 placeholder={__('Enter your PIN')}
               />

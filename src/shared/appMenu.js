@@ -196,7 +196,7 @@ const menuItems = preprocess({
   toggleModuleDevTools: {
     label: __("Toggle Module's Developer Tools"),
     click: () => {
-      store.dispatch(toggleWebViewDevTools());
+      toggleWebViewDevTools();
     },
   },
   websiteLink: {
@@ -278,18 +278,6 @@ function buildUpdaterMenu() {
 }
 
 /**
- * Activate if Module is open
- *
- * @memberof AppMenu
- */
-// const setPageModuleActive = active => {
-//   if (pageModuleActive !== active) {
-//     pageModuleActive = active;
-//     build();
-//   }
-// };
-
-/**
  * Build Menu for OSX
  *
  * @memberof AppMenu
@@ -349,7 +337,7 @@ function buildDarwinTemplate() {
   if (process.env.NODE_ENV === 'development' || state.settings.devMode) {
     subMenuWindow.submenu.push(menuItems.toggleDevTools);
 
-    if (activeAppModule) {
+    if (activeAppModule && activeAppModule.webview) {
       subMenuWindow.submenu.push(menuItems.toggleModuleDevTools);
     }
   }
@@ -426,7 +414,7 @@ function buildDefaultTemplate() {
   if (process.env.NODE_ENV === 'development' || state.settings.devMode) {
     subMenuView.submenu.push(menuItems.separator, menuItems.toggleDevTools);
 
-    if (activeAppModule) {
+    if (activeAppModule && activeAppModule.webview) {
       subMenuView.submenu.push(menuItems.toggleModuleDevTools);
     }
   }

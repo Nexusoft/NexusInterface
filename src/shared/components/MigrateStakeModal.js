@@ -4,7 +4,7 @@ import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
 
 import Modal from 'components/Modal';
-import MaskableTextField from 'components/MaskableTextField';
+import TextFieldWithKeyboard from 'components/TextFieldWithKeyboard';
 import FormField from 'components/FormField';
 import Button from 'components/Button';
 import confirmPin from 'utils/promisified/confirmPin';
@@ -14,7 +14,7 @@ import { errorHandler } from 'utils/form';
 
 __ = __context('MigrateStake');
 
-const PasswordInput = styled(MaskableTextField.RF)({
+const PasswordInput = styled(TextFieldWithKeyboard.RF)({
   margin: '1em auto 2.5em',
 });
 
@@ -67,6 +67,7 @@ const MigrateStakeModal = ({ handleSubmit }) => {
               <FormField connectLabel label={__('Legacy wallet password')}>
                 <Field
                   component={PasswordInput}
+                  maskable
                   name="passphrase"
                   skin="filled-inverted"
                   placeholder={__(

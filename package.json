@@ -1,10 +1,9 @@
 {
   "name": "nexus_wallet",
   "productName": "Nexus Wallet",
-  "version": "2.1.4",
-  "moduleSpecVersion": "0.3.0",
-  "supportedModuleSpecVersion": "0.1.0",
-  "buildDate": "January 25th 2020",
+  "version": "2.2.0",
+  "backwardCompatible": "2.2.0",
+  "buildDate": "February 17th 2020",
   "description": "User interface for the Nexus blockchain and ecosystem.",
   "scripts": {
     "prebuild-dev": "concurrently \"npm run build-main-dev\" \"npm run build-preload-dev\" \"node -r @babel/register ./internals/scripts/checkDll.js\" ",
@@ -47,6 +46,13 @@
         "to": "build",
         "filter": [
           "app.html"
+        ]
+      },
+      {
+        "from": "src/keyboard",
+        "to": "build",
+        "filter": [
+          "keyboard.html"
         ]
       }
     ],
@@ -254,6 +260,7 @@
     "react-redux": "^7.1.3",
     "react-router": "^5.1.2",
     "react-router-dom": "^5.1.2",
+    "react-simple-keyboard": "^2.1.96",
     "react-table": "^6.11.5",
     "redux": "^4.0.4",
     "redux-form": "^8.2.6",
@@ -263,7 +270,7 @@
     "three": "^0.111.0",
     "three-orbitcontrols": "^2.110.1",
     "universal-analytics": "^0.4.20",
-    "victory": "^33.1.7"
+    "victory": "^34.1.1"
   },
   "devEngines": {
     "node": ">=10.x",

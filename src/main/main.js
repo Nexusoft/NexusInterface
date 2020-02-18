@@ -1,11 +1,18 @@
 import { app, ipcMain, dialog } from 'electron';
 import { autoUpdater } from 'electron-updater';
 
-import { startCore, stopCore, restartCore, getCoreConfig } from './core';
+import {
+  startCore,
+  coreBinaryExists,
+  executeCommand,
+  isCoreRunning,
+  killCoreProcess,
+} from './core';
 import { getDomain, serveModuleFiles } from './fileServer';
 import { createWindow } from './renderer';
 import { setupTray } from './tray';
 import { setApplicationMenu, popupContextMenu } from './menu';
+import { openVirtualKeyboard } from './keyboard';
 import './updater';
 
 let mainWindow;
@@ -41,20 +48,24 @@ ipcMain.handle('popup-context-menu', (event, menuTemplate) =>
 ipcMain.handle('set-app-menu', (event, menuTemplate) => {
   setApplicationMenu(menuTemplate);
 });
+ipcMain.handle('open-virtual-keyboard', (event, ...args) => {
+  openVirtualKeyboard(...args);
+});
 
 // File server
-ipcMain.handle('get-file-server-domain', async (event, ...args) =>
-  getDomain(...args)
-);
 ipcMain.handle('serve-module-files', (event, ...args) =>
   serveModuleFiles(...args)
 );
 
 // Core
+ipcMain.handle('check-core-exists', async () => await coreBinaryExists());
+ipcMain.handle('check-core-running', async () => await isCoreRunning());
 ipcMain.handle('start-core', (event, ...args) => startCore(...args));
-ipcMain.handle('stop-core', (event, ...args) => stopCore(...args));
-ipcMain.handle('restart-core', (event, ...args) => restartCore(...args));
-ipcMain.handle('get-core-config', async () => getCoreConfig());
+ipcMain.handle('kill-core-process', async () => await killCoreProcess());
+ipcMain.handle(
+  'execute-core-command',
+  async (event, command) => await executeCommand(command)
+);
 
 // Auto update
 ipcMain.handle('check-for-updates', (event, ...args) =>
@@ -67,6 +78,9 @@ ipcMain.handle('quit-and-install-update', (event, ...args) =>
 // Sync message handlers
 ipcMain.on('get-path', (event, name) => {
   event.returnValue = app.getPath(name);
+});
+ipcMain.on('get-file-server-domain', event => {
+  event.returnValue = getDomain();
 });
 
 // START RENDERER
@@ -95,7 +109,6 @@ if (!gotTheLock) {
     mainWindow.on('close', (...args) =>
       mainWindow.webContents.send('window-close', ...args)
     );
-    startCore();
     global.tray = setupTray(mainWindow);
   });
 }

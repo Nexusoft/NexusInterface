@@ -3,13 +3,13 @@ import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
 
 import Modal from 'components/Modal';
-import MaskableTextField from 'components/MaskableTextField';
+import TextFieldWithKeyboard from 'components/TextFieldWithKeyboard';
 import Button from 'components/Button';
 import { removeModal } from 'lib/ui';
 
 __ = __context('PinDialog');
 
-const PinInput = styled(MaskableTextField.RF)({
+const PinInput = styled(TextFieldWithKeyboard.RF)({
   margin: '1em auto 2.5em',
   fontSize: 18,
 });
@@ -44,6 +44,7 @@ const PinDialog = ({ handleSubmit, confirmLabel = __('Confirm'), onClose }) => (
           <form onSubmit={handleSubmit}>
             <Field
               component={PinInput}
+              maskable
               name="pin"
               autoFocus
               skin="filled-inverted"

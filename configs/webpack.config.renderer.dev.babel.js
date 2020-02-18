@@ -26,11 +26,11 @@ export default merge.smart(baseConfig, {
   entry: {
     'renderer.dev': [
       'react-hot-loader/patch',
-      `webpack-dev-server/client?http://localhost:${port}/`,
+      `webpack-dev-server/client?${publicPath}`,
       'webpack/hot/only-dev-server',
       './src/index',
     ],
-    'module_preload.dev': './src/module_preload',
+    'keyboard.dev': './src/keyboard/index.js',
   },
 
   output: {
@@ -92,15 +92,5 @@ export default merge.smart(baseConfig, {
     lazy: false,
     hot: true,
     headers: { 'Access-Control-Allow-Origin': '*' },
-    contentBase: path.join(process.cwd(), 'build'),
-    watchOptions: {
-      aggregateTimeout: 300,
-      ignored: /node_modules/,
-      poll: 100,
-    },
-    historyApiFallback: {
-      verbose: true,
-      disableDotRule: false,
-    },
   },
 });

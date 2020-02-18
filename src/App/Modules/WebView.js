@@ -1,17 +1,33 @@
 // External
 import React from 'react';
 import { existsSync } from 'fs';
+import { URL } from 'url';
 import { join } from 'path';
 import { ipcRenderer } from 'electron';
 
 // Internal Global
-import { modulesDir } from 'consts/paths';
 import { setActiveWebView, unsetActiveWebView } from 'lib/modules';
 
-let domain = '';
-(async () => {
-  domain = await ipcRenderer.invoke('get-file-server-domain');
-})();
+const domain = ipcRenderer.sendSync('get-file-server-domain');
+
+const getEntryUrl = module => {
+  if (module.development) {
+    try {
+      // Check if entry is a URL itself
+      new URL(module.info.entry);
+      return module.info.entry;
+    } catch (err) {}
+  }
+
+  const entry = module.info.entry || 'index.html';
+  const entryPath = join(module.path, entry);
+  if (!existsSync(entryPath)) return null;
+  if (module.development) {
+    return `file://${entryPath}`;
+  } else {
+    return `${domain}/modules/${module.info.name}/${entry}`;
+  }
+};
 
 /**
  * WebView
@@ -30,8 +46,12 @@ class WebView extends React.Component {
   constructor(props) {
     super(props);
     const { module } = this.props;
-    const moduleFiles = module.files.map(file => join(module.dirName, file));
-    ipcRenderer.invoke('serve-module-files', moduleFiles);
+    if (!module.development) {
+      const moduleFiles = module.info.files.map(file =>
+        join(module.info.name, file)
+      );
+      ipcRenderer.invoke('serve-module-files', moduleFiles);
+    }
   }
 
   /**
@@ -40,7 +60,7 @@ class WebView extends React.Component {
    * @memberof WebView
    */
   componentDidMount() {
-    setActiveWebView(this.webviewRef.current, this.props.module.name);
+    setActiveWebView(this.webviewRef.current, this.props.module.info.name);
   }
 
   /**
@@ -60,11 +80,8 @@ class WebView extends React.Component {
    */
   render() {
     const { module, className, style } = this.props;
-    const entry = module.entry || 'index.html';
-    const entryPath = join(modulesDir, module.dirName, entry);
-    if (!existsSync(entryPath)) return null;
+    const entryUrl = getEntryUrl(module);
 
-    const entryUrl = `${domain}/modules/${module.name}/${entry}`;
     const preloadUrl =
       process.env.NODE_ENV === 'development'
         ? `file://${process.cwd()}/build/module_preload.dev.js`

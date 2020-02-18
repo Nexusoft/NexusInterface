@@ -1,17 +1,9 @@
+import child_process from 'child_process';
 import spawn from 'cross-spawn';
 import log from 'electron-log';
 import fs from 'fs';
 import path from 'path';
-import axios from 'axios';
 
-import {
-  loadSettingsFromFile,
-  updateSettingsFile,
-} from 'lib/settings/universal';
-import { customConfig, loadNexusConf } from 'lib/coreConfig';
-import exec from 'utils/promisified/exec';
-import sleep from 'utils/promisified/sleep';
-import deleteDirectory from 'utils/promisified/deleteDirectory';
 import { assetsByPlatformDir } from 'consts/paths';
 
 const coreBinaryName = `nexus-${process.platform}-${process.arch}${
@@ -19,12 +11,23 @@ const coreBinaryName = `nexus-${process.platform}-${process.arch}${
 }`;
 const coreBinaryPath = path.join(assetsByPlatformDir, 'cores', coreBinaryName);
 
+const exec = (command, options) =>
+  new Promise((resolve, reject) => {
+    child_process.exec(command, options, (err, stdout, stderr) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(stdout);
+      }
+    });
+  });
+
 /**
  * Check if core binary file exists
  *
  * @returns
  */
-function coreBinaryExists() {
+export function coreBinaryExists() {
   log.info('Checking if core binary exists: ' + coreBinaryPath);
   try {
     fs.accessSync(coreBinaryPath);
@@ -100,10 +103,9 @@ async function getCorePID() {
   }
 }
 
-let config = null;
-
-export function getCoreConfig() {
-  return config;
+export async function isCoreRunning() {
+  const pid = await getCorePID();
+  return !!pid;
 }
 
 /**
@@ -111,99 +113,8 @@ export function getCoreConfig() {
  *
  * @memberof Core
  */
-export async function startCore() {
-  const settings = loadSettingsFromFile();
-  const corePID = await getCorePID();
-  config = null;
-
-  if (settings.manualDaemon == true) {
-    log.info('Core Manager: Manual Core mode, skipping starting core');
-    throw 'Manual Core mode';
-  }
-
-  if (corePID) {
-    log.info(
-      'Core Manager: Nexus Core Process already running. Skipping starting core'
-    );
-    config = customConfig(loadNexusConf());
-    return null;
-  }
-
-  //Settings will override config
-  //Need to be set if changed in the settings so it can be reloaded.
-  const conf = (config = customConfig({
-    ...loadNexusConf(),
-    verbose: settings.verboseLevel,
-    dataDir: settings.coreDataDir,
-  }));
-
-  if (!coreBinaryExists()) {
-    log.info('Core Manager: Core not found, please run in manual deamon mode');
-    throw 'Core not found';
-  }
-
-  if (!fs.existsSync(conf.dataDir)) {
-    log.info(
-      'Core Manager: Data Directory path not found. Creating folder: ' +
-        conf.dataDir
-    );
-    fs.mkdirSync(conf.dataDir);
-  }
-
-  if (settings.clearPeers) {
-    if (fs.existsSync(path.join(conf.dataDir, 'addr.bak'))) {
-      await deleteDirectory(path.join(conf.dataDir, 'addr.bak'));
-    }
-    if (fs.existsSync(path.join(conf.dataDir, 'addr'))) {
-      fs.renameSync(
-        path.join(conf.dataDir, 'addr'),
-        path.join(conf.dataDir, 'addr.bak')
-      );
-    }
-    updateSettingsFile({ clearPeers: false });
-  }
-
-  const params = [
-    '-daemon',
-    '-server',
-    '-rpcthreads=4',
-    '-fastsync',
-    `-datadir=${conf.dataDir}`,
-    `-rpcport=${conf.port}`,
-    `-verbose=${conf.verbose}`,
-  ];
-
-  //Check for Testnet
-  if (settings.testnetIteration) {
-    params.push('-testnet=' + settings.testnetIteration);
-  }
-
-  //After core forksblocks clear out that field.
-  if (settings.forkBlocks) {
-    params.push('-forkblocks=' + settings.forkBlocks);
-    updateSettingsFile({ forkBlocks: 0 });
-  }
-  if (settings.walletClean) {
-    params.push('-walletclean');
-    updateSettingsFile({ walletClean: false });
-  }
-  //Avatar is default so only add it if it is off.
-  if (!settings.avatarMode) {
-    params.push('-avatar=0');
-  }
-  // Enable mining (default is 0)
-  if (settings.enableMining == true) {
-    params.push('-mining=1');
-    if (settings.ipMineWhitelist !== '') {
-      settings.ipMineWhitelist.split(';').forEach(element => {
-        params.push(`-llpallowip=${element}`);
-      });
-    }
-  }
-  // Enable staking (default is 0)
-  if (settings.enableStaking == true) params.push('-stake=1');
-
-  log.info('Core Parameters: ' + params.toString());
+export function startCore(params) {
+  log.info('Core Parameters: ' + (params && params.join(' ')));
   log.info('Core Manager: Starting core');
   try {
     const coreProcess = spawn(coreBinaryPath, params, {
@@ -225,68 +136,7 @@ export async function startCore() {
   }
 }
 
-/**
- * Stop the core from running by sending stop command or SIGTERM to the process
- *
- * @memberof Core
- */
-export async function stopCore() {
-  log.info('Core Manager: Stop function called');
-  const settings = loadSettingsFromFile();
-
-  let corePID;
-  corePID = await getCorePID();
-  if (!corePID) {
-    log.info(`Core Manager: Core has already stopped.`);
-    return false;
-  }
-
-  const conf = settings.manualDaemon
-    ? customConfig({
-        ip: settings.manualDaemonIP,
-        port: settings.manualDaemonPort,
-        user: settings.manualDaemonUser,
-        password: settings.manualDaemonPassword,
-        dataDir: settings.manualDaemonDataDir,
-      })
-    : config || customConfig(loadNexusConf());
-
-  try {
-    await axios.post(
-      conf.host,
-      { method: 'stop', params: [] },
-      {
-        auth:
-          conf.user && conf.password
-            ? {
-                username: conf.user,
-                password: conf.password,
-              }
-            : undefined,
-      }
-    );
-  } catch (err) {
-    log.error('Error stopping core');
-    log.error(err);
-  }
-
-  // Check if the core really stopped
-
-  for (let i = 0; i < 30; i++) {
-    corePID = await getCorePID();
-
-    if (corePID) {
-      log.info(
-        `Core Manager: Core still running after stop command for: ${i} seconds, CorePID: ${corePID}`
-      );
-    } else {
-      log.info(`Core Manager: Core stopped gracefully.`);
-      return true;
-    }
-    await sleep(1000);
-  }
-
-  // If core still doesn't stop after 30 seconds, kill the process
+export async function killCoreProcess() {
   log.info('Core Manager: Killing process ' + corePID);
   const { env } = process;
   env.KILL_PID = corePID;
@@ -295,15 +145,8 @@ export async function stopCore() {
   } else {
     await exec('kill -9 $KILL_PID', [], { env });
   }
-  return false;
 }
 
-/**
- * Restart the core process
- *
- * @memberof Core
- */
-export async function restartCore() {
-  await stopCore();
-  await startCore();
+export async function executeCommand(command) {
+  return await exec(`${coreBinaryPath} ${command}`);
 }

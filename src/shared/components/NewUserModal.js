@@ -7,7 +7,7 @@ import { apiPost } from 'lib/tritiumApi';
 import Modal from 'components/Modal';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
-import MaskableTextField from 'components/MaskableTextField';
+import TextFieldWithKeyboard from 'components/TextFieldWithKeyboard';
 import Button from 'components/Button';
 import Link from 'components/Link';
 import LoginModal from 'components/LoginModal';
@@ -136,7 +136,7 @@ export default class NewUserModal extends Component {
               style={{ marginTop: 0 }}
             >
               <Field
-                component={TextField.RF}
+                component={TextFieldWithKeyboard.RF}
                 name="username"
                 placeholder={__('A globally unique username')}
                 autoFocus
@@ -145,7 +145,8 @@ export default class NewUserModal extends Component {
 
             <FormField connectLabel label={__('Password')}>
               <Field
-                component={MaskableTextField.RF}
+                component={TextFieldWithKeyboard.RF}
+                maskable
                 name="password"
                 placeholder={__('Enter your password')}
               />
@@ -153,7 +154,8 @@ export default class NewUserModal extends Component {
 
             <FormField connectLabel label={__('PIN')}>
               <Field
-                component={MaskableTextField.RF}
+                component={TextFieldWithKeyboard.RF}
+                maskable
                 name="pin"
                 placeholder={__('Enter your PIN')}
               />

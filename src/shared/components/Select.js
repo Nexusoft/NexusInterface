@@ -115,6 +115,26 @@ const SelectControl = styled.div(
               }
             : null),
         };
+      case 'filled-inverted':
+        return {
+          paddingLeft: '.8em',
+          border: `1px solid ${theme.mixer(0.125)}`,
+          background: theme.background,
+          color: theme.foreground,
+          borderRadius: 2,
+          transitionProperty: 'background-color',
+          transitionDuration: timing.normal,
+          '&:hover': {
+            background: theme.mixer(0.125),
+          },
+          ...(active
+            ? {
+                background: theme.mixer(0.125),
+                borderBottomLeftRadius: 0,
+                borderBottomRightRadius: 0,
+              }
+            : null),
+        };
     }
   }
 );
@@ -158,6 +178,11 @@ const OptionsComponent = styled.div(
           background: theme.foreground,
           color: theme.background,
         };
+      case 'filled-inverted':
+        return {
+          background: theme.background,
+          color: theme.foreground,
+        };
     }
   },
   ({ ready }) =>
@@ -199,6 +224,18 @@ const Option = styled.div(
         return {
           '&:hover': {
             background: selectable ? theme.mixer(0.875) : undefined,
+          },
+        };
+      case 'filled-inverted':
+        return {
+          background: selected ? theme.primary : undefined,
+          color: selected ? theme.primaryAccent : undefined,
+          '&:hover': {
+            background: selected
+              ? theme.primary
+              : selectable
+              ? theme.mixer(0.125)
+              : undefined,
           },
         };
     }
