@@ -18,6 +18,7 @@ import * as core from '@emotion/core';
 import styled from '@emotion/styled';
 import * as theming from 'emotion-theming';
 import { ipcRenderer, clipboard } from 'electron';
+import * as ReduxForm from 'redux-form';
 
 import GlobalStyles from 'components/GlobalStyles';
 import Panel from 'components/Panel';
@@ -31,11 +32,19 @@ import Icon from 'components/Icon';
 import Tab from 'components/Tab';
 import FieldSet from 'components/FieldSet';
 import * as color from 'utils/color';
+import AutoSuggest from 'components/AutoSuggest';
+import PopUp from 'components/PopUp';
+import DateTime from 'components/DateTimePicker';
+import FormField from 'components/FormField';
+import Table from 'components/Table';
+import Arrow from 'components/Arrow';
 
 const newId = (() => {
   let id = 0;
   return () => ++id;
 })();
+
+const Modal = PopUp;
 
 global.NEXUS = {
   walletVersion: APP_VERSION,
@@ -44,6 +53,7 @@ global.NEXUS = {
     ReactDOM,
     ReactRouterDOM,
     Redux,
+    ReduxForm,
     ReactRedux,
     emotion: { core, styled, theming, createCache },
   },
@@ -253,15 +263,21 @@ global.NEXUS = {
   },
   components: {
     GlobalStyles,
-    Panel,
-    Button,
-    Tooltip,
-    TextField,
-    Switch,
-    Select,
-    Link,
     Icon,
-    Tab,
+    Panel,
+    AutoSuggest,
     FieldSet,
+    Switch,
+    Modal,
+    Tooltip,
+    Table,
+    Select,
+    DateTime,
+    TextField,
+    FormField,
+    Link,
+    Arrow,
+    Tab,
+    Button,
   },
 };
