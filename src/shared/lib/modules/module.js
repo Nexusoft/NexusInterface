@@ -376,7 +376,7 @@ async function initializeModule(module) {
     semver.lt(module.info.targetWalletVersion, BACKWARD_COMPATIBLE_VERSION);
   module.disallowed = !(
     (devMode && !verifyModuleSource) ||
-    (module.repo.repository && module.repo.online && module.repo.verified)
+    (module.repository && module.repoOnline && module.repoVerified)
   );
   module.enabled =
     !module.disallowed && !disabledModules.includes(module.info.name);
