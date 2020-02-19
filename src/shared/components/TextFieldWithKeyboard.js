@@ -19,7 +19,6 @@ export default class TextFieldWithKeyboard extends Component {
   openKeyboard = () => {
     ipcRenderer.on('keyboard-input-change', this.handleInputChange);
     ipcRenderer.once('keyboard-closed', () => {
-      console.log('keyboard closed');
       ipcRenderer.off('keyboard-input-change', this.handleInputChange);
     });
     ipcRenderer.invoke('open-virtual-keyboard', {

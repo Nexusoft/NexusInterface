@@ -140,7 +140,13 @@ export async function loadNexusConf() {
   // Save nexus.conf file if there were changes
   if (updated) {
     log.info('Filling up some missing configurations in nexus.conf');
-    fs.writeFile(confPath, toKeyValues(configs));
+    fs.writeFile(confPath, toKeyValues(configs), err => {
+      if (err) {
+        console.error(err);
+      } else {
+        log.info('nexus.conf has been updated');
+      }
+    });
   }
 
   return customConfig({

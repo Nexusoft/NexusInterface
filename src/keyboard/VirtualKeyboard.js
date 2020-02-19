@@ -25,7 +25,8 @@ export default class App extends React.Component {
   state = {
     options: null,
     text: '',
-    capitalized: false,
+    capslock: false,
+    shift: false,
   };
 
   populated = false;
@@ -49,12 +50,18 @@ export default class App extends React.Component {
   handleKeyPress = btn => {
     switch (btn) {
       case '{shift}':
+        this.setState({ shift: !this.state.shift });
+        break;
       case '{lock}':
-        this.setState({ capitalized: !this.state.capitalized });
+        this.setState({ capslock: !this.state.capslock });
         break;
       case '{enter}':
         ipcRenderer.send('close-keyboard');
         break;
+      default:
+        if (this.state.shift) {
+          this.setState({ shift: false });
+        }
     }
   };
 
@@ -63,7 +70,8 @@ export default class App extends React.Component {
 
     const {
       text,
-      capitalized,
+      capslock,
+      shift,
       options: { theme, maskable, placeholder },
     } = this.state;
     const themeWithMixer = {
@@ -111,7 +119,9 @@ export default class App extends React.Component {
                 '{space}',
               ],
             }}
-            layoutName={capitalized ? 'shift' : 'default'}
+            layoutName={
+              (capslock && !shift) || (!capslock && shift) ? 'shift' : 'default'
+            }
             display={{
               '{enter}': 'done',
             }}

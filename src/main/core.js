@@ -148,5 +148,5 @@ export async function killCoreProcess() {
 }
 
 export async function executeCommand(command) {
-  return await exec(`${coreBinaryPath} ${command}`);
+  return await exec(`"${coreBinaryPath}" ${command}`);
 }
