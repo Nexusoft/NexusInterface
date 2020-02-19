@@ -160,7 +160,9 @@ export default class PopUp extends PureComponent {
    */
   animatedClose = () => {
     const modalID = this.context;
-    if (modalID) {
+    console.log('Animated Close');
+    if (true) {
+      console.log(modalID);
       const duration = parseInt(timing.quick);
       const animation = this.props.fullScreen ? fullScreenOutro : outro;
       const options = {
@@ -182,7 +184,9 @@ export default class PopUp extends PureComponent {
   remove = () => {
     const modalID = this.context;
     //removeModal(modalID);
-    this.props.removeModal(modalID);
+    console.log(this.props);
+
+    this.props.removeModal();
   };
 
   /**
@@ -222,6 +226,7 @@ export default class PopUp extends PureComponent {
    * @memberof Modal
    */
   render() {
+    console.error(this.props);
     const {
       open,
       dimBackground,

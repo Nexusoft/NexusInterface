@@ -70,6 +70,7 @@ const apiWhiteList = [
   'users/list/namespaces',
   'users/list/notifications',
   'users/list/tokens',
+  'users/list/invoices',
   'users/list/transactions',
   'finance/get/account',
   'finance/list/account',
