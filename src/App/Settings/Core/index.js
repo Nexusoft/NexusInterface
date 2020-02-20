@@ -102,7 +102,9 @@ const mapStateToProps = state => {
   );
   const settingTestnetIteration = settings.testnetIteration;
   return {
-    showTestnetOff: formTestnetIteration || settingTestnetIteration,
+    showTestnetOff:
+      (formTestnetIteration && formTestnetIteration != 0) ||
+      (settingTestnetIteration && settingTestnetIteration != 0),
     coreConnected: isCoreConnected(state),
     manualDaemon: settings.manualDaemon,
     initialValues: getInitialValues(settings),
