@@ -1,3 +1,19 @@
+# 2.2.2 (2020.2.20)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.2.1)
+
+#### Additions
+
+- None
+
+#### Adjustments
+
+- None
+
+#### Fixes
+
+- Fixed issue with confirming Password and Pin when creating a user
+
 # 2.2.1 (2020.2.19)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.2.1)

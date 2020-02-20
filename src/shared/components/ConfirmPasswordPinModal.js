@@ -58,7 +58,8 @@ export default class ConfirmPasswordPinModal extends React.Component {
                 maskable
                 value={this.state.password}
                 onChange={text => {
-                  this.setState({ password: text });
+                  const inputValue = text.target ? text.target.value : text;
+                  this.setState({ password: inputValue });
                 }}
                 placeholder={
                   isNew
@@ -74,7 +75,8 @@ export default class ConfirmPasswordPinModal extends React.Component {
                 maskable
                 value={this.state.pin}
                 onChange={text => {
-                  this.setState({ pin: text });
+                  const inputValue = text.target ? text.target.value : text;
+                  this.setState({ pin: inputValue });
                 }}
                 placeholder={
                   isNew ? __('Re-enter your new PIN') : __('Re-enter your PIN')
