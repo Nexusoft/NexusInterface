@@ -1,9 +1,9 @@
 {
   "name": "nexus_wallet",
   "productName": "Nexus Wallet",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "backwardCompatible": "2.2.0",
-  "buildDate": "February 17th 2020",
+  "buildDate": "February 19th 2020",
   "description": "User interface for the Nexus blockchain and ecosystem.",
   "scripts": {
     "prebuild-dev": "concurrently \"npm run build-main-dev\" \"npm run build-preload-dev\" \"node -r @babel/register ./internals/scripts/checkDll.js\" ",
