@@ -57,8 +57,8 @@ export default class ConfirmPasswordPinModal extends React.Component {
               <TextFieldWithKeyboard
                 maskable
                 value={this.state.password}
-                onChange={e => {
-                  this.setState({ password: e.target.value });
+                onChange={text => {
+                  this.setState({ password: text });
                 }}
                 placeholder={
                   isNew
@@ -73,8 +73,8 @@ export default class ConfirmPasswordPinModal extends React.Component {
               <TextFieldWithKeyboard
                 maskable
                 value={this.state.pin}
-                onChange={e => {
-                  this.setState({ pin: e.target.value });
+                onChange={text => {
+                  this.setState({ pin: text });
                 }}
                 placeholder={
                   isNew ? __('Re-enter your new PIN') : __('Re-enter your PIN')

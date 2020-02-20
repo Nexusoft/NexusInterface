@@ -1,4 +1,23 @@
-# 2.2.0 (2020.1.25)
+# 2.2.1 (2020.2.19)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.2.1)
+
+#### Additions
+
+- None
+
+#### Adjustments
+
+- Virtual keyboard Shift button now capitalizes only one next character
+
+#### Fixes
+
+- Fixed modules not being able to load when open source policy is on
+- Fixed CLI syntax Nexus API Console commands failing when binary path contains a space
+- Fixed virtual keyboard not working on Confirm password & PIN modal
+- Fixed core config bug on a fresh install
+
+# 2.2.0 (2020.2.17)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.2.0)
 

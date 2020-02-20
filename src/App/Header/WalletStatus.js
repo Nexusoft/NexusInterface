@@ -50,7 +50,7 @@ class WalletStatus extends React.Component {
       (!legacyMode && !loggedIn && (
         <span className="dim">{__("You're not logged in")}. </span>
       )) ||
-        (isInDanger && staking && (
+        (!!(isInDanger && staking) && (
           <StakingDanger>
             {__('You are staking but have not received a block in 30 minutes!')}
           </StakingDanger>
