@@ -5,6 +5,7 @@ import FormField from 'components/FormField';
 import TextFieldWithKeyboard from 'components/TextFieldWithKeyboard';
 import Button from 'components/Button';
 import { openErrorDialog } from 'lib/ui';
+import { resolveValue } from 'utils/form';
 
 __ = __context('ConfirmPassword&PIN');
 
@@ -57,9 +58,8 @@ export default class ConfirmPasswordPinModal extends React.Component {
               <TextFieldWithKeyboard
                 maskable
                 value={this.state.password}
-                onChange={text => {
-                  const inputValue = text.target ? text.target.value : text;
-                  this.setState({ password: inputValue });
+                onChange={input => {
+                  this.setState({ password: resolveValue(input) });
                 }}
                 placeholder={
                   isNew
@@ -74,9 +74,8 @@ export default class ConfirmPasswordPinModal extends React.Component {
               <TextFieldWithKeyboard
                 maskable
                 value={this.state.pin}
-                onChange={text => {
-                  const inputValue = text.target ? text.target.value : text;
-                  this.setState({ pin: inputValue });
+                onChange={input => {
+                  this.setState({ pin: resolveValue(input) });
                 }}
                 placeholder={
                   isNew ? __('Re-enter your new PIN') : __('Re-enter your PIN')
