@@ -171,7 +171,6 @@ export async function getActiveCoreConfig() {
       apiPort: settings.manualDaemonApiPort,
       apiUser: settings.manualDaemonApiUser,
       apiPassword: settings.manualDaemonApiPassword,
-      // dataDir: settings.manualDaemonDataDir,
     });
   } else {
     if (config) {
