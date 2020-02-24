@@ -18,7 +18,7 @@ const timeFormatOptions = {
   second: '2-digit',
 };
 
-@connect(({ core: { transactions: { map } } }, props) => ({
+@connect(({ user: { transactions: { map } } }, props) => ({
   transaction: map && map[props.txid],
 }))
 export default class TransactionDetailsModal extends React.Component {

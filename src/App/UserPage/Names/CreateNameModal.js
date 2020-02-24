@@ -64,8 +64,8 @@ const NameTypeSelect = ({ input, hasNamespaces }) => (
 );
 
 @connect(state => ({
-  username: state.core.userStatus && state.core.userStatus.username,
-  namespaces: state.core.namespaces,
+  username: state.user.status && state.user.status.username,
+  namespaces: state.user.namespaces,
 }))
 @reduxForm({
   form: 'create-name',

@@ -70,9 +70,9 @@ const Separator = styled.div(({ theme }) => ({
   borderBottom: `1px solid ${theme.mixer(0.125)}`,
 }));
 
-@connect(({ core: { userStatus, stakeInfo } }) => ({
-  currentUser: userStatus && userStatus.username,
-  hasRecoveryPhrase: !!(userStatus && userStatus.recovery),
+@connect(({ user: { status, stakeInfo } }) => ({
+  currentUser: status && status.username,
+  hasRecoveryPhrase: !!(status && status.recovery),
   trustIsNew: stakeInfo && stakeInfo.new,
 }))
 class LoggedInDropdown extends React.Component {

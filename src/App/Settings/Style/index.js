@@ -51,7 +51,7 @@ const getTritiumDefaultAddress = memoize(accounts => {
 });
 
 const mapStateToProps = ({
-  core: { accounts },
+  user: { accounts },
   settings: { renderGlobe, locale, addressStyle, overviewDisplay },
   myAccounts,
   theme,

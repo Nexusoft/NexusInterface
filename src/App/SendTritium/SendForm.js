@@ -59,11 +59,7 @@ const valueSelector = formValueSelector(formName);
 const mapStateToProps = state => {
   const {
     addressBook,
-    core: {
-      info: { locked, minting_only },
-      accounts,
-      tokens,
-    },
+    user: { accounts, tokens },
     form,
   } = state;
   const accountName = valueSelector(state, 'sendFrom');
@@ -71,10 +67,8 @@ const mapStateToProps = state => {
   const expires = valueSelector(state, 'expires');
   const accountInfo = getAccountInfo(accountName, accounts, tokens);
   return {
-    locked,
     reference,
     expires,
-    minting_only,
     accountName,
     accountInfo,
     accountOptions: getAccountOptions(accounts, tokens),

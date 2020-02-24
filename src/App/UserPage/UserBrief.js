@@ -69,13 +69,13 @@ const MenuItem = styled(NavLink)(
     }
 );
 
-const UserBrief = ({ userStatus, match }) => (
+const UserBrief = ({ status, match }) => (
   <UserBriefComponent>
-    <Username>{userStatus.username}</Username>
+    <Username>{status.username}</Username>
     <Separator />
     <Genesis>
       <div>{__('User ID')}:</div>
-      <GenesisId>{userStatus.genesis}</GenesisId>
+      <GenesisId>{status.genesis}</GenesisId>
     </Genesis>
     <Separator />
     <MenuItem to={`${match.url}/Accounts`}>{__('Accounts')}</MenuItem>
@@ -87,7 +87,7 @@ const UserBrief = ({ userStatus, match }) => (
 );
 
 const mapStateToProps = state => ({
-  userStatus: state.core.userStatus,
+  status: state.user.status,
 });
 
 export default connect(mapStateToProps)(UserBrief);

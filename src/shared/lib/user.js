@@ -21,8 +21,8 @@ const getStakeInfo = async () => {
 
 export const getUserStatus = async () => {
   try {
-    const userStatus = await apiPost('users/get/status');
-    store.dispatch({ type: TYPE.SET_USER_STATUS, payload: userStatus });
+    const status = await apiPost('users/get/status');
+    store.dispatch({ type: TYPE.SET_USER_STATUS, payload: status });
     getStakeInfo();
   } catch (err) {
     store.dispatch({ type: TYPE.CLEAR_USER_STATUS });

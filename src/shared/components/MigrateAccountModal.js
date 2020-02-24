@@ -108,8 +108,8 @@ const MigrateAccountModal = ({ legacyBalance, isNewAccount, accounts }) => {
 };
 
 const mapStateToProps = state => ({
-  isNewAccount: state.core.stakeInfo.new,
-  accounts: state.core.accounts,
+  isNewAccount: state.user.stakeInfo.new,
+  accounts: state.user.accounts,
 });
 
 export default connect(mapStateToProps)(MigrateAccountModal);

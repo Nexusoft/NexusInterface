@@ -23,7 +23,7 @@ const StakingDanger = styled.div({
 @connect(state => ({
   manualDaemon: state.settings.manualDaemon,
   autoConnect: state.core.autoConnect,
-  staking: state.core.stakeInfo.staking,
+  staking: state.user.stakeInfo.staking,
   blockDate: state.common.blockDate,
   blockCount: state.core.systemInfo.timestamp,
   coreConnected: isCoreConnected(state),

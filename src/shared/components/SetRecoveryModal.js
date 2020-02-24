@@ -33,8 +33,8 @@ const options = [
   },
 ];
 
-@connect(({ core: { userStatus } }) => ({
-  hasRecoveryPhrase: !!(userStatus && userStatus.recovery),
+@connect(({ user: { status } }) => ({
+  hasRecoveryPhrase: !!(status && status.recovery),
 }))
 @reduxForm({
   form: 'set-recovery-phrase',

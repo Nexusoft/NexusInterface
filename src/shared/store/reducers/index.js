@@ -14,6 +14,7 @@ import ui from './ui';
 import modules from './modules';
 import moduleStates from './moduleStates';
 import core from './core';
+import user from './user';
 import updater from './updater';
 import activeAppModule from './activeAppModule';
 import bootstrap from './bootstrap';
@@ -22,6 +23,7 @@ import failedModules from './failedModules';
 export default function createRootReducer() {
   return combineReducers({
     core,
+    user,
     list,
     market,
     transactions,

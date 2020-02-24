@@ -52,7 +52,7 @@ const BalanceTooltip = staking =>
       );
 
 @connect(state => ({
-  stakeInfo: state.core.stakeInfo,
+  stakeInfo: state.user.stakeInfo,
   stakingEnabled: state.settings.enableStaking,
 }))
 export default class Staking extends React.Component {

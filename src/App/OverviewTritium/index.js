@@ -92,7 +92,8 @@ const blockWeightIcons = [
 // React-Redux mandatory methods
 const mapStateToProps = state => {
   const {
-    core: { systemInfo, stakeInfo, balances, miningInfo },
+    core: { systemInfo, miningInfo },
+    user: { stakeInfo, balances },
     common: { blockDate },
     market: {
       cryptocompare: { rawNXSvalues, displayNXSvalues },
@@ -286,7 +287,7 @@ class Overview extends Component {
     // Periodically get balances
     getBalances();
     this.unobserve = observeStore(
-      ({ core }) => core && core.userStatus,
+      ({ user }) => user && user.status,
       getBalances
     );
 

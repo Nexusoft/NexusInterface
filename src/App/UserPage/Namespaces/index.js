@@ -71,7 +71,7 @@ const Namespace = ({ namespace }) => (
 );
 
 @connect(state => ({
-  namespaces: state.core.namespaces,
+  namespaces: state.user.namespaces,
 }))
 export default class Namesspaces extends React.Component {
   constructor(props) {

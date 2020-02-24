@@ -26,7 +26,7 @@ const Name = styled.span(({ theme }) => ({
 }));
 
 @connect(state => ({
-  username: state.core.userStatus && state.core.userStatus.username,
+  username: state.user.status && state.user.status.username,
 }))
 @reduxForm({
   form: 'transfer-name',
