@@ -478,6 +478,8 @@ walletEvents.once('post-render', async function() {
       type: TYPE.LOAD_MODULES,
       payload: modules,
     });
+    // check for module updates every 6 hours
+    setInterval(checkForModuleUpdates, 21600000);
     checkForModuleUpdates();
 
     const failedModules = [];
