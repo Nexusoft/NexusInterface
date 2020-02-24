@@ -144,9 +144,18 @@ export const loadNameRecords = async () => {
 export const loadNamespaces = async () => {
   try {
     const namespaces = await listAll('users/list/namespaces');
-    store.dispatch({ type: TYPE.SET_NAME_RECORDSPACES, payload: namespaces });
+    store.dispatch({ type: TYPE.SET_NAMESPACES, payload: namespaces });
   } catch (err) {
     console.error('users/list/namespaces failed', err);
+  }
+};
+
+export const loadAssets = async () => {
+  try {
+    const assets = await listAll('users/list/assets');
+    store.dispatch({ type: TYPE.SET_ASSETS, payload: assets });
+  } catch (err) {
+    console.error('users/list/assets failed', err);
   }
 };
 

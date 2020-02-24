@@ -13,6 +13,7 @@ import miningInfo from './miningInfo';
 import tokens from './tokens';
 import nameRecords from './nameRecords';
 import namespaces from './namespaces';
+import assets from './assets';
 import config from './config';
 
 export default combineReducers({
@@ -29,5 +30,6 @@ export default combineReducers({
   tokens,
   nameRecords,
   namespaces,
+  assets,
   config,
 });

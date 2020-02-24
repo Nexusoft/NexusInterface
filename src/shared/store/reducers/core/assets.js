@@ -4,7 +4,7 @@ const initialState = null;
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case TYPE.SET_NAMESPACES:
+    case TYPE.SET_ASSETS:
       return action.payload;
 
     case TYPE.CLEAR_CORE_INFO:
