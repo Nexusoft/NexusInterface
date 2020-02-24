@@ -6,7 +6,6 @@ import macaddress from 'macaddress';
 
 import store from 'store';
 import * as TYPE from 'consts/actionTypes';
-import { defaultCoreDataDir } from 'consts/paths';
 
 function generateDefaultPassword() {
   let randomNumbers = ['', ''];
@@ -61,8 +60,6 @@ const defaultConfig = {
   password: generateDefaultPassword(),
   apiUser: 'apiserver',
   apiPassword: generateDefaultPassword(),
-  dataDir: defaultCoreDataDir,
-  verbose: 2,
 };
 
 /**
@@ -86,11 +83,6 @@ function customConfig(config = {}) {
     apiUser: config.apiUser || config.apiuser || defaultConfig.apiUser,
     apiPassword:
       config.apiPassword || config.apipassword || defaultConfig.apiPassword,
-    dataDir: config.dataDir || defaultConfig.dataDir,
-    verbose:
-      config.verbose || config.verbose === 0
-        ? config.verbose
-        : defaultConfig.verbose,
   };
 }
 
@@ -101,7 +93,7 @@ function customConfig(config = {}) {
  */
 export async function loadNexusConf() {
   const {
-    settings: { coreDataDir, verboseLevel },
+    settings: { coreDataDir },
   } = store.getState();
   if (!fs.existsSync(coreDataDir)) {
     log.info(
@@ -154,8 +146,6 @@ export async function loadNexusConf() {
     rpcpassword: configs.rpcpassword,
     apiuser: configs.apiuser,
     apipassword: configs.apipassword,
-    verbose: verboseLevel,
-    dataDir: coreDataDir,
   });
 }
 
@@ -181,7 +171,7 @@ export async function getActiveCoreConfig() {
       apiPort: settings.manualDaemonApiPort,
       apiUser: settings.manualDaemonApiUser,
       apiPassword: settings.manualDaemonApiPassword,
-      dataDir: settings.manualDaemonDataDir,
+      // dataDir: settings.manualDaemonDataDir,
     });
   } else {
     if (config) {
