@@ -151,7 +151,7 @@ export default class Names extends React.Component {
               />
             ))
           ) : (
-            <EmptyMessage>{__("You don't own any names")}</EmptyMessage>
+            <EmptyMessage>{__("You don't own any name")}</EmptyMessage>
           )}
         </div>
       </TabContentWrapper>

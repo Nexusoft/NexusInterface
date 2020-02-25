@@ -83,6 +83,7 @@ const UserBrief = ({ status, match }) => (
     <MenuItem to={`${match.url}/Tokens`}>{__('Tokens')}</MenuItem>
     <MenuItem to={`${match.url}/Names`}>{__('Names')}</MenuItem>
     <MenuItem to={`${match.url}/Namespaces`}>{__('Namespaces')}</MenuItem>
+    <MenuItem to={`${match.url}/Assets`}>{__('Assets')}</MenuItem>
   </UserBriefComponent>
 );
 

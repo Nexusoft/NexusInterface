@@ -105,7 +105,7 @@ export default class Namesspaces extends React.Component {
                 <Namespace key={namespace.address} namespace={namespace} />
               ))
             ) : (
-              <EmptyMessage>{__("You don't own any namespaces")}</EmptyMessage>
+              <EmptyMessage>{__("You don't own any namespace")}</EmptyMessage>
             )}
           </div>
         </div>

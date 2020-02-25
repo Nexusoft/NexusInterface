@@ -33,3 +33,9 @@ export async function showDesktopNotif(title, message) {
     new Notification(title, { body: message });
   }
 }
+
+export function getAssetData(asset) {
+  if (!asset) return asset;
+  const { name, created, modified, address, owner, ownership, ...data } = asset;
+  return data;
+}
