@@ -2,9 +2,12 @@ import React from 'react';
 import styled from '@emotion/styled';
 
 import InfoField from 'components/InfoField';
+import { openModal } from 'lib/ui';
 import { getAssetData } from 'utils/misc';
 import * as color from 'utils/color';
 import { timing } from 'styles';
+
+import AssetDetailsModal from './AssetDetailsModal';
 
 __ = __context('User.Assets');
 
@@ -38,7 +41,7 @@ const AssetName = styled.div(({ theme, unnamed }) => ({
 }));
 
 const AssetData = styled.div({
-  padding: '.3em 1em',
+  padding: '.6em 1em .1em',
 });
 
 export default class Asset extends React.Component {
@@ -47,7 +50,11 @@ export default class Asset extends React.Component {
     const data = getAssetData(asset);
 
     return (
-      <AssetComponent>
+      <AssetComponent
+        onClick={() => {
+          openModal(AssetDetailsModal, { asset });
+        }}
+      >
         <AssetName unnamed={!asset.name}>
           {asset.name || __('Unnamed asset')}
         </AssetName>
