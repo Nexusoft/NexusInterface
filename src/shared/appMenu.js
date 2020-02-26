@@ -202,7 +202,7 @@ const menuItems = preprocess({
   websiteLink: {
     label: __('Nexus Website'),
     click: () => {
-      shell.openExternal('http://nexusearth.com');
+      shell.openExternal('http://nexus.io');
     },
   },
   gitRepoLink: {
@@ -214,7 +214,7 @@ const menuItems = preprocess({
   walletGuideLink: {
     label: __('Nexus Wallet Guide'),
     click: () => {
-      shell.openExternal('https://nexusearth.com/nexus-tritium-wallet-guide/');
+      shell.openExternal('https://nexus.io/nexus-tritium-wallet-guide/');
     },
   },
   openCoreDataDir: {

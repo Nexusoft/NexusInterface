@@ -1,4 +1,39 @@
-# 2.2.0 (2020.1.25)
+# 2.2.2 (2020.2.21)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.2.1)
+
+#### Additions
+
+- None
+
+#### Adjustments
+
+- None
+
+#### Fixes
+
+- Fixed issue with confirming Password and Pin when creating a user
+
+# 2.2.1 (2020.2.19)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.2.1)
+
+#### Additions
+
+- None
+
+#### Adjustments
+
+- Virtual keyboard Shift button now capitalizes only one next character
+
+#### Fixes
+
+- Fixed modules not being able to load when open source policy is on
+- Fixed CLI syntax Nexus API Console commands failing when binary path contains a space
+- Fixed virtual keyboard not working on Confirm password & PIN modal
+- Fixed core config bug on a fresh install
+
+# 2.2.0 (2020.2.17)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.2.0)
 
@@ -14,7 +49,6 @@
 #### Adjustments
 
 - Moved Market Data page out into a downloadable module
-- Improved performance for loading a long transactions history
 - Tritium API console now let you explicitly choose which syntax you use (URL or CLI)
 - Improved error reporting when a module fails to install
 - Deprecated module specification version, using wallet version directly instead
@@ -22,9 +56,24 @@
 
 #### Fixes
 
+- Fixed transactions not being loaded in some cases
+
+# 2.1.4 (2020.1.25)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.1.4)
+
+#### Additions
+
+- None
+
+#### Adjustments
+
+- Improved performance for loading a long transactions history
+
+#### Fixes
+
 - Fixed the core failing to start when the Nexus directory doesn't exist
 - Fixed legacy transactions not being loaded
-- Fixed transactions not being loaded in some cases
 - Fixed module file server error
 
 # 2.1.3 (2020.1.03)

@@ -39,7 +39,6 @@ const {
       theming,      // from 'emotion-themeing'
       createCache,  // from '@emotion/cache'
     },
-    victory,        // from 'victory'
   }
 } = NEXUS
 ```
