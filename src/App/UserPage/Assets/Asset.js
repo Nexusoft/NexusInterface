@@ -65,8 +65,10 @@ export default class Asset extends React.Component {
           openModal(AssetDetailsModal, { asset });
         }}
       >
-        <AssetHeader unnamed={!asset.name}>
-          <AssetName>{asset.name || __('Unnamed asset')}</AssetName>
+        <AssetHeader>
+          <AssetName unnamed={!asset.name}>
+            {asset.name || __('Unnamed asset')}
+          </AssetName>
           {typeof asset.ownership === 'number' && (
             <Tooltip.Trigger
               tooltip={__('You own %{percentage}% of this asset', {
