@@ -7,7 +7,6 @@ import Button from 'components/Button';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import Spinner from 'components/Spinner';
-import Select from 'components/Select';
 import Divider from 'components/Divider';
 import QuestionCircle from 'components/QuestionCircle';
 import confirmPin from 'utils/promisified/confirmPin';
@@ -79,7 +78,8 @@ class CreateAssetForm extends React.Component {
   }
 
   render() {
-    const { handleSubmit, submitting } = this.props;
+    const { handleSubmit, submitting, form } = this.props;
+    console.log('form', form);
     return (
       <form onSubmit={handleSubmit}>
         <FormField
@@ -122,6 +122,7 @@ class CreateAssetForm extends React.Component {
                 key={fieldName}
                 fieldName={fieldName}
                 first={i === 0}
+                form={form}
               />
             ))
           }

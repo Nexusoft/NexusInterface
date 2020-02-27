@@ -1,11 +1,13 @@
 import React from 'react';
-import { Field, Fields } from 'redux-form';
+import { connect } from 'react-redux';
+import { Field, getFormValues } from 'redux-form';
 import styled from '@emotion/styled';
 
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import Switch from 'components/Switch';
 import Select from 'components/Select';
+import QuestionCircle from 'components/QuestionCircle';
 import { consts } from 'styles';
 import { getDeep } from 'utils/misc';
 
@@ -44,6 +46,27 @@ const typeOptions = [
   },
 ];
 
+const numberTypes = [
+  'uint8',
+  'uint16',
+  'uint32',
+  'uint64',
+  'uint256',
+  'uint512',
+  'uint1024',
+];
+
+const minValue = {
+  string: undefined,
+  uint8: 0,
+  uint16: 0,
+  uint32: 0,
+  uint64: 0,
+  uint256: 0,
+  uint512: 0,
+  uint1024: 0,
+};
+
 const FirstLine = styled.div({
   display: 'grid',
   gridTemplateColumns: '1fr min-content 2fr',
@@ -64,83 +87,90 @@ const SwitchWrapper = styled.div({
   alignItems: 'center',
 });
 
-const AssetFieldCreator = ({ fieldName, first }) => (
-  <div className={first ? undefined : 'mt2'}>
-    <FirstLine>
-      <FormField label={__('Name')} connectLabel capitalizeLabel>
-        <Field
-          name={`${fieldName}.name`}
-          component={TextField.RF}
-          placeholder={__('Field name')}
-        />
-      </FormField>
-      <span className="space-left space-right">:</span>
-      <FormField label={__('Value')} connectLabel capitalizeLabel>
-        <Field
-          name={`${fieldName}.value`}
-          component={TextField.RF}
-          placeholder={__('Field value')}
-        />
-      </FormField>
-    </FirstLine>
+@connect((state, props) => ({
+  fieldValue: getDeep(getFormValues(props.form)(state), props.fieldName),
+}))
+export default class AssetFieldCreator extends React.PureComponent {
+  render() {
+    const { fieldName, first, fieldValue } = this.props;
+    const lengthDisabled = !(
+      fieldValue.mutable && fieldValue.type === 'string'
+    );
 
-    <SecondLine>
-      <FormField
-        label={__('Type')}
-        connectLabel
-        capitalizeLabel
-        className="space-right"
-      >
-        <Field
-          name={`${fieldName}.type`}
-          component={Select.RF}
-          options={typeOptions}
-        />
-      </FormField>
-      <FormField
-        label={__('Mutable')}
-        connectLabel
-        capitalizeLabel
-        className="space-right"
-      >
-        {inputId => (
-          <SwitchWrapper>
+    return (
+      <div className={first ? undefined : 'mt2'}>
+        <FirstLine>
+          <FormField label={__('Name')} connectLabel capitalizeLabel>
             <Field
-              name={`${fieldName}.mutable`}
-              component={Switch.RF}
-              id={inputId}
+              name={`${fieldName}.name`}
+              component={TextField.RF}
+              placeholder={__('Field name')}
             />
-          </SwitchWrapper>
-        )}
-      </FormField>
-      <Fields
-        names={[`${fieldName}.mutable`, `${fieldName}.type`]}
-        component={fields => {
-          const mutable = getDeep(fields, `${fieldName}.mutable`);
-          const type = getDeep(fields, `${fieldName}.type`);
-          const disabled = !(
-            mutable.input.value && type.input.value === 'string'
-          );
-          return (
-            <FormField
-              label={__('Max. length')}
-              connectLabel
-              capitalizeLabel
-              className={disabled ? 'dim' : undefined}
-            >
-              <Field
-                name={`${fieldName}.maxlength`}
-                type="number"
-                component={TextField.RF}
-                disabled={disabled}
-                placeholder={__('Maximum length')}
-              />
-            </FormField>
-          );
-        }}
-      />
-    </SecondLine>
-  </div>
-);
+          </FormField>
+          <span className="space-left space-right">=</span>
+          <FormField label={__('Value')} connectLabel capitalizeLabel>
+            <Field
+              name={`${fieldName}.value`}
+              component={TextField.RF}
+              placeholder={__('Field value')}
+              type={numberTypes.includes(fieldValue.type) ? 'number' : 'text'}
+              min={minValue[fieldValue.type]}
+            />
+          </FormField>
+        </FirstLine>
 
-export default AssetFieldCreator;
+        <SecondLine>
+          <FormField
+            label={__('Type')}
+            connectLabel
+            capitalizeLabel
+            className="space-right"
+          >
+            <Field
+              name={`${fieldName}.type`}
+              component={Select.RF}
+              options={typeOptions}
+            />
+          </FormField>
+          <FormField
+            label={__('Mutable')}
+            connectLabel
+            capitalizeLabel
+            className="space-right"
+          >
+            {inputId => (
+              <SwitchWrapper>
+                <Field
+                  name={`${fieldName}.mutable`}
+                  component={Switch.RF}
+                  id={inputId}
+                />
+              </SwitchWrapper>
+            )}
+          </FormField>
+          <FormField
+            label={
+              <span>
+                <span className="v-align">{__('Max. length')}</span>
+                <QuestionCircle
+                  tooltip={__('Only applicable to mutable string fields')}
+                />
+              </span>
+            }
+            connectLabel
+            capitalizeLabel
+            className={lengthDisabled ? 'dim' : undefined}
+          >
+            <Field
+              name={`${fieldName}.maxlength`}
+              type="number"
+              component={TextField.RF}
+              disabled={lengthDisabled}
+              placeholder={__('Maximum length')}
+            />
+          </FormField>
+        </SecondLine>
+      </div>
+    );
+  }
+}
