@@ -14,7 +14,7 @@ __ = __context('User.Assets');
 
 const AssetComponent = styled.div(({ theme }) => ({
   margin: '1em 0',
-  boxShadow: '0 0 8px 0 rgba(0,0,0,.5)',
+  boxShadow: '0 0 5px 0 rgba(0,0,0,.5)',
   borderRadius: 4,
   cursor: 'pointer',
   background: theme.background,

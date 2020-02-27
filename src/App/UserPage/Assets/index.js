@@ -10,6 +10,7 @@ import { openModal } from 'lib/ui';
 import plusIcon from 'icons/plus.svg';
 
 import Asset from './Asset';
+import CreateAssetModal from './CreateAssetModal';
 import TabContentWrapper from '../TabContentWrapper';
 
 __ = __context('User.Assets');
@@ -41,7 +42,7 @@ export default class Assets extends React.Component {
         <Button
           wide
           onClick={() => {
-            openModal();
+            openModal(CreateAssetModal);
           }}
         >
           <Icon icon={plusIcon} className="space-right" />
