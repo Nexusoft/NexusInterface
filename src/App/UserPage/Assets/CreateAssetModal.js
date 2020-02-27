@@ -8,16 +8,26 @@ import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import Spinner from 'components/Spinner';
 import Divider from 'components/Divider';
+import Icon from 'components/Icon';
 import QuestionCircle from 'components/QuestionCircle';
 import confirmPin from 'utils/promisified/confirmPin';
 import { errorHandler } from 'utils/form';
 import { openSuccessDialog } from 'lib/ui';
 import { loadNameRecords } from 'lib/user';
 import { apiPost } from 'lib/tritiumApi';
+import plusIcon from 'icons/plus.svg';
 
 import AssetFieldCreator from './AssetFieldCreator';
 
 __ = __context('CreateAsset');
+
+const getInitialField = () => ({
+  name: '',
+  value: '',
+  mutable: false,
+  type: 'string',
+  maxlength: null,
+});
 
 @reduxForm({
   form: 'create-asset',
@@ -26,22 +36,7 @@ __ = __context('CreateAsset');
     name: '',
     format: 'basic',
     data: '',
-    data: [
-      {
-        name: '',
-        value: '',
-        mutable: false,
-        type: 'string',
-        maxlength: null,
-      },
-      {
-        name: '',
-        value: '',
-        mutable: false,
-        type: 'string',
-        maxlength: null,
-      },
-    ],
+    data: [getInitialField()],
   },
   validate: ({ name, namespace, type }) => {
     const errors = {};
@@ -77,9 +72,16 @@ class CreateAssetForm extends React.Component {
     super(props);
   }
 
+  addField = () => {
+    this.props.array.push('data', getInitialField());
+  };
+
+  removeField = index => {
+    this.props.array.remove('data', index);
+  };
+
   render() {
     const { handleSubmit, submitting, form } = this.props;
-    console.log('form', form);
     return (
       <form onSubmit={handleSubmit}>
         <FormField
@@ -112,7 +114,7 @@ class CreateAssetForm extends React.Component {
           }
         />
 
-        <Divider title={__('Asset data')} style={{ marginBottom: 0 }} />
+        <Divider label={__('Asset data')} style={{ marginBottom: 0 }} />
 
         <FieldArray
           name="data"
@@ -123,10 +125,24 @@ class CreateAssetForm extends React.Component {
                 fieldName={fieldName}
                 first={i === 0}
                 form={form}
+                remove={() => {
+                  this.removeField(i);
+                }}
+                onlyField={fields.length === 1}
               />
             ))
           }
         />
+
+        <Button
+          uppercase
+          skin="hyperlink"
+          className="mt2"
+          onClick={this.addField}
+        >
+          <Icon icon={plusIcon} className="space-right" />
+          <span className="v-align">{__('Add field')}</span>
+        </Button>
 
         <Button
           skin="primary"

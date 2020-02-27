@@ -7,8 +7,9 @@ import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import Switch from 'components/Switch';
 import Select from 'components/Select';
+import Tooltip from 'components/Tooltip';
 import QuestionCircle from 'components/QuestionCircle';
-import { consts } from 'styles';
+import { consts, timing } from 'styles';
 import { getDeep } from 'utils/misc';
 
 const typeOptions = [
@@ -67,6 +68,31 @@ const minValue = {
   uint1024: 0,
 };
 
+const Wrapper = styled.div({
+  marginLeft: -50,
+  paddingLeft: 50,
+  position: 'relative',
+});
+
+const RemoveButton = styled.div(({ theme }) => ({
+  position: 'absolute',
+  top: 'calc(50% - 13px)',
+  left: 0,
+  fontSize: 16,
+  padding: 10,
+  lineHeight: 1,
+  color: theme.mixer(0.5),
+  opacity: 0,
+  cursor: 'pointer',
+  transition: `color ${timing.normal}, opacity ${timing.normal}`,
+  '&:hover': {
+    color: theme.mixer(0.75),
+  },
+  [`${Wrapper}:hover &`]: {
+    opacity: 1,
+  },
+}));
+
 const FirstLine = styled.div({
   display: 'grid',
   gridTemplateColumns: '1fr min-content 2fr',
@@ -92,13 +118,13 @@ const SwitchWrapper = styled.div({
 }))
 export default class AssetFieldCreator extends React.PureComponent {
   render() {
-    const { fieldName, first, fieldValue } = this.props;
+    const { fieldName, first, fieldValue, remove, onlyField } = this.props;
     const lengthDisabled = !(
       fieldValue.mutable && fieldValue.type === 'string'
     );
 
     return (
-      <div className={first ? undefined : 'mt2'}>
+      <Wrapper className={first ? undefined : 'mt2'}>
         <FirstLine>
           <FormField label={__('Name')} connectLabel capitalizeLabel>
             <Field
@@ -170,7 +196,13 @@ export default class AssetFieldCreator extends React.PureComponent {
             />
           </FormField>
         </SecondLine>
-      </div>
+
+        {!onlyField && (
+          <Tooltip.Trigger tooltip={__('Remove field')}>
+            <RemoveButton onClick={remove}>✕</RemoveButton>
+          </Tooltip.Trigger>
+        )}
+      </Wrapper>
     );
   }
 }

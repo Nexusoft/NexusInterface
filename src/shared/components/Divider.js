@@ -3,16 +3,16 @@ import styled from '@emotion/styled';
 import * as color from 'utils/color';
 
 const Divider = styled.div(
-  ({ theme, title, backgroundColor, titleColor, dividerColor }) => {
+  ({ theme, label, backgroundColor, labelColor, dividerColor }) => {
     const colors = {
       background:
         typeof backgroundColor === 'function'
           ? backgroundColor(theme)
           : backgroundColor || color.darken(theme.background, 0.2),
-      title:
-        typeof titleColor === 'function'
-          ? titleColor(theme)
-          : titleColor || theme.mixer(0.75),
+      label:
+        typeof labelColor === 'function'
+          ? labelColor(theme)
+          : labelColor || theme.mixer(0.75),
       divider:
         typeof dividerColor === 'function'
           ? dividerColor(theme)
@@ -30,18 +30,18 @@ const Divider = styled.div(
         content: '""',
         display: 'block',
         position: 'absolute',
-        top: 'calc(50% - 0.5px)',
+        top: '50%',
         left: 0,
         right: 0,
         height: 1,
         background: colors.divider,
       },
       '&::after': {
-        content: `"${title}"`,
+        content: `"${label}"`,
         position: 'relative',
         padding: '.3em .6em',
         background: colors.background,
-        color: colors.title,
+        color: colors.label,
       },
     };
   }
