@@ -1,6 +1,5 @@
 import React from 'react';
 import { reduxForm, Field, FieldArray } from 'redux-form';
-import styled from '@emotion/styled';
 
 import Modal from 'components/Modal';
 import Button from 'components/Button';
@@ -13,7 +12,7 @@ import QuestionCircle from 'components/QuestionCircle';
 import confirmPin from 'utils/promisified/confirmPin';
 import { errorHandler } from 'utils/form';
 import { openSuccessDialog } from 'lib/ui';
-import { loadNameRecords } from 'lib/user';
+import { loadAssets } from 'lib/user';
 import { apiPost } from 'lib/tritiumApi';
 import plusIcon from 'icons/plus.svg';
 
@@ -21,7 +20,7 @@ import AssetFieldCreator from './AssetFieldCreator';
 
 __ = __context('CreateAsset');
 
-const getInitialField = () => ({
+const createInitialField = () => ({
   name: '',
   value: '',
   mutable: false,
@@ -34,38 +33,52 @@ const getInitialField = () => ({
   destroyOnUnmount: false,
   initialValues: {
     name: '',
-    format: 'basic',
-    data: '',
-    data: [getInitialField()],
+    fields: [createInitialField()],
   },
-  validate: ({ name, namespace, type }) => {
+  validate: ({ fields }) => {
     const errors = {};
+    const fieldsErrors = [];
+
+    if (fields) {
+      fields.forEach(({ name }, i) => {
+        const fieldErrors = {};
+        if (!name) {
+          fieldErrors.name = __('Field name is required');
+        }
+        if (Object.keys(fieldErrors).length) {
+          fieldsErrors[i] = fieldErrors;
+        }
+      });
+    }
+
+    if (fieldsErrors.length) {
+      errors.fields = fieldsErrors;
+    }
 
     return errors;
   },
-  onSubmit: async ({ type, name, namespace, registerAddress }) => {
+  onSubmit: async ({ name, fields }) => {
     const pin = await confirmPin();
 
     if (pin) {
-      return await apiPost('names/create/name', {
+      return await apiPost('assets/create/asset', {
         pin,
         name,
-        global: type === 'global',
-        namespace: type === 'namespaced' ? namespace : undefined,
-        register_address: registerAddress,
+        format: 'JSON',
+        json: fields,
       });
     }
   },
   onSubmitSuccess: async (result, dispatch, props) => {
     if (!result) return; // Submission was cancelled
-    loadNameRecords();
+    loadAssets();
     props.reset();
     props.closeModal();
     openSuccessDialog({
-      message: __('New name has been created'),
+      message: __('New asset has been created'),
     });
   },
-  onSubmitFail: errorHandler(__('Error creating name')),
+  onSubmitFail: errorHandler(__('Error creating asset')),
 })
 class CreateAssetForm extends React.Component {
   constructor(props) {
@@ -73,11 +86,11 @@ class CreateAssetForm extends React.Component {
   }
 
   addField = () => {
-    this.props.array.push('data', getInitialField());
+    this.props.array.push('fields', createInitialField());
   };
 
   removeField = index => {
-    this.props.array.remove('data', index);
+    this.props.array.remove('fields', index);
   };
 
   render() {
@@ -117,7 +130,7 @@ class CreateAssetForm extends React.Component {
         <Divider label={__('Asset data')} style={{ marginBottom: 0 }} />
 
         <FieldArray
-          name="data"
+          name="fields"
           component={({ fields }) =>
             fields.map((fieldName, i) => (
               <AssetFieldCreator
