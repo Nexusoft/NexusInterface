@@ -82,7 +82,7 @@ export default class Asset extends React.Component {
 
         <AssetData>
           {Object.entries(data).map(([key, value]) => (
-            <InfoField key={key} label={key}>
+            <InfoField key={key} label={key} ratio={[1, 2]}>
               {value}
             </InfoField>
           ))}
