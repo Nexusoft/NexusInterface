@@ -28,6 +28,18 @@ const createInitialField = () => ({
   maxlength: null,
 });
 
+const AssetFields = ({ fields, form, removeField }) =>
+  fields.map((fieldName, i) => (
+    <AssetFieldCreator
+      key={fieldName}
+      fieldName={fieldName}
+      first={i === 0}
+      form={form}
+      remove={() => removeField(i)}
+      onlyField={fields.length === 1}
+    />
+  ));
+
 @reduxForm({
   form: 'create-asset',
   destroyOnUnmount: false,
@@ -131,20 +143,9 @@ class CreateAssetForm extends React.Component {
 
         <FieldArray
           name="fields"
-          component={({ fields }) =>
-            fields.map((fieldName, i) => (
-              <AssetFieldCreator
-                key={fieldName}
-                fieldName={fieldName}
-                first={i === 0}
-                form={form}
-                remove={() => {
-                  this.removeField(i);
-                }}
-                onlyField={fields.length === 1}
-              />
-            ))
-          }
+          component={AssetFields}
+          form={form}
+          removeField={this.removeField}
         />
 
         <Button

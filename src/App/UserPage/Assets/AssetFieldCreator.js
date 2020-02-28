@@ -68,7 +68,7 @@ const minValue = {
   uint1024: 0,
 };
 
-const Wrapper = styled.div({
+const FieldWrapper = styled.div({
   marginLeft: -50,
   paddingLeft: 50,
   position: 'relative',
@@ -88,7 +88,7 @@ const RemoveButton = styled.div(({ theme }) => ({
   '&:hover': {
     color: theme.mixer(0.75),
   },
-  [`${Wrapper}:hover &`]: {
+  [`${FieldWrapper}:hover &`]: {
     opacity: 1,
   },
 }));
@@ -124,7 +124,7 @@ export default class AssetFieldCreator extends React.PureComponent {
     );
 
     return (
-      <Wrapper className={first ? undefined : 'mt2'}>
+      <FieldWrapper className={first ? undefined : 'mt2'}>
         <FirstLine>
           <FormField label={__('Name')} connectLabel capitalizeLabel>
             <Field
@@ -202,7 +202,7 @@ export default class AssetFieldCreator extends React.PureComponent {
             <RemoveButton onClick={remove}>✕</RemoveButton>
           </Tooltip.Trigger>
         )}
-      </Wrapper>
+      </FieldWrapper>
     );
   }
 }
