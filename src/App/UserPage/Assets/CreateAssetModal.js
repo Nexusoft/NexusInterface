@@ -73,12 +73,13 @@ const AssetFields = ({ fields, form, removeField }) =>
     const pin = await confirmPin();
 
     if (pin) {
-      return await apiPost('assets/create/asset', {
+      const params = {
         pin,
-        name,
         format: 'JSON',
         json: fields,
-      });
+      };
+      if (name) params.name = name;
+      return await apiPost('assets/create/asset', params);
     }
   },
   onSubmitSuccess: async (result, dispatch, props) => {
