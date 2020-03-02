@@ -9,6 +9,7 @@ import Tooltip from 'components/Tooltip';
 import InfoField from 'components/InfoField';
 import { formatDateTime } from 'lib/intl';
 import { openModal } from 'lib/ui';
+import { fetchAssetSchema } from 'lib/asset';
 import { getAssetData } from 'utils/misc';
 import editIcon from 'icons/edit.svg';
 
@@ -33,13 +34,26 @@ const EditAsset = styled.div({
   fontSize: '1rem',
 });
 
-@connect(({ user: { status } }) => ({
-  genesisId: status && status.genesis,
-}))
+const isEditable = schema =>
+  !!Array.isArray(schema) && schema.some(field => field.mutable);
+
+@connect(({ user: { status, assetSchemas } }, props) => {
+  const genesisId = status && status.genesis;
+  return {
+    isOwner: !!genesisId && genesisId === props.asset.owner,
+    schema: assetSchemas[props.asset.address],
+  };
+})
 export default class AssetDetailsModal extends React.Component {
+  componentDidMount() {
+    const { asset, schema, isOwner } = this.props;
+    if (!schema && isOwner) {
+      fetchAssetSchema(asset.address);
+    }
+  }
+
   render() {
-    const { asset, genesisId } = this.props;
-    const isOwner = !!genesisId && genesisId === asset.owner;
+    const { asset, schema, isOwner } = this.props;
     const data = getAssetData(asset);
 
     return (
@@ -48,7 +62,7 @@ export default class AssetDetailsModal extends React.Component {
           <>
             <Modal.Header className="relative">
               {__('Asset Details')}
-              {isOwner && (
+              {isOwner && isEditable(schema) && (
                 <EditAsset>
                   <Tooltip.Trigger tooltip={__('Edit asset')}>
                     <Button
