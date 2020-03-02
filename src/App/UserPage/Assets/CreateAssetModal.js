@@ -127,6 +127,7 @@ class CreateAssetForm extends React.Component {
             name="name"
             component={TextField.RF}
             placeholder={__('Asset name (optional)')}
+            autoFocus
           />
         </FormField>
         <Field
