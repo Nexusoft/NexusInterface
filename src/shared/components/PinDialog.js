@@ -35,7 +35,12 @@ const formOptions = {
   },
 };
 
-const PinDialog = ({ handleSubmit, confirmLabel = __('Confirm'), onClose }) => (
+const PinDialog = ({
+  handleSubmit,
+  label = null,
+  confirmLabel = __('Confirm'),
+  onClose,
+}) => (
   <Modal style={{ maxWidth: 350 }} onClose={onClose}>
     {closeModal => (
       <>
@@ -50,6 +55,7 @@ const PinDialog = ({ handleSubmit, confirmLabel = __('Confirm'), onClose }) => (
               skin="filled-inverted"
               placeholder={__('Your PIN')}
             />
+            <span style={{ display: 'flow-root' }}>{label}</span>
             <div className="flex space-between">
               <Button onClick={closeModal}>{__('Cancel')}</Button>
               <Button type="submit" skin="primary">

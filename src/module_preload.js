@@ -67,13 +67,13 @@ global.NEXUS = {
       }
       clipboard.writeText(text);
     },
-    sendNXS: (recipients, message) => {
+    sendNXS: (recipients, message, tritium) => {
       if (!Array.isArray(recipients)) {
         throw new Error(
           'Expected `recipients` to be `array` type, found: ' + typeof params
         );
       }
-      ipcRenderer.sendToHost('send-nxs', recipients, message);
+      ipcRenderer.sendToHost('send-nxs', recipients, message, tritium);
     },
     showNotification: options => {
       if (!options) {
@@ -154,6 +154,30 @@ global.NEXUS = {
           }
         });
         ipcRenderer.sendToHost('api-call', endpoint, params, callId);
+      });
+    },
+    secureApiCall: (endpoint, params) => {
+      if (!endpoint) {
+        throw new Error('`endpoint` is required');
+      }
+      if (typeof endpoint !== 'string') {
+        throw new Error(
+          'Expected `endpoint` to be `string` type, found: ' + typeof endpoint
+        );
+      }
+      const callId = newId();
+      return new Promise((resolve, reject) => {
+        ipcRenderer.once(
+          `secure-api-return:${callId}`,
+          (event, err, result) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(result);
+            }
+          }
+        );
+        ipcRenderer.sendToHost('secure-api-call', endpoint, params, callId);
       });
     },
     proxyRequest: (url, options) => {

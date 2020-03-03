@@ -11,6 +11,8 @@ import {
   openErrorDialog,
   openSuccessDialog,
 } from 'lib/ui';
+
+import confirmPin from 'utils/promisified/confirmPin';
 import { walletEvents } from 'lib/wallet';
 import rpc from 'lib/rpc';
 import { apiPost } from 'lib/tritiumApi';
@@ -62,6 +64,7 @@ const apiWhiteList = [
   'system/get/info',
   'system/list/peers',
   'system/list/lisp-eids',
+  'system/validate/address',
   'users/get/status',
   'users/list/accounts',
   'users/list/assets',
@@ -96,6 +99,11 @@ const apiWhiteList = [
   'objects/get/schema',
   'supply/get/item',
   'supply/list/item/history',
+  'invoices/create/invoice',
+  'invoices/get/invoice',
+  'invoices/pay/invoice',
+  'invoices/cancel/invoice',
+  'invoices/list/invoice/history',
 ];
 
 /**
@@ -151,6 +159,8 @@ function handleIpcMessage(event) {
     case 'api-call':
       apiCall(event.args);
       break;
+    case 'secure-api-call':
+      secureApiCall(event.args);
     case 'show-notification':
       showNotif(event.args);
       break;
@@ -172,11 +182,14 @@ function handleIpcMessage(event) {
   }
 }
 
-function sendNXS([recipients, message]) {
+function sendNXS([recipients, message, tritium]) {
   if (!Array.isArray(recipients)) return;
-
+  console.error(recipients);
+  console.error(message);
+  console.error(tritium);
+  const formName = tritium ? 'send' : 'sendNXS';
   store.dispatch(
-    initialize('sendNXS', {
+    initialize(formName, {
       sendFrom: null,
       recipients: recipients.map(r => ({
         address: `${r.address}`,
@@ -186,7 +199,7 @@ function sendNXS([recipients, message]) {
       message: message,
     })
   );
-  store.dispatch(reset('sendNXS'));
+  store.dispatch(reset(formName));
   history.push('/Send');
 }
 
@@ -272,6 +285,34 @@ async function apiCall([endpoint, params, callId]) {
       activeAppModule.webview.send(
         `api-return${callId ? `:${callId}` : ''}`,
         err
+      );
+    }
+  }
+}
+
+async function secureApiCall([endpoint, params, callId]) {
+  try {
+    const message = `You can executing ${endpoint} with the params: \n ${JSON.stringify(
+      params
+    )}`;
+    const pin = await confirmPin({ label: message });
+
+    const result = await apiPost(endpoint, { ...params, pin: pin });
+    const { activeAppModule } = store.getState();
+    if (activeAppModule && activeAppModule.webview) {
+      activeAppModule.webview.send(
+        `secure-api-return${callId ? `:${callId}` : ''}`,
+        null,
+        result
+      );
+    }
+  } catch (error) {
+    console.error(error);
+    const { activeAppModule } = store.getState();
+    if (activeAppModule && activeAppModule.webview) {
+      activeAppModule.webview.send(
+        `secure-api-return${callId ? `:${callId}` : ''}`,
+        error
       );
     }
   }

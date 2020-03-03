@@ -226,7 +226,6 @@ export default class PopUp extends PureComponent {
    * @memberof Modal
    */
   render() {
-    console.error(this.props);
     const {
       open,
       dimBackground,
