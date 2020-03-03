@@ -10,6 +10,7 @@ import Select from 'components/Select';
 import Tooltip from 'components/Tooltip';
 import QuestionCircle from 'components/QuestionCircle';
 import { consts, timing } from 'styles';
+import { assetNumberTypes } from 'consts/misc';
 import { getDeep } from 'utils/misc';
 
 const typeOptions = [
@@ -46,27 +47,6 @@ const typeOptions = [
     display: 'uint1024',
   },
 ];
-
-const numberTypes = [
-  'uint8',
-  'uint16',
-  'uint32',
-  'uint64',
-  'uint256',
-  'uint512',
-  'uint1024',
-];
-
-const minValue = {
-  string: undefined,
-  uint8: 0,
-  uint16: 0,
-  uint32: 0,
-  uint64: 0,
-  uint256: 0,
-  uint512: 0,
-  uint1024: 0,
-};
 
 const FieldWrapper = styled.div({
   marginLeft: -50,
@@ -139,8 +119,10 @@ export default class AssetFieldCreator extends React.PureComponent {
               name={`${fieldName}.value`}
               component={TextField.RF}
               placeholder={__('Field value')}
-              type={numberTypes.includes(fieldValue.type) ? 'number' : 'text'}
-              min={minValue[fieldValue.type]}
+              type={
+                assetNumberTypes.includes(fieldValue.type) ? 'number' : 'text'
+              }
+              min={assetNumberTypes.includes(fieldValue.type) ? 0 : undefined}
             />
           </FormField>
         </FirstLine>

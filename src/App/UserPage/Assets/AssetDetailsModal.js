@@ -13,6 +13,8 @@ import { fetchAssetSchema } from 'lib/asset';
 import { getAssetData } from 'utils/misc';
 import editIcon from 'icons/edit.svg';
 
+import EditAssetModal from './EditAssetModal';
+
 __ = __context('AssetDetails');
 
 const timeFormatOptions = {
@@ -69,7 +71,10 @@ export default class AssetDetailsModal extends React.Component {
                       skin="plain"
                       onClick={() => {
                         closeModal();
-                        openModal();
+                        openModal(EditAssetModal, {
+                          schema,
+                          asset: asset,
+                        });
                       }}
                     >
                       <Icon icon={editIcon} />
