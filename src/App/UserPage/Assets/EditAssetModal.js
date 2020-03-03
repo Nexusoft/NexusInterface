@@ -65,7 +65,9 @@ class EditAssetForm extends React.Component {
     const { handleSubmit, submitting, mutableFields, asset } = this.props;
     return (
       <form onSubmit={handleSubmit}>
-        <InfoField label={__('Name')}>{asset.name}</InfoField>
+        <InfoField label={__('Name')}>
+          {asset.name || <span className="dim">N/A</span>}
+        </InfoField>
         <InfoField label={__('Address')}>{asset.address}</InfoField>
 
         {mutableFields.map(field => (
