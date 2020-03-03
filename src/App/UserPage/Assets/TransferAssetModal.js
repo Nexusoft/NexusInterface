@@ -11,17 +11,13 @@ import Spinner from 'components/Spinner';
 import confirmPin from 'utils/promisified/confirmPin';
 import { errorHandler } from 'utils/form';
 import { openSuccessDialog } from 'lib/ui';
-import { loadNameRecords } from 'lib/user';
+import { loadAssets } from 'lib/user';
 import { apiPost } from 'lib/tritiumApi';
 import { userIdRegex } from 'consts/misc';
 
-__ = __context('TransferName');
+__ = __context('TransferAsset');
 
-const Prefix = styled.span(({ theme }) => ({
-  color: theme.mixer(0.5),
-}));
-
-const Name = styled.span(({ theme }) => ({
+const Value = styled.span(({ theme }) => ({
   color: theme.foreground,
 }));
 
@@ -29,7 +25,7 @@ const Name = styled.span(({ theme }) => ({
   username: state.user.status && state.user.status.username,
 }))
 @reduxForm({
-  form: 'transfer-name',
+  form: 'transfer-asset',
   destroyOnUnmount: true,
   initialValues: {
     recipient: '',
@@ -41,10 +37,10 @@ const Name = styled.span(({ theme }) => ({
     }
     return errors;
   },
-  onSubmit: async ({ recipient }, dispatch, { nameRecord }) => {
+  onSubmit: async ({ recipient }, dispatch, { asset }) => {
     const pin = await confirmPin();
 
-    const params = { pin, address: nameRecord.address };
+    const params = { pin, address: asset.address };
     if (userIdRegex.test(recipient)) {
       params.destination = recipient;
     } else {
@@ -52,12 +48,12 @@ const Name = styled.span(({ theme }) => ({
     }
 
     if (pin) {
-      return await apiPost('names/transfer/name', params);
+      return await apiPost('assets/transfer/asset', params);
     }
   },
   onSubmitSuccess: async (result, dispatch, props) => {
     if (!result) return; // Submission was cancelled
-    loadNameRecords();
+    loadAssets();
     props.closeModal();
     openSuccessDialog({
       message: __('Name has been transferred'),
@@ -65,18 +61,17 @@ const Name = styled.span(({ theme }) => ({
   },
   onSubmitFail: errorHandler(__('Error transferring name')),
 })
-class TransferNameForm extends React.Component {
+class TransferAssetForm extends React.Component {
   render() {
-    const { handleSubmit, username, nameRecord, submitting } = this.props;
+    const { handleSubmit, asset, submitting } = this.props;
     return (
       <form onSubmit={handleSubmit}>
         <FormField label={__('Name')}>
-          {nameRecord.global ? null : nameRecord.namespace ? (
-            <Prefix>{nameRecord.namespace + '::'}</Prefix>
-          ) : (
-            <Prefix>{username + ':'}</Prefix>
-          )}
-          <Name>{nameRecord.name}</Name>
+          <Value>{asset.name}</Value>
+        </FormField>
+
+        <FormField label={__('Address')}>
+          <Value>{asset.address}</Value>
         </FormField>
 
         <FormField connectLabel label={__('Transfer to')}>
@@ -99,10 +94,10 @@ class TransferNameForm extends React.Component {
           {submitting ? (
             <span>
               <Spinner className="space-right" />
-              <span className="v-align">{__('Transferring name')}...</span>
+              <span className="v-align">{__('Transferring asset')}...</span>
             </span>
           ) : (
-            __('Transfer name')
+            __('Transfer asset')
           )}
         </Button>
       </form>
@@ -110,17 +105,17 @@ class TransferNameForm extends React.Component {
   }
 }
 
-const TransferNameModal = ({ nameRecord }) => (
+const TransferAssetModal = ({ asset }) => (
   <Modal style={{ maxWidth: 600 }}>
     {closeModal => (
       <>
-        <Modal.Header>{__('Transfer name')}</Modal.Header>
+        <Modal.Header>{__('Transfer asset')}</Modal.Header>
         <Modal.Body>
-          <TransferNameForm closeModal={closeModal} nameRecord={nameRecord} />
+          <TransferAssetForm closeModal={closeModal} asset={asset} />
         </Modal.Body>
       </>
     )}
   </Modal>
 );
 
-export default TransferNameModal;
+export default TransferAssetModal;

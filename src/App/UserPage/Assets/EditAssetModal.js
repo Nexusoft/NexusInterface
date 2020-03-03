@@ -15,14 +15,6 @@ import { assetNumberTypes } from 'consts/misc';
 
 __ = __context('EditAsset');
 
-const createInitialField = () => ({
-  name: '',
-  value: '',
-  mutable: false,
-  type: 'string',
-  maxlength: null,
-});
-
 @reduxForm({
   form: 'edit-asset',
   destroyOnUnmount: true,
@@ -52,14 +44,6 @@ class EditAssetForm extends React.Component {
   constructor(props) {
     super(props);
   }
-
-  addField = () => {
-    this.props.array.push('fields', createInitialField());
-  };
-
-  removeField = index => {
-    this.props.array.remove('fields', index);
-  };
 
   render() {
     const { handleSubmit, submitting, mutableFields, asset } = this.props;

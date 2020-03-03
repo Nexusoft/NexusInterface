@@ -14,6 +14,7 @@ import { getAssetData } from 'utils/misc';
 import editIcon from 'icons/edit.svg';
 
 import EditAssetModal from './EditAssetModal';
+import TransferAssetModal from './TransferAssetModal';
 
 __ = __context('AssetDetails');
 
@@ -59,64 +60,69 @@ export default class AssetDetailsModal extends React.Component {
     const data = getAssetData(asset);
 
     return (
-      <Modal>
-        {closeModal => (
-          <>
-            <Modal.Header className="relative">
-              {__('Asset Details')}
-              {isOwner && isEditable(schema) && (
-                <EditAsset>
-                  <Tooltip.Trigger tooltip={__('Edit asset')}>
-                    <Button
-                      skin="plain"
-                      onClick={() => {
-                        closeModal();
-                        openModal(EditAssetModal, {
-                          schema,
-                          asset: asset,
-                        });
-                      }}
-                    >
-                      <Icon icon={editIcon} />
-                    </Button>
-                  </Tooltip.Trigger>
-                </EditAsset>
-              )}
-            </Modal.Header>
+      <Modal
+        assignClose={close => {
+          this.closeModal = close;
+        }}
+      >
+        <Modal.Header className="relative">
+          {__('Asset Details')}
+          {isOwner && isEditable(schema) && (
+            <EditAsset>
+              <Tooltip.Trigger tooltip={__('Edit asset')}>
+                <Button
+                  skin="plain"
+                  onClick={() => {
+                    this.closeModal();
+                    openModal(EditAssetModal, {
+                      schema,
+                      asset: asset,
+                    });
+                  }}
+                >
+                  <Icon icon={editIcon} />
+                </Button>
+              </Tooltip.Trigger>
+            </EditAsset>
+          )}
+        </Modal.Header>
 
-            <Modal.Body>
-              <InfoField label={__('Name')}>
-                {asset.name || <span className="dim">N/A</span>}
-              </InfoField>
-              <InfoField label={__('Address')}>{asset.address}</InfoField>
-              <InfoField label={__('Owner')}>{asset.owner}</InfoField>
-              {!!asset.ownership && (
-                <InfoField label={__('Ownership')}>
-                  {asset.ownership}%
-                </InfoField>
-              )}
-              <InfoField label={__('Created at')}>
-                {formatDateTime(asset.created * 1000, timeFormatOptions)}
-              </InfoField>
-              <InfoField label={__('Last modified')}>
-                {formatDateTime(asset.modified * 1000, timeFormatOptions)}
-              </InfoField>
+        <Modal.Body>
+          <InfoField label={__('Name')}>
+            {asset.name || <span className="dim">N/A</span>}
+          </InfoField>
+          <InfoField label={__('Address')}>{asset.address}</InfoField>
+          <InfoField label={__('Owner')}>{asset.owner}</InfoField>
+          {!!asset.ownership && (
+            <InfoField label={__('Ownership')}>{asset.ownership}%</InfoField>
+          )}
+          <InfoField label={__('Created at')}>
+            {formatDateTime(asset.created * 1000, timeFormatOptions)}
+          </InfoField>
+          <InfoField label={__('Last modified')}>
+            {formatDateTime(asset.modified * 1000, timeFormatOptions)}
+          </InfoField>
 
-              {Object.entries(data).map(([key, value]) => (
-                <InfoField key={key} label={key}>
-                  {value}
-                </InfoField>
-              ))}
+          {Object.entries(data).map(([key, value]) => (
+            <InfoField key={key} label={key}>
+              {value}
+            </InfoField>
+          ))}
 
-              {isOwner && (
-                <div className="mt2 flex space-between">
-                  <div />
-                  <Button>{__('Transfer ownership')}</Button>
-                </div>
-              )}
-            </Modal.Body>
-          </>
-        )}
+          {isOwner && (
+            <div className="mt2 flex space-between">
+              <div />
+              <Button
+                onClick={() => {
+                  this.closeModal();
+                  openModal(TransferAssetModal, { asset });
+                }}
+              >
+                {__('Transfer ownership')}
+              </Button>
+            </div>
+          )}
+        </Modal.Body>
       </Modal>
     );
   }
