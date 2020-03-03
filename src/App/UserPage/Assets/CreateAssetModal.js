@@ -14,6 +14,7 @@ import { errorHandler } from 'utils/form';
 import { openSuccessDialog } from 'lib/ui';
 import { loadAssets } from 'lib/user';
 import { apiPost } from 'lib/tritiumApi';
+import { createLocalNameFee } from 'lib/fees';
 import plusIcon from 'icons/plus.svg';
 
 import AssetFieldCreator from './AssetFieldCreator';
@@ -135,7 +136,7 @@ class CreateAssetForm extends React.Component {
           component={({ input }) =>
             !!input.value && (
               <div className="dim" style={{ marginTop: '.3em' }}>
-                {__('Name creation fee')}: 1 NXS
+                {__('Name creation fee')}: {createLocalNameFee} NXS
               </div>
             )
           }
