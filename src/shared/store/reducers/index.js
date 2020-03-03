@@ -19,6 +19,7 @@ import updater from './updater';
 import activeAppModule from './activeAppModule';
 import bootstrap from './bootstrap';
 import failedModules from './failedModules';
+import assetSchemas from './assetSchemas';
 
 export default function createRootReducer() {
   return combineReducers({
@@ -40,6 +41,7 @@ export default function createRootReducer() {
     updater,
     activeAppModule,
     bootstrap,
+    assetSchemas,
     form: formReducer,
   });
 }

@@ -37,7 +37,7 @@ const EditAsset = styled.div({
 const isEditable = schema =>
   !!Array.isArray(schema) && schema.some(field => field.mutable);
 
-@connect(({ user: { status, assetSchemas } }, props) => {
+@connect(({ user: { status }, assetSchemas }, props) => {
   const genesisId = status && status.genesis;
   return {
     isOwner: !!genesisId && genesisId === props.asset.owner,
