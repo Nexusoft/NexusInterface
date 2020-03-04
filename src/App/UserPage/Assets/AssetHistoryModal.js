@@ -8,6 +8,8 @@ import { openModal } from 'lib/ui';
 import { apiPost } from 'lib/tritiumApi';
 import { handleError } from 'utils/form';
 
+import AssetHistoryDetailsModal from './AssetHistoryDetailsModal';
+
 __ = __context('AssetHistory');
 
 const timeFormatOptions = {
@@ -51,7 +53,7 @@ export default class AssetHistoryModal extends React.Component {
       const events = await apiPost('assets/list/asset/history', {
         address: asset.address,
       });
-      this.setState({ events: events.sort((a, b) => a.modified - b.modified) });
+      this.setState({ events: events.reverse() });
     } catch (err) {
       handleError(err);
       this.closeModal();
@@ -84,7 +86,7 @@ export default class AssetHistoryModal extends React.Component {
                 const event = row && row.original;
                 return {
                   onClick: () => {
-                    openModal(ContractDetailsModal, {
+                    openModal(AssetHistoryDetailsModal, {
                       event,
                     });
                   },
