@@ -81,7 +81,7 @@ export default class AssetHistoryModal extends React.Component {
             <Table
               columns={tableColumns}
               data={events}
-              defaultPageSize={5}
+              defaultPageSize={events.length < 10 ? events.length : 10}
               getTrProps={(state, row) => {
                 const event = row && row.original;
                 return {
