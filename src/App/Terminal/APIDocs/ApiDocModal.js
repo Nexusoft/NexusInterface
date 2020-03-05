@@ -1,13 +1,11 @@
 //External
 import React from 'react';
-import { connect } from 'react-redux';
-import styled from '@emotion/styled';
-import ReactDom from 'react-dom';
 import ReactMarkdown from 'react-markdown';
 
 //Internal
 import Modal from 'components/Modal';
 import Button from 'components/Button';
+import Link from 'components/Link';
 
 //DOCS
 import Assets from './ASSETS.MD';
@@ -33,6 +31,20 @@ const documents = [
   { path: Tokens, label: 'Tokens' },
   { path: Users, label: 'Users' },
 ];
+
+const getInnerText = children => {
+  if (typeof children === 'string') return children;
+  if (Array.isArray(children)) {
+    return children.map(child => getInnerText(child.props.children)).join('');
+  }
+  return '';
+};
+
+const toHeadingId = text =>
+  text
+    .replace(/\s/g, '-')
+    .replace(/[^\d\w]/g, '')
+    .toLowerCase();
 
 class APIDocModal extends React.Component {
   constructor(props) {
@@ -66,7 +78,37 @@ class APIDocModal extends React.Component {
         <Modal.Header>{'API Documentation'}</Modal.Header>
         <Modal.Body>
           {displayMD ? (
-            <ReactMarkdown source={this.state.displayMD} />
+            <ReactMarkdown
+              source={this.state.displayMD}
+              renderers={{
+                link: ({ href, ...rest }) => {
+                  return (
+                    <Link
+                      as="a"
+                      href={href}
+                      onClick={evt => {
+                        evt.preventDefault();
+                        if (href && href.startsWith('#')) {
+                          const element = document.getElementById(
+                            href.substring(1)
+                          );
+                          element.scrollIntoView();
+                        }
+                      }}
+                      {...rest}
+                    />
+                  );
+                },
+                heading: ({ level, children, ...rest }) => {
+                  const Heading = 'h' + level;
+                  return (
+                    <Heading id={toHeadingId(getInnerText(children))} {...rest}>
+                      {children}
+                    </Heading>
+                  );
+                },
+              }}
+            />
           ) : (
             <>
               <span>{'Documentation'}</span>
