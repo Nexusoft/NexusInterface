@@ -1,5 +1,6 @@
 //External
 import React from 'react';
+import styled from '@emotion/styled';
 import ReactMarkdown from 'react-markdown';
 
 //Internal
@@ -45,6 +46,19 @@ const toHeadingId = text =>
     .replace(/\s/g, '-')
     .replace(/[^\d\w]/g, '')
     .toLowerCase();
+
+const CodeBlock = styled.code(({ theme }) => ({
+  display: 'block',
+  maxWidth: '100%',
+  overflow: 'auto',
+  border: `1px solid ${theme.mixer(0.125)}`,
+  padding: '.5em',
+  whiteSpace: 'pre',
+}));
+
+const InlineCode = styled.code({
+  overflowWrap: 'break-word',
+});
 
 class APIDocModal extends React.Component {
   constructor(props) {
@@ -107,6 +121,12 @@ class APIDocModal extends React.Component {
                     </Heading>
                   );
                 },
+                code: ({ value, ...rest }) => (
+                  <CodeBlock {...rest}>{value}</CodeBlock>
+                ),
+                inlineCode: ({ value, ...rest }) => (
+                  <InlineCode {...rest}>{value}</InlineCode>
+                ),
               }}
             />
           ) : (
