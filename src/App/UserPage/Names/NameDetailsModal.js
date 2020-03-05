@@ -85,6 +85,7 @@ const NameDetailsModal = ({ nameRecord }) => (
             <div>
               <Button
                 onClick={() => {
+                  closeModal();
                   openModal(NameHistoryModal, { nameRecord });
                 }}
               >

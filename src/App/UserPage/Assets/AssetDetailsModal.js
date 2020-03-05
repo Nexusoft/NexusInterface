@@ -117,6 +117,7 @@ export default class AssetDetailsModal extends React.Component {
                 <Button
                   className="space-right"
                   onClick={() => {
+                    this.closeModal();
                     openModal(AssetHistoryModal, { asset });
                   }}
                 >
