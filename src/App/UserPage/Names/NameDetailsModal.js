@@ -12,6 +12,7 @@ import editIcon from 'icons/edit.svg';
 
 import ChangeRegisterAddressModal from './ChangeRegisterAddressModal';
 import TransferNameModal from './TransferNameModal';
+import NameHistoryModal from './NameHistoryModal';
 
 __ = __context('NameDetails');
 
@@ -79,19 +80,29 @@ const NameDetailsModal = ({ nameRecord }) => (
             {formatDateTime(nameRecord.modified * 1000, timeFormatOptions)}
           </InfoField>
 
-          {(!!nameRecord.global || !!nameRecord.namespace) && (
-            <div className="mt2 flex space-between">
-              <div />
+          <div className="mt2 flex space-between">
+            <div />
+            <div>
               <Button
                 onClick={() => {
-                  closeModal();
-                  openModal(TransferNameModal, { nameRecord });
+                  openModal(NameHistoryModal, { nameRecord });
                 }}
               >
-                {__('Transfer ownership')}
+                {__('View history')}
               </Button>
+              {(!!nameRecord.global || !!nameRecord.namespace) && (
+                <Button
+                  className="space-left"
+                  onClick={() => {
+                    closeModal();
+                    openModal(TransferNameModal, { nameRecord });
+                  }}
+                >
+                  {__('Transfer ownership')}
+                </Button>
+              )}
             </div>
-          )}
+          </div>
         </Modal.Body>
       </>
     )}

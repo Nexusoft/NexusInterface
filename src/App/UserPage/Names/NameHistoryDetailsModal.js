@@ -4,7 +4,7 @@ import Modal from 'components/Modal';
 import InfoField from 'components/InfoField';
 import { formatDateTime } from 'lib/intl';
 
-__ = __context('AssetHistoryDetails');
+__ = __context('NameHistoryDetails');
 
 const timeFormatOptions = {
   year: 'numeric',
@@ -15,13 +15,20 @@ const timeFormatOptions = {
   second: '2-digit',
 };
 
-const AssetHistoryDetailsModal = ({
-  event: { type, owner, modified, address, checksum, name, ...data },
+const NameHistoryDetailsModal = ({
+  event: {
+    type,
+    owner,
+    modified,
+    address,
+    register_address,
+    checksum,
+    name,
+    namespace,
+  },
 }) => (
   <Modal>
-    <Modal.Header className="relative">
-      {__('Asset History Event')}
-    </Modal.Header>
+    <Modal.Header className="relative">{__('Name History Event')}</Modal.Header>
 
     <Modal.Body>
       <InfoField label={__('Type')}>{type}</InfoField>
@@ -33,15 +40,13 @@ const AssetHistoryDetailsModal = ({
       <InfoField label={__('Name')}>
         {name || <span className="dim">N/A</span>}
       </InfoField>
+      <InfoField label={__('Namespace')}>
+        {namespace || <span className="dim">N/A</span>}
+      </InfoField>
       <InfoField label={__('Address')}>{address}</InfoField>
-
-      {Object.entries(data).map(([key, value]) => (
-        <InfoField key={key} label={key}>
-          {value}
-        </InfoField>
-      ))}
+      <InfoField label={__('Points to')}>{register_address}</InfoField>
     </Modal.Body>
   </Modal>
 );
 
-export default AssetHistoryDetailsModal;
+export default NameHistoryDetailsModal;
