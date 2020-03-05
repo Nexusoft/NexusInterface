@@ -63,7 +63,7 @@ const options = [
     if (!newPhrase) {
       errors.newPhrase = __('Recovery phrase is required');
     } else if (newPhrase.length < 8) {
-      errors.newPhrase = __('Recovery phrase must be at least 40 characters');
+      errors.newPhrase = __('Recovery phrase must be at least 8 characters');
     }
 
     return errors;
