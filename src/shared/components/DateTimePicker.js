@@ -230,6 +230,7 @@ export default class DateTime extends Component {
       inputRef,
       autoFocus,
       error,
+      time,
       ...rest
     } = this.props;
 
@@ -250,7 +251,11 @@ export default class DateTime extends Component {
       >
         {left}
 
-        <Input {...inputProps} ref={this.inputRef} type="datetime-local" />
+        <Input
+          {...inputProps}
+          ref={this.inputRef}
+          type={time ? 'datetime-local' : 'date'}
+        />
 
         {right}
         {!!error && (
