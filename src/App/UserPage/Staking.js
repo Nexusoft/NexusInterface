@@ -4,7 +4,6 @@ import styled from '@emotion/styled';
 
 import Button from 'components/Button';
 import AdjustStakeModal from 'components/AdjustStakeModal';
-import MigrateStakeModal from 'components/MigrateStakeModal';
 import { switchUserTab } from 'lib/ui';
 import { updateSettings } from 'lib/settings';
 import { restartCore } from 'lib/core';
@@ -182,15 +181,7 @@ export default class Staking extends React.Component {
             <div>{formatNumber(stakeInfo.balance, 6)} NXS</div>
           </Line>
           <div className="mt1 flex space-between">
-            {stakeInfo.new ? (
-              <Button
-                onClick={() => {
-                  openModal(MigrateStakeModal);
-                }}
-              >
-                {__('Migrate stake')}
-              </Button>
-            ) : (
+            {!stakeInfo.new && (
               <div>
                 <Button
                   disabled={!stakeInfo.stake && !stakeInfo.balance}
