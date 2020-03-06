@@ -127,7 +127,7 @@ const ModalFooter = styled.div(
  * @class Modal
  * @extends {PureComponent}
  */
-export default class PopUp extends PureComponent {
+export default class ModuleModal extends PureComponent {
   static defaultProps = {
     dimBackground: true,
     escToClose: true,
@@ -262,6 +262,6 @@ export default class PopUp extends PureComponent {
   }
 }
 
-PopUp.Header = ModalHeader;
-PopUp.Body = ModalBody;
-PopUp.Footer = ModalFooter;
+ModuleModal.Header = ModalHeader;
+ModuleModal.Body = ModalBody;
+ModuleModal.Footer = ModalFooter;

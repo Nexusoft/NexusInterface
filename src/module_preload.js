@@ -33,7 +33,7 @@ import Tab from 'components/Tab';
 import FieldSet from 'components/FieldSet';
 import * as color from 'utils/color';
 import AutoSuggest from 'components/AutoSuggest';
-import PopUp from 'components/PopUp';
+import ModuleModal from 'components/ModuleModal';
 import DateTime from 'components/DateTimePicker';
 import FormField from 'components/FormField';
 import Table from 'components/Table';
@@ -43,8 +43,6 @@ const newId = (() => {
   let id = 0;
   return () => ++id;
 })();
-
-const Modal = PopUp;
 
 global.NEXUS = {
   walletVersion: APP_VERSION,
@@ -292,7 +290,7 @@ global.NEXUS = {
     AutoSuggest,
     FieldSet,
     Switch,
-    Modal,
+    Modal: ModuleModal,
     Tooltip,
     Table,
     Select,
