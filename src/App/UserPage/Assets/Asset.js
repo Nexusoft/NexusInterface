@@ -54,7 +54,7 @@ const AssetData = styled.div({
   padding: '.6em 1em .1em',
 });
 
-export default class Asset extends React.Component {
+class Asset extends React.Component {
   render() {
     const { asset } = this.props;
     const data = getAssetData(asset);
@@ -91,3 +91,5 @@ export default class Asset extends React.Component {
     );
   }
 }
+
+export default Asset;
