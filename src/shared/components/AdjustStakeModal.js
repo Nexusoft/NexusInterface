@@ -61,7 +61,7 @@ const Note = styled.div(({ theme }) => ({
   marginTop: 20,
 }));
 
-@connect(({ core: { stakeInfo } }) => ({
+@connect(({ user: { stakeInfo } }) => ({
   currentStake: stakeInfo && stakeInfo.stake,
   total: stakeInfo && stakeInfo.stake + stakeInfo.balance,
   initialValues: {

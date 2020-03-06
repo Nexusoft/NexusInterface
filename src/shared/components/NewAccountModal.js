@@ -20,7 +20,7 @@ __ = __context('NewAccount');
 
 const mapStateToProps = state => {
   return {
-    userTokens: state.core.tokens,
+    userTokens: state.user.tokens,
   };
 };
 @connect(mapStateToProps, null, (stateProps, dispatchProps, ownProps) => ({

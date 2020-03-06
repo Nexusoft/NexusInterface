@@ -18,3 +18,13 @@ export const legacyMode = settings.legacyMode === false ? false : true;
 export const semverRegex = /(?<=^v?|\sv?)(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-(?:[1-9]\d*|[\da-z-]*[a-z-][\da-z-]*)(?:\.(?:[1-9]\d*|[\da-z-]*[a-z-][\da-z-]*))*)?(?:\+[\da-z-]+(?:\.[\da-z-]+)*)?(?=$|\s)/gi;
 
 export const userIdRegex = /^[\da-f]+$/;
+
+export const assetNumberTypes = [
+  'uint8',
+  'uint16',
+  'uint32',
+  'uint64',
+  'uint256',
+  'uint512',
+  'uint1024',
+];

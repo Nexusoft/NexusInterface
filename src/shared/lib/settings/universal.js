@@ -52,7 +52,6 @@ export const defaultSettings = {
   manualDaemonApiPassword: defaultPassword,
   manualDaemonApiIP: '127.0.0.1',
   manualDaemonApiPort: '8080',
-  manualDaemonDataDir: defaultCoreDataDir,
 
   // Style
   renderGlobe: true,

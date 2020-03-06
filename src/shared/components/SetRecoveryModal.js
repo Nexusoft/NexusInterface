@@ -33,8 +33,8 @@ const options = [
   },
 ];
 
-@connect(({ core: { userStatus } }) => ({
-  hasRecoveryPhrase: !!(userStatus && userStatus.recovery),
+@connect(({ user: { status } }) => ({
+  hasRecoveryPhrase: !!(status && status.recovery),
 }))
 @reduxForm({
   form: 'set-recovery-phrase',
@@ -63,7 +63,7 @@ const options = [
     if (!newPhrase) {
       errors.newPhrase = __('Recovery phrase is required');
     } else if (newPhrase.length < 8) {
-      errors.newPhrase = __('Recovery phrase must be at least 40 characters');
+      errors.newPhrase = __('Recovery phrase must be at least 8 characters');
     }
 
     return errors;

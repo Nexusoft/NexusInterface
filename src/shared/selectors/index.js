@@ -12,7 +12,7 @@ export const isCoreConnected = legacyMode
 
 export const isStaking = legacyMode
   ? ({ core: { info } }) => !!info && info.staking === 'Started'
-  : ({ core: { stakeInfo } }) => !!(stakeInfo && stakeInfo.staking);
+  : ({ user: { stakeInfo } }) => !!(stakeInfo && stakeInfo.staking);
 
 export const isSynchronized = legacyMode
   ? ({ core: { info } }) => !!info && info.synccomplete === 100
@@ -20,4 +20,4 @@ export const isSynchronized = legacyMode
 
 export const isLoggedIn = legacyMode
   ? () => false
-  : ({ core }) => !!(core && core.userStatus);
+  : ({ user }) => !!(user && user.status);

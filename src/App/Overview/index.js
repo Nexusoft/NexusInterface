@@ -816,10 +816,7 @@ class Overview extends Component {
             </div>
             <StatIcon icon={transactionIcon} />
           </Stat>
-          <Stat
-            as={market ? Link : undefined}
-            to={market ? '/Market' : undefined}
-          >
+          <Stat>
             <div>
               <StatLabel>
                 {__('Market Price')} ({fiatCurrency})
@@ -840,10 +837,7 @@ class Overview extends Component {
             </div>
             <StatIcon icon={chartIcon} />
           </Stat>
-          <Stat
-            as={market ? Link : undefined}
-            to={market ? '/Market' : undefined}
-          >
+          <Stat>
             <div>
               <StatLabel>
                 {__('Market Cap')} ({fiatCurrency})
@@ -858,10 +852,7 @@ class Overview extends Component {
             </div>
             <StatIcon icon={supplyIcon} />
           </Stat>
-          <Stat
-            as={market ? Link : undefined}
-            to={market ? '/Market' : undefined}
-          >
+          <Stat>
             <div>
               <StatLabel>
                 {__('24hr Change')} ({fiatCurrency} %)

@@ -1,5 +1,6 @@
-import { BrowserWindow, screen } from 'electron';
+import { BrowserWindow, screen, app } from 'electron';
 import path from 'path';
+import fs from 'fs';
 import devToolsInstall, {
   REACT_DEVELOPER_TOOLS,
   REDUX_DEVTOOLS,
@@ -110,6 +111,17 @@ export async function createWindow() {
     settings.devMode
   ) {
     try {
+      if (process.platform === 'win32') {
+        const extensionsPath = path.join(
+          app.getPath('userData'),
+          'DevTools Extensions'
+        );
+        try {
+          await fs.promises.unlink(extensionsPath);
+        } catch (_) {
+          // noop
+        }
+      }
       await installExtensions();
     } catch (err) {
       console.error('Failed to install extensions', err);

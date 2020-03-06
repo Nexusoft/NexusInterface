@@ -15,7 +15,7 @@ import TabContentWrapper from '../TabContentWrapper';
 __ = __context('User.Accounts');
 
 @connect(state => ({
-  accounts: state.core.accounts,
+  accounts: state.user.accounts,
 }))
 export default class Accounts extends React.Component {
   constructor(props) {

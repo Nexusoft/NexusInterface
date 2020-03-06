@@ -26,7 +26,7 @@ const Name = styled.span(({ theme }) => ({
 }));
 
 @connect(state => ({
-  username: state.core.userStatus && state.core.userStatus.username,
+  username: state.user.status && state.user.status.username,
 }))
 @reduxForm({
   form: 'transfer-name',
@@ -81,7 +81,6 @@ class TransferNameForm extends React.Component {
 
         <FormField connectLabel label={__('Transfer to')}>
           <Field
-            inputRef={this.inputRef}
             name="recipient"
             autoFocus
             component={TextField.RF}

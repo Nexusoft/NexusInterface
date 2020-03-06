@@ -68,11 +68,11 @@ export const startCore = async () => {
     '-server',
     '-rpcthreads=4',
     '-fastsync',
-    `-datadir=${conf.dataDir}`,
+    `-datadir=${settings.coreDataDir}`,
     `-rpcport=${conf.port}`,
-    `-verbose=${conf.verbose}`,
+    `-verbose=${settings.verboseLevel}`,
   ];
-  if (settings.testnetIteration) {
+  if (settings.testnetIteration && settings.testnetIteration !== '0') {
     params.push('-testnet=' + settings.testnetIteration);
   }
   if (settings.forkBlocks) {

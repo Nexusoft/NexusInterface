@@ -7,6 +7,7 @@ import { formatDateTime } from 'lib/intl';
 import { openModal } from 'lib/ui';
 
 import TransferNamespaceModal from './TransferNamespaceModal';
+import NamespaceHistoryModal from './NamespaceHistoryModal';
 
 __ = __context('NamespaceDetails');
 
@@ -38,14 +39,25 @@ const NamespaceDetailsModal = ({ namespace }) => (
 
           <div className="mt2 flex space-between">
             <div />
-            <Button
-              onClick={() => {
-                closeModal();
-                openModal(TransferNamespaceModal, { namespace });
-              }}
-            >
-              {__('Transfer ownership')}
-            </Button>
+            <div>
+              <Button
+                onClick={() => {
+                  closeModal();
+                  openModal(NamespaceHistoryModal, { namespace });
+                }}
+              >
+                {__('View history')}
+              </Button>
+              <Button
+                className="space-left"
+                onClick={() => {
+                  closeModal();
+                  openModal(TransferNamespaceModal, { namespace });
+                }}
+              >
+                {__('Transfer ownership')}
+              </Button>
+            </div>
           </div>
         </Modal.Body>
       </>

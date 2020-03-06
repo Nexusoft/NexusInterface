@@ -71,7 +71,7 @@ const Namespace = ({ namespace }) => (
 );
 
 @connect(state => ({
-  namespaces: state.core.namespaces,
+  namespaces: state.user.namespaces,
 }))
 export default class Namesspaces extends React.Component {
   constructor(props) {
@@ -105,7 +105,7 @@ export default class Namesspaces extends React.Component {
                 <Namespace key={namespace.address} namespace={namespace} />
               ))
             ) : (
-              <EmptyMessage>{__("You don't own any namespaces")}</EmptyMessage>
+              <EmptyMessage>{__("You don't own any namespace")}</EmptyMessage>
             )}
           </div>
         </div>

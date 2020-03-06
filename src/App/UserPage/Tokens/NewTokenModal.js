@@ -16,7 +16,7 @@ import { removeModal, showNotification } from 'lib/ui';
 import NewAccountModal from 'components/NewAccountModal';
 import { openModal } from 'lib/ui';
 
-import { token, localName } from 'lib/fees';
+import { token, createLocalNameFee } from 'lib/fees';
 import GA from 'lib/googleAnalytics';
 
 __ = __context('User.Tokens.NewToken');
@@ -111,7 +111,6 @@ const mapStateToProps = state => {
 class NewTokenModal extends React.Component {
   render() {
     const { handleSubmit, submitting, supply, decimal } = this.props;
-    const tokenNameCreationFee = localName;
     const tokenCreationFee = token(supply, decimal);
     return (
       <Modal
@@ -133,7 +132,7 @@ class NewTokenModal extends React.Component {
               <>
                 <SubLable>
                   {__('Name Creation Fee: %{tokenFee} NXS (Optional)', {
-                    tokenFee: tokenNameCreationFee,
+                    tokenFee: createLocalNameFee,
                   })}
                 </SubLable>
                 <Field
