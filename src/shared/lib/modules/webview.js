@@ -132,10 +132,12 @@ const getModuleData = ({
   theme,
   core,
   settings: { locale, fiatCurrency, addressStyle },
+  addressBook,
 }) => ({
   theme,
   settings: getSettingsForModules(locale, fiatCurrency, addressStyle),
   coreInfo: legacyMode ? core.info : core.systemInfo,
+  addressBook,
 });
 
 const getActiveModule = () => {
