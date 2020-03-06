@@ -293,7 +293,7 @@ async function apiCall([endpoint, params, callId]) {
 
 async function secureApiCall([endpoint, params, callId]) {
   try {
-    const message = `You can executing ${endpoint} with the params: \n ${formatSecureApiParams(
+    const message = `You are executing ${endpoint} with the params: \n ${formatSecureApiParams(
       JSON.stringify(params)
     )}`;
     const pin = await confirmPin({ label: message });

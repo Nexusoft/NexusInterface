@@ -160,7 +160,6 @@ export default class PopUp extends PureComponent {
    */
   animatedClose = () => {
     const modalID = this.context;
-    console.log('Animated Close');
     if (true) {
       console.log(modalID);
       const duration = parseInt(timing.quick);

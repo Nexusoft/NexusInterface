@@ -14,7 +14,7 @@ const PinInput = styled(TextFieldWithKeyboard.RF)({
   fontSize: 18,
 });
 
-const PinLabel = styled.div({
+const PinLabel = styled.code({
   display: 'inline-block',
   height: '15em',
   wordBreak: 'break-word',
