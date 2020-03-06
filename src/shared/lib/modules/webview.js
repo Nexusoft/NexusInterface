@@ -296,7 +296,7 @@ async function secureApiCall([endpoint, params, callId]) {
     const message = `You are executing ${endpoint} with the params: \n ${formatSecureApiParams(
       JSON.stringify(params)
     )}`;
-    const pin = await confirmPin({ label: message });
+    const pin = await confirmPin({ note: message });
 
     const result = await apiPost(endpoint, { ...params, pin: pin });
     const { activeAppModule } = store.getState();
