@@ -189,7 +189,7 @@ walletEvents.once('pre-render', function() {
           systemInfo.synccomplete < 50 &&
           systemInfo.synccomplete >= 0
         ) {
-          store.dispatch(bootstrap({ suggesting: true }));
+          bootstrap({ suggesting: true });
         }
       }
     );
