@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 
 import Modal from 'components/Modal';
-import MigrateStakeModal from 'components/MigrateStakeModal';
 import Button from 'components/Button';
 import { history } from 'lib/wallet';
 import { formatNumber } from 'lib/intl';
@@ -12,7 +11,7 @@ import { updateSettings } from 'lib/settings';
 
 __ = __context('MigrateAccount');
 
-const MigrateAccountModal = ({ legacyBalance, isNewAccount, accounts }) => {
+const MigrateAccountModal = ({ legacyBalance, accounts }) => {
   useEffect(() => {
     if (!accounts) loadAccounts();
   }, []);
@@ -36,43 +35,7 @@ const MigrateAccountModal = ({ legacyBalance, isNewAccount, accounts }) => {
 
             <div className="mt2">
               {__(
-                'If you have been staking with your legacy account, click Migrate stake button below to move both your stake amount and your trust score to this new Tritium user.'
-              )}
-            </div>
-            <div className="mt1 text-center">
-              <Button
-                skin="primary"
-                disabled={!isNewAccount}
-                onClick={() => {
-                  closeModal();
-                  openModal(MigrateStakeModal);
-                }}
-              >
-                {__('Migrate stake')}
-              </Button>
-              {!isNewAccount && (
-                <div
-                  className="mt1 error"
-                  style={{
-                    fontStyle: 'italic',
-                    padding: '0 50px',
-                  }}
-                >
-                  {__(
-                    'Cannot migrate stake since this Tritium user has already started staking before. Please create a new user if you still want to migrate your stake.'
-                  )}
-                </div>
-              )}
-            </div>
-
-            <div className="mt2">
-              {__(
-                'If you have never started staking, or have already migrated your stake, you can manually send your funds from legacy account to this new Tritium user.'
-              )}
-            </div>
-            <div className="mt1">
-              {__(
-                'Please keep in mind that you may lose your legacy trust score if you send NXS manually from your legacy account without migrating your stake first'
+                'You can manually send your funds from legacy account to this new Tritium user.'
               )}
             </div>
             <div className="mt1 text-center">
@@ -108,7 +71,6 @@ const MigrateAccountModal = ({ legacyBalance, isNewAccount, accounts }) => {
 };
 
 const mapStateToProps = state => ({
-  isNewAccount: state.core.stakeInfo.new,
   accounts: state.core.accounts,
 });
 
