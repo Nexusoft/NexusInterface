@@ -106,6 +106,10 @@ const apiWhiteList = [
   'invoices/list/invoice/history',
 ];
 
+const formatSecureApiParams = paramString => {
+  return paramString.replace('/":"/g', '":\n"').replace('/","/g', '",\n"');
+};
+
 /**
  * Utilities
  * ===========================================================================
@@ -184,9 +188,6 @@ function handleIpcMessage(event) {
 
 function sendNXS([recipients, message, tritium]) {
   if (!Array.isArray(recipients)) return;
-  console.error(recipients);
-  console.error(message);
-  console.error(tritium);
   const formName = tritium ? 'send' : 'sendNXS';
   store.dispatch(
     initialize(formName, {
@@ -292,8 +293,8 @@ async function apiCall([endpoint, params, callId]) {
 
 async function secureApiCall([endpoint, params, callId]) {
   try {
-    const message = `You can executing ${endpoint} with the params: \n ${JSON.stringify(
-      params
+    const message = `You can executing ${endpoint} with the params: \n ${formatSecureApiParams(
+      JSON.stringify(params)
     )}`;
     const pin = await confirmPin({ label: message });
 
