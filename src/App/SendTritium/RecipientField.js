@@ -40,9 +40,9 @@ const filterRecipients = memoize((suggestions, inputValue) => {
   );
 });
 
-const mapStateToProps = ({ addressBook, core }) => ({
-  suggestions: getRecipientSuggestions(addressBook, core.accounts),
-  addressNameMap: getAddressNameMap(addressBook, core.accounts),
+const mapStateToProps = ({ addressBook, user }) => ({
+  suggestions: getRecipientSuggestions(addressBook, user.accounts),
+  addressNameMap: getAddressNameMap(addressBook, user.accounts),
 });
 
 /**
@@ -76,7 +76,8 @@ class RecipientField extends Component {
     return suggestions.filter(
       account =>
         (account.token === tokenAddress || account.token === address) &&
-        account.name !== name && account.name !== address
+        account.name !== name &&
+        account.name !== address
     );
   }
 

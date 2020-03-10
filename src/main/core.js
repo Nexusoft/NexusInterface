@@ -137,6 +137,7 @@ export function startCore(params) {
 }
 
 export async function killCoreProcess() {
+  const corePID = await getCorePID();
   log.info('Core Manager: Killing process ' + corePID);
   const { env } = process;
   env.KILL_PID = corePID;

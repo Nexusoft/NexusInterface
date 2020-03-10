@@ -93,10 +93,10 @@ const TransactionsChartModal = ({ theme, chartData }) => (
             // }}
             />
           }
-          labels={tx =>
-            `${categoryText(tx.category)}\n` +
-            `${__('Amount')}: ${tx.b}\n` +
-            `${__('Time')}: ${tx.a}`
+          labels={({ datum }) =>
+            `${categoryText(datum.category)}\n` +
+            `${__('Amount')}: ${datum.b}\n` +
+            `${__('Time')}: ${datum.a}`
           }
           data={chartData}
           x="a"

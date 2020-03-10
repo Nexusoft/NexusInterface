@@ -1,6 +1,23 @@
+# 3.0.0 (2020.3.10)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v3.0.0)
+
+#### Additions
+
+- Nexus Core v5.0.0
+- Added Assets in the User page
+
+#### Adjustments
+
+-
+
+#### Fixes
+
+-
+
 # 2.2.2 (2020.2.21)
 
-[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.2.1)
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.2.2)
 
 #### Additions
 

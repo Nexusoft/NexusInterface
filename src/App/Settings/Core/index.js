@@ -62,7 +62,6 @@ const formKeys = [
   'manualDaemonPassword',
   'manualDaemonApiUser',
   'manualDaemonApiPassword',
-  'manualDaemonDataDir',
 ];
 const getInitialValues = (() => {
   let lastOutput = null;
@@ -132,7 +131,6 @@ const mapStateToProps = state => {
       manualDaemonPort,
       manualDaemonApiIP,
       manualDaemonApiPort,
-      manualDaemonDataDir,
     },
     props
   ) => {
@@ -162,9 +160,6 @@ const mapStateToProps = state => {
         if (!manualDaemonApiPort) {
           errors.manualDaemonApiPort = __('Manual Core port is required');
         }
-      }
-      if (!manualDaemonDataDir) {
-        errors.manualDaemonDataDir = __('Data directory is required');
       }
     }
     return errors;
@@ -503,19 +498,6 @@ class SettingsCore extends Component {
                   component={TextField.RF}
                   name={legacyMode ? 'manualDaemonPort' : 'manualDaemonApiPort'}
                   size="5"
-                />
-              </SettingsField>
-
-              <SettingsField
-                indent={1}
-                connectLabel
-                label={__('Data directory name')}
-                subLabel={__('Data directory configured for manual Core.')}
-              >
-                <Field
-                  component={TextField.RF}
-                  name="manualDaemonDataDir"
-                  size={30}
                 />
               </SettingsField>
             </>

@@ -16,10 +16,11 @@ const Label = styled.div(({ theme }) => ({
   color: theme.mixer(0.875),
 }));
 
-const Value = styled.div({
+const Value = styled.div(({ theme }) => ({
   gridArea: 'value',
   wordBreak: 'break-word',
-});
+  color: theme.mixer(0.75),
+}));
 
 const InfoField = ({ ratio = [1, 3], label, children, ...rest }) => (
   <Row leftSize={ratio[0]} rightSize={ratio[1]} {...rest}>

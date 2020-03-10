@@ -18,6 +18,7 @@ import * as core from '@emotion/core';
 import styled from '@emotion/styled';
 import * as theming from 'emotion-theming';
 import { ipcRenderer, clipboard } from 'electron';
+import * as ReduxForm from 'redux-form';
 
 import GlobalStyles from 'components/GlobalStyles';
 import Panel from 'components/Panel';
@@ -31,6 +32,12 @@ import Icon from 'components/Icon';
 import Tab from 'components/Tab';
 import FieldSet from 'components/FieldSet';
 import * as color from 'utils/color';
+import AutoSuggest from 'components/AutoSuggest';
+import ModuleModal from 'components/ModuleModal';
+import DateTime from 'components/DateTimePicker';
+import FormField from 'components/FormField';
+import Table from 'components/Table';
+import Arrow from 'components/Arrow';
 
 const newId = (() => {
   let id = 0;
@@ -44,6 +51,7 @@ global.NEXUS = {
     ReactDOM,
     ReactRouterDOM,
     Redux,
+    ReduxForm,
     ReactRedux,
     emotion: { core, styled, theming, createCache },
   },
@@ -57,13 +65,13 @@ global.NEXUS = {
       }
       clipboard.writeText(text);
     },
-    sendNXS: (recipients, message) => {
+    sendNXS: (recipients, message, tritium) => {
       if (!Array.isArray(recipients)) {
         throw new Error(
           'Expected `recipients` to be `array` type, found: ' + typeof params
         );
       }
-      ipcRenderer.sendToHost('send-nxs', recipients, message);
+      ipcRenderer.sendToHost('send-nxs', recipients, message, tritium);
     },
     showNotification: options => {
       if (!options) {
@@ -144,6 +152,30 @@ global.NEXUS = {
           }
         });
         ipcRenderer.sendToHost('api-call', endpoint, params, callId);
+      });
+    },
+    secureApiCall: (endpoint, params) => {
+      if (!endpoint) {
+        throw new Error('`endpoint` is required');
+      }
+      if (typeof endpoint !== 'string') {
+        throw new Error(
+          'Expected `endpoint` to be `string` type, found: ' + typeof endpoint
+        );
+      }
+      const callId = newId();
+      return new Promise((resolve, reject) => {
+        ipcRenderer.once(
+          `secure-api-return:${callId}`,
+          (event, err, result) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(result);
+            }
+          }
+        );
+        ipcRenderer.sendToHost('secure-api-call', endpoint, params, callId);
       });
     },
     proxyRequest: (url, options) => {
@@ -253,15 +285,21 @@ global.NEXUS = {
   },
   components: {
     GlobalStyles,
-    Panel,
-    Button,
-    Tooltip,
-    TextField,
-    Switch,
-    Select,
-    Link,
     Icon,
-    Tab,
+    Panel,
+    AutoSuggest,
     FieldSet,
+    Switch,
+    Modal: ModuleModal,
+    Tooltip,
+    Table,
+    Select,
+    DateTime,
+    TextField,
+    FormField,
+    Link,
+    Arrow,
+    Tab,
+    Button,
   },
 };

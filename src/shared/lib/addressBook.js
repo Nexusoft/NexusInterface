@@ -79,7 +79,7 @@ function loadAddressBookFromFile() {
                 address: {
                   type: 'string',
                   minLength: 51,
-                  maxLength: 51,
+                  maxLength: 64,
                 },
                 isMine: { type: 'boolean' },
                 label: { type: 'string' },

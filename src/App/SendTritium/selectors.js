@@ -111,29 +111,31 @@ const Address = styled.span(({ theme }) => ({
 
 export const getRecipientSuggestions = memoize(
   (addressBook, myTritiumAccounts) => {
-    console.log(myTritiumAccounts);
-    console.log(addressBook);
+    //console.log(myTritiumAccounts);
+    //console.log(addressBook);
     const suggestions = [];
     if (addressBook) {
       Object.values(addressBook).forEach(contact => {
         if (contact.addresses) {
-          contact.addresses.forEach(({ address, label, isMine }) => {
-            if (!isMine) {
-              suggestions.push({
-                name: contact.name,
-                value: address,
-                token: '0',
-                display: (
-                  <span>
-                    {contact.name}
-                    {label ? ' - ' + label : ''}{' '}
-                    <TokenRecipientName>{'(NXS)'}</TokenRecipientName>{' '}
-                    <Address>{address}</Address>
-                  </span>
-                ),
-              });
-            }
-          });
+          contact.addresses
+            .filter(e => !e.address.startsWith('a'))
+            .forEach(({ address, label, isMine }) => {
+              if (!isMine) {
+                suggestions.push({
+                  name: contact.name,
+                  value: address,
+                  token: '0',
+                  display: (
+                    <span>
+                      {contact.name}
+                      {label ? ' - ' + label : ''}{' '}
+                      <TokenRecipientName>{'(NXS)'}</TokenRecipientName>{' '}
+                      <Address>{address}</Address>
+                    </span>
+                  ),
+                });
+              }
+            });
         }
       });
     }

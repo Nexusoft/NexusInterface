@@ -113,8 +113,8 @@ const Name = ({ nameRecord, username }) => (
 );
 
 @connect(state => ({
-  nameRecords: state.core.nameRecords,
-  username: state.core.userStatus && state.core.userStatus.username,
+  nameRecords: state.user.nameRecords,
+  username: state.user.status && state.user.status.username,
 }))
 export default class Names extends React.Component {
   constructor(props) {
@@ -151,7 +151,7 @@ export default class Names extends React.Component {
               />
             ))
           ) : (
-            <EmptyMessage>{__("You don't own any names")}</EmptyMessage>
+            <EmptyMessage>{__("You don't own any name")}</EmptyMessage>
           )}
         </div>
       </TabContentWrapper>

@@ -23,9 +23,8 @@ __ = __context('Header');
  */
 @connect(state => {
   const {
-    core: {
+    user: {
       stakeInfo: { stakerate },
-      systemInfo: { synchronizing, synccomplete },
     },
   } = state;
   return {

@@ -343,7 +343,7 @@ class AccountHistoryModal extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  stakeInfo: state.core.stakeInfo,
+  stakeInfo: state.user.stakeInfo,
 });
 
 export default connect(mapStateToProps)(AccountHistoryModal);

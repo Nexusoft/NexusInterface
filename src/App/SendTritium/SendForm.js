@@ -6,7 +6,6 @@ import styled from '@emotion/styled';
 
 // Internal Global
 import { apiPost } from 'lib/tritiumApi';
-import rpc from 'lib/rpc';
 import { loadAccounts } from 'lib/user';
 import { formName, defaultValues } from 'lib/send';
 import Icon from 'components/Icon';
@@ -59,11 +58,7 @@ const valueSelector = formValueSelector(formName);
 const mapStateToProps = state => {
   const {
     addressBook,
-    core: {
-      info: { locked, minting_only },
-      accounts,
-      tokens,
-    },
+    user: { accounts, tokens },
     form,
   } = state;
   const accountName = valueSelector(state, 'sendFrom');
@@ -71,10 +66,8 @@ const mapStateToProps = state => {
   const expires = valueSelector(state, 'expires');
   const accountInfo = getAccountInfo(accountName, accounts, tokens);
   return {
-    locked,
     reference,
     expires,
-    minting_only,
     accountName,
     accountInfo,
     accountOptions: getAccountOptions(accounts, tokens),
@@ -156,32 +149,6 @@ const mapStateToProps = state => {
       }
     }
 
-    return null;
-    const recipientsErrors = [];
-    await Promise.all(
-      recipients.map(({ address }, i) =>
-        rpc('validateaddress', [address])
-          .then(result => {
-            if (!result.isvalid) {
-              recipientsErrors[i] = {
-                address: __('Invalid address'),
-              };
-            } else if (result.ismine) {
-              recipientsErrors[i] = {
-                address: __('This is an address registered to this wallet.'),
-              };
-            }
-          })
-          .catch(err => {
-            recipientsErrors[i] = {
-              address: __('Invalid address'),
-            };
-          })
-      )
-    );
-    if (recipientsErrors.length) {
-      throw { recipients: recipientsErrors };
-    }
     return null;
   },
   onSubmit: async (
