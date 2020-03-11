@@ -36,7 +36,6 @@ import AutoSuggest from 'components/AutoSuggest';
 import ModuleModal from 'components/ModuleModal';
 import DateTime from 'components/DateTimePicker';
 import FormField from 'components/FormField';
-import Table from 'components/Table';
 import Arrow from 'components/Arrow';
 
 const newId = (() => {
@@ -292,7 +291,6 @@ global.NEXUS = {
     Switch,
     Modal: ModuleModal,
     Tooltip,
-    Table,
     Select,
     DateTime,
     TextField,
