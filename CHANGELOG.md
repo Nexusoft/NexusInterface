@@ -11,10 +11,12 @@
 - Display a plus sign when pending stake change occurs
 - Added ability to save Genesis in the Address Book
 - Modules will now check for updates
+- Added Norwegian Language
 
 #### Adjustments
 
 - REMOVED Migrate stake function
+- Updated Polish Language
 
 #### Fixes
 
