@@ -1,5 +1,4 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
 
@@ -21,9 +20,6 @@ const Value = styled.span(({ theme }) => ({
   color: theme.foreground,
 }));
 
-@connect(state => ({
-  username: state.user.status && state.user.status.username,
-}))
 @reduxForm({
   form: 'transfer-asset',
   destroyOnUnmount: true,
@@ -56,21 +52,21 @@ const Value = styled.span(({ theme }) => ({
     loadAssets();
     props.closeModal();
     openSuccessDialog({
-      message: __('Name has been transferred'),
+      message: __('Asset has been transferred'),
     });
   },
-  onSubmitFail: errorHandler(__('Error transferring name')),
+  onSubmitFail: errorHandler(__('Error transferring asset')),
 })
 class TransferAssetForm extends React.Component {
   render() {
     const { handleSubmit, asset, submitting } = this.props;
     return (
       <form onSubmit={handleSubmit}>
-        <FormField label={__('Name')}>
+        <FormField label={__('Asset name')}>
           <Value>{asset.name}</Value>
         </FormField>
 
-        <FormField label={__('Address')}>
+        <FormField label={__('Asset address')}>
           <Value>{asset.address}</Value>
         </FormField>
 
