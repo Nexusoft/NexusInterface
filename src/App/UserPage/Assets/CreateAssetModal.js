@@ -131,16 +131,6 @@ class CreateAssetForm extends React.Component {
             autoFocus
           />
         </FormField>
-        <Field
-          name="name"
-          component={({ input }) =>
-            !!input.value && (
-              <div className="dim" style={{ marginTop: '.3em' }}>
-                {__('Name creation fee')}: {createLocalNameFee} NXS
-              </div>
-            )
-          }
-        />
 
         <Divider label={__('Asset data')} style={{ marginBottom: 0 }} />
 
@@ -161,23 +151,35 @@ class CreateAssetForm extends React.Component {
           <span className="v-align">{__('Add field')}</span>
         </Button>
 
-        <Button
-          skin="primary"
-          wide
-          uppercase
-          className="mt3"
-          type="submit"
-          disabled={submitting}
-        >
-          {submitting ? (
-            <span>
-              <Spinner className="space-right" />
-              <span className="v-align">{__('Creating asset')}...</span>
-            </span>
-          ) : (
-            __('Create asset')
-          )}
-        </Button>
+        <div className="mt3">
+          <div className="text-center dim">
+            <span>{__('Estimated fee')}: </span>
+            <Field
+              name="name"
+              component={({ input }) =>
+                !!input.value ? 1 + createLocalNameFee : 1
+              }
+            />{' '}
+            NXS
+          </div>
+          <Button
+            skin="primary"
+            wide
+            uppercase
+            className="mt1"
+            type="submit"
+            disabled={submitting}
+          >
+            {submitting ? (
+              <span>
+                <Spinner className="space-right" />
+                <span className="v-align">{__('Creating asset')}...</span>
+              </span>
+            ) : (
+              __('Create asset')
+            )}
+          </Button>
+        </div>
       </form>
     );
   }
