@@ -14,6 +14,8 @@ import {
 } from 'lib/settings/universal';
 import { debounced } from 'utils/universal';
 
+app.allowRendererProcessReuse = false;
+
 /**
  * Enable development tools for REACT and REDUX
  *
