@@ -8,7 +8,7 @@ __ = __context('MarketData');
 
 async function fetchMarketData() {
   const { data } = await axios.get(
-    'https://whispering-lake-14690.herokuapp.com/displaydata'
+    'https://nexus-wallet-external-services.herokuapp.com/displaydata'
   );
 
   const rawBTC = Object.values(data.RAW.BTC).map(ele => {
