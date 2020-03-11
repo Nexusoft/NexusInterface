@@ -12,6 +12,7 @@ import { openSuccessDialog } from 'lib/ui';
 import { loadAssets } from 'lib/user';
 import { apiPost } from 'lib/tritiumApi';
 import { assetNumberTypes } from 'consts/misc';
+import { getAssetData } from 'utils/misc';
 
 __ = __context('EditAsset');
 
@@ -47,6 +48,7 @@ class EditAssetForm extends React.Component {
 
   render() {
     const { handleSubmit, submitting, mutableFields, asset } = this.props;
+    const data = getAssetData(asset);
     return (
       <form onSubmit={handleSubmit}>
         <InfoField label={__('Name')}>
@@ -54,21 +56,30 @@ class EditAssetForm extends React.Component {
         </InfoField>
         <InfoField label={__('Address')}>{asset.address}</InfoField>
 
-        {mutableFields.map(field => (
-          <InfoField
-            key={field.name}
-            label={field.name}
-            style={{ alignItems: 'center' }}
-          >
-            <Field
-              name={field.name}
-              component={TextField.RF}
-              type={assetNumberTypes.includes(field.type) ? 'number' : 'text'}
-              min={assetNumberTypes.includes(field.type) ? 0 : undefined}
-              placeholder={field.name}
-            />
-          </InfoField>
-        ))}
+        {Object.keys(data).map(fieldName => {
+          const field = mutableFields.find(field => field.name === fieldName);
+          return (
+            <InfoField
+              key={fieldName}
+              label={fieldName}
+              style={{ alignItems: 'center' }}
+            >
+              {field ? (
+                <Field
+                  name={fieldName}
+                  component={TextField.RF}
+                  type={
+                    assetNumberTypes.includes(field.type) ? 'number' : 'text'
+                  }
+                  min={assetNumberTypes.includes(field.type) ? 0 : undefined}
+                  placeholder={fieldName}
+                />
+              ) : (
+                data[fieldName]
+              )}
+            </InfoField>
+          );
+        })}
 
         <div className="mt3 flex space-between">
           <div />

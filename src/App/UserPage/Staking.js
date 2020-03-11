@@ -106,7 +106,10 @@ export default class Staking extends React.Component {
                       )}
                     />
                   </div>
-                  <div>{formatNumber(stakeInfo.amount, 6)} NXS</div>
+                  <div>
+                    {stakeInfo.amount > 0 && '+'}
+                    {formatNumber(stakeInfo.amount, 6)} NXS
+                  </div>
                 </Line>
                 <Line>
                   <div>

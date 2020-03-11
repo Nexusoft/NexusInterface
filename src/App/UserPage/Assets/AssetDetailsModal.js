@@ -16,6 +16,7 @@ import editIcon from 'icons/edit.svg';
 import EditAssetModal from './EditAssetModal';
 import TransferAssetModal from './TransferAssetModal';
 import AssetHistoryModal from './AssetHistoryModal';
+import TokenizeAssetModal from './TokenizeAssetModal';
 
 __ = __context('AssetDetails');
 
@@ -110,19 +111,31 @@ export default class AssetDetailsModal extends React.Component {
             </InfoField>
           ))}
 
-          {isOwner && (
-            <div className="mt2 flex space-between">
-              <div />
+          <div className="mt2 flex space-between">
+            <div>
+              <Button
+                className="space-right"
+                onClick={() => {
+                  this.closeModal();
+                  openModal(AssetHistoryModal, { asset });
+                }}
+              >
+                {__('View history')}
+              </Button>
+            </div>
+            {isOwner && (
               <div>
-                <Button
-                  className="space-right"
-                  onClick={() => {
-                    this.closeModal();
-                    openModal(AssetHistoryModal, { asset });
-                  }}
-                >
-                  {__('View history')}
-                </Button>
+                {asset.ownership === undefined && (
+                  <Button
+                    className="space-right"
+                    onClick={() => {
+                      this.closeModal();
+                      openModal(TokenizeAssetModal, { asset });
+                    }}
+                  >
+                    {__('Tokenize')}
+                  </Button>
+                )}
                 <Button
                   onClick={() => {
                     this.closeModal();
@@ -132,8 +145,8 @@ export default class AssetDetailsModal extends React.Component {
                   {__('Transfer ownership')}
                 </Button>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </Modal.Body>
       </Modal>
     );
