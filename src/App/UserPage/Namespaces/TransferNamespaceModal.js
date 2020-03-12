@@ -99,7 +99,7 @@ class TransferNamespaceForm extends React.Component {
 }
 
 const TransferNamespaceModal = ({ namespace }) => (
-  <Modal style={{ maxWidth: 600 }}>
+  <Modal maxWidth={600}>
     {closeModal => (
       <>
         <Modal.Header>{__('Transfer namespace')}</Modal.Header>

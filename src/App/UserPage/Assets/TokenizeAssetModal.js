@@ -162,7 +162,7 @@ class TokenizeAssetForm extends React.Component {
 }
 
 const TokenizeAssetModal = ({ asset }) => (
-  <Modal style={{ maxWidth: 600 }}>
+  <Modal maxWidth={600}>
     {closeModal => (
       <>
         <Modal.Header>{__('Tokenize asset')}</Modal.Header>

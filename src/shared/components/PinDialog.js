@@ -48,7 +48,7 @@ const PinDialog = ({
   confirmLabel = __('Confirm'),
   onClose,
 }) => (
-  <Modal style={{ maxWidth: 350 }} onClose={onClose}>
+  <Modal maxWidth={350} onClose={onClose}>
     {closeModal => (
       <>
         <Modal.Header>{__('Enter PIN')}</Modal.Header>

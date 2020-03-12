@@ -38,7 +38,7 @@ export default class ConfirmPasswordPinModal extends React.Component {
     return (
       <Modal
         assignClose={closeModal => (this.closeModal = closeModal)}
-        style={{ maxWidth: 500 }}
+        maxWidth={500}
         {...rest}
       >
         <Modal.Header>{__('Confirm password and PIN')}</Modal.Header>

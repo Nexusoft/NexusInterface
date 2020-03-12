@@ -117,7 +117,7 @@ export default class SetRecoveryModal extends React.Component {
     return (
       <Modal
         assignClose={closeModal => (this.closeModal = closeModal)}
-        style={{ maxWidth: 500 }}
+        maxWidth={500}
       >
         <Modal.Header>{__('Recovery phrase')}</Modal.Header>
         <Modal.Body>

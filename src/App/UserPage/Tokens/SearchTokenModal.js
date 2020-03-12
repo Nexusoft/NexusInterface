@@ -71,7 +71,7 @@ class SearchTokenModal extends React.Component {
         assignClose={closeModal => {
           this.closeModal = closeModal;
         }}
-        style={{ maxWidth: 800 }}
+        maxWidth={800}
       >
         <Modal.Header>{__('Lookup Token')}</Modal.Header>
         <Modal.Body>

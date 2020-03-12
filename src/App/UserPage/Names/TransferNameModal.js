@@ -111,7 +111,7 @@ class TransferNameForm extends React.Component {
 }
 
 const TransferNameModal = ({ nameRecord }) => (
-  <Modal style={{ maxWidth: 600 }}>
+  <Modal maxWidth={600}>
     {closeModal => (
       <>
         <Modal.Header>{__('Transfer name')}</Modal.Header>

@@ -124,7 +124,7 @@ export default class NewUserModal extends Component {
 
     return (
       <Modal
-        style={{ maxWidth: 500 }}
+        maxWidth={500}
         assignClose={closeModal => (this.closeModal = closeModal)}
       >
         <Modal.Header>{__('Create new user')}</Modal.Header>
