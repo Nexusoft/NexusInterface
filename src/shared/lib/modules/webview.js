@@ -11,6 +11,8 @@ import {
   openErrorDialog,
   openSuccessDialog,
 } from 'lib/ui';
+
+import confirmPin from 'utils/promisified/confirmPin';
 import { walletEvents } from 'lib/wallet';
 import rpc from 'lib/rpc';
 import { apiPost } from 'lib/tritiumApi';
@@ -62,6 +64,7 @@ const apiWhiteList = [
   'system/get/info',
   'system/list/peers',
   'system/list/lisp-eids',
+  'system/validate/address',
   'users/get/status',
   'users/list/accounts',
   'users/list/assets',
@@ -70,6 +73,7 @@ const apiWhiteList = [
   'users/list/namespaces',
   'users/list/notifications',
   'users/list/tokens',
+  'users/list/invoices',
   'users/list/transactions',
   'finance/get/account',
   'finance/list/account',
@@ -95,7 +99,16 @@ const apiWhiteList = [
   'objects/get/schema',
   'supply/get/item',
   'supply/list/item/history',
+  'invoices/create/invoice',
+  'invoices/get/invoice',
+  'invoices/pay/invoice',
+  'invoices/cancel/invoice',
+  'invoices/list/invoice/history',
 ];
+
+const formatSecureApiParams = paramString => {
+  return paramString.replace('/":"/g', '":\n"').replace('/","/g', '",\n"');
+};
 
 /**
  * Utilities
@@ -119,10 +132,12 @@ const getModuleData = ({
   theme,
   core,
   settings: { locale, fiatCurrency, addressStyle },
+  addressBook,
 }) => ({
   theme,
   settings: getSettingsForModules(locale, fiatCurrency, addressStyle),
   coreInfo: legacyMode ? core.info : core.systemInfo,
+  addressBook,
 });
 
 const getActiveModule = () => {
@@ -150,6 +165,8 @@ function handleIpcMessage(event) {
     case 'api-call':
       apiCall(event.args);
       break;
+    case 'secure-api-call':
+      secureApiCall(event.args);
     case 'show-notification':
       showNotif(event.args);
       break;
@@ -171,11 +188,11 @@ function handleIpcMessage(event) {
   }
 }
 
-function sendNXS([recipients, message]) {
+function sendNXS([recipients, message, tritium]) {
   if (!Array.isArray(recipients)) return;
-
+  const formName = tritium ? 'send' : 'sendNXS';
   store.dispatch(
-    initialize('sendNXS', {
+    initialize(formName, {
       sendFrom: null,
       recipients: recipients.map(r => ({
         address: `${r.address}`,
@@ -185,7 +202,7 @@ function sendNXS([recipients, message]) {
       message: message,
     })
   );
-  store.dispatch(reset('sendNXS'));
+  store.dispatch(reset(formName));
   history.push('/Send');
 }
 
@@ -271,6 +288,34 @@ async function apiCall([endpoint, params, callId]) {
       activeAppModule.webview.send(
         `api-return${callId ? `:${callId}` : ''}`,
         err
+      );
+    }
+  }
+}
+
+async function secureApiCall([endpoint, params, callId]) {
+  try {
+    const message = `You are executing ${endpoint} with the params: \n ${formatSecureApiParams(
+      JSON.stringify(params)
+    )}`;
+    const pin = await confirmPin({ note: message });
+
+    const result = await apiPost(endpoint, { ...params, pin: pin });
+    const { activeAppModule } = store.getState();
+    if (activeAppModule && activeAppModule.webview) {
+      activeAppModule.webview.send(
+        `secure-api-return${callId ? `:${callId}` : ''}`,
+        null,
+        result
+      );
+    }
+  } catch (error) {
+    console.error(error);
+    const { activeAppModule } = store.getState();
+    if (activeAppModule && activeAppModule.webview) {
+      activeAppModule.webview.send(
+        `secure-api-return${callId ? `:${callId}` : ''}`,
+        error
       );
     }
   }

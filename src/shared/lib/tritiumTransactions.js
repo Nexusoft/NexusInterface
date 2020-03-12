@@ -24,7 +24,7 @@ function startWatchingTransaction(txid) {
       // Fetch the updated transaction info
       await fetchTransaction(txid);
 
-      const tx = store.getState().core.transactions.map[txid];
+      const tx = store.getState().user.transactions.map[txid];
       if (tx && isConfirmed(tx)) {
         // If this transaction is already confirmed, unobserve the store
         unsubscribers[txid]();
@@ -59,7 +59,7 @@ const getBalanceChange = tx =>
 if (!legacyMode) {
   walletEvents.once('post-render', function() {
     observeStore(
-      ({ core: { userStatus } }) => userStatus && userStatus.transactions,
+      ({ user: { status } }) => status && status.transactions,
       async (txCount, oldTxCount) => {
         if (
           typeof txCount === 'number' &&

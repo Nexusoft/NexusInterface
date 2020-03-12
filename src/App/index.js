@@ -82,7 +82,6 @@ const App = () => (
 
                 {/* <Route path="/Exchange" component={Exchange} /> */}
                 {/* <Route exact path="/List" component={TrustList} /> */}
-
                 <Route path="/Modules/:name" component={Modules} />
 
                 <Redirect to="/" />

@@ -14,14 +14,17 @@ import ui from './ui';
 import modules from './modules';
 import moduleStates from './moduleStates';
 import core from './core';
+import user from './user';
 import updater from './updater';
 import activeAppModule from './activeAppModule';
 import bootstrap from './bootstrap';
 import failedModules from './failedModules';
+import assetSchemas from './assetSchemas';
 
 export default function createRootReducer() {
   return combineReducers({
     core,
+    user,
     list,
     market,
     transactions,
@@ -38,6 +41,7 @@ export default function createRootReducer() {
     updater,
     activeAppModule,
     bootstrap,
+    assetSchemas,
     form: formReducer,
   });
 }

@@ -13,7 +13,7 @@ __ = __context('User');
 
 const UserOptions = () => {
   const hasRecoveryPhrase = useSelector(
-    ({ core: { userStatus } }) => !!(userStatus && userStatus.recovery)
+    ({ user: { status } }) => !!(status && status.recovery)
   );
 
   return (

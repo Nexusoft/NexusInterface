@@ -45,9 +45,12 @@ function asyncValidateAddresses(isMine, addresses, errors) {
     rpc('validateaddress', [address])
       .then(result => {
         if (!result.isvalid) {
-          errors[i] = {
-            address: __('Invalid address'),
-          };
+          if (address.startsWith('a') && address.length === 64) {
+          } else {
+            errors[i] = {
+              address: __('Invalid address'),
+            };
+          }
         } else if (isMine && !result.ismine) {
           errors[i] = {
             address: __('This is not one of your addresses.'),

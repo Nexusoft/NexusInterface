@@ -12,6 +12,7 @@ import FinnishFlag from './flags/fi.png';
 import ArabicFlag from './flags/arabic.png';
 import HungarianFlag from './flags/hu.png';
 import RomanianFlag from './flags/ro.png';
+import NorwegianFlag from './flags/no.png';
 import USUKFlag from './flags/US-UK.png';
 
 /**
@@ -64,7 +65,11 @@ const languages = [
     flag: KoreaFlag,
     name: '한국어',
   },
-
+  {
+    code: 'no',
+    flag: NorwegianFlag,
+    name: 'Norsk',
+  },
   {
     code: 'nl',
     flag: NetherlandsFlag,

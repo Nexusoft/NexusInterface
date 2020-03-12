@@ -113,7 +113,7 @@ const AccountDetailsModal = ({ account, stakeInfo }) => (
 );
 
 const mapStateToProps = state => ({
-  stakeInfo: state.core.stakeInfo,
+  stakeInfo: state.user.stakeInfo,
 });
 
 export default connect(mapStateToProps)(AccountDetailsModal);

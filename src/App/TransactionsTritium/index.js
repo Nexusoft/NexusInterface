@@ -84,7 +84,7 @@ const PaginationButton = styled(Button)({
 // React-Redux mandatory methods
 const mapStateToProps = state => {
   const {
-    core: {
+    user: {
       transactions: { map, loadedAll },
     },
     ui: {

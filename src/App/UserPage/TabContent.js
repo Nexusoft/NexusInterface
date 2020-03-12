@@ -8,6 +8,7 @@ import Accounts from './Accounts';
 import Tokens from './Tokens';
 import Names from './Names';
 import Namespaces from './Namespaces';
+import Assets from './Assets';
 
 const TabContentComponent = styled.div({
   flexGrow: 1,
@@ -35,6 +36,7 @@ const TabContent = ({ match }) => (
       <Route path={`${match.url}/Tokens`} component={Tokens} />
       <Route path={`${match.url}/Names`} component={Names} />
       <Route path={`${match.url}/Namespaces`} component={Namespaces} />
+      <Route path={`${match.url}/Assets`} component={Assets} />
       <UserRedirect match={match} />
     </Switch>
   </TabContentComponent>

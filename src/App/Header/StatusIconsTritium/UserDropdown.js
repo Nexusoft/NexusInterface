@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom';
 import { arrowStyles } from 'components/Arrow';
 import LoginModal from 'components/LoginModal';
 import NewUserModal from 'components/NewUserModal';
-import MigrateStakeModal from 'components/MigrateStakeModal';
 import SetRecoveryModal from 'components/SetRecoveryModal';
 import { isLoggedIn } from 'selectors';
 import { openModal, showNotification } from 'lib/ui';
@@ -70,10 +69,9 @@ const Separator = styled.div(({ theme }) => ({
   borderBottom: `1px solid ${theme.mixer(0.125)}`,
 }));
 
-@connect(({ core: { userStatus, stakeInfo } }) => ({
-  currentUser: userStatus && userStatus.username,
-  hasRecoveryPhrase: !!(userStatus && userStatus.recovery),
-  trustIsNew: stakeInfo && stakeInfo.new,
+@connect(({ user: { status, stakeInfo } }) => ({
+  currentUser: status && status.username,
+  hasRecoveryPhrase: !!(status && status.recovery),
 }))
 class LoggedInDropdown extends React.Component {
   logOut = async () => {
@@ -83,12 +81,7 @@ class LoggedInDropdown extends React.Component {
   };
 
   render() {
-    const {
-      currentUser,
-      hasRecoveryPhrase,
-      closeDropdown,
-      trustIsNew,
-    } = this.props;
+    const { currentUser, hasRecoveryPhrase, closeDropdown } = this.props;
     return (
       <>
         <CurrentUser>
@@ -112,17 +105,7 @@ class LoggedInDropdown extends React.Component {
             {__('Set recovery phrase')}
           </MenuItem>
         )}
-        {!!trustIsNew && (
-          <MenuItem
-            onClick={() => {
-              openModal(MigrateStakeModal);
-              closeDropdown();
-            }}
-          >
-            {__('Migrate stake')}
-          </MenuItem>
-        )}
-        {(!hasRecoveryPhrase || !!trustIsNew) && <Separator />}
+        {!hasRecoveryPhrase && <Separator />}
         <MenuItem onClick={this.logOut}>{__('Log out')}</MenuItem>
       </>
     );

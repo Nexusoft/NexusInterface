@@ -1,7 +1,5 @@
 export const namedAccount = 1;
 
-export const localName = 1;
-
 export const asset = bytes => 0.01 * bytes;
 
 export const token = (supply, decimal) => {
@@ -10,6 +8,10 @@ export const token = (supply, decimal) => {
   return fee ? (fee <= 0 ? 1 : fee) : 1;
 };
 
-export const namespace = 1000;
+export const createNamespaceFee = 1000;
 
-export const global = 2000;
+export const createGlobalNameFee = 2000;
+
+export const createNamespacedNameFee = 1;
+
+export const createLocalNameFee = 1;

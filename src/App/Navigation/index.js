@@ -125,7 +125,6 @@ const Navigation = () => (
       <NavItem icon={consoleIcon} to="/Terminal">
         {__('Console')}
       </NavItem>
-
       <ModuleNavItems />
     </NavBar>
   </Nav>

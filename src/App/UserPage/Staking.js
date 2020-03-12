@@ -4,7 +4,6 @@ import styled from '@emotion/styled';
 
 import Button from 'components/Button';
 import AdjustStakeModal from 'components/AdjustStakeModal';
-import MigrateStakeModal from 'components/MigrateStakeModal';
 import { switchUserTab } from 'lib/ui';
 import { updateSettings } from 'lib/settings';
 import { restartCore } from 'lib/core';
@@ -52,7 +51,7 @@ const BalanceTooltip = staking =>
       );
 
 @connect(state => ({
-  stakeInfo: state.core.stakeInfo,
+  stakeInfo: state.user.stakeInfo,
   stakingEnabled: state.settings.enableStaking,
 }))
 export default class Staking extends React.Component {
@@ -107,7 +106,10 @@ export default class Staking extends React.Component {
                       )}
                     />
                   </div>
-                  <div>{formatNumber(stakeInfo.amount, 6)} NXS</div>
+                  <div>
+                    {stakeInfo.amount > 0 && '+'}
+                    {formatNumber(stakeInfo.amount, 6)} NXS
+                  </div>
                 </Line>
                 <Line>
                   <div>
@@ -182,15 +184,7 @@ export default class Staking extends React.Component {
             <div>{formatNumber(stakeInfo.balance, 6)} NXS</div>
           </Line>
           <div className="mt1 flex space-between">
-            {stakeInfo.new ? (
-              <Button
-                onClick={() => {
-                  openModal(MigrateStakeModal);
-                }}
-              >
-                {__('Migrate stake')}
-              </Button>
-            ) : (
+            {!stakeInfo.new && (
               <div>
                 <Button
                   disabled={!stakeInfo.stake && !stakeInfo.balance}

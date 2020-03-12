@@ -43,14 +43,14 @@ const Value = styled.div({
 });
 
 @connect(state => ({
-  balances: state.core.balances,
+  balances: state.user.balances,
 }))
 export default class Balances extends React.Component {
   componentDidMount() {
     // Periodically get balances
     getBalances();
     this.unobserve = observeStore(
-      ({ core }) => core && core.userStatus,
+      ({ user }) => user && user.status,
       getBalances
     );
   }

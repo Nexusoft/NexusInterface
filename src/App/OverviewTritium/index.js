@@ -92,7 +92,8 @@ const blockWeightIcons = [
 // React-Redux mandatory methods
 const mapStateToProps = state => {
   const {
-    core: { systemInfo, stakeInfo, balances, miningInfo },
+    core: { systemInfo, miningInfo },
+    user: { stakeInfo, balances },
     common: { blockDate },
     market: {
       cryptocompare: { rawNXSvalues, displayNXSvalues },
@@ -286,7 +287,7 @@ class Overview extends Component {
     // Periodically get balances
     getBalances();
     this.unobserve = observeStore(
-      ({ core }) => core && core.userStatus,
+      ({ user }) => user && user.status,
       getBalances
     );
 
@@ -789,10 +790,7 @@ class Overview extends Component {
             </div>
             <StatIcon icon={nxsStakeIcon} />
           </Stat>
-          <Stat
-            as={market ? Link : undefined}
-            to={market ? '/Market' : undefined}
-          >
+          <Stat>
             <div>
               <StatLabel>
                 {__('Market Price')} ({fiatCurrency})
@@ -813,10 +811,7 @@ class Overview extends Component {
             </div>
             <StatIcon icon={chartIcon} />
           </Stat>
-          <Stat
-            as={market ? Link : undefined}
-            to={market ? '/Market' : undefined}
-          >
+          <Stat>
             <div>
               <StatLabel>
                 {__('Market Cap')} ({fiatCurrency})
@@ -831,10 +826,7 @@ class Overview extends Component {
             </div>
             <StatIcon icon={supplyIcon} />
           </Stat>
-          <Stat
-            as={market ? Link : undefined}
-            to={market ? '/Market' : undefined}
-          >
+          <Stat>
             <div>
               <StatLabel>
                 {__('24hr Change')} ({fiatCurrency} %)

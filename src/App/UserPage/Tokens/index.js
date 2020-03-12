@@ -28,10 +28,10 @@ __ = __context('User.Tokens');
 
 const mapStateToProps = state => ({
   coreConnected: isCoreConnected(state),
-  userGenesis: state.core.userStatus.genesis,
+  userGenesis: state.user.status.genesis,
   loggedIn: isLoggedIn(state),
-  accounts: state.core.accounts,
-  ownedTokens: state.core.tokens,
+  accounts: state.user.accounts,
+  ownedTokens: state.user.tokens,
 });
 
 /**

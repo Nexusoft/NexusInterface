@@ -11,6 +11,7 @@ import { errorHandler } from 'utils/form';
 import { openSuccessDialog } from 'lib/ui';
 import { loadNamespaces } from 'lib/user';
 import { apiPost } from 'lib/tritiumApi';
+import { createNamespaceFee } from 'lib/fees';
 
 __ = __context('CreateNamespace');
 
@@ -72,7 +73,7 @@ class CreateNamespaceForm extends React.Component {
         </FormField>
 
         <div className="mt2" style={{ textAlign: 'left' }}>
-          {__('Namespace creation fee')}: 1000 NXS
+          {__('Namespace creation fee')}: {createNamespaceFee} NXS
         </div>
 
         <Button

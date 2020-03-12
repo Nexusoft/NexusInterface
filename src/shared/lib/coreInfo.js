@@ -156,9 +156,11 @@ walletEvents.once('pre-render', function() {
       async () => {
         if (isCoreConnected(store.getState())) {
           await getUserStatus();
-          if (justConnected) {
+          const state = store.getState();
+          // The wallet will have to refresh after language is chosen
+          // So NewUser modal won't be visible now
+          if (justConnected && state.settings.locale) {
             justConnected = false;
-            const state = store.getState();
             if (!isLoggedIn(state)) {
               if (state.settings.firstCreateNewUserShown) {
                 openModal(LoginModal);
@@ -189,7 +191,7 @@ walletEvents.once('pre-render', function() {
           systemInfo.synccomplete < 50 &&
           systemInfo.synccomplete >= 0
         ) {
-          store.dispatch(bootstrap({ suggesting: true }));
+          bootstrap({ suggesting: true });
         }
       }
     );

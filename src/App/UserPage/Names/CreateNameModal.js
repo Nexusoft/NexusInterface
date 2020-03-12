@@ -12,6 +12,11 @@ import Select from 'components/Select';
 import confirmPin from 'utils/promisified/confirmPin';
 import { errorHandler } from 'utils/form';
 import { openSuccessDialog } from 'lib/ui';
+import {
+  createLocalNameFee,
+  createNamespacedNameFee,
+  createGlobalNameFee,
+} from 'lib/fees';
 import { loadNameRecords, loadNamespaces } from 'lib/user';
 import { apiPost } from 'lib/tritiumApi';
 
@@ -64,8 +69,8 @@ const NameTypeSelect = ({ input, hasNamespaces }) => (
 );
 
 @connect(state => ({
-  username: state.core.userStatus && state.core.userStatus.username,
-  namespaces: state.core.namespaces,
+  username: state.user.status && state.user.status.username,
+  namespaces: state.user.namespaces,
 }))
 @reduxForm({
   form: 'create-name',
@@ -198,7 +203,12 @@ class CreateNameForm extends React.Component {
             name="type"
             component={({ input }) => (
               <div className="mt2" style={{ textAlign: 'left' }}>
-                {__('Name creation fee')}: {input.value === 'global' ? 2000 : 1}{' '}
+                {__('Name creation fee')}:{' '}
+                {input.value === 'global'
+                  ? createGlobalNameFee
+                  : input.value === 'namespaced'
+                  ? createNamespacedNameFee
+                  : createLocalNameFee}{' '}
                 NXS
               </div>
             )}

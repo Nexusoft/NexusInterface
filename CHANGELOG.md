@@ -1,6 +1,35 @@
+# 3.0.0 (2020.3.11)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v3.0.0)
+
+#### Additions
+
+- Nexus Core v5.0.1
+- Added Assets in the User page
+- Added Name and Namespace history
+- Added Indian Rupee and Polish Zloty
+- Display a plus sign when pending stake change occurs
+- Added ability to save Genesis in the Address Book
+- Modules will now check for updates
+- Added Norwegian Language
+
+#### Adjustments
+
+- REMOVED Migrate stake function
+- Updated Polish Language
+
+#### Fixes
+
+- Fixed issue with the Login screen was shown before Create user screen
+- Fixed bootstrap suggestion message
+- Fixed links in the Console documentation
+- Fixed recovery passphrase length error message
+- Fixed name not updating when creating new Tokens
+- Fixed Overview page linking to the market page which has been removed
+
 # 2.2.2 (2020.2.21)
 
-[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.2.1)
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.2.2)
 
 #### Additions
 
