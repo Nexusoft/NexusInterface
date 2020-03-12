@@ -1,7 +1,7 @@
 {
   "name": "nexus_wallet",
   "productName": "Nexus Wallet",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "backwardCompatible": "2.2.0",
   "buildDate": "March 10th 2020",
   "description": "User interface for the Nexus blockchain and ecosystem.",
@@ -27,9 +27,7 @@
     "start-main-dev": "cross-env HOT=1 NODE_ENV=development electron ./build/main.dev.js",
     "start-renderer-dev": "cross-env NODE_ENV=development webpack-dev-server --config configs/webpack.config.renderer.dev.babel.js",
     "run-tests": "./node_modules/mocha/bin/mocha tests/test.js",
-    "version2": "node ./internals/scripts/UpdateBuildDate.js",
     "trans-extract": "node -r @babel/register ./internals/scripts/extractTranslations.js",
-    "trans-update": "node -r @babel/register ./internals/scripts/UpdateLanguageFiles.js",
     "update-documentation": "./UpdateDocumentation.sh",
     "update-maxmind": "node -r @babel/register ./internals/scripts/UpdateMaxMind.js"
   },
