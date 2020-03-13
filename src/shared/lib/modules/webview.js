@@ -295,15 +295,20 @@ async function secureApiCall([endpoint, params, callId]) {
   try {
     const message = (
       <div style={{ overflow: 'scroll', maxHeight: '15em' }}>
-        {`You are executing ${endpoint} with the params: \n `}
+        <div>
+          You are executing <strong>{endpoint}</strong> with the params:
+        </div>
         <code style={{ wordBreak: 'break-word' }}>
-          {JSON.stringify(params)}
+          {JSON.stringify(params, null, 2)}
         </code>
       </div>
     );
     const pin = await confirmPin({ note: message });
 
-    const result = await apiPost(endpoint, { ...params, pin: pin });
+    const result =
+      pin === undefined
+        ? undefined
+        : await apiPost(endpoint, { ...params, pin });
     const { activeAppModule } = store.getState();
     if (activeAppModule && activeAppModule.webview) {
       activeAppModule.webview.send(
