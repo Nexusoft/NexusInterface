@@ -2,6 +2,8 @@ import memoize from 'utils/memoize';
 import axios from 'axios';
 import { reset, initialize } from 'redux-form';
 
+import React from 'react';
+
 import * as TYPE from 'consts/actionTypes';
 import store, { observeStore } from 'store';
 import { history } from 'lib/wallet';
@@ -105,10 +107,6 @@ const apiWhiteList = [
   'invoices/cancel/invoice',
   'invoices/list/invoice/history',
 ];
-
-const formatSecureApiParams = paramString => {
-  return paramString.replace('/":"/g', '":\n"').replace('/","/g', '",\n"');
-};
 
 /**
  * Utilities
@@ -295,9 +293,14 @@ async function apiCall([endpoint, params, callId]) {
 
 async function secureApiCall([endpoint, params, callId]) {
   try {
-    const message = `You are executing ${endpoint} with the params: \n ${formatSecureApiParams(
-      JSON.stringify(params)
-    )}`;
+    const message = (
+      <div style={{ overflow: 'scroll', maxHeight: '15em' }}>
+        {`You are executing ${endpoint} with the params: \n `}
+        <code style={{ wordBreak: 'break-word' }}>
+          {JSON.stringify(params)}
+        </code>
+      </div>
+    );
     const pin = await confirmPin({ note: message });
 
     const result = await apiPost(endpoint, { ...params, pin: pin });
