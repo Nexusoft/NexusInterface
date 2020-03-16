@@ -26,7 +26,7 @@ const createInitialField = () => ({
   value: '',
   mutable: false,
   type: 'string',
-  maxlength: null,
+  maxlength: '',
 });
 
 const AssetFields = ({ fields, form, removeField }) =>
@@ -77,7 +77,13 @@ const AssetFields = ({ fields, form, removeField }) =>
       const params = {
         pin,
         format: 'JSON',
-        json: fields,
+        json: fields.map(({ name, value, mutable, type, maxlength }) => {
+          const field = { name, value, mutable, type };
+          if (mutable && type === 'string' && maxlength) {
+            field.maxlength = maxlength;
+          }
+          return field;
+        }),
       };
       if (name) params.name = name;
       return await apiPost('assets/create/asset', params);
