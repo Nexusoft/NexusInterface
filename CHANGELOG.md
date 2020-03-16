@@ -4,7 +4,7 @@
 
 #### Additions
 
--
+- Added Invoice Documentation to Terminal
 
 #### Adjustments
 
