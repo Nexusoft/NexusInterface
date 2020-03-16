@@ -1,18 +1,20 @@
-# 3.0.1 (2020.3.19)
+# 3.0.1 (2020.3.16)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v3.0.1)
 
 #### Additions
 
+- Nexus Core v5.0.2
 - Added Invoice Documentation to Terminal
 
 #### Adjustments
 
--
+- Adjusted the pin popup for using the SecureAPICall
 
 #### Fixes
 
--
+- Fixed maxlength on new Asset creation page
+- Fixed confirm pin pop up not to have unnecessary space
 
 # 3.0.0 (2020.3.11)
 
