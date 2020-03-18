@@ -2,6 +2,8 @@ import memoize from 'utils/memoize';
 import axios from 'axios';
 import { reset, initialize } from 'redux-form';
 
+import React from 'react';
+
 import * as TYPE from 'consts/actionTypes';
 import store, { observeStore } from 'store';
 import { history } from 'lib/wallet';
@@ -105,10 +107,6 @@ const apiWhiteList = [
   'invoices/cancel/invoice',
   'invoices/list/invoice/history',
 ];
-
-const formatSecureApiParams = paramString => {
-  return paramString.replace('/":"/g', '":\n"').replace('/","/g', '",\n"');
-};
 
 /**
  * Utilities
@@ -295,12 +293,22 @@ async function apiCall([endpoint, params, callId]) {
 
 async function secureApiCall([endpoint, params, callId]) {
   try {
-    const message = `You are executing ${endpoint} with the params: \n ${formatSecureApiParams(
-      JSON.stringify(params)
-    )}`;
+    const message = (
+      <div style={{ overflow: 'scroll', maxHeight: '15em' }}>
+        <div>
+          You are executing <strong>{endpoint}</strong> with the params:
+        </div>
+        <code style={{ wordBreak: 'break-word' }}>
+          {JSON.stringify(params, null, 2)}
+        </code>
+      </div>
+    );
     const pin = await confirmPin({ note: message });
 
-    const result = await apiPost(endpoint, { ...params, pin: pin });
+    const result =
+      pin === undefined
+        ? undefined
+        : await apiPost(endpoint, { ...params, pin });
     const { activeAppModule } = store.getState();
     if (activeAppModule && activeAppModule.webview) {
       activeAppModule.webview.send(

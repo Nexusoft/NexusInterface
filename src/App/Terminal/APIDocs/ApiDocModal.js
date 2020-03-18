@@ -19,6 +19,7 @@ import Supply from './SUPPLY.MD';
 import System from './SYSTEM.MD';
 import Tokens from './TOKENS.MD';
 import Users from './USERS.MD';
+import Invoices from './INVOICES.MD';
 
 const documents = [
   { path: Overview, label: 'Overview' },
@@ -31,6 +32,7 @@ const documents = [
   { path: System, label: 'System' },
   { path: Tokens, label: 'Tokens' },
   { path: Users, label: 'Users' },
+  { path: Invoices, label: 'Invoices' },
 ];
 
 const getInnerText = children => {
