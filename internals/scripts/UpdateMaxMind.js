@@ -1,7 +1,7 @@
 const chalk = require('chalk');
 const https = require('https');
 const path = require('path');
-const fs = require('fs-extra');
+const fs = require('fs');
 const tar = require('tar');
 
 let extractedLoc = null;
@@ -81,13 +81,22 @@ try {
         ? appDataDir
         : process.env.HOME
     ).then(e => {
-      const oldFiles = path.join(__dirname, '../..', '/assets/GeoLite2-City');
-      fs.move(extractedLoc, oldFiles, { overwrite: true }, err => {
+      const dest = path.join(
+        __dirname,
+        '../..',
+        '/assets/GeoLite2-City',
+        path.basename(extractedLoc)
+      );
+      fs.rename(extractedLoc, dest, err => {
         if (err) return console.error(err);
 
         console.log(chalk.yellowBright.bold('Success!'));
-        fs.removeSync(fileLocation);
-        fs.removeSync(extractedLoc);
+        fs.unlink(fileLocation, err => {
+          if (err) console.error(err);
+        });
+        fs.unlink(extractedLoc, err => {
+          if (err) console.error(err);
+        });
         console.log(chalk.yellowBright.bold('Deleted Old Files'));
       });
     });

@@ -243,7 +243,6 @@
     "electron-updater": "^4.2.5",
     "emotion-theming": "^10.0.27",
     "extract-zip": "^1.6.7",
-    "fs-extra": "^9.0.0",
     "history": "^4.10.1",
     "istextorbinary": "^3.3.0",
     "macaddress": "^0.2.9",
