@@ -40,7 +40,6 @@ You are staking but have not received a block in 30 minutes!,,Header
 Accounts,Conturi,Header.UserDropdown
 Tokens,Monede,Header.UserDropdown
 Set recovery phrase,,Header.UserDropdown
-Migrate stake,Migrare cotă parte,Header.UserDropdown
 Log out,Deconectare,Header.UserDropdown
 Log in,Autentificare,Header.UserDropdown
 Create new user,Creare utilizator nou,Header.UserDropdown
@@ -278,8 +277,6 @@ IP address,Adresă IP,Settings.Core
 IP address configured for manual Core.,Adresa IP a fost configurată pentru Nucleu în mod manual.,Settings.Core
 Port,Port,Settings.Core
 Port configured for manual Core.,Port configurat pentru Nucleu manual.,Settings.Core
-Data directory name,Denumire director date,Settings.Core
-Data directory configured for manual Core.,Directorul de date a fost configurat pentru Nucleu manual.,Settings.Core
 Restart Core for these changes to take effect,"Pentru ca schimbările să aibe loc, reporneşte Nucleul",Settings.Core
 Save settings,Salvează setările,Settings.Core
 Verbose level is required,Este necesar nivelul de notificări dorit,Settings.Core
@@ -287,7 +284,6 @@ Manual Core username is required,Este necesar numele de utilizator pentru Nucleu
 Manual Core password is required,Este necesară parola pentru Nucleul Manual,Settings.Core
 Manual Core IP is required,Este necesar IP pentru Nucleul Manual,Settings.Core
 Manual Core port is required,Este necesar port-ul pentru Nucleul Manual,Settings.Core
-Data directory is required,Este necesar un folder director pentru date,Settings.Core
 Core settings saved,Setările Nucleului au fost salvate,Settings.Core
 Restarting Core...,Se repornește Nucleul...,Settings.Core
 Error rescanning,Eroare rescanare,Settings.Core
@@ -538,6 +534,80 @@ Available,Disponibil,User.Accounts.AccountHistory
 Pending,În aşteptare,User.Accounts.AccountHistory
 Unconfirmed,Neconfirmat,User.Accounts.AccountHistory
 Stake,Miză,User.Accounts.AccountHistory
+Unnamed asset,,User.Assets
+You own %{percentage}% of this asset,,User.Assets
+Create new asset,,User.Assets
+You don't own any asset,,User.Assets
+Asset Details,,AssetDetails
+Edit asset,,AssetDetails
+Name,,AssetDetails
+Address,,AssetDetails
+Owner,,AssetDetails
+Ownership,,AssetDetails
+Created at,,AssetDetails
+Last modified,,AssetDetails
+View history,,AssetDetails
+Tokenize,,AssetDetails
+Transfer ownership,,AssetDetails
+Name,,CreateAsset
+Field name,,CreateAsset
+Value,,CreateAsset
+Field value,,CreateAsset
+Mutable,,CreateAsset
+Type,,CreateAsset
+Max. length,,CreateAsset
+Only applicable to mutable string fields,,CreateAsset
+Unlimited,,CreateAsset
+Remove field,,CreateAsset
+Asset name,,CreateAsset
+A local Name object register will be created for this asset name,,CreateAsset
+Asset name (optional),,CreateAsset
+Asset data,,CreateAsset
+Add field,,CreateAsset
+Estimated fee,,CreateAsset
+Creating asset,,CreateAsset
+Create asset,,CreateAsset
+Field name is required,,CreateAsset
+New asset has been created,,CreateAsset
+Error creating asset,,CreateAsset
+Create a new asset,,CreateAsset
+Asset History Event,,AssetHistoryDetails
+Type,,AssetHistoryDetails
+Time,,AssetHistoryDetails
+Owner,,AssetHistoryDetails
+Checksum,,AssetHistoryDetails
+Name,,AssetHistoryDetails
+Address,,AssetHistoryDetails
+Time,,AssetHistory
+Type,,AssetHistory
+Owner,,AssetHistory
+Asset History,,AssetHistory
+Loading asset history,,AssetHistory
+Name,,EditAsset
+Address,,EditAsset
+Updating asset,,EditAsset
+Update asset,,EditAsset
+Asset has been updated,,EditAsset
+Error updating asset,,EditAsset
+Edit asset,,EditAsset
+Asset name,,TokenizeAsset
+Asset address,,TokenizeAsset
+Token,,TokenizeAsset
+Token address,,TokenizeAsset
+Tokenizing asset,,TokenizeAsset
+Tokenize asset,,TokenizeAsset
+Token is required,,TokenizeAsset
+Asset has been tokenized,,TokenizeAsset
+Error tokenizing asset,,TokenizeAsset
+Asset name,,TransferAsset
+Asset address,,TransferAsset
+Transfer to,,TransferAsset
+Recipient username or user ID,,TransferAsset
+Transferring asset,,TransferAsset
+Transfer asset,,TransferAsset
+Recipient is required,,TransferAsset
+Asset has been transferred,,TransferAsset
+Error transferring asset,,TransferAsset
 User,Utilizator,User
 User ID,ID utilizator,User
 Accounts,Conturi,User
@@ -545,6 +615,7 @@ Staking,Cota parte este activă,User
 Tokens,Monede,User
 Names,,User
 Namespaces,,User
+Assets,,User
 Change password & PIN,,User
 Change recovery phrase,,User
 Set recovery phrase,,User
@@ -583,7 +654,7 @@ Global,,User.Names
 Namespaced,,User.Names
 Local,,User.Names
 Create new name,,User.Names
-You don't own any names,,User.Names
+You don't own any name,,User.Names
 Name Details,,NameDetails
 Change register address,,NameDetails
 Name,,NameDetails
@@ -596,7 +667,22 @@ Address,,NameDetails
 Points to,,NameDetails
 Created at,,NameDetails
 Last modified,,NameDetails
+View history,,NameDetails
 Transfer ownership,,NameDetails
+Name History Event,,NameHistoryDetails
+Type,,NameHistoryDetails
+Time,,NameHistoryDetails
+Owner,,NameHistoryDetails
+Checksum,,NameHistoryDetails
+Name,,NameHistoryDetails
+Namespace,,NameHistoryDetails
+Address,,NameHistoryDetails
+Points to,,NameHistoryDetails
+Time,,NameHistory
+Type,,NameHistory
+Owner,,NameHistory
+Name History,,NameHistory
+Loading name history,,NameHistory
 Name,,TransferName
 Transfer to,,TransferName
 Recipient username or user ID,,TransferName
@@ -618,13 +704,26 @@ Create a new namespace,,CreateNamespace
 View name details,,User.Namespaces
 Transfer namespace,,User.Namespaces
 Create new namespace,,User.Namespaces
-You don't own any namespaces,,User.Namespaces
+You don't own any namespace,,User.Namespaces
 Namespace Details,,NamespaceDetails
 Name,,NamespaceDetails
 Address,,NamespaceDetails
 Created at,,NamespaceDetails
 Last modified,,NamespaceDetails
+View history,,NamespaceDetails
 Transfer ownership,,NamespaceDetails
+Namespace History Event,,NamespaceHistoryDetails
+Type,,NamespaceHistoryDetails
+Time,,NamespaceHistoryDetails
+Owner,,NamespaceHistoryDetails
+Checksum,,NamespaceHistoryDetails
+Name,,NamespaceHistoryDetails
+Address,,NamespaceHistoryDetails
+Time,,NamespaceHistory
+Type,,NamespaceHistory
+Owner,,NamespaceHistory
+Namespace History,,NamespaceHistory
+Loading namespace history,,NamespaceHistory
 Namespace,,TransferNamespace
 Transfer to,,TransferNamespace
 Recipient username or user ID,,TransferNamespace
@@ -658,7 +757,6 @@ Block Weight,Greutate bloc,User.Staking
 Stake Weight,Greutate miză,User.Staking
 "Stake Weight depends on Trust Weight and Block Weight. Along with your Stake amount, Stake Weight affects how frequent you receive a Trust transaction",,User.Staking
 Available Balance,,User.Staking
-Migrate stake,Migrare cotă parte,User.Staking
 Adjust stake amount,Ajustează cantitatea mizei,User.Staking
 Account on hold for another %{stakeSeconds} Seconds,,User.Staking
 Stop staking,,User.Staking
@@ -839,21 +937,9 @@ Logged in as %{username},Autentificat ca %{username},Login
 Error logging in,Eroare autorizare,Login
 Migrate account,Migrare cont,MigrateAccount
 You have %{amount} NXS in your legacy account.,Ai suma de %{amount} NXS în contul tău legacy.,MigrateAccount
-"If you have been staking with your legacy account, click Migrate stake button below to move both your stake amount and your trust score to this new Tritium user.","Dacă ai avut o cotă parte folosind contul tău ""legacy""(clasic), apasă butonul Migrare de mai jos pentru a muta atât cota parte cât şi scorul de încredere în acest cont de utilizator nou Tritium.",MigrateAccount
-Migrate stake,Migrare cotă parte,MigrateAccount
-Cannot migrate stake since this Tritium user has already started staking before. Please create a new user if you still want to migrate your stake.,Nu se poate migra cota parte deoarece acest utilizator Tritium a mai iniţiat procesul de cotă parte în trecut. Te rugăm creează un nou cont de utilizator dacă doreşti să transferi cota parte.,MigrateAccount
-"If you have never started staking, or have already migrated your stake, you can manually send your funds from legacy account to this new Tritium user.","Daca nu ai iniţiat niciodată procesul de cotă parte sau ai transferat deja cota parte, îţi poţi trimite manual fondurile din contul legacy/clasic în noul cont Tritium.",MigrateAccount
-Please keep in mind that you may lose your legacy trust score if you send NXS manually from your legacy account without migrating your stake first,Te rugăm să ai în vedere faptul că îți poți pierde scorul de încredere legacy/clasic dacă transferi NXS manual din contul legacy fără să îți fi migrat mai întâi cota parte,MigrateAccount
+You can manually send your funds from legacy account to this new Tritium user.,,MigrateAccount
 Send NXS manually,Trimite NXS manual,MigrateAccount
 Don't show this again,Nu afişa asta din nou,MigrateAccount
-Your stake has been successfully migrated,Cota ta parte a fost transferată cu succes,MigrateStake
-Error migrating stake,Eroare la migrarea cotei parte,MigrateStake
-Migrate stake,Migrare cotă parte,MigrateStake
-This will transfer all stake amount and trust score from your legacy wallet to your new Tritium account.,Această opțiune va transfera toată suma cotei parte precum și scorul de încredere din portofelul legacy/clasic în noul tău cont Tritium.,MigrateStake
-"Please make sure that you are using the same machine that you used to stake with your legacy wallet, or you have put your staking wallet.dat file into %{path}","Te rugăm să te asiguri că foloseşti acelaşi computer pe care l-ai folosit atunci când ai iniţiat procesul de cotă parte cu portofelul tău legacy/clasic, sau că ai plasat fisierul wallet.dat în %{path}",MigrateStake
-Legacy wallet password,Parola portofel Legacy,MigrateStake
-Leave this blank if your legacy wallet is not encrypted,"Lasă acest spaţiu necompletat dacă portofelul tău ""legacy"" nu este criptat",MigrateStake
-Cancel,Anulează,MigrateStake
 Module Details,Detalii module,ModuleDetails
 Remove module,,ModuleDetails
 Module name,Denumire modul,ModuleDetails
@@ -918,7 +1004,7 @@ Enter your password,Introdu parola,NewUser
 PIN,PIN,NewUser
 Enter your PIN,,NewUser
 Attention,Atenție,NewUser
-"Please be sure to make a note of up your username, password, and PIN, and keep it in a safe place. If you lose or forget them you will be unable to access your account.",,NewUser
+"Please be sure to make a note of your username, password, and PIN, and keep it in a safe place. If you lose or forget them you will be unable to access your account.",,NewUser
 Creating user,Se creează utilizator,NewUser
 Create user,Creează utilizator,NewUser
 "Please wait, this may take up to 30 seconds","Te rugăm aşteaptă, operaţiunea poate dura până la 30 de secunde",NewUser
@@ -975,7 +1061,7 @@ Password is required,Parola este necesară,SetRecoveryPhrase
 PIN is required,Codul PIN este necesar,SetRecoveryPhrase
 Current recovery phrase is required,,SetRecoveryPhrase
 Recovery phrase is required,,SetRecoveryPhrase
-Recovery phrase must be at least 40 characters,,SetRecoveryPhrase
+Recovery phrase must be at least 8 characters,,SetRecoveryPhrase
 Recovery phrase has been updated,,SetRecoveryPhrase
 Error setting recovery phrase,,SetRecoveryPhrase
 Transaction Details,,TransactionDetails

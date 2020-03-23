@@ -13,6 +13,8 @@ import { consts, timing } from 'styles';
 import { assetNumberTypes } from 'consts/misc';
 import { getDeep } from 'utils/misc';
 
+__ = __context('CreateAsset');
+
 const typeOptions = [
   {
     value: 'string',

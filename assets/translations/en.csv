@@ -40,7 +40,6 @@ You are staking but have not received a block in 30 minutes!,You are staking but
 Accounts,Accounts,Header.UserDropdown
 Tokens,Tokens,Header.UserDropdown
 Set recovery phrase,Set recovery phrase,Header.UserDropdown
-Migrate stake,Migrate stake,Header.UserDropdown
 Log out,Log out,Header.UserDropdown
 Log in,Log in,Header.UserDropdown
 Create new user,Create new user,Header.UserDropdown
@@ -279,8 +278,6 @@ IP address,IP address,Settings.Core
 IP address configured for manual Core.,IP address configured for manual Core.,Settings.Core
 Port,Port,Settings.Core
 Port configured for manual Core.,Port configured for manual Core.,Settings.Core
-Data directory name,Data directory name,Settings.Core
-Data directory configured for manual Core.,Data directory configured for manual Core.,Settings.Core
 Restart Core for these changes to take effect,Restart Core for these changes to take effect,Settings.Core
 Save settings,Save settings,Settings.Core
 Verbose level is required,Verbose level is required,Settings.Core
@@ -288,7 +285,6 @@ Manual Core username is required,Manual Core username is required,Settings.Core
 Manual Core password is required,Manual Core password is required,Settings.Core
 Manual Core IP is required,Manual Core IP is required,Settings.Core
 Manual Core port is required,Manual Core port is required,Settings.Core
-Data directory is required,Data directory is required,Settings.Core
 Core settings saved,Core settings saved,Settings.Core
 Restarting Core...,Restarting Core...,Settings.Core
 Error rescanning,Error rescanning,Settings.Core
@@ -539,6 +535,80 @@ Available,Available,User.Accounts.AccountHistory
 Pending,Pending,User.Accounts.AccountHistory
 Unconfirmed,Unconfirmed,User.Accounts.AccountHistory
 Stake,Stake,User.Accounts.AccountHistory
+Unnamed asset,Unnamed asset,User.Assets
+You own %{percentage}% of this asset,You own %{percentage}% of this asset,User.Assets
+Create new asset,Create new asset,User.Assets
+You don't own any asset,You don't own any asset,User.Assets
+Asset Details,Asset Details,AssetDetails
+Edit asset,Edit asset,AssetDetails
+Name,Name,AssetDetails
+Address,Address,AssetDetails
+Owner,Owner,AssetDetails
+Ownership,Ownership,AssetDetails
+Created at,Created at,AssetDetails
+Last modified,Last modified,AssetDetails
+View history,View history,AssetDetails
+Tokenize,Tokenize,AssetDetails
+Transfer ownership,Transfer ownership,AssetDetails
+Name,Name,CreateAsset
+Field name,Field name,CreateAsset
+Value,Value,CreateAsset
+Field value,Field value,CreateAsset
+Mutable,Mutable,CreateAsset
+Type,Type,CreateAsset
+Max. length,Max. length,CreateAsset
+Only applicable to mutable string fields,Only applicable to mutable string fields,CreateAsset
+Unlimited,Unlimited,CreateAsset
+Remove field,Remove field,CreateAsset
+Asset name,Asset name,CreateAsset
+A local Name object register will be created for this asset name,A local Name object register will be created for this asset name,CreateAsset
+Asset name (optional),Asset name (optional),CreateAsset
+Asset data,Asset data,CreateAsset
+Add field,Add field,CreateAsset
+Estimated fee,Estimated fee,CreateAsset
+Creating asset,Creating asset,CreateAsset
+Create asset,Create asset,CreateAsset
+Field name is required,Field name is required,CreateAsset
+New asset has been created,New asset has been created,CreateAsset
+Error creating asset,Error creating asset,CreateAsset
+Create a new asset,Create a new asset,CreateAsset
+Asset History Event,Asset History Event,AssetHistoryDetails
+Type,Type,AssetHistoryDetails
+Time,Time,AssetHistoryDetails
+Owner,Owner,AssetHistoryDetails
+Checksum,Checksum,AssetHistoryDetails
+Name,Name,AssetHistoryDetails
+Address,Address,AssetHistoryDetails
+Time,Time,AssetHistory
+Type,Type,AssetHistory
+Owner,Owner,AssetHistory
+Asset History,Asset History,AssetHistory
+Loading asset history,Loading asset history,AssetHistory
+Name,Name,EditAsset
+Address,Address,EditAsset
+Updating asset,Updating asset,EditAsset
+Update asset,Update asset,EditAsset
+Asset has been updated,Asset has been updated,EditAsset
+Error updating asset,Error updating asset,EditAsset
+Edit asset,Edit asset,EditAsset
+Asset name,Asset name,TokenizeAsset
+Asset address,Asset address,TokenizeAsset
+Token,Token,TokenizeAsset
+Token address,Token address,TokenizeAsset
+Tokenizing asset,Tokenizing asset,TokenizeAsset
+Tokenize asset,Tokenize asset,TokenizeAsset
+Token is required,Token is required,TokenizeAsset
+Asset has been tokenized,Asset has been tokenized,TokenizeAsset
+Error tokenizing asset,Error tokenizing asset,TokenizeAsset
+Asset name,Asset name,TransferAsset
+Asset address,Asset address,TransferAsset
+Transfer to,Transfer to,TransferAsset
+Recipient username or user ID,Recipient username or user ID,TransferAsset
+Transferring asset,Transferring asset,TransferAsset
+Transfer asset,Transfer asset,TransferAsset
+Recipient is required,Recipient is required,TransferAsset
+Asset has been transferred,Asset has been transferred,TransferAsset
+Error transferring asset,Error transferring asset,TransferAsset
 User,User,User
 User ID,User ID,User
 Accounts,Accounts,User
@@ -546,6 +616,7 @@ Staking,Staking,User
 Tokens,Tokens,User
 Names,Names,User
 Namespaces,Namespaces,User
+Assets,Assets,User
 Change password & PIN,Change password & PIN,User
 Change recovery phrase,Change recovery phrase,User
 Set recovery phrase,Set recovery phrase,User
@@ -584,7 +655,7 @@ Global,Global,User.Names
 Namespaced,Namespaced,User.Names
 Local,Local,User.Names
 Create new name,Create new name,User.Names
-You don't own any names,You don't own any names,User.Names
+You don't own any name,You don't own any name,User.Names
 Name Details,Name Details,NameDetails
 Change register address,Change register address,NameDetails
 Name,Name,NameDetails
@@ -597,7 +668,22 @@ Address,Address,NameDetails
 Points to,Points to,NameDetails
 Created at,Created at,NameDetails
 Last modified,Last modified,NameDetails
+View history,View history,NameDetails
 Transfer ownership,Transfer ownership,NameDetails
+Name History Event,Name History Event,NameHistoryDetails
+Type,Type,NameHistoryDetails
+Time,Time,NameHistoryDetails
+Owner,Owner,NameHistoryDetails
+Checksum,Checksum,NameHistoryDetails
+Name,Name,NameHistoryDetails
+Namespace,Namespace,NameHistoryDetails
+Address,Address,NameHistoryDetails
+Points to,Points to,NameHistoryDetails
+Time,Time,NameHistory
+Type,Type,NameHistory
+Owner,Owner,NameHistory
+Name History,Name History,NameHistory
+Loading name history,Loading name history,NameHistory
 Name,Name,TransferName
 Transfer to,Transfer to,TransferName
 Recipient username or user ID,Recipient username or user ID,TransferName
@@ -619,13 +705,26 @@ Create a new namespace,Create a new namespace,CreateNamespace
 View name details,View name details,User.Namespaces
 Transfer namespace,Transfer namespace,User.Namespaces
 Create new namespace,Create new namespace,User.Namespaces
-You don't own any namespaces,You don't own any namespaces,User.Namespaces
+You don't own any namespace,You don't own any namespace,User.Namespaces
 Namespace Details,Namespace Details,NamespaceDetails
 Name,Name,NamespaceDetails
 Address,Address,NamespaceDetails
 Created at,Created at,NamespaceDetails
 Last modified,Last modified,NamespaceDetails
+View history,View history,NamespaceDetails
 Transfer ownership,Transfer ownership,NamespaceDetails
+Namespace History Event,Namespace History Event,NamespaceHistoryDetails
+Type,Type,NamespaceHistoryDetails
+Time,Time,NamespaceHistoryDetails
+Owner,Owner,NamespaceHistoryDetails
+Checksum,Checksum,NamespaceHistoryDetails
+Name,Name,NamespaceHistoryDetails
+Address,Address,NamespaceHistoryDetails
+Time,Time,NamespaceHistory
+Type,Type,NamespaceHistory
+Owner,Owner,NamespaceHistory
+Namespace History,Namespace History,NamespaceHistory
+Loading namespace history,Loading namespace history,NamespaceHistory
 Namespace,Namespace,TransferNamespace
 Transfer to,Transfer to,TransferNamespace
 Recipient username or user ID,Recipient username or user ID,TransferNamespace
@@ -659,7 +758,6 @@ Block Weight,Block Weight,User.Staking
 Stake Weight,Stake Weight,User.Staking
 "Stake Weight depends on Trust Weight and Block Weight. Along with your Stake amount, Stake Weight affects how frequent you receive a Trust transaction","Stake Weight depends on Trust Weight and Block Weight. Along with your Stake amount, Stake Weight affects how frequent you receive a Trust transaction",User.Staking
 Available Balance,Available Balance,User.Staking
-Migrate stake,Migrate stake,User.Staking
 Adjust stake amount,Adjust stake amount,User.Staking
 Account on hold for another %{stakeSeconds} Seconds,Account on hold for another %{stakeSeconds} Seconds,User.Staking
 Stop staking,Stop staking,User.Staking
@@ -840,21 +938,9 @@ Logged in as %{username},Logged in as %{username},Login
 Error logging in,Error logging in,Login
 Migrate account,Migrate account,MigrateAccount
 You have %{amount} NXS in your legacy account.,You have %{amount} NXS in your legacy account.,MigrateAccount
-"If you have been staking with your legacy account, click Migrate stake button below to move both your stake amount and your trust score to this new Tritium user.","If you have been staking with your legacy account, click Migrate stake button below to move both your stake amount and your trust score to this new Tritium user.",MigrateAccount
-Migrate stake,Migrate stake,MigrateAccount
-Cannot migrate stake since this Tritium user has already started staking before. Please create a new user if you still want to migrate your stake.,Cannot migrate stake since this Tritium user has already started staking before. Please create a new user if you still want to migrate your stake.,MigrateAccount
-"If you have never started staking, or have already migrated your stake, you can manually send your funds from legacy account to this new Tritium user.","If you have never started staking, or have already migrated your stake, you can manually send your funds from legacy account to this new Tritium user.",MigrateAccount
-Please keep in mind that you may lose your legacy trust score if you send NXS manually from your legacy account without migrating your stake first,Please keep in mind that you may lose your legacy trust score if you send NXS manually from your legacy account without migrating your stake first,MigrateAccount
+You can manually send your funds from legacy account to this new Tritium user.,You can manually send your funds from legacy account to this new Tritium user.,MigrateAccount
 Send NXS manually,Send NXS manually,MigrateAccount
 Don't show this again,Don't show this again,MigrateAccount
-Your stake has been successfully migrated,Your stake has been successfully migrated,MigrateStake
-Error migrating stake,Error migrating stake,MigrateStake
-Migrate stake,Migrate stake,MigrateStake
-This will transfer all stake amount and trust score from your legacy wallet to your new Tritium account.,This will transfer all stake amount and trust score from your legacy wallet to your new Tritium account.,MigrateStake
-"Please make sure that you are using the same machine that you used to stake with your legacy wallet, or you have put your staking wallet.dat file into %{path}","Please make sure that you are using the same machine that you used to stake with your legacy wallet, or you have put your staking wallet.dat file into %{path}",MigrateStake
-Legacy wallet password,Legacy wallet password,MigrateStake
-Leave this blank if your legacy wallet is not encrypted,Leave this blank if your legacy wallet is not encrypted,MigrateStake
-Cancel,Cancel,MigrateStake
 Module Details,Module Details,ModuleDetails
 Remove module,Remove module,ModuleDetails
 Module name,Module name,ModuleDetails
@@ -919,7 +1005,7 @@ Enter your password,Enter your password,NewUser
 PIN,PIN,NewUser
 Enter your PIN,Enter your PIN,NewUser
 Attention,Attention,NewUser
-"Please be sure to make a note of up your username, password, and PIN, and keep it in a safe place. If you lose or forget them you will be unable to access your account.","Please be sure to make a note of up your username, password, and PIN, and keep it in a safe place. If you lose or forget them you will be unable to access your account.",NewUser
+"Please be sure to make a note of your username, password, and PIN, and keep it in a safe place. If you lose or forget them you will be unable to access your account.","Please be sure to make a note of your username, password, and PIN, and keep it in a safe place. If you lose or forget them you will be unable to access your account.",NewUser
 Creating user,Creating user,NewUser
 Create user,Create user,NewUser
 "Please wait, this may take up to 30 seconds","Please wait, this may take up to 30 seconds",NewUser
@@ -976,7 +1062,7 @@ Password is required,Password is required,SetRecoveryPhrase
 PIN is required,PIN is required,SetRecoveryPhrase
 Current recovery phrase is required,Current recovery phrase is required,SetRecoveryPhrase
 Recovery phrase is required,Recovery phrase is required,SetRecoveryPhrase
-Recovery phrase must be at least 40 characters,Recovery phrase must be at least 40 characters,SetRecoveryPhrase
+Recovery phrase must be at least 8 characters,Recovery phrase must be at least 8 characters,SetRecoveryPhrase
 Recovery phrase has been updated,Recovery phrase has been updated,SetRecoveryPhrase
 Error setting recovery phrase,Error setting recovery phrase,SetRecoveryPhrase
 Transaction Details,Transaction Details,TransactionDetails

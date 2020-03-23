@@ -163,7 +163,7 @@ export default class NewUserModal extends Component {
 
             <FieldSet legend={__('Attention')} style={{ fontSize: '.9em' }}>
               {__(
-                'Please be sure to make a note of up your username, password, and PIN, and keep it in a safe place. If you lose or forget them you will be unable to access your account.'
+                'Please be sure to make a note of your username, password, and PIN, and keep it in a safe place. If you lose or forget them you will be unable to access your account.'
               )}
             </FieldSet>
 
