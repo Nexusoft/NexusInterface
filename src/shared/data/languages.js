@@ -13,6 +13,7 @@ import ArabicFlag from './flags/arabic.png';
 import HungarianFlag from './flags/hu.png';
 import RomanianFlag from './flags/ro.png';
 import NorwegianFlag from './flags/no.png';
+import SerbianFlag from './flags/rs.png';
 import USUKFlag from './flags/US-UK.png';
 
 /**
@@ -94,6 +95,11 @@ const languages = [
     code: 'ru',
     flag: RussiaFlag,
     name: 'Pусский',
+  },
+  {
+    code: 'sr',
+    flag: SerbianFlag,
+    name: 'српски'
   },
   {
     code: 'zh-cn',
