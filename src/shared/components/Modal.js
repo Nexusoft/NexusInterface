@@ -53,13 +53,14 @@ const fullScreenOutro = {
 const modalBorderRadius = 4;
 
 const ModalComponent = styled.div(
-  ({ theme }) => ({
+  ({ theme, maxWidth }) => ({
     position: 'fixed',
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: '60%',
     maxHeight: '80%',
+    maxWidth: maxWidth,
     background: color.darken(theme.background, 0.2),
     color: theme.mixer(0.75),
     borderRadius: modalBorderRadius,
@@ -233,6 +234,7 @@ export default class Modal extends PureComponent {
       modalRef,
       backgroundRef,
       escToClose,
+      maxWidth,
       ...rest
     } = this.props;
 
@@ -247,6 +249,7 @@ export default class Modal extends PureComponent {
           ref={this.modalRef}
           fullScreen={fullScreen}
           tabIndex="0"
+          maxWidth={maxWidth}
           onKeyDown={this.handleKeyDown}
           {...rest}
         >

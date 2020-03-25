@@ -238,7 +238,7 @@ class CreateNameForm extends React.Component {
 }
 
 const CreateNameModal = () => (
-  <Modal style={{ maxWidth: 500 }}>
+  <Modal maxWidth={500}>
     {closeModal => (
       <>
         <Modal.Header>{__('Create a new name')}</Modal.Header>

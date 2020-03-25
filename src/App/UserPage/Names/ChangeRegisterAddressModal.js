@@ -110,7 +110,7 @@ class ChangeRegisterAddressForm extends React.Component {
 }
 
 const ChangeRegisterAddressModal = ({ nameRecord }) => (
-  <Modal style={{ maxWidth: 600 }}>
+  <Modal maxWidth={600}>
     {closeModal => (
       <>
         <Modal.Header>{__('Change register address')}</Modal.Header>

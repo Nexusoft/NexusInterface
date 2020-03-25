@@ -117,7 +117,7 @@ class NewTokenModal extends React.Component {
         assignClose={closeModal => {
           this.closeModal = closeModal;
         }}
-        style={{ maxWidth: 400 }}
+        maxWidth={400}
       >
         <Modal.Header>{__('New Token')}</Modal.Header>
         <Modal.Body>

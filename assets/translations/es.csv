@@ -40,7 +40,6 @@ You are staking but have not received a block in 30 minutes!,,Header
 Accounts,Cuentas,Header.UserDropdown
 Tokens,Tokens,Header.UserDropdown
 Set recovery phrase,Establecer frase de recuperación,Header.UserDropdown
-Migrate stake,Migrar Stake,Header.UserDropdown
 Log out,Cerrar sesión,Header.UserDropdown
 Log in,Iniciar sesión,Header.UserDropdown
 Create new user,Crear nuevo usuario,Header.UserDropdown
@@ -277,8 +276,6 @@ IP address,Dirección IP,Settings.Core
 IP address configured for manual Core.,Dirección IP configurada para el demonio manual.,Settings.Core
 Port,Puerto,Settings.Core
 Port configured for manual Core.,Puerto configurado para el daemon manual.,Settings.Core
-Data directory name,Nombre del directorio de datos,Settings.Core
-Data directory configured for manual Core.,Directorio de datos configurado para el daemon manual.,Settings.Core
 Restart Core for these changes to take effect,Debe reiniciar núcleo para que estos cambios surtan efecto,Settings.Core
 Save settings,Guardar cambios,Settings.Core
 Verbose level is required,Se requiere activar verbosidad,Settings.Core
@@ -286,7 +283,6 @@ Manual Core username is required,Se requiere el nombre de usuario del daemon man
 Manual Core password is required,Se requiere la contraseña del daemon manual,Settings.Core
 Manual Core IP is required,Se requiere IP manual del demonio,Settings.Core
 Manual Core port is required,Se requiere un puerto de daemon manual,Settings.Core
-Data directory is required,Se requiere el directorio de datos,Settings.Core
 Core settings saved,Configuraciones principales guardadas,Settings.Core
 Restarting Core...,Reiniciando el núcleo...,Settings.Core
 Error rescanning,Error al volver a escanear,Settings.Core
@@ -537,6 +533,80 @@ Available,Disponible,User.Accounts.AccountHistory
 Pending,En espera,User.Accounts.AccountHistory
 Unconfirmed,No confirmado,User.Accounts.AccountHistory
 Stake,Estaca,User.Accounts.AccountHistory
+Unnamed asset,,User.Assets
+You own %{percentage}% of this asset,,User.Assets
+Create new asset,,User.Assets
+You don't own any asset,,User.Assets
+Asset Details,,AssetDetails
+Edit asset,,AssetDetails
+Name,,AssetDetails
+Address,,AssetDetails
+Owner,,AssetDetails
+Ownership,,AssetDetails
+Created at,,AssetDetails
+Last modified,,AssetDetails
+View history,,AssetDetails
+Tokenize,,AssetDetails
+Transfer ownership,,AssetDetails
+Name,,CreateAsset
+Field name,,CreateAsset
+Value,,CreateAsset
+Field value,,CreateAsset
+Mutable,,CreateAsset
+Type,,CreateAsset
+Max. length,,CreateAsset
+Only applicable to mutable string fields,,CreateAsset
+Unlimited,,CreateAsset
+Remove field,,CreateAsset
+Asset name,,CreateAsset
+A local Name object register will be created for this asset name,,CreateAsset
+Asset name (optional),,CreateAsset
+Asset data,,CreateAsset
+Add field,,CreateAsset
+Estimated fee,,CreateAsset
+Creating asset,,CreateAsset
+Create asset,,CreateAsset
+Field name is required,,CreateAsset
+New asset has been created,,CreateAsset
+Error creating asset,,CreateAsset
+Create a new asset,,CreateAsset
+Asset History Event,,AssetHistoryDetails
+Type,,AssetHistoryDetails
+Time,,AssetHistoryDetails
+Owner,,AssetHistoryDetails
+Checksum,,AssetHistoryDetails
+Name,,AssetHistoryDetails
+Address,,AssetHistoryDetails
+Time,,AssetHistory
+Type,,AssetHistory
+Owner,,AssetHistory
+Asset History,,AssetHistory
+Loading asset history,,AssetHistory
+Name,,EditAsset
+Address,,EditAsset
+Updating asset,,EditAsset
+Update asset,,EditAsset
+Asset has been updated,,EditAsset
+Error updating asset,,EditAsset
+Edit asset,,EditAsset
+Asset name,,TokenizeAsset
+Asset address,,TokenizeAsset
+Token,,TokenizeAsset
+Token address,,TokenizeAsset
+Tokenizing asset,,TokenizeAsset
+Tokenize asset,,TokenizeAsset
+Token is required,,TokenizeAsset
+Asset has been tokenized,,TokenizeAsset
+Error tokenizing asset,,TokenizeAsset
+Asset name,,TransferAsset
+Asset address,,TransferAsset
+Transfer to,,TransferAsset
+Recipient username or user ID,,TransferAsset
+Transferring asset,,TransferAsset
+Transfer asset,,TransferAsset
+Recipient is required,,TransferAsset
+Asset has been transferred,,TransferAsset
+Error transferring asset,,TransferAsset
 User,Usuario,User
 User ID,ID de usuario,User
 Accounts,Cuentas,User
@@ -544,6 +614,7 @@ Staking,Generación de interés,User
 Tokens,Tokens,User
 Names,,User
 Namespaces,,User
+Assets,,User
 Change password & PIN,Cambiar contraseña y PIN,User
 Change recovery phrase,Cambiar frase de recuperación,User
 Set recovery phrase,Establecer frase de recuperación,User
@@ -582,7 +653,7 @@ Global,,User.Names
 Namespaced,,User.Names
 Local,,User.Names
 Create new name,,User.Names
-You don't own any names,,User.Names
+You don't own any name,,User.Names
 Name Details,,NameDetails
 Change register address,,NameDetails
 Name,,NameDetails
@@ -595,7 +666,22 @@ Address,,NameDetails
 Points to,,NameDetails
 Created at,,NameDetails
 Last modified,,NameDetails
+View history,,NameDetails
 Transfer ownership,,NameDetails
+Name History Event,,NameHistoryDetails
+Type,,NameHistoryDetails
+Time,,NameHistoryDetails
+Owner,,NameHistoryDetails
+Checksum,,NameHistoryDetails
+Name,,NameHistoryDetails
+Namespace,,NameHistoryDetails
+Address,,NameHistoryDetails
+Points to,,NameHistoryDetails
+Time,,NameHistory
+Type,,NameHistory
+Owner,,NameHistory
+Name History,,NameHistory
+Loading name history,,NameHistory
 Name,,TransferName
 Transfer to,,TransferName
 Recipient username or user ID,,TransferName
@@ -617,13 +703,26 @@ Create a new namespace,,CreateNamespace
 View name details,,User.Namespaces
 Transfer namespace,,User.Namespaces
 Create new namespace,,User.Namespaces
-You don't own any namespaces,,User.Namespaces
+You don't own any namespace,,User.Namespaces
 Namespace Details,,NamespaceDetails
 Name,,NamespaceDetails
 Address,,NamespaceDetails
 Created at,,NamespaceDetails
 Last modified,,NamespaceDetails
+View history,,NamespaceDetails
 Transfer ownership,,NamespaceDetails
+Namespace History Event,,NamespaceHistoryDetails
+Type,,NamespaceHistoryDetails
+Time,,NamespaceHistoryDetails
+Owner,,NamespaceHistoryDetails
+Checksum,,NamespaceHistoryDetails
+Name,,NamespaceHistoryDetails
+Address,,NamespaceHistoryDetails
+Time,,NamespaceHistory
+Type,,NamespaceHistory
+Owner,,NamespaceHistory
+Namespace History,,NamespaceHistory
+Loading namespace history,,NamespaceHistory
 Namespace,,TransferNamespace
 Transfer to,,TransferNamespace
 Recipient username or user ID,,TransferNamespace
@@ -657,7 +756,6 @@ Block Weight,Peso de cada bloque,User.Staking
 Stake Weight,Peso de Stake,User.Staking
 "Stake Weight depends on Trust Weight and Block Weight. Along with your Stake amount, Stake Weight affects how frequent you receive a Trust transaction","El peso del consumo depende del peso de la confianza y del peso del bloque. Junto con su cantidad de de stake, el peso del stake afecta a la frecuencia con que recibes una transacción de confianza",User.Staking
 Available Balance,Saldo Disponible,User.Staking
-Migrate stake,Migrar Stake,User.Staking
 Adjust stake amount,Ajustar monto de stake,User.Staking
 Account on hold for another %{stakeSeconds} Seconds,Cuenta en espera por otros %{stakeSeconds} segundos,User.Staking
 Stop staking,,User.Staking
@@ -838,21 +936,9 @@ Logged in as %{username},Sesión iniciada como %{username},Login
 Error logging in,Error al iniciar sesión,Login
 Migrate account,Migrar cuenta,MigrateAccount
 You have %{amount} NXS in your legacy account.,Tienes %{amount} NXS en tu cuenta antigua.,MigrateAccount
-"If you have been staking with your legacy account, click Migrate stake button below to move both your stake amount and your trust score to this new Tritium user.","Si ha estado haciendo stake con su cuenta tradicional, haga clic en el botón Migrar para migrar su stake y la puntuación de tu confianza a este nuevo usuario de Tritium.",MigrateAccount
-Migrate stake,Migrar Stake,MigrateAccount
-Cannot migrate stake since this Tritium user has already started staking before. Please create a new user if you still want to migrate your stake.,"No se puede migrar el stake ya que este usuario de Tritium ya ha comenzado a hacer stake antes. Por favor, crea un nuevo usuario si quieres migrar tu stake.",MigrateAccount
-"If you have never started staking, or have already migrated your stake, you can manually send your funds from legacy account to this new Tritium user.",Si nunca has hecho stake o ya has migrado tu stake puedes enviar manualmente tus fondos desde la cuenta antigua a este nuevo usuario de Tritium.,MigrateAccount
-Please keep in mind that you may lose your legacy trust score if you send NXS manually from your legacy account without migrating your stake first,"Por favor, ten en cuenta que puedes perder tu puntuación de confianza antigua si envias NXS manualmente desde tu cuenta clasica sin migrar tu stake primero",MigrateAccount
+You can manually send your funds from legacy account to this new Tritium user.,,MigrateAccount
 Send NXS manually,,MigrateAccount
 Don't show this again,,MigrateAccount
-Your stake has been successfully migrated,,MigrateStake
-Error migrating stake,,MigrateStake
-Migrate stake,Migrar Stake,MigrateStake
-This will transfer all stake amount and trust score from your legacy wallet to your new Tritium account.,,MigrateStake
-"Please make sure that you are using the same machine that you used to stake with your legacy wallet, or you have put your staking wallet.dat file into %{path}",,MigrateStake
-Legacy wallet password,,MigrateStake
-Leave this blank if your legacy wallet is not encrypted,,MigrateStake
-Cancel,Cancelar,MigrateStake
 Module Details,,ModuleDetails
 Remove module,,ModuleDetails
 Module name,Nombre del módulo,ModuleDetails
@@ -914,7 +1000,7 @@ Enter your password,Escribe tu contraseña,NewUser
 PIN,PIN,NewUser
 Enter your PIN,,NewUser
 Attention,,NewUser
-"Please be sure to make a note of up your username, password, and PIN, and keep it in a safe place. If you lose or forget them you will be unable to access your account.",,NewUser
+"Please be sure to make a note of your username, password, and PIN, and keep it in a safe place. If you lose or forget them you will be unable to access your account.",,NewUser
 Creating user,,NewUser
 Create user,,NewUser
 "Please wait, this may take up to 30 seconds",,NewUser
@@ -971,7 +1057,7 @@ Password is required,Se requiere contraseña,SetRecoveryPhrase
 PIN is required,El código PIN es necesario,SetRecoveryPhrase
 Current recovery phrase is required,Se requiere la frase de recuperación actual,SetRecoveryPhrase
 Recovery phrase is required,Se requiere frase de recuperación,SetRecoveryPhrase
-Recovery phrase must be at least 40 characters,La frase de recuperación debe tener al menos 40 caracteres,SetRecoveryPhrase
+Recovery phrase must be at least 8 characters,,SetRecoveryPhrase
 Recovery phrase has been updated,La frase de recuperación ha sido actualizada,SetRecoveryPhrase
 Error setting recovery phrase,Error al establecer frase de recuperación,SetRecoveryPhrase
 Transaction Details,,TransactionDetails

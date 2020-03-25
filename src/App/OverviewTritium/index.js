@@ -711,7 +711,7 @@ class Overview extends Component {
           >
             <div>
               <StatLabel>
-                {!synchronized && (
+                {!synchronized && available !== undefined && (
                   <Tooltip.Trigger
                     align="start"
                     tooltip={__(

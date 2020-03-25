@@ -105,7 +105,7 @@ export default class NewAccountModal extends React.Component {
         assignClose={closeModal => {
           this.closeModal = closeModal;
         }}
-        style={{ maxWidth: 700 }}
+        maxWidth={700}
       >
         <Modal.Header>{__('New account')}</Modal.Header>
         <Modal.Body>

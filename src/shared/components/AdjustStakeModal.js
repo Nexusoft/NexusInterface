@@ -119,7 +119,7 @@ export default class AdjustStakeModal extends React.Component {
     const { total, handleSubmit, submitting, change } = this.props;
     return (
       <Modal
-        style={{ maxWidth: 600 }}
+        maxWidth={600}
         assignClose={closeModal => {
           this.closeModal = closeModal;
         }}

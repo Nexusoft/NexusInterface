@@ -1,7 +1,7 @@
 // External
 import { ipcRenderer } from 'electron';
 import path from 'path';
-import fs from 'fs-extra';
+import fs from 'fs';
 import axios from 'axios';
 import semver from 'semver';
 

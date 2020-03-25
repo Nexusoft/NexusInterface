@@ -22,7 +22,7 @@ const MigrateAccountModal = ({ legacyBalance, accounts }) => {
   const defaultAddress = defaultAccount && defaultAccount.address;
 
   return (
-    <Modal style={{ maxWidth: 600 }}>
+    <Modal maxWidth={600}>
       {closeModal => (
         <>
           <Modal.Header>{__('Migrate account')}</Modal.Header>

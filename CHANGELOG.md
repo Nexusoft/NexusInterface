@@ -1,3 +1,20 @@
+# 3.0.2 (2020.3.25)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v3.0.2)
+
+#### Additions
+
+- Nexus Core v5.0.3
+- Serbian Language
+
+#### Adjustments
+
+- Staking Warning will not show if no balance/ logged in
+
+#### Fixes
+
+- Fixed typos
+
 # 3.0.1 (2020.3.16)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v3.0.1)

@@ -237,7 +237,7 @@ class MoveBetweenAccountsForm extends Component {
  *
  */
 const MoveBetweenAccountsModal = () => (
-  <Modal style={{ maxWidth: 650 }}>
+  <Modal maxWidth={650}>
     {closeModal => (
       <>
         <Modal.Header>{__('Move NXS between accounts')}</Modal.Header>

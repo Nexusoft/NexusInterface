@@ -30,11 +30,9 @@ const filterSuggestions = memoize((suggestions, inputValue) => {
   if (!suggestions) return [];
   const query = new String(inputValue || '').toLowerCase();
   return suggestions.filter(suggestion => {
-    const { value, display } = suggestion;
+    const { name } = suggestion;
     return (
-      !!display &&
-      typeof display === 'string' &&
-      display.toLowerCase().includes(query)
+      !!name && typeof name === 'string' && name.toLowerCase().includes(query)
     );
   });
 });
@@ -44,10 +42,11 @@ const filterSuggestions = memoize((suggestions, inputValue) => {
     tokens &&
     tokens.map(token => ({
       value: token.address,
-      display: token.name ? (
-        token.name
-      ) : (
-        <span className="dim">{token.address}</span>
+      name: token.name,
+      display: (
+        <span>
+          {token.name} -<span className="dim"> {token.address}</span>
+        </span>
       ),
     })),
 }))
@@ -121,7 +120,7 @@ class TokenizeAssetForm extends React.Component {
                       tokenSuggestions.find(
                         suggestion => suggestion.value === input.value
                       );
-                    const tokenName = suggestion && suggestion.display;
+                    const tokenName = suggestion && suggestion.name;
                     return !!tokenName && <TokenName>{tokenName}</TokenName>;
                   }}
                 />
@@ -162,7 +161,7 @@ class TokenizeAssetForm extends React.Component {
 }
 
 const TokenizeAssetModal = ({ asset }) => (
-  <Modal style={{ maxWidth: 600 }}>
+  <Modal maxWidth={600}>
     {closeModal => (
       <>
         <Modal.Header>{__('Tokenize asset')}</Modal.Header>

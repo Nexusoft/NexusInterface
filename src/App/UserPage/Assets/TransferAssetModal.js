@@ -102,7 +102,7 @@ class TransferAssetForm extends React.Component {
 }
 
 const TransferAssetModal = ({ asset }) => (
-  <Modal style={{ maxWidth: 600 }}>
+  <Modal maxWidth={600}>
     {closeModal => (
       <>
         <Modal.Header>{__('Transfer asset')}</Modal.Header>

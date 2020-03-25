@@ -24,7 +24,7 @@ export default class PasswordModal extends React.Component {
     return (
       <Modal
         assignClose={closeModal => (this.closeModal = closeModal)}
-        style={{ maxWidth: 500 }}
+        maxWidth={500}
       >
         <Modal.Header>{__('Wallet password')}</Modal.Header>
         <Modal.Body>

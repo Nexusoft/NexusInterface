@@ -99,7 +99,7 @@ class Login extends Component {
 
     return (
       <Modal
-        style={{ maxWidth: 500 }}
+        maxWidth={500}
         assignClose={closeModal => (this.closeModal = closeModal)}
       >
         <Modal.Header>{__('Log in')}</Modal.Header>

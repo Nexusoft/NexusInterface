@@ -13,6 +13,8 @@ import { consts, timing } from 'styles';
 import { assetNumberTypes } from 'consts/misc';
 import { getDeep } from 'utils/misc';
 
+__ = __context('CreateAsset');
+
 const typeOptions = [
   {
     value: 'string',
@@ -52,6 +54,10 @@ const FieldWrapper = styled.div({
   marginLeft: -50,
   paddingLeft: 50,
   position: 'relative',
+  display: 'grid',
+  gridTemplateColumns: '1fr 2fr 60px 115px 100px',
+  columnGap: '1em',
+  alignItems: 'stretch',
 });
 
 const RemoveButton = styled.div(({ theme }) => ({
@@ -73,25 +79,20 @@ const RemoveButton = styled.div(({ theme }) => ({
   },
 }));
 
-const FirstLine = styled.div({
-  display: 'grid',
-  gridTemplateColumns: '1fr min-content 2fr',
-  columnGap: '.6em',
-  alignItems: 'end',
-});
-
-const SecondLine = styled.div({
-  display: 'grid',
-  gridTemplateColumns: '1fr min-content 1fr',
-  columnGap: '.6em',
-  alignItems: 'stretch',
-});
-
 const SwitchWrapper = styled.div({
   height: consts.inputHeightEm + 'em',
   display: 'flex',
   alignItems: 'center',
 });
+
+const ConditionalFormField = ({ showLabel, label, children, ...rest }) =>
+  showLabel ? (
+    <FormField label={label} capitalizeLabel {...rest}>
+      <div style={{ marginTop: '.75em' }}>{children}</div>
+    </FormField>
+  ) : (
+    children
+  );
 
 @connect((state, props) => ({
   fieldValue: getDeep(getFormValues(props.form)(state), props.fieldName),
@@ -104,80 +105,58 @@ export default class AssetFieldCreator extends React.PureComponent {
     );
 
     return (
-      <FieldWrapper className={first ? undefined : 'mt2'}>
-        <FirstLine>
-          <FormField label={__('Name')} connectLabel capitalizeLabel>
-            <Field
-              name={`${fieldName}.name`}
-              component={TextField.RF}
-              placeholder={__('Field name')}
-            />
-          </FormField>
-          <span className="space-left space-right">=</span>
-          <FormField label={__('Value')} connectLabel capitalizeLabel>
-            <Field
-              name={`${fieldName}.value`}
-              component={TextField.RF}
-              placeholder={__('Field value')}
-              type={
-                assetNumberTypes.includes(fieldValue.type) ? 'number' : 'text'
-              }
-              min={assetNumberTypes.includes(fieldValue.type) ? 0 : undefined}
-            />
-          </FormField>
-        </FirstLine>
-
-        <SecondLine>
-          <FormField
-            label={__('Type')}
-            connectLabel
-            capitalizeLabel
-            className="space-right"
-          >
-            <Field
-              name={`${fieldName}.type`}
-              component={Select.RF}
-              options={typeOptions}
-            />
-          </FormField>
-          <FormField
-            label={__('Mutable')}
-            connectLabel
-            capitalizeLabel
-            className="space-right"
-          >
-            {inputId => (
-              <SwitchWrapper>
-                <Field
-                  name={`${fieldName}.mutable`}
-                  component={Switch.RF}
-                  id={inputId}
-                />
-              </SwitchWrapper>
-            )}
-          </FormField>
-          <FormField
-            label={
-              <span>
-                <span className="v-align">{__('Max. length')}</span>
-                <QuestionCircle
-                  tooltip={__('Only applicable to mutable string fields')}
-                />
-              </span>
+      <FieldWrapper className={first ? undefined : 'mt1'}>
+        <ConditionalFormField showLabel={first} label={__('Name')}>
+          <Field
+            name={`${fieldName}.name`}
+            component={TextField.RF}
+            placeholder={__('Field name')}
+          />
+        </ConditionalFormField>
+        <ConditionalFormField showLabel={first} label={__('Value')}>
+          <Field
+            name={`${fieldName}.value`}
+            component={TextField.RF}
+            placeholder={__('Field value')}
+            type={
+              assetNumberTypes.includes(fieldValue.type) ? 'number' : 'text'
             }
-            connectLabel
-            capitalizeLabel
-            className={lengthDisabled ? 'dim' : undefined}
-          >
-            <Field
-              name={`${fieldName}.maxlength`}
-              type="number"
-              component={TextField.RF}
-              disabled={lengthDisabled}
-              placeholder={__('Maximum length')}
-            />
-          </FormField>
-        </SecondLine>
+            min={assetNumberTypes.includes(fieldValue.type) ? 0 : undefined}
+          />
+        </ConditionalFormField>
+        <ConditionalFormField showLabel={first} label={__('Mutable')}>
+          <SwitchWrapper>
+            <Field name={`${fieldName}.mutable`} component={Switch.RF} />
+          </SwitchWrapper>
+        </ConditionalFormField>
+        <ConditionalFormField showLabel={first} label={__('Type')}>
+          <Field
+            name={`${fieldName}.type`}
+            component={Select.RF}
+            options={typeOptions}
+          />
+        </ConditionalFormField>
+
+        <ConditionalFormField
+          showLabel={first}
+          label={
+            <span>
+              <span className="v-align">{__('Max. length')}</span>
+              <QuestionCircle
+                tooltip={__('Only applicable to mutable string fields')}
+              />
+            </span>
+          }
+          className={lengthDisabled ? 'dim' : undefined}
+        >
+          <Field
+            name={`${fieldName}.maxlength`}
+            type="number"
+            component={TextField.RF}
+            disabled={lengthDisabled}
+            placeholder={lengthDisabled ? 'N/A' : __('Unlimited')}
+          />
+        </ConditionalFormField>
 
         {!onlyField && (
           <Tooltip.Trigger tooltip={__('Remove field')}>

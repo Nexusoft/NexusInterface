@@ -192,7 +192,7 @@ class CreateAssetForm extends React.Component {
 }
 
 const CreateAssetModal = () => (
-  <Modal style={{ maxWidth: 600 }}>
+  <Modal style={{ width: '80%' }} maxWidth={900}>
     {closeModal => (
       <>
         <Modal.Header>{__('Create a new asset')}</Modal.Header>
