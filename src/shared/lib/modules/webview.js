@@ -101,10 +101,7 @@ const apiWhiteList = [
   'objects/get/schema',
   'supply/get/item',
   'supply/list/item/history',
-  'invoices/create/invoice',
   'invoices/get/invoice',
-  'invoices/pay/invoice',
-  'invoices/cancel/invoice',
   'invoices/list/invoice/history',
 ];
 
@@ -457,7 +454,7 @@ walletEvents.once('post-render', function() {
       const { activeAppModule } = store.getState();
       if (activeAppModule && activeAppModule.webview) {
         try {
-          activeAppModule.webview.send('coreInfo-updated', coreInfo);
+          activeAppModule.webview.send('core-info-updated', coreInfo);
         } catch (err) {}
       }
     }
