@@ -1,3 +1,19 @@
+# 3.0.3 (2020.4.XX)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v3.0.3)
+
+#### Additions
+
+-
+
+#### Adjustments
+
+-
+
+#### Fixes
+
+- Fixed the details popup showing that a trust account needs to mature even though the account was already matured
+
 # 3.0.2 (2020.3.25)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v3.0.2)

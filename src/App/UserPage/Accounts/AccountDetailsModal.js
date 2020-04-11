@@ -88,9 +88,13 @@ const AccountDetailsModal = ({ account, stakeInfo }) => (
               {!stakeInfo.stake && !stakeInfo.balance ? (
                 <div className="error">{__('Trust Account is empty.')}</div>
               ) : (
-                <div className="error">
-                  {__('Trust Account must mature for 72 hours before staking')}
-                </div>
+                stakeInfo.new && (
+                  <div className="error">
+                    {__(
+                      'Trust Account must mature for 72 hours before staking'
+                    )}
+                  </div>
+                )
               )}
               <Button
                 disabled={
