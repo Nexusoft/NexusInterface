@@ -13,6 +13,7 @@
 #### Fixes
 
 - Fixed the details popup showing that a trust account needs to mature even though the account was already matured
+- Fixed the GUI not notifying a module of a core update
 
 # 3.0.2 (2020.3.25)
 
