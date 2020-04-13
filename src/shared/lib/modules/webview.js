@@ -127,11 +127,13 @@ const getModuleData = ({
   theme,
   core,
   settings: { locale, fiatCurrency, addressStyle },
+  user: {status},
   addressBook,
 }) => ({
   theme,
   settings: getSettingsForModules(locale, fiatCurrency, addressStyle),
   coreInfo: legacyMode ? core.info : core.systemInfo,
+  userStatus: status,
   addressBook,
 });
 
@@ -459,6 +461,18 @@ walletEvents.once('post-render', function() {
       }
     }
   );
+
+  observeStore(
+    state => (state.user.status),
+    userStatus => {
+      const { activeAppModule } = store.getState();
+      if (activeAppModule && activeAppModule.webview) {
+        try {
+          activeAppModule.webview.send('core-user-updated', userStatus);
+        } catch (err) {}
+      }
+    }
+  )
 });
 
 /**
