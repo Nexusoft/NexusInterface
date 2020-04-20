@@ -288,7 +288,7 @@ global.NEXUS = {
             typeof listener
         );
       }
-      ipcRenderer.on('core-user-updated', (event, userStatus) =>
+      ipcRenderer.on('user-status-updated', (event, userStatus) =>
         listener(userStatus)
       );
     },

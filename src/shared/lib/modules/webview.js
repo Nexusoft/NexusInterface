@@ -127,7 +127,7 @@ const getModuleData = ({
   theme,
   core,
   settings: { locale, fiatCurrency, addressStyle },
-  user: {status},
+  user: { status },
   addressBook,
 }) => ({
   theme,
@@ -463,16 +463,16 @@ walletEvents.once('post-render', function() {
   );
 
   observeStore(
-    state => (state.user.status),
+    state => state.user.status,
     userStatus => {
       const { activeAppModule } = store.getState();
       if (activeAppModule && activeAppModule.webview) {
         try {
-          activeAppModule.webview.send('core-user-updated', userStatus);
+          activeAppModule.webview.send('user-status-updated', userStatus);
         } catch (err) {}
       }
     }
-  )
+  );
 });
 
 /**
