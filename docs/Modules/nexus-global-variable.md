@@ -99,6 +99,7 @@ const {
     onThemeUpdated,
     onSettingsUpdate,
     onCoreInfoUpdated,
+    onUserStatusUpdated,
     onceRpcReturn,
     onceProxyResponse,
     onceCOnfirmAnswer,
@@ -119,6 +120,7 @@ const {
 - [`onThemeUpdated`](#onthemeupdated)
 - [`onSettingsUpdated`](#onsettingsupdated)
 - [`onCoreInfoUpdated`](#oncoreinfoupdated)
+- [`onUserStatusUpdated`](#onuserstatusupdated)
 - [`sendNXS`](#sendnxs)
 - [`rpcCall`](#rpccall)
 - [`proxyRequest`](#proxyrequest)
@@ -218,6 +220,8 @@ NEXUS.utilities.onceInitialize(listener);
   - `initialData.theme`: object - See [`onThemeUpdated`](#onthemeupdated) for more details
   - `initialData.settings`: object - See [`onSettingsUpdated`](#onsettingsupdatedd) for more details
   - `initialData.coreInfo`: object - See [`onCoreInfoUpdated`](#oncoreinfoupdated) for more details
+  - `initialData.userStatus`: object - See [`onUserStatusUpdated](#onuserstatusupdated) for more details
+  - `initialData.addressBook`: object - This local machines Address Book
   - `initialData.moduleState`: object - The last state object that your module has previously stored via [`updateState` function](#updatestate).
   - `initialData.storageData`: object - The last data object that your module has previously stored via [`updateStorage` function](#updatestorage).
 
@@ -284,6 +288,25 @@ NEXUS.utilities.onCoreInfoUpdated(listener);
 ```
 
 - `coreInfo`: object - Information that the Nexus core returned from `getinfo` RPC calls which are called at regular interval. What's contained inside `coreInfo` depends on the core that the Nexus Wallet is using.
+
+### `onUserStatusUpdated`
+
+Register a listener that will be called everytime the status of the user is updated in the base wallet.
+
+```js
+const listener = userStatus => {
+  // update user status in module...
+};
+NEXUS.utilities.onUserStatusUpdated(listener);
+```
+
+- `userStatus`: object - Contains information about the user, will return `null` if logged out.
+- `genesis`: User's Genesis
+- `username`: User's Username
+- `recovery`: Boobleon flag for if User has a recovery seed
+- `transactions`: Number of transactions on this Username
+- `notifications`: Number of Pending notifications,
+- `unlocked`: User Status on if the sigchain is unlocked, `mining`,`notifications`,`staking`,`transactions`
 
 ### `sendNXS`
 
