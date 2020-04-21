@@ -14,6 +14,7 @@
 
 - Fixed the details popup showing that a trust account needs to mature even though the account was already matured
 - Fixed the GUI not notifying a module of a core update
+- Pressing the Turn Off button for testnet works requires confirming core restart
 
 # 3.0.2 (2020.3.25)
 

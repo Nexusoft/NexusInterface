@@ -252,7 +252,6 @@ class SettingsCore extends Component {
 
   turnOffTestNet = e => {
     this.props.change('testnetIteration', null);
-    updateSettings({ testnetIteration: null });
   };
 
   /**
@@ -271,7 +270,6 @@ class SettingsCore extends Component {
       restartCoreOnSave,
       showTestnetOff,
     } = this.props;
-
     return (
       <>
         <form onSubmit={handleSubmit} style={{ paddingBottom: dirty ? 55 : 0 }}>
