@@ -91,6 +91,8 @@ const {
     showErrorDialog,
     showSuccessDialog,
     rpcCall,
+    apiCall,
+    secureApiCall,
     proxyRequest,
     confirm,
     updateState,
@@ -123,6 +125,8 @@ const {
 - [`onUserStatusUpdated`](#onuserstatusupdated)
 - [`sendNXS`](#sendnxs)
 - [`rpcCall`](#rpccall)
+- [`apiCall`](#apicall)
+- [`secureApiCall`](#secureapicall)
 - [`proxyRequest`](#proxyrequest)
 - [`confirm`](#confirm)
 - [`copyToClipboard`](#copytoclipboard)
@@ -384,6 +388,100 @@ NEXUS.utilities
     // handle error...
   });
 ```
+
+### `apiCall`
+
+`apiCall` method will be the interface between the module and executing api calls. All available api calls must be on the whitelist, all these calls are considered nondestructive. To use api calls that will modify the sig chain use [secureApiCall](#secureapicall) . Will return a promise with the result, a result will only ever return if the nexus core accepts the request. 
+
+Api Whitelist
+
+```
+system/get/info
+system/list/peers
+system/list/lisp-eids
+system/validate/address
+users/get/status
+users/list/accounts
+users/list/assets
+users/list/items
+users/list/names
+users/list/namespaces
+users/list/notifications
+users/list/tokens
+users/list/invoices
+users/list/transactions
+finance/get/account
+finance/list/account
+finance/list/account/transactions
+finance/get/stakeinfo
+finance/get/balances
+finance/list/trustaccounts
+ledger/get/blockhash
+ledger/get/block
+ledger/list/block
+ledger/get/transaction
+ledger/get/mininginfo
+tokens/get/token
+tokens/list/token/transactions
+tokens/get/account
+tokens/list/account/transactions
+names/get/namespace
+names/list/namespace/history
+names/get/name
+names/list/name/history
+assets/get/asset
+assets/list/asset/history
+objects/get/schema
+supply/get/item
+supply/list/item/history
+invoices/get/invoice
+invoices/list/invoice/history
+```
+
+```js
+apiCall(url: string, params: object) : Promise<object>
+```
+
+- `url`: string - The api endpoint, must be on the whitelist.
+- `params`: object - parameters to pass to the endpoint
+- Return : promise - promise returns a object  
+
+Example Usage
+
+```js
+apiCall('system/get/info', { foo: bar })
+  .then(result => {
+    // handle result
+  })
+  .catch(err => {
+    //handle error
+  });
+```
+
+### `secureApiCall`
+
+`secureApiCall` acts just like the `apiCall` method but will allow for dangerous operations that will result in a change to your sigchain. For example sending NXS to another address. All api methods that require a pin must use this function. When this method is called a pop up will display that will force the user to enter their pin, it will also say what methods are being used and what params are being passed in.
+
+```js
+secureApiCall(url: string, params: object) : Promise<object>
+```
+
+- `url`: string - The api endpoint, must be on the whitelist.
+- `params`: object - parameters to pass to the endpoint 
+- Return : promise - promise returns a object  
+
+Example Usage:
+
+````js
+secureApiCall('finance/debit/account',{address: foo, name_to:bar})
+.then(result => {
+  // hendle result
+})
+.catch(err => {
+  // handle error
+  // Also returns if prompt is canceled
+})
+````
 
 ### `proxyRequest`
 
