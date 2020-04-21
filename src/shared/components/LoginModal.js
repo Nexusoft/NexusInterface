@@ -35,10 +35,13 @@ const ExtraSection = styled.div({
  * @class Login
  * @extends {Component}
  */
-@connect(({ settings: { enableMining, enableStaking } }) => ({
-  enableMining,
-  enableStaking,
-}))
+@connect(
+  ({ core: { systemInfo }, settings: { enableMining, enableStaking } }) => ({
+    enableMining,
+    enableStaking,
+    syncing: systemInfo.synchronizing,
+  })
+)
 @reduxForm({
   form: 'login_tritium',
   destroyOnUnmount: true,
@@ -85,7 +88,19 @@ const ExtraSection = styled.div({
     });
     getUserStatus();
   },
-  onSubmitFail: errorHandler(__('Error logging in')),
+  onSubmitFail: (errors, dispatch, submitError, props) => {
+    const submissionError =
+      submitError.code === -139 && props.syncing
+        ? {
+            ...submitError,
+            message:
+              submitError.message +
+              '. ' +
+              __('Not being fully synced may of caused this error.'),
+          }
+        : submitError;
+    errorHandler(__('Error logging in'))(errors, dispatch, submissionError);
+  },
 })
 class Login extends Component {
   /**

@@ -8,7 +8,7 @@
 
 #### Adjustments
 
--
+- If you are not in sync when you login with invalid credentials 
 
 #### Fixes
 
