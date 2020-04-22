@@ -1,10 +1,10 @@
-# 3.0.3 (2020.4.XX)
+# 3.0.3 (2020.4.21)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v3.0.3)
 
 #### Additions
 
--
+- Added additional core information for use with the module system
 
 #### Adjustments
 
