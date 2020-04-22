@@ -1,3 +1,21 @@
+# 3.0.3 (2020.4.21)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v3.0.3)
+
+#### Additions
+
+- Added additional core information for use with the module system
+
+#### Adjustments
+
+- If you are not in sync when you login with invalid credentials 
+
+#### Fixes
+
+- Fixed the details popup showing that a trust account needs to mature even though the account was already matured
+- Fixed the GUI not notifying a module of a core update
+- Pressing the Turn Off button for testnet works requires confirming core restart
+
 # 3.0.2 (2020.3.25)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v3.0.2)

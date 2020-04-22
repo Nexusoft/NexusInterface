@@ -199,6 +199,17 @@ const ButtonComponent = styled.button(
             color: theme.background,
           },
         };
+      case 'plain-danger':
+        return {
+          '&, &:active, &&:disabled': {
+            background: 'transparent',
+            color: theme.mixer(0.25),
+            transitionProperty: 'color',
+          },
+          '&:hover': {
+            color: theme.background,
+          },
+        };
       case 'plain':
         return {
           '&, &:active, &&:disabled': {

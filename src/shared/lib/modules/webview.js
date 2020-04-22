@@ -101,10 +101,7 @@ const apiWhiteList = [
   'objects/get/schema',
   'supply/get/item',
   'supply/list/item/history',
-  'invoices/create/invoice',
   'invoices/get/invoice',
-  'invoices/pay/invoice',
-  'invoices/cancel/invoice',
   'invoices/list/invoice/history',
 ];
 
@@ -130,11 +127,13 @@ const getModuleData = ({
   theme,
   core,
   settings: { locale, fiatCurrency, addressStyle },
+  user: { status },
   addressBook,
 }) => ({
   theme,
   settings: getSettingsForModules(locale, fiatCurrency, addressStyle),
   coreInfo: legacyMode ? core.info : core.systemInfo,
+  userStatus: status,
   addressBook,
 });
 
@@ -457,7 +456,19 @@ walletEvents.once('post-render', function() {
       const { activeAppModule } = store.getState();
       if (activeAppModule && activeAppModule.webview) {
         try {
-          activeAppModule.webview.send('coreInfo-updated', coreInfo);
+          activeAppModule.webview.send('core-info-updated', coreInfo);
+        } catch (err) {}
+      }
+    }
+  );
+
+  observeStore(
+    state => state.user.status,
+    userStatus => {
+      const { activeAppModule } = store.getState();
+      if (activeAppModule && activeAppModule.webview) {
+        try {
+          activeAppModule.webview.send('user-status-updated', userStatus);
         } catch (err) {}
       }
     }

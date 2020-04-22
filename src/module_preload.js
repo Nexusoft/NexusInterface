@@ -281,6 +281,17 @@ global.NEXUS = {
         listener(coreInfo)
       );
     },
+    onUserStatusUpdated: listener => {
+      if (typeof listener !== 'function') {
+        throw new Error(
+          'Expected `listner` to be a `function` type, found: ' +
+            typeof listener
+        );
+      }
+      ipcRenderer.on('user-status-updated', (event, userStatus) =>
+        listener(userStatus)
+      );
+    },
   },
   components: {
     GlobalStyles,
