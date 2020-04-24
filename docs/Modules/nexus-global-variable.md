@@ -397,6 +397,7 @@ Api Whitelist
 
 ```
 system/get/info
+system/get/metrics
 system/list/peers
 system/list/lisp-eids
 system/validate/address
