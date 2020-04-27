@@ -934,6 +934,7 @@ Username is required,Este necesar numele de utilizator,Login
 Password is required,Parola este necesară,Login
 PIN is required,Codul PIN este necesar,Login
 Logged in as %{username},Autentificat ca %{username},Login
+Not being fully synced may of caused this error.,,Login
 Error logging in,Eroare autorizare,Login
 Migrate account,Migrare cont,MigrateAccount
 You have %{amount} NXS in your legacy account.,Ai suma de %{amount} NXS în contul tău legacy.,MigrateAccount

@@ -931,6 +931,7 @@ Username is required,Gebruikersnaam is vereist,Login
 Password is required,Wachtwoord vereist,Login
 PIN is required,Pincode is vereist,Login
 Logged in as %{username},Ingelogd als %{username},Login
+Not being fully synced may of caused this error.,,Login
 Error logging in,Fout bij aanmelden,Login
 Migrate account,Account migreren,MigrateAccount
 You have %{amount} NXS in your legacy account.,U hebt %{amount} NXS in uw legacy account.,MigrateAccount

@@ -933,6 +933,7 @@ Username is required,Se requiere el nombre de usuario,Login
 Password is required,Se requiere contraseña,Login
 PIN is required,El código PIN es necesario,Login
 Logged in as %{username},Sesión iniciada como %{username},Login
+Not being fully synced may of caused this error.,,Login
 Error logging in,Error al iniciar sesión,Login
 Migrate account,Migrar cuenta,MigrateAccount
 You have %{amount} NXS in your legacy account.,Tienes %{amount} NXS en tu cuenta antigua.,MigrateAccount

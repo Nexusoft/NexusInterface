@@ -929,6 +929,7 @@ Username is required,,Login
 Password is required,Passord er påkrevd,Login
 PIN is required,,Login
 Logged in as %{username},,Login
+Not being fully synced may of caused this error.,,Login
 Error logging in,Feil ved innlogging,Login
 Migrate account,,MigrateAccount
 You have %{amount} NXS in your legacy account.,,MigrateAccount

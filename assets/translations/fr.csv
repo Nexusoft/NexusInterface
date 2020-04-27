@@ -930,6 +930,7 @@ Username is required,,Login
 Password is required,Mot de passe requis,Login
 PIN is required,,Login
 Logged in as %{username},,Login
+Not being fully synced may of caused this error.,,Login
 Error logging in,Erreur de connexion,Login
 Migrate account,,MigrateAccount
 You have %{amount} NXS in your legacy account.,,MigrateAccount

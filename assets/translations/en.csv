@@ -935,6 +935,7 @@ Username is required,Username is required,Login
 Password is required,Password is required,Login
 PIN is required,PIN is required,Login
 Logged in as %{username},Logged in as %{username},Login
+Not being fully synced may of caused this error.,Not being fully synced may of caused this error.,Login
 Error logging in,Error logging in,Login
 Migrate account,Migrate account,MigrateAccount
 You have %{amount} NXS in your legacy account.,You have %{amount} NXS in your legacy account.,MigrateAccount
