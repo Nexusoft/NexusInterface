@@ -1,3 +1,19 @@
+# 3.0.4 (2020.5.xx)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v3.0.4)
+
+#### Additions
+
+- 
+
+#### Adjustments
+
+- 
+
+#### Fixes
+
+- Fixed issue where modules saved as ZIP archives would be installed
+
 # 3.0.3 (2020.4.21)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v3.0.3)
