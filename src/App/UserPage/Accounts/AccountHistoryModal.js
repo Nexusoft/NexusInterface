@@ -115,8 +115,7 @@ const tableColumns = [
             OP === 'GENESIS' ||
             OP === 'TRUST' ||
             OP === 'COINBASE' ||
-            OP === 'MIGRATE' ||
-            OP === 'LEGACY'
+            OP === 'MIGRATE' 
           }
         >
           {formatNumber(amount, 6)}

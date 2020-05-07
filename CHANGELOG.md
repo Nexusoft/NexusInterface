@@ -13,6 +13,7 @@
 #### Fixes
 
 - Fixed issue where modules saved as ZIP archives would be installed
+- Legacy Debits in tritium  mode in the account history section now display properly in negative
 
 # 3.0.3 (2020.4.21)
 
