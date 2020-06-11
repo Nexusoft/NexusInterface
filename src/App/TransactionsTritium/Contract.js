@@ -99,7 +99,7 @@ const Account = ({ name, address }) =>
     </>
   );
 
-const creditFrom = contract => {
+const creditFrom = (contract) => {
   switch (contract.for) {
     case 'DEBIT':
       return <Account name={contract.from_name} address={contract.from} />;
@@ -115,7 +115,7 @@ const creditFrom = contract => {
   }
 };
 
-const contractContent = contract => {
+const contractContent = (contract) => {
   switch (contract.OP) {
     case 'WRITE': {
       return (
@@ -230,7 +230,7 @@ const contractContent = contract => {
             <Account name={contract.account_name} address={contract.account} />
           </div>
           <div>
-            from <Hash>{contract.hashkey}</Hash>
+            from <Hash>{contract.trustkey}</Hash>
           </div>
         </>
       );
@@ -282,7 +282,7 @@ const contractContent = contract => {
 const Contract = ({ contract, txid }) => (
   <ContractComponent
     onClick={() => openModal(ContractDetailsModal, { contract, txid })}
-    onContextMenu={e => {
+    onContextMenu={(e) => {
       e.stopPropagation();
       popupContextMenu([
         {
