@@ -73,6 +73,8 @@ const tableColumns = [
         case 'CREDIT':
           if (cell.original.for === 'COINBASE') {
             return <i className="dim">{__('mining')}</i>;
+          } else {
+            return content;
           }
         case 'MIGRATE':
           return trustkey || '';
@@ -93,8 +95,9 @@ const tableColumns = [
         case 'CREDIT':
           if (cell.original.for === 'COINBASE') {
             return <span className="dim">{currentAccount}</span>;
+          } else {
+            return <span className="dim">{content}</span>;
           }
-          return <span className="dim">{content}</span>;
         case 'TRUST':
         case 'GENESIS':
           return <span className="dim">{currentAccount}</span>;
