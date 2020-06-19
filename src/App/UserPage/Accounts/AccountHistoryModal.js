@@ -44,7 +44,7 @@ const tableColumns = [
     id: 'timestamp',
     Header: __('Time'),
     accessor: 'timestamp',
-    Cell: cell =>
+    Cell: (cell) =>
       cell.value ? formatDateTime(cell.value * 1000, timeFormatOptions) : '',
     width: 180,
   },
@@ -57,7 +57,7 @@ const tableColumns = [
   {
     id: 'from',
     Header: __('From'),
-    Cell: cell => {
+    Cell: (cell) => {
       const {
         original: { from_name, from, trustkey, OP },
       } = cell;
@@ -68,10 +68,10 @@ const tableColumns = [
           return <span className="dim">{content}</span>;
         case 'TRUST':
         case 'GENESIS':
-          return <i className="dim">{__('staked')}</i>;
+          return <i className="dim">{__('staking')}</i>;
         case 'CREDIT':
           if (cell.original.for === 'COINBASE') {
-            return <i className="dim">{__('mined')}</i>;
+            return <i className="dim">{__('mining')}</i>;
           }
         case 'MIGRATE':
           return trustkey || '';
@@ -83,7 +83,7 @@ const tableColumns = [
   {
     id: 'to',
     Header: __('To'),
-    Cell: cell => {
+    Cell: (cell) => {
       const {
         original: { to_name, to, account_name, account, OP, currentAccount },
       } = cell;
@@ -115,7 +115,7 @@ const tableColumns = [
             OP === 'GENESIS' ||
             OP === 'TRUST' ||
             OP === 'COINBASE' ||
-            OP === 'MIGRATE' 
+            OP === 'MIGRATE'
           }
         >
           {formatNumber(amount, 6)}
@@ -153,13 +153,13 @@ const Amount = styled.span(({ theme, possitive }) => ({
     content: possitive ? '"+"' : '"-"',
   },
 }));
-@connect(state => ({
+@connect((state) => ({
   showFiat: state.ui.user.balancesShowFiat,
   fiatCurrency: state.settings.fiatCurrency,
   market:
     state.market.cryptocompare.rawNXSvalues &&
     state.market.cryptocompare.rawNXSvalues.find(
-      e => e.name === state.settings.fiatCurrency
+      (e) => e.name === state.settings.fiatCurrency
     ).price,
 }))
 class AccountHistoryModal extends React.Component {
@@ -181,7 +181,7 @@ class AccountHistoryModal extends React.Component {
 
       const contracts = transactions.reduce((contracts, tx) => {
         if (Array.isArray(tx.contracts)) {
-          tx.contracts.forEach(contract => {
+          tx.contracts.forEach((contract) => {
             if (displayedOperations.includes(contract.OP)) {
               contracts.push({
                 ...contract,
@@ -206,7 +206,7 @@ class AccountHistoryModal extends React.Component {
     const { contracts } = this.state;
     return (
       <Modal
-        assignClose={closeModal => {
+        assignClose={(closeModal) => {
           this.closeModal = closeModal;
         }}
       >
@@ -235,7 +235,7 @@ class AccountHistoryModal extends React.Component {
                         <Link
                           as={''}
                           to={''}
-                          onClick={e =>
+                          onClick={(e) =>
                             toggleUserBalanceDisplayFiat(!this.props.showFiat)
                           }
                         >
@@ -341,7 +341,7 @@ class AccountHistoryModal extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   stakeInfo: state.user.stakeInfo,
 });
 
