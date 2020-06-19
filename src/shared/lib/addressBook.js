@@ -38,10 +38,10 @@ function convertOldContact({
     name,
     addresses: [
       ...(notMine || []).map(
-        info => info && convertOldAddressInfo({ ...info, isMine: false })
+        (info) => info && convertOldAddressInfo({ ...info, isMine: false })
       ),
       ...(mine || []).map(
-        info => info && convertOldAddressInfo({ ...info, isMine: true })
+        (info) => info && convertOldAddressInfo({ ...info, isMine: true })
       ),
     ],
     phoneNumber,
@@ -58,11 +58,6 @@ function convertOldAddressInfo({ label, address, isMine }) {
     isMine,
   };
 }
-
-/**
- * Public API
- * =============================================================================
- */
 
 function loadAddressBookFromFile() {
   const schema = {
@@ -147,7 +142,21 @@ function saveAddressBookToFile(addressBook) {
 
 export const loadAddressBook = loadAddressBookFromFile;
 
-export const addNewContact = contact => {
+export const lookupAddress = (address) => {
+  const { addressBook } = store.getState();
+  for (const contact of Object.values(addressBook)) {
+    const match =
+      contact.addresses && contact.addresses.find((a) => a.address === address);
+    if (match) {
+      return {
+        name: contact.name,
+        label: match.label,
+      };
+    }
+  }
+};
+
+export const addNewContact = (contact) => {
   const result = store.dispatch({
     type: TYPE.ADD_NEW_CONTACT,
     payload: contact,
@@ -167,7 +176,7 @@ export const updateContact = (name, contact) => {
   return result;
 };
 
-export const deleteContact = name => {
+export const deleteContact = (name) => {
   const result = store.dispatch({
     type: TYPE.DELETE_CONTACT,
     payload: name,
@@ -177,14 +186,14 @@ export const deleteContact = name => {
   return result;
 };
 
-export const searchContact = query => {
+export const searchContact = (query) => {
   store.dispatch({
     type: TYPE.CONTACT_SEARCH,
     payload: query,
   });
 };
 
-export const selectContact = index => {
+export const selectContact = (index) => {
   store.dispatch({
     type: TYPE.SELECT_CONTACT,
     payload: index,

@@ -10,6 +10,7 @@ import FieldSet from 'components/FieldSet';
 import listAll from 'utils/listAll';
 import { formatDateTime, formatNumber, formatCurrency } from 'lib/intl';
 import { openModal, toggleUserBalanceDisplayFiat } from 'lib/ui';
+import { lookupAddress } from 'lib/addressBook';
 import { handleError } from 'utils/form';
 
 import { totalBalance } from './utils';
@@ -39,6 +40,19 @@ const timeFormatOptions = {
   hour12: false,
 };
 
+const accountDisplay = (accountName, address) => {
+  if (accountName) return accountName;
+  if (address) {
+    const match = lookupAddress(address);
+    if (match) {
+      return match.name + (match.label ? ' - ' + match.label : '');
+    } else {
+      return address;
+    }
+  }
+  return '';
+};
+
 const tableColumns = [
   {
     id: 'timestamp',
@@ -61,7 +75,7 @@ const tableColumns = [
       const {
         original: { from_name, from, trustkey, OP },
       } = cell;
-      const content = from_name || from || '';
+      const content = accountDisplay(from_name, from);
       switch (OP) {
         case 'DEBIT':
         case 'FEE':
@@ -90,7 +104,7 @@ const tableColumns = [
       const {
         original: { to_name, to, account_name, account, OP, currentAccount },
       } = cell;
-      const content = to_name || to || '';
+      const content = accountDisplay(to_name, to);
       switch (OP) {
         case 'CREDIT':
           if (cell.original.for === 'COINBASE') {
