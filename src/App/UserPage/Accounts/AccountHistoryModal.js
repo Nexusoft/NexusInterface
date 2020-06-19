@@ -65,6 +65,7 @@ const tableColumns = [
       switch (OP) {
         case 'DEBIT':
         case 'FEE':
+        case 'LEGACY':
           return <span className="dim">{content}</span>;
         case 'TRUST':
         case 'GENESIS':
