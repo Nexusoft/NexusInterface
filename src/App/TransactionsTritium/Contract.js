@@ -8,6 +8,7 @@ import { openModal } from 'lib/ui';
 import { popupContextMenu } from 'lib/contextMenu';
 import { formatNumber } from 'lib/intl';
 import { getDeltaSign } from 'lib/tritiumTransactions';
+import { lookupAddress } from 'lib/addressBook';
 import { consts, timing } from 'styles';
 import * as color from 'utils/color';
 
@@ -85,19 +86,25 @@ const Hash = ({ children, ...rest }) => {
   );
 };
 
-const Account = ({ name, address }) =>
-  name ? (
-    <>
-      account{' '}
-      <Tooltip.Trigger tooltip={address}>
-        <AccountName>{name}</AccountName>
-      </Tooltip.Trigger>
-    </>
+const accountLabel = (name, address) => {
+  if (name) return name;
+  if (!address) return null;
+  const match = lookupAddress(address);
+  if (match) return match.name + (match.label ? ' - ' + match.label : '');
+  else return null;
+};
+
+const Account = ({ name, address }) => {
+  const label = accountLabel(name, address);
+
+  return label ? (
+    <Tooltip.Trigger tooltip={address}>
+      <AccountName>{label}</AccountName>
+    </Tooltip.Trigger>
   ) : (
-    <>
-      address <Hash>{address}</Hash>
-    </>
+    <Hash>{address}</Hash>
   );
+};
 
 const creditFrom = (contract) => {
   switch (contract.for) {
