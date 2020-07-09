@@ -240,12 +240,8 @@ class SettingsCore extends Component {
         question: __('Exit manual Core mode?'),
         note: __('(This will restart your Core)'),
         callbackYes: async () => {
-          try {
-            await stopCore();
-          } finally {
-            updateSettings({ manualDaemon: false });
-            await startCore();
-          }
+          updateSettings({ manualDaemon: false });
+          await startCore();
         },
       });
     } else {
