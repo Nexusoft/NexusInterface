@@ -46,7 +46,41 @@ const RestartContainer = styled.div({
   alignItems: 'center',
 });
 
-const removeWhiteSpaces = value => (value || '').replace(' ', '');
+const CoreModes = styled.div({
+  display: 'flex',
+  justifyContent: 'center',
+  marginTop: 10,
+  marginBottom: 20,
+});
+
+const EmbeddedMode = styled(Button)(
+  {
+    borderTopRightRadius: 0,
+    borderBottomRightRadius: 0,
+    position: 'relative',
+  },
+  ({ active }) =>
+    active && {
+      zIndex: 1,
+      cursor: 'default',
+    }
+);
+
+const ManualMode = styled(Button)(
+  {
+    borderTopLeftRadius: 0,
+    borderBottomLeftRadius: 0,
+    marginLeft: -1,
+    position: 'relative',
+  },
+  ({ active }) =>
+    active && {
+      zIndex: 1,
+      cursor: 'default',
+    }
+);
+
+const removeWhiteSpaces = (value) => (value || '').replace(' ', '');
 
 const formKeys = [
   'enableMining',
@@ -67,12 +101,12 @@ const getInitialValues = (() => {
   let lastOutput = null;
   let lastInput = null;
 
-  return settings => {
+  return (settings) => {
     if (settings === lastInput) return lastOutput;
 
     let changed = false;
     const output = lastOutput || {};
-    formKeys.forEach(key => {
+    formKeys.forEach((key) => {
       if (settings[key] !== output[key]) {
         changed = true;
       }
@@ -88,7 +122,7 @@ const getInitialValues = (() => {
   };
 })();
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const {
     settings,
     ui: {
@@ -164,7 +198,7 @@ const mapStateToProps = state => {
     }
     return errors;
   },
-  onSubmit: async values => {
+  onSubmit: async (values) => {
     return updateSettings(values);
   },
   onSubmitSuccess: (result, dispatch, props) => {
@@ -179,7 +213,7 @@ const mapStateToProps = state => {
 class SettingsCore extends Component {
   switchId = newUID();
 
-  handleRestartSwitch = e => {
+  handleRestartSwitch = (e) => {
     setCoreSettingsRestart(!!e.target.checked);
   };
 
@@ -250,7 +284,7 @@ class SettingsCore extends Component {
     }
   };
 
-  turnOffTestNet = e => {
+  turnOffTestNet = (e) => {
     this.props.change('testnetIteration', null);
   };
 
@@ -273,6 +307,27 @@ class SettingsCore extends Component {
     return (
       <>
         <form onSubmit={handleSubmit} style={{ paddingBottom: dirty ? 55 : 0 }}>
+          <CoreModes>
+            <EmbeddedMode
+              skin={manualDaemon ? 'default' : 'filled-primary'}
+              active={!manualDaemon}
+              onClick={
+                manualDaemon ? this.confirmSwitchManualDaemon : undefined
+              }
+            >
+              {__('Embedded Core')}
+            </EmbeddedMode>
+            <ManualMode
+              skin={manualDaemon ? 'filled-primary' : 'default'}
+              active={manualDaemon}
+              onClick={
+                manualDaemon ? undefined : this.confirmSwitchManualDaemon
+              }
+            >
+              {__('Manual Core')}
+            </ManualMode>
+          </CoreModes>
+
           {!manualDaemon && (
             <>
               <SettingsField
@@ -295,7 +350,7 @@ class SettingsCore extends Component {
                         'IP/Ports allowed to mine to. Separate by <b>;</b> . Wildcards supported only in IP',
                         undefined,
                         {
-                          b: txt => <b>{txt}</b>,
+                          b: (txt) => <b>{txt}</b>,
                         }
                       )}
                     >
@@ -346,21 +401,6 @@ class SettingsCore extends Component {
                   </Button>
                 </SettingsField>
               )}
-
-              <SettingsField
-                connectLabel
-                label={__('Clear peer connections')}
-                subLabel={__(
-                  'Clear all stored peer connections and restart Nexus'
-                )}
-              >
-                <Button
-                  onClick={this.clearPeerConnections}
-                  style={{ height: consts.inputHeightEm + 'em' }}
-                >
-                  {__('Clear')}
-                </Button>
-              </SettingsField>
 
               <SettingsField
                 connectLabel
@@ -425,21 +465,23 @@ class SettingsCore extends Component {
                   <Field name="avatarMode" component={Switch.RF} />
                 </SettingsField>
               )}
+
+              <SettingsField
+                connectLabel
+                label={__('Clear peer connections')}
+                subLabel={__(
+                  'Clear all stored peer connections and restart Nexus'
+                )}
+              >
+                <Button
+                  onClick={this.clearPeerConnections}
+                  style={{ height: consts.inputHeightEm + 'em' }}
+                >
+                  {__('Clear')}
+                </Button>
+              </SettingsField>
             </>
           )}
-
-          <SettingsField
-            connectLabel
-            label={__('Manual Core mode')}
-            subLabel={__(
-              'Enable manual Core mode if you are running the Nexus Core manually outside of the wallet.'
-            )}
-          >
-            <Switch
-              checked={manualDaemon}
-              onChange={this.confirmSwitchManualDaemon}
-            />
-          </SettingsField>
 
           {!!manualDaemon && (
             <>
