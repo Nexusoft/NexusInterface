@@ -66,7 +66,7 @@ const ExtraSection = styled.div({
 
     return errors;
   },
-  onSubmit: ({ username, password, pin }) =>
+  onSubmit: async ({ username, password, pin }) =>
     apiPost('users/login/user', {
       username,
       password,
@@ -90,13 +90,13 @@ const ExtraSection = styled.div({
   },
   onSubmitFail: (errors, dispatch, submitError, props) => {
     const submissionError =
-      submitError.code === -139 && props.syncing
+      props.syncing && submitError && submitError.code === -139
         ? {
             ...submitError,
             message:
               submitError.message +
               '. ' +
-              __('Not being fully synced may of caused this error.'),
+              __('Not being fully synced may have caused this error.'),
           }
         : submitError;
     errorHandler(__('Error logging in'))(errors, dispatch, submissionError);
@@ -115,7 +115,7 @@ class Login extends Component {
     return (
       <Modal
         maxWidth={500}
-        assignClose={closeModal => (this.closeModal = closeModal)}
+        assignClose={(closeModal) => (this.closeModal = closeModal)}
       >
         <Modal.Header>{__('Log in')}</Modal.Header>
         <Modal.Body>
