@@ -58,7 +58,7 @@ class RecipientField extends Component {
    *
    * @memberof RecipientField
    */
-  handleSelect = address => {
+  handleSelect = (address) => {
     this.props.change(this.props.input.name, address);
   };
 
@@ -74,8 +74,10 @@ class RecipientField extends Component {
   returnFilteredSuggestions(suggestions) {
     const { name, token: tokenAddress, address } = this.props.sendFrom;
     return suggestions.filter(
-      account =>
-        (account.token === tokenAddress || account.token === address) &&
+      (account) =>
+        (!tokenAddress ||
+          account.token === tokenAddress ||
+          account.token === address) &&
         account.name !== name &&
         account.name !== address
     );
