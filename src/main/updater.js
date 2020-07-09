@@ -18,7 +18,7 @@ const updaterEvents = [
   'download-progress',
   'update-downloaded',
 ];
-updaterEvents.forEach(eventName => {
+updaterEvents.forEach((eventName) => {
   autoUpdater.on(eventName, (...args) => {
     if (global.mainWindow) {
       global.mainWindow.webContents.send('updater:' + eventName, ...args);

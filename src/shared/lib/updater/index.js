@@ -18,7 +18,7 @@ __ = __context('AutoUpdate');
 const autoUpdateInterval = 2 * 60 * 60 * 1000; // 2 hours
 let timerId = null;
 
-const setUpdaterState = state => {
+const setUpdaterState = (state) => {
   store.dispatch({
     type: TYPE.SET_UPDATER_STATE,
     payload: state,
@@ -105,7 +105,7 @@ export function stopAutoUpdate() {
  * Initialize the Updater
  *
  */
-walletEvents.once('post-render', function() {
+walletEvents.once('post-render', function () {
   ipcRenderer.on('updater:update-available', (event, updateInfo) => {
     showNotification(
       __('New wallet version %{version} available. Downloading...', {

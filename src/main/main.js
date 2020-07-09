@@ -23,7 +23,7 @@ app.setAppUserModelId(APP_ID);
 // cannot be caught (net::ERR_HTTP_RESPONSE_CODE_FAILURE).
 // This should be removed when the issue is resolved.
 // A similar issue: https://github.com/electron-userland/electron-builder/issues/2451
-process.on('uncaughtException', err => {
+process.on('uncaughtException', (err) => {
   console.error('Uncaught exception:', err);
 });
 
@@ -32,8 +32,12 @@ process.on('uncaughtException', err => {
 
 // App
 ipcMain.handle('is-force-quit', async () => global.forceQuit);
-ipcMain.handle('quit-app', () => app.quit());
-ipcMain.handle('exit-app', () => app.exit());
+ipcMain.handle('quit-app', async () => {
+  app.quit();
+});
+ipcMain.handle('exit-app', () => {
+  app.exit();
+});
 ipcMain.handle('hide-window', () => mainWindow.hide());
 ipcMain.handle('hide-dock', () => app.dock.hide());
 ipcMain.handle('show-open-dialog', (event, options) =>
@@ -79,7 +83,7 @@ ipcMain.handle('quit-and-install-update', (event, ...args) =>
 ipcMain.on('get-path', (event, name) => {
   event.returnValue = app.getPath(name);
 });
-ipcMain.on('get-file-server-domain', event => {
+ipcMain.on('get-file-server-domain', (event) => {
   event.returnValue = getDomain();
 });
 
@@ -106,9 +110,9 @@ if (!gotTheLock) {
   // Application Startup
   app.on('ready', async () => {
     global.mainWindow = mainWindow = await createWindow();
-    mainWindow.on('close', (...args) =>
-      mainWindow.webContents.send('window-close', ...args)
-    );
+    mainWindow.on('close', () => {
+      mainWindow.webContents.send('window-close');
+    });
     global.tray = setupTray(mainWindow);
   });
 }

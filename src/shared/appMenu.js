@@ -20,7 +20,7 @@ import AboutModal from 'components/AboutModal';
 
 // Because functions can't be passed through IPC messages so we have
 // to preprocess menu template so that click handlers function properly
-const preprocess = menuItems => {
+const preprocess = (menuItems) => {
   Object.entries(menuItems).forEach(([id, item]) => {
     // Only add id if menu item has a click handler
     if (item.click) {
@@ -115,7 +115,7 @@ const menuItems = preprocess({
       if (!backupDirExists) {
         fs.mkdirSync(BackupDir);
       }
-      shell.openItem(BackupDir);
+      shell.openPath(BackupDir);
     },
   },
   cut: {
@@ -221,13 +221,13 @@ const menuItems = preprocess({
     label: __('Open Core Data Folder'),
     click: () => {
       const state = store.getState();
-      shell.openItem(state.settings.coreDataDir);
+      shell.openPath(state.settings.coreDataDir);
     },
   },
   openInterfaceDataDir: {
     label: __('Open Interface Data Folder'),
     click: () => {
-      shell.openItem(walletDataDir);
+      shell.openPath(walletDataDir);
     },
   },
   updaterIdle: {
@@ -302,7 +302,7 @@ function buildDarwinTemplate() {
       legacyMode ? menuItems.switchTritiumMode : menuItems.switchLegacyMode,
       menuItems.separator,
       menuItems.quitNexus,
-    ].filter(e => e),
+    ].filter((e) => e),
   };
 
   //TODO: darwin does not like null here , so I replaced it with separator which will colapse into nothing. But rework this for next build.
@@ -327,7 +327,7 @@ function buildDarwinTemplate() {
       legacyMode ? menuItems.keyManagement : null,
       menuItems.styleSettings,
       menuItems.moduleSettings,
-    ].filter(e => e),
+    ].filter((e) => e),
   };
 
   const subMenuWindow = {
@@ -394,7 +394,7 @@ function buildDefaultTemplate() {
       legacyMode ? menuItems.switchTritiumMode : menuItems.switchLegacyMode,
       menuItems.separator,
       menuItems.quitNexus,
-    ].filter(e => e),
+    ].filter((e) => e),
   };
 
   const subMenuSettings = {
@@ -405,7 +405,7 @@ function buildDefaultTemplate() {
       legacyMode ? menuItems.keyManagement : null,
       menuItems.styleSettings,
       menuItems.moduleSettings,
-    ].filter(e => e),
+    ].filter((e) => e),
   };
   const subMenuView = {
     label: __('View'),
@@ -469,11 +469,14 @@ function rebuildMenu() {
 
 // Update the updater menu item when the updater state changes
 // Changing menu item labels directly has no effect so we have to rebuild the whole menu
-walletEvents.once('post-render', function() {
+walletEvents.once('post-render', function () {
   buildMenu();
-  observeStore(state => state.updater.state, rebuildMenu);
+  observeStore((state) => state.updater.state, rebuildMenu);
   observeStore(isCoreConnected, rebuildMenu);
-  observeStore(state => state.settings && state.settings.devMode, rebuildMenu);
-  observeStore(state => state.activeAppModule, rebuildMenu);
-  observeStore(state => state.settings.manualDaemon, rebuildMenu);
+  observeStore(
+    (state) => state.settings && state.settings.devMode,
+    rebuildMenu
+  );
+  observeStore((state) => state.activeAppModule, rebuildMenu);
+  observeStore((state) => state.settings.manualDaemon, rebuildMenu);
 });

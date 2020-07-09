@@ -33,10 +33,10 @@ export async function openVirtualKeyboard(options) {
   bw.on('closed', () => {
     global.mainWindow.webContents.send('keyboard-closed');
   });
-  bw.webContents.on('ipc-message', (evt, channel, ...args) => {
+  bw.webContents.on('ipc-message', (evt, channel, text) => {
     switch (channel) {
       case 'keyboard-input-change': {
-        global.mainWindow.webContents.send('keyboard-input-change', ...args);
+        global.mainWindow.webContents.send('keyboard-input-change', text);
         break;
       }
       case 'close-keyboard': {

@@ -38,7 +38,7 @@ const FailedModule = styled.div(({ theme }) => ({
  * @class SettingsModules
  * @extends {React.Component}
  */
-@connect(state => ({
+@connect((state) => ({
   modules: state.modules,
   failedModules: state.failedModules,
   devMode: state.settings.devMode,
@@ -80,7 +80,7 @@ class SettingsModules extends React.Component {
               <FailedModule
                 key={name}
                 onClick={() => {
-                  shell.openItem(path);
+                  shell.openPath(path);
                 }}
               >
                 <Tooltip.Trigger tooltip={message}>
