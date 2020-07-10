@@ -90,10 +90,11 @@ const formKeys = [
   'testnetIteration',
   'avatarMode',
   'coreDataDir',
-  legacyMode ? 'manualDaemonIP' : 'manualDaemonApiIP',
-  legacyMode ? 'manualDaemonPort' : 'manualDaemonApiPort',
+  'manualDaemonIP',
+  'manualDaemonPort',
   'manualDaemonUser',
   'manualDaemonPassword',
+  'manualDaemonApiPort',
   'manualDaemonApiUser',
   'manualDaemonApiPassword',
 ];
@@ -159,12 +160,13 @@ const mapStateToProps = (state) => {
   validate: (
     {
       verboseLevel,
-      manualDaemonUser,
-      manualDaemonPassword,
       manualDaemonIP,
       manualDaemonPort,
-      manualDaemonApiIP,
+      manualDaemonUser,
+      manualDaemonPassword,
       manualDaemonApiPort,
+      manualDaemonApiUser,
+      manualDaemonApiPassword,
     },
     props
   ) => {
@@ -174,25 +176,27 @@ const mapStateToProps = (state) => {
     }
 
     if (props.manualDaemon) {
+      if (!manualDaemonIP) {
+        errors.manualDaemonIP = __('Manual Core IP is required');
+      }
+      if (!manualDaemonPort) {
+        errors.manualDaemonPort = __('RPC port is required');
+      }
       if (!manualDaemonUser) {
-        errors.manualDaemonUser = __('Manual Core username is required');
+        errors.manualDaemonUser = __('RPC username is required');
       }
       if (!manualDaemonPassword) {
-        errors.manualDaemonPassword = __('Manual Core password is required');
+        errors.manualDaemonPassword = __('RPC password is required');
       }
-      if (legacyMode) {
-        if (!manualDaemonIP) {
-          errors.manualDaemonIP = __('Manual Core IP is required');
-        }
-        if (!manualDaemonPort) {
-          errors.manualDaemonPort = __('Manual Core port is required');
-        }
-      } else {
-        if (!manualDaemonApiIP) {
-          errors.manualDaemonApiIP = __('Manual Core IP is required');
-        }
+      if (!legacyMode) {
         if (!manualDaemonApiPort) {
-          errors.manualDaemonApiPort = __('Manual Core port is required');
+          errors.manualDaemonApiPort = __('API port is required');
+        }
+        if (!manualDaemonApiUser) {
+          errors.manualDaemonApiUser = __('API username is required');
+        }
+        if (!manualDaemonApiPassword) {
+          errors.manualDaemonApiPassword = __('API password is required');
         }
       }
     }
@@ -369,35 +373,6 @@ class SettingsCore extends Component {
                 <Field name="enableStaking" component={Switch.RF} />
               </SettingsField>
 
-              {legacyMode && (
-                <SettingsField
-                  connectLabel
-                  label={__('Rescan wallet')}
-                  subLabel={__(
-                    'Used to correct transaction/balance issues, scans over every block in the database. Could take up to 10 minutes.'
-                  )}
-                >
-                  <ReScanButton disabled={!coreConnected} />
-                </SettingsField>
-              )}
-
-              {legacyMode && (
-                <SettingsField
-                  connectLabel
-                  label={__('Reload transaction history')}
-                  subLabel={__(
-                    'Restart Nexus core with -walletclean parameter to clean out and reload all transaction history'
-                  )}
-                >
-                  <Button
-                    onClick={this.reloadTxHistory}
-                    style={{ height: consts.inputHeightEm + 'em' }}
-                  >
-                    {__('Reload')}
-                  </Button>
-                </SettingsField>
-              )}
-
               <SettingsField
                 connectLabel
                 label={__('Verbose level')}
@@ -451,15 +426,42 @@ class SettingsCore extends Component {
               </SettingsField>
 
               {legacyMode && (
-                <SettingsField
-                  connectLabel
-                  label={__('Avatar Mode')}
-                  subLabel={__(
-                    'Disabling Avatar will make the core use a separate change key'
-                  )}
-                >
-                  <Field name="avatarMode" component={Switch.RF} />
-                </SettingsField>
+                <>
+                  <SettingsField
+                    connectLabel
+                    label={__('Avatar Mode')}
+                    subLabel={__(
+                      'Disabling Avatar will make the core use a separate change key'
+                    )}
+                  >
+                    <Field name="avatarMode" component={Switch.RF} />
+                  </SettingsField>
+
+                  <SettingsField
+                    connectLabel
+                    label={__('Rescan wallet')}
+                    subLabel={__(
+                      'Used to correct transaction/balance issues, scans over every block in the database. Could take up to 10 minutes.'
+                    )}
+                  >
+                    <ReScanButton disabled={!coreConnected} />
+                  </SettingsField>
+
+                  <SettingsField
+                    connectLabel
+                    label={__('Reload transaction history')}
+                    subLabel={__(
+                      'Restart Nexus core with -walletclean parameter to clean out and reload all transaction history'
+                    )}
+                  >
+                    <Button
+                      onClick={this.reloadTxHistory}
+                      style={{ height: consts.inputHeightEm + 'em' }}
+                    >
+                      {__('Reload')}
+                    </Button>
+                  </SettingsField>
+                </>
               )}
 
               <SettingsField
@@ -484,42 +486,81 @@ class SettingsCore extends Component {
               <SettingsField
                 indent={1}
                 connectLabel
-                label={__('Username')}
-                subLabel={__('Username configured for manual Core.')}
-              >
-                <Field
-                  component={TextField.RF}
-                  name={legacyMode ? 'manualDaemonUser' : 'manualDaemonApiUser'}
-                  size="12"
-                />
-              </SettingsField>
-
-              <SettingsField
-                indent={1}
-                connectLabel
-                label={__('Password')}
-                subLabel={__('Password configured for manual Core.')}
-              >
-                <Field
-                  component={TextField.RF}
-                  name={
-                    legacyMode
-                      ? 'manualDaemonPassword'
-                      : 'manualDaemonApiPassword'
-                  }
-                  size="12"
-                />
-              </SettingsField>
-
-              <SettingsField
-                indent={1}
-                connectLabel
                 label={__('IP address')}
-                subLabel={__('IP address configured for manual Core.')}
+                subLabel={__('Manual Core IP address')}
               >
                 <Field
                   component={TextField.RF}
-                  name={legacyMode ? 'manualDaemonIP' : 'manualDaemonApiIP'}
+                  name="manualDaemonIP"
+                  size="12"
+                />
+              </SettingsField>
+
+              {!legacyMode && (
+                <>
+                  <SettingsField
+                    indent={1}
+                    connectLabel
+                    label={__('API Port')}
+                    subLabel={__('Nexus API server Port')}
+                  >
+                    <Field
+                      component={TextField.RF}
+                      name="manualDaemonApiPort"
+                      size="5"
+                    />
+                  </SettingsField>
+
+                  <SettingsField
+                    indent={1}
+                    connectLabel
+                    label={__('API Username')}
+                    subLabel={__('Nexus API server Username')}
+                  >
+                    <Field
+                      component={TextField.RF}
+                      name="manualDaemonApiUser"
+                      size="12"
+                    />
+                  </SettingsField>
+
+                  <SettingsField
+                    indent={1}
+                    connectLabel
+                    label={__('API Password')}
+                    subLabel={__('Nexus API server Password')}
+                  >
+                    <Field
+                      component={TextField.RF}
+                      name="manualDaemonApiPassword"
+                      size="12"
+                    />
+                  </SettingsField>
+                </>
+              )}
+
+              <SettingsField
+                indent={1}
+                connectLabel
+                label={__('RPC Port')}
+                subLabel={__('Nexus RPC server Port')}
+              >
+                <Field
+                  component={TextField.RF}
+                  name="manualDaemonPort"
+                  size="5"
+                />
+              </SettingsField>
+
+              <SettingsField
+                indent={1}
+                connectLabel
+                label={__('RPC Username')}
+                subLabel={__('Nexus RPC server Username')}
+              >
+                <Field
+                  component={TextField.RF}
+                  name="manualDaemonUser"
                   size="12"
                 />
               </SettingsField>
@@ -527,13 +568,13 @@ class SettingsCore extends Component {
               <SettingsField
                 indent={1}
                 connectLabel
-                label={__('Port')}
-                subLabel={__('Port configured for manual Core.')}
+                label={__('RPC Password')}
+                subLabel={__('Nexus RPC server Password')}
               >
                 <Field
                   component={TextField.RF}
-                  name={legacyMode ? 'manualDaemonPort' : 'manualDaemonApiPort'}
-                  size="5"
+                  name="manualDaemonPassword"
+                  size="12"
                 />
               </SettingsField>
             </>

@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import { apiPost } from 'lib/tritiumApi';
 import Modal from 'components/Modal';
 import FormField from 'components/FormField';
-import TextField from 'components/TextField';
 import TextFieldWithKeyboard from 'components/TextFieldWithKeyboard';
 import Button from 'components/Button';
 import NewUserModal from 'components/NewUserModal';
