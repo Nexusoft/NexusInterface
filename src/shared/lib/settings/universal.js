@@ -85,7 +85,7 @@ export const defaultSettings = {
 
 function filterValidSettings(settings) {
   const validSettings = {};
-  Object.keys(settings || {}).map(key => {
+  Object.keys(settings || {}).map((key) => {
     if (defaultSettings.hasOwnProperty(key)) {
       validSettings[key] = settings[key];
     } else {
@@ -105,6 +105,11 @@ function writeSettings(settings) {
 
 export function loadSettingsFromFile() {
   const customSettings = readSettings();
+  // Deprecating manualDaemonApiIP, copy to manualDaemonIP if manualDaemonApiIP is configured
+  const { manualDaemonIP, manualDaemonApiIP } = customSettings;
+  if (manualDaemonApiIP && !manualDaemonIP) {
+    updateSettingsFile({ manualDaemonIP: manualDaemonApiIP });
+  }
   return { ...defaultSettings, ...customSettings };
 }
 
