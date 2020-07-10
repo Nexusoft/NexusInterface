@@ -24,10 +24,11 @@ export const getAccountOptions = memoize((myAccounts, myTokens) => {
       indent: false,
     });
     options.push(
-      ...myAccounts.map(acc => ({
+      ...myAccounts.map((acc) => ({
         value: acc.name || acc.address,
-        display: `${acc.name || acc.address} (${acc.balance} ${acc.token_name ||
-          'Tokens'})`,
+        display: `${acc.name || acc.address} (${acc.balance} ${
+          acc.token_name || 'Tokens'
+        })`,
         indent: true,
       }))
     );
@@ -40,11 +41,11 @@ export const getAccountOptions = memoize((myAccounts, myTokens) => {
       indent: false,
     });
     options.push(
-      ...myTokens.map(token => ({
+      ...myTokens.map((token) => ({
         value: token.name || token.address,
-        display: `${token.name || token.address} (${
-          token.balance
-        } ${token.name || 'Tokens'})`,
+        display: `${token.name || token.address} (${token.balance} ${
+          token.name || 'Tokens'
+        })`,
         indent: true,
       }))
     );
@@ -56,8 +57,8 @@ export const getAccountOptions = memoize((myAccounts, myTokens) => {
 export const getAccountBalance = memoize(
   (accountName, myAccounts, myTokens) => {
     const account =
-      myAccounts && myAccounts.find(acc => acc.name === accountName);
-    const token = myTokens && myTokens(tkn => tkn.name === accountName);
+      myAccounts && myAccounts.find((acc) => acc.name === accountName);
+    const token = myTokens && myTokens((tkn) => tkn.name === accountName);
     return account && account.balance;
   }
 );
@@ -66,19 +67,19 @@ export const getAccountInfo = memoize((accountName, myAccounts, myTokens) => {
   const account =
     myAccounts &&
     myAccounts.find(
-      acc => acc.name === accountName || acc.address === accountName
+      (acc) => acc.name === accountName || acc.address === accountName
     );
   const token =
     myTokens &&
     myTokens.find(
-      tkn => tkn.name === accountName || tkn.address === accountName
+      (tkn) => tkn.name === accountName || tkn.address === accountName
     );
   return account || token || { balance: 0 };
 });
 
 export const getNxsFiatPrice = memoize((rawNXSvalues, fiatCurrency) => {
   if (rawNXSvalues) {
-    const marketInfo = rawNXSvalues.find(e => e.name === fiatCurrency);
+    const marketInfo = rawNXSvalues.find((e) => e.name === fiatCurrency);
     if (marketInfo) {
       return marketInfo.price;
     }
@@ -89,7 +90,7 @@ export const getNxsFiatPrice = memoize((rawNXSvalues, fiatCurrency) => {
 export const getAddressNameMap = memoize((addressBook, myTritiumAccounts) => {
   const map = {};
   if (addressBook) {
-    Object.values(addressBook).forEach(contact => {
+    Object.values(addressBook).forEach((contact) => {
       if (contact.addresses) {
         contact.addresses.forEach(({ address, label }) => {
           map[address] = contact.name + (label ? ' - ' + label : '');
@@ -98,7 +99,7 @@ export const getAddressNameMap = memoize((addressBook, myTritiumAccounts) => {
     });
   }
   if (myTritiumAccounts) {
-    myTritiumAccounts.forEach(element => {
+    myTritiumAccounts.forEach((element) => {
       map[element.address] = element.name;
     });
   }
@@ -115,10 +116,10 @@ export const getRecipientSuggestions = memoize(
     //console.log(addressBook);
     const suggestions = [];
     if (addressBook) {
-      Object.values(addressBook).forEach(contact => {
+      Object.values(addressBook).forEach((contact) => {
         if (contact.addresses) {
           contact.addresses
-            .filter(e => !e.address.startsWith('a'))
+            .filter((e) => !e.address.startsWith('a'))
             .forEach(({ address, label, isMine }) => {
               if (!isMine) {
                 suggestions.push({
@@ -140,7 +141,7 @@ export const getRecipientSuggestions = memoize(
       });
     }
     if (myTritiumAccounts) {
-      myTritiumAccounts.forEach(element => {
+      myTritiumAccounts.forEach((element) => {
         suggestions.push({
           name: element.name || element.address,
           value: element.address,
@@ -148,8 +149,9 @@ export const getRecipientSuggestions = memoize(
           display: (
             <span>
               {element.name} {'   '}
-              <TokenRecipientName>{`(${element.token_name ||
-                'Tokens'})`}</TokenRecipientName>{' '}
+              <TokenRecipientName>{`(${
+                element.token_name || 'Tokens'
+              })`}</TokenRecipientName>{' '}
               <Address>{element.address}</Address>
             </span>
           ),
@@ -160,6 +162,6 @@ export const getRecipientSuggestions = memoize(
   }
 );
 
-export const getRegisteredFieldNames = memoize(registeredFields =>
+export const getRegisteredFieldNames = memoize((registeredFields) =>
   Object.keys(registeredFields || {})
 );

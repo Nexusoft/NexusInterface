@@ -4,7 +4,7 @@ import { formatDateTime } from 'lib/intl';
 
 __ = __context('Transactions');
 
-const getThresholdDate = timeSpan => {
+const getThresholdDate = (timeSpan) => {
   const now = new Date();
   switch (timeSpan) {
     case 'week':
@@ -19,7 +19,7 @@ const getThresholdDate = timeSpan => {
 };
 
 export const getTransactionsList = memoize(
-  txMap => txMap && Object.values(txMap)
+  (txMap) => txMap && Object.values(txMap)
 );
 
 export const withFakeTxs = memoize(
@@ -29,7 +29,7 @@ export const withFakeTxs = memoize(
 export const getFilteredTransactions = memoize(
   (allTransactions, account, addressQuery, category, minAmount, timeSpan) =>
     allTransactions &&
-    allTransactions.filter(tx => {
+    allTransactions.filter((tx) => {
       // Filter by Address
       if (
         addressQuery &&
@@ -71,9 +71,9 @@ const timeFormatOptions = {
 };
 
 export const getChartData = memoize(
-  transactions =>
+  (transactions) =>
     transactions &&
-    transactions.map(tx => ({
+    transactions.map((tx) => ({
       a: formatDateTime(tx.time * 1000, timeFormatOptions),
       b: tx.amount,
       category: tx.category,
@@ -81,13 +81,13 @@ export const getChartData = memoize(
     }))
 );
 
-export const getAccountOptions = memoize(myAccounts => [
+export const getAccountOptions = memoize((myAccounts) => [
   {
     value: null,
     display: __('All Accounts'),
   },
   ...(myAccounts
-    ? myAccounts.map(acc => ({
+    ? myAccounts.map((acc) => ({
         value: acc.account,
         display: acc.account,
       }))

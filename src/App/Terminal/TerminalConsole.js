@@ -27,7 +27,8 @@ __ = __context('Console.Console');
 const filterCommands = memoize((commandList, inputValue) => {
   if (!commandList || !inputValue) return [];
   return commandList.filter(
-    cmd => !!cmd && cmd.value.toLowerCase().startsWith(inputValue.toLowerCase())
+    (cmd) =>
+      !!cmd && cmd.value.toLowerCase().startsWith(inputValue.toLowerCase())
   );
 });
 
@@ -36,7 +37,7 @@ const consoleInputSelector = memoize(
     historyIndex === -1 ? currentCommand : commandHistory[historyIndex]
 );
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const {
     ui: {
       console: {
@@ -126,13 +127,13 @@ class TerminalConsole extends Component {
     const commandList = result
       .split('\n')
       .filter(
-        c =>
+        (c) =>
           c &&
           typeof c === 'string' &&
           c !== 'please enable -richlist to use this command' &&
           !c.startsWith(' ')
       ) // Tritium added some extra comments that are not commands so filter them out
-      .map(c => ({
+      .map((c) => ({
         display: c,
         value: c.split(' ')[0],
       }));
@@ -166,14 +167,14 @@ class TerminalConsole extends Component {
     const [cmd, ...chunks] = consoleInput.split(' ');
     executeCommand(consoleInput);
     GA.SendEvent('Terminal', 'Console', 'UseCommand', 1);
-    if (!commandList.some(c => c.value.includes(cmd))) {
+    if (!commandList.some((c) => c.value.includes(cmd))) {
       printCommandError(`\`${cmd}\` is not a valid command`);
       return;
     }
 
     const args = chunks
-      .filter(arg => arg)
-      .map(arg => (isNaN(Number(arg)) ? arg : Number(arg)));
+      .filter((arg) => arg)
+      .map((arg) => (isNaN(Number(arg)) ? arg : Number(arg)));
 
     // this.inputRef.inputRef.current.blur();
 
@@ -216,7 +217,9 @@ class TerminalConsole extends Component {
       printCommandOutput(
         result
           .split('\n')
-          .map(text => tab + (text.startsWith(' ') ? text : '> ' + text + '\n'))
+          .map(
+            (text) => tab + (text.startsWith(' ') ? text : '> ' + text + '\n')
+          )
       );
     } else {
       printCommandOutput(tab + result);
@@ -228,7 +231,7 @@ class TerminalConsole extends Component {
    * @param {*} e
    * @memberof TerminalConsole
    */
-  handleKeyDown = e => {
+  handleKeyDown = (e) => {
     switch (e.key) {
       case 'ArrowDown':
         e.preventDefault();
@@ -249,7 +252,7 @@ class TerminalConsole extends Component {
    *
    * @memberof TerminalConsole
    */
-  formateAutoSuggest = e => {
+  formateAutoSuggest = (e) => {
     updateConsoleInput(e);
   };
 
@@ -273,7 +276,7 @@ class TerminalConsole extends Component {
                 onSelect={this.formateAutoSuggest}
                 keyControl={false}
                 suggestOn="change"
-                ref={c => (this.inputRef = c)}
+                ref={(c) => (this.inputRef = c)}
                 inputRef={this.inputRef}
                 inputProps={{
                   autoFocus: true,
@@ -282,7 +285,7 @@ class TerminalConsole extends Component {
                   placeholder: __(
                     'Enter console commands here (ex: getinfo, help)'
                   ),
-                  onChange: e => {
+                  onChange: (e) => {
                     updateConsoleInput(e.target.value);
                   },
                   onKeyDown: this.handleKeyDown,

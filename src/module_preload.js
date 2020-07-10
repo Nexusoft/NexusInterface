@@ -56,7 +56,7 @@ global.NEXUS = {
   },
   utilities: {
     color,
-    copyToClipboard: text => {
+    copyToClipboard: (text) => {
       if (typeof text !== 'string') {
         throw new Error(
           'Expected `text` to be `string` type, found: ' + typeof text
@@ -72,7 +72,7 @@ global.NEXUS = {
       }
       ipcRenderer.sendToHost('send-nxs', recipients, message, tritium);
     },
-    showNotification: options => {
+    showNotification: (options) => {
       if (!options) {
         throw new Error('`options` is required');
       }
@@ -83,7 +83,7 @@ global.NEXUS = {
       }
       ipcRenderer.sendToHost('show-notification', options);
     },
-    showErrorDialog: options => {
+    showErrorDialog: (options) => {
       if (!options) {
         throw new Error('`options` is required');
       }
@@ -94,7 +94,7 @@ global.NEXUS = {
       }
       ipcRenderer.sendToHost('show-error-dialog', options);
     },
-    showSuccessDialog: options => {
+    showSuccessDialog: (options) => {
       if (!options) {
         throw new Error('`options` is required');
       }
@@ -210,7 +210,7 @@ global.NEXUS = {
         ipcRenderer.sendToHost('proxy-request', url, options, requestId);
       });
     },
-    confirm: options => {
+    confirm: (options) => {
       if (!options) {
         throw new Error('`options` is required');
       }
@@ -227,7 +227,7 @@ global.NEXUS = {
         ipcRenderer.sendToHost('confirm', options, confirmationId);
       });
     },
-    updateState: state => {
+    updateState: (state) => {
       if (typeof state !== 'object') {
         throw new Error(
           'Expected `state` to be `object` type, found: ' + typeof state
@@ -235,7 +235,7 @@ global.NEXUS = {
       }
       ipcRenderer.sendToHost('update-state', state);
     },
-    updateStorage: data => {
+    updateStorage: (data) => {
       if (typeof data !== 'object') {
         throw new Error(
           'Expected `data` to be `object` type, found: ' + typeof data
@@ -243,7 +243,7 @@ global.NEXUS = {
       }
       ipcRenderer.sendToHost('update-storage', data);
     },
-    onceInitialize: listener => {
+    onceInitialize: (listener) => {
       if (typeof listener !== 'function') {
         throw new Error(
           'Expected `listener` to be `function` type, found: ' + typeof listener
@@ -253,7 +253,7 @@ global.NEXUS = {
         listener(initialData)
       );
     },
-    onThemeUpdated: listener => {
+    onThemeUpdated: (listener) => {
       if (typeof listener !== 'function') {
         throw new Error(
           'Expected `listener` to be `function` type, found: ' + typeof listener
@@ -261,7 +261,7 @@ global.NEXUS = {
       }
       ipcRenderer.on('theme-updated', (event, theme) => listener(theme));
     },
-    onSettingsUpdated: listener => {
+    onSettingsUpdated: (listener) => {
       if (typeof listener !== 'function') {
         throw new Error(
           'Expected `listener` to be `function` type, found: ' + typeof listener
@@ -271,7 +271,7 @@ global.NEXUS = {
         listener(settings)
       );
     },
-    onCoreInfoUpdated: listener => {
+    onCoreInfoUpdated: (listener) => {
       if (typeof listener !== 'function') {
         throw new Error(
           'Expected `listener` to be `function` type, found: ' + typeof listener
@@ -281,7 +281,7 @@ global.NEXUS = {
         listener(coreInfo)
       );
     },
-    onUserStatusUpdated: listener => {
+    onUserStatusUpdated: (listener) => {
       if (typeof listener !== 'function') {
         throw new Error(
           'Expected `listner` to be a `function` type, found: ' +

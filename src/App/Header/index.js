@@ -95,7 +95,7 @@ const preReleaseTag = APP_VERSION.toString().includes('alpha')
  * @class Header
  * @extends {Component}
  */
-@connect(state => {
+@connect((state) => {
   const {
     core: { info, systemInfo },
   } = state;

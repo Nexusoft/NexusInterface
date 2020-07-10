@@ -43,7 +43,7 @@ class EncryptionWarningModal extends React.Component {
   render() {
     return (
       <WarningModal
-        assignClose={close => {
+        assignClose={(close) => {
           this.closeModal = close;
         }}
       >

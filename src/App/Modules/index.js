@@ -15,7 +15,7 @@ import WrappedAppModule from './WrappedAppModule';
  * @class Modules
  * @extends {Component}
  */
-@connect(state => ({
+@connect((state) => ({
   modules: state.modules,
 }))
 class Modules extends React.Component {

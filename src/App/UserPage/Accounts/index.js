@@ -14,7 +14,7 @@ import TabContentWrapper from '../TabContentWrapper';
 
 __ = __context('User.Accounts');
 
-@connect(state => ({
+@connect((state) => ({
   accounts: state.user.accounts,
 }))
 export default class Accounts extends React.Component {
@@ -47,7 +47,7 @@ export default class Accounts extends React.Component {
             {__('Create new account')}
           </Button>
           <div className="mt1">
-            {accounts.map(account => (
+            {accounts.map((account) => (
               <Account key={account.name + account.address} account={account} />
             ))}
           </div>

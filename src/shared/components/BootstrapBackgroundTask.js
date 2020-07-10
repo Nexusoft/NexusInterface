@@ -73,7 +73,7 @@ function getStatusMsg({ step, details }) {
  * @class BootstrapBackgroundTask
  * @extends {Component}
  */
-@connect(state => ({
+@connect((state) => ({
   statusMsg: getStatusMsg(state.bootstrap),
 }))
 export default class BootstrapBackgroundTask extends Component {
@@ -111,7 +111,7 @@ export default class BootstrapBackgroundTask extends Component {
   render() {
     return (
       <BootstrapBackgroundTaskComponent
-        assignClose={closeTask => (this.closeTask = closeTask)}
+        assignClose={(closeTask) => (this.closeTask = closeTask)}
         onClick={this.maximize}
         index={this.props.index}
       >

@@ -35,7 +35,7 @@ export function backupWallet(backupFolder) {
   return rpc('backupwallet', [backupDir + '/NexusBackup_' + now + '.dat']);
 }
 
-export const closeWallet = async beforeExit => {
+export const closeWallet = async (beforeExit) => {
   const {
     settings: { manualDaemon },
   } = store.getState();
@@ -56,7 +56,7 @@ export const history = createHashHistory();
 
 export const walletEvents = new EventEmitter();
 
-walletEvents.once('pre-render', function() {
+walletEvents.once('pre-render', function () {
   ipcRenderer.on('window-close', async () => {
     const {
       settings: { minimizeOnClose },

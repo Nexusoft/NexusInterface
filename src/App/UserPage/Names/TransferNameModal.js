@@ -25,7 +25,7 @@ const Name = styled.span(({ theme }) => ({
   color: theme.foreground,
 }));
 
-@connect(state => ({
+@connect((state) => ({
   username: state.user.status && state.user.status.username,
 }))
 @reduxForm({
@@ -112,7 +112,7 @@ class TransferNameForm extends React.Component {
 
 const TransferNameModal = ({ nameRecord }) => (
   <Modal maxWidth={600}>
-    {closeModal => (
+    {(closeModal) => (
       <>
         <Modal.Header>{__('Transfer name')}</Modal.Header>
         <Modal.Body>

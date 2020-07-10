@@ -15,7 +15,7 @@ export default class ConfirmPasswordPinModal extends React.Component {
     pin: '',
   };
 
-  confirm = e => {
+  confirm = (e) => {
     e.preventDefault();
     if (
       this.state.password === this.props.password &&
@@ -37,7 +37,7 @@ export default class ConfirmPasswordPinModal extends React.Component {
     const { isNew, password, pin, onConfirm, ...rest } = this.props;
     return (
       <Modal
-        assignClose={closeModal => (this.closeModal = closeModal)}
+        assignClose={(closeModal) => (this.closeModal = closeModal)}
         maxWidth={500}
         {...rest}
       >
@@ -58,7 +58,7 @@ export default class ConfirmPasswordPinModal extends React.Component {
               <TextFieldWithKeyboard
                 maskable
                 value={this.state.password}
-                onChange={input => {
+                onChange={(input) => {
                   this.setState({ password: resolveValue(input) });
                 }}
                 placeholder={
@@ -74,7 +74,7 @@ export default class ConfirmPasswordPinModal extends React.Component {
               <TextFieldWithKeyboard
                 maskable
                 value={this.state.pin}
-                onChange={input => {
+                onChange={(input) => {
                   this.setState({ pin: resolveValue(input) });
                 }}
                 placeholder={

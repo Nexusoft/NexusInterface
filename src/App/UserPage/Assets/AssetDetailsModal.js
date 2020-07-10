@@ -39,8 +39,8 @@ const EditAsset = styled.div({
   fontSize: '1rem',
 });
 
-const isEditable = schema =>
-  !!Array.isArray(schema) && schema.some(field => field.mutable);
+const isEditable = (schema) =>
+  !!Array.isArray(schema) && schema.some((field) => field.mutable);
 
 @connect(({ user: { status }, assetSchemas }, props) => {
   const genesisId = status && status.genesis;
@@ -63,7 +63,7 @@ export default class AssetDetailsModal extends React.Component {
 
     return (
       <Modal
-        assignClose={close => {
+        assignClose={(close) => {
           this.closeModal = close;
         }}
       >

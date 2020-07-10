@@ -49,14 +49,14 @@ const tableColumns = [
     id: 'time',
     Header: __('Time'),
     accessor: 'time',
-    Cell: cell => formatDateTime(cell.value * 1000, timeFormatOptions),
+    Cell: (cell) => formatDateTime(cell.value * 1000, timeFormatOptions),
     width: 200,
   },
   {
     id: 'category',
     Header: __('CATEGORY'),
     accessor: 'category',
-    Cell: cell => <CategoryCell transaction={cell.original} />,
+    Cell: (cell) => <CategoryCell transaction={cell.original} />,
     width: 120,
   },
   {
@@ -98,7 +98,7 @@ const TransactionsTable = styled(Table)({
 });
 
 // React-Redux mandatory methods
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const {
     ui: {
       transactions: { account, addressQuery, category, minAmount, timeSpan },

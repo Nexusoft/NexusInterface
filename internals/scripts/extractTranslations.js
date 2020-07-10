@@ -32,7 +32,7 @@ const locales = [
  * =============================================================================
  */
 const oldDicts = {};
-locales.forEach(locale => {
+locales.forEach((locale) => {
   const oldDict = {};
   const csv = fs.readFileSync(path.join(transDir, locale + '.csv'));
   const records = csvParse(csv);
@@ -65,7 +65,7 @@ keys.forEach(({ key, context }) => {
  */
 const newTranslations = [];
 Object.entries(newEnDict).forEach(([context, strings]) => {
-  Object.keys(strings).forEach(string => {
+  Object.keys(strings).forEach((string) => {
     if (!oldEnDict[context] || !oldEnDict[context][string]) {
       newTranslations.push([context, string]);
     }
@@ -74,7 +74,7 @@ Object.entries(newEnDict).forEach(([context, strings]) => {
 
 const obsoleteTranslations = [];
 Object.entries(oldEnDict).forEach(([context, oldStrings]) => {
-  Object.keys(oldStrings).forEach(oldString => {
+  Object.keys(oldStrings).forEach((oldString) => {
     if (!newEnDict[context] || !newEnDict[context][oldString]) {
       obsoleteTranslations.push([context, oldString]);
     }
@@ -86,7 +86,7 @@ Object.entries(oldDicts).forEach(([locale, oldDict]) => {
   if (locale === 'en') return;
   const newDict = {};
   Object.entries(newEnDict).forEach(([context, newStrings]) => {
-    Object.keys(newStrings).forEach(newString => {
+    Object.keys(newStrings).forEach((newString) => {
       if (!newDict[context]) {
         newDict[context] = {};
       }

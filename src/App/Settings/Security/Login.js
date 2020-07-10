@@ -34,7 +34,7 @@ const Buttons = styled.div({
  * @class Login
  * @extends {Component}
  */
-@connect(state => ({
+@connect((state) => ({
   tritium:
     state.core.info.version.includes('0.3') ||
     parseFloat(state.core.info.version) >= 3,

@@ -82,7 +82,7 @@ const PaginationButton = styled(Button)({
 });
 
 // React-Redux mandatory methods
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const {
     user: {
       transactions: { map, loadedAll },
@@ -137,7 +137,7 @@ class TransactionsTritium extends Component {
       if (this.props.loggedIn) {
         fetchAllTransactions();
       } else {
-        this.unobserve = observeStore(isLoggedIn, loggedIn => {
+        this.unobserve = observeStore(isLoggedIn, (loggedIn) => {
           if (loggedIn) {
             fetchAllTransactions();
           }
@@ -199,7 +199,7 @@ class TransactionsTritium extends Component {
               <TransactionsList ref={this.listRef}>
                 <Container>
                   {transactions &&
-                    transactions.map(tx => (
+                    transactions.map((tx) => (
                       <Transaction key={tx.txid} transaction={tx} />
                     ))}
                 </Container>
@@ -235,7 +235,7 @@ class TransactionsTritium extends Component {
                               min={1}
                               max={totalPages}
                               value={page}
-                              onChange={e => {
+                              onChange={(e) => {
                                 goToTxsPage(e.target.current.value);
                               }}
                             />

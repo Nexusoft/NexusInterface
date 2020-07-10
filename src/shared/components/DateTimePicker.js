@@ -189,7 +189,7 @@ export default class DateTime extends Component {
     focus: false,
   };
 
-  inputRef = el => {
+  inputRef = (el) => {
     this.inputElem = el;
     if (this.props.inputRef) {
       passRef(el, this.props.inputRef);
@@ -206,12 +206,12 @@ export default class DateTime extends Component {
     }
   }
 
-  handleFocus = e => {
+  handleFocus = (e) => {
     this.setState({ focus: true });
     this.props.onFocus && this.props.onFocus(e);
   };
 
-  handleBlur = e => {
+  handleBlur = (e) => {
     this.setState({ focus: false });
     this.props.onBlur && this.props.onBlur(e);
   };

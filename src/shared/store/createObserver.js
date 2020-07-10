@@ -1,4 +1,4 @@
-const createObserver = store => (select, onChange) => {
+const createObserver = (store) => (select, onChange) => {
   let currentState = undefined;
 
   function handleChange() {

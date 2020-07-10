@@ -98,8 +98,8 @@ export default class SetRecoveryModal extends React.Component {
     this.wordlist = allWords
       .toString()
       .split('\n')
-      .map(w => w.trim())
-      .filter(w => w);
+      .map((w) => w.trim())
+      .filter((w) => w);
   }
 
   generatePhrase = () => {
@@ -116,7 +116,7 @@ export default class SetRecoveryModal extends React.Component {
     const { handleSubmit, submitting } = this.props;
     return (
       <Modal
-        assignClose={closeModal => (this.closeModal = closeModal)}
+        assignClose={(closeModal) => (this.closeModal = closeModal)}
         maxWidth={500}
       >
         <Modal.Header>{__('Recovery phrase')}</Modal.Header>
@@ -166,7 +166,7 @@ export default class SetRecoveryModal extends React.Component {
                 <Select
                   options={options}
                   value={this.state.wordCount}
-                  onChange={wordCount => {
+                  onChange={(wordCount) => {
                     this.setState({ wordCount });
                   }}
                 />

@@ -17,13 +17,13 @@ const MigrateAccountModal = ({ legacyBalance, accounts }) => {
   }, []);
   const defaultAccount =
     accounts && accounts.length
-      ? accounts.find(a => a.name === 'default') || accounts[0]
+      ? accounts.find((a) => a.name === 'default') || accounts[0]
       : null;
   const defaultAddress = defaultAccount && defaultAccount.address;
 
   return (
     <Modal maxWidth={600}>
-      {closeModal => (
+      {(closeModal) => (
         <>
           <Modal.Header>{__('Migrate account')}</Modal.Header>
           <Modal.Body>
@@ -70,7 +70,7 @@ const MigrateAccountModal = ({ legacyBalance, accounts }) => {
   );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   accounts: state.user.accounts,
 });
 

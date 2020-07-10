@@ -9,7 +9,7 @@ import Panel from 'components/Panel';
 import nexusIcon from 'icons/NXS_coin.svg';
 
 // React-Redux mandatory methods
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     ...state.core,
   };

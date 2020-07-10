@@ -5,7 +5,7 @@ import WaitingMessage from 'components/WaitingMessage';
 import CoreStatus from 'components/CoreStatus';
 import { isCoreConnected } from 'selectors';
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   coreConnected: isCoreConnected(state),
 });
 

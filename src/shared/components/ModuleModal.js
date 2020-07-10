@@ -193,7 +193,7 @@ export default class ModuleModal extends PureComponent {
    *
    * @memberof Modal
    */
-  modalRef = el => {
+  modalRef = (el) => {
     this.modalElem = el;
     if (this.props.modalRef) {
       passRef(el, this.props.modalRef);
@@ -205,14 +205,14 @@ export default class ModuleModal extends PureComponent {
    *
    * @memberof Modal
    */
-  backgroundRef = el => {
+  backgroundRef = (el) => {
     this.backgroundElem = el;
     if (this.props.backgroundRef) {
       passRef(el, this.props.backgroundRef);
     }
   };
 
-  handleKeyDown = e => {
+  handleKeyDown = (e) => {
     if (this.props.escToClose && e.key === 'Escape') {
       this.animatedClose();
     }

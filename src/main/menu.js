@@ -10,7 +10,7 @@ function handleClick(menuItem) {
 }
 
 function refillClick(template) {
-  template.forEach(item => {
+  template.forEach((item) => {
     if (item.click) {
       item.click = handleClick;
     }
@@ -32,8 +32,8 @@ export function setApplicationMenu(template) {
 export function popupContextMenu(template) {
   return new Promise((resolve, reject) => {
     try {
-      const refillClick = template => {
-        template.forEach(item => {
+      const refillClick = (template) => {
+        template.forEach((item) => {
           if (item.click) {
             item.click = () => {
               resolve(item.id);

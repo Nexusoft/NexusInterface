@@ -44,7 +44,7 @@ const LoginStatusIcon = styled(StatusIcon)(
     }
 );
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const {
     core: {
       info: { unlocked_until, minting_only, locked },

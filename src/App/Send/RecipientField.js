@@ -58,7 +58,7 @@ class RecipientField extends Component {
    *
    * @memberof RecipientField
    */
-  handleSelect = address => {
+  handleSelect = (address) => {
     this.props.change(this.props.input.name, address);
   };
 

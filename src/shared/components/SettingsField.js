@@ -81,7 +81,7 @@ class SettingsField extends Component {
       <Field indent={indent} {...rest}>
         <Label
           htmlFor={connectLabel ? this.inputId : undefined}
-          onClick={e => e.preventDefault()}
+          onClick={(e) => e.preventDefault()}
         >
           <div>{label}</div>
           {subLabel && <SubLabel>{subLabel}</SubLabel>}

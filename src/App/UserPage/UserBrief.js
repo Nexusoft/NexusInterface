@@ -87,7 +87,7 @@ const UserBrief = ({ status, match }) => (
   </UserBriefComponent>
 );
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   status: state.user.status,
 });
 

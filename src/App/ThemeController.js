@@ -12,7 +12,7 @@ import { getMixer } from 'utils/color';
  * @class ThemeController
  * @extends {PureComponent}
  */
-@connect(state => ({
+@connect((state) => ({
   theme: state.theme,
 }))
 class ThemeController extends PureComponent {

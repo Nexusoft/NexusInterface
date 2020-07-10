@@ -68,7 +68,7 @@ async function getCorePID() {
     )
       .toString()
       .split('\n')
-      .find(output => output.includes(coreBinaryPath));
+      .find((output) => output.includes(coreBinaryPath));
 
     PID =
       PID &&

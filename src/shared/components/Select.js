@@ -296,7 +296,7 @@ class Options extends Component {
     this.setState({ ready: true, styles });
   };
 
-  select = option => {
+  select = (option) => {
     this.props.close();
     if (!option.isDummy) {
       this.props.onChange(option.value);
@@ -306,13 +306,13 @@ class Options extends Component {
   render() {
     const { skin, options, close, value } = this.props;
     const { ready, styles } = this.state;
-    const selectedIndex = options.findIndex(o => o.value === value);
+    const selectedIndex = options.findIndex((o) => o.value === value);
     const anchorIndex = selectedIndex !== -1 ? selectedIndex : 0;
     return (
       <Overlay onBackgroundClick={close}>
         <OptionsComponent
           skin={skin}
-          ref={el => {
+          ref={(el) => {
             if (el && this.scrollTop) {
               el.scrollTop = this.scrollTop;
               this.scrollTop = null;
@@ -361,8 +361,8 @@ class Select extends Component {
     }
   };
 
-  option = value =>
-    this.props.options && this.props.options.find(o => o.value === value);
+  option = (value) =>
+    this.props.options && this.props.options.find((o) => o.value === value);
 
   open = () => {
     this.setState({ open: true });
@@ -388,7 +388,7 @@ class Select extends Component {
     return (
       <>
         <SelectControl
-          ref={el => {
+          ref={(el) => {
             passRef(el, this.controlRef);
             passRef(el, controlRef);
           }}

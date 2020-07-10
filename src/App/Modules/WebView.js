@@ -10,7 +10,7 @@ import { setActiveWebView, unsetActiveWebView } from 'lib/modules';
 
 const domain = ipcRenderer.sendSync('get-file-server-domain');
 
-const getEntryUrl = module => {
+const getEntryUrl = (module) => {
   if (module.development) {
     try {
       // Check if entry is a URL itself
@@ -47,7 +47,7 @@ class WebView extends React.Component {
     super(props);
     const { module } = this.props;
     if (!module.development) {
-      const moduleFiles = module.info.files.map(file =>
+      const moduleFiles = module.info.files.map((file) =>
         join(module.info.name, file)
       );
       ipcRenderer.invoke('serve-module-files', moduleFiles);

@@ -21,7 +21,7 @@ __ = __context('Header');
  * @class StakingStatus
  * @extends {React.Component}
  */
-@connect(state => {
+@connect((state) => {
   const {
     user: {
       stakeInfo: { stakerate },

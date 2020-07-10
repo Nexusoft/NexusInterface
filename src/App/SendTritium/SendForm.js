@@ -55,7 +55,7 @@ const MoreOptions = styled.div({
 });
 
 const valueSelector = formValueSelector(formName);
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const {
     addressBook,
     user: { accounts, tokens },
@@ -235,7 +235,7 @@ class SendForm extends Component {
    *
    * @memberof SendForm
    */
-  confirmSend = e => {
+  confirmSend = (e) => {
     e.preventDefault();
     const { handleSubmit, invalid, touch, fieldNames } = this.props;
 
@@ -249,7 +249,7 @@ class SendForm extends Component {
     handleSubmit();
   };
 
-  toggleMoreOptions = e => {
+  toggleMoreOptions = (e) => {
     this.setState({
       optionalOpen: !this.state.optionalOpen,
     });

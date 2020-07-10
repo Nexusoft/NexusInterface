@@ -125,7 +125,7 @@ export default class NewUserModal extends Component {
     return (
       <Modal
         maxWidth={500}
-        assignClose={closeModal => (this.closeModal = closeModal)}
+        assignClose={(closeModal) => (this.closeModal = closeModal)}
       >
         <Modal.Header>{__('Create new user')}</Modal.Header>
         <Modal.Body>
@@ -244,7 +244,7 @@ class UserConfirmBackgroundTask extends React.Component {
     const { username } = this.props;
     return (
       <BackgroundTask
-        assignClose={close => (this.closeTask = close)}
+        assignClose={(close) => (this.closeTask = close)}
         onClick={null}
         style={{ cursor: 'default' }}
       >

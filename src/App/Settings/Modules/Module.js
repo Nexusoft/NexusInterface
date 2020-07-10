@@ -109,7 +109,7 @@ class Module extends React.Component {
   enableModule = () => {
     updateSettings({
       disabledModules: this.props.disabledModules.filter(
-        moduleName => moduleName !== this.props.module.info.name
+        (moduleName) => moduleName !== this.props.module.info.name
       ),
     });
   };

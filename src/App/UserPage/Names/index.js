@@ -64,7 +64,7 @@ const Name = ({ nameRecord, username }) => (
         nameRecord,
       });
     }}
-    onContextMenu={e => {
+    onContextMenu={(e) => {
       e.stopPropagation();
       const template = [
         {
@@ -112,7 +112,7 @@ const Name = ({ nameRecord, username }) => (
   </NameComponent>
 );
 
-@connect(state => ({
+@connect((state) => ({
   nameRecords: state.user.nameRecords,
   username: state.user.status && state.user.status.username,
 }))
@@ -143,7 +143,7 @@ export default class Names extends React.Component {
 
         <div className="mt1">
           {!!nameRecords && nameRecords.length > 0 ? (
-            nameRecords.map(nameRecord => (
+            nameRecords.map((nameRecord) => (
               <Name
                 key={nameRecord.address}
                 nameRecord={nameRecord}

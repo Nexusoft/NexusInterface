@@ -25,7 +25,7 @@ const SpinningIcon = styled(Icon)({
  * @class SyncStatus
  * @extends {React.Component}
  */
-@connect(state => {
+@connect((state) => {
   const {
     core: {
       systemInfo: { synccomplete },

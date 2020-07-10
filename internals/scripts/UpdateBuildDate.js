@@ -20,4 +20,4 @@ if (!process.argv[2] || !process.argv[3]) {
 }
 
 var fs = require('fs');
-fs.writeFile('../../package.json', packageJson, err => console.log(err));
+fs.writeFile('../../package.json', packageJson, (err) => console.log(err));

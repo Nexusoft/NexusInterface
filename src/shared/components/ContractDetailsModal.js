@@ -8,7 +8,7 @@ import { openModal } from 'lib/ui';
 
 __ = __context('ContractDetails');
 
-const translateKey = key => {
+const translateKey = (key) => {
   switch (key) {
     case 'OP':
       return 'Operation';
@@ -30,7 +30,7 @@ class ContractDetailsModal extends React.Component {
 
     return (
       <Modal
-        assignClose={close => {
+        assignClose={(close) => {
           this.closeModal = close;
         }}
       >

@@ -30,7 +30,7 @@ export function setupTray(mainWindow) {
   const contextMenu = Menu.buildFromTemplate([
     {
       label: 'Show Nexus Wallet',
-      click: function() {
+      click: function () {
         mainWindow.show();
         if (process.platform === 'darwin') {
           app.dock.show();

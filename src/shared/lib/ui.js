@@ -5,17 +5,17 @@ import SuccessDialog from 'components/Dialogs/SuccessDialog';
 import { reset } from 'redux-form';
 import store from 'store';
 
-const newModalId = (function() {
+const newModalId = (function () {
   let counter = 1;
   return () => `modal-${counter++}`;
 })();
 
-const newNotifId = (function() {
+const newNotifId = (function () {
   let counter = 1;
   return () => `notif-${counter++}`;
 })();
 
-const newTaskId = (function() {
+const newTaskId = (function () {
   let counter = 1;
   return () => `task-${counter++}`;
 })();
@@ -43,11 +43,11 @@ export function removeModal(modalId) {
   });
 }
 
-export const openConfirmDialog = props => openModal(ConfirmDialog, props);
+export const openConfirmDialog = (props) => openModal(ConfirmDialog, props);
 
-export const openErrorDialog = props => openModal(ErrorDialog, props);
+export const openErrorDialog = (props) => openModal(ErrorDialog, props);
 
-export const openSuccessDialog = props => openModal(SuccessDialog, props);
+export const openSuccessDialog = (props) => openModal(SuccessDialog, props);
 
 /**
  * Notification
@@ -97,56 +97,56 @@ export function removeBackgroundTask(taskId) {
  * Transactions
  * ===========================
  */
-export const setTxsAccountFilter = account => {
+export const setTxsAccountFilter = (account) => {
   store.dispatch({
     type: TYPE.SET_TXS_ACCOUNT_FILTER,
     payload: account,
   });
 };
 
-export const setTxsAddressQuery = query => {
+export const setTxsAddressQuery = (query) => {
   store.dispatch({
     type: TYPE.SET_TXS_ADDRESS_QUERY,
     payload: query,
   });
 };
 
-export const setTxsCategoryFilter = category => {
+export const setTxsCategoryFilter = (category) => {
   store.dispatch({
     type: TYPE.SET_TXS_CATEGORY_FILTER,
     payload: category,
   });
 };
 
-export const setTxsMinAmountFilter = minAmount => {
+export const setTxsMinAmountFilter = (minAmount) => {
   store.dispatch({
     type: TYPE.SET_TXS_MIN_AMOUNT_FILTER,
     payload: minAmount,
   });
 };
 
-export const setTxsTimeFilter = timeSpan => {
+export const setTxsTimeFilter = (timeSpan) => {
   store.dispatch({
     type: TYPE.SET_TXS_TIME_FILTER,
     payload: timeSpan,
   });
 };
 
-export const setTxsNameQuery = accountName => {
+export const setTxsNameQuery = (accountName) => {
   store.dispatch({
     type: TYPE.SET_TXS_NAME_QUERY,
     payload: accountName,
   });
 };
 
-export const setTxsOperationFilter = operation => {
+export const setTxsOperationFilter = (operation) => {
   store.dispatch({
     type: TYPE.SET_TXS_OP_FILTER,
     payload: operation,
   });
 };
 
-export const goToTxsPage = page => {
+export const goToTxsPage = (page) => {
   store.dispatch({
     type: TYPE.SET_TXS_PAGE,
     payload: page < 1 ? 1 : page,
@@ -157,14 +157,14 @@ export const goToTxsPage = page => {
  * Address Book
  * ===========================
  */
-export const searchContact = query => {
+export const searchContact = (query) => {
   store.dispatch({
     type: TYPE.CONTACT_SEARCH,
     payload: query,
   });
 };
 
-export const selectContact = index => {
+export const selectContact = (index) => {
   store.dispatch({
     type: TYPE.SELECT_CONTACT,
     payload: index,
@@ -175,14 +175,14 @@ export const selectContact = index => {
  * Settings
  * ===========================
  */
-export const switchSettingsTab = tab => {
+export const switchSettingsTab = (tab) => {
   store.dispatch({
     type: TYPE.SWITCH_SETTINGS_TAB,
     payload: tab,
   });
 };
 
-export const setCoreSettingsRestart = restart => {
+export const setCoreSettingsRestart = (restart) => {
   store.dispatch({
     type: TYPE.SET_CORE_SETTINGS_RESTART,
     payload: restart,
@@ -193,7 +193,7 @@ export const setCoreSettingsRestart = restart => {
  * Console
  * ===========================
  */
-export const switchConsoleTab = tab => {
+export const switchConsoleTab = (tab) => {
   store.dispatch({
     type: TYPE.SWITCH_CONSOLE_TAB,
     payload: tab,
@@ -204,14 +204,14 @@ export const switchConsoleTab = tab => {
  * Console/Console
  * ===========================
  */
-export const updateConsoleInput = value => {
+export const updateConsoleInput = (value) => {
   store.dispatch({
     type: TYPE.SET_CONSOLE_INPUT,
     payload: value,
   });
 };
 
-export const setCommandList = commandList => {
+export const setCommandList = (commandList) => {
   store.dispatch({
     type: TYPE.SET_COMMAND_LIST,
     payload: commandList,
@@ -228,21 +228,21 @@ export const commandHistoryDown = () => {
     type: TYPE.COMMAND_HISTORY_DOWN,
   });
 };
-export const executeCommand = cmd => {
+export const executeCommand = (cmd) => {
   store.dispatch({
     type: TYPE.EXECUTE_COMMAND,
     payload: cmd,
   });
 };
 
-export const printCommandOutput = text => {
+export const printCommandOutput = (text) => {
   store.dispatch({
     type: TYPE.PRINT_COMMAND_OUTPUT,
     payload: text,
   });
 };
 
-export const printCommandError = msg => {
+export const printCommandError = (msg) => {
   store.dispatch({
     type: TYPE.PRINT_COMMAND_ERROR,
     payload: msg,
@@ -254,7 +254,7 @@ export const resetConsoleOutput = () => {
     type: TYPE.RESET_CONSOLE_OUTPUT,
   });
 };
-export const printCoreOutput = output => {
+export const printCoreOutput = (output) => {
   store.dispatch({
     type: TYPE.PRINT_CORE_OUTPUT,
     payload: output,
@@ -275,14 +275,14 @@ export const unpauseCoreOutput = () => {
  * User
  * ===========================
  */
-export const switchUserTab = tab => {
+export const switchUserTab = (tab) => {
   store.dispatch({
     type: TYPE.SWITCH_USER_TAB,
     payload: tab,
   });
 };
 
-export const toggleUserBalanceDisplayFiat = toggleBool => {
+export const toggleUserBalanceDisplayFiat = (toggleBool) => {
   store.dispatch({
     type: TYPE.USERS_BALANCE_DISPLAY_FIAT,
     payload: toggleBool,

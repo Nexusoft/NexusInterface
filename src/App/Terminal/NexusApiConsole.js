@@ -48,7 +48,7 @@ const consoleInputSelector = memoize(
     historyIndex === -1 ? currentCommand : commandHistory[historyIndex]
 );
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const {
     ui: {
       console: {
@@ -160,7 +160,7 @@ class NexusApiConsole extends Component {
    * @param {*} e
    * @memberof TerminalConsole
    */
-  handleKeyDown = e => {
+  handleKeyDown = (e) => {
     switch (e.key) {
       case 'ArrowDown':
         e.preventDefault();
@@ -231,7 +231,9 @@ class NexusApiConsole extends Component {
       printCommandOutput(
         result
           .split('\n')
-          .map(text => tab + (text.startsWith(' ') ? text : '> ' + text + '\n'))
+          .map(
+            (text) => tab + (text.startsWith(' ') ? text : '> ' + text + '\n')
+          )
       );
     } else {
       printCommandOutput(tab + result.data);
@@ -243,7 +245,7 @@ class NexusApiConsole extends Component {
    *
    * @memberof TerminalConsole
    */
-  formateAutoSuggest = e => {
+  formateAutoSuggest = (e) => {
     updateConsoleInput(e);
   };
 
@@ -274,7 +276,7 @@ class NexusApiConsole extends Component {
                     ? 'api/verb/noun param=1 param2=2'
                     : 'api/verb/noun?param=value&param2=2'
                 }
-                onChange={e => {
+                onChange={(e) => {
                   updateConsoleInput(e.target.value);
                 }}
                 onKeyDown={this.handleKeyDown}
@@ -283,7 +285,7 @@ class NexusApiConsole extends Component {
                     skin="filled-inverted"
                     options={syntaxOptions}
                     value={consoleCliSyntax}
-                    onChange={v => {
+                    onChange={(v) => {
                       updateSettings({ consoleCliSyntax: v });
                       if (this.inputRef.current) {
                         this.inputRef.current.focus();

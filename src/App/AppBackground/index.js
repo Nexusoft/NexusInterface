@@ -8,7 +8,7 @@ import styled from '@emotion/styled';
 import StarrySky from './StarrySky';
 import CosmicLight from './Light';
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   wallpaper: state.theme.wallpaper,
   defaultStyle: state.theme.defaultStyle,
 });

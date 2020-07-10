@@ -56,8 +56,8 @@ class EditAssetForm extends React.Component {
         </InfoField>
         <InfoField label={__('Address')}>{asset.address}</InfoField>
 
-        {Object.keys(data).map(fieldName => {
-          const field = mutableFields.find(field => field.name === fieldName);
+        {Object.keys(data).map((fieldName) => {
+          const field = mutableFields.find((field) => field.name === fieldName);
           return (
             <InfoField
               key={fieldName}
@@ -105,9 +105,9 @@ class EditAssetForm extends React.Component {
   }
 }
 
-const getMutableFields = schema => schema.filter(field => field.mutable);
+const getMutableFields = (schema) => schema.filter((field) => field.mutable);
 
-const getInitialValues = mutableFields =>
+const getInitialValues = (mutableFields) =>
   mutableFields.reduce(
     (values, field) => ({ ...values, [field.name]: field.value }),
     {}
@@ -117,7 +117,7 @@ const EditAssetModal = ({ schema, asset }) => {
   const mutableFields = getMutableFields(schema);
   return (
     <Modal>
-      {closeModal => (
+      {(closeModal) => (
         <>
           <Modal.Header>{__('Edit asset')}</Modal.Header>
           <Modal.Body>

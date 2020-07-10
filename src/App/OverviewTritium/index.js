@@ -90,7 +90,7 @@ const blockWeightIcons = [
 ];
 
 // React-Redux mandatory methods
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const {
     core: { systemInfo, miningInfo },
     user: { stakeInfo, balances },
@@ -103,7 +103,7 @@ const mapStateToProps = state => {
   } = state;
   const displayValues =
     displayNXSvalues &&
-    displayNXSvalues.find(e => e.name === settings.fiatCurrency);
+    displayNXSvalues.find((e) => e.name === settings.fiatCurrency);
   return {
     coreConnected: isCoreConnected(state),
     synchronized: isSynchronized(state),
@@ -111,7 +111,7 @@ const mapStateToProps = state => {
     blockDate,
     market: {
       ...(rawNXSvalues &&
-        rawNXSvalues.find(e => e.name === settings.fiatCurrency)),
+        rawNXSvalues.find((e) => e.name === settings.fiatCurrency)),
       displayMarketCap: displayValues && displayValues.marketCap,
     },
     settings,
@@ -444,7 +444,7 @@ class Overview extends Component {
    *
    * @memberof Overview
    */
-  waitForCore = stat =>
+  waitForCore = (stat) =>
     this.props.coreConnected ? stat : <span className="dim">-</span>;
 
   /**
@@ -511,7 +511,7 @@ class Overview extends Component {
    *
    * @memberof Overview
    */
-  returnDifficultyStats = miningInfo => {
+  returnDifficultyStats = (miningInfo) => {
     return (
       <React.Fragment>
         <Stat>
@@ -693,8 +693,8 @@ class Overview extends Component {
       <OverviewPage>
         {!!this.showingGlobe() && (
           <Globe
-            handleOnLineRender={e => (this.redrawCurves = e)}
-            handleRemoveAllPoints={e => (this.removeAllPoints = e)}
+            handleOnLineRender={(e) => (this.redrawCurves = e)}
+            handleRemoveAllPoints={(e) => (this.removeAllPoints = e)}
             connections={connections}
             blocks={blocks}
             pillarColor={theme.globePillarColor}

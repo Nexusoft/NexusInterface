@@ -109,7 +109,7 @@ class CreateAssetForm extends React.Component {
     this.props.array.push('fields', createInitialField());
   };
 
-  removeField = index => {
+  removeField = (index) => {
     this.props.array.remove('fields', index);
   };
 
@@ -193,7 +193,7 @@ class CreateAssetForm extends React.Component {
 
 const CreateAssetModal = () => (
   <Modal style={{ width: '80%' }} maxWidth={900}>
-    {closeModal => (
+    {(closeModal) => (
       <>
         <Modal.Header>{__('Create a new asset')}</Modal.Header>
         <Modal.Body>

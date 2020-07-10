@@ -99,7 +99,7 @@ const languages = [
   {
     code: 'sr',
     flag: SerbianFlag,
-    name: 'српски'
+    name: 'српски',
   },
   {
     code: 'zh-cn',

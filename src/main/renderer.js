@@ -69,7 +69,7 @@ export async function createWindow() {
   mainWindow.loadURL(`file://${path.resolve(__dirname, htmlPath)}`);
 
   // Show the window only once the contents finish loading, then check for updates
-  mainWindow.webContents.on('did-finish-load', function() {
+  mainWindow.webContents.on('did-finish-load', function () {
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
     }
@@ -103,7 +103,7 @@ export async function createWindow() {
 
   // e.preventDefault doesn't work on renderer process so leave it in the main process
   // https://github.com/electron/electron/issues/4473
-  mainWindow.on('close', e => {
+  mainWindow.on('close', (e) => {
     e.preventDefault();
   });
 

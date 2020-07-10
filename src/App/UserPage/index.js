@@ -27,7 +27,7 @@ const UserPageLayout = styled.div({
   height: '100%',
 });
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   addressBook: state.addressBook,
   coreConnected: isCoreConnected(state),
   loggedIn: isLoggedIn(state),

@@ -79,10 +79,10 @@ export async function checkForModuleUpdates() {
   const state = store.getState();
   const modules = Object.values(state.modules);
   const updateableModules = modules.filter(
-    module => !module.development && !!module.repository
+    (module) => !module.development && !!module.repository
   );
   const results = await Promise.allSettled(
-    updateableModules.map(m => checkForModuleUpdate(m))
+    updateableModules.map((m) => checkForModuleUpdate(m))
   );
   const updates = results
     .filter(({ status, value }) => value && status === 'fulfilled')
@@ -106,7 +106,7 @@ export async function checkForModuleUpdates() {
       ),
       {
         type: 'success',
-        onClick: closeNotif => {
+        onClick: (closeNotif) => {
           history.push('/Settings/Modules');
           closeNotif();
         },

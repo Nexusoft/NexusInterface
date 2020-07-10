@@ -88,7 +88,7 @@ const Field = ({ label, content }) => (
  * @param {*} tz TimeZone
  * @returns {string} Hours:Minutes AM/PM
  */
-const getLocalTime = tz => {
+const getLocalTime = (tz) => {
   const now = new Date();
   const utc = new Date().getTimezoneOffset();
   now.setMinutes(now.getMinutes() + utc + parseInt(tz));
@@ -116,7 +116,7 @@ const getLocalTime = tz => {
  * @class ContactDetails
  * @extends {Component}
  */
-@connect(state => {
+@connect((state) => {
   const {
     addressBook,
     ui: {
@@ -170,7 +170,7 @@ class ContactDetails extends React.Component {
 
     const tz =
       typeof contact.timeZone === 'number'
-        ? timeZones.find(t => t.value === contact.timeZone)
+        ? timeZones.find((t) => t.value === contact.timeZone)
         : null;
 
     return (

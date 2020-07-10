@@ -40,7 +40,7 @@ export default (state = initialState, action) => {
         addressbook = { ...state, [name]: contact };
       } else {
         const contacts = [...Object.values(state), contact]
-          .filter(c => c.name !== action.payload.name)
+          .filter((c) => c.name !== action.payload.name)
           .sort(compareNames);
         addressbook = fromArray(contacts);
       }

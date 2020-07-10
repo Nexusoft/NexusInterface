@@ -6,7 +6,7 @@ export default function confirmPin({ note, confirmLabel } = {}) {
     openModal(PinDialog, {
       note,
       confirmLabel,
-      submitPin: pin => {
+      submitPin: (pin) => {
         resolve(pin);
       },
       onClose: () => {

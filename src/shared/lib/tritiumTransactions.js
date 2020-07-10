@@ -9,7 +9,7 @@ import { walletEvents } from 'lib/wallet';
 import { legacyMode } from 'consts/misc';
 import listAll from 'utils/listAll';
 
-const isConfirmed = tx => !!tx.confirmations;
+const isConfirmed = (tx) => !!tx.confirmations;
 
 const unsubscribers = {};
 function startWatchingTransaction(txid) {
@@ -17,7 +17,7 @@ function startWatchingTransaction(txid) {
   // Update everytime a new block is received
   unsubscribers[txid] = observeStore(
     ({ core: { systemInfo } }) => systemInfo && systemInfo.blocks,
-    async blocks => {
+    async (blocks) => {
       // Skip because core is most likely disconnected
       if (!blocks) return;
 
@@ -37,7 +37,7 @@ function startWatchingTransaction(txid) {
   );
 }
 
-const getBalanceChange = tx =>
+const getBalanceChange = (tx) =>
   tx.contracts
     ? tx.contracts.reduce((changes, contract) => {
         const sign = getDeltaSign(contract);
@@ -57,7 +57,7 @@ const getBalanceChange = tx =>
     : 0;
 
 if (!legacyMode) {
-  walletEvents.once('post-render', function() {
+  walletEvents.once('post-render', function () {
     observeStore(
       ({ user: { status } }) => status && status.transactions,
       async (txCount, oldTxCount) => {
@@ -72,13 +72,13 @@ if (!legacyMode) {
           });
           addTritiumTransactions(transactions);
 
-          transactions.forEach(tx => {
+          transactions.forEach((tx) => {
             if (!isConfirmed(tx)) {
               startWatchingTransaction(tx.txid);
             }
 
             const changes = getBalanceChange(tx);
-            if (Object.values(changes).some(v => v)) {
+            if (Object.values(changes).some((v) => v)) {
               Object.entries(changes).forEach(([token, change]) => {
                 showDesktopNotif(
                   __('New transaction'),
@@ -104,7 +104,7 @@ if (!legacyMode) {
  * =============================================================================
  */
 
-export const loadTritiumTransactions = transactions => {
+export const loadTritiumTransactions = (transactions) => {
   store.dispatch({
     type: TYPE.LOAD_TRITIUM_TRANSACTIONS,
     payload: {
@@ -113,7 +113,7 @@ export const loadTritiumTransactions = transactions => {
   });
 };
 
-export const addTritiumTransactions = newTransactions => {
+export const addTritiumTransactions = (newTransactions) => {
   store.dispatch({
     type: TYPE.ADD_TRITIUM_TRANSACTIONS,
     payload: {
@@ -122,14 +122,14 @@ export const addTritiumTransactions = newTransactions => {
   });
 };
 
-export const updateTritiumTransaction = tx => {
+export const updateTritiumTransaction = (tx) => {
   store.dispatch({
     type: TYPE.UPDATE_TRITIUM_TRANSACTION,
     payload: tx,
   });
 };
 
-export const getDeltaSign = contract => {
+export const getDeltaSign = (contract) => {
   switch (contract.OP) {
     case 'CREDIT':
     case 'COINBASE':
@@ -153,7 +153,7 @@ export async function fetchAllTransactions() {
     verbose: 'summary',
   });
   loadTritiumTransactions(transactions);
-  transactions.forEach(tx => {
+  transactions.forEach((tx) => {
     if (!isConfirmed(tx)) {
       startWatchingTransaction(tx.txid);
     }

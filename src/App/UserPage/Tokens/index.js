@@ -26,7 +26,7 @@ import TabContentWrapper from '../TabContentWrapper';
 
 __ = __context('User.Tokens');
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   coreConnected: isCoreConnected(state),
   userGenesis: state.user.status.genesis,
   loggedIn: isLoggedIn(state),
@@ -72,7 +72,7 @@ class Tokens extends Component {
 
     let tempMap = new Map();
     if (accounts) {
-      accounts.forEach(element => {
+      accounts.forEach((element) => {
         if (
           tempMap.has(element.token_name || element.token) ||
           element.token_name === 'NXS'
@@ -83,7 +83,7 @@ class Tokens extends Component {
       });
     }
     if (ownedTokens) {
-      ownedTokens.forEach(element => {
+      ownedTokens.forEach((element) => {
         element.owner = this.props.userGenesis;
         if (tempMap.has(element.name || element.address)) return;
         tempMap.set(element.name || element.address, element);
@@ -100,7 +100,7 @@ class Tokens extends Component {
         ? `tokens/get/token?name=${element.token_name}`
         : `tokens/get/token?address=${element.token}`
     );
-    this.setState(prevState => {
+    this.setState((prevState) => {
       let usedTokens = prevState.usedTokens;
       usedTokens.set(element.token_name || element.token, info);
       return { usedTokens };

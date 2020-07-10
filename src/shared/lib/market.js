@@ -11,7 +11,7 @@ async function fetchMarketData() {
     'https://nexus-wallet-external-services.herokuapp.com/displaydata'
   );
 
-  const rawBTC = Object.values(data.RAW.BTC).map(ele => {
+  const rawBTC = Object.values(data.RAW.BTC).map((ele) => {
     return {
       changePct24Hr: ele.CHANGEPCT24HOUR,
       marketCap: ele.MKTCAP,
@@ -19,7 +19,7 @@ async function fetchMarketData() {
       name: ele.TOSYMBOL,
     };
   });
-  const rawNXS = Object.values(data.RAW.NXS).map(ele => {
+  const rawNXS = Object.values(data.RAW.NXS).map((ele) => {
     return {
       changePct24Hr: ele.CHANGEPCT24HOUR,
       marketCap: ele.MKTCAP,
@@ -27,7 +27,7 @@ async function fetchMarketData() {
       name: ele.TOSYMBOL,
     };
   });
-  const displayBTC = Object.values(data.RAW.BTC).map(ele => {
+  const displayBTC = Object.values(data.RAW.BTC).map((ele) => {
     const curCode = ele.TOSYMBOL;
     const displayEle = data.DISPLAY.NXS[curCode];
     return {
@@ -38,7 +38,7 @@ async function fetchMarketData() {
       symbol: displayEle.TOSYMBOL,
     };
   });
-  const displayNXS = Object.values(data.RAW.NXS).map(ele => {
+  const displayNXS = Object.values(data.RAW.NXS).map((ele) => {
     const curCode = ele.TOSYMBOL;
     const displayEle = data.DISPLAY.NXS[curCode];
     return {
@@ -61,7 +61,7 @@ async function fetchMarketData() {
   });
 }
 
-walletEvents.once('pre-render', function() {
+walletEvents.once('pre-render', function () {
   fetchMarketData();
   setInterval(fetchMarketData, 900000); // 15 minutes
 });

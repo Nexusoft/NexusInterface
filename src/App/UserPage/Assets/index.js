@@ -21,7 +21,7 @@ const EmptyMessage = styled.div(({ theme }) => ({
   color: theme.mixer(0.5),
 }));
 
-@connect(state => ({
+@connect((state) => ({
   assets: state.user.assets,
 }))
 export default class Assets extends React.Component {
@@ -51,7 +51,7 @@ export default class Assets extends React.Component {
 
         <div className="mt1">
           {!!assets && assets.length > 0 ? (
-            assets.map(asset => <Asset key={asset.address} asset={asset} />)
+            assets.map((asset) => <Asset key={asset.address} asset={asset} />)
           ) : (
             <EmptyMessage>{__("You don't own any asset")}</EmptyMessage>
           )}

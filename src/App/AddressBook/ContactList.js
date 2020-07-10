@@ -25,7 +25,7 @@ const Separator = styled.div(({ theme }) => ({
   background: theme.mixer(0.125),
 }));
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const {
     addressBook,
     ui: {
@@ -62,7 +62,7 @@ class ContactList extends React.Component {
 
     return (
       <ContactListComponent>
-        {Object.values(addressBook).map(contact =>
+        {Object.values(addressBook).map((contact) =>
           contact.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
           contact.addresses.find(({ address }) => address === searchQuery) ? (
             <Contact key={contact.name} contact={contact} />

@@ -192,7 +192,7 @@ function sendNXS([recipients, message, tritium]) {
   store.dispatch(
     initialize(formName, {
       sendFrom: null,
-      recipients: recipients.map(r => ({
+      recipients: recipients.map((r) => ({
         address: `${r.address}`,
         amount: parseFloat(r.amount) || 0,
         fiatAmount: '',
@@ -404,10 +404,10 @@ function updateStorage([data]) {
   writeModuleStorage(activeModule, data);
 }
 
-walletEvents.once('post-render', function() {
+walletEvents.once('post-render', function () {
   observeStore(
-    state => state.activeAppModule && state.activeAppModule.webview,
-    webview => {
+    (state) => state.activeAppModule && state.activeAppModule.webview,
+    (webview) => {
       if (webview) {
         webview.addEventListener('ipc-message', handleIpcMessage);
         webview.addEventListener('dom-ready', async () => {
@@ -426,7 +426,7 @@ walletEvents.once('post-render', function() {
   );
 
   observeStore(
-    state => state.settings,
+    (state) => state.settings,
     (settings, oldSettings) => {
       if (settingsChanged(oldSettings, settings)) {
         const { activeAppModule } = store.getState();
@@ -440,8 +440,8 @@ walletEvents.once('post-render', function() {
   );
 
   observeStore(
-    state => state.theme,
-    theme => {
+    (state) => state.theme,
+    (theme) => {
       const { activeAppModule } = store.getState();
       if (activeAppModule && activeAppModule.webview) {
         try {
@@ -452,8 +452,8 @@ walletEvents.once('post-render', function() {
   );
 
   observeStore(
-    state => (legacyMode ? state.core.info : state.core.systemInfo),
-    coreInfo => {
+    (state) => (legacyMode ? state.core.info : state.core.systemInfo),
+    (coreInfo) => {
       const { activeAppModule } = store.getState();
       if (activeAppModule && activeAppModule.webview) {
         try {
@@ -464,8 +464,8 @@ walletEvents.once('post-render', function() {
   );
 
   observeStore(
-    state => state.user.status,
-    userStatus => {
+    (state) => state.user.status,
+    (userStatus) => {
       const { activeAppModule } = store.getState();
       if (activeAppModule && activeAppModule.webview) {
         try {

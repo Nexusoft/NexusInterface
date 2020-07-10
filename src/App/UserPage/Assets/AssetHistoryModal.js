@@ -26,7 +26,7 @@ export const tableColumns = [
     id: 'time',
     Header: __('Time'),
     accessor: 'modified',
-    Cell: cell => formatDateTime(cell.value * 1000, timeFormatOptions),
+    Cell: (cell) => formatDateTime(cell.value * 1000, timeFormatOptions),
     width: 210,
   },
   {
@@ -65,7 +65,7 @@ export default class AssetHistoryModal extends React.Component {
 
     return (
       <Modal
-        assignClose={close => {
+        assignClose={(close) => {
           this.closeModal = close;
         }}
       >

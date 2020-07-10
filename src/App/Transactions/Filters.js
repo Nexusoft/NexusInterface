@@ -91,7 +91,7 @@ const Filters = ({ addressQuery, category, minAmount, timeSpan }) => (
         name="addressfilter"
         placeholder={__('Search for Address')}
         value={addressQuery}
-        onChange={evt => {
+        onChange={(evt) => {
           setTxsAddressQuery(evt.target.value);
         }}
         left={<Icon icon={searchIcon} className="space-right" />}
@@ -112,7 +112,7 @@ const Filters = ({ addressQuery, category, minAmount, timeSpan }) => (
         min="0"
         placeholder="0.00"
         value={minAmount}
-        onChange={evt => setTxsMinAmountFilter(evt.target.value)}
+        onChange={(evt) => setTxsMinAmountFilter(evt.target.value)}
       />
     </FormField>
 

@@ -95,7 +95,7 @@ const translateWithContext = (context = '', string, data, injections) =>
 const translate = (string, data, injections) =>
   translateWithContext('', string, data, injections);
 
-const withContext = context => (string, data, injections) =>
+const withContext = (context) => (string, data, injections) =>
   translateWithContext(context, string, data, injections);
 
 const ensureSignificantDigit = (decimalDigits, num) => {
@@ -147,7 +147,7 @@ const relativeTimeUnit = [
   [1000 * 60 * 60 * 24, 'day'],
   [1000 * 60 * 60 * 24 * 7, 'week'],
 ];
-const toRelativeTime = timestamp => {
+const toRelativeTime = (timestamp) => {
   const ms = new Date(timestamp).valueOf() - Date.now();
   let count = Math.round(ms / 1000);
   let unit = 'second';

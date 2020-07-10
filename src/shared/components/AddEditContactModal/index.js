@@ -23,8 +23,8 @@ const initialContact = {
 };
 
 function getInitialValues(contact) {
-  const mine = contact.addresses.filter(c => c.isMine);
-  const notMine = contact.addresses.filter(c => !c.isMine);
+  const mine = contact.addresses.filter((c) => c.isMine);
+  const notMine = contact.addresses.filter((c) => !c.isMine);
   return { ...contact, mine, notMine };
 }
 
@@ -40,7 +40,7 @@ class AddEditContactModal extends Component {
 
     return (
       <Modal>
-        {closeModal => (
+        {(closeModal) => (
           <>
             <Modal.Header>
               {edit ? __('Edit contact') : __('Create new contact')}

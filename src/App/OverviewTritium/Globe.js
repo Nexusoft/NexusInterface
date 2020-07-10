@@ -234,7 +234,7 @@ export default class Globe extends Component {
     // update the registery entry data
 
     let newRegistry = peerInfo
-      .map(peer => {
+      .map((peer) => {
         let GeoData = geoip.get(peer.address.split(':')[0]);
         // TODO: add checks for lisp and change color appropreately
         //console.log(this.props.pillarColor);
@@ -254,10 +254,10 @@ export default class Globe extends Component {
         ///Find out how many peers will be on pillar
         let duplicateIndex = array
           .map(
-            internalPoint =>
+            (internalPoint) =>
               peer.lat === internalPoint.lat && peer.lng === internalPoint.lng
           )
-          .filter(e => e);
+          .filter((e) => e);
 
         return {
           ...peer,
@@ -269,10 +269,10 @@ export default class Globe extends Component {
       })
       .map((peer, i, array) => {
         let existIndex = this.pointRegistry.findIndex(
-          point => peer.lat === point.lat && peer.lng === point.lng
+          (point) => peer.lat === point.lat && peer.lng === point.lng
         );
         let duplicateIndex = array.findIndex(
-          internalPoint =>
+          (internalPoint) =>
             peer.lat === internalPoint.lat && peer.lng === internalPoint.lng
         );
 
@@ -285,11 +285,11 @@ export default class Globe extends Component {
           return newPoint;
         }
       })
-      .filter(e => e);
+      .filter((e) => e);
 
-    this.pointRegistry.map(point => {
+    this.pointRegistry.map((point) => {
       let existIndex = newRegistry.findIndex(
-        peer => peer.lat === point.lat && peer.lng === point.lng
+        (peer) => peer.lat === point.lat && peer.lng === point.lng
       );
 
       if (existIndex < 0 && point.params.type !== 'SELF') {
@@ -308,13 +308,13 @@ export default class Globe extends Component {
    */
   addSelfPoint() {
     let selfIndex = this.pointRegistry.indexOf(
-      point => point.params.type === 'SELF'
+      (point) => point.params.type === 'SELF'
     );
 
     if (selfIndex < 0) {
       fetch('http://www.geoplugin.net/json.gp')
-        .then(response => response.json())
-        .then(data => {
+        .then((response) => response.json())
+        .then((data) => {
           let self = new Point(
             parseFloat(data.geoplugin_latitude),
             parseFloat(data.geoplugin_longitude),
@@ -329,7 +329,7 @@ export default class Globe extends Component {
           this.allPoints.add(self.pillar);
           this.arcRegister();
         })
-        .catch(e => console.log(e));
+        .catch((e) => console.log(e));
     }
   }
 
@@ -339,7 +339,7 @@ export default class Globe extends Component {
    * @memberof Globe
    */
   removeAllPoints() {
-    this.pointRegistry.map(point => {
+    this.pointRegistry.map((point) => {
       if (point.params.type === 'SELF') {
         setTimeout(() => {
           this.destroyPoint(point);
@@ -359,13 +359,13 @@ export default class Globe extends Component {
    * @memberof Globe
    */
   destroyPoint(deadPoint) {
-    this.pointRegistry = this.pointRegistry.filter(point => {
+    this.pointRegistry = this.pointRegistry.filter((point) => {
       if (point.pillar.uuid !== deadPoint.pillar.uuid) return point;
     });
 
     this.allPoints.remove(deadPoint.pillar);
     this.curveRegistry
-      .filter(arc => {
+      .filter((arc) => {
         if (
           (arc.pointOne.lat === deadPoint.lat &&
             arc.pointOne.lat === deadPoint.lat) ||
@@ -374,7 +374,7 @@ export default class Globe extends Component {
         )
           return arc;
       })
-      .map(arc => {
+      .map((arc) => {
         this.destroyArc(arc);
       });
 
@@ -390,14 +390,14 @@ export default class Globe extends Component {
    */
   arcRegister() {
     let self = this.pointRegistry[
-      this.pointRegistry.findIndex(element => {
+      this.pointRegistry.findIndex((element) => {
         return element.params.type === 'SELF';
       })
     ];
 
     if (self) {
-      this.pointRegistry.forEach(point => {
-        let existIndex = this.curveRegistry.findIndex(curve => {
+      this.pointRegistry.forEach((point) => {
+        let existIndex = this.curveRegistry.findIndex((curve) => {
           if (
             curve.pointOne.lat === point.lat &&
             curve.pointOne.lng === point.lng &&
@@ -436,13 +436,13 @@ export default class Globe extends Component {
   animateArcs() {
     if (this.curveRegistry.length <= 0) return;
     if (this.curveRegistry[0].isPlaying) return;
-    this.curveRegistry.map(arc => {
+    this.curveRegistry.map((arc) => {
       if (arc.forward) {
         arc.play();
       }
     });
     setTimeout(() => {
-      this.curveRegistry.map(arc => {
+      this.curveRegistry.map((arc) => {
         if (!arc.forward) {
           arc.play();
         }
@@ -457,7 +457,7 @@ export default class Globe extends Component {
    * @memberof Globe
    */
   destroyArc(deadCurve) {
-    this.curveRegistry = this.curveRegistry.filter(curve => {
+    this.curveRegistry = this.curveRegistry.filter((curve) => {
       if (curve.arc.uuid !== deadCurve.arc.uuid) return curve;
     });
 
@@ -528,7 +528,7 @@ export default class Globe extends Component {
   render() {
     return (
       <GlobeContainer>
-        <div ref={element => (this.threeRootElement = element)} />
+        <div ref={(element) => (this.threeRootElement = element)} />
       </GlobeContainer>
     );
   }

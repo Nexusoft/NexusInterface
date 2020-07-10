@@ -11,7 +11,7 @@ import TextField from 'components/TextField';
 
 __ = __context('Settings.Application');
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   backupDir: state.settings.backupDirectory,
   locale: state.settings.locale,
 });
@@ -51,7 +51,7 @@ class SettingsApp extends Component {
   render() {
     return (
       <SettingsField connectLabel label={__('Backup directory')}>
-        {inputId => (
+        {(inputId) => (
           <div className="flex stretch">
             <TextField
               id={inputId}

@@ -22,7 +22,7 @@ export default (state = initialState, action) => {
       const {
         payload: { id },
       } = action;
-      return state.filter(m => m.id !== id);
+      return state.filter((m) => m.id !== id);
     }
 
     default:

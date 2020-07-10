@@ -83,7 +83,7 @@ export async function getModuleHash(module) {
       const nxsPackagePath = join(module.path, 'nxs_package.json');
       const filePaths = module.info.files
         .sort()
-        .map(file => join(module.path, file));
+        .map((file) => join(module.path, file));
       const streams = [
         normalizeFile(nxsPackagePath),
         ...filePaths.map(normalizeFile),
@@ -212,7 +212,7 @@ export async function isRepoFromNexus({ host, owner, repo, commit }) {
     const url = apiUrls[host];
     const response = await axios.get(url);
     const listOfOrgs = JSON.parse(response.request.response);
-    const partOfNexus = listOfOrgs.find(e => e.login === 'Nexusoft');
+    const partOfNexus = listOfOrgs.find((e) => e.login === 'Nexusoft');
     return !!partOfNexus;
   } catch (err) {
     console.error(err);

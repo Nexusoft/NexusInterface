@@ -27,7 +27,7 @@ const SubLable = styled.span(({ theme }) => ({
   color: theme.mixer(0.5),
 }));
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const valueSelector = formValueSelector('new_token');
 
   return {
@@ -114,7 +114,7 @@ class NewTokenModal extends React.Component {
     const tokenCreationFee = token(supply, decimal);
     return (
       <Modal
-        assignClose={closeModal => {
+        assignClose={(closeModal) => {
           this.closeModal = closeModal;
         }}
         maxWidth={400}

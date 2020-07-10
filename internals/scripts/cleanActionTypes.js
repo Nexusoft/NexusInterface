@@ -11,7 +11,7 @@ const actionTypes = matches.map(([str, at]) => at);
 function checkFile(filePath) {
   const fileContent = fs.readFileSync(filePath).toString();
   const actionTypesCopy = [...actionTypes];
-  actionTypesCopy.forEach(at => {
+  actionTypesCopy.forEach((at) => {
     if (fileContent.includes(at)) {
       const index = actionTypes.indexOf(at);
       actionTypes.splice(index, 1);
@@ -21,7 +21,7 @@ function checkFile(filePath) {
 
 function checkFolder(dirPath) {
   const items = fs.readdirSync(dirPath);
-  items.forEach(item => {
+  items.forEach((item) => {
     const itemPath = path.join(dirPath, item);
     const stat = fs.statSync(itemPath);
     if (stat.isDirectory()) {
@@ -36,11 +36,11 @@ const reducersDir = path.join(srcDir, 'shared/store/reducers');
 checkFolder(reducersDir);
 
 let newContent = content;
-actionTypes.forEach(at => {
+actionTypes.forEach((at) => {
   newContent = newContent.replace(new RegExp(`export const ${at} = .*\n`), '');
 });
 console.log(chalk.yellow.bold('Unused action types:'));
-actionTypes.forEach(at => {
+actionTypes.forEach((at) => {
   console.log(at);
 });
 

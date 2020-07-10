@@ -41,7 +41,7 @@ const UserControlComponent = styled(StatusIcon)(
  *
  *@returns {JSX} JSX
  */
-@connect(state => ({ loggedIn: isLoggedIn(state) }))
+@connect((state) => ({ loggedIn: isLoggedIn(state) }))
 class UserControl extends React.Component {
   state = {
     open: false,

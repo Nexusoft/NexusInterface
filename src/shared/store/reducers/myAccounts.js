@@ -16,7 +16,7 @@ export default (state = initialState, action) => {
           };
         } else {
           //if for any reason they are not in the same order search
-          const find = state.find(stateE => {
+          const find = state.find((stateE) => {
             return e === stateE.account;
           });
           return {

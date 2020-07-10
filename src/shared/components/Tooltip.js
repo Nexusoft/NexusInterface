@@ -72,7 +72,7 @@ const tooltipAligning = (rect, position, align) => {
   }
 };
 
-const arrowPositioning = position => ({ [position]: '100%' });
+const arrowPositioning = (position) => ({ [position]: '100%' });
 
 const arrowAligning = (position, align) => {
   if (position === 'top' || position == 'bottom') {

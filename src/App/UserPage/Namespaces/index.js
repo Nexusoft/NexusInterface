@@ -46,7 +46,7 @@ const Namespace = ({ namespace }) => (
         namespace,
       });
     }}
-    onContextMenu={e => {
+    onContextMenu={(e) => {
       e.stopPropagation();
       popupContextMenu([
         {
@@ -70,7 +70,7 @@ const Namespace = ({ namespace }) => (
   </NamespaceComponent>
 );
 
-@connect(state => ({
+@connect((state) => ({
   namespaces: state.user.namespaces,
 }))
 export default class Namesspaces extends React.Component {
@@ -101,7 +101,7 @@ export default class Namesspaces extends React.Component {
 
           <div className="mt1">
             {!!namespaces && namespaces.length > 0 ? (
-              namespaces.map(namespace => (
+              namespaces.map((namespace) => (
                 <Namespace key={namespace.address} namespace={namespace} />
               ))
             ) : (

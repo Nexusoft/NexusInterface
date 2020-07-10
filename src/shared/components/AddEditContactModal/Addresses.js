@@ -88,7 +88,7 @@ class Addresses extends React.Component {
     this.justAdded = true;
   };
 
-  getAddressLabel = name =>
+  getAddressLabel = (name) =>
     this.props.isMine
       ? name
         ? __('My Nexus address for %{name}', { name })

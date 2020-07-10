@@ -41,7 +41,7 @@ const Pending = styled.div({
   paddingLeft: '1em',
 });
 
-const BalanceTooltip = staking =>
+const BalanceTooltip = (staking) =>
   staking
     ? __(
         'The current NXS balance of the trust account that is not staked. You can spend this amount without affecting your Trust Score'
@@ -50,7 +50,7 @@ const BalanceTooltip = staking =>
         'Balance that will be staked after the 72 holding period, any change to this balance will reset the hold timer'
       );
 
-@connect(state => ({
+@connect((state) => ({
   stakeInfo: state.user.stakeInfo,
   stakingEnabled: state.settings.enableStaking,
 }))

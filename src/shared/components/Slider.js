@@ -33,7 +33,7 @@ const SliderComponent = styled.input(({ theme }) => ({
   },
 }));
 
-const Slider = props => {
+const Slider = (props) => {
   const sliderRef = useRef();
   return (
     <SliderComponent

@@ -25,7 +25,7 @@ const timeFormatOptions = {
 
 const AccountDetailsModal = ({ account, stakeInfo }) => (
   <Modal>
-    {closeModal => (
+    {(closeModal) => (
       <>
         <Modal.Header>{__('Account Details')}</Modal.Header>
         <Modal.Body>
@@ -116,7 +116,7 @@ const AccountDetailsModal = ({ account, stakeInfo }) => (
   </Modal>
 );
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   stakeInfo: state.user.stakeInfo,
 });
 

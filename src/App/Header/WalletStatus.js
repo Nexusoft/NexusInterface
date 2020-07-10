@@ -20,7 +20,7 @@ const StakingDanger = styled.div({
  * @class WalletStatus
  * @extends {React.Component}
  */
-@connect(state => ({
+@connect((state) => ({
   manualDaemon: state.settings.manualDaemon,
   autoConnect: state.core.autoConnect,
   staking: state.user.stakeInfo.staking,

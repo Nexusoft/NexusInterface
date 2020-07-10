@@ -42,7 +42,7 @@ class BackgroundPicker extends Component {
    *
    * @memberof BackgroundPicker
    */
-  setDefault = version => {
+  setDefault = (version) => {
     if (this.props.defaultStyle != version) {
       version = version + 'Custom';
     }
@@ -54,7 +54,7 @@ class BackgroundPicker extends Component {
    *
    * @memberof BackgroundPicker
    */
-  handleFilePick = e => {
+  handleFilePick = (e) => {
     if (!!e.target.files.length) {
       let imagePath = e.target.files[0].path;
       if (process.platform === 'win32') {

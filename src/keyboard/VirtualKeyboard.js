@@ -38,16 +38,16 @@ export default class App extends React.Component {
     });
   }
 
-  handleChange = text => {
+  handleChange = (text) => {
     this.setState({ text });
     ipcRenderer.send('keyboard-input-change', text);
   };
 
-  handleInputChange = e => {
+  handleInputChange = (e) => {
     this.setState({ text: e.target.value });
   };
 
-  handleKeyPress = btn => {
+  handleKeyPress = (btn) => {
     switch (btn) {
       case '{shift}':
         this.setState({ shift: !this.state.shift });
@@ -98,7 +98,7 @@ export default class App extends React.Component {
           </InputWrapper>
 
           <Keyboard
-            keyboardRef={keyboard => {
+            keyboardRef={(keyboard) => {
               if (!this.populated && this.state.options) {
                 keyboard.setInput(this.state.options.defaultText);
               }

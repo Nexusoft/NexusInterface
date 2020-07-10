@@ -30,8 +30,8 @@ const Buttons = styled.div({
  * @class NewAddressForm
  * @extends {React.Component}
  */
-@connect(state => ({
-  accountNames: (state.myAccounts || []).map(acc => acc.account),
+@connect((state) => ({
+  accountNames: (state.myAccounts || []).map((acc) => acc.account),
 }))
 @reduxForm({
   form: 'newAddress',
@@ -62,7 +62,7 @@ class NewAddressForm extends React.Component {
    *
    * @memberof NewAddressForm
    */
-  setAccountName = name => {
+  setAccountName = (name) => {
     this.props.change('accountName', name);
   };
 

@@ -100,7 +100,7 @@ class CreateNamespaceForm extends React.Component {
 
 const CreateNamespaceModal = () => (
   <Modal maxWidth={450}>
-    {closeModal => (
+    {(closeModal) => (
       <>
         <Modal.Header>{__('Create a new namespace')}</Modal.Header>
         <Modal.Body>

@@ -59,7 +59,7 @@ class ThemePicker extends Component {
     this.props.handleOnSetCustom(() => {
       this.setToCustomTheme();
     });
-    this.props.handleSetSelector(selectorIndex => {
+    this.props.handleSetSelector((selectorIndex) => {
       this.setSelector(selectorIndex);
     });
   }

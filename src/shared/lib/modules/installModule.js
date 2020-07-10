@@ -59,7 +59,7 @@ async function copyModule(files, source, dest) {
 
   const promises = [
     copyFile('nxs_package.json', source, dest),
-    ...files.map(file => copyFile(file, source, dest)),
+    ...files.map((file) => copyFile(file, source, dest)),
   ];
   if (fs.existsSync(join(source, 'repo_info.json'))) {
     promises.push(copyFile('repo_info.json', source, dest));
@@ -141,7 +141,7 @@ export async function installModule(path) {
     let sourcePath = path;
 
     if ((await fs.promises.stat(path)).isFile()) {
-      if (!supportedExtensions.some(ext => path.endsWith(ext))) {
+      if (!supportedExtensions.some((ext) => path.endsWith(ext))) {
         showNotification(__('Unsupported file type'), 'error');
         return;
       }

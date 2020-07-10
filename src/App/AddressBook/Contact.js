@@ -76,7 +76,7 @@ const AddressesCount = styled.div(({ theme }) => ({
  * @class Contact
  * @extends {PureComponent}
  */
-@connect(state => ({
+@connect((state) => ({
   selectedContactName: state.ui.addressBook.selectedContactName,
   locale: state.settings.locale,
   coreConnected: isCoreConnected(state),
@@ -116,7 +116,7 @@ class Contact extends React.PureComponent {
    *
    * @memberof Contact
    */
-  showContextMenu = e => {
+  showContextMenu = (e) => {
     e.preventDefault();
     e.stopPropagation();
     const template = [...defaultMenu];
@@ -142,7 +142,7 @@ class Contact extends React.PureComponent {
    * @returns
    * @memberof Contact
    */
-  getinitial = name => (name && name.length >= 1 ? name.charAt(0) : '');
+  getinitial = (name) => (name && name.length >= 1 ? name.charAt(0) : '');
 
   /**
    * Select a Contact
@@ -191,7 +191,7 @@ export default Contact;
  * @param {*} props
  * @memberof Contact
  */
-const NewContactButton = props => (
+const NewContactButton = (props) => (
   <ContactComponent {...props}>
     <ContactAvatar>
       <Icon icon={plusIcon} style={{ fontSize: '.8em', opacity: 0.7 }} />

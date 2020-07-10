@@ -42,7 +42,7 @@ const Value = styled.div({
   float: 'right',
 });
 
-@connect(state => ({
+@connect((state) => ({
   balances: state.user.balances,
 }))
 export default class Balances extends React.Component {

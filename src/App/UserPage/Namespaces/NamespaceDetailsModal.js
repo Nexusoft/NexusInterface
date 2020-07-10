@@ -22,7 +22,7 @@ const timeFormatOptions = {
 
 const NamespaceDetailsModal = ({ namespace }) => (
   <Modal>
-    {closeModal => (
+    {(closeModal) => (
       <>
         <Modal.Header className="relative">
           {__('Namespace Details')}

@@ -47,7 +47,7 @@ const Buttons = styled.div({
 
 const formName = 'moveBetweenAccounts';
 const valueSelector = formValueSelector(formName);
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const {
     settings: { minConfirmations, fiatCurrency },
     core: {
@@ -145,7 +145,7 @@ class MoveBetweenAccountsForm extends Component {
    *
    * @memberof MoveBetweenAccountsForm
    */
-  confirmMove = e => {
+  confirmMove = (e) => {
     e.preventDefault();
     const { handleSubmit, invalid, locked, touch, fieldNames } = this.props;
 
@@ -238,7 +238,7 @@ class MoveBetweenAccountsForm extends Component {
  */
 const MoveBetweenAccountsModal = () => (
   <Modal maxWidth={650}>
-    {closeModal => (
+    {(closeModal) => (
       <>
         <Modal.Header>{__('Move NXS between accounts')}</Modal.Header>
 

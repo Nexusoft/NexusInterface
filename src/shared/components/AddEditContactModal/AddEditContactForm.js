@@ -17,12 +17,12 @@ import Addresses from './Addresses';
 
 __ = __context('AddEditContact');
 
-const tzOptions = timeZones.map(tz => ({
+const tzOptions = timeZones.map((tz) => ({
   value: tz.value,
   display: `(${tz.offset}) ${tz.description}`,
 }));
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   addressBook: state.addressBook,
 });
 
@@ -43,7 +43,7 @@ function validateAddresses(addresses) {
 function asyncValidateAddresses(isMine, addresses, errors) {
   return addresses.map(({ address }, i) =>
     rpc('validateaddress', [address])
-      .then(result => {
+      .then((result) => {
         if (!result.isvalid) {
           if (address.startsWith('a') && address.length === 64) {
           } else {
@@ -61,7 +61,7 @@ function asyncValidateAddresses(isMine, addresses, errors) {
           };
         }
       })
-      .catch(err => {
+      .catch((err) => {
         errors[i] = {
           address: __('Invalid address'),
         };
@@ -132,8 +132,8 @@ function asyncValidateAddresses(isMine, addresses, errors) {
   onSubmit: (values, dispatch, props) => {
     const contact = { ...values };
     const addresses = [
-      ...contact.notMine.map(addr => ({ ...addr, isMine: false })),
-      ...contact.mine.map(addr => ({ ...addr, isMine: true })),
+      ...contact.notMine.map((addr) => ({ ...addr, isMine: false })),
+      ...contact.mine.map((addr) => ({ ...addr, isMine: true })),
     ];
     delete contact.mine;
     delete contact.notMine;

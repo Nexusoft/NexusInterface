@@ -43,7 +43,7 @@ const Buttons = styled.div({
  * @class MyAddressesModal
  * @extends {React.Component}
  */
-@connect(state => ({
+@connect((state) => ({
   myAccounts: state.myAccounts,
   locale: state.settings.locale,
   blockCount: state.core.info.blocks,
@@ -68,7 +68,7 @@ class MyAddressesModal extends React.Component {
    *
    * @memberof MyAddressesModal
    */
-  handleChange = e => {
+  handleChange = (e) => {
     this.setState({
       searchQuery: e.target.value,
     });
@@ -92,7 +92,7 @@ class MyAddressesModal extends React.Component {
    */
   filteredAccounts = () => {
     const allAccounts = this.props.myAccounts || [];
-    return allAccounts.filter(acc => {
+    return allAccounts.filter((acc) => {
       const accName = acc.account || __('My Account');
       const searchedName = accName.toLowerCase();
       const query = this.state.searchQuery.toLowerCase();
@@ -147,7 +147,7 @@ class MyAddressesModal extends React.Component {
               </Button>
             </Tooltip.Trigger>
           </Search>
-          {this.filteredAccounts().map(acc => (
+          {this.filteredAccounts().map((acc) => (
             <Account
               key={acc.account}
               account={acc}

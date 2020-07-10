@@ -18,7 +18,7 @@ __ = __context('Settings.Security');
  * @class SettingsSecurity
  * @extends {React.Component}
  */
-@connect(state => ({
+@connect((state) => ({
   locked: state.core.info.locked,
 }))
 class SettingsSecurity extends React.Component {

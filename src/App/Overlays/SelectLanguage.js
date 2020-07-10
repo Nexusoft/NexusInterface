@@ -45,7 +45,7 @@ class SelectLanguage extends React.Component {
     selection: 'en',
   };
 
-  selectLanguage = lang => {
+  selectLanguage = (lang) => {
     this.setState({ selection: lang });
   };
 

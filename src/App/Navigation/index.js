@@ -77,12 +77,12 @@ const ModuleNavItem = ({ module }) => (
   </Tooltip.Trigger>
 );
 
-const ModuleNavItems = connect(state => ({
+const ModuleNavItems = connect((state) => ({
   modules: state.modules,
 }))(({ modules }) =>
   Object.values(modules)
-    .filter(module => module.enabled && module.info.type === 'app')
-    .map(module => <ModuleNavItem key={module.info.name} module={module} />)
+    .filter((module) => module.enabled && module.info.type === 'app')
+    .map((module) => <ModuleNavItem key={module.info.name} module={module} />)
 );
 
 /**

@@ -10,7 +10,7 @@ const precision = 100000;
  * @returns {float} result of subtracted numbers
  */
 export const subtract = (...numbers) =>
-  numbers.map(num => Number(num) * precision).reduce((a, b) => a - b) /
+  numbers.map((num) => Number(num) * precision).reduce((a, b) => a - b) /
   precision;
 
 /**
@@ -20,7 +20,7 @@ export const subtract = (...numbers) =>
  * @returns {float} result of additioned numbers
  */
 export const add = (...numbers) =>
-  numbers.map(num => Number(num) * precision).reduce((a, b) => a + b) /
+  numbers.map((num) => Number(num) * precision).reduce((a, b) => a + b) /
   precision;
 
 /**
@@ -30,7 +30,7 @@ export const add = (...numbers) =>
  * @returns {float} result of multiplied numbers
  */
 export const multiply = (...numbers) =>
-  numbers.map(num => Number(num) * precision).reduce((a, b) => a * b) /
+  numbers.map((num) => Number(num) * precision).reduce((a, b) => a * b) /
   precision;
 
 /**
@@ -40,5 +40,5 @@ export const multiply = (...numbers) =>
  * @returns {float} result of Divided numbers
  */
 export const divide = (...numbers) =>
-  numbers.map(num => Number(num) * precision).reduce((a, b) => a / b) /
+  numbers.map((num) => Number(num) * precision).reduce((a, b) => a / b) /
   precision;

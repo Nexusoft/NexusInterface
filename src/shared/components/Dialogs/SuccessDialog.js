@@ -31,7 +31,7 @@ class SuccessDialog extends React.Component {
     const { message, note, ...rest } = this.props;
     return (
       <Dialog
-        assignClose={closeModal => {
+        assignClose={(closeModal) => {
           this.closeModal = closeModal;
         }}
         {...rest}

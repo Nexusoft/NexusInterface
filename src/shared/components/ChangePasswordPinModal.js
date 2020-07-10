@@ -80,7 +80,7 @@ export default class ChangePasswordPinModal extends React.Component {
     const { handleSubmit, submitting } = this.props;
     return (
       <Modal
-        assignClose={closeModal => (this.closeModal = closeModal)}
+        assignClose={(closeModal) => (this.closeModal = closeModal)}
         maxWidth={500}
       >
         <Modal.Header>{__('Change password and PIN')}</Modal.Header>

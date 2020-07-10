@@ -68,7 +68,7 @@ class SearchTokenModal extends React.Component {
     const { handleSubmit, submitting } = this.props;
     return (
       <Modal
-        assignClose={closeModal => {
+        assignClose={(closeModal) => {
           this.closeModal = closeModal;
         }}
         maxWidth={800}

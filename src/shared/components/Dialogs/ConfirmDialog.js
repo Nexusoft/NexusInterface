@@ -32,7 +32,7 @@ const ConfirmDialog = ({
   ...rest
 }) => (
   <Dialog onBackgroundClick={null} escToClose={false} {...rest}>
-    {closeModal => (
+    {(closeModal) => (
       <Modal.Body>
         <QuestionMark>?</QuestionMark>
         <Dialog.Message>{question}</Dialog.Message>

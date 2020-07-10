@@ -8,7 +8,7 @@ function getDecoder() {
   var prevChunk;
 
   return {
-    write: function(chunk) {
+    write: function (chunk) {
       var idx, ch;
 
       if (typeof chunk !== 'string') chunk = decoder.write(chunk);
@@ -31,7 +31,7 @@ function getDecoder() {
 
       return chunk;
     },
-    end: function() {
+    end: function () {
       var chunk;
 
       if (typeof decoder.end === 'function') chunk = decoder.end();
@@ -67,13 +67,13 @@ export default function normalizeEol(format) {
     throw Error('Unknown EOL format: ' + format);
   }
 
-  ts._transform = function(chunk, encoding, callback) {
+  ts._transform = function (chunk, encoding, callback) {
     chunk = decoder.write(chunk);
     if (chunk) this.push(chunk.replace(find, format));
     callback();
   };
 
-  ts._flush = function() {
+  ts._flush = function () {
     var chunk = decoder.end();
     if (chunk) this.push(chunk.replace(find, format));
     this.push(null);

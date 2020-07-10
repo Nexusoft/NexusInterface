@@ -18,7 +18,7 @@ __ = __context('Header');
  * @class StakingStatus
  * @extends {React.Component}
  */
-@connect(state => {
+@connect((state) => {
   const {
     core: {
       info: { stakerate, genesismature, synccomplete },

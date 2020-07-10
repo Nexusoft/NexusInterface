@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 
 import { isCoreConnected } from 'selectors';
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   manualDaemon: state.settings.manualDaemon,
   autoConnect: state.core.autoConnect,
   coreConnected: isCoreConnected(state),

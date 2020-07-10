@@ -143,7 +143,7 @@ const UserDropdown = ({ loggedIn, closeDropdown, ...rest }) => (
   </UserDropdownComponent>
 );
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   loggedIn: isLoggedIn(state),
 });
 

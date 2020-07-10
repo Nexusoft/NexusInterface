@@ -109,7 +109,7 @@ const Transaction = ({ transaction }) => {
         onClick={() =>
           openModal(TransactionDetailsModal, { txid: transaction.txid })
         }
-        onContextMenu={e => {
+        onContextMenu={(e) => {
           e.stopPropagation();
           popupContextMenu([
             {

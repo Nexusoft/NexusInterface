@@ -103,7 +103,7 @@ class AddModule extends React.Component {
    *
    * @memberof AddModule
    */
-  getFilesFromEvent = event => {
+  getFilesFromEvent = (event) => {
     if (!event || !event.dataTransfer) return [];
     if (event.type === 'drop') {
       return Array.from(event.dataTransfer.files);
@@ -117,7 +117,7 @@ class AddModule extends React.Component {
    *
    * @memberof AddModule
    */
-  handleDrop = acceptedFiles => {
+  handleDrop = (acceptedFiles) => {
     if (acceptedFiles && acceptedFiles.length > 0) {
       this.startInstall(acceptedFiles[0].path);
     }
@@ -128,7 +128,7 @@ class AddModule extends React.Component {
    *
    * @memberof AddModule
    */
-  startInstall = async path => {
+  startInstall = async (path) => {
     this.setState({ checking: true });
     try {
       await installModule(path);
@@ -177,12 +177,12 @@ class AddModule extends React.Component {
                       "Select module's <file>archive file</file> or <dir>directory</dir>",
                       undefined,
                       {
-                        file: txt => (
+                        file: (txt) => (
                           <Button skin="hyperlink" onClick={this.browseFiles}>
                             {txt}
                           </Button>
                         ),
-                        dir: txt => (
+                        dir: (txt) => (
                           <Button
                             skin="hyperlink"
                             onClick={this.browseDirectories}

@@ -62,7 +62,7 @@ const fiatCurrencies = [
   { value: 'USD', display: 'United States Dollar (USD)' },
 ];
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   coreConnected: isCoreConnected(state),
   settings: state.settings,
 });
@@ -110,7 +110,7 @@ class SettingsApp extends Component {
    *
    * @memberof SettingsApp
    */
-  toggleVerifyModuleSource = e => {
+  toggleVerifyModuleSource = (e) => {
     if (e.target.checked) {
       openConfirmDialog({
         question: __('Turn module open source policy on?'),
@@ -160,9 +160,9 @@ class SettingsApp extends Component {
    */
   updateHandlers = (() => {
     const handlers = [];
-    return settingName => {
+    return (settingName) => {
       if (!handlers[settingName]) {
-        handlers[settingName] = input =>
+        handlers[settingName] = (input) =>
           updateSettings({
             [settingName]: form.resolveValue(input),
           });
@@ -176,7 +176,7 @@ class SettingsApp extends Component {
    *
    * @memberof SettingsApp
    */
-  handleAutoUpdateChange = e => {
+  handleAutoUpdateChange = (e) => {
     if (!e.target.checked) {
       openConfirmDialog({
         question: __('Are you sure you want to disable auto update?'),
@@ -285,7 +285,7 @@ class SettingsApp extends Component {
               step="1"
               min="1"
               onChange={this.updateHandlers('minConfirmations')}
-              onKeyPress={e => {
+              onKeyPress={(e) => {
                 e.preventDefault();
               }}
               style={{ width: 75 }}

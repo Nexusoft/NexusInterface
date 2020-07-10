@@ -16,7 +16,7 @@ const Flag = styled.img({
   verticalAlign: 'middle',
 });
 
-const languageOptions = languages.map(lang => ({
+const languageOptions = languages.map((lang) => ({
   value: lang.code,
   display: (
     <span>
@@ -26,7 +26,7 @@ const languageOptions = languages.map(lang => ({
   ),
 }));
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   locale: state.settings.locale,
 });
 
@@ -43,7 +43,7 @@ class LanguageSetting extends Component {
    *
    * @memberof LanguageSetting
    */
-  handleChange = locale => {
+  handleChange = (locale) => {
     updateSettings({ locale });
     location.reload();
   };

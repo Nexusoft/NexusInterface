@@ -10,15 +10,15 @@ export default function extractTarball(source, dest) {
     try {
       fs.createReadStream(source)
         .pipe(tar.extract({ C: dest }))
-        .on('error', function(er) {
+        .on('error', function (er) {
           console.log('bootstrap error', er);
           reject(er);
         })
-        .on('end', function() {
+        .on('end', function () {
           resolve(null);
         });
     } catch {
-      e => console.log('Extract Error', e);
+      (e) => console.log('Extract Error', e);
     }
   });
 }

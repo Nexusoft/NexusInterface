@@ -9,10 +9,7 @@ import * as TYPE from 'consts/actionTypes';
 
 function generateDefaultPassword() {
   let randomNumbers = ['', ''];
-  const ranByte = crypto
-    .randomBytes(64)
-    .toString('hex')
-    .split('');
+  const ranByte = crypto.randomBytes(64).toString('hex').split('');
   for (let index = 0; index < ranByte.length; index++) {
     const element = ranByte[index];
     if (index % 2) {
@@ -28,13 +25,10 @@ function generateDefaultPassword() {
     process.platform === 'darwin'
       ? process.env.USER + process.env.HOME + process.env.SHELL + randomValue
       : JSON.stringify(macaddress.networkInterfaces(), null, 2) + randomValue;
-  return crypto
-    .createHmac('sha256', secret)
-    .update('pass')
-    .digest('hex');
+  return crypto.createHmac('sha256', secret).update('pass').digest('hex');
 }
 
-const fromKeyValues = rawContent =>
+const fromKeyValues = (rawContent) =>
   rawContent
     ? rawContent.split('\n').reduce((obj, line) => {
         const equalIndex = line.indexOf('=');
@@ -47,7 +41,7 @@ const fromKeyValues = rawContent =>
       }, {})
     : {};
 
-const toKeyValues = obj =>
+const toKeyValues = (obj) =>
   Object.entries(obj)
     .map(([key, value]) => `${key}=${value}`)
     .join('\n');
@@ -132,7 +126,7 @@ export async function loadNexusConf() {
   // Save nexus.conf file if there were changes
   if (updated) {
     log.info('Filling up some missing configurations in nexus.conf');
-    fs.writeFile(confPath, toKeyValues(configs), err => {
+    fs.writeFile(confPath, toKeyValues(configs), (err) => {
       if (err) {
         console.error(err);
       } else {

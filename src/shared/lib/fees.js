@@ -1,6 +1,6 @@
 export const namedAccount = 1;
 
-export const asset = bytes => 0.01 * bytes;
+export const asset = (bytes) => 0.01 * bytes;
 
 export const token = (supply, decimal) => {
   const totalSupply = supply * Math.pow(10, decimal || 0);

@@ -31,7 +31,7 @@ const AddDevModule = () => (
       'Your module is still in development? <link>Add a development module</link>',
       null,
       {
-        link: txt => (
+        link: (txt) => (
           <Button skin="hyperlink" onClick={handleClick}>
             {txt}
           </Button>

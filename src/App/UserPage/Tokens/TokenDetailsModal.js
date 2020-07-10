@@ -32,7 +32,7 @@ const CloseButton = styled(Button)({
 
 const TokenDetailsModal = ({ token }) => (
   <Modal>
-    {closeModal => (
+    {(closeModal) => (
       <>
         <Modal.Header>{__('Token Details')}</Modal.Header>
         <Modal.Body>
@@ -92,6 +92,6 @@ const TokenDetailsModal = ({ token }) => (
   </Modal>
 );
 
-const mapStateToProps = state => ({});
+const mapStateToProps = (state) => ({});
 
 export default connect(mapStateToProps)(TokenDetailsModal);

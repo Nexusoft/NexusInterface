@@ -76,7 +76,7 @@ class ColorPicker extends Component {
    *
    * @memberof ColorPicker
    */
-  handleColorChange = pickedColor => {
+  handleColorChange = (pickedColor) => {
     this.props.onChange(this.props.colorName, pickedColor.hex);
   };
 

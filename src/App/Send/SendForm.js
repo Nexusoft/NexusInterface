@@ -144,7 +144,7 @@ const mapStateToProps = (state, ownProps) => {
     await Promise.all(
       recipients.map(({ address }, i) =>
         rpc('validateaddress', [address])
-          .then(result => {
+          .then((result) => {
             if (!result.isvalid) {
               recipientsErrors[i] = {
                 address: __('Invalid address'),
@@ -155,7 +155,7 @@ const mapStateToProps = (state, ownProps) => {
               };
             }
           })
-          .catch(err => {
+          .catch((err) => {
             recipientsErrors[i] = {
               address: __('Invalid address'),
             };
@@ -219,7 +219,7 @@ class SendForm extends Component {
    *
    * @memberof SendForm
    */
-  confirmSend = e => {
+  confirmSend = (e) => {
     e.preventDefault();
     const {
       handleSubmit,
@@ -269,7 +269,7 @@ class SendForm extends Component {
       callbackYes: () => {
         if (locked || minting_only) {
           openModal(PasswordModal, {
-            onSubmit: password => {
+            onSubmit: (password) => {
               this.props.change('password', password);
               // change function seems to be asynchronous
               // so setTimeout to wait for it to take effect

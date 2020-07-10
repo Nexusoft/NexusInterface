@@ -11,10 +11,10 @@ var appRef = null;
 var errorOutput = [];
 var appPath = '';
 
-describe('Application launch and Daemon Load', function() {
+describe('Application launch and Daemon Load', function () {
   this.timeout(1000000);
 
-  before(function() {
+  before(function () {
     if (process.platform === 'win32') {
       appPath = 'release/win-unpacked/Nexus Wallet.exe';
     } else if (process.platform === 'darwin') {
@@ -33,11 +33,11 @@ describe('Application launch and Daemon Load', function() {
     return this.app.start();
   });
 
-  beforeEach(function() {
+  beforeEach(function () {
     chaiAsPromised.transferPromiseness = this.app.transferPromiseness;
   });
 
-  afterEach(function() {
+  afterEach(function () {
     if (this.app && this.app.isRunning()) {
       //return this.app.stop()
     }
@@ -48,18 +48,18 @@ describe('Application launch and Daemon Load', function() {
       errorOutput.push('\n');
       errorOutput.push(this.currentTest.err);
       errorOutput.push('\n \n \n');
-      this.app.browserWindow.capturePage().then(function(imageBuffer) {
+      this.app.browserWindow.capturePage().then(function (imageBuffer) {
         let fs = require('fs');
         fs.writeFile(
           'Test-Output/Nexus_Fail_Test_' + testTitle + '.png',
           imageBuffer,
-          function() {}
+          function () {}
         );
       });
     }
   });
 
-  after(function() {
+  after(function () {
     //let fs = require('fs')
     //fs.writeFile('Test-Output/Nexus_Fail_Test_Stats.txt', errorOutput, function() {})
     if (this.app && this.app.isRunning()) {
@@ -67,7 +67,7 @@ describe('Application launch and Daemon Load', function() {
     }
   });
 
-  it('opens a window', function() {
+  it('opens a window', function () {
     return this.app.client
       .waitUntilWindowLoaded()
       .getWindowCount()
@@ -82,7 +82,7 @@ describe('Application launch and Daemon Load', function() {
       .should.eventually.have.property('height')
       .and.be.above(0);
   });
-  it('tests the title', function() {
+  it('tests the title', function () {
     return this.app.client
       .waitUntilWindowLoaded()
       .pause(2000)
@@ -90,7 +90,7 @@ describe('Application launch and Daemon Load', function() {
       .should.eventually.equal('Nexus');
   });
 
-  it('Test Close Agreement', function() {
+  it('Test Close Agreement', function () {
     return this.app.client
       .waitUntilWindowLoaded()
       .pause(2000)
@@ -98,7 +98,7 @@ describe('Application launch and Daemon Load', function() {
     //.element('button*=Accept').click();
   });
 
-  it('Test Close Experiment', function() {
+  it('Test Close Experiment', function () {
     return this.app.client
       .waitUntilWindowLoaded()
       .pause(3000)
@@ -106,14 +106,14 @@ describe('Application launch and Daemon Load', function() {
     //.element('button[class="button primary"]').click();
   });
   this.app;
-  it('Test Close Encrypt', function() {
+  it('Test Close Encrypt', function () {
     return this.app.client
       .waitUntilWindowLoaded()
       .pause(3000)
       .click('button*=Ignore');
   });
 
-  it('Wait Till Daemon Loads', function() {
+  it('Wait Till Daemon Loads', function () {
     return this.app.client
       .waitUntilWindowLoaded()
       .pause(3500)
@@ -121,10 +121,10 @@ describe('Application launch and Daemon Load', function() {
   });
 });
 
-describe('Run Page Tests', function() {
+describe('Run Page Tests', function () {
   this.timeout(222000000);
 
-  afterEach(function() {
+  afterEach(function () {
     if (this.currentTest.state == 'failed') {
       var testTitle = this.currentTest.title;
       console.log(this.currentTest);
@@ -132,23 +132,23 @@ describe('Run Page Tests', function() {
       errorOutput.push('\n');
       errorOutput.push(this.currentTest.err);
       errorOutput.push('\n \n \n');
-      appRef.browserWindow.capturePage().then(function(imageBuffer) {
+      appRef.browserWindow.capturePage().then(function (imageBuffer) {
         let fs = require('fs');
         fs.writeFile(
           'Test-Output/Nexus_Fail_Test_' + testTitle + '.png',
           imageBuffer,
-          function() {}
+          function () {}
         );
       });
     }
   });
 
-  after(function() {
+  after(function () {
     let fs = require('fs');
     fs.writeFile(
       'Test-Output/Nexus_Fail_Test_Stats.txt',
       errorOutput,
-      function() {}
+      function () {}
     );
   });
   /*
@@ -164,7 +164,7 @@ describe('Run Page Tests', function() {
       .click('button*=No, let it sync from scratch');
   });
 */
-  it('Test Go To Send', function() {
+  it('Test Go To Send', function () {
     return appRef.client
       .waitUntilWindowLoaded()
       .pause(5000)
@@ -175,7 +175,7 @@ describe('Run Page Tests', function() {
       .waitUntilTextExists('label', 'SEND FROM', 50000);
   });
 
-  it('Add To Queue', function() {
+  it('Add To Queue', function () {
     return (
       appRef.client
         .waitUntilWindowLoaded()
@@ -198,7 +198,7 @@ describe('Run Page Tests', function() {
     );
   });
 
-  it('Test Go To Transactions', function() {
+  it('Test Go To Transactions', function () {
     return appRef.client
       .waitUntilWindowLoaded()
       .pause(5000)
@@ -209,7 +209,7 @@ describe('Run Page Tests', function() {
       .waitUntilTextExists('label', 'SEARCH ADDRESS', 50000);
   });
 
-  it('Test Go To Market', function() {
+  it('Test Go To Market', function () {
     return appRef.client
       .waitUntilWindowLoaded()
       .pause(5000)
@@ -220,7 +220,7 @@ describe('Run Page Tests', function() {
       .waitUntilTextExists('b', '24hr Change', 50000);
   });
 
-  it('Test Go To Address Book', function() {
+  it('Test Go To Address Book', function () {
     return appRef.client
       .waitUntilWindowLoaded()
       .pause(5000)
@@ -231,7 +231,7 @@ describe('Run Page Tests', function() {
       .waitUntilTextExists('span', 'Address Book', 50000);
   });
 
-  it('Test Add Contact', function() {
+  it('Test Add Contact', function () {
     return appRef.client
       .waitUntilWindowLoaded()
       .pause(1000)
@@ -257,7 +257,7 @@ describe('Run Page Tests', function() {
       .click();
   });
 
-  it('Test Go To Settings', function() {
+  it('Test Go To Settings', function () {
     return appRef.client
       .waitUntilWindowLoaded()
       .pause(5000)
@@ -268,7 +268,7 @@ describe('Run Page Tests', function() {
       .waitUntilTextExists('span', 'Settings', 50000);
   });
 
-  it('Test Backup wallet', function() {
+  it('Test Backup wallet', function () {
     return appRef.client
       .waitUntilWindowLoaded()
       .pause(1000)
@@ -280,7 +280,7 @@ describe('Run Page Tests', function() {
       .pause(1000);
   });
 
-  it('Change Fiat Settings', function() {
+  it('Change Fiat Settings', function () {
     return appRef.client
       .waitUntilWindowLoaded()
       .pause(1000)
@@ -306,7 +306,7 @@ describe('Run Page Tests', function() {
       .pause(500);
   });
 
-  it('Test Go Terminal', function() {
+  it('Test Go Terminal', function () {
     return appRef.client
       .waitUntilWindowLoaded()
       .pause(5000)

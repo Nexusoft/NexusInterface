@@ -68,7 +68,7 @@ const NameTypeSelect = ({ input, hasNamespaces }) => (
   </NameTypes>
 );
 
-@connect(state => ({
+@connect((state) => ({
   username: state.user.status && state.user.status.username,
   namespaces: state.user.namespaces,
 }))
@@ -144,7 +144,7 @@ class CreateNameForm extends React.Component {
                   <Field
                     name="namespace"
                     component={Select.RF}
-                    options={(namespaces || []).map(n => ({
+                    options={(namespaces || []).map((n) => ({
                       value: n.name,
                       display: n.name,
                     }))}
@@ -239,7 +239,7 @@ class CreateNameForm extends React.Component {
 
 const CreateNameModal = () => (
   <Modal maxWidth={500}>
-    {closeModal => (
+    {(closeModal) => (
       <>
         <Modal.Header>{__('Create a new name')}</Modal.Header>
         <Modal.Body>

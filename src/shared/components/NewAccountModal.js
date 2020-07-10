@@ -18,7 +18,7 @@ import GA from 'lib/googleAnalytics';
 
 __ = __context('NewAccount');
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     userTokens: state.user.tokens,
   };
@@ -83,13 +83,13 @@ const mapStateToProps = state => {
 export default class NewAccountModal extends React.Component {
   componentDidMount() {}
 
-  returnTokenSelect = event => {
+  returnTokenSelect = (event) => {
     let values = [];
     values.push({
       value: '0',
       display: 'NXS',
     });
-    this.props.userTokens.forEach(e => {
+    this.props.userTokens.forEach((e) => {
       values.push({
         value: e.address,
         display: e.name || e.address,
@@ -102,7 +102,7 @@ export default class NewAccountModal extends React.Component {
     const { handleSubmit, submitting } = this.props;
     return (
       <Modal
-        assignClose={closeModal => {
+        assignClose={(closeModal) => {
           this.closeModal = closeModal;
         }}
         maxWidth={700}

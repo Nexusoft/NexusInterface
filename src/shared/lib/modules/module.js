@@ -246,7 +246,7 @@ async function validateModuleInfo(moduleInfo, dirPath) {
         moduleInfo.icon
     );
   }
-  const nonRelativeFile = moduleInfo.files.find(file => isAbsolute(file));
+  const nonRelativeFile = moduleInfo.files.find((file) => isAbsolute(file));
   if (nonRelativeFile) {
     throw new Error(
       'nxs_package.json validation error: `files` must contain only relative paths. Getting ' +
@@ -255,7 +255,7 @@ async function validateModuleInfo(moduleInfo, dirPath) {
   }
 
   // Ensure no file names are reserved
-  const reservedFile = moduleInfo.files.find(file =>
+  const reservedFile = moduleInfo.files.find((file) =>
     reservedFileNames.includes(normalize(file))
   );
   if (reservedFile) {
@@ -267,15 +267,15 @@ async function validateModuleInfo(moduleInfo, dirPath) {
   // Ensure all files exist and are not directories
   // Also check upper folders of all listed files because folder can be a symlink
   const relativePaths = [].concat(
-    ...moduleInfo.files.map(file => getAllUpperFolders(file))
+    ...moduleInfo.files.map((file) => getAllUpperFolders(file))
   );
-  const filePaths = relativePaths.map(path => join(dirPath, path));
+  const filePaths = relativePaths.map((path) => join(dirPath, path));
   const {
     settings: { devMode, allowSymLink },
   } = store.getState();
   const checkSymLink = !(devMode && allowSymLink);
   try {
-    await Promise.all(filePaths.map(path => checkPath(path, checkSymLink)));
+    await Promise.all(filePaths.map((path) => checkPath(path, checkSymLink)));
   } catch ({ reason, path }) {
     switch (reason) {
       case 'not_found':
@@ -434,20 +434,20 @@ export async function loadDevModuleFromDir(dirPath) {
  * Load all installed modules from the app modules directory.
  * Only called once when the wallet is started.
  */
-walletEvents.once('post-render', async function() {
+walletEvents.once('post-render', async function () {
   try {
     if (!fs.existsSync(modulesDir)) return {};
     const { devModulePaths = [] } = store.getState().settings;
     const childNames = await fs.promises.readdir(modulesDir);
-    const childPaths = childNames.map(name => join(modulesDir, name));
+    const childPaths = childNames.map((name) => join(modulesDir, name));
     const stats = await Promise.all(
-      childPaths.map(path => fs.promises.stat(path))
+      childPaths.map((path) => fs.promises.stat(path))
     );
     const dirNames = childNames.filter((name, i) => stats[i].isDirectory());
-    const dirPaths = dirNames.map(name => join(modulesDir, name));
+    const dirPaths = dirNames.map((name) => join(modulesDir, name));
     const results = await Promise.allSettled([
-      ...devModulePaths.map(path => loadDevModuleFromDir(path)),
-      ...dirPaths.map(path => loadModuleFromDir(path)),
+      ...devModulePaths.map((path) => loadDevModuleFromDir(path)),
+      ...dirPaths.map((path) => loadModuleFromDir(path)),
     ]);
     const moduleList = results
       .filter(({ status }) => status === 'fulfilled')

@@ -11,7 +11,7 @@ export default class PasswordModal extends React.Component {
     password: '',
   };
 
-  handleChange = evt => {
+  handleChange = (evt) => {
     this.setState({ password: evt.target.value });
   };
 
@@ -23,7 +23,7 @@ export default class PasswordModal extends React.Component {
   render() {
     return (
       <Modal
-        assignClose={closeModal => (this.closeModal = closeModal)}
+        assignClose={(closeModal) => (this.closeModal = closeModal)}
         maxWidth={500}
       >
         <Modal.Header>{__('Wallet password')}</Modal.Header>

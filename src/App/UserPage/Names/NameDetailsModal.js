@@ -37,7 +37,7 @@ const EditName = styled.div({
 
 const NameDetailsModal = ({ nameRecord }) => (
   <Modal>
-    {closeModal => (
+    {(closeModal) => (
       <>
         <Modal.Header className="relative">
           {__('Name Details')}

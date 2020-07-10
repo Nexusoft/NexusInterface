@@ -103,7 +103,7 @@ class AmountField extends Component {
     (this.props.parentFieldName ? this.props.parentFieldName + '.' : '') +
     'fiatAmount';
 
-  sendAll = evt => {
+  sendAll = (evt) => {
     evt.preventDefault();
     const { change, fullAmount } = this.props;
     change(this.amountFieldName(), fullAmount);

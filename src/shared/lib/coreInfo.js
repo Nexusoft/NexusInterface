@@ -58,11 +58,11 @@ const getInfo = legacyMode
       }
     };
 
-walletEvents.once('pre-render', function() {
+walletEvents.once('pre-render', function () {
   if (legacyMode) {
     observeStore(
       ({ core: { info } }) => info && info.locked,
-      locked => {
+      (locked) => {
         const state = store.getState();
         if (isCoreConnected(state) && locked === undefined) {
           if (
@@ -79,7 +79,7 @@ walletEvents.once('pre-render', function() {
       }
     );
 
-    observeStore(isCoreConnected, connected => {
+    observeStore(isCoreConnected, (connected) => {
       if (connected) {
         loadAccounts();
       }
@@ -122,7 +122,7 @@ walletEvents.once('pre-render', function() {
 
     observeStore(
       ({ core: { info } }) => info,
-      info => {
+      (info) => {
         const state = store.getState();
         if (
           !state.settings.bootstrapSuggestionDisabled &&
@@ -139,7 +139,7 @@ walletEvents.once('pre-render', function() {
 
     observeStore(
       ({ core: { info } }) => info && info.blocks,
-      blocks => {
+      (blocks) => {
         if (blocks) {
           store.dispatch({
             type: TYPE.UPDATE_BLOCK_DATE,
@@ -173,7 +173,7 @@ walletEvents.once('pre-render', function() {
         }
       }
     );
-    observeStore(isCoreConnected, coreConnected => {
+    observeStore(isCoreConnected, (coreConnected) => {
       if (coreConnected) {
         justConnected = true;
       }
@@ -181,7 +181,7 @@ walletEvents.once('pre-render', function() {
 
     observeStore(
       ({ core: { systemInfo } }) => systemInfo,
-      systemInfo => {
+      (systemInfo) => {
         const state = store.getState();
         if (
           !state.settings.bootstrapSuggestionDisabled &&
@@ -198,7 +198,7 @@ walletEvents.once('pre-render', function() {
 
     observeStore(
       ({ core: { systemInfo } }) => systemInfo && systemInfo.blocks,
-      blocks => {
+      (blocks) => {
         if (blocks) {
           store.dispatch({
             type: TYPE.UPDATE_BLOCK_DATE,
@@ -212,8 +212,8 @@ walletEvents.once('pre-render', function() {
   // All modes
   autoFetchCoreInfo();
   observeStore(
-    state => state.core.autoConnect,
-    autoConnect => {
+    (state) => state.core.autoConnect,
+    (autoConnect) => {
       if (autoConnect) autoFetchCoreInfo();
       else stopFetchingCoreInfo();
     }

@@ -6,7 +6,7 @@ import * as color from 'utils/color';
 
 const KeyboardStyles = () => (
   <Global
-    styles={theme => ({
+    styles={(theme) => ({
       body: {
         background: theme.background,
       },

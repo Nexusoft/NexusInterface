@@ -27,7 +27,7 @@ export function showDefaultMenu(e) {
  */
 function transformTemplate(template) {
   const actions = {};
-  template.forEach(item => {
+  template.forEach((item) => {
     if (typeof item.click === 'function') {
       actions[item.id] = item.click;
       item.click = true;

@@ -42,7 +42,7 @@ const SearchInput = styled(TextField)({
  * @extends {Component}
  * @memberof PanelControls
  */
-@connect(state => ({
+@connect((state) => ({
   searchQuery: state.ui.addressBook.searchQuery,
 }))
 class SearchBox extends Component {
@@ -58,7 +58,7 @@ class SearchBox extends Component {
         left={<Icon icon={searchIcon} className="space-right" />}
         placeholder={__('Search contact')}
         value={this.props.searchQuery}
-        onChange={e => searchContact(e.target.value)}
+        onChange={(e) => searchContact(e.target.value)}
       />
     );
   }
@@ -70,7 +70,7 @@ class SearchBox extends Component {
  * @class PanelControls
  * @extends {Component}
  */
-@connect(state => ({
+@connect((state) => ({
   addressBook: state.addressBook,
   coreConnected: isCoreConnected(state),
 }))
@@ -93,7 +93,7 @@ class PanelControls extends Component {
       'Notes', //d
     ];
     rows.push(NameEntry); //how we get our header line
-    Object.values(this.props.addressBook).map(e => {
+    Object.values(this.props.addressBook).map((e) => {
       let tempentry = [];
       tempentry.push(e.name);
       tempentry.push(e.phoneNumber);
@@ -104,7 +104,7 @@ class PanelControls extends Component {
       let tempAddresses = [];
 
       if (e.addresses.length > 0) {
-        e.addresses.map(add => {
+        e.addresses.map((add) => {
           const label =
             add.label ||
             (add.isMine ? 'My Address for ' + e.name : e.name + "'s Address");
@@ -115,7 +115,7 @@ class PanelControls extends Component {
       rows.push(tempentry);
     });
 
-    rows.forEach(function(rowArray) {
+    rows.forEach(function (rowArray) {
       let row = rowArray.join(',');
       csvContent += row + '\r\n';
     }); //format each row

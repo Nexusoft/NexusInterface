@@ -36,7 +36,7 @@ const opOptions = [
     value: null,
     display: __('All'),
   },
-  ...operations.map(op => ({
+  ...operations.map((op) => ({
     value: op,
     display: op,
   })),
@@ -85,7 +85,7 @@ const Filters = ({
         type="search"
         placeholder={__('Account/token address')}
         value={addressQuery}
-        onChange={evt => {
+        onChange={(evt) => {
           setTxsAddressQuery(evt.target.value);
         }}
       />
@@ -96,7 +96,7 @@ const Filters = ({
         type="search"
         placeholder="Account/token name"
         value={nameQuery}
-        onChange={evt => setTxsNameQuery(evt.target.value)}
+        onChange={(evt) => setTxsNameQuery(evt.target.value)}
       />
     </FormField>
 

@@ -45,7 +45,7 @@ const PinDialog = ({
   onClose,
 }) => (
   <Modal maxWidth={350} onClose={onClose}>
-    {closeModal => (
+    {(closeModal) => (
       <>
         <Modal.Header>{__('Enter PIN')}</Modal.Header>
         <Modal.Body>

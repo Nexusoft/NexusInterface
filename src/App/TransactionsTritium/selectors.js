@@ -1,6 +1,6 @@
 import memoize from 'utils/memoize';
 
-const getThresholdDate = timeSpan => {
+const getThresholdDate = (timeSpan) => {
   const now = new Date();
   switch (timeSpan) {
     case 'week':
@@ -15,7 +15,7 @@ const getThresholdDate = timeSpan => {
 };
 
 export const getTransactionsList = memoize(
-  txMap =>
+  (txMap) =>
     txMap &&
     Object.values(txMap).sort((tx1, tx2) => tx2.timestamp - tx1.timestamp)
 );
@@ -30,7 +30,7 @@ export const getFilteredTransactions = memoize(
   (allTransactions, nameQuery, addressQuery, operation, timeSpan) =>
     allTransactions &&
     allTransactions
-      .filter(tx => {
+      .filter((tx) => {
         // Filter by Time
         if (timeSpan) {
           const pastDate = getThresholdDate(timeSpan);
@@ -39,11 +39,11 @@ export const getFilteredTransactions = memoize(
         }
         return true;
       })
-      .map(tx => ({
+      .map((tx) => ({
         ...tx,
         contracts:
           tx.contracts &&
-          tx.contracts.filter(contract => {
+          tx.contracts.filter((contract) => {
             // Filter by Address
             if (addressQuery) {
               const address = addressQuery.toLowerCase();
@@ -106,14 +106,14 @@ export const getFilteredTransactions = memoize(
             return true;
           }),
       }))
-      .filter(tx => tx.contracts && tx.contracts.length > 0)
+      .filter((tx) => tx.contracts && tx.contracts.length > 0)
 );
 
-export const getContractList = memoize(txMap => {
+export const getContractList = memoize((txMap) => {
   const txList = getTransactionsList(txMap);
   return txList.reduce((list, tx) => {
     if (!tx.contracts) return list;
     const { contracts, ...txInfo } = tx;
-    return [...list, ...contracts.map(contract => ({ ...contract, txInfo }))];
+    return [...list, ...contracts.map((contract) => ({ ...contract, txInfo }))];
   }, []);
 });

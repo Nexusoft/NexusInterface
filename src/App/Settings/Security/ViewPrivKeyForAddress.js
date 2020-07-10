@@ -57,10 +57,10 @@ class ViewPrivKeyForAddress extends Component {
     let address = this.inputRef.value;
     if (address) {
       rpc('dumpprivkey', [address])
-        .then(payload => {
+        .then((payload) => {
           this.outputRef.value = payload;
         })
-        .catch(e => {
+        .catch((e) => {
           if (e.includes(address)) {
             e = e.replace(address + ' ', '');
           }
@@ -103,7 +103,7 @@ class ViewPrivKeyForAddress extends Component {
       <form onSubmit={handleSubmit}>
         <FieldSet legend={__('View private key for address')}>
           <FormField connectLabel label={__('Address')}>
-            {inputId => (
+            {(inputId) => (
               <InputGroup>
                 <Field
                   component={TextField.RF}

@@ -15,9 +15,9 @@ import { timing, consts } from 'styles';
  * or a string if value and display are the same
  */
 
-const getValue = suggestion =>
+const getValue = (suggestion) =>
   typeof suggestion === 'object' ? suggestion && suggestion.value : suggestion;
-const getDisplay = suggestion =>
+const getDisplay = (suggestion) =>
   typeof suggestion === 'object'
     ? suggestion && suggestion.display
     : suggestion;
@@ -182,7 +182,7 @@ export default class AutoSuggest extends React.Component {
   defaultFilterSuggestions = memoize((suggestions, inputValue) => {
     if (!suggestions) return [];
     const query = new String(inputValue || '').toLowerCase();
-    return suggestions.filter(suggestion => {
+    return suggestions.filter((suggestion) => {
       const value = getValue(suggestion);
       return (
         !!value &&
@@ -213,7 +213,7 @@ export default class AutoSuggest extends React.Component {
    * @param {HTMLEvent} e HTMLEvent
    * @memberof AutoSuggest
    */
-  handleInputFocus = e => {
+  handleInputFocus = (e) => {
     if (this.props.suggestOn === 'focus') {
       this.setState({ open: true });
     }
@@ -225,7 +225,7 @@ export default class AutoSuggest extends React.Component {
    * @param {HTMLEvent} e HTMLEvent
    * @memberof AutoSuggest
    */
-  handleInputBlur = e => {
+  handleInputBlur = (e) => {
     this.setState({ open: false });
     this.props.inputProps.onBlur && this.props.inputProps.onBlur(e);
   };
@@ -235,7 +235,7 @@ export default class AutoSuggest extends React.Component {
    * @param {HTMLEvent} e HTMLEvent
    * @memberof AutoSuggest
    */
-  handleInputChange = e => {
+  handleInputChange = (e) => {
     if (this.props.suggestOn === 'change') {
       this.setState({ open: true });
     }
@@ -247,7 +247,7 @@ export default class AutoSuggest extends React.Component {
    * @param {number} index Suggestion Number
    * @memberof AutoSuggest
    */
-  scrollToNewSelection = index => {
+  scrollToNewSelection = (index) => {
     this.setState({ activeIndex: index });
     if (index !== null) {
       const suggestionsEl = findDOMNode(this.suggestionsRef.current);
@@ -265,7 +265,7 @@ export default class AutoSuggest extends React.Component {
    * @param {HTMLEvent} e HTMLEvent
    * @memberof AutoSuggest
    */
-  handleKeyDown = e => {
+  handleKeyDown = (e) => {
     const {
       filterSuggestions = this.defaultFilterSuggestions,
       suggestions,
@@ -364,7 +364,7 @@ export default class AutoSuggest extends React.Component {
    *
    * @memberof AutoSuggest
    */
-  activate = index => {
+  activate = (index) => {
     this.setState({ activeIndex: index });
   };
 

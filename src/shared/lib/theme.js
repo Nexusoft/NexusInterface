@@ -24,7 +24,7 @@ const defaultTheme = {
 
 function filterValidTheme(theme) {
   const validTheme = {};
-  Object.keys(theme || {}).map(key => {
+  Object.keys(theme || {}).map((key) => {
     if (defaultTheme.hasOwnProperty(key)) {
       validTheme[key] = theme[key];
     } else {
@@ -58,7 +58,7 @@ function updateThemeFile(updates) {
 
 export const loadTheme = loadThemeFromFile;
 
-export const updateTheme = updates => {
+export const updateTheme = (updates) => {
   store.dispatch({ type: TYPE.UPDATE_THEME, payload: updates });
   updateThemeFile(updates);
 };

@@ -52,7 +52,7 @@ export default (state = initialState, action) => {
 
     case TYPE.PRINT_COMMAND_OUTPUT: {
       const newOutput = Array.isArray(action.payload)
-        ? action.payload.map(content => ({
+        ? action.payload.map((content) => ({
             type: 'text',
             content,
           }))

@@ -70,7 +70,9 @@ class ModuleDetailsModal extends React.Component {
         if (module.development) {
           const { devModulePaths } = store.getState().settings;
           updateSettings({
-            devModulePaths: devModulePaths.filter(path => path !== module.path),
+            devModulePaths: devModulePaths.filter(
+              (path) => path !== module.path
+            ),
           });
         } else {
           await deleteDirectory(module.path);
@@ -96,7 +98,7 @@ class ModuleDetailsModal extends React.Component {
       : null;
     return (
       <Modal
-        assignClose={close => {
+        assignClose={(close) => {
           this.closeModal = close;
         }}
       >

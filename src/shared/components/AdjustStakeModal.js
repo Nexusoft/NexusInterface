@@ -48,10 +48,9 @@ const SliderWrapper = styled.div({
 });
 
 const StakeSlider = styled(Slider.RF)(({ theme, input, max }) => ({
-  background: `linear-gradient(to right, ${theme.primary}, ${
-    theme.primary
-  } ${(100 * input.value) / max}%, ${theme.mixer(0.5)} ${(100 * input.value) /
-    max}%)`,
+  background: `linear-gradient(to right, ${theme.primary}, ${theme.primary} ${
+    (100 * input.value) / max
+  }%, ${theme.mixer(0.5)} ${(100 * input.value) / max}%)`,
 }));
 
 const Note = styled.div(({ theme }) => ({
@@ -120,7 +119,7 @@ export default class AdjustStakeModal extends React.Component {
     return (
       <Modal
         maxWidth={600}
-        assignClose={closeModal => {
+        assignClose={(closeModal) => {
           this.closeModal = closeModal;
         }}
       >

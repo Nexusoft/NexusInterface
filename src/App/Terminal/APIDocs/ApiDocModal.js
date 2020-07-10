@@ -35,15 +35,15 @@ const documents = [
   { path: Invoices, label: 'Invoices' },
 ];
 
-const getInnerText = children => {
+const getInnerText = (children) => {
   if (typeof children === 'string') return children;
   if (Array.isArray(children)) {
-    return children.map(child => getInnerText(child.props.children)).join('');
+    return children.map((child) => getInnerText(child.props.children)).join('');
   }
   return '';
 };
 
-const toHeadingId = text =>
+const toHeadingId = (text) =>
   text
     .replace(/\s/g, '-')
     .replace(/[^\d\w]/g, '')
@@ -71,14 +71,14 @@ class APIDocModal extends React.Component {
 
   loadMD(inFile) {
     fetch(inFile)
-      .then(response => response.text())
-      .then(text => {
+      .then((response) => response.text())
+      .then((text) => {
         this.setState({ displayMD: text });
       });
   }
 
   renderDocList = () =>
-    documents.map(e => (
+    documents.map((e) => (
       <div key={e.label}>
         <Button skin={'hyperlink'} onClick={() => this.loadMD(e.path)}>
           {e.label}
@@ -90,7 +90,7 @@ class APIDocModal extends React.Component {
   render() {
     const { displayMD } = this.state;
     return (
-      <Modal assignClose={closeModal => (this.closeModal = closeModal)}>
+      <Modal assignClose={(closeModal) => (this.closeModal = closeModal)}>
         <Modal.Header>{'API Documentation'}</Modal.Header>
         <Modal.Body>
           {displayMD ? (
@@ -102,7 +102,7 @@ class APIDocModal extends React.Component {
                     <Link
                       as="a"
                       href={href}
-                      onClick={evt => {
+                      onClick={(evt) => {
                         evt.preventDefault();
                         if (href && href.startsWith('#')) {
                           const element = document.getElementById(

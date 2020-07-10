@@ -34,7 +34,7 @@ export default class AutoUpdateBackgroundTask extends React.Component {
     return (
       <BackgroundTask
         type="success"
-        assignClose={close => {
+        assignClose={(close) => {
           this.closeTask = close;
         }}
         onClick={gitHub ? this.goToGitHub : this.confirmInstall}

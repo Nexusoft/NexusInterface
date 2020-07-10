@@ -19,7 +19,7 @@ import { consts } from 'styles';
 import fontStyles from './fonts';
 import tableStyles from './tableStyles';
 
-const resetStyles = theme => ({
+const resetStyles = (theme) => ({
   '*, *::before, *::after': {
     boxSizing: 'border-box',
   },
@@ -91,7 +91,7 @@ const resetStyles = theme => ({
   },
 });
 
-const customizedScrollbar = theme => ({
+const customizedScrollbar = (theme) => ({
   '::-webkit-scrollbar': {
     background: 'transparent',
     zIndex: 1,
@@ -114,7 +114,7 @@ const customizedScrollbar = theme => ({
   },
 });
 
-const utilityClasses = theme => css`
+const utilityClasses = (theme) => css`
   .relative {
     position: relative;
   }

@@ -9,7 +9,7 @@
  * - Make sure this note also presents in other files which are imported here.
  */
 
-export const newUID = (function() {
+export const newUID = (function () {
   let counter = 1;
   return () => `uid-${counter++}`;
 })();

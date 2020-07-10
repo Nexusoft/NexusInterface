@@ -7,7 +7,7 @@ import Button from 'components/Button';
 import { openModal } from 'lib/ui';
 import { isLoggedIn } from 'selectors';
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   loggedIn: isLoggedIn(state),
 });
 
