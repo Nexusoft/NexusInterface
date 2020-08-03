@@ -64,13 +64,31 @@ global.NEXUS = {
       }
       clipboard.writeText(text);
     },
-    sendNXS: (recipients, message, tritium) => {
-      if (!Array.isArray(recipients)) {
+    // `options` shape:
+    //  {
+    //    recipients: [{
+    //      address, amount
+    //    }],
+    //    message,    // for Legacy mode only
+    //    reference,  // for Tritium mode only
+    //    expires,    // for Tritium mode only
+    //  }
+    send: (options) => {
+      if (!options) {
+        throw new Error('`options` is required');
+      }
+      if (typeof options !== 'object') {
         throw new Error(
-          'Expected `recipients` to be `array` type, found: ' + typeof params
+          'Expected `options` to be `object` type, found: ' + typeof options
         );
       }
-      ipcRenderer.sendToHost('send-nxs', recipients, message, tritium);
+      if (!Array.isArray(options.recipients)) {
+        throw new Error(
+          'Expected `options.recipients` to be `array` type, found: ' +
+            typeof options.recipients
+        );
+      }
+      ipcRenderer.sendToHost('send', options);
     },
     showNotification: (options) => {
       if (!options) {

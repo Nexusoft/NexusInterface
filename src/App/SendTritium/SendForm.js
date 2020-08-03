@@ -78,6 +78,8 @@ const mapStateToProps = (state) => {
   };
 };
 
+const referenceRegex = /^[0-9]+$/;
+
 /**
  * The Internal Send Form in the Send Page
  *
@@ -95,8 +97,11 @@ const mapStateToProps = (state) => {
       errors.sendFrom = __('No accounts selected');
     }
     if (reference) {
-      if (!reference.match('^[0-9]+$')) {
-        errors.reference = __('Reference must be a number');
+      if (
+        !(Number.isInteger(reference) && reference >= 0) &&
+        !referenceRegex.test(reference)
+      ) {
+        errors.reference = __('Reference must be an unsigned integer');
       } else {
         if (parseInt(reference) > 18446744073709551615) {
           errors.reference = __('Number is too large');

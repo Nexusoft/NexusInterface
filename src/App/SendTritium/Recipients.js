@@ -76,8 +76,6 @@ class Recipients extends React.Component {
   render() {
     const { fields, change, accBalance, sendFrom } = this.props;
 
-    console.log(this.props);
-    console.log(this.props.fields.get(0));
     if (!fields || !fields.length) return null;
 
     return (

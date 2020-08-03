@@ -42,7 +42,7 @@ const SendFormButtons = styled.div({
   marginTop: '2em',
 });
 
-const formName = 'sendNXS';
+const formName = 'send';
 const valueSelector = formValueSelector(formName);
 const mapStateToProps = (state, ownProps) => {
   const {

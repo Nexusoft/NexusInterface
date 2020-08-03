@@ -151,8 +151,8 @@ const getActiveModule = () => {
 
 function handleIpcMessage(event) {
   switch (event.channel) {
-    case 'send-nxs':
-      sendNXS(event.args);
+    case 'send':
+      send(event.args);
       break;
     case 'proxy-request':
       proxyRequest(event.args);
@@ -186,9 +186,9 @@ function handleIpcMessage(event) {
   }
 }
 
-function sendNXS([recipients, message, tritium]) {
+function send([{ recipients, message, reference, expires }]) {
   if (!Array.isArray(recipients)) return;
-  const formName = tritium ? 'send' : 'sendNXS';
+  const formName = 'send';
   store.dispatch(
     initialize(formName, {
       sendFrom: null,
@@ -197,7 +197,9 @@ function sendNXS([recipients, message, tritium]) {
         amount: parseFloat(r.amount) || 0,
         fiatAmount: '',
       })),
-      message: message,
+      message,
+      reference,
+      expires,
     })
   );
   store.dispatch(reset(formName));
