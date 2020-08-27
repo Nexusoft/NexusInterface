@@ -36,6 +36,7 @@ export const defaultSettings = {
   displayFiatBalance: false,
 
   // Core
+  clientMode: false,
   enableMining: false,
   enableStaking: true,
   verboseLevel: 0,

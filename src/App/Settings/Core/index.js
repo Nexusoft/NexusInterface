@@ -83,6 +83,7 @@ const ManualMode = styled(Button)(
 const removeWhiteSpaces = (value) => (value || '').replace(' ', '');
 
 const formKeys = [
+  'clientMode',
   'enableMining',
   'ipMineWhitelist',
   'enableStaking',
@@ -332,6 +333,16 @@ class SettingsCore extends Component {
             <>
               <SettingsField
                 connectLabel
+                label={__('Client mode')}
+                subLabel={__(
+                  'Nexus Core in client mode runs lighter and synchronize much faster, but you will not be able to stake or switch the wallet to Legacy Mode.'
+                )}
+              >
+                <Field name="clientMode" component={Switch.RF} />
+              </SettingsField>
+
+              <SettingsField
+                connectLabel
                 label={__('Enable mining')}
                 subLabel={__('Enable/Disable mining to the wallet.')}
               >
@@ -365,13 +376,23 @@ class SettingsCore extends Component {
                 }
               />
 
-              <SettingsField
-                connectLabel
-                label={__('Enable staking')}
-                subLabel={__('Enable/Disable staking on the wallet.')}
-              >
-                <Field name="enableStaking" component={Switch.RF} />
-              </SettingsField>
+              <Field
+                name="clientMode"
+                component={({ input }) => (
+                  <SettingsField
+                    connectLabel
+                    label={__('Enable staking')}
+                    subLabel={__('Enable/Disable staking on the wallet.')}
+                    disabled={input.value}
+                  >
+                    {input.value ? (
+                      <Switch readOnly value={false} />
+                    ) : (
+                      <Field name="enableStaking" component={Switch.RF} />
+                    )}
+                  </SettingsField>
+                )}
+              />
 
               <SettingsField
                 connectLabel

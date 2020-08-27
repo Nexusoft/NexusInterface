@@ -7,13 +7,15 @@ import { newUID } from 'utils/misc';
 
 const indentSpace = 20;
 
-const Field = styled.div(({ indent = 0, theme }) => ({
+const Field = styled.div(({ indent = 0, theme, disabled }) => ({
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
   padding: '1em 0',
   borderBottom: `1px solid ${theme.mixer(0.125)}`,
   marginLeft: indent * indentSpace,
+  opacity: disabled ? 0.5 : 1,
+  pointerEvents: disabled ? 'none' : 'initial',
 }));
 
 const Label = styled.label({
@@ -75,10 +77,11 @@ class SettingsField extends Component {
       connectLabel,
       children,
       indent,
+      disabled,
       ...rest
     } = this.props;
     return (
-      <Field indent={indent} {...rest}>
+      <Field indent={indent} disabled={disabled} {...rest}>
         <Label
           htmlFor={connectLabel ? this.inputId : undefined}
           onClick={(e) => e.preventDefault()}
