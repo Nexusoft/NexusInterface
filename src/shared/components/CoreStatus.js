@@ -12,7 +12,7 @@ const CoreStatus = ({ coreConnected, manualDaemon, autoConnect }) =>
   coreConnected
     ? ''
     : manualDaemon
-    ? __('Manual Core is disconnected')
+    ? __('Remote Core is disconnected')
     : autoConnect
     ? __('Connecting to Nexus Core...')
     : __('Nexus Core is stopped');

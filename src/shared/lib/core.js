@@ -28,10 +28,10 @@ export const getDifficulty = async () => {
  * Start Nexus Core
  */
 export const startCore = async () => {
-  // Check manual core mode
+  // Check remote core mode
   const { settings } = store.getState();
   if (settings.manualDaemon) {
-    log.info('Core Manager: Manual Core mode, skipping starting core');
+    log.info('Core Manager: Remote Core mode, skipping starting core');
     return;
   }
   // Check if core's already running

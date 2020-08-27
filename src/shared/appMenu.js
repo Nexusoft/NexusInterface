@@ -292,7 +292,7 @@ function buildDarwinTemplate() {
     label: 'Nexus',
     submenu: [
       menuItems.about,
-      // If it's in manual core mode and core is not running, don't show
+      // If it's in remote core mode and core is not running, don't show
       // Start Core option because it does nothing
       !manualDaemon || coreConnected
         ? coreConnected
@@ -384,7 +384,7 @@ function buildDefaultTemplate() {
       menuItems.separator,
       menuItems.downloadRecent,
       menuItems.separator,
-      // If it's in manual core mode and core is not running, don't show
+      // If it's in remote core mode and core is not running, don't show
       // Start Core option because it does nothing
       !manualDaemon || coreConnected
         ? coreConnected

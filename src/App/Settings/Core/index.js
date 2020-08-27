@@ -177,7 +177,7 @@ const mapStateToProps = (state) => {
 
     if (props.manualDaemon) {
       if (!manualDaemonIP) {
-        errors.manualDaemonIP = __('Manual Core IP is required');
+        errors.manualDaemonIP = __('Remote Core IP is required');
       }
       if (!manualDaemonPort) {
         errors.manualDaemonPort = __('RPC port is required');
@@ -232,7 +232,7 @@ class SettingsCore extends Component {
   }
 
   /**
-   * Confirms Switch to Manual Core
+   * Confirms Switch to Remote Core
    *
    * @memberof SettingsCore
    */
@@ -241,7 +241,7 @@ class SettingsCore extends Component {
 
     if (manualDaemon) {
       openConfirmDialog({
-        question: __('Exit manual Core mode?'),
+        question: __('Exit remote Core mode?'),
         note: __('(This will restart your Core)'),
         callbackYes: async () => {
           updateSettings({ manualDaemon: false });
@@ -250,7 +250,7 @@ class SettingsCore extends Component {
       });
     } else {
       openConfirmDialog({
-        question: __('Enter manual Core mode?'),
+        question: __('Enter remote Core mode?'),
         note: __('(This will restart your Core)'),
         callbackYes: async () => {
           updateSettings({ manualDaemon: true });
@@ -324,7 +324,7 @@ class SettingsCore extends Component {
                 manualDaemon ? undefined : this.confirmSwitchManualDaemon
               }
             >
-              {__('Manual Core')}
+              {__('Remote Core')}
             </ManualMode>
           </CoreModes>
 
@@ -487,7 +487,7 @@ class SettingsCore extends Component {
                 indent={1}
                 connectLabel
                 label={__('IP address')}
-                subLabel={__('Manual Core IP address')}
+                subLabel={__('Remote Core IP address')}
               >
                 <Field
                   component={TextField.RF}
