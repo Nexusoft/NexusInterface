@@ -62,7 +62,6 @@ async function checkFreeSpaceForBootstrap() {
  */
 async function startBootstrap() {
   const setStatus = (step, details) => setBootstrapStatus(step, details);
-  const extractDest = getExtractDest();
 
   try {
     const {

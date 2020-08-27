@@ -366,39 +366,52 @@ class SettingsCore extends Component {
                 <Field name="clientMode" component={Switch.RF} />
               </SettingsField>
 
-              <SettingsField
-                connectLabel
-                label={__('Enable mining')}
-                subLabel={__('Enable/Disable mining to the wallet.')}
-              >
-                <Field name="enableMining" component={Switch.RF} />
-              </SettingsField>
-
               <Field
-                name="enableMining"
-                component={({ input }) =>
-                  !!input.value && (
+                name="clientMode"
+                component={({ input: clientMode }) => (
+                  <>
                     <SettingsField
                       connectLabel
-                      indent={1}
-                      label={__('Mining IP Whitelist')}
-                      subLabel={__(
-                        'IP/Ports allowed to mine to. Separate by <b>;</b> . Wildcards supported only in IP',
-                        undefined,
-                        {
-                          b: (txt) => <b>{txt}</b>,
-                        }
-                      )}
+                      label={__('Enable mining')}
+                      subLabel={__('Enable/Disable mining to the wallet.')}
+                      disabled={clientMode.value}
                     >
-                      <Field
-                        name="ipMineWhitelist"
-                        component={TextField.RF}
-                        normalize={removeWhiteSpaces}
-                        size="12"
-                      />
+                      {clientMode.value ? (
+                        <Switch readOnly value={false} />
+                      ) : (
+                        <Field name="enableMining" component={Switch.RF} />
+                      )}
                     </SettingsField>
-                  )
-                }
+
+                    <Field
+                      name="enableMining"
+                      component={({ input }) =>
+                        !clientMode.value &&
+                        !!input.value && (
+                          <SettingsField
+                            connectLabel
+                            indent={1}
+                            label={__('Mining IP Whitelist')}
+                            subLabel={__(
+                              'IP/Ports allowed to mine to. Separate by <b>;</b> . Wildcards supported only in IP',
+                              undefined,
+                              {
+                                b: (txt) => <b>{txt}</b>,
+                              }
+                            )}
+                          >
+                            <Field
+                              name="ipMineWhitelist"
+                              component={TextField.RF}
+                              normalize={removeWhiteSpaces}
+                              size="12"
+                            />
+                          </SettingsField>
+                        )
+                      }
+                    />
+                  </>
+                )}
               />
 
               <Field
