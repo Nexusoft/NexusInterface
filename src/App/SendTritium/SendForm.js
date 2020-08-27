@@ -79,6 +79,7 @@ const mapStateToProps = (state) => {
 };
 
 const referenceRegex = /^[0-9]+$/;
+const base58Regex = /^[1-9A-HJ-NP-Za-km-z]{51}$/;
 
 /**
  * The Internal Send Form in the Send Page
@@ -139,19 +140,21 @@ const referenceRegex = /^[0-9]+$/;
   },
   asyncBlurFields: ['recipients[].address'],
   asyncValidate: async ({ recipients }) => {
-    const recipientInputSize = new Blob([recipients[0].address]).size;
+    const { address } = recipients[0];
 
-    const isAddress =
-      recipientInputSize === 51 &&
-      recipients[0].address.match(/([0OIl+/])/g) === null;
-
-    if (isAddress) {
-      const isAddressResult = await apiPost('system/validate/address', {
-        address: recipients[0].address,
+    if (base58Regex.test(address)) {
+      const addressResult = await apiPost('system/validate/address', {
+        address,
       });
-      if (!isAddressResult.is_valid) {
-        throw { recipients: [{ address: __('Invalid address') }] };
+      if (addressResult.is_valid) {
+        return null;
       }
+    }
+
+    try {
+      await apiPost('names/get/name', { name: address });
+    } catch (err) {
+      throw { recipients: [{ address: __('Invalid name/address') }] };
     }
 
     return null;
