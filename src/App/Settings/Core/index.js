@@ -3,12 +3,14 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { reduxForm, Field, formValueSelector } from 'redux-form';
 // import cpy from 'cpy';
+import path from 'path';
 import styled from '@emotion/styled';
 
 // Internal
+import store from 'store';
 import { switchSettingsTab, setCoreSettingsRestart } from 'lib/ui';
 import { stopCore, startCore, restartCore } from 'lib/core';
-import { showNotification, openConfirmDialog } from 'lib/ui';
+import { showNotification, openConfirmDialog, openErrorDialog } from 'lib/ui';
 import { updateSettings } from 'lib/settings';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
@@ -18,6 +20,7 @@ import { errorHandler } from 'utils/form';
 import { legacyMode } from 'consts/misc';
 import * as color from 'utils/color';
 import confirm from 'utils/promisified/confirm';
+import rimraf from 'utils/promisified/rimraf';
 import { newUID } from 'utils/misc';
 import { consts } from 'styles';
 import { isCoreConnected } from 'selectors';
@@ -281,7 +284,29 @@ class SettingsCore extends Component {
     });
     if (confirmed) {
       updateSettings({ clearPeers: true });
-      this.props.restartCore();
+      restartCore();
+    }
+  };
+
+  resyncClientMode = async () => {
+    const confirmed = await confirm({
+      question: __('Resync database') + '?',
+      note:
+        'Nexus Core will be restarted. Client mode database will be deleted and resynchronized from the beginning.',
+    });
+    if (confirmed) {
+      updateSettings({ clearPeers: true });
+      await stopCore();
+      const {
+        settings: { coreDataDir },
+      } = store.getState();
+      const clientFolder = path.join(coreDataDir, 'client');
+      try {
+        await rimraf(clientFolder);
+      } catch (err) {
+        openErrorDialog({ message: err && err.message });
+      }
+      await startCore();
     }
   };
 
@@ -497,6 +522,22 @@ class SettingsCore extends Component {
                   style={{ height: consts.inputHeightEm + 'em' }}
                 >
                   {__('Clear')}
+                </Button>
+              </SettingsField>
+
+              {/* TODO: add condition: coreInfo client mode must be on */}
+              <SettingsField
+                connectLabel
+                label={__('Resync database')}
+                subLabel={__(
+                  'Delete client mode database and resynchronize from the beginning'
+                )}
+              >
+                <Button
+                  onClick={this.resyncClientMode}
+                  style={{ height: consts.inputHeightEm + 'em' }}
+                >
+                  {__('Resynchronize')}
                 </Button>
               </SettingsField>
             </>
