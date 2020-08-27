@@ -5,7 +5,6 @@ import fs from 'fs';
 import path from 'path';
 import https from 'https';
 import moveFile from 'move-file';
-import rimraf from 'rimraf';
 
 // Internal
 import { walletDataDir } from 'consts/paths';
@@ -22,6 +21,7 @@ import {
 import confirm from 'utils/promisified/confirm';
 import extractTarball from 'utils/promisified/extractTarball';
 import sleep from 'utils/promisified/sleep';
+import deleteDirectory from 'utils/promisified/deleteDirectory';
 import { throttled } from 'utils/universal';
 import * as TYPE from 'consts/actionTypes';
 import { walletEvents } from 'lib/wallet';
@@ -84,11 +84,8 @@ async function startBootstrap() {
         if (err) throw err;
       });
     }
-    if (fs.existsSync(extractDest)) {
-      console.log('Removing the old file');
-      rimraf.sync(extractDest, {}, () => console.log('done'));
-      cleanUp();
-    }
+    console.log('Removing old files');
+    await cleanUp();
 
     setStatus('stopping_core');
     await stopCore();
@@ -295,23 +292,19 @@ async function rescan() {
  *
  * @returns
  */
-function cleanUp() {
-  // Clean up asynchornously
-  setTimeout(() => {
-    if (fs.existsSync(fileLocation)) {
-      fs.unlink(fileLocation, (err) => {
-        if (err) {
-          console.error(err);
-        }
-      });
-    }
+async function cleanUp() {
+  if (fs.existsSync(fileLocation)) {
+    fs.unlink(fileLocation, (err) => {
+      if (err) {
+        console.error(err);
+      }
+    });
+  }
 
-    const extractDest = getExtractDest();
-    if (fs.existsSync(extractDest)) {
-      rimraf.sync(extractDest, {}, () => console.log('done'));
-    }
-  }, 0);
-  return;
+  const extractDest = getExtractDest();
+  if (fs.existsSync(extractDest)) {
+    await deleteDirectory(extractDest);
+  }
 }
 
 const setBootstrapStatus = (step, details) => {
