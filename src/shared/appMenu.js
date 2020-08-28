@@ -285,8 +285,11 @@ function buildUpdaterMenu() {
 function buildDarwinTemplate() {
   const state = store.getState();
   const coreConnected = isCoreConnected(state);
-  const { manualDaemon } = state.settings;
-  const { activeAppModule } = state;
+  const {
+    settings: { manualDaemon },
+    activeAppModule,
+    core: { systemInfo },
+  } = state.settings;
 
   const subMenuAbout = {
     label: 'Nexus',
@@ -299,7 +302,11 @@ function buildDarwinTemplate() {
           ? menuItems.stopCoreMenu
           : menuItems.startCoreMenu
         : null,
-      legacyMode ? menuItems.switchTritiumMode : menuItems.switchLegacyMode,
+      legacyMode
+        ? menuItems.switchTritiumMode
+        : systemInfo?.clientmode
+        ? null
+        : menuItems.switchLegacyMode,
       menuItems.separator,
       menuItems.quitNexus,
     ].filter((e) => e),
@@ -373,8 +380,11 @@ function buildDarwinTemplate() {
 function buildDefaultTemplate() {
   const state = store.getState();
   const coreConnected = isCoreConnected(state);
-  const { manualDaemon } = state.settings;
-  const { activeAppModule } = state;
+  const {
+    activeAppModule,
+    settings: { manualDaemon },
+    core: { systemInfo },
+  } = state;
 
   const subMenuFile = {
     label: __('File'),
@@ -391,7 +401,11 @@ function buildDefaultTemplate() {
           ? menuItems.stopCoreMenu
           : menuItems.startCoreMenu
         : null,
-      legacyMode ? menuItems.switchTritiumMode : menuItems.switchLegacyMode,
+      legacyMode
+        ? menuItems.switchTritiumMode
+        : systemInfo?.clientmode
+        ? null
+        : menuItems.switchLegacyMode,
       menuItems.separator,
       menuItems.quitNexus,
     ].filter((e) => e),
@@ -479,4 +493,5 @@ walletEvents.once('post-render', function () {
   );
   observeStore((state) => state.activeAppModule, rebuildMenu);
   observeStore((state) => state.settings.manualDaemon, rebuildMenu);
+  observeStore((state) => state.core.systemInfo?.clientmode, rebuildMenu);
 });
