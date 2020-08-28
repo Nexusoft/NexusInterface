@@ -353,13 +353,15 @@ class SettingsApp extends Component {
           )}
         </div>
 
-        <Button
-          disabled={!coreConnected}
-          style={{ marginTop: '2em' }}
-          onClick={this.confirmBackupWallet}
-        >
-          {__('Backup wallet')}
-        </Button>
+        {legacyMode && (
+          <Button
+            disabled={!coreConnected}
+            style={{ marginTop: '2em' }}
+            onClick={this.confirmBackupWallet}
+          >
+            {__('Backup wallet')}
+          </Button>
+        )}
       </>
     );
   }
