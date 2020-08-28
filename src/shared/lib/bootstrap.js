@@ -71,6 +71,7 @@ async function startBootstrap() {
 
     aborting = false;
     setStatus('backing_up');
+    // LEGACY
     await backupWallet(backupDirectory);
     if (aborting) {
       bootstrapEvents.emit('abort');
@@ -275,6 +276,7 @@ async function rescan() {
   // Retry up to 5 times in 5 seconds
   while (count <= 5) {
     try {
+      // LEGACY
       await rpc('rescan', []);
       return;
     } catch (err) {

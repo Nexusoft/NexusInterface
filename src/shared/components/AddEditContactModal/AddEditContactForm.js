@@ -11,6 +11,7 @@ import TextField from 'components/TextField';
 import Select from 'components/Select';
 import Button from 'components/Button';
 import { showNotification } from 'lib/ui';
+import { apiPost } from 'lib/tritiumApi';
 import { emailRegex } from 'utils/form';
 import timeZones from 'data/timeZones';
 import Addresses from './Addresses';
@@ -42,20 +43,20 @@ function validateAddresses(addresses) {
 
 function asyncValidateAddresses(isMine, addresses, errors) {
   return addresses.map(({ address }, i) =>
-    rpc('validateaddress', [address])
-      .then((result) => {
-        if (!result.isvalid) {
+    apiPost('system/validate/address', { address })
+      .then(({ is_valid, is_mine }) => {
+        if (!is_valid) {
           if (address.startsWith('a') && address.length === 64) {
           } else {
             errors[i] = {
               address: __('Invalid address'),
             };
           }
-        } else if (isMine && !result.ismine) {
+        } else if (isMine && !is_mine) {
           errors[i] = {
             address: __('This is not one of your addresses.'),
           };
-        } else if (!isMine && result.ismine) {
+        } else if (!isMine && is_mine) {
           errors[i] = {
             address: __('This is one of your addresses.'),
           };
