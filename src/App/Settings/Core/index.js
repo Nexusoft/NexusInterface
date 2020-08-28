@@ -293,8 +293,9 @@ class SettingsCore extends Component {
   resyncClientMode = async () => {
     const confirmed = await confirm({
       question: __('Resync database') + '?',
-      note:
-        'Nexus Core will be restarted. Client mode database will be deleted and resynchronized from the beginning.',
+      note: __(
+        'Nexus Core will be restarted. Client mode database will be deleted and resynchronized from the beginning.'
+      ),
     });
     if (confirmed) {
       updateSettings({ clearPeers: true });
@@ -363,7 +364,9 @@ class SettingsCore extends Component {
                 connectLabel
                 label={__('Client mode')}
                 subLabel={__(
-                  'Nexus Core in client mode runs lighter and synchronize much faster, but you will not be able to stake or switch the wallet to Legacy Mode.'
+                  'Nexus Core under client mode runs lighter and synchronize much faster, but you <b>will NOT be able to stake</b> or switch the wallet to Legacy Mode.',
+                  null,
+                  { b: (text) => <strong>{text}</strong> }
                 )}
               >
                 <Field name="clientMode" component={Switch.RF} />
