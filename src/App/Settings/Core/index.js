@@ -364,7 +364,7 @@ class SettingsCore extends Component {
                 connectLabel
                 label={__('Client mode')}
                 subLabel={__(
-                  'Nexus Core under client mode runs lighter and synchronize much faster, but you <b>will NOT be able to stake</b> or switch the wallet to Legacy Mode.',
+                  'Nexus Core under client mode runs lighter and synchronize much faster, but you will <b>NOT</b> be able to stake, mine, or switch the wallet to Legacy Mode.',
                   null,
                   { b: (text) => <strong>{text}</strong> }
                 )}
