@@ -98,6 +98,7 @@ export const startCore = async () => {
   }
   // Enable staking (default is 0)
   if (settings.enableStaking == true) params.push('-stake=1');
+  if (settings.clientMode == true) params.push('-client=1');
 
   // Start core
   await ipcRenderer.invoke('start-core', params);
