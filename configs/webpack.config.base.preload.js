@@ -3,12 +3,12 @@
  */
 
 import path from 'path';
-import merge from 'webpack-merge';
+import { merge } from 'webpack-merge';
 
 import baseConfig from './webpack.config.base';
 import { babelLoaderRenderer } from './babelLoaderConfig';
 
-export default merge.smart(baseConfig, {
+export default merge(baseConfig, {
   target: 'electron-renderer',
 
   entry: './src/module_preload',

@@ -7,7 +7,7 @@
 
 import path from 'path';
 import webpack from 'webpack';
-import merge from 'webpack-merge';
+import { merge } from 'webpack-merge';
 
 import baseConfig from './webpack.config.base.renderer';
 import CheckNodeEnv from '../internals/scripts/CheckNodeEnv';
@@ -20,7 +20,7 @@ const publicPath = `http://localhost:${port}/`;
 const dllPath = path.resolve(process.cwd(), 'dll');
 const manifest = path.resolve(dllPath, 'renderer.json');
 
-export default merge.smart(baseConfig, {
+export default merge(baseConfig, {
   devtool: 'cheap-module-eval-source-map',
 
   entry: {

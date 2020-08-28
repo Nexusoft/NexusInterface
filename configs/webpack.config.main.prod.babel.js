@@ -3,14 +3,14 @@
  */
 
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
-import merge from 'webpack-merge';
+import { merge } from 'webpack-merge';
 
 import baseConfig from './webpack.config.base.main';
 import CheckNodeEnv from '../internals/scripts/CheckNodeEnv';
 
 CheckNodeEnv('production');
 
-export default merge.smart(baseConfig, {
+export default merge(baseConfig, {
   output: {
     filename: 'main.prod.js',
   },

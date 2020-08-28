@@ -4,7 +4,7 @@
 
 import path from 'path';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
-import merge from 'webpack-merge';
+import { merge } from 'webpack-merge';
 import TerserPlugin from 'terser-webpack-plugin';
 
 import baseConfig from './webpack.config.base.renderer';
@@ -13,7 +13,7 @@ import { babelLoaderRenderer } from './babelLoaderConfig';
 
 CheckNodeEnv('production');
 
-export default merge.smart(baseConfig, {
+export default merge(baseConfig, {
   entry: {
     'renderer.prod': './src/index.js',
     'keyboard.prod': './src/keyboard/index.js',
