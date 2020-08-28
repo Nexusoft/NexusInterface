@@ -133,6 +133,7 @@ const mapStateToProps = (state) => {
     ui: {
       settings: { restartCoreOnSave },
     },
+    core: { systemInfo },
   } = state;
   const formTestnetIteration = formValueSelector('coreSettings')(
     state,
@@ -144,6 +145,7 @@ const mapStateToProps = (state) => {
       (formTestnetIteration && formTestnetIteration != 0) ||
       (settingTestnetIteration && settingTestnetIteration != 0),
     coreConnected: isCoreConnected(state),
+    clientMode: !!systemInfo?.clientmode,
     manualDaemon: settings.manualDaemon,
     initialValues: getInitialValues(settings),
     restartCoreOnSave,
@@ -323,6 +325,7 @@ class SettingsCore extends Component {
   render() {
     const {
       coreConnected,
+      clientMode,
       manualDaemon,
       handleSubmit,
       dirty,
@@ -538,21 +541,22 @@ class SettingsCore extends Component {
                 </Button>
               </SettingsField>
 
-              {/* TODO: add condition: coreInfo client mode must be on */}
-              <SettingsField
-                connectLabel
-                label={__('Resync database')}
-                subLabel={__(
-                  'Delete client mode database and resynchronize from the beginning'
-                )}
-              >
-                <Button
-                  onClick={this.resyncClientMode}
-                  style={{ height: consts.inputHeightEm + 'em' }}
+              {clientMode && (
+                <SettingsField
+                  connectLabel
+                  label={__('Resync database')}
+                  subLabel={__(
+                    'Delete client mode database and resynchronize from the beginning'
+                  )}
                 >
-                  {__('Resynchronize')}
-                </Button>
-              </SettingsField>
+                  <Button
+                    onClick={this.resyncClientMode}
+                    style={{ height: consts.inputHeightEm + 'em' }}
+                  >
+                    {__('Resynchronize')}
+                  </Button>
+                </SettingsField>
+              )}
             </>
           )}
 
