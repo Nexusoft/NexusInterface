@@ -4,6 +4,7 @@ import styled from '@emotion/styled';
 
 import Modal from 'components/Modal';
 import InfoField from 'components/InfoField';
+import QRButton from 'components/QRButton';
 import { formatDateTime } from 'lib/intl';
 import { openModal } from 'lib/ui';
 import { formatNumber } from 'lib/intl';
@@ -42,7 +43,8 @@ const TokenDetailsModal = ({ token }) => (
             </InfoField>
           )}
           <InfoField ratio={[1, 2]} label={__('Token address')}>
-            <div className="monospace">{token.address || '0'}</div>
+            <span className="monospace v-align">{token.address || '0'}</span>
+            <QRButton className="space-left" address={token.address} />
           </InfoField>
           <InfoField ratio={[1, 2]} label={__('Created at')}>
             {formatDateTime(token.created * 1000, timeFormatOptions)}

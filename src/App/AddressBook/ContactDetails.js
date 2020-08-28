@@ -4,13 +4,14 @@ import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
 // Internal
-import { deleteContact } from 'lib/addressBook';
 import ExternalLink from 'components/ExternalLink';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import NexusAddress from 'components/NexusAddress';
-import { openConfirmDialog, openModal } from 'lib/ui';
+import QRButton from 'components/QRButton';
 import AddEditContactModal from 'components/AddEditContactModal';
+import { deleteContact } from 'lib/addressBook';
+import { openConfirmDialog, openModal } from 'lib/ui';
 import { isCoreConnected } from 'selectors';
 import timeZones from 'data/timeZones';
 import { timing } from 'styles';
@@ -58,6 +59,14 @@ const HeaderAction = styled.div(({ theme, danger }) => ({
 
 const DefaultLabel = styled.span({
   opacity: 0.66,
+});
+
+const LabelWrapper = styled.div({
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  paddingLeft: 5,
+  paddingRight: 5,
 });
 
 const FieldLabel = styled.div({
@@ -200,15 +209,20 @@ class ContactDetails extends React.Component {
             key={i}
             address={address}
             label={
-              label || (
-                <DefaultLabel>
-                  {isMine
-                    ? __('My address for %{name}')
-                    : __("%{name}'s Address", {
-                        name: contact.name,
-                      })}
-                </DefaultLabel>
-              )
+              <LabelWrapper>
+                <div>
+                  {label || (
+                    <DefaultLabel>
+                      {isMine
+                        ? __('My address for %{name}')
+                        : __("%{name}'s Address", {
+                            name: contact.name,
+                          })}
+                    </DefaultLabel>
+                  )}
+                </div>
+                <QRButton address={address} />
+              </LabelWrapper>
             }
           />
         ))}

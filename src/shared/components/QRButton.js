@@ -11,7 +11,6 @@ import QRIcon from 'icons/qr.svg';
 const QRButtonComponent = styled(Button)({
   display: 'inline-block',
   verticalAlign: 'middle',
-  marginLeft: 10,
   padding: 0,
   height: 'auto',
 });

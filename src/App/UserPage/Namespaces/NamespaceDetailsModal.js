@@ -3,6 +3,7 @@ import React from 'react';
 import Modal from 'components/Modal';
 import Button from 'components/Button';
 import InfoField from 'components/InfoField';
+import QRButton from 'components/QRButton';
 import { formatDateTime } from 'lib/intl';
 import { openModal } from 'lib/ui';
 
@@ -29,7 +30,10 @@ const NamespaceDetailsModal = ({ namespace }) => (
         </Modal.Header>
         <Modal.Body>
           <InfoField label={__('Name')}>{namespace.name}</InfoField>
-          <InfoField label={__('Address')}>{namespace.address}</InfoField>
+          <InfoField label={__('Address')}>
+            <span className="v-align">{namespace.address}</span>
+            <QRButton className="space-left" address={namespace.address} />
+          </InfoField>
           <InfoField label={__('Created at')}>
             {formatDateTime(namespace.created * 1000, timeFormatOptions)}
           </InfoField>

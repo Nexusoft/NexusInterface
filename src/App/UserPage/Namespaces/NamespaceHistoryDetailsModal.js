@@ -2,6 +2,7 @@ import React from 'react';
 
 import Modal from 'components/Modal';
 import InfoField from 'components/InfoField';
+import QRButton from 'components/QRButton';
 import { formatDateTime } from 'lib/intl';
 
 __ = __context('NamespaceHistoryDetails');
@@ -33,7 +34,10 @@ const NamespaceHistoryDetailsModal = ({
       <InfoField label={__('Name')}>
         {name || <span className="dim">N/A</span>}
       </InfoField>
-      <InfoField label={__('Address')}>{address}</InfoField>
+      <InfoField label={__('Address')}>
+        <span className="v-align">{address}</span>
+        <QRButton className="space-left" address={address} />
+      </InfoField>
     </Modal.Body>
   </Modal>
 );

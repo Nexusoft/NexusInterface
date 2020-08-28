@@ -5,10 +5,13 @@ import Modal from 'components/Modal';
 import Button from 'components/Button';
 import InfoField from 'components/InfoField';
 import AdjustStakeModal from 'components/AdjustStakeModal';
+import Icon from 'components/Icon';
+import QRButton from 'components/QRButton';
 import { goToSend } from 'lib/send';
 import { formatDateTime } from 'lib/intl';
 import { openModal } from 'lib/ui';
 import { formatNumber } from 'lib/intl';
+import QRCodeIcon from 'icons/qr.svg';
 
 import { totalBalance } from './utils';
 
@@ -79,7 +82,8 @@ const AccountDetailsModal = ({ account, stakeInfo }) => (
             </InfoField>
           )}
           <InfoField ratio={[1, 2]} label={__('Address')}>
-            <span className="monospace">{account.address}</span>
+            <span className="monospace v-align">{account.address}</span>
+            <QRButton address={account.address} className="space-left" />
           </InfoField>
 
           {account.stake !== undefined && (
