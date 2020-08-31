@@ -66,16 +66,19 @@ async function startBootstrap() {
   try {
     const {
       settings: { backupDirectory },
+      core: { systemInfo },
     } = store.getState();
     const recentDbUrl = recentDbUrlTritium;
 
     aborting = false;
-    setStatus('backing_up');
-    // LEGACY
-    await backupWallet(backupDirectory);
-    if (aborting) {
-      bootstrapEvents.emit('abort');
-      return false;
+
+    if (systemInfo?.legacywallet !== false) {
+      setStatus('backing_up');
+      await backupWallet(backupDirectory);
+      if (aborting) {
+        bootstrapEvents.emit('abort');
+        return false;
+      }
     }
 
     // Remove the old file if exists
@@ -275,8 +278,8 @@ async function rescan() {
   // Sometimes the core RPC server is not yet ready after restart, so rescan may fail
   // Retry up to 5 times in 5 seconds
   while (count <= 5) {
+    if (store.getState().core.systemInfo?.legacywallet === false) break;
     try {
-      // LEGACY
       await rpc('rescan', []);
       return;
     } catch (err) {
