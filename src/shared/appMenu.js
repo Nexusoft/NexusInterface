@@ -304,7 +304,7 @@ function buildDarwinTemplate() {
         : null,
       legacyMode
         ? menuItems.switchTritiumMode
-        : systemInfo?.clientmode
+        : systemInfo?.clientmode || systemInfo?.legacywallet === false
         ? null
         : menuItems.switchLegacyMode,
       menuItems.separator,
@@ -312,15 +312,14 @@ function buildDarwinTemplate() {
     ].filter((e) => e),
   };
 
-  //TODO: darwin does not like null here , so I replaced it with separator which will colapse into nothing. But rework this for next build.
   const subMenuFile = {
     label: __('File'),
     submenu: [
-      legacyMode ? menuItems.backupWallet : menuItems.separator,
-      legacyMode ? menuItems.viewBackups : menuItems.separator,
+      legacyMode ? menuItems.backupWallet : null,
+      legacyMode ? menuItems.viewBackups : null,
       menuItems.separator,
       menuItems.downloadRecent,
-    ],
+    ].filter((e) => e),
   };
   const subMenuEdit = {
     label: __('Edit'),
@@ -403,7 +402,7 @@ function buildDefaultTemplate() {
         : null,
       legacyMode
         ? menuItems.switchTritiumMode
-        : systemInfo?.clientmode
+        : systemInfo?.clientmode || systemInfo?.legacywallet === false
         ? null
         : menuItems.switchLegacyMode,
       menuItems.separator,
@@ -494,4 +493,5 @@ walletEvents.once('post-render', function () {
   observeStore((state) => state.activeAppModule, rebuildMenu);
   observeStore((state) => state.settings.manualDaemon, rebuildMenu);
   observeStore((state) => state.core.systemInfo?.clientmode, rebuildMenu);
+  observeStore((state) => state.core.systemInfo?.legacywallet, rebuildMenu);
 });
