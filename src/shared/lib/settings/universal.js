@@ -69,6 +69,8 @@ export const defaultSettings = {
   encryptionWarningDisabled: false,
   bootstrapSuggestionDisabled: false,
   migrateSuggestionDisabled: false,
+  tritiumModeNoticeDisabled: false,
+  clientModeNoticeDisabled: false,
   windowWidth: 1200,
   windowHeight: 800,
   windowX: undefined,
@@ -76,7 +78,6 @@ export const defaultSettings = {
   forkBlocks: 0,
   walletClean: false,
   legacyMode: false,
-  tritiumModeNoticeDisabled: false,
   clearPeers: false,
   // If false, show Create new user modal instead of Login
   // modal automatically when core is connected

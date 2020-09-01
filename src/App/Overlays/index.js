@@ -1,39 +1,63 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { legacyMode } from 'consts/misc';
+import { updateSettings } from 'lib/settings';
 
 import ClosingScreen from './ClosingScreen';
 import SelectLanguage from './SelectLanguage';
 import LicenseAgreement from './LicenseAgreement';
 import ExperimentalWarning from './ExperimentalWarning';
-import TritiumModeNotice from './TritiumModeNotice';
+import ClientModeNotice from './ClientModeNotice';
 import Wallet from './Wallet';
 
 const mapStateToProps = ({
   settings: {
     experimentalWarningDisabled,
-    tritiumModeNoticeDisabled,
+    clientModeNoticeDisabled,
     acceptedAgreement,
     locale,
+    enableStaking,
   },
   ui: { closing },
 }) => ({
   locale,
   experimentalWarningDisabled,
-  tritiumModeNoticeDisabled,
+  clientModeNoticeDisabled,
   acceptedAgreement,
   closing,
+  enableStaking,
 });
 
 const Overlays = ({
   locale,
   experimentalWarningDisabled,
-  tritiumModeNoticeDisabled,
+  clientModeNoticeDisabled,
   acceptedAgreement,
   closing,
+  enableStaking,
   children,
 }) => {
+  React.useEffect(() => {
+    // Disable the notice even when the notice is not shown
+    if (
+      !closing &&
+      locale &&
+      acceptedAgreement &&
+      experimentalWarningDisabled &&
+      !clientModeNoticeDisabled &&
+      enableStaking
+    ) {
+      updateSettings({ clientModeNoticeDisabled: true });
+    }
+  }, [
+    closing,
+    locale,
+    acceptedAgreement,
+    experimentalWarningDisabled,
+    clientModeNoticeDisabled,
+    enableStaking,
+  ]);
+
   if (closing) {
     return <ClosingScreen />;
   }
@@ -50,8 +74,8 @@ const Overlays = ({
     return <ExperimentalWarning />;
   }
 
-  if (!legacyMode && !tritiumModeNoticeDisabled) {
-    return <TritiumModeNotice />;
+  if (!clientModeNoticeDisabled && !enableStaking) {
+    return <ClientModeNotice />;
   }
 
   return <Wallet>{children}</Wallet>;
