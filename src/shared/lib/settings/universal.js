@@ -69,7 +69,6 @@ export const defaultSettings = {
   encryptionWarningDisabled: false,
   bootstrapSuggestionDisabled: false,
   migrateSuggestionDisabled: false,
-  tritiumModeNoticeDisabled: false,
   clientModeNoticeDisabled: false,
   windowWidth: 1200,
   windowHeight: 800,
