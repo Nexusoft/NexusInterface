@@ -169,7 +169,7 @@ if (!legacyMode) {
           settings: { migrateSuggestionDisabled },
           core: { systemInfo },
         } = store.getState();
-        if (!migrateSuggestionDisabled && systemInfo?.legacywallet !== false) {
+        if (!migrateSuggestionDisabled && !systemInfo?.legacy_unsupported) {
           const coreInfo = await rpc('getinfo', []);
           const legacyBalance = (coreInfo.balance || 0) + (coreInfo.stake || 0);
           if (legacyBalance) {

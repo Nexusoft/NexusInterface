@@ -304,7 +304,7 @@ function buildDarwinTemplate() {
         : null,
       legacyMode
         ? menuItems.switchTritiumMode
-        : systemInfo?.clientmode || systemInfo?.legacywallet === false
+        : systemInfo?.clientmode || systemInfo?.legacy_unsupported
         ? null
         : menuItems.switchLegacyMode,
       menuItems.separator,
@@ -402,7 +402,7 @@ function buildDefaultTemplate() {
         : null,
       legacyMode
         ? menuItems.switchTritiumMode
-        : systemInfo?.clientmode || systemInfo?.legacywallet === false
+        : systemInfo?.clientmode || systemInfo?.legacy_unsupported
         ? null
         : menuItems.switchLegacyMode,
       menuItems.separator,
@@ -493,5 +493,8 @@ walletEvents.once('post-render', function () {
   observeStore((state) => state.activeAppModule, rebuildMenu);
   observeStore((state) => state.settings.manualDaemon, rebuildMenu);
   observeStore((state) => state.core.systemInfo?.clientmode, rebuildMenu);
-  observeStore((state) => state.core.systemInfo?.legacywallet, rebuildMenu);
+  observeStore(
+    (state) => state.core.systemInfo?.legacy_unsupported,
+    rebuildMenu
+  );
 });
