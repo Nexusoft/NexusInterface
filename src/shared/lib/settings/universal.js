@@ -45,14 +45,18 @@ export const defaultSettings = {
   coreDataDir: defaultCoreDataDir,
   testnetIteration: 0,
   manualDaemon: false,
+  manualDaemonSSL: true,
   manualDaemonUser: 'rpcserver',
   manualDaemonPassword: defaultPassword,
   manualDaemonIP: '127.0.0.1',
   manualDaemonPort: '9336',
+  manualDaemonPortSSL: '7336',
+  manualDaemonApiSSL: true,
   manualDaemonApiUser: 'apiserver',
   manualDaemonApiPassword: defaultPassword,
   manualDaemonApiIP: '127.0.0.1',
   manualDaemonApiPort: '8080',
+  manualDaemonApiPortSSL: '7080',
 
   // Style
   renderGlobe: true,

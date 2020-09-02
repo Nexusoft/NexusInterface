@@ -68,8 +68,15 @@ export const startCore = async () => {
     '-server',
     '-rpcthreads=4',
     '-fastsync',
+    '-ssl=1',
+    '-apissl=1',
+    '-rpcssl=1',
+    '-p2pssl=1',
     `-datadir=${settings.coreDataDir}`,
     `-rpcport=${conf.port}`,
+    `-apiport=${conf.apiPort}`,
+    `-rpcsslport=${conf.portSSL}`,
+    `-apisslport=${conf.apiPortSSL}`,
     `-verbose=${settings.verboseLevel}`,
   ];
   if (settings.testnetIteration && settings.testnetIteration !== '0') {

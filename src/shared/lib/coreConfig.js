@@ -48,10 +48,14 @@ const toKeyValues = (obj) =>
 
 const defaultConfig = {
   ip: '127.0.0.1',
+  rpcSSL: true,
   port: '9336',
-  apiPort: '8080',
+  portSSL: '7336',
   user: 'rpcserver',
   password: generateDefaultPassword(),
+  apiSSL: true,
+  apiPort: '8080',
+  apiPortSSL: '7080',
   apiUser: 'apiserver',
   apiPassword: generateDefaultPassword(),
 };
@@ -64,16 +68,26 @@ const defaultConfig = {
  */
 function customConfig(config = {}) {
   const ip = config.ip || defaultConfig.ip;
+  const rpcSSL =
+    typeof config.rpcSSL === 'boolean' ? config.rpcSSL : defaultConfig.rpcSSL;
+  const apiSSL =
+    typeof config.apiSSL === 'boolean' ? config.apiSSL : defaultConfig.apiSSL;
   const port = config.port || defaultConfig.port;
+  const portSSL = config.portSSL || defaultConfig.portSSL;
   const apiPort = config.apiPort || defaultConfig.apiPort;
+  const apiPortSSL = config.apiPortSSL || defaultConfig.apiPortSSL;
   return {
     ip,
     port,
-    apiPort,
-    host: `http://${ip}:${port}`,
-    apiHost: `http://${ip}:${apiPort}`,
+    portSSL,
+    host: `${rpcSSL ? 'https' : 'http'}://${ip}:${rpcSSL ? portSSL : port}`,
     user: config.user || config.rpcuser || defaultConfig.user,
     password: config.password || config.rpcpassword || defaultConfig.password,
+    apiPort,
+    apiPortSSL,
+    apiHost: `${apiSSL ? 'https' : 'http'}://${ip}:${
+      apiSSL ? apiPortSSL : apiPort
+    }`,
     apiUser: config.apiUser || config.apiuser || defaultConfig.apiUser,
     apiPassword:
       config.apiPassword || config.apipassword || defaultConfig.apiPassword,
@@ -159,10 +173,14 @@ export async function getActiveCoreConfig() {
   if (settings.manualDaemon) {
     return customConfig({
       ip: settings.manualDaemonIP,
+      rpcSSL: settings.manualDaemonSSL,
       port: settings.manualDaemonPort,
+      portSSL: settings.manualDaemonPortSSL,
       user: settings.manualDaemonUser,
       password: settings.manualDaemonPassword,
+      apiSSL: settings.manualDaemonApiSSL,
       apiPort: settings.manualDaemonApiPort,
+      apiPortSSL: settings.manualDaemonApiPortSSL,
       apiUser: settings.manualDaemonApiUser,
       apiPassword: settings.manualDaemonApiPassword,
     });

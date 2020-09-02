@@ -95,10 +95,14 @@ const formKeys = [
   'avatarMode',
   'coreDataDir',
   'manualDaemonIP',
+  'manualDaemonSSL',
   'manualDaemonPort',
+  'manualDaemonPortSSL',
   'manualDaemonUser',
   'manualDaemonPassword',
+  'manualDaemonApiSSL',
   'manualDaemonApiPort',
+  'manualDaemonApiPortSSL',
   'manualDaemonApiUser',
   'manualDaemonApiPassword',
 ];
@@ -583,12 +587,34 @@ class SettingsCore extends Component {
                   <SettingsField
                     indent={1}
                     connectLabel
+                    label={__('API SSL')}
+                    subLabel={__('Use SSL for API calls')}
+                  >
+                    <Field component={Switch.RF} name="manualDaemonApiSSL" />
+                  </SettingsField>
+
+                  <SettingsField
+                    indent={1}
+                    connectLabel
                     label={__('API Port')}
                     subLabel={__('Nexus API server Port')}
                   >
                     <Field
                       component={TextField.RF}
                       name="manualDaemonApiPort"
+                      size="5"
+                    />
+                  </SettingsField>
+
+                  <SettingsField
+                    indent={1}
+                    connectLabel
+                    label={__('API SSL Port')}
+                    subLabel={__('Nexus API server SSL Port')}
+                  >
+                    <Field
+                      component={TextField.RF}
+                      name="manualDaemonApiPortSSL"
                       size="5"
                     />
                   </SettingsField>
@@ -624,12 +650,34 @@ class SettingsCore extends Component {
               <SettingsField
                 indent={1}
                 connectLabel
+                label={__('RPC SSL')}
+                subLabel={__('Use SSL for RPC calls')}
+              >
+                <Field component={Switch.RF} name="manualDaemonSSL" />
+              </SettingsField>
+
+              <SettingsField
+                indent={1}
+                connectLabel
                 label={__('RPC Port')}
                 subLabel={__('Nexus RPC server Port')}
               >
                 <Field
                   component={TextField.RF}
                   name="manualDaemonPort"
+                  size="5"
+                />
+              </SettingsField>
+
+              <SettingsField
+                indent={1}
+                connectLabel
+                label={__('RPC SSL Port')}
+                subLabel={__('Nexus RPC server SSL Port')}
+              >
+                <Field
+                  component={TextField.RF}
+                  name="manualDaemonPortSSL"
                   size="5"
                 />
               </SettingsField>
