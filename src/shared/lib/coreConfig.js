@@ -78,11 +78,13 @@ function customConfig(config = {}) {
   const apiPortSSL = config.apiPortSSL || defaultConfig.apiPortSSL;
   return {
     ip,
+    rpcSSL,
     port,
     portSSL,
     host: `${rpcSSL ? 'https' : 'http'}://${ip}:${rpcSSL ? portSSL : port}`,
     user: config.user || config.rpcuser || defaultConfig.user,
     password: config.password || config.rpcpassword || defaultConfig.password,
+    apiSSL,
     apiPort,
     apiPortSSL,
     apiHost: `${apiSSL ? 'https' : 'http'}://${ip}:${
