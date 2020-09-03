@@ -10,7 +10,7 @@ import Button from 'components/Button';
 __ = __context('User');
 
 const UserBriefComponent = styled.div(({ theme }) => ({
-  width: 307,
+  width: 315,
   marginLeft: -30,
   padding: '0 30px',
   borderRight: `1px solid ${theme.mixer(0.125)}`,
