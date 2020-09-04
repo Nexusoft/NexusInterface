@@ -7,7 +7,7 @@ export default (state = initialState, action) => {
     case TYPE.SET_STAKE_INFO:
       return action.payload;
 
-    case TYPE.CLEAR_CORE_INFO:
+    case TYPE.DISCONNECT_CORE:
     case TYPE.CLEAR_USER:
     case TYPE.CLEAR_STAKE_INFO:
     case TYPE.LOGOUT:

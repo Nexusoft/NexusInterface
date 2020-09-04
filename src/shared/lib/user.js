@@ -48,12 +48,46 @@ export const refreshBalances = async () => {
   }
 };
 
+export const login = async ({ username, password, pin }) => {
+  const result = await apiPost('users/login/user', {
+    username,
+    password,
+    pin,
+  });
+  const { session } = result;
+  const status = await apiPost('users/get/status', { session });
+
+  store.dispatch({ type: TYPE.LOGIN, payload: { username, session, status } });
+  return { username, session, status };
+};
+
 export const logOut = async () => {
   store.dispatch({
-    type: TYPE.CLEAR_USER,
-    payload: null,
+    type: TYPE.LOGOUT,
   });
-  await apiPost('users/logout/user');
+  const { sessions } = store.getState();
+  await Promise.all([
+    sessions.map((session) => {
+      apiPost('users/logout/user', { session });
+    }),
+  ]);
+};
+
+export const unlockUser = async ({ pin }) => {
+  const {
+    settings: { enableStaking, enableMining },
+  } = store.getState();
+  return await apiPost('users/unlock/user', {
+    pin,
+    notifications: true,
+    mining: !!enableMining,
+    staking: !!enableStaking,
+  });
+};
+
+export const switchUser = async ({ session }) => {
+  const status = await apiPost('users/get/status', { session });
+  store.dispatch({ type: TYPE.SWITCH_USER, payload: { session, status } });
 };
 
 export const loadOwnedTokens = async () => {

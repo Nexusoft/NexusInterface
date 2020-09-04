@@ -10,7 +10,7 @@ export default (state = initialState, action) => {
         [action.payload.address]: action.payload.schema,
       };
 
-    case TYPE.CLEAR_CORE_INFO:
+    case TYPE.DISCONNECT_CORE:
     case TYPE.CLEAR_USER:
       return initialState;
 

@@ -114,7 +114,7 @@ export const startCore = async () => {
 export const stopCore = async (forRestart) => {
   log.info('Core Manager: Stop function called');
   const { manualDaemon } = store.getState().settings;
-  store.dispatch({ type: TYPE.CLEAR_CORE_INFO });
+  store.dispatch({ type: TYPE.DISCONNECT_CORE });
   await apiPost('system/stop');
 
   // Wait for core to gracefully stop for 30 seconds

@@ -7,7 +7,7 @@ export default (state = initialState, action) => {
     case TYPE.SET_USER_OWNED_TOKENS:
       return action.payload;
 
-    case TYPE.CLEAR_CORE_INFO:
+    case TYPE.DISCONNECT_CORE:
     case TYPE.CLEAR_USER:
     case TYPE.LOGOUT:
       return initialState;

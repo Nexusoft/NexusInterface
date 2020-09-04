@@ -8,9 +8,10 @@ export default (state = initialState, action) => {
       return action.payload;
 
     case TYPE.LOGIN:
+    case TYPE.SWITCH_USER:
       return action.payload.status;
 
-    case TYPE.CLEAR_CORE_INFO:
+    case TYPE.DISCONNECT_CORE:
     case TYPE.CLEAR_USER:
     case TYPE.LOGOUT:
       return initialState;

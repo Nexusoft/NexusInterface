@@ -37,7 +37,7 @@ const getInfo = legacyMode
 
         store.dispatch({ type: TYPE.GET_INFO, payload: info });
       } catch (err) {
-        store.dispatch({ type: TYPE.CLEAR_CORE_INFO });
+        store.dispatch({ type: TYPE.DISCONNECT_CORE });
         console.error(err);
         // Throws error so getInfo fails and autoFetchCoreInfo will
         // switch to using dynamic interval.
@@ -50,7 +50,7 @@ const getInfo = legacyMode
         const systemInfo = await apiPost('system/get/info');
         store.dispatch({ type: TYPE.SET_SYSTEM_INFO, payload: systemInfo });
       } catch (err) {
-        store.dispatch({ type: TYPE.CLEAR_CORE_INFO });
+        store.dispatch({ type: TYPE.DISCONNECT_CORE });
         console.error('system/get/info failed', err);
         // Throws error so getInfo fails and autoFetchCoreInfo will
         // switch to using dynamic interval.
