@@ -4,13 +4,8 @@ const initialState = null;
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case TYPE.SET_BALANCES:
-      return action.payload;
-
-    case TYPE.CLEAR_CORE_INFO:
-    case TYPE.LOGOUT:
-    case TYPE.CLEAR_BALANCES:
-      return initialState;
+    case TYPE.LOGIN:
+      return action.payload.session;
 
     default:
       return state;

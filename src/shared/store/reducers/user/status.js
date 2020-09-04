@@ -7,8 +7,11 @@ export default (state = initialState, action) => {
     case TYPE.SET_USER_STATUS:
       return action.payload;
 
+    case TYPE.LOGIN:
+      return action.payload.status;
+
     case TYPE.CLEAR_CORE_INFO:
-    case TYPE.CLEAR_USER_STATUS:
+    case TYPE.LOGOUT:
       return initialState;
 
     case TYPE.LOGOUT_USER:

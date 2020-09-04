@@ -25,7 +25,7 @@ export const getUserStatus = async () => {
     store.dispatch({ type: TYPE.SET_USER_STATUS, payload: status });
     getStakeInfo();
   } catch (err) {
-    store.dispatch({ type: TYPE.CLEAR_USER_STATUS });
+    store.dispatch({ type: TYPE.LOGOUT });
   }
 };
 
@@ -41,7 +41,7 @@ export const getBalances = async () => {
 
 export const logOut = async () => {
   store.dispatch({
-    type: TYPE.CLEAR_USER_STATUS,
+    type: TYPE.LOGOUT,
     payload: null,
   });
   await apiPost('users/logout/user');

@@ -8,7 +8,7 @@ export default (state = initialState, action) => {
       return action.payload;
 
     case TYPE.CLEAR_CORE_INFO:
-    case TYPE.CLEAR_USER_STATUS:
+    case TYPE.LOGOUT:
       return initialState;
 
     default:
