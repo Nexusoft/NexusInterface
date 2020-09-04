@@ -11,13 +11,8 @@ import MigrateAccountModal from 'components/MigrateAccountModal';
 
 const refreshStakeInfo = async () => {
   try {
-    const {
-      user: { session },
-    } = store.getState();
-    if (session) {
-      const stakeInfo = await apiPost('finance/get/stakeinfo');
-      store.dispatch({ type: TYPE.SET_STAKE_INFO, payload: stakeInfo });
-    }
+    const stakeInfo = await apiPost('finance/get/stakeinfo');
+    store.dispatch({ type: TYPE.SET_STAKE_INFO, payload: stakeInfo });
   } catch (err) {
     store.dispatch({ type: TYPE.CLEAR_STAKE_INFO });
     console.error('finance/get/stakeinfo failed', err);
@@ -62,10 +57,10 @@ export const login = async ({ username, password, pin }) => {
 };
 
 export const logOut = async () => {
+  const { sessions } = store.getState();
   store.dispatch({
     type: TYPE.LOGOUT,
   });
-  const { sessions } = store.getState();
   await Promise.all([
     sessions.map((session) => {
       apiPost('users/logout/user', { session });
