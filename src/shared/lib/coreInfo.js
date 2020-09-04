@@ -7,7 +7,7 @@ import { loadAccounts } from 'lib/user';
 import { showNotification, openModal } from 'lib/ui';
 import { updateSettings } from 'lib/settings';
 import { bootstrap } from 'lib/bootstrap';
-import { getUserStatus } from 'lib/user';
+import { refreshUserStatus } from 'lib/user';
 import { showDesktopNotif } from 'utils/misc';
 import LoginModal from 'components/LoginModal';
 import NewUserModal from 'components/NewUserModal';
@@ -155,7 +155,7 @@ walletEvents.once('pre-render', function () {
       ({ core: { systemInfo } }) => systemInfo,
       async () => {
         if (isCoreConnected(store.getState())) {
-          await getUserStatus();
+          await refreshUserStatus();
           const state = store.getState();
           // The wallet will have to refresh after language is chosen
           // So NewUser modal won't be visible now

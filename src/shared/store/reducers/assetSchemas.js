@@ -11,7 +11,7 @@ export default (state = initialState, action) => {
       };
 
     case TYPE.CLEAR_CORE_INFO:
-    case TYPE.LOGOUT:
+    case TYPE.CLEAR_USER:
       return initialState;
 
     default:

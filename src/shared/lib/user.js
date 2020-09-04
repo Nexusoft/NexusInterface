@@ -9,27 +9,36 @@ import { isLoggedIn } from 'selectors';
 import listAll from 'utils/listAll';
 import MigrateAccountModal from 'components/MigrateAccountModal';
 
-const getStakeInfo = async () => {
+const refreshStakeInfo = async () => {
   try {
-    const stakeInfo = await apiPost('finance/get/stakeinfo');
-    store.dispatch({ type: TYPE.SET_STAKE_INFO, payload: stakeInfo });
+    const {
+      user: { session },
+    } = store.getState();
+    if (session) {
+      const stakeInfo = await apiPost('finance/get/stakeinfo');
+      store.dispatch({ type: TYPE.SET_STAKE_INFO, payload: stakeInfo });
+    }
   } catch (err) {
     store.dispatch({ type: TYPE.CLEAR_STAKE_INFO });
     console.error('finance/get/stakeinfo failed', err);
   }
 };
 
-export const getUserStatus = async () => {
+export const refreshUserStatus = async () => {
   try {
-    const status = await apiPost('users/get/status');
-    store.dispatch({ type: TYPE.SET_USER_STATUS, payload: status });
-    getStakeInfo();
+    const {
+      user: { session },
+    } = store.getState();
+    if (session) {
+      const status = await apiPost('users/get/status', { session });
+      store.dispatch({ type: TYPE.SET_USER_STATUS, payload: status });
+    }
   } catch (err) {
-    store.dispatch({ type: TYPE.LOGOUT });
+    store.dispatch({ type: TYPE.CLEAR_USER });
   }
 };
 
-export const getBalances = async () => {
+export const refreshBalances = async () => {
   try {
     const balances = await apiPost('finance/get/balances');
     store.dispatch({ type: TYPE.SET_BALANCES, payload: balances });
@@ -41,7 +50,7 @@ export const getBalances = async () => {
 
 export const logOut = async () => {
   store.dispatch({
-    type: TYPE.LOGOUT,
+    type: TYPE.CLEAR_USER,
     payload: null,
   });
   await apiPost('users/logout/user');
@@ -178,5 +187,14 @@ if (!legacyMode) {
         }
       }
     });
+
+    observeStore(
+      (state) => state.user.status,
+      (userStatus) => {
+        if (userStatus) {
+          refreshStakeInfo();
+        }
+      }
+    );
   });
 }

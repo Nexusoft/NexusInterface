@@ -7,6 +7,9 @@ export default (state = initialState, action) => {
     case TYPE.LOGIN:
       return action.payload.session;
 
+    case TYPE.LOGOUT:
+      return initialState;
+
     default:
       return state;
   }

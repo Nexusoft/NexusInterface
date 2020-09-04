@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
 import QuestionCircle from 'components/QuestionCircle';
-import { getBalances } from 'lib/user';
+import { refreshBalances } from 'lib/user';
 import { observeStore } from 'store';
 import { formatNumber } from 'lib/intl';
 
@@ -48,10 +48,10 @@ const Value = styled.div({
 export default class Balances extends React.Component {
   componentDidMount() {
     // Periodically get balances
-    getBalances();
+    refreshBalances();
     this.unobserve = observeStore(
       ({ user }) => user && user.status,
-      getBalances
+      refreshBalances
     );
   }
 

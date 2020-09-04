@@ -12,7 +12,7 @@ import NewUserModal from 'components/NewUserModal';
 import RecoverPasswordPinModal from 'components/RecoverPasswordPinModal';
 import Spinner from 'components/Spinner';
 import { showNotification, openModal, removeModal } from 'lib/ui';
-import { getUserStatus } from 'lib/user';
+import { refreshUserStatus } from 'lib/user';
 import { errorHandler } from 'utils/form';
 
 __ = __context('Login');
@@ -85,7 +85,7 @@ const ExtraSection = styled.div({
       mining: !!props.enableMining,
       staking: !!props.enableStaking,
     });
-    getUserStatus();
+    refreshUserStatus();
   },
   onSubmitFail: (errors, dispatch, submitError, props) => {
     const submissionError =
