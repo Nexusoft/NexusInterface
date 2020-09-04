@@ -285,10 +285,13 @@ class Overview extends Component {
     GA.SendScreen('Overview');
 
     // Periodically get balances
-    refreshBalances();
     this.unobserve = observeStore(
       ({ user }) => user && user.status,
-      refreshBalances
+      (status) => {
+        if (status) {
+          refreshBalances();
+        }
+      }
     );
 
     // Periodically get difficulty
