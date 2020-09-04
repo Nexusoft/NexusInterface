@@ -1,5 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 import { Link } from 'react-router-dom';
 
@@ -72,6 +72,8 @@ const Separator = styled.div(({ theme }) => ({
 @connect((state) => ({
   currentUser: selectUsername(state),
   hasRecoveryPhrase: !!state.user.status?.recovery,
+  multiuser: !!state.core.systemInfo?.multiuser,
+  hasOtherSessions: Object.keys(state.sessions).length > 1,
 }))
 class LoggedInDropdown extends React.Component {
   logOut = async () => {
@@ -81,7 +83,13 @@ class LoggedInDropdown extends React.Component {
   };
 
   render() {
-    const { currentUser, hasRecoveryPhrase, closeDropdown } = this.props;
+    const {
+      currentUser,
+      hasRecoveryPhrase,
+      closeDropdown,
+      multiuser,
+      hasOtherSessions,
+    } = this.props;
     return (
       <>
         <CurrentUser>
@@ -96,42 +104,85 @@ class LoggedInDropdown extends React.Component {
         </Link>
         <Separator />
         {!hasRecoveryPhrase && (
-          <MenuItem
-            onClick={() => {
-              openModal(SetRecoveryModal);
-              closeDropdown();
-            }}
-          >
-            {__('Set recovery phrase')}
-          </MenuItem>
+          <>
+            <MenuItem
+              onClick={() => {
+                openModal(SetRecoveryModal);
+                closeDropdown();
+              }}
+            >
+              {__('Set recovery phrase')}
+            </MenuItem>
+            <Separator />
+          </>
         )}
-        {!hasRecoveryPhrase && <Separator />}
-        <MenuItem onClick={this.logOut}>{__('Log out')}</MenuItem>
+        {multiuser && (
+          <>
+            {hasOtherSessions && (
+              <MenuItem
+                onClick={() => {
+                  // openModal(LoginModal);
+                  closeDropdown();
+                }}
+              >
+                {__('Switch user')}
+              </MenuItem>
+            )}
+            <MenuItem
+              onClick={() => {
+                openModal(LoginModal);
+                closeDropdown();
+              }}
+            >
+              {__('Log in to another user')}
+            </MenuItem>
+            <Separator />
+          </>
+        )}
+        <MenuItem onClick={this.logOut}>
+          {multiuser ? __('Log out of all users') : __('Log out')}
+        </MenuItem>
       </>
     );
   }
 }
 
-const NotLoggedInDropdown = ({ closeDropdown }) => (
-  <>
-    <MenuItem
-      onClick={() => {
-        openModal(LoginModal);
-        closeDropdown();
-      }}
-    >
-      {__('Log in')}
-    </MenuItem>
-    <MenuItem
-      onClick={() => {
-        openModal(NewUserModal);
-        closeDropdown();
-      }}
-    >
-      {__('Create new user')}
-    </MenuItem>
-  </>
-);
+const NotLoggedInDropdown = ({ closeDropdown }) => {
+  const multiuser = useSelector((state) => !!state.core.systemInfo?.multiuser);
+  const hasOtherSessions = useSelector(
+    (state) => Object.keys(state.sessions).length > 1
+  );
+  return (
+    <>
+      <MenuItem
+        onClick={() => {
+          openModal(LoginModal);
+          closeDropdown();
+        }}
+      >
+        {__('Log in')}
+      </MenuItem>
+      {multiuser && hasOtherSessions && (
+        <MenuItem
+          onClick={() => {
+            // openModal(LoginModal);
+            closeDropdown();
+          }}
+        >
+          {__('Switch user')}
+        </MenuItem>
+      )}
+      <MenuItem
+        onClick={() => {
+          openModal(NewUserModal);
+          closeDropdown();
+        }}
+      >
+        {__('Create new user')}
+      </MenuItem>
+    </>
+  );
+};
 
 const UserDropdown = ({ loggedIn, closeDropdown, ...rest }) => (
   <UserDropdownComponent {...rest}>
