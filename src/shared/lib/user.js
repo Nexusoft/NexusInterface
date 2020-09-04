@@ -9,7 +9,10 @@ import { isLoggedIn } from 'selectors';
 import listAll from 'utils/listAll';
 import MigrateAccountModal from 'components/MigrateAccountModal';
 
-const refreshStakeInfo = async () => {
+export const selectUsername = (state) =>
+  state.user.status?.username || state.sessions[state.user.session]?.username;
+
+export const refreshStakeInfo = async () => {
   try {
     const stakeInfo = await apiPost('finance/get/stakeinfo');
     store.dispatch({ type: TYPE.SET_STAKE_INFO, payload: stakeInfo });

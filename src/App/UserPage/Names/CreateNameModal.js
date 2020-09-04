@@ -17,7 +17,7 @@ import {
   createNamespacedNameFee,
   createGlobalNameFee,
 } from 'lib/fees';
-import { loadNameRecords, loadNamespaces } from 'lib/user';
+import { loadNameRecords, loadNamespaces, selectUsername } from 'lib/user';
 import { apiPost } from 'lib/tritiumApi';
 
 __ = __context('CreateName');
@@ -69,7 +69,7 @@ const NameTypeSelect = ({ input, hasNamespaces }) => (
 );
 
 @connect((state) => ({
-  username: state.user.status && state.user.status.username,
+  username: selectUsername(state),
   namespaces: state.user.namespaces,
 }))
 @reduxForm({

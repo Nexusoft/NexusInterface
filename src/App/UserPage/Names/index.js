@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
 import { switchUserTab } from 'lib/ui';
-import { loadNameRecords } from 'lib/user';
+import { loadNameRecords, selectUsername } from 'lib/user';
 import { openModal } from 'lib/ui';
 import { timing } from 'styles';
 import { popupContextMenu } from 'lib/contextMenu';
@@ -114,7 +114,7 @@ const Name = ({ nameRecord, username }) => (
 
 @connect((state) => ({
   nameRecords: state.user.nameRecords,
-  username: state.user.status && state.user.status.username,
+  username: selectUsername(state),
 }))
 export default class Names extends React.Component {
   constructor(props) {

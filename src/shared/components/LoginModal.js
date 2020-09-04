@@ -34,13 +34,9 @@ const ExtraSection = styled.div({
  * @class Login
  * @extends {Component}
  */
-@connect(
-  ({ core: { systemInfo }, settings: { enableMining, enableStaking } }) => ({
-    enableMining,
-    enableStaking,
-    syncing: systemInfo.synchronizing,
-  })
-)
+@connect(({ core: { systemInfo } }) => ({
+  syncing: systemInfo.synchronizing,
+}))
 @reduxForm({
   form: 'login_tritium',
   destroyOnUnmount: true,
@@ -66,11 +62,7 @@ const ExtraSection = styled.div({
     return errors;
   },
   onSubmit: ({ username, password, pin }) => login({ username, password, pin }),
-  onSubmitSuccess: async (
-    result,
-    dispatch,
-    { modalId, reset, values, enableMining, enableStaking }
-  ) => {
+  onSubmitSuccess: async (result, dispatch, { modalId, reset, values }) => {
     removeModal(modalId);
     reset();
     showNotification(

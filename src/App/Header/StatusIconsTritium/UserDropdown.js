@@ -10,7 +10,7 @@ import SetRecoveryModal from 'components/SetRecoveryModal';
 import { isLoggedIn } from 'selectors';
 import { openModal, showNotification } from 'lib/ui';
 import { timing, animations, consts } from 'styles';
-import { logOut } from 'lib/user';
+import { logOut, selectUsername } from 'lib/user';
 
 __ = __context('Header.UserDropdown');
 
@@ -69,9 +69,9 @@ const Separator = styled.div(({ theme }) => ({
   borderBottom: `1px solid ${theme.mixer(0.125)}`,
 }));
 
-@connect(({ user: { status, stakeInfo } }) => ({
-  currentUser: status && status.username,
-  hasRecoveryPhrase: !!(status && status.recovery),
+@connect((state) => ({
+  currentUser: selectUsername(state),
+  hasRecoveryPhrase: !!state.user.status?.recovery,
 }))
 class LoggedInDropdown extends React.Component {
   logOut = async () => {

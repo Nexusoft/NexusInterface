@@ -11,7 +11,7 @@ import Spinner from 'components/Spinner';
 import confirmPin from 'utils/promisified/confirmPin';
 import { errorHandler } from 'utils/form';
 import { openSuccessDialog } from 'lib/ui';
-import { loadNameRecords } from 'lib/user';
+import { loadNameRecords, selectUsername } from 'lib/user';
 import { apiPost } from 'lib/tritiumApi';
 import { userIdRegex } from 'consts/misc';
 
@@ -26,7 +26,7 @@ const Name = styled.span(({ theme }) => ({
 }));
 
 @connect((state) => ({
-  username: state.user.status && state.user.status.username,
+  username: selectUsername(state),
 }))
 @reduxForm({
   form: 'transfer-name',
