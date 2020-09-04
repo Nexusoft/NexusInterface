@@ -26,9 +26,10 @@ export const refreshUserStatus = async () => {
   try {
     const {
       user: { session },
+      core: { systemInfo },
     } = store.getState();
-    if (session) {
-      const status = await apiPost('users/get/status', { session });
+    if (!systemInfo.multiuser || session) {
+      const status = await apiPost('users/get/status');
       store.dispatch({ type: TYPE.SET_USER_STATUS, payload: status });
     }
   } catch (err) {
@@ -65,7 +66,7 @@ export const logOut = async () => {
     type: TYPE.LOGOUT,
   });
   await Promise.all([
-    sessions.map((session) => {
+    Object.keys(sessions).map((session) => {
       apiPost('users/logout/user', { session });
     }),
   ]);
