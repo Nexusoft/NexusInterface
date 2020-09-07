@@ -26,9 +26,8 @@ export const refreshUserStatus = async () => {
   try {
     const {
       user: { session },
-      core: { systemInfo },
     } = store.getState();
-    if (!systemInfo.multiuser || session) {
+    if (session) {
       const status = await apiPost('users/get/status');
       store.dispatch({ type: TYPE.SET_USER_STATUS, payload: status });
     }
