@@ -12,6 +12,8 @@ import { openModal, showNotification } from 'lib/ui';
 import { timing, animations, consts } from 'styles';
 import { logOut, selectUsername } from 'lib/user';
 
+import SwitchUserModal from './SwitchUserModal';
+
 __ = __context('Header.UserDropdown');
 
 const UserDropdownComponent = styled.div(({ theme }) => ({
@@ -121,7 +123,7 @@ class LoggedInDropdown extends React.Component {
             {hasOtherSessions && (
               <MenuItem
                 onClick={() => {
-                  // openModal(LoginModal);
+                  openModal(SwitchUserModal);
                   closeDropdown();
                 }}
               >
@@ -165,7 +167,7 @@ const NotLoggedInDropdown = ({ closeDropdown }) => {
       {multiuser && hasOtherSessions && (
         <MenuItem
           onClick={() => {
-            // openModal(LoginModal);
+            openModal(SwitchUserModal);
             closeDropdown();
           }}
         >
