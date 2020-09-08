@@ -18,7 +18,7 @@ import ensureDirExists from 'utils/ensureDirExists';
 import deleteDirectory from 'utils/promisified/deleteDirectory';
 import extractZip from 'utils/promisified/extractZip';
 import extractTarball from 'utils/promisified/extractTarball';
-import confirm from 'utils/promisified/confirm';
+import { confirm } from 'lib/ui';
 
 import { loadModuleFromDir, loadDevModuleFromDir } from './module';
 

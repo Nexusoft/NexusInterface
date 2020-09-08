@@ -11,7 +11,7 @@ import LoginModal from 'components/LoginModal';
 import Spinner from 'components/Spinner';
 import { openSuccessDialog, removeModal, openModal } from 'lib/ui';
 import { errorHandler } from 'utils/form';
-import confirmPasswordPin from 'utils/promisified/confirmPasswordPin';
+import { confirmPasswordPin } from 'lib/ui';
 
 __ = __context('RecoverPassword&PIN');
 

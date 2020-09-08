@@ -2,7 +2,8 @@ import * as TYPE from 'consts/actionTypes';
 import ConfirmDialog from 'components/Dialogs/ConfirmDialog';
 import ErrorDialog from 'components/Dialogs/ErrorDialog';
 import SuccessDialog from 'components/Dialogs/SuccessDialog';
-import { reset } from 'redux-form';
+import PinDialog from 'components/Dialogs/PinDialog';
+import ConfirmPasswordPinDialog from 'components/Dialogs/ConfirmPasswordPinDialog';
 import store from 'store';
 
 const newModalId = (function () {
@@ -48,6 +49,56 @@ export const openConfirmDialog = (props) => openModal(ConfirmDialog, props);
 export const openErrorDialog = (props) => openModal(ErrorDialog, props);
 
 export const openSuccessDialog = (props) => openModal(SuccessDialog, props);
+
+export function confirm(options) {
+  return new Promise((resolve, reject) => {
+    try {
+      openConfirmDialog({
+        ...options,
+        callbackYes: () => {
+          resolve(true);
+        },
+        callbackNo: () => {
+          resolve(false);
+        },
+      });
+    } catch (err) {
+      console.error(err);
+      reject(err);
+    }
+  });
+}
+
+export function confirmPin({ note, confirmLabel } = {}) {
+  return new Promise((resolve, reject) => {
+    openModal(PinDialog, {
+      note,
+      confirmLabel,
+      submitPin: (pin) => {
+        resolve(pin);
+      },
+      onClose: () => {
+        resolve(undefined);
+      },
+    });
+  });
+}
+
+export default function confirmPasswordPin({ password, pin, isNew }) {
+  return new Promise((resolve, reject) => {
+    openModal(ConfirmPasswordPinDialog, {
+      isNew,
+      password,
+      pin,
+      onConfirm: () => {
+        resolve(true);
+      },
+      onClose: () => {
+        resolve(false);
+      },
+    });
+  });
+}
 
 /**
  * Notification

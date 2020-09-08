@@ -76,7 +76,6 @@ export default function SwitchUserModal() {
   const sessions = useSelector((state) => state.sessions);
   const currentSession = useSelector((state) => state.user.session);
   const [switchingTo, setSwitchingTo] = React.useState(null);
-  // const [switchingTo, setSwitchingTo] = ['234', () => {}];
 
   return (
     <Modal maxWidth={500}>

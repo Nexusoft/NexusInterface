@@ -19,7 +19,7 @@ import Switch from 'components/Switch';
 import { errorHandler } from 'utils/form';
 import { legacyMode } from 'consts/misc';
 import * as color from 'utils/color';
-import confirm from 'utils/promisified/confirm';
+import { confirm } from 'lib/ui';
 import deleteDirectory from 'utils/promisified/deleteDirectory';
 import { newUID } from 'utils/misc';
 import { consts } from 'styles';

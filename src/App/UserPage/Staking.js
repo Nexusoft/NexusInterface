@@ -8,7 +8,7 @@ import { switchUserTab } from 'lib/ui';
 import { updateSettings } from 'lib/settings';
 import { restartCore } from 'lib/core';
 import { openModal } from 'lib/ui';
-import confirm from 'utils/promisified/confirm';
+import { confirm } from 'lib/ui';
 import { formatNumber, formatDateTime } from 'lib/intl';
 import QuestionCircle from 'components/QuestionCircle';
 

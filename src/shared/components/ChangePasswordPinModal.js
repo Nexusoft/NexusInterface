@@ -9,7 +9,7 @@ import Button from 'components/Button';
 import Spinner from 'components/Spinner';
 import { errorHandler } from 'utils/form';
 import { openSuccessDialog, removeModal, openModal } from 'lib/ui';
-import confirmPasswordPin from 'utils/promisified/confirmPasswordPin';
+import { confirmPasswordPin } from 'lib/ui';
 
 __ = __context('ChangePassword&PIN');
 

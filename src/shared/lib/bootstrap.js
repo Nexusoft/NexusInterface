@@ -18,7 +18,7 @@ import {
   openSuccessDialog,
   openModal,
 } from 'lib/ui';
-import confirm from 'utils/promisified/confirm';
+import { confirm } from 'lib/ui';
 import extractTarball from 'utils/promisified/extractTarball';
 import sleep from 'utils/promisified/sleep';
 import deleteDirectory from 'utils/promisified/deleteDirectory';
