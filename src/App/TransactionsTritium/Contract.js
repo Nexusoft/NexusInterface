@@ -8,6 +8,7 @@ import { openModal } from 'lib/ui';
 import { popupContextMenu } from 'lib/contextMenu';
 import { formatNumber } from 'lib/intl';
 import { getDeltaSign } from 'lib/tritiumTransactions';
+import { getTokenName } from 'lib/tokens';
 import { lookupAddress } from 'lib/addressBook';
 import { consts, timing } from 'styles';
 import * as color from 'utils/color';
@@ -284,14 +285,6 @@ const contractContent = (contract) => {
       return <Operation>{contract.OP}</Operation>;
     }
   }
-};
-
-const getTokenName = ({ token_name, token }) => {
-  if (token_name) return token_name;
-  if (typeof token === 'string') {
-    return <span className="dim">{token.substring(0, 3)}...</span>;
-  }
-  return 'NXS';
 };
 
 const Contract = ({ contract, txid }) => (
