@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 
+import session from './session';
 import status from './status';
 import stakeInfo from './stakeInfo';
 import balances from './balances';
@@ -11,6 +12,7 @@ import namespaces from './namespaces';
 import assets from './assets';
 
 export default combineReducers({
+  session,
   status,
   stakeInfo,
   balances,

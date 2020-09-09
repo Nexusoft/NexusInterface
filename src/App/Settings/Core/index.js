@@ -19,7 +19,7 @@ import Switch from 'components/Switch';
 import { errorHandler } from 'utils/form';
 import { legacyMode } from 'consts/misc';
 import * as color from 'utils/color';
-import confirm from 'utils/promisified/confirm';
+import { confirm } from 'lib/ui';
 import deleteDirectory from 'utils/promisified/deleteDirectory';
 import { newUID } from 'utils/misc';
 import { consts } from 'styles';
@@ -90,6 +90,7 @@ const formKeys = [
   'enableMining',
   'ipMineWhitelist',
   'enableStaking',
+  'multiUser',
   'verboseLevel',
   'testnetIteration',
   'avatarMode',
@@ -420,27 +421,30 @@ class SettingsCore extends Component {
                         )
                       }
                     />
+
+                    <SettingsField
+                      connectLabel
+                      label={__('Enable staking')}
+                      subLabel={__('Enable/Disable staking on the wallet.')}
+                      disabled={clientMode.value}
+                    >
+                      {clientMode.value ? (
+                        <Switch readOnly value={false} />
+                      ) : (
+                        <Field name="enableStaking" component={Switch.RF} />
+                      )}
+                    </SettingsField>
                   </>
                 )}
               />
 
-              <Field
-                name="clientMode"
-                component={({ input }) => (
-                  <SettingsField
-                    connectLabel
-                    label={__('Enable staking')}
-                    subLabel={__('Enable/Disable staking on the wallet.')}
-                    disabled={input.value}
-                  >
-                    {input.value ? (
-                      <Switch readOnly value={false} />
-                    ) : (
-                      <Field name="enableStaking" component={Switch.RF} />
-                    )}
-                  </SettingsField>
-                )}
-              />
+              <SettingsField
+                connectLabel
+                label={__('Multi-user')}
+                subLabel={__('Allow multiple users logged in at the same time')}
+              >
+                <Field name="multiUser" component={Switch.RF} />
+              </SettingsField>
 
               <SettingsField
                 connectLabel

@@ -23,7 +23,7 @@ import {
 import { errorHandler } from 'utils/form';
 import store, { observeStore } from 'store';
 import { isLoggedIn } from 'selectors';
-import confirmPasswordPin from 'utils/promisified/confirmPasswordPin';
+import { confirmPasswordPin } from 'lib/ui';
 
 __ = __context('NewUser');
 

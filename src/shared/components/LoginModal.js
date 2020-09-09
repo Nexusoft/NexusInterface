@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { reduxForm, Field } from 'redux-form';
+import { reduxForm, Field, getFormValues } from 'redux-form';
 import styled from '@emotion/styled';
 import { connect } from 'react-redux';
 
@@ -12,7 +12,7 @@ import NewUserModal from 'components/NewUserModal';
 import RecoverPasswordPinModal from 'components/RecoverPasswordPinModal';
 import Spinner from 'components/Spinner';
 import { showNotification, openModal, removeModal } from 'lib/ui';
-import { getUserStatus } from 'lib/user';
+import { login, unlockUser } from 'lib/user';
 import { errorHandler } from 'utils/form';
 
 __ = __context('Login');
@@ -34,13 +34,9 @@ const ExtraSection = styled.div({
  * @class Login
  * @extends {Component}
  */
-@connect(
-  ({ core: { systemInfo }, settings: { enableMining, enableStaking } }) => ({
-    enableMining,
-    enableStaking,
-    syncing: systemInfo.synchronizing,
-  })
-)
+@connect(({ core: { systemInfo } }) => ({
+  syncing: systemInfo.synchronizing,
+}))
 @reduxForm({
   form: 'login_tritium',
   destroyOnUnmount: true,
@@ -65,27 +61,15 @@ const ExtraSection = styled.div({
 
     return errors;
   },
-  onSubmit: async ({ username, password, pin }) =>
-    apiPost('users/login/user', {
-      username,
-      password,
-      pin,
-    }),
-  onSubmitSuccess: async (result, dispatch, props) => {
-    removeModal(props.modalId);
-    props.reset();
+  onSubmit: ({ username, password, pin }) => login({ username, password, pin }),
+  onSubmitSuccess: async (result, dispatch, { modalId, reset, values }) => {
+    removeModal(modalId);
+    reset();
     showNotification(
-      __('Logged in as %{username}', { username: props.values.username }),
+      __('Logged in as %{username}', { username: values.username }),
       'success'
     );
-
-    await apiPost('users/unlock/user', {
-      pin: props.values.pin,
-      notifications: true,
-      mining: !!props.enableMining,
-      staking: !!props.enableStaking,
-    });
-    getUserStatus();
+    unlockUser({ pin: values.pin });
   },
   onSubmitFail: (errors, dispatch, submitError, props) => {
     const submissionError =

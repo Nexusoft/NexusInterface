@@ -9,7 +9,7 @@ import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import Spinner from 'components/Spinner';
 import Select from 'components/Select';
-import confirmPin from 'utils/promisified/confirmPin';
+import { confirmPin } from 'lib/ui';
 import { errorHandler } from 'utils/form';
 import { openSuccessDialog } from 'lib/ui';
 import {
@@ -17,7 +17,7 @@ import {
   createNamespacedNameFee,
   createGlobalNameFee,
 } from 'lib/fees';
-import { loadNameRecords, loadNamespaces } from 'lib/user';
+import { loadNameRecords, loadNamespaces, selectUsername } from 'lib/user';
 import { apiPost } from 'lib/tritiumApi';
 
 __ = __context('CreateName');
@@ -69,7 +69,7 @@ const NameTypeSelect = ({ input, hasNamespaces }) => (
 );
 
 @connect((state) => ({
-  username: state.user.status && state.user.status.username,
+  username: selectUsername(state),
   namespaces: state.user.namespaces,
 }))
 @reduxForm({

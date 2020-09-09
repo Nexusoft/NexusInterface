@@ -19,7 +19,7 @@ import { openSuccessDialog } from 'lib/ui';
 import { errorHandler } from 'utils/form';
 import sendIcon from 'icons/send.svg';
 import { numericOnly } from 'utils/form';
-import confirmPin from 'utils/promisified/confirmPin';
+import { confirmPin } from 'lib/ui';
 import questionIcon from 'icons/question-mark-circle.svg';
 
 // Internal Local

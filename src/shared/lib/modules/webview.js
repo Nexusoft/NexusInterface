@@ -14,7 +14,7 @@ import {
   openSuccessDialog,
 } from 'lib/ui';
 
-import confirmPin from 'utils/promisified/confirmPin';
+import { confirmPin } from 'lib/ui';
 import { walletEvents } from 'lib/wallet';
 import rpc from 'lib/rpc';
 import { apiPost } from 'lib/tritiumApi';

@@ -9,7 +9,7 @@ import GA from 'lib/googleAnalytics';
 // Internal
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
-import { getBalances } from 'lib/user';
+import { refreshBalances } from 'lib/user';
 import { getMiningInfo } from 'lib/core';
 import { formatNumber, formatCurrency, formatRelativeTime } from 'lib/intl';
 import { timing, consts } from 'styles';
@@ -285,10 +285,13 @@ class Overview extends Component {
     GA.SendScreen('Overview');
 
     // Periodically get balances
-    getBalances();
     this.unobserve = observeStore(
       ({ user }) => user && user.status,
-      getBalances
+      (status) => {
+        if (status) {
+          refreshBalances();
+        }
+      }
     );
 
     // Periodically get difficulty

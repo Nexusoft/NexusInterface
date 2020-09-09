@@ -9,7 +9,7 @@ import Spinner from 'components/Spinner';
 import Divider from 'components/Divider';
 import Icon from 'components/Icon';
 import QuestionCircle from 'components/QuestionCircle';
-import confirmPin from 'utils/promisified/confirmPin';
+import { confirmPin } from 'lib/ui';
 import { errorHandler } from 'utils/form';
 import { openSuccessDialog } from 'lib/ui';
 import { loadAssets } from 'lib/user';

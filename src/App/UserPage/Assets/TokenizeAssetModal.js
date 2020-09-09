@@ -8,7 +8,7 @@ import Button from 'components/Button';
 import FormField from 'components/FormField';
 import Spinner from 'components/Spinner';
 import AutoSuggest from 'components/AutoSuggest';
-import confirmPin from 'utils/promisified/confirmPin';
+import { confirmPin } from 'lib/ui';
 import { errorHandler } from 'utils/form';
 import { openSuccessDialog } from 'lib/ui';
 import { loadAssets, loadOwnedTokens } from 'lib/user';

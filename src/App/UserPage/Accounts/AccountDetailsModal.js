@@ -5,13 +5,11 @@ import Modal from 'components/Modal';
 import Button from 'components/Button';
 import InfoField from 'components/InfoField';
 import AdjustStakeModal from 'components/AdjustStakeModal';
-import Icon from 'components/Icon';
 import QRButton from 'components/QRButton';
 import { goToSend } from 'lib/send';
-import { formatDateTime } from 'lib/intl';
+import { formatDateTime, formatNumber } from 'lib/intl';
 import { openModal } from 'lib/ui';
-import { formatNumber } from 'lib/intl';
-import QRCodeIcon from 'icons/qr.svg';
+import { getTokenName } from 'lib/tokens';
 
 import { totalBalance } from './utils';
 
@@ -45,11 +43,11 @@ const AccountDetailsModal = ({ account, stakeInfo }) => (
             {account.token_name}
           </InfoField>
           <InfoField ratio={[1, 2]} label={__('Total account balance')}>
-            {formatNumber(totalBalance(account), 6)} {account.token_name}
+            {formatNumber(totalBalance(account), 6)} {getTokenName(account)}
           </InfoField>
           <InfoField ratio={[1, 2]} label={__('Available balance')}>
             <span className="v-align">
-              {formatNumber(account.balance, 6)} {account.token_name}
+              {formatNumber(account.balance, 6)} {getTokenName(account)}
             </span>
             &nbsp;&nbsp;
             {account.balance > 0 && (
@@ -61,24 +59,26 @@ const AccountDetailsModal = ({ account, stakeInfo }) => (
                   goToSend({ sendFrom: account.name });
                 }}
               >
-                {__('Send %{token_name}', { token_name: account.token_name })}
+                {__('Send %{token_name}', {
+                  token_name: getTokenName(account),
+                })}
               </Button>
             )}
           </InfoField>
           <InfoField ratio={[1, 2]} label={__('Pending balance')}>
-            {formatNumber(account.pending, 6)} {account.token_name}
+            {formatNumber(account.pending, 6)} {getTokenName(account)}
           </InfoField>
           <InfoField ratio={[1, 2]} label={__('Unconfirmed balance')}>
-            {formatNumber(account.unconfirmed, 6)} {account.token_name}
+            {formatNumber(account.unconfirmed, 6)} {getTokenName(account)}
           </InfoField>
           {account.stake !== undefined && (
             <InfoField ratio={[1, 2]} label={__('Stake balance')}>
-              {formatNumber(account.stake, 6)} {account.token_name}
+              {formatNumber(account.stake, 6)} {getTokenName(account)}
             </InfoField>
           )}
           {account.immature !== undefined && (
             <InfoField ratio={[1, 2]} label={__('Immature balance')}>
-              {formatNumber(account.immature, 6)} {account.token_name}
+              {formatNumber(account.immature, 6)} {getTokenName(account)}
             </InfoField>
           )}
           <InfoField ratio={[1, 2]} label={__('Address')}>

@@ -1,16 +1,16 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 import { NavLink } from 'react-router-dom';
 
 import { timing, consts } from 'styles';
 import * as color from 'utils/color';
-import Button from 'components/Button';
+import { selectUsername } from 'lib/user';
 
 __ = __context('User');
 
 const UserBriefComponent = styled.div(({ theme }) => ({
-  width: 307,
+  width: 315,
   marginLeft: -30,
   padding: '0 30px',
   borderRight: `1px solid ${theme.mixer(0.125)}`,
@@ -69,26 +69,26 @@ const MenuItem = styled(NavLink)(
     }
 );
 
-const UserBrief = ({ status, match }) => (
-  <UserBriefComponent>
-    <Username>{status.username}</Username>
-    <Separator />
-    <Genesis>
-      <div>{__('User ID')}:</div>
-      <GenesisId>{status.genesis}</GenesisId>
-    </Genesis>
-    <Separator />
-    <MenuItem to={`${match.url}/Accounts`}>{__('Accounts')}</MenuItem>
-    <MenuItem to={`${match.url}/Staking`}>{__('Staking')}</MenuItem>
-    <MenuItem to={`${match.url}/Tokens`}>{__('Tokens')}</MenuItem>
-    <MenuItem to={`${match.url}/Names`}>{__('Names')}</MenuItem>
-    <MenuItem to={`${match.url}/Namespaces`}>{__('Namespaces')}</MenuItem>
-    <MenuItem to={`${match.url}/Assets`}>{__('Assets')}</MenuItem>
-  </UserBriefComponent>
-);
+const UserBrief = ({ match }) => {
+  const username = useSelector(selectUsername);
+  const genesis = useSelector((state) => state.user.status?.genesis);
+  return (
+    <UserBriefComponent>
+      <Username>{username}</Username>
+      <Separator />
+      <Genesis>
+        <div>{__('User ID')}:</div>
+        <GenesisId>{genesis}</GenesisId>
+      </Genesis>
+      <Separator />
+      <MenuItem to={`${match.url}/Accounts`}>{__('Accounts')}</MenuItem>
+      <MenuItem to={`${match.url}/Staking`}>{__('Staking')}</MenuItem>
+      <MenuItem to={`${match.url}/Tokens`}>{__('Tokens')}</MenuItem>
+      <MenuItem to={`${match.url}/Names`}>{__('Names')}</MenuItem>
+      <MenuItem to={`${match.url}/Namespaces`}>{__('Namespaces')}</MenuItem>
+      <MenuItem to={`${match.url}/Assets`}>{__('Assets')}</MenuItem>
+    </UserBriefComponent>
+  );
+};
 
-const mapStateToProps = (state) => ({
-  status: state.user.status,
-});
-
-export default connect(mapStateToProps)(UserBrief);
+export default UserBrief;

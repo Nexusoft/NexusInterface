@@ -9,7 +9,10 @@ import { isLoggedIn } from 'selectors';
 import listAll from 'utils/listAll';
 import MigrateAccountModal from 'components/MigrateAccountModal';
 
-const getStakeInfo = async () => {
+export const selectUsername = (state) =>
+  state.user.status?.username || state.sessions[state.user.session]?.username;
+
+export const refreshStakeInfo = async () => {
   try {
     const stakeInfo = await apiPost('finance/get/stakeinfo');
     store.dispatch({ type: TYPE.SET_STAKE_INFO, payload: stakeInfo });
@@ -19,17 +22,22 @@ const getStakeInfo = async () => {
   }
 };
 
-export const getUserStatus = async () => {
+export const refreshUserStatus = async () => {
   try {
-    const status = await apiPost('users/get/status');
-    store.dispatch({ type: TYPE.SET_USER_STATUS, payload: status });
-    getStakeInfo();
+    const {
+      user: { session },
+      core: { systemInfo },
+    } = store.getState();
+    if (!systemInfo?.multiuser || session) {
+      const status = await apiPost('users/get/status');
+      store.dispatch({ type: TYPE.SET_USER_STATUS, payload: status });
+    }
   } catch (err) {
-    store.dispatch({ type: TYPE.CLEAR_USER_STATUS });
+    store.dispatch({ type: TYPE.CLEAR_USER });
   }
 };
 
-export const getBalances = async () => {
+export const refreshBalances = async () => {
   try {
     const balances = await apiPost('finance/get/balances');
     store.dispatch({ type: TYPE.SET_BALANCES, payload: balances });
@@ -39,12 +47,53 @@ export const getBalances = async () => {
   }
 };
 
-export const logOut = async () => {
-  store.dispatch({
-    type: TYPE.CLEAR_USER_STATUS,
-    payload: null,
+export const login = async ({ username, password, pin }) => {
+  const result = await apiPost('users/login/user', {
+    username,
+    password,
+    pin,
   });
-  await apiPost('users/logout/user');
+  const { session } = result;
+  const status = await apiPost('users/get/status', { session });
+
+  store.dispatch({ type: TYPE.LOGIN, payload: { username, session, status } });
+  return { username, session, status };
+};
+
+export const logOut = async () => {
+  const {
+    sessions,
+    core: { systemInfo },
+  } = store.getState();
+  store.dispatch({
+    type: TYPE.LOGOUT,
+  });
+  if (systemInfo?.multiuser) {
+    await Promise.all([
+      Object.keys(sessions).map((session) => {
+        apiPost('users/logout/user', { session });
+      }),
+    ]);
+  } else {
+    await apiPost('users/logout/user');
+  }
+};
+
+export const unlockUser = async ({ pin }) => {
+  const {
+    settings: { enableStaking, enableMining },
+  } = store.getState();
+  return await apiPost('users/unlock/user', {
+    pin,
+    notifications: true,
+    mining: !!enableMining,
+    staking: !!enableStaking,
+  });
+};
+
+export const switchUser = async ({ session }) => {
+  const status = await apiPost('users/get/status', { session });
+  store.dispatch({ type: TYPE.SWITCH_USER, payload: { session, status } });
 };
 
 export const loadOwnedTokens = async () => {
@@ -178,5 +227,14 @@ if (!legacyMode) {
         }
       }
     });
+
+    observeStore(
+      (state) => state.user.status,
+      (userStatus) => {
+        if (userStatus) {
+          refreshStakeInfo();
+        }
+      }
+    );
   });
 }

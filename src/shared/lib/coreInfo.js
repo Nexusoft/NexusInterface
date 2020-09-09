@@ -7,7 +7,7 @@ import { loadAccounts } from 'lib/user';
 import { showNotification, openModal } from 'lib/ui';
 import { updateSettings } from 'lib/settings';
 import { bootstrap } from 'lib/bootstrap';
-import { getUserStatus } from 'lib/user';
+import { refreshUserStatus } from 'lib/user';
 import { showDesktopNotif } from 'utils/misc';
 import LoginModal from 'components/LoginModal';
 import NewUserModal from 'components/NewUserModal';
@@ -20,6 +20,7 @@ const maxTime = 10000;
 let waitTime = 0;
 let connected = false;
 let timerId = null;
+let clientModeChecked = false;
 
 const getInfo = legacyMode
   ? // Legacy
@@ -37,8 +38,21 @@ const getInfo = legacyMode
 
         store.dispatch({ type: TYPE.GET_INFO, payload: info });
       } catch (err) {
-        store.dispatch({ type: TYPE.CLEAR_CORE_INFO });
+        store.dispatch({ type: TYPE.DISCONNECT_CORE });
         console.error(err);
+
+        // Client mode doesn't support RPC so might be the reason the RPC call failed
+        if (!clientModeChecked) {
+          try {
+            clientModeChecked = true;
+            const systemInfo = await apiPost('system/get/info');
+            if (systemInfo?.clientmode) {
+              updateSettings({ legacyMode: false });
+              location.reload();
+            }
+          } catch (err) {}
+        }
+
         // Throws error so getInfo fails and autoFetchCoreInfo will
         // switch to using dynamic interval.
         throw err;
@@ -50,7 +64,7 @@ const getInfo = legacyMode
         const systemInfo = await apiPost('system/get/info');
         store.dispatch({ type: TYPE.SET_SYSTEM_INFO, payload: systemInfo });
       } catch (err) {
-        store.dispatch({ type: TYPE.CLEAR_CORE_INFO });
+        store.dispatch({ type: TYPE.DISCONNECT_CORE });
         console.error('system/get/info failed', err);
         // Throws error so getInfo fails and autoFetchCoreInfo will
         // switch to using dynamic interval.
@@ -155,7 +169,7 @@ walletEvents.once('pre-render', function () {
       ({ core: { systemInfo } }) => systemInfo,
       async () => {
         if (isCoreConnected(store.getState())) {
-          await getUserStatus();
+          await refreshUserStatus();
           const state = store.getState();
           // The wallet will have to refresh after language is chosen
           // So NewUser modal won't be visible now

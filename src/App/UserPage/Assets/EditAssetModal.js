@@ -6,7 +6,7 @@ import Button from 'components/Button';
 import InfoField from 'components/InfoField';
 import TextField from 'components/TextField';
 import Spinner from 'components/Spinner';
-import confirmPin from 'utils/promisified/confirmPin';
+import { confirmPin } from 'lib/ui';
 import { errorHandler } from 'utils/form';
 import { openSuccessDialog } from 'lib/ui';
 import { loadAssets } from 'lib/user';

@@ -12,7 +12,7 @@ import { showNotification, openModal } from 'lib/ui';
 import { bootstrap } from 'lib/bootstrap';
 import { isCoreConnected } from 'selectors';
 import { legacyMode } from 'consts/misc';
-import confirm from 'utils/promisified/confirm';
+import { confirm } from 'lib/ui';
 import { walletDataDir } from 'consts/paths';
 import { checkForUpdates, quitAndInstall } from 'lib/updater';
 import { walletEvents } from 'lib/wallet';

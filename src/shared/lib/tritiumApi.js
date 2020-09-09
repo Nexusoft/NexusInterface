@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+import store from 'store';
 import { getActiveCoreConfig } from 'lib/coreConfig';
 
 const getDefaultOptions = ({ apiUser, apiPassword }) => ({
@@ -24,9 +25,16 @@ const getDefaultOptions = ({ apiUser, apiPassword }) => ({
  * @param {*} params
  * @returns
  */
-export async function apiPost(endpoint, params) {
+export async function apiPost(endpoint, customParams) {
   const conf = await getActiveCoreConfig();
+  const {
+    user: { session },
+    core: { systemInfo },
+  } = store.getState();
   try {
+    const params = systemInfo?.multiuser
+      ? { session, ...customParams }
+      : customParams;
     const response = await axios.post(
       `${conf.apiHost}/${endpoint}`,
       params,

@@ -7,7 +7,7 @@ export default (state = initialState, action) => {
     case TYPE.SET_MINING_INFO:
       return action.payload;
 
-    case TYPE.CLEAR_CORE_INFO:
+    case TYPE.DISCONNECT_CORE:
     case TYPE.CLEAR_MINING_INFO:
       return initialState;
 

@@ -11,6 +11,7 @@ import listAll from 'utils/listAll';
 import { formatDateTime, formatNumber, formatCurrency } from 'lib/intl';
 import { openModal, toggleUserBalanceDisplayFiat } from 'lib/ui';
 import { lookupAddress } from 'lib/addressBook';
+import { getTokenName } from 'lib/tokens';
 import { handleError } from 'utils/form';
 
 import { totalBalance } from './utils';
@@ -263,7 +264,7 @@ class AccountHistoryModal extends React.Component {
                       {')'}
                     </>
                   ) : (
-                    `${__('Account balance')} (${account.token_name})`
+                    `${__('Account balance')} (${getTokenName(account)})`
                   )
                 }
               >

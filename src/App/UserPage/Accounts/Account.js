@@ -5,7 +5,7 @@ import Link from 'components/Link';
 import NexusAddress from 'components/NexusAddress';
 import { formatNumber } from 'lib/intl';
 import { openModal } from 'lib/ui';
-
+import { getTokenName } from 'lib/tokens';
 import AccountDetailsModal from './AccountDetailsModal';
 import AccountHistoryModal from './AccountHistoryModal';
 import { totalBalance } from './utils';
@@ -33,7 +33,7 @@ const Account = ({ account }) => (
       <div>
         {!account.name && <UnNamed>{__('Unnamed account')}</UnNamed>}
         <AccountName>{account.name}</AccountName> (
-        {formatNumber(totalBalance(account))} {account.token_name || 'Tokens'})
+        {formatNumber(totalBalance(account))} {getTokenName(account)})
       </div>
       <div>
         <Link
