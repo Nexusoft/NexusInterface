@@ -24,13 +24,8 @@ export const refreshStakeInfo = async () => {
 
 export const refreshUserStatus = async () => {
   try {
-    const {
-      user: { session },
-    } = store.getState();
-    if (session) {
-      const status = await apiPost('users/get/status');
-      store.dispatch({ type: TYPE.SET_USER_STATUS, payload: status });
-    }
+    const status = await apiPost('users/get/status');
+    store.dispatch({ type: TYPE.SET_USER_STATUS, payload: status });
   } catch (err) {
     store.dispatch({ type: TYPE.CLEAR_USER });
   }
@@ -60,15 +55,22 @@ export const login = async ({ username, password, pin }) => {
 };
 
 export const logOut = async () => {
-  const { sessions } = store.getState();
+  const {
+    sessions,
+    core: { systemInfo },
+  } = store.getState();
   store.dispatch({
     type: TYPE.LOGOUT,
   });
-  await Promise.all([
-    Object.keys(sessions).map((session) => {
-      apiPost('users/logout/user', { session });
-    }),
-  ]);
+  if (systemInfo?.multiuser) {
+    await Promise.all([
+      Object.keys(sessions).map((session) => {
+        apiPost('users/logout/user', { session });
+      }),
+    ]);
+  } else {
+    await apiPost('users/logout/user');
+  }
 };
 
 export const unlockUser = async ({ pin }) => {
