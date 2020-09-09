@@ -84,7 +84,7 @@ export function confirmPin({ note, confirmLabel } = {}) {
   });
 }
 
-export default function confirmPasswordPin({ password, pin, isNew }) {
+export function confirmPasswordPin({ password, pin, isNew }) {
   return new Promise((resolve, reject) => {
     openModal(ConfirmPasswordPinDialog, {
       isNew,
