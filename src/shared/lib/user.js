@@ -24,8 +24,14 @@ export const refreshStakeInfo = async () => {
 
 export const refreshUserStatus = async () => {
   try {
-    const status = await apiPost('users/get/status');
-    store.dispatch({ type: TYPE.SET_USER_STATUS, payload: status });
+    const {
+      user: { session },
+      core: { systemInfo },
+    } = store.getState();
+    if (!systemInfo?.multiuser || session) {
+      const status = await apiPost('users/get/status');
+      store.dispatch({ type: TYPE.SET_USER_STATUS, payload: status });
+    }
   } catch (err) {
     store.dispatch({ type: TYPE.CLEAR_USER });
   }
