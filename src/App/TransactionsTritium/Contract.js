@@ -286,6 +286,14 @@ const contractContent = (contract) => {
   }
 };
 
+const getTokenName = ({ token_name, token }) => {
+  if (token_name) return token_name;
+  if (typeof token === 'string') {
+    return <span className="dim">{token.substring(0, 3)}...</span>;
+  }
+  return 'NXS';
+};
+
 const Contract = ({ contract, txid }) => (
   <ContractComponent
     onClick={() => openModal(ContractDetailsModal, { contract, txid })}
@@ -312,7 +320,7 @@ const Contract = ({ contract, txid }) => (
     <ContractContent>{contractContent(contract)}</ContractContent>
     {!!contract.amount && (
       <ContractDelta sign={getDeltaSign(contract)}>
-        {formatNumber(contract.amount)} {contract.token_name || 'NXS'}
+        {formatNumber(contract.amount)} {getTokenName(contract)}
       </ContractDelta>
     )}
   </ContractComponent>
