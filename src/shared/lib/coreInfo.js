@@ -30,11 +30,13 @@ const getInfo = legacyMode
         payload: 'getInfo',
       });
       try {
-        const info = await rpc('getinfo', []);
-        const { connections } = await apiPost('system/get/info');
+        const [info, tritiumInfo] = await Promise.all([
+          rpc('getinfo', []),
+          apiPost('system/get/info'),
+        ]);
         //Paul wants us to use the number of connections from API instead of RPC, but getinfo and get/info are not one to one.
         //This is a bit of a hack.
-        info.connections = connections;
+        info.connections = tritiumInfo.connections;
 
         store.dispatch({ type: TYPE.GET_INFO, payload: info });
       } catch (err) {
