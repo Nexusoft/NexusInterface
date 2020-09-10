@@ -56,9 +56,9 @@ export default merge(baseConfig, {
 
   resolve: {
     // TODO: uncomment this when @hot-loader/react-dom updates to the same version as react-dom
-    // alias: {
-    //   'react-dom': '@hot-loader/react-dom',
-    // },
+    alias: {
+      'react-dom': '@hot-loader/react-dom',
+    },
   },
 
   plugins: [
