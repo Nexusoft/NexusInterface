@@ -114,6 +114,7 @@ export async function callApiByUrl(url) {
   const conf = await getActiveCoreConfig();
   return await request({
     options: {
+      method: 'GET',
       path: `/${url}`,
       ...getDefaultOptions(conf),
     },
