@@ -91,7 +91,7 @@ export const unlockUser = async ({ pin }) => {
   });
 };
 
-export const switchUser = async ({ session }) => {
+export const switchUser = async (session) => {
   const status = await callApi('users/get/status', { session });
   store.dispatch({ type: TYPE.SWITCH_USER, payload: { session, status } });
 };
