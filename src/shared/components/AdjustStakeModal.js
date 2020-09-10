@@ -7,7 +7,7 @@ import Modal from 'components/Modal';
 import Slider from 'components/Slider';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
-import { apiPost } from 'lib/tritiumApi';
+import { callApi } from 'lib/tritiumApi';
 import { confirm } from 'lib/ui';
 import { confirmPin } from 'lib/ui';
 import { errorHandler } from 'utils/form';
@@ -96,7 +96,7 @@ const Note = styled.div(({ theme }) => ({
 
     const pin = await confirmPin();
     if (pin) {
-      return await apiPost('finance/set/stake', { pin, amount: stake });
+      return await callApi('finance/set/stake', { pin, amount: stake });
     }
   },
   onSubmitSuccess: async (result, dispatch, props) => {

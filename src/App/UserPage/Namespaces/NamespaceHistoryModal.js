@@ -5,7 +5,7 @@ import Table from 'components/Table';
 import WaitingMessage from 'components/WaitingMessage';
 import { formatDateTime } from 'lib/intl';
 import { openModal } from 'lib/ui';
-import { apiPost } from 'lib/tritiumApi';
+import { callApi } from 'lib/tritiumApi';
 import { handleError } from 'utils/form';
 
 import NamespaceHistoryDetailsModal from './NamespaceHistoryDetailsModal';
@@ -50,7 +50,7 @@ export default class NamespaceHistoryModal extends React.Component {
   async componentDidMount() {
     const { namespace } = this.props;
     try {
-      const events = await apiPost('names/list/namespace/history', {
+      const events = await callApi('names/list/namespace/history', {
         address: namespace.address,
       });
       this.setState({ events: events.reverse() });

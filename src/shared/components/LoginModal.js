@@ -3,7 +3,7 @@ import { reduxForm, Field, getFormValues } from 'redux-form';
 import styled from '@emotion/styled';
 import { connect } from 'react-redux';
 
-import { apiPost } from 'lib/tritiumApi';
+import { callApi } from 'lib/tritiumApi';
 import Modal from 'components/Modal';
 import FormField from 'components/FormField';
 import TextFieldWithKeyboard from 'components/TextFieldWithKeyboard';

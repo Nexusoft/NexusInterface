@@ -1,6 +1,6 @@
 import * as TYPE from 'consts/actionTypes';
 import store, { observeStore } from 'store';
-import { apiPost } from 'lib/tritiumApi';
+import { callApi } from 'lib/tritiumApi';
 import rpc from 'lib/rpc';
 import { legacyMode } from 'consts/misc';
 import { walletEvents } from 'lib/wallet';
@@ -14,7 +14,7 @@ export const selectUsername = (state) =>
 
 export const refreshStakeInfo = async () => {
   try {
-    const stakeInfo = await apiPost('finance/get/stakeinfo');
+    const stakeInfo = await callApi('finance/get/stakeinfo');
     store.dispatch({ type: TYPE.SET_STAKE_INFO, payload: stakeInfo });
   } catch (err) {
     store.dispatch({ type: TYPE.CLEAR_STAKE_INFO });
@@ -29,7 +29,7 @@ export const refreshUserStatus = async () => {
       core: { systemInfo },
     } = store.getState();
     if (!systemInfo?.multiuser || session) {
-      const status = await apiPost('users/get/status');
+      const status = await callApi('users/get/status');
       store.dispatch({ type: TYPE.SET_USER_STATUS, payload: status });
     }
   } catch (err) {
@@ -39,7 +39,7 @@ export const refreshUserStatus = async () => {
 
 export const refreshBalances = async () => {
   try {
-    const balances = await apiPost('finance/get/balances');
+    const balances = await callApi('finance/get/balances');
     store.dispatch({ type: TYPE.SET_BALANCES, payload: balances });
   } catch (err) {
     store.dispatch({ type: TYPE.CLEAR_BALANCES });
@@ -48,13 +48,13 @@ export const refreshBalances = async () => {
 };
 
 export const login = async ({ username, password, pin }) => {
-  const result = await apiPost('users/login/user', {
+  const result = await callApi('users/login/user', {
     username,
     password,
     pin,
   });
   const { session } = result;
-  const status = await apiPost('users/get/status', { session });
+  const status = await callApi('users/get/status', { session });
 
   store.dispatch({ type: TYPE.LOGIN, payload: { username, session, status } });
   return { username, session, status };
@@ -71,11 +71,11 @@ export const logOut = async () => {
   if (systemInfo?.multiuser) {
     await Promise.all([
       Object.keys(sessions).map((session) => {
-        apiPost('users/logout/user', { session });
+        callApi('users/logout/user', { session });
       }),
     ]);
   } else {
-    await apiPost('users/logout/user');
+    await callApi('users/logout/user');
   }
 };
 
@@ -83,7 +83,7 @@ export const unlockUser = async ({ pin }) => {
   const {
     settings: { enableStaking, enableMining },
   } = store.getState();
-  return await apiPost('users/unlock/user', {
+  return await callApi('users/unlock/user', {
     pin,
     notifications: true,
     mining: !!enableMining,
@@ -92,7 +92,7 @@ export const unlockUser = async ({ pin }) => {
 };
 
 export const switchUser = async ({ session }) => {
-  const status = await apiPost('users/get/status', { session });
+  const status = await callApi('users/get/status', { session });
   store.dispatch({ type: TYPE.SWITCH_USER, payload: { session, status } });
 };
 
@@ -171,7 +171,7 @@ export const loadAccounts = legacyMode
   : // Tritium Mode
     async () => {
       try {
-        const accounts = await apiPost('users/list/accounts');
+        const accounts = await callApi('users/list/accounts');
         store.dispatch({ type: TYPE.SET_TRITIUM_ACCOUNTS, payload: accounts });
       } catch (err) {
         console.error('users/list/accounts failed', err);

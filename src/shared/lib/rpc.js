@@ -101,9 +101,11 @@ export default function rpc(cmd, args) {
       const req = https.request(options, (res) => {
         let data = '';
         res.setEncoding('utf8');
+
         res.on('data', (chunk) => {
           data += chunk;
         });
+
         res.on('end', () => {
           let result = undefined;
           try {
@@ -114,10 +116,10 @@ export default function rpc(cmd, args) {
           if (res.statusCode >= 200 && res.statusCode < 300) {
             resolve(result?.result);
           } else {
-            console.log('Error', result);
             reject(result?.error);
           }
         });
+
         res.on('aborted', () => {
           reject(new Error('Aborted'));
         });
@@ -126,6 +128,7 @@ export default function rpc(cmd, args) {
       req.on('error', (err) => {
         reject(err);
       });
+
       req.on('abort', () => {
         reject(new Error('Aborted'));
       });

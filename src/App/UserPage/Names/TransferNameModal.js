@@ -12,7 +12,7 @@ import { confirmPin } from 'lib/ui';
 import { errorHandler } from 'utils/form';
 import { openSuccessDialog } from 'lib/ui';
 import { loadNameRecords, selectUsername } from 'lib/user';
-import { apiPost } from 'lib/tritiumApi';
+import { callApi } from 'lib/tritiumApi';
 import { userIdRegex } from 'consts/misc';
 
 __ = __context('TransferName');
@@ -52,7 +52,7 @@ const Name = styled.span(({ theme }) => ({
     }
 
     if (pin) {
-      return await apiPost('names/transfer/name', params);
+      return await callApi('names/transfer/name', params);
     }
   },
   onSubmitSuccess: async (result, dispatch, props) => {

@@ -5,7 +5,7 @@ import { reduxForm, Field, FieldArray, formValueSelector } from 'redux-form';
 import styled from '@emotion/styled';
 
 // Internal Global
-import { apiPost } from 'lib/tritiumApi';
+import { callApi } from 'lib/tritiumApi';
 import { loadAccounts } from 'lib/user';
 import { formName, defaultValues } from 'lib/send';
 import Icon from 'components/Icon';
@@ -143,7 +143,7 @@ const base58Regex = /^[1-9A-HJ-NP-Za-km-z]{51}$/;
     const { address } = recipients[0];
 
     if (base58Regex.test(address)) {
-      const addressResult = await apiPost('system/validate/address', {
+      const addressResult = await callApi('system/validate/address', {
         address,
       });
       if (addressResult.is_valid) {
@@ -152,7 +152,7 @@ const base58Regex = /^[1-9A-HJ-NP-Za-km-z]{51}$/;
     }
 
     try {
-      await apiPost('names/get/name', { name: address });
+      await callApi('names/get/name', { name: address });
     } catch (err) {
       throw { recipients: [{ address: __('Invalid name/address') }] };
     }
@@ -184,12 +184,12 @@ const base58Regex = /^[1-9A-HJ-NP-Za-km-z]{51}$/;
       if (expires) params.expires = expires;
 
       if (props.accountInfo.token_name === 'NXS') {
-        return await apiPost('finance/debit/account', params);
+        return await callApi('finance/debit/account', params);
       } else {
         if (props.accountInfo.maxsupply) {
-          return await apiPost('tokens/debit/token', params);
+          return await callApi('tokens/debit/token', params);
         } else {
-          return await apiPost('tokens/debit/account', params);
+          return await callApi('tokens/debit/account', params);
         }
       }
     }

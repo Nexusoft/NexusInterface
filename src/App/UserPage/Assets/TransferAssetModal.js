@@ -11,7 +11,7 @@ import { confirmPin } from 'lib/ui';
 import { errorHandler } from 'utils/form';
 import { openSuccessDialog } from 'lib/ui';
 import { loadAssets } from 'lib/user';
-import { apiPost } from 'lib/tritiumApi';
+import { callApi } from 'lib/tritiumApi';
 import { userIdRegex } from 'consts/misc';
 
 __ = __context('TransferAsset');
@@ -44,7 +44,7 @@ const Value = styled.span(({ theme }) => ({
     }
 
     if (pin) {
-      return await apiPost('assets/transfer/asset', params);
+      return await callApi('assets/transfer/asset', params);
     }
   },
   onSubmitSuccess: async (result, dispatch, props) => {

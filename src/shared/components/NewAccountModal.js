@@ -9,7 +9,7 @@ import FormField from 'components/FormField';
 import SelectField from 'components/Select';
 import { confirm } from 'lib/ui';
 import { confirmPin } from 'lib/ui';
-import { apiPost } from 'lib/tritiumApi';
+import { callApi } from 'lib/tritiumApi';
 import { errorHandler } from 'utils/form';
 import { loadAccounts } from 'lib/user';
 import { removeModal, showNotification } from 'lib/ui';
@@ -59,10 +59,10 @@ const mapStateToProps = (state) => {
 
       if (token === '0') {
         //run NXS
-        return await apiPost('finance/create/account', params);
+        return await callApi('finance/create/account', params);
       } else {
         if (props.tokenAddress) params.token = token;
-        return await apiPost('tokens/create/account', params);
+        return await callApi('tokens/create/account', params);
       }
     }
   },

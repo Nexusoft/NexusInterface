@@ -5,13 +5,13 @@ import * as TYPE from 'consts/actionTypes';
 import store from 'store';
 import rpc from 'lib/rpc';
 import { loadNexusConf, saveCoreConfig } from 'lib/coreConfig';
-import { apiPost } from 'lib/tritiumApi';
+import { callApi } from 'lib/tritiumApi';
 import { updateSettings } from 'lib/settings';
 import sleep from 'utils/promisified/sleep';
 
 export const getMiningInfo = async () => {
   try {
-    const miningInfo = await apiPost('ledger/get/mininginfo');
+    const miningInfo = await callApi('ledger/get/mininginfo');
     store.dispatch({ type: TYPE.SET_MINING_INFO, payload: miningInfo });
   } catch (err) {
     store.dispatch({ type: TYPE.CLEAR_MINING_INFO });
@@ -123,7 +123,7 @@ export const stopCore = async (forRestart) => {
   log.info('Core Manager: Stop function called');
   const { manualDaemon } = store.getState().settings;
   store.dispatch({ type: TYPE.DISCONNECT_CORE });
-  await apiPost('system/stop');
+  await callApi('system/stop');
 
   // Wait for core to gracefully stop for 30 seconds
   for (let i = 0; i <= 30; i++) {

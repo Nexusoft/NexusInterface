@@ -1,7 +1,7 @@
 import React from 'react';
 import { reduxForm, Field } from 'redux-form';
 
-import { apiPost } from 'lib/tritiumApi';
+import { callApi } from 'lib/tritiumApi';
 import Modal from 'components/Modal';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
@@ -57,7 +57,7 @@ __ = __context('RecoverPassword&PIN');
     });
 
     if (correct) {
-      return await apiPost('users/recover/user', {
+      return await callApi('users/recover/user', {
         username,
         recovery: recoveryPhrase,
         password: newPassword,

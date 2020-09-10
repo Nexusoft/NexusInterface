@@ -18,7 +18,7 @@ import {
   createGlobalNameFee,
 } from 'lib/fees';
 import { loadNameRecords, loadNamespaces, selectUsername } from 'lib/user';
-import { apiPost } from 'lib/tritiumApi';
+import { callApi } from 'lib/tritiumApi';
 
 __ = __context('CreateName');
 
@@ -99,7 +99,7 @@ const NameTypeSelect = ({ input, hasNamespaces }) => (
     const pin = await confirmPin();
 
     if (pin) {
-      return await apiPost('names/create/name', {
+      return await callApi('names/create/name', {
         pin,
         name,
         global: type === 'global',

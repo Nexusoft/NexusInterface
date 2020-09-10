@@ -6,9 +6,9 @@ import Modal from 'components/Modal';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
 import FormField from 'components/FormField';
-import { apiPost } from 'lib/tritiumApi';
+import { callApi } from 'lib/tritiumApi';
 import { errorHandler } from 'utils/form';
-import { removeModal, showNotification } from 'lib/ui';
+import { removeModal } from 'lib/ui';
 import { openModal } from 'lib/ui';
 import searchIcon from 'icons/search.svg';
 import Icon from 'components/Icon';
@@ -37,7 +37,7 @@ __ = __context('User.Tokens.SearchToken');
     !searchValue.startsWith('8')
       ? (params.name = searchValue)
       : (params.address = searchValue);
-    return await apiPost('tokens/get/token', params);
+    return await callApi('tokens/get/token', params);
   },
   onSubmitSuccess: async (result, dispatch, props) => {
     if (!result) return; // Submission was cancelled
@@ -49,10 +49,11 @@ __ = __context('User.Tokens.SearchToken');
 class SearchTokenModal extends React.Component {
   async openSearchedDetailsModal(props) {
     try {
-      const token = await apiGet(
+      const token = await apiPost(
+        'tokens/get/token',
         props.tokenName
-          ? `tokens/get/token?name=${props.tokenName}`
-          : `tokens/get/token?address=${props.tokenAddress}`
+          ? { name: props.tokenName }
+          : { address: props.tokenAddress }
       );
       openModal(TokenDetailsModal, { token });
     } catch (e) {

@@ -11,7 +11,7 @@ import TextField from 'components/TextField';
 import Select from 'components/Select';
 import Button from 'components/Button';
 import { showNotification } from 'lib/ui';
-import { apiPost } from 'lib/tritiumApi';
+import { callApi } from 'lib/tritiumApi';
 import { emailRegex } from 'utils/form';
 import timeZones from 'data/timeZones';
 import Addresses from './Addresses';
@@ -43,7 +43,7 @@ function validateAddresses(addresses) {
 
 function asyncValidateAddresses(isMine, addresses, errors) {
   return addresses.map(({ address }, i) =>
-    apiPost('system/validate/address', { address })
+    callApi('system/validate/address', { address })
       .then(({ is_valid, is_mine }) => {
         if (!is_valid) {
           if (address.startsWith('a') && address.length === 64) {

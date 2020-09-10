@@ -1,4 +1,4 @@
-import { apiPost } from 'lib/tritiumApi';
+import { callApi } from 'lib/tritiumApi';
 import store, { observeStore } from 'store';
 import * as TYPE from 'consts/actionTypes';
 import { loadAccounts } from 'lib/user';
@@ -67,7 +67,7 @@ if (!legacyMode) {
           typeof oldTxCount === 'number' &&
           txCount > oldTxCount
         ) {
-          const transactions = await apiPost('users/list/transactions', {
+          const transactions = await callApi('users/list/transactions', {
             verbose: 'summary',
             limit: txCount - oldTxCount,
           });
@@ -162,7 +162,7 @@ export async function fetchAllTransactions() {
 }
 
 export async function fetchTransaction(txid) {
-  const tx = await apiPost('ledger/get/transaction', {
+  const tx = await callApi('ledger/get/transaction', {
     txid,
     verbose: 'summary',
   });

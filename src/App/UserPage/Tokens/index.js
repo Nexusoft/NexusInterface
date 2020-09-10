@@ -10,7 +10,7 @@ import { openModal } from 'lib/ui';
 import { switchUserTab } from 'lib/ui';
 import { isCoreConnected, isLoggedIn } from 'selectors';
 import { legacyMode } from 'consts/misc';
-import { apiGet } from 'lib/tritiumApi';
+import { callApi } from 'lib/tritiumApi';
 import { loadOwnedTokens, loadAccounts } from 'lib/user';
 import Icon from 'components/Icon';
 
@@ -95,10 +95,11 @@ class Tokens extends Component {
   }
 
   async getTokenInfo(element) {
-    const info = await apiGet(
+    const info = await callApi(
+      'tokens/get/token',
       element.token_name
-        ? `tokens/get/token?name=${element.token_name}`
-        : `tokens/get/token?address=${element.token}`
+        ? { name: element.token_name }
+        : { address: element.token }
     );
     this.setState((prevState) => {
       let usedTokens = prevState.usedTokens;

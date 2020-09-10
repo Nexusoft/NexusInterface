@@ -12,7 +12,7 @@ import { confirmPin } from 'lib/ui';
 import { errorHandler } from 'utils/form';
 import { openSuccessDialog } from 'lib/ui';
 import { loadNameRecords, selectUsername } from 'lib/user';
-import { apiPost } from 'lib/tritiumApi';
+import { callApi } from 'lib/tritiumApi';
 
 __ = __context('ChangeRegisterAddress');
 
@@ -34,7 +34,7 @@ const Name = styled.span(({ theme }) => ({
     const pin = await confirmPin();
 
     if (pin) {
-      return await apiPost('names/update/name', {
+      return await callApi('names/update/name', {
         pin,
         address: nameRecord.address,
         register_address: registerAddress,

@@ -10,7 +10,7 @@ import { confirmPin } from 'lib/ui';
 import { errorHandler } from 'utils/form';
 import { openSuccessDialog } from 'lib/ui';
 import { loadAssets } from 'lib/user';
-import { apiPost } from 'lib/tritiumApi';
+import { callApi } from 'lib/tritiumApi';
 import { assetNumberTypes } from 'consts/misc';
 import { getAssetData } from 'utils/misc';
 
@@ -23,7 +23,7 @@ __ = __context('EditAsset');
     const pin = await confirmPin();
 
     if (pin) {
-      return await apiPost('assets/update/asset', {
+      return await callApi('assets/update/asset', {
         pin,
         address: props.asset.address,
         ...values,

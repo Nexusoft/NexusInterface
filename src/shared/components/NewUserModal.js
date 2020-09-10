@@ -3,7 +3,7 @@ import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
 import { connect } from 'react-redux';
 
-import { apiPost } from 'lib/tritiumApi';
+import { callApi } from 'lib/tritiumApi';
 import Modal from 'components/Modal';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
@@ -92,7 +92,7 @@ const Note = styled.div({
     });
 
     if (correct) {
-      return await apiPost('users/create/user', {
+      return await callApi('users/create/user', {
         username,
         password,
         pin,
@@ -214,7 +214,7 @@ class UserConfirmBackgroundTask extends React.Component {
     this.unobserve = observeStore(
       ({ core: { systemInfo } }) => systemInfo && systemInfo.blocks,
       async () => {
-        const txs = await apiPost('users/list/transactions', {
+        const txs = await callApi('users/list/transactions', {
           username,
           order: 'asc',
           limit: 1,

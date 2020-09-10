@@ -10,7 +10,7 @@ import { confirmPin } from 'lib/ui';
 import { errorHandler } from 'utils/form';
 import { openSuccessDialog } from 'lib/ui';
 import { loadNamespaces } from 'lib/user';
-import { apiPost } from 'lib/tritiumApi';
+import { callApi } from 'lib/tritiumApi';
 import { createNamespaceFee } from 'lib/fees';
 
 __ = __context('CreateNamespace');
@@ -40,7 +40,7 @@ const namespaceRegex = /^[a-z\d\.]+$/;
     const pin = await confirmPin();
 
     if (pin) {
-      return await apiPost('names/create/namespace', {
+      return await callApi('names/create/namespace', {
         pin,
         name,
       });

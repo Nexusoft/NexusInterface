@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import React from 'react';
 import { reduxForm, Field } from 'redux-form';
 
-import { apiPost } from 'lib/tritiumApi';
+import { callApi } from 'lib/tritiumApi';
 import Modal from 'components/Modal';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
@@ -69,7 +69,7 @@ const options = [
     return errors;
   },
   onSubmit: ({ password, pin, phrase, newPhrase }, dispatch, props) =>
-    apiPost('users/update/user', {
+    callApi('users/update/user', {
       password,
       pin,
       recovery: props.hasRecoveryPhrase ? phrase : undefined,

@@ -17,7 +17,7 @@ import {
 import { confirmPin } from 'lib/ui';
 import { walletEvents } from 'lib/wallet';
 import rpc from 'lib/rpc';
-import { apiPost } from 'lib/tritiumApi';
+import { callApi } from 'lib/tritiumApi';
 import { legacyMode } from 'consts/misc';
 
 import { readModuleStorage, writeModuleStorage } from './storage';
@@ -272,7 +272,7 @@ async function apiCall([endpoint, params, callId]) {
       throw 'Invalid API endpoint';
     }
 
-    const result = await apiPost(endpoint, params);
+    const result = await callApi(endpoint, params);
     const { activeAppModule } = store.getState();
     if (activeAppModule && activeAppModule.webview) {
       activeAppModule.webview.send(
@@ -310,7 +310,7 @@ async function secureApiCall([endpoint, params, callId]) {
     const result =
       pin === undefined
         ? undefined
-        : await apiPost(endpoint, { ...params, pin });
+        : await callApi(endpoint, { ...params, pin });
     const { activeAppModule } = store.getState();
     if (activeAppModule && activeAppModule.webview) {
       activeAppModule.webview.send(

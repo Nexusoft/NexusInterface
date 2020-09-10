@@ -5,7 +5,7 @@ import Table from 'components/Table';
 import WaitingMessage from 'components/WaitingMessage';
 import { formatDateTime } from 'lib/intl';
 import { openModal } from 'lib/ui';
-import { apiPost } from 'lib/tritiumApi';
+import { callApi } from 'lib/tritiumApi';
 import { handleError } from 'utils/form';
 
 import AssetHistoryDetailsModal from './AssetHistoryDetailsModal';
@@ -50,7 +50,7 @@ export default class AssetHistoryModal extends React.Component {
   async componentDidMount() {
     const { asset } = this.props;
     try {
-      const events = await apiPost('assets/list/asset/history', {
+      const events = await callApi('assets/list/asset/history', {
         address: asset.address,
       });
       this.setState({ events: events.reverse() });

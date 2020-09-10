@@ -8,7 +8,7 @@ import geoip from 'data/geoip';
 import Curve from './Curve';
 import Point from './Point';
 import rpc from 'lib/rpc';
-import { apiPost } from 'lib/tritiumApi';
+import { callApi } from 'lib/tritiumApi';
 
 const MaxDisplayPoints = 64;
 
@@ -221,7 +221,7 @@ export default class Globe extends Component {
    * @memberof Globe
    */
   async pointRegister() {
-    const peerInfo = await apiPost('system/list/peers', null);
+    const peerInfo = await callApi('system/list/peers', null);
     if (!peerInfo) return;
     if (peerInfo.length > MaxDisplayPoints) {
       peerInfo.length = MaxDisplayPoints;

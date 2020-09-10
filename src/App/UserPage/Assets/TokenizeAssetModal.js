@@ -12,7 +12,7 @@ import { confirmPin } from 'lib/ui';
 import { errorHandler } from 'utils/form';
 import { openSuccessDialog } from 'lib/ui';
 import { loadAssets, loadOwnedTokens } from 'lib/user';
-import { apiPost } from 'lib/tritiumApi';
+import { callApi } from 'lib/tritiumApi';
 import memoize from 'utils/memoize';
 
 __ = __context('TokenizeAsset');
@@ -67,7 +67,7 @@ const filterSuggestions = memoize((suggestions, inputValue) => {
     const pin = await confirmPin();
 
     if (pin) {
-      return await apiPost('assets/tokenize/asset', {
+      return await callApi('assets/tokenize/asset', {
         pin,
         address: asset.address,
         token,

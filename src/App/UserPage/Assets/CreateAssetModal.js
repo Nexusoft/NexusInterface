@@ -13,7 +13,7 @@ import { confirmPin } from 'lib/ui';
 import { errorHandler } from 'utils/form';
 import { openSuccessDialog } from 'lib/ui';
 import { loadAssets } from 'lib/user';
-import { apiPost } from 'lib/tritiumApi';
+import { callApi } from 'lib/tritiumApi';
 import { createLocalNameFee } from 'lib/fees';
 import plusIcon from 'icons/plus.svg';
 
@@ -86,7 +86,7 @@ const AssetFields = ({ fields, form, removeField }) =>
         }),
       };
       if (name) params.name = name;
-      return await apiPost('assets/create/asset', params);
+      return await callApi('assets/create/asset', params);
     }
   },
   onSubmitSuccess: async (result, dispatch, props) => {

@@ -35,9 +35,11 @@ function request({ params, options }) {
       const req = https.request(options, (res) => {
         let data = '';
         res.setEncoding('utf8');
+
         res.on('data', (chunk) => {
           data += chunk;
         });
+
         res.on('end', () => {
           let result = undefined;
           try {
@@ -51,6 +53,7 @@ function request({ params, options }) {
             reject(result?.error);
           }
         });
+
         res.on('aborted', () => {
           reject(new Error('Aborted'));
         });
@@ -59,6 +62,7 @@ function request({ params, options }) {
       req.on('error', (err) => {
         reject(err);
       });
+
       req.on('abort', () => {
         reject(new Error('Aborted'));
       });
@@ -81,7 +85,7 @@ function request({ params, options }) {
  * @param {*} params
  * @returns
  */
-export async function apiPost(endpoint, customParams) {
+export async function callApi(endpoint, customParams) {
   const conf = await getActiveCoreConfig();
   const {
     user: { session },
@@ -106,7 +110,7 @@ export async function apiPost(endpoint, customParams) {
  * @param {*} url
  * @returns
  */
-export async function apiGet(url) {
+export async function callApiByUrl(url) {
   const conf = await getActiveCoreConfig();
   return await request({
     options: {

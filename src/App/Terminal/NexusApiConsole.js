@@ -11,7 +11,7 @@ import Button from 'components/Button';
 import Select from 'components/Select';
 import TextField from 'components/TextField';
 import RequireCoreConnected from 'components/RequireCoreConnected';
-import { apiGet } from 'lib/tritiumApi';
+import { callApiByUrl } from 'lib/tritiumApi';
 import {
   switchConsoleTab,
   updateConsoleInput,
@@ -193,7 +193,7 @@ class NexusApiConsole extends Component {
       if (this.props.consoleCliSyntax) {
         result = await ipcRenderer.invoke('execute-core-command', cmd);
       } else {
-        result = await apiGet(cmd);
+        result = await callApiByUrl(cmd);
       }
     } catch (err) {
       console.error(err);

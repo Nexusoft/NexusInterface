@@ -11,7 +11,7 @@ import { confirmPin } from 'lib/ui';
 import { errorHandler } from 'utils/form';
 import { openSuccessDialog } from 'lib/ui';
 import { loadNamespaces } from 'lib/user';
-import { apiPost } from 'lib/tritiumApi';
+import { callApi } from 'lib/tritiumApi';
 import { userIdRegex } from 'consts/misc';
 
 __ = __context('TransferNamespace');
@@ -44,7 +44,7 @@ const Namespace = styled.span(({ theme }) => ({
     }
 
     if (pin) {
-      return await apiPost('names/transfer/namespace', params);
+      return await callApi('names/transfer/namespace', params);
     }
   },
   onSubmitSuccess: async (result, dispatch, props) => {

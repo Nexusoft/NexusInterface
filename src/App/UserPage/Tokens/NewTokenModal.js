@@ -9,7 +9,7 @@ import TextField from 'components/TextField';
 import FormField from 'components/FormField';
 import { confirm } from 'lib/ui';
 import { confirmPin } from 'lib/ui';
-import { apiPost } from 'lib/tritiumApi';
+import { callApi } from 'lib/tritiumApi';
 import { errorHandler } from 'utils/form';
 import { loadAccounts, loadOwnedTokens } from 'lib/user';
 import { removeModal, showNotification } from 'lib/ui';
@@ -72,7 +72,7 @@ const mapStateToProps = (state) => {
     if (pin) {
       const params = { pin, supply, decimals };
       if (name) params.name = name;
-      return await apiPost('tokens/create/token', params);
+      return await callApi('tokens/create/token', params);
     }
   },
   onSubmitSuccess: async (result, dispatch, props) => {

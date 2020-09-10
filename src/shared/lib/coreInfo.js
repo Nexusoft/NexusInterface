@@ -1,7 +1,7 @@
 import * as TYPE from 'consts/actionTypes';
 import store, { observeStore } from 'store';
 import rpc from 'lib/rpc';
-import { apiPost } from 'lib/tritiumApi';
+import { callApi } from 'lib/tritiumApi';
 import { isCoreConnected, isLoggedIn } from 'selectors';
 import { loadAccounts } from 'lib/user';
 import { showNotification, openModal } from 'lib/ui';
@@ -32,7 +32,7 @@ const getInfo = legacyMode
       try {
         const [info, tritiumInfo] = await Promise.all([
           rpc('getinfo', []),
-          apiPost('system/get/info'),
+          callApi('system/get/info'),
         ]);
         //Paul wants us to use the number of connections from API instead of RPC, but getinfo and get/info are not one to one.
         //This is a bit of a hack.
@@ -47,7 +47,7 @@ const getInfo = legacyMode
         if (!clientModeChecked) {
           try {
             clientModeChecked = true;
-            const systemInfo = await apiPost('system/get/info');
+            const systemInfo = await callApi('system/get/info');
             if (systemInfo?.clientmode) {
               updateSettings({ legacyMode: false });
               location.reload();
@@ -63,7 +63,7 @@ const getInfo = legacyMode
   : // Tritium
     async () => {
       try {
-        const systemInfo = await apiPost('system/get/info');
+        const systemInfo = await callApi('system/get/info');
         store.dispatch({ type: TYPE.SET_SYSTEM_INFO, payload: systemInfo });
       } catch (err) {
         store.dispatch({ type: TYPE.DISCONNECT_CORE });
