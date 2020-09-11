@@ -137,11 +137,17 @@ class TransactionsTritium extends Component {
       if (this.props.loggedIn) {
         fetchAllTransactions();
       } else {
-        this.unobserve = observeStore(isLoggedIn, (loggedIn) => {
-          if (loggedIn) {
-            fetchAllTransactions();
+        this.unobserve = observeStore(
+          (state) => state.user.status,
+          (status, oldStatus) => {
+            if (
+              (!oldStatus && status) ||
+              status?.genesis !== oldStatus?.genesis
+            ) {
+              fetchAllTransactions();
+            }
           }
-        });
+        );
       }
     }
 
