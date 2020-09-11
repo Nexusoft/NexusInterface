@@ -43,7 +43,14 @@ const Status = styled.div(({ active }) => ({
   transition: `opacity ${timing.normal}`,
 }));
 
-function User({ session, username, active, switching, setSwitchingTo }) {
+function User({
+  session,
+  username,
+  active,
+  switching,
+  setSwitchingTo,
+  closeModal,
+}) {
   return (
     <UserWrapper
       active={active}
@@ -54,6 +61,7 @@ function User({ session, username, active, switching, setSwitchingTo }) {
           await switchUser(session);
         } finally {
           setSwitchingTo(null);
+          closeModal();
         }
       }}
     >
@@ -79,25 +87,30 @@ export default function SwitchUserModal() {
 
   return (
     <Modal maxWidth={500}>
-      <Modal.Header>{__('Switch user')}</Modal.Header>
-      <Modal.Body>
-        {Object.entries(sessions)
-          .sort()
-          .map(([session, { username }]) => (
-            <User
-              key={session}
-              session={session}
-              username={username}
-              active={
-                switchingTo
-                  ? switchingTo === session
-                  : currentSession === session
-              }
-              switching={!!switchingTo}
-              setSwitchingTo={setSwitchingTo}
-            />
-          ))}
-      </Modal.Body>
+      {(closeModal) => (
+        <>
+          <Modal.Header>{__('Switch user')}</Modal.Header>
+          <Modal.Body>
+            {Object.entries(sessions)
+              .sort()
+              .map(([session, { username }]) => (
+                <User
+                  key={session}
+                  session={session}
+                  username={username}
+                  active={
+                    switchingTo
+                      ? switchingTo === session
+                      : currentSession === session
+                  }
+                  switching={!!switchingTo}
+                  setSwitchingTo={setSwitchingTo}
+                  closeModal={closeModal}
+                />
+              ))}
+          </Modal.Body>
+        </>
+      )}
     </Modal>
   );
 }
