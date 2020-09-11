@@ -60,8 +60,13 @@ const getBalanceChange = (tx) =>
 if (!legacyMode) {
   walletEvents.once('post-render', function () {
     observeStore(
-      ({ user: { status } }) => status && status.transactions,
-      async (txCount, oldTxCount) => {
+      ({ user: { status } }) => status,
+      async (status, oldStatus) => {
+        // Skip if user was just switched
+        if (status?.genesis !== oldStatus?.genesis) return;
+
+        const txCount = status?.transactions;
+        const oldTxCount = status?.transactions;
         if (
           typeof txCount === 'number' &&
           typeof oldTxCount === 'number' &&
