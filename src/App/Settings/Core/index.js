@@ -1,7 +1,7 @@
 // External
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { reduxForm, Field, formValueSelector } from 'redux-form';
+import { reduxForm, Field, Fields, formValueSelector } from 'redux-form';
 // import cpy from 'cpy';
 import path from 'path';
 import styled from '@emotion/styled';
@@ -365,29 +365,59 @@ class SettingsCore extends Component {
 
           {!manualDaemon && (
             <>
-              <SettingsField
-                connectLabel
-                label={__('Client mode')}
-                subLabel={__(
-                  'Nexus Core under client mode runs lighter and synchronize much faster, but you will <b>NOT</b> be able to stake, mine, or switch the wallet to Legacy Mode.',
-                  null,
-                  { b: (text) => <strong>{text}</strong> }
+              <Field
+                name="multiUser"
+                component={({ input: multiUser }) => (
+                  <SettingsField
+                    connectLabel
+                    label={__('Client mode')}
+                    subLabel={__(
+                      'Nexus Core under client mode runs lighter and synchronize much faster, but you will <b>NOT</b> be able to stake, mine, or switch the wallet to Legacy Mode.',
+                      null,
+                      { b: (text) => <strong>{text}</strong> }
+                    )}
+                    disabled={multiUser.value}
+                  >
+                    {multiUser.value ? (
+                      <Switch readOnly value={false} />
+                    ) : (
+                      <Field name="clientMode" component={Switch.RF} />
+                    )}
+                  </SettingsField>
                 )}
-              >
-                <Field name="clientMode" component={Switch.RF} />
-              </SettingsField>
+              />
 
               <Field
                 name="clientMode"
                 component={({ input: clientMode }) => (
+                  <SettingsField
+                    connectLabel
+                    label={__('Multi-user')}
+                    subLabel={__(
+                      'Allow multiple logged in users at the same time. Mining and staking will be unavailable.'
+                    )}
+                    disabled={clientMode.value}
+                  >
+                    {clientMode.value ? (
+                      <Switch readOnly value={false} />
+                    ) : (
+                      <Field name="multiUser" component={Switch.RF} />
+                    )}
+                  </SettingsField>
+                )}
+              />
+
+              <Fields
+                names={["clientMode", "multiUser"]}
+                component={({ clientMode: {input: clientMode}, multiUser: {input: multiUser} }) => (
                   <>
                     <SettingsField
                       connectLabel
                       label={__('Enable mining')}
                       subLabel={__('Enable/Disable mining to the wallet.')}
-                      disabled={clientMode.value}
+                      disabled={(clientMode.value || multiUser.value)}
                     >
-                      {clientMode.value ? (
+                      {(clientMode.value || multiUser.value) ? (
                         <Switch readOnly value={false} />
                       ) : (
                         <Field name="enableMining" component={Switch.RF} />
@@ -396,9 +426,9 @@ class SettingsCore extends Component {
 
                     <Field
                       name="enableMining"
-                      component={({ input }) =>
-                        !clientMode.value &&
-                        !!input.value && (
+                      component={({ input: enableMining }) =>
+                        !(clientMode.value || multiUser.value) &&
+                        !!enableMining.value && (
                           <SettingsField
                             connectLabel
                             indent={1}
@@ -426,9 +456,9 @@ class SettingsCore extends Component {
                       connectLabel
                       label={__('Enable staking')}
                       subLabel={__('Enable/Disable staking on the wallet.')}
-                      disabled={clientMode.value}
+                      disabled={(clientMode.value || multiUser.value)}
                     >
-                      {clientMode.value ? (
+                      {(clientMode.value || multiUser.value) ? (
                         <Switch readOnly value={false} />
                       ) : (
                         <Field name="enableStaking" component={Switch.RF} />
@@ -437,14 +467,6 @@ class SettingsCore extends Component {
                   </>
                 )}
               />
-
-              <SettingsField
-                connectLabel
-                label={__('Multi-user')}
-                subLabel={__('Allow multiple users logged in at the same time')}
-              >
-                <Field name="multiUser" component={Switch.RF} />
-              </SettingsField>
 
               <SettingsField
                 connectLabel
