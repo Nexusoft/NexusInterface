@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { reduxForm, Field, getFormValues } from 'redux-form';
+import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
 import { connect } from 'react-redux';
 
-import { callApi } from 'lib/tritiumApi';
 import Modal from 'components/Modal';
 import FormField from 'components/FormField';
 import TextFieldWithKeyboard from 'components/TextFieldWithKeyboard';
@@ -72,7 +71,7 @@ const ExtraSection = styled.div({
     unlockUser({ pin: values.pin });
   },
   onSubmitFail: (errors, dispatch, submitError, props) => {
-    const submissionError =
+    const error =
       props.syncing && submitError && submitError.code === -139
         ? {
             ...submitError,
@@ -82,7 +81,7 @@ const ExtraSection = styled.div({
               __('Not being fully synced may have caused this error.'),
           }
         : submitError;
-    errorHandler(__('Error logging in'))(errors, dispatch, submissionError);
+    errorHandler(__('Error logging in'))(errors, dispatch, error);
   },
 })
 class Login extends Component {

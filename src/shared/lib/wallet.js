@@ -8,6 +8,7 @@ import store from 'store';
 import { defaultSettings } from 'lib/settings/universal';
 import rpc from 'lib/rpc';
 import { stopCore } from 'lib/core';
+import { logOut } from 'lib/user';
 
 /**
  * Backs up wallet
@@ -37,7 +38,7 @@ export function backupWallet(backupFolder) {
 
 export const closeWallet = async (beforeExit) => {
   const {
-    settings: { manualDaemon },
+    settings: { manualDaemon, manualDaemonLogOutOnClose },
   } = store.getState();
 
   store.dispatch({
@@ -46,6 +47,8 @@ export const closeWallet = async (beforeExit) => {
 
   if (!manualDaemon) {
     await stopCore();
+  } else if (manualDaemonLogOutOnClose) {
+    await logOut()
   }
 
   if (beforeExit) beforeExit();

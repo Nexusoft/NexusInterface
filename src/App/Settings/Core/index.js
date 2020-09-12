@@ -408,16 +408,19 @@ class SettingsCore extends Component {
               />
 
               <Fields
-                names={["clientMode", "multiUser"]}
-                component={({ clientMode: {input: clientMode}, multiUser: {input: multiUser} }) => (
+                names={['clientMode', 'multiUser']}
+                component={({
+                  clientMode: { input: clientMode },
+                  multiUser: { input: multiUser },
+                }) => (
                   <>
                     <SettingsField
                       connectLabel
                       label={__('Enable mining')}
                       subLabel={__('Enable/Disable mining to the wallet.')}
-                      disabled={(clientMode.value || multiUser.value)}
+                      disabled={clientMode.value || multiUser.value}
                     >
-                      {(clientMode.value || multiUser.value) ? (
+                      {clientMode.value || multiUser.value ? (
                         <Switch readOnly value={false} />
                       ) : (
                         <Field name="enableMining" component={Switch.RF} />
@@ -456,9 +459,9 @@ class SettingsCore extends Component {
                       connectLabel
                       label={__('Enable staking')}
                       subLabel={__('Enable/Disable staking on the wallet.')}
-                      disabled={(clientMode.value || multiUser.value)}
+                      disabled={clientMode.value || multiUser.value}
                     >
-                      {(clientMode.value || multiUser.value) ? (
+                      {clientMode.value || multiUser.value ? (
                         <Switch readOnly value={false} />
                       ) : (
                         <Field name="enableStaking" component={Switch.RF} />
@@ -732,6 +735,15 @@ class SettingsCore extends Component {
                   name="manualDaemonPassword"
                   size="12"
                 />
+              </SettingsField>
+
+              <SettingsField
+                indent={1}
+                connectLabel
+                label={__('Log out on close')}
+                subLabel={__('Log out of all users before closing the wallet')}
+              >
+                <Field component={Switch.RF} name="manualDaemonLogOutOnClose" />
               </SettingsField>
             </>
           )}

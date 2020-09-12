@@ -58,6 +58,7 @@ export const defaultSettings = {
   manualDaemonApiIP: '127.0.0.1',
   manualDaemonApiPort: '8080',
   manualDaemonApiPortSSL: '7080',
+  manualDaemonLogOutOnClose: false,
 
   // Style
   renderGlobe: true,
