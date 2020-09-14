@@ -5,7 +5,6 @@ import { loadAccounts } from 'lib/user';
 import { showDesktopNotif } from 'utils/misc';
 import { formatNumber } from 'lib/intl';
 import { showNotification } from 'lib/ui';
-import { walletEvents } from 'lib/wallet';
 import { getTokenName } from 'lib/tokens';
 import { legacyMode } from 'consts/misc';
 import listAll from 'utils/listAll';
@@ -56,54 +55,6 @@ const getBalanceChange = (tx) =>
         return changes;
       }, {})
     : 0;
-
-if (!legacyMode) {
-  walletEvents.once('post-render', function () {
-    observeStore(
-      ({ user: { status } }) => status,
-      async (status, oldStatus) => {
-        // Skip if user was just switched
-        if (status?.genesis !== oldStatus?.genesis) return;
-
-        const txCount = status?.transactions;
-        const oldTxCount = status?.transactions;
-        if (
-          typeof txCount === 'number' &&
-          typeof oldTxCount === 'number' &&
-          txCount > oldTxCount
-        ) {
-          const transactions = await callApi('users/list/transactions', {
-            verbose: 'summary',
-            limit: txCount - oldTxCount,
-          });
-          addTritiumTransactions(transactions);
-
-          transactions.forEach((tx) => {
-            if (!isConfirmed(tx)) {
-              startWatchingTransaction(tx.txid);
-            }
-
-            const changes = getBalanceChange(tx);
-            if (Object.values(changes).some((v) => v)) {
-              Object.entries(changes).forEach(([token, change]) => {
-                showDesktopNotif(
-                  __('New transaction'),
-                  `${change > 0 ? '+' : ''}${formatNumber(change, 6)} ${token}`
-                );
-                showNotification(
-                  `${__('New transaction')}: ${
-                    change > 0 ? '+' : ''
-                  }${formatNumber(change, 6)} ${token}`,
-                  'success'
-                );
-              });
-            }
-          });
-        }
-      }
-    );
-  });
-}
 
 /**
  * Public API
@@ -172,4 +123,52 @@ export async function fetchTransaction(txid) {
     verbose: 'summary',
   });
   updateTritiumTransaction(tx);
+}
+
+export function prepareTransactions() {
+  if (!legacyMode) {
+    observeStore(
+      ({ user: { status } }) => status,
+      async (status, oldStatus) => {
+        // Skip if user was just switched
+        if (status?.genesis !== oldStatus?.genesis) return;
+
+        const txCount = status?.transactions;
+        const oldTxCount = status?.transactions;
+        if (
+          typeof txCount === 'number' &&
+          typeof oldTxCount === 'number' &&
+          txCount > oldTxCount
+        ) {
+          const transactions = await callApi('users/list/transactions', {
+            verbose: 'summary',
+            limit: txCount - oldTxCount,
+          });
+          addTritiumTransactions(transactions);
+
+          transactions.forEach((tx) => {
+            if (!isConfirmed(tx)) {
+              startWatchingTransaction(tx.txid);
+            }
+
+            const changes = getBalanceChange(tx);
+            if (Object.values(changes).some((v) => v)) {
+              Object.entries(changes).forEach(([token, change]) => {
+                showDesktopNotif(
+                  __('New transaction'),
+                  `${change > 0 ? '+' : ''}${formatNumber(change, 6)} ${token}`
+                );
+                showNotification(
+                  `${__('New transaction')}: ${
+                    change > 0 ? '+' : ''
+                  }${formatNumber(change, 6)} ${token}`,
+                  'success'
+                );
+              });
+            }
+          });
+        }
+      }
+    );
+  }
 }

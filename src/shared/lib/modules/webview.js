@@ -15,7 +15,6 @@ import {
 } from 'lib/ui';
 
 import { confirmPin } from 'lib/ui';
-import { walletEvents } from 'lib/wallet';
 import rpc from 'lib/rpc';
 import { callApi } from 'lib/tritiumApi';
 import { legacyMode } from 'consts/misc';
@@ -406,7 +405,37 @@ function updateStorage([data]) {
   writeModuleStorage(activeModule, data);
 }
 
-walletEvents.once('post-render', function () {
+/**
+ * Public API
+ * ===========================================================================
+ */
+
+export const setActiveWebView = (webview, moduleName) => {
+  store.dispatch({
+    type: TYPE.SET_ACTIVE_APP_MODULE,
+    payload: { webview, moduleName },
+  });
+};
+
+export const unsetActiveWebView = () => {
+  store.dispatch({
+    type: TYPE.UNSET_ACTIVE_APP_MODULE,
+  });
+};
+
+export const toggleWebViewDevTools = () => {
+  const { activeAppModule } = store.getState();
+  if (activeAppModule && activeAppModule.webview) {
+    const { webview } = activeAppModule;
+    if (webview.isDevToolsOpened()) {
+      webview.closeDevTools();
+    } else {
+      webview.openDevTools();
+    }
+  }
+};
+
+export function prepareWebView() {
   observeStore(
     (state) => state.activeAppModule && state.activeAppModule.webview,
     (webview) => {
@@ -476,34 +505,4 @@ walletEvents.once('post-render', function () {
       }
     }
   );
-});
-
-/**
- * Public API
- * ===========================================================================
- */
-
-export const setActiveWebView = (webview, moduleName) => {
-  store.dispatch({
-    type: TYPE.SET_ACTIVE_APP_MODULE,
-    payload: { webview, moduleName },
-  });
-};
-
-export const unsetActiveWebView = () => {
-  store.dispatch({
-    type: TYPE.UNSET_ACTIVE_APP_MODULE,
-  });
-};
-
-export const toggleWebViewDevTools = () => {
-  const { activeAppModule } = store.getState();
-  if (activeAppModule && activeAppModule.webview) {
-    const { webview } = activeAppModule;
-    if (webview.isDevToolsOpened()) {
-      webview.closeDevTools();
-    } else {
-      webview.openDevTools();
-    }
-  }
-};
+}

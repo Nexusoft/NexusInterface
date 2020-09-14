@@ -3,7 +3,6 @@ import store, { observeStore } from 'store';
 import { callApi } from 'lib/tritiumApi';
 import rpc from 'lib/rpc';
 import { legacyMode } from 'consts/misc';
-import { walletEvents } from 'lib/wallet';
 import { openModal } from 'lib/ui';
 import { isLoggedIn } from 'selectors';
 import listAll from 'utils/listAll';
@@ -210,8 +209,8 @@ export const loadAssets = async () => {
   }
 };
 
-if (!legacyMode) {
-  walletEvents.once('pre-render', function () {
+export function prepareUser() {
+  if (!legacyMode) {
     observeStore(isLoggedIn, async (loggedIn) => {
       if (loggedIn) {
         const {
@@ -236,5 +235,5 @@ if (!legacyMode) {
         }
       }
     );
-  });
+  }
 }

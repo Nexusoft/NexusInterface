@@ -48,7 +48,7 @@ export const closeWallet = async (beforeExit) => {
   if (!manualDaemon) {
     await stopCore();
   } else if (manualDaemonLogOutOnClose) {
-    await logOut()
+    await logOut();
   }
 
   if (beforeExit) beforeExit();
@@ -57,9 +57,7 @@ export const closeWallet = async (beforeExit) => {
 
 export const history = createHashHistory();
 
-export const walletEvents = new EventEmitter();
-
-walletEvents.once('pre-render', function () {
+export function prepareWallet() {
   ipcRenderer.on('window-close', async () => {
     const {
       settings: { minimizeOnClose },
@@ -79,4 +77,4 @@ walletEvents.once('pre-render', function () {
 
     await closeWallet();
   });
-});
+}

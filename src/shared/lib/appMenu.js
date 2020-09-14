@@ -15,7 +15,6 @@ import { legacyMode } from 'consts/misc';
 import { confirm } from 'lib/ui';
 import { walletDataDir } from 'consts/paths';
 import { checkForUpdates, quitAndInstall } from 'lib/updater';
-import { walletEvents } from 'lib/wallet';
 import AboutModal from 'components/AboutModal';
 
 // Because functions can't be passed through IPC messages so we have
@@ -482,7 +481,7 @@ function rebuildMenu() {
 
 // Update the updater menu item when the updater state changes
 // Changing menu item labels directly has no effect so we have to rebuild the whole menu
-walletEvents.once('post-render', function () {
+export function prepareMenu() {
   buildMenu();
   observeStore((state) => state.updater.state, rebuildMenu);
   observeStore(isCoreConnected, rebuildMenu);
@@ -497,4 +496,4 @@ walletEvents.once('post-render', function () {
     (state) => state.core.systemInfo?.legacy_unsupported,
     rebuildMenu
   );
-});
+};

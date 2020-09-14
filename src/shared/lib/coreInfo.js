@@ -12,7 +12,6 @@ import { showDesktopNotif } from 'utils/misc';
 import LoginModal from 'components/LoginModal';
 import NewUserModal from 'components/NewUserModal';
 import { legacyMode } from 'consts/misc';
-import { walletEvents } from 'lib/wallet';
 import EncryptionWarningModal from 'components/EncryptionWarningModal';
 
 const incStep = 1000;
@@ -74,7 +73,41 @@ const getInfo = legacyMode
       }
     };
 
-walletEvents.once('pre-render', function () {
+
+
+/**
+ *
+ *
+ * @export
+ */
+export async function autoFetchCoreInfo() {
+  try {
+    // Clear timeout in case this function is called again when
+    // the autoFetching is already running
+    clearTimeout(timerId);
+    await store.dispatch(getInfo());
+    connected = true;
+    waitTime = maxTime;
+  } catch (err) {
+    if (connected) waitTime = incStep;
+    else if (waitTime < maxTime) waitTime += incStep;
+    else waitTime = maxTime;
+    connected = false;
+  } finally {
+    const {
+      core: { autoConnect },
+    } = store.getState();
+    if (autoConnect) {
+      timerId = setTimeout(autoFetchCoreInfo, waitTime);
+    }
+  }
+}
+
+export function stopFetchingCoreInfo() {
+  clearTimeout(timerId);
+}
+
+export function prepareCoreInfo() {
   if (legacyMode) {
     observeStore(
       ({ core: { info } }) => info && info.locked,
@@ -234,36 +267,4 @@ walletEvents.once('pre-render', function () {
       else stopFetchingCoreInfo();
     }
   );
-});
-
-/**
- *
- *
- * @export
- */
-export async function autoFetchCoreInfo() {
-  try {
-    // Clear timeout in case this function is called again when
-    // the autoFetching is already running
-    clearTimeout(timerId);
-    await store.dispatch(getInfo());
-    connected = true;
-    waitTime = maxTime;
-  } catch (err) {
-    if (connected) waitTime = incStep;
-    else if (waitTime < maxTime) waitTime += incStep;
-    else waitTime = maxTime;
-    connected = false;
-  } finally {
-    const {
-      core: { autoConnect },
-    } = store.getState();
-    if (autoConnect) {
-      timerId = setTimeout(autoFetchCoreInfo, waitTime);
-    }
-  }
-}
-
-export function stopFetchingCoreInfo() {
-  clearTimeout(timerId);
-}
+};

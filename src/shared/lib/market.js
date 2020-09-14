@@ -2,7 +2,6 @@ import axios from 'axios';
 
 import * as TYPE from 'consts/actionTypes';
 import store from 'store';
-import { walletEvents } from 'lib/wallet';
 
 __ = __context('MarketData');
 
@@ -61,7 +60,7 @@ async function fetchMarketData() {
   });
 }
 
-walletEvents.once('pre-render', function () {
+export function prepareMarket() {
   fetchMarketData();
   setInterval(fetchMarketData, 900000); // 15 minutes
-});
+};

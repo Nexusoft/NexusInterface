@@ -24,7 +24,6 @@ import sleep from 'utils/promisified/sleep';
 import deleteDirectory from 'utils/promisified/deleteDirectory';
 import { throttled } from 'utils/universal';
 import * as TYPE from 'consts/actionTypes';
-import { walletEvents } from 'lib/wallet';
 import { updateSettings } from 'lib/settings';
 import BootstrapModal from 'components/BootstrapModal';
 
@@ -318,28 +317,6 @@ const setBootstrapStatus = (step, details) => {
   });
 };
 
-/**
- * Register bootstrap events listeners
- *
- * @export
- */
-walletEvents.once('post-render', function () {
-  bootstrapEvents.on('abort', () =>
-    showNotification(__('Bootstrap process has been aborted'), 'error')
-  );
-  bootstrapEvents.on('error', (err) => {
-    console.error(err);
-    openErrorDialog({
-      message: __('Error bootstrapping recent database'),
-      note: typeof err === 'string' ? err : err.message || __('Unknown error'),
-    });
-  });
-  bootstrapEvents.on('success', () =>
-    openSuccessDialog({
-      message: __('Recent database has been successfully bootstrapped'),
-    })
-  );
-});
 
 /**
  * Public API
@@ -406,3 +383,26 @@ export function abortBootstrap() {
   aborting = true;
   if (downloadRequest) downloadRequest.abort();
 }
+
+/**
+ * Register bootstrap events listeners
+ *
+ * @export
+ */
+export function prepareBootstrap() {
+  bootstrapEvents.on('abort', () =>
+    showNotification(__('Bootstrap process has been aborted'), 'error')
+  );
+  bootstrapEvents.on('error', (err) => {
+    console.error(err);
+    openErrorDialog({
+      message: __('Error bootstrapping recent database'),
+      note: typeof err === 'string' ? err : err.message || __('Unknown error'),
+    });
+  });
+  bootstrapEvents.on('success', () =>
+    openSuccessDialog({
+      message: __('Recent database has been successfully bootstrapped'),
+    })
+  );
+};

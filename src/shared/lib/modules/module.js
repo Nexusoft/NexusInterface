@@ -7,7 +7,6 @@ import store from 'store';
 import { semverRegex } from 'consts/misc';
 import * as TYPE from 'consts/actionTypes';
 import { modulesDir } from 'consts/paths';
-import { walletEvents } from 'lib/wallet';
 
 import {
   loadRepoInfo,
@@ -434,7 +433,7 @@ export async function loadDevModuleFromDir(dirPath) {
  * Load all installed modules from the app modules directory.
  * Only called once when the wallet is started.
  */
-walletEvents.once('post-render', async function () {
+export async function prepareModules() {
   try {
     if (!fs.existsSync(modulesDir)) return {};
     const { devModulePaths = [] } = store.getState().settings;
@@ -503,4 +502,4 @@ walletEvents.once('post-render', async function () {
     console.error(err);
     return {};
   }
-});
+}
