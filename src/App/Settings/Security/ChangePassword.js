@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 
 // Internal
 import rpc from 'lib/rpc';
-import { autoFetchCoreInfo } from 'lib/coreInfo';
+import { refreshCoreInfo } from 'lib/coreInfo';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import Button from 'components/Button';
@@ -75,7 +75,7 @@ class ChangePassword extends Component {
       callbackYes: async () => {
         try {
           await rpc('walletlock', []);
-          autoFetchCoreInfo();
+          refreshCoreInfo();
         } catch (err) {
           const note = (err & err.error && err.error.message) || err;
           openErrorDialog({

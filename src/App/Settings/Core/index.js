@@ -8,9 +8,17 @@ import styled from '@emotion/styled';
 
 // Internal
 import store from 'store';
-import { switchSettingsTab, setCoreSettingsRestart } from 'lib/ui';
+import * as TYPE from 'consts/actionTypes';
+import {
+  confirm,
+  switchSettingsTab,
+  setCoreSettingsRestart,
+  showNotification,
+  openConfirmDialog,
+  openErrorDialog,
+} from 'lib/ui';
 import { stopCore, startCore, restartCore } from 'lib/core';
-import { showNotification, openConfirmDialog, openErrorDialog } from 'lib/ui';
+import { refreshCoreInfo } from 'lib/coreInfo';
 import { updateSettings } from 'lib/settings';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
@@ -19,7 +27,6 @@ import Switch from 'components/Switch';
 import { errorHandler } from 'utils/form';
 import { legacyMode } from 'consts/misc';
 import * as color from 'utils/color';
-import { confirm } from 'lib/ui';
 import deleteDirectory from 'utils/promisified/deleteDirectory';
 import { newUID } from 'utils/misc';
 import { consts } from 'styles';
@@ -255,8 +262,10 @@ class SettingsCore extends Component {
         question: __('Exit remote Core mode?'),
         note: __('(This will restart your Core)'),
         callbackYes: async () => {
+          store.dispatch({ type: TYPE.DISCONNECT_CORE });
           updateSettings({ manualDaemon: false });
           await startCore();
+          refreshCoreInfo();
         },
       });
     } else {
@@ -264,8 +273,10 @@ class SettingsCore extends Component {
         question: __('Enter remote Core mode?'),
         note: __('(This will restart your Core)'),
         callbackYes: async () => {
+          store.dispatch({ type: TYPE.DISCONNECT_CORE });
           updateSettings({ manualDaemon: true });
           await stopCore();
+          refreshCoreInfo();
         },
       });
     }

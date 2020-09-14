@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 import { connect } from 'react-redux';
 
 // Internal Dependencies
-import { autoFetchCoreInfo } from 'lib/coreInfo';
+import { refreshCoreInfo } from 'lib/coreInfo';
 import rpc from 'lib/rpc';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
@@ -97,7 +97,7 @@ const Buttons = styled.div({
   onSubmitSuccess: async (result, dispatch, props) => {
     props.reset();
     showNotification(__('Logged in successfully'), 'success');
-    autoFetchCoreInfo();
+    refreshCoreInfo();
   },
   onSubmitFail: errorHandler(__('Error logging in')),
 })

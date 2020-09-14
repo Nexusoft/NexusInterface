@@ -54,7 +54,7 @@ const getInfo = legacyMode
           } catch (err) {}
         }
 
-        // Throws error so getInfo fails and autoFetchCoreInfo will
+        // Throws error so getInfo fails and refreshCoreInfo will
         // switch to using dynamic interval.
         throw err;
       }
@@ -67,20 +67,18 @@ const getInfo = legacyMode
       } catch (err) {
         store.dispatch({ type: TYPE.DISCONNECT_CORE });
         console.error('system/get/info failed', err);
-        // Throws error so getInfo fails and autoFetchCoreInfo will
+        // Throws error so getInfo fails and refreshCoreInfo will
         // switch to using dynamic interval.
         throw err;
       }
     };
-
-
 
 /**
  *
  *
  * @export
  */
-export async function autoFetchCoreInfo() {
+export async function refreshCoreInfo() {
   try {
     // Clear timeout in case this function is called again when
     // the autoFetching is already running
@@ -98,7 +96,7 @@ export async function autoFetchCoreInfo() {
       core: { autoConnect },
     } = store.getState();
     if (autoConnect) {
-      timerId = setTimeout(autoFetchCoreInfo, waitTime);
+      timerId = setTimeout(refreshCoreInfo, waitTime);
     }
   }
 }
@@ -259,12 +257,12 @@ export function prepareCoreInfo() {
   }
 
   // All modes
-  autoFetchCoreInfo();
+  refreshCoreInfo();
   observeStore(
     (state) => state.core.autoConnect,
     (autoConnect) => {
-      if (autoConnect) autoFetchCoreInfo();
+      if (autoConnect) refreshCoreInfo();
       else stopFetchingCoreInfo();
     }
   );
-};
+}
