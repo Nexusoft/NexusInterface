@@ -8,7 +8,7 @@ import ModuleIcon from 'components/ModuleIcon';
 import Switch from 'components/Switch';
 import Tooltip from 'components/Tooltip';
 import Icon from 'components/Icon';
-import { openConfirmDialog, openModal } from 'lib/ui';
+import { confirm, openModal } from 'lib/ui';
 import ModuleDetailsModal from 'components/ModuleDetailsModal';
 import { timing } from 'styles';
 import { updateSettings } from 'lib/settings';
@@ -133,36 +133,36 @@ class Module extends React.Component {
    *
    * @memberof Module
    */
-  toggleModule = () => {
+  toggleModule = async () => {
     const { module } = this.props;
     if (module.disallowed) return;
 
     if (module.enabled) {
-      openConfirmDialog({
+      const confirmed = await confirm({
         question: __('Disable %{moduleName}?', {
           moduleName: module.info.displayName,
         }),
         note: __(
           'Wallet will be automatically refreshed for the change to take effect'
         ),
-        callbackYes: () => {
-          this.disableModule();
-          document.location.reload();
-        },
       });
+      if (confirmed) {
+        this.disableModule();
+        document.location.reload();
+      }
     } else {
-      openConfirmDialog({
+      const confirmed = await confirm({
         question: __('Enable %{moduleName}?', {
           moduleName: module.info.displayName,
         }),
         note: __(
           'Wallet will be automatically refreshed for the change to take effect'
         ),
-        callbackYes: () => {
-          this.enableModule();
-          document.location.reload();
-        },
       });
+      if (confirmed) {
+        this.enableModule();
+        document.location.reload();
+      }
     }
   };
 

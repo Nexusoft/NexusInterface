@@ -11,7 +11,7 @@ import NexusAddress from 'components/NexusAddress';
 import QRButton from 'components/QRButton';
 import AddEditContactModal from 'components/AddEditContactModal';
 import { deleteContact } from 'lib/addressBook';
-import { openConfirmDialog, openModal } from 'lib/ui';
+import { confirm, openModal } from 'lib/ui';
 import { isCoreConnected } from 'selectors';
 import timeZones from 'data/timeZones';
 import { timing } from 'styles';
@@ -143,16 +143,16 @@ class ContactDetails extends React.Component {
    *
    * @memberof ContactDetails
    */
-  confirmDelete = () => {
-    openConfirmDialog({
+  confirmDelete = async () => {
+    const confirmed = await confirm({
       question: __('Delete contact %{name}?', {
         name: this.props.contact.name,
       }),
       skinYes: 'danger',
-      callbackYes: () => {
-        deleteContact(this.props.contact.name);
-      },
     });
+    if (confirmed) {
+      deleteContact(this.props.contact.name);
+    }
   };
 
   /**

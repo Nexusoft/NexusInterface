@@ -11,7 +11,7 @@ import Tooltip from 'components/Tooltip';
 import InfoField from 'components/InfoField';
 import ExternalLink from 'components/ExternalLink';
 import GA from 'lib/googleAnalytics';
-import { openConfirmDialog } from 'lib/ui';
+import { confirm } from 'lib/ui';
 import { history } from 'lib/wallet';
 import { updateSettings } from 'lib/settings';
 import { timing } from 'styles';
@@ -62,25 +62,23 @@ class ModuleDetailsModal extends React.Component {
    *
    * @memberof ModuleDetailsModal
    */
-  confirmDelete = () => {
+  confirmDelete = async () => {
     const { module } = this.props;
-    openConfirmDialog({
+    const confirmed = await confirm({
       question: `Delete ${module.info.displayName}?`,
-      callbackYes: async () => {
-        if (module.development) {
-          const { devModulePaths } = store.getState().settings;
-          updateSettings({
-            devModulePaths: devModulePaths.filter(
-              (path) => path !== module.path
-            ),
-          });
-        } else {
-          await deleteDirectory(module.path);
-          GA.SendEvent('Modules', 'uninstallModule', 'name', module.info.name);
-        }
-        location.reload();
-      },
     });
+    if (confirmed) {
+      if (module.development) {
+        const { devModulePaths } = store.getState().settings;
+        updateSettings({
+          devModulePaths: devModulePaths.filter((path) => path !== module.path),
+        });
+      } else {
+        await deleteDirectory(module.path);
+        GA.SendEvent('Modules', 'uninstallModule', 'name', module.info.name);
+      }
+      location.reload();
+    }
   };
 
   /**

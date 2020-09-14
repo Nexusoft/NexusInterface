@@ -8,7 +8,7 @@ import { ipcRenderer } from 'electron';
 import { selectContact, deleteContact } from 'lib/addressBook';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
-import { openConfirmDialog, openModal } from 'lib/ui';
+import { confirm, openModal } from 'lib/ui';
 import { popupContextMenu } from 'lib/contextMenu';
 import AddEditContactModal from 'components/AddEditContactModal';
 import { isCoreConnected } from 'selectors';
@@ -87,16 +87,16 @@ class Contact extends React.PureComponent {
    *
    * @memberof Contact
    */
-  confirmDelete = () => {
-    openConfirmDialog({
+  confirmDelete = async () => {
+    const confirmed = await confirm({
       question: __('Delete contact %{name}?', {
         name: this.props.contact.name,
       }),
       skinYes: 'danger',
-      callbackYes: () => {
-        deleteContact(this.props.contact.name);
-      },
     });
+    if (confirmed) {
+      deleteContact(this.props.contact.name);
+    }
   };
 
   /**

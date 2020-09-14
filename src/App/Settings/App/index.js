@@ -13,7 +13,7 @@ import TextField from 'components/TextField';
 import Select from 'components/Select';
 import Switch from 'components/Switch';
 import Icon from 'components/Icon';
-import { openConfirmDialog, openErrorDialog, showNotification } from 'lib/ui';
+import { confirm, openErrorDialog, showNotification } from 'lib/ui';
 import * as color from 'utils/color';
 import * as form from 'utils/form';
 import { legacyMode } from 'consts/misc';
@@ -89,20 +89,20 @@ class SettingsApp extends Component {
    *
    * @memberof SettingsApp
    */
-  confirmBackupWallet = () => {
-    openConfirmDialog({
+  confirmBackupWallet = async () => {
+    const confirmed = await confirm({
       question: __('Backup wallet'),
-      callbackYes: () => {
-        if (this.props.coreConnected) {
-          backupWallet(this.props.settings.backupDirectory);
-          showNotification(__('Wallet has been backed up'), 'success');
-        } else {
-          openErrorDialog({
-            message: __('Connecting to Nexus Core'),
-          });
-        }
-      },
     });
+    if (confirmed) {
+      if (this.props.coreConnected) {
+        backupWallet(this.props.settings.backupDirectory);
+        showNotification(__('Wallet has been backed up'), 'success');
+      } else {
+        openErrorDialog({
+          message: __('Connecting to Nexus Core'),
+        });
+      }
+    }
   };
 
   /**
@@ -110,20 +110,20 @@ class SettingsApp extends Component {
    *
    * @memberof SettingsApp
    */
-  toggleVerifyModuleSource = (e) => {
+  toggleVerifyModuleSource = async (e) => {
     if (e.target.checked) {
-      openConfirmDialog({
+      const confirmed = await confirm({
         question: __('Turn module open source policy on?'),
         note: __(
           'All modules without open source verifications, possibly including your own under-development modules, will become invalid. Wallet must be refreshed for the change to take effect.'
         ),
-        callbackYes: () => {
-          updateSettings({ verifyModuleSource: true });
-          location.reload();
-        },
       });
+      if (confirmed) {
+        updateSettings({ verifyModuleSource: true });
+        location.reload();
+      }
     } else {
-      openConfirmDialog({
+      const confirmed = await confirm({
         question: __('Turn module open source policy off?'),
         note: (
           <div>
@@ -142,14 +142,14 @@ class SettingsApp extends Component {
         ),
         labelYes: __('Turn policy off'),
         skinYes: 'danger',
-        callbackYes: () => {
-          updateSettings({ verifyModuleSource: false });
-          location.reload();
-        },
         labelNo: __('Keep policy on'),
         skinNo: 'primary',
         style: { width: 600 },
       });
+      if (confirmed) {
+        updateSettings({ verifyModuleSource: false });
+        location.reload();
+      }
     }
   };
 
@@ -176,9 +176,9 @@ class SettingsApp extends Component {
    *
    * @memberof SettingsApp
    */
-  handleAutoUpdateChange = (e) => {
+  handleAutoUpdateChange = async (e) => {
     if (!e.target.checked) {
-      openConfirmDialog({
+      const confirmed = await confirm({
         question: __('Are you sure you want to disable auto update?'),
         note: __(
           'Keeping your wallet up-to-date is important for your security and will ensure that you get the best possible user experience.'
@@ -186,12 +186,12 @@ class SettingsApp extends Component {
         labelYes: __('Keep auto update On'),
         labelNo: __('Turn auto update Off'),
         skinNo: 'danger',
-        callbackNo: () => {
-          updateSettings({ autoUpdate: false });
-          stopAutoUpdate();
-        },
         style: { width: 580 },
       });
+      if (!confirmed) {
+        updateSettings({ autoUpdate: false });
+        stopAutoUpdate();
+      }
     } else {
       updateSettings({ autoUpdate: true });
       startAutoUpdate();

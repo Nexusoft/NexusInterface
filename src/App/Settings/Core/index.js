@@ -14,7 +14,6 @@ import {
   switchSettingsTab,
   setCoreSettingsRestart,
   showNotification,
-  openConfirmDialog,
   openErrorDialog,
 } from 'lib/ui';
 import { stopCore, startCore, restartCore } from 'lib/core';
@@ -254,31 +253,31 @@ class SettingsCore extends Component {
    *
    * @memberof SettingsCore
    */
-  confirmSwitchManualDaemon = () => {
+  confirmSwitchManualDaemon = async () => {
     const { manualDaemon } = this.props;
 
     if (manualDaemon) {
-      openConfirmDialog({
+      const confirmed = await confirm({
         question: __('Exit remote Core mode?'),
         note: __('(This will restart your Core)'),
-        callbackYes: async () => {
-          store.dispatch({ type: TYPE.DISCONNECT_CORE });
-          updateSettings({ manualDaemon: false });
-          await startCore();
-          refreshCoreInfo();
-        },
       });
+      if (confirmed) {
+        store.dispatch({ type: TYPE.DISCONNECT_CORE });
+        updateSettings({ manualDaemon: false });
+        await startCore();
+        refreshCoreInfo();
+      }
     } else {
-      openConfirmDialog({
+      const confirmed = await confirm({
         question: __('Enter remote Core mode?'),
         note: __('(This will restart your Core)'),
-        callbackYes: async () => {
-          store.dispatch({ type: TYPE.DISCONNECT_CORE });
-          updateSettings({ manualDaemon: true });
-          await stopCore();
-          refreshCoreInfo();
-        },
       });
+      if (confirmed) {
+        store.dispatch({ type: TYPE.DISCONNECT_CORE });
+        updateSettings({ manualDaemon: true });
+        await stopCore();
+        refreshCoreInfo();
+      }
     }
   };
 

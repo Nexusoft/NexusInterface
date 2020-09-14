@@ -8,7 +8,7 @@ import { keyframes } from '@emotion/core';
 // Internal
 import Modal from 'components/Modal';
 import Button from 'components/Button';
-import { showBackgroundTask, openConfirmDialog, removeModal } from 'lib/ui';
+import { showBackgroundTask, confirm, removeModal } from 'lib/ui';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import ModalContext from 'context/modal';
@@ -176,15 +176,17 @@ class BootstrapModal extends PureComponent {
    *
    * @memberof BootstrapModal
    */
-  confirmAbort = () => {
-    openConfirmDialog({
+  confirmAbort = async () => {
+    const confirmed = await confirm({
       question: __('Are you sure you want to abort the process?'),
       labelYes: __('Yes, abort'),
       skinYes: 'danger',
-      callbackYes: abortBootstrap,
       labelNo: __('No, let it continue'),
       skinNo: 'primary',
     });
+    if (confirmed) {
+      abortBootstrap();
+    }
   };
 
   /**

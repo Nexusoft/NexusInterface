@@ -15,7 +15,7 @@ import Button from 'components/Button';
 import TextField from 'components/TextField';
 import Select from 'components/Select';
 import FormField from 'components/FormField';
-import { openConfirmDialog, openSuccessDialog, openModal } from 'lib/ui';
+import { confirm, openSuccessDialog, openModal } from 'lib/ui';
 import { errorHandler } from 'utils/form';
 import sendIcon from 'icons/send.svg';
 
@@ -219,7 +219,7 @@ class SendForm extends Component {
    *
    * @memberof SendForm
    */
-  confirmSend = (e) => {
+  confirmSend = async (e) => {
     e.preventDefault();
     const {
       handleSubmit,
@@ -264,23 +264,23 @@ class SendForm extends Component {
     //   return;
     // }
 
-    openConfirmDialog({
+    const confirmed = await confirm({
       question: __('Send transaction?'),
-      callbackYes: () => {
-        if (locked || minting_only) {
-          openModal(PasswordModal, {
-            onSubmit: (password) => {
-              this.props.change('password', password);
-              // change function seems to be asynchronous
-              // so setTimeout to wait for it to take effect
-              setTimeout(handleSubmit, 0);
-            },
-          });
-        } else {
-          handleSubmit();
-        }
-      },
     });
+    if (confirmed) {
+      if (locked || minting_only) {
+        openModal(PasswordModal, {
+          onSubmit: (password) => {
+            this.props.change('password', password);
+            // change function seems to be asynchronous
+            // so setTimeout to wait for it to take effect
+            setTimeout(handleSubmit, 0);
+          },
+        });
+      } else {
+        handleSubmit();
+      }
+    }
   };
 
   /**
