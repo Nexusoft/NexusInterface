@@ -1,5 +1,5 @@
 import React from 'react';
-import { reduxForm, Field, change, formValueSelector } from 'redux-form';
+import { reduxForm, Field } from 'redux-form';
 import { connect } from 'react-redux';
 
 import Modal from 'components/Modal';
@@ -84,18 +84,24 @@ export default class NewAccountModal extends React.Component {
   componentDidMount() {}
 
   returnTokenSelect = (event) => {
-    let values = [];
-    values.push({
-      value: '0',
-      display: 'NXS',
-    });
-    this.props.userTokens.forEach((e) => {
-      values.push({
-        value: e.address,
-        display: e.name || e.address,
+    const { userTokens, tokenAddress, tokenName } = this.props;
+    const options = [
+      {
+        value: '0',
+        display: 'NXS',
+      },
+      ...userTokens.map((t) => ({
+        value: t.address,
+        display: t.name || t.address,
+      })),
+    ];
+    if (tokenAddress && !options.some((t) => t.value === tokenAddress)) {
+      options.unshift({
+        value: tokenAddress,
+        display: tokenName || tokenAddress,
       });
-    });
-    return values;
+    }
+    return options;
   };
 
   render() {

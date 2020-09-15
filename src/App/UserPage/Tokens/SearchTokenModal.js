@@ -1,13 +1,11 @@
 import React from 'react';
 import { reduxForm, Field } from 'redux-form';
-import styled from '@emotion/styled';
 
 import Modal from 'components/Modal';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
 import FormField from 'components/FormField';
 import { callApi } from 'lib/tritiumApi';
-import { errorHandler } from 'utils/form';
 import { removeModal, openModal, openErrorDialog } from 'lib/ui';
 import searchIcon from 'icons/search.svg';
 import Icon from 'components/Icon';
