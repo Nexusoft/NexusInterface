@@ -49,7 +49,7 @@ const mapStateToProps = (state) => {
       });
 
       if (!confirmed) {
-        throw { name: __('Add Name') };
+        return;
       }
     }
     const pin = await confirmPin();
