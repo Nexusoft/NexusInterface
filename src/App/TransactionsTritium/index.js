@@ -242,7 +242,7 @@ class TransactionsTritium extends Component {
                               max={totalPages}
                               value={page}
                               onChange={(e) => {
-                                goToTxsPage(e.target.current.value);
+                                goToTxsPage(e.target.value);
                               }}
                             />
                             &nbsp;
