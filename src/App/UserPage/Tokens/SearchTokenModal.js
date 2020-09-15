@@ -8,8 +8,7 @@ import TextField from 'components/TextField';
 import FormField from 'components/FormField';
 import { callApi } from 'lib/tritiumApi';
 import { errorHandler } from 'utils/form';
-import { removeModal } from 'lib/ui';
-import { openModal } from 'lib/ui';
+import { removeModal, openModal, openErrorDialog } from 'lib/ui';
 import searchIcon from 'icons/search.svg';
 import Icon from 'components/Icon';
 
@@ -17,6 +16,8 @@ import Icon from 'components/Icon';
 import TokenDetailsModal from './TokenDetailsModal';
 
 __ = __context('User.Tokens.SearchToken');
+
+const base58Regex = /^[1-9A-HJ-NP-Za-km-z]{51}$/;
 
 @reduxForm({
   form: 'search_tokens',
@@ -32,19 +33,30 @@ __ = __context('User.Tokens.SearchToken');
     return errors;
   },
   onSubmit: async ({ searchValue }) => {
-    const params = {};
-    // Just for test net need a better way to validate token name/address
-    !searchValue.startsWith('8')
-      ? (params.name = searchValue)
-      : (params.address = searchValue);
-    return await callApi('tokens/get/token', params);
+    if (base58Regex.test(searchValue)) {
+      try {
+        // Test if searchValue is the token address
+        return await callApi('tokens/get/token', {
+          address: searchValue,
+        });
+      } catch (err) {}
+    }
+
+    // Assuming searchValue is token name
+    try {
+      return await callApi('tokens/get/token', { name: searchValue });
+    } catch (err) {
+      openErrorDialog({
+        message: __('Error searching for token'),
+        note: __('Unknown token name/address'),
+      });
+    }
   },
   onSubmitSuccess: async (result, dispatch, props) => {
     if (!result) return; // Submission was cancelled
     removeModal(props.modalId);
     openModal(TokenDetailsModal, { token: result });
   },
-  onSubmitFail: errorHandler(__('Error searching for token')),
 })
 class SearchTokenModal extends React.Component {
   async openSearchedDetailsModal(props) {
@@ -77,11 +89,11 @@ class SearchTokenModal extends React.Component {
         <Modal.Header>{__('Lookup Token')}</Modal.Header>
         <Modal.Body>
           <form onSubmit={handleSubmit}>
-            <FormField connectLabel label={__('Name/Address')}>
+            <FormField connectLabel label={__('Name or address')}>
               <Field
                 name="searchValue"
                 component={TextField.RF}
-                placeholder={__('Lookup a Token on the network')}
+                placeholder={__('Token name/address')}
                 left={<Icon icon={searchIcon} className="space-right" />}
               />
             </FormField>
