@@ -42,7 +42,7 @@ const mapStateToProps = (state) => {
   onSubmit: async ({ name, token }, dispatch, props) => {
     if (!name) {
       const confirmed = await confirm({
-        question: __('Create a account without a name?'),
+        question: __('Create an account without a name?'),
         note: __('Adding a name costs a NXS fee'),
         labelYes: __("That's Ok"),
         labelNo: __('Cancel'),

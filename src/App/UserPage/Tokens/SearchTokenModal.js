@@ -69,7 +69,7 @@ class SearchTokenModal extends React.Component {
     } catch (e) {
       console.log(e);
       openModal(ErrorDialog, {
-        message: __('Can not find Token'),
+        message: __('Cannot find Token'),
         note: e.message + ' ' + e.code,
       });
     }
@@ -84,7 +84,7 @@ class SearchTokenModal extends React.Component {
         }}
         maxWidth={800}
       >
-        <Modal.Header>{__('Lookup Token')}</Modal.Header>
+        <Modal.Header>{__('Look up token')}</Modal.Header>
         <Modal.Body>
           <form onSubmit={handleSubmit}>
             <FormField connectLabel label={__('Name or address')}>
@@ -101,7 +101,7 @@ class SearchTokenModal extends React.Component {
               type="submit"
               disabled={submitting}
             >
-              {__('Lookup this token')}
+              {__('Look up')}
             </Button>
           </form>
         </Modal.Body>

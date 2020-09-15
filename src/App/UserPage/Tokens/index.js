@@ -148,7 +148,7 @@ class Tokens extends Component {
             }}
           >
             <Icon icon={searchIcon} className="space-right" />
-            {__('Lookup a token')}
+            {__('Look up a token')}
           </Button>
         </div>
         <div>{this.returnTokenList()}</div>
