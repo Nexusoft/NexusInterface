@@ -81,7 +81,16 @@ export default class Staking extends React.Component {
         <TabContentWrapper maxWidth={400}>
           <Line bold>
             <div>{__('Status')}</div>
-            <div>{stakeInfo.staking ? __('Staking') : __('Not staking')}</div>
+            <div>
+              {stakeInfo.staking ? (
+                <span>
+                  {__('Staking')}
+                  {!!stakeInfo.pooled && ` (${__('pooled')})`}
+                </span>
+              ) : (
+                __('Not staking')
+              )}
+            </div>
           </Line>
           <Line>
             <div>

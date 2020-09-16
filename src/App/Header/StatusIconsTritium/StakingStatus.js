@@ -24,12 +24,13 @@ __ = __context('Header');
 @connect((state) => {
   const {
     user: {
-      stakeInfo: { stakerate },
+      stakeInfo: { stakerate, pooled },
     },
   } = state;
   return {
     staking: isStaking(state),
     stakerate,
+    pooled,
     synchronized: isSynchronized(state),
   };
 })
@@ -43,7 +44,7 @@ class StakingStatus extends React.Component {
    * @memberof StakingStatus
    */
   render() {
-    const { staking, stakerate, synchronized } = this.props;
+    const { staking, stakerate, pooled, synchronized } = this.props;
 
     return (
       <Tooltip.Trigger
@@ -52,7 +53,10 @@ class StakingStatus extends React.Component {
             synchronized ? (
               <>
                 <div>
-                  <strong>{__('Wallet is staking')}</strong>
+                  <strong>
+                    {__('Wallet is staking')}
+                    {!!pooled && ` (${__('pooled')})`}
+                  </strong>
                   {!!stakerate && (
                     <div>
                       {__('Stake Rate')}: {formatNumber(stakerate, 2)}%
