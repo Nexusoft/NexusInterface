@@ -26,6 +26,8 @@ const displayedOperations = [
   'FEE',
   'GENESIS',
   'TRUST',
+  'GENESISPOOL',
+  'TRUSTPOOL',
   'COINBASE',
   'MIGRATE',
   'LEGACY',
@@ -84,6 +86,8 @@ const tableColumns = [
           return <span className="dim">{content}</span>;
         case 'TRUST':
         case 'GENESIS':
+        case 'TRUSTPOOL':
+        case 'GENESISPOOL':
           return <i className="dim">{__('staking')}</i>;
         case 'CREDIT':
           if (cell.original.for === 'COINBASE') {
@@ -115,6 +119,8 @@ const tableColumns = [
           }
         case 'TRUST':
         case 'GENESIS':
+        case 'TRUSTPOOL':
+        case 'GENESISPOOL':
           return <span className="dim">{currentAccount}</span>;
         case 'MIGRATE':
           return <span className="dim">{account_name || account || ''}</span>;
@@ -133,6 +139,8 @@ const tableColumns = [
             OP === 'CREDIT' ||
             OP === 'GENESIS' ||
             OP === 'TRUST' ||
+            OP === 'GENESISPOOL' ||
+            OP === 'TRUSTPOOL' ||
             OP === 'COINBASE' ||
             OP === 'MIGRATE'
           }

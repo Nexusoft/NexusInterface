@@ -196,10 +196,26 @@ const contractContent = (contract) => {
       );
     }
 
+    case 'TRUSTPOOL': {
+      return (
+        <>
+          <Operation>TrustPool</Operation>
+        </>
+      );
+    }
+
     case 'GENESIS': {
       return (
         <>
           <Operation>Genesis</Operation> <Hash>{contract.address}</Hash>
+        </>
+      );
+    }
+
+    case 'GENESISPOOL': {
+      return (
+        <>
+          <Operation>GenesisPool</Operation> <Hash>{contract.address}</Hash>
         </>
       );
     }

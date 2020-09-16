@@ -92,6 +92,8 @@ export const getDeltaSign = (contract) => {
     case 'COINBASE':
     case 'TRUST':
     case 'GENESIS':
+    case 'TRUSTPOOL':
+    case 'GENESISPOOL':
     case 'MIGRATE':
       return '+';
 

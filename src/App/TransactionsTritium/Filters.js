@@ -23,6 +23,8 @@ const operations = [
   'COINBASE',
   'TRUST',
   'GENESIS',
+  'TRUSTPOOL',
+  'GENESISPOOL',
   'DEBIT',
   'CREDIT',
   'MIGRATE',
