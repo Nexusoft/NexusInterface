@@ -94,7 +94,6 @@ export const startCore = async () => {
   if (!settings.avatarMode) {
     params.push('-avatar=0');
   }
-  // Enable mining (default is 0)
   if (settings.enableMining == true) {
     params.push('-mining=1');
     if (settings.ipMineWhitelist !== '') {
@@ -103,8 +102,8 @@ export const startCore = async () => {
       });
     }
   }
-  // Enable staking (default is 0)
   if (settings.enableStaking == true) params.push('-stake=1');
+  if (settings.pooledStaking == true) params.push('-poolstaking=1');
   if (settings.clientMode == true) params.push('-client=1');
   if (settings.multiUser == true) params.push('-multiuser=1');
 
