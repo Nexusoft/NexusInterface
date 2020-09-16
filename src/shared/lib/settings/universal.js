@@ -39,6 +39,7 @@ export const defaultSettings = {
   clientMode: false,
   enableMining: false,
   enableStaking: true,
+  pooledStaking: false,
   multiUser: false,
   verboseLevel: 0,
   avatarMode: true,

@@ -89,6 +89,24 @@ const ManualMode = styled(Button)(
     }
 );
 
+function ExpandableText({ shortText, longText }) {
+  const [expanded, setExpanded] = React.useState(false);
+  return (
+    <div>
+      {shortText}
+      {expanded && <div className="mt1">{longText}</div>}{' '}
+      <Button
+        skin="hyperlink"
+        onClick={() => {
+          setExpanded(!expanded);
+        }}
+      >
+        {expanded ? __('See less') : __('See more')}
+      </Button>
+    </div>
+  );
+}
+
 const removeWhiteSpaces = (value) => (value || '').replace(' ', '');
 
 const formKeys = [
@@ -96,6 +114,7 @@ const formKeys = [
   'enableMining',
   'ipMineWhitelist',
   'enableStaking',
+  'pooledStaking',
   'multiUser',
   'verboseLevel',
   'testnetIteration',
@@ -479,6 +498,31 @@ class SettingsCore extends Component {
                     </SettingsField>
                   </>
                 )}
+              />
+
+              <Field
+                name="enableStaking"
+                component={({ input: enableStaking }) =>
+                  !!enableStaking.value && (
+                    <SettingsField
+                      connectLabel
+                      indent={1}
+                      label={__('Pooled staking')}
+                      subLabel={
+                        <ExpandableText
+                          shortText={__(
+                            'Join the decentralized and trust-less staking pool.'
+                          )}
+                          longText={__(
+                            'Pooled staking is a decentralised and trust-less mechanism allowing you to use the balances of other pooled stakers to increase your chances of finding a trust block.  In exchange, your balance is also provided to others in the pool to increase their staking power.  All participants in a pool receive their staking rewards and build trust, regardless of which user mines the block.  However a fee (equivalent to 16% of each staking reward) is paid to the block finder by all pool participants.  This algorithm rewards those with higher trust as they are more likely to find blocks until others in the pool build up trust.  Equally pooled staking is useful for those with low trust or small balances who would otherwise not have enough balance to consistently find stake blocks.'
+                          )}
+                        />
+                      }
+                    >
+                      <Field name="pooledStaking" component={Switch.RF} />
+                    </SettingsField>
+                  )
+                }
               />
 
               <SettingsField
