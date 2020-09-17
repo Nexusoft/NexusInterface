@@ -35,8 +35,6 @@ __ = __context('Header');
   };
 })
 class StakingStatus extends React.Component {
-  renderTooltip = () => {};
-
   /**
    * Component's Renderable JSX
    *
