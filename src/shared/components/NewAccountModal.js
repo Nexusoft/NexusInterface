@@ -6,21 +6,28 @@ import Modal from 'components/Modal';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
 import FormField from 'components/FormField';
-import SelectField from 'components/Select';
+import AutoSuggest from 'components/AutoSuggest';
 import { confirm } from 'lib/ui';
 import { confirmPin } from 'lib/ui';
 import { callApi } from 'lib/tritiumApi';
 import { errorHandler } from 'utils/form';
 import { loadAccounts } from 'lib/user';
-import { removeModal, showNotification } from 'lib/ui';
+import { removeModal, showNotification, openErrorDialog } from 'lib/ui';
 import { namedAccount } from 'lib/fees';
 import GA from 'lib/googleAnalytics';
+import memoize from 'utils/memoize';
+import { addressRegex } from 'consts/misc';
 
 __ = __context('NewAccount');
 
+const getSuggestions = memoize((userTokens) => [
+  'NXS',
+  ...(userTokens ? userTokens.map((t) => t.name || t.address) : []),
+]);
+
 const mapStateToProps = (state) => {
   return {
-    userTokens: state.user.tokens,
+    suggestions: getSuggestions(state.user.tokens),
   };
 };
 @connect(mapStateToProps, null, (stateProps, dispatchProps, ownProps) => ({
@@ -29,7 +36,7 @@ const mapStateToProps = (state) => {
   ...ownProps,
   initialValues: {
     name: '',
-    token: ownProps.tokenAddress,
+    token: ownProps.tokenName || ownProps.tokenAddress,
   },
 }))
 @reduxForm({
@@ -57,12 +64,27 @@ const mapStateToProps = (state) => {
       const params = { pin };
       if (name) params.name = name;
 
-      if (token === '0') {
-        //run NXS
+      if (token === 'NXS') {
         return await callApi('finance/create/account', params);
       } else {
-        if (props.tokenAddress) params.token = token;
-        return await callApi('tokens/create/account', params);
+        if (addressRegex.test(token)) {
+          try {
+            // Test if `token` is the token address
+            params.token = token;
+            return await callApi('tokens/create/account', params);
+          } catch (err) {}
+        }
+
+        // Assuming `token` is token name
+        try {
+          params.token_name = token;
+          return await callApi('tokens/create/account', params);
+        } catch (err) {
+          openErrorDialog({
+            message: __('Error creating account'),
+            note: __('Unknown token name/address'),
+          });
+        }
       }
     }
   },
@@ -81,31 +103,8 @@ const mapStateToProps = (state) => {
   onSubmitFail: errorHandler(__('Error creating account')),
 })
 export default class NewAccountModal extends React.Component {
-  componentDidMount() {}
-
-  returnTokenSelect = (event) => {
-    const { userTokens, tokenAddress, tokenName } = this.props;
-    const options = [
-      {
-        value: '0',
-        display: 'NXS',
-      },
-      ...userTokens.map((t) => ({
-        value: t.address,
-        display: t.name || t.address,
-      })),
-    ];
-    if (tokenAddress && !options.some((t) => t.value === tokenAddress)) {
-      options.unshift({
-        value: tokenAddress,
-        display: tokenName || tokenAddress,
-      });
-    }
-    return options;
-  };
-
   render() {
-    const { handleSubmit, submitting } = this.props;
+    const { handleSubmit, submitting, suggestions } = this.props;
     return (
       <Modal
         assignClose={(closeModal) => {
@@ -129,11 +128,12 @@ export default class NewAccountModal extends React.Component {
               />
             </FormField>
 
-            <FormField connectLabel label={__('Token')}>
+            <FormField connectLabel label={__('Token name/address')}>
               <Field
                 name="token"
-                component={SelectField.RF}
-                options={this.returnTokenSelect()}
+                component={AutoSuggest.RF}
+                suggestions={suggestions}
+                filterSuggestions={(suggestions) => suggestions}
               />
             </FormField>
 

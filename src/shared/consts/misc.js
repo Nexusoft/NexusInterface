@@ -19,6 +19,8 @@ export const semverRegex = /(?<=^v?|\sv?)(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1
 
 export const userIdRegex = /^[\da-f]+$/;
 
+export const addressRegex = /^[1-9A-HJ-NP-Za-km-z]{51}$/;
+
 export const assetNumberTypes = [
   'uint8',
   'uint16',

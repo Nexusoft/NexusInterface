@@ -20,6 +20,7 @@ import { errorHandler } from 'utils/form';
 import sendIcon from 'icons/send.svg';
 import { numericOnly } from 'utils/form';
 import { confirmPin } from 'lib/ui';
+import { addressRegex } from 'consts/misc';
 import questionIcon from 'icons/question-mark-circle.svg';
 
 // Internal Local
@@ -79,7 +80,6 @@ const mapStateToProps = (state) => {
 };
 
 const referenceRegex = /^[0-9]+$/;
-const base58Regex = /^[1-9A-HJ-NP-Za-km-z]{51}$/;
 
 /**
  * The Internal Send Form in the Send Page
@@ -142,7 +142,7 @@ const base58Regex = /^[1-9A-HJ-NP-Za-km-z]{51}$/;
   asyncValidate: async ({ recipients }) => {
     const { address } = recipients[0];
 
-    if (base58Regex.test(address)) {
+    if (addressRegex.test(address)) {
       const addressResult = await callApi('system/validate/address', {
         address,
       });

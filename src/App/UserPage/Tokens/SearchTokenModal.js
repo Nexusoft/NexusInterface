@@ -9,13 +9,12 @@ import { callApi } from 'lib/tritiumApi';
 import { removeModal, openModal, openErrorDialog } from 'lib/ui';
 import searchIcon from 'icons/search.svg';
 import Icon from 'components/Icon';
+import { addressRegex } from 'consts/misc';
 
 // Internal Local
 import TokenDetailsModal from './TokenDetailsModal';
 
 __ = __context('User.Tokens.SearchToken');
-
-const base58Regex = /^[1-9A-HJ-NP-Za-km-z]{51}$/;
 
 @reduxForm({
   form: 'search_tokens',
@@ -31,7 +30,7 @@ const base58Regex = /^[1-9A-HJ-NP-Za-km-z]{51}$/;
     return errors;
   },
   onSubmit: async ({ searchValue }) => {
-    if (base58Regex.test(searchValue)) {
+    if (addressRegex.test(searchValue)) {
       try {
         // Test if searchValue is the token address
         return await callApi('tokens/get/token', {
