@@ -427,6 +427,38 @@ class SettingsCore extends Component {
                   <>
                     <SettingsField
                       connectLabel
+                      label={__('Enable staking')}
+                      subLabel={__('Enable/Disable staking on the wallet.')}
+                      disabled={lightMode.value || multiUser.value}
+                    >
+                      {lightMode.value || multiUser.value ? (
+                        <Switch readOnly value={false} />
+                      ) : (
+                        <Field name="enableStaking" component={Switch.RF} />
+                      )}
+                    </SettingsField>
+
+                    <Field
+                      name="enableStaking"
+                      component={({ input: enableStaking }) =>
+                        !(lightMode.value || multiUser.value) &&
+                        !!enableStaking.value && (
+                          <SettingsField
+                            connectLabel
+                            indent={1}
+                            label={__('Pooled staking')}
+                            subLabel={__(
+                              'Pooled staking is a decentralized and trust-less mechanism allowing you to use the balances of others to increase your chances of finding a stake block. All participants receive their staking rewards and build trust, regardless of which user mines the block. A small portion of each reward is paid to the block finder by all pool participants.'
+                            )}
+                          >
+                            <Field name="pooledStaking" component={Switch.RF} />
+                          </SettingsField>
+                        )
+                      }
+                    />
+
+                    <SettingsField
+                      connectLabel
                       label={__('Enable mining')}
                       subLabel={__('Enable/Disable mining to the wallet.')}
                       disabled={lightMode.value || multiUser.value}
@@ -465,39 +497,8 @@ class SettingsCore extends Component {
                         )
                       }
                     />
-
-                    <SettingsField
-                      connectLabel
-                      label={__('Enable staking')}
-                      subLabel={__('Enable/Disable staking on the wallet.')}
-                      disabled={lightMode.value || multiUser.value}
-                    >
-                      {lightMode.value || multiUser.value ? (
-                        <Switch readOnly value={false} />
-                      ) : (
-                        <Field name="enableStaking" component={Switch.RF} />
-                      )}
-                    </SettingsField>
                   </>
                 )}
-              />
-
-              <Field
-                name="enableStaking"
-                component={({ input: enableStaking }) =>
-                  !!enableStaking.value && (
-                    <SettingsField
-                      connectLabel
-                      indent={1}
-                      label={__('Pooled staking')}
-                      subLabel={__(
-                        'Pooled staking is a decentralized and trust-less mechanism allowing you to use the balances of others to increase your chances of finding a stake block. All participants receive their staking rewards and build trust, regardless of which user mines the block. A small portion of each reward is paid to the block finder by all pool participants.'
-                      )}
-                    >
-                      <Field name="pooledStaking" component={Switch.RF} />
-                    </SettingsField>
-                  )
-                }
               />
 
               <SettingsField
