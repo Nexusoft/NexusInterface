@@ -7,13 +7,13 @@ import ClosingScreen from './ClosingScreen';
 import SelectLanguage from './SelectLanguage';
 import LicenseAgreement from './LicenseAgreement';
 import ExperimentalWarning from './ExperimentalWarning';
-import ClientModeNotice from './ClientModeNotice';
+import LightModeNotice from './LightModeNotice';
 import Wallet from './Wallet';
 
 const mapStateToProps = ({
   settings: {
     experimentalWarningDisabled,
-    clientModeNoticeDisabled,
+    lightModeNoticeDisabled,
     acceptedAgreement,
     locale,
     enableStaking,
@@ -22,7 +22,7 @@ const mapStateToProps = ({
 }) => ({
   locale,
   experimentalWarningDisabled,
-  clientModeNoticeDisabled,
+  lightModeNoticeDisabled,
   acceptedAgreement,
   closing,
   enableStaking,
@@ -31,7 +31,7 @@ const mapStateToProps = ({
 const Overlays = ({
   locale,
   experimentalWarningDisabled,
-  clientModeNoticeDisabled,
+  lightModeNoticeDisabled,
   acceptedAgreement,
   closing,
   enableStaking,
@@ -44,17 +44,17 @@ const Overlays = ({
       locale &&
       acceptedAgreement &&
       experimentalWarningDisabled &&
-      !clientModeNoticeDisabled &&
+      !lightModeNoticeDisabled &&
       enableStaking
     ) {
-      updateSettings({ clientModeNoticeDisabled: true });
+      updateSettings({ lightModeNoticeDisabled: true });
     }
   }, [
     closing,
     locale,
     acceptedAgreement,
     experimentalWarningDisabled,
-    clientModeNoticeDisabled,
+    lightModeNoticeDisabled,
     enableStaking,
   ]);
 
@@ -74,8 +74,8 @@ const Overlays = ({
     return <ExperimentalWarning />;
   }
 
-  if (!clientModeNoticeDisabled && !enableStaking) {
-    return <ClientModeNotice />;
+  if (!lightModeNoticeDisabled && !enableStaking) {
+    return <LightModeNotice />;
   }
 
   return <Wallet>{children}</Wallet>;

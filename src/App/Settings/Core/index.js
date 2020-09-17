@@ -92,7 +92,7 @@ const ManualMode = styled(Button)(
 const removeWhiteSpaces = (value) => (value || '').replace(' ', '');
 
 const formKeys = [
-  'clientMode',
+  'lightMode',
   'enableMining',
   'ipMineWhitelist',
   'enableStaking',
@@ -157,7 +157,7 @@ const mapStateToProps = (state) => {
       (formTestnetIteration && formTestnetIteration != 0) ||
       (settingTestnetIteration && settingTestnetIteration != 0),
     coreConnected: isCoreConnected(state),
-    clientMode: !!systemInfo?.clientmode,
+    lightMode: !!systemInfo?.clientmode,
     manualDaemon: settings.manualDaemon,
     initialValues: getInitialValues(settings),
     restartCoreOnSave,
@@ -306,11 +306,11 @@ class SettingsCore extends Component {
     }
   };
 
-  resyncClientMode = async () => {
+  resyncLightMode = async () => {
     const confirmed = await confirm({
       question: __('Resync database') + '?',
       note: __(
-        'Nexus Core will be restarted. Client mode database will be deleted and resynchronized from the beginning.'
+        'Nexus Core will be restarted. Light mode database will be deleted and resynchronized from the beginning.'
       ),
     });
     if (confirmed) {
@@ -342,7 +342,7 @@ class SettingsCore extends Component {
   render() {
     const {
       coreConnected,
-      clientMode,
+      lightMode,
       manualDaemon,
       handleSubmit,
       dirty,
@@ -381,9 +381,9 @@ class SettingsCore extends Component {
                 component={({ input: multiUser }) => (
                   <SettingsField
                     connectLabel
-                    label={__('Client mode')}
+                    label={__('Light mode')}
                     subLabel={__(
-                      'Nexus Core under client mode runs lighter and synchronize much faster, but you will <b>NOT</b> be able to stake, mine, or switch the wallet to Legacy Mode.',
+                      'Nexus Core under light mode runs lighter and synchronize much faster, but you will <b>NOT</b> be able to stake, mine, or switch the wallet to Legacy Mode.',
                       null,
                       { b: (text) => <strong>{text}</strong> }
                     )}
@@ -392,24 +392,24 @@ class SettingsCore extends Component {
                     {multiUser.value ? (
                       <Switch readOnly value={false} />
                     ) : (
-                      <Field name="clientMode" component={Switch.RF} />
+                      <Field name="lightMode" component={Switch.RF} />
                     )}
                   </SettingsField>
                 )}
               />
 
               <Field
-                name="clientMode"
-                component={({ input: clientMode }) => (
+                name="lightMode"
+                component={({ input: lightMode }) => (
                   <SettingsField
                     connectLabel
                     label={__('Multi-user')}
                     subLabel={__(
                       'Allow multiple logged in users at the same time. Mining and staking will be unavailable.'
                     )}
-                    disabled={clientMode.value}
+                    disabled={lightMode.value}
                   >
-                    {clientMode.value ? (
+                    {lightMode.value ? (
                       <Switch readOnly value={false} />
                     ) : (
                       <Field name="multiUser" component={Switch.RF} />
@@ -419,9 +419,9 @@ class SettingsCore extends Component {
               />
 
               <Fields
-                names={['clientMode', 'multiUser']}
+                names={['lightMode', 'multiUser']}
                 component={({
-                  clientMode: { input: clientMode },
+                  lightMode: { input: lightMode },
                   multiUser: { input: multiUser },
                 }) => (
                   <>
@@ -429,9 +429,9 @@ class SettingsCore extends Component {
                       connectLabel
                       label={__('Enable mining')}
                       subLabel={__('Enable/Disable mining to the wallet.')}
-                      disabled={clientMode.value || multiUser.value}
+                      disabled={lightMode.value || multiUser.value}
                     >
-                      {clientMode.value || multiUser.value ? (
+                      {lightMode.value || multiUser.value ? (
                         <Switch readOnly value={false} />
                       ) : (
                         <Field name="enableMining" component={Switch.RF} />
@@ -441,7 +441,7 @@ class SettingsCore extends Component {
                     <Field
                       name="enableMining"
                       component={({ input: enableMining }) =>
-                        !(clientMode.value || multiUser.value) &&
+                        !(lightMode.value || multiUser.value) &&
                         !!enableMining.value && (
                           <SettingsField
                             connectLabel
@@ -470,9 +470,9 @@ class SettingsCore extends Component {
                       connectLabel
                       label={__('Enable staking')}
                       subLabel={__('Enable/Disable staking on the wallet.')}
-                      disabled={clientMode.value || multiUser.value}
+                      disabled={lightMode.value || multiUser.value}
                     >
-                      {clientMode.value || multiUser.value ? (
+                      {lightMode.value || multiUser.value ? (
                         <Switch readOnly value={false} />
                       ) : (
                         <Field name="enableStaking" component={Switch.RF} />
@@ -606,16 +606,16 @@ class SettingsCore extends Component {
                 </Button>
               </SettingsField>
 
-              {clientMode && (
+              {lightMode && (
                 <SettingsField
                   connectLabel
                   label={__('Resync database')}
                   subLabel={__(
-                    'Delete client mode database and resynchronize from the beginning'
+                    'Delete light mode database and resynchronize from the beginning'
                   )}
                 >
                   <Button
-                    onClick={this.resyncClientMode}
+                    onClick={this.resyncLightMode}
                     style={{ height: consts.inputHeightEm + 'em' }}
                   >
                     {__('Resynchronize')}
