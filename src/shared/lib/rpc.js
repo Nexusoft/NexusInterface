@@ -66,6 +66,7 @@ Available RPC methods:
 	Add new Interface Specific Utilities Here. Module Specific Functions go In Module Scripts.
 **/
 
+import http from 'http';
 import https from 'https';
 
 import { getActiveCoreConfig } from 'lib/coreConfig';
@@ -98,7 +99,8 @@ export default function rpc(cmd, args) {
         };
       }
 
-      const req = https.request(options, (res) => {
+      const { request } = conf.rpcSSL ? https : http;
+      const req = request(options, (res) => {
         let data = '';
         res.setEncoding('utf8');
 
@@ -108,10 +110,12 @@ export default function rpc(cmd, args) {
 
         res.on('end', () => {
           let result = undefined;
-          try {
-            result = JSON.parse(data);
-          } catch (err) {
-            console.error('Response data is not valid JSON', data);
+          if (data) {
+            try {
+              result = JSON.parse(data);
+            } catch (err) {
+              console.error('Response data is not valid JSON', data);
+            }
           }
           if (res.statusCode >= 200 && res.statusCode < 300) {
             resolve(result?.result);

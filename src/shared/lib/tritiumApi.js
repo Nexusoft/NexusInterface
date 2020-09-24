@@ -1,3 +1,4 @@
+import http from 'http';
 import https from 'https';
 
 import store from 'store';
@@ -21,7 +22,7 @@ const getDefaultOptions = ({
   rejectUnauthorized: false,
 });
 
-function request({ params, options }) {
+function sendRequest({ params, options, ssl }) {
   return new Promise((resolve, reject) => {
     try {
       const content = params && JSON.stringify(params);
@@ -32,7 +33,8 @@ function request({ params, options }) {
         };
       }
 
-      const req = https.request(options, (res) => {
+      const { request } = ssl ? https : http;
+      const req = request(options, (res) => {
         let data = '';
         res.setEncoding('utf8');
 
@@ -42,10 +44,12 @@ function request({ params, options }) {
 
         res.on('end', () => {
           let result = undefined;
-          try {
-            result = JSON.parse(data);
-          } catch (err) {
-            console.error('Response data is not valid JSON', data);
+          if (data) {
+            try {
+              result = JSON.parse(data);
+            } catch (err) {
+              console.error('Response data is not valid JSON', data);
+            }
           }
           if (res.statusCode >= 200 && res.statusCode < 300) {
             resolve(result?.result);
@@ -100,7 +104,7 @@ export async function callApi(endpoint, customParams) {
     path: `/${endpoint}`,
     ...getDefaultOptions(conf),
   };
-  return await request({ params, options });
+  return await sendRequest({ params, options, ssl: conf.apiSSL });
 }
 
 /**
@@ -112,11 +116,12 @@ export async function callApi(endpoint, customParams) {
  */
 export async function callApiByUrl(url) {
   const conf = await getActiveCoreConfig();
-  return await request({
+  return await sendRequest({
     options: {
       method: 'GET',
       path: `/${url}`,
       ...getDefaultOptions(conf),
     },
+    ssl: conf.apiSSL,
   });
 }
