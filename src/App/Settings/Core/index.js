@@ -92,7 +92,7 @@ const ManualMode = styled(Button)(
 const removeWhiteSpaces = (value) => (value || '').replace(' ', '');
 
 const formKeys = [
-  'lightMode',
+  'liteMode',
   'enableMining',
   'ipMineWhitelist',
   'enableStaking',
@@ -157,7 +157,7 @@ const mapStateToProps = (state) => {
       (formTestnetIteration && formTestnetIteration != 0) ||
       (settingTestnetIteration && settingTestnetIteration != 0),
     coreConnected: isCoreConnected(state),
-    lightMode: !!systemInfo?.clientmode,
+    liteMode: !!systemInfo?.clientmode,
     manualDaemon: settings.manualDaemon,
     initialValues: getInitialValues(settings),
     restartCoreOnSave,
@@ -306,11 +306,11 @@ class SettingsCore extends Component {
     }
   };
 
-  resyncLightMode = async () => {
+  resyncLiteMode = async () => {
     const confirmed = await confirm({
       question: __('Resync database') + '?',
       note: __(
-        'Nexus Core will be restarted. Light mode database will be deleted and resynchronized from the beginning.'
+        'Nexus Core will be restarted. Lite mode database will be deleted and resynchronized from the beginning.'
       ),
     });
     if (confirmed) {
@@ -342,7 +342,7 @@ class SettingsCore extends Component {
   render() {
     const {
       coreConnected,
-      lightMode,
+      liteMode,
       manualDaemon,
       handleSubmit,
       dirty,
@@ -381,9 +381,9 @@ class SettingsCore extends Component {
                 component={({ input: multiUser }) => (
                   <SettingsField
                     connectLabel
-                    label={__('Light mode')}
+                    label={__('Lite mode')}
                     subLabel={__(
-                      'Nexus Core under light mode runs lighter and synchronize much faster, but you will <b>NOT</b> be able to stake, mine, or switch the wallet to Legacy Mode.',
+                      'Nexus Core under lite mode runs lighter and synchronize much faster, but you will <b>NOT</b> be able to stake, mine, or switch the wallet to Legacy Mode.',
                       null,
                       { b: (text) => <strong>{text}</strong> }
                     )}
@@ -392,24 +392,24 @@ class SettingsCore extends Component {
                     {multiUser.value ? (
                       <Switch readOnly value={false} />
                     ) : (
-                      <Field name="lightMode" component={Switch.RF} />
+                      <Field name="liteMode" component={Switch.RF} />
                     )}
                   </SettingsField>
                 )}
               />
 
               <Field
-                name="lightMode"
-                component={({ input: lightMode }) => (
+                name="liteMode"
+                component={({ input: liteMode }) => (
                   <SettingsField
                     connectLabel
                     label={__('Multi-user')}
                     subLabel={__(
                       'Allow multiple logged in users at the same time. Mining and staking will be unavailable.'
                     )}
-                    disabled={lightMode.value}
+                    disabled={liteMode.value}
                   >
-                    {lightMode.value ? (
+                    {liteMode.value ? (
                       <Switch readOnly value={false} />
                     ) : (
                       <Field name="multiUser" component={Switch.RF} />
@@ -419,9 +419,9 @@ class SettingsCore extends Component {
               />
 
               <Fields
-                names={['lightMode', 'multiUser']}
+                names={['liteMode', 'multiUser']}
                 component={({
-                  lightMode: { input: lightMode },
+                  liteMode: { input: liteMode },
                   multiUser: { input: multiUser },
                 }) => (
                   <>
@@ -429,9 +429,9 @@ class SettingsCore extends Component {
                       connectLabel
                       label={__('Enable staking')}
                       subLabel={__('Enable/Disable staking on the wallet.')}
-                      disabled={lightMode.value || multiUser.value}
+                      disabled={liteMode.value || multiUser.value}
                     >
-                      {lightMode.value || multiUser.value ? (
+                      {liteMode.value || multiUser.value ? (
                         <Switch readOnly value={false} />
                       ) : (
                         <Field name="enableStaking" component={Switch.RF} />
@@ -441,7 +441,7 @@ class SettingsCore extends Component {
                     <Field
                       name="enableStaking"
                       component={({ input: enableStaking }) =>
-                        !(lightMode.value || multiUser.value) &&
+                        !(liteMode.value || multiUser.value) &&
                         !!enableStaking.value && (
                           <SettingsField
                             connectLabel
@@ -461,9 +461,9 @@ class SettingsCore extends Component {
                       connectLabel
                       label={__('Enable mining')}
                       subLabel={__('Enable/Disable mining to the wallet.')}
-                      disabled={lightMode.value || multiUser.value}
+                      disabled={liteMode.value || multiUser.value}
                     >
-                      {lightMode.value || multiUser.value ? (
+                      {liteMode.value || multiUser.value ? (
                         <Switch readOnly value={false} />
                       ) : (
                         <Field name="enableMining" component={Switch.RF} />
@@ -473,7 +473,7 @@ class SettingsCore extends Component {
                     <Field
                       name="enableMining"
                       component={({ input: enableMining }) =>
-                        !(lightMode.value || multiUser.value) &&
+                        !(liteMode.value || multiUser.value) &&
                         !!enableMining.value && (
                           <SettingsField
                             connectLabel
@@ -607,16 +607,16 @@ class SettingsCore extends Component {
                 </Button>
               </SettingsField>
 
-              {lightMode && (
+              {liteMode && (
                 <SettingsField
                   connectLabel
                   label={__('Resync database')}
                   subLabel={__(
-                    'Delete light mode database and resynchronize from the beginning'
+                    'Delete lite mode database and resynchronize from the beginning'
                   )}
                 >
                   <Button
-                    onClick={this.resyncLightMode}
+                    onClick={this.resyncLiteMode}
                     style={{ height: consts.inputHeightEm + 'em' }}
                   >
                     {__('Resynchronize')}

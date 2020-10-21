@@ -36,7 +36,7 @@ export const defaultSettings = {
   displayFiatBalance: false,
 
   // Core
-  lightMode: false,
+  liteMode: false,
   enableMining: false,
   enableStaking: true,
   pooledStaking: false,
@@ -76,7 +76,7 @@ export const defaultSettings = {
   encryptionWarningDisabled: false,
   bootstrapSuggestionDisabled: false,
   migrateSuggestionDisabled: false,
-  lightModeNoticeDisabled: false,
+  liteModeNoticeDisabled: false,
   windowWidth: 1200,
   windowHeight: 800,
   windowX: undefined,

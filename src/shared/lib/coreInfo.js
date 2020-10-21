@@ -19,7 +19,7 @@ const maxTime = 10000;
 let waitTime = 0;
 let connected = false;
 let timerId = null;
-let lightModeChecked = false;
+let liteModeChecked = false;
 
 const getInfo = legacyMode
   ? // Legacy
@@ -42,10 +42,10 @@ const getInfo = legacyMode
         store.dispatch({ type: TYPE.DISCONNECT_CORE });
         console.error(err);
 
-        // Light mode doesn't support RPC so might be the reason the RPC call failed
-        if (!lightModeChecked) {
+        // Lite mode doesn't support RPC so might be the reason the RPC call failed
+        if (!liteModeChecked) {
           try {
-            lightModeChecked = true;
+            liteModeChecked = true;
             const systemInfo = await callApi('system/get/info');
             if (systemInfo?.clientmode) {
               updateSettings({ legacyMode: false });

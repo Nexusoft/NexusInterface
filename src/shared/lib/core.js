@@ -104,7 +104,7 @@ export const startCore = async () => {
   }
   if (settings.enableStaking == true) params.push('-stake=1');
   if (settings.pooledStaking == true) params.push('-poolstaking=1');
-  if (settings.lightMode == true) params.push('-client=1');
+  if (settings.liteMode == true) params.push('-client=1');
   if (settings.multiUser == true) params.push('-multiuser=1');
 
   // Start core

@@ -11,24 +11,24 @@ const ListItem = styled.li({
   listStyle: 'disc',
 });
 
-async function enableLightMode() {
-  updateSettings({ lightMode: true, lightModeNoticeDisabled: true });
+async function enableLiteMode() {
+  updateSettings({ liteMode: true, liteModeNoticeDisabled: true });
   await restartCore();
 }
 
 function ignore() {
-  updateSettings({ lightModeNoticeDisabled: true });
+  updateSettings({ liteModeNoticeDisabled: true });
 }
 
-const LightModeNotice = () => (
-  <FullScreen header={__('Light mode')} width={600} style={{ fontSize: 18 }}>
+const LiteModeNotice = () => (
+  <FullScreen header={__('Lite mode')} width={600} style={{ fontSize: 18 }}>
     <div className="mt1">
-      {__('Light mode is now available for Nexus Core!')}
+      {__('Lite mode is now available for Nexus Core!')}
     </div>
 
     <div className="mt2">
       <div>
-        <strong>{__('Why you should enable light mode')}</strong>
+        <strong>{__('Why you should enable lite mode')}</strong>
       </div>
       <ul>
         <ListItem className="mt0_4">
@@ -44,7 +44,7 @@ const LightModeNotice = () => (
 
     <div className="mt2">
       <div>
-        <strong>{__('Why you should NOT enable light mode')}</strong>
+        <strong>{__('Why you should NOT enable lite mode')}</strong>
       </div>
       <ul>
         <ListItem className="mt0_4">
@@ -60,11 +60,11 @@ const LightModeNotice = () => (
       <Button skin="default" onClick={ignore} className="space-right">
         {__('Ignore')}
       </Button>
-      <Button skin="primary" onClick={enableLightMode} className="space-left">
-        {__('Enable light mode')}
+      <Button skin="primary" onClick={enableLiteMode} className="space-left">
+        {__('Enable lite mode')}
       </Button>
     </div>
   </FullScreen>
 );
 
-export default LightModeNotice;
+export default LiteModeNotice;
