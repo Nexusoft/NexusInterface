@@ -35,35 +35,34 @@ Wallet is not staking,Новчаник није у режиму штедње у�
 Checking sync status,Проверава се статус синхронизације,Header
 Synchronizing,Синхронизација,Header
 Synchronized,Синхронизовано,Header
+pooled,,Header
 You're not logged in,Нисте пријављени,Header
 You are staking but have not received a block in 30 minutes!,,Header
-Accounts,Рачуни,Header.UserDropdown
-Tokens,Токени,Header.UserDropdown
-Set recovery phrase,Постави фразу за опоравак,Header.UserDropdown
-Log out,Одјави се,Header.UserDropdown
-Log in,Пријави се,Header.UserDropdown
-Create new user,Креирај новог корисника,Header.UserDropdown
-Overview,Преглед,NavigationBar
-User,Корисник,NavigationBar
-Send NXS,Пошаљи Нексус,NavigationBar
-Send,Пошаљи,NavigationBar
-Transactions,Трансакције,NavigationBar
-Address Book,Именик,NavigationBar
-Settings,Подешавања,NavigationBar
-Console,Конзола,NavigationBar
+Switching...,,
+Active,,
+Switch,,
+Switch user,,
 Closing Nexus Wallet,Затварање Нексус Новчаника,
 Warning,Упозорење,
 IMPROPER USE OF THIS SOFTWARE COULD LEAD TO PERMANENT LOSS OF COIN.,НЕПРАВИЛНА УПОТРЕБА ОВОГ СОФТВЕРА МОЖЕ ДОВЕСТИ ДО ПЕРМАНЕНТНОГ ГУБИТКА КОИНА.,
 BACKUP YOUR WALLET OFTEN AND KEEP YOUR PASSWORDS SAFE.,ЧЕСТО БЕКАПУЈТЕ ВАШ НОВЧАНИК И ЧУВАЈТЕ ВАШУ ЛОЗИНКУ.,
 I understand the risk,Разумем ризик,
-Tritium Mode,Тритиум Мод,
-Your wallet is now in Tritium Mode!,Ваш новчаник је сада у Тритијум Моду!,
-"Tritium Mode is currently in early development, therefore not all Tritium features are supported by the user interface. If you want to access a Tritium feature that hasn't had a user interface yet, you can go to Console/Tritium Console, or use any HTTP client to call Nexus APIs directly.","Тритијум Мод је тренутно у фази раног развоја, због тога нису све Тритијум опције подржане од стране корисничког интерфејса. Ако желите приступ опцији Тритијума која још нема кориснички интерфејс, можете да идете на Конзола/Тритијум Конзола, или користите било који ХТТП клијент за директне позиве ка Нексусовом АПИ-ју.",
-"If you need to switch back to Legacy Mode, you can select ""%{menu}"" menu option at any time.","Ако је потребно да се вратите у Легат Мод, можете да изаберете %{menu} у менију у било ком тренутку.",
-File,Фајл,
-Switch to Legacy Mode,Пређи у Легат Мод,
-Continue to Tritium Mode,Настави ка Тритијум Моду,
 Close,Затвори,
+Remote Core is disconnected,,
+Connecting to Nexus Core...,Конектовање на Нексус Језгро...,
+Nexus Core is stopped,Нексус Језгро је заустављено,
+Address has been copied to clipboard,Адреса копирана у привремену меморију,
+Copy to clipboard,Копирај у привремену меморију,
+Click to copy to clipboard,Кликни да копираш у привремену меморију,
+Show QR code,,
+Log in,Пријави се,
+No Rows Found,Нема Пронађених Редова,
+Page,Страна,
+rows,редови,
+Previous,Претходно,
+Next,Следеће,
+Use virtual keyboard,,
+Switch to Legacy Mode,Пређи у Легат Мод,
 Are you sure you want to switch to Legacy Mode?,Да ли сте сигурни да желите да пређете у Легат Мод?,
 Switch to Tritium Mode,Пређи у Тритијум Мод,
 Start Nexus Core,Стартуј Нексус Језгро,
@@ -98,23 +97,11 @@ There are currently no updates available,Тренутно нема доступ�
 Checking for Updates...,Провера ажурирања...,
 Update available! Downloading...,Ажурирање доступно! Преузимам...,
 Quit and install update...,Прекини и инсталирај ажурирање...,
+File,Фајл,
 Edit,Уреди,
 Settings,Подешавања,
 View,Преглед,
 Help,Помоћ,
-Manual Core is disconnected,Мануелно Језгро није повезано,
-Connecting to Nexus Core...,Конектовање на Нексус Језгро...,
-Nexus Core is stopped,Нексус Језгро је заустављено,
-Address has been copied to clipboard,Адреса копирана у привремену меморију,
-Copy to clipboard,Копирај у привремену меморију,
-Click to copy to clipboard,Кликни да копираш у привремену меморију,
-Log in,Пријави се,
-No Rows Found,Нема Пронађених Редова,
-Page,Страна,
-rows,редови,
-Previous,Претходно,
-Next,Следеће,
-Use virtual keyboard,,
 Transaction received,Трансакција примљена,
 Transaction sent,Трансакција послата,
 Genesis transaction,Генеза трансакција,
@@ -123,6 +110,33 @@ Update available for %{smart_count} module |||| Updates available for %{smart_co
 New transaction,Нова трансакција,
 Error,Грешка,
 Unknown error,Непозната грешка,
+Accounts,Рачуни,Header.UserDropdown
+Tokens,Токени,Header.UserDropdown
+Set recovery phrase,Постави фразу за опоравак,Header.UserDropdown
+Switch user,,Header.UserDropdown
+Log in to another user,,Header.UserDropdown
+Log out of all users,,Header.UserDropdown
+Log out,Одјави се,Header.UserDropdown
+Log in,Пријави се,Header.UserDropdown
+Create new user,Креирај новог корисника,Header.UserDropdown
+Overview,Преглед,NavigationBar
+User,Корисник,NavigationBar
+Send NXS,Пошаљи Нексус,NavigationBar
+Send,Пошаљи,NavigationBar
+Transactions,Трансакције,NavigationBar
+Address Book,Именик,NavigationBar
+Settings,Подешавања,NavigationBar
+Console,Конзола,NavigationBar
+Lite mode,,LiteModeNotice
+Lite mode is now available on Nexus Wallet! You can choose to enable lite mode now or just ignore it. You can change your decision anytime under Settings/Core.,,LiteModeNotice
+Why you might want to enable lite mode,,LiteModeNotice
+Nexus Core would take less resources (memory and storage) to run,,LiteModeNotice
+Synchronization would be much faster,,LiteModeNotice
+Why you might NOT want to enable lite mode,,LiteModeNotice
+You would NOT be able to mine or stake,,LiteModeNotice
+Legacy Mode would be disabled,,LiteModeNotice
+Ignore,,LiteModeNotice
+Enable lite mode,,LiteModeNotice
 "Last updated
 %{time}","Последњи пут ажурирано
 %{time}",Overview
@@ -194,9 +208,10 @@ More options,Више опција,Send
 Reference number,Референтни број,Send
 An optional number which may be provided by the recipient to identify this transaction from the others,Опциони број који може бити обезбеђен од стране примаоца за идентификацију ове трансакције од осталих,Send
 "Invoice number, order number, etc... (Optional)","Број рачуна, број поруџбине, итд... (Опционо)",Send
-Reference must be a number,Референца мора бити број,Send
+Reference must be an unsigned integer,,Send
 Number is too large,Број је превелики,Send
 Address/Name is required,Адреса/Назив је обавезна,Send
+Invalid name/address,,Send
 Select backup directory,Одабери директоријум за резервну копију,Settings.Application
 Backup directory,Бекап директоријум,Settings.Application
 Browse,Претражи,Settings.Application
@@ -242,23 +257,27 @@ Allow the presence of SymLinks in the module directory,Дозволи прису
 Fake Test Transactions,Лажне Тест Трансакције,Settings.Application
 Display Test Transactions on the Transactions page,Прикажи Тест Трансакције на страници Трансакција,Settings.Application
 Language,Језик,Settings.Application
-Exit manual Core mode?,Изађи из мода мануелног Језгра?,Settings.Core
+Exit remote Core mode?,,Settings.Core
 (This will restart your Core),(Ово ће рестартовати твоје Језгро),Settings.Core
-Enter manual Core mode?,Уђи у мод мануелног Језгра?,Settings.Core
+Enter remote Core mode?,,Settings.Core
 Reload transaction history,Поново учитај историју трансакција,Settings.Core
 Clear peer connections,Очисти пеер конекције,Settings.Core
+Resync database,,Settings.Core
+Nexus Core will be restarted. Lite mode database will be deleted and resynchronized from the beginning.,,Settings.Core
+Embedded Core,,Settings.Core
+Remote Core,,Settings.Core
+Lite mode,,Settings.Core
+"Nexus Core under lite mode runs lighter and synchronize much faster, but you will <b>NOT</b> be able to stake, mine, or switch the wallet to Legacy Mode.",,Settings.Core
+Multi-user,,Settings.Core
+Allow multiple logged in users at the same time. Mining and staking will be unavailable.,,Settings.Core
+Enable staking,Дозволи штедњу,Settings.Core
+Enable/Disable staking on the wallet.,Дозволи/Забрани штедњу у новчанику.,Settings.Core
+Pooled staking,,Settings.Core
+"Pooled staking is a decentralized and trust-less mechanism allowing you to use the balances of others to increase your chances of finding a stake block. All participants receive their staking rewards and build trust, regardless of which user mines the block. A small portion of each reward is paid to the block finder by all pool participants.",,Settings.Core
 Enable mining,Дозволи мајновање,Settings.Core
 Enable/Disable mining to the wallet.,Дозволи/Забрани мајновање у новчаник.,Settings.Core
 Mining IP Whitelist,Листа дозвољених ИП-ова за мајновање,Settings.Core
 IP/Ports allowed to mine to. Separate by <b>;</b> . Wildcards supported only in IP,ИП/Портови којима је дозвољено да мајнују. Раздвој помоћу <b>;</b> . Вајлдкарте подржане само у ИП,Settings.Core
-Enable staking,Дозволи штедњу,Settings.Core
-Enable/Disable staking on the wallet.,Дозволи/Забрани штедњу у новчанику.,Settings.Core
-Rescan wallet,Поново скенирај новчаник,Settings.Core
-"Used to correct transaction/balance issues, scans over every block in the database. Could take up to 10 minutes.","Користи се за корекцију проблема са трансакцијама/балансом, скенира сваки блок у бази података. Може да потраје и до 10 минута.",Settings.Core
-Restart Nexus core with -walletclean parameter to clean out and reload all transaction history,Рестартуј Нексус језгро са -walletclean параметром да би очистио и поново учитао целокупну историју трансакција,Settings.Core
-Reload,Поново учитај,Settings.Core
-Clear all stored peer connections and restart Nexus,Очисти све сачуване пеер конекције и рестартуј Нексус,Settings.Core
-Clear,Обриши,Settings.Core
 Verbose level,Опширан ниво,Settings.Core
 Verbose level for logs.,Опширан ниво за логове.,Settings.Core
 Core Data Directory,,Settings.Core
@@ -268,23 +287,48 @@ The iteration of Testnet to connect to.,Итерација Тестнета на
 Turn Off,Искључи,Settings.Core
 Avatar Mode,Аватар Мод,Settings.Core
 Disabling Avatar will make the core use a separate change key,Онемогућавање Аватара ће учинити да језгро користи посебан кључ за промену,Settings.Core
-Manual Core mode,Мануални мод Језгра,Settings.Core
-Enable manual Core mode if you are running the Nexus Core manually outside of the wallet.,Омогући мануални мод Језгра ако покрећеш Нексус Језгро мануално изван новчаника.,Settings.Core
-Username,Корисничко име,Settings.Core
-Username configured for manual Core.,Корисничко име конфигурисано за мануелно Језгро.,Settings.Core
-Password,Лозинка,Settings.Core
-Password configured for manual Core.,Лозинка конфигурисана за мануелно Језгро.,Settings.Core
+Rescan wallet,Поново скенирај новчаник,Settings.Core
+"Used to correct transaction/balance issues, scans over every block in the database. Could take up to 10 minutes.","Користи се за корекцију проблема са трансакцијама/балансом, скенира сваки блок у бази података. Може да потраје и до 10 минута.",Settings.Core
+Restart Nexus core with -walletclean parameter to clean out and reload all transaction history,Рестартуј Нексус језгро са -walletclean параметром да би очистио и поново учитао целокупну историју трансакција,Settings.Core
+Reload,Поново учитај,Settings.Core
+Clear all stored peer connections and restart Nexus,Очисти све сачуване пеер конекције и рестартуј Нексус,Settings.Core
+Clear,Обриши,Settings.Core
+Delete lite mode database and resynchronize from the beginning,,Settings.Core
+Resynchronize,,Settings.Core
 IP address,IP адреса,Settings.Core
-IP address configured for manual Core.,ИП адреса конфигурисана за мануелно Језгро.,Settings.Core
-Port,Порт,Settings.Core
-Port configured for manual Core.,Порт конфигурисан за мануелно Језгро.,Settings.Core
+Remote Core IP address,,Settings.Core
+API SSL,,Settings.Core
+Use SSL for API calls,,Settings.Core
+API Port,,Settings.Core
+Nexus API server Port,,Settings.Core
+API SSL Port,,Settings.Core
+Nexus API server SSL Port,,Settings.Core
+API Username,,Settings.Core
+Nexus API server Username,,Settings.Core
+API Password,,Settings.Core
+Nexus API server Password,,Settings.Core
+RPC SSL,,Settings.Core
+Use SSL for RPC calls,,Settings.Core
+RPC Port,,Settings.Core
+Nexus RPC server Port,,Settings.Core
+RPC SSL Port,,Settings.Core
+Nexus RPC server SSL Port,,Settings.Core
+RPC Username,,Settings.Core
+Nexus RPC server Username,,Settings.Core
+RPC Password,,Settings.Core
+Nexus RPC server Password,,Settings.Core
+Log out on close,,Settings.Core
+Log out of all users before closing the wallet,,Settings.Core
 Restart Core for these changes to take effect,Поново покрените Језгро да би ова промена постала ефективна,Settings.Core
 Save settings,Сачувај подешавања,Settings.Core
 Verbose level is required,Опширан ниво је обавезан,Settings.Core
-Manual Core username is required,Корисничко име Мануелног Језгра је обавезно,Settings.Core
-Manual Core password is required,Корисничка лозинка Мануелног Језгра је обавезна,Settings.Core
-Manual Core IP is required,ИП адреса Мануелног Језгра је обавезна,Settings.Core
-Manual Core port is required,Порт Мануелног Језгра је обавезан,Settings.Core
+Remote Core IP is required,,Settings.Core
+RPC port is required,,Settings.Core
+RPC username is required,,Settings.Core
+RPC password is required,,Settings.Core
+API port is required,,Settings.Core
+API username is required,,Settings.Core
+API password is required,,Settings.Core
 Core settings saved,Подешавања Језгра сачувана,Settings.Core
 Restarting Core...,Рестартовање Језгра...,Settings.Core
 Error rescanning,Поновно скенирање Грешака,Settings.Core
@@ -521,8 +565,8 @@ Adjust stake amount,Подесите износ штедње,User.Accounts.Accou
 Time,Време,User.Accounts.AccountHistory
 Operation,Операција,User.Accounts.AccountHistory
 From,Од,User.Accounts.AccountHistory
-staked,уштеђено,User.Accounts.AccountHistory
-mined,мајновано,User.Accounts.AccountHistory
+staking,,User.Accounts.AccountHistory
+mining,,User.Accounts.AccountHistory
 To,За,User.Accounts.AccountHistory
 Change,Измени,User.Accounts.AccountHistory
 Account History,Историја Рачуна,User.Accounts.AccountHistory
@@ -742,6 +786,7 @@ Enable staking,Дозволи штедњу,User.Staking
 Cancel,Откажи,User.Staking
 Status,Статус,User.Staking
 Staking,Штедња,User.Staking
+pooled,,User.Staking
 Not staking,Штедња није активна,User.Staking
 Stake amount,Износ штедње,User.Staking
 The amount of NXS currently staked in the trust account,Количина NXS-а која је тренутно на штедњи на поверљивом рачуну,User.Staking
@@ -763,7 +808,7 @@ Account on hold for another %{stakeSeconds} Seconds,Рачун на чекању
 Stop staking,,User.Staking
 Start staking,,User.Staking
 Create new token,Креирај нови токен,User.Tokens
-Lookup a token,Пронађи токен,User.Tokens
+Look up a token,,User.Tokens
 Unnamed token,Неименовани токен,User.Tokens
  (Owned by you), (У вашем власништву),User.Tokens
 Details,Детаљи,User.Tokens
@@ -788,13 +833,14 @@ You have successfully created token %{token} ! Would you like to make an account
 Yes,Да,User.Tokens.NewToken
 No,Не,User.Tokens.NewToken
 Error creating token,Грешка при креирању токена,User.Tokens.NewToken
-Can not find Token,Не могу да нађем токен,User.Tokens.SearchToken
-Lookup Token,Пронађи токен,User.Tokens.SearchToken
-Name/Address,Име/Адреса,User.Tokens.SearchToken
-Lookup a Token on the network,Потражи Токен на мрежи,User.Tokens.SearchToken
-Lookup this token,Потражи овај токен,User.Tokens.SearchToken
+Cannot find Token,,User.Tokens.SearchToken
+Look up token,,User.Tokens.SearchToken
+Name or address,,User.Tokens.SearchToken
+Token name/address,,User.Tokens.SearchToken
+Look up,,User.Tokens.SearchToken
 No Value,Нема Вредности,User.Tokens.SearchToken
 Error searching for token,Грешка приликом тражења токена,User.Tokens.SearchToken
+Unknown token name/address,,User.Tokens.SearchToken
 Token Details,Детаљи Токена,User.Tokens.TokenDetails
 Token name,Име токена,User.Tokens.TokenDetails
 Token address,Адреса токена,User.Tokens.TokenDetails
@@ -871,15 +917,15 @@ Are you sure you want to abort the process?,Да ли сте сигурни да
 "No, let it continue","Не, нека настави",Bootstrap
 Bootstrap Recent Database,Бутстрап Свеже Базе података,Bootstrap
 Abort,Прекини,Bootstrap
-Bootstrap process has been aborted,Бутстрап процес је прекинут,Bootstrap
-Error bootstrapping recent database,Грешка приликом бутстраповања свеже базе података,Bootstrap
-Unknown error,Непозната грешка,Bootstrap
-Recent database has been successfully bootstrapped,Свежа база података је успешно бутстрапована,Bootstrap
 Not enough disk space! Minimum 15GB of free space is required.,Нема довољно места на диску! Неопходно је минимум 15GB слободног простора.,Bootstrap
 Download recent database?,Преузми Свежу Базу података?,Bootstrap
 Downloading a recent version of the database might reduce the time it takes to synchronize your wallet,Преузимање свеже верзије базе података може смањити време потребно за синхронизацију вашег новчаника,Bootstrap
 "Yes, let's bootstrap it","Да, бутстрапуј је",Bootstrap
 "No, let it sync","Не, остави да се синхронизује",Bootstrap
+Bootstrap process has been aborted,Бутстрап процес је прекинут,Bootstrap
+Error bootstrapping recent database,Грешка приликом бутстраповања свеже базе података,Bootstrap
+Unknown error,Непозната грешка,Bootstrap
+Recent database has been successfully bootstrapped,Свежа база података је успешно бутстрапована,Bootstrap
 Change password and PIN,Промени лозинку и ПИН,ChangePassword&PIN
 Current password,Тренутна лозинка,ChangePassword&PIN
 Your current password,Ваша актуелна лозинка,ChangePassword&PIN
@@ -899,6 +945,10 @@ New PIN is required,Нови ПИН је обавезан,ChangePassword&PIN
 PIN must be at least 4 characters,ПИН мора да има најмање 4 знакова,ChangePassword&PIN
 Password & PIN have been updated,Лозинка и ПИН су ажурирани,ChangePassword&PIN
 Error updating password & PIN,Грешка приликом ажурирања лозинке и ПИН-а,ChangePassword&PIN
+Contract Details,Детаљи Уговора,ContractDetails
+View transaction details,,ContractDetails
+Yes,Да,ConfirmDialog
+No,Не,ConfirmDialog
 Password/PIN mismatch,Лозинка/ПИН се не слаже,ConfirmPassword&PIN
 "You have entered either your password or your PIN incorrectly, please re-check","Унели сте погрешну лозинку или ПИН, молим проверите",ConfirmPassword&PIN
 Confirm password and PIN,Потврди лозинку и ПИН,ConfirmPassword&PIN
@@ -911,11 +961,12 @@ PIN,ПИН,ConfirmPassword&PIN
 Re-enter your new PIN,,ConfirmPassword&PIN
 Re-enter your PIN,,ConfirmPassword&PIN
 Confirm,Потврди,ConfirmPassword&PIN
-Contract Details,Детаљи Уговора,ContractDetails
-View transaction details,,ContractDetails
-Yes,Да,ConfirmDialog
-No,Не,ConfirmDialog
 Dismiss,Одбаци,ErrorDialog
+Pin must be at least 4 characters,Пин мора да има најмање 4 карактера,PinDialog
+Confirm,Потврди,PinDialog
+Enter PIN,,PinDialog
+Your PIN,,PinDialog
+Cancel,Откажи,PinDialog
 Dismiss,Одбаци,SuccessDialog
 Your wallet is not encrypted!,Новчаник није шифрован!,EncryptionWarning
 It is highly recommended that you should encrypt your wallet to keep your NXS safe.,Максимално је препоручљиво да шифрирате свој новчаник како би ваш NXS био безбедан.,EncryptionWarning
@@ -935,7 +986,7 @@ Username is required,Корисничко име је обавезно,Login
 Password is required,Лозинка је обавезна,Login
 PIN is required,ПИН је обавезан,Login
 Logged in as %{username},Пријављен као %{username},Login
-Not being fully synced may of caused this error.,,Login
+Not being fully synced may have caused this error.,,Login
 Error logging in,Грешка приликом пријављивања,Login
 Migrate account,Мигрирај рачун,MigrateAccount
 You have %{amount} NXS in your legacy account.,Имате %{amount} NXS на свом легат рачуну.,MigrateAccount
@@ -988,16 +1039,16 @@ Error creating new address,Грешка приликом креирања нов
 New account,Нови налог,NewAccount
 Account name (%{nameFee} NXS Fee) (Optional),Назив налога (%{nameFee} NXS такса) (Опционо),NewAccount
 New account's name,Назив новог налога,NewAccount
-Token,Токен,NewAccount
+Token name/address,,NewAccount
 Cancel,Откажи,NewAccount
 Creating account,Креирање налога,NewAccount
 Create account,Креирај налог,NewAccount
-Create a account without a name?,Креирај налог без имена?,NewAccount
+Create an account without a name?,,NewAccount
 Adding a name costs a NXS fee,Додавање имена вредности NXS накнаде,NewAccount
 That's Ok,То је у реду,NewAccount
-Add Name,Додај име,NewAccount
-New account %{account} has been created,Нови налог %{account} је креиран,NewAccount
 Error creating account,Грешка приликом креирања налога,NewAccount
+Unknown token name/address,,NewAccount
+New account %{account} has been created,Нови налог %{account} је креиран,NewAccount
 Create new user,Креирај новог корисника,NewUser
 Username,Корисничко име,NewUser
 A globally unique username,Глобално уникатно корисничко име,NewUser
@@ -1021,11 +1072,6 @@ PIN must be at least 4 characters,ПИН мора да има најмање 4 �
 Error creating user,Грешка при креирању корисника,NewUser
 User registration for %{username} has been confirmed,Регистрација корисника %{username} је потврђена,NewUser
 User registration for %{username} is waiting to be confirmed on Nexus blockchain...,Регистрација корисника %{username} чека на потврду на Нексус блокчеину...,NewUser
-Pin must be at least 4 characters,Пин мора да има најмање 4 карактера,PinDialog
-Confirm,Потврди,PinDialog
-Enter PIN,,PinDialog
-Your PIN,,PinDialog
-Cancel,Откажи,PinDialog
 Recover password and PIN,Поврати лозинку и ПИН,RecoverPassword&PIN
 Username,Корисничко име,RecoverPassword&PIN
 Your username,Ваше корисничко име,RecoverPassword&PIN

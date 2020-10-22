@@ -7,6 +7,8 @@ import { restartCore } from 'lib/core';
 
 import FullScreen from './FullScreen';
 
+__ = __context('LiteModeNotice');
+
 const ListItem = styled.li({
   listStyle: 'disc',
 });
@@ -23,12 +25,14 @@ function ignore() {
 const LiteModeNotice = () => (
   <FullScreen header={__('Lite mode')} width={600} style={{ fontSize: 18 }}>
     <div className="mt1">
-      {__('Lite mode is now available for Nexus Core!')}
+      {__(
+        'Lite mode is now available on Nexus Wallet! You can choose to enable lite mode now or just ignore it. You can change your decision anytime under Settings/Core.'
+      )}
     </div>
 
     <div className="mt2">
       <div>
-        <strong>{__('Why you should enable lite mode')}</strong>
+        <strong>{__('Why you might want to enable lite mode')}</strong>
       </div>
       <ul>
         <ListItem className="mt0_4">
@@ -44,7 +48,7 @@ const LiteModeNotice = () => (
 
     <div className="mt2">
       <div>
-        <strong>{__('Why you should NOT enable lite mode')}</strong>
+        <strong>{__('Why you might NOT want to enable lite mode')}</strong>
       </div>
       <ul>
         <ListItem className="mt0_4">
