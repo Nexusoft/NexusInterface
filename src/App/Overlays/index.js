@@ -1,8 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { updateSettings } from 'lib/settings';
-
 import ClosingScreen from './ClosingScreen';
 import SelectLanguage from './SelectLanguage';
 import LicenseAgreement from './LicenseAgreement';
@@ -16,7 +14,6 @@ const mapStateToProps = ({
     liteModeNoticeDisabled,
     acceptedAgreement,
     locale,
-    enableStaking,
   },
   ui: { closing },
 }) => ({
@@ -25,7 +22,6 @@ const mapStateToProps = ({
   liteModeNoticeDisabled,
   acceptedAgreement,
   closing,
-  enableStaking,
 });
 
 const Overlays = ({
@@ -34,30 +30,8 @@ const Overlays = ({
   liteModeNoticeDisabled,
   acceptedAgreement,
   closing,
-  enableStaking,
   children,
 }) => {
-  React.useEffect(() => {
-    // Disable the notice even when the notice is not shown
-    if (
-      !closing &&
-      locale &&
-      acceptedAgreement &&
-      experimentalWarningDisabled &&
-      !liteModeNoticeDisabled &&
-      enableStaking
-    ) {
-      updateSettings({ liteModeNoticeDisabled: true });
-    }
-  }, [
-    closing,
-    locale,
-    acceptedAgreement,
-    experimentalWarningDisabled,
-    liteModeNoticeDisabled,
-    enableStaking,
-  ]);
-
   if (closing) {
     return <ClosingScreen />;
   }
@@ -74,7 +48,7 @@ const Overlays = ({
     return <ExperimentalWarning />;
   }
 
-  if (!liteModeNoticeDisabled && !enableStaking) {
+  if (!liteModeNoticeDisabled) {
     return <LiteModeNotice />;
   }
 
