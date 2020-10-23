@@ -37,23 +37,30 @@ function startWatchingTransaction(txid) {
   );
 }
 
-const getBalanceChange = (tx) =>
+const getBalanceChanges = (tx) =>
   tx.contracts
     ? tx.contracts.reduce((changes, contract) => {
         const sign = getDeltaSign(contract);
-        const token = getTokenName(contract, { markup: false });
-        if (sign === '+')
-          return {
-            ...changes,
-            [token]: (changes[token] || 0) + contract.amount,
-          };
-        if (sign === '-')
-          return {
-            ...changes,
-            [token]: (changes[token] || 0) - contract.amount,
-          };
+        if (sign && contract.amount) {
+          let change = changes.find(
+            contract.token_name
+              ? (change) => change.token_name === contract.token_name
+              : (change) => change.token === contract.token
+          );
+          if (change) {
+            change.amount =
+              change.amount + (sign === '-' ? -1 : 1) * contract.amount;
+          } else {
+            change = {
+              token_name: contract.token_name,
+              token: contract.token,
+              amount: (sign === '-' ? -1 : 1) * contract.amount,
+            };
+            changes.push(change);
+          }
+        }
         return changes;
-      }, {})
+      }, [])
     : 0;
 
 /**
@@ -153,20 +160,20 @@ export function prepareTransactions() {
               startWatchingTransaction(tx.txid);
             }
 
-            const changes = getBalanceChange(tx);
-            if (Object.values(changes).some((v) => v)) {
-              Object.entries(changes).forEach(([token, change]) => {
-                showDesktopNotif(
-                  __('New transaction'),
-                  `${change > 0 ? '+' : ''}${formatNumber(change, 6)} ${token}`
-                );
-                showNotification(
-                  `${__('New transaction')}: ${
-                    change > 0 ? '+' : ''
-                  }${formatNumber(change, 6)} ${token}`,
-                  'success'
-                );
-              });
+            const changes = getBalanceChanges(tx);
+            if (changes.length) {
+              const changeLines = changes.map(
+                (change) =>
+                  `${change.amount >= 0 ? '+' : ''}${formatNumber(
+                    change.amount,
+                    6
+                  )} ${getTokenName(change, { markup: false })}`
+              );
+              showDesktopNotif(__('New transaction'), changeLines.join(' \n'));
+              showNotification(
+                `${__('New transaction')}: ${changeLines.join(' | ')}`,
+                'success'
+              );
             }
           });
         }
