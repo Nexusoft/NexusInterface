@@ -143,7 +143,7 @@ export function prepareTransactions() {
         if (status?.genesis !== oldStatus?.genesis) return;
 
         const txCount = status?.transactions;
-        const oldTxCount = status?.transactions;
+        const oldTxCount = oldStatus?.transactions;
         if (
           typeof txCount === 'number' &&
           typeof oldTxCount === 'number' &&
