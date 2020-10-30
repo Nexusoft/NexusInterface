@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import * as TYPE from 'consts/actionTypes';
+import { callApi } from 'lib/tritiumApi';
 import store, { observeStore } from 'store';
 
 __ = __context('MarketData');
@@ -13,13 +14,16 @@ export async function refreshMarketData() {
     const {
       settings: { fiatCurrency },
     } = store.getState();
-    const { data } = await axios.get(
-      `https://nexus-wallet-external-services.herokuapp.com/market-data?base_currency=${fiatCurrency}`
-    );
+    const [{ data }, metrics] = await Promise.all([
+      axios.get(
+        `https://nexus-wallet-external-services.herokuapp.com/market-data?base_currency=${fiatCurrency}`
+      ),
+      callApi('system/get/metrics'),
+    ]);
 
     store.dispatch({
       type: TYPE.SET_MARKET_DATA,
-      payload: data,
+      payload: { ...data, marketCap: metrics?.supply?.total * data.price },
     });
   } catch (err) {
     console.error(err);
