@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 import * as TYPE from 'consts/actionTypes';
-import store from 'store';
+import store, { observeStore } from 'store';
 
 __ = __context('MarketData');
 
@@ -26,4 +26,12 @@ export async function refreshMarketData() {
   } finally {
     timerId = setTimeout(refreshMarketData, 900000); // 15 minutes
   }
+}
+
+export function prepareMarket() {
+  refreshMarketData();
+  observeStore(
+    ({ settings: { fiatCurrency } }) => fiatCurrency,
+    refreshMarketData
+  );
 }
