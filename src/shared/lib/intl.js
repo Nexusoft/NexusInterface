@@ -125,6 +125,7 @@ export const formatCurrency = (num, currency = 'USD', maxDecimalDigits = 3) => {
   return new Intl.NumberFormat(locale, {
     style: 'currency',
     currency,
+    minimumFractionDigits: 0,
     maximumFractionDigits: digits,
   }).format(num);
 };
