@@ -836,7 +836,7 @@ class Overview extends Component {
               <StatValue>
                 {market?.displayMarketCap ? (
                   fiatCurrency === 'BTC' ? (
-                    formatCurrency(market.marketCap, fiatCurrency, 8)
+                    formatCurrency(market.marketCap, fiatCurrency, 2)
                   ) : fiatCurrency !== 'BTC' ? (
                     formatCurrency(market.marketCap, fiatCurrency, 0)
                   ) : (
