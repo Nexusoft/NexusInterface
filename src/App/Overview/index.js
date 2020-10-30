@@ -102,9 +102,7 @@ const mapStateToProps = (state) => {
   const {
     core: { info, difficulty },
     common: { blockDate },
-    market: {
-      cryptocompare: { rawNXSvalues, displayNXSvalues },
-    },
+    market,
     settings,
     theme,
   } = state;
@@ -113,18 +111,11 @@ const mapStateToProps = (state) => {
     (!synccomplete && synccomplete !== 0) ||
     synccomplete < 0 ||
     synccomplete > 100;
-  const displayValues =
-    displayNXSvalues &&
-    displayNXSvalues.find((e) => e.name === settings.fiatCurrency);
   return {
     coreConnected: isCoreConnected(state),
     difficulty,
     blockDate,
-    market: {
-      ...(rawNXSvalues &&
-        rawNXSvalues.find((e) => e.name === settings.fiatCurrency)),
-      displayMarketCap: displayValues && displayValues.marketCap,
-    },
+    market,
     settings,
     theme,
     coreInfo: info,

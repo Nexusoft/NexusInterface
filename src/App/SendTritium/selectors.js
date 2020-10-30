@@ -77,16 +77,6 @@ export const getAccountInfo = memoize((accountName, myAccounts, myTokens) => {
   return account || token || { balance: 0 };
 });
 
-export const getNxsFiatPrice = memoize((rawNXSvalues, fiatCurrency) => {
-  if (rawNXSvalues) {
-    const marketInfo = rawNXSvalues.find((e) => e.name === fiatCurrency);
-    if (marketInfo) {
-      return marketInfo.price;
-    }
-  }
-  return null;
-});
-
 export const getAddressNameMap = memoize((addressBook, myTritiumAccounts) => {
   const map = {};
   if (addressBook) {

@@ -183,11 +183,7 @@ const Amount = styled.span(({ theme, possitive }) => ({
 @connect((state) => ({
   showFiat: state.ui.user.balancesShowFiat,
   fiatCurrency: state.settings.fiatCurrency,
-  market:
-    state.market.cryptocompare.rawNXSvalues &&
-    state.market.cryptocompare.rawNXSvalues.find(
-      (e) => e.name === state.settings.fiatCurrency
-    ).price,
+  price: state.market?.price,
 }))
 class AccountHistoryModal extends React.Component {
   state = {

@@ -8,7 +8,6 @@ import styled from '@emotion/styled';
 import TextField from 'components/TextField';
 import FormField from 'components/FormField';
 import Link from 'components/Link';
-import { getNxsFiatPrice } from './selectors';
 
 __ = __context('Send');
 
@@ -36,14 +35,9 @@ const SendAllLink = styled(Link)({
   verticalAlign: 'middle',
 });
 
-const mapStateToProps = ({
-  settings: { fiatCurrency },
-  market: {
-    cryptocompare: { rawNXSvalues },
-  },
-}) => ({
+const mapStateToProps = ({ settings: { fiatCurrency }, market }) => ({
+  price: market?.price,
   fiatCurrency: fiatCurrency,
-  nxsFiatPrice: getNxsFiatPrice(rawNXSvalues, fiatCurrency),
 });
 
 /**
@@ -62,9 +56,9 @@ class AmountField extends Component {
   nxsToFiat = (e, value) => {
     if (floatRegex.test(value)) {
       const nxs = parseFloat(value);
-      const { nxsFiatPrice } = this.props;
-      if (nxsFiatPrice) {
-        const fiat = nxs * nxsFiatPrice;
+      const { price } = this.props;
+      if (price) {
+        const fiat = nxs * price;
         this.props.change(this.fiatAmountFieldName(), fiat.toFixed(2));
       }
     }
@@ -78,9 +72,9 @@ class AmountField extends Component {
   fiatToNxs = (e, value) => {
     if (floatRegex.test(value)) {
       const fiat = parseFloat(value);
-      const { nxsFiatPrice } = this.props;
-      if (nxsFiatPrice) {
-        const nxs = fiat / nxsFiatPrice;
+      const { price } = this.props;
+      if (price) {
+        const nxs = fiat / price;
         this.props.change(this.amountFieldName(), nxs.toFixed(5));
       }
     }

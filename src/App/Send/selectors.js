@@ -17,16 +17,6 @@ export const getAccountBalance = memoize((accountName, myAccounts) => {
   return account && account.balance;
 });
 
-export const getNxsFiatPrice = memoize((rawNXSvalues, fiatCurrency) => {
-  if (rawNXSvalues) {
-    const marketInfo = rawNXSvalues.find((e) => e.name === fiatCurrency);
-    if (marketInfo) {
-      return marketInfo.price;
-    }
-  }
-  return null;
-});
-
 export const getAddressNameMap = memoize((addressBook) => {
   const map = {};
   if (addressBook) {

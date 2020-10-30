@@ -9,7 +9,7 @@ import { prepareMenu } from 'lib/appMenu';
 import { prepareBootstrap } from 'lib/bootstrap';
 import { prepareCoreInfo } from 'lib/coreInfo';
 import { prepareCoreOutput } from 'lib/coreOutput';
-import { prepareMarket } from 'lib/market';
+import { refreshMarketData } from 'lib/market';
 import { prepareTransactions } from 'lib/tritiumTransactions';
 import { prepareUser } from 'lib/user';
 import { prepareModules, prepareWebView } from 'lib/modules';
@@ -26,7 +26,7 @@ async function run() {
     prepareWallet();
     prepareCoreInfo();
     prepareUser();
-    prepareMarket();
+    refreshMarketData();
     prepareModules();
 
     render(

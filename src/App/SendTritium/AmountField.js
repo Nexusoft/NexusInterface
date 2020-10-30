@@ -8,7 +8,6 @@ import styled from '@emotion/styled';
 import TextField from 'components/TextField';
 import FormField from 'components/FormField';
 import Link from 'components/Link';
-import { getNxsFiatPrice } from './selectors';
 import Tooltip from 'components/Tooltip';
 
 __ = __context('Send');
@@ -43,14 +42,9 @@ const TokenAddress = styled.a(({ theme }) => ({
   color: theme.mixer(0.5),
 }));
 
-const mapStateToProps = ({
-  settings: { fiatCurrency },
-  market: {
-    cryptocompare: { rawNXSvalues },
-  },
-}) => ({
+const mapStateToProps = ({ settings: { fiatCurrency }, market }) => ({
   fiatCurrency: fiatCurrency,
-  nxsFiatPrice: getNxsFiatPrice(rawNXSvalues, fiatCurrency),
+  price: market?.price,
 });
 
 /**

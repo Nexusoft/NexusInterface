@@ -1,20 +1,10 @@
 import * as TYPE from 'consts/actionTypes';
 
-const initialState = {
-  cryptocompare: {},
-};
+const initialState = null;
 export default (state = initialState, action) => {
   switch (action.type) {
-    case TYPE.SET_MKT_AVE_DATA:
-      return {
-        ...state,
-        cryptocompare: {
-          displayBTCvalues: action.payload.displayBTC,
-          rawBTCvalues: action.payload.rawBTC,
-          displayNXSvalues: action.payload.displayNXS,
-          rawNXSvalues: action.payload.rawNXS,
-        },
-      };
+    case TYPE.SET_MARKET_DATA:
+      return action.payload;
 
     default:
       return state;
