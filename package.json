@@ -29,7 +29,8 @@
     "run-tests": "./node_modules/mocha/bin/mocha tests/test.js",
     "trans-extract": "node -r @babel/register ./internals/scripts/extractTranslations.js",
     "update-documentation": "./UpdateDocumentation.sh",
-    "update-maxmind": "node -r @babel/register ./internals/scripts/UpdateMaxMind.js"
+    "update-maxmind": "node -r @babel/register ./internals/scripts/UpdateMaxMind.js",
+    "clean-action-types": "node -r @babel/register ./internals/scripts/cleanActionTypes.js"
   },
   "main": "./build/main.prod.js",
   "build": {
