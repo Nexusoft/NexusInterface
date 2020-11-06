@@ -206,6 +206,7 @@ function send([{ recipients, message, reference, expires }]) {
 }
 
 async function proxyRequest([url, options, requestId]) {
+  const { activeAppModule } = store.getState();
   try {
     const lUrl = url.toLowerCase();
     if (!lUrl.startsWith('http://') && !lUrl.startsWith('https://')) {
@@ -218,18 +219,16 @@ async function proxyRequest([url, options, requestId]) {
     }
 
     const response = await axios(url, options);
-    const { activeAppModule } = store.getState();
-    if (activeAppModule && activeAppModule.webview) {
+    if (activeAppModule?.webview) {
       activeAppModule.webview.send(
         `proxy-response${requestId ? `:${requestId}` : ''}`,
         null,
-        response
+        JSON.parse(JSON.stringify(response))
       );
     }
   } catch (err) {
     console.error(err);
-    const { activeAppModule } = store.getState();
-    if (activeAppModule && activeAppModule.webview) {
+    if (activeAppModule?.webview) {
       activeAppModule.webview.send(
         `proxy-response${requestId ? `:${requestId}` : ''}`,
         err.toString ? err.toString() : err
@@ -239,24 +238,23 @@ async function proxyRequest([url, options, requestId]) {
 }
 
 async function rpcCall([command, params, callId]) {
+  const { activeAppModule } = store.getState();
   try {
     if (!cmdWhitelist.includes(command)) {
       throw 'Invalid command';
     }
 
     const response = await rpc(command, ...(params || []));
-    const { activeAppModule } = store.getState();
-    if (activeAppModule && activeAppModule.webview) {
+    if (activeAppModule?.webview) {
       activeAppModule.webview.send(
         `rpc-return${callId ? `:${callId}` : ''}`,
         null,
-        response
+        JSON.parse(JSON.stringify(response))
       );
     }
   } catch (err) {
     console.error(err);
-    const { activeAppModule } = store.getState();
-    if (activeAppModule && activeAppModule.webview) {
+    if (activeAppModule?.webview) {
       activeAppModule.webview.send(
         `rpc-return${callId ? `:${callId}` : ''}`,
         err
@@ -266,24 +264,23 @@ async function rpcCall([command, params, callId]) {
 }
 
 async function apiCall([endpoint, params, callId]) {
+  const { activeAppModule } = store.getState();
   try {
     if (!apiWhiteList.includes(endpoint)) {
       throw 'Invalid API endpoint';
     }
 
-    const result = await callApi(endpoint, params);
-    const { activeAppModule } = store.getState();
-    if (activeAppModule && activeAppModule.webview) {
+    const response = await callApi(endpoint, params);
+    if (activeAppModule?.webview) {
       activeAppModule.webview.send(
         `api-return${callId ? `:${callId}` : ''}`,
         null,
-        result
+        JSON.parse(JSON.stringify(response))
       );
     }
   } catch (err) {
     console.error(err);
-    const { activeAppModule } = store.getState();
-    if (activeAppModule && activeAppModule.webview) {
+    if (activeAppModule?.webview) {
       activeAppModule.webview.send(
         `api-return${callId ? `:${callId}` : ''}`,
         err
@@ -293,6 +290,7 @@ async function apiCall([endpoint, params, callId]) {
 }
 
 async function secureApiCall([endpoint, params, callId]) {
+  const { activeAppModule } = store.getState();
   try {
     const message = (
       <div style={{ overflow: 'scroll', maxHeight: '15em' }}>
@@ -306,22 +304,20 @@ async function secureApiCall([endpoint, params, callId]) {
     );
     const pin = await confirmPin({ note: message });
 
-    const result =
+    const response =
       pin === undefined
         ? undefined
         : await callApi(endpoint, { ...params, pin });
-    const { activeAppModule } = store.getState();
-    if (activeAppModule && activeAppModule.webview) {
+    if (activeAppModule?.webview) {
       activeAppModule.webview.send(
         `secure-api-return${callId ? `:${callId}` : ''}`,
         null,
-        result
+        JSON.parse(JSON.stringify(response))
       );
     }
   } catch (error) {
     console.error(error);
-    const { activeAppModule } = store.getState();
-    if (activeAppModule && activeAppModule.webview) {
+    if (activeAppModule?.webview) {
       activeAppModule.webview.send(
         `secure-api-return${callId ? `:${callId}` : ''}`,
         error
@@ -364,7 +360,7 @@ function confirm([options = {}, confirmationId]) {
         `confirm-answer${confirmationId ? `:${confirmationId}` : ''}`
       );
       const { activeAppModule } = store.getState();
-      if (activeAppModule && activeAppModule.webview) {
+      if (activeAppModule?.webview) {
         activeAppModule.webview.send(
           `confirm-answer${confirmationId ? `:${confirmationId}` : ''}`,
           true
@@ -375,7 +371,7 @@ function confirm([options = {}, confirmationId]) {
     skinNo,
     callbackNo: () => {
       const { activeAppModule } = store.getState();
-      if (activeAppModule && activeAppModule.webview) {
+      if (activeAppModule?.webview) {
         activeAppModule.webview.send(
           `confirm-answer${confirmationId ? `:${confirmationId}` : ''}`,
           false
@@ -425,7 +421,7 @@ export const unsetActiveWebView = () => {
 
 export const toggleWebViewDevTools = () => {
   const { activeAppModule } = store.getState();
-  if (activeAppModule && activeAppModule.webview) {
+  if (activeAppModule?.webview) {
     const { webview } = activeAppModule;
     if (webview.isDevToolsOpened()) {
       webview.closeDevTools();
@@ -461,7 +457,7 @@ export function prepareWebView() {
     (settings, oldSettings) => {
       if (settingsChanged(oldSettings, settings)) {
         const { activeAppModule } = store.getState();
-        if (activeAppModule && activeAppModule.webview) {
+        if (activeAppModule?.webview) {
           try {
             activeAppModule.webview.send('settings-updated', settings);
           } catch (err) {}
@@ -474,7 +470,7 @@ export function prepareWebView() {
     (state) => state.theme,
     (theme) => {
       const { activeAppModule } = store.getState();
-      if (activeAppModule && activeAppModule.webview) {
+      if (activeAppModule?.webview) {
         try {
           activeAppModule.webview.send('theme-updated', theme);
         } catch (err) {}
@@ -486,7 +482,7 @@ export function prepareWebView() {
     (state) => (legacyMode ? state.core.info : state.core.systemInfo),
     (coreInfo) => {
       const { activeAppModule } = store.getState();
-      if (activeAppModule && activeAppModule.webview) {
+      if (activeAppModule?.webview) {
         try {
           activeAppModule.webview.send('core-info-updated', coreInfo);
         } catch (err) {}
@@ -498,7 +494,7 @@ export function prepareWebView() {
     (state) => state.user.status,
     (userStatus) => {
       const { activeAppModule } = store.getState();
-      if (activeAppModule && activeAppModule.webview) {
+      if (activeAppModule?.webview) {
         try {
           activeAppModule.webview.send('user-status-updated', userStatus);
         } catch (err) {}
