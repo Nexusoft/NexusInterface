@@ -194,6 +194,7 @@ const menuItems = preprocess({
   },
   toggleModuleDevTools: {
     label: __("Toggle Module's Developer Tools"),
+    accelerator: 'Alt+Shift+I',
     click: () => {
       toggleWebViewDevTools();
     },
@@ -496,4 +497,4 @@ export function prepareMenu() {
     (state) => state.core.systemInfo?.legacy_unsupported,
     rebuildMenu
   );
-};
+}
