@@ -17,7 +17,7 @@ import createCache from '@emotion/cache';
 import * as core from '@emotion/core';
 import styled from '@emotion/styled';
 import * as theming from 'emotion-theming';
-import { ipcRenderer, clipboard } from 'electron';
+import { ipcRenderer, clipboard, shell } from 'electron';
 import * as ReduxForm from 'redux-form';
 
 import GlobalStyles from 'components/GlobalStyles';
@@ -330,3 +330,14 @@ global.NEXUS = {
     Button,
   },
 };
+
+// Open all external URLs on OS default browser instead of inside the wallet itself
+document.addEventListener('click', function (event) {
+  const {
+    target: { tagName, href },
+  } = event;
+  if ((tagName === 'a' || tagName === 'A') && href.startsWith('http')) {
+    event.preventDefault();
+    shell.openExternal(href);
+  }
+});
