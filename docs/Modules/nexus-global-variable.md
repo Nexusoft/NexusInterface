@@ -51,27 +51,37 @@ const {
 
 Please note that these components are built on React, so your module also need to be built on React in order to use them. These components are also styled using [Emotion](https://emotion.sh/), so although you can use them without using Emotion, it would be easiest to customize them using Emotion.
 
-List of included components:
-
 ```js
 const {
   components: {
-    [GlobalStyles](../../src/shared/components/GlobalStyles/index.js),
-    [Panel](../../src/shared/components/Panel.js),
-    [Button](../../src/shared/components/Button.js),
-    [Tooltip](../../src/shared/components/Tooltip.js),
-    [TextField](../../src/shared/components/TextField.js),
-    [Switch](../../src/shared/components/Switch.js),
-    [Select](../../src/shared/components/Select.js),
-    [Link](../../src/shared/components/Link.js),
-    [Icon](../../src/shared/components/Icon.js),
-    [Tab](../../src/shared/components/Tab.js),
-    [FieldSet](../../src/shared/components/FieldSet.js),
+    GlobalStyles,
+    Panel,
+    Button,
+    Tooltip,
+    TextField,
+    Switch,
+    Select,
+    Link,
+    Icon,
+    Tab,
+    FieldSet,
   },
 } = NEXUS;
 ```
 
-<!-- See [React components](./react-components.md) for more details. -->
+List of included components:
+
+- [GlobalStyles](../../src/shared/components/GlobalStyles/index.js)
+- [Panel](../../src/shared/components/Panel.js)
+- [Button](../../src/shared/components/Button.js)
+- [Tooltip](../../src/shared/components/Tooltip.js)
+- [TextField](../../src/shared/components/TextField.js)
+- [Switch](../../src/shared/components/Switch.js)
+- [Select](../../src/shared/components/Select.js)
+- [Link](../../src/shared/components/Link.js)
+- [Icon](../../src/shared/components/Icon.js)
+- [Tab](../../src/shared/components/Tab.js)
+- [FieldSet](../../src/shared/components/FieldSet.js)
 
 ---
 
