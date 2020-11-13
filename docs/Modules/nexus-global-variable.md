@@ -291,7 +291,7 @@ const listener = (coreInfo) => {
 NEXUS.utilities.onCoreInfoUpdated(listener);
 ```
 
-- `coreInfo`: object - Information that the Nexus core returned from `getinfo` RPC calls which are called at regular interval. What's contained inside `coreInfo` depends on the core that the Nexus Wallet is using.
+- `coreInfo`: object - Returned data from `system/get/info` API calls (or `getinfo` RPC calls if wallet is in Legacy mode) updated at regular intervals (about every 10 seconds).
 
 ### `onUserStatusUpdated`
 
