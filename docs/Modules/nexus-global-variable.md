@@ -53,17 +53,23 @@ Please note that these components are built on React, so your module also need t
 
 List of included components:
 
-- [GlobalStyles](../../../src/shared/components/GlobalStyles/index.js)
-- [Panel](../../../src/shared/components/Panel.js)
-- [Button](../../../src/shared/components/Button.js)
-- [Tooltip](../../../src/shared/components/Tooltip.js)
-- [TextField](../../../src/shared/components/TextField.js)
-- [Switch](../../../src/shared/components/Switch.js)
-- [Select](../../../src/shared/components/Select.js)
-- [Link](../../../src/shared/components/Link.js)
-- [Icon](../../../src/shared/components/Icon.js)
-- [Tab](../../../src/shared/components/Tab.js)
-- [FieldSet](../../../src/shared/components/FieldSet.js)
+```js
+const {
+  components: {
+    [GlobalStyles](../../src/shared/components/GlobalStyles/index.js),
+    [Panel](../../src/shared/components/Panel.js),
+    [Button](../../src/shared/components/Button.js),
+    [Tooltip](../../src/shared/components/Tooltip.js),
+    [TextField](../../src/shared/components/TextField.js),
+    [Switch](../../src/shared/components/Switch.js),
+    [Select](../../src/shared/components/Select.js),
+    [Link](../../src/shared/components/Link.js),
+    [Icon](../../src/shared/components/Icon.js),
+    [Tab](../../src/shared/components/Tab.js),
+    [FieldSet](../../src/shared/components/FieldSet.js),
+  },
+} = NEXUS;
+```
 
 <!-- See [React components](./react-components.md) for more details. -->
 
