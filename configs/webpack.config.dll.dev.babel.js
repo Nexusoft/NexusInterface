@@ -15,6 +15,8 @@ CheckNodeEnv('development');
 const dllPath = path.resolve(process.cwd(), 'dll');
 
 export default merge(baseConfig, {
+  mode: 'development',
+
   context: process.cwd(),
 
   devtool: 'eval',
@@ -32,6 +34,10 @@ export default merge(baseConfig, {
     path: dllPath,
     filename: '[name].dev.dll.js',
     libraryTarget: 'var',
+  },
+
+  optimization: {
+    moduleIds: 'named',
   },
 
   plugins: [

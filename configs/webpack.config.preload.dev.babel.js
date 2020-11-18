@@ -10,9 +10,15 @@ import CheckNodeEnv from '../internals/scripts/CheckNodeEnv';
 CheckNodeEnv('development');
 
 export default merge(baseConfig, {
-  devtool: 'cheap-module-eval-source-map',
+  mode: 'development',
+
+  devtool: 'eval-source-map',
 
   output: {
     filename: 'module_preload.dev.js',
+  },
+
+  optimization: {
+    moduleIds: 'named',
   },
 });

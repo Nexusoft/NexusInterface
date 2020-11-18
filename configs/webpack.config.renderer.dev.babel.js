@@ -21,7 +21,9 @@ const dllPath = path.resolve(process.cwd(), 'dll');
 const manifest = path.resolve(dllPath, 'renderer.json');
 
 export default merge(baseConfig, {
-  devtool: 'cheap-module-eval-source-map',
+  mode: 'development',
+
+  devtool: 'eval-source-map',
 
   entry: {
     'renderer.dev': [
@@ -59,6 +61,10 @@ export default merge(baseConfig, {
     alias: {
       'react-dom': '@hot-loader/react-dom',
     },
+  },
+
+  optimization: {
+    moduleIds: 'named',
   },
 
   plugins: [

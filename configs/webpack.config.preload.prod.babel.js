@@ -11,8 +11,16 @@ import CheckNodeEnv from '../internals/scripts/CheckNodeEnv';
 CheckNodeEnv('production');
 
 export default merge(baseConfig, {
+  mode: 'production',
+
+  devtool: 'source-map',
+
   output: {
     filename: 'module_preload.prod.js',
+  },
+
+  optimization: {
+    moduleIds: 'deterministic',
   },
 
   plugins: [

@@ -14,6 +14,10 @@ import { babelLoaderRenderer } from './babelLoaderConfig';
 CheckNodeEnv('production');
 
 export default merge(baseConfig, {
+  mode: 'production',
+
+  devtool: 'source-map',
+
   entry: {
     'renderer.prod': './src/index.js',
     'keyboard.prod': './src/keyboard/index.js',
@@ -42,6 +46,7 @@ export default merge(baseConfig, {
   },
 
   optimization: {
+    moduleIds: 'deterministic',
     minimizer: process.env.E2E_BUILD
       ? []
       : [
