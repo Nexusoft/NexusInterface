@@ -45,7 +45,7 @@ const development = process.env.NODE_ENV === 'development';
 export const rendererBabelConfig = (hot) => {
   const config = {
     plugins: [
-      ['emotion', { sourceMap: development }],
+      ['@emotion', { sourceMap: development }],
       ...stage0Preset,
       ...(development ? devPlugins : [...prodPlugins, ...reactOptimizePreset]),
     ],
