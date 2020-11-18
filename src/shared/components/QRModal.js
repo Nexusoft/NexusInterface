@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import QRCode from 'qrcode';
-import { useTheme } from 'emotion-theming';
+import { useTheme } from '@emotion/react';
 
 import Modal from 'components/Modal';
 import NexusAddress from 'components/NexusAddress';

@@ -14,7 +14,7 @@
 // External
 import React, { Component } from 'react';
 import styled from '@emotion/styled';
-import { jsx, css } from '@emotion/core';
+import { jsx, css } from '@emotion/react';
 
 // Internal
 import Tooltip from 'components/Tooltip';

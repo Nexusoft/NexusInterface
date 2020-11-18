@@ -1,7 +1,7 @@
 /**
  * Migrated from react-table
  */
-import { css } from '@emotion/core';
+import { css } from '@emotion/react';
 import { consts } from 'styles';
 
 const paddingHorizontal = 0.5 * consts.lineHeight + 'em';

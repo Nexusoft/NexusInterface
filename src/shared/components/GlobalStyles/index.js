@@ -11,7 +11,7 @@
 
 // External
 import React from 'react';
-import { Global, css } from '@emotion/core';
+import { Global, css } from '@emotion/react';
 
 // Internal
 import * as color from 'utils/color';

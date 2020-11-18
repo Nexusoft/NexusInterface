@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import styled from '@emotion/styled';
 import { ChromePicker } from 'react-color';
-import { withTheme } from 'emotion-theming';
+import { withTheme } from '@emotion/react';
 
 // Internal
 import Button from 'components/Button';
