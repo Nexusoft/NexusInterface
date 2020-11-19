@@ -1,5 +1,3 @@
-// @jsx jsx
-
 /**
  * Important note - This file is imported into module_preload.js, either directly or
  * indirectly, and will be a part of the preload script for modules, therefore:
@@ -15,7 +13,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import styled from '@emotion/styled';
-import { jsx } from '@emotion/react';
 
 // Internal
 import { arrowStyles } from 'components/Arrow';
@@ -247,7 +244,7 @@ class TooltipTrigger extends Component {
    * @memberof TooltipTrigger
    */
   render() {
-    const { children, tooltip, ...rest } = this.props;
+    const { children, tooltip, style, ...rest } = this.props;
 
     return (
       <>
@@ -256,7 +253,10 @@ class TooltipTrigger extends Component {
           onMouseLeave: this.hideTooltip,
         })}
         {!!tooltip && this.state.active && (
-          <TooltipPortal css={this.state.tooltipStyles} {...rest}>
+          <TooltipPortal
+            style={{ ...this.state.tooltipStyles, ...style }}
+            {...rest}
+          >
             {tooltip}
           </TooltipPortal>
         )}
