@@ -49,7 +49,10 @@ export const rendererBabelConfig = (hot) => {
       ...stage0Preset,
       ...(development ? devPlugins : [...prodPlugins, ...reactOptimizePreset]),
     ],
-    presets: [presetEnv, ['@babel/preset-react', { development }]],
+    presets: [
+      presetEnv,
+      ['@babel/preset-react', { development, runtime: 'automatic' }],
+    ],
   };
 
   if (hot) {
