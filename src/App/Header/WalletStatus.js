@@ -25,7 +25,7 @@ const StakingDanger = styled.div({
   autoConnect: state.core.autoConnect,
   staking: state.user.stakeInfo.staking,
   blockDate: state.common.blockDate,
-  blockCount: state.core.systemInfo.timestamp,
+  blockCount: state.core.systemInfo?.timestamp,
   coreConnected: isCoreConnected(state),
   loggedIn: isLoggedIn(state),
 }))

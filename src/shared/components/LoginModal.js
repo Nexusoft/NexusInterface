@@ -34,7 +34,7 @@ const ExtraSection = styled.div({
  * @extends {Component}
  */
 @connect(({ core: { systemInfo } }) => ({
-  syncing: systemInfo.synchronizing,
+  syncing: systemInfo?.synchronizing,
 }))
 @reduxForm({
   form: 'login_tritium',

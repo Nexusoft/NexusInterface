@@ -212,7 +212,7 @@ class UserConfirmBackgroundTask extends React.Component {
   componentDidMount() {
     const { username } = this.props;
     this.unobserve = observeStore(
-      ({ core: { systemInfo } }) => systemInfo && systemInfo.blocks,
+      ({ core: { systemInfo } }) => systemInfo?.blocks,
       async () => {
         const txs = await callApi('users/list/transactions', {
           username,

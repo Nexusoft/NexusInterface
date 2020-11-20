@@ -355,10 +355,6 @@ function confirm([options = {}, confirmationId]) {
     labelYes,
     skinYes,
     callbackYes: () => {
-      console.log(
-        'yes',
-        `confirm-answer${confirmationId ? `:${confirmationId}` : ''}`
-      );
       const { activeAppModule } = store.getState();
       if (activeAppModule?.webview) {
         activeAppModule.webview.send(

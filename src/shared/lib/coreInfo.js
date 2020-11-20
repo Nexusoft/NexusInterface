@@ -235,8 +235,8 @@ export function prepareCoreInfo() {
           isCoreConnected(state) &&
           state.bootstrap.step === 'idle' &&
           !state.settings.manualDaemon &&
-          systemInfo.synccomplete < 50 &&
-          systemInfo.synccomplete >= 0
+          systemInfo?.synccomplete < 50 &&
+          systemInfo?.synccomplete >= 0
         ) {
           bootstrap({ suggesting: true });
         }
@@ -244,7 +244,7 @@ export function prepareCoreInfo() {
     );
 
     observeStore(
-      ({ core: { systemInfo } }) => systemInfo && systemInfo.blocks,
+      ({ core: { systemInfo } }) => systemInfo?.blocks,
       (blocks) => {
         if (blocks) {
           store.dispatch({
