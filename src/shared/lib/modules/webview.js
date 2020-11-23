@@ -224,7 +224,7 @@ async function proxyRequest([url, options, requestId]) {
       activeAppModule.webview.send(
         `proxy-response${requestId ? `:${requestId}` : ''}`,
         null,
-        JSON.parse(JSON.stringify(response))
+        response && JSON.parse(JSON.stringify(response))
       );
     }
   } catch (err) {
@@ -250,7 +250,7 @@ async function rpcCall([command, params, callId]) {
       activeAppModule.webview.send(
         `rpc-return${callId ? `:${callId}` : ''}`,
         null,
-        JSON.parse(JSON.stringify(response))
+        response && JSON.parse(JSON.stringify(response))
       );
     }
   } catch (err) {
@@ -276,7 +276,7 @@ async function apiCall([endpoint, params, callId]) {
       activeAppModule.webview.send(
         `api-return${callId ? `:${callId}` : ''}`,
         null,
-        JSON.parse(JSON.stringify(response))
+        response && JSON.parse(JSON.stringify(response))
       );
     }
   } catch (err) {
@@ -320,7 +320,7 @@ async function secureApiCall([endpoint, params, callId]) {
       activeAppModule.webview.send(
         `secure-api-return${callId ? `:${callId}` : ''}`,
         null,
-        JSON.parse(JSON.stringify(response))
+        response && JSON.parse(JSON.stringify(response))
       );
     }
   } catch (error) {
