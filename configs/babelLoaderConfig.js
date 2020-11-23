@@ -56,7 +56,7 @@ export const rendererBabelConfig = (hot) => {
   };
 
   if (hot) {
-    config.plugins.push('react-hot-loader/babel');
+    // config.plugins.push('react-hot-loader/babel');
   }
   return config;
 };

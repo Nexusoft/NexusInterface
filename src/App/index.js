@@ -1,5 +1,5 @@
 // External
-import { hot } from 'react-hot-loader/root';
+// import { hot } from 'react-hot-loader/root';
 import React from 'react';
 import { Switch, Redirect } from 'react-router';
 import { Router, Route } from 'react-router-dom';
@@ -95,4 +95,5 @@ const App = () => (
   </Router>
 );
 
-export default hot(App);
+export default App;
+// hot(App);
