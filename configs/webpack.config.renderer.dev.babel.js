@@ -8,6 +8,7 @@
 import path from 'path';
 import webpack from 'webpack';
 import { merge } from 'webpack-merge';
+import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 
 import baseConfig from './webpack.config.base.renderer';
 import CheckNodeEnv from '../internals/scripts/CheckNodeEnv';
@@ -83,6 +84,8 @@ export default merge(baseConfig, {
     // }),
 
     new webpack.NoEmitOnErrorsPlugin(),
+
+    new ReactRefreshWebpackPlugin(),
   ],
 
   node: {
