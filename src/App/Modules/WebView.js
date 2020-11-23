@@ -60,7 +60,15 @@ class WebView extends React.Component {
    * @memberof WebView
    */
   componentDidMount() {
-    setActiveWebView(this.webviewRef.current, this.props.module.info.name);
+    const {
+      webviewRef,
+      props: {
+        module: {
+          info: { name, displayName },
+        },
+      },
+    } = this;
+    setActiveWebView(webviewRef.current, name, displayName);
   }
 
   /**

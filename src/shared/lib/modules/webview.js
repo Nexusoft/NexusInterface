@@ -295,9 +295,16 @@ async function secureApiCall([endpoint, params, callId]) {
     const message = (
       <div style={{ overflow: 'scroll', maxHeight: '15em' }}>
         <div>
-          You are executing <strong>{endpoint}</strong> with the params:
+          <strong>{activeAppModule.displayName}</strong> is requesting to call{' '}
+          <strong>{endpoint}</strong> endpoint with the following parameters:
         </div>
-        <code style={{ wordBreak: 'break-word' }}>
+        <code
+          style={{
+            wordBreak: 'break-word',
+            display: 'block',
+            marginTop: '0.5em',
+          }}
+        >
           {JSON.stringify(params, null, 2)}
         </code>
       </div>
@@ -402,10 +409,10 @@ function updateStorage([data]) {
  * ===========================================================================
  */
 
-export const setActiveWebView = (webview, moduleName) => {
+export const setActiveWebView = (webview, moduleName, displayName) => {
   store.dispatch({
     type: TYPE.SET_ACTIVE_APP_MODULE,
-    payload: { webview, moduleName },
+    payload: { webview, moduleName, displayName },
   });
 };
 
