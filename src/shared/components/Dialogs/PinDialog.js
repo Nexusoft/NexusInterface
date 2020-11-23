@@ -14,8 +14,10 @@ const PinInput = styled(TextFieldWithKeyboard.RF)({
   fontSize: 18,
 });
 
-//Might not be needed
-const Note = styled.div({});
+const Note = styled.div({
+  marginTop: '-1.5em',
+  marginBottom: '1.5em',
+});
 
 const formOptions = {
   form: 'pin',
@@ -58,7 +60,7 @@ const PinDialog = ({
               skin="filled-inverted"
               placeholder={__('Your PIN')}
             />
-            <Note>{note}</Note>
+            {!!note && <Note>{note}</Note>}
             <div className="flex space-between">
               <Button onClick={closeModal}>{__('Cancel')}</Button>
               <Button type="submit" skin="primary">
