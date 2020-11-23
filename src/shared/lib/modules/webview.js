@@ -164,6 +164,7 @@ function handleIpcMessage(event) {
       break;
     case 'secure-api-call':
       secureApiCall(event.args);
+      break;
     case 'show-notification':
       showNotif(event.args);
       break;
