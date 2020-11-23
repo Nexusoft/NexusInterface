@@ -45,11 +45,10 @@ const development = process.env.NODE_ENV === 'development';
 export const rendererBabelConfig = (hot) => {
   const config = {
     plugins: [
-      !!hot && 'react-refresh/babel',
       ['@emotion', { sourceMap: development }],
       ...stage0Preset,
       ...(development ? devPlugins : [...prodPlugins, ...reactOptimizePreset]),
-    ].filter(Boolean),
+    ],
     presets: [
       presetEnv,
       ['@babel/preset-react', { development, runtime: 'automatic' }],
@@ -57,7 +56,7 @@ export const rendererBabelConfig = (hot) => {
   };
 
   if (hot) {
-    // config.plugins.push('react-hot-loader/babel');
+    config.plugins.unshift('react-refresh/babel');
   }
   return config;
 };

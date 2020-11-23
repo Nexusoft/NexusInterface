@@ -1,10 +1,3 @@
-/**
- * Webpack config for development electron renderer process that uses
- * Hot-Module-Replacement
- *
- * https://webpack.js.org/concepts/hot-module-replacement/
- */
-
 import path from 'path';
 import webpack from 'webpack';
 import { merge } from 'webpack-merge';
@@ -27,13 +20,7 @@ export default merge(baseConfig, {
   devtool: 'eval-source-map',
 
   entry: {
-    'renderer.dev':
-      // [
-      //   'react-hot-loader/patch',
-      //   `webpack-dev-server/client?${publicPath}`,
-      //   'webpack/hot/only-dev-server',
-      './src/index',
-    // ],
+    'renderer.dev': './src/index',
     'keyboard.dev': './src/keyboard/index.js',
   },
 
@@ -58,13 +45,6 @@ export default merge(baseConfig, {
     ],
   },
 
-  // resolve: {
-  //   // TODO: uncomment this when @hot-loader/react-dom updates to the same version as react-dom
-  //   alias: {
-  //     'react-dom': '@hot-loader/react-dom',
-  //   },
-  // },
-
   optimization: {
     moduleIds: 'named',
   },
@@ -75,13 +55,6 @@ export default merge(baseConfig, {
       manifest: require(manifest),
       sourceType: 'var',
     }),
-
-    /**
-     * https://webpack.js.org/concepts/hot-module-replacement/
-     */
-    // new webpack.HotModuleReplacementPlugin({
-    //   multiStep: true,
-    // }),
 
     new webpack.NoEmitOnErrorsPlugin(),
 

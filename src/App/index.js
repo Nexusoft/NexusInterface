@@ -1,5 +1,4 @@
 // External
-// import { hot } from 'react-hot-loader/root';
 import React from 'react';
 import { Switch, Redirect } from 'react-router';
 import { Router, Route } from 'react-router-dom';
@@ -49,51 +48,50 @@ const Main = styled.main({
   alignItems: 'stretch',
 });
 
-const App = () => (
-  <Router history={history}>
-    <ThemeController>
-      <GlobalStyles />
-      <div onContextMenu={showDefaultMenu}>
-        <Overlays>
-          <AppBackground />
-          <AppLayout>
-            <Header />
-            <Main>
-              <Switch>
-                <Route
-                  exact
-                  path="/"
-                  component={legacyMode ? Overview : OverviewTritium}
-                />
-                <Route
-                  exact
-                  path="/Send"
-                  component={legacyMode ? Send : SendTritium}
-                />
-                <Route
-                  exact
-                  path="/Transactions"
-                  component={legacyMode ? Transactions : TransactionsTritium}
-                />
-                <Route exact path="/AddressBook" component={AddressBook} />
-                <Route path="/Settings" component={Settings} />
-                <Route path="/Terminal" component={Terminal} />
-                {!legacyMode && <Route path="/User" component={UserPage} />}
+export default function App() {
+  return (
+    <Router history={history}>
+      <ThemeController>
+        <GlobalStyles />
+        <div onContextMenu={showDefaultMenu}>
+          <Overlays>
+            <AppBackground />
+            <AppLayout>
+              <Header />
+              <Main>
+                <Switch>
+                  <Route
+                    exact
+                    path="/"
+                    component={legacyMode ? Overview : OverviewTritium}
+                  />
+                  <Route
+                    exact
+                    path="/Send"
+                    component={legacyMode ? Send : SendTritium}
+                  />
+                  <Route
+                    exact
+                    path="/Transactions"
+                    component={legacyMode ? Transactions : TransactionsTritium}
+                  />
+                  <Route exact path="/AddressBook" component={AddressBook} />
+                  <Route path="/Settings" component={Settings} />
+                  <Route path="/Terminal" component={Terminal} />
+                  {!legacyMode && <Route path="/User" component={UserPage} />}
 
-                {/* <Route path="/Exchange" component={Exchange} /> */}
-                {/* <Route exact path="/List" component={TrustList} /> */}
-                <Route path="/Modules/:name" component={Modules} />
+                  {/* <Route path="/Exchange" component={Exchange} /> */}
+                  {/* <Route exact path="/List" component={TrustList} /> */}
+                  <Route path="/Modules/:name" component={Modules} />
 
-                <Redirect to="/" />
-              </Switch>
-            </Main>
-            <Navigation />
-          </AppLayout>
-        </Overlays>
-      </div>
-    </ThemeController>
-  </Router>
-);
-
-export default App;
-// hot(App);
+                  <Redirect to="/" />
+                </Switch>
+              </Main>
+              <Navigation />
+            </AppLayout>
+          </Overlays>
+        </div>
+      </ThemeController>
+    </Router>
+  );
+}
