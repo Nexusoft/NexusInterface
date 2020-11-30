@@ -97,7 +97,7 @@ const ConditionalFormField = ({ showLabel, label, children, ...rest }) =>
 @connect((state, props) => ({
   fieldValue: getDeep(getFormValues(props.form)(state), props.fieldName),
 }))
-export default class AssetFieldCreator extends React.PureComponent {
+class AssetFieldCreator extends React.PureComponent {
   render() {
     const { fieldName, first, fieldValue, remove, onlyField } = this.props;
     const lengthDisabled = !(
@@ -167,3 +167,5 @@ export default class AssetFieldCreator extends React.PureComponent {
     );
   }
 }
+
+export default AssetFieldCreator;

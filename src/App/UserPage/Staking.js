@@ -54,7 +54,7 @@ const BalanceTooltip = (staking) =>
   stakeInfo: state.user.stakeInfo,
   stakingEnabled: state.settings.enableStaking,
 }))
-export default class Staking extends React.Component {
+class Staking extends React.Component {
   constructor(props) {
     super(props);
     switchUserTab('Staking');
@@ -224,3 +224,5 @@ export default class Staking extends React.Component {
     );
   }
 }
+
+export default Staking;

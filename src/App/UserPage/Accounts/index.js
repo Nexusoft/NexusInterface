@@ -17,7 +17,7 @@ __ = __context('User.Accounts');
 @connect((state) => ({
   accounts: state.user.accounts,
 }))
-export default class Accounts extends React.Component {
+class Accounts extends React.Component {
   constructor(props) {
     super(props);
     switchUserTab('Accounts');
@@ -56,3 +56,5 @@ export default class Accounts extends React.Component {
     );
   }
 }
+
+export default Accounts;

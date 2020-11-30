@@ -45,7 +45,7 @@ const Value = styled.div({
 @connect((state) => ({
   balances: state.user.balances,
 }))
-export default class Balances extends React.Component {
+class Balances extends React.Component {
   componentDidMount() {
     // Periodically get balances
     refreshBalances();
@@ -141,3 +141,5 @@ export default class Balances extends React.Component {
     );
   }
 }
+
+export default Balances;

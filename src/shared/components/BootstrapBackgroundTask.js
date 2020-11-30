@@ -76,7 +76,7 @@ function getStatusMsg({ step, details }) {
 @connect((state) => ({
   statusMsg: getStatusMsg(state.bootstrap),
 }))
-export default class BootstrapBackgroundTask extends Component {
+class BootstrapBackgroundTask extends Component {
   componentDidMount() {
     bootstrapEvents.on('abort', this.closeTask);
     bootstrapEvents.on('error', this.closeTask);
@@ -121,3 +121,5 @@ export default class BootstrapBackgroundTask extends Component {
     );
   }
 }
+
+export default BootstrapBackgroundTask;

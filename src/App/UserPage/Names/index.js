@@ -116,7 +116,7 @@ const Name = ({ nameRecord, username }) => (
   nameRecords: state.user.nameRecords,
   username: selectUsername(state),
 }))
-export default class Names extends React.Component {
+class Names extends React.Component {
   constructor(props) {
     super(props);
     switchUserTab('Names');
@@ -158,3 +158,5 @@ export default class Names extends React.Component {
     );
   }
 }
+
+export default Names;

@@ -24,7 +24,7 @@ const EmptyMessage = styled.div(({ theme }) => ({
 @connect((state) => ({
   assets: state.user.assets,
 }))
-export default class Assets extends React.Component {
+class Assets extends React.Component {
   constructor(props) {
     super(props);
     switchUserTab('Assets');
@@ -60,3 +60,5 @@ export default class Assets extends React.Component {
     );
   }
 }
+
+export default Assets;

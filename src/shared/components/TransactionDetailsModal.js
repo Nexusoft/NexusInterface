@@ -21,7 +21,7 @@ const timeFormatOptions = {
 @connect(({ user: { transactions: { map } } }, props) => ({
   transaction: map && map[props.txid],
 }))
-export default class TransactionDetailsModal extends React.Component {
+class TransactionDetailsModal extends React.Component {
   constructor(props) {
     super(props);
     fetchTransaction(this.props.txid);
@@ -63,3 +63,5 @@ export default class TransactionDetailsModal extends React.Component {
     );
   }
 }
+
+export default TransactionDetailsModal;
