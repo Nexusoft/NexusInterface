@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import { reduxForm, Field } from 'redux-form';
 
 import Modal from 'components/Modal';
@@ -57,7 +57,7 @@ const namespaceRegex = /^[a-z\d\.]+$/;
   },
   onSubmitFail: errorHandler(__('Error creating namespace')),
 })
-class CreateNamespaceForm extends React.Component {
+class CreateNamespaceForm extends Component {
   render() {
     const { handleSubmit, submitting } = this.props;
     return (

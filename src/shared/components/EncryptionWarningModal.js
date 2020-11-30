@@ -1,5 +1,5 @@
 // External
-import React from 'react';
+import { Component } from 'react';
 import { history } from 'lib/wallet';
 import styled from '@emotion/styled';
 
@@ -29,7 +29,7 @@ const WarningMessage = styled.div({
   fontSize: 28,
 });
 
-class EncryptionWarningModal extends React.Component {
+class EncryptionWarningModal extends Component {
   ignore = () => {
     updateSettings({ encryptionWarningDisabled: true });
     this.closeModal();

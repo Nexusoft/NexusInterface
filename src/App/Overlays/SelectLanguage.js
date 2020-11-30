@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import styled from '@emotion/styled';
 
 import Button from 'components/Button';
@@ -40,7 +40,7 @@ const Language = styled.div(
     }
 );
 
-class SelectLanguage extends React.Component {
+class SelectLanguage extends Component {
   state = {
     selection: 'en',
   };

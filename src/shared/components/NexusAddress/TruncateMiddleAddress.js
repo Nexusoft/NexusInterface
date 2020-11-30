@@ -1,5 +1,5 @@
 // External
-import React from 'react';
+import { createRef, Component } from 'react';
 import { clipboard } from 'electron';
 import styled from '@emotion/styled';
 
@@ -96,9 +96,9 @@ const Label = styled.div(({ theme }) => ({
  * @class TruncateMiddleAddress
  * @extends {React.Component}
  */
-export default class TruncateMiddleAddress extends React.Component {
-  addressRef = React.createRef();
-  contentRef = React.createRef();
+export default class TruncateMiddleAddress extends Component {
+  addressRef = createRef();
+  contentRef = createRef();
 
   state = { overflown: false };
 

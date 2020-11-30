@@ -1,6 +1,6 @@
 // External Dependencies
 import { connect } from 'react-redux';
-import React, { Component } from 'react';
+import { createRef, Component } from 'react';
 import styled from '@emotion/styled';
 import GA from 'lib/googleAnalytics';
 import memoize from 'utils/memoize';
@@ -108,8 +108,8 @@ class TerminalConsole extends Component {
    */
   constructor(props) {
     super(props);
-    this.inputRef = React.createRef();
-    this.outputRef = React.createRef();
+    this.inputRef = createRef();
+    this.outputRef = createRef();
     switchConsoleTab('Console');
 
     if (!this.props.commandList.length) {

@@ -1,5 +1,5 @@
 // External Dependencies
-import React, { Component } from 'react';
+import { Component } from 'react';
 import styled from '@emotion/styled';
 import { connect } from 'react-redux';
 import { history } from 'lib/wallet';

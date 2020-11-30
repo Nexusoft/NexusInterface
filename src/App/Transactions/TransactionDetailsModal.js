@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 
 import Modal from 'components/Modal';
@@ -26,7 +26,7 @@ const timeFormatOptions = {
     transaction: map[props.txid],
   })
 )
-class TransactionDetailsModal extends React.Component {
+class TransactionDetailsModal extends Component {
   constructor(props) {
     super(props);
     fetchTransaction(this.props.txid);

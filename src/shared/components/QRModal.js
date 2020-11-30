@@ -1,4 +1,4 @@
-import React from 'react';
+import { useRef, useEffect } from 'react';
 import styled from '@emotion/styled';
 import QRCode from 'qrcode';
 import { useTheme } from '@emotion/react';
@@ -16,8 +16,8 @@ const QRWrapper = styled.div({
 
 export default function QRModal({ address }) {
   const theme = useTheme();
-  const canvasRef = React.useRef();
-  React.useEffect(() => {
+  const canvasRef = useRef();
+  useEffect(() => {
     QRCode.toCanvas(canvasRef.current, address, {
       width: size,
       color: { dark: theme.background, light: theme.foreground },

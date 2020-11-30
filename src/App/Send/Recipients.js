@@ -1,5 +1,5 @@
 // External
-import React from 'react';
+import { Component } from 'react';
 import { Field } from 'redux-form';
 import styled from '@emotion/styled';
 
@@ -70,7 +70,7 @@ const PlusIcon = styled(Icon)({
  * @class Recipients
  * @extends {React.Component}
  */
-class Recipients extends React.Component {
+class Recipients extends Component {
   /**
    * Component's Renderable JSX
    *

@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
@@ -116,7 +116,7 @@ const Name = ({ nameRecord, username }) => (
   nameRecords: state.user.nameRecords,
   username: selectUsername(state),
 }))
-class Names extends React.Component {
+class Names extends Component {
   constructor(props) {
     super(props);
     switchUserTab('Names');

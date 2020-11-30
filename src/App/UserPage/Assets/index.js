@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
@@ -24,7 +24,7 @@ const EmptyMessage = styled.div(({ theme }) => ({
 @connect((state) => ({
   assets: state.user.assets,
 }))
-class Assets extends React.Component {
+class Assets extends Component {
   constructor(props) {
     super(props);
     switchUserTab('Assets');

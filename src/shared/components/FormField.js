@@ -1,5 +1,5 @@
 // External
-import React, { Component } from 'react';
+import { cloneElement, Children, Component } from 'react';
 import styled from '@emotion/styled';
 
 // Internal
@@ -81,7 +81,7 @@ class FormField extends Component {
       if (typeof children === 'function') {
         return children(this.inputId);
       } else {
-        return React.cloneElement(React.Children.only(children), {
+        return cloneElement(Children.only(children), {
           id: this.inputId,
         });
       }

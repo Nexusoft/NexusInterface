@@ -1,5 +1,5 @@
 // External
-import React, { Component } from 'react';
+import { createRef, Component } from 'react';
 import styled from '@emotion/styled';
 
 // Internal
@@ -33,7 +33,7 @@ export default class Notification extends Component {
     autoClose: 5000, // ms
   };
 
-  notifRef = React.createRef();
+  notifRef = createRef();
 
   componentDidMount() {
     if (this.props.autoClose) {

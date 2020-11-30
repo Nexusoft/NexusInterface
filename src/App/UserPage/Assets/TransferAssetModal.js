@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
 
@@ -57,7 +57,7 @@ const Value = styled.span(({ theme }) => ({
   },
   onSubmitFail: errorHandler(__('Error transferring asset')),
 })
-class TransferAssetForm extends React.Component {
+class TransferAssetForm extends Component {
   render() {
     const { handleSubmit, asset, submitting } = this.props;
     return (

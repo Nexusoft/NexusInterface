@@ -1,5 +1,5 @@
 // External
-import React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 
 // Internal Global
@@ -18,7 +18,7 @@ import WrappedAppModule from './WrappedAppModule';
 @connect((state) => ({
   modules: state.modules,
 }))
-class Modules extends React.Component {
+class Modules extends Component {
   /**
    * Component Mount Callback
    *

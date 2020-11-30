@@ -10,7 +10,7 @@
  */
 
 // External
-import React from 'react';
+import { forwardRef } from 'react';
 import styled from '@emotion/styled';
 import { Link as RouterLink } from 'react-router-dom';
 
@@ -35,7 +35,7 @@ const NativeLink = styled.a(linkStyles);
 
 const ComponentLink = styled(RouterLink)(linkStyles);
 
-const Link = React.forwardRef(({ as, ...rest }, ref) => {
+const Link = forwardRef(({ as, ...rest }, ref) => {
   if (typeof as === 'string') {
     return <NativeLink as={as} {...rest} ref={ref} />;
   } else {

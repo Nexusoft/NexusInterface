@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import styled from '@emotion/styled';
 
 import InfoField from 'components/InfoField';
@@ -54,7 +54,7 @@ const AssetData = styled.div({
   padding: '.6em 1em .1em',
 });
 
-class Asset extends React.Component {
+class Asset extends Component {
   render() {
     const { asset } = this.props;
     const data = getAssetData(asset);

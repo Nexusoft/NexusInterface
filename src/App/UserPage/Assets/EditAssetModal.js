@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import { reduxForm, Field } from 'redux-form';
 
 import Modal from 'components/Modal';
@@ -41,7 +41,7 @@ __ = __context('EditAsset');
   },
   onSubmitFail: errorHandler(__('Error updating asset')),
 })
-class EditAssetForm extends React.Component {
+class EditAssetForm extends Component {
   constructor(props) {
     super(props);
   }

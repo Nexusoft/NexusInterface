@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import { reduxForm, Field } from 'redux-form';
 import { connect } from 'react-redux';
 
@@ -102,7 +102,7 @@ const mapStateToProps = (state) => {
   },
   onSubmitFail: errorHandler(__('Error creating account')),
 })
-class NewAccountModal extends React.Component {
+class NewAccountModal extends Component {
   render() {
     const { handleSubmit, submitting, suggestions } = this.props;
     return (

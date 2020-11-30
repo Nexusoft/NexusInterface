@@ -1,5 +1,5 @@
 // External Dependencies
-import React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 
 // Internal Dependencies
@@ -31,7 +31,7 @@ __ = __context('Header');
     synccomplete,
   };
 })
-class StakingStatus extends React.Component {
+class StakingStatus extends Component {
   /**
    * Component's Renderable JSX
    *

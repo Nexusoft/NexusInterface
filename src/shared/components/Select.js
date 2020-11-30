@@ -10,7 +10,7 @@
  */
 
 // External Dependencies
-import React, { Component } from 'react';
+import { createRef, forwardRef, Component } from 'react';
 import styled from '@emotion/styled';
 
 // Internal Dependencies
@@ -243,7 +243,7 @@ const Option = styled.div(
 );
 
 class Options extends Component {
-  anchorRef = React.createRef();
+  anchorRef = createRef();
 
   state = {
     ready: false,
@@ -343,7 +343,7 @@ class Options extends Component {
 }
 
 class Select extends Component {
-  controlRef = React.createRef();
+  controlRef = createRef();
 
   state = { open: false };
 
@@ -431,7 +431,7 @@ class Select extends Component {
   }
 }
 
-const SelectWrapper = React.forwardRef((props, ref) => (
+const SelectWrapper = forwardRef((props, ref) => (
   <Select {...props} controlRef={ref} />
 ));
 

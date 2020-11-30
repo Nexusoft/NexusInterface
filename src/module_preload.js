@@ -8,7 +8,7 @@
  * - Make sure a similar note also presents in other files which are imported here.
  */
 
-import React from 'react';
+import * as React from 'react';
 import ReactDOM from 'react-dom';
 import * as ReactRouterDOM from 'react-router-dom';
 import * as Redux from 'redux';

@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
@@ -84,7 +84,7 @@ const filterSuggestions = memoize((suggestions, inputValue) => {
   },
   onSubmitFail: errorHandler(__('Error tokenizing asset')),
 })
-class TokenizeAssetForm extends React.Component {
+class TokenizeAssetForm extends Component {
   componentDidMount() {
     loadOwnedTokens();
   }

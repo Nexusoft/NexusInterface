@@ -1,5 +1,5 @@
 // External
-import React, { Component } from 'react';
+import { Fragment, Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import styled from '@emotion/styled';
@@ -479,7 +479,7 @@ class Overview extends Component {
     const { blockweight, trustweight, stakeweight } = coreInfo || {};
 
     return (
-      <React.Fragment>
+      <Fragment>
         <Stat>
           <StatIcon icon={this.blockWeightIcon()} />
           <div>
@@ -515,7 +515,7 @@ class Overview extends Component {
             </StatValue>
           </div>
         </Stat>
-      </React.Fragment>
+      </Fragment>
     );
   };
 
@@ -526,7 +526,7 @@ class Overview extends Component {
    */
   returnDifficultyStats = (difficulty) => {
     return (
-      <React.Fragment>
+      <Fragment>
         <Stat>
           <StatIcon icon={this.trustIcon()} />
           <div>
@@ -567,7 +567,7 @@ class Overview extends Component {
             </StatValue>
           </div>
         </Stat>
-      </React.Fragment>
+      </Fragment>
     );
   };
 

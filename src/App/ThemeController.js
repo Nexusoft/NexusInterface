@@ -1,5 +1,5 @@
 // External
-import React, { PureComponent } from 'react';
+import { PureComponent } from 'react';
 import { ThemeProvider } from '@emotion/react';
 import { connect } from 'react-redux';
 

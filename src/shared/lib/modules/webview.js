@@ -2,8 +2,6 @@ import memoize from 'utils/memoize';
 import axios from 'axios';
 import { reset, initialize } from 'redux-form';
 
-import React from 'react';
-
 import * as TYPE from 'consts/actionTypes';
 import store, { observeStore } from 'store';
 import { history } from 'lib/wallet';

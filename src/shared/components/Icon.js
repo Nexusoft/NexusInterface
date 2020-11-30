@@ -9,7 +9,7 @@
  * - Make sure this note also presents in other files which are imported here.
  */
 
-import React from 'react';
+import { forwardRef } from 'react';
 import styled from '@emotion/styled';
 
 const Svg = styled.svg({
@@ -20,7 +20,7 @@ const Svg = styled.svg({
   height: '1em',
 });
 
-const Icon = React.forwardRef(({ icon = {}, ...rest }, ref) => (
+const Icon = forwardRef(({ icon = {}, ...rest }, ref) => (
   <Svg viewBox={icon.viewBox} {...rest} ref={ref}>
     <use href={`${icon.url ? icon.url : ''}#${icon.id}`} />
   </Svg>

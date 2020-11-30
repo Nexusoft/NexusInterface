@@ -1,5 +1,3 @@
-import React from 'react';
-
 export const getTokenName = (
   { token_name, token },
   { markup } = { markup: true }

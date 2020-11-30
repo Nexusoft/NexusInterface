@@ -1,5 +1,3 @@
-import React from 'react';
-
 import Modal from 'components/Modal';
 import InfoField from 'components/InfoField';
 import { formatDateTime } from 'lib/intl';

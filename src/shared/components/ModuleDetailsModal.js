@@ -1,5 +1,5 @@
 // External
-import React from 'react';
+import { Component } from 'react';
 import styled from '@emotion/styled';
 import { shell } from 'electron';
 
@@ -56,7 +56,7 @@ const CheckMark = styled.span({
  * @class ModuleDetailsModal
  * @extends {React.Component}
  */
-class ModuleDetailsModal extends React.Component {
+class ModuleDetailsModal extends Component {
   /**
    *
    *
@@ -286,7 +286,7 @@ const InstallerWarning = styled.div({
  * @class Installer
  * @extends {React.Component}
  */
-class Installer extends React.Component {
+class Installer extends Component {
   state = {
     installing: false,
   };

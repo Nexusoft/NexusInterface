@@ -1,5 +1,5 @@
 // External
-import React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
@@ -48,7 +48,7 @@ const Buttons = styled.div({
   locale: state.settings.locale,
   blockCount: state.core.info.blocks,
 }))
-class MyAddressesModal extends React.Component {
+class MyAddressesModal extends Component {
   state = {
     searchQuery: '',
     creatingAddress: false,

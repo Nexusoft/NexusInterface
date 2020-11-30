@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import { reduxForm, Field, formValueSelector } from 'redux-form';
 import styled from '@emotion/styled';
@@ -108,7 +108,7 @@ const mapStateToProps = (state) => {
   },
   onSubmitFail: errorHandler(__('Error creating token')),
 })
-class NewTokenModal extends React.Component {
+class NewTokenModal extends Component {
   render() {
     const { handleSubmit, submitting, supply, decimal } = this.props;
     const tokenCreationFee = token(supply, decimal);

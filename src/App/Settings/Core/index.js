@@ -1,5 +1,5 @@
 // External
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import { reduxForm, Field, Fields, formValueSelector } from 'redux-form';
 // import cpy from 'cpy';

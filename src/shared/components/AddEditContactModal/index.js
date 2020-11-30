@@ -1,5 +1,5 @@
 // External
-import React, { Component } from 'react';
+import { Component } from 'react';
 
 // Internal
 import Modal from 'components/Modal';

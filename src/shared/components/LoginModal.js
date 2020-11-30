@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
 import { connect } from 'react-redux';

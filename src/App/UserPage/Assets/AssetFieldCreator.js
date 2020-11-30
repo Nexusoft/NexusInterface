@@ -1,4 +1,4 @@
-import React from 'react';
+import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { Field, getFormValues } from 'redux-form';
 import styled from '@emotion/styled';
@@ -97,7 +97,7 @@ const ConditionalFormField = ({ showLabel, label, children, ...rest }) =>
 @connect((state, props) => ({
   fieldValue: getDeep(getFormValues(props.form)(state), props.fieldName),
 }))
-class AssetFieldCreator extends React.PureComponent {
+class AssetFieldCreator extends PureComponent {
   render() {
     const { fieldName, first, fieldValue, remove, onlyField } = this.props;
     const lengthDisabled = !(

@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 
 import Modal from 'components/Modal';
 import Table from 'components/Table';
@@ -42,7 +42,7 @@ export const tableColumns = [
   },
 ];
 
-export default class AssetHistoryModal extends React.Component {
+export default class AssetHistoryModal extends Component {
   state = {
     events: null,
   };

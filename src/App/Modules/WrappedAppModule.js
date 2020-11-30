@@ -1,4 +1,3 @@
-import React from 'react';
 import Panel from 'components/Panel';
 import ModuleIcon from 'components/ModuleIcon';
 import WebView from './WebView';

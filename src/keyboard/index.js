@@ -1,4 +1,3 @@
-import React from 'react';
 import { render } from 'react-dom';
 import cssUrl from 'react-simple-keyboard/build/css/index.css';
 

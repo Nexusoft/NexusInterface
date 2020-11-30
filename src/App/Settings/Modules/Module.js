@@ -1,5 +1,5 @@
 // External
-import React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
@@ -100,7 +100,7 @@ const mapStateToProps = (state, props) => ({
  * @extends {React.Component}
  */
 @connect(mapStateToProps)
-class Module extends React.Component {
+class Module extends Component {
   /**
    * Enable this module
    *

@@ -10,7 +10,7 @@
  */
 
 // External
-import React, { Component } from 'react';
+import { cloneElement, Children, Component } from 'react';
 import ReactDOM from 'react-dom';
 import styled from '@emotion/styled';
 
@@ -246,22 +246,20 @@ class TooltipTrigger extends Component {
   render() {
     const { children, tooltip, style, ...rest } = this.props;
 
-    return (
-      <>
-        {React.cloneElement(React.Children.only(children), {
-          onMouseEnter: this.showTooltip,
-          onMouseLeave: this.hideTooltip,
-        })}
-        {!!tooltip && this.state.active && (
-          <TooltipPortal
-            style={{ ...this.state.tooltipStyles, ...style }}
-            {...rest}
-          >
-            {tooltip}
-          </TooltipPortal>
-        )}
-      </>
-    );
+    return <>
+      {cloneElement(Children.only(children), {
+        onMouseEnter: this.showTooltip,
+        onMouseLeave: this.hideTooltip,
+      })}
+      {!!tooltip && this.state.active && (
+        <TooltipPortal
+          style={{ ...this.state.tooltipStyles, ...style }}
+          {...rest}
+        >
+          {tooltip}
+        </TooltipPortal>
+      )}
+    </>;
   }
 }
 

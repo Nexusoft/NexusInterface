@@ -10,7 +10,7 @@
  */
 
 // External Dependencies
-import React from 'react';
+import { forwardRef } from 'react';
 import styled from '@emotion/styled';
 import { NavLink } from 'react-router-dom';
 
@@ -45,7 +45,7 @@ const TabLink = styled(NavLink)(({ theme }) => ({
   },
 }));
 
-const Tab = React.forwardRef(
+const Tab = forwardRef(
   ({ link, icon, text, toolTipText, isActive, ...rest }, ref) => (
     <TabLi {...rest} ref={ref}>
       <Tooltip.Trigger tooltip={toolTipText} position="top">

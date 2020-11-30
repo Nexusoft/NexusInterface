@@ -1,5 +1,5 @@
 // External
-import React from 'react';
+import { createRef, Component } from 'react';
 import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
@@ -42,12 +42,12 @@ const UserControlComponent = styled(StatusIcon)(
  *@returns {JSX} JSX
  */
 @connect((state) => ({ loggedIn: isLoggedIn(state) }))
-class UserControl extends React.Component {
+class UserControl extends Component {
   state = {
     open: false,
   };
 
-  controlRef = React.createRef();
+  controlRef = createRef();
 
   openDropdown = () => {
     this.setState({ open: true });

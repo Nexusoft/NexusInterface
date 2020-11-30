@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 
 import Modal from 'components/Modal';
 import TextField from 'components/TextField';
@@ -6,7 +6,7 @@ import Button from 'components/Button';
 
 __ = __context('Send');
 
-export default class PasswordModal extends React.Component {
+export default class PasswordModal extends Component {
   state = {
     password: '',
   };

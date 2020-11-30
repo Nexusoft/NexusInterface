@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
@@ -49,7 +49,7 @@ const isEditable = (schema) =>
     schema: assetSchemas[props.asset.address],
   };
 })
-class AssetDetailsModal extends React.Component {
+class AssetDetailsModal extends Component {
   componentDidMount() {
     const { asset, schema, isOwner } = this.props;
     if (!schema && isOwner) {

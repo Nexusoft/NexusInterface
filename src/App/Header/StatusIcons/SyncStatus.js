@@ -1,5 +1,5 @@
 // External Dependencies
-import React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
@@ -40,7 +40,7 @@ const SpinningIcon = styled(StatusIcon)({
     };
   }
 )
-class SyncStatus extends React.Component {
+class SyncStatus extends Component {
   /**
    * Component's Renderable JSX
    *

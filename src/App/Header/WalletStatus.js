@@ -1,5 +1,5 @@
 // External
-import React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 
 // Internal
@@ -29,7 +29,7 @@ const StakingDanger = styled.div({
   coreConnected: isCoreConnected(state),
   loggedIn: isLoggedIn(state),
 }))
-class WalletStatus extends React.Component {
+class WalletStatus extends Component {
   /**
    * Component's Renderable JSX
    *

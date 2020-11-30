@@ -1,5 +1,5 @@
 // External
-import React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
@@ -137,7 +137,7 @@ const getLocalTime = (tz) => {
     coreConnected: isCoreConnected(state),
   };
 })
-class ContactDetails extends React.Component {
+class ContactDetails extends Component {
   /**
    * Opens a dialog to confirm contact delete
    *

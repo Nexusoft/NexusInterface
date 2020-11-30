@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import { reduxForm, Field } from 'redux-form';
 
 import { callApi } from 'lib/tritiumApi';
@@ -80,7 +80,7 @@ __ = __context('RecoverPassword&PIN');
   },
   onSubmitFail: errorHandler(__('Error updating password & PIN')),
 })
-class RecoverPasswordPinModal extends React.Component {
+class RecoverPasswordPinModal extends Component {
   render() {
     const { handleSubmit, submitting } = this.props;
     return (

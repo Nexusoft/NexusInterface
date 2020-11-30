@@ -1,5 +1,5 @@
 // External Dependencies
-import React, { Component } from 'react';
+import { createRef, Component } from 'react';
 import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
@@ -66,7 +66,7 @@ const OutputLine = styled.code(({ theme }) => ({
  * @extends {Component}
  */
 class TerminalCore extends Component {
-  outputRef = React.createRef();
+  outputRef = createRef();
 
   /**
    *Creates an instance of TerminalCore.

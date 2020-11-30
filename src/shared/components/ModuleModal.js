@@ -1,5 +1,5 @@
 // External
-import React, { PureComponent } from 'react';
+import { PureComponent } from 'react';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/react';
 

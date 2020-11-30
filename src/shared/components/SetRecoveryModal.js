@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { connect } from 'react-redux';
-import React from 'react';
+import { Component } from 'react';
 import { reduxForm, Field } from 'redux-form';
 
 import { callApi } from 'lib/tritiumApi';
@@ -84,7 +84,7 @@ const options = [
   },
   onSubmitFail: errorHandler(__('Error setting recovery phrase')),
 })
-class SetRecoveryModal extends React.Component {
+class SetRecoveryModal extends Component {
   state = {
     wordCount: 20,
   };

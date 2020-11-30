@@ -1,5 +1,4 @@
 // External
-import React from 'react';
 import { Switch, Redirect } from 'react-router';
 import { Router, Route } from 'react-router-dom';
 import styled from '@emotion/styled';

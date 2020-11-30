@@ -1,5 +1,5 @@
 // External
-import React from 'react';
+import { createRef, Component } from 'react';
 import { clipboard } from 'electron';
 import styled from '@emotion/styled';
 
@@ -42,8 +42,8 @@ const CopyButton = styled(Button)(({ theme }) => ({
  * @class RawAddress
  * @extends {React.Component}
  */
-export default class RawAddress extends React.Component {
-  inputRef = React.createRef();
+export default class RawAddress extends Component {
+  inputRef = createRef();
 
   /**
    * Copy address to clipboard

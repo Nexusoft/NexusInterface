@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
 
@@ -57,7 +57,7 @@ const Namespace = styled.span(({ theme }) => ({
   },
   onSubmitFail: errorHandler(__('Error transferring namespace')),
 })
-class TransferNamespaceForm extends React.Component {
+class TransferNamespaceForm extends Component {
   render() {
     const { handleSubmit, namespace, submitting } = this.props;
     return (

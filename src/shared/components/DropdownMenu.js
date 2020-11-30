@@ -1,4 +1,4 @@
-import React from 'react';
+import { createRef, Component } from 'react';
 import styled from '@emotion/styled';
 
 import Overlay from 'components/Overlay';
@@ -50,12 +50,12 @@ const Separator = styled.div(({ theme }) => ({
   borderBottom: `1px solid ${theme.mixer(0.125)}`,
 }));
 
-export default class DropdownMenu extends React.Component {
+export default class DropdownMenu extends Component {
   state = {
     open: false,
   };
 
-  controlRef = React.createRef();
+  controlRef = createRef();
 
   openDropdown = () => {
     this.setState({ open: true });

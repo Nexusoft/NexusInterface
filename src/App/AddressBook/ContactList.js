@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
@@ -45,7 +45,7 @@ const mapStateToProps = (state) => {
  * @extends {Component}
  */
 @connect(mapStateToProps)
-class ContactList extends React.Component {
+class ContactList extends Component {
   createContact = () => {
     openModal(AddEditContactModal);
   };

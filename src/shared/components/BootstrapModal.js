@@ -1,5 +1,5 @@
 // External
-import React, { PureComponent } from 'react';
+import { createRef, PureComponent } from 'react';
 import { connect } from 'react-redux';
 import prettyBytes from 'utils/prettyBytes';
 import styled from '@emotion/styled';
@@ -156,8 +156,8 @@ function getStatusMsg({ step, details }, locale) {
 class BootstrapModal extends PureComponent {
   static contextType = ModalContext;
 
-  modalRef = React.createRef();
-  backgroundRef = React.createRef();
+  modalRef = createRef();
+  backgroundRef = createRef();
 
   componentDidMount() {
     bootstrapEvents.on('abort', this.closeModal);

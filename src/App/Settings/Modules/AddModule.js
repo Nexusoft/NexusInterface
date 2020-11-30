@@ -1,5 +1,5 @@
 // External
-import React from 'react';
+import { Component } from 'react';
 import Dropzone from 'react-dropzone';
 import styled from '@emotion/styled';
 import { ipcRenderer } from 'electron';
@@ -56,7 +56,7 @@ const InnerMessage = styled.div(
  * @class AddModule
  * @extends {React.Component}
  */
-class AddModule extends React.Component {
+class AddModule extends Component {
   state = {
     checking: false,
   };

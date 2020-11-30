@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import { ipcRenderer } from 'electron';
 import { ThemeProvider } from '@emotion/react';
 import Keyboard from 'react-simple-keyboard';
@@ -21,7 +21,7 @@ const InputWrapper = styled.div({
   alignItems: 'stretch',
 });
 
-export default class App extends React.Component {
+export default class App extends Component {
   state = {
     options: null,
     text: '',

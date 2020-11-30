@@ -1,5 +1,5 @@
 // External
-import React, { Component } from 'react';
+import { createRef, Component } from 'react';
 import { reduxForm, Field } from 'redux-form';
 import { clipboard } from 'electron';
 
@@ -44,7 +44,7 @@ __ = __context('Settings.Security');
   onSubmitFail: errorHandler(__('Error getting private key')),
 })
 class ViewPrivKeyForAddress extends Component {
-  privKeyRef = React.createRef();
+  privKeyRef = createRef();
 
   /**
    * Show Private Keys

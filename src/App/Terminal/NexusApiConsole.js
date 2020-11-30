@@ -1,6 +1,6 @@
 // External Dependencies
 import { connect } from 'react-redux';
-import React, { Component } from 'react';
+import { createRef, Component } from 'react';
 import styled from '@emotion/styled';
 import { ipcRenderer } from 'electron';
 import GA from 'lib/googleAnalytics';
@@ -127,8 +127,8 @@ const SyntaxSelect = styled(Select)(({ theme }) => ({
  */
 @connect(mapStateToProps)
 class NexusApiConsole extends Component {
-  inputRef = React.createRef();
-  outputRef = React.createRef();
+  inputRef = createRef();
+  outputRef = createRef();
 
   /**
    *Creates an instance of TerminalConsole.
