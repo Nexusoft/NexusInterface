@@ -1,5 +1,5 @@
 /**
- * Build config for electron renderer process
+ * Webpack config for production electron renderer process
  */
 
 import path from 'path';
@@ -7,17 +7,11 @@ import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import { merge } from 'webpack-merge';
 import TerserPlugin from 'terser-webpack-plugin';
 
-import baseConfig from './webpack.config.base.renderer';
-import CheckNodeEnv from '../internals/scripts/CheckNodeEnv';
+import baseRendererConfig from './webpack.config.base.renderer';
+import prodConfig from './webpack.config.base.prod';
 import { babelLoaderRenderer } from './babelLoaderConfig';
 
-CheckNodeEnv('production');
-
-export default merge(baseConfig, {
-  mode: 'production',
-
-  devtool: 'source-map',
-
+export default merge(baseRendererConfig, prodConfig, {
   entry: {
     'renderer.prod': './src/index.js',
     'keyboard.prod': './src/keyboard/index.js',
@@ -46,7 +40,6 @@ export default merge(baseConfig, {
   },
 
   optimization: {
-    moduleIds: 'deterministic',
     minimizer: process.env.E2E_BUILD
       ? []
       : [

@@ -5,22 +5,12 @@
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import { merge } from 'webpack-merge';
 
-import baseConfig from './webpack.config.base.preload';
-import CheckNodeEnv from '../internals/scripts/CheckNodeEnv';
+import basePreloadConfig from './webpack.config.base.preload';
+import prodConfig from './webpack.config.base.prod';
 
-CheckNodeEnv('production');
-
-export default merge(baseConfig, {
-  mode: 'production',
-
-  devtool: 'source-map',
-
+export default merge(basePreloadConfig, prodConfig, {
   output: {
     filename: 'module_preload.prod.js',
-  },
-
-  optimization: {
-    moduleIds: 'deterministic',
   },
 
   plugins: [

@@ -4,21 +4,11 @@
 
 import { merge } from 'webpack-merge';
 
-import baseConfig from './webpack.config.base.main';
-import CheckNodeEnv from '../internals/scripts/CheckNodeEnv';
+import baseMainConfig from './webpack.config.base.main';
+import devConfig from './webpack.config.base.dev';
 
-CheckNodeEnv('development');
-
-export default merge(baseConfig, {
-  mode: 'development',
-
-  devtool: 'eval-source-map',
-
+export default merge(baseMainConfig, devConfig, {
   output: {
     filename: 'main.dev.js',
-  },
-
-  optimization: {
-    moduleIds: 'named',
   },
 });

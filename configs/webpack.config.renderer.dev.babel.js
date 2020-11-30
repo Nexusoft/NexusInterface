@@ -1,24 +1,22 @@
+/**
+ * Webpack config for development electron renderer process
+ */
+
 import path from 'path';
 import webpack from 'webpack';
 import { merge } from 'webpack-merge';
 import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 
-import baseConfig from './webpack.config.base.renderer';
-import CheckNodeEnv from '../internals/scripts/CheckNodeEnv';
+import baseRendererConfig from './webpack.config.base.renderer';
+import devConfig from './webpack.config.base.dev';
 import { babelLoaderRenderer } from './babelLoaderConfig';
-
-CheckNodeEnv('development');
 
 const port = process.env.PORT || 1212;
 const publicPath = `http://localhost:${port}/`;
 const dllPath = path.resolve(process.cwd(), 'dll');
 const manifest = path.resolve(dllPath, 'renderer.json');
 
-export default merge(baseConfig, {
-  mode: 'development',
-
-  devtool: 'eval-source-map',
-
+export default merge(baseRendererConfig, devConfig, {
   entry: {
     'renderer.dev': './src/index',
     'keyboard.dev': './src/keyboard/index.js',
@@ -43,10 +41,6 @@ export default merge(baseConfig, {
         },
       },
     ],
-  },
-
-  optimization: {
-    moduleIds: 'named',
   },
 
   plugins: [
