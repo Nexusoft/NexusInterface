@@ -31,7 +31,7 @@ export default merge(baseConfig, {
 
   module: {
     rules: [
-      babelLoaderRenderer(true),
+      babelLoaderRenderer({ hot: true }),
       {
         test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
         use: {
