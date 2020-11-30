@@ -80,7 +80,7 @@ __ = __context('RecoverPassword&PIN');
   },
   onSubmitFail: errorHandler(__('Error updating password & PIN')),
 })
-export default class RecoverPasswordPinModal extends React.Component {
+class RecoverPasswordPinModal extends React.Component {
   render() {
     const { handleSubmit, submitting } = this.props;
     return (
@@ -150,3 +150,5 @@ export default class RecoverPasswordPinModal extends React.Component {
     );
   }
 }
+
+export default RecoverPasswordPinModal;

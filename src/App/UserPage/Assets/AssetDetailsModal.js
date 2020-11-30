@@ -49,7 +49,7 @@ const isEditable = (schema) =>
     schema: assetSchemas[props.asset.address],
   };
 })
-export default class AssetDetailsModal extends React.Component {
+class AssetDetailsModal extends React.Component {
   componentDidMount() {
     const { asset, schema, isOwner } = this.props;
     if (!schema && isOwner) {
@@ -152,3 +152,5 @@ export default class AssetDetailsModal extends React.Component {
     );
   }
 }
+
+export default AssetDetailsModal;

@@ -84,7 +84,7 @@ const options = [
   },
   onSubmitFail: errorHandler(__('Error setting recovery phrase')),
 })
-export default class SetRecoveryModal extends React.Component {
+class SetRecoveryModal extends React.Component {
   state = {
     wordCount: 20,
   };
@@ -205,3 +205,5 @@ export default class SetRecoveryModal extends React.Component {
     );
   }
 }
+
+export default SetRecoveryModal;

@@ -75,7 +75,7 @@ __ = __context('ChangePassword&PIN');
   },
   onSubmitFail: errorHandler(__('Error updating password & PIN')),
 })
-export default class ChangePasswordPinModal extends React.Component {
+class ChangePasswordPinModal extends React.Component {
   render() {
     const { handleSubmit, submitting } = this.props;
     return (
@@ -143,3 +143,5 @@ export default class ChangePasswordPinModal extends React.Component {
     );
   }
 }
+
+export default ChangePasswordPinModal;

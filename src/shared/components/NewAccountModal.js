@@ -102,7 +102,7 @@ const mapStateToProps = (state) => {
   },
   onSubmitFail: errorHandler(__('Error creating account')),
 })
-export default class NewAccountModal extends React.Component {
+class NewAccountModal extends React.Component {
   render() {
     const { handleSubmit, submitting, suggestions } = this.props;
     return (
@@ -157,3 +157,5 @@ export default class NewAccountModal extends React.Component {
     );
   }
 }
+
+export default NewAccountModal;

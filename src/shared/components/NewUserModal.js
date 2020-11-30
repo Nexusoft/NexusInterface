@@ -112,7 +112,7 @@ const Note = styled.div({
   },
   onSubmitFail: errorHandler(__('Error creating user')),
 })
-export default class NewUserModal extends Component {
+class NewUserModal extends Component {
   /**
    * Component's Renderable JSX
    *
@@ -258,3 +258,5 @@ class UserConfirmBackgroundTask extends React.Component {
     );
   }
 }
+
+export default NewUserModal;
