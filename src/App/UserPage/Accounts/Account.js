@@ -31,8 +31,18 @@ const Account = ({ account }) => (
     <div className="flex space-between">
       <div>
         {!account.name && <UnNamed>{__('Unnamed account')}</UnNamed>}
-        <AccountName>{account.name}</AccountName> (
-        {formatNumber(totalBalance(account))} {getTokenName(account)})
+        <span
+          style={{ cursor: 'pointer' }}
+          onClick={() => {
+            openModal(AccountDetailsModal, { account });
+          }}
+        >
+          <AccountName>{account.name}</AccountName>
+          <span>
+            {' '}
+            ({formatNumber(totalBalance(account))} {getTokenName(account)})
+          </span>
+        </span>
       </div>
       <div>
         <Link
