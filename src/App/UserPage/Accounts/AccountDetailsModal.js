@@ -59,7 +59,7 @@ const AccountDetailsModal = ({ account, stakeInfo }) => (
                 }}
               >
                 {__('Send %{token_name}', {
-                  token_name: getTokenName(account),
+                  token_name: getTokenName(account, { markup: false }),
                 })}
               </Button>
             )}
