@@ -13,7 +13,7 @@ import { callApi } from 'lib/tritiumApi';
 import { errorHandler } from 'utils/form';
 import { loadAccounts } from 'lib/user';
 import { removeModal, showNotification, openErrorDialog } from 'lib/ui';
-import { namedAccount } from 'lib/fees';
+import { createLocalNameFee } from 'lib/fees';
 import GA from 'lib/googleAnalytics';
 import memoize from 'utils/memoize';
 import { addressRegex } from 'consts/misc';
@@ -118,7 +118,7 @@ class NewAccountModal extends Component {
             <FormField
               connectLabel
               label={__('Account name (%{nameFee} NXS Fee) (Optional)', {
-                nameFee: namedAccount,
+                nameFee: createLocalNameFee,
               })}
             >
               <Field
