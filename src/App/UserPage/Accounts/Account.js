@@ -7,6 +7,7 @@ import { openModal } from 'lib/ui';
 import { getTokenName } from 'lib/tokens';
 import AccountDetailsModal from './AccountDetailsModal';
 import AccountHistoryModal from './AccountHistoryModal';
+import RenameAccountModal from './RenameAccountModal';
 import { totalBalance } from './utils';
 
 __ = __context('User.Accounts');
@@ -61,6 +62,15 @@ const Account = ({ account }) => (
           }}
         >
           {__('History')}
+        </Link>
+        &nbsp;&nbsp;
+        <Link
+          as="a"
+          onClick={() => {
+            openModal(RenameAccountModal, { account });
+          }}
+        >
+          {__('Rename')}
         </Link>
       </div>
     </div>
