@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 
 import Link from 'components/Link';
 import NexusAddress from 'components/NexusAddress';
+import QRButton from 'components/QRButton';
 import { formatNumber } from 'lib/intl';
 import { openModal } from 'lib/ui';
 import { getTokenName } from 'lib/tokens';
@@ -13,8 +14,8 @@ import { totalBalance } from './utils';
 __ = __context('User.Accounts');
 
 const AccountComponent = styled.div(({ theme }) => ({
-  padding: '1em 0',
-  borderBottom: `1px solid ${theme.mixer(0.125)}`,
+  padding: '1em 0 1.5em',
+  // borderBottom: `1px solid ${theme.mixer(0.125)}`,
 }));
 
 const AccountName = styled.span(({ theme }) => ({
@@ -41,7 +42,8 @@ const Account = ({ account }) => (
           <AccountName>{account.name}</AccountName>
           <span>
             {' '}
-            ({formatNumber(totalBalance(account))} {getTokenName(account)})
+            ({formatNumber(totalBalance(account))}{' '}
+            {getTokenName(account, { markup: false })})
           </span>
         </span>
       </div>
@@ -74,7 +76,25 @@ const Account = ({ account }) => (
         </Link>
       </div>
     </div>
-    <NexusAddress address={account.address} />
+    <NexusAddress
+      address={account.address}
+      label={
+        <div className="flex center space-between">
+          <span>
+            {__(
+              '<b>%{account_name}</b> account address',
+              {
+                account_name: account.name,
+              },
+              {
+                b: (text) => <strong>{text}</strong>,
+              }
+            )}
+          </span>
+          <QRButton address={account.address} />
+        </div>
+      }
+    />
   </AccountComponent>
 );
 

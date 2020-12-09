@@ -61,14 +61,6 @@ const DefaultLabel = styled.span({
   opacity: 0.66,
 });
 
-const LabelWrapper = styled.div({
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  paddingLeft: 5,
-  paddingRight: 5,
-});
-
 const FieldLabel = styled.div({
   width: '40%',
 });
@@ -209,7 +201,7 @@ class ContactDetails extends Component {
             key={i}
             address={address}
             label={
-              <LabelWrapper>
+              <div className="flex center space-between">
                 <div>
                   {label || (
                     <DefaultLabel>
@@ -222,7 +214,7 @@ class ContactDetails extends Component {
                   )}
                 </div>
                 <QRButton address={address} />
-              </LabelWrapper>
+              </div>
             }
           />
         ))}

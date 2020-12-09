@@ -44,7 +44,7 @@ const Label = styled.div(({ theme }) => ({
   borderTopRightRadius: 2,
   background: theme.mixer(0.125),
   fontSize: '.9em',
-  padding: '.1em .4em',
+  padding: '.1em .8em',
 }));
 
 /**
