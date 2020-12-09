@@ -70,6 +70,9 @@ export const defaultSettings = {
   allowSymLink: false,
   devModulePaths: [],
 
+  // Others
+  showUnusedNames: true,
+
   // Hidden settings
   acceptedAgreement: false,
   experimentalWarningDisabled: false,

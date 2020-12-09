@@ -169,6 +169,10 @@ const utilityClasses = (theme) => css`
   .monospace {
     font-family: ${consts.monoFontFamily};
   }
+
+  .pointer {
+    cursor: pointer;
+  }
 `;
 
 const GlobalStyles = () => (
