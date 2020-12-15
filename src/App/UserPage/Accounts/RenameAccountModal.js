@@ -20,10 +20,7 @@ import { addressRegex } from 'consts/misc';
 
 __ = __context('RenameAccount');
 
-const getSuggestions = memoize((userTokens) => [
-  'NXS',
-  ...(userTokens ? userTokens.map((t) => t.name || t.address) : []),
-]);
+const getFee = (accountName) => (accountName ? 2 : 1);
 
 @reduxForm({
   form: 'rename_account',
@@ -58,6 +55,20 @@ const getSuggestions = memoize((userTokens) => [
       if (err.code !== -101) {
         throw err;
       }
+    }
+
+    // Check if balance is enough to pay the fee, otherwise user might
+    // end up creating a new name without nullifying the old name
+    const fee = getFee(accountName);
+    const defaultAccount = await callApi('finance/get/account', {
+      name: 'default',
+    });
+    if (defaultAccount.balance < fee) {
+      openErrorDialog({
+        message: __('Insuffient balance'),
+        note: __('Your default account balance is not enough to pay the fee.'),
+      });
+      return;
     }
 
     const pin = await confirmPin();
@@ -112,7 +123,7 @@ class RenameAccountForm extends Component {
 
             <div className="mt1">
               {__('Account renaming fee')}:{' '}
-              {createLocalNameFee * (accountName ? 2 : 1)} NXS
+              {createLocalNameFee * getFee(accountName)} NXS
             </div>
 
             <div className="mt3 flex space-between">
