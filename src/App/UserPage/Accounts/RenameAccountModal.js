@@ -47,12 +47,9 @@ const getSuggestions = memoize((userTokens) => [
       });
       if (nameRecord?.register_address && nameRecord.register_address !== '0') {
         openErrorDialog({
-          message: __('Reuse existing name?'),
+          message: __('Name already in use'),
           note: __(
-            'Your chosen account name %{account_name} is already in use. Please choose another name.',
-            {
-              account_name: name,
-            }
+            'The name you entered is already in use. Please choose another name.'
           ),
         });
         return;
