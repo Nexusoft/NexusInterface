@@ -294,8 +294,9 @@ async function secureApiCall([endpoint, params, callId]) {
     const message = (
       <div style={{ overflow: 'scroll', maxHeight: '15em' }}>
         <div>
-          <strong>{activeAppModule.displayName}</strong> is requesting to call{' '}
-          <strong>{endpoint}</strong> endpoint with the following parameters:
+          <strong>{activeAppModule.displayName}</strong> module is requesting to
+          call <strong>{endpoint}</strong> endpoint with the following
+          parameters:
         </div>
         <code
           style={{
