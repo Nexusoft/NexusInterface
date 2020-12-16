@@ -5,7 +5,6 @@
 import path from 'path';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import { merge } from 'webpack-merge';
-import TerserPlugin from 'terser-webpack-plugin';
 
 import baseRendererConfig from './webpack.config.base.renderer';
 import prodConfig from './webpack.config.base.prod';
@@ -37,18 +36,6 @@ export default merge(baseRendererConfig, prodConfig, {
         },
       },
     ],
-  },
-
-  optimization: {
-    minimizer: process.env.E2E_BUILD
-      ? []
-      : [
-          new TerserPlugin({
-            parallel: true,
-            sourceMap: false,
-            cache: true,
-          }),
-        ],
   },
 
   plugins: [
