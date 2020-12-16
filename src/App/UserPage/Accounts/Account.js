@@ -32,13 +32,13 @@ const Account = ({ account }) => (
   <AccountComponent>
     <div className="flex space-between">
       <div>
-        {!account.name && <UnNamed>{__('Unnamed account')}</UnNamed>}
         <span
           style={{ cursor: 'pointer' }}
           onClick={() => {
             openModal(AccountDetailsModal, { account });
           }}
         >
+          {!account.name && <UnNamed>{__('Unnamed account')}</UnNamed>}
           <AccountName>{account.name}</AccountName>
           <span>
             {' '}
@@ -84,10 +84,15 @@ const Account = ({ account }) => (
             {__(
               '<b>%{account_name}</b> account address',
               {
-                account_name: account.name,
+                account_name: account.name || __('Unnamed'),
               },
               {
-                b: (text) => <strong>{text}</strong>,
+                b: (text) =>
+                  account.name ? (
+                    <strong>{text}</strong>
+                  ) : (
+                    <UnNamed>{text}</UnNamed>
+                  ),
               }
             )}
           </span>
