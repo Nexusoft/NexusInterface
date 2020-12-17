@@ -30,7 +30,7 @@ const AccountDetailsModal = ({ account, stakeInfo }) => (
         <Modal.Header>{__('Account Details')}</Modal.Header>
         <Modal.Body>
           <InfoField ratio={[1, 2]} label={__('Account name')}>
-            {account.name}
+            {account.name || <span className="dim">{__('Unnamed')}</span>}
           </InfoField>
           <InfoField ratio={[1, 2]} label={__('Created at')}>
             {formatDateTime(account.created * 1000, timeFormatOptions)}
