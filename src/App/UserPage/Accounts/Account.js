@@ -48,6 +48,17 @@ const Account = ({ account }) => (
         </span>
       </div>
       <div>
+        {account.name !== 'default' && (
+          <Link
+            as="a"
+            onClick={() => {
+              openModal(RenameAccountModal, { account });
+            }}
+          >
+            {__('Rename')}
+          </Link>
+        )}
+        &nbsp;&nbsp;
         <Link
           as="a"
           onClick={() => {
@@ -64,15 +75,6 @@ const Account = ({ account }) => (
           }}
         >
           {__('History')}
-        </Link>
-        &nbsp;&nbsp;
-        <Link
-          as="a"
-          onClick={() => {
-            openModal(RenameAccountModal, { account });
-          }}
-        >
-          {__('Rename')}
         </Link>
       </div>
     </div>
