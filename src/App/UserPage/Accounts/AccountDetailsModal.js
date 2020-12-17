@@ -41,6 +41,11 @@ const AccountDetailsModal = ({ account, stakeInfo }) => (
           <InfoField ratio={[1, 2]} label={__('Token name')}>
             {account.token_name}
           </InfoField>
+          {account.data !== undefined && (
+            <InfoField ratio={[1, 2]} label={__('Data')}>
+              {account.data}
+            </InfoField>
+          )}
           <InfoField ratio={[1, 2]} label={__('Total account balance')}>
             {formatNumber(totalBalance(account), 6)} {getTokenName(account)}
           </InfoField>
