@@ -237,7 +237,7 @@
     "cpy": "^8.1.0",
     "csv-parse": "^4.8.8",
     "d3-geo": "^1.12.0",
-    "dompurify": "^2.0.8",
+    "dompurify": "^2.0.17",
     "electron-log": "^4.1.1",
     "electron-notarize": "^0.3.0",
     "electron-updater": "^4.2.5",
