@@ -38,6 +38,11 @@ const NameComponent = styled(Item)(({ theme }) => ({
   },
 }));
 
+const Types = styled.div({
+  flexShrink: 0,
+  display: 'flex',
+});
+
 const Type = styled.span(({ theme }) => ({
   textTransform: 'uppercase',
   fontSize: '.75em',
@@ -46,7 +51,6 @@ const Type = styled.span(({ theme }) => ({
   padding: '.1em .3em',
   borderRadius: 4,
   whiteSpace: 'nowrap',
-  flexShrink: 0,
   marginLeft: '1em',
 }));
 
@@ -104,13 +108,18 @@ const Name = ({ nameRecord, username }) => (
       ) : null}
       {nameRecord.name}
     </span>
-    <Type>
-      {nameRecord.global
-        ? __('Global')
-        : nameRecord.namespace
-        ? __('Namespaced')
-        : __('Local')}
-    </Type>
+    <Types>
+      {!(
+        nameRecord.register_address && nameRecord.register_address !== '0'
+      ) && <Type>{__('Unused')}</Type>}
+      <Type>
+        {nameRecord.global
+          ? __('Global')
+          : nameRecord.namespace
+          ? __('Namespaced')
+          : __('Local')}
+      </Type>
+    </Types>
   </NameComponent>
 );
 
