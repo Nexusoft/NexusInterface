@@ -1,5 +1,5 @@
 // External
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import memoize from 'utils/memoize';
 import styled from '@emotion/styled';

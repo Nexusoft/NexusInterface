@@ -9,7 +9,7 @@
  * - Make sure this note also presents in other files which are imported here.
  */
 
-import React, { Component } from 'react';
+import { forwardRef, Component } from 'react';
 import styled from '@emotion/styled';
 
 import { timing } from 'styles';
@@ -246,7 +246,7 @@ const ButtonComponent = styled.button(
  * Note: the double & in &&:disabled is a css specificity hack so that the disabled styles take priority over the hover styles
  */
 
-const Button = React.forwardRef(
+const Button = forwardRef(
   ({ type = 'button', skin = 'default', ...rest }, ref) => (
     <ButtonComponent type={type} skin={skin} {...rest} ref={ref} />
   )

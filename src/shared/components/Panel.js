@@ -10,9 +10,9 @@
  */
 
 // External Dependencies
-import React from 'react';
+import { forwardRef } from 'react';
 import styled from '@emotion/styled';
-import { keyframes } from '@emotion/core';
+import { keyframes } from '@emotion/react';
 import * as color from 'utils/color';
 
 // Internal Global Dependencies
@@ -79,7 +79,7 @@ const PanelBody = styled.div(({ theme }) => ({
   overscrollBehavior: 'none',
 }));
 
-const Panel = React.forwardRef(
+const Panel = forwardRef(
   ({ icon, title, controls, children, ...rest }, ref) => (
     <PanelWrapper {...rest}>
       <PanelComponent ref={ref}>

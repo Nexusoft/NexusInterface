@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 
 import Modal from 'components/Modal';
 import FormField from 'components/FormField';
@@ -9,7 +9,7 @@ import { resolveValue } from 'utils/form';
 
 __ = __context('ConfirmPassword&PIN');
 
-export default class ConfirmPasswordPinModal extends React.Component {
+export default class ConfirmPasswordPinModal extends Component {
   state = {
     password: '',
     pin: '',

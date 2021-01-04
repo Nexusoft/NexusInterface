@@ -1,13 +1,12 @@
-// External
-import React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
-// Internal
-import { openModal } from 'lib/ui';
 import AddEditContactModal from 'components/AddEditContactModal';
+import { openModal } from 'lib/ui';
 import { isCoreConnected } from 'selectors';
-import Contact, { NewContactButton } from './Contact';
+
+import Contact from './Contact';
 
 __ = __context('AddressBook');
 
@@ -46,7 +45,7 @@ const mapStateToProps = (state) => {
  * @extends {Component}
  */
 @connect(mapStateToProps)
-class ContactList extends React.Component {
+class ContactList extends Component {
   createContact = () => {
     openModal(AddEditContactModal);
   };
@@ -71,7 +70,10 @@ class ContactList extends React.Component {
         {coreConnected && (
           <>
             <Separator />
-            <NewContactButton onClick={this.createContact} />
+            <Contact
+              contact={null /* new contact */}
+              onClick={this.createContact}
+            />
           </>
         )}
       </ContactListComponent>

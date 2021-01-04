@@ -1,14 +1,16 @@
-import React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
 import Icon from 'components/Icon';
 import Button from 'components/Button';
-import { switchUserTab } from 'lib/ui';
+import Switch from 'components/Switch';
+import { switchUserTab, openModal } from 'lib/ui';
 import { loadNameRecords, selectUsername } from 'lib/user';
-import { openModal } from 'lib/ui';
-import { timing } from 'styles';
+import { updateSettings } from 'lib/settings';
 import { popupContextMenu } from 'lib/contextMenu';
+import { timing } from 'styles';
+import memoize from 'utils/memoize';
 import plusIcon from 'icons/plus.svg';
 
 import NameDetailsModal from './NameDetailsModal';
@@ -36,6 +38,11 @@ const NameComponent = styled(Item)(({ theme }) => ({
   },
 }));
 
+const Types = styled.div({
+  flexShrink: 0,
+  display: 'flex',
+});
+
 const Type = styled.span(({ theme }) => ({
   textTransform: 'uppercase',
   fontSize: '.75em',
@@ -44,7 +51,6 @@ const Type = styled.span(({ theme }) => ({
   padding: '.1em .3em',
   borderRadius: 4,
   whiteSpace: 'nowrap',
-  flexShrink: 0,
   marginLeft: '1em',
 }));
 
@@ -102,21 +108,38 @@ const Name = ({ nameRecord, username }) => (
       ) : null}
       {nameRecord.name}
     </span>
-    <Type>
-      {nameRecord.global
-        ? __('Global')
-        : nameRecord.namespace
-        ? __('Namespaced')
-        : __('Local')}
-    </Type>
+    <Types>
+      {!(
+        nameRecord.register_address && nameRecord.register_address !== '0'
+      ) && <Type>{__('Unused')}</Type>}
+      <Type>
+        {nameRecord.global
+          ? __('Global')
+          : nameRecord.namespace
+          ? __('Namespaced')
+          : __('Local')}
+      </Type>
+    </Types>
   </NameComponent>
 );
 
+const selectNameRecords = memoize((nameRecords, showUnusedNames) =>
+  showUnusedNames
+    ? nameRecords
+    : nameRecords?.filter(
+        (nr) => nr.register_address && nr.register_address !== '0'
+      )
+);
+
 @connect((state) => ({
-  nameRecords: state.user.nameRecords,
+  nameRecords: selectNameRecords(
+    state.user.nameRecords,
+    state.settings.showUnusedNames
+  ),
   username: selectUsername(state),
+  showUnusedNames: state.settings.showUnusedNames,
 }))
-export default class Names extends React.Component {
+class Names extends Component {
   constructor(props) {
     super(props);
     switchUserTab('Names');
@@ -127,7 +150,8 @@ export default class Names extends React.Component {
   }
 
   render() {
-    const { nameRecords, username } = this.props;
+    const { nameRecords, username, showUnusedNames } = this.props;
+    const toggle = () => updateSettings({ showUnusedNames: !showUnusedNames });
 
     return (
       <TabContentWrapper maxWidth={500}>
@@ -141,20 +165,35 @@ export default class Names extends React.Component {
           <span className="v-align">{__('Create new name')}</span>
         </Button>
 
-        <div className="mt1">
-          {!!nameRecords && nameRecords.length > 0 ? (
-            nameRecords.map((nameRecord) => (
-              <Name
-                key={nameRecord.address}
-                nameRecord={nameRecord}
-                username={username}
-              />
-            ))
-          ) : (
-            <EmptyMessage>{__("You don't own any name")}</EmptyMessage>
-          )}
+        <div className="mt2">
+          <div className="flex center">
+            <Switch
+              style={{ fontSize: '.7em' }}
+              value={showUnusedNames}
+              onChange={toggle}
+            />
+            <span className="pointer space-left" onClick={toggle}>
+              {__('Show unused names')}
+            </span>
+          </div>
+
+          <div className="mt1">
+            {!!nameRecords && nameRecords.length > 0 ? (
+              nameRecords.map((nameRecord) => (
+                <Name
+                  key={nameRecord.address}
+                  nameRecord={nameRecord}
+                  username={username}
+                />
+              ))
+            ) : (
+              <EmptyMessage>{__("You don't own any name")}</EmptyMessage>
+            )}
+          </div>
         </div>
       </TabContentWrapper>
     );
   }
 }
+
+export default Names;

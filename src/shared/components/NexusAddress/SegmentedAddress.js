@@ -1,5 +1,5 @@
 // External
-import React from 'react';
+import { createRef, Component } from 'react';
 import { clipboard } from 'electron';
 import styled from '@emotion/styled';
 
@@ -44,7 +44,7 @@ const Label = styled.div(({ theme }) => ({
   borderTopRightRadius: 2,
   background: theme.mixer(0.125),
   fontSize: '.9em',
-  padding: '.1em .4em',
+  padding: '.1em .8em',
 }));
 
 /**
@@ -54,8 +54,8 @@ const Label = styled.div(({ theme }) => ({
  * @class SegmentedAddress
  * @extends {React.Component}
  */
-export default class SegmentedAddress extends React.Component {
-  addressRef = React.createRef();
+export default class SegmentedAddress extends Component {
+  addressRef = createRef();
 
   /**
    * Copy address to clipboard

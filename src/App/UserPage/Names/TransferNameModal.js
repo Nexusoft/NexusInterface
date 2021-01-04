@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
@@ -65,7 +65,7 @@ const Name = styled.span(({ theme }) => ({
   },
   onSubmitFail: errorHandler(__('Error transferring name')),
 })
-class TransferNameForm extends React.Component {
+class TransferNameForm extends Component {
   render() {
     const { handleSubmit, username, nameRecord, submitting } = this.props;
     return (

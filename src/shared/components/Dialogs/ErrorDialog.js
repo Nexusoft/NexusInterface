@@ -1,5 +1,5 @@
 // External
-import React from 'react';
+import { createRef, Component } from 'react';
 import styled from '@emotion/styled';
 
 // Internal
@@ -16,8 +16,8 @@ const XMark = styled(Dialog.Icon)(({ theme }) => ({
   filter: `drop-shadow(0 0 5px ${color.fade(theme.danger, 0.5)})`,
 }));
 
-class ErrorDialog extends React.Component {
-  buttonRef = React.createRef();
+class ErrorDialog extends Component {
+  buttonRef = createRef();
 
   componentDidMount() {
     if (this.buttonRef.current) {

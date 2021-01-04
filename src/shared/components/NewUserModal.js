@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
+import * as React from 'react';
 import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
 import { connect } from 'react-redux';
@@ -112,7 +113,7 @@ const Note = styled.div({
   },
   onSubmitFail: errorHandler(__('Error creating user')),
 })
-export default class NewUserModal extends Component {
+class NewUserModal extends Component {
   /**
    * Component's Renderable JSX
    *
@@ -212,7 +213,7 @@ class UserConfirmBackgroundTask extends React.Component {
   componentDidMount() {
     const { username } = this.props;
     this.unobserve = observeStore(
-      ({ core: { systemInfo } }) => systemInfo && systemInfo.blocks,
+      ({ core: { systemInfo } }) => systemInfo?.blocks,
       async () => {
         const txs = await callApi('users/list/transactions', {
           username,
@@ -258,3 +259,5 @@ class UserConfirmBackgroundTask extends React.Component {
     );
   }
 }
+
+export default NewUserModal;

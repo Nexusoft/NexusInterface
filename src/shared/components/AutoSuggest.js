@@ -1,5 +1,5 @@
 // External
-import React from 'react';
+import { PureComponent, createRef, Component } from 'react';
 import { findDOMNode } from 'react-dom';
 import memoize from 'utils/memoize';
 import styled from '@emotion/styled';
@@ -76,7 +76,7 @@ const SuggestionComponent = styled.div(
  * @class Suggestion
  * @extends {React.PureComponent}
  */
-class Suggestion extends React.PureComponent {
+class Suggestion extends PureComponent {
   /**
    * Handles Select Action
    *
@@ -164,7 +164,7 @@ const ClearButton = styled(Button)(
  * @class AutoSuggest
  * @extends {React.Component}
  */
-export default class AutoSuggest extends React.Component {
+export default class AutoSuggest extends Component {
   static defaultProps = {
     inputComponent: TextField,
     keyControl: true,
@@ -176,8 +176,8 @@ export default class AutoSuggest extends React.Component {
     activeIndex: null,
   };
 
-  inputRef = React.createRef();
-  suggestionsRef = React.createRef();
+  inputRef = createRef();
+  suggestionsRef = createRef();
 
   defaultFilterSuggestions = memoize((suggestions, inputValue) => {
     if (!suggestions) return [];

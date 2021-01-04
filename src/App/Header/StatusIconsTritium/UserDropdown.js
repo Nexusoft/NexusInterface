@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import { connect, useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 import { Link } from 'react-router-dom';
@@ -77,7 +77,7 @@ const Separator = styled.div(({ theme }) => ({
   multiuser: !!state.core.systemInfo?.multiuser,
   hasOtherSessions: Object.keys(state.sessions).length > 1,
 }))
-class LoggedInDropdown extends React.Component {
+class LoggedInDropdown extends Component {
   logOut = async () => {
     this.props.closeDropdown();
     await logOut();

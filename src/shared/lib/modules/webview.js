@@ -2,8 +2,6 @@ import memoize from 'utils/memoize';
 import axios from 'axios';
 import { reset, initialize } from 'redux-form';
 
-import React from 'react';
-
 import * as TYPE from 'consts/actionTypes';
 import store, { observeStore } from 'store';
 import { history } from 'lib/wallet';
@@ -164,6 +162,7 @@ function handleIpcMessage(event) {
       break;
     case 'secure-api-call':
       secureApiCall(event.args);
+      break;
     case 'show-notification':
       showNotif(event.args);
       break;
@@ -223,7 +222,7 @@ async function proxyRequest([url, options, requestId]) {
       activeAppModule.webview.send(
         `proxy-response${requestId ? `:${requestId}` : ''}`,
         null,
-        JSON.parse(JSON.stringify(response))
+        response && JSON.parse(JSON.stringify(response))
       );
     }
   } catch (err) {
@@ -249,7 +248,7 @@ async function rpcCall([command, params, callId]) {
       activeAppModule.webview.send(
         `rpc-return${callId ? `:${callId}` : ''}`,
         null,
-        JSON.parse(JSON.stringify(response))
+        response && JSON.parse(JSON.stringify(response))
       );
     }
   } catch (err) {
@@ -275,7 +274,7 @@ async function apiCall([endpoint, params, callId]) {
       activeAppModule.webview.send(
         `api-return${callId ? `:${callId}` : ''}`,
         null,
-        JSON.parse(JSON.stringify(response))
+        response && JSON.parse(JSON.stringify(response))
       );
     }
   } catch (err) {
@@ -295,9 +294,17 @@ async function secureApiCall([endpoint, params, callId]) {
     const message = (
       <div style={{ overflow: 'scroll', maxHeight: '15em' }}>
         <div>
-          You are executing <strong>{endpoint}</strong> with the params:
+          <strong>{activeAppModule.displayName}</strong> module is requesting to
+          call <strong>{endpoint}</strong> endpoint with the following
+          parameters:
         </div>
-        <code style={{ wordBreak: 'break-word' }}>
+        <code
+          style={{
+            wordBreak: 'break-word',
+            display: 'block',
+            marginTop: '0.5em',
+          }}
+        >
           {JSON.stringify(params, null, 2)}
         </code>
       </div>
@@ -312,7 +319,7 @@ async function secureApiCall([endpoint, params, callId]) {
       activeAppModule.webview.send(
         `secure-api-return${callId ? `:${callId}` : ''}`,
         null,
-        JSON.parse(JSON.stringify(response))
+        response && JSON.parse(JSON.stringify(response))
       );
     }
   } catch (error) {
@@ -355,10 +362,6 @@ function confirm([options = {}, confirmationId]) {
     labelYes,
     skinYes,
     callbackYes: () => {
-      console.log(
-        'yes',
-        `confirm-answer${confirmationId ? `:${confirmationId}` : ''}`
-      );
       const { activeAppModule } = store.getState();
       if (activeAppModule?.webview) {
         activeAppModule.webview.send(
@@ -406,10 +409,10 @@ function updateStorage([data]) {
  * ===========================================================================
  */
 
-export const setActiveWebView = (webview, moduleName) => {
+export const setActiveWebView = (webview, moduleName, displayName) => {
   store.dispatch({
     type: TYPE.SET_ACTIVE_APP_MODULE,
-    payload: { webview, moduleName },
+    payload: { webview, moduleName, displayName },
   });
 };
 

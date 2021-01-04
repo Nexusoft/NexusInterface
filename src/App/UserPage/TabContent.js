@@ -1,4 +1,3 @@
-import React from 'react';
 import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 import { Route, Redirect, Switch } from 'react-router';

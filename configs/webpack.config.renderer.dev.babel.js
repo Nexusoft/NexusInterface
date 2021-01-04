@@ -1,35 +1,24 @@
 /**
- * Webpack config for development electron renderer process that uses
- * Hot-Module-Replacement
- *
- * https://webpack.js.org/concepts/hot-module-replacement/
+ * Webpack config for development electron renderer process
  */
 
 import path from 'path';
 import webpack from 'webpack';
 import { merge } from 'webpack-merge';
+import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 
-import baseConfig from './webpack.config.base.renderer';
-import CheckNodeEnv from '../internals/scripts/CheckNodeEnv';
+import baseRendererConfig from './webpack.config.base.renderer';
+import devConfig from './webpack.config.base.dev';
 import { babelLoaderRenderer } from './babelLoaderConfig';
-
-CheckNodeEnv('development');
 
 const port = process.env.PORT || 1212;
 const publicPath = `http://localhost:${port}/`;
 const dllPath = path.resolve(process.cwd(), 'dll');
 const manifest = path.resolve(dllPath, 'renderer.json');
 
-export default merge(baseConfig, {
-  devtool: 'cheap-module-eval-source-map',
-
+export default merge(baseRendererConfig, devConfig, {
   entry: {
-    'renderer.dev': [
-      'react-hot-loader/patch',
-      `webpack-dev-server/client?${publicPath}`,
-      'webpack/hot/only-dev-server',
-      './src/index',
-    ],
+    'renderer.dev': './src/index',
     'keyboard.dev': './src/keyboard/index.js',
   },
 
@@ -40,7 +29,7 @@ export default merge(baseConfig, {
 
   module: {
     rules: [
-      babelLoaderRenderer(true),
+      babelLoaderRenderer({ hot: true }),
       {
         test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
         use: {
@@ -54,13 +43,6 @@ export default merge(baseConfig, {
     ],
   },
 
-  resolve: {
-    // TODO: uncomment this when @hot-loader/react-dom updates to the same version as react-dom
-    alias: {
-      'react-dom': '@hot-loader/react-dom',
-    },
-  },
-
   plugins: [
     new webpack.DllReferencePlugin({
       context: process.cwd(),
@@ -68,14 +50,9 @@ export default merge(baseConfig, {
       sourceType: 'var',
     }),
 
-    /**
-     * https://webpack.js.org/concepts/hot-module-replacement/
-     */
-    new webpack.HotModuleReplacementPlugin({
-      multiStep: true,
-    }),
-
     new webpack.NoEmitOnErrorsPlugin(),
+
+    new ReactRefreshWebpackPlugin(),
   ],
 
   node: {

@@ -1,9 +1,9 @@
 // External
-import React, { Component } from 'react';
+import { createRef, Component } from 'react';
 import ReactDOM from 'react-dom';
 import styled from '@emotion/styled';
 import { ChromePicker } from 'react-color';
-import { withTheme } from 'emotion-theming';
+import { withTheme } from '@emotion/react';
 
 // Internal
 import Button from 'components/Button';
@@ -37,7 +37,7 @@ const ColorButton = styled(Button)(({ color: c, open }) => {
  * @extends {Component}
  */
 class ColorPicker extends Component {
-  btnRef = React.createRef();
+  btnRef = createRef();
 
   state = {
     open: false,

@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
@@ -73,7 +73,7 @@ const Namespace = ({ namespace }) => (
 @connect((state) => ({
   namespaces: state.user.namespaces,
 }))
-export default class Namesspaces extends React.Component {
+class Namespaces extends Component {
   constructor(props) {
     super(props);
     switchUserTab('Namespaces');
@@ -113,3 +113,5 @@ export default class Namesspaces extends React.Component {
     );
   }
 }
+
+export default Namespaces;

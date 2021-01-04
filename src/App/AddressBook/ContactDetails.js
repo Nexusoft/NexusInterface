@@ -1,5 +1,5 @@
 // External
-import React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
@@ -59,14 +59,6 @@ const HeaderAction = styled.div(({ theme, danger }) => ({
 
 const DefaultLabel = styled.span({
   opacity: 0.66,
-});
-
-const LabelWrapper = styled.div({
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  paddingLeft: 5,
-  paddingRight: 5,
 });
 
 const FieldLabel = styled.div({
@@ -137,7 +129,7 @@ const getLocalTime = (tz) => {
     coreConnected: isCoreConnected(state),
   };
 })
-class ContactDetails extends React.Component {
+class ContactDetails extends Component {
   /**
    * Opens a dialog to confirm contact delete
    *
@@ -209,7 +201,7 @@ class ContactDetails extends React.Component {
             key={i}
             address={address}
             label={
-              <LabelWrapper>
+              <div className="flex center space-between">
                 <div>
                   {label || (
                     <DefaultLabel>
@@ -222,7 +214,7 @@ class ContactDetails extends React.Component {
                   )}
                 </div>
                 <QRButton address={address} />
-              </LabelWrapper>
+              </div>
             }
           />
         ))}

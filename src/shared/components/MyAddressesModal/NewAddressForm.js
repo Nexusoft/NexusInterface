@@ -1,5 +1,5 @@
 // External
-import React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
@@ -56,7 +56,7 @@ const Buttons = styled.div({
   },
   onSubmitFail: errorHandler(__('Error creating new address')),
 })
-class NewAddressForm extends React.Component {
+class NewAddressForm extends Component {
   /**
    * Sets the account name
    *

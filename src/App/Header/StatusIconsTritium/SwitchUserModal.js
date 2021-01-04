@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 
@@ -83,7 +83,7 @@ function User({
 export default function SwitchUserModal() {
   const sessions = useSelector((state) => state.sessions);
   const currentSession = useSelector((state) => state.user.session);
-  const [switchingTo, setSwitchingTo] = React.useState(null);
+  const [switchingTo, setSwitchingTo] = useState(null);
 
   return (
     <Modal maxWidth={500}>

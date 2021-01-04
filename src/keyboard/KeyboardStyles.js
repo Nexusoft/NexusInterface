@@ -1,5 +1,4 @@
-import React from 'react';
-import { Global } from '@emotion/core';
+import { Global } from '@emotion/react';
 
 import { timing } from 'styles';
 import * as color from 'utils/color';

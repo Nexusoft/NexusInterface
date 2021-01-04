@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 
 import Modal from 'components/Modal';
 import Button from 'components/Button';
@@ -23,7 +23,7 @@ const translateKey = (key) => {
   }
 };
 
-class ContractDetailsModal extends React.Component {
+class ContractDetailsModal extends Component {
   render() {
     const { contract, txid } = this.props;
     if (!contract) return;

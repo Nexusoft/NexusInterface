@@ -1,5 +1,5 @@
 // External
-import React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 
 // Internal
@@ -21,7 +21,7 @@ __ = __context('Settings.Security');
 @connect((state) => ({
   locked: state.core.info.locked,
 }))
-class SettingsSecurity extends React.Component {
+class SettingsSecurity extends Component {
   /**
    *Creates an instance of SettingsSecurity.
    * @param {*} props

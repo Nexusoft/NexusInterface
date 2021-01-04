@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import { reduxForm, Field } from 'redux-form';
 
 import Modal from 'components/Modal';
@@ -55,7 +55,7 @@ __ = __context('User.Tokens.SearchToken');
     openModal(TokenDetailsModal, { token: result });
   },
 })
-class SearchTokenModal extends React.Component {
+class SearchTokenModal extends Component {
   async openSearchedDetailsModal(props) {
     try {
       const token = await apiPost(

@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
@@ -185,7 +185,7 @@ const Amount = styled.span(({ theme, possitive }) => ({
   fiatCurrency: state.settings.fiatCurrency,
   price: state.market?.price,
 }))
-class AccountHistoryModal extends React.Component {
+class AccountHistoryModal extends Component {
   state = {
     contracts: null,
   };

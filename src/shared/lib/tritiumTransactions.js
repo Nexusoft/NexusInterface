@@ -16,7 +16,7 @@ function startWatchingTransaction(txid) {
   if (unsubscribers[txid]) return;
   // Update everytime a new block is received
   unsubscribers[txid] = observeStore(
-    ({ core: { systemInfo } }) => systemInfo && systemInfo.blocks,
+    ({ core: { systemInfo } }) => systemInfo?.blocks,
     async (blocks) => {
       // Skip because core is most likely disconnected
       if (!blocks) return;

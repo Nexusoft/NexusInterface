@@ -258,7 +258,7 @@ export function startCoreOuputWatch() {
 
   if (!legacyMode) {
     observeStore(
-      ({ core: { systemInfo } }) => systemInfo && systemInfo.testnet,
+      ({ core: { systemInfo } }) => systemInfo?.testnet,
       (testnet) => {
         if (testnet) {
           subFolder = `testnet${testnet}`;

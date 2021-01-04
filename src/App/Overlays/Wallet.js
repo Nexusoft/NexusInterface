@@ -1,5 +1,5 @@
 // External
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
@@ -64,7 +64,7 @@ const Notifications = ({ notifications, taskCount }) => (
   notifications,
   backgroundTasks,
 }))
-export default class Wallet extends Component {
+class Wallet extends Component {
   /**
    * Component's Renderable JSX
    *
@@ -86,3 +86,5 @@ export default class Wallet extends Component {
     );
   }
 }
+
+export default Wallet;

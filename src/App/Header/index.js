@@ -1,5 +1,5 @@
 // External
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import styled from '@emotion/styled';
@@ -101,8 +101,8 @@ const preReleaseTag = APP_VERSION.toString().includes('alpha')
   } = state;
   return {
     coreConnected: isCoreConnected(state),
-    testnet: systemInfo && systemInfo.testnet,
-    privateNet: systemInfo && systemInfo.private,
+    testnet: systemInfo?.testnet,
+    privateNet: systemInfo?.private,
     legacyTestnet: info && info.testnet,
   };
 })

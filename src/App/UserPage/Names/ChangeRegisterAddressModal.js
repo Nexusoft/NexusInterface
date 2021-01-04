@@ -1,4 +1,4 @@
-import React from 'react';
+import { createRef, Component } from 'react';
 import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
@@ -51,8 +51,8 @@ const Name = styled.span(({ theme }) => ({
   },
   onSubmitFail: errorHandler(__('Error updating name')),
 })
-class ChangeRegisterAddressForm extends React.Component {
-  inputRef = React.createRef();
+class ChangeRegisterAddressForm extends Component {
+  inputRef = createRef();
 
   componentDidMount() {
     setTimeout(() => {

@@ -1,4 +1,3 @@
-import React from 'react';
 import DOMPurify from 'dompurify';
 import { readFileSync } from 'fs';
 import styled from '@emotion/styled';

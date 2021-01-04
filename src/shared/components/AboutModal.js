@@ -1,4 +1,3 @@
-import React from 'react';
 import { connect } from 'react-redux';
 
 import Modal from 'components/Modal';
@@ -310,8 +309,8 @@ const About = ({ version, testnet, privateBlockchain }) => (
 );
 
 const mapStateToProps = ({ core: { info, systemInfo } }) => ({
-  version: legacyMode ? info && info.version : systemInfo && systemInfo.version,
-  testnet: legacyMode ? undefined : systemInfo && systemInfo.testnet,
-  privateBlockchain: legacyMode ? undefined : systemInfo && systemInfo.private,
+  version: legacyMode ? info && info.version : systemInfo?.version,
+  testnet: legacyMode ? undefined : systemInfo?.testnet,
+  privateBlockchain: legacyMode ? undefined : systemInfo?.private,
 });
 export default connect(mapStateToProps)(About);

@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import { shell } from 'electron';
 
 import BackgroundTask from 'components/BackgroundTask';
@@ -6,7 +6,7 @@ import { confirm, showBackgroundTask } from 'lib/ui';
 
 __ = __context('AutoUpdate');
 
-export default class AutoUpdateBackgroundTask extends React.Component {
+export default class AutoUpdateBackgroundTask extends Component {
   confirmInstall = async () => {
     this.closeTask();
     const confirmed = await confirm({

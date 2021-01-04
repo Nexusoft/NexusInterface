@@ -122,12 +122,14 @@ export const stopCore = async (forRestart) => {
   log.info('Core Manager: Stop function called');
   const { manualDaemon } = store.getState().settings;
   store.dispatch({ type: TYPE.DISCONNECT_CORE });
-  await callApi('system/stop');
+  try {
+    await callApi('system/stop');
 
-  // Wait for core to gracefully stop for 30 seconds
-  for (let i = 0; i <= 30; i++) {
-    if (i < 30) {
-      if (await ipcRenderer.invoke('check-core-running')) {
+    // Wait for core to gracefully stop for 10 seconds
+    let coreStillRunning;
+    for (let i = 0; i < 10; i++) {
+      coreStillRunning = await ipcRenderer.invoke('check-core-running');
+      if (coreStillRunning) {
         log.info(
           `Core Manager: Core still running after stop command for: ${i} seconds`
         );
@@ -136,11 +138,12 @@ export const stopCore = async (forRestart) => {
         break;
       }
       await sleep(1000);
-    } else {
-      // If core still doesn't stop after 30 seconds, kill the process
+    }
+
+    if (coreStillRunning) {
       await ipcRenderer.invoke('kill-core-process');
     }
-  }
+  } catch (err) {}
 
   if (!forRestart && !manualDaemon) {
     store.dispatch({

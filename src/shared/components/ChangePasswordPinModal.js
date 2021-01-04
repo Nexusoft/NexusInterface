@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import { reduxForm, Field } from 'redux-form';
 
 import { callApi } from 'lib/tritiumApi';
@@ -75,7 +75,7 @@ __ = __context('ChangePassword&PIN');
   },
   onSubmitFail: errorHandler(__('Error updating password & PIN')),
 })
-export default class ChangePasswordPinModal extends React.Component {
+class ChangePasswordPinModal extends Component {
   render() {
     const { handleSubmit, submitting } = this.props;
     return (
@@ -143,3 +143,5 @@ export default class ChangePasswordPinModal extends React.Component {
     );
   }
 }
+
+export default ChangePasswordPinModal;

@@ -1,12 +1,12 @@
-import React from 'react';
+import { useRef, useEffect } from 'react';
 import styled from '@emotion/styled';
 import QRCode from 'qrcode';
-import { useTheme } from 'emotion-theming';
+import { useTheme } from '@emotion/react';
 
 import Modal from 'components/Modal';
 import NexusAddress from 'components/NexusAddress';
 
-const width = 322;
+const size = 322;
 
 const QRWrapper = styled.div({
   display: 'flex',
@@ -16,27 +16,19 @@ const QRWrapper = styled.div({
 
 export default function QRModal({ address }) {
   const theme = useTheme();
-  const [dataURL, setDataURL] = React.useState(null);
-  React.useEffect(() => {
-    QRCode.toDataURL(
-      address,
-      {
-        width,
-        color: { dark: theme.background, light: theme.foreground },
-        margin: 2,
-      },
-      (err, url) => {
-        if (!err) {
-          setDataURL(url);
-        }
-      }
-    );
+  const canvasRef = useRef();
+  useEffect(() => {
+    QRCode.toCanvas(canvasRef.current, address, {
+      width: size,
+      color: { dark: theme.background, light: theme.foreground },
+      margin: 1,
+    });
   }, []);
   return (
     <Modal maxWidth={500}>
       <Modal.Body>
         <QRWrapper>
-          {!!dataURL && <img src={dataURL} width={width} />}
+          <canvas ref={canvasRef} width={size} />
           <NexusAddress address={address} />
         </QRWrapper>
       </Modal.Body>

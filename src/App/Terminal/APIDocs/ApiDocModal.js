@@ -1,5 +1,5 @@
 //External
-import React from 'react';
+import { Component } from 'react';
 import styled from '@emotion/styled';
 import ReactMarkdown from 'react-markdown';
 
@@ -62,7 +62,7 @@ const InlineCode = styled.code({
   overflowWrap: 'break-word',
 });
 
-class APIDocModal extends React.Component {
+class APIDocModal extends Component {
   constructor(props) {
     super(props);
     this.closeModal = null;

@@ -1,5 +1,5 @@
 // External
-import React from 'react';
+import { createRef, Component } from 'react';
 import styled from '@emotion/styled';
 
 // Internal
@@ -18,8 +18,8 @@ const CheckMark = styled(Dialog.Icon)(({ theme }) => ({
   filter: `drop-shadow(0 0 5px ${color.fade(theme.primary, 0.5)})`,
 }));
 
-class SuccessDialog extends React.Component {
-  buttonRef = React.createRef();
+class SuccessDialog extends Component {
+  buttonRef = createRef();
 
   componentDidMount() {
     if (this.buttonRef.current) {

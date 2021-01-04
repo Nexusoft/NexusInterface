@@ -1,5 +1,5 @@
 // External
-import React, { Component } from 'react';
+import { createRef, Component } from 'react';
 import { reduxForm, Field, FieldArray } from 'redux-form';
 import { connect } from 'react-redux';
 
@@ -160,7 +160,7 @@ function asyncValidateAddresses(isMine, addresses, errors) {
   },
 })
 class AddEditContactForm extends Component {
-  inputRef = React.createRef();
+  inputRef = createRef();
 
   /**
    * componentDidMount

@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
@@ -113,7 +113,7 @@ const Note = styled.div(({ theme }) => ({
   },
   onSubmitFail: errorHandler(__('Error setting stake amount')),
 })
-export default class AdjustStakeModal extends React.Component {
+class AdjustStakeModal extends Component {
   render() {
     const { total, handleSubmit, submitting, change } = this.props;
     return (
@@ -178,3 +178,5 @@ export default class AdjustStakeModal extends React.Component {
     );
   }
 }
+
+export default AdjustStakeModal;

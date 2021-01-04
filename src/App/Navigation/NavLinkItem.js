@@ -1,7 +1,7 @@
 // External Dependencies
 import { NavLink } from 'react-router-dom';
 import styled from '@emotion/styled';
-import { keyframes } from '@emotion/core';
+import { keyframes } from '@emotion/react';
 
 import { timing, consts } from 'styles';
 

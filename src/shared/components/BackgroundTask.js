@@ -1,5 +1,5 @@
 // External
-import React, { Component } from 'react';
+import { createRef, Component } from 'react';
 
 // Internal
 import { removeBackgroundTask } from 'lib/ui';
@@ -23,7 +23,7 @@ export default class BackgroundTask extends Component {
     type: 'work',
   };
 
-  snackBarRef = React.createRef();
+  snackBarRef = createRef();
 
   /**
    *Creates an instance of BackgroundTask.

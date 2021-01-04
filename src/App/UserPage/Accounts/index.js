@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 
 import Icon from 'components/Icon';
@@ -17,7 +17,7 @@ __ = __context('User.Accounts');
 @connect((state) => ({
   accounts: state.user.accounts,
 }))
-export default class Accounts extends React.Component {
+class Accounts extends Component {
   constructor(props) {
     super(props);
     switchUserTab('Accounts');
@@ -56,3 +56,5 @@ export default class Accounts extends React.Component {
     );
   }
 }
+
+export default Accounts;

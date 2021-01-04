@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
 import { connect } from 'react-redux';
@@ -34,7 +34,7 @@ const ExtraSection = styled.div({
  * @extends {Component}
  */
 @connect(({ core: { systemInfo } }) => ({
-  syncing: systemInfo.synchronizing,
+  syncing: systemInfo?.synchronizing,
 }))
 @reduxForm({
   form: 'login_tritium',

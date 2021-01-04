@@ -1,7 +1,7 @@
 // External
-import React, { PureComponent } from 'react';
+import { PureComponent } from 'react';
 import styled from '@emotion/styled';
-import { keyframes } from '@emotion/core';
+import { keyframes } from '@emotion/react';
 
 // Internal
 import ModalContext from 'context/modal';

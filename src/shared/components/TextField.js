@@ -1,5 +1,3 @@
-// @jsx jsx
-
 /**
  * Important note - This file is imported into module_preload.js, either directly or
  * indirectly, and will be a part of the preload script for modules, therefore:
@@ -12,9 +10,8 @@
  */
 
 // External
-import React, { Component } from 'react';
+import { Component } from 'react';
 import styled from '@emotion/styled';
-import { jsx, css } from '@emotion/core';
 
 // Internal
 import Tooltip from 'components/Tooltip';
@@ -222,7 +219,7 @@ const Input = styled.input(
     }
 );
 
-const multilineStyle = css({
+const MultilineInput = styled(Input)({
   height: 'auto',
   width: '100%',
   paddingTop: '.4em',
@@ -247,14 +244,7 @@ class TextArea extends Component {
   };
 
   render() {
-    return (
-      <Input
-        ref={this.inputRef}
-        as="textarea"
-        css={multilineStyle}
-        {...this.props}
-      />
-    );
+    return <MultilineInput ref={this.inputRef} as="textarea" {...this.props} />;
   }
 }
 

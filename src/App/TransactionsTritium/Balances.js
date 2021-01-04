@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
@@ -45,7 +45,7 @@ const Value = styled.div({
 @connect((state) => ({
   balances: state.user.balances,
 }))
-export default class Balances extends React.Component {
+class Balances extends Component {
   componentDidMount() {
     // Periodically get balances
     refreshBalances();
@@ -141,3 +141,5 @@ export default class Balances extends React.Component {
     );
   }
 }
+
+export default Balances;

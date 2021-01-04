@@ -42,18 +42,21 @@ const devPlugins = [];
 const prodPlugins = ['babel-plugin-dev-expression'];
 const development = process.env.NODE_ENV === 'development';
 
-export const rendererBabelConfig = (hot) => {
+export const rendererBabelConfig = ({ hot } = {}) => {
   const config = {
     plugins: [
-      ['emotion', { sourceMap: development }],
+      ['@emotion', { sourceMap: development }],
       ...stage0Preset,
       ...(development ? devPlugins : [...prodPlugins, ...reactOptimizePreset]),
     ],
-    presets: [presetEnv, ['@babel/preset-react', { development }]],
+    presets: [
+      presetEnv,
+      ['@babel/preset-react', { development, runtime: 'automatic' }],
+    ],
   };
 
   if (hot) {
-    config.plugins.push('react-hot-loader/babel');
+    config.plugins.unshift('react-refresh/babel');
   }
   return config;
 };

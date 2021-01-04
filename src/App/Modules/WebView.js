@@ -1,5 +1,5 @@
 // External
-import React from 'react';
+import { createRef, Component } from 'react';
 import { existsSync } from 'fs';
 import { URL } from 'url';
 import { join } from 'path';
@@ -35,8 +35,8 @@ const getEntryUrl = (module) => {
  * @class WebView
  * @extends {Component}
  */
-class WebView extends React.Component {
-  webviewRef = React.createRef();
+class WebView extends Component {
+  webviewRef = createRef();
 
   /**
    * Creates an instance of WebView.
@@ -60,7 +60,15 @@ class WebView extends React.Component {
    * @memberof WebView
    */
   componentDidMount() {
-    setActiveWebView(this.webviewRef.current, this.props.module.info.name);
+    const {
+      webviewRef,
+      props: {
+        module: {
+          info: { name, displayName },
+        },
+      },
+    } = this;
+    setActiveWebView(webviewRef.current, name, displayName);
   }
 
   /**

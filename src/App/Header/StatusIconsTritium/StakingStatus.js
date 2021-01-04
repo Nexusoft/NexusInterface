@@ -1,5 +1,5 @@
 // External Dependencies
-import React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
@@ -34,7 +34,7 @@ __ = __context('Header');
     synchronized: isSynchronized(state),
   };
 })
-class StakingStatus extends React.Component {
+class StakingStatus extends Component {
   /**
    * Component's Renderable JSX
    *

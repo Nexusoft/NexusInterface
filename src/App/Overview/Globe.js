@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import * as THREE from 'three';
 import styled from '@emotion/styled';
 import OrbitControls from 'three-orbitcontrols';

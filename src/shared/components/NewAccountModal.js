@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import { reduxForm, Field } from 'redux-form';
 import { connect } from 'react-redux';
 
@@ -13,7 +13,7 @@ import { callApi } from 'lib/tritiumApi';
 import { errorHandler } from 'utils/form';
 import { loadAccounts } from 'lib/user';
 import { removeModal, showNotification, openErrorDialog } from 'lib/ui';
-import { namedAccount } from 'lib/fees';
+import { createLocalNameFee } from 'lib/fees';
 import GA from 'lib/googleAnalytics';
 import memoize from 'utils/memoize';
 import { addressRegex } from 'consts/misc';
@@ -102,7 +102,7 @@ const mapStateToProps = (state) => {
   },
   onSubmitFail: errorHandler(__('Error creating account')),
 })
-export default class NewAccountModal extends React.Component {
+class NewAccountModal extends Component {
   render() {
     const { handleSubmit, submitting, suggestions } = this.props;
     return (
@@ -118,7 +118,7 @@ export default class NewAccountModal extends React.Component {
             <FormField
               connectLabel
               label={__('Account name (%{nameFee} NXS Fee) (Optional)', {
-                nameFee: namedAccount,
+                nameFee: createLocalNameFee,
               })}
             >
               <Field
@@ -157,3 +157,5 @@ export default class NewAccountModal extends React.Component {
     );
   }
 }
+
+export default NewAccountModal;

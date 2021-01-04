@@ -10,7 +10,7 @@
  */
 
 // External Dependencies
-import React from 'react';
+import { forwardRef } from 'react';
 import styled from '@emotion/styled';
 
 import { consts, timing } from 'styles';
@@ -31,7 +31,7 @@ const Legend = styled.legend(({ theme, color }) => ({
   transition: `color ${timing.normal}`,
 }));
 
-const FieldSet = React.forwardRef(
+const FieldSet = forwardRef(
   ({ legend, children, color, ...rest }, ref) => (
     <FieldSetComponent {...rest} ref={ref} color={color}>
       <Legend color={color}>{legend}</Legend>

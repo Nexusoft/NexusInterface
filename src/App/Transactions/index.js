@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import GA from 'lib/googleAnalytics';
 import styled from '@emotion/styled';

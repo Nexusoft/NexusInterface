@@ -1,5 +1,5 @@
 // External Dependencies
-import React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
@@ -27,16 +27,14 @@ const SpinningIcon = styled(Icon)({
  */
 @connect((state) => {
   const {
-    core: {
-      systemInfo: { synccomplete },
-    },
+    core: { systemInfo },
   } = state;
   return {
     synchronized: isSynchronized(state),
-    synccomplete,
+    synccomplete: systemInfo?.synccomplete,
   };
 })
-class SyncStatus extends React.Component {
+class SyncStatus extends Component {
   /**
    * Component's Renderable JSX
    *

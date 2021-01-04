@@ -5,12 +5,10 @@
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import { merge } from 'webpack-merge';
 
-import baseConfig from './webpack.config.base.main';
-import CheckNodeEnv from '../internals/scripts/CheckNodeEnv';
+import baseMainConfig from './webpack.config.base.main';
+import prodConfig from './webpack.config.base.prod';
 
-CheckNodeEnv('production');
-
-export default merge(baseConfig, {
+export default merge(baseMainConfig, prodConfig, {
   output: {
     filename: 'main.prod.js',
   },

@@ -1,4 +1,3 @@
-import React from 'react';
 import { connect } from 'react-redux';
 
 import Modal from 'components/Modal';
@@ -31,7 +30,7 @@ const AccountDetailsModal = ({ account, stakeInfo }) => (
         <Modal.Header>{__('Account Details')}</Modal.Header>
         <Modal.Body>
           <InfoField ratio={[1, 2]} label={__('Account name')}>
-            {account.name}
+            {account.name || <span className="dim">{__('Unnamed')}</span>}
           </InfoField>
           <InfoField ratio={[1, 2]} label={__('Created at')}>
             {formatDateTime(account.created * 1000, timeFormatOptions)}
@@ -42,6 +41,11 @@ const AccountDetailsModal = ({ account, stakeInfo }) => (
           <InfoField ratio={[1, 2]} label={__('Token name')}>
             {account.token_name}
           </InfoField>
+          {account.data !== undefined && (
+            <InfoField ratio={[1, 2]} label={__('Data')}>
+              {account.data}
+            </InfoField>
+          )}
           <InfoField ratio={[1, 2]} label={__('Total account balance')}>
             {formatNumber(totalBalance(account), 6)} {getTokenName(account)}
           </InfoField>
@@ -60,7 +64,7 @@ const AccountDetailsModal = ({ account, stakeInfo }) => (
                 }}
               >
                 {__('Send %{token_name}', {
-                  token_name: getTokenName(account),
+                  token_name: getTokenName(account, { markup: false }),
                 })}
               </Button>
             )}

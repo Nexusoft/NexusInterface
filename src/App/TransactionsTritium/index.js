@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { createRef, Component } from 'react';
 import { connect } from 'react-redux';
 import GA from 'lib/googleAnalytics';
 import styled from '@emotion/styled';
@@ -119,7 +119,7 @@ const mapStateToProps = (state) => {
  * @extends {Component}
  */
 class TransactionsTritium extends Component {
-  listRef = React.createRef();
+  listRef = createRef();
 
   state = {
     // Whether transaction list is having a scrollbar

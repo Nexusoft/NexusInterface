@@ -1,5 +1,5 @@
 // External
-import React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 import { shell } from 'electron';
@@ -43,7 +43,7 @@ const FailedModule = styled.div(({ theme }) => ({
   failedModules: state.failedModules,
   devMode: state.settings.devMode,
 }))
-class SettingsModules extends React.Component {
+class SettingsModules extends Component {
   /**
    *Creates an instance of SettingsModules.
    * @param {*} props

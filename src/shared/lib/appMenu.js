@@ -214,7 +214,7 @@ const menuItems = preprocess({
   walletGuideLink: {
     label: __('Nexus Wallet Guide'),
     click: () => {
-      shell.openExternal('https://nexus.io/nexus-tritium-wallet-guide/');
+      shell.openExternal('https://crypto.nexus.io/tritium-guide');
     },
   },
   openCoreDataDir: {

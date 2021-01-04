@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
@@ -119,7 +119,7 @@ const NameTypeSelect = ({ input, hasNamespaces }) => (
   },
   onSubmitFail: errorHandler(__('Error creating name')),
 })
-class CreateNameForm extends React.Component {
+class CreateNameForm extends Component {
   constructor(props) {
     super(props);
     loadNamespaces();

@@ -8,15 +8,14 @@
  * - Make sure a similar note also presents in other files which are imported here.
  */
 
-import React from 'react';
+import * as React from 'react';
 import ReactDOM from 'react-dom';
 import * as ReactRouterDOM from 'react-router-dom';
 import * as Redux from 'redux';
 import * as ReactRedux from 'react-redux';
 import createCache from '@emotion/cache';
-import * as core from '@emotion/core';
+import * as core from '@emotion/react';
 import styled from '@emotion/styled';
-import * as theming from 'emotion-theming';
 import { ipcRenderer, clipboard, shell } from 'electron';
 import * as ReduxForm from 'redux-form';
 
@@ -52,7 +51,7 @@ global.NEXUS = {
     Redux,
     ReduxForm,
     ReactRedux,
-    emotion: { core, styled, theming, createCache },
+    emotion: { core, styled, theming: core, createCache },
   },
   utilities: {
     color,

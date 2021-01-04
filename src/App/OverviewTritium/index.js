@@ -1,9 +1,9 @@
 // External
-import React, { Component } from 'react';
+import { Fragment, Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import styled from '@emotion/styled';
-import { keyframes } from '@emotion/core';
+import { keyframes } from '@emotion/react';
 import GA from 'lib/googleAnalytics';
 
 // Internal
@@ -322,10 +322,7 @@ class Overview extends Component {
    * @memberof Overview
    */
   componentDidUpdate(prevProps) {
-    const {
-      settings,
-      systemInfo: { blocks, connections },
-    } = this.props;
+    const { settings, systemInfo } = this.props;
     const correctView =
       settings.overviewDisplay !== 'minimalist' &&
       settings.overviewDisplay !== 'none';
@@ -335,17 +332,24 @@ class Overview extends Component {
       settings.renderGlobe &&
       correctView
     ) {
-      if (blocks != prevProps.blocks && blocks && prevProps.blocks) {
+      if (
+        systemInfo?.blocks != prevProps.blocks &&
+        systemInfo?.blocks &&
+        prevProps.blocks
+      ) {
         this.redrawCurves();
       }
 
-      if (prevProps.connections && connections == 0) {
+      if (prevProps.connections && systemInfo?.connections == 0) {
         this.removeAllPoints();
         this.reDrawEverything();
         return;
       }
 
-      if (connections && prevProps.connections !== connections) {
+      if (
+        systemInfo?.connections &&
+        prevProps.connections !== systemInfo?.connections
+      ) {
         //Core Starting Up
         this.reDrawEverything();
       }
@@ -451,7 +455,7 @@ class Overview extends Component {
     const { blockweight, trustweight, stakeweight } = stakeInfo || {};
 
     return (
-      <React.Fragment>
+      <Fragment>
         <Stat
           as={blockweight ? Link : undefined}
           to={blockweight ? '/User/Staking' : undefined}
@@ -496,7 +500,7 @@ class Overview extends Component {
             </StatValue>
           </div>
         </Stat>
-      </React.Fragment>
+      </Fragment>
     );
   };
 
@@ -507,7 +511,7 @@ class Overview extends Component {
    */
   returnDifficultyStats = (miningInfo) => {
     return (
-      <React.Fragment>
+      <Fragment>
         <Stat>
           <StatIcon icon={this.trustIcon()} />
           <div>
@@ -548,7 +552,7 @@ class Overview extends Component {
             </StatValue>
           </div>
         </Stat>
-      </React.Fragment>
+      </Fragment>
     );
   };
 
@@ -561,8 +565,8 @@ class Overview extends Component {
    */
   render() {
     const {
-      systemInfo: { connections, txtotal, blocks },
-      stakeInfo: { stakerate },
+      systemInfo,
+      stakeInfo,
       balances,
       blockDate,
       market,
@@ -572,6 +576,8 @@ class Overview extends Component {
       synchronized,
     } = this.props;
     const { available, pending, unconfirmed, stake, immature } = balances || {};
+    const { connections, txtotal, blocks } = systemInfo || {};
+    const { stakerate } = stakeInfo || {};
     const { fiatCurrency } = settings;
 
     if (settings.overviewDisplay === 'none') {

@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
@@ -54,7 +54,7 @@ const BalanceTooltip = (staking) =>
   stakeInfo: state.user.stakeInfo,
   stakingEnabled: state.settings.enableStaking,
 }))
-export default class Staking extends React.Component {
+class Staking extends Component {
   constructor(props) {
     super(props);
     switchUserTab('Staking');
@@ -224,3 +224,5 @@ export default class Staking extends React.Component {
     );
   }
 }
+
+export default Staking;

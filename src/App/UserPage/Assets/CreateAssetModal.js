@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import { reduxForm, Field, FieldArray } from 'redux-form';
 
 import Modal from 'components/Modal';
@@ -100,7 +100,7 @@ const AssetFields = ({ fields, form, removeField }) =>
   },
   onSubmitFail: errorHandler(__('Error creating asset')),
 })
-class CreateAssetForm extends React.Component {
+class CreateAssetForm extends Component {
   constructor(props) {
     super(props);
   }
