@@ -542,14 +542,19 @@ The amount of NXS currently staked in the trust account,,Transactions.Balances
 Immature,未成熟,Transactions.Balances
 The sum of all coinbase transactions that have not yet reached maturity,,Transactions.Balances
 Unnamed account,,User.Accounts
+Rename,,User.Accounts
 Details,,User.Accounts
 History,,User.Accounts
+<b>%{account_name}</b> account address,,User.Accounts
+Unnamed,,User.Accounts
 Create new account,,User.Accounts
 Account Details,,User.Accounts.AccountDetails
 Account name,帐户名称,User.Accounts.AccountDetails
+Unnamed,,User.Accounts.AccountDetails
 Created at,,User.Accounts.AccountDetails
 Last modified,,User.Accounts.AccountDetails
 Token name,,User.Accounts.AccountDetails
+Data,,User.Accounts.AccountDetails
 Total account balance,,User.Accounts.AccountDetails
 Available balance,,User.Accounts.AccountDetails
 Send %{token_name},,User.Accounts.AccountDetails
@@ -578,6 +583,19 @@ Available,,User.Accounts.AccountHistory
 Pending,待处理,User.Accounts.AccountHistory
 Unconfirmed,,User.Accounts.AccountHistory
 Stake,堆栈,User.Accounts.AccountHistory
+Rename account,,RenameAccount
+Account name,,RenameAccount
+Account renaming fee,,RenameAccount
+Cancel,,RenameAccount
+Renaming,,RenameAccount
+Rename,,RenameAccount
+Account name is required,,RenameAccount
+Name already in use,,RenameAccount
+The name you entered is already in use. Please choose another name.,,RenameAccount
+Insuffient balance,,RenameAccount
+Your default account balance is not enough to pay the fee.,,RenameAccount
+Account has been renamed to %{account_name},,RenameAccount
+Error renaming account,,RenameAccount
 Unnamed asset,,User.Assets
 You own %{percentage}% of this asset,,User.Assets
 Create new asset,,User.Assets
@@ -694,10 +712,12 @@ Create a new name,,CreateName
 View name details,,User.Names
 Change register address,,User.Names
 Transfer name,,User.Names
+Unused,,User.Names
 Global,,User.Names
 Namespaced,,User.Names
 Local,,User.Names
 Create new name,,User.Names
+Show unused names,,User.Names
 You don't own any name,,User.Names
 Name Details,,NameDetails
 Change register address,,NameDetails

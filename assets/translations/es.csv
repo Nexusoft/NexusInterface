@@ -541,14 +541,19 @@ The amount of NXS currently staked in the trust account,La cantidad de NXS actua
 Immature,Por confirmar,Transactions.Balances
 The sum of all coinbase transactions that have not yet reached maturity,La suma de todas las transacciones de coinbase que aún no han alcanzado la madurez,Transactions.Balances
 Unnamed account,Cuenta sin nombre,User.Accounts
+Rename,,User.Accounts
 Details,Detalles,User.Accounts
 History,Historial,User.Accounts
+<b>%{account_name}</b> account address,,User.Accounts
+Unnamed,,User.Accounts
 Create new account,Crear una cuenta nueva,User.Accounts
 Account Details,Detalles de la cuenta,User.Accounts.AccountDetails
 Account name,Nombre de la cuenta,User.Accounts.AccountDetails
+Unnamed,,User.Accounts.AccountDetails
 Created at,Fecha de creación,User.Accounts.AccountDetails
 Last modified,Ultima modificación,User.Accounts.AccountDetails
 Token name,Nombre del token,User.Accounts.AccountDetails
+Data,,User.Accounts.AccountDetails
 Total account balance,Saldo total de la cuenta,User.Accounts.AccountDetails
 Available balance,Balance disponible,User.Accounts.AccountDetails
 Send %{token_name},,User.Accounts.AccountDetails
@@ -577,6 +582,19 @@ Available,Disponible,User.Accounts.AccountHistory
 Pending,En espera,User.Accounts.AccountHistory
 Unconfirmed,No confirmado,User.Accounts.AccountHistory
 Stake,Estaca,User.Accounts.AccountHistory
+Rename account,,RenameAccount
+Account name,,RenameAccount
+Account renaming fee,,RenameAccount
+Cancel,,RenameAccount
+Renaming,,RenameAccount
+Rename,,RenameAccount
+Account name is required,,RenameAccount
+Name already in use,,RenameAccount
+The name you entered is already in use. Please choose another name.,,RenameAccount
+Insuffient balance,,RenameAccount
+Your default account balance is not enough to pay the fee.,,RenameAccount
+Account has been renamed to %{account_name},,RenameAccount
+Error renaming account,,RenameAccount
 Unnamed asset,,User.Assets
 You own %{percentage}% of this asset,,User.Assets
 Create new asset,,User.Assets
@@ -693,10 +711,12 @@ Create a new name,,CreateName
 View name details,,User.Names
 Change register address,,User.Names
 Transfer name,,User.Names
+Unused,,User.Names
 Global,,User.Names
 Namespaced,,User.Names
 Local,,User.Names
 Create new name,,User.Names
+Show unused names,,User.Names
 You don't own any name,,User.Names
 Name Details,,NameDetails
 Change register address,,NameDetails

@@ -539,14 +539,19 @@ The amount of NXS currently staked in the trust account,Het NXS-bedrag dat momen
 Immature,Ongeverifieerd,Transactions.Balances
 The sum of all coinbase transactions that have not yet reached maturity,De som van alle coinbasetransacties die nog niet uitgehard/volwassen zijn,Transactions.Balances
 Unnamed account,Naamloos account,User.Accounts
+Rename,,User.Accounts
 Details,Details,User.Accounts
 History,Geschiedenis,User.Accounts
+<b>%{account_name}</b> account address,,User.Accounts
+Unnamed,,User.Accounts
 Create new account,Nieuw account aanmaken,User.Accounts
 Account Details,Accountgegevens,User.Accounts.AccountDetails
 Account name,Account Naam,User.Accounts.AccountDetails
+Unnamed,,User.Accounts.AccountDetails
 Created at,Aangemaakt op,User.Accounts.AccountDetails
 Last modified,Laatst gewijzigd,User.Accounts.AccountDetails
 Token name,Tokennaam,User.Accounts.AccountDetails
+Data,,User.Accounts.AccountDetails
 Total account balance,Totale accountsaldo,User.Accounts.AccountDetails
 Available balance,Beschikbaar saldo,User.Accounts.AccountDetails
 Send %{token_name},,User.Accounts.AccountDetails
@@ -575,6 +580,19 @@ Available,Beschikbaar,User.Accounts.AccountHistory
 Pending,In afwachting,User.Accounts.AccountHistory
 Unconfirmed,Onbevestigd,User.Accounts.AccountHistory
 Stake,Stake,User.Accounts.AccountHistory
+Rename account,,RenameAccount
+Account name,,RenameAccount
+Account renaming fee,,RenameAccount
+Cancel,,RenameAccount
+Renaming,,RenameAccount
+Rename,,RenameAccount
+Account name is required,,RenameAccount
+Name already in use,,RenameAccount
+The name you entered is already in use. Please choose another name.,,RenameAccount
+Insuffient balance,,RenameAccount
+Your default account balance is not enough to pay the fee.,,RenameAccount
+Account has been renamed to %{account_name},,RenameAccount
+Error renaming account,,RenameAccount
 Unnamed asset,,User.Assets
 You own %{percentage}% of this asset,,User.Assets
 Create new asset,,User.Assets
@@ -691,10 +709,12 @@ Create a new name,,CreateName
 View name details,,User.Names
 Change register address,,User.Names
 Transfer name,,User.Names
+Unused,,User.Names
 Global,,User.Names
 Namespaced,,User.Names
 Local,,User.Names
 Create new name,,User.Names
+Show unused names,,User.Names
 You don't own any name,,User.Names
 Name Details,,NameDetails
 Change register address,,NameDetails
