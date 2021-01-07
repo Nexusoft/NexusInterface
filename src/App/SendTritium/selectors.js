@@ -1,4 +1,6 @@
 import styled from '@emotion/styled';
+
+import { getTokenName } from 'lib/tokens';
 import memoize from 'utils/memoize';
 
 __ = __context('Send');
@@ -25,9 +27,10 @@ export const getAccountOptions = memoize((myAccounts, myTokens) => {
     options.push(
       ...myAccounts.map((acc) => ({
         value: acc.name || acc.address,
-        display: `${acc.name || acc.address} (${acc.balance} ${
-          acc.token_name || 'Tokens'
-        })`,
+        display: `${acc.name || acc.address} (${acc.balance} ${getTokenName(
+          acc,
+          { markup: false }
+        )})`,
         indent: true,
       }))
     );
@@ -42,9 +45,12 @@ export const getAccountOptions = memoize((myAccounts, myTokens) => {
     options.push(
       ...myTokens.map((token) => ({
         value: token.name || token.address,
-        display: `${token.name || token.address} (${token.balance} ${
-          token.name || 'Tokens'
-        })`,
+        display: `${token.name || token.address} (${
+          token.balance
+        } ${getTokenName(
+          { token_name: token.name, token: token.address },
+          { markup: false }
+        )})`,
         indent: true,
       }))
     );
@@ -137,10 +143,10 @@ export const getRecipientSuggestions = memoize(
           token: element.token,
           display: (
             <span>
-              {element.name} {'   '}
-              <TokenRecipientName>{`(${
-                element.token_name || 'Tokens'
-              })`}</TokenRecipientName>{' '}
+              {element.name || (
+                <span style={{ fontStyle: 'italic' }}>{__('Unnamed')}</span>
+              )}{' '}
+              <TokenRecipientName>({getTokenName(element)})</TokenRecipientName>{' '}
               <Address>{element.address}</Address>
             </span>
           ),
