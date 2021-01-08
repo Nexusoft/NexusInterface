@@ -9,6 +9,7 @@ import TextField from 'components/TextField';
 import FormField from 'components/FormField';
 import Link from 'components/Link';
 import Tooltip from 'components/Tooltip';
+import { getTokenName } from 'lib/tokens';
 
 __ = __context('Send');
 
@@ -128,7 +129,10 @@ class AmountField extends Component {
               <>
                 <span className="v-align">
                   {__('%{tokenName} Amount', {
-                    tokenName: token.name || 'Token',
+                    tokenName: getTokenName(
+                      { token_name: token.name, token: token.address },
+                      { markup: false }
+                    ),
                   })}
                 </span>
                 {!token.name && <TokenAddress> {token.address} </TokenAddress>}
