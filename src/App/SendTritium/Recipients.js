@@ -79,7 +79,6 @@ class Recipients extends Component {
    */
   render() {
     const { fields, change, accBalance, sendFrom, addRecipient } = this.props;
-    console.log('sendFrom', sendFrom);
     const token = {
       name: sendFrom.token_name
         ? sendFrom.token_name === '0'

@@ -177,19 +177,24 @@ const referenceRegex = /^[0-9]+$/;
       const params = {
         pin,
         address: props.accountInfo.address,
-        amount: parseFloat(recipients[0].amount),
       };
 
-      const recipientInputSize = new Blob([recipients[0].address]).size;
-      const isAddress =
-        recipientInputSize === 51 &&
-        recipients[0].address.match(/([0OIl+/])/g) === null;
+      recipients.forEach((recipient, i) => {
+        const recipParam = params.recipients[i];
+        const recipientInputSize = new Blob([recipient.address]).size;
+        const isAddress =
+          recipientInputSize === 51 &&
+          recipient.address.match(/([0OIl+/])/g) === null;
 
-      isAddress
-        ? (params.address_to = recipients[0].address)
-        : (params.name_to = recipients[0].address);
-      if (reference) params.reference = reference;
-      if (expires) params.expires = expires;
+        if (isAddress) {
+          recipParam.address_to = recipient.address;
+        } else {
+          recipParam.name_to = recipient.address;
+        }
+        if (reference) recipParam.reference = reference;
+        if (expires) recipParam.expires = expires;
+        recipParam.amount = parseFloat(recipient.amount);
+      });
 
       if (props.accountInfo.token_name === 'NXS') {
         return await callApi('finance/debit/account', params);
