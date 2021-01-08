@@ -5,7 +5,11 @@ import styled from '@emotion/styled';
 
 // Internal
 import Icon from 'components/Icon';
+import Tooltip from 'components/Tooltip';
+6;
+import Button from 'components/Button';
 import { timing } from 'styles';
+import plusIcon from 'icons/plus.svg';
 import RecipientField from './RecipientField';
 import AmountField from './AmountField';
 
@@ -74,33 +78,79 @@ class Recipients extends Component {
    * @memberof Recipients
    */
   render() {
-    const { fields, change, accBalance, sendFrom } = this.props;
+    const { fields, change, accBalance, sendFrom, addRecipient } = this.props;
+    console.log('sendFrom', sendFrom);
+    const token = {
+      name: sendFrom.token_name
+        ? sendFrom.token_name === '0'
+          ? 'NXS'
+          : sendFrom.token_name
+        : sendFrom.name,
+      address: sendFrom.token || sendFrom.address,
+    };
 
     if (!fields || !fields.length) return null;
 
-    return (
-      <>
-        <Field
-          name={`${fields.name}[0].address`}
-          component={RecipientField}
-          change={change}
-          sendFrom={sendFrom}
-        />
-        <AmountField
-          fullAmount={accBalance}
-          parentFieldName={`${fields.name}[0]`}
-          change={change}
-          token={{
-            name: sendFrom.token_name
-              ? sendFrom.token_name === '0'
-                ? 'NXS'
-                : sendFrom.token_name
-              : sendFrom.name,
-            address: sendFrom.token || sendFrom.address,
-          }}
-        />
-      </>
-    );
+    if (fields.length === 1) {
+      return (
+        <>
+          <Field
+            name={`${fields.name}[0].address`}
+            component={RecipientField}
+            change={change}
+            sendFrom={sendFrom}
+          />
+          <AmountField
+            fullAmount={accBalance}
+            parentFieldName={`${fields.name}[0]`}
+            change={change}
+            token={token}
+          />
+        </>
+      );
+    } else {
+      return (
+        <>
+          {fields.map((fieldName, i) => (
+            <Recipient key={i}>
+              <Tooltip.Trigger tooltip={__('Remove recipient')}>
+                <RemoveButton
+                  onClick={() => {
+                    fields.remove(i);
+                  }}
+                >
+                  ✕
+                </RemoveButton>
+              </Tooltip.Trigger>
+
+              <AddressWrapper>
+                <Field
+                  name={`${fieldName}.address`}
+                  component={RecipientField}
+                  change={change}
+                  sendFrom={sendFrom}
+                />
+              </AddressWrapper>
+
+              <AmountWrapper>
+                <AmountField
+                  parentFieldName={fieldName}
+                  change={change}
+                  token={token}
+                />
+              </AmountWrapper>
+            </Recipient>
+          ))}
+
+          <MoreInfo>
+            <Button skin="hyperlink" onClick={addRecipient}>
+              <PlusIcon icon={plusIcon} className="space-right" />
+              <span className="v-align">{__('Add recipient')}</span>
+            </Button>
+          </MoreInfo>
+        </>
+      );
+    }
   }
 }
 export default Recipients;

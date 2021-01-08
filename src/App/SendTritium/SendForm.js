@@ -7,7 +7,7 @@ import styled from '@emotion/styled';
 // Internal Global
 import { callApi } from 'lib/tritiumApi';
 import { loadAccounts } from 'lib/user';
-import { formName, defaultValues } from 'lib/send';
+import { formName, defaultValues, defaultRecipient } from 'lib/send';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
@@ -42,7 +42,15 @@ const SendFormComponent = styled.form({
 const SendFormButtons = styled.div({
   display: 'flex',
   justifyContent: 'space-between',
-  marginTop: '2em',
+  marginTop: '3em',
+});
+
+const SendBtn = styled(Button)({
+  flex: 1,
+});
+
+const MultiBtn = styled(Button)({
+  marginRight: '1em',
 });
 
 const OptionsArrow = styled.span({
@@ -269,27 +277,8 @@ class SendForm extends Component {
    * @memberof SendForm
    */
   addRecipient = () => {
-    this.props.array.push('recipients', {
-      address: null,
-      amount: '',
-      fiatAmount: '',
-    });
+    this.props.array.push('recipients', defaultRecipient);
   };
-
-  /**
-   * Return JSX for the Add Recipient Button
-   *
-   * @memberof SendForm
-   */
-  renderAddRecipientButton = ({ fields }) =>
-    //BEING REMOVED TILL NEW API SUPPORTS MULTI SEND
-    fields.length === 1 ? (
-      <Button onClick={this.addRecipient}>
-        {__('Send To multiple recipients')}
-      </Button>
-    ) : (
-      <div />
-    );
 
   /**
    * Component's Renderable JSX
@@ -371,10 +360,20 @@ class SendForm extends Component {
         )}
 
         <SendFormButtons>
-          <Button type="submit" skin="primary" wide disabled={submitting}>
+          <FieldArray
+            component={({ fields }) =>
+              fields.length === 1 && (
+                <MultiBtn skin="default" onClick={this.addRecipient}>
+                  {__('Send To multiple recipients')}
+                </MultiBtn>
+              )
+            }
+            name="recipients"
+          />
+          <SendBtn type="submit" skin="primary" disabled={submitting}>
             <Icon icon={sendIcon} className="space-right" />
             {__('Send')}
-          </Button>
+          </SendBtn>
         </SendFormButtons>
       </SendFormComponent>
     );

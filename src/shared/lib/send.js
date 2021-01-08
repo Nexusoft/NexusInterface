@@ -5,15 +5,15 @@ import store from 'store';
 
 export const formName = 'send';
 
+export const defaultRecipient = {
+  address: null,
+  amount: '',
+  fiatAmount: '',
+};
+
 export const defaultValues = {
   sendFrom: null,
-  recipients: [
-    {
-      address: null,
-      amount: '',
-      fiatAmount: '',
-    },
-  ],
+  recipients: [defaultRecipient],
   reference: null,
   expires: null,
 };
