@@ -89,6 +89,25 @@ const mapStateToProps = (state) => {
 
 const referenceRegex = /^[0-9]+$/;
 
+async function asyncValidateRecipient(recipient) {
+  const { address } = recipient;
+
+  if (addressRegex.test(address)) {
+    const addressResult = await callApi('system/validate/address', {
+      address,
+    });
+    if (addressResult.is_valid) {
+      return null;
+    }
+  }
+
+  try {
+    await callApi('names/get/name', { name: address });
+  } catch (err) {
+    throw { address: __('Invalid name/address') };
+  }
+}
+
 /**
  * The Internal Send Form in the Send Page
  *
@@ -148,24 +167,18 @@ const referenceRegex = /^[0-9]+$/;
   },
   asyncBlurFields: ['recipients[].address'],
   asyncValidate: async ({ recipients }) => {
-    const { address } = recipients[0];
-
-    if (addressRegex.test(address)) {
-      const addressResult = await callApi('system/validate/address', {
-        address,
-      });
-      if (addressResult.is_valid) {
-        return null;
-      }
+    const results = await Promise.allSettled(
+      recipients.map((recipient) => asyncValidateRecipient(recipient))
+    );
+    if (results.some(({ status }) => status === 'rejected')) {
+      throw {
+        recipients: results.map(({ status, reason }) =>
+          status === 'rejected' ? reason : undefined
+        ),
+      };
+    } else {
+      return null;
     }
-
-    try {
-      await callApi('names/get/name', { name: address });
-    } catch (err) {
-      throw { recipients: [{ address: __('Invalid name/address') }] };
-    }
-
-    return null;
   },
   onSubmit: async (
     { sendFrom, recipients, reference, expires },
