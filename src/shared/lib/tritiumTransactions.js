@@ -167,7 +167,7 @@ export function prepareTransactions() {
                   `${change.amount >= 0 ? '+' : ''}${formatNumber(
                     change.amount,
                     6
-                  )} ${TokenName.from({ account: change })}`
+                  )} ${TokenName.from({ contract: change })}`
               );
               showDesktopNotif(__('New transaction'), changeLines.join(' \n'));
               showNotification(

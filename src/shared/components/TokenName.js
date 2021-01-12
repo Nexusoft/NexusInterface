@@ -1,13 +1,16 @@
 import Tooltip from 'components/Tooltip';
 import NexusAddress from 'components/NexusAddress';
 
-const getToken = (token, account) =>
-  token || { name: account.token_name, address: account.token };
+const getToken = ({ token, account, contract }) => {
+  if (token) return token;
+  const obj = account || contract;
+  return { name: obj?.token_name, address: obj?.token };
+};
 
 const trimAddress = (address) => (address ? address.substring(0, 3) + '…' : '');
 
-export default function TokenName({ token, account, ...rest }) {
-  const { name, address } = getToken(token, account);
+export default function TokenName({ token, account, contract, ...rest }) {
+  const { name, address } = getToken({ token, account, contract });
 
   const tokenLabel = name ? (
     __('<token_name></token_name> token', null, {
@@ -38,7 +41,7 @@ export default function TokenName({ token, account, ...rest }) {
   );
 }
 
-TokenName.from = ({ token, account }) => {
-  const { name, address } = getToken(token, account);
+TokenName.from = ({ token, account, contract }) => {
+  const { name, address } = getToken({ token, account, contract });
   return name || trimAddress(address);
 };

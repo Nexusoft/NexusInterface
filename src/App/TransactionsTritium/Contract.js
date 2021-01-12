@@ -329,7 +329,7 @@ const Contract = ({ contract, txid }) => (
     {!!contract.amount && (
       <ContractDelta sign={getDeltaSign(contract)}>
         {formatNumber(contract.amount)}{' '}
-        {contract.token ? <TokenName account={contract} /> : 'NXS'}
+        {contract.token ? <TokenName contract={contract} /> : 'NXS'}
       </ContractDelta>
     )}
   </ContractComponent>
