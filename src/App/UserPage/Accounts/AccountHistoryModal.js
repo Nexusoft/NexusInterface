@@ -11,7 +11,7 @@ import listAll from 'utils/listAll';
 import { formatDateTime, formatNumber, formatCurrency } from 'lib/intl';
 import { openModal, toggleUserBalanceDisplayFiat } from 'lib/ui';
 import { lookupAddress } from 'lib/addressBook';
-import { getTokenName } from 'lib/tokens';
+import TokenName from 'components/TokenName';
 import { handleError } from 'utils/form';
 
 import { totalBalance } from './utils';
@@ -248,7 +248,7 @@ class AccountHistoryModal extends Component {
                 legend={
                   account.token_name === 'NXS' ? (
                     <>
-                      {__('Account balance(')}
+                      {__('Account balance')} (
                       <Tooltip.Trigger
                         tooltip={__('Show %{tokenName}', {
                           tokenName: showFiat ? 'NXS' : 'Fiat',
@@ -265,10 +265,13 @@ class AccountHistoryModal extends Component {
                           {showFiat ? fiatCurrency : 'NXS'}
                         </Link>
                       </Tooltip.Trigger>
-                      {')'}
+                      )
                     </>
                   ) : (
-                    `${__('Account balance')} (${getTokenName(account)})`
+                    <span>
+                      {__('Account balance')} (
+                      <TokenName account={account} />)
+                    </span>
                   )
                 }
               >

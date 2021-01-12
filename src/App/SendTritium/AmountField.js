@@ -8,8 +8,7 @@ import styled from '@emotion/styled';
 import TextField from 'components/TextField';
 import FormField from 'components/FormField';
 import Link from 'components/Link';
-import Tooltip from 'components/Tooltip';
-import { getTokenName } from 'lib/tokens';
+import TokenName from 'components/TokenName';
 
 __ = __context('Send');
 
@@ -120,6 +119,8 @@ class AmountField extends Component {
    */
   render() {
     const token = this.props.token;
+    const tokenName = TokenName.from({ token });
+
     return (
       <SendAmount>
         <SendAmountField>
@@ -128,12 +129,8 @@ class AmountField extends Component {
             label={
               <>
                 <span className="v-align">
-                  {__('%{tokenName} Amount', {
-                    tokenName: getTokenName(
-                      { token_name: token.name, token: token.address },
-                      { markup: false }
-                    ),
-                  })}
+                  {__('Amount')}
+                  {!!tokenName && ` (${tokenName})`}
                 </span>
                 {!token.name && <TokenAddress> {token.address} </TokenAddress>}
                 {!!this.props.fullAmount && (

@@ -7,7 +7,7 @@ import { openModal } from 'lib/ui';
 import { popupContextMenu } from 'lib/contextMenu';
 import { formatNumber } from 'lib/intl';
 import { getDeltaSign } from 'lib/tritiumTransactions';
-import { getTokenName } from 'lib/tokens';
+import TokenName from 'components/TokenName';
 import { lookupAddress } from 'lib/addressBook';
 import { consts, timing } from 'styles';
 import * as color from 'utils/color';
@@ -328,7 +328,8 @@ const Contract = ({ contract, txid }) => (
     <ContractContent>{contractContent(contract)}</ContractContent>
     {!!contract.amount && (
       <ContractDelta sign={getDeltaSign(contract)}>
-        {formatNumber(contract.amount)} {getTokenName(contract)}
+        {formatNumber(contract.amount)}{' '}
+        {contract.token ? <TokenName account={contract} /> : 'NXS'}
       </ContractDelta>
     )}
   </ContractComponent>

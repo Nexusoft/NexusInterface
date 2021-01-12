@@ -77,7 +77,6 @@ const mapStateToProps = (state) => {
   return {
     reference,
     expires,
-    accountName,
     accountInfo,
     accountOptions: getAccountOptions(accounts, tokens),
     addressNameMap: getAddressNameMap(addressBook),

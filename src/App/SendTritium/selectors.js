@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 
-import { getTokenName } from 'lib/tokens';
+import TokenName from 'components/TokenName';
 import memoize from 'utils/memoize';
 
 __ = __context('Send');
@@ -27,10 +27,9 @@ export const getAccountOptions = memoize((myAccounts, myTokens) => {
     options.push(
       ...myAccounts.map((acc) => ({
         value: acc.name || acc.address,
-        display: `${acc.name || acc.address} (${acc.balance} ${getTokenName(
-          acc,
-          { markup: false }
-        )})`,
+        display: `${acc.name || acc.address} (${acc.balance} ${TokenName.from({
+          account: acc,
+        })})`,
         indent: true,
       }))
     );
@@ -47,10 +46,7 @@ export const getAccountOptions = memoize((myAccounts, myTokens) => {
         value: token.name || token.address,
         display: `${token.name || token.address} (${
           token.balance
-        } ${getTokenName(
-          { token_name: token.name, token: token.address },
-          { markup: false }
-        )})`,
+        } ${TokenName.from({ token })})`,
         indent: true,
       }))
     );
@@ -136,18 +132,20 @@ export const getRecipientSuggestions = memoize(
       });
     }
     if (myTritiumAccounts) {
-      myTritiumAccounts.forEach((element) => {
+      myTritiumAccounts.forEach((account) => {
         suggestions.push({
-          name: element.name || element.address,
-          value: element.address,
-          token: element.token,
+          name: account.name || account.address,
+          value: account.address,
+          token: account.token,
           display: (
             <span>
-              {element.name || (
+              {account.name || (
                 <span style={{ fontStyle: 'italic' }}>{__('Unnamed')}</span>
               )}{' '}
-              <TokenRecipientName>({getTokenName(element)})</TokenRecipientName>{' '}
-              <Address>{element.address}</Address>
+              <TokenRecipientName>
+                (<TokenName account={account} />)
+              </TokenRecipientName>{' '}
+              <Address>{account.address}</Address>
             </span>
           ),
         });

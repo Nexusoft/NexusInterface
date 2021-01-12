@@ -97,7 +97,6 @@ const Tooltip = styled.div(
   {
     whiteSpace: 'pre-wrap',
     wordBreak: 'break-word',
-    maxWidth: 300,
     width: 'max-content',
     borderRadius: 4,
     boxShadow: '0 0 8px rgba(0,0,0,.7)',
@@ -109,6 +108,9 @@ const Tooltip = styled.div(
       position: 'absolute',
     },
   },
+  ({ maxWidth }) => ({
+    maxWidth,
+  }),
   ({ skin, theme }) => {
     switch (skin) {
       case 'default':
@@ -246,20 +248,22 @@ class TooltipTrigger extends Component {
   render() {
     const { children, tooltip, style, ...rest } = this.props;
 
-    return <>
-      {cloneElement(Children.only(children), {
-        onMouseEnter: this.showTooltip,
-        onMouseLeave: this.hideTooltip,
-      })}
-      {!!tooltip && this.state.active && (
-        <TooltipPortal
-          style={{ ...this.state.tooltipStyles, ...style }}
-          {...rest}
-        >
-          {tooltip}
-        </TooltipPortal>
-      )}
-    </>;
+    return (
+      <>
+        {cloneElement(Children.only(children), {
+          onMouseEnter: this.showTooltip,
+          onMouseLeave: this.hideTooltip,
+        })}
+        {!!tooltip && this.state.active && (
+          <TooltipPortal
+            style={{ ...this.state.tooltipStyles, ...style }}
+            {...rest}
+          >
+            {tooltip}
+          </TooltipPortal>
+        )}
+      </>
+    );
   }
 }
 
