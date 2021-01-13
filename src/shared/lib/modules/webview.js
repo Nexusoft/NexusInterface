@@ -11,6 +11,7 @@ import {
   openErrorDialog,
   openSuccessDialog,
 } from 'lib/ui';
+import { popupContextMenu, defaultMenu } from 'lib/contextMenu';
 
 import { confirmPin } from 'lib/ui';
 import rpc from 'lib/rpc';
@@ -180,6 +181,9 @@ function handleIpcMessage(event) {
       break;
     case 'update-storage':
       updateStorage(event.args);
+      break;
+    case 'context-menu':
+      contextMenu(event.args);
       break;
   }
 }
@@ -402,6 +406,16 @@ function updateState([moduleState]) {
 function updateStorage([data]) {
   const activeModule = getActiveModule();
   writeModuleStorage(activeModule, data);
+}
+
+function contextMenu([template]) {
+  const { activeAppModule } = store.getState();
+  if (activeAppModule?.webview) {
+    popupContextMenu(
+      template || defaultMenu,
+      activeAppModule.webview.getWebContentsId()
+    );
+  }
 }
 
 /**

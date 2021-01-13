@@ -340,3 +340,7 @@ document.addEventListener('click', function (event) {
     shell.openExternal(href);
   }
 });
+
+document.addEventListener('contextmenu', (event) => {
+  ipcRenderer.sendToHost('context-menu');
+});
