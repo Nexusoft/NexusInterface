@@ -406,14 +406,6 @@ class SettingsStyle extends Component {
               }
               label={__('Sample Address')}
             />
-            {!!defaultAddress && (
-              <AddressStyleNote>
-                <Icon icon={warningIcon} className="space-right" />
-                <span className="v-align">
-                  {__('This is your Default Address')}
-                </span>
-              </AddressStyleNote>
-            )}
           </div>
         </SettingsField>
 
