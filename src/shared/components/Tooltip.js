@@ -109,7 +109,7 @@ const Tooltip = styled.div(
     },
   },
   ({ maxWidth }) => ({
-    maxWidth,
+    maxWidth: maxWidth || 300,
   }),
   ({ skin, theme }) => {
     switch (skin) {
