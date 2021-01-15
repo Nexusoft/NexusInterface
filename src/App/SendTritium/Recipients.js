@@ -6,10 +6,10 @@ import styled from '@emotion/styled';
 // Internal
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
-6;
 import Button from 'components/Button';
-import { timing } from 'styles';
+import { timing, consts } from 'styles';
 import plusIcon from 'icons/plus.svg';
+import gearIcon from 'icons/gear.svg';
 import RecipientField from './RecipientField';
 import AmountField from './AmountField';
 
@@ -43,14 +43,23 @@ const Recipient = styled.div({
 });
 
 const AddressWrapper = styled.div({
-  flexGrow: 8,
+  flex: 8,
   flexBasis: 0,
   marginRight: '1em',
 });
 
 const AmountWrapper = styled.div({
-  flexGrow: 2,
+  flex: 2,
   flexBasis: 0,
+});
+
+const AdvancedButtonWrapper = styled.div({
+  flex: 0,
+  height: consts.inputHeightEm + 'em',
+  // marginLeft: '0.5em',
+  alignSelf: 'flex-end',
+  display: 'flex',
+  alignItems: 'center',
 });
 
 const MoreInfo = styled.div({
@@ -89,28 +98,29 @@ class Recipients extends Component {
 
     if (!fields || !fields.length) return null;
 
-    if (fields.length === 1) {
-      return (
-        <>
-          <Field
-            name={`${fields.name}[0].address`}
-            component={RecipientField}
-            change={change}
-            sendFrom={sendFrom}
-          />
-          <AmountField
-            fullAmount={accBalance}
-            parentFieldName={`${fields.name}[0]`}
-            change={change}
-            token={token}
-          />
-        </>
-      );
-    } else {
-      return (
-        <>
-          {fields.map((fieldName, i) => (
-            <Recipient key={i}>
+    // if (fields.length === 1) {
+    //   return (
+    //     <>
+    //       <Field
+    //         name={`${fields.name}[0].address`}
+    //         component={RecipientField}
+    //         change={change}
+    //         sendFrom={sendFrom}
+    //       />
+    //       <AmountField
+    //         fullAmount={accBalance}
+    //         parentFieldName={`${fields.name}[0]`}
+    //         change={change}
+    //         token={token}
+    //       />
+    //     </>
+    //   );
+    // } else {
+    return (
+      <>
+        {fields.map((fieldName, i) => (
+          <Recipient key={i}>
+            {fields.length !== 1 && (
               <Tooltip.Trigger tooltip={__('Remove recipient')}>
                 <RemoveButton
                   onClick={() => {
@@ -120,35 +130,44 @@ class Recipients extends Component {
                   ✕
                 </RemoveButton>
               </Tooltip.Trigger>
+            )}
 
-              <AddressWrapper>
-                <Field
-                  name={`${fieldName}.address`}
-                  component={RecipientField}
-                  change={change}
-                  sendFrom={sendFrom}
-                />
-              </AddressWrapper>
+            <AddressWrapper>
+              <Field
+                name={`${fieldName}.address`}
+                component={RecipientField}
+                change={change}
+                sendFrom={sendFrom}
+              />
+            </AddressWrapper>
 
-              <AmountWrapper>
-                <AmountField
-                  parentFieldName={fieldName}
-                  change={change}
-                  token={token}
-                />
-              </AmountWrapper>
-            </Recipient>
-          ))}
+            <AmountWrapper>
+              <AmountField
+                parentFieldName={fieldName}
+                change={change}
+                token={token}
+              />
+            </AmountWrapper>
 
-          <MoreInfo>
-            <Button skin="hyperlink" onClick={addRecipient}>
-              <PlusIcon icon={plusIcon} className="space-right" />
-              <span className="v-align">{__('Add recipient')}</span>
-            </Button>
-          </MoreInfo>
-        </>
-      );
-    }
+            {/* <AdvancedButtonWrapper>
+              <Tooltip.Trigger tooltip={__('Advanced options')}>
+                <Button skin="plain">
+                  <Icon icon={gearIcon} />
+                </Button>
+              </Tooltip.Trigger>
+            </AdvancedButtonWrapper> */}
+          </Recipient>
+        ))}
+
+        <MoreInfo>
+          <Button skin="hyperlink" onClick={addRecipient}>
+            <PlusIcon icon={plusIcon} className="space-right" />
+            <span className="v-align">{__('Add recipient')}</span>
+          </Button>
+        </MoreInfo>
+      </>
+    );
+    // }
   }
 }
 export default Recipients;

@@ -110,6 +110,7 @@ class RecipientField extends Component {
           meta={meta}
           inputProps={{
             placeholder: __('Recipient Address/Name'),
+            skin: 'filled-inverted',
           }}
           suggestions={suggestions}
           onSelect={this.handleSelect}

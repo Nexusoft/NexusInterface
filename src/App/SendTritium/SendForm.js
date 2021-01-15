@@ -35,7 +35,7 @@ import {
 __ = __context('Send');
 
 const SendFormComponent = styled.form({
-  maxWidth: 700,
+  maxWidth: 800,
   margin: '-.5em auto 0',
 });
 
@@ -316,6 +316,7 @@ class SendForm extends Component {
         <FormField label={__('Send from')}>
           <Field
             component={Select.RF}
+            skin="filled-inverted"
             name="sendFrom"
             placeholder={__('Select an account')}
             options={accountOptions}

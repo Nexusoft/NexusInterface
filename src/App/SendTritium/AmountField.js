@@ -146,6 +146,7 @@ class AmountField extends Component {
           >
             <Field
               component={TextField.RF}
+              skin="filled-inverted"
               name={this.amountFieldName()}
               placeholder="0.00000"
               onChange={this.nxsToFiat}

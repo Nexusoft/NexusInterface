@@ -9,6 +9,8 @@ export const defaultRecipient = {
   address: null,
   amount: '',
   fiatAmount: '',
+  reference: null,
+  expires: null,
 };
 
 export const defaultValues = {
