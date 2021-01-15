@@ -62,6 +62,8 @@ rows,reihen,
 Previous,Vorheriger,
 Next,Nächster,
 Use virtual keyboard,,
+<token_name></token_name> token,,
+Unnamed token,,
 Switch to Legacy Mode,,
 Are you sure you want to switch to Legacy Mode?,,
 Switch to Tritium Mode,,
@@ -200,10 +202,12 @@ There must be at least one recipient,Es muss zumindest einen Empfänger geben,Se
 Address is required,Adresse ist erforderlich,Send
 Transaction sent,Transaktion gesendet,Send
 Error sending NXS,NXS senden fehlgeschlagen,Send
-%{tokenName} Amount,,Send
+Amount,,Send
 Recipient Address/Name,,Send
 Accounts,,Send
 Tokens,,Send
+Unnamed,,Send
+Invalid name/address,,Send
 More options,,Send
 Reference number,,Send
 An optional number which may be provided by the recipient to identify this transaction from the others,,Send
@@ -211,7 +215,6 @@ An optional number which may be provided by the recipient to identify this trans
 Reference must be an unsigned integer,,Send
 Number is too large,,Send
 Address/Name is required,,Send
-Invalid name/address,,Send
 Select backup directory,Backup Verzeichnis auswählen,Settings.Application
 Backup directory,Backup Verzeichnis,Settings.Application
 Browse,Suchen,Settings.Application
@@ -435,7 +438,6 @@ Overview Display,Übersicht anzeigen,Settings.Style
 Nexus Addresses format,Nexus Adressen Format,Settings.Style
 Choose your Nexus Address display preference,Wählen Sie Ihre Einstellung für die Anzeige der Nexus-Adresse aus,Settings.Style
 Sample Address,Beispieladresse,Settings.Style
-This is your Default Address,Dies ist Ihre Standard-Adresse,Settings.Style
 Theme,Design,Settings.Style
 Select Wallet Theme,Design auswählen,Settings.Style
 Background,Hintergrund,Settings.Style
@@ -571,9 +573,8 @@ To,,User.Accounts.AccountHistory
 Change,,User.Accounts.AccountHistory
 Account History,,User.Accounts.AccountHistory
 Loading account history,,User.Accounts.AccountHistory
-Account balance(,,User.Accounts.AccountHistory
-Show %{tokenName},,User.Accounts.AccountHistory
 Account balance,,User.Accounts.AccountHistory
+Show %{tokenName},,User.Accounts.AccountHistory
 Total,,User.Accounts.AccountHistory
 Available,,User.Accounts.AccountHistory
 Pending,Ausstehend,User.Accounts.AccountHistory

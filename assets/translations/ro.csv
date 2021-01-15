@@ -62,6 +62,8 @@ rows,rânduri,
 Previous,Anteriorul,
 Next,Următorul,
 Use virtual keyboard,,
+<token_name></token_name> token,,
+Unnamed token,,
 Switch to Legacy Mode,Comutare la Modul Legacy,
 Are you sure you want to switch to Legacy Mode?,Eşti sigur că doreşti să comuţi pe Modul Legacy?,
 Switch to Tritium Mode,Comutare la Modul Tritium,
@@ -199,10 +201,12 @@ There must be at least one recipient,Este necesar cel puțin un destinatar,Send
 Address is required,Adresa este necesară,Send
 Transaction sent,Tranzacție trimisă,Send
 Error sending NXS,Eroare trimitere NXS,Send
-%{tokenName} Amount,Sumă %{tokenName},Send
+Amount,,Send
 Recipient Address/Name,Adresă/Nume beneficiar,Send
 Accounts,Conturi,Send
 Tokens,Monede,Send
+Unnamed,,Send
+Invalid name/address,,Send
 More options,Mai multe opțiuni,Send
 Reference number,Număr de referință,Send
 An optional number which may be provided by the recipient to identify this transaction from the others,Un număr opţional care poate fi furnizat de destinatar pentru a diferenţia această tranzacţie de altele,Send
@@ -210,7 +214,6 @@ An optional number which may be provided by the recipient to identify this trans
 Reference must be an unsigned integer,,Send
 Number is too large,Numărul este prea lung,Send
 Address/Name is required,Nume/Adresă sunt necesare,Send
-Invalid name/address,,Send
 Select backup directory,Alege un director de rezervă,Settings.Application
 Backup directory,Registru copii de rezervă,Settings.Application
 Browse,Răsfoieşte,Settings.Application
@@ -439,7 +442,6 @@ Overview Display,Afișaj general,Settings.Style
 Nexus Addresses format,Format adrese Nexus,Settings.Style
 Choose your Nexus Address display preference,Alege preferinţele de afişare pentru adresa ta Nexus,Settings.Style
 Sample Address,Mostră Adresă,Settings.Style
-This is your Default Address,Aceasta este adresa ta implicită,Settings.Style
 Theme,Temă,Settings.Style
 Select Wallet Theme,Selectează o temă,Settings.Style
 Background,Fundal,Settings.Style
@@ -575,9 +577,8 @@ To,Către,User.Accounts.AccountHistory
 Change,Modifică,User.Accounts.AccountHistory
 Account History,Istoricul contului,User.Accounts.AccountHistory
 Loading account history,Se încarcă istoricul contului,User.Accounts.AccountHistory
-Account balance(,,User.Accounts.AccountHistory
-Show %{tokenName},,User.Accounts.AccountHistory
 Account balance,Sold cont,User.Accounts.AccountHistory
+Show %{tokenName},,User.Accounts.AccountHistory
 Total,Total,User.Accounts.AccountHistory
 Available,Disponibil,User.Accounts.AccountHistory
 Pending,În aşteptare,User.Accounts.AccountHistory

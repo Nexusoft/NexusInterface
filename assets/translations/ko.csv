@@ -62,6 +62,8 @@ rows,,
 Previous,너무 이른,
 Next,다음 것,
 Use virtual keyboard,,
+<token_name></token_name> token,,
+Unnamed token,,
 Switch to Legacy Mode,,
 Are you sure you want to switch to Legacy Mode?,,
 Switch to Tritium Mode,,
@@ -199,10 +201,12 @@ There must be at least one recipient,,Send
 Address is required,,Send
 Transaction sent,거래 송부,Send
 Error sending NXS,,Send
-%{tokenName} Amount,,Send
+Amount,,Send
 Recipient Address/Name,,Send
 Accounts,,Send
 Tokens,,Send
+Unnamed,,Send
+Invalid name/address,,Send
 More options,,Send
 Reference number,,Send
 An optional number which may be provided by the recipient to identify this transaction from the others,,Send
@@ -210,7 +214,6 @@ An optional number which may be provided by the recipient to identify this trans
 Reference must be an unsigned integer,,Send
 Number is too large,,Send
 Address/Name is required,,Send
-Invalid name/address,,Send
 Select backup directory,,Settings.Application
 Backup directory,,Settings.Application
 Browse,,Settings.Application
@@ -434,7 +437,6 @@ Overview Display,,Settings.Style
 Nexus Addresses format,,Settings.Style
 Choose your Nexus Address display preference,,Settings.Style
 Sample Address,,Settings.Style
-This is your Default Address,,Settings.Style
 Theme,,Settings.Style
 Select Wallet Theme,,Settings.Style
 Background,,Settings.Style
@@ -570,9 +572,8 @@ To,,User.Accounts.AccountHistory
 Change,,User.Accounts.AccountHistory
 Account History,,User.Accounts.AccountHistory
 Loading account history,,User.Accounts.AccountHistory
-Account balance(,,User.Accounts.AccountHistory
-Show %{tokenName},,User.Accounts.AccountHistory
 Account balance,,User.Accounts.AccountHistory
+Show %{tokenName},,User.Accounts.AccountHistory
 Total,,User.Accounts.AccountHistory
 Available,,User.Accounts.AccountHistory
 Pending,,User.Accounts.AccountHistory

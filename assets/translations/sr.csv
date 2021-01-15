@@ -62,6 +62,8 @@ rows,редови,
 Previous,Претходно,
 Next,Следеће,
 Use virtual keyboard,,
+<token_name></token_name> token,,
+Unnamed token,,
 Switch to Legacy Mode,Пређи у Легат Мод,
 Are you sure you want to switch to Legacy Mode?,Да ли сте сигурни да желите да пређете у Легат Мод?,
 Switch to Tritium Mode,Пређи у Тритијум Мод,
@@ -200,10 +202,12 @@ There must be at least one recipient,Бар један примаоц је об�
 Address is required,Адреса је обавезна,Send
 Transaction sent,Трансакција послата,Send
 Error sending NXS,Грешка приликом слања NXS-а,Send
-%{tokenName} Amount,%{tokenName} Износ,Send
+Amount,,Send
 Recipient Address/Name,Адреса/Назив Примаоца,Send
 Accounts,Рачуни,Send
 Tokens,Токени,Send
+Unnamed,,Send
+Invalid name/address,,Send
 More options,Више опција,Send
 Reference number,Референтни број,Send
 An optional number which may be provided by the recipient to identify this transaction from the others,Опциони број који може бити обезбеђен од стране примаоца за идентификацију ове трансакције од осталих,Send
@@ -211,7 +215,6 @@ An optional number which may be provided by the recipient to identify this trans
 Reference must be an unsigned integer,,Send
 Number is too large,Број је превелики,Send
 Address/Name is required,Адреса/Назив је обавезна,Send
-Invalid name/address,,Send
 Select backup directory,Одабери директоријум за резервну копију,Settings.Application
 Backup directory,Бекап директоријум,Settings.Application
 Browse,Претражи,Settings.Application
@@ -440,7 +443,6 @@ Overview Display,Прегледни Приказ,Settings.Style
 Nexus Addresses format,Формат Нексусове адресе,Settings.Style
 Choose your Nexus Address display preference,Изаберите изглед преференци ваше Нексус адресе,Settings.Style
 Sample Address,Узорак Адресе,Settings.Style
-This is your Default Address,Ово је ваша Предефинисана Адреса,Settings.Style
 Theme,Тема,Settings.Style
 Select Wallet Theme,Изабери Тему за Новчаник,Settings.Style
 Background,Позадина,Settings.Style
@@ -576,9 +578,8 @@ To,За,User.Accounts.AccountHistory
 Change,Измени,User.Accounts.AccountHistory
 Account History,Историја Рачуна,User.Accounts.AccountHistory
 Loading account history,Учитавање историје рачуна,User.Accounts.AccountHistory
-Account balance(,Стање на рачуну(,User.Accounts.AccountHistory
-Show %{tokenName},Прикажи %{tokenName},User.Accounts.AccountHistory
 Account balance,Стање на рачуну,User.Accounts.AccountHistory
+Show %{tokenName},Прикажи %{tokenName},User.Accounts.AccountHistory
 Total,Укупно,User.Accounts.AccountHistory
 Available,Доступно,User.Accounts.AccountHistory
 Pending,Нa чекању,User.Accounts.AccountHistory

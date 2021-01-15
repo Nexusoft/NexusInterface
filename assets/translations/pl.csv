@@ -62,6 +62,8 @@ rows,rzędy,
 Previous,Poprzednie,
 Next,Nastepne,
 Use virtual keyboard,,
+<token_name></token_name> token,,
+Unnamed token,,
 Switch to Legacy Mode,Przejdź do trybu Legacy,
 Are you sure you want to switch to Legacy Mode?,Czy jesteś pewny ze chcesz przejść do trybu Legacy?,
 Switch to Tritium Mode,Przejdź do trybu Tritium,
@@ -199,10 +201,12 @@ There must be at least one recipient,Musi być dokładnie jeden odbiorca,Send
 Address is required,Wymagany jest adres,Send
 Transaction sent,Transakcja wysłana,Send
 Error sending NXS,Błąd przy przesyłaniu NXS,Send
-%{tokenName} Amount,%{tokenName} Kwota,Send
+Amount,,Send
 Recipient Address/Name,Adres/Nazwa odbiorcy,Send
 Accounts,Konta,Send
 Tokens,Tokeny,Send
+Unnamed,,Send
+Invalid name/address,,Send
 More options,Więcej opcji,Send
 Reference number,Numer referencyjny,Send
 An optional number which may be provided by the recipient to identify this transaction from the others,"Opcjonalny numer, który odbiorca może podać w celu identyfikacji tej transakcji od innych",Send
@@ -210,7 +214,6 @@ An optional number which may be provided by the recipient to identify this trans
 Reference must be an unsigned integer,,Send
 Number is too large,Numer jest zbyt duży,Send
 Address/Name is required,Adres/nazwa jest wymagana,Send
-Invalid name/address,,Send
 Select backup directory,Wybierz miejsce na kopię zapasowa,Settings.Application
 Backup directory,Miejsce na kopie zapasową,Settings.Application
 Browse,Przeglądaj,Settings.Application
@@ -439,7 +442,6 @@ Overview Display,Widok ogólny,Settings.Style
 Nexus Addresses format,Format adresów Nexus,Settings.Style
 Choose your Nexus Address display preference,Wybierz preferowany format wyświetlania adresów Nexus,Settings.Style
 Sample Address,Przykładowy adres,Settings.Style
-This is your Default Address,To jest Twój domyślny adres,Settings.Style
 Theme,Motyw,Settings.Style
 Select Wallet Theme,Wybierz skórkę portfela,Settings.Style
 Background,Tło,Settings.Style
@@ -575,9 +577,8 @@ To,Do,User.Accounts.AccountHistory
 Change,Zmiana,User.Accounts.AccountHistory
 Account History,,User.Accounts.AccountHistory
 Loading account history,,User.Accounts.AccountHistory
-Account balance(,,User.Accounts.AccountHistory
-Show %{tokenName},,User.Accounts.AccountHistory
 Account balance,,User.Accounts.AccountHistory
+Show %{tokenName},,User.Accounts.AccountHistory
 Total,,User.Accounts.AccountHistory
 Available,,User.Accounts.AccountHistory
 Pending,,User.Accounts.AccountHistory

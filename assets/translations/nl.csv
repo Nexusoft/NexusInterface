@@ -62,6 +62,8 @@ rows,rijen,
 Previous,Vorige,
 Next,Volgende,
 Use virtual keyboard,,
+<token_name></token_name> token,,
+Unnamed token,,
 Switch to Legacy Mode,Overschakelen naar verouderde modus,
 Are you sure you want to switch to Legacy Mode?,Weet u zeker dat u wilt overschakelen naar de Legacy modus?,
 Switch to Tritium Mode,Overschakelen naar Tritium Modus,
@@ -200,10 +202,12 @@ There must be at least one recipient,Er moet ten minste één ontvanger zijn,Sen
 Address is required,Adres is verplicht,Send
 Transaction sent,Transacti Verzonden,Send
 Error sending NXS,Fout bij verzenden van NXS,Send
-%{tokenName} Amount,%{tokenName} Hoeveelheid,Send
+Amount,,Send
 Recipient Address/Name,Adres/naam van de ontvanger,Send
 Accounts,Accounts,Send
 Tokens,Tokens,Send
+Unnamed,,Send
+Invalid name/address,,Send
 More options,Meer opties,Send
 Reference number,Referentienummer,Send
 An optional number which may be provided by the recipient to identify this transaction from the others,Een optioneel nummer dat kan worden verstrekt om deze transactie te identificeren,Send
@@ -211,7 +215,6 @@ An optional number which may be provided by the recipient to identify this trans
 Reference must be an unsigned integer,,Send
 Number is too large,Getal is te groot,Send
 Address/Name is required,Adres/Naam is vereist,Send
-Invalid name/address,,Send
 Select backup directory,Selecteer back-up map,Settings.Application
 Backup directory,Backup folder,Settings.Application
 Browse,Blader,Settings.Application
@@ -436,7 +439,6 @@ Overview Display,Weergaveoverzicht,Settings.Style
 Nexus Addresses format,Format van Nexusadressen,Settings.Style
 Choose your Nexus Address display preference,Kies uw Nexus Adres weergave voorkeur,Settings.Style
 Sample Address,Adres voorbeeldweergave,Settings.Style
-This is your Default Address,Dit is uw standaard adres,Settings.Style
 Theme,Thema,Settings.Style
 Select Wallet Theme,Selecteer weergavethema voor de portemonnee,Settings.Style
 Background,Achtergrond,Settings.Style
@@ -572,9 +574,8 @@ To,Naar,User.Accounts.AccountHistory
 Change,Wijzigen,User.Accounts.AccountHistory
 Account History,Accountgeschiedenis,User.Accounts.AccountHistory
 Loading account history,Accountgeschiedenis laden,User.Accounts.AccountHistory
-Account balance(,Accountsaldo(,User.Accounts.AccountHistory
-Show %{tokenName},Toon %{tokenName},User.Accounts.AccountHistory
 Account balance,Accountsaldo,User.Accounts.AccountHistory
+Show %{tokenName},Toon %{tokenName},User.Accounts.AccountHistory
 Total,Totaal,User.Accounts.AccountHistory
 Available,Beschikbaar,User.Accounts.AccountHistory
 Pending,In afwachting,User.Accounts.AccountHistory
