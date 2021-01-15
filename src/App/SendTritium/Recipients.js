@@ -55,7 +55,7 @@ const AmountWrapper = styled.div({
 
 const MoreInfo = styled.div({
   marginTop: '1em',
-  marginBottom: '1.5em',
+  marginBottom: '2em',
   display: 'flex',
   justifyContent: 'space-between',
 });
