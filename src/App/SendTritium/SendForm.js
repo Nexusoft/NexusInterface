@@ -191,14 +191,10 @@ async function asyncValidateRecipient(recipient) {
         address: props.accountInfo.address,
       };
 
-      recipients.forEach((recipient, i) => {
-        const recipParam = params.recipients[i];
-        const recipientInputSize = new Blob([recipient.address]).size;
-        const isAddress =
-          recipientInputSize === 51 &&
-          recipient.address.match(/([0OIl+/])/g) === null;
+      const recipParams = recipients.map((recipient, i) => {
+        const recipParam = {};
 
-        if (isAddress) {
+        if (addressRegex.test(recipient.address)) {
           recipParam.address_to = recipient.address;
         } else {
           recipParam.name_to = recipient.address;
@@ -206,7 +202,15 @@ async function asyncValidateRecipient(recipient) {
         if (reference) recipParam.reference = reference;
         if (expires) recipParam.expires = expires;
         recipParam.amount = parseFloat(recipient.amount);
+
+        return recipParam;
       });
+
+      if (recipParams.length === 1) {
+        Object.assign(params, recipParams[0]);
+      } else {
+        Object.assign(params, { recipients: recipParams });
+      }
 
       if (props.accountInfo.token_name === 'NXS') {
         return await callApi('finance/debit/account', params);
