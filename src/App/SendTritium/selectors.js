@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 
 import TokenName from 'components/TokenName';
 import memoize from 'utils/memoize';
+import shortenAddress from 'utils/shortenAddress';
 
 __ = __context('Send');
 
@@ -25,11 +26,19 @@ export const getAccountOptions = memoize((myAccounts, myTokens) => {
       indent: false,
     });
     options.push(
-      ...myAccounts.map((acc) => ({
-        value: acc.name || acc.address,
-        display: `${acc.name || acc.address} (${acc.balance} ${TokenName.from({
-          account: acc,
-        })})`,
+      ...myAccounts.map((account) => ({
+        value: account.address,
+        display: (
+          <span>
+            {account.name || (
+              <span>
+                <em>{__('Unnamed account')}</em>{' '}
+                <span className="dim">{shortenAddress(account.address)}</span>
+              </span>
+            )}{' '}
+            ({account.balance} {TokenName.from({ account })})
+          </span>
+        ),
         indent: true,
       }))
     );
@@ -43,10 +52,18 @@ export const getAccountOptions = memoize((myAccounts, myTokens) => {
     });
     options.push(
       ...myTokens.map((token) => ({
-        value: token.name || token.address,
-        display: `${token.name || token.address} (${
-          token.balance
-        } ${TokenName.from({ token })})`,
+        value: token.address,
+        display: (
+          <span>
+            {token.name || (
+              <span>
+                <em>{__('Unnamed token')}</em>{' '}
+                <span className="dim">{shortenAddress(token.address)}</span>
+              </span>
+            )}{' '}
+            ({token.balance} {TokenName.from({ token })})
+          </span>
+        ),
         indent: true,
       }))
     );
@@ -64,18 +81,14 @@ export const getAccountBalance = memoize(
   }
 );
 
-export const getAccountInfo = memoize((accountName, myAccounts, myTokens) => {
-  const account =
-    myAccounts &&
-    myAccounts.find(
-      (acc) => acc.name === accountName || acc.address === accountName
-    );
-  const token =
-    myTokens &&
-    myTokens.find(
-      (tkn) => tkn.name === accountName || tkn.address === accountName
-    );
-  return account || token || { balance: 0 };
+export const getAccountInfo = memoize((fromAddress, myAccounts, myTokens) => {
+  const account = myAccounts?.find((acc) => acc.address === fromAddress);
+  if (account) return { ...account, type: 'account' };
+
+  const token = myTokens?.find((tkn) => tkn.address === fromAddress);
+  if (token) return { ...token, type: 'token' };
+
+  return { balance: 0 };
 });
 
 export const getAddressNameMap = memoize((addressBook, myTritiumAccounts) => {

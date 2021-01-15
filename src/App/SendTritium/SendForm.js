@@ -35,7 +35,7 @@ import {
 __ = __context('Send');
 
 const SendFormComponent = styled.form({
-  maxWidth: 800,
+  maxWidth: 700,
   margin: '-.5em auto 0',
 });
 
@@ -70,10 +70,10 @@ const mapStateToProps = (state) => {
     user: { accounts, tokens },
     form,
   } = state;
-  const accountName = valueSelector(state, 'sendFrom');
+  const fromAddress = valueSelector(state, 'sendFrom');
   const reference = valueSelector(state, 'reference');
   const expires = valueSelector(state, 'expires');
-  const accountInfo = getAccountInfo(accountName, accounts, tokens);
+  const accountInfo = getAccountInfo(fromAddress, accounts, tokens);
   return {
     reference,
     expires,

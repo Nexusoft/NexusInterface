@@ -43,7 +43,7 @@ const Recipient = styled.div({
 });
 
 const AddressWrapper = styled.div({
-  flexGrow: 5,
+  flexGrow: 8,
   flexBasis: 0,
   marginRight: '1em',
 });
@@ -79,14 +79,13 @@ class Recipients extends Component {
    */
   render() {
     const { fields, change, accBalance, sendFrom, addRecipient } = this.props;
-    const token = {
-      name: sendFrom.token_name
-        ? sendFrom.token_name === '0'
-          ? 'NXS'
-          : sendFrom.token_name
-        : sendFrom.name,
-      address: sendFrom.token || sendFrom.address,
-    };
+    const token =
+      sendFrom.type === 'token'
+        ? sendFrom
+        : {
+            name: sendFrom.token_name,
+            address: sendFrom.token,
+          };
 
     if (!fields || !fields.length) return null;
 
