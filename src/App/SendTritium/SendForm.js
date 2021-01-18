@@ -5,21 +5,28 @@ import { reduxForm, Field, FieldArray, formValueSelector } from 'redux-form';
 import styled from '@emotion/styled';
 
 // Internal Global
-import { callApi } from 'lib/tritiumApi';
-import { loadAccounts } from 'lib/user';
-import { formName, defaultValues, defaultRecipient } from 'lib/send';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
 import Select from 'components/Select';
 import FormField from 'components/FormField';
+import Switch from 'components/Switch';
 import Tooltip from 'components/Tooltip';
 import Arrow from 'components/Arrow';
-import { openSuccessDialog } from 'lib/ui';
+import { openSuccessDialog, confirmPin } from 'lib/ui';
+import { callApi } from 'lib/tritiumApi';
+import { loadAccounts } from 'lib/user';
+import {
+  formName,
+  defaultValues,
+  defaultRecipient,
+  toggleShowAdvanced,
+} from 'lib/send';
 import { errorHandler } from 'utils/form';
 import sendIcon from 'icons/send.svg';
+import { timing } from 'styles';
 import { numericOnly } from 'utils/form';
-import { confirmPin } from 'lib/ui';
+import { newUID } from 'utils/misc';
 import { addressRegex } from 'consts/misc';
 import questionIcon from 'icons/question-mark-circle.svg';
 
@@ -35,7 +42,7 @@ import {
 __ = __context('Send');
 
 const SendFormComponent = styled.form({
-  maxWidth: 800,
+  maxWidth: 740,
   margin: '-.5em auto 0',
 });
 
@@ -63,6 +70,16 @@ const MoreOptions = styled.div({
   paddingLeft: '1em',
 });
 
+const ShowAdvancedSwitch = styled.div(({ dim }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  transition: `opacity ${timing.normal}`,
+  opacity: dim ? 0.67 : 1,
+  cursor: 'pointer',
+  marginTop: 10,
+  fontSize: 15,
+}));
+
 const valueSelector = formValueSelector(formName);
 const mapStateToProps = (state) => {
   const {
@@ -74,6 +91,7 @@ const mapStateToProps = (state) => {
   const reference = valueSelector(state, 'reference');
   const expires = valueSelector(state, 'expires');
   const accountInfo = getAccountInfo(fromAddress, accounts, tokens);
+  const { showAdvanced } = state.ui.send;
   return {
     reference,
     expires,
@@ -83,6 +101,7 @@ const mapStateToProps = (state) => {
     fieldNames: getRegisteredFieldNames(
       form[formName] && form[formName].registeredFields
     ),
+    showAdvanced,
   };
 };
 
@@ -242,6 +261,8 @@ class SendForm extends Component {
     };
   }
 
+  switchID = newUID();
+
   componentDidUpdate(prevProps) {
     // if you have EVER added to these items always show till form is reset.
 
@@ -308,11 +329,32 @@ class SendForm extends Component {
    * @memberof SendForm
    */
   render() {
-    const { accountOptions, change, accountInfo, submitting } = this.props;
+    const {
+      accountOptions,
+      showAdvanced,
+      change,
+      accountInfo,
+      submitting,
+    } = this.props;
     const optionsOpen =
       this.state.optionalOpen || this.props.reference || this.props.expires;
     return (
       <SendFormComponent onSubmit={this.confirmSend}>
+        <div className="flex space-between">
+          <div />
+          <ShowAdvancedSwitch dim={!showAdvanced}>
+            <Switch
+              value={showAdvanced}
+              onChange={toggleShowAdvanced}
+              style={{ fontSize: '.75em' }}
+              id={this.switchID}
+            />
+            <label className="space-left pointer" htmlFor={this.switchID}>
+              {__('Show advanced options')}
+            </label>
+          </ShowAdvancedSwitch>
+        </div>
+
         <FormField label={__('Send from')}>
           <Field
             component={Select.RF}
@@ -332,7 +374,7 @@ class SendForm extends Component {
           sendFrom={accountInfo}
         />
 
-        <div className="mt1" style={{ opacity: 0.7 }}>
+        {/* <div className="mt1" style={{ opacity: 0.7 }}>
           <Button onClick={this.toggleMoreOptions} skin="hyperlink">
             <OptionsArrow>
               <Arrow
@@ -343,7 +385,7 @@ class SendForm extends Component {
             </OptionsArrow>
             <span className="v-align">{__('More options')}</span>
           </Button>
-        </div>
+        </div> */}
         {optionsOpen && (
           <MoreOptions>
             {' '}

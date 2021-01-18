@@ -50,6 +50,7 @@ export const SET_MARKET_DATA = 'SET_MARKET_DATA';
 
 // Send
 export const SELECT_CONTACT = 'SELECT_CONTACT';
+export const TOGGLE_SHOW_ADVANCED_SEND = 'TOGGLE_SHOW_ADVANCED_SEND';
 
 // Exchange
 export const AVAILABLE_COINS = 'AVAILABLE_COINS';

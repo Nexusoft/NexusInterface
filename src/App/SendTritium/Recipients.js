@@ -37,7 +37,8 @@ const RemoveButton = styled.div(({ theme }) => ({
 const Recipient = styled.div({
   display: 'flex',
   alignItems: 'center',
-  margin: '0 -30px',
+  marginLeft: -30,
+  marginRight: -30,
   padding: '0 30px',
   position: 'relative',
 });
@@ -119,7 +120,10 @@ class Recipients extends Component {
     return (
       <>
         {fields.map((fieldName, i) => (
-          <Recipient key={i}>
+          <Recipient
+            key={i}
+            style={fields.length > 1 ? { marginTop: '0.5em' } : undefined}
+          >
             {fields.length !== 1 && (
               <Tooltip.Trigger tooltip={__('Remove recipient')}>
                 <RemoveButton
@@ -159,12 +163,12 @@ class Recipients extends Component {
           </Recipient>
         ))}
 
-        <MoreInfo>
+        {/* <MoreInfo>
           <Button skin="hyperlink" onClick={addRecipient}>
             <PlusIcon icon={plusIcon} className="space-right" />
             <span className="v-align">{__('Add recipient')}</span>
           </Button>
-        </MoreInfo>
+        </MoreInfo> */}
       </>
     );
     // }
