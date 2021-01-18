@@ -16,7 +16,7 @@ const numberInputProps = {
 
 export default function AdvancedFields({ parentFieldName }) {
   return (
-    <div className="flex center space-between">
+    <div className="flex center space-between" style={{ marginTop: -8 }}>
       <div className="flex1 mr2">
         <FormField
           label={
@@ -31,6 +31,7 @@ export default function AdvancedFields({ parentFieldName }) {
           }
         >
           <Field
+            skin="filled-inverted"
             component={TextField.RF}
             name={`${parentFieldName}.reference`}
             normalize={numericOnly}
@@ -54,11 +55,16 @@ export default function AdvancedFields({ parentFieldName }) {
         ></FormField>
 
         <FormField label={__('Days')} className="ml1">
-          <Field {...numberInputProps} name={`${parentFieldName}.expireDays`} />
+          <Field
+            skin="filled-inverted"
+            {...numberInputProps}
+            name={`${parentFieldName}.expireDays`}
+          />
         </FormField>
 
         <FormField label={__('Hours')} className="space-left">
           <Field
+            skin="filled-inverted"
             {...numberInputProps}
             name={`${parentFieldName}.expireHours`}
           />
@@ -66,6 +72,7 @@ export default function AdvancedFields({ parentFieldName }) {
 
         <FormField label={__('Minutes')} className="space-left">
           <Field
+            skin="filled-inverted"
             {...numberInputProps}
             name={`${parentFieldName}.expireMinutes`}
           />
@@ -73,6 +80,7 @@ export default function AdvancedFields({ parentFieldName }) {
 
         <FormField label={__('Seconds')} className="space-left">
           <Field
+            skin="filled-inverted"
             {...numberInputProps}
             name={`${parentFieldName}.expireSeconds`}
           />
