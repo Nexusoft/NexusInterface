@@ -1,13 +1,13 @@
 import * as TYPE from 'consts/actionTypes';
 
-const initialState = { showAdvanced: false };
+const initialState = { advancedOptions: false };
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case TYPE.TOGGLE_SHOW_ADVANCED_SEND: {
+    case TYPE.TOGGLE_ADVANCED_SEND_OPTIONS: {
       return {
         ...state,
-        showAdvanced: !state.showAdvanced,
+        advancedOptions: !state.advancedOptions,
       };
     }
 

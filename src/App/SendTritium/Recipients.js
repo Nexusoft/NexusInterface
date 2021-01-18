@@ -12,13 +12,14 @@ import plusIcon from 'icons/plus.svg';
 import gearIcon from 'icons/gear.svg';
 import RecipientField from './RecipientField';
 import AmountField from './AmountField';
+import AdvancedFields from './AdvancedFields';
 
 __ = __context('Send');
 
 const RemoveButton = styled.div(({ theme }) => ({
   position: 'absolute',
   left: 3,
-  bottom: 8,
+  top: 16,
   cursor: 'pointer',
   width: '1.5em',
   height: '1.5em',
@@ -35,8 +36,8 @@ const RemoveButton = styled.div(({ theme }) => ({
 }));
 
 const Recipient = styled.div({
-  display: 'flex',
-  alignItems: 'center',
+  // display: 'flex',
+  // alignItems: 'center',
   marginLeft: -30,
   marginRight: -30,
   padding: '0 30px',
@@ -88,7 +89,14 @@ class Recipients extends Component {
    * @memberof Recipients
    */
   render() {
-    const { fields, change, accBalance, sendFrom, addRecipient } = this.props;
+    const {
+      fields,
+      change,
+      advancedOptions,
+      accBalance,
+      sendFrom,
+      addRecipient,
+    } = this.props;
     const token =
       sendFrom.type === 'token'
         ? sendFrom
@@ -136,22 +144,26 @@ class Recipients extends Component {
               </Tooltip.Trigger>
             )}
 
-            <AddressWrapper>
-              <Field
-                name={`${fieldName}.address`}
-                component={RecipientField}
-                change={change}
-                sendFrom={sendFrom}
-              />
-            </AddressWrapper>
+            <div className="flex center">
+              <AddressWrapper>
+                <Field
+                  name={`${fieldName}.address`}
+                  component={RecipientField}
+                  change={change}
+                  sendFrom={sendFrom}
+                />
+              </AddressWrapper>
 
-            <AmountWrapper>
-              <AmountField
-                parentFieldName={fieldName}
-                change={change}
-                token={token}
-              />
-            </AmountWrapper>
+              <AmountWrapper>
+                <AmountField
+                  parentFieldName={fieldName}
+                  change={change}
+                  token={token}
+                />
+              </AmountWrapper>
+            </div>
+
+            {advancedOptions && <AdvancedFields parentFieldName={fieldName} />}
 
             {/* <AdvancedButtonWrapper>
               <Tooltip.Trigger tooltip={__('Advanced options')}>

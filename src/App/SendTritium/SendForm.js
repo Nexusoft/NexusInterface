@@ -20,7 +20,7 @@ import {
   formName,
   defaultValues,
   defaultRecipient,
-  toggleShowAdvanced,
+  toggleAdvancedOptions,
 } from 'lib/send';
 import { errorHandler } from 'utils/form';
 import sendIcon from 'icons/send.svg';
@@ -28,6 +28,7 @@ import { timing } from 'styles';
 import { numericOnly } from 'utils/form';
 import { newUID } from 'utils/misc';
 import { addressRegex } from 'consts/misc';
+import plusIcon from 'icons/plus.svg';
 import questionIcon from 'icons/question-mark-circle.svg';
 
 // Internal Local
@@ -91,7 +92,7 @@ const mapStateToProps = (state) => {
   const reference = valueSelector(state, 'reference');
   const expires = valueSelector(state, 'expires');
   const accountInfo = getAccountInfo(fromAddress, accounts, tokens);
-  const { showAdvanced } = state.ui.send;
+  const { advancedOptions } = state.ui.send;
   return {
     reference,
     expires,
@@ -101,7 +102,7 @@ const mapStateToProps = (state) => {
     fieldNames: getRegisteredFieldNames(
       form[formName] && form[formName].registeredFields
     ),
-    showAdvanced,
+    advancedOptions,
   };
 };
 
@@ -331,7 +332,7 @@ class SendForm extends Component {
   render() {
     const {
       accountOptions,
-      showAdvanced,
+      advancedOptions,
       change,
       accountInfo,
       submitting,
@@ -342,15 +343,15 @@ class SendForm extends Component {
       <SendFormComponent onSubmit={this.confirmSend}>
         <div className="flex space-between">
           <div />
-          <ShowAdvancedSwitch dim={!showAdvanced}>
+          <ShowAdvancedSwitch dim={!advancedOptions}>
             <Switch
-              value={showAdvanced}
-              onChange={toggleShowAdvanced}
+              value={advancedOptions}
+              onChange={toggleAdvancedOptions}
               style={{ fontSize: '.75em' }}
               id={this.switchID}
             />
             <label className="space-left pointer" htmlFor={this.switchID}>
-              {__('Show advanced options')}
+              {__('Advanced options')}
             </label>
           </ShowAdvancedSwitch>
         </div>
@@ -372,6 +373,7 @@ class SendForm extends Component {
           addRecipient={this.addRecipient}
           accBalance={accountInfo.balance}
           sendFrom={accountInfo}
+          advancedOptions={advancedOptions}
         />
 
         {/* <div className="mt1" style={{ opacity: 0.7 }}>
@@ -425,13 +427,14 @@ class SendForm extends Component {
 
         <SendFormButtons>
           <FieldArray
-            component={({ fields }) =>
-              fields.length === 1 && (
-                <MultiBtn skin="default" onClick={this.addRecipient}>
-                  {__('Send To multiple recipients')}
-                </MultiBtn>
-              )
-            }
+            component={({ fields }) => (
+              <MultiBtn skin="default" onClick={this.addRecipient}>
+                <Icon icon={plusIcon} />
+                <span className="v-align space-left">
+                  {__('Add recipient')}
+                </span>
+              </MultiBtn>
+            )}
             name="recipients"
           />
           <SendBtn type="submit" skin="primary" disabled={submitting}>

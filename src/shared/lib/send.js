@@ -11,7 +11,10 @@ export const defaultRecipient = {
   amount: '',
   fiatAmount: '',
   reference: null,
-  expires: null,
+  expireDays: 1,
+  expireHours: 0,
+  expireMinutes: 0,
+  expireSeconds: 0,
 };
 
 export const defaultValues = {
@@ -27,8 +30,8 @@ export function goToSend(formValues) {
   history.push('/Send');
 }
 
-export function toggleShowAdvanced() {
+export function toggleAdvancedOptions() {
   store.dispatch({
-    type: TYPE.TOGGLE_SHOW_ADVANCED_SEND,
+    type: TYPE.TOGGLE_ADVANCED_SEND_OPTIONS,
   });
 }
