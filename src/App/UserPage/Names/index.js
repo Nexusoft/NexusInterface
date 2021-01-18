@@ -161,7 +161,7 @@ class Names extends Component {
             openModal(CreateNameModal);
           }}
         >
-          <Icon icon={plusIcon} className="space-right" />
+          <Icon icon={plusIcon} className="mr0_4" />
           <span className="v-align">{__('Create new name')}</span>
         </Button>
 
@@ -172,7 +172,7 @@ class Names extends Component {
               value={showUnusedNames}
               onChange={toggle}
             />
-            <span className="pointer space-left" onClick={toggle}>
+            <span className="pointer ml0_4" onClick={toggle}>
               {__('Show unused names')}
             </span>
           </div>

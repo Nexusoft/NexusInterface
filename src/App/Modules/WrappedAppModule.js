@@ -11,7 +11,7 @@ const WrappedAppModule = ({ module }) => (
   <Panel
     title={
       <>
-        <ModuleIcon module={module} className="space-right" />
+        <ModuleIcon module={module} className="mr0_4" />
         <span className="v-align">{module.info.displayName}</span>
       </>
     }

@@ -43,7 +43,7 @@ const TokenDetailsModal = ({ token }) => (
           )}
           <InfoField ratio={[1, 2]} label={__('Token address')}>
             <span className="monospace v-align">{token.address || '0'}</span>
-            <QRButton className="space-left" address={token.address} />
+            <QRButton className="ml0_4" address={token.address} />
           </InfoField>
           <InfoField ratio={[1, 2]} label={__('Created at')}>
             {formatDateTime(token.created * 1000, timeFormatOptions)}
@@ -83,7 +83,7 @@ const TokenDetailsModal = ({ token }) => (
                 })
               }
             >
-              <Icon icon={plusIcon} className="space-right" />
+              <Icon icon={plusIcon} className="mr0_4" />
               {__('Create new account with this token')}
             </Button>{' '}
             <CloseButton skin="primary" wide onClick={closeModal}>

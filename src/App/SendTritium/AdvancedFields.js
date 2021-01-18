@@ -62,7 +62,7 @@ export default function AdvancedFields({ parentFieldName }) {
           />
         </FormField>
 
-        <FormField label={__('Hours')} className="space-left">
+        <FormField label={__('Hours')} className="ml0_4">
           <Field
             skin="filled-inverted"
             {...numberInputProps}
@@ -70,7 +70,7 @@ export default function AdvancedFields({ parentFieldName }) {
           />
         </FormField>
 
-        <FormField label={__('Minutes')} className="space-left">
+        <FormField label={__('Minutes')} className="ml0_4">
           <Field
             skin="filled-inverted"
             {...numberInputProps}
@@ -78,7 +78,7 @@ export default function AdvancedFields({ parentFieldName }) {
           />
         </FormField>
 
-        <FormField label={__('Seconds')} className="space-left">
+        <FormField label={__('Seconds')} className="ml0_4">
           <Field
             skin="filled-inverted"
             {...numberInputProps}

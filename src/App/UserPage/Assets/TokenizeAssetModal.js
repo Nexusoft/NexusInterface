@@ -148,7 +148,7 @@ class TokenizeAssetForm extends Component {
         >
           {submitting ? (
             <span>
-              <Spinner className="space-right" />
+              <Spinner className="mr0_4" />
               <span className="v-align">{__('Tokenizing asset')}...</span>
             </span>
           ) : (

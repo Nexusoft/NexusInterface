@@ -137,7 +137,7 @@ class ViewPrivKeyForAddress extends Component {
                 ref={this.privKeyRef}
               />
               <Button fitHeight className="relative" onClick={this.copyPrivkey}>
-                <Icon icon={copyIcon} className="space-right" />
+                <Icon icon={copyIcon} className="mr0_4" />
                 {__('Copy')}
               </Button>
             </InputGroup>

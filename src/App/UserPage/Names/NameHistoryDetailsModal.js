@@ -44,11 +44,11 @@ const NameHistoryDetailsModal = ({
       </InfoField>
       <InfoField label={__('Address')}>
         <span className="v-align">{address}</span>
-        <QRButton className="space-left" address={address} />
+        <QRButton className="ml0_4" address={address} />
       </InfoField>
       <InfoField label={__('Points to')}>
         <span className="v-align">{register_address}</span>
-        <QRButton className="space-left" address={register_address} />
+        <QRButton className="ml0_4" address={register_address} />
       </InfoField>
     </Modal.Body>
   </Modal>

@@ -148,7 +148,7 @@ class Addresses extends Component {
 
         <div className="mt1">
           <AddButton skin="hyperlink" onClick={this.addNewAddress}>
-            <PlusIcon icon={plusIcon} className="space-right" />
+            <PlusIcon icon={plusIcon} className="mr0_4" />
             <span className="v-align">
               <Field
                 name="name"

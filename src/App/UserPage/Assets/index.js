@@ -45,7 +45,7 @@ class Assets extends Component {
             openModal(CreateAssetModal);
           }}
         >
-          <Icon icon={plusIcon} className="space-right" />
+          <Icon icon={plusIcon} className="mr0_4" />
           <span className="v-align">{__('Create new asset')}</span>
         </Button>
 

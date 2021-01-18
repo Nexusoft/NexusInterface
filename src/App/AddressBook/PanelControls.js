@@ -55,7 +55,7 @@ class SearchBox extends Component {
   render() {
     return (
       <SearchInput
-        left={<Icon icon={searchIcon} className="space-right" />}
+        left={<Icon icon={searchIcon} className="mr0_4" />}
         placeholder={__('Search contact')}
         value={this.props.searchQuery}
         onChange={(e) => searchContact(e.target.value)}

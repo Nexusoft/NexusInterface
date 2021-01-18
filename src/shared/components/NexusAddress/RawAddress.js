@@ -80,7 +80,7 @@ export default class RawAddress extends Component {
                 grouped="right"
                 onClick={this.copyAddress}
               >
-                <Icon icon={copyIcon} className="space-right" />
+                <Icon icon={copyIcon} className="mr0_4" />
               </CopyButton>
             </Tooltip.Trigger>
           }

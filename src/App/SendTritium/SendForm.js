@@ -350,7 +350,7 @@ class SendForm extends Component {
               style={{ fontSize: '.75em' }}
               id={this.switchID}
             />
-            <label className="space-left pointer" htmlFor={this.switchID}>
+            <label className="ml0_4 pointer" htmlFor={this.switchID}>
               {__('Advanced options')}
             </label>
           </ShowAdvancedSwitch>
@@ -401,7 +401,7 @@ class SendForm extends Component {
                       'An optional number which may be provided by the recipient to identify this transaction from the others'
                     )}
                   >
-                    <Icon icon={questionIcon} className="space-left" />
+                    <Icon icon={questionIcon} className="ml0_4" />
                   </Tooltip.Trigger>
                 </span>
               }
@@ -430,15 +430,13 @@ class SendForm extends Component {
             component={({ fields }) => (
               <MultiBtn skin="default" onClick={this.addRecipient}>
                 <Icon icon={plusIcon} />
-                <span className="v-align space-left">
-                  {__('Add recipient')}
-                </span>
+                <span className="v-align ml0_4">{__('Add recipient')}</span>
               </MultiBtn>
             )}
             name="recipients"
           />
           <SendBtn type="submit" skin="primary" disabled={submitting}>
-            <Icon icon={sendIcon} className="space-right" />
+            <Icon icon={sendIcon} className="mr0_4" />
             {__('Send')}
           </SendBtn>
         </SendFormButtons>

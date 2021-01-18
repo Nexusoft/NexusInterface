@@ -50,7 +50,7 @@ const Tab = forwardRef(
     <TabLi {...rest} ref={ref}>
       <Tooltip.Trigger tooltip={toolTipText} position="top">
         <TabLink to={link} isActive={isActive}>
-          {!!icon && <Icon className="space-right" icon={icon} />}
+          {!!icon && <Icon className="mr0_4" icon={icon} />}
           {text}
         </TabLink>
       </Tooltip.Trigger>

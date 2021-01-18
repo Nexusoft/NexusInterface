@@ -355,7 +355,7 @@ class SendForm extends Component {
           />
 
           <Button type="submit" skin="primary">
-            <Icon icon={sendIcon} className="space-right" />
+            <Icon icon={sendIcon} className="mr0_4" />
             {__('Send')}
           </Button>
         </SendFormButtons>

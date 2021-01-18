@@ -168,6 +168,9 @@ const utilityClasses = (theme) => css`
   .mt3 {
     margin-top: 3em;
   }
+  .ml0_4 {
+    margin-left: 0.4em;
+  }
   .ml1 {
     margin-left: 1em;
   }
@@ -176,6 +179,9 @@ const utilityClasses = (theme) => css`
   }
   .ml3 {
     margin-left: 3em;
+  }
+  .mr0_4 {
+    margin-right: 0.4em;
   }
   .mr1 {
     margin-right: 1em;
@@ -187,12 +193,6 @@ const utilityClasses = (theme) => css`
     margin-right: 3em;
   }
 
-  .space-left {
-    margin-left: 0.4em;
-  }
-  .space-right {
-    margin-right: 0.4em;
-  }
   .monospace {
     font-family: ${consts.monoFontFamily};
   }

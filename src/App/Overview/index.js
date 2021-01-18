@@ -740,7 +740,7 @@ class Overview extends Component {
                       'The balance displayed might not be up-to-date since the wallet is not yet fully synchronized'
                     )}
                   >
-                    <Icon icon={warningIcon} className="space-right" />
+                    <Icon icon={warningIcon} className="mr0_4" />
                   </Tooltip.Trigger>
                 )}{' '}
                 <span className="v-align">

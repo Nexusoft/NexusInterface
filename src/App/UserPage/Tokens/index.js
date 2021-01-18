@@ -139,7 +139,7 @@ class Tokens extends Component {
               openModal(NewTokenModal);
             }}
           >
-            <Icon icon={plusIcon} className="space-right" />
+            <Icon icon={plusIcon} className="mr0_4" />
             {__('Create new token')}
           </Button>
           <Button
@@ -147,7 +147,7 @@ class Tokens extends Component {
               openModal(SearchTokenModal);
             }}
           >
-            <Icon icon={searchIcon} className="space-right" />
+            <Icon icon={searchIcon} className="mr0_4" />
             {__('Look up a token')}
           </Button>
         </div>

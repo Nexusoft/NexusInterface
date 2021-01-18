@@ -177,7 +177,7 @@ class Recipients extends Component {
 
         {/* <MoreInfo>
           <Button skin="hyperlink" onClick={addRecipient}>
-            <PlusIcon icon={plusIcon} className="space-right" />
+            <PlusIcon icon={plusIcon} className="mr0_4" />
             <span className="v-align">{__('Add recipient')}</span>
           </Button>
         </MoreInfo> */}

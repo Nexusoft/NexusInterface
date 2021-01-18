@@ -90,7 +90,7 @@ const AccountDetailsModal = ({ account, stakeInfo }) => (
           )}
           <InfoField ratio={[1, 2]} label={__('Address')}>
             <span className="monospace v-align">{account.address}</span>
-            <QRButton address={account.address} className="space-left" />
+            <QRButton address={account.address} className="ml0_4" />
           </InfoField>
 
           {account.stake !== undefined && (

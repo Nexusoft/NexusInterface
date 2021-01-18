@@ -122,7 +122,7 @@ class RecipientField extends Component {
                 <Button as="a" skin="hyperlink" onClick={this.createContact}>
                   <Icon
                     icon={plusIcon}
-                    className="space-right"
+                    className="mr0_4"
                     style={{ fontSize: '.8em' }}
                   />
                   {__('Create new contact')}

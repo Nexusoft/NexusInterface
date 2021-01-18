@@ -134,7 +134,7 @@ class RecoverPasswordPinModal extends Component {
               <Button skin="primary" wide type="submit" disabled={submitting}>
                 {submitting ? (
                   <span>
-                    <Spinner className="space-right" />
+                    <Spinner className="mr0_4" />
                     <span className="v-align">
                       {__('Recovering password & PIN')}...
                     </span>
