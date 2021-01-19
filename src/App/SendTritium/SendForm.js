@@ -106,7 +106,7 @@ const mapStateToProps = (state) => {
   };
 };
 
-const referenceRegex = /^[0-9]+$/;
+const uintRegex = /^[0-9]+$/;
 
 async function asyncValidateRecipient(recipient) {
   const { address } = recipient;
@@ -138,22 +138,10 @@ async function asyncValidateRecipient(recipient) {
   form: formName,
   destroyOnUnmount: false,
   initialValues: defaultValues,
-  validate: ({ sendFrom, recipients, reference, expires }) => {
+  validate: ({ sendFrom, recipients }) => {
     const errors = {};
     if (!sendFrom) {
       errors.sendFrom = __('No accounts selected');
-    }
-    if (reference) {
-      if (
-        !(Number.isInteger(reference) && reference >= 0) &&
-        !referenceRegex.test(reference)
-      ) {
-        errors.reference = __('Reference must be an unsigned integer');
-      } else {
-        if (parseInt(reference) > 18446744073709551615) {
-          errors.reference = __('Number is too large');
-        }
-      }
     }
 
     if (!recipients || !recipients.length) {
@@ -163,7 +151,7 @@ async function asyncValidateRecipient(recipient) {
     } else {
       const recipientsErrors = [];
 
-      recipients.forEach(({ address, amount }, i) => {
+      recipients.forEach(({ address, amount, reference }, i) => {
         const recipientErrors = {};
         if (!address) {
           recipientErrors.address = __('Address/Name is required');
@@ -171,6 +159,17 @@ async function asyncValidateRecipient(recipient) {
         const floatAmount = parseFloat(amount);
         if (!floatAmount || floatAmount < 0) {
           recipientErrors.amount = __('Invalid amount');
+        }
+        if (reference) {
+          if (!uintRegex.test(reference)) {
+            recipientErrors.reference = __(
+              'Reference must be an unsigned integer'
+            );
+          } else {
+            if (Number(reference) > 18446744073709551615) {
+              recipientErrors.reference = __('Number is too large');
+            }
+          }
         }
         if (Object.keys(recipientErrors).length) {
           recipientsErrors[i] = recipientErrors;
@@ -200,31 +199,53 @@ async function asyncValidateRecipient(recipient) {
     }
   },
   onSubmit: async (
-    { sendFrom, recipients, reference, expires },
+    { recipients },
     dispatch,
-    props
+    { accountInfo, advancedOptions }
   ) => {
     const pin = await confirmPin();
     if (pin) {
       const params = {
         pin,
-        address: props.accountInfo.address,
+        address: accountInfo.address,
       };
 
-      const recipParams = recipients.map((recipient, i) => {
-        const recipParam = {};
+      const recipParams = recipients.map(
+        (
+          {
+            address,
+            amount,
+            reference,
+            expireDays,
+            expireHours,
+            expireMinutes,
+            expireSeconds,
+          },
+          i
+        ) => {
+          const recipParam = {};
 
-        if (addressRegex.test(recipient.address)) {
-          recipParam.address_to = recipient.address;
-        } else {
-          recipParam.name_to = recipient.address;
+          if (addressRegex.test(address)) {
+            recipParam.address_to = address;
+          } else {
+            recipParam.name_to = address;
+          }
+          if (advancedOptions) {
+            const expires =
+              parseInt(expireSeconds) +
+              parseInt(expireMinutes) * 60 +
+              parseInt(expireHours) * 3600 +
+              parseInt(expireDays) * 86400;
+            if (Number.isInteger(expires)) {
+              recipParam.expires = expireDays;
+            }
+            if (reference) recipParam.reference = reference;
+          }
+          recipParam.amount = parseFloat(amount);
+
+          return recipParam;
         }
-        if (reference) recipParam.reference = reference;
-        if (expires) recipParam.expires = expires;
-        recipParam.amount = parseFloat(recipient.amount);
-
-        return recipParam;
-      });
+      );
 
       if (recipParams.length === 1) {
         Object.assign(params, recipParams[0]);
@@ -232,10 +253,10 @@ async function asyncValidateRecipient(recipient) {
         Object.assign(params, { recipients: recipParams });
       }
 
-      if (props.accountInfo.token_name === 'NXS') {
+      if (accountInfo.token_name === 'NXS') {
         return await callApi('finance/debit/account', params);
       } else {
-        if (props.accountInfo.maxsupply) {
+        if (accountInfo.maxsupply) {
           return await callApi('tokens/debit/token', params);
         } else {
           return await callApi('tokens/debit/account', params);

@@ -11,7 +11,7 @@ const numberInputProps = {
   component: TextField.RF,
   type: 'number',
   min: 0,
-  style: { maxWidth: 60 },
+  style: { maxWidth: 80 },
 };
 
 export default function AdvancedFields({ parentFieldName }) {
