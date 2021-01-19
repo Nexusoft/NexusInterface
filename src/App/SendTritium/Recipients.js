@@ -4,12 +4,8 @@ import { Field } from 'redux-form';
 import styled from '@emotion/styled';
 
 // Internal
-import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
-import Button from 'components/Button';
-import { timing, consts } from 'styles';
-import plusIcon from 'icons/plus.svg';
-import gearIcon from 'icons/gear.svg';
+import { timing } from 'styles';
 import RecipientField from './RecipientField';
 import AmountField from './AmountField';
 import AdvancedFields from './AdvancedFields';
@@ -19,7 +15,7 @@ __ = __context('Send');
 const RemoveButton = styled.div(({ theme }) => ({
   position: 'absolute',
   left: 3,
-  top: 16,
+  top: '1em',
   cursor: 'pointer',
   width: '1.5em',
   height: '1.5em',
@@ -55,26 +51,6 @@ const AmountWrapper = styled.div({
   flexBasis: 0,
 });
 
-const AdvancedButtonWrapper = styled.div({
-  flex: 0,
-  height: consts.inputHeightEm + 'em',
-  // marginLeft: '0.5em',
-  alignSelf: 'flex-end',
-  display: 'flex',
-  alignItems: 'center',
-});
-
-const MoreInfo = styled.div({
-  marginTop: '1em',
-  marginBottom: '2em',
-  display: 'flex',
-  justifyContent: 'space-between',
-});
-
-const PlusIcon = styled(Icon)({
-  fontSize: '.8em',
-});
-
 /**
  * Recipients Field from the Send Page
  *
@@ -89,14 +65,7 @@ class Recipients extends Component {
    * @memberof Recipients
    */
   render() {
-    const {
-      fields,
-      change,
-      advancedOptions,
-      accBalance,
-      sendFrom,
-      addRecipient,
-    } = this.props;
+    const { fields, change, advancedOptions, sendFrom } = this.props;
     const token =
       sendFrom.type === 'token'
         ? sendFrom
@@ -164,23 +133,8 @@ class Recipients extends Component {
             </div>
 
             {advancedOptions && <AdvancedFields parentFieldName={fieldName} />}
-
-            {/* <AdvancedButtonWrapper>
-              <Tooltip.Trigger tooltip={__('Advanced options')}>
-                <Button skin="plain">
-                  <Icon icon={gearIcon} />
-                </Button>
-              </Tooltip.Trigger>
-            </AdvancedButtonWrapper> */}
           </Recipient>
         ))}
-
-        {/* <MoreInfo>
-          <Button skin="hyperlink" onClick={addRecipient}>
-            <PlusIcon icon={plusIcon} className="mr0_4" />
-            <span className="v-align">{__('Add recipient')}</span>
-          </Button>
-        </MoreInfo> */}
       </>
     );
     // }

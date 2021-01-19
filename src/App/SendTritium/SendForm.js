@@ -7,12 +7,9 @@ import styled from '@emotion/styled';
 // Internal Global
 import Icon from 'components/Icon';
 import Button from 'components/Button';
-import TextField from 'components/TextField';
 import Select from 'components/Select';
 import FormField from 'components/FormField';
 import Switch from 'components/Switch';
-import Tooltip from 'components/Tooltip';
-import Arrow from 'components/Arrow';
 import { openSuccessDialog, confirmPin } from 'lib/ui';
 import { callApi } from 'lib/tritiumApi';
 import { loadAccounts } from 'lib/user';
@@ -25,11 +22,9 @@ import {
 import { errorHandler } from 'utils/form';
 import sendIcon from 'icons/send.svg';
 import { timing } from 'styles';
-import { numericOnly } from 'utils/form';
 import { newUID } from 'utils/misc';
 import { addressRegex } from 'consts/misc';
 import plusIcon from 'icons/plus.svg';
-import questionIcon from 'icons/question-mark-circle.svg';
 
 // Internal Local
 import Recipients from './Recipients';
@@ -61,16 +56,6 @@ const MultiBtn = styled(Button)({
   marginRight: '1em',
 });
 
-const OptionsArrow = styled.span({
-  display: 'inline-block',
-  width: 15,
-  verticalAlign: 'middle',
-});
-
-const MoreOptions = styled.div({
-  paddingLeft: '1em',
-});
-
 const ShowAdvancedSwitch = styled.div(({ dim }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -89,13 +74,9 @@ const mapStateToProps = (state) => {
     form,
   } = state;
   const fromAddress = valueSelector(state, 'sendFrom');
-  const reference = valueSelector(state, 'reference');
-  const expires = valueSelector(state, 'expires');
   const accountInfo = getAccountInfo(fromAddress, accounts, tokens);
   const { advancedOptions } = state.ui.send;
   return {
-    reference,
-    expires,
     accountInfo,
     accountOptions: getAccountOptions(accounts, tokens),
     addressNameMap: getAddressNameMap(addressBook),
@@ -276,39 +257,7 @@ async function asyncValidateRecipient(recipient) {
   onSubmitFail: errorHandler(__('Error sending NXS')),
 })
 class SendForm extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      optionalOpen: false,
-    };
-  }
-
   switchID = newUID();
-
-  componentDidUpdate(prevProps) {
-    // if you have EVER added to these items always show till form is reset.
-
-    if (this.props.reference || this.props.expires) {
-      if (
-        this.props.reference !== prevProps.reference ||
-        this.props.expires !== prevProps.expires
-      ) {
-        this.setState({
-          optionalOpen: true,
-        });
-      }
-    }
-  }
-
-  componentDidMount() {
-    // if ref or experation was in the form then open the optionals.
-    // form is NOT reset on component unmount so we must show it on mount
-    if (this.props.reference || this.props.expires) {
-      this.setState({
-        optionalOpen: true,
-      });
-    }
-  }
 
   /**
    * Confirm the Send
@@ -358,12 +307,9 @@ class SendForm extends Component {
       accountInfo,
       submitting,
     } = this.props;
-    const optionsOpen =
-      this.state.optionalOpen || this.props.reference || this.props.expires;
     return (
       <SendFormComponent onSubmit={this.confirmSend}>
-        <div className="flex space-between">
-          <div />
+        <div className="flex justify-end">
           <ShowAdvancedSwitch dim={!advancedOptions}>
             <Switch
               value={advancedOptions}
@@ -397,65 +343,11 @@ class SendForm extends Component {
           advancedOptions={advancedOptions}
         />
 
-        {/* <div className="mt1" style={{ opacity: 0.7 }}>
-          <Button onClick={this.toggleMoreOptions} skin="hyperlink">
-            <OptionsArrow>
-              <Arrow
-                direction={optionsOpen ? 'down' : 'right'}
-                height={8}
-                width={10}
-              />
-            </OptionsArrow>
-            <span className="v-align">{__('More options')}</span>
-          </Button>
-        </div> */}
-        {optionsOpen && (
-          <MoreOptions>
-            {' '}
-            <FormField
-              label={
-                <span>
-                  <span className="v-align">{__('Reference number')}</span>
-                  <Tooltip.Trigger
-                    position="right"
-                    tooltip={__(
-                      'An optional number which may be provided by the recipient to identify this transaction from the others'
-                    )}
-                  >
-                    <Icon icon={questionIcon} className="ml0_4" />
-                  </Tooltip.Trigger>
-                </span>
-              }
-            >
-              <Field
-                component={TextField.RF}
-                name="reference"
-                normalize={numericOnly}
-                placeholder={__(
-                  'Invoice number, order number, etc... (Optional)'
-                )}
-              />
-            </FormField>
-            {/*<FormField label={__('Expiration')}>
-              <Field
-                component={TextField.RF}
-                name="expires"
-                placeholder={__('Seconds till experation (Optional)')}
-              />
-        </FormField>{' '}*/}
-          </MoreOptions>
-        )}
-
         <SendFormButtons>
-          <FieldArray
-            component={({ fields }) => (
-              <MultiBtn skin="default" onClick={this.addRecipient}>
-                <Icon icon={plusIcon} />
-                <span className="v-align ml0_4">{__('Add recipient')}</span>
-              </MultiBtn>
-            )}
-            name="recipients"
-          />
+          <MultiBtn skin="default" onClick={this.addRecipient}>
+            <Icon icon={plusIcon} style={{ fontSize: '.8em' }} />
+            <span className="v-align ml0_4">{__('Add recipient')}</span>
+          </MultiBtn>
           <SendBtn type="submit" skin="primary" disabled={submitting}>
             <Icon icon={sendIcon} className="mr0_4" />
             {__('Send')}
