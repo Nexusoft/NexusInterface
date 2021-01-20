@@ -25,7 +25,7 @@ export default function TokenName({ token, account, contract, ...rest }) {
   const tooltip = <NexusAddress address={address} label={tokenLabel} />;
 
   const tokenName = name ? (
-    <span>{name}</span>
+    <span {...rest}>{name}</span>
   ) : (
     <span className="dim" {...rest}>
       {trimAddress(address)}
