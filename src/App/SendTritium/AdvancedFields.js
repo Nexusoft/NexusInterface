@@ -21,10 +21,10 @@ export default function AdvancedFields({ parentFieldName }) {
         <FormField
           label={
             <span>
-              <span className="v-align">{__('Reference number')}</span>
+              <span className="v-align">{__('Reference')}</span>
               <QuestionCircle
                 tooltip={__(
-                  'An optional number which may be provided by the recipient to identify this transaction from the others'
+                  'An optional number which may be provided by the recipient to identify this transaction from the others, e.g. invoice number, order number, etc.'
                 )}
               />
             </span>
@@ -35,7 +35,7 @@ export default function AdvancedFields({ parentFieldName }) {
             component={TextField.RF}
             name={`${parentFieldName}.reference`}
             normalize={numericOnly}
-            placeholder={__('Invoice number, order number, etc...')}
+            placeholder={__('Reference number (optional)')}
           />
         </FormField>
       </div>
