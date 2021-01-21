@@ -15,10 +15,14 @@ const Separator = styled.div(({ theme }) => ({
   color: theme.primary,
 }));
 
+const Address = styled.span(({ theme }) => ({
+  color: theme.mixer(0.75),
+}));
+
 export const getAccountOptions = memoize((myAccounts, myTokens) => {
   let options = [];
 
-  if (myAccounts && myAccounts.length > 0) {
+  if (myAccounts?.length) {
     options.push({
       value: 'AccountsSeparator',
       display: <Separator>{__('Accounts')}</Separator>,
@@ -27,7 +31,7 @@ export const getAccountOptions = memoize((myAccounts, myTokens) => {
     });
     options.push(
       ...myAccounts.map((account) => ({
-        value: account.address,
+        value: `account:${account.address}`,
         display: (
           <span>
             {account.name || (
@@ -52,7 +56,7 @@ export const getAccountOptions = memoize((myAccounts, myTokens) => {
     });
     options.push(
       ...myTokens.map((token) => ({
-        value: token.address,
+        value: `token:${token.address}`,
         display: (
           <span>
             {token.name || (
@@ -81,17 +85,24 @@ export const getAccountBalance = memoize(
   }
 );
 
-export const getAccountInfo = memoize((fromAddress, myAccounts, myTokens) => {
-  const account = myAccounts?.find((acc) => acc.address === fromAddress);
-  if (account) return { ...account, type: 'account' };
+export const getSendSource = memoize((sendFrom, myAccounts, myTokens) => {
+  const matches = /^(account|token):(.+)/.exec(sendFrom);
+  const [_, type, address] = matches || [];
 
-  const token = myTokens?.find((tkn) => tkn.address === fromAddress);
-  if (token) return { ...token, type: 'token' };
+  if (type === 'account') {
+    const account = myAccounts?.find((acc) => acc.address === address);
+    if (account) return { account };
+  }
 
-  return { balance: 0 };
+  if (type === 'token') {
+    const token = myTokens?.find((tkn) => tkn.address === address);
+    if (token) return { token };
+  }
+
+  return null;
 });
 
-export const getAddressNameMap = memoize((addressBook, myTritiumAccounts) => {
+export const getAddressNameMap = memoize((addressBook, myAccounts) => {
   const map = {};
   if (addressBook) {
     Object.values(addressBook).forEach((contact) => {
@@ -102,66 +113,55 @@ export const getAddressNameMap = memoize((addressBook, myTritiumAccounts) => {
       }
     });
   }
-  if (myTritiumAccounts) {
-    myTritiumAccounts.forEach((element) => {
+  if (myAccounts) {
+    myAccounts.forEach((element) => {
       map[element.address] = element.name;
     });
   }
   return map;
 });
 
-const Address = styled.span(({ theme }) => ({
-  color: theme.mixer(0.75),
-}));
-
 export const getRecipientSuggestions = memoize(
-  (addressBook, myTritiumAccounts) => {
-    //console.log(myTritiumAccounts);
-    //console.log(addressBook);
+  (addressBook, myAccounts, tokenAddress) => {
     const suggestions = [];
     if (addressBook) {
       Object.values(addressBook).forEach((contact) => {
-        if (contact.addresses) {
-          contact.addresses
-            .filter((e) => !e.address.startsWith('a'))
-            .forEach(({ address, label, isMine }) => {
-              if (!isMine) {
-                suggestions.push({
-                  name: contact.name,
-                  value: address,
-                  token: '0',
-                  display: (
-                    <span>
-                      {contact.name}
-                      {label ? ' - ' + label : ''}{' '}
-                      <TokenRecipientName>{'(NXS)'}</TokenRecipientName>{' '}
-                      <Address>{address}</Address>
-                    </span>
-                  ),
-                });
-              }
+        contact.addresses?.forEach(({ address, label, isMine }) => {
+          if (!isMine) {
+            suggestions.push({
+              name: contact.name,
+              value: address,
+              display: (
+                <span>
+                  {contact.name}
+                  {label ? ' - ' + label : ''} <Address>{address}</Address>
+                </span>
+              ),
             });
-        }
+          }
+        });
       });
     }
-    if (myTritiumAccounts) {
-      myTritiumAccounts.forEach((account) => {
-        suggestions.push({
-          name: account.name || account.address,
-          value: account.address,
-          token: account.token,
-          display: (
-            <span>
-              {account.name || (
-                <span style={{ fontStyle: 'italic' }}>{__('Unnamed')}</span>
-              )}{' '}
-              <TokenRecipientName>
-                (<TokenName account={account} />)
-              </TokenRecipientName>{' '}
-              <Address>{account.address}</Address>
-            </span>
-          ),
-        });
+    if (myAccounts) {
+      myAccounts.forEach((account) => {
+        if (!tokenAddress || account.token === tokenAddress) {
+          suggestions.push({
+            name: account.name || account.address,
+            value: account.address,
+            token: account.token,
+            display: (
+              <span>
+                {account.name || (
+                  <span style={{ fontStyle: 'italic' }}>{__('Unnamed')}</span>
+                )}{' '}
+                <TokenRecipientName>
+                  (<TokenName account={account} />)
+                </TokenRecipientName>{' '}
+                <Address>{account.address}</Address>
+              </span>
+            ),
+          });
+        }
       });
     }
     return suggestions;

@@ -118,7 +118,7 @@ class AmountField extends Component {
    * @memberof AmountField
    */
   render() {
-    const token = this.props.token;
+    const { source } = this.props;
 
     return (
       <SendAmount>
@@ -129,10 +129,15 @@ class AmountField extends Component {
               <span style={{ whiteSpace: 'nowrap' }}>
                 <span className="v-align">
                   {__('Amount')}
-                  {!!token?.address && (
+                  {!!source && (
                     <span>
                       &nbsp;(
-                      <TokenName token={token} />)
+                      {source.token ? (
+                        <TokenName token={source.token} />
+                      ) : (
+                        <TokenName account={source.account} />
+                      )}
+                      )
                     </span>
                   )}
                 </span>

@@ -65,16 +65,8 @@ class Recipients extends Component {
    * @memberof Recipients
    */
   render() {
-    const { fields, change, advancedOptions, sendFrom } = this.props;
-    const token =
-      sendFrom.type === 'token'
-        ? sendFrom
-        : {
-            name: sendFrom.token_name,
-            address: sendFrom.token,
-          };
-
-    if (!fields || !fields.length) return null;
+    const { fields, change, advancedOptions, source } = this.props;
+    if (!fields?.length) return null;
 
     // if (fields.length === 1) {
     //   return (
@@ -119,7 +111,7 @@ class Recipients extends Component {
                   name={`${fieldName}.address`}
                   component={RecipientField}
                   change={change}
-                  sendFrom={sendFrom}
+                  source={source}
                 />
               </AddressWrapper>
 
@@ -127,7 +119,7 @@ class Recipients extends Component {
                 <AmountField
                   parentFieldName={fieldName}
                   change={change}
-                  token={token}
+                  source={source}
                 />
               </AmountWrapper>
             </div>

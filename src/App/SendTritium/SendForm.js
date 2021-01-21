@@ -32,7 +32,7 @@ import {
   getAccountOptions,
   getAddressNameMap,
   getRegisteredFieldNames,
-  getAccountInfo,
+  getSendSource,
 } from './selectors';
 
 __ = __context('Send');
@@ -73,11 +73,11 @@ const mapStateToProps = (state) => {
     user: { accounts, tokens },
     form,
   } = state;
-  const fromAddress = valueSelector(state, 'sendFrom');
-  const accountInfo = getAccountInfo(fromAddress, accounts, tokens);
+  const sendFrom = valueSelector(state, 'sendFrom');
+  const source = getSendSource(sendFrom, accounts, tokens);
   const { advancedOptions } = state.ui.send;
   return {
-    accountInfo,
+    source,
     accountOptions: getAccountOptions(accounts, tokens),
     addressNameMap: getAddressNameMap(addressBook),
     fieldNames: getRegisteredFieldNames(
@@ -179,16 +179,12 @@ async function asyncValidateRecipient(recipient) {
       return null;
     }
   },
-  onSubmit: async (
-    { recipients },
-    dispatch,
-    { accountInfo, advancedOptions }
-  ) => {
+  onSubmit: async ({ recipients }, dispatch, { source, advancedOptions }) => {
     const pin = await confirmPin();
     if (pin) {
       const params = {
         pin,
-        address: accountInfo.address,
+        address: source?.account?.address || source?.token?.address,
       };
 
       const recipParams = recipients.map(
@@ -234,14 +230,10 @@ async function asyncValidateRecipient(recipient) {
         Object.assign(params, { recipients: recipParams });
       }
 
-      if (accountInfo.token_name === 'NXS') {
-        return await callApi('finance/debit/account', params);
+      if (source?.token) {
+        return await callApi('tokens/debit/token', params);
       } else {
-        if (accountInfo.maxsupply) {
-          return await callApi('tokens/debit/token', params);
-        } else {
-          return await callApi('tokens/debit/account', params);
-        }
+        return await callApi('finance/debit/account', params);
       }
     }
   },
@@ -304,7 +296,7 @@ class SendForm extends Component {
       accountOptions,
       advancedOptions,
       change,
-      accountInfo,
+      source,
       submitting,
     } = this.props;
     return (
@@ -338,8 +330,7 @@ class SendForm extends Component {
           name="recipients"
           change={change}
           addRecipient={this.addRecipient}
-          accBalance={accountInfo.balance}
-          sendFrom={accountInfo}
+          source={source}
           advancedOptions={advancedOptions}
         />
 

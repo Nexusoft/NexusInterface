@@ -40,10 +40,17 @@ const filterRecipients = memoize((suggestions, inputValue) => {
   );
 });
 
-const mapStateToProps = ({ addressBook, user }) => ({
-  suggestions: getRecipientSuggestions(addressBook, user.accounts),
-  addressNameMap: getAddressNameMap(addressBook, user.accounts),
-});
+const mapStateToProps = ({ addressBook, user }, { source }) => {
+  const tokenAddress = source?.token?.address || source?.account?.token;
+  return {
+    suggestions: getRecipientSuggestions(
+      addressBook,
+      user.accounts,
+      tokenAddress
+    ),
+    addressNameMap: getAddressNameMap(addressBook, user.accounts),
+  };
+};
 
 /**
  * The Recipient Field in the Send Page
@@ -71,18 +78,6 @@ class RecipientField extends Component {
     openModal(AddEditContactModal);
   };
 
-  returnFilteredSuggestions(suggestions) {
-    const { name, token: tokenAddress, address } = this.props.sendFrom;
-    return suggestions.filter(
-      (account) =>
-        (!tokenAddress ||
-          account.token === tokenAddress ||
-          account.token === address) &&
-        account.name !== name &&
-        account.name !== address
-    );
-  }
-
   /**
    * Component's Renderable JSX
    *
@@ -90,9 +85,8 @@ class RecipientField extends Component {
    * @memberof RecipientField
    */
   render() {
-    const { addressNameMap, input, meta } = this.props;
+    const { addressNameMap, input, meta, suggestions } = this.props;
     const recipientName = addressNameMap[input.value];
-    const suggestions = this.returnFilteredSuggestions(this.props.suggestions);
     return (
       <FormField
         label={
