@@ -30,13 +30,13 @@ const EmptyMessage = styled.div(({ theme }) => ({
   alignItems: 'center',
 }));
 
-const filterRecipients = memoize((suggestions, inputValue) => {
+const filterSuggestions = memoize((suggestions, inputValue) => {
   if (!suggestions) return [];
-  const query = inputValue || '';
+  const query = (inputValue || '').toLowerCase();
   return suggestions.filter(
-    ({ value, name }) =>
-      value === query ||
-      (!!name && name.toLowerCase().includes(query.toLowerCase()))
+    ({ address, name }) =>
+      (!!name && name.toLowerCase().includes(query)) ||
+      (!!address && address.toLowerCase().includes(query))
   );
 });
 
@@ -45,7 +45,7 @@ const mapStateToProps = ({ addressBook, user }, { source }) => {
   return {
     suggestions: getRecipientSuggestions(
       addressBook,
-      user.accounts,
+      user?.accounts,
       tokenAddress,
       source?.account?.address
     ),
@@ -109,7 +109,7 @@ class RecipientField extends Component {
           }}
           suggestions={suggestions}
           onSelect={this.handleSelect}
-          filterSuggestions={filterRecipients}
+          filterSuggestions={filterSuggestions}
           emptyFiller={
             suggestions.length === 0 && (
               <EmptyMessage>

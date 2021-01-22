@@ -130,6 +130,7 @@ export const getRecipientSuggestions = memoize(
           if (!isMine) {
             suggestions.push({
               name: contact.name,
+              address: address,
               value: address,
               display: (
                 <span>
@@ -148,9 +149,9 @@ export const getRecipientSuggestions = memoize(
         if (tokenAddress && account.token !== tokenAddress) return;
 
         suggestions.push({
-          name: account.name || account.address,
-          value: account.address,
-          token: account.token,
+          name: account.name,
+          address: account.address,
+          value: account.name || account.address,
           display: (
             <span>
               {account.name || (

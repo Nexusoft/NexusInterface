@@ -38,8 +38,12 @@ const Account = ({ account }) => (
             openModal(AccountDetailsModal, { account });
           }}
         >
-          {!account.name && <UnNamed>{__('Unnamed account')}</UnNamed>}
-          <AccountName>{account.name}</AccountName>
+          {account.name ? (
+            <AccountName>{account.name}</AccountName>
+          ) : (
+            <UnNamed>{__('Unnamed account')}</UnNamed>
+          )}
+
           <span>
             {' '}
             ({formatNumber(totalBalance(account))}{' '}

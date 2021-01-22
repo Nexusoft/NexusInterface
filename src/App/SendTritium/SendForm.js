@@ -10,7 +10,7 @@ import Button from 'components/Button';
 import Select from 'components/Select';
 import FormField from 'components/FormField';
 import Switch from 'components/Switch';
-import { openSuccessDialog, confirmPin } from 'lib/ui';
+import { openSuccessDialog, confirmPin, openModal } from 'lib/ui';
 import { callApi } from 'lib/tritiumApi';
 import { loadAccounts } from 'lib/user';
 import {
@@ -34,6 +34,7 @@ import {
   getRegisteredFieldNames,
   getSendSource,
 } from './selectors';
+import PreviewTransactionModal from './PreviewTransactionModal';
 
 __ = __context('Send');
 
@@ -108,6 +109,45 @@ async function asyncValidateRecipient(recipient) {
   }
 }
 
+function getRecipientsParams(recipients, { advancedOptions }) {
+  return recipients.map(
+    (
+      {
+        address,
+        amount,
+        reference,
+        expireDays,
+        expireHours,
+        expireMinutes,
+        expireSeconds,
+      },
+      i
+    ) => {
+      const recipParam = {};
+
+      if (addressRegex.test(address)) {
+        recipParam.address_to = address;
+      } else {
+        recipParam.name_to = address;
+      }
+      if (advancedOptions) {
+        const expires =
+          parseInt(expireSeconds) +
+          parseInt(expireMinutes) * 60 +
+          parseInt(expireHours) * 3600 +
+          parseInt(expireDays) * 86400;
+        if (Number.isInteger(expires)) {
+          recipParam.expires = expireDays;
+        }
+        if (reference) recipParam.reference = reference;
+      }
+      recipParam.amount = parseFloat(amount);
+
+      return recipParam;
+    }
+  );
+}
+
 /**
  * The Internal Send Form in the Send Page
  *
@@ -179,63 +219,31 @@ async function asyncValidateRecipient(recipient) {
       return null;
     }
   },
-  onSubmit: async ({ recipients }, dispatch, { source, advancedOptions }) => {
-    const pin = await confirmPin();
-    if (pin) {
-      const params = {
-        pin,
-        address: source?.account?.address || source?.token?.address,
-      };
+  onSubmit: ({ recipients }, dispatch, { source, advancedOptions }) => {
+    // const pin = await confirmPin();
+    // if (pin) {
+    //   const params = {
+    //     pin,
+    //     address: source?.account?.address || source?.token?.address,
+    //   };
 
-      const recipParams = recipients.map(
-        (
-          {
-            address,
-            amount,
-            reference,
-            expireDays,
-            expireHours,
-            expireMinutes,
-            expireSeconds,
-          },
-          i
-        ) => {
-          const recipParam = {};
+    openModal(PreviewTransactionModal, {
+      source,
+      recipients: getRecipientsParams(recipients, { advancedOptions }),
+    });
 
-          if (addressRegex.test(address)) {
-            recipParam.address_to = address;
-          } else {
-            recipParam.name_to = address;
-          }
-          if (advancedOptions) {
-            const expires =
-              parseInt(expireSeconds) +
-              parseInt(expireMinutes) * 60 +
-              parseInt(expireHours) * 3600 +
-              parseInt(expireDays) * 86400;
-            if (Number.isInteger(expires)) {
-              recipParam.expires = expireDays;
-            }
-            if (reference) recipParam.reference = reference;
-          }
-          recipParam.amount = parseFloat(amount);
+    //   if (recipParams.length === 1) {
+    //     Object.assign(params, recipParams[0]);
+    //   } else {
+    //     Object.assign(params, { recipients: recipParams });
+    //   }
 
-          return recipParam;
-        }
-      );
-
-      if (recipParams.length === 1) {
-        Object.assign(params, recipParams[0]);
-      } else {
-        Object.assign(params, { recipients: recipParams });
-      }
-
-      if (source?.token) {
-        return await callApi('tokens/debit/token', params);
-      } else {
-        return await callApi('finance/debit/account', params);
-      }
-    }
+    //   if (source?.token) {
+    //     return await callApi('tokens/debit/token', params);
+    //   } else {
+    //     return await callApi('finance/debit/account', params);
+    //   }
+    // }
   },
   onSubmitSuccess: (result, dispatch, props) => {
     if (!result) return;
@@ -246,7 +254,7 @@ async function asyncValidateRecipient(recipient) {
       message: __('Transaction sent'),
     });
   },
-  onSubmitFail: errorHandler(__('Error sending NXS')),
+  // onSubmitFail: errorHandler(__('Error sending NXS')),
 })
 class SendForm extends Component {
   switchID = newUID();
