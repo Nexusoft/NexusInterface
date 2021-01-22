@@ -46,7 +46,8 @@ const mapStateToProps = ({ addressBook, user }, { source }) => {
     suggestions: getRecipientSuggestions(
       addressBook,
       user.accounts,
-      tokenAddress
+      tokenAddress,
+      source?.account?.address
     ),
     addressNameMap: getAddressNameMap(addressBook, user.accounts),
   };

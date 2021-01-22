@@ -122,7 +122,7 @@ export const getAddressNameMap = memoize((addressBook, myAccounts) => {
 });
 
 export const getRecipientSuggestions = memoize(
-  (addressBook, myAccounts, tokenAddress) => {
+  (addressBook, myAccounts, tokenAddress, accountAddress) => {
     const suggestions = [];
     if (addressBook) {
       Object.values(addressBook).forEach((contact) => {
@@ -144,24 +144,25 @@ export const getRecipientSuggestions = memoize(
     }
     if (myAccounts) {
       myAccounts.forEach((account) => {
-        if (!tokenAddress || account.token === tokenAddress) {
-          suggestions.push({
-            name: account.name || account.address,
-            value: account.address,
-            token: account.token,
-            display: (
-              <span>
-                {account.name || (
-                  <span style={{ fontStyle: 'italic' }}>{__('Unnamed')}</span>
-                )}{' '}
-                <TokenRecipientName>
-                  (<TokenName account={account} />)
-                </TokenRecipientName>{' '}
-                <Address>{account.address}</Address>
-              </span>
-            ),
-          });
-        }
+        if (accountAddress && account.address === accountAddress) return;
+        if (tokenAddress && account.token !== tokenAddress) return;
+
+        suggestions.push({
+          name: account.name || account.address,
+          value: account.address,
+          token: account.token,
+          display: (
+            <span>
+              {account.name || (
+                <span style={{ fontStyle: 'italic' }}>{__('Unnamed')}</span>
+              )}{' '}
+              <TokenRecipientName>
+                (<TokenName account={account} />)
+              </TokenRecipientName>{' '}
+              <Address>{account.address}</Address>
+            </span>
+          ),
+        });
       });
     }
     return suggestions;
