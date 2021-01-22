@@ -202,19 +202,40 @@ There must be at least one recipient,There must be at least one recipient,Send
 Address is required,Address is required,Send
 Transaction sent,Transaction sent,Send
 Error sending NXS,Error sending NXS,Send
+Reference,Reference,Send
+"An optional number which may be provided by the recipient to identify this transaction from the others, e.g. invoice number, order number, etc.","An optional number which may be provided by the recipient to identify this transaction from the others, e.g. invoice number, order number, etc.",Send
+Reference number (optional),Reference number (optional),Send
+Expires in,Expires in,Send
+"The amount of time since the transaction is created after which the transaction can no longer be credited by the recipient. By default, transactions will expire in 1 day (86400 seconds).","The amount of time since the transaction is created after which the transaction can no longer be credited by the recipient. By default, transactions will expire in 1 day (86400 seconds).",Send
+Days,Days,Send
+Hours,Hours,Send
+Minutes,Minutes,Send
+Seconds,Seconds,Send
 Amount,Amount,Send
 Recipient Address/Name,Recipient Address/Name,Send
 Accounts,Accounts,Send
+Unnamed account,Unnamed account,Send
 Tokens,Tokens,Send
+Unnamed token,Unnamed token,Send
 Unnamed,Unnamed,Send
 Invalid name/address,Invalid name/address,Send
-More options,More options,Send
-Reference number,Reference number,Send
-An optional number which may be provided by the recipient to identify this transaction from the others,An optional number which may be provided by the recipient to identify this transaction from the others,Send
-"Invoice number, order number, etc... (Optional)","Invoice number, order number, etc... (Optional)",Send
+Advanced options,Advanced options,Send
+Address/Name is required,Address/Name is required,Send
 Reference must be an unsigned integer,Reference must be an unsigned integer,Send
 Number is too large,Number is too large,Send
-Address/Name is required,Address/Name is required,Send
+Unnamed,Unnamed,PreviewTransaction
+%{smart_count} day |||| %{smart_count} days,%{smart_count} day |||| %{smart_count} days,PreviewTransaction
+%{smart_count} hour |||| %{smart_count} hours,%{smart_count} hour |||| %{smart_count} hours,PreviewTransaction
+%{smart_count} minute |||| %{smart_count} minutes,%{smart_count} minute |||| %{smart_count} minutes,PreviewTransaction
+%{smart_count} second |||| %{smart_count} seconds,%{smart_count} second |||| %{smart_count} seconds,PreviewTransaction
+Preview Transaction,Preview Transaction,PreviewTransaction
+You're sending,You're sending,PreviewTransaction
+From,From,PreviewTransaction
+To,To,PreviewTransaction
+Amount,Amount,PreviewTransaction
+Reference,Reference,PreviewTransaction
+Expires,Expires,PreviewTransaction
+Send transaction,Send transaction,PreviewTransaction
 Select backup directory,Select backup directory,Settings.Application
 Backup directory,Backup directory,Settings.Application
 Browse,Browse,Settings.Application

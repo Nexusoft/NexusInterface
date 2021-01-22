@@ -202,19 +202,40 @@ There must be at least one recipient,Бар један примаоц је об�
 Address is required,Адреса је обавезна,Send
 Transaction sent,Трансакција послата,Send
 Error sending NXS,Грешка приликом слања NXS-а,Send
+Reference,,Send
+"An optional number which may be provided by the recipient to identify this transaction from the others, e.g. invoice number, order number, etc.",,Send
+Reference number (optional),,Send
+Expires in,,Send
+"The amount of time since the transaction is created after which the transaction can no longer be credited by the recipient. By default, transactions will expire in 1 day (86400 seconds).",,Send
+Days,,Send
+Hours,,Send
+Minutes,,Send
+Seconds,,Send
 Amount,,Send
 Recipient Address/Name,Адреса/Назив Примаоца,Send
 Accounts,Рачуни,Send
+Unnamed account,,Send
 Tokens,Токени,Send
+Unnamed token,,Send
 Unnamed,,Send
 Invalid name/address,,Send
-More options,Више опција,Send
-Reference number,Референтни број,Send
-An optional number which may be provided by the recipient to identify this transaction from the others,Опциони број који може бити обезбеђен од стране примаоца за идентификацију ове трансакције од осталих,Send
-"Invoice number, order number, etc... (Optional)","Број рачуна, број поруџбине, итд... (Опционо)",Send
+Advanced options,,Send
+Address/Name is required,Адреса/Назив је обавезна,Send
 Reference must be an unsigned integer,,Send
 Number is too large,Број је превелики,Send
-Address/Name is required,Адреса/Назив је обавезна,Send
+Unnamed,,PreviewTransaction
+%{smart_count} day |||| %{smart_count} days,,PreviewTransaction
+%{smart_count} hour |||| %{smart_count} hours,,PreviewTransaction
+%{smart_count} minute |||| %{smart_count} minutes,,PreviewTransaction
+%{smart_count} second |||| %{smart_count} seconds,,PreviewTransaction
+Preview Transaction,,PreviewTransaction
+You're sending,,PreviewTransaction
+From,,PreviewTransaction
+To,,PreviewTransaction
+Amount,,PreviewTransaction
+Reference,,PreviewTransaction
+Expires,,PreviewTransaction
+Send transaction,,PreviewTransaction
 Select backup directory,Одабери директоријум за резервну копију,Settings.Application
 Backup directory,Бекап директоријум,Settings.Application
 Browse,Претражи,Settings.Application
