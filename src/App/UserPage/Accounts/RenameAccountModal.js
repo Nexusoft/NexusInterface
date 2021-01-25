@@ -65,7 +65,7 @@ const getFee = (accountName) => (accountName ? 2 : 1);
     });
     if (defaultAccount.balance < fee) {
       openErrorDialog({
-        message: __('Insuffient balance'),
+        message: __('Insufficient balance'),
         note: __('Your default account balance is not enough to pay the fee.'),
       });
       return;
