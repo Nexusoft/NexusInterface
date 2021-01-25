@@ -31,8 +31,10 @@ const EmptyMessage = styled.div(({ theme }) => ({
 }));
 
 const filterSuggestions = memoize((suggestions, inputValue) => {
+  console.log(suggestions, inputValue);
   if (!suggestions) return [];
-  const query = (inputValue || '').toLowerCase();
+  if (!inputValue) return suggestions;
+  const query = inputValue.toLowerCase();
   return suggestions.filter(
     ({ address, name }) =>
       (!!name && name.toLowerCase().includes(query)) ||

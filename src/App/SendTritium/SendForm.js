@@ -138,7 +138,7 @@ function getRecipientsParams(recipients, { advancedOptions }) {
           parseInt(expireHours) * 3600 +
           parseInt(expireDays) * 86400;
         if (Number.isInteger(expires)) {
-          recipParam.expires = expireDays;
+          recipParam.expires = expires;
         }
         if (reference) recipParam.reference = reference;
       }
@@ -220,7 +220,11 @@ function getRecipientsParams(recipients, { advancedOptions }) {
       return null;
     }
   },
-  onSubmit: async ({ recipients }, dispatch, { source, advancedOptions }) => {
+  onSubmit: async (
+    { recipients },
+    dispatch,
+    { source, advancedOptions, reset }
+  ) => {
     // const pin = await confirmPin();
     // if (pin) {
     //   const params = {
@@ -231,6 +235,7 @@ function getRecipientsParams(recipients, { advancedOptions }) {
     openModal(PreviewTransactionModal, {
       source,
       recipients: getRecipientsParams(recipients, { advancedOptions }),
+      resetSendForm: reset,
     });
 
     //   if (recipParams.length === 1) {
@@ -350,7 +355,7 @@ class SendForm extends Component {
           </MultiBtn>
           <SendBtn type="submit" skin="primary" disabled={submitting}>
             <Icon icon={sendIcon} className="mr0_4" />
-            {__('Send')}
+            {__('Proceed')}
           </SendBtn>
         </SendFormButtons>
       </SendFormComponent>

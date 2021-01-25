@@ -1,14 +1,19 @@
 import { useState, useEffect, useMemo, Fragment } from 'react';
 import styled from '@emotion/styled';
+import { reduxForm, Field } from 'redux-form';
 
 import Modal from 'components/Modal';
 import NexusAddress from 'components/NexusAddress';
-import Tooltip from 'components/Tooltip';
 import Icon from 'components/Icon';
 import TokenName from 'components/TokenName';
 import Button from 'components/Button';
+import FormField from 'components/FormField';
+import TextFieldWithKeyboard from 'components/TextFieldWithKeyboard';
 import { callApi } from 'lib/tritiumApi';
 import { lookupAddress } from 'lib/addressBook';
+import { openSuccessDialog, removeModal } from 'lib/ui';
+import { loadAccounts } from 'lib/user';
+import { errorHandler } from 'utils/form';
 import addressBookIcon from 'icons/address-book.svg';
 import sendIcon from 'icons/send.svg';
 
@@ -19,6 +24,7 @@ const Layout = styled.div({
   gridTemplateColumns: 'max-content 1fr',
   columnGap: '1em',
   rowGap: '1em',
+  paddingBottom: 20,
 });
 
 const LabelCell = styled.div({
@@ -29,11 +35,6 @@ const LabelCell = styled.div({
 const ContentCell = styled.div({
   gridColumn: '2 / span 1',
 });
-
-const Title = styled.div(({ theme }) => ({
-  fontSize: 22,
-  color: theme.mixer(0.75),
-}));
 
 const Label = styled.div(({ theme }) => ({
   textTransform: 'uppercase',
@@ -66,6 +67,10 @@ const Separator = styled.div(({ theme }) => ({
   backgroundColor: theme.mixer(0.125),
 }));
 
+const SubmitButton = styled(Button)({
+  fontSize: 16,
+});
+
 function Source({ source }) {
   const { name, address } = source?.account || source?.token || {};
   return (
@@ -75,7 +80,7 @@ function Source({ source }) {
         name ? (
           <SourceName>{name}</SourceName>
         ) : (
-          <UnNamed>{__('Unnamed')}</UnNamed>
+          <UnNamed>{__('Unnamed account')}</UnNamed>
         )
       }
     />
@@ -121,40 +126,87 @@ function AddressTo({ address }) {
 
 function renderExpiry(timeSpan) {
   let string = '';
-  let remainder = timeSpan;
+  let seconds = timeSpan;
 
-  const days = Math.floor(remainder / 86400);
+  const days = Math.floor(seconds / 86400);
   if (days) {
     string += __('%{smart_count} day |||| %{smart_count} days', days) + ' ';
   }
-  remainder %= 86400;
+  seconds %= 86400;
 
-  const hours = Math.floor(remainder / 3600);
+  const hours = Math.floor(seconds / 3600);
   if (hours) {
     string += __('%{smart_count} hour |||| %{smart_count} hours', hours) + ' ';
   }
-  remainder %= 3600;
+  seconds %= 3600;
 
-  const minutes = Math.floor(remainder / 60);
+  const minutes = Math.floor(seconds / 60);
   if (minutes) {
     string +=
       __('%{smart_count} minute |||| %{smart_count} minutes', minutes) + ' ';
   }
 
-  const seconds = remainder % 60;
+  seconds %= 60;
   if (seconds) {
     string +=
       __('%{smart_count} second |||| %{smart_count} seconds', seconds) + ' ';
   }
 
-  string += `(${__(
-    '%{smart_count} second |||| %{smart_count} seconds',
-    timeSpan
-  )})`;
-  return string;
+  if (days || minutes || hours) {
+    string += `(${__(
+      '%{smart_count} second |||| %{smart_count} seconds',
+      timeSpan
+    )})`;
+  }
+  return __('in %{time_span}', { time_span: string });
 }
 
-export default function PreviewTransactionModal({ source, recipients }) {
+const formOptions = {
+  form: 'preview_tx',
+  destroyOnUnmount: true,
+  initialValues: {
+    pin: '',
+  },
+  validate: ({ pin }) => {
+    const errors = {};
+    if (!pin || pin.length < 4) {
+      errors.pin = __('Pin must be at least 4 characters');
+    }
+    return errors;
+  },
+  onSubmit: async ({ pin }, dispatch, { source, recipients }) => {
+    const params = {
+      pin,
+      recipients,
+    };
+
+    if (source?.token) {
+      params.address = source.token.address;
+      return await callApi('tokens/debit/token', params);
+    } else {
+      params.address = source.account.address;
+      return await callApi('finance/debit/account', params);
+    }
+  },
+  onSubmitSuccess: (result, dispatch, { modalId, resetSendForm }) => {
+    if (!result) return;
+
+    resetSendForm();
+    loadAccounts();
+    removeModal(modalId);
+    openSuccessDialog({
+      message: __('Transaction sent'),
+    });
+  },
+  onSubmitFail: errorHandler(__('Error sending transaction')),
+};
+
+function PreviewTransactionModal({
+  source,
+  recipients,
+  handleSubmit,
+  submitting,
+}) {
   return (
     <Modal>
       <Modal.Header>{__("You're sending")}</Modal.Header>
@@ -225,11 +277,35 @@ export default function PreviewTransactionModal({ source, recipients }) {
       </Modal.Body>
 
       <Modal.Footer>
-        <Button skin="primary" uppercase wide>
-          <Icon icon={sendIcon} />
-          <span className="ml0_4 v-align">{__('Send transaction')}</span>
-        </Button>
+        <form onSubmit={handleSubmit} style={{ marginTop: -20 }}>
+          <Field
+            component={TextFieldWithKeyboard.RF}
+            maskable
+            name="pin"
+            autoFocus
+            skin="filled-inverted"
+            placeholder={__('Enter your PIN to confirm')}
+          />
+
+          <SubmitButton
+            type="submit"
+            skin="primary"
+            uppercase
+            wide
+            disabled={submitting}
+            className="mt1"
+          >
+            <Icon icon={sendIcon} />
+            <span className="ml0_4 v-align">
+              {submitting
+                ? __('Sending transaction...')
+                : __('Send transaction')}
+            </span>
+          </SubmitButton>
+        </form>
       </Modal.Footer>
     </Modal>
   );
 }
+
+export default reduxForm(formOptions)(PreviewTransactionModal);

@@ -155,7 +155,9 @@ export const getRecipientSuggestions = memoize(
           display: (
             <span>
               {account.name || (
-                <span style={{ fontStyle: 'italic' }}>{__('Unnamed')}</span>
+                <span style={{ fontStyle: 'italic' }}>
+                  {__('Unnamed account')}
+                </span>
               )}{' '}
               <TokenRecipientName>
                 (<TokenName account={account} />)
