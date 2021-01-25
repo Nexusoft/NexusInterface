@@ -65,7 +65,7 @@ class Recipients extends Component {
    * @memberof Recipients
    */
   render() {
-    const { fields, change, advancedOptions, source } = this.props;
+    const { fields, change, source } = this.props;
     if (!fields?.length) return null;
 
     // if (fields.length === 1) {
@@ -124,7 +124,12 @@ class Recipients extends Component {
               </AmountWrapper>
             </div>
 
-            {advancedOptions && <AdvancedFields parentFieldName={fieldName} />}
+            <Field
+              name="advancedOptions"
+              component={({ input }) =>
+                !!input.value && <AdvancedFields parentFieldName={fieldName} />
+              }
+            />
           </Recipient>
         ))}
       </>

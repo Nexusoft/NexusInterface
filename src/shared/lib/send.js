@@ -20,18 +20,11 @@ export const defaultRecipient = {
 export const defaultValues = {
   sendFrom: null,
   recipients: [defaultRecipient],
-  reference: null,
-  expires: null,
+  advancedOptions: false,
 };
 
 export function goToSend(formValues) {
   store.dispatch(initialize(formName, { ...defaultValues, ...formValues }));
   store.dispatch(reset(formName));
   history.push('/Send');
-}
-
-export function toggleAdvancedOptions() {
-  store.dispatch({
-    type: TYPE.TOGGLE_ADVANCED_SEND_OPTIONS,
-  });
 }

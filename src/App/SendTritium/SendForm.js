@@ -12,12 +12,7 @@ import FormField from 'components/FormField';
 import Switch from 'components/Switch';
 import { openModal } from 'lib/ui';
 import { callApi } from 'lib/tritiumApi';
-import {
-  formName,
-  defaultValues,
-  defaultRecipient,
-  toggleAdvancedOptions,
-} from 'lib/send';
+import { formName, defaultValues, defaultRecipient } from 'lib/send';
 import sendIcon from 'icons/send.svg';
 import { timing } from 'styles';
 import { newUID } from 'utils/misc';
@@ -55,14 +50,17 @@ const MultiBtn = styled(Button)({
   marginRight: '1em',
 });
 
-const ShowAdvancedSwitch = styled.div(({ dim }) => ({
+const AdvancedOptionsSwitch = styled.div({
   display: 'flex',
   alignItems: 'center',
-  transition: `opacity ${timing.normal}`,
-  opacity: dim ? 0.67 : 1,
   cursor: 'pointer',
   marginTop: 10,
   fontSize: 15,
+});
+
+const AdvancedOptionsLabel = styled.label(({ active }) => ({
+  transition: `opacity ${timing.normal}`,
+  opacity: active ? 1 : 0.67,
 }));
 
 const valueSelector = formValueSelector(formName);
@@ -74,7 +72,6 @@ const mapStateToProps = (state) => {
   } = state;
   const sendFrom = valueSelector(state, 'sendFrom');
   const source = getSendSource(sendFrom, accounts, tokens);
-  const { advancedOptions } = state.ui.send;
   return {
     source,
     accountOptions: getAccountOptions(accounts, tokens),
@@ -82,7 +79,6 @@ const mapStateToProps = (state) => {
     fieldNames: getRegisteredFieldNames(
       form[formName] && form[formName].registeredFields
     ),
-    advancedOptions,
   };
 };
 
@@ -270,21 +266,30 @@ class SendForm extends Component {
    * @memberof SendForm
    */
   render() {
-    const { accountOptions, advancedOptions, change, source } = this.props;
+    const { accountOptions, change, source } = this.props;
     return (
       <SendFormComponent onSubmit={this.confirmSend}>
         <div className="flex justify-end">
-          <ShowAdvancedSwitch dim={!advancedOptions}>
-            <Switch
-              value={advancedOptions}
-              onChange={toggleAdvancedOptions}
+          <AdvancedOptionsSwitch>
+            <Field
+              name="advancedOptions"
+              component={Switch.RF}
               style={{ fontSize: '.75em' }}
               id={this.switchID}
             />
-            <label className="ml0_4 pointer" htmlFor={this.switchID}>
-              {__('Advanced options')}
-            </label>
-          </ShowAdvancedSwitch>
+            <Field
+              name="advancedOptions"
+              component={({ input: { value } }) => (
+                <AdvancedOptionsLabel
+                  className="ml0_4 pointer"
+                  htmlFor={this.switchID}
+                  active={value}
+                >
+                  {__('Advanced options')}
+                </AdvancedOptionsLabel>
+              )}
+            />
+          </AdvancedOptionsSwitch>
         </div>
 
         <FormField label={__('Send from')}>
@@ -303,7 +308,6 @@ class SendForm extends Component {
           change={change}
           addRecipient={this.addRecipient}
           source={source}
-          advancedOptions={advancedOptions}
         />
 
         <SendFormButtons>

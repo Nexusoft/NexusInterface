@@ -205,24 +205,6 @@ export const goToTxsPage = (page) => {
 };
 
 /**
- * Address Book
- * ===========================
- */
-export const searchContact = (query) => {
-  store.dispatch({
-    type: TYPE.CONTACT_SEARCH,
-    payload: query,
-  });
-};
-
-export const selectContact = (index) => {
-  store.dispatch({
-    type: TYPE.SELECT_CONTACT,
-    payload: index,
-  });
-};
-
-/**
  * Settings
  * ===========================
  */
