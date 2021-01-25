@@ -10,16 +10,14 @@ import Button from 'components/Button';
 import Select from 'components/Select';
 import FormField from 'components/FormField';
 import Switch from 'components/Switch';
-import { openSuccessDialog, confirmPin, openModal } from 'lib/ui';
+import { openModal } from 'lib/ui';
 import { callApi } from 'lib/tritiumApi';
-import { loadAccounts } from 'lib/user';
 import {
   formName,
   defaultValues,
   defaultRecipient,
   toggleAdvancedOptions,
 } from 'lib/send';
-import { errorHandler } from 'utils/form';
 import sendIcon from 'icons/send.svg';
 import { timing } from 'styles';
 import { newUID } from 'utils/misc';
@@ -220,47 +218,13 @@ function getRecipientsParams(recipients, { advancedOptions }) {
       return null;
     }
   },
-  onSubmit: async (
-    { recipients },
-    dispatch,
-    { source, advancedOptions, reset }
-  ) => {
-    // const pin = await confirmPin();
-    // if (pin) {
-    //   const params = {
-    //     pin,
-    //     address: source?.account?.address || source?.token?.address,
-    //   };
-
+  onSubmit: ({ recipients }, dispatch, { source, advancedOptions, reset }) => {
     openModal(PreviewTransactionModal, {
       source,
       recipients: getRecipientsParams(recipients, { advancedOptions }),
       resetSendForm: reset,
     });
-
-    //   if (recipParams.length === 1) {
-    //     Object.assign(params, recipParams[0]);
-    //   } else {
-    //     Object.assign(params, { recipients: recipParams });
-    //   }
-
-    //   if (source?.token) {
-    //     return await callApi('tokens/debit/token', params);
-    //   } else {
-    //     return await callApi('finance/debit/account', params);
-    //   }
-    // }
   },
-  onSubmitSuccess: (result, dispatch, props) => {
-    if (!result) return;
-
-    props.reset();
-    loadAccounts();
-    openSuccessDialog({
-      message: __('Transaction sent'),
-    });
-  },
-  onSubmitFail: errorHandler(__('Error sending NXS')),
 })
 class SendForm extends Component {
   switchID = newUID();
@@ -306,13 +270,7 @@ class SendForm extends Component {
    * @memberof SendForm
    */
   render() {
-    const {
-      accountOptions,
-      advancedOptions,
-      change,
-      source,
-      submitting,
-    } = this.props;
+    const { accountOptions, advancedOptions, change, source } = this.props;
     return (
       <SendFormComponent onSubmit={this.confirmSend}>
         <div className="flex justify-end">
@@ -353,7 +311,7 @@ class SendForm extends Component {
             <Icon icon={plusIcon} style={{ fontSize: '.8em' }} />
             <span className="v-align ml0_4">{__('Add recipient')}</span>
           </MultiBtn>
-          <SendBtn type="submit" skin="primary" disabled={submitting}>
+          <SendBtn type="submit" skin="primary">
             <Icon icon={sendIcon} className="mr0_4" />
             {__('Proceed')}
           </SendBtn>
