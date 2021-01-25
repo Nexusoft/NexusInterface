@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, Fragment } from 'react';
 import styled from '@emotion/styled';
 
 import Modal from 'components/Modal';
@@ -23,6 +23,7 @@ const Layout = styled.div({
 
 const LabelCell = styled.div({
   gridColumn: '1 / span 1',
+  textAlign: 'left',
 });
 
 const ContentCell = styled.div({
@@ -34,9 +35,15 @@ const Title = styled.div(({ theme }) => ({
   color: theme.mixer(0.75),
 }));
 
-const Label = styled.div({
+const Label = styled.div(({ theme }) => ({
   textTransform: 'uppercase',
-});
+  fontSize: '0.9em',
+  color: theme.mixer(0.625),
+}));
+
+const Content = styled.div(({ theme }) => ({
+  color: theme.foreground,
+}));
 
 const SourceName = styled.span(({ theme }) => ({
   fontWeight: 'bold',
@@ -48,19 +55,30 @@ const UnNamed = styled(SourceName)(({ theme }) => ({
   color: theme.mixer(0.8),
 }));
 
+const RecipientName = styled.span(({ theme }) => ({
+  fontWeight: 'bold',
+  color: theme.foreground,
+}));
+
+const Separator = styled.div(({ theme }) => ({
+  gridColumn: '1 / span 2',
+  height: 1,
+  backgroundColor: theme.mixer(0.125),
+}));
+
 function Source({ source }) {
   const { name, address } = source?.account || source?.token || {};
   return (
-    <div>
-      <div>
-        {name ? (
+    <NexusAddress
+      address={address}
+      label={
+        name ? (
           <SourceName>{name}</SourceName>
         ) : (
           <UnNamed>{__('Unnamed')}</UnNamed>
-        )}
-      </div>
-      <NexusAddress address={address} />
-    </div>
+        )
+      }
+    />
   );
 }
 
@@ -73,9 +91,10 @@ function NameTo({ name }) {
     })();
   }, []);
   return (
-    <Tooltip.Trigger tooltip={!!address && <NexusAddress address={address} />}>
-      <span>{name}</span>
-    </Tooltip.Trigger>
+    <NexusAddress
+      label={<RecipientName>{name}</RecipientName>}
+      address={address || ''}
+    />
   );
 }
 
@@ -83,11 +102,12 @@ function AddressTo({ address }) {
   const contactName = useMemo(() => {
     const contact = lookupAddress(address);
     if (!contact) return null;
-    return [contact.name, contact.label || ''].join(' - ');
+    return contact.name + (contact.label ? ' - ' + contact.label : '');
   }, [address]);
   return (
-    <Tooltip.Trigger
-      tooltip={
+    <NexusAddress
+      address={address}
+      label={
         !!contactName && (
           <span>
             <Icon icon={addressBookIcon} />
@@ -95,9 +115,7 @@ function AddressTo({ address }) {
           </span>
         )
       }
-    >
-      <span>{address}</span>
-    </Tooltip.Trigger>
+    />
   );
 }
 
@@ -139,13 +157,9 @@ function renderExpiry(timeSpan) {
 export default function PreviewTransactionModal({ source, recipients }) {
   return (
     <Modal>
-      <Modal.Header>{__('Preview Transaction')}</Modal.Header>
+      <Modal.Header>{__("You're sending")}</Modal.Header>
       <Modal.Body>
         <Layout>
-          <ContentCell>
-            <Title>{__("You're sending")}</Title>
-          </ContentCell>
-
           <LabelCell>
             <Label>{__('From')}</Label>
           </LabelCell>
@@ -154,8 +168,10 @@ export default function PreviewTransactionModal({ source, recipients }) {
           </ContentCell>
 
           {recipients.map(
-            ({ name_to, address_to, amount, reference, expires }) => (
-              <>
+            ({ name_to, address_to, amount, reference, expires }, i) => (
+              <Fragment key={i}>
+                <Separator />
+
                 <LabelCell>
                   <Label>{__('To')}</Label>
                 </LabelCell>
@@ -171,11 +187,13 @@ export default function PreviewTransactionModal({ source, recipients }) {
                 </LabelCell>
                 <ContentCell>
                   <ContentCell>
-                    {amount}{' '}
-                    <TokenName
-                      account={source?.account}
-                      token={source?.token}
-                    />
+                    <Content>
+                      {amount}{' '}
+                      <TokenName
+                        account={source?.account}
+                        token={source?.token}
+                      />
+                    </Content>
                   </ContentCell>
                 </ContentCell>
 
@@ -200,7 +218,7 @@ export default function PreviewTransactionModal({ source, recipients }) {
                     </ContentCell>
                   </>
                 )}
-              </>
+              </Fragment>
             )
           )}
         </Layout>

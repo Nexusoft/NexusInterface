@@ -105,6 +105,7 @@ async function asyncValidateRecipient(recipient) {
   try {
     await callApi('names/get/name', { name: address });
   } catch (err) {
+    console.log(recipient);
     throw { address: __('Invalid name/address') };
   }
 }
@@ -219,7 +220,7 @@ function getRecipientsParams(recipients, { advancedOptions }) {
       return null;
     }
   },
-  onSubmit: ({ recipients }, dispatch, { source, advancedOptions }) => {
+  onSubmit: async ({ recipients }, dispatch, { source, advancedOptions }) => {
     // const pin = await confirmPin();
     // if (pin) {
     //   const params = {
@@ -254,7 +255,7 @@ function getRecipientsParams(recipients, { advancedOptions }) {
       message: __('Transaction sent'),
     });
   },
-  // onSubmitFail: errorHandler(__('Error sending NXS')),
+  onSubmitFail: errorHandler(__('Error sending NXS')),
 })
 class SendForm extends Component {
   switchID = newUID();
