@@ -198,6 +198,7 @@ class ContactDetails extends Component {
 
         {contact.addresses.map(({ address, label, isMine }, i) => (
           <NexusAddress
+            className="mt1"
             key={i}
             address={address}
             label={

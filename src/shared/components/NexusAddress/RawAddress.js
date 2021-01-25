@@ -12,7 +12,7 @@ import { showNotification } from 'lib/ui';
 import copyIcon from 'icons/copy.svg';
 
 const RawAddressComponent = styled.div({
-  marginTop: '1em',
+  // marginTop: '1em',
 });
 
 const AddressTextField = styled(TextField)(

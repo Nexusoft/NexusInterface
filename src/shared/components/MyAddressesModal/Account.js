@@ -31,7 +31,7 @@ const Account = ({
       ({formatNumber(balance, 6)} NXS)
     </div>
     {addresses.map((addr) => (
-      <NexusAddress key={addr} address={addr} />
+      <NexusAddress className="mt1" key={addr} address={addr} />
     ))}
   </AccountComponent>
 );

@@ -83,6 +83,7 @@ const Account = ({ account }) => (
       </div>
     </div>
     <NexusAddress
+      className="mt1"
       address={account.address}
       label={
         <div className="flex center space-between">
