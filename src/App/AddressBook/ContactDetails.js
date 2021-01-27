@@ -229,7 +229,7 @@ class ContactDetails extends Component {
 
         <Field
           label={__('User ID')}
-          content={<UserID>{contact.genesis}</UserID>}
+          content={!!contact.genesis && <UserID>{contact.genesis}</UserID>}
         />
         <Field
           label={__('Email')}
