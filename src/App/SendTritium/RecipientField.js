@@ -31,7 +31,6 @@ const EmptyMessage = styled.div(({ theme }) => ({
 }));
 
 const filterSuggestions = memoize((suggestions, inputValue) => {
-  console.log(suggestions, inputValue);
   if (!suggestions) return [];
   if (!inputValue) return suggestions;
   const query = inputValue.toLowerCase();

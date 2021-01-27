@@ -60,6 +60,7 @@ function convertOldAddressInfo({ label, address, isMine }) {
 }
 
 function loadAddressBookFromFile() {
+  // TODO: deprecate genesis usage in address fields
   const schema = {
     patternProperties: {
       '^.+$': {
@@ -81,6 +82,7 @@ function loadAddressBookFromFile() {
               },
             },
           },
+          genesis: { type: 'string' },
           email: {
             type: 'string',
             // also accept empty strings

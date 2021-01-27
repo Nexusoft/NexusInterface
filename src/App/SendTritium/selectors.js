@@ -76,15 +76,6 @@ export const getAccountOptions = memoize((myAccounts, myTokens) => {
   return options;
 });
 
-export const getAccountBalance = memoize(
-  (accountName, myAccounts, myTokens) => {
-    const account =
-      myAccounts && myAccounts.find((acc) => acc.name === accountName);
-    const token = myTokens && myTokens((tkn) => tkn.name === accountName);
-    return account && account.balance;
-  }
-);
-
 export const getSendSource = memoize((sendFrom, myAccounts, myTokens) => {
   const matches = /^(account|token):(.+)/.exec(sendFrom);
   const [_, type, address] = matches || [];

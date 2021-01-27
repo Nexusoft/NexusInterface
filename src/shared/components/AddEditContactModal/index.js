@@ -16,6 +16,7 @@ const initialContact = {
     },
   ],
   mine: [],
+  genesis: '',
   email: '',
   phoneNumber: '',
   timeZone: null,
