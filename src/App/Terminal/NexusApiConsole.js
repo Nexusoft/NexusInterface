@@ -273,8 +273,8 @@ class NexusApiConsole extends Component {
                 inputStyle={{ resize: 'none' }}
                 placeholder={
                   consoleCliSyntax
-                    ? 'api/verb/noun param=1 param2=2'
-                    : 'api/verb/noun?param=value&param2=2'
+                    ? 'api/verb/noun param1=value1 param2=value2'
+                    : 'api/verb/noun?param1=value1&param2=value2'
                 }
                 onChange={(e) => {
                   updateConsoleInput(e.target.value);
