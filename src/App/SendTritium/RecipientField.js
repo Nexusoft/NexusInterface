@@ -42,12 +42,10 @@ const filterSuggestions = memoize((suggestions, inputValue) => {
 });
 
 const mapStateToProps = ({ addressBook, user }, { source }) => {
-  const tokenAddress = source?.token?.address || source?.account?.token;
   return {
     suggestions: getRecipientSuggestions(
       addressBook,
       user?.accounts,
-      tokenAddress,
       source?.account?.address
     ),
     addressNameMap: getAddressNameMap(addressBook, user.accounts),

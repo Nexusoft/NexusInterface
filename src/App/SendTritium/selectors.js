@@ -113,7 +113,7 @@ export const getAddressNameMap = memoize((addressBook, myAccounts) => {
 });
 
 export const getRecipientSuggestions = memoize(
-  (addressBook, myAccounts, tokenAddress, accountAddress) => {
+  (addressBook, myAccounts, accountAddress) => {
     const suggestions = [];
     if (addressBook) {
       Object.values(addressBook).forEach((contact) => {
@@ -137,7 +137,7 @@ export const getRecipientSuggestions = memoize(
     if (myAccounts) {
       myAccounts.forEach((account) => {
         if (accountAddress && account.address === accountAddress) return;
-        if (tokenAddress && account.token !== tokenAddress) return;
+        // if (tokenAddress && account.token !== tokenAddress) return;
 
         suggestions.push({
           name: account.name,

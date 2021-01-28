@@ -84,24 +84,53 @@ const mapStateToProps = (state) => {
 
 const uintRegex = /^[0-9]+$/;
 
-async function asyncValidateRecipient(recipient) {
+async function asyncValidateRecipient({ recipient, source }) {
   const { address } = recipient;
+  const params = {};
 
+  // Check if it's a valid address/name
   if (addressRegex.test(address)) {
-    const addressResult = await callApi('system/validate/address', {
+    const result = await callApi('system/validate/address', {
       address,
     });
-    if (addressResult.is_valid) {
-      return null;
+    if (result.is_valid) {
+      params.address = address;
+    }
+  }
+  if (!params.address) {
+    try {
+      const result = await callApi('names/get/name', { name: address });
+      params.address = result.register_address;
+    } catch (err) {
+      throw { address: __('Invalid name/address') };
     }
   }
 
-  try {
-    await callApi('names/get/name', { name: address });
-  } catch (err) {
-    console.log(recipient);
-    throw { address: __('Invalid name/address') };
+  // Check if recipient is on the same token as source
+  const sourceToken = source?.account?.token || source?.token?.address;
+  if (sourceToken !== address) {
+    let account;
+    try {
+      account = await callApi('finance/get/account', params);
+    } catch (err) {
+      let token;
+      try {
+        token = await callApi('tokens/get/token', params);
+      } catch (err) {}
+      if (token) {
+        throw {
+          address: __('Source and recipient must be of the same token'),
+        };
+      }
+    }
+    if (account?.token !== sourceToken) {
+      throw {
+        address: __('Source and recipient must be of the same token'),
+      };
+    }
   }
+
+  return null;
 }
 
 function getRecipientsParams(recipients, { advancedOptions }) {
@@ -200,9 +229,11 @@ function getRecipientsParams(recipients, { advancedOptions }) {
     return errors;
   },
   asyncBlurFields: ['recipients[].address'],
-  asyncValidate: async ({ recipients }) => {
+  asyncValidate: async ({ recipients }, dispatch, { source }) => {
     const results = await Promise.allSettled(
-      recipients.map((recipient) => asyncValidateRecipient(recipient))
+      recipients.map((recipient) =>
+        asyncValidateRecipient({ recipient, source })
+      )
     );
     if (results.some(({ status }) => status === 'rejected')) {
       throw {
