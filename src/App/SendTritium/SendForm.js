@@ -123,7 +123,7 @@ async function asyncValidateRecipient({ recipient, source }) {
         };
       }
     }
-    if (account?.token !== sourceToken) {
+    if (account && account?.token !== sourceToken) {
       throw {
         address: __('Source and recipient must be of the same token'),
       };
