@@ -213,11 +213,11 @@ class AddEditContactForm extends Component {
         {error && <div className="error mt1">{error}</div>}
 
         <div className="mt2">
-          <FormField connectLabel label={__('Nexus User ID')}>
+          <FormField connectLabel label={__('Nexus user ID')}>
             <Field
               name="genesis"
               component={TextField.RF}
-              placeholder={__('Nexus User ID')}
+              placeholder={__('Nexus user ID')}
             />
           </FormField>
 

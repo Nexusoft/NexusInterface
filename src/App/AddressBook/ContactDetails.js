@@ -228,7 +228,7 @@ class ContactDetails extends Component {
         <SectionHeader>{__('Contact info')}</SectionHeader>
 
         <Field
-          label={__('User ID')}
+          label={__('Nexus user ID')}
           content={!!contact.genesis && <UserID>{contact.genesis}</UserID>}
         />
         <Field
