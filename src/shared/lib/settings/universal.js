@@ -103,14 +103,23 @@ function writeSettings(settings) {
 }
 
 export function loadSettingsFromFile() {
-  const userSettings = readSettings();
-  const { manualDaemonIP, manualDaemonApiIP } = userSettings;
+  let userSettings = readSettings();
   let changed = false;
+  // Enable lite mode for new users
+  if (!userSettings) {
+    userSettings = {
+      liteMode: true,
+      liteModeNoticeDisabled: true,
+    };
+    changed = true;
+  }
   // Deprecating manualDaemonApiIP, copy to manualDaemonIP if manualDaemonApiIP is configured
+  const { manualDaemonIP, manualDaemonApiIP } = userSettings;
   if (manualDaemonApiIP && !manualDaemonIP) {
     userSettings.manualDaemonIP = manualDaemonApiIP;
     changed = true;
   }
+
   if (changed) {
     writeSettings(userSettings);
   }
@@ -118,6 +127,6 @@ export function loadSettingsFromFile() {
 }
 
 export function updateSettingsFile(updates) {
-  const settings = readSettings();
+  const settings = readSettings() || {};
   return writeSettings({ ...settings, ...updates });
 }

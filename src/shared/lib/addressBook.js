@@ -104,7 +104,7 @@ function loadAddressBookFromFile() {
   const validate = ajv.compile(schema);
 
   if (fs.existsSync(filePath)) {
-    const json = readJson(filePath);
+    const json = readJson(filePath) || {};
     let addressBook, valid;
     // `addressbook` (all lowercase) signals the old schema
     // New schema uses camel case `addressBook`
