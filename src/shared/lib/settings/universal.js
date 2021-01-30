@@ -103,13 +103,18 @@ function writeSettings(settings) {
 }
 
 export function loadSettingsFromFile() {
-  const customSettings = readSettings();
+  const userSettings = readSettings();
+  const { manualDaemonIP, manualDaemonApiIP } = userSettings;
+  let changed = false;
   // Deprecating manualDaemonApiIP, copy to manualDaemonIP if manualDaemonApiIP is configured
-  const { manualDaemonIP, manualDaemonApiIP } = customSettings;
   if (manualDaemonApiIP && !manualDaemonIP) {
-    updateSettingsFile({ manualDaemonIP: manualDaemonApiIP });
+    userSettings.manualDaemonIP = manualDaemonApiIP;
+    changed = true;
   }
-  return { ...defaultSettings, ...customSettings };
+  if (changed) {
+    writeSettings(userSettings);
+  }
+  return { ...defaultSettings, ...userSettings };
 }
 
 export function updateSettingsFile(updates) {
