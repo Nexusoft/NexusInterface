@@ -94,24 +94,12 @@ export const defaultSettings = {
   consoleCliSyntax: true,
 };
 
-function filterValidSettings(settings) {
-  const validSettings = {};
-  Object.keys(settings || {}).map((key) => {
-    if (defaultSettings.hasOwnProperty(key)) {
-      validSettings[key] = settings[key];
-    } else {
-      console.error(`Invalid setting \`${key}\``);
-    }
-  });
-  return validSettings;
-}
-
 function readSettings() {
-  return filterValidSettings(readJson(settingsFilePath));
+  return readJson(settingsFilePath);
 }
 
 function writeSettings(settings) {
-  return writeJson(settingsFilePath, filterValidSettings(settings));
+  return writeJson(settingsFilePath, settings);
 }
 
 export function loadSettingsFromFile() {
