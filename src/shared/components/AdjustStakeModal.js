@@ -35,7 +35,7 @@ const LimitNumber = styled(Link)(
 );
 
 const StakeTextField = styled(TextField.RF)({
-  width: 120,
+  width: 170,
   margin: '0 auto',
 
   '& > input': {
@@ -60,11 +60,11 @@ const Note = styled.div(({ theme }) => ({
   marginTop: 20,
 }));
 
-@connect(({ user: { stakeInfo } }) => ({
+@connect(({ user: { stakeInfo } }, { initialStake }) => ({
   currentStake: stakeInfo && stakeInfo.stake,
   total: stakeInfo && stakeInfo.stake + stakeInfo.balance,
   initialValues: {
-    stake: stakeInfo && stakeInfo.stake,
+    stake: typeof initialStake === 'number' ? initialStake : stakeInfo?.stake,
   },
 }))
 @reduxForm({
@@ -82,7 +82,7 @@ const Note = styled.div(({ theme }) => ({
 
     return errors;
   },
-  onSubmit: async ({ stake }, dispatch, props) => {
+  onSubmit: async ({ stake }, dispatch, props, ...rest) => {
     if (stake < props.currentStake) {
       const confirmed = await confirm({
         question: __('Reduce stake amount?'),
@@ -110,20 +110,22 @@ const Note = styled.div(({ theme }) => ({
 
     removeModal(props.modalId);
     showNotification(__('Stake amount has been updated'), 'success');
+    props.onComplete?.();
   },
   onSubmitFail: errorHandler(__('Error setting stake amount')),
 })
 class AdjustStakeModal extends Component {
   render() {
-    const { total, handleSubmit, submitting, change } = this.props;
+    const { total, handleSubmit, submitting, change, onClose } = this.props;
     return (
       <Modal
         maxWidth={600}
         assignClose={(closeModal) => {
           this.closeModal = closeModal;
         }}
+        onClose={onClose}
       >
-        <Modal.Header>{__('Adjust stake amount')}</Modal.Header>
+        <Modal.Header>{__('Set stake amount')}</Modal.Header>
         <Modal.Body>
           <form onSubmit={handleSubmit}>
             <div className="relative">

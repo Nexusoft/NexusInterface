@@ -4,12 +4,20 @@ import styled from '@emotion/styled';
 
 import Button from 'components/Button';
 import AdjustStakeModal from 'components/AdjustStakeModal';
+import ConfirmDialog from 'components/Dialogs/ConfirmDialog';
+import store from 'store';
 import { switchUserTab } from 'lib/ui';
 import { updateSettings } from 'lib/settings';
 import { restartCore } from 'lib/core';
-import { openModal } from 'lib/ui';
-import { confirm } from 'lib/ui';
+import { openModal, removeModal } from 'lib/ui';
+import {
+  confirm,
+  openSuccessDialog,
+  openErrorDialog,
+  showNotification,
+} from 'lib/ui';
 import { formatNumber, formatDateTime } from 'lib/intl';
+import { isSynchronized } from 'selectors';
 import QuestionCircle from 'components/QuestionCircle';
 
 import TabContentWrapper from './TabContentWrapper';
@@ -50,6 +58,23 @@ const BalanceTooltip = (staking) =>
         'Balance that will be staked after the 72 holding period, any change to this balance will reset the hold timer'
       );
 
+function promptForStakeAmount() {
+  let completed = false;
+  return new Promise((resolve, reject) => {
+    openModal(AdjustStakeModal, {
+      onComplete: () => {
+        completed = true;
+        resolve(false);
+      },
+      onClose: () => {
+        if (!completed) {
+          resolve(true);
+        }
+      },
+    });
+  });
+}
+
 @connect((state) => ({
   stakeInfo: state.user.stakeInfo,
   stakingEnabled: state.settings.enableStaking,
@@ -60,22 +85,128 @@ class Staking extends Component {
     switchUserTab('Staking');
   }
 
-  switchStaking = async () => {
-    const { stakingEnabled } = this.props;
-    const confirmed = await confirm({
-      question: __('Restart Core?'),
-      note: __('Nexus Core needs to restart for this change to take effect'),
-      labelYes: stakingEnabled ? __('Disable staking') : __('Enable staking'),
-      labelNo: __('Cancel'),
-    });
-    if (confirmed) {
-      updateSettings({ enableStaking: !stakingEnabled });
+  startStaking = async () => {
+    const state = store.getState();
+    const {
+      settings: { liteMode, multiUser, enableStaking },
+    } = state;
+    const { stakeInfo } = this.props;
+    const synchronized = isSynchronized(state);
+
+    if (stakeInfo?.amount === 0) {
+      if (stakeInfo?.balance === 0) {
+        openErrorDialog({
+          message: __('Trust balance empty!'),
+          note: __('You must send some NXS to your <b>trust</b> account first'),
+        });
+        return;
+      } else if (!stakeInfo?.new) {
+        const cancelled = await promptForStakeAmount();
+        if (cancelled) return;
+      }
+    }
+
+    if (liteMode || multiUser || !enableStaking) {
+      const confirmed = await confirm({
+        question: __('Start staking'),
+        note: (
+          <div style={{ textAlign: 'left' }}>
+            <p>
+              {__(
+                'In order to start staking, the following settings need to be changed:'
+              )}
+            </p>
+            <ul>
+              {!!liteMode && (
+                <li style={{ listStyle: 'initial' }}>
+                  {__('Lite mode needs to be turned OFF')}
+                </li>
+              )}
+              {!!multiUser && (
+                <li style={{ listStyle: 'initial' }}>
+                  {__('Multi-user needs to be turned OFF')}
+                </li>
+              )}
+              {!enableStaking && (
+                <li style={{ listStyle: 'initial' }}>
+                  {__('Enable staking needs to be turned ON')}
+                </li>
+              )}
+            </ul>
+          </div>
+        ),
+        labelYes: __('Apply changes'),
+        labelNo: __('Cancel'),
+      });
+      if (confirmed) {
+        updateSettings({
+          enableStaking: true,
+          liteMode: false,
+          multiUser: false,
+        });
+        restartCore();
+        showNotification(__('Restarting Core'));
+      } else {
+        return;
+      }
+    }
+
+    if (!synchronized) {
+      openSuccessDialog({
+        message: __(
+          'Staking will automatically start when blockchain is synchronized'
+        ),
+      });
+    }
+  };
+
+  stopStaking = async () => {
+    const { stakeInfo } = this.props;
+    const stopStaking = () => {
+      updateSettings({
+        enableStaking: false,
+      });
       restartCore();
+      showNotification(__('Restarting Core'));
+    };
+    let confirmed = false;
+
+    if (stakeInfo.amount) {
+      confirmed = await confirm({
+        question: __('Stop staking?'),
+      });
+      if (confirmed) {
+        stopStaking();
+      }
+    } else {
+      const modalId = openModal(ConfirmDialog, {
+        question: __('Stop staking?'),
+        note: __(
+          'If you stop staking, stake amount will still stay locked. In case you want to unlock the stake amount, <link>set your stake amount to 0</link> and keep staking until the next Trust transaction is mined.',
+          null,
+          {
+            link: (text) => (
+              <Button
+                skin="hyperlink"
+                onClick={() => {
+                  removeModal(modalId);
+                  openModal(AdjustStakeModal, { initialStake: 0 });
+                }}
+              >
+                {text}
+              </Button>
+            ),
+          }
+        ),
+        labelYes: __('Stop staking'),
+        callbackYes: stopStaking,
+        labelNo: __('Cancel'),
+      });
     }
   };
 
   render() {
-    const { stakeInfo, stakingEnabled } = this.props;
+    const { stakeInfo } = this.props;
     return (
       !!stakeInfo && (
         <TabContentWrapper maxWidth={400}>
@@ -94,7 +225,7 @@ class Staking extends Component {
           </Line>
           <Line>
             <div>
-              <span className="v-align">{__('Stake amount')}</span>
+              <span className="v-align">{__('Stake amount (locked)')}</span>
               <QuestionCircle
                 tooltip={__(
                   'The amount of NXS currently staked in the trust account'
@@ -193,31 +324,39 @@ class Staking extends Component {
             <div>{formatNumber(stakeInfo.balance, 6)} NXS</div>
           </Line>
           <div className="mt1 flex space-between">
-            {!stakeInfo.new && (
-              <div>
-                <Button
-                  disabled={!stakeInfo.stake && !stakeInfo.balance}
-                  onClick={() => {
-                    openModal(AdjustStakeModal);
-                  }}
-                >
-                  {__('Adjust stake amount')}
-                </Button>
-                {stakeInfo.onhold && (
-                  <div className="error">
-                    {__('Account on hold for another %{stakeSeconds} Seconds', {
-                      stakeSeconds: stakeInfo.holdtime,
-                    })}
-                  </div>
-                )}
-              </div>
+            <div>
+              {!stakeInfo.new && (
+                <>
+                  <Button
+                    disabled={!stakeInfo.stake && !stakeInfo.balance}
+                    onClick={() => {
+                      openModal(AdjustStakeModal);
+                    }}
+                  >
+                    {__('Adjust stake amount')}
+                  </Button>
+                  {stakeInfo.onhold && (
+                    <div className="error">
+                      {__(
+                        'Account on hold for another %{stakeSeconds} Seconds',
+                        {
+                          stakeSeconds: stakeInfo.holdtime,
+                        }
+                      )}
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+            {stakeInfo.staking ? (
+              <Button skin="default" onClick={this.stopStaking}>
+                {__('Stop staking')}
+              </Button>
+            ) : (
+              <Button skin="primary" onClick={this.startStaking}>
+                {__('Start staking')}
+              </Button>
             )}
-            <Button
-              skin={stakingEnabled ? 'default' : 'primary'}
-              onClick={this.switchStaking}
-            >
-              {stakingEnabled ? __('Stop staking') : __('Start staking')}
-            </Button>
           </div>
         </TabContentWrapper>
       )

@@ -26,14 +26,16 @@ const newTaskId = (function () {
  * ===========================
  */
 export function openModal(component, props) {
+  const id = newModalId();
   store.dispatch({
     type: TYPE.CREATE_MODAL,
     payload: {
-      id: newModalId(),
+      id,
       component,
       props,
     },
   });
+  return id;
 }
 
 // Using regular function here to avoid circular dependency which causes error
