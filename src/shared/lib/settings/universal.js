@@ -75,7 +75,6 @@ export const defaultSettings = {
 
   // Hidden settings
   acceptedAgreement: false,
-  experimentalWarningDisabled: false,
   encryptionWarningDisabled: false,
   bootstrapSuggestionDisabled: false,
   migrateSuggestionDisabled: false,

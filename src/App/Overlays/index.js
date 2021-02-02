@@ -3,21 +3,14 @@ import { connect } from 'react-redux';
 import ClosingScreen from './ClosingScreen';
 import SelectLanguage from './SelectLanguage';
 import LicenseAgreement from './LicenseAgreement';
-import ExperimentalWarning from './ExperimentalWarning';
 import LiteModeNotice from './LiteModeNotice';
 import Wallet from './Wallet';
 
 const mapStateToProps = ({
-  settings: {
-    experimentalWarningDisabled,
-    liteModeNoticeDisabled,
-    acceptedAgreement,
-    locale,
-  },
+  settings: { liteModeNoticeDisabled, acceptedAgreement, locale },
   ui: { closing },
 }) => ({
   locale,
-  experimentalWarningDisabled,
   liteModeNoticeDisabled,
   acceptedAgreement,
   closing,
@@ -25,7 +18,6 @@ const mapStateToProps = ({
 
 const Overlays = ({
   locale,
-  experimentalWarningDisabled,
   liteModeNoticeDisabled,
   acceptedAgreement,
   closing,
@@ -41,10 +33,6 @@ const Overlays = ({
 
   if (!acceptedAgreement) {
     return <LicenseAgreement />;
-  }
-
-  if (!experimentalWarningDisabled) {
-    return <ExperimentalWarning />;
   }
 
   if (!liteModeNoticeDisabled) {
