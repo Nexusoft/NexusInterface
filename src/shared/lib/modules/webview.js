@@ -10,6 +10,7 @@ import {
   openConfirmDialog,
   openErrorDialog,
   openSuccessDialog,
+  openInfoDialog,
 } from 'lib/ui';
 import { popupContextMenu, defaultMenu } from 'lib/contextMenu';
 
@@ -172,6 +173,9 @@ function handleIpcMessage(event) {
       break;
     case 'show-success-dialog':
       showSuccessDialog(event.args);
+      break;
+    case 'show-info-dialog':
+      showInfoDialog(event.args);
       break;
     case 'confirm':
       confirm(event.args);
@@ -353,6 +357,14 @@ function showErrorDialog([options = {}]) {
 function showSuccessDialog([options = {}]) {
   const { message, note } = options;
   openSuccessDialog({
+    message,
+    note,
+  });
+}
+
+function showInfoDialog([options = {}]) {
+  const { message, note } = options;
+  openInfoDialog({
     message,
     note,
   });

@@ -122,6 +122,17 @@ global.NEXUS = {
       }
       ipcRenderer.sendToHost('show-success-dialog', options);
     },
+    showInfoDialog: (options) => {
+      if (!options) {
+        throw new Error('`options` is required');
+      }
+      if (typeof options !== 'object') {
+        throw new Error(
+          'Expected `options` to be `object` type, found: ' + typeof options
+        );
+      }
+      ipcRenderer.sendToHost('show-info-dialog', options);
+    },
     rpcCall: (command, params) => {
       if (!command) {
         throw new Error('`command` is required');
