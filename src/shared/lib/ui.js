@@ -2,6 +2,7 @@ import * as TYPE from 'consts/actionTypes';
 import ConfirmDialog from 'components/Dialogs/ConfirmDialog';
 import ErrorDialog from 'components/Dialogs/ErrorDialog';
 import SuccessDialog from 'components/Dialogs/SuccessDialog';
+import InfoDialog from 'components/Dialogs/InfoDialog';
 import PinDialog from 'components/Dialogs/PinDialog';
 import ConfirmPasswordPinDialog from 'components/Dialogs/ConfirmPasswordPinDialog';
 import store from 'store';
@@ -51,6 +52,8 @@ export const openConfirmDialog = (props) => openModal(ConfirmDialog, props);
 export const openErrorDialog = (props) => openModal(ErrorDialog, props);
 
 export const openSuccessDialog = (props) => openModal(SuccessDialog, props);
+
+export const openInfoDialog = (props) => openModal(InfoDialog, props);
 
 export function confirm(options) {
   return new Promise((resolve, reject) => {
