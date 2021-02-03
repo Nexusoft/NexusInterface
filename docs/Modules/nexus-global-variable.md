@@ -100,6 +100,7 @@ const {
     showNotification,
     showErrorDialog,
     showSuccessDialog,
+    showInfoDialog,
     rpcCall,
     apiCall,
     secureApiCall,
@@ -126,6 +127,7 @@ const {
 - [`showNotification`](#shownotification)
 - [`showErrorDialog`](#showerrordialog)
 - [`showSuccessDialog`](#showsuccessdialog)
+- [`showInfoDialog`](#showinfodialog)
 - [`updateState`](#updatestate)
 - [`updateStorage`](#updatestorage)
 - [`onceInitialize`](#onceinitialize)
@@ -183,6 +185,19 @@ Available options:
 
 - `message`: string - The main (larger) text shown in the success dialog.
 - `note`: string (optional) - The supporting (smaller) text shown in the success dialog below the `message`.
+
+### `showInfoDialog`
+
+Displays an info dialog in the wallet.
+
+```js
+showInfoDialog((options: object));
+```
+
+Available options:
+
+- `message`: string - The main (larger) text shown in the info dialog.
+- `note`: string (optional) - The supporting (smaller) text shown in the info dialog below the `message`.
 
 ### `updateState`
 
