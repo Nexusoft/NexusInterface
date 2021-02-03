@@ -12,7 +12,7 @@ import { restartCore } from 'lib/core';
 import { openModal, removeModal } from 'lib/ui';
 import {
   confirm,
-  openSuccessDialog,
+  openInfoDialog,
   openErrorDialog,
   showNotification,
 } from 'lib/ui';
@@ -152,9 +152,9 @@ class Staking extends Component {
     }
 
     if (!synchronized) {
-      openSuccessDialog({
+      openInfoDialog({
         message: __(
-          'Staking will automatically start when blockchain is synchronized'
+          'Staking will automatically start when your wallet is synchronized'
         ),
       });
     }
