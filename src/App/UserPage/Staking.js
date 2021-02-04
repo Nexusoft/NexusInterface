@@ -106,7 +106,8 @@ class Staking extends Component {
       }
     }
 
-    if (liteMode || multiUser || !enableStaking) {
+    // TODO: || multiUser
+    if (liteMode || !enableStaking) {
       const confirmed = await confirm({
         question: __('Start staking'),
         note: (
@@ -122,11 +123,11 @@ class Staking extends Component {
                   {__('Lite mode needs to be turned OFF')}
                 </li>
               )}
-              {!!multiUser && (
+              {/* {!!multiUser && (
                 <li style={{ listStyle: 'initial' }}>
                   {__('Multi-user needs to be turned OFF')}
                 </li>
-              )}
+              )} */}
               {!enableStaking && (
                 <li style={{ listStyle: 'initial' }}>
                   {__('Enable staking needs to be turned ON')}
