@@ -9,8 +9,10 @@ import AutoSuggest from 'components/AutoSuggest';
 import FormField from 'components/FormField';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
-import { openModal } from 'lib/ui';
 import AddEditContactModal from 'components/AddEditContactModal';
+import { openModal } from 'lib/ui';
+import { callApi } from 'lib/tritiumApi';
+import { addressRegex } from 'consts/misc';
 import plusIcon from 'icons/plus.svg';
 import { getAddressNameMap, getRecipientSuggestions } from './selectors';
 
@@ -78,6 +80,23 @@ class RecipientField extends Component {
     openModal(AddEditContactModal);
   };
 
+  addToContact = async () => {
+    const address = this.props.input.value;
+    let isMine = false;
+    try {
+      const result = await callApi('system/validate/address', {
+        address,
+      });
+      isMine = result.is_mine;
+    } catch (err) {
+      console.error(err);
+    }
+    const prefill = isMine
+      ? { notMine: [], mine: [{ address, label: '' }] }
+      : { notMine: [{ address, label: '' }] };
+    openModal(AddEditContactModal, { prefill });
+  };
+
   /**
    * Component's Renderable JSX
    *
@@ -87,6 +106,8 @@ class RecipientField extends Component {
   render() {
     const { addressNameMap, input, meta, suggestions } = this.props;
     const recipientName = addressNameMap[input.value];
+    const isAddress = addressRegex.test(input.value);
+
     return (
       <FormField
         label={
@@ -96,6 +117,14 @@ class RecipientField extends Component {
               &nbsp;&nbsp;
             </span>
             <RecipientName>{recipientName}</RecipientName>
+            {!recipientName && isAddress && (
+              <Button skin="plain-link-primary" onClick={this.addToContact}>
+                <Icon icon={plusIcon} style={{ fontSize: '0.9em' }} />
+                <span className="v-align ml0_4">
+                  {__('Add to Address Book')}
+                </span>
+              </Button>
+            )}
           </>
         }
       >
@@ -119,7 +148,7 @@ class RecipientField extends Component {
                     className="mr0_4"
                     style={{ fontSize: '.8em' }}
                   />
-                  {__('Create new contact')}
+                  <span className="v-align">{__('Create new contact')}</span>
                 </Button>
               </EmptyMessage>
             )

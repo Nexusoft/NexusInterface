@@ -37,7 +37,7 @@ function getInitialValues(contact) {
  */
 class AddEditContactModal extends Component {
   render() {
-    const { edit, contact } = this.props;
+    const { edit, contact, prefill } = this.props;
 
     return (
       <Modal>
@@ -52,7 +52,9 @@ class AddEditContactModal extends Component {
                 edit={edit}
                 oldName={contact && contact.name}
                 initialValues={
-                  edit ? getInitialValues(contact) : initialContact
+                  edit
+                    ? getInitialValues(contact)
+                    : { ...initialContact, ...prefill }
                 }
                 closeModal={closeModal}
               />

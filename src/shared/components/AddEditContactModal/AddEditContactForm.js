@@ -78,7 +78,7 @@ function asyncValidateAddresses(isMine, addresses, errors) {
  */
 @connect(mapStateToProps)
 @reduxForm({
-  destroyOnUnmount: false,
+  destroyOnUnmount: true,
   validate: ({ name, mine, notMine, genesis, email }, props) => {
     const errors = {};
 
