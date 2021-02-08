@@ -37,6 +37,7 @@ const fiatCurrencies = [
   { value: 'BTC', display: 'Bitcoin (BTC)' },
   { value: 'BRL', display: 'Brazilian Real (BRL)' },
   { value: 'GBP', display: 'British Pound (GBP)' },
+  { value: 'MMK', display: 'Burmese Kyat (MMK)' },
   { value: 'CAD', display: 'Canadian Dollar (CAD)' },
   { value: 'CLP', display: 'Chilean Peso (CLP)' },
   { value: 'CNY', display: 'Chinese Yuan (CNY)' },
@@ -58,8 +59,10 @@ const fiatCurrencies = [
   { value: 'ZAR', display: 'South African Rand (ZAR)' },
   { value: 'CHF', display: 'Swiss Franc (CHF)' },
   { value: 'TWD', display: 'Taiwan Dollar (TWD)' },
+  { value: 'THB', display: 'Thai Baht (THB)' },
   { value: 'AED', display: 'United Arab Emirates Dirham (AED)' },
   { value: 'USD', display: 'United States Dollar (USD)' },
+  { value: 'VND', display: 'Vietnamese Dong (VND)' },
 ];
 
 const mapStateToProps = (state) => ({
