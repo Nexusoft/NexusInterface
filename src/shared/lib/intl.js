@@ -120,6 +120,10 @@ export const formatNumber = (num, maxDecimalDigits = 3) => {
 };
 
 export const formatCurrency = (num, currency = 'USD', maxDecimalDigits = 3) => {
+  // VND doesn't have decimal digits
+  if (currency === 'VND') {
+    maxDecimalDigits = 0;
+  }
   const digits = ensureSignificantDigit(maxDecimalDigits, num);
   return new Intl.NumberFormat(locale, {
     style: 'currency',
