@@ -82,17 +82,21 @@ function customConfig(config = {}) {
     port,
     portSSL,
     host: `${rpcSSL ? 'https' : 'http'}://${ip}:${rpcSSL ? portSSL : port}`,
-    user: config.user || config.rpcuser || defaultConfig.user,
-    password: config.password || config.rpcpassword || defaultConfig.password,
+    user: config.user !== undefined ? config.user : defaultConfig.user,
+    password:
+      config.password !== undefined ? config.password : defaultConfig.password,
     apiSSL,
     apiPort,
     apiPortSSL,
     apiHost: `${apiSSL ? 'https' : 'http'}://${ip}:${
       apiSSL ? apiPortSSL : apiPort
     }`,
-    apiUser: config.apiUser || config.apiuser || defaultConfig.apiUser,
+    apiUser:
+      config.apiUser !== undefined ? config.apiUser : defaultConfig.apiUser,
     apiPassword:
-      config.apiPassword || config.apipassword || defaultConfig.apiPassword,
+      config.apiPassword !== undefined
+        ? config.apiPassword
+        : defaultConfig.apiPassword,
   };
 }
 
@@ -129,6 +133,9 @@ export async function loadNexusConf() {
     ['rpcpassword', defaultConfig.password],
     ['apiuser', defaultConfig.apiUser],
     ['apipassword', defaultConfig.apiPassword],
+    ['apissl', defaultConfig.apiSSL],
+    ['apiport', defaultConfig.apiPort],
+    ['apiportssl', defaultConfig.apiPortSSL],
   ];
   let updated = false;
   fallbackConf.forEach(([key, value]) => {
@@ -152,10 +159,13 @@ export async function loadNexusConf() {
   }
 
   return customConfig({
-    rpcuser: configs.rpcuser,
-    rpcpassword: configs.rpcpassword,
-    apiuser: configs.apiuser,
-    apipassword: configs.apipassword,
+    user: configs.rpcuser,
+    password: configs.rpcpassword,
+    apiUser: configs.apiuser,
+    apiPassword: configs.apipassword,
+    apiSSL: configs.apissl,
+    apiPort: configs.apiport,
+    apiPortSSL: configs.apiportssl,
   });
 }
 
