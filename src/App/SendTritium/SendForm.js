@@ -135,18 +135,15 @@ async function asyncValidateRecipient({ recipient, source }) {
 
 function getRecipientsParams(recipients, { advancedOptions }) {
   return recipients.map(
-    (
-      {
-        address,
-        amount,
-        reference,
-        expireDays,
-        expireHours,
-        expireMinutes,
-        expireSeconds,
-      },
-      i
-    ) => {
+    ({
+      address,
+      amount,
+      reference,
+      expireDays,
+      expireHours,
+      expireMinutes,
+      expireSeconds,
+    }) => {
       const recipParam = {};
 
       if (addressRegex.test(address)) {
@@ -245,7 +242,7 @@ function getRecipientsParams(recipients, { advancedOptions }) {
       return null;
     }
   },
-  onSubmit: ({ recipients }, dispatch, { source, advancedOptions, reset }) => {
+  onSubmit: ({ recipients, advancedOptions }, dispatch, { source, reset }) => {
     openModal(PreviewTransactionModal, {
       source,
       recipients: getRecipientsParams(recipients, { advancedOptions }),

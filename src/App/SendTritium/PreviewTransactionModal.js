@@ -7,7 +7,6 @@ import NexusAddress from 'components/NexusAddress';
 import Icon from 'components/Icon';
 import TokenName from 'components/TokenName';
 import Button from 'components/Button';
-import FormField from 'components/FormField';
 import TextFieldWithKeyboard from 'components/TextFieldWithKeyboard';
 import { callApi } from 'lib/tritiumApi';
 import { lookupAddress } from 'lib/addressBook';
@@ -260,7 +259,7 @@ function PreviewTransactionModal({
                   </>
                 )}
 
-                {!!expires && (
+                {(!!expires || expires === 0) && (
                   <>
                     <LabelCell>
                       <Label>{__('Expires')}</Label>
