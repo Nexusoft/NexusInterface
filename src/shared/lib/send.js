@@ -11,7 +11,7 @@ export const defaultRecipient = {
   amount: '',
   fiatAmount: '',
   reference: null,
-  expireDays: 1,
+  expireDays: 7,
   expireHours: 0,
   expireMinutes: 0,
   expireSeconds: 0,
