@@ -7,6 +7,7 @@ import NexusAddress from 'components/NexusAddress';
 import Icon from 'components/Icon';
 import TokenName from 'components/TokenName';
 import Button from 'components/Button';
+import Tooltip from 'components/Tooltip';
 import TextFieldWithKeyboard from 'components/TextFieldWithKeyboard';
 import { callApi } from 'lib/tritiumApi';
 import { lookupAddress } from 'lib/addressBook';
@@ -14,6 +15,7 @@ import { openSuccessDialog, removeModal } from 'lib/ui';
 import { loadAccounts } from 'lib/user';
 import { errorHandler } from 'utils/form';
 import addressBookIcon from 'icons/address-book.svg';
+import WarningIcon from 'icons/warning.svg';
 import sendIcon from 'icons/send.svg';
 
 __ = __context('PreviewTransaction');
@@ -29,6 +31,8 @@ const Layout = styled.div({
 const LabelCell = styled.div({
   gridColumn: '1 / span 1',
   textAlign: 'left',
+  display: 'flex',
+  alignItems: 'center',
 });
 
 const ContentCell = styled.div({
@@ -265,7 +269,24 @@ function PreviewTransactionModal({
                       <Label>{__('Expires')}</Label>
                     </LabelCell>
                     <ContentCell>
-                      <ContentCell>{renderExpiry(expires)}</ContentCell>
+                      <ContentCell>
+                        {expires === 0 ? (
+                          <span>
+                            <span className="v-align mr0_4">
+                              {__('NO EXPIRY')}
+                            </span>
+                            <Tooltip.Trigger
+                              tooltip={__(
+                                "Transaction never expires, and you won't be able to void it even if the recipient doesn't credit the transaction"
+                              )}
+                            >
+                              <Icon icon={WarningIcon} />
+                            </Tooltip.Trigger>
+                          </span>
+                        ) : (
+                          renderExpiry(expires)
+                        )}
+                      </ContentCell>
                     </ContentCell>
                   </>
                 )}
