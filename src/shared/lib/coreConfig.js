@@ -107,7 +107,13 @@ function customConfig(config = {}) {
  */
 export async function loadNexusConf() {
   const {
-    settings: { coreDataDir },
+    settings: {
+      coreDataDir,
+      embeddedCoreApiPort,
+      embeddedCoreApiPortSSL,
+      embeddedCoreRpcPort,
+      embeddedCoreRpcPortSSL,
+    },
   } = store.getState();
   if (!fs.existsSync(coreDataDir)) {
     log.info(
@@ -125,7 +131,7 @@ export async function loadNexusConf() {
     );
     confContent = (await fs.promises.readFile(confPath)).toString();
   }
-  const configs = fromKeyValues(confContent);
+  let configs = fromKeyValues(confContent);
 
   // Fallback to default values if empty
   const fallbackConf = [
@@ -136,7 +142,16 @@ export async function loadNexusConf() {
     ['apissl', defaultConfig.apiSSL],
     ['apiport', defaultConfig.apiPort],
     ['apiportssl', defaultConfig.apiPortSSL],
+    ['rpcssl', defaultConfig.rpcSSL],
+    ['rpcport', defaultConfig.port],
+    ['rpcportssl', defaultConfig.portSSL],
   ];
+  const settingsConf = {
+    apiport: embeddedCoreApiPort || undefined,
+    apiportssl: embeddedCoreApiPortSSL || undefined,
+    port: embeddedCoreRpcPort || undefined,
+    portssl: embeddedCoreRpcPortSSL || undefined,
+  };
   let updated = false;
   fallbackConf.forEach(([key, value]) => {
     // Don't replace it if value is an empty string
@@ -158,6 +173,8 @@ export async function loadNexusConf() {
     });
   }
 
+  configs = { ...configs, ...settingsConf };
+
   return customConfig({
     user: configs.rpcuser,
     password: configs.rpcpassword,
@@ -166,6 +183,9 @@ export async function loadNexusConf() {
     apiSSL: configs.apissl,
     apiPort: configs.apiport,
     apiPortSSL: configs.apiportssl,
+    rpcSSL: configs.rpcssl,
+    port: configs.rpcport,
+    portSSL: configs.rpcportssl,
   });
 }
 
