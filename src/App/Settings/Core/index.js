@@ -19,6 +19,7 @@ import {
 import { stopCore, startCore, restartCore } from 'lib/core';
 import { refreshCoreInfo } from 'lib/coreInfo';
 import { updateSettings } from 'lib/settings';
+import { defaultConfig } from 'lib/coreConfig';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
@@ -565,6 +566,7 @@ class SettingsCore extends Component {
                 <Field
                   component={TextField.RF}
                   name="embeddedCoreApiPort"
+                  placeholder={defaultConfig.apiPort}
                   size="5"
                 />
               </SettingsField>
@@ -577,6 +579,7 @@ class SettingsCore extends Component {
                 <Field
                   component={TextField.RF}
                   name="embeddedCoreApiPortSSL"
+                  placeholder={defaultConfig.apiPortSSL}
                   size="5"
                 />
               </SettingsField>
@@ -589,6 +592,7 @@ class SettingsCore extends Component {
                 <Field
                   component={TextField.RF}
                   name="embeddedCoreRpcPort"
+                  placeholder={defaultConfig.port}
                   size="5"
                 />
               </SettingsField>
@@ -601,6 +605,7 @@ class SettingsCore extends Component {
                 <Field
                   component={TextField.RF}
                   name="embeddedCoreRpcPortSSL"
+                  placeholder={defaultConfig.portSSL}
                   size="5"
                 />
               </SettingsField>

@@ -46,7 +46,7 @@ const toKeyValues = (obj) =>
     .map(([key, value]) => `${key}=${value}`)
     .join('\n');
 
-const defaultConfig = {
+export const defaultConfig = {
   ip: '127.0.0.1',
   rpcSSL: true,
   port: '9336',
