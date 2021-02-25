@@ -113,6 +113,9 @@ const formKeys = [
   'manualDaemonApiPortSSL',
   'manualDaemonApiUser',
   'manualDaemonApiPassword',
+  'embeddedCoreApiSSL',
+  'embeddedCoreApiPort',
+  'embeddedCoreApiPortSSL',
 ];
 const getInitialValues = (() => {
   let lastOutput = null;
@@ -550,6 +553,38 @@ class SettingsCore extends Component {
                   min={0}
                   max={99999999}
                   style={{ maxWidth: 50 }}
+                />
+              </SettingsField>
+
+              <SettingsField
+                connectLabel
+                label={__('API SSL')}
+                subLabel={__('Use SSL for API calls')}
+              >
+                <Field component={Switch.RF} name="embeddedCoreApiSSL" />
+              </SettingsField>
+
+              <SettingsField
+                connectLabel
+                label={__('API Port')}
+                subLabel={__('Nexus API server Port')}
+              >
+                <Field
+                  component={TextField.RF}
+                  name="embeddedCoreApiPort"
+                  size="5"
+                />
+              </SettingsField>
+
+              <SettingsField
+                connectLabel
+                label={__('API SSL Port')}
+                subLabel={__('Nexus API server SSL Port')}
+              >
+                <Field
+                  component={TextField.RF}
+                  name="embeddedCoreApiPortSSL"
+                  size="5"
                 />
               </SettingsField>
 
