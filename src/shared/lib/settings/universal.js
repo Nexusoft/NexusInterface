@@ -60,9 +60,10 @@ export const defaultSettings = {
   manualDaemonApiPort: '8080',
   manualDaemonApiPortSSL: '7080',
   manualDaemonLogOutOnClose: false,
-  embeddedCoreApiSSL: true,
   embeddedCoreApiPort: '8080',
   embeddedCoreApiPortSSL: '7080',
+  embeddedCoreRpcPort: '9336',
+  embeddedCoreRpcPortSSL: '7336',
 
   // Style
   renderGlobe: true,

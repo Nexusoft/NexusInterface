@@ -113,9 +113,10 @@ const formKeys = [
   'manualDaemonApiPortSSL',
   'manualDaemonApiUser',
   'manualDaemonApiPassword',
-  'embeddedCoreApiSSL',
   'embeddedCoreApiPort',
   'embeddedCoreApiPortSSL',
+  'embeddedCoreRpcPort',
+  'embeddedCoreRpcPortSSL',
 ];
 const getInitialValues = (() => {
   let lastOutput = null;
@@ -558,16 +559,8 @@ class SettingsCore extends Component {
 
               <SettingsField
                 connectLabel
-                label={__('API SSL')}
-                subLabel={__('Use SSL for API calls')}
-              >
-                <Field component={Switch.RF} name="embeddedCoreApiSSL" />
-              </SettingsField>
-
-              <SettingsField
-                connectLabel
-                label={__('API Port')}
-                subLabel={__('Nexus API server Port')}
+                label={__('API non-SSL Port')}
+                subLabel={__('Nexus API server non-SSL Port')}
               >
                 <Field
                   component={TextField.RF}
@@ -584,6 +577,30 @@ class SettingsCore extends Component {
                 <Field
                   component={TextField.RF}
                   name="embeddedCoreApiPortSSL"
+                  size="5"
+                />
+              </SettingsField>
+
+              <SettingsField
+                connectLabel
+                label={__('RPC non-SSL Port')}
+                subLabel={__('Nexus RPC server non-SSL Port')}
+              >
+                <Field
+                  component={TextField.RF}
+                  name="embeddedCoreRpcPort"
+                  size="5"
+                />
+              </SettingsField>
+
+              <SettingsField
+                connectLabel
+                label={__('RPC SSL Port')}
+                subLabel={__('Nexus RPC server SSL Port')}
+              >
+                <Field
+                  component={TextField.RF}
+                  name="embeddedCoreRpcPortSSL"
                   size="5"
                 />
               </SettingsField>
@@ -690,8 +707,8 @@ class SettingsCore extends Component {
                   <SettingsField
                     indent={1}
                     connectLabel
-                    label={__('API Port')}
-                    subLabel={__('Nexus API server Port')}
+                    label={__('API non-SSL Port')}
+                    subLabel={__('Nexus API server non-SSL Port')}
                   >
                     <Field
                       component={TextField.RF}
@@ -753,8 +770,8 @@ class SettingsCore extends Component {
               <SettingsField
                 indent={1}
                 connectLabel
-                label={__('RPC Port')}
-                subLabel={__('Nexus RPC server Port')}
+                label={__('RPC non-SSL Port')}
+                subLabel={__('Nexus RPC server non-SSL Port')}
               >
                 <Field
                   component={TextField.RF}
