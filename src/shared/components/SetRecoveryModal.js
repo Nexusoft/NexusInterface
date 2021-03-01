@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { connect } from 'react-redux';
-import { Component } from 'react';
+import { Component, useState } from 'react';
 import { reduxForm, Field } from 'redux-form';
 
 import { callApi } from 'lib/tritiumApi';
@@ -13,7 +13,12 @@ import Button from 'components/Button';
 import Select from 'components/Select';
 import Spinner from 'components/Spinner';
 import { errorHandler } from 'utils/form';
-import { openSuccessDialog, removeModal } from 'lib/ui';
+import {
+  openSuccessDialog,
+  removeModal,
+  openModal,
+  openErrorDialog,
+} from 'lib/ui';
 import { assetsDir } from 'consts/paths';
 
 __ = __context('SetRecoveryPhrase');
@@ -68,14 +73,19 @@ const options = [
 
     return errors;
   },
-  onSubmit: ({ password, pin, phrase, newPhrase }, dispatch, props) =>
-    callApi('users/update/user', {
-      password,
-      pin,
-      recovery: props.hasRecoveryPhrase ? phrase : undefined,
-      new_recovery: newPhrase,
-    }),
+  onSubmit: async ({ password, pin, phrase, newPhrase }, dispatch, props) => {
+    const confirmed = await confirmRecovery(newPhrase);
+    if (confirmed) {
+      return await callApi('users/update/user', {
+        password,
+        pin,
+        recovery: props.hasRecoveryPhrase ? phrase : undefined,
+        new_recovery: newPhrase,
+      });
+    }
+  },
   onSubmitSuccess: async (result, dispatch, props) => {
+    if (!result) return;
     removeModal(props.modalId);
     props.reset();
     openSuccessDialog({
@@ -122,11 +132,20 @@ class SetRecoveryModal extends Component {
         <Modal.Header>{__('Recovery phrase')}</Modal.Header>
         <Modal.Body>
           <form onSubmit={handleSubmit}>
-            <div>
+            <p>
               {__(
-                'The recovery phrase can be used to recover your account and set a new password and PIN in the event that you lose or forget them. Your recovery phrase must be a minimum of 40 characters, and should ideally be made up of random words. Save this new recovery phrase in a safe place.'
+                'The recovery phrase can be used to recover your account and set a new password and PIN in the event that you lose or forget them. Your recovery phrase must be a minimum of 40 characters, and should ideally be made up of random words.'
               )}
-            </div>
+            </p>
+            <p>
+              {__(
+                '<b>Save your new recovery phrase in a safe place</b>, because if you lose it, there will be <b>no way</b> to recover it.',
+                null,
+                {
+                  b: (text) => <strong>{text}</strong>,
+                }
+              )}
+            </p>
 
             <FormField label={__('Password')}>
               <Field
@@ -204,6 +223,71 @@ class SetRecoveryModal extends Component {
       </Modal>
     );
   }
+}
+
+function ConfirmRecoveryDialog({ phrase, onConfirm, ...rest }) {
+  const [inputValue, setInputValue] = useState('');
+  return (
+    <Modal maxWidth={500} {...rest}>
+      {(closeModal) => (
+        <>
+          <Modal.Header>{__('Confirm recovery phrase')}</Modal.Header>
+          <Modal.Body>
+            <TextField
+              multiline
+              rows={1}
+              value={inputValue}
+              onChange={(e) => {
+                setInputValue(e.target.value);
+              }}
+              autoFocus
+              placeholder={__('Enter your new recovery phrase again')}
+            />
+            <div className="flex space-between mt2">
+              <Button onClick={closeModal}>{__('Cancel')}</Button>
+              <Button
+                type="submit"
+                skin="primary"
+                onClick={() => {
+                  console.log('inputValue', inputValue);
+                  console.log('phrase', phrase);
+                  if (inputValue !== phrase) {
+                    openErrorDialog({
+                      message: __(
+                        "Recovery phrase confirmation doesn't match!"
+                      ),
+                      note: __(
+                        'Please make sure that you have a good backup of your recovery phrase and try again.'
+                      ),
+                    });
+                  } else {
+                    onConfirm?.();
+                    closeModal();
+                  }
+                }}
+              >
+                {__('Confirm')}
+              </Button>
+            </div>
+          </Modal.Body>
+        </>
+      )}
+    </Modal>
+  );
+}
+
+async function confirmRecovery(phrase) {
+  return new Promise((resolve) => {
+    openModal(ConfirmRecoveryDialog, {
+      phrase,
+      onClose: () => {
+        resolve(false);
+      },
+      onConfirm: () => {
+        resolve(true);
+      },
+    });
+  });
 }
 
 export default SetRecoveryModal;
