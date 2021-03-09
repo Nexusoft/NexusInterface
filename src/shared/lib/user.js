@@ -15,6 +15,7 @@ export const refreshStakeInfo = async () => {
   try {
     const stakeInfo = await callApi('finance/get/stakeinfo');
     store.dispatch({ type: TYPE.SET_STAKE_INFO, payload: stakeInfo });
+    return stakeInfo;
   } catch (err) {
     store.dispatch({ type: TYPE.CLEAR_STAKE_INFO });
     console.error('finance/get/stakeinfo failed', err);
@@ -30,6 +31,7 @@ export const refreshUserStatus = async () => {
     if (!systemInfo?.multiuser || session) {
       const status = await callApi('users/get/status');
       store.dispatch({ type: TYPE.SET_USER_STATUS, payload: status });
+      return status;
     }
   } catch (err) {
     store.dispatch({ type: TYPE.CLEAR_USER });
@@ -40,6 +42,7 @@ export const refreshBalances = async () => {
   try {
     const balances = await callApi('finance/get/balances');
     store.dispatch({ type: TYPE.SET_BALANCES, payload: balances });
+    return balances;
   } catch (err) {
     store.dispatch({ type: TYPE.CLEAR_BALANCES });
     console.error('finance/get/balances failed', err);
