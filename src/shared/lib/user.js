@@ -46,7 +46,7 @@ export const refreshBalances = async () => {
   }
 };
 
-export const login = async ({ username, password, pin }) => {
+export const logIn = async ({ username, password, pin }) => {
   const result = await callApi('users/login/user', {
     username,
     password,

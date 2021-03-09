@@ -249,8 +249,6 @@ function ConfirmRecoveryDialog({ phrase, onConfirm, ...rest }) {
                 type="submit"
                 skin="primary"
                 onClick={() => {
-                  console.log('inputValue', inputValue);
-                  console.log('phrase', phrase);
                   if (inputValue !== phrase) {
                     openErrorDialog({
                       message: __(

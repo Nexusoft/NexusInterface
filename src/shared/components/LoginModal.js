@@ -11,7 +11,7 @@ import NewUserModal from 'components/NewUserModal';
 import RecoverPasswordPinModal from 'components/RecoverPasswordPinModal';
 import Spinner from 'components/Spinner';
 import { showNotification, openModal, removeModal } from 'lib/ui';
-import { login, unlockUser } from 'lib/user';
+import { logIn, unlockUser } from 'lib/user';
 import { errorHandler } from 'utils/form';
 
 __ = __context('Login');
@@ -60,7 +60,7 @@ const ExtraSection = styled.div({
 
     return errors;
   },
-  onSubmit: ({ username, password, pin }) => login({ username, password, pin }),
+  onSubmit: ({ username, password, pin }) => logIn({ username, password, pin }),
   onSubmitSuccess: async (result, dispatch, { modalId, reset, values }) => {
     removeModal(modalId);
     reset();
@@ -78,7 +78,7 @@ const ExtraSection = styled.div({
             message:
               submitError.message +
               '. ' +
-              __('Not being fully synced may have caused this error.'),
+              __('Not being fully synced may have caused this error.'), //
           }
         : submitError;
     errorHandler(__('Error logging in'))(errors, dispatch, error);
