@@ -6,16 +6,19 @@ import Button from 'components/Button';
 import AdjustStakeModal from 'components/AdjustStakeModal';
 import ConfirmDialog from 'components/Dialogs/ConfirmDialog';
 import store from 'store';
-import { switchUserTab } from 'lib/ui';
 import { updateSettings } from 'lib/settings';
 import { restartCore } from 'lib/core';
-import { openModal, removeModal } from 'lib/ui';
 import {
   confirm,
+  confirmPin,
+  openModal,
+  removeModal,
   openInfoDialog,
   openErrorDialog,
   showNotification,
+  switchUserTab,
 } from 'lib/ui';
+import { unlockUser } from 'lib/user';
 import { formatNumber, formatDateTime } from 'lib/intl';
 import { isSynchronized } from 'selectors';
 import QuestionCircle from 'components/QuestionCircle';
@@ -89,6 +92,7 @@ class Staking extends Component {
     const state = store.getState();
     const {
       settings: { liteMode, multiUser, enableStaking },
+      user: { status },
     } = state;
     const { stakeInfo } = this.props;
     const synchronized = isSynchronized(state);
@@ -149,6 +153,15 @@ class Staking extends Component {
         showNotification(__('Restarting Core'));
       } else {
         return;
+      }
+    }
+
+    if (status?.unlocked.staking === false) {
+      const pin = await confirmPin({
+        note: __('Enter your PIN to start staking'),
+      });
+      if (pin) {
+        await unlockUser({ pin, staking: true });
       }
     }
 
