@@ -1,12 +1,14 @@
+import MigrateAccountModal from 'components/MigrateAccountModal';
+import ExternalLink from 'components/ExternalLink';
 import * as TYPE from 'consts/actionTypes';
 import store, { observeStore } from 'store';
+import { legacyMode } from 'consts/misc';
 import { callApi } from 'lib/tritiumApi';
 import rpc from 'lib/rpc';
-import { legacyMode } from 'consts/misc';
-import { openModal } from 'lib/ui';
+import { openModal, confirm, confirmPin } from 'lib/ui';
+import { updateSettings } from 'lib/settings';
 import { isLoggedIn } from 'selectors';
 import listAll from 'utils/listAll';
-import MigrateAccountModal from 'components/MigrateAccountModal';
 
 export const selectUsername = (state) =>
   state.user.status?.username || state.sessions[state.user.session]?.username;
@@ -56,7 +58,18 @@ export const logIn = async ({ username, password, pin }) => {
     pin,
   });
   const { session } = result;
-  const status = await callApi('users/get/status', { session });
+  let [status, stakeInfo] = await Promise.all([
+    callApi('users/get/status', { session }),
+    callApi('finance/get/stakeinfo', { session }),
+  ]);
+  const unlockStaking = await shouldUnlockStaking({ stakeInfo, status });
+  await unlockUser({
+    pin,
+    staking: unlockStaking,
+  });
+  if (unlockStaking) {
+    status = await callApi('users/get/status', { session });
+  }
 
   store.dispatch({ type: TYPE.LOGIN, payload: { username, session, status } });
   return { username, session, status };
@@ -81,15 +94,15 @@ export const logOut = async () => {
   }
 };
 
-export const unlockUser = async ({ pin }) => {
+export const unlockUser = async ({ pin, mining, staking, notifications }) => {
   const {
-    settings: { enableStaking, enableMining },
+    settings: { enableMining },
   } = store.getState();
   return await callApi('users/unlock/user', {
     pin,
-    notifications: true,
-    mining: !!enableMining,
-    staking: !!enableStaking,
+    notifications: notifications !== undefined ? notifications : true,
+    mining: mining !== undefined ? mining : !!enableMining,
+    staking: staking !== undefined ? staking : false, //!!enableStaking,
   });
 };
 
@@ -238,5 +251,81 @@ export function prepareUser() {
         }
       }
     );
+
+    observeStore(
+      (state) => state.user,
+      async ({ stakeInfo, status }) => {
+        if (await shouldUnlockStaking({ stakeInfo, status })) {
+          const pin = await confirmPin({
+            note: __('Enter your PIN to start staking'),
+          });
+          if (pin) {
+            unlockUser({ pin, staking: true });
+          }
+        }
+      }
+    );
   }
+}
+
+async function shouldUnlockStaking({ stakeInfo, status }) {
+  const {
+    settings: { enableStaking, askToStartStaking },
+    core: { systemInfo },
+  } = store.getState();
+
+  if (
+    !systemInfo?.clientmode &&
+    enableStaking &&
+    status?.unlocked.staking === false
+  ) {
+    if (stakeInfo?.new === false) {
+      return true;
+    }
+
+    if (stakeInfo?.new === true && stakeInfo?.balance && askToStartStaking) {
+      const accepted = await confirm({
+        question: __('Start staking?'),
+        note: (
+          <div style={{ textAlign: 'left' }}>
+            <p>
+              {__(
+                'You have %{amount} NXS in your trust account and can start staking now.',
+                {
+                  amount: stakeInfo.balance,
+                }
+              )}
+            </p>
+            <p>
+              {__(
+                'However, keep in mind that if you start staking, your staking amount will be locked, and the smaller the amount is, the longer it would likely take to unlock it.'
+              )}
+            </p>
+            <p>
+              {__(
+                'To learn more about staking, visit <link>crypto.nexus.io/stake</link>.',
+                null,
+                {
+                  link: () => (
+                    <ExternalLink href="https://crypto.nexus.io/stake">
+                      crypto.nexus.io/stake
+                    </ExternalLink>
+                  ),
+                }
+              )}
+            </p>
+          </div>
+        ),
+        labelYes: __('Start staking'),
+        labelNo: __("Don't stake"),
+      });
+      if (accepted) {
+        return true;
+      } else {
+        updateSettings({ askToStartStaking: false });
+      }
+    }
+  }
+
+  return false;
 }

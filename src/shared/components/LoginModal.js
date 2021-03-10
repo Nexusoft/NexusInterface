@@ -68,7 +68,6 @@ const ExtraSection = styled.div({
       __('Logged in as %{username}', { username: values.username }),
       'success'
     );
-    unlockUser({ pin: values.pin });
   },
   onSubmitFail: (errors, dispatch, submitError, props) => {
     const error =

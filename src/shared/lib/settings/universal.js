@@ -95,6 +95,7 @@ export const defaultSettings = {
   // modal automatically when core is connected
   firstCreateNewUserShown: false,
   consoleCliSyntax: true,
+  askToStartStaking: true,
 };
 
 function readSettings() {
