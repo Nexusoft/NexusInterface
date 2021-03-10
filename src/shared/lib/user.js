@@ -10,6 +10,8 @@ import { updateSettings } from 'lib/settings';
 import { isLoggedIn } from 'selectors';
 import listAll from 'utils/listAll';
 
+__ = __context('User');
+
 export const selectUsername = (state) =>
   state.user.status?.username || state.sessions[state.user.session]?.username;
 
