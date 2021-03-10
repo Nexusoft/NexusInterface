@@ -1,3 +1,4 @@
+import { createRef } from 'react';
 import MigrateAccountModal from 'components/MigrateAccountModal';
 import ExternalLink from 'components/ExternalLink';
 import * as TYPE from 'consts/actionTypes';
@@ -272,8 +273,9 @@ export function prepareUser() {
 
 async function shouldUnlockStaking({ stakeInfo, status }) {
   const {
-    settings: { enableStaking, askToStartStaking },
+    settings: { enableStaking, dontAskToStartStaking },
     core: { systemInfo },
+    user: { startStakingAsked },
   } = store.getState();
 
   if (
@@ -285,7 +287,13 @@ async function shouldUnlockStaking({ stakeInfo, status }) {
       return true;
     }
 
-    if (stakeInfo?.new === true && stakeInfo?.balance && askToStartStaking) {
+    if (
+      stakeInfo?.new === true &&
+      stakeInfo?.balance &&
+      !startStakingAsked &&
+      !dontAskToStartStaking
+    ) {
+      let checkboxRef = createRef();
       const accepted = await confirm({
         question: __('Start staking?'),
         note: (
@@ -316,15 +324,25 @@ async function shouldUnlockStaking({ stakeInfo, status }) {
                 }
               )}
             </p>
+            <div className="mt3">
+              <label>
+                <input type="checkbox" ref={checkboxRef} />{' '}
+                {__("Don't show this again")}
+              </label>
+            </div>
           </div>
         ),
         labelYes: __('Start staking'),
         labelNo: __("Don't stake"),
       });
+      store.dispatch({
+        type: TYPE.ASK_START_STAKING,
+      });
+      if (checkboxRef.current?.checked) {
+        updateSettings({ dontAskToStartStaking: true });
+      }
       if (accepted) {
         return true;
-      } else {
-        updateSettings({ askToStartStaking: false });
       }
     }
   }
