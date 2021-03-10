@@ -3,7 +3,7 @@ import EventEmitter from 'events';
 import checkDiskSpace from 'check-disk-space';
 import fs from 'fs';
 import path from 'path';
-import https from 'https';
+import http from 'http';
 import moveFile from 'move-file';
 
 // Internal
@@ -37,7 +37,7 @@ const getExtractDest = () => {
   } = store.getState();
   return path.join(coreDataDir, 'recent');
 };
-const recentDbUrlTritium = 'https://nexus.io/bootstrap/tritium/tritium.tar.gz'; // Tritium Bootstrap URL
+const recentDbUrlTritium = 'http://bootstrap.nexus.io/tritium.tar.gz'; // Tritium Bootstrap URL
 
 let aborting = false;
 let downloadRequest = null;
@@ -161,7 +161,7 @@ async function startBootstrap() {
 async function downloadDb(recentDbUrl, downloadProgress) {
   const promise = new Promise((resolve, reject) => {
     let timerId;
-    downloadRequest = https
+    downloadRequest = http
       .get(recentDbUrl)
       .setTimeout(60000)
       .on('response', (response) => {
