@@ -300,7 +300,7 @@ async function shouldUnlockStaking({ stakeInfo, status }) {
             </p>
             <p>
               {__(
-                'However, keep in mind that if you start staking, your staking amount will be locked, and the smaller the amount is, the longer it would likely take to unlock it.'
+                'However, keep in mind that if you start staking, your stake amount will be locked, and the smaller the amount is, the longer it would likely take to unlock it.'
               )}
             </p>
             <p>
