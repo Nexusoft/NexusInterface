@@ -2,6 +2,7 @@ import * as TYPE from 'consts/actionTypes';
 import ConfirmDialog from 'components/Dialogs/ConfirmDialog';
 import ErrorDialog from 'components/Dialogs/ErrorDialog';
 import SuccessDialog from 'components/Dialogs/SuccessDialog';
+import InfoDialog from 'components/Dialogs/InfoDialog';
 import PinDialog from 'components/Dialogs/PinDialog';
 import ConfirmPasswordPinDialog from 'components/Dialogs/ConfirmPasswordPinDialog';
 import store from 'store';
@@ -26,14 +27,16 @@ const newTaskId = (function () {
  * ===========================
  */
 export function openModal(component, props) {
+  const id = newModalId();
   store.dispatch({
     type: TYPE.CREATE_MODAL,
     payload: {
-      id: newModalId(),
+      id,
       component,
       props,
     },
   });
+  return id;
 }
 
 // Using regular function here to avoid circular dependency which causes error
@@ -49,6 +52,8 @@ export const openConfirmDialog = (props) => openModal(ConfirmDialog, props);
 export const openErrorDialog = (props) => openModal(ErrorDialog, props);
 
 export const openSuccessDialog = (props) => openModal(SuccessDialog, props);
+
+export const openInfoDialog = (props) => openModal(InfoDialog, props);
 
 export function confirm(options) {
   return new Promise((resolve, reject) => {
@@ -201,24 +206,6 @@ export const goToTxsPage = (page) => {
   store.dispatch({
     type: TYPE.SET_TXS_PAGE,
     payload: page < 1 ? 1 : page,
-  });
-};
-
-/**
- * Address Book
- * ===========================
- */
-export const searchContact = (query) => {
-  store.dispatch({
-    type: TYPE.CONTACT_SEARCH,
-    payload: query,
-  });
-};
-
-export const selectContact = (index) => {
-  store.dispatch({
-    type: TYPE.SELECT_CONTACT,
-    payload: index,
   });
 };
 

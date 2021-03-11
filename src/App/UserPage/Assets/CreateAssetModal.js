@@ -153,7 +153,7 @@ class CreateAssetForm extends Component {
           className="mt2"
           onClick={this.addField}
         >
-          <Icon icon={plusIcon} className="space-right" />
+          <Icon icon={plusIcon} className="mr0_4" />
           <span className="v-align">{__('Add field')}</span>
         </Button>
 
@@ -178,7 +178,7 @@ class CreateAssetForm extends Component {
           >
             {submitting ? (
               <span>
-                <Spinner className="space-right" />
+                <Spinner className="mr0_4" />
                 <span className="v-align">{__('Creating asset')}...</span>
               </span>
             ) : (

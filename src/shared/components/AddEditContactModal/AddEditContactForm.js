@@ -78,8 +78,8 @@ function asyncValidateAddresses(isMine, addresses, errors) {
  */
 @connect(mapStateToProps)
 @reduxForm({
-  destroyOnUnmount: false,
-  validate: ({ name, mine, notMine, email }, props) => {
+  destroyOnUnmount: true,
+  validate: ({ name, mine, notMine, genesis, email }, props) => {
     const errors = {};
 
     if (!name || !name.trim()) {
@@ -103,6 +103,10 @@ function asyncValidateAddresses(isMine, addresses, errors) {
     const notMineErrors = validateAddresses(notMine);
     if (notMineErrors.length) {
       errors.notMine = notMineErrors;
+    }
+
+    if (genesis && genesis.length !== 64) {
+      errors.genesis = __('Invalid user ID');
     }
 
     if (email && !emailRegex.test(email.toLowerCase())) {
@@ -209,6 +213,14 @@ class AddEditContactForm extends Component {
         {error && <div className="error mt1">{error}</div>}
 
         <div className="mt2">
+          <FormField connectLabel label={__('Nexus user ID')}>
+            <Field
+              name="genesis"
+              component={TextField.RF}
+              placeholder={__('Nexus user ID')}
+            />
+          </FormField>
+
           <FormField connectLabel label={__('Email address')}>
             <Field
               name="email"

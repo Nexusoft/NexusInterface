@@ -10,7 +10,7 @@ export function readJson(path) {
       `Cannot read JSON file at ${path}, returning an empty object as fallback`,
       err
     );
-    return {};
+    return null;
   }
 }
 

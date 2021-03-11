@@ -95,7 +95,7 @@ class Namespaces extends Component {
               openModal(CreateNamespaceModal);
             }}
           >
-            <Icon icon={plusIcon} className="space-right" />
+            <Icon icon={plusIcon} className="mr0_4" />
             <span className="v-align">{__('Create new namespace')}</span>
           </Button>
 

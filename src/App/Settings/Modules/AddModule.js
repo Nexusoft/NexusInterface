@@ -160,7 +160,7 @@ class AddModule extends Component {
             legend={
               <>
                 <Icon icon={plusCircleIcon} />
-                <span className="v-align space-left">{__('Add Module')}</span>
+                <span className="v-align ml0_4">{__('Add Module')}</span>
               </>
             }
             active={isDragActive || checking}

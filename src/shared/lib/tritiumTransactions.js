@@ -5,7 +5,7 @@ import { loadAccounts } from 'lib/user';
 import { showDesktopNotif } from 'utils/misc';
 import { formatNumber } from 'lib/intl';
 import { showNotification } from 'lib/ui';
-import { getTokenName } from 'lib/tokens';
+import TokenName from 'components/TokenName';
 import { legacyMode } from 'consts/misc';
 import listAll from 'utils/listAll';
 
@@ -167,7 +167,7 @@ export function prepareTransactions() {
                   `${change.amount >= 0 ? '+' : ''}${formatNumber(
                     change.amount,
                     6
-                  )} ${getTokenName(change, { markup: false })}`
+                  )} ${TokenName.from({ contract: change })}`
               );
               showDesktopNotif(__('New transaction'), changeLines.join(' \n'));
               showNotification(

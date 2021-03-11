@@ -93,7 +93,7 @@ const Filters = ({ addressQuery, category, minAmount, timeSpan }) => (
         onChange={(evt) => {
           setTxsAddressQuery(evt.target.value);
         }}
-        left={<Icon icon={searchIcon} className="space-right" />}
+        left={<Icon icon={searchIcon} className="mr0_4" />}
       />
     </FormField>
 

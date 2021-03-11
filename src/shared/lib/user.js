@@ -1,12 +1,17 @@
+import { createRef } from 'react';
+import MigrateAccountModal from 'components/MigrateAccountModal';
+import ExternalLink from 'components/ExternalLink';
 import * as TYPE from 'consts/actionTypes';
 import store, { observeStore } from 'store';
+import { legacyMode } from 'consts/misc';
 import { callApi } from 'lib/tritiumApi';
 import rpc from 'lib/rpc';
-import { legacyMode } from 'consts/misc';
-import { openModal } from 'lib/ui';
+import { openModal, confirm, confirmPin } from 'lib/ui';
+import { updateSettings } from 'lib/settings';
 import { isLoggedIn } from 'selectors';
 import listAll from 'utils/listAll';
-import MigrateAccountModal from 'components/MigrateAccountModal';
+
+__ = __context('User');
 
 export const selectUsername = (state) =>
   state.user.status?.username || state.sessions[state.user.session]?.username;
@@ -15,6 +20,7 @@ export const refreshStakeInfo = async () => {
   try {
     const stakeInfo = await callApi('finance/get/stakeinfo');
     store.dispatch({ type: TYPE.SET_STAKE_INFO, payload: stakeInfo });
+    return stakeInfo;
   } catch (err) {
     store.dispatch({ type: TYPE.CLEAR_STAKE_INFO });
     console.error('finance/get/stakeinfo failed', err);
@@ -30,6 +36,7 @@ export const refreshUserStatus = async () => {
     if (!systemInfo?.multiuser || session) {
       const status = await callApi('users/get/status');
       store.dispatch({ type: TYPE.SET_USER_STATUS, payload: status });
+      return status;
     }
   } catch (err) {
     store.dispatch({ type: TYPE.CLEAR_USER });
@@ -40,20 +47,32 @@ export const refreshBalances = async () => {
   try {
     const balances = await callApi('finance/get/balances');
     store.dispatch({ type: TYPE.SET_BALANCES, payload: balances });
+    return balances;
   } catch (err) {
     store.dispatch({ type: TYPE.CLEAR_BALANCES });
     console.error('finance/get/balances failed', err);
   }
 };
 
-export const login = async ({ username, password, pin }) => {
+export const logIn = async ({ username, password, pin }) => {
   const result = await callApi('users/login/user', {
     username,
     password,
     pin,
   });
   const { session } = result;
-  const status = await callApi('users/get/status', { session });
+  let [status, stakeInfo] = await Promise.all([
+    callApi('users/get/status', { session }),
+    callApi('finance/get/stakeinfo', { session }),
+  ]);
+  const unlockStaking = await shouldUnlockStaking({ stakeInfo, status });
+  await unlockUser({
+    pin,
+    staking: unlockStaking,
+  });
+  if (unlockStaking) {
+    status = await callApi('users/get/status', { session });
+  }
 
   store.dispatch({ type: TYPE.LOGIN, payload: { username, session, status } });
   return { username, session, status };
@@ -78,15 +97,15 @@ export const logOut = async () => {
   }
 };
 
-export const unlockUser = async ({ pin }) => {
+export const unlockUser = async ({ pin, mining, staking, notifications }) => {
   const {
-    settings: { enableStaking, enableMining },
+    settings: { enableMining },
   } = store.getState();
   return await callApi('users/unlock/user', {
     pin,
-    notifications: true,
-    mining: !!enableMining,
-    staking: !!enableStaking,
+    notifications: notifications !== undefined ? notifications : true,
+    mining: mining !== undefined ? mining : !!enableMining,
+    staking: staking !== undefined ? staking : false, //!!enableStaking,
   });
 };
 
@@ -235,5 +254,98 @@ export function prepareUser() {
         }
       }
     );
+
+    observeStore(
+      (state) => state.user,
+      async ({ stakeInfo, status }) => {
+        if (await shouldUnlockStaking({ stakeInfo, status })) {
+          const pin = await confirmPin({
+            note: __('Enter your PIN to start staking'),
+          });
+          if (pin) {
+            unlockUser({ pin, staking: true });
+          }
+        }
+      }
+    );
   }
+}
+
+async function shouldUnlockStaking({ stakeInfo, status }) {
+  const {
+    settings: { enableStaking, dontAskToStartStaking },
+    core: { systemInfo },
+    user: { startStakingAsked },
+  } = store.getState();
+
+  if (
+    !systemInfo?.clientmode &&
+    enableStaking &&
+    status?.unlocked.staking === false
+  ) {
+    if (stakeInfo?.new === false) {
+      return true;
+    }
+
+    if (
+      stakeInfo?.new === true &&
+      stakeInfo?.balance &&
+      !startStakingAsked &&
+      !dontAskToStartStaking
+    ) {
+      let checkboxRef = createRef();
+      const accepted = await confirm({
+        question: __('Start staking?'),
+        note: (
+          <div style={{ textAlign: 'left' }}>
+            <p>
+              {__(
+                'You have %{amount} NXS in your trust account and can start staking now.',
+                {
+                  amount: stakeInfo.balance,
+                }
+              )}
+            </p>
+            <p>
+              {__(
+                'However, keep in mind that if you start staking, your stake amount will be locked, and the smaller the amount is, the longer it would likely take to unlock it.'
+              )}
+            </p>
+            <p>
+              {__(
+                'To learn more about staking, visit <link>crypto.nexus.io/stake</link>.',
+                null,
+                {
+                  link: () => (
+                    <ExternalLink href="https://crypto.nexus.io/stake">
+                      crypto.nexus.io/stake
+                    </ExternalLink>
+                  ),
+                }
+              )}
+            </p>
+            <div className="mt3">
+              <label>
+                <input type="checkbox" ref={checkboxRef} />{' '}
+                {__("Don't show this again")}
+              </label>
+            </div>
+          </div>
+        ),
+        labelYes: __('Start staking'),
+        labelNo: __("Don't stake"),
+      });
+      store.dispatch({
+        type: TYPE.ASK_START_STAKING,
+      });
+      if (checkboxRef.current?.checked) {
+        updateSettings({ dontAskToStartStaking: true });
+      }
+      if (accepted) {
+        return true;
+      }
+    }
+  }
+
+  return false;
 }

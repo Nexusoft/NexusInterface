@@ -138,3 +138,4 @@ export const USERS_BALANCE_DISPLAY_FIAT = 'USERS_BALANCE_DISPLAY_FIAT';
 export const LOGIN = 'LOGIN';
 export const LOGOUT = 'LOGOUT';
 export const SWITCH_USER = 'SWITCH_USER';
+export const ASK_START_STAKING = 'ASK_START_STAKING';

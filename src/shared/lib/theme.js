@@ -36,7 +36,8 @@ function filterValidTheme(theme) {
 
 function readTheme() {
   if (fs.existsSync(themeFilePath)) {
-    return filterValidTheme(readJson(themeFilePath));
+    const json = readJson(themeFilePath) || {};
+    return filterValidTheme(json);
   } else {
     return defaultTheme;
   }

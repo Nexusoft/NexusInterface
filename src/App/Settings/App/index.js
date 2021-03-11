@@ -37,6 +37,7 @@ const fiatCurrencies = [
   { value: 'BTC', display: 'Bitcoin (BTC)' },
   { value: 'BRL', display: 'Brazilian Real (BRL)' },
   { value: 'GBP', display: 'British Pound (GBP)' },
+  { value: 'MMK', display: 'Burmese Kyat (MMK)' },
   { value: 'CAD', display: 'Canadian Dollar (CAD)' },
   { value: 'CLP', display: 'Chilean Peso (CLP)' },
   { value: 'CNY', display: 'Chinese Yuan (CNY)' },
@@ -45,12 +46,14 @@ const fiatCurrencies = [
   { value: 'HKD', display: 'Hong Kong Dollar (HKD)' },
   { value: 'ILS', display: 'Israeli Shekel (ILS)' },
   { value: 'INR', display: 'Indian Rupee (INR)' },
+  { value: 'IDR', display: 'Indonesian Rupiah (IDR)' },
   { value: 'JPY', display: 'Japanese Yen (JPY)' },
   { value: 'KRW', display: 'Korean Won (KRW)' },
   { value: 'MYR', display: 'Malaysian Ringgit (MYR)' },
   { value: 'MXN', display: 'Mexican Peso (MXN)' },
   { value: 'NZD', display: 'New Zealand Dollar (NZD)' },
   { value: 'PKR', display: 'Pakistan Rupee (PKR)' },
+  { value: 'PHP', display: 'Philippine Peso (PHP)' },
   { value: 'PLN', display: 'Polish Złoty (PLN)' },
   { value: 'RUB', display: 'Russian Ruble (RUB)' },
   { value: 'SAR', display: 'Saudi Riyal (SAR)' },
@@ -58,8 +61,10 @@ const fiatCurrencies = [
   { value: 'ZAR', display: 'South African Rand (ZAR)' },
   { value: 'CHF', display: 'Swiss Franc (CHF)' },
   { value: 'TWD', display: 'Taiwan Dollar (TWD)' },
+  { value: 'THB', display: 'Thai Baht (THB)' },
   { value: 'AED', display: 'United Arab Emirates Dirham (AED)' },
   { value: 'USD', display: 'United States Dollar (USD)' },
+  { value: 'VND', display: 'Vietnamese Dong (VND)' },
 ];
 
 const mapStateToProps = (state) => ({

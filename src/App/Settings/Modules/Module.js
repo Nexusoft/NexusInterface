@@ -209,12 +209,12 @@ class Module extends Component {
                       'This module was built for an incompatible wallet version'
                     )}
                   >
-                    <Icon icon={warningIcon} className="error space-left" />
+                    <Icon icon={warningIcon} className="error ml0_4" />
                   </Tooltip.Trigger>
                 )}
                 {(!module.repository || !module.repoOnline) && (
                   <Tooltip.Trigger tooltip={__('Module is not open source')}>
-                    <Icon icon={warningIcon} className="error space-left" />
+                    <Icon icon={warningIcon} className="error ml0_4" />
                   </Tooltip.Trigger>
                 )}
                 {!!module.repository && !module.repoVerified && (
@@ -223,7 +223,7 @@ class Module extends Component {
                       'The provided repository is not verified to be the real source code of this module'
                     )}
                   >
-                    <Icon icon={warningIcon} className="error space-left" />
+                    <Icon icon={warningIcon} className="error ml0_4" />
                   </Tooltip.Trigger>
                 )}
                 {module.hasNewVersion && (

@@ -9,7 +9,7 @@ import { showNotification } from 'lib/ui';
 import { consts, timing } from 'styles';
 
 const SegmentedAddressComponent = styled.div({
-  marginTop: '1em',
+  // marginTop: '1em',
 });
 
 const Address = styled.div(

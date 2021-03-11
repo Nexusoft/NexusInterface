@@ -28,8 +28,8 @@ class Send extends Component {
    * @memberof Send
    */
   componentDidMount() {
-    loadAccounts();
-    loadOwnedTokens();
+    loadAccounts().catch(() => {});
+    loadOwnedTokens().catch(() => {});
     GA.SendScreen('Send');
   }
 

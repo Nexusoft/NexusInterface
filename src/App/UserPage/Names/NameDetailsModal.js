@@ -71,14 +71,11 @@ const NameDetailsModal = ({ nameRecord }) => (
           )}
           <InfoField label={__('Address')}>
             <span className="v-align">{nameRecord.address}</span>
-            <QRButton className="space-left" address={nameRecord.address} />
+            <QRButton className="ml0_4" address={nameRecord.address} />
           </InfoField>
           <InfoField label={__('Points to')}>
             <span className="v-align">{nameRecord.register_address}</span>
-            <QRButton
-              className="space-left"
-              address={nameRecord.register_address}
-            />
+            <QRButton className="ml0_4" address={nameRecord.register_address} />
           </InfoField>
           <InfoField label={__('Created at')}>
             {formatDateTime(nameRecord.created * 1000, timeFormatOptions)}
@@ -100,7 +97,7 @@ const NameDetailsModal = ({ nameRecord }) => (
               </Button>
               {(!!nameRecord.global || !!nameRecord.namespace) && (
                 <Button
-                  className="space-left"
+                  className="ml0_4"
                   onClick={() => {
                     closeModal();
                     openModal(TransferNameModal, { nameRecord });

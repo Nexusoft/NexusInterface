@@ -122,9 +122,7 @@ class ModuleDetailsModal extends Component {
           <InfoField ratio={[1, 2]} label={__('Module type')}>
             {moduleInfo.type}
             {module.development && (
-              <span className="space-left">
-                &#x28;{__('in development')}&#x29;
-              </span>
+              <span className="ml0_4">&#x28;{__('in development')}&#x29;</span>
             )}
           </InfoField>
 
@@ -140,9 +138,9 @@ class ModuleDetailsModal extends Component {
                   )}
                 </span>
                 {module.incompatible && (
-                  <span className="error space-left">
+                  <span className="error ml0_4">
                     <Icon icon={warningIcon} />
-                    <span className="v-align space-left">
+                    <span className="v-align ml0_4">
                       ({__('incompatible')})
                     </span>
                   </span>
@@ -158,10 +156,10 @@ class ModuleDetailsModal extends Component {
               <div>
                 <span>{moduleInfo.author.name}</span>
                 {!!moduleInfo.author.email && (
-                  <span className="space-left">
+                  <span className="ml0_4">
                     -
                     <ExternalLink
-                      className="space-left"
+                      className="ml0_4"
                       href={`mailto:${moduleInfo.author.email}`}
                     >
                       {moduleInfo.author.email}
@@ -180,7 +178,7 @@ class ModuleDetailsModal extends Component {
                   <Tooltip.Trigger tooltip={repoUrl}>
                     <ExternalLink href={repoUrl}>
                       <span className="v-align">{__('Visit repository')}</span>
-                      <Icon icon={linkIcon} className="space-left" />
+                      <Icon icon={linkIcon} className="ml0_4" />
                     </ExternalLink>
                   </Tooltip.Trigger>
 
@@ -195,7 +193,7 @@ class ModuleDetailsModal extends Component {
                   {!module.repoOnline && (
                     <div className="error">
                       <Icon icon={warningIcon} />
-                      <span className="v-align space-left">
+                      <span className="v-align ml0_4">
                         {__('This repository does not exist or is private')}
                       </span>
                     </div>
@@ -203,7 +201,7 @@ class ModuleDetailsModal extends Component {
                   {!module.repoVerified && (
                     <div className="error">
                       <Icon icon={warningIcon} />
-                      <span className="v-align space-left">
+                      <span className="v-align ml0_4">
                         {__(
                           'This repository is not verified to be the real source code of this module'
                         )}
@@ -215,7 +213,7 @@ class ModuleDetailsModal extends Component {
                 <div className={module.development ? 'dim' : 'error'}>
                   <span className="v-align">N/A</span>
                   {!module.development && (
-                    <Icon icon={warningIcon} className="space-left" />
+                    <Icon icon={warningIcon} className="ml0_4" />
                   )}
                 </div>
               )}
@@ -240,7 +238,7 @@ class ModuleDetailsModal extends Component {
                     shell.openExternal(module.latestRelease.html_url);
                   }}
                 >
-                  <Icon icon={updateIcon} className="space-right" />
+                  <Icon icon={updateIcon} className="mr0_4" />
                   <span className="v-align">
                     {__('Download %{version} (manual)', {
                       version: 'v' + module.latestVersion,

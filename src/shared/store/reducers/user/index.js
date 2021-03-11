@@ -10,6 +10,7 @@ import tokens from './tokens';
 import nameRecords from './nameRecords';
 import namespaces from './namespaces';
 import assets from './assets';
+import startStakingAsked from './startStakingAsked';
 
 export default combineReducers({
   session,
@@ -22,4 +23,5 @@ export default combineReducers({
   nameRecords,
   namespaces,
   assets,
+  startStakingAsked,
 });

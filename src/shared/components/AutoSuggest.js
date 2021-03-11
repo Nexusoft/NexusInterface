@@ -83,8 +83,14 @@ class Suggestion extends PureComponent {
    * @memberof Suggestion
    */
   handleSelect = () => {
-    const { suggestion, onSelect } = this.props;
+    const { suggestion, onSelect, inputRef } = this.props;
     onSelect && onSelect(getValue(suggestion));
+
+    // Fix selecting an option not triggering validation on blur event
+    inputRef.current?.focus();
+    setTimeout(() => {
+      inputRef.current?.blur();
+    }, 0);
   };
 
   /**
@@ -415,6 +421,7 @@ export default class AutoSuggest extends Component {
               activate={this.activate}
               suggestion={suggestion}
               onSelect={onSelect}
+              inputRef={this.inputRef}
             />
           ))}
           {currentSuggestions.length === 0 && !!emptyFiller && (

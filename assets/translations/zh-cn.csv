@@ -62,6 +62,8 @@ rows,行,
 Previous,上一步,
 Next,下一个,
 Use virtual keyboard,,
+<token_name></token_name> token,,
+Unnamed token,,
 Switch to Legacy Mode,,
 Are you sure you want to switch to Legacy Mode?,,
 Switch to Tritium Mode,,
@@ -199,18 +201,40 @@ There must be at least one recipient,必须至少有一个收件人,Send
 Address is required,地址必填.,Send
 Transaction sent,交易已发送,Send
 Error sending NXS,发送NXS时出错,Send
-%{tokenName} Amount,,Send
+Reference,,Send
+"An optional number which may be provided by the recipient to identify this transaction from the others, e.g. invoice number, order number, etc.",,Send
+Reference number (optional),,Send
+Expires in,,Send
+"The amount of time since the transaction is created after which the transaction can no longer be credited by the recipient. By default, transactions will expire in 1 day (86400 seconds).",,Send
+Days,,Send
+Hours,,Send
+Minutes,,Send
+Seconds,,Send
+Amount,,Send
 Recipient Address/Name,,Send
 Accounts,,Send
+Unnamed account,,Send
 Tokens,,Send
-More options,,Send
-Reference number,,Send
-An optional number which may be provided by the recipient to identify this transaction from the others,,Send
-"Invoice number, order number, etc... (Optional)",,Send
+Unnamed token,,Send
+Unnamed,,Send
+Invalid name/address,,Send
+Advanced options,,Send
+Address/Name is required,,Send
 Reference must be an unsigned integer,,Send
 Number is too large,,Send
-Address/Name is required,,Send
-Invalid name/address,,Send
+Unnamed,,PreviewTransaction
+%{smart_count} day |||| %{smart_count} days,,PreviewTransaction
+%{smart_count} hour |||| %{smart_count} hours,,PreviewTransaction
+%{smart_count} minute |||| %{smart_count} minutes,,PreviewTransaction
+%{smart_count} second |||| %{smart_count} seconds,,PreviewTransaction
+Preview Transaction,,PreviewTransaction
+You're sending,,PreviewTransaction
+From,,PreviewTransaction
+To,,PreviewTransaction
+Amount,,PreviewTransaction
+Reference,,PreviewTransaction
+Expires,,PreviewTransaction
+Send transaction,,PreviewTransaction
 Select backup directory,选择备份目录,Settings.Application
 Backup directory,备份目录,Settings.Application
 Browse,浏览,Settings.Application
@@ -439,7 +463,6 @@ Overview Display,概览显示,Settings.Style
 Nexus Addresses format,Nexus 地址格式,Settings.Style
 Choose your Nexus Address display preference,选择您的Nexus地址显示偏好,Settings.Style
 Sample Address,示例地址,Settings.Style
-This is your Default Address,这是您的默认地址,Settings.Style
 Theme,主题,Settings.Style
 Select Wallet Theme,选择钱包主题,Settings.Style
 Background,背景，后台。,Settings.Style
@@ -542,14 +565,19 @@ The amount of NXS currently staked in the trust account,,Transactions.Balances
 Immature,未成熟,Transactions.Balances
 The sum of all coinbase transactions that have not yet reached maturity,,Transactions.Balances
 Unnamed account,,User.Accounts
+Rename,,User.Accounts
 Details,,User.Accounts
 History,,User.Accounts
+<b>%{account_name}</b> account address,,User.Accounts
+Unnamed,,User.Accounts
 Create new account,,User.Accounts
 Account Details,,User.Accounts.AccountDetails
 Account name,帐户名称,User.Accounts.AccountDetails
+Unnamed,,User.Accounts.AccountDetails
 Created at,,User.Accounts.AccountDetails
 Last modified,,User.Accounts.AccountDetails
 Token name,,User.Accounts.AccountDetails
+Data,,User.Accounts.AccountDetails
 Total account balance,,User.Accounts.AccountDetails
 Available balance,,User.Accounts.AccountDetails
 Send %{token_name},,User.Accounts.AccountDetails
@@ -570,14 +598,26 @@ To,,User.Accounts.AccountHistory
 Change,,User.Accounts.AccountHistory
 Account History,,User.Accounts.AccountHistory
 Loading account history,,User.Accounts.AccountHistory
-Account balance(,,User.Accounts.AccountHistory
-Show %{tokenName},,User.Accounts.AccountHistory
 Account balance,,User.Accounts.AccountHistory
+Show %{tokenName},,User.Accounts.AccountHistory
 Total,,User.Accounts.AccountHistory
 Available,,User.Accounts.AccountHistory
 Pending,待处理,User.Accounts.AccountHistory
 Unconfirmed,,User.Accounts.AccountHistory
 Stake,堆栈,User.Accounts.AccountHistory
+Rename account,,RenameAccount
+Account name,,RenameAccount
+Account renaming fee,,RenameAccount
+Cancel,,RenameAccount
+Renaming,,RenameAccount
+Rename,,RenameAccount
+Account name is required,,RenameAccount
+Name already in use,,RenameAccount
+The name you entered is already in use. Please choose another name.,,RenameAccount
+Insuffient balance,,RenameAccount
+Your default account balance is not enough to pay the fee.,,RenameAccount
+Account has been renamed to %{account_name},,RenameAccount
+Error renaming account,,RenameAccount
 Unnamed asset,,User.Assets
 You own %{percentage}% of this asset,,User.Assets
 Create new asset,,User.Assets
@@ -694,10 +734,12 @@ Create a new name,,CreateName
 View name details,,User.Names
 Change register address,,User.Names
 Transfer name,,User.Names
+Unused,,User.Names
 Global,,User.Names
 Namespaced,,User.Names
 Local,,User.Names
 Create new name,,User.Names
+Show unused names,,User.Names
 You don't own any name,,User.Names
 Name Details,,NameDetails
 Change register address,,NameDetails

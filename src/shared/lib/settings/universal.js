@@ -60,6 +60,10 @@ export const defaultSettings = {
   manualDaemonApiPort: '8080',
   manualDaemonApiPortSSL: '7080',
   manualDaemonLogOutOnClose: false,
+  embeddedCoreApiPort: undefined,
+  embeddedCoreApiPortSSL: undefined,
+  embeddedCoreRpcPort: undefined,
+  embeddedCoreRpcPortSSL: undefined,
 
   // Style
   renderGlobe: true,
@@ -75,7 +79,6 @@ export const defaultSettings = {
 
   // Hidden settings
   acceptedAgreement: false,
-  experimentalWarningDisabled: false,
   encryptionWarningDisabled: false,
   bootstrapSuggestionDisabled: false,
   migrateSuggestionDisabled: false,
@@ -92,39 +95,42 @@ export const defaultSettings = {
   // modal automatically when core is connected
   firstCreateNewUserShown: false,
   consoleCliSyntax: true,
+  dontAskToStartStaking: false,
 };
 
-function filterValidSettings(settings) {
-  const validSettings = {};
-  Object.keys(settings || {}).map((key) => {
-    if (defaultSettings.hasOwnProperty(key)) {
-      validSettings[key] = settings[key];
-    } else {
-      console.error(`Invalid setting \`${key}\``);
-    }
-  });
-  return validSettings;
-}
-
 function readSettings() {
-  return filterValidSettings(readJson(settingsFilePath));
+  return readJson(settingsFilePath);
 }
 
 function writeSettings(settings) {
-  return writeJson(settingsFilePath, filterValidSettings(settings));
+  return writeJson(settingsFilePath, settings);
 }
 
 export function loadSettingsFromFile() {
-  const customSettings = readSettings();
-  // Deprecating manualDaemonApiIP, copy to manualDaemonIP if manualDaemonApiIP is configured
-  const { manualDaemonIP, manualDaemonApiIP } = customSettings;
-  if (manualDaemonApiIP && !manualDaemonIP) {
-    updateSettingsFile({ manualDaemonIP: manualDaemonApiIP });
+  let userSettings = readSettings();
+  let changed = false;
+  // Enable lite mode for new users
+  if (!userSettings) {
+    userSettings = {
+      liteMode: true,
+      liteModeNoticeDisabled: true,
+    };
+    changed = true;
   }
-  return { ...defaultSettings, ...customSettings };
+  // Deprecating manualDaemonApiIP, copy to manualDaemonIP if manualDaemonApiIP is configured
+  const { manualDaemonIP, manualDaemonApiIP } = userSettings;
+  if (manualDaemonApiIP && !manualDaemonIP) {
+    userSettings.manualDaemonIP = manualDaemonApiIP;
+    changed = true;
+  }
+
+  if (changed) {
+    writeSettings(userSettings);
+  }
+  return { ...defaultSettings, ...userSettings };
 }
 
 export function updateSettingsFile(updates) {
-  const settings = readSettings();
+  const settings = readSettings() || {};
   return writeSettings({ ...settings, ...updates });
 }

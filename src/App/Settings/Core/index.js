@@ -19,6 +19,7 @@ import {
 import { stopCore, startCore, restartCore } from 'lib/core';
 import { refreshCoreInfo } from 'lib/coreInfo';
 import { updateSettings } from 'lib/settings';
+import { defaultConfig } from 'lib/coreConfig';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
@@ -113,6 +114,10 @@ const formKeys = [
   'manualDaemonApiPortSSL',
   'manualDaemonApiUser',
   'manualDaemonApiPassword',
+  'embeddedCoreApiPort',
+  'embeddedCoreApiPortSSL',
+  'embeddedCoreRpcPort',
+  'embeddedCoreRpcPortSSL',
 ];
 const getInitialValues = (() => {
   let lastOutput = null;
@@ -553,6 +558,58 @@ class SettingsCore extends Component {
                 />
               </SettingsField>
 
+              <SettingsField
+                connectLabel
+                label={__('API non-SSL Port')}
+                subLabel={__('Nexus API server non-SSL Port')}
+              >
+                <Field
+                  component={TextField.RF}
+                  name="embeddedCoreApiPort"
+                  placeholder={defaultConfig.apiPort}
+                  size="5"
+                />
+              </SettingsField>
+
+              <SettingsField
+                connectLabel
+                label={__('API SSL Port')}
+                subLabel={__('Nexus API server SSL Port')}
+              >
+                <Field
+                  component={TextField.RF}
+                  name="embeddedCoreApiPortSSL"
+                  placeholder={defaultConfig.apiPortSSL}
+                  size="5"
+                />
+              </SettingsField>
+
+              <SettingsField
+                connectLabel
+                label={__('RPC non-SSL Port')}
+                subLabel={__('Nexus RPC server non-SSL Port')}
+              >
+                <Field
+                  component={TextField.RF}
+                  name="embeddedCoreRpcPort"
+                  placeholder={defaultConfig.port}
+                  size="5"
+                />
+              </SettingsField>
+
+              <SettingsField
+                connectLabel
+                label={__('RPC SSL Port')}
+                subLabel={__('Nexus RPC server SSL Port')}
+              >
+                <Field
+                  component={TextField.RF}
+                  name="embeddedCoreRpcPortSSL"
+                  placeholder={defaultConfig.portSSL}
+                  size="5"
+                />
+              </SettingsField>
+
               {legacyMode && (
                 <>
                   <SettingsField
@@ -655,8 +712,8 @@ class SettingsCore extends Component {
                   <SettingsField
                     indent={1}
                     connectLabel
-                    label={__('API Port')}
-                    subLabel={__('Nexus API server Port')}
+                    label={__('API non-SSL Port')}
+                    subLabel={__('Nexus API server non-SSL Port')}
                   >
                     <Field
                       component={TextField.RF}
@@ -718,8 +775,8 @@ class SettingsCore extends Component {
               <SettingsField
                 indent={1}
                 connectLabel
-                label={__('RPC Port')}
-                subLabel={__('Nexus RPC server Port')}
+                label={__('RPC non-SSL Port')}
+                subLabel={__('Nexus RPC server non-SSL Port')}
               >
                 <Field
                   component={TextField.RF}

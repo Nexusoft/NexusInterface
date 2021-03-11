@@ -16,7 +16,7 @@ const QuestionMark = styled(Dialog.Icon)(({ theme }) => ({
 }));
 
 const ConfirmationButton = styled(Button)({
-  minWidth: 180,
+  flexGrow: 1,
 });
 
 const ConfirmDialog = ({
@@ -47,6 +47,7 @@ const ConfirmDialog = ({
             {labelNo}
           </ConfirmationButton>
           <ConfirmationButton
+            className="ml1"
             skin={skinYes}
             onClick={() => {
               callbackYes && callbackYes();

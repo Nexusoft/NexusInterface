@@ -48,6 +48,7 @@ const Token = ({ token, owner }) => (
       </div>
     </div>
     <NexusAddress
+      className="mt1"
       address={token.address || '00000000000000000000000000000000000000000000'}
     />
   </TokenComponent>

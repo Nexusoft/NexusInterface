@@ -91,7 +91,7 @@ class SearchTokenModal extends Component {
                 name="searchValue"
                 component={TextField.RF}
                 placeholder={__('Token name/address')}
-                left={<Icon icon={searchIcon} className="space-right" />}
+                left={<Icon icon={searchIcon} className="mr0_4" />}
               />
             </FormField>
             <Button

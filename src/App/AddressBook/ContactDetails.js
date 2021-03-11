@@ -14,7 +14,7 @@ import { deleteContact } from 'lib/addressBook';
 import { confirm, openModal } from 'lib/ui';
 import { isCoreConnected } from 'selectors';
 import timeZones from 'data/timeZones';
-import { timing } from 'styles';
+import { timing, consts } from 'styles';
 import trashIcon from 'icons/trash.svg';
 import editIcon from 'icons/edit.svg';
 
@@ -67,6 +67,11 @@ const FieldLabel = styled.div({
 
 const FieldContent = styled.div({
   width: '60%',
+});
+
+const UserID = styled.span({
+  fontFamily: consts.monoFontFamily,
+  wordBreak: 'break-all',
 });
 
 /**
@@ -198,6 +203,7 @@ class ContactDetails extends Component {
 
         {contact.addresses.map(({ address, label, isMine }, i) => (
           <NexusAddress
+            className="mt1"
             key={i}
             address={address}
             label={
@@ -221,6 +227,10 @@ class ContactDetails extends Component {
 
         <SectionHeader>{__('Contact info')}</SectionHeader>
 
+        <Field
+          label={__('Nexus user ID')}
+          content={!!contact.genesis && <UserID>{contact.genesis}</UserID>}
+        />
         <Field
           label={__('Email')}
           content={

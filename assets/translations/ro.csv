@@ -62,6 +62,8 @@ rows,rânduri,
 Previous,Anteriorul,
 Next,Următorul,
 Use virtual keyboard,,
+<token_name></token_name> token,,
+Unnamed token,,
 Switch to Legacy Mode,Comutare la Modul Legacy,
 Are you sure you want to switch to Legacy Mode?,Eşti sigur că doreşti să comuţi pe Modul Legacy?,
 Switch to Tritium Mode,Comutare la Modul Tritium,
@@ -199,18 +201,40 @@ There must be at least one recipient,Este necesar cel puțin un destinatar,Send
 Address is required,Adresa este necesară,Send
 Transaction sent,Tranzacție trimisă,Send
 Error sending NXS,Eroare trimitere NXS,Send
-%{tokenName} Amount,Sumă %{tokenName},Send
+Reference,,Send
+"An optional number which may be provided by the recipient to identify this transaction from the others, e.g. invoice number, order number, etc.",,Send
+Reference number (optional),,Send
+Expires in,,Send
+"The amount of time since the transaction is created after which the transaction can no longer be credited by the recipient. By default, transactions will expire in 1 day (86400 seconds).",,Send
+Days,,Send
+Hours,,Send
+Minutes,,Send
+Seconds,,Send
+Amount,,Send
 Recipient Address/Name,Adresă/Nume beneficiar,Send
 Accounts,Conturi,Send
+Unnamed account,,Send
 Tokens,Monede,Send
-More options,Mai multe opțiuni,Send
-Reference number,Număr de referință,Send
-An optional number which may be provided by the recipient to identify this transaction from the others,Un număr opţional care poate fi furnizat de destinatar pentru a diferenţia această tranzacţie de altele,Send
-"Invoice number, order number, etc... (Optional)","Număr factură, număr comandă, etc...(Opţional)",Send
+Unnamed token,,Send
+Unnamed,,Send
+Invalid name/address,,Send
+Advanced options,,Send
+Address/Name is required,Nume/Adresă sunt necesare,Send
 Reference must be an unsigned integer,,Send
 Number is too large,Numărul este prea lung,Send
-Address/Name is required,Nume/Adresă sunt necesare,Send
-Invalid name/address,,Send
+Unnamed,,PreviewTransaction
+%{smart_count} day |||| %{smart_count} days,,PreviewTransaction
+%{smart_count} hour |||| %{smart_count} hours,,PreviewTransaction
+%{smart_count} minute |||| %{smart_count} minutes,,PreviewTransaction
+%{smart_count} second |||| %{smart_count} seconds,,PreviewTransaction
+Preview Transaction,,PreviewTransaction
+You're sending,,PreviewTransaction
+From,,PreviewTransaction
+To,,PreviewTransaction
+Amount,,PreviewTransaction
+Reference,,PreviewTransaction
+Expires,,PreviewTransaction
+Send transaction,,PreviewTransaction
 Select backup directory,Alege un director de rezervă,Settings.Application
 Backup directory,Registru copii de rezervă,Settings.Application
 Browse,Răsfoieşte,Settings.Application
@@ -439,7 +463,6 @@ Overview Display,Afișaj general,Settings.Style
 Nexus Addresses format,Format adrese Nexus,Settings.Style
 Choose your Nexus Address display preference,Alege preferinţele de afişare pentru adresa ta Nexus,Settings.Style
 Sample Address,Mostră Adresă,Settings.Style
-This is your Default Address,Aceasta este adresa ta implicită,Settings.Style
 Theme,Temă,Settings.Style
 Select Wallet Theme,Selectează o temă,Settings.Style
 Background,Fundal,Settings.Style
@@ -542,14 +565,19 @@ The amount of NXS currently staked in the trust account,Cantitatea de NXS cotă 
 Immature,Nematurizat,Transactions.Balances
 The sum of all coinbase transactions that have not yet reached maturity,Suma tuturor monedelor câştigate indisponibile momentan pentru ca nu au ajuns încă la maturitate,Transactions.Balances
 Unnamed account,Cont fără nume,User.Accounts
+Rename,,User.Accounts
 Details,Detalii,User.Accounts
 History,Istoric,User.Accounts
+<b>%{account_name}</b> account address,,User.Accounts
+Unnamed,,User.Accounts
 Create new account,Creează cont nou,User.Accounts
 Account Details,Detalii cont,User.Accounts.AccountDetails
 Account name,Nume cont,User.Accounts.AccountDetails
+Unnamed,,User.Accounts.AccountDetails
 Created at,Creat la,User.Accounts.AccountDetails
 Last modified,Ultima modificare,User.Accounts.AccountDetails
 Token name,Nume monedă,User.Accounts.AccountDetails
+Data,,User.Accounts.AccountDetails
 Total account balance,Sold total,User.Accounts.AccountDetails
 Available balance,Sold disponibil,User.Accounts.AccountDetails
 Send %{token_name},,User.Accounts.AccountDetails
@@ -570,14 +598,26 @@ To,Către,User.Accounts.AccountHistory
 Change,Modifică,User.Accounts.AccountHistory
 Account History,Istoricul contului,User.Accounts.AccountHistory
 Loading account history,Se încarcă istoricul contului,User.Accounts.AccountHistory
-Account balance(,,User.Accounts.AccountHistory
-Show %{tokenName},,User.Accounts.AccountHistory
 Account balance,Sold cont,User.Accounts.AccountHistory
+Show %{tokenName},,User.Accounts.AccountHistory
 Total,Total,User.Accounts.AccountHistory
 Available,Disponibil,User.Accounts.AccountHistory
 Pending,În aşteptare,User.Accounts.AccountHistory
 Unconfirmed,Neconfirmat,User.Accounts.AccountHistory
 Stake,Miză,User.Accounts.AccountHistory
+Rename account,,RenameAccount
+Account name,,RenameAccount
+Account renaming fee,,RenameAccount
+Cancel,,RenameAccount
+Renaming,,RenameAccount
+Rename,,RenameAccount
+Account name is required,,RenameAccount
+Name already in use,,RenameAccount
+The name you entered is already in use. Please choose another name.,,RenameAccount
+Insuffient balance,,RenameAccount
+Your default account balance is not enough to pay the fee.,,RenameAccount
+Account has been renamed to %{account_name},,RenameAccount
+Error renaming account,,RenameAccount
 Unnamed asset,,User.Assets
 You own %{percentage}% of this asset,,User.Assets
 Create new asset,,User.Assets
@@ -694,10 +734,12 @@ Create a new name,,CreateName
 View name details,,User.Names
 Change register address,,User.Names
 Transfer name,,User.Names
+Unused,,User.Names
 Global,,User.Names
 Namespaced,,User.Names
 Local,,User.Names
 Create new name,,User.Names
+Show unused names,,User.Names
 You don't own any name,,User.Names
 Name Details,,NameDetails
 Change register address,,NameDetails

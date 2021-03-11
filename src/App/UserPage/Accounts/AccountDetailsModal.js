@@ -8,7 +8,7 @@ import QRButton from 'components/QRButton';
 import { goToSend } from 'lib/send';
 import { formatDateTime, formatNumber } from 'lib/intl';
 import { openModal } from 'lib/ui';
-import { getTokenName } from 'lib/tokens';
+import TokenName from 'components/TokenName';
 
 import { totalBalance } from './utils';
 
@@ -47,11 +47,12 @@ const AccountDetailsModal = ({ account, stakeInfo }) => (
             </InfoField>
           )}
           <InfoField ratio={[1, 2]} label={__('Total account balance')}>
-            {formatNumber(totalBalance(account), 6)} {getTokenName(account)}
+            {formatNumber(totalBalance(account), 6)}{' '}
+            <TokenName account={account} />
           </InfoField>
           <InfoField ratio={[1, 2]} label={__('Available balance')}>
             <span className="v-align">
-              {formatNumber(account.balance, 6)} {getTokenName(account)}
+              {formatNumber(account.balance, 6)} <TokenName account={account} />
             </span>
             &nbsp;&nbsp;
             {account.balance > 0 && (
@@ -64,30 +65,32 @@ const AccountDetailsModal = ({ account, stakeInfo }) => (
                 }}
               >
                 {__('Send %{token_name}', {
-                  token_name: getTokenName(account, { markup: false }),
+                  token_name: TokenName.from({ account }),
                 })}
               </Button>
             )}
           </InfoField>
           <InfoField ratio={[1, 2]} label={__('Pending balance')}>
-            {formatNumber(account.pending, 6)} {getTokenName(account)}
+            {formatNumber(account.pending, 6)} <TokenName account={account} />
           </InfoField>
           <InfoField ratio={[1, 2]} label={__('Unconfirmed balance')}>
-            {formatNumber(account.unconfirmed, 6)} {getTokenName(account)}
+            {formatNumber(account.unconfirmed, 6)}{' '}
+            <TokenName account={account} />
           </InfoField>
           {account.stake !== undefined && (
             <InfoField ratio={[1, 2]} label={__('Stake balance')}>
-              {formatNumber(account.stake, 6)} {getTokenName(account)}
+              {formatNumber(account.stake, 6)} <TokenName account={account} />
             </InfoField>
           )}
           {account.immature !== undefined && (
             <InfoField ratio={[1, 2]} label={__('Immature balance')}>
-              {formatNumber(account.immature, 6)} {getTokenName(account)}
+              {formatNumber(account.immature, 6)}{' '}
+              <TokenName account={account} />
             </InfoField>
           )}
           <InfoField ratio={[1, 2]} label={__('Address')}>
             <span className="monospace v-align">{account.address}</span>
-            <QRButton address={account.address} className="space-left" />
+            <QRButton address={account.address} className="ml0_4" />
           </InfoField>
 
           {account.stake !== undefined && (

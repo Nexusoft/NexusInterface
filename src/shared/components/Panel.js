@@ -85,7 +85,7 @@ const Panel = forwardRef(
       <PanelComponent ref={ref}>
         <PanelHeader>
           <PanelTitle>
-            {!!icon && <Icon className="space-right" icon={icon} />}
+            {!!icon && <Icon className="mr0_4" icon={icon} />}
             <span className="v-align">{title}</span>
           </PanelTitle>
           {controls}

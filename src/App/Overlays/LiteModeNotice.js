@@ -60,10 +60,10 @@ const LiteModeNotice = () => (
     </div>
 
     <div className="mt3 flex center" style={{ justifyContent: 'flex-end' }}>
-      <Button skin="default" onClick={ignore} className="space-right">
+      <Button skin="default" onClick={ignore} className="mr0_4">
         {__('Ignore')}
       </Button>
-      <Button skin="primary" onClick={enableLiteMode} className="space-left">
+      <Button skin="primary" onClick={enableLiteMode} className="ml0_4">
         {__('Enable lite mode')}
       </Button>
     </div>

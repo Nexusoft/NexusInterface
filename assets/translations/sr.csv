@@ -62,6 +62,8 @@ rows,редови,
 Previous,Претходно,
 Next,Следеће,
 Use virtual keyboard,,
+<token_name></token_name> token,,
+Unnamed token,,
 Switch to Legacy Mode,Пређи у Легат Мод,
 Are you sure you want to switch to Legacy Mode?,Да ли сте сигурни да желите да пређете у Легат Мод?,
 Switch to Tritium Mode,Пређи у Тритијум Мод,
@@ -200,18 +202,40 @@ There must be at least one recipient,Бар један примаоц је об�
 Address is required,Адреса је обавезна,Send
 Transaction sent,Трансакција послата,Send
 Error sending NXS,Грешка приликом слања NXS-а,Send
-%{tokenName} Amount,%{tokenName} Износ,Send
+Reference,,Send
+"An optional number which may be provided by the recipient to identify this transaction from the others, e.g. invoice number, order number, etc.",,Send
+Reference number (optional),,Send
+Expires in,,Send
+"The amount of time since the transaction is created after which the transaction can no longer be credited by the recipient. By default, transactions will expire in 1 day (86400 seconds).",,Send
+Days,,Send
+Hours,,Send
+Minutes,,Send
+Seconds,,Send
+Amount,,Send
 Recipient Address/Name,Адреса/Назив Примаоца,Send
 Accounts,Рачуни,Send
+Unnamed account,,Send
 Tokens,Токени,Send
-More options,Више опција,Send
-Reference number,Референтни број,Send
-An optional number which may be provided by the recipient to identify this transaction from the others,Опциони број који може бити обезбеђен од стране примаоца за идентификацију ове трансакције од осталих,Send
-"Invoice number, order number, etc... (Optional)","Број рачуна, број поруџбине, итд... (Опционо)",Send
+Unnamed token,,Send
+Unnamed,,Send
+Invalid name/address,,Send
+Advanced options,,Send
+Address/Name is required,Адреса/Назив је обавезна,Send
 Reference must be an unsigned integer,,Send
 Number is too large,Број је превелики,Send
-Address/Name is required,Адреса/Назив је обавезна,Send
-Invalid name/address,,Send
+Unnamed,,PreviewTransaction
+%{smart_count} day |||| %{smart_count} days,,PreviewTransaction
+%{smart_count} hour |||| %{smart_count} hours,,PreviewTransaction
+%{smart_count} minute |||| %{smart_count} minutes,,PreviewTransaction
+%{smart_count} second |||| %{smart_count} seconds,,PreviewTransaction
+Preview Transaction,,PreviewTransaction
+You're sending,,PreviewTransaction
+From,,PreviewTransaction
+To,,PreviewTransaction
+Amount,,PreviewTransaction
+Reference,,PreviewTransaction
+Expires,,PreviewTransaction
+Send transaction,,PreviewTransaction
 Select backup directory,Одабери директоријум за резервну копију,Settings.Application
 Backup directory,Бекап директоријум,Settings.Application
 Browse,Претражи,Settings.Application
@@ -440,7 +464,6 @@ Overview Display,Прегледни Приказ,Settings.Style
 Nexus Addresses format,Формат Нексусове адресе,Settings.Style
 Choose your Nexus Address display preference,Изаберите изглед преференци ваше Нексус адресе,Settings.Style
 Sample Address,Узорак Адресе,Settings.Style
-This is your Default Address,Ово је ваша Предефинисана Адреса,Settings.Style
 Theme,Тема,Settings.Style
 Select Wallet Theme,Изабери Тему за Новчаник,Settings.Style
 Background,Позадина,Settings.Style
@@ -543,14 +566,19 @@ The amount of NXS currently staked in the trust account,Количина NXS-а 
 Immature,Незрело,Transactions.Balances
 The sum of all coinbase transactions that have not yet reached maturity,Сума свих coinbase трансакција које још увек нису достигле зрелост,Transactions.Balances
 Unnamed account,Неименовани рачун,User.Accounts
+Rename,,User.Accounts
 Details,Детаљи,User.Accounts
 History,Историја,User.Accounts
+<b>%{account_name}</b> account address,,User.Accounts
+Unnamed,,User.Accounts
 Create new account,Направи нови налог,User.Accounts
 Account Details,Детаљи рачуна,User.Accounts.AccountDetails
 Account name,Назив рачуна,User.Accounts.AccountDetails
+Unnamed,,User.Accounts.AccountDetails
 Created at,Направљено у,User.Accounts.AccountDetails
 Last modified,Последња измена,User.Accounts.AccountDetails
 Token name,Име токена,User.Accounts.AccountDetails
+Data,,User.Accounts.AccountDetails
 Total account balance,Укупни баланс рачуна,User.Accounts.AccountDetails
 Available balance,Доступно стање,User.Accounts.AccountDetails
 Send %{token_name},,User.Accounts.AccountDetails
@@ -571,14 +599,26 @@ To,За,User.Accounts.AccountHistory
 Change,Измени,User.Accounts.AccountHistory
 Account History,Историја Рачуна,User.Accounts.AccountHistory
 Loading account history,Учитавање историје рачуна,User.Accounts.AccountHistory
-Account balance(,Стање на рачуну(,User.Accounts.AccountHistory
-Show %{tokenName},Прикажи %{tokenName},User.Accounts.AccountHistory
 Account balance,Стање на рачуну,User.Accounts.AccountHistory
+Show %{tokenName},Прикажи %{tokenName},User.Accounts.AccountHistory
 Total,Укупно,User.Accounts.AccountHistory
 Available,Доступно,User.Accounts.AccountHistory
 Pending,Нa чекању,User.Accounts.AccountHistory
 Unconfirmed,Непотврђено,User.Accounts.AccountHistory
 Stake,Штедња,User.Accounts.AccountHistory
+Rename account,,RenameAccount
+Account name,,RenameAccount
+Account renaming fee,,RenameAccount
+Cancel,,RenameAccount
+Renaming,,RenameAccount
+Rename,,RenameAccount
+Account name is required,,RenameAccount
+Name already in use,,RenameAccount
+The name you entered is already in use. Please choose another name.,,RenameAccount
+Insuffient balance,,RenameAccount
+Your default account balance is not enough to pay the fee.,,RenameAccount
+Account has been renamed to %{account_name},,RenameAccount
+Error renaming account,,RenameAccount
 Unnamed asset,,User.Assets
 You own %{percentage}% of this asset,,User.Assets
 Create new asset,,User.Assets
@@ -695,10 +735,12 @@ Create a new name,,CreateName
 View name details,,User.Names
 Change register address,,User.Names
 Transfer name,,User.Names
+Unused,,User.Names
 Global,,User.Names
 Namespaced,,User.Names
 Local,,User.Names
 Create new name,,User.Names
+Show unused names,,User.Names
 You don't own any name,,User.Names
 Name Details,,NameDetails
 Change register address,,NameDetails

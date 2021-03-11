@@ -62,6 +62,8 @@ rows,rows,
 Previous,Previous,
 Next,Next,
 Use virtual keyboard,Use virtual keyboard,
+<token_name></token_name> token,<token_name></token_name> token,
+Unnamed token,Unnamed token,
 Switch to Legacy Mode,Switch to Legacy Mode,
 Are you sure you want to switch to Legacy Mode?,Are you sure you want to switch to Legacy Mode?,
 Switch to Tritium Mode,Switch to Tritium Mode,
@@ -200,18 +202,40 @@ There must be at least one recipient,There must be at least one recipient,Send
 Address is required,Address is required,Send
 Transaction sent,Transaction sent,Send
 Error sending NXS,Error sending NXS,Send
-%{tokenName} Amount,%{tokenName} Amount,Send
+Reference,Reference,Send
+"An optional number which may be provided by the recipient to identify this transaction from the others, e.g. invoice number, order number, etc.","An optional number which may be provided by the recipient to identify this transaction from the others, e.g. invoice number, order number, etc.",Send
+Reference number (optional),Reference number (optional),Send
+Expires in,Expires in,Send
+"The amount of time since the transaction is created after which the transaction can no longer be credited by the recipient. By default, transactions will expire in 1 day (86400 seconds).","The amount of time since the transaction is created after which the transaction can no longer be credited by the recipient. By default, transactions will expire in 1 day (86400 seconds).",Send
+Days,Days,Send
+Hours,Hours,Send
+Minutes,Minutes,Send
+Seconds,Seconds,Send
+Amount,Amount,Send
 Recipient Address/Name,Recipient Address/Name,Send
 Accounts,Accounts,Send
+Unnamed account,Unnamed account,Send
 Tokens,Tokens,Send
-More options,More options,Send
-Reference number,Reference number,Send
-An optional number which may be provided by the recipient to identify this transaction from the others,An optional number which may be provided by the recipient to identify this transaction from the others,Send
-"Invoice number, order number, etc... (Optional)","Invoice number, order number, etc... (Optional)",Send
+Unnamed token,Unnamed token,Send
+Unnamed,Unnamed,Send
+Invalid name/address,Invalid name/address,Send
+Advanced options,Advanced options,Send
+Address/Name is required,Address/Name is required,Send
 Reference must be an unsigned integer,Reference must be an unsigned integer,Send
 Number is too large,Number is too large,Send
-Address/Name is required,Address/Name is required,Send
-Invalid name/address,Invalid name/address,Send
+Unnamed,Unnamed,PreviewTransaction
+%{smart_count} day |||| %{smart_count} days,%{smart_count} day |||| %{smart_count} days,PreviewTransaction
+%{smart_count} hour |||| %{smart_count} hours,%{smart_count} hour |||| %{smart_count} hours,PreviewTransaction
+%{smart_count} minute |||| %{smart_count} minutes,%{smart_count} minute |||| %{smart_count} minutes,PreviewTransaction
+%{smart_count} second |||| %{smart_count} seconds,%{smart_count} second |||| %{smart_count} seconds,PreviewTransaction
+Preview Transaction,Preview Transaction,PreviewTransaction
+You're sending,You're sending,PreviewTransaction
+From,From,PreviewTransaction
+To,To,PreviewTransaction
+Amount,Amount,PreviewTransaction
+Reference,Reference,PreviewTransaction
+Expires,Expires,PreviewTransaction
+Send transaction,Send transaction,PreviewTransaction
 Select backup directory,Select backup directory,Settings.Application
 Backup directory,Backup directory,Settings.Application
 Browse,Browse,Settings.Application
@@ -440,7 +464,6 @@ Overview Display,Overview Display,Settings.Style
 Nexus Addresses format,Nexus Addresses format,Settings.Style
 Choose your Nexus Address display preference,Choose your Nexus Address display preference,Settings.Style
 Sample Address,Sample Address,Settings.Style
-This is your Default Address,This is your Default Address,Settings.Style
 Theme,Theme,Settings.Style
 Select Wallet Theme,Select Wallet Theme,Settings.Style
 Background,Background,Settings.Style
@@ -543,14 +566,19 @@ The amount of NXS currently staked in the trust account,The amount of NXS curren
 Immature,Immature,Transactions.Balances
 The sum of all coinbase transactions that have not yet reached maturity,The sum of all coinbase transactions that have not yet reached maturity,Transactions.Balances
 Unnamed account,Unnamed account,User.Accounts
+Rename,Rename,User.Accounts
 Details,Details,User.Accounts
 History,History,User.Accounts
+<b>%{account_name}</b> account address,<b>%{account_name}</b> account address,User.Accounts
+Unnamed,Unnamed,User.Accounts
 Create new account,Create new account,User.Accounts
 Account Details,Account Details,User.Accounts.AccountDetails
 Account name,Account name,User.Accounts.AccountDetails
+Unnamed,Unnamed,User.Accounts.AccountDetails
 Created at,Created at,User.Accounts.AccountDetails
 Last modified,Last modified,User.Accounts.AccountDetails
 Token name,Token name,User.Accounts.AccountDetails
+Data,Data,User.Accounts.AccountDetails
 Total account balance,Total account balance,User.Accounts.AccountDetails
 Available balance,Available balance,User.Accounts.AccountDetails
 Send %{token_name},Send %{token_name},User.Accounts.AccountDetails
@@ -571,14 +599,26 @@ To,To,User.Accounts.AccountHistory
 Change,Change,User.Accounts.AccountHistory
 Account History,Account History,User.Accounts.AccountHistory
 Loading account history,Loading account history,User.Accounts.AccountHistory
-Account balance(,Account balance(,User.Accounts.AccountHistory
-Show %{tokenName},Show %{tokenName},User.Accounts.AccountHistory
 Account balance,Account balance,User.Accounts.AccountHistory
+Show %{tokenName},Show %{tokenName},User.Accounts.AccountHistory
 Total,Total,User.Accounts.AccountHistory
 Available,Available,User.Accounts.AccountHistory
 Pending,Pending,User.Accounts.AccountHistory
 Unconfirmed,Unconfirmed,User.Accounts.AccountHistory
 Stake,Stake,User.Accounts.AccountHistory
+Rename account,Rename account,RenameAccount
+Account name,Account name,RenameAccount
+Account renaming fee,Account renaming fee,RenameAccount
+Cancel,Cancel,RenameAccount
+Renaming,Renaming,RenameAccount
+Rename,Rename,RenameAccount
+Account name is required,Account name is required,RenameAccount
+Name already in use,Name already in use,RenameAccount
+The name you entered is already in use. Please choose another name.,The name you entered is already in use. Please choose another name.,RenameAccount
+Insuffient balance,Insuffient balance,RenameAccount
+Your default account balance is not enough to pay the fee.,Your default account balance is not enough to pay the fee.,RenameAccount
+Account has been renamed to %{account_name},Account has been renamed to %{account_name},RenameAccount
+Error renaming account,Error renaming account,RenameAccount
 Unnamed asset,Unnamed asset,User.Assets
 You own %{percentage}% of this asset,You own %{percentage}% of this asset,User.Assets
 Create new asset,Create new asset,User.Assets
@@ -695,10 +735,12 @@ Create a new name,Create a new name,CreateName
 View name details,View name details,User.Names
 Change register address,Change register address,User.Names
 Transfer name,Transfer name,User.Names
+Unused,Unused,User.Names
 Global,Global,User.Names
 Namespaced,Namespaced,User.Names
 Local,Local,User.Names
 Create new name,Create new name,User.Names
+Show unused names,Show unused names,User.Names
 You don't own any name,You don't own any name,User.Names
 Name Details,Name Details,NameDetails
 Change register address,Change register address,NameDetails

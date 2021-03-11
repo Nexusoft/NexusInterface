@@ -46,7 +46,7 @@ const toKeyValues = (obj) =>
     .map(([key, value]) => `${key}=${value}`)
     .join('\n');
 
-const defaultConfig = {
+export const defaultConfig = {
   ip: '127.0.0.1',
   rpcSSL: true,
   port: '9336',
@@ -82,17 +82,21 @@ function customConfig(config = {}) {
     port,
     portSSL,
     host: `${rpcSSL ? 'https' : 'http'}://${ip}:${rpcSSL ? portSSL : port}`,
-    user: config.user || config.rpcuser || defaultConfig.user,
-    password: config.password || config.rpcpassword || defaultConfig.password,
+    user: config.user !== undefined ? config.user : defaultConfig.user,
+    password:
+      config.password !== undefined ? config.password : defaultConfig.password,
     apiSSL,
     apiPort,
     apiPortSSL,
     apiHost: `${apiSSL ? 'https' : 'http'}://${ip}:${
       apiSSL ? apiPortSSL : apiPort
     }`,
-    apiUser: config.apiUser || config.apiuser || defaultConfig.apiUser,
+    apiUser:
+      config.apiUser !== undefined ? config.apiUser : defaultConfig.apiUser,
     apiPassword:
-      config.apiPassword || config.apipassword || defaultConfig.apiPassword,
+      config.apiPassword !== undefined
+        ? config.apiPassword
+        : defaultConfig.apiPassword,
   };
 }
 
@@ -103,7 +107,13 @@ function customConfig(config = {}) {
  */
 export async function loadNexusConf() {
   const {
-    settings: { coreDataDir },
+    settings: {
+      coreDataDir,
+      embeddedCoreApiPort,
+      embeddedCoreApiPortSSL,
+      embeddedCoreRpcPort,
+      embeddedCoreRpcPortSSL,
+    },
   } = store.getState();
   if (!fs.existsSync(coreDataDir)) {
     log.info(
@@ -121,7 +131,7 @@ export async function loadNexusConf() {
     );
     confContent = (await fs.promises.readFile(confPath)).toString();
   }
-  const configs = fromKeyValues(confContent);
+  let configs = fromKeyValues(confContent);
 
   // Fallback to default values if empty
   const fallbackConf = [
@@ -129,7 +139,19 @@ export async function loadNexusConf() {
     ['rpcpassword', defaultConfig.password],
     ['apiuser', defaultConfig.apiUser],
     ['apipassword', defaultConfig.apiPassword],
+    ['apissl', defaultConfig.apiSSL],
+    ['apiport', defaultConfig.apiPort],
+    ['apiportssl', defaultConfig.apiPortSSL],
+    ['rpcssl', defaultConfig.rpcSSL],
+    ['rpcport', defaultConfig.port],
+    ['rpcportssl', defaultConfig.portSSL],
   ];
+  const settingsConf = {
+    apiport: embeddedCoreApiPort || undefined,
+    apiportssl: embeddedCoreApiPortSSL || undefined,
+    port: embeddedCoreRpcPort || undefined,
+    portssl: embeddedCoreRpcPortSSL || undefined,
+  };
   let updated = false;
   fallbackConf.forEach(([key, value]) => {
     // Don't replace it if value is an empty string
@@ -151,11 +173,19 @@ export async function loadNexusConf() {
     });
   }
 
+  configs = { ...configs, ...settingsConf };
+
   return customConfig({
-    rpcuser: configs.rpcuser,
-    rpcpassword: configs.rpcpassword,
-    apiuser: configs.apiuser,
-    apipassword: configs.apipassword,
+    user: configs.rpcuser,
+    password: configs.rpcpassword,
+    apiUser: configs.apiuser,
+    apiPassword: configs.apipassword,
+    apiSSL: configs.apissl,
+    apiPort: configs.apiport,
+    apiPortSSL: configs.apiportssl,
+    rpcSSL: configs.rpcssl,
+    port: configs.rpcport,
+    portSSL: configs.rpcportssl,
   });
 }
 

@@ -9,7 +9,7 @@ import { showNotification } from 'lib/ui';
 import { timing, consts } from 'styles';
 
 const TruncateMiddleAddressComponent = styled.div({
-  marginTop: '1em',
+  // marginTop: '1em',
 });
 
 const AddressWrapper = styled.div(

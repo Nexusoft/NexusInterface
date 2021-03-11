@@ -8,7 +8,7 @@ import styled from '@emotion/styled';
 import TextField from 'components/TextField';
 import FormField from 'components/FormField';
 import Link from 'components/Link';
-import Tooltip from 'components/Tooltip';
+import TokenName from 'components/TokenName';
 
 __ = __context('Send');
 
@@ -118,30 +118,40 @@ class AmountField extends Component {
    * @memberof AmountField
    */
   render() {
-    const token = this.props.token;
+    const { source } = this.props;
+
     return (
       <SendAmount>
         <SendAmountField>
           <FormField
             connectLabel
             label={
-              <>
+              <span style={{ whiteSpace: 'nowrap' }}>
                 <span className="v-align">
-                  {__('%{tokenName} Amount', {
-                    tokenName: token.name || 'Token',
-                  })}
+                  {__('Amount')}
+                  {!!source && (
+                    <span>
+                      &nbsp;(
+                      {source.token ? (
+                        <TokenName token={source.token} />
+                      ) : (
+                        <TokenName account={source.account} />
+                      )}
+                      )
+                    </span>
+                  )}
                 </span>
-                {!token.name && <TokenAddress> {token.address} </TokenAddress>}
                 {!!this.props.fullAmount && (
                   <SendAllLink as="a" onClick={this.sendAll}>
                     {__('Send all')}
                   </SendAllLink>
                 )}
-              </>
+              </span>
             }
           >
             <Field
               component={TextField.RF}
+              skin="filled-inverted"
               name={this.amountFieldName()}
               placeholder="0.00000"
               onChange={this.nxsToFiat}
@@ -149,7 +159,7 @@ class AmountField extends Component {
           </FormField>
         </SendAmountField>
 
-        {token.address === '0' ? (
+        {/* {token.address === '0' ? (
           <>
             <SendAmountEqual>=</SendAmountEqual>
 
@@ -164,7 +174,7 @@ class AmountField extends Component {
               </FormField>
             </SendAmountField>
           </>
-        ) : null}
+        ) : null} */}
       </SendAmount>
     );
   }

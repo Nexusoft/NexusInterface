@@ -46,8 +46,8 @@ ipcMain.handle('show-open-dialog', (event, options) =>
 ipcMain.handle('show-save-dialog', async (event, options) =>
   dialog.showSaveDialogSync(mainWindow, options)
 );
-ipcMain.handle('popup-context-menu', (event, menuTemplate) =>
-  popupContextMenu(menuTemplate)
+ipcMain.handle('popup-context-menu', (event, menuTemplate, webContentsId) =>
+  popupContextMenu(menuTemplate, webContentsId)
 );
 ipcMain.handle('set-app-menu', (event, menuTemplate) => {
   setApplicationMenu(menuTemplate);

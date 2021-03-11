@@ -317,8 +317,8 @@ function buildDarwinTemplate() {
     submenu: [
       legacyMode ? menuItems.backupWallet : null,
       legacyMode ? menuItems.viewBackups : null,
-      menuItems.separator,
-      menuItems.downloadRecent,
+      legacyMode ? menuItems.separator : null,
+      !systemInfo?.clientmode ? menuItems.downloadRecent : null,
     ].filter((e) => e),
   };
   const subMenuEdit = {
@@ -363,12 +363,12 @@ function buildDarwinTemplate() {
 
   return [
     subMenuAbout,
-    subMenuFile,
+    subMenuFile.submenu.length ? subMenuFile : null,
     subMenuEdit,
     subMenuView,
     subMenuWindow,
     subMenuHelp,
-  ];
+  ].filter((e) => e);
 }
 
 /**
@@ -391,7 +391,7 @@ function buildDefaultTemplate() {
       legacyMode ? menuItems.backupWallet : null,
       legacyMode ? menuItems.viewBackups : null,
       menuItems.separator,
-      menuItems.downloadRecent,
+      !systemInfo?.clientmode ? menuItems.downloadRecent : null,
       menuItems.separator,
       // If it's in remote core mode and core is not running, don't show
       // Start Core option because it does nothing

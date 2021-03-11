@@ -43,7 +43,7 @@ class Accounts extends Component {
               })
             }
           >
-            <Icon icon={plusIcon} className="space-right" />
+            <Icon icon={plusIcon} className="mr0_4" />
             {__('Create new account')}
           </Button>
           <div className="mt1">

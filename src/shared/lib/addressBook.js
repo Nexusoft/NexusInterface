@@ -60,6 +60,7 @@ function convertOldAddressInfo({ label, address, isMine }) {
 }
 
 function loadAddressBookFromFile() {
+  // TODO: deprecate genesis usage in address fields
   const schema = {
     patternProperties: {
       '^.+$': {
@@ -81,6 +82,7 @@ function loadAddressBookFromFile() {
               },
             },
           },
+          genesis: { type: 'string' },
           email: {
             type: 'string',
             // also accept empty strings
@@ -102,7 +104,7 @@ function loadAddressBookFromFile() {
   const validate = ajv.compile(schema);
 
   if (fs.existsSync(filePath)) {
-    const json = readJson(filePath);
+    const json = readJson(filePath) || {};
     let addressBook, valid;
     // `addressbook` (all lowercase) signals the old schema
     // New schema uses camel case `addressBook`

@@ -238,6 +238,20 @@ const ButtonComponent = styled.button(
             color: theme.foreground,
           },
         };
+      case 'plain-link-primary':
+        return {
+          '&, &:active, &&:disabled': {
+            display: 'inline',
+            padding: '.2em 0',
+            height: 'auto',
+            background: 'transparent',
+            color: color.fade(theme.primary, 0.15),
+            transitionProperty: 'color',
+          },
+          '&:hover': {
+            color: theme.primary,
+          },
+        };
     }
   }
 );

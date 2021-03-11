@@ -29,7 +29,7 @@ export default function QRModal({ address }) {
       <Modal.Body>
         <QRWrapper>
           <canvas ref={canvasRef} width={size} />
-          <NexusAddress address={address} />
+          <NexusAddress address={address} className="mt1" />
         </QRWrapper>
       </Modal.Body>
     </Modal>

@@ -114,7 +114,7 @@ class AssetDetailsModal extends Component {
           <div className="mt2 flex space-between">
             <div>
               <Button
-                className="space-right"
+                className="mr0_4"
                 onClick={() => {
                   this.closeModal();
                   openModal(AssetHistoryModal, { asset });
@@ -127,7 +127,7 @@ class AssetDetailsModal extends Component {
               <div>
                 {asset.ownership === undefined && (
                   <Button
-                    className="space-right"
+                    className="mr0_4"
                     onClick={() => {
                       this.closeModal();
                       openModal(TokenizeAssetModal, { asset });

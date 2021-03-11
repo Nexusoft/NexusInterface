@@ -3,9 +3,9 @@ import styled from '@emotion/styled';
 import Link from 'components/Link';
 import NexusAddress from 'components/NexusAddress';
 import QRButton from 'components/QRButton';
+import TokenName from 'components/TokenName';
 import { formatNumber } from 'lib/intl';
 import { openModal } from 'lib/ui';
-import { getTokenName } from 'lib/tokens';
 import AccountDetailsModal from './AccountDetailsModal';
 import AccountHistoryModal from './AccountHistoryModal';
 import RenameAccountModal from './RenameAccountModal';
@@ -38,12 +38,16 @@ const Account = ({ account }) => (
             openModal(AccountDetailsModal, { account });
           }}
         >
-          {!account.name && <UnNamed>{__('Unnamed account')}</UnNamed>}
-          <AccountName>{account.name}</AccountName>
+          {account.name ? (
+            <AccountName>{account.name}</AccountName>
+          ) : (
+            <UnNamed>{__('Unnamed account')}</UnNamed>
+          )}
+
           <span>
             {' '}
             ({formatNumber(totalBalance(account))}{' '}
-            {getTokenName(account, { markup: false })})
+            <TokenName account={account} />)
           </span>
         </span>
       </div>
@@ -79,6 +83,7 @@ const Account = ({ account }) => (
       </div>
     </div>
     <NexusAddress
+      className="mt1"
       address={account.address}
       label={
         <div className="flex center space-between">

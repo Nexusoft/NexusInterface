@@ -5,23 +5,19 @@ import { reduxForm, Field, FieldArray, formValueSelector } from 'redux-form';
 import styled from '@emotion/styled';
 
 // Internal Global
-import { callApi } from 'lib/tritiumApi';
-import { loadAccounts } from 'lib/user';
-import { formName, defaultValues } from 'lib/send';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
-import TextField from 'components/TextField';
 import Select from 'components/Select';
 import FormField from 'components/FormField';
-import Tooltip from 'components/Tooltip';
-import Arrow from 'components/Arrow';
-import { openSuccessDialog } from 'lib/ui';
-import { errorHandler } from 'utils/form';
+import Switch from 'components/Switch';
+import { openModal } from 'lib/ui';
+import { callApi } from 'lib/tritiumApi';
+import { formName, defaultValues, defaultRecipient } from 'lib/send';
 import sendIcon from 'icons/send.svg';
-import { numericOnly } from 'utils/form';
-import { confirmPin } from 'lib/ui';
+import { timing } from 'styles';
+import { newUID } from 'utils/misc';
 import { addressRegex } from 'consts/misc';
-import questionIcon from 'icons/question-mark-circle.svg';
+import plusIcon from 'icons/plus.svg';
 
 // Internal Local
 import Recipients from './Recipients';
@@ -29,31 +25,43 @@ import {
   getAccountOptions,
   getAddressNameMap,
   getRegisteredFieldNames,
-  getAccountInfo,
+  getSendSource,
 } from './selectors';
+import PreviewTransactionModal from './PreviewTransactionModal';
 
 __ = __context('Send');
 
 const SendFormComponent = styled.form({
-  maxWidth: 800,
+  maxWidth: 740,
   margin: '-.5em auto 0',
 });
 
 const SendFormButtons = styled.div({
   display: 'flex',
   justifyContent: 'space-between',
-  marginTop: '2em',
+  marginTop: '3em',
 });
 
-const OptionsArrow = styled.span({
-  display: 'inline-block',
-  width: 15,
-  verticalAlign: 'middle',
+const SendBtn = styled(Button)({
+  flex: 1,
 });
 
-const MoreOptions = styled.div({
-  paddingLeft: '1em',
+const MultiBtn = styled(Button)({
+  marginRight: '1em',
 });
+
+const AdvancedOptionsSwitch = styled.div({
+  display: 'flex',
+  alignItems: 'center',
+  cursor: 'pointer',
+  marginTop: 10,
+  fontSize: 15,
+});
+
+const AdvancedOptionsLabel = styled.label(({ active }) => ({
+  transition: `opacity ${timing.normal}`,
+  opacity: active ? 1 : 0.67,
+}));
 
 const valueSelector = formValueSelector(formName);
 const mapStateToProps = (state) => {
@@ -62,15 +70,10 @@ const mapStateToProps = (state) => {
     user: { accounts, tokens },
     form,
   } = state;
-  const accountName = valueSelector(state, 'sendFrom');
-  const reference = valueSelector(state, 'reference');
-  const expires = valueSelector(state, 'expires');
-  const accountInfo = getAccountInfo(accountName, accounts, tokens);
+  const sendFrom = valueSelector(state, 'sendFrom');
+  const source = getSendSource(sendFrom, accounts, tokens);
   return {
-    reference,
-    expires,
-    accountName,
-    accountInfo,
+    source,
     accountOptions: getAccountOptions(accounts, tokens),
     addressNameMap: getAddressNameMap(addressBook),
     fieldNames: getRegisteredFieldNames(
@@ -79,7 +82,92 @@ const mapStateToProps = (state) => {
   };
 };
 
-const referenceRegex = /^[0-9]+$/;
+const uintRegex = /^[0-9]+$/;
+
+async function asyncValidateRecipient({ recipient, source }) {
+  const { address } = recipient;
+  const params = {};
+
+  // Check if it's a valid address/name
+  if (addressRegex.test(address)) {
+    const result = await callApi('system/validate/address', {
+      address,
+    });
+    if (result.is_valid) {
+      params.address = address;
+    }
+  }
+  if (!params.address) {
+    try {
+      const result = await callApi('names/get/name', { name: address });
+      params.address = result.register_address;
+    } catch (err) {
+      throw { address: __('Invalid name/address') };
+    }
+  }
+
+  // Check if recipient is on the same token as source
+  const sourceToken = source?.account?.token || source?.token?.address;
+  if (sourceToken !== address) {
+    let account;
+    try {
+      account = await callApi('finance/get/account', params);
+    } catch (err) {
+      let token;
+      try {
+        token = await callApi('tokens/get/token', params);
+      } catch (err) {}
+      if (token) {
+        throw {
+          address: __('Source and recipient must be of the same token'),
+        };
+      }
+    }
+    if (account && account?.token !== sourceToken) {
+      throw {
+        address: __('Source and recipient must be of the same token'),
+      };
+    }
+  }
+
+  return null;
+}
+
+function getRecipientsParams(recipients, { advancedOptions }) {
+  return recipients.map(
+    ({
+      address,
+      amount,
+      reference,
+      expireDays,
+      expireHours,
+      expireMinutes,
+      expireSeconds,
+    }) => {
+      const recipParam = {};
+
+      if (addressRegex.test(address)) {
+        recipParam.address_to = address;
+      } else {
+        recipParam.name_to = address;
+      }
+      if (advancedOptions) {
+        const expires =
+          parseInt(expireSeconds) +
+          parseInt(expireMinutes) * 60 +
+          parseInt(expireHours) * 3600 +
+          parseInt(expireDays) * 86400;
+        if (Number.isInteger(expires)) {
+          recipParam.expires = expires;
+        }
+        if (reference) recipParam.reference = reference;
+      }
+      recipParam.amount = parseFloat(amount);
+
+      return recipParam;
+    }
+  );
+}
 
 /**
  * The Internal Send Form in the Send Page
@@ -92,22 +180,10 @@ const referenceRegex = /^[0-9]+$/;
   form: formName,
   destroyOnUnmount: false,
   initialValues: defaultValues,
-  validate: ({ sendFrom, recipients, reference, expires }) => {
+  validate: ({ sendFrom, recipients }) => {
     const errors = {};
     if (!sendFrom) {
       errors.sendFrom = __('No accounts selected');
-    }
-    if (reference) {
-      if (
-        !(Number.isInteger(reference) && reference >= 0) &&
-        !referenceRegex.test(reference)
-      ) {
-        errors.reference = __('Reference must be an unsigned integer');
-      } else {
-        if (parseInt(reference) > 18446744073709551615) {
-          errors.reference = __('Number is too large');
-        }
-      }
     }
 
     if (!recipients || !recipients.length) {
@@ -117,7 +193,7 @@ const referenceRegex = /^[0-9]+$/;
     } else {
       const recipientsErrors = [];
 
-      recipients.forEach(({ address, amount }, i) => {
+      recipients.forEach(({ address, amount, reference }, i) => {
         const recipientErrors = {};
         if (!address) {
           recipientErrors.address = __('Address/Name is required');
@@ -125,6 +201,17 @@ const referenceRegex = /^[0-9]+$/;
         const floatAmount = parseFloat(amount);
         if (!floatAmount || floatAmount < 0) {
           recipientErrors.amount = __('Invalid amount');
+        }
+        if (reference) {
+          if (!uintRegex.test(reference)) {
+            recipientErrors.reference = __(
+              'Reference must be an unsigned integer'
+            );
+          } else {
+            if (Number(reference) > 18446744073709551615) {
+              recipientErrors.reference = __('Number is too large');
+            }
+          }
         }
         if (Object.keys(recipientErrors).length) {
           recipientsErrors[i] = recipientErrors;
@@ -139,104 +226,32 @@ const referenceRegex = /^[0-9]+$/;
     return errors;
   },
   asyncBlurFields: ['recipients[].address'],
-  asyncValidate: async ({ recipients }) => {
-    const { address } = recipients[0];
-
-    if (addressRegex.test(address)) {
-      const addressResult = await callApi('system/validate/address', {
-        address,
-      });
-      if (addressResult.is_valid) {
-        return null;
-      }
-    }
-
-    try {
-      await callApi('names/get/name', { name: address });
-    } catch (err) {
-      throw { recipients: [{ address: __('Invalid name/address') }] };
-    }
-
-    return null;
-  },
-  onSubmit: async (
-    { sendFrom, recipients, reference, expires },
-    dispatch,
-    props
-  ) => {
-    const pin = await confirmPin();
-    if (pin) {
-      const params = {
-        pin,
-        address: props.accountInfo.address,
-        amount: parseFloat(recipients[0].amount),
+  asyncValidate: async ({ recipients }, dispatch, { source }) => {
+    const results = await Promise.allSettled(
+      recipients.map((recipient) =>
+        asyncValidateRecipient({ recipient, source })
+      )
+    );
+    if (results.some(({ status }) => status === 'rejected')) {
+      throw {
+        recipients: results.map(({ status, reason }) =>
+          status === 'rejected' ? reason : undefined
+        ),
       };
-
-      const recipientInputSize = new Blob([recipients[0].address]).size;
-      const isAddress =
-        recipientInputSize === 51 &&
-        recipients[0].address.match(/([0OIl+/])/g) === null;
-
-      isAddress
-        ? (params.address_to = recipients[0].address)
-        : (params.name_to = recipients[0].address);
-      if (reference) params.reference = reference;
-      if (expires) params.expires = expires;
-
-      if (props.accountInfo.token_name === 'NXS') {
-        return await callApi('finance/debit/account', params);
-      } else {
-        if (props.accountInfo.maxsupply) {
-          return await callApi('tokens/debit/token', params);
-        } else {
-          return await callApi('tokens/debit/account', params);
-        }
-      }
+    } else {
+      return null;
     }
   },
-  onSubmitSuccess: (result, dispatch, props) => {
-    if (!result) return;
-
-    props.reset();
-    loadAccounts();
-    openSuccessDialog({
-      message: __('Transaction sent'),
+  onSubmit: ({ recipients, advancedOptions }, dispatch, { source, reset }) => {
+    openModal(PreviewTransactionModal, {
+      source,
+      recipients: getRecipientsParams(recipients, { advancedOptions }),
+      resetSendForm: reset,
     });
   },
-  onSubmitFail: errorHandler(__('Error sending NXS')),
 })
 class SendForm extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      optionalOpen: false,
-    };
-  }
-
-  componentDidUpdate(prevProps) {
-    // if you have EVER added to these items always show till form is reset.
-
-    if (this.props.reference || this.props.expires) {
-      if (
-        this.props.reference !== prevProps.reference ||
-        this.props.expires !== prevProps.expires
-      ) {
-        this.setState({
-          optionalOpen: true,
-        });
-      }
-    }
-  }
-
-  componentDidMount() {
-    // if ref or experation was in the form then open the optionals.
-    // form is NOT reset on component unmount so we must show it on mount
-    if (this.props.reference || this.props.expires) {
-      this.setState({
-        optionalOpen: true,
-      });
-    }
-  }
+  switchID = newUID();
 
   /**
    * Confirm the Send
@@ -269,27 +284,8 @@ class SendForm extends Component {
    * @memberof SendForm
    */
   addRecipient = () => {
-    this.props.array.push('recipients', {
-      address: null,
-      amount: '',
-      fiatAmount: '',
-    });
+    this.props.array.push('recipients', defaultRecipient);
   };
-
-  /**
-   * Return JSX for the Add Recipient Button
-   *
-   * @memberof SendForm
-   */
-  renderAddRecipientButton = ({ fields }) =>
-    //BEING REMOVED TILL NEW API SUPPORTS MULTI SEND
-    fields.length === 1 ? (
-      <Button onClick={this.addRecipient}>
-        {__('Send To multiple recipients')}
-      </Button>
-    ) : (
-      <div />
-    );
 
   /**
    * Component's Renderable JSX
@@ -298,14 +294,36 @@ class SendForm extends Component {
    * @memberof SendForm
    */
   render() {
-    const { accountOptions, change, accountInfo, submitting } = this.props;
-    const optionsOpen =
-      this.state.optionalOpen || this.props.reference || this.props.expires;
+    const { accountOptions, change, source } = this.props;
     return (
       <SendFormComponent onSubmit={this.confirmSend}>
+        <div className="flex justify-end">
+          <AdvancedOptionsSwitch>
+            <Field
+              name="advancedOptions"
+              component={Switch.RF}
+              style={{ fontSize: '.75em' }}
+              id={this.switchID}
+            />
+            <Field
+              name="advancedOptions"
+              component={({ input: { value } }) => (
+                <AdvancedOptionsLabel
+                  className="ml0_4 pointer"
+                  htmlFor={this.switchID}
+                  active={value}
+                >
+                  {__('Advanced options')}
+                </AdvancedOptionsLabel>
+              )}
+            />
+          </AdvancedOptionsSwitch>
+        </div>
+
         <FormField label={__('Send from')}>
           <Field
             component={Select.RF}
+            skin="filled-inverted"
             name="sendFrom"
             placeholder={__('Select an account')}
             options={accountOptions}
@@ -317,64 +335,18 @@ class SendForm extends Component {
           name="recipients"
           change={change}
           addRecipient={this.addRecipient}
-          accBalance={accountInfo.balance}
-          sendFrom={accountInfo}
+          source={source}
         />
 
-        <div className="mt1" style={{ opacity: 0.7 }}>
-          <Button onClick={this.toggleMoreOptions} skin="hyperlink">
-            <OptionsArrow>
-              <Arrow
-                direction={optionsOpen ? 'down' : 'right'}
-                height={8}
-                width={10}
-              />
-            </OptionsArrow>
-            <span className="v-align">{__('More options')}</span>
-          </Button>
-        </div>
-        {optionsOpen && (
-          <MoreOptions>
-            {' '}
-            <FormField
-              label={
-                <span>
-                  <span className="v-align">{__('Reference number')}</span>
-                  <Tooltip.Trigger
-                    position="right"
-                    tooltip={__(
-                      'An optional number which may be provided by the recipient to identify this transaction from the others'
-                    )}
-                  >
-                    <Icon icon={questionIcon} className="space-left" />
-                  </Tooltip.Trigger>
-                </span>
-              }
-            >
-              <Field
-                component={TextField.RF}
-                name="reference"
-                normalize={numericOnly}
-                placeholder={__(
-                  'Invoice number, order number, etc... (Optional)'
-                )}
-              />
-            </FormField>
-            {/*<FormField label={__('Expiration')}>
-              <Field
-                component={TextField.RF}
-                name="expires"
-                placeholder={__('Seconds till experation (Optional)')}
-              />
-        </FormField>{' '}*/}
-          </MoreOptions>
-        )}
-
         <SendFormButtons>
-          <Button type="submit" skin="primary" wide disabled={submitting}>
-            <Icon icon={sendIcon} className="space-right" />
-            {__('Send')}
-          </Button>
+          <MultiBtn skin="default" onClick={this.addRecipient}>
+            <Icon icon={plusIcon} style={{ fontSize: '.8em' }} />
+            <span className="v-align ml0_4">{__('Add recipient')}</span>
+          </MultiBtn>
+          <SendBtn type="submit" skin="primary">
+            <Icon icon={sendIcon} className="mr0_4" />
+            {__('Proceed')}
+          </SendBtn>
         </SendFormButtons>
       </SendFormComponent>
     );

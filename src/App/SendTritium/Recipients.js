@@ -4,17 +4,18 @@ import { Field } from 'redux-form';
 import styled from '@emotion/styled';
 
 // Internal
-import Icon from 'components/Icon';
+import Tooltip from 'components/Tooltip';
 import { timing } from 'styles';
 import RecipientField from './RecipientField';
 import AmountField from './AmountField';
+import AdvancedFields from './AdvancedFields';
 
 __ = __context('Send');
 
 const RemoveButton = styled.div(({ theme }) => ({
   position: 'absolute',
   left: 3,
-  bottom: 8,
+  top: '1em',
   cursor: 'pointer',
   width: '1.5em',
   height: '1.5em',
@@ -31,33 +32,23 @@ const RemoveButton = styled.div(({ theme }) => ({
 }));
 
 const Recipient = styled.div({
-  display: 'flex',
-  alignItems: 'center',
-  margin: '0 -30px',
+  // display: 'flex',
+  // alignItems: 'center',
+  marginLeft: -30,
+  marginRight: -30,
   padding: '0 30px',
   position: 'relative',
 });
 
 const AddressWrapper = styled.div({
-  flexGrow: 5,
+  flex: 8,
   flexBasis: 0,
   marginRight: '1em',
 });
 
 const AmountWrapper = styled.div({
-  flexGrow: 2,
+  flex: 2,
   flexBasis: 0,
-});
-
-const MoreInfo = styled.div({
-  marginTop: '1em',
-  marginBottom: '1.5em',
-  display: 'flex',
-  justifyContent: 'space-between',
-});
-
-const PlusIcon = styled(Icon)({
-  fontSize: '.8em',
 });
 
 /**
@@ -74,33 +65,76 @@ class Recipients extends Component {
    * @memberof Recipients
    */
   render() {
-    const { fields, change, accBalance, sendFrom } = this.props;
+    const { fields, change, source } = this.props;
+    if (!fields?.length) return null;
 
-    if (!fields || !fields.length) return null;
-
+    // if (fields.length === 1) {
+    //   return (
+    //     <>
+    //       <Field
+    //         name={`${fields.name}[0].address`}
+    //         component={RecipientField}
+    //         change={change}
+    //         sendFrom={sendFrom}
+    //       />
+    //       <AmountField
+    //         fullAmount={accBalance}
+    //         parentFieldName={`${fields.name}[0]`}
+    //         change={change}
+    //         token={token}
+    //       />
+    //     </>
+    //   );
+    // } else {
     return (
       <>
-        <Field
-          name={`${fields.name}[0].address`}
-          component={RecipientField}
-          change={change}
-          sendFrom={sendFrom}
-        />
-        <AmountField
-          fullAmount={accBalance}
-          parentFieldName={`${fields.name}[0]`}
-          change={change}
-          token={{
-            name: sendFrom.token_name
-              ? sendFrom.token_name === '0'
-                ? 'NXS'
-                : sendFrom.token_name
-              : sendFrom.name,
-            address: sendFrom.token || sendFrom.address,
-          }}
-        />
+        {fields.map((fieldName, i) => (
+          <Recipient
+            key={i}
+            style={fields.length > 1 ? { marginTop: '0.5em' } : undefined}
+          >
+            {fields.length !== 1 && (
+              <Tooltip.Trigger tooltip={__('Remove recipient')}>
+                <RemoveButton
+                  onClick={() => {
+                    fields.remove(i);
+                  }}
+                >
+                  ✕
+                </RemoveButton>
+              </Tooltip.Trigger>
+            )}
+
+            <div className="flex center">
+              <AddressWrapper>
+                <Field
+                  name={`${fieldName}.address`}
+                  component={RecipientField}
+                  change={change}
+                  source={source}
+                />
+              </AddressWrapper>
+
+              <AmountWrapper>
+                <AmountField
+                  parentFieldName={fieldName}
+                  change={change}
+                  source={source}
+                />
+              </AmountWrapper>
+            </div>
+
+            <Field
+              name="advancedOptions"
+              component={({ input }) =>
+                !!input.value && <AdvancedFields parentFieldName={fieldName} />
+              }
+            />
+          </Recipient>
+        ))}
       </>
     );
+    // }
   }
 }
 export default Recipients;

@@ -115,7 +115,7 @@ class BootstrapBackgroundTask extends Component {
         onClick={this.maximize}
         index={this.props.index}
       >
-        <Icon icon={workIcon} className="space-right" />
+        <Icon icon={workIcon} className="mr0_4" />
         {this.props.statusMsg}
       </BootstrapBackgroundTaskComponent>
     );

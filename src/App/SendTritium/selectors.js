@@ -1,5 +1,8 @@
 import styled from '@emotion/styled';
+
+import TokenName from 'components/TokenName';
 import memoize from 'utils/memoize';
+import shortenAddress from 'utils/shortenAddress';
 
 __ = __context('Send');
 
@@ -12,10 +15,14 @@ const Separator = styled.div(({ theme }) => ({
   color: theme.primary,
 }));
 
+const Address = styled.span(({ theme }) => ({
+  color: theme.mixer(0.75),
+}));
+
 export const getAccountOptions = memoize((myAccounts, myTokens) => {
   let options = [];
 
-  if (myAccounts && myAccounts.length > 0) {
+  if (myAccounts?.length) {
     options.push({
       value: 'AccountsSeparator',
       display: <Separator>{__('Accounts')}</Separator>,
@@ -23,11 +30,19 @@ export const getAccountOptions = memoize((myAccounts, myTokens) => {
       indent: false,
     });
     options.push(
-      ...myAccounts.map((acc) => ({
-        value: acc.name || acc.address,
-        display: `${acc.name || acc.address} (${acc.balance} ${
-          acc.token_name || 'Tokens'
-        })`,
+      ...myAccounts.map((account) => ({
+        value: `account:${account.address}`,
+        display: (
+          <span>
+            {account.name || (
+              <span>
+                <em>{__('Unnamed account')}</em>{' '}
+                <span className="dim">{shortenAddress(account.address)}</span>
+              </span>
+            )}{' '}
+            ({account.balance} {TokenName.from({ account })})
+          </span>
+        ),
         indent: true,
       }))
     );
@@ -41,10 +56,18 @@ export const getAccountOptions = memoize((myAccounts, myTokens) => {
     });
     options.push(
       ...myTokens.map((token) => ({
-        value: token.name || token.address,
-        display: `${token.name || token.address} (${token.balance} ${
-          token.name || 'Tokens'
-        })`,
+        value: `token:${token.address}`,
+        display: (
+          <span>
+            {token.name || (
+              <span>
+                <em>{__('Unnamed token')}</em>{' '}
+                <span className="dim">{shortenAddress(token.address)}</span>
+              </span>
+            )}{' '}
+            ({token.balance} {TokenName.from({ token })})
+          </span>
+        ),
         indent: true,
       }))
     );
@@ -53,30 +76,24 @@ export const getAccountOptions = memoize((myAccounts, myTokens) => {
   return options;
 });
 
-export const getAccountBalance = memoize(
-  (accountName, myAccounts, myTokens) => {
-    const account =
-      myAccounts && myAccounts.find((acc) => acc.name === accountName);
-    const token = myTokens && myTokens((tkn) => tkn.name === accountName);
-    return account && account.balance;
-  }
-);
+export const getSendSource = memoize((sendFrom, myAccounts, myTokens) => {
+  const matches = /^(account|token):(.+)/.exec(sendFrom);
+  const [_, type, address] = matches || [];
 
-export const getAccountInfo = memoize((accountName, myAccounts, myTokens) => {
-  const account =
-    myAccounts &&
-    myAccounts.find(
-      (acc) => acc.name === accountName || acc.address === accountName
-    );
-  const token =
-    myTokens &&
-    myTokens.find(
-      (tkn) => tkn.name === accountName || tkn.address === accountName
-    );
-  return account || token || { balance: 0 };
+  if (type === 'account') {
+    const account = myAccounts?.find((acc) => acc.address === address);
+    if (account) return { account };
+  }
+
+  if (type === 'token') {
+    const token = myTokens?.find((tkn) => tkn.address === address);
+    if (token) return { token };
+  }
+
+  return null;
 });
 
-export const getAddressNameMap = memoize((addressBook, myTritiumAccounts) => {
+export const getAddressNameMap = memoize((addressBook, myAccounts) => {
   const map = {};
   if (addressBook) {
     Object.values(addressBook).forEach((contact) => {
@@ -87,61 +104,56 @@ export const getAddressNameMap = memoize((addressBook, myTritiumAccounts) => {
       }
     });
   }
-  if (myTritiumAccounts) {
-    myTritiumAccounts.forEach((element) => {
+  if (myAccounts) {
+    myAccounts.forEach((element) => {
       map[element.address] = element.name;
     });
   }
   return map;
 });
 
-const Address = styled.span(({ theme }) => ({
-  color: theme.mixer(0.75),
-}));
-
 export const getRecipientSuggestions = memoize(
-  (addressBook, myTritiumAccounts) => {
-    //console.log(myTritiumAccounts);
-    //console.log(addressBook);
+  (addressBook, myAccounts, accountAddress) => {
     const suggestions = [];
     if (addressBook) {
       Object.values(addressBook).forEach((contact) => {
-        if (contact.addresses) {
-          contact.addresses
-            .filter((e) => !e.address.startsWith('a'))
-            .forEach(({ address, label, isMine }) => {
-              if (!isMine) {
-                suggestions.push({
-                  name: contact.name,
-                  value: address,
-                  token: '0',
-                  display: (
-                    <span>
-                      {contact.name}
-                      {label ? ' - ' + label : ''}{' '}
-                      <TokenRecipientName>{'(NXS)'}</TokenRecipientName>{' '}
-                      <Address>{address}</Address>
-                    </span>
-                  ),
-                });
-              }
+        contact.addresses?.forEach(({ address, label, isMine }) => {
+          if (!isMine) {
+            suggestions.push({
+              name: contact.name,
+              address: address,
+              value: address,
+              display: (
+                <span>
+                  {contact.name}
+                  {label ? ' - ' + label : ''} <Address>{address}</Address>
+                </span>
+              ),
             });
-        }
+          }
+        });
       });
     }
-    if (myTritiumAccounts) {
-      myTritiumAccounts.forEach((element) => {
+    if (myAccounts) {
+      myAccounts.forEach((account) => {
+        if (accountAddress && account.address === accountAddress) return;
+        // if (tokenAddress && account.token !== tokenAddress) return;
+
         suggestions.push({
-          name: element.name || element.address,
-          value: element.address,
-          token: element.token,
+          name: account.name,
+          address: account.address,
+          value: account.name || account.address,
           display: (
             <span>
-              {element.name} {'   '}
-              <TokenRecipientName>{`(${
-                element.token_name || 'Tokens'
-              })`}</TokenRecipientName>{' '}
-              <Address>{element.address}</Address>
+              {account.name || (
+                <span style={{ fontStyle: 'italic' }}>
+                  {__('Unnamed account')}
+                </span>
+              )}{' '}
+              <TokenRecipientName>
+                (<TokenName account={account} />)
+              </TokenRecipientName>{' '}
+              <Address>{account.address}</Address>
             </span>
           ),
         });

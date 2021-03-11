@@ -141,6 +141,15 @@ const utilityClasses = (theme) => css`
     &.space-between {
       justify-content: space-between;
     }
+    &.justify-start {
+      justify-content: flex-start;
+    }
+    &.justify-end {
+      justify-content: flex-end;
+    }
+  }
+  .flex1 {
+    flex: 1;
   }
 
   .error {
@@ -159,13 +168,31 @@ const utilityClasses = (theme) => css`
   .mt3 {
     margin-top: 3em;
   }
-
-  .space-left {
+  .ml0_4 {
     margin-left: 0.4em;
   }
-  .space-right {
+  .ml1 {
+    margin-left: 1em;
+  }
+  .ml2 {
+    margin-left: 2em;
+  }
+  .ml3 {
+    margin-left: 3em;
+  }
+  .mr0_4 {
     margin-right: 0.4em;
   }
+  .mr1 {
+    margin-right: 1em;
+  }
+  .mr2 {
+    margin-right: 2em;
+  }
+  .mr3 {
+    margin-right: 3em;
+  }
+
   .monospace {
     font-family: ${consts.monoFontFamily};
   }

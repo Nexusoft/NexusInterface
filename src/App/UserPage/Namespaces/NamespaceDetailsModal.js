@@ -30,7 +30,7 @@ const NamespaceDetailsModal = ({ namespace }) => (
           <InfoField label={__('Name')}>{namespace.name}</InfoField>
           <InfoField label={__('Address')}>
             <span className="v-align">{namespace.address}</span>
-            <QRButton className="space-left" address={namespace.address} />
+            <QRButton className="ml0_4" address={namespace.address} />
           </InfoField>
           <InfoField label={__('Created at')}>
             {formatDateTime(namespace.created * 1000, timeFormatOptions)}
@@ -51,7 +51,7 @@ const NamespaceDetailsModal = ({ namespace }) => (
                 {__('View history')}
               </Button>
               <Button
-                className="space-left"
+                className="ml0_4"
                 onClick={() => {
                   closeModal();
                   openModal(TransferNamespaceModal, { namespace });

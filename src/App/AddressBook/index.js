@@ -96,7 +96,7 @@ class AddressBook extends Component {
                 onClick={this.showAddContact}
                 className="mt1"
               >
-                <Icon icon={addContactIcon} className="space-right" />
+                <Icon icon={addContactIcon} className="mr0_4" />
                 {__('Create new contact')}
               </Button>
             )}

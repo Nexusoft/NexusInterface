@@ -135,7 +135,7 @@ class MyAddressesModal extends Component {
         <Modal.Body>
           <Search>
             <TextField
-              left={<Icon icon={searchIcon} className="space-right" />}
+              left={<Icon icon={searchIcon} className="mr0_4" />}
               placeholder="Search account"
               value={this.state.searchQuery}
               onChange={this.handleChange}
@@ -160,7 +160,7 @@ class MyAddressesModal extends Component {
           ) : (
             <Buttons>
               <Button onClick={this.startCreating}>
-                <Icon icon={plusIcon} className="space-right" />
+                <Icon icon={plusIcon} className="mr0_4" />
                 {__('Create new address')}
               </Button>
             </Buttons>

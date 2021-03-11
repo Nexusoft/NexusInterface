@@ -233,6 +233,7 @@ export function prepareCoreInfo() {
         if (
           !state.settings.bootstrapSuggestionDisabled &&
           isCoreConnected(state) &&
+          !state.core.systemInfo?.clientmode &&
           state.bootstrap.step === 'idle' &&
           !state.settings.manualDaemon &&
           systemInfo?.synccomplete < 50 &&

@@ -66,7 +66,7 @@ function User({
       }}
     >
       <Username>
-        <Icon icon={userIcon} className="space-right" />
+        <Icon icon={userIcon} className="mr0_4" />
         <span>{username}</span>
       </Username>
       <Status active={active}>

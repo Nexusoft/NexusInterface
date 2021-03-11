@@ -9,8 +9,10 @@ import AutoSuggest from 'components/AutoSuggest';
 import FormField from 'components/FormField';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
-import { openModal } from 'lib/ui';
 import AddEditContactModal from 'components/AddEditContactModal';
+import { openModal } from 'lib/ui';
+import { callApi } from 'lib/tritiumApi';
+import { addressRegex } from 'consts/misc';
 import plusIcon from 'icons/plus.svg';
 import { getAddressNameMap, getRecipientSuggestions } from './selectors';
 
@@ -30,20 +32,27 @@ const EmptyMessage = styled.div(({ theme }) => ({
   alignItems: 'center',
 }));
 
-const filterRecipients = memoize((suggestions, inputValue) => {
+const filterSuggestions = memoize((suggestions, inputValue) => {
   if (!suggestions) return [];
-  const query = inputValue || '';
+  if (!inputValue) return suggestions;
+  const query = inputValue.toLowerCase();
   return suggestions.filter(
-    ({ value, name }) =>
-      value === query ||
-      (!!name && name.toLowerCase().includes(query.toLowerCase()))
+    ({ address, name }) =>
+      (!!name && name.toLowerCase().includes(query)) ||
+      (!!address && address.toLowerCase().includes(query))
   );
 });
 
-const mapStateToProps = ({ addressBook, user }) => ({
-  suggestions: getRecipientSuggestions(addressBook, user.accounts),
-  addressNameMap: getAddressNameMap(addressBook, user.accounts),
-});
+const mapStateToProps = ({ addressBook, user }, { source }) => {
+  return {
+    suggestions: getRecipientSuggestions(
+      addressBook,
+      user?.accounts,
+      source?.account?.address
+    ),
+    addressNameMap: getAddressNameMap(addressBook, user.accounts),
+  };
+};
 
 /**
  * The Recipient Field in the Send Page
@@ -71,17 +80,22 @@ class RecipientField extends Component {
     openModal(AddEditContactModal);
   };
 
-  returnFilteredSuggestions(suggestions) {
-    const { name, token: tokenAddress, address } = this.props.sendFrom;
-    return suggestions.filter(
-      (account) =>
-        (!tokenAddress ||
-          account.token === tokenAddress ||
-          account.token === address) &&
-        account.name !== name &&
-        account.name !== address
-    );
-  }
+  addToContact = async () => {
+    const address = this.props.input.value;
+    let isMine = false;
+    try {
+      const result = await callApi('system/validate/address', {
+        address,
+      });
+      isMine = result.is_mine;
+    } catch (err) {
+      console.error(err);
+    }
+    const prefill = isMine
+      ? { notMine: [], mine: [{ address, label: '' }] }
+      : { notMine: [{ address, label: '' }] };
+    openModal(AddEditContactModal, { prefill });
+  };
 
   /**
    * Component's Renderable JSX
@@ -90,9 +104,10 @@ class RecipientField extends Component {
    * @memberof RecipientField
    */
   render() {
-    const { addressNameMap, input, meta } = this.props;
+    const { addressNameMap, input, meta, suggestions } = this.props;
     const recipientName = addressNameMap[input.value];
-    const suggestions = this.returnFilteredSuggestions(this.props.suggestions);
+    const isAddress = addressRegex.test(input.value);
+
     return (
       <FormField
         label={
@@ -102,6 +117,14 @@ class RecipientField extends Component {
               &nbsp;&nbsp;
             </span>
             <RecipientName>{recipientName}</RecipientName>
+            {!recipientName && isAddress && (
+              <Button skin="plain-link-primary" onClick={this.addToContact}>
+                <Icon icon={plusIcon} style={{ fontSize: '0.9em' }} />
+                <span className="v-align ml0_4">
+                  {__('Add to Address Book')}
+                </span>
+              </Button>
+            )}
           </>
         }
       >
@@ -110,10 +133,11 @@ class RecipientField extends Component {
           meta={meta}
           inputProps={{
             placeholder: __('Recipient Address/Name'),
+            skin: 'filled-inverted',
           }}
           suggestions={suggestions}
           onSelect={this.handleSelect}
-          filterSuggestions={filterRecipients}
+          filterSuggestions={filterSuggestions}
           emptyFiller={
             suggestions.length === 0 && (
               <EmptyMessage>
@@ -121,10 +145,10 @@ class RecipientField extends Component {
                 <Button as="a" skin="hyperlink" onClick={this.createContact}>
                   <Icon
                     icon={plusIcon}
-                    className="space-right"
+                    className="mr0_4"
                     style={{ fontSize: '.8em' }}
                   />
-                  {__('Create new contact')}
+                  <span className="v-align">{__('Create new contact')}</span>
                 </Button>
               </EmptyMessage>
             )
