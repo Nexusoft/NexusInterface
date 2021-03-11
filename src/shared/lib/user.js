@@ -317,8 +317,8 @@ async function shouldUnlockStaking({ stakeInfo, status }) {
                 null,
                 {
                   link: () => (
-                    <ExternalLink href="https://crypto.nexus.io/stake">
-                      crypto.nexus.io/stake
+                    <ExternalLink href="https://crypto.nexus.io/staking-guide">
+                      crypto.nexus.io/staking-guide
                     </ExternalLink>
                   ),
                 }
