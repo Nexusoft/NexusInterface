@@ -443,7 +443,7 @@ class SettingsCore extends Component {
                       )}
                     </SettingsField>
 
-                    <Field
+                    {/* <Field
                       name="enableStaking"
                       component={({ input: enableStaking }) =>
                         !(liteMode.value || multiUser.value) &&
@@ -460,7 +460,7 @@ class SettingsCore extends Component {
                           </SettingsField>
                         )
                       }
-                    />
+                    /> */}
 
                     <SettingsField
                       connectLabel
