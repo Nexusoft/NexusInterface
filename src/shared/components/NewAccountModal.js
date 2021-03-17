@@ -110,6 +110,7 @@ class NewAccountModal extends Component {
       suggestions,
       tokenName,
       tokenAddress,
+      change,
     } = this.props;
     const tokenPreset = !!(tokenName || tokenAddress);
 
@@ -144,6 +145,11 @@ class NewAccountModal extends Component {
                 filterSuggestions={(suggestions) => suggestions}
                 disabled={tokenPreset}
                 className={tokenPreset ? 'dim' : undefined}
+                onSelect={
+                  tokenPreset
+                    ? undefined
+                    : (suggestion) => change('token', suggestion)
+                }
               />
             </FormField>
 
