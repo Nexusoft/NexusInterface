@@ -25,18 +25,14 @@ const getSuggestions = memoize((userTokens) => [
   ...(userTokens ? userTokens.map((t) => t.name || t.address) : []),
 ]);
 
-const mapStateToProps = (state) => {
-  return {
-    suggestions: getSuggestions(state.user.tokens),
-  };
-};
-@connect(mapStateToProps, null, (stateProps, dispatchProps, ownProps) => ({
-  ...stateProps,
-  ...dispatchProps,
-  ...ownProps,
+@connect((state, props) => ({
+  suggestions:
+    props.tokenName || props.tokenAddress
+      ? []
+      : getSuggestions(state.user.tokens),
   initialValues: {
     name: '',
-    token: ownProps.tokenName || ownProps.tokenAddress,
+    token: props.tokenName || props.tokenAddress || 'NXS',
   },
 }))
 @reduxForm({
@@ -44,6 +40,10 @@ const mapStateToProps = (state) => {
   destroyOnUnmount: true,
   validate: ({ name, token }) => {
     const errors = {};
+    if (!token) {
+      errors.token = __('Token name/address is required');
+    }
+
     return errors;
   },
   onSubmit: async ({ name, token }, dispatch, props) => {
@@ -104,7 +104,15 @@ const mapStateToProps = (state) => {
 })
 class NewAccountModal extends Component {
   render() {
-    const { handleSubmit, submitting, suggestions } = this.props;
+    const {
+      handleSubmit,
+      submitting,
+      suggestions,
+      tokenName,
+      tokenAddress,
+    } = this.props;
+    const tokenPreset = !!(tokenName || tokenAddress);
+
     return (
       <Modal
         assignClose={(closeModal) => {
