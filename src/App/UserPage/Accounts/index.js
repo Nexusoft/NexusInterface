@@ -34,15 +34,7 @@ class Accounts extends Component {
     return (
       !!accounts && (
         <TabContentWrapper>
-          <Button
-            wide
-            onClick={() =>
-              openModal(NewAccountModal, {
-                tokenName: 'NXS',
-                tokenAddress: '0',
-              })
-            }
-          >
+          <Button wide onClick={() => openModal(NewAccountModal)}>
             <Icon icon={plusIcon} className="mr0_4" />
             {__('Create new account')}
           </Button>

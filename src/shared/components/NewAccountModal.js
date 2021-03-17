@@ -139,9 +139,11 @@ class NewAccountModal extends Component {
             <FormField connectLabel label={__('Token name/address')}>
               <Field
                 name="token"
-                component={AutoSuggest.RF}
+                component={tokenPreset ? TextField.RF : AutoSuggest.RF}
                 suggestions={suggestions}
                 filterSuggestions={(suggestions) => suggestions}
+                disabled={tokenPreset}
+                className={tokenPreset ? 'dim' : undefined}
               />
             </FormField>
 
