@@ -78,3 +78,40 @@ export function getDeep(object, path) {
   }
   return result;
 }
+
+export function timeToText(timeSpan) {
+  let string = '';
+  let seconds = timeSpan;
+
+  const days = Math.floor(seconds / 86400);
+  if (days) {
+    string += __('%{smart_count} day |||| %{smart_count} days', days) + ' ';
+  }
+  seconds %= 86400;
+
+  const hours = Math.floor(seconds / 3600);
+  if (hours) {
+    string += __('%{smart_count} hour |||| %{smart_count} hours', hours) + ' ';
+  }
+  seconds %= 3600;
+
+  const minutes = Math.floor(seconds / 60);
+  if (minutes) {
+    string +=
+      __('%{smart_count} minute |||| %{smart_count} minutes', minutes) + ' ';
+  }
+
+  seconds %= 60;
+  if (seconds) {
+    string +=
+      __('%{smart_count} second |||| %{smart_count} seconds', seconds) + ' ';
+  }
+
+  if (days || minutes || hours) {
+    string += `(${__(
+      '%{smart_count} second |||| %{smart_count} seconds',
+      timeSpan
+    )})`;
+  }
+  return string;
+}

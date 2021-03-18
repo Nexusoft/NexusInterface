@@ -1,9 +1,12 @@
+import { useEffect, useState } from 'react';
 import { Field } from 'redux-form';
 
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import QuestionCircle from 'components/QuestionCircle';
+import { getActiveCoreConfig } from 'lib/coreConfig';
 import { numericOnly } from 'utils/form';
+import { timeToText } from 'utils/misc';
 
 __ = __context('Send');
 
@@ -14,7 +17,20 @@ const numberInputProps = {
   style: { maxWidth: 80 },
 };
 
+const defaultTxExpiry = 604800;
+
 export default function AdvancedFields({ parentFieldName }) {
+  const [txExpiry, setTxExpiry] = useState(defaultTxExpiry);
+  useEffect(() => {
+    (async () => {
+      const config = await getActiveCoreConfig();
+      console.log('config', config);
+      setTxExpiry(
+        config.txExpiry !== undefined ? config.txExpiry : defaultTxExpiry
+      );
+    })();
+  }, []);
+
   return (
     <div className="flex center space-between" style={{ marginTop: -8 }}>
       <div className="flex1 mr2">
@@ -47,7 +63,10 @@ export default function AdvancedFields({ parentFieldName }) {
               <span className="v-align">{__('Expires in')}</span>
               <QuestionCircle
                 tooltip={__(
-                  'The amount of time since the transaction is created after which the transaction can no longer be credited by the recipient. By default, transactions will expire in 7 days (604800 seconds).'
+                  'The amount of time since the transaction is created after which the transaction can no longer be credited by the recipient. By default, transactions will expire in %{time}',
+                  {
+                    time: `${timeToText(txExpiry)} `,
+                  }
                 )}
               />
             </span>
