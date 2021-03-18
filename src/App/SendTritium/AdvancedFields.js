@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Field } from 'redux-form';
+import { useSelector } from 'react-redux';
 
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import QuestionCircle from 'components/QuestionCircle';
-import { getActiveCoreConfig } from 'lib/coreConfig';
-import { defaultTxExpiry } from 'lib/send';
 import { numericOnly } from 'utils/form';
 import { timeToText } from 'utils/misc';
 
@@ -19,15 +18,7 @@ const numberInputProps = {
 };
 
 export default function AdvancedFields({ parentFieldName }) {
-  const [txExpiry, setTxExpiry] = useState(defaultTxExpiry);
-  useEffect(() => {
-    (async () => {
-      const config = await getActiveCoreConfig();
-      setTxExpiry(
-        config.txExpiry !== undefined ? config.txExpiry : defaultTxExpiry
-      );
-    })();
-  }, []);
+  const txExpiry = useSelector((state) => state.core.config?.txExpiry);
 
   return (
     <div className="flex center space-between" style={{ marginTop: -8 }}>
