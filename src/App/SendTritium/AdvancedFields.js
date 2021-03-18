@@ -5,6 +5,7 @@ import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import QuestionCircle from 'components/QuestionCircle';
 import { getActiveCoreConfig } from 'lib/coreConfig';
+import { defaultTxExpiry } from 'lib/send';
 import { numericOnly } from 'utils/form';
 import { timeToText } from 'utils/misc';
 
@@ -17,14 +18,11 @@ const numberInputProps = {
   style: { maxWidth: 80 },
 };
 
-const defaultTxExpiry = 604800;
-
 export default function AdvancedFields({ parentFieldName }) {
   const [txExpiry, setTxExpiry] = useState(defaultTxExpiry);
   useEffect(() => {
     (async () => {
       const config = await getActiveCoreConfig();
-      console.log('config', config);
       setTxExpiry(
         config.txExpiry !== undefined ? config.txExpiry : defaultTxExpiry
       );
