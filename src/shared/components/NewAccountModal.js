@@ -126,7 +126,7 @@ class NewAccountModal extends Component {
           <form onSubmit={handleSubmit}>
             <FormField
               connectLabel
-              label={__('Account name (%{nameFee} NXS Fee) (Optional)', {
+              label={__('Account name (Optional)', {
                 nameFee: createLocalNameFee,
               })}
             >
@@ -137,21 +137,38 @@ class NewAccountModal extends Component {
               />
             </FormField>
 
-            <FormField connectLabel label={__('Token name/address')}>
-              <Field
-                name="token"
-                component={tokenPreset ? TextField.RF : AutoSuggest.RF}
-                suggestions={suggestions}
-                filterSuggestions={(suggestions) => suggestions}
-                disabled={tokenPreset}
-                className={tokenPreset ? 'dim' : undefined}
-                onSelect={
-                  tokenPreset
-                    ? undefined
-                    : (suggestion) => change('token', suggestion)
-                }
-              />
-            </FormField>
+            <Field
+              name="name"
+              component={({ input }) =>
+                !!input.value && (
+                  <div className="mt1">
+                    <span>
+                      {__('Fee: %{nameFee} NXS', {
+                        nameFee: createLocalNameFee,
+                      })}
+                    </span>
+                  </div>
+                )
+              }
+            />
+
+            <div className="mt2">
+              <FormField connectLabel label={__('Token name/address')}>
+                <Field
+                  name="token"
+                  component={tokenPreset ? TextField.RF : AutoSuggest.RF}
+                  suggestions={suggestions}
+                  filterSuggestions={(suggestions) => suggestions}
+                  disabled={tokenPreset}
+                  className={tokenPreset ? 'dim' : undefined}
+                  onSelect={
+                    tokenPreset
+                      ? undefined
+                      : (suggestion) => change('token', suggestion)
+                  }
+                />
+              </FormField>
+            </div>
 
             <div className="mt3 flex space-between">
               <Button
