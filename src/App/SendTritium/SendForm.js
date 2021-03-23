@@ -12,7 +12,7 @@ import FormField from 'components/FormField';
 import Switch from 'components/Switch';
 import { openModal } from 'lib/ui';
 import { callApi } from 'lib/tritiumApi';
-import { formName, defaultValues, defaultRecipient } from 'lib/send';
+import { formName, getDefaultValues, getDefaultRecipient } from 'lib/send';
 import sendIcon from 'icons/send.svg';
 import { timing } from 'styles';
 import { newUID } from 'utils/misc';
@@ -72,6 +72,7 @@ const mapStateToProps = (state) => {
   } = state;
   const sendFrom = valueSelector(state, 'sendFrom');
   const source = getSendSource(sendFrom, accounts, tokens);
+  const txExpiry = state.core.config?.txExpiry;
   return {
     source,
     accountOptions: getAccountOptions(accounts, tokens),
@@ -79,6 +80,8 @@ const mapStateToProps = (state) => {
     fieldNames: getRegisteredFieldNames(
       form[formName] && form[formName].registeredFields
     ),
+    initialValues: getDefaultValues({ txExpiry }),
+    txExpiry,
   };
 };
 
@@ -179,7 +182,6 @@ function getRecipientsParams(recipients, { advancedOptions }) {
 @reduxForm({
   form: formName,
   destroyOnUnmount: false,
-  initialValues: defaultValues,
   validate: ({ sendFrom, recipients }) => {
     const errors = {};
     if (!sendFrom) {
@@ -284,7 +286,8 @@ class SendForm extends Component {
    * @memberof SendForm
    */
   addRecipient = () => {
-    this.props.array.push('recipients', defaultRecipient);
+    const { txExpiry } = this.props;
+    this.props.array.push('recipients', getDefaultRecipient({ txExpiry }));
   };
 
   /**

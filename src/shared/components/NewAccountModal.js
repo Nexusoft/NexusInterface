@@ -25,18 +25,14 @@ const getSuggestions = memoize((userTokens) => [
   ...(userTokens ? userTokens.map((t) => t.name || t.address) : []),
 ]);
 
-const mapStateToProps = (state) => {
-  return {
-    suggestions: getSuggestions(state.user.tokens),
-  };
-};
-@connect(mapStateToProps, null, (stateProps, dispatchProps, ownProps) => ({
-  ...stateProps,
-  ...dispatchProps,
-  ...ownProps,
+@connect((state, props) => ({
+  suggestions:
+    props.tokenName || props.tokenAddress
+      ? []
+      : getSuggestions(state.user.tokens),
   initialValues: {
     name: '',
-    token: ownProps.tokenName || ownProps.tokenAddress,
+    token: props.tokenName || props.tokenAddress || 'NXS',
   },
 }))
 @reduxForm({
@@ -44,6 +40,10 @@ const mapStateToProps = (state) => {
   destroyOnUnmount: true,
   validate: ({ name, token }) => {
     const errors = {};
+    if (!token) {
+      errors.token = __('Token name/address is required');
+    }
+
     return errors;
   },
   onSubmit: async ({ name, token }, dispatch, props) => {
@@ -104,7 +104,16 @@ const mapStateToProps = (state) => {
 })
 class NewAccountModal extends Component {
   render() {
-    const { handleSubmit, submitting, suggestions } = this.props;
+    const {
+      handleSubmit,
+      submitting,
+      suggestions,
+      tokenName,
+      tokenAddress,
+      change,
+    } = this.props;
+    const tokenPreset = !!(tokenName || tokenAddress);
+
     return (
       <Modal
         assignClose={(closeModal) => {
@@ -117,7 +126,7 @@ class NewAccountModal extends Component {
           <form onSubmit={handleSubmit}>
             <FormField
               connectLabel
-              label={__('Account name (%{nameFee} NXS Fee) (Optional)', {
+              label={__('Account name (Optional)', {
                 nameFee: createLocalNameFee,
               })}
             >
@@ -128,14 +137,38 @@ class NewAccountModal extends Component {
               />
             </FormField>
 
-            <FormField connectLabel label={__('Token name/address')}>
-              <Field
-                name="token"
-                component={AutoSuggest.RF}
-                suggestions={suggestions}
-                filterSuggestions={(suggestions) => suggestions}
-              />
-            </FormField>
+            <Field
+              name="name"
+              component={({ input }) =>
+                !!input.value && (
+                  <div className="mt1">
+                    <span>
+                      {__('Fee: %{nameFee} NXS', {
+                        nameFee: createLocalNameFee,
+                      })}
+                    </span>
+                  </div>
+                )
+              }
+            />
+
+            <div className="mt2">
+              <FormField connectLabel label={__('Token name/address')}>
+                <Field
+                  name="token"
+                  component={tokenPreset ? TextField.RF : AutoSuggest.RF}
+                  suggestions={suggestions}
+                  filterSuggestions={(suggestions) => suggestions}
+                  disabled={tokenPreset}
+                  className={tokenPreset ? 'dim' : undefined}
+                  onSelect={
+                    tokenPreset
+                      ? undefined
+                      : (suggestion) => change('token', suggestion)
+                  }
+                />
+              </FormField>
+            </div>
 
             <div className="mt3 flex space-between">
               <Button

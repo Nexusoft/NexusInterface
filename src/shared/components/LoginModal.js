@@ -77,7 +77,7 @@ const ExtraSection = styled.div({
             message:
               submitError.message +
               '. ' +
-              __('Not being fully synced may have caused this error.'), //
+              __('Not being fully synced may have caused this error.'),
           }
         : submitError;
     errorHandler(__('Error logging in'))(errors, dispatch, error);

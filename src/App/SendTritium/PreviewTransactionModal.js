@@ -13,7 +13,9 @@ import { callApi } from 'lib/tritiumApi';
 import { lookupAddress } from 'lib/addressBook';
 import { openSuccessDialog, removeModal } from 'lib/ui';
 import { loadAccounts } from 'lib/user';
+import { getActiveCoreConfig } from 'lib/coreConfig';
 import { errorHandler } from 'utils/form';
+import { timeToText } from 'utils/misc';
 import addressBookIcon from 'icons/address-book.svg';
 import WarningIcon from 'icons/warning.svg';
 import sendIcon from 'icons/send.svg';
@@ -127,43 +129,6 @@ function AddressTo({ address }) {
   );
 }
 
-function renderExpiry(timeSpan) {
-  let string = '';
-  let seconds = timeSpan;
-
-  const days = Math.floor(seconds / 86400);
-  if (days) {
-    string += __('%{smart_count} day |||| %{smart_count} days', days) + ' ';
-  }
-  seconds %= 86400;
-
-  const hours = Math.floor(seconds / 3600);
-  if (hours) {
-    string += __('%{smart_count} hour |||| %{smart_count} hours', hours) + ' ';
-  }
-  seconds %= 3600;
-
-  const minutes = Math.floor(seconds / 60);
-  if (minutes) {
-    string +=
-      __('%{smart_count} minute |||| %{smart_count} minutes', minutes) + ' ';
-  }
-
-  seconds %= 60;
-  if (seconds) {
-    string +=
-      __('%{smart_count} second |||| %{smart_count} seconds', seconds) + ' ';
-  }
-
-  if (days || minutes || hours) {
-    string += `(${__(
-      '%{smart_count} second |||| %{smart_count} seconds',
-      timeSpan
-    )})`;
-  }
-  return __('in %{time_span}', { time_span: string });
-}
-
 const formOptions = {
   form: 'preview_tx',
   destroyOnUnmount: true,
@@ -210,6 +175,14 @@ function PreviewTransactionModal({
   handleSubmit,
   submitting,
 }) {
+  const [defaultTxExpiry, setDefaultTxExpiry] = useState();
+  useEffect(() => {
+    (async () => {
+      const config = await getActiveCoreConfig();
+      setDefaultTxExpiry(config.txExpiry);
+    })();
+  }, []);
+
   return (
     <Modal>
       <Modal.Header>{__("You're sending")}</Modal.Header>
@@ -284,7 +257,9 @@ function PreviewTransactionModal({
                             </Tooltip.Trigger>
                           </span>
                         ) : (
-                          renderExpiry(expires)
+                          __('in %{time_span}', {
+                            time_span: timeToText(expires),
+                          })
                         )}
                       </ContentCell>
                     </ContentCell>

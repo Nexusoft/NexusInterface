@@ -97,6 +97,7 @@ function customConfig(config = {}) {
       config.apiPassword !== undefined
         ? config.apiPassword
         : defaultConfig.apiPassword,
+    txExpiry: parseInt(config.txExpiry),
   };
 }
 
@@ -186,6 +187,7 @@ export async function loadNexusConf() {
     rpcSSL: configs.rpcssl,
     port: configs.rpcport,
     portSSL: configs.rpcportssl,
+    txExpiry: configs.txexpiry,
   });
 }
 
