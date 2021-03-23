@@ -445,6 +445,21 @@ class Overview extends Component {
   waitForCore = (stat) =>
     this.props.coreConnected ? stat : <span className="dim">-</span>;
 
+  genesisTooltip = (content) => (
+    <Tooltip.Trigger
+      align="start"
+      tooltip={
+        this.props.stakeInfo?.staking && this.props.stakeInfo?.new
+          ? __(
+              'Staking stats not yet available until you get a genesis transaction'
+            )
+          : null
+      }
+    >
+      {content}
+    </Tooltip.Trigger>
+  );
+
   /**
    * Returns the weight stats for the overview page
    *
@@ -456,50 +471,47 @@ class Overview extends Component {
 
     return (
       <Fragment>
-        <Stat
-          as={blockweight ? Link : undefined}
-          to={blockweight ? '/User/Staking' : undefined}
-        >
-          <StatIcon icon={this.blockWeightIcon()} />
-          <div>
-            <StatLabel>{__('Block Weight')}</StatLabel>
-            <StatValue>
-              {this.waitForCore(
-                blockweight ? formatNumber(blockweight, 2) + '%' : 'N/A'
-              )}
-            </StatValue>
-          </div>
-        </Stat>
+        {this.genesisTooltip(
+          <Stat as={Link} to="/User/Staking">
+            <StatIcon icon={this.blockWeightIcon()} />
+            <div>
+              <StatLabel>{__('Block Weight')}</StatLabel>
+              <StatValue>
+                {this.waitForCore(
+                  blockweight ? formatNumber(blockweight, 2) + '%' : 'N/A'
+                )}
+              </StatValue>
+            </div>
+          </Stat>
+        )}
 
-        <Stat
-          as={trustweight ? Link : undefined}
-          to={trustweight ? '/User/Staking' : undefined}
-        >
-          <StatIcon icon={this.trustIcon()} />
-          <div>
-            <StatLabel>{__('Trust Weight')}</StatLabel>
-            <StatValue>
-              {this.waitForCore(
-                trustweight ? formatNumber(trustweight, 2) + '%' : 'N/A'
-              )}
-            </StatValue>
-          </div>
-        </Stat>
+        {this.genesisTooltip(
+          <Stat as={Link} to="/User/Staking">
+            <StatIcon icon={this.trustIcon()} />
+            <div>
+              <StatLabel>{__('Trust Weight')}</StatLabel>
+              <StatValue>
+                {this.waitForCore(
+                  trustweight ? formatNumber(trustweight, 2) + '%' : 'N/A'
+                )}
+              </StatValue>
+            </div>
+          </Stat>
+        )}
 
-        <Stat
-          as={stakeweight ? Link : undefined}
-          to={stakeweight ? '/User/Staking' : undefined}
-        >
-          <StatIcon icon={stakeIcon} />
-          <div>
-            <StatLabel>{__('Stake Weight')}</StatLabel>
-            <StatValue>
-              {this.waitForCore(
-                stakeweight ? formatNumber(stakeweight, 2) + '%' : 'N/A'
-              )}
-            </StatValue>
-          </div>
-        </Stat>
+        {this.genesisTooltip(
+          <Stat as={Link} to="/User/Staking">
+            <StatIcon icon={stakeIcon} />
+            <div>
+              <StatLabel>{__('Stake Weight')}</StatLabel>
+              <StatValue>
+                {this.waitForCore(
+                  stakeweight ? formatNumber(stakeweight, 2) + '%' : 'N/A'
+                )}
+              </StatValue>
+            </div>
+          </Stat>
+        )}
       </Fragment>
     );
   };
@@ -877,20 +889,19 @@ class Overview extends Component {
             </Stat>
           </Tooltip.Trigger>
 
-          <Stat
-            as={stakerate ? Link : undefined}
-            to={stakerate ? '/User/Staking' : undefined}
-          >
-            <StatIcon icon={interestIcon} />
-            <div>
-              <StatLabel>{__('Stake Rate')}</StatLabel>
-              <StatValue>
-                {this.waitForCore(
-                  stakerate ? formatNumber(stakerate, 2) + '%' : 'N/A'
-                )}
-              </StatValue>
-            </div>
-          </Stat>
+          {this.genesisTooltip(
+            <Stat as={Link} to="/User/Staking">
+              <StatIcon icon={interestIcon} />
+              <div>
+                <StatLabel>{__('Stake Rate')}</StatLabel>
+                <StatValue>
+                  {this.waitForCore(
+                    stakerate ? formatNumber(stakerate, 2) + '%' : 'N/A'
+                  )}
+                </StatValue>
+              </div>
+            </Stat>
+          )}
 
           {settings.overviewDisplay === 'miner'
             ? this.returnDifficultyStats(miningInfo)
