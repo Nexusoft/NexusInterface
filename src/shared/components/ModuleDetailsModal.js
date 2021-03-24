@@ -125,6 +125,11 @@ class ModuleDetailsModal extends Component {
               <span className="ml0_4">&#x28;{__('in development')}&#x29;</span>
             )}
           </InfoField>
+          {!!module.development && (
+            <InfoField ratio={[1, 2]} label={__('Entry')}>
+              {module.info.entry}
+            </InfoField>
+          )}
 
           <InfoField ratio={[1, 2]} label={__('Version')}>
             {moduleInfo.version || <span className="dim">N/A</span>}
