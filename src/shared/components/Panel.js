@@ -58,7 +58,7 @@ const PanelHeader = styled.div(({ theme }) => ({
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
-  color: theme.background,
+  color: theme.mixer(0.75),
 }));
 
 const PanelTitle = styled.h3(({ theme }) => ({
