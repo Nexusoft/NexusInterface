@@ -104,6 +104,8 @@ export const startCore = async () => {
   }
   if (settings.enableStaking == true) params.push('-stake=1');
   if (settings.pooledStaking == true) params.push('-poolstaking=1');
+  if (settings.embeddedCoreAllowNonSSL == false)
+    params.push('-apisslrequired', '-rpcsslrequired');
   if (settings.liteMode == true) params.push('-client=1');
   if (settings.multiUser == true) params.push('-multiuser=1');
 
