@@ -27,13 +27,15 @@ export const refreshStakeInfo = async () => {
   }
 };
 
+// Don't refresh user status while login process is not yet done
+const refreshUserStatusLock = false;
 export const refreshUserStatus = async () => {
   try {
     const {
       user: { session },
       core: { systemInfo },
     } = store.getState();
-    if (!systemInfo?.multiuser || session) {
+    if (!refreshUserStatusLock && (!systemInfo?.multiuser || session)) {
       const status = await callApi('users/get/status');
       store.dispatch({ type: TYPE.SET_USER_STATUS, payload: status });
       return status;
@@ -60,22 +62,32 @@ export const logIn = async ({ username, password, pin }) => {
     password,
     pin,
   });
-  const { session } = result;
-  let [status, stakeInfo] = await Promise.all([
-    callApi('users/get/status', { session }),
-    callApi('finance/get/stakeinfo', { session }),
-  ]);
-  const unlockStaking = await shouldUnlockStaking({ stakeInfo, status });
-  await unlockUser({
-    pin,
-    staking: unlockStaking,
-  });
-  if (unlockStaking) {
-    status = await callApi('users/get/status', { session });
-  }
+  // Stop refreshing user status
+  refreshUserStatusLock = true;
+  try {
+    const { session } = result;
+    let [status, stakeInfo] = await Promise.all([
+      callApi('users/get/status', { session }),
+      callApi('finance/get/stakeinfo', { session }),
+    ]);
+    const unlockStaking = await shouldUnlockStaking({ stakeInfo, status });
+    await unlockUser({
+      pin,
+      staking: unlockStaking,
+    });
+    if (unlockStaking) {
+      status = await callApi('users/get/status', { session });
+    }
 
-  store.dispatch({ type: TYPE.LOGIN, payload: { username, session, status } });
-  return { username, session, status };
+    store.dispatch({
+      type: TYPE.LOGIN,
+      payload: { username, session, status },
+    });
+    return { username, session, status };
+  } finally {
+    // Release the lock
+    refreshUserStatusLock = false;
+  }
 };
 
 export const logOut = async () => {
@@ -280,8 +292,8 @@ async function shouldUnlockStaking({ stakeInfo, status }) {
 
   if (
     !systemInfo?.clientmode &&
-    enableStaking &&
-    status?.unlocked.staking === false
+    status?.unlocked.staking === false &&
+    enableStaking
   ) {
     if (stakeInfo?.new === false) {
       return true;
