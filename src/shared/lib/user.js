@@ -266,20 +266,6 @@ export function prepareUser() {
         }
       }
     );
-
-    observeStore(
-      (state) => state.user,
-      async ({ stakeInfo, status }) => {
-        if (await shouldUnlockStaking({ stakeInfo, status })) {
-          const pin = await confirmPin({
-            note: __('Enter your PIN to start staking'),
-          });
-          if (pin) {
-            unlockUser({ pin, staking: true });
-          }
-        }
-      }
-    );
   }
 }
 
