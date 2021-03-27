@@ -28,7 +28,7 @@ export const refreshStakeInfo = async () => {
 };
 
 // Don't refresh user status while login process is not yet done
-const refreshUserStatusLock = false;
+let refreshUserStatusLock = false;
 export const refreshUserStatus = async () => {
   try {
     const {
