@@ -1,3 +1,14 @@
+/**
+ * Important note - This file is imported into module_preload.js, either directly or
+ * indirectly, and will be a part of the preload script for modules, therefore:
+ * - Be picky with importing stuffs into this file, especially for big
+ * files and libraries. The bigger the preload scripts get, the slower the modules
+ * will load.
+ * - Don't assign anything to `global` variable because it will be passed
+ * into modules' execution environment.
+ * - Make sure this note also presents in other files which are imported here.
+ */
+
 // External
 import { PureComponent } from 'react';
 import styled from '@emotion/styled';
@@ -11,11 +22,11 @@ import { passRef } from 'utils/misc';
 import * as color from 'utils/color';
 
 const intro = keyframes`
-  from { 
+  from {
     transform: translate(-50%, -50%) scale(0.9);
     opacity: 0 
   }
-  to { 
+  to {
     transform: translate(-50%, -50%) scale(1);
     opacity: 1
   }
@@ -52,13 +63,14 @@ const fullScreenOutro = {
 const modalBorderRadius = 4;
 
 const ModalComponent = styled.div(
-  ({ theme }) => ({
+  ({ theme, maxWidth }) => ({
     position: 'fixed',
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: '60%',
     maxHeight: '80%',
+    maxWidth: maxWidth,
     background: color.darken(theme.background, 0.2),
     color: theme.mixer(0.75),
     borderRadius: modalBorderRadius,
@@ -142,7 +154,7 @@ export default class ModuleModal extends PureComponent {
    */
   constructor(props) {
     super(props);
-    props.assignClose && props.assignClose(this.animatedClose);
+    props.assignClose && props.assignClose(this.closeWithAnimation);
   }
 
   componentDidMount() {
@@ -158,21 +170,17 @@ export default class ModuleModal extends PureComponent {
    *
    * @memberof Modal
    */
-  animatedClose = () => {
-    const modalID = this.context;
-    if (true) {
-      console.log(modalID);
-      const duration = parseInt(timing.quick);
-      const animation = this.props.fullScreen ? fullScreenOutro : outro;
-      const options = {
-        duration,
-        easing: 'ease-in',
-        fill: 'both',
-      };
-      this.modalElem.animate(animation, options);
-      this.backgroundElem.animate(bgOutro, options);
-      setTimeout(this.remove, duration);
-    }
+  closeWithAnimation = () => {
+    const duration = parseInt(timing.quick);
+    const animation = this.props.fullScreen ? fullScreenOutro : outro;
+    const options = {
+      duration,
+      easing: 'ease-in',
+      fill: 'both',
+    };
+    this.modalElem.animate(animation, options);
+    this.backgroundElem.animate(bgOutro, options);
+    setTimeout(this.remove, duration);
   };
 
   /**
@@ -181,10 +189,6 @@ export default class ModuleModal extends PureComponent {
    * @memberof Modal
    */
   remove = () => {
-    const modalID = this.context;
-    //removeModal(modalID);
-    console.log(this.props);
-
     this.props.removeModal();
   };
 
@@ -214,7 +218,7 @@ export default class ModuleModal extends PureComponent {
 
   handleKeyDown = (e) => {
     if (this.props.escToClose && e.key === 'Escape') {
-      this.animatedClose();
+      this.closeWithAnimation();
     }
   };
 
@@ -228,7 +232,7 @@ export default class ModuleModal extends PureComponent {
     const {
       open,
       dimBackground,
-      onBackgroundClick = this.animatedClose,
+      onBackgroundClick = this.closeWithAnimation,
       onClose,
       fullScreen,
       children,
@@ -236,6 +240,7 @@ export default class ModuleModal extends PureComponent {
       modalRef,
       backgroundRef,
       escToClose,
+      maxWidth,
       ...rest
     } = this.props;
 
@@ -250,11 +255,12 @@ export default class ModuleModal extends PureComponent {
           ref={this.modalRef}
           fullScreen={fullScreen}
           tabIndex="0"
+          maxWidth={maxWidth}
           onKeyDown={this.handleKeyDown}
           {...rest}
         >
           {typeof children === 'function'
-            ? children(this.animatedClose)
+            ? children(this.closeWithAnimation)
             : children}
         </ModalComponent>
       </Overlay>
