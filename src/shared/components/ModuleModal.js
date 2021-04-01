@@ -230,7 +230,7 @@ export default class ModuleModal extends PureComponent {
    */
   render() {
     const {
-      open,
+      visible,
       dimBackground,
       onBackgroundClick = this.closeWithAnimation,
       onClose,
@@ -245,25 +245,27 @@ export default class ModuleModal extends PureComponent {
     } = this.props;
 
     return (
-      <Overlay
-        dimBackground={this.props.dimBackground}
-        onBackgroundClick={onBackgroundClick}
-        backgroundRef={this.backgroundRef}
-        zPriority={fullScreen ? 1 : 0}
-      >
-        <ModalComponent
-          ref={this.modalRef}
-          fullScreen={fullScreen}
-          tabIndex="0"
-          maxWidth={maxWidth}
-          onKeyDown={this.handleKeyDown}
-          {...rest}
+      !!visible && (
+        <Overlay
+          dimBackground={this.props.dimBackground}
+          onBackgroundClick={onBackgroundClick}
+          backgroundRef={this.backgroundRef}
+          zPriority={fullScreen ? 1 : 0}
         >
-          {typeof children === 'function'
-            ? children(this.closeWithAnimation)
-            : children}
-        </ModalComponent>
-      </Overlay>
+          <ModalComponent
+            ref={this.modalRef}
+            fullScreen={fullScreen}
+            tabIndex="0"
+            maxWidth={maxWidth}
+            onKeyDown={this.handleKeyDown}
+            {...rest}
+          >
+            {typeof children === 'function'
+              ? children(this.closeWithAnimation)
+              : children}
+          </ModalComponent>
+        </Overlay>
+      )
     );
   }
 }
