@@ -158,7 +158,7 @@ export default class ModuleModal extends PureComponent {
   }
 
   componentDidMount() {
-    this.modalElem.focus();
+    this.modalElem?.focus();
   }
 
   componentWillUnmount() {
@@ -178,8 +178,8 @@ export default class ModuleModal extends PureComponent {
       easing: 'ease-in',
       fill: 'both',
     };
-    this.modalElem.animate(animation, options);
-    this.backgroundElem.animate(bgOutro, options);
+    this.modalElem?.animate(animation, options);
+    this.backgroundElem?.animate(bgOutro, options);
     setTimeout(this.remove, duration);
   };
 
