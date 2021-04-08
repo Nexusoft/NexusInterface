@@ -9,11 +9,16 @@ import GA from 'lib/googleAnalytics';
 // Internal
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
-import { refreshBalances } from 'lib/user';
+import TokenName from 'components/TokenName';
+import { refreshBalances, loadAccounts } from 'lib/user';
 import { getMiningInfo } from 'lib/core';
 import { formatNumber, formatCurrency, formatRelativeTime } from 'lib/intl';
 import { timing, consts } from 'styles';
-import { isCoreConnected, isSynchronized } from 'selectors';
+import {
+  isCoreConnected,
+  isSynchronized,
+  selectTokenBalances,
+} from 'selectors';
 import { observeStore } from 'store';
 import Globe from './Globe';
 import { webGLAvailable } from 'consts/misc';
@@ -102,6 +107,7 @@ const mapStateToProps = (state) => {
   return {
     coreConnected: isCoreConnected(state),
     synchronized: isSynchronized(state),
+    tokenBalances: selectTokenBalances(state),
     miningInfo,
     blockDate,
     market,
@@ -246,6 +252,11 @@ const StatValue = styled.div({
   fontSize: '1.8em',
 });
 
+const SubValue = styled.div(({ theme }) => ({
+  fontSize: '0.5em',
+  // color: theme.primary,
+}));
+
 const StatIcon = styled(Icon)(({ theme }) => ({
   width: 38,
   height: 38,
@@ -289,6 +300,9 @@ class Overview extends Component {
     if (this.props.settings.overviewDisplay === 'miner') {
       this.fetchDifficulty();
     }
+
+    // Load accounts to display token balances if any
+    loadAccounts();
   }
   /**
    * Set by {NetworkGlobe}, ReDraws all Pillars and Archs
@@ -579,6 +593,7 @@ class Overview extends Component {
     const {
       systemInfo,
       stakeInfo,
+      tokenBalances,
       balances,
       blockDate,
       market,
@@ -717,36 +732,60 @@ class Overview extends Component {
         )}
 
         <Stats left compact={!this.showingGlobe()}>
-          <Stat
-            as={stake !== undefined ? Link : undefined}
-            to={stake !== undefined ? '/Transactions' : undefined}
+          <Tooltip.Trigger
+            align="end"
+            tooltip={
+              tokenBalances?.length > 0 ? (
+                <div style={{ textAlign: 'right' }}>
+                  <div>{__('Token balances')}</div>
+                  {tokenBalances.map((token) => (
+                    <div>
+                      {token.balance}&nbsp;
+                      <TokenName token={token} />
+                    </div>
+                  ))}
+                </div>
+              ) : null
+            }
           >
-            <div>
-              <StatLabel>
-                {!synchronized && available !== undefined && (
-                  <Tooltip.Trigger
-                    align="start"
-                    tooltip={__(
-                      'The balance displayed might not be up-to-date since the wallet is not yet fully synchronized'
-                    )}
-                  >
-                    <Icon icon={warningIcon} className="mr0_4" />
-                  </Tooltip.Trigger>
-                )}{' '}
-                <span className="v-align">{__('Balance')} (NXS)</span>
-              </StatLabel>
-              <StatValue>
-                {settings.overviewDisplay === 'balHidden'
-                  ? '-'
-                  : this.waitForCore(
-                      available !== undefined
-                        ? formatNumber(available + stake)
-                        : 'N/A'
-                    )}
-              </StatValue>
-            </div>
-            <StatIcon icon={logoIcon} />
-          </Stat>
+            <Stat
+              as={stake !== undefined ? Link : undefined}
+              to={stake !== undefined ? '/Transactions' : undefined}
+            >
+              <div>
+                <StatLabel>
+                  {!synchronized && available !== undefined && (
+                    <Tooltip.Trigger
+                      align="start"
+                      tooltip={__(
+                        'The balance displayed might not be up-to-date since the wallet is not yet fully synchronized'
+                      )}
+                    >
+                      <Icon icon={warningIcon} className="mr0_4" />
+                    </Tooltip.Trigger>
+                  )}{' '}
+                  <span className="v-align">{__('Balance')} (NXS)</span>
+                </StatLabel>
+                <StatValue>
+                  {settings.overviewDisplay === 'balHidden'
+                    ? '-'
+                    : this.waitForCore(
+                        available !== undefined ? (
+                          <div>
+                            <div>{formatNumber(available + stake)}</div>
+                            {tokenBalances?.length > 0 && (
+                              <SubValue>+ {__('OTHER TOKENS')}</SubValue>
+                            )}
+                          </div>
+                        ) : (
+                          'N/A'
+                        )
+                      )}
+                </StatValue>
+              </div>
+              <StatIcon icon={logoIcon} />
+            </Stat>
+          </Tooltip.Trigger>
           <Stat
             as={stake !== undefined ? Link : undefined}
             to={stake !== undefined ? '/Transactions' : undefined}
