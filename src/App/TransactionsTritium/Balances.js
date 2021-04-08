@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
@@ -70,6 +70,9 @@ class Balances extends Component {
       ({ user }) => user && user.status,
       refreshBalances
     );
+
+    // Load accounts to display token balances if any
+    loadAccounts();
   }
 
   componentWillUnmount() {
@@ -159,7 +162,7 @@ class Balances extends Component {
         )}
 
         {tokenBalances.map((token) => (
-          <>
+          <Fragment key={token.address}>
             <BalancesTitle>
               {__('%{token_name} balances', {
                 token_name: TokenName.from({ token }),
@@ -206,7 +209,7 @@ class Balances extends Component {
                 </Value>
               </Line>
             </BalancesWrapper>
-          </>
+          </Fragment>
         ))}
       </BalancesColumn>
     );
