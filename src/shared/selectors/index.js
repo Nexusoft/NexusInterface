@@ -22,7 +22,6 @@ export const selectTokenBalances = legacyMode
   ? () => undefined
   : memoize(
       (accounts) => {
-        console.log('input', accounts);
         const tokenBalances = {};
         accounts?.forEach((acc) => {
           if (acc.token && acc.token !== '0') {

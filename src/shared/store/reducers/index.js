@@ -21,6 +21,7 @@ import bootstrap from './bootstrap';
 import failedModules from './failedModules';
 import assetSchemas from './assetSchemas';
 import sessions from './sessions';
+import tokenDecimals from './tokenDecimals';
 
 export default function createRootReducer() {
   return combineReducers({
@@ -44,6 +45,7 @@ export default function createRootReducer() {
     bootstrap,
     assetSchemas,
     sessions,
+    tokenDecimals,
     form: formReducer,
   });
 }
