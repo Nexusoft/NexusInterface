@@ -739,7 +739,7 @@ class Overview extends Component {
                 <div style={{ textAlign: 'right' }}>
                   <div>{__('Token balances')}</div>
                   {tokenBalances.map((token) => (
-                    <div>
+                    <div key={token.address}>
                       {formatNumber(token.balance, token.decimals)}{' '}
                       <TokenName token={token} />
                     </div>
