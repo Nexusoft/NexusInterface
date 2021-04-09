@@ -61,7 +61,6 @@ const Value = styled.div({
 @connect((state) => ({
   balances: state.user.balances,
   tokenBalances: selectTokenBalances(state),
-  tokenDecimals: state.tokenDecimals,
 }))
 class Balances extends Component {
   componentDidMount() {
@@ -81,7 +80,7 @@ class Balances extends Component {
   }
 
   render() {
-    const { balances, tokenBalances, tokenDecimals } = this.props;
+    const { balances, tokenBalances } = this.props;
     const total =
       balances &&
       balances.available +
@@ -162,64 +161,58 @@ class Balances extends Component {
           </BalancesWrapper>
         )}
 
-        {tokenBalances.map((token) => {
-          let decimals = tokenDecimals[token.address];
-          if (decimals === undefined || decimals > 6) {
-            decimals = 6;
-          }
-          return (
-            <Fragment key={token.address}>
-              <BalancesTitle>
-                {__('%{token_name} balances', {
-                  token_name: TokenName.from({ token }),
-                })}
-              </BalancesTitle>
+        {tokenBalances.map((token) => (
+          <Fragment key={token.address}>
+            <BalancesTitle>
+              {__('%{token_name} balances', {
+                token_name: TokenName.from({ token }),
+              })}
+            </BalancesTitle>
 
-              <BalancesWrapper>
-                <Line bold>
-                  <Label>{__('Total')}</Label>
-                  <Value>
-                    {formatNumber(
-                      token.balance + token.pending + token.unconfirmed,
-                      decimals
-                    )}{' '}
-                    <TokenName token={token} />
-                  </Value>
-                </Line>
+            <BalancesWrapper>
+              <Line bold>
+                <Label>{__('Total')}</Label>
+                <Value>
+                  {formatNumber(
+                    token.balance + token.pending + token.unconfirmed,
+                    token.decimals
+                  )}{' '}
+                  <TokenName token={token} />
+                </Value>
+              </Line>
 
-                <Line>
-                  <Label>
-                    <span className="v-align">{__('Available')}</span>
-                  </Label>
-                  <Value>
-                    {formatNumber(token.balance, decimals)}{' '}
-                    <TokenName token={token} />
-                  </Value>
-                </Line>
+              <Line>
+                <Label>
+                  <span className="v-align">{__('Available')}</span>
+                </Label>
+                <Value>
+                  {formatNumber(token.balance, token.decimals)}{' '}
+                  <TokenName token={token} />
+                </Value>
+              </Line>
 
-                <Line>
-                  <Label>
-                    <span className="v-align">{__('Pending')}</span>
-                  </Label>
-                  <Value>
-                    {formatNumber(token.pending, decimals)}{' '}
-                    <TokenName token={token} />
-                  </Value>
-                </Line>
+              <Line>
+                <Label>
+                  <span className="v-align">{__('Pending')}</span>
+                </Label>
+                <Value>
+                  {formatNumber(token.pending, token.decimals)}{' '}
+                  <TokenName token={token} />
+                </Value>
+              </Line>
 
-                <Line>
-                  <Label>
-                    <span className="v-align">{__('Unconfirmed')}</span>
-                  </Label>
-                  <Value>
-                    {formatNumber(token.unconfirmed, decimals)}{' '}
-                    <TokenName token={token} />
-                  </Value>
-                </Line>
-              </BalancesWrapper>
-            </Fragment>
-          );
-        })}
+              <Line>
+                <Label>
+                  <span className="v-align">{__('Unconfirmed')}</span>
+                </Label>
+                <Value>
+                  {formatNumber(token.unconfirmed, token.decimals)}{' '}
+                  <TokenName token={token} />
+                </Value>
+              </Line>
+            </BalancesWrapper>
+          </Fragment>
+        ))}
       </BalancesColumn>
     );
   }

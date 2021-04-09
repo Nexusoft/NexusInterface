@@ -103,7 +103,6 @@ const mapStateToProps = (state) => {
     market,
     settings,
     theme,
-    tokenDecimals,
   } = state;
   return {
     coreConnected: isCoreConnected(state),
@@ -117,7 +116,6 @@ const mapStateToProps = (state) => {
     systemInfo,
     stakeInfo,
     balances,
-    tokenDecimals,
   };
 };
 
@@ -272,26 +270,6 @@ const BlockCountTooltip = ({ blockDate }) => (
     })}
   </div>
 );
-
-function TokenBalancesTooltip() {
-  const tokenDecimals = useSelector((state) => state.tokenDecimals);
-  return (
-    <div style={{ textAlign: 'right' }}>
-      <div>{__('Token balances')}</div>
-      {tokenBalances.map((token) => {
-        let decimals = tokenDecimals[token.address];
-        if (decimals === undefined || decimals > 6) {
-          decimals = 6;
-        }
-        return (
-          <div>
-            {formatNumber(token.balance, decimals)} <TokenName token={token} />
-          </div>
-        );
-      })}
-    </div>
-  );
-}
 
 /**
  * Overview Page, The main page
@@ -757,7 +735,17 @@ class Overview extends Component {
           <Tooltip.Trigger
             align="end"
             tooltip={
-              tokenBalances?.length > 0 ? <TokenBalancesTooltip /> : null
+              tokenBalances?.length > 0 ? (
+                <div style={{ textAlign: 'right' }}>
+                  <div>{__('Token balances')}</div>
+                  {tokenBalances.map((token) => (
+                    <div>
+                      {formatNumber(token.balance, token.decimals)}{' '}
+                      <TokenName token={token} />
+                    </div>
+                  ))}
+                </div>
+              ) : null
             }
           >
             <Stat

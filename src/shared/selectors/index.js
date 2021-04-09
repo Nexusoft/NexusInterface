@@ -21,7 +21,7 @@ export const isLoggedIn = legacyMode
 export const selectTokenBalances = legacyMode
   ? () => undefined
   : memoize(
-      (accounts) => {
+      (accounts, tokenDecimals) => {
         const tokenBalances = {};
         accounts?.forEach((acc) => {
           if (acc.token && acc.token !== '0') {
@@ -38,9 +38,10 @@ export const selectTokenBalances = legacyMode
             token.balance += acc.balance;
             token.pending += acc.pending;
             token.unconfirmed += acc.unconfirmed;
+            token.decimals = tokenDecimals[acc.token];
           }
         });
         return Object.values(tokenBalances);
       },
-      ({ user: { accounts } }) => [accounts]
+      ({ user: { accounts }, tokenDecimals }) => [accounts, tokenDecimals]
     );
