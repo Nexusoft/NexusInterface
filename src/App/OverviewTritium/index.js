@@ -1,7 +1,7 @@
 // External
 import { Fragment, Component } from 'react';
 import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/react';
 import GA from 'lib/googleAnalytics';
@@ -103,6 +103,7 @@ const mapStateToProps = (state) => {
     market,
     settings,
     theme,
+    tokenDecimals,
   } = state;
   return {
     coreConnected: isCoreConnected(state),
@@ -116,6 +117,7 @@ const mapStateToProps = (state) => {
     systemInfo,
     stakeInfo,
     balances,
+    tokenDecimals,
   };
 };
 
@@ -270,6 +272,26 @@ const BlockCountTooltip = ({ blockDate }) => (
     })}
   </div>
 );
+
+function TokenBalancesTooltip() {
+  const tokenDecimals = useSelector((state) => state.tokenDecimals);
+  return (
+    <div style={{ textAlign: 'right' }}>
+      <div>{__('Token balances')}</div>
+      {tokenBalances.map((token) => {
+        let decimals = tokenDecimals[token.address];
+        if (decimals === undefined || decimals > 6) {
+          decimals = 6;
+        }
+        return (
+          <div>
+            {formatNumber(token.balance, decimals)} <TokenName token={token} />
+          </div>
+        );
+      })}
+    </div>
+  );
+}
 
 /**
  * Overview Page, The main page
@@ -735,17 +757,7 @@ class Overview extends Component {
           <Tooltip.Trigger
             align="end"
             tooltip={
-              tokenBalances?.length > 0 ? (
-                <div style={{ textAlign: 'right' }}>
-                  <div>{__('Token balances')}</div>
-                  {tokenBalances.map((token) => (
-                    <div>
-                      {token.balance}&nbsp;
-                      <TokenName token={token} />
-                    </div>
-                  ))}
-                </div>
-              ) : null
+              tokenBalances?.length > 0 ? <TokenBalancesTooltip /> : null
             }
           >
             <Stat
