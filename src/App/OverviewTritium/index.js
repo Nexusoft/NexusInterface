@@ -735,7 +735,8 @@ class Overview extends Component {
           <Tooltip.Trigger
             align="end"
             tooltip={
-              tokenBalances?.length > 0 ? (
+              tokenBalances?.length > 0 &&
+              settings.overviewDisplay !== 'balHidden' ? (
                 <div style={{ textAlign: 'right' }}>
                   <div>{__('Token balances')}</div>
                   {tokenBalances.map((token) => (

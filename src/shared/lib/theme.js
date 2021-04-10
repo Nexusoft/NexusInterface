@@ -2,7 +2,7 @@ import * as TYPE from 'consts/actionTypes';
 import store from 'store';
 import path from 'path';
 import fs from 'fs';
-import { walletDataDir, fileExists } from 'consts/paths';
+import { walletDataDir } from 'consts/paths';
 import { readJson, writeJson } from 'utils/json';
 
 const themeFileName = 'theme.json';
