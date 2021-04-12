@@ -253,7 +253,7 @@ const StatValue = styled.div({
 });
 
 const SubValue = styled.div(({ theme }) => ({
-  fontSize: '0.5em',
+  fontSize: '0.4em',
   // color: theme.primary,
 }));
 
