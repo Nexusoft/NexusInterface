@@ -765,7 +765,7 @@ class Overview extends Component {
                       <Icon icon={warningIcon} className="mr0_4" />
                     </Tooltip.Trigger>
                   )}{' '}
-                  <span className="v-align">{__('Balance')} (NXS)</span>
+                  <span className="v-align">{__('NXS Balance')}</span>
                 </StatLabel>
                 <StatValue>
                   {settings.overviewDisplay === 'balHidden'
@@ -793,7 +793,7 @@ class Overview extends Component {
           >
             <div>
               <StatLabel>
-                {__('balance')} ({fiatCurrency})
+                {__('NXS Balance')} ({fiatCurrency})
               </StatLabel>
               <StatValue>
                 {settings.overviewDisplay === 'balHidden' ? (
