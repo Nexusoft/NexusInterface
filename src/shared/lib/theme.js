@@ -20,6 +20,7 @@ const defaultTheme = {
   globeColor: '#0097e4',
   globePillarColor: '#00ffff',
   globeArchColor: '#00ffff',
+  featuredTokenName: null,
 };
 
 function filterValidTheme(theme) {

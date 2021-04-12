@@ -606,6 +606,9 @@ class Overview extends Component {
     const { connections, txtotal, blocks } = systemInfo || {};
     const { stakerate } = stakeInfo || {};
     const { fiatCurrency } = settings;
+    const featuredToken = theme.featuredTokenName
+      ? tokenBalances?.find((token) => token.name === theme.featuredTokenName)
+      : undefined;
 
     if (settings.overviewDisplay === 'none') {
       return <OverviewPage />;
@@ -787,33 +790,63 @@ class Overview extends Component {
               <StatIcon icon={logoIcon} />
             </Stat>
           </Tooltip.Trigger>
-          <Stat
-            as={stake !== undefined ? Link : undefined}
-            to={stake !== undefined ? '/Transactions' : undefined}
-          >
-            <div>
-              <StatLabel>
-                {__('NXS Balance')} ({fiatCurrency})
-              </StatLabel>
-              <StatValue>
-                {settings.overviewDisplay === 'balHidden' ? (
-                  '-'
-                ) : market?.price ? (
-                  this.waitForCore(
-                    available !== undefined
-                      ? formatCurrency(
-                          (available + stake) * market.price,
-                          fiatCurrency
-                        )
-                      : 'N/A'
-                  )
-                ) : (
-                  <span className="dim">-</span>
-                )}
-              </StatValue>
-            </div>
-            <StatIcon icon={currencyIcons(fiatCurrency)} />
-          </Stat>
+
+          {theme.featuredTokenName ? (
+            <Stat
+              as={stake !== undefined ? Link : undefined}
+              to={stake !== undefined ? '/Transactions' : undefined}
+            >
+              <div>
+                <StatLabel>
+                  {__('%{token_name} balance', {
+                    token_name: theme.featuredTokenName,
+                  })}
+                </StatLabel>
+                <StatValue>
+                  {settings.overviewDisplay === 'balHidden'
+                    ? '-'
+                    : this.waitForCore(
+                        featuredToken
+                          ? formatNumber(
+                              featuredToken.balance,
+                              featuredToken.decimals
+                            )
+                          : 'N/A'
+                      )}
+                </StatValue>
+              </div>
+              <StatIcon icon={currencyIcons(fiatCurrency)} />
+            </Stat>
+          ) : (
+            <Stat
+              as={stake !== undefined ? Link : undefined}
+              to={stake !== undefined ? '/Transactions' : undefined}
+            >
+              <div>
+                <StatLabel>
+                  {__('NXS Balance')} ({fiatCurrency})
+                </StatLabel>
+                <StatValue>
+                  {settings.overviewDisplay === 'balHidden' ? (
+                    '-'
+                  ) : market?.price ? (
+                    this.waitForCore(
+                      available !== undefined
+                        ? formatCurrency(
+                            (available + stake) * market.price,
+                            fiatCurrency
+                          )
+                        : 'N/A'
+                    )
+                  ) : (
+                    <span className="dim">-</span>
+                  )}
+                </StatValue>
+              </div>
+              <StatIcon icon={currencyIcons(fiatCurrency)} />
+            </Stat>
+          )}
+
           <Stat
             as={stake !== undefined ? Link : undefined}
             to={stake !== undefined ? '/Transactions' : undefined}
