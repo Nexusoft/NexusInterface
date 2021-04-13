@@ -40,7 +40,7 @@ const OptionButton = styled.button(
     selected && {
       '&, &:hover': {
         background: color.darken(theme.primary, 0.2),
-        color: theme.foreground,
+        color: theme.primaryAccent,
       },
     }
 );
