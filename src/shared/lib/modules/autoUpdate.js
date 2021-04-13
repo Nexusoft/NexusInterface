@@ -16,9 +16,6 @@ import { history } from 'lib/wallet';
 
 const githubHeaders = {
   Accept: 'application/vnd.github.v3+json',
-  'If-Modified-Since': new Date(
-    new Date().getTime() - 6 * 60 * 60 * 1000
-  ).toUTCString(),
 };
 
 // const getAssetName = (name, version) => `${name}_v${version}.zip`;
@@ -31,10 +28,7 @@ async function getLatestRelease(repo) {
     });
     return response.data;
   } catch (err) {
-    if (err.response.status !== 304) {
-      // 304 = Not modified in the last 6 hours, so nothing to return. However if it is not then throw that error.
-      console.error(err);
-    }
+    console.error(err);
     return null;
   }
 }
