@@ -142,15 +142,24 @@ export async function loadRepoInfo(dirPath) {
  */
 export async function isRepoOnline({ host, owner, repo, commit }) {
   if (!host || !owner || !repo || !commit) return false;
-
   try {
     const apiUrls = {
       'github.com': `https://api.github.com/repos/${owner}/${repo}/commits/${commit}`,
     };
     const url = apiUrls[host];
-    const response = await axios.get(url);
+    const response = await axios.get(url, {
+      headers: {
+        'If-Modified-Since': new Date(
+          new Date().getTime() - 6 * 60 * 60 * 1000
+        ).toUTCString(),
+      },
+    });
     return !!response.data.sha && response.data.sha === commit;
   } catch (err) {
+    if (err.response.status === 304) {
+      // 304 = Not modified in the last 6 hours, assume true
+      return true;
+    }
     console.error(err);
     return false;
   }
