@@ -1,6 +1,6 @@
-# 3.0.4 (2020.5.xx)
+# 3.1.0 (2021.4.20)
 
-[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v3.0.4)
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v3.1.0)
 
 #### Additions
 
