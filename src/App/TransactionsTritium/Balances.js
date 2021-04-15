@@ -113,6 +113,18 @@ class Balances extends Component {
 
             <Line>
               <Label>
+                <span className="v-align">{__('Stake')}</span>
+                <QuestionCircle
+                  tooltip={__(
+                    'The amount of NXS currently staked in the trust account'
+                  )}
+                />
+              </Label>
+              <Value>{formatNumber(balances.stake, 6)} NXS</Value>
+            </Line>
+
+            <Line>
+              <Label>
                 <span className="v-align">{__('Pending')}</span>
                 <QuestionCircle
                   tooltip={__(
@@ -133,18 +145,6 @@ class Balances extends Component {
                 />
               </Label>
               <Value>{formatNumber(balances.unconfirmed, 6)} NXS</Value>
-            </Line>
-
-            <Line>
-              <Label>
-                <span className="v-align">{__('Stake')}</span>
-                <QuestionCircle
-                  tooltip={__(
-                    'The amount of NXS currently staked in the trust account'
-                  )}
-                />
-              </Label>
-              <Value>{formatNumber(balances.stake, 6)} NXS</Value>
             </Line>
 
             <Line>
