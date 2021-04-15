@@ -738,8 +738,7 @@ class Overview extends Component {
           <Tooltip.Trigger
             align="end"
             tooltip={
-              tokenBalances?.length > 0 &&
-              settings.overviewDisplay !== 'balHidden' ? (
+              tokenBalances?.length > 0 && !settings.hideOverviewBalances ? (
                 <div style={{ textAlign: 'right' }}>
                   <div>{__('Token balances')}</div>
                   {tokenBalances.map((token) => (
@@ -774,7 +773,7 @@ class Overview extends Component {
                   </span>
                 </StatLabel>
                 <StatValue>
-                  {settings.overviewDisplay === 'balHidden'
+                  {settings.hideOverviewBalances
                     ? '-'
                     : this.waitForCore(
                         available !== undefined ? (
@@ -809,7 +808,7 @@ class Overview extends Component {
                   })}
                 </StatLabel>
                 <StatValue>
-                  {settings.overviewDisplay === 'balHidden'
+                  {settings.hideOverviewBalances
                     ? '-'
                     : this.waitForCore(
                         featuredToken
@@ -833,7 +832,7 @@ class Overview extends Component {
                   {__('NXS Balance')} ({fiatCurrency})
                 </StatLabel>
                 <StatValue>
-                  {settings.overviewDisplay === 'balHidden' ? (
+                  {settings.hideOverviewBalances ? (
                     '-'
                   ) : market?.price ? (
                     this.waitForCore(
@@ -870,7 +869,7 @@ class Overview extends Component {
                 <span className="v-align">{__('Incoming balances')} (NXS)</span>
               </StatLabel>
               <StatValue>
-                {settings.overviewDisplay === 'balHidden'
+                {settings.hideOverviewBalances
                   ? '-'
                   : this.waitForCore(
                       stake !== undefined

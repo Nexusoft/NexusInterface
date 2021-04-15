@@ -37,7 +37,7 @@ const overviewDisplays = [
   { value: 'standard', display: 'Standard' },
   { value: 'miner', display: 'Miner' },
   // { value: 'minimalist', display: 'Minimalist' },
-  { value: 'balHidden', display: 'Hidden Balance' },
+  // { value: 'balHidden', display: 'Hidden Balance' },
   { value: 'none', display: 'None' },
 ];
 
@@ -52,12 +52,19 @@ const getTritiumDefaultAddress = memoize((accounts) => {
 
 const mapStateToProps = ({
   user: { accounts },
-  settings: { renderGlobe, locale, addressStyle, overviewDisplay },
+  settings: {
+    renderGlobe,
+    locale,
+    addressStyle,
+    overviewDisplay,
+    hideOverviewBalances,
+  },
   myAccounts,
   theme,
 }) => {
   return {
     renderGlobe,
+    hideOverviewBalances,
     theme,
     locale,
     addressStyle,
@@ -138,6 +145,10 @@ class SettingsStyle extends Component {
    */
   toggleGlobeRender = (e) => {
     setRenderGlobe(e.target.checked);
+  };
+
+  toggleHideOverviewBalances = (e) => {
+    updateSettings({ hideOverviewBalances: e.target.checked });
   };
 
   /**
@@ -350,6 +361,7 @@ class SettingsStyle extends Component {
     const {
       theme,
       renderGlobe,
+      hideOverviewBalances,
       defaultAddress,
       addressStyle,
       overviewDisplay,
@@ -384,6 +396,21 @@ class SettingsStyle extends Component {
             onChange={setOverviewDisplay}
             options={overviewDisplays}
             style={{ maxWidth: 260 }}
+          />
+        </SettingsField>
+
+        <SettingsField
+          connectLabel
+          label={__('Hide Overview balances')}
+          subLabel={
+            <div>
+              {__('Hide the balances on the Overview page for privacy.')}
+            </div>
+          }
+        >
+          <Switch
+            checked={hideOverviewBalances}
+            onChange={this.toggleHideOverviewBalances}
           />
         </SettingsField>
 

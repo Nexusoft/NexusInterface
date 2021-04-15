@@ -33,6 +33,7 @@ export const defaultSettings = {
   verifyModuleSource: true,
   fakeTransactions: false,
   overviewDisplay: 'standard',
+  hideOverviewBalances: false,
   displayFiatBalance: false,
 
   // Core
