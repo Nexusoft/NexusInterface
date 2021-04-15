@@ -110,6 +110,7 @@ function writeSettings(settings) {
 export function loadSettingsFromFile() {
   let userSettings = readSettings();
   let changed = false;
+
   // Enable lite mode for new users
   if (!userSettings) {
     userSettings = {
@@ -118,6 +119,15 @@ export function loadSettingsFromFile() {
     };
     changed = true;
   }
+
+  // Convert balHidden value of overviewDisplay to hideOverviewBalances
+  // TODO: remove this after a few versions
+  if (userSettings.overviewDisplay === 'balHidden') {
+    userSettings.hideOverviewBalances = true;
+    userSettings.overviewDisplay = defaultSettings.overviewDisplay;
+    changed = true;
+  }
+
   // Deprecating manualDaemonApiIP, copy to manualDaemonIP if manualDaemonApiIP is configured
   const { manualDaemonIP, manualDaemonApiIP } = userSettings;
   if (manualDaemonApiIP && !manualDaemonIP) {
