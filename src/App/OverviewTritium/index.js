@@ -768,7 +768,10 @@ class Overview extends Component {
                       <Icon icon={warningIcon} className="mr0_4" />
                     </Tooltip.Trigger>
                   )}{' '}
-                  <span className="v-align">{__('NXS Balance')}</span>
+                  <span className="v-align">
+                    {__('Balance')}
+                    {tokenBalances?.length === 0 && ' (NXS)'}
+                  </span>
                 </StatLabel>
                 <StatValue>
                   {settings.overviewDisplay === 'balHidden'
@@ -776,7 +779,10 @@ class Overview extends Component {
                     : this.waitForCore(
                         available !== undefined ? (
                           <div>
-                            <div>{formatNumber(available + stake)}</div>
+                            <div>
+                              {formatNumber(available + stake)}
+                              {tokenBalances?.length > 0 && ' NXS'}
+                            </div>
                             {tokenBalances?.length > 0 && (
                               <SubValue>+ {__('OTHER TOKENS')}</SubValue>
                             )}
