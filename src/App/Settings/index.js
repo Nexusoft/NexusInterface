@@ -58,6 +58,7 @@ const Badge = styled.div(({ theme }) => ({
   fontSize: '0.8em',
   height: '1.4em',
   width: '1.4em',
+  lineHeight: '1em',
   borderRadius: '50%',
   display: 'inline-flex',
   justifyContent: 'center',
@@ -111,12 +112,12 @@ export default function Settings({ match }) {
             link={`${match.url}/Modules`}
             icon={legoIcon}
             text={
-              <span>
+              <>
                 <span className="v-align">{__('Modules')}</span>
                 {!!updateCount && (
                   <Badge className="ml0_4">{updateCount}</Badge>
                 )}
-              </span>
+              </>
             }
           />
         </SettingsTabBar>
