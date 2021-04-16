@@ -30,6 +30,7 @@ import ThemePicker from './ThemePicker';
 
 import DarkTheme from './Dark.json';
 import LightTheme from './Light.json';
+import PotTheme from './Pot.json';
 
 __ = __context('Settings.Style');
 
@@ -303,6 +304,11 @@ class SettingsStyle extends Component {
   pressLightTheme = () => {
     updateTheme(LightTheme);
   };
+
+  pressPotTheme = () => {
+    updateTheme(PotTheme);
+  };
+
   /**
    * Press Custom theme button
    *
@@ -441,6 +447,7 @@ class SettingsStyle extends Component {
             parentTheme={theme}
             darkCallback={this.pressDarkTheme}
             lightCallback={this.pressLightTheme}
+            potCallback={this.pressPotTheme}
             customCallback={this.pressCustomTheme}
             resetCallback={this.pressResetTheme}
             saveCustomCallback={this.savePreviousCustomTheme}

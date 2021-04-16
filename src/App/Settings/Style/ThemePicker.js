@@ -71,7 +71,7 @@ class ThemePicker extends Component {
    */
   setToCustomTheme() {
     console.log('Set To Custom');
-    this.setState({ themeOn: 2 }, () => {
+    this.setState({ themeOn: 3 }, () => {
       console.log(this);
     });
   }
@@ -98,7 +98,7 @@ class ThemePicker extends Component {
         <OptionButton
           selected={this.state.themeOn == 0 ? true : false}
           onClick={() => {
-            if (this.state.themeOn == 2) {
+            if (this.state.themeOn == 3) {
               this.props.saveCustomCallback();
             }
             this.setState({ themeOn: 0 });
@@ -110,7 +110,7 @@ class ThemePicker extends Component {
         <OptionButton
           selected={this.state.themeOn == 1 ? true : false}
           onClick={() => {
-            if (this.state.themeOn == 2) {
+            if (this.state.themeOn == 3) {
               this.props.saveCustomCallback();
             }
             this.setState({ themeOn: 1 });
@@ -122,19 +122,31 @@ class ThemePicker extends Component {
         <OptionButton
           selected={this.state.themeOn == 2 ? true : false}
           onClick={() => {
+            if (this.state.themeOn == 3) {
+              this.props.saveCustomCallback();
+            }
             this.setState({ themeOn: 2 });
+            this.props.potCallback();
+          }}
+        >
+          POT
+        </OptionButton>
+        <OptionButton
+          selected={this.state.themeOn == 3 ? true : false}
+          onClick={() => {
+            this.setState({ themeOn: 3 });
             this.props.customCallback();
           }}
         >
           {__('Custom')}
         </OptionButton>
         <OptionButton
-          selected={this.state.themeOn == 3 ? true : false}
+          selected={this.state.themeOn == 4 ? true : false}
           onClick={() => {
-            if (this.state.themeOn == 2) {
+            if (this.state.themeOn == 3) {
               this.props.saveCustomCallback();
             }
-            this.setState({ themeOn: 3 });
+            this.setState({ themeOn: 4 });
             this.props.resetCallback();
           }}
         >
