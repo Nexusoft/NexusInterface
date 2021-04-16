@@ -45,3 +45,11 @@ export const selectTokenBalances = legacyMode
       },
       ({ user: { accounts }, tokenDecimals }) => [accounts, tokenDecimals]
     );
+
+export const selectModuleUpdateCount = memoize(
+  (modules) =>
+    modules
+      ? Object.values(modules).filter((module) => module.hasNewVersion).length
+      : 0,
+  (state) => [state.modules]
+);
