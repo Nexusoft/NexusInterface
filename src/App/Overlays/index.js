@@ -1,28 +1,33 @@
-import { connect } from 'react-redux';
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
+
+import { openModal } from 'lib/ui';
 
 import ClosingScreen from './ClosingScreen';
 import SelectLanguage from './SelectLanguage';
 import LicenseAgreement from './LicenseAgreement';
 import LiteModeNotice from './LiteModeNotice';
+import PotThemeModal from './PotThemeModal';
 import Wallet from './Wallet';
 
-const mapStateToProps = ({
-  settings: { liteModeNoticeDisabled, acceptedAgreement, locale },
-  ui: { closing },
-}) => ({
-  locale,
-  liteModeNoticeDisabled,
-  acceptedAgreement,
-  closing,
-});
+const Overlays = ({ children }) => {
+  const locale = useSelector((state) => state.settings.locale);
+  const liteModeNoticeDisabled = useSelector(
+    (state) => state.settings.liteModeNoticeDisabled
+  );
+  const acceptedAgreement = useSelector(
+    (state) => state.settings.acceptedAgreement
+  );
+  const closing = useSelector((state) => state.ui.closing);
 
-const Overlays = ({
-  locale,
-  liteModeNoticeDisabled,
-  acceptedAgreement,
-  closing,
-  children,
-}) => {
+  const showingNoOverlay =
+    !closing && !!locale && !!acceptedAgreement && !!liteModeNoticeDisabled;
+  useEffect(() => {
+    if (showingNoOverlay) {
+      openModal(PotThemeModal);
+    }
+  }, [showingNoOverlay]);
+
   if (closing) {
     return <ClosingScreen />;
   }
@@ -42,4 +47,4 @@ const Overlays = ({
   return <Wallet>{children}</Wallet>;
 };
 
-export default connect(mapStateToProps)(Overlays);
+export default Overlays;
