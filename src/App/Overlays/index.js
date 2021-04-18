@@ -19,14 +19,22 @@ const Overlays = ({ children }) => {
     (state) => state.settings.acceptedAgreement
   );
   const closing = useSelector((state) => state.ui.closing);
+  const potThemeModalShown = useSelector(
+    (state) => state.settings.potThemeModalShown
+  );
 
   const showingNoOverlay =
     !closing && !!locale && !!acceptedAgreement && !!liteModeNoticeDisabled;
-  useEffect(() => {
-    if (showingNoOverlay) {
-      openModal(PotThemeModal);
-    }
-  }, [showingNoOverlay]);
+  useEffect(
+    potThemeModalShown
+      ? () => {}
+      : () => {
+          if (showingNoOverlay) {
+            openModal(PotThemeModal);
+          }
+        },
+    [showingNoOverlay]
+  );
 
   if (closing) {
     return <ClosingScreen />;

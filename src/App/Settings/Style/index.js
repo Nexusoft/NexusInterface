@@ -9,7 +9,7 @@ import https from 'https';
 // Internal
 import GA from 'lib/googleAnalytics';
 import { updateSettings } from 'lib/settings';
-import { updateTheme, resetColors } from 'lib/theme';
+import { updateTheme, resetColors, potTheme } from 'lib/theme';
 import { switchSettingsTab } from 'lib/ui';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
@@ -30,7 +30,6 @@ import ThemePicker from './ThemePicker';
 
 import DarkTheme from './Dark.json';
 import LightTheme from './Light.json';
-import PotTheme from './Pot.json';
 
 __ = __context('Settings.Style');
 
@@ -306,7 +305,7 @@ class SettingsStyle extends Component {
   };
 
   pressPotTheme = () => {
-    updateTheme(PotTheme);
+    updateTheme(potTheme);
   };
 
   /**

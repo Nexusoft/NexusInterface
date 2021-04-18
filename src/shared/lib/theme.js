@@ -23,6 +23,21 @@ const defaultTheme = {
   featuredTokenName: null,
 };
 
+export const potTheme = {
+  defaultStyle: 'DarkCustom',
+  wallpaper: null,
+  background: '#10341d',
+  foreground: '#cfcfaf',
+  primary: '#02ff55',
+  primaryAccent: '#000000',
+  danger: '#d75239',
+  dangerAccent: '#ffffff',
+  globeColor: '#0c863a',
+  globePillarColor: '#00ffff',
+  globeArchColor: '#00ffff',
+  featuredTokenName: 'POT',
+};
+
 function filterValidTheme(theme) {
   const validTheme = {};
   Object.keys(theme || {}).map((key) => {
