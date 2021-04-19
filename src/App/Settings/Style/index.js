@@ -9,7 +9,14 @@ import https from 'https';
 // Internal
 import GA from 'lib/googleAnalytics';
 import { updateSettings } from 'lib/settings';
-import { updateTheme, resetColors } from 'lib/theme';
+import {
+  updateTheme,
+  setTheme,
+  resetColors,
+  darkTheme,
+  lightTheme,
+  potTheme,
+} from 'lib/theme';
 import { switchSettingsTab } from 'lib/ui';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
@@ -28,16 +35,13 @@ import ColorPicker from './ColorPicker';
 import BackgroundPicker from './BackgroundPicker';
 import ThemePicker from './ThemePicker';
 
-import DarkTheme from './Dark.json';
-import LightTheme from './Light.json';
-
 __ = __context('Settings.Style');
 
 const overviewDisplays = [
   { value: 'standard', display: 'Standard' },
   { value: 'miner', display: 'Miner' },
   // { value: 'minimalist', display: 'Minimalist' },
-  { value: 'balHidden', display: 'Hidden Balance' },
+  // { value: 'balHidden', display: 'Hidden Balance' },
   { value: 'none', display: 'None' },
 ];
 
@@ -52,12 +56,19 @@ const getTritiumDefaultAddress = memoize((accounts) => {
 
 const mapStateToProps = ({
   user: { accounts },
-  settings: { renderGlobe, locale, addressStyle, overviewDisplay },
+  settings: {
+    renderGlobe,
+    locale,
+    addressStyle,
+    overviewDisplay,
+    hideOverviewBalances,
+  },
   myAccounts,
   theme,
 }) => {
   return {
     renderGlobe,
+    hideOverviewBalances,
     theme,
     locale,
     addressStyle,
@@ -108,8 +119,6 @@ class SettingsStyle extends Component {
 
   state = {
     previousCustom: {},
-    DarkTheme: DarkTheme,
-    LightTheme: LightTheme,
   };
 
   /**
@@ -138,6 +147,10 @@ class SettingsStyle extends Component {
    */
   toggleGlobeRender = (e) => {
     setRenderGlobe(e.target.checked);
+  };
+
+  toggleHideOverviewBalances = (e) => {
+    updateSettings({ hideOverviewBalances: e.target.checked });
   };
 
   /**
@@ -236,7 +249,7 @@ class SettingsStyle extends Component {
       );
     }
     customTheme.defaultStyle = 'Custom';
-    updateTheme(customTheme);
+    setTheme(customTheme);
   };
 
   /**
@@ -282,7 +295,7 @@ class SettingsStyle extends Component {
    * @memberof SettingsStyle
    */
   pressDarkTheme = () => {
-    updateTheme(DarkTheme);
+    setTheme(darkTheme);
   };
   /**
    * Press Light Theme Button
@@ -290,8 +303,13 @@ class SettingsStyle extends Component {
    * @memberof SettingsStyle
    */
   pressLightTheme = () => {
-    updateTheme(LightTheme);
+    setTheme(lightTheme);
   };
+
+  pressPotTheme = () => {
+    setTheme(potTheme);
+  };
+
   /**
    * Press Custom theme button
    *
@@ -299,7 +317,7 @@ class SettingsStyle extends Component {
    */
   pressCustomTheme = () => {
     if (this.state.previousCustom != {}) {
-      updateTheme(this.state.previousCustom);
+      setTheme(this.state.previousCustom);
     }
   };
   /**
@@ -308,7 +326,7 @@ class SettingsStyle extends Component {
    * @memberof SettingsStyle
    */
   pressResetTheme = () => {
-    updateTheme(DarkTheme);
+    setTheme(darkTheme);
     this.setThemeSelector(0);
     showNotification(__('Theme has been reset to default'), 'success');
   };
@@ -350,6 +368,7 @@ class SettingsStyle extends Component {
     const {
       theme,
       renderGlobe,
+      hideOverviewBalances,
       defaultAddress,
       addressStyle,
       overviewDisplay,
@@ -388,6 +407,21 @@ class SettingsStyle extends Component {
         </SettingsField>
 
         <SettingsField
+          connectLabel
+          label={__('Hide Overview balances')}
+          subLabel={
+            <div>
+              {__('Hide the balances on the Overview page for privacy.')}
+            </div>
+          }
+        >
+          <Switch
+            checked={hideOverviewBalances}
+            onChange={this.toggleHideOverviewBalances}
+          />
+        </SettingsField>
+
+        <SettingsField
           label={__('Nexus Addresses format')}
           subLabel={__('Choose your Nexus Address display preference')}
         >
@@ -414,6 +448,7 @@ class SettingsStyle extends Component {
             parentTheme={theme}
             darkCallback={this.pressDarkTheme}
             lightCallback={this.pressLightTheme}
+            potCallback={this.pressPotTheme}
             customCallback={this.pressCustomTheme}
             resetCallback={this.pressResetTheme}
             saveCustomCallback={this.savePreviousCustomTheme}

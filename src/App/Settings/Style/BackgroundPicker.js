@@ -24,6 +24,7 @@ const Option = styled.label(
     selected && {
       '&, &:hover': {
         background: color.darken(theme.primary, 0.2),
+        color: theme.primaryAccent,
       },
     }
 );

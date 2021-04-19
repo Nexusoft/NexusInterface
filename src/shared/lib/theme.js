@@ -8,7 +8,7 @@ import { readJson, writeJson } from 'utils/json';
 const themeFileName = 'theme.json';
 const themeFilePath = path.join(walletDataDir, themeFileName);
 
-const defaultTheme = {
+export const darkTheme = {
   defaultStyle: 'Dark',
   wallpaper: null,
   background: '#1c1d1f',
@@ -20,37 +20,52 @@ const defaultTheme = {
   globeColor: '#0097e4',
   globePillarColor: '#00ffff',
   globeArchColor: '#00ffff',
-  featuredTokenName: null,
 };
 
-function filterValidTheme(theme) {
-  const validTheme = {};
-  Object.keys(theme || {}).map((key) => {
-    if (defaultTheme.hasOwnProperty(key)) {
-      validTheme[key] = theme[key];
-    } else {
-      console.error(`Invalid theme propery \`${key}\``);
-    }
-  });
-  return validTheme;
-}
+export const lightTheme = {
+  defaultStyle: 'Light',
+  background: '#91a0b8',
+  danger: '#8F240E',
+  dangerAccent: '#ffffff',
+  foreground: '#fdfafa',
+  globeArchColor: '#00ffff',
+  globeColor: '#8fbcfe',
+  globePillarColor: '#00ffff',
+  primary: '#FFFFFF',
+  primaryAccent: '#91a0b8',
+};
+
+export const potTheme = {
+  defaultStyle: 'DarkCustom',
+  wallpaper: null,
+  background: '#10341d',
+  foreground: '#cfcfaf',
+  primary: '#02ff55',
+  primaryAccent: '#000000',
+  danger: '#d75239',
+  dangerAccent: '#ffffff',
+  globeColor: '#0c863a',
+  globePillarColor: '#00ffff',
+  globeArchColor: '#00ffff',
+  featuredTokenName: 'POT',
+};
 
 function readTheme() {
   if (fs.existsSync(themeFilePath)) {
     const json = readJson(themeFilePath) || {};
-    return filterValidTheme(json);
+    return json;
   } else {
-    return defaultTheme;
+    return darkTheme;
   }
 }
 
 function writeTheme(theme) {
-  return writeJson(themeFilePath, filterValidTheme(theme));
+  return writeJson(themeFilePath, theme);
 }
 
 function loadThemeFromFile() {
   const customTheme = readTheme();
-  return { ...defaultTheme, ...customTheme };
+  return { ...darkTheme, ...customTheme };
 }
 
 function updateThemeFile(updates) {
@@ -63,6 +78,11 @@ export const loadTheme = loadThemeFromFile;
 export const updateTheme = (updates) => {
   store.dispatch({ type: TYPE.UPDATE_THEME, payload: updates });
   updateThemeFile(updates);
+};
+
+export const setTheme = (theme) => {
+  store.dispatch({ type: TYPE.SET_THEME, payload: theme });
+  writeTheme(theme);
 };
 
 export const resetColors = () => {

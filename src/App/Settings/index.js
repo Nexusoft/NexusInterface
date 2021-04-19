@@ -1,6 +1,6 @@
 // External
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useEffect } from 'react';
+import { connect, useSelector } from 'react-redux';
 import { Route, Redirect, Switch } from 'react-router';
 import styled from '@emotion/styled';
 import GA from 'lib/googleAnalytics';
@@ -9,6 +9,7 @@ import GA from 'lib/googleAnalytics';
 import Panel from 'components/Panel';
 import Tab from 'components/Tab';
 import { legacyMode } from 'consts/misc';
+import { selectModuleUpdateCount } from 'selectors';
 
 // Internal Local
 import SettingsApp from './App';
@@ -51,6 +52,20 @@ const SettingsContainer = styled.div({
   margin: '0 auto',
 });
 
+const Badge = styled.div(({ theme }) => ({
+  background: theme.primary,
+  color: theme.primaryAccent,
+  fontSize: '0.8em',
+  height: '1.4em',
+  width: '1.4em',
+  lineHeight: '1em',
+  borderRadius: '50%',
+  display: 'inline-flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  verticalAlign: 'middle',
+}));
+
 let SettingsRedirect = ({ lastActiveTab, match }) => (
   <Redirect
     exact
@@ -58,8 +73,8 @@ let SettingsRedirect = ({ lastActiveTab, match }) => (
     to={`${match.path}/${lastActiveTab}`}
   />
 );
-SettingsRedirect = connect(({ ui: { settings: { lastActiveTab } } }) => ({
-  lastActiveTab,
+SettingsRedirect = connect((state) => ({
+  lastActiveTab: state.ui.settings.lastActiveTab,
 }))(SettingsRedirect);
 
 /**
@@ -69,76 +84,65 @@ SettingsRedirect = connect(({ ui: { settings: { lastActiveTab } } }) => ({
  * @class Settings
  * @extends {Component}
  */
-export default class Settings extends Component {
-  /**
-   * Component Mount Callback
-   *
-   * @memberof Settings
-   */
-  componentDidMount() {
+export default function Settings({ match }) {
+  useEffect(() => {
     GA.SendScreen('Settings');
-  }
+  }, []);
+  const updateCount = useSelector(selectModuleUpdateCount);
 
-  /**
-   * Component's Renderable JSX
-   *
-   * @returns
-   * @memberof Settings
-   */
-  render() {
-    const { match } = this.props;
-
-    return (
-      <Panel bodyScrollable={false} icon={settingsIcon} title={__('Settings')}>
-        <SettingsComponent>
-          <SettingsTabBar>
+  return (
+    <Panel bodyScrollable={false} icon={settingsIcon} title={__('Settings')}>
+      <SettingsComponent>
+        <SettingsTabBar>
+          <Tab
+            link={`${match.url}/App`}
+            icon={logoIcon}
+            text={__('Application')}
+          />
+          <Tab link={`${match.url}/Core`} icon={coreIcon} text={__('Core')} />
+          {legacyMode && (
             <Tab
-              link={`${match.url}/App`}
-              icon={logoIcon}
-              text={__('Application')}
+              link={`${match.url}/Security`}
+              icon={lockIcon}
+              text={__('Security')}
             />
-            <Tab link={`${match.url}/Core`} icon={coreIcon} text={__('Core')} />
-            {legacyMode && (
-              <Tab
-                link={`${match.url}/Security`}
-                icon={lockIcon}
-                text={__('Security')}
-              />
-            )}
-            <Tab
-              link={`${match.url}/Style`}
-              icon={leafIcon}
-              text={__('Style')}
-            />
-            <Tab
-              link={`${match.url}/Modules`}
-              icon={legoIcon}
-              text={__('Modules')}
-            />
-          </SettingsTabBar>
-
-          <SettingsContent>
-            <SettingsContainer>
-              <Switch>
-                <Route path={`${match.path}/App`} component={SettingsApp} />
-                <Route path={`${match.path}/Core`} component={SettingsCore} />
-                {legacyMode && (
-                  <Route
-                    path={`${match.path}/Security`}
-                    component={SettingsSecurity}
-                  />
+          )}
+          <Tab link={`${match.url}/Style`} icon={leafIcon} text={__('Style')} />
+          <Tab
+            link={`${match.url}/Modules`}
+            icon={legoIcon}
+            text={
+              <>
+                <span className="v-align">{__('Modules')}</span>
+                {!!updateCount && (
+                  <Badge className="ml0_4">{updateCount}</Badge>
                 )}
-                <Route path={`${match.path}/Style`} component={SettingsStyle} />
+              </>
+            }
+          />
+        </SettingsTabBar>
+
+        <SettingsContent>
+          <SettingsContainer>
+            <Switch>
+              <Route path={`${match.path}/App`} component={SettingsApp} />
+              <Route path={`${match.path}/Core`} component={SettingsCore} />
+              {legacyMode && (
                 <Route
-                  path={`${match.path}/Modules`}
-                  component={SettingsModules}
+                  path={`${match.path}/Security`}
+                  component={SettingsSecurity}
                 />
-                <SettingsRedirect match={match} />
-              </Switch>
-            </SettingsContainer>
-          </SettingsContent>
-        </SettingsComponent>
-      </Panel>
-    );
-  }
+              )}
+              <Route path={`${match.path}/Style`} component={SettingsStyle} />
+              <Route
+                path={`${match.path}/Modules`}
+                component={SettingsModules}
+              />
+              <SettingsRedirect match={match} />
+            </Switch>
+          </SettingsContainer>
+        </SettingsContent>
+      </SettingsComponent>
+    </Panel>
+  );
 }
