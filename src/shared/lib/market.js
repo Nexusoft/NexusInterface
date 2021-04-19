@@ -21,9 +21,9 @@ export async function refreshMarketData() {
       callApi('system/get/metrics'),
     ]);
 
-    // cryptocompare's VND price is divided by 1000
+    // cryptocompare's VND price is divided by 10
     if (fiatCurrency === 'VND') {
-      data.price *= 1000;
+      data.price *= 10;
     }
 
     store.dispatch({

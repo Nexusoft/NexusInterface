@@ -880,6 +880,7 @@ class Overview extends Component {
             </div>
             <StatIcon icon={nxsStakeIcon} />
           </Stat>
+
           <Stat>
             <div>
               <StatLabel>
@@ -901,6 +902,7 @@ class Overview extends Component {
             </div>
             <StatIcon icon={chartIcon} />
           </Stat>
+
           <Stat>
             <div>
               <StatLabel>
@@ -922,6 +924,7 @@ class Overview extends Component {
             </div>
             <StatIcon icon={supplyIcon} />
           </Stat>
+
           <Stat>
             <div>
               <StatLabel>
