@@ -9,7 +9,14 @@ import https from 'https';
 // Internal
 import GA from 'lib/googleAnalytics';
 import { updateSettings } from 'lib/settings';
-import { updateTheme, resetColors, potTheme } from 'lib/theme';
+import {
+  updateTheme,
+  setTheme,
+  resetColors,
+  darkTheme,
+  lightTheme,
+  potTheme,
+} from 'lib/theme';
 import { switchSettingsTab } from 'lib/ui';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
@@ -27,9 +34,6 @@ import { loadAccounts } from 'lib/user';
 import ColorPicker from './ColorPicker';
 import BackgroundPicker from './BackgroundPicker';
 import ThemePicker from './ThemePicker';
-
-import DarkTheme from './Dark.json';
-import LightTheme from './Light.json';
 
 __ = __context('Settings.Style');
 
@@ -115,8 +119,6 @@ class SettingsStyle extends Component {
 
   state = {
     previousCustom: {},
-    DarkTheme: DarkTheme,
-    LightTheme: LightTheme,
   };
 
   /**
@@ -247,7 +249,7 @@ class SettingsStyle extends Component {
       );
     }
     customTheme.defaultStyle = 'Custom';
-    updateTheme(customTheme);
+    setTheme(customTheme);
   };
 
   /**
@@ -293,7 +295,7 @@ class SettingsStyle extends Component {
    * @memberof SettingsStyle
    */
   pressDarkTheme = () => {
-    updateTheme(DarkTheme);
+    setTheme(darkTheme);
   };
   /**
    * Press Light Theme Button
@@ -301,11 +303,11 @@ class SettingsStyle extends Component {
    * @memberof SettingsStyle
    */
   pressLightTheme = () => {
-    updateTheme(LightTheme);
+    setTheme(lightTheme);
   };
 
   pressPotTheme = () => {
-    updateTheme(potTheme);
+    setTheme(potTheme);
   };
 
   /**
@@ -315,7 +317,7 @@ class SettingsStyle extends Component {
    */
   pressCustomTheme = () => {
     if (this.state.previousCustom != {}) {
-      updateTheme(this.state.previousCustom);
+      setTheme(this.state.previousCustom);
     }
   };
   /**
@@ -324,7 +326,7 @@ class SettingsStyle extends Component {
    * @memberof SettingsStyle
    */
   pressResetTheme = () => {
-    updateTheme(DarkTheme);
+    setTheme(darkTheme);
     this.setThemeSelector(0);
     showNotification(__('Theme has been reset to default'), 'success');
   };

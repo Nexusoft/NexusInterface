@@ -3,7 +3,7 @@ import { useState } from 'react';
 import Button from 'components/Button';
 import Modal from 'components/Modal';
 import { updateSettings } from 'lib/settings';
-import { potTheme, updateTheme } from 'lib/theme';
+import { potTheme, setTheme } from 'lib/theme';
 import store from 'store';
 
 import potImg from './potcoin.png';
@@ -14,10 +14,10 @@ export default function PotThemeModal() {
   const [previousTheme, setPreviousTheme] = useState(null);
   const tryPotTheme = () => {
     setPreviousTheme(store.getState().theme);
-    updateTheme(potTheme);
+    setTheme(potTheme);
   };
   const revertTheme = () => {
-    updateTheme(previousTheme);
+    setTheme(previousTheme);
     setPreviousTheme(null);
   };
 
