@@ -36,7 +36,7 @@ export const lightTheme = {
 };
 
 export const potTheme = {
-  defaultStyle: 'DarkCustom',
+  defaultStyle: 'Dark',
   wallpaper: null,
   background: '#0a4224',
   foreground: '#94b9a7',
