@@ -4,16 +4,42 @@
 
 #### Additions
 
-- 
+- **Lite Mode now available**
+- **Multi-user mode now available**
+- Allow configuring embedded core's port
+- Added HTTPS support for core connection
+- Allow sending to multiple recipients
+- Allow setting transaction exipiry
+- Added Preview Transaction screen before sending transactions
+- Token balances (if any) are now displayed on Overview and Transactions
+- Added support for 5 new currencies: MMK, IDR, PHP, THB, and VND
+- Added QR code for addresses
+- Allow renaming accounts
+- Added confirmation before setting a new recovery phrase
+- Added POT theme option
 
 #### Adjustments
 
-- 
+- Start/Stop staking button on Staking page is now smarter
+- Contact names are now looked up and displayed where applicable
+- Hide Overview balances setting is now separated from Overview Display setting
+- Improved token selection when creating a new account
+- Updated some icons
+- Various other improvements
 
 #### Fixes
 
 - Fixed issue where modules saved as ZIP archives would be installed
-- Legacy Debits in tritium  mode in the account history section now display properly in negative
+- Fixed issue with some modules failing to open
+- Legacy Debits in tritium mode in the account history section now display properly in negative
+- Correctly display unnamed token
+- Various other fixes
+
+### Module system
+
+- Added `NEXUS.utilities.showInfoDialog`
+- `NEXUS.utilities.sendNXS` renamed to `NEXUS.utilities.send`
+- Minor changes on common component interface
 
 # 3.0.3 (2020.4.21)
 
@@ -25,7 +51,7 @@
 
 #### Adjustments
 
-- If you are not in sync when you login with invalid credentials 
+- If you are not in sync when you login with invalid credentials
 
 #### Fixes
 
