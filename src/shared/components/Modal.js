@@ -144,7 +144,7 @@ export default class Modal extends PureComponent {
    */
   constructor(props) {
     super(props);
-    props.assignClose && props.assignClose(this.animatedClose);
+    props.assignClose && props.assignClose(this.closeWithAnimation);
   }
 
   componentDidMount() {
@@ -160,7 +160,7 @@ export default class Modal extends PureComponent {
    *
    * @memberof Modal
    */
-  animatedClose = () => {
+  closeWithAnimation = () => {
     const modalID = this.context;
     if (modalID) {
       const duration = parseInt(timing.quick);
@@ -212,7 +212,7 @@ export default class Modal extends PureComponent {
 
   handleKeyDown = (e) => {
     if (this.props.escToClose && e.key === 'Escape') {
-      this.animatedClose();
+      this.closeWithAnimation();
     }
   };
 
@@ -224,9 +224,8 @@ export default class Modal extends PureComponent {
    */
   render() {
     const {
-      open,
       dimBackground,
-      onBackgroundClick = this.animatedClose,
+      onBackgroundClick = this.closeWithAnimation,
       onClose,
       fullScreen,
       children,
@@ -254,7 +253,7 @@ export default class Modal extends PureComponent {
           {...rest}
         >
           {typeof children === 'function'
-            ? children(this.animatedClose)
+            ? children(this.closeWithAnimation)
             : children}
         </ModalComponent>
       </Overlay>

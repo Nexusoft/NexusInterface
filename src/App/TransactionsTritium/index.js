@@ -38,21 +38,6 @@ const PageLayout = styled.div({
   gridTemplateColumns: '1fr 2.7fr',
 });
 
-const BalancesColumn = styled.div(({ theme }) => ({
-  gridArea: 'balances',
-  padding: '0 30px',
-  margin: '20px 0',
-  borderRight: `1px solid ${theme.mixer(0.125)}`,
-  overflowY: 'auto',
-}));
-
-const BalancesTitle = styled.div(({ theme }) => ({
-  color: theme.primary,
-  textTransform: 'uppercase',
-  textAlign: 'center',
-  fontWeight: 'bold',
-}));
-
 const TransactionsList = styled.div({
   gridArea: 'list',
   overflowY: 'auto',
@@ -197,10 +182,7 @@ class TransactionsTritium extends Component {
             <WaitingMessage>{__('Loading transactions...')}</WaitingMessage>
           ) : (
             <PageLayout>
-              <BalancesColumn>
-                <BalancesTitle>{__('NXS balances')}</BalancesTitle>
-                <Balances />
-              </BalancesColumn>
+              <Balances />
               <Filters morePadding={this.state.hasScroll} />
               <TransactionsList ref={this.listRef}>
                 <Container>

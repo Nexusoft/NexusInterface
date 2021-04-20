@@ -70,6 +70,7 @@ const ExtraSection = styled.div({
     );
   },
   onSubmitFail: (errors, dispatch, submitError, props) => {
+    console.error(submitError);
     const error =
       props.syncing && submitError && submitError.code === -139
         ? {

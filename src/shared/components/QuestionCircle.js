@@ -9,8 +9,8 @@ const QuestionMarkComponent = styled(Icon)({
   marginLeft: 6,
 });
 
-const QuestionMark = ({ tooltip }) => (
-  <Tooltip.Trigger tooltip={tooltip}>
+const QuestionMark = ({ tooltip, align, position }) => (
+  <Tooltip.Trigger tooltip={tooltip} align={align} position={position}>
     <QuestionMarkComponent icon={questionIcon} />
   </Tooltip.Trigger>
 );

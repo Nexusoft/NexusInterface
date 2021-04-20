@@ -1,7 +1,7 @@
 // External
 import { Fragment, Component } from 'react';
 import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/react';
 import GA from 'lib/googleAnalytics';
@@ -9,11 +9,16 @@ import GA from 'lib/googleAnalytics';
 // Internal
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
-import { refreshBalances } from 'lib/user';
+import TokenName from 'components/TokenName';
+import { refreshBalances, loadAccounts } from 'lib/user';
 import { getMiningInfo } from 'lib/core';
 import { formatNumber, formatCurrency, formatRelativeTime } from 'lib/intl';
 import { timing, consts } from 'styles';
-import { isCoreConnected, isSynchronized } from 'selectors';
+import {
+  isCoreConnected,
+  isSynchronized,
+  selectTokenBalances,
+} from 'selectors';
 import { observeStore } from 'store';
 import Globe from './Globe';
 import { webGLAvailable } from 'consts/misc';
@@ -102,6 +107,7 @@ const mapStateToProps = (state) => {
   return {
     coreConnected: isCoreConnected(state),
     synchronized: isSynchronized(state),
+    tokenBalances: selectTokenBalances(state),
     miningInfo,
     blockDate,
     market,
@@ -246,6 +252,11 @@ const StatValue = styled.div({
   fontSize: '1.8em',
 });
 
+const SubValue = styled.div(({ theme }) => ({
+  fontSize: '0.4em',
+  // color: theme.primary,
+}));
+
 const StatIcon = styled(Icon)(({ theme }) => ({
   width: 38,
   height: 38,
@@ -289,6 +300,9 @@ class Overview extends Component {
     if (this.props.settings.overviewDisplay === 'miner') {
       this.fetchDifficulty();
     }
+
+    // Load accounts to display token balances if any
+    loadAccounts();
   }
   /**
    * Set by {NetworkGlobe}, ReDraws all Pillars and Archs
@@ -579,6 +593,7 @@ class Overview extends Component {
     const {
       systemInfo,
       stakeInfo,
+      tokenBalances,
       balances,
       blockDate,
       market,
@@ -591,6 +606,9 @@ class Overview extends Component {
     const { connections, txtotal, blocks } = systemInfo || {};
     const { stakerate } = stakeInfo || {};
     const { fiatCurrency } = settings;
+    const featuredToken = theme.featuredTokenName
+      ? tokenBalances?.find((token) => token.name === theme.featuredTokenName)
+      : undefined;
 
     if (settings.overviewDisplay === 'none') {
       return <OverviewPage />;
@@ -717,63 +735,123 @@ class Overview extends Component {
         )}
 
         <Stats left compact={!this.showingGlobe()}>
-          <Stat
-            as={stake !== undefined ? Link : undefined}
-            to={stake !== undefined ? '/Transactions' : undefined}
+          <Tooltip.Trigger
+            align="end"
+            tooltip={
+              tokenBalances?.length > 0 && !settings.hideOverviewBalances ? (
+                <div style={{ textAlign: 'right' }}>
+                  <div>{__('Token balances')}</div>
+                  {tokenBalances.map((token) => (
+                    <div key={token.address}>
+                      {formatNumber(token.balance, token.decimals)}{' '}
+                      <TokenName token={token} />
+                    </div>
+                  ))}
+                </div>
+              ) : null
+            }
           >
-            <div>
-              <StatLabel>
-                {!synchronized && available !== undefined && (
-                  <Tooltip.Trigger
-                    align="start"
-                    tooltip={__(
-                      'The balance displayed might not be up-to-date since the wallet is not yet fully synchronized'
-                    )}
-                  >
-                    <Icon icon={warningIcon} className="mr0_4" />
-                  </Tooltip.Trigger>
-                )}{' '}
-                <span className="v-align">{__('Balance')} (NXS)</span>
-              </StatLabel>
-              <StatValue>
-                {settings.overviewDisplay === 'balHidden'
-                  ? '-'
-                  : this.waitForCore(
-                      available !== undefined
-                        ? formatNumber(available + stake)
-                        : 'N/A'
-                    )}
-              </StatValue>
-            </div>
-            <StatIcon icon={logoIcon} />
-          </Stat>
-          <Stat
-            as={stake !== undefined ? Link : undefined}
-            to={stake !== undefined ? '/Transactions' : undefined}
-          >
-            <div>
-              <StatLabel>
-                {__('balance')} ({fiatCurrency})
-              </StatLabel>
-              <StatValue>
-                {settings.overviewDisplay === 'balHidden' ? (
-                  '-'
-                ) : market?.price ? (
-                  this.waitForCore(
-                    available !== undefined
-                      ? formatCurrency(
-                          (available + stake) * market.price,
-                          fiatCurrency
+            <Stat
+              as={stake !== undefined ? Link : undefined}
+              to={stake !== undefined ? '/Transactions' : undefined}
+            >
+              <div>
+                <StatLabel>
+                  {!synchronized && available !== undefined && (
+                    <Tooltip.Trigger
+                      align="start"
+                      tooltip={__(
+                        'The balance displayed might not be up-to-date since the wallet is not yet fully synchronized'
+                      )}
+                    >
+                      <Icon icon={warningIcon} className="mr0_4" />
+                    </Tooltip.Trigger>
+                  )}{' '}
+                  <span className="v-align">
+                    {__('Balance')}
+                    {tokenBalances?.length === 0 && ' (NXS)'}
+                  </span>
+                </StatLabel>
+                <StatValue>
+                  {settings.hideOverviewBalances
+                    ? '-'
+                    : this.waitForCore(
+                        available !== undefined ? (
+                          <div>
+                            <div>
+                              {formatNumber(available + stake)}
+                              {tokenBalances?.length > 0 && ' NXS'}
+                            </div>
+                            {tokenBalances?.length > 0 && (
+                              <SubValue>+ {__('OTHER TOKENS')}</SubValue>
+                            )}
+                          </div>
+                        ) : (
+                          'N/A'
                         )
-                      : 'N/A'
-                  )
-                ) : (
-                  <span className="dim">-</span>
-                )}
-              </StatValue>
-            </div>
-            <StatIcon icon={currencyIcons(fiatCurrency)} />
-          </Stat>
+                      )}
+                </StatValue>
+              </div>
+              <StatIcon icon={logoIcon} />
+            </Stat>
+          </Tooltip.Trigger>
+
+          {theme.featuredTokenName ? (
+            <Stat
+              as={stake !== undefined ? Link : undefined}
+              to={stake !== undefined ? '/Transactions' : undefined}
+            >
+              <div>
+                <StatLabel>
+                  {__('%{token_name} balance', {
+                    token_name: theme.featuredTokenName,
+                  })}
+                </StatLabel>
+                <StatValue>
+                  {settings.hideOverviewBalances
+                    ? '-'
+                    : this.waitForCore(
+                        featuredToken
+                          ? formatNumber(
+                              featuredToken.balance,
+                              featuredToken.decimals
+                            )
+                          : 'N/A'
+                      )}
+                </StatValue>
+              </div>
+              <StatIcon icon={currencyIcons(fiatCurrency)} />
+            </Stat>
+          ) : (
+            <Stat
+              as={stake !== undefined ? Link : undefined}
+              to={stake !== undefined ? '/Transactions' : undefined}
+            >
+              <div>
+                <StatLabel>
+                  {__('NXS Balance')} ({fiatCurrency})
+                </StatLabel>
+                <StatValue>
+                  {settings.hideOverviewBalances ? (
+                    '-'
+                  ) : market?.price ? (
+                    this.waitForCore(
+                      available !== undefined
+                        ? formatCurrency(
+                            (available + stake) * market.price,
+                            fiatCurrency
+                          )
+                        : 'N/A'
+                    )
+                  ) : (
+                    <span className="dim">-</span>
+                  )}
+                </StatValue>
+              </div>
+              <StatIcon icon={currencyIcons(fiatCurrency)} />
+            </Stat>
+          )}
+
           <Stat
             as={stake !== undefined ? Link : undefined}
             to={stake !== undefined ? '/Transactions' : undefined}
@@ -791,7 +869,7 @@ class Overview extends Component {
                 <span className="v-align">{__('Incoming balances')} (NXS)</span>
               </StatLabel>
               <StatValue>
-                {settings.overviewDisplay === 'balHidden'
+                {settings.hideOverviewBalances
                   ? '-'
                   : this.waitForCore(
                       stake !== undefined
@@ -802,6 +880,7 @@ class Overview extends Component {
             </div>
             <StatIcon icon={nxsStakeIcon} />
           </Stat>
+
           <Stat>
             <div>
               <StatLabel>
@@ -823,6 +902,7 @@ class Overview extends Component {
             </div>
             <StatIcon icon={chartIcon} />
           </Stat>
+
           <Stat>
             <div>
               <StatLabel>
@@ -844,6 +924,7 @@ class Overview extends Component {
             </div>
             <StatIcon icon={supplyIcon} />
           </Stat>
+
           <Stat>
             <div>
               <StatLabel>

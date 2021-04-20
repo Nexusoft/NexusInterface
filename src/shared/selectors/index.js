@@ -1,4 +1,5 @@
 import { legacyMode } from 'consts/misc';
+import memoize from 'utils/memoize';
 
 export const isCoreConnected = legacyMode
   ? ({ core: { info } }) =>
@@ -16,3 +17,39 @@ export const isSynchronized = legacyMode
 export const isLoggedIn = legacyMode
   ? () => false
   : ({ user }) => !!(user && user.status);
+
+export const selectTokenBalances = legacyMode
+  ? () => undefined
+  : memoize(
+      (accounts, tokenDecimals) => {
+        const tokenBalances = {};
+        accounts?.forEach((acc) => {
+          if (acc.token && acc.token !== '0') {
+            if (!tokenBalances[acc.token]) {
+              tokenBalances[acc.token] = {
+                name: acc.token_name,
+                address: acc.token,
+                balance: 0,
+                pending: 0,
+                unconfirmed: 0,
+              };
+            }
+            const token = tokenBalances[acc.token];
+            token.balance += acc.balance;
+            token.pending += acc.pending;
+            token.unconfirmed += acc.unconfirmed;
+            token.decimals = tokenDecimals[acc.token];
+          }
+        });
+        return Object.values(tokenBalances);
+      },
+      ({ user: { accounts }, tokenDecimals }) => [accounts, tokenDecimals]
+    );
+
+export const selectModuleUpdateCount = memoize(
+  (modules) =>
+    modules
+      ? Object.values(modules).filter((module) => module.hasNewVersion).length
+      : 0,
+  (state) => [state.modules]
+);
