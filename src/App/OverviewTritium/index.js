@@ -820,7 +820,7 @@ class Overview extends Component {
                       )}
                 </StatValue>
               </div>
-              <StatIcon icon={currencyIcons(fiatCurrency)} />
+              <StatIcon icon={nxsStakeIcon} />
             </Stat>
           ) : (
             <Stat
@@ -878,7 +878,7 @@ class Overview extends Component {
                     )}
               </StatValue>
             </div>
-            <StatIcon icon={nxsStakeIcon} />
+            <StatIcon icon={logoIcon} />
           </Stat>
 
           <Stat>
