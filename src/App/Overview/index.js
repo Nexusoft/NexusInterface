@@ -749,7 +749,7 @@ class Overview extends Component {
                 </span>
               </StatLabel>
               <StatValue>
-                {settings.overviewDisplay === 'balHidden' ? (
+                {settings.hideOverviewBalances ? (
                   '-'
                 ) : !settings.displayFiatBalance ? (
                   this.waitForCore(formatNumber(balance + unconfirmedbalance))
@@ -790,7 +790,7 @@ class Overview extends Component {
                 <span className="v-align">{__('Immature Balance')} (NXS)</span>
               </StatLabel>
               <StatValue>
-                {settings.overviewDisplay === 'balHidden'
+                {settings.hideOverviewBalances
                   ? '-'
                   : this.waitForCore(formatNumber(stake + newmint))}
               </StatValue>
