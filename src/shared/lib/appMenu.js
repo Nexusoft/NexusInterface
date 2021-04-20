@@ -289,7 +289,7 @@ function buildDarwinTemplate() {
     settings: { manualDaemon },
     activeAppModule,
     core: { systemInfo },
-  } = state.settings;
+  } = state;
 
   const subMenuAbout = {
     label: 'Nexus',
