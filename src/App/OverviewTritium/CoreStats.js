@@ -100,7 +100,7 @@ export function BlockCountStat() {
 
   return (
     <Stat
-      position="left"
+      tooltipPosition="left"
       tooltip={
         !!blockDate && (
           <div style={{ textAlign: 'center' }}>

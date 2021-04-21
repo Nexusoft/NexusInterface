@@ -68,84 +68,105 @@ import Stat from './Stat';
 
 __ = __context('Overview');
 
-function CurrencyValue({ value, fiatCurrency, fiatDecimals, btcDecimals }) {
-  if (typeof value !== 'number') {
-    return <span className="dim">-</span>;
-  }
-  const decimals = fiatCurrency === 'BTC' ? btcDecimals : fiatDecimals;
-  return formatCurrency(value, fiatCurrency, decimals);
+function getBlockWeightIcon(blockWeight = 0) {
+  const blockWeightIcons = [
+    blockweight0,
+    blockweight1,
+    blockweight2,
+    blockweight3,
+    blockweight4,
+    blockweight5,
+    blockweight6,
+    blockweight7,
+    blockweight8,
+    blockweight9,
+    blockweight9,
+  ];
+  const bw = Math.round(blockWeight / 10);
+  return blockWeightIcons[bw];
 }
 
-export function PriceStat() {
-  const fiatCurrency = useSelector((state) => state.settings.fiatCurrency);
-  const price = useSelector((state) => state.market?.price);
+function getTrustWeightIcon(trustWeight = 0) {
+  const trustIcons = [
+    trust00,
+    trust10,
+    trust20,
+    trust30,
+    trust40,
+    trust50,
+    trust60,
+    trust70,
+    trust80,
+    trust90,
+    trust100,
+  ];
+  const tw = Math.round(trustWeight / 10);
+  return trustIcons[tw];
+}
 
+function StakingStat({ stakeInfo, value, ...props }) {
   return (
     <Stat
-      waitForCore={false}
-      label={
-        <>
-          {__('Market Price')} ({fiatCurrency})
-        </>
+      tooltipAlign="start"
+      tooltip={
+        stakeInfo?.staking &&
+        stakeInfo?.new &&
+        __(
+          'Staking stats not yet available until you get a genesis transaction'
+        )
       }
-      icon={chartIcon}
+      linkTo="/User/Staking"
+      {...props}
     >
-      <CurrencyValue
-        value={price}
-        fiatCurrency={fiatCurrency}
-        btcDecimals={8}
-        fiatDecimals={2}
-      />
+      {value ? formatNumber(value, 2) + '%' : 'N/A'}
     </Stat>
   );
 }
 
-export function MarketCapStat() {
-  const fiatCurrency = useSelector((state) => state.settings.fiatCurrency);
-  const marketCap = useSelector((state) => state.market?.marketCap);
-
+export function StakeRateStat() {
+  const stakeInfo = useSelector((state) => state.user.stakeInfo);
   return (
-    <Stat
-      waitForCore={false}
-      label={
-        <>
-          {__('Market Cap')} ({fiatCurrency})
-        </>
-      }
-      icon={supplyIcon}
-    >
-      <CurrencyValue
-        value={marketCap}
-        fiatCurrency={fiatCurrency}
-        btcDecimals={2}
-        fiatDecimals={0}
-      />
-    </Stat>
+    <StakingStat
+      stakeInfo={stakeInfo}
+      label={__('Stake Rate')}
+      value={stakeInfo.stakerate}
+      icon={interestIcon}
+    />
   );
 }
 
-export function MarketCapStat() {
-  const fiatCurrency = useSelector((state) => state.settings.fiatCurrency);
-  const changePct24Hr = useSelector((state) => state.market?.changePct24Hr);
-
+export function BlockWeightStat() {
+  const stakeInfo = useSelector((state) => state.user.stakeInfo);
   return (
-    <Stat
-      waitForCore={false}
-      label={
-        <>
-          {__('24hr Change')} ({fiatCurrency} %)
-        </>
-      }
-      icon={hours24Icon}
-    >
-      {typeof changePct24Hr === 'number' ? (
-        <>
-          {changePct24Hr > 0 && '+'}
-          {formatNumber(changePct24Hr, 2)}%
-        </>
-      ) : (
-        <span className="dim">-</span>
-      )}
-    </Stat>
+    <StakingStat
+      stakeInfo={stakeInfo}
+      label={__('Block Weight')}
+      value={stakeInfo.blockweight}
+      icon={getBlockWeightIcon(stakeInfo.blockweight)}
+    />
+  );
+}
+
+export function TrustWeightStat() {
+  const stakeInfo = useSelector((state) => state.user.stakeInfo);
+  return (
+    <StakingStat
+      stakeInfo={stakeInfo}
+      label={__('Trust Weight')}
+      value={stakeInfo.trustweight}
+      icon={getTrustWeightIcon(stakeInfo.trustweight)}
+    />
+  );
+}
+
+export function StakeWeightStat() {
+  const stakeInfo = useSelector((state) => state.user.stakeInfo);
+  return (
+    <StakingStat
+      stakeInfo={stakeInfo}
+      label={__('Stake Weight')}
+      value={stakeInfo.stakeweight}
+      icon={stakeIcon}
+    />
   );
 }
