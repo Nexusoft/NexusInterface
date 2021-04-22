@@ -11,9 +11,8 @@ import { timing } from 'styles';
 
 __ = __context('Overview');
 
-const StatWrapper = styled.div(
+export const StatWrapper = styled.div(
   ({ theme }) => ({
-    display: 'block',
     margin: '1.7em 0',
     display: 'flex',
     alignItems: 'center',
@@ -44,7 +43,7 @@ const StatValue = styled.div({
   fontSize: '1.8em',
 });
 
-const StatIcon = styled(Icon)(({ theme }) => ({
+export const StatIcon = styled(Icon)(({ theme }) => ({
   width: 38,
   height: 38,
   color: theme.primary,
