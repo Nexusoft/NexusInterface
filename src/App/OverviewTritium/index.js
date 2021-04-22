@@ -79,10 +79,8 @@ const Stats = styled.div(
       right: compact ? 'calc(56% + 40px)' : 'calc(70% + 40px)',
       animation: `${timing.slow} ${consts.enhancedEaseOut} 0s ${slideRight}`,
       [StatWrapper]: {
-        justifyContent: 'flex-end',
-      },
-      [StatIcon]: {
-        marginLeft: 15,
+        gridTemplateAreas: '"content icon"',
+        justifyContent: 'end',
       },
     },
   ({ right, compact }) =>
@@ -91,10 +89,8 @@ const Stats = styled.div(
       left: compact ? 'calc(56% + 40px)' : 'calc(70% + 40px)',
       animation: `${timing.slow} ${consts.enhancedEaseOut} 0s ${slideLeft}`,
       [StatWrapper]: {
-        justifyContent: 'flex-start',
-      },
-      [StatIcon]: {
-        marginRight: 15,
+        gridTemplateAreas: '"icon content"',
+        justifyContent: 'start',
       },
     }
 );
