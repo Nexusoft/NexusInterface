@@ -14,6 +14,7 @@ import logoIcon from 'icons/NXS_coin.svg';
 import currencyIcons from 'data/currencyIcons';
 import nxsStakeIcon from 'icons/nxs-staking.svg';
 import warningIcon from 'icons/warning.svg';
+import waitIcon from 'icons/wait.svg';
 
 import Stat from './Stat';
 
@@ -177,7 +178,7 @@ export function IncomingBalanceStat() {
           <span className="v-align">{__('Incoming balances')} (NXS)</span>
         </>
       }
-      icon={nxsStakeIcon}
+      icon={waitIcon}
     >
       <BalanceValue>{balances ? formatNumber(incoming) : blank}</BalanceValue>
     </Stat>
