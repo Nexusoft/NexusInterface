@@ -37,8 +37,6 @@ export function ConnectionsStat() {
   const connections = useSelector(
     (state) => state.core.systemInfo?.connections
   );
-  const state = useSelector((state) => state);
-  console.log(state);
 
   return (
     <Stat label={__('Connections')} icon={getConnectionsIcon(connections)}>
