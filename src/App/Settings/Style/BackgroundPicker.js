@@ -49,16 +49,15 @@ class BackgroundPicker extends Component {
    * @memberof BackgroundPicker
    */
   handleFilePick = (e) => {
-    console.log(1, e.target.files);
     if (!!e.target.files.length) {
       let imagePath = e.target.files[0].path;
-      console.log(2, imagePath);
+      // Reset the input value, or onChange won't fire next time
+      // if user selects the same file
+      e.target.value = '';
       if (process.platform === 'win32') {
         imagePath = imagePath.replace(/\\/g, '/');
       }
-      console.log(3, imagePath);
       updateTheme({ wallpaper: imagePath });
-      console.log(4);
     }
   };
 
