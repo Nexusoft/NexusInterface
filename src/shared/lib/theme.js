@@ -10,9 +10,12 @@ import { readJson, writeJson } from 'utils/json';
 const themeFileName = 'theme.json';
 const themeFilePath = path.join(walletDataDir, themeFileName);
 
+export const starryNightBackground = ':starry_night';
+export const cosmicLightBackground = ':cosmic_light';
+
 export const darkTheme = {
   defaultStyle: 'Dark',
-  wallpaper: null,
+  wallpaper: starryNightBackground,
   background: '#1c1d1f',
   foreground: '#ebebe6',
   primary: '#00b7fa',
@@ -26,6 +29,7 @@ export const darkTheme = {
 
 export const lightTheme = {
   defaultStyle: 'Light',
+  wallpaper: cosmicLightBackground,
   background: '#91a0b8',
   danger: '#8F240E',
   dangerAccent: '#ffffff',
@@ -39,7 +43,7 @@ export const lightTheme = {
 
 export const potTheme = {
   defaultStyle: 'Dark',
-  wallpaper: null,
+  wallpaper: starryNightBackground,
   background: '#0a4224',
   foreground: '#94b9a7',
   primary: '#1CBB38',
@@ -51,6 +55,27 @@ export const potTheme = {
   globeArchColor: '#00ffff',
   featuredTokenName: 'POT',
 };
+
+// TODO: remove this after a few versions
+function transformTheme(theme) {
+  let changed = false;
+  if (theme.defaultStyle) {
+    changed = true;
+    if (theme.defaultStyle?.startsWith('Light')) {
+      theme.dark = false;
+      if (!theme.wallpaper) {
+        theme.wallpaper = cosmicLightBackground;
+      }
+    } else {
+      theme.dark = true;
+      if (!theme.wallpaper) {
+        theme.wallpaper = starryNightBackground;
+      }
+    }
+    delete theme.defaultStyle;
+  }
+  return changed;
+}
 
 function readTheme() {
   if (fs.existsSync(themeFilePath)) {
@@ -67,6 +92,10 @@ function writeTheme(theme) {
 
 function loadThemeFromFile() {
   const customTheme = readTheme();
+  const changed = transformTheme(customTheme);
+  if (changed) {
+    writeTheme(customTheme);
+  }
   return { ...darkTheme, ...customTheme };
 }
 
@@ -74,26 +103,6 @@ function updateThemeFile(updates) {
   const theme = readTheme();
   return writeTheme({ ...theme, ...updates });
 }
-
-export const loadTheme = loadThemeFromFile;
-
-export const updateTheme = (updates) => {
-  store.dispatch({ type: TYPE.UPDATE_THEME, payload: updates });
-  updateThemeFile(updates);
-};
-
-export const setTheme = (theme) => {
-  store.dispatch({ type: TYPE.SET_THEME, payload: theme });
-  writeTheme(theme);
-};
-
-export const resetColors = () => {
-  const theme = readTheme();
-  const newTheme = {};
-  if (theme.wallpaper) newTheme.wallpaper = theme.wallpaper;
-  store.dispatch({ type: TYPE.SET_THEME, payload: newTheme });
-  return writeTheme(newTheme);
-};
 
 const downloadWallpaper = (wallpaper) =>
   new Promise((resolve, reject) => {
@@ -119,10 +128,35 @@ const downloadWallpaper = (wallpaper) =>
       });
   });
 
+export const loadTheme = loadThemeFromFile;
+
+export const updateTheme = (updates) => {
+  store.dispatch({ type: TYPE.UPDATE_THEME, payload: updates });
+  updateThemeFile(updates);
+};
+
+export const setTheme = (theme) => {
+  store.dispatch({ type: TYPE.SET_THEME, payload: theme });
+  writeTheme(theme);
+};
+
+export const resetColors = () => {
+  const theme = readTheme();
+  const newTheme = {};
+  if (theme.wallpaper) newTheme.wallpaper = theme.wallpaper;
+  store.dispatch({ type: TYPE.SET_THEME, payload: newTheme });
+  return writeTheme(newTheme);
+};
+
 export async function loadCustomTheme(path) {
   const theme = readJson(path);
   if (!theme) {
     throw new Error('Fail to read json file at ' + path);
+  }
+
+  const changed = transformTheme(theme);
+  if (changed) {
+    writeJson(path, theme);
   }
 
   if (theme.wallpaper && theme.wallpaper.startsWith('http')) {
