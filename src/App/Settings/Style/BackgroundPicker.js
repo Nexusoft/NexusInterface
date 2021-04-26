@@ -3,6 +3,11 @@ import { Component } from 'react';
 import styled from '@emotion/styled';
 
 // Internal
+import {
+  starryNightBackground,
+  cosmicLightBackground,
+  updateTheme,
+} from 'lib/theme';
 import { timing } from 'styles';
 import { newUID } from 'utils/misc';
 import * as color from 'utils/color';
@@ -39,30 +44,21 @@ class BackgroundPicker extends Component {
   fileInputID = newUID();
 
   /**
-   * Set a Default background
-   *
-   * @memberof BackgroundPicker
-   */
-  setDefault = (version) => {
-    if (this.props.defaultStyle != version) {
-      version = version + 'Custom';
-    }
-    this.props.onChange(null, version);
-  };
-
-  /**
    * Handle Picking a file
    *
    * @memberof BackgroundPicker
    */
   handleFilePick = (e) => {
+    console.log(1, e.target.files);
     if (!!e.target.files.length) {
       let imagePath = e.target.files[0].path;
+      console.log(2, imagePath);
       if (process.platform === 'win32') {
         imagePath = imagePath.replace(/\\/g, '/');
       }
-
-      this.props.onChange(imagePath, 'Custom');
+      console.log(3, imagePath);
+      updateTheme({ wallpaper: imagePath });
+      console.log(4);
     }
   };
 
@@ -74,24 +70,27 @@ class BackgroundPicker extends Component {
    */
   render() {
     const { wallpaper, defaultStyle } = this.props;
+    const customWallpaper =
+      wallpaper !== starryNightBackground &&
+      wallpaper !== cosmicLightBackground;
     return (
       <div>
         <Option
-          onClick={() => this.setDefault('Dark')}
-          selected={!wallpaper && defaultStyle.startsWith('Dark')}
+          onClick={() => updateTheme({ wallpaper: starryNightBackground })}
+          selected={wallpaper === starryNightBackground}
           style={{ display: 'inline', marginBottom: '.5em' }}
         >
           {__('Starry night')}
         </Option>
         <Option
-          onClick={() => this.setDefault('Light')}
-          selected={!wallpaper && defaultStyle.startsWith('Light')}
+          onClick={() => updateTheme({ wallpaper: cosmicLightBackground })}
+          selected={wallpaper === cosmicLightBackground}
           style={{ display: 'inline', marginBottom: '.5em' }}
         >
           {__('Cosmic light')}
         </Option>
-        <Option htmlFor={this.fileInputID} selected={!!wallpaper}>
-          {wallpaper ? (
+        <Option htmlFor={this.fileInputID} selected={customWallpaper}>
+          {customWallpaper ? (
             <span>
               {__('Custom wallpaper')}: {wallpaper}
             </span>

@@ -154,22 +154,6 @@ class SettingsStyle extends Component {
   };
 
   /**
-   * Set New Wallpaper
-   *
-   * @memberof SettingsStyle
-   */
-  setWallpaper = (path, defaultStyle) => {
-    defaultStyle = defaultStyle ? defaultStyle : this.props.theme.defaultStyle;
-    updateTheme({ defaultStyle: defaultStyle, wallpaper: path });
-    if (path || defaultStyle.endsWith('Custom')) {
-      this.setThemeSelector(2);
-      if (path) {
-        updateTheme({ defaultStyle: 'Custom' });
-      }
-    }
-  };
-
-  /**
    * Set Color
    *
    * @memberof SettingsStyle
@@ -443,7 +427,7 @@ class SettingsStyle extends Component {
           </div>
         </SettingsField>
 
-        <SettingsField label={__('Theme')} subLabel={__('Select Wallet Theme')}>
+        <SettingsField label={__('Theme preset')}>
           <ThemePicker
             parentTheme={theme}
             darkCallback={this.pressDarkTheme}
