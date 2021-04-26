@@ -81,7 +81,7 @@ class BackgroundPicker extends Component {
           selected={!wallpaper && defaultStyle.startsWith('Dark')}
           style={{ display: 'inline', marginBottom: '.5em' }}
         >
-          {__('Twinkling stars')}
+          {__('Starry night')}
         </Option>
         <Option
           onClick={() => this.setDefault('Light')}

@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 
 // Internal
 import { starryNightBackground, cosmicLightBackground } from 'lib/theme';
-import StarrySky from './StarrySky';
+import StarryNight from './StarryNight';
 import CosmicLight from './Light';
 
 const CustomWallpaper = styled.div(
@@ -28,7 +28,7 @@ export default function AppBackground() {
   const wallpaper = useSelector((state) => state.theme.wallpaper);
 
   if (wallpaper === starryNightBackground) {
-    return <StarrySky />;
+    return <StarryNight />;
   }
   if (wallpaper === cosmicLightBackground) {
     return <CosmicLight />;
@@ -36,5 +36,5 @@ export default function AppBackground() {
   if (!!wallpaper && existsSync(wallpaper)) {
     return <CustomWallpaper wallpaper={wallpaper} />;
   }
-  return <StarrySky />;
+  return <StarryNight />;
 }
