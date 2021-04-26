@@ -1,7 +1,9 @@
+import https from 'https';
+import fs from 'fs';
+
 import * as TYPE from 'consts/actionTypes';
 import store from 'store';
 import path from 'path';
-import fs from 'fs';
 import { walletDataDir } from 'consts/paths';
 import { readJson, writeJson } from 'utils/json';
 
@@ -92,3 +94,44 @@ export const resetColors = () => {
   store.dispatch({ type: TYPE.SET_THEME, payload: newTheme });
   return writeTheme(newTheme);
 };
+
+const downloadWallpaper = (wallpaper) =>
+  new Promise((resolve, reject) => {
+    const wallpaperPathSplit = wallpaper.split('.');
+    const fileEnding = wallpaperPathSplit[wallpaperPathSplit.length - 1];
+    const file = fs.createWriteStream(
+      walletDataDir + '/wallpaper.' + fileEnding
+    );
+    file.on('finish', () => {
+      file.close(() => {
+        resolve(file.path);
+      });
+    });
+    https
+      .get(customTheme.wallpaper)
+      .setTimeout(10000)
+      .on('response', (response) => {
+        response.pipe(file);
+      })
+      .on('error', reject)
+      .on('timeout', () => {
+        reject(new Error('Timeout'));
+      });
+  });
+
+export async function loadCustomTheme(path) {
+  const theme = readJson(path);
+  if (!theme) {
+    throw new Error('Fail to read json file at ' + path);
+  }
+
+  if (theme.wallpaper && theme.wallpaper.startsWith('http')) {
+    try {
+      theme.wallpaper = await downloadWallpaper(theme.wallpaper);
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  setTheme(theme);
+}
