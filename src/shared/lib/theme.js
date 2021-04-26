@@ -45,7 +45,7 @@ export const potTheme = {
   defaultStyle: 'Dark',
   wallpaper: starryNightBackground,
   background: '#0a4224',
-  foreground: '#94b9a7',
+  foreground: '#D1E0DC',
   primary: '#1CBB38',
   primaryAccent: '#ffffff',
   danger: '#d75239',
