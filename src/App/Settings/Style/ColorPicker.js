@@ -1,6 +1,5 @@
 // External
 import { useRef, useState } from 'react';
-import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 import { ChromePicker } from 'react-color';
@@ -56,7 +55,7 @@ export default function ColorPicker({ colorName }) {
   };
 
   const handleColorChange = (pickedColor) => {
-    updateTheme(colorName, pickedColor.hex);
+    updateTheme({ [colorName]: pickedColor.hex });
   };
 
   return (
