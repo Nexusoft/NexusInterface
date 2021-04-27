@@ -14,7 +14,7 @@ export const starryNightBackground = ':starry_night';
 export const cosmicLightBackground = ':cosmic_light';
 
 export const darkTheme = {
-  defaultStyle: 'Dark',
+  dark: true,
   wallpaper: starryNightBackground,
   background: '#1c1d1f',
   foreground: '#ebebe6',
@@ -28,7 +28,7 @@ export const darkTheme = {
 };
 
 export const lightTheme = {
-  defaultStyle: 'Light',
+  dark: false,
   wallpaper: cosmicLightBackground,
   background: '#91a0b8',
   danger: '#8F240E',
@@ -42,7 +42,7 @@ export const lightTheme = {
 };
 
 export const potTheme = {
-  defaultStyle: 'Dark',
+  dark: true,
   wallpaper: starryNightBackground,
   background: '#0a4224',
   foreground: '#D1E0DC',

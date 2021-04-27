@@ -122,25 +122,6 @@ class SettingsStyle extends Component {
   };
 
   /**
-   * Component Mount Callback
-   *
-   * @memberof SettingsStyle
-   */
-  componentDidMount() {
-    if (this.props.theme.defaultStyle == 'Dark') {
-      this.setThemeSelector(0);
-    } else if (this.props.theme.defaultStyle == 'Light') {
-      this.setThemeSelector(1);
-    } else {
-      this.setThemeSelector(2);
-    }
-
-    if (!this.props.defaultAddress) {
-      loadAccounts();
-    }
-  }
-
-  /**
    * Toggle The Globe
    *
    * @memberof SettingsStyle
@@ -154,28 +135,6 @@ class SettingsStyle extends Component {
   };
 
   /**
-   * Set Color
-   *
-   * @memberof SettingsStyle
-   */
-  setColor = (key, value) => {
-    this.setToCustom();
-    const defaultStyle = this.props.theme.defaultStyle;
-    const wasOnDefault =
-      defaultStyle === 'Dark' ||
-      defaultStyle === 'Light' ||
-      defaultStyle.endsWith('Custom');
-    updateTheme({
-      [key]: value,
-      defaultStyle: wasOnDefault
-        ? defaultStyle.endsWith('Custom')
-          ? defaultStyle
-          : defaultStyle + 'Custom'
-        : 'Custom',
-    });
-  };
-
-  /**
    * Reset Colors
    *
    * @memberof SettingsStyle
@@ -184,56 +143,6 @@ class SettingsStyle extends Component {
     //Dont think we need this anymore
     resetColors();
     showNotification(__('Color scheme has been reset to default'), 'success');
-  };
-
-  /**
-   * Load Custom Theme from json File
-   *
-   * @memberof SettingsStyle
-   */
-  loadCustomTheme = (filepath) => {
-    const content = fs.readFileSync(filepath);
-    let customTheme;
-    try {
-      customTheme = JSON.parse(content);
-      if (
-        customTheme.wallpaper.startsWith('https') ||
-        customTheme.wallpaper.startsWith('http')
-      ) {
-        const wallpaperPathSplit = customTheme.wallpaper.split('.');
-        const fileEnding = wallpaperPathSplit[wallpaperPathSplit.length - 1];
-        const file = fs.createWriteStream(
-          walletDataDir + '/wallpaper.' + fileEnding
-        );
-        this.wallpaperRequest = https
-          .get(customTheme.wallpaper)
-          .setTimeout(10000)
-          .on('response', (response) => {
-            response.pipe(file);
-            let onFinish = () => {
-              file.close((response) => {
-                console.log('Finished Downloading');
-                this.setWallpaper(file.path);
-              });
-            };
-            onFinish.bind(this);
-            file.on('finish', () => onFinish());
-          })
-          .on('error', (error) => {
-            this.setWallpaper('');
-          })
-          .on('timeout', (timeout) => {
-            this.setWallpaper('');
-          });
-      }
-    } catch (err) {
-      showNotification(
-        __('Invalid file format! Custom theme file must be in JSON'),
-        'error'
-      );
-    }
-    customTheme.defaultStyle = 'Custom';
-    setTheme(customTheme);
   };
 
   /**
