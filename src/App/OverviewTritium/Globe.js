@@ -238,6 +238,7 @@ export default class Globe extends Component {
         let GeoData = geoip.get(peer.address.split(':')[0]);
         // TODO: add checks for lisp and change color appropreately
         //console.log(this.props.pillarColor);
+        if (!GeoData) return {} //Usecase for private or testnet when there is no outside ip address
         return {
           lat: GeoData.location.latitude,
           lng: GeoData.location.longitude,
