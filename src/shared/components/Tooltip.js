@@ -17,7 +17,6 @@ import styled from '@emotion/styled';
 // Internal
 import { arrowStyles } from 'components/Arrow';
 import { timing, animations, zIndex } from 'styles';
-import * as color from 'utils/color';
 
 const spacing = 10;
 const arrowPadding = 15;
@@ -115,7 +114,7 @@ const Tooltip = styled.div(
     switch (skin) {
       case 'default':
         return {
-          background: color.lighten(theme.background, 0.2),
+          background: theme.raise(theme.background, 0.2),
           color: theme.foreground,
         };
       case 'error':
@@ -136,7 +135,7 @@ const Tooltip = styled.div(
       height: 8,
       color:
         skin === 'default'
-          ? color.lighten(theme.background, 0.2)
+          ? theme.raise(theme.background, 0.2)
           : skin === 'error'
           ? theme.danger
           : undefined,

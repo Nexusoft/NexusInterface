@@ -9,7 +9,6 @@ import { removeModal } from 'lib/ui';
 import Overlay from 'components/Overlay';
 import { timing } from 'styles';
 import { passRef } from 'utils/misc';
-import * as color from 'utils/color';
 
 const intro = keyframes`
   from { 
@@ -61,7 +60,7 @@ const ModalComponent = styled.div(
     width: '60%',
     maxHeight: '80%',
     maxWidth: maxWidth,
-    background: color.darken(theme.background, 0.2),
+    background: theme.lower(theme.background, 0.2),
     color: theme.mixer(0.75),
     borderRadius: modalBorderRadius,
     boxShadow: '0 0 20px #000',

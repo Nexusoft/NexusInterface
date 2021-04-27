@@ -14,7 +14,6 @@ import Select from 'components/Select';
 import Switch from 'components/Switch';
 import Icon from 'components/Icon';
 import { confirm, openErrorDialog, showNotification } from 'lib/ui';
-import * as color from 'utils/color';
 import * as form from 'utils/form';
 import { legacyMode } from 'consts/misc';
 import { isCoreConnected } from 'selectors';
@@ -28,7 +27,7 @@ import BackupDirSetting from './BackupDirSetting';
 __ = __context('Settings.Application');
 
 const WarningIcon = styled(Icon)(({ theme }) => ({
-  color: color.lighten(theme.danger, 0.3),
+  color: theme.raise(theme.danger, 0.3),
   fontSize: '1.1em',
 }));
 

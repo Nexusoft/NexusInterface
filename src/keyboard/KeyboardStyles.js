@@ -30,15 +30,15 @@ const KeyboardStyles = () => (
 
           '&.btn-submit': {
             '&': {
-              background: color.darken(theme.primary, 0.2),
+              background: theme.lower(theme.primary, 0.2),
               color: theme.primaryAccent,
               borderBottomColor: color.mix(theme.primaryAccent, theme.primary),
             },
             '&:hover': {
-              background: color.darken(theme.primary, 0.1),
+              background: theme.lower(theme.primary, 0.1),
             },
             '&:active': {
-              background: color.darken(theme.primary, 0.2),
+              background: theme.lower(theme.primary, 0.2),
             },
           },
         },

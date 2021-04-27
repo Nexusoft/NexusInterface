@@ -4,7 +4,7 @@ import { ThemeProvider } from '@emotion/react';
 import { connect } from 'react-redux';
 
 // Internal
-import { getMixer } from 'utils/color';
+import { fortifyTheme } from 'lib/theme';
 
 /**
  * Controls the theme using {Emotion}
@@ -24,12 +24,8 @@ class ThemeController extends PureComponent {
    */
   render() {
     const { theme } = this.props;
-    const themeWithMixer = {
-      ...theme,
-      mixer: getMixer(theme.background, theme.foreground),
-    };
     return (
-      <ThemeProvider theme={themeWithMixer}>
+      <ThemeProvider theme={fortifyTheme(theme)}>
         {this.props.children}
       </ThemeProvider>
     );

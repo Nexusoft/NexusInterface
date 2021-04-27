@@ -7,7 +7,6 @@ import { jsx, css } from '@emotion/react';
 import Tooltip from 'components/Tooltip';
 import { timing, consts } from 'styles';
 import { passRef } from 'utils/misc';
-import * as color from 'utils/color';
 
 const ErrorMessage = styled(Tooltip)(
   {
@@ -70,14 +69,14 @@ const TextFieldComponent = styled.div(
             color: theme.foreground,
             '&::after': {
               background: error
-                ? color.lighten(theme.danger, 0.3)
+                ? theme.raise(theme.danger, 0.3)
                 : theme.mixer(0.75),
             },
           },
           ...(focus
             ? {
                 '&&::after': {
-                  background: color.lighten(
+                  background: theme.raise(
                     error ? theme.danger : theme.primary,
                     0.3
                   ),
@@ -172,7 +171,7 @@ const Input = styled.input(
         borderBottomColor: theme.mixer(0.75),
         '&::after': {
           background: error
-            ? color.lighten(theme.danger, 0.3)
+            ? theme.raise(theme.danger, 0.3)
             : theme.mixer(0.75),
         },
       },

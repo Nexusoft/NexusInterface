@@ -13,7 +13,6 @@
 import { forwardRef } from 'react';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/react';
-import * as color from 'utils/color';
 
 // Internal Global Dependencies
 import Icon from 'components/Icon';
@@ -70,7 +69,7 @@ const PanelTitle = styled.h3(({ theme }) => ({
 
 const PanelBody = styled.div(({ theme }) => ({
   gridArea: 'body',
-  background: color.darken(theme.background, 0.3),
+  background: theme.lower(theme.background, 0.3),
   borderBottomLeftRadius: borderRadius,
   borderBottomRightRadius: borderRadius,
   padding: '20px 30px',
