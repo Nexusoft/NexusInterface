@@ -445,41 +445,37 @@ class SettingsStyle extends Component {
           label={__('Background')}
           subLabel={__('Customize your background wallpaper')}
         >
-          <BackgroundPicker
-            wallpaper={theme.wallpaper}
-            defaultStyle={theme.defaultStyle}
-            onChange={this.setWallpaper}
-          />
+          <BackgroundPicker />
         </SettingsField>
 
         <SettingsField label={__('Color scheme')} />
 
         <SettingsField indent={1} label={__('Background Color')}>
-          <ColorPicker colorName="background" onChange={this.setColor} />
+          <ColorPicker colorName="background" />
         </SettingsField>
         <SettingsField indent={1} label={__('Foreground Color')}>
-          <ColorPicker colorName="foreground" onChange={this.setColor} />
+          <ColorPicker colorName="foreground" />
         </SettingsField>
         <SettingsField indent={1} label={__('Primary Color')}>
-          <ColorPicker colorName="primary" onChange={this.setColor} />
+          <ColorPicker colorName="primary" />
         </SettingsField>
         <SettingsField indent={1} label={__('Primary Color Accent')}>
-          <ColorPicker colorName="primaryAccent" onChange={this.setColor} />
+          <ColorPicker colorName="primaryAccent" />
         </SettingsField>
         <SettingsField indent={1} label={__('Danger Color')}>
-          <ColorPicker colorName="danger" onChange={this.setColor} />
+          <ColorPicker colorName="danger" />
         </SettingsField>
         <SettingsField indent={1} label={__('Danger Color Accent')}>
-          <ColorPicker colorName="dangerAccent" onChange={this.setColor} />
+          <ColorPicker colorName="dangerAccent" />
         </SettingsField>
         <SettingsField indent={1} label={__('Globe Color')}>
-          <ColorPicker colorName="globeColor" onChange={this.setColor} />
+          <ColorPicker colorName="globeColor" />
         </SettingsField>
         <SettingsField indent={2} label={__('Globe Pillar Color')}>
-          <ColorPicker colorName="globePillarColor" onChange={this.setColor} />
+          <ColorPicker colorName="globePillarColor" />
         </SettingsField>
         <SettingsField indent={2} label={__('Globe Arch Color')}>
-          <ColorPicker colorName="globeArchColor" onChange={this.setColor} />
+          <ColorPicker colorName="globeArchColor" />
         </SettingsField>
 
         <div style={{ marginTop: '2em' }}>
