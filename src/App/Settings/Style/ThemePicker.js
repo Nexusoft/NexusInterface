@@ -1,63 +1,20 @@
 // External
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import styled from '@emotion/styled';
 
 //Internal
+import Button from 'components/Button';
 import { darkTheme, lightTheme, potTheme, setTheme } from 'lib/theme';
-import { timing } from 'styles';
-import * as color from 'utils/color';
 
 __ = __context('Settings.Style');
 
-const OptionButton = styled.button(
-  ({ theme }) => ({
-    display: 'inline-flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 4,
-    padding: '0 1em',
-    marginRight: '0.4em',
-    height: '2.8em',
-    border: 'none',
-    outline: 'none',
-    background: 'transparent',
-    cursor: 'pointer',
-    whiteSpace: 'nowrap',
-    userSelect: 'none',
-    transitionProperty: 'border-color, color',
-    transitionDuration: timing.normal,
-    color: theme.foreground,
-
-    '&:disabled': {
-      opacity: 0.5,
-      cursor: 'not-allowed',
-    },
-    transition: `background-color ${timing.normal}`,
-
-    '&:hover': {
-      background: theme.background,
-    },
-  }),
-  ({ selected, theme }) =>
-    selected && {
-      '&, &:hover': {
-        background: color.darken(theme.primary, 0.2),
-        color: theme.primaryAccent,
-      },
-    }
-);
-
 function equals(theme1, theme2) {
   if (theme1 === theme2) return true;
-
   const entries1 = Object.entries(theme1);
   if (entries1.length !== Object.keys(theme2).length) return false;
-
   for (const [key, value] of entries1) {
     if (theme2[key] !== value) return false;
   }
-
   return true;
 }
 
@@ -75,8 +32,9 @@ export default function ThemePicker() {
 
   return (
     <div>
-      <OptionButton
-        selected={themeName === 'dark'}
+      <Button
+        skin={themeName === 'dark' ? 'filled-primary' : 'plain'}
+        className="mr1"
         onClick={
           themeName !== 'dark'
             ? () => {
@@ -87,10 +45,11 @@ export default function ThemePicker() {
         }
       >
         {__('Dark')}
-      </OptionButton>
+      </Button>
 
-      <OptionButton
-        selected={themeName === 'light'}
+      <Button
+        skin={themeName === 'light' ? 'filled-primary' : 'plain'}
+        className="mr1"
         onClick={
           themeName !== 'light'
             ? () => {
@@ -101,10 +60,11 @@ export default function ThemePicker() {
         }
       >
         {__('Light')}
-      </OptionButton>
+      </Button>
 
-      <OptionButton
-        selected={themeName === 'pot'}
+      <Button
+        skin={themeName === 'pot' ? 'filled-primary' : 'plain'}
+        className="mr1"
         onClick={
           themeName !== 'pot'
             ? () => {
@@ -115,11 +75,11 @@ export default function ThemePicker() {
         }
       >
         POT
-      </OptionButton>
+      </Button>
 
       {(customTheme || themeName === 'custom') && (
-        <OptionButton
-          selected={themeName === 'custom'}
+        <Button
+          skin={themeName === 'custom' ? 'filled-primary' : 'plain'}
           onClick={
             themeName !== 'custom'
               ? () => {
@@ -129,7 +89,7 @@ export default function ThemePicker() {
           }
         >
           {__('Custom')}
-        </OptionButton>
+        </Button>
       )}
     </div>
   );

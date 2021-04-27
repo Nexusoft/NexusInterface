@@ -168,7 +168,7 @@ export default function SettingsStyle() {
         </div>
       </SettingsField>
 
-      <SettingsField label={__('Theme preset')}>
+      <SettingsField label={__('Wallet theme')}>
         <ThemePicker />
       </SettingsField>
 

@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 
 // Internal
+import Button from 'components/Button';
 import {
   starryNightBackground,
   cosmicLightBackground,
@@ -56,21 +57,30 @@ export default function BackgroundPicker() {
 
   return (
     <div>
-      <Option
+      <Button
+        skin={wallpaper === starryNightBackground ? 'filled-primary' : 'plain'}
+        className="mr1"
         onClick={() => updateTheme({ wallpaper: starryNightBackground })}
         selected={wallpaper === starryNightBackground}
         style={{ display: 'inline', marginBottom: '.5em' }}
       >
         {__('Starry night')}
-      </Option>
-      <Option
+      </Button>
+      <Button
+        skin={wallpaper === cosmicLightBackground ? 'filled-primary' : 'plain'}
+        className="mr1"
         onClick={() => updateTheme({ wallpaper: cosmicLightBackground })}
         selected={wallpaper === cosmicLightBackground}
         style={{ display: 'inline', marginBottom: '.5em' }}
       >
         {__('Cosmic light')}
-      </Option>
-      <Option htmlFor={fileInputID} selected={customWallpaper}>
+      </Button>
+      <Button
+        skin={customWallpaper ? 'filled-primary' : 'plain'}
+        className="mr1"
+        htmlFor={fileInputID}
+        selected={customWallpaper}
+      >
         {customWallpaper ? (
           <span>
             {__('Custom wallpaper')}: {wallpaper}
@@ -78,7 +88,7 @@ export default function BackgroundPicker() {
         ) : (
           __('Select a custom wallpaper')
         )}
-      </Option>
+      </Button>
       <input
         id={fileInputID}
         type="file"
