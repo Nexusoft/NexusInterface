@@ -1,7 +1,7 @@
 // External
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import styled from '@emotion/styled';
+import { ipcRenderer } from 'electron';
 
 // Internal
 import Button from 'components/Button';
@@ -10,42 +10,27 @@ import {
   cosmicLightBackground,
   updateTheme,
 } from 'lib/theme';
-import { timing } from 'styles';
 import { newUID } from 'utils/misc';
-import * as color from 'utils/color';
 
 __ = __context('Settings.Style');
 
-const Option = styled.label(
-  ({ theme }) => ({
-    display: 'block',
-    padding: '.4em .8em',
-    transition: `background-color ${timing.normal}`,
-    cursor: 'pointer',
-
-    '&:hover': {
-      background: theme.background,
-    },
-  }),
-  ({ selected, theme }) =>
-    selected && {
-      '&, &:hover': {
-        background: color.darken(theme.primary, 0.2),
-        color: theme.primaryAccent,
+async function handleFilePick(e) {
+  const files = await ipcRenderer.invoke('show-open-dialog', {
+    title: __('Select wallpaper'),
+    properties: ['openFile'],
+    filters: [
+      {
+        name: 'Images',
+        extensions: ['jpg', 'jpeg', 'png', 'webp', 'bmp', 'gif'],
       },
+    ],
+  });
+  let path = files?.[0];
+  if (path) {
+    if (process.platform === 'win32') {
+      path = path.replace(/\\/g, '/');
     }
-);
-
-function handleFilePick(e) {
-  if (!!e.target.files.length) {
-    let imagePath = e.target.files[0]?.path;
-    // Reset the input value, or onChange won't fire next time
-    // if user selects the same file
-    e.target.value = '';
-    if (imagePath && process.platform === 'win32') {
-      imagePath = imagePath.replace(/\\/g, '/');
-    }
-    updateTheme({ wallpaper: imagePath });
+    updateTheme({ wallpaper: path });
   }
 }
 
@@ -78,8 +63,8 @@ export default function BackgroundPicker() {
       <Button
         skin={customWallpaper ? 'filled-primary' : 'plain'}
         className="mr1"
-        htmlFor={fileInputID}
         selected={customWallpaper}
+        onClick={handleFilePick}
       >
         {customWallpaper ? (
           <span>
@@ -89,13 +74,6 @@ export default function BackgroundPicker() {
           __('Select a custom wallpaper')
         )}
       </Button>
-      <input
-        id={fileInputID}
-        type="file"
-        accept="image/*"
-        style={{ display: 'none' }}
-        onChange={handleFilePick}
-      />
     </div>
   );
 }
