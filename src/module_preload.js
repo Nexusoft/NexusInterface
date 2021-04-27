@@ -36,6 +36,7 @@ import ModuleModal from 'components/ModuleModal';
 import DateTime from 'components/DateTimePicker';
 import FormField from 'components/FormField';
 import Arrow from 'components/Arrow';
+import ThemeController from './App/ThemeController';
 
 const newId = (() => {
   let id = 0;
@@ -323,6 +324,7 @@ global.NEXUS = {
   },
   components: {
     GlobalStyles,
+    ThemeController,
     Icon,
     Panel,
     AutoSuggest,
