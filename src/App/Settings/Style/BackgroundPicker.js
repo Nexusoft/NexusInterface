@@ -1,5 +1,4 @@
 // External
-import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { ipcRenderer } from 'electron';
 
@@ -10,7 +9,6 @@ import {
   cosmicLightBackground,
   updateTheme,
 } from 'lib/theme';
-import { newUID } from 'utils/misc';
 
 __ = __context('Settings.Style');
 
@@ -36,7 +34,6 @@ async function handleFilePick(e) {
 
 export default function BackgroundPicker() {
   const wallpaper = useSelector((state) => state.theme.wallpaper);
-  const fileInputID = useMemo(newUID, []);
   const customWallpaper =
     wallpaper !== starryNightBackground && wallpaper !== cosmicLightBackground;
 
