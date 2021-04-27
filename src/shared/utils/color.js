@@ -70,3 +70,31 @@ export function isDark(color) {
 export function toHex(color) {
   return Color(color).hex();
 }
+
+export const getMixer = (() => {
+  let currBackground = null;
+  let currForeground = null;
+  // Memoize the mixer if the background and foreground colors are not changed
+  let mixer = () => {};
+
+  return function getMixer(background, foreground) {
+    if (background !== currBackground || foreground !== currForeground) {
+      currBackground = background;
+      currForeground = foreground;
+
+      mixer = (() => {
+        // Memoize the mixed colors by ratios
+        const mixes = {};
+        return function mixer(ratio) {
+          if (mixes[ratio]) {
+            return mixes[ratio];
+          } else {
+            return (mixes[ratio] = mix(background, foreground, ratio));
+          }
+        };
+      })();
+    }
+
+    return mixer;
+  };
+})();

@@ -6,7 +6,7 @@ import store from 'store';
 import path from 'path';
 import { walletDataDir } from 'consts/paths';
 import { readJson, writeJson } from 'utils/json';
-import { darken, lighten, mix } from 'utils/color';
+import { darken, lighten, mix, getMixer } from 'utils/color';
 
 const themeFileName = 'theme.json';
 const themeFilePath = path.join(walletDataDir, themeFileName);
@@ -173,33 +173,7 @@ export async function loadCustomTheme(path) {
 
 // Mixer is a utility function that mixes the background and foreground color in a specified ratio
 // to produce an intermediate color (may be thought of similarly to shades of gray between black and white)
-export const getMixer = (() => {
-  let currBackground = null;
-  let currForeground = null;
-  // Memoize the mixer if the background and foreground colors are not changed
-  let mixer = () => {};
-
-  return function getMixer(background, foreground) {
-    if (background !== currBackground || foreground !== currForeground) {
-      currBackground = background;
-      currForeground = foreground;
-
-      mixer = (() => {
-        // Memoize the mixed colors by ratios
-        const mixes = {};
-        return function mixer(ratio) {
-          if (mixes[ratio]) {
-            return mixes[ratio];
-          } else {
-            return (mixes[ratio] = mix(background, foreground, ratio));
-          }
-        };
-      })();
-    }
-
-    return mixer;
-  };
-})();
+export { getMixer };
 
 export const fortifyTheme = (theme) => ({
   ...theme,
