@@ -1,13 +1,12 @@
 import { Component } from 'react';
 import { ipcRenderer } from 'electron';
-import { ThemeProvider } from '@emotion/react';
 import Keyboard from 'react-simple-keyboard';
 import styled from '@emotion/styled';
 
 import GlobalStyles from 'components/GlobalStyles';
+import ThemeController from 'components/ThemeController';
 import TextField from 'components/TextField';
 import MaskableTextField from 'components/MaskableTextField';
-import { getMixer } from 'utils/color';
 
 import KeyboardStyles from './KeyboardStyles';
 
@@ -74,14 +73,10 @@ export default class App extends Component {
       shift,
       options: { theme, maskable, placeholder },
     } = this.state;
-    const themeWithMixer = {
-      ...theme,
-      mixer: getMixer(theme.background, theme.foreground),
-    };
     const Input = maskable ? MaskableTextField : TextField;
 
     return (
-      <ThemeProvider theme={themeWithMixer}>
+      <ThemeController theme={theme}>
         <KeyboardWrapper>
           <GlobalStyles />
           <KeyboardStyles />
@@ -137,7 +132,7 @@ export default class App extends Component {
             tabCharOnTab={false}
           />
         </KeyboardWrapper>
-      </ThemeProvider>
+      </ThemeController>
     );
   }
 }
