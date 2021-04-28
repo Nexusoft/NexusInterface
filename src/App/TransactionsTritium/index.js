@@ -13,6 +13,8 @@ import { fetchAllTransactions } from 'lib/tritiumTransactions';
 import { observeStore } from 'store';
 import { goToTxsPage } from 'lib/ui';
 import transactionIcon from 'icons/transaction.svg';
+import Spinner from 'components/Spinner';
+
 
 import {
   getTransactionsList,
@@ -174,11 +176,12 @@ class TransactionsTritium extends Component {
    */
   render() {
     const { loadedAll, transactions, page, totalPages } = this.props;
+    const loadedSome = !!transactions.length;
 
     return (
-      <Panel icon={transactionIcon} title={__('Transactions')}>
+      <Panel icon={transactionIcon} title={__('Transactions')} controls={ !loadedAll ? <Button skin="danger" disabled={true} >{__('Loading Transactions')}<Spinner style={{padding:'0 .5em 0 .5em'}}/></Button> : <></>}>
         <RequireLoggedIn>
-          {!loadedAll ? (
+          {!loadedSome ? (
             <WaitingMessage>{__('Loading transactions...')}</WaitingMessage>
           ) : (
             <PageLayout>

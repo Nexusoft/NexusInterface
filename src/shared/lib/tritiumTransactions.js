@@ -114,16 +114,21 @@ export const getDeltaSign = (contract) => {
   }
 };
 
-export async function fetchAllTransactions() {
-  const transactions = await listAll('users/list/transactions', {
-    verbose: 'summary',
-  });
-  loadTritiumTransactions(transactions);
+function addAndWatch(transactions) {
+    console.log(transactions);
+  addTritiumTransactions(transactions);
   transactions.forEach((tx) => {
     if (!isConfirmed(tx)) {
       startWatchingTransaction(tx.txid);
     }
   });
+}
+
+export async function fetchAllTransactions() {
+  const transactions = await listAll('users/list/transactions', {
+    verbose: 'summary',
+  },10,0,addAndWatch);
+  store.dispatch({type: TYPE.SET_TRANSACTIONS_LOADEDALL});
 }
 
 export async function fetchTransaction(txid) {

@@ -22,6 +22,12 @@ export default (state = initialState, action) => {
         loadedAll: true,
       };
 
+    case TYPE.SET_TRANSACTIONS_LOADEDALL:
+      return{
+        ...state,
+        loadedAll: true
+      }
+      
     case TYPE.ADD_TRITIUM_TRANSACTIONS:
       return {
         ...state,
