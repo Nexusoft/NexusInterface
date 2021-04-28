@@ -171,8 +171,6 @@ export async function loadCustomTheme(path) {
   setTheme(theme);
 }
 
-// Mixer is a utility function that mixes the background and foreground color in a specified ratio
-// to produce an intermediate color (may be thought of similarly to shades of gray between black and white)
 export { getMixer };
 
 export const fortifyTheme = (theme) => ({

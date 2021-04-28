@@ -71,6 +71,8 @@ export function toHex(color) {
   return Color(color).hex();
 }
 
+// Mixer is a utility function that mixes the background and foreground color in a specified ratio
+// to produce an intermediate color (may be thought of similarly to shades of gray between black and white)
 export const getMixer = (() => {
   let currBackground = null;
   let currForeground = null;
