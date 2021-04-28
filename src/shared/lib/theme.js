@@ -170,12 +170,3 @@ export async function loadCustomTheme(path) {
 
   setTheme(theme);
 }
-
-export { getMixer };
-
-export const fortifyTheme = (theme) => ({
-  ...theme,
-  mixer: getMixer(theme.background, theme.foreground),
-  lower: theme.dark ? darken : lighten,
-  raise: theme.dark ? lighten : darken,
-});

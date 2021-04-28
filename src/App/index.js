@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 
 // Internal
 import GlobalStyles from 'components/GlobalStyles';
-import ThemeController from 'component/ThemeController';
+import ThemeController from 'components/ThemeController';
 import { legacyMode } from 'consts/misc';
 import { history } from 'lib/wallet';
 import { showDefaultMenu } from 'lib/contextMenu';
