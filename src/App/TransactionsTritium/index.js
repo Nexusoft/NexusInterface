@@ -84,8 +84,9 @@ const mapStateToProps = (state) => {
       },
     },
   } = state;
+  const transactionList = getTransactionsList(map);
   const filteredTransactions = getFilteredTransactions(
-    getTransactionsList(map),
+    transactionList,
     nameQuery,
     addressQuery,
     operation,
@@ -94,6 +95,7 @@ const mapStateToProps = (state) => {
   return {
     transactions: paginateTransactions(filteredTransactions, page),
     loadedAll,
+    loadedSome: !!transactionList.length ,
     page,
     totalPages: Math.ceil(filteredTransactions.length / txPerPage),
   };
@@ -175,11 +177,10 @@ class TransactionsTritium extends Component {
    * @memberof Transactions
    */
   render() {
-    const { loadedAll, transactions, page, totalPages } = this.props;
-    const loadedSome = !!transactions.length;
+    const { loadedAll,loadedSome, transactions, page, totalPages } = this.props;
 
     return (
-      <Panel icon={transactionIcon} title={__('Transactions')} controls={ !loadedAll ? <Button skin="danger" disabled={true} >{__('Loading Transactions')}<Spinner style={{padding:'0 .5em 0 .5em'}}/></Button> : <></>}>
+      <Panel icon={transactionIcon} title={__('Transactions')} controls={ !loadedAll ? <Button skin="danger" disabled={true} >{__('Loading transactions...')}<Spinner style={{padding:'0 .5em 0 .5em'}}/></Button> : <></>}>
         <RequireLoggedIn>
           {!loadedSome ? (
             <WaitingMessage>{__('Loading transactions...')}</WaitingMessage>

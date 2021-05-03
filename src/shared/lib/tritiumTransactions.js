@@ -115,7 +115,6 @@ export const getDeltaSign = (contract) => {
 };
 
 function addAndWatch(transactions) {
-    console.log(transactions);
   addTritiumTransactions(transactions);
   transactions.forEach((tx) => {
     if (!isConfirmed(tx)) {
