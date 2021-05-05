@@ -1,36 +1,20 @@
 // External
-import { Fragment, Component } from 'react';
-import { Link } from 'react-router-dom';
-import { connect, useSelector } from 'react-redux';
-import styled from '@emotion/styled';
-import { keyframes } from '@emotion/react';
-import GA from 'lib/googleAnalytics';
+import { useSelector } from 'react-redux';
 
 // Internal
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import TokenName from 'components/TokenName';
 import QuestionCircle from 'components/QuestionCircle';
-import { refreshBalances, loadAccounts } from 'lib/user';
-import { getMiningInfo } from 'lib/core';
-import { formatNumber, formatCurrency, formatRelativeTime } from 'lib/intl';
-import { timing, consts } from 'styles';
-import {
-  isCoreConnected,
-  isSynchronized,
-  selectTokenBalances,
-} from 'selectors';
-import { observeStore } from 'store';
-import Globe from './Globe';
-import { webGLAvailable } from 'consts/misc';
+import { formatNumber, formatCurrency } from 'lib/intl';
+import { isSynchronized, selectTokenBalances } from 'selectors';
 
 // Images
 import logoIcon from 'icons/NXS_coin.svg';
 import currencyIcons from 'data/currencyIcons';
-import chartIcon from 'icons/chart.svg';
-import supplyIcon from 'icons/supply.svg';
-import hours24Icon from 'icons/24hr.svg';
 import nxsStakeIcon from 'icons/nxs-staking.svg';
+import warningIcon from 'icons/warning.svg';
+import waitIcon from 'icons/wait.svg';
 
 import Stat from './Stat';
 
@@ -63,13 +47,15 @@ function UnsyncWarning() {
   );
 }
 
+const blank = <span className="dim">-</span>;
+
 function BalanceValue({ children }) {
   const hideOverviewBalances = useSelector(
     (state) => state.settings.hideOverviewBalances
   );
 
   if (hideOverviewBalances) {
-    return <span className="dim">-</span>;
+    return blank;
   }
   return children;
 }
@@ -77,7 +63,10 @@ function BalanceValue({ children }) {
 export function NXSBalanceStat() {
   const tokenBalances = useSelector(selectTokenBalances);
   const synchronized = useSelector(isSynchronized);
-  const { available, stake } = useSelector((state) => state.user.balances);
+  const balances = useSelector((state) => state.user.balances);
+  const hideOverviewBalances = useSelector(
+    (state) => state.settings.hideOverviewBalances
+  );
 
   return (
     <Stat
@@ -91,7 +80,7 @@ export function NXSBalanceStat() {
       linkTo="/Transactions"
       label={
         <>
-          {!synchronized && available !== undefined && <UnsyncWarning />}
+          {!synchronized && balances && <UnsyncWarning />}
           <span className="v-align">
             {__('Balance')}
             {tokenBalances?.length === 0 && ' (NXS)'}
@@ -101,18 +90,18 @@ export function NXSBalanceStat() {
       icon={logoIcon}
     >
       <BalanceValue>
-        {available !== undefined ? (
+        {balances ? (
           <div>
             <div>
-              {formatNumber(available + stake)}
+              {formatNumber(balances?.available + balances?.stake)}
               {tokenBalances?.length > 0 && ' NXS'}
             </div>
             {tokenBalances?.length > 0 && (
-              <SubValue>+ {__('OTHER TOKENS')}</SubValue>
+              <div style={{ fontSize: '0.4em' }}>+ {__('OTHER TOKENS')}</div>
             )}
           </div>
         ) : (
-          'N/A'
+          blank
         )}
       </BalanceValue>
     </Stat>
@@ -121,7 +110,8 @@ export function NXSBalanceStat() {
 
 export function NXSFiatBalanceStat() {
   const fiatCurrency = useSelector((state) => state.settings.fiatCurrency);
-  const { available, stake } = useSelector((state) => state.user.balances);
+  const balances = useSelector((state) => state.user.balances);
+  const price = useSelector((state) => state.market?.price);
 
   return (
     <Stat
@@ -134,9 +124,12 @@ export function NXSFiatBalanceStat() {
       icon={currencyIcons(fiatCurrency)}
     >
       <BalanceValue>
-        {available !== undefined
-          ? formatCurrency((available + stake) * market.price, fiatCurrency)
-          : 'N/A'}
+        {price && balances
+          ? formatCurrency(
+              (balances?.available + balances?.stake) * price,
+              fiatCurrency
+            )
+          : blank}
       </BalanceValue>
     </Stat>
   );
@@ -144,6 +137,10 @@ export function NXSFiatBalanceStat() {
 
 export function FeaturedTokenBalanceStat() {
   const theme = useSelector((state) => state.theme);
+  const tokenBalances = useSelector(selectTokenBalances);
+  const featuredToken = theme.featuredTokenName
+    ? tokenBalances?.find((token) => token.name === theme.featuredTokenName)
+    : undefined;
 
   return (
     <Stat
@@ -156,17 +153,16 @@ export function FeaturedTokenBalanceStat() {
       <BalanceValue>
         {featuredToken
           ? formatNumber(featuredToken.balance, featuredToken.decimals)
-          : 'N/A'}
+          : blank}
       </BalanceValue>
     </Stat>
   );
 }
 
 export function IncomingBalanceStat() {
-  const { pending, unconfirmed, immature } = useSelector(
-    (state) => state.user.balances
-  );
-  const incoming = pending + unconfirmed + immature;
+  const balances = useSelector((state) => state.user.balances);
+  const incoming =
+    balances?.pending + balances?.unconfirmed + balances?.immature;
 
   return (
     <Stat
@@ -182,11 +178,9 @@ export function IncomingBalanceStat() {
           <span className="v-align">{__('Incoming balances')} (NXS)</span>
         </>
       }
-      icon={nxsStakeIcon}
+      icon={waitIcon}
     >
-      <BalanceValue>
-        {Number.isNaN(incoming) ? formatNumber(incoming) : 'N/A'}
-      </BalanceValue>
+      <BalanceValue>{balances ? formatNumber(incoming) : blank}</BalanceValue>
     </Stat>
   );
 }

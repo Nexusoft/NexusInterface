@@ -11,12 +11,12 @@ import { timing } from 'styles';
 
 __ = __context('Overview');
 
-const StatWrapper = styled.div(
+export const StatWrapper = styled.div(
   ({ theme }) => ({
-    display: 'block',
-    margin: '1.7em 0',
-    display: 'flex',
+    display: 'grid',
+    columnGap: 15,
     alignItems: 'center',
+    margin: '1.7em 0',
     filter: `drop-shadow(0 0 8px ${theme.mixer(-0.5)}) brightness(100%)`,
     color: theme.foreground,
   }),
@@ -32,6 +32,10 @@ const StatWrapper = styled.div(
     }
 );
 
+const StatContent = styled.div({
+  gridArea: 'content',
+});
+
 const StatLabel = styled.div(({ theme }) => ({
   fontWeight: 'bold',
   letterSpacing: 0.5,
@@ -45,6 +49,7 @@ const StatValue = styled.div({
 });
 
 const StatIcon = styled(Icon)(({ theme }) => ({
+  gridArea: 'icon',
   width: 38,
   height: 38,
   color: theme.primary,
@@ -71,10 +76,10 @@ export default function Stat({
       position={tooltipPosition}
     >
       <StatWrapper as={linkTo ? Link : undefined} to={linkTo || undefined}>
-        <div>
+        <StatContent>
           <StatLabel>{label}</StatLabel>
           <StatValue>{value}</StatValue>
-        </div>
+        </StatContent>
         <StatIcon icon={icon} />
       </StatWrapper>
     </Tooltip.Trigger>
