@@ -6,7 +6,6 @@ import store from 'store';
 import path from 'path';
 import { walletDataDir } from 'consts/paths';
 import { readJson, writeJson } from 'utils/json';
-import { darken, lighten, mix, getMixer } from 'utils/color';
 
 const themeFileName = 'theme.json';
 const themeFilePath = path.join(walletDataDir, themeFileName);
