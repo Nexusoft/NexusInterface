@@ -309,8 +309,10 @@ async function secureApiCall([endpoint, params, callId]) {
         <code
           style={{
             wordBreak: 'break-word',
+            whiteSpace: 'pre',
             display: 'block',
             marginTop: '0.5em',
+            padding: '8px 0',
           }}
         >
           {JSON.stringify(params, null, 2)}
