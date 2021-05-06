@@ -57,7 +57,6 @@ function useUpdateGlobe({ settings, connections, blocks }) {
   return { redrawCurves, removeAllPoints };
 }
 
-// Mandatory React-Redux method
 export default function Overview() {
   const settings = useSelector((state) => state.settings);
   const theme = useSelector((state) => state.theme);
