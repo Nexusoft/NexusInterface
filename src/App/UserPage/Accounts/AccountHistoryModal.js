@@ -2,7 +2,7 @@ import { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import WaitingMessage from 'components/WaitingMessage';
 import Table from 'components/Table';
 import ContractDetailsModal from 'components/ContractDetailsModal';
@@ -228,15 +228,15 @@ class AccountHistoryModal extends Component {
     const { account, balances, showFiat, market, fiatCurrency } = this.props;
     const { contracts } = this.state;
     return (
-      <Modal
+      <ControlledModal
         assignClose={(closeModal) => {
           this.closeModal = closeModal;
         }}
       >
-        <Modal.Header>
+        <ControlledModal.Header>
           {account.name} {__('Account History')}
-        </Modal.Header>
-        <Modal.Body>
+        </ControlledModal.Header>
+        <ControlledModal.Body>
           {!contracts ? (
             <WaitingMessage>
               {__('Loading account history')}
@@ -361,8 +361,8 @@ class AccountHistoryModal extends Component {
               />
             </Layout>
           )}
-        </Modal.Body>
-      </Modal>
+        </ControlledModal.Body>
+      </ControlledModal>
     );
   }
 }

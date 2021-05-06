@@ -5,7 +5,7 @@ import { Component, useState } from 'react';
 import { reduxForm, Field } from 'redux-form';
 
 import { callApi } from 'lib/tritiumApi';
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import TextFieldWithKeyboard from 'components/TextFieldWithKeyboard';
@@ -125,12 +125,12 @@ class SetRecoveryModal extends Component {
   render() {
     const { handleSubmit, submitting } = this.props;
     return (
-      <Modal
+      <ControlledModal
         assignClose={(closeModal) => (this.closeModal = closeModal)}
         maxWidth={500}
       >
-        <Modal.Header>{__('Recovery phrase')}</Modal.Header>
-        <Modal.Body>
+        <ControlledModal.Header>{__('Recovery phrase')}</ControlledModal.Header>
+        <ControlledModal.Body>
           <form onSubmit={handleSubmit}>
             <p>
               {__(
@@ -219,8 +219,8 @@ class SetRecoveryModal extends Component {
               </Button>
             </div>
           </form>
-        </Modal.Body>
-      </Modal>
+        </ControlledModal.Body>
+      </ControlledModal>
     );
   }
 }
@@ -228,11 +228,13 @@ class SetRecoveryModal extends Component {
 function ConfirmRecoveryDialog({ phrase, onConfirm, ...rest }) {
   const [inputValue, setInputValue] = useState('');
   return (
-    <Modal maxWidth={500} {...rest}>
+    <ControlledModal maxWidth={500} {...rest}>
       {(closeModal) => (
         <>
-          <Modal.Header>{__('Confirm recovery phrase')}</Modal.Header>
-          <Modal.Body>
+          <ControlledModal.Header>
+            {__('Confirm recovery phrase')}
+          </ControlledModal.Header>
+          <ControlledModal.Body>
             <TextField
               multiline
               rows={1}
@@ -267,10 +269,10 @@ function ConfirmRecoveryDialog({ phrase, onConfirm, ...rest }) {
                 {__('Confirm')}
               </Button>
             </div>
-          </Modal.Body>
+          </ControlledModal.Body>
         </>
       )}
-    </Modal>
+    </ControlledModal>
   );
 }
 

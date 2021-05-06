@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import { reduxForm, Field } from 'redux-form';
 
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
 import FormField from 'components/FormField';
@@ -77,14 +77,14 @@ class SearchTokenModal extends Component {
   render() {
     const { handleSubmit, submitting } = this.props;
     return (
-      <Modal
+      <ControlledModal
         assignClose={(closeModal) => {
           this.closeModal = closeModal;
         }}
         maxWidth={800}
       >
-        <Modal.Header>{__('Look up token')}</Modal.Header>
-        <Modal.Body>
+        <ControlledModal.Header>{__('Look up token')}</ControlledModal.Header>
+        <ControlledModal.Body>
           <form onSubmit={handleSubmit}>
             <FormField connectLabel label={__('Name or address')}>
               <Field
@@ -103,8 +103,8 @@ class SearchTokenModal extends Component {
               {__('Look up')}
             </Button>
           </form>
-        </Modal.Body>
-      </Modal>
+        </ControlledModal.Body>
+      </ControlledModal>
     );
   }
 }

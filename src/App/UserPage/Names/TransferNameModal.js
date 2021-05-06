@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
 
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import Button from 'components/Button';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
@@ -111,16 +111,16 @@ class TransferNameForm extends Component {
 }
 
 const TransferNameModal = ({ nameRecord }) => (
-  <Modal maxWidth={600}>
+  <ControlledModal maxWidth={600}>
     {(closeModal) => (
       <>
-        <Modal.Header>{__('Transfer name')}</Modal.Header>
-        <Modal.Body>
+        <ControlledModal.Header>{__('Transfer name')}</ControlledModal.Header>
+        <ControlledModal.Body>
           <TransferNameForm closeModal={closeModal} nameRecord={nameRecord} />
-        </Modal.Body>
+        </ControlledModal.Body>
       </>
     )}
-  </Modal>
+  </ControlledModal>
 );
 
 export default TransferNameModal;

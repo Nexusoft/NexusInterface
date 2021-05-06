@@ -2,7 +2,7 @@ import { Component } from 'react';
 import { reduxForm, Field } from 'redux-form';
 
 import { callApi } from 'lib/tritiumApi';
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import FormField from 'components/FormField';
 import TextFieldWithKeyboard from 'components/TextFieldWithKeyboard';
 import Button from 'components/Button';
@@ -79,12 +79,14 @@ class ChangePasswordPinModal extends Component {
   render() {
     const { handleSubmit, submitting } = this.props;
     return (
-      <Modal
+      <ControlledModal
         assignClose={(closeModal) => (this.closeModal = closeModal)}
         maxWidth={500}
       >
-        <Modal.Header>{__('Change password and PIN')}</Modal.Header>
-        <Modal.Body>
+        <ControlledModal.Header>
+          {__('Change password and PIN')}
+        </ControlledModal.Header>
+        <ControlledModal.Body>
           <form onSubmit={handleSubmit}>
             <FormField label={__('Current password')}>
               <Field
@@ -138,8 +140,8 @@ class ChangePasswordPinModal extends Component {
               </Button>
             </div>
           </form>
-        </Modal.Body>
-      </Modal>
+        </ControlledModal.Body>
+      </ControlledModal>
     );
   }
 }

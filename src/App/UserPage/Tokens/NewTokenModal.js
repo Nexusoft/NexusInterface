@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { reduxForm, Field, formValueSelector } from 'redux-form';
 import styled from '@emotion/styled';
 
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
 import FormField from 'components/FormField';
@@ -113,14 +113,14 @@ class NewTokenModal extends Component {
     const { handleSubmit, submitting, supply, decimal } = this.props;
     const tokenCreationFee = token(supply, decimal);
     return (
-      <Modal
+      <ControlledModal
         assignClose={(closeModal) => {
           this.closeModal = closeModal;
         }}
         maxWidth={400}
       >
-        <Modal.Header>{__('New Token')}</Modal.Header>
-        <Modal.Body>
+        <ControlledModal.Header>{__('New Token')}</ControlledModal.Header>
+        <ControlledModal.Body>
           <form onSubmit={handleSubmit}>
             {__(
               `There is a %{tokenfee} NXS token creation fee, based on supply`,
@@ -178,8 +178,8 @@ class NewTokenModal extends Component {
               </Button>
             </div>
           </form>
-        </Modal.Body>
-      </Modal>
+        </ControlledModal.Body>
+      </ControlledModal>
     );
   }
 }

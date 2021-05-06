@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import InfoField from 'components/InfoField';
 import QRButton from 'components/QRButton';
 import { formatDateTime } from 'lib/intl';
@@ -31,11 +31,11 @@ const CloseButton = styled(Button)({
 });
 
 const TokenDetailsModal = ({ token }) => (
-  <Modal>
+  <ControlledModal>
     {(closeModal) => (
       <>
-        <Modal.Header>{__('Token Details')}</Modal.Header>
-        <Modal.Body>
+        <ControlledModal.Header>{__('Token Details')}</ControlledModal.Header>
+        <ControlledModal.Body>
           {token.name && (
             <InfoField ratio={[1, 2]} label={__('Token name')}>
               {token.name}
@@ -90,10 +90,10 @@ const TokenDetailsModal = ({ token }) => (
               {__('Close')}
             </CloseButton>
           </div>
-        </Modal.Body>
+        </ControlledModal.Body>
       </>
     )}
-  </Modal>
+  </ControlledModal>
 );
 
 const mapStateToProps = (state) => ({});

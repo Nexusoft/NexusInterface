@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo, Fragment } from 'react';
 import styled from '@emotion/styled';
 import { reduxForm, Field } from 'redux-form';
 
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import NexusAddress from 'components/NexusAddress';
 import Icon from 'components/Icon';
 import TokenName from 'components/TokenName';
@@ -184,9 +184,9 @@ function PreviewTransactionModal({
   }, []);
 
   return (
-    <Modal>
-      <Modal.Header>{__("You're sending")}</Modal.Header>
-      <Modal.Body>
+    <ControlledModal>
+      <ControlledModal.Header>{__("You're sending")}</ControlledModal.Header>
+      <ControlledModal.Body>
         <Layout>
           <LabelCell>
             <Label>{__('From')}</Label>
@@ -269,9 +269,9 @@ function PreviewTransactionModal({
             )
           )}
         </Layout>
-      </Modal.Body>
+      </ControlledModal.Body>
 
-      <Modal.Footer>
+      <ControlledModal.Footer>
         <form onSubmit={handleSubmit} style={{ marginTop: -20 }}>
           <Field
             component={TextFieldWithKeyboard.RF}
@@ -298,8 +298,8 @@ function PreviewTransactionModal({
             </span>
           </SubmitButton>
         </form>
-      </Modal.Footer>
-    </Modal>
+      </ControlledModal.Footer>
+    </ControlledModal>
   );
 }
 

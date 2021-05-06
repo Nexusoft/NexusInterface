@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import Icon from 'components/Icon';
 import InfoField from 'components/InfoField';
 import ExternalLink from 'components/ExternalLink';
@@ -89,11 +89,11 @@ const AgreementContent = styled.p({
 });
 
 const About = ({ version, testnet, privateBlockchain }) => (
-  <Modal>
-    <Modal.Header>
+  <ControlledModal>
+    <ControlledModal.Header>
       <NexusLogo icon={nexusLogo} />
-    </Modal.Header>
-    <Modal.Body>
+    </ControlledModal.Header>
+    <ControlledModal.Body>
       <div>
         <InfoField ratio={[1, 1]} label={__('Wallet version')}>
           {APP_VERSION}
@@ -304,8 +304,8 @@ const About = ({ version, testnet, privateBlockchain }) => (
           </ExternalLink>
         </div>
       </Section>
-    </Modal.Body>
-  </Modal>
+    </ControlledModal.Body>
+  </ControlledModal>
 );
 
 const mapStateToProps = ({ core: { info, systemInfo } }) => ({

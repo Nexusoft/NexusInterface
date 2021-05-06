@@ -2,7 +2,7 @@
 import { Component } from 'react';
 
 // Internal
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import AddEditContactForm from './AddEditContactForm';
 
 __ = __context('AddEditContact');
@@ -40,13 +40,13 @@ class AddEditContactModal extends Component {
     const { edit, contact, prefill } = this.props;
 
     return (
-      <Modal>
+      <ControlledModal>
         {(closeModal) => (
           <>
-            <Modal.Header>
+            <ControlledModal.Header>
               {edit ? __('Edit contact') : __('Create new contact')}
-            </Modal.Header>
-            <Modal.Body>
+            </ControlledModal.Header>
+            <ControlledModal.Body>
               <AddEditContactForm
                 form={edit ? `editContact:${contact.name}` : 'createContact'}
                 edit={edit}
@@ -58,10 +58,10 @@ class AddEditContactModal extends Component {
                 }
                 closeModal={closeModal}
               />
-            </Modal.Body>
+            </ControlledModal.Body>
           </>
         )}
-      </Modal>
+      </ControlledModal>
     );
   }
 }

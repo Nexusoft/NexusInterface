@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import Button from 'components/Button';
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import { updateSettings } from 'lib/settings';
 import { potTheme, setTheme } from 'lib/theme';
 import store from 'store';
@@ -22,7 +22,7 @@ export default function PotThemeModal() {
   };
 
   return (
-    <Modal
+    <ControlledModal
       maxWidth={600}
       onClose={() => {
         updateSettings({ potThemeModalShown: true });
@@ -30,8 +30,10 @@ export default function PotThemeModal() {
     >
       {(closeModal) => (
         <>
-          <Modal.Header>{__('Introducing POT theme')}</Modal.Header>
-          <Modal.Body>
+          <ControlledModal.Header>
+            {__('Introducing POT theme')}
+          </ControlledModal.Header>
+          <ControlledModal.Body>
             <div className="text-center">
               <img src={potImg} width={100} height={100} />
             </div>
@@ -61,9 +63,9 @@ export default function PotThemeModal() {
                 {__('Done')}
               </Button>
             </div>
-          </Modal.Body>
+          </ControlledModal.Body>
         </>
       )}
-    </Modal>
+    </ControlledModal>
   );
 }

@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { connect } from 'react-redux';
 
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import Button from 'components/Button';
 import { history } from 'lib/wallet';
 import { formatNumber } from 'lib/intl';
@@ -22,11 +22,13 @@ const MigrateAccountModal = ({ legacyBalance, accounts }) => {
   const defaultAddress = defaultAccount && defaultAccount.address;
 
   return (
-    <Modal maxWidth={600}>
+    <ControlledModal maxWidth={600}>
       {(closeModal) => (
         <>
-          <Modal.Header>{__('Migrate account')}</Modal.Header>
-          <Modal.Body>
+          <ControlledModal.Header>
+            {__('Migrate account')}
+          </ControlledModal.Header>
+          <ControlledModal.Body>
             <div>
               {__('You have %{amount} NXS in your legacy account.', {
                 amount: formatNumber(legacyBalance, 6),
@@ -63,10 +65,10 @@ const MigrateAccountModal = ({ legacyBalance, accounts }) => {
                 {__("Don't show this again")}
               </Button>
             </div>
-          </Modal.Body>
+          </ControlledModal.Body>
         </>
       )}
-    </Modal>
+    </ControlledModal>
   );
 };
 

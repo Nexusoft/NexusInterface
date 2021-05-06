@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 import ReactMarkdown from 'react-markdown';
 
 //Internal
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import Button from 'components/Button';
 import Link from 'components/Link';
 
@@ -90,9 +90,11 @@ class APIDocModal extends Component {
   render() {
     const { displayMD } = this.state;
     return (
-      <Modal assignClose={(closeModal) => (this.closeModal = closeModal)}>
-        <Modal.Header>{'API Documentation'}</Modal.Header>
-        <Modal.Body>
+      <ControlledModal
+        assignClose={(closeModal) => (this.closeModal = closeModal)}
+      >
+        <ControlledModal.Header>{'API Documentation'}</ControlledModal.Header>
+        <ControlledModal.Body>
           {displayMD ? (
             <ReactMarkdown
               source={this.state.displayMD}
@@ -137,8 +139,8 @@ class APIDocModal extends Component {
               {this.renderDocList()}
             </>
           )}
-        </Modal.Body>
-        <Modal.Footer>
+        </ControlledModal.Body>
+        <ControlledModal.Footer>
           <div className="flex space-between">
             {displayMD && (
               <>
@@ -154,8 +156,8 @@ class APIDocModal extends Component {
               {__('Close')}
             </Button>
           </div>
-        </Modal.Footer>
-      </Modal>
+        </ControlledModal.Footer>
+      </ControlledModal>
     );
   }
 }

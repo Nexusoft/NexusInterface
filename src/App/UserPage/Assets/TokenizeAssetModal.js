@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
 
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import Button from 'components/Button';
 import FormField from 'components/FormField';
 import Spinner from 'components/Spinner';
@@ -161,16 +161,16 @@ class TokenizeAssetForm extends Component {
 }
 
 const TokenizeAssetModal = ({ asset }) => (
-  <Modal maxWidth={600}>
+  <ControlledModal maxWidth={600}>
     {(closeModal) => (
       <>
-        <Modal.Header>{__('Tokenize asset')}</Modal.Header>
-        <Modal.Body>
+        <ControlledModal.Header>{__('Tokenize asset')}</ControlledModal.Header>
+        <ControlledModal.Body>
           <TokenizeAssetForm closeModal={closeModal} asset={asset} />
-        </Modal.Body>
+        </ControlledModal.Body>
       </>
     )}
-  </Modal>
+  </ControlledModal>
 );
 
 export default TokenizeAssetModal;

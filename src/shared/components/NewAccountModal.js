@@ -2,7 +2,7 @@ import { Component } from 'react';
 import { reduxForm, Field } from 'redux-form';
 import { connect } from 'react-redux';
 
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
 import FormField from 'components/FormField';
@@ -115,14 +115,14 @@ class NewAccountModal extends Component {
     const tokenPreset = !!(tokenName || tokenAddress);
 
     return (
-      <Modal
+      <ControlledModal
         assignClose={(closeModal) => {
           this.closeModal = closeModal;
         }}
         maxWidth={700}
       >
-        <Modal.Header>{__('New account')}</Modal.Header>
-        <Modal.Body>
+        <ControlledModal.Header>{__('New account')}</ControlledModal.Header>
+        <ControlledModal.Body>
           <form onSubmit={handleSubmit}>
             <FormField
               connectLabel
@@ -185,8 +185,8 @@ class NewAccountModal extends Component {
               </Button>
             </div>
           </form>
-        </Modal.Body>
-      </Modal>
+        </ControlledModal.Body>
+      </ControlledModal>
     );
   }
 }

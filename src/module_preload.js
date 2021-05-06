@@ -32,7 +32,7 @@ import Icon from 'components/Icon';
 import Tab from 'components/Tab';
 import FieldSet from 'components/FieldSet';
 import AutoSuggest from 'components/AutoSuggest';
-import ModuleModal from 'components/ModuleModal';
+import Modal from 'components/Modal';
 import DateTime from 'components/DateTimePicker';
 import FormField from 'components/FormField';
 import Arrow from 'components/Arrow';
@@ -330,7 +330,7 @@ global.NEXUS = {
     AutoSuggest,
     FieldSet,
     Switch,
-    Modal: ModuleModal,
+    Modal,
     Tooltip,
     Select,
     DateTime,

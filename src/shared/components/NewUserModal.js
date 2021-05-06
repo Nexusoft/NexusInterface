@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 import { connect } from 'react-redux';
 
 import { callApi } from 'lib/tritiumApi';
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import TextFieldWithKeyboard from 'components/TextFieldWithKeyboard';
@@ -124,12 +124,12 @@ class NewUserModal extends Component {
     const { handleSubmit, submitting } = this.props;
 
     return (
-      <Modal
+      <ControlledModal
         maxWidth={500}
         assignClose={(closeModal) => (this.closeModal = closeModal)}
       >
-        <Modal.Header>{__('Create new user')}</Modal.Header>
-        <Modal.Body>
+        <ControlledModal.Header>{__('Create new user')}</ControlledModal.Header>
+        <ControlledModal.Body>
           <form onSubmit={handleSubmit}>
             <FormField
               connectLabel
@@ -203,8 +203,8 @@ class NewUserModal extends Component {
               </Link>
             </ExtraSection>
           </form>
-        </Modal.Body>
-      </Modal>
+        </ControlledModal.Body>
+      </ControlledModal>
     );
   }
 }

@@ -1,6 +1,6 @@
 import { Component } from 'react';
 
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import TextField from 'components/TextField';
 import Button from 'components/Button';
 
@@ -22,12 +22,12 @@ export default class PasswordModal extends Component {
 
   render() {
     return (
-      <Modal
+      <ControlledModal
         assignClose={(closeModal) => (this.closeModal = closeModal)}
         maxWidth={500}
       >
-        <Modal.Header>{__('Wallet password')}</Modal.Header>
-        <Modal.Body>
+        <ControlledModal.Header>{__('Wallet password')}</ControlledModal.Header>
+        <ControlledModal.Body>
           <TextField
             type="password"
             placeholder={__('Enter your wallet password')}
@@ -35,16 +35,16 @@ export default class PasswordModal extends Component {
             onChange={this.handleChange}
             style={{ marginTop: '.5em' }}
           />
-        </Modal.Body>
-        <Modal.Footer>
+        </ControlledModal.Body>
+        <ControlledModal.Footer>
           <div className="flex space-between">
             <Button onClick={this.closeModal}>{__('Cancel')}</Button>
             <Button skin="primary" onClick={this.confirmPassword}>
               {__('Confirm')}
             </Button>
           </div>
-        </Modal.Footer>
-      </Modal>
+        </ControlledModal.Footer>
+      </ControlledModal>
     );
   }
 }

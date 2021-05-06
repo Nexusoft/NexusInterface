@@ -4,7 +4,7 @@ import { history } from 'lib/wallet';
 import styled from '@emotion/styled';
 
 // Internal
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
 import { updateSettings } from 'lib/settings';
@@ -13,7 +13,7 @@ import warningIcon from 'icons/warning.svg';
 
 __ = __context('EncryptionWarning');
 
-const WarningModal = styled(Modal)({
+const WarningModal = styled(ControlledModal)({
   maxWidth: 500,
   textAlign: 'center',
 });
@@ -47,7 +47,7 @@ class EncryptionWarningModal extends Component {
           this.closeModal = close;
         }}
       >
-        <Modal.Body style={{ fontSize: 18 }}>
+        <ControlledModal.Body style={{ fontSize: 18 }}>
           <WarningIcon icon={warningIcon} />
           <WarningMessage>{__('Your wallet is not encrypted!')}</WarningMessage>
           <p>
@@ -64,7 +64,7 @@ class EncryptionWarningModal extends Component {
               {__('Encrypt wallet')}
             </Button>
           </div>
-        </Modal.Body>
+        </ControlledModal.Body>
       </WarningModal>
     );
   }

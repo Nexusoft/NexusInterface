@@ -2,7 +2,7 @@ import { Component } from 'react';
 import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
 
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import Button from 'components/Button';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
@@ -99,19 +99,21 @@ class TransferNamespaceForm extends Component {
 }
 
 const TransferNamespaceModal = ({ namespace }) => (
-  <Modal maxWidth={600}>
+  <ControlledModal maxWidth={600}>
     {(closeModal) => (
       <>
-        <Modal.Header>{__('Transfer namespace')}</Modal.Header>
-        <Modal.Body>
+        <ControlledModal.Header>
+          {__('Transfer namespace')}
+        </ControlledModal.Header>
+        <ControlledModal.Body>
           <TransferNamespaceForm
             closeModal={closeModal}
             namespace={namespace}
           />
-        </Modal.Body>
+        </ControlledModal.Body>
       </>
     )}
-  </Modal>
+  </ControlledModal>
 );
 
 export default TransferNamespaceModal;

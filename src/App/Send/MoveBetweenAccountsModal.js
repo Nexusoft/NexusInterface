@@ -8,7 +8,7 @@ import { reduxForm, Field, formValueSelector } from 'redux-form';
 import rpc from 'lib/rpc';
 import Select from 'components/Select';
 import Button from 'components/Button';
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import Link from 'components/Link';
 import {
   openConfirmDialog,
@@ -237,17 +237,19 @@ class MoveBetweenAccountsForm extends Component {
  *
  */
 const MoveBetweenAccountsModal = () => (
-  <Modal maxWidth={650}>
+  <ControlledModal maxWidth={650}>
     {(closeModal) => (
       <>
-        <Modal.Header>{__('Move NXS between accounts')}</Modal.Header>
+        <ControlledModal.Header>
+          {__('Move NXS between accounts')}
+        </ControlledModal.Header>
 
-        <Modal.Body>
+        <ControlledModal.Body>
           <MoveBetweenAccountsForm closeModal={closeModal} />
-        </Modal.Body>
+        </ControlledModal.Body>
       </>
     )}
-  </Modal>
+  </ControlledModal>
 );
 
 export default MoveBetweenAccountsModal;

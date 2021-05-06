@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
 
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import Button from 'components/Button';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
@@ -238,16 +238,18 @@ class CreateNameForm extends Component {
 }
 
 const CreateNameModal = () => (
-  <Modal maxWidth={500}>
+  <ControlledModal maxWidth={500}>
     {(closeModal) => (
       <>
-        <Modal.Header>{__('Create a new name')}</Modal.Header>
-        <Modal.Body>
+        <ControlledModal.Header>
+          {__('Create a new name')}
+        </ControlledModal.Header>
+        <ControlledModal.Body>
           <CreateNameForm closeModal={closeModal} />
-        </Modal.Body>
+        </ControlledModal.Body>
       </>
     )}
-  </Modal>
+  </ControlledModal>
 );
 
 export default CreateNameModal;

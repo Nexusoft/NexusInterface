@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import { reduxForm, Field } from 'redux-form';
 
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import Button from 'components/Button';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
@@ -99,16 +99,18 @@ class CreateNamespaceForm extends Component {
 }
 
 const CreateNamespaceModal = () => (
-  <Modal maxWidth={450}>
+  <ControlledModal maxWidth={450}>
     {(closeModal) => (
       <>
-        <Modal.Header>{__('Create a new namespace')}</Modal.Header>
-        <Modal.Body>
+        <ControlledModal.Header>
+          {__('Create a new namespace')}
+        </ControlledModal.Header>
+        <ControlledModal.Body>
           <CreateNamespaceForm closeModal={closeModal} />
-        </Modal.Body>
+        </ControlledModal.Body>
       </>
     )}
-  </Modal>
+  </ControlledModal>
 );
 
 export default CreateNamespaceModal;

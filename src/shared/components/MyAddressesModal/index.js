@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
 // Internal
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import TextField from 'components/TextField';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
@@ -20,7 +20,7 @@ import rpc from 'lib/rpc';
 
 __ = __context('MyAddresses');
 
-const MyAddressesModalComponent = styled(Modal)({
+const MyAddressesModalComponent = styled(ControlledModal)({
   // set a fixed height so that the modal won't jump when the search query changes
   height: '80%',
 });
@@ -131,8 +131,8 @@ class MyAddressesModal extends Component {
   render() {
     return (
       <MyAddressesModalComponent>
-        <Modal.Header>My Addresses</Modal.Header>
-        <Modal.Body>
+        <ControlledModal.Header>My Addresses</ControlledModal.Header>
+        <ControlledModal.Body>
           <Search>
             <TextField
               left={<Icon icon={searchIcon} className="mr0_4" />}
@@ -165,7 +165,7 @@ class MyAddressesModal extends Component {
               </Button>
             </Buttons>
           )}
-        </Modal.Body>
+        </ControlledModal.Body>
       </MyAddressesModalComponent>
     );
   }

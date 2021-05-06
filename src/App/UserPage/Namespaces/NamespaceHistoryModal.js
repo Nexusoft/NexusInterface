@@ -1,6 +1,6 @@
 import { Component } from 'react';
 
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import Table from 'components/Table';
 import WaitingMessage from 'components/WaitingMessage';
 import { formatDateTime } from 'lib/intl';
@@ -64,16 +64,16 @@ export default class NamespaceHistoryModal extends Component {
     const { events } = this.state;
 
     return (
-      <Modal
+      <ControlledModal
         assignClose={(close) => {
           this.closeModal = close;
         }}
       >
-        <Modal.Header className="relative">
+        <ControlledModal.Header className="relative">
           {__('Namespace History')}
-        </Modal.Header>
+        </ControlledModal.Header>
 
-        <Modal.Body>
+        <ControlledModal.Body>
           {!events ? (
             <WaitingMessage>
               {__('Loading namespace history')}
@@ -100,8 +100,8 @@ export default class NamespaceHistoryModal extends Component {
               }}
             />
           )}
-        </Modal.Body>
-      </Modal>
+        </ControlledModal.Body>
+      </ControlledModal>
     );
   }
 }
