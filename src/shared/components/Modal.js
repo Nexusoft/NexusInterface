@@ -147,18 +147,22 @@ export default function Modal({
 }) {
   const modalElem = useRef();
   const backgroundElem = useRef();
-  const closeWithAnimation = () => {
-    const duration = parseInt(timing.quick);
-    const animation = fullScreen ? fullScreenOutro : outro;
-    const options = {
-      duration,
-      easing: 'ease-in',
-      fill: 'both',
-    };
-    modalElem.current?.animate(animation, options);
-    backgroundElem.current?.animate(bgOutro, options);
-    setTimeout(removeModal, duration);
-  };
+  const closeWithAnimation = () =>
+    new Promise((resolve) => {
+      const duration = parseInt(timing.quick);
+      const animation = fullScreen ? fullScreenOutro : outro;
+      const options = {
+        duration,
+        easing: 'ease-in',
+        fill: 'both',
+      };
+      modalElem.current?.animate(animation, options);
+      backgroundElem.current?.animate(bgOutro, options);
+      setTimeout(() => {
+        removeModal();
+        resolve();
+      }, duration);
+    });
 
   useEffect(() => {
     assignClose?.(closeWithAnimation);
