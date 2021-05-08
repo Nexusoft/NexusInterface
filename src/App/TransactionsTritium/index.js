@@ -8,13 +8,15 @@ import WaitingMessage from 'components/WaitingMessage';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
 import RequireLoggedIn from 'components/RequireLoggedIn';
+import Spinner from 'components/Spinner';
+import Tooltip from 'components/Tooltip';
+import Icon from 'components/Icon';
 import { isLoggedIn } from 'selectors';
 import { fetchAllTransactions } from 'lib/tritiumTransactions';
 import { observeStore } from 'store';
 import { goToTxsPage } from 'lib/ui';
 import transactionIcon from 'icons/transaction.svg';
-import Spinner from 'components/Spinner';
-
+import warningIcon from 'icons/warning.svg';
 
 import {
   getTransactionsList,
@@ -68,6 +70,19 @@ const PaginationButton = styled(Button)({
   minWidth: 150,
 });
 
+const TransactionLoadingWarningSpinner = styled(Spinner)(({ theme }) => ({
+  color: theme.danger,
+  width: '2em',
+  height: '2em',
+}));
+
+const TransactionLoadingWarningIcon = styled(Icon)(({ theme }) => ({
+  color: theme.danger,
+  position: 'absolute',
+  marginTop: '.4em',
+  marginLeft: '-1.5em',
+}));
+
 // React-Redux mandatory methods
 const mapStateToProps = (state) => {
   const {
@@ -95,7 +110,7 @@ const mapStateToProps = (state) => {
   return {
     transactions: paginateTransactions(filteredTransactions, page),
     loadedAll,
-    loadedSome: !!transactionList.length ,
+    loadedSome: !!transactionList.length,
     page,
     totalPages: Math.ceil(filteredTransactions.length / txPerPage),
   };
@@ -177,10 +192,15 @@ class TransactionsTritium extends Component {
    * @memberof Transactions
    */
   render() {
-    const { loadedAll,loadedSome, transactions, page, totalPages } = this.props;
-
+    const {
+      loadedAll,
+      loadedSome,
+      transactions,
+      page,
+      totalPages,
+    } = this.props;
     return (
-      <Panel icon={transactionIcon} title={__('Transactions')} controls={ !loadedAll ? <Button skin="danger" disabled={true} >{__('Loading transactions...')}<Spinner style={{padding:'0 .5em 0 .5em'}}/></Button> : <></>}>
+      <Panel icon={transactionIcon} title={__('Transactions')}>
         <RequireLoggedIn>
           {!loadedSome ? (
             <WaitingMessage>{__('Loading transactions...')}</WaitingMessage>
@@ -211,7 +231,6 @@ class TransactionsTritium extends Component {
                   >
                     &lt; {__('Previous')}
                   </PaginationButton>
-
                   <div className="flex center">
                     {__(
                       'Page <page></page> of %{total}',
@@ -237,7 +256,17 @@ class TransactionsTritium extends Component {
                       }
                     )}
                   </div>
-
+                  {!loadedAll ? (
+                    <Tooltip.Trigger
+                      position="top"
+                      tooltip={__('Loading transactions...')}
+                    >
+                      <div>
+                        <TransactionLoadingWarningSpinner />
+                        <TransactionLoadingWarningIcon icon={warningIcon} />
+                      </div>
+                    </Tooltip.Trigger>
+                  ) : null}
                   <PaginationButton
                     skin="filled-inverted"
                     disabled={page >= totalPages}
