@@ -1,36 +1,13 @@
 // External
-import { Fragment, Component } from 'react';
-import { Link } from 'react-router-dom';
-import { connect, useSelector } from 'react-redux';
-import styled from '@emotion/styled';
-import { keyframes } from '@emotion/react';
-import GA from 'lib/googleAnalytics';
+import { useSelector } from 'react-redux';
 
 // Internal
-import Icon from 'components/Icon';
-import Tooltip from 'components/Tooltip';
-import TokenName from 'components/TokenName';
-import QuestionCircle from 'components/QuestionCircle';
-import { refreshBalances, loadAccounts } from 'lib/user';
-import { getMiningInfo } from 'lib/core';
-import { formatNumber, formatCurrency, formatRelativeTime } from 'lib/intl';
-import { timing, consts } from 'styles';
-import {
-  isCoreConnected,
-  isSynchronized,
-  selectTokenBalances,
-} from 'selectors';
-import { observeStore } from 'store';
-import Globe from './Globe';
-import { webGLAvailable } from 'consts/misc';
+import { formatNumber, formatCurrency } from 'lib/intl';
 
 // Images
-import logoIcon from 'icons/NXS_coin.svg';
-import currencyIcons from 'data/currencyIcons';
 import chartIcon from 'icons/chart.svg';
 import supplyIcon from 'icons/supply.svg';
 import hours24Icon from 'icons/24hr.svg';
-import nxsStakeIcon from 'icons/nxs-staking.svg';
 
 import Stat from './Stat';
 
@@ -92,7 +69,7 @@ export function MarketCapStat() {
   );
 }
 
-export function MarketCapStat() {
+export function PctChangeStat() {
   const fiatCurrency = useSelector((state) => state.settings.fiatCurrency);
   const changePct24Hr = useSelector((state) => state.market?.changePct24Hr);
 
