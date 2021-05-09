@@ -55,6 +55,7 @@ const Pagination = styled.div(({ morePadding }) => ({
 }));
 
 const Container = styled.div({
+  position: 'relative',
   maxWidth: 650,
   margin: '0 auto',
 });
@@ -261,7 +262,7 @@ class TransactionsTritium extends Component {
                       position="top"
                       tooltip={__('Loading transactions...')}
                     >
-                      <div>
+                      <div style={{ position: 'absolute', right: '30%' }}>
                         <TransactionLoadingWarningSpinner />
                         <TransactionLoadingWarningIcon icon={warningIcon} />
                       </div>
