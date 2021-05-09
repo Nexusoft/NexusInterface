@@ -1,6 +1,12 @@
 import { callApi } from 'lib/tritiumApi';
 
-export default async function listAll(endpoint, params, limit = 100, startPage = 0,additems = () => {}) {
+export default async function listAll(
+  endpoint,
+  params,
+  limit = 100,
+  startPage = 0,
+  callback
+) {
   let list = [];
   let results = null;
   let page = startPage;
@@ -8,7 +14,7 @@ export default async function listAll(endpoint, params, limit = 100, startPage =
     results = await callApi(endpoint, { ...params, limit, page: page++ });
     if (!results) break;
     if (Array.isArray(results)) {
-      additems(results);
+      callback && callback(results);
       list = list.concat(results);
     } else {
       console.log(results);
