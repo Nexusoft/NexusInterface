@@ -1,27 +1,29 @@
 import { callApi } from 'lib/tritiumApi';
 
-export default async function listAll(
-  endpoint,
-  params,
-  limit = 100,
-  startPage = 0,
-  callback
-) {
+export default async function listAll(endpoint, params, options = {}) {
+  options = {
+    limit: 100,
+    callback: () => {},
+    ...options,
+  };
   let list = [];
   let results = null;
-  let page = startPage;
+  let page = 0;
   do {
-    results = await callApi(endpoint, { ...params, limit, page: page++ });
+    results = await callApi(endpoint, {
+      ...params,
+      limit: options.limit,
+      page: page++,
+    });
     if (!results) break;
     if (Array.isArray(results)) {
-      callback && callback(results);
+      options.callback?.(results);
       list = list.concat(results);
     } else {
-      console.log(results);
       throw new Error(
         `API result is expected to be an array, got ${typeof results}`
       );
     }
-  } while (results.length === limit);
+  } while (results.length === options.limit);
   return list;
 }

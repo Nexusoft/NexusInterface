@@ -124,10 +124,14 @@ function addAndWatch(transactions) {
 }
 
 export async function fetchAllTransactions() {
-  const transactions = await listAll('users/list/transactions', {
-    verbose: 'summary',
-  },10,0,addAndWatch);
-  store.dispatch({type: TYPE.SET_TRANSACTIONS_LOADEDALL});
+  const transactions = await listAll(
+    'users/list/transactions',
+    {
+      verbose: 'summary',
+    },
+    { limit: 10, callback: addAndWatch }
+  );
+  store.dispatch({ type: TYPE.SET_TRANSACTIONS_LOADEDALL });
 }
 
 export async function fetchTransaction(txid) {
