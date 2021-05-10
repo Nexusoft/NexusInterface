@@ -10,13 +10,10 @@ import TextField from 'components/TextField';
 import RequireLoggedIn from 'components/RequireLoggedIn';
 import Spinner from 'components/Spinner';
 import Tooltip from 'components/Tooltip';
-import Icon from 'components/Icon';
-import { isLoggedIn } from 'selectors';
 import { fetchAllTransactions } from 'lib/tritiumTransactions';
 import { observeStore } from 'store';
 import { goToTxsPage } from 'lib/ui';
 import transactionIcon from 'icons/transaction.svg';
-import warningIcon from 'icons/warning.svg';
 
 import {
   getTransactionsList,
@@ -72,16 +69,12 @@ const PaginationButton = styled(Button)({
 });
 
 const TransactionLoadingWarningSpinner = styled(Spinner)(({ theme }) => ({
-  color: theme.danger,
-  width: '2em',
-  height: '2em',
-}));
-
-const TransactionLoadingWarningIcon = styled(Icon)(({ theme }) => ({
-  color: theme.danger,
+  color: theme.mixer(0.5),
+  width: '1.4em',
+  height: '1.4em',
   position: 'absolute',
-  marginTop: '.4em',
-  marginLeft: '-1.5em',
+  left: '100%',
+  marginLeft: '1em',
 }));
 
 // React-Redux mandatory methods
@@ -232,7 +225,7 @@ class TransactionsTritium extends Component {
                   >
                     &lt; {__('Previous')}
                   </PaginationButton>
-                  <div className="flex center">
+                  <div className="flex center relative">
                     {__(
                       'Page <page></page> of %{total}',
                       {
@@ -256,18 +249,15 @@ class TransactionsTritium extends Component {
                         ),
                       }
                     )}
-                  </div>
-                  {!loadedAll ? (
-                    <Tooltip.Trigger
-                      position="top"
-                      tooltip={__('Loading transactions...')}
-                    >
-                      <div style={{ position: 'absolute', right: '30%' }}>
+                    {!loadedAll ? (
+                      <Tooltip.Trigger
+                        position="top"
+                        tooltip={__('Loading transactions...')}
+                      >
                         <TransactionLoadingWarningSpinner />
-                        <TransactionLoadingWarningIcon icon={warningIcon} />
-                      </div>
-                    </Tooltip.Trigger>
-                  ) : null}
+                      </Tooltip.Trigger>
+                    ) : null}
+                  </div>
                   <PaginationButton
                     skin="filled-inverted"
                     disabled={page >= totalPages}
