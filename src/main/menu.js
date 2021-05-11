@@ -1,7 +1,4 @@
-import { Menu } from 'electron';
-
-// APP MENU
-// =============================================================================
+import { Menu, webContents } from 'electron';
 
 function handleClick(menuItem) {
   if (global.mainWindow) {
@@ -10,7 +7,7 @@ function handleClick(menuItem) {
 }
 
 function refillClick(template) {
-  template.forEach(item => {
+  template.forEach((item) => {
     if (item.click) {
       item.click = handleClick;
     }
@@ -19,6 +16,9 @@ function refillClick(template) {
     }
   });
 }
+
+// APP MENU
+// =============================================================================
 
 export function setApplicationMenu(template) {
   refillClick(template);
@@ -29,11 +29,11 @@ export function setApplicationMenu(template) {
 // CONTEXT MENU
 // =============================================================================
 
-export function popupContextMenu(template) {
+export function popupContextMenu(template, webContentsId) {
   return new Promise((resolve, reject) => {
     try {
-      const refillClick = template => {
-        template.forEach(item => {
+      const refillClick = (template) => {
+        template.forEach((item) => {
           if (item.click) {
             item.click = () => {
               resolve(item.id);
@@ -47,8 +47,11 @@ export function popupContextMenu(template) {
       refillClick(template);
 
       const menu = Menu.buildFromTemplate(template);
+      const window = webContentsId
+        ? webContents.fromId(webContentsId)
+        : global.mainWindow;
       menu.popup({
-        window: global.mainWindow,
+        window,
         callback: () => {
           setTimeout(() => {
             resolve(null);
