@@ -34,6 +34,7 @@ export const defaultSettings = {
   fakeTransactions: false,
   overviewDisplay: 'standard',
   displayFiatBalance: false,
+  potThemeModalShown: false,
 
   // Core
   enableMining: false,
@@ -85,7 +86,7 @@ export const defaultSettings = {
 
 function filterValidSettings(settings) {
   const validSettings = {};
-  Object.keys(settings || {}).map(key => {
+  Object.keys(settings || {}).map((key) => {
     if (defaultSettings.hasOwnProperty(key)) {
       validSettings[key] = settings[key];
     } else {

@@ -4,13 +4,13 @@
 
 import path from 'path';
 import webpack from 'webpack';
-import merge from 'webpack-merge';
+import { merge } from 'webpack-merge';
 
 import baseConfig from './webpack.config.base';
 
 const intlPath = path.join(process.cwd(), 'src', 'shared', 'lib', 'intl.js');
 
-export default merge.smart(baseConfig, {
+export default merge(baseConfig, {
   target: 'electron-renderer',
 
   module: {

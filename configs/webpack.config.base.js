@@ -23,8 +23,6 @@ try {
 }
 
 export default {
-  mode: process.env.NODE_ENV === 'development' ? 'development' : 'production',
-
   output: {
     // https://github.com/webpack/webpack/issues/1114
     libraryTarget: 'commonjs2',
@@ -49,7 +47,5 @@ export default {
       APP_ID: JSON.stringify(appId || ''),
       NEXUS_EMBASSY_PUBLIC_KEY: JSON.stringify(nexusPubKey),
     }),
-
-    new webpack.NamedModulesPlugin(),
   ],
 };
