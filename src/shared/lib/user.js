@@ -19,6 +19,17 @@ const getStakeInfo = async () => {
   }
 };
 
+export const refreshBalances = async () => {
+  try {
+    const balances = await apiPost('finance/get/balances');
+    store.dispatch({ type: TYPE.SET_BALANCES, payload: balances });
+    return balances;
+  } catch (err) {
+    store.dispatch({ type: TYPE.CLEAR_BALANCES });
+    console.error('finance/get/balances failed', err);
+  }
+};
+
 export const getUserStatus = async () => {
   try {
     const status = await apiPost('users/get/status');
@@ -61,7 +72,7 @@ export const loadAccounts = legacyMode
       const accList = await rpc('listaccounts', []);
 
       const addrList = await Promise.all(
-        Object.keys(accList || {}).map(account =>
+        Object.keys(accList || {}).map((account) =>
           rpc('getaddressesbyaccount', [account])
         )
       );
@@ -69,18 +80,20 @@ export const loadAccounts = legacyMode
       const validateAddressPromises = addrList.reduce(
         (list, element) => [
           ...list,
-          ...element.map(address => rpc('validateaddress', [address])),
+          ...element.map((address) => rpc('validateaddress', [address])),
         ],
         []
       );
       const validations = await Promise.all(validateAddressPromises);
 
       const accountList = [];
-      validations.forEach(e => {
+      validations.forEach((e) => {
         if (e.ismine && e.isvalid) {
-          const index = accountList.findIndex(ele => ele.account === e.account);
+          const index = accountList.findIndex(
+            (ele) => ele.account === e.account
+          );
           const indexDefault = accountList.findIndex(
-            ele => ele.account === 'default'
+            (ele) => ele.account === 'default'
           );
 
           if (e.account === '' || e.account === 'default') {
@@ -105,7 +118,7 @@ export const loadAccounts = legacyMode
         }
       });
 
-      accountList.forEach(acc => {
+      accountList.forEach((acc) => {
         const accountName = acc.account || 'default';
         if (accountName === 'default') {
           acc.balance =
@@ -160,8 +173,8 @@ export const loadAssets = async () => {
 };
 
 if (!legacyMode) {
-  walletEvents.once('pre-render', function() {
-    observeStore(isLoggedIn, async loggedIn => {
+  walletEvents.once('pre-render', function () {
+    observeStore(isLoggedIn, async (loggedIn) => {
       if (loggedIn) {
         const {
           settings: { migrateSuggestionDisabled },

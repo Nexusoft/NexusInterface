@@ -1,6 +1,8 @@
-// Source https://github.com/alexreardon/memoize-one
-
-export default function memoize(resultFn, isEqual = areInputsEqual) {
+export default function memoize(
+  resultFn,
+  transformArgs = keepArgs,
+  isEqual = areInputsEqual
+) {
   let lastThis;
   let lastArgs = [];
   let lastResult;
@@ -8,21 +10,26 @@ export default function memoize(resultFn, isEqual = areInputsEqual) {
 
   // breaking cache when context (this) or arguments change
   function memoized(...newArgs) {
-    if (calledOnce && lastThis === this && isEqual(newArgs, lastArgs)) {
+    const transformedArgs = transformArgs(...newArgs);
+    if (calledOnce && lastThis === this && isEqual(transformedArgs, lastArgs)) {
       return lastResult;
     }
 
     // Throwing during an assignment aborts the assignment: https://codepen.io/alexreardon/pen/RYKoaz
     // Doing the lastResult assignment first so that if it throws
     // nothing will be overwritten
-    lastResult = resultFn.apply(this, newArgs);
+    lastResult = resultFn.apply(this, transformedArgs);
     calledOnce = true;
     lastThis = this;
-    lastArgs = newArgs;
+    lastArgs = transformedArgs;
     return lastResult;
   }
 
   return memoized;
+}
+
+function keepArgs(...params) {
+  return params;
 }
 
 function areInputsEqual(newInputs, lastInputs) {
