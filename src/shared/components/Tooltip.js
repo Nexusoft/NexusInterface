@@ -1,5 +1,3 @@
-// @jsx jsx
-
 /**
  * Important note - This file is imported into module_preload.js, either directly or
  * indirectly, and will be a part of the preload script for modules, therefore:
@@ -72,7 +70,7 @@ const tooltipAligning = (rect, position, align) => {
   }
 };
 
-const arrowPositioning = position => ({ [position]: '100%' });
+const arrowPositioning = (position) => ({ [position]: '100%' });
 
 const arrowAligning = (position, align) => {
   if (position === 'top' || position == 'bottom') {

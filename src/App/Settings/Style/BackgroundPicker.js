@@ -1,5 +1,5 @@
 // External
-import React, { Component } from 'react';
+import { Component } from 'react';
 import styled from '@emotion/styled';
 
 // Internal
@@ -24,6 +24,7 @@ const Option = styled.label(
     selected && {
       '&, &:hover': {
         background: color.darken(theme.primary, 0.2),
+        color: theme.primaryAccent,
       },
     }
 );
@@ -42,7 +43,7 @@ class BackgroundPicker extends Component {
    *
    * @memberof BackgroundPicker
    */
-  setDefault = version => {
+  setDefault = (version) => {
     if (this.props.defaultStyle != version) {
       version = version + 'Custom';
     }
@@ -54,7 +55,7 @@ class BackgroundPicker extends Component {
    *
    * @memberof BackgroundPicker
    */
-  handleFilePick = e => {
+  handleFilePick = (e) => {
     if (!!e.target.files.length) {
       let imagePath = e.target.files[0].path;
       if (process.platform === 'win32') {

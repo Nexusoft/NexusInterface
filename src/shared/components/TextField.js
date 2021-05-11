@@ -1,5 +1,3 @@
-// @jsx jsx
-
 /**
  * Important note - This file is imported into module_preload.js, either directly or
  * indirectly, and will be a part of the preload script for modules, therefore:
@@ -239,7 +237,7 @@ class TextArea extends Component {
       (scrollHeight > 114 ? 114 : scrollHeight) + 'px';
   }
 
-  inputRef = el => {
+  inputRef = (el) => {
     this.inputElem = el;
     if (this.props.inputRef) {
       passRef(el, this.props.inputRef);
@@ -263,7 +261,7 @@ export default class TextField extends Component {
     focus: false,
   };
 
-  inputRef = el => {
+  inputRef = (el) => {
     this.inputElem = el;
     if (this.props.inputRef) {
       passRef(el, this.props.inputRef);
@@ -280,12 +278,12 @@ export default class TextField extends Component {
     }
   }
 
-  handleFocus = e => {
+  handleFocus = (e) => {
     this.setState({ focus: true });
     this.props.onFocus && this.props.onFocus(e);
   };
 
-  handleBlur = e => {
+  handleBlur = (e) => {
     this.setState({ focus: false });
     this.props.onBlur && this.props.onBlur(e);
   };

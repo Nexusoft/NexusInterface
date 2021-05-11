@@ -2,13 +2,13 @@ import * as TYPE from 'consts/actionTypes';
 import store from 'store';
 import path from 'path';
 import fs from 'fs';
-import { walletDataDir, fileExists } from 'consts/paths';
+import { walletDataDir } from 'consts/paths';
 import { readJson, writeJson } from 'utils/json';
 
 const themeFileName = 'theme.json';
 const themeFilePath = path.join(walletDataDir, themeFileName);
 
-const defaultTheme = {
+export const darkTheme = {
   defaultStyle: 'Dark',
   wallpaper: null,
   background: '#1c1d1f',
@@ -22,33 +22,50 @@ const defaultTheme = {
   globeArchColor: '#00ffff',
 };
 
-function filterValidTheme(theme) {
-  const validTheme = {};
-  Object.keys(theme || {}).map(key => {
-    if (defaultTheme.hasOwnProperty(key)) {
-      validTheme[key] = theme[key];
-    } else {
-      console.error(`Invalid theme propery \`${key}\``);
-    }
-  });
-  return validTheme;
-}
+export const lightTheme = {
+  defaultStyle: 'Light',
+  background: '#91a0b8',
+  danger: '#8F240E',
+  dangerAccent: '#ffffff',
+  foreground: '#fdfafa',
+  globeArchColor: '#00ffff',
+  globeColor: '#8fbcfe',
+  globePillarColor: '#00ffff',
+  primary: '#FFFFFF',
+  primaryAccent: '#91a0b8',
+};
+
+export const potTheme = {
+  defaultStyle: 'Dark',
+  wallpaper: null,
+  background: '#0a4224',
+  foreground: '#A3C2B3',
+  primary: '#1CBB38',
+  primaryAccent: '#DEDEDE',
+  danger: '#d75239',
+  dangerAccent: '#DEDEDE',
+  globeColor: '#0c7d3d',
+  globePillarColor: '#00ffff',
+  globeArchColor: '#00ffff',
+  featuredTokenName: 'POT',
+};
 
 function readTheme() {
   if (fs.existsSync(themeFilePath)) {
-    return filterValidTheme(readJson(themeFilePath));
+    const json = readJson(themeFilePath) || {};
+    return json;
   } else {
-    return defaultTheme;
+    return darkTheme;
   }
 }
 
 function writeTheme(theme) {
-  return writeJson(themeFilePath, filterValidTheme(theme));
+  return writeJson(themeFilePath, theme);
 }
 
 function loadThemeFromFile() {
   const customTheme = readTheme();
-  return { ...defaultTheme, ...customTheme };
+  return { ...darkTheme, ...customTheme };
 }
 
 function updateThemeFile(updates) {
@@ -58,9 +75,14 @@ function updateThemeFile(updates) {
 
 export const loadTheme = loadThemeFromFile;
 
-export const updateTheme = updates => {
+export const updateTheme = (updates) => {
   store.dispatch({ type: TYPE.UPDATE_THEME, payload: updates });
   updateThemeFile(updates);
+};
+
+export const setTheme = (theme) => {
+  store.dispatch({ type: TYPE.SET_THEME, payload: theme });
+  writeTheme(theme);
 };
 
 export const resetColors = () => {

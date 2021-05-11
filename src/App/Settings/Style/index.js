@@ -1,5 +1,5 @@
 // External
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import { ipcRenderer } from 'electron';
 import fs from 'fs';
@@ -9,7 +9,14 @@ import https from 'https';
 // Internal
 import GA from 'lib/googleAnalytics';
 import { updateSettings } from 'lib/settings';
-import { updateTheme, resetColors } from 'lib/theme';
+import {
+  updateTheme,
+  setTheme,
+  resetColors,
+  darkTheme,
+  lightTheme,
+  potTheme,
+} from 'lib/theme';
 import { switchSettingsTab } from 'lib/ui';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
@@ -28,36 +35,40 @@ import ColorPicker from './ColorPicker';
 import BackgroundPicker from './BackgroundPicker';
 import ThemePicker from './ThemePicker';
 
-import DarkTheme from './Dark.json';
-import LightTheme from './Light.json';
-
 __ = __context('Settings.Style');
 
 const overviewDisplays = [
   { value: 'standard', display: 'Standard' },
   { value: 'miner', display: 'Miner' },
   // { value: 'minimalist', display: 'Minimalist' },
-  { value: 'balHidden', display: 'Hidden Balance' },
+  // { value: 'balHidden', display: 'Hidden Balance' },
   { value: 'none', display: 'None' },
 ];
 
-const getLegacyDefaultAddress = memoize(myAccounts => {
-  const acc = myAccounts && myAccounts.find(a => a.account === 'default');
+const getLegacyDefaultAddress = memoize((myAccounts) => {
+  const acc = myAccounts && myAccounts.find((a) => a.account === 'default');
   return acc && acc.addresses && acc.addresses[0];
 });
-const getTritiumDefaultAddress = memoize(accounts => {
-  const acc = accounts && accounts.find(a => a.name === 'default');
+const getTritiumDefaultAddress = memoize((accounts) => {
+  const acc = accounts && accounts.find((a) => a.name === 'default');
   return acc && acc.address;
 });
 
 const mapStateToProps = ({
   user: { accounts },
-  settings: { renderGlobe, locale, addressStyle, overviewDisplay },
+  settings: {
+    renderGlobe,
+    locale,
+    addressStyle,
+    overviewDisplay,
+    hideOverviewBalances,
+  },
   myAccounts,
   theme,
 }) => {
   return {
     renderGlobe,
+    hideOverviewBalances,
     theme,
     locale,
     addressStyle,
@@ -68,10 +79,10 @@ const mapStateToProps = ({
   };
 };
 
-const setRenderGlobe = renderGlobe => updateSettings({ renderGlobe });
-const setOverviewDisplay = overviewDisplay =>
+const setRenderGlobe = (renderGlobe) => updateSettings({ renderGlobe });
+const setOverviewDisplay = (overviewDisplay) =>
   updateSettings({ overviewDisplay });
-const setAddressStyle = addressStyle => {
+const setAddressStyle = (addressStyle) => {
   GA.SendEvent('Settings', 'Style', 'setAddressStyle', addressStyle);
   updateSettings({ addressStyle });
 };
@@ -108,8 +119,6 @@ class SettingsStyle extends Component {
 
   state = {
     previousCustom: {},
-    DarkTheme: DarkTheme,
-    LightTheme: LightTheme,
   };
 
   /**
@@ -136,8 +145,12 @@ class SettingsStyle extends Component {
    *
    * @memberof SettingsStyle
    */
-  toggleGlobeRender = e => {
+  toggleGlobeRender = (e) => {
     setRenderGlobe(e.target.checked);
+  };
+
+  toggleHideOverviewBalances = (e) => {
+    updateSettings({ hideOverviewBalances: e.target.checked });
   };
 
   /**
@@ -194,7 +207,7 @@ class SettingsStyle extends Component {
    *
    * @memberof SettingsStyle
    */
-  loadCustomTheme = filepath => {
+  loadCustomTheme = (filepath) => {
     const content = fs.readFileSync(filepath);
     let customTheme;
     try {
@@ -211,10 +224,10 @@ class SettingsStyle extends Component {
         this.wallpaperRequest = https
           .get(customTheme.wallpaper)
           .setTimeout(10000)
-          .on('response', response => {
+          .on('response', (response) => {
             response.pipe(file);
             let onFinish = () => {
-              file.close(response => {
+              file.close((response) => {
                 console.log('Finished Downloading');
                 this.setWallpaper(file.path);
               });
@@ -222,10 +235,10 @@ class SettingsStyle extends Component {
             onFinish.bind(this);
             file.on('finish', () => onFinish());
           })
-          .on('error', error => {
+          .on('error', (error) => {
             this.setWallpaper('');
           })
-          .on('timeout', timeout => {
+          .on('timeout', (timeout) => {
             this.setWallpaper('');
           });
       }
@@ -236,7 +249,7 @@ class SettingsStyle extends Component {
       );
     }
     customTheme.defaultStyle = 'Custom';
-    updateTheme(customTheme);
+    setTheme(customTheme);
   };
 
   /**
@@ -267,7 +280,7 @@ class SettingsStyle extends Component {
       filters: [{ name: 'Theme JSON', extensions: ['json'] }],
     });
     if (!path) return;
-    fs.copyFile(walletDataDir + '/theme.json', path, err => {
+    fs.copyFile(walletDataDir + '/theme.json', path, (err) => {
       if (err) {
         console.error(err);
         showNotification(err, 'error');
@@ -282,7 +295,7 @@ class SettingsStyle extends Component {
    * @memberof SettingsStyle
    */
   pressDarkTheme = () => {
-    updateTheme(DarkTheme);
+    setTheme(darkTheme);
   };
   /**
    * Press Light Theme Button
@@ -290,8 +303,13 @@ class SettingsStyle extends Component {
    * @memberof SettingsStyle
    */
   pressLightTheme = () => {
-    updateTheme(LightTheme);
+    setTheme(lightTheme);
   };
+
+  pressPotTheme = () => {
+    setTheme(potTheme);
+  };
+
   /**
    * Press Custom theme button
    *
@@ -299,7 +317,7 @@ class SettingsStyle extends Component {
    */
   pressCustomTheme = () => {
     if (this.state.previousCustom != {}) {
-      updateTheme(this.state.previousCustom);
+      setTheme(this.state.previousCustom);
     }
   };
   /**
@@ -308,7 +326,7 @@ class SettingsStyle extends Component {
    * @memberof SettingsStyle
    */
   pressResetTheme = () => {
-    updateTheme(DarkTheme);
+    setTheme(darkTheme);
     this.setThemeSelector(0);
     showNotification(__('Theme has been reset to default'), 'success');
   };
@@ -338,7 +356,7 @@ class SettingsStyle extends Component {
    *
    * @memberof SettingsStyle
    */
-  setThemeSelector = selectorIndex => {};
+  setThemeSelector = (selectorIndex) => {};
 
   /**
    * Component's Renderable JSX
@@ -350,6 +368,7 @@ class SettingsStyle extends Component {
     const {
       theme,
       renderGlobe,
+      hideOverviewBalances,
       defaultAddress,
       addressStyle,
       overviewDisplay,
@@ -388,6 +407,21 @@ class SettingsStyle extends Component {
         </SettingsField>
 
         <SettingsField
+          connectLabel
+          label={__('Hide Overview balances')}
+          subLabel={
+            <div>
+              {__('Hide the balances on the Overview page for privacy.')}
+            </div>
+          }
+        >
+          <Switch
+            checked={hideOverviewBalances}
+            onChange={this.toggleHideOverviewBalances}
+          />
+        </SettingsField>
+
+        <SettingsField
           label={__('Nexus Addresses format')}
           subLabel={__('Choose your Nexus Address display preference')}
         >
@@ -406,14 +440,6 @@ class SettingsStyle extends Component {
               }
               label={__('Sample Address')}
             />
-            {!!defaultAddress && (
-              <AddressStyleNote>
-                <Icon icon={warningIcon} className="space-right" />
-                <span className="v-align">
-                  {__('This is your Default Address')}
-                </span>
-              </AddressStyleNote>
-            )}
           </div>
         </SettingsField>
 
@@ -422,11 +448,12 @@ class SettingsStyle extends Component {
             parentTheme={theme}
             darkCallback={this.pressDarkTheme}
             lightCallback={this.pressLightTheme}
+            potCallback={this.pressPotTheme}
             customCallback={this.pressCustomTheme}
             resetCallback={this.pressResetTheme}
             saveCustomCallback={this.savePreviousCustomTheme}
-            handleOnSetCustom={e => (this.setToCustom = e)}
-            handleSetSelector={e => (this.setThemeSelector = e)}
+            handleOnSetCustom={(e) => (this.setToCustom = e)}
+            handleSetSelector={(e) => (this.setThemeSelector = e)}
           />
         </SettingsField>
 
