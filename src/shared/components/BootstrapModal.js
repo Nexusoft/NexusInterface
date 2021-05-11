@@ -3,7 +3,7 @@ import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import prettyBytes from 'utils/prettyBytes';
 import styled from '@emotion/styled';
-import { keyframes } from '@emotion/core';
+import { keyframes } from '@emotion/react';
 
 // Internal
 import Modal from 'components/Modal';
@@ -149,7 +149,7 @@ function getStatusMsg({ step, details }, locale) {
  * @class BootstrapModal
  * @extends {PureComponent}
  */
-@connect(state => ({
+@connect((state) => ({
   statusMsg: getStatusMsg(state.bootstrap, state.settings.locale),
   percentage: getPercentage(state.bootstrap),
 }))
@@ -212,7 +212,7 @@ class BootstrapModal extends PureComponent {
     removeModal(modalID);
   };
 
-  handleKeyDown = e => {
+  handleKeyDown = (e) => {
     if (e.key === 'Escape') {
       this.minimize();
     }
@@ -232,7 +232,7 @@ class BootstrapModal extends PureComponent {
         backgroundRef={this.backgroundRef}
         onBackgroundClick={this.minimize}
         onKeyDown={this.handleKeyDown}
-        assignClose={closeModal => (this.closeModal = closeModal)}
+        assignClose={(closeModal) => (this.closeModal = closeModal)}
         escToClose={false}
         {...rest}
       >

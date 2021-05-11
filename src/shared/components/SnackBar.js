@@ -1,6 +1,6 @@
 // External
 import styled from '@emotion/styled';
-import { keyframes } from '@emotion/core';
+import { keyframes } from '@emotion/react';
 
 // Internal
 import { timing } from 'styles';
@@ -9,7 +9,7 @@ import * as color from 'utils/color';
 const notifHeight = 40;
 const notifMargin = 15;
 
-const intro = index => keyframes`
+const intro = (index) => keyframes`
   from {
     opacity: 0;
     transform: translateY(-${(index - 1) * (notifHeight + notifMargin)}px)

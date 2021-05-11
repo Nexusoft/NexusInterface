@@ -13,7 +13,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import styled from '@emotion/styled';
-import { jsx } from '@emotion/core';
+import { jsx } from '@emotion/react';
 
 // Internal
 import { arrowStyles } from 'components/Arrow';

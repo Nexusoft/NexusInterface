@@ -1,6 +1,6 @@
 // External
 import React, { PureComponent } from 'react';
-import { ThemeProvider } from 'emotion-theming';
+import { ThemeProvider } from '@emotion/react';
 import { connect } from 'react-redux';
 
 // Internal
@@ -12,7 +12,7 @@ import { getMixer } from 'utils/color';
  * @class ThemeController
  * @extends {PureComponent}
  */
-@connect(state => ({
+@connect((state) => ({
   theme: state.theme,
 }))
 class ThemeController extends PureComponent {

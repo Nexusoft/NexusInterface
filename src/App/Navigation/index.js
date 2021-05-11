@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import styled from '@emotion/styled';
-import { keyframes } from '@emotion/core';
+import { keyframes } from '@emotion/react';
 
 import HorizontalLine from 'components/HorizontalLine';
 import Icon from 'components/Icon';
@@ -77,12 +77,12 @@ const ModuleNavItem = ({ module }) => (
   </Tooltip.Trigger>
 );
 
-const ModuleNavItems = connect(state => ({
+const ModuleNavItems = connect((state) => ({
   modules: state.modules,
 }))(({ modules }) =>
   Object.values(modules)
-    .filter(module => module.enabled && module.info.type === 'app')
-    .map(module => <ModuleNavItem key={module.info.name} module={module} />)
+    .filter((module) => module.enabled && module.info.type === 'app')
+    .map((module) => <ModuleNavItem key={module.info.name} module={module} />)
 );
 
 /**

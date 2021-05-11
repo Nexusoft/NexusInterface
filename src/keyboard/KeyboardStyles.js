@@ -1,12 +1,12 @@
 import React from 'react';
-import { Global } from '@emotion/core';
+import { Global } from '@emotion/react';
 
 import { timing } from 'styles';
 import * as color from 'utils/color';
 
 const KeyboardStyles = () => (
   <Global
-    styles={theme => ({
+    styles={(theme) => ({
       body: {
         background: theme.background,
       },

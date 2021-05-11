@@ -1,13 +1,13 @@
 /**
  * Migrated from react-table
  */
-import { css } from '@emotion/core';
+import { css } from '@emotion/react';
 import { consts } from 'styles';
 
 const paddingHorizontal = 0.5 * consts.lineHeight + 'em';
 const paddingVertical = 0.375 * consts.lineHeight + 'em';
 
-export default theme => css`
+export default (theme) => css`
   .ReactTable {
     position: relative;
     display: -webkit-box;

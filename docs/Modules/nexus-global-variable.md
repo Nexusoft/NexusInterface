@@ -34,7 +34,7 @@ const {
     Redux,          // from 'redux'
     ReactRedux,     // from 'react-redux'
     emotion: {
-      core,         // from '@emotion/core'
+      core,         // from '@emotion/react'
       styled,       // from '@emotion/styled'
       theming,      // from 'emotion-themeing'
       createCache,  // from '@emotion/cache'
@@ -213,7 +213,7 @@ Register a listener that receives the initial data passed from the base wallet.
 The listener registered in `onceInitialize` will be called only once when the `webview`'s DOM is ready.
 
 ```js
-const listener = initialData => {
+const listener = (initialData) => {
   const { theme, settings, coreInfo, moduleState, storageData } = initialData;
   // populate initial data in module...
 };
@@ -236,7 +236,7 @@ Example usage:
 Register a listener that will be called everytime the base wallet theme is changed.
 
 ```js
-const listener = theme => {
+const listener = (theme) => {
   // update theme in module...
 };
 NEXUS.utilities.onThemeUpdated(listener);
@@ -262,7 +262,7 @@ NEXUS.utilities.onThemeUpdated(listener);
 Register a listener that will be called everytime the base wallet settings is changed.
 
 ```js
-const listener = settings => {
+const listener = (settings) => {
   // update settings in module...
 };
 NEXUS.utilities.onSettingsUpdated(listener);
@@ -285,7 +285,7 @@ NEXUS.utilities.onSettingsUpdated(listener);
 Register a listener that will be called everytime the core info is updated in the base wallet.
 
 ```js
-const listener = coreInfo => {
+const listener = (coreInfo) => {
   // update core info in module...
 };
 NEXUS.utilities.onCoreInfoUpdated(listener);
@@ -298,7 +298,7 @@ NEXUS.utilities.onCoreInfoUpdated(listener);
 Register a listener that will be called everytime the status of the user is updated in the base wallet.
 
 ```js
-const listener = userStatus => {
+const listener = (userStatus) => {
   // update user status in module...
 };
 NEXUS.utilities.onUserStatusUpdated(listener);
@@ -381,17 +381,17 @@ verifymessage
 ```js
 NEXUS.utilities
   .rpcCall('getaccountaddress', ['default'])
-  .then(result => {
+  .then((result) => {
     // handle result...
   })
-  .catch(err => {
+  .catch((err) => {
     // handle error...
   });
 ```
 
 ### `apiCall`
 
-`apiCall` method will be the interface between the module and executing api calls. All available api calls must be on the whitelist, all these calls are considered nondestructive. To use api calls that will modify the sig chain use [secureApiCall](#secureapicall) . Will return a promise with the result, a result will only ever return if the nexus core accepts the request. 
+`apiCall` method will be the interface between the module and executing api calls. All available api calls must be on the whitelist, all these calls are considered nondestructive. To use api calls that will modify the sig chain use [secureApiCall](#secureapicall) . Will return a promise with the result, a result will only ever return if the nexus core accepts the request.
 
 Api Whitelist
 
@@ -445,16 +445,16 @@ apiCall(url: string, params: object) : Promise<object>
 
 - `url`: string - The api endpoint, must be on the whitelist.
 - `params`: object - parameters to pass to the endpoint
-- Return : promise - promise returns a object  
+- Return : promise - promise returns a object
 
 Example Usage
 
 ```js
 apiCall('system/get/info', { foo: bar })
-  .then(result => {
+  .then((result) => {
     // handle result
   })
-  .catch(err => {
+  .catch((err) => {
     //handle error
   });
 ```
@@ -468,21 +468,21 @@ secureApiCall(url: string, params: object) : Promise<object>
 ```
 
 - `url`: string - The api endpoint, must be on the whitelist.
-- `params`: object - parameters to pass to the endpoint 
-- Return : promise - promise returns a object  
+- `params`: object - parameters to pass to the endpoint
+- Return : promise - promise returns a object
 
 Example Usage:
 
-````js
-secureApiCall('finance/debit/account',{address: foo, name_to:bar})
-.then(result => {
-  // hendle result
-})
-.catch(err => {
-  // handle error
-  // Also returns if prompt is canceled
-})
-````
+```js
+secureApiCall('finance/debit/account', { address: foo, name_to: bar })
+  .then((result) => {
+    // hendle result
+  })
+  .catch((err) => {
+    // handle error
+    // Also returns if prompt is canceled
+  });
+```
 
 ### `proxyRequest`
 
@@ -502,10 +502,10 @@ Example usage:
 ```js
 NEXUS.utilities
   .proxyRequest('getaccountaddress', ['default'])
-  .then(result => {
+  .then((result) => {
     // handle result...
   })
-  .catch(err => {
+  .catch((err) => {
     // handle error...
   });
 ```
@@ -533,7 +533,7 @@ NEXUS.utilities
   .confirm({
     /* options... */
   })
-  .then(agreed => {
+  .then((agreed) => {
     if (agreed) {
       // proceed...
     } else {
