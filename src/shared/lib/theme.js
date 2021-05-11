@@ -37,8 +37,8 @@ export const lightTheme = {
   globeArchColor: '#00ffff',
   globeColor: '#58BCFE',
   globePillarColor: '#00ffff',
-  primary: '#05939E',
-  primaryAccent: '#EEF0F1',
+  primary: '#07C5E9',
+  primaryAccent: '#404244',
 };
 
 export const potTheme = {
