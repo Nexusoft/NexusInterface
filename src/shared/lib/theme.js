@@ -30,15 +30,15 @@ export const darkTheme = {
 export const lightTheme = {
   dark: false,
   wallpaper: cosmicLightBackground,
-  background: '#91a0b8',
+  background: '#C6D1D2',
   danger: '#8F240E',
-  dangerAccent: '#ffffff',
-  foreground: '#fdfafa',
+  dangerAccent: '#EEF0F1',
+  foreground: '#565A5C',
   globeArchColor: '#00ffff',
-  globeColor: '#8fbcfe',
+  globeColor: '#58BCFE',
   globePillarColor: '#00ffff',
-  primary: '#FFFFFF',
-  primaryAccent: '#91a0b8',
+  primary: '#05939E',
+  primaryAccent: '#EEF0F1',
 };
 
 export const potTheme = {
