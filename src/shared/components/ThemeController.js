@@ -1,5 +1,5 @@
 import { ThemeProvider } from '@emotion/react';
-import { darken, lighten, mix } from 'utils/color';
+import { darken, lighten, mix, luminosity } from 'utils/color';
 
 // Mixer is a utility function that mixes the background and foreground color in a specified ratio
 // to produce an intermediate color (may be thought of similarly to shades of gray between black and white)
@@ -31,12 +31,16 @@ const getMixer = (() => {
   };
 })();
 
-const fortifyTheme = (theme) => ({
-  ...theme,
-  mixer: getMixer(theme.background, theme.foreground),
-  lower: theme.dark ? darken : lighten,
-  raise: theme.dark ? lighten : darken,
-});
+function fortifyTheme(theme) {
+  const dark = luminosity(theme.foreground) > luminosity(theme.background);
+  return {
+    ...theme,
+    dark,
+    mixer: getMixer(theme.background, theme.foreground),
+    lower: dark ? darken : lighten,
+    raise: dark ? lighten : darken,
+  };
+}
 
 export default function ThemeController({ theme, children }) {
   return <ThemeProvider theme={fortifyTheme(theme)}>{children}</ThemeProvider>;
