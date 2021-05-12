@@ -70,3 +70,7 @@ export function isDark(color) {
 export function toHex(color) {
   return Color(color).hex();
 }
+
+export function luminosity(color) {
+  return Color(color).luminosity();
+}

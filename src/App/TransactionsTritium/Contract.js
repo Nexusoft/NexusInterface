@@ -9,6 +9,7 @@ import { formatNumber } from 'lib/intl';
 import { getDeltaSign } from 'lib/tritiumTransactions';
 import TokenName from 'components/TokenName';
 import { lookupAddress } from 'lib/addressBook';
+import * as color from 'utils/color';
 import { consts, timing } from 'styles';
 
 __ = __context('Transactions');
@@ -25,7 +26,7 @@ const ContractComponent = styled.div(({ theme }) => ({
   cursor: 'pointer',
   transition: `background ${timing.normal}`,
   '&:hover': {
-    background: theme.raise(theme.background, 0.2),
+    background: color.lighten(theme.background, 0.2),
   },
 }));
 

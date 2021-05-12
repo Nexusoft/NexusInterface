@@ -40,12 +40,15 @@ const LogoLink = styled(Link)(({ theme }) => ({
   transitionDuration: timing.normal,
   transitionTimingFunction: 'ease-out',
   filter: `drop-shadow(0 0 8px ${color.fade(
-    theme.raise(theme.primary, 0.2),
+    color.lighten(theme.primary, 0.2),
     0.3
   )})`,
 
   '&:hover': {
-    filter: `drop-shadow(0 0 10px ${theme.primary}) brightness(110%)`,
+    filter: `drop-shadow(0 0 10px ${color.lighten(
+      theme.primary,
+      0.2
+    )}) brightness(110%)`,
   },
 }));
 

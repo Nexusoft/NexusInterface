@@ -116,8 +116,8 @@ const ButtonComponent = styled.button(
             },
           },
           '&:hover': {
-            borderColor: theme.raise(theme.primary, 0.3),
-            color: theme.raise(theme.primary, 0.3),
+            borderColor: color.lighten(theme.primary, 0.3),
+            color: color.lighten(theme.primary, 0.3),
             boxShadow: `0 0 7px ${color.fade(theme.primary, 0.3)}`,
             textShadow: `0 0 7px ${color.fade(theme.primary, 0.3)}`,
           },
@@ -147,7 +147,7 @@ const ButtonComponent = styled.button(
       case 'filled-primary':
         return {
           '&, &:active, &&:disabled': {
-            background: theme.lower(theme.primary, 0.1),
+            background: theme.lower(theme.primary, 0.2),
             color: theme.primaryAccent,
             transitionProperty: 'background-color',
           },

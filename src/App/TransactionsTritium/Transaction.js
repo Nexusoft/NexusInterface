@@ -50,7 +50,7 @@ const TransactionLeft = styled.div(({ theme }) => ({
   cursor: 'pointer',
   transition: `background ${timing.normal}`,
   '&:hover': {
-    background: theme.raise(theme.background, 0.2),
+    background: color.lighten(theme.background, 0.2),
   },
 }));
 
