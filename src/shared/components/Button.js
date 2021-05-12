@@ -9,11 +9,11 @@
  * - Make sure this note also presents in other files which are imported here.
  */
 
-import { forwardRef, Component } from 'react';
+import { forwardRef } from 'react';
 import styled from '@emotion/styled';
 
 import { timing } from 'styles';
-import * as color from 'utils/color';
+import { lighten, fade } from 'utils/color';
 
 const ButtonComponent = styled.button(
   {
@@ -106,7 +106,8 @@ const ButtonComponent = styled.button(
             border: `2px solid ${theme.primary}`,
             color: theme.primary,
             fontWeight: 'bold',
-            transitionProperty: 'border-color, color, filter',
+            transitionProperty:
+              'border-color, color, filter, box-shadow, text-shadow',
             transitionTimingFunction: 'ease-out',
             boxShadow: 'none',
             textShadow: 'none',
@@ -116,10 +117,10 @@ const ButtonComponent = styled.button(
             },
           },
           '&:hover': {
-            borderColor: color.lighten(theme.primary, 0.3),
-            color: color.lighten(theme.primary, 0.3),
-            boxShadow: `0 0 7px ${color.fade(theme.primary, 0.3)}`,
-            textShadow: `0 0 7px ${color.fade(theme.primary, 0.3)}`,
+            borderColor: lighten(theme.primary, 0.3),
+            color: lighten(theme.primary, 0.3),
+            boxShadow: `0 0 7px ${fade(theme.primary, 0.3)}`,
+            textShadow: `0 0 7px ${fade(theme.primary, 0.3)}`,
           },
         };
       case 'danger':
@@ -128,7 +129,8 @@ const ButtonComponent = styled.button(
             border: `2px solid ${theme.danger}`,
             color: theme.danger,
             fontWeight: 'bold',
-            transitionProperty: 'border-color, color, filter',
+            transitionProperty:
+              'border-color, color, filter, box-shadow, text-shadow',
             transitionTimingFunction: 'ease-out',
             boxShadow: 'none',
             textShadow: 'none',
@@ -140,8 +142,8 @@ const ButtonComponent = styled.button(
           '&:hover': {
             borderColor: theme.raise(theme.danger, 0.3),
             color: theme.raise(theme.danger, 0.3),
-            boxShadow: `0 0 7px ${color.fade(theme.danger, 0.3)}`,
-            textShadow: `0 0 7px ${color.fade(theme.danger, 0.3)}`,
+            boxShadow: `0 0 7px ${fade(theme.danger, 0.3)}`,
+            textShadow: `0 0 7px ${fade(theme.danger, 0.3)}`,
           },
         };
       case 'filled-primary':
@@ -245,7 +247,7 @@ const ButtonComponent = styled.button(
             padding: '.2em 0',
             height: 'auto',
             background: 'transparent',
-            color: color.fade(theme.primary, 0.15),
+            color: fade(theme.primary, 0.15),
             transitionProperty: 'color',
           },
           '&:hover': {
