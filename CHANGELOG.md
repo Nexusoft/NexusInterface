@@ -1,19 +1,20 @@
-# 3.0.4 (2020.5.xx)
+# 3.0.4 (2021.5.16)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v3.0.4)
 
 #### Additions
 
-- 
+- Token balances (if any) are now displayed on Overview page
+- Added POT theme option
 
 #### Adjustments
 
-- 
+-
 
 #### Fixes
 
 - Fixed issue where modules saved as ZIP archives would be installed
-- Legacy Debits in tritium  mode in the account history section now display properly in negative
+- Legacy Debits in tritium mode in the account history section now display properly in negative
 
 # 3.0.3 (2020.4.21)
 
@@ -25,7 +26,7 @@
 
 #### Adjustments
 
-- If you are not in sync when you login with invalid credentials 
+- If you are not in sync when you login with invalid credentials
 
 #### Fixes
 
