@@ -38,7 +38,7 @@ const getExtractDest = () => {
   } = store.getState();
   return path.join(coreDataDir, 'recent');
 };
-const recentDbUrlTritium = 'https://nexus.io/bootstrap/tritium/tritium.tar.gz'; // Tritium Bootstrap URL
+const recentDbUrlTritium = 'http://bootstrap.nexus.io/tritium.tar.gz'; // Tritium Bootstrap URL
 
 let aborting = false;
 let downloadRequest = null;
@@ -80,7 +80,7 @@ async function startBootstrap() {
 
     // Remove the old file if exists
     if (fs.existsSync(fileLocation)) {
-      fs.unlinkSync(fileLocation, err => {
+      fs.unlinkSync(fileLocation, (err) => {
         if (err) throw err;
       });
     }
@@ -97,7 +97,7 @@ async function startBootstrap() {
     // A flag to prevent bootstrap status being set back to downloading
     // when download is already done or aborted
     let downloading = true;
-    const downloadProgress = throttled(details => {
+    const downloadProgress = throttled((details) => {
       if (downloading) setStatus('downloading', details);
     }, 1000);
     await downloadDb(recentDbUrl, downloadProgress);
@@ -165,11 +165,11 @@ async function downloadDb(recentDbUrl, downloadProgress) {
     downloadRequest = https
       .get(recentDbUrl)
       .setTimeout(60000)
-      .on('response', response => {
+      .on('response', (response) => {
         const totalSize = parseInt(response.headers['content-length'], 10);
         let downloaded = 0;
 
-        response.on('data', chunk => {
+        response.on('data', (chunk) => {
           downloaded += chunk.length;
           timerId = downloadProgress({ downloaded, totalSize });
         });
@@ -177,7 +177,7 @@ async function downloadDb(recentDbUrl, downloadProgress) {
         response.pipe(
           fs
             .createWriteStream(fileLocation, { autoClose: true })
-            .on('error', e => {
+            .on('error', (e) => {
               reject(e);
             })
             .on('close', () => {
@@ -185,15 +185,15 @@ async function downloadDb(recentDbUrl, downloadProgress) {
             })
         );
       })
-      .on('error', e => reject(e))
-      .on('timeout', function() {
+      .on('error', (e) => reject(e))
+      .on('timeout', function () {
         if (downloadRequest) downloadRequest.abort();
         reject(new Error('Request timeout!'));
       })
-      .on('abort', function() {
+      .on('abort', function () {
         clearTimeout(timerId);
         if (fs.existsSync(fileLocation)) {
-          fs.unlink(fileLocation, err => {
+          fs.unlink(fileLocation, (err) => {
             if (err) console.error(err);
           });
         }
@@ -299,7 +299,7 @@ function cleanUp() {
   // Clean up asynchornously
   setTimeout(() => {
     if (fs.existsSync(fileLocation)) {
-      fs.unlink(fileLocation, err => {
+      fs.unlink(fileLocation, (err) => {
         if (err) {
           console.error(err);
         }
@@ -326,11 +326,11 @@ const setBootstrapStatus = (step, details) => {
  *
  * @export
  */
-walletEvents.once('post-render', function() {
+walletEvents.once('post-render', function () {
   bootstrapEvents.on('abort', () =>
     showNotification(__('Bootstrap process has been aborted'), 'error')
   );
-  bootstrapEvents.on('error', err => {
+  bootstrapEvents.on('error', (err) => {
     console.error(err);
     openErrorDialog({
       message: __('Error bootstrapping recent database'),
