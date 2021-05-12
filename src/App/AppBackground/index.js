@@ -15,26 +15,43 @@ const CustomWallpaper = styled.div(
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundSize: 'cover',
     backgroundPosition: 'center center',
   },
-  ({ wallpaper }) =>
-    !!wallpaper && {
-      backgroundImage: `url("${wallpaper}")`,
-    }
+  ({ image }) =>
+    !!image && {
+      backgroundImage: `url("${image}")`,
+    },
+  ({ size = 'cover', backgroundColor = '#000' }) => ({
+    backgroundSize: size,
+    backgroundColor,
+  })
 );
 
 export default function AppBackground() {
-  const wallpaper = useSelector((state) => state.theme.wallpaper);
+  const { wallpaper, wallpaperSize, wallpaperBackgroundColor } = useSelector(
+    (state) => state.theme.wallpaper
+  );
 
   if (wallpaper === starryNightBackground) {
     return <StarryNight />;
   }
   if (wallpaper === cosmicLightBackground) {
-    return <CustomWallpaper wallpaper={lightImg} />;
+    return (
+      <CustomWallpaper
+        image={lightImg}
+        size={wallpaperSize}
+        backgroundColor={wallpaperBackgroundColor}
+      />
+    );
   }
   if (!!wallpaper && existsSync(wallpaper)) {
-    return <CustomWallpaper wallpaper={wallpaper} />;
+    return (
+      <CustomWallpaper
+        image={wallpaper}
+        size={wallpaperSize}
+        backgroundColor={wallpaperBackgroundColor}
+      />
+    );
   }
   return <StarryNight />;
 }
