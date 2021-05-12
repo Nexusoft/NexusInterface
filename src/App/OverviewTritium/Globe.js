@@ -184,6 +184,10 @@ export default class Globe extends Component {
     if (geoip == null) {
       return;
     }
+    if (this.props.globeColor != prevProps.globeColor) {
+      const newColor = new THREE.Color(this.props.globeColor);
+      this.globe.children[0].material.color = newColor; // [0] == globe
+    }
     this.timesSkipped++;
     if (
       this.props.connections !== prevProps.connections &&
@@ -389,11 +393,12 @@ export default class Globe extends Component {
    * @memberof Globe
    */
   arcRegister() {
-    let self = this.pointRegistry[
-      this.pointRegistry.findIndex((element) => {
-        return element.params.type === 'SELF';
-      })
-    ];
+    let self =
+      this.pointRegistry[
+        this.pointRegistry.findIndex((element) => {
+          return element.params.type === 'SELF';
+        })
+      ];
 
     if (self) {
       this.pointRegistry.forEach((point) => {
