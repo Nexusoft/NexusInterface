@@ -29,7 +29,7 @@ const CustomWallpaper = styled.div(
 
 export default function AppBackground() {
   const { wallpaper, wallpaperSize, wallpaperBackgroundColor } = useSelector(
-    (state) => state.theme.wallpaper
+    (state) => state.theme
   );
 
   if (wallpaper === starryNightBackground) {
