@@ -10,7 +10,11 @@ import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
-import { openConfirmDialog, openErrorDialog, openSuccessDialog } from 'lib/ui';
+import {
+  openConfirmDialog,
+  openErrorDialog,
+  openSuccessDialog,
+} from 'lib/dialog';
 import { errorHandler } from 'utils/form';
 import passwordInvalidChars from './passwordInvalidChars';
 

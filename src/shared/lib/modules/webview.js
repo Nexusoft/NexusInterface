@@ -5,16 +5,16 @@ import { reset, initialize } from 'redux-form';
 import * as TYPE from 'consts/actionTypes';
 import store, { observeStore } from 'store';
 import { history } from 'lib/wallet';
+import { showNotification } from 'lib/ui';
 import {
-  showNotification,
   openConfirmDialog,
   openErrorDialog,
   openSuccessDialog,
   openInfoDialog,
-} from 'lib/ui';
+  confirmPin,
+} from 'lib/dialog';
 import { popupContextMenu, defaultMenu } from 'lib/contextMenu';
 
-import { confirmPin } from 'lib/ui';
 import rpc from 'lib/rpc';
 import { callApi } from 'lib/tritiumApi';
 import { legacyMode } from 'consts/misc';

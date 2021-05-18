@@ -11,7 +11,7 @@ import Tooltip from 'components/Tooltip';
 import InfoField from 'components/InfoField';
 import ExternalLink from 'components/ExternalLink';
 import GA from 'lib/googleAnalytics';
-import { confirm } from 'lib/ui';
+import { confirm } from 'lib/dialog';
 import { history } from 'lib/wallet';
 import { updateSettings } from 'lib/settings';
 import { timing } from 'styles';

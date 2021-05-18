@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 
 // Internal Global
 import { updateSettings } from 'lib/settings';
-import { switchSettingsTab } from 'lib/ui';
+import { switchSettingsTab, showNotification } from 'lib/ui';
 import { backupWallet } from 'lib/wallet';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
@@ -13,7 +13,7 @@ import TextField from 'components/TextField';
 import Select from 'components/Select';
 import Switch from 'components/Switch';
 import Icon from 'components/Icon';
-import { confirm, openErrorDialog, showNotification } from 'lib/ui';
+import { confirm, openErrorDialog } from 'lib/dialog';
 import * as color from 'utils/color';
 import * as form from 'utils/form';
 import { legacyMode } from 'consts/misc';

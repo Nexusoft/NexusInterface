@@ -21,8 +21,8 @@ import {
   printCommandOutput,
   printCommandError,
   resetConsoleOutput,
+  openModal,
 } from 'lib/ui';
-import { openModal } from 'lib/ui';
 import { updateSettings } from 'lib/settings';
 import APIDocModal from './APIDocs/ApiDocModal';
 import documentsIcon from 'icons/documents.svg';

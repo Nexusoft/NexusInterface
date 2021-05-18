@@ -3,9 +3,8 @@ import { connect } from 'react-redux';
 
 import Icon from 'components/Icon';
 import Button from 'components/Button';
-import { switchUserTab } from 'lib/ui';
+import { switchUserTab, openModal } from 'lib/ui';
 import { loadAccounts, loadOwnedTokens } from 'lib/user';
-import { openModal } from 'lib/ui';
 import plusIcon from 'icons/plus.svg';
 
 import Account from './Account';

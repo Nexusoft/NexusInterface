@@ -17,15 +17,12 @@ import {
   lightTheme,
   potTheme,
 } from 'lib/theme';
-import { switchSettingsTab } from 'lib/ui';
+import { switchSettingsTab, showNotification } from 'lib/ui';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
 import Switch from 'components/Switch';
 import Select from 'components/Select';
-import Icon from 'components/Icon';
-import { showNotification } from 'lib/ui';
 import NexusAddress from 'components/NexusAddress';
-import warningIcon from 'icons/warning.svg';
 import { walletDataDir } from 'consts/paths';
 import { webGLAvailable, legacyMode } from 'consts/misc';
 import memoize from 'utils/memoize';
