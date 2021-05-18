@@ -2,6 +2,7 @@ module.exports = {
   full: true,
   plugins: [
     'cleanupAttrs',
+    'mergeStyles',
     'inlineStyles',
     'removeDoctype',
     'removeXMLProcInst',
@@ -36,6 +37,7 @@ module.exports = {
     'removeRasterImages',
     'mergePaths',
     'convertShapeToPath',
+    'convertEllipseToCircle',
     // { sortAttrs: false },
     'removeDimensions',
     { name: 'removeAttrs', params: { attrs: ['fill', 'stroke'] } },
