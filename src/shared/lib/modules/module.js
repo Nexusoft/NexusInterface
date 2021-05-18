@@ -86,7 +86,7 @@ const nxsPackageSchema = {
       required: ['name'],
       properties: {
         name: { type: 'string' },
-        email: { type: 'string', pattern: emailRegex },
+        email: { type: 'string', pattern: emailRegex.source },
       },
     },
     // Lists ALL the files which is used by the module in relative paths from the module directory
