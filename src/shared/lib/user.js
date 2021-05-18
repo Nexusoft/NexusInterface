@@ -6,7 +6,7 @@ import store, { observeStore } from 'store';
 import { legacyMode } from 'consts/misc';
 import { callApi } from 'lib/tritiumApi';
 import rpc from 'lib/rpc';
-import { openModal, confirm, confirmPin } from 'lib/ui';
+import { openModal, confirm } from 'lib/ui';
 import { fetchTokenDecimals } from 'lib/tokens';
 import { updateSettings } from 'lib/settings';
 import { isLoggedIn } from 'selectors';
@@ -118,7 +118,7 @@ export const unlockUser = async ({ pin, mining, staking, notifications }) => {
     pin,
     notifications: notifications !== undefined ? notifications : true,
     mining: mining !== undefined ? mining : !!enableMining,
-    staking: staking !== undefined ? staking : false, //!!enableStaking,
+    staking: staking !== undefined ? staking : false,
   });
 };
 
