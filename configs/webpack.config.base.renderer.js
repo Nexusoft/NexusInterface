@@ -24,7 +24,7 @@ export default merge(baseConfig, {
           {
             loader: 'svgo-loader',
             options: {
-              externalConfig: 'svgo-config.json',
+              configFile: path.join(process.cwd(), 'svgo.config.js'),
             },
           },
         ],
