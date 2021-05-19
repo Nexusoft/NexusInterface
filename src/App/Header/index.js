@@ -106,6 +106,7 @@ const preReleaseTag = APP_VERSION.toString().includes('alpha')
     coreConnected: isCoreConnected(state),
     testnet: systemInfo?.testnet,
     privateNet: systemInfo?.private,
+    lite: systemInfo?.clientmode,
     legacyTestnet: info && info.testnet,
   };
 })
@@ -117,7 +118,8 @@ class Header extends Component {
    * @memberof Header
    */
   render() {
-    const { coreConnected, testnet, privateNet, legacyTestnet } = this.props;
+    const { coreConnected, testnet, privateNet, legacyTestnet, lite } =
+      this.props;
 
     return (
       <HeaderComponent>
@@ -133,11 +135,13 @@ class Header extends Component {
           {legacyMode ? (
             <>
               {__('Legacy Mode')}
+              {lite && ` (${__('Lite')})`}
               {!!legacyTestnet && ' - testnet'}
             </>
           ) : (
             <>
               {__('Tritium Mode')}
+              {lite && ` (${__('Lite')})`}
               {!!testnet &&
                 ` -${privateNet ? ' private' : ''} testnet ${testnet}`}
             </>
