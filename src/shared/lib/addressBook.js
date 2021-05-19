@@ -4,7 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import Ajv from 'ajv';
 import { walletDataDir } from 'consts/paths';
-import { emailRegex } from 'utils/form';
+import { emailRegex } from 'consts/misc';
 import { readJson, writeJson } from 'utils/json';
 
 const fileName = 'addressbook.json';

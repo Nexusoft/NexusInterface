@@ -4,9 +4,8 @@ import styled from '@emotion/styled';
 
 import Icon from 'components/Icon';
 import Button from 'components/Button';
-import { switchUserTab } from 'lib/ui';
+import { switchUserTab, openModal } from 'lib/ui';
 import { loadAssets } from 'lib/user';
-import { openModal } from 'lib/ui';
 import plusIcon from 'icons/plus.svg';
 
 import Asset from './Asset';

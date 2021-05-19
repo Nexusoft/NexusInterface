@@ -8,7 +8,7 @@ import languages from 'data/languages';
 import { updateSettings } from 'lib/settings';
 import SettingsField from 'components/SettingsField';
 import Select from 'components/Select';
-import { confirm } from 'lib/ui';
+import { confirm } from 'lib/dialog';
 
 __ = __context('Settings.Application');
 

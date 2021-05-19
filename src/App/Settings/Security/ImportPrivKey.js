@@ -8,7 +8,8 @@ import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
-import { openErrorDialog, openSuccessDialog, showNotification } from 'lib/ui';
+import { openErrorDialog, openSuccessDialog } from 'lib/dialog';
+import { showNotification } from 'lib/ui';
 import rpc from 'lib/rpc';
 import { errorHandler, trimText } from 'utils/form';
 

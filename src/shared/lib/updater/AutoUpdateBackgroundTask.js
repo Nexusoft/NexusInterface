@@ -2,7 +2,8 @@ import { Component } from 'react';
 import { shell } from 'electron';
 
 import BackgroundTask from 'components/BackgroundTask';
-import { confirm, showBackgroundTask } from 'lib/ui';
+import { showBackgroundTask } from 'lib/ui';
+import { confirm } from 'lib/dialog';
 
 __ = __context('AutoUpdate');
 

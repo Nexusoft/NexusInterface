@@ -4,7 +4,7 @@ import ControlledModal from 'components/ControlledModal';
 import FormField from 'components/FormField';
 import TextFieldWithKeyboard from 'components/TextFieldWithKeyboard';
 import Button from 'components/Button';
-import { openErrorDialog } from 'lib/ui';
+import { openErrorDialog } from 'lib/dialog';
 import { resolveValue } from 'utils/form';
 
 __ = __context('ConfirmPassword&PIN');

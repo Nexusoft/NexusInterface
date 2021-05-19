@@ -14,8 +14,8 @@ import {
   openConfirmDialog,
   openErrorDialog,
   openSuccessDialog,
-  removeModal,
-} from 'lib/ui';
+} from 'lib/dialog';
+import { removeModal } from 'lib/ui';
 import { loadAccounts } from 'lib/user';
 import { errorHandler } from 'utils/form';
 import {

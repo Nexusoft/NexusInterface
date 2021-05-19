@@ -12,8 +12,7 @@ import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
 import Table from 'components/Table';
 import { formatDateTime } from 'lib/intl';
-import { openModal } from 'lib/ui';
-import { setTxsAccountFilter } from 'lib/ui';
+import { openModal, setTxsAccountFilter } from 'lib/ui';
 import { autoUpdateTransactions, isPending } from 'lib/transactions';
 import { isCoreConnected } from 'selectors';
 
@@ -183,12 +182,8 @@ class Transactions extends Component {
    * @memberof Transactions
    */
   render() {
-    const {
-      filteredTransactions,
-      account,
-      accountOptions,
-      minConfirmations,
-    } = this.props;
+    const { filteredTransactions, account, accountOptions, minConfirmations } =
+      this.props;
 
     return (
       <Panel

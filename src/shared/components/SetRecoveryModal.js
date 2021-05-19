@@ -13,12 +13,8 @@ import Button from 'components/Button';
 import Select from 'components/Select';
 import Spinner from 'components/Spinner';
 import { errorHandler } from 'utils/form';
-import {
-  openSuccessDialog,
-  removeModal,
-  openModal,
-  openErrorDialog,
-} from 'lib/ui';
+import { removeModal, openModal } from 'lib/ui';
+import { openSuccessDialog, openErrorDialog } from 'lib/dialog';
 import { assetsDir } from 'consts/paths';
 
 __ = __context('SetRecoveryPhrase');

@@ -6,17 +6,13 @@ import ControlledModal from 'components/ControlledModal';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
 import FormField from 'components/FormField';
-import AutoSuggest from 'components/AutoSuggest';
-import { confirm } from 'lib/ui';
-import { confirmPin } from 'lib/ui';
+import { confirmPin, openErrorDialog } from 'lib/dialog';
 import { callApi } from 'lib/tritiumApi';
 import { errorHandler } from 'utils/form';
 import { loadAccounts } from 'lib/user';
-import { removeModal, showNotification, openErrorDialog } from 'lib/ui';
+import { removeModal, showNotification } from 'lib/ui';
 import { createLocalNameFee } from 'lib/fees';
 import GA from 'lib/googleAnalytics';
-import memoize from 'utils/memoize';
-import { addressRegex } from 'consts/misc';
 
 __ = __context('RenameAccount');
 

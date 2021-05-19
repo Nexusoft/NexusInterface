@@ -10,12 +10,11 @@ import styled from '@emotion/styled';
 import store from 'store';
 import * as TYPE from 'consts/actionTypes';
 import {
-  confirm,
   switchSettingsTab,
   setCoreSettingsRestart,
   showNotification,
-  openErrorDialog,
 } from 'lib/ui';
+import { confirm, openErrorDialog } from 'lib/dialog';
 import { stopCore, startCore, restartCore } from 'lib/core';
 import { refreshCoreInfo } from 'lib/coreInfo';
 import { updateSettings } from 'lib/settings';
@@ -290,8 +289,7 @@ class SettingsCore extends Component {
   reloadTxHistory = async () => {
     const confirmed = await confirm({
       question: __('Reload transaction history') + '?',
-      note:
-        'Nexus Core will be restarted, after that, it will take a while for the transaction history to be reloaded',
+      note: 'Nexus Core will be restarted, after that, it will take a while for the transaction history to be reloaded',
     });
     if (confirmed) {
       updateSettings({ walletClean: true });
@@ -302,8 +300,7 @@ class SettingsCore extends Component {
   clearPeerConnections = async () => {
     const confirmed = await confirm({
       question: __('Clear peer connections') + '?',
-      note:
-        'Nexus Core will be restarted. After that, all stored peer connections will be reset.',
+      note: 'Nexus Core will be restarted. After that, all stored peer connections will be reset.',
     });
     if (confirmed) {
       updateSettings({ clearPeers: true });

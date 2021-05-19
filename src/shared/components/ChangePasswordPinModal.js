@@ -8,8 +8,8 @@ import TextFieldWithKeyboard from 'components/TextFieldWithKeyboard';
 import Button from 'components/Button';
 import Spinner from 'components/Spinner';
 import { errorHandler } from 'utils/form';
-import { openSuccessDialog, removeModal, openModal } from 'lib/ui';
-import { confirmPasswordPin } from 'lib/ui';
+import { removeModal } from 'lib/ui';
+import { openSuccessDialog, confirmPasswordPin } from 'lib/dialog';
 
 __ = __context('ChangePassword&PIN');
 

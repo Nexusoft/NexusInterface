@@ -9,9 +9,8 @@ import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import Spinner from 'components/Spinner';
 import Select from 'components/Select';
-import { confirmPin } from 'lib/ui';
+import { confirmPin, openSuccessDialog } from 'lib/dialog';
 import { errorHandler } from 'utils/form';
-import { openSuccessDialog } from 'lib/ui';
 import {
   createLocalNameFee,
   createNamespacedNameFee,

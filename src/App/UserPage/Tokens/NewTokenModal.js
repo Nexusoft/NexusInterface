@@ -7,14 +7,12 @@ import ControlledModal from 'components/ControlledModal';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
 import FormField from 'components/FormField';
-import { confirm } from 'lib/ui';
-import { confirmPin } from 'lib/ui';
+import { confirm, confirmPin } from 'lib/dialog';
 import { callApi } from 'lib/tritiumApi';
 import { errorHandler } from 'utils/form';
 import { loadAccounts, loadOwnedTokens } from 'lib/user';
-import { removeModal, showNotification } from 'lib/ui';
+import { openModal, removeModal, showNotification } from 'lib/ui';
 import NewAccountModal from 'components/NewAccountModal';
-import { openModal } from 'lib/ui';
 
 import { token, createLocalNameFee } from 'lib/fees';
 import GA from 'lib/googleAnalytics';

@@ -8,7 +8,8 @@ import { keyframes } from '@emotion/react';
 // Internal
 import ControlledModal from 'components/ControlledModal';
 import Button from 'components/Button';
-import { showBackgroundTask, confirm, removeModal } from 'lib/ui';
+import { showBackgroundTask, removeModal } from 'lib/ui';
+import { confirm } from 'lib/dialog';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import ModalContext from 'context/modal';

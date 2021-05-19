@@ -11,7 +11,7 @@ import NewUserModal from 'components/NewUserModal';
 import RecoverPasswordPinModal from 'components/RecoverPasswordPinModal';
 import Spinner from 'components/Spinner';
 import { showNotification, openModal, removeModal } from 'lib/ui';
-import { logIn, unlockUser } from 'lib/user';
+import { logIn } from 'lib/user';
 import { errorHandler } from 'utils/form';
 
 __ = __context('Login');

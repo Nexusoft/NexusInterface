@@ -3,12 +3,7 @@ import fs from 'fs';
 
 import store from 'store';
 import * as TYPE from 'consts/actionTypes';
-import {
-  showNotification,
-  openModal,
-  openSuccessDialog,
-  openErrorDialog,
-} from 'lib/ui';
+import { showNotification, openModal } from 'lib/ui';
 import GA from 'lib/googleAnalytics';
 import { updateSettings } from 'lib/settings';
 import ModuleDetailsModal from 'components/ModuleDetailsModal';
@@ -18,7 +13,7 @@ import ensureDirExists from 'utils/ensureDirExists';
 import deleteDirectory from 'utils/promisified/deleteDirectory';
 import extractZip from 'utils/promisified/extractZip';
 import extractTarball from 'utils/promisified/extractTarball';
-import { confirm } from 'lib/ui';
+import { confirm, openSuccessDialog, openErrorDialog } from 'lib/dialog';
 
 import { loadModuleFromDir, loadDevModuleFromDir } from './module';
 

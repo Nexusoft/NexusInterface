@@ -5,7 +5,6 @@ import ControlledModal from 'components/ControlledModal';
 import Button from 'components/Button';
 import { history } from 'lib/wallet';
 import { formatNumber } from 'lib/intl';
-import { openModal } from 'lib/ui';
 import { loadAccounts } from 'lib/user';
 import { updateSettings } from 'lib/settings';
 
