@@ -5,17 +5,16 @@ import { ipcRenderer } from 'electron';
 import fs from 'fs';
 
 // Internal
-import GA from 'lib/googleAnalytics';
-import { updateSettings } from 'lib/settings';
-import { switchSettingsTab, showNotification } from 'lib/ui';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
 import Switch from 'components/Switch';
 import Select from 'components/Select';
+import NexusAddress from 'components/NexusAddress';
+import GA from 'lib/googleAnalytics';
 import { updateSettings } from 'lib/settings';
+import { switchSettingsTab, showNotification } from 'lib/ui';
 import { loadCustomTheme } from 'lib/theme';
 import { loadAccounts } from 'lib/user';
-import NexusAddress from 'components/NexusAddress';
 import { walletDataDir } from 'consts/paths';
 import { webGLAvailable, legacyMode } from 'consts/misc';
 import memoize from 'utils/memoize';
