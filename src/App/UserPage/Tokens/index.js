@@ -68,7 +68,7 @@ export default function Tokens() {
           {__('Look up a token')}
         </Button>
       </div>
-      <div>
+      <div className="mt1">
         {ownedTokens?.map((token) => (
           <Token key={token.address} token={token} mine />
         ))}
