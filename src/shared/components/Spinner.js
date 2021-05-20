@@ -6,13 +6,13 @@ const spinning = keyframes`
   100% { transform: rotate(360deg) }
 `;
 
-const SpinnerComponent = styled.div({
+const SpinnerComponent = styled.div(({ size }) => ({
   display: 'inline-block',
   position: 'relative',
-  width: '1em',
-  height: '1em',
+  width: size !== undefined ? size : '1em',
+  height: size !== undefined ? size : '1em',
   verticalAlign: 'middle',
-});
+}));
 
 const SpinnerPart = styled.div(({ index = 0, thickness }) => ({
   position: 'absolute',
@@ -25,8 +25,8 @@ const SpinnerPart = styled.div(({ index = 0, thickness }) => ({
   animationDelay: `-${0.1 * index}s`,
 }));
 
-const Spinner = ({ thickness = 0.1, ...rest }) => (
-  <SpinnerComponent {...rest}>
+const Spinner = ({ thickness = 0.1, size, ...rest }) => (
+  <SpinnerComponent size={size} {...rest}>
     <SpinnerPart index={0} thickness={thickness} />
     <SpinnerPart index={1} thickness={thickness} />
     <SpinnerPart index={2} thickness={thickness} />
