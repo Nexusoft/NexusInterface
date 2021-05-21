@@ -19,7 +19,11 @@ import * as form from 'utils/form';
 import { legacyMode } from 'consts/misc';
 import { isCoreConnected } from 'selectors';
 import warningIcon from 'icons/warning.svg';
-import { startAutoUpdate, stopAutoUpdate } from 'lib/updater';
+import {
+  startAutoUpdate,
+  stopAutoUpdate,
+  setAllowPrerelease,
+} from 'lib/updater';
 
 // Internal Local
 import LanguageSetting from './LanguageSetting';
@@ -267,7 +271,7 @@ class SettingsApp extends Component {
         >
           <Switch
             checked={settings.allowPrerelease}
-            onChange={this.updateHandlers('allowPrerelease')}
+            onChange={(evt) => setAllowPrerelease(evt.target.checked)}
           />
         </SettingsField>
 
