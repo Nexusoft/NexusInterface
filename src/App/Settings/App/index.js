@@ -256,6 +256,23 @@ class SettingsApp extends Component {
 
         <SettingsField
           connectLabel
+          label={__('Allow Pre-releases')}
+          subLabel={
+            <div>
+              {__(
+                'Accept pre-release versions (e.g. alpha, beta) when checking for updates.'
+              )}
+            </div>
+          }
+        >
+          <Switch
+            checked={settings.allowPrerelease}
+            onChange={this.updateHandlers('allowPrerelease')}
+          />
+        </SettingsField>
+
+        <SettingsField
+          connectLabel
           label={__('Send anonymous usage data')}
           subLabel={__(
             'Send anonymous usage data to allow the Nexus developers to improve the wallet.'
