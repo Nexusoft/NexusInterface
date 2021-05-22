@@ -79,10 +79,9 @@ ipcMain.handle('check-for-updates', (event, ...args) =>
 ipcMain.handle('quit-and-install-update', (event, ...args) =>
   autoUpdater.quitAndInstall(...args)
 );
-ipcMain.handle('set-allow-prerelease', (event, value) => {
-  setAllowPrerelease(value);
-  autoUpdater.checkForUpdates();
-});
+ipcMain.handle('set-allow-prerelease', (event, value) =>
+  setAllowPrerelease(value)
+);
 
 // Sync message handlers
 ipcMain.on('get-path', (event, name) => {

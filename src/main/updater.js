@@ -34,4 +34,7 @@ export function initializeUpdater(settings) {
 
 export function setAllowPrerelease(value) {
   autoUpdater.allowPrerelease = !!value;
+  if (value) {
+    autoUpdater.checkForUpdates();
+  }
 }
