@@ -62,14 +62,17 @@ function convertOldAddressInfo({ label, address, isMine }) {
 function loadAddressBookFromFile() {
   // TODO: deprecate genesis usage in address fields
   const schema = {
+    type: 'object',
     patternProperties: {
       '^.+$': {
+        type: 'object',
         required: ['name', 'addresses'],
         properties: {
           name: { type: 'string' },
           addresses: {
             type: 'array',
             items: {
+              type: 'object',
               required: ['address', 'isMine'],
               properties: {
                 address: {
