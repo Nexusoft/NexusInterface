@@ -42,7 +42,7 @@
       "!build/*.dev.js",
       "!node_modules/**/*",
       {
-        "from": "src",
+        "from": "assets/static",
         "to": "build",
         "filter": [
           "app.html"
