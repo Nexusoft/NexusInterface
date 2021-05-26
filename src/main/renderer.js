@@ -62,8 +62,10 @@ export async function createWindow(settings) {
 
   // Load the index.html into the new browser window
   const htmlPath =
-    process.env.NODE_ENV === 'development' ? '../src/app.html' : 'app.html';
-  mainWindow.loadURL(`file://${path.resolve(__dirname, htmlPath)}`);
+    process.env.NODE_ENV === 'development'
+      ? `http://localhost:${port}/assets/app.html`
+      : `file://${path.resolve(__dirname, 'app.html')}`;
+  mainWindow.loadURL(htmlPath);
 
   // Show the window only once the contents finish loading, then check for updates
   mainWindow.webContents.on('did-finish-load', function () {

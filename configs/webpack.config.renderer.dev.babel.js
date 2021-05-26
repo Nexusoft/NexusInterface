@@ -63,6 +63,11 @@ export default merge(baseRendererConfig, devConfig, {
   devServer: {
     port,
     publicPath,
+    contentBase: [
+      path.resolve(process.cwd(), 'assets/static'),
+      path.resolve(process.cwd(), 'dll'),
+    ],
+    contentBasePublicPath: '/assets',
     compress: true,
     noInfo: true,
     stats: 'errors-only',
