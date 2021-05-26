@@ -1,41 +1,24 @@
 import { BrowserWindow, screen, app } from 'electron';
 import path from 'path';
-import fs from 'fs';
-import devToolsInstall, {
+import installExtensions, {
   REACT_DEVELOPER_TOOLS,
   REDUX_DEVTOOLS,
 } from 'electron-devtools-installer';
 
 // Internal
 import { assetsDir } from 'consts/paths';
-import {
-  loadSettingsFromFile,
-  updateSettingsFile,
-} from 'lib/settings/universal';
+import { updateSettingsFile } from 'lib/settings/universal';
 import { debounced } from 'utils/universal';
 
 app.allowRendererProcessReuse = false;
-
-/**
- * Enable development tools for REACT and REDUX
- *
- * @returns
- */
-function installExtensions() {
-  const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
-  return Promise.all([
-    devToolsInstall(REACT_DEVELOPER_TOOLS, forceDownload),
-    devToolsInstall(REDUX_DEVTOOLS, forceDownload),
-  ]);
-}
+const port = process.env.PORT || 1212;
 
 /**
  * Create the application window
  *
  * @export
  */
-export async function createWindow() {
-  const settings = loadSettingsFromFile();
+export async function createWindow(settings) {
   const fileName =
     process.platform == 'darwin' ? 'nexuslogo.ico' : 'Nexus_App_Icon_64.png';
   const iconPath = path.join(assetsDir, 'tray', fileName);
@@ -66,8 +49,10 @@ export async function createWindow() {
 
   // Load the index.html into the new browser window
   const htmlPath =
-    process.env.NODE_ENV === 'development' ? '../src/app.html' : 'app.html';
-  mainWindow.loadURL(`file://${path.resolve(__dirname, htmlPath)}`);
+    process.env.NODE_ENV === 'development'
+      ? `http://localhost:${port}/assets/app.html`
+      : `file://${path.resolve(__dirname, 'app.html')}`;
+  mainWindow.loadURL(htmlPath);
 
   // Show the window only once the contents finish loading, then check for updates
   mainWindow.webContents.on('did-finish-load', function () {
@@ -114,18 +99,10 @@ export async function createWindow() {
     settings.devMode
   ) {
     try {
-      if (process.platform === 'win32') {
-        const extensionsPath = path.join(
-          app.getPath('userData'),
-          'DevTools Extensions'
-        );
-        try {
-          await fs.promises.unlink(extensionsPath);
-        } catch (_) {
-          // noop
-        }
-      }
-      await installExtensions();
+      await Promise.all([
+        installExtensions(REACT_DEVELOPER_TOOLS),
+        installExtensions(REDUX_DEVTOOLS),
+      ]);
     } catch (err) {
       console.error('Failed to install extensions', err);
     }

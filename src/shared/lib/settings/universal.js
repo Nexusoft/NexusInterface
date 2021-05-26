@@ -25,6 +25,7 @@ export const defaultSettings = {
   locale: null,
   minimizeOnClose: false,
   autoUpdate: true,
+  allowPrerelease: false,
   sendUsageData: true,
   fiatCurrency: 'USD',
   minConfirmations: 3,

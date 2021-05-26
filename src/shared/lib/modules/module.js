@@ -32,6 +32,7 @@ const reservedFileNames = [
  * =============================================================================
  */
 const nxsPackageSchema = {
+  type: 'object',
   additionalProperties: false,
   required: ['name', 'displayName', 'version', 'type', 'files'],
   properties: {
@@ -110,6 +111,7 @@ const validateNxsPackage = ajv.compile(nxsPackageSchema);
  * =============================================================================
  */
 const nxsPackageDevSchema = {
+  type: 'object',
   additionalProperties: true,
   required: ['name', 'displayName', 'type'],
   properties: {

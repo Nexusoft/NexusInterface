@@ -1,6 +1,7 @@
 import { app, ipcMain, dialog } from 'electron';
 import { autoUpdater } from 'electron-updater';
 
+import { loadSettingsFromFile } from 'lib/settings/universal';
 import {
   startCore,
   coreBinaryExists,
@@ -13,7 +14,7 @@ import { createWindow } from './renderer';
 import { setupTray } from './tray';
 import { setApplicationMenu, popupContextMenu } from './menu';
 import { openVirtualKeyboard } from './keyboard';
-import './updater';
+import { initializeUpdater, setAllowPrerelease } from './updater';
 
 let mainWindow;
 global.forceQuit = false;
@@ -78,6 +79,9 @@ ipcMain.handle('check-for-updates', (event, ...args) =>
 ipcMain.handle('quit-and-install-update', (event, ...args) =>
   autoUpdater.quitAndInstall(...args)
 );
+ipcMain.handle('set-allow-prerelease', (event, value) =>
+  setAllowPrerelease(value)
+);
 
 // Sync message handlers
 ipcMain.on('get-path', (event, name) => {
@@ -109,7 +113,9 @@ if (!gotTheLock) {
 
   // Application Startup
   app.on('ready', async () => {
-    global.mainWindow = mainWindow = await createWindow();
+    const settings = loadSettingsFromFile();
+    initializeUpdater(settings);
+    global.mainWindow = mainWindow = await createWindow(settings);
     mainWindow.on('close', () => {
       mainWindow.webContents.send('window-close');
     });
