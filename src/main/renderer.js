@@ -1,7 +1,6 @@
 import { BrowserWindow, screen, app } from 'electron';
 import path from 'path';
-import fs from 'fs';
-import devToolsInstall, {
+import installExtensions, {
   REACT_DEVELOPER_TOOLS,
   REDUX_DEVTOOLS,
 } from 'electron-devtools-installer';
@@ -12,19 +11,7 @@ import { updateSettingsFile } from 'lib/settings/universal';
 import { debounced } from 'utils/universal';
 
 app.allowRendererProcessReuse = false;
-
-/**
- * Enable development tools for REACT and REDUX
- *
- * @returns
- */
-function installExtensions() {
-  const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
-  return Promise.all([
-    devToolsInstall(REACT_DEVELOPER_TOOLS, forceDownload),
-    devToolsInstall(REDUX_DEVTOOLS, forceDownload),
-  ]);
-}
+const port = process.env.PORT || 1212;
 
 /**
  * Create the application window
@@ -112,18 +99,10 @@ export async function createWindow(settings) {
     settings.devMode
   ) {
     try {
-      if (process.platform === 'win32') {
-        const extensionsPath = path.join(
-          app.getPath('userData'),
-          'DevTools Extensions'
-        );
-        try {
-          await fs.promises.unlink(extensionsPath);
-        } catch (_) {
-          // noop
-        }
-      }
-      await installExtensions();
+      await Promise.all([
+        installExtensions(REACT_DEVELOPER_TOOLS),
+        installExtensions(REDUX_DEVTOOLS),
+      ]);
     } catch (err) {
       console.error('Failed to install extensions', err);
     }
