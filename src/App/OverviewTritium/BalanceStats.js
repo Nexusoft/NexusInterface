@@ -12,7 +12,6 @@ import { isSynchronized, selectTokenBalances } from 'selectors';
 // Images
 import logoIcon from 'icons/NXS_coin.svg';
 import currencyIcons from 'data/currencyIcons';
-import nxsStakeIcon from 'icons/nxs-staking.svg';
 import warningIcon from 'icons/warning.svg';
 import waitIcon from 'icons/wait.svg';
 
