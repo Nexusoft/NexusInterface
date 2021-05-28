@@ -102,6 +102,7 @@ class WebView extends Component {
         ref={this.webviewRef}
         src={entryUrl}
         preload={preloadUrl}
+        webpreferences="contextIsolation=no"
       />
     );
   }

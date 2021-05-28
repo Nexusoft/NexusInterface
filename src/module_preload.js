@@ -16,7 +16,7 @@ import * as ReactRedux from 'react-redux';
 import createCache from '@emotion/cache';
 import * as core from '@emotion/react';
 import styled from '@emotion/styled';
-import { ipcRenderer, clipboard, shell, contextBridge } from 'electron';
+import { ipcRenderer, clipboard, shell } from 'electron';
 import * as ReduxForm from 'redux-form';
 
 import GlobalStyles from 'components/GlobalStyles';
@@ -42,7 +42,7 @@ const newId = (() => {
   return () => ++id;
 })();
 
-contextBridge.exposeInMainWorld('NEXUS', {
+global.NEXUS = {
   walletVersion: APP_VERSION,
   libraries: {
     React,
@@ -339,7 +339,7 @@ contextBridge.exposeInMainWorld('NEXUS', {
     Tab,
     Button,
   },
-});
+};
 
 // Open all external URLs on OS default browser instead of inside the wallet itself
 document.addEventListener('click', function (event) {
