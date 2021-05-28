@@ -41,7 +41,6 @@ export default class Globe extends Component {
     this.contextRestoredHandler = this.contextRestoredHandler.bind(this);
     this.pointRegistry = [];
     this.curveRegistry = [];
-    this.timesSkipped = 0;
   }
 
   /**
@@ -188,17 +187,10 @@ export default class Globe extends Component {
       const newColor = new THREE.Color(this.props.globeColor);
       this.globe.children[0].material.color = newColor; // [0] == globe
     }
-    this.timesSkipped++;
-    if (
-      this.props.connections !== prevProps.connections &&
-      this.timesSkipped > 15
-    ) {
+    if (this.props.connections !== prevProps.connections) {
       this.pointRegister();
-      this.timesSkipped = 0;
-    } else if (
-      this.timesSkipped > 5 &&
-      this.props.blocks !== prevProps.blocks
-    ) {
+    }
+    if (this.props.blocks !== prevProps.blocks) {
       this.animateArcs();
     }
   }
