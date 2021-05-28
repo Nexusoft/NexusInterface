@@ -24,6 +24,7 @@ export async function openVirtualKeyboard(options) {
     webPreferences: {
       nodeIntegration: true,
       enableRemoteModule: false,
+      contextIsolation: false,
     },
   });
 
