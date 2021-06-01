@@ -4,7 +4,7 @@ import rpc from 'lib/rpc';
 import { callApi } from 'lib/tritiumApi';
 import { isCoreConnected, isLoggedIn } from 'selectors';
 import { loadAccounts } from 'lib/user';
-import { showNotification, openModal } from 'lib/ui';
+import { showNotification, openModal, isModalOpen } from 'lib/ui';
 import { updateSettings } from 'lib/settings';
 import { bootstrap } from 'lib/bootstrap';
 import { refreshUserStatus } from 'lib/user';
@@ -208,7 +208,11 @@ export function prepareCoreInfo() {
           // So NewUser modal won't be visible now
           if (justConnected && state.settings.locale) {
             justConnected = false;
-            if (!isLoggedIn(state)) {
+            if (
+              !isLoggedIn(state) &&
+              !isModalOpen(LoginModal) &&
+              !isModalOpen(NewUserModal)
+            ) {
               if (state.settings.firstCreateNewUserShown) {
                 openModal(LoginModal);
               } else {

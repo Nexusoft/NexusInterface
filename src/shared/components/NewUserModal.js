@@ -7,7 +7,6 @@ import { connect } from 'react-redux';
 import { callApi } from 'lib/tritiumApi';
 import ControlledModal from 'components/ControlledModal';
 import FormField from 'components/FormField';
-import TextField from 'components/TextField';
 import TextFieldWithKeyboard from 'components/TextFieldWithKeyboard';
 import Button from 'components/Button';
 import Link from 'components/Link';
@@ -20,6 +19,7 @@ import {
   openModal,
   removeModal,
   showBackgroundTask,
+  isModalOpen,
 } from 'lib/ui';
 import { errorHandler } from 'utils/form';
 import store, { observeStore } from 'store';
@@ -221,7 +221,7 @@ class UserConfirmBackgroundTask extends React.Component {
           limit: 1,
           verbose: 'summary',
         });
-        if (txs && txs[0] && txs[0].confirmations) {
+        if (txs?.[0]?.confirmations) {
           this.closeTask();
           showNotification(
             __('User registration for %{username} has been confirmed', {
@@ -229,7 +229,7 @@ class UserConfirmBackgroundTask extends React.Component {
             }),
             'success'
           );
-          if (!isLoggedIn(store.getState())) {
+          if (!isLoggedIn(store.getState()) && !isModalOpen(LoginModal)) {
             openModal(LoginModal);
           }
         }
