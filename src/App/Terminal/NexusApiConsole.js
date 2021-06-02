@@ -76,6 +76,26 @@ const mapStateToProps = (state) => {
   };
 };
 
+function censorSecuredFields(cmd, { consoleCliSyntax }) {
+  const securedFields = [
+    'pin',
+    'password',
+    'recovery',
+    'new_pin',
+    'new_password',
+    'new_recovery',
+  ];
+  const replacer = (match, p1, p2, p3) => p1 + '***' + p3;
+
+  securedFields.forEach((field) => {
+    const regexStr = consoleCliSyntax
+      ? `( ${field}=)([^ ]*)( |$)`
+      : `([?&]${field}=)([^&]*)(&|$)`;
+    cmd = cmd.replace(new RegExp(regexStr, 'g'), replacer);
+  });
+  return cmd;
+}
+
 const TerminalContent = styled.div({
   gridArea: 'content',
   overflow: 'visible',
@@ -183,14 +203,17 @@ class NexusApiConsole extends Component {
    * @memberof TerminalConsole
    */
   execute = async () => {
-    if (!this.props.currentCommand || !this.props.currentCommand.trim()) return;
+    const { currentCommand, consoleCliSyntax } = this.props;
+    if (!currentCommand || !currentCommand.trim()) return;
 
-    const cmd = this.props.currentCommand.trim();
+    const cmd = currentCommand.trim();
     GA.SendEvent('Terminal', 'NexusApiConsole', 'UseCommand', 1);
-    executeCommand(cmd);
+
+    executeCommand(censorSecuredFields(cmd, { consoleCliSyntax }));
+
     let result = undefined;
     try {
-      if (this.props.consoleCliSyntax) {
+      if (consoleCliSyntax) {
         result = await ipcRenderer.invoke('execute-core-command', cmd);
       } else {
         result = await callApiByUrl(cmd);
@@ -212,7 +235,6 @@ class NexusApiConsole extends Component {
 
     if (typeof result === 'object') {
       const output = [];
-      console.log(output);
       const traverseOutput = (obj, depth) => {
         const tabs = tab.repeat(depth);
         Object.entries(obj).forEach(([key, value]) => {

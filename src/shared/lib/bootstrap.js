@@ -81,7 +81,6 @@ async function startBootstrap() {
         if (err) throw err;
       });
     }
-    console.log('Removing old files');
     await cleanUp();
 
     setStatus('stopping_core');
