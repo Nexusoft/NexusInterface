@@ -70,10 +70,12 @@ export default (state = initialState, action) => {
       };
     }
 
-    case TYPE.RESET_CONSOLE_OUTPUT:
+    case TYPE.RESET_CONSOLE:
       return {
         ...state,
         output: initialState.output,
+        commandHistory: [],
+        historyIndex: -1,
       };
 
     default:

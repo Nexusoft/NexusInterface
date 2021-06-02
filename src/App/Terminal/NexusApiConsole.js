@@ -20,7 +20,7 @@ import {
   executeCommand,
   printCommandOutput,
   printCommandError,
-  resetConsoleOutput,
+  resetConsole,
   openModal,
 } from 'lib/ui';
 import { updateSettings } from 'lib/settings';
@@ -367,7 +367,7 @@ class NexusApiConsole extends Component {
             <Button
               skin="filled-inverted"
               grouped="bottom"
-              onClick={resetConsoleOutput}
+              onClick={resetConsole}
             >
               {__('Clear')}
             </Button>
