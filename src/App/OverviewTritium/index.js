@@ -41,7 +41,7 @@ function useUpdateGlobe({ settings, connections, blocks }) {
         redrawCurves.current();
       }
 
-      if (prevConnections && connections === 0) {
+      if (prevConnections && connections === undefined) {
         removeAllPoints.current();
         // reDrawEverything.current();
         return;

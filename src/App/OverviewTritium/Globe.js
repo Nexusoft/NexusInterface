@@ -36,6 +36,7 @@ export default class Globe extends Component {
     this.animate = this.animate.bind(this);
     this.onWindowResize = this.onWindowResize.bind(this);
     this.animateArcs = this.animateArcs.bind(this);
+    this.removeAllPoints = this.removeAllPoints.bind(this);
     this.pointRegister = this.pointRegister.bind(this);
     this.contextLostHandler = this.contextLostHandler.bind(this);
     this.contextRestoredHandler = this.contextRestoredHandler.bind(this);
@@ -339,7 +340,7 @@ export default class Globe extends Component {
     this.pointRegistry.map((point) => {
       if (point.params.type === 'SELF') {
         setTimeout(() => {
-          this.destroyPoint(point);
+          //this.destroyPoint(point);
         }, 11000);
       } else {
         setTimeout(() => {
