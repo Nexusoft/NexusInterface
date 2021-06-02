@@ -36,12 +36,12 @@ export default class Globe extends Component {
     this.animate = this.animate.bind(this);
     this.onWindowResize = this.onWindowResize.bind(this);
     this.animateArcs = this.animateArcs.bind(this);
+    this.removeAllPoints = this.removeAllPoints.bind(this);
     this.pointRegister = this.pointRegister.bind(this);
     this.contextLostHandler = this.contextLostHandler.bind(this);
     this.contextRestoredHandler = this.contextRestoredHandler.bind(this);
     this.pointRegistry = [];
     this.curveRegistry = [];
-    this.timesSkipped = 0;
   }
 
   /**
@@ -89,7 +89,8 @@ export default class Globe extends Component {
       controls.update();
       scene.add(camera);
 
-      const importworld = new THREE.TextureLoader().load(world);
+      let importworld = new THREE.TextureLoader().load(world);
+      importworld.anisotropy = 4;
       const newWorld = new THREE.MeshBasicMaterial({
         map: importworld,
         color: this.props.globeColor,
@@ -184,17 +185,14 @@ export default class Globe extends Component {
     if (geoip == null) {
       return;
     }
-    this.timesSkipped++;
-    if (
-      this.props.connections !== prevProps.connections &&
-      this.timesSkipped > 15
-    ) {
+    if (this.props.globeColor != prevProps.globeColor) {
+      const newColor = new THREE.Color(this.props.globeColor);
+      this.globe.children[0].material.color = newColor; // [0] == globe
+    }
+    if (this.props.connections !== prevProps.connections) {
       this.pointRegister();
-      this.timesSkipped = 0;
-    } else if (
-      this.timesSkipped > 5 &&
-      this.props.blocks !== prevProps.blocks
-    ) {
+    }
+    if (this.props.blocks !== prevProps.blocks) {
       this.animateArcs();
     }
   }
@@ -342,7 +340,7 @@ export default class Globe extends Component {
     this.pointRegistry.map((point) => {
       if (point.params.type === 'SELF') {
         setTimeout(() => {
-          this.destroyPoint(point);
+          //this.destroyPoint(point);
         }, 11000);
       } else {
         setTimeout(() => {
@@ -389,11 +387,12 @@ export default class Globe extends Component {
    * @memberof Globe
    */
   arcRegister() {
-    let self = this.pointRegistry[
-      this.pointRegistry.findIndex((element) => {
-        return element.params.type === 'SELF';
-      })
-    ];
+    let self =
+      this.pointRegistry[
+        this.pointRegistry.findIndex((element) => {
+          return element.params.type === 'SELF';
+        })
+      ];
 
     if (self) {
       this.pointRegistry.forEach((point) => {

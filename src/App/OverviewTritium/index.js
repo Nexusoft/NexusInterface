@@ -41,7 +41,7 @@ function useUpdateGlobe({ settings, connections, blocks }) {
         redrawCurves.current();
       }
 
-      if (prevConnections && connections === 0) {
+      if (prevConnections && connections === undefined) {
         removeAllPoints.current();
         // reDrawEverything.current();
         return;
@@ -60,8 +60,10 @@ function useUpdateGlobe({ settings, connections, blocks }) {
 export default function Overview() {
   const settings = useSelector((state) => state.settings);
   const theme = useSelector((state) => state.theme);
-  const connections = useSelector((state) => state.systemInfo?.connections);
-  const blocks = useSelector((state) => state.systemInfo?.blocks);
+  const connections = useSelector(
+    (state) => state.core.systemInfo?.connections
+  );
+  const blocks = useSelector((state) => state.core.systemInfo?.blocks);
   const showingGlobe =
     settings.acceptedAgreement && settings.renderGlobe && webGLAvailable;
 
