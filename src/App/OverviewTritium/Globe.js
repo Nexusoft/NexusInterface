@@ -88,7 +88,8 @@ export default class Globe extends Component {
       controls.update();
       scene.add(camera);
 
-      const importworld = new THREE.TextureLoader().load(world);
+      let importworld = new THREE.TextureLoader().load(world);
+      importworld.anisotropy = 4;
       const newWorld = new THREE.MeshBasicMaterial({
         map: importworld,
         color: this.props.globeColor,
