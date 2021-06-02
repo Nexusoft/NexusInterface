@@ -14,6 +14,7 @@ const ajv = new Ajv();
 
 // Schema for repo_info.json
 const repoInfoSchema = {
+  type: 'object',
   additionalProperties: false,
   required: ['data'],
   properties: {
@@ -233,7 +234,8 @@ async function signModuleRepo(
   repoUrl,
   { moduleDir, privKeyPath, privKeyPassphrase } = {}
 ) {
-  const repoUrlRegex = /https:\/\/github\.com\/([^\/]+)\/([^\/]+)\/commit\/([^\/]+)/i;
+  const repoUrlRegex =
+    /https:\/\/github\.com\/([^\/]+)\/([^\/]+)\/commit\/([^\/]+)/i;
   const matches = repoUrlRegex.exec(repoUrl);
   if (!matches) {
     throw '`repoUrl` is missing or invalid. Please remember to include the commit in the URL.';

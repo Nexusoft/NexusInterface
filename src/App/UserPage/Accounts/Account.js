@@ -15,7 +15,6 @@ __ = __context('User.Accounts');
 
 const AccountComponent = styled.div(({ theme }) => ({
   padding: '1em 0 1.5em',
-  // borderBottom: `1px solid ${theme.mixer(0.125)}`,
 }));
 
 const AccountName = styled.span(({ theme }) => ({

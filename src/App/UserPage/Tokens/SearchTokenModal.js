@@ -6,7 +6,8 @@ import Button from 'components/Button';
 import TextField from 'components/TextField';
 import FormField from 'components/FormField';
 import { callApi } from 'lib/tritiumApi';
-import { removeModal, openModal, openErrorDialog } from 'lib/ui';
+import { removeModal, openModal } from 'lib/ui';
+import { openErrorDialog } from 'lib/dialog';
 import searchIcon from 'icons/search.svg';
 import Icon from 'components/Icon';
 import { addressRegex } from 'consts/misc';
@@ -81,7 +82,7 @@ class SearchTokenModal extends Component {
         assignClose={(closeModal) => {
           this.closeModal = closeModal;
         }}
-        maxWidth={800}
+        maxWidth={600}
       >
         <Modal.Header>{__('Look up token')}</Modal.Header>
         <Modal.Body>
@@ -94,14 +95,16 @@ class SearchTokenModal extends Component {
                 left={<Icon icon={searchIcon} className="mr0_4" />}
               />
             </FormField>
-            <Button
-              style={{ marginTop: '2em' }}
-              skin="primary"
-              type="submit"
-              disabled={submitting}
-            >
-              {__('Look up')}
-            </Button>
+            <div className="flex justify-end">
+              <Button
+                style={{ marginTop: '2em' }}
+                skin="primary"
+                type="submit"
+                disabled={submitting}
+              >
+                {__('Look up')}
+              </Button>
+            </div>
           </form>
         </Modal.Body>
       </Modal>

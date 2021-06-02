@@ -12,13 +12,8 @@ import { backupWallet } from 'lib/wallet';
 import rpc from 'lib/rpc';
 import store from 'store';
 import { startCore, stopCore } from 'lib/core';
-import {
-  showNotification,
-  openErrorDialog,
-  openSuccessDialog,
-  openModal,
-} from 'lib/ui';
-import { confirm } from 'lib/ui';
+import { showNotification, openModal } from 'lib/ui';
+import { confirm, openErrorDialog, openSuccessDialog } from 'lib/dialog';
 import extractTarball from 'utils/promisified/extractTarball';
 import sleep from 'utils/promisified/sleep';
 import deleteDirectory from 'utils/promisified/deleteDirectory';
@@ -317,7 +312,6 @@ const setBootstrapStatus = (step, details) => {
   });
 };
 
-
 /**
  * Public API
  * =============================================================================
@@ -405,4 +399,4 @@ export function prepareBootstrap() {
       message: __('Recent database has been successfully bootstrapped'),
     })
   );
-};
+}

@@ -17,6 +17,7 @@
 - Allow renaming accounts
 - Added confirmation before setting a new recovery phrase
 - Added POT theme option
+- Added 'Allow Pre-releases' setting
 
 #### Adjustments
 

@@ -9,6 +9,7 @@ import semver from 'semver';
 import * as TYPE from 'consts/actionTypes';
 import store from 'store';
 import { showBackgroundTask, showNotification } from 'lib/ui';
+import { updateSettings } from 'lib/settings';
 import AutoUpdateBackgroundTask from './AutoUpdateBackgroundTask';
 import { assetsParentDir } from 'consts/paths';
 import { closeWallet } from 'lib/wallet';
@@ -43,6 +44,11 @@ export function checkForUpdates() {
  */
 export function quitAndInstall() {
   closeWallet(() => ipcRenderer.invoke('quit-and-install-update'));
+}
+
+export function setAllowPrerelease(value) {
+  updateSettings({ allowPrerelease: value });
+  ipcRenderer.invoke('set-allow-prerelease', value);
 }
 
 /**

@@ -4,7 +4,7 @@ import Ajv from 'ajv';
 import semver from 'semver';
 
 import store from 'store';
-import { semverRegex } from 'consts/misc';
+import { semverRegex, emailRegex } from 'consts/misc';
 import * as TYPE from 'consts/actionTypes';
 import { modulesDir } from 'consts/paths';
 
@@ -32,6 +32,7 @@ const reservedFileNames = [
  * =============================================================================
  */
 const nxsPackageSchema = {
+  type: 'object',
   additionalProperties: false,
   required: ['name', 'displayName', 'version', 'type', 'files'],
   properties: {
@@ -86,7 +87,7 @@ const nxsPackageSchema = {
       required: ['name'],
       properties: {
         name: { type: 'string' },
-        email: { type: 'string', format: 'email' },
+        email: { type: 'string', pattern: emailRegex.source },
       },
     },
     // Lists ALL the files which is used by the module in relative paths from the module directory
@@ -110,6 +111,7 @@ const validateNxsPackage = ajv.compile(nxsPackageSchema);
  * =============================================================================
  */
 const nxsPackageDevSchema = {
+  type: 'object',
   additionalProperties: true,
   required: ['name', 'displayName', 'type'],
   properties: {

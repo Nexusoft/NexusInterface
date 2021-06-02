@@ -9,9 +9,9 @@ import TextFieldWithKeyboard from 'components/TextFieldWithKeyboard';
 import Button from 'components/Button';
 import LoginModal from 'components/LoginModal';
 import Spinner from 'components/Spinner';
-import { openSuccessDialog, removeModal, openModal } from 'lib/ui';
+import { removeModal, openModal } from 'lib/ui';
 import { errorHandler } from 'utils/form';
-import { confirmPasswordPin } from 'lib/ui';
+import { openSuccessDialog, confirmPasswordPin } from 'lib/dialog';
 
 __ = __context('RecoverPassword&PIN');
 

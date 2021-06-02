@@ -15,7 +15,8 @@ import Button from 'components/Button';
 import TextField from 'components/TextField';
 import Select from 'components/Select';
 import FormField from 'components/FormField';
-import { confirm, openSuccessDialog, openModal } from 'lib/ui';
+import { openModal } from 'lib/ui';
+import { confirm, openSuccessDialog } from 'lib/dialog';
 import { errorHandler } from 'utils/form';
 import sendIcon from 'icons/send.svg';
 
@@ -221,14 +222,8 @@ class SendForm extends Component {
    */
   confirmSend = async (e) => {
     e.preventDefault();
-    const {
-      handleSubmit,
-      invalid,
-      locked,
-      minting_only,
-      touch,
-      fieldNames,
-    } = this.props;
+    const { handleSubmit, invalid, locked, minting_only, touch, fieldNames } =
+      this.props;
 
     if (invalid) {
       // Mark the form touched so that the validation errors will be shown.

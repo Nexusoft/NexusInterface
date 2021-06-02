@@ -8,7 +8,7 @@ import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
-import { openSuccessDialog } from 'lib/ui';
+import { openSuccessDialog } from 'lib/dialog';
 import rpc from 'lib/rpc';
 import { startCore } from 'lib/core';
 import { consts } from 'styles';

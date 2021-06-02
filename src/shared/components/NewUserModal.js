@@ -24,7 +24,7 @@ import {
 import { errorHandler } from 'utils/form';
 import store, { observeStore } from 'store';
 import { isLoggedIn } from 'selectors';
-import { confirmPasswordPin } from 'lib/ui';
+import { confirmPasswordPin } from 'lib/dialog';
 
 __ = __context('NewUser');
 

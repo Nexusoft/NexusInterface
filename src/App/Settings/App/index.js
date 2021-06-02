@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 
 // Internal Global
 import { updateSettings } from 'lib/settings';
-import { switchSettingsTab } from 'lib/ui';
+import { switchSettingsTab, showNotification } from 'lib/ui';
 import { backupWallet } from 'lib/wallet';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
@@ -13,13 +13,17 @@ import TextField from 'components/TextField';
 import Select from 'components/Select';
 import Switch from 'components/Switch';
 import Icon from 'components/Icon';
-import { confirm, openErrorDialog, showNotification } from 'lib/ui';
+import { confirm, openErrorDialog } from 'lib/dialog';
 import * as color from 'utils/color';
 import * as form from 'utils/form';
 import { legacyMode } from 'consts/misc';
 import { isCoreConnected } from 'selectors';
 import warningIcon from 'icons/warning.svg';
-import { startAutoUpdate, stopAutoUpdate } from 'lib/updater';
+import {
+  startAutoUpdate,
+  stopAutoUpdate,
+  setAllowPrerelease,
+} from 'lib/updater';
 
 // Internal Local
 import LanguageSetting from './LanguageSetting';
@@ -251,6 +255,23 @@ class SettingsApp extends Component {
           <Switch
             checked={settings.autoUpdate}
             onChange={this.handleAutoUpdateChange}
+          />
+        </SettingsField>
+
+        <SettingsField
+          connectLabel
+          label={__('Allow Pre-releases')}
+          subLabel={
+            <div>
+              {__(
+                'Accept pre-release versions (e.g. alpha, beta) when checking for updates.'
+              )}
+            </div>
+          }
+        >
+          <Switch
+            checked={settings.allowPrerelease}
+            onChange={(evt) => setAllowPrerelease(evt.target.checked)}
           />
         </SettingsField>
 

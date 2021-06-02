@@ -8,10 +8,7 @@ import devToolsInstall, {
 
 // Internal
 import { assetsDir } from 'consts/paths';
-import {
-  loadSettingsFromFile,
-  updateSettingsFile,
-} from 'lib/settings/universal';
+import { updateSettingsFile } from 'lib/settings/universal';
 import { debounced } from 'utils/universal';
 
 app.allowRendererProcessReuse = false;
@@ -34,8 +31,7 @@ function installExtensions() {
  *
  * @export
  */
-export async function createWindow() {
-  const settings = loadSettingsFromFile();
+export async function createWindow(settings) {
   const fileName =
     process.platform == 'darwin' ? 'nexuslogo.ico' : 'Nexus_App_Icon_64.png';
   const iconPath = path.join(assetsDir, 'tray', fileName);
@@ -58,6 +54,7 @@ export async function createWindow() {
     show: false,
     webPreferences: {
       nodeIntegration: true,
+      contextIsolation: false,
       webviewTag: true,
       enableRemoteModule: false,
     },

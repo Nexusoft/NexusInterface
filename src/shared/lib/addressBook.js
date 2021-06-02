@@ -4,7 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import Ajv from 'ajv';
 import { walletDataDir } from 'consts/paths';
-import { emailRegex } from 'utils/form';
+import { emailRegex } from 'consts/misc';
 import { readJson, writeJson } from 'utils/json';
 
 const fileName = 'addressbook.json';
@@ -62,14 +62,17 @@ function convertOldAddressInfo({ label, address, isMine }) {
 function loadAddressBookFromFile() {
   // TODO: deprecate genesis usage in address fields
   const schema = {
+    type: 'object',
     patternProperties: {
       '^.+$': {
+        type: 'object',
         required: ['name', 'addresses'],
         properties: {
           name: { type: 'string' },
           addresses: {
             type: 'array',
             items: {
+              type: 'object',
               required: ['address', 'isMine'],
               properties: {
                 address: {

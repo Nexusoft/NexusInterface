@@ -9,15 +9,17 @@ import store from 'store';
 import { updateSettings } from 'lib/settings';
 import { restartCore } from 'lib/core';
 import {
-  confirm,
-  confirmPin,
   openModal,
   removeModal,
-  openInfoDialog,
-  openErrorDialog,
   showNotification,
   switchUserTab,
 } from 'lib/ui';
+import {
+  confirm,
+  confirmPin,
+  openInfoDialog,
+  openErrorDialog,
+} from 'lib/dialog';
 import { unlockUser } from 'lib/user';
 import { formatNumber, formatDateTime } from 'lib/intl';
 import { isSynchronized } from 'selectors';

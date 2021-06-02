@@ -8,10 +8,9 @@ import TokenDetailsModal from './TokenDetailsModal';
 
 __ = __context('User.Tokens');
 
-const TokenComponent = styled.div(({ theme }) => ({
-  padding: '1em 0',
-  borderBottom: `1px solid ${theme.mixer(0.125)}`,
-}));
+const TokenComponent = styled.div({
+  padding: '1em 0 1.5em',
+});
 
 const AccountName = styled.span(({ theme }) => ({
   fontWeight: 'bold',
@@ -28,30 +27,32 @@ const Owner = styled.span(({ theme }) => ({
   fontWeight: '75%',
 }));
 
-const Token = ({ token, owner }) => (
-  <TokenComponent>
-    <div className="flex space-between">
-      <div>
-        <AccountName>{token.name}</AccountName>
-        {!token.name && <UnNamed>{__('Unnamed token')}</UnNamed>}
-        {owner === token.owner && <Owner>{__(' (Owned by you)')}</Owner>}
-      </div>
-      <div>
-        <Link
-          as="a"
-          onClick={() => {
-            openModal(TokenDetailsModal, { token });
-          }}
-        >
-          {__('Details')}
-        </Link>
-      </div>
-    </div>
-    <NexusAddress
-      className="mt1"
-      address={token.address || '00000000000000000000000000000000000000000000'}
-    />
-  </TokenComponent>
-);
-
-export default Token;
+export default function Token({ token, mine }) {
+  return (
+    <>
+      <TokenComponent>
+        <div className="flex space-between">
+          <div>
+            <AccountName>{token.name}</AccountName>
+            {!token.name && <UnNamed>{__('Unnamed token')}</UnNamed>}
+            {mine && <Owner>{__(' (Owned by you)')}</Owner>}
+          </div>
+          <div>
+            <Link
+              as="a"
+              onClick={() => {
+                openModal(TokenDetailsModal, {
+                  token: mine ? token : undefined,
+                  tokenAddress: mine ? undefined : token.address,
+                });
+              }}
+            >
+              {__('Details')}
+            </Link>
+          </div>
+        </div>
+        <NexusAddress className="mt1" address={token.address} />
+      </TokenComponent>
+    </>
+  );
+}
