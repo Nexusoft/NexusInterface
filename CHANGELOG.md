@@ -25,6 +25,7 @@
 - Contact names are now looked up and displayed where applicable
 - Hide Overview balances setting is now separated from Overview Display setting
 - Improved token selection when creating a new account
+- Secret fields are now censored on Nexus API Console, and Clear button now also clears the command history
 - Updated some icons
 - Various other improvements
 

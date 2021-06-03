@@ -230,9 +230,9 @@ export const printCommandError = (msg) => {
   });
 };
 
-export const resetConsoleOutput = () => {
+export const resetConsole = () => {
   store.dispatch({
-    type: TYPE.RESET_CONSOLE_OUTPUT,
+    type: TYPE.RESET_CONSOLE,
   });
 };
 export const printCoreOutput = (output) => {
