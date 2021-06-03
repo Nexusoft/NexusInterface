@@ -90,7 +90,8 @@ export default class Globe extends Component {
       controls.update();
       scene.add(camera);
 
-      const importworld = new THREE.TextureLoader().load(world);
+      let importworld = new THREE.TextureLoader().load(world);
+      importworld.anisotropy = 4;
       const newWorld = new THREE.MeshBasicMaterial({
         map: importworld,
         color: this.props.globeColor,
@@ -184,6 +185,10 @@ export default class Globe extends Component {
   componentDidUpdate(prevProps) {
     if (geoip == null) {
       return;
+    }
+    if (this.props.globeColor != prevProps.globeColor) {
+      const newColor = new THREE.Color(this.props.globeColor);
+      this.globe.children[0].material.color = newColor; // [0] == globe
     }
     this.timesSkipped++;
     if (
@@ -365,11 +370,12 @@ export default class Globe extends Component {
    * @memberof Globe
    */
   arcRegister() {
-    let self = this.pointRegistry[
-      this.pointRegistry.findIndex((element) => {
-        return element.params.type === 'SELF';
-      })
-    ];
+    let self =
+      this.pointRegistry[
+        this.pointRegistry.findIndex((element) => {
+          return element.params.type === 'SELF';
+        })
+      ];
 
     if (self) {
       this.pointRegistry.forEach((point) => {
