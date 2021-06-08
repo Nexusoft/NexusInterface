@@ -9,6 +9,8 @@
  */
 
 import * as React from 'react';
+import jsxRuntime from 'react/jsx-runtime';
+import jsxDevRuntime from 'react/jsx-dev-runtime';
 import ReactDOM from 'react-dom';
 import * as ReactRouterDOM from 'react-router-dom';
 import * as Redux from 'redux';
@@ -46,7 +48,7 @@ const newId = (() => {
 global.NEXUS = {
   walletVersion: APP_VERSION,
   libraries: {
-    React,
+    React: { ...React, jsxDevRuntime, jsxRuntime },
     ReactDOM,
     ReactRouterDOM,
     Redux,
