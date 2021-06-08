@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import * as THREE from 'three';
 import styled from '@emotion/styled';
-import OrbitControls from 'three-orbitcontrols';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 import world from 'icons/world-light-white.jpg';
 import geoip from 'data/geoip';
