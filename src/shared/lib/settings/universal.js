@@ -100,6 +100,7 @@ export const defaultSettings = {
   firstCreateNewUserShown: false,
   consoleCliSyntax: true,
   dontAskToStartStaking: false,
+  lastCheckForUpdates: null,
 };
 
 function readSettings() {

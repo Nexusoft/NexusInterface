@@ -13,10 +13,11 @@ import { updateSettings } from 'lib/settings';
 import AutoUpdateBackgroundTask from './AutoUpdateBackgroundTask';
 import { assetsParentDir } from 'consts/paths';
 import { closeWallet } from 'lib/wallet';
+import { checkForModuleUpdates } from 'lib/modules';
 
 __ = __context('AutoUpdate');
 
-const autoUpdateInterval = 2 * 60 * 60 * 1000; // 2 hours
+const autoUpdateInterval = 4 * 60 * 60 * 1000; // 4 hours
 let timerId = null;
 
 const setUpdaterState = (state) => {
@@ -25,16 +26,6 @@ const setUpdaterState = (state) => {
     payload: state,
   });
 };
-
-/**
- * Check for updates
- *
- * @export
- * @returns
- */
-export function checkForUpdates() {
-  return ipcRenderer.invoke('check-for-updates');
-}
 
 /**
  * Quit wallet and install the update
@@ -57,42 +48,49 @@ export function setAllowPrerelease(value) {
  * @export
  * @returns
  */
-export async function startAutoUpdate() {
+export async function checkForUpdates() {
   const checkGithubManually = !fs.existsSync(
     path.join(assetsParentDir, 'app-update.yml')
   );
+  clearTimeout(timerId);
 
-  if (process.env.NODE_ENV !== 'development' && checkGithubManually) {
-    clearTimeout(timerId);
-    try {
-      const response = await axios.get(
-        'https://api.github.com/repos/Nexusoft/NexusInterface/releases/latest'
-      );
-      const latestVerion = response.data.tag_name;
-      if (
-        semver.lt('v' + APP_VERSION, latestVerion) &&
-        response.data.prerelease === false
-      ) {
-        showBackgroundTask(AutoUpdateBackgroundTask, {
-          version: response.data.tag_name,
-          quitAndInstall: null,
-          gitHub: true,
-        });
-      }
-    } catch (e) {
-      console.error(e);
-    }
-    timerId = setTimeout(startAutoUpdate, autoUpdateInterval);
-  } else {
-    try {
-      clearTimeout(timerId);
-      const result = await checkForUpdates();
-      if (result && result.downloadPromise) {
-        await result.downloadPromise;
-      }
-    } finally {
-      // Check for updates every 2 hours
-      timerId = setTimeout(startAutoUpdate, autoUpdateInterval);
+  try {
+    await Promise.all([
+      (async () => {
+        if (process.env.NODE_ENV !== 'development' && checkGithubManually) {
+          const response = await axios.get(
+            'https://api.github.com/repos/Nexusoft/NexusInterface/releases/latest'
+          );
+          const latestVerion = response.data.tag_name;
+          if (
+            semver.lt('v' + APP_VERSION, latestVerion) &&
+            response.data.prerelease === false
+          ) {
+            showBackgroundTask(AutoUpdateBackgroundTask, {
+              version: response.data.tag_name,
+              quitAndInstall: null,
+              gitHub: true,
+            });
+          }
+        } else {
+          const result = await ipcRenderer.invoke('check-for-updates');
+          if (result && result.downloadPromise) {
+            await result.downloadPromise;
+          }
+        }
+      })(),
+      checkForModuleUpdates(),
+    ]);
+  } catch (e) {
+    console.error(e);
+  } finally {
+    updateSettings({ lastCheckForUpdates: Date.now() });
+
+    const {
+      settings: { autoUpdate },
+    } = store.getState();
+    if (autoUpdate) {
+      timerId = setTimeout(checkForUpdates, autoUpdateInterval);
     }
   }
 }
@@ -149,9 +147,14 @@ export function prepareUpdater() {
   });
 
   const {
-    settings: { autoUpdate },
+    settings: { autoUpdate, lastCheckForUpdates },
   } = store.getState();
   if (autoUpdate) {
-    startAutoUpdate();
+    const timeFromLastCheck = Date.now() - lastCheckForUpdates;
+    if (!lastCheckForUpdates || timeFromLastCheck > autoUpdateInterval) {
+      checkForUpdates();
+    } else {
+      setTimeout(checkForUpdates, autoUpdateInterval - timeFromLastCheck);
+    }
   }
 }
