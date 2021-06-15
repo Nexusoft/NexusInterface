@@ -121,7 +121,7 @@ async function startBootstrap() {
     setStatus('rescanning');
     await rescan();
 
-    cleanUp();
+    await cleanUp();
 
     bootstrapEvents.emit('success');
     return true;

@@ -36,6 +36,7 @@
 - Legacy Debits in tritium mode in the account history section now display properly in negative
 - Correctly display unnamed token
 - Fixed issues with the globe: Resolved stretching at the poles, Fixed pillars not being removed on disconnect, Fixed animation issue with new blocks/connections
+- Fixed issue with the wallet not deleting the old bootstrap zip after installation
 - Various other fixes
 
 ### Module system
