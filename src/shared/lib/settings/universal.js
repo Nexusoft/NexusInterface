@@ -63,6 +63,7 @@ export const defaultSettings = {
   manualDaemonApiPortSSL: '7080',
   manualDaemonLogOutOnClose: false,
   embeddedCoreAllowNonSSL: false,
+  embeddedCoreUseNonSSL: true,
   embeddedCoreApiPort: undefined,
   embeddedCoreApiPortSSL: undefined,
   embeddedCoreRpcPort: undefined,
