@@ -76,11 +76,6 @@ async function startBootstrap() {
     }
 
     // Remove the old file if exists
-    if (fs.existsSync(fileLocation)) {
-      fs.unlinkSync(fileLocation, (err) => {
-        if (err) throw err;
-      });
-    }
     await cleanUp();
 
     setStatus('stopping_core');
