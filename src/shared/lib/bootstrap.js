@@ -10,7 +10,7 @@ import moveFile from 'move-file';
 import { walletDataDir } from 'consts/paths';
 import { backupWallet } from 'lib/wallet';
 import rpc from 'lib/rpc';
-import store from 'store';
+import store, { observeStore } from 'store';
 import { startCore, stopCore } from 'lib/core';
 import { showNotification, openModal } from 'lib/ui';
 import { confirm, openErrorDialog, openSuccessDialog } from 'lib/dialog';
@@ -113,8 +113,10 @@ async function startBootstrap() {
     setStatus('restarting_core');
     await startCore();
 
-    setStatus('rescanning');
-    await rescan();
+    if (await shouldRescan()) {
+      setStatus('rescanning');
+      await rpc('rescan', []);
+    }
 
     cleanUp();
 
@@ -256,27 +258,34 @@ async function moveExtractedContent() {
   }
 }
 
-/**
- * Rescan wallet
- *
- * @returns
- */
-async function rescan() {
-  let count = 1;
-  // Sometimes the core RPC server is not yet ready after restart, so rescan may fail
-  // Retry up to 5 times in 5 seconds
-  while (count <= 5) {
-    if (store.getState().core.systemInfo?.legacy_unsupported) break;
-    try {
-      await rpc('rescan', []);
-      return;
-    } catch (err) {
-      console.error('Rescan failed', err);
-      count++;
-      if (count < 5) await sleep(1000);
-      else throw err;
+function shouldRescan() {
+  return new Promise((resolve) => {
+    const {
+      core: { systemInfo },
+    } = store.getState();
+
+    if (systemInfo) {
+      resolve(!systemInfo.legacy_unsupported);
+    } else {
+      // Core might not be ready right away. In that case,
+      // wait until systemInfo is available
+      const unobserve = observeStore(
+        (state) => state.core.systemInfo,
+        (systemInfo) => {
+          if (systemInfo) {
+            unobserve();
+            resolve(!systemInfo.legacy_unsupported);
+            clearTimeout(timeoutId);
+          }
+        }
+      );
+      // Wait at most 5s
+      const timeoutId = setTimeout(() => {
+        unobserve();
+        resolve(false);
+      }, 5000);
     }
-  }
+  });
 }
 
 /**
