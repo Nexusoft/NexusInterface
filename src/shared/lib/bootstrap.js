@@ -121,7 +121,11 @@ async function startBootstrap() {
 
     if (await shouldRescan()) {
       setStatus('rescanning');
-      await rpc('rescan', []);
+      try {
+        await rpc('rescan', []);
+      } catch (err) {
+        console.error(err);
+      }
     }
 
     cleanUp();
