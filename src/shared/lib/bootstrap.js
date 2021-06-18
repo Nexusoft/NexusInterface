@@ -266,6 +266,8 @@ async function moveExtractedContent() {
 
 function shouldRescan() {
   return new Promise((resolve) => {
+    if (legacyMode) return true;
+
     const {
       core: { systemInfo },
     } = store.getState();
