@@ -15,12 +15,13 @@ import { startCore, stopCore } from 'lib/core';
 import { showNotification, openModal } from 'lib/ui';
 import { confirm, openErrorDialog, openSuccessDialog } from 'lib/dialog';
 import extractTarball from 'utils/promisified/extractTarball';
-import sleep from 'utils/promisified/sleep';
 import deleteDirectory from 'utils/promisified/deleteDirectory';
 import { throttled } from 'utils/universal';
 import * as TYPE from 'consts/actionTypes';
 import { updateSettings } from 'lib/settings';
 import BootstrapModal from 'components/BootstrapModal';
+import { legacyMode } from 'consts/misc';
+import { isSynchronized } from 'selectors';
 
 __ = __context('Bootstrap');
 
@@ -78,8 +79,11 @@ async function startBootstrap() {
     // Remove the old file if exists
     await cleanUp();
 
-    setStatus('stopping_core');
-    await stopCore();
+    // Stop core if it's synchronizing to avoid downloading the db twice at the same time
+    if (!isSynchronized(store.getState())) {
+      setStatus('stopping_core');
+      await stopCore();
+    }
 
     setStatus('downloading', {});
     // A flag to prevent bootstrap status being set back to downloading
@@ -102,6 +106,9 @@ async function startBootstrap() {
       return false;
     }
 
+    setStatus('stopping_core');
+    await stopCore();
+
     setStatus('moving_db');
     await moveExtractedContent();
     if (aborting) {
@@ -109,7 +116,6 @@ async function startBootstrap() {
       return false;
     }
 
-    await stopCore();
     setStatus('restarting_core');
     await startCore();
 
