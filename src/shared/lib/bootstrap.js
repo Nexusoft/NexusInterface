@@ -77,6 +77,7 @@ async function startBootstrap() {
     }
 
     // Remove the old file if exists
+    setStatus('preparing');
     await cleanUp();
 
     // Stop core if it's synchronizing to avoid downloading the db twice at the same time
@@ -128,6 +129,7 @@ async function startBootstrap() {
       }
     }
 
+    setStatus('cleaning_up');
     cleanUp();
 
     bootstrapEvents.emit('success');
@@ -138,17 +140,8 @@ async function startBootstrap() {
     const lastStep = store.getState().bootstrap.step;
     aborting = false;
     setStatus('idle');
-    if (
-      [
-        'stopping_core',
-        'downloading',
-        'extracting',
-        'moving_db',
-        'restarting_core',
-      ].includes(lastStep)
-    ) {
-      await startCore();
-    }
+    // Ensure to start core after completion
+    await startCore();
   }
 }
 
