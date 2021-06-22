@@ -1,11 +1,11 @@
-import { Component, Fragment } from 'react';
-import { connect } from 'react-redux';
+import { Fragment, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 
 import QuestionCircle from 'components/QuestionCircle';
 import TokenName from 'components/TokenName';
-import { refreshBalances, loadAccounts } from 'lib/user';
-import { selectTokenBalances } from 'selectors';
+import { refreshBalances } from 'lib/user';
+import { selectBalances } from 'selectors';
 import { observeStore } from 'store';
 import { formatNumber } from 'lib/intl';
 
@@ -58,164 +58,148 @@ const Value = styled.div({
   float: 'right',
 });
 
-@connect((state) => ({
-  balances: state.user.balances,
-  tokenBalances: selectTokenBalances(state),
-}))
-class Balances extends Component {
-  componentDidMount() {
-    // Periodically get balances
+export default function Balances() {
+  const [nxsBalances, tokenBalances] = useSelector(selectBalances);
+  useEffect(() => {
     refreshBalances();
-    this.unobserve = observeStore(
-      ({ user }) => user && user.status,
-      refreshBalances
+    return observeStore(
+      ({ user }) => user.status,
+      (userStatus) => userStatus && refreshBalances()
     );
+  }, []);
 
-    // Load accounts to display token balances if any
-    loadAccounts();
-  }
+  const total =
+    nxsBalances &&
+    nxsBalances.available +
+      nxsBalances.pending +
+      nxsBalances.unconfirmed +
+      nxsBalances.stake +
+      nxsBalances.immature;
 
-  componentWillUnmount() {
-    if (this.unobserve) this.unobserve();
-  }
+  return (
+    <BalancesColumn>
+      <BalancesTitle>{__('NXS balances')}</BalancesTitle>
+      {!!nxsBalances && (
+        <BalancesWrapper>
+          <Line bold>
+            <Label>{__('Total')}</Label>
+            <Value>{formatNumber(total, 6)} NXS</Value>
+          </Line>
 
-  render() {
-    const { balances, tokenBalances } = this.props;
-    const total =
-      balances &&
-      balances.available +
-        balances.pending +
-        balances.unconfirmed +
-        balances.stake +
-        balances.immature;
+          <Line>
+            <Label>
+              <span className="v-align">{__('Available')}</span>
+              <QuestionCircle
+                tooltip={__(
+                  'The current balance across all NXS accounts that is available to be spent'
+                )}
+              />
+            </Label>
+            <Value>{formatNumber(nxsBalances.available, 6)} NXS</Value>
+          </Line>
 
-    return (
-      <BalancesColumn>
-        <BalancesTitle>{__('NXS balances')}</BalancesTitle>
-        {!!balances && (
+          <Line>
+            <Label>
+              <span className="v-align">{__('Stake')}</span>
+              <QuestionCircle
+                tooltip={__(
+                  'The amount of NXS currently staked in the trust account'
+                )}
+              />
+            </Label>
+            <Value>{formatNumber(nxsBalances.stake, 6)} NXS</Value>
+          </Line>
+
+          <Line>
+            <Label>
+              <span className="v-align">{__('Pending')}</span>
+              <QuestionCircle
+                tooltip={__(
+                  'The sum of all debit and coinbase transactions made to your NXS accounts that are confirmed but have not yet been credited. This does NOT include immature and unconfirmed amounts'
+                )}
+              />
+            </Label>
+            <Value>{formatNumber(nxsBalances.pending, 6)} NXS</Value>
+          </Line>
+
+          <Line>
+            <Label>
+              <span className="v-align">{__('Unconfirmed')}</span>
+              <QuestionCircle
+                tooltip={__(
+                  'The sum of all debit transactions made to your NXS accounts that are not confirmed, or credits you have made to your accounts that are not yet confirmed (not yet included in a block)'
+                )}
+              />
+            </Label>
+            <Value>{formatNumber(nxsBalances.unconfirmed, 6)} NXS</Value>
+          </Line>
+
+          <Line>
+            <Label>
+              <span className="v-align">{__('Immature')}</span>
+              <QuestionCircle
+                tooltip={__(
+                  'The sum of all coinbase transactions that have not yet reached maturity'
+                )}
+              />
+            </Label>
+            <Value>{formatNumber(nxsBalances.immature, 6)} NXS</Value>
+          </Line>
+        </BalancesWrapper>
+      )}
+
+      {tokenBalances.map((balance) => (
+        <Fragment key={balance.token}>
+          <BalancesTitle>
+            {__('%{token_name} balances', {
+              token_name: TokenName.from({ account: balance }),
+            })}
+          </BalancesTitle>
+
           <BalancesWrapper>
             <Line bold>
               <Label>{__('Total')}</Label>
-              <Value>{formatNumber(total, 6)} NXS</Value>
+              <Value>
+                {formatNumber(
+                  balance.available + balance.pending + balance.unconfirmed,
+                  balance.decimals
+                )}{' '}
+                <TokenName token={token} />
+              </Value>
             </Line>
 
             <Line>
               <Label>
                 <span className="v-align">{__('Available')}</span>
-                <QuestionCircle
-                  tooltip={__(
-                    'The current balance across all NXS accounts that is available to be spent'
-                  )}
-                />
               </Label>
-              <Value>{formatNumber(balances.available, 6)} NXS</Value>
-            </Line>
-
-            <Line>
-              <Label>
-                <span className="v-align">{__('Stake')}</span>
-                <QuestionCircle
-                  tooltip={__(
-                    'The amount of NXS currently staked in the trust account'
-                  )}
-                />
-              </Label>
-              <Value>{formatNumber(balances.stake, 6)} NXS</Value>
+              <Value>
+                {formatNumber(balance.available, balance.decimals)}{' '}
+                <TokenName token={token} />
+              </Value>
             </Line>
 
             <Line>
               <Label>
                 <span className="v-align">{__('Pending')}</span>
-                <QuestionCircle
-                  tooltip={__(
-                    'The sum of all debit and coinbase transactions made to your NXS accounts that are confirmed but have not yet been credited. This does NOT include immature and unconfirmed amounts'
-                  )}
-                />
               </Label>
-              <Value>{formatNumber(balances.pending, 6)} NXS</Value>
+              <Value>
+                {formatNumber(balance.pending, balance.decimals)}{' '}
+                <TokenName token={token} />
+              </Value>
             </Line>
 
             <Line>
               <Label>
                 <span className="v-align">{__('Unconfirmed')}</span>
-                <QuestionCircle
-                  tooltip={__(
-                    'The sum of all debit transactions made to your NXS accounts that are not confirmed, or credits you have made to your accounts that are not yet confirmed (not yet included in a block)'
-                  )}
-                />
               </Label>
-              <Value>{formatNumber(balances.unconfirmed, 6)} NXS</Value>
-            </Line>
-
-            <Line>
-              <Label>
-                <span className="v-align">{__('Immature')}</span>
-                <QuestionCircle
-                  tooltip={__(
-                    'The sum of all coinbase transactions that have not yet reached maturity'
-                  )}
-                />
-              </Label>
-              <Value>{formatNumber(balances.immature, 6)} NXS</Value>
+              <Value>
+                {formatNumber(balance.unconfirmed, balance.decimals)}{' '}
+                <TokenName token={token} />
+              </Value>
             </Line>
           </BalancesWrapper>
-        )}
-
-        {tokenBalances.map((token) => (
-          <Fragment key={token.address}>
-            <BalancesTitle>
-              {__('%{token_name} balances', {
-                token_name: TokenName.from({ token }),
-              })}
-            </BalancesTitle>
-
-            <BalancesWrapper>
-              <Line bold>
-                <Label>{__('Total')}</Label>
-                <Value>
-                  {formatNumber(
-                    token.balance + token.pending + token.unconfirmed,
-                    token.decimals
-                  )}{' '}
-                  <TokenName token={token} />
-                </Value>
-              </Line>
-
-              <Line>
-                <Label>
-                  <span className="v-align">{__('Available')}</span>
-                </Label>
-                <Value>
-                  {formatNumber(token.balance, token.decimals)}{' '}
-                  <TokenName token={token} />
-                </Value>
-              </Line>
-
-              <Line>
-                <Label>
-                  <span className="v-align">{__('Pending')}</span>
-                </Label>
-                <Value>
-                  {formatNumber(token.pending, token.decimals)}{' '}
-                  <TokenName token={token} />
-                </Value>
-              </Line>
-
-              <Line>
-                <Label>
-                  <span className="v-align">{__('Unconfirmed')}</span>
-                </Label>
-                <Value>
-                  {formatNumber(token.unconfirmed, token.decimals)}{' '}
-                  <TokenName token={token} />
-                </Value>
-              </Line>
-            </BalancesWrapper>
-          </Fragment>
-        ))}
-      </BalancesColumn>
-    );
-  }
+        </Fragment>
+      ))}
+    </BalancesColumn>
+  );
 }
-
-export default Balances;
