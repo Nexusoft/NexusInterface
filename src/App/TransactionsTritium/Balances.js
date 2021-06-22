@@ -148,7 +148,7 @@ export default function Balances() {
         </BalancesWrapper>
       )}
 
-      {tokenBalances.map((balance) => (
+      {tokenBalances?.map((balance) => (
         <Fragment key={balance.token}>
           <BalancesTitle>
             {__('%{token_name} balances', {
@@ -164,7 +164,7 @@ export default function Balances() {
                   balance.available + balance.pending + balance.unconfirmed,
                   balance.decimals
                 )}{' '}
-                <TokenName token={token} />
+                <TokenName account={balance} />
               </Value>
             </Line>
 
@@ -174,7 +174,7 @@ export default function Balances() {
               </Label>
               <Value>
                 {formatNumber(balance.available, balance.decimals)}{' '}
-                <TokenName token={token} />
+                <TokenName account={balance} />
               </Value>
             </Line>
 
@@ -184,7 +184,7 @@ export default function Balances() {
               </Label>
               <Value>
                 {formatNumber(balance.pending, balance.decimals)}{' '}
-                <TokenName token={token} />
+                <TokenName account={balance} />
               </Value>
             </Line>
 
@@ -194,7 +194,7 @@ export default function Balances() {
               </Label>
               <Value>
                 {formatNumber(balance.unconfirmed, balance.decimals)}{' '}
-                <TokenName token={token} />
+                <TokenName account={balance} />
               </Value>
             </Line>
           </BalancesWrapper>
