@@ -23,10 +23,10 @@ function TokenBalancesTooltip({ tokenBalances }) {
   return (
     <div style={{ textAlign: 'right' }}>
       <div>{__('Token balances')}</div>
-      {tokenBalances.map((token) => (
-        <div key={token.address}>
-          {formatNumber(token.balance, token.decimals)}{' '}
-          <TokenName token={token} />
+      {tokenBalances.map((balance) => (
+        <div key={balance.token}>
+          {formatNumber(balance.available, balance.decimals)}{' '}
+          <TokenName account={balance} />
         </div>
       ))}
     </div>
@@ -159,7 +159,6 @@ export function FeaturedTokenBalanceStat() {
 
 export function IncomingBalanceStat() {
   const [nxsBalances] = useSelector(selectBalances);
-  console.log(nxsBalances);
   const incoming =
     nxsBalances?.pending + nxsBalances?.unconfirmed + nxsBalances?.immature;
 
