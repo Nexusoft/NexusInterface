@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 import { keyframes } from '@emotion/react';
 
 // Internal
-import { refreshBalances, loadAccounts } from 'lib/user';
+import { refreshBalances } from 'lib/user';
 import { getMiningInfo } from 'lib/core';
 import { timing, consts } from 'styles';
 import { observeStore } from 'store';
@@ -125,10 +125,6 @@ export default function Stats({ showingGlobe }) {
     (state) => state.theme?.featuredTokenName
   );
 
-  useEffect(() => {
-    // Load accounts to display token balances if any
-    loadAccounts();
-  }, []);
   useGetBalances();
   useGetDifficulty(overviewDisplay);
 

@@ -7,12 +7,11 @@ import Tooltip from 'components/Tooltip';
 import TokenName from 'components/TokenName';
 import QuestionCircle from 'components/QuestionCircle';
 import { formatNumber, formatCurrency } from 'lib/intl';
-import { isSynchronized, selectTokenBalances } from 'selectors';
+import { isSynchronized, selectBalances } from 'selectors';
 
 // Images
 import logoIcon from 'icons/NXS_coin.svg';
 import currencyIcons from 'data/currencyIcons';
-import nxsStakeIcon from 'icons/nxs-staking.svg';
 import warningIcon from 'icons/warning.svg';
 import waitIcon from 'icons/wait.svg';
 
@@ -61,9 +60,8 @@ function BalanceValue({ children }) {
 }
 
 export function NXSBalanceStat() {
-  const tokenBalances = useSelector(selectTokenBalances);
+  const [nxsBalances, tokenBalances] = useSelector(selectBalances);
   const synchronized = useSelector(isSynchronized);
-  const balances = useSelector((state) => state.user.balances);
   const hideOverviewBalances = useSelector(
     (state) => state.settings.hideOverviewBalances
   );
@@ -80,7 +78,7 @@ export function NXSBalanceStat() {
       linkTo="/Transactions"
       label={
         <>
-          {!synchronized && balances && <UnsyncWarning />}
+          {!synchronized && nxsBalances && <UnsyncWarning />}
           <span className="v-align">
             {__('Balance')}
             {tokenBalances?.length === 0 && ' (NXS)'}
@@ -90,10 +88,10 @@ export function NXSBalanceStat() {
       icon={logoIcon}
     >
       <BalanceValue>
-        {balances ? (
+        {nxsBalances ? (
           <div>
             <div>
-              {formatNumber(balances?.available + balances?.stake)}
+              {formatNumber(nxsBalances.available + nxsBalances.stake)}
               {tokenBalances?.length > 0 && ' NXS'}
             </div>
             {tokenBalances?.length > 0 && (
@@ -110,7 +108,7 @@ export function NXSBalanceStat() {
 
 export function NXSFiatBalanceStat() {
   const fiatCurrency = useSelector((state) => state.settings.fiatCurrency);
-  const balances = useSelector((state) => state.user.balances);
+  const [nxsBalances] = useSelector(selectBalances);
   const price = useSelector((state) => state.market?.price);
 
   return (
@@ -124,9 +122,9 @@ export function NXSFiatBalanceStat() {
       icon={currencyIcons(fiatCurrency)}
     >
       <BalanceValue>
-        {price && balances
+        {price && nxsBalances
           ? formatCurrency(
-              (balances?.available + balances?.stake) * price,
+              (nxsBalances.available + nxsBalances.stake) * price,
               fiatCurrency
             )
           : blank}
@@ -137,7 +135,7 @@ export function NXSFiatBalanceStat() {
 
 export function FeaturedTokenBalanceStat() {
   const theme = useSelector((state) => state.theme);
-  const tokenBalances = useSelector(selectTokenBalances);
+  const [nxsBalances, tokenBalances] = useSelector(selectBalances);
   const featuredToken = theme.featuredTokenName
     ? tokenBalances?.find((token) => token.name === theme.featuredTokenName)
     : undefined;
@@ -160,9 +158,10 @@ export function FeaturedTokenBalanceStat() {
 }
 
 export function IncomingBalanceStat() {
-  const balances = useSelector((state) => state.user.balances);
+  const [nxsBalances] = useSelector(selectBalances);
+  console.log(nxsBalances);
   const incoming =
-    balances?.pending + balances?.unconfirmed + balances?.immature;
+    nxsBalances?.pending + nxsBalances?.unconfirmed + nxsBalances?.immature;
 
   return (
     <Stat
@@ -180,7 +179,9 @@ export function IncomingBalanceStat() {
       }
       icon={waitIcon}
     >
-      <BalanceValue>{balances ? formatNumber(incoming) : blank}</BalanceValue>
+      <BalanceValue>
+        {nxsBalances ? formatNumber(incoming) : blank}
+      </BalanceValue>
     </Stat>
   );
 }
