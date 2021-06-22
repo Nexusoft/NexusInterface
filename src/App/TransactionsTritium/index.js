@@ -186,95 +186,90 @@ class TransactionsTritium extends Component {
    * @memberof Transactions
    */
   render() {
-    const {
-      loadedAll,
-      loadedSome,
-      transactions,
-      page,
-      totalPages,
-    } = this.props;
+    const { loadedAll, loadedSome, transactions, page, totalPages } =
+      this.props;
     return (
       <Panel icon={transactionIcon} title={__('Transactions')}>
         <RequireLoggedIn>
-          {!loadedSome ? (
-            <WaitingMessage>{__('Loading transactions...')}</WaitingMessage>
-          ) : (
-            <PageLayout>
-              <Balances />
-              <Filters morePadding={this.state.hasScroll} />
-              <TransactionsList ref={this.listRef}>
+          <PageLayout>
+            <Balances />
+            <Filters morePadding={this.state.hasScroll} />
+            <TransactionsList ref={this.listRef}>
+              {!loadedSome ? (
+                <WaitingMessage>{__('Loading transactions...')}</WaitingMessage>
+              ) : (
                 <Container>
                   {transactions &&
                     transactions.map((tx) => (
                       <Transaction key={tx.txid} transaction={tx} />
                     ))}
                 </Container>
-              </TransactionsList>
-              <Pagination morePadding={this.state.hasScroll}>
-                <Container className="flex center space-between">
-                  <PaginationButton
-                    skin="filled-inverted"
-                    disabled={page <= 1}
-                    onClick={
-                      page > 1
-                        ? () => {
-                            goToTxsPage(page - 1);
-                          }
-                        : undefined
+              )}
+            </TransactionsList>
+            <Pagination morePadding={this.state.hasScroll}>
+              <Container className="flex center space-between">
+                <PaginationButton
+                  skin="filled-inverted"
+                  disabled={page <= 1}
+                  onClick={
+                    page > 1
+                      ? () => {
+                          goToTxsPage(page - 1);
+                        }
+                      : undefined
+                  }
+                >
+                  &lt; {__('Previous')}
+                </PaginationButton>
+                <div className="flex center relative">
+                  {__(
+                    'Page <page></page> of %{total}',
+                    {
+                      total: totalPages,
+                    },
+                    {
+                      page: () => (
+                        <>
+                          &nbsp;
+                          <PageInput
+                            type="number"
+                            min={1}
+                            max={totalPages}
+                            value={page}
+                            onChange={(e) => {
+                              goToTxsPage(e.target.value);
+                            }}
+                          />
+                          &nbsp;
+                        </>
+                      ),
                     }
-                  >
-                    &lt; {__('Previous')}
-                  </PaginationButton>
-                  <div className="flex center relative">
-                    {__(
-                      'Page <page></page> of %{total}',
-                      {
-                        total: totalPages,
-                      },
-                      {
-                        page: () => (
-                          <>
-                            &nbsp;
-                            <PageInput
-                              type="number"
-                              min={1}
-                              max={totalPages}
-                              value={page}
-                              onChange={(e) => {
-                                goToTxsPage(e.target.value);
-                              }}
-                            />
-                            &nbsp;
-                          </>
-                        ),
-                      }
-                    )}
-                    {!loadedAll ? (
-                      <Tooltip.Trigger
-                        position="top"
-                        tooltip={__('Loading transactions...')}
-                      >
-                        <TransactionLoadingWarningSpinner />
-                      </Tooltip.Trigger>
-                    ) : null}
-                  </div>
-                  <PaginationButton
-                    skin="filled-inverted"
-                    disabled={page >= totalPages}
-                    onClick={
-                      page < totalPages
-                        ? () => {
-                            goToTxsPage(page + 1);
-                          }
-                        : undefined
-                    }
-                  >
-                    {__('Next')} &gt;
-                  </PaginationButton>
-                </Container>
-              </Pagination>
-            </PageLayout>
-          )}
+                  )}
+                  {!loadedAll ? (
+                    <Tooltip.Trigger
+                      position="top"
+                      tooltip={__('Loading transactions...')}
+                    >
+                      <TransactionLoadingWarningSpinner />
+                    </Tooltip.Trigger>
+                  ) : null}
+                </div>
+                <PaginationButton
+                  skin="filled-inverted"
+                  disabled={page >= totalPages}
+                  onClick={
+                    page < totalPages
+                      ? () => {
+                          goToTxsPage(page + 1);
+                        }
+                      : undefined
+                  }
+                >
+                  {__('Next')} &gt;
+                </PaginationButton>
+              </Container>
+            </Pagination>
+          </PageLayout>
         </RequireLoggedIn>
       </Panel>
     );
