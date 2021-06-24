@@ -5,6 +5,7 @@ import fs from 'fs';
 import path from 'path';
 import http from 'http';
 import moveFile from 'move-file';
+import unzip from 'unzip-stream';
 
 // Internal
 import { walletDataDir } from 'consts/paths';
@@ -200,6 +201,51 @@ async function downloadDb(recentDbUrl, downloadProgress) {
   } finally {
     downloadRequest = null;
   }
+
+  // return new Promise((resolve, reject) => {
+  //   downloadRequest = http
+  //     .get(recentDbUrlTritium, (stream) => {
+  //       const destination = getExtractDest();
+  //       stream.on('close', () => {
+  //         resolve();
+  //       });
+  //       stream.pipe();
+  //     })
+  //     .setTimeout(60000)
+  //     .on('response', (response) => {
+  //       const totalSize = parseInt(response.headers['content-length'], 10);
+  //       let downloaded = 0;
+
+  //       response
+  //         .pipe(unzip.Extract({ path: destination }))
+  //         .on('data', (chunk) => {
+  //           downloaded += chunk.length;
+  //           timerId = downloadProgress({ downloaded, totalSize });
+  //         })
+  //         .on('close', () => {
+  //           resolve();
+  //         })
+  //         .on('error', (err) => {
+  //           reject(err);
+  //         });
+  //     })
+  //     .on('error', (err) => {
+  //       reject(err);
+  //     })
+  //     .on('timeout', function () {
+  //       if (downloadRequest) downloadRequest.abort();
+  //       reject(new Error('Request timeout!'));
+  //     })
+  //     .on('abort', function () {
+  //       clearTimeout(timerId);
+  //       if (fs.existsSync(fileLocation)) {
+  //         fs.unlink(fileLocation, (err) => {
+  //           if (err) console.error(err);
+  //         });
+  //       }
+  //       resolve();
+  //     });
+  // });
 }
 
 /**
