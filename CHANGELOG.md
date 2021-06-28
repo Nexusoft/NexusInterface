@@ -37,6 +37,7 @@
 - Correctly display unnamed token
 - Fixed issues with the globe: Resolved stretching at the poles, Fixed pillars not being removed on disconnect, Fixed animation issue with new blocks/connections
 - Fixed issue with the wallet not deleting the old bootstrap zip after installation
+- Fixed Mac try icon not displaying correctly
 - Various other fixes
 
 ### Module system
