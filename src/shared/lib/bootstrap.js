@@ -15,7 +15,6 @@ import store, { observeStore } from 'store';
 import { startCore, stopCore } from 'lib/core';
 import { showNotification, openModal } from 'lib/ui';
 import { confirm, openErrorDialog, openSuccessDialog } from 'lib/dialog';
-import extractTarball from 'utils/promisified/extractTarball';
 import deleteDirectory from 'utils/promisified/deleteDirectory';
 import { throttled } from 'utils/universal';
 import * as TYPE from 'consts/actionTypes';
@@ -34,7 +33,7 @@ const getExtractDest = () => {
   } = store.getState();
   return path.join(coreDataDir, 'recent');
 };
-const recentDbUrlTritium = 'http://bootstrap.nexus.io/tritium.tar.gz'; // Tritium Bootstrap URL
+const recentDbUrlTritium = 'http://bootstrap.nexus.io/tritium.zip'; // Tritium Bootstrap URL
 
 let aborting = false;
 let downloadRequest = null;
@@ -64,7 +63,6 @@ async function startBootstrap() {
       settings: { backupDirectory },
       core: { systemInfo },
     } = store.getState();
-    const recentDbUrl = recentDbUrlTritium;
 
     aborting = false;
 
@@ -94,15 +92,8 @@ async function startBootstrap() {
     const downloadProgress = throttled((details) => {
       if (downloading) setStatus('downloading', details);
     }, 1000);
-    await downloadDb(recentDbUrl, downloadProgress);
+    await downloadDb(downloadProgress);
     downloading = false;
-    if (aborting) {
-      bootstrapEvents.emit('abort');
-      return false;
-    }
-
-    setStatus('extracting');
-    await extractDb();
     if (aborting) {
       bootstrapEvents.emit('abort');
       return false;
@@ -153,39 +144,39 @@ async function startBootstrap() {
  * @param {*} downloadProgress
  * @returns
  */
-async function downloadDb(recentDbUrl, downloadProgress) {
-  const promise = new Promise((resolve, reject) => {
-    let timerId;
+function downloadDb(downloadProgress) {
+  const destination = getExtractDest();
+  let timerId;
+  return new Promise((resolve, reject) => {
     downloadRequest = http
-      .get(recentDbUrl)
-      .setTimeout(60000)
+      .get(recentDbUrlTritium)
+      .setTimeout(180000)
       .on('response', (response) => {
         const totalSize = parseInt(response.headers['content-length'], 10);
+
         let downloaded = 0;
 
-        response.on('data', (chunk) => {
-          downloaded += chunk.length;
-          timerId = downloadProgress({ downloaded, totalSize });
-        });
-
-        response.pipe(
-          fs
-            .createWriteStream(fileLocation, { autoClose: true })
-            .on('error', (e) => {
-              reject(e);
-            })
-            .on('close', () => {
-              resolve();
-            })
-        );
+        response
+          .on('data', (chunk) => {
+            downloaded += chunk.length;
+            timerId = downloadProgress({ downloaded, totalSize });
+          })
+          .on('close', () => {
+            resolve(destination);
+          })
+          .on('error', (err) => {
+            reject(err);
+          })
+          .pipe(unzip.Extract({ path: destination }));
       })
-      .on('error', (e) => reject(e))
+      .on('error', (err) => {
+        reject(err);
+      })
       .on('timeout', function () {
         if (downloadRequest) downloadRequest.abort();
-        reject(new Error('Request timeout!'));
+        reject(new Error('Request timeout! ' + Date.now()));
       })
       .on('abort', function () {
-        clearTimeout(timerId);
         if (fs.existsSync(fileLocation)) {
           fs.unlink(fileLocation, (err) => {
             if (err) console.error(err);
@@ -193,68 +184,11 @@ async function downloadDb(recentDbUrl, downloadProgress) {
         }
         resolve();
       });
-  });
-
-  // Ensure downloadRequest is always cleaned up
-  try {
-    return await promise;
-  } finally {
+  }).finally(() => {
+    // Ensure downloadRequest is always cleaned up
     downloadRequest = null;
-  }
-
-  // return new Promise((resolve, reject) => {
-  //   downloadRequest = http
-  //     .get(recentDbUrlTritium, (stream) => {
-  //       const destination = getExtractDest();
-  //       stream.on('close', () => {
-  //         resolve();
-  //       });
-  //       stream.pipe();
-  //     })
-  //     .setTimeout(60000)
-  //     .on('response', (response) => {
-  //       const totalSize = parseInt(response.headers['content-length'], 10);
-  //       let downloaded = 0;
-
-  //       response
-  //         .pipe(unzip.Extract({ path: destination }))
-  //         .on('data', (chunk) => {
-  //           downloaded += chunk.length;
-  //           timerId = downloadProgress({ downloaded, totalSize });
-  //         })
-  //         .on('close', () => {
-  //           resolve();
-  //         })
-  //         .on('error', (err) => {
-  //           reject(err);
-  //         });
-  //     })
-  //     .on('error', (err) => {
-  //       reject(err);
-  //     })
-  //     .on('timeout', function () {
-  //       if (downloadRequest) downloadRequest.abort();
-  //       reject(new Error('Request timeout!'));
-  //     })
-  //     .on('abort', function () {
-  //       clearTimeout(timerId);
-  //       if (fs.existsSync(fileLocation)) {
-  //         fs.unlink(fileLocation, (err) => {
-  //           if (err) console.error(err);
-  //         });
-  //       }
-  //       resolve();
-  //     });
-  // });
-}
-
-/**
- * Extract the Database
- *
- * @returns
- */
-function extractDb() {
-  return extractTarball(fileLocation, getExtractDest());
+    clearTimeout(timerId);
+  });
 }
 
 /**
