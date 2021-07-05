@@ -9,9 +9,9 @@ const initialState = {
     page: 1,
   },
   lastPage: false,
+  status: 'notLoaded', // notLoaded | loading | loaded | error
   loading: false,
   transactions: [],
-  error: null,
 };
 
 export default (state = initialState, action) => {
@@ -28,23 +28,28 @@ export default (state = initialState, action) => {
     case TYPE.START_FETCHING_TXS:
       return {
         ...state,
-        loading: true,
+        status: 'loading',
       };
 
     case TYPE.FETCH_TXS_RESULT:
       return {
         ...state,
+        status: 'loaded',
         transactions: action.payload?.transactions,
         lastPage: action.payload?.lastPage,
-        loading: false,
       };
 
     case TYPE.FETCH_TXS_ERROR:
       return {
         ...state,
-        error: action.payload,
-        loading: false,
+        status: 'error',
       };
+
+    case TYPE.DISCONNECT_CORE:
+    case TYPE.SWITCH_USER:
+    case TYPE.CLEAR_USER:
+    case TYPE.LOGOUT:
+      return initialState;
 
     default:
       return state;

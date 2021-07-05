@@ -65,48 +65,6 @@ const getBalanceChanges = (tx) =>
       }, [])
     : 0;
 
-async function refetchTransactions() {
-  const {
-    ui: { accountQuery, tokenQuery, operation, timeSpan, page },
-  } = store.getState();
-  let transactions = null;
-  let lastPage = false;
-
-  try {
-    const where = [];
-    if (accountQuery) {
-      if (addressRegex.test(accountQuery))
-        where.push({
-          field: 'contracts.',
-        });
-    }
-    transactions = await callApi('users/list/transactions', {
-      verbose: 'summary',
-      page,
-      limit: txCountPerPage,
-      where: [
-        {
-          field: '',
-        },
-      ],
-    });
-    lastPage = transactions.length < txCountPerPage;
-  } catch (err) {
-    openErrorDialog({
-      message: __('Error fetching transactions'),
-      note: typeof err === 'string' ? err : err.message || __('Unknown error'),
-    });
-  }
-
-  store.dispatch({
-    type: TYPE.FETCH_TXS_RESULT,
-    payload: {
-      transactions,
-      lastPage,
-    },
-  });
-}
-
 /**
  * Public API
  * =============================================================================
@@ -141,17 +99,20 @@ export async function loadTransactions() {
   } catch (err) {
     store.dispatch({
       type: TYPE.FETCH_TXS_ERROR,
-      payload: err,
+    });
+    openErrorDialog({
+      message: __('Error fetching transactions'),
+      note: typeof err === 'string' ? err : err?.message || __('Unknown error'),
     });
   }
 }
 
-export function updateFilter(updates) {
+export async function updateFilter(updates) {
   store.dispatch({
     type: TYPE.UPDATE_TRANSACTIONS_FILTER,
     payload: updates,
   });
-  loadTransactions();
+  return await loadTransactions();
 }
 
 export const addTritiumTransactions = (newTransactions) => {
