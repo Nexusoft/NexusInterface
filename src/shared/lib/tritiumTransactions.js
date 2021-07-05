@@ -65,6 +65,13 @@ const getBalanceChanges = (tx) =>
       }, [])
     : 0;
 
+function filterTransactions(transactions) {
+  const { accountQuery, tokenQuery, operation, timeSpan, page } =
+    store.getState().ui.transactionsPage.filter;
+  // filter
+  return transactions;
+}
+
 /**
  * Public API
  * =============================================================================
@@ -226,13 +233,8 @@ export function prepareTransactions() {
             verbose: 'summary',
             limit: txCount - oldTxCount,
           });
-          addTritiumTransactions(transactions);
 
-          transactions.forEach((tx) => {
-            if (!isConfirmed(tx)) {
-              watchTransaction(tx.txid);
-            }
-
+          for (const tx of transactions) {
             const changes = getBalanceChanges(tx);
             if (changes.length) {
               const changeLines = changes.map(
@@ -248,7 +250,18 @@ export function prepareTransactions() {
                 'success'
               );
             }
-          });
+          }
+
+          const filteredTransactions = filterTransactions(transactions);
+          const { status } = store.getState().ui.transactionsPage;
+          if (filteredTransactions.length && status === 'loaded') {
+            addTritiumTransactions(filteredTransactions);
+            for (const tx of filteredTransactions) {
+              if (!isConfirmed(tx)) {
+                watchTransaction(tx.txid);
+              }
+            }
+          }
         }
       }
     );
