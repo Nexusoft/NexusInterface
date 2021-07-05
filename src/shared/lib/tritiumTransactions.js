@@ -4,15 +4,17 @@ import * as TYPE from 'consts/actionTypes';
 import { loadAccounts } from 'lib/user';
 import { showDesktopNotif } from 'utils/misc';
 import { formatNumber } from 'lib/intl';
-import { showNotification } from 'lib/ui';
+import { showNotification, openErrorDialog } from 'lib/ui';
 import TokenName from 'components/TokenName';
-import { legacyMode } from 'consts/misc';
+import { legacyMode, addressRegex } from 'consts/misc';
 import listAll from 'utils/listAll';
 
 const isConfirmed = (tx) => !!tx.confirmations;
 
+const txCountPerPage = 10;
+
 const unsubscribers = {};
-function startWatchingTransaction(txid) {
+function watchTransaction(txid) {
   if (unsubscribers[txid]) return;
   // Update everytime a new block is received
   unsubscribers[txid] = observeStore(
@@ -63,19 +65,94 @@ const getBalanceChanges = (tx) =>
       }, [])
     : 0;
 
+async function refetchTransactions() {
+  const {
+    ui: { accountQuery, tokenQuery, operation, timeSpan, page },
+  } = store.getState();
+  let transactions = null;
+  let lastPage = false;
+
+  try {
+    const where = [];
+    if (accountQuery) {
+      if (addressRegex.test(accountQuery))
+        where.push({
+          field: 'contracts.',
+        });
+    }
+    transactions = await callApi('users/list/transactions', {
+      verbose: 'summary',
+      page,
+      limit: txCountPerPage,
+      where: [
+        {
+          field: '',
+        },
+      ],
+    });
+    lastPage = transactions.length < txCountPerPage;
+  } catch (err) {
+    openErrorDialog({
+      message: __('Error fetching transactions'),
+      note: typeof err === 'string' ? err : err.message || __('Unknown error'),
+    });
+  }
+
+  store.dispatch({
+    type: TYPE.FETCH_TXS_RESULT,
+    payload: {
+      transactions,
+      lastPage,
+    },
+  });
+}
+
 /**
  * Public API
  * =============================================================================
  */
 
-export const loadTritiumTransactions = (transactions) => {
+export async function loadTransactions() {
+  const { accountQuery, tokenQuery, operation, timeSpan, page } =
+    store.getState().ui.transactionsPage.filter;
   store.dispatch({
-    type: TYPE.LOAD_TRITIUM_TRANSACTIONS,
-    payload: {
-      list: transactions,
-    },
+    type: TYPE.START_FETCHING_TXS,
   });
-};
+  try {
+    const transactions = await callApi('users/list/transactions', {
+      accountQuery,
+      tokenQuery,
+      operation,
+      timeSpan,
+      page,
+    });
+    store.dispatch({
+      type: TYPE.FETCH_TXS_RESULT,
+      payload: {
+        transactions,
+        lastPage: transactions.length < limit,
+      },
+    });
+    for (const tx of transactions) {
+      if (!isConfirmed(tx)) {
+        watchTransaction(tx.txid);
+      }
+    }
+  } catch (err) {
+    store.dispatch({
+      type: TYPE.FETCH_TXS_ERROR,
+      payload: err,
+    });
+  }
+}
+
+export function updateFilter(updates) {
+  store.dispatch({
+    type: TYPE.UPDATE_TRANSACTIONS_FILTER,
+    payload: updates,
+  });
+  loadTransactions();
+}
 
 export const addTritiumTransactions = (newTransactions) => {
   store.dispatch({
@@ -114,11 +191,10 @@ export const getDeltaSign = (contract) => {
   }
 };
 
-function addAndWatch(transactions) {
-  addTritiumTransactions(transactions);
+function watchTransactions(transactions) {
   transactions.forEach((tx) => {
     if (!isConfirmed(tx)) {
-      startWatchingTransaction(tx.txid);
+      watchTransaction(tx.txid);
     }
   });
 }
@@ -141,6 +217,34 @@ export async function fetchTransaction(txid) {
   });
   updateTritiumTransaction(tx);
 }
+
+export const setTxsTimeFilter = (timeSpan) => {
+  store.dispatch({
+    type: TYPE.SET_TXS_TIME_FILTER,
+    payload: timeSpan,
+  });
+};
+
+export const setTxsNameQuery = (accountName) => {
+  store.dispatch({
+    type: TYPE.SET_TXS_NAME_QUERY,
+    payload: accountName,
+  });
+};
+
+export const setTxsOperationFilter = (operation) => {
+  store.dispatch({
+    type: TYPE.SET_TXS_OP_FILTER,
+    payload: operation,
+  });
+};
+
+export const goToTxsPage = (page) => {
+  store.dispatch({
+    type: TYPE.SET_TXS_PAGE,
+    payload: page < 1 ? 1 : page,
+  });
+};
 
 export function prepareTransactions() {
   if (!legacyMode) {
@@ -165,7 +269,7 @@ export function prepareTransactions() {
 
           transactions.forEach((tx) => {
             if (!isConfirmed(tx)) {
-              startWatchingTransaction(tx.txid);
+              watchTransaction(tx.txid);
             }
 
             const changes = getBalanceChanges(tx);
