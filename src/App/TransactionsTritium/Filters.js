@@ -121,7 +121,7 @@ const Filters = ({
 
 const mapStateToProps = ({
   ui: {
-    transactionsTritium: { addressQuery, operation, nameQuery, timeSpan },
+    transactionsPage: { addressQuery, operation, nameQuery, timeSpan },
   },
 }) => ({
   addressQuery,
