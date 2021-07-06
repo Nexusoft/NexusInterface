@@ -76,6 +76,12 @@ const TransactionLoadingWarningSpinner = styled(Spinner)(({ theme }) => ({
   marginLeft: '1em',
 }));
 
+const ErrorMessage = styled.div(({ theme }) => ({
+  textAlign: 'center',
+  padding: '30px 0',
+  color: theme.danger,
+}));
+
 // listRef = createRef();
 
 // state = {
@@ -150,9 +156,13 @@ export default function TransactionsTritium() {
           <Filters morePadding={this.state.hasScroll} />
 
           <TransactionsList ref={this.listRef}>
-            {loading ? (
+            {status === 'loading' && (
               <WaitingMessage>{__('Loading transactions...')}</WaitingMessage>
-            ) : (
+            )}
+            {status === 'error' && (
+              <ErrorMessage>{__('Failed to load transactions')}</ErrorMessage>
+            )}
+            {status === 'loaded' && (
               <Container>
                 {transactions &&
                   transactions.map((tx) => (

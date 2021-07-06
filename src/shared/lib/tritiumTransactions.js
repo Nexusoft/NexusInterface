@@ -65,11 +65,69 @@ const getBalanceChanges = (tx) =>
       }, [])
     : 0;
 
+const getThresholdDate = (timeSpan) => {
+  const now = new Date();
+  switch (timeSpan) {
+    case 'week':
+      return new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7);
+    case 'month':
+      return new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
+    case 'year':
+      return new Date(now.getFullYear() - 1, now.getMonth(), now.getDate());
+    default:
+      return null;
+  }
+};
+
 function filterTransactions(transactions) {
-  const { accountQuery, tokenQuery, operation, timeSpan, page } =
-    store.getState().ui.transactionsPage.filter;
-  // filter
-  return transactions;
+  const {
+    status,
+    filter: { accountQuery, tokenQuery, operation, timeSpan, page },
+  } = store.getState().ui.transactionsPage;
+  if (status !== 'loaded' || page !== 1 || !transactions) return [];
+
+  return transactions.filter((tx) => {
+    if (timeSpan) {
+      const pastDate = getThresholdDate(timeSpan);
+      if (pastDate && tx.timestamp * 1000 < pastDate.getTime()) {
+        return false;
+      }
+    }
+    if (
+      operation &&
+      !tx.contracts.some((contract) => contract.OP === operation)
+    ) {
+      return false;
+    }
+    if (
+      accountQuery &&
+      !tx.contracts.some(
+        (contract) =>
+          contract.from_name?.includes(accountQuery) ||
+          contract.from?.includes(accountQuery) ||
+          contract.to_name?.includes(accountQuery) ||
+          contract.to?.includes(accountQuery) ||
+          contract.account_name?.includes(accountQuery) ||
+          contract.account?.includes(accountQuery) ||
+          contract.destination?.includes(accountQuery) ||
+          contract.address?.includes(accountQuery)
+      )
+    ) {
+      return false;
+    }
+    if (
+      tokenQuery &&
+      !tx.contracts.some(
+        (contract) =>
+          contract.token_name?.includes(tokenQuery) ||
+          contract.token?.includes(tokenQuery)
+      )
+    ) {
+      return false;
+    }
+
+    return true;
+  });
 }
 
 /**
@@ -253,8 +311,7 @@ export function prepareTransactions() {
           }
 
           const filteredTransactions = filterTransactions(transactions);
-          const { status } = store.getState().ui.transactionsPage;
-          if (filteredTransactions.length && status === 'loaded') {
+          if (filteredTransactions.length) {
             addTritiumTransactions(filteredTransactions);
             for (const tx of filteredTransactions) {
               if (!isConfirmed(tx)) {
