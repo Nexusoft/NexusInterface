@@ -130,24 +130,63 @@ function filterTransactions(transactions) {
   });
 }
 
+function buildQuery({ accountQuery, tokenQuery, operation, timeSpan }) {
+  const queries = [];
+  if (timeSpan) {
+    const pastDate = getThresholdDate(timeSpan);
+    if (pastDate) {
+      queries.push(`object.timespan > ${pastDate.getTime() / 1000}`);
+    }
+  }
+  if (operation) {
+    queries.push(`object.contracts.OP = ${operation}`);
+  }
+  if (tokenQuery) {
+    const buildTokenQuery = (field) =>
+      `object.contracts.${field} = *${tokenQuery}*`;
+    const tokenQueries = [
+      buildTokenQuery('token'),
+      buildTokenQuery('token_name'),
+    ];
+    queries.push(`(${tokenQueries.join(' OR ')})`);
+  }
+  if (accountQuery) {
+    const buildAccountQuery = (field) =>
+      `object.contracts.${field} = *${accountQuery}*`;
+    const accountQueries = [
+      buildAccountQuery('from'),
+      buildAccountQuery('from_name'),
+      buildAccountQuery('to'),
+      buildAccountQuery('to_name'),
+      buildAccountQuery('account'),
+      buildAccountQuery('account_name'),
+      buildAccountQuery('destination'),
+      buildAccountQuery('address'),
+    ];
+    queries.push(`(${accountQueries.join(' OR ')})`);
+  }
+
+  return queries.join(' AND ');
+}
+
 /**
  * Public API
  * =============================================================================
  */
 
 export async function loadTransactions() {
-  const { accountQuery, tokenQuery, operation, timeSpan, page } =
-    store.getState().ui.transactionsPage.filter;
+  const { filter } = store.getState().ui.transactionsPage;
+  const { page } = filter;
   store.dispatch({
     type: TYPE.START_FETCHING_TXS,
   });
   try {
     const transactions = await callApi('users/list/transactions', {
-      accountQuery,
-      tokenQuery,
-      operation,
-      timeSpan,
-      page,
+      verbose: 'summary',
+      limit: txCountPerPage,
+      // API page param is 0 based, while the page number on the UI is 1 based
+      page: page - 1,
+      where: buildQuery(filter),
     });
     store.dispatch({
       type: TYPE.FETCH_TXS_RESULT,
