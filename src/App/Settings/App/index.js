@@ -2,6 +2,7 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from '@emotion/styled';
+import * as AutoLaunch from 'auto-launch';
 
 // Internal Global
 import { updateSettings } from 'lib/settings';
@@ -111,6 +112,20 @@ class SettingsApp extends Component {
           message: __('Connecting to Nexus Core'),
         });
       }
+    }
+  };
+
+  toggleOpenOnStart = async (e) => {
+    const { checked } = e.target;
+    const nexusAutoLaunch = new AutoLaunch({
+      name: 'Nexus Wallet',
+    });
+    if (checked) {
+      nexusAutoLaunch.enabled();
+      updateSettings({ openOnStart: true });
+    } else {
+      nexusAutoLaunch.disabled();
+      updateSettings({ openOnStart: false });
     }
   };
 
@@ -229,6 +244,17 @@ class SettingsApp extends Component {
           <Switch
             checked={settings.minimizeOnClose}
             onChange={this.updateHandlers('minimizeOnClose')}
+          />
+        </SettingsField>
+
+        <SettingsField
+          connectLabel
+          label={__('Open on startup')}
+          subLabel={__('Open the wallet when ever the OS starts.')}
+        >
+          <Switch
+            checked={settings.openOnStart}
+            onChange={this.toggleOpenOnStart}
           />
         </SettingsField>
 
