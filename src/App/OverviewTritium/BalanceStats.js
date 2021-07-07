@@ -160,7 +160,7 @@ export function FeaturedTokenBalanceStat() {
 export function IncomingBalanceStat() {
   const [nxsBalances] = useSelector(selectBalances);
   const incoming =
-    nxsBalances?.pending + nxsBalances?.unconfirmed + nxsBalances?.immature;
+    nxsBalances?.unclaimed + nxsBalances?.unconfirmed + nxsBalances?.immature;
 
   return (
     <Stat

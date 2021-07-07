@@ -71,7 +71,7 @@ export default function Balances() {
   const total =
     nxsBalances &&
     nxsBalances.available +
-      nxsBalances.pending +
+      nxsBalances.unclaimed +
       nxsBalances.unconfirmed +
       nxsBalances.stake +
       nxsBalances.immature;
@@ -112,14 +112,14 @@ export default function Balances() {
 
           <Line>
             <Label>
-              <span className="v-align">{__('Pending')}</span>
+              <span className="v-align">{__('Unclaimed')}</span>
               <QuestionCircle
                 tooltip={__(
                   'The sum of all debit and coinbase transactions made to your NXS accounts that are confirmed but have not yet been credited. This does NOT include immature and unconfirmed amounts'
                 )}
               />
             </Label>
-            <Value>{formatNumber(nxsBalances.pending, 6)} NXS</Value>
+            <Value>{formatNumber(nxsBalances.unclaimed, 6)} NXS</Value>
           </Line>
 
           <Line>
@@ -161,7 +161,7 @@ export default function Balances() {
               <Label>{__('Total')}</Label>
               <Value>
                 {formatNumber(
-                  balance.available + balance.pending + balance.unconfirmed,
+                  balance.available + balance.unclaimed + balance.unconfirmed,
                   balance.decimals
                 )}{' '}
                 <TokenName account={balance} />
@@ -180,10 +180,10 @@ export default function Balances() {
 
             <Line>
               <Label>
-                <span className="v-align">{__('Pending')}</span>
+                <span className="v-align">{__('Unclaimed')}</span>
               </Label>
               <Value>
-                {formatNumber(balance.pending, balance.decimals)}{' '}
+                {formatNumber(balance.unclaimed, balance.decimals)}{' '}
                 <TokenName account={balance} />
               </Value>
             </Line>
