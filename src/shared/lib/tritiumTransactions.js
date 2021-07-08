@@ -167,7 +167,7 @@ function buildQuery({ accountQuery, tokenQuery, operation, timeSpan }) {
     queries.push(`(${accountQueries.join(' OR ')})`);
   }
 
-  return queries.join(' AND ');
+  return queries.join(' AND ') || undefined;
 }
 
 /**
@@ -182,13 +182,17 @@ export async function loadTransactions() {
     type: TYPE.START_FETCHING_TXS,
   });
   try {
-    const transactions = await callApi('users/list/transactions', {
+    const params = {
       verbose: 'summary',
       limit: txCountPerPage,
       // API page param is 0 based, while the page number on the UI is 1 based
       page: page - 1,
-      where: buildQuery(filter),
-    });
+    };
+    const query = buildQuery(filter);
+    if (query) {
+      params.where = query;
+    }
+    const transactions = await callApi('users/list/transactions', params);
     store.dispatch({
       type: TYPE.FETCH_TXS_RESULT,
       payload: {
