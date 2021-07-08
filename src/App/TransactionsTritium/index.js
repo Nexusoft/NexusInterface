@@ -135,27 +135,28 @@ export default function TransactionsTritium() {
     lastPage,
     filter: { page },
   } = useSelector((state) => state.ui.transactionsPage);
-  const session = useSelector((state) => state.user.session);
+  const genesis = useSelector((state) => state.user.status?.genesis);
 
   useEffect(() => {
     GA.SendScreen('TransactionsTritium');
   }, []);
-  // Reload transactions when user session changes, such as when user
+  // Reload transactions when user genesis changes, such as when user
   // is logged in or switched to another user
   useEffect(() => {
-    if (session && (status === 'notLoaded' || status === 'error')) {
+    if (genesis && (status === 'notLoaded' || status === 'error')) {
       loadTransactions();
     }
-  }, session);
+  }, [genesis]);
 
   return (
     <Panel icon={transactionIcon} title={__('Transactions')}>
       <RequireLoggedIn>
         <PageLayout>
           <Balances />
-          <Filters morePadding={this.state.hasScroll} />
-
-          <TransactionsList ref={this.listRef}>
+          <Filters /> {/*morePadding={this.state.hasScroll} */}
+          <TransactionsList>
+            {' '}
+            {/*ref={this.listRef} */}
             {status === 'loading' && (
               <WaitingMessage>{__('Loading transactions...')}</WaitingMessage>
             )}
@@ -171,8 +172,9 @@ export default function TransactionsTritium() {
               </Container>
             )}
           </TransactionsList>
-
-          <Pagination morePadding={this.state.hasScroll}>
+          <Pagination>
+            {' '}
+            {/*morePadding={this.state.hasScroll}*/}
             <Container className="flex center space-between">
               <PaginationButton
                 skin="filled-inverted"
