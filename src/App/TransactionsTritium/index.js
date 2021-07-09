@@ -9,10 +9,12 @@ import Button from 'components/Button';
 import TextField from 'components/TextField';
 import RequireLoggedIn from 'components/RequireLoggedIn';
 import Spinner from 'components/Spinner';
+import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import { loadTransactions, updateFilter } from 'lib/tritiumTransactions';
 import { observeStore } from 'store';
 import transactionIcon from 'icons/transaction.svg';
+import warningIcon from 'icons/warning.svg';
 
 import {
   getTransactionsList,
@@ -161,7 +163,12 @@ export default function TransactionsTritium() {
               <WaitingMessage>{__('Loading transactions...')}</WaitingMessage>
             )}
             {status === 'error' && (
-              <ErrorMessage>{__('Failed to load transactions')}</ErrorMessage>
+              <ErrorMessage>
+                <div className="text-center">
+                  <Icon icon={warningIcon} size={32} />
+                </div>
+                <div className="mt0_4">{__('Failed to load transactions')}</div>
+              </ErrorMessage>
             )}
             {status === 'loaded' && (
               <Container>

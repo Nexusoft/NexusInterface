@@ -12,16 +12,16 @@
 import { forwardRef } from 'react';
 import styled from '@emotion/styled';
 
-const Svg = styled.svg({
+const Svg = styled.svg(({ size = '1em' }) => ({
   verticalAlign: 'middle',
   transitionProperty: 'fill, stroke',
   transitionDuration: '.2s',
-  width: '1em',
-  height: '1em',
-});
+  width: size,
+  height: size,
+}));
 
-const Icon = forwardRef(({ icon = {}, ...rest }, ref) => (
-  <Svg viewBox={icon.viewBox} {...rest} ref={ref}>
+const Icon = forwardRef(({ icon = {}, size, ...rest }, ref) => (
+  <Svg viewBox={icon.viewBox} size={size} {...rest} ref={ref}>
     <use href={`${icon.url ? icon.url : ''}#${icon.id}`} />
   </Svg>
 ));
