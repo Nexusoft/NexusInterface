@@ -1,15 +1,10 @@
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 
 import Select from 'components/Select';
 import TextField from 'components/TextField';
 import FormField from 'components/FormField';
-import {
-  setTxsAddressQuery,
-  setTxsNameQuery,
-  setTxsOperationFilter,
-  setTxsTimeFilter,
-} from 'lib/ui';
+import { updateFilter } from 'lib/tritiumTransactions';
 
 __ = __context('Transactions');
 
@@ -73,61 +68,52 @@ const FiltersWrapper = styled.div(({ morePadding }) => ({
   padding: `0 ${morePadding ? '26px' : '20px'} 10px 20px`,
 }));
 
-const Filters = ({
-  addressQuery,
-  operation,
-  nameQuery,
-  timeSpan,
-  morePadding,
-}) => (
-  <FiltersWrapper morePadding={morePadding}>
-    <FormField connectLabel label={__('Address')}>
-      <TextField
-        type="search"
-        placeholder={__('Account/token address')}
-        value={addressQuery}
-        onChange={(evt) => {
-          setTxsAddressQuery(evt.target.value);
-        }}
-      />
-    </FormField>
+export default function Filters() {
+  const { accountQuery, tokenQuery, operation, timeSpan, morePadding } =
+    useSelector((state) => state.ui.transactionsPage);
+  return (
+    <FiltersWrapper morePadding={morePadding}>
+      <FormField connectLabel label={__('Account')}>
+        <TextField
+          type="search"
+          placeholder={__('Account name/address')}
+          value={accountQuery}
+          onChange={(evt) => {
+            updateFilter({ accountQuery: evt.target.value });
+          }}
+        />
+      </FormField>
 
-    <FormField connectLabel label={__('Name')}>
-      <TextField
-        type="search"
-        placeholder="Account/token name"
-        value={nameQuery}
-        onChange={(evt) => setTxsNameQuery(evt.target.value)}
-      />
-    </FormField>
+      <FormField connectLabel label={__('Token')}>
+        <TextField
+          type="search"
+          placeholder="Token name/address"
+          value={tokenQuery}
+          onChange={(evt) => {
+            updateFilter({ tokenQuery: evt.target.value });
+          }}
+        />
+      </FormField>
 
-    <FormField label={__('Time span')}>
-      <Select
-        value={timeSpan}
-        onChange={setTxsTimeFilter}
-        options={timeFrames}
-      />
-    </FormField>
+      <FormField label={__('Time span')}>
+        <Select
+          value={timeSpan}
+          onChange={(timeSpan) => {
+            updateFilter({ timeSpan });
+          }}
+          options={timeFrames}
+        />
+      </FormField>
 
-    <FormField label={__('Operation')}>
-      <Select
-        value={operation}
-        onChange={setTxsOperationFilter}
-        options={opOptions}
-      />
-    </FormField>
-  </FiltersWrapper>
-);
-
-const mapStateToProps = ({
-  ui: {
-    transactionsPage: { addressQuery, operation, nameQuery, timeSpan },
-  },
-}) => ({
-  addressQuery,
-  operation,
-  nameQuery,
-  timeSpan,
-});
-
-export default connect(mapStateToProps)(Filters);
+      <FormField label={__('Operation')}>
+        <Select
+          value={operation}
+          onChange={(operation) => {
+            updateFilter({ operation });
+          }}
+          options={opOptions}
+        />
+      </FormField>
+    </FiltersWrapper>
+  );
+}
