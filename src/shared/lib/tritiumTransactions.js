@@ -136,15 +136,15 @@ function buildQuery({ accountQuery, tokenQuery, operation, timeSpan }) {
   if (timeSpan) {
     const pastDate = getThresholdDate(timeSpan);
     if (pastDate) {
-      queries.push(`object.timespan > ${pastDate.getTime() / 1000}`);
+      queries.push(`object.timespan>${pastDate.getTime() / 1000}`);
     }
   }
   if (operation) {
-    queries.push(`object.contracts.OP = ${operation}`);
+    queries.push(`object.contracts.OP=${operation}`);
   }
   if (tokenQuery) {
     const buildTokenQuery = (field) =>
-      `object.contracts.${field} = *${tokenQuery}*`;
+      `object.contracts.${field}=*${tokenQuery}*`;
     const tokenQueries = [
       buildTokenQuery('token'),
       buildTokenQuery('token_name'),
@@ -153,7 +153,7 @@ function buildQuery({ accountQuery, tokenQuery, operation, timeSpan }) {
   }
   if (accountQuery) {
     const buildAccountQuery = (field) =>
-      `object.contracts.${field} = *${accountQuery}*`;
+      `object.contracts.${field}=*${accountQuery}*`;
     const accountQueries = [
       buildAccountQuery('from'),
       buildAccountQuery('from_name'),
