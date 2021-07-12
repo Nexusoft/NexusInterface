@@ -8,7 +8,7 @@ import notifications from './notifications';
 import backgroundTasks from './backgroundTasks';
 import closing from './closing';
 import transactions from './transactions';
-import transactionsPage from './transactionsPage';
+import transactionsFilter from './transactionsFilter';
 import user from './user';
 
 export default combineReducers({
@@ -20,6 +20,6 @@ export default combineReducers({
   backgroundTasks,
   closing,
   transactions,
-  transactionsPage,
+  transactionsFilter,
   user,
 });

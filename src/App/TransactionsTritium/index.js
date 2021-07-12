@@ -131,12 +131,10 @@ const totalPages = 10;
  * @extends {Component}
  */
 export default function TransactionsTritium() {
-  const {
-    status,
-    transactions,
-    lastPage,
-    filter: { page },
-  } = useSelector((state) => state.ui.transactionsPage);
+  const { status, transactions, lastPage } = useSelector(
+    (state) => state.user.transactions
+  );
+  const { page } = useSelector((state) => state.ui.transactionsFilter);
   const genesis = useSelector((state) => state.user.status?.genesis);
 
   useEffect(() => {

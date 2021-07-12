@@ -82,9 +82,19 @@ const getThresholdDate = (timeSpan) => {
 
 function filterTransactions(transactions) {
   const {
-    status,
-    filter: { accountQuery, tokenQuery, operation, timeSpan, page },
-  } = store.getState().ui.transactionsPage;
+    ui: {
+      transactionsFilter: {
+        accountQuery,
+        tokenQuery,
+        operation,
+        timeSpan,
+        page,
+      },
+    },
+    user: {
+      transactions: { status },
+    },
+  } = store.getState();
   if (status !== 'loaded' || page !== 1 || !transactions) return [];
 
   return transactions.filter((tx) => {
@@ -176,8 +186,10 @@ function buildQuery({ accountQuery, tokenQuery, operation, timeSpan }) {
  */
 
 export async function loadTransactions() {
-  const { filter } = store.getState().ui.transactionsPage;
-  const { page } = filter;
+  const {
+    ui: { transactionsFilter },
+  } = store.getState();
+  const { page } = transactionsFilter;
   store.dispatch({
     type: TYPE.START_FETCHING_TXS,
   });
@@ -188,7 +200,8 @@ export async function loadTransactions() {
       // API page param is 0 based, while the page number on the UI is 1 based
       page: page - 1,
     };
-    const query = buildQuery(filter);
+    const query = buildQuery(transactionsFilter);
+    console.log('query', query);
     if (query) {
       params.where = query;
     }

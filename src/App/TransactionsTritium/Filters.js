@@ -80,7 +80,7 @@ const FiltersWrapper = styled.div(({ morePadding }) => ({
 
 export default function Filters({ morePadding }) {
   const { accountQuery, tokenQuery, operation, timeSpan } = useSelector(
-    (state) => state.ui.transactionsPage.filter
+    (state) => state.ui.transactionsFilter
   );
   return (
     <FiltersWrapper morePadding={morePadding}>
