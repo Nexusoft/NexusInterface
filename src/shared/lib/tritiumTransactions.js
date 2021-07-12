@@ -227,9 +227,7 @@ export async function updateFilter(updates) {
 export const addTritiumTransactions = (newTransactions) => {
   store.dispatch({
     type: TYPE.ADD_TRITIUM_TRANSACTIONS,
-    payload: {
-      list: newTransactions,
-    },
+    payload: newTransactions,
   });
 };
 

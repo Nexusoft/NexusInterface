@@ -10,7 +10,6 @@ const initialState = {
   },
   lastPage: false,
   status: 'notLoaded', // notLoaded | loading | loaded | error
-  loading: false,
   transactions: [],
 };
 
@@ -44,6 +43,26 @@ export default (state = initialState, action) => {
         ...state,
         status: 'error',
       };
+
+    case TYPE.UPDATE_TRITIUM_TRANSACTION:
+      if (status === 'loaded') {
+        return {
+          ...state,
+          transactions: [action.payload, ...state.transactions],
+        };
+      } else {
+        return state;
+      }
+
+    case TYPE.ADD_TRITIUM_TRANSACTIONS:
+      if (status === 'loaded') {
+        return {
+          ...state,
+          transactions: [...action.payload, ...state.transactions],
+        };
+      } else {
+        return state;
+      }
 
     case TYPE.DISCONNECT_CORE:
     case TYPE.SWITCH_USER:
