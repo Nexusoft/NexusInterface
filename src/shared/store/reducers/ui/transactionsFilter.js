@@ -13,10 +13,7 @@ export default (state = initialState, action) => {
     case TYPE.UPDATE_TRANSACTIONS_FILTER:
       return {
         ...state,
-        filter: {
-          ...state.filter,
-          ...action.payload,
-        },
+        ...action.payload,
       };
 
     default:
