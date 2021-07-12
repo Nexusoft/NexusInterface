@@ -10,7 +10,7 @@ import HorizontalLine from 'components/HorizontalLine';
 import { consts, timing, animations } from 'styles';
 import * as color from 'utils/color';
 import { isCoreConnected } from 'selectors';
-import { legacyMode } from 'consts/misc';
+import { alphaRelease, betaRelease, legacyMode } from 'consts/misc';
 
 // Internal Local
 import StatusIcons from './StatusIcons';
@@ -83,11 +83,7 @@ const PreReleaseTag = styled.div(({ theme }) => ({
   color: theme.foreground,
 }));
 
-const preReleaseTag = APP_VERSION.toString().includes('alpha')
-  ? 'ALPHA'
-  : APP_VERSION.toString().includes('beta')
-  ? 'BETA'
-  : null;
+const preReleaseTag = alphaRelease ? 'ALPHA' : betaRelease ? 'BETA' : null;
 
 /**
  * Handles the App Header
