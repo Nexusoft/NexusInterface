@@ -213,11 +213,7 @@ export async function loadTransactions() {
         lastPage: transactions.length < limit,
       },
     });
-    for (const tx of transactions) {
-      if (!isConfirmed(tx)) {
-        watchTransaction(tx.txid);
-      }
-    }
+    watchIfUnconfirmed(transactions);
   } catch (err) {
     store.dispatch({
       type: TYPE.FETCH_TXS_ERROR,
@@ -272,8 +268,8 @@ export const getDeltaSign = (contract) => {
   }
 };
 
-function watchTransactions(transactions) {
-  transactions.forEach((tx) => {
+function watchIfUnconfirmed(transactions) {
+  transactions?.forEach((tx) => {
     if (!isConfirmed(tx)) {
       watchTransaction(tx.txid);
     }
@@ -368,11 +364,7 @@ export function prepareTransactions() {
           const filteredTransactions = filterTransactions(transactions);
           if (filteredTransactions.length) {
             addTritiumTransactions(filteredTransactions);
-            for (const tx of filteredTransactions) {
-              if (!isConfirmed(tx)) {
-                watchTransaction(tx.txid);
-              }
-            }
+            watchIfUnconfirmed(filteredTransactions);
           }
         }
       }
