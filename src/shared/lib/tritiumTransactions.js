@@ -8,6 +8,7 @@ import { showNotification } from 'lib/ui';
 import { openErrorDialog } from 'lib/dialog';
 import TokenName from 'components/TokenName';
 import { legacyMode, addressRegex } from 'consts/misc';
+import { isLoggedIn } from 'selectors';
 import listAll from 'utils/listAll';
 
 const isConfirmed = (tx) => !!tx.confirmations;
@@ -18,11 +19,21 @@ const unsubscribers = {};
 function watchTransaction(txid) {
   if (unsubscribers[txid]) return;
   // Update everytime a new block is received
-  unsubscribers[txid] = observeStore(
-    ({ core: { systemInfo } }) => systemInfo?.blocks,
-    async (blocks) => {
-      // Skip because core is most likely disconnected
-      if (!blocks) return;
+  const unsubscribe = (unsubscribers[txid] = observeStore(
+    (state) => state,
+    async (state, oldState) => {
+      // Stop watching if user is logged out or core is disconnected or user is switched
+      const genesis = state.user.status?.genesis;
+      const oldGenesis = oldState.user.status?.genesis;
+      if (!isLoggedIn(state) || genesis !== oldGenesis) {
+        unsubscribe();
+        delete unsubscribers[txid];
+      }
+
+      // Only refetch transaction each time there is a new block
+      const blocks = state.core.systemInfo?.blocks;
+      const oldBlocks = oldState.core.systemInfo?.blocks;
+      if (!blocks || blocks === oldBlocks) return;
 
       // Fetch the updated transaction info
       await fetchTransaction(txid);
@@ -30,14 +41,14 @@ function watchTransaction(txid) {
       const tx = store.getState().user.transactions.map[txid];
       if (tx && isConfirmed(tx)) {
         // If this transaction is already confirmed, unobserve the store
-        unsubscribers[txid]();
+        unsubscribe();
         delete unsubscribers[txid];
         // Reload the account list
         // so that the account balances (available & unconfirmed) are up-to-date
         loadAccounts();
       }
     }
-  );
+  ));
 }
 
 const getBalanceChanges = (tx) =>
