@@ -11,7 +11,7 @@ import { backupWallet as backup, history } from 'lib/wallet';
 import { showNotification, openModal } from 'lib/ui';
 import { bootstrap } from 'lib/bootstrap';
 import { isCoreConnected } from 'selectors';
-import { legacyMode } from 'consts/misc';
+import { legacyMode, preRelease } from 'consts/misc';
 import { confirm } from 'lib/dialog';
 import { walletDataDir } from 'consts/paths';
 import { checkForUpdates, quitAndInstall } from 'lib/updater';
@@ -217,6 +217,12 @@ const menuItems = preprocess({
       shell.openExternal('https://crypto.nexus.io/tritium-guide');
     },
   },
+  reportBug: {
+    label: __('Report Bug'),
+    click: () => {
+      shell.openExternal('https://github.com/Nexusoft/NexusInterface/issues');
+    },
+  },
   openCoreDataDir: {
     label: __('Open Core Data Folder'),
     click: () => {
@@ -354,11 +360,12 @@ function buildDarwinTemplate() {
       menuItems.websiteLink,
       menuItems.gitRepoLink,
       menuItems.walletGuideLink,
+      preRelease ? menuItems.reportBug : null,
       menuItems.openCoreDataDir,
       menuItems.openInterfaceDataDir,
       menuItems.separator,
       buildUpdaterMenu(),
-    ],
+    ].filter((e) => e),
   };
 
   return [
@@ -439,12 +446,13 @@ function buildDefaultTemplate() {
       menuItems.separator,
       menuItems.websiteLink,
       menuItems.gitRepoLink,
+      preRelease ? menuItems.reportBug : null,
       menuItems.walletGuideLink,
       menuItems.openCoreDataDir,
       menuItems.openInterfaceDataDir,
       menuItems.separator,
       buildUpdaterMenu(),
-    ],
+    ].filter((e) => e),
   };
 
   return [subMenuFile, subMenuSettings, subMenuView, subMenuHelp];
