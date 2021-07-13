@@ -1,6 +1,7 @@
 import Button from 'components/Button';
 import Modal from 'components/Modal';
 import { alphaRelease } from 'consts/misc';
+import { shell } from 'electron';
 
 const PreReleaseWarningModal = () => {
   console.log(this);
@@ -15,17 +16,29 @@ const PreReleaseWarningModal = () => {
           <Modal.Body>
             <div className="text-center">{versionRunning}</div>
 
-            <div className="mt1">
+            <div className="mt1 text-center">
               {__(
                 `You are currenctly running a ${releaseType} version of the wallet. `
               )}
             </div>
-            <div className="mt2">
+            <div className="mt1 text-center">
               {__('Thank you for testing our wallet, please ')}
-              <Button skin="plain-link-primary">{__('Click here')}</Button>
-              {__(' To send feedback to the devs.')}
+              <Button
+                skin="plain-link-primary"
+                onClick={() =>
+                  shell.openExternal(
+                    'https://github.com/Nexusoft/NexusInterface/issues'
+                  )
+                }
+              >
+                {__('Click here')}
+              </Button>
+              {__(' To send feedback to the developers. ')}
               {__('Or join us on the offical ')}
-              <Button skin="plain-link-primary">
+              <Button
+                skin="plain-link-primary"
+                onClick={() => shell.openExternal('https://t.me/NexusOfficial')}
+              >
                 Nexus Testing Telegram group
               </Button>
               {' .'}
