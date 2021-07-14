@@ -15,19 +15,19 @@ const isConfirmed = (tx) => !!tx.confirmations;
 
 const txCountPerPage = 10;
 
-const unsubscribers = {};
-function watchTransaction(txid) {
-  if (unsubscribers[txid]) return;
-  // Update everytime a new block is received
-  const unsubscribe = (unsubscribers[txid] = observeStore(
+let watchedIds = [];
+let unsubscribe = null;
+function startWatcher() {
+  unsubscribe = observeStore(
     (state) => state,
     async (state, oldState) => {
-      // Stop watching if user is logged out or core is disconnected or user is switched
+      // Clear watcher if user is logged out or core is disconnected or user is switched
       const genesis = state.user.status?.genesis;
       const oldGenesis = oldState.user.status?.genesis;
       if (!isLoggedIn(state) || genesis !== oldGenesis) {
-        unsubscribe();
-        delete unsubscribers[txid];
+        unsubscribe?.();
+        unsubscribe = null;
+        watchedIds = [];
       }
 
       // Only refetch transaction each time there is a new block
@@ -36,19 +36,37 @@ function watchTransaction(txid) {
       if (!blocks || blocks === oldBlocks) return;
 
       // Fetch the updated transaction info
-      await fetchTransaction(txid);
+      const transactions = await Promise.all([
+        watchedIds.map((txid) => fetchTransaction(txid)),
+      ]);
 
-      const tx = store.getState().user.transactions.map[txid];
-      if (tx && isConfirmed(tx)) {
-        // If this transaction is already confirmed, unobserve the store
-        unsubscribe();
-        delete unsubscribers[txid];
-        // Reload the account list
-        // so that the account balances (available & unconfirmed) are up-to-date
-        loadAccounts();
+      for (const tx of transactions) {
+        if (isConfirmed(tx)) {
+          unwatchTransaction(tx.txid);
+          // Reload the account list
+          // so that the account balances (available & unconfirmed) are up-to-date
+          loadAccounts();
+        }
       }
     }
-  ));
+  );
+}
+
+function watchTransaction(txid) {
+  if (!watchedIds.includes(txid)) {
+    watchedIds.push(txid);
+  }
+  if (!unsubscribe) {
+    startWatcher();
+  }
+}
+
+function unwatchTransaction(txid) {
+  watchedIds = watchedIds.filter((id) => id !== txid);
+  if (!watchedIds.length) {
+    unsubscribe?.();
+    unsubscribe = null;
+  }
 }
 
 const getBalanceChanges = (tx) =>
@@ -304,6 +322,7 @@ export async function fetchTransaction(txid) {
     verbose: 'summary',
   });
   updateTritiumTransaction(tx);
+  return tx;
 }
 
 export const setTxsTimeFilter = (timeSpan) => {
