@@ -136,15 +136,6 @@ const About = ({ version, testnet, privateBlockchain }) => (
           <br />
           Tempe, Arizona, United States Of America
         </div>
-        <div>
-          <Strong>
-            <ExternalLink href={'https://crypto.nexus.io/embassies'}>
-              Nexus Embassy Australia
-            </ExternalLink>
-          </Strong>
-          <br />
-          Sydney, New South Wales, Australia
-        </div>
       </BusinessUnits>
 
       <Section>
