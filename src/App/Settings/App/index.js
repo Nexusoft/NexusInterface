@@ -19,7 +19,7 @@ import { legacyMode } from 'consts/misc';
 import { isCoreConnected } from 'selectors';
 import warningIcon from 'icons/warning.svg';
 import {
-  startAutoUpdate,
+  checkForUpdates,
   stopAutoUpdate,
   setAllowPrerelease,
 } from 'lib/updater';
@@ -202,7 +202,7 @@ class SettingsApp extends Component {
       }
     } else {
       updateSettings({ autoUpdate: true });
-      startAutoUpdate();
+      checkForUpdates();
     }
   };
 

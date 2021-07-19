@@ -4,52 +4,52 @@
 import * as TYPE from 'consts/actionTypes';
 
 const initialState = {
-  map: {},
-  loadedAll: false,
+  lastPage: false,
+  status: 'notLoaded', // notLoaded | loading | loaded | error
+  transactions: [],
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case TYPE.LOAD_TRITIUM_TRANSACTIONS:
+    case TYPE.START_FETCHING_TXS:
       return {
         ...state,
-        map:
-          action.payload.list &&
-          action.payload.list.reduce((map, tx) => {
-            map[tx.txid] = tx;
-            return map;
-          }, {}),
-        loadedAll: true,
+        status: 'loading',
       };
 
-    case TYPE.SET_TRANSACTIONS_LOADEDALL:
-      return{
-        ...state,
-        loadedAll: true
-      }
-      
-    case TYPE.ADD_TRITIUM_TRANSACTIONS:
+    case TYPE.FETCH_TXS_RESULT:
       return {
         ...state,
-        map:
-          action.payload.list &&
-          action.payload.list.reduce(
-            (map, tx) => {
-              map[tx.txid] = tx;
-              return map;
-            },
-            { ...state.map }
-          ),
+        status: 'loaded',
+        transactions: action.payload?.transactions,
+        lastPage: action.payload?.lastPage,
+      };
+
+    case TYPE.FETCH_TXS_ERROR:
+      return {
+        ...state,
+        status: 'error',
       };
 
     case TYPE.UPDATE_TRITIUM_TRANSACTION:
-      return {
-        ...state,
-        map: {
-          ...state.map,
-          [action.payload.txid]: action.payload,
-        },
-      };
+      if (status === 'loaded') {
+        return {
+          ...state,
+          transactions: [action.payload, ...state.transactions],
+        };
+      } else {
+        return state;
+      }
+
+    case TYPE.ADD_TRITIUM_TRANSACTIONS:
+      if (status === 'loaded') {
+        return {
+          ...state,
+          transactions: [...action.payload, ...state.transactions],
+        };
+      } else {
+        return state;
+      }
 
     case TYPE.DISCONNECT_CORE:
     case TYPE.SWITCH_USER:

@@ -5,22 +5,23 @@ import fs from 'fs';
 import path from 'path';
 import http from 'http';
 import moveFile from 'move-file';
+import unzip from 'unzip-stream';
 
 // Internal
 import { walletDataDir } from 'consts/paths';
 import { backupWallet } from 'lib/wallet';
 import rpc from 'lib/rpc';
-import store from 'store';
+import store, { observeStore } from 'store';
 import { startCore, stopCore } from 'lib/core';
 import { showNotification, openModal } from 'lib/ui';
 import { confirm, openErrorDialog, openSuccessDialog } from 'lib/dialog';
-import extractTarball from 'utils/promisified/extractTarball';
-import sleep from 'utils/promisified/sleep';
 import deleteDirectory from 'utils/promisified/deleteDirectory';
 import { throttled } from 'utils/universal';
 import * as TYPE from 'consts/actionTypes';
 import { updateSettings } from 'lib/settings';
 import BootstrapModal from 'components/BootstrapModal';
+import { legacyMode } from 'consts/misc';
+import { isSynchronized } from 'selectors';
 
 __ = __context('Bootstrap');
 
@@ -32,7 +33,7 @@ const getExtractDest = () => {
   } = store.getState();
   return path.join(coreDataDir, 'recent');
 };
-const recentDbUrlTritium = 'http://bootstrap.nexus.io/tritium.tar.gz'; // Tritium Bootstrap URL
+const recentDbUrlTritium = 'http://bootstrap.nexus.io/tritium.zip'; // Tritium Bootstrap URL
 
 let aborting = false;
 let downloadRequest = null;
@@ -62,7 +63,6 @@ async function startBootstrap() {
       settings: { backupDirectory },
       core: { systemInfo },
     } = store.getState();
-    const recentDbUrl = recentDbUrlTritium;
 
     aborting = false;
 
@@ -76,15 +76,14 @@ async function startBootstrap() {
     }
 
     // Remove the old file if exists
-    if (fs.existsSync(fileLocation)) {
-      fs.unlinkSync(fileLocation, (err) => {
-        if (err) throw err;
-      });
-    }
+    setStatus('preparing');
     await cleanUp();
 
-    setStatus('stopping_core');
-    await stopCore();
+    // Stop core if it's synchronizing to avoid downloading the db twice at the same time
+    if (!isSynchronized(store.getState())) {
+      setStatus('stopping_core');
+      await stopCore();
+    }
 
     setStatus('downloading', {});
     // A flag to prevent bootstrap status being set back to downloading
@@ -93,19 +92,15 @@ async function startBootstrap() {
     const downloadProgress = throttled((details) => {
       if (downloading) setStatus('downloading', details);
     }, 1000);
-    await downloadDb(recentDbUrl, downloadProgress);
+    await downloadDb(downloadProgress);
     downloading = false;
     if (aborting) {
       bootstrapEvents.emit('abort');
       return false;
     }
 
-    setStatus('extracting');
-    await extractDb();
-    if (aborting) {
-      bootstrapEvents.emit('abort');
-      return false;
-    }
+    setStatus('stopping_core');
+    await stopCore();
 
     setStatus('moving_db');
     await moveExtractedContent();
@@ -114,13 +109,19 @@ async function startBootstrap() {
       return false;
     }
 
-    await stopCore();
     setStatus('restarting_core');
     await startCore();
 
-    setStatus('rescanning');
-    await rescan();
+    if (await shouldRescan()) {
+      setStatus('rescanning');
+      try {
+        await rpc('rescan', []);
+      } catch (err) {
+        console.error(err);
+      }
+    }
 
+    setStatus('cleaning_up');
     cleanUp();
 
     bootstrapEvents.emit('success');
@@ -131,17 +132,8 @@ async function startBootstrap() {
     const lastStep = store.getState().bootstrap.step;
     aborting = false;
     setStatus('idle');
-    if (
-      [
-        'stopping_core',
-        'downloading',
-        'extracting',
-        'moving_db',
-        'restarting_core',
-      ].includes(lastStep)
-    ) {
-      await startCore();
-    }
+    // Ensure to start core after completion
+    await startCore();
   }
 }
 
@@ -152,39 +144,39 @@ async function startBootstrap() {
  * @param {*} downloadProgress
  * @returns
  */
-async function downloadDb(recentDbUrl, downloadProgress) {
-  const promise = new Promise((resolve, reject) => {
-    let timerId;
+function downloadDb(downloadProgress) {
+  const destination = getExtractDest();
+  let timerId;
+  return new Promise((resolve, reject) => {
     downloadRequest = http
-      .get(recentDbUrl)
-      .setTimeout(60000)
+      .get(recentDbUrlTritium)
+      .setTimeout(180000)
       .on('response', (response) => {
         const totalSize = parseInt(response.headers['content-length'], 10);
+
         let downloaded = 0;
 
-        response.on('data', (chunk) => {
-          downloaded += chunk.length;
-          timerId = downloadProgress({ downloaded, totalSize });
-        });
-
-        response.pipe(
-          fs
-            .createWriteStream(fileLocation, { autoClose: true })
-            .on('error', (e) => {
-              reject(e);
-            })
-            .on('close', () => {
-              resolve();
-            })
-        );
+        response
+          .on('data', (chunk) => {
+            downloaded += chunk.length;
+            timerId = downloadProgress({ downloaded, totalSize });
+          })
+          .on('close', () => {
+            resolve(destination);
+          })
+          .on('error', (err) => {
+            reject(err);
+          })
+          .pipe(unzip.Extract({ path: destination }));
       })
-      .on('error', (e) => reject(e))
+      .on('error', (err) => {
+        reject(err);
+      })
       .on('timeout', function () {
         if (downloadRequest) downloadRequest.abort();
-        reject(new Error('Request timeout!'));
+        reject(new Error('Request timeout! ' + Date.now()));
       })
       .on('abort', function () {
-        clearTimeout(timerId);
         if (fs.existsSync(fileLocation)) {
           fs.unlink(fileLocation, (err) => {
             if (err) console.error(err);
@@ -192,23 +184,11 @@ async function downloadDb(recentDbUrl, downloadProgress) {
         }
         resolve();
       });
-  });
-
-  // Ensure downloadRequest is always cleaned up
-  try {
-    return await promise;
-  } finally {
+  }).finally(() => {
+    // Ensure downloadRequest is always cleaned up
     downloadRequest = null;
-  }
-}
-
-/**
- * Extract the Database
- *
- * @returns
- */
-function extractDb() {
-  return extractTarball(fileLocation, getExtractDest());
+    clearTimeout(timerId);
+  });
 }
 
 /**
@@ -261,27 +241,36 @@ async function moveExtractedContent() {
   }
 }
 
-/**
- * Rescan wallet
- *
- * @returns
- */
-async function rescan() {
-  let count = 1;
-  // Sometimes the core RPC server is not yet ready after restart, so rescan may fail
-  // Retry up to 5 times in 5 seconds
-  while (count <= 5) {
-    if (store.getState().core.systemInfo?.legacy_unsupported) break;
-    try {
-      await rpc('rescan', []);
-      return;
-    } catch (err) {
-      console.error('Rescan failed', err);
-      count++;
-      if (count < 5) await sleep(1000);
-      else throw err;
+function shouldRescan() {
+  return new Promise((resolve) => {
+    if (legacyMode) return true;
+
+    const {
+      core: { systemInfo },
+    } = store.getState();
+
+    if (systemInfo) {
+      resolve(!systemInfo.legacy_unsupported);
+    } else {
+      // Core might not be ready right away. In that case,
+      // wait until systemInfo is available
+      const unobserve = observeStore(
+        (state) => state.core.systemInfo,
+        (systemInfo) => {
+          if (systemInfo) {
+            unobserve();
+            resolve(!systemInfo.legacy_unsupported);
+            clearTimeout(timeoutId);
+          }
+        }
+      );
+      // Wait at most 5s
+      const timeoutId = setTimeout(() => {
+        unobserve();
+        resolve(false);
+      }, 5000);
     }
-  }
+  });
 }
 
 /**

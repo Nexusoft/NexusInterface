@@ -1,5 +1,5 @@
-import { createRef, Component } from 'react';
-import { connect } from 'react-redux';
+import { createRef, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import GA from 'lib/googleAnalytics';
 import styled from '@emotion/styled';
 
@@ -9,11 +9,12 @@ import Button from 'components/Button';
 import TextField from 'components/TextField';
 import RequireLoggedIn from 'components/RequireLoggedIn';
 import Spinner from 'components/Spinner';
+import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
-import { fetchAllTransactions } from 'lib/tritiumTransactions';
+import { loadTransactions, updateFilter } from 'lib/tritiumTransactions';
 import { observeStore } from 'store';
-import { goToTxsPage } from 'lib/ui';
 import transactionIcon from 'icons/transaction.svg';
+import warningIcon from 'icons/warning.svg';
 
 import {
   getTransactionsList,
@@ -77,38 +78,51 @@ const TransactionLoadingWarningSpinner = styled(Spinner)(({ theme }) => ({
   marginLeft: '1em',
 }));
 
-// React-Redux mandatory methods
-const mapStateToProps = (state) => {
-  const {
-    user: {
-      transactions: { map, loadedAll },
-    },
-    ui: {
-      transactionsTritium: {
-        page,
-        addressQuery,
-        operation,
-        nameQuery,
-        timeSpan,
-      },
-    },
-  } = state;
-  const transactionList = getTransactionsList(map);
-  const filteredTransactions = getFilteredTransactions(
-    transactionList,
-    nameQuery,
-    addressQuery,
-    operation,
-    timeSpan
-  );
-  return {
-    transactions: paginateTransactions(filteredTransactions, page),
-    loadedAll,
-    loadedSome: !!transactionList.length,
-    page,
-    totalPages: Math.ceil(filteredTransactions.length / txPerPage),
-  };
-};
+const ErrorMessage = styled.div(({ theme }) => ({
+  textAlign: 'center',
+  padding: '30px 0',
+  color: theme.danger,
+}));
+
+// listRef = createRef();
+
+// state = {
+//   // Whether transaction list is having a scrollbar
+//   hasScroll: false,
+// };
+
+// /**
+//    * Component Mount Callback
+//    *
+//    * @memberof TransactionsTritium
+//    */
+//  componentDidMount() {
+
+//   this.checkScrollbar();
+// }
+
+// componentDidUpdate(prevProps) {
+//   if (prevProps.transactions !== this.props.transaction) {
+//     this.checkScrollbar();
+//   }
+// }
+
+// // When transactions list has a scrollbar, the alignment of elements
+// // will be affected, so set a state to adjust the paddings accordingly
+// checkScrollbar = () => {
+//   const listEl = this.listRef.current;
+//   if (listEl) {
+//     // If transactions list has a scrollbar
+//     if (listEl.clientHeight < listEl.scrollHeight && !this.state.hasScroll) {
+//       this.setState({ hasScroll: true });
+//     }
+//     if (listEl.clientHeight >= listEl.scrollHeight && this.state.hasScroll) {
+//       this.setState({ hasScroll: false });
+//     }
+//   }
+// };
+
+const totalPages = 10;
 
 /**
  * TransactionsTritium Page
@@ -116,170 +130,112 @@ const mapStateToProps = (state) => {
  * @class TransactionsTritium
  * @extends {Component}
  */
-class TransactionsTritium extends Component {
-  listRef = createRef();
+export default function TransactionsTritium() {
+  const { status, transactions, lastPage } = useSelector(
+    (state) => state.user.transactions
+  );
+  const { page } = useSelector((state) => state.ui.transactionsFilter);
+  const genesis = useSelector((state) => state.user.status?.genesis);
 
-  state = {
-    // Whether transaction list is having a scrollbar
-    hasScroll: false,
-  };
-
-  /**
-   * Component Mount Callback
-   *
-   * @memberof TransactionsTritium
-   */
-  componentDidMount() {
+  useEffect(() => {
     GA.SendScreen('TransactionsTritium');
-    if (!this.props.loadedAll) {
-      if (this.props.loggedIn) {
-        fetchAllTransactions();
-      } else {
-        this.unobserve = observeStore(
-          (state) => state.user.status,
-          (status, oldStatus) => {
-            if (
-              (!oldStatus && status) ||
-              status?.genesis !== oldStatus?.genesis
-            ) {
-              fetchAllTransactions();
-            }
-          }
-        );
-      }
+  }, []);
+  // Reload transactions when user genesis changes, such as when user
+  // is logged in or switched to another user
+  useEffect(() => {
+    if (genesis && (status === 'notLoaded' || status === 'error')) {
+      loadTransactions();
     }
+  }, [genesis]);
 
-    this.checkScrollbar();
-  }
-
-  componentWillUnmount() {
-    if (this.unobserve) {
-      this.unobserve();
-    }
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.transactions !== this.props.transaction) {
-      this.checkScrollbar();
-    }
-  }
-
-  // When transactions list has a scrollbar, the alignment of elements
-  // will be affected, so set a state to adjust the paddings accordingly
-  checkScrollbar = () => {
-    const listEl = this.listRef.current;
-    if (listEl) {
-      // If transactions list has a scrollbar
-      if (listEl.clientHeight < listEl.scrollHeight && !this.state.hasScroll) {
-        this.setState({ hasScroll: true });
-      }
-      if (listEl.clientHeight >= listEl.scrollHeight && this.state.hasScroll) {
-        this.setState({ hasScroll: false });
-      }
-    }
-  };
-
-  /**
-   * React Render
-   *
-   * @returns JSX for Element
-   * @memberof Transactions
-   */
-  render() {
-    const {
-      loadedAll,
-      loadedSome,
-      transactions,
-      page,
-      totalPages,
-    } = this.props;
-    return (
-      <Panel icon={transactionIcon} title={__('Transactions')}>
-        <RequireLoggedIn>
-          {!loadedSome ? (
-            <WaitingMessage>{__('Loading transactions...')}</WaitingMessage>
-          ) : (
-            <PageLayout>
-              <Balances />
-              <Filters morePadding={this.state.hasScroll} />
-              <TransactionsList ref={this.listRef}>
-                <Container>
-                  {transactions &&
-                    transactions.map((tx) => (
-                      <Transaction key={tx.txid} transaction={tx} />
-                    ))}
-                </Container>
-              </TransactionsList>
-              <Pagination morePadding={this.state.hasScroll}>
-                <Container className="flex center space-between">
-                  <PaginationButton
-                    skin="filled-inverted"
-                    disabled={page <= 1}
-                    onClick={
-                      page > 1
-                        ? () => {
-                            goToTxsPage(page - 1);
-                          }
-                        : undefined
-                    }
-                  >
-                    &lt; {__('Previous')}
-                  </PaginationButton>
-                  <div className="flex center relative">
-                    {__(
-                      'Page <page></page> of %{total}',
-                      {
-                        total: totalPages,
-                      },
-                      {
-                        page: () => (
-                          <>
-                            &nbsp;
-                            <PageInput
-                              type="number"
-                              min={1}
-                              max={totalPages}
-                              value={page}
-                              onChange={(e) => {
-                                goToTxsPage(e.target.value);
-                              }}
-                            />
-                            &nbsp;
-                          </>
-                        ),
+  return (
+    <Panel icon={transactionIcon} title={__('Transactions')}>
+      <RequireLoggedIn>
+        <PageLayout>
+          <Balances />
+          <Filters /> {/*morePadding={this.state.hasScroll} */}
+          <TransactionsList>
+            {' '}
+            {/*ref={this.listRef} */}
+            {status === 'loading' && (
+              <WaitingMessage>{__('Loading transactions...')}</WaitingMessage>
+            )}
+            {status === 'error' && (
+              <ErrorMessage>
+                <div className="text-center">
+                  <Icon icon={warningIcon} size={32} />
+                </div>
+                <div className="mt0_4">{__('Failed to load transactions')}</div>
+              </ErrorMessage>
+            )}
+            {status === 'loaded' && (
+              <Container>
+                {transactions &&
+                  transactions.map((tx) => (
+                    <Transaction key={tx.txid} transaction={tx} />
+                  ))}
+              </Container>
+            )}
+          </TransactionsList>
+          <Pagination>
+            {' '}
+            {/*morePadding={this.state.hasScroll}*/}
+            <Container className="flex center space-between">
+              <PaginationButton
+                skin="filled-inverted"
+                disabled={page <= 1}
+                onClick={
+                  page > 1
+                    ? () => {
+                        updateFilter({ page: page - 1 });
                       }
-                    )}
-                    {!loadedAll ? (
-                      <Tooltip.Trigger
-                        position="top"
-                        tooltip={__('Loading transactions...')}
-                      >
-                        <TransactionLoadingWarningSpinner />
-                      </Tooltip.Trigger>
-                    ) : null}
-                  </div>
-                  <PaginationButton
-                    skin="filled-inverted"
-                    disabled={page >= totalPages}
-                    onClick={
-                      page < totalPages
-                        ? () => {
-                            goToTxsPage(page + 1);
-                          }
-                        : undefined
-                    }
-                  >
-                    {__('Next')} &gt;
-                  </PaginationButton>
-                </Container>
-              </Pagination>
-            </PageLayout>
-          )}
-        </RequireLoggedIn>
-      </Panel>
-    );
-  }
+                    : undefined
+                }
+              >
+                &lt; {__('Previous')}
+              </PaginationButton>
+              <div className="flex center relative">
+                {__(
+                  'Page <page></page> of %{total}',
+                  {
+                    total: totalPages,
+                  },
+                  {
+                    page: () => (
+                      <>
+                        &nbsp;
+                        <PageInput
+                          type="number"
+                          min={1}
+                          max={totalPages}
+                          value={page}
+                          onChange={(e) => {
+                            updateFilter({ page: e.target.value });
+                          }}
+                        />
+                        &nbsp;
+                      </>
+                    ),
+                  }
+                )}
+              </div>
+              <PaginationButton
+                skin="filled-inverted"
+                disabled={page >= totalPages}
+                onClick={
+                  page < totalPages
+                    ? () => {
+                        updateFilter({ page: page + 1 });
+                      }
+                    : undefined
+                }
+              >
+                {__('Next')} &gt;
+              </PaginationButton>
+            </Container>
+          </Pagination>
+        </PageLayout>
+      </RequireLoggedIn>
+    </Panel>
+  );
 }
-
-// Mandatory React-Redux method
-export default connect(mapStateToProps)(TransactionsTritium);

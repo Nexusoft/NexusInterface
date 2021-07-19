@@ -19,7 +19,7 @@ import {
   executeCommand,
   printCommandOutput,
   printCommandError,
-  resetConsoleOutput,
+  resetConsole,
 } from 'lib/ui';
 
 __ = __context('Console.Console');
@@ -313,7 +313,7 @@ class TerminalConsole extends Component {
                           <span style={{ color: '#0ca4fb' }}>Nexus-Core</span>
                           <span style={{ color: '#00d850' }}>$ </span>
                           {content}
-                          <span style={{ color: '#0ca4fb' }}> ></span>
+                          <span style={{ color: '#0ca4fb' }}> &gt;</span>
                         </span>
                       </div>
                     );
@@ -332,7 +332,7 @@ class TerminalConsole extends Component {
             <Button
               skin="filled-inverted"
               grouped="bottom"
-              onClick={resetConsoleOutput}
+              onClick={resetConsole}
             >
               {__('Clear console')}
             </Button>
