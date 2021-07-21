@@ -19,7 +19,7 @@ import {
   executeCommand,
   printCommandOutput,
   printCommandError,
-  resetConsoleOutput,
+  resetConsole,
 } from 'lib/ui';
 
 __ = __context('Console.Console');
@@ -332,7 +332,7 @@ class TerminalConsole extends Component {
             <Button
               skin="filled-inverted"
               grouped="bottom"
-              onClick={resetConsoleOutput}
+              onClick={resetConsole}
             >
               {__('Clear console')}
             </Button>
