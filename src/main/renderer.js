@@ -21,8 +21,14 @@ app.allowRendererProcessReuse = false;
 function installExtensions() {
   const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
   return Promise.all([
-    devToolsInstall(REACT_DEVELOPER_TOOLS, forceDownload),
-    devToolsInstall(REDUX_DEVTOOLS, forceDownload),
+    devToolsInstall(REACT_DEVELOPER_TOOLS, {
+      loadExtensionOptions: { allowFileAccess: true },
+      forceDownload: forceDownload,
+    }),
+    devToolsInstall(REDUX_DEVTOOLS, {
+      loadExtensionOptions: { allowFileAccess: true },
+      forceDownload: forceDownload,
+    }),
   ]);
 }
 
