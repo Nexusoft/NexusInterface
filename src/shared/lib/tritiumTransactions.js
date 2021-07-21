@@ -239,7 +239,7 @@ export async function loadTransactions() {
       type: TYPE.FETCH_TXS_RESULT,
       payload: {
         transactions,
-        lastPage: transactions.length < limit,
+        lastPage: transactions.length < txCountPerPage,
       },
     });
     watchIfUnconfirmed(transactions);
