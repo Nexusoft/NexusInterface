@@ -31,14 +31,14 @@ const selectTokenOptions = memoize((ownedTokens, accounts) => {
   };
   if (ownedTokens) {
     for (const token of ownedTokens) {
-      if (!tokensMap[token.address]) {
+      if (token.address && !tokensMap[token.address]) {
         tokensMap[token.address] = token;
       }
     }
   }
   if (accounts) {
     for (const account of accounts) {
-      if (!tokensMap[account.token]) {
+      if (account.token && !tokensMap[account.token]) {
         tokensMap[account.token] = {
           address: account.token,
           name: account.token_name,
