@@ -136,6 +136,7 @@ export default function Filters({ morePadding }) {
             },
           }}
           suggestions={tokenOptions}
+          filterSuggestions={(suggestions) => suggestions}
           onSelect={(value) => {
             updateTokenQuery(value);
           }}
