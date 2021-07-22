@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 
@@ -7,6 +8,7 @@ import FormField from 'components/FormField';
 import AutoSuggest from 'components/AutoSuggest';
 import TokenName from 'components/TokenName';
 import { updateFilter } from 'lib/tritiumTransactions';
+import { loadOwnedTokens, loadAccounts } from 'lib/user';
 import { debounced } from 'utils/universal';
 
 __ = __context('Transactions');
@@ -112,6 +114,10 @@ export default function Filters({ morePadding }) {
   const tokenOptions = useSelector(({ user: { tokens, accounts } }) =>
     selectTokenOptions(tokens, accounts)
   );
+  useEffect(() => {
+    loadOwnedTokens();
+    loadAccounts();
+  }, []);
   return (
     <FiltersWrapper morePadding={morePadding}>
       <FormField connectLabel label={__('Account')}>
