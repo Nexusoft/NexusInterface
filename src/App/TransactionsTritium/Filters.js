@@ -4,6 +4,8 @@ import styled from '@emotion/styled';
 import Select from 'components/Select';
 import TextField from 'components/TextField';
 import FormField from 'components/FormField';
+import AutoSuggest from 'components/AutoSuggest';
+import TokenName from 'components/TokenName';
 import { updateFilter } from 'lib/tritiumTransactions';
 import { debounced } from 'utils/universal';
 
@@ -17,6 +19,31 @@ const updateTokenQuery = debounced(
   (tokenQuery) => updateFilter({ tokenQuery }),
   1000
 );
+
+const selectTokenOptions = memoize((ownedTokens, accounts) => {
+  const tokensMap = {};
+  if (ownedTokens) {
+    for (const token of ownedTokens) {
+      if (!tokensMap[token.address]) {
+        tokensMap[token.address] = token;
+      }
+    }
+  }
+  if (accounts) {
+    for (const account of accounts) {
+      if (!tokensMap[account.token]) {
+        tokensMap[account.token] = {
+          address: account.token,
+          name: account.token_name,
+        };
+      }
+    }
+  }
+  return Object.values(tokensMap).map((token) => ({
+    value: token.address,
+    display: TokenName.from({ token }),
+  }));
+});
 
 const operations = [
   'WRITE',
@@ -82,6 +109,9 @@ export default function Filters({ morePadding }) {
   const { accountQuery, tokenQuery, operation, timeSpan } = useSelector(
     (state) => state.ui.transactionsFilter
   );
+  const tokenOptions = useSelector(({ user: { tokens, accounts } }) =>
+    selectTokenOptions(tokens, accounts)
+  );
   return (
     <FiltersWrapper morePadding={morePadding}>
       <FormField connectLabel label={__('Account')}>
@@ -96,12 +126,18 @@ export default function Filters({ morePadding }) {
       </FormField>
 
       <FormField connectLabel label={__('Token')}>
-        <TextField
-          type="search"
-          placeholder="Token name/address"
-          value={tokenQuery}
-          onChange={(evt) => {
-            updateTokenQuery(evt.target.value);
+        <AutoSuggest
+          inputComponent={TextField}
+          inputProps={{
+            placeholder: 'Token name/address',
+            value: tokenQuery,
+            onChange: (evt) => {
+              updateTokenQuery(evt.target.value);
+            },
+          }}
+          suggestions={tokenOptions}
+          onSelect={(value) => {
+            updateTokenQuery(value);
           }}
         />
       </FormField>
