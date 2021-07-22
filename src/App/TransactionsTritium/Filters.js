@@ -23,7 +23,12 @@ const updateTokenQuery = debounced(
 );
 
 const selectTokenOptions = memoize((ownedTokens, accounts) => {
-  const tokensMap = {};
+  const tokensMap = {
+    0: {
+      address: '0',
+      name: 'NXS',
+    },
+  };
   if (ownedTokens) {
     for (const token of ownedTokens) {
       if (!tokensMap[token.address]) {
