@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 
@@ -16,11 +16,11 @@ __ = __context('Transactions');
 
 const updateAccountQuery = debounced(
   (accountQuery) => updateFilter({ accountQuery }),
-  1000
+  500
 );
 const updateTokenQuery = debounced(
   (tokenQuery) => updateFilter({ tokenQuery }),
-  1000
+  500
 );
 
 const selectTokenOptions = memoize((ownedTokens, accounts) => {
@@ -120,6 +120,8 @@ export default function Filters({ morePadding }) {
   const tokenOptions = useSelector(({ user: { tokens, accounts } }) =>
     selectTokenOptions(tokens, accounts)
   );
+  const [accountInput, setAccountInput] = useState(accountQuery);
+  const [tokenInput, setTokenInput] = useState(tokenQuery);
   useEffect(() => {
     loadOwnedTokens();
     loadAccounts();
@@ -130,8 +132,9 @@ export default function Filters({ morePadding }) {
         <TextField
           type="search"
           placeholder={__('Account name/address')}
-          value={accountQuery}
+          value={accountInput}
           onChange={(evt) => {
+            setAccountInput(evt.target.value);
             updateAccountQuery(evt.target.value);
           }}
         />
@@ -141,15 +144,18 @@ export default function Filters({ morePadding }) {
         <AutoSuggest
           inputComponent={TextField}
           inputProps={{
+            type: 'search',
             placeholder: 'Token name/address',
-            value: tokenQuery,
+            value: tokenInput,
             onChange: (evt) => {
+              setTokenInput(evt.target.value);
               updateTokenQuery(evt.target.value);
             },
           }}
           suggestions={tokenOptions}
           filterSuggestions={(suggestions) => suggestions}
           onSelect={(value) => {
+            setTokenInput(value);
             updateTokenQuery(value);
           }}
         />
