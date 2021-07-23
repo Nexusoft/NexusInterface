@@ -1,4 +1,4 @@
-import { createRef, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import GA from 'lib/googleAnalytics';
 import styled from '@emotion/styled';

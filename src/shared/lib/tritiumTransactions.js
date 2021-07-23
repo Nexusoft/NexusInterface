@@ -7,9 +7,8 @@ import { formatNumber } from 'lib/intl';
 import { showNotification } from 'lib/ui';
 import { openErrorDialog } from 'lib/dialog';
 import TokenName from 'components/TokenName';
-import { legacyMode, addressRegex } from 'consts/misc';
+import { legacyMode } from 'consts/misc';
 import { isLoggedIn } from 'selectors';
-import listAll from 'utils/listAll';
 
 const isConfirmed = (tx) => !!tx.confirmations;
 
@@ -67,6 +66,14 @@ function unwatchTransaction(txid) {
     unsubscribe?.();
     unsubscribe = null;
   }
+}
+
+function watchIfUnconfirmed(transactions) {
+  transactions?.forEach((tx) => {
+    if (!isConfirmed(tx)) {
+      watchTransaction(tx.txid);
+    }
+  });
 }
 
 const getBalanceChanges = (tx) =>
@@ -269,20 +276,6 @@ export async function updatePage(page) {
   return await loadTransactions();
 }
 
-export const addTritiumTransactions = (newTransactions) => {
-  store.dispatch({
-    type: TYPE.ADD_TRITIUM_TRANSACTIONS,
-    payload: newTransactions,
-  });
-};
-
-export const updateTritiumTransaction = (tx) => {
-  store.dispatch({
-    type: TYPE.UPDATE_TRITIUM_TRANSACTION,
-    payload: tx,
-  });
-};
-
 export const getDeltaSign = (contract) => {
   switch (contract.OP) {
     case 'CREDIT':
@@ -304,61 +297,17 @@ export const getDeltaSign = (contract) => {
   }
 };
 
-function watchIfUnconfirmed(transactions) {
-  transactions?.forEach((tx) => {
-    if (!isConfirmed(tx)) {
-      watchTransaction(tx.txid);
-    }
-  });
-}
-
-export async function fetchAllTransactions() {
-  const transactions = await listAll(
-    'users/list/transactions',
-    {
-      verbose: 'summary',
-    },
-    { limit: 10, callback: addAndWatch }
-  );
-  store.dispatch({ type: TYPE.SET_TRANSACTIONS_LOADEDALL });
-}
-
 export async function fetchTransaction(txid) {
   const tx = await callApi('ledger/get/transaction', {
     txid,
     verbose: 'summary',
   });
-  updateTritiumTransaction(tx);
+  store.dispatch({
+    type: TYPE.UPDATE_TRITIUM_TRANSACTION,
+    payload: tx,
+  });
   return tx;
 }
-
-export const setTxsTimeFilter = (timeSpan) => {
-  store.dispatch({
-    type: TYPE.SET_TXS_TIME_FILTER,
-    payload: timeSpan,
-  });
-};
-
-export const setTxsNameQuery = (accountName) => {
-  store.dispatch({
-    type: TYPE.SET_TXS_NAME_QUERY,
-    payload: accountName,
-  });
-};
-
-export const setTxsOperationFilter = (operation) => {
-  store.dispatch({
-    type: TYPE.SET_TXS_OP_FILTER,
-    payload: operation,
-  });
-};
-
-export const goToTxsPage = (page) => {
-  store.dispatch({
-    type: TYPE.SET_TXS_PAGE,
-    payload: page < 1 ? 1 : page,
-  });
-};
 
 export function prepareTransactions() {
   if (!legacyMode) {
@@ -400,7 +349,10 @@ export function prepareTransactions() {
 
           const filteredTransactions = filterTransactions(transactions);
           if (filteredTransactions.length) {
-            addTritiumTransactions(filteredTransactions);
+            store.dispatch({
+              type: TYPE.ADD_TRITIUM_TRANSACTIONS,
+              payload: filteredTransactions,
+            });
             watchIfUnconfirmed(filteredTransactions);
           }
         }
