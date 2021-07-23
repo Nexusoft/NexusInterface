@@ -10,6 +10,7 @@ import TokenName from 'components/TokenName';
 import { updateFilter } from 'lib/tritiumTransactions';
 import { loadOwnedTokens, loadAccounts } from 'lib/user';
 import { debounced } from 'utils/universal';
+import memoize from 'utils/memoize';
 
 __ = __context('Transactions');
 
