@@ -256,7 +256,15 @@ export async function loadTransactions() {
 export async function updateFilter(updates) {
   store.dispatch({
     type: TYPE.UPDATE_TRANSACTIONS_FILTER,
-    payload: updates,
+    payload: { ...updates, page: 1 },
+  });
+  return await loadTransactions();
+}
+
+export async function updatePage(page) {
+  store.dispatch({
+    type: TYPE.UPDATE_TRANSACTIONS_FILTER,
+    payload: { page },
   });
   return await loadTransactions();
 }

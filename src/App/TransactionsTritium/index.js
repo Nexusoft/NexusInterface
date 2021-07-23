@@ -10,18 +10,10 @@ import TextField from 'components/TextField';
 import RequireLoggedIn from 'components/RequireLoggedIn';
 import Spinner from 'components/Spinner';
 import Icon from 'components/Icon';
-import Tooltip from 'components/Tooltip';
-import { loadTransactions, updateFilter } from 'lib/tritiumTransactions';
-import { observeStore } from 'store';
+import { loadTransactions, updatePage } from 'lib/tritiumTransactions';
 import transactionIcon from 'icons/transaction.svg';
 import warningIcon from 'icons/warning.svg';
 
-import {
-  getTransactionsList,
-  getFilteredTransactions,
-  paginateTransactions,
-  txPerPage,
-} from './selectors';
 import Transaction from './Transaction';
 import Balances from './Balances';
 import Filters from './Filters';
@@ -187,7 +179,7 @@ export default function TransactionsTritium() {
                 onClick={
                   page > 1
                     ? () => {
-                        updateFilter({ page: page - 1 });
+                        updatePage(page - 1);
                       }
                     : undefined
                 }
@@ -210,7 +202,7 @@ export default function TransactionsTritium() {
                           max={totalPages}
                           value={page}
                           onChange={(e) => {
-                            updateFilter({ page: e.target.value });
+                            updatePage(e.target.value);
                           }}
                         />
                         &nbsp;
@@ -225,7 +217,7 @@ export default function TransactionsTritium() {
                 onClick={
                   page < totalPages
                     ? () => {
-                        updateFilter({ page: page + 1 });
+                        updatePage(page + 1);
                       }
                     : undefined
                 }
