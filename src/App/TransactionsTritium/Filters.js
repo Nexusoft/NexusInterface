@@ -53,7 +53,7 @@ const selectAccountOptions = memoize((accounts, addressBook) => {
   }
   return Object.values(accountsMap).map(
     ({ type, address, account, name, label }) => ({
-      value: address,
+      value: type === 'account' ? account.name : address,
       display:
         type === 'account' ? (
           <span>
