@@ -23,6 +23,53 @@ const updateTokenQuery = debounced(
   500
 );
 
+const selectAccountOptions = memoize((accounts, addressBook) => {
+  const accountsMap = {};
+  if (accounts) {
+    for (const account of accounts) {
+      const { address } = account;
+      if (address && !accountsMap[address]) {
+        accountsMap[address] = {
+          type: 'account',
+          address,
+          account,
+        };
+      }
+    }
+  }
+  if (addressBook) {
+    for (const contact of Object.values(addressBook)) {
+      for (const { address, isMine, label } of contact.addresses) {
+        if (!isMine && address && !accountsMap[address]) {
+          accountsMap[address] = {
+            type: 'contact',
+            address,
+            name: contact.name,
+            label,
+          };
+        }
+      }
+    }
+  }
+  return Object.values(accountsMap).map(
+    ({ type, address, account, name, label }) => ({
+      value: address,
+      display:
+        type === 'account' ? (
+          <span>
+            {account.name || <em>{__('Unnamed account')}</em>}{' '}
+            <span className="dim">{address}</span>
+          </span>
+        ) : (
+          <span>
+            {name}
+            {label ? ' - ' + label : ''} <span className="dim">{address}</span>
+          </span>
+        ),
+    })
+  );
+});
+
 const selectTokenOptions = memoize((ownedTokens, accounts) => {
   const tokensMap = {
     0: {
@@ -120,6 +167,9 @@ export default function Filters({ morePadding }) {
   const tokenOptions = useSelector(({ user: { tokens, accounts } }) =>
     selectTokenOptions(tokens, accounts)
   );
+  const accountOptions = useSelector(({ addressBook, user: { accounts } }) =>
+    selectAccountOptions(accounts, addressBook)
+  );
   const [accountInput, setAccountInput] = useState(accountQuery);
   const [tokenInput, setTokenInput] = useState(tokenQuery);
   useEffect(() => {
@@ -129,13 +179,22 @@ export default function Filters({ morePadding }) {
   return (
     <FiltersWrapper morePadding={morePadding}>
       <FormField connectLabel label={__('Account')}>
-        <TextField
-          type="search"
-          placeholder={__('Account name/address')}
-          value={accountInput}
-          onChange={(evt) => {
-            setAccountInput(evt.target.value);
-            updateAccountQuery(evt.target.value);
+        <AutoSuggest
+          inputComponent={TextField}
+          inputProps={{
+            type: 'search',
+            placeholder: 'Account name/address',
+            value: accountInput,
+            onChange: (evt) => {
+              setAccountInput(evt.target.value);
+              updateAccountQuery(evt.target.value);
+            },
+          }}
+          suggestions={accountOptions}
+          filterSuggestions={(suggestions) => suggestions}
+          onSelect={(value) => {
+            setAccountInput(value);
+            updateAccountQuery(value);
           }}
         />
       </FormField>
