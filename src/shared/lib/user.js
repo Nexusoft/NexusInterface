@@ -129,7 +129,7 @@ export const switchUser = async (session) => {
 };
 
 export const loadOwnedTokens = async () => {
-  const result = await listAll('users/list/tokens');
+  const result = await listAll('finance/list/tokens');
   store.dispatch({
     type: TYPE.SET_USER_OWNED_TOKENS,
     payload: result,
@@ -203,7 +203,7 @@ export const loadAccounts = legacyMode
   : // Tritium Mode
     async () => {
       try {
-        const accounts = await callApi('users/list/accounts');
+        const accounts = await callApi('finance/list/accounts');
         store.dispatch({ type: TYPE.SET_TRITIUM_ACCOUNTS, payload: accounts });
 
         // Fetch token decimals for token accounts
@@ -223,7 +223,7 @@ export const loadAccounts = legacyMode
           fetchTokenDecimals(tokenAddresses);
         }
       } catch (err) {
-        console.error('users/list/accounts failed', err);
+        console.error('finance/list/accounts failed', err);
       }
     };
 
@@ -234,28 +234,28 @@ export const updateAccountBalances = async () => {
 
 export const loadNameRecords = async () => {
   try {
-    const nameRecords = await listAll('users/list/names');
+    const nameRecords = await listAll('names/list/names');
     store.dispatch({ type: TYPE.SET_NAME_RECORDS, payload: nameRecords });
   } catch (err) {
-    console.error('users/list/names failed', err);
+    console.error('names/list/names failed', err);
   }
 };
 
 export const loadNamespaces = async () => {
   try {
-    const namespaces = await listAll('users/list/namespaces');
+    const namespaces = await listAll('names/list/namespaces');
     store.dispatch({ type: TYPE.SET_NAMESPACES, payload: namespaces });
   } catch (err) {
-    console.error('users/list/namespaces failed', err);
+    console.error('names/list/namespaces failed', err);
   }
 };
 
 export const loadAssets = async () => {
   try {
-    const assets = await listAll('users/list/assets');
+    const assets = await listAll('assets/list/assets');
     store.dispatch({ type: TYPE.SET_ASSETS, payload: assets });
   } catch (err) {
-    console.error('users/list/assets failed', err);
+    console.error('assets/list/assets failed', err);
   }
 };
 
