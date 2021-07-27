@@ -70,13 +70,15 @@ const AccountDetailsModal = ({ account, stakeInfo }) => (
               </Button>
             )}
           </InfoField>
+          {account.pending !== undefined && (
           <InfoField ratio={[1, 2]} label={__('Pending balance')}>
             {formatNumber(account.pending, 6)} <TokenName account={account} />
-          </InfoField>
+          </InfoField>)}
+          {account.unconfirmed !== undefined && (
           <InfoField ratio={[1, 2]} label={__('Unconfirmed balance')}>
             {formatNumber(account.unconfirmed, 6)}{' '}
             <TokenName account={account} />
-          </InfoField>
+          </InfoField>)}
           {account.stake !== undefined && (
             <InfoField ratio={[1, 2]} label={__('Stake balance')}>
               {formatNumber(account.stake, 6)} <TokenName account={account} />
