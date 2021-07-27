@@ -50,7 +50,7 @@ export default class AssetHistoryModal extends Component {
   async componentDidMount() {
     const { asset } = this.props;
     try {
-      const events = await callApi('assets/list/asset/history', {
+      const events = await callApi('assets/history/asset', {
         address: asset.address,
       });
       this.setState({ events: events.reverse() });
