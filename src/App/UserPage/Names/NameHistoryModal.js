@@ -50,7 +50,7 @@ export default class NameHistoryModal extends Component {
   async componentDidMount() {
     const { nameRecord } = this.props;
     try {
-      const events = await callApi('names/list/name/history', {
+      const events = await callApi('names/history/name', {
         address: nameRecord.address,
       });
       this.setState({ events: events.reverse() });
