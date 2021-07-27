@@ -6,7 +6,7 @@ import { keyframes } from '@emotion/react';
 
 // Internal
 import { refreshBalances, loadAccounts } from 'lib/user';
-import { getMiningInfo } from 'lib/core';
+import { getLedgerInfo } from 'lib/core';
 import { timing, consts } from 'styles';
 import { observeStore } from 'store';
 
@@ -107,8 +107,8 @@ function useGetBalances() {
 function useGetDifficulty(overviewDisplay) {
   useEffect(() => {
     if (overviewDisplay === 'miner') {
-      getMiningInfo();
-      const intervalID = setInterval(getMiningInfo, 50000);
+      getLedgerInfo();
+      const intervalID = setInterval(getLedgerInfo, 50000);
       return () => {
         clearInterval(intervalID);
       };

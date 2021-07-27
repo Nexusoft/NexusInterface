@@ -4,7 +4,7 @@ const initialState = {};
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case TYPE.SET_MINING_INFO:
+    case TYPE.SET_LEDGER_INFO:
       return action.payload;
 
     case TYPE.DISCONNECT_CORE:
