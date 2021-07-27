@@ -98,7 +98,7 @@ export async function callApi(endpoint, customParams) {
 
   const params = systemInfo?.multiuser
     ? { session, ...customParams }
-    : customParams;
+    : customParams || {};
   const options = {
     method: 'POST',
     path: `/${endpoint}`,
