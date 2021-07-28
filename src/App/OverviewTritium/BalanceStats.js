@@ -62,7 +62,7 @@ function BalanceValue({ children }) {
 export function NXSBalanceStat() {
   const tokenBalances = useSelector(selectTokenBalances);
   const synchronized = useSelector(isSynchronized);
-  const balances = useSelector((state) => state.user.balances).filter(e => e.ticker === 'NXS')[0];
+  const balances = useSelector((state) => state.user.balances)?.filter(e => e.ticker === 'NXS')[0];
   const hideOverviewBalances = useSelector(
     (state) => state.settings.hideOverviewBalances
   );
@@ -109,7 +109,7 @@ export function NXSBalanceStat() {
 
 export function NXSFiatBalanceStat() {
   const fiatCurrency = useSelector((state) => state.settings.fiatCurrency);
-  const balances = useSelector((state) => state.user.balances).filter(e => e.ticker === 'NXS')[0];;
+  const balances = useSelector((state) => state.user.balances)?.filter(e => e.ticker === 'NXS')[0];;
   const price = useSelector((state) => state.market?.price);
 
   return (
@@ -159,7 +159,7 @@ export function FeaturedTokenBalanceStat() {
 }
 
 export function IncomingBalanceStat() {
-  const balances = useSelector((state) => state.user.balances).filter(e => e.ticker === 'NXS')[0];;
+  const balances = useSelector((state) => state.user.balances)?.filter(e => e.ticker === 'NXS')[0];;
   const incoming =
     balances?.unclaimed + balances?.unconfirmed + balances?.immature;
 
