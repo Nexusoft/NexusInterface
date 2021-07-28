@@ -38,7 +38,7 @@ class ContractDetailsModal extends Component {
         <Modal.Body>
           {Object.entries(contract).map(([key, value]) => (
             <InfoField key={key} label={translateKey(key)}>
-              {value}
+              {String(value)}
             </InfoField>
           ))}
           <InfoField label="">
