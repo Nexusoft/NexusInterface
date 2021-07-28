@@ -12,7 +12,6 @@ import { isSynchronized, selectTokenBalances } from 'selectors';
 // Images
 import logoIcon from 'icons/NXS_coin.svg';
 import currencyIcons from 'data/currencyIcons';
-import nxsStakeIcon from 'icons/nxs-staking.svg';
 import warningIcon from 'icons/warning.svg';
 import waitIcon from 'icons/wait.svg';
 
@@ -63,7 +62,7 @@ function BalanceValue({ children }) {
 export function NXSBalanceStat() {
   const tokenBalances = useSelector(selectTokenBalances);
   const synchronized = useSelector(isSynchronized);
-  const balances = useSelector((state) => state.user.balances);
+  const balances = useSelector((state) => state.user.balances).filter(e => e.ticker === 'NXS')[0];
   const hideOverviewBalances = useSelector(
     (state) => state.settings.hideOverviewBalances
   );
@@ -110,7 +109,7 @@ export function NXSBalanceStat() {
 
 export function NXSFiatBalanceStat() {
   const fiatCurrency = useSelector((state) => state.settings.fiatCurrency);
-  const balances = useSelector((state) => state.user.balances);
+  const balances = useSelector((state) => state.user.balances).filter(e => e.ticker === 'NXS')[0];;
   const price = useSelector((state) => state.market?.price);
 
   return (
@@ -160,9 +159,9 @@ export function FeaturedTokenBalanceStat() {
 }
 
 export function IncomingBalanceStat() {
-  const balances = useSelector((state) => state.user.balances);
+  const balances = useSelector((state) => state.user.balances).filter(e => e.ticker === 'NXS')[0];;
   const incoming =
-    balances?.pending + balances?.unconfirmed + balances?.immature;
+    balances?.unclaimed + balances?.unconfirmed + balances?.immature;
 
   return (
     <Stat
@@ -171,7 +170,7 @@ export function IncomingBalanceStat() {
         <>
           <QuestionCircle
             tooltip={__(
-              'This includes your pending balance, unconfirmed balance and immature balance'
+              'This includes your unclaimed balance, unconfirmed balance and immature balance'
             )}
             align="start"
           />{' '}
