@@ -89,7 +89,7 @@ const selectTokenOptions = memoize((ownedTokens, accounts) => {
       if (account.token && !tokensMap[account.token]) {
         tokensMap[account.token] = {
           address: account.token,
-          name: account.token_name,
+          name: account.ticker,
         };
       }
     }
