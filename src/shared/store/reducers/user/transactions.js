@@ -31,15 +31,22 @@ export default (state = initialState, action) => {
         status: 'error',
       };
 
-    case TYPE.UPDATE_TRITIUM_TRANSACTION:
+    case TYPE.UPDATE_TRITIUM_TRANSACTION: {
       if (status === 'loaded') {
-        return {
-          ...state,
-          transactions: [action.payload, ...state.transactions],
-        };
-      } else {
-        return state;
+        const index = state.transactions.findIndex(
+          (tx) => tx.txid === action.payload.txid
+        );
+        if (index >= 0) {
+          const newTransactions = [...state.transactions];
+          newTransactions.splice(index, 1, action.payload);
+          return {
+            ...state,
+            transactions: newTransactions,
+          };
+        }
       }
+      return state;
+    }
 
     case TYPE.ADD_TRITIUM_TRANSACTIONS:
       if (status === 'loaded') {
