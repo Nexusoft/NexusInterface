@@ -50,7 +50,7 @@ export default class NamespaceHistoryModal extends Component {
   async componentDidMount() {
     const { namespace } = this.props;
     try {
-      const events = await callApi('names/list/namespace/history', {
+      const events = await callApi('names/history/namespace', {
         address: namespace.address,
       });
       this.setState({ events: events.reverse() });

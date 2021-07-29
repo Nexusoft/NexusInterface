@@ -24,6 +24,7 @@ export const defaultSettings = {
   // App
   locale: null,
   minimizeOnClose: false,
+  openOnStart: false,
   autoUpdate: true,
   allowPrerelease: false,
   sendUsageData: true,

@@ -194,11 +194,7 @@ class AccountHistoryModal extends Component {
     const { account } = this.props;
     try {
       const transactions = await listAll(
-        account.token === '0'
-          ? // A NXS account
-            'finance/list/account/transactions'
-          : // A token account
-            'tokens/list/account/transactions',
+            'finance/transactions/account',
         { address: account.address, verbose: 'summary' }
       );
 
@@ -275,7 +271,7 @@ class AccountHistoryModal extends Component {
                   )
                 }
               >
-                <div className="flex space-between">
+                <div className="flex space-evenly">
                   <div className="text-center">
                     <div>
                       <strong>{__('Total')}</strong>
@@ -299,6 +295,7 @@ class AccountHistoryModal extends Component {
                         : formatNumber(account.balance, 6)}
                     </div>
                   </div>
+                  {account.pending !== undefined && (
                   <div className="text-center">
                     <div>
                       <strong>{__('Pending')}</strong>
@@ -308,8 +305,9 @@ class AccountHistoryModal extends Component {
                         ? formatCurrency(account.pending * market, fiatCurrency)
                         : formatNumber(account.pending, 6)}
                     </div>
-                  </div>
-                  <div className="text-center">
+                  </div>)}
+                  { account.unconfirmed !== undefined && 
+                  (<div className="text-center">
                     <div>
                       <strong>{__('Unconfirmed')}</strong>
                     </div>
@@ -321,7 +319,7 @@ class AccountHistoryModal extends Component {
                           )
                         : formatNumber(account.unconfirmed, 6)}
                     </div>
-                  </div>
+                  </div>)}
                   {typeof account.stake === 'number' && (
                     <div className="text-center">
                       <div>
