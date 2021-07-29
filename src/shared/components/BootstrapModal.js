@@ -97,6 +97,7 @@ const MinimizeIcon = styled(Icon)(({ theme }) => ({
 function getPercentage({ step, details }) {
   switch (step) {
     case 'backing_up':
+    case 'preparing':
       return 0;
     case 'downloading':
       const { downloaded, totalSize } = details || {};
@@ -107,6 +108,7 @@ function getPercentage({ step, details }) {
     case 'moving_db':
     case 'restarting_core':
     case 'rescanning':
+    case 'cleaning_up':
       return 100;
     default:
       return 0;
@@ -117,6 +119,8 @@ function getStatusMsg({ step, details }, locale) {
   switch (step) {
     case 'backing_up':
       return __('Backing up your wallet...');
+    case 'preparing':
+      return __('Preparing...');
     case 'downloading':
       const { downloaded, totalSize } = details || {};
       const percentage = getPercentage({ step, details });
@@ -139,6 +143,8 @@ function getStatusMsg({ step, details }, locale) {
       return __('Restarting Nexus Core...');
     case 'rescanning':
       return __('Rescanning Wallet...');
+    case 'cleaning_up':
+      return __('Cleaning up...');
     default:
       return '';
   }

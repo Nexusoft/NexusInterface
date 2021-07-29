@@ -114,6 +114,7 @@ const formKeys = [
   'manualDaemonApiUser',
   'manualDaemonApiPassword',
   'embeddedCoreAllowNonSSL',
+  'embeddedCoreUseNonSSL',
   'embeddedCoreApiPort',
   'embeddedCoreApiPortSSL',
   'embeddedCoreRpcPort',
@@ -597,6 +598,20 @@ class SettingsCore extends Component {
                 component={({ input: embeddedCoreAllowNonSSL }) =>
                   embeddedCoreAllowNonSSL.value && (
                     <>
+                      <SettingsField
+                        connectLabel
+                        indent={1}
+                        label={__('Use non-SSL Ports')}
+                        subLabel={__(
+                          'Connect to Nexus Core using non-SSL Ports'
+                        )}
+                      >
+                        <Field
+                          name="embeddedCoreUseNonSSL"
+                          component={Switch.RF}
+                        />
+                      </SettingsField>
+
                       <SettingsField
                         connectLabel
                         indent={1}

@@ -6,3 +6,4 @@ export {
   prepareWebView,
 } from './webview';
 export { prepareModules } from './module';
+export { checkForModuleUpdates } from './autoUpdate';

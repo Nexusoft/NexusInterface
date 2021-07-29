@@ -18,32 +18,17 @@ export const isLoggedIn = legacyMode
   ? () => false
   : ({ user }) => !!(user && user.status);
 
-export const selectTokenBalances = legacyMode
+export const selectBalances = legacyMode
   ? () => undefined
   : memoize(
-      (accounts, tokenDecimals) => {
-        const tokenBalances = {};
-        accounts?.forEach((acc) => {
-          if (acc.token && acc.token !== '0') {
-            if (!tokenBalances[acc.token]) {
-              tokenBalances[acc.token] = {
-                name: acc.token_name,
-                address: acc.token,
-                balance: 0,
-                pending: 0,
-                unconfirmed: 0,
-              };
-            }
-            const token = tokenBalances[acc.token];
-            token.balance += acc.balance;
-            token.pending += acc.pending;
-            token.unconfirmed += acc.unconfirmed;
-            token.decimals = tokenDecimals[acc.token];
-          }
-        });
-        return Object.values(tokenBalances);
+      (balances) => {
+        if (!balances) return [undefined, undefined];
+        const nxsIndex = balances.findIndex(({ token }) => token === '0');
+        const tokenBalances = [...balances];
+        const [nxsBalances] = tokenBalances.splice(nxsIndex, 1);
+        return [nxsBalances, tokenBalances];
       },
-      ({ user: { accounts }, tokenDecimals }) => [accounts, tokenDecimals]
+      ({ user: { balances } }) => [balances]
     );
 
 export const selectModuleUpdateCount = memoize(
