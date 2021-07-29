@@ -31,7 +31,7 @@ const SpinningIcon = styled(Icon)({
   } = state;
   return {
     synchronized: isSynchronized(state),
-    synccomplete: systemInfo?.synccomplete,
+    syncprogress: systemInfo?.syncprogress,
   };
 })
 class SyncStatus extends Component {
@@ -50,7 +50,7 @@ class SyncStatus extends Component {
         </StatusIcon>
       </Tooltip.Trigger>
     ) : (
-      <Tooltip.Trigger tooltip={`${__('Synchronizing')}: ${synccomplete}%`}>
+      <Tooltip.Trigger tooltip={`${__('Synchronizing')}: ${syncprogress}%`}>
         <StatusIcon>
           <SpinningIcon icon={syncingIcon} />
         </StatusIcon>
