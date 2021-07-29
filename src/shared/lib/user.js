@@ -8,7 +8,6 @@ import { callApi } from 'lib/tritiumApi';
 import rpc from 'lib/rpc';
 import { openModal } from 'lib/ui';
 import { confirm } from 'lib/dialog';
-import { fetchTokenDecimals } from 'lib/tokens';
 import { updateSettings } from 'lib/settings';
 import { isLoggedIn } from 'selectors';
 import listAll from 'utils/listAll';
@@ -205,23 +204,6 @@ export const loadAccounts = legacyMode
       try {
         const accounts = await callApi('finance/list/accounts');
         store.dispatch({ type: TYPE.SET_TRITIUM_ACCOUNTS, payload: accounts });
-
-        // Fetch token decimals for token accounts
-        const { tokenDecimals } = store.getState();
-        const tokenAccounts = accounts.filter(
-          (account) =>
-            account.token !== '0' && tokenDecimals[account.token] === undefined
-        );
-        if (tokenAccounts.length) {
-          const tokenAddresses = tokenAccounts.reduce(
-            (addresses, account) =>
-              addresses.includes(account.token)
-                ? addresses
-                : [...addresses, account.token],
-            []
-          );
-          fetchTokenDecimals(tokenAddresses);
-        }
       } catch (err) {
         console.error('finance/list/accounts failed', err);
       }

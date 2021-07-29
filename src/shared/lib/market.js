@@ -6,20 +6,19 @@ import store, { observeStore } from 'store';
 
 __ = __context('MarketData');
 
-let timerId = null;
+let marketDataTimerId = null;
+let metricsTimerId = null;
+let unobserveMetrics = null;
 
-export async function refreshMarketData() {
+async function fetchMarketData() {
   try {
-    clearTimeout(timerId);
+    clearTimeout(marketDataTimerId);
     const {
       settings: { fiatCurrency },
     } = store.getState();
-    const [{ data }, metrics] = await Promise.all([
-      axios.get(
-        `https://nexus-wallet-external-services.herokuapp.com/market-data?base_currency=${fiatCurrency}`
-      ),
-      callApi('system/get/metrics'),
-    ]);
+    const { data } = await axios.get(
+      `https://nexus-wallet-external-services.herokuapp.com/market-data?base_currency=${fiatCurrency}`
+    );
 
     // cryptocompare's VND price is divided by 10
     if (fiatCurrency === 'VND') {
@@ -28,13 +27,42 @@ export async function refreshMarketData() {
 
     store.dispatch({
       type: TYPE.SET_MARKET_DATA,
-      payload: { ...data, marketCap: metrics?.supply?.total * data.price },
+      payload: data,
     });
   } catch (err) {
     console.error(err);
   } finally {
-    timerId = setTimeout(refreshMarketData, 900000); // 15 minutes
+    marketDataTimerId = setTimeout(fetchMarketData, 900000); // 15 minutes
   }
+}
+
+async function fetchMetrics() {
+  try {
+    clearTimeout(metricsTimerId);
+    unobserveMetrics?.();
+    const metrics = await callApi('system/get/metrics');
+    store.dispatch({
+      type: TYPE.SET_TOTAL_SUPPLY,
+      payload: metrics?.supply?.total,
+    });
+    metricsTimerId = setTimeout(fetchMetrics, 900000); // 15 minutes
+  } catch (err) {
+    unobserveMetrics = observeStore(
+      (state) => state.core.systemInfo,
+      (systemInfo) => {
+        if (systemInfo) {
+          fetchMetrics();
+          unobserveMetrics?.();
+          unobserveMetrics = null;
+        }
+      }
+    );
+  }
+}
+
+export async function refreshMarketData() {
+  fetchMarketData();
+  fetchMetrics();
 }
 
 export function prepareMarket() {

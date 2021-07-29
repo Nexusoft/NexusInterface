@@ -1,17 +1,104 @@
-import { connect } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 
 import Select from 'components/Select';
 import TextField from 'components/TextField';
 import FormField from 'components/FormField';
-import {
-  setTxsAddressQuery,
-  setTxsNameQuery,
-  setTxsOperationFilter,
-  setTxsTimeFilter,
-} from 'lib/ui';
+import AutoSuggest from 'components/AutoSuggest';
+import TokenName from 'components/TokenName';
+import { updateFilter } from 'lib/tritiumTransactions';
+import { loadOwnedTokens, loadAccounts } from 'lib/user';
+import { debounced } from 'utils/universal';
+import memoize from 'utils/memoize';
 
 __ = __context('Transactions');
+
+const updateAccountQuery = debounced(
+  (accountQuery) => updateFilter({ accountQuery }),
+  500
+);
+const updateTokenQuery = debounced(
+  (tokenQuery) => updateFilter({ tokenQuery }),
+  500
+);
+
+const selectAccountOptions = memoize((accounts, addressBook) => {
+  const accountsMap = {};
+  if (accounts) {
+    for (const account of accounts) {
+      const { address } = account;
+      if (address && !accountsMap[address]) {
+        accountsMap[address] = {
+          type: 'account',
+          address,
+          account,
+        };
+      }
+    }
+  }
+  if (addressBook) {
+    for (const contact of Object.values(addressBook)) {
+      for (const { address, isMine, label } of contact.addresses) {
+        if (!isMine && address && !accountsMap[address]) {
+          accountsMap[address] = {
+            type: 'contact',
+            address,
+            name: contact.name,
+            label,
+          };
+        }
+      }
+    }
+  }
+  return Object.values(accountsMap).map(
+    ({ type, address, account, name, label }) => ({
+      value: type === 'account' ? account.name : address,
+      display:
+        type === 'account' ? (
+          <span>
+            {account.name || <em>{__('Unnamed account')}</em>}{' '}
+            <span className="dim">{address}</span>
+          </span>
+        ) : (
+          <span>
+            {name}
+            {label ? ' - ' + label : ''} <span className="dim">{address}</span>
+          </span>
+        ),
+    })
+  );
+});
+
+const selectTokenOptions = memoize((ownedTokens, accounts) => {
+  const tokensMap = {
+    0: {
+      address: '0',
+      name: 'NXS',
+    },
+  };
+  if (ownedTokens) {
+    for (const token of ownedTokens) {
+      if (token.address && !tokensMap[token.address]) {
+        tokensMap[token.address] = token;
+      }
+    }
+  }
+  if (accounts) {
+    for (const account of accounts) {
+      if (account.token && !tokensMap[account.token]) {
+        tokensMap[account.token] = {
+          address: account.token,
+          name: account.ticker,
+        };
+      }
+    }
+  }
+  return Object.values(tokensMap).map((token) => ({
+    value: token.address,
+    display: TokenName.from({ token }),
+  }));
+});
 
 const operations = [
   'WRITE',
@@ -73,61 +160,85 @@ const FiltersWrapper = styled.div(({ morePadding }) => ({
   padding: `0 ${morePadding ? '26px' : '20px'} 10px 20px`,
 }));
 
-const Filters = ({
-  addressQuery,
-  operation,
-  nameQuery,
-  timeSpan,
-  morePadding,
-}) => (
-  <FiltersWrapper morePadding={morePadding}>
-    <FormField connectLabel label={__('Address')}>
-      <TextField
-        type="search"
-        placeholder={__('Account/token address')}
-        value={addressQuery}
-        onChange={(evt) => {
-          setTxsAddressQuery(evt.target.value);
-        }}
-      />
-    </FormField>
+export default function Filters({ morePadding }) {
+  const { accountQuery, tokenQuery, operation, timeSpan } = useSelector(
+    (state) => state.ui.transactionsFilter
+  );
+  const tokenOptions = useSelector(({ user: { tokens, accounts } }) =>
+    selectTokenOptions(tokens, accounts)
+  );
+  const accountOptions = useSelector(({ addressBook, user: { accounts } }) =>
+    selectAccountOptions(accounts, addressBook)
+  );
+  const [accountInput, setAccountInput] = useState(accountQuery);
+  const [tokenInput, setTokenInput] = useState(tokenQuery);
+  useEffect(() => {
+    loadOwnedTokens();
+    loadAccounts();
+  }, []);
+  return (
+    <FiltersWrapper morePadding={morePadding}>
+      <FormField connectLabel label={__('Account')}>
+        <AutoSuggest
+          inputComponent={TextField}
+          inputProps={{
+            type: 'search',
+            placeholder: 'Account name/address',
+            value: accountInput,
+            onChange: (evt) => {
+              setAccountInput(evt.target.value);
+              updateAccountQuery(evt.target.value);
+            },
+          }}
+          suggestions={accountOptions}
+          filterSuggestions={(suggestions) => suggestions}
+          onSelect={(value) => {
+            setAccountInput(value);
+            updateAccountQuery(value);
+          }}
+        />
+      </FormField>
 
-    <FormField connectLabel label={__('Name')}>
-      <TextField
-        type="search"
-        placeholder="Account/token name"
-        value={nameQuery}
-        onChange={(evt) => setTxsNameQuery(evt.target.value)}
-      />
-    </FormField>
+      <FormField connectLabel label={__('Token')}>
+        <AutoSuggest
+          inputComponent={TextField}
+          inputProps={{
+            type: 'search',
+            placeholder: 'Token name/address',
+            value: tokenInput,
+            onChange: (evt) => {
+              setTokenInput(evt.target.value);
+              updateTokenQuery(evt.target.value);
+            },
+          }}
+          suggestions={tokenOptions}
+          filterSuggestions={(suggestions) => suggestions}
+          onSelect={(value) => {
+            setTokenInput(value);
+            updateTokenQuery(value);
+          }}
+        />
+      </FormField>
 
-    <FormField label={__('Time span')}>
-      <Select
-        value={timeSpan}
-        onChange={setTxsTimeFilter}
-        options={timeFrames}
-      />
-    </FormField>
+      <FormField label={__('Time span')}>
+        <Select
+          value={timeSpan}
+          onChange={(timeSpan) => {
+            updateFilter({ timeSpan });
+          }}
+          options={timeFrames}
+        />
+      </FormField>
 
-    <FormField label={__('Operation')}>
-      <Select
-        value={operation}
-        onChange={setTxsOperationFilter}
-        options={opOptions}
-      />
-    </FormField>
-  </FiltersWrapper>
-);
-
-const mapStateToProps = ({
-  ui: {
-    transactionsTritium: { addressQuery, operation, nameQuery, timeSpan },
-  },
-}) => ({
-  addressQuery,
-  operation,
-  nameQuery,
-  timeSpan,
-});
-
-export default connect(mapStateToProps)(Filters);
+      <FormField label={__('Operation')}>
+        <Select
+          value={operation}
+          onChange={(operation) => {
+            updateFilter({ operation });
+          }}
+          options={opOptions}
+        />
+      </FormField>
+    </FiltersWrapper>
+  );
+}

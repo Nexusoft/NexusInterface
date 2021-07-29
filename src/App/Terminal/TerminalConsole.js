@@ -313,7 +313,7 @@ class TerminalConsole extends Component {
                           <span style={{ color: '#0ca4fb' }}>Nexus-Core</span>
                           <span style={{ color: '#00d850' }}>$ </span>
                           {content}
-                          <span style={{ color: '#0ca4fb' }}> ></span>
+                          <span style={{ color: '#0ca4fb' }}> &gt;</span>
                         </span>
                       </div>
                     );

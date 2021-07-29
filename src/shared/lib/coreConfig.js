@@ -110,6 +110,8 @@ export async function loadNexusConf() {
   const {
     settings: {
       coreDataDir,
+      embeddedCoreAllowNonSSL,
+      embeddedCoreUseNonSSL,
       embeddedCoreApiPort,
       embeddedCoreApiPortSSL,
       embeddedCoreRpcPort,
@@ -148,6 +150,8 @@ export async function loadNexusConf() {
     ['rpcportssl', defaultConfig.portSSL],
   ];
   const settingsConf = {
+    apissl: !(embeddedCoreAllowNonSSL && embeddedCoreUseNonSSL),
+    rpcssl: !(embeddedCoreAllowNonSSL && embeddedCoreUseNonSSL),
     apiport: embeddedCoreApiPort || undefined,
     apiportssl: embeddedCoreApiPortSSL || undefined,
     port: embeddedCoreRpcPort || undefined,

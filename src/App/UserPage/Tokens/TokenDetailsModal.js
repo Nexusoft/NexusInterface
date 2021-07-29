@@ -85,16 +85,14 @@ export default function TokenDetailsModal({ token: tokenProp, tokenAddress }) {
                   {token.decimals}
                 </InfoField>
                 <InfoField ratio={[1, 2]} label={__('Balance')}>
-                  {formatNumber(token.balance, token.decimals)}{' '}
-                  {token.token_name}
+                  {formatNumber(token.balance, token.decimals)} {token.ticker}
                 </InfoField>
                 <InfoField ratio={[1, 2]} label={__('Pending balance')}>
-                  {formatNumber(token.pending, token.decimals)}{' '}
-                  {token.token_name}
+                  {formatNumber(token.pending, token.decimals)} {token.ticker}
                 </InfoField>
                 <InfoField ratio={[1, 2]} label={__('Unconfirmed balance')}>
                   {formatNumber(token.unconfirmed, token.decimals)}{' '}
-                  {token.token_name}
+                  {token.ticker}
                 </InfoField>
                 <div className="flex space-between">
                   <Button
@@ -102,7 +100,7 @@ export default function TokenDetailsModal({ token: tokenProp, tokenAddress }) {
                     onClick={() =>
                       openModal(NewAccountModal, {
                         tokenAddress: token.address,
-                        tokenName: token.token_name,
+                        tokenName: token.ticker,
                       })
                     }
                   >

@@ -73,8 +73,6 @@ export const startCore = async () => {
     '-rpcssl=1',
     '-p2pssl=1',
     `-datadir=${settings.coreDataDir}`,
-    `-rpcport=${conf.port}`,
-    `-apiport=${conf.apiPort}`,
     `-rpcsslport=${conf.portSSL}`,
     `-apisslport=${conf.apiPortSSL}`,
     `-verbose=${settings.verboseLevel}`,
@@ -104,8 +102,11 @@ export const startCore = async () => {
   }
   if (settings.enableStaking == true) params.push('-stake=1');
   if (settings.pooledStaking == true) params.push('-poolstaking=1');
-  if (settings.embeddedCoreAllowNonSSL == false)
+  if (settings.embeddedCoreAllowNonSSL == false) {
     params.push('-apisslrequired', '-rpcsslrequired');
+  } else {
+    params.push(`-rpcport=${conf.port}`, `-apiport=${conf.apiPort}`);
+  }
   if (settings.liteMode == true) params.push('-client=1');
   if (settings.multiUser == true) params.push('-multiuser=1');
 

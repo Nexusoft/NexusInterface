@@ -64,6 +64,7 @@ export const defaultSettings = {
   manualDaemonApiPortSSL: '7080',
   manualDaemonLogOutOnClose: false,
   embeddedCoreAllowNonSSL: false,
+  embeddedCoreUseNonSSL: false,
   embeddedCoreApiPort: undefined,
   embeddedCoreApiPortSSL: undefined,
   embeddedCoreRpcPort: undefined,
@@ -101,6 +102,7 @@ export const defaultSettings = {
   firstCreateNewUserShown: false,
   consoleCliSyntax: true,
   dontAskToStartStaking: false,
+  lastCheckForUpdates: null,
 };
 
 function readSettings() {
