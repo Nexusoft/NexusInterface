@@ -4,8 +4,6 @@ import { alphaRelease } from 'consts/misc';
 import { shell } from 'electron';
 
 const PreReleaseWarningModal = () => {
-  console.log(this);
-
   const versionRunning = APP_VERSION.toString();
   const releaseType = alphaRelease ? 'Alpha' : 'Beta';
   return (
