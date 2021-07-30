@@ -6,6 +6,7 @@ import InfoField from 'components/InfoField';
 import CodeBlock from 'components/CodeBlock';
 import TransactionDetailsModal from 'components/TransactionDetailsModal';
 import { openModal } from 'lib/ui';
+import { addressRegex } from 'consts/misc';
 
 __ = __context('ContractDetails');
 
@@ -29,6 +30,10 @@ function displayValue(value) {
 
   if (typeof value === 'object') {
     return <CodeBlock>{JSON.stringify(value, null, 2)}</CodeBlock>;
+  }
+
+  if (typeof value === 'string' && addressRegex.test(value)) {
+    return <span className="monospace">{value}</span>;
   }
 
   return String(value);
