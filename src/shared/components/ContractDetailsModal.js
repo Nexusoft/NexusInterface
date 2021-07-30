@@ -3,6 +3,7 @@ import { Component } from 'react';
 import Modal from 'components/Modal';
 import Button from 'components/Button';
 import InfoField from 'components/InfoField';
+import CodeBlock from 'components/CodeBlock';
 import TransactionDetailsModal from 'components/TransactionDetailsModal';
 import { openModal } from 'lib/ui';
 
@@ -23,6 +24,16 @@ const translateKey = (key) => {
   }
 };
 
+function displayValue(value) {
+  if (value === null || value === undefined) return null;
+
+  if (typeof value === 'object') {
+    return <CodeBlock>{JSON.stringify(value, null, 2)}</CodeBlock>;
+  }
+
+  return String(value);
+}
+
 class ContractDetailsModal extends Component {
   render() {
     const { contract, txid } = this.props;
@@ -38,7 +49,7 @@ class ContractDetailsModal extends Component {
         <Modal.Body>
           {Object.entries(contract).map(([key, value]) => (
             <InfoField key={key} label={translateKey(key)}>
-              {String(value)}
+              {displayValue(value)}
             </InfoField>
           ))}
           <InfoField label="">
