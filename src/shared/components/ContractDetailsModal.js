@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import styled from '@emotion/styled';
 
 import Modal from 'components/Modal';
 import Button from 'components/Button';
@@ -10,8 +11,14 @@ import { addressRegex } from 'consts/misc';
 
 __ = __context('ContractDetails');
 
+const KeyName = styled.span({
+  textTransform: 'capitalize',
+});
+
 const translateKey = (key) => {
   switch (key) {
+    case 'id':
+      return 'Contract #';
     case 'OP':
       return 'Operation';
     case 'txid':
@@ -20,8 +27,10 @@ const translateKey = (key) => {
       return 'Token Name';
     case 'from_name':
       return 'From Name';
+    case 'json':
+      return 'JSON';
     default:
-      return key;
+      return <KeyName>{key}</KeyName>;
   }
 };
 
