@@ -93,6 +93,7 @@ const removeWhiteSpaces = (value) => (value || '').replace(' ', '');
 
 const formKeys = [
   'liteMode',
+  'safeMode',
   'enableMining',
   'ipMineWhitelist',
   'enableStaking',
@@ -504,6 +505,16 @@ class SettingsCore extends Component {
                   </>
                 )}
               />
+
+              <SettingsField
+                connectLabel
+                label={__('Safe Mode')}
+                subLabel={__(
+                  'Enables NextHash verification to protect against corruption, but adds computation time.'
+                )}
+              >
+                <Field name="safeMode" component={Switch.RF} />
+              </SettingsField>
 
               <SettingsField
                 connectLabel

@@ -84,6 +84,9 @@ export const startCore = async () => {
     params.push('-forkblocks=' + settings.forkBlocks);
     updateSettings({ forkBlocks: 0 });
   }
+  if (settings.safeMode) {
+    params.push('-safemode=1');
+  }
   if (settings.walletClean) {
     params.push('-walletclean');
     updateSettings({ walletClean: false });
