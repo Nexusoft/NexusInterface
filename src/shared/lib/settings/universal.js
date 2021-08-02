@@ -88,7 +88,6 @@ export const defaultSettings = {
   bootstrapSuggestionDisabled: false,
   migrateSuggestionDisabled: false,
   liteModeNoticeDisabled: false,
-  potThemeModalShown: false,
   windowWidth: 1200,
   windowHeight: 800,
   windowX: undefined,

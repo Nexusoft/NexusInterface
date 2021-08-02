@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 
 //Internal
 import Button from 'components/Button';
-import { darkTheme, lightTheme, potTheme, setTheme } from 'lib/theme';
+import { darkTheme, lightTheme, setTheme } from 'lib/theme';
 
 __ = __context('Settings.Style');
 
@@ -21,7 +21,6 @@ function equals(theme1, theme2) {
 function getName(theme) {
   if (equals(theme, darkTheme)) return 'dark';
   if (equals(theme, lightTheme)) return 'light';
-  if (equals(theme, potTheme)) return 'pot';
   return 'custom';
 }
 
@@ -60,21 +59,6 @@ export default function ThemePicker() {
         }
       >
         {__('Light')}
-      </Button>
-
-      <Button
-        skin={themeName === 'pot' ? 'filled-primary' : 'plain'}
-        className="mr1"
-        onClick={
-          themeName !== 'pot'
-            ? () => {
-                if (themeName === 'custom') setCustomTheme(theme);
-                setTheme(potTheme);
-              }
-            : undefined
-        }
-      >
-        POT
       </Button>
 
       {(customTheme || themeName === 'custom') && (

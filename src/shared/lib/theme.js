@@ -39,20 +39,6 @@ export const lightTheme = {
   primaryAccent: '#404244',
 };
 
-export const potTheme = {
-  wallpaper: starryNightBackground,
-  background: '#0a4224',
-  foreground: '#A3C2B3',
-  primary: '#1CBB38',
-  primaryAccent: '#DEDEDE',
-  danger: '#d75239',
-  dangerAccent: '#DEDEDE',
-  globeColor: '#0c7d3d',
-  globePillarColor: '#00ffff',
-  globeArchColor: '#00ffff',
-  featuredTokenName: 'POT',
-};
-
 // TODO: remove this after a few versions
 function transformTheme(theme) {
   let changed = false;
