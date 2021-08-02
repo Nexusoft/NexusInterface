@@ -8,7 +8,9 @@ import SelectLanguage from './SelectLanguage';
 import LicenseAgreement from './LicenseAgreement';
 import LiteModeNotice from './LiteModeNotice';
 import PotThemeModal from './PotThemeModal';
+import PreReleaseWarningModal from './PreReleaseWarningModal';
 import Wallet from './Wallet';
+import { preRelease } from 'consts/misc';
 
 const Overlays = ({ children }) => {
   const locale = useSelector((state) => state.settings.locale);
@@ -50,6 +52,10 @@ const Overlays = ({ children }) => {
 
   if (!liteModeNoticeDisabled) {
     return <LiteModeNotice />;
+  }
+
+  if (preRelease) {
+    openModal(PreReleaseWarningModal);
   }
 
   return <Wallet>{children}</Wallet>;

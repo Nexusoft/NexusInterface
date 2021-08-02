@@ -9,13 +9,13 @@ import { callApi } from 'lib/tritiumApi';
 import { updateSettings } from 'lib/settings';
 import sleep from 'utils/promisified/sleep';
 
-export const getMiningInfo = async () => {
+export const getLedgerInfo = async () => {
   try {
-    const miningInfo = await callApi('ledger/get/mininginfo');
-    store.dispatch({ type: TYPE.SET_MINING_INFO, payload: miningInfo });
+    const ledgerInfo = await callApi('ledger/get/info');
+    store.dispatch({ type: TYPE.SET_LEDGER_INFO, payload: ledgerInfo });
   } catch (err) {
     store.dispatch({ type: TYPE.CLEAR_MINING_INFO });
-    console.error('ledger/get/mininginfo failed', err);
+    console.error('ledger/get/info failed', err);
   }
 };
 

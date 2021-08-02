@@ -22,33 +22,33 @@ function MiningStat({ value, ...props }) {
 }
 
 export function PrimeDiffStat() {
-  const miningInfo = useSelector((state) => state.core.miningInfo);
+  const ledgerInfo = useSelector((state) => state.core.ledgerInfo);
   return (
     <MiningStat
       label={__('Prime Difficulty')}
-      value={miningInfo.primeDifficulty}
+      value={ledgerInfo?.prime?.difficulty}
       icon={mathIcon}
     />
   );
 }
 
 export function HashDiffStat() {
-  const miningInfo = useSelector((state) => state.core.miningInfo);
+  const ledgerInfo = useSelector((state) => state.core.ledgerInfo);
   return (
     <MiningStat
       label={__('Hash Difficulty')}
-      value={miningInfo.hashDifficulty}
+      value={ledgerInfo?.hash?.difficulty}
       icon={hashIcon}
     />
   );
 }
 
 export function StakingDiffStat() {
-  const miningInfo = useSelector((state) => state.core.miningInfo);
+  const ledgerInfo = useSelector((state) => state.core.ledgerInfo);
   return (
     <MiningStat
       label={__('Staking Difficulty')}
-      value={miningInfo.stakeDifficulty}
+      value={ledgerInfo?.stake?.difficulty}
       icon={nxsStakeIcon}
     />
   );

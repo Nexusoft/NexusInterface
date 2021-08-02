@@ -34,3 +34,9 @@ export const assetNumberTypes = [
   'uint512',
   'uint1024',
 ];
+
+export const betaRelease = APP_VERSION.toString().includes('beta');
+
+export const alphaRelease = APP_VERSION.toString().includes('alpha');
+
+export const preRelease = alphaRelease || betaRelease;

@@ -62,6 +62,9 @@ const mapStateToProps = (state) => {
       },
     },
     settings: { consoleCliSyntax },
+    core: {
+      config: { apiUser, apiPassword },
+    },
   } = state;
   return {
     consoleInput: consoleInputSelector(
@@ -69,6 +72,8 @@ const mapStateToProps = (state) => {
       commandHistory,
       historyIndex
     ),
+    apiUser,
+    apiPassword,
     currentCommand,
     commandList,
     output,
@@ -203,7 +208,8 @@ class NexusApiConsole extends Component {
    * @memberof TerminalConsole
    */
   execute = async () => {
-    const { currentCommand, consoleCliSyntax } = this.props;
+    const { currentCommand, consoleCliSyntax, apiUser, apiPassword } =
+      this.props;
     if (!currentCommand || !currentCommand.trim()) return;
 
     const cmd = currentCommand.trim();
@@ -214,7 +220,10 @@ class NexusApiConsole extends Component {
     let result = undefined;
     try {
       if (consoleCliSyntax) {
-        result = await ipcRenderer.invoke('execute-core-command', cmd);
+        result = await ipcRenderer.invoke(
+          'execute-core-command',
+          `-apiuser=${apiUser} -apipassword=${apiPassword} ${cmd}`
+        );
       } else {
         result = await callApiByUrl(cmd);
       }
