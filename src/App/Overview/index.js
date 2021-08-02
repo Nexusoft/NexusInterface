@@ -100,17 +100,17 @@ const formatDiff = (diff) => (diff || 0).toFixed(3);
 // React-Redux mandatory methods
 const mapStateToProps = (state) => {
   const {
-    core: { info, difficulty },
+    core: { info, difficulty, systemInfo },
     common: { blockDate },
     market,
     settings,
     theme,
   } = state;
-  const { synccomplete } = info;
+  const { syncprogress } = systemInfo;
   const syncUnknown =
-    (!synccomplete && synccomplete !== 0) ||
-    synccomplete < 0 ||
-    synccomplete > 100;
+    (!syncprogress && syncprogress !== 0) ||
+    syncprogress < 0 ||
+    syncprogress > 100;
   return {
     coreConnected: isCoreConnected(state),
     difficulty,
@@ -119,7 +119,7 @@ const mapStateToProps = (state) => {
     settings,
     theme,
     coreInfo: info,
-    synchronizing: !syncUnknown && synccomplete !== 100,
+    synchronizing: !syncUnknown && syncprogress !== 100,
   };
 };
 
