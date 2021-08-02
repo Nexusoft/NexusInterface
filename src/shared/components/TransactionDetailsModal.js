@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import InfoField from 'components/InfoField';
 import WaitingMessage from 'components/WaitingMessage';
 import { callApi } from 'lib/tritiumApi';
@@ -37,9 +37,11 @@ export default function TransactionDetailsModal({ txid }) {
   }, []);
 
   return (
-    <Modal>
-      <Modal.Header>{__('Transaction Details')}</Modal.Header>
-      <Modal.Body>
+    <ControlledModal>
+      <ControlledModal.Header>
+        {__('Transaction Details')}
+      </ControlledModal.Header>
+      <ControlledModal.Body>
         {transaction ? (
           <>
             <InfoField label={__('Time')}>
@@ -59,7 +61,7 @@ export default function TransactionDetailsModal({ txid }) {
             {__('Loading transaction details...')}
           </WaitingMessage>
         )}
-      </Modal.Body>
-    </Modal>
+      </ControlledModal.Body>
+    </ControlledModal>
   );
 }

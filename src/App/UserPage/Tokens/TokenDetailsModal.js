@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import InfoField from 'components/InfoField';
 import QRButton from 'components/QRButton';
 import NewAccountModal from 'components/NewAccountModal';
@@ -41,11 +41,11 @@ export default function TokenDetailsModal({ token: tokenProp, tokenAddress }) {
   const token = tokenProp || tokenState;
 
   return (
-    <Modal>
+    <ControlledModal>
       {(closeModal) => (
         <>
-          <Modal.Header>{__('Token Details')}</Modal.Header>
-          <Modal.Body>
+          <ControlledModal.Header>{__('Token Details')}</ControlledModal.Header>
+          <ControlledModal.Body>
             {!token && (
               <div className="text-center">
                 <Spinner size={24} />
@@ -113,9 +113,9 @@ export default function TokenDetailsModal({ token: tokenProp, tokenAddress }) {
                 </div>
               </>
             )}
-          </Modal.Body>
+          </ControlledModal.Body>
         </>
       )}
-    </Modal>
+    </ControlledModal>
   );
 }

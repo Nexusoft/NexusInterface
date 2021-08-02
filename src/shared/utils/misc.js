@@ -27,6 +27,14 @@ export function passRef(el, ref) {
   }
 }
 
+export function refs(...list) {
+  return (el) => {
+    list.forEach((ref) => {
+      passRef(el, ref);
+    });
+  };
+}
+
 export async function showDesktopNotif(title, message) {
   const result = await Notification.requestPermission();
   if (result === 'granted') {

@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import QRCode from 'qrcode';
 import { useTheme } from '@emotion/react';
 
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import NexusAddress from 'components/NexusAddress';
 
 const size = 322;
@@ -25,13 +25,13 @@ export default function QRModal({ address }) {
     });
   }, []);
   return (
-    <Modal maxWidth={500}>
-      <Modal.Body>
+    <ControlledModal maxWidth={500}>
+      <ControlledModal.Body>
         <QRWrapper>
           <canvas ref={canvasRef} width={size} />
           <NexusAddress address={address} className="mt1" />
         </QRWrapper>
-      </Modal.Body>
-    </Modal>
+      </ControlledModal.Body>
+    </ControlledModal>
   );
 }

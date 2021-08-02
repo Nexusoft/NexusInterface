@@ -7,7 +7,7 @@ import {
   createContainer,
 } from 'victory';
 
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 
 import {
   getChartData,
@@ -35,9 +35,9 @@ const barStrokeColor = (inData) =>
     : '#fff';
 
 const TransactionsChartModal = ({ theme, chartData }) => (
-  <Modal>
-    <Modal.Header>{__('Transactions chart')}</Modal.Header>
-    <Modal.Body style={{ paddingTop: 50, paddingBottom: 50 }}>
+  <ControlledModal>
+    <ControlledModal.Header>{__('Transactions chart')}</ControlledModal.Header>
+    <ControlledModal.Body style={{ paddingTop: 50, paddingBottom: 50 }}>
       <VictoryChart
         width={550}
         height={200}
@@ -140,8 +140,8 @@ const TransactionsChartModal = ({ theme, chartData }) => (
           }}
         />
       </VictoryChart>
-    </Modal.Body>
-  </Modal>
+    </ControlledModal.Body>
+  </ControlledModal>
 );
 
 const mapStateToProps = ({

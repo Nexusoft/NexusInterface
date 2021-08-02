@@ -1,4 +1,4 @@
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import InfoField from 'components/InfoField';
 import { formatDateTime } from 'lib/intl';
 
@@ -16,12 +16,12 @@ const timeFormatOptions = {
 const AssetHistoryDetailsModal = ({
   event: { type, owner, modified, address, checksum, name, ...data },
 }) => (
-  <Modal>
-    <Modal.Header className="relative">
+  <ControlledModal>
+    <ControlledModal.Header className="relative">
       {__('Asset History Event')}
-    </Modal.Header>
+    </ControlledModal.Header>
 
-    <Modal.Body>
+    <ControlledModal.Body>
       <InfoField label={__('Type')}>{type}</InfoField>
       <InfoField label={__('Time')}>
         {formatDateTime(modified * 1000, timeFormatOptions)}
@@ -38,8 +38,8 @@ const AssetHistoryDetailsModal = ({
           {value}
         </InfoField>
       ))}
-    </Modal.Body>
-  </Modal>
+    </ControlledModal.Body>
+  </ControlledModal>
 );
 
 export default AssetHistoryDetailsModal;

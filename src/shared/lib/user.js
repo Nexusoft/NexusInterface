@@ -118,7 +118,7 @@ export const unlockUser = async ({ pin, mining, staking, notifications }) => {
     pin,
     notifications: notifications !== undefined ? notifications : true,
     mining: mining !== undefined ? mining : !!enableMining,
-    staking: staking !== undefined ? staking : false, //!!enableStaking,
+    staking: staking !== undefined ? staking : false,
   });
 };
 

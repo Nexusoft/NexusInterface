@@ -5,7 +5,6 @@ import InfoField from 'components/InfoField';
 import Tooltip from 'components/Tooltip';
 import { openModal } from 'lib/ui';
 import { getAssetData } from 'utils/misc';
-import * as color from 'utils/color';
 import { timing } from 'styles';
 
 import AssetDetailsModal from './AssetDetailsModal';
@@ -20,7 +19,7 @@ const AssetComponent = styled.div(({ theme }) => ({
   background: theme.background,
   transition: `background-color ${timing.normal}`,
   '&:hover': {
-    background: color.lighten(theme.background, 0.2),
+    background: theme.raise(theme.background, 0.2),
   },
 }));
 
@@ -33,7 +32,7 @@ const AssetHeader = styled.div(({ theme }) => ({
   background: theme.mixer(0.05),
   transition: `background-color ${timing.normal}`,
   [`${AssetComponent}:hover &`]: {
-    background: color.lighten(theme.mixer(0.05), 0.2),
+    background: theme.raise(theme.mixer(0.05), 0.2),
   },
 }));
 

@@ -2,7 +2,6 @@ import styled from '@emotion/styled';
 import { keyframes } from '@emotion/react';
 
 import { timing } from 'styles';
-import * as color from 'utils/color';
 
 const intro = keyframes`
   from { 
@@ -22,7 +21,7 @@ const FullScreenComponent = styled.div(({ theme }) => ({
   right: 0,
   bottom: 0,
   padding: '10px 30px',
-  background: color.darken(theme.background, 0.2),
+  background: theme.lower(theme.background, 0.2),
   color: theme.mixer(0.75),
   animation: `${intro} ${timing.quick} ease-out`,
   display: 'grid',

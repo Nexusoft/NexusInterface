@@ -9,6 +9,8 @@
  */
 
 import * as React from 'react';
+import jsxRuntime from 'react/jsx-runtime';
+import jsxDevRuntime from 'react/jsx-dev-runtime';
 import ReactDOM from 'react-dom';
 import * as ReactRouterDOM from 'react-router-dom';
 import * as Redux from 'redux';
@@ -20,6 +22,7 @@ import { ipcRenderer, clipboard, shell } from 'electron';
 import * as ReduxForm from 'redux-form';
 
 import GlobalStyles from 'components/GlobalStyles';
+import ThemeController from 'components/ThemeController';
 import Panel from 'components/Panel';
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
@@ -30,12 +33,12 @@ import Link from 'components/Link';
 import Icon from 'components/Icon';
 import Tab from 'components/Tab';
 import FieldSet from 'components/FieldSet';
-import * as color from 'utils/color';
 import AutoSuggest from 'components/AutoSuggest';
-import ModuleModal from 'components/ModuleModal';
+import Modal from 'components/Modal';
 import DateTime from 'components/DateTimePicker';
 import FormField from 'components/FormField';
 import Arrow from 'components/Arrow';
+import * as color from 'utils/color';
 
 const newId = (() => {
   let id = 0;
@@ -45,7 +48,7 @@ const newId = (() => {
 global.NEXUS = {
   walletVersion: APP_VERSION,
   libraries: {
-    React,
+    React: { ...React, jsxDevRuntime, jsxRuntime },
     ReactDOM,
     ReactRouterDOM,
     Redux,
@@ -323,12 +326,13 @@ global.NEXUS = {
   },
   components: {
     GlobalStyles,
+    ThemeController,
     Icon,
     Panel,
     AutoSuggest,
     FieldSet,
     Switch,
-    Modal: ModuleModal,
+    Modal,
     Tooltip,
     Select,
     DateTime,

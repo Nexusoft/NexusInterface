@@ -2,7 +2,7 @@ import { Component } from 'react';
 import { reduxForm, Field } from 'redux-form';
 import { useSelector } from 'react-redux';
 
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
 import FormField from 'components/FormField';
@@ -104,14 +104,14 @@ class RenameAccountForm extends Component {
   render() {
     const { accountName, handleSubmit, submitting, pristine } = this.props;
     return (
-      <Modal
+      <ControlledModal
         assignClose={(closeModal) => {
           this.closeModal = closeModal;
         }}
         maxWidth={600}
       >
-        <Modal.Header>{__('Rename account')}</Modal.Header>
-        <Modal.Body>
+        <ControlledModal.Header>{__('Rename account')}</ControlledModal.Header>
+        <ControlledModal.Body>
           <form onSubmit={handleSubmit}>
             <FormField connectLabel label={__('Account name')}>
               <Field name="name" component={TextField.RF} autoFocus />
@@ -139,8 +139,8 @@ class RenameAccountForm extends Component {
               </Button>
             </div>
           </form>
-        </Modal.Body>
-      </Modal>
+        </ControlledModal.Body>
+      </ControlledModal>
     );
   }
 }

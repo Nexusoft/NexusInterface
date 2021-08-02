@@ -1,4 +1,4 @@
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import InfoField from 'components/InfoField';
 import QRButton from 'components/QRButton';
 import { formatDateTime } from 'lib/intl';
@@ -17,12 +17,12 @@ const timeFormatOptions = {
 const NamespaceHistoryDetailsModal = ({
   event: { type, owner, modified, address, checksum, name },
 }) => (
-  <Modal>
-    <Modal.Header className="relative">
+  <ControlledModal>
+    <ControlledModal.Header className="relative">
       {__('Namespace History Event')}
-    </Modal.Header>
+    </ControlledModal.Header>
 
-    <Modal.Body>
+    <ControlledModal.Body>
       <InfoField label={__('Type')}>{type}</InfoField>
       <InfoField label={__('Time')}>
         {formatDateTime(modified * 1000, timeFormatOptions)}
@@ -36,8 +36,8 @@ const NamespaceHistoryDetailsModal = ({
         <span className="v-align">{address}</span>
         <QRButton className="ml0_4" address={address} />
       </InfoField>
-    </Modal.Body>
-  </Modal>
+    </ControlledModal.Body>
+  </ControlledModal>
 );
 
 export default NamespaceHistoryDetailsModal;

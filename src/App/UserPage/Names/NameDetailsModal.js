@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
@@ -36,10 +36,10 @@ const EditName = styled.div({
 });
 
 const NameDetailsModal = ({ nameRecord }) => (
-  <Modal>
+  <ControlledModal>
     {(closeModal) => (
       <>
-        <Modal.Header className="relative">
+        <ControlledModal.Header className="relative">
           {__('Name Details')}
           <EditName>
             <Tooltip.Trigger tooltip={__('Change register address')}>
@@ -54,8 +54,8 @@ const NameDetailsModal = ({ nameRecord }) => (
               </Button>
             </Tooltip.Trigger>
           </EditName>
-        </Modal.Header>
-        <Modal.Body>
+        </ControlledModal.Header>
+        <ControlledModal.Body>
           <InfoField label={__('Name')}>{nameRecord.name}</InfoField>
           <InfoField label={__('Type')}>
             {nameRecord.global
@@ -108,10 +108,10 @@ const NameDetailsModal = ({ nameRecord }) => (
               )}
             </div>
           </div>
-        </Modal.Body>
+        </ControlledModal.Body>
       </>
     )}
-  </Modal>
+  </ControlledModal>
 );
 
 export default NameDetailsModal;

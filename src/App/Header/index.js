@@ -45,7 +45,10 @@ const LogoLink = styled(Link)(({ theme }) => ({
   )})`,
 
   '&:hover': {
-    filter: `drop-shadow(0 0 10px ${theme.primary}) brightness(110%)`,
+    filter: `drop-shadow(0 0 10px ${color.lighten(
+      theme.primary,
+      0.2
+    )}) brightness(110%)`,
   },
 }));
 
@@ -99,6 +102,7 @@ const preReleaseTag = alphaRelease ? 'ALPHA' : betaRelease ? 'BETA' : null;
     coreConnected: isCoreConnected(state),
     testnet: systemInfo?.testnet,
     privateNet: systemInfo?.private,
+    lite: systemInfo?.clientmode,
     legacyTestnet: info && info.testnet,
   };
 })
@@ -110,7 +114,8 @@ class Header extends Component {
    * @memberof Header
    */
   render() {
-    const { coreConnected, testnet, privateNet, legacyTestnet } = this.props;
+    const { coreConnected, testnet, privateNet, legacyTestnet, lite } =
+      this.props;
 
     return (
       <HeaderComponent>
@@ -126,11 +131,13 @@ class Header extends Component {
           {legacyMode ? (
             <>
               {__('Legacy Mode')}
+              {lite && ` (${__('Lite')})`}
               {!!legacyTestnet && ' - testnet'}
             </>
           ) : (
             <>
               {__('Tritium Mode')}
+              {lite && ` (${__('Lite')})`}
               {!!testnet &&
                 ` -${privateNet ? ' private' : ''} testnet ${testnet}`}
             </>

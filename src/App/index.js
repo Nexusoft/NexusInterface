@@ -2,9 +2,11 @@
 import { Switch, Redirect } from 'react-router';
 import { Router, Route } from 'react-router-dom';
 import styled from '@emotion/styled';
+import { useSelector } from 'react-redux';
 
 // Internal
 import GlobalStyles from 'components/GlobalStyles';
+import ThemeController from 'components/ThemeController';
 import { legacyMode } from 'consts/misc';
 import { history } from 'lib/wallet';
 import { showDefaultMenu } from 'lib/contextMenu';
@@ -22,10 +24,8 @@ import AddressBook from './AddressBook';
 import Settings from './Settings';
 import Terminal from './Terminal';
 import UserPage from './UserPage';
-
 import Modules from './Modules';
 import AppBackground from './AppBackground';
-import ThemeController from './ThemeController';
 
 const AppLayout = styled.div({
   position: 'fixed',
@@ -48,9 +48,10 @@ const Main = styled.main({
 });
 
 export default function App() {
+  const theme = useSelector((state) => state.theme);
   return (
     <Router history={history}>
-      <ThemeController>
+      <ThemeController theme={theme}>
         <GlobalStyles />
         <div onContextMenu={showDefaultMenu}>
           <Overlays>

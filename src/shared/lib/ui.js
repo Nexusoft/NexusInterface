@@ -41,6 +41,13 @@ export function removeModal(modalId) {
   });
 }
 
+export function isModalOpen(modalComponent) {
+  const {
+    ui: { modals },
+  } = store.getState();
+  return modals.some(({ component }) => component === modalComponent);
+}
+
 /**
  * Notification
  * ===========================

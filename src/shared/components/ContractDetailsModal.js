@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import styled from '@emotion/styled';
 
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import Button from 'components/Button';
 import InfoField from 'components/InfoField';
 import CodeBlock from 'components/CodeBlock';
@@ -54,13 +54,16 @@ class ContractDetailsModal extends Component {
     if (!contract) return;
 
     return (
-      <Modal
+      <ControlledModal
         assignClose={(close) => {
+          console.log('assign', close);
           this.closeModal = close;
         }}
       >
-        <Modal.Header>{__('Contract Details')}</Modal.Header>
-        <Modal.Body>
+        <ControlledModal.Header>
+          {__('Contract Details')}
+        </ControlledModal.Header>
+        <ControlledModal.Body>
           {Object.entries(contract).map(([key, value]) => (
             <InfoField key={key} label={translateKey(key)}>
               {displayValue(value)}
@@ -77,8 +80,8 @@ class ContractDetailsModal extends Component {
               {__('View transaction details')}
             </Button>
           </InfoField>
-        </Modal.Body>
-      </Modal>
+        </ControlledModal.Body>
+      </ControlledModal>
     );
   }
 }

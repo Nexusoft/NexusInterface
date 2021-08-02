@@ -5,9 +5,8 @@ import styled from '@emotion/styled';
 import { connect } from 'react-redux';
 
 import { callApi } from 'lib/tritiumApi';
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import FormField from 'components/FormField';
-import TextField from 'components/TextField';
 import TextFieldWithKeyboard from 'components/TextFieldWithKeyboard';
 import Button from 'components/Button';
 import Link from 'components/Link';
@@ -20,6 +19,7 @@ import {
   openModal,
   removeModal,
   showBackgroundTask,
+  isModalOpen,
 } from 'lib/ui';
 import { errorHandler } from 'utils/form';
 import store, { observeStore } from 'store';
@@ -124,12 +124,12 @@ class NewUserModal extends Component {
     const { handleSubmit, submitting } = this.props;
 
     return (
-      <Modal
+      <ControlledModal
         maxWidth={500}
         assignClose={(closeModal) => (this.closeModal = closeModal)}
       >
-        <Modal.Header>{__('Create new user')}</Modal.Header>
-        <Modal.Body>
+        <ControlledModal.Header>{__('Create new user')}</ControlledModal.Header>
+        <ControlledModal.Body>
           <form onSubmit={handleSubmit}>
             <FormField
               connectLabel
@@ -203,8 +203,8 @@ class NewUserModal extends Component {
               </Link>
             </ExtraSection>
           </form>
-        </Modal.Body>
-      </Modal>
+        </ControlledModal.Body>
+      </ControlledModal>
     );
   }
 }
@@ -221,7 +221,7 @@ class UserConfirmBackgroundTask extends React.Component {
           limit: 1,
           verbose: 'summary',
         });
-        if (txs && txs[0] && txs[0].confirmations) {
+        if (txs?.[0]?.confirmations) {
           this.closeTask();
           showNotification(
             __('User registration for %{username} has been confirmed', {
@@ -229,7 +229,7 @@ class UserConfirmBackgroundTask extends React.Component {
             }),
             'success'
           );
-          if (!isLoggedIn(store.getState())) {
+          if (!isLoggedIn(store.getState()) && !isModalOpen(LoginModal)) {
             openModal(LoginModal);
           }
         }
