@@ -289,6 +289,19 @@ class SettingsCore extends Component {
     }
   };
 
+  disableSafeMode = async (e) => {
+    if (e.target.defaultValue === 'true') {
+      e.preventDefault();
+      const confirmed = await confirm({
+        question: __('Are you sure you want to disable Safe Mode') + '?',
+        note: 'In the unlikely event of corruption your sigchain may be lost.',
+      });
+      if (confirmed) {
+        this.props.change('safeMode', false);
+      }
+    }
+  };
+
   reloadTxHistory = async () => {
     const confirmed = await confirm({
       question: __('Reload transaction history') + '?',
@@ -513,7 +526,11 @@ class SettingsCore extends Component {
                   'Enables NextHash verification to protect against corruption, but adds computation time.'
                 )}
               >
-                <Field name="safeMode" component={Switch.RF} />
+                <Field
+                  name="safeMode"
+                  component={Switch.RF}
+                  onChange={this.disableSafeMode}
+                />
               </SettingsField>
 
               <SettingsField
