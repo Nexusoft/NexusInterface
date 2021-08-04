@@ -34,14 +34,18 @@ const translateKey = (key) => {
   }
 };
 
-function displayValue(value) {
+function displayValue(value, key) {
   if (value === null || value === undefined) return null;
 
   if (typeof value === 'object') {
     return <CodeBlock>{JSON.stringify(value, null, 2)}</CodeBlock>;
   }
 
-  if (typeof value === 'string' && addressRegex.test(value)) {
+  if (
+    (typeof value === 'string' && addressRegex.test(value)) ||
+    key === 'txid' ||
+    key === 'destination'
+  ) {
     return <span className="monospace">{value}</span>;
   }
 
@@ -56,7 +60,6 @@ class ContractDetailsModal extends Component {
     return (
       <ControlledModal
         assignClose={(close) => {
-          console.log('assign', close);
           this.closeModal = close;
         }}
       >
@@ -66,7 +69,7 @@ class ContractDetailsModal extends Component {
         <ControlledModal.Body>
           {Object.entries(contract).map(([key, value]) => (
             <InfoField key={key} label={translateKey(key)}>
-              {displayValue(value)}
+              {displayValue(value, key)}
             </InfoField>
           ))}
           <InfoField label="">
