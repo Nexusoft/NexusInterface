@@ -37,6 +37,10 @@ const WarningIcon = styled(Icon)(({ theme }) => ({
   fontSize: '1.1em',
 }));
 
+/**
+ * List of the Fiat Currencies the wallet supports. Corresponds to the data taken from our server.
+ * @memberof SettingsApp
+ */
 const fiatCurrencies = [
   { value: 'AUD', display: 'Australian Dollar (AUD)' },
   { value: 'BTC', display: 'Bitcoin (BTC)' },
@@ -115,6 +119,11 @@ class SettingsApp extends Component {
     }
   };
 
+  /**
+   * Handles setting the auto launch function.
+   * @param {element} e Attached element
+   * @memberof SettingsApp
+   */
   toggleOpenOnStart = async (e) => {
     const { checked } = e.target;
     const nexusAutoLaunch = new AutoLaunch({

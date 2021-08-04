@@ -2,7 +2,6 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
 import { reduxForm, Field, Fields, formValueSelector } from 'redux-form';
-// import cpy from 'cpy';
 import path from 'path';
 import styled from '@emotion/styled';
 
@@ -91,6 +90,9 @@ const ManualMode = styled(Button)(
 
 const removeWhiteSpaces = (value) => (value || '').replace(' ', '');
 
+/**
+ *  Keys to change in the settings. Have a key here and set the name field to the same key to connect it.
+ */
 const formKeys = [
   'liteMode',
   'safeMode',
@@ -121,6 +123,7 @@ const formKeys = [
   'embeddedCoreRpcPort',
   'embeddedCoreRpcPortSSL',
 ];
+
 const getInitialValues = (() => {
   let lastOutput = null;
   let lastInput = null;
@@ -242,12 +245,17 @@ const mapStateToProps = (state) => {
 class SettingsCore extends Component {
   switchId = newUID();
 
+  /**
+   * Handles the logic when the switch is activated
+   * @param {element} e Attached element
+   * @memberof SettingsCore
+   */
   handleRestartSwitch = (e) => {
     setCoreSettingsRestart(!!e.target.checked);
   };
 
   /**
-   *Creates an instance of SettingsCore.
+   * Creates an instance of SettingsCore.
    * @param {*} props
    * @memberof SettingsCore
    */
@@ -289,6 +297,11 @@ class SettingsCore extends Component {
     }
   };
 
+  /**
+   * Attached to the OnChange event to display a warning about turning off safe mode
+   * @param {element} e Attached element
+   * @memberof SettingsCore
+   */
   disableSafeMode = async (e) => {
     if (e.target.defaultValue === 'true') {
       e.preventDefault();
@@ -302,6 +315,10 @@ class SettingsCore extends Component {
     }
   };
 
+  /**
+   *  Asks to reload TX History. Only for legacy mode.
+   * @memberof SettingsCore
+   */
   reloadTxHistory = async () => {
     const confirmed = await confirm({
       question: __('Reload transaction history') + '?',
@@ -313,6 +330,10 @@ class SettingsCore extends Component {
     }
   };
 
+  /**
+   *  Asks to clear Peer Connections. Only for legacy mode.
+   * @memberof SettingsCore
+   */
   clearPeerConnections = async () => {
     const confirmed = await confirm({
       question: __('Clear peer connections') + '?',
@@ -324,6 +345,10 @@ class SettingsCore extends Component {
     }
   };
 
+  /**
+   * Asks to resync when using Lite mode
+   * @memberof SettingsCore
+   */
   resyncLiteMode = async () => {
     const confirmed = await confirm({
       question: __('Resync database') + '?',
@@ -347,6 +372,11 @@ class SettingsCore extends Component {
     }
   };
 
+  /**
+   * Handles the button to turn off testnet if active
+   * @param {element} e Attached element
+   * @memberof SettingsCore
+   */
   turnOffTestNet = (e) => {
     this.props.change('testnetIteration', null);
   };
