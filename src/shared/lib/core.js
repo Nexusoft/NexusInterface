@@ -14,7 +14,7 @@ export const getLedgerInfo = async () => {
     const ledgerInfo = await callApi('ledger/get/info');
     store.dispatch({ type: TYPE.SET_LEDGER_INFO, payload: ledgerInfo });
   } catch (err) {
-    store.dispatch({ type: TYPE.CLEAR_MINING_INFO });
+    store.dispatch({ type: TYPE.CLEAR_LEDGER_INFO });
     console.error('ledger/get/info failed', err);
   }
 };
