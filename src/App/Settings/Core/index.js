@@ -307,7 +307,7 @@ class SettingsCore extends Component {
       e.preventDefault();
       const confirmed = await confirm({
         question: __('Are you sure you want to disable Safe Mode') + '?',
-        note: 'In the unlikely event of hardware failure, your sigchain may become inaccessible.',
+        note: 'In the unlikely event of hardware failure your sigchain could become inaccessible. Disabling safemode, while not having a recovery phrase, could result in loss of your coins. Proceed at your own risk.',
       });
       if (confirmed) {
         this.props.change('safeMode', false);
