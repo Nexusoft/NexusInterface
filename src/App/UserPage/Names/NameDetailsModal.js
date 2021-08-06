@@ -74,8 +74,8 @@ const NameDetailsModal = ({ nameRecord }) => (
             <QRButton className="ml0_4" address={nameRecord.address} />
           </InfoField>
           <InfoField label={__('Points to')}>
-            <span className="v-align">{nameRecord.register_address}</span>
-            <QRButton className="ml0_4" address={nameRecord.register_address} />
+            <span className="v-align">{nameRecord.register}</span>
+            <QRButton className="ml0_4" address={nameRecord.register} />
           </InfoField>
           <InfoField label={__('Created at')}>
             {formatDateTime(nameRecord.created * 1000, timeFormatOptions)}

@@ -36,7 +36,7 @@ const Name = styled.span(({ theme }) => ({
       return await callApi('names/update/name', {
         pin,
         address: nameRecord.address,
-        register_address: registerAddress,
+        register: registerAddress,
       });
     }
   },
@@ -118,7 +118,7 @@ const ChangeRegisterAddressModal = ({ nameRecord }) => (
             closeModal={closeModal}
             nameRecord={nameRecord}
             initialValues={{
-              registerAddress: nameRecord.register_address,
+              registerAddress: nameRecord.register,
             }}
           />
         </Modal.Body>

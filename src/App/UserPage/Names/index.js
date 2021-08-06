@@ -109,9 +109,9 @@ const Name = ({ nameRecord, username }) => (
       {nameRecord.name}
     </span>
     <Types>
-      {!(
-        nameRecord.register_address && nameRecord.register_address !== '0'
-      ) && <Type>{__('Unused')}</Type>}
+      {!(nameRecord.register && nameRecord.register !== '0') && (
+        <Type>{__('Unused')}</Type>
+      )}
       <Type>
         {nameRecord.global
           ? __('Global')
@@ -126,9 +126,7 @@ const Name = ({ nameRecord, username }) => (
 const selectNameRecords = memoize((nameRecords, showUnusedNames) =>
   showUnusedNames
     ? nameRecords
-    : nameRecords?.filter(
-        (nr) => nr.register_address && nr.register_address !== '0'
-      )
+    : nameRecords?.filter((nr) => nr.register && nr.register !== '0')
 );
 
 @connect((state) => ({
@@ -153,6 +151,7 @@ class Names extends Component {
     const { nameRecords, username, showUnusedNames } = this.props;
     const toggle = () => updateSettings({ showUnusedNames: !showUnusedNames });
 
+    console.log(this.props);
     return (
       <TabContentWrapper maxWidth={500}>
         <Button

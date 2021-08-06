@@ -103,7 +103,7 @@ async function asyncValidateRecipient({ recipient, source }) {
   if (!params.address) {
     try {
       const result = await callApi('names/get/name', { name: address });
-      params.address = result.register_address;
+      params.address = result.register;
     } catch (err) {
       throw { address: __('Invalid name/address') };
     }
