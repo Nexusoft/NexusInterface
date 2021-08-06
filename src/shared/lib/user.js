@@ -202,10 +202,10 @@ export const loadAccounts = legacyMode
   : // Tritium Mode
     async () => {
       try {
-        const accounts = await callApi('finance/list/accounts');
+        const accounts = await callApi('finance/list/all');
         store.dispatch({ type: TYPE.SET_TRITIUM_ACCOUNTS, payload: accounts });
       } catch (err) {
-        console.error('finance/list/accounts failed', err);
+        console.error('finance/list/all failed', err);
       }
     };
 
