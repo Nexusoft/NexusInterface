@@ -68,6 +68,9 @@ export function NXSBalanceStat() {
 
   return (
     <Stat
+      style={{ label: 'ASDAD', color: 'red' }}
+      tagName={'sssssss'}
+      fffff={'ddddd'}
       tooltipAlign="end"
       tooltip={
         tokenBalances?.length > 0 &&
@@ -77,13 +80,13 @@ export function NXSBalanceStat() {
       }
       linkTo="/Transactions"
       label={
-        <>
+        <div tutorial={'0'}>
           {!synchronized && nxsBalances && <UnsyncWarning />}
           <span className="v-align">
             {__('Balance')}
             {tokenBalances?.length === 0 && ' (NXS)'}
           </span>
-        </>
+        </div>
       }
       icon={logoIcon}
     >
@@ -173,7 +176,9 @@ export function IncomingBalanceStat() {
             )}
             align="start"
           />{' '}
-          <span className="v-align">{__('Incoming balances')} (NXS)</span>
+          <span tutorial={'1'} className="v-align">
+            {__('Incoming balances')} (NXS)
+          </span>
         </>
       }
       icon={waitIcon}

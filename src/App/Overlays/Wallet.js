@@ -9,6 +9,8 @@ import ModalContext from 'context/modal';
 import TaskContext from 'context/task';
 import { zIndex } from 'styles';
 
+import Onboarding from './Onboarding';
+
 const SnackBars = styled.div({
   position: 'fixed',
   top: 20,
@@ -82,6 +84,7 @@ class Wallet extends Component {
           notifications={notifications}
           taskCount={backgroundTasks.length}
         />
+        <Onboarding />
       </>
     );
   }
