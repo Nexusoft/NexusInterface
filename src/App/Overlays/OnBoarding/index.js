@@ -189,7 +189,7 @@ const reactSlides = slides.map((e, i, a) => (
 ));
 */
 
-class OnBoarding extends Component {
+class Onboarding extends Component {
   constructor() {
     super();
     this.state = {
@@ -212,4 +212,4 @@ class OnBoarding extends Component {
   }
 }
 
-export default OnBoarding;
+export default Onboarding;
