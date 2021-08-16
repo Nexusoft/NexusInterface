@@ -61,12 +61,17 @@ const Notifications = ({ notifications, taskCount }) => (
  * @class Wallet
  * @extends {Component}
  */
-@connect(({ ui: { modals, notifications, backgroundTasks } }) => ({
+@connect(({ ui: { modals, notifications, backgroundTasks, onboarding } }) => ({
   modals,
   notifications,
   backgroundTasks,
+  onboarding,
 }))
 class Wallet extends Component {
+  state = {
+    show: true,
+  };
+
   /**
    * Component's Renderable JSX
    *
@@ -75,6 +80,7 @@ class Wallet extends Component {
    */
   render() {
     const { children, modals, notifications, backgroundTasks } = this.props;
+    console.log(this.state);
     return (
       <>
         <div>{children}</div>
@@ -84,7 +90,10 @@ class Wallet extends Component {
           notifications={notifications}
           taskCount={backgroundTasks.length}
         />
-        <Onboarding />
+
+        {this.state.show && (
+          <Onboarding CloseOnboarding={() => this.setState({ show: false })} />
+        )}
       </>
     );
   }

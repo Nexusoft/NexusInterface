@@ -134,7 +134,10 @@ const Slide = ({
             }}
           >
             <div style={{ width: '100%', height: '2em' }}>
-              <Button style={{ height: '1em', width: '1em', float: 'right' }}>
+              <Button
+                style={{ height: '1em', width: '1em', float: 'right' }}
+                onClick={onClose}
+              >
                 X
               </Button>
             </div>
@@ -197,9 +200,11 @@ class OnBoarding extends Component {
     const e = slides[this.state.slideOn];
     console.log(this.state.slideOn);
     console.log(e);
+    console.log(this.props);
     return (
       <Slide
         onNext={() => this.setState({ slideOn: 1 })}
+        onClose={this.props.CloseOnboarding}
         position={getTarget(this.state.slideOn)}
         {...e}
       />
