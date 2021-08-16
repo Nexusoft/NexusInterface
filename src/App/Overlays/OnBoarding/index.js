@@ -90,12 +90,15 @@ const Slide = ({
   fill = 5,
   blur = 10,
   position,
+  textTitle,
+  textBody,
   toggleBeacon,
   onNext,
   onClose,
+  ...rest
 }) => (
   <>
-    {console.log(position && position)}
+    {console.log(rest)}
     <div
       style={{
         width: position?.width + 2 * (fill + blur) || 0,
@@ -117,11 +120,34 @@ const Slide = ({
         <Tooltip.Base
           skin={'default'}
           position={'right'}
+          domRect={position}
           forceOpen={true}
           tooltip={'sada'}
         >
-          <div>hhhhh</div>
-          <Button onClick={onNext}>Next</Button>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignContent: 'center',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <div style={{ width: '100%', height: '2em' }}>
+              <Button style={{ height: '1em', width: '1em', float: 'right' }}>
+                X
+              </Button>
+            </div>
+            <div>
+              <div style={{ textAlign: 'center', float: 'center' }}>
+                {textTitle}
+              </div>
+              <div>{textBody}</div>
+            </div>
+            <div style={{ width: '100%' }}>
+              <Button onClick={onNext}>Next</Button>
+            </div>
+          </div>
         </Tooltip.Base>
         <div
           style={{
@@ -173,10 +199,9 @@ class OnBoarding extends Component {
     console.log(e);
     return (
       <Slide
-        fill={e.fill}
-        blur={e.blur}
         onNext={() => this.setState({ slideOn: 1 })}
         position={getTarget(this.state.slideOn)}
+        {...e}
       />
     );
   }

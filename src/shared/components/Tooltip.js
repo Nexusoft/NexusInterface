@@ -279,25 +279,16 @@ class TooltipBase extends Component {
 
   componentDidMount() {}
 
-  componentDidUpdate() {
-    return;
-    if (!this.state.target) {
-      const trigger = ReactDOM.findDOMNode(this);
-      console.log(trigger);
-      this.setState({ target: trigger });
-    }
-  }
+  componentDidUpdate() {}
 
   render() {
-    const { position, align, children, ...rest } = this.props;
-    const trigger = this.myRef.current;
+    const { position, align, children, domRect, ...rest } = this.props;
 
-    const rect = trigger?.getBoundingClientRect();
-    const tooltipStyles = rect && {
+    const tooltipStyles = domRect && {
       position: 'fixed',
       zIndex: zIndex.tooltips,
-      ...tooltipPositioning(rect, position),
-      ...tooltipAligning(rect, position, align),
+      ...tooltipPositioning(domRect, position),
+      ...tooltipAligning(domRect, position, align),
       maxWidth: 'none',
       width: '12em',
     };
