@@ -1,4 +1,60 @@
 import { Component } from 'react';
+import styled from '@emotion/styled';
+import { keyframes } from '@emotion/react';
+
+import Button from 'components/Button';
+import Tooltip from 'components/Tooltip';
+
+const pulseRing = keyframes`
+  0% {
+    transform: translate(-50%,50%) scale(0.33);
+  }
+  80%, 100% {
+    opacity: 0;
+    transform: translate(-50%,50%)
+  }
+`;
+
+const pulseDot = keyframes`
+  0% {
+    transform: translate(-50%,50%) scale(0.8);
+  }
+  50% {
+    transform: translate(-50%,50%) scale(1);
+  }
+  100% {
+    transform: translate(-50%,50%) scale(0.8);
+  }
+`;
+
+const BeaconIcon = styled.div(({ theme }) => ({
+  display: 'block',
+  '&::before': {
+    content: '""',
+    display: 'block',
+    width: 20,
+    height: 20,
+    background: theme.primary,
+    borderRadius: 45,
+    position: 'absolute',
+    bottom: 0,
+    left: '50%',
+    transform: 'translate(-50%,50%)',
+    animation: `${pulseRing} 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite`,
+  },
+  '&::after': {
+    content: '""',
+    height: 6,
+    width: 6,
+    background: theme.foreground,
+    borderRadius: '50%',
+    position: 'absolute',
+    bottom: 0,
+    left: '50%',
+    transform: 'translate(-50%,50%)',
+    animation: `${pulseDot} 2s cubic-bezier(0.455, 0.03, 0.515, 0.955) -0.4s infinite`,
+  },
+}));
 
 const BoxBuilder = (fill, blur) => {
   const color = `black ${fill}% , transparent ${fill + blur}%`;
@@ -30,11 +86,15 @@ const slides = [
   },
 ];
 
-let slideOn = 0;
-
-const Slide = ({ fill = 5, blur = 10, position }) => (
+const Slide = ({
+  fill = 5,
+  blur = 10,
+  position,
+  toggleBeacon,
+  onNext,
+  onClose,
+}) => (
   <>
-    {' '}
     {console.log(position && position)}
     <div
       style={{
@@ -45,31 +105,36 @@ const Slide = ({ fill = 5, blur = 10, position }) => (
         left: position?.left - blur || 0,
       }}
     >
-      <div
-        style={{
-          height: '100%',
-          background: '#000000c9',
-          WebkitMaskImage: BoxBuilder(fill, blur),
-        }}
-      />
-      <div
-        style={{
-          height: '100%',
-          width: '100%',
-          top: '0px',
-          position: 'absolute',
-          outline: '5000px solid #000000c9',
-        }}
-      />
+      <>
+        <div
+          style={{
+            height: '100%',
+            background: '#000000c9',
+            WebkitMaskImage: BoxBuilder(fill, blur),
+          }}
+        />
+
+        <Tooltip.Base
+          skin={'default'}
+          position={'right'}
+          forceOpen={true}
+          tooltip={'sada'}
+        >
+          <div>hhhhh</div>
+          <Button onClick={onNext}>Next</Button>
+        </Tooltip.Base>
+        <div
+          style={{
+            height: '100%',
+            width: '100%',
+            top: '0px',
+            position: 'absolute',
+            outline: '5000px solid #000000c9',
+          }}
+        />
+      </>
+      <BeaconIcon />
     </div>
-    <div
-      style={{
-        width: '100%',
-        height: '100%',
-        position: 'absolute',
-        pointerEvents: 'all',
-      }}
-    />
   </>
 );
 
@@ -95,35 +160,24 @@ const reactSlides = slides.map((e, i, a) => (
 ));
 */
 
-var ggggg = 0;
-
 class OnBoarding extends Component {
   constructor() {
     super();
     this.state = {
-      ggggg: 0,
+      slideOn: 0,
     };
-
-    setTimeout(() => {
-      this.setState({ ggggg: 1 });
-    }, 3000);
   }
   render() {
-    const e = slides[ggggg];
-    console.log(ggggg);
+    const e = slides[this.state.slideOn];
+    console.log(this.state.slideOn);
     console.log(e);
-    console.log(<Slide props={e} position={getTarget(0)} />);
     return (
-      <>
-        <button onClick={() => this.setState({ ggggg: ggggg++ })}>
-          asdads
-        </button>
-        <Slide
-          fill={e.fill}
-          blur={e.blur}
-          position={getTarget(this.state.ggggg)}
-        />
-      </>
+      <Slide
+        fill={e.fill}
+        blur={e.blur}
+        onNext={() => this.setState({ slideOn: 1 })}
+        position={getTarget(this.state.slideOn)}
+      />
     );
   }
 }

@@ -10,7 +10,7 @@
  */
 
 // External
-import { cloneElement, Children, Component } from 'react';
+import { cloneElement, Children, Component, createRef } from 'react';
 import ReactDOM from 'react-dom';
 import styled from '@emotion/styled';
 
@@ -267,7 +267,58 @@ class TooltipTrigger extends Component {
   }
 }
 
+class TooltipBase extends Component {
+  constructor(props) {
+    super(props);
+    this.myRef = createRef();
+  }
+
+  state = {
+    target: this.myRef,
+  };
+
+  componentDidMount() {}
+
+  componentDidUpdate() {
+    return;
+    if (!this.state.target) {
+      const trigger = ReactDOM.findDOMNode(this);
+      console.log(trigger);
+      this.setState({ target: trigger });
+    }
+  }
+
+  render() {
+    const { position, align, children, ...rest } = this.props;
+    const trigger = this.myRef.current;
+
+    const rect = trigger?.getBoundingClientRect();
+    const tooltipStyles = rect && {
+      position: 'fixed',
+      zIndex: zIndex.tooltips,
+      ...tooltipPositioning(rect, position),
+      ...tooltipAligning(rect, position, align),
+      maxWidth: 'none',
+      width: '12em',
+    };
+
+    console.log(tooltipStyles);
+
+    return (
+      <Tooltip
+        ref={this.myRef}
+        style={tooltipStyles}
+        position={position}
+        {...rest}
+      >
+        {children}
+      </Tooltip>
+    );
+  }
+}
+
 Tooltip.Portal = TooltipPortal;
 Tooltip.Trigger = TooltipTrigger;
+Tooltip.Base = TooltipBase;
 
 export default Tooltip;
