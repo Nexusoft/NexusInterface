@@ -194,6 +194,7 @@ function buildQuery({ accountQuery, tokenQuery, operation, timeSpan }) {
     const tokenQueries = [
       buildTokenQuery('token'),
       buildTokenQuery('token_name'),
+      buildTokenQuery('ticker'),
     ];
     queries.push(`(${tokenQueries.join(' OR ')})`);
   }
