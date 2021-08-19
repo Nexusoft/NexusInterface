@@ -182,7 +182,6 @@ export default function Filters({ morePadding }) {
         <AutoSuggest
           inputComponent={TextField}
           inputProps={{
-            type: 'search',
             placeholder: 'Account name/address',
             value: accountInput,
             onChange: (evt) => {
@@ -203,7 +202,6 @@ export default function Filters({ morePadding }) {
         <AutoSuggest
           inputComponent={TextField}
           inputProps={{
-            type: 'search',
             placeholder: 'Token name/address',
             value: tokenInput,
             onChange: (evt) => {

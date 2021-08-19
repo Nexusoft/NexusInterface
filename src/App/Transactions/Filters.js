@@ -86,7 +86,6 @@ const Filters = ({ addressQuery, category, minAmount, timeSpan }) => (
   <FiltersWrapper>
     <FormField connectLabel label={__('Search address')}>
       <TextField
-        type="search"
         name="addressfilter"
         placeholder={__('Search for Address')}
         value={addressQuery}
