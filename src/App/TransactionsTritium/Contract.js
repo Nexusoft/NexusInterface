@@ -109,7 +109,11 @@ const Account = ({ name, address }) => {
 const creditFrom = (contract) => {
   switch (contract.for) {
     case 'DEBIT':
-      return <Account name={contract.from_name} address={contract.from} />;
+      if (contract.from_name || contract.from) {
+        return <Account name={contract.from_name} address={contract.from} />;
+      } else {
+        return '';
+      }
 
     case 'LEGACY':
       return <Info>{__('Legacy transaction')}</Info>;
@@ -234,13 +238,14 @@ const contractContent = (contract) => {
     }
 
     case 'CREDIT': {
+      const from = creditFrom(contract);
       return (
         <>
           <div>
             <Operation>Credit</Operation> to{' '}
             <Account name={contract.to_name} address={contract.to} />
           </div>
-          <div>from {creditFrom(contract)}</div>
+          <div>{from && 'from ' + from}</div>
         </>
       );
     }
