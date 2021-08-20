@@ -39,6 +39,7 @@ export default function TokenDetailsModal({ token: tokenProp, tokenAddress }) {
     }
   }, []);
   const token = tokenProp || tokenState;
+  console.log(token);
 
   return (
     <ControlledModal>
@@ -87,13 +88,18 @@ export default function TokenDetailsModal({ token: tokenProp, tokenAddress }) {
                 <InfoField ratio={[1, 2]} label={__('Balance')}>
                   {formatNumber(token.balance, token.decimals)} {token.ticker}
                 </InfoField>
-                <InfoField ratio={[1, 2]} label={__('Pending balance')}>
-                  {formatNumber(token.pending, token.decimals)} {token.ticker}
-                </InfoField>
-                <InfoField ratio={[1, 2]} label={__('Unconfirmed balance')}>
-                  {formatNumber(token.unconfirmed, token.decimals)}{' '}
-                  {token.ticker}
-                </InfoField>
+                {typeof token.unclaimed === 'number' && (
+                  <InfoField ratio={[1, 2]} label={__('Unclaimed balance')}>
+                    {formatNumber(token.unclaimed, token.decimals)}{' '}
+                    {token.ticker}
+                  </InfoField>
+                )}
+                {typeof token.unconfirmed === 'number' && (
+                  <InfoField ratio={[1, 2]} label={__('Unconfirmed balance')}>
+                    {formatNumber(token.unconfirmed, token.decimals)}{' '}
+                    {token.ticker}
+                  </InfoField>
+                )}
                 <div className="flex space-between">
                   <Button
                     wide
