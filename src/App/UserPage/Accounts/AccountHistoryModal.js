@@ -193,10 +193,10 @@ class AccountHistoryModal extends Component {
   async componentDidMount() {
     const { account } = this.props;
     try {
-      const transactions = await listAll(
-            'finance/transactions/account',
-        { address: account.address, verbose: 'summary' }
-      );
+      const transactions = await listAll('finance/transactions/account', {
+        address: account.address,
+        verbose: 'summary',
+      });
 
       const contracts = transactions.reduce((contracts, tx) => {
         if (Array.isArray(tx.contracts)) {
@@ -295,31 +295,36 @@ class AccountHistoryModal extends Component {
                         : formatNumber(account.balance, 6)}
                     </div>
                   </div>
-                  {account.pending !== undefined && (
-                  <div className="text-center">
-                    <div>
-                      <strong>{__('Pending')}</strong>
+                  {account.unclaimed !== undefined && (
+                    <div className="text-center">
+                      <div>
+                        <strong>{__('Unclaimed')}</strong>
+                      </div>
+                      <div>
+                        {showFiat && account.token_name === 'NXS'
+                          ? formatCurrency(
+                              account.unclaimed * market,
+                              fiatCurrency
+                            )
+                          : formatNumber(account.unclaimed, 6)}
+                      </div>
                     </div>
-                    <div>
-                      {showFiat && account.token_name === 'NXS'
-                        ? formatCurrency(account.pending * market, fiatCurrency)
-                        : formatNumber(account.pending, 6)}
+                  )}
+                  {account.unconfirmed !== undefined && (
+                    <div className="text-center">
+                      <div>
+                        <strong>{__('Unconfirmed')}</strong>
+                      </div>
+                      <div>
+                        {showFiat && account.token_name === 'NXS'
+                          ? formatCurrency(
+                              account.unconfirmed * market,
+                              fiatCurrency
+                            )
+                          : formatNumber(account.unconfirmed, 6)}
+                      </div>
                     </div>
-                  </div>)}
-                  { account.unconfirmed !== undefined && 
-                  (<div className="text-center">
-                    <div>
-                      <strong>{__('Unconfirmed')}</strong>
-                    </div>
-                    <div>
-                      {showFiat && account.token_name === 'NXS'
-                        ? formatCurrency(
-                            account.unconfirmed * market,
-                            fiatCurrency
-                          )
-                        : formatNumber(account.unconfirmed, 6)}
-                    </div>
-                  </div>)}
+                  )}
                   {typeof account.stake === 'number' && (
                     <div className="text-center">
                       <div>
