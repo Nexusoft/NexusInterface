@@ -77,10 +77,10 @@ export default function TokenDetailsModal({ token: tokenProp, tokenAddress }) {
                 </InfoField>
 
                 <InfoField ratio={[1, 2]} label={__('Current Supply')}>
-                  {token.currentsupply}
+                  {formatNumber(token.currentsupply, 0)}
                 </InfoField>
                 <InfoField ratio={[1, 2]} label={__('Max Supply')}>
-                  {token.maxsupply}
+                  {formatNumber(token.maxsupply, 0)}
                 </InfoField>
                 <InfoField ratio={[1, 2]} label={__('Decimals')}>
                   {token.decimals}
