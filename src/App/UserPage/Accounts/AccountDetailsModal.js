@@ -38,8 +38,8 @@ const AccountDetailsModal = ({ account, stakeInfo }) => (
           <InfoField ratio={[1, 2]} label={__('Last modified')}>
             {formatDateTime(account.modified * 1000, timeFormatOptions)}
           </InfoField>
-          <InfoField ratio={[1, 2]} label={__('Token name')}>
-            {account.token_name}
+          <InfoField ratio={[1, 2]} label={__('Token')}>
+            <TokenName account={account} />
           </InfoField>
           {account.data !== undefined && (
             <InfoField ratio={[1, 2]} label={__('Data')}>

@@ -39,7 +39,6 @@ export default function TokenDetailsModal({ token: tokenProp, tokenAddress }) {
     }
   }, []);
   const token = tokenProp || tokenState;
-  console.log(token);
 
   return (
     <ControlledModal>
