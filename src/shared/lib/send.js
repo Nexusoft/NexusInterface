@@ -38,7 +38,9 @@ export function getDefaultValues(options) {
 }
 
 export function goToSend(formValues) {
-  store.dispatch(initialize(formName, { ...defaultValues, ...formValues }));
+  store.dispatch(
+    initialize(formName, { ...getDefaultValues(), ...formValues })
+  );
   store.dispatch(reset(formName));
   history.push('/Send');
 }

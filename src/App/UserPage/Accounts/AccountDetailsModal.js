@@ -61,7 +61,7 @@ const AccountDetailsModal = ({ account, stakeInfo }) => (
                 className="v-align"
                 onClick={() => {
                   closeModal();
-                  goToSend({ sendFrom: account.name });
+                  goToSend({ sendFrom: `account:${account.address}` });
                 }}
               >
                 {__('Send %{token_name}', {
