@@ -18,18 +18,16 @@ export const isLoggedIn = legacyMode
   ? () => false
   : ({ user }) => !!(user && user.status);
 
-export const selectBalances = legacyMode
-  ? () => undefined
-  : memoize(
-      (balances) => {
-        if (!balances) return [undefined, undefined];
-        const nxsIndex = balances.findIndex(({ token }) => token === '0');
-        const tokenBalances = [...balances];
-        const [nxsBalances] = tokenBalances.splice(nxsIndex, 1);
-        return [nxsBalances, tokenBalances];
-      },
-      ({ user: { balances } }) => [balances]
-    );
+export const selectBalances = memoize(
+  (balances) => {
+    if (!balances) return [undefined, undefined];
+    const nxsIndex = balances.findIndex(({ token }) => token === '0');
+    const tokenBalances = [...balances];
+    const [nxsBalances] = tokenBalances.splice(nxsIndex, 1);
+    return [nxsBalances, tokenBalances];
+  },
+  ({ user: { balances } }) => [balances]
+);
 
 export const selectModuleUpdateCount = memoize(
   (modules) =>
