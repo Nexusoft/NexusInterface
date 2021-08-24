@@ -98,7 +98,7 @@ function NameTo({ name }) {
   useEffect(() => {
     (async () => {
       const nameRecord = await callApi('names/get/name', { name });
-      setAddress(nameRecord?.register_address);
+      setAddress(nameRecord?.register);
     })();
   }, []);
   return (

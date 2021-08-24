@@ -103,7 +103,7 @@ const NameTypeSelect = ({ input, hasNamespaces }) => (
         name,
         global: type === 'global',
         namespace: type === 'namespaced' ? namespace : undefined,
-        register_address: registerAddress,
+        register: registerAddress,
       });
     }
   },

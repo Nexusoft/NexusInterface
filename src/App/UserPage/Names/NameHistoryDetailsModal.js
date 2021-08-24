@@ -20,7 +20,7 @@ const NameHistoryDetailsModal = ({
     owner,
     modified,
     address,
-    register_address,
+    register,
     checksum,
     name,
     namespace,
@@ -49,8 +49,8 @@ const NameHistoryDetailsModal = ({
         <QRButton className="ml0_4" address={address} />
       </InfoField>
       <InfoField label={__('Points to')}>
-        <span className="v-align">{register_address}</span>
-        <QRButton className="ml0_4" address={register_address} />
+        <span className="v-align">{register}</span>
+        <QRButton className="ml0_4" address={register} />
       </InfoField>
     </ControlledModal.Body>
   </ControlledModal>

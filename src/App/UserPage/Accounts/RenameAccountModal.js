@@ -38,7 +38,7 @@ const getFee = (accountName) => (accountName ? 2 : 1);
       nameRecord = await callApi('names/get/name', {
         name: `${username}:${name}`,
       });
-      if (nameRecord?.register_address && nameRecord.register_address !== '0') {
+      if (nameRecord?.register && nameRecord.register !== '0') {
         openErrorDialog({
           message: __('Name already in use'),
           note: __(
@@ -72,14 +72,14 @@ const getFee = (accountName) => (accountName ? 2 : 1);
       await callApi(nameRecord ? 'names/update/name' : 'names/create/name', {
         pin,
         name,
-        register_address: accountAddress,
+        register: accountAddress,
       });
 
       if (accountName) {
         await callApi('names/update/name', {
           pin,
           name: accountName,
-          register_address: '0',
+          register: '0',
         });
       }
 
