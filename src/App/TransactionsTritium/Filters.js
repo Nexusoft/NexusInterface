@@ -14,12 +14,8 @@ import memoize from 'utils/memoize';
 
 __ = __context('Transactions');
 
-const updateAccountQuery = debounced(
-  (accountQuery) => updateFilter({ accountQuery }),
-  500
-);
-const updateTokenQuery = debounced(
-  (tokenQuery) => updateFilter({ tokenQuery }),
+const debouncedUpdateFilter = debounced(
+  (updates) => updateFilter(updates),
   500
 );
 
@@ -184,16 +180,16 @@ export default function Filters({ morePadding }) {
           inputProps={{
             placeholder: __('Account address'),
             value: accountInput,
-            onChange: (evt) => {
-              setAccountInput(evt.target.value);
-              updateAccountQuery(evt.target.value);
+            onChange: ({ target: { value } }) => {
+              setAccountInput(value);
+              debouncedUpdateFilter({ accountQuery: value });
             },
           }}
           suggestions={accountOptions}
           filterSuggestions={(suggestions) => suggestions}
           onSelect={(value) => {
             setAccountInput(value);
-            updateAccountQuery(value);
+            updateFilter({ accountQuery: value });
           }}
         />
       </FormField>
@@ -204,16 +200,16 @@ export default function Filters({ morePadding }) {
           inputProps={{
             placeholder: __('Token address'),
             value: tokenInput,
-            onChange: (evt) => {
-              setTokenInput(evt.target.value);
-              updateTokenQuery(evt.target.value);
+            onChange: ({ target: { value } }) => {
+              setTokenInput(value);
+              debouncedUpdateFilter({ tokenQuery: value });
             },
           }}
           suggestions={tokenOptions}
           filterSuggestions={(suggestions) => suggestions}
           onSelect={(value) => {
             setTokenInput(value);
-            updateTokenQuery(value);
+            updateFilter({ tokenQuery: value });
           }}
         />
       </FormField>
