@@ -271,7 +271,7 @@ class AccountHistoryModal extends Component {
                   )
                 }
               >
-                <div className="flex space-evenly">
+                <div className="flex space-between">
                   <div className="text-center">
                     <div>
                       <strong>{__('Total')}</strong>
@@ -295,36 +295,32 @@ class AccountHistoryModal extends Component {
                         : formatNumber(account.balance, 6)}
                     </div>
                   </div>
-                  {account.unclaimed !== undefined && (
-                    <div className="text-center">
-                      <div>
-                        <strong>{__('Unclaimed')}</strong>
-                      </div>
-                      <div>
-                        {showFiat && account.token_name === 'NXS'
-                          ? formatCurrency(
-                              account.unclaimed * market,
-                              fiatCurrency
-                            )
-                          : formatNumber(account.unclaimed, 6)}
-                      </div>
+                  <div className="text-center">
+                    <div>
+                      <strong>{__('Unclaimed')}</strong>
                     </div>
-                  )}
-                  {account.unconfirmed !== undefined && (
-                    <div className="text-center">
-                      <div>
-                        <strong>{__('Unconfirmed')}</strong>
-                      </div>
-                      <div>
-                        {showFiat && account.token_name === 'NXS'
-                          ? formatCurrency(
-                              account.unconfirmed * market,
-                              fiatCurrency
-                            )
-                          : formatNumber(account.unconfirmed, 6)}
-                      </div>
+                    <div>
+                      {showFiat && account.token_name === 'NXS'
+                        ? formatCurrency(
+                            (account.unclaimed || 0) * market,
+                            fiatCurrency
+                          )
+                        : formatNumber(account.unclaimed || 0, 6)}
                     </div>
-                  )}
+                  </div>
+                  <div className="text-center">
+                    <div>
+                      <strong>{__('Unconfirmed')}</strong>
+                    </div>
+                    <div>
+                      {showFiat && account.token_name === 'NXS'
+                        ? formatCurrency(
+                            (account.unconfirmed || 0) * market,
+                            fiatCurrency
+                          )
+                        : formatNumber(account.unconfirmed || 0, 6)}
+                    </div>
+                  </div>
                   {typeof account.stake === 'number' && (
                     <div className="text-center">
                       <div>
