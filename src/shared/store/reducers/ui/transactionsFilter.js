@@ -1,8 +1,7 @@
 import * as TYPE from 'consts/actionTypes';
 
 const initialState = {
-  accountQuery: '',
-  tokenQuery: '',
+  addressQuery: '',
   operation: null,
   timeSpan: null,
   page: 1,
