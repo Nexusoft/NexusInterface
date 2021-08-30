@@ -1,5 +1,5 @@
 // External
-import { createRef, Component } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { clipboard } from 'electron';
 import styled from '@emotion/styled';
 
@@ -24,11 +24,13 @@ const AddressWrapper = styled.div(
     cursor: 'pointer',
     userSelect: 'none',
     transition: `background ${timing.normal}`,
-
-    '&:hover': {
-      background: theme.mixer(0.05),
-    },
   }),
+  ({ copyable, theme }) =>
+    !!copyable && {
+      '&:hover': {
+        background: theme.mixer(0.05),
+      },
+    },
   ({ hasLabel }) =>
     hasLabel && {
       borderTopLeftRadius: 0,
@@ -89,6 +91,39 @@ const Label = styled.div(({ theme }) => ({
   padding: '.1em .4em',
 }));
 
+function useCheckOverflow() {
+  const [overflown, setOverflown] = useState(false);
+  const addressRef = useRef();
+  const contentRef = useRef();
+
+  const checkOverflow = () => {
+    const containerWidth = addressRef.current.clientWidth;
+    const contentWidth = contentRef.current.offsetWidth;
+    if (contentWidth > containerWidth && !overflown) {
+      setOverflown(true);
+    }
+    if (contentWidth <= containerWidth && overflown) {
+      setOverflown(false);
+    }
+  };
+
+  useEffect(checkOverflow);
+  useEffect(() => {
+    const resizeObserver = new ResizeObserver(checkOverflow);
+    resizeObserver.observe(addressRef.current);
+    return () => {
+      resizeObserver.unobserve(addressRef.current);
+    };
+  }, []);
+
+  return { overflown, addressRef, contentRef };
+}
+
+function copyAddress(address) {
+  clipboard.writeText(address);
+  showNotification(__('Address has been copied to clipboard'), 'success');
+}
+
 /**
  * Nexus Address with Copy functionality
  *
@@ -96,102 +131,40 @@ const Label = styled.div(({ theme }) => ({
  * @class TruncateMiddleAddress
  * @extends {React.Component}
  */
-export default class TruncateMiddleAddress extends Component {
-  addressRef = createRef();
-  contentRef = createRef();
+export default function TruncateMiddleAddress({
+  address,
+  label,
+  copyable = true,
+  ...rest
+}) {
+  const { overflown, addressRef, contentRef } = useCheckOverflow();
 
-  state = { overflown: false };
+  return (
+    <TruncateMiddleAddressComponent {...rest}>
+      {!!label && <Label>{label}</Label>}
 
-  /**
-   *
-   *
-   * @memberof TruncateMiddleAddress
-   */
-  checkOverflow = () => {
-    const containerWidth = this.addressRef.current.clientWidth;
-    const contentWidth = this.contentRef.current.offsetWidth;
-
-    if (contentWidth > containerWidth && !this.state.overflown) {
-      this.setState({ overflown: true });
-    }
-    if (contentWidth <= containerWidth && this.state.overflown) {
-      this.setState({ overflown: false });
-    }
-  };
-
-  resizeObserver = new ResizeObserver(this.checkOverflow);
-
-  /**
-   *
-   *
-   * @memberof TruncateMiddleAddress
-   */
-  componentDidMount() {
-    this.checkOverflow();
-    this.resizeObserver.observe(this.addressRef.current);
-  }
-
-  /**
-   *
-   *
-   * @memberof TruncateMiddleAddress
-   */
-  componentDidUpdate() {
-    this.checkOverflow();
-  }
-
-  /**
-   *
-   *
-   * @memberof TruncateMiddleAddress
-   */
-  componentWillUnmount() {
-    this.resizeObserver.unobserve(this.addressRef.current);
-  }
-
-  /**
-   * Copy address to clipboard
-   *
-   * @memberof TruncateMiddleAddress
-   */
-  copyAddress = () => {
-    clipboard.writeText(this.props.address);
-    showNotification(__('Address has been copied to clipboard'), 'success');
-  };
-
-  /**
-   * React Render
-   *
-   * @returns
-   * @memberof TruncateMiddleAddress
-   */
-  render() {
-    const { address, label, ...rest } = this.props;
-    const { overflown } = this.state;
-    return (
-      <TruncateMiddleAddressComponent {...rest}>
-        {!!label && <Label>{label}</Label>}
-
-        <Tooltip.Trigger tooltip={__('Click to copy to clipboard')}>
-          <AddressWrapper
-            hasLabel={!!label}
-            inputProps={{
-              style: { cursor: 'pointer' },
-            }}
-            onClick={this.copyAddress}
-          >
-            <Address ref={this.addressRef}>
-              <AddressCopy left overflown={overflown}>
-                <AddressContent ref={this.contentRef}>{address}</AddressContent>
-              </AddressCopy>
-              <Ellipsis hidden={!overflown}>...</Ellipsis>
-              <AddressCopy right overflown={overflown}>
-                {address}
-              </AddressCopy>
-            </Address>
-          </AddressWrapper>
-        </Tooltip.Trigger>
-      </TruncateMiddleAddressComponent>
-    );
-  }
+      <Tooltip.Trigger
+        tooltip={copyable ? __('Click to copy to clipboard') : undefined}
+      >
+        <AddressWrapper
+          hasLabel={!!label}
+          inputProps={{
+            style: { cursor: 'pointer' },
+          }}
+          copyable={copyable}
+          onClick={copyable ? () => copyAddress(address) : undefined}
+        >
+          <Address ref={addressRef}>
+            <AddressCopy left overflown={overflown}>
+              <AddressContent ref={contentRef}>{address}</AddressContent>
+            </AddressCopy>
+            <Ellipsis hidden={!overflown}>...</Ellipsis>
+            <AddressCopy right overflown={overflown}>
+              {address}
+            </AddressCopy>
+          </Address>
+        </AddressWrapper>
+      </Tooltip.Trigger>
+    </TruncateMiddleAddressComponent>
+  );
 }
