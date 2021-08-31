@@ -2,11 +2,12 @@ import styled from '@emotion/styled';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import NexusAddress from 'components/NexusAddress';
 import TokenName from 'components/TokenName';
 import { timing } from 'styles';
 import { loadAccounts, loadOwnedTokens } from 'lib/user';
+import memoize from 'utils/memoize';
 
 __ = __context('SelectAddress');
 
@@ -16,13 +17,15 @@ const SubHeading = styled.div({
 });
 
 const Option = styled.div(({ theme }) => ({
-  opacity: 0.95,
+  // opacity: 0.9,
   margin: '0 -50px',
-  padding: '7px 50px',
-  transition: `opacity ${timing.normal}`,
+  padding: '15px 50px',
+  transitionProperty: 'opacity, background-color',
+  transitionDuration: timing.normal,
 
   '&:hover': {
     opacity: 1,
+    background: theme.background,
   },
 }));
 
@@ -58,23 +61,24 @@ const selectContacts = memoize(
 );
 
 export default function SelectAddressModal({ onSelect }) {
+  const accounts = useSelector((state) => state.user.accounts);
+  const tokens = useSelector(selectKnownTokens);
+  const contacts = useSelector(selectContacts);
   useEffect(() => {
     loadAccounts();
     loadOwnedTokens();
   }, []);
 
-  const accounts = useSelector((state) => state.user.accounts);
-  const tokens = useSelector(selectKnownTokens);
-  const contacts = useSelector(selectContacts);
   return (
-    <Modal>
+    <ControlledModal>
       {(closeModal) => (
-        <Modal.Body>
+        <ControlledModal.Body>
           {!!accounts?.length && (
             <div>
               <SubHeading>{__('Accounts')}</SubHeading>
               {accounts.map((account) => (
                 <Option
+                  key={account.address}
                   onClick={() => {
                     onSelect?.(account.address);
                     closeModal();
@@ -94,10 +98,11 @@ export default function SelectAddressModal({ onSelect }) {
             </div>
           )}
           {!!tokens?.length && (
-            <div>
+            <div className="mt2">
               <SubHeading>{__('Tokens')}</SubHeading>
               {tokens.map((token) => (
                 <Option
+                  key={token.address}
                   onClick={() => {
                     onSelect?.(token.address);
                     closeModal();
@@ -113,10 +118,11 @@ export default function SelectAddressModal({ onSelect }) {
             </div>
           )}
           {!!contacts?.length && (
-            <div>
+            <div className="mt2">
               <SubHeading>{__('Contacts')}</SubHeading>
               {contacts.map((contact) => (
                 <Option
+                  key={contact.address}
                   onClick={() => {
                     onSelect?.(contact.address);
                     closeModal();
@@ -131,8 +137,8 @@ export default function SelectAddressModal({ onSelect }) {
               ))}
             </div>
           )}
-        </Modal.Body>
+        </ControlledModal.Body>
       )}
-    </Modal>
+    </ControlledModal>
   );
 }
