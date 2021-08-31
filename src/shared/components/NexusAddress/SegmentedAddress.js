@@ -79,12 +79,12 @@ function renderAddress(address) {
  * @class SegmentedAddress
  * @extends {React.Component}
  */
-export default function SegmentedAddress(
+export default function SegmentedAddress({
   address,
   label,
   copyable = true,
   ...rest
-) {
+}) {
   const addressRef = useRef();
   return (
     <SegmentedAddressComponent {...rest}>
