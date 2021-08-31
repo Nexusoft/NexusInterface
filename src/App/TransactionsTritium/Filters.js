@@ -5,8 +5,6 @@ import styled from '@emotion/styled';
 import Select from 'components/Select';
 import TextField from 'components/TextField';
 import FormField from 'components/FormField';
-import AutoSuggest from 'components/AutoSuggest';
-import TokenName from 'components/TokenName';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
@@ -14,7 +12,6 @@ import { updateFilter } from 'lib/tritiumTransactions';
 import { loadOwnedTokens, loadAccounts } from 'lib/user';
 import { openModal } from 'lib/ui';
 import { debounced } from 'utils/universal';
-import memoize from 'utils/memoize';
 import ListIcon from 'icons/list.svg';
 import SearchIcon from 'icons/search.svg';
 import SelectAddressModal from './SelectAddressModal';
@@ -25,83 +22,6 @@ const debouncedUpdateFilter = debounced(
   (updates) => updateFilter(updates),
   500
 );
-
-const selectAccountOptions = memoize((accounts, addressBook) => {
-  const accountsMap = {};
-  if (accounts) {
-    for (const account of accounts) {
-      const { address } = account;
-      if (address && !accountsMap[address]) {
-        accountsMap[address] = {
-          type: 'account',
-          address,
-          account,
-        };
-      }
-    }
-  }
-  if (addressBook) {
-    for (const contact of Object.values(addressBook)) {
-      for (const { address, isMine, label } of contact.addresses) {
-        if (!isMine && address && !accountsMap[address]) {
-          accountsMap[address] = {
-            type: 'contact',
-            address,
-            name: contact.name,
-            label,
-          };
-        }
-      }
-    }
-  }
-  return Object.values(accountsMap).map(
-    ({ type, address, account, name, label }) => ({
-      value: address,
-      display:
-        type === 'account' ? (
-          <span>
-            {account.name || <em>{__('Unnamed account')}</em>}{' '}
-            <span className="dim">{address}</span>
-          </span>
-        ) : (
-          <span>
-            {name}
-            {label ? ' - ' + label : ''} <span className="dim">{address}</span>
-          </span>
-        ),
-    })
-  );
-});
-
-const selectTokenOptions = memoize((ownedTokens, accounts) => {
-  const tokensMap = {
-    0: {
-      address: '0',
-      name: 'NXS',
-    },
-  };
-  if (ownedTokens) {
-    for (const token of ownedTokens) {
-      if (token.address && !tokensMap[token.address]) {
-        tokensMap[token.address] = token;
-      }
-    }
-  }
-  if (accounts) {
-    for (const account of accounts) {
-      if (account.token && !tokensMap[account.token]) {
-        tokensMap[account.token] = {
-          address: account.token,
-          name: account.ticker,
-        };
-      }
-    }
-  }
-  return Object.values(tokensMap).map((token) => ({
-    value: token.address,
-    display: TokenName.from({ token }),
-  }));
-});
 
 const operations = [
   'WRITE',
@@ -166,9 +86,6 @@ const FiltersWrapper = styled.div(({ morePadding }) => ({
 export default function Filters({ morePadding }) {
   const { addressQuery, operation, timeSpan } = useSelector(
     (state) => state.ui.transactionsFilter
-  );
-  const accountOptions = useSelector(({ addressBook, user: { accounts } }) =>
-    selectAccountOptions(accounts, addressBook)
   );
   const [addressInput, setAddressInput] = useState(addressQuery);
   useEffect(() => {
