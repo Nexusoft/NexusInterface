@@ -7,10 +7,17 @@ import TextField from 'components/TextField';
 import FormField from 'components/FormField';
 import AutoSuggest from 'components/AutoSuggest';
 import TokenName from 'components/TokenName';
+import Icon from 'components/Icon';
+import Button from 'components/Button';
+import Tooltip from 'components/Tooltip';
 import { updateFilter } from 'lib/tritiumTransactions';
 import { loadOwnedTokens, loadAccounts } from 'lib/user';
+import { openModal } from 'lib/ui';
 import { debounced } from 'utils/universal';
 import memoize from 'utils/memoize';
+import ListIcon from 'icons/list.svg';
+import SearchIcon from 'icons/search.svg';
+import SelectAddressModal from './SelectAddressModal';
 
 __ = __context('Transactions');
 
@@ -148,8 +155,8 @@ const timeFrames = [
 const FiltersWrapper = styled.div(({ morePadding }) => ({
   gridArea: 'filters',
   display: 'grid',
-  gridTemplateAreas: '"addressSearch nameSearch timeFrame operation"',
-  gridTemplateColumns: '3fr 2fr 100px 100px',
+  gridTemplateAreas: '"addressSearch timeFrame operation"',
+  gridTemplateColumns: '3fr  100px 100px',
   columnGap: '.75em',
   alignItems: 'end',
   fontSize: 15,
@@ -157,60 +164,46 @@ const FiltersWrapper = styled.div(({ morePadding }) => ({
 }));
 
 export default function Filters({ morePadding }) {
-  const { accountQuery, tokenQuery, operation, timeSpan } = useSelector(
+  const { addressQuery, operation, timeSpan } = useSelector(
     (state) => state.ui.transactionsFilter
-  );
-  const tokenOptions = useSelector(({ user: { tokens, accounts } }) =>
-    selectTokenOptions(tokens, accounts)
   );
   const accountOptions = useSelector(({ addressBook, user: { accounts } }) =>
     selectAccountOptions(accounts, addressBook)
   );
-  const [accountInput, setAccountInput] = useState(accountQuery);
-  const [tokenInput, setTokenInput] = useState(tokenQuery);
+  const [addressInput, setAddressInput] = useState(addressQuery);
   useEffect(() => {
     loadOwnedTokens();
     loadAccounts();
   }, []);
   return (
     <FiltersWrapper morePadding={morePadding}>
-      <FormField connectLabel label={__('Account')}>
-        <AutoSuggest
-          inputComponent={TextField}
-          inputProps={{
-            placeholder: __('Account address'),
-            value: accountInput,
-            onChange: ({ target: { value } }) => {
-              setAccountInput(value);
-              debouncedUpdateFilter({ accountQuery: value });
-            },
+      <FormField connectLabel label={__('Address')}>
+        <TextField
+          placeholder={__('Search for account/token address')}
+          value={addressInput}
+          onChange={({ target: { value } }) => {
+            setAddressInput(value);
+            debouncedUpdateFilter({ addressQuery: value });
           }}
-          suggestions={accountOptions}
-          filterSuggestions={(suggestions) => suggestions}
-          onSelect={(value) => {
-            setAccountInput(value);
-            updateFilter({ accountQuery: value });
-          }}
-        />
-      </FormField>
-
-      <FormField connectLabel label={__('Token')}>
-        <AutoSuggest
-          inputComponent={TextField}
-          inputProps={{
-            placeholder: __('Token address'),
-            value: tokenInput,
-            onChange: ({ target: { value } }) => {
-              setTokenInput(value);
-              debouncedUpdateFilter({ tokenQuery: value });
-            },
-          }}
-          suggestions={tokenOptions}
-          filterSuggestions={(suggestions) => suggestions}
-          onSelect={(value) => {
-            setTokenInput(value);
-            updateFilter({ tokenQuery: value });
-          }}
+          left={<Icon icon={SearchIcon} className="mr1" />}
+          right={
+            <Tooltip.Trigger tooltip={__('Select an address')}>
+              <Button
+                skin="plain"
+                fitHeight
+                onClick={() => {
+                  openModal(SelectAddressModal, {
+                    onSelect: (address) => {
+                      setAddressInput(address);
+                      updateFilter({ addressQuery: address });
+                    },
+                  });
+                }}
+              >
+                <Icon icon={ListIcon} />
+              </Button>
+            </Tooltip.Trigger>
+          }
         />
       </FormField>
 
