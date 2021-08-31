@@ -47,17 +47,20 @@ const selectKnownTokens = memoize(
     }
     return tokens;
   },
-  (state) => state.user.tokens
+  (state) => [state.user.tokens, state.user.accounts]
 );
 
 const selectContacts = memoize(
   (addressBook) =>
     addressBook &&
-    Object.entries(addressBook).map(([name, { addresses }]) => ({
-      name,
-      addresses,
-    })),
-  (state) => state.addressBook
+    Object.entries(addressBook).reduce(
+      (contacts, [name, { addresses }]) => [
+        ...contacts,
+        ...addresses.map((contact) => ({ ...contact, name })),
+      ],
+      []
+    ),
+  (state) => [state.addressBook]
 );
 
 export default function SelectAddressModal({ onSelect }) {
@@ -129,7 +132,15 @@ export default function SelectAddressModal({ onSelect }) {
                   }}
                 >
                   <NexusAddress
-                    label={<TokenName contact={contact} />}
+                    label={
+                      contact.label
+                        ? `${contact.name} - ${contact.label}`
+                        : contact.isMine
+                        ? __('My address for %{name}')
+                        : __("%{name}'s address", {
+                            name: contact.name,
+                          })
+                    }
                     address={contact.address}
                     copyable={false}
                   />
