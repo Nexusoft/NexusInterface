@@ -19,7 +19,7 @@ const SubHeading = styled.div({
 const Option = styled.div(({ theme }) => ({
   // opacity: 0.9,
   margin: '0 -50px',
-  padding: '15px 50px',
+  padding: '1em 50px',
   transitionProperty: 'opacity, background-color',
   transitionDuration: timing.normal,
 
@@ -70,7 +70,7 @@ export default function SelectAddressModal({ onSelect }) {
   }, []);
 
   return (
-    <ControlledModal>
+    <ControlledModal maxWidth={500}>
       {(closeModal) => (
         <ControlledModal.Body>
           {!!accounts?.length && (
