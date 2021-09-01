@@ -310,7 +310,7 @@ function buildDarwinTemplate() {
         : null,
       legacyMode
         ? menuItems.switchTritiumMode
-        : systemInfo?.clientmode || systemInfo?.legacy_unsupported
+        : systemInfo?.litemode || systemInfo?.legacy_unsupported
         ? null
         : menuItems.switchLegacyMode,
       menuItems.separator,
@@ -324,7 +324,7 @@ function buildDarwinTemplate() {
       legacyMode ? menuItems.backupWallet : null,
       legacyMode ? menuItems.viewBackups : null,
       legacyMode ? menuItems.separator : null,
-      !systemInfo?.clientmode ? menuItems.downloadRecent : null,
+      !systemInfo?.litemode ? menuItems.downloadRecent : null,
     ].filter((e) => e),
   };
   const subMenuEdit = {
@@ -398,7 +398,7 @@ function buildDefaultTemplate() {
       legacyMode ? menuItems.backupWallet : null,
       legacyMode ? menuItems.viewBackups : null,
       menuItems.separator,
-      !systemInfo?.clientmode ? menuItems.downloadRecent : null,
+      !systemInfo?.litemode ? menuItems.downloadRecent : null,
       menuItems.separator,
       // If it's in remote core mode and core is not running, don't show
       // Start Core option because it does nothing
@@ -409,7 +409,7 @@ function buildDefaultTemplate() {
         : null,
       legacyMode
         ? menuItems.switchTritiumMode
-        : systemInfo?.clientmode || systemInfo?.legacy_unsupported
+        : systemInfo?.litemode || systemInfo?.legacy_unsupported
         ? null
         : menuItems.switchLegacyMode,
       menuItems.separator,
@@ -500,7 +500,7 @@ export function prepareMenu() {
   );
   observeStore((state) => state.activeAppModule, rebuildMenu);
   observeStore((state) => state.settings.manualDaemon, rebuildMenu);
-  observeStore((state) => state.core.systemInfo?.clientmode, rebuildMenu);
+  observeStore((state) => state.core.systemInfo?.litemode, rebuildMenu);
   observeStore(
     (state) => state.core.systemInfo?.legacy_unsupported,
     rebuildMenu

@@ -278,7 +278,7 @@ async function shouldUnlockStaking({ stakeInfo, status }) {
   } = store.getState();
 
   if (
-    !systemInfo?.clientmode &&
+    !systemInfo?.litemode &&
     status?.unlocked.staking === false &&
     enableStaking
   ) {

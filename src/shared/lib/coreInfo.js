@@ -47,7 +47,7 @@ const getInfo = legacyMode
           try {
             liteModeChecked = true;
             const systemInfo = await callApi('system/get/info');
-            if (systemInfo?.clientmode) {
+            if (systemInfo?.litemode) {
               updateSettings({ legacyMode: false });
               location.reload();
             }
@@ -237,7 +237,7 @@ export function prepareCoreInfo() {
         if (
           !state.settings.bootstrapSuggestionDisabled &&
           isCoreConnected(state) &&
-          !state.core.systemInfo?.clientmode &&
+          !state.core.systemInfo?.litemode &&
           state.bootstrap.step === 'idle' &&
           !state.settings.manualDaemon &&
           systemInfo?.synccomplete < 50 &&

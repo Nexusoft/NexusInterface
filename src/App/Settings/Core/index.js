@@ -166,7 +166,7 @@ const mapStateToProps = (state) => {
       (formTestnetIteration && formTestnetIteration != 0) ||
       (settingTestnetIteration && settingTestnetIteration != 0),
     coreConnected: isCoreConnected(state),
-    liteMode: !!systemInfo?.clientmode,
+    liteMode: !!systemInfo?.litemode,
     manualDaemon: settings.manualDaemon,
     initialValues: getInitialValues(settings),
     restartCoreOnSave,
