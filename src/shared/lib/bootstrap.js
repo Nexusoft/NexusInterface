@@ -66,7 +66,7 @@ async function startBootstrap() {
 
     aborting = false;
 
-    if (!systemInfo?.legacy_unsupported) {
+    if (!systemInfo?.nolegacy) {
       setStatus('backing_up');
       await backupWallet(backupDirectory);
       if (aborting) {
@@ -250,7 +250,7 @@ function shouldRescan() {
     } = store.getState();
 
     if (systemInfo) {
-      resolve(!systemInfo.legacy_unsupported);
+      resolve(!systemInfo.nolegacy);
     } else {
       // Core might not be ready right away. In that case,
       // wait until systemInfo is available
@@ -259,7 +259,7 @@ function shouldRescan() {
         (systemInfo) => {
           if (systemInfo) {
             unobserve();
-            resolve(!systemInfo.legacy_unsupported);
+            resolve(!systemInfo.nolegacy);
             clearTimeout(timeoutId);
           }
         }

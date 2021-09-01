@@ -310,7 +310,7 @@ function buildDarwinTemplate() {
         : null,
       legacyMode
         ? menuItems.switchTritiumMode
-        : systemInfo?.litemode || systemInfo?.legacy_unsupported
+        : systemInfo?.litemode || systemInfo?.nolegacy
         ? null
         : menuItems.switchLegacyMode,
       menuItems.separator,
@@ -409,7 +409,7 @@ function buildDefaultTemplate() {
         : null,
       legacyMode
         ? menuItems.switchTritiumMode
-        : systemInfo?.litemode || systemInfo?.legacy_unsupported
+        : systemInfo?.litemode || systemInfo?.nolegacy
         ? null
         : menuItems.switchLegacyMode,
       menuItems.separator,
@@ -501,8 +501,5 @@ export function prepareMenu() {
   observeStore((state) => state.activeAppModule, rebuildMenu);
   observeStore((state) => state.settings.manualDaemon, rebuildMenu);
   observeStore((state) => state.core.systemInfo?.litemode, rebuildMenu);
-  observeStore(
-    (state) => state.core.systemInfo?.legacy_unsupported,
-    rebuildMenu
-  );
+  observeStore((state) => state.core.systemInfo?.nolegacy, rebuildMenu);
 }

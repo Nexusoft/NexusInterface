@@ -249,7 +249,7 @@ export function prepareUser() {
           settings: { migrateSuggestionDisabled },
           core: { systemInfo },
         } = store.getState();
-        if (!migrateSuggestionDisabled && !systemInfo?.legacy_unsupported) {
+        if (!migrateSuggestionDisabled && !systemInfo?.nolegacy) {
           const coreInfo = await rpc('getinfo', []);
           const legacyBalance = (coreInfo.balance || 0) + (coreInfo.stake || 0);
           if (legacyBalance) {
