@@ -2,7 +2,7 @@ import { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import WaitingMessage from 'components/WaitingMessage';
 import Table from 'components/Table';
 import ContractDetailsModal from 'components/ContractDetailsModal';
@@ -193,10 +193,10 @@ class AccountHistoryModal extends Component {
   async componentDidMount() {
     const { account } = this.props;
     try {
-      const transactions = await listAll(
-            'finance/transactions/account',
-        { address: account.address, verbose: 'summary' }
-      );
+      const transactions = await listAll('finance/transactions/account', {
+        address: account.address,
+        verbose: 'summary',
+      });
 
       const contracts = transactions.reduce((contracts, tx) => {
         if (Array.isArray(tx.contracts)) {
@@ -224,15 +224,15 @@ class AccountHistoryModal extends Component {
     const { account, balances, showFiat, market, fiatCurrency } = this.props;
     const { contracts } = this.state;
     return (
-      <Modal
+      <ControlledModal
         assignClose={(closeModal) => {
           this.closeModal = closeModal;
         }}
       >
-        <Modal.Header>
+        <ControlledModal.Header>
           {account.name} {__('Account History')}
-        </Modal.Header>
-        <Modal.Body>
+        </ControlledModal.Header>
+        <ControlledModal.Body>
           {!contracts ? (
             <WaitingMessage>
               {__('Loading account history')}
@@ -295,31 +295,36 @@ class AccountHistoryModal extends Component {
                         : formatNumber(account.balance, 6)}
                     </div>
                   </div>
-                  {account.pending !== undefined && (
-                  <div className="text-center">
-                    <div>
-                      <strong>{__('Pending')}</strong>
+                  {account.unclaimed !== undefined && (
+                    <div className="text-center">
+                      <div>
+                        <strong>{__('Unclaimed')}</strong>
+                      </div>
+                      <div>
+                        {showFiat && account.token_name === 'NXS'
+                          ? formatCurrency(
+                              account.unclaimed * market,
+                              fiatCurrency
+                            )
+                          : formatNumber(account.unclaimed, 6)}
+                      </div>
                     </div>
-                    <div>
-                      {showFiat && account.token_name === 'NXS'
-                        ? formatCurrency(account.pending * market, fiatCurrency)
-                        : formatNumber(account.pending, 6)}
+                  )}
+                  {account.unconfirmed !== undefined && (
+                    <div className="text-center">
+                      <div>
+                        <strong>{__('Unconfirmed')}</strong>
+                      </div>
+                      <div>
+                        {showFiat && account.token_name === 'NXS'
+                          ? formatCurrency(
+                              account.unconfirmed * market,
+                              fiatCurrency
+                            )
+                          : formatNumber(account.unconfirmed, 6)}
+                      </div>
                     </div>
-                  </div>)}
-                  { account.unconfirmed !== undefined && 
-                  (<div className="text-center">
-                    <div>
-                      <strong>{__('Unconfirmed')}</strong>
-                    </div>
-                    <div>
-                      {showFiat && account.token_name === 'NXS'
-                        ? formatCurrency(
-                            account.unconfirmed * market,
-                            fiatCurrency
-                          )
-                        : formatNumber(account.unconfirmed, 6)}
-                    </div>
-                  </div>)}
+                  )}
                   {typeof account.stake === 'number' && (
                     <div className="text-center">
                       <div>
@@ -359,8 +364,8 @@ class AccountHistoryModal extends Component {
               />
             </Layout>
           )}
-        </Modal.Body>
-      </Modal>
+        </ControlledModal.Body>
+      </ControlledModal>
     );
   }
 }

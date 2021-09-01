@@ -3,7 +3,7 @@ import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
 import { connect } from 'react-redux';
 
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import FormField from 'components/FormField';
 import TextFieldWithKeyboard from 'components/TextFieldWithKeyboard';
 import Button from 'components/Button';
@@ -95,12 +95,12 @@ class Login extends Component {
     const { handleSubmit, submitting } = this.props;
 
     return (
-      <Modal
+      <ControlledModal
         maxWidth={500}
         assignClose={(closeModal) => (this.closeModal = closeModal)}
       >
-        <Modal.Header>{__('Log in')}</Modal.Header>
-        <Modal.Body>
+        <ControlledModal.Header>{__('Log in')}</ControlledModal.Header>
+        <ControlledModal.Body>
           <form onSubmit={handleSubmit}>
             <FormField
               connectLabel
@@ -173,8 +173,8 @@ class Login extends Component {
               </Button>
             </ExtraSection>
           </form>
-        </Modal.Body>
-      </Modal>
+        </ControlledModal.Body>
+      </ControlledModal>
     );
   }
 }

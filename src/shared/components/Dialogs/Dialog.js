@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import Button from 'components/Button';
 
-const Dialog = styled(Modal)({
+const Dialog = styled(ControlledModal)({
   width: 500,
 });
 

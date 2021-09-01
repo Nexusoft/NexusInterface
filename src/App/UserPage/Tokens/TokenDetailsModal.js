@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import InfoField from 'components/InfoField';
 import QRButton from 'components/QRButton';
 import NewAccountModal from 'components/NewAccountModal';
@@ -41,11 +41,11 @@ export default function TokenDetailsModal({ token: tokenProp, tokenAddress }) {
   const token = tokenProp || tokenState;
 
   return (
-    <Modal>
+    <ControlledModal>
       {(closeModal) => (
         <>
-          <Modal.Header>{__('Token Details')}</Modal.Header>
-          <Modal.Body>
+          <ControlledModal.Header>{__('Token Details')}</ControlledModal.Header>
+          <ControlledModal.Body>
             {!token && (
               <div className="text-center">
                 <Spinner size={24} />
@@ -76,10 +76,10 @@ export default function TokenDetailsModal({ token: tokenProp, tokenAddress }) {
                 </InfoField>
 
                 <InfoField ratio={[1, 2]} label={__('Current Supply')}>
-                  {token.currentsupply}
+                  {formatNumber(token.currentsupply, 0)}
                 </InfoField>
                 <InfoField ratio={[1, 2]} label={__('Max Supply')}>
-                  {token.maxsupply}
+                  {formatNumber(token.maxsupply, 0)}
                 </InfoField>
                 <InfoField ratio={[1, 2]} label={__('Decimals')}>
                   {token.decimals}
@@ -87,13 +87,18 @@ export default function TokenDetailsModal({ token: tokenProp, tokenAddress }) {
                 <InfoField ratio={[1, 2]} label={__('Balance')}>
                   {formatNumber(token.balance, token.decimals)} {token.ticker}
                 </InfoField>
-                <InfoField ratio={[1, 2]} label={__('Pending balance')}>
-                  {formatNumber(token.pending, token.decimals)} {token.ticker}
-                </InfoField>
-                <InfoField ratio={[1, 2]} label={__('Unconfirmed balance')}>
-                  {formatNumber(token.unconfirmed, token.decimals)}{' '}
-                  {token.ticker}
-                </InfoField>
+                {typeof token.unclaimed === 'number' && (
+                  <InfoField ratio={[1, 2]} label={__('Unclaimed balance')}>
+                    {formatNumber(token.unclaimed, token.decimals)}{' '}
+                    {token.ticker}
+                  </InfoField>
+                )}
+                {typeof token.unconfirmed === 'number' && (
+                  <InfoField ratio={[1, 2]} label={__('Unconfirmed balance')}>
+                    {formatNumber(token.unconfirmed, token.decimals)}{' '}
+                    {token.ticker}
+                  </InfoField>
+                )}
                 <div className="flex space-between">
                   <Button
                     wide
@@ -113,9 +118,9 @@ export default function TokenDetailsModal({ token: tokenProp, tokenAddress }) {
                 </div>
               </>
             )}
-          </Modal.Body>
+          </ControlledModal.Body>
         </>
       )}
-    </Modal>
+    </ControlledModal>
   );
 }

@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import Button from 'components/Button';
 import InfoField from 'components/InfoField';
 import AdjustStakeModal from 'components/AdjustStakeModal';
@@ -24,11 +24,11 @@ const timeFormatOptions = {
 };
 
 const AccountDetailsModal = ({ account, stakeInfo }) => (
-  <Modal>
+  <ControlledModal>
     {(closeModal) => (
       <>
-        <Modal.Header>{__('Account Details')}</Modal.Header>
-        <Modal.Body>
+        <ControlledModal.Header>{__('Account Details')}</ControlledModal.Header>
+        <ControlledModal.Body>
           <InfoField ratio={[1, 2]} label={__('Account name')}>
             {account.name || <span className="dim">{__('Unnamed')}</span>}
           </InfoField>
@@ -38,8 +38,8 @@ const AccountDetailsModal = ({ account, stakeInfo }) => (
           <InfoField ratio={[1, 2]} label={__('Last modified')}>
             {formatDateTime(account.modified * 1000, timeFormatOptions)}
           </InfoField>
-          <InfoField ratio={[1, 2]} label={__('Token name')}>
-            {account.token_name}
+          <InfoField ratio={[1, 2]} label={__('Token')}>
+            <TokenName account={account} />
           </InfoField>
           {account.data !== undefined && (
             <InfoField ratio={[1, 2]} label={__('Data')}>
@@ -61,7 +61,7 @@ const AccountDetailsModal = ({ account, stakeInfo }) => (
                 className="v-align"
                 onClick={() => {
                   closeModal();
-                  goToSend({ sendFrom: account.name });
+                  goToSend({ sendFrom: `account:${account.address}` });
                 }}
               >
                 {__('Send %{token_name}', {
@@ -70,15 +70,18 @@ const AccountDetailsModal = ({ account, stakeInfo }) => (
               </Button>
             )}
           </InfoField>
-          {account.pending !== undefined && (
-          <InfoField ratio={[1, 2]} label={__('Pending balance')}>
-            {formatNumber(account.pending, 6)} <TokenName account={account} />
-          </InfoField>)}
+          {account.unclaimed !== undefined && (
+            <InfoField ratio={[1, 2]} label={__('Unclaimed balance')}>
+              {formatNumber(account.unclaimed, 6)}{' '}
+              <TokenName account={account} />
+            </InfoField>
+          )}
           {account.unconfirmed !== undefined && (
-          <InfoField ratio={[1, 2]} label={__('Unconfirmed balance')}>
-            {formatNumber(account.unconfirmed, 6)}{' '}
-            <TokenName account={account} />
-          </InfoField>)}
+            <InfoField ratio={[1, 2]} label={__('Unconfirmed balance')}>
+              {formatNumber(account.unconfirmed, 6)}{' '}
+              <TokenName account={account} />
+            </InfoField>
+          )}
           {account.stake !== undefined && (
             <InfoField ratio={[1, 2]} label={__('Stake balance')}>
               {formatNumber(account.stake, 6)} <TokenName account={account} />
@@ -123,10 +126,10 @@ const AccountDetailsModal = ({ account, stakeInfo }) => (
               </Button>
             </div>
           )}
-        </Modal.Body>
+        </ControlledModal.Body>
       </>
     )}
-  </Modal>
+  </ControlledModal>
 );
 
 const mapStateToProps = (state) => ({

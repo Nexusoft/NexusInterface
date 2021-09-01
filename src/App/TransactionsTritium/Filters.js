@@ -53,7 +53,7 @@ const selectAccountOptions = memoize((accounts, addressBook) => {
   }
   return Object.values(accountsMap).map(
     ({ type, address, account, name, label }) => ({
-      value: type === 'account' ? account.name : address,
+      value: address,
       display:
         type === 'account' ? (
           <span>
@@ -182,8 +182,7 @@ export default function Filters({ morePadding }) {
         <AutoSuggest
           inputComponent={TextField}
           inputProps={{
-            type: 'search',
-            placeholder: 'Account name/address',
+            placeholder: __('Account address'),
             value: accountInput,
             onChange: (evt) => {
               setAccountInput(evt.target.value);
@@ -203,8 +202,7 @@ export default function Filters({ morePadding }) {
         <AutoSuggest
           inputComponent={TextField}
           inputProps={{
-            type: 'search',
-            placeholder: 'Token name/address',
+            placeholder: __('Token address'),
             value: tokenInput,
             onChange: (evt) => {
               setTokenInput(evt.target.value);

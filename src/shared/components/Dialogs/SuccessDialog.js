@@ -3,7 +3,7 @@ import { createRef, Component } from 'react';
 import styled from '@emotion/styled';
 
 // Internal
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import Icon from 'components/Icon';
 import * as color from 'utils/color';
 import checkIcon from 'icons/check.svg';
@@ -36,13 +36,13 @@ class SuccessDialog extends Component {
         }}
         {...rest}
       >
-        <Modal.Body>
+        <ControlledModal.Body>
           <CheckMark>
             <Icon icon={checkIcon} />
           </CheckMark>
           <Dialog.Message>{message}</Dialog.Message>
           {!!note && <Dialog.Note>{note}</Dialog.Note>}
-        </Modal.Body>
+        </ControlledModal.Body>
         <Dialog.Button
           ref={this.buttonRef}
           skin="filled-primary"

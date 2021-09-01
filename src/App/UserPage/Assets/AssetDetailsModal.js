@@ -2,7 +2,7 @@ import { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
@@ -62,12 +62,12 @@ class AssetDetailsModal extends Component {
     const data = getAssetData(asset);
 
     return (
-      <Modal
+      <ControlledModal
         assignClose={(close) => {
           this.closeModal = close;
         }}
       >
-        <Modal.Header className="relative">
+        <ControlledModal.Header className="relative">
           {__('Asset Details')}
           {isOwner && isEditable(schema) && (
             <EditAsset>
@@ -87,9 +87,9 @@ class AssetDetailsModal extends Component {
               </Tooltip.Trigger>
             </EditAsset>
           )}
-        </Modal.Header>
+        </ControlledModal.Header>
 
-        <Modal.Body>
+        <ControlledModal.Body>
           <InfoField label={__('Name')}>
             {asset.name || <span className="dim">N/A</span>}
           </InfoField>
@@ -147,8 +147,8 @@ class AssetDetailsModal extends Component {
               </div>
             )}
           </div>
-        </Modal.Body>
-      </Modal>
+        </ControlledModal.Body>
+      </ControlledModal>
     );
   }
 }

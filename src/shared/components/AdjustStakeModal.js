@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
 
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import Slider from 'components/Slider';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
@@ -117,15 +117,17 @@ class AdjustStakeModal extends Component {
   render() {
     const { total, handleSubmit, submitting, change, onClose } = this.props;
     return (
-      <Modal
+      <ControlledModal
         maxWidth={600}
         assignClose={(closeModal) => {
           this.closeModal = closeModal;
         }}
         onClose={onClose}
       >
-        <Modal.Header>{__('Set stake amount')}</Modal.Header>
-        <Modal.Body>
+        <ControlledModal.Header>
+          {__('Set stake amount')}
+        </ControlledModal.Header>
+        <ControlledModal.Body>
           <form onSubmit={handleSubmit}>
             <div className="relative">
               <Field
@@ -174,8 +176,8 @@ class AdjustStakeModal extends Component {
               </Button>
             </div>
           </form>
-        </Modal.Body>
-      </Modal>
+        </ControlledModal.Body>
+      </ControlledModal>
     );
   }
 }

@@ -2,7 +2,6 @@ import { useRef } from 'react';
 import styled from '@emotion/styled';
 
 import { timing } from 'styles';
-import * as color from 'utils/color';
 
 const SliderComponent = styled.input(({ theme }) => ({
   appearance: 'none',
@@ -28,7 +27,7 @@ const SliderComponent = styled.input(({ theme }) => ({
     transition: `background-color ${timing.normal}`,
 
     '&:hover': {
-      background: color.lighten(theme.primary, 0.15),
+      background: theme.raise(theme.primary, 0.15),
     },
   },
 }));

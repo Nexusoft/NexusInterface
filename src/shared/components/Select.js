@@ -19,7 +19,6 @@ import Arrow from 'components/Arrow';
 import Overlay from 'components/Overlay';
 import Tooltip from 'components/Tooltip';
 import { timing, consts, animations } from 'styles';
-import * as color from 'utils/color';
 import { passRef } from 'utils/misc';
 
 // Minimum gap from the dropdown to the edges of the screen
@@ -82,7 +81,7 @@ const SelectControl = styled.div(
             borderBottomColor: theme.mixer(0.75),
             '&::after': {
               background: error
-                ? color.lighten(theme.danger, 0.3)
+                ? theme.raise(theme.danger, 0.3)
                 : theme.mixer(0.75),
             },
           },
@@ -91,8 +90,8 @@ const SelectControl = styled.div(
                 color: theme.foreground,
                 '&&::after': {
                   background: error
-                    ? color.lighten(theme.danger, 0.3)
-                    : color.lighten(theme.primary, 0.3),
+                    ? theme.raise(theme.danger, 0.3)
+                    : theme.raise(theme.primary, 0.3),
                 },
               }
             : null),

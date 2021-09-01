@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
 
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import InfoField from 'components/InfoField';
 import WaitingMessage from 'components/WaitingMessage';
 import { formatDateTime } from 'lib/intl';
@@ -36,9 +36,11 @@ class TransactionDetailsModal extends Component {
     const { transaction, minConfirmations } = this.props;
 
     return (
-      <Modal>
-        <Modal.Header>{__('Transactions Details')}</Modal.Header>
-        <Modal.Body>
+      <ControlledModal>
+        <ControlledModal.Header>
+          {__('Transactions Details')}
+        </ControlledModal.Header>
+        <ControlledModal.Body>
           {transaction ? (
             <>
               <InfoField label={__('Time')}>
@@ -73,8 +75,8 @@ class TransactionDetailsModal extends Component {
               {__('Loading transaction details...')}
             </WaitingMessage>
           )}
-        </Modal.Body>
-      </Modal>
+        </ControlledModal.Body>
+      </ControlledModal>
     );
   }
 }

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
 
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import Button from 'components/Button';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
@@ -109,11 +109,13 @@ class ChangeRegisterAddressForm extends Component {
 }
 
 const ChangeRegisterAddressModal = ({ nameRecord }) => (
-  <Modal maxWidth={600}>
+  <ControlledModal maxWidth={600}>
     {(closeModal) => (
       <>
-        <Modal.Header>{__('Change register address')}</Modal.Header>
-        <Modal.Body>
+        <ControlledModal.Header>
+          {__('Change register address')}
+        </ControlledModal.Header>
+        <ControlledModal.Body>
           <ChangeRegisterAddressForm
             closeModal={closeModal}
             nameRecord={nameRecord}
@@ -121,10 +123,10 @@ const ChangeRegisterAddressModal = ({ nameRecord }) => (
               registerAddress: nameRecord.register,
             }}
           />
-        </Modal.Body>
+        </ControlledModal.Body>
       </>
     )}
-  </Modal>
+  </ControlledModal>
 );
 
 export default ChangeRegisterAddressModal;

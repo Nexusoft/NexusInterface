@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import { reduxForm, Field } from 'redux-form';
 
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import Button from 'components/Button';
 import InfoField from 'components/InfoField';
 import TextField from 'components/TextField';
@@ -115,21 +115,21 @@ const getInitialValues = (mutableFields) =>
 const EditAssetModal = ({ schema, asset }) => {
   const mutableFields = getMutableFields(schema);
   return (
-    <Modal>
+    <ControlledModal>
       {(closeModal) => (
         <>
-          <Modal.Header>{__('Edit asset')}</Modal.Header>
-          <Modal.Body>
+          <ControlledModal.Header>{__('Edit asset')}</ControlledModal.Header>
+          <ControlledModal.Body>
             <EditAssetForm
               closeModal={closeModal}
               asset={asset}
               mutableFields={mutableFields}
               initialValues={getInitialValues(mutableFields)}
             />
-          </Modal.Body>
+          </ControlledModal.Body>
         </>
       )}
-    </Modal>
+    </ControlledModal>
   );
 };
 

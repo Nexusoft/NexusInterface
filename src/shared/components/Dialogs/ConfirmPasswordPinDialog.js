@@ -1,6 +1,6 @@
 import { Component } from 'react';
 
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import FormField from 'components/FormField';
 import TextFieldWithKeyboard from 'components/TextFieldWithKeyboard';
 import Button from 'components/Button';
@@ -36,13 +36,15 @@ export default class ConfirmPasswordPinModal extends Component {
   render() {
     const { isNew, password, pin, onConfirm, ...rest } = this.props;
     return (
-      <Modal
+      <ControlledModal
         assignClose={(closeModal) => (this.closeModal = closeModal)}
         maxWidth={500}
         {...rest}
       >
-        <Modal.Header>{__('Confirm password and PIN')}</Modal.Header>
-        <Modal.Body>
+        <ControlledModal.Header>
+          {__('Confirm password and PIN')}
+        </ControlledModal.Header>
+        <ControlledModal.Body>
           <form onSubmit={this.confirm}>
             <div>
               {isNew
@@ -87,8 +89,8 @@ export default class ConfirmPasswordPinModal extends Component {
               {__('Confirm')}
             </Button>
           </form>
-        </Modal.Body>
-      </Modal>
+        </ControlledModal.Body>
+      </ControlledModal>
     );
   }
 }

@@ -9,8 +9,8 @@ import { formatNumber } from 'lib/intl';
 import { getDeltaSign } from 'lib/tritiumTransactions';
 import TokenName from 'components/TokenName';
 import { lookupAddress } from 'lib/addressBook';
-import { consts, timing } from 'styles';
 import * as color from 'utils/color';
+import { consts, timing } from 'styles';
 
 __ = __context('Transactions');
 
@@ -26,7 +26,7 @@ const ContractComponent = styled.div(({ theme }) => ({
   cursor: 'pointer',
   transition: `background ${timing.normal}`,
   '&:hover': {
-    background: color.lighten(theme.background, 0.2),
+    background: color.lighten(theme.lower(theme.background, 0.1), 0.2),
   },
 }));
 
@@ -109,7 +109,11 @@ const Account = ({ name, address }) => {
 const creditFrom = (contract) => {
   switch (contract.for) {
     case 'DEBIT':
-      return <Account name={contract.from_name} address={contract.from} />;
+      if (contract.from_name || contract.from) {
+        return <Account name={contract.from_name} address={contract.from} />;
+      } else {
+        return '';
+      }
 
     case 'LEGACY':
       return <Info>{__('Legacy transaction')}</Info>;
@@ -234,13 +238,14 @@ const contractContent = (contract) => {
     }
 
     case 'CREDIT': {
+      const from = creditFrom(contract);
       return (
         <>
           <div>
             <Operation>Credit</Operation> to{' '}
             <Account name={contract.to_name} address={contract.to} />
           </div>
-          <div>from {creditFrom(contract)}</div>
+          <div>{from && 'from ' + from}</div>
         </>
       );
     }

@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import { reduxForm, Field, FieldArray } from 'redux-form';
 
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import Button from 'components/Button';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
@@ -191,16 +191,18 @@ class CreateAssetForm extends Component {
 }
 
 const CreateAssetModal = () => (
-  <Modal style={{ width: '80%' }} maxWidth={900}>
+  <ControlledModal style={{ width: '80%' }} maxWidth={900}>
     {(closeModal) => (
       <>
-        <Modal.Header>{__('Create a new asset')}</Modal.Header>
-        <Modal.Body>
+        <ControlledModal.Header>
+          {__('Create a new asset')}
+        </ControlledModal.Header>
+        <ControlledModal.Body>
           <CreateAssetForm closeModal={closeModal} />
-        </Modal.Body>
+        </ControlledModal.Body>
       </>
     )}
-  </Modal>
+  </ControlledModal>
 );
 
 export default CreateAssetModal;

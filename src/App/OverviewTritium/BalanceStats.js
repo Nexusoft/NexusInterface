@@ -169,7 +169,7 @@ export function IncomingBalanceStat() {
         <>
           <QuestionCircle
             tooltip={__(
-              'This includes your pending balance, unconfirmed balance and immature balance'
+              'This includes your unclaimed balance, unconfirmed balance and immature balance'
             )}
             align="start"
           />{' '}

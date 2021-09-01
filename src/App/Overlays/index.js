@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
 import { openModal } from 'lib/ui';
@@ -7,7 +6,6 @@ import ClosingScreen from './ClosingScreen';
 import SelectLanguage from './SelectLanguage';
 import LicenseAgreement from './LicenseAgreement';
 import LiteModeNotice from './LiteModeNotice';
-import PotThemeModal from './PotThemeModal';
 import PreReleaseWarningModal from './PreReleaseWarningModal';
 import Wallet from './Wallet';
 import { preRelease } from 'consts/misc';
@@ -21,22 +19,6 @@ const Overlays = ({ children }) => {
     (state) => state.settings.acceptedAgreement
   );
   const closing = useSelector((state) => state.ui.closing);
-  const potThemeModalShown = useSelector(
-    (state) => state.settings.potThemeModalShown
-  );
-
-  const showingNoOverlay =
-    !closing && !!locale && !!acceptedAgreement && !!liteModeNoticeDisabled;
-  useEffect(
-    potThemeModalShown
-      ? () => {}
-      : () => {
-          if (showingNoOverlay) {
-            openModal(PotThemeModal);
-          }
-        },
-    [showingNoOverlay]
-  );
 
   if (closing) {
     return <ClosingScreen />;

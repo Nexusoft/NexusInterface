@@ -6,7 +6,7 @@ import styled from '@emotion/styled';
 import { keyframes } from '@emotion/react';
 
 // Internal
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import Button from 'components/Button';
 import { showBackgroundTask, removeModal } from 'lib/ui';
 import { confirm } from 'lib/dialog';
@@ -49,7 +49,7 @@ const fadeOut = {
   opacity: [1, 0],
 };
 
-const BootstrapModalComponent = styled(Modal)(
+const BootstrapModalComponent = styled(ControlledModal)(
   ({ maximizedFromBackground }) =>
     maximizedFromBackground && {
       animation: `${maximizeAnimation} ${timing.quick} linear`,
@@ -245,7 +245,7 @@ class BootstrapModal extends PureComponent {
         escToClose={false}
         {...rest}
       >
-        <Modal.Body>
+        <ControlledModal.Body>
           <Title>{__('Bootstrap Recent Database')}</Title>
           <p>{statusMsg}</p>
           <ProgressBar percentage={percentage} />
@@ -258,7 +258,7 @@ class BootstrapModal extends PureComponent {
           <Tooltip.Trigger tooltip="Minimize">
             <MinimizeIcon onClick={this.minimize} icon={arrowUpLeftIcon} />
           </Tooltip.Trigger>
-        </Modal.Body>
+        </ControlledModal.Body>
       </BootstrapModalComponent>
     );
   }

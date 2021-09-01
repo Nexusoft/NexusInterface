@@ -1,15 +1,24 @@
 import { Component } from 'react';
+import styled from '@emotion/styled';
 
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import Button from 'components/Button';
 import InfoField from 'components/InfoField';
+import CodeBlock from 'components/CodeBlock';
 import TransactionDetailsModal from 'components/TransactionDetailsModal';
 import { openModal } from 'lib/ui';
+import { addressRegex } from 'consts/misc';
 
 __ = __context('ContractDetails');
 
+const KeyName = styled.span({
+  textTransform: 'capitalize',
+});
+
 const translateKey = (key) => {
   switch (key) {
+    case 'id':
+      return 'Contract #';
     case 'OP':
       return 'Operation';
     case 'txid':
@@ -18,10 +27,30 @@ const translateKey = (key) => {
       return 'Token Name';
     case 'from_name':
       return 'From Name';
+    case 'json':
+      return 'JSON';
     default:
-      return key;
+      return <KeyName>{key}</KeyName>;
   }
 };
+
+function displayValue(value, key) {
+  if (value === null || value === undefined) return null;
+
+  if (typeof value === 'object') {
+    return <CodeBlock>{JSON.stringify(value, null, 2)}</CodeBlock>;
+  }
+
+  if (
+    (typeof value === 'string' && addressRegex.test(value)) ||
+    key === 'txid' ||
+    key === 'destination'
+  ) {
+    return <span className="monospace">{value}</span>;
+  }
+
+  return String(value);
+}
 
 class ContractDetailsModal extends Component {
   render() {
@@ -29,16 +58,18 @@ class ContractDetailsModal extends Component {
     if (!contract) return;
 
     return (
-      <Modal
+      <ControlledModal
         assignClose={(close) => {
           this.closeModal = close;
         }}
       >
-        <Modal.Header>{__('Contract Details')}</Modal.Header>
-        <Modal.Body>
+        <ControlledModal.Header>
+          {__('Contract Details')}
+        </ControlledModal.Header>
+        <ControlledModal.Body>
           {Object.entries(contract).map(([key, value]) => (
             <InfoField key={key} label={translateKey(key)}>
-              {String(value)}
+              {displayValue(value, key)}
             </InfoField>
           ))}
           <InfoField label="">
@@ -52,8 +83,8 @@ class ContractDetailsModal extends Component {
               {__('View transaction details')}
             </Button>
           </InfoField>
-        </Modal.Body>
-      </Modal>
+        </ControlledModal.Body>
+      </ControlledModal>
     );
   }
 }

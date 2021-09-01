@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 import { shell } from 'electron';
 
 // Internal
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
@@ -95,12 +95,12 @@ class ModuleDetailsModal extends Component {
       ? `https://${host}/${owner}/${repo}/tree/${commit}`
       : null;
     return (
-      <Modal
+      <ControlledModal
         assignClose={(close) => {
           this.closeModal = close;
         }}
       >
-        <Modal.Header className="relative">
+        <ControlledModal.Header className="relative">
           {__('Module Details')}
           {!forInstall && (
             <DeleteModule>
@@ -111,8 +111,8 @@ class ModuleDetailsModal extends Component {
               </Tooltip.Trigger>
             </DeleteModule>
           )}
-        </Modal.Header>
-        <Modal.Body>
+        </ControlledModal.Header>
+        <ControlledModal.Body>
           <InfoField ratio={[1, 2]} label={__('Module name')}>
             {moduleInfo.name}
           </InfoField>
@@ -264,10 +264,10 @@ class ModuleDetailsModal extends Component {
               </Button>
             </div>
           )}
-        </Modal.Body>
+        </ControlledModal.Body>
 
         {!!forInstall && <Installer module={module} install={install} />}
-      </Modal>
+      </ControlledModal>
     );
   }
 }
@@ -324,7 +324,7 @@ class Installer extends Component {
       : __('Install Module');
 
     return (
-      <Modal.Footer separator style={{ textAlign: 'center' }}>
+      <ControlledModal.Footer separator style={{ textAlign: 'center' }}>
         {!module.disallowed && !(module.repoVerified && module.repoFromNexus) && (
           <InstallerWarning>
             {__(`Warning: This module is written by a third party, Nexus is NOT
@@ -342,7 +342,7 @@ class Installer extends Component {
         >
           {btnLabel}
         </Button>
-      </Modal.Footer>
+      </ControlledModal.Footer>
     );
   }
 }

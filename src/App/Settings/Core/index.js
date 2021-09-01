@@ -24,7 +24,6 @@ import TextField from 'components/TextField';
 import Switch from 'components/Switch';
 import { errorHandler } from 'utils/form';
 import { legacyMode } from 'consts/misc';
-import * as color from 'utils/color';
 import deleteDirectory from 'utils/promisified/deleteDirectory';
 import { newUID } from 'utils/misc';
 import { consts } from 'styles';
@@ -39,7 +38,7 @@ const RestartPrompt = styled.div(({ theme }) => ({
   bottom: 0,
   left: 0,
   right: 0,
-  background: color.darken(theme.background, 0.3),
+  background: theme.lower(theme.background, 0.3),
   borderTop: `1px solid ${theme.mixer(0.5)}`,
   paddingTop: 10,
   marginRight: 6,

@@ -1,7 +1,7 @@
 import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
 
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import TextFieldWithKeyboard from 'components/TextFieldWithKeyboard';
 import Button from 'components/Button';
 import { removeModal } from 'lib/ui';
@@ -45,11 +45,11 @@ const PinDialog = ({
   confirmLabel = __('Confirm'),
   onClose,
 }) => (
-  <Modal maxWidth={350} onClose={onClose}>
+  <ControlledModal maxWidth={350} onClose={onClose}>
     {(closeModal) => (
       <>
-        <Modal.Header>{__('Enter PIN')}</Modal.Header>
-        <Modal.Body>
+        <ControlledModal.Header>{__('Enter PIN')}</ControlledModal.Header>
+        <ControlledModal.Body>
           <form onSubmit={handleSubmit}>
             <Field
               component={PinInput}
@@ -67,10 +67,10 @@ const PinDialog = ({
               </Button>
             </div>
           </form>
-        </Modal.Body>
+        </ControlledModal.Body>
       </>
     )}
-  </Modal>
+  </ControlledModal>
 );
 
 export default reduxForm(formOptions)(PinDialog);

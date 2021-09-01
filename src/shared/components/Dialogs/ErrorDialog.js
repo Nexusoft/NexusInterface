@@ -3,7 +3,7 @@ import { createRef, Component } from 'react';
 import styled from '@emotion/styled';
 
 // Internal
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import * as color from 'utils/color';
 import Dialog from './Dialog';
 
@@ -34,11 +34,11 @@ class ErrorDialog extends Component {
         }}
         {...rest}
       >
-        <Modal.Body>
+        <ControlledModal.Body>
           <XMark>✕</XMark>
           <Dialog.Message>{message}</Dialog.Message>
           {!!note && <Dialog.Note>{note}</Dialog.Note>}
-        </Modal.Body>
+        </ControlledModal.Body>
         <Dialog.Button
           ref={this.buttonRef}
           skin="filled-danger"

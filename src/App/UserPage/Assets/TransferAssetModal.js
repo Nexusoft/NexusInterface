@@ -2,7 +2,7 @@ import { Component } from 'react';
 import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
 
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import Button from 'components/Button';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
@@ -101,16 +101,16 @@ class TransferAssetForm extends Component {
 }
 
 const TransferAssetModal = ({ asset }) => (
-  <Modal maxWidth={600}>
+  <ControlledModal maxWidth={600}>
     {(closeModal) => (
       <>
-        <Modal.Header>{__('Transfer asset')}</Modal.Header>
-        <Modal.Body>
+        <ControlledModal.Header>{__('Transfer asset')}</ControlledModal.Header>
+        <ControlledModal.Body>
           <TransferAssetForm closeModal={closeModal} asset={asset} />
-        </Modal.Body>
+        </ControlledModal.Body>
       </>
     )}
-  </Modal>
+  </ControlledModal>
 );
 
 export default TransferAssetModal;

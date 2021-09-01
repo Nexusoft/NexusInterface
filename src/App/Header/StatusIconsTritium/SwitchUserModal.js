@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import Icon from 'components/Icon';
 import { timing } from 'styles';
 import { switchUser } from 'lib/user';
@@ -86,11 +86,11 @@ export default function SwitchUserModal() {
   const [switchingTo, setSwitchingTo] = useState(null);
 
   return (
-    <Modal maxWidth={500}>
+    <ControlledModal maxWidth={500}>
       {(closeModal) => (
         <>
-          <Modal.Header>{__('Switch user')}</Modal.Header>
-          <Modal.Body>
+          <ControlledModal.Header>{__('Switch user')}</ControlledModal.Header>
+          <ControlledModal.Body>
             {Object.entries(sessions)
               .sort()
               .map(([session, { username }]) => (
@@ -108,9 +108,9 @@ export default function SwitchUserModal() {
                   closeModal={closeModal}
                 />
               ))}
-          </Modal.Body>
+          </ControlledModal.Body>
         </>
       )}
-    </Modal>
+    </ControlledModal>
   );
 }

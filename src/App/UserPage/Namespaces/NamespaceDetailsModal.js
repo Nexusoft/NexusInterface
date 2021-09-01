@@ -1,4 +1,4 @@
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import Button from 'components/Button';
 import InfoField from 'components/InfoField';
 import QRButton from 'components/QRButton';
@@ -20,13 +20,13 @@ const timeFormatOptions = {
 };
 
 const NamespaceDetailsModal = ({ namespace }) => (
-  <Modal>
+  <ControlledModal>
     {(closeModal) => (
       <>
-        <Modal.Header className="relative">
+        <ControlledModal.Header className="relative">
           {__('Namespace Details')}
-        </Modal.Header>
-        <Modal.Body>
+        </ControlledModal.Header>
+        <ControlledModal.Body>
           <InfoField label={__('Name')}>{namespace.name}</InfoField>
           <InfoField label={__('Address')}>
             <span className="v-align">{namespace.address}</span>
@@ -61,10 +61,10 @@ const NamespaceDetailsModal = ({ namespace }) => (
               </Button>
             </div>
           </div>
-        </Modal.Body>
+        </ControlledModal.Body>
       </>
     )}
-  </Modal>
+  </ControlledModal>
 );
 
 export default NamespaceDetailsModal;
