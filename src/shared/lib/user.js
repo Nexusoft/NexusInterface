@@ -202,10 +202,10 @@ export const loadAccounts = legacyMode
   : // Tritium Mode
     async () => {
       try {
-        const accounts = await callApi('finance/list/accounts');
+        const accounts = await callApi('finance/list/all');
         store.dispatch({ type: TYPE.SET_TRITIUM_ACCOUNTS, payload: accounts });
       } catch (err) {
-        console.error('finance/list/accounts failed', err);
+        console.error('finance/list/all failed', err);
       }
     };
 
@@ -249,7 +249,7 @@ export function prepareUser() {
           settings: { migrateSuggestionDisabled },
           core: { systemInfo },
         } = store.getState();
-        if (!migrateSuggestionDisabled && !systemInfo?.legacy_unsupported) {
+        if (!migrateSuggestionDisabled && !systemInfo?.nolegacy) {
           const coreInfo = await rpc('getinfo', []);
           const legacyBalance = (coreInfo.balance || 0) + (coreInfo.stake || 0);
           if (legacyBalance) {
@@ -278,7 +278,7 @@ async function shouldUnlockStaking({ stakeInfo, status }) {
   } = store.getState();
 
   if (
-    !systemInfo?.clientmode &&
+    !systemInfo?.litemode &&
     status?.unlocked.staking === false &&
     enableStaking
   ) {

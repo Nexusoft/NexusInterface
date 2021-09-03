@@ -102,7 +102,7 @@ const preReleaseTag = alphaRelease ? 'ALPHA' : betaRelease ? 'BETA' : null;
     coreConnected: isCoreConnected(state),
     testnet: systemInfo?.testnet,
     privateNet: systemInfo?.private,
-    lite: systemInfo?.clientmode,
+    lite: systemInfo?.litemode,
     legacyTestnet: info && info.testnet,
   };
 })

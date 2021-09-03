@@ -2,7 +2,6 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
 import { reduxForm, Field, Fields, formValueSelector } from 'redux-form';
-// import cpy from 'cpy';
 import path from 'path';
 import styled from '@emotion/styled';
 
@@ -90,8 +89,12 @@ const ManualMode = styled(Button)(
 
 const removeWhiteSpaces = (value) => (value || '').replace(' ', '');
 
+/**
+ *  Keys to change in the settings. Have a key here and set the name field to the same key to connect it.
+ */
 const formKeys = [
   'liteMode',
+  'safeMode',
   'enableMining',
   'ipMineWhitelist',
   'enableStaking',
@@ -119,6 +122,7 @@ const formKeys = [
   'embeddedCoreRpcPort',
   'embeddedCoreRpcPortSSL',
 ];
+
 const getInitialValues = (() => {
   let lastOutput = null;
   let lastInput = null;
@@ -162,7 +166,7 @@ const mapStateToProps = (state) => {
       (formTestnetIteration && formTestnetIteration != 0) ||
       (settingTestnetIteration && settingTestnetIteration != 0),
     coreConnected: isCoreConnected(state),
-    liteMode: !!systemInfo?.clientmode,
+    liteMode: !!systemInfo?.litemode,
     manualDaemon: settings.manualDaemon,
     initialValues: getInitialValues(settings),
     restartCoreOnSave,
@@ -240,12 +244,17 @@ const mapStateToProps = (state) => {
 class SettingsCore extends Component {
   switchId = newUID();
 
+  /**
+   * Handles the logic when the switch is activated
+   * @param {element} e Attached element
+   * @memberof SettingsCore
+   */
   handleRestartSwitch = (e) => {
     setCoreSettingsRestart(!!e.target.checked);
   };
 
   /**
-   *Creates an instance of SettingsCore.
+   * Creates an instance of SettingsCore.
    * @param {*} props
    * @memberof SettingsCore
    */
@@ -287,6 +296,28 @@ class SettingsCore extends Component {
     }
   };
 
+  /**
+   * Attached to the OnChange event to display a warning about turning off safe mode
+   * @param {element} e Attached element
+   * @memberof SettingsCore
+   */
+  disableSafeMode = async (e) => {
+    if (e.target.defaultValue === 'true') {
+      e.preventDefault();
+      const confirmed = await confirm({
+        question: __('Are you sure you want to disable Safe Mode') + '?',
+        note: 'In the unlikely event of hardware failure your sigchain could become inaccessible. Disabling safemode, while not having a recovery phrase, could result in loss of your coins. Proceed at your own risk.',
+      });
+      if (confirmed) {
+        this.props.change('safeMode', false);
+      }
+    }
+  };
+
+  /**
+   *  Asks to reload TX History. Only for legacy mode.
+   * @memberof SettingsCore
+   */
   reloadTxHistory = async () => {
     const confirmed = await confirm({
       question: __('Reload transaction history') + '?',
@@ -298,6 +329,10 @@ class SettingsCore extends Component {
     }
   };
 
+  /**
+   *  Asks to clear Peer Connections. Only for legacy mode.
+   * @memberof SettingsCore
+   */
   clearPeerConnections = async () => {
     const confirmed = await confirm({
       question: __('Clear peer connections') + '?',
@@ -309,6 +344,10 @@ class SettingsCore extends Component {
     }
   };
 
+  /**
+   * Asks to resync when using Lite mode
+   * @memberof SettingsCore
+   */
   resyncLiteMode = async () => {
     const confirmed = await confirm({
       question: __('Resync database') + '?',
@@ -332,6 +371,11 @@ class SettingsCore extends Component {
     }
   };
 
+  /**
+   * Handles the button to turn off testnet if active
+   * @param {element} e Attached element
+   * @memberof SettingsCore
+   */
   turnOffTestNet = (e) => {
     this.props.change('testnetIteration', null);
   };
@@ -503,6 +547,20 @@ class SettingsCore extends Component {
                   </>
                 )}
               />
+
+              <SettingsField
+                connectLabel
+                label={__('Safe Mode')}
+                subLabel={__(
+                  'Enables NextHash verification to protect against corruption, but adds computation time.'
+                )}
+              >
+                <Field
+                  name="safeMode"
+                  component={Switch.RF}
+                  onChange={this.disableSafeMode}
+                />
+              </SettingsField>
 
               <SettingsField
                 connectLabel

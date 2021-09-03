@@ -35,7 +35,9 @@ const PreReleaseWarningModal = () => {
               {__('Or join us on the offical ')}
               <Button
                 skin="plain-link-primary"
-                onClick={() => shell.openExternal('https://t.me/NexusOfficial')}
+                onClick={() =>
+                  shell.openExternal('https://t.me/joinchat/jrfQGVfaNe03MWM8')
+                }
               >
                 Nexus Testing Telegram group
               </Button>

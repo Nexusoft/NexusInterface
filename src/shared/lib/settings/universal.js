@@ -40,6 +40,7 @@ export const defaultSettings = {
 
   // Core
   liteMode: false,
+  safeMode: true,
   enableMining: false,
   enableStaking: true,
   pooledStaking: false,

@@ -152,6 +152,7 @@ class Names extends Component {
     const toggle = () => updateSettings({ showUnusedNames: !showUnusedNames });
     console.log(nameRecords);
 
+    console.log(this.props);
     return (
       <TabContentWrapper maxWidth={500}>
         <Button

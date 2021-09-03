@@ -8,7 +8,7 @@ export default (state = initialState, action) => {
       return action.payload;
 
     case TYPE.DISCONNECT_CORE:
-    case TYPE.CLEAR_MINING_INFO:
+    case TYPE.CLEAR_LEDGER_INFO:
       return initialState;
 
     default:
