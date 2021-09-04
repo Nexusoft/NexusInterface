@@ -171,19 +171,21 @@ function buildQuery({ addressQuery, operation, timeSpan }) {
     queries.push(`results.contracts.OP=${operation}`);
   }
   if (addressQuery) {
-    const buildAddressQuery =
-      addressQuery === '0'
-        ? (field) => `results.contracts.${field}=${addressQuery}`
-        : (field) => `results.contracts.${field}=*${addressQuery}*`;
-    const addressQueries = [
-      buildAddressQuery('token'),
-      buildAddressQuery('from'),
-      buildAddressQuery('to'),
-      buildAddressQuery('account'),
-      buildAddressQuery('destination'),
-      buildAddressQuery('address'),
-    ];
-    queries.push(`(${addressQueries.join(' OR ')})`);
+    if (addressQuery === '0') {
+      queries.push(`results.contracts.token=0`);
+    } else {
+      const buildAddressQuery = (field) =>
+        `results.contracts.${field}=*${addressQuery}*`;
+      const addressQueries = [
+        buildAddressQuery('token'),
+        buildAddressQuery('from'),
+        buildAddressQuery('to'),
+        buildAddressQuery('account'),
+        buildAddressQuery('destination'),
+        buildAddressQuery('address'),
+      ];
+      queries.push(`(${addressQueries.join(' OR ')})`);
+    }
   }
 
   return queries.join(' AND ') || undefined;
