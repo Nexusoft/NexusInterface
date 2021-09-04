@@ -171,8 +171,10 @@ function buildQuery({ addressQuery, operation, timeSpan }) {
     queries.push(`results.contracts.OP=${operation}`);
   }
   if (addressQuery) {
-    const buildAddressQuery = (field) =>
-      `results.contracts.${field}=*${addressQuery}*`;
+    const buildAddressQuery =
+      addressQuery === '0'
+        ? (field) => `results.contracts.${field}=${addressQuery}`
+        : (field) => `results.contracts.${field}=*${addressQuery}*`;
     const addressQueries = [
       buildAddressQuery('token'),
       buildAddressQuery('from'),
