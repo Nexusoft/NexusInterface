@@ -140,19 +140,26 @@ function filterTransactions(transactions) {
     ) {
       return false;
     }
-    if (
-      addressQuery &&
-      !tx.contracts.some(
-        (contract) =>
-          contract.token?.includes(addressQuery) ||
-          contract.from?.includes(addressQuery) ||
-          contract.to?.includes(addressQuery) ||
-          contract.account?.includes(addressQuery) ||
-          contract.destination?.includes(addressQuery) ||
-          contract.address?.includes(addressQuery)
-      )
-    ) {
-      return false;
+    if (addressQuery) {
+      if (addressQuery === '0') {
+        if (!tx.contracts.some((contract) => contract.token === '0')) {
+          return false;
+        }
+      } else {
+        if (
+          !tx.contracts.some(
+            (contract) =>
+              contract.token?.includes(addressQuery) ||
+              contract.from?.includes(addressQuery) ||
+              contract.to?.includes(addressQuery) ||
+              contract.account?.includes(addressQuery) ||
+              contract.destination?.includes(addressQuery) ||
+              contract.address?.includes(addressQuery)
+          )
+        ) {
+          return false;
+        }
+      }
     }
 
     return true;
