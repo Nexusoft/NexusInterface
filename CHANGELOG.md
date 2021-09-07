@@ -1,3 +1,11 @@
+# 3.0.4 (2021.9.07)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v3.0.4)
+
+#### Additions
+
+- Nexus Core v5.0.4
+
 # 3.0.3 (2020.4.21)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v3.0.3)
@@ -8,7 +16,7 @@
 
 #### Adjustments
 
-- If you are not in sync when you login with invalid credentials 
+- If you are not in sync when you login with invalid credentials
 
 #### Fixes
 
