@@ -106,7 +106,7 @@ const About = ({ version, testnet, privateBlockchain }) => (
           {version}
         </InfoField>
         <InfoField ratio={[1, 1]} label={__('Core build date')}>
-          March 16th 2020
+          September 7th 2021
         </InfoField>
         {!!testnet && (
           <InfoField ratio={[1, 1]} label={__('Testnet')}>
@@ -135,16 +135,7 @@ const About = ({ version, testnet, privateBlockchain }) => (
             </ExternalLink>
           </Strong>
           <br />
-          Tempe, Arizona, United States Of America
-        </div>
-        <div>
-          <Strong>
-            <ExternalLink href={'https://nexus.io/embassies'}>
-              Nexus Embassy Australia
-            </ExternalLink>
-          </Strong>
-          <br />
-          Sydney, New South Wales, Australia
+          Arizona, United States Of America
         </div>
       </BusinessUnits>
 
