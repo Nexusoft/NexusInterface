@@ -82,8 +82,9 @@ const getBalanceChanges = (tx) =>
         const sign = getDeltaSign(contract);
         if (sign && contract.amount) {
           let change = changes.find(
-            contract.token_name
-              ? (change) => change.token_name === contract.token_name
+            contract.ticker || contract.token_name
+              ? (change) =>
+                  change.ticker === contract.ticker || contract.token_name
               : (change) => change.token === contract.token
           );
           if (change) {
@@ -91,7 +92,7 @@ const getBalanceChanges = (tx) =>
               change.amount + (sign === '-' ? -1 : 1) * contract.amount;
           } else {
             change = {
-              token_name: contract.token_name,
+              ticker: contract.ticker || contract.token_name,
               token: contract.token,
               amount: (sign === '-' ? -1 : 1) * contract.amount,
             };
