@@ -29,30 +29,28 @@ const Owner = styled.span(({ theme }) => ({
 
 export default function Token({ token, mine }) {
   return (
-    <>
-      <TokenComponent>
-        <div className="flex space-between">
-          <div>
-            <AccountName>{token.name}</AccountName>
-            {!token.name && <UnNamed>{__('Unnamed token')}</UnNamed>}
-            {mine && <Owner>{__(' (Owned by you)')}</Owner>}
-          </div>
-          <div>
-            <Link
-              as="a"
-              onClick={() => {
-                openModal(TokenDetailsModal, {
-                  token: mine ? token : undefined,
-                  tokenAddress: mine ? undefined : token.address,
-                });
-              }}
-            >
-              {__('Details')}
-            </Link>
-          </div>
+    <TokenComponent>
+      <div className="flex space-between">
+        <div>
+          <AccountName>{token.name}</AccountName>
+          {!token.name && <UnNamed>{__('Unnamed token')}</UnNamed>}
+          {mine && <Owner>{__(' (Owned by you)')}</Owner>}
         </div>
-        <NexusAddress className="mt1" address={token.address} />
-      </TokenComponent>
-    </>
+        <div>
+          <Link
+            as="a"
+            onClick={() => {
+              openModal(TokenDetailsModal, {
+                token: mine ? token : undefined,
+                tokenAddress: mine ? undefined : token.address,
+              });
+            }}
+          >
+            {__('Details')}
+          </Link>
+        </div>
+      </div>
+      <NexusAddress className="mt1" address={token.address} />
+    </TokenComponent>
   );
 }
