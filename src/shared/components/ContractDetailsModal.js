@@ -23,6 +23,7 @@ const translateKey = (key) => {
       return 'Operation';
     case 'txid':
       return 'Transaction ID';
+    case 'ticker':
     case 'token_name':
       return 'Token Name';
     case 'from_name':
