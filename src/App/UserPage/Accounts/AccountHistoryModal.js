@@ -242,7 +242,7 @@ class AccountHistoryModal extends Component {
             <Layout>
               <BalancesFieldSet
                 legend={
-                  account.token_name === 'NXS' ? (
+                  account.token === '0' ? (
                     <>
                       {__('Account balance')} (
                       <Tooltip.Trigger
@@ -277,7 +277,7 @@ class AccountHistoryModal extends Component {
                       <strong>{__('Total')}</strong>
                     </div>
                     <div>
-                      {showFiat && account.token_name === 'NXS'
+                      {showFiat && account.ticker === '0'
                         ? formatCurrency(
                             totalBalance(account, 6) * market,
                             fiatCurrency
@@ -290,7 +290,7 @@ class AccountHistoryModal extends Component {
                       <strong>{__('Available')}</strong>
                     </div>
                     <div>
-                      {showFiat && account.token_name === 'NXS'
+                      {showFiat && account.ticker === '0'
                         ? formatCurrency(account.balance * market, fiatCurrency)
                         : formatNumber(account.balance, 6)}
                     </div>
@@ -300,7 +300,7 @@ class AccountHistoryModal extends Component {
                       <strong>{__('Unclaimed')}</strong>
                     </div>
                     <div>
-                      {showFiat && account.token_name === 'NXS'
+                      {showFiat && account.ticker === '0'
                         ? formatCurrency(
                             (account.unclaimed || 0) * market,
                             fiatCurrency
@@ -313,7 +313,7 @@ class AccountHistoryModal extends Component {
                       <strong>{__('Unconfirmed')}</strong>
                     </div>
                     <div>
-                      {showFiat && account.token_name === 'NXS'
+                      {showFiat && account.ticker === '0'
                         ? formatCurrency(
                             (account.unconfirmed || 0) * market,
                             fiatCurrency
@@ -327,7 +327,7 @@ class AccountHistoryModal extends Component {
                         <strong>{__('Stake')}</strong>
                       </div>
                       <div>
-                        {showFiat && account.token_name === 'NXS'
+                        {showFiat && account.ticker === '0'
                           ? formatCurrency(account.stake * market, fiatCurrency)
                           : formatNumber(account.stake, 6)}
                       </div>
