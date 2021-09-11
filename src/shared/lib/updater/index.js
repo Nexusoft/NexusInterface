@@ -128,6 +128,13 @@ export function prepareUpdater() {
   });
 
   ipcRenderer.on('updater:error', (event, err) => {
+    console.error(
+      'Error Downloading Wallet Update:\n',
+      'Event: ',
+      event,
+      '\nError: ',
+      err
+    );
     setUpdaterState('idle');
   });
   ipcRenderer.on('updater:checking-for-update', () => {
