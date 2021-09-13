@@ -113,10 +113,16 @@ export const logOut = async () => {
 export const unlockUser = async ({ pin, mining, staking, notifications }) => {
   const {
     settings: { enableMining },
+    user: { status },
   } = store.getState();
   return await callApi('users/unlock/user', {
     pin,
-    notifications: notifications !== undefined ? notifications : true,
+    notifications:
+      notifications !== undefined
+        ? notifications
+        : status?.unlocked?.notifications === true
+        ? false
+        : true,
     mining: mining !== undefined ? mining : !!enableMining,
     staking: staking !== undefined ? staking : false,
   });
