@@ -7,6 +7,7 @@ export default (state = initialState, action) => {
     case TYPE.ASK_START_STAKING:
       return true;
 
+    case TYPE.DISCONNECT_CORE:
     case TYPE.CLEAR_USER:
     case TYPE.LOGOUT:
       return initialState;
