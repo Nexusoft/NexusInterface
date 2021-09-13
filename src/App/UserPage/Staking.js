@@ -91,87 +91,96 @@ class Staking extends Component {
   }
 
   startStaking = async () => {
-    const state = store.getState();
-    const {
-      settings: { liteMode, multiUser, enableStaking },
-      user: { status },
-    } = state;
-    const { stakeInfo } = this.props;
-    const synchronized = isSynchronized(state);
+    try {
+      const state = store.getState();
+      const {
+        settings: { liteMode, multiUser, enableStaking },
+        user: { status },
+      } = state;
+      const { stakeInfo } = this.props;
+      const synchronized = isSynchronized(state);
 
-    if (stakeInfo?.amount === 0) {
-      if (stakeInfo?.balance === 0) {
-        openErrorDialog({
-          message: __('Trust balance empty!'),
-          note: __('You must send some NXS to your <b>trust</b> account first'),
-        });
-        return;
-      } else if (!stakeInfo?.new) {
-        const cancelled = await promptForStakeAmount();
-        if (cancelled) return;
+      if (stakeInfo?.amount === 0) {
+        if (stakeInfo?.balance === 0) {
+          openErrorDialog({
+            message: __('Trust balance empty!'),
+            note: __(
+              'You must send some NXS to your <b>trust</b> account first'
+            ),
+          });
+          return;
+        } else if (!stakeInfo?.new) {
+          const cancelled = await promptForStakeAmount();
+          if (cancelled) return;
+        }
       }
-    }
 
-    // TODO: || multiUser
-    if (liteMode || !enableStaking) {
-      const confirmed = await confirm({
-        question: __('Start staking'),
-        note: (
-          <div style={{ textAlign: 'left' }}>
-            <p>
-              {__(
-                'In order to start staking, the following settings need to be changed:'
-              )}
-            </p>
-            <ul>
-              {!!liteMode && (
-                <li style={{ listStyle: 'initial' }}>
-                  {__('Lite mode needs to be turned OFF')}
-                </li>
-              )}
-              {/* {!!multiUser && (
+      // TODO: || multiUser
+      if (liteMode || !enableStaking) {
+        const confirmed = await confirm({
+          question: __('Start staking'),
+          note: (
+            <div style={{ textAlign: 'left' }}>
+              <p>
+                {__(
+                  'In order to start staking, the following settings need to be changed:'
+                )}
+              </p>
+              <ul>
+                {!!liteMode && (
+                  <li style={{ listStyle: 'initial' }}>
+                    {__('Lite mode needs to be turned OFF')}
+                  </li>
+                )}
+                {/* {!!multiUser && (
                 <li style={{ listStyle: 'initial' }}>
                   {__('Multi-user needs to be turned OFF')}
                 </li>
               )} */}
-              {!enableStaking && (
-                <li style={{ listStyle: 'initial' }}>
-                  {__('Enable staking needs to be turned ON')}
-                </li>
-              )}
-            </ul>
-          </div>
-        ),
-        labelYes: __('Apply changes'),
-        labelNo: __('Cancel'),
-      });
-      if (confirmed) {
-        updateSettings({
-          enableStaking: true,
-          liteMode: false,
-          multiUser: false,
+                {!enableStaking && (
+                  <li style={{ listStyle: 'initial' }}>
+                    {__('Enable staking needs to be turned ON')}
+                  </li>
+                )}
+              </ul>
+            </div>
+          ),
+          labelYes: __('Apply changes'),
+          labelNo: __('Cancel'),
         });
-        restartCore();
-        showNotification(__('Restarting Core'));
-      } else {
-        return;
+        if (confirmed) {
+          updateSettings({
+            enableStaking: true,
+            liteMode: false,
+            multiUser: false,
+          });
+          restartCore();
+          showNotification(__('Restarting Core'));
+        } else {
+          return;
+        }
       }
-    }
 
-    if (status?.unlocked.staking === false) {
-      const pin = await confirmPin({
-        note: __('Enter your PIN to start staking'),
-      });
-      if (pin) {
-        await unlockUser({ pin, staking: true });
+      if (status?.unlocked.staking === false) {
+        const pin = await confirmPin({
+          note: __('Enter your PIN to start staking'),
+        });
+        if (pin) {
+          await unlockUser({ pin, staking: true });
+        }
       }
-    }
 
-    if (!synchronized) {
-      openInfoDialog({
-        message: __(
-          'Staking will automatically start when your wallet is synchronized'
-        ),
+      if (!synchronized) {
+        openInfoDialog({
+          message: __(
+            'Staking will automatically start when your wallet is synchronized'
+          ),
+        });
+      }
+    } catch (err) {
+      openErrorDialog({
+        message: __('Error'),
+        note: err?.message || err,
       });
     }
   };
