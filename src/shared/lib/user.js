@@ -288,12 +288,12 @@ async function shouldUnlockStaking({ stakeInfo, status }) {
     status?.unlocked.staking === false &&
     enableStaking
   ) {
-    if (stakeInfo?.new === false) {
+    if (!stakeInfo?.new) {
       return true;
     }
 
     if (
-      stakeInfo?.new === true &&
+      stakeInfo?.new &&
       stakeInfo?.balance &&
       !startStakingAsked &&
       !dontAskToStartStaking
