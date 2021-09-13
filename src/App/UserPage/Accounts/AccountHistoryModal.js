@@ -221,7 +221,7 @@ class AccountHistoryModal extends Component {
   }
 
   render() {
-    const { account, balances, showFiat, market, fiatCurrency } = this.props;
+    const { account, showFiat, market, fiatCurrency } = this.props;
     const { contracts } = this.state;
     return (
       <ControlledModal

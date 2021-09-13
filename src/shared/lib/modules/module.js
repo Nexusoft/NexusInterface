@@ -15,7 +15,6 @@ import {
   isRepoFromNexus,
   getModuleHash,
 } from './repo';
-import { checkForModuleUpdates } from './autoUpdate';
 
 const ajv = new Ajv();
 // Reserved file names, modules are not allowed to have one of these in their `files` field
