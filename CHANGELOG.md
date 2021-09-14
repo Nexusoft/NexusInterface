@@ -1,6 +1,14 @@
+# 3.0.5 (2021.9.13)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v3.0.5)
+
+#### Additions
+
+- Nexus Core v5.0.5
+
 # 3.0.4 (2021.9.07)
 
-[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v3.0.4)
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v3.0.4-rc2)
 
 #### Additions
 

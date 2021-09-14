@@ -16,7 +16,7 @@ if (
     Boolean(settings.sendUsageData) == true) &&
   process.env.NODE_ENV !== 'development'
 ) {
-  GA.visitor = ua('UA-117808839-1');
+  GA.visitor = ua('UA-207070578-1');
   GA.active = true;
   GA.visitor.set('ul', settings.locale || 'en');
   GA.visitor.set('aiid', process.platform);
@@ -33,7 +33,7 @@ if (
 // Send A Screen Event to Google, this is like a url hit for websites
 // Input :
 //     ScreenTitle || String || The Screen To Post
-GA.SendScreen = function(ScreenTitle) {
+GA.SendScreen = function (ScreenTitle) {
   if (GA.active == false) return;
 
   GA.visitor.screenview(ScreenTitle, 'Nexus Wallet', APP_VERSION).send();
@@ -48,14 +48,14 @@ GA.SendScreen = function(ScreenTitle) {
 //     label    || String || Event Label, The actual event being fired
 //     value    || NonNegative Int || Event Value, must be NonNegative
 
-GA.SendEvent = function(category, action, lable, value) {
+GA.SendEvent = function (category, action, lable, value) {
   if (GA.active == false) return;
   GA.visitor.event(category, action, lable, value).send();
 };
 
 // Disable Analytics
 // Turn off anayltics and destroys the old object
-GA.DisableAnalytics = function() {
+GA.DisableAnalytics = function () {
   if (GA.visitor == null) return;
   GA.visitor = null;
   GA.active = false;
@@ -63,7 +63,7 @@ GA.DisableAnalytics = function() {
 
 // Enable Analytics
 // Turn on Analytics and create a new visitor
-GA.EnableAnalytics = function() {
+GA.EnableAnalytics = function () {
   if (GA.visitor != null) return;
   GA.visitor = ua('UA-117808839-1');
   GA.active = true;
