@@ -1,3 +1,13 @@
+# 3.0.6 (2021.9.15)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v3.0.6)
+
+#### Fixes
+
+- Fixed Nexus Core not starting on OSX 10.09 to 10.13
+  - Older versions will require compiling core manually
+- Fixed error with the bootstrap not downloading.
+
 # 3.0.5 (2021.9.13)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v3.0.5)
