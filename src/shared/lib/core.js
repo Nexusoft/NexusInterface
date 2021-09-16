@@ -74,6 +74,10 @@ export const startCore = async () => {
   ];
   if (settings.testnetIteration && settings.testnetIteration !== '0') {
     params.push('-testnet=' + settings.testnetIteration);
+  } else {
+    //Only do this if your on mainnet.
+    params.push('-connect=node1.nexusoft.io');
+    params.push('-connect=node4.nexusoft.io');
   }
   if (settings.forkBlocks) {
     params.push('-forkblocks=' + settings.forkBlocks);
@@ -91,7 +95,7 @@ export const startCore = async () => {
   if (settings.enableMining == true) {
     params.push('-mining=1');
     if (settings.ipMineWhitelist !== '') {
-      settings.ipMineWhitelist.split(';').forEach(element => {
+      settings.ipMineWhitelist.split(';').forEach((element) => {
         params.push(`-llpallowip=${element}`);
       });
     }
@@ -110,7 +114,7 @@ export const startCore = async () => {
 /**
  * Stop Nexus Core
  */
-export const stopCore = async forRestart => {
+export const stopCore = async (forRestart) => {
   log.info('Core Manager: Stop function called');
   const { manualDaemon } = store.getState().settings;
   store.dispatch({ type: TYPE.CLEAR_CORE_INFO });
