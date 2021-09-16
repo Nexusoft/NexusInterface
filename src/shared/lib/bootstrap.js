@@ -3,7 +3,7 @@ import EventEmitter from 'events';
 import checkDiskSpace from 'check-disk-space';
 import fs from 'fs';
 import path from 'path';
-import https from 'https';
+import http from 'http';
 import moveFile from 'move-file';
 import rimraf from 'rimraf';
 
@@ -162,7 +162,7 @@ async function startBootstrap() {
 async function downloadDb(recentDbUrl, downloadProgress) {
   const promise = new Promise((resolve, reject) => {
     let timerId;
-    downloadRequest = https
+    downloadRequest = http
       .get(recentDbUrl)
       .setTimeout(60000)
       .on('response', (response) => {
