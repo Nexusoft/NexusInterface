@@ -32,8 +32,8 @@ export default function Token({ token, mine }) {
     <TokenComponent>
       <div className="flex space-between">
         <div>
-          <AccountName>{token.name}</AccountName>
-          {!token.name && <UnNamed>{__('Unnamed token')}</UnNamed>}
+          <AccountName>{token.ticker}</AccountName>
+          {!token.ticker && <UnNamed>{__('Unnamed token')}</UnNamed>}
           {mine && <Owner>{__(' (Owned by you)')}</Owner>}
         </div>
         <div>

@@ -41,10 +41,10 @@ const filterSuggestions = memoize((suggestions, inputValue) => {
     tokens &&
     tokens.map((token) => ({
       value: token.address,
-      name: token.name,
+      name: token.ticker,
       display: (
         <span>
-          {token.name} -<span className="dim"> {token.address}</span>
+          {token.ticker} -<span className="dim"> {token.address}</span>
         </span>
       ),
     })),

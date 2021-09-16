@@ -137,7 +137,7 @@ export function FeaturedTokenBalanceStat() {
   const theme = useSelector((state) => state.theme);
   const [nxsBalances, tokenBalances] = useSelector(selectBalances);
   const featuredToken = theme.featuredTokenName
-    ? tokenBalances?.find((token) => token.name === theme.featuredTokenName)
+    ? tokenBalances?.find((token) => token.ticker === theme.featuredTokenName)
     : undefined;
 
   return (

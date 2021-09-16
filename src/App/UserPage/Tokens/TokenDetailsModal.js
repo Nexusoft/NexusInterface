@@ -54,9 +54,9 @@ export default function TokenDetailsModal({ token: tokenProp, tokenAddress }) {
 
             {token && (
               <>
-                {token.name && (
+                {token.ticker && (
                   <InfoField ratio={[1, 2]} label={__('Token name')}>
-                    {token.name}
+                    {token.ticker}
                   </InfoField>
                 )}
                 <InfoField ratio={[1, 2]} label={__('Token address')}>
