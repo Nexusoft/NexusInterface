@@ -10,8 +10,8 @@
 Install the following
 
 - Code editor of choice (VSCode)
-- Node.js
-- NPM
+- Node.js (min v14.0.0)
+- NPM (min v6.14.4)
 
 ### Step 2
 
@@ -33,12 +33,13 @@ Run command `npm run package-platform*`
 - replace `platform` with your desired platform
   Platforms: `win`, `darwin`(Mac OSX), `linux`
   This will build the project and place the build in the `release` folder. The file format will depend on the provided formats in the `package.json`
+- Mac OSX should use `npm run package-mac-unsigned` to skip code notarization
 
 ### FAQ
 
 ## Cores
 
-//URL
+https://github.com/Nexusoft/LLL-TAO
 
 ### Step 1
 
