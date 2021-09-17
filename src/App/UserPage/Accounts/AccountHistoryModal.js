@@ -193,7 +193,11 @@ class AccountHistoryModal extends Component {
   async componentDidMount() {
     const { account } = this.props;
     try {
-      const transactions = await listAll('finance/transactions/account', {
+      const endpoint =
+        account.stake === undefined
+          ? 'finance/transactions/account'
+          : 'finance/transactions/trust';
+      const transactions = await listAll(endpoint, {
         address: account.address,
         verbose: 'summary',
       });
