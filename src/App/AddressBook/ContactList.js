@@ -1,5 +1,4 @@
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 
 import AddEditContactModal from 'components/AddEditContactModal';
@@ -24,61 +23,30 @@ const Separator = styled.div(({ theme }) => ({
   background: theme.mixer(0.125),
 }));
 
-const mapStateToProps = (state) => {
-  const {
-    addressBook,
-    ui: {
-      addressBook: { searchQuery },
-    },
-  } = state;
-  return {
-    addressBook,
-    searchQuery,
-    coreConnected: isCoreConnected(state),
-  };
-};
+export default function ContactList() {
+  const addressBook = useSelector((state) => state.addressBook);
+  const searchQuery = useSelector((state) => state.ui.addressBook.searchQuery);
+  const coreConnected = useSelector(isCoreConnected);
 
-/**
- * List of contacts
- *
- * @class ContactList
- * @extends {Component}
- */
-@connect(mapStateToProps)
-class ContactList extends Component {
-  createContact = () => {
-    openModal(AddEditContactModal);
-  };
-
-  /**
-   * Component's Renderable JSX
-   *
-   * @returns {JSX}
-   * @memberof ContactList
-   */
-  render() {
-    const { addressBook, searchQuery, coreConnected } = this.props;
-
-    return (
-      <ContactListComponent>
-        {Object.values(addressBook).map((contact) =>
-          contact.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          contact.addresses.find(({ address }) => address === searchQuery) ? (
-            <Contact key={contact.name} contact={contact} />
-          ) : null
-        )}
-        {coreConnected && (
-          <>
-            <Separator />
-            <Contact
-              contact={null /* new contact */}
-              onClick={this.createContact}
-            />
-          </>
-        )}
-      </ContactListComponent>
-    );
-  }
+  return (
+    <ContactListComponent>
+      {Object.values(addressBook).map((contact) =>
+        contact.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        contact.addresses.find(({ address }) => address === searchQuery) ? (
+          <Contact key={contact.name} contact={contact} />
+        ) : null
+      )}
+      {coreConnected && (
+        <>
+          <Separator />
+          <Contact
+            contact={null /* new contact */}
+            onClick={() => {
+              openModal(AddEditContactModal);
+            }}
+          />
+        </>
+      )}
+    </ContactListComponent>
+  );
 }
-
-export default ContactList;

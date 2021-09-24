@@ -1,6 +1,5 @@
 // External
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 
 // Internal
@@ -117,140 +116,111 @@ const getLocalTime = (tz) => {
   return `${h}:${m} ${i}`;
 };
 
-/**
- * Contact details
- *
- * @class ContactDetails
- * @extends {Component}
- */
-@connect((state) => {
-  const {
-    addressBook,
-    ui: {
-      addressBook: { selectedContactName },
-    },
-  } = state;
-  return {
-    contact: addressBook[selectedContactName] || null,
-    coreConnected: isCoreConnected(state),
-  };
-})
-class ContactDetails extends Component {
-  /**
-   * Opens a dialog to confirm contact delete
-   *
-   * @memberof ContactDetails
-   */
-  confirmDelete = async () => {
-    const confirmed = await confirm({
-      question: __('Delete contact %{name}?', {
-        name: this.props.contact.name,
-      }),
-      skinYes: 'danger',
-    });
-    if (confirmed) {
-      deleteContact(this.props.contact.name);
-    }
-  };
+export default function ContactDetails() {
+  const contact = useSelector(
+    ({
+      addressBook,
+      ui: {
+        addressBook: { selectedContactName },
+      },
+    }) => addressBook[selectedContactName] || null
+  );
+  const coreConnected = useSelector(isCoreConnected);
+  if (!contact) return null;
 
-  /**
-   * Opens the Add/Edit Contact modal
-   *
-   * @memberof ContactDetails
-   */
-  editContact = () => {
-    openModal(AddEditContactModal, {
-      edit: true,
-      contact: this.props.contact,
-    });
-  };
+  const tz =
+    typeof contact.timeZone === 'number'
+      ? timeZones.find((t) => t.value === contact.timeZone)
+      : null;
 
-  /**
-   * Component's Renderable JSX
-   *
-   * @returns {JSX}
-   * @memberof ContactDetails
-   */
-  render() {
-    const { contact, coreConnected } = this.props;
-    if (!contact) return null;
-
-    const tz =
-      typeof contact.timeZone === 'number'
-        ? timeZones.find((t) => t.value === contact.timeZone)
-        : null;
-
-    return (
-      <ContactDetailsComponent>
-        <Header>
-          <Tooltip.Trigger tooltip={__('Delete')}>
-            <HeaderAction danger onClick={this.confirmDelete}>
-              <Icon icon={trashIcon} />
+  return (
+    <ContactDetailsComponent>
+      <Header>
+        <Tooltip.Trigger tooltip={__('Delete')}>
+          <HeaderAction
+            danger
+            onClick={async () => {
+              const confirmed = await confirm({
+                question: __('Delete contact %{name}?', {
+                  name: contact.name,
+                }),
+                skinYes: 'danger',
+              });
+              if (confirmed) {
+                deleteContact(contact.name);
+              }
+            }}
+          >
+            <Icon icon={trashIcon} />
+          </HeaderAction>
+        </Tooltip.Trigger>
+        <ContactName>{contact.name}</ContactName>
+        {coreConnected ? (
+          <Tooltip.Trigger tooltip={__('Edit')}>
+            <HeaderAction
+              onClick={() => {
+                openModal(AddEditContactModal, {
+                  edit: true,
+                  contact: contact,
+                });
+              }}
+            >
+              <Icon icon={editIcon} />
             </HeaderAction>
           </Tooltip.Trigger>
-          <ContactName>{contact.name}</ContactName>
-          {coreConnected ? (
-            <Tooltip.Trigger tooltip={__('Edit')}>
-              <HeaderAction onClick={this.editContact}>
-                <Icon icon={editIcon} />
-              </HeaderAction>
-            </Tooltip.Trigger>
-          ) : (
-            <div style={{ width: '1em' }} />
-          )}
-        </Header>
+        ) : (
+          <div style={{ width: '1em' }} />
+        )}
+      </Header>
 
-        <SectionHeader>{__('NXS addresses')}</SectionHeader>
+      <SectionHeader>{__('NXS addresses')}</SectionHeader>
 
-        {contact.addresses.map(({ address, label, isMine }, i) => (
-          <NexusAddress
-            className="mt1"
-            key={i}
-            address={address}
-            label={
-              <div className="flex center space-between">
-                <div>
-                  {label || (
-                    <DefaultLabel>
-                      {isMine
-                        ? __('My address for %{name}')
-                        : __("%{name}'s Address", {
-                            name: contact.name,
-                          })}
-                    </DefaultLabel>
-                  )}
-                </div>
-                <QRButton address={address} />
+      {contact.addresses.map(({ address, label, isMine }, i) => (
+        <NexusAddress
+          className="mt1"
+          key={i}
+          address={address}
+          label={
+            <div className="flex center space-between">
+              <div>
+                {label || (
+                  <DefaultLabel>
+                    {isMine
+                      ? __('My address for %{name}')
+                      : __("%{name}'s Address", {
+                          name: contact.name,
+                        })}
+                  </DefaultLabel>
+                )}
               </div>
-            }
-          />
-        ))}
-
-        <SectionHeader>{__('Contact info')}</SectionHeader>
-
-        <Field
-          label={__('Nexus user ID')}
-          content={!!contact.genesis && <UserID>{contact.genesis}</UserID>}
-        />
-        <Field
-          label={__('Email')}
-          content={
-            contact.email && (
-              <ExternalLink href={`mailto:${contact.email}`}>
-                {contact.email}
-              </ExternalLink>
-            )
+              <QRButton address={address} />
+            </div>
           }
         />
-        <Field label={__('Phone Number')} content={contact.phoneNumber} />
-        <Field
-          label={__('Local Time')}
-          content={tz && `${getLocalTime(tz.value)} (${tz.offset})`}
-        />
-        <Field label={__('Notes')} content={contact.notes} />
-      </ContactDetailsComponent>
-    );
-  }
-}
+      ))}
 
-export default ContactDetails;
+      <SectionHeader>{__('Contact info')}</SectionHeader>
+
+      <Field
+        label={__('Nexus user ID')}
+        content={!!contact.genesis && <UserID>{contact.genesis}</UserID>}
+      />
+      <Field
+        label={__('Email')}
+        content={
+          contact.email && (
+            <ExternalLink href={`mailto:${contact.email}`}>
+              {contact.email}
+            </ExternalLink>
+          )
+        }
+      />
+      <Field label={__('Phone Number')} content={contact.phoneNumber} />
+      <Field
+        label={__('Local Time')}
+        content={tz && `${getLocalTime(tz.value)} (${tz.offset})`}
+      />
+      <Field label={__('Notes')} content={contact.notes} />
+    </ContactDetailsComponent>
+  );
+}
