@@ -21,8 +21,8 @@ function startWatcher() {
     (state) => state,
     async (state, oldState) => {
       // Clear watcher if user is logged out or core is disconnected or user is switched
-      const genesis = state.user.status?.genesis;
-      const oldGenesis = oldState.user.status?.genesis;
+      const genesis = state?.user.status?.genesis;
+      const oldGenesis = oldState?.user.status?.genesis;
       if (!isLoggedIn(state) || genesis !== oldGenesis) {
         unsubscribe?.();
         unsubscribe = null;
