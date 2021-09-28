@@ -63,7 +63,7 @@ export default function WebView({ module, className, style }) {
     <webview
       className={className}
       style={style}
-      ref={this.webviewRef}
+      ref={webviewRef}
       src={entryUrl}
       preload={preloadUrl}
       webpreferences="contextIsolation=no"
