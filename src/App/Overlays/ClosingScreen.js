@@ -25,12 +25,12 @@ const ClosingMessage = styled.div(({ theme }) => ({
   animation: `${breathe} 2s ease 0s infinite alternate`,
 }));
 
-const ClosingScreen = () => (
-  <FullScreen width={null}>
-    <Wrapper>
-      <ClosingMessage>{__('Closing Nexus Wallet')}</ClosingMessage>
-    </Wrapper>
-  </FullScreen>
-);
-
-export default ClosingScreen;
+export default function ClosingScreen() {
+  return (
+    <FullScreen width={null}>
+      <Wrapper>
+        <ClosingMessage>{__('Closing Nexus Wallet')}</ClosingMessage>
+      </Wrapper>
+    </FullScreen>
+  );
+}

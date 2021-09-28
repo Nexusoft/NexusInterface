@@ -10,7 +10,7 @@ import PreReleaseWarningModal from './PreReleaseWarningModal';
 import Wallet from './Wallet';
 import { preRelease } from 'consts/misc';
 
-const Overlays = ({ children }) => {
+export default function Overlays({ children }) {
   const locale = useSelector((state) => state.settings.locale);
   const liteModeNoticeDisabled = useSelector(
     (state) => state.settings.liteModeNoticeDisabled
@@ -41,6 +41,4 @@ const Overlays = ({ children }) => {
   }
 
   return <Wallet>{children}</Wallet>;
-};
-
-export default Overlays;
+}
