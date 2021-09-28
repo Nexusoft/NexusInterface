@@ -1,5 +1,5 @@
 // External
-import { createRef, Component } from 'react';
+import { useRef, useEffect } from 'react';
 import { existsSync } from 'fs';
 import { URL } from 'url';
 import { join } from 'path';
@@ -29,83 +29,44 @@ const getEntryUrl = (module) => {
   }
 };
 
-/**
- * WebView
- *
- * @class WebView
- * @extends {Component}
- */
-class WebView extends Component {
-  webviewRef = createRef();
+export default function WebView({ module, className, style }) {
+  const webviewRef = useRef();
 
-  /**
-   * Creates an instance of WebView.
-   * @param {*} props
-   * @memberof WebView
-   */
-  constructor(props) {
-    super(props);
-    const { module } = this.props;
+  useEffect(() => {
     if (!module.development) {
       const moduleFiles = module.info.files.map((file) =>
         join(module.info.name, file)
       );
       ipcRenderer.invoke('serve-module-files', moduleFiles);
     }
-  }
+  }, []);
 
-  /**
-   * Component Mount Callback
-   *
-   * @memberof WebView
-   */
-  componentDidMount() {
+  useEffect(() => {
     const {
-      webviewRef,
-      props: {
-        module: {
-          info: { name, displayName },
-        },
-      },
-    } = this;
+      info: { name, displayName },
+    } = module;
     setActiveWebView(webviewRef.current, name, displayName);
-  }
 
-  /**
-   * Component Unmount Callback
-   *
-   * @memberof WebView
-   */
-  componentWillUnmount() {
-    unsetActiveWebView();
-  }
+    return () => {
+      unsetActiveWebView();
+    };
+  }, []);
 
-  /**
-   * Component's Renderable JSX
-   *
-   * @returns
-   * @memberof WebView
-   */
-  render() {
-    const { module, className, style } = this.props;
-    const entryUrl = getEntryUrl(module);
+  const entryUrl = getEntryUrl(module);
 
-    const preloadUrl =
-      process.env.NODE_ENV === 'development'
-        ? `file://${process.cwd()}/build/module_preload.dev.js`
-        : 'module_preload.prod.js';
+  const preloadUrl =
+    process.env.NODE_ENV === 'development'
+      ? `file://${process.cwd()}/build/module_preload.dev.js`
+      : 'module_preload.prod.js';
 
-    return (
-      <webview
-        className={className}
-        style={style}
-        ref={this.webviewRef}
-        src={entryUrl}
-        preload={preloadUrl}
-        webpreferences="contextIsolation=no"
-      />
-    );
-  }
+  return (
+    <webview
+      className={className}
+      style={style}
+      ref={this.webviewRef}
+      src={entryUrl}
+      preload={preloadUrl}
+      webpreferences="contextIsolation=no"
+    />
+  );
 }
-
-export default WebView;
