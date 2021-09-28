@@ -1,6 +1,5 @@
 // External
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import memoize from 'utils/memoize';
 import styled from '@emotion/styled';
 
@@ -43,45 +42,31 @@ const filterSuggestions = memoize((suggestions, inputValue) => {
   );
 });
 
-const mapStateToProps = ({ addressBook, user }, { source }) => {
-  return {
-    suggestions: getRecipientSuggestions(
+function createContact() {
+  openModal(AddEditContactModal);
+}
+
+export default function RecipientField({ source, change, input, meta }) {
+  const suggestions = useSelector(({ addressBook, user }) =>
+    getRecipientSuggestions(
       addressBook,
       user?.accounts,
       source?.account?.address
-    ),
-    addressNameMap: getAddressNameMap(addressBook, user.accounts),
-  };
-};
+    )
+  );
+  const addressNameMap = useSelector(({ addressBook, user }) =>
+    getAddressNameMap(addressBook, user?.accounts)
+  );
 
-/**
- * The Recipient Field in the Send Page
- *
- * @class RecipientField
- * @extends {Component}
- */
-@connect(mapStateToProps)
-class RecipientField extends Component {
-  /**
-   *Handle Select Address
-   *
-   * @memberof RecipientField
-   */
-  handleSelect = (address) => {
-    this.props.change(this.props.input.name, address);
+  const recipientName = addressNameMap[input.value];
+  const isAddress = addressRegex.test(input.value);
+
+  const handleSelect = (address) => {
+    change(input.name, address);
   };
 
-  /**
-   * Opens the Add/Edit Contact Modal
-   *
-   * @memberof RecipientField
-   */
-  createContact = () => {
-    openModal(AddEditContactModal);
-  };
-
-  addToContact = async () => {
-    const address = this.props.input.value;
+  const addToContact = async () => {
+    const address = input.value;
     let isMine = false;
     try {
       const result = await callApi('system/validate/address', {
@@ -97,65 +82,50 @@ class RecipientField extends Component {
     openModal(AddEditContactModal, { prefill });
   };
 
-  /**
-   * Component's Renderable JSX
-   *
-   * @returns
-   * @memberof RecipientField
-   */
-  render() {
-    const { addressNameMap, input, meta, suggestions } = this.props;
-    const recipientName = addressNameMap[input.value];
-    const isAddress = addressRegex.test(input.value);
-
-    return (
-      <FormField
-        label={
-          <>
-            <span>
-              {__('Send to')}
-              &nbsp;&nbsp;
-            </span>
-            <RecipientName>{recipientName}</RecipientName>
-            {!recipientName && isAddress && (
-              <Button skin="plain-link-primary" onClick={this.addToContact}>
-                <Icon icon={plusIcon} style={{ fontSize: '0.9em' }} />
-                <span className="v-align ml0_4">
-                  {__('Add to Address Book')}
-                </span>
+  return (
+    <FormField
+      label={
+        <>
+          <span>
+            {__('Send to')}
+            &nbsp;&nbsp;
+          </span>
+          <RecipientName>{recipientName}</RecipientName>
+          {!recipientName && isAddress && (
+            <Button skin="plain-link-primary" onClick={addToContact}>
+              <Icon icon={plusIcon} style={{ fontSize: '0.9em' }} />
+              <span className="v-align ml0_4">{__('Add to Address Book')}</span>
+            </Button>
+          )}
+        </>
+      }
+    >
+      <AutoSuggest.RF
+        input={input}
+        meta={meta}
+        inputProps={{
+          placeholder: __('Recipient Address/Name'),
+          skin: 'filled-inverted',
+        }}
+        suggestions={suggestions}
+        onSelect={handleSelect}
+        filterSuggestions={filterSuggestions}
+        emptyFiller={
+          suggestions.length === 0 && (
+            <EmptyMessage>
+              {__('Your address book is empty')}
+              <Button as="a" skin="hyperlink" onClick={createContact}>
+                <Icon
+                  icon={plusIcon}
+                  className="mr0_4"
+                  style={{ fontSize: '.8em' }}
+                />
+                <span className="v-align">{__('Create new contact')}</span>
               </Button>
-            )}
-          </>
+            </EmptyMessage>
+          )
         }
-      >
-        <AutoSuggest.RF
-          input={input}
-          meta={meta}
-          inputProps={{
-            placeholder: __('Recipient Address/Name'),
-            skin: 'filled-inverted',
-          }}
-          suggestions={suggestions}
-          onSelect={this.handleSelect}
-          filterSuggestions={filterSuggestions}
-          emptyFiller={
-            suggestions.length === 0 && (
-              <EmptyMessage>
-                {__('Your address book is empty')}
-                <Button as="a" skin="hyperlink" onClick={this.createContact}>
-                  <Icon
-                    icon={plusIcon}
-                    className="mr0_4"
-                    style={{ fontSize: '.8em' }}
-                  />
-                  <span className="v-align">{__('Create new contact')}</span>
-                </Button>
-              </EmptyMessage>
-            )
-          }
-        />
-      </FormField>
-    );
-  }
+      />
+    </FormField>
+  );
 }
-export default RecipientField;

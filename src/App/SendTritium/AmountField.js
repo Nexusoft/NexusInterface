@@ -42,124 +42,85 @@ const TokenAddress = styled.a(({ theme }) => ({
   color: theme.mixer(0.5),
 }));
 
-const mapStateToProps = ({ settings: { fiatCurrency }, market }) => ({
-  fiatCurrency: fiatCurrency,
-  price: market?.price,
-});
+export default function AmountField({ source, parentFieldName, fullAmount }) {
+  // const fiatCurrency = useSelector(state => state.settings.fiatCurrency)
+  // const price = useSelector(state => state.market?.price)
 
-/**
- * The Amount Feild on the Send Page
- *
- * @class AmountField
- * @extends {Component}
- */
-@connect(mapStateToProps)
-class AmountField extends Component {
-  /**
-   * Convert the NXS to the User's currency
-   *
-   * @memberof AmountField
-   */
-  nxsToFiat = (e, value) => {
-    if (floatRegex.test(value)) {
-      const nxs = parseFloat(value);
-      const { nxsFiatPrice } = this.props;
-      if (nxsFiatPrice) {
-        const fiat = nxs * nxsFiatPrice;
-        this.props.change(this.fiatAmountFieldName(), fiat.toFixed(2));
-      }
-    }
-  };
+  // const nxsToFiat = (e, value) => {
+  //   if (floatRegex.test(value)) {
+  //     const nxs = parseFloat(value);
+  //     const { nxsFiatPrice } = this.props;
+  //     if (nxsFiatPrice) {
+  //       const fiat = nxs * nxsFiatPrice;
+  //       this.props.change(this.fiatAmountFieldName(), fiat.toFixed(2));
+  //     }
+  //   }
+  // };
 
-  /**
-   * Returns the fiat from NXS
-   *
-   * @memberof AmountField
-   */
-  fiatToNxs = (e, value) => {
-    if (floatRegex.test(value)) {
-      const fiat = parseFloat(value);
-      const { nxsFiatPrice } = this.props;
-      if (nxsFiatPrice) {
-        const nxs = fiat / nxsFiatPrice;
-        this.props.change(this.amountFieldName(), nxs.toFixed(5));
-      }
-    }
-  };
+  // /**
+  //  * Returns the fiat from NXS
+  //  *
+  //  * @memberof AmountField
+  //  */
+  // fiatToNxs = (e, value) => {
+  //   if (floatRegex.test(value)) {
+  //     const fiat = parseFloat(value);
+  //     const { nxsFiatPrice } = this.props;
+  //     if (nxsFiatPrice) {
+  //       const nxs = fiat / nxsFiatPrice;
+  //       this.props.change(this.amountFieldName(), nxs.toFixed(5));
+  //     }
+  //   }
+  // };
 
-  /**
-   * Returns the Amount Feild Name
-   *
-   * @memberof AmountField
-   */
-  amountFieldName = () =>
-    (this.props.parentFieldName ? this.props.parentFieldName + '.' : '') +
-    'amount';
-  /**
-   * Returns the Fiat Amount Name
-   *
-   * @memberof AmountField
-   */
-  fiatAmountFieldName = () =>
-    (this.props.parentFieldName ? this.props.parentFieldName + '.' : '') +
-    'fiatAmount';
+  const amountFieldName = () =>
+    (parentFieldName ? parentFieldName + '.' : '') + 'amount';
 
-  sendAll = (evt) => {
+  const sendAll = (evt) => {
     evt.preventDefault();
-    const { change, fullAmount } = this.props;
-    change(this.amountFieldName(), fullAmount);
-    this.nxsToFiat(null, fullAmount);
+    change(amountFieldName(), fullAmount);
+    // nxsToFiat(null, fullAmount);
   };
 
-  /**
-   * Component's Renderable JSX
-   *
-   * @returns
-   * @memberof AmountField
-   */
-  render() {
-    const { source } = this.props;
-
-    return (
-      <SendAmount>
-        <SendAmountField>
-          <FormField
-            connectLabel
-            label={
-              <span style={{ whiteSpace: 'nowrap' }}>
-                <span className="v-align">
-                  {__('Amount')}
-                  {!!source && (
-                    <span>
-                      &nbsp;(
-                      {source.token ? (
-                        <TokenName token={source.token} />
-                      ) : (
-                        <TokenName account={source.account} />
-                      )}
-                      )
-                    </span>
-                  )}
-                </span>
-                {!!this.props.fullAmount && (
-                  <SendAllLink as="a" onClick={this.sendAll}>
-                    {__('Send all')}
-                  </SendAllLink>
+  return (
+    <SendAmount>
+      <SendAmountField>
+        <FormField
+          connectLabel
+          label={
+            <span style={{ whiteSpace: 'nowrap' }}>
+              <span className="v-align">
+                {__('Amount')}
+                {!!source && (
+                  <span>
+                    &nbsp;(
+                    {source.token ? (
+                      <TokenName token={source.token} />
+                    ) : (
+                      <TokenName account={source.account} />
+                    )}
+                    )
+                  </span>
                 )}
               </span>
-            }
-          >
-            <Field
-              component={TextField.RF}
-              skin="filled-inverted"
-              name={this.amountFieldName()}
-              placeholder="0.00000"
-              onChange={this.nxsToFiat}
-            />
-          </FormField>
-        </SendAmountField>
+              {!!fullAmount && (
+                <SendAllLink as="a" onClick={sendAll}>
+                  {__('Send all')}
+                </SendAllLink>
+              )}
+            </span>
+          }
+        >
+          <Field
+            component={TextField.RF}
+            skin="filled-inverted"
+            name={amountFieldName()}
+            placeholder="0.00000"
+          />
+        </FormField>
+      </SendAmountField>
 
-        {/* {token.address === '0' ? (
+      {/* {token.address === '0' ? (
           <>
             <SendAmountEqual>=</SendAmountEqual>
 
@@ -175,8 +136,6 @@ class AmountField extends Component {
             </SendAmountField>
           </>
         ) : null} */}
-      </SendAmount>
-    );
-  }
+    </SendAmount>
+  );
 }
-export default AmountField;
