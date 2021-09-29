@@ -1,11 +1,12 @@
 // External
 import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Field } from 'redux-form';
 import styled from '@emotion/styled';
 
 // Internal
 import TextField from 'components/TextField';
+import Tooltip from 'components/Tooltip';
 import FormField from 'components/FormField';
 import Link from 'components/Link';
 import TokenName from 'components/TokenName';
@@ -42,21 +43,33 @@ const TokenAddress = styled.a(({ theme }) => ({
   color: theme.mixer(0.5),
 }));
 
+const nxsToFiat = (value, price) => {
+  if (price) {
+    if (floatRegex.test(value)) {
+      const nxs = parseFloat(value);
+      const fiat = nxs * price;
+      return fiat.toFixed(2);
+    }
+  }
+  return null;
+};
+
+function AmountTextField({ input, source, ...rest }) {
+  const price = useSelector((state) => state.market?.price);
+  const currency = useSelector((state) => state.market?.currency);
+  const isInNXS = (source?.account?.token || source?.token?.address) === '0';
+  const fiat = isInNXS && nxsToFiat(input.value, price);
+
+  return (
+    <Tooltip.Trigger tooltip={fiat ? `≈ ${fiat} ${currency}` : null}>
+      <TextField.RF input={input} {...rest} />
+    </Tooltip.Trigger>
+  );
+}
+
 export default function AmountField({ source, parentFieldName, change }) {
   const fullAmount = (source?.account || source?.token)?.balance;
   // const fiatCurrency = useSelector(state => state.settings.fiatCurrency)
-  // const price = useSelector(state => state.market?.price)
-
-  // const nxsToFiat = (e, value) => {
-  //   if (floatRegex.test(value)) {
-  //     const nxs = parseFloat(value);
-  //     const { nxsFiatPrice } = this.props;
-  //     if (nxsFiatPrice) {
-  //       const fiat = nxs * nxsFiatPrice;
-  //       this.props.change(this.fiatAmountFieldName(), fiat.toFixed(2));
-  //     }
-  //   }
-  // };
 
   // /**
   //  * Returns the fiat from NXS
@@ -113,10 +126,11 @@ export default function AmountField({ source, parentFieldName, change }) {
           }
         >
           <Field
-            component={TextField.RF}
+            component={AmountTextField}
             skin="filled-inverted"
             name={amountFieldName()}
             placeholder="0.00000"
+            source={source}
           />
         </FormField>
       </SendAmountField>

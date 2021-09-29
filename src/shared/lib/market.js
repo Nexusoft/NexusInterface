@@ -19,6 +19,7 @@ async function fetchMarketData() {
     const { data } = await axios.get(
       `https://nexus-wallet-external-services.herokuapp.com/market-data?base_currency=${fiatCurrency}`
     );
+    data.currency = fiatCurrency;
 
     // cryptocompare's VND price is divided by 10
     if (fiatCurrency === 'VND') {
