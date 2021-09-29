@@ -42,7 +42,8 @@ const TokenAddress = styled.a(({ theme }) => ({
   color: theme.mixer(0.5),
 }));
 
-export default function AmountField({ source, parentFieldName, fullAmount }) {
+export default function AmountField({ source, parentFieldName, change }) {
+  const fullAmount = (source?.account || source?.token)?.balance;
   // const fiatCurrency = useSelector(state => state.settings.fiatCurrency)
   // const price = useSelector(state => state.market?.price)
 
@@ -105,7 +106,7 @@ export default function AmountField({ source, parentFieldName, fullAmount }) {
               </span>
               {!!fullAmount && (
                 <SendAllLink as="a" onClick={sendAll}>
-                  {__('Send all')}
+                  {__('All')}
                 </SendAllLink>
               )}
             </span>
