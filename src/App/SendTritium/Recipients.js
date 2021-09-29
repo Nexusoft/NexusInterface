@@ -1,5 +1,4 @@
 // External
-import { Component } from 'react';
 import { Field } from 'redux-form';
 import styled from '@emotion/styled';
 
@@ -51,90 +50,74 @@ const AmountWrapper = styled.div({
   flexBasis: 0,
 });
 
-/**
- * Recipients Field from the Send Page
- *
- * @class Recipients
- * @extends {React.Component}
- */
-class Recipients extends Component {
-  /**
-   * Component's Renderable JSX
-   *
-   * @returns
-   * @memberof Recipients
-   */
-  render() {
-    const { fields, change, source } = this.props;
-    if (!fields?.length) return null;
+export default function Recipients({ fields, change, source }) {
+  if (!fields?.length) return null;
 
-    // if (fields.length === 1) {
-    //   return (
-    //     <>
-    //       <Field
-    //         name={`${fields.name}[0].address`}
-    //         component={RecipientField}
-    //         change={change}
-    //         sendFrom={sendFrom}
-    //       />
-    //       <AmountField
-    //         fullAmount={accBalance}
-    //         parentFieldName={`${fields.name}[0]`}
-    //         change={change}
-    //         token={token}
-    //       />
-    //     </>
-    //   );
-    // } else {
-    return (
-      <>
-        {fields.map((fieldName, i) => (
-          <Recipient
-            key={i}
-            style={fields.length > 1 ? { marginTop: '0.5em' } : undefined}
-          >
-            {fields.length !== 1 && (
-              <Tooltip.Trigger tooltip={__('Remove recipient')}>
-                <RemoveButton
-                  onClick={() => {
-                    fields.remove(i);
-                  }}
-                >
-                  ✕
-                </RemoveButton>
-              </Tooltip.Trigger>
-            )}
+  // if (fields.length === 1) {
+  //   return (
+  //     <>
+  //       <Field
+  //         name={`${fields.name}[0].address`}
+  //         component={RecipientField}
+  //         change={change}
+  //         sendFrom={sendFrom}
+  //       />
+  //       <AmountField
+  //         fullAmount={accBalance}
+  //         parentFieldName={`${fields.name}[0]`}
+  //         change={change}
+  //         token={token}
+  //       />
+  //     </>
+  //   );
+  // } else {
+  return (
+    <>
+      {fields.map((fieldName, i) => (
+        <Recipient
+          key={i}
+          style={fields.length > 1 ? { marginTop: '0.5em' } : undefined}
+        >
+          {fields.length !== 1 && (
+            <Tooltip.Trigger tooltip={__('Remove recipient')}>
+              <RemoveButton
+                onClick={() => {
+                  fields.remove(i);
+                }}
+              >
+                ✕
+              </RemoveButton>
+            </Tooltip.Trigger>
+          )}
 
-            <div className="flex center">
-              <AddressWrapper>
-                <Field
-                  name={`${fieldName}.address`}
-                  component={RecipientField}
-                  change={change}
-                  source={source}
-                />
-              </AddressWrapper>
+          <div className="flex center">
+            <AddressWrapper>
+              <Field
+                name={`${fieldName}.address`}
+                component={RecipientField}
+                change={change}
+                source={source}
+              />
+            </AddressWrapper>
 
-              <AmountWrapper>
-                <AmountField
-                  parentFieldName={fieldName}
-                  change={change}
-                  source={source}
-                />
-              </AmountWrapper>
-            </div>
+            <AmountWrapper>
+              <AmountField
+                parentFieldName={fieldName}
+                change={change}
+                source={source}
+              />
+            </AmountWrapper>
+          </div>
 
-            <Field
-              name="advancedOptions"
-              component={({ input }) =>
-                !!input.value && <AdvancedFields parentFieldName={fieldName} />
-              }
-            />
-          </Recipient>
-        ))}
-      </>
-    );
-    // }
-  }
+          <Field
+            name="advancedOptions"
+            component={({ input }) =>
+              !!input.value && <AdvancedFields parentFieldName={fieldName} />
+            }
+          />
+        </Recipient>
+      ))}
+    </>
+  );
+  // }
 }
-export default Recipients;

@@ -14,7 +14,6 @@ import { lookupAddress } from 'lib/addressBook';
 import { removeModal } from 'lib/ui';
 import { openSuccessDialog } from 'lib/dialog';
 import { loadAccounts } from 'lib/user';
-import { getActiveCoreConfig } from 'lib/coreConfig';
 import { errorHandler } from 'utils/form';
 import { timeToText } from 'utils/misc';
 import addressBookIcon from 'icons/address-book.svg';
@@ -176,14 +175,6 @@ function PreviewTransactionModal({
   handleSubmit,
   submitting,
 }) {
-  const [defaultTxExpiry, setDefaultTxExpiry] = useState();
-  useEffect(() => {
-    (async () => {
-      const config = await getActiveCoreConfig();
-      setDefaultTxExpiry(config.txExpiry);
-    })();
-  }, []);
-
   return (
     <ControlledModal>
       <ControlledModal.Header>{__("You're sending")}</ControlledModal.Header>
