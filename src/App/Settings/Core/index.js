@@ -104,6 +104,8 @@ const formKeys = [
   'testnetIteration',
   'avatarMode',
   'coreDataDir',
+  'allowAdvancedCoreOptions',
+  'advancedCoreParams',
   'manualDaemonIP',
   'manualDaemonSSL',
   'manualDaemonPort',
@@ -771,6 +773,34 @@ class SettingsCore extends Component {
                   </Button>
                 </SettingsField>
               )}
+              <SettingsField
+                connectLabel
+                label={__('Advance')}
+                subLabel={__('Allow advanced core options')}
+              >
+                <Field name="allowAdvancedCoreOptions" component={Switch.RF} />
+              </SettingsField>
+              <Field
+                name="allowAdvancedCoreOptions"
+                component={({ input: allowAdvancedCoreOptions }) =>
+                  allowAdvancedCoreOptions.value && (
+                    <>
+                      {' '}
+                      <SettingsField
+                        connectLabel
+                        indent={1}
+                        label={__('Core Flags')}
+                        subLabel={__('Pass these flags to the core on start')}
+                      >
+                        <Field
+                          name="advancedCoreParams"
+                          component={TextField.RF}
+                        />
+                      </SettingsField>
+                    </>
+                  )
+                }
+              />
             </>
           )}
 

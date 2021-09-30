@@ -50,6 +50,8 @@ export const defaultSettings = {
   ipMineWhitelist: '',
   coreDataDir: defaultCoreDataDir,
   testnetIteration: 0,
+  allowAdvancedCoreOptions: false,
+  advancedCoreParams: '',
   manualDaemon: false,
   manualDaemonSSL: true,
   manualDaemonUser: 'rpcserver',
