@@ -182,8 +182,8 @@ const Amount = styled.span(({ theme, possitive }) => ({
 }));
 @connect((state) => ({
   showFiat: state.ui.user.balancesShowFiat,
-  fiatCurrency: state.settings.fiatCurrency,
   price: state.market?.price,
+  currency: state.market?.currency,
 }))
 class AccountHistoryModal extends Component {
   state = {
@@ -225,7 +225,7 @@ class AccountHistoryModal extends Component {
   }
 
   render() {
-    const { account, showFiat, market, fiatCurrency } = this.props;
+    const { account, showFiat, market, currency } = this.props;
     const { contracts } = this.state;
     return (
       <ControlledModal
@@ -262,7 +262,7 @@ class AccountHistoryModal extends Component {
                             toggleUserBalanceDisplayFiat(!this.props.showFiat)
                           }
                         >
-                          {showFiat ? fiatCurrency : 'NXS'}
+                          {showFiat ? currency : 'NXS'}
                         </Link>
                       </Tooltip.Trigger>
                       )
@@ -284,7 +284,7 @@ class AccountHistoryModal extends Component {
                       {showFiat && account.ticker === '0'
                         ? formatCurrency(
                             totalBalance(account, 6) * market,
-                            fiatCurrency
+                            currency
                           )
                         : formatNumber(totalBalance(account, 6))}
                     </div>
@@ -295,7 +295,7 @@ class AccountHistoryModal extends Component {
                     </div>
                     <div>
                       {showFiat && account.ticker === '0'
-                        ? formatCurrency(account.balance * market, fiatCurrency)
+                        ? formatCurrency(account.balance * market, currency)
                         : formatNumber(account.balance, 6)}
                     </div>
                   </div>
@@ -307,7 +307,7 @@ class AccountHistoryModal extends Component {
                       {showFiat && account.ticker === '0'
                         ? formatCurrency(
                             (account.unclaimed || 0) * market,
-                            fiatCurrency
+                            currency
                           )
                         : formatNumber(account.unclaimed || 0, 6)}
                     </div>
@@ -320,7 +320,7 @@ class AccountHistoryModal extends Component {
                       {showFiat && account.ticker === '0'
                         ? formatCurrency(
                             (account.unconfirmed || 0) * market,
-                            fiatCurrency
+                            currency
                           )
                         : formatNumber(account.unconfirmed || 0, 6)}
                     </div>
@@ -332,7 +332,7 @@ class AccountHistoryModal extends Component {
                       </div>
                       <div>
                         {showFiat && account.ticker === '0'
-                          ? formatCurrency(account.stake * market, fiatCurrency)
+                          ? formatCurrency(account.stake * market, currency)
                           : formatNumber(account.stake, 6)}
                       </div>
                     </div>
