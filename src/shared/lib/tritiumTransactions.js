@@ -30,8 +30,8 @@ function startWatcher() {
       }
 
       // Only refetch transaction each time there is a new block
-      const blocks = state.core.systemInfo?.blocks;
-      const oldBlocks = oldState.core.systemInfo?.blocks;
+      const blocks = state?.core.systemInfo?.blocks;
+      const oldBlocks = oldState?.core.systemInfo?.blocks;
       if (!blocks || blocks === oldBlocks) return;
 
       // Fetch the updated transaction info
