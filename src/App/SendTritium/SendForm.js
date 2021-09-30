@@ -93,7 +93,7 @@ async function asyncValidateRecipient({ recipient, source }) {
     const result = await callApi('system/validate/address', {
       address,
     });
-    if (result.is_valid) {
+    if (result.valid) {
       params.address = address;
     }
   }
