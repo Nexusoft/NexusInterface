@@ -72,7 +72,7 @@ export default function RecipientField({ source, change, input, meta }) {
       const result = await callApi('system/validate/address', {
         address,
       });
-      isMine = result.is_mine;
+      isMine = result.mine;
     } catch (err) {
       console.error(err);
     }

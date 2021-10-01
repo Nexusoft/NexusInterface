@@ -43,19 +43,19 @@ function validateAddresses(addresses) {
 function asyncValidateAddresses(isMine, addresses, errors) {
   return addresses.map(({ address }, i) =>
     callApi('system/validate/address', { address })
-      .then(({ is_valid, is_mine }) => {
-        if (!is_valid) {
+      .then(({ valid, mine }) => {
+        if (!valid) {
           if (address.startsWith('a') && address.length === 64) {
           } else {
             errors[i] = {
               address: __('Invalid address'),
             };
           }
-        } else if (isMine && !is_mine) {
+        } else if (isMine && !mine) {
           errors[i] = {
             address: __('This is not one of your addresses.'),
           };
-        } else if (!isMine && is_mine) {
+        } else if (!isMine && mine) {
           errors[i] = {
             address: __('This is one of your addresses.'),
           };
