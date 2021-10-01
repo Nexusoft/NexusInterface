@@ -1,6 +1,6 @@
 // External
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 import * as AutoLaunch from 'auto-launch';
 
@@ -75,40 +75,109 @@ const fiatCurrencies = [
   { value: 'VND', display: 'Vietnamese Dong (VND)' },
 ];
 
-const mapStateToProps = (state) => ({
-  coreConnected: isCoreConnected(state),
-  settings: state.settings,
-});
+/**
+ * Handles setting the auto launch function.
+ * @param {element} e Attached element
+ */
+async function toggleOpenOnStart(e) {
+  const { checked } = e.target;
+  const nexusAutoLaunch = new AutoLaunch({
+    name: 'Nexus Wallet',
+  });
+  if (checked) {
+    nexusAutoLaunch.enabled();
+    updateSettings({ openOnStart: true });
+  } else {
+    nexusAutoLaunch.disabled();
+    updateSettings({ openOnStart: false });
+  }
+}
 
 /**
- * App Page in the Setting Page
- *
- * @class SettingsApp
- * @extends {Component}
+ * Toggles if modules should be verified or not.
  */
-@connect(mapStateToProps)
-class SettingsApp extends Component {
-  /**
-   * Creates an instance of SettingsApp.
-   * @param {*} props
-   * @memberof SettingsApp
-   */
-  constructor(props) {
-    super(props);
-    switchSettingsTab('App');
+async function toggleVerifyModuleSource(e) {
+  if (e.target.checked) {
+    const confirmed = await confirm({
+      question: __('Turn module open source policy on?'),
+      note: __(
+        'All modules without open source verifications, possibly including your own under-development modules, will become invalid. Wallet must be refreshed for the change to take effect.'
+      ),
+    });
+    if (confirmed) {
+      updateSettings({ verifyModuleSource: true });
+      location.reload();
+    }
+  } else {
+    const confirmed = await confirm({
+      question: __('Turn module open source policy off?'),
+      note: (
+        <div>
+          <p>
+            {__(`This is only for module developers and can be dangerous for
+            regular users. Please make sure you know what you are doing!`)}
+          </p>
+          <p>
+            {__(`It would be much easier for a closed source module to hide
+            malicious code than for an open source one. Therefore, in case you
+            still want to disable this setting, it is highly recommended that
+            you only install and run closed source modules that you are
+            developing yourself.`)}
+          </p>
+        </div>
+      ),
+      labelYes: __('Turn policy off'),
+      skinYes: 'danger',
+      labelNo: __('Keep policy on'),
+      skinNo: 'primary',
+      style: { width: 600 },
+    });
+    if (confirmed) {
+      updateSettings({ verifyModuleSource: false });
+      location.reload();
+    }
   }
-  /**
-   *  Confirm Wallet Back up
-   *
-   * @memberof SettingsApp
-   */
-  confirmBackupWallet = async () => {
+}
+
+/**
+ * Handles update Change
+ */
+async function handleAutoUpdateChange(e) {
+  if (!e.target.checked) {
+    const confirmed = await confirm({
+      question: __('Are you sure you want to disable auto update?'),
+      note: __(
+        'Keeping your wallet up-to-date is important for your security and will ensure that you get the best possible user experience.'
+      ),
+      labelYes: __('Keep auto update On'),
+      labelNo: __('Turn auto update Off'),
+      skinNo: 'danger',
+      style: { width: 580 },
+    });
+    if (!confirmed) {
+      updateSettings({ autoUpdate: false });
+      stopAutoUpdate();
+    }
+  } else {
+    updateSettings({ autoUpdate: true });
+    checkForUpdates();
+  }
+}
+
+export default function SettingsApp() {
+  const coreConnected = useSelector(isCoreConnected);
+  const settings = useSelector((state) => state.settings);
+  useEffect(() => {
+    switchSettingsTab('App');
+  }, []);
+
+  const confirmBackupWallet = async () => {
     const confirmed = await confirm({
       question: __('Backup wallet'),
     });
     if (confirmed) {
-      if (this.props.coreConnected) {
-        backupWallet(this.props.settings.backupDirectory);
+      if (coreConnected) {
+        backupWallet(settings.backupDirectory);
         showNotification(__('Wallet has been backed up'), 'success');
       } else {
         openErrorDialog({
@@ -118,312 +187,190 @@ class SettingsApp extends Component {
     }
   };
 
-  /**
-   * Handles setting the auto launch function.
-   * @param {element} e Attached element
-   * @memberof SettingsApp
-   */
-  toggleOpenOnStart = async (e) => {
-    const { checked } = e.target;
-    const nexusAutoLaunch = new AutoLaunch({
-      name: 'Nexus Wallet',
+  const updateHandlers = (settingName) => (input) =>
+    updateSettings({
+      [settingName]: form.resolveValue(input),
     });
-    if (checked) {
-      nexusAutoLaunch.enabled();
-      updateSettings({ openOnStart: true });
-    } else {
-      nexusAutoLaunch.disabled();
-      updateSettings({ openOnStart: false });
-    }
-  };
 
-  /**
-   * Toggles if modules should be verified or not.
-   *
-   * @memberof SettingsApp
-   */
-  toggleVerifyModuleSource = async (e) => {
-    if (e.target.checked) {
-      const confirmed = await confirm({
-        question: __('Turn module open source policy on?'),
-        note: __(
-          'All modules without open source verifications, possibly including your own under-development modules, will become invalid. Wallet must be refreshed for the change to take effect.'
-        ),
-      });
-      if (confirmed) {
-        updateSettings({ verifyModuleSource: true });
-        location.reload();
-      }
-    } else {
-      const confirmed = await confirm({
-        question: __('Turn module open source policy off?'),
-        note: (
-          <div>
-            <p>
-              {__(`This is only for module developers and can be dangerous for
-              regular users. Please make sure you know what you are doing!`)}
-            </p>
-            <p>
-              {__(`It would be much easier for a closed source module to hide
-              malicious code than for an open source one. Therefore, in case you
-              still want to disable this setting, it is highly recommended that
-              you only install and run closed source modules that you are
-              developing yourself.`)}
-            </p>
-          </div>
-        ),
-        labelYes: __('Turn policy off'),
-        skinYes: 'danger',
-        labelNo: __('Keep policy on'),
-        skinNo: 'primary',
-        style: { width: 600 },
-      });
-      if (confirmed) {
-        updateSettings({ verifyModuleSource: false });
-        location.reload();
-      }
-    }
-  };
+  return (
+    <>
+      <LanguageSetting />
 
-  /**
-   * Update the settings
-   *
-   * @memberof SettingsApp
-   */
-  updateHandlers = (() => {
-    const handlers = [];
-    return (settingName) => {
-      if (!handlers[settingName]) {
-        handlers[settingName] = (input) =>
-          updateSettings({
-            [settingName]: form.resolveValue(input),
-          });
-      }
-      return handlers[settingName];
-    };
-  })();
+      <SettingsField
+        connectLabel
+        label={__('Minimize on close')}
+        subLabel={__(
+          'Minimize the wallet when closing the window instead of closing it.'
+        )}
+      >
+        <Switch
+          checked={settings.minimizeOnClose}
+          onChange={updateHandlers('minimizeOnClose')}
+        />
+      </SettingsField>
 
-  /**
-   * Handles update Change
-   *
-   * @memberof SettingsApp
-   */
-  handleAutoUpdateChange = async (e) => {
-    if (!e.target.checked) {
-      const confirmed = await confirm({
-        question: __('Are you sure you want to disable auto update?'),
-        note: __(
-          'Keeping your wallet up-to-date is important for your security and will ensure that you get the best possible user experience.'
-        ),
-        labelYes: __('Keep auto update On'),
-        labelNo: __('Turn auto update Off'),
-        skinNo: 'danger',
-        style: { width: 580 },
-      });
-      if (!confirmed) {
-        updateSettings({ autoUpdate: false });
-        stopAutoUpdate();
-      }
-    } else {
-      updateSettings({ autoUpdate: true });
-      checkForUpdates();
-    }
-  };
+      <SettingsField
+        connectLabel
+        label={__('Open on startup')}
+        subLabel={__('Open the wallet when ever the OS starts.')}
+      >
+        <Switch checked={settings.openOnStart} onChange={toggleOpenOnStart} />
+      </SettingsField>
 
-  /**
-   * Component's Renderable JSX
-   *
-   * @returns
-   * @memberof SettingsApp
-   */
-  render() {
-    const { coreConnected, settings } = this.props;
-    return (
-      <>
-        <LanguageSetting />
-
-        <SettingsField
-          connectLabel
-          label={__('Minimize on close')}
-          subLabel={__(
-            'Minimize the wallet when closing the window instead of closing it.'
-          )}
-        >
-          <Switch
-            checked={settings.minimizeOnClose}
-            onChange={this.updateHandlers('minimizeOnClose')}
-          />
-        </SettingsField>
-
-        <SettingsField
-          connectLabel
-          label={__('Open on startup')}
-          subLabel={__('Open the wallet when ever the OS starts.')}
-        >
-          <Switch
-            checked={settings.openOnStart}
-            onChange={this.toggleOpenOnStart}
-          />
-        </SettingsField>
-
-        <SettingsField
-          connectLabel
-          label={
-            <span>
-              <span className="v-align">
-                {__('Auto update (Recommended)')}{' '}
-                {!settings.autoUpdate && (
-                  <WarningIcon spaceLeft icon={warningIcon} />
-                )}
-              </span>
+      <SettingsField
+        connectLabel
+        label={
+          <span>
+            <span className="v-align">
+              {__('Auto update (Recommended)')}{' '}
+              {!settings.autoUpdate && (
+                <WarningIcon spaceLeft icon={warningIcon} />
+              )}
             </span>
-          }
-          subLabel={
-            <div>
-              {__(
-                'Automatically check for new versions and notify if a new version is available.'
-              )}
-            </div>
-          }
-        >
-          <Switch
-            checked={settings.autoUpdate}
-            onChange={this.handleAutoUpdateChange}
-          />
-        </SettingsField>
+          </span>
+        }
+        subLabel={
+          <div>
+            {__(
+              'Automatically check for new versions and notify if a new version is available.'
+            )}
+          </div>
+        }
+      >
+        <Switch
+          checked={settings.autoUpdate}
+          onChange={handleAutoUpdateChange}
+        />
+      </SettingsField>
 
+      <SettingsField
+        connectLabel
+        label={__('Allow Pre-releases')}
+        subLabel={
+          <div>
+            {__(
+              'Accept pre-release versions (e.g. alpha, beta) when checking for updates.'
+            )}
+          </div>
+        }
+      >
+        <Switch
+          checked={settings.allowPrerelease}
+          onChange={(evt) => setAllowPrerelease(evt.target.checked)}
+        />
+      </SettingsField>
+
+      <SettingsField
+        connectLabel
+        label={__('Send anonymous usage data')}
+        subLabel={__(
+          'Send anonymous usage data to allow the Nexus developers to improve the wallet.'
+        )}
+      >
+        <Switch
+          checked={settings.sendUsageData}
+          onChange={updateHandlers('sendUsageData')}
+        />
+      </SettingsField>
+
+      <SettingsField label={__('Base currency')}>
+        <Select
+          value={settings.fiatCurrency}
+          onChange={updateHandlers('fiatCurrency')}
+          options={fiatCurrencies}
+          style={{ maxWidth: 260 }}
+        />
+      </SettingsField>
+
+      {legacyMode && (
         <SettingsField
           connectLabel
-          label={__('Allow Pre-releases')}
-          subLabel={
-            <div>
-              {__(
-                'Accept pre-release versions (e.g. alpha, beta) when checking for updates.'
-              )}
-            </div>
-          }
-        >
-          <Switch
-            checked={settings.allowPrerelease}
-            onChange={(evt) => setAllowPrerelease(evt.target.checked)}
-          />
-        </SettingsField>
-
-        <SettingsField
-          connectLabel
-          label={__('Send anonymous usage data')}
+          label={__('Minimum confirmations')}
           subLabel={__(
-            'Send anonymous usage data to allow the Nexus developers to improve the wallet.'
+            'Minimum amount of confirmations before a block is accepted. Local only.'
+          )}
+        >
+          <TextField
+            type="number"
+            value={settings.minConfirmations}
+            step="1"
+            min="1"
+            onChange={updateHandlers('minConfirmations')}
+            onKeyPress={(e) => {
+              e.preventDefault();
+            }}
+            style={{ width: 75 }}
+          />
+        </SettingsField>
+      )}
+
+      {legacyMode && <BackupDirSetting />}
+
+      <SettingsField
+        connectLabel
+        label={__('Developer mode')}
+        subLabel={__(
+          'Development mode enables advanced features to aid in development. After enabling the wallet must be closed and reopened to enable those features.'
+        )}
+      >
+        <Switch
+          checked={settings.devMode}
+          onChange={updateHandlers('devMode')}
+        />
+      </SettingsField>
+
+      <div style={{ display: settings.devMode ? 'block' : 'none' }}>
+        <SettingsField
+          indent={1}
+          connectLabel
+          label={__('Module open source policy')}
+          subLabel={__(
+            "Only modules which have valid open source repositories are allowed to be installed and run. You can disable this option to test run the modules that you're developing"
           )}
         >
           <Switch
-            checked={settings.sendUsageData}
-            onChange={this.updateHandlers('sendUsageData')}
+            checked={settings.verifyModuleSource}
+            onChange={toggleVerifyModuleSource}
           />
         </SettingsField>
-
-        <SettingsField label={__('Base currency')}>
-          <Select
-            value={settings.fiatCurrency}
-            onChange={this.updateHandlers('fiatCurrency')}
-            options={fiatCurrencies}
-            style={{ maxWidth: 260 }}
+        <SettingsField
+          indent={1}
+          connectLabel
+          label={__('Allow SymLink')}
+          subLabel={__(
+            'Allow the presence of SymLinks in the module directory'
+          )}
+        >
+          <Switch
+            checked={settings.allowSymLink}
+            onChange={updateHandlers('allowSymLink')}
           />
         </SettingsField>
 
         {legacyMode && (
           <SettingsField
+            indent={1}
             connectLabel
-            label={__('Minimum confirmations')}
-            subLabel={__(
-              'Minimum amount of confirmations before a block is accepted. Local only.'
-            )}
+            label={__('Fake Test Transactions')}
+            subLabel={__('Display Test Transactions on the Transactions page')}
           >
-            <TextField
-              type="number"
-              value={settings.minConfirmations}
-              step="1"
-              min="1"
-              onChange={this.updateHandlers('minConfirmations')}
-              onKeyPress={(e) => {
-                e.preventDefault();
-              }}
-              style={{ width: 75 }}
+            <Switch
+              checked={settings.fakeTransactions}
+              onChange={updateHandlers('fakeTransactions')}
             />
           </SettingsField>
         )}
+      </div>
 
-        {legacyMode && <BackupDirSetting />}
-
-        <SettingsField
-          connectLabel
-          label={__('Developer mode')}
-          subLabel={__(
-            'Development mode enables advanced features to aid in development. After enabling the wallet must be closed and reopened to enable those features.'
-          )}
+      {legacyMode && (
+        <Button
+          disabled={!coreConnected}
+          style={{ marginTop: '2em' }}
+          onClick={confirmBackupWallet}
         >
-          <Switch
-            checked={settings.devMode}
-            onChange={this.updateHandlers('devMode')}
-          />
-        </SettingsField>
-
-        <div style={{ display: settings.devMode ? 'block' : 'none' }}>
-          <SettingsField
-            indent={1}
-            connectLabel
-            label={__('Module open source policy')}
-            subLabel={__(
-              "Only modules which have valid open source repositories are allowed to be installed and run. You can disable this option to test run the modules that you're developing"
-            )}
-          >
-            <Switch
-              checked={settings.verifyModuleSource}
-              onChange={this.toggleVerifyModuleSource}
-            />
-          </SettingsField>
-          <SettingsField
-            indent={1}
-            connectLabel
-            label={__('Allow SymLink')}
-            subLabel={__(
-              'Allow the presence of SymLinks in the module directory'
-            )}
-          >
-            <Switch
-              checked={settings.allowSymLink}
-              onChange={this.updateHandlers('allowSymLink')}
-            />
-          </SettingsField>
-
-          {legacyMode && (
-            <SettingsField
-              indent={1}
-              connectLabel
-              label={__('Fake Test Transactions')}
-              subLabel={__(
-                'Display Test Transactions on the Transactions page'
-              )}
-            >
-              <Switch
-                checked={settings.fakeTransactions}
-                onChange={this.updateHandlers('fakeTransactions')}
-              />
-            </SettingsField>
-          )}
-        </div>
-
-        {legacyMode && (
-          <Button
-            disabled={!coreConnected}
-            style={{ marginTop: '2em' }}
-            onClick={this.confirmBackupWallet}
-          >
-            {__('Backup wallet')}
-          </Button>
-        )}
-      </>
-    );
-  }
+          {__('Backup wallet')}
+        </Button>
+      )}
+    </>
+  );
 }
-export default SettingsApp;
