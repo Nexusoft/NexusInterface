@@ -1,6 +1,6 @@
 // External Dependencies
-import { connect } from 'react-redux';
-import { createRef, Component } from 'react';
+import { useSelector } from 'react-redux';
+import { useRef, useEffect } from 'react';
 import styled from '@emotion/styled';
 import { ipcRenderer } from 'electron';
 import GA from 'lib/googleAnalytics';
@@ -24,10 +24,11 @@ import {
   openModal,
 } from 'lib/ui';
 import { updateSettings } from 'lib/settings';
-import APIDocModal from './APIDocs/ApiDocModal';
 import documentsIcon from 'icons/documents.svg';
 import Tooltip from 'components/Tooltip';
 import Icon from 'components/Icon';
+
+import APIDocModal from './APIDocs/ApiDocModal';
 
 __ = __context('Console.NexusAPI');
 
@@ -45,41 +46,15 @@ const tab = ' '.repeat(2);
 
 const consoleInputSelector = memoize(
   (currentCommand, commandHistory, historyIndex) =>
-    historyIndex === -1 ? currentCommand : commandHistory[historyIndex]
-);
-
-const mapStateToProps = (state) => {
-  const {
+    historyIndex === -1 ? currentCommand : commandHistory[historyIndex],
+  ({
     ui: {
       console: {
-        console: {
-          currentCommand,
-          commandHistory,
-          historyIndex,
-          commandList,
-          output,
-        },
+        console: { currentCommand, commandHistory, historyIndex },
       },
     },
-    settings: { consoleCliSyntax },
-    core: {
-      config: { apiUser, apiPassword },
-    },
-  } = state;
-  return {
-    consoleInput: consoleInputSelector(
-      currentCommand,
-      commandHistory,
-      historyIndex
-    ),
-    apiUser,
-    apiPassword,
-    currentCommand,
-    commandList,
-    output,
-    consoleCliSyntax,
-  };
-};
+  }) => [currentCommand, commandHistory, historyIndex]
+);
 
 function censorSecuredFields(cmd, { consoleCliSyntax }) {
   const securedFields = [
@@ -144,72 +119,34 @@ const SyntaxSelect = styled(Select)(({ theme }) => ({
   borderRight: `1px solid ${theme.mixer(0.125)}`,
 }));
 
-/**
- * Console Page in the Terminal Page
- *
- * @class TerminalConsole
- * @extends {Component}
- */
-@connect(mapStateToProps)
-class NexusApiConsole extends Component {
-  inputRef = createRef();
-  outputRef = createRef();
+export default function NexusApiConsole() {
+  const inputRef = useRef();
+  const outputRef = useRef();
+  const consoleInput = useSelector(consoleInputSelector);
+  const apiUser = useSelector((state) => state.core.config.apiUser);
+  const apiPassword = useSelector((state) => state.core.config.apiPassword);
+  const currentCommand = useSelector(
+    (state) => state.ui.console.console.currentCommand
+  );
+  const output = useSelector((state) => state.ui.console.console.output);
+  const consoleCliSyntax = useSelector(
+    (state) => state.settings.consoleCliSyntax
+  );
 
-  /**
-   *Creates an instance of TerminalConsole.
-   * @param {*} props
-   * @memberof TerminalConsole
-   */
-  constructor(props) {
-    super(props);
+  useEffect(() => {
     switchConsoleTab('Console');
-  }
+  }, []);
 
-  /**
-   *
-   *
-   * @param {*} prevProps
-   * @param {*} PrevState
-   * @memberof TerminalConsole
-   */
-  componentDidUpdate(prevProps, PrevState) {
-    // Scroll to bottom
-    if (this.outputRef.current && prevProps.output !== this.props.output) {
-      const { clientHeight, scrollHeight } = this.outputRef.current;
-      this.outputRef.current.scrollTop = scrollHeight - clientHeight;
+  const prevOutput = useRef(output);
+  useEffect(() => {
+    if (outputRef.current && prevOutput.current !== output) {
+      const { clientHeight, scrollHeight } = outputRef.current;
+      outputRef.current.scrollTop = scrollHeight - clientHeight;
     }
-  }
+    prevOutput.current = output;
+  });
 
-  /**
-   * Handle Key Down Event
-   * @param {*} e
-   * @memberof TerminalConsole
-   */
-  handleKeyDown = (e) => {
-    switch (e.key) {
-      case 'ArrowDown':
-        e.preventDefault();
-        commandHistoryDown();
-        break;
-      case 'ArrowUp':
-        e.preventDefault();
-        commandHistoryUp();
-        break;
-      case 'Enter':
-        e.preventDefault();
-        this.execute();
-        break;
-    }
-  };
-
-  /**
-   * Execute a Command
-   *
-   * @memberof TerminalConsole
-   */
-  execute = async () => {
-    const { currentCommand, consoleCliSyntax, apiUser, apiPassword } =
-      this.props;
+  const execute = async () => {
     if (!currentCommand || !currentCommand.trim()) return;
 
     const cmd = currentCommand.trim();
@@ -271,120 +208,116 @@ class NexusApiConsole extends Component {
     }
   };
 
-  /**
-   * Take the Autosuggest and updateConsoleInput
-   *
-   * @memberof TerminalConsole
-   */
-  formateAutoSuggest = (e) => {
-    updateConsoleInput(e);
+  const handleKeyDown = (e) => {
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        commandHistoryDown();
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        commandHistoryUp();
+        break;
+      case 'Enter':
+        e.preventDefault();
+        execute();
+        break;
+    }
   };
 
-  /**
-   * Component's Renderable JSX
-   *
-   * @returns
-   * @memberof TerminalConsole
-   */
-  render() {
-    const { consoleInput, output, consoleCliSyntax } = this.props;
-
-    return (
-      <RequireCoreConnected>
-        <TerminalContent>
-          <Console>
-            <ConsoleInput>
-              <TextField
-                autoFocus
-                inputRef={this.inputRef}
-                skin="filled-inverted"
-                value={consoleInput}
-                multiline
-                rows={1}
-                inputStyle={{ resize: 'none' }}
-                placeholder={
-                  consoleCliSyntax
-                    ? 'api/verb/noun param1=value1 param2=value2'
-                    : 'api/verb/noun?param1=value1&param2=value2'
-                }
-                onChange={(e) => {
-                  updateConsoleInput(e.target.value);
-                }}
-                onKeyDown={this.handleKeyDown}
-                left={
-                  <SyntaxSelect
-                    skin="filled-inverted"
-                    options={syntaxOptions}
-                    value={consoleCliSyntax}
-                    onChange={(v) => {
-                      updateSettings({ consoleCliSyntax: v });
-                      if (this.inputRef.current) {
-                        this.inputRef.current.focus();
-                      }
-                    }}
-                  />
-                }
-                right={
-                  <ExecuteButton
-                    skin="filled-inverted"
-                    fitHeight
-                    grouped="right"
-                    onClick={this.execute}
-                  >
-                    {__('Execute')}
-                  </ExecuteButton>
-                }
-              />
-
-              <Tooltip.Trigger tooltip={__('API Documentation')}>
-                <HelpButton
+  return (
+    <RequireCoreConnected>
+      <TerminalContent>
+        <Console>
+          <ConsoleInput>
+            <TextField
+              autoFocus
+              inputRef={inputRef}
+              skin="filled-inverted"
+              value={consoleInput}
+              multiline
+              rows={1}
+              inputStyle={{ resize: 'none' }}
+              placeholder={
+                consoleCliSyntax
+                  ? 'api/verb/noun param1=value1 param2=value2'
+                  : 'api/verb/noun?param1=value1&param2=value2'
+              }
+              onChange={(e) => {
+                updateConsoleInput(e.target.value);
+              }}
+              onKeyDown={handleKeyDown}
+              left={
+                <SyntaxSelect
+                  skin="filled-inverted"
+                  options={syntaxOptions}
+                  value={consoleCliSyntax}
+                  onChange={(v) => {
+                    updateSettings({ consoleCliSyntax: v });
+                    if (inputRef.current) {
+                      inputRef.current.focus();
+                    }
+                  }}
+                />
+              }
+              right={
+                <ExecuteButton
                   skin="filled-inverted"
                   fitHeight
-                  onClick={() => openModal(APIDocModal)}
+                  grouped="right"
+                  onClick={execute}
                 >
-                  <Icon icon={documentsIcon} />
-                </HelpButton>
-              </Tooltip.Trigger>
-            </ConsoleInput>
+                  {__('Execute')}
+                </ExecuteButton>
+              }
+            />
 
-            <ConsoleOutput ref={this.outputRef}>
-              {output.map(({ type, content }, i) => {
-                switch (type) {
-                  case 'command':
-                    return (
-                      <div key={i}>
-                        <span>
-                          <span style={{ color: '#0ca4fb' }}>Nexus-API</span>
-                          <span style={{ color: '#00d850' }}>$ </span>
-                          {content}
-                          <span style={{ color: '#0ca4fb' }}> ►</span>
-                        </span>
-                      </div>
-                    );
-                  case 'text':
-                    return <div key={i}>{content}</div>;
-                  case 'error':
-                    return (
-                      <div key={i} className="error">
+            <Tooltip.Trigger tooltip={__('API Documentation')}>
+              <HelpButton
+                skin="filled-inverted"
+                fitHeight
+                onClick={() => openModal(APIDocModal)}
+              >
+                <Icon icon={documentsIcon} />
+              </HelpButton>
+            </Tooltip.Trigger>
+          </ConsoleInput>
+
+          <ConsoleOutput ref={outputRef}>
+            {output.map(({ type, content }, i) => {
+              switch (type) {
+                case 'command':
+                  return (
+                    <div key={i}>
+                      <span>
+                        <span style={{ color: '#0ca4fb' }}>Nexus-API</span>
+                        <span style={{ color: '#00d850' }}>$ </span>
                         {content}
-                      </div>
-                    );
-                }
-              })}
-            </ConsoleOutput>
+                        <span style={{ color: '#0ca4fb' }}> ►</span>
+                      </span>
+                    </div>
+                  );
+                case 'text':
+                  return <div key={i}>{content}</div>;
+                case 'error':
+                  return (
+                    <div key={i} className="error">
+                      {content}
+                    </div>
+                  );
+              }
+            })}
+          </ConsoleOutput>
 
-            <Button
-              skin="filled-inverted"
-              grouped="bottom"
-              onClick={resetConsole}
-            >
-              {__('Clear')}
-            </Button>
-          </Console>
-        </TerminalContent>
-      </RequireCoreConnected>
-    );
-  }
+          <Button
+            skin="filled-inverted"
+            grouped="bottom"
+            onClick={resetConsole}
+          >
+            {__('Clear')}
+          </Button>
+        </Console>
+      </TerminalContent>
+    </RequireCoreConnected>
+  );
 }
-
-export default NexusApiConsole;

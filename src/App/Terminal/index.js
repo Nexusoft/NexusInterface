@@ -1,8 +1,7 @@
 // External Dependencies
-import { Component } from 'react';
 import { Route, Redirect, Switch } from 'react-router';
 import styled from '@emotion/styled';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 // Internal Global Dependencies
 import Panel from 'components/Panel';
@@ -32,61 +31,43 @@ const TerminalTabBar = styled(Tab.Bar)({
   gridArea: 'tab-bar',
 });
 
-let ConsoleRedirect = ({ lastActiveTab, match }) => (
-  <Redirect
-    exact
-    from={`${match.path}/`}
-    to={`${match.path}/${lastActiveTab}`}
-  />
-);
-ConsoleRedirect = connect(({ ui: { console: { lastActiveTab } } }) => ({
-  lastActiveTab,
-}))(ConsoleRedirect);
-
-/**
- * Terminal Page
- *
- * @class Terminal
- * @extends {Component}
- */
-class Terminal extends Component {
-  /**
-   * Component's Renderable JSX
-   *
-   * @returns
-   * @memberof Terminal
-   */
-  render() {
-    const { match } = this.props;
-    return (
-      <Panel icon={consoleIcon} title={__('Console')} bodyScrollable={false}>
-        <TerminalComponent>
-          <TerminalTabBar>
-            <Tab
-              link={`${match.url}/Console`}
-              icon={logoIcon}
-              text={legacyMode ? __('Console') : 'Nexus API'}
-            />
-            <Tab
-              link={`${match.url}/Core`}
-              icon={coreIcon}
-              text={__('Core output')}
-            />
-          </TerminalTabBar>
-
-          <Switch>
-            <Route
-              path={`${match.path}/Console`}
-              component={legacyMode ? TerminalConsole : NexusApiConsole}
-            />
-            <Route path={`${match.path}/Core`} component={TerminalCore} />
-            <ConsoleRedirect match={match} />
-          </Switch>
-        </TerminalComponent>
-      </Panel>
-    );
-  }
+function ConsoleRedirect({ match }) {
+  const lastActiveTab = useSelector((state) => state.ui.console.lastActiveTab);
+  return (
+    <Redirect
+      exact
+      from={`${match.path}/`}
+      to={`${match.path}/${lastActiveTab}`}
+    />
+  );
 }
 
-// Mandatory React-Redux method
-export default Terminal;
+export default function Terminal({ match }) {
+  return (
+    <Panel icon={consoleIcon} title={__('Console')} bodyScrollable={false}>
+      <TerminalComponent>
+        <TerminalTabBar>
+          <Tab
+            link={`${match.url}/Console`}
+            icon={logoIcon}
+            text={legacyMode ? __('Console') : 'Nexus API'}
+          />
+          <Tab
+            link={`${match.url}/Core`}
+            icon={coreIcon}
+            text={__('Core output')}
+          />
+        </TerminalTabBar>
+
+        <Switch>
+          <Route
+            path={`${match.path}/Console`}
+            component={legacyMode ? TerminalConsole : NexusApiConsole}
+          />
+          <Route path={`${match.path}/Core`} component={TerminalCore} />
+          <ConsoleRedirect match={match} />
+        </Switch>
+      </TerminalComponent>
+    </Panel>
+  );
+}
