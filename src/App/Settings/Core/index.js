@@ -1,5 +1,5 @@
 // External
-import { Component } from 'react';
+import { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { reduxForm, Field, Fields, formValueSelector } from 'redux-form';
 import path from 'path';
@@ -25,7 +25,7 @@ import Switch from 'components/Switch';
 import { errorHandler } from 'utils/form';
 import { legacyMode } from 'consts/misc';
 import deleteDirectory from 'utils/promisified/deleteDirectory';
-import { newUID } from 'utils/misc';
+import useUID from 'utils/useUID.js';
 import { consts } from 'styles';
 import { isCoreConnected } from 'selectors';
 
@@ -148,6 +148,100 @@ const getInitialValues = (() => {
   };
 })();
 
+/**
+ * Asks to resync when using Lite mode
+ */
+async function resyncLiteMode() {
+  const confirmed = await confirm({
+    question: __('Resync database') + '?',
+    note: __(
+      'Nexus Core will be restarted. Lite mode database will be deleted and resynchronized from the beginning.'
+    ),
+  });
+  if (confirmed) {
+    updateSettings({ clearPeers: true });
+    await stopCore();
+    const {
+      settings: { coreDataDir },
+    } = store.getState();
+    const clientFolder = path.join(coreDataDir, 'client');
+    try {
+      await deleteDirectory(clientFolder);
+    } catch (err) {
+      openErrorDialog({ message: err && err.message });
+    }
+    await startCore();
+  }
+}
+
+/**
+ * Confirms turning off Remote Core
+ */
+async function turnOffRemoteCore() {
+  const confirmed = await confirm({
+    question: __('Exit remote Core mode?'),
+    note: __('(This will restart your Core)'),
+  });
+  if (confirmed) {
+    store.dispatch({ type: TYPE.DISCONNECT_CORE });
+    updateSettings({ manualDaemon: false });
+    await startCore();
+    refreshCoreInfo();
+  }
+}
+
+/**
+ * Confirms turning on Remote Core
+ */
+async function turnOnRemoteCore() {
+  const confirmed = await confirm({
+    question: __('Enter remote Core mode?'),
+    note: __('(This will restart your Core)'),
+  });
+  if (confirmed) {
+    store.dispatch({ type: TYPE.DISCONNECT_CORE });
+    updateSettings({ manualDaemon: true });
+    await stopCore();
+    refreshCoreInfo();
+  }
+}
+
+/**
+ * Handles the logic when the switch is activated
+ * @param {element} e Attached element
+ */
+function handleRestartSwitch(e) {
+  setCoreSettingsRestart(!!e.target.checked);
+}
+
+/**
+ *  Asks to reload TX History. Only for legacy mode.
+ */
+async function reloadTxHistory() {
+  const confirmed = await confirm({
+    question: __('Reload transaction history') + '?',
+    note: 'Nexus Core will be restarted, after that, it will take a while for the transaction history to be reloaded',
+  });
+  if (confirmed) {
+    updateSettings({ walletClean: true });
+    restartCore();
+  }
+}
+
+/**
+ *  Asks to clear Peer Connections. Only for legacy mode.
+ */
+async function clearPeerConnections() {
+  const confirmed = await confirm({
+    question: __('Clear peer connections') + '?',
+    note: 'Nexus Core will be restarted. After that, all stored peer connections will be reset.',
+  });
+  if (confirmed) {
+    updateSettings({ clearPeers: true });
+    restartCore();
+  }
+}
+
 const mapStateToProps = (state) => {
   const {
     settings,
@@ -173,14 +267,7 @@ const mapStateToProps = (state) => {
   };
 };
 
-/**
- * Core Settings page that is inside Settings
- *
- * @class SettingsCore
- * @extends {Component}
- */
-@connect(mapStateToProps)
-@reduxForm({
+const formOptions = {
   form: 'coreSettings',
   destroyOnUnmount: false,
   enableReinitialize: true,
@@ -240,68 +327,26 @@ const mapStateToProps = (state) => {
     }
   },
   onSubmitFail: errorHandler('Error saving settings'),
-})
-class SettingsCore extends Component {
-  switchId = newUID();
+};
 
-  /**
-   * Handles the logic when the switch is activated
-   * @param {element} e Attached element
-   * @memberof SettingsCore
-   */
-  handleRestartSwitch = (e) => {
-    setCoreSettingsRestart(!!e.target.checked);
-  };
+function SettingsCore({
+  coreConnected,
+  liteMode,
+  manualDaemon,
+  handleSubmit,
+  dirty,
+  submitting,
+  restartCoreOnSave,
+  showTestnetOff,
+  change,
+}) {
+  const switchId = useUID();
 
-  /**
-   * Creates an instance of SettingsCore.
-   * @param {*} props
-   * @memberof SettingsCore
-   */
-  constructor(props) {
-    super(props);
+  useEffect(() => {
     switchSettingsTab('Core');
-  }
+  }, []);
 
-  /**
-   * Confirms Switch to Remote Core
-   *
-   * @memberof SettingsCore
-   */
-  confirmSwitchManualDaemon = async () => {
-    const { manualDaemon } = this.props;
-
-    if (manualDaemon) {
-      const confirmed = await confirm({
-        question: __('Exit remote Core mode?'),
-        note: __('(This will restart your Core)'),
-      });
-      if (confirmed) {
-        store.dispatch({ type: TYPE.DISCONNECT_CORE });
-        updateSettings({ manualDaemon: false });
-        await startCore();
-        refreshCoreInfo();
-      }
-    } else {
-      const confirmed = await confirm({
-        question: __('Enter remote Core mode?'),
-        note: __('(This will restart your Core)'),
-      });
-      if (confirmed) {
-        store.dispatch({ type: TYPE.DISCONNECT_CORE });
-        updateSettings({ manualDaemon: true });
-        await stopCore();
-        refreshCoreInfo();
-      }
-    }
-  };
-
-  /**
-   * Attached to the OnChange event to display a warning about turning off safe mode
-   * @param {element} e Attached element
-   * @memberof SettingsCore
-   */
-  disableSafeMode = async (e) => {
+  const disableSafeMode = async (e) => {
     if (e.target.defaultValue === 'true') {
       e.preventDefault();
       const confirmed = await confirm({
@@ -309,183 +354,96 @@ class SettingsCore extends Component {
         note: 'In the unlikely event of hardware failure your sigchain could become inaccessible. Disabling safemode, while not having a recovery phrase, could result in loss of your coins. Proceed at your own risk.',
       });
       if (confirmed) {
-        this.props.change('safeMode', false);
+        change('safeMode', false);
       }
     }
   };
 
-  /**
-   *  Asks to reload TX History. Only for legacy mode.
-   * @memberof SettingsCore
-   */
-  reloadTxHistory = async () => {
-    const confirmed = await confirm({
-      question: __('Reload transaction history') + '?',
-      note: 'Nexus Core will be restarted, after that, it will take a while for the transaction history to be reloaded',
-    });
-    if (confirmed) {
-      updateSettings({ walletClean: true });
-      restartCore();
-    }
-  };
+  return (
+    <>
+      <form onSubmit={handleSubmit} style={{ paddingBottom: dirty ? 55 : 0 }}>
+        <CoreModes>
+          <EmbeddedMode
+            skin={manualDaemon ? 'default' : 'filled-primary'}
+            active={!manualDaemon}
+            onClick={manualDaemon ? turnOffRemoteCore : undefined}
+          >
+            {__('Embedded Core')}
+          </EmbeddedMode>
+          <ManualMode
+            skin={manualDaemon ? 'filled-primary' : 'default'}
+            active={manualDaemon}
+            onClick={manualDaemon ? undefined : turnOnRemoteCore}
+          >
+            {__('Remote Core')}
+          </ManualMode>
+        </CoreModes>
 
-  /**
-   *  Asks to clear Peer Connections. Only for legacy mode.
-   * @memberof SettingsCore
-   */
-  clearPeerConnections = async () => {
-    const confirmed = await confirm({
-      question: __('Clear peer connections') + '?',
-      note: 'Nexus Core will be restarted. After that, all stored peer connections will be reset.',
-    });
-    if (confirmed) {
-      updateSettings({ clearPeers: true });
-      restartCore();
-    }
-  };
+        {!manualDaemon && (
+          <>
+            <Field
+              name="multiUser"
+              component={({ input: multiUser }) => (
+                <SettingsField
+                  connectLabel
+                  label={__('Lite mode')}
+                  subLabel={__(
+                    'Nexus Core under lite mode runs lighter and synchronize much faster, but you will <b>NOT</b> be able to stake, mine, or switch the wallet to Legacy Mode.',
+                    null,
+                    { b: (text) => <strong>{text}</strong> }
+                  )}
+                  disabled={multiUser.value}
+                >
+                  {multiUser.value ? (
+                    <Switch readOnly value={false} />
+                  ) : (
+                    <Field name="liteMode" component={Switch.RF} />
+                  )}
+                </SettingsField>
+              )}
+            />
 
-  /**
-   * Asks to resync when using Lite mode
-   * @memberof SettingsCore
-   */
-  resyncLiteMode = async () => {
-    const confirmed = await confirm({
-      question: __('Resync database') + '?',
-      note: __(
-        'Nexus Core will be restarted. Lite mode database will be deleted and resynchronized from the beginning.'
-      ),
-    });
-    if (confirmed) {
-      updateSettings({ clearPeers: true });
-      await stopCore();
-      const {
-        settings: { coreDataDir },
-      } = store.getState();
-      const clientFolder = path.join(coreDataDir, 'client');
-      try {
-        await deleteDirectory(clientFolder);
-      } catch (err) {
-        openErrorDialog({ message: err && err.message });
-      }
-      await startCore();
-    }
-  };
+            <Field
+              name="liteMode"
+              component={({ input: liteMode }) => (
+                <SettingsField
+                  connectLabel
+                  label={__('Multi-user')}
+                  subLabel={__(
+                    'Allow multiple logged in users at the same time. Mining and staking will be unavailable.'
+                  )}
+                  disabled={liteMode.value}
+                >
+                  {liteMode.value ? (
+                    <Switch readOnly value={false} />
+                  ) : (
+                    <Field name="multiUser" component={Switch.RF} />
+                  )}
+                </SettingsField>
+              )}
+            />
 
-  /**
-   * Handles the button to turn off testnet if active
-   * @param {element} e Attached element
-   * @memberof SettingsCore
-   */
-  turnOffTestNet = (e) => {
-    this.props.change('testnetIteration', null);
-  };
-
-  /**
-   * Component's Renderable JSX
-   *
-   * @returns
-   * @memberof SettingsCore
-   */
-  render() {
-    const {
-      coreConnected,
-      liteMode,
-      manualDaemon,
-      handleSubmit,
-      dirty,
-      submitting,
-      restartCoreOnSave,
-      showTestnetOff,
-    } = this.props;
-    return (
-      <>
-        <form onSubmit={handleSubmit} style={{ paddingBottom: dirty ? 55 : 0 }}>
-          <CoreModes>
-            <EmbeddedMode
-              skin={manualDaemon ? 'default' : 'filled-primary'}
-              active={!manualDaemon}
-              onClick={
-                manualDaemon ? this.confirmSwitchManualDaemon : undefined
-              }
-            >
-              {__('Embedded Core')}
-            </EmbeddedMode>
-            <ManualMode
-              skin={manualDaemon ? 'filled-primary' : 'default'}
-              active={manualDaemon}
-              onClick={
-                manualDaemon ? undefined : this.confirmSwitchManualDaemon
-              }
-            >
-              {__('Remote Core')}
-            </ManualMode>
-          </CoreModes>
-
-          {!manualDaemon && (
-            <>
-              <Field
-                name="multiUser"
-                component={({ input: multiUser }) => (
+            <Fields
+              names={['liteMode', 'multiUser']}
+              component={({
+                liteMode: { input: liteMode },
+                multiUser: { input: multiUser },
+              }) => (
+                <>
                   <SettingsField
                     connectLabel
-                    label={__('Lite mode')}
-                    subLabel={__(
-                      'Nexus Core under lite mode runs lighter and synchronize much faster, but you will <b>NOT</b> be able to stake, mine, or switch the wallet to Legacy Mode.',
-                      null,
-                      { b: (text) => <strong>{text}</strong> }
-                    )}
-                    disabled={multiUser.value}
+                    label={__('Enable staking')}
+                    subLabel={__('Enable/Disable staking on the wallet.')}
+                    disabled={liteMode.value || multiUser.value}
                   >
-                    {multiUser.value ? (
+                    {liteMode.value || multiUser.value ? (
                       <Switch readOnly value={false} />
                     ) : (
-                      <Field name="liteMode" component={Switch.RF} />
+                      <Field name="enableStaking" component={Switch.RF} />
                     )}
                   </SettingsField>
-                )}
-              />
 
-              <Field
-                name="liteMode"
-                component={({ input: liteMode }) => (
-                  <SettingsField
-                    connectLabel
-                    label={__('Multi-user')}
-                    subLabel={__(
-                      'Allow multiple logged in users at the same time. Mining and staking will be unavailable.'
-                    )}
-                    disabled={liteMode.value}
-                  >
-                    {liteMode.value ? (
-                      <Switch readOnly value={false} />
-                    ) : (
-                      <Field name="multiUser" component={Switch.RF} />
-                    )}
-                  </SettingsField>
-                )}
-              />
-
-              <Fields
-                names={['liteMode', 'multiUser']}
-                component={({
-                  liteMode: { input: liteMode },
-                  multiUser: { input: multiUser },
-                }) => (
-                  <>
-                    <SettingsField
-                      connectLabel
-                      label={__('Enable staking')}
-                      subLabel={__('Enable/Disable staking on the wallet.')}
-                      disabled={liteMode.value || multiUser.value}
-                    >
-                      {liteMode.value || multiUser.value ? (
-                        <Switch readOnly value={false} />
-                      ) : (
-                        <Field name="enableStaking" component={Switch.RF} />
-                      )}
-                    </SettingsField>
-
-                    {/* <Field
+                  {/* <Field
                       name="enableStaking"
                       component={({ input: enableStaking }) =>
                         !(liteMode.value || multiUser.value) &&
@@ -504,462 +462,458 @@ class SettingsCore extends Component {
                       }
                     /> */}
 
-                    <SettingsField
-                      connectLabel
-                      label={__('Enable mining')}
-                      subLabel={__('Enable/Disable mining to the wallet.')}
-                      disabled={liteMode.value || multiUser.value}
-                    >
-                      {liteMode.value || multiUser.value ? (
-                        <Switch readOnly value={false} />
-                      ) : (
-                        <Field name="enableMining" component={Switch.RF} />
-                      )}
-                    </SettingsField>
-
-                    <Field
-                      name="enableMining"
-                      component={({ input: enableMining }) =>
-                        !(liteMode.value || multiUser.value) &&
-                        !!enableMining.value && (
-                          <SettingsField
-                            connectLabel
-                            indent={1}
-                            label={__('Mining IP Whitelist')}
-                            subLabel={__(
-                              'IP/Ports allowed to mine to. Separate by <b>;</b> . Wildcards supported only in IP',
-                              undefined,
-                              {
-                                b: (txt) => <b>{txt}</b>,
-                              }
-                            )}
-                          >
-                            <Field
-                              name="ipMineWhitelist"
-                              component={TextField.RF}
-                              normalize={removeWhiteSpaces}
-                              size="12"
-                            />
-                          </SettingsField>
-                        )
-                      }
-                    />
-                  </>
-                )}
-              />
-
-              <SettingsField
-                connectLabel
-                label={__('Safe Mode')}
-                subLabel={__(
-                  'Enables NextHash verification to protect against corruption, but adds computation time.'
-                )}
-              >
-                <Field
-                  name="safeMode"
-                  component={Switch.RF}
-                  onChange={this.disableSafeMode}
-                />
-              </SettingsField>
-
-              <SettingsField
-                connectLabel
-                label={__('Verbose level')}
-                subLabel={__('Verbose level for logs.')}
-              >
-                <Field
-                  name="verboseLevel"
-                  component={TextField.RF}
-                  type="number"
-                  min={0}
-                  max={5}
-                  style={{ maxWidth: 50 }}
-                />
-              </SettingsField>
-
-              <SettingsField
-                connectLabel
-                label={__('Core Data Directory')}
-                subLabel={__(
-                  'Where the blockchain data and your legacy wallet.dat are stored'
-                )}
-              >
-                <Field name="coreDataDir" component={TextField.RF} />
-              </SettingsField>
-
-              <SettingsField
-                connectLabel
-                label={__('Testnet Iteration')}
-                subLabel={
-                  <>
-                    {__('The iteration of Testnet to connect to.')}{' '}
-                    {showTestnetOff && (
-                      <Button
-                        style={{ height: '25%', width: '25%' }}
-                        onClick={this.turnOffTestNet}
-                      >
-                        {__('Turn Off')}
-                      </Button>
-                    )}
-                  </>
-                }
-              >
-                <Field
-                  name="testnetIteration"
-                  component={TextField.RF}
-                  type="number"
-                  min={0}
-                  max={99999999}
-                  style={{ maxWidth: 50 }}
-                />
-              </SettingsField>
-
-              <SettingsField
-                connectLabel
-                label={__('API SSL Port')}
-                subLabel={__('Nexus API server SSL Port')}
-              >
-                <Field
-                  component={TextField.RF}
-                  name="embeddedCoreApiPortSSL"
-                  placeholder={defaultConfig.apiPortSSL}
-                  size="5"
-                />
-              </SettingsField>
-
-              <SettingsField
-                connectLabel
-                label={__('RPC SSL Port')}
-                subLabel={__('Nexus RPC server SSL Port')}
-              >
-                <Field
-                  component={TextField.RF}
-                  name="embeddedCoreRpcPortSSL"
-                  placeholder={defaultConfig.portSSL}
-                  size="5"
-                />
-              </SettingsField>
-
-              <SettingsField
-                connectLabel
-                label={__('Allow Non-SSL Ports')}
-                subLabel={__(
-                  'Allows Non-SSL plaintext communication to the core'
-                )}
-              >
-                <Field name="embeddedCoreAllowNonSSL" component={Switch.RF} />
-              </SettingsField>
-
-              <Field
-                name="embeddedCoreAllowNonSSL"
-                component={({ input: embeddedCoreAllowNonSSL }) =>
-                  embeddedCoreAllowNonSSL.value && (
-                    <>
-                      <SettingsField
-                        connectLabel
-                        indent={1}
-                        label={__('Use non-SSL Ports')}
-                        subLabel={__(
-                          'Connect to Nexus Core using non-SSL Ports'
-                        )}
-                      >
-                        <Field
-                          name="embeddedCoreUseNonSSL"
-                          component={Switch.RF}
-                        />
-                      </SettingsField>
-
-                      <SettingsField
-                        connectLabel
-                        indent={1}
-                        label={__('API non-SSL Port')}
-                        subLabel={__('Nexus API server non-SSL Port')}
-                      >
-                        <Field
-                          component={TextField.RF}
-                          name="embeddedCoreApiPort"
-                          placeholder={defaultConfig.apiPort}
-                          size="5"
-                        />
-                      </SettingsField>
-
-                      <SettingsField
-                        connectLabel
-                        indent={1}
-                        label={__('RPC non-SSL Port')}
-                        subLabel={__('Nexus RPC server non-SSL Port')}
-                      >
-                        <Field
-                          component={TextField.RF}
-                          name="embeddedCoreRpcPort"
-                          placeholder={defaultConfig.port}
-                          size="5"
-                        />
-                      </SettingsField>
-                    </>
-                  )
-                }
-              />
-
-              {legacyMode && (
-                <>
                   <SettingsField
                     connectLabel
-                    label={__('Avatar Mode')}
-                    subLabel={__(
-                      'Disabling Avatar will make the core use a separate change key'
-                    )}
+                    label={__('Enable mining')}
+                    subLabel={__('Enable/Disable mining to the wallet.')}
+                    disabled={liteMode.value || multiUser.value}
                   >
-                    <Field name="avatarMode" component={Switch.RF} />
+                    {liteMode.value || multiUser.value ? (
+                      <Switch readOnly value={false} />
+                    ) : (
+                      <Field name="enableMining" component={Switch.RF} />
+                    )}
                   </SettingsField>
 
-                  <SettingsField
-                    connectLabel
-                    label={__('Rescan wallet')}
-                    subLabel={__(
-                      'Used to correct transaction/balance issues, scans over every block in the database. Could take up to 10 minutes.'
-                    )}
-                  >
-                    <ReScanButton disabled={!coreConnected} />
-                  </SettingsField>
-
-                  <SettingsField
-                    connectLabel
-                    label={__('Reload transaction history')}
-                    subLabel={__(
-                      'Restart Nexus core with -walletclean parameter to clean out and reload all transaction history'
-                    )}
-                  >
-                    <Button
-                      onClick={this.reloadTxHistory}
-                      style={{ height: consts.inputHeightEm + 'em' }}
-                    >
-                      {__('Reload')}
-                    </Button>
-                  </SettingsField>
+                  <Field
+                    name="enableMining"
+                    component={({ input: enableMining }) =>
+                      !(liteMode.value || multiUser.value) &&
+                      !!enableMining.value && (
+                        <SettingsField
+                          connectLabel
+                          indent={1}
+                          label={__('Mining IP Whitelist')}
+                          subLabel={__(
+                            'IP/Ports allowed to mine to. Separate by <b>;</b> . Wildcards supported only in IP',
+                            undefined,
+                            {
+                              b: (txt) => <b>{txt}</b>,
+                            }
+                          )}
+                        >
+                          <Field
+                            name="ipMineWhitelist"
+                            component={TextField.RF}
+                            normalize={removeWhiteSpaces}
+                            size="12"
+                          />
+                        </SettingsField>
+                      )
+                    }
+                  />
                 </>
               )}
+            />
 
-              <SettingsField
-                connectLabel
-                label={__('Clear peer connections')}
-                subLabel={__(
-                  'Clear all stored peer connections and restart Nexus'
-                )}
-              >
-                <Button
-                  onClick={this.clearPeerConnections}
-                  style={{ height: consts.inputHeightEm + 'em' }}
-                >
-                  {__('Clear')}
-                </Button>
-              </SettingsField>
+            <SettingsField
+              connectLabel
+              label={__('Safe Mode')}
+              subLabel={__(
+                'Enables NextHash verification to protect against corruption, but adds computation time.'
+              )}
+            >
+              <Field
+                name="safeMode"
+                component={Switch.RF}
+                onChange={disableSafeMode}
+              />
+            </SettingsField>
 
-              {liteMode && (
+            <SettingsField
+              connectLabel
+              label={__('Verbose level')}
+              subLabel={__('Verbose level for logs.')}
+            >
+              <Field
+                name="verboseLevel"
+                component={TextField.RF}
+                type="number"
+                min={0}
+                max={5}
+                style={{ maxWidth: 50 }}
+              />
+            </SettingsField>
+
+            <SettingsField
+              connectLabel
+              label={__('Core Data Directory')}
+              subLabel={__(
+                'Where the blockchain data and your legacy wallet.dat are stored'
+              )}
+            >
+              <Field name="coreDataDir" component={TextField.RF} />
+            </SettingsField>
+
+            <SettingsField
+              connectLabel
+              label={__('Testnet Iteration')}
+              subLabel={
+                <>
+                  {__('The iteration of Testnet to connect to.')}{' '}
+                  {showTestnetOff && (
+                    <Button
+                      style={{ height: '25%', width: '25%' }}
+                      onClick={() => {
+                        change('testnetIteration', null);
+                      }}
+                    >
+                      {__('Turn Off')}
+                    </Button>
+                  )}
+                </>
+              }
+            >
+              <Field
+                name="testnetIteration"
+                component={TextField.RF}
+                type="number"
+                min={0}
+                max={99999999}
+                style={{ maxWidth: 50 }}
+              />
+            </SettingsField>
+
+            <SettingsField
+              connectLabel
+              label={__('API SSL Port')}
+              subLabel={__('Nexus API server SSL Port')}
+            >
+              <Field
+                component={TextField.RF}
+                name="embeddedCoreApiPortSSL"
+                placeholder={defaultConfig.apiPortSSL}
+                size="5"
+              />
+            </SettingsField>
+
+            <SettingsField
+              connectLabel
+              label={__('RPC SSL Port')}
+              subLabel={__('Nexus RPC server SSL Port')}
+            >
+              <Field
+                component={TextField.RF}
+                name="embeddedCoreRpcPortSSL"
+                placeholder={defaultConfig.portSSL}
+                size="5"
+              />
+            </SettingsField>
+
+            <SettingsField
+              connectLabel
+              label={__('Allow Non-SSL Ports')}
+              subLabel={__(
+                'Allows Non-SSL plaintext communication to the core'
+              )}
+            >
+              <Field name="embeddedCoreAllowNonSSL" component={Switch.RF} />
+            </SettingsField>
+
+            <Field
+              name="embeddedCoreAllowNonSSL"
+              component={({ input: embeddedCoreAllowNonSSL }) =>
+                embeddedCoreAllowNonSSL.value && (
+                  <>
+                    <SettingsField
+                      connectLabel
+                      indent={1}
+                      label={__('Use non-SSL Ports')}
+                      subLabel={__('Connect to Nexus Core using non-SSL Ports')}
+                    >
+                      <Field
+                        name="embeddedCoreUseNonSSL"
+                        component={Switch.RF}
+                      />
+                    </SettingsField>
+
+                    <SettingsField
+                      connectLabel
+                      indent={1}
+                      label={__('API non-SSL Port')}
+                      subLabel={__('Nexus API server non-SSL Port')}
+                    >
+                      <Field
+                        component={TextField.RF}
+                        name="embeddedCoreApiPort"
+                        placeholder={defaultConfig.apiPort}
+                        size="5"
+                      />
+                    </SettingsField>
+
+                    <SettingsField
+                      connectLabel
+                      indent={1}
+                      label={__('RPC non-SSL Port')}
+                      subLabel={__('Nexus RPC server non-SSL Port')}
+                    >
+                      <Field
+                        component={TextField.RF}
+                        name="embeddedCoreRpcPort"
+                        placeholder={defaultConfig.port}
+                        size="5"
+                      />
+                    </SettingsField>
+                  </>
+                )
+              }
+            />
+
+            {legacyMode && (
+              <>
                 <SettingsField
                   connectLabel
-                  label={__('Resync database')}
+                  label={__('Avatar Mode')}
                   subLabel={__(
-                    'Delete lite mode database and resynchronize from the beginning'
+                    'Disabling Avatar will make the core use a separate change key'
+                  )}
+                >
+                  <Field name="avatarMode" component={Switch.RF} />
+                </SettingsField>
+
+                <SettingsField
+                  connectLabel
+                  label={__('Rescan wallet')}
+                  subLabel={__(
+                    'Used to correct transaction/balance issues, scans over every block in the database. Could take up to 10 minutes.'
+                  )}
+                >
+                  <ReScanButton disabled={!coreConnected} />
+                </SettingsField>
+
+                <SettingsField
+                  connectLabel
+                  label={__('Reload transaction history')}
+                  subLabel={__(
+                    'Restart Nexus core with -walletclean parameter to clean out and reload all transaction history'
                   )}
                 >
                   <Button
-                    onClick={this.resyncLiteMode}
+                    onClick={reloadTxHistory}
                     style={{ height: consts.inputHeightEm + 'em' }}
                   >
-                    {__('Resynchronize')}
+                    {__('Reload')}
                   </Button>
                 </SettingsField>
+              </>
+            )}
+
+            <SettingsField
+              connectLabel
+              label={__('Clear peer connections')}
+              subLabel={__(
+                'Clear all stored peer connections and restart Nexus'
               )}
-            </>
-          )}
-
-          {!!manualDaemon && (
-            <>
-              <SettingsField
-                indent={1}
-                connectLabel
-                label={__('IP address')}
-                subLabel={__('Remote Core IP address')}
+            >
+              <Button
+                onClick={clearPeerConnections}
+                style={{ height: consts.inputHeightEm + 'em' }}
               >
-                <Field
-                  component={TextField.RF}
-                  name="manualDaemonIP"
-                  size="12"
-                />
-              </SettingsField>
+                {__('Clear')}
+              </Button>
+            </SettingsField>
 
-              {!legacyMode && (
-                <>
-                  <SettingsField
-                    indent={1}
-                    connectLabel
-                    label={__('API SSL')}
-                    subLabel={__('Use SSL for API calls')}
-                  >
-                    <Field component={Switch.RF} name="manualDaemonApiSSL" />
-                  </SettingsField>
-
-                  <SettingsField
-                    indent={1}
-                    connectLabel
-                    label={__('API non-SSL Port')}
-                    subLabel={__('Nexus API server non-SSL Port')}
-                  >
-                    <Field
-                      component={TextField.RF}
-                      name="manualDaemonApiPort"
-                      size="5"
-                    />
-                  </SettingsField>
-
-                  <SettingsField
-                    indent={1}
-                    connectLabel
-                    label={__('API SSL Port')}
-                    subLabel={__('Nexus API server SSL Port')}
-                  >
-                    <Field
-                      component={TextField.RF}
-                      name="manualDaemonApiPortSSL"
-                      size="5"
-                    />
-                  </SettingsField>
-
-                  <SettingsField
-                    indent={1}
-                    connectLabel
-                    label={__('API Username')}
-                    subLabel={__('Nexus API server Username')}
-                  >
-                    <Field
-                      component={TextField.RF}
-                      name="manualDaemonApiUser"
-                      size="12"
-                    />
-                  </SettingsField>
-
-                  <SettingsField
-                    indent={1}
-                    connectLabel
-                    label={__('API Password')}
-                    subLabel={__('Nexus API server Password')}
-                  >
-                    <Field
-                      component={TextField.RF}
-                      name="manualDaemonApiPassword"
-                      size="12"
-                    />
-                  </SettingsField>
-                </>
-              )}
-
+            {liteMode && (
               <SettingsField
-                indent={1}
                 connectLabel
-                label={__('RPC SSL')}
-                subLabel={__('Use SSL for RPC calls')}
+                label={__('Resync database')}
+                subLabel={__(
+                  'Delete lite mode database and resynchronize from the beginning'
+                )}
               >
-                <Field component={Switch.RF} name="manualDaemonSSL" />
-              </SettingsField>
-
-              <SettingsField
-                indent={1}
-                connectLabel
-                label={__('RPC non-SSL Port')}
-                subLabel={__('Nexus RPC server non-SSL Port')}
-              >
-                <Field
-                  component={TextField.RF}
-                  name="manualDaemonPort"
-                  size="5"
-                />
-              </SettingsField>
-
-              <SettingsField
-                indent={1}
-                connectLabel
-                label={__('RPC SSL Port')}
-                subLabel={__('Nexus RPC server SSL Port')}
-              >
-                <Field
-                  component={TextField.RF}
-                  name="manualDaemonPortSSL"
-                  size="5"
-                />
-              </SettingsField>
-
-              <SettingsField
-                indent={1}
-                connectLabel
-                label={__('RPC Username')}
-                subLabel={__('Nexus RPC server Username')}
-              >
-                <Field
-                  component={TextField.RF}
-                  name="manualDaemonUser"
-                  size="12"
-                />
-              </SettingsField>
-
-              <SettingsField
-                indent={1}
-                connectLabel
-                label={__('RPC Password')}
-                subLabel={__('Nexus RPC server Password')}
-              >
-                <Field
-                  component={TextField.RF}
-                  name="manualDaemonPassword"
-                  size="12"
-                />
-              </SettingsField>
-
-              <SettingsField
-                indent={1}
-                connectLabel
-                label={__('Log out on close')}
-                subLabel={__('Log out of all users before closing the wallet')}
-              >
-                <Field component={Switch.RF} name="manualDaemonLogOutOnClose" />
-              </SettingsField>
-            </>
-          )}
-          {!!dirty && (
-            <RestartPrompt>
-              <RestartContainer>
-                <div className="flex center">
-                  {!manualDaemon && (
-                    <>
-                      <Switch
-                        id={this.switchId}
-                        checked={restartCoreOnSave}
-                        onChange={this.handleRestartSwitch}
-                        style={{ fontSize: '0.7em' }}
-                      />
-                      &nbsp;
-                      <label
-                        htmlFor={this.switchId}
-                        style={{
-                          cursor: 'pointer',
-                          opacity: restartCoreOnSave ? 1 : 0.7,
-                        }}
-                      >
-                        {__('Restart Core for these changes to take effect')}
-                      </label>
-                    </>
-                  )}
-                </div>
-
-                <Button type="submit" disabled={submitting}>
-                  {__('Save settings')}
+                <Button
+                  onClick={resyncLiteMode}
+                  style={{ height: consts.inputHeightEm + 'em' }}
+                >
+                  {__('Resynchronize')}
                 </Button>
-              </RestartContainer>
-            </RestartPrompt>
-          )}
-        </form>
-      </>
-    );
-  }
+              </SettingsField>
+            )}
+          </>
+        )}
+
+        {!!manualDaemon && (
+          <>
+            <SettingsField
+              indent={1}
+              connectLabel
+              label={__('IP address')}
+              subLabel={__('Remote Core IP address')}
+            >
+              <Field component={TextField.RF} name="manualDaemonIP" size="12" />
+            </SettingsField>
+
+            {!legacyMode && (
+              <>
+                <SettingsField
+                  indent={1}
+                  connectLabel
+                  label={__('API SSL')}
+                  subLabel={__('Use SSL for API calls')}
+                >
+                  <Field component={Switch.RF} name="manualDaemonApiSSL" />
+                </SettingsField>
+
+                <SettingsField
+                  indent={1}
+                  connectLabel
+                  label={__('API non-SSL Port')}
+                  subLabel={__('Nexus API server non-SSL Port')}
+                >
+                  <Field
+                    component={TextField.RF}
+                    name="manualDaemonApiPort"
+                    size="5"
+                  />
+                </SettingsField>
+
+                <SettingsField
+                  indent={1}
+                  connectLabel
+                  label={__('API SSL Port')}
+                  subLabel={__('Nexus API server SSL Port')}
+                >
+                  <Field
+                    component={TextField.RF}
+                    name="manualDaemonApiPortSSL"
+                    size="5"
+                  />
+                </SettingsField>
+
+                <SettingsField
+                  indent={1}
+                  connectLabel
+                  label={__('API Username')}
+                  subLabel={__('Nexus API server Username')}
+                >
+                  <Field
+                    component={TextField.RF}
+                    name="manualDaemonApiUser"
+                    size="12"
+                  />
+                </SettingsField>
+
+                <SettingsField
+                  indent={1}
+                  connectLabel
+                  label={__('API Password')}
+                  subLabel={__('Nexus API server Password')}
+                >
+                  <Field
+                    component={TextField.RF}
+                    name="manualDaemonApiPassword"
+                    size="12"
+                  />
+                </SettingsField>
+              </>
+            )}
+
+            <SettingsField
+              indent={1}
+              connectLabel
+              label={__('RPC SSL')}
+              subLabel={__('Use SSL for RPC calls')}
+            >
+              <Field component={Switch.RF} name="manualDaemonSSL" />
+            </SettingsField>
+
+            <SettingsField
+              indent={1}
+              connectLabel
+              label={__('RPC non-SSL Port')}
+              subLabel={__('Nexus RPC server non-SSL Port')}
+            >
+              <Field
+                component={TextField.RF}
+                name="manualDaemonPort"
+                size="5"
+              />
+            </SettingsField>
+
+            <SettingsField
+              indent={1}
+              connectLabel
+              label={__('RPC SSL Port')}
+              subLabel={__('Nexus RPC server SSL Port')}
+            >
+              <Field
+                component={TextField.RF}
+                name="manualDaemonPortSSL"
+                size="5"
+              />
+            </SettingsField>
+
+            <SettingsField
+              indent={1}
+              connectLabel
+              label={__('RPC Username')}
+              subLabel={__('Nexus RPC server Username')}
+            >
+              <Field
+                component={TextField.RF}
+                name="manualDaemonUser"
+                size="12"
+              />
+            </SettingsField>
+
+            <SettingsField
+              indent={1}
+              connectLabel
+              label={__('RPC Password')}
+              subLabel={__('Nexus RPC server Password')}
+            >
+              <Field
+                component={TextField.RF}
+                name="manualDaemonPassword"
+                size="12"
+              />
+            </SettingsField>
+
+            <SettingsField
+              indent={1}
+              connectLabel
+              label={__('Log out on close')}
+              subLabel={__('Log out of all users before closing the wallet')}
+            >
+              <Field component={Switch.RF} name="manualDaemonLogOutOnClose" />
+            </SettingsField>
+          </>
+        )}
+        {!!dirty && (
+          <RestartPrompt>
+            <RestartContainer>
+              <div className="flex center">
+                {!manualDaemon && (
+                  <>
+                    <Switch
+                      id={switchId}
+                      checked={restartCoreOnSave}
+                      onChange={handleRestartSwitch}
+                      style={{ fontSize: '0.7em' }}
+                    />
+                    &nbsp;
+                    <label
+                      htmlFor={switchId}
+                      style={{
+                        cursor: 'pointer',
+                        opacity: restartCoreOnSave ? 1 : 0.7,
+                      }}
+                    >
+                      {__('Restart Core for these changes to take effect')}
+                    </label>
+                  </>
+                )}
+              </div>
+
+              <Button type="submit" disabled={submitting}>
+                {__('Save settings')}
+              </Button>
+            </RestartContainer>
+          </RestartPrompt>
+        )}
+      </form>
+    </>
+  );
 }
-export default SettingsCore;
+
+export default connect(mapStateToProps)(reduxForm(formOptions)(SettingsCore));

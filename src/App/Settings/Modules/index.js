@@ -1,6 +1,6 @@
 // External
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 import { shell } from 'electron';
 
@@ -32,69 +32,45 @@ const FailedModule = styled.div(({ theme }) => ({
   },
 }));
 
-/**
- * The Module's Settings Page
- *
- * @class SettingsModules
- * @extends {React.Component}
- */
-@connect((state) => ({
-  modules: state.modules,
-  failedModules: state.failedModules,
-  devMode: state.settings.devMode,
-}))
-class SettingsModules extends Component {
-  /**
-   *Creates an instance of SettingsModules.
-   * @param {*} props
-   * @memberof SettingsModules
-   */
-  constructor(props) {
-    super(props);
+export default function SettingsModules() {
+  const modules = useSelector((state) => state.modules);
+  const failedModules = useSelector((state) => state.failedModules);
+  const devMode = useSelector((state) => state.settings.devMode);
+  const moduleList = Object.values(modules);
+
+  useEffect(() => {
     switchSettingsTab('Modules');
-  }
+  }, []);
 
-  /**
-   * Component's Renderable JSX
-   *
-   * @returns {JSX}
-   * @memberof SettingsModules
-   */
-  render() {
-    const { modules, devMode, failedModules } = this.props;
-    const list = Object.values(modules);
-    return (
-      <>
-        <AddModule />
-        {devMode && <AddDevModule />}
-        {list.map((module, i) => (
-          <Module
-            key={module.info.name}
-            module={module}
-            last={i === list.length - 1}
-          />
-        ))}
-        {!!failedModules && failedModules.length > 0 && (
-          <FailedModules>
-            {failedModules.map(({ name, path, message }) => (
-              <FailedModule
-                key={name}
-                onClick={() => {
-                  shell.openPath(path);
-                }}
-              >
-                <Tooltip.Trigger tooltip={message}>
-                  <span>
-                    {__('Failed to load %{moduleName}', { moduleName: name })}
-                  </span>
-                </Tooltip.Trigger>
-              </FailedModule>
-            ))}
-          </FailedModules>
-        )}
-      </>
-    );
-  }
+  return (
+    <>
+      <AddModule />
+      {devMode && <AddDevModule />}
+      {moduleList.map((module, i) => (
+        <Module
+          key={module.info.name}
+          module={module}
+          last={i === moduleList.length - 1}
+        />
+      ))}
+      {!!failedModules && failedModules.length > 0 && (
+        <FailedModules>
+          {failedModules.map(({ name, path, message }) => (
+            <FailedModule
+              key={name}
+              onClick={() => {
+                shell.openPath(path);
+              }}
+            >
+              <Tooltip.Trigger tooltip={message}>
+                <span>
+                  {__('Failed to load %{moduleName}', { moduleName: name })}
+                </span>
+              </Tooltip.Trigger>
+            </FailedModule>
+          ))}
+        </FailedModules>
+      )}
+    </>
+  );
 }
-
-export default SettingsModules;
