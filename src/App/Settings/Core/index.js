@@ -276,7 +276,9 @@ class SettingsCore extends Component {
     if (manualDaemon) {
       const confirmed = await confirm({
         question: __('Exit remote Core mode?'),
-        note: __('(This will restart your Core)'),
+        note: __(
+          '(Remote core will continue to run, but internal core will restart)'
+        ),
       });
       if (confirmed) {
         store.dispatch({ type: TYPE.DISCONNECT_CORE });
