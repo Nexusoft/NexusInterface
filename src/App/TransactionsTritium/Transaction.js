@@ -99,7 +99,7 @@ const TransactionRight = styled.div({
   justifyContent: 'center',
 });
 
-const Transaction = ({ transaction }) => {
+export default function Transaction({ transaction }) {
   const txTime = new Date(transaction.timestamp * 1000);
 
   return (
@@ -144,6 +144,4 @@ const Transaction = ({ transaction }) => {
       </TransactionRight>
     </TransactionComponent>
   );
-};
-
-export default Transaction;
+}
