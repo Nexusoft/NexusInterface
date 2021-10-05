@@ -24,10 +24,6 @@ let liteModeChecked = false;
 const getInfo = legacyMode
   ? // Legacy
     async () => {
-      store.dispatch({
-        type: TYPE.ADD_RPC_CALL,
-        payload: 'getInfo',
-      });
       try {
         const [info, tritiumInfo] = await Promise.all([
           rpc('getinfo', []),
