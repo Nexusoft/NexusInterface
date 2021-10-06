@@ -27,86 +27,86 @@ const UnNamed = styled(AccountName)(({ theme }) => ({
   color: theme.mixer(0.8),
 }));
 
-const Account = ({ account }) => (
-  <AccountComponent>
-    <div className="flex space-between">
-      <div>
-        <span
-          style={{ cursor: 'pointer' }}
-          onClick={() => {
-            openModal(AccountDetailsModal, { account });
-          }}
-        >
-          {account.name ? (
-            <AccountName>{account.name}</AccountName>
-          ) : (
-            <UnNamed>{__('Unnamed account')}</UnNamed>
-          )}
+export default function Account({ account }) {
+  return (
+    <AccountComponent>
+      <div className="flex space-between">
+        <div>
+          <span
+            style={{ cursor: 'pointer' }}
+            onClick={() => {
+              openModal(AccountDetailsModal, { account });
+            }}
+          >
+            {account.name ? (
+              <AccountName>{account.name}</AccountName>
+            ) : (
+              <UnNamed>{__('Unnamed account')}</UnNamed>
+            )}
 
-          <span>
-            {' '}
-            ({formatNumber(totalBalance(account))}{' '}
-            <TokenName account={account} />)
+            <span>
+              {' '}
+              ({formatNumber(totalBalance(account))}{' '}
+              <TokenName account={account} />)
+            </span>
           </span>
-        </span>
-      </div>
-      <div>
-        {account.name !== 'default' && (
+        </div>
+        <div>
+          {account.name !== 'default' && (
+            <Link
+              as="a"
+              onClick={() => {
+                openModal(RenameAccountModal, { account });
+              }}
+            >
+              {__('Rename')}
+            </Link>
+          )}
+          &nbsp;&nbsp;
           <Link
             as="a"
             onClick={() => {
-              openModal(RenameAccountModal, { account });
+              openModal(AccountDetailsModal, { account });
             }}
           >
-            {__('Rename')}
+            {__('Details')}
           </Link>
-        )}
-        &nbsp;&nbsp;
-        <Link
-          as="a"
-          onClick={() => {
-            openModal(AccountDetailsModal, { account });
-          }}
-        >
-          {__('Details')}
-        </Link>
-        &nbsp;&nbsp;
-        <Link
-          as="a"
-          onClick={() => {
-            openModal(AccountHistoryModal, { account });
-          }}
-        >
-          {__('History')}
-        </Link>
-      </div>
-    </div>
-    <NexusAddress
-      className="mt1"
-      address={account.address}
-      label={
-        <div className="flex center space-between">
-          <span>
-            {__(
-              '<b>%{account_name}</b> account address',
-              {
-                account_name: account.name || __('Unnamed'),
-              },
-              {
-                b: (text) =>
-                  account.name ? (
-                    <strong>{text}</strong>
-                  ) : (
-                    <UnNamed>{text}</UnNamed>
-                  ),
-              }
-            )}
-          </span>
-          <QRButton address={account.address} />
+          &nbsp;&nbsp;
+          <Link
+            as="a"
+            onClick={() => {
+              openModal(AccountHistoryModal, { account });
+            }}
+          >
+            {__('History')}
+          </Link>
         </div>
-      }
-    />
-  </AccountComponent>
-);
-
-export default Account;
+      </div>
+      <NexusAddress
+        className="mt1"
+        address={account.address}
+        label={
+          <div className="flex center space-between">
+            <span>
+              {__(
+                '<b>%{account_name}</b> account address',
+                {
+                  account_name: account.name || __('Unnamed'),
+                },
+                {
+                  b: (text) =>
+                    account.name ? (
+                      <strong>{text}</strong>
+                    ) : (
+                      <UnNamed>{text}</UnNamed>
+                    ),
+                }
+              )}
+            </span>
+            <QRButton address={account.address} />
+          </div>
+        }
+      />
+    </AccountComponent>
+  );
+}
