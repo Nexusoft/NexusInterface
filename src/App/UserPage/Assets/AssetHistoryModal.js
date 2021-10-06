@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 import ControlledModal from 'components/ControlledModal';
 import Table from 'components/Table';
@@ -42,66 +42,61 @@ export const tableColumns = [
   },
 ];
 
-export default class AssetHistoryModal extends Component {
-  state = {
-    events: null,
-  };
+export default function AssetHistoryModal({ asset }) {
+  const [events, setEvents] = useState(null);
+  const closeModalRef = useRef();
+  useEffect(() => {
+    (async () => {
+      try {
+        const events = await callApi('assets/history/asset', {
+          address: asset.address,
+        });
+        setEvents(events.reverse());
+      } catch (err) {
+        handleError(err);
+        closeModalRef.current?.();
+      }
+    })();
+  }, []);
 
-  async componentDidMount() {
-    const { asset } = this.props;
-    try {
-      const events = await callApi('assets/history/asset', {
-        address: asset.address,
-      });
-      this.setState({ events: events.reverse() });
-    } catch (err) {
-      handleError(err);
-      this.closeModal();
-    }
-  }
+  return (
+    <ControlledModal
+      assignClose={(closeModal) => {
+        closeModalRef.current = closeModal;
+      }}
+    >
+      <ControlledModal.Header className="relative">
+        {__('Asset History')}
+      </ControlledModal.Header>
 
-  render() {
-    const { events } = this.state;
-
-    return (
-      <ControlledModal
-        assignClose={(close) => {
-          this.closeModal = close;
-        }}
-      >
-        <ControlledModal.Header className="relative">
-          {__('Asset History')}
-        </ControlledModal.Header>
-
-        <ControlledModal.Body>
-          {!events ? (
-            <WaitingMessage>
-              {__('Loading asset history')}
-              ...
-            </WaitingMessage>
-          ) : (
-            <Table
-              columns={tableColumns}
-              data={events}
-              defaultPageSize={events.length < 10 ? events.length : 10}
-              getTrProps={(state, row) => {
-                const event = row && row.original;
-                return {
-                  onClick: () => {
-                    openModal(AssetHistoryDetailsModal, {
-                      event,
-                    });
-                  },
-                  style: {
-                    cursor: 'pointer',
-                    fontSize: 15,
-                  },
-                };
-              }}
-            />
-          )}
-        </ControlledModal.Body>
-      </ControlledModal>
-    );
-  }
+      <ControlledModal.Body>
+        {!events ? (
+          <WaitingMessage>
+            {__('Loading asset history')}
+            ...
+          </WaitingMessage>
+        ) : (
+          <Table
+            columns={tableColumns}
+            data={events}
+            defaultPageSize={events.length < 10 ? events.length : 10}
+            getTrProps={(state, row) => {
+              const event = row && row.original;
+              return {
+                onClick: () => {
+                  openModal(AssetHistoryDetailsModal, {
+                    event,
+                  });
+                },
+                style: {
+                  cursor: 'pointer',
+                  fontSize: 15,
+                },
+              };
+            }}
+          />
+        )}
+      </ControlledModal.Body>
+    </ControlledModal>
+  );
 }

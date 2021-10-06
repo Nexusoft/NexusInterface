@@ -159,17 +159,19 @@ class TokenizeAssetForm extends Component {
   }
 }
 
-const TokenizeAssetModal = ({ asset }) => (
-  <ControlledModal maxWidth={600}>
-    {(closeModal) => (
-      <>
-        <ControlledModal.Header>{__('Tokenize asset')}</ControlledModal.Header>
-        <ControlledModal.Body>
-          <TokenizeAssetForm closeModal={closeModal} asset={asset} />
-        </ControlledModal.Body>
-      </>
-    )}
-  </ControlledModal>
-);
-
-export default TokenizeAssetModal;
+export default function TokenizeAssetModal({ asset }) {
+  return (
+    <ControlledModal maxWidth={600}>
+      {(closeModal) => (
+        <>
+          <ControlledModal.Header>
+            {__('Tokenize asset')}
+          </ControlledModal.Header>
+          <ControlledModal.Body>
+            <TokenizeAssetForm closeModal={closeModal} asset={asset} />
+          </ControlledModal.Body>
+        </>
+      )}
+    </ControlledModal>
+  );
+}
