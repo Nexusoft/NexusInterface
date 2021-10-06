@@ -10,7 +10,7 @@ import menuIcon from 'icons/menu.svg';
 
 __ = __context('User');
 
-const UserOptions = () => {
+export default function UserOptions() {
   const hasRecoveryPhrase = useSelector(
     ({ user: { status } }) => !!(status && status.recovery)
   );
@@ -52,6 +52,4 @@ const UserOptions = () => {
       )}
     />
   );
-};
-
-export default UserOptions;
+}

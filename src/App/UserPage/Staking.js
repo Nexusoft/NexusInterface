@@ -1,5 +1,5 @@
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 
 import Button from 'components/Button';
@@ -80,24 +80,19 @@ function promptForStakeAmount() {
   });
 }
 
-@connect((state) => ({
-  stakeInfo: state.user.stakeInfo,
-  stakingEnabled: state.settings.enableStaking,
-}))
-class Staking extends Component {
-  constructor(props) {
-    super(props);
+export default function Staking() {
+  const stakeInfo = useSelector((state) => state.user.stakeInfo);
+  useEffect(() => {
     switchUserTab('Staking');
-  }
+  }, []);
 
-  startStaking = async () => {
+  const startStaking = async () => {
     try {
       const state = store.getState();
       const {
         settings: { liteMode, multiUser, enableStaking },
         user: { status },
       } = state;
-      const { stakeInfo } = this.props;
       const synchronized = isSynchronized(state);
 
       if (stakeInfo?.amount === 0) {
@@ -185,9 +180,8 @@ class Staking extends Component {
     }
   };
 
-  stopStaking = async () => {
-    const { stakeInfo } = this.props;
-    const stopStaking = () => {
+  const stopStaking = async () => {
+    const doStop = () => {
       updateSettings({
         enableStaking: false,
       });
@@ -201,7 +195,7 @@ class Staking extends Component {
         question: __('Stop staking?'),
       });
       if (confirmed) {
-        stopStaking();
+        doStop();
       }
     } else {
       const modalId = openModal(ConfirmDialog, {
@@ -224,169 +218,159 @@ class Staking extends Component {
           }
         ),
         labelYes: __('Stop staking'),
-        callbackYes: stopStaking,
+        callbackYes: doStop,
         labelNo: __('Cancel'),
       });
     }
   };
 
-  render() {
-    const { stakeInfo } = this.props;
-    return (
-      !!stakeInfo && (
-        <TabContentWrapper maxWidth={400}>
-          <Line bold>
-            <div>{__('Status')}</div>
-            <div>
-              {stakeInfo.staking ? (
-                <span>
-                  {__('Staking')}
-                  {!!stakeInfo.pooled && ` (${__('pooled')})`}
-                </span>
-              ) : (
-                __('Not staking')
-              )}
-            </div>
-          </Line>
-          <Line>
-            <div>
-              <span className="v-align">{__('Stake amount (locked)')}</span>
-              <QuestionCircle
-                tooltip={__(
-                  'The amount of NXS currently staked in the trust account'
-                )}
-              />
-            </div>
-            <div>{formatNumber(stakeInfo.stake, 6)} NXS</div>
-          </Line>
-          {!!stakeInfo.change && (
-            <div>
-              <Pending>
-                <Line>
-                  <div>
-                    <span className="v-align">{__('Pending change')}</span>
-                    <QuestionCircle
-                      tooltip={__(
-                        'The pending stake amount change that will be applied on the next Trust transaction'
-                      )}
-                    />
-                  </div>
-                  <div>
-                    {stakeInfo.amount > 0 && '+'}
-                    {formatNumber(stakeInfo.amount, 6)} NXS
-                  </div>
-                </Line>
-                <Line>
-                  <div>
-                    <span className="v-align">{__('Requested at')}</span>
-                  </div>
-                  <div>
-                    {formatDateTime(stakeInfo.requested * 1000, dateTimeFormat)}
-                  </div>
-                </Line>
-                {!!stakeInfo.expires && (
-                  <Line>
-                    <div>
-                      <span className="v-align">{__('Expired in')}</span>
-                    </div>
-                    <div>
-                      {formatDateTime(stakeInfo.expires * 1000, dateTimeFormat)}{' '}
-                    </div>
-                  </Line>
-                )}
-              </Pending>
-            </div>
-          )}
-          <Line>
-            <div>
-              <span className="v-align">{__('Stake Rate')}</span>
-              <QuestionCircle
-                tooltip={__(
-                  'The current annual reward rate earned for staking'
-                )}
-              />
-            </div>
-            <div>{formatNumber(stakeInfo.stakerate, 3)} %</div>
-          </Line>
-          <Line>
-            <div>
-              <span className="v-align">{__('Trust Weight')}</span>
-              <QuestionCircle
-                tooltip={__(
-                  'The percentage of the maximum Trust Score, which is gradually built over time when you consistently operate your node in an honest, trustworthy, and timely manner'
-                )}
-              />
-            </div>
-            <div>{formatNumber(stakeInfo.trustweight, 3)} %</div>
-          </Line>
-          <Line>
-            <div>
-              <span className="v-align">{__('Block Weight')}</span>
-              <QuestionCircle
-                tooltip={__(
-                  'Block Weight depends on the time passed since you received a Trust transaction and will be reset everytime you receive a Trust transaction. Otherwise, Block Weight will reach 100% after 3 days and your Trust Score will start decaying until you receive another Trust transaction'
-                )}
-              />
-            </div>
-            <div>{formatNumber(stakeInfo.blockweight, 3)} %</div>
-          </Line>
-          <Line>
-            <div>
-              <span className="v-align">{__('Stake Weight')}</span>
-              <QuestionCircle
-                tooltip={__(
-                  'Stake Weight depends on Trust Weight and Block Weight. Along with your Stake amount, Stake Weight affects how frequent you receive a Trust transaction'
-                )}
-              />
-            </div>
-            <div>{formatNumber(stakeInfo.stakeweight, 3)} %</div>
-          </Line>
-          <Line>
-            <div>
-              <span className="v-align">{__('Available Balance')}</span>
-              <QuestionCircle tooltip={BalanceTooltip(!stakeInfo.new)} />
-            </div>
-            <div>{formatNumber(stakeInfo.balance, 6)} NXS</div>
-          </Line>
-          <div className="mt1 flex space-between">
-            <div>
-              {!stakeInfo.new && (
-                <>
-                  <Button
-                    disabled={!stakeInfo.stake && !stakeInfo.balance}
-                    onClick={() => {
-                      openModal(AdjustStakeModal);
-                    }}
-                  >
-                    {__('Adjust stake amount')}
-                  </Button>
-                  {stakeInfo.onhold && (
-                    <div className="error">
-                      {__(
-                        'Account on hold for another %{stakeSeconds} Seconds',
-                        {
-                          stakeSeconds: stakeInfo.holdtime,
-                        }
-                      )}
-                    </div>
-                  )}
-                </>
-              )}
-            </div>
+  return (
+    !!stakeInfo && (
+      <TabContentWrapper maxWidth={400}>
+        <Line bold>
+          <div>{__('Status')}</div>
+          <div>
             {stakeInfo.staking ? (
-              <Button skin="default" onClick={this.stopStaking}>
-                {__('Stop staking')}
-              </Button>
+              <span>
+                {__('Staking')}
+                {!!stakeInfo.pooled && ` (${__('pooled')})`}
+              </span>
             ) : (
-              <Button skin="primary" onClick={this.startStaking}>
-                {__('Start staking')}
-              </Button>
+              __('Not staking')
             )}
           </div>
-        </TabContentWrapper>
-      )
-    );
-  }
+        </Line>
+        <Line>
+          <div>
+            <span className="v-align">{__('Stake amount (locked)')}</span>
+            <QuestionCircle
+              tooltip={__(
+                'The amount of NXS currently staked in the trust account'
+              )}
+            />
+          </div>
+          <div>{formatNumber(stakeInfo.stake, 6)} NXS</div>
+        </Line>
+        {!!stakeInfo.change && (
+          <div>
+            <Pending>
+              <Line>
+                <div>
+                  <span className="v-align">{__('Pending change')}</span>
+                  <QuestionCircle
+                    tooltip={__(
+                      'The pending stake amount change that will be applied on the next Trust transaction'
+                    )}
+                  />
+                </div>
+                <div>
+                  {stakeInfo.amount > 0 && '+'}
+                  {formatNumber(stakeInfo.amount, 6)} NXS
+                </div>
+              </Line>
+              <Line>
+                <div>
+                  <span className="v-align">{__('Requested at')}</span>
+                </div>
+                <div>
+                  {formatDateTime(stakeInfo.requested * 1000, dateTimeFormat)}
+                </div>
+              </Line>
+              {!!stakeInfo.expires && (
+                <Line>
+                  <div>
+                    <span className="v-align">{__('Expired in')}</span>
+                  </div>
+                  <div>
+                    {formatDateTime(stakeInfo.expires * 1000, dateTimeFormat)}{' '}
+                  </div>
+                </Line>
+              )}
+            </Pending>
+          </div>
+        )}
+        <Line>
+          <div>
+            <span className="v-align">{__('Stake Rate')}</span>
+            <QuestionCircle
+              tooltip={__('The current annual reward rate earned for staking')}
+            />
+          </div>
+          <div>{formatNumber(stakeInfo.stakerate, 3)} %</div>
+        </Line>
+        <Line>
+          <div>
+            <span className="v-align">{__('Trust Weight')}</span>
+            <QuestionCircle
+              tooltip={__(
+                'The percentage of the maximum Trust Score, which is gradually built over time when you consistently operate your node in an honest, trustworthy, and timely manner'
+              )}
+            />
+          </div>
+          <div>{formatNumber(stakeInfo.trustweight, 3)} %</div>
+        </Line>
+        <Line>
+          <div>
+            <span className="v-align">{__('Block Weight')}</span>
+            <QuestionCircle
+              tooltip={__(
+                'Block Weight depends on the time passed since you received a Trust transaction and will be reset everytime you receive a Trust transaction. Otherwise, Block Weight will reach 100% after 3 days and your Trust Score will start decaying until you receive another Trust transaction'
+              )}
+            />
+          </div>
+          <div>{formatNumber(stakeInfo.blockweight, 3)} %</div>
+        </Line>
+        <Line>
+          <div>
+            <span className="v-align">{__('Stake Weight')}</span>
+            <QuestionCircle
+              tooltip={__(
+                'Stake Weight depends on Trust Weight and Block Weight. Along with your Stake amount, Stake Weight affects how frequent you receive a Trust transaction'
+              )}
+            />
+          </div>
+          <div>{formatNumber(stakeInfo.stakeweight, 3)} %</div>
+        </Line>
+        <Line>
+          <div>
+            <span className="v-align">{__('Available Balance')}</span>
+            <QuestionCircle tooltip={BalanceTooltip(!stakeInfo.new)} />
+          </div>
+          <div>{formatNumber(stakeInfo.balance, 6)} NXS</div>
+        </Line>
+        <div className="mt1 flex space-between">
+          <div>
+            {!stakeInfo.new && (
+              <>
+                <Button
+                  disabled={!stakeInfo.stake && !stakeInfo.balance}
+                  onClick={() => {
+                    openModal(AdjustStakeModal);
+                  }}
+                >
+                  {__('Adjust stake amount')}
+                </Button>
+                {stakeInfo.onhold && (
+                  <div className="error">
+                    {__('Account on hold for another %{stakeSeconds} Seconds', {
+                      stakeSeconds: stakeInfo.holdtime,
+                    })}
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+          {stakeInfo.staking ? (
+            <Button skin="default" onClick={stopStaking}>
+              {__('Stop staking')}
+            </Button>
+          ) : (
+            <Button skin="primary" onClick={startStaking}>
+              {__('Start staking')}
+            </Button>
+          )}
+        </div>
+      </TabContentWrapper>
+    )
+  );
 }
-
-export default Staking;
