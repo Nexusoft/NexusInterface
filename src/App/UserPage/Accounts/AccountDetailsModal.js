@@ -23,7 +23,7 @@ const timeFormatOptions = {
   second: '2-digit',
 };
 
-export default function AccountDetailsModal({ account, stakeInfo }) {
+export default function AccountDetailsModal({ account }) {
   const stakeInfo = useSelector((state) => state.user.stakeInfo);
   return (
     <ControlledModal>

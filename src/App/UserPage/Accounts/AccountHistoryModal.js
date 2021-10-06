@@ -180,190 +180,185 @@ const Amount = styled.span(({ theme, possitive }) => ({
     content: possitive ? '"+"' : '"-"',
   },
 }));
-@connect((state) => ({
-  showFiat: state.ui.user.balancesShowFiat,
-  price: state.market?.price,
-  currency: state.market?.currency,
-}))
-export default function AccountHistoryModal({account}) {
-  const [contracts, setContracts] = useState(null)
-  const showFiat = useSelector(state => state.ui.user.balancesShowFiat)
-  const price = useSelector(state => state.market?.price)
-  const currency = useSelector(state => state.market?.currency)
-  const closeModalRef = useRef()
+
+export default function AccountHistoryModal({ account }) {
+  const [contracts, setContracts] = useState(null);
+  const showFiat = useSelector((state) => state.ui.user.balancesShowFiat);
+  const price = useSelector((state) => state.market?.price);
+  const currency = useSelector((state) => state.market?.currency);
+  const closeModalRef = useRef();
 
   useEffect(() => {
-    try {
-      const endpoint =
-        account.stake === undefined
-          ? 'finance/transactions/account'
-          : 'finance/transactions/trust';
-      const transactions = await listAll(endpoint, {
-        address: account.address,
-        verbose: 'summary',
-      });
+    (async () => {
+      try {
+        const endpoint =
+          account.stake === undefined
+            ? 'finance/transactions/account'
+            : 'finance/transactions/trust';
+        const transactions = await listAll(endpoint, {
+          address: account.address,
+          verbose: 'summary',
+        });
 
-      const contracts = transactions.reduce((contracts, tx) => {
-        if (Array.isArray(tx.contracts)) {
-          tx.contracts.forEach((contract) => {
-            if (displayedOperations.includes(contract.OP)) {
-              contracts.push({
-                ...contract,
-                txid: tx.txid,
-                timestamp: tx.timestamp,
-                currentAccount: account.name,
-              });
-            }
-          });
-        }
-        return contracts.sort((c1, c2) => c1.timestamp - c2.timestamp);
-      }, []);
-      setContracts(contracts);
-    } catch (err) {
-      handleError(err);
-      closeModalRef.current?.();
-    }
-  }, [])
+        const contracts = transactions.reduce((contracts, tx) => {
+          if (Array.isArray(tx.contracts)) {
+            tx.contracts.forEach((contract) => {
+              if (displayedOperations.includes(contract.OP)) {
+                contracts.push({
+                  ...contract,
+                  txid: tx.txid,
+                  timestamp: tx.timestamp,
+                  currentAccount: account.name,
+                });
+              }
+            });
+          }
+          return contracts.sort((c1, c2) => c1.timestamp - c2.timestamp);
+        }, []);
+        setContracts(contracts);
+      } catch (err) {
+        handleError(err);
+        closeModalRef.current?.();
+      }
+    })();
+  }, []);
 
-    return (
-      <ControlledModal
-        assignClose={(closeModal) => {
-          closeModalRef.current = closeModal;
-        }}
-      >
-        <ControlledModal.Header>
-          {account.name} {__('Account History')}
-        </ControlledModal.Header>
-        <ControlledModal.Body>
-          {!contracts ? (
-            <WaitingMessage>
-              {__('Loading account history')}
-              ...
-            </WaitingMessage>
-          ) : (
-            <Layout>
-              <BalancesFieldSet
-                legend={
-                  account.token === '0' ? (
-                    <>
-                      {__('Account balance')} (
-                      <Tooltip.Trigger
-                        tooltip={__('Show %{tokenName}', {
-                          tokenName: showFiat ? 'NXS' : 'Fiat',
-                        })}
-                        position="top"
+  return (
+    <ControlledModal
+      assignClose={(closeModal) => {
+        closeModalRef.current = closeModal;
+      }}
+    >
+      <ControlledModal.Header>
+        {account.name} {__('Account History')}
+      </ControlledModal.Header>
+      <ControlledModal.Body>
+        {!contracts ? (
+          <WaitingMessage>
+            {__('Loading account history')}
+            ...
+          </WaitingMessage>
+        ) : (
+          <Layout>
+            <BalancesFieldSet
+              legend={
+                account.token === '0' ? (
+                  <>
+                    {__('Account balance')} (
+                    <Tooltip.Trigger
+                      tooltip={__('Show %{tokenName}', {
+                        tokenName: showFiat ? 'NXS' : 'Fiat',
+                      })}
+                      position="top"
+                    >
+                      <Link
+                        as={''}
+                        to={''}
+                        onClick={(e) => toggleUserBalanceDisplayFiat(!showFiat)}
                       >
-                        <Link
-                          as={''}
-                          to={''}
-                          onClick={(e) =>
-                            toggleUserBalanceDisplayFiat(!showFiat)
-                          }
-                        >
-                          {showFiat ? currency : 'NXS'}
-                        </Link>
-                      </Tooltip.Trigger>
-                      )
-                    </>
-                  ) : (
-                    <span>
-                      {__('Account balance')} (
-                      <TokenName account={account} />)
-                    </span>
-                  )
-                }
-              >
-                <div className="flex space-between">
-                  <div className="text-center">
-                    <div>
-                      <strong>{__('Total')}</strong>
-                    </div>
-                    <div>
-                      {showFiat && account.ticker === '0'
-                        ? formatCurrency(
-                            totalBalance(account, 6) * price,
-                            currency
-                          )
-                        : formatNumber(totalBalance(account, 6))}
-                    </div>
+                        {showFiat ? currency : 'NXS'}
+                      </Link>
+                    </Tooltip.Trigger>
+                    )
+                  </>
+                ) : (
+                  <span>
+                    {__('Account balance')} (
+                    <TokenName account={account} />)
+                  </span>
+                )
+              }
+            >
+              <div className="flex space-between">
+                <div className="text-center">
+                  <div>
+                    <strong>{__('Total')}</strong>
                   </div>
-                  <div className="text-center">
-                    <div>
-                      <strong>{__('Available')}</strong>
-                    </div>
-                    <div>
-                      {showFiat && account.ticker === '0'
-                        ? formatCurrency(account.balance * price, currency)
-                        : formatNumber(account.balance, 6)}
-                    </div>
+                  <div>
+                    {showFiat && account.ticker === '0'
+                      ? formatCurrency(
+                          totalBalance(account, 6) * price,
+                          currency
+                        )
+                      : formatNumber(totalBalance(account, 6))}
                   </div>
-                  <div className="text-center">
-                    <div>
-                      <strong>{__('Unclaimed')}</strong>
-                    </div>
-                    <div>
-                      {showFiat && account.ticker === '0'
-                        ? formatCurrency(
-                            (account.unclaimed || 0) * price,
-                            currency
-                          )
-                        : formatNumber(account.unclaimed || 0, 6)}
-                    </div>
-                  </div>
-                  <div className="text-center">
-                    <div>
-                      <strong>{__('Unconfirmed')}</strong>
-                    </div>
-                    <div>
-                      {showFiat && account.ticker === '0'
-                        ? formatCurrency(
-                            (account.unconfirmed || 0) * price,
-                            currency
-                          )
-                        : formatNumber(account.unconfirmed || 0, 6)}
-                    </div>
-                  </div>
-                  {typeof account.stake === 'number' && (
-                    <div className="text-center">
-                      <div>
-                        <strong>{__('Stake')}</strong>
-                      </div>
-                      <div>
-                        {showFiat && account.ticker === '0'
-                          ? formatCurrency(account.stake * price, currency)
-                          : formatNumber(account.stake, 6)}
-                      </div>
-                    </div>
-                  )}
                 </div>
-              </BalancesFieldSet>
+                <div className="text-center">
+                  <div>
+                    <strong>{__('Available')}</strong>
+                  </div>
+                  <div>
+                    {showFiat && account.ticker === '0'
+                      ? formatCurrency(account.balance * price, currency)
+                      : formatNumber(account.balance, 6)}
+                  </div>
+                </div>
+                <div className="text-center">
+                  <div>
+                    <strong>{__('Unclaimed')}</strong>
+                  </div>
+                  <div>
+                    {showFiat && account.ticker === '0'
+                      ? formatCurrency(
+                          (account.unclaimed || 0) * price,
+                          currency
+                        )
+                      : formatNumber(account.unclaimed || 0, 6)}
+                  </div>
+                </div>
+                <div className="text-center">
+                  <div>
+                    <strong>{__('Unconfirmed')}</strong>
+                  </div>
+                  <div>
+                    {showFiat && account.ticker === '0'
+                      ? formatCurrency(
+                          (account.unconfirmed || 0) * price,
+                          currency
+                        )
+                      : formatNumber(account.unconfirmed || 0, 6)}
+                  </div>
+                </div>
+                {typeof account.stake === 'number' && (
+                  <div className="text-center">
+                    <div>
+                      <strong>{__('Stake')}</strong>
+                    </div>
+                    <div>
+                      {showFiat && account.ticker === '0'
+                        ? formatCurrency(account.stake * price, currency)
+                        : formatNumber(account.stake, 6)}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </BalancesFieldSet>
 
-              <ContractsTable
-                data={contracts}
-                columns={tableColumns}
-                defaultPageSize={10}
-                getTrProps={(state, row) => {
-                  const contract = row && row.original;
-                  return {
-                    onClick: contract
-                      ? () => {
-                          openModal(ContractDetailsModal, {
-                            contract,
-                            txid: contract.txid,
-                          });
-                        }
-                      : undefined,
-                    style: {
-                      cursor: 'pointer',
-                      fontSize: 15,
-                    },
-                  };
-                }}
-              />
-            </Layout>
-          )}
-        </ControlledModal.Body>
-      </ControlledModal>
-    );
-  }
-
+            <ContractsTable
+              data={contracts}
+              columns={tableColumns}
+              defaultPageSize={10}
+              getTrProps={(state, row) => {
+                const contract = row && row.original;
+                return {
+                  onClick: contract
+                    ? () => {
+                        openModal(ContractDetailsModal, {
+                          contract,
+                          txid: contract.txid,
+                        });
+                      }
+                    : undefined,
+                  style: {
+                    cursor: 'pointer',
+                    fontSize: 15,
+                  },
+                };
+              }}
+            />
+          </Layout>
+        )}
+      </ControlledModal.Body>
+    </ControlledModal>
+  );
+}

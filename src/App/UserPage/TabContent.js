@@ -16,7 +16,7 @@ const TabContentComponent = styled.div({
   overflow: 'auto',
 });
 
-function UserRedirect({ lastActiveTab, match }) {
+function UserRedirect({ match }) {
   const lastActiveTab = useSelector((state) => state.ui.user.lastActiveTab);
   return (
     <Redirect
