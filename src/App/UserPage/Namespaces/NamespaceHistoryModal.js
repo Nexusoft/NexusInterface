@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 import ControlledModal from 'components/ControlledModal';
 import Table from 'components/Table';
@@ -42,66 +42,61 @@ export const tableColumns = [
   },
 ];
 
-export default class NamespaceHistoryModal extends Component {
-  state = {
-    events: null,
-  };
+export default function NamespaceHistoryModal() {
+  const closeModalRef = useRef();
+  const [events, setEvents] = useState(null);
+  useEffect(() => {
+    (async () => {
+      try {
+        const events = await callApi('names/history/namespace', {
+          address: namespace.address,
+        });
+        setEvents(events.reverse());
+      } catch (err) {
+        handleError(err);
+        closeModalRef.current?.();
+      }
+    })();
+  }, []);
 
-  async componentDidMount() {
-    const { namespace } = this.props;
-    try {
-      const events = await callApi('names/history/namespace', {
-        address: namespace.address,
-      });
-      this.setState({ events: events.reverse() });
-    } catch (err) {
-      handleError(err);
-      this.closeModal();
-    }
-  }
+  return (
+    <ControlledModal
+      assignClose={(close) => {
+        closeModalRef.current = close;
+      }}
+    >
+      <ControlledModal.Header className="relative">
+        {__('Namespace History')}
+      </ControlledModal.Header>
 
-  render() {
-    const { events } = this.state;
-
-    return (
-      <ControlledModal
-        assignClose={(close) => {
-          this.closeModal = close;
-        }}
-      >
-        <ControlledModal.Header className="relative">
-          {__('Namespace History')}
-        </ControlledModal.Header>
-
-        <ControlledModal.Body>
-          {!events ? (
-            <WaitingMessage>
-              {__('Loading namespace history')}
-              ...
-            </WaitingMessage>
-          ) : (
-            <Table
-              columns={tableColumns}
-              data={events}
-              defaultPageSize={events.length < 10 ? events.length : 10}
-              getTrProps={(state, row) => {
-                const event = row && row.original;
-                return {
-                  onClick: () => {
-                    openModal(NamespaceHistoryDetailsModal, {
-                      event,
-                    });
-                  },
-                  style: {
-                    cursor: 'pointer',
-                    fontSize: 15,
-                  },
-                };
-              }}
-            />
-          )}
-        </ControlledModal.Body>
-      </ControlledModal>
-    );
-  }
+      <ControlledModal.Body>
+        {!events ? (
+          <WaitingMessage>
+            {__('Loading namespace history')}
+            ...
+          </WaitingMessage>
+        ) : (
+          <Table
+            columns={tableColumns}
+            data={events}
+            defaultPageSize={events.length < 10 ? events.length : 10}
+            getTrProps={(state, row) => {
+              const event = row && row.original;
+              return {
+                onClick: () => {
+                  openModal(NamespaceHistoryDetailsModal, {
+                    event,
+                  });
+                },
+                style: {
+                  cursor: 'pointer',
+                  fontSize: 15,
+                },
+              };
+            }}
+          />
+        )}
+      </ControlledModal.Body>
+    </ControlledModal>
+  );
 }

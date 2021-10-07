@@ -97,19 +97,19 @@ class CreateNamespaceForm extends Component {
   }
 }
 
-const CreateNamespaceModal = () => (
-  <ControlledModal maxWidth={450}>
-    {(closeModal) => (
-      <>
-        <ControlledModal.Header>
-          {__('Create a new namespace')}
-        </ControlledModal.Header>
-        <ControlledModal.Body>
-          <CreateNamespaceForm closeModal={closeModal} />
-        </ControlledModal.Body>
-      </>
-    )}
-  </ControlledModal>
-);
-
-export default CreateNamespaceModal;
+export default function CreateNamespaceModal() {
+  return (
+    <ControlledModal maxWidth={450}>
+      {(closeModal) => (
+        <>
+          <ControlledModal.Header>
+            {__('Create a new namespace')}
+          </ControlledModal.Header>
+          <ControlledModal.Body>
+            <CreateNamespaceForm closeModal={closeModal} />
+          </ControlledModal.Body>
+        </>
+      )}
+    </ControlledModal>
+  );
+}

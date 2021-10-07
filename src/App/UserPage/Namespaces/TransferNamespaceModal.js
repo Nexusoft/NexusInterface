@@ -97,22 +97,22 @@ class TransferNamespaceForm extends Component {
   }
 }
 
-const TransferNamespaceModal = ({ namespace }) => (
-  <ControlledModal maxWidth={600}>
-    {(closeModal) => (
-      <>
-        <ControlledModal.Header>
-          {__('Transfer namespace')}
-        </ControlledModal.Header>
-        <ControlledModal.Body>
-          <TransferNamespaceForm
-            closeModal={closeModal}
-            namespace={namespace}
-          />
-        </ControlledModal.Body>
-      </>
-    )}
-  </ControlledModal>
-);
-
-export default TransferNamespaceModal;
+export default function TransferNamespaceModal({ namespace }) {
+  return (
+    <ControlledModal maxWidth={600}>
+      {(closeModal) => (
+        <>
+          <ControlledModal.Header>
+            {__('Transfer namespace')}
+          </ControlledModal.Header>
+          <ControlledModal.Body>
+            <TransferNamespaceForm
+              closeModal={closeModal}
+              namespace={namespace}
+            />
+          </ControlledModal.Body>
+        </>
+      )}
+    </ControlledModal>
+  );
+}
