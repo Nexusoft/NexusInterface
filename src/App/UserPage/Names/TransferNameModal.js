@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
 
@@ -24,9 +24,6 @@ const Name = styled.span(({ theme }) => ({
   color: theme.foreground,
 }));
 
-@connect((state) => ({
-  username: selectUsername(state),
-}))
 @reduxForm({
   form: 'transfer-name',
   destroyOnUnmount: true,
@@ -109,17 +106,22 @@ class TransferNameForm extends Component {
   }
 }
 
-const TransferNameModal = ({ nameRecord }) => (
-  <ControlledModal maxWidth={600}>
-    {(closeModal) => (
-      <>
-        <ControlledModal.Header>{__('Transfer name')}</ControlledModal.Header>
-        <ControlledModal.Body>
-          <TransferNameForm closeModal={closeModal} nameRecord={nameRecord} />
-        </ControlledModal.Body>
-      </>
-    )}
-  </ControlledModal>
-);
-
-export default TransferNameModal;
+export default function TransferNameModal({ nameRecord }) {
+  const username = useSelector(selectUsername);
+  return (
+    <ControlledModal maxWidth={600}>
+      {(closeModal) => (
+        <>
+          <ControlledModal.Header>{__('Transfer name')}</ControlledModal.Header>
+          <ControlledModal.Body>
+            <TransferNameForm
+              closeModal={closeModal}
+              nameRecord={nameRecord}
+              username={username}
+            />
+          </ControlledModal.Body>
+        </>
+      )}
+    </ControlledModal>
+  );
+}

@@ -1,5 +1,5 @@
-import { createRef, Component } from 'react';
-import { connect } from 'react-redux';
+import { useRef, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
 
@@ -23,10 +23,7 @@ const Name = styled.span(({ theme }) => ({
   color: theme.foreground,
 }));
 
-@connect((state) => ({
-  username: selectUsername(state),
-}))
-@reduxForm({
+const formOptions = {
   form: 'change-register-address',
   destroyOnUnmount: true,
   onSubmit: async ({ registerAddress }, dispatch, { nameRecord }) => {
@@ -49,84 +46,84 @@ const Name = styled.span(({ theme }) => ({
     });
   },
   onSubmitFail: errorHandler(__('Error updating name')),
-})
-class ChangeRegisterAddressForm extends Component {
-  inputRef = createRef();
+};
 
-  componentDidMount() {
+function ChangeRegisterAddressForm({ handleSubmit, nameRecord, submitting }) {
+  const username = useSelector(selectUsername);
+  const inputRef = useRef();
+  useEffect(() => {
     setTimeout(() => {
       // Select all register address
-      this.inputRef.current.select();
+      inputRef.current?.select();
     }, 0);
-  }
+  }, []);
 
-  render() {
-    const { handleSubmit, username, nameRecord, submitting } = this.props;
-    return (
-      <form onSubmit={handleSubmit}>
-        <FormField label={__('Name')}>
-          {nameRecord.global ? null : nameRecord.namespace ? (
-            <Prefix>{nameRecord.namespace + '::'}</Prefix>
-          ) : (
-            <Prefix>{username + ':'}</Prefix>
-          )}
-          <Name>{nameRecord.name}</Name>
-        </FormField>
+  return (
+    <form onSubmit={handleSubmit}>
+      <FormField label={__('Name')}>
+        {nameRecord.global ? null : nameRecord.namespace ? (
+          <Prefix>{nameRecord.namespace + '::'}</Prefix>
+        ) : (
+          <Prefix>{username + ':'}</Prefix>
+        )}
+        <Name>{nameRecord.name}</Name>
+      </FormField>
 
-        <FormField connectLabel label={__('Register address')}>
-          <Field
-            inputRef={this.inputRef}
-            name="registerAddress"
-            component={TextField.RF}
-            placeholder={__('Register address that this name points to')}
-          />
-        </FormField>
+      <FormField connectLabel label={__('Register address')}>
+        <Field
+          inputRef={this.inputRef}
+          name="registerAddress"
+          component={TextField.RF}
+          placeholder={__('Register address that this name points to')}
+        />
+      </FormField>
 
-        <div className="mt1" style={{ textAlign: 'left' }}>
-          {__('Name update fee')}: 1 NXS
-        </div>
+      <div className="mt1" style={{ textAlign: 'left' }}>
+        {__('Name update fee')}: 1 NXS
+      </div>
 
-        <Button
-          skin="primary"
-          wide
-          uppercase
-          className="mt3"
-          type="submit"
-          disabled={submitting}
-        >
-          {submitting ? (
-            <span>
-              <Spinner className="mr0_4" />
-              <span className="v-align">{__('Updating name')}...</span>
-            </span>
-          ) : (
-            __('Update name')
-          )}
-        </Button>
-      </form>
-    );
-  }
+      <Button
+        skin="primary"
+        wide
+        uppercase
+        className="mt3"
+        type="submit"
+        disabled={submitting}
+      >
+        {submitting ? (
+          <span>
+            <Spinner className="mr0_4" />
+            <span className="v-align">{__('Updating name')}...</span>
+          </span>
+        ) : (
+          __('Update name')
+        )}
+      </Button>
+    </form>
+  );
 }
 
-const ChangeRegisterAddressModal = ({ nameRecord }) => (
-  <ControlledModal maxWidth={600}>
-    {(closeModal) => (
-      <>
-        <ControlledModal.Header>
-          {__('Change register address')}
-        </ControlledModal.Header>
-        <ControlledModal.Body>
-          <ChangeRegisterAddressForm
-            closeModal={closeModal}
-            nameRecord={nameRecord}
-            initialValues={{
-              registerAddress: nameRecord.register,
-            }}
-          />
-        </ControlledModal.Body>
-      </>
-    )}
-  </ControlledModal>
-);
+ChangeRegisterAddressForm = reduxForm(formOptions)(ChangeRegisterAddressForm);
 
-export default ChangeRegisterAddressModal;
+export default function ChangeRegisterAddressModal({ nameRecord }) {
+  return (
+    <ControlledModal maxWidth={600}>
+      {(closeModal) => (
+        <>
+          <ControlledModal.Header>
+            {__('Change register address')}
+          </ControlledModal.Header>
+          <ControlledModal.Body>
+            <ChangeRegisterAddressForm
+              closeModal={closeModal}
+              nameRecord={nameRecord}
+              initialValues={{
+                registerAddress: nameRecord.register,
+              }}
+            />
+          </ControlledModal.Body>
+        </>
+      )}
+    </ControlledModal>
+  );
+}
