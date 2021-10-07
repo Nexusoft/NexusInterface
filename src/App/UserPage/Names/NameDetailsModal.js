@@ -35,7 +35,7 @@ const EditName = styled.div({
   fontSize: '1rem',
 });
 
-function NameDetailsModal({ nameRecord }) {
+export default function NameDetailsModal({ nameRecord }) {
   return (
     <ControlledModal>
       {(closeModal) => (

@@ -14,7 +14,7 @@ const timeFormatOptions = {
   second: '2-digit',
 };
 
-function NameHistoryDetailsModal({
+export default function NameHistoryDetailsModal({
   event: {
     type,
     owner,
