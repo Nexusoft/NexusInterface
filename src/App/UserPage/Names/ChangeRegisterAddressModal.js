@@ -71,7 +71,7 @@ function ChangeRegisterAddressForm({ handleSubmit, nameRecord, submitting }) {
 
       <FormField connectLabel label={__('Register address')}>
         <Field
-          inputRef={this.inputRef}
+          inputRef={inputRef}
           name="registerAddress"
           component={TextField.RF}
           placeholder={__('Register address that this name points to')}
