@@ -25,7 +25,7 @@ const SubLable = styled.span(({ theme }) => ({
 
 function FeeMessage({ supply, decimals }) {
   return __(`There is a %{tokenfee} NXS token creation fee, based on supply`, {
-    tokenfee: createTokenFee(supply, decimals),
+    tokenfee: createTokenFee(supply.input.value, decimals.input.value),
   });
 }
 

@@ -263,10 +263,6 @@ export default function AutoSuggest({
     inputRef.current?.focus();
   };
 
-  const blurInput = () => {
-    inputRef.current?.blur();
-  };
-
   return (
     <AutoSuggestComponent {...rest}>
       <Input
