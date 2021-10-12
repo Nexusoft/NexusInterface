@@ -1,7 +1,6 @@
 // External
-import { Component } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import styled from '@emotion/styled';
-import { jsx, css } from '@emotion/react';
 
 // Internal
 import Tooltip from 'components/Tooltip';
@@ -183,93 +182,83 @@ const Input = styled.input(
       width: '100%',
     }
 );
-export default class DateTime extends Component {
-  state = {
-    focus: false,
-  };
 
-  inputRef = (el) => {
-    this.inputElem = el;
-    if (this.props.inputRef) {
-      passRef(el, this.props.inputRef);
-    }
-  };
+export default function DateTimePicker({
+  inputRef,
+  onFocus,
+  onBlur,
+  className,
+  style,
+  inputStyle,
+  skin = 'underline',
+  multiline,
+  left,
+  right,
+  size,
+  readOnly,
+  autoFocus,
+  error,
+  time,
+  ...rest
+}) {
+  const [focus, setFocus] = useState(false);
+  const inputElRef = useRef();
 
-  componentDidMount() {
+  useEffect(() => {
     // Somehow React's autoFocus doesn't work, so handle it manually
-    if (this.props.autoFocus && this.inputElem) {
+    if (autoFocus && inputElRef.current) {
       // This needs setTimeout to work
       setTimeout(() => {
-        this.inputElem.focus();
+        inputElRef.current.focus();
       }, 0);
     }
-  }
+  }, []);
 
-  handleFocus = (e) => {
-    this.setState({ focus: true });
-    this.props.onFocus && this.props.onFocus(e);
+  const handleFocus = (e) => {
+    setFocus(true);
+    onFocus?.(e);
   };
 
-  handleBlur = (e) => {
-    this.setState({ focus: false });
-    this.props.onBlur && this.props.onBlur(e);
+  const handleBlur = (e) => {
+    setFocus(false);
+    onBlur?.(e);
   };
 
-  render() {
-    const {
-      className,
-      style,
-      inputStyle,
-      skin = 'underline',
-      multiline,
-      left,
-      right,
-      size,
-      readOnly,
-      inputRef,
-      autoFocus,
-      error,
-      time,
-      ...rest
-    } = this.props;
+  return (
+    <TextFieldComponent
+      {...{ className, style, skin, size, error, multiline }}
+      focus={!readOnly && focus}
+    >
+      {left}
 
-    const inputProps = {
-      skin,
-      size,
-      readOnly,
-      ...rest,
-      onFocus: this.handleFocus,
-      onBlur: this.handleBlur,
-      style: inputStyle,
-    };
+      <Input
+        {...{ skin, size, readOnly }}
+        {...rest}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+        style={inputStyle}
+        ref={(el) => {
+          inputElRef.current = el;
+          if (inputRef) {
+            passRef(el, inputRef);
+          }
+        }}
+        type={time ? 'datetime-local' : 'date'}
+      />
 
-    return (
-      <TextFieldComponent
-        {...{ className, style, skin, size, error, multiline }}
-        focus={!readOnly && this.state.focus}
-      >
-        {left}
-
-        <Input
-          {...inputProps}
-          ref={this.inputRef}
-          type={time ? 'datetime-local' : 'date'}
-        />
-
-        {right}
-        {!!error && (
-          <ErrorMessage
-            skin="error"
-            position="bottom"
-            align="start"
-            focus={this.state.focus}
-          >
-            {error}
-          </ErrorMessage>
-        )}
-      </TextFieldComponent>
-    );
-  }
+      {right}
+      {!!error && (
+        <ErrorMessage
+          skin="error"
+          position="bottom"
+          align="start"
+          focus={focus}
+        >
+          {error}
+        </ErrorMessage>
+      )}
+    </TextFieldComponent>
+  );
 }
 
 // DateTime wrapper for redux-form

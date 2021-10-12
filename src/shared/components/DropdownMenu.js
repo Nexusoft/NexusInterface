@@ -1,4 +1,4 @@
-import { createRef, Component } from 'react';
+import { useRef, useState } from 'react';
 import styled from '@emotion/styled';
 
 import Overlay from 'components/Overlay';
@@ -50,55 +50,47 @@ const Separator = styled.div(({ theme }) => ({
   borderBottom: `1px solid ${theme.mixer(0.125)}`,
 }));
 
-export default class DropdownMenu extends Component {
-  state = {
-    open: false,
+function getDropdownStyle(el) {
+  if (!el) return {};
+  const rect = el.getBoundingClientRect();
+  return {
+    minWidth: 120,
+    top: rect.bottom + 18,
+    right: window.innerWidth - rect.right,
+  };
+}
+
+export default function DropdownMenu({ renderControl, renderDropdown }) {
+  const [open, setOpen] = useState(false);
+  const controlRef = useRef();
+
+  const openDropdown = () => {
+    setOpen(true);
   };
 
-  controlRef = createRef();
-
-  openDropdown = () => {
-    this.setState({ open: true });
+  const closeDropdown = () => {
+    setOpen(false);
   };
 
-  closeDropdown = () => {
-    this.setState({ open: false });
+  const args = {
+    open,
+    controlRef,
+    openDropdown,
+    closeDropdown,
   };
 
-  getDropdownStyle = () => {
-    const el = this.controlRef.current;
-    if (!el) return {};
-
-    const rect = el.getBoundingClientRect();
-    return {
-      minWidth: 120,
-      top: rect.bottom + 18,
-      right: window.innerWidth - rect.right,
-    };
-  };
-
-  render() {
-    const { renderControl, renderDropdown } = this.props;
-    const args = {
-      open: this.state.open,
-      controlRef: this.controlRef,
-      openDropdown: this.openDropdown,
-      closeDropdown: this.closeDropdown,
-    };
-
-    return (
-      <>
-        {renderControl(args)}
-        {this.state.open && (
-          <Overlay onBackgroundClick={this.closeDropdown}>
-            <DropdownMenuComponent style={this.getDropdownStyle()}>
-              {renderDropdown(args)}
-            </DropdownMenuComponent>
-          </Overlay>
-        )}
-      </>
-    );
-  }
+  return (
+    <>
+      {renderControl(args)}
+      {open && (
+        <Overlay onBackgroundClick={closeDropdown}>
+          <DropdownMenuComponent style={getDropdownStyle(controlRef.current)}>
+            {renderDropdown(args)}
+          </DropdownMenuComponent>
+        </Overlay>
+      )}
+    </>
+  );
 }
 
 DropdownMenu.MenuItem = MenuItem;

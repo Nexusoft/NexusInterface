@@ -1,4 +1,3 @@
-import { Component } from 'react';
 import styled from '@emotion/styled';
 
 import ControlledModal from 'components/ControlledModal';
@@ -53,40 +52,36 @@ function displayValue(value, key) {
   return String(value);
 }
 
-class ContractDetailsModal extends Component {
-  render() {
-    const { contract, txid } = this.props;
-    if (!contract) return;
+export default function ContractDetailsModal({ contract, txid }) {
+  if (!contract) return;
 
-    return (
-      <ControlledModal
-        assignClose={(close) => {
-          this.closeModal = close;
-        }}
-      >
-        <ControlledModal.Header>
-          {__('Contract Details')}
-        </ControlledModal.Header>
-        <ControlledModal.Body>
-          {Object.entries(contract).map(([key, value]) => (
-            <InfoField key={key} label={translateKey(key)}>
-              {displayValue(value, key)}
+  return (
+    <ControlledModal>
+      {(closeModal) => (
+        <>
+          <ControlledModal.Header>
+            {__('Contract Details')}
+          </ControlledModal.Header>
+          <ControlledModal.Body>
+            {Object.entries(contract).map(([key, value]) => (
+              <InfoField key={key} label={translateKey(key)}>
+                {displayValue(value, key)}
+              </InfoField>
+            ))}
+            <InfoField label="">
+              <Button
+                skin="hyperlink"
+                onClick={() => {
+                  closeModal();
+                  openModal(TransactionDetailsModal, { txid });
+                }}
+              >
+                {__('View transaction details')}
+              </Button>
             </InfoField>
-          ))}
-          <InfoField label="">
-            <Button
-              skin="hyperlink"
-              onClick={() => {
-                this.closeModal();
-                openModal(TransactionDetailsModal, { txid });
-              }}
-            >
-              {__('View transaction details')}
-            </Button>
-          </InfoField>
-        </ControlledModal.Body>
-      </ControlledModal>
-    );
-  }
+          </ControlledModal.Body>
+        </>
+      )}
+    </ControlledModal>
+  );
 }
-export default ContractDetailsModal;
