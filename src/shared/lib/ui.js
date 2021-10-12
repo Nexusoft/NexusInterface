@@ -252,6 +252,11 @@ export const unpauseCoreOutput = () => {
     type: TYPE.UNPAUSE_CORE_OUTPUT,
   });
 };
+export const clearCoreOutput = () => {
+  store.dispatch({
+    type: TYPE.CLEAR_CORE_OUTPUT,
+  });
+};
 /**
  * User
  * ===========================
