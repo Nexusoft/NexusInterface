@@ -1,5 +1,5 @@
 // External
-import { Component } from 'react';
+import { useState } from 'react';
 import styled from '@emotion/styled';
 import { shell } from 'electron';
 
@@ -49,6 +49,24 @@ const CheckMark = styled.span({
   userSelect: 'none',
 });
 
+async function confirmDelete(module) {
+  const confirmed = await confirm({
+    question: `Delete ${module.info.displayName}?`,
+  });
+  if (confirmed) {
+    if (module.development) {
+      const { devModulePaths } = store.getState().settings;
+      updateSettings({
+        devModulePaths: devModulePaths.filter((path) => path !== module.path),
+      });
+    } else {
+      await deleteDirectory(module.path);
+      GA.SendEvent('Modules', 'uninstallModule', 'name', module.info.name);
+    }
+    location.reload();
+  }
+}
+
 /**
  * Module details modal, for viewing details of both installed modules
  * and modules being installed
@@ -56,223 +74,192 @@ const CheckMark = styled.span({
  * @class ModuleDetailsModal
  * @extends {React.Component}
  */
-class ModuleDetailsModal extends Component {
-  /**
-   *
-   *
-   * @memberof ModuleDetailsModal
-   */
-  confirmDelete = async () => {
-    const { module } = this.props;
-    const confirmed = await confirm({
-      question: `Delete ${module.info.displayName}?`,
-    });
-    if (confirmed) {
-      if (module.development) {
-        const { devModulePaths } = store.getState().settings;
-        updateSettings({
-          devModulePaths: devModulePaths.filter((path) => path !== module.path),
-        });
-      } else {
-        await deleteDirectory(module.path);
-        GA.SendEvent('Modules', 'uninstallModule', 'name', module.info.name);
-      }
-      location.reload();
-    }
-  };
-
-  /**
-   *
-   *
-   * @returns
-   * @memberof ModuleDetailsModal
-   */
-  render() {
-    const { module, forInstall, install } = this.props;
-    const moduleInfo = module.info;
-    const { host, owner, repo, commit } = module.repository || {};
-    const repoUrl = module.repository
-      ? `https://${host}/${owner}/${repo}/tree/${commit}`
-      : null;
-    return (
-      <ControlledModal
-        assignClose={(close) => {
-          this.closeModal = close;
-        }}
-      >
-        <ControlledModal.Header className="relative">
-          {__('Module Details')}
-          {!forInstall && (
-            <DeleteModule>
-              <Tooltip.Trigger tooltip={__('Remove module')}>
-                <DeleteButton skin="plain" onClick={this.confirmDelete}>
-                  <Icon icon={trashIcon} />
-                </DeleteButton>
-              </Tooltip.Trigger>
-            </DeleteModule>
-          )}
-        </ControlledModal.Header>
-        <ControlledModal.Body>
-          <InfoField ratio={[1, 2]} label={__('Module name')}>
-            {moduleInfo.name}
-          </InfoField>
-          <InfoField ratio={[1, 2]} label={__('Display name')}>
-            {moduleInfo.displayName}
-          </InfoField>
-          <InfoField ratio={[1, 2]} label={__('Module type')}>
-            {moduleInfo.type}
-            {module.development && (
-              <span className="ml0_4">&#x28;{__('in development')}&#x29;</span>
+export default function ModuleDetailsModal({ module, forInstall, install }) {
+  const moduleInfo = module.info;
+  const { host, owner, repo, commit } = module.repository || {};
+  const repoUrl = module.repository
+    ? `https://${host}/${owner}/${repo}/tree/${commit}`
+    : null;
+  return (
+    <ControlledModal>
+      {(closeModal) => (
+        <>
+          <ControlledModal.Header className="relative">
+            {__('Module Details')}
+            {!forInstall && (
+              <DeleteModule>
+                <Tooltip.Trigger tooltip={__('Remove module')}>
+                  <DeleteButton skin="plain" onClick={confirmDelete}>
+                    <Icon icon={trashIcon} />
+                  </DeleteButton>
+                </Tooltip.Trigger>
+              </DeleteModule>
             )}
-          </InfoField>
-          {!!module.development && (
-            <InfoField ratio={[1, 2]} label={__('Entry')}>
-              {module.info.entry}
+          </ControlledModal.Header>
+          <ControlledModal.Body>
+            <InfoField ratio={[1, 2]} label={__('Module name')}>
+              {moduleInfo.name}
             </InfoField>
-          )}
-
-          <InfoField ratio={[1, 2]} label={__('Version')}>
-            {moduleInfo.version || <span className="dim">N/A</span>}
-          </InfoField>
-          <InfoField ratio={[1, 2]} label={__('Target wallet version')}>
-            {
-              <span className={module.incompatible ? 'error' : undefined}>
-                <span className="v-align">
-                  {moduleInfo.targetWalletVersion || (
-                    <span className="dim">N/A</span>
-                  )}
+            <InfoField ratio={[1, 2]} label={__('Display name')}>
+              {moduleInfo.displayName}
+            </InfoField>
+            <InfoField ratio={[1, 2]} label={__('Module type')}>
+              {moduleInfo.type}
+              {module.development && (
+                <span className="ml0_4">
+                  &#x28;{__('in development')}&#x29;
                 </span>
-                {module.incompatible && (
-                  <span className="error ml0_4">
-                    <Icon icon={warningIcon} />
-                    <span className="v-align ml0_4">
-                      ({__('incompatible')})
-                    </span>
-                  </span>
-                )}
-              </span>
-            }
-          </InfoField>
-          <InfoField ratio={[1, 2]} label={__('Description')}>
-            {moduleInfo.description || <span className="dim">N/A</span>}
-          </InfoField>
-          <InfoField ratio={[1, 2]} label={__('Author')}>
-            {moduleInfo.author ? (
-              <div>
-                <span>{moduleInfo.author.name}</span>
-                {!!moduleInfo.author.email && (
-                  <span className="ml0_4">
-                    -
-                    <ExternalLink
-                      className="ml0_4"
-                      href={`mailto:${moduleInfo.author.email}`}
-                    >
-                      {moduleInfo.author.email}
-                    </ExternalLink>
-                  </span>
-                )}
-              </div>
-            ) : (
-              <span className="dim">N/A</span>
-            )}
-          </InfoField>
-          {!module.development && (
-            <InfoField ratio={[1, 2]} label={__('Source code')}>
-              {module.repository ? (
-                <div>
-                  <Tooltip.Trigger tooltip={repoUrl}>
-                    <ExternalLink href={repoUrl}>
-                      <span className="v-align">{__('Visit repository')}</span>
-                      <Icon icon={linkIcon} className="ml0_4" />
-                    </ExternalLink>
-                  </Tooltip.Trigger>
-
-                  {module.repoVerified && module.repoFromNexus && (
-                    <Tooltip.Trigger
-                      tooltip={__('This module is developed by Nexus')}
-                    >
-                      <CheckMark>&nbsp;&nbsp;✔</CheckMark>
-                    </Tooltip.Trigger>
-                  )}
-
-                  {!module.repoOnline && (
-                    <div className="error">
-                      <Icon icon={warningIcon} />
-                      <span className="v-align ml0_4">
-                        {__('This repository does not exist or is private')}
-                      </span>
-                    </div>
-                  )}
-                  {!module.repoVerified && (
-                    <div className="error">
-                      <Icon icon={warningIcon} />
-                      <span className="v-align ml0_4">
-                        {__(
-                          'This repository is not verified to be the real source code of this module'
-                        )}
-                      </span>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <div className={module.development ? 'dim' : 'error'}>
-                  <span className="v-align">N/A</span>
-                  {!module.development && (
-                    <Icon icon={warningIcon} className="ml0_4" />
-                  )}
-                </div>
               )}
             </InfoField>
-          )}
-          {!module.development && (
-            <InfoField ratio={[1, 2]} label={__('Module hash')}>
-              {module.hash ? (
-                <span className="monospace">{module.hash}</span>
+            {!!module.development && (
+              <InfoField ratio={[1, 2]} label={__('Entry')}>
+                {module.info.entry}
+              </InfoField>
+            )}
+
+            <InfoField ratio={[1, 2]} label={__('Version')}>
+              {moduleInfo.version || <span className="dim">N/A</span>}
+            </InfoField>
+            <InfoField ratio={[1, 2]} label={__('Target wallet version')}>
+              {
+                <span className={module.incompatible ? 'error' : undefined}>
+                  <span className="v-align">
+                    {moduleInfo.targetWalletVersion || (
+                      <span className="dim">N/A</span>
+                    )}
+                  </span>
+                  {module.incompatible && (
+                    <span className="error ml0_4">
+                      <Icon icon={warningIcon} />
+                      <span className="v-align ml0_4">
+                        ({__('incompatible')})
+                      </span>
+                    </span>
+                  )}
+                </span>
+              }
+            </InfoField>
+            <InfoField ratio={[1, 2]} label={__('Description')}>
+              {moduleInfo.description || <span className="dim">N/A</span>}
+            </InfoField>
+            <InfoField ratio={[1, 2]} label={__('Author')}>
+              {moduleInfo.author ? (
+                <div>
+                  <span>{moduleInfo.author.name}</span>
+                  {!!moduleInfo.author.email && (
+                    <span className="ml0_4">
+                      -
+                      <ExternalLink
+                        className="ml0_4"
+                        href={`mailto:${moduleInfo.author.email}`}
+                      >
+                        {moduleInfo.author.email}
+                      </ExternalLink>
+                    </span>
+                  )}
+                </div>
               ) : (
                 <span className="dim">N/A</span>
               )}
             </InfoField>
-          )}
+            {!module.development && (
+              <InfoField ratio={[1, 2]} label={__('Source code')}>
+                {module.repository ? (
+                  <div>
+                    <Tooltip.Trigger tooltip={repoUrl}>
+                      <ExternalLink href={repoUrl}>
+                        <span className="v-align">
+                          {__('Visit repository')}
+                        </span>
+                        <Icon icon={linkIcon} className="ml0_4" />
+                      </ExternalLink>
+                    </Tooltip.Trigger>
 
-          {!forInstall && module.info.type === 'app' && (
-            <div className="mt1 flex space-between">
-              {module.hasNewVersion ? (
+                    {module.repoVerified && module.repoFromNexus && (
+                      <Tooltip.Trigger
+                        tooltip={__('This module is developed by Nexus')}
+                      >
+                        <CheckMark>&nbsp;&nbsp;✔</CheckMark>
+                      </Tooltip.Trigger>
+                    )}
+
+                    {!module.repoOnline && (
+                      <div className="error">
+                        <Icon icon={warningIcon} />
+                        <span className="v-align ml0_4">
+                          {__('This repository does not exist or is private')}
+                        </span>
+                      </div>
+                    )}
+                    {!module.repoVerified && (
+                      <div className="error">
+                        <Icon icon={warningIcon} />
+                        <span className="v-align ml0_4">
+                          {__(
+                            'This repository is not verified to be the real source code of this module'
+                          )}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className={module.development ? 'dim' : 'error'}>
+                    <span className="v-align">N/A</span>
+                    {!module.development && (
+                      <Icon icon={warningIcon} className="ml0_4" />
+                    )}
+                  </div>
+                )}
+              </InfoField>
+            )}
+            {!module.development && (
+              <InfoField ratio={[1, 2]} label={__('Module hash')}>
+                {module.hash ? (
+                  <span className="monospace">{module.hash}</span>
+                ) : (
+                  <span className="dim">N/A</span>
+                )}
+              </InfoField>
+            )}
+
+            {!forInstall && module.info.type === 'app' && (
+              <div className="mt1 flex space-between">
+                {module.hasNewVersion ? (
+                  <Button
+                    skin="primary"
+                    onClick={() => {
+                      shell.openExternal(module.latestRelease.html_url);
+                    }}
+                  >
+                    <Icon icon={updateIcon} className="mr0_4" />
+                    <span className="v-align">
+                      {__('Download %{version} (manual)', {
+                        version: 'v' + module.latestVersion,
+                      })}
+                    </span>
+                  </Button>
+                ) : (
+                  <div />
+                )}
                 <Button
                   skin="primary"
                   onClick={() => {
-                    shell.openExternal(module.latestRelease.html_url);
+                    closeModal();
+                    history.push('/Modules/' + module.info.name);
                   }}
                 >
-                  <Icon icon={updateIcon} className="mr0_4" />
-                  <span className="v-align">
-                    {__('Download %{version} (manual)', {
-                      version: 'v' + module.latestVersion,
-                    })}
-                  </span>
+                  {__('Open App')}
                 </Button>
-              ) : (
-                <div />
-              )}
-              <Button
-                skin="primary"
-                onClick={() => {
-                  this.closeModal();
-                  history.push('/Modules/' + module.info.name);
-                }}
-              >
-                {__('Open App')}
-              </Button>
-            </div>
-          )}
-        </ControlledModal.Body>
+              </div>
+            )}
+          </ControlledModal.Body>
 
-        {!!forInstall && <Installer module={module} install={install} />}
-      </ControlledModal>
-    );
-  }
+          {!!forInstall && <Installer module={module} install={install} />}
+        </>
+      )}
+    </ControlledModal>
+  );
 }
-
-export default ModuleDetailsModal;
 
 /**
  * Module Installer
@@ -289,60 +276,43 @@ const InstallerWarning = styled.div({
  * @class Installer
  * @extends {React.Component}
  */
-class Installer extends Component {
-  state = {
-    installing: false,
-  };
+function Installer({ install, module }) {
+  const [installing, setInstalling] = useState(false);
 
-  /**
-   *
-   *
-   * @memberof Installer
-   */
-  install = async () => {
-    this.setState({ installing: true });
+  const doInstall = async () => {
+    setInstalling(true);
     try {
-      await this.props.install();
+      await install();
     } finally {
-      this.setState({ installing: false });
+      setInstalling(false);
     }
   };
 
-  /**
-   *
-   *
-   * @returns
-   * @memberof Installer
-   */
-  render() {
-    const { module } = this.props;
-    const { installing } = this.state;
-    const btnLabel = module.disallowed
-      ? __('Module is disallowed')
-      : installing
-      ? __('Installing Module...')
-      : __('Install Module');
+  const btnLabel = module.disallowed
+    ? __('Module is disallowed')
+    : installing
+    ? __('Installing Module...')
+    : __('Install Module');
 
-    return (
-      <ControlledModal.Footer separator style={{ textAlign: 'center' }}>
-        {!module.disallowed && !(module.repoVerified && module.repoFromNexus) && (
-          <InstallerWarning>
-            {__(`Warning: This module is written by a third party, Nexus is NOT
+  return (
+    <ControlledModal.Footer separator style={{ textAlign: 'center' }}>
+      {!module.disallowed && !(module.repoVerified && module.repoFromNexus) && (
+        <InstallerWarning>
+          {__(`Warning: This module is written by a third party, Nexus is NOT
               responsible for its quality or legitimacy. Please make sure to do
               your due diligence before installing third party modules and use
               them with your own risk.`)}
-          </InstallerWarning>
-        )}
-        <Button
-          skin="primary"
-          wide
-          className="mt1"
-          disabled={installing || !!module.disallowed}
-          onClick={this.install}
-        >
-          {btnLabel}
-        </Button>
-      </ControlledModal.Footer>
-    );
-  }
+        </InstallerWarning>
+      )}
+      <Button
+        skin="primary"
+        wide
+        className="mt1"
+        disabled={installing || !!module.disallowed}
+        onClick={doInstall}
+      >
+        {btnLabel}
+      </Button>
+    </ControlledModal.Footer>
+  );
 }
