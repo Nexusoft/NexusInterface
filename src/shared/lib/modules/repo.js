@@ -3,10 +3,11 @@ import fs from 'fs';
 import crypto from 'crypto';
 import Ajv from 'ajv';
 import axios from 'axios';
-import { isText } from 'istextorbinary';
-import normalizeEol from 'utils/normalizeEol';
 import Multistream from 'multistream';
 import { ipcRenderer } from 'electron';
+import https from 'https';
+import { isText } from 'istextorbinary';
+import normalizeEol from 'utils/normalizeEol';
 
 import { loadModuleFromDir } from './module';
 
@@ -146,11 +147,20 @@ export async function isRepoOnline({ host, owner, repo, commit }) {
 
   try {
     const apiUrls = {
-      'github.com': `https://api.github.com/repos/${owner}/${repo}/commits/${commit}`,
+      'github.com': `https://github.com/${owner}/${repo}/commit/${commit}`,
     };
     const url = apiUrls[host];
-    const response = await axios.get(url);
-    return !!response.data.sha && response.data.sha === commit;
+    const getUrlStatus = (url) =>
+      new Promise((resolve, reject) => {
+        try {
+          https.get(url, (res) => resolve(res.statusCode));
+        } catch (error) {
+          reject(error);
+        }
+      });
+
+    const res = await getUrlStatus(url);
+    return res === 200;
   } catch (err) {
     console.error(err);
     return false;
