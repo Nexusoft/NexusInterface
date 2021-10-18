@@ -216,20 +216,40 @@ export async function isRepoFromNexus({ host, owner, repo, commit }) {
 
   if (owner === 'Nexusoft') return true;
 
-  try {
-    const apiUrls = {
-      'github.com': `https://api.github.com/users/${owner}/orgs`,
-    };
-    const url = apiUrls[host];
-    const response = await axios.get(url);
-    const listOfOrgs = JSON.parse(response.request.response);
-    const partOfNexus = listOfOrgs.find((e) => e.login === 'Nexusoft');
-    return !!partOfNexus;
-  } catch (err) {
-    console.error(err);
-    return false;
-  }
+  const nexusOrgUsers = await getNexusOrgUsers();
+  if (!nexusOrgUsers) return false;
+  else return nexusOrgUsers.includes(owner);
 }
+
+export const getNexusOrgUsers = (() => {
+  let nexusOrgUsers = null;
+  // Cache the ongoing request promise so it won't send another request
+  // when the last one wasn't finished
+  let promise = null;
+  return () => {
+    if (!promise) {
+      promise = new Promise(async (resolve, reject) => {
+        if (!nexusOrgUsers) {
+          try {
+            const response = await axios.get(
+              'https://api.github.com/orgs/Nexusoft/members'
+            );
+            nexusOrgUsers = response.data.map((e) => e.login);
+          } catch (err) {
+            console.error(err);
+            return reject(err);
+          } finally {
+            // Signaling that the call has ended
+            // If it was successful, nexusOrgUsers would have been assigned
+            promise = null;
+          }
+        }
+        resolve(nexusOrgUsers);
+      });
+    }
+    return promise;
+  };
+})();
 
 /**
  * =============================================================================
