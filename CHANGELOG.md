@@ -26,6 +26,7 @@
 - Improved token selection when creating a new account
 - Secret fields are now censored on Nexus API Console, and Clear button now also clears the command history
 - Updated some icons
+- Updated menu links
 - Various other improvements
 
 #### Fixes

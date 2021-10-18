@@ -112,6 +112,9 @@ export const startCore = async () => {
   }
   if (settings.liteMode == true) params.push('-client=1');
   if (settings.multiUser == true) params.push('-multiuser=1');
+  if (settings.allowAdvancedCoreOptions) {
+    if (settings.advancedCoreParams) params.push(settings.advancedCoreParams);
+  }
 
   // Start core
   await ipcRenderer.invoke('start-core', params);

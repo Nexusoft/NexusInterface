@@ -2,6 +2,7 @@ import { join, isAbsolute, normalize, dirname } from 'path';
 import fs from 'fs';
 import Ajv from 'ajv';
 import semver from 'semver';
+import axios from 'axios';
 
 import store from 'store';
 import { semverRegex, emailRegex } from 'consts/misc';
@@ -24,6 +25,7 @@ const reservedFileNames = [
   'repo_info.json',
   'storage.json',
 ];
+let nexusOrgUsers = [];
 
 /**
  * =============================================================================
@@ -356,11 +358,13 @@ async function initializeModule(module) {
   const repoInfo = await loadRepoInfo(module.path);
   if (repoInfo) {
     module.repository = repoInfo.data.repository;
-    const [repoOnline, repoVerified, repoFromNexus] = await Promise.all([
+    const [repoOnline, repoVerified] = await Promise.all([
       isRepoOnline(module.repository),
       isModuleVerified(module, repoInfo),
-      isRepoFromNexus(module.repository),
     ]);
+    const repoFromNexus = !!nexusOrgUsers.find(
+      (e) => e === module.repository.owner
+    );
     Object.assign(module, {
       repoOnline,
       repoVerified,
@@ -382,6 +386,19 @@ async function initializeModule(module) {
     !module.disallowed && !disabledModules.includes(module.info.name);
 
   return module;
+}
+
+async function getNexusOrgUsers() {
+  try {
+    const response = await axios.get(
+      'https://api.github.com/orgs/Nexusoft/members'
+    );
+    console.log(response.data);
+    const parsed = response.data.map((e) => e.login);
+    nexusOrgUsers = parsed;
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 /**
@@ -440,6 +457,7 @@ export async function prepareModules() {
     const { devModulePaths = [] } = store.getState().settings;
     const childNames = await fs.promises.readdir(modulesDir);
     const childPaths = childNames.map((name) => join(modulesDir, name));
+    getNexusOrgUsers();
     const stats = await Promise.all(
       childPaths.map((path) => fs.promises.stat(path))
     );

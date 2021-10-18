@@ -22,6 +22,7 @@ import warningIcon from 'icons/warning.svg';
 import linkIcon from 'icons/link.svg';
 import trashIcon from 'icons/trash.svg';
 import updateIcon from 'icons/update.svg';
+import { removeUpdateCache } from 'lib/modules/autoUpdate';
 
 __ = __context('ModuleDetails');
 
@@ -61,6 +62,7 @@ async function confirmDelete(module) {
       });
     } else {
       await deleteDirectory(module.path);
+      removeUpdateCache(module.repository.repo);
       GA.SendEvent('Modules', 'uninstallModule', 'name', module.info.name);
     }
     location.reload();

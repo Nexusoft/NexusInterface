@@ -320,6 +320,17 @@ export async function bootstrap({ suggesting } = {}) {
   if (state.bootstrap.step !== 'idle') return;
 
   setBootstrapStatus('prompting');
+
+  const testPriv =
+    state.core.systemInfo.private || state.core.systemInfo.testnet; // if Private or on Testnet, prevent bootstrapping
+  if (testPriv) {
+    openErrorDialog({
+      message: __('Can not Bootstrap on Testnet/Private networks.'),
+    });
+    setBootstrapStatus('idle');
+    return;
+  }
+
   const enoughSpace = await checkFreeSpaceForBootstrap();
   if (!enoughSpace) {
     if (!suggesting) {

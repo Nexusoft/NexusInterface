@@ -214,7 +214,7 @@ const menuItems = preprocess({
   walletGuideLink: {
     label: __('Nexus Wallet Guide'),
     click: () => {
-      shell.openExternal('https://crypto.nexus.io/tritium-guide');
+      shell.openExternal('https://nexus.io/ResourceHub/wallet-guide');
     },
   },
   reportBug: {
@@ -244,7 +244,7 @@ const menuItems = preprocess({
       // Not sure if this is the best way to check if there's an update
       // available because autoUpdater.checkForUpdates() doesn't return
       // any reliable results like a boolean `updateAvailable` property
-      if (result.updateInfo.version === APP_VERSION) {
+      if (result?.updateInfo.version === APP_VERSION) {
         showNotification(__('There are currently no updates available'));
       }
     },

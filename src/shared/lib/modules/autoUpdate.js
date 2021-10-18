@@ -14,20 +14,39 @@ import { history } from 'lib/wallet';
 // const pendingDir = join(walletDataDir, 'module_updates', 'pending');
 // const completeDir = join(walletDataDir, 'module_updates', 'complete');
 
-const githubHeaders = {
-  Accept: 'application/vnd.github.v3+json',
-};
+//If expanded consider moving to own file.
+const cache = window.localStorage;
+const cacheStaleTime = 1000 * 60 * 60 * 24 * 7;
 
 // const getAssetName = (name, version) => `${name}_v${version}.zip`;
 
 async function getLatestRelease(repo) {
   const url = `https://api.github.com/repos/${repo.owner}/${repo.repo}/releases/latest`;
+  let repoCache = JSON.parse(cache.getItem(repo.repo));
+  if (repoCache && Date.now() - cacheStaleTime > repoCache.time) {
+    removeUpdateCache(repo.repo);
+    repoCache = null;
+  }
   try {
     const response = await axios.get(url, {
-      headers: githubHeaders,
+      headers: {
+        Accept: 'application/vnd.github.v3+json',
+        ...(repoCache?.etag && { 'If-None-Match': repoCache.etag }),
+      },
     });
+    const cacheObj = {
+      version: response.data.tag_name,
+      assets: !!response.data.assets,
+      etag: response.headers.etag,
+      time: Date.now(),
+    };
+    cache.setItem(repo.repo, JSON.stringify(cacheObj));
     return response.data;
   } catch (err) {
+    if (err.response?.status === 304) {
+      // 304 = Not modified
+      return { tag_name: repoCache.version, assets: repoCache.assets };
+    }
     console.error(err);
     return null;
   }
@@ -78,9 +97,11 @@ async function checkForModuleUpdate(module) {
 export async function checkForModuleUpdates() {
   const state = store.getState();
   const modules = Object.values(state.modules);
-  const updateableModules = modules.filter(
-    (module) => !module.development && !!module.repository
-  );
+  const updateableModules = modules
+    .filter((module) => !module.development && !!module.repository)
+    .sort((a, b) =>
+      a.hasNewVersion === b.hasNewVersion ? 1 : a.hasNewVersion ? 1 : -1
+    );
   const results = await Promise.allSettled(
     updateableModules.map((m) => checkForModuleUpdate(m))
   );
@@ -128,4 +149,9 @@ export async function checkForModuleUpdates() {
     type: TYPE.UPDATE_MODULES_LATEST,
     payload: updatesMapping,
   });
+}
+
+export function removeUpdateCache(repo) {
+  console.log(`${repo} is stale and removed`);
+  cache.removeItem(repo);
 }

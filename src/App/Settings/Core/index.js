@@ -104,6 +104,8 @@ const formKeys = [
   'testnetIteration',
   'avatarMode',
   'coreDataDir',
+  'allowAdvancedCoreOptions',
+  'advancedCoreParams',
   'manualDaemonIP',
   'manualDaemonSSL',
   'manualDaemonPort',
@@ -196,7 +198,9 @@ async function turnOffRemoteCore() {
 async function turnOnRemoteCore() {
   const confirmed = await confirm({
     question: __('Enter remote Core mode?'),
-    note: __('(This will restart your Core)'),
+    note: __(
+      '(Remote core will continue to run, but internal core will restart)'
+    ),
   });
   if (confirmed) {
     store.dispatch({ type: TYPE.DISCONNECT_CORE });
@@ -712,6 +716,34 @@ function SettingsCore({
                 {__('Clear')}
               </Button>
             </SettingsField>
+            <SettingsField
+              connectLabel
+              label={__('Advance')}
+              subLabel={__('Allow advanced core options')}
+            >
+              <Field name="allowAdvancedCoreOptions" component={Switch.RF} />
+            </SettingsField>
+            <Field
+              name="allowAdvancedCoreOptions"
+              component={({ input: allowAdvancedCoreOptions }) =>
+                allowAdvancedCoreOptions.value && (
+                  <>
+                    {' '}
+                    <SettingsField
+                      connectLabel
+                      indent={1}
+                      label={__('Core Flags')}
+                      subLabel={__('Pass these flags to the core on start')}
+                    >
+                      <Field
+                        name="advancedCoreParams"
+                        component={TextField.RF}
+                      />
+                    </SettingsField>
+                  </>
+                )
+              }
+            />
 
             {liteMode && (
               <SettingsField
