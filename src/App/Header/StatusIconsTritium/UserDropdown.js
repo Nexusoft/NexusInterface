@@ -1,5 +1,4 @@
-import { Component } from 'react';
-import { connect, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 import { Link } from 'react-router-dom';
 
@@ -71,85 +70,79 @@ const Separator = styled.div(({ theme }) => ({
   borderBottom: `1px solid ${theme.mixer(0.125)}`,
 }));
 
-@connect((state) => ({
-  currentUser: selectUsername(state),
-  hasRecoveryPhrase: !!state.user.status?.recovery,
-  multiuser: !!state.core.systemInfo?.multiuser,
-  hasOtherSessions: Object.keys(state.sessions).length > 1,
-}))
-class LoggedInDropdown extends Component {
-  logOut = async () => {
-    this.props.closeDropdown();
-    await logOut();
-    showNotification('Logged out');
-  };
+function LoggedInDropdown({ closeDropdown }) {
+  const currentUser = useSelector(selectUsername);
+  const hasRecoveryPhrase = useSelector(
+    (state) => !!state.user.status?.recovery
+  );
+  const multiuser = useSelector((state) => !!state.core.systemInfo?.multiuser);
+  const hasOtherSessions = useSelector(
+    (state) => Object.keys(state.sessions).length > 1
+  );
 
-  render() {
-    const {
-      currentUser,
-      hasRecoveryPhrase,
-      closeDropdown,
-      multiuser,
-      hasOtherSessions,
-    } = this.props;
-    return (
-      <>
-        <CurrentUser>
-          <Username>{currentUser}</Username>
-        </CurrentUser>
-        <Separator />
-        <Link to="/User/Accounts" onClick={closeDropdown}>
-          <MenuItem>{__('Accounts')}</MenuItem>
-        </Link>
-        <Link to="/User/Tokens" onClick={closeDropdown}>
-          <MenuItem>{__('Tokens')}</MenuItem>
-        </Link>
-        <Separator />
-        {!hasRecoveryPhrase && (
-          <>
+  return (
+    <>
+      <CurrentUser>
+        <Username>{currentUser}</Username>
+      </CurrentUser>
+      <Separator />
+      <Link to="/User/Accounts" onClick={closeDropdown}>
+        <MenuItem>{__('Accounts')}</MenuItem>
+      </Link>
+      <Link to="/User/Tokens" onClick={closeDropdown}>
+        <MenuItem>{__('Tokens')}</MenuItem>
+      </Link>
+      <Separator />
+      {!hasRecoveryPhrase && (
+        <>
+          <MenuItem
+            onClick={() => {
+              openModal(SetRecoveryModal);
+              closeDropdown();
+            }}
+          >
+            {__('Set recovery phrase')}
+          </MenuItem>
+          <Separator />
+        </>
+      )}
+      {multiuser && (
+        <>
+          {hasOtherSessions && (
             <MenuItem
               onClick={() => {
-                openModal(SetRecoveryModal);
+                openModal(SwitchUserModal);
                 closeDropdown();
               }}
             >
-              {__('Set recovery phrase')}
+              {__('Switch user')}
             </MenuItem>
-            <Separator />
-          </>
-        )}
-        {multiuser && (
-          <>
-            {hasOtherSessions && (
-              <MenuItem
-                onClick={() => {
-                  openModal(SwitchUserModal);
-                  closeDropdown();
-                }}
-              >
-                {__('Switch user')}
-              </MenuItem>
-            )}
-            <MenuItem
-              onClick={() => {
-                openModal(LoginModal);
-                closeDropdown();
-              }}
-            >
-              {__('Log in to another user')}
-            </MenuItem>
-            <Separator />
-          </>
-        )}
-        <MenuItem onClick={this.logOut}>
-          {multiuser ? __('Log out of all users') : __('Log out')}
-        </MenuItem>
-      </>
-    );
-  }
+          )}
+          <MenuItem
+            onClick={() => {
+              openModal(LoginModal);
+              closeDropdown();
+            }}
+          >
+            {__('Log in to another user')}
+          </MenuItem>
+          <Separator />
+        </>
+      )}
+      <MenuItem
+        onClick={async () => {
+          closeDropdown();
+          await logOut();
+          showNotification('Logged out');
+        }}
+      >
+        {multiuser ? __('Log out of all users') : __('Log out')}
+      </MenuItem>
+    </>
+  );
 }
 
-const NotLoggedInDropdown = ({ closeDropdown }) => {
+function NotLoggedInDropdown({ closeDropdown }) {
   const multiuser = useSelector((state) => !!state.core.systemInfo?.multiuser);
   const hasOtherSessions = useSelector(
     (state) => Object.keys(state.sessions).length > 1
@@ -184,20 +177,17 @@ const NotLoggedInDropdown = ({ closeDropdown }) => {
       </MenuItem>
     </>
   );
-};
+}
 
-const UserDropdown = ({ loggedIn, closeDropdown, ...rest }) => (
-  <UserDropdownComponent {...rest}>
-    {loggedIn ? (
-      <LoggedInDropdown closeDropdown={closeDropdown} />
-    ) : (
-      <NotLoggedInDropdown closeDropdown={closeDropdown} />
-    )}
-  </UserDropdownComponent>
-);
-
-const mapStateToProps = (state) => ({
-  loggedIn: isLoggedIn(state),
-});
-
-export default connect(mapStateToProps)(UserDropdown);
+export default function UserDropdown({ closeDropdown, ...rest }) {
+  const loggedIn = useSelector(isLoggedIn);
+  return (
+    <UserDropdownComponent {...rest}>
+      {loggedIn ? (
+        <LoggedInDropdown closeDropdown={closeDropdown} />
+      ) : (
+        <NotLoggedInDropdown closeDropdown={closeDropdown} />
+      )}
+    </UserDropdownComponent>
+  );
+}

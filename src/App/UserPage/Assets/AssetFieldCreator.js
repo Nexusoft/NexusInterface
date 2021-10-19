@@ -1,5 +1,4 @@
-import { PureComponent } from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Field, getFormValues } from 'redux-form';
 import styled from '@emotion/styled';
 
@@ -94,78 +93,75 @@ const ConditionalFormField = ({ showLabel, label, children, ...rest }) =>
     children
   );
 
-@connect((state, props) => ({
-  fieldValue: getDeep(getFormValues(props.form)(state), props.fieldName),
-}))
-class AssetFieldCreator extends PureComponent {
-  render() {
-    const { fieldName, first, fieldValue, remove, onlyField } = this.props;
-    const lengthDisabled = !(
-      fieldValue.mutable && fieldValue.type === 'string'
-    );
+export default function AssetFieldCreator({
+  form,
+  fieldName,
+  first,
+  remove,
+  onlyField,
+}) {
+  const fieldValue = useSelector((state) =>
+    getDeep(getFormValues(form)(state), fieldName)
+  );
+  const lengthDisabled = !(fieldValue.mutable && fieldValue.type === 'string');
 
-    return (
-      <FieldWrapper className={first ? undefined : 'mt1'}>
-        <ConditionalFormField showLabel={first} label={__('Name')}>
-          <Field
-            name={`${fieldName}.name`}
-            component={TextField.RF}
-            placeholder={__('Field name')}
-          />
-        </ConditionalFormField>
-        <ConditionalFormField showLabel={first} label={__('Value')}>
-          <Field
-            name={`${fieldName}.value`}
-            component={TextField.RF}
-            placeholder={__('Field value')}
-            type={
-              assetNumberTypes.includes(fieldValue.type) ? 'number' : 'text'
-            }
-            min={assetNumberTypes.includes(fieldValue.type) ? 0 : undefined}
-          />
-        </ConditionalFormField>
-        <ConditionalFormField showLabel={first} label={__('Mutable')}>
-          <SwitchWrapper>
-            <Field name={`${fieldName}.mutable`} component={Switch.RF} />
-          </SwitchWrapper>
-        </ConditionalFormField>
-        <ConditionalFormField showLabel={first} label={__('Type')}>
-          <Field
-            name={`${fieldName}.type`}
-            component={Select.RF}
-            options={typeOptions}
-          />
-        </ConditionalFormField>
+  return (
+    <FieldWrapper className={first ? undefined : 'mt1'}>
+      <ConditionalFormField showLabel={first} label={__('Name')}>
+        <Field
+          name={`${fieldName}.name`}
+          component={TextField.RF}
+          placeholder={__('Field name')}
+        />
+      </ConditionalFormField>
+      <ConditionalFormField showLabel={first} label={__('Value')}>
+        <Field
+          name={`${fieldName}.value`}
+          component={TextField.RF}
+          placeholder={__('Field value')}
+          type={assetNumberTypes.includes(fieldValue.type) ? 'number' : 'text'}
+          min={assetNumberTypes.includes(fieldValue.type) ? 0 : undefined}
+        />
+      </ConditionalFormField>
+      <ConditionalFormField showLabel={first} label={__('Mutable')}>
+        <SwitchWrapper>
+          <Field name={`${fieldName}.mutable`} component={Switch.RF} />
+        </SwitchWrapper>
+      </ConditionalFormField>
+      <ConditionalFormField showLabel={first} label={__('Type')}>
+        <Field
+          name={`${fieldName}.type`}
+          component={Select.RF}
+          options={typeOptions}
+        />
+      </ConditionalFormField>
 
-        <ConditionalFormField
-          showLabel={first}
-          label={
-            <span>
-              <span className="v-align">{__('Max. length')}</span>
-              <QuestionCircle
-                tooltip={__('Only applicable to mutable string fields')}
-              />
-            </span>
-          }
-          className={lengthDisabled ? 'dim' : undefined}
-        >
-          <Field
-            name={`${fieldName}.maxlength`}
-            type="number"
-            component={TextField.RF}
-            disabled={lengthDisabled}
-            placeholder={lengthDisabled ? 'N/A' : __('Unlimited')}
-          />
-        </ConditionalFormField>
+      <ConditionalFormField
+        showLabel={first}
+        label={
+          <span>
+            <span className="v-align">{__('Max. length')}</span>
+            <QuestionCircle
+              tooltip={__('Only applicable to mutable string fields')}
+            />
+          </span>
+        }
+        className={lengthDisabled ? 'dim' : undefined}
+      >
+        <Field
+          name={`${fieldName}.maxlength`}
+          type="number"
+          component={TextField.RF}
+          disabled={lengthDisabled}
+          placeholder={lengthDisabled ? 'N/A' : __('Unlimited')}
+        />
+      </ConditionalFormField>
 
-        {!onlyField && (
-          <Tooltip.Trigger tooltip={__('Remove field')}>
-            <RemoveButton onClick={remove}>✕</RemoveButton>
-          </Tooltip.Trigger>
-        )}
-      </FieldWrapper>
-    );
-  }
+      {!onlyField && (
+        <Tooltip.Trigger tooltip={__('Remove field')}>
+          <RemoveButton onClick={remove}>✕</RemoveButton>
+        </Tooltip.Trigger>
+      )}
+    </FieldWrapper>
+  );
 }
-
-export default AssetFieldCreator;

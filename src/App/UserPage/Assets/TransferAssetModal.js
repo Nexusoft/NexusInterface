@@ -100,17 +100,19 @@ class TransferAssetForm extends Component {
   }
 }
 
-const TransferAssetModal = ({ asset }) => (
-  <ControlledModal maxWidth={600}>
-    {(closeModal) => (
-      <>
-        <ControlledModal.Header>{__('Transfer asset')}</ControlledModal.Header>
-        <ControlledModal.Body>
-          <TransferAssetForm closeModal={closeModal} asset={asset} />
-        </ControlledModal.Body>
-      </>
-    )}
-  </ControlledModal>
-);
-
-export default TransferAssetModal;
+export default function TransferAssetModal({ asset }) {
+  return (
+    <ControlledModal maxWidth={600}>
+      {(closeModal) => (
+        <>
+          <ControlledModal.Header>
+            {__('Transfer asset')}
+          </ControlledModal.Header>
+          <ControlledModal.Body>
+            <TransferAssetForm closeModal={closeModal} asset={asset} />
+          </ControlledModal.Body>
+        </>
+      )}
+    </ControlledModal>
+  );
+}

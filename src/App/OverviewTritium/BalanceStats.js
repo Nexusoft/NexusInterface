@@ -107,25 +107,25 @@ export function NXSBalanceStat() {
 }
 
 export function NXSFiatBalanceStat() {
-  const fiatCurrency = useSelector((state) => state.settings.fiatCurrency);
   const [nxsBalances] = useSelector(selectBalances);
   const price = useSelector((state) => state.market?.price);
+  const currency = useSelector((state) => state.market?.currency);
 
   return (
     <Stat
       linkTo="/Transactions"
       label={
         <>
-          {__('NXS Balance')} ({fiatCurrency})
+          {__('NXS Balance')} ({currency})
         </>
       }
-      icon={currencyIcons(fiatCurrency)}
+      icon={currencyIcons(currency)}
     >
       <BalanceValue>
         {price && nxsBalances
           ? formatCurrency(
               (nxsBalances.available + nxsBalances.stake) * price,
-              fiatCurrency
+              currency
             )
           : blank}
       </BalanceValue>
@@ -137,7 +137,7 @@ export function FeaturedTokenBalanceStat() {
   const theme = useSelector((state) => state.theme);
   const [nxsBalances, tokenBalances] = useSelector(selectBalances);
   const featuredToken = theme.featuredTokenName
-    ? tokenBalances?.find((token) => token.name === theme.featuredTokenName)
+    ? tokenBalances?.find((token) => token.ticker === theme.featuredTokenName)
     : undefined;
 
   return (

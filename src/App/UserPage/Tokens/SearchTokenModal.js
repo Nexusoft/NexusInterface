@@ -1,4 +1,3 @@
-import { Component } from 'react';
 import { reduxForm, Field } from 'redux-form';
 
 import ControlledModal from 'components/ControlledModal';
@@ -17,7 +16,7 @@ import TokenDetailsModal from './TokenDetailsModal';
 
 __ = __context('User.Tokens.SearchToken');
 
-@reduxForm({
+const formOptions = {
   form: 'search_tokens',
   destroyOnUnmount: true,
   initialValues: {
@@ -55,61 +54,36 @@ __ = __context('User.Tokens.SearchToken');
     removeModal(props.modalId);
     openModal(TokenDetailsModal, { token: result });
   },
-})
-class SearchTokenModal extends Component {
-  async openSearchedDetailsModal(props) {
-    try {
-      const token = await apiPost(
-        'tokens/get/token',
-        props.tokenName
-          ? { name: props.tokenName }
-          : { address: props.tokenAddress }
-      );
-      openModal(TokenDetailsModal, { token });
-    } catch (e) {
-      console.log(e);
-      openModal(ErrorDialog, {
-        message: __('Cannot find Token'),
-        note: e.message + ' ' + e.code,
-      });
-    }
-  }
+};
 
-  render() {
-    const { handleSubmit, submitting } = this.props;
-    return (
-      <ControlledModal
-        assignClose={(closeModal) => {
-          this.closeModal = closeModal;
-        }}
-        maxWidth={600}
-      >
-        <ControlledModal.Header>{__('Look up token')}</ControlledModal.Header>
-        <ControlledModal.Body>
-          <form onSubmit={handleSubmit}>
-            <FormField connectLabel label={__('Name or address')}>
-              <Field
-                name="searchValue"
-                component={TextField.RF}
-                placeholder={__('Token name/address')}
-                left={<Icon icon={searchIcon} className="mr0_4" />}
-              />
-            </FormField>
-            <div className="flex justify-end">
-              <Button
-                style={{ marginTop: '2em' }}
-                skin="primary"
-                type="submit"
-                disabled={submitting}
-              >
-                {__('Look up')}
-              </Button>
-            </div>
-          </form>
-        </ControlledModal.Body>
-      </ControlledModal>
-    );
-  }
+function SearchTokenModal({ handleSubmit, submitting }) {
+  return (
+    <ControlledModal maxWidth={600}>
+      <ControlledModal.Header>{__('Look up token')}</ControlledModal.Header>
+      <ControlledModal.Body>
+        <form onSubmit={handleSubmit}>
+          <FormField connectLabel label={__('Name or address')}>
+            <Field
+              name="searchValue"
+              component={TextField.RF}
+              placeholder={__('Token name/address')}
+              left={<Icon icon={searchIcon} className="mr0_4" />}
+            />
+          </FormField>
+          <div className="flex justify-end">
+            <Button
+              style={{ marginTop: '2em' }}
+              skin="primary"
+              type="submit"
+              disabled={submitting}
+            >
+              {__('Look up')}
+            </Button>
+          </div>
+        </form>
+      </ControlledModal.Body>
+    </ControlledModal>
+  );
 }
 
-export default SearchTokenModal;
+export default reduxForm(formOptions)(SearchTokenModal);

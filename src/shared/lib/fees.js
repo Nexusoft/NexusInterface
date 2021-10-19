@@ -1,8 +1,11 @@
 export const asset = (bytes) => 0.01 * bytes;
 
-export const token = (supply, decimal) => {
+const roundTo6DecimalPlaces = (number) =>
+  Math.round(number * 1000000) / 1000000;
+
+export const createTokenFee = (supply, decimal) => {
   const totalSupply = supply * Math.pow(10, decimal || 0);
-  const fee = (Math.log10(totalSupply) - 2) * 100;
+  const fee = roundTo6DecimalPlaces((Math.log10(totalSupply) - 2) * 100);
   return fee ? (fee <= 0 ? 1 : fee) : 1;
 };
 

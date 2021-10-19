@@ -41,10 +41,6 @@ __ = __context('EditAsset');
   onSubmitFail: errorHandler(__('Error updating asset')),
 })
 class EditAssetForm extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     const { handleSubmit, submitting, mutableFields, asset } = this.props;
     const data = getAssetData(asset);
@@ -112,7 +108,7 @@ const getInitialValues = (mutableFields) =>
     {}
   );
 
-const EditAssetModal = ({ schema, asset }) => {
+export default function EditAssetModal({ schema, asset }) {
   const mutableFields = getMutableFields(schema);
   return (
     <ControlledModal>
@@ -131,6 +127,4 @@ const EditAssetModal = ({ schema, asset }) => {
       )}
     </ControlledModal>
   );
-};
-
-export default EditAssetModal;
+}

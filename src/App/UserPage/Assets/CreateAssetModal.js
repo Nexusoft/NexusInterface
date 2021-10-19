@@ -100,10 +100,6 @@ const AssetFields = ({ fields, form, removeField }) =>
   onSubmitFail: errorHandler(__('Error creating asset')),
 })
 class CreateAssetForm extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   addField = () => {
     this.props.array.push('fields', createInitialField());
   };
@@ -190,19 +186,19 @@ class CreateAssetForm extends Component {
   }
 }
 
-const CreateAssetModal = () => (
-  <ControlledModal style={{ width: '80%' }} maxWidth={900}>
-    {(closeModal) => (
-      <>
-        <ControlledModal.Header>
-          {__('Create a new asset')}
-        </ControlledModal.Header>
-        <ControlledModal.Body>
-          <CreateAssetForm closeModal={closeModal} />
-        </ControlledModal.Body>
-      </>
-    )}
-  </ControlledModal>
-);
-
-export default CreateAssetModal;
+export default function CreateAssetModal() {
+  return (
+    <ControlledModal style={{ width: '80%' }} maxWidth={900}>
+      {(closeModal) => (
+        <>
+          <ControlledModal.Header>
+            {__('Create a new asset')}
+          </ControlledModal.Header>
+          <ControlledModal.Body>
+            <CreateAssetForm closeModal={closeModal} />
+          </ControlledModal.Body>
+        </>
+      )}
+    </ControlledModal>
+  );
+}

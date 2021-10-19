@@ -29,7 +29,7 @@ const selectAccountTokens = memoize((accounts, ownedTokens) =>
       !ownedTokens.some((token) => token.address === account.token)
     ) {
       tokens.push({
-        name: account.token_name,
+        ticker: account.ticker || account.token_name,
         address: account.token,
       });
     }

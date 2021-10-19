@@ -37,10 +37,10 @@ const Twinkling = styled.div({
  * Returns the Starry Night Sky Background
  *
  */
-const StarrySky = () => (
-  <Stars>
-    <Twinkling />
-  </Stars>
-);
-
-export default StarrySky;
+export default function StarrySky() {
+  return (
+    <Stars>
+      <Twinkling />
+    </Stars>
+  );
+}

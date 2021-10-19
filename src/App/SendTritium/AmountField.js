@@ -1,11 +1,11 @@
 // External
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Field } from 'redux-form';
 import styled from '@emotion/styled';
 
 // Internal
 import TextField from 'components/TextField';
+import Tooltip from 'components/Tooltip';
 import FormField from 'components/FormField';
 import Link from 'components/Link';
 import TokenName from 'components/TokenName';
@@ -22,13 +22,6 @@ const SendAmountField = styled.div({
   flex: 1,
 });
 
-const SendAmountEqual = styled.div({
-  display: 'flex',
-  alignItems: 'flex-end',
-  padding: '.1em .6em',
-  fontSize: '1.2em',
-});
-
 const SendAllLink = styled(Link)({
   textTransform: 'uppercase',
   marginLeft: '1em',
@@ -36,147 +29,79 @@ const SendAllLink = styled(Link)({
   verticalAlign: 'middle',
 });
 
-const TokenAddress = styled.a(({ theme }) => ({
-  textTransform: 'none',
-  marginLeft: '1em',
-  color: theme.mixer(0.5),
-}));
-
-const mapStateToProps = ({ settings: { fiatCurrency }, market }) => ({
-  fiatCurrency: fiatCurrency,
-  price: market?.price,
-});
-
-/**
- * The Amount Feild on the Send Page
- *
- * @class AmountField
- * @extends {Component}
- */
-@connect(mapStateToProps)
-class AmountField extends Component {
-  /**
-   * Convert the NXS to the User's currency
-   *
-   * @memberof AmountField
-   */
-  nxsToFiat = (e, value) => {
+const nxsToFiat = (value, price) => {
+  if (price) {
     if (floatRegex.test(value)) {
       const nxs = parseFloat(value);
-      const { nxsFiatPrice } = this.props;
-      if (nxsFiatPrice) {
-        const fiat = nxs * nxsFiatPrice;
-        this.props.change(this.fiatAmountFieldName(), fiat.toFixed(2));
-      }
+      const fiat = nxs * price;
+      return fiat.toFixed(2);
     }
-  };
+  }
+  return null;
+};
 
-  /**
-   * Returns the fiat from NXS
-   *
-   * @memberof AmountField
-   */
-  fiatToNxs = (e, value) => {
-    if (floatRegex.test(value)) {
-      const fiat = parseFloat(value);
-      const { nxsFiatPrice } = this.props;
-      if (nxsFiatPrice) {
-        const nxs = fiat / nxsFiatPrice;
-        this.props.change(this.amountFieldName(), nxs.toFixed(5));
-      }
-    }
-  };
+function AmountTextField({ input, source, ...rest }) {
+  const price = useSelector((state) => state.market?.price);
+  const currency = useSelector((state) => state.market?.currency);
+  const isInNXS = (source?.account?.token || source?.token?.address) === '0';
+  const fiat = isInNXS && nxsToFiat(input.value, price);
 
-  /**
-   * Returns the Amount Feild Name
-   *
-   * @memberof AmountField
-   */
-  amountFieldName = () =>
-    (this.props.parentFieldName ? this.props.parentFieldName + '.' : '') +
-    'amount';
-  /**
-   * Returns the Fiat Amount Name
-   *
-   * @memberof AmountField
-   */
-  fiatAmountFieldName = () =>
-    (this.props.parentFieldName ? this.props.parentFieldName + '.' : '') +
-    'fiatAmount';
+  return (
+    <Tooltip.Trigger tooltip={fiat ? `≈ ${fiat} ${currency}` : null}>
+      <TextField.RF input={input} {...rest} />
+    </Tooltip.Trigger>
+  );
+}
 
-  sendAll = (evt) => {
+export default function AmountField({ source, parentFieldName, change }) {
+  const fullAmount = (source?.account || source?.token)?.balance;
+
+  const amountFieldName = () =>
+    (parentFieldName ? parentFieldName + '.' : '') + 'amount';
+
+  const sendAll = (evt) => {
     evt.preventDefault();
-    const { change, fullAmount } = this.props;
-    change(this.amountFieldName(), fullAmount);
-    this.nxsToFiat(null, fullAmount);
+    change(amountFieldName(), fullAmount);
   };
 
-  /**
-   * Component's Renderable JSX
-   *
-   * @returns
-   * @memberof AmountField
-   */
-  render() {
-    const { source } = this.props;
-
-    return (
-      <SendAmount>
-        <SendAmountField>
-          <FormField
-            connectLabel
-            label={
-              <span style={{ whiteSpace: 'nowrap' }}>
-                <span className="v-align">
-                  {__('Amount')}
-                  {!!source && (
-                    <span>
-                      &nbsp;(
-                      {source.token ? (
-                        <TokenName token={source.token} />
-                      ) : (
-                        <TokenName account={source.account} />
-                      )}
-                      )
-                    </span>
-                  )}
-                </span>
-                {!!this.props.fullAmount && (
-                  <SendAllLink as="a" onClick={this.sendAll}>
-                    {__('Send all')}
-                  </SendAllLink>
+  return (
+    <SendAmount>
+      <SendAmountField>
+        <FormField
+          connectLabel
+          label={
+            <span style={{ whiteSpace: 'nowrap' }}>
+              <span className="v-align">
+                {__('Amount')}
+                {!!source && (
+                  <span>
+                    &nbsp;(
+                    {source.token ? (
+                      <TokenName token={source.token} />
+                    ) : (
+                      <TokenName account={source.account} />
+                    )}
+                    )
+                  </span>
                 )}
               </span>
-            }
-          >
-            <Field
-              component={TextField.RF}
-              skin="filled-inverted"
-              name={this.amountFieldName()}
-              placeholder="0.00000"
-              onChange={this.nxsToFiat}
-            />
-          </FormField>
-        </SendAmountField>
-
-        {/* {token.address === '0' ? (
-          <>
-            <SendAmountEqual>=</SendAmountEqual>
-
-            <SendAmountField>
-              <FormField connectLabel label={this.props.fiatCurrency}>
-                <Field
-                  component={TextField.RF}
-                  name={this.fiatAmountFieldName()}
-                  placeholder="0.00"
-                  onChange={this.fiatToNxs}
-                />
-              </FormField>
-            </SendAmountField>
-          </>
-        ) : null} */}
-      </SendAmount>
-    );
-  }
+              {!!fullAmount && (
+                <SendAllLink as="a" onClick={sendAll}>
+                  {__('All')}
+                </SendAllLink>
+              )}
+            </span>
+          }
+        >
+          <Field
+            component={AmountTextField}
+            skin="filled-inverted"
+            name={amountFieldName()}
+            placeholder="0.00000"
+            source={source}
+          />
+        </FormField>
+      </SendAmountField>
+    </SendAmount>
+  );
 }
-export default AmountField;

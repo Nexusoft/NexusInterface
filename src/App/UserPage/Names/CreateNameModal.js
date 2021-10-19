@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
 
@@ -34,43 +34,41 @@ const NameTypes = styled.div({
   gridTemplateColumns: '1fr 1fr 1fr',
 });
 
-const NameTypeSelect = ({ input, hasNamespaces }) => (
-  <NameTypes>
-    <Button
-      uppercase
-      skin={input.value === 'local' ? 'filled-primary' : 'default'}
-      onClick={() => {
-        input.onChange('local');
-      }}
-    >
-      {__('Local')}
-    </Button>
-    <Button
-      uppercase
-      skin={input.value === 'namespaced' ? 'filled-primary' : 'default'}
-      disabled={!hasNamespaces}
-      onClick={() => {
-        input.onChange('namespaced');
-      }}
-    >
-      {__('Namespaced')}
-    </Button>
-    <Button
-      uppercase
-      skin={input.value === 'global' ? 'filled-primary' : 'default'}
-      onClick={() => {
-        input.onChange('global');
-      }}
-    >
-      {__('Global')}
-    </Button>
-  </NameTypes>
-);
+function NameTypeSelect({ input, hasNamespaces }) {
+  return (
+    <NameTypes>
+      <Button
+        uppercase
+        skin={input.value === 'local' ? 'filled-primary' : 'default'}
+        onClick={() => {
+          input.onChange('local');
+        }}
+      >
+        {__('Local')}
+      </Button>
+      <Button
+        uppercase
+        skin={input.value === 'namespaced' ? 'filled-primary' : 'default'}
+        disabled={!hasNamespaces}
+        onClick={() => {
+          input.onChange('namespaced');
+        }}
+      >
+        {__('Namespaced')}
+      </Button>
+      <Button
+        uppercase
+        skin={input.value === 'global' ? 'filled-primary' : 'default'}
+        onClick={() => {
+          input.onChange('global');
+        }}
+      >
+        {__('Global')}
+      </Button>
+    </NameTypes>
+  );
+}
 
-@connect((state) => ({
-  username: selectUsername(state),
-  namespaces: state.user.namespaces,
-}))
 @reduxForm({
   form: 'create-name',
   destroyOnUnmount: false,
@@ -236,19 +234,25 @@ class CreateNameForm extends Component {
   }
 }
 
-const CreateNameModal = () => (
-  <ControlledModal maxWidth={500}>
-    {(closeModal) => (
-      <>
-        <ControlledModal.Header>
-          {__('Create a new name')}
-        </ControlledModal.Header>
-        <ControlledModal.Body>
-          <CreateNameForm closeModal={closeModal} />
-        </ControlledModal.Body>
-      </>
-    )}
-  </ControlledModal>
-);
-
-export default CreateNameModal;
+export default function CreateNameModal() {
+  const username = useSelector(selectUsername);
+  const namespaces = useSelector((state) => state.user.namespaces);
+  return (
+    <ControlledModal maxWidth={500}>
+      {(closeModal) => (
+        <>
+          <ControlledModal.Header>
+            {__('Create a new name')}
+          </ControlledModal.Header>
+          <ControlledModal.Body>
+            <CreateNameForm
+              closeModal={closeModal}
+              username={username}
+              namespaces={namespaces}
+            />
+          </ControlledModal.Body>
+        </>
+      )}
+    </ControlledModal>
+  );
+}

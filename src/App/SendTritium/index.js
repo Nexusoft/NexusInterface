@@ -1,5 +1,5 @@
 // External Dependencies
-import { Component } from 'react';
+import { useEffect } from 'react';
 
 // Internal Global Dependencies
 import GA from 'lib/googleAnalytics';
@@ -15,38 +15,17 @@ import sendIcon from 'icons/send.svg';
 
 __ = __context('Send');
 
-/**
- * Send Page
- *
- * @class Send
- * @extends {Component}
- */
-class Send extends Component {
-  /**
-   * Component Mount Callback
-   *
-   * @memberof Send
-   */
-  componentDidMount() {
-    loadAccounts().catch(() => {});
-    loadOwnedTokens().catch(() => {});
+export default function Send() {
+  useEffect(() => {
+    loadAccounts();
+    loadOwnedTokens();
     GA.SendScreen('Send');
-  }
-
-  /**
-   * Component's Renderable JSX
-   *
-   * @returns
-   * @memberof Send
-   */
-  render() {
-    return (
-      <Panel icon={sendIcon} title={__('Send')}>
-        <RequireLoggedIn>
-          <SendForm />
-        </RequireLoggedIn>
-      </Panel>
-    );
-  }
+  }, []);
+  return (
+    <Panel icon={sendIcon} title={__('Send')}>
+      <RequireLoggedIn>
+        <SendForm />
+      </RequireLoggedIn>
+    </Panel>
+  );
 }
-export default Send;

@@ -42,7 +42,7 @@ const getCachedSVG = (() => {
       : cache[path];
 })();
 
-const ModuleIcon = ({ module, ...rest }) => {
+export default function ModuleIcon({ module, ...rest }) {
   if (module.iconPath) {
     if (module.iconPath.endsWith('.svg')) {
       const iconContent = getCachedSVG(module.iconPath);
@@ -62,6 +62,4 @@ const ModuleIcon = ({ module, ...rest }) => {
   }
 
   return <Icon icon={legoBlockIcon} {...rest} />;
-};
-
-export default ModuleIcon;
+}

@@ -1,5 +1,5 @@
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 
 import Icon from 'components/Icon';
@@ -20,44 +20,32 @@ const EmptyMessage = styled.div(({ theme }) => ({
   color: theme.mixer(0.5),
 }));
 
-@connect((state) => ({
-  assets: state.user.assets,
-}))
-class Assets extends Component {
-  constructor(props) {
-    super(props);
+export default function Assets() {
+  const assets = useSelector((state) => state.user.assets);
+  useEffect(() => {
     switchUserTab('Assets');
-  }
-
-  componentDidMount() {
     loadAssets();
-  }
+  }, []);
 
-  render() {
-    const { assets } = this.props;
+  return (
+    <TabContentWrapper maxWidth={400}>
+      <Button
+        wide
+        onClick={() => {
+          openModal(CreateAssetModal);
+        }}
+      >
+        <Icon icon={plusIcon} className="mr0_4" />
+        <span className="v-align">{__('Create new asset')}</span>
+      </Button>
 
-    return (
-      <TabContentWrapper maxWidth={400}>
-        <Button
-          wide
-          onClick={() => {
-            openModal(CreateAssetModal);
-          }}
-        >
-          <Icon icon={plusIcon} className="mr0_4" />
-          <span className="v-align">{__('Create new asset')}</span>
-        </Button>
-
-        <div className="mt1">
-          {!!assets && assets.length > 0 ? (
-            assets.map((asset) => <Asset key={asset.address} asset={asset} />)
-          ) : (
-            <EmptyMessage>{__("You don't own any asset")}</EmptyMessage>
-          )}
-        </div>
-      </TabContentWrapper>
-    );
-  }
+      <div className="mt1">
+        {!!assets && assets.length > 0 ? (
+          assets.map((asset) => <Asset key={asset.address} asset={asset} />)
+        ) : (
+          <EmptyMessage>{__("You don't own any asset")}</EmptyMessage>
+        )}
+      </div>
+    </TabContentWrapper>
+  );
 }
-
-export default Assets;

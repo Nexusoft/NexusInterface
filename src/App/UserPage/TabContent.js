@@ -1,4 +1,4 @@
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 import { Route, Redirect, Switch } from 'react-router';
 
@@ -16,29 +16,29 @@ const TabContentComponent = styled.div({
   overflow: 'auto',
 });
 
-let UserRedirect = ({ lastActiveTab, match }) => (
-  <Redirect
-    exact
-    from={`${match.path}/`}
-    to={`${match.path}/${lastActiveTab}`}
-  />
-);
-UserRedirect = connect(({ ui: { user: { lastActiveTab } } }) => ({
-  lastActiveTab,
-}))(UserRedirect);
+function UserRedirect({ match }) {
+  const lastActiveTab = useSelector((state) => state.ui.user.lastActiveTab);
+  return (
+    <Redirect
+      exact
+      from={`${match.path}/`}
+      to={`${match.path}/${lastActiveTab}`}
+    />
+  );
+}
 
-const TabContent = ({ match }) => (
-  <TabContentComponent>
-    <Switch>
-      <Route path={`${match.url}/Staking`} component={Staking} />
-      <Route path={`${match.url}/Accounts`} component={Accounts} />
-      <Route path={`${match.url}/Tokens`} component={Tokens} />
-      <Route path={`${match.url}/Names`} component={Names} />
-      <Route path={`${match.url}/Namespaces`} component={Namespaces} />
-      <Route path={`${match.url}/Assets`} component={Assets} />
-      <UserRedirect match={match} />
-    </Switch>
-  </TabContentComponent>
-);
-
-export default TabContent;
+export default function TabContent({ match }) {
+  return (
+    <TabContentComponent>
+      <Switch>
+        <Route path={`${match.url}/Staking`} component={Staking} />
+        <Route path={`${match.url}/Accounts`} component={Accounts} />
+        <Route path={`${match.url}/Tokens`} component={Tokens} />
+        <Route path={`${match.url}/Names`} component={Names} />
+        <Route path={`${match.url}/Namespaces`} component={Namespaces} />
+        <Route path={`${match.url}/Assets`} component={Assets} />
+        <UserRedirect match={match} />
+      </Switch>
+    </TabContentComponent>
+  );
+}

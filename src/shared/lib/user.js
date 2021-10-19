@@ -113,10 +113,16 @@ export const logOut = async () => {
 export const unlockUser = async ({ pin, mining, staking, notifications }) => {
   const {
     settings: { enableMining },
+    user: { status },
   } = store.getState();
   return await callApi('users/unlock/user', {
     pin,
-    notifications: notifications !== undefined ? notifications : true,
+    notifications:
+      notifications !== undefined
+        ? notifications
+        : status?.unlocked?.notifications === true
+        ? false
+        : true,
     mining: mining !== undefined ? mining : !!enableMining,
     staking: staking !== undefined ? staking : false,
   });
@@ -282,12 +288,12 @@ async function shouldUnlockStaking({ stakeInfo, status }) {
     status?.unlocked.staking === false &&
     enableStaking
   ) {
-    if (stakeInfo?.new === false) {
+    if (!stakeInfo?.new) {
       return true;
     }
 
     if (
-      stakeInfo?.new === true &&
+      stakeInfo?.new &&
       stakeInfo?.balance &&
       !startStakingAsked &&
       !dontAskToStartStaking

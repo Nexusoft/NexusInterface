@@ -1,5 +1,5 @@
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 
 import Icon from 'components/Icon';
@@ -63,136 +63,127 @@ const EmptyMessage = styled(Item)(({ theme }) => ({
   color: theme.mixer(0.5),
 }));
 
-const Name = ({ nameRecord, username }) => (
-  <NameComponent
-    onClick={() => {
-      openModal(NameDetailsModal, {
-        nameRecord,
-      });
-    }}
-    onContextMenu={(e) => {
-      e.stopPropagation();
-      const template = [
-        {
-          id: 'view-details',
-          label: __('View name details'),
-          click: () => {
-            openModal(NameDetailsModal, { nameRecord });
-          },
-        },
-        {
-          id: 'change-register-address',
-          label: __('Change register address'),
-          click: () => {
-            openModal(ChangeRegisterAddressModal, { nameRecord });
-          },
-        },
-      ];
-      if (nameRecord.global || nameRecord.namespace) {
-        template.push({
-          id: 'transfer',
-          label: __('Transfer name'),
-          click: () => {
-            openModal(TransferNameModal, { nameRecord });
-          },
+function Name({ nameRecord, username }) {
+  return (
+    <NameComponent
+      onClick={() => {
+        openModal(NameDetailsModal, {
+          nameRecord,
         });
-      }
-      popupContextMenu(template);
-    }}
-  >
-    <span>
-      {!!nameRecord.namespace ? (
-        <Prefix>{nameRecord.namespace}::</Prefix>
-      ) : !nameRecord.global ? (
-        <Prefix>{username}:</Prefix>
-      ) : null}
-      {nameRecord.name}
-    </span>
-    <Types>
-      {!(nameRecord.register && nameRecord.register !== '0') && (
-        <Type>{__('Unused')}</Type>
-      )}
-      <Type>
-        {nameRecord.global
-          ? __('Global')
-          : nameRecord.namespace
-          ? __('Namespaced')
-          : __('Local')}
-      </Type>
-    </Types>
-  </NameComponent>
-);
-
-const selectNameRecords = memoize((nameRecords, showUnusedNames) =>
-  showUnusedNames
-    ? nameRecords
-    : nameRecords?.filter((nr) => nr.register && nr.register !== '0')
-);
-
-@connect((state) => ({
-  nameRecords: selectNameRecords(
-    state.user.nameRecords,
-    state.settings.showUnusedNames
-  ),
-  username: selectUsername(state),
-  showUnusedNames: state.settings.showUnusedNames,
-}))
-class Names extends Component {
-  constructor(props) {
-    super(props);
-    switchUserTab('Names');
-  }
-
-  componentDidMount() {
-    loadNameRecords();
-  }
-
-  render() {
-    const { nameRecords, username, showUnusedNames } = this.props;
-    const toggle = () => updateSettings({ showUnusedNames: !showUnusedNames });
-
-    console.log(this.props);
-    return (
-      <TabContentWrapper maxWidth={500}>
-        <Button
-          wide
-          onClick={() => {
-            openModal(CreateNameModal);
-          }}
-        >
-          <Icon icon={plusIcon} className="mr0_4" />
-          <span className="v-align">{__('Create new name')}</span>
-        </Button>
-
-        <div className="mt2">
-          <div className="flex center">
-            <Switch
-              style={{ fontSize: '.7em' }}
-              value={showUnusedNames}
-              onChange={toggle}
-            />
-            <span className="pointer ml0_4" onClick={toggle}>
-              {__('Show unused names')}
-            </span>
-          </div>
-
-          <div className="mt1">
-            {!!nameRecords && nameRecords.length > 0 ? (
-              nameRecords.map((nameRecord) => (
-                <Name
-                  key={nameRecord.address}
-                  nameRecord={nameRecord}
-                  username={username}
-                />
-              ))
-            ) : (
-              <EmptyMessage>{__("You don't own any name")}</EmptyMessage>
-            )}
-          </div>
-        </div>
-      </TabContentWrapper>
-    );
-  }
+      }}
+      onContextMenu={(e) => {
+        e.stopPropagation();
+        const template = [
+          {
+            id: 'view-details',
+            label: __('View name details'),
+            click: () => {
+              openModal(NameDetailsModal, { nameRecord });
+            },
+          },
+          {
+            id: 'change-register-address',
+            label: __('Change register address'),
+            click: () => {
+              openModal(ChangeRegisterAddressModal, { nameRecord });
+            },
+          },
+        ];
+        if (nameRecord.global || nameRecord.namespace) {
+          template.push({
+            id: 'transfer',
+            label: __('Transfer name'),
+            click: () => {
+              openModal(TransferNameModal, { nameRecord });
+            },
+          });
+        }
+        popupContextMenu(template);
+      }}
+    >
+      <span>
+        {!!nameRecord.namespace ? (
+          <Prefix>{nameRecord.namespace}::</Prefix>
+        ) : !nameRecord.global ? (
+          <Prefix>{username}:</Prefix>
+        ) : null}
+        {nameRecord.name}
+      </span>
+      <Types>
+        {!(nameRecord.register && nameRecord.register !== '0') && (
+          <Type>{__('Unused')}</Type>
+        )}
+        <Type>
+          {nameRecord.global
+            ? __('Global')
+            : nameRecord.namespace
+            ? __('Namespaced')
+            : __('Local')}
+        </Type>
+      </Types>
+    </NameComponent>
+  );
 }
 
-export default Names;
+const selectNameRecords = memoize(
+  (nameRecords, showUnusedNames) =>
+    showUnusedNames
+      ? nameRecords
+      : nameRecords?.filter((nr) => nr.register && nr.register !== '0'),
+  (state) => [state.user.nameRecords, state.settings.showUnusedNames]
+);
+
+export default function Names() {
+  const nameRecords = useSelector(selectNameRecords);
+  const username = useSelector(selectUsername);
+  const showUnusedNames = useSelector(
+    (state) => state.settings.showUnusedNames
+  );
+  useEffect(() => {
+    switchUserTab('Names');
+    loadNameRecords();
+  }, []);
+
+  const toggle = () => updateSettings({ showUnusedNames: !showUnusedNames });
+
+  return (
+    <TabContentWrapper maxWidth={500}>
+      <Button
+        wide
+        onClick={() => {
+          openModal(CreateNameModal);
+        }}
+      >
+        <Icon icon={plusIcon} className="mr0_4" />
+        <span className="v-align">{__('Create new name')}</span>
+      </Button>
+
+      <div className="mt2">
+        <div className="flex center">
+          <Switch
+            style={{ fontSize: '.7em' }}
+            value={showUnusedNames}
+            onChange={toggle}
+          />
+          <span className="pointer ml0_4" onClick={toggle}>
+            {__('Show unused names')}
+          </span>
+        </div>
+
+        <div className="mt1">
+          {!!nameRecords && nameRecords.length > 0 ? (
+            nameRecords.map((nameRecord) => (
+              <Name
+                key={nameRecord.address}
+                nameRecord={nameRecord}
+                username={username}
+              />
+            ))
+          ) : (
+            <EmptyMessage>{__("You don't own any name")}</EmptyMessage>
+          )}
+        </div>
+      </div>
+    </TabContentWrapper>
+  );
+}

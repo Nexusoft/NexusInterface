@@ -1,6 +1,5 @@
 // External
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 
 // Internal
@@ -90,52 +89,26 @@ const LatestVersion = styled.span(({ theme }) => ({
   fontSize: '.9em',
 }));
 
-const mapStateToProps = (state, props) => ({
-  disabledModules: state.settings.disabledModules,
-});
+export default function Module({ module, ...rest }) {
+  const disabledModules = useSelector(
+    (state) => state.settings.disabledModules
+  );
 
-/**
- * Each Module On the list of installed modules
- *
- * @class Module
- * @extends {React.Component}
- */
-@connect(mapStateToProps)
-class Module extends Component {
-  /**
-   * Enable this module
-   *
-   * @memberof Module
-   */
-  enableModule = () => {
+  const enableModule = () => {
     updateSettings({
-      disabledModules: this.props.disabledModules.filter(
-        (moduleName) => moduleName !== this.props.module.info.name
+      disabledModules: disabledModules.filter(
+        (moduleName) => moduleName !== module.info.name
       ),
     });
   };
 
-  /**
-   * Disable this module
-   *
-   * @memberof Module
-   */
-  disableModule = () => {
+  const disableModule = () => {
     updateSettings({
-      disabledModules: [
-        ...this.props.disabledModules,
-        this.props.module.info.name,
-      ],
+      disabledModules: [...disabledModules, module.info.name],
     });
   };
 
-  /**
-   * Toggle Module on or off
-   *
-   * @memberof Module
-   */
-  toggleModule = async () => {
-    const { module } = this.props;
+  const toggleModule = async () => {
     if (module.disallowed) return;
 
     if (module.enabled) {
@@ -148,7 +121,7 @@ class Module extends Component {
         ),
       });
       if (confirmed) {
-        this.disableModule();
+        disableModule();
         document.location.reload();
       }
     } else {
@@ -161,114 +134,95 @@ class Module extends Component {
         ),
       });
       if (confirmed) {
-        this.enableModule();
+        enableModule();
         document.location.reload();
       }
     }
   };
 
-  /**
-   * Open the details modal for the module
-   *
-   * @memberof Module
-   */
-  openModuleDetails = () => {
+  const openModuleDetails = () => {
     openModal(ModuleDetailsModal, {
-      module: this.props.module,
+      module,
     });
   };
 
-  /**
-   * Component's Renderable JSX
-   *
-   * @returns {JSX}
-   * @memberof Module
-   */
-  render() {
-    const { module, ...rest } = this.props;
+  return (
+    <ModuleComponent {...rest}>
+      <ModuleLogo
+        className={module.disallowed ? 'dim' : undefined}
+        onClick={openModuleDetails}
+      >
+        <ModuleIcon module={module} />
+      </ModuleLogo>
 
-    return (
-      <ModuleComponent {...rest}>
-        <ModuleLogo
-          className={module.disallowed ? 'dim' : undefined}
-          onClick={this.openModuleDetails}
-        >
-          <ModuleIcon module={module} />
-        </ModuleLogo>
-
-        <ModuleInfo onClick={this.openModuleDetails}>
-          <div className={module.disallowed ? 'dim' : undefined}>
-            <ModuleName>{module.info.displayName}</ModuleName>
-            {!!module.info.version && (
-              <ModuleVersion>v{module.info.version}</ModuleVersion>
-            )}
-            {!module.development && (
-              <>
-                {module.incompatible && (
-                  <Tooltip.Trigger
-                    tooltip={__(
-                      'This module was built for an incompatible wallet version'
-                    )}
-                  >
-                    <Icon icon={warningIcon} className="error ml0_4" />
-                  </Tooltip.Trigger>
-                )}
-                {(!module.repository || !module.repoOnline) && (
-                  <Tooltip.Trigger tooltip={__('Module is not open source')}>
-                    <Icon icon={warningIcon} className="error ml0_4" />
-                  </Tooltip.Trigger>
-                )}
-                {!!module.repository && !module.repoVerified && (
-                  <Tooltip.Trigger
-                    tooltip={__(
-                      'The provided repository is not verified to be the real source code of this module'
-                    )}
-                  >
-                    <Icon icon={warningIcon} className="error ml0_4" />
-                  </Tooltip.Trigger>
-                )}
-                {module.hasNewVersion && (
-                  <LatestVersion>
-                    {__('%{version} update available', {
-                      version: 'v' + module.latestVersion,
-                    })}
-                  </LatestVersion>
-                )}
-              </>
-            )}
-          </div>
-
-          <div>
-            <ModuleDescription
-              className={module.disallowed ? 'dim' : undefined}
-            >
-              {module.info.description}
-            </ModuleDescription>
-          </div>
-        </ModuleInfo>
-
-        <ModuleControls>
-          {module.development ? (
-            <Badge>{__('development')}</Badge>
-          ) : (
-            <Tooltip.Trigger
-              tooltip={
-                !module.disallowed &&
-                !module.development &&
-                (module.enabled ? 'Enabled' : 'Disabled')
-              }
-            >
-              <Switch
-                checked={module.enabled}
-                onChange={this.toggleModule}
-                disabled={module.disallowed || module.development}
-              />
-            </Tooltip.Trigger>
+      <ModuleInfo onClick={openModuleDetails}>
+        <div className={module.disallowed ? 'dim' : undefined}>
+          <ModuleName>{module.info.displayName}</ModuleName>
+          {!!module.info.version && (
+            <ModuleVersion>v{module.info.version}</ModuleVersion>
           )}
-        </ModuleControls>
-      </ModuleComponent>
-    );
-  }
-}
+          {!module.development && (
+            <>
+              {module.incompatible && (
+                <Tooltip.Trigger
+                  tooltip={__(
+                    'This module was built for an incompatible wallet version'
+                  )}
+                >
+                  <Icon icon={warningIcon} className="error ml0_4" />
+                </Tooltip.Trigger>
+              )}
+              {(!module.repository || !module.repoOnline) && (
+                <Tooltip.Trigger tooltip={__('Module is not open source')}>
+                  <Icon icon={warningIcon} className="error ml0_4" />
+                </Tooltip.Trigger>
+              )}
+              {!!module.repository && !module.repoVerified && (
+                <Tooltip.Trigger
+                  tooltip={__(
+                    'The provided repository is not verified to be the real source code of this module'
+                  )}
+                >
+                  <Icon icon={warningIcon} className="error ml0_4" />
+                </Tooltip.Trigger>
+              )}
+              {module.hasNewVersion && (
+                <LatestVersion>
+                  {__('%{version} update available', {
+                    version: 'v' + module.latestVersion,
+                  })}
+                </LatestVersion>
+              )}
+            </>
+          )}
+        </div>
 
-export default Module;
+        <div>
+          <ModuleDescription className={module.disallowed ? 'dim' : undefined}>
+            {module.info.description}
+          </ModuleDescription>
+        </div>
+      </ModuleInfo>
+
+      <ModuleControls>
+        {module.development ? (
+          <Badge>{__('development')}</Badge>
+        ) : (
+          <Tooltip.Trigger
+            tooltip={
+              !module.disallowed &&
+              !module.development &&
+              (module.enabled ? 'Enabled' : 'Disabled')
+            }
+          >
+            <Switch
+              checked={module.enabled}
+              onChange={toggleModule}
+              disabled={module.disallowed || module.development}
+            />
+          </Tooltip.Trigger>
+        )}
+      </ModuleControls>
+    </ModuleComponent>
+  );
+}

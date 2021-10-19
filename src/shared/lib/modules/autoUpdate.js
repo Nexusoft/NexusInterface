@@ -21,8 +21,9 @@ const cacheStaleTime = 1000 * 60 * 60 * 24 * 7;
 // const getAssetName = (name, version) => `${name}_v${version}.zip`;
 
 async function getLatestRelease(repo) {
-  const url = `https://api.github.com/repos/${repo.owner}/${repo.repo}/releases/latest`;
-  let repoCache = JSON.parse(cache.getItem(repo.repo));
+  const repoId = `${repo.owner}/${repo.repo}`;
+  const url = `https://api.github.com/repos/${repoId}/releases/latest`;
+  let repoCache = JSON.parse(cache.getItem(repoId));
   if (repoCache && Date.now() - cacheStaleTime > repoCache.time) {
     removeUpdateCache(repo.repo);
     repoCache = null;
@@ -40,7 +41,7 @@ async function getLatestRelease(repo) {
       etag: response.headers.etag,
       time: Date.now(),
     };
-    cache.setItem(repo.repo, JSON.stringify(cacheObj));
+    cache.setItem(repoId, JSON.stringify(cacheObj));
     return response.data;
   } catch (err) {
     if (err.response?.status === 304) {

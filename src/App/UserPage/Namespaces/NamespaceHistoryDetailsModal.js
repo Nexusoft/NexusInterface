@@ -14,30 +14,30 @@ const timeFormatOptions = {
   second: '2-digit',
 };
 
-const NamespaceHistoryDetailsModal = ({
+export default function NamespaceHistoryDetailsModal({
   event: { type, owner, modified, address, checksum, name },
-}) => (
-  <ControlledModal>
-    <ControlledModal.Header className="relative">
-      {__('Namespace History Event')}
-    </ControlledModal.Header>
+}) {
+  return (
+    <ControlledModal>
+      <ControlledModal.Header className="relative">
+        {__('Namespace History Event')}
+      </ControlledModal.Header>
 
-    <ControlledModal.Body>
-      <InfoField label={__('Type')}>{type}</InfoField>
-      <InfoField label={__('Time')}>
-        {formatDateTime(modified * 1000, timeFormatOptions)}
-      </InfoField>
-      <InfoField label={__('Owner')}>{owner}</InfoField>
-      <InfoField label={__('Checksum')}>{checksum}</InfoField>
-      <InfoField label={__('Name')}>
-        {name || <span className="dim">N/A</span>}
-      </InfoField>
-      <InfoField label={__('Address')}>
-        <span className="v-align">{address}</span>
-        <QRButton className="ml0_4" address={address} />
-      </InfoField>
-    </ControlledModal.Body>
-  </ControlledModal>
-);
-
-export default NamespaceHistoryDetailsModal;
+      <ControlledModal.Body>
+        <InfoField label={__('Type')}>{type}</InfoField>
+        <InfoField label={__('Time')}>
+          {formatDateTime(modified * 1000, timeFormatOptions)}
+        </InfoField>
+        <InfoField label={__('Owner')}>{owner}</InfoField>
+        <InfoField label={__('Checksum')}>{checksum}</InfoField>
+        <InfoField label={__('Name')}>
+          {name || <span className="dim">N/A</span>}
+        </InfoField>
+        <InfoField label={__('Address')}>
+          <span className="v-align">{address}</span>
+          <QRButton className="ml0_4" address={address} />
+        </InfoField>
+      </ControlledModal.Body>
+    </ControlledModal>
+  );
+}

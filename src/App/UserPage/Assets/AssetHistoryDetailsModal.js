@@ -13,33 +13,33 @@ const timeFormatOptions = {
   second: '2-digit',
 };
 
-const AssetHistoryDetailsModal = ({
+export default function AssetHistoryDetailsModal({
   event: { type, owner, modified, address, checksum, name, ...data },
-}) => (
-  <ControlledModal>
-    <ControlledModal.Header className="relative">
-      {__('Asset History Event')}
-    </ControlledModal.Header>
+}) {
+  return (
+    <ControlledModal>
+      <ControlledModal.Header className="relative">
+        {__('Asset History Event')}
+      </ControlledModal.Header>
 
-    <ControlledModal.Body>
-      <InfoField label={__('Type')}>{type}</InfoField>
-      <InfoField label={__('Time')}>
-        {formatDateTime(modified * 1000, timeFormatOptions)}
-      </InfoField>
-      <InfoField label={__('Owner')}>{owner}</InfoField>
-      <InfoField label={__('Checksum')}>{checksum}</InfoField>
-      <InfoField label={__('Name')}>
-        {name || <span className="dim">N/A</span>}
-      </InfoField>
-      <InfoField label={__('Address')}>{address}</InfoField>
-
-      {Object.entries(data).map(([key, value]) => (
-        <InfoField key={key} label={key}>
-          {value}
+      <ControlledModal.Body>
+        <InfoField label={__('Type')}>{type}</InfoField>
+        <InfoField label={__('Time')}>
+          {formatDateTime(modified * 1000, timeFormatOptions)}
         </InfoField>
-      ))}
-    </ControlledModal.Body>
-  </ControlledModal>
-);
+        <InfoField label={__('Owner')}>{owner}</InfoField>
+        <InfoField label={__('Checksum')}>{checksum}</InfoField>
+        <InfoField label={__('Name')}>
+          {name || <span className="dim">N/A</span>}
+        </InfoField>
+        <InfoField label={__('Address')}>{address}</InfoField>
 
-export default AssetHistoryDetailsModal;
+        {Object.entries(data).map(([key, value]) => (
+          <InfoField key={key} label={key}>
+            {value}
+          </InfoField>
+        ))}
+      </ControlledModal.Body>
+    </ControlledModal>
+  );
+}

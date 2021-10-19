@@ -68,7 +68,7 @@ const MenuItem = styled(NavLink)(
     }
 );
 
-const UserBrief = ({ match }) => {
+export default function UserBrief({ match }) {
   const username = useSelector(selectUsername);
   const genesis = useSelector((state) => state.user.status?.genesis);
   return (
@@ -88,6 +88,4 @@ const UserBrief = ({ match }) => {
       <MenuItem to={`${match.url}/Assets`}>{__('Assets')}</MenuItem>
     </UserBriefComponent>
   );
-};
-
-export default UserBrief;
+}

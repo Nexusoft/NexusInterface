@@ -3,7 +3,7 @@ import Modal from 'components/Modal';
 import { alphaRelease } from 'consts/misc';
 import { shell } from 'electron';
 
-const PreReleaseWarningModal = () => {
+export default function PreReleaseWarningModal() {
   const versionRunning = APP_VERSION.toString();
   const releaseType = alphaRelease ? 'Alpha' : 'Beta';
   return (
@@ -57,6 +57,4 @@ const PreReleaseWarningModal = () => {
       )}
     </Modal>
   );
-};
-
-export default PreReleaseWarningModal;
+}

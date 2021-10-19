@@ -66,24 +66,30 @@ const FullScreenFooter = styled.div({
   gridArea: 'footer',
 });
 
-const FullScreen = ({ children, header, footer, width, ...rest }) => (
-  <FullScreenComponent {...rest}>
-    {!!header && (
-      <FullScreenHeader>
-        <Container width={width}>
-          <InnerHeader>{header}</InnerHeader>
-        </Container>
-      </FullScreenHeader>
-    )}
-    <FullScreenBody>
-      <Container width={width}>{children}</Container>
-    </FullScreenBody>
-    {!!footer && (
-      <FullScreenFooter>
-        <Container width={width}>{footer}</Container>
-      </FullScreenFooter>
-    )}
-  </FullScreenComponent>
-);
-
-export default FullScreen;
+export default function FullScreen({
+  children,
+  header,
+  footer,
+  width,
+  ...rest
+}) {
+  return (
+    <FullScreenComponent {...rest}>
+      {!!header && (
+        <FullScreenHeader>
+          <Container width={width}>
+            <InnerHeader>{header}</InnerHeader>
+          </Container>
+        </FullScreenHeader>
+      )}
+      <FullScreenBody>
+        <Container width={width}>{children}</Container>
+      </FullScreenBody>
+      {!!footer && (
+        <FullScreenFooter>
+          <Container width={width}>{footer}</Container>
+        </FullScreenFooter>
+      )}
+    </FullScreenComponent>
+  );
+}

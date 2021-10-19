@@ -59,7 +59,7 @@ export const getAccountOptions = memoize((myAccounts, myTokens) => {
         value: `token:${token.address}`,
         display: (
           <span>
-            {token.name || (
+            {token.ticker || (
               <span>
                 <em>{__('Unnamed token')}</em>{' '}
                 <span className="dim">{shortenAddress(token.address)}</span>

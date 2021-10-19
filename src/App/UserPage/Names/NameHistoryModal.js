@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 import ControlledModal from 'components/ControlledModal';
 import Table from 'components/Table';
@@ -42,66 +42,61 @@ export const tableColumns = [
   },
 ];
 
-export default class NameHistoryModal extends Component {
-  state = {
-    events: null,
-  };
+export default function NameHistoryModal({ nameRecord }) {
+  const [events, setEvents] = useState(null);
+  const closeModalRef = useRef();
+  useEffect(() => {
+    (async () => {
+      try {
+        const events = await callApi('names/history/name', {
+          address: nameRecord.address,
+        });
+        setEvents(events.reverse());
+      } catch (err) {
+        handleError(err);
+        closeModalRef.current?.();
+      }
+    })();
+  }, []);
 
-  async componentDidMount() {
-    const { nameRecord } = this.props;
-    try {
-      const events = await callApi('names/history/name', {
-        address: nameRecord.address,
-      });
-      this.setState({ events: events.reverse() });
-    } catch (err) {
-      handleError(err);
-      this.closeModal();
-    }
-  }
+  return (
+    <ControlledModal
+      assignClose={(close) => {
+        closeModalRef.current = close;
+      }}
+    >
+      <ControlledModal.Header className="relative">
+        {__('Name History')}
+      </ControlledModal.Header>
 
-  render() {
-    const { events } = this.state;
-
-    return (
-      <ControlledModal
-        assignClose={(close) => {
-          this.closeModal = close;
-        }}
-      >
-        <ControlledModal.Header className="relative">
-          {__('Name History')}
-        </ControlledModal.Header>
-
-        <ControlledModal.Body>
-          {!events ? (
-            <WaitingMessage>
-              {__('Loading name history')}
-              ...
-            </WaitingMessage>
-          ) : (
-            <Table
-              columns={tableColumns}
-              data={events}
-              defaultPageSize={events.length < 10 ? events.length : 10}
-              getTrProps={(state, row) => {
-                const event = row && row.original;
-                return {
-                  onClick: () => {
-                    openModal(NameHistoryDetailsModal, {
-                      event,
-                    });
-                  },
-                  style: {
-                    cursor: 'pointer',
-                    fontSize: 15,
-                  },
-                };
-              }}
-            />
-          )}
-        </ControlledModal.Body>
-      </ControlledModal>
-    );
-  }
+      <ControlledModal.Body>
+        {!events ? (
+          <WaitingMessage>
+            {__('Loading name history')}
+            ...
+          </WaitingMessage>
+        ) : (
+          <Table
+            columns={tableColumns}
+            data={events}
+            defaultPageSize={events.length < 10 ? events.length : 10}
+            getTrProps={(state, row) => {
+              const event = row && row.original;
+              return {
+                onClick: () => {
+                  openModal(NameHistoryDetailsModal, {
+                    event,
+                  });
+                },
+                style: {
+                  cursor: 'pointer',
+                  fontSize: 15,
+                },
+              };
+            }}
+          />
+        )}
+      </ControlledModal.Body>
+    </ControlledModal>
+  );
 }

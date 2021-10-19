@@ -165,5 +165,13 @@ export async function killCoreProcess() {
  * @memberof Core
  */
 export async function executeCommand(command) {
-  return await exec(`"${coreBinaryPath}" ${command}`);
+  try {
+    console.log('command', command);
+    const result = await exec(`"${coreBinaryPath}" ${command}`);
+    console.log(result);
+    return result;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
 }

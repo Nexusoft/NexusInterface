@@ -13,31 +13,31 @@ import Stat from './Stat';
 
 __ = __context('Overview');
 
-function CurrencyValue({ value, fiatCurrency, fiatDecimals, btcDecimals }) {
+function CurrencyValue({ value, currency, fiatDecimals, btcDecimals }) {
   if (typeof value !== 'number') {
     return <span className="dim">-</span>;
   }
-  const decimals = fiatCurrency === 'BTC' ? btcDecimals : fiatDecimals;
-  return formatCurrency(value, fiatCurrency, decimals);
+  const decimals = currency === 'BTC' ? btcDecimals : fiatDecimals;
+  return formatCurrency(value, currency, decimals);
 }
 
 export function PriceStat() {
-  const fiatCurrency = useSelector((state) => state.settings.fiatCurrency);
   const price = useSelector((state) => state.market?.price);
+  const currency = useSelector((state) => state.market?.currency);
 
   return (
     <Stat
       waitForCore={false}
       label={
         <>
-          {__('Market Price')} ({fiatCurrency})
+          {__('Market Price')} ({currency})
         </>
       }
       icon={chartIcon}
     >
       <CurrencyValue
         value={price}
-        fiatCurrency={fiatCurrency}
+        currency={currency}
         btcDecimals={8}
         fiatDecimals={2}
       />
@@ -46,22 +46,22 @@ export function PriceStat() {
 }
 
 export function MarketCapStat() {
-  const fiatCurrency = useSelector((state) => state.settings.fiatCurrency);
   const marketCap = useSelector((state) => state.market?.marketCap);
+  const currency = useSelector((state) => state.market?.currency);
 
   return (
     <Stat
       waitForCore={false}
       label={
         <>
-          {__('Market Cap')} ({fiatCurrency})
+          {__('Market Cap')} ({currency})
         </>
       }
       icon={supplyIcon}
     >
       <CurrencyValue
         value={marketCap}
-        fiatCurrency={fiatCurrency}
+        currency={currency}
         btcDecimals={2}
         fiatDecimals={0}
       />
@@ -70,15 +70,15 @@ export function MarketCapStat() {
 }
 
 export function PctChangeStat() {
-  const fiatCurrency = useSelector((state) => state.settings.fiatCurrency);
   const changePct24Hr = useSelector((state) => state.market?.changePct24Hr);
+  const currency = useSelector((state) => state.market?.currency);
 
   return (
     <Stat
       waitForCore={false}
       label={
         <>
-          {__('24hr Change')} ({fiatCurrency} %)
+          {__('24hr Change')} ({currency} %)
         </>
       }
       icon={hours24Icon}

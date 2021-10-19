@@ -21,8 +21,8 @@ function startWatcher() {
     (state) => state,
     async (state, oldState) => {
       // Clear watcher if user is logged out or core is disconnected or user is switched
-      const genesis = state.user.status?.genesis;
-      const oldGenesis = oldState.user.status?.genesis;
+      const genesis = state?.user.status?.genesis;
+      const oldGenesis = oldState?.user.status?.genesis;
       if (!isLoggedIn(state) || genesis !== oldGenesis) {
         unsubscribe?.();
         unsubscribe = null;
@@ -30,8 +30,8 @@ function startWatcher() {
       }
 
       // Only refetch transaction each time there is a new block
-      const blocks = state.core.systemInfo?.blocks;
-      const oldBlocks = oldState.core.systemInfo?.blocks;
+      const blocks = state?.core.systemInfo?.blocks;
+      const oldBlocks = oldState?.core.systemInfo?.blocks;
       if (!blocks || blocks === oldBlocks) return;
 
       // Fetch the updated transaction info
@@ -82,8 +82,9 @@ const getBalanceChanges = (tx) =>
         const sign = getDeltaSign(contract);
         if (sign && contract.amount) {
           let change = changes.find(
-            contract.token_name
-              ? (change) => change.token_name === contract.token_name
+            contract.ticker || contract.token_name
+              ? (change) =>
+                  change.ticker === contract.ticker || contract.token_name
               : (change) => change.token === contract.token
           );
           if (change) {
@@ -91,7 +92,7 @@ const getBalanceChanges = (tx) =>
               change.amount + (sign === '-' ? -1 : 1) * contract.amount;
           } else {
             change = {
-              token_name: contract.token_name,
+              ticker: contract.ticker || contract.token_name,
               token: contract.token,
               amount: (sign === '-' ? -1 : 1) * contract.amount,
             };
@@ -119,13 +120,7 @@ const getThresholdDate = (timeSpan) => {
 function filterTransactions(transactions) {
   const {
     ui: {
-      transactionsFilter: {
-        accountQuery,
-        tokenQuery,
-        operation,
-        timeSpan,
-        page,
-      },
+      transactionsFilter: { addressQuery, operation, timeSpan, page },
     },
     user: {
       transactions: { status },
@@ -146,38 +141,33 @@ function filterTransactions(transactions) {
     ) {
       return false;
     }
-    if (
-      accountQuery &&
-      !tx.contracts.some(
-        (contract) =>
-          contract.from_name?.includes(accountQuery) ||
-          contract.from?.includes(accountQuery) ||
-          contract.to_name?.includes(accountQuery) ||
-          contract.to?.includes(accountQuery) ||
-          contract.account_name?.includes(accountQuery) ||
-          contract.account?.includes(accountQuery) ||
-          contract.destination?.includes(accountQuery) ||
-          contract.address?.includes(accountQuery)
-      )
-    ) {
-      return false;
-    }
-    if (
-      tokenQuery &&
-      !tx.contracts.some(
-        (contract) =>
-          contract.token_name?.includes(tokenQuery) ||
-          contract.token?.includes(tokenQuery)
-      )
-    ) {
-      return false;
+    if (addressQuery) {
+      if (addressQuery === '0') {
+        if (!tx.contracts.some((contract) => contract.token === '0')) {
+          return false;
+        }
+      } else {
+        if (
+          !tx.contracts.some(
+            (contract) =>
+              contract.token?.includes(addressQuery) ||
+              contract.from?.includes(addressQuery) ||
+              contract.to?.includes(addressQuery) ||
+              contract.account?.includes(addressQuery) ||
+              contract.destination?.includes(addressQuery) ||
+              contract.address?.includes(addressQuery)
+          )
+        ) {
+          return false;
+        }
+      }
     }
 
     return true;
   });
 }
 
-function buildQuery({ accountQuery, tokenQuery, operation, timeSpan }) {
+function buildQuery({ addressQuery, operation, timeSpan }) {
   const queries = [];
   if (timeSpan) {
     const pastDate = getThresholdDate(timeSpan);
@@ -188,30 +178,22 @@ function buildQuery({ accountQuery, tokenQuery, operation, timeSpan }) {
   if (operation) {
     queries.push(`results.contracts.OP=${operation}`);
   }
-  if (tokenQuery) {
-    const buildTokenQuery = (field) =>
-      `results.contracts.${field}=*${tokenQuery}*`;
-    const tokenQueries = [
-      buildTokenQuery('token'),
-      buildTokenQuery('token_name'),
-      buildTokenQuery('ticker'),
-    ];
-    queries.push(`(${tokenQueries.join(' OR ')})`);
-  }
-  if (accountQuery) {
-    const buildAccountQuery = (field) =>
-      `results.contracts.${field}=*${accountQuery}*`;
-    const accountQueries = [
-      buildAccountQuery('from'),
-      buildAccountQuery('from_name'),
-      buildAccountQuery('to'),
-      buildAccountQuery('to_name'),
-      buildAccountQuery('account'),
-      buildAccountQuery('account_name'),
-      buildAccountQuery('destination'),
-      buildAccountQuery('address'),
-    ];
-    queries.push(`(${accountQueries.join(' OR ')})`);
+  if (addressQuery) {
+    if (addressQuery === '0') {
+      queries.push(`results.contracts.token=0`);
+    } else {
+      const buildAddressQuery = (field) =>
+        `results.contracts.${field}=*${addressQuery}*`;
+      const addressQueries = [
+        buildAddressQuery('token'),
+        buildAddressQuery('from'),
+        buildAddressQuery('to'),
+        buildAddressQuery('account'),
+        buildAddressQuery('destination'),
+        buildAddressQuery('address'),
+      ];
+      queries.push(`(${addressQueries.join(' OR ')})`);
+    }
   }
 
   return queries.join(' AND ') || undefined;

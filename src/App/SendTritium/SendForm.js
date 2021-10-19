@@ -1,5 +1,4 @@
 // External
-import { Component } from 'react';
 import { connect } from 'react-redux';
 import { reduxForm, Field, FieldArray, formValueSelector } from 'redux-form';
 import styled from '@emotion/styled';
@@ -15,7 +14,7 @@ import { callApi } from 'lib/tritiumApi';
 import { formName, getDefaultValues, getDefaultRecipient } from 'lib/send';
 import sendIcon from 'icons/send.svg';
 import { timing } from 'styles';
-import { newUID } from 'utils/misc';
+import useUID from 'utils/useUID';
 import { addressRegex } from 'consts/misc';
 import plusIcon from 'icons/plus.svg';
 
@@ -77,9 +76,7 @@ const mapStateToProps = (state) => {
     source,
     accountOptions: getAccountOptions(accounts, tokens),
     addressNameMap: getAddressNameMap(addressBook),
-    fieldNames: getRegisteredFieldNames(
-      form[formName] && form[formName].registeredFields
-    ),
+    fieldNames: getRegisteredFieldNames(form[formName]?.registeredFields),
     initialValues: getDefaultValues({ txExpiry }),
     txExpiry,
   };
@@ -96,7 +93,7 @@ async function asyncValidateRecipient({ recipient, source }) {
     const result = await callApi('system/validate/address', {
       address,
     });
-    if (result.is_valid) {
+    if (result.valid) {
       params.address = address;
     }
   }
@@ -172,14 +169,7 @@ function getRecipientsParams(recipients, { advancedOptions }) {
   );
 }
 
-/**
- * The Internal Send Form in the Send Page
- *
- * @class SendForm
- * @extends {Component}
- */
-@connect(mapStateToProps)
-@reduxForm({
+const reduxFormOptions = {
   form: formName,
   destroyOnUnmount: false,
   validate: ({ sendFrom, recipients }) => {
@@ -251,18 +241,23 @@ function getRecipientsParams(recipients, { advancedOptions }) {
       resetSendForm: reset,
     });
   },
-})
-class SendForm extends Component {
-  switchID = newUID();
+};
 
-  /**
-   * Confirm the Send
-   *
-   * @memberof SendForm
-   */
-  confirmSend = (e) => {
+function SendForm({
+  handleSubmit,
+  invalid,
+  touch,
+  fieldNames,
+  array,
+  txExpiry,
+  accountOptions,
+  change,
+  source,
+}) {
+  const switchID = useUID();
+
+  const confirmSend = (e) => {
     e.preventDefault();
-    const { handleSubmit, invalid, touch, fieldNames } = this.props;
 
     if (invalid) {
       // Mark the form touched so that the validation errors will be shown.
@@ -274,86 +269,65 @@ class SendForm extends Component {
     handleSubmit();
   };
 
-  toggleMoreOptions = (e) => {
-    this.setState({
-      optionalOpen: !this.state.optionalOpen,
-    });
+  const addRecipient = () => {
+    array.push('recipients', getDefaultRecipient({ txExpiry }));
   };
 
-  /**
-   * Add Recipient to the queue
-   *
-   * @memberof SendForm
-   */
-  addRecipient = () => {
-    const { txExpiry } = this.props;
-    this.props.array.push('recipients', getDefaultRecipient({ txExpiry }));
-  };
-
-  /**
-   * Component's Renderable JSX
-   *
-   * @returns
-   * @memberof SendForm
-   */
-  render() {
-    const { accountOptions, change, source } = this.props;
-    return (
-      <SendFormComponent onSubmit={this.confirmSend}>
-        <div className="flex justify-end">
-          <AdvancedOptionsSwitch>
-            <Field
-              name="advancedOptions"
-              component={Switch.RF}
-              style={{ fontSize: '.75em' }}
-              id={this.switchID}
-            />
-            <Field
-              name="advancedOptions"
-              component={({ input: { value } }) => (
-                <AdvancedOptionsLabel
-                  className="ml0_4 pointer"
-                  htmlFor={this.switchID}
-                  active={value}
-                >
-                  {__('Advanced options')}
-                </AdvancedOptionsLabel>
-              )}
-            />
-          </AdvancedOptionsSwitch>
-        </div>
-
-        <FormField label={__('Send from')}>
+  return (
+    <SendFormComponent onSubmit={confirmSend}>
+      <div className="flex justify-end">
+        <AdvancedOptionsSwitch>
           <Field
-            component={Select.RF}
-            skin="filled-inverted"
-            name="sendFrom"
-            placeholder={__('Select an account')}
-            options={accountOptions}
+            name="advancedOptions"
+            component={Switch.RF}
+            style={{ fontSize: '.75em' }}
+            id={switchID}
           />
-        </FormField>
+          <Field
+            name="advancedOptions"
+            component={({ input: { value } }) => (
+              <AdvancedOptionsLabel
+                className="ml0_4 pointer"
+                htmlFor={switchID}
+                active={value}
+              >
+                {__('Advanced options')}
+              </AdvancedOptionsLabel>
+            )}
+          />
+        </AdvancedOptionsSwitch>
+      </div>
 
-        <FieldArray
-          component={Recipients}
-          name="recipients"
-          change={change}
-          addRecipient={this.addRecipient}
-          source={source}
+      <FormField label={__('Send from')}>
+        <Field
+          component={Select.RF}
+          skin="filled-inverted"
+          name="sendFrom"
+          placeholder={__('Select an account')}
+          options={accountOptions}
         />
+      </FormField>
 
-        <SendFormButtons>
-          <MultiBtn skin="default" onClick={this.addRecipient}>
-            <Icon icon={plusIcon} style={{ fontSize: '.8em' }} />
-            <span className="v-align ml0_4">{__('Add recipient')}</span>
-          </MultiBtn>
-          <SendBtn type="submit" skin="primary">
-            <Icon icon={sendIcon} className="mr0_4" />
-            {__('Proceed')}
-          </SendBtn>
-        </SendFormButtons>
-      </SendFormComponent>
-    );
-  }
+      <FieldArray
+        component={Recipients}
+        name="recipients"
+        change={change}
+        addRecipient={addRecipient}
+        source={source}
+      />
+
+      <SendFormButtons>
+        <MultiBtn skin="default" onClick={addRecipient}>
+          <Icon icon={plusIcon} style={{ fontSize: '.8em' }} />
+          <span className="v-align ml0_4">{__('Add recipient')}</span>
+        </MultiBtn>
+        <SendBtn type="submit" skin="primary">
+          <Icon icon={sendIcon} className="mr0_4" />
+          {__('Proceed')}
+        </SendBtn>
+      </SendFormButtons>
+    </SendFormComponent>
+  );
 }
 
-export default SendForm;
+export default connect(mapStateToProps)(reduxForm(reduxFormOptions)(SendForm));

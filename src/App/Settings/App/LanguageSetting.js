@@ -1,6 +1,5 @@
 // External
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 
 // Internal
@@ -27,24 +26,10 @@ const languageOptions = languages.map((lang) => ({
   ),
 }));
 
-const mapStateToProps = (state) => ({
-  locale: state.settings.locale,
-});
+export default function LanguageSetting() {
+  const locale = useSelector((state) => state.settings.locale);
 
-/**
- * Internal JSX for Language Settings
- *
- * @class LanguageSetting
- * @extends {Component}
- */
-@connect(mapStateToProps)
-class LanguageSetting extends Component {
-  /**
-   * Handle Change
-   *
-   * @memberof LanguageSetting
-   */
-  handleChange = async (locale) => {
+  const handleChange = async (locale) => {
     if (locale !== 'en') {
       const language = languages.find((lang) => lang.code === locale);
       const agreed = await confirm({
@@ -64,22 +49,13 @@ class LanguageSetting extends Component {
     location.reload();
   };
 
-  /**
-   * Component's Renderable JSX
-   *
-   * @returns
-   * @memberof LanguageSetting
-   */
-  render() {
-    return (
-      <SettingsField label={__('Language')}>
-        <Select
-          options={languageOptions}
-          value={this.props.locale}
-          onChange={this.handleChange}
-        />
-      </SettingsField>
-    );
-  }
+  return (
+    <SettingsField label={__('Language')}>
+      <Select
+        options={languageOptions}
+        value={locale}
+        onChange={handleChange}
+      />
+    </SettingsField>
+  );
 }
-export default LanguageSetting;

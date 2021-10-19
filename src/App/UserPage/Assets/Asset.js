@@ -1,4 +1,3 @@
-import { Component } from 'react';
 import styled from '@emotion/styled';
 
 import InfoField from 'components/InfoField';
@@ -53,42 +52,37 @@ const AssetData = styled.div({
   padding: '.6em 1em .1em',
 });
 
-class Asset extends Component {
-  render() {
-    const { asset } = this.props;
-    const data = getAssetData(asset);
+export default function Asset({ asset }) {
+  const data = getAssetData(asset);
 
-    return (
-      <AssetComponent
-        onClick={() => {
-          openModal(AssetDetailsModal, { asset });
-        }}
-      >
-        <AssetHeader>
-          <AssetName unnamed={!asset.name}>
-            {asset.name || __('Unnamed asset')}
-          </AssetName>
-          {typeof asset.ownership === 'number' && (
-            <Tooltip.Trigger
-              tooltip={__('You own %{percentage}% of this asset', {
-                percentage: asset.ownership,
-              })}
-            >
-              <Ownership>{asset.ownership}%</Ownership>
-            </Tooltip.Trigger>
-          )}
-        </AssetHeader>
+  return (
+    <AssetComponent
+      onClick={() => {
+        openModal(AssetDetailsModal, { asset });
+      }}
+    >
+      <AssetHeader>
+        <AssetName unnamed={!asset.name}>
+          {asset.name || __('Unnamed asset')}
+        </AssetName>
+        {typeof asset.ownership === 'number' && (
+          <Tooltip.Trigger
+            tooltip={__('You own %{percentage}% of this asset', {
+              percentage: asset.ownership,
+            })}
+          >
+            <Ownership>{asset.ownership}%</Ownership>
+          </Tooltip.Trigger>
+        )}
+      </AssetHeader>
 
-        <AssetData>
-          {Object.entries(data).map(([key, value]) => (
-            <InfoField key={key} label={key} ratio={[1, 2]}>
-              {value}
-            </InfoField>
-          ))}
-        </AssetData>
-      </AssetComponent>
-    );
-  }
+      <AssetData>
+        {Object.entries(data).map(([key, value]) => (
+          <InfoField key={key} label={key} ratio={[1, 2]}>
+            {value}
+          </InfoField>
+        ))}
+      </AssetData>
+    </AssetComponent>
+  );
 }
-
-export default Asset;

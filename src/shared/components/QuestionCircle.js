@@ -9,10 +9,10 @@ const QuestionMarkComponent = styled(Icon)({
   marginLeft: 6,
 });
 
-const QuestionMark = ({ tooltip, align, position }) => (
-  <Tooltip.Trigger tooltip={tooltip} align={align} position={position}>
-    <QuestionMarkComponent icon={questionIcon} />
-  </Tooltip.Trigger>
-);
-
-export default QuestionMark;
+export default function QuestionMark({ tooltip, align, position }) {
+  return (
+    <Tooltip.Trigger tooltip={tooltip} align={align} position={position}>
+      <QuestionMarkComponent icon={questionIcon} />
+    </Tooltip.Trigger>
+  );
+}

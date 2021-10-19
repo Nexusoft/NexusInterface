@@ -41,10 +41,10 @@ const filterSuggestions = memoize((suggestions, inputValue) => {
     tokens &&
     tokens.map((token) => ({
       value: token.address,
-      name: token.name,
+      name: token.ticker,
       display: (
         <span>
-          {token.name} -<span className="dim"> {token.address}</span>
+          {token.ticker} -<span className="dim"> {token.address}</span>
         </span>
       ),
     })),
@@ -159,17 +159,19 @@ class TokenizeAssetForm extends Component {
   }
 }
 
-const TokenizeAssetModal = ({ asset }) => (
-  <ControlledModal maxWidth={600}>
-    {(closeModal) => (
-      <>
-        <ControlledModal.Header>{__('Tokenize asset')}</ControlledModal.Header>
-        <ControlledModal.Body>
-          <TokenizeAssetForm closeModal={closeModal} asset={asset} />
-        </ControlledModal.Body>
-      </>
-    )}
-  </ControlledModal>
-);
-
-export default TokenizeAssetModal;
+export default function TokenizeAssetModal({ asset }) {
+  return (
+    <ControlledModal maxWidth={600}>
+      {(closeModal) => (
+        <>
+          <ControlledModal.Header>
+            {__('Tokenize asset')}
+          </ControlledModal.Header>
+          <ControlledModal.Body>
+            <TokenizeAssetForm closeModal={closeModal} asset={asset} />
+          </ControlledModal.Body>
+        </>
+      )}
+    </ControlledModal>
+  );
+}

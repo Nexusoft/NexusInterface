@@ -114,7 +114,7 @@ const ErrorMessage = styled.div(({ theme }) => ({
 //   }
 // };
 
-const totalPages = 10;
+// const totalPages = 10;
 
 /**
  * TransactionsTritium Page
@@ -188,9 +188,10 @@ export default function TransactionsTritium() {
               </PaginationButton>
               <div className="flex center relative">
                 {__(
-                  'Page <page></page> of %{total}',
+                  'Page <page></page>',
+                  // 'Page <page></page> of %{total}',
                   {
-                    total: totalPages,
+                    // total: totalPages,
                   },
                   {
                     page: () => (
@@ -199,7 +200,7 @@ export default function TransactionsTritium() {
                         <PageInput
                           type="number"
                           min={1}
-                          max={totalPages}
+                          // max={totalPages}
                           value={page}
                           onChange={(e) => {
                             updatePage(e.target.value);
@@ -213,13 +214,13 @@ export default function TransactionsTritium() {
               </div>
               <PaginationButton
                 skin="filled-inverted"
-                disabled={page >= totalPages}
+                // disabled={page >= totalPages}
                 onClick={
-                  page < totalPages
-                    ? () => {
-                        updatePage(page + 1);
-                      }
-                    : undefined
+                  // page < totalPages ?
+                  () => {
+                    updatePage(page + 1);
+                  }
+                  // : undefined
                 }
               >
                 {__('Next')} &gt;

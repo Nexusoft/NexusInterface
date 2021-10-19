@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
 
@@ -59,14 +59,7 @@ const Note = styled.div(({ theme }) => ({
   marginTop: 20,
 }));
 
-@connect(({ user: { stakeInfo } }, { initialStake }) => ({
-  currentStake: stakeInfo && stakeInfo.stake,
-  total: stakeInfo && stakeInfo.stake + stakeInfo.balance,
-  initialValues: {
-    stake: typeof initialStake === 'number' ? initialStake : stakeInfo?.stake,
-  },
-}))
-@reduxForm({
+const formOptions = {
   form: 'adjust_stake',
   destroyOnUnmount: true,
   validate: ({ stake }, props) => {
@@ -107,79 +100,100 @@ const Note = styled.div(({ theme }) => ({
       GA.SendEvent('Users', 'IncreaseStake', 'Staking', 1);
     }
 
-    removeModal(props.modalId);
+    props.closeModal();
     showNotification(__('Stake amount has been updated'), 'success');
     props.onComplete?.();
   },
   onSubmitFail: errorHandler(__('Error setting stake amount')),
-})
-class AdjustStakeModal extends Component {
-  render() {
-    const { total, handleSubmit, submitting, change, onClose } = this.props;
-    return (
-      <ControlledModal
-        maxWidth={600}
-        assignClose={(closeModal) => {
-          this.closeModal = closeModal;
-        }}
-        onClose={onClose}
-      >
-        <ControlledModal.Header>
-          {__('Set stake amount')}
-        </ControlledModal.Header>
-        <ControlledModal.Body>
-          <form onSubmit={handleSubmit}>
-            <div className="relative">
-              <Field
-                name="stake"
-                type="number"
-                component={StakeTextField}
-                skin="filled-inverted"
-              />
-              <LimitNumber
-                as="a"
-                onClick={() => {
-                  change('stake', 0);
-                }}
-                align="left"
-              >
-                0
-              </LimitNumber>
-              <LimitNumber
-                as="a"
-                onClick={() => {
-                  change('stake', total);
-                }}
-                align="right"
-              >
-                {formatNumber(total, 6)}
-              </LimitNumber>
-            </div>
-            <SliderWrapper>
-              <Field name="stake" component={StakeSlider} min={0} max={total} />
-            </SliderWrapper>
-            <Note>
-              {__(
-                'Note: This change will not take effect immediately but will stay pending until you get the next Trust transaction. The pending change will be recorded locally in this machine, therefore if you switch to another machine for staking, the change will not take effect.'
-              )}
-            </Note>
-            <div className="mt2 flex space-between">
-              <Button
-                onClick={() => {
-                  this.closeModal();
-                }}
-              >
-                {__('Cancel')}
-              </Button>
-              <Button skin="primary" type="submit" disabled={submitting}>
-                {__('Set stake amount')}
-              </Button>
-            </div>
-          </form>
-        </ControlledModal.Body>
-      </ControlledModal>
-    );
-  }
+};
+
+function AdjustStakeForm({
+  total,
+  handleSubmit,
+  submitting,
+  change,
+  closeModal,
+}) {
+  return (
+    <>
+      <ControlledModal.Header>{__('Set stake amount')}</ControlledModal.Header>
+      <ControlledModal.Body>
+        <form onSubmit={handleSubmit}>
+          <div className="relative">
+            <Field
+              name="stake"
+              type="number"
+              component={StakeTextField}
+              skin="filled-inverted"
+            />
+            <LimitNumber
+              as="a"
+              onClick={() => {
+                change('stake', 0);
+              }}
+              align="left"
+            >
+              0
+            </LimitNumber>
+            <LimitNumber
+              as="a"
+              onClick={() => {
+                change('stake', total);
+              }}
+              align="right"
+            >
+              {formatNumber(total, 6)}
+            </LimitNumber>
+          </div>
+          <SliderWrapper>
+            <Field name="stake" component={StakeSlider} min={0} max={total} />
+          </SliderWrapper>
+          <Note>
+            {__(
+              'Note: This change will not take effect immediately but will stay pending until you get the next Trust transaction. The pending change will be recorded locally in this machine, therefore if you switch to another machine for staking, the change will not take effect.'
+            )}
+          </Note>
+          <div className="mt2 flex space-between">
+            <Button
+              onClick={() => {
+                closeModal();
+              }}
+            >
+              {__('Cancel')}
+            </Button>
+            <Button skin="primary" type="submit" disabled={submitting}>
+              {__('Set stake amount')}
+            </Button>
+          </div>
+        </form>
+      </ControlledModal.Body>
+    </>
+  );
 }
 
-export default AdjustStakeModal;
+AdjustStakeForm = reduxForm(formOptions)(AdjustStakeForm);
+
+export default function AdjustStakeModal({ initialStake, onClose }) {
+  const currentStake = useSelector((state) => state.user.stakeInfo?.stake);
+  const total = useSelector(
+    ({ user: { stakeInfo } }) =>
+      stakeInfo && stakeInfo.stake + stakeInfo.balance
+  );
+  return (
+    <ControlledModal maxWidth={600} onClose={onClose}>
+      {(closeModal) => (
+        <AdjustStakeForm
+          closeModal={closeModal}
+          currentStake={currentStake}
+          total={total}
+          initialValues={{
+            stake:
+              typeof initialStake === 'number'
+                ? initialStake
+                : currentStake || 0,
+          }}
+        />
+      )}
+    </ControlledModal>
+  );
+}
