@@ -177,13 +177,15 @@ export default function ModuleDetailsModal({ module, forInstall, install }) {
                       </ExternalLink>
                     </Tooltip.Trigger>
 
-                    {module.repoVerified && module.repoFromNexus && (
-                      <Tooltip.Trigger
-                        tooltip={__('This module is developed by Nexus')}
-                      >
-                        <CheckMark>&nbsp;&nbsp;✔</CheckMark>
-                      </Tooltip.Trigger>
-                    )}
+                    {module.repoOnline &&
+                      module.repoVerified &&
+                      module.repoFromNexus && (
+                        <Tooltip.Trigger
+                          tooltip={__('This module is developed by Nexus')}
+                        >
+                          <CheckMark>&nbsp;&nbsp;✔</CheckMark>
+                        </Tooltip.Trigger>
+                      )}
 
                     {!module.repoOnline && (
                       <div className="error">
@@ -298,14 +300,15 @@ function Installer({ install, module }) {
 
   return (
     <ControlledModal.Footer separator style={{ textAlign: 'center' }}>
-      {!module.disallowed && !(module.repoVerified && module.repoFromNexus) && (
-        <InstallerWarning>
-          {__(`Warning: This module is written by a third party, Nexus is NOT
+      {!module.disallowed &&
+        !(module.repoOnline && module.repoVerified && module.repoFromNexus) && (
+          <InstallerWarning>
+            {__(`Warning: This module is written by a third party, Nexus is NOT
               responsible for its quality or legitimacy. Please make sure to do
               your due diligence before installing third party modules and use
               them with your own risk.`)}
-        </InstallerWarning>
-      )}
+          </InstallerWarning>
+        )}
       <Button
         skin="primary"
         wide
