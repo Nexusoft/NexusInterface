@@ -150,17 +150,22 @@ export async function isRepoOnline({ host, owner, repo, commit }) {
       'github.com': `https://github.com/${owner}/${repo}/commit/${commit}`,
     };
     const url = apiUrls[host];
-    const getUrlStatus = (url) =>
+    const requestHead = (url) =>
       new Promise((resolve, reject) => {
         try {
-          https.get(url, (res) => resolve(res.statusCode));
+          https
+            .request(url, { method: 'HEAD' }, (res) => resolve(res))
+            .on('error', (err) => {
+              reject(err);
+            })
+            .end();
         } catch (error) {
           reject(error);
         }
       });
 
-    const res = await getUrlStatus(url);
-    return res === 200;
+    const res = await requestHead(url);
+    return res.statusCode === 200;
   } catch (err) {
     console.error(err);
     return false;
