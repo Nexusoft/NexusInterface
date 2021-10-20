@@ -305,7 +305,7 @@ export function stopCoreOuputWatch() {
 }
 
 function checkDebugFileExists(err, stat) {
-  if (err == null) {
+  if (!err) {
     processDeamonOutput(debugFileLocation);
     clearInterval(checkIfFileExistsInterval);
   } else {
@@ -330,7 +330,6 @@ function processDeamonOutput(debugfile) {
     if (batch.length == 0) {
       return;
     }
-    console.log(batch);
     printCoreOutput(batch.reverse());
     batch = [];
   }, 1000);

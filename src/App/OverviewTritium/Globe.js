@@ -149,7 +149,7 @@ export default class Globe extends Component {
       window.addEventListener('resize', this.onWindowResize, false);
       this.start();
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   }
   /**
@@ -327,7 +327,7 @@ export default class Globe extends Component {
           this.allPoints.add(self.pillar);
           this.arcRegister();
         })
-        .catch((e) => console.log(e));
+        .catch((e) => console.error(e));
     }
   }
 

@@ -78,7 +78,7 @@ class MyAddressesModal extends Component {
     try {
       await rpc('checkwallet', []);
     } catch (err) {
-      console.log(err);
+      console.error(err);
       showNotification(__('Check wallet failed'), 'error');
       return;
     }
