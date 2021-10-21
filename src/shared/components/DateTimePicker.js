@@ -184,7 +184,7 @@ const Input = styled.input(
 );
 
 export default function DateTimePicker({
-  inputRef,
+  inputRef: ref,
   onFocus,
   onBlur,
   className,
@@ -202,14 +202,14 @@ export default function DateTimePicker({
   ...rest
 }) {
   const [focus, setFocus] = useState(false);
-  const inputElRef = useRef();
+  const inputRef = useRef();
 
   useEffect(() => {
     // Somehow React's autoFocus doesn't work, so handle it manually
-    if (autoFocus && inputElRef.current) {
+    if (autoFocus && inputRef.current) {
       // This needs setTimeout to work
       setTimeout(() => {
-        inputElRef.current.focus();
+        inputRef.current.focus();
       }, 0);
     }
   }, []);
@@ -238,9 +238,9 @@ export default function DateTimePicker({
         onBlur={handleBlur}
         style={inputStyle}
         ref={(el) => {
-          inputElRef.current = el;
-          if (inputRef) {
-            passRef(el, inputRef);
+          inputRef.current = el;
+          if (ref) {
+            passRef(el, ref);
           }
         }}
         type={time ? 'datetime-local' : 'date'}

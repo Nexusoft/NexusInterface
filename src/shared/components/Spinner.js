@@ -25,13 +25,13 @@ const SpinnerPart = styled.div(({ index = 0, thickness }) => ({
   animationDelay: `-${0.1 * index}s`,
 }));
 
-const Spinner = ({ thickness = 0.1, size, ...rest }) => (
-  <SpinnerComponent size={size} {...rest}>
-    <SpinnerPart index={0} thickness={thickness} />
-    <SpinnerPart index={1} thickness={thickness} />
-    <SpinnerPart index={2} thickness={thickness} />
-    <SpinnerPart index={3} thickness={thickness} />
-  </SpinnerComponent>
-);
-
-export default Spinner;
+export default function Spinner({ thickness = 0.1, size, ...rest }) {
+  return (
+    <SpinnerComponent size={size} {...rest}>
+      <SpinnerPart index={0} thickness={thickness} />
+      <SpinnerPart index={1} thickness={thickness} />
+      <SpinnerPart index={2} thickness={thickness} />
+      <SpinnerPart index={3} thickness={thickness} />
+    </SpinnerComponent>
+  );
+}
