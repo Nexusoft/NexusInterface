@@ -10,7 +10,7 @@
  */
 
 // External
-import { Component } from 'react';
+import { useEffect, useRef, useState, forwardRef } from 'react';
 import styled from '@emotion/styled';
 
 // Internal
@@ -227,110 +227,113 @@ const MultilineInput = styled(Input)({
   lineHeight: 1.28,
 });
 
-class TextArea extends Component {
-  componentDidUpdate() {
-    this.inputElem.style.height = 'auto';
-    const { scrollHeight } = this.inputElem;
-    this.inputElem.style.height =
-      (scrollHeight > 114 ? 114 : scrollHeight) + 'px';
-  }
+const TextArea = forwardRef((props, ref) => {
+  const inputRef = useRef();
 
-  inputRef = (el) => {
-    this.inputElem = el;
-    if (this.props.inputRef) {
-      passRef(el, this.props.inputRef);
+  useEffect(() => {
+    const inputElem = inputRef.current;
+    if (inputElem) {
+      inputElem.style.height = 'auto';
+      const { scrollHeight } = inputElem;
+      inputElem.style.height = (scrollHeight > 114 ? 114 : scrollHeight) + 'px';
+    }
+  });
+
+  return (
+    <MultilineInput
+      ref={(el) => {
+        inputRef.current = el;
+        if (ref) {
+          passRef(el, ref);
+        }
+      }}
+      as="textarea"
+      {...props}
+    />
+  );
+});
+
+export default function TextField({
+  className,
+  style,
+  inputStyle,
+  skin = 'underline',
+  multiline,
+  left,
+  right,
+  size,
+  readOnly,
+  inputRef: ref,
+  autoFocus,
+  onFocus,
+  onBlur,
+  error,
+  ...rest
+}) {
+  const [focus, setFocus] = useState(false);
+  const inputRef = useRef();
+
+  const handleRef = (el) => {
+    inputRef.current = el;
+    if (ref) {
+      passRef(el, ref);
     }
   };
 
-  render() {
-    return <MultilineInput ref={this.inputRef} as="textarea" {...this.props} />;
-  }
-}
-
-export default class TextField extends Component {
-  state = {
-    focus: false,
-  };
-
-  inputRef = (el) => {
-    this.inputElem = el;
-    if (this.props.inputRef) {
-      passRef(el, this.props.inputRef);
-    }
-  };
-
-  componentDidMount() {
+  useEffect(() => {
     // Somehow React's autoFocus doesn't work, so handle it manually
-    if (this.props.autoFocus && this.inputElem) {
+    if (autoFocus && inputRef.current) {
       // This needs setTimeout to work
       setTimeout(() => {
-        this.inputElem.focus();
+        inputRef.current.focus();
       }, 0);
     }
-  }
+  }, []);
 
-  handleFocus = (e) => {
-    this.setState({ focus: true });
-    this.props.onFocus && this.props.onFocus(e);
+  const handleFocus = (e) => {
+    setFocus(true);
+    onFocus?.(e);
   };
 
-  handleBlur = (e) => {
-    this.setState({ focus: false });
-    this.props.onBlur && this.props.onBlur(e);
+  const handleBlur = (e) => {
+    setFocus(false);
+    onBlur?.(e);
   };
 
-  render() {
-    const {
-      className,
-      style,
-      inputStyle,
-      skin = 'underline',
-      multiline,
-      left,
-      right,
-      size,
-      readOnly,
-      inputRef,
-      autoFocus,
-      error,
-      ...rest
-    } = this.props;
+  const inputProps = {
+    skin,
+    size,
+    readOnly,
+    ...rest,
+    onFocus: handleFocus,
+    onBlur: handleBlur,
+    style: inputStyle,
+  };
 
-    const inputProps = {
-      skin,
-      size,
-      readOnly,
-      ...rest,
-      onFocus: this.handleFocus,
-      onBlur: this.handleBlur,
-      style: inputStyle,
-    };
-
-    return (
-      <TextFieldComponent
-        {...{ className, style, skin, size, error, multiline }}
-        focus={!readOnly && this.state.focus}
-      >
-        {left}
-        {multiline ? (
-          <TextArea {...inputProps} inputRef={this.inputRef} />
-        ) : (
-          <Input {...inputProps} ref={this.inputRef} />
-        )}
-        {right}
-        {!!error && (
-          <ErrorMessage
-            skin="error"
-            position="bottom"
-            align="start"
-            focus={this.state.focus}
-          >
-            {error}
-          </ErrorMessage>
-        )}
-      </TextFieldComponent>
-    );
-  }
+  return (
+    <TextFieldComponent
+      {...{ className, style, skin, size, error, multiline }}
+      focus={!readOnly && focus}
+    >
+      {left}
+      {multiline ? (
+        <TextArea {...inputProps} ref={handleRef} />
+      ) : (
+        <Input {...inputProps} ref={handleRef} />
+      )}
+      {right}
+      {!!error && (
+        <ErrorMessage
+          skin="error"
+          position="bottom"
+          align="start"
+          focus={focus}
+        >
+          {error}
+        </ErrorMessage>
+      )}
+    </TextFieldComponent>
+  );
 }
 
 // TextField wrapper for redux-form
