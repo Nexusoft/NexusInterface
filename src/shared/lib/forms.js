@@ -1,13 +1,12 @@
 import { UPDATE_FORM_INSTANCE } from 'consts/actionTypes';
 import store from 'store';
 
-export function updateFormInstance(form, state) {
+export function updateFormInstance(formName, instance) {
   store.dispatch({
     type: UPDATE_FORM_INSTANCE,
-    payload: { form, state },
+    payload: { formName, instance },
   });
 }
 
-export function getFormInstance(form) {
-  return store.getState().forms[form];
-}
+export const selectFormInstance = (formName) => (state) =>
+  state.forms[formName];
