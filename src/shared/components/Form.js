@@ -1,8 +1,12 @@
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { Form as FinalForm, FormSpy } from 'react-final-form';
+import { Form as FinalForm, useFormState } from 'react-final-form';
 import { createForm } from 'final-form';
 
+import TextField from 'components/TextField';
+import Select from 'components/Select';
+import Switch from 'components/Switch';
+import Button from 'components/Button';
 import { updateFormInstance, selectFormInstance } from 'lib/forms';
 
 export default function Form({
@@ -63,3 +67,18 @@ export default function Form({
     </FinalForm>
   );
 }
+
+Form.TextField = ({ input, meta, ...rest }) => (
+  <TextField error={meta.touched && meta.error} {...input} {...rest} />
+);
+
+Form.Select = ({ input, meta, ...rest }) => (
+  <Select error={meta.touched && meta.error} {...input} {...rest} />
+);
+
+Form.Switch = ({ input, meta, ...rest }) => <Switch {...input} {...rest} />;
+
+Form.SubmitButton = (props) => {
+  const { submitting } = useFormState({ subscription: { submitting: true } });
+  return <Button type="submit" disabled={submitting} {...props} />;
+};
