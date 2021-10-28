@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, Fragment } from 'react';
 import styled from '@emotion/styled';
-import { reduxForm, Field } from 'redux-form';
+import { Field } from 'react-final-form';
 
 import ControlledModal from 'components/ControlledModal';
 import NexusAddress from 'components/NexusAddress';
@@ -9,12 +9,13 @@ import TokenName from 'components/TokenName';
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
 import TextFieldWithKeyboard from 'components/TextFieldWithKeyboard';
+import Form from 'components/Form';
 import { callApi } from 'lib/tritiumApi';
 import { lookupAddress } from 'lib/addressBook';
 import { removeModal } from 'lib/ui';
 import { openSuccessDialog } from 'lib/dialog';
 import { loadAccounts } from 'lib/user';
-import { errorHandler } from 'utils/form';
+import { formSubmit } from 'lib/form';
 import { timeToText } from 'utils/misc';
 import addressBookIcon from 'icons/address-book.svg';
 import WarningIcon from 'icons/warning.svg';
@@ -129,51 +130,10 @@ function AddressTo({ address }) {
   );
 }
 
-const formOptions = {
-  form: 'preview_tx',
-  destroyOnUnmount: true,
-  initialValues: {
-    pin: '',
-  },
-  validate: ({ pin }) => {
-    const errors = {};
-    if (!pin || pin.length < 4) {
-      errors.pin = __('Pin must be at least 4 characters');
-    }
-    return errors;
-  },
-  onSubmit: async ({ pin }, dispatch, { source, recipients }) => {
-    const params = {
-      pin,
-      recipients,
-    };
-
-    if (source?.token) {
-      params.address = source.token.address;
-      return await callApi('tokens/debit/token', params);
-    } else {
-      params.address = source.account.address;
-      return await callApi('finance/debit/account', params);
-    }
-  },
-  onSubmitSuccess: (result, dispatch, { modalId, resetSendForm }) => {
-    if (!result) return;
-
-    resetSendForm();
-    loadAccounts();
-    removeModal(modalId);
-    openSuccessDialog({
-      message: __('Transaction sent'),
-    });
-  },
-  onSubmitFail: errorHandler(__('Error sending transaction')),
-};
-
-function PreviewTransactionModal({
+export default function PreviewTransactionModal({
   source,
   recipients,
-  handleSubmit,
-  submitting,
+  resetSendForm,
 }) {
   return (
     <ControlledModal>
@@ -264,35 +224,69 @@ function PreviewTransactionModal({
       </ControlledModal.Body>
 
       <ControlledModal.Footer>
-        <form onSubmit={handleSubmit} style={{ marginTop: -20 }}>
-          <Field
-            component={TextFieldWithKeyboard.RF}
-            maskable
-            name="pin"
-            autoFocus
-            skin="filled-inverted"
-            placeholder={__('Enter your PIN to confirm')}
-          />
+        <Form
+          name="preview_tx"
+          initialValues={{
+            pin: '',
+          }}
+          validate={({ pin }) => {
+            const errors = {};
+            if (!pin || pin.length < 4) {
+              errors.pin = __('Pin must be at least 4 characters');
+            }
+            return errors;
+          }}
+          onSubmit={formSubmit({
+            submit: async ({ pin }) => {
+              const params = {
+                pin,
+                recipients,
+              };
 
-          <SubmitButton
-            type="submit"
-            skin="primary"
-            uppercase
-            wide
-            disabled={submitting}
-            className="mt1"
-          >
-            <Icon icon={sendIcon} />
-            <span className="ml0_4 v-align">
-              {submitting
-                ? __('Sending transaction...')
-                : __('Send transaction')}
-            </span>
-          </SubmitButton>
-        </form>
+              if (source?.token) {
+                params.address = source.token.address;
+                return await callApi('tokens/debit/token', params);
+              } else {
+                params.address = source.account.address;
+                return await callApi('finance/debit/account', params);
+              }
+            },
+            onSuccess: () => {
+              resetSendForm();
+              loadAccounts();
+              removeModal(modalId);
+              openSuccessDialog({
+                message: __('Transaction sent'),
+              });
+            },
+            errorMessage: __('Error sending transaction'),
+          })}
+        >
+          <div style={{ marginTop: -20 }}>
+            <Field
+              component={TextFieldWithKeyboard.RF}
+              maskable
+              name="pin"
+              autoFocus
+              skin="filled-inverted"
+              placeholder={__('Enter your PIN to confirm')}
+            />
+
+            <Form.SubmitButton skin="primary" uppercase wide className="mt1">
+              {({ submitting }) => (
+                <>
+                  <Icon icon={sendIcon} />
+                  <span className="ml0_4 v-align">
+                    {submitting
+                      ? __('Sending transaction...')
+                      : __('Send transaction')}
+                  </span>
+                </>
+              )}
+            </Form.SubmitButton>
+          </div>
+        </Form>
       </ControlledModal.Footer>
     </ControlledModal>
   );
 }
-
-export default reduxForm(formOptions)(PreviewTransactionModal);
