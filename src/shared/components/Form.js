@@ -4,10 +4,11 @@ import { Form as FinalForm, useFormState } from 'react-final-form';
 import { createForm } from 'final-form';
 
 import TextField from 'components/TextField';
+import TextFieldWithKeyboard from 'components/TextFieldWithKeyboard';
 import Select from 'components/Select';
 import Switch from 'components/Switch';
 import Button from 'components/Button';
-import { updateFormInstance, selectFormInstance } from 'lib/forms';
+import { updateFormInstance, selectFormInstance } from 'lib/form';
 
 export default function Form({
   name,
@@ -72,13 +73,25 @@ Form.TextField = ({ input, meta, ...rest }) => (
   <TextField error={meta.touched && meta.error} {...input} {...rest} />
 );
 
+Form.TextFieldWithKeyboard = ({ input, meta, ...rest }) => (
+  <TextFieldWithKeyboard
+    error={meta.touched && meta.error}
+    {...input}
+    {...rest}
+  />
+);
+
 Form.Select = ({ input, meta, ...rest }) => (
   <Select error={meta.touched && meta.error} {...input} {...rest} />
 );
 
 Form.Switch = ({ input, meta, ...rest }) => <Switch {...input} {...rest} />;
 
-Form.SubmitButton = (props) => {
+Form.SubmitButton = ({ children, ...rest }) => {
   const { submitting } = useFormState({ subscription: { submitting: true } });
-  return <Button type="submit" disabled={submitting} {...props} />;
+  return (
+    <Button type="submit" disabled={submitting} {...rest}>
+      {typeof children === 'function' ? children({ submitting }) : children}
+    </Button>
+  );
 };
