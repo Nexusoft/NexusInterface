@@ -11,7 +11,7 @@ import { updateFormInstance, selectFormInstance } from 'lib/forms';
 
 export default function Form({
   name,
-  persistState = true,
+  persistState,
   children,
   render,
   component: Component,
