@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, forwardRef } from 'react';
 import { useSelector } from 'react-redux';
 import { Form as FinalForm, Field, useFormState } from 'react-final-form';
 import { createForm } from 'final-form';
@@ -69,25 +69,108 @@ export default function Form({
   );
 }
 
-Form.Field = Field;
+const splitProps = ({
+  name,
+  afterSubmit,
+  allowNull,
+  beforeSubmit,
+  data,
+  defaultValue,
+  format,
+  formatOnBlur,
+  initialValue,
+  isEqual,
+  multiple,
+  parse,
+  subscription,
+  type,
+  validate,
+  validateFields,
+  value,
+  inputProps,
+  ...rest
+}) => [
+  {
+    name,
+    afterSubmit,
+    allowNull,
+    beforeSubmit,
+    data,
+    defaultValue,
+    format,
+    formatOnBlur,
+    initialValue,
+    isEqual,
+    multiple,
+    parse,
+    subscription,
+    validate,
+    validateFields,
+    value,
+  },
+  { ...inputProps, ...rest },
+];
 
-Form.TextField = ({ input, meta, ...rest }) => (
-  <TextField error={meta.touched && meta.error} {...input} {...rest} />
-);
+Form.TextField = forwardRef(function (props, ref) {
+  const [fieldProps, inputProps] = splitProps(props);
+  return (
+    <Field
+      {...fieldProps}
+      render={({ input, meta }) => (
+        <TextField
+          ref={ref}
+          error={meta.touched && meta.error}
+          {...input}
+          {...inputProps}
+        />
+      )}
+    />
+  );
+});
 
-Form.TextFieldWithKeyboard = ({ input, meta, ...rest }) => (
-  <TextFieldWithKeyboard
-    error={meta.touched && meta.error}
-    {...input}
-    {...rest}
-  />
-);
+Form.TextFieldWithKeyboard = forwardRef(function (props, ref) {
+  const [fieldProps, inputProps] = splitProps(props);
+  return (
+    <Field
+      {...fieldProps}
+      render={({ input, meta }) => (
+        <TextFieldWithKeyboard
+          ref={ref}
+          error={meta.touched && meta.error}
+          {...input}
+          {...inputProps}
+        />
+      )}
+    />
+  );
+});
 
-Form.Select = ({ input, meta, ...rest }) => (
-  <Select error={meta.touched && meta.error} {...input} {...rest} />
-);
+Form.Select = forwardRef(function (props, ref) {
+  const [fieldProps, inputProps] = splitProps(props);
+  return (
+    <Field
+      {...fieldProps}
+      render={({ input, meta }) => (
+        <Select
+          ref={ref}
+          error={meta.touched && meta.error}
+          {...input}
+          {...inputProps}
+        />
+      )}
+    />
+  );
+});
 
-Form.Switch = ({ input, meta, ...rest }) => <Switch {...input} {...rest} />;
+Form.Switch = forwardRef(function (props, ref) {
+  const [fieldProps, inputProps] = splitProps(props);
+  return (
+    <Field
+      {...fieldProps}
+      render={({ input }) => <Switch ref={ref} {...input} {...inputProps} />}
+    />
+  );
+});
 
 Form.SubmitButton = ({ children, ...rest }) => {
   const { submitting } = useFormState({ subscription: { submitting: true } });

@@ -7,7 +7,6 @@ import Icon from 'components/Icon';
 import TokenName from 'components/TokenName';
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
-import TextFieldWithKeyboard from 'components/TextFieldWithKeyboard';
 import Form from 'components/Form';
 import { callApi } from 'lib/tritiumApi';
 import { lookupAddress } from 'lib/addressBook';
@@ -262,8 +261,7 @@ export default function PreviewTransactionModal({
           })}
         >
           <div style={{ marginTop: -20 }}>
-            <Form.Field
-              component={TextFieldWithKeyboard.RF}
+            <Form.TextFieldWithKeyboard
               maskable
               name="pin"
               autoFocus
