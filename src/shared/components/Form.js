@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { Form as FinalForm, useFormState } from 'react-final-form';
+import { Form as FinalForm, Field, useFormState } from 'react-final-form';
 import { createForm } from 'final-form';
 
 import TextField from 'components/TextField';
@@ -68,6 +68,8 @@ export default function Form({
     </FinalForm>
   );
 }
+
+Form.Field = Field;
 
 Form.TextField = ({ input, meta, ...rest }) => (
   <TextField error={meta.touched && meta.error} {...input} {...rest} />

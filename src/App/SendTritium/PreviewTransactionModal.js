@@ -1,6 +1,5 @@
 import { useState, useEffect, useMemo, Fragment } from 'react';
 import styled from '@emotion/styled';
-import { Field } from 'react-final-form';
 
 import ControlledModal from 'components/ControlledModal';
 import NexusAddress from 'components/NexusAddress';
@@ -263,7 +262,7 @@ export default function PreviewTransactionModal({
           })}
         >
           <div style={{ marginTop: -20 }}>
-            <Field
+            <Form.Field
               component={TextFieldWithKeyboard.RF}
               maskable
               name="pin"
