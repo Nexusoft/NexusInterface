@@ -14,25 +14,29 @@ export function updateFormInstance(formName, instance) {
 export const selectFormInstance = (formName) => (state) =>
   state.forms[formName];
 
+const defaultOnFail = (err, errorMessage) => {
+  openErrorDialog({
+    message: errorMessage || __('Error'),
+    note: err?.message || (typeof err === 'string' ? err : __('Unknown error')),
+  });
+  return {
+    [FORM_ERROR]: err,
+  };
+};
+
 export const formSubmit =
-  ({ preSubmit, submit, onSuccess, errorMessage }) =>
+  ({ preSubmit, submit, onSuccess, onFail = defaultOnFail, errorMessage }) =>
   async (values, form) => {
     if (preSubmit) {
       const proceed = preSubmit(values, form);
       if (!proceed) return;
     }
 
+    let result;
     try {
-      const result = await Promise.resolve(submit(values, form));
+      result = await Promise.resolve(submit(values, form));
     } catch (err) {
-      openErrorDialog({
-        message: errorMessage || __('Error'),
-        note:
-          err?.message || (typeof err === 'string' ? err : __('Unknown error')),
-      });
-      return {
-        [FORM_ERROR]: err,
-      };
+      return onFail(err, errorMessage);
     }
     onSuccess?.(result, values, form);
   };
