@@ -19,7 +19,6 @@ import createCache from '@emotion/cache';
 import * as core from '@emotion/react';
 import styled from '@emotion/styled';
 import { ipcRenderer, clipboard, shell } from 'electron';
-import * as ReduxForm from 'redux-form';
 
 import GlobalStyles from 'components/GlobalStyles';
 import ThemeController from 'components/ThemeController';
@@ -52,7 +51,6 @@ global.NEXUS = {
     ReactDOM,
     ReactRouterDOM,
     Redux,
-    ReduxForm,
     ReactRedux,
     emotion: { core, styled, theming: core, createCache },
   },
