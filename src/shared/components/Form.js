@@ -6,6 +6,7 @@ import { createForm } from 'final-form';
 import TextField from 'components/TextField';
 import TextFieldWithKeyboard from 'components/TextFieldWithKeyboard';
 import Select from 'components/Select';
+import AutoSuggest from 'components/AutoSuggest';
 import Switch from 'components/Switch';
 import Button from 'components/Button';
 import { updateFormInstance, selectFormInstance } from 'lib/form';
@@ -156,6 +157,26 @@ Form.Select = forwardRef(function (props, ref) {
           error={meta.touched && meta.error}
           {...input}
           {...inputProps}
+        />
+      )}
+    />
+  );
+});
+
+Form.AutoSuggest = forwardRef(function ({ inputProps, ...rest }, ref) {
+  const [fieldProps, autoSuggestProps] = splitProps(rest);
+  return (
+    <Field
+      {...fieldProps}
+      render={({ input, meta }) => (
+        <AutoSuggest
+          ref={ref}
+          inputProps={{
+            error: meta.touched && meta.error,
+            ...input,
+            ...inputProps,
+          }}
+          {...autoSuggestProps}
         />
       )}
     />
