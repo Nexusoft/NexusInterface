@@ -49,7 +49,11 @@ export default function Form({
   if (persistState && !!form) return null;
 
   const formContent =
-    render || children || ((props) => <Component {...props} />);
+    render ||
+    children ||
+    (Component ? (props) => <Component {...props} /> : null);
+
+  if (!formContent) return null;
 
   return (
     <FinalForm subscription={{}} form={form} {...config} {...rest}>
