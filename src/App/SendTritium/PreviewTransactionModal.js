@@ -132,6 +132,45 @@ export default function PreviewTransactionModal({
   recipients,
   resetSendForm,
 }) {
+  const formOptions = {
+    name: 'preview_tx',
+    initialValues: {
+      pin: '',
+    },
+    validate: ({ pin }) => {
+      const errors = {};
+      if (!pin || pin.length < 4) {
+        errors.pin = __('Pin must be at least 4 characters');
+      }
+      return errors;
+    },
+    onSubmit: formSubmit({
+      submit: async ({ pin }) => {
+        const params = {
+          pin,
+          recipients,
+        };
+
+        if (source?.token) {
+          params.address = source.token.address;
+          return await callApi('tokens/debit/token', params);
+        } else {
+          params.address = source.account.address;
+          return await callApi('finance/debit/account', params);
+        }
+      },
+      onSuccess: () => {
+        resetSendForm();
+        loadAccounts();
+        removeModal(modalId);
+        openSuccessDialog({
+          message: __('Transaction sent'),
+        });
+      },
+      errorMessage: __('Error sending transaction'),
+    }),
+  };
+
   return (
     <ControlledModal>
       <ControlledModal.Header>{__("You're sending")}</ControlledModal.Header>
@@ -221,44 +260,7 @@ export default function PreviewTransactionModal({
       </ControlledModal.Body>
 
       <ControlledModal.Footer>
-        <Form
-          name="preview_tx"
-          initialValues={{
-            pin: '',
-          }}
-          validate={({ pin }) => {
-            const errors = {};
-            if (!pin || pin.length < 4) {
-              errors.pin = __('Pin must be at least 4 characters');
-            }
-            return errors;
-          }}
-          onSubmit={formSubmit({
-            submit: async ({ pin }) => {
-              const params = {
-                pin,
-                recipients,
-              };
-
-              if (source?.token) {
-                params.address = source.token.address;
-                return await callApi('tokens/debit/token', params);
-              } else {
-                params.address = source.account.address;
-                return await callApi('finance/debit/account', params);
-              }
-            },
-            onSuccess: () => {
-              resetSendForm();
-              loadAccounts();
-              removeModal(modalId);
-              openSuccessDialog({
-                message: __('Transaction sent'),
-              });
-            },
-            errorMessage: __('Error sending transaction'),
-          })}
-        >
+        <Form {...formOptions}>
           <div style={{ marginTop: -20 }}>
             <Form.TextFieldWithKeyboard
               maskable

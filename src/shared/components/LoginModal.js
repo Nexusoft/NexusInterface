@@ -29,59 +29,61 @@ const ExtraSection = styled.div({
 export default function LoginModal({ modalId }) {
   const syncing = useSelector((state) => state.core.systemInfo?.synchronizing);
 
+  const formOptions = {
+    name: 'login_tritium',
+    initialValues: {
+      username: '',
+      password: '',
+      pin: '',
+    },
+    validate: ({ username, password, pin }) => {
+      const errors = {};
+      if (!username) {
+        errors.username = __('Username is required');
+      }
+
+      if (!password) {
+        errors.password = __('Password is required');
+      }
+
+      if (!pin) {
+        errors.pin = __('PIN is required');
+      }
+
+      return errors;
+    },
+    onSubmit: formSubmit({
+      submit: ({ username, password, pin }) =>
+        logIn({ username, password, pin }),
+      onSuccess: async (result, { username }) => {
+        removeModal(modalId);
+        showNotification(
+          __('Logged in as %{username}', { username }),
+          'success'
+        );
+      },
+      onFail: (err) => {
+        const message =
+          syncing && err?.code === -139
+            ? `${err?.message}. ${__(
+                'Not being fully synced may have caused this error.'
+              )}`
+            : err?.message;
+        openErrorDialog({
+          message: __('Error logging in'),
+          note: message,
+        });
+      },
+    }),
+  };
+
   return (
     <ControlledModal maxWidth={500}>
       {(closeModal) => (
         <>
           <ControlledModal.Header>{__('Log in')}</ControlledModal.Header>
           <ControlledModal.Body>
-            <Form
-              name="login_tritium"
-              initialValues={{
-                username: '',
-                password: '',
-                pin: '',
-              }}
-              validate={({ username, password, pin }) => {
-                const errors = {};
-                if (!username) {
-                  errors.username = __('Username is required');
-                }
-
-                if (!password) {
-                  errors.password = __('Password is required');
-                }
-
-                if (!pin) {
-                  errors.pin = __('PIN is required');
-                }
-
-                return errors;
-              }}
-              onSubmit={formSubmit({
-                submit: ({ username, password, pin }) =>
-                  logIn({ username, password, pin }),
-                onSuccess: async (result, { username }) => {
-                  removeModal(modalId);
-                  showNotification(
-                    __('Logged in as %{username}', { username }),
-                    'success'
-                  );
-                },
-                onFail: (err) => {
-                  const message =
-                    syncing && err?.code === -139
-                      ? `${err?.message}. ${__(
-                          'Not being fully synced may have caused this error.'
-                        )}`
-                      : err?.message;
-                  openErrorDialog({
-                    message: __('Error logging in'),
-                    note: message,
-                  });
-                },
-              })}
-            >
+            <Form {...formOptions}>
               <FormField
                 connectLabel
                 label={__('Username')}
