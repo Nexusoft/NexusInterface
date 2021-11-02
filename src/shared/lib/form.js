@@ -27,13 +27,13 @@ const defaultOnFail = (err, errorMessage) => {
 export const formSubmit =
   ({ preSubmit, submit, onSuccess, onFail = defaultOnFail, errorMessage }) =>
   async (values, form) => {
-    if (preSubmit) {
-      const proceed = preSubmit(values, form);
-      if (!proceed) return;
-    }
-
     let result;
     try {
+      if (preSubmit) {
+        const proceed = await Promise.resolve(preSubmit(values, form));
+        if (!proceed) return;
+      }
+
       result = await Promise.resolve(submit(values, form));
     } catch (err) {
       return onFail(err, errorMessage);
