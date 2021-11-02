@@ -74,6 +74,8 @@ export default function Form({
   );
 }
 
+Form.Field = Field;
+
 const splitProps = ({
   name,
   afterSubmit,
