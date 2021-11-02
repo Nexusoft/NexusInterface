@@ -1,18 +1,15 @@
-import { Component } from 'react';
-import { reduxForm, Field } from 'redux-form';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import ControlledModal from 'components/ControlledModal';
 import Button from 'components/Button';
-import TextField from 'components/TextField';
 import FormField from 'components/FormField';
-import AutoSuggest from 'components/AutoSuggest';
-import { confirm, confirmPin, openErrorDialog } from 'lib/dialog';
+import Form from 'components/Form';
+import { confirm, confirmPin } from 'lib/dialog';
 import { callApi } from 'lib/tritiumApi';
-import { errorHandler } from 'utils/form';
 import { loadAccounts } from 'lib/user';
-import { removeModal, showNotification } from 'lib/ui';
+import { showNotification } from 'lib/ui';
 import { createLocalNameFee } from 'lib/fees';
+import { formSubmit } from 'lib/form';
 import GA from 'lib/googleAnalytics';
 import memoize from 'utils/memoize';
 import { addressRegex } from 'consts/misc';
@@ -24,170 +21,152 @@ const getSuggestions = memoize((userTokens) => [
   ...(userTokens ? userTokens.map((t) => t.name || t.address) : []),
 ]);
 
-@connect((state, props) => ({
-  suggestions:
-    props.tokenName || props.tokenAddress
-      ? []
-      : getSuggestions(state.user.tokens),
-  initialValues: {
-    name: '',
-    token: props.tokenName || props.tokenAddress || 'NXS',
-  },
-}))
-@reduxForm({
-  form: 'new_account',
-  destroyOnUnmount: true,
-  validate: ({ name, token }) => {
-    const errors = {};
-    if (!token) {
-      errors.token = __('Token name/address is required');
-    }
+export default function NewAccountModal({ tokenName, tokenAddress }) {
+  const suggestions = useSelector((state) =>
+    tokenName || tokenAddress ? [] : getSuggestions(state.user.tokens)
+  );
 
-    return errors;
-  },
-  onSubmit: async ({ name, token }, dispatch, props) => {
-    if (!name) {
-      const confirmed = await confirm({
-        question: __('Create an account without a name?'),
-        note: __('Adding a name costs a NXS fee'),
-        labelYes: __("That's Ok"),
-        labelNo: __('Cancel'),
-      });
+  const tokenPreset = !!(tokenName || tokenAddress);
+  const SelectToken = tokenPreset ? Form.TextField : Form.AutoSuggest;
 
-      if (!confirmed) {
-        return;
-      }
-    }
-    const pin = await confirmPin();
-    if (pin) {
-      const params = { pin };
-      if (name) params.name = name;
+  return (
+    <ControlledModal maxWidth={700}>
+      {(closeModal) => {
+        const formOptions = {
+          name: 'new_account',
+          initialValues: {
+            name: '',
+            token: tokenName || tokenAddress || 'NXS',
+          },
+          validate: ({ token }) => {
+            const errors = {};
+            if (!token) {
+              errors.token = __('Token name/address is required');
+            }
+            return errors;
+          },
+          onSubmit: formSubmit({
+            submit: async ({ name, token }) => {
+              if (!name) {
+                const confirmed = await confirm({
+                  question: __('Create an account without a name?'),
+                  note: __('Adding a name costs a NXS fee'),
+                  labelYes: __("That's Ok"),
+                  labelNo: __('Cancel'),
+                });
+                if (!confirmed) return;
+              }
+              const pin = await confirmPin();
+              if (pin) {
+                const params = { pin };
+                if (name) params.name = name;
 
-      if (token === 'NXS') {
-        return await callApi('finance/create/account', params);
-      } else {
-        if (addressRegex.test(token)) {
-          try {
-            // Test if `token` is the token address
-            params.token = token;
-            return await callApi('tokens/create/account', params);
-          } catch (err) {}
-        }
+                if (token === 'NXS') {
+                  return await callApi('finance/create/account', params);
+                } else {
+                  if (addressRegex.test(token)) {
+                    try {
+                      // Test if `token` is the token address
+                      params.token = token;
+                      return await callApi('tokens/create/account', params);
+                    } catch (err) {}
+                  }
 
-        // Assuming `token` is token name
-        try {
-          params.token_name = token;
-          return await callApi('tokens/create/account', params);
-        } catch (err) {
-          openErrorDialog({
-            message: __('Error creating account'),
-            note: __('Unknown token name/address'),
-          });
-        }
-      }
-    }
-  },
-  onSubmitSuccess: (result, dispatch, props) => {
-    if (!result) return; // Submission was cancelled
-    GA.SendEvent('Users', 'NewAccount', 'Accounts', 1);
-    loadAccounts();
-    removeModal(props.modalId);
-    showNotification(
-      __('New account %{account} has been created', {
-        account: props.values.name,
-      }),
-      'success'
-    );
-  },
-  onSubmitFail: errorHandler(__('Error creating account')),
-})
-class NewAccountModal extends Component {
-  render() {
-    const {
-      handleSubmit,
-      submitting,
-      suggestions,
-      tokenName,
-      tokenAddress,
-      change,
-    } = this.props;
-    const tokenPreset = !!(tokenName || tokenAddress);
+                  // Assuming `token` is token name
+                  try {
+                    params.token_name = token;
+                    return await callApi('tokens/create/account', params);
+                  } catch (err) {
+                    // TODO: check error code?
+                    throw new Error(__('Unknown token name/address'));
+                  }
+                }
+              }
+            },
+            onSuccess: (result) => {
+              if (!result) return; // Submission was cancelled
+              GA.SendEvent('Users', 'NewAccount', 'Accounts', 1);
+              loadAccounts();
+              closeModal();
+              showNotification(
+                __('New account %{account} has been created', {
+                  account: props.values.name,
+                }),
+                'success'
+              );
+            },
+            errorMessage: __('Error creating account'),
+          }),
+        };
 
-    return (
-      <ControlledModal
-        assignClose={(closeModal) => {
-          this.closeModal = closeModal;
-        }}
-        maxWidth={700}
-      >
-        <ControlledModal.Header>{__('New account')}</ControlledModal.Header>
-        <ControlledModal.Body>
-          <form onSubmit={handleSubmit}>
-            <FormField
-              connectLabel
-              label={__('Account name (Optional)', {
-                nameFee: createLocalNameFee,
-              })}
-            >
-              <Field
-                name="name"
-                component={TextField.RF}
-                placeholder={__("New account's name")}
-              />
-            </FormField>
-
-            <Field
-              name="name"
-              component={({ input }) =>
-                !!input.value && (
-                  <div className="mt1">
-                    <span>
-                      {__('Fee: %{nameFee} NXS', {
+        return (
+          <>
+            <ControlledModal.Header>{__('New account')}</ControlledModal.Header>
+            <ControlledModal.Body>
+              <Form {...formOptions}>
+                {({ form }) => (
+                  <>
+                    <FormField
+                      connectLabel
+                      label={__('Account name (Optional)', {
                         nameFee: createLocalNameFee,
                       })}
-                    </span>
-                  </div>
-                )
-              }
-            />
+                    >
+                      <Form.TextField
+                        name="name"
+                        placeholder={__("New account's name")}
+                      />
+                    </FormField>
 
-            <div className="mt2">
-              <FormField connectLabel label={__('Token name/address')}>
-                <Field
-                  name="token"
-                  component={tokenPreset ? TextField.RF : AutoSuggest.RF}
-                  suggestions={suggestions}
-                  filterSuggestions={(suggestions) => suggestions}
-                  disabled={tokenPreset}
-                  className={tokenPreset ? 'dim' : undefined}
-                  onSelect={
-                    tokenPreset
-                      ? undefined
-                      : (suggestion) => change('token', suggestion)
-                  }
-                />
-              </FormField>
-            </div>
+                    <Form.Field
+                      name="name"
+                      component={({ input }) =>
+                        !!input.value && (
+                          <div className="mt1">
+                            <span>
+                              {__('Fee: %{nameFee} NXS', {
+                                nameFee: createLocalNameFee,
+                              })}
+                            </span>
+                          </div>
+                        )
+                      }
+                    />
 
-            <div className="mt3 flex space-between">
-              <Button
-                onClick={() => {
-                  this.closeModal();
-                }}
-              >
-                {__('Cancel')}
-              </Button>
-              <Button skin="primary" type="submit" disabled={submitting}>
-                {submitting
-                  ? __('Creating account') + '...'
-                  : __('Create account')}
-              </Button>
-            </div>
-          </form>
-        </ControlledModal.Body>
-      </ControlledModal>
-    );
-  }
+                    <div className="mt2">
+                      <FormField connectLabel label={__('Token name/address')}>
+                        <SelectToken
+                          name="token"
+                          suggestions={suggestions}
+                          filterSuggestions={(suggestions) => suggestions}
+                          disabled={tokenPreset}
+                          className={tokenPreset ? 'dim' : undefined}
+                          onSelect={
+                            tokenPreset
+                              ? undefined
+                              : (suggestion) => form.change('token', suggestion)
+                          }
+                        />
+                      </FormField>
+                    </div>
+
+                    <div className="mt3 flex space-between">
+                      <Button onClick={closeModal}>{__('Cancel')}</Button>
+                      <Form.SubmitButton skin="primary">
+                        {({ submitting }) =>
+                          submitting
+                            ? __('Creating account') + '...'
+                            : __('Create account')
+                        }
+                      </Form.SubmitButton>
+                    </div>
+                  </>
+                )}
+              </Form>
+            </ControlledModal.Body>
+          </>
+        );
+      }}
+    </ControlledModal>
+  );
 }
-
-export default NewAccountModal;
