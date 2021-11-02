@@ -5,7 +5,6 @@ import ControlledModal from 'components/ControlledModal';
 import NexusAddress from 'components/NexusAddress';
 import Icon from 'components/Icon';
 import TokenName from 'components/TokenName';
-import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
 import Form from 'components/Form';
 import { callApi } from 'lib/tritiumApi';
@@ -71,7 +70,7 @@ const Separator = styled.div(({ theme }) => ({
   backgroundColor: theme.mixer(0.125),
 }));
 
-const SubmitButton = styled(Button)({
+const SubmitButton = styled(Form.SubmitButton)({
   fontSize: 16,
 });
 
@@ -269,7 +268,7 @@ export default function PreviewTransactionModal({
               placeholder={__('Enter your PIN to confirm')}
             />
 
-            <Form.SubmitButton skin="primary" uppercase wide className="mt1">
+            <SubmitButton skin="primary" uppercase wide className="mt1">
               {({ submitting }) => (
                 <>
                   <Icon icon={sendIcon} />
@@ -280,7 +279,7 @@ export default function PreviewTransactionModal({
                   </span>
                 </>
               )}
-            </Form.SubmitButton>
+            </SubmitButton>
           </div>
         </Form>
       </ControlledModal.Footer>
