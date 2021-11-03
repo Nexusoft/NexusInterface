@@ -1,6 +1,11 @@
 import { useEffect, forwardRef } from 'react';
 import { useSelector } from 'react-redux';
-import { Form as FinalForm, Field, useFormState } from 'react-final-form';
+import {
+  Form as FinalForm,
+  Field,
+  useField,
+  useFormState,
+} from 'react-final-form';
 import { createForm } from 'final-form';
 
 import TextField from 'components/TextField';
@@ -76,127 +81,58 @@ export default function Form({
 
 Form.Field = Field;
 
-const splitProps = ({
-  name,
-  afterSubmit,
-  allowNull,
-  beforeSubmit,
-  data,
-  defaultValue,
-  format,
-  formatOnBlur,
-  initialValue,
-  isEqual,
-  multiple,
-  parse,
-  subscription,
-  type,
-  validate,
-  validateFields,
-  value,
-  inputProps,
-  ...rest
-}) => [
-  {
-    name,
-    afterSubmit,
-    allowNull,
-    beforeSubmit,
-    data,
-    defaultValue,
-    format,
-    formatOnBlur,
-    initialValue,
-    isEqual,
-    multiple,
-    parse,
-    subscription,
-    validate,
-    validateFields,
-    value,
-  },
-  { ...inputProps, ...rest },
-];
-
-Form.TextField = forwardRef(function (props, ref) {
-  const [fieldProps, inputProps] = splitProps(props);
+Form.TextField = forwardRef(function ({ name, config, ...rest }) {
+  const { input, meta } = useField(name, config);
   return (
-    <Field
-      {...fieldProps}
-      render={({ input, meta }) => (
-        <TextField
-          ref={ref}
-          error={meta.touched && meta.error}
-          {...input}
-          {...inputProps}
-        />
-      )}
+    <TextField
+      ref={ref}
+      error={meta.touched && meta.error}
+      {...input}
+      {...rest}
     />
   );
 });
 
-Form.TextFieldWithKeyboard = forwardRef(function (props, ref) {
-  const [fieldProps, inputProps] = splitProps(props);
+Form.TextFieldWithKeyboard = forwardRef(function ({ name, config, ...rest }) {
+  const { input, meta } = useField(name, config);
   return (
-    <Field
-      {...fieldProps}
-      render={({ input, meta }) => (
-        <TextFieldWithKeyboard
-          ref={ref}
-          error={meta.touched && meta.error}
-          {...input}
-          {...inputProps}
-        />
-      )}
+    <TextFieldWithKeyboard
+      ref={ref}
+      error={meta.touched && meta.error}
+      {...input}
+      {...rest}
     />
   );
 });
 
-Form.Select = forwardRef(function (props, ref) {
-  const [fieldProps, inputProps] = splitProps(props);
+Form.Select = forwardRef(function ({ name, config, ...rest }) {
+  const { input, meta } = useField(name, config);
   return (
-    <Field
-      {...fieldProps}
-      render={({ input, meta }) => (
-        <Select
-          ref={ref}
-          error={meta.touched && meta.error}
-          {...input}
-          {...inputProps}
-        />
-      )}
+    <Select ref={ref} error={meta.touched && meta.error} {...input} {...rest} />
+  );
+});
+
+Form.AutoSuggest = forwardRef(function (
+  { name, config, inputProps, ...rest },
+  ref
+) {
+  const { input, meta } = useField(name, config);
+  return (
+    <AutoSuggest
+      ref={ref}
+      inputProps={{
+        error: meta.touched && meta.error,
+        ...input,
+        ...inputProps,
+      }}
+      {...rest}
     />
   );
 });
 
-Form.AutoSuggest = forwardRef(function ({ inputProps, ...rest }, ref) {
-  const [fieldProps, autoSuggestProps] = splitProps(rest);
-  return (
-    <Field
-      {...fieldProps}
-      render={({ input, meta }) => (
-        <AutoSuggest
-          ref={ref}
-          inputProps={{
-            error: meta.touched && meta.error,
-            ...input,
-            ...inputProps,
-          }}
-          {...autoSuggestProps}
-        />
-      )}
-    />
-  );
-});
-
-Form.Switch = forwardRef(function (props, ref) {
-  const [fieldProps, inputProps] = splitProps(props);
-  return (
-    <Field
-      {...fieldProps}
-      render={({ input }) => <Switch ref={ref} {...input} {...inputProps} />}
-    />
-  );
+Form.Switch = forwardRef(function ({ name, config, ...rest }) {
+  const { input } = useField(name, config);
+  return <Switch ref={ref} {...input} {...rest} />;
 });
 
 Form.SubmitButton = ({ children, ...rest }) => {
