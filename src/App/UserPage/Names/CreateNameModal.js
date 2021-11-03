@@ -101,7 +101,7 @@ function NameTypeSelect({ input, hasNamespaces }) {
         name,
         global: type === 'global',
         namespace: type === 'namespaced' ? namespace : undefined,
-        register: registerAddress,
+        address: registerAddress,
       });
     }
   },
