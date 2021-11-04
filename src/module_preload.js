@@ -35,7 +35,6 @@ import Tab from 'components/Tab';
 import FieldSet from 'components/FieldSet';
 import AutoSuggest from 'components/AutoSuggest';
 import Modal from 'components/Modal';
-import DateTime from 'components/DateTimePicker';
 import FormField from 'components/FormField';
 import Arrow from 'components/Arrow';
 import * as color from 'utils/color';
@@ -335,7 +334,6 @@ global.NEXUS = {
     Modal,
     Tooltip,
     Select,
-    DateTime,
     TextField,
     FormField,
     Link,
