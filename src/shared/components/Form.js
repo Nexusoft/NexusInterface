@@ -81,7 +81,7 @@ export default function Form({
 
 Form.Field = Field;
 
-Form.TextField = forwardRef(function ({ name, config, ...rest }) {
+Form.TextField = forwardRef(function ({ name, config, ...rest }, ref) {
   const { input, meta } = useField(name, config);
   return (
     <TextField
@@ -93,7 +93,10 @@ Form.TextField = forwardRef(function ({ name, config, ...rest }) {
   );
 });
 
-Form.TextFieldWithKeyboard = forwardRef(function ({ name, config, ...rest }) {
+Form.TextFieldWithKeyboard = forwardRef(function (
+  { name, config, ...rest },
+  ref
+) {
   const { input, meta } = useField(name, config);
   return (
     <TextFieldWithKeyboard
@@ -105,7 +108,7 @@ Form.TextFieldWithKeyboard = forwardRef(function ({ name, config, ...rest }) {
   );
 });
 
-Form.Select = forwardRef(function ({ name, config, ...rest }) {
+Form.Select = forwardRef(function ({ name, config, ...rest }, ref) {
   const { input, meta } = useField(name, config);
   return (
     <Select ref={ref} error={meta.touched && meta.error} {...input} {...rest} />
@@ -130,7 +133,7 @@ Form.AutoSuggest = forwardRef(function (
   );
 });
 
-Form.Switch = forwardRef(function ({ name, config, ...rest }) {
+Form.Switch = forwardRef(function ({ name, config, ...rest }, ref) {
   const { input } = useField(name, config);
   return <Switch ref={ref} {...input} {...rest} />;
 });
