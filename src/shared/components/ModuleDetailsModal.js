@@ -91,7 +91,10 @@ export default function ModuleDetailsModal({ module, forInstall, install }) {
             {!forInstall && (
               <DeleteModule>
                 <Tooltip.Trigger tooltip={__('Remove module')}>
-                  <DeleteButton skin="plain" onClick={confirmDelete}>
+                  <DeleteButton
+                    skin="plain"
+                    onClick={() => confirmDelete(module)}
+                  >
                     <Icon icon={trashIcon} />
                   </DeleteButton>
                 </Tooltip.Trigger>
