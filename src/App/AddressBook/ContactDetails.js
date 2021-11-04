@@ -186,7 +186,9 @@ export default function ContactDetails() {
                 {label || (
                   <DefaultLabel>
                     {isMine
-                      ? __('My address for %{name}')
+                      ? __('My address for %{name}', {
+                          name: contact.name,
+                        })
                       : __("%{name}'s Address", {
                           name: contact.name,
                         })}
