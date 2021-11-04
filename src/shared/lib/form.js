@@ -47,5 +47,25 @@ export const checkAll = (validations) => (value, allValues, meta) => {
   }
 };
 
-export const required = (value) =>
-  !value && value !== 0 ? __('Required!') : undefined;
+export const required =
+  (message = __('Required!')) =>
+  (value) =>
+    !value && value !== 0 ? message : undefined;
+
+export const regex =
+  (regexp, message = __('Invalid!')) =>
+  (value) =>
+    typeof value !== 'string' || !regexp.test(value) ? message : undefined;
+
+export const range =
+  (min, max, message = __('Out of range!')) =>
+  (value) =>
+    ((min || min === 0) && value < min) || ((max || max === 0) && value > max)
+      ? message
+      : undefined;
+
+export const oneOf = (list, message) => (value) =>
+  !list.includes(value) ? message : undefined;
+
+export const notOneOf = (list, message) => (value) =>
+  list.includes(value) ? message : undefined;
