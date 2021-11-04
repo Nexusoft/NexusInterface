@@ -35,3 +35,17 @@ export const formSubmit =
     }
     onSuccess?.(result, values, form);
   };
+
+/**
+ * VALIDATE FUNCTIONS
+ */
+
+export const checkAll = (validations) => (value, allValues, meta) => {
+  for (const validation of validations) {
+    const result = validation(value, allValues, meta);
+    if (result) return result;
+  }
+};
+
+export const required = (value) =>
+  !value && value !== 0 ? __('Required!') : undefined;
