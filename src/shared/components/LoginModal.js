@@ -8,7 +8,7 @@ import Button from 'components/Button';
 import NewUserModal from 'components/NewUserModal';
 import RecoverPasswordPinModal from 'components/RecoverPasswordPinModal';
 import Spinner from 'components/Spinner';
-import { showNotification, openModal, removeModal } from 'lib/ui';
+import { showNotification, openModal } from 'lib/ui';
 import { openErrorDialog } from 'lib/dialog';
 import { formSubmit, required } from 'lib/form';
 import { logIn } from 'lib/user';
@@ -26,56 +26,8 @@ const ExtraSection = styled.div({
   opacity: 0.9,
 });
 
-export default function LoginModal({ modalId }) {
+export default function LoginModal() {
   const syncing = useSelector((state) => state.core.systemInfo?.synchronizing);
-
-  const formOptions = {
-    name: 'login_tritium',
-    initialValues: {
-      username: '',
-      password: '',
-      pin: '',
-    },
-    validate: ({ username, password, pin }) => {
-      const errors = {};
-      if (!username) {
-        errors.username = __('Username is required');
-      }
-
-      if (!password) {
-        errors.password = __('Password is required');
-      }
-
-      if (!pin) {
-        errors.pin = __('PIN is required');
-      }
-
-      return errors;
-    },
-    onSubmit: formSubmit({
-      submit: ({ username, password, pin }) =>
-        logIn({ username, password, pin }),
-      onSuccess: async (result, { username }) => {
-        removeModal(modalId);
-        showNotification(
-          __('Logged in as %{username}', { username }),
-          'success'
-        );
-      },
-      onFail: (err) => {
-        const message =
-          syncing && err?.code === -139
-            ? `${err?.message}. ${__(
-                'Not being fully synced may have caused this error.'
-              )}`
-            : err?.message;
-        openErrorDialog({
-          message: __('Error logging in'),
-          note: message,
-        });
-      },
-    }),
-  };
 
   return (
     <ControlledModal maxWidth={500}>
@@ -83,7 +35,37 @@ export default function LoginModal({ modalId }) {
         <>
           <ControlledModal.Header>{__('Log in')}</ControlledModal.Header>
           <ControlledModal.Body>
-            <Form {...formOptions}>
+            <Form
+              name="login_tritium"
+              initialValues={{
+                username: '',
+                password: '',
+                pin: '',
+              }}
+              onSubmit={formSubmit({
+                submit: ({ username, password, pin }) =>
+                  logIn({ username, password, pin }),
+                onSuccess: async (result, { username }) => {
+                  closeModal();
+                  showNotification(
+                    __('Logged in as %{username}', { username }),
+                    'success'
+                  );
+                },
+                onFail: (err) => {
+                  const message =
+                    syncing && err?.code === -139
+                      ? `${err?.message}. ${__(
+                          'Not being fully synced may have caused this error.'
+                        )}`
+                      : err?.message;
+                  openErrorDialog({
+                    message: __('Error logging in'),
+                    note: message,
+                  });
+                },
+              })}
+            >
               <FormField
                 connectLabel
                 label={__('Username')}

@@ -26,24 +26,22 @@ export default function PinDialog({
   return (
     <ControlledModal maxWidth={350} onClose={onClose}>
       {(closeModal) => {
-        const formOptions = {
-          name: 'pin',
-          initialValues: {
-            pin: '',
-          },
-          onSubmit: formSubmit({
-            submit: ({ pin }) => {
-              submitPin?.(pin);
-            },
-            onSuccess: closeModal,
-          }),
-        };
-
         return (
           <>
             <ControlledModal.Header>{__('Enter PIN')}</ControlledModal.Header>
             <ControlledModal.Body>
-              <Form {...formOptions}>
+              <Form
+                name="pin"
+                initialValues={{
+                  pin: '',
+                }}
+                onSubmit={formSubmit({
+                  submit: ({ pin }) => {
+                    submitPin?.(pin);
+                  },
+                  onSuccess: closeModal,
+                })}
+              >
                 <PinInput
                   name="pin"
                   validate={required()}
