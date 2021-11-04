@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import ControlledModal from 'components/ControlledModal';
 import Form from 'components/Form';
 import Button from 'components/Button';
-import { formSubmit } from 'lib/form';
+import { formSubmit, required } from 'lib/form';
 
 __ = __context('PinDialog');
 
@@ -31,13 +31,6 @@ export default function PinDialog({
           initialValues: {
             pin: '',
           },
-          validate: ({ pin }) => {
-            const errors = {};
-            if (!pin || pin.length < 4) {
-              errors.pin = __('Pin must be at least 4 characters');
-            }
-            return errors;
-          },
           onSubmit: formSubmit({
             submit: ({ pin }) => {
               submitPin?.(pin);
@@ -53,6 +46,7 @@ export default function PinDialog({
               <Form {...formOptions}>
                 <PinInput
                   name="pin"
+                  validate={required()}
                   maskable
                   autoFocus
                   skin="filled-inverted"

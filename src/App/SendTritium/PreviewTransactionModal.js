@@ -137,13 +137,6 @@ export default function PreviewTransactionModal({
     initialValues: {
       pin: '',
     },
-    validate: ({ pin }) => {
-      const errors = {};
-      if (!pin || pin.length < 4) {
-        errors.pin = __('Pin must be at least 4 characters');
-      }
-      return errors;
-    },
     onSubmit: formSubmit({
       submit: async ({ pin }) => {
         const params = {
@@ -263,8 +256,9 @@ export default function PreviewTransactionModal({
         <Form {...formOptions}>
           <div style={{ marginTop: -20 }}>
             <Form.TextFieldWithKeyboard
-              maskable
               name="pin"
+              validate={required()}
+              maskable
               autoFocus
               skin="filled-inverted"
               placeholder={__('Enter your PIN to confirm')}

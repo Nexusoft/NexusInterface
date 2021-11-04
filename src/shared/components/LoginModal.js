@@ -10,7 +10,7 @@ import RecoverPasswordPinModal from 'components/RecoverPasswordPinModal';
 import Spinner from 'components/Spinner';
 import { showNotification, openModal, removeModal } from 'lib/ui';
 import { openErrorDialog } from 'lib/dialog';
-import { formSubmit } from 'lib/form';
+import { formSubmit, required } from 'lib/form';
 import { logIn } from 'lib/user';
 
 __ = __context('Login');
@@ -91,6 +91,7 @@ export default function LoginModal({ modalId }) {
               >
                 <Form.TextFieldWithKeyboard
                   name="username"
+                  validate={required()}
                   placeholder={__('Enter your username')}
                   autoFocus
                 />
@@ -98,16 +99,18 @@ export default function LoginModal({ modalId }) {
 
               <FormField connectLabel label={__('Password')}>
                 <Form.TextFieldWithKeyboard
-                  maskable
                   name="password"
+                  validate={required()}
+                  maskable
                   placeholder={__('Enter your password')}
                 />
               </FormField>
 
               <FormField connectLabel label={__('PIN')}>
                 <Form.TextFieldWithKeyboard
-                  maskable
                   name="pin"
+                  validate={required()}
+                  maskable
                   placeholder={__('Enter your PIN')}
                 />
               </FormField>
