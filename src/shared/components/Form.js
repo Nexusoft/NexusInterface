@@ -81,8 +81,11 @@ export default function Form({
 
 Form.Field = Field;
 
-Form.TextField = forwardRef(function ({ name, config, ...rest }, ref) {
-  const { input, meta } = useField(name, config);
+Form.TextField = forwardRef(function (
+  { name, config, validate, ...rest },
+  ref
+) {
+  const { input, meta } = useField(name, { validate, ...config });
   return (
     <TextField
       ref={ref}
@@ -94,10 +97,10 @@ Form.TextField = forwardRef(function ({ name, config, ...rest }, ref) {
 });
 
 Form.TextFieldWithKeyboard = forwardRef(function (
-  { name, config, ...rest },
+  { name, config, validate, ...rest },
   ref
 ) {
-  const { input, meta } = useField(name, config);
+  const { input, meta } = useField(name, { validate, ...config });
   return (
     <TextFieldWithKeyboard
       ref={ref}
@@ -108,18 +111,18 @@ Form.TextFieldWithKeyboard = forwardRef(function (
   );
 });
 
-Form.Select = forwardRef(function ({ name, config, ...rest }, ref) {
-  const { input, meta } = useField(name, config);
+Form.Select = forwardRef(function ({ name, config, validate, ...rest }, ref) {
+  const { input, meta } = useField(name, { validate, ...config });
   return (
     <Select ref={ref} error={meta.touched && meta.error} {...input} {...rest} />
   );
 });
 
 Form.AutoSuggest = forwardRef(function (
-  { name, config, inputProps, ...rest },
+  { name, config, validate, inputProps, ...rest },
   ref
 ) {
-  const { input, meta } = useField(name, config);
+  const { input, meta } = useField(name, { validate, ...config });
   return (
     <AutoSuggest
       ref={ref}
@@ -133,8 +136,8 @@ Form.AutoSuggest = forwardRef(function (
   );
 });
 
-Form.Switch = forwardRef(function ({ name, config, ...rest }, ref) {
-  const { input } = useField(name, config);
+Form.Switch = forwardRef(function ({ name, config, validate, ...rest }, ref) {
+  const { input } = useField(name, { validate, ...config });
   return <Switch ref={ref} {...input} {...rest} />;
 });
 
