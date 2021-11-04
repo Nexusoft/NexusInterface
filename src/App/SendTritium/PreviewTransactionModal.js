@@ -9,7 +9,6 @@ import Tooltip from 'components/Tooltip';
 import Form from 'components/Form';
 import { callApi } from 'lib/tritiumApi';
 import { lookupAddress } from 'lib/addressBook';
-import { removeModal } from 'lib/ui';
 import { openSuccessDialog } from 'lib/dialog';
 import { loadAccounts } from 'lib/user';
 import { formSubmit } from 'lib/form';
@@ -127,158 +126,163 @@ function AddressTo({ address }) {
   );
 }
 
+function TransactionDetails({ source, recipients }) {
+  return (
+    <Layout>
+      <LabelCell>
+        <Label>{__('From')}</Label>
+      </LabelCell>
+      <ContentCell>
+        <Source source={source} />
+      </ContentCell>
+
+      {recipients.map(
+        ({ name_to, address_to, amount, reference, expires }, i) => (
+          <Fragment key={i}>
+            <Separator />
+
+            <LabelCell>
+              <Label>{__('To')}</Label>
+            </LabelCell>
+            <ContentCell>
+              <ContentCell>
+                {name_to && <NameTo name={name_to} />}
+                {address_to && <AddressTo address={address_to} />}
+              </ContentCell>
+            </ContentCell>
+
+            <LabelCell>
+              <Label>{__('Amount')}</Label>
+            </LabelCell>
+            <ContentCell>
+              <ContentCell>
+                <Content>
+                  {amount}{' '}
+                  <TokenName account={source?.account} token={source?.token} />
+                </Content>
+              </ContentCell>
+            </ContentCell>
+
+            {!!reference && (
+              <>
+                <LabelCell>
+                  <Label>{__('Reference')}</Label>
+                </LabelCell>
+                <ContentCell>
+                  <ContentCell>{reference}</ContentCell>
+                </ContentCell>
+              </>
+            )}
+
+            {(!!expires || expires === 0) && (
+              <>
+                <LabelCell>
+                  <Label>{__('Expires')}</Label>
+                </LabelCell>
+                <ContentCell>
+                  <ContentCell>
+                    {expires === 0 ? (
+                      <span>
+                        <span className="v-align mr0_4">{__('NO EXPIRY')}</span>
+                        <Tooltip.Trigger
+                          tooltip={__(
+                            "Transaction never expires, and you won't be able to void it even if the recipient doesn't credit the transaction"
+                          )}
+                        >
+                          <Icon icon={WarningIcon} />
+                        </Tooltip.Trigger>
+                      </span>
+                    ) : (
+                      __('in %{time_span}', {
+                        time_span: timeToText(expires),
+                      })
+                    )}
+                  </ContentCell>
+                </ContentCell>
+              </>
+            )}
+          </Fragment>
+        )
+      )}
+    </Layout>
+  );
+}
+
 export default function PreviewTransactionModal({
   source,
   recipients,
   resetSendForm,
 }) {
-  const formOptions = {
-    name: 'preview_tx',
-    initialValues: {
-      pin: '',
-    },
-    onSubmit: formSubmit({
-      submit: async ({ pin }) => {
-        const params = {
-          pin,
-          recipients,
-        };
-
-        if (source?.token) {
-          params.address = source.token.address;
-          return await callApi('tokens/debit/token', params);
-        } else {
-          params.address = source.account.address;
-          return await callApi('finance/debit/account', params);
-        }
-      },
-      onSuccess: () => {
-        resetSendForm();
-        loadAccounts();
-        removeModal(modalId);
-        openSuccessDialog({
-          message: __('Transaction sent'),
-        });
-      },
-      errorMessage: __('Error sending transaction'),
-    }),
-  };
-
   return (
     <ControlledModal>
-      <ControlledModal.Header>{__("You're sending")}</ControlledModal.Header>
-      <ControlledModal.Body>
-        <Layout>
-          <LabelCell>
-            <Label>{__('From')}</Label>
-          </LabelCell>
-          <ContentCell>
-            <Source source={source} />
-          </ContentCell>
+      {(closeModal) => (
+        <>
+          <ControlledModal.Header>
+            {__("You're sending")}
+          </ControlledModal.Header>
+          <ControlledModal.Body>
+            <TransactionDetails source={source} recipients={recipients} />
+          </ControlledModal.Body>
 
-          {recipients.map(
-            ({ name_to, address_to, amount, reference, expires }, i) => (
-              <Fragment key={i}>
-                <Separator />
+          <ControlledModal.Footer>
+            <Form
+              name="preview_tx"
+              initialValues={{
+                pin: '',
+              }}
+              onSubmit={formSubmit({
+                submit: async ({ pin }) => {
+                  const params = {
+                    pin,
+                    recipients,
+                  };
 
-                <LabelCell>
-                  <Label>{__('To')}</Label>
-                </LabelCell>
-                <ContentCell>
-                  <ContentCell>
-                    {name_to && <NameTo name={name_to} />}
-                    {address_to && <AddressTo address={address_to} />}
-                  </ContentCell>
-                </ContentCell>
+                  if (source?.token) {
+                    params.address = source.token.address;
+                    return await callApi('tokens/debit/token', params);
+                  } else {
+                    params.address = source.account.address;
+                    return await callApi('finance/debit/account', params);
+                  }
+                },
+                onSuccess: () => {
+                  resetSendForm();
+                  loadAccounts();
+                  closeModal();
+                  openSuccessDialog({
+                    message: __('Transaction sent'),
+                  });
+                },
+                errorMessage: __('Error sending transaction'),
+              })}
+            >
+              <div style={{ marginTop: -20 }}>
+                <Form.TextFieldWithKeyboard
+                  name="pin"
+                  validate={required()}
+                  maskable
+                  autoFocus
+                  skin="filled-inverted"
+                  placeholder={__('Enter your PIN to confirm')}
+                />
 
-                <LabelCell>
-                  <Label>{__('Amount')}</Label>
-                </LabelCell>
-                <ContentCell>
-                  <ContentCell>
-                    <Content>
-                      {amount}{' '}
-                      <TokenName
-                        account={source?.account}
-                        token={source?.token}
-                      />
-                    </Content>
-                  </ContentCell>
-                </ContentCell>
-
-                {!!reference && (
-                  <>
-                    <LabelCell>
-                      <Label>{__('Reference')}</Label>
-                    </LabelCell>
-                    <ContentCell>
-                      <ContentCell>{reference}</ContentCell>
-                    </ContentCell>
-                  </>
-                )}
-
-                {(!!expires || expires === 0) && (
-                  <>
-                    <LabelCell>
-                      <Label>{__('Expires')}</Label>
-                    </LabelCell>
-                    <ContentCell>
-                      <ContentCell>
-                        {expires === 0 ? (
-                          <span>
-                            <span className="v-align mr0_4">
-                              {__('NO EXPIRY')}
-                            </span>
-                            <Tooltip.Trigger
-                              tooltip={__(
-                                "Transaction never expires, and you won't be able to void it even if the recipient doesn't credit the transaction"
-                              )}
-                            >
-                              <Icon icon={WarningIcon} />
-                            </Tooltip.Trigger>
-                          </span>
-                        ) : (
-                          __('in %{time_span}', {
-                            time_span: timeToText(expires),
-                          })
-                        )}
-                      </ContentCell>
-                    </ContentCell>
-                  </>
-                )}
-              </Fragment>
-            )
-          )}
-        </Layout>
-      </ControlledModal.Body>
-
-      <ControlledModal.Footer>
-        <Form {...formOptions}>
-          <div style={{ marginTop: -20 }}>
-            <Form.TextFieldWithKeyboard
-              name="pin"
-              validate={required()}
-              maskable
-              autoFocus
-              skin="filled-inverted"
-              placeholder={__('Enter your PIN to confirm')}
-            />
-
-            <SubmitButton skin="primary" uppercase wide className="mt1">
-              {({ submitting }) => (
-                <>
-                  <Icon icon={sendIcon} />
-                  <span className="ml0_4 v-align">
-                    {submitting
-                      ? __('Sending transaction...')
-                      : __('Send transaction')}
-                  </span>
-                </>
-              )}
-            </SubmitButton>
-          </div>
-        </Form>
-      </ControlledModal.Footer>
+                <SubmitButton skin="primary" uppercase wide className="mt1">
+                  {({ submitting }) => (
+                    <>
+                      <Icon icon={sendIcon} />
+                      <span className="ml0_4 v-align">
+                        {submitting
+                          ? __('Sending transaction...')
+                          : __('Send transaction')}
+                      </span>
+                    </>
+                  )}
+                </SubmitButton>
+              </div>
+            </Form>
+          </ControlledModal.Footer>
+        </>
+      )}
     </ControlledModal>
   );
 }
