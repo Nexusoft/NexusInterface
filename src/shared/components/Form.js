@@ -6,6 +6,7 @@ import {
   useField,
   useFormState,
 } from 'react-final-form';
+import { FieldArray } from 'react-final-form-arrays';
 import { createForm } from 'final-form';
 
 import TextField from 'components/TextField';
@@ -80,6 +81,8 @@ export default function Form({
 }
 
 Form.Field = Field;
+
+Form.FieldArray = FieldArray;
 
 Form.TextField = forwardRef(function (
   { name, config, validate, ...rest },
