@@ -96,8 +96,11 @@ function NameTo({ name }) {
   const [address, setAddress] = useState(null);
   useEffect(() => {
     (async () => {
-      const nameRecord = await callApi('names/get/name', { name });
-      setAddress(nameRecord?.register);
+      const nameRecord = await callApi('finance/get/any', {
+        //Uses new "any" to resolve any name type to address
+        name: name.charAt(0) === '~' ? name.substring(1) : name, //TODO: Finance is having issues with ~, core needs to be accept it or we remove the ~ on get/accounts
+      });
+      setAddress(nameRecord?.address);
     })();
   }, []);
   return (
@@ -149,11 +152,11 @@ const formOptions = {
     };
 
     if (source?.token) {
-      params.address = source.token.address;
-      return await callApi('tokens/debit/token', params);
+      params.from = source.token.address;
+      return await callApi('finance/debit/token', params);
     } else {
-      params.address = source.account.address;
-      return await callApi('finance/debit/account', params);
+      params.from = source.account.address;
+      return await callApi('finance/debit/all', params);
     }
   },
   onSubmitSuccess: (result, dispatch, { modalId, resetSendForm }) => {

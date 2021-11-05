@@ -99,7 +99,9 @@ async function asyncValidateRecipient({ recipient, source }) {
   }
   if (!params.address) {
     try {
-      const result = await callApi('names/get/name', { name: address });
+      const result = await callApi('names/get/name', {
+        name: address.charAt(0) === '~' ? address.substring(1) : address, //TODO: Finance is having issues with ~, core needs to be accept it or we remove the ~ on get/accounts
+      });
       params.address = result.register;
     } catch (err) {
       throw { address: __('Invalid name/address') };
@@ -149,7 +151,8 @@ function getRecipientsParams(recipients, { advancedOptions }) {
       if (addressRegex.test(address)) {
         recipParam.address_to = address;
       } else {
-        recipParam.name_to = address;
+        recipParam.name_to =
+          address.charAt(0) === '~' ? address.substring(1) : address; //TODO: Finance is having issues with ~, core needs to be accept it or we remove the ~ on get/accounts;
       }
       if (advancedOptions) {
         const expires =
