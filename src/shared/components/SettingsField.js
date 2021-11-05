@@ -1,9 +1,7 @@
 // External
-import { cloneElement, Children, Component } from 'react';
+import { cloneElement, Children } from 'react';
 import styled from '@emotion/styled';
-
-// Internal
-import { newUID } from 'utils/misc';
+import useUID from 'utils/useUID';
 
 const indentSpace = 20;
 
@@ -41,58 +39,40 @@ const Input = styled.div({
  * @class SettingsField
  * @extends {Component}
  */
-class SettingsField extends Component {
-  inputId = newUID();
+export default function SettingsField({
+  label,
+  subLabel,
+  connectLabel,
+  children,
+  indent,
+  disabled,
+  ...rest
+}) {
+  const inputId = useUID();
 
-  /**
-   *  Handles input to a settingsfield
-   *
-   * @memberof SettingsField
-   */
-  settingsInput = () => {
-    const { connectLabel, children } = this.props;
+  const settingsInput = () => {
     if (connectLabel) {
       if (typeof children === 'function') {
-        return children(this.inputId);
+        return children(inputId);
       } else {
         return cloneElement(Children.only(children), {
-          id: this.inputId,
+          id: inputId,
         });
       }
     }
-
     return children;
   };
 
-  /**
-   * Component's Renderable JSX
-   *
-   * @returns
-   * @memberof SettingsField
-   */
-  render() {
-    const {
-      label,
-      subLabel,
-      connectLabel,
-      children,
-      indent,
-      disabled,
-      ...rest
-    } = this.props;
-    return (
-      <Field indent={indent} disabled={disabled} {...rest}>
-        <Label
-          htmlFor={connectLabel ? this.inputId : undefined}
-          onClick={(e) => e.preventDefault()}
-        >
-          <div>{label}</div>
-          {subLabel && <SubLabel>{subLabel}</SubLabel>}
-        </Label>
-        <Input>{this.settingsInput()}</Input>
-      </Field>
-    );
-  }
+  return (
+    <Field indent={indent} disabled={disabled} {...rest}>
+      <Label
+        htmlFor={connectLabel ? inputId : undefined}
+        onClick={(e) => e.preventDefault()}
+      >
+        <div>{label}</div>
+        {subLabel && <SubLabel>{subLabel}</SubLabel>}
+      </Label>
+      <Input>{settingsInput()}</Input>
+    </Field>
+  );
 }
-
-export default SettingsField;

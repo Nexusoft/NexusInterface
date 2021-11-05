@@ -10,7 +10,7 @@
  */
 
 // External
-import { cloneElement, Children, Component } from 'react';
+import { cloneElement, Children, useEffect, useState, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import styled from '@emotion/styled';
 
@@ -149,44 +149,17 @@ const Tooltip = styled.div(
   })
 );
 
-class TooltipPortal extends Component {
-  /**
-   *Creates an instance of TooltipPortal.
-   * @param {*} props
-   * @memberof TooltipPortal
-   */
-  constructor(props) {
-    super(props);
-    this.el = document.createElement('div');
-  }
+function TooltipPortal(props) {
+  const ref = useRef();
+  if (!ref.current) ref.current = document.createElement('div');
+  useEffect(() => {
+    document.getElementsByTagName('body')[0].appendChild(ref.current);
+    return () => {
+      document.getElementsByTagName('body')[0].removeChild(ref.current);
+    };
+  }, []);
 
-  /**
-   * Component Mount Callback
-   *
-   * @memberof TooltipPortal
-   */
-  componentDidMount() {
-    document.getElementsByTagName('body')[0].appendChild(this.el);
-  }
-
-  /**
-   * Component Unmount Callback
-   *
-   * @memberof TooltipPortal
-   */
-  componentWillUnmount() {
-    document.getElementsByTagName('body')[0].removeChild(this.el);
-  }
-
-  /**
-   * Component's Renderable JSX
-   *
-   * @returns
-   * @memberof TooltipPortal
-   */
-  render() {
-    return ReactDOM.createPortal(<Tooltip {...this.props} />, this.el);
-  }
+  return ReactDOM.createPortal(<Tooltip {...props} />, ref.current);
 }
 
 /**
@@ -196,29 +169,23 @@ class TooltipPortal extends Component {
  * @memberof TooltipPortal
  * @extends {Component}
  */
-class TooltipTrigger extends Component {
-  static defaultProps = {
-    position: 'bottom',
-    align: 'center',
-    skin: 'default',
-  };
+function TooltipTrigger({
+  position = 'bottom',
+  align = 'center',
+  skin = 'default',
+  children,
+  tooltip,
+  style,
+  ...rest
+}) {
+  const [active, setActive] = useState(false);
+  const [tooltipStyles, setTooltipStyles] = useState({});
+  const triggerRef = useRef();
 
-  state = {
-    active: false,
-    tooltipStyles: {},
-  };
+  const showTooltip = () => {
+    if (!triggerRef.current) return;
 
-  /**
-   * Show the Tooltip
-   *
-   * @memberof TooltipTrigger
-   */
-  showTooltip = () => {
-    const trigger = ReactDOM.findDOMNode(this);
-    if (!trigger) return;
-
-    const { position, align } = this.props;
-    const rect = trigger.getBoundingClientRect();
+    const rect = triggerRef.current.getBoundingClientRect();
     const tooltipStyles = {
       position: 'fixed',
       zIndex: zIndex.tooltips,
@@ -226,44 +193,32 @@ class TooltipTrigger extends Component {
       ...tooltipAligning(rect, position, align),
     };
 
-    this.setState({ active: true, tooltipStyles });
+    setActive(true);
+    setTooltipStyles(tooltipStyles);
   };
 
-  /**
-   * Hide the Tooltip
-   *
-   * @memberof TooltipTrigger
-   */
-  hideTooltip = () => {
-    this.setState({ active: false });
+  const hideTooltip = () => {
+    setActive(false);
   };
 
-  /**
-   * Component's Renderable JSX
-   *
-   * @returns
-   * @memberof TooltipTrigger
-   */
-  render() {
-    const { children, tooltip, style, ...rest } = this.props;
-
-    return (
-      <>
-        {cloneElement(Children.only(children), {
-          onMouseEnter: this.showTooltip,
-          onMouseLeave: this.hideTooltip,
-        })}
-        {!!tooltip && this.state.active && (
-          <TooltipPortal
-            style={{ ...this.state.tooltipStyles, ...style }}
-            {...rest}
-          >
-            {tooltip}
-          </TooltipPortal>
-        )}
-      </>
-    );
-  }
+  return (
+    <>
+      {cloneElement(Children.only(children), {
+        onMouseEnter: showTooltip,
+        onMouseLeave: hideTooltip,
+        ref: triggerRef,
+      })}
+      {!!tooltip && active && (
+        <TooltipPortal
+          style={{ ...tooltipStyles, ...style }}
+          {...{ position, align, skin }}
+          {...rest}
+        >
+          {tooltip}
+        </TooltipPortal>
+      )}
+    </>
+  );
 }
 
 Tooltip.Portal = TooltipPortal;

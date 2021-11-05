@@ -234,7 +234,6 @@ async function moveExtractedContent() {
         );
       }
     }
-    console.log('Moved Successfully');
   } catch (e) {
     console.log('Moving Extracted Content Error', e);
     throw e;
