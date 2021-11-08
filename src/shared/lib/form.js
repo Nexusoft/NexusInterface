@@ -40,12 +40,14 @@ export const formSubmit =
  * VALIDATE FUNCTIONS
  */
 
-export const checkAll = (validations) => (value, allValues, meta) => {
-  for (const validation of validations) {
-    const result = validation(value, allValues, meta);
-    if (result) return result;
-  }
-};
+export const checkAll =
+  (...validations) =>
+  (value, allValues, meta) => {
+    for (const validation of validations) {
+      const result = validation(value, allValues, meta);
+      if (result) return result;
+    }
+  };
 
 export const required =
   (message = __('Required!')) =>
