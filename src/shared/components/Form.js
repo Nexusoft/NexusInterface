@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import {
   Form as FinalForm,
   Field,
+  FormSpy,
   useField,
   useFormState,
 } from 'react-final-form';
@@ -83,6 +84,8 @@ export default function Form({
 Form.Field = Field;
 
 Form.FieldArray = FieldArray;
+
+Form.Spy = FormSpy;
 
 Form.TextField = forwardRef(function (
   { name, config, validate, type, ...rest },
