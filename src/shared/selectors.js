@@ -23,7 +23,8 @@ export const selectBalances = memoize(
     if (!balances) return [undefined, undefined];
     const nxsIndex = balances.findIndex(({ token }) => token === '0');
     const tokenBalances = [...balances];
-    const [nxsBalances] = tokenBalances.splice(nxsIndex, 1);
+    const [nxsBalances] =
+      nxsIndex >= 0 ? tokenBalances.splice(nxsIndex, 1) : [undefined];
     return [nxsBalances, tokenBalances];
   },
   ({ user: { balances } }) => [balances]

@@ -78,74 +78,77 @@ export default function Balances() {
 
   return (
     <BalancesColumn>
-      <BalancesTitle>{__('NXS balances')}</BalancesTitle>
       {!!nxsBalances && (
-        <BalancesWrapper>
-          <Line bold>
-            <Label>{__('Total')}</Label>
-            <Value>{formatNumber(total, 6)} NXS</Value>
-          </Line>
+        <Fragment>
+          <BalancesTitle>{__('NXS balances')}</BalancesTitle>
 
-          <Line>
-            <Label>
-              <span className="v-align">{__('Available')}</span>
-              <QuestionCircle
-                tooltip={__(
-                  'The current balance across all NXS accounts that is available to be spent'
-                )}
-              />
-            </Label>
-            <Value>{formatNumber(nxsBalances.available, 6)} NXS</Value>
-          </Line>
+          <BalancesWrapper>
+            <Line bold>
+              <Label>{__('Total')}</Label>
+              <Value>{formatNumber(total, 6)} NXS</Value>
+            </Line>
 
-          <Line>
-            <Label>
-              <span className="v-align">{__('Stake')}</span>
-              <QuestionCircle
-                tooltip={__(
-                  'The amount of NXS currently staked in the trust account'
-                )}
-              />
-            </Label>
-            <Value>{formatNumber(nxsBalances.stake, 6)} NXS</Value>
-          </Line>
+            <Line>
+              <Label>
+                <span className="v-align">{__('Available')}</span>
+                <QuestionCircle
+                  tooltip={__(
+                    'The current balance across all NXS accounts that is available to be spent'
+                  )}
+                />
+              </Label>
+              <Value>{formatNumber(nxsBalances.available, 6)} NXS</Value>
+            </Line>
 
-          <Line>
-            <Label>
-              <span className="v-align">{__('Unclaimed')}</span>
-              <QuestionCircle
-                tooltip={__(
-                  'The sum of all debit and coinbase transactions made to your NXS accounts that are confirmed but have not yet been credited. This does NOT include immature and unconfirmed amounts'
-                )}
-              />
-            </Label>
-            <Value>{formatNumber(nxsBalances.unclaimed, 6)} NXS</Value>
-          </Line>
+            <Line>
+              <Label>
+                <span className="v-align">{__('Stake')}</span>
+                <QuestionCircle
+                  tooltip={__(
+                    'The amount of NXS currently staked in the trust account'
+                  )}
+                />
+              </Label>
+              <Value>{formatNumber(nxsBalances.stake, 6)} NXS</Value>
+            </Line>
 
-          <Line>
-            <Label>
-              <span className="v-align">{__('Unconfirmed')}</span>
-              <QuestionCircle
-                tooltip={__(
-                  'The sum of all debit transactions made to your NXS accounts that are not confirmed, or credits you have made to your accounts that are not yet confirmed (not yet included in a block)'
-                )}
-              />
-            </Label>
-            <Value>{formatNumber(nxsBalances.unconfirmed, 6)} NXS</Value>
-          </Line>
+            <Line>
+              <Label>
+                <span className="v-align">{__('Unclaimed')}</span>
+                <QuestionCircle
+                  tooltip={__(
+                    'The sum of all debit and coinbase transactions made to your NXS accounts that are confirmed but have not yet been credited. This does NOT include immature and unconfirmed amounts'
+                  )}
+                />
+              </Label>
+              <Value>{formatNumber(nxsBalances.unclaimed, 6)} NXS</Value>
+            </Line>
 
-          <Line>
-            <Label>
-              <span className="v-align">{__('Immature')}</span>
-              <QuestionCircle
-                tooltip={__(
-                  'The sum of all coinbase transactions that have not yet reached maturity'
-                )}
-              />
-            </Label>
-            <Value>{formatNumber(nxsBalances.immature, 6)} NXS</Value>
-          </Line>
-        </BalancesWrapper>
+            <Line>
+              <Label>
+                <span className="v-align">{__('Unconfirmed')}</span>
+                <QuestionCircle
+                  tooltip={__(
+                    'The sum of all debit transactions made to your NXS accounts that are not confirmed, or credits you have made to your accounts that are not yet confirmed (not yet included in a block)'
+                  )}
+                />
+              </Label>
+              <Value>{formatNumber(nxsBalances.unconfirmed, 6)} NXS</Value>
+            </Line>
+
+            <Line>
+              <Label>
+                <span className="v-align">{__('Immature')}</span>
+                <QuestionCircle
+                  tooltip={__(
+                    'The sum of all coinbase transactions that have not yet reached maturity'
+                  )}
+                />
+              </Label>
+              <Value>{formatNumber(nxsBalances.immature, 6)} NXS</Value>
+            </Line>
+          </BalancesWrapper>
+        </Fragment>
       )}
 
       {tokenBalances?.map((balance) => (
