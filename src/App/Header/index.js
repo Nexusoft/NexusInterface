@@ -90,9 +90,10 @@ const preReleaseTag = alphaRelease ? 'ALPHA' : betaRelease ? 'BETA' : null;
 export default function Header() {
   const coreConnected = useSelector(isCoreConnected);
   const testnet = useSelector((state) => state.core.systemInfo?.testnet);
-  const privateNet = useSelector((state) => state.core.systemInfo?.privateNet);
+  const privateNet = useSelector((state) => state.core.systemInfo?.private);
   const legacyTestnet = useSelector((state) => state.core.info?.testnet);
   const lite = useSelector((state) => state.core.systemInfo?.litemode);
+  const hybrid = useSelector((state) => state.core.systemInfo?.hybrid);
 
   return (
     <HeaderComponent>
@@ -113,6 +114,7 @@ export default function Header() {
           <>
             {__('Tritium Mode')}
             {lite && ` (${__('Lite')})`}
+            {hybrid && `[ Hybrid ]`}
             {!!testnet &&
               ` -${privateNet ? ' private' : ''} testnet ${testnet}`}
           </>
