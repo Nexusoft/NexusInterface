@@ -66,17 +66,9 @@ const getSuggestions = memoize((userTokens) => [
       if (token === 'NXS') {
         return await callApi('finance/create/account', params);
       } else {
-        if (addressRegex.test(token)) {
-          try {
-            // Test if `token` is the token address
-            params.token = token;
-            return await callApi('tokens/create/account', params);
-          } catch (err) {}
-        }
-
-        // Assuming `token` is token name
+        //token accepts Name or Address
         try {
-          params.token_name = token;
+          params.token = token;
           return await callApi('tokens/create/account', params);
         } catch (err) {
           openErrorDialog({
