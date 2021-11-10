@@ -78,14 +78,17 @@ const SubmitButton = styled(Button)({
 
 function Source({ source }) {
   const { name, address } = source?.account || source?.token || {};
+  const { ticker } = source?.token || {}; //Only get ticker if the source is a token.
   return (
     <NexusAddress
       address={address}
       label={
-        name ? (
-          <SourceName>{name}</SourceName>
+        name || ticker ? (
+          <SourceName>{name || ticker}</SourceName>
         ) : (
-          <UnNamed>{__('Unnamed account')}</UnNamed>
+          <UnNamed>
+            {source?.token ? __('Unnamed token') : __('Unnamed account')}
+          </UnNamed>
         )
       }
     />
