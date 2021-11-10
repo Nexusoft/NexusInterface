@@ -2,10 +2,9 @@ import Tooltip from 'components/Tooltip';
 import NexusAddress from 'components/NexusAddress';
 
 const getToken = ({ token, account, contract }) => {
-  if (token) return token;
-  const obj = account || contract;
+  const obj = token || account || contract;
   return {
-    name: obj?.ticker || obj?.token_name,
+    name: obj?.ticker || obj?.token_name, //token_name might be depercated
     address: obj?.token,
   };
 };
