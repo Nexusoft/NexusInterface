@@ -26,7 +26,8 @@ const selectAccountTokens = memoize((accounts, ownedTokens) =>
   accounts?.reduce((tokens, account) => {
     if (
       account.token !== '0' &&
-      !ownedTokens.some((token) => token.address === account.token)
+      !ownedTokens.some((token) => token.address === account.token) &&
+      !tokens?.some((token) => token.address === account.token)
     ) {
       tokens.push({
         ticker: account.ticker || account.token_name,
