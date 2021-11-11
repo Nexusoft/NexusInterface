@@ -59,6 +59,11 @@ const MenuItem = styled(NavLink)(
       color: theme.primaryAccent,
     },
   }),
+  ({ disabled, theme }) =>
+    disabled && {
+      pointerEvents: 'none',
+      color: theme.mixer(0.05),
+    },
   ({ selected, theme }) =>
     selected && {
       '&, &:hover': {
@@ -71,6 +76,7 @@ const MenuItem = styled(NavLink)(
 export default function UserBrief({ match }) {
   const username = useSelector(selectUsername);
   const genesis = useSelector((state) => state.user.status?.genesis);
+  const privateNet = useSelector((state) => state.core.systemInfo?.private);
   return (
     <UserBriefComponent>
       <Username>{username}</Username>
@@ -81,7 +87,9 @@ export default function UserBrief({ match }) {
       </Genesis>
       <Separator />
       <MenuItem to={`${match.url}/Accounts`}>{__('Accounts')}</MenuItem>
-      <MenuItem to={`${match.url}/Staking`}>{__('Staking')}</MenuItem>
+      <MenuItem disabled={privateNet ? true : null} to={`${match.url}/Staking`}>
+        {__('Staking')}
+      </MenuItem>
       <MenuItem to={`${match.url}/Tokens`}>{__('Tokens')}</MenuItem>
       <MenuItem to={`${match.url}/Names`}>{__('Names')}</MenuItem>
       <MenuItem to={`${match.url}/Namespaces`}>{__('Namespaces')}</MenuItem>
