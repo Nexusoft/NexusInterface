@@ -5,6 +5,7 @@ import {
   Field,
   FormSpy,
   useField,
+  useForm,
   useFormState,
 } from 'react-final-form';
 import { FieldArray } from 'react-final-form-arrays';
@@ -132,6 +133,7 @@ Form.AutoSuggest = forwardRef(function (
   ref
 ) {
   const { input, meta } = useField(name, { validate, type, ...config });
+  const form = useForm();
   return (
     <AutoSuggest
       ref={ref}
@@ -140,6 +142,7 @@ Form.AutoSuggest = forwardRef(function (
         ...input,
         ...inputProps,
       }}
+      onSelect={(value) => form.change(name, value)}
       {...rest}
     />
   );
