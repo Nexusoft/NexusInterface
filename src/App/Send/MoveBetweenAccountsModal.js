@@ -73,7 +73,7 @@ export default function MoveBetweenAccountsModal() {
 
           <ControlledModal.Body>
             <Form
-              form="moveBetweenAccounts"
+              name="moveBetweenAccounts"
               persistState
               initialValues={{
                 sendFrom: null,

@@ -159,7 +159,7 @@ export default function SendForm() {
 
   return (
     <SendFormComponent
-      form="send"
+      name="send"
       persistState
       initialValues={{
         sendFrom: null,
