@@ -54,7 +54,7 @@ export default function Form({
   const form = useSelector(selectFormInstance(name));
 
   // Skip rendering on the first render to wait for form instance to be created
-  if (persistState && !!form) return null;
+  if (persistState && !form) return null;
 
   const formContent =
     render ||
