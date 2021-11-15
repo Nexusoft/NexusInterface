@@ -58,7 +58,9 @@ export default function RecipientAddress({ fieldName }) {
           </span>
           <RecipientName>
             <Form.Field name={fieldName} subscription={['value']}>
-              {({ input }) => useSelector(lookUpContactName(input.value))}
+              {({ input }) =>
+                useSelector(lookUpContactName(input.value)) || null
+              }
             </Form.Field>
           </RecipientName>
         </>
