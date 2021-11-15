@@ -37,7 +37,7 @@ export const selectAddressNameMap = memoize(
 );
 
 export const lookUpContactName = (lookupAddress) => (state) => {
-  for (const contact of state.addressBook) {
+  for (const contact of Object.values(state.addressBook)) {
     if (contact.addresses) {
       for (const { address, label } of contact.addresses) {
         if (address === lookupAddress) {
@@ -56,7 +56,7 @@ export const selectRecipientSuggestions = memoize(
   (addressBook) => {
     const suggestions = [];
     if (addressBook) {
-      Object.values(addressBook).forEach((contact) => {
+      for (const contact of Object.values(addressBook)) {
         if (contact.addresses) {
           contact.addresses.forEach(({ address, label, isMine }) => {
             if (!isMine) {
@@ -73,7 +73,7 @@ export const selectRecipientSuggestions = memoize(
             }
           });
         }
-      });
+      }
     }
     return suggestions;
   },
