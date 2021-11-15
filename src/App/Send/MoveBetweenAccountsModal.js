@@ -152,7 +152,7 @@ export default function MoveBetweenAccountsModal() {
                 />
               </AccountSelectors>
 
-              <AmountField fullAmount={accBalance} change={change} />
+              <AmountField />
 
               <Buttons>
                 <Form.SubmitButton skin="primary">
