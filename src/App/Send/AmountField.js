@@ -7,6 +7,7 @@ import styled from '@emotion/styled';
 import Form from 'components/Form';
 import FormField from 'components/FormField';
 import Link from 'components/Link';
+import { subtract } from 'utils/calc';
 
 __ = __context('Send');
 
@@ -43,7 +44,7 @@ function SendAll({ nxsToFiat, amountFieldName, form }) {
   } = useField({ name: amountFieldName, config: { subscription: ['value'] } });
   const myAccounts = useSelector((state) => state.myAccounts);
   const account = myAccounts.find((acc) => acc.account === sendFrom);
-  const fullAmount = account?.balance;
+  const fullAmount = subtract(account?.balance, 0.01);
   const hidden = !fullAmount || amount === fullAmount;
 
   return (

@@ -9,7 +9,6 @@ import { timing } from 'styles';
 import plusIcon from 'icons/plus.svg';
 import RecipientAddress from './RecipientAddress';
 import AmountField from './AmountField';
-import { subtract } from 'utils/calc';
 
 __ = __context('Send');
 
@@ -69,11 +68,7 @@ export default function Recipients({ fields }) {
     return (
       <>
         <RecipientAddress fieldName={`${fields.name}[0].address`} />
-        <AmountField
-          fullAmount={subtract(accBalance, 0.01)} // 0.01 = network fee
-          parentFieldName={`${fields.name}[0]`}
-          change={change}
-        />
+        <AmountField parentFieldName={`${fields.name}[0]`} />
       </>
     );
   } else {
@@ -96,11 +91,7 @@ export default function Recipients({ fields }) {
             </AddressWrapper>
 
             <AmountWrapper>
-              <AmountField
-                parentFieldName={fieldName}
-                change={change}
-                hideSendAll
-              />
+              <AmountField parentFieldName={fieldName} hideSendAll />
             </AmountWrapper>
           </Recipient>
         ))}

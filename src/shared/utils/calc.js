@@ -1,7 +1,7 @@
 // To prevent floating point errors while dealing with nexus amounts
 
 // Max significant digits in a nexus token is 5
-const precision = 100000;
+const precision = 1000000;
 
 /**
  * Subtracts all params and delivers reesult
