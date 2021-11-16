@@ -64,7 +64,7 @@ export default function Form({
   if (!formContent) return null;
 
   return (
-    <FinalForm subscription={[]} form={form} {...config} {...rest}>
+    <FinalForm subscription={{}} form={form} {...config} {...rest}>
       {({ handleSubmit, ...rest }) => (
         <form onSubmit={handleSubmit}>
           {typeof formContent === 'function'

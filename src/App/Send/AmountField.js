@@ -38,10 +38,13 @@ const SendAllLink = styled(Link)({
 function SendAll({ nxsToFiat, amountFieldName, form }) {
   const {
     input: { value: sendFrom },
-  } = useField({ name: 'sendFrom', config: { subscription: ['value'] } });
+  } = useField({ name: 'sendFrom', config: { subscription: { value: true } } });
   const {
     input: { value: amount },
-  } = useField({ name: amountFieldName, config: { subscription: ['value'] } });
+  } = useField({
+    name: amountFieldName,
+    config: { subscription: { value: true } },
+  });
   const myAccounts = useSelector((state) => state.myAccounts);
   const account = myAccounts.find((acc) => acc.account === sendFrom);
   const fullAmount = subtract(account?.balance, 0.01);

@@ -148,7 +148,7 @@ export default function AddEditContactModal({ edit, contact, prefill }) {
               />
 
               <Form.Spy
-                subscription={['error']}
+                subscription={{ error: true }}
                 render={({ error }) =>
                   !!error && <div className="error mt1">{error}</div>
                 }
@@ -204,7 +204,7 @@ export default function AddEditContactModal({ edit, contact, prefill }) {
                 <div>
                   <Button onClick={closeModal}>{__('Cancel')}</Button>
                   <Form.Spy
-                    subscription={['pristine']}
+                    subscription={{ pristine: true }}
                     render={({ form, pristine }) => (
                       <Button
                         onClick={form.reset}

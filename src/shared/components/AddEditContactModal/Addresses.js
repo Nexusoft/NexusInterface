@@ -72,7 +72,7 @@ export default function Addresses({ fields, isMine }) {
   const justAddedRef = useRef(false);
   const {
     input: { value: contactName },
-  } = useField('name', { subscription: ['value'] });
+  } = useField('name', { subscription: { value: true } });
 
   useEffect(() => {
     // Focus the address input after it has just been added
