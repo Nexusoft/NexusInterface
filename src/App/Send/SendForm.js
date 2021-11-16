@@ -17,6 +17,7 @@ import { loadAccounts, updateAccountBalances } from 'lib/user';
 import { openModal } from 'lib/ui';
 import { required, formSubmit } from 'lib/form';
 import { confirm, openSuccessDialog } from 'lib/dialog';
+import memoize from 'utils/memoize';
 import sendIcon from 'icons/send.svg';
 
 // Internal Local
@@ -129,6 +130,19 @@ function SendMultipleButton() {
   );
 }
 
+const initValues = memoize((sendTo) => ({
+  sendFrom: null,
+  recipients: [
+    {
+      address: sendTo || null,
+      amount: '',
+      fiatAmount: '',
+    },
+  ],
+  password: null,
+  message: '',
+}));
+
 export default function SendForm() {
   const minConfirmations = useSelector(
     (state) => state.settings.minConfirmations
@@ -161,18 +175,7 @@ export default function SendForm() {
     <SendFormComponent
       name="send"
       persistState
-      initialValues={{
-        sendFrom: null,
-        recipients: [
-          {
-            address: sendTo || null,
-            amount: '',
-            fiatAmount: '',
-          },
-        ],
-        password: null,
-        message: '',
-      }}
+      initialValues={initValues(sendTo)}
       // validate: ({ sendFrom, recipients }) => {
       //   const errors = {};
       //   if (!sendFrom) {
