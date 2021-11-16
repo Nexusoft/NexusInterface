@@ -1,4 +1,5 @@
 import { FORM_ERROR } from 'final-form';
+import { useField } from 'react-final-form';
 
 import { UPDATE_FORM_INSTANCE } from 'consts/actionTypes';
 import store from 'store';
@@ -35,6 +36,13 @@ export const formSubmit =
     }
     onSuccess?.(result, values, form);
   };
+
+export function useFieldValue(name) {
+  const {
+    input: { value },
+  } = useField(name, { subscription: { value: true } });
+  return value;
+}
 
 /**
  * VALIDATE FUNCTIONS

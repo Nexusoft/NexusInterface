@@ -8,7 +8,7 @@ import Tooltip from 'components/Tooltip';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
 import Form from 'components/Form';
-import { required, checkAll } from 'lib/form';
+import { required, checkAll, useFieldValue } from 'lib/form';
 import { callApi } from 'lib/tritiumApi';
 import { timing } from 'styles';
 import plusIcon from 'icons/plus.svg';
@@ -70,9 +70,7 @@ const PlusIcon = styled(Icon)({
 export default function Addresses({ fields, isMine }) {
   const lastInputRef = useRef();
   const justAddedRef = useRef(false);
-  const {
-    input: { value: contactName },
-  } = useField('name', { subscription: { value: true } });
+  const contactName = useFieldValue('name');
 
   useEffect(() => {
     // Focus the address input after it has just been added

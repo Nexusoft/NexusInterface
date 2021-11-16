@@ -8,6 +8,7 @@ import Form from 'components/Form';
 import FormField from 'components/FormField';
 import Link from 'components/Link';
 import { subtract } from 'utils/calc';
+import { useFieldValue } from 'lib/form';
 
 __ = __context('Send');
 
@@ -36,12 +37,8 @@ const SendAllLink = styled(Link)({
 });
 
 function SendAll({ nxsToFiat, amountFieldName, form }) {
-  const {
-    input: { value: sendFrom },
-  } = useField('sendFrom', { subscription: { value: true } });
-  const {
-    input: { value: amount },
-  } = useField(amountFieldName, { subscription: { value: true } });
+  const sendFrom = useFieldValue('sendFrom');
+  const amount = useFieldValue(amountFieldName);
   const myAccounts = useSelector((state) => state.myAccounts);
   const account = myAccounts.find((acc) => acc.account === sendFrom);
   const fullAmount = subtract(account?.balance, 0.01);
