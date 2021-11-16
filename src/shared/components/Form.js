@@ -45,13 +45,13 @@ export default function Form({
     validate,
     validateOnBlur,
   };
+  const form = useSelector(selectFormInstance(name));
   useEffect(() => {
-    if (persistState) {
+    if (persistState && !form) {
       const form = createForm(config);
       updateFormInstance(name, form);
     }
   }, []);
-  const form = useSelector(selectFormInstance(name));
 
   // Skip rendering on the first render to wait for form instance to be created
   if (persistState && !form) return null;
