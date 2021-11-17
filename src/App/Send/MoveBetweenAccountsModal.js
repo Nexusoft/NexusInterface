@@ -48,6 +48,13 @@ const Buttons = styled.div({
   justifyContent: 'flex-end',
 });
 
+const initialValues = {
+  sendFrom: null,
+  sendTo: null,
+  amount: '',
+  fiatAmount: '',
+};
+
 // const formName = 'moveBetweenAccounts';
 // const valueSelector = formValueSelector(formName);
 
@@ -75,12 +82,7 @@ export default function MoveBetweenAccountsModal() {
             <Form
               name="moveBetweenAccounts"
               persistState
-              initialValues={{
-                sendFrom: null,
-                sendTo: null,
-                amount: '',
-                fiatAmount: '',
-              }}
+              initialValues={initialValues}
               onSubmit={formSubmit({
                 submit: async ({ sendFrom, sendTo, amount }) => {
                   if (locked) {

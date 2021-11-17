@@ -208,6 +208,10 @@ function TransactionDetails({ source, recipients }) {
   );
 }
 
+const initialValues = {
+  pin: '',
+};
+
 export default function PreviewTransactionModal({
   source,
   recipients,
@@ -227,9 +231,7 @@ export default function PreviewTransactionModal({
           <ControlledModal.Footer>
             <Form
               name="preview_tx"
-              initialValues={{
-                pin: '',
-              }}
+              initialValues={initialValues}
               onSubmit={formSubmit({
                 submit: async ({ pin }) => {
                   const params = {

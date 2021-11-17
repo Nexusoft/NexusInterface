@@ -26,6 +26,12 @@ const ExtraSection = styled.div({
   opacity: 0.9,
 });
 
+const initialValues = {
+  username: '',
+  password: '',
+  pin: '',
+};
+
 export default function LoginModal() {
   const syncing = useSelector((state) => state.core.systemInfo?.synchronizing);
 
@@ -37,11 +43,7 @@ export default function LoginModal() {
           <ControlledModal.Body>
             <Form
               name="login_tritium"
-              initialValues={{
-                username: '',
-                password: '',
-                pin: '',
-              }}
+              initialValues={initialValues}
               onSubmit={formSubmit({
                 submit: ({ username, password, pin }) =>
                   logIn({ username, password, pin }),
