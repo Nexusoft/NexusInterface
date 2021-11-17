@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import memoize from 'utils/memoize';
+import rpc from 'lib/rpc';
 
 export const selectAccountOptions = memoize(
   (myAccounts) => {
