@@ -67,7 +67,7 @@ function positiveNumber(value) {
   }
 }
 
-export default function AmountField({ parentFieldName = '' }) {
+export default function AmountField({ parentFieldName = '', hideSendAll }) {
   const price = useSelector((state) => state.market?.price);
   const fiatCurrency = useSelector((state) => state.settings.fiatCurrency);
   const form = useForm();
@@ -106,11 +106,13 @@ export default function AmountField({ parentFieldName = '' }) {
           label={
             <>
               <span className="v-align">{__('NXS Amount')}</span>
-              <SendAll
-                nxsToFiat={nxsToFiat}
-                amountFieldName={amountFieldName}
-                form={form}
-              />
+              {!hideSendAll && (
+                <SendAll
+                  nxsToFiat={nxsToFiat}
+                  amountFieldName={amountFieldName}
+                  form={form}
+                />
+              )}
             </>
           }
         >
