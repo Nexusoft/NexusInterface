@@ -11,7 +11,7 @@ import { callApi } from 'lib/tritiumApi';
 import { lookupAddress } from 'lib/addressBook';
 import { openSuccessDialog } from 'lib/dialog';
 import { loadAccounts } from 'lib/user';
-import { formSubmit } from 'lib/form';
+import { formSubmit, required } from 'lib/form';
 import { timeToText } from 'utils/misc';
 import addressBookIcon from 'icons/address-book.svg';
 import WarningIcon from 'icons/warning.svg';
