@@ -240,10 +240,10 @@ export default function PreviewTransactionModal({
                   };
 
                   if (source?.token) {
-                    params.address = source.token.address;
+                    params.from = source.token.address;
                     return await callApi('tokens/debit/token', params);
                   } else {
-                    params.address = source.account.address;
+                    params.from = source.account.address;
                     return await callApi('finance/debit/account', params);
                   }
                 },
