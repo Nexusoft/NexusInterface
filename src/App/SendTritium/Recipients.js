@@ -1,11 +1,10 @@
 // External
-import { Field } from 'redux-form';
 import styled from '@emotion/styled';
 
 // Internal
 import Tooltip from 'components/Tooltip';
 import { timing } from 'styles';
-import RecipientField from './RecipientField';
+import RecipientAddress from './RecipientAddress';
 import AmountField from './AmountField';
 import AdvancedFields from './AdvancedFields';
 
@@ -50,7 +49,7 @@ const AmountWrapper = styled.div({
   flexBasis: 0,
 });
 
-export default function Recipients({ fields, change, source }) {
+export default function Recipients({ fields }) {
   if (!fields?.length) return null;
 
   // if (fields.length === 1) {
@@ -58,7 +57,7 @@ export default function Recipients({ fields, change, source }) {
   //     <>
   //       <Field
   //         name={`${fields.name}[0].address`}
-  //         component={RecipientField}
+  //         component={RecipientAddress}
   //         change={change}
   //         sendFrom={sendFrom}
   //       />
@@ -92,29 +91,15 @@ export default function Recipients({ fields, change, source }) {
 
           <div className="flex center">
             <AddressWrapper>
-              <Field
-                name={`${fieldName}.address`}
-                component={RecipientField}
-                change={change}
-                source={source}
-              />
+              <RecipientAddress parentFieldName={fieldName} />
             </AddressWrapper>
 
             <AmountWrapper>
-              <AmountField
-                parentFieldName={fieldName}
-                change={change}
-                source={source}
-              />
+              <AmountField parentFieldName={fieldName} />
             </AmountWrapper>
           </div>
 
-          <Field
-            name="advancedOptions"
-            component={({ input }) =>
-              !!input.value && <AdvancedFields parentFieldName={fieldName} />
-            }
-          />
+          <AdvancedFields parentFieldName={fieldName} />
         </Recipient>
       ))}
     </>

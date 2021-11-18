@@ -4,16 +4,23 @@ import memoize from 'utils/memoize';
 import styled from '@emotion/styled';
 
 // Internal
-import AutoSuggest from 'components/AutoSuggest';
+import Form from 'components/Form';
 import FormField from 'components/FormField';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
 import AddEditContactModal from 'components/AddEditContactModal';
 import { openModal } from 'lib/ui';
+import { useFieldValue, required, checkAll } from 'lib/form';
 import { callApi } from 'lib/tritiumApi';
 import { addressRegex } from 'consts/misc';
 import plusIcon from 'icons/plus.svg';
-import { getAddressNameMap, getRecipientSuggestions } from './selectors';
+import {
+  selectAddressNameMap,
+  getRecipientSuggestions,
+  selectSource,
+  notSameAccount,
+  validateRecipient,
+} from './selectors';
 
 __ = __context('Send');
 
@@ -46,27 +53,14 @@ function createContact() {
   openModal(AddEditContactModal);
 }
 
-export default function RecipientField({ source, change, input, meta }) {
-  const suggestions = useSelector(({ addressBook, user }) =>
-    getRecipientSuggestions(
-      addressBook,
-      user?.accounts,
-      source?.account?.address
-    )
-  );
-  const addressNameMap = useSelector(({ addressBook, user }) =>
-    getAddressNameMap(addressBook, user?.accounts)
-  );
+function RecipientLabel({ fieldName }) {
+  const address = useFieldValue(fieldName);
+  const addressNameMap = useSelector(selectAddressNameMap);
 
-  const recipientName = addressNameMap[input.value];
-  const isAddress = addressRegex.test(input.value);
-
-  const handleSelect = (address) => {
-    change(input.name, address);
-  };
+  const recipientName = addressNameMap[address];
+  const isAddress = addressRegex.test(address);
 
   const addToContact = async () => {
-    const address = input.value;
     let isMine = false;
     try {
       const result = await callApi('system/validate/address', {
@@ -83,32 +77,42 @@ export default function RecipientField({ source, change, input, meta }) {
   };
 
   return (
-    <FormField
-      label={
-        <>
-          <span>
-            {__('Send to')}
-            &nbsp;&nbsp;
-          </span>
-          <RecipientName>{recipientName}</RecipientName>
-          {!recipientName && isAddress && (
-            <Button skin="plain-link-primary" onClick={addToContact}>
-              <Icon icon={plusIcon} style={{ fontSize: '0.9em' }} />
-              <span className="v-align ml0_4">{__('Add to Address Book')}</span>
-            </Button>
-          )}
-        </>
-      }
-    >
-      <AutoSuggest.RF
-        input={input}
-        meta={meta}
+    <>
+      <span>
+        {__('Send to')}
+        &nbsp;&nbsp;
+      </span>
+      <RecipientName>{recipientName}</RecipientName>
+      {!recipientName && isAddress && (
+        <Button skin="plain-link-primary" onClick={addToContact}>
+          <Icon icon={plusIcon} style={{ fontSize: '0.9em' }} />
+          <span className="v-align ml0_4">{__('Add to Address Book')}</span>
+        </Button>
+      )}
+    </>
+  );
+}
+
+export default function RecipientAddress({ parentFieldName }) {
+  const source = selectSource();
+  const fieldName = `${parentFieldName}.address`;
+  const suggestions = useSelector((state) =>
+    getRecipientSuggestions(
+      state.addressBook,
+      state.user?.accounts,
+      source?.account?.address
+    )
+  );
+
+  return (
+    <FormField label={<RecipientLabel fieldName={fieldName} />}>
+      <Form.AutoSuggest
+        name={fieldName}
         inputProps={{
           placeholder: __('Recipient Address/Name'),
           skin: 'filled-inverted',
         }}
         suggestions={suggestions}
-        onSelect={handleSelect}
         filterSuggestions={filterSuggestions}
         emptyFiller={
           suggestions.length === 0 && (
@@ -125,6 +129,11 @@ export default function RecipientField({ source, change, input, meta }) {
             </EmptyMessage>
           )
         }
+        validate={checkAll(
+          required(),
+          notSameAccount,
+          validateRecipient(source)
+        )}
       />
     </FormField>
   );

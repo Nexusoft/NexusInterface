@@ -100,6 +100,4 @@ export async function validateAddress(value) {
 }
 
 export const notSameAccount = (value, { sendFrom }) =>
-  value && value === sendFrom
-    ? __('Cannot move to the same account')
-    : undefined;
+  value === sendFrom ? __('Cannot move to the same account') : undefined;
