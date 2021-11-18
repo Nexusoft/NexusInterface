@@ -276,7 +276,6 @@ class TerminalConsole extends Component {
                 onSelect={this.formateAutoSuggest}
                 keyControl={false}
                 suggestOn="change"
-                ref={(c) => (this.inputRef = c)}
                 inputRef={this.inputRef}
                 inputProps={{
                   autoFocus: true,
