@@ -134,11 +134,15 @@ export const switchUser = async (session) => {
 };
 
 export const loadOwnedTokens = async () => {
-  const result = await listAll('finance/list/tokens');
-  store.dispatch({
-    type: TYPE.SET_USER_OWNED_TOKENS,
-    payload: result,
-  });
+  try {
+    const result = await listAll('finance/list/tokens');
+    store.dispatch({
+      type: TYPE.SET_USER_OWNED_TOKENS,
+      payload: result,
+    });
+  } catch (err) {
+    console.error('finance/list/tokens failed', err);
+  }
 };
 
 export const loadAccounts = legacyMode
