@@ -1,5 +1,5 @@
 // External
-import { useState } from 'react';
+import { useState, forwardRef } from 'react';
 
 // Internal
 import TextField from 'components/TextField';
@@ -8,7 +8,7 @@ import Button from 'components/Button';
 import visibleIcon from 'icons/visible.svg';
 import invisibleIcon from 'icons/invisible.svg';
 
-export default function MaskableTextField(props) {
+const MaskableTextField = forwardRef(function (props, ref) {
   const [unmasked, setUnmasked] = useState(false);
 
   const toggleUnmasked = () => {
@@ -19,6 +19,7 @@ export default function MaskableTextField(props) {
     <TextField
       {...props}
       type={unmasked ? 'text' : 'password'}
+      ref={ref}
       right={
         <Button skin="plain" onClick={toggleUnmasked} tabIndex="-1">
           <Icon icon={unmasked ? visibleIcon : invisibleIcon} />
@@ -26,7 +27,9 @@ export default function MaskableTextField(props) {
       }
     />
   );
-}
+});
+
+export default MaskableTextField;
 
 // MaskableTextField wrapper for redux-form
 const MaskableTextFieldReduxForm = ({ input, meta, ...rest }) => (

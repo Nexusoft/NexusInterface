@@ -1,5 +1,5 @@
 // External
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, forwardRef } from 'react';
 import { ipcRenderer } from 'electron';
 
 // Internal
@@ -11,14 +11,10 @@ import Button from 'components/Button';
 import store from 'store';
 import keyboardIcon from 'icons/keyboard.svg';
 
-export default function TextFieldWithKeyboard({
-  value,
-  onChange,
-  placeholder,
-  maskable,
-  skin,
-  ...rest
-}) {
+const TextFieldWithKeyboard = forwardRef(function (
+  { value, onChange, placeholder, maskable, skin, ...rest },
+  ref
+) {
   const handleInputChange = useCallback((evt, text) => {
     onChange(text);
   }, []);
@@ -50,6 +46,7 @@ export default function TextFieldWithKeyboard({
       {...{ value, onChange, placeholder, skin }}
       skin={skin}
       onChange={onChange}
+      ref={ref}
       {...rest}
       left={
         <Tooltip.Trigger align="start" tooltip={__('Use virtual keyboard')}>
@@ -69,7 +66,9 @@ export default function TextFieldWithKeyboard({
       }
     />
   );
-}
+});
+
+export default TextFieldWithKeyboard;
 
 // TextFieldWithKeyboard wrapper for redux-form
 const TextFieldWithKeyboardReduxForm = ({ input, meta, ...rest }) => (
