@@ -1,6 +1,5 @@
 // External
 import { useSelector } from 'react-redux';
-import memoize from 'utils/memoize';
 import styled from '@emotion/styled';
 
 // Internal
@@ -12,14 +11,13 @@ import AddEditContactModal from 'components/AddEditContactModal';
 import { openModal } from 'lib/ui';
 import { useFieldValue, required, checkAll } from 'lib/form';
 import { callApi } from 'lib/tritiumApi';
+import memoize from 'utils/memoize';
 import { addressRegex } from 'consts/misc';
 import plusIcon from 'icons/plus.svg';
 import {
   selectAddressNameMap,
   getRecipientSuggestions,
   selectSource,
-  notSameAccount,
-  validateRecipient,
 } from './selectors';
 
 __ = __context('Send');
@@ -48,6 +46,52 @@ const filterSuggestions = memoize((suggestions, inputValue) => {
       (!!address && address.toLowerCase().includes(query))
   );
 });
+
+const notSameAccount = (value, { sendFrom }) =>
+  value === sendFrom ? __('Cannot move to the same account') : undefined;
+
+const validateRecipient = (source) =>
+  async function (address) {
+    const params = {};
+
+    // Check if it's a valid address/name
+    if (addressRegex.test(address)) {
+      const result = await callApi('system/validate/address', {
+        address,
+      });
+      if (result.valid) {
+        params.address = address;
+      }
+    }
+    if (!params.address) {
+      try {
+        const result = await callApi('names/get/name', { name: address });
+        params.address = result.register;
+      } catch (err) {
+        return __('Invalid name/address');
+      }
+    }
+
+    // Check if recipient is on the same token as source
+    const sourceToken = source?.account?.token || source?.token?.address;
+    if (sourceToken !== address) {
+      let account;
+      try {
+        account = await callApi('finance/get/account', params);
+      } catch (err) {
+        let token;
+        try {
+          token = await callApi('tokens/get/token', params);
+        } catch (err) {}
+        if (token) {
+          return __('Source and recipient must be of the same token');
+        }
+      }
+      if (account && account?.token !== sourceToken) {
+        return __('Source and recipient must be of the same token');
+      }
+    }
+  };
 
 function createContact() {
   openModal(AddEditContactModal);

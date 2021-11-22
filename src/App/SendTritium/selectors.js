@@ -6,7 +6,6 @@ import memoize from 'utils/memoize';
 import shortenAddress from 'utils/shortenAddress';
 import { getDefaultValues } from 'lib/send';
 import { useFieldValue } from 'lib/form';
-import { addressRegex } from 'consts/misc';
 
 __ = __context('Send');
 
@@ -190,49 +189,3 @@ export const selectInitialValues = memoize(
   (txExpiry) => getDefaultValues({ txExpiry }),
   (state) => [state.core.config?.txExpiry]
 );
-
-export const validateRecipient = (source) =>
-  async function (address) {
-    const params = {};
-
-    // Check if it's a valid address/name
-    if (addressRegex.test(address)) {
-      const result = await callApi('system/validate/address', {
-        address,
-      });
-      if (result.valid) {
-        params.address = address;
-      }
-    }
-    if (!params.address) {
-      try {
-        const result = await callApi('names/get/name', { name: address });
-        params.address = result.register;
-      } catch (err) {
-        return __('Invalid name/address');
-      }
-    }
-
-    // Check if recipient is on the same token as source
-    const sourceToken = source?.account?.token || source?.token?.address;
-    if (sourceToken !== address) {
-      let account;
-      try {
-        account = await callApi('finance/get/account', params);
-      } catch (err) {
-        let token;
-        try {
-          token = await callApi('tokens/get/token', params);
-        } catch (err) {}
-        if (token) {
-          return __('Source and recipient must be of the same token');
-        }
-      }
-      if (account && account?.token !== sourceToken) {
-        return __('Source and recipient must be of the same token');
-      }
-    }
-  };
-
-export const notSameAccount = (value, { sendFrom }) =>
-  value === sendFrom ? __('Cannot move to the same account') : undefined;
