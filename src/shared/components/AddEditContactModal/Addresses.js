@@ -134,7 +134,7 @@ export default function Addresses({ fields, isMine }) {
             <Form.TextField
               name={`${fieldName}.address`}
               placeholder={addressLabel}
-              inputRef={i === fields.length - 1 ? lastInputRef : undefined}
+              ref={i === fields.length - 1 ? lastInputRef : undefined}
               validate={checkAll(required(), validateAddress)}
             />
           </AddressWrapper>

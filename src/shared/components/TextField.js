@@ -253,23 +253,25 @@ const TextArea = forwardRef((props, ref) => {
   );
 });
 
-export default function TextField({
-  className,
-  style,
-  inputStyle,
-  skin = 'underline',
-  multiline,
-  left,
-  right,
-  size,
-  readOnly,
-  inputRef: ref,
-  autoFocus,
-  onFocus,
-  onBlur,
-  error,
-  ...rest
-}) {
+const TextField = forwardRef(function (
+  {
+    className,
+    style,
+    inputStyle,
+    skin = 'underline',
+    multiline,
+    left,
+    right,
+    size,
+    readOnly,
+    autoFocus,
+    onFocus,
+    onBlur,
+    error,
+    ...rest
+  },
+  ref
+) {
   const [focus, setFocus] = useState(false);
   const inputRef = useRef();
 
@@ -334,7 +336,9 @@ export default function TextField({
       )}
     </TextFieldComponent>
   );
-}
+});
+
+export default TextField;
 
 // TextField wrapper for redux-form
 const TextFieldReduxForm = ({ input, meta, ...rest }) => (

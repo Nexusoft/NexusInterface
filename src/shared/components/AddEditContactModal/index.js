@@ -131,7 +131,7 @@ export default function AddEditContactModal({ edit, contact, prefill }) {
                   name="name"
                   validate={checkAll(required(), nameUnique)}
                   placeholder={__('Contact name')}
-                  inputRef={inputRef}
+                  ref={inputRef}
                 />
               </FormField>
 

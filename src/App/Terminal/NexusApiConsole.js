@@ -232,7 +232,7 @@ export default function NexusApiConsole() {
           <ConsoleInput>
             <TextField
               autoFocus
-              inputRef={inputRef}
+              ref={inputRef}
               skin="filled-inverted"
               value={consoleInput}
               multiline
