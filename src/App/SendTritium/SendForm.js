@@ -1,6 +1,5 @@
 // External
 import { useSelector } from 'react-redux';
-import { reduxForm, Field, FieldArray, formValueSelector } from 'redux-form';
 import styled from '@emotion/styled';
 import arrayMutators from 'final-form-arrays';
 
@@ -8,12 +7,9 @@ import arrayMutators from 'final-form-arrays';
 import Form from 'components/Form';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
-import Select from 'components/Select';
 import FormField from 'components/FormField';
-import Switch from 'components/Switch';
 import { openModal } from 'lib/ui';
-import { callApi } from 'lib/tritiumApi';
-import { formName, getDefaultValues, getDefaultRecipient } from 'lib/send';
+import { formName, getDefaultRecipient } from 'lib/send';
 import { required } from 'lib/form';
 import store from 'store';
 import useUID from 'utils/useUID';
@@ -26,8 +22,6 @@ import plusIcon from 'icons/plus.svg';
 import Recipients from './Recipients';
 import {
   selectAccountOptions,
-  selectAddressNameMap,
-  getRegisteredFieldNames,
   selectInitialValues,
   getSource,
 } from './selectors';
@@ -66,9 +60,6 @@ const AdvancedOptionsLabel = styled.label(({ active }) => ({
   transition: `opacity ${timing.normal}`,
   opacity: active ? 1 : 0.67,
 }));
-
-const valueSelector = formValueSelector(formName);
-const mapStateToProps = (state) => {};
 
 function AddRecipientButton() {
   const txExpiry = useSelector((state) => state.core.config?.txExpiry);
@@ -128,23 +119,8 @@ function getRecipientsParams(recipients, { advancedOptions }) {
 
 export default function SendForm() {
   const switchID = useUID();
-
   const accountOptions = useSelector(selectAccountOptions);
-  // fieldNames: getRegisteredFieldNames(form[formName]?.registeredFields),
   const initialValues = useSelector(selectInitialValues);
-
-  // const confirmSend = (e) => {
-  //   e.preventDefault();
-
-  //   if (invalid) {
-  //     // Mark the form touched so that the validation errors will be shown.
-  //     // redux-form doesn't have the `touchAll` feature yet so we have to list all fields manually.
-  //     // redux-form also doesn't have the API to get all the field names yet so we have to connect to the store to retrieve it manually
-  //     touch(...fieldNames);
-  //     return;
-  //   }
-  //   handleSubmit();
-  // };
 
   return (
     <SendFormComponent>
@@ -152,51 +128,6 @@ export default function SendForm() {
         name={formName}
         persistState
         initialValues={initialValues}
-        // validate: ({ sendFrom, recipients }) => {
-        //   const errors = {};
-        //   if (!sendFrom) {
-        //     errors.sendFrom = __('No accounts selected');
-        //   }
-
-        //   if (!recipients || !recipients.length) {
-        //     errors.recipients = {
-        //       _error: __('There must be at least one recipient'),
-        //     };
-        //   } else {
-        //     const recipientsErrors = [];
-
-        //     recipients.forEach(({ address, amount, reference }, i) => {
-        //       const recipientErrors = {};
-        //       if (!address) {
-        //         recipientErrors.address = __('Address/Name is required');
-        //       }
-        //       const floatAmount = parseFloat(amount);
-        //       if (!floatAmount || floatAmount < 0) {
-        //         recipientErrors.amount = __('Invalid amount');
-        //       }
-        //       if (reference) {
-        //         if (!uintRegex.test(reference)) {
-        //           recipientErrors.reference = __(
-        //             'Reference must be an unsigned integer'
-        //           );
-        //         } else {
-        //           if (Number(reference) > 18446744073709551615) {
-        //             recipientErrors.reference = __('Number is too large');
-        //           }
-        //         }
-        //       }
-        //       if (Object.keys(recipientErrors).length) {
-        //         recipientsErrors[i] = recipientErrors;
-        //       }
-        //     });
-
-        //     if (recipientsErrors.length) {
-        //       errors.recipients = recipientsErrors;
-        //     }
-        //   }
-
-        //   return errors;
-        // },
         onSubmit={({ sendFrom, recipients, advancedOptions }, form) => {
           const state = store.getState();
           const source = getSource(state, sendFrom);
