@@ -133,6 +133,11 @@ const SelectControl = styled.div(
                 borderBottomRightRadius: 0,
               }
             : null),
+          ...(error
+            ? {
+                borderColor: theme.danger,
+              }
+            : null),
         };
     }
   }
