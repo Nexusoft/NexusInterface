@@ -1,7 +1,8 @@
 // External
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { reduxForm, Field, FieldArray, formValueSelector } from 'redux-form';
 import styled from '@emotion/styled';
+import arrayMutators from 'final-form-arrays';
 
 // Internal Global
 import Form from 'components/Form';
@@ -14,10 +15,11 @@ import { openModal } from 'lib/ui';
 import { callApi } from 'lib/tritiumApi';
 import { formName, getDefaultValues, getDefaultRecipient } from 'lib/send';
 import { required } from 'lib/form';
-import sendIcon from 'icons/send.svg';
-import { timing } from 'styles';
+import store from 'store';
 import useUID from 'utils/useUID';
+import { timing } from 'styles';
 import { addressRegex } from 'consts/misc';
+import sendIcon from 'icons/send.svg';
 import plusIcon from 'icons/plus.svg';
 
 // Internal Local
@@ -127,7 +129,6 @@ function getRecipientsParams(recipients, { advancedOptions }) {
 export default function SendForm() {
   const switchID = useUID();
 
-  const source = useSelector((state) => getSource(state, sendFrom));
   const accountOptions = useSelector(selectAccountOptions);
   // fieldNames: getRegisteredFieldNames(form[formName]?.registeredFields),
   const initialValues = useSelector(selectInitialValues);
@@ -148,7 +149,7 @@ export default function SendForm() {
   return (
     <SendFormComponent>
       <Form
-        form={formName}
+        name={formName}
         persistState
         initialValues={initialValues}
         // validate: ({ sendFrom, recipients }) => {
@@ -196,13 +197,16 @@ export default function SendForm() {
 
         //   return errors;
         // },
-        onSubmit={({ recipients, advancedOptions }, form) => {
+        onSubmit={({ sendFrom, recipients, advancedOptions }, form) => {
+          const state = store.getState();
+          const source = getSource(state, sendFrom);
           openModal(PreviewTransactionModal, {
             source,
             recipients: getRecipientsParams(recipients, { advancedOptions }),
             resetSendForm: form.reset,
           });
         }}
+        mutators={{ ...arrayMutators }}
       >
         <div className="flex justify-end">
           <AdvancedOptionsSwitch>
