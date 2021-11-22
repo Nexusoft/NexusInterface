@@ -5,7 +5,6 @@ import {
   Field,
   FormSpy,
   useField,
-  useForm,
   useFormState,
 } from 'react-final-form';
 import { FieldArray } from 'react-final-form-arrays';
@@ -89,10 +88,10 @@ Form.FieldArray = FieldArray;
 Form.Spy = FormSpy;
 
 Form.TextField = forwardRef(function (
-  { name, config, validate, type, ...rest },
+  { name, config, validate, ...rest },
   ref
 ) {
-  const { input, meta } = useField(name, { validate, type, ...config });
+  const { input, meta } = useField(name, { validate, ...config });
   return (
     <TextField
       ref={ref}
@@ -104,10 +103,10 @@ Form.TextField = forwardRef(function (
 });
 
 Form.TextFieldWithKeyboard = forwardRef(function (
-  { name, config, validate, type, ...rest },
+  { name, config, validate, ...rest },
   ref
 ) {
-  const { input, meta } = useField(name, { validate, type, ...config });
+  const { input, meta } = useField(name, { validate, ...config });
   return (
     <TextFieldWithKeyboard
       ref={ref}
@@ -118,21 +117,18 @@ Form.TextFieldWithKeyboard = forwardRef(function (
   );
 });
 
-Form.Select = forwardRef(function (
-  { name, config, validate, type, ...rest },
-  ref
-) {
-  const { input, meta } = useField(name, { validate, type, ...config });
+Form.Select = forwardRef(function ({ name, config, validate, ...rest }, ref) {
+  const { input, meta } = useField(name, { validate, ...config });
   return (
     <Select ref={ref} error={meta.touched && meta.error} {...input} {...rest} />
   );
 });
 
 Form.AutoSuggest = forwardRef(function (
-  { name, config, validate, type, inputProps, ...rest },
+  { name, config, validate, inputProps, ...rest },
   ref
 ) {
-  const { input, meta } = useField(name, { validate, type, ...config });
+  const { input, meta } = useField(name, { validate, ...config });
   return (
     <AutoSuggest
       ref={ref}
@@ -147,11 +143,8 @@ Form.AutoSuggest = forwardRef(function (
   );
 });
 
-Form.Switch = forwardRef(function (
-  { name, config, validate, type, ...rest },
-  ref
-) {
-  const { input } = useField(name, { validate, type, ...config });
+Form.Switch = forwardRef(function ({ name, config, validate, ...rest }, ref) {
+  const { input } = useField(name, { validate, type: 'checkbox', ...config });
   return <Switch ref={ref} {...input} {...rest} />;
 });
 
