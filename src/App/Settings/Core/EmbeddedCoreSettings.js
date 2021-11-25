@@ -62,16 +62,22 @@ export default function EmbeddedCoreSettings() {
         subLabel={
           <>
             {__('The iteration of Testnet to connect to.')}{' '}
-            {showTestnetOff && (
-              <Button
-                style={{ height: '25%', width: '25%' }}
-                onClick={() => {
-                  change('testnetIteration', null);
-                }}
-              >
-                {__('Turn Off')}
-              </Button>
-            )}
+            <Form.Field
+              name="testnetIteration"
+              render={({ input }) =>
+                !!input.value &&
+                input.value !== '0' && (
+                  <Button
+                    style={{ height: '25%', width: '25%' }}
+                    onClick={() => {
+                      input.onChange(null);
+                    }}
+                  >
+                    {__('Turn Off')}
+                  </Button>
+                )
+              }
+            />
           </>
         }
       >
