@@ -9,7 +9,12 @@ import Icon from 'components/Icon';
 import Button from 'components/Button';
 import FormField from 'components/FormField';
 import { openModal } from 'lib/ui';
-import { formName, getDefaultRecipient } from 'lib/send';
+import {
+  formName,
+  getDefaultRecipient,
+  selectInitialValues,
+  getSource,
+} from 'lib/send';
 import { required } from 'lib/form';
 import store from 'store';
 import useUID from 'utils/useUID';
@@ -20,11 +25,7 @@ import plusIcon from 'icons/plus.svg';
 
 // Internal Local
 import Recipients from './Recipients';
-import {
-  selectAccountOptions,
-  selectInitialValues,
-  getSource,
-} from './selectors';
+import { selectAccountOptions } from './selectors';
 import PreviewTransactionModal from './PreviewTransactionModal';
 
 __ = __context('Send');
@@ -94,6 +95,7 @@ function getRecipientsParams(recipients, { advancedOptions }) {
     }) => {
       const recipParam = {};
 
+      // TODO: update param keys
       if (addressRegex.test(address)) {
         recipParam.address_to = address;
       } else {

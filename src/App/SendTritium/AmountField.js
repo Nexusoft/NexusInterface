@@ -10,7 +10,7 @@ import FormField from 'components/FormField';
 import Link from 'components/Link';
 import TokenName from 'components/TokenName';
 import { useFieldValue } from 'lib/form';
-import { selectSource } from './selectors';
+import { selectSource } from 'lib/send';
 
 __ = __context('Send');
 

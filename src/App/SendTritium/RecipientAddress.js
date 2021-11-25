@@ -11,14 +11,11 @@ import AddEditContactModal from 'components/AddEditContactModal';
 import { openModal } from 'lib/ui';
 import { useFieldValue, required, checkAll } from 'lib/form';
 import { callApi } from 'lib/tritiumApi';
+import { selectAddressNameMap, selectSource } from 'lib/send';
 import memoize from 'utils/memoize';
 import { addressRegex } from 'consts/misc';
 import plusIcon from 'icons/plus.svg';
-import {
-  selectAddressNameMap,
-  getRecipientSuggestions,
-  selectSource,
-} from './selectors';
+import { getRecipientSuggestions } from './selectors';
 
 __ = __context('Send');
 
