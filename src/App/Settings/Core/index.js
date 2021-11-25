@@ -1,8 +1,7 @@
 // External
 import { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { reduxForm, Field, Fields, formValueSelector } from 'redux-form';
-import path from 'path';
+import { reduxForm, formValueSelector } from 'redux-form';
 import styled from '@emotion/styled';
 
 // Internal
@@ -13,24 +12,20 @@ import {
   setCoreSettingsRestart,
   showNotification,
 } from 'lib/ui';
-import { confirm, openErrorDialog } from 'lib/dialog';
+import { confirm } from 'lib/dialog';
 import { stopCore, startCore, restartCore } from 'lib/core';
 import { refreshCoreInfo } from 'lib/coreInfo';
 import { updateSettings } from 'lib/settings';
-import { defaultConfig } from 'lib/coreConfig';
-import SettingsField from 'components/SettingsField';
+
 import Button from 'components/Button';
-import TextField from 'components/TextField';
 import Switch from 'components/Switch';
 import { errorHandler } from 'utils/form';
 import { legacyMode } from 'consts/misc';
-import deleteDirectory from 'utils/promisified/deleteDirectory';
 import useUID from 'utils/useUID.js';
-import { consts } from 'styles';
 import { isCoreConnected } from 'selectors';
 
+import EmbeddedCoreSettings from './EmbeddedCoreSettings';
 import RemoteCoreSettings from './RemoteCoreSettings';
-import ReScanButton from './RescanButton.js';
 
 __ = __context('Settings.Core');
 
@@ -87,8 +82,6 @@ const ManualMode = styled(Button)(
       cursor: 'default',
     }
 );
-
-const removeWhiteSpaces = (value) => (value || '').replace(' ', '');
 
 /**
  *  Keys to change in the settings. Have a key here and set the name field to the same key to connect it.
@@ -152,32 +145,6 @@ const getInitialValues = (() => {
 })();
 
 /**
- * Asks to resync when using Lite mode
- */
-async function resyncLiteMode() {
-  const confirmed = await confirm({
-    question: __('Resync database') + '?',
-    note: __(
-      'Nexus Core will be restarted. Lite mode database will be deleted and resynchronized from the beginning.'
-    ),
-  });
-  if (confirmed) {
-    updateSettings({ clearPeers: true });
-    await stopCore();
-    const {
-      settings: { coreDataDir },
-    } = store.getState();
-    const clientFolder = path.join(coreDataDir, 'client');
-    try {
-      await deleteDirectory(clientFolder);
-    } catch (err) {
-      openErrorDialog({ message: err && err.message });
-    }
-    await startCore();
-  }
-}
-
-/**
  * Confirms turning off Remote Core
  */
 async function turnOffRemoteCore() {
@@ -217,34 +184,6 @@ async function turnOnRemoteCore() {
  */
 function handleRestartSwitch(e) {
   setCoreSettingsRestart(!!e.target.checked);
-}
-
-/**
- *  Asks to reload TX History. Only for legacy mode.
- */
-async function reloadTxHistory() {
-  const confirmed = await confirm({
-    question: __('Reload transaction history') + '?',
-    note: 'Nexus Core will be restarted, after that, it will take a while for the transaction history to be reloaded',
-  });
-  if (confirmed) {
-    updateSettings({ walletClean: true });
-    restartCore();
-  }
-}
-
-/**
- *  Asks to clear Peer Connections. Only for legacy mode.
- */
-async function clearPeerConnections() {
-  const confirmed = await confirm({
-    question: __('Clear peer connections') + '?',
-    note: 'Nexus Core will be restarted. After that, all stored peer connections will be reset.',
-  });
-  if (confirmed) {
-    updateSettings({ clearPeers: true });
-    restartCore();
-  }
 }
 
 const mapStateToProps = (state) => {
@@ -384,386 +323,7 @@ function SettingsCore({
           </ManualMode>
         </CoreModes>
 
-        {!manualDaemon && (
-          <>
-            <Field
-              name="multiUser"
-              component={({ input: multiUser }) => (
-                <SettingsField
-                  connectLabel
-                  label={__('Lite mode')}
-                  subLabel={__(
-                    'Nexus Core under lite mode runs lighter and synchronize much faster, but you will <b>NOT</b> be able to stake, mine, or switch the wallet to Legacy Mode.',
-                    null,
-                    { b: (text) => <strong>{text}</strong> }
-                  )}
-                  disabled={multiUser.value}
-                >
-                  {multiUser.value ? (
-                    <Switch readOnly value={false} />
-                  ) : (
-                    <Field name="liteMode" component={Switch.RF} />
-                  )}
-                </SettingsField>
-              )}
-            />
-
-            <Field
-              name="liteMode"
-              component={({ input: liteMode }) => (
-                <SettingsField
-                  connectLabel
-                  label={__('Multi-user')}
-                  subLabel={__(
-                    'Allow multiple logged in users at the same time. Mining and staking will be unavailable.'
-                  )}
-                  disabled={liteMode.value}
-                >
-                  {liteMode.value ? (
-                    <Switch readOnly value={false} />
-                  ) : (
-                    <Field name="multiUser" component={Switch.RF} />
-                  )}
-                </SettingsField>
-              )}
-            />
-
-            <Fields
-              names={['liteMode', 'multiUser']}
-              component={({
-                liteMode: { input: liteMode },
-                multiUser: { input: multiUser },
-              }) => (
-                <>
-                  <SettingsField
-                    connectLabel
-                    label={__('Enable staking')}
-                    subLabel={__('Enable/Disable staking on the wallet.')}
-                    disabled={liteMode.value || multiUser.value}
-                  >
-                    {liteMode.value || multiUser.value ? (
-                      <Switch readOnly value={false} />
-                    ) : (
-                      <Field name="enableStaking" component={Switch.RF} />
-                    )}
-                  </SettingsField>
-
-                  {/* <Field
-                      name="enableStaking"
-                      component={({ input: enableStaking }) =>
-                        !(liteMode.value || multiUser.value) &&
-                        !!enableStaking.value && (
-                          <SettingsField
-                            connectLabel
-                            indent={1}
-                            label={__('Pooled staking')}
-                            subLabel={__(
-                              'Pooled staking is a decentralized and trust-less mechanism allowing you to use the balances of others to increase your chances of finding a stake block. All participants receive their staking rewards and build trust, regardless of which user mines the block. A small portion of each reward is paid to the block finder by all pool participants.'
-                            )}
-                          >
-                            <Field name="pooledStaking" component={Switch.RF} />
-                          </SettingsField>
-                        )
-                      }
-                    /> */}
-
-                  <SettingsField
-                    connectLabel
-                    label={__('Enable mining')}
-                    subLabel={__('Enable/Disable mining to the wallet.')}
-                    disabled={liteMode.value || multiUser.value}
-                  >
-                    {liteMode.value || multiUser.value ? (
-                      <Switch readOnly value={false} />
-                    ) : (
-                      <Field name="enableMining" component={Switch.RF} />
-                    )}
-                  </SettingsField>
-
-                  <Field
-                    name="enableMining"
-                    component={({ input: enableMining }) =>
-                      !(liteMode.value || multiUser.value) &&
-                      !!enableMining.value && (
-                        <SettingsField
-                          connectLabel
-                          indent={1}
-                          label={__('Mining IP Whitelist')}
-                          subLabel={__(
-                            'IP/Ports allowed to mine to. Separate by <b>;</b> . Wildcards supported only in IP',
-                            undefined,
-                            {
-                              b: (txt) => <b>{txt}</b>,
-                            }
-                          )}
-                        >
-                          <Field
-                            name="ipMineWhitelist"
-                            component={TextField.RF}
-                            normalize={removeWhiteSpaces}
-                            size="12"
-                          />
-                        </SettingsField>
-                      )
-                    }
-                  />
-                </>
-              )}
-            />
-
-            <SettingsField
-              connectLabel
-              label={__('Safe Mode')}
-              subLabel={__(
-                'Enables NextHash verification to protect against corruption, but adds computation time.'
-              )}
-            >
-              <Field
-                name="safeMode"
-                component={Switch.RF}
-                onChange={disableSafeMode}
-              />
-            </SettingsField>
-
-            <SettingsField
-              connectLabel
-              label={__('Verbose level')}
-              subLabel={__('Verbose level for logs.')}
-            >
-              <Field
-                name="verboseLevel"
-                component={TextField.RF}
-                type="number"
-                min={0}
-                max={5}
-                style={{ maxWidth: 50 }}
-              />
-            </SettingsField>
-
-            <SettingsField
-              connectLabel
-              label={__('Core Data Directory')}
-              subLabel={__(
-                'Where the blockchain data and your legacy wallet.dat are stored'
-              )}
-            >
-              <Field name="coreDataDir" component={TextField.RF} />
-            </SettingsField>
-
-            <SettingsField
-              connectLabel
-              label={__('Testnet Iteration')}
-              subLabel={
-                <>
-                  {__('The iteration of Testnet to connect to.')}{' '}
-                  {showTestnetOff && (
-                    <Button
-                      style={{ height: '25%', width: '25%' }}
-                      onClick={() => {
-                        change('testnetIteration', null);
-                      }}
-                    >
-                      {__('Turn Off')}
-                    </Button>
-                  )}
-                </>
-              }
-            >
-              <Field
-                name="testnetIteration"
-                component={TextField.RF}
-                type="number"
-                min={0}
-                max={99999999}
-                style={{ maxWidth: 50 }}
-              />
-            </SettingsField>
-
-            <SettingsField
-              connectLabel
-              label={__('API SSL Port')}
-              subLabel={__('Nexus API server SSL Port')}
-            >
-              <Field
-                component={TextField.RF}
-                name="embeddedCoreApiPortSSL"
-                placeholder={defaultConfig.apiPortSSL}
-                size="5"
-              />
-            </SettingsField>
-
-            <SettingsField
-              connectLabel
-              label={__('RPC SSL Port')}
-              subLabel={__('Nexus RPC server SSL Port')}
-            >
-              <Field
-                component={TextField.RF}
-                name="embeddedCoreRpcPortSSL"
-                placeholder={defaultConfig.portSSL}
-                size="5"
-              />
-            </SettingsField>
-
-            <SettingsField
-              connectLabel
-              label={__('Allow Non-SSL Ports')}
-              subLabel={__(
-                'Allows Non-SSL plaintext communication to the core'
-              )}
-            >
-              <Field name="embeddedCoreAllowNonSSL" component={Switch.RF} />
-            </SettingsField>
-
-            <Field
-              name="embeddedCoreAllowNonSSL"
-              component={({ input: embeddedCoreAllowNonSSL }) =>
-                embeddedCoreAllowNonSSL.value && (
-                  <>
-                    <SettingsField
-                      connectLabel
-                      indent={1}
-                      label={__('Use non-SSL Ports')}
-                      subLabel={__('Connect to Nexus Core using non-SSL Ports')}
-                    >
-                      <Field
-                        name="embeddedCoreUseNonSSL"
-                        component={Switch.RF}
-                      />
-                    </SettingsField>
-
-                    <SettingsField
-                      connectLabel
-                      indent={1}
-                      label={__('API non-SSL Port')}
-                      subLabel={__('Nexus API server non-SSL Port')}
-                    >
-                      <Field
-                        component={TextField.RF}
-                        name="embeddedCoreApiPort"
-                        placeholder={defaultConfig.apiPort}
-                        size="5"
-                      />
-                    </SettingsField>
-
-                    <SettingsField
-                      connectLabel
-                      indent={1}
-                      label={__('RPC non-SSL Port')}
-                      subLabel={__('Nexus RPC server non-SSL Port')}
-                    >
-                      <Field
-                        component={TextField.RF}
-                        name="embeddedCoreRpcPort"
-                        placeholder={defaultConfig.port}
-                        size="5"
-                      />
-                    </SettingsField>
-                  </>
-                )
-              }
-            />
-
-            {legacyMode && (
-              <>
-                <SettingsField
-                  connectLabel
-                  label={__('Avatar Mode')}
-                  subLabel={__(
-                    'Disabling Avatar will make the core use a separate change key'
-                  )}
-                >
-                  <Field name="avatarMode" component={Switch.RF} />
-                </SettingsField>
-
-                <SettingsField
-                  connectLabel
-                  label={__('Rescan wallet')}
-                  subLabel={__(
-                    'Used to correct transaction/balance issues, scans over every block in the database. Could take up to 10 minutes.'
-                  )}
-                >
-                  <ReScanButton disabled={!coreConnected} />
-                </SettingsField>
-
-                <SettingsField
-                  connectLabel
-                  label={__('Reload transaction history')}
-                  subLabel={__(
-                    'Restart Nexus core with -walletclean parameter to clean out and reload all transaction history'
-                  )}
-                >
-                  <Button
-                    onClick={reloadTxHistory}
-                    style={{ height: consts.inputHeightEm + 'em' }}
-                  >
-                    {__('Reload')}
-                  </Button>
-                </SettingsField>
-              </>
-            )}
-
-            <SettingsField
-              connectLabel
-              label={__('Clear peer connections')}
-              subLabel={__(
-                'Clear all stored peer connections and restart Nexus'
-              )}
-            >
-              <Button
-                onClick={clearPeerConnections}
-                style={{ height: consts.inputHeightEm + 'em' }}
-              >
-                {__('Clear')}
-              </Button>
-            </SettingsField>
-            <SettingsField
-              connectLabel
-              label={__('Advance')}
-              subLabel={__('Allow advanced core options')}
-            >
-              <Field name="allowAdvancedCoreOptions" component={Switch.RF} />
-            </SettingsField>
-            <Field
-              name="allowAdvancedCoreOptions"
-              component={({ input: allowAdvancedCoreOptions }) =>
-                allowAdvancedCoreOptions.value && (
-                  <>
-                    {' '}
-                    <SettingsField
-                      connectLabel
-                      indent={1}
-                      label={__('Core Flags')}
-                      subLabel={__('Pass these flags to the core on start')}
-                    >
-                      <Field
-                        name="advancedCoreParams"
-                        component={TextField.RF}
-                      />
-                    </SettingsField>
-                  </>
-                )
-              }
-            />
-
-            {liteMode && (
-              <SettingsField
-                connectLabel
-                label={__('Resync database')}
-                subLabel={__(
-                  'Delete lite mode database and resynchronize from the beginning'
-                )}
-              >
-                <Button
-                  onClick={resyncLiteMode}
-                  style={{ height: consts.inputHeightEm + 'em' }}
-                >
-                  {__('Resynchronize')}
-                </Button>
-              </SettingsField>
-            )}
-          </>
-        )}
+        {!manualDaemon && <EmbeddedCoreSettings />}
 
         {!!manualDaemon && <RemoteCoreSettings />}
         {!!dirty && (
