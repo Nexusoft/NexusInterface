@@ -290,19 +290,6 @@ function SettingsCore({
     switchSettingsTab('Core');
   }, []);
 
-  const disableSafeMode = async (e) => {
-    if (e.target.defaultValue === 'true') {
-      e.preventDefault();
-      const confirmed = await confirm({
-        question: __('Are you sure you want to disable Safe Mode') + '?',
-        note: 'In the unlikely event of hardware failure your sigchain could become inaccessible. Disabling safemode, while not having a recovery phrase, could result in loss of your coins. Proceed at your own risk.',
-      });
-      if (confirmed) {
-        change('safeMode', false);
-      }
-    }
-  };
-
   return (
     <>
       <form onSubmit={handleSubmit} style={{ paddingBottom: dirty ? 55 : 0 }}>
