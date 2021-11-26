@@ -237,6 +237,7 @@ export default function SettingsCore() {
             {!manualDaemon && <EmbeddedCoreSettings />}
 
             {!!manualDaemon && <RemoteCoreSettings />}
+
             {!!dirty && (
               <RestartPrompt>
                 <RestartContainer>

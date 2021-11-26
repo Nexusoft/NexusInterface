@@ -240,10 +240,8 @@ function SafeModeSetting() {
         'Enables NextHash verification to protect against corruption, but adds computation time.'
       )}
     >
-      <Form.Field
-        name="safeMode"
-        type="checkbox"
-        render={({ input }) => (
+      <Form.Field name="safeMode" type="checkbox">
+        {({ input }) => (
           <Switch
             {...input}
             onChange={async (e) => {
@@ -263,7 +261,7 @@ function SafeModeSetting() {
             }}
           />
         )}
-      />
+      </Form.Field>
     </SettingsField>
   );
 }
