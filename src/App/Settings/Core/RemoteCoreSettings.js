@@ -1,6 +1,7 @@
 import Form from 'components/Form';
 import SettingsField from 'components/SettingsField';
 import { legacyMode } from 'consts/misc';
+import { required } from 'lib/form';
 
 __ = __context('Settings.Core');
 
@@ -21,6 +22,7 @@ export default function RemoteCoreSettings() {
         component={Form.TextField}
         name="manualDaemonIP"
         size="12"
+        validate={required()}
       />
 
       {!legacyMode && (
@@ -38,6 +40,7 @@ export default function RemoteCoreSettings() {
             component={Form.TextField}
             name="manualDaemonApiPort"
             size="5"
+            validate={required()}
           />
 
           <Setting
@@ -46,6 +49,7 @@ export default function RemoteCoreSettings() {
             component={Form.TextField}
             name="manualDaemonApiPortSSL"
             size="5"
+            validate={required()}
           />
 
           <Setting
@@ -54,6 +58,7 @@ export default function RemoteCoreSettings() {
             component={Form.TextField}
             name="manualDaemonApiUser"
             size="12"
+            validate={required()}
           />
 
           <Setting
@@ -62,6 +67,7 @@ export default function RemoteCoreSettings() {
             component={Form.TextField}
             name="manualDaemonApiPassword"
             size="12"
+            validate={required()}
           />
         </>
       )}
@@ -79,6 +85,7 @@ export default function RemoteCoreSettings() {
         component={Form.TextField}
         name="manualDaemonPort"
         size="5"
+        validate={required()}
       />
 
       <Setting
@@ -87,6 +94,7 @@ export default function RemoteCoreSettings() {
         component={Form.TextField}
         name="manualDaemonPortSSL"
         size="5"
+        validate={required()}
       />
 
       <Setting
@@ -95,6 +103,7 @@ export default function RemoteCoreSettings() {
         component={Form.TextField}
         name="manualDaemonUser"
         size="12"
+        validate={required()}
       />
 
       <Setting
@@ -103,6 +112,7 @@ export default function RemoteCoreSettings() {
         component={Form.TextField}
         name="manualDaemonPassword"
         size="12"
+        validate={required()}
       />
 
       <Setting
