@@ -23,15 +23,7 @@ export default function EmbeddedCoreSettings() {
     <>
       <BasicSettings />
 
-      <SettingsField
-        connectLabel
-        label={__('Safe Mode')}
-        subLabel={__(
-          'Enables NextHash verification to protect against corruption, but adds computation time.'
-        )}
-      >
-        <Form.Switch name="safeMode" onChange={disableSafeMode} />
-      </SettingsField>
+      <SafeModeSetting />
 
       <SettingsField
         connectLabel
@@ -238,6 +230,39 @@ function BasicSettings() {
   );
 }
 
+function SafeModeSetting() {
+  return (
+    <SettingsField
+      connectLabel
+      label={__('Safe Mode')}
+      subLabel={__(
+        'Enables NextHash verification to protect against corruption, but adds computation time.'
+      )}
+    >
+      <Form.Field
+        name="safeMode"
+        type="checkbox"
+        render={({ input }) => (
+          <Switch
+            {...input}
+            onChange={async (value) => {
+              if (!value) {
+                const confirmed = await confirm({
+                  question:
+                    __('Are you sure you want to disable Safe Mode') + '?',
+                  note: 'In the unlikely event of hardware failure your sigchain could become inaccessible. Disabling safemode, while not having a recovery phrase, could result in loss of your coins. Proceed at your own risk.',
+                });
+                if (!confirmed) return;
+              }
+              input.onChange(value);
+            }}
+          />
+        )}
+      />
+    </SettingsField>
+  );
+}
+
 function PortSettings() {
   const embeddedCoreAllowNonSSL = useFieldValue('embeddedCoreAllowNonSSL');
 
@@ -438,18 +463,5 @@ async function resyncLiteMode() {
       openErrorDialog({ message: err && err.message });
     }
     await startCore();
-  }
-}
-
-async function disableSafeMode(e) {
-  if (e.target.defaultValue === 'true') {
-    e.preventDefault();
-    const confirmed = await confirm({
-      question: __('Are you sure you want to disable Safe Mode') + '?',
-      note: 'In the unlikely event of hardware failure your sigchain could become inaccessible. Disabling safemode, while not having a recovery phrase, could result in loss of your coins. Proceed at your own risk.',
-    });
-    if (confirmed) {
-      updateSettings({ safeMode: false });
-    }
   }
 }
