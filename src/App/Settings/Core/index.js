@@ -1,10 +1,11 @@
 // External
 import { useEffect } from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { reduxForm, formValueSelector } from 'redux-form';
 import styled from '@emotion/styled';
 
 // Internal
+import Form from 'components/Form';
 import store from 'store';
 import * as TYPE from 'consts/actionTypes';
 import {
@@ -16,7 +17,7 @@ import { confirm } from 'lib/dialog';
 import { stopCore, startCore, restartCore } from 'lib/core';
 import { refreshCoreInfo } from 'lib/coreInfo';
 import { updateSettings } from 'lib/settings';
-
+import { formSubmit } from 'lib/form';
 import Button from 'components/Button';
 import Switch from 'components/Switch';
 import { errorHandler } from 'utils/form';
@@ -211,80 +212,13 @@ const mapStateToProps = (state) => {
   };
 };
 
-const formOptions = {
-  form: 'coreSettings',
-  destroyOnUnmount: false,
-  enableReinitialize: true,
-  validate: (
-    {
-      verboseLevel,
-      manualDaemonIP,
-      manualDaemonPort,
-      manualDaemonUser,
-      manualDaemonPassword,
-      manualDaemonApiPort,
-      manualDaemonApiUser,
-      manualDaemonApiPassword,
-    },
-    props
-  ) => {
-    const errors = {};
-    if (!verboseLevel && verboseLevel !== 0) {
-      errors.verboseLevel = __('Verbose level is required');
-    }
-
-    if (props.manualDaemon) {
-      if (!manualDaemonIP) {
-        errors.manualDaemonIP = __('Remote Core IP is required');
-      }
-      if (!manualDaemonPort) {
-        errors.manualDaemonPort = __('RPC port is required');
-      }
-      if (!manualDaemonUser) {
-        errors.manualDaemonUser = __('RPC username is required');
-      }
-      if (!manualDaemonPassword) {
-        errors.manualDaemonPassword = __('RPC password is required');
-      }
-      if (!legacyMode) {
-        if (!manualDaemonApiPort) {
-          errors.manualDaemonApiPort = __('API port is required');
-        }
-        if (!manualDaemonApiUser) {
-          errors.manualDaemonApiUser = __('API username is required');
-        }
-        if (!manualDaemonApiPassword) {
-          errors.manualDaemonApiPassword = __('API password is required');
-        }
-      }
-    }
-    return errors;
-  },
-  onSubmit: async (values) => {
-    return updateSettings(values);
-  },
-  onSubmitSuccess: (result, dispatch, props) => {
-    showNotification(__('Core settings saved'), 'success');
-    if (!props.manualDaemon && props.restartCoreOnSave) {
-      showNotification(__('Restarting Core...'));
-      restartCore();
-    }
-  },
-  onSubmitFail: errorHandler('Error saving settings'),
-};
-
-function SettingsCore({
-  coreConnected,
-  liteMode,
-  manualDaemon,
-  handleSubmit,
-  dirty,
-  submitting,
-  restartCoreOnSave,
-  showTestnetOff,
-  change,
-}) {
+export default function SettingsCore() {
   const switchId = useUID();
+  const settings = useSelector((state) => state.settings);
+  const { manualDaemon } = settings;
+  const restartCoreOnSave = useSelector(
+    (state) => state.ui.settings.restartCoreOnSave
+  );
 
   useEffect(() => {
     switchSettingsTab('Core');
@@ -292,62 +226,124 @@ function SettingsCore({
 
   return (
     <>
-      <form onSubmit={handleSubmit} style={{ paddingBottom: dirty ? 55 : 0 }}>
-        <CoreModes>
-          <EmbeddedMode
-            skin={manualDaemon ? 'default' : 'filled-primary'}
-            active={!manualDaemon}
-            onClick={manualDaemon ? turnOffRemoteCore : undefined}
-          >
-            {__('Embedded Core')}
-          </EmbeddedMode>
-          <ManualMode
-            skin={manualDaemon ? 'filled-primary' : 'default'}
-            active={manualDaemon}
-            onClick={manualDaemon ? undefined : turnOnRemoteCore}
-          >
-            {__('Remote Core')}
-          </ManualMode>
-        </CoreModes>
+      <Form
+        name="coreSettings"
+        persistState
+        initialValues={getInitialValues(settings)}
+        keepDirtyOnReinitialize={false}
+        // validate: (
+        //   {
+        //     verboseLevel,
+        //     manualDaemonIP,
+        //     manualDaemonPort,
+        //     manualDaemonUser,
+        //     manualDaemonPassword,
+        //     manualDaemonApiPort,
+        //     manualDaemonApiUser,
+        //     manualDaemonApiPassword,
+        //   },
+        //   props
+        // ) => {
+        //   const errors = {};
+        //   if (!verboseLevel && verboseLevel !== 0) {
+        //     errors.verboseLevel = __('Verbose level is required');
+        //   }
 
-        {!manualDaemon && <EmbeddedCoreSettings />}
+        //   if (props.manualDaemon) {
+        //     if (!manualDaemonIP) {
+        //       errors.manualDaemonIP = __('Remote Core IP is required');
+        //     }
+        //     if (!manualDaemonPort) {
+        //       errors.manualDaemonPort = __('RPC port is required');
+        //     }
+        //     if (!manualDaemonUser) {
+        //       errors.manualDaemonUser = __('RPC username is required');
+        //     }
+        //     if (!manualDaemonPassword) {
+        //       errors.manualDaemonPassword = __('RPC password is required');
+        //     }
+        //     if (!legacyMode) {
+        //       if (!manualDaemonApiPort) {
+        //         errors.manualDaemonApiPort = __('API port is required');
+        //       }
+        //       if (!manualDaemonApiUser) {
+        //         errors.manualDaemonApiUser = __('API username is required');
+        //       }
+        //       if (!manualDaemonApiPassword) {
+        //         errors.manualDaemonApiPassword = __('API password is required');
+        //       }
+        //     }
+        //   }
+        //   return errors;
+        // },
+        onSubmit={formSubmit({
+          submit: updateSettings,
+          onSuccess: () => {
+            showNotification(__('Core settings saved'), 'success');
+            if (!manualDaemon && restartCoreOnSave) {
+              showNotification(__('Restarting Core...'));
+              restartCore();
+            }
+          },
+          errorMessage: __('Error saving settings'),
+        })}
+        subscription={{ dirty: true }}
+      >
+        {({ dirty }) => (
+          <div style={{ paddingBottom: dirty ? 55 : 0 }}>
+            <CoreModes>
+              <EmbeddedMode
+                skin={manualDaemon ? 'default' : 'filled-primary'}
+                active={!manualDaemon}
+                onClick={manualDaemon ? turnOffRemoteCore : undefined}
+              >
+                {__('Embedded Core')}
+              </EmbeddedMode>
+              <ManualMode
+                skin={manualDaemon ? 'filled-primary' : 'default'}
+                active={manualDaemon}
+                onClick={manualDaemon ? undefined : turnOnRemoteCore}
+              >
+                {__('Remote Core')}
+              </ManualMode>
+            </CoreModes>
 
-        {!!manualDaemon && <RemoteCoreSettings />}
-        {!!dirty && (
-          <RestartPrompt>
-            <RestartContainer>
-              <div className="flex center">
-                {!manualDaemon && (
-                  <>
-                    <Switch
-                      id={switchId}
-                      checked={restartCoreOnSave}
-                      onChange={handleRestartSwitch}
-                      style={{ fontSize: '0.7em' }}
-                    />
-                    &nbsp;
-                    <label
-                      htmlFor={switchId}
-                      style={{
-                        cursor: 'pointer',
-                        opacity: restartCoreOnSave ? 1 : 0.7,
-                      }}
-                    >
-                      {__('Restart Core for these changes to take effect')}
-                    </label>
-                  </>
-                )}
-              </div>
+            {!manualDaemon && <EmbeddedCoreSettings />}
 
-              <Button type="submit" disabled={submitting}>
-                {__('Save settings')}
-              </Button>
-            </RestartContainer>
-          </RestartPrompt>
+            {!!manualDaemon && <RemoteCoreSettings />}
+            {!!dirty && (
+              <RestartPrompt>
+                <RestartContainer>
+                  <div className="flex center">
+                    {!manualDaemon && (
+                      <>
+                        <Switch
+                          id={switchId}
+                          checked={restartCoreOnSave}
+                          onChange={handleRestartSwitch}
+                          style={{ fontSize: '0.7em' }}
+                        />
+                        &nbsp;
+                        <label
+                          htmlFor={switchId}
+                          style={{
+                            cursor: 'pointer',
+                            opacity: restartCoreOnSave ? 1 : 0.7,
+                          }}
+                        >
+                          {__('Restart Core for these changes to take effect')}
+                        </label>
+                      </>
+                    )}
+                  </div>
+
+                  <Form.SubmitButton>{__('Save settings')}</Form.SubmitButton>
+                </RestartContainer>
+              </RestartPrompt>
+            )}
+          </div>
         )}
-      </form>
+      </Form>
     </>
   );
 }
-
-export default connect(mapStateToProps)(reduxForm(formOptions)(SettingsCore));
