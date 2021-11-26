@@ -128,9 +128,9 @@ const getInitialValues = (() => {
     if (settings === lastInput) return lastOutput;
 
     let changed = false;
-    const output = lastOutput || {};
+    const output = {};
     formKeys.forEach((key) => {
-      if (settings[key] !== output[key]) {
+      if (!lastOutput || settings[key] !== lastOutput[key]) {
         changed = true;
       }
       output[key] = settings[key];
