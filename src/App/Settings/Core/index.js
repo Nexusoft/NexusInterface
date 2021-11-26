@@ -1,7 +1,6 @@
 // External
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { reduxForm, formValueSelector } from 'redux-form';
 import styled from '@emotion/styled';
 
 // Internal
@@ -20,10 +19,7 @@ import { updateSettings } from 'lib/settings';
 import { formSubmit } from 'lib/form';
 import Button from 'components/Button';
 import Switch from 'components/Switch';
-import { errorHandler } from 'utils/form';
-import { legacyMode } from 'consts/misc';
 import useUID from 'utils/useUID.js';
-import { isCoreConnected } from 'selectors';
 
 import EmbeddedCoreSettings from './EmbeddedCoreSettings';
 import RemoteCoreSettings from './RemoteCoreSettings';
@@ -187,31 +183,6 @@ function handleRestartSwitch(e) {
   setCoreSettingsRestart(!!e.target.checked);
 }
 
-const mapStateToProps = (state) => {
-  const {
-    settings,
-    ui: {
-      settings: { restartCoreOnSave },
-    },
-    core: { systemInfo },
-  } = state;
-  const formTestnetIteration = formValueSelector('coreSettings')(
-    state,
-    'testnetIteration'
-  );
-  const settingTestnetIteration = settings.testnetIteration;
-  return {
-    showTestnetOff:
-      (formTestnetIteration && formTestnetIteration != 0) ||
-      (settingTestnetIteration && settingTestnetIteration != 0),
-    coreConnected: isCoreConnected(state),
-    liteMode: !!systemInfo?.litemode,
-    manualDaemon: settings.manualDaemon,
-    initialValues: getInitialValues(settings),
-    restartCoreOnSave,
-  };
-};
-
 export default function SettingsCore() {
   const switchId = useUID();
   const settings = useSelector((state) => state.settings);
@@ -231,51 +202,6 @@ export default function SettingsCore() {
         persistState
         initialValues={getInitialValues(settings)}
         keepDirtyOnReinitialize={false}
-        // validate: (
-        //   {
-        //     verboseLevel,
-        //     manualDaemonIP,
-        //     manualDaemonPort,
-        //     manualDaemonUser,
-        //     manualDaemonPassword,
-        //     manualDaemonApiPort,
-        //     manualDaemonApiUser,
-        //     manualDaemonApiPassword,
-        //   },
-        //   props
-        // ) => {
-        //   const errors = {};
-        //   if (!verboseLevel && verboseLevel !== 0) {
-        //     errors.verboseLevel = __('Verbose level is required');
-        //   }
-
-        //   if (props.manualDaemon) {
-        //     if (!manualDaemonIP) {
-        //       errors.manualDaemonIP = __('Remote Core IP is required');
-        //     }
-        //     if (!manualDaemonPort) {
-        //       errors.manualDaemonPort = __('RPC port is required');
-        //     }
-        //     if (!manualDaemonUser) {
-        //       errors.manualDaemonUser = __('RPC username is required');
-        //     }
-        //     if (!manualDaemonPassword) {
-        //       errors.manualDaemonPassword = __('RPC password is required');
-        //     }
-        //     if (!legacyMode) {
-        //       if (!manualDaemonApiPort) {
-        //         errors.manualDaemonApiPort = __('API port is required');
-        //       }
-        //       if (!manualDaemonApiUser) {
-        //         errors.manualDaemonApiUser = __('API username is required');
-        //       }
-        //       if (!manualDaemonApiPassword) {
-        //         errors.manualDaemonApiPassword = __('API password is required');
-        //       }
-        //     }
-        //   }
-        //   return errors;
-        // },
         onSubmit={formSubmit({
           submit: updateSettings,
           onSuccess: () => {
