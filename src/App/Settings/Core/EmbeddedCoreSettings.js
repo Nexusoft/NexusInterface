@@ -3,6 +3,7 @@ import path from 'path';
 import Form from 'components/Form';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
+import Switch from 'components/Switch';
 import { useFieldValue } from 'lib/form';
 import { updateSettings } from 'lib/settings';
 import { confirm, openErrorDialog } from 'lib/dialog';
@@ -245,16 +246,20 @@ function SafeModeSetting() {
         render={({ input }) => (
           <Switch
             {...input}
-            onChange={async (value) => {
-              if (!value) {
+            onChange={async (e) => {
+              const { checked } = e.target;
+              if (!checked) {
                 const confirmed = await confirm({
                   question:
                     __('Are you sure you want to disable Safe Mode') + '?',
                   note: 'In the unlikely event of hardware failure your sigchain could become inaccessible. Disabling safemode, while not having a recovery phrase, could result in loss of your coins. Proceed at your own risk.',
                 });
-                if (!confirmed) return;
+                if (!confirmed) {
+                  e.preventDefault();
+                  return;
+                }
               }
-              input.onChange(value);
+              input.onChange(checked);
             }}
           />
         )}
