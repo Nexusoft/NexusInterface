@@ -13,7 +13,7 @@ import rpc from 'lib/rpc';
 import { startCore } from 'lib/core';
 import { consts } from 'styles';
 import { errorHandler } from 'utils/form';
-import passwordInvalidChars from './passwordInvalidChars';
+import passwordRegex from './passwordRegex';
 
 __ = __context('Settings.Security');
 
@@ -51,7 +51,7 @@ const Characters = styled.span({
     if (!password) {
       errors.password = __('Password is required');
     }
-    if (passwordInvalidChars.test(password)) {
+    if (passwordRegex.test(password)) {
       errors.password =
         __('Password cannot contain these characters:') + ' - $ / & * | < >';
     } else if (!password || password.length < 8) {
