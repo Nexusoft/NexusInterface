@@ -144,12 +144,13 @@ const getInitialValues = (() => {
 /**
  * Confirms turning off Remote Core
  */
-async function turnOffRemoteCore() {
+async function turnOffRemoteCore(restartForm) {
   const confirmed = await confirm({
     question: __('Exit remote Core mode?'),
     note: __('(This will restart your Core)'),
   });
   if (confirmed) {
+    restartForm();
     store.dispatch({ type: TYPE.DISCONNECT_CORE });
     updateSettings({ manualDaemon: false });
     await startCore();
@@ -160,7 +161,7 @@ async function turnOffRemoteCore() {
 /**
  * Confirms turning on Remote Core
  */
-async function turnOnRemoteCore() {
+async function turnOnRemoteCore(restartForm) {
   const confirmed = await confirm({
     question: __('Enter remote Core mode?'),
     note: __(
@@ -168,6 +169,7 @@ async function turnOnRemoteCore() {
     ),
   });
   if (confirmed) {
+    restartForm();
     store.dispatch({ type: TYPE.DISCONNECT_CORE });
     updateSettings({ manualDaemon: true });
     await stopCore();
@@ -215,20 +217,28 @@ export default function SettingsCore() {
         })}
         subscription={{ dirty: true }}
       >
-        {({ dirty }) => (
+        {({ dirty, form }) => (
           <div style={{ paddingBottom: dirty ? 55 : 0 }}>
             <CoreModes>
               <EmbeddedMode
                 skin={manualDaemon ? 'default' : 'filled-primary'}
                 active={!manualDaemon}
-                onClick={manualDaemon ? turnOffRemoteCore : undefined}
+                onClick={
+                  manualDaemon
+                    ? () => turnOffRemoteCore(form.restart)
+                    : undefined
+                }
               >
                 {__('Embedded Core')}
               </EmbeddedMode>
               <ManualMode
                 skin={manualDaemon ? 'filled-primary' : 'default'}
                 active={manualDaemon}
-                onClick={manualDaemon ? undefined : turnOnRemoteCore}
+                onClick={
+                  manualDaemon
+                    ? undefined
+                    : () => turnOnRemoteCore(form.restart)
+                }
               >
                 {__('Remote Core')}
               </ManualMode>
