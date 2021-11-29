@@ -1,7 +1,7 @@
 import Form from 'components/Form';
 import SettingsField from 'components/SettingsField';
 import { legacyMode } from 'consts/misc';
-import { required } from 'lib/form';
+import { defaultConfig } from 'lib/coreConfig';
 
 __ = __context('Settings.Core');
 
@@ -21,8 +21,8 @@ export default function RemoteCoreSettings() {
         subLabel={__('Remote Core IP address')}
         component={Form.TextField}
         name="manualDaemonIP"
+        placeholder={defaultConfig.ip}
         size="12"
-        validate={required()}
       />
 
       {!legacyMode && (
@@ -32,6 +32,7 @@ export default function RemoteCoreSettings() {
             subLabel={__('Use SSL for API calls')}
             component={Form.Switch}
             name="manualDaemonApiSSL"
+            placeholder={defaultConfig.apiSSL}
           />
 
           <Setting
@@ -39,8 +40,8 @@ export default function RemoteCoreSettings() {
             subLabel={__('Nexus API server non-SSL Port')}
             component={Form.TextField}
             name="manualDaemonApiPort"
+            placeholder={defaultConfig.apiPort}
             size="5"
-            validate={required()}
           />
 
           <Setting
@@ -48,8 +49,8 @@ export default function RemoteCoreSettings() {
             subLabel={__('Nexus API server SSL Port')}
             component={Form.TextField}
             name="manualDaemonApiPortSSL"
+            placeholder={defaultConfig.apiPortSSL}
             size="5"
-            validate={required()}
           />
 
           <Setting
@@ -57,8 +58,8 @@ export default function RemoteCoreSettings() {
             subLabel={__('Nexus API server Username')}
             component={Form.TextField}
             name="manualDaemonApiUser"
+            placeholder={defaultConfig.apiUser}
             size="12"
-            validate={required()}
           />
 
           <Setting
@@ -66,8 +67,8 @@ export default function RemoteCoreSettings() {
             subLabel={__('Nexus API server Password')}
             component={Form.TextField}
             name="manualDaemonApiPassword"
+            placeholder={defaultConfig.apiPassword}
             size="12"
-            validate={required()}
           />
         </>
       )}
@@ -77,6 +78,7 @@ export default function RemoteCoreSettings() {
         subLabel={__('Use SSL for RPC calls')}
         component={Form.Switch}
         name="manualDaemonSSL"
+        placeholder={defaultConfig.rpcSSL}
       />
 
       <Setting
@@ -84,8 +86,8 @@ export default function RemoteCoreSettings() {
         subLabel={__('Nexus RPC server non-SSL Port')}
         component={Form.TextField}
         name="manualDaemonPort"
+        placeholder={defaultConfig.port}
         size="5"
-        validate={required()}
       />
 
       <Setting
@@ -93,8 +95,8 @@ export default function RemoteCoreSettings() {
         subLabel={__('Nexus RPC server SSL Port')}
         component={Form.TextField}
         name="manualDaemonPortSSL"
+        placeholder={defaultConfig.portSSL}
         size="5"
-        validate={required()}
       />
 
       <Setting
@@ -102,8 +104,8 @@ export default function RemoteCoreSettings() {
         subLabel={__('Nexus RPC server Username')}
         component={Form.TextField}
         name="manualDaemonUser"
+        placeholder={defaultConfig.user}
         size="12"
-        validate={required()}
       />
 
       <Setting
@@ -111,8 +113,8 @@ export default function RemoteCoreSettings() {
         subLabel={__('Nexus RPC server Password')}
         component={Form.TextField}
         name="manualDaemonPassword"
+        placeholder={defaultConfig.password}
         size="12"
-        validate={required()}
       />
 
       <Setting
