@@ -10,7 +10,12 @@ import FormField from 'components/FormField';
 import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
 import { openErrorDialog, openSuccessDialog, confirm } from 'lib/dialog';
-import passwordRegex from './passwordRegex';
+import {
+  passwordRegex,
+  passwordMinLength,
+  passwordNoSpaces,
+  passwordsMatch,
+} from './common';
 
 __ = __context('Settings.Security');
 
@@ -24,17 +29,6 @@ const initialValues = {
   newPassword: '',
   newPasswordRepeat: '',
 };
-
-const passwordMinLength = (value) =>
-  value?.length < 8 ? __('Password must be at least 8 characters') : undefined;
-
-const passwordNoSpaces = (value) =>
-  value !== value.trim()
-    ? __('Password cannot start or end with spaces')
-    : undefined;
-
-const passwordsMatch = (newPassword, { password }) =>
-  newPassword !== password ? __('Passwords do not match') : undefined;
 
 export default function ChangePassword() {
   const confirmLogout = async () => {
