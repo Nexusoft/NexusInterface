@@ -151,7 +151,7 @@ Form.Switch = forwardRef(function ({ name, config, validate, ...rest }, ref) {
 Form.SubmitButton = ({ children, ...rest }) => {
   const { submitting } = useFormState({ subscription: { submitting: true } });
   return (
-    <Button type="submit" disabled={submitting} {...rest}>
+    <Button type="submit" disabled={submitting} waiting={submitting} {...rest}>
       {typeof children === 'function' ? children({ submitting }) : children}
     </Button>
   );
