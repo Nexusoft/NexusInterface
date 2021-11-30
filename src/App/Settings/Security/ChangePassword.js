@@ -1,24 +1,15 @@
 // External
-import { Component } from 'react';
-import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
 
 // Internal
 import rpc from 'lib/rpc';
 import { refreshCoreInfo } from 'lib/coreInfo';
 import { formSubmit, required, checkAll, regex } from 'lib/form';
-import { confirm } from 'lib/dialog';
 import Form from 'components/Form';
 import FormField from 'components/FormField';
-import TextField from 'components/TextField';
 import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
-import {
-  openConfirmDialog,
-  openErrorDialog,
-  openSuccessDialog,
-} from 'lib/dialog';
-import { errorHandler } from 'utils/form';
+import { openErrorDialog, openSuccessDialog, confirm } from 'lib/dialog';
 import passwordRegex from './passwordRegex';
 
 __ = __context('Settings.Security');
@@ -68,24 +59,6 @@ export default function ChangePassword() {
       name="changePassword"
       persistState
       initialValues={initialValues}
-      // validate: ({ password, newPassword, newPasswordRepeat }) => {
-      //   const errors = {};
-      //   if (!password) {
-      //     errors.password = __('Password is required');
-      //   }
-      //   if (passwordInvalidChars.test(newPassword)) {
-      //     errors.newPassword =
-      //       __('Password cannot contain these characters:') + ' - $ / & * | < >';
-      //   } else if (!newPassword || newPassword.length < 8) {
-      //     errors.newPassword = __('Password must be at least 8 characters');
-      //   } else if (newPassword !== newPassword.trim()) {
-      //     errors.newPassword = __('Password cannot start or end with spaces');
-      //   }
-      //   if (newPasswordRepeat !== newPassword) {
-      //     errors.newPasswordRepeat = __('Passwords do not match');
-      //   }
-      //   return errors;
-      // },
       onSubmit={formSubmit({
         submit: ({ password, newPassword }) =>
           rpc('walletpassphrasechange', [password, newPassword]),
