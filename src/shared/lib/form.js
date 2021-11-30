@@ -44,6 +44,11 @@ export function useFieldValue(name) {
   return value;
 }
 
+export const numericOnly = (value) =>
+  (value ? String(value) : '').replace(/\D/g, '');
+
+export const trimText = (text) => text && text.trim();
+
 /**
  * VALIDATE FUNCTIONS
  */
