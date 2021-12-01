@@ -10,7 +10,7 @@ import InfoField from 'components/InfoField';
 import { formatDateTime } from 'lib/intl';
 import { openModal } from 'lib/ui';
 import { fetchAssetSchema } from 'lib/asset';
-import { getAssetData } from 'utils/misc';
+import { getAssetData } from 'lib/asset';
 import editIcon from 'icons/edit.svg';
 
 import EditAssetModal from './EditAssetModal';

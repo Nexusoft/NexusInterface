@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import InfoField from 'components/InfoField';
 import Tooltip from 'components/Tooltip';
 import { openModal } from 'lib/ui';
-import { getAssetData } from 'utils/misc';
+import { getAssetData } from 'lib/asset';
 import { timing } from 'styles';
 
 import AssetDetailsModal from './AssetDetailsModal';
