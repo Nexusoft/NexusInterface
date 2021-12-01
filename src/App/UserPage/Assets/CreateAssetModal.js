@@ -144,14 +144,18 @@ export default function CreateAssetModal() {
                   uppercase
                   className="mt1"
                 >
-                  {submitting ? (
-                    <span>
-                      <Spinner className="mr0_4" />
-                      <span className="v-align">{__('Creating asset')}...</span>
-                    </span>
-                  ) : (
-                    __('Create asset')
-                  )}
+                  {({ submitting }) =>
+                    submitting ? (
+                      <span>
+                        <Spinner className="mr0_4" />
+                        <span className="v-align">
+                          {__('Creating asset')}...
+                        </span>
+                      </span>
+                    ) : (
+                      __('Create asset')
+                    )
+                  }
                 </Form.SubmitButton>
               </div>
             </Form>
