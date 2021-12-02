@@ -1,15 +1,13 @@
-import { Component } from 'react';
-import { connect } from 'react-redux';
-import { reduxForm, Field } from 'redux-form';
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 
+import Form from 'components/Form';
 import ControlledModal from 'components/ControlledModal';
-import Button from 'components/Button';
 import FormField from 'components/FormField';
 import Spinner from 'components/Spinner';
-import AutoSuggest from 'components/AutoSuggest';
+import { formSubmit, required } from 'lib/form';
 import { confirmPin, openSuccessDialog } from 'lib/dialog';
-import { errorHandler } from 'utils/form';
 import { loadAssets, loadOwnedTokens } from 'lib/user';
 import { callApi } from 'lib/tritiumApi';
 import memoize from 'utils/memoize';
@@ -36,130 +34,32 @@ const filterSuggestions = memoize((suggestions, inputValue) => {
   });
 });
 
-@connect(({ user: { tokens } }) => ({
-  tokenSuggestions:
-    tokens &&
-    tokens.map((token) => ({
-      value: token.address,
-      name: token.ticker,
-      display: (
-        <span>
-          {token.ticker} -<span className="dim"> {token.address}</span>
-        </span>
-      ),
-    })),
-}))
-@reduxForm({
-  form: 'tokenize-asset',
-  destroyOnUnmount: true,
-  initialValues: {
-    token: '',
-  },
-  validate: ({ token }) => {
-    const errors = {};
-    if (!token) {
-      errors.token = __('Token is required');
-    }
-    return errors;
-  },
-  onSubmit: async ({ token }, dispatch, { asset }) => {
-    const pin = await confirmPin();
-
-    if (pin) {
-      return await callApi('assets/tokenize/asset', {
-        pin,
-        address: asset.address,
-        token,
-      });
-    }
-  },
-  onSubmitSuccess: async (result, dispatch, props) => {
-    if (!result) return; // Submission was cancelled
-    loadAssets();
-    props.closeModal();
-    openSuccessDialog({
-      message: __('Asset has been tokenized'),
-    });
-  },
-  onSubmitFail: errorHandler(__('Error tokenizing asset')),
-})
-class TokenizeAssetForm extends Component {
-  componentDidMount() {
-    loadOwnedTokens();
-  }
-
-  setToken = (token) => {
-    this.props.change('token', token);
-  };
-
-  render() {
-    const { handleSubmit, asset, submitting, tokenSuggestions } = this.props;
-
-    return (
-      <form onSubmit={handleSubmit}>
-        <FormField label={__('Asset name')}>
-          <Value>{asset.name}</Value>
-        </FormField>
-
-        <FormField label={__('Asset address')}>
-          <Value>{asset.address}</Value>
-        </FormField>
-
-        <FormField
-          connectLabel
-          label={
+const selectTokenSuggestions = memoize(
+  (tokens) =>
+    tokens
+      ? tokens.map((token) => ({
+          value: token.address,
+          name: token.ticker,
+          display: (
             <span>
-              <span>{__('Token')}</span>
-              {
-                <Field
-                  name="token"
-                  component={({ input }) => {
-                    const suggestion =
-                      tokenSuggestions &&
-                      tokenSuggestions.find(
-                        (suggestion) => suggestion.value === input.value
-                      );
-                    const tokenName = suggestion && suggestion.name;
-                    return !!tokenName && <TokenName>{tokenName}</TokenName>;
-                  }}
-                />
-              }
+              {token.ticker} -<span className="dim"> {token.address}</span>
             </span>
-          }
-        >
-          <Field
-            name="token"
-            component={AutoSuggest.RF}
-            suggestions={tokenSuggestions || []}
-            filterSuggestions={filterSuggestions}
-            onSelect={this.setToken}
-            inputProps={{ placeholder: __('Token address'), autoFocus: true }}
-          />
-        </FormField>
+          ),
+        }))
+      : [],
+  (state) => state.user.tokens
+);
 
-        <Button
-          skin="primary"
-          wide
-          uppercase
-          className="mt3"
-          type="submit"
-          disabled={submitting}
-        >
-          {submitting ? (
-            <span>
-              <Spinner className="mr0_4" />
-              <span className="v-align">{__('Tokenizing asset')}...</span>
-            </span>
-          ) : (
-            __('Tokenize asset')
-          )}
-        </Button>
-      </form>
-    );
-  }
-}
+const initialValues = {
+  token: '',
+};
 
 export default function TokenizeAssetModal({ asset }) {
+  const tokenSuggestions = useSelector(selectTokenSuggestions);
+  useEffect(() => {
+    loadOwnedTokens();
+  }, []);
+
   return (
     <ControlledModal maxWidth={600}>
       {(closeModal) => (
@@ -168,7 +68,88 @@ export default function TokenizeAssetModal({ asset }) {
             {__('Tokenize asset')}
           </ControlledModal.Header>
           <ControlledModal.Body>
-            <TokenizeAssetForm closeModal={closeModal} asset={asset} />
+            <Form
+              name="tokenize-asset"
+              initialValues={initialValues}
+              onSubmit={formSubmit({
+                submit: async ({ token }) => {
+                  const pin = await confirmPin();
+                  if (pin) {
+                    return await callApi('assets/tokenize/asset', {
+                      pin,
+                      address: asset.address,
+                      token,
+                    });
+                  }
+                },
+                onSuccess: async (result) => {
+                  if (!result) return; // Submission was cancelled
+                  loadAssets();
+                  closeModal();
+                  openSuccessDialog({
+                    message: __('Asset has been tokenized'),
+                  });
+                },
+                errorMessage: __('Error tokenizing asset'),
+              })}
+            >
+              <FormField label={__('Asset name')}>
+                <Value>{asset.name}</Value>
+              </FormField>
+
+              <FormField label={__('Asset address')}>
+                <Value>{asset.address}</Value>
+              </FormField>
+
+              <FormField
+                connectLabel
+                label={
+                  <span>
+                    <span>{__('Token')}</span>
+                    {
+                      <Form.Field
+                        name="token"
+                        render={({ input }) => {
+                          const suggestion = tokenSuggestions?.find(
+                            (suggestion) => suggestion.value === input.value
+                          );
+                          const tokenName = suggestion?.name;
+                          return (
+                            !!tokenName && <TokenName>{tokenName}</TokenName>
+                          );
+                        }}
+                      />
+                    }
+                  </span>
+                }
+              >
+                <Form.AutoSuggest
+                  name="token"
+                  suggestions={tokenSuggestions}
+                  filterSuggestions={filterSuggestions}
+                  inputProps={{
+                    placeholder: __('Token address'),
+                    autoFocus: true,
+                  }}
+                  validate={required()}
+                />
+              </FormField>
+
+              <Form.SubmitButton skin="primary" wide uppercase className="mt3">
+                {({ submitting }) =>
+                  submitting ? (
+                    <span>
+                      <Spinner className="mr0_4" />
+                      <span className="v-align">
+                        {__('Tokenizing asset')}...
+                      </span>
+                    </span>
+                  ) : (
+                    __('Tokenize asset')
+                  )
+                }
+              </Form.SubmitButton>
+            </Form>
           </ControlledModal.Body>
         </>
       )}
