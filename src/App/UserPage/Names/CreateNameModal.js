@@ -1,16 +1,15 @@
-import { Component } from 'react';
+import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { reduxForm, Field } from 'redux-form';
+import { useField } from 'react-final-form';
 import styled from '@emotion/styled';
 
+import Form from 'components/Form';
 import ControlledModal from 'components/ControlledModal';
 import Button from 'components/Button';
 import FormField from 'components/FormField';
-import TextField from 'components/TextField';
 import Spinner from 'components/Spinner';
-import Select from 'components/Select';
+import { formSubmit, required, checkAll } from 'lib/form';
 import { confirmPin, openSuccessDialog } from 'lib/dialog';
-import { errorHandler } from 'utils/form';
 import {
   createLocalNameFee,
   createNamespacedNameFee,
@@ -32,211 +31,79 @@ const NameTypes = styled.div({
   fontSize: '.9em',
   columnGap: '1em',
   gridTemplateColumns: '1fr 1fr 1fr',
+  marginBottom: '2em',
 });
 
-function NameTypeSelect({ input, hasNamespaces }) {
+function NameType({ hasNamespaces }) {
+  const { input } = useField('type');
   return (
-    <NameTypes>
-      <Button
-        uppercase
-        skin={input.value === 'local' ? 'filled-primary' : 'default'}
-        onClick={() => {
-          input.onChange('local');
-        }}
-      >
-        {__('Local')}
-      </Button>
-      <Button
-        uppercase
-        skin={input.value === 'namespaced' ? 'filled-primary' : 'default'}
-        disabled={!hasNamespaces}
-        onClick={() => {
-          input.onChange('namespaced');
-        }}
-      >
-        {__('Namespaced')}
-      </Button>
-      <Button
-        uppercase
-        skin={input.value === 'global' ? 'filled-primary' : 'default'}
-        onClick={() => {
-          input.onChange('global');
-        }}
-      >
-        {__('Global')}
-      </Button>
-    </NameTypes>
+    <>
+      <NameTypes>
+        <Button
+          uppercase
+          skin={input.value === 'local' ? 'filled-primary' : 'default'}
+          onClick={() => {
+            input.onChange('local');
+          }}
+        >
+          {__('Local')}
+        </Button>
+        <Button
+          uppercase
+          skin={input.value === 'namespaced' ? 'filled-primary' : 'default'}
+          disabled={!hasNamespaces}
+          onClick={() => {
+            input.onChange('namespaced');
+          }}
+        >
+          {__('Namespaced')}
+        </Button>
+        <Button
+          uppercase
+          skin={input.value === 'global' ? 'filled-primary' : 'default'}
+          onClick={() => {
+            input.onChange('global');
+          }}
+        >
+          {__('Global')}
+        </Button>
+      </NameTypes>
+
+      {input.value === 'namespaced' && (
+        <FormField connectLabel label={__('Namespace')}>
+          <Form.Select
+            name="namespace"
+            options={(namespaces || []).map((n) => ({
+              value: n.name,
+              display: n.name,
+            }))}
+            placeholder={__('A namespace you own')}
+            validate={required()}
+          />
+        </FormField>
+      )}
+    </>
   );
 }
 
-@reduxForm({
-  form: 'create-name',
-  destroyOnUnmount: false,
-  initialValues: {
-    type: 'local',
-    namespace: '',
-    name: '',
-    registerAddress: '',
-  },
-  validate: ({ name, namespace, type }) => {
-    const errors = {};
-    if (!name || !name.trim()) {
-      errors.name = __('Name is required');
-    } else if (name.startsWith(':')) {
-      errors.name = __('Name cannot start with a colon character');
-    }
+const initialValues = {
+  type: 'local',
+  namespace: '',
+  name: '',
+  registerAddress: '',
+};
 
-    if (type === 'namespaced' && (!namespace || !namespace.trim())) {
-      errors.namespace = __('Namespace is required');
-    }
-
-    return errors;
-  },
-  onSubmit: async ({ type, name, namespace, registerAddress }) => {
-    const pin = await confirmPin();
-
-    if (pin) {
-      return await callApi('names/create/name', {
-        pin,
-        name,
-        global: type === 'global',
-        namespace: type === 'namespaced' ? namespace : undefined,
-        address: registerAddress,
-      });
-    }
-  },
-  onSubmitSuccess: async (result, dispatch, props) => {
-    if (!result) return; // Submission was cancelled
-    loadNameRecords();
-    props.reset();
-    props.closeModal();
-    openSuccessDialog({
-      message: __('New name has been created'),
-    });
-  },
-  onSubmitFail: errorHandler(__('Error creating name')),
-})
-class CreateNameForm extends Component {
-  constructor(props) {
-    super(props);
-    loadNamespaces();
-  }
-
-  render() {
-    const { handleSubmit, username, namespaces, submitting } = this.props;
-    return (
-      <form onSubmit={handleSubmit}>
-        <Field
-          name="type"
-          component={NameTypeSelect}
-          hasNamespaces={!!namespaces && namespaces.length > 0}
-        />
-
-        <div className="mt2">
-          <Field
-            name="type"
-            component={({ input }) =>
-              input.value === 'namespaced' && (
-                <FormField connectLabel label={__('Namespace')}>
-                  <Field
-                    name="namespace"
-                    component={Select.RF}
-                    options={(namespaces || []).map((n) => ({
-                      value: n.name,
-                      display: n.name,
-                    }))}
-                    placeholder={__('A namespace you own')}
-                  />
-                </FormField>
-              )
-            }
-          />
-
-          <FormField connectLabel label={__('Name')}>
-            <Field
-              name="name"
-              component={TextField.RF}
-              skin="filled-inverted"
-              className="mt0_4"
-              placeholder={__('name')}
-              left={
-                <Field
-                  name="type"
-                  component={({ input }) => {
-                    switch (input.value) {
-                      case 'local':
-                        return <Prefix>{username + ':'}</Prefix>;
-                      case 'namespaced':
-                        return (
-                          <Field
-                            name="namespace"
-                            component={({ input }) => (
-                              <Prefix>
-                                {(input.value || __('namespace')) + '::'}
-                              </Prefix>
-                            )}
-                          />
-                        );
-                      default:
-                        return null;
-                    }
-                  }}
-                />
-              }
-            />
-          </FormField>
-
-          <FormField connectLabel label={__('Register address')}>
-            <Field
-              name="registerAddress"
-              component={TextField.RF}
-              skin="filled-inverted"
-              className="mt0_4"
-              placeholder={__('Register address that this name points to')}
-            />
-          </FormField>
-
-          <Field
-            name="type"
-            component={({ input }) => (
-              <div className="mt2" style={{ textAlign: 'left' }}>
-                {__('Name creation fee')}:{' '}
-                {input.value === 'global'
-                  ? createGlobalNameFee
-                  : input.value === 'namespaced'
-                  ? createNamespacedNameFee
-                  : createLocalNameFee}{' '}
-                NXS
-              </div>
-            )}
-          />
-        </div>
-
-        <Button
-          skin="primary"
-          wide
-          uppercase
-          className="mt3"
-          type="submit"
-          disabled={submitting}
-        >
-          {submitting ? (
-            <span>
-              <Spinner className="mr0_4" />
-              <span className="v-align">{__('Creating name')}...</span>
-            </span>
-          ) : (
-            __('Create name')
-          )}
-        </Button>
-      </form>
-    );
-  }
-}
+const notStartWithColon = (value) =>
+  value.startsWith(':')
+    ? __('Name cannot start with a colon character')
+    : undefined;
 
 export default function CreateNameModal() {
   const username = useSelector(selectUsername);
   const namespaces = useSelector((state) => state.user.namespaces);
+  useEffect(() => {
+    loadNamespaces();
+  }, []);
   return (
     <ControlledModal maxWidth={500}>
       {(closeModal) => (
@@ -245,11 +112,109 @@ export default function CreateNameModal() {
             {__('Create a new name')}
           </ControlledModal.Header>
           <ControlledModal.Body>
-            <CreateNameForm
-              closeModal={closeModal}
-              username={username}
-              namespaces={namespaces}
-            />
+            <Form
+              name="create-name"
+              persistState
+              initialValues={initialValues}
+              onSubmit={formSubmit({
+                submit: async ({ type, name, namespace, registerAddress }) => {
+                  const pin = await confirmPin();
+
+                  if (pin) {
+                    return await callApi('names/create/name', {
+                      pin,
+                      name,
+                      global: type === 'global',
+                      namespace: type === 'namespaced' ? namespace : undefined,
+                      address: registerAddress,
+                    });
+                  }
+                },
+                onSuccess: async (result, values, form) => {
+                  if (!result) return; // Submission was cancelled
+                  loadNameRecords();
+                  form.restart();
+                  closeModal();
+                  openSuccessDialog({
+                    message: __('New name has been created'),
+                  });
+                },
+                errorMessage: __('Error creating name'),
+              })}
+            >
+              <NameType hasNamespaces={!!namespaces && namespaces.length > 0} />
+
+              <FormField connectLabel label={__('Name')}>
+                <Form.TextField
+                  name="name"
+                  skin="filled-inverted"
+                  className="mt0_4"
+                  placeholder={__('name')}
+                  validate={checkAll(required(), notStartWithColon)}
+                  left={
+                    <Form.Field
+                      name="type"
+                      component={({ input }) => {
+                        switch (input.value) {
+                          case 'local':
+                            return <Prefix>{username + ':'}</Prefix>;
+                          case 'namespaced':
+                            return (
+                              <From.Field
+                                name="namespace"
+                                component={({ input }) => (
+                                  <Prefix>
+                                    {(input.value || __('namespace')) + '::'}
+                                  </Prefix>
+                                )}
+                              />
+                            );
+                          default:
+                            return null;
+                        }
+                      }}
+                    />
+                  }
+                />
+              </FormField>
+
+              <FormField connectLabel label={__('Register address')}>
+                <Form.TextField
+                  name="registerAddress"
+                  skin="filled-inverted"
+                  className="mt0_4"
+                  placeholder={__('Register address that this name points to')}
+                />
+              </FormField>
+
+              <Form.Field
+                name="type"
+                component={({ input }) => (
+                  <div className="mt2" style={{ textAlign: 'left' }}>
+                    {__('Name creation fee')}:{' '}
+                    {input.value === 'global'
+                      ? createGlobalNameFee
+                      : input.value === 'namespaced'
+                      ? createNamespacedNameFee
+                      : createLocalNameFee}{' '}
+                    NXS
+                  </div>
+                )}
+              />
+
+              <Form.SubmitButton skin="primary" wide uppercase className="mt3">
+                {({ submitting }) =>
+                  submitting ? (
+                    <span>
+                      <Spinner className="mr0_4" />
+                      <span className="v-align">{__('Creating name')}...</span>
+                    </span>
+                  ) : (
+                    __('Create name')
+                  )
+                }
+              </Form.SubmitButton>
+            </Form>
           </ControlledModal.Body>
         </>
       )}
