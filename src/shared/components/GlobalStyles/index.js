@@ -192,6 +192,18 @@ const utilityClasses = (theme) => css`
   .mr3 {
     margin-right: 3em;
   }
+  .mb0_4 {
+    margin-bottom: 0.4em;
+  }
+  .mb1 {
+    margin-bottom: 1em;
+  }
+  .mb2 {
+    margin-bottom: 2em;
+  }
+  .mb3 {
+    margin-bottom: 3em;
+  }
 
   .monospace {
     font-family: ${consts.monoFontFamily};
