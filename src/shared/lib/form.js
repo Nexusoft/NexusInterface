@@ -84,3 +84,8 @@ export const oneOf = (list, message) => (value) =>
 
 export const notOneOf = (list, message) => (value) =>
   list.includes(value) ? message : undefined;
+
+export const minChars = (min) => (value) =>
+  value.length < min
+    ? __('Must be at least %{min} characters', { min })
+    : undefined;

@@ -2,7 +2,7 @@ import Form from 'components/Form';
 import ControlledModal from 'components/ControlledModal';
 import FormField from 'components/FormField';
 import Spinner from 'components/Spinner';
-import { formSubmit, checkAll, required } from 'lib/form';
+import { formSubmit, checkAll, required, minChars } from 'lib/form';
 import { callApi } from 'lib/tritiumApi';
 import { openSuccessDialog, confirmPasswordPin } from 'lib/dialog';
 
@@ -14,11 +14,6 @@ const initialValues = {
   newPassword: '',
   newPin: '',
 };
-
-const minChars = (min) => (value) =>
-  value.length < min
-    ? __('Must be at least %{min} characters', { min })
-    : undefined;
 
 export default function ChangePasswordPinModal() {
   return (
