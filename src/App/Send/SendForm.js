@@ -22,11 +22,7 @@ import sendIcon from 'icons/send.svg';
 
 // Internal Local
 import Recipients from './Recipients';
-import {
-  selectAccountOptions,
-  getRegisteredFieldNames,
-  getAccountBalance,
-} from './selectors';
+import { selectAccountOptions } from './selectors';
 import PasswordModal from './PasswordModal';
 
 __ = __context('Send');
@@ -42,68 +38,12 @@ const SendFormButtons = styled.div({
   marginTop: '2em',
 });
 
-// const formName = 'send';
-// const valueSelector = formValueSelector(formName);
-// const mapStateToProps = (state, ownProps) => {
-//   const {
-//     addressBook,
-//     myAccounts,
-//     settings: { minConfirmations },
-//     core: {
-//       info: { blocks, locked, minting_only },
-//     },
-//     form,
-//   } = state;
-//   const accountName = valueSelector(state, 'sendFrom');
-//   const recipients = valueSelector(state, 'recipients');
-//   const accBalance = getAccountBalance(accountName, myAccounts);
-//   const hideSendAll =
-//     recipients &&
-//     (recipients.length > 1 ||
-//       (recipients[0] && recipients[0].amount === accBalance));
-
-//   return {
-//     minConfirmations,
-//     locked,
-//     blocks,
-//     minting_only,
-//     accountOptions: selectAccountOptions(state),
-//     addressNameMap: getAddressNameMap(addressBook),
-//     fieldNames: getRegisteredFieldNames(
-//       form[formName] && form[formName].registeredFields
-//     ),
-//     accBalance: hideSendAll ? undefined : accBalance,
-//     initialValues: {
-//       sendFrom: null,
-//       recipients: [
-//         {
-//           address: sendTo || null,
-//           amount: '',
-//           fiatAmount: '',
-//         },
-//       ],
-//       password: null,
-//       message: '',
-//     },
-//   };
-// };
-
 const confirmPassword = () =>
   new Promise((resolve) => {
     openModal(PasswordModal, {
       onSubmit: resolve,
     });
   });
-
-//   if (invalid) {
-//     // Mark the form touched so that the validation errors will be shown.
-//     // redux-form doesn't have the `touchAll` feature yet so we have to list all fields manually.
-//     // redux-form also doesn't have the API to get all the field names yet so we have to connect to the store to retrieve it manually
-//     touch(...fieldNames);
-//     return;
-//   }
-
-// };
 
 function SendMultipleButton() {
   return (
@@ -151,7 +91,6 @@ export default function SendForm() {
   const blocks = useSelector((state) => state.core.info?.blocks);
   const mintingOnly = useSelector((state) => state.core.info?.minting_only);
   const accountOptions = useSelector(selectAccountOptions);
-  // accBalance: hideSendAll ? undefined : accBalance,
 
   const location = useLocation();
   // React-router's search field has a leading ? mark but
@@ -176,69 +115,6 @@ export default function SendForm() {
       name="send"
       persistState
       initialValues={initValues(sendTo)}
-      // validate: ({ sendFrom, recipients }) => {
-      //   const errors = {};
-      //   if (!sendFrom) {
-      //     errors.sendFrom = __('No accounts selected');
-      //   }
-
-      //   if (!recipients || !recipients.length) {
-      //     errors.recipients = {
-      //       _error: __('There must be at least one recipient'),
-      //     };
-      //   } else {
-      //     const recipientsErrors = [];
-
-      //     recipients.forEach(({ address, amount }, i) => {
-      //       const recipientErrors = {};
-      //       if (!address) {
-      //         recipientErrors.address = __('Address is required');
-      //       }
-      //       const floatAmount = parseFloat(amount);
-      //       if (!floatAmount || floatAmount < 0) {
-      //         recipientErrors.amount = __('Invalid amount');
-      //       }
-      //       if (Object.keys(recipientErrors).length) {
-      //         recipientsErrors[i] = recipientErrors;
-      //       }
-      //     });
-
-      //     if (recipientsErrors.length) {
-      //       errors.recipients = recipientsErrors;
-      //     }
-      //   }
-
-      //   return errors;
-      // },
-      // asyncBlurFields: ['recipients[].address'],
-      // asyncValidate: async ({ recipients }) => {
-      //   const recipientsErrors = [];
-      //   await Promise.all(
-      //     recipients.map(({ address }, i) =>
-      //       rpc('validateaddress', [address])
-      //         .then((result) => {
-      //           if (!result.isvalid) {
-      //             recipientsErrors[i] = {
-      //               address: __('Invalid address'),
-      //             };
-      //           } else if (result.ismine) {
-      //             recipientsErrors[i] = {
-      //               address: __('This is an address registered to this wallet.'),
-      //             };
-      //           }
-      //         })
-      //         .catch((err) => {
-      //           recipientsErrors[i] = {
-      //             address: __('Invalid address'),
-      //           };
-      //         })
-      //     )
-      //   );
-      //   if (recipientsErrors.length) {
-      //     throw { recipients: recipientsErrors };
-      //   }
-      //   return null;
-      // },
       onSubmit={formSubmit({
         submit: async ({ sendFrom, recipients, message }) => {
           const confirmed = await confirm({
@@ -267,7 +143,6 @@ export default function SendForm() {
               null,
             ];
             if (password) params.push(password);
-            // if (message) params.push(message);
             return await rpc('sendfrom', params);
           } else {
             const queue = recipients.reduce(

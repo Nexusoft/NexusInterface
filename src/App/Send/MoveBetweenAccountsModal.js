@@ -1,26 +1,16 @@
 // External
-import { Component } from 'react';
 import styled from '@emotion/styled';
 import { useSelector } from 'react-redux';
-import { reduxForm, Field, formValueSelector } from 'redux-form';
 
 // Internal
 import rpc from 'lib/rpc';
 import Form from 'components/Form';
-import Select from 'components/Select';
-import Button from 'components/Button';
 import ControlledModal from 'components/ControlledModal';
 import Link from 'components/Link';
-import {
-  openConfirmDialog,
-  openErrorDialog,
-  openSuccessDialog,
-  confirm,
-} from 'lib/dialog';
+import { openErrorDialog, openSuccessDialog, confirm } from 'lib/dialog';
 import { removeModal } from 'lib/ui';
 import { formSubmit, required, range } from 'lib/form';
 import { loadAccounts } from 'lib/user';
-import { errorHandler } from 'utils/form';
 import {
   selectAccountOptions,
   validateAddress,
@@ -55,21 +45,12 @@ const initialValues = {
   fiatAmount: '',
 };
 
-// const formName = 'moveBetweenAccounts';
-// const valueSelector = formValueSelector(formName);
-
 export default function MoveBetweenAccountsModal() {
   const minConfirmations = useSelector(
     (state) => state.settings.minConfirmations
   );
   const locked = useSelector((state) => state.core.info?.locked);
   const accountOptions = useSelector(selectAccountOptions);
-  // const fieldNames: getRegisteredFieldNames(
-  //   form[formName] && form[formName].registeredFields
-  // ),
-  // const accBalance = hideSendAll ? undefined : accBalance,
-
-  // const { accountOptions, accBalance, change, submitting } = this.props;
   return (
     <ControlledModal maxWidth={650}>
       {(closeModal) => (
