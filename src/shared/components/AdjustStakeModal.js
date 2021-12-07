@@ -1,11 +1,9 @@
 import { useSelector } from 'react-redux';
-import { Field } from 'redux-form';
 import styled from '@emotion/styled';
 import { useField } from 'react-final-form';
 
 import Form from 'components/Form';
 import ControlledModal from 'components/ControlledModal';
-import Slider from 'components/Slider';
 import Button from 'components/Button';
 import { formSubmit, checkAll } from 'lib/form';
 import { callApi } from 'lib/tritiumApi';
@@ -47,7 +45,7 @@ const SliderWrapper = styled.div({
   marginTop: 10,
 });
 
-const StakeSlider = styled(Slider.RF)(({ theme, input, max }) => ({
+const StakeSlider = styled(Form.Slider)(({ theme, input, max }) => ({
   background: `linear-gradient(to right, ${theme.primary}, ${theme.primary} ${
     (100 * input.value) / max
   }%, ${theme.mixer(0.5)} ${(100 * input.value) / max}%)`,
@@ -167,12 +165,7 @@ export default function AdjustStakeModal({
                 <LimitNumbers total={total} />
               </div>
               <SliderWrapper>
-                <Field
-                  name="stake"
-                  component={StakeSlider}
-                  min={0}
-                  max={total}
-                />
+                <StakeSlider name="stake" min={0} max={total} />
               </SliderWrapper>
               <Note>
                 {__(
