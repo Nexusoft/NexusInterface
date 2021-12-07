@@ -2,7 +2,6 @@ import { useEffect, useRef } from 'react';
 import * as React from 'react';
 import styled from '@emotion/styled';
 
-import { callApi } from 'lib/tritiumApi';
 import Form from 'components/Form';
 import ControlledModal from 'components/ControlledModal';
 import FormField from 'components/FormField';
@@ -12,6 +11,7 @@ import Spinner from 'components/Spinner';
 import FieldSet from 'components/FieldSet';
 import BackgroundTask from 'components/BackgroundTask';
 import { formSubmit, checkAll, required, minChars } from 'lib/form';
+import { callApi } from 'lib/tritiumApi';
 import {
   showNotification,
   openModal,
