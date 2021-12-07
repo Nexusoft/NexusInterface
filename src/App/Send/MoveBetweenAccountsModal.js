@@ -9,7 +9,7 @@ import ControlledModal from 'components/ControlledModal';
 import Link from 'components/Link';
 import { openErrorDialog, openSuccessDialog, confirm } from 'lib/dialog';
 import { removeModal } from 'lib/ui';
-import { formSubmit, required, range } from 'lib/form';
+import { formSubmit, required } from 'lib/form';
 import { loadAccounts } from 'lib/user';
 import {
   selectAccountOptions,
