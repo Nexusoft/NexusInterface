@@ -16,6 +16,7 @@ import Select from 'components/Select';
 import AutoSuggest from 'components/AutoSuggest';
 import Switch from 'components/Switch';
 import Button from 'components/Button';
+import Slider from 'components/Slider';
 import { updateFormInstance, selectFormInstance } from 'lib/form';
 
 export default function Form({
@@ -146,6 +147,13 @@ Form.AutoSuggest = forwardRef(function (
 Form.Switch = forwardRef(function ({ name, config, validate, ...rest }, ref) {
   const { input } = useField(name, { validate, type: 'checkbox', ...config });
   return <Switch ref={ref} {...input} {...rest} />;
+});
+
+Form.Slider = forwardRef(function ({ name, config, validate, ...rest }, ref) {
+  const { input } = useField(name, { validate, type: 'checkbox', ...config });
+  return (
+    <Slider ref={ref} error={meta.touched && meta.error} {...input} {...rest} />
+  );
 });
 
 Form.SubmitButton = ({ children, ...rest }) => {
