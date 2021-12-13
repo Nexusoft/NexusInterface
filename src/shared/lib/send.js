@@ -1,8 +1,10 @@
-import { initialize, reset } from 'redux-form';
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+import qs from 'querystring';
 import { useSelector } from 'react-redux';
 
 import { history } from 'lib/wallet';
-import { useFieldValue } from 'lib/form';
+import { useFieldValue, selectFormInstance } from 'lib/form';
 import { timeToObject } from 'utils/misc';
 import store from 'store';
 import memoize from 'utils/memoize';
@@ -32,26 +34,48 @@ export function getDefaultRecipient({ txExpiry } = {}) {
   return recipient;
 }
 
-export function getDefaultValues(options) {
+function getFormValues(customValues = {}) {
+  const state = store.getState();
+  const txExpiry = state.core.config?.txExpiry;
+  const defaultRecipient = getDefaultRecipient({ txExpiry });
   return {
-    sendFrom: null,
-    recipients: [getDefaultRecipient(options)],
-    advancedOptions: false,
+    sendFrom: customValues.sendFrom || null,
+    recipients: customValues.recipients?.map((recipient) => ({
+      ...defaultRecipient,
+      recipient,
+    })) || [defaultRecipient],
+    advancedOptions: customValues.advancedOptions || false,
   };
 }
 
-export function goToSend(formValues) {
-  store.dispatch(
-    initialize(formName, { ...getDefaultValues(), ...formValues })
-  );
-  store.dispatch(reset(formName));
-  history.push('/Send');
+export function goToSend(customValues) {
+  history.push('/Send?state=' + JSON.stringify(customValues));
 }
 
-export const selectInitialValues = memoize(
-  (txExpiry) => getDefaultValues({ txExpiry }),
-  (state) => [state.core.config?.txExpiry]
-);
+export function useInitialValues() {
+  const location = useLocation();
+  // React-router's search field has a leading ? mark but
+  // qs.parse will consider it invalid, so remove it
+  const queryParams = qs.parse(location.search.substring(1));
+
+  const stateJson = queryParams?.state;
+  let customValues = null;
+  try {
+    customValues = stateJson && JSON.parse(stateJson);
+  } catch (err) {}
+  const initialValues = getFormValues(customValues);
+
+  // Reset the form when a new specific Send state is passed through the query string
+  // Otherwise, always keep the form's current state
+  useEffect(() => {
+    if (customValues) {
+      const state = store.getState();
+      const form = selectFormInstance(formName)(state);
+      form.restart(initialValues);
+    }
+  }, [stateJson]);
+  return initialValues;
+}
 
 export const selectAddressNameMap = memoize(
   (addressBook, myAccounts) => {

@@ -14,7 +14,7 @@ import {
   confirmPin,
 } from 'lib/dialog';
 import { popupContextMenu, defaultMenu } from 'lib/contextMenu';
-
+import { goToSend } from 'lib/send';
 import rpc from 'lib/rpc';
 import { callApi } from 'lib/tritiumApi';
 import { legacyMode } from 'consts/misc';
@@ -192,24 +192,30 @@ function handleIpcMessage(event) {
   }
 }
 
-function send([{ recipients, message, reference, expires }]) {
+function send([
+  { sendFrom, recipients, message, reference, expires, advancedOptions },
+]) {
   if (!Array.isArray(recipients)) return;
-  const formName = 'send';
-  store.dispatch(
-    initialize(formName, {
-      sendFrom: null,
-      recipients: recipients.map((r) => ({
-        address: `${r.address}`,
-        amount: parseFloat(r.amount) || 0,
-        fiatAmount: '',
-      })),
-      message,
-      reference,
-      expires,
-    })
-  );
-  store.dispatch(reset(formName));
-  history.push('/Send');
+  if (legacyMode) {
+    const formName = 'send';
+    store.dispatch(
+      initialize(formName, {
+        sendFrom: null,
+        recipients: recipients.map((r) => ({
+          address: `${r.address}`,
+          amount: parseFloat(r.amount) || 0,
+          fiatAmount: '',
+        })),
+        message,
+        reference,
+        expires,
+      })
+    );
+    store.dispatch(reset(formName));
+    history.push('/Send');
+  } else {
+    goToSend({ sendFrom, recipients, advancedOptions });
+  }
 }
 
 async function proxyRequest([url, options, requestId]) {
