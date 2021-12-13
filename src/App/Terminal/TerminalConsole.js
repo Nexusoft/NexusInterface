@@ -1,6 +1,6 @@
 // External Dependencies
-import { connect } from 'react-redux';
-import { createRef, Component } from 'react';
+import { useSelector } from 'react-redux';
+import { useRef, useEffect } from 'react';
 import styled from '@emotion/styled';
 import GA from 'lib/googleAnalytics';
 import memoize from 'utils/memoize';
@@ -32,35 +32,17 @@ const filterCommands = memoize((commandList, inputValue) => {
   );
 });
 
-const consoleInputSelector = memoize(
+const selectConsoleInput = memoize(
   (currentCommand, commandHistory, historyIndex) =>
-    historyIndex === -1 ? currentCommand : commandHistory[historyIndex]
-);
-
-const mapStateToProps = (state) => {
-  const {
+    historyIndex === -1 ? currentCommand : commandHistory[historyIndex],
+  ({
     ui: {
       console: {
-        console: {
-          currentCommand,
-          commandHistory,
-          historyIndex,
-          commandList,
-          output,
-        },
+        console: { currentCommand, commandHistory, historyIndex },
       },
     },
-  } = state;
-  return {
-    consoleInput: consoleInputSelector(
-      currentCommand,
-      commandHistory,
-      historyIndex
-    ),
-    commandList,
-    output,
-  };
-};
+  }) => [currentCommand, commandHistory, historyIndex]
+);
 
 const TerminalContent = styled.div({
   gridArea: 'content',
@@ -93,36 +75,16 @@ const ExecuteButton = styled(Button)(({ theme }) => ({
   borderLeft: `1px solid ${theme.mixer(0.125)}`,
 }));
 
-/**
- * Console Page in the Terminal Page
- *
- * @class TerminalConsole
- * @extends {Component}
- */
-@connect(mapStateToProps)
-class TerminalConsole extends Component {
-  /**
-   *Creates an instance of TerminalConsole.
-   * @param {*} props
-   * @memberof TerminalConsole
-   */
-  constructor(props) {
-    super(props);
-    this.inputRef = createRef();
-    this.outputRef = createRef();
-    switchConsoleTab('Console');
+export default function TerminalConsole() {
+  const inputRef = useRef();
+  const outputRef = useRef();
+  const consoleInput = useSelector(selectConsoleInput);
+  const commandList = useSelector(
+    (state) => state.ui.console.console.commandList
+  );
+  const output = useSelector((state) => state.ui.console.console.output);
 
-    if (!this.props.commandList.length) {
-      this.loadCommandList();
-    }
-  }
-
-  /**
-   * Loadin all the usable RPC commands
-   *
-   * @memberof TerminalConsole
-   */
-  loadCommandList = async () => {
+  const loadCommandList = async () => {
     const result = await rpc('help', []);
     const commandList = result
       .split('\n')
@@ -140,28 +102,22 @@ class TerminalConsole extends Component {
     setCommandList(commandList);
   };
 
-  /**
-   *
-   *
-   * @param {*} prevProps
-   * @param {*} PrevState
-   * @memberof TerminalConsole
-   */
-  componentDidUpdate(prevProps, PrevState) {
-    // Scroll to bottom
-    if (this.outputRef.current && prevProps.output !== this.props.output) {
-      const { clientHeight, scrollHeight } = this.outputRef.current;
-      this.outputRef.current.scrollTop = scrollHeight - clientHeight;
+  useEffect(() => {
+    switchConsoleTab('Console');
+    if (!commandList.length) {
+      loadCommandList();
     }
-  }
+  }, []);
 
-  /**
-   * Execute a Command
-   *
-   * @memberof TerminalConsole
-   */
-  execute = async () => {
-    const { consoleInput, commandList } = this.props;
+  useEffect(() => {
+    // Scroll to bottom
+    if (outputRef.current) {
+      const { clientHeight, scrollHeight } = outputRef.current;
+      outputRef.current.scrollTop = scrollHeight - clientHeight;
+    }
+  }, [output]);
+
+  const execute = async () => {
     if (!consoleInput || !consoleInput.trim()) return;
 
     const [cmd, ...chunks] = consoleInput.split(' ');
@@ -176,7 +132,7 @@ class TerminalConsole extends Component {
       .filter((arg) => arg)
       .map((arg) => (isNaN(Number(arg)) ? arg : Number(arg)));
 
-    // this.inputRef.inputRef.current.blur();
+    // inputRef.inputRef.current.blur();
 
     const tab = ' '.repeat(2);
     let result = null;
@@ -226,12 +182,7 @@ class TerminalConsole extends Component {
     }
   };
 
-  /**
-   * Handle Key Down Event
-   * @param {*} e
-   * @memberof TerminalConsole
-   */
-  handleKeyDown = (e) => {
+  const handleKeyDown = (e) => {
     switch (e.key) {
       case 'ArrowDown':
         e.preventDefault();
@@ -242,104 +193,87 @@ class TerminalConsole extends Component {
         commandHistoryUp();
         break;
       case 'Enter':
-        this.execute();
+        execute();
         break;
     }
   };
 
-  /**
-   * Take the Autosuggest and updateConsoleInput
-   *
-   * @memberof TerminalConsole
-   */
-  formateAutoSuggest = (e) => {
+  const formatAutoSuggest = (e) => {
     updateConsoleInput(e);
   };
 
-  /**
-   * Component's Renderable JSX
-   *
-   * @returns
-   * @memberof TerminalConsole
-   */
-  render() {
-    const { commandList, consoleInput, output } = this.props;
+  return (
+    <RequireCoreConnected>
+      <TerminalContent>
+        <Console>
+          <ConsoleInput>
+            <AutoSuggest
+              suggestions={commandList}
+              filterSuggestions={filterCommands}
+              onSelect={formatAutoSuggest}
+              keyControl={false}
+              suggestOn="change"
+              inputRef={inputRef}
+              inputProps={{
+                autoFocus: true,
+                skin: 'filled-inverted',
+                value: consoleInput,
+                placeholder: __(
+                  'Enter console commands here (ex: getinfo, help)'
+                ),
+                onChange: (e) => {
+                  updateConsoleInput(e.target.value);
+                },
+                onKeyDown: handleKeyDown,
+                right: (
+                  <ExecuteButton
+                    skin="filled-inverted"
+                    fitHeight
+                    grouped="right"
+                    onClick={execute}
+                  >
+                    {__('Execute')}
+                  </ExecuteButton>
+                ),
+              }}
+            />
+          </ConsoleInput>
 
-    return (
-      <RequireCoreConnected>
-        <TerminalContent>
-          <Console>
-            <ConsoleInput>
-              <AutoSuggest
-                suggestions={commandList}
-                filterSuggestions={filterCommands}
-                onSelect={this.formateAutoSuggest}
-                keyControl={false}
-                suggestOn="change"
-                inputRef={this.inputRef}
-                inputProps={{
-                  autoFocus: true,
-                  skin: 'filled-inverted',
-                  value: consoleInput,
-                  placeholder: __(
-                    'Enter console commands here (ex: getinfo, help)'
-                  ),
-                  onChange: (e) => {
-                    updateConsoleInput(e.target.value);
-                  },
-                  onKeyDown: this.handleKeyDown,
-                  right: (
-                    <ExecuteButton
-                      skin="filled-inverted"
-                      fitHeight
-                      grouped="right"
-                      onClick={this.execute}
-                    >
-                      {__('Execute')}
-                    </ExecuteButton>
-                  ),
-                }}
-              />
-            </ConsoleInput>
-
-            <ConsoleOutput ref={this.outputRef}>
-              {output.map(({ type, content }, i) => {
-                switch (type) {
-                  case 'command':
-                    return (
-                      <div key={i}>
-                        <span>
-                          <span style={{ color: '#0ca4fb' }}>Nexus-Core</span>
-                          <span style={{ color: '#00d850' }}>$ </span>
-                          {content}
-                          <span style={{ color: '#0ca4fb' }}> &gt;</span>
-                        </span>
-                      </div>
-                    );
-                  case 'text':
-                    return <div key={i}>{content}</div>;
-                  case 'error':
-                    return (
-                      <div key={i} className="error">
+          <ConsoleOutput ref={outputRef}>
+            {output.map(({ type, content }, i) => {
+              switch (type) {
+                case 'command':
+                  return (
+                    <div key={i}>
+                      <span>
+                        <span style={{ color: '#0ca4fb' }}>Nexus-Core</span>
+                        <span style={{ color: '#00d850' }}>$ </span>
                         {content}
-                      </div>
-                    );
-                }
-              })}
-            </ConsoleOutput>
+                        <span style={{ color: '#0ca4fb' }}> &gt;</span>
+                      </span>
+                    </div>
+                  );
+                case 'text':
+                  return <div key={i}>{content}</div>;
+                case 'error':
+                  return (
+                    <div key={i} className="error">
+                      {content}
+                    </div>
+                  );
+              }
+            })}
+          </ConsoleOutput>
 
-            <Button
-              skin="filled-inverted"
-              grouped="bottom"
-              onClick={resetConsole}
-            >
-              {__('Clear console')}
-            </Button>
-          </Console>
-        </TerminalContent>
-      </RequireCoreConnected>
-    );
-  }
+          <Button
+            skin="filled-inverted"
+            grouped="bottom"
+            onClick={resetConsole}
+          >
+            {__('Clear console')}
+          </Button>
+        </Console>
+      </TerminalContent>
+    </RequireCoreConnected>
+  );
 }
-
-export default TerminalConsole;
