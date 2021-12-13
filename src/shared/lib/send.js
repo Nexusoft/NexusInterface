@@ -11,8 +11,6 @@ import memoize from 'utils/memoize';
 
 export const formName = 'send';
 
-export const defaultTxExpiry = 604800;
-
 export function getDefaultRecipient({ txExpiry } = {}) {
   const recipient = {
     address: null,
