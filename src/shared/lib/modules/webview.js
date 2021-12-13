@@ -1,6 +1,5 @@
 import memoize from 'utils/memoize';
 import axios from 'axios';
-import { reset, initialize } from 'redux-form';
 
 import * as TYPE from 'consts/actionTypes';
 import store, { observeStore } from 'store';
@@ -192,27 +191,13 @@ function handleIpcMessage(event) {
   }
 }
 
-function send([
-  { sendFrom, recipients, message, reference, expires, advancedOptions },
-]) {
+function send([{ sendFrom, recipients, advancedOptions }]) {
   if (!Array.isArray(recipients)) return;
   if (legacyMode) {
-    const formName = 'send';
-    store.dispatch(
-      initialize(formName, {
-        sendFrom: null,
-        recipients: recipients.map((r) => ({
-          address: `${r.address}`,
-          amount: parseFloat(r.amount) || 0,
-          fiatAmount: '',
-        })),
-        message,
-        reference,
-        expires,
-      })
-    );
-    store.dispatch(reset(formName));
-    history.push('/Send');
+    const sendTo = recipients?.[0]?.address;
+    if (sendTo) {
+      history.push('/Send?sendTo=' + sendTo);
+    }
   } else {
     goToSend({ sendFrom, recipients, advancedOptions });
   }
