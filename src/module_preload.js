@@ -63,14 +63,26 @@ global.NEXUS = {
       }
       clipboard.writeText(text);
     },
-    // `options` shape:
+    // `options` shape
+    //  For Legacy mode:
     //  {
     //    recipients: [{
-    //      address, amount
+    //      address
+    //    }]
+    //  }
+    //  For Tritium mode:
+    //  {
+    //    sendFrom,
+    //    recipients: [{
+    //      address,
+    //      amount,
+    //      reference,
+    //      expireDays,
+    //      expireHours,
+    //      expireMinutes,
+    //      expireSeconds,
     //    }],
-    //    message,    // for Legacy mode only
-    //    reference,  // for Tritium mode only
-    //    expires,    // for Tritium mode only
+    //    advancedOptions,
     //  }
     send: (options) => {
       if (!options) {
