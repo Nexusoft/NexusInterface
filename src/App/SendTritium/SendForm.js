@@ -12,7 +12,7 @@ import { openModal } from 'lib/ui';
 import {
   formName,
   getDefaultRecipient,
-  selectInitialValues,
+  useInitialValues,
   getSource,
 } from 'lib/send';
 import { required } from 'lib/form';
@@ -122,7 +122,7 @@ function getRecipientsParams(recipients, { advancedOptions }) {
 export default function SendForm() {
   const switchID = useUID();
   const accountOptions = useSelector(selectAccountOptions);
-  const initialValues = useSelector(selectInitialValues);
+  const initialValues = useInitialValues();
 
   return (
     <SendFormComponent>
@@ -130,6 +130,7 @@ export default function SendForm() {
         name={formName}
         persistState
         initialValues={initialValues}
+        initialValuesEqual={() => true}
         onSubmit={({ sendFrom, recipients, advancedOptions }, form) => {
           const state = store.getState();
           const source = getSource(state, sendFrom);
