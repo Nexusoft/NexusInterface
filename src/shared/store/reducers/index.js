@@ -1,5 +1,4 @@
 import { combineReducers } from 'redux';
-import { reducer as formReducer } from 'redux-form';
 
 import list from './list';
 import market from './market';
@@ -45,7 +44,6 @@ export default function createRootReducer() {
     bootstrap,
     assetSchemas,
     sessions,
-    form: formReducer,
     forms,
   });
 }

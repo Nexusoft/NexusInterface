@@ -339,9 +339,3 @@ const TextField = forwardRef(function (
 });
 
 export default TextField;
-
-// TextField wrapper for redux-form
-const TextFieldReduxForm = ({ input, meta, ...rest }) => (
-  <TextField error={meta.touched && meta.error} {...input} {...rest} />
-);
-TextField.RF = TextFieldReduxForm;

@@ -30,9 +30,3 @@ const MaskableTextField = forwardRef(function (props, ref) {
 });
 
 export default MaskableTextField;
-
-// MaskableTextField wrapper for redux-form
-const MaskableTextFieldReduxForm = ({ input, meta, ...rest }) => (
-  <MaskableTextField error={meta.touched && meta.error} {...input} {...rest} />
-);
-MaskableTextField.RF = MaskableTextFieldReduxForm;

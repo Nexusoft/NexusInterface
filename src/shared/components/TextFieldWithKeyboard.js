@@ -69,13 +69,3 @@ const TextFieldWithKeyboard = forwardRef(function (
 });
 
 export default TextFieldWithKeyboard;
-
-// TextFieldWithKeyboard wrapper for redux-form
-const TextFieldWithKeyboardReduxForm = ({ input, meta, ...rest }) => (
-  <TextFieldWithKeyboard
-    error={meta.touched && meta.error}
-    {...input}
-    {...rest}
-  />
-);
-TextFieldWithKeyboard.RF = TextFieldWithKeyboardReduxForm;
