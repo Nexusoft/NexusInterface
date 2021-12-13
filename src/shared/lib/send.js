@@ -38,9 +38,23 @@ function getFormValues(customValues = {}) {
   const defaultRecipient = getDefaultRecipient({ txExpiry });
   return {
     sendFrom: customValues.sendFrom || null,
-    recipients: customValues.recipients?.map((recipient) => ({
+    // not accepting fiatAmount
+    recipients: customValues.recipients?.map(({address,
+      amount,
+      reference,
+      expireDays,
+      expireHours,
+      expireMinutes,
+      expireSeconds,
+    }) => ({
       ...defaultRecipient,
-      recipient,
+      address,
+      amount,
+      reference,
+      expireDays,
+      expireHours,
+      expireMinutes,
+      expireSeconds,,
     })) || [defaultRecipient],
     advancedOptions: customValues.advancedOptions || false,
   };
