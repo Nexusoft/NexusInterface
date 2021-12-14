@@ -125,20 +125,25 @@ export default function Settings({ match }) {
         <SettingsContent>
           <SettingsContainer>
             <Switch>
-              <Route path={`${match.path}/App`} component={SettingsApp} />
-              <Route path={`${match.path}/Core`} component={SettingsCore} />
+              <Route path={`${match.path}/App`}>
+                {' '}
+                <SettingsApp />
+              </Route>
+              <Route path={`${match.path}/Core`}>
+                <SettingsCore />
+              </Route>
               {legacyMode && (
-                <Route
-                  path={`${match.path}/Security`}
-                  component={SettingsSecurity}
-                />
+                <Route path={`${match.path}/Security`}>
+                  <SettingsSecurity />
+                </Route>
               )}
-              <Route path={`${match.path}/Style`} component={SettingsStyle} />
-              <Route
-                path={`${match.path}/Modules`}
-                component={SettingsModules}
-              />
-              <SettingsRedirect match={match} />
+              <Route path={`${match.path}/Style`}>
+                <SettingsStyle />
+              </Route>
+              <Route path={`${match.path}/Modules`}>
+                <SettingsModules />
+              </Route>
+              <Route render={() => <SettingsRedirect match={match} />} />
             </Switch>
           </SettingsContainer>
         </SettingsContent>

@@ -60,12 +60,13 @@ export default function Terminal({ match }) {
         </TerminalTabBar>
 
         <Switch>
-          <Route
-            path={`${match.path}/Console`}
-            component={legacyMode ? TerminalConsole : NexusApiConsole}
-          />
-          <Route path={`${match.path}/Core`} component={TerminalCore} />
-          <ConsoleRedirect match={match} />
+          <Route path={`${match.path}/Console`}>
+            {legacyMode ? <TerminalConsole /> : <NexusApiConsole />}
+          </Route>
+          <Route path={`${match.path}/Core`}>
+            <TerminalCore />
+          </Route>
+          <Route render={() => <ConsoleRedirect match={match} />} />
         </Switch>
       </TerminalComponent>
     </Panel>

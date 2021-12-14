@@ -60,31 +60,33 @@ export default function App() {
               <Header />
               <Main>
                 <Switch>
-                  <Route
-                    exact
-                    path="/"
-                    component={legacyMode ? Overview : OverviewTritium}
-                  />
-                  <Route
-                    exact
-                    path="/Send"
-                    component={legacyMode ? Send : SendTritium}
-                  />
-                  <Route
-                    exact
-                    path="/Transactions"
-                    component={legacyMode ? Transactions : TransactionsTritium}
-                  />
-                  <Route exact path="/AddressBook" component={AddressBook} />
-                  <Route path="/Settings" component={Settings} />
-                  <Route path="/Terminal" component={Terminal} />
-                  {!legacyMode && <Route path="/User" component={UserPage} />}
-
-                  {/* <Route path="/Exchange" component={Exchange} /> */}
-                  {/* <Route exact path="/List" component={TrustList} /> */}
-                  <Route path="/Modules/:name" component={Modules} />
-
-                  <Redirect to="/" />
+                  <Route exact path="/">
+                    {legacyMode ? <Overview /> : <OverviewTritium />}
+                  </Route>
+                  <Route exact path="/Send">
+                    {legacyMode ? <Send /> : <SendTritium />}
+                  </Route>
+                  <Route exact path="/Transactions">
+                    {legacyMode ? <Transactions /> : <TransactionsTritium />}
+                  </Route>
+                  <Route exact path="/AddressBook">
+                    <AddressBook />
+                  </Route>
+                  <Route path="/Settings">
+                    <Settings />
+                  </Route>
+                  <Route path="/Terminal">
+                    <Terminal />
+                  </Route>
+                  {!legacyMode && (
+                    <Route path="/User">
+                      <UserPage />
+                    </Route>
+                  )}
+                  <Route path="/Modules/:name">
+                    <Modules />
+                  </Route>
+                  <Route render={() => <Redirect to="/" />} />
                 </Switch>
               </Main>
               <Navigation />
