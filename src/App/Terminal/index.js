@@ -1,6 +1,6 @@
 // External Dependencies
 import { Route, Redirect, Switch } from 'react-router';
-import { useRouteMatch } from 'react-router-dom';
+import { useRouteMatch, Routes } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { useSelector } from 'react-redux';
 
@@ -61,7 +61,7 @@ export default function Terminal() {
           />
         </TerminalTabBar>
 
-        <Switch>
+        <Routes>
           <Route path={`${match.path}/Console`}>
             {legacyMode ? <TerminalConsole /> : <NexusApiConsole />}
           </Route>
@@ -69,7 +69,7 @@ export default function Terminal() {
             <TerminalCore />
           </Route>
           <Route render={() => <ConsoleRedirect match={match} />} />
-        </Switch>
+        </Routes>
       </TerminalComponent>
     </Panel>
   );

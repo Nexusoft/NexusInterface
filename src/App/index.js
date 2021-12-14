@@ -1,6 +1,6 @@
 // External
 import { Switch, Redirect } from 'react-router';
-import { Router, Route } from 'react-router-dom';
+import { Routes, Router, Route } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { useSelector } from 'react-redux';
 
@@ -59,7 +59,7 @@ export default function App() {
             <AppLayout>
               <Header />
               <Main>
-                <Switch>
+                <Routes>
                   <Route exact path="/">
                     {legacyMode ? <Overview /> : <OverviewTritium />}
                   </Route>
@@ -87,7 +87,7 @@ export default function App() {
                     <Modules />
                   </Route>
                   <Route render={() => <Redirect to="/" />} />
-                </Switch>
+                </Routes>
               </Main>
               <Navigation />
             </AppLayout>

@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 import { Route, Redirect, Switch } from 'react-router';
-import { useRouteMatch } from 'react-router-dom';
+import { useRouteMatch, Routes } from 'react-router-dom';
 
 import Staking from './Staking';
 import Accounts from './Accounts';
@@ -32,7 +32,7 @@ export default function TabContent() {
   const match = useRouteMatch();
   return (
     <TabContentComponent>
-      <Switch>
+      <Routes>
         <Route path={`${match.url}/Staking`}>
           <Staking />
         </Route>
@@ -52,7 +52,7 @@ export default function TabContent() {
           <Assets />
         </Route>
         <Route render={() => <UserRedirect match={match} />} />
-      </Switch>
+      </Routes>
     </TabContentComponent>
   );
 }

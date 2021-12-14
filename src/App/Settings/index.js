@@ -2,7 +2,7 @@
 import { useEffect } from 'react';
 import { connect, useSelector } from 'react-redux';
 import { Route, Redirect, Switch } from 'react-router';
-import { useRouteMatch } from 'react-router-dom';
+import { useRouteMatch, Routes } from 'react-router-dom';
 import styled from '@emotion/styled';
 import GA from 'lib/googleAnalytics';
 
@@ -126,7 +126,7 @@ export default function Settings() {
 
         <SettingsContent>
           <SettingsContainer>
-            <Switch>
+            <Routes>
               <Route path={`${match.path}/App`}>
                 {' '}
                 <SettingsApp />
@@ -146,7 +146,7 @@ export default function Settings() {
                 <SettingsModules />
               </Route>
               <Route render={() => <SettingsRedirect match={match} />} />
-            </Switch>
+            </Routes>
           </SettingsContainer>
         </SettingsContent>
       </SettingsComponent>
