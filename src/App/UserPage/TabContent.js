@@ -17,7 +17,8 @@ const TabContentComponent = styled.div({
   overflow: 'auto',
 });
 
-function UserRedirect({ match }) {
+function UserRedirect() {
+  const match = useRouteMatch();
   const lastActiveTab = useSelector((state) => state.ui.user.lastActiveTab);
   return (
     <Redirect
@@ -29,29 +30,16 @@ function UserRedirect({ match }) {
 }
 
 export default function TabContent() {
-  const match = useRouteMatch();
   return (
     <TabContentComponent>
       <Routes>
-        <Route path={`${match.url}/Staking`}>
-          <Staking />
-        </Route>
-        <Route path={`${match.url}/Accounts`}>
-          <Accounts />
-        </Route>
-        <Route path={`${match.url}/Tokens`}>
-          <Tokens />
-        </Route>
-        <Route path={`${match.url}/Names`}>
-          <Names />
-        </Route>
-        <Route path={`${match.url}/Namespaces`}>
-          <Namespaces />
-        </Route>
-        <Route path={`${match.url}/Assets`}>
-          <Assets />
-        </Route>
-        <Route render={() => <UserRedirect match={match} />} />
+        <Route path="Staking" element={<Staking />} />
+        <Route path="Accounts" element={<Accounts />} />
+        <Route path="Tokens" element={<Tokens />} />
+        <Route path="Names" element={<Names />} />
+        <Route path="Namespaces" element={<Namespaces />} />
+        <Route path="Assets" element={<Assets />} />
+        <Route element={<UserRedirect />} />
       </Routes>
     </TabContentComponent>
   );

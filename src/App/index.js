@@ -60,33 +60,29 @@ export default function App() {
               <Header />
               <Main>
                 <Routes>
-                  <Route exact path="/">
-                    {legacyMode ? <Overview /> : <OverviewTritium />}
-                  </Route>
-                  <Route exact path="/Send">
-                    {legacyMode ? <Send /> : <SendTritium />}
-                  </Route>
-                  <Route exact path="/Transactions">
-                    {legacyMode ? <Transactions /> : <TransactionsTritium />}
-                  </Route>
-                  <Route exact path="/AddressBook">
-                    <AddressBook />
-                  </Route>
-                  <Route path="/Settings">
-                    <Settings />
-                  </Route>
-                  <Route path="/Terminal">
-                    <Terminal />
-                  </Route>
-                  {!legacyMode && (
-                    <Route path="/User">
-                      <UserPage />
-                    </Route>
-                  )}
-                  <Route path="/Modules/:name">
-                    <Modules />
-                  </Route>
-                  <Route render={() => <Redirect to="/" />} />
+                  <Route
+                    exact
+                    path="/"
+                    element={legacyMode ? <Overview /> : <OverviewTritium />}
+                  />
+                  <Route
+                    exact
+                    path="/Send"
+                    element={legacyMode ? <Send /> : <SendTritium />}
+                  />
+                  <Route
+                    exact
+                    path="/Transactions"
+                    element={
+                      legacyMode ? <Transactions /> : <TransactionsTritium />
+                    }
+                  />
+                  <Route exact path="/AddressBook" element={<AddressBook />} />
+                  <Route path="/Settings" element={<Settings />} />
+                  <Route path="/Terminal" element={<Terminal />} />
+                  {!legacyMode && <Route path="/User" element={<UserPage />} />}
+                  <Route path="/Modules/:name" element={<Modules />} />
+                  <Route element={<Redirect to="/" />} />
                 </Routes>
               </Main>
               <Navigation />
