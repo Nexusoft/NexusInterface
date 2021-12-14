@@ -6,7 +6,7 @@ import semver from 'semver';
 import store from 'store';
 import * as TYPE from 'consts/actionTypes';
 import { showNotification } from 'lib/ui';
-import { history } from 'lib/wallet';
+import { navigate } from 'lib/wallet';
 // import { walletDataDir } from 'consts/paths';
 // import ensureDirExists from 'utils/ensureDirExists';
 // import downloadFile from 'utils/downloadFile';
@@ -129,7 +129,7 @@ export async function checkForModuleUpdates() {
       {
         type: 'success',
         onClick: (closeNotif) => {
-          history.push('/Settings/Modules');
+          navigate('/Settings/Modules');
           closeNotif();
         },
       }

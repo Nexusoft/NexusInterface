@@ -7,7 +7,7 @@ import store, { observeStore } from 'store';
 import { toggleWebViewDevTools } from 'lib/modules';
 import { updateSettings } from 'lib/settings';
 import { startCore, stopCore } from 'lib/core';
-import { backupWallet as backup, history } from 'lib/wallet';
+import { backupWallet as backup, navigate } from 'lib/wallet';
 import { showNotification, openModal } from 'lib/ui';
 import { bootstrap } from 'lib/bootstrap';
 import { isCoreConnected } from 'selectors';
@@ -135,31 +135,31 @@ const menuItems = preprocess({
   coreSettings: {
     label: __('Core'),
     click: () => {
-      history.push('/Settings/Core');
+      navigate('/Settings/Core');
     },
   },
   appSettings: {
     label: __('Application'),
     click: () => {
-      history.push('/Settings/App');
+      navigate('/Settings/App');
     },
   },
   keyManagement: {
     label: __('Key Management'),
     click: () => {
-      history.push('/Settings/Security');
+      navigate('/Settings/Security');
     },
   },
   styleSettings: {
     label: __('Style'),
     click: () => {
-      history.push('/Settings/Style');
+      navigate('/Settings/Style');
     },
   },
   moduleSettings: {
     label: __('Modules'),
     click: () => {
-      history.push('/Settings/Modules');
+      navigate('/Settings/Modules');
     },
   },
   downloadRecent: {

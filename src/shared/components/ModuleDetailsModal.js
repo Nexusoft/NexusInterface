@@ -12,7 +12,7 @@ import InfoField from 'components/InfoField';
 import ExternalLink from 'components/ExternalLink';
 import GA from 'lib/googleAnalytics';
 import { confirm } from 'lib/dialog';
-import { history } from 'lib/wallet';
+import { navigate } from 'lib/wallet';
 import { updateSettings } from 'lib/settings';
 import { timing } from 'styles';
 import store from 'store';
@@ -249,7 +249,7 @@ export default function ModuleDetailsModal({ module, forInstall, install }) {
                   skin="primary"
                   onClick={() => {
                     closeModal();
-                    history.push('/Modules/' + module.info.name);
+                    navigate('/Modules/' + module.info.name);
                   }}
                 >
                   {__('Open App')}

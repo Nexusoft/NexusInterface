@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import qs from 'querystring';
 import { useSelector } from 'react-redux';
 
-import { history } from 'lib/wallet';
+import { navigate } from 'lib/wallet';
 import { useFieldValue, selectFormInstance } from 'lib/form';
 import { timeToObject } from 'utils/misc';
 import store from 'store';
@@ -64,7 +64,7 @@ function getFormValues(customValues = {}) {
 }
 
 export function goToSend(customValues) {
-  history.push('/Send?state=' + JSON.stringify(customValues));
+  navigate('/Send?state=' + JSON.stringify(customValues));
 }
 
 export function useInitialValues() {

@@ -1,11 +1,11 @@
 // External
-import { history } from 'lib/wallet';
 import styled from '@emotion/styled';
 
 // Internal
 import ControlledModal from 'components/ControlledModal';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
+import { navigate } from 'lib/wallet';
 import { updateSettings } from 'lib/settings';
 import * as color from 'utils/color';
 import warningIcon from 'icons/warning.svg';
@@ -58,7 +58,7 @@ export default function EncryptionWarningModal() {
                 skin="primary"
                 onClick={() => {
                   closeModal();
-                  history.push('/Settings/Security');
+                  navigate('/Settings/Security');
                 }}
               >
                 {__('Encrypt wallet')}

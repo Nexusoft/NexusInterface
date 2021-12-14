@@ -8,7 +8,7 @@ import GA from 'lib/googleAnalytics';
 import Panel from 'components/Panel';
 import RequireLoggedIn from 'components/RequireLoggedIn';
 import { isLoggedIn } from 'selectors';
-import { history } from 'lib/wallet';
+import { navigate } from 'lib/wallet';
 import { legacyMode } from 'consts/misc';
 import userIcon from 'icons/user.svg';
 
@@ -30,7 +30,7 @@ export default function UserPage() {
 
   useEffect(() => {
     if (legacyMode) {
-      history.push('/');
+      navigate('/');
     }
     GA.SendScreen('UserPage');
   }, []);

@@ -1,5 +1,12 @@
 // External
-import { Routes, Router, Route, Navigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import {
+  Routes,
+  Route,
+  Navigate,
+  HashRouter,
+  useNavigate,
+} from 'react-router-dom';
 import styled from '@emotion/styled';
 import { useSelector } from 'react-redux';
 
@@ -7,8 +14,8 @@ import { useSelector } from 'react-redux';
 import GlobalStyles from 'components/GlobalStyles';
 import ThemeController from 'components/ThemeController';
 import { legacyMode } from 'consts/misc';
-import { history } from 'lib/wallet';
 import { showDefaultMenu } from 'lib/contextMenu';
+import { setNavigate } from 'lib/wallet';
 
 import Overlays from './Overlays';
 import Overview from './Overview';
@@ -46,10 +53,19 @@ const Main = styled.main({
   alignItems: 'stretch',
 });
 
+function NavigateExporter() {
+  const navigate = useNavigate();
+  useEffect(() => {
+    setNavigate(navigate);
+  }, [navigate]);
+  return null;
+}
+
 export default function App() {
   const theme = useSelector((state) => state.theme);
   return (
-    <Router history={history}>
+    <HashRouter>
+      <NavigateExporter />
       <ThemeController theme={theme}>
         <GlobalStyles />
         <div onContextMenu={showDefaultMenu}>
@@ -86,6 +102,6 @@ export default function App() {
           </Overlays>
         </div>
       </ThemeController>
-    </Router>
+    </HashRouter>
   );
 }

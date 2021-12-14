@@ -1,7 +1,7 @@
 // External Dependencies
 import styled from '@emotion/styled';
 import { useSelector } from 'react-redux';
-import { history } from 'lib/wallet';
+import { navigate } from 'lib/wallet';
 
 // Internal Dependencies
 import Tooltip from 'components/Tooltip';
@@ -44,7 +44,7 @@ const LoginStatusIcon = styled(StatusIcon)(
 );
 
 function goToSecurity() {
-  history.push('/Settings/Security');
+  navigate('/Settings/Security');
 }
 
 export default function LogInStatus() {

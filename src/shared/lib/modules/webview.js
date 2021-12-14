@@ -3,7 +3,7 @@ import axios from 'axios';
 
 import * as TYPE from 'consts/actionTypes';
 import store, { observeStore } from 'store';
-import { history } from 'lib/wallet';
+import { navigate } from 'lib/wallet';
 import { showNotification } from 'lib/ui';
 import {
   openConfirmDialog,
@@ -196,7 +196,7 @@ function send([{ sendFrom, recipients, advancedOptions }]) {
   if (legacyMode) {
     const sendTo = recipients?.[0]?.address;
     if (sendTo) {
-      history.push('/Send?sendTo=' + sendTo);
+      navigate('/Send?sendTo=' + sendTo);
     }
   } else {
     goToSend({ sendFrom, recipients, advancedOptions });

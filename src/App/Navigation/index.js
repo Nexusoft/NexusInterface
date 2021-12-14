@@ -114,7 +114,7 @@ export default function Navigation() {
       </AboveNav>
 
       <NavBar>
-        <NavItem icon={logoIcon} to="/">
+        <NavItem icon={logoIcon} end to="/">
           {__('Overview')}
         </NavItem>
 
