@@ -1,6 +1,7 @@
 // External
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { useRouteMatch } from 'react-router-dom';
 
 // Internal Global
 import GA from 'lib/googleAnalytics';
@@ -9,7 +10,8 @@ import GA from 'lib/googleAnalytics';
 import AppModule from './AppModule';
 import WrappedAppModule from './WrappedAppModule';
 
-export default function Modules({ match }) {
+export default function Modules() {
+  const match = useRouteMatch();
   const modules = useSelector((state) => state.modules);
   useEffect(() => {
     GA.SendScreen('Module');

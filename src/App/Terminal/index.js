@@ -1,5 +1,6 @@
 // External Dependencies
 import { Route, Redirect, Switch } from 'react-router';
+import { useRouteMatch } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { useSelector } from 'react-redux';
 
@@ -42,7 +43,8 @@ function ConsoleRedirect({ match }) {
   );
 }
 
-export default function Terminal({ match }) {
+export default function Terminal() {
+  const match = useRouteMatch();
   return (
     <Panel icon={consoleIcon} title={__('Console')} bodyScrollable={false}>
       <TerminalComponent>

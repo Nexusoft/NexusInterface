@@ -2,6 +2,7 @@
 import { useEffect } from 'react';
 import { connect, useSelector } from 'react-redux';
 import { Route, Redirect, Switch } from 'react-router';
+import { useRouteMatch } from 'react-router-dom';
 import styled from '@emotion/styled';
 import GA from 'lib/googleAnalytics';
 
@@ -84,7 +85,8 @@ SettingsRedirect = connect((state) => ({
  * @class Settings
  * @extends {Component}
  */
-export default function Settings({ match }) {
+export default function Settings() {
+  const match = useRouteMatch();
   useEffect(() => {
     GA.SendScreen('Settings');
   }, []);
