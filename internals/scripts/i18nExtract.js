@@ -63,7 +63,7 @@ function extractFromCode(code) {
     plugins: [
       '@babel/plugin-syntax-jsx',
       ['@babel/plugin-syntax-class-properties', { loose: true }],
-      ['@babel/plugin-syntax-decorators', { legacy: true }],
+      // ['@babel/plugin-syntax-decorators', { legacy: true }],
     ],
   };
 
