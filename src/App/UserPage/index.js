@@ -25,7 +25,7 @@ const UserPageLayout = styled.div({
   height: '100%',
 });
 
-export default function UserPage({ match }) {
+export default function UserPage() {
   const loggedIn = useSelector(isLoggedIn);
 
   useEffect(() => {
@@ -44,8 +44,8 @@ export default function UserPage({ match }) {
     >
       <RequireLoggedIn>
         <UserPageLayout>
-          <UserBrief match={match} />
-          <TabContent match={match} />
+          <UserBrief />
+          <TabContent />
         </UserPageLayout>
       </RequireLoggedIn>
     </Panel>

@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useRouteMatch } from 'react-router-dom';
 
 import { timing, consts } from 'styles';
 import * as color from 'utils/color';
@@ -68,7 +68,8 @@ const MenuItem = styled(NavLink)(
     }
 );
 
-export default function UserBrief({ match }) {
+export default function UserBrief() {
+  const match = useRouteMatch();
   const username = useSelector(selectUsername);
   const genesis = useSelector((state) => state.user.status?.genesis);
   return (
