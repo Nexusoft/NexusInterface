@@ -1,6 +1,5 @@
 // External Dependencies
-import { Route, Redirect, Switch } from 'react-router';
-import { useRouteMatch, Routes } from 'react-router-dom';
+import { useRouteMatch, Routes, Route, Navigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { useSelector } from 'react-redux';
 
@@ -34,13 +33,7 @@ const TerminalTabBar = styled(Tab.Bar)({
 
 function ConsoleRedirect({ match }) {
   const lastActiveTab = useSelector((state) => state.ui.console.lastActiveTab);
-  return (
-    <Redirect
-      exact
-      from={`${match.path}/`}
-      to={`${match.path}/${lastActiveTab}`}
-    />
-  );
+  return <Navigate to={`${match.path}/${lastActiveTab}`} replace />;
 }
 
 export default function Terminal() {

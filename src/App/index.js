@@ -1,6 +1,5 @@
 // External
-import { Switch, Redirect } from 'react-router';
-import { Routes, Router, Route } from 'react-router-dom';
+import { Routes, Router, Route, Navigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { useSelector } from 'react-redux';
 
@@ -82,7 +81,7 @@ export default function App() {
                   <Route path="/Terminal" element={<Terminal />} />
                   {!legacyMode && <Route path="/User" element={<UserPage />} />}
                   <Route path="/Modules/:name" element={<Modules />} />
-                  <Route element={<Redirect to="/" />} />
+                  <Route element={<Navigate to="/" replace />} />
                 </Routes>
               </Main>
               <Navigation />

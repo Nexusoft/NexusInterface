@@ -1,8 +1,7 @@
 // External
 import { useEffect } from 'react';
-import { connect, useSelector } from 'react-redux';
-import { Route, Redirect, Switch } from 'react-router';
-import { useRouteMatch, Routes } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { useRouteMatch, Routes, Route, Navigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 import GA from 'lib/googleAnalytics';
 
@@ -67,16 +66,10 @@ const Badge = styled.div(({ theme }) => ({
   verticalAlign: 'middle',
 }));
 
-let SettingsRedirect = ({ lastActiveTab, match }) => (
-  <Redirect
-    exact
-    from={`${match.path}/`}
-    to={`${match.path}/${lastActiveTab}`}
-  />
-);
-SettingsRedirect = connect((state) => ({
-  lastActiveTab: state.ui.settings.lastActiveTab,
-}))(SettingsRedirect);
+function SettingsRedirect({ lastActiveTab, match }) {
+  const lastActiveTab = useSelector((state) => state.ui.settings.lastActiveTab);
+  return <Navigate to={`${match.path}/${lastActiveTab}`} replace />;
+}
 
 /**
  * Settings Page
