@@ -60,23 +60,20 @@ export default function App() {
               <Main>
                 <Routes>
                   <Route
-                    exact
                     path="/"
                     element={legacyMode ? <Overview /> : <OverviewTritium />}
                   />
                   <Route
-                    exact
                     path="/Send"
                     element={legacyMode ? <Send /> : <SendTritium />}
                   />
                   <Route
-                    exact
                     path="/Transactions"
                     element={
                       legacyMode ? <Transactions /> : <TransactionsTritium />
                     }
                   />
-                  <Route exact path="/AddressBook" element={<AddressBook />} />
+                  <Route path="/AddressBook" element={<AddressBook />} />
                   <Route path="/Settings" element={<Settings />} />
                   <Route path="/Terminal" element={<Terminal />} />
                   {!legacyMode && <Route path="/User" element={<UserPage />} />}
