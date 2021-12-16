@@ -1,11 +1,12 @@
 import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 import { useField } from 'react-final-form';
+import { useTheme } from '@emotion/react';
 
 import Form from 'components/Form';
 import ControlledModal from 'components/ControlledModal';
 import Button from 'components/Button';
-import { formSubmit, checkAll } from 'lib/form';
+import { formSubmit, checkAll, useFieldValue } from 'lib/form';
 import { callApi } from 'lib/tritiumApi';
 import { confirm, confirmPin } from 'lib/dialog';
 import { formatNumber } from 'lib/intl';
@@ -45,18 +46,30 @@ const SliderWrapper = styled.div({
   marginTop: 10,
 });
 
-const StakeSlider = styled(Form.Slider)(({ theme, input, max }) => ({
-  background: `linear-gradient(to right, ${theme.primary}, ${theme.primary} ${
-    (100 * input.value) / max
-  }%, ${theme.mixer(0.5)} ${(100 * input.value) / max}%)`,
-}));
-
 const Note = styled.div(({ theme }) => ({
   fontSize: 14,
   fontStyle: 'italic',
   color: theme.mixer(0.75),
   marginTop: 20,
 }));
+
+function StakeSlider({ min, max }) {
+  const theme = useTheme();
+  const stake = useFieldValue('stake');
+  const percentage = (stake / max) * 100;
+  return (
+    <Form.Slider
+      name="stake"
+      min={min}
+      max={max}
+      style={{
+        background: `linear-gradient(to right, ${theme.primary}, ${
+          theme.primary
+        } ${percentage}%, ${theme.mixer(0.5)} ${percentage}%)`,
+      }}
+    />
+  );
+}
 
 function LimitNumbers({ total }) {
   const { input } = useField('stake', { subscription: {} });
@@ -165,7 +178,7 @@ export default function AdjustStakeModal({
                 <LimitNumbers total={total} />
               </div>
               <SliderWrapper>
-                <StakeSlider name="stake" min={0} max={total} />
+                <StakeSlider min={0} max={total} />
               </SliderWrapper>
               <Note>
                 {__(
