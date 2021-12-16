@@ -4,13 +4,14 @@ import { useSelector } from 'react-redux';
 import { useRef, useEffect, useState } from 'react';
 import { useField } from 'react-final-form';
 
-import { callApi } from 'lib/tritiumApi';
+import Form from 'components/Form';
 import ControlledModal from 'components/ControlledModal';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import Button from 'components/Button';
 import Select from 'components/Select';
 import Spinner from 'components/Spinner';
+import { callApi } from 'lib/tritiumApi';
 import { formSubmit, checkAll, required, minChars } from 'lib/form';
 import { openModal } from 'lib/ui';
 import { openSuccessDialog, openErrorDialog } from 'lib/dialog';
@@ -46,9 +47,6 @@ export default function SetRecoveryModal() {
   );
   const [wordCount, setWordCount] = useState(20);
   const wordlistRef = useRef(null);
-  const {
-    input: { onChange: changeNewPhrase },
-  } = useField('newPhrase', { subscription: {} });
 
   useEffect(() => {
     (async () => {
@@ -62,18 +60,6 @@ export default function SetRecoveryModal() {
         .filter((w) => w);
     })();
   }, []);
-
-  const generatePhrase = () => {
-    if (!wordlistRef.current) return;
-    const words = [];
-    for (let i = 0; i < wordCount; i++) {
-      const randomIndex = Math.floor(
-        Math.random() * wordlistRef.current.length
-      );
-      words.push(wordlistRef.current[randomIndex]);
-    }
-    changeNewPhrase(words.join(' '));
-  };
 
   return (
     <ControlledModal maxWidth={500}>
@@ -155,9 +141,26 @@ export default function SetRecoveryModal() {
 
               <div className="mt2">
                 <div className="mt1 flex center space-between">
-                  <Button skin="hyperlink" onClick={generatePhrase}>
-                    {__('Generate a recovery phrase')}
-                  </Button>
+                  <Form.Field name="newPhrase" subscription={{}}>
+                    {({ input: { onChange } }) => (
+                      <Button
+                        skin="hyperlink"
+                        onClick={() => {
+                          if (!wordlistRef.current) return;
+                          const words = [];
+                          for (let i = 0; i < wordCount; i++) {
+                            const randomIndex = Math.floor(
+                              Math.random() * wordlistRef.current.length
+                            );
+                            words.push(wordlistRef.current[randomIndex]);
+                          }
+                          onChange(words.join(' '));
+                        }}
+                      >
+                        {__('Generate a recovery phrase')}
+                      </Button>
+                    )}
+                  </Form.Field>
                   <Select
                     options={options}
                     value={wordCount}
