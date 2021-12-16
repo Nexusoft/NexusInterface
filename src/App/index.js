@@ -4,7 +4,7 @@ import {
   Routes,
   Route,
   Navigate,
-  BrowserRouter,
+  HashRouter,
   useNavigate,
 } from 'react-router-dom';
 import styled from '@emotion/styled';
@@ -64,7 +64,7 @@ function NavigateExporter() {
 export default function App() {
   const theme = useSelector((state) => state.theme);
   return (
-    <BrowserRouter basename="/assets/app.html">
+    <HashRouter>
       <NavigateExporter />
       <ThemeController theme={theme}>
         <GlobalStyles />
@@ -104,6 +104,6 @@ export default function App() {
           </Overlays>
         </div>
       </ThemeController>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
