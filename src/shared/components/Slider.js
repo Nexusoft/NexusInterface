@@ -50,9 +50,4 @@ const Slider = forwardRef((props, ref) => {
   );
 });
 
-const SliderReduxForm = ({ input, meta, ...rest }) => (
-  <Slider error={meta.touched && meta.error} {...input} {...rest} />
-);
-Slider.RF = SliderReduxForm;
-
 export default Slider;

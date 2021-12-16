@@ -109,9 +109,4 @@ const Switch = forwardRef((props, ref) => (
   <SwitchInput type="checkbox" checked={!!props.value} {...props} ref={ref} />
 ));
 
-const SwitchReduxForm = ({ input, meta, ...rest }) => (
-  <Switch {...input} {...rest} />
-);
-Switch.RF = SwitchReduxForm;
-
 export default Switch;

@@ -310,11 +310,3 @@ export default function AutoSuggest({
     </AutoSuggestComponent>
   );
 }
-
-const AutoSuggestReduxForm = ({ input, inputProps, meta, ...rest }) => (
-  <AutoSuggest
-    inputProps={{ ...input, error: meta.touched && meta.error, ...inputProps }}
-    {...rest}
-  />
-);
-AutoSuggest.RF = AutoSuggestReduxForm;
