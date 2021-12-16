@@ -31,7 +31,7 @@ export default function TabContent() {
         <Route path="Names" element={<Names />} />
         <Route path="Namespaces" element={<Namespaces />} />
         <Route path="Assets" element={<Assets />} />
-        <Route index element={<UserRedirect />} />
+        <Route path="*" element={<UserRedirect />} />
       </Routes>
     </TabContentComponent>
   );

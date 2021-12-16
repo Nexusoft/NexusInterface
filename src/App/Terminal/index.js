@@ -55,7 +55,7 @@ export default function Terminal() {
             element={legacyMode ? <TerminalConsole /> : <NexusApiConsole />}
           />
           <Route path="Core" element={<TerminalCore />} />
-          <Route index element={<ConsoleRedirect />} />
+          <Route path="*" element={<ConsoleRedirect />} />
         </Routes>
       </TerminalComponent>
     </Panel>

@@ -118,7 +118,7 @@ export default function Settings() {
               )}
               <Route path="Style" element={<SettingsStyle />} />
               <Route path="Modules" element={<SettingsModules />} />
-              <Route index element={<SettingsRedirect />} />
+              <Route path="*" element={<SettingsRedirect />} />
             </Routes>
           </SettingsContainer>
         </SettingsContent>
