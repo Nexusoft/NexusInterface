@@ -18,7 +18,7 @@ const initialValues = {
 export default function ChangePasswordPinModal() {
   return (
     <ControlledModal maxWidth={500}>
-      {(closeModal) => {
+      {(closeModal) => (
         <>
           <ControlledModal.Header>
             {__('Change password and PIN')}
@@ -110,8 +110,8 @@ export default function ChangePasswordPinModal() {
               </div>
             </Form>
           </ControlledModal.Body>
-        </>;
-      }}
+        </>
+      )}
     </ControlledModal>
   );
 }
