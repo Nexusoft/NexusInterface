@@ -150,7 +150,10 @@ Form.Switch = forwardRef(function ({ name, config, validate, ...rest }, ref) {
 });
 
 Form.Slider = forwardRef(function ({ name, config, validate, ...rest }, ref) {
-  const { input } = useField(name, { validate, type: 'checkbox', ...config });
+  const { input, meta } = useField(name, {
+    validate,
+    ...config,
+  });
   return (
     <Slider ref={ref} error={meta.touched && meta.error} {...input} {...rest} />
   );
