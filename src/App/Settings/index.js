@@ -1,7 +1,7 @@
 // External
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { useRouteMatch, Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 import GA from 'lib/googleAnalytics';
 
@@ -66,9 +66,9 @@ const Badge = styled.div(({ theme }) => ({
   verticalAlign: 'middle',
 }));
 
-function SettingsRedirect({ lastActiveTab, match }) {
+function SettingsRedirect() {
   const lastActiveTab = useSelector((state) => state.ui.settings.lastActiveTab);
-  return <Navigate to={`${match.path}/${lastActiveTab}`} replace />;
+  return <Navigate to={lastActiveTab} replace />;
 }
 
 /**
@@ -79,7 +79,6 @@ function SettingsRedirect({ lastActiveTab, match }) {
  * @extends {Component}
  */
 export default function Settings() {
-  const match = useRouteMatch();
   useEffect(() => {
     GA.SendScreen('Settings');
   }, []);
@@ -89,22 +88,14 @@ export default function Settings() {
     <Panel bodyScrollable={false} icon={settingsIcon} title={__('Settings')}>
       <SettingsComponent>
         <SettingsTabBar>
-          <Tab
-            link={`${match.url}/App`}
-            icon={logoIcon}
-            text={__('Application')}
-          />
-          <Tab link={`${match.url}/Core`} icon={coreIcon} text={__('Core')} />
+          <Tab link="App" icon={logoIcon} text={__('Application')} />
+          <Tab link="Core" icon={coreIcon} text={__('Core')} />
           {legacyMode && (
-            <Tab
-              link={`${match.url}/Security`}
-              icon={lockIcon}
-              text={__('Security')}
-            />
+            <Tab link="Security" icon={lockIcon} text={__('Security')} />
           )}
-          <Tab link={`${match.url}/Style`} icon={leafIcon} text={__('Style')} />
+          <Tab link="Style" icon={leafIcon} text={__('Style')} />
           <Tab
-            link={`${match.url}/Modules`}
+            link="Modules"
             icon={legoIcon}
             text={
               <>
@@ -127,7 +118,7 @@ export default function Settings() {
               )}
               <Route path="Style" element={<SettingsStyle />} />
               <Route path="Modules" element={<SettingsModules />} />
-              <Route element={<SettingsRedirect match={match} />} />
+              <Route index element={<SettingsRedirect />} />
             </Routes>
           </SettingsContainer>
         </SettingsContent>

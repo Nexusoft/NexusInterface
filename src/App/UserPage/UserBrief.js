@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
-import { NavLink, useRouteMatch } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 import { timing, consts } from 'styles';
 import * as color from 'utils/color';
@@ -69,7 +69,6 @@ const MenuItem = styled(NavLink)(
 );
 
 export default function UserBrief() {
-  const match = useRouteMatch();
   const username = useSelector(selectUsername);
   const genesis = useSelector((state) => state.user.status?.genesis);
   return (
@@ -81,12 +80,12 @@ export default function UserBrief() {
         <GenesisId>{genesis}</GenesisId>
       </Genesis>
       <Separator />
-      <MenuItem to={`${match.url}/Accounts`}>{__('Accounts')}</MenuItem>
-      <MenuItem to={`${match.url}/Staking`}>{__('Staking')}</MenuItem>
-      <MenuItem to={`${match.url}/Tokens`}>{__('Tokens')}</MenuItem>
-      <MenuItem to={`${match.url}/Names`}>{__('Names')}</MenuItem>
-      <MenuItem to={`${match.url}/Namespaces`}>{__('Namespaces')}</MenuItem>
-      <MenuItem to={`${match.url}/Assets`}>{__('Assets')}</MenuItem>
+      <MenuItem to="Accounts">{__('Accounts')}</MenuItem>
+      <MenuItem to="Staking">{__('Staking')}</MenuItem>
+      <MenuItem to="Tokens">{__('Tokens')}</MenuItem>
+      <MenuItem to="Names">{__('Names')}</MenuItem>
+      <MenuItem to="Namespaces">{__('Namespaces')}</MenuItem>
+      <MenuItem to="Assets">{__('Assets')}</MenuItem>
     </UserBriefComponent>
   );
 }

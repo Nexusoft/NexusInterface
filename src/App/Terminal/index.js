@@ -1,5 +1,5 @@
 // External Dependencies
-import { useRouteMatch, Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { useSelector } from 'react-redux';
 
@@ -31,27 +31,22 @@ const TerminalTabBar = styled(Tab.Bar)({
   gridArea: 'tab-bar',
 });
 
-function ConsoleRedirect({ match }) {
+function ConsoleRedirect() {
   const lastActiveTab = useSelector((state) => state.ui.console.lastActiveTab);
-  return <Navigate to={`${match.path}/${lastActiveTab}`} replace />;
+  return <Navigate to={lastActiveTab} replace />;
 }
 
 export default function Terminal() {
-  const match = useRouteMatch();
   return (
     <Panel icon={consoleIcon} title={__('Console')} bodyScrollable={false}>
       <TerminalComponent>
         <TerminalTabBar>
           <Tab
-            link={`${match.url}/Console`}
+            link="Console"
             icon={logoIcon}
             text={legacyMode ? __('Console') : 'Nexus API'}
           />
-          <Tab
-            link={`${match.url}/Core`}
-            icon={coreIcon}
-            text={__('Core output')}
-          />
+          <Tab link="Core" icon={coreIcon} text={__('Core output')} />
         </TerminalTabBar>
 
         <Routes>
@@ -60,7 +55,7 @@ export default function Terminal() {
             element={legacyMode ? <TerminalConsole /> : <NexusApiConsole />}
           />
           <Route path="Core" element={<TerminalCore />} />
-          <Route element={<ConsoleRedirect match={match} />} />
+          <Route index element={<ConsoleRedirect />} />
         </Routes>
       </TerminalComponent>
     </Panel>

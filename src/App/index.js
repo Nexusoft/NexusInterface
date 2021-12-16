@@ -4,7 +4,7 @@ import {
   Routes,
   Route,
   Navigate,
-  HashRouter,
+  BrowserRouter,
   useNavigate,
 } from 'react-router-dom';
 import styled from '@emotion/styled';
@@ -64,7 +64,7 @@ function NavigateExporter() {
 export default function App() {
   const theme = useSelector((state) => state.theme);
   return (
-    <HashRouter>
+    <BrowserRouter basename="/assets/app.html">
       <NavigateExporter />
       <ThemeController theme={theme}>
         <GlobalStyles />
@@ -76,25 +76,27 @@ export default function App() {
               <Main>
                 <Routes>
                   <Route
-                    path="/"
+                    index
                     element={legacyMode ? <Overview /> : <OverviewTritium />}
                   />
                   <Route
-                    path="/Send"
+                    path="Send"
                     element={legacyMode ? <Send /> : <SendTritium />}
                   />
                   <Route
-                    path="/Transactions"
+                    path="Transactions"
                     element={
                       legacyMode ? <Transactions /> : <TransactionsTritium />
                     }
                   />
-                  <Route path="/AddressBook" element={<AddressBook />} />
-                  <Route path="/Settings" element={<Settings />} />
-                  <Route path="/Terminal" element={<Terminal />} />
-                  {!legacyMode && <Route path="/User" element={<UserPage />} />}
-                  <Route path="/Modules/:name" element={<Modules />} />
-                  <Route element={<Navigate to="/" replace />} />
+                  <Route path="AddressBook" element={<AddressBook />} />
+                  <Route path="Settings/*" element={<Settings />} />
+                  <Route path="Terminal/*" element={<Terminal />} />
+                  {!legacyMode && (
+                    <Route path="User/*" element={<UserPage />} />
+                  )}
+                  <Route path="Modules/:name" element={<Modules />} />
+                  <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
               </Main>
               <Navigation />
@@ -102,6 +104,6 @@ export default function App() {
           </Overlays>
         </div>
       </ThemeController>
-    </HashRouter>
+    </BrowserRouter>
   );
 }

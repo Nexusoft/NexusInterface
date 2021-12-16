@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
-import { useRouteMatch, Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 
 import Staking from './Staking';
 import Accounts from './Accounts';
@@ -17,9 +17,8 @@ const TabContentComponent = styled.div({
 });
 
 function UserRedirect() {
-  const match = useRouteMatch();
   const lastActiveTab = useSelector((state) => state.ui.user.lastActiveTab);
-  return <Navigate to={`${match.path}/${lastActiveTab}`} replace />;
+  return <Navigate to={lastActiveTab} replace />;
 }
 
 export default function TabContent() {
@@ -32,7 +31,7 @@ export default function TabContent() {
         <Route path="Names" element={<Names />} />
         <Route path="Namespaces" element={<Namespaces />} />
         <Route path="Assets" element={<Assets />} />
-        <Route element={<UserRedirect />} />
+        <Route index element={<UserRedirect />} />
       </Routes>
     </TabContentComponent>
   );
