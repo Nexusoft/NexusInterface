@@ -12,9 +12,6 @@ import * as React from 'react';
 import jsxRuntime from 'react/jsx-runtime';
 import jsxDevRuntime from 'react/jsx-dev-runtime';
 import ReactDOM from 'react-dom';
-import * as ReactRouterDOM from 'react-router-dom';
-import * as Redux from 'redux';
-import * as ReactRedux from 'react-redux';
 import createCache from '@emotion/cache';
 import * as core from '@emotion/react';
 import styled from '@emotion/styled';
@@ -48,9 +45,6 @@ global.NEXUS = {
   libraries: {
     React: { ...React, jsxDevRuntime, jsxRuntime },
     ReactDOM,
-    ReactRouterDOM,
-    Redux,
-    ReactRedux,
     emotion: { core, styled, theming: core, createCache },
   },
   utilities: {
