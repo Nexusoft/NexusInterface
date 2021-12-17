@@ -47,6 +47,24 @@ global.NEXUS = {
     ReactDOM,
     emotion: { core, styled, theming: core, createCache },
   },
+  components: {
+    GlobalStyles,
+    ThemeController,
+    Icon,
+    Panel,
+    AutoSuggest,
+    FieldSet,
+    Switch,
+    Modal,
+    Tooltip,
+    Select,
+    TextField,
+    FormField,
+    Link,
+    Arrow,
+    Tab,
+    Button,
+  },
   utilities: {
     color,
     copyToClipboard: (text) => {
@@ -326,25 +344,6 @@ global.NEXUS = {
         listener(userStatus)
       );
     },
-  },
-  components: {
-    GlobalStyles,
-    ThemeController,
-    Icon,
-    Panel,
-    AutoSuggest,
-    FieldSet,
-    Switch,
-    Modal,
-    Tooltip,
-    Select,
-    DateTime,
-    TextField,
-    FormField,
-    Link,
-    Arrow,
-    Tab,
-    Button,
   },
 };
 
