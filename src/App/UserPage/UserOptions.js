@@ -29,16 +29,16 @@ export default function UserOptions() {
       )}
       renderDropdown={({ closeDropdown }) => (
         <>
-          <DropdownMenu.MenuItem
+          <DropdownMenu.Item
             onClick={() => {
               closeDropdown();
               openModal(ChangePasswordPinModal);
             }}
           >
             {__('Change password & PIN')}
-          </DropdownMenu.MenuItem>
+          </DropdownMenu.Item>
 
-          <DropdownMenu.MenuItem
+          <DropdownMenu.Item
             onClick={() => {
               closeDropdown();
               openModal(SetRecoveryModal);
@@ -47,7 +47,7 @@ export default function UserOptions() {
             {hasRecoveryPhrase
               ? __('Change recovery phrase')
               : __('Set recovery phrase')}
-          </DropdownMenu.MenuItem>
+          </DropdownMenu.Item>
         </>
       )}
     />

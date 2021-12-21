@@ -93,5 +93,5 @@ export default function DropdownMenu({ renderControl, renderDropdown }) {
   );
 }
 
-DropdownMenu.MenuItem = MenuItem;
+DropdownMenu.Item = MenuItem;
 DropdownMenu.Separator = Separator;
