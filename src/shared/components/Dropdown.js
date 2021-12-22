@@ -60,7 +60,7 @@ function getDropdownStyle(controlElem) {
   };
 }
 
-export default function Dropdown({ children, content }) {
+export default function Dropdown({ children, dropdown }) {
   const [open, setOpen] = useState(false);
   const controlRef = useRef();
 
@@ -89,7 +89,7 @@ export default function Dropdown({ children, content }) {
   const clonedControl = cloneElement(control, { ref: controlRef });
 
   const dropdownContent =
-    typeof content === 'function' ? content(dropdownProps) : content;
+    typeof dropdown === 'function' ? dropdown(dropdownProps) : dropdown;
 
   return (
     <>

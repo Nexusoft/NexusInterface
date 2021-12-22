@@ -17,7 +17,7 @@ export default function UserOptions() {
 
   return (
     <Dropdown
-      content={({ closeDropdown }) => (
+      dropdown={({ closeDropdown }) => (
         <>
           <Dropdown.MenuItem
             onClick={() => {
