@@ -33,6 +33,7 @@ import AutoSuggest from 'components/AutoSuggest';
 import Modal from 'components/Modal';
 import FormField from 'components/FormField';
 import Arrow from 'components/Arrow';
+import Dropdown from 'components/Dropdown';
 import * as color from 'utils/color';
 
 const newId = (() => {
@@ -64,6 +65,7 @@ global.NEXUS = {
     Arrow,
     Tab,
     Button,
+    Dropdown,
   },
   utilities: {
     color,
