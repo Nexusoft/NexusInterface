@@ -1,3 +1,5 @@
+// Temporarily disable chalk import because of a webpack error
+// Try enabling this again at some point
 // import chalk from 'chalk';
 
 export default function CheckNodeEnv(expectedEnv) {
