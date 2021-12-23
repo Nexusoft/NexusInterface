@@ -46,7 +46,7 @@ global.NEXUS = {
   libraries: {
     React: { ...React, jsxDevRuntime, jsxRuntime },
     ReactDOM,
-    emotion: { core, styled, theming: core, createCache },
+    emotion: { core, styled, createCache },
   },
   components: {
     GlobalStyles,
