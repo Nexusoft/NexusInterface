@@ -14,12 +14,12 @@ if (
   (settings.sendUsageData == null ||
     settings.sendUsageData == undefined ||
     Boolean(settings.sendUsageData) == true) &&
-  process.env.NODE_ENV !== 'development'
-) {
-  GA.visitor = ua('UA-117808839-1');
+  GA.visitor = ua('UA-207070578-1');
   GA.active = true;
   GA.visitor.set('ul', settings.locale || 'en');
   GA.visitor.set('aiid', process.platform);
+  GA.visitor.set('ds', 'app');
+  GA.visitor.set('aip', 1);
   try {
     const osVer = os.platform() + ' ' + os.release();
     GA.visitor.set('cd1', osVer);
@@ -64,10 +64,12 @@ GA.DisableAnalytics = function () {
 // Turn on Analytics and create a new visitor
 GA.EnableAnalytics = function () {
   if (GA.visitor != null) return;
-  GA.visitor = ua('UA-117808839-1');
+  GA.visitor = ua('UA-207070578-1');
   GA.active = true;
   GA.visitor.set('ul', settings.locale || 'en');
   GA.visitor.set('aiid', process.platform);
+  GA.visitor.set('ds', 'app');
+  GA.visitor.set('aip', 1);
   try {
     const osVer = os.platform() + ' ' + os.release();
     GA.visitor.set('cd1', osVer);
