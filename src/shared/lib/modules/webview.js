@@ -20,90 +20,6 @@ import { legacyMode } from 'consts/misc';
 
 import { readModuleStorage, writeModuleStorage } from './storage';
 
-const cmdWhitelist = [
-  'checkwallet',
-  'getaccount',
-  'getaccountaddress',
-  'getaddressesbyaccount',
-  'getbalance',
-  'getblock',
-  'getblockcount',
-  'getblockhash',
-  'getblocknumber',
-  'getconnectioncount',
-  'getdifficulty',
-  'getinfo',
-  'getmininginfo',
-  'getmoneysupply',
-  'getnetworkhashps',
-  'getnetworkpps',
-  'getnetworktrustkeys',
-  'getnewaddress',
-  'getpeerinfo',
-  'getrawtransaction',
-  'getreceivedbyaccount',
-  'getreceivedbyaddress',
-  'getsupplyrates',
-  'gettransaction',
-  'help',
-  'isorphan',
-  'listaccounts',
-  'listaddresses',
-  'listreceivedbyaccount',
-  'listreceivedbyaddress',
-  'listsinceblock',
-  'listtransactions',
-  'listtrustkeys',
-  'listunspent',
-  'unspentbalance',
-  'validateaddress',
-  'verifymessage',
-];
-
-const apiWhiteList = [
-  'system/get/info',
-  'system/get/metrics',
-  'system/list/peers',
-  'system/list/lisp-eids',
-  'system/validate/address',
-  'users/get/status',
-  'users/list/accounts',
-  'users/list/assets',
-  'users/list/items',
-  'users/list/names',
-  'users/list/namespaces',
-  'users/list/notifications',
-  'users/list/tokens',
-  'users/list/invoices',
-  'users/list/transactions',
-  'finance/get/account',
-  'finance/list/account',
-  'finance/list/account/transactions',
-  'finance/get/stakeinfo',
-  'finance/get/balances',
-  'finance/list/trustaccounts',
-  'ledger/get/blockhash',
-  'ledger/get/block',
-  'ledger/list/block',
-  'ledger/get/transaction',
-  'ledger/get/mininginfo',
-  'tokens/get/token',
-  'tokens/list/token/transactions',
-  'tokens/get/account',
-  'tokens/list/account/transactions',
-  'names/get/namespace',
-  'names/list/namespace/history',
-  'names/get/name',
-  'names/list/name/history',
-  'assets/get/asset',
-  'assets/list/asset/history',
-  'objects/get/schema',
-  'supply/get/item',
-  'supply/list/item/history',
-  'invoices/get/invoice',
-  'invoices/list/invoice/history',
-];
-
 /**
  * Utilities
  * ===========================================================================
@@ -238,10 +154,6 @@ async function proxyRequest([url, options, requestId]) {
 async function rpcCall([command, params, callId]) {
   const { activeAppModule } = store.getState();
   try {
-    if (!cmdWhitelist.includes(command)) {
-      throw 'Invalid command';
-    }
-
     const response = await rpc(command, ...(params || []));
     if (activeAppModule?.webview) {
       activeAppModule.webview.send(
@@ -264,10 +176,6 @@ async function rpcCall([command, params, callId]) {
 async function apiCall([endpoint, params, callId]) {
   const { activeAppModule } = store.getState();
   try {
-    if (!apiWhiteList.includes(endpoint)) {
-      throw 'Invalid API endpoint';
-    }
-
     const response = await callApi(endpoint, params);
     if (activeAppModule?.webview) {
       activeAppModule.webview.send(
