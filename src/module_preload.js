@@ -80,6 +80,7 @@ global.NEXUS = {
     // `options` shape
     //  For Legacy mode:
     //  {
+    //    sendFrom,
     //    recipients: [{
     //      address
     //    }]
@@ -96,7 +97,7 @@ global.NEXUS = {
     //      expireMinutes,
     //      expireSeconds,
     //    }],
-    //    advancedOptions,
+    //    advancedOptions, // Boolean - whether reference and expire options take effect
     //  }
     send: (options) => {
       if (!options) {

@@ -2,11 +2,11 @@
 
 Nexus Wallet v3.1 comes with a lot of breaking changes to the module API. This article will walk you through those changes so that you can make your modules compatible with Nexus Wallet v3.1.
 
-## Some libraries are no longer provided
+## Some third-party libraries are no longer provided through `NEXUS.libraries`
 
 These libraries will no longer be found at `NEXUS.libraries`:
 
-- `Redux` (from redux)
+- `Redux` (from redux)xw
 - `ReactRedux` (from react-redux)
 - `ReactRouterDOM` (from react-router-dom)
 - `ReduxForm` (from redux-form)
@@ -44,6 +44,10 @@ return (
 )
 ```
 
+## `emotion.theming` is now in `emotion.core`
+
+Starting from v11, emotion-theming has been moved into @emotion/react. Therefore, exports from emotion-theming like `useTheme`, `withTheme` or `ThemeProvider` will now be found under `NEXUS.libraries.emotion.core.
+
 ## RF adapter components were removed
 
 Before v3.1, many components in `NEXUS.components` have a 'sub-component' called RF (e.g. `TextField` has `TextField.RF`) which is the adapter for `redux-form`'s interface.
@@ -58,8 +62,38 @@ const TextFieldReduxForm = ({ input, meta, ...rest }) => (
 
 ## DateTimePicker component is removed
 
+DateTimePicker component is removed because it's not being used by the wallet. Modules which need it should implement a DateTimePicker on its own.
+
 ## `options` param for `send()` now has a slightly different shape
 
-## Default right click menu now works on modules
+Previously `send()` function supports an `options` parameter that's more suitable for Legacy mode:
 
-## Clicking on a link (an `a` tag with `href` attribute) in a module now opens it up on browser
+```
+{
+  recipients: [{
+    address,
+    amount
+  }],
+  message,
+  reference,
+  expires
+}
+```
+
+Now `options` parameter shape is more suitable for Tritium mode:
+
+```
+{
+  sendFrom,
+  recipients: [{
+    address,
+    amount,
+    reference,
+    expireDays,
+    expireHours,
+    expireMinutes,
+    expireSeconds,
+  }],
+  advancedOptions,
+}
+```
