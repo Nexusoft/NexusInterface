@@ -9,9 +9,9 @@
  */
 
 import * as React from 'react';
-import jsxRuntime from 'react/jsx-runtime';
-import jsxDevRuntime from 'react/jsx-dev-runtime';
-import ReactDOM from 'react-dom';
+import * as jsxRuntime from 'react/jsx-runtime';
+import * as jsxDevRuntime from 'react/jsx-dev-runtime';
+import * as ReactDOM from 'react-dom';
 import createCache from '@emotion/cache';
 import * as core from '@emotion/react';
 import styled from '@emotion/styled';
