@@ -44,9 +44,14 @@ return (
 )
 ```
 
-## `emotion.theming` is now in `emotion.core`
+## Emotion sub-libraries names have been updated
 
-Starting from v11, emotion-theming has been moved into @emotion/react. Therefore, exports from emotion-theming like `useTheme`, `withTheme` or `ThemeProvider` will now be found under `NEXUS.libraries.emotion.core.
+Starting from v11, Emotion library had a lot of changes related to library namings. Therefore, Emotion sub-libraries under `NEXUS.libraries` will be updated as follow:
+
+- `emotion.core` => `emotion.react`
+- `emotion.theming` => `emotion.react`
+- `emotion.createCache` => `emotion.cache`
+- `emotion.styled` remains
 
 ## RF adapter components were removed
 
