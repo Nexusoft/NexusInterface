@@ -12,8 +12,8 @@ import * as React from 'react';
 import * as jsxRuntime from 'react/jsx-runtime';
 import * as jsxDevRuntime from 'react/jsx-dev-runtime';
 import * as ReactDOM from 'react-dom';
-import createCache from '@emotion/cache';
-import * as core from '@emotion/react';
+import cache from '@emotion/cache';
+import * as react from '@emotion/react';
 import styled from '@emotion/styled';
 import { ipcRenderer, clipboard, shell } from 'electron';
 
@@ -46,7 +46,7 @@ global.NEXUS = {
   libraries: {
     React: { ...React, jsxDevRuntime, jsxRuntime },
     ReactDOM,
-    emotion: { core, styled, createCache },
+    emotion: { react, styled, cache },
   },
   components: {
     GlobalStyles,
