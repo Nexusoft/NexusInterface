@@ -217,3 +217,62 @@ export async function addDevModule(dirPath) {
     message: __('Development module has been added'),
   });
 }
+
+import https from 'https';
+import axios from 'axios';
+
+export async function download(module) {
+  const repoId = `${module.owner}/${module.repo}`;
+  const url = `https://api.github.com/repos/${repoId}/releases/latest`;
+  try {
+    const response = await axios.get(url, {
+      headers: {
+        Accept: 'application/vnd.github.v3+json',
+      },
+    });
+    console.log(response);
+    const data = response.data;
+    const assets = data.assets;
+    if (assets.length == 0) throw 'Nothing to download';
+    let tarzip;
+    for (let i = 0; i < assets.length; i++) {
+      const element = assets[i];
+      if (
+        element.content_type === 'application/x-gzip' ||
+        element.content_type === 'application/x-zip'
+      ) {
+        tarzip = element.browser_download_url;
+        break;
+      }
+    }
+
+    console.log(tarzip);
+    const file = fs.createWriteStream(
+      join(
+        walletDataDir,
+        'modules',
+        `${module.repo}_TEMP.${tarzip.endsWith('gz') ? 'tar.gz' : 'zip'}`
+      )
+    );
+    console.log(file);
+    const request = await https.get(tarzip, async function (response) {
+      console.log(response);
+      if (response.statusCode === 302) {
+        const request2 = await https.get(
+          response.headers.location,
+          async function (response) {
+            console.log(response);
+            response.pipe(file);
+            setTimeout(async () => {
+              await installModule(file.path);
+            }, 1000);
+          }
+        );
+      } else {
+        response.pipe(file);
+      }
+    });
+  } catch (e) {
+    console.log('error', e);
+  }
+}
