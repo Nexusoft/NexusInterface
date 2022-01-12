@@ -115,7 +115,7 @@ const {
     onUserStatusUpdated,
     onceRpcReturn,
     onceProxyResponse,
-    onceCOnfirmAnswer,
+    onceConfirmAnswer,
     copyToClipboard,
     color,
   },
