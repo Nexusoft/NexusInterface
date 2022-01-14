@@ -102,3 +102,16 @@ Now `options` parameter shape is more suitable for Tritium mode:
   advancedOptions,
 }
 ```
+
+## Individual `onSomethingUpdated` functions (e.g. `onThemeUpdated`) were replaced by a single `onWalletDataUpdated` function
+
+All functions listed below
+
+```
+onThemeUpdated(listener)
+onSettingsUpdated(listener)
+onCoreInfoUpdated(listener)
+onUserStatusUpdate(listener)
+```
+
+were removed and replaced by `onWalletDataUpdated(listener)` which registers a single listener for any kind of wallet data change. `listener` will now also be called when there's a change in `addressBook`.
