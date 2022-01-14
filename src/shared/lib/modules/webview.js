@@ -389,7 +389,10 @@ export function prepareWebView() {
         const { activeAppModule } = store.getState();
         if (activeAppModule?.webview) {
           try {
-            activeAppModule.webview.send('settings-updated', settings);
+            activeAppModule.webview.send(
+              'settings-updated',
+              getSettingsForModules(settings)
+            );
           } catch (err) {}
         }
       }
