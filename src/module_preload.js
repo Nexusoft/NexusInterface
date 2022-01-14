@@ -308,43 +308,14 @@ global.NEXUS = {
         listener(initialData)
       );
     },
-    onThemeUpdated: (listener) => {
+    onWalletDataUpdated: (listener) => {
       if (typeof listener !== 'function') {
         throw new Error(
           'Expected `listener` to be `function` type, found: ' + typeof listener
         );
       }
-      ipcRenderer.on('theme-updated', (event, theme) => listener(theme));
-    },
-    onSettingsUpdated: (listener) => {
-      if (typeof listener !== 'function') {
-        throw new Error(
-          'Expected `listener` to be `function` type, found: ' + typeof listener
-        );
-      }
-      ipcRenderer.on('settings-updated', (event, settings) =>
-        listener(settings)
-      );
-    },
-    onCoreInfoUpdated: (listener) => {
-      if (typeof listener !== 'function') {
-        throw new Error(
-          'Expected `listener` to be `function` type, found: ' + typeof listener
-        );
-      }
-      ipcRenderer.on('core-info-updated', (event, coreInfo) =>
-        listener(coreInfo)
-      );
-    },
-    onUserStatusUpdated: (listener) => {
-      if (typeof listener !== 'function') {
-        throw new Error(
-          'Expected `listner` to be a `function` type, found: ' +
-            typeof listener
-        );
-      }
-      ipcRenderer.on('user-status-updated', (event, userStatus) =>
-        listener(userStatus)
+      ipcRenderer.on('wallet-data-updated', (event, walletData) =>
+        listener(walletData)
       );
     },
   },

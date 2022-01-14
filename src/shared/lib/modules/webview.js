@@ -38,7 +38,7 @@ const settingsChanged = (settings1, settings2) =>
       settings1.addressStyle !== settings2.addressStyle
     : true;
 
-const getModuleData = ({
+const getWalletData = ({
   theme,
   core,
   settings: { locale, fiatCurrency, addressStyle },
@@ -361,9 +361,18 @@ export const toggleWebViewDevTools = () => {
   }
 };
 
+function sendWalletDataUpdated(walletData) {
+  const { activeAppModule } = store.getState();
+  if (activeAppModule?.webview) {
+    try {
+      activeAppModule.webview.send('wallet-data-updated', walletData);
+    } catch (err) {}
+  }
+}
+
 export function prepareWebView() {
   observeStore(
-    (state) => state.activeAppModule && state.activeAppModule.webview,
+    (state) => state.activeAppModule?.webview,
     (webview) => {
       if (webview) {
         webview.addEventListener('ipc-message', handleIpcMessage);
@@ -373,7 +382,7 @@ export function prepareWebView() {
           const moduleState = state.moduleStates[activeModule.name];
           const storageData = await readModuleStorage(activeModule);
           webview.send('initialize', {
-            ...getModuleData(state),
+            ...getWalletData(state),
             moduleState,
             storageData,
           });
@@ -384,17 +393,10 @@ export function prepareWebView() {
 
   observeStore(
     (state) => state.settings,
-    (settings, oldSettings) => {
-      if (settingsChanged(oldSettings, settings)) {
-        const { activeAppModule } = store.getState();
-        if (activeAppModule?.webview) {
-          try {
-            activeAppModule.webview.send(
-              'settings-updated',
-              getSettingsForModules(settings)
-            );
-          } catch (err) {}
-        }
+    (newSettings, oldSettings) => {
+      if (settingsChanged(oldSettings, newSettings)) {
+        const settings = getSettingsForModules(settings);
+        sendWalletDataUpdated({ settings });
       }
     }
   );
@@ -402,36 +404,28 @@ export function prepareWebView() {
   observeStore(
     (state) => state.theme,
     (theme) => {
-      const { activeAppModule } = store.getState();
-      if (activeAppModule?.webview) {
-        try {
-          activeAppModule.webview.send('theme-updated', theme);
-        } catch (err) {}
-      }
+      sendWalletDataUpdated({ theme });
     }
   );
 
   observeStore(
     (state) => (legacyMode ? state.core.info : state.core.systemInfo),
     (coreInfo) => {
-      const { activeAppModule } = store.getState();
-      if (activeAppModule?.webview) {
-        try {
-          activeAppModule.webview.send('core-info-updated', coreInfo);
-        } catch (err) {}
-      }
+      sendWalletDataUpdated({ coreInfo });
     }
   );
 
   observeStore(
     (state) => state.user.status,
     (userStatus) => {
-      const { activeAppModule } = store.getState();
-      if (activeAppModule?.webview) {
-        try {
-          activeAppModule.webview.send('user-status-updated', userStatus);
-        } catch (err) {}
-      }
+      sendWalletDataUpdated({ userStatus });
+    }
+  );
+
+  observeStore(
+    (state) => state.addressBook,
+    (addressBook) => {
+      sendWalletDataUpdated({ addressBook });
     }
   );
 }
