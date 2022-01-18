@@ -395,7 +395,7 @@ export function prepareWebView() {
     (state) => state.settings,
     (newSettings, oldSettings) => {
       if (settingsChanged(oldSettings, newSettings)) {
-        const settings = getSettingsForModules(settings);
+        const settings = getSettingsForModules(newSettings);
         sendWalletDataUpdated({ settings });
       }
     }
