@@ -14,7 +14,7 @@ if (!validChannels.includes(channel)) {
 }
 
 const fileName = 'package.json';
-const file = require(path.resolve(fileName));
+const packageJson = require(path.resolve(fileName));
 
 //https://leancrew.com/all-this/2020/06/ordinal-numerals-and-javascript/
 function ordinal(n) {
@@ -23,19 +23,19 @@ function ordinal(n) {
   return n + (s[(v - 20) % 10] || s[v] || s[0]);
 }
 
+// Sets New build date
 const time = new Date();
+packageJson.buildDate = `${time.toLocaleString('en-US', {
+  month: 'long',
+})} ${ordinal(time.getDate())} ${time.getFullYear()}`;
 
-file.buildDate = `${time.toLocaleString('en-US', { month: 'long' })} ${ordinal(
-  time.getDate()
-)} ${time.getFullYear()}`;
-
-const currentVer = semver.parse(file.version);
-
+// Makes sure semver is correct
+const currentVer = semver.parse(packageJson.version);
 const pre = currentVer.prerelease[0];
 if (pre) {
   if (channel !== '') {
     if (pre !== channel) {
-      file.version = `${currentVer.major}.${currentVer.minor}.${
+      packageJson.version = `${currentVer.major}.${currentVer.minor}.${
         currentVer.patch
       }-${channel}.${currentVer.prerelease[1] || 0}`;
     }
@@ -45,15 +45,25 @@ if (pre) {
   }
 } else {
   if (channel !== '') {
-    file.version = `${currentVer.major}.${currentVer.minor}.${
+    packageJson.version = `${currentVer.major}.${currentVer.minor}.${
       currentVer.patch
     }-${channel}.${currentVer.prerelease[1] || 0}`;
   }
 }
 
+//Sets channel in build config
+if (channel) {
+  packageJson.build.publish.channel = channel;
+} else {
+  if (packageJson.build.publish.channel) {
+    delete packageJson.build.publish.channel;
+  }
+}
+
+// write package back, second param will immitate prettier
 fs.writeFileSync(
   fileName,
-  JSON.stringify(file, null, 2),
+  JSON.stringify(packageJson, null, 2),
   function writeJSON(err) {
     if (err) return console.log(err);
   }
@@ -66,9 +76,15 @@ if (process.platform === 'win32') {
     stdio: 'inherit',
   });
 } else if (process.platform === 'darwin') {
-  execSync.execSync(`npm run package-mac ${isTestnet && '--testnet=true'}`, {
-    stdio: 'inherit',
-  });
+  const unsigned = process.argv[3] === 'unsigned';
+  execSync.execSync(
+    `npm run package-mac${unsigned && '-unsigned'} ${
+      isTestnet && '--testnet=true'
+    }`,
+    {
+      stdio: 'inherit',
+    }
+  );
 } else {
   execSync.execSync(`package-linux ${isTestnet && '--testnet=true'}`, {
     stdio: 'inherit',
