@@ -7,6 +7,7 @@ import SelectLanguage from './SelectLanguage';
 import LicenseAgreement from './LicenseAgreement';
 import LiteModeNotice from './LiteModeNotice';
 import PreReleaseWarningModal from './PreReleaseWarningModal';
+import TestnetWarningModal from './TestnetWarningModal';
 import Wallet from './Wallet';
 import { preRelease } from 'consts/misc';
 
@@ -38,6 +39,10 @@ export default function Overlays({ children }) {
 
   if (preRelease) {
     openModal(PreReleaseWarningModal);
+  }
+
+  if (TESTNET_BUILD) {
+    openModal(TestnetWarningModal);
   }
 
   return <Wallet>{children}</Wallet>;

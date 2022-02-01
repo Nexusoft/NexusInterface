@@ -116,6 +116,16 @@ export const startCore = async () => {
     if (settings.advancedCoreParams) params.push(settings.advancedCoreParams);
   }
 
+  if (TESTNET_BUILD) {
+    params.push(
+      '-connect=testnet1.nexus-interactions.io',
+      '-connect=testnet2.nexus-interactions.io',
+      '-connect=testnet3.nexus-interactions.io',
+      '-nodns=1',
+      '-testnet=1'
+    );
+  }
+
   // Start core
   await ipcRenderer.invoke('start-core', params);
   saveCoreConfig(conf);

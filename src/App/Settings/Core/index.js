@@ -552,6 +552,7 @@ function SettingsCore({
             <SettingsField
               connectLabel
               label={__('Testnet Iteration')}
+              disabled={!!TESTNET_BUILD}
               subLabel={
                 <>
                   {__('The iteration of Testnet to connect to.')}{' '}
@@ -572,6 +573,7 @@ function SettingsCore({
                 name="testnetIteration"
                 component={TextField.RF}
                 type="number"
+                disabled={!!TESTNET_BUILD}
                 min={0}
                 max={99999999}
                 style={{ maxWidth: 50 }}
