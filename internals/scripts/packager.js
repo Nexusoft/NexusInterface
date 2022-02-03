@@ -69,8 +69,6 @@ fs.writeFileSync(
   }
 );
 
-return;
-
 if (process.platform === 'win32') {
   execSync.execSync(`npm run package-win ${isTestnet && '--testnet=true'}`, {
     stdio: 'inherit',
@@ -78,7 +76,7 @@ if (process.platform === 'win32') {
 } else if (process.platform === 'darwin') {
   const unsigned = process.argv[3] === 'unsigned';
   execSync.execSync(
-    `npm run package-mac${unsigned && '-unsigned'} ${
+    `npm run package-mac${unsigned ? '-unsigned' : ''} ${
       isTestnet && '--testnet=true'
     }`,
     {
