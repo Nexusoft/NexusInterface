@@ -3,7 +3,7 @@
   "productName": "Nexus Wallet",
   "version": "3.1.0-testnet.0",
   "backwardCompatible": "2.2.0",
-  "buildDate": "January 28th 2022",
+  "buildDate": "February 3rd 2022",
   "description": "User interface for the Nexus blockchain and ecosystem.",
   "scripts": {
     "prebuild-dev": "concurrently \"npm run build-main-dev\" \"npm run build-preload-dev\" \"node -r @babel/register ./internals/scripts/checkDll.js\" ",
@@ -82,6 +82,7 @@
       ],
       "hardenedRuntime": true,
       "gatekeeperAssess": false,
+      "identity": "NEXUS DEVELOPMENT U S LLC",
       "entitlements": "internals/entitlements.mac.plist",
       "entitlementsInherit": "internals/entitlements.mac.plist"
     },
@@ -208,7 +209,7 @@
     "csv-parse": "^4.15.4",
     "csv-stringify": "^5.6.2",
     "electron": "^13.0.1",
-    "electron-builder": "^22.14.5",
+    "electron-builder": "^22.14.13",
     "electron-devtools-installer": "^3.2.0",
     "electron-notarize": "^1.0.0",
     "express": "^4.17.1",
