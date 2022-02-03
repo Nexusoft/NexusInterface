@@ -1,6 +1,7 @@
 import path from 'path';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
+import semver from 'semver';
 
 export function initializeUpdater(settings) {
   autoUpdater.logger = log;
@@ -14,6 +15,14 @@ export function initializeUpdater(settings) {
     );
   }
   autoUpdater.allowPrerelease = !!settings.allowPrerelease;
+
+  // Set Up channels
+  const currentChannel = semver.parse(APP_VERSION).prerelease[0] || null;
+  if (currentChannel) {
+    autoUpdater.allowPrerelease = true;
+    autoUpdater.channel = currentChannel;
+    autoUpdater.autoDownload = false;
+  }
 
   const updaterEvents = [
     'error',
@@ -37,4 +46,11 @@ export function setAllowPrerelease(value) {
   if (value) {
     autoUpdater.checkForUpdates();
   }
+}
+
+//Mark updater to now use alpha ( this is for testnet -> alpha(mainnet))
+export function migrateToMainnet() {
+  autoUpdater.allowDowngrade = false;
+  autoUpdater.channel = 'alpha';
+  autoUpdater.checkForUpdates();
 }
