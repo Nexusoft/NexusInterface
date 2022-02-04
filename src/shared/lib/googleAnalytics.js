@@ -14,6 +14,8 @@ if (
   (settings.sendUsageData == null ||
     settings.sendUsageData == undefined ||
     Boolean(settings.sendUsageData) == true) &&
+  process.env.NODE_ENV !== 'development'
+) {
   GA.visitor = ua('UA-207070578-1');
   GA.active = true;
   GA.visitor.set('ul', settings.locale || 'en');
