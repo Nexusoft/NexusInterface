@@ -99,7 +99,8 @@ function getRecipientsParams(recipients, { advancedOptions }) {
       if (addressRegex.test(address)) {
         recipParam.address_to = address;
       } else {
-        recipParam.name_to = address;
+        recipParam.name_to =
+          address.charAt(0) === '~' ? address.substring(1) : address; //TODO: Finance is having issues with ~, core needs to be accept it or we remove the ~ on get/accounts;
       }
       if (advancedOptions) {
         const expires =

@@ -75,14 +75,17 @@ const SubmitButton = styled(Form.SubmitButton)({
 
 function Source({ source }) {
   const { name, address } = source?.account || source?.token || {};
+  const { ticker } = source?.token || {}; //Only get ticker if the source is a token.
   return (
     <NexusAddress
       address={address}
       label={
-        name ? (
-          <SourceName>{name}</SourceName>
+        name || ticker ? (
+          <SourceName>{name || ticker}</SourceName>
         ) : (
-          <UnNamed>{__('Unnamed account')}</UnNamed>
+          <UnNamed>
+            {source?.token ? __('Unnamed token') : __('Unnamed account')}
+          </UnNamed>
         )
       }
     />
@@ -93,8 +96,11 @@ function NameTo({ name }) {
   const [address, setAddress] = useState(null);
   useEffect(() => {
     (async () => {
-      const nameRecord = await callApi('names/get/name', { name });
-      setAddress(nameRecord?.register);
+      const nameRecord = await callApi('finance/get/any', {
+        //Uses new "any" to resolve any name type to address
+        name: name.charAt(0) === '~' ? name.substring(1) : name, //TODO: Finance is having issues with ~, core needs to be accept it or we remove the ~ on get/accounts
+      });
+      setAddress(nameRecord?.address);
     })();
   }, []);
   return (
@@ -241,10 +247,10 @@ export default function PreviewTransactionModal({
 
                   if (source?.token) {
                     params.from = source.token.address;
-                    return await callApi('tokens/debit/token', params);
+                    return await callApi('finance/debit/token', params);
                   } else {
                     params.from = source.account.address;
-                    return await callApi('finance/debit/account', params);
+                    return await callApi('finance/debit/all', params);
                   }
                 },
                 onSuccess: () => {

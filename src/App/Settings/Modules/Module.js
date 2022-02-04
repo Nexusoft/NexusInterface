@@ -13,6 +13,7 @@ import ModuleDetailsModal from 'components/ModuleDetailsModal';
 import { timing } from 'styles';
 import { updateSettings } from 'lib/settings';
 import warningIcon from 'icons/warning.svg';
+import DownloadButton from './DownloadButton';
 
 __ = __context('Settings.Modules');
 
@@ -141,6 +142,7 @@ export default function Module({ module, ...rest }) {
   };
 
   const openModuleDetails = () => {
+    if (module.notInstalled) return;
     openModal(ModuleDetailsModal, {
       module,
     });
@@ -161,7 +163,7 @@ export default function Module({ module, ...rest }) {
           {!!module.info.version && (
             <ModuleVersion>v{module.info.version}</ModuleVersion>
           )}
-          {!module.development && (
+          {!module.development && !module.notInstalled && (
             <>
               {module.incompatible && (
                 <Tooltip.Trigger
@@ -205,22 +207,26 @@ export default function Module({ module, ...rest }) {
       </ModuleInfo>
 
       <ModuleControls>
-        {module.development ? (
-          <Badge>{__('development')}</Badge>
+        {!module.notInstalled ? (
+          module.development ? (
+            <Badge>{__('development')}</Badge>
+          ) : (
+            <Tooltip.Trigger
+              tooltip={
+                !module.disallowed &&
+                !module.development &&
+                (module.enabled ? 'Enabled' : 'Disabled')
+              }
+            >
+              <Switch
+                checked={module.enabled}
+                onChange={toggleModule}
+                disabled={module.disallowed || module.development}
+              />
+            </Tooltip.Trigger>
+          )
         ) : (
-          <Tooltip.Trigger
-            tooltip={
-              !module.disallowed &&
-              !module.development &&
-              (module.enabled ? 'Enabled' : 'Disabled')
-            }
-          >
-            <Switch
-              checked={module.enabled}
-              onChange={toggleModule}
-              disabled={module.disallowed || module.development}
-            />
-          </Tooltip.Trigger>
+          <DownloadButton module={module} />
         )}
       </ModuleControls>
     </ModuleComponent>

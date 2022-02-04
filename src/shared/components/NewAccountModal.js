@@ -12,7 +12,6 @@ import { createLocalNameFee } from 'lib/fees';
 import { formSubmit, required } from 'lib/form';
 import GA from 'lib/googleAnalytics';
 import memoize from 'utils/memoize';
-import { addressRegex } from 'consts/misc';
 
 __ = __context('NewAccount');
 
@@ -39,17 +38,9 @@ async function createToken({ name, token }) {
     if (token === 'NXS') {
       return await callApi('finance/create/account', params);
     } else {
-      if (addressRegex.test(token)) {
-        try {
-          // Test if `token` is the token address
-          params.token = token;
-          return await callApi('tokens/create/account', params);
-        } catch (err) {}
-      }
-
-      // Assuming `token` is token name
+      // Token accepts Name or Address
       try {
-        params.token_name = token;
+        params.token = token;
         return await callApi('tokens/create/account', params);
       } catch (err) {
         // TODO: check error code?

@@ -96,6 +96,13 @@ export async function callApi(endpoint, customParams) {
     core: { systemInfo },
   } = store.getState();
 
+  //TODO: There is a bug in the core and where HAS to be the last param. Remove when fixed.
+  if (customParams?.where) {
+    const tempWhere = customParams.where;
+    delete customParams.where;
+    customParams.where = tempWhere;
+  }
+
   const params = systemInfo?.multiuser
     ? { session, ...customParams }
     : customParams;

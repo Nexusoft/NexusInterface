@@ -318,7 +318,6 @@ global.NEXUS = {
         listener(walletData)
       );
     },
-  },
 };
 
 // Open all external URLs on OS default browser instead of inside the wallet itself
