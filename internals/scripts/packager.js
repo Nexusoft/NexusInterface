@@ -84,7 +84,7 @@ if (process.platform === 'win32') {
     }
   );
 } else {
-  execSync.execSync(`package-linux ${isTestnet && '--testnet=true'}`, {
+  execSync.execSync(`npm run package-linux ${isTestnet && '--testnet=true'}`, {
     stdio: 'inherit',
   });
 }
