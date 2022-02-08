@@ -30,14 +30,10 @@ const {
   libraries: {
     React,          // from 'react'
     ReactDOM,       // from 'react-dom'
-    ReactRouterDOM, // from 'react-router-dom
-    Redux,          // from 'redux'
-    ReactRedux,     // from 'react-redux'
     emotion: {
-      core,         // from '@emotion/core'
+      react,        // from '@emotion/react'
       styled,       // from '@emotion/styled'
-      theming,      // from 'emotion-themeing'
-      createCache,  // from '@emotion/cache'
+      cache,        // from '@emotion/cache'
     },
   }
 } = NEXUS
@@ -54,34 +50,46 @@ Please note that these components are built on React, so your module also need t
 ```js
 const {
   components: {
-    GlobalStyles,
-    Panel,
+    Arrow,
+    AutoSuggest,
     Button,
-    Tooltip,
-    TextField,
-    Switch,
-    Select,
-    Link,
-    Icon,
-    Tab,
+    Dropdown,
     FieldSet,
+    FormField,
+    GlobalStyles,
+    Icon,
+    Link,
+    Modal,
+    Panel,
+    Select,
+    Switch,
+    Tab,
+    TextField,
+    ThemeController,
+    Tooltip,
   },
 } = NEXUS;
 ```
 
 List of included components:
 
-- [GlobalStyles](../../src/shared/components/GlobalStyles/index.js)
-- [Panel](../../src/shared/components/Panel.js)
+- [Arrow](../../src/shared/components/Arrow.js)
+- [AutoSuggest](../../src/shared/components/AutoSuggest.js)
 - [Button](../../src/shared/components/Button.js)
-- [Tooltip](../../src/shared/components/Tooltip.js)
-- [TextField](../../src/shared/components/TextField.js)
-- [Switch](../../src/shared/components/Switch.js)
-- [Select](../../src/shared/components/Select.js)
-- [Link](../../src/shared/components/Link.js)
-- [Icon](../../src/shared/components/Icon.js)
-- [Tab](../../src/shared/components/Tab.js)
+- [Dropdown](../../src/shared/components/Dropdown.js)
 - [FieldSet](../../src/shared/components/FieldSet.js)
+- [FormField](../../src/shared/components/FormField.js)
+- [GlobalStyles](../../src/shared/components/GlobalStyles/index.js)
+- [Icon](../../src/shared/components/Icon.js)
+- [Link](../../src/shared/components/Link.js)
+- [Modal](../../src/shared/components/Modal.js)
+- [Panel](../../src/shared/components/Panel.js)
+- [Select](../../src/shared/components/Select.js)
+- [Switch](../../src/shared/components/Switch.js)
+- [Tab](../../src/shared/components/Tab.js)
+- [TextField](../../src/shared/components/TextField.js)
+- [ThemeController](../../src/shared/components/ThemeController.js)
+- [Tooltip](../../src/shared/components/Tooltip.js)
 
 ---
 
@@ -97,25 +105,20 @@ Some notes about the utilities function:
 ```js
 const {
   utilities: {
-    showNotification,
-    showErrorDialog,
-    showSuccessDialog,
-    showInfoDialog,
+    send,
     rpcCall,
     apiCall,
     secureApiCall,
     proxyRequest,
+    showNotification,
+    showErrorDialog,
+    showSuccessDialog,
+    showInfoDialog,
     confirm,
     updateState,
     updateStorage,
     onceInitialize,
-    onThemeUpdated,
-    onSettingsUpdate,
-    onCoreInfoUpdated,
-    onUserStatusUpdated,
-    onceRpcReturn,
-    onceProxyResponse,
-    onceConfirmAnswer,
+    onWalletDataUpdated,
     copyToClipboard,
     color,
   },
@@ -124,232 +127,53 @@ const {
 
 ### `utilities` API references
 
-- [`showNotification`](#shownotification)
-- [`showErrorDialog`](#showerrordialog)
-- [`showSuccessDialog`](#showsuccessdialog)
-- [`showInfoDialog`](#showinfodialog)
-- [`updateState`](#updatestate)
-- [`updateStorage`](#updatestorage)
-- [`onceInitialize`](#onceinitialize)
-- [`onThemeUpdated`](#onthemeupdated)
-- [`onSettingsUpdated`](#onsettingsupdated)
-- [`onCoreInfoUpdated`](#oncoreinfoupdated)
-- [`onUserStatusUpdated`](#onuserstatusupdated)
 - [`send`](#send)
 - [`rpcCall`](#rpccall)
 - [`apiCall`](#apicall)
 - [`secureApiCall`](#secureapicall)
 - [`proxyRequest`](#proxyrequest)
+- [`showNotification`](#shownotification)
+- [`showErrorDialog`](#showerrordialog)
+- [`showSuccessDialog`](#showsuccessdialog)
+- [`showInfoDialog`](#showinfodialog)
 - [`confirm`](#confirm)
+- [`updateState`](#updatestate)
+- [`updateStorage`](#updatestorage)
+- [`onceInitialize`](#onceinitialize)
+- [`onWalletDataUpdated`](#onwalletdataupdated)
 - [`copyToClipboard`](#copytoclipboard)
 - [`color`](#color)
 
 ---
 
-### `showNotification`
-
-Displays a notification at the top left corner of the wallet.
-
-```js
-showNotification((options: object));
-```
-
-Available options:
-
-- `content`: string - The content that you want to display in the notification.
-- `type`: string (optional) - Type of notification that you want to display. Available types are: `info` (default), `success`, `error`.
-- `autoClose`: number (optional) - The time (in miliseconds) after which the notification will automatically be closed. If a falsy value except `undefined` is passed, the notification will not automatically be closed. Default value is `5000`.
-
-### `showErrorDialog`
-
-Displays an error dialog in the wallet.
-
-```js
-showErrorDialog((options: object));
-```
-
-Available options:
-
-- `message`: string - The main (larger) text shown in the error dialog.
-- `note`: string (optional) - The supporting (smaller) text shown in the error dialog below the `message`.
-
-### `showSuccessDialog`
-
-Displays an success dialog in the wallet.
-
-```js
-showSuccessDialog((options: object));
-```
-
-Available options:
-
-- `message`: string - The main (larger) text shown in the success dialog.
-- `note`: string (optional) - The supporting (smaller) text shown in the success dialog below the `message`.
-
-### `showInfoDialog`
-
-Displays an info dialog in the wallet.
-
-```js
-showInfoDialog((options: object));
-```
-
-Available options:
-
-- `message`: string - The main (larger) text shown in the info dialog.
-- `note`: string (optional) - The supporting (smaller) text shown in the info dialog below the `message`.
-
-### `updateState`
-
-Saves an arbitrary data object (usually your module's state data) into the base wallet's memory so that it won't be lost when user navigates away from your module.
-
-Because all your module's code is embedded inside a [`<webview>` tag](./module-types.md#webview-tag), normally when user navigates away from your module page, the `<webview>` tag will be unmounted and all your module state will be lost. The next time user navigates back to your module, user will have to do everything from the beginning. Therefore you might want to save your module's state into the base wallet by interval or everytime when it's changed.
-
-Using the `updateState` utility, the next time user navigates back to your module, the **last** data object that you've saved with `updateState` will be passed back to your module via [`onceInitialize` listener](#onceinitialize).
-
-```js
-updateState((state: object));
-```
-
-- `state`: object - Any data object that you want to save.
-
-Note: This data will not be persisted when the wallet is closed. In order to persist data even when the wallet is closed, use [`updateStorage` utilities](#updatestorage) instead.
-
-### `updateStorage`
-
-Saves an arbitrary data object (usually your module's settings) into a file so that it won't be lost when the wallet is closed.
-
-Data will be saved into a file named `storage.json` inside your module's directory, therefore each module has its own storage, not shared with any other. Maximum size of the data that can be stored in `storage.json` is roughly 1MB.
-
-Using the `updateStorage` utility, the next time user navigates back to your module, the **last** data object that you've saved with `updateStorage` will be passed back to your module via [`onceInitialize` listener](#onceinitialize).
-
-```js
-send(`updateStorage`, (data: object));
-```
-
-- `data`: object - Any data object that you want to save.
-
-Note: This will write data into a file on user's hard drive, so avoid calling this on highly frequent events such as on user's key stroke. For the data that doesn't need to be persisted when the wallet is closed (textbox content for example), use [`updateState` utilities](#updatestate) instead.
-
-### `onceInitialize`
-
-Register a listener that receives the initial data passed from the base wallet.
-
-The listener registered in `onceInitialize` will be called only once when the `webview`'s DOM is ready.
-
-```js
-const listener = (initialData) => {
-  const { theme, settings, coreInfo, moduleState, storageData } = initialData;
-  // populate initial data in module...
-};
-NEXUS.utilities.onceInitialize(listener);
-```
-
-- `initialData`: object
-  - `initialData.theme`: object - See [`onThemeUpdated`](#onthemeupdated) for more details
-  - `initialData.settings`: object - See [`onSettingsUpdated`](#onsettingsupdatedd) for more details
-  - `initialData.coreInfo`: object - See [`onCoreInfoUpdated`](#oncoreinfoupdated) for more details
-  - `initialData.userStatus`: object - See [`onUserStatusUpdated](#onuserstatusupdated) for more details
-  - `initialData.addressBook`: object - This local machines Address Book
-  - `initialData.moduleState`: object - The last state object that your module has previously stored via [`updateState` function](#updatestate).
-  - `initialData.storageData`: object - The last data object that your module has previously stored via [`updateStorage` function](#updatestorage).
-
-### `onThemeUpdated`
-
-Example usage:
-
-Register a listener that will be called everytime the base wallet theme is changed.
-
-```js
-const listener = (theme) => {
-  // update theme in module...
-};
-NEXUS.utilities.onThemeUpdated(listener);
-```
-
-- `theme`: object - The current theme object that the base wallet is using. It is best used in combination with `NEXUS.utilities.color.getMixer` and pass to [Emotion](https://emotion.sh)'s `ThemeProvider`:
-
-  ```js
-  // Add the mixer function
-  const themeWithMixer = {
-    ...theme,
-    mixer: color.getMixer(theme.background, theme.foreground),
-  };
-
-  // Then render this...
-  <ThemeProvider theme={themeWithMixer}>{/* Your module... */}</ThemeProvider>;
-  ```
-
-  Check out usage example in [react-redux_module_example](https://github.com/Nexusoft/react_redux_module_example).
-
-### `onSettingsUpdated`
-
-Register a listener that will be called everytime the base wallet settings is changed.
-
-```js
-const listener = (settings) => {
-  // update settings in module...
-};
-NEXUS.utilities.onSettingsUpdated(listener);
-```
-
-- `settings`: object - The current user settings that the base wallet is using. It's not the full settings but only a few settings that modules might care about.
-
-<!-- prettier-ignore -->
-  ```js
-  // Fields in `settings`
-  {
-    locale,       // string, e.g. 'en'
-    fiatCurrency, // string, e.g. 'USD'
-    addressStyle, // string enum: ['segmented', 'truncateMiddle', 'raw']
-  }
-  ```
-
-### `onCoreInfoUpdated`
-
-Register a listener that will be called everytime the core info is updated in the base wallet.
-
-```js
-const listener = (coreInfo) => {
-  // update core info in module...
-};
-NEXUS.utilities.onCoreInfoUpdated(listener);
-```
-
-- `coreInfo`: object - Returned data from `system/get/info` API calls (or `getinfo` RPC calls if wallet is in Legacy mode) updated at regular intervals (about every 10 seconds).
-
-### `onUserStatusUpdated`
-
-Register a listener that will be called everytime the status of the user is updated in the base wallet.
-
-```js
-const listener = (userStatus) => {
-  // update user status in module...
-};
-NEXUS.utilities.onUserStatusUpdated(listener);
-```
-
-- `userStatus`: object - Contains information about the user, will return `null` if logged out.
-- `genesis`: User's Genesis
-- `username`: User's Username
-- `recovery`: Boobleon flag for if User has a recovery seed
-- `transactions`: Number of transactions on this Username
-- `notifications`: Number of Pending notifications,
-- `unlocked`: User Status on if the sigchain is unlocked, `mining`,`notifications`,`staking`,`transactions`
-
 ### `send`
 
-For security reasons, this function **won't send out NXS or any tokens directly**. It only **redirects** user to the built in Send page with the recipient addresses, send amount, and other fields pre-filled, and user need to manually click Send to complete the transaction.
+For security reasons, this function **won't really send NXS or any tokens**. It only **redirects** user to the built in Send page in the wallet, prefilled with data fields. User will then need to manually click Send to complete the transaction.
 
 ```js
 send(options: object): void;
 ```
 
+Depending on whether the wallet is in Tritium mode or Legacy mode, the `options` parameter shape is different.
+
+For Tritium mode:
+
+- `options.sendFrom`: string - The address of the account or token to send from.
 - `options.recipients`: array - An array of objects that contain recipient addresses and the NXS amount to send to the corresponding address.
   - `options.recipients[].address`: string - Recipient's Nexus address to send to.
   - `options.recipients[].amount`: string - Amount to send.
-- `options.message`: string - (Only for Legacy mode) An optional message to the recipient.
-- `options.reference`: string | number - (Only for Tritium mode) An optional number which may be provided by the recipient to identify this transaction from the others. Reference should be an unsigned integer between 0 and 18446744073709551615.
+  - `options.recipients[].reference`: string|number - An optional number which may be provided by the recipient to identify this transaction from the others. Reference should be an unsigned integer between 0 and 18446744073709551615.
+  - `options.recipients[].expireDays`: string|number - Expiration time in days.
+  - `options.recipients[].expireHours`: string|number - Expiration time in hours.
+  - `options.recipients[].expireMinutes`: string|number - Expiration time in minutes.
+  - `options.recipients[].expireSeconds`: string|number - Expiration time in seconds.
+- `options.advancedOptions`: boolean - Whether to turn on "Advanced options", which will enable reference and expiration settings.
+
+For Legacy mode:
+
+- `options.sendFrom`: string - The address of the account or token to send from.
+- `options.recipients`: array - An array of objects that contain recipient addresses and the NXS amount to send to the corresponding address.
+  - `options.recipients[].address`: string - Recipient's Nexus address to send to.
 
 ### `rpcCall`
 
@@ -359,51 +183,9 @@ send(options: object): void;
 rpcCall(command: string, params: array) : Promise<object>
 ```
 
-- `command`: string - A valid command that will be sent to Nexus core (see Nexus core documentation for list of all available commands). There's a whitelist of commands that is allowed to be called (see the full list below).
+- `command`: string - A valid command that will be sent to Nexus core (see Nexus core documentation for list of all available commands).
 - `params`: array - List of all params that will be passed along with the command.
 - Returns a Promise that will be resolved to the RPC call result or rejected with an error.
-
-RPC command whitelist:
-
-```
-checkwallet
-getaccount
-getaccountaddress
-getaddressesbyaccount
-getbalance
-getblock
-getblockcount
-getblockhash
-getblocknumber
-getconnectioncount
-getdifficulty
-getinfo
-getmininginfo
-getmoneysupply
-getnetworkhashps
-getnetworkpps
-getnetworktrustkeys
-getnewaddress
-getpeerinfo
-getrawtransaction
-getreceivedbyaccount
-getreceivedbyaddress
-getsupplyrates
-gettransaction
-help
-isorphan
-listaccounts
-listaddresses
-listreceivedbyaccount
-listreceivedbyaddress
-listsinceblock
-listtransactions
-listtrustkeys
-listunspent
-unspentbalance
-validateaddress
-verifymessage
-```
 
 ```js
 NEXUS.utilities
@@ -418,59 +200,13 @@ NEXUS.utilities
 
 ### `apiCall`
 
-`apiCall` method will be the interface between the module and executing api calls. All available api calls must be on the whitelist, all these calls are considered nondestructive. To use api calls that will modify the sig chain use [secureApiCall](#secureapicall) . Will return a promise with the result, a result will only ever return if the nexus core accepts the request.
-
-Api Whitelist
-
-```
-system/get/info
-system/get/metrics
-system/list/peers
-system/list/lisp-eids
-system/validate/address
-users/get/status
-users/list/accounts
-users/list/assets
-users/list/items
-users/list/names
-users/list/namespaces
-users/list/notifications
-users/list/tokens
-users/list/invoices
-users/list/transactions
-finance/get/account
-finance/list/account
-finance/list/account/transactions
-finance/get/stakeinfo
-finance/get/balances
-finance/list/trustaccounts
-ledger/get/blockhash
-ledger/get/block
-ledger/list/block
-ledger/get/transaction
-ledger/get/mininginfo
-tokens/get/token
-tokens/list/token/transactions
-tokens/get/account
-tokens/list/account/transactions
-names/get/namespace
-names/list/namespace/history
-names/get/name
-names/list/name/history
-assets/get/asset
-assets/list/asset/history
-objects/get/schema
-supply/get/item
-supply/list/item/history
-invoices/get/invoice
-invoices/list/invoice/history
-```
+`apiCall` method will be the interface between the module and executing API calls. To use API calls that will modify the sig chain use [secureApiCall](#secureapicall) . Will return a promise with the result, a result will only ever return if the nexus core accepts the request.
 
 ```js
 apiCall(url: string, params: object) : Promise<object>
 ```
 
-- `url`: string - The api endpoint, must be on the whitelist.
+- `url`: string - The API endpoint.
 - `params`: object - parameters to pass to the endpoint
 - Return : promise - promise returns a object
 
@@ -537,6 +273,59 @@ NEXUS.utilities
   });
 ```
 
+### `showNotification`
+
+Displays a notification at the top left corner of the wallet.
+
+```js
+showNotification((options: object));
+```
+
+Available options:
+
+- `content`: string - The content that you want to display in the notification.
+- `type`: string (optional) - Type of notification that you want to display. Available types are: `info` (default), `success`, `error`.
+- `autoClose`: number (optional) - The time (in miliseconds) after which the notification will automatically be closed. If a falsy value except `undefined` is passed, the notification will not automatically be closed. Default value is `5000`.
+
+### `showErrorDialog`
+
+Displays an error dialog in the wallet.
+
+```js
+showErrorDialog((options: object));
+```
+
+Available options:
+
+- `message`: string - The main (larger) text shown in the error dialog.
+- `note`: string (optional) - The supporting (smaller) text shown in the error dialog below the `message`.
+
+### `showSuccessDialog`
+
+Displays an success dialog in the wallet.
+
+```js
+showSuccessDialog((options: object));
+```
+
+Available options:
+
+- `message`: string - The main (larger) text shown in the success dialog.
+- `note`: string (optional) - The supporting (smaller) text shown in the success dialog below the `message`.
+
+### `showInfoDialog`
+
+Displays an info dialog in the wallet.
+
+```js
+showInfoDialog((options: object));
+```
+
+Available options:
+
+- `message`: string - The main (larger) text shown in the info dialog.
+- `note`: string (optional) - The supporting (smaller) text shown in the info dialog below the `message`.
+
 ### `confirm`
 
 `confirm` function displays a confirmation dialog to the user. The confirmation dialog contains a question and two buttons for "Yes" and "No" answers, and the answer user selected (either `true` for "Yes" or `false` for "No") will be returned to your module via a Promise.
@@ -568,6 +357,96 @@ NEXUS.utilities
     }
   });
 ```
+
+### `updateState`
+
+Saves an arbitrary data object (usually your module's state data) into the base wallet's memory so that it won't be lost when user navigates away from your module.
+
+Because all your module's code is embedded inside a [`<webview>` tag](./module-types.md#webview-tag), normally when user navigates away from your module page, the `<webview>` tag will be unmounted and all your module state will be lost. The next time user navigates back to your module, user will have to do everything from the beginning. Therefore you might want to save your module's state into the base wallet by interval or everytime when it's changed.
+
+Using the `updateState` utility, the next time user navigates back to your module, the **last** data object that you've saved with `updateState` will be passed back to your module via [`onceInitialize` listener](#onceinitialize).
+
+```js
+updateState((state: object));
+```
+
+- `state`: object - Any data object that you want to save.
+
+Note: This data will not be persisted when the wallet is closed. In order to persist data even when the wallet is closed, use [`updateStorage` utilities](#updatestorage) instead.
+
+### `updateStorage`
+
+Saves an arbitrary data object (usually your module's settings) into a file so that it won't be lost when the wallet is closed.
+
+Data will be saved into a file named `storage.json` inside your module's directory, therefore each module has its own storage, not shared with any other. Maximum size of the data that can be stored in `storage.json` is roughly 1MB.
+
+Using the `updateStorage` utility, the next time user navigates back to your module, the **last** data object that you've saved with `updateStorage` will be passed back to your module via [`onceInitialize` listener](#onceinitialize).
+
+```js
+send(`updateStorage`, (data: object));
+```
+
+- `data`: object - Any data object that you want to save.
+
+Note: This will write data into a file on user's hard drive, so avoid calling this on highly frequent events such as on user's key stroke. For the data that doesn't need to be persisted when the wallet is closed (textbox content for example), use [`updateState` utilities](#updatestate) instead.
+
+### `onceInitialize`
+
+Register a listener that receives the initial data passed from the base wallet.
+
+The listener registered in `onceInitialize` will be called only once when the `webview`'s DOM is ready.
+
+```js
+const listener = (initialData) => {
+  const { theme, settings, coreInfo, moduleState, storageData } = initialData;
+  // populate initial data in module...
+};
+NEXUS.utilities.onceInitialize(listener);
+```
+
+- `initialData`: object
+  - `initialData.theme`: object - See [`onThemeUpdated`](#onthemeupdated) for more details
+  - `initialData.settings`: object - See [`onSettingsUpdated`](#onsettingsupdatedd) for more details
+  - `initialData.coreInfo`: object - See [`onCoreInfoUpdated`](#oncoreinfoupdated) for more details
+  - `initialData.userStatus`: object - See [`onUserStatusUpdated](#onuserstatusupdated) for more details
+  - `initialData.addressBook`: object - This local machines Address Book
+  - `initialData.moduleState`: object - The last state object that your module has previously stored via [`updateState` function](#updatestate).
+  - `initialData.storageData`: object - The last data object that your module has previously stored via [`updateStorage` function](#updatestorage).
+
+### `onWalletDataUpdated`
+
+Example usage:
+
+Register a listener that will be called everytime the wallet data is changed.
+
+```js
+const listener = (walletData) => {
+  // update wallet data in module...
+};
+NEXUS.utilities.onWalletDataUpdated(listener);
+```
+
+- `walletData`: object - Includes `theme`, `settings`, `coreInfo`, `userStatus`, `addressBook`.
+
+  - `walletData.theme`: object - The current theme object that the base wallet is using. It is best used in combination with `NEXUS.utilities.color.getMixer` and pass to [Emotion](https://emotion.sh)'s `ThemeProvider`:
+
+  - `walletData.settings`: object - The current user settings that the base wallet is using. It's not the full settings but only a few settings that modules might care about.
+
+<!-- prettier-ignore -->
+  ```js
+  // Fields in `settings`
+  {
+    locale,       // string, e.g. 'en'
+    fiatCurrency, // string, e.g. 'USD'
+    addressStyle, // string enum: ['segmented', 'truncateMiddle', 'raw']
+  }
+  ```
+
+<!-- prettier-ignore -->
+  - `walletData.coreInfo`: object - Returned data from `system/get/info` API calls (or `getinfo` RPC calls if wallet is in Legacy mode) updated at regular intervals (about every 10 seconds).
+
+
+  - `walletData.userStatus`: object - Contains information about the user, will return `null` if logged out.
 
 ### `copyToClipboard`
 
@@ -601,10 +480,4 @@ color.mix(color1, color2, value);
 color.isLight(color);
 color.isDark(color);
 color.toHex(color);
-// This is a special function that is intended to only be used together with
-// the wallet's `theme` object. You would probably not need to use this function
-// in most other cases.
-// For usage example, check out `react-redux-module-example` repository:
-// https://github.com/Nexusoft/react_redux_module_example
-color.getMixer(color1, color2);
 ```

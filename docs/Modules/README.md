@@ -7,9 +7,7 @@ Nexus Wallet is a web-based desktop application built on [Electron](https://elec
 However, if you aim for the best convenience, compatibility, and the most consistent look and feel compared to the base wallet, it is highly recommended that you use the same libraries (not necessarily all) that are used in the base wallet, namely:
 
 - [React](https://reactjs.org/) for javascript GUI library.
-- [Redux](https://redux.js.org/) for app state manager.
 - [Emotion](https://emotion.sh) for CSS styling.
-- [ReactRouter](https://reacttraining.com/react-router/) for app routing solution.
 
 Another benefit of using these libraries in your module is that you won't need to add them as your project dependencies, because the base Nexus Wallet will provide your module with these libraries through an injected [global variable](./nexus-global-variable.md). As a result, you will be able to reduce your module size, speed up your development, and ensure a more consistent UI with the base wallet.
 
@@ -19,17 +17,17 @@ Another benefit of using these libraries in your module is that you won't need t
 
 In order to test your module, you need to download and install the [latest version of Nexus Wallet](https://github.com/Nexusoft/NexusInterface/releases/latest) if you haven't.
 
-Just like when you develop a website, you need a suitable code editor like Visual Studio Code or Sublime Text. You also need to have [Node.js](https://nodejs.org/) installed (either LTS or current version is ok), though it's not a hard requirement, but it is very likely that you will need it, especially if you plan to follow the steps below.
+Just like when you develop a website, you need a suitable code editor like Visual Studio Code or Sublime Text. You also need to have [Node.js](https://nodejs.org/) installed, even though it's not a hard requirement, it is very likely that you will need it, especially if you plan to follow the steps below.
 
 ### 1. Initialize your repository
 
-Unless you're experienced with developing Nexus Wallet Modules, or you're confident about your ability to build a module from scratch, it is highly recommended that you start your project by forking or using one of the template modules below as template (click the green "Use this template" button in the repository):
+Unless you're experienced with developing Nexus Wallet Modules, or you're confident about your ability to build a module from scratch, it is highly recommended that you start your project by forking one of the template modules below or using them as a template (click the green "Use this template" button in the repository):
 
 - [minimal_module_template](https://github.com/Nexusoft/minimal_module_template) - A minimal "Hello World" type of module to demonstrate what a simple Nexus Wallet Module needs at minimum, written in plain HTML, CSS and Javascript.
 - [react_module_template](https://github.com/Nexusoft/react_module_template) - A simple Nexus Wallet Module template built with React.
 - [react_redux_module_template](https://github.com/Nexusoft/react_redux_module_template) - (Recommended) A Nexus Wallet Module template built with React and Redux, also includes boilerplate code and example usages of some Nexus Wallet Module's advanced features.
 
-Please keep in mind that your module code needs to be open source and publicly accessible (just read access). If not, Nexus team won't be able to verify your module source code and people won't be able to run your module. Currently, github.com is the only repository hosting that is supported, Nexus team will consider supporting more hostings in the future.
+Please keep in mind that your module code needs to be open source and publicly accessible (read access). If not, Nexus team won't be able to verify your module source code and people won't be able to run your module. Currently, github.com is the only repository hosting that is supported, Nexus team will consider supporting more hostings in the future.
 
 Clone your repository on your computer and run `npm install` to install the dependencies.
 
@@ -39,7 +37,7 @@ After your repository is initialized, the first thing you should do is to add yo
 
 A development version of your module will appear on the wallet. But it won't be working yet, in your module repository folder, you need to run `npm run dev` to start the local development server. Now open the module on the wallet, you should see it working. Everytime you save your code with some changes, your module will automatically reload so that you can review the changes immediately. WebView works like a separate web browser so it has a separate Developer Tools, you can open it with "View/Toggle Module's Developer Tools" menu.
 
-Now you can start to replace the template UI components and logic with your own code and add more cool stuffs.
+Now you can start replacing the template UI components and logic with your own code and add more cool stuffs.
 
 Here are some topics that you can learn about:
 

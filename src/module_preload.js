@@ -49,34 +49,25 @@ global.NEXUS = {
     emotion: { react, styled, cache },
   },
   components: {
-    GlobalStyles,
-    ThemeController,
-    Icon,
-    Panel,
-    AutoSuggest,
-    FieldSet,
-    Switch,
-    Modal,
-    Tooltip,
-    Select,
-    TextField,
-    FormField,
-    Link,
     Arrow,
-    Tab,
+    AutoSuggest,
     Button,
     Dropdown,
+    FieldSet,
+    FormField,
+    GlobalStyles,
+    Icon,
+    Link,
+    Modal,
+    Panel,
+    Select,
+    Switch,
+    Tab,
+    TextField,
+    ThemeController,
+    Tooltip,
   },
   utilities: {
-    color,
-    copyToClipboard: (text) => {
-      if (typeof text !== 'string') {
-        throw new Error(
-          'Expected `text` to be `string` type, found: ' + typeof text
-        );
-      }
-      clipboard.writeText(text);
-    },
     // `options` shape
     //  For Legacy mode:
     //  {
@@ -115,50 +106,6 @@ global.NEXUS = {
         );
       }
       ipcRenderer.sendToHost('send', options);
-    },
-    showNotification: (options) => {
-      if (!options) {
-        throw new Error('`options` is required');
-      }
-      if (typeof options !== 'object') {
-        throw new Error(
-          'Expected `options` to be `object` type, found: ' + typeof options
-        );
-      }
-      ipcRenderer.sendToHost('show-notification', options);
-    },
-    showErrorDialog: (options) => {
-      if (!options) {
-        throw new Error('`options` is required');
-      }
-      if (typeof options !== 'object') {
-        throw new Error(
-          'Expected `options` to be `object` type, found: ' + typeof options
-        );
-      }
-      ipcRenderer.sendToHost('show-error-dialog', options);
-    },
-    showSuccessDialog: (options) => {
-      if (!options) {
-        throw new Error('`options` is required');
-      }
-      if (typeof options !== 'object') {
-        throw new Error(
-          'Expected `options` to be `object` type, found: ' + typeof options
-        );
-      }
-      ipcRenderer.sendToHost('show-success-dialog', options);
-    },
-    showInfoDialog: (options) => {
-      if (!options) {
-        throw new Error('`options` is required');
-      }
-      if (typeof options !== 'object') {
-        throw new Error(
-          'Expected `options` to be `object` type, found: ' + typeof options
-        );
-      }
-      ipcRenderer.sendToHost('show-info-dialog', options);
     },
     rpcCall: (command, params) => {
       if (!command) {
@@ -265,6 +212,50 @@ global.NEXUS = {
         ipcRenderer.sendToHost('proxy-request', url, options, requestId);
       });
     },
+    showNotification: (options) => {
+      if (!options) {
+        throw new Error('`options` is required');
+      }
+      if (typeof options !== 'object') {
+        throw new Error(
+          'Expected `options` to be `object` type, found: ' + typeof options
+        );
+      }
+      ipcRenderer.sendToHost('show-notification', options);
+    },
+    showErrorDialog: (options) => {
+      if (!options) {
+        throw new Error('`options` is required');
+      }
+      if (typeof options !== 'object') {
+        throw new Error(
+          'Expected `options` to be `object` type, found: ' + typeof options
+        );
+      }
+      ipcRenderer.sendToHost('show-error-dialog', options);
+    },
+    showSuccessDialog: (options) => {
+      if (!options) {
+        throw new Error('`options` is required');
+      }
+      if (typeof options !== 'object') {
+        throw new Error(
+          'Expected `options` to be `object` type, found: ' + typeof options
+        );
+      }
+      ipcRenderer.sendToHost('show-success-dialog', options);
+    },
+    showInfoDialog: (options) => {
+      if (!options) {
+        throw new Error('`options` is required');
+      }
+      if (typeof options !== 'object') {
+        throw new Error(
+          'Expected `options` to be `object` type, found: ' + typeof options
+        );
+      }
+      ipcRenderer.sendToHost('show-info-dialog', options);
+    },
     confirm: (options) => {
       if (!options) {
         throw new Error('`options` is required');
@@ -318,6 +309,15 @@ global.NEXUS = {
         listener(walletData)
       );
     },
+    copyToClipboard: (text) => {
+      if (typeof text !== 'string') {
+        throw new Error(
+          'Expected `text` to be `string` type, found: ' + typeof text
+        );
+      }
+      clipboard.writeText(text);
+    },
+    color,
   },
 };
 
