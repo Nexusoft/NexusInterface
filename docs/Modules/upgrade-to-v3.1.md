@@ -1,4 +1,4 @@
-# Migrating modules to Nexus Wallet v3.1
+# Upgrading modules to Nexus Wallet v3.1
 
 Nexus Wallet v3.1 comes with a lot of breaking changes to the module API. This article will walk you through those changes so that you can make your modules compatible with Nexus Wallet v3.1.
 
@@ -115,3 +115,11 @@ onUserStatusUpdate(listener)
 ```
 
 were removed and replaced by `onWalletDataUpdated(listener)` which registers a single listener for any kind of wallet data change. `listener` will now also be called when there's a change in `addressBook`.
+
+---
+
+## Notable non-breaking changes
+
+### Right clicking in module now opens up a default context menu with Copy and Paste options
+
+### Clicking an external link will now opens up the URL in user's default browser
