@@ -101,7 +101,7 @@ function NameTo({ name }) {
     (async () => {
       const nameRecord = await callApi('finance/get/any', {
         //Uses new "any" to resolve any name type to address
-        name: name.charAt(0) === '~' ? name.substring(1) : name, //TODO: Finance is having issues with ~, core needs to be accept it or we remove the ~ on get/accounts
+        name: name.startsWith('local:') ? name.substring(6) : name, //TODO: Finance is having issues with ~, core needs to be accept it or we remove the ~ on get/accounts
       });
       setAddress(nameRecord?.address);
     })();

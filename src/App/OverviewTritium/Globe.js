@@ -8,6 +8,7 @@ import geoip from 'data/geoip';
 import Curve from './Curve';
 import Point from './Point';
 import { callApi } from 'lib/tritiumApi';
+import Color from 'color';
 
 const MaxDisplayPoints = 64;
 
@@ -317,7 +318,7 @@ export default class Globe extends Component {
             parseFloat(data.geoplugin_latitude),
             parseFloat(data.geoplugin_longitude),
             {
-              color: '#44EB08',
+              color: new Color(this.props.pillarColor).negate().hex(),
               name: data.geoplugin_timezone,
               type: 'SELF',
               peerConnections: 1.5,

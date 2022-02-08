@@ -100,7 +100,7 @@ async function asyncValidateRecipient({ recipient, source }) {
   if (!params.address) {
     try {
       const result = await callApi('names/get/name', {
-        name: address.charAt(0) === '~' ? address.substring(1) : address, //TODO: Finance is having issues with ~, core needs to be accept it or we remove the ~ on get/accounts
+        name: address.startsWith('local:') ? address.substring(6) : address, //TODO: Finance is having issues with ~, core needs to be accept it or we remove the ~ on get/accounts
       });
       params.address = result.register;
     } catch (err) {
@@ -108,18 +108,23 @@ async function asyncValidateRecipient({ recipient, source }) {
     }
   }
 
+  console.log(source);
   // Check if recipient is on the same token as source
   const sourceToken = source?.account?.token || source?.token?.address;
+  console.log(sourceToken, address);
   if (sourceToken !== address) {
     let account;
     try {
       account = await callApi('finance/get/account', params);
+      console.log(account);
     } catch (err) {
       let token;
+      console.log(params);
       try {
         token = await callApi('tokens/get/token', params);
       } catch (err) {}
       if (token) {
+        console.log(token);
         throw {
           address: __('Source and recipient must be of the same token'),
         };
@@ -131,7 +136,6 @@ async function asyncValidateRecipient({ recipient, source }) {
       };
     }
   }
-
   return null;
 }
 
@@ -151,8 +155,9 @@ function getRecipientsParams(recipients, { advancedOptions }) {
       if (addressRegex.test(address)) {
         recipParam.address_to = address;
       } else {
-        recipParam.name_to =
-          address.charAt(0) === '~' ? address.substring(1) : address; //TODO: Finance is having issues with ~, core needs to be accept it or we remove the ~ on get/accounts;
+        recipParam.name_to = address.startsWith('local:')
+          ? address.substring(6)
+          : address; //TODO: Finance is having issues with ~, core needs to be accept it or we remove the ~ on get/accounts;
       }
       if (advancedOptions) {
         const expires =
