@@ -33,7 +33,7 @@ const getExtractDest = () => {
   } = store.getState();
   return path.join(coreDataDir, 'recent');
 };
-const recentDbUrlTritium = 'http://bootstrap.nexus.io/tritium.zip'; // Tritium Bootstrap URL
+const recentDbUrlTritium = 'http://bootstrap.nexus.io/tritium.zip';
 
 let aborting = false;
 let downloadRequest = null;
