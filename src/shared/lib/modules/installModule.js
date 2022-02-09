@@ -221,6 +221,87 @@ export async function addDevModule(dirPath) {
 import https from 'https';
 import axios from 'axios';
 
+function downloadFile({ url, filePath, onProgress }) {
+  return new Promise((resolve, reject) => {
+    https
+      .get(url)
+      .setTimeout(180000)
+      .on('response', (response) => {
+        const totalSize = parseInt(response.headers['content-length'], 10);
+
+        let downloaded = 0;
+        const file = fs.createWriteStream(filePath);
+
+        response
+          .on('data', (chunk) => {
+            downloaded += chunk.length;
+            timerId = onProgress({ downloaded, totalSize });
+          })
+          .on('close', () => {
+            resolve(true);
+          })
+          .on('error', (err) => {
+            reject(err);
+          })
+          .pipe(file);
+      })
+      .on('error', (err) => {
+        reject(err);
+      })
+      .on('timeout', function () {
+        if (downloadRequest) downloadRequest.abort();
+        reject(new Error('Request timeout!'));
+      })
+      .on('abort', function () {
+        if (fs.existsSync(fileLocation)) {
+          fs.unlink(fileLocation, (err) => {
+            if (err) console.error(err);
+          });
+        }
+        resolve(false);
+      });
+  });
+}
+
+export async function downloadModulePackage({
+  moduleName,
+  owner,
+  repo,
+  releaseId,
+  onProgress,
+}) {
+  try {
+    const { data: releaseAssets } = await axios.get(
+      `https://api.github.com//repos/${owner}/${repo}/releases/${releaseId}/assets`,
+      {
+        headers: {
+          Accept: 'application/vnd.github.v3+json',
+        },
+      }
+    );
+    const asset = releaseAssets.find(
+      ({ name }) =>
+        name.startsWith(moduleName) &&
+        (name.endsWith('.zip') || name.endsWith('.tar.gz'))
+    );
+    if (!asset) {
+      openErrorDialog({
+        message: __('Cannot find module archive file among assets'),
+      });
+      return;
+    }
+    const filePath = join(walletDataDir, '.downloads', asset.name);
+    const completed = await downloadFile({
+      url: asset.browser_download_url,
+      filePath,
+      onProgress,
+    });
+    if (completed) {
+      await installModule(filePath);
+    }
+  } catch (err) {}
+}
+
 export async function download(module) {
   const repoId = `${module.owner}/${module.repo}`;
   const url = `https://api.github.com/repos/${repoId}/releases/latest`;
@@ -230,7 +311,6 @@ export async function download(module) {
         Accept: 'application/vnd.github.v3+json',
       },
     });
-    console.log(response);
     const data = response.data;
     const assets = data.assets;
     if (assets.length == 0) throw 'Nothing to download';
