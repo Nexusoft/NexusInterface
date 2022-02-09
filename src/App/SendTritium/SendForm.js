@@ -108,23 +108,18 @@ async function asyncValidateRecipient({ recipient, source }) {
     }
   }
 
-  console.log(source);
   // Check if recipient is on the same token as source
   const sourceToken = source?.account?.token || source?.token?.address;
-  console.log(sourceToken, address);
   if (sourceToken !== address) {
     let account;
     try {
       account = await callApi('finance/get/account', params);
-      console.log(account);
     } catch (err) {
       let token;
-      console.log(params);
       try {
         token = await callApi('tokens/get/token', params);
       } catch (err) {}
       if (token) {
-        console.log(token);
         throw {
           address: __('Source and recipient must be of the same token'),
         };

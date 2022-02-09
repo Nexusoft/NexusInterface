@@ -50,7 +50,7 @@ export default function RecipientField({ source, change, input, meta }) {
   const suggestions = useSelector(({ addressBook, user }) =>
     getRecipientSuggestions(
       addressBook,
-      user?.accounts.filter((e) => e.token === source?.account?.token),
+      user?.accounts,
       source?.account?.address
     )
   );
