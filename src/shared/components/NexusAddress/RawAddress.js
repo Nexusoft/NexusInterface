@@ -63,7 +63,7 @@ export default function RawAddress({
         readOnly
         skin="filled-inverted"
         value={address}
-        inputRef={inputRef}
+        ref={inputRef}
         right={
           !!copyable && (
             <Tooltip.Trigger tooltip={__('Copy to clipboard')}>

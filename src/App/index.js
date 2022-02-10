@@ -1,6 +1,12 @@
 // External
-import { Switch, Redirect } from 'react-router';
-import { Router, Route } from 'react-router-dom';
+import { useEffect } from 'react';
+import {
+  Routes,
+  Route,
+  Navigate,
+  HashRouter,
+  useNavigate,
+} from 'react-router-dom';
 import styled from '@emotion/styled';
 import { useSelector } from 'react-redux';
 
@@ -8,8 +14,8 @@ import { useSelector } from 'react-redux';
 import GlobalStyles from 'components/GlobalStyles';
 import ThemeController from 'components/ThemeController';
 import { legacyMode } from 'consts/misc';
-import { history } from 'lib/wallet';
 import { showDefaultMenu } from 'lib/contextMenu';
+import { setNavigate } from 'lib/wallet';
 
 import Overlays from './Overlays';
 import Overview from './Overview';
@@ -47,10 +53,19 @@ const Main = styled.main({
   alignItems: 'stretch',
 });
 
+function NavigateExporter() {
+  const navigate = useNavigate();
+  useEffect(() => {
+    setNavigate(navigate);
+  }, [navigate]);
+  return null;
+}
+
 export default function App() {
   const theme = useSelector((state) => state.theme);
   return (
-    <Router history={history}>
+    <HashRouter>
+      <NavigateExporter />
       <ThemeController theme={theme}>
         <GlobalStyles />
         <div onContextMenu={showDefaultMenu}>
@@ -59,39 +74,36 @@ export default function App() {
             <AppLayout>
               <Header />
               <Main>
-                <Switch>
+                <Routes>
                   <Route
-                    exact
-                    path="/"
-                    component={legacyMode ? Overview : OverviewTritium}
+                    index
+                    element={legacyMode ? <Overview /> : <OverviewTritium />}
                   />
                   <Route
-                    exact
-                    path="/Send"
-                    component={legacyMode ? Send : SendTritium}
+                    path="Send"
+                    element={legacyMode ? <Send /> : <SendTritium />}
                   />
                   <Route
-                    exact
-                    path="/Transactions"
-                    component={legacyMode ? Transactions : TransactionsTritium}
+                    path="Transactions"
+                    element={
+                      legacyMode ? <Transactions /> : <TransactionsTritium />
+                    }
                   />
-                  <Route exact path="/AddressBook" component={AddressBook} />
-                  <Route path="/Settings" component={Settings} />
-                  <Route path="/Terminal" component={Terminal} />
-                  {!legacyMode && <Route path="/User" component={UserPage} />}
-
-                  {/* <Route path="/Exchange" component={Exchange} /> */}
-                  {/* <Route exact path="/List" component={TrustList} /> */}
-                  <Route path="/Modules/:name" component={Modules} />
-
-                  <Redirect to="/" />
-                </Switch>
+                  <Route path="AddressBook" element={<AddressBook />} />
+                  <Route path="Settings/*" element={<Settings />} />
+                  <Route path="Terminal/*" element={<Terminal />} />
+                  {!legacyMode && (
+                    <Route path="User/*" element={<UserPage />} />
+                  )}
+                  <Route path="Modules/:name" element={<Modules />} />
+                  <Route path="*" element={<Navigate to="/" replace />} />
+                </Routes>
               </Main>
               <Navigation />
             </AppLayout>
           </Overlays>
         </div>
       </ThemeController>
-    </Router>
+    </HashRouter>
   );
 }

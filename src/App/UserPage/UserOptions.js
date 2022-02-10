@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux';
 
-import DropdownMenu from 'components/DropdownMenu';
+import Dropdown from 'components/Dropdown';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
 import SetRecoveryModal from 'components/SetRecoveryModal';
@@ -16,8 +16,32 @@ export default function UserOptions() {
   );
 
   return (
-    <DropdownMenu
-      renderControl={({ open, controlRef, openDropdown }) => (
+    <Dropdown
+      dropdown={({ closeDropdown }) => (
+        <>
+          <Dropdown.MenuItem
+            onClick={() => {
+              closeDropdown();
+              openModal(ChangePasswordPinModal);
+            }}
+          >
+            {__('Change password & PIN')}
+          </Dropdown.MenuItem>
+
+          <Dropdown.MenuItem
+            onClick={() => {
+              closeDropdown();
+              openModal(SetRecoveryModal);
+            }}
+          >
+            {hasRecoveryPhrase
+              ? __('Change recovery phrase')
+              : __('Set recovery phrase')}
+          </Dropdown.MenuItem>
+        </>
+      )}
+    >
+      {({ controlRef, openDropdown }) => (
         <Button
           skin="plain"
           ref={controlRef}
@@ -27,29 +51,6 @@ export default function UserOptions() {
           <Icon icon={menuIcon} />
         </Button>
       )}
-      renderDropdown={({ closeDropdown }) => (
-        <>
-          <DropdownMenu.MenuItem
-            onClick={() => {
-              closeDropdown();
-              openModal(ChangePasswordPinModal);
-            }}
-          >
-            {__('Change password & PIN')}
-          </DropdownMenu.MenuItem>
-
-          <DropdownMenu.MenuItem
-            onClick={() => {
-              closeDropdown();
-              openModal(SetRecoveryModal);
-            }}
-          >
-            {hasRecoveryPhrase
-              ? __('Change recovery phrase')
-              : __('Set recovery phrase')}
-          </DropdownMenu.MenuItem>
-        </>
-      )}
-    />
+    </Dropdown>
   );
 }

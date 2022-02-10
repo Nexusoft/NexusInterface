@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import Polyglot from 'node-polyglot';
-import csvParse from 'csv-parse/lib/sync';
+import { parse } from 'csv-parse/sync';
 
 import { assetsDir } from 'consts/paths';
 import settings from 'data/initialSettings';
@@ -28,7 +28,7 @@ function loadDict(loc) {
   const csv = fs.readFileSync(
     path.join(assetsDir, 'translations', `${locale}.csv`)
   );
-  const records = csvParse(csv);
+  const records = parse(csv);
   const dict = {};
   records.forEach(([key, translation, context]) => {
     if (!dict[context]) {

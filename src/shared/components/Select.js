@@ -133,6 +133,11 @@ const SelectControl = styled.div(
                 borderBottomRightRadius: 0,
               }
             : null),
+          ...(error
+            ? {
+                borderColor: theme.danger,
+              }
+            : null),
         };
     }
   }
@@ -392,12 +397,5 @@ const Select = forwardRef(function (
     </>
   );
 });
-
-// Select wrapper for redux-form
-const SelectReduxForm = ({ input, meta, ...rest }) => (
-  <Select error={meta.touched && meta.error} {...input} {...rest} />
-);
-
-Select.RF = SelectReduxForm;
 
 export default Select;

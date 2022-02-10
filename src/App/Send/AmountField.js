@@ -1,13 +1,14 @@
 // External
-import { Component } from 'react';
-import { connect } from 'react-redux';
-import { Field } from 'redux-form';
+import { useSelector } from 'react-redux';
+import { useForm } from 'react-final-form';
 import styled from '@emotion/styled';
 
 // Internal
-import TextField from 'components/TextField';
+import Form from 'components/Form';
 import FormField from 'components/FormField';
 import Link from 'components/Link';
+import { subtract } from 'utils/calc';
+import { useFieldValue } from 'lib/form';
 
 __ = __context('Send');
 
@@ -35,121 +36,106 @@ const SendAllLink = styled(Link)({
   verticalAlign: 'middle',
 });
 
-const mapStateToProps = ({ settings: { fiatCurrency }, market }) => ({
-  price: market?.price,
-  fiatCurrency: fiatCurrency,
-});
+function SendAll({ nxsToFiat, amountFieldName, form }) {
+  const sendFrom = useFieldValue('sendFrom');
+  const amount = useFieldValue(amountFieldName);
+  const myAccounts = useSelector((state) => state.myAccounts);
+  const account = myAccounts.find((acc) => acc.account === sendFrom);
+  const fullAmount = subtract(account?.balance, 0.01);
+  const hidden = !fullAmount || amount === fullAmount;
 
-/**
- * The Amount Feild on the Send Page
- *
- * @class AmountField
- * @extends {Component}
- */
-@connect(mapStateToProps)
-class AmountField extends Component {
-  /**
-   * Convert the NXS to the User's currency
-   *
-   * @memberof AmountField
-   */
-  nxsToFiat = (e, value) => {
-    if (floatRegex.test(value)) {
-      const nxs = parseFloat(value);
-      const { price } = this.props;
-      if (price) {
-        const fiat = nxs * price;
-        this.props.change(this.fiatAmountFieldName(), fiat.toFixed(2));
-      }
-    }
-  };
+  return (
+    !hidden && (
+      <SendAllLink
+        as="a"
+        onClick={(evt) => {
+          evt.preventDefault();
+          form.change(amountFieldName, fullAmount);
+          nxsToFiat(fullAmount);
+        }}
+      >
+        {__('Send all')}
+      </SendAllLink>
+    )
+  );
+}
 
-  /**
-   * Returns the fiat from NXS
-   *
-   * @memberof AmountField
-   */
-  fiatToNxs = (e, value) => {
-    if (floatRegex.test(value)) {
-      const fiat = parseFloat(value);
-      const { price } = this.props;
-      if (price) {
-        const nxs = fiat / price;
-        this.props.change(this.amountFieldName(), nxs.toFixed(5));
-      }
-    }
-  };
-
-  /**
-   * Returns the Amount Feild Name
-   *
-   * @memberof AmountField
-   */
-  amountFieldName = () =>
-    (this.props.parentFieldName ? this.props.parentFieldName + '.' : '') +
-    'amount';
-  /**
-   * Returns the Fiat Amount Name
-   *
-   * @memberof AmountField
-   */
-  fiatAmountFieldName = () =>
-    (this.props.parentFieldName ? this.props.parentFieldName + '.' : '') +
-    'fiatAmount';
-
-  sendAll = (evt) => {
-    evt.preventDefault();
-    const { change, fullAmount } = this.props;
-    change(this.amountFieldName(), fullAmount);
-    this.nxsToFiat(null, fullAmount);
-  };
-
-  /**
-   * Component's Renderable JSX
-   *
-   * @returns
-   * @memberof AmountField
-   */
-  render() {
-    return (
-      <SendAmount>
-        <SendAmountField>
-          <FormField
-            connectLabel
-            label={
-              <>
-                <span className="v-align">{__('NXS Amount')}</span>
-                {!!this.props.fullAmount && (
-                  <SendAllLink as="a" onClick={this.sendAll}>
-                    {__('Send all')}
-                  </SendAllLink>
-                )}
-              </>
-            }
-          >
-            <Field
-              component={TextField.RF}
-              name={this.amountFieldName()}
-              placeholder="0.00000"
-              onChange={this.nxsToFiat}
-            />
-          </FormField>
-        </SendAmountField>
-
-        <SendAmountEqual>=</SendAmountEqual>
-
-        <SendAmountField>
-          <FormField connectLabel label={this.props.fiatCurrency}>
-            <Field
-              component={TextField.RF}
-              name={this.fiatAmountFieldName()}
-              placeholder="0.00"
-              onChange={this.fiatToNxs}
-            />
-          </FormField>
-        </SendAmountField>
-      </SendAmount>
-    );
+function positiveNumber(value) {
+  const floatAmount = parseFloat(value);
+  if (!floatAmount || floatAmount < 0) {
+    return __('Invalid amount');
   }
 }
-export default AmountField;
+
+export default function AmountField({ parentFieldName = '', hideSendAll }) {
+  const price = useSelector((state) => state.market?.price);
+  const fiatCurrency = useSelector((state) => state.settings.fiatCurrency);
+  const form = useForm();
+  const amountFieldName = parentFieldName
+    ? parentFieldName + '.amount'
+    : 'amount';
+  const fiatAmountFieldName = parentFieldName
+    ? parentFieldName + '.fiatAmount'
+    : 'fiatAmount';
+
+  const nxsToFiat = (value) => {
+    if (floatRegex.test(value)) {
+      const nxs = parseFloat(value);
+      if (price) {
+        const fiat = nxs * price;
+        form.change(fiatAmountFieldName, fiat.toFixed(2));
+      }
+    }
+  };
+
+  const fiatToNxs = (value) => {
+    if (floatRegex.test(value)) {
+      const fiat = parseFloat(value);
+      if (price) {
+        const nxs = fiat / price;
+        form.change(amountFieldName, nxs.toFixed(6));
+      }
+    }
+  };
+
+  return (
+    <SendAmount>
+      <SendAmountField>
+        <FormField
+          connectLabel
+          label={
+            <>
+              <span className="v-align">{__('NXS Amount')}</span>
+              {!hideSendAll && (
+                <SendAll
+                  nxsToFiat={nxsToFiat}
+                  amountFieldName={amountFieldName}
+                  form={form}
+                />
+              )}
+            </>
+          }
+        >
+          <Form.TextField
+            name="amount"
+            placeholder="0.00000"
+            onChange={nxsToFiat}
+            validate={positiveNumber}
+          />
+        </FormField>
+      </SendAmountField>
+
+      <SendAmountEqual>=</SendAmountEqual>
+
+      <SendAmountField>
+        <FormField connectLabel label={fiatCurrency}>
+          <Form.TextField
+            name="fiatAmount"
+            placeholder="0.00"
+            onChange={fiatToNxs}
+          />
+        </FormField>
+      </SendAmountField>
+    </SendAmount>
+  );
+}

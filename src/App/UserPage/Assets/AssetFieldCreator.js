@@ -1,16 +1,12 @@
-import { useSelector } from 'react-redux';
-import { Field, getFormValues } from 'redux-form';
 import styled from '@emotion/styled';
 
+import Form from 'components/Form';
 import FormField from 'components/FormField';
-import TextField from 'components/TextField';
-import Switch from 'components/Switch';
-import Select from 'components/Select';
 import Tooltip from 'components/Tooltip';
 import QuestionCircle from 'components/QuestionCircle';
+import { useFieldValue, required } from 'lib/form';
 import { consts, timing } from 'styles';
 import { assetNumberTypes } from 'consts/misc';
-import { getDeep } from 'utils/misc';
 
 __ = __context('CreateAsset');
 
@@ -94,46 +90,41 @@ const ConditionalFormField = ({ showLabel, label, children, ...rest }) =>
   );
 
 export default function AssetFieldCreator({
-  form,
   fieldName,
   first,
   remove,
   onlyField,
 }) {
-  const fieldValue = useSelector((state) =>
-    getDeep(getFormValues(form)(state), fieldName)
-  );
+  const fieldValue = useFieldValue(fieldName);
   const lengthDisabled = !(fieldValue.mutable && fieldValue.type === 'string');
 
   return (
     <FieldWrapper className={first ? undefined : 'mt1'}>
       <ConditionalFormField showLabel={first} label={__('Name')}>
-        <Field
+        <Form.TextField
           name={`${fieldName}.name`}
-          component={TextField.RF}
           placeholder={__('Field name')}
+          validate={required()}
         />
       </ConditionalFormField>
+
       <ConditionalFormField showLabel={first} label={__('Value')}>
-        <Field
+        <Form.TextField
           name={`${fieldName}.value`}
-          component={TextField.RF}
           placeholder={__('Field value')}
           type={assetNumberTypes.includes(fieldValue.type) ? 'number' : 'text'}
           min={assetNumberTypes.includes(fieldValue.type) ? 0 : undefined}
         />
       </ConditionalFormField>
+
       <ConditionalFormField showLabel={first} label={__('Mutable')}>
         <SwitchWrapper>
-          <Field name={`${fieldName}.mutable`} component={Switch.RF} />
+          <Form.Switch name={`${fieldName}.mutable`} />
         </SwitchWrapper>
       </ConditionalFormField>
+
       <ConditionalFormField showLabel={first} label={__('Type')}>
-        <Field
-          name={`${fieldName}.type`}
-          component={Select.RF}
-          options={typeOptions}
-        />
+        <Form.Select name={`${fieldName}.type`} options={typeOptions} />
       </ConditionalFormField>
 
       <ConditionalFormField
@@ -148,10 +139,9 @@ export default function AssetFieldCreator({
         }
         className={lengthDisabled ? 'dim' : undefined}
       >
-        <Field
+        <Form.TextField
           name={`${fieldName}.maxlength`}
           type="number"
-          component={TextField.RF}
           disabled={lengthDisabled}
           placeholder={lengthDisabled ? 'N/A' : __('Unlimited')}
         />

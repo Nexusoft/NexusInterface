@@ -8,7 +8,7 @@ import GA from 'lib/googleAnalytics';
 import Panel from 'components/Panel';
 import RequireLoggedIn from 'components/RequireLoggedIn';
 import { isLoggedIn } from 'selectors';
-import { history } from 'lib/wallet';
+import { navigate } from 'lib/wallet';
 import { legacyMode } from 'consts/misc';
 import userIcon from 'icons/user.svg';
 
@@ -25,12 +25,12 @@ const UserPageLayout = styled.div({
   height: '100%',
 });
 
-export default function UserPage({ match }) {
+export default function UserPage() {
   const loggedIn = useSelector(isLoggedIn);
 
   useEffect(() => {
     if (legacyMode) {
-      history.push('/');
+      navigate('/');
     }
     GA.SendScreen('UserPage');
   }, []);
@@ -44,8 +44,8 @@ export default function UserPage({ match }) {
     >
       <RequireLoggedIn>
         <UserPageLayout>
-          <UserBrief match={match} />
-          <TabContent match={match} />
+          <UserBrief />
+          <TabContent />
         </UserPageLayout>
       </RequireLoggedIn>
     </Panel>

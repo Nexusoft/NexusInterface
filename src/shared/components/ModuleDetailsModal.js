@@ -12,7 +12,7 @@ import InfoField from 'components/InfoField';
 import ExternalLink from 'components/ExternalLink';
 import GA from 'lib/googleAnalytics';
 import { confirm } from 'lib/dialog';
-import { history } from 'lib/wallet';
+import { navigate } from 'lib/wallet';
 import { updateSettings } from 'lib/settings';
 import { timing } from 'styles';
 import store from 'store';
@@ -82,6 +82,8 @@ export default function ModuleDetailsModal({ module, forInstall, install }) {
   const repoUrl = module.repository
     ? `https://${host}/${owner}/${repo}/tree/${commit}`
     : null;
+
+  const [isDownloading, setIsDownloading] = useState(false);
   return (
     <ControlledModal>
       {(closeModal) => (
@@ -232,19 +234,41 @@ export default function ModuleDetailsModal({ module, forInstall, install }) {
             {!forInstall && module.info.type === 'app' && (
               <div className="mt1 flex space-between">
                 {module.hasNewVersion ? (
-                  <Button
-                    skin="primary"
-                    onClick={() => {
-                      shell.openExternal(module.latestRelease.html_url);
-                    }}
-                  >
-                    <Icon icon={updateIcon} className="mr0_4" />
-                    <span className="v-align">
-                      {__('Download %{version} (manual)', {
-                        version: 'v' + module.latestVersion,
-                      })}
-                    </span>
-                  </Button>
+                  isDownloading ? (
+                    <span>Downloading, please wait</span>
+                  ) : (
+                    <>
+                      <Button
+                        skin="primary"
+                        onClick={() => {
+                          setIsDownloading(true);
+                          download(module.repository);
+                        }}
+                      >
+                        <Icon icon={updateIcon} className="mr0_4" />
+                        <span className="v-align">
+                          {__('Download %{version} (auto)', {
+                            version: 'v' + module.latestVersion,
+                          })}
+                        </span>
+                      </Button>
+                      <Button
+                        skin="primary"
+                        onClick={() => {
+                          shell.openExternal(
+                            `https://${host}/${owner}/${repo}/releases/tag/${module.latestRelease.tag_name}`
+                          );
+                        }}
+                      >
+                        <Icon icon={updateIcon} className="mr0_4" />
+                        <span className="v-align">
+                          {__('Download %{version} (manual)', {
+                            version: 'v' + module.latestVersion,
+                          })}
+                        </span>
+                      </Button>
+                    </>
+                  )
                 ) : (
                   <div />
                 )}
@@ -252,7 +276,7 @@ export default function ModuleDetailsModal({ module, forInstall, install }) {
                   skin="primary"
                   onClick={() => {
                     closeModal();
-                    history.push('/Modules/' + module.info.name);
+                    navigate('/Modules/' + module.info.name);
                   }}
                 >
                   {__('Open App')}
@@ -276,6 +300,66 @@ export default function ModuleDetailsModal({ module, forInstall, install }) {
 const InstallerWarning = styled.div({
   fontSize: '.9em',
 });
+
+import https from 'https';
+import { join } from 'path';
+import { walletDataDir } from 'consts/paths';
+import axios from 'axios';
+import fs from 'fs';
+import { installModule } from 'lib/modules';
+
+async function download(module) {
+  const repoId = `${module.owner}/${module.repo}`;
+  const url = `https://api.github.com/repos/${repoId}/releases/latest`;
+  try {
+    const response = await axios.get(url, {
+      headers: {
+        Accept: 'application/vnd.github.v3+json',
+      },
+    });
+    console.log(response);
+    const data = response.data;
+    const assets = data.assets;
+    if (assets.length == 0) throw 'Nothing to download';
+    let tarzip;
+    for (let i = 0; i < assets.length; i++) {
+      const element = assets[i];
+      if (
+        element.content_type === 'application/x-gzip' ||
+        element.content_type === 'application/x-zip'
+      ) {
+        tarzip = element.browser_download_url;
+        break;
+      }
+    }
+
+    const file = fs.createWriteStream(
+      join(
+        walletDataDir,
+        'modules',
+        `${module.repo}_TEMP.${tarzip.endsWith('gz') ? 'tar.gz' : 'zip'}`
+      )
+    );
+    const request = await https.get(tarzip, async function (response) {
+      if (response.statusCode === 302) {
+        const request2 = await https.get(
+          response.headers.location,
+          async function (response) {
+            console.log(response);
+            response.pipe(file);
+            setTimeout(async () => {
+              await installModule(file.path);
+            }, 1000);
+          }
+        );
+      } else {
+        response.pipe(file);
+      }
+    });
+  } catch (e) {
+    console.log('error', e);
+  }
+}
 
 /**
  * Install section at the bottom of Module Details modal

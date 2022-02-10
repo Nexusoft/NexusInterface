@@ -10,8 +10,6 @@ import { assetsDir } from 'consts/paths';
 import { updateSettingsFile } from 'lib/settings/universal';
 import { debounced } from 'utils/universal';
 
-app.allowRendererProcessReuse = false;
-
 const port = process.env.PORT || 1212;
 
 /**

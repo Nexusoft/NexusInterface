@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
-import { Route, Redirect, Switch } from 'react-router';
+import { Routes, Route, Navigate } from 'react-router-dom';
 
 import Staking from './Staking';
 import Accounts from './Accounts';
@@ -16,29 +16,23 @@ const TabContentComponent = styled.div({
   overflow: 'auto',
 });
 
-function UserRedirect({ match }) {
+function UserRedirect() {
   const lastActiveTab = useSelector((state) => state.ui.user.lastActiveTab);
-  return (
-    <Redirect
-      exact
-      from={`${match.path}/`}
-      to={`${match.path}/${lastActiveTab}`}
-    />
-  );
+  return <Navigate to={lastActiveTab} replace />;
 }
 
-export default function TabContent({ match }) {
+export default function TabContent() {
   return (
     <TabContentComponent>
-      <Switch>
-        <Route path={`${match.url}/Staking`} component={Staking} />
-        <Route path={`${match.url}/Accounts`} component={Accounts} />
-        <Route path={`${match.url}/Tokens`} component={Tokens} />
-        <Route path={`${match.url}/Names`} component={Names} />
-        <Route path={`${match.url}/Namespaces`} component={Namespaces} />
-        <Route path={`${match.url}/Assets`} component={Assets} />
-        <UserRedirect match={match} />
-      </Switch>
+      <Routes>
+        <Route path="Staking" element={<Staking />} />
+        <Route path="Accounts" element={<Accounts />} />
+        <Route path="Tokens" element={<Tokens />} />
+        <Route path="Names" element={<Names />} />
+        <Route path="Namespaces" element={<Namespaces />} />
+        <Route path="Assets" element={<Assets />} />
+        <Route path="*" element={<UserRedirect />} />
+      </Routes>
     </TabContentComponent>
   );
 }

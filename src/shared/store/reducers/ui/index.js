@@ -9,6 +9,7 @@ import backgroundTasks from './backgroundTasks';
 import closing from './closing';
 import transactionsFilter from './transactionsFilter';
 import user from './user';
+import transactions from './transactions';
 
 export default combineReducers({
   addressBook,
@@ -20,4 +21,5 @@ export default combineReducers({
   closing,
   transactionsFilter,
   user,
+  transactions,
 });

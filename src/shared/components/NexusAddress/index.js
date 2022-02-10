@@ -1,27 +1,20 @@
 // External
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 // Internal
 import SegmentedAddress from './SegmentedAddress';
 import TruncateMiddleAddress from './TruncateMiddleAddress';
 import RawAddress from './RawAddress';
 
-@connect(({ settings: { addressStyle } }) => ({
-  addressStyle,
-}))
-class NexusAddress extends Component {
-  render() {
-    const { addressStyle, ...rest } = this.props;
-    switch (addressStyle) {
-      case 'raw':
-        return <RawAddress {...rest} />;
-      case 'truncateMiddle':
-        return <TruncateMiddleAddress {...rest} />;
-      default:
-        return <SegmentedAddress {...rest} />;
-    }
+export default function NexusAddress(props) {
+  const addressStyle = useSelector((state) => state.settings.addressStyle);
+
+  switch (addressStyle) {
+    case 'raw':
+      return <RawAddress {...props} />;
+    case 'truncateMiddle':
+      return <TruncateMiddleAddress {...props} />;
+    default:
+      return <SegmentedAddress {...props} />;
   }
 }
-
-export default NexusAddress;

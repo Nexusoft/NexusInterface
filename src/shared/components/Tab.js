@@ -45,18 +45,16 @@ const TabLink = styled(NavLink)(({ theme }) => ({
   },
 }));
 
-const Tab = forwardRef(
-  ({ link, icon, text, toolTipText, isActive, ...rest }, ref) => (
-    <TabLi {...rest} ref={ref}>
-      <Tooltip.Trigger tooltip={toolTipText} position="top">
-        <TabLink to={link} isActive={isActive}>
-          {!!icon && <Icon className="mr0_4" icon={icon} />}
-          {text}
-        </TabLink>
-      </Tooltip.Trigger>
-    </TabLi>
-  )
-);
+const Tab = forwardRef(({ link, icon, text, toolTipText, ...rest }, ref) => (
+  <TabLi {...rest} ref={ref}>
+    <Tooltip.Trigger tooltip={toolTipText} position="top">
+      <TabLink to={link}>
+        {!!icon && <Icon className="mr0_4" icon={icon} />}
+        {text}
+      </TabLink>
+    </Tooltip.Trigger>
+  </TabLi>
+));
 
 const TabBar = styled.ul({
   display: 'flex',

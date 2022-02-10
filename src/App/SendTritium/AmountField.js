@@ -1,14 +1,16 @@
 // External
 import { useSelector } from 'react-redux';
-import { Field } from 'redux-form';
+import { useForm } from 'react-final-form';
 import styled from '@emotion/styled';
 
 // Internal
-import TextField from 'components/TextField';
+import Form from 'components/Form';
 import Tooltip from 'components/Tooltip';
 import FormField from 'components/FormField';
 import Link from 'components/Link';
 import TokenName from 'components/TokenName';
+import { useFieldValue } from 'lib/form';
+import { selectSource } from 'lib/send';
 
 __ = __context('Send');
 
@@ -40,28 +42,32 @@ const nxsToFiat = (value, price) => {
   return null;
 };
 
-function AmountTextField({ input, source, ...rest }) {
+function positiveNumber(value) {
+  const floatAmount = parseFloat(value);
+  if (!floatAmount || floatAmount < 0) {
+    return __('Invalid amount');
+  }
+}
+
+function FiatValue({ fieldName, source }) {
+  const value = useFieldValue(fieldName);
   const price = useSelector((state) => state.market?.price);
   const currency = useSelector((state) => state.market?.currency);
   const isInNXS = (source?.account?.token || source?.token?.address) === '0';
-  const fiat = isInNXS && nxsToFiat(input.value, price);
+  const fiat = isInNXS && nxsToFiat(value, price);
 
-  return (
-    <Tooltip.Trigger tooltip={fiat ? `≈ ${fiat} ${currency}` : null}>
-      <TextField.RF input={input} {...rest} />
-    </Tooltip.Trigger>
-  );
+  return fiat ? `≈ ${fiat} ${currency}` : null;
 }
 
-export default function AmountField({ source, parentFieldName, change }) {
+export default function AmountField({ parentFieldName }) {
+  const source = selectSource();
+  const form = useForm();
   const fullAmount = (source?.account || source?.token)?.balance;
-
-  const amountFieldName = () =>
-    (parentFieldName ? parentFieldName + '.' : '') + 'amount';
+  const fieldName = parentFieldName + '.amount';
 
   const sendAll = (evt) => {
     evt.preventDefault();
-    change(amountFieldName(), fullAmount);
+    form.change(fieldName, fullAmount);
   };
 
   return (
@@ -93,13 +99,16 @@ export default function AmountField({ source, parentFieldName, change }) {
             </span>
           }
         >
-          <Field
-            component={AmountTextField}
-            skin="filled-inverted"
-            name={amountFieldName()}
-            placeholder="0.00000"
-            source={source}
-          />
+          <Tooltip.Trigger
+            tooltip={<FiatValue fieldName={fieldName} source={source} />}
+          >
+            <Form.TextField
+              name={fieldName}
+              skin="filled-inverted"
+              placeholder="0.00000"
+              validate={positiveNumber}
+            />
+          </Tooltip.Trigger>
         </FormField>
       </SendAmountField>
     </SendAmount>

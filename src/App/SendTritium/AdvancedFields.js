@@ -1,23 +1,40 @@
-import { Field } from 'redux-form';
 import { useSelector } from 'react-redux';
 
 import FormField from 'components/FormField';
-import TextField from 'components/TextField';
+import Form from 'components/Form';
 import QuestionCircle from 'components/QuestionCircle';
+import { useFieldValue } from 'lib/form';
 import { numericOnly } from 'utils/form';
 import { timeToText } from 'utils/misc';
 
 __ = __context('Send');
 
 const numberInputProps = {
-  component: TextField.RF,
   type: 'number',
   min: 0,
+  skin: 'filled-inverted',
   style: { maxWidth: 80 },
 };
 
+const uintRegex = /^[0-9]+$/;
+
+function validateReference(value) {
+  if (value) {
+    if (!uintRegex.test(value)) {
+      return __('Reference must be an unsigned integer');
+    } else {
+      if (Number(reference) > 18446744073709551615) {
+        return __('Number is too large');
+      }
+    }
+  }
+}
+
 export default function AdvancedFields({ parentFieldName }) {
   const txExpiry = useSelector((state) => state.core.config?.txExpiry);
+  const turnedOn = useFieldValue('advancedOptions');
+
+  if (!turnedOn) return null;
 
   return (
     <div className="flex center space-between" style={{ marginTop: -8 }}>
@@ -34,12 +51,12 @@ export default function AdvancedFields({ parentFieldName }) {
             </span>
           }
         >
-          <Field
+          <Form.TextField
             skin="filled-inverted"
-            component={TextField.RF}
             name={`${parentFieldName}.reference`}
             normalize={numericOnly}
             placeholder={__('Reference number (optional)')}
+            validate={validateReference}
           />
         </FormField>
       </div>
@@ -62,34 +79,30 @@ export default function AdvancedFields({ parentFieldName }) {
         ></FormField>
 
         <FormField label={__('Days')} className="ml1">
-          <Field
-            skin="filled-inverted"
-            {...numberInputProps}
+          <Form.TextField
             name={`${parentFieldName}.expireDays`}
+            {...numberInputProps}
           />
         </FormField>
 
         <FormField label={__('Hours')} className="ml0_4">
-          <Field
-            skin="filled-inverted"
-            {...numberInputProps}
+          <Form.TextField
             name={`${parentFieldName}.expireHours`}
+            {...numberInputProps}
           />
         </FormField>
 
         <FormField label={__('Minutes')} className="ml0_4">
-          <Field
-            skin="filled-inverted"
-            {...numberInputProps}
+          <Form.TextField
             name={`${parentFieldName}.expireMinutes`}
+            {...numberInputProps}
           />
         </FormField>
 
         <FormField label={__('Seconds')} className="ml0_4">
-          <Field
-            skin="filled-inverted"
-            {...numberInputProps}
+          <Form.TextField
             name={`${parentFieldName}.expireSeconds`}
+            {...numberInputProps}
           />
         </FormField>
       </div>

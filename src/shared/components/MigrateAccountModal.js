@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import ControlledModal from 'components/ControlledModal';
 import Button from 'components/Button';
-import { history } from 'lib/wallet';
+import { navigate } from 'lib/wallet';
 import { formatNumber } from 'lib/intl';
 import { loadAccounts } from 'lib/user';
 import { updateSettings } from 'lib/settings';
@@ -43,7 +43,7 @@ const MigrateAccountModal = ({ legacyBalance, accounts }) => {
               <Button
                 onClick={() => {
                   updateSettings({ legacyMode: true });
-                  history.push(
+                  navigate(
                     `/Send${defaultAddress ? `?sendTo=${defaultAddress}` : ''}`
                   );
                   window.location.reload();

@@ -73,7 +73,7 @@ const MenuItem = styled(NavLink)(
     }
 );
 
-export default function UserBrief({ match }) {
+export default function UserBrief() {
   const username = useSelector(selectUsername);
   const genesis = useSelector((state) => state.user.status?.genesis);
   const privateNet = useSelector((state) => state.core.systemInfo?.private);
@@ -86,14 +86,14 @@ export default function UserBrief({ match }) {
         <GenesisId>{genesis}</GenesisId>
       </Genesis>
       <Separator />
-      <MenuItem to={`${match.url}/Accounts`}>{__('Accounts')}</MenuItem>
-      <MenuItem disabled={privateNet ? true : null} to={`${match.url}/Staking`}>
+      <MenuItem to="Accounts">{__('Accounts')}</MenuItem>
+      <MenuItem disabled={privateNet ? true : null} to="Staking">
         {__('Staking')}
       </MenuItem>
-      <MenuItem to={`${match.url}/Tokens`}>{__('Tokens')}</MenuItem>
-      <MenuItem to={`${match.url}/Names`}>{__('Names')}</MenuItem>
-      <MenuItem to={`${match.url}/Namespaces`}>{__('Namespaces')}</MenuItem>
-      <MenuItem to={`${match.url}/Assets`}>{__('Assets')}</MenuItem>
+      <MenuItem to="Tokens">{__('Tokens')}</MenuItem>
+      <MenuItem to="Names">{__('Names')}</MenuItem>
+      <MenuItem to="Namespaces">{__('Namespaces')}</MenuItem>
+      <MenuItem to="Assets">{__('Assets')}</MenuItem>
     </UserBriefComponent>
   );
 }

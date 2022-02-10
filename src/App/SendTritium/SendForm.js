@@ -1,36 +1,36 @@
 // External
-import { connect } from 'react-redux';
-import { reduxForm, Field, FieldArray, formValueSelector } from 'redux-form';
+import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
+import arrayMutators from 'final-form-arrays';
 
 // Internal Global
+import Form from 'components/Form';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
-import Select from 'components/Select';
 import FormField from 'components/FormField';
-import Switch from 'components/Switch';
 import { openModal } from 'lib/ui';
-import { callApi } from 'lib/tritiumApi';
-import { formName, getDefaultValues, getDefaultRecipient } from 'lib/send';
-import sendIcon from 'icons/send.svg';
-import { timing } from 'styles';
+import {
+  formName,
+  getDefaultRecipient,
+  useInitialValues,
+  getSource,
+} from 'lib/send';
+import { required } from 'lib/form';
+import store from 'store';
 import useUID from 'utils/useUID';
+import { timing } from 'styles';
 import { addressRegex } from 'consts/misc';
+import sendIcon from 'icons/send.svg';
 import plusIcon from 'icons/plus.svg';
 
 // Internal Local
 import Recipients from './Recipients';
-import {
-  getAccountOptions,
-  getAddressNameMap,
-  getRegisteredFieldNames,
-  getSendSource,
-} from './selectors';
+import { selectAccountOptions } from './selectors';
 import PreviewTransactionModal from './PreviewTransactionModal';
 
 __ = __context('Send');
 
-const SendFormComponent = styled.form({
+const SendFormComponent = styled.div({
   maxWidth: 740,
   margin: '-.5em auto 0',
 });
@@ -41,7 +41,7 @@ const SendFormButtons = styled.div({
   marginTop: '3em',
 });
 
-const SendBtn = styled(Button)({
+const SendBtn = styled(Form.SubmitButton)({
   flex: 1,
 });
 
@@ -62,76 +62,24 @@ const AdvancedOptionsLabel = styled.label(({ active }) => ({
   opacity: active ? 1 : 0.67,
 }));
 
-const valueSelector = formValueSelector(formName);
-const mapStateToProps = (state) => {
-  const {
-    addressBook,
-    user: { accounts, tokens },
-    form,
-  } = state;
-  const sendFrom = valueSelector(state, 'sendFrom');
-  const source = getSendSource(sendFrom, accounts, tokens);
-  const txExpiry = state.core.config?.txExpiry;
-  return {
-    source,
-    accountOptions: getAccountOptions(accounts, tokens),
-    addressNameMap: getAddressNameMap(addressBook),
-    fieldNames: getRegisteredFieldNames(form[formName]?.registeredFields),
-    initialValues: getDefaultValues({ txExpiry }),
-    txExpiry,
-  };
-};
-
-const uintRegex = /^[0-9]+$/;
-
-async function asyncValidateRecipient({ recipient, source }) {
-  const { address } = recipient;
-  const params = {};
-
-  // Check if it's a valid address/name
-  if (addressRegex.test(address)) {
-    const result = await callApi('system/validate/address', {
-      address,
-    });
-    if (result.valid) {
-      params.address = address;
-    }
-  }
-  if (!params.address) {
-    try {
-      const result = await callApi('names/get/name', {
-        name: address.startsWith('local:') ? address.substring(6) : address, //TODO: Finance is having issues with ~, core needs to be accept it or we remove the ~ on get/accounts
-      });
-      params.address = result.register;
-    } catch (err) {
-      throw { address: __('Invalid name/address') };
-    }
-  }
-
-  // Check if recipient is on the same token as source
-  const sourceToken = source?.account?.token || source?.token?.address;
-  if (sourceToken !== address) {
-    let account;
-    try {
-      account = await callApi('finance/get/account', params);
-    } catch (err) {
-      let token;
-      try {
-        token = await callApi('tokens/get/token', params);
-      } catch (err) {}
-      if (token) {
-        throw {
-          address: __('Source and recipient must be of the same token'),
-        };
-      }
-    }
-    if (account && account?.token !== sourceToken) {
-      throw {
-        address: __('Source and recipient must be of the same token'),
-      };
-    }
-  }
-  return null;
+function AddRecipientButton() {
+  const txExpiry = useSelector((state) => state.core.config?.txExpiry);
+  return (
+    <Form.FieldArray
+      name="recipients"
+      render={({ fields }) => (
+        <MultiBtn
+          skin="default"
+          onClick={() => {
+            fields.push(getDefaultRecipient({ txExpiry }));
+          }}
+        >
+          <Icon icon={plusIcon} style={{ fontSize: '.8em' }} />
+          <span className="v-align ml0_4">{__('Add recipient')}</span>
+        </MultiBtn>
+      )}
+    />
+  );
 }
 
 function getRecipientsParams(recipients, { advancedOptions }) {
@@ -147,6 +95,7 @@ function getRecipientsParams(recipients, { advancedOptions }) {
     }) => {
       const recipParam = {};
 
+      // TODO: update param keys
       if (addressRegex.test(address)) {
         recipParam.address_to = address;
       } else {
@@ -172,165 +121,72 @@ function getRecipientsParams(recipients, { advancedOptions }) {
   );
 }
 
-const reduxFormOptions = {
-  form: formName,
-  destroyOnUnmount: false,
-  validate: ({ sendFrom, recipients }) => {
-    const errors = {};
-    if (!sendFrom) {
-      errors.sendFrom = __('No accounts selected');
-    }
-
-    if (!recipients || !recipients.length) {
-      errors.recipients = {
-        _error: __('There must be at least one recipient'),
-      };
-    } else {
-      const recipientsErrors = [];
-
-      recipients.forEach(({ address, amount, reference }, i) => {
-        const recipientErrors = {};
-        if (!address) {
-          recipientErrors.address = __('Address/Name is required');
-        }
-        const floatAmount = parseFloat(amount);
-        if (!floatAmount || floatAmount < 0) {
-          recipientErrors.amount = __('Invalid amount');
-        }
-        if (reference) {
-          if (!uintRegex.test(reference)) {
-            recipientErrors.reference = __(
-              'Reference must be an unsigned integer'
-            );
-          } else {
-            if (Number(reference) > 18446744073709551615) {
-              recipientErrors.reference = __('Number is too large');
-            }
-          }
-        }
-        if (Object.keys(recipientErrors).length) {
-          recipientsErrors[i] = recipientErrors;
-        }
-      });
-
-      if (recipientsErrors.length) {
-        errors.recipients = recipientsErrors;
-      }
-    }
-
-    return errors;
-  },
-  asyncBlurFields: ['recipients[].address'],
-  asyncValidate: async ({ recipients }, dispatch, { source }) => {
-    const results = await Promise.allSettled(
-      recipients.map((recipient) =>
-        asyncValidateRecipient({ recipient, source })
-      )
-    );
-    if (results.some(({ status }) => status === 'rejected')) {
-      throw {
-        recipients: results.map(({ status, reason }) =>
-          status === 'rejected' ? reason : undefined
-        ),
-      };
-    } else {
-      return null;
-    }
-  },
-  onSubmit: ({ recipients, advancedOptions }, dispatch, { source, reset }) => {
-    openModal(PreviewTransactionModal, {
-      source,
-      recipients: getRecipientsParams(recipients, { advancedOptions }),
-      resetSendForm: reset,
-    });
-  },
-};
-
-function SendForm({
-  handleSubmit,
-  invalid,
-  touch,
-  fieldNames,
-  array,
-  txExpiry,
-  accountOptions,
-  change,
-  source,
-}) {
+export default function SendForm() {
   const switchID = useUID();
-
-  const confirmSend = (e) => {
-    e.preventDefault();
-
-    if (invalid) {
-      // Mark the form touched so that the validation errors will be shown.
-      // redux-form doesn't have the `touchAll` feature yet so we have to list all fields manually.
-      // redux-form also doesn't have the API to get all the field names yet so we have to connect to the store to retrieve it manually
-      touch(...fieldNames);
-      return;
-    }
-    handleSubmit();
-  };
-
-  const addRecipient = () => {
-    array.push('recipients', getDefaultRecipient({ txExpiry }));
-  };
+  const accountOptions = useSelector(selectAccountOptions);
+  const initialValues = useInitialValues();
 
   return (
-    <SendFormComponent onSubmit={confirmSend}>
-      <div className="flex justify-end">
-        <AdvancedOptionsSwitch>
-          <Field
-            name="advancedOptions"
-            component={Switch.RF}
-            style={{ fontSize: '.75em' }}
-            id={switchID}
+    <SendFormComponent>
+      <Form
+        name={formName}
+        persistState
+        initialValues={initialValues}
+        initialValuesEqual={() => true}
+        onSubmit={({ sendFrom, recipients, advancedOptions }, form) => {
+          const state = store.getState();
+          const source = getSource(state, sendFrom);
+          openModal(PreviewTransactionModal, {
+            source,
+            recipients: getRecipientsParams(recipients, { advancedOptions }),
+            resetSendForm: form.reset,
+          });
+        }}
+        mutators={{ ...arrayMutators }}
+      >
+        <div className="flex justify-end">
+          <AdvancedOptionsSwitch>
+            <Form.Switch
+              name="advancedOptions"
+              style={{ fontSize: '.75em' }}
+              id={switchID}
+            />
+            <Form.Field
+              name="advancedOptions"
+              subscription={{ value: true }}
+              render={({ input: { value } }) => (
+                <AdvancedOptionsLabel
+                  className="ml0_4 pointer"
+                  htmlFor={switchID}
+                  active={value}
+                >
+                  {__('Advanced options')}
+                </AdvancedOptionsLabel>
+              )}
+            />
+          </AdvancedOptionsSwitch>
+        </div>
+
+        <FormField label={__('Send from')}>
+          <Form.Select
+            name="sendFrom"
+            skin="filled-inverted"
+            placeholder={__('Select an account')}
+            options={accountOptions}
+            validate={required()}
           />
-          <Field
-            name="advancedOptions"
-            component={({ input: { value } }) => (
-              <AdvancedOptionsLabel
-                className="ml0_4 pointer"
-                htmlFor={switchID}
-                active={value}
-              >
-                {__('Advanced options')}
-              </AdvancedOptionsLabel>
-            )}
-          />
-        </AdvancedOptionsSwitch>
-      </div>
+        </FormField>
 
-      <FormField label={__('Send from')}>
-        <Field
-          component={Select.RF}
-          skin="filled-inverted"
-          name="sendFrom"
-          placeholder={__('Select an account')}
-          options={accountOptions}
-        />
-      </FormField>
+        <Form.FieldArray component={Recipients} name="recipients" />
 
-      <FieldArray
-        component={Recipients}
-        name="recipients"
-        change={change}
-        addRecipient={addRecipient}
-        source={source}
-      />
-
-      <SendFormButtons>
-        <MultiBtn skin="default" onClick={addRecipient}>
-          <Icon icon={plusIcon} style={{ fontSize: '.8em' }} />
-          <span className="v-align ml0_4">{__('Add recipient')}</span>
-        </MultiBtn>
-        <SendBtn type="submit" skin="primary">
-          <Icon icon={sendIcon} className="mr0_4" />
-          {__('Proceed')}
-        </SendBtn>
-      </SendFormButtons>
+        <SendFormButtons>
+          <AddRecipientButton />
+          <SendBtn skin="primary">
+            <Icon icon={sendIcon} className="mr0_4" />
+            {__('Proceed')}
+          </SendBtn>
+        </SendFormButtons>
+      </Form>
     </SendFormComponent>
   );
 }
-
-export default connect(mapStateToProps)(reduxForm(reduxFormOptions)(SendForm));

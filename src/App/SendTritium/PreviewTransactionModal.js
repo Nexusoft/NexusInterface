@@ -1,20 +1,17 @@
 import { useState, useEffect, useMemo, Fragment } from 'react';
 import styled from '@emotion/styled';
-import { reduxForm, Field } from 'redux-form';
 
 import ControlledModal from 'components/ControlledModal';
 import NexusAddress from 'components/NexusAddress';
 import Icon from 'components/Icon';
 import TokenName from 'components/TokenName';
-import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
-import TextFieldWithKeyboard from 'components/TextFieldWithKeyboard';
+import Form from 'components/Form';
 import { callApi } from 'lib/tritiumApi';
 import { lookupAddress } from 'lib/addressBook';
-import { removeModal } from 'lib/ui';
 import { openSuccessDialog } from 'lib/dialog';
 import { loadAccounts } from 'lib/user';
-import { errorHandler } from 'utils/form';
+import { formSubmit, required } from 'lib/form';
 import { timeToText } from 'utils/misc';
 import addressBookIcon from 'icons/address-book.svg';
 import WarningIcon from 'icons/warning.svg';
@@ -72,7 +69,7 @@ const Separator = styled.div(({ theme }) => ({
   backgroundColor: theme.mixer(0.125),
 }));
 
-const SubmitButton = styled(Button)({
+const SubmitButton = styled(Form.SubmitButton)({
   fontSize: 16,
 });
 
@@ -135,170 +132,165 @@ function AddressTo({ address }) {
   );
 }
 
-const formOptions = {
-  form: 'preview_tx',
-  destroyOnUnmount: true,
-  initialValues: {
-    pin: '',
-  },
-  validate: ({ pin }) => {
-    const errors = {};
-    if (!pin || pin.length < 4) {
-      errors.pin = __('Pin must be at least 4 characters');
-    }
-    return errors;
-  },
-  onSubmit: async ({ pin }, dispatch, { source, recipients }) => {
-    const params = {
-      pin,
-      recipients,
-    };
-
-    if (source?.token) {
-      params.from = source.token.address;
-      return await callApi('finance/debit/token', params);
-    } else {
-      params.from = source.account.address;
-      return await callApi('finance/debit/all', params);
-    }
-  },
-  onSubmitSuccess: (result, dispatch, { modalId, resetSendForm }) => {
-    if (!result) return;
-
-    resetSendForm();
-    loadAccounts();
-    removeModal(modalId);
-    openSuccessDialog({
-      message: __('Transaction sent'),
-    });
-  },
-  onSubmitFail: errorHandler(__('Error sending transaction')),
-};
-
-function PreviewTransactionModal({
-  source,
-  recipients,
-  handleSubmit,
-  submitting,
-}) {
+function TransactionDetails({ source, recipients }) {
   return (
-    <ControlledModal>
-      <ControlledModal.Header>{__("You're sending")}</ControlledModal.Header>
-      <ControlledModal.Body>
-        <Layout>
-          <LabelCell>
-            <Label>{__('From')}</Label>
-          </LabelCell>
-          <ContentCell>
-            <Source source={source} />
-          </ContentCell>
+    <Layout>
+      <LabelCell>
+        <Label>{__('From')}</Label>
+      </LabelCell>
+      <ContentCell>
+        <Source source={source} />
+      </ContentCell>
 
-          {recipients.map(
-            ({ name_to, address_to, amount, reference, expires }, i) => (
-              <Fragment key={i}>
-                <Separator />
+      {recipients.map(
+        ({ name_to, address_to, amount, reference, expires }, i) => (
+          <Fragment key={i}>
+            <Separator />
 
+            <LabelCell>
+              <Label>{__('To')}</Label>
+            </LabelCell>
+            <ContentCell>
+              <ContentCell>
+                {name_to && <NameTo name={name_to} />}
+                {address_to && <AddressTo address={address_to} />}
+              </ContentCell>
+            </ContentCell>
+
+            <LabelCell>
+              <Label>{__('Amount')}</Label>
+            </LabelCell>
+            <ContentCell>
+              <ContentCell>
+                <Content>
+                  {amount}{' '}
+                  <TokenName account={source?.account} token={source?.token} />
+                </Content>
+              </ContentCell>
+            </ContentCell>
+
+            {!!reference && (
+              <>
                 <LabelCell>
-                  <Label>{__('To')}</Label>
+                  <Label>{__('Reference')}</Label>
+                </LabelCell>
+                <ContentCell>
+                  <ContentCell>{reference}</ContentCell>
+                </ContentCell>
+              </>
+            )}
+
+            {(!!expires || expires === 0) && (
+              <>
+                <LabelCell>
+                  <Label>{__('Expires')}</Label>
                 </LabelCell>
                 <ContentCell>
                   <ContentCell>
-                    {name_to && <NameTo name={name_to} />}
-                    {address_to && <AddressTo address={address_to} />}
+                    {expires === 0 ? (
+                      <span>
+                        <span className="v-align mr0_4">{__('NO EXPIRY')}</span>
+                        <Tooltip.Trigger
+                          tooltip={__(
+                            "Transaction never expires, and you won't be able to void it even if the recipient doesn't credit the transaction"
+                          )}
+                        >
+                          <Icon icon={WarningIcon} />
+                        </Tooltip.Trigger>
+                      </span>
+                    ) : (
+                      __('in %{time_span}', {
+                        time_span: timeToText(expires),
+                      })
+                    )}
                   </ContentCell>
                 </ContentCell>
-
-                <LabelCell>
-                  <Label>{__('Amount')}</Label>
-                </LabelCell>
-                <ContentCell>
-                  <ContentCell>
-                    <Content>
-                      {amount}{' '}
-                      <TokenName
-                        account={source?.account}
-                        token={source?.token}
-                      />
-                    </Content>
-                  </ContentCell>
-                </ContentCell>
-
-                {!!reference && (
-                  <>
-                    <LabelCell>
-                      <Label>{__('Reference')}</Label>
-                    </LabelCell>
-                    <ContentCell>
-                      <ContentCell>{reference}</ContentCell>
-                    </ContentCell>
-                  </>
-                )}
-
-                {(!!expires || expires === 0) && (
-                  <>
-                    <LabelCell>
-                      <Label>{__('Expires')}</Label>
-                    </LabelCell>
-                    <ContentCell>
-                      <ContentCell>
-                        {expires === 0 ? (
-                          <span>
-                            <span className="v-align mr0_4">
-                              {__('NO EXPIRY')}
-                            </span>
-                            <Tooltip.Trigger
-                              tooltip={__(
-                                "Transaction never expires, and you won't be able to void it even if the recipient doesn't credit the transaction"
-                              )}
-                            >
-                              <Icon icon={WarningIcon} />
-                            </Tooltip.Trigger>
-                          </span>
-                        ) : (
-                          __('in %{time_span}', {
-                            time_span: timeToText(expires),
-                          })
-                        )}
-                      </ContentCell>
-                    </ContentCell>
-                  </>
-                )}
-              </Fragment>
-            )
-          )}
-        </Layout>
-      </ControlledModal.Body>
-
-      <ControlledModal.Footer>
-        <form onSubmit={handleSubmit} style={{ marginTop: -20 }}>
-          <Field
-            component={TextFieldWithKeyboard.RF}
-            maskable
-            name="pin"
-            autoFocus
-            skin="filled-inverted"
-            placeholder={__('Enter your PIN to confirm')}
-          />
-
-          <SubmitButton
-            type="submit"
-            skin="primary"
-            uppercase
-            wide
-            disabled={submitting}
-            className="mt1"
-          >
-            <Icon icon={sendIcon} />
-            <span className="ml0_4 v-align">
-              {submitting
-                ? __('Sending transaction...')
-                : __('Send transaction')}
-            </span>
-          </SubmitButton>
-        </form>
-      </ControlledModal.Footer>
-    </ControlledModal>
+              </>
+            )}
+          </Fragment>
+        )
+      )}
+    </Layout>
   );
 }
 
-export default reduxForm(formOptions)(PreviewTransactionModal);
+const initialValues = {
+  pin: '',
+};
+
+export default function PreviewTransactionModal({
+  source,
+  recipients,
+  resetSendForm,
+}) {
+  return (
+    <ControlledModal>
+      {(closeModal) => (
+        <>
+          <ControlledModal.Header>
+            {__("You're sending")}
+          </ControlledModal.Header>
+          <ControlledModal.Body>
+            <TransactionDetails source={source} recipients={recipients} />
+          </ControlledModal.Body>
+
+          <ControlledModal.Footer>
+            <Form
+              name="preview_tx"
+              initialValues={initialValues}
+              onSubmit={formSubmit({
+                submit: async ({ pin }) => {
+                  const params = {
+                    pin,
+                    recipients,
+                  };
+
+                  if (source?.token) {
+                    params.from = source.token.address;
+                    return await callApi('finance/debit/token', params);
+                  } else {
+                    params.from = source.account.address;
+                    return await callApi('finance/debit/all', params);
+                  }
+                },
+                onSuccess: () => {
+                  resetSendForm();
+                  loadAccounts();
+                  closeModal();
+                  openSuccessDialog({
+                    message: __('Transaction sent'),
+                  });
+                },
+                errorMessage: __('Error sending transaction'),
+              })}
+            >
+              <div style={{ marginTop: -20 }}>
+                <Form.TextFieldWithKeyboard
+                  name="pin"
+                  validate={required()}
+                  maskable
+                  autoFocus
+                  skin="filled-inverted"
+                  placeholder={__('Enter your PIN to confirm')}
+                />
+
+                <SubmitButton skin="primary" uppercase wide className="mt1">
+                  {({ submitting }) => (
+                    <>
+                      <Icon icon={sendIcon} />
+                      <span className="ml0_4 v-align">
+                        {submitting
+                          ? __('Sending transaction...')
+                          : __('Send transaction')}
+                      </span>
+                    </>
+                  )}
+                </SubmitButton>
+              </div>
+            </Form>
+          </ControlledModal.Footer>
+        </>
+      )}
+    </ControlledModal>
+  );
+}

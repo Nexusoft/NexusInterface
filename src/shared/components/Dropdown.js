@@ -1,11 +1,11 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, Children, cloneElement } from 'react';
 import styled from '@emotion/styled';
 
 import Overlay from 'components/Overlay';
 import { arrowStyles } from 'components/Arrow';
 import { timing, animations, consts } from 'styles';
 
-const DropdownMenuComponent = styled.div(({ theme }) => ({
+const DropdownComponent = styled.div(({ theme }) => ({
   position: 'fixed',
   background: theme.background,
   color: theme.foreground,
@@ -50,9 +50,9 @@ const Separator = styled.div(({ theme }) => ({
   borderBottom: `1px solid ${theme.mixer(0.125)}`,
 }));
 
-function getDropdownStyle(el) {
-  if (!el) return {};
-  const rect = el.getBoundingClientRect();
+function getDropdownStyle(controlElem) {
+  if (!controlElem) return {};
+  const rect = controlElem.getBoundingClientRect();
   return {
     minWidth: 120,
     top: rect.bottom + 18,
@@ -60,7 +60,7 @@ function getDropdownStyle(el) {
   };
 }
 
-export default function DropdownMenu({ renderControl, renderDropdown }) {
+export default function Dropdown({ children, dropdown }) {
   const [open, setOpen] = useState(false);
   const controlRef = useRef();
 
@@ -72,26 +72,38 @@ export default function DropdownMenu({ renderControl, renderDropdown }) {
     setOpen(false);
   };
 
-  const args = {
+  const controlProps = {
     open,
-    controlRef,
     openDropdown,
     closeDropdown,
   };
 
+  const dropdownProps = {
+    closeDropdown,
+  };
+
+  const control =
+    typeof children === 'function'
+      ? children(controlProps)
+      : Children.only(children);
+  const clonedControl = cloneElement(control, { ref: controlRef });
+
+  const dropdownContent =
+    typeof dropdown === 'function' ? dropdown(dropdownProps) : dropdown;
+
   return (
     <>
-      {renderControl(args)}
+      {clonedControl}
       {open && (
         <Overlay onBackgroundClick={closeDropdown}>
-          <DropdownMenuComponent style={getDropdownStyle(controlRef.current)}>
-            {renderDropdown(args)}
-          </DropdownMenuComponent>
+          <DropdownComponent style={getDropdownStyle(controlRef.current)}>
+            {dropdownContent}
+          </DropdownComponent>
         </Overlay>
       )}
     </>
   );
 }
 
-DropdownMenu.MenuItem = MenuItem;
-DropdownMenu.Separator = Separator;
+Dropdown.MenuItem = MenuItem;
+Dropdown.Separator = Separator;

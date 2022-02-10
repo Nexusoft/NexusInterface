@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import chalk from 'chalk';
 import csvStringify from 'csv-stringify';
-import csvParse from 'csv-parse/lib/sync';
+import { parse } from 'csv-parse/sync';
 import extractFromFiles from './i18nExtract';
 
 const transDir = path.join(__dirname, '../../assets/translations');
@@ -35,7 +35,7 @@ const oldDicts = {};
 locales.forEach((locale) => {
   const oldDict = {};
   const csv = fs.readFileSync(path.join(transDir, locale + '.csv'));
-  const records = csvParse(csv);
+  const records = parse(csv);
   records.forEach(([key, translation, context]) => {
     if (!oldDict[context]) {
       oldDict[context] = {};

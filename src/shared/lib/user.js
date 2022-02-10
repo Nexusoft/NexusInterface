@@ -82,9 +82,9 @@ export const logIn = async ({ username, password, pin }) => {
 
     store.dispatch({
       type: TYPE.LOGIN,
-      payload: { username, session, status },
+      payload: { username, session, status, stakeInfo },
     });
-    return { username, session, status };
+    return { username, session, status, stakeInfo };
   } finally {
     // Release the lock
     refreshUserStatusLock = false;
@@ -134,11 +134,15 @@ export const switchUser = async (session) => {
 };
 
 export const loadOwnedTokens = async () => {
-  const result = await listAll('finance/list/tokens');
-  store.dispatch({
-    type: TYPE.SET_USER_OWNED_TOKENS,
-    payload: result,
-  });
+  try {
+    const result = await listAll('finance/list/tokens');
+    store.dispatch({
+      type: TYPE.SET_USER_OWNED_TOKENS,
+      payload: result,
+    });
+  } catch (err) {
+    console.error('finance/list/tokens failed', err);
+  }
 };
 
 export const loadAccounts = legacyMode

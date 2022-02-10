@@ -1,6 +1,4 @@
 import fs from 'fs';
-import EventEmitter from 'events';
-import { createHashHistory } from 'history';
 import { ipcRenderer } from 'electron';
 
 import * as TYPE from 'consts/actionTypes';
@@ -9,6 +7,15 @@ import { defaultSettings } from 'lib/settings/universal';
 import rpc from 'lib/rpc';
 import { stopCore } from 'lib/core';
 import { logOut } from 'lib/user';
+
+let _navigate = null;
+export function navigate(...params) {
+  return _navigate?.(...params);
+}
+
+export function setNavigate(func) {
+  _navigate = func;
+}
 
 /**
  * Backs up wallet
@@ -54,8 +61,6 @@ export const closeWallet = async (beforeExit) => {
   if (beforeExit) beforeExit();
   ipcRenderer.invoke('exit-app');
 };
-
-export const history = createHashHistory();
 
 export function prepareWallet() {
   ipcRenderer.on('window-close', async () => {

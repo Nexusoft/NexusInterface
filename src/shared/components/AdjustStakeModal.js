@@ -1,18 +1,18 @@
-import { Component } from 'react';
 import { useSelector } from 'react-redux';
-import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
+import { useField } from 'react-final-form';
+import { useTheme } from '@emotion/react';
 
+import Form from 'components/Form';
 import ControlledModal from 'components/ControlledModal';
-import Slider from 'components/Slider';
 import Button from 'components/Button';
-import TextField from 'components/TextField';
+import { formSubmit, checkAll, useFieldValue } from 'lib/form';
 import { callApi } from 'lib/tritiumApi';
 import { confirm, confirmPin } from 'lib/dialog';
-import { errorHandler } from 'utils/form';
 import { formatNumber } from 'lib/intl';
-import { removeModal, showNotification } from 'lib/ui';
+import { showNotification } from 'lib/ui';
 import Link from 'components/Link';
+import memoize from 'utils/memoize';
 import GA from 'lib/googleAnalytics';
 
 __ = __context('AdjustStake');
@@ -33,7 +33,7 @@ const LimitNumber = styled(Link)(
     }
 );
 
-const StakeTextField = styled(TextField.RF)({
+const StakeTextField = styled(Form.TextField)({
   width: 170,
   margin: '0 auto',
 
@@ -46,12 +46,6 @@ const SliderWrapper = styled.div({
   marginTop: 10,
 });
 
-const StakeSlider = styled(Slider.RF)(({ theme, input, max }) => ({
-  background: `linear-gradient(to right, ${theme.primary}, ${theme.primary} ${
-    (100 * input.value) / max
-  }%, ${theme.mixer(0.5)} ${(100 * input.value) / max}%)`,
-}));
-
 const Note = styled.div(({ theme }) => ({
   fontSize: 14,
   fontStyle: 'italic',
@@ -59,121 +53,65 @@ const Note = styled.div(({ theme }) => ({
   marginTop: 20,
 }));
 
-const formOptions = {
-  form: 'adjust_stake',
-  destroyOnUnmount: true,
-  validate: ({ stake }, props) => {
-    const errors = {};
-    const num = Number(stake);
+function StakeSlider({ min, max }) {
+  const theme = useTheme();
+  const stake = useFieldValue('stake');
+  const percentage = (stake / max) * 100;
+  return (
+    <Form.Slider
+      name="stake"
+      min={min}
+      max={max}
+      style={{
+        background: `linear-gradient(to right, ${theme.primary}, ${
+          theme.primary
+        } ${percentage}%, ${theme.mixer(0.5)} ${percentage}%)`,
+      }}
+    />
+  );
+}
 
-    if (Number.isNaN(num)) {
-      errors.stake = __('Invalid number');
-    } else if (num < 0 || num > props.total) {
-      errors.stake = __('Out of range');
-    }
-
-    return errors;
-  },
-  onSubmit: async ({ stake }, dispatch, props, ...rest) => {
-    if (stake < props.currentStake) {
-      const confirmed = await confirm({
-        question: __('Reduce stake amount?'),
-        note: __('Reducing stake amount might make your Stake Rate decrease'),
-        // labelYes: __('Reduce stake amount'),
-        skinYes: 'danger',
-        // labelNo: __('Cancel'),
-      });
-      if (!confirmed) return;
-    }
-
-    const pin = await confirmPin();
-    if (pin) {
-      return await callApi('finance/set/stake', { pin, amount: stake });
-    }
-  },
-  onSubmitSuccess: async (result, dispatch, props) => {
-    if (!result) return; // Submission was cancelled
-
-    if (props.values.stake < props.currentStake) {
-      GA.SendEvent('Users', 'ReduceStake', 'Staking', 1);
-    } else {
-      GA.SendEvent('Users', 'IncreaseStake', 'Staking', 1);
-    }
-
-    props.closeModal();
-    showNotification(__('Stake amount has been updated'), 'success');
-    props.onComplete?.();
-  },
-  onSubmitFail: errorHandler(__('Error setting stake amount')),
-};
-
-function AdjustStakeForm({
-  total,
-  handleSubmit,
-  submitting,
-  change,
-  closeModal,
-}) {
+function LimitNumbers({ total }) {
+  const { input } = useField('stake', { subscription: {} });
   return (
     <>
-      <ControlledModal.Header>{__('Set stake amount')}</ControlledModal.Header>
-      <ControlledModal.Body>
-        <form onSubmit={handleSubmit}>
-          <div className="relative">
-            <Field
-              name="stake"
-              type="number"
-              component={StakeTextField}
-              skin="filled-inverted"
-            />
-            <LimitNumber
-              as="a"
-              onClick={() => {
-                change('stake', 0);
-              }}
-              align="left"
-            >
-              0
-            </LimitNumber>
-            <LimitNumber
-              as="a"
-              onClick={() => {
-                change('stake', total);
-              }}
-              align="right"
-            >
-              {formatNumber(total, 6)}
-            </LimitNumber>
-          </div>
-          <SliderWrapper>
-            <Field name="stake" component={StakeSlider} min={0} max={total} />
-          </SliderWrapper>
-          <Note>
-            {__(
-              'Note: This change will not take effect immediately but will stay pending until you get the next Trust transaction. The pending change will be recorded locally in this machine, therefore if you switch to another machine for staking, the change will not take effect.'
-            )}
-          </Note>
-          <div className="mt2 flex space-between">
-            <Button
-              onClick={() => {
-                closeModal();
-              }}
-            >
-              {__('Cancel')}
-            </Button>
-            <Button skin="primary" type="submit" disabled={submitting}>
-              {__('Set stake amount')}
-            </Button>
-          </div>
-        </form>
-      </ControlledModal.Body>
+      <LimitNumber
+        as="a"
+        onClick={() => {
+          input.onChange(0);
+        }}
+        align="left"
+      >
+        0
+      </LimitNumber>
+      <LimitNumber
+        as="a"
+        onClick={() => {
+          input.onChange(total);
+        }}
+        align="right"
+      >
+        {formatNumber(total, 6)}
+      </LimitNumber>
     </>
   );
 }
 
-AdjustStakeForm = reduxForm(formOptions)(AdjustStakeForm);
+const isNumber = (value) =>
+  Number.isNaN(Number(value)) ? __('Invalid number') : undefined;
 
-export default function AdjustStakeModal({ initialStake, onClose }) {
+const isInRange = (total) => (value) =>
+  value < 0 || value > total ? __('Out of range') : undefined;
+
+const getInitialValues = memoize((initialStake, currentStake) => ({
+  stake: typeof initialStake === 'number' ? initialStake : currentStake || 0,
+}));
+
+export default function AdjustStakeModal({
+  initialStake,
+  onClose,
+  onComplete,
+}) {
   const currentStake = useSelector((state) => state.user.stakeInfo?.stake);
   const total = useSelector(
     ({ user: { stakeInfo } }) =>
@@ -182,17 +120,86 @@ export default function AdjustStakeModal({ initialStake, onClose }) {
   return (
     <ControlledModal maxWidth={600} onClose={onClose}>
       {(closeModal) => (
-        <AdjustStakeForm
-          closeModal={closeModal}
-          currentStake={currentStake}
-          total={total}
-          initialValues={{
-            stake:
-              typeof initialStake === 'number'
-                ? initialStake
-                : currentStake || 0,
-          }}
-        />
+        <>
+          <ControlledModal.Header>
+            {__('Set stake amount')}
+          </ControlledModal.Header>
+          <ControlledModal.Body>
+            <Form
+              name="adjust_stake"
+              initialValues={getInitialValues(initialStake, currentStake)}
+              onSubmit={formSubmit({
+                submit: async ({ stake }) => {
+                  if (stake < currentStake) {
+                    const confirmed = await confirm({
+                      question: __('Reduce stake amount?'),
+                      note: __(
+                        'Reducing stake amount might make your Stake Rate decrease'
+                      ),
+                      skinYes: 'danger',
+                    });
+                    if (!confirmed) return;
+                  }
+
+                  const pin = await confirmPin();
+                  if (pin) {
+                    return await callApi('finance/set/stake', {
+                      pin,
+                      amount: stake,
+                    });
+                  }
+                },
+                onSuccess: async (result, { stake }) => {
+                  if (!result) return; // Submission was cancelled
+
+                  if (stake < currentStake) {
+                    GA.SendEvent('Users', 'ReduceStake', 'Staking', 1);
+                  } else {
+                    GA.SendEvent('Users', 'IncreaseStake', 'Staking', 1);
+                  }
+
+                  closeModal();
+                  showNotification(
+                    __('Stake amount has been updated'),
+                    'success'
+                  );
+                  onComplete?.();
+                },
+                errorMessage: __('Error setting stake amount'),
+              })}
+            >
+              <div className="relative">
+                <StakeTextField
+                  name="stake"
+                  type="number"
+                  skin="filled-inverted"
+                  validate={checkAll(isNumber, isInRange(total))}
+                />
+                <LimitNumbers total={total} />
+              </div>
+              <SliderWrapper>
+                <StakeSlider min={0} max={total} />
+              </SliderWrapper>
+              <Note>
+                {__(
+                  'Note: This change will not take effect immediately but will stay pending until you get the next Trust transaction. The pending change will be recorded locally in this machine, therefore if you switch to another machine for staking, the change will not take effect.'
+                )}
+              </Note>
+              <div className="mt2 flex space-between">
+                <Button
+                  onClick={() => {
+                    closeModal();
+                  }}
+                >
+                  {__('Cancel')}
+                </Button>
+                <Form.SubmitButton skin="primary">
+                  {__('Set stake amount')}
+                </Form.SubmitButton>
+              </div>
+            </Form>
+          </ControlledModal.Body>
+        </>
       )}
     </ControlledModal>
   );

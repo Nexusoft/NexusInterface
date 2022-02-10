@@ -32,11 +32,27 @@ const FailedModule = styled.div(({ theme }) => ({
   },
 }));
 
+const officalModules = [
+  'nexus_module_catalog',
+  'Nexus-Interface-Invoice-Module',
+];
+
+const OfficalSpan = styled.span(({ theme }) => ({
+  borderBottom: `1px solid ${theme.mixer(0.75)}`,
+  color: theme.mixer(0.75),
+  display: 'block',
+  textAlign: 'center',
+}));
+
 export default function SettingsModules() {
   const modules = useSelector((state) => state.modules);
   const failedModules = useSelector((state) => state.failedModules);
   const devMode = useSelector((state) => state.settings.devMode);
   const moduleList = Object.values(modules);
+
+  const notInstalledOffialModules = officalModules.filter(
+    (e) => !!!moduleList.find((d) => d?.repository?.repo === e)
+  );
 
   useEffect(() => {
     switchSettingsTab('Modules');
@@ -70,6 +86,24 @@ export default function SettingsModules() {
             </FailedModule>
           ))}
         </FailedModules>
+      )}
+      {!!notInstalledOffialModules && notInstalledOffialModules.length > 0 && (
+        <>
+          <OfficalSpan>Offical Modules</OfficalSpan>
+          {notInstalledOffialModules.map((e) => (
+            <Module
+              style={{ opacity: '.25' }}
+              key={e}
+              module={{
+                disallowed: false,
+                notInstalled: true,
+                iconPath: null,
+                info: { displayName: e },
+                repository: { repo: e },
+              }}
+            />
+          ))}
+        </>
       )}
     </>
   );

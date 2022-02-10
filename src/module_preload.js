@@ -9,17 +9,13 @@
  */
 
 import * as React from 'react';
-import jsxRuntime from 'react/jsx-runtime';
-import jsxDevRuntime from 'react/jsx-dev-runtime';
-import ReactDOM from 'react-dom';
-import * as ReactRouterDOM from 'react-router-dom';
-import * as Redux from 'redux';
-import * as ReactRedux from 'react-redux';
-import createCache from '@emotion/cache';
-import * as core from '@emotion/react';
+import * as jsxRuntime from 'react/jsx-runtime';
+import * as jsxDevRuntime from 'react/jsx-dev-runtime';
+import * as ReactDOM from 'react-dom';
+import cache from '@emotion/cache';
+import * as react from '@emotion/react';
 import styled from '@emotion/styled';
 import { ipcRenderer, clipboard, shell } from 'electron';
-import * as ReduxForm from 'redux-form';
 
 import GlobalStyles from 'components/GlobalStyles';
 import ThemeController from 'components/ThemeController';
@@ -37,6 +33,7 @@ import AutoSuggest from 'components/AutoSuggest';
 import Modal from 'components/Modal';
 import FormField from 'components/FormField';
 import Arrow from 'components/Arrow';
+import Dropdown from 'components/Dropdown';
 import * as color from 'utils/color';
 
 const newId = (() => {
@@ -49,30 +46,49 @@ global.NEXUS = {
   libraries: {
     React: { ...React, jsxDevRuntime, jsxRuntime },
     ReactDOM,
-    ReactRouterDOM,
-    Redux,
-    ReduxForm,
-    ReactRedux,
-    emotion: { core, styled, theming: core, createCache },
+    emotion: { react, styled, cache },
+  },
+  components: {
+    Arrow,
+    AutoSuggest,
+    Button,
+    Dropdown,
+    FieldSet,
+    FormField,
+    GlobalStyles,
+    Icon,
+    Link,
+    Modal,
+    Panel,
+    Select,
+    Switch,
+    Tab,
+    TextField,
+    ThemeController,
+    Tooltip,
   },
   utilities: {
-    color,
-    copyToClipboard: (text) => {
-      if (typeof text !== 'string') {
-        throw new Error(
-          'Expected `text` to be `string` type, found: ' + typeof text
-        );
-      }
-      clipboard.writeText(text);
-    },
-    // `options` shape:
+    // `options` shape
+    //  For Legacy mode:
     //  {
+    //    sendFrom,
     //    recipients: [{
-    //      address, amount
+    //      address
+    //    }]
+    //  }
+    //  For Tritium mode:
+    //  {
+    //    sendFrom,
+    //    recipients: [{
+    //      address,
+    //      amount,
+    //      reference,
+    //      expireDays,
+    //      expireHours,
+    //      expireMinutes,
+    //      expireSeconds,
     //    }],
-    //    message,    // for Legacy mode only
-    //    reference,  // for Tritium mode only
-    //    expires,    // for Tritium mode only
+    //    advancedOptions, // Boolean - whether reference and expire options take effect
     //  }
     send: (options) => {
       if (!options) {
@@ -90,50 +106,6 @@ global.NEXUS = {
         );
       }
       ipcRenderer.sendToHost('send', options);
-    },
-    showNotification: (options) => {
-      if (!options) {
-        throw new Error('`options` is required');
-      }
-      if (typeof options !== 'object') {
-        throw new Error(
-          'Expected `options` to be `object` type, found: ' + typeof options
-        );
-      }
-      ipcRenderer.sendToHost('show-notification', options);
-    },
-    showErrorDialog: (options) => {
-      if (!options) {
-        throw new Error('`options` is required');
-      }
-      if (typeof options !== 'object') {
-        throw new Error(
-          'Expected `options` to be `object` type, found: ' + typeof options
-        );
-      }
-      ipcRenderer.sendToHost('show-error-dialog', options);
-    },
-    showSuccessDialog: (options) => {
-      if (!options) {
-        throw new Error('`options` is required');
-      }
-      if (typeof options !== 'object') {
-        throw new Error(
-          'Expected `options` to be `object` type, found: ' + typeof options
-        );
-      }
-      ipcRenderer.sendToHost('show-success-dialog', options);
-    },
-    showInfoDialog: (options) => {
-      if (!options) {
-        throw new Error('`options` is required');
-      }
-      if (typeof options !== 'object') {
-        throw new Error(
-          'Expected `options` to be `object` type, found: ' + typeof options
-        );
-      }
-      ipcRenderer.sendToHost('show-info-dialog', options);
     },
     rpcCall: (command, params) => {
       if (!command) {
@@ -240,6 +212,50 @@ global.NEXUS = {
         ipcRenderer.sendToHost('proxy-request', url, options, requestId);
       });
     },
+    showNotification: (options) => {
+      if (!options) {
+        throw new Error('`options` is required');
+      }
+      if (typeof options !== 'object') {
+        throw new Error(
+          'Expected `options` to be `object` type, found: ' + typeof options
+        );
+      }
+      ipcRenderer.sendToHost('show-notification', options);
+    },
+    showErrorDialog: (options) => {
+      if (!options) {
+        throw new Error('`options` is required');
+      }
+      if (typeof options !== 'object') {
+        throw new Error(
+          'Expected `options` to be `object` type, found: ' + typeof options
+        );
+      }
+      ipcRenderer.sendToHost('show-error-dialog', options);
+    },
+    showSuccessDialog: (options) => {
+      if (!options) {
+        throw new Error('`options` is required');
+      }
+      if (typeof options !== 'object') {
+        throw new Error(
+          'Expected `options` to be `object` type, found: ' + typeof options
+        );
+      }
+      ipcRenderer.sendToHost('show-success-dialog', options);
+    },
+    showInfoDialog: (options) => {
+      if (!options) {
+        throw new Error('`options` is required');
+      }
+      if (typeof options !== 'object') {
+        throw new Error(
+          'Expected `options` to be `object` type, found: ' + typeof options
+        );
+      }
+      ipcRenderer.sendToHost('show-info-dialog', options);
+    },
     confirm: (options) => {
       if (!options) {
         throw new Error('`options` is required');
@@ -283,63 +299,25 @@ global.NEXUS = {
         listener(initialData)
       );
     },
-    onThemeUpdated: (listener) => {
+    onWalletDataUpdated: (listener) => {
       if (typeof listener !== 'function') {
         throw new Error(
           'Expected `listener` to be `function` type, found: ' + typeof listener
         );
       }
-      ipcRenderer.on('theme-updated', (event, theme) => listener(theme));
-    },
-    onSettingsUpdated: (listener) => {
-      if (typeof listener !== 'function') {
-        throw new Error(
-          'Expected `listener` to be `function` type, found: ' + typeof listener
-        );
-      }
-      ipcRenderer.on('settings-updated', (event, settings) =>
-        listener(settings)
+      ipcRenderer.on('wallet-data-updated', (event, walletData) =>
+        listener(walletData)
       );
     },
-    onCoreInfoUpdated: (listener) => {
-      if (typeof listener !== 'function') {
+    copyToClipboard: (text) => {
+      if (typeof text !== 'string') {
         throw new Error(
-          'Expected `listener` to be `function` type, found: ' + typeof listener
+          'Expected `text` to be `string` type, found: ' + typeof text
         );
       }
-      ipcRenderer.on('core-info-updated', (event, coreInfo) =>
-        listener(coreInfo)
-      );
+      clipboard.writeText(text);
     },
-    onUserStatusUpdated: (listener) => {
-      if (typeof listener !== 'function') {
-        throw new Error(
-          'Expected `listner` to be a `function` type, found: ' +
-            typeof listener
-        );
-      }
-      ipcRenderer.on('user-status-updated', (event, userStatus) =>
-        listener(userStatus)
-      );
-    },
-  },
-  components: {
-    GlobalStyles,
-    ThemeController,
-    Icon,
-    Panel,
-    AutoSuggest,
-    FieldSet,
-    Switch,
-    Modal,
-    Tooltip,
-    Select,
-    TextField,
-    FormField,
-    Link,
-    Arrow,
-    Tab,
-    Button,
+    color,
   },
 };
 

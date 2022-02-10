@@ -1,15 +1,12 @@
-import { Component } from 'react';
 import { useSelector } from 'react-redux';
-import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
 
+import Form from 'components/Form';
 import ControlledModal from 'components/ControlledModal';
-import Button from 'components/Button';
 import FormField from 'components/FormField';
-import TextField from 'components/TextField';
 import Spinner from 'components/Spinner';
+import { formSubmit, required } from 'lib/form';
 import { confirmPin, openSuccessDialog } from 'lib/dialog';
-import { errorHandler } from 'utils/form';
 import { loadNameRecords, selectUsername } from 'lib/user';
 import { callApi } from 'lib/tritiumApi';
 import { userIdRegex } from 'consts/misc';
@@ -24,87 +21,9 @@ const Name = styled.span(({ theme }) => ({
   color: theme.foreground,
 }));
 
-@reduxForm({
-  form: 'transfer-name',
-  destroyOnUnmount: true,
-  initialValues: {
-    recipient: '',
-  },
-  validate: ({ recipient }) => {
-    const errors = {};
-    if (!recipient) {
-      errors.recipient = __('Recipient is required');
-    }
-    return errors;
-  },
-  onSubmit: async ({ recipient }, dispatch, { nameRecord }) => {
-    const pin = await confirmPin();
-
-    const params = { pin, address: nameRecord.address };
-    if (userIdRegex.test(recipient)) {
-      params.destination = recipient;
-    } else {
-      params.username = recipient;
-    }
-
-    if (pin) {
-      return await callApi('names/transfer/name', params);
-    }
-  },
-  onSubmitSuccess: async (result, dispatch, props) => {
-    if (!result) return; // Submission was cancelled
-    loadNameRecords();
-    props.closeModal();
-    openSuccessDialog({
-      message: __('Name has been transferred'),
-    });
-  },
-  onSubmitFail: errorHandler(__('Error transferring name')),
-})
-class TransferNameForm extends Component {
-  render() {
-    const { handleSubmit, username, nameRecord, submitting } = this.props;
-    return (
-      <form onSubmit={handleSubmit}>
-        <FormField label={__('Name')}>
-          {nameRecord.global ? null : nameRecord.namespace ? (
-            <Prefix>{nameRecord.namespace + '::'}</Prefix>
-          ) : (
-            <Prefix>{username + ':'}</Prefix>
-          )}
-          <Name>{nameRecord.name}</Name>
-        </FormField>
-
-        <FormField connectLabel label={__('Transfer to')}>
-          <Field
-            name="recipient"
-            autoFocus
-            component={TextField.RF}
-            placeholder={__('Recipient username or user ID')}
-          />
-        </FormField>
-
-        <Button
-          skin="primary"
-          wide
-          uppercase
-          className="mt3"
-          type="submit"
-          disabled={submitting}
-        >
-          {submitting ? (
-            <span>
-              <Spinner className="mr0_4" />
-              <span className="v-align">{__('Transferring name')}...</span>
-            </span>
-          ) : (
-            __('Transfer name')
-          )}
-        </Button>
-      </form>
-    );
-  }
-}
+const initialValues = {
+  recipient: '',
+};
 
 export default function TransferNameModal({ nameRecord }) {
   const username = useSelector(selectUsername);
@@ -114,11 +33,68 @@ export default function TransferNameModal({ nameRecord }) {
         <>
           <ControlledModal.Header>{__('Transfer name')}</ControlledModal.Header>
           <ControlledModal.Body>
-            <TransferNameForm
-              closeModal={closeModal}
-              nameRecord={nameRecord}
-              username={username}
-            />
+            <Form
+              name="transfer-name"
+              initialValues={initialValues}
+              onSubmit={formSubmit({
+                submit: async ({ recipient }) => {
+                  const pin = await confirmPin();
+
+                  const params = { pin, address: nameRecord.address };
+                  if (userIdRegex.test(recipient)) {
+                    params.destination = recipient;
+                  } else {
+                    params.username = recipient;
+                  }
+
+                  if (pin) {
+                    return await callApi('names/transfer/name', params);
+                  }
+                },
+                onSuccess: async (result) => {
+                  if (!result) return; // Submission was cancelled
+                  loadNameRecords();
+                  closeModal();
+                  openSuccessDialog({
+                    message: __('Name has been transferred'),
+                  });
+                },
+                errorMessage: __('Error transferring name'),
+              })}
+            >
+              <FormField label={__('Name')}>
+                {nameRecord.global ? null : nameRecord.namespace ? (
+                  <Prefix>{nameRecord.namespace + '::'}</Prefix>
+                ) : (
+                  <Prefix>{username + ':'}</Prefix>
+                )}
+                <Name>{nameRecord.name}</Name>
+              </FormField>
+
+              <FormField connectLabel label={__('Transfer to')}>
+                <Form.TextField
+                  name="recipient"
+                  autoFocus
+                  placeholder={__('Recipient username or user ID')}
+                  validate={required()}
+                />
+              </FormField>
+
+              <Form.SubmitButton skin="primary" wide uppercase className="mt3">
+                {({ submitting }) =>
+                  submitting ? (
+                    <span>
+                      <Spinner className="mr0_4" />
+                      <span className="v-align">
+                        {__('Transferring name')}...
+                      </span>
+                    </span>
+                  ) : (
+                    __('Transfer name')
+                  )
+                }
+              </Form.SubmitButton>
+            </Form>
           </ControlledModal.Body>
         </>
       )}
