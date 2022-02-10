@@ -1,5 +1,7 @@
 import { join, dirname, normalize } from 'path';
 import fs from 'fs';
+import https from 'https';
+import axios from 'axios';
 
 import store from 'store';
 import * as TYPE from 'consts/actionTypes';
@@ -13,6 +15,7 @@ import ensureDirExists from 'utils/ensureDirExists';
 import deleteDirectory from 'utils/promisified/deleteDirectory';
 import extractZip from 'utils/promisified/extractZip';
 import extractTarball from 'utils/promisified/extractTarball';
+import { throttled } from 'utils/universal';
 import { confirm, openSuccessDialog, openErrorDialog } from 'lib/dialog';
 
 import { loadModuleFromDir, loadDevModuleFromDir } from './module';
@@ -218,12 +221,16 @@ export async function addDevModule(dirPath) {
   });
 }
 
-import https from 'https';
-import axios from 'axios';
+const updateDownloadProgress = throttled((payload) => {
+  store.dispatch({
+    type: TYPE.MODULE_DOWNLOAD_PROGRESS,
+    payload,
+  });
+}, 1000);
 
-function downloadFile({ url, filePath, onProgress }) {
+function downloadAsset({ moduleName, url, filePath }) {
   return new Promise((resolve, reject) => {
-    https
+    const downloadRequest = https
       .get(url)
       .setTimeout(180000)
       .on('response', (response) => {
@@ -235,7 +242,12 @@ function downloadFile({ url, filePath, onProgress }) {
         response
           .on('data', (chunk) => {
             downloaded += chunk.length;
-            timerId = onProgress({ downloaded, totalSize });
+            updateDownloadProgress({
+              moduleName,
+              downloaded,
+              totalSize,
+              downloadRequest,
+            });
           })
           .on('close', () => {
             resolve(true);
@@ -253,11 +265,6 @@ function downloadFile({ url, filePath, onProgress }) {
         reject(new Error('Request timeout!'));
       })
       .on('abort', function () {
-        if (fs.existsSync(fileLocation)) {
-          fs.unlink(fileLocation, (err) => {
-            if (err) console.error(err);
-          });
-        }
         resolve(false);
       });
   });
@@ -268,9 +275,13 @@ export async function downloadModulePackage({
   owner,
   repo,
   releaseId,
-  onProgress,
 }) {
   try {
+    store.dispatch({
+      type: TYPE.MODULE_DOWNLOAD_START,
+      payload: { moduleName },
+    });
+
     const { data: releaseAssets } = await axios.get(
       `https://api.github.com//repos/${owner}/${repo}/releases/${releaseId}/assets`,
       {
@@ -291,15 +302,38 @@ export async function downloadModulePackage({
       return;
     }
     const filePath = join(walletDataDir, '.downloads', asset.name);
-    const completed = await downloadFile({
+    const completed = await downloadAsset({
+      moduleName,
       url: asset.browser_download_url,
       filePath,
-      onProgress,
     });
+
     if (completed) {
       await installModule(filePath);
     }
-  } catch (err) {}
+  } catch (err) {
+    openErrorDialog({
+      message: __('Error downloading module'),
+      note: err.message,
+    });
+  } finally {
+    store.dispatch({
+      type: TYPE.MODULE_DOWNLOAD_FINISH,
+      payload: { moduleName },
+    });
+    if (fs.existsSync(filePath)) {
+      fs.unlink(filePath, (err) => {
+        if (err) console.error(err);
+      });
+    }
+  }
+}
+
+export function abortModuleDownload(moduleName) {
+  const moduleDownload = store.getState().moduleDownloads[moduleName];
+  if (moduleDownload?.downloadRequest) {
+    moduleDownload.downloadRequest.abort();
+  }
 }
 
 export async function download(module) {
