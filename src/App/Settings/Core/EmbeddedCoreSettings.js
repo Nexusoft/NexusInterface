@@ -53,6 +53,7 @@ export default function EmbeddedCoreSettings() {
       <SettingsField
         connectLabel
         label={__('Testnet Iteration')}
+        disabled={!!TESTNET_BUILD} //TODO: Consider removing, depends on support from testnet maintainers
         subLabel={
           <>
             {__('The iteration of Testnet to connect to.')}{' '}
@@ -78,6 +79,7 @@ export default function EmbeddedCoreSettings() {
         <Form.TextField
           name="testnetIteration"
           type="number"
+          disabled={!!TESTNET_BUILD}
           min={0}
           max={99999999}
           style={{ maxWidth: 50 }}
