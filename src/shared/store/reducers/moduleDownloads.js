@@ -4,13 +4,21 @@ const initialState = {};
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case TYPE.MODULE_DOWNLOAD_START:
+      return {
+        ...state,
+        [action.payload.moduleName]: {},
+      };
+
     case TYPE.MODULE_DOWNLOAD_PROGRESS: {
-      const { moduleName, downloaded, totalSize } = action.payload;
+      const { moduleName, downloaded, totalSize, downloadRequest } =
+        action.payload;
       return {
         ...state,
         [moduleName]: {
           downloaded,
           totalSize,
+          downloadRequest,
         },
       };
     }
