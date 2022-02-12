@@ -229,7 +229,7 @@
     "@emotion/cache": "^10.0.29",
     "@emotion/core": "^10.0.28",
     "@emotion/styled": "^10.0.27",
-    "ajv": "^6.12.2",
+    "ajv": "^6.12.3",
     "axios": "^0.21.4",
     "check-disk-space": "^2.1.0",
     "color": "^3.1.2",
