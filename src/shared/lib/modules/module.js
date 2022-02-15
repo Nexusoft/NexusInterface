@@ -16,6 +16,7 @@ import {
   getModuleHash,
   getNexusOrgUsers,
 } from './repo';
+import { checkForModuleUpdates } from './autoUpdate';
 
 const ajv = new Ajv();
 // Reserved file names, modules are not allowed to have one of these in their `files` field
@@ -499,6 +500,8 @@ export async function prepareModules() {
         payload: failedModules,
       });
     }
+
+    checkForModuleUpdates();
   } catch (err) {
     console.error(err);
     return {};
