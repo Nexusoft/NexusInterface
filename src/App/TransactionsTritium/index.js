@@ -203,7 +203,7 @@ export default function TransactionsTritium() {
                           // max={totalPages}
                           value={page}
                           onChange={(e) => {
-                            updatePage(e.target.value);
+                            updatePage(Number(e.target.value));
                           }}
                         />
                         &nbsp;
