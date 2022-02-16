@@ -1,4 +1,9 @@
-export { installModule, addDevModule } from './installModule';
+export {
+  installModule,
+  addDevModule,
+  downloadAndInstall,
+  abortModuleDownload,
+} from './installModule';
 export {
   setActiveWebView,
   unsetActiveWebView,

@@ -270,7 +270,7 @@ function downloadAsset({ moduleName, url, filePath }) {
   });
 }
 
-export async function downloadModulePackage({
+export async function downloadAndInstall({
   moduleName,
   owner,
   repo,
