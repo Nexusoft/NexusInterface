@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import styled from '@emotion/styled';
 import { shell } from 'electron';
+import { useSelector } from 'react-redux';
 
 // Internal
 import ControlledModal from 'components/ControlledModal';
@@ -10,10 +11,12 @@ import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
 import InfoField from 'components/InfoField';
 import ExternalLink from 'components/ExternalLink';
+import SimpleProgressBar from 'components/SimpleProgressBar';
 import GA from 'lib/googleAnalytics';
 import { confirm } from 'lib/dialog';
 import { navigate } from 'lib/wallet';
 import { updateSettings } from 'lib/settings';
+import { downloadAndInstall, abortModuleDownload } from 'lib/modules';
 import { timing } from 'styles';
 import store from 'store';
 import deleteDirectory from 'utils/promisified/deleteDirectory';
@@ -22,6 +25,7 @@ import warningIcon from 'icons/warning.svg';
 import linkIcon from 'icons/link.svg';
 import trashIcon from 'icons/trash.svg';
 import updateIcon from 'icons/update.svg';
+import closeIcon from 'icons/x-circle.svg';
 import { removeUpdateCache } from 'lib/modules/autoUpdate';
 
 __ = __context('ModuleDetails');
@@ -82,6 +86,18 @@ export default function ModuleDetailsModal({ module, forInstall, install }) {
   const repoUrl = module.repository
     ? `https://${host}/${owner}/${repo}/tree/${commit}`
     : null;
+  const downloadProgress = useSelector((state) => {
+    const { downloaded, totalSize } =
+      state.moduleDownloads[moduleInfo.name] || {};
+    return downloaded / totalSize;
+  });
+  const downloadRequest = useSelector(
+    (state) => state.moduleDownloads[moduleInfo.name]?.downloadRequest
+  );
+  // `downloading` -> when the module package is being downloaded
+  // `busy` -> when the module package is being downloaded OR is in other preparation steps
+  const downloading = !!downloadRequest;
+  const busy = useSelector((state) => !!state.moduleDownloads[moduleInfo.name]);
 
   const [isDownloading, setIsDownloading] = useState(false);
   return (
@@ -120,7 +136,7 @@ export default function ModuleDetailsModal({ module, forInstall, install }) {
             </InfoField>
             {!!module.development && (
               <InfoField ratio={[1, 2]} label={__('Entry')}>
-                {module.info.entry}
+                {moduleInfo.entry}
               </InfoField>
             )}
 
@@ -234,25 +250,47 @@ export default function ModuleDetailsModal({ module, forInstall, install }) {
             {!forInstall && module.info.type === 'app' && (
               <div className="mt1 flex space-between">
                 {module.hasNewVersion ? (
-                  isDownloading ? (
-                    <span>Downloading, please wait</span>
+                  downloading ? (
+                    <>
+                      <SimpleProgressBar
+                        label={__('Downloading %{percentage}%...', {
+                          percentage: Math.round(downloadProgress * 100),
+                        })}
+                        progress={downloadProgress}
+                        width={200}
+                      />
+                      <Tooltip.Trigger tooltip={__('Cancel download')}>
+                        <Button
+                          skin="plain-danger"
+                          className="ml1"
+                          onClick={abortModuleDownload}
+                        >
+                          <Icon icon={closeIcon} />
+                        </Button>
+                      </Tooltip.Trigger>
+                    </>
                   ) : (
                     <>
                       <Button
                         skin="primary"
                         onClick={() => {
-                          setIsDownloading(true);
-                          download(module.repository);
+                          downloadAndInstall({
+                            moduleName: moduleInfo.name,
+                            owner: module.repository?.owner,
+                            repo: module.repository?.repo,
+                            releaseId: module.latestRelease?.id,
+                          });
                         }}
+                        disabled={busy}
                       >
                         <Icon icon={updateIcon} className="mr0_4" />
                         <span className="v-align">
-                          {__('Download %{version} (auto)', {
+                          {__('Update to %{version}', {
                             version: 'v' + module.latestVersion,
                           })}
                         </span>
                       </Button>
-                      <Button
+                      {/* <Button
                         skin="primary"
                         onClick={() => {
                           shell.openExternal(
@@ -266,7 +304,7 @@ export default function ModuleDetailsModal({ module, forInstall, install }) {
                             version: 'v' + module.latestVersion,
                           })}
                         </span>
-                      </Button>
+                      </Button> */}
                     </>
                   )
                 ) : (
