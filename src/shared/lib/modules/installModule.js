@@ -228,12 +228,22 @@ const updateDownloadProgress = throttled((payload) => {
   });
 }, 1000);
 
-function downloadAsset({ moduleName, url, filePath }) {
+function download1(url, { moduleName, filePath }) {
   return new Promise((resolve, reject) => {
     const downloadRequest = https
       .get(url)
       .setTimeout(180000)
       .on('response', (response) => {
+        if (String(response.statusCode).startsWith('3')) {
+          // Redirecting
+          return download1(response.headers['location'], {
+            moduleName,
+            filePath,
+          })
+            .then(resolve)
+            .catch(reject);
+        }
+
         const totalSize = parseInt(response.headers['content-length'], 10);
 
         let downloaded = 0;
@@ -250,7 +260,7 @@ function downloadAsset({ moduleName, url, filePath }) {
             });
           })
           .on('close', () => {
-            resolve(true);
+            resolve(filePath);
           })
           .on('error', (err) => {
             reject(err);
@@ -265,9 +275,14 @@ function downloadAsset({ moduleName, url, filePath }) {
         reject(new Error('Request timeout!'));
       })
       .on('abort', function () {
-        resolve(false);
+        resolve(null);
       });
   });
+}
+
+function downloadAsset({ moduleName, asset }) {
+  const filePath = join(walletDataDir, 'downloads', asset.name);
+  return download1(asset.browser_download_url, { moduleName, filePath });
 }
 
 export async function downloadAndInstall({
@@ -276,6 +291,7 @@ export async function downloadAndInstall({
   repo,
   releaseId,
 }) {
+  let filePath;
   try {
     store.dispatch({
       type: TYPE.MODULE_DOWNLOAD_START,
@@ -283,7 +299,7 @@ export async function downloadAndInstall({
     });
 
     const { data: releaseAssets } = await axios.get(
-      `https://api.github.com//repos/${owner}/${repo}/releases/${releaseId}/assets`,
+      `https://api.github.com/repos/${owner}/${repo}/releases/${releaseId}/assets`,
       {
         headers: {
           Accept: 'application/vnd.github.v3+json',
@@ -301,14 +317,12 @@ export async function downloadAndInstall({
       });
       return;
     }
-    const filePath = join(walletDataDir, '.downloads', asset.name);
-    const completed = await downloadAsset({
+    filePath = await downloadAsset({
       moduleName,
-      url: asset.browser_download_url,
-      filePath,
+      asset: asset,
     });
 
-    if (completed) {
+    if (filePath) {
       await installModule(filePath);
     }
   } catch (err) {
@@ -321,11 +335,11 @@ export async function downloadAndInstall({
       type: TYPE.MODULE_DOWNLOAD_FINISH,
       payload: { moduleName },
     });
-    if (fs.existsSync(filePath)) {
-      fs.unlink(filePath, (err) => {
-        if (err) console.error(err);
-      });
-    }
+    // if (filePath && fs.existsSync(filePath)) {
+    //   fs.unlink(filePath, (err) => {
+    //     if (err) console.error(err);
+    //   });
+    // }
   }
 }
 
