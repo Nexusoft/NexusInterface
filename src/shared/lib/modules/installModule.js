@@ -290,8 +290,24 @@ function download1(url, { moduleName, filePath }) {
   });
 }
 
-function downloadAsset({ moduleName, asset }) {
-  const filePath = join(walletDataDir, 'downloads', asset.name);
+async function downloadAsset({ moduleName, asset }) {
+  const dirPath = join(walletDataDir, '.downloads');
+  let dirStat;
+  try {
+    dirStat = await fs.promises.stat(dirPath);
+  } catch (err) {
+    if (err.code === 'ENOENT') {
+      // Create directory if it doesn't exist
+      await fs.promises.mkdir(dirPath, { recursive: true });
+    } else {
+      throw err;
+    }
+  }
+  if (dirStat && !dirStat.isDirectory()) {
+    throw new Error(`${dirPath} is not a directory`);
+  }
+
+  const filePath = join(dirPath, asset.name);
   return download1(asset.browser_download_url, { moduleName, filePath });
 }
 
