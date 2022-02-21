@@ -253,49 +253,50 @@ export default function ModuleDetailsModal({
             )}
 
             {!forInstall && module.info.type === 'app' && (
-              <div className="mt1 flex space-between">
+              <div className="mt2 flex space-between">
                 {module.hasNewVersion ? (
-                  downloading ? (
-                    <>
-                      <SimpleProgressBar
-                        label={__('Downloading %{percentage}%...', {
-                          percentage: Math.round(downloadProgress * 100),
-                        })}
-                        progress={downloadProgress}
-                        width={200}
-                      />
-                      <Tooltip.Trigger tooltip={__('Cancel download')}>
-                        <Button
-                          skin="plain-danger"
-                          className="ml1"
-                          onClick={abortModuleDownload}
-                        >
-                          <Icon icon={closeIcon} />
-                        </Button>
-                      </Tooltip.Trigger>
-                    </>
-                  ) : (
-                    <>
-                      <Button
-                        skin="primary"
-                        onClick={() => {
-                          downloadAndInstall({
-                            moduleName: moduleInfo.name,
-                            owner: module.repository?.owner,
-                            repo: module.repository?.repo,
-                            releaseId: module.latestRelease?.id,
-                          });
-                        }}
-                        disabled={busy}
-                      >
-                        <Icon icon={updateIcon} className="mr0_4" />
-                        <span className="v-align">
-                          {__('Update to %{version}', {
-                            version: 'v' + module.latestVersion,
+                  <div className="flex">
+                    {downloading ? (
+                      <>
+                        <SimpleProgressBar
+                          label={__('Downloading %{percentage}%...', {
+                            percentage: Math.round(downloadProgress * 100),
                           })}
-                        </span>
-                      </Button>
-                      {/* <Button
+                          progress={downloadProgress}
+                          width={200}
+                        />
+                        <Tooltip.Trigger tooltip={__('Cancel download')}>
+                          <Button
+                            skin="plain-danger"
+                            className="ml1"
+                            onClick={abortModuleDownload}
+                          >
+                            <Icon icon={closeIcon} />
+                          </Button>
+                        </Tooltip.Trigger>
+                      </>
+                    ) : (
+                      <>
+                        <Button
+                          skin="primary"
+                          onClick={() => {
+                            downloadAndInstall({
+                              moduleName: moduleInfo.name,
+                              owner: module.repository?.owner,
+                              repo: module.repository?.repo,
+                              releaseId: module.latestRelease?.id,
+                            });
+                          }}
+                          disabled={busy}
+                        >
+                          <Icon icon={updateIcon} className="mr0_4" />
+                          <span className="v-align">
+                            {__('Update to %{version}', {
+                              version: 'v' + module.latestVersion,
+                            })}
+                          </span>
+                        </Button>
+                        {/* <Button
                         skin="primary"
                         onClick={() => {
                           shell.openExternal(
@@ -310,8 +311,19 @@ export default function ModuleDetailsModal({
                           })}
                         </span>
                       </Button> */}
-                    </>
-                  )
+                      </>
+                    )}
+                    <div className="ml2 flex center">
+                      <ExternalLink
+                        href={`https://${host}/${owner}/${repo}/releases/tag/${module.latestRelease.tag_name}`}
+                      >
+                        <span className="v-align mr0_4">
+                          {__('View the release')}
+                        </span>
+                        <Icon icon={linkIcon} />
+                      </ExternalLink>
+                    </div>
+                  </div>
                 ) : (
                   <div />
                 )}
