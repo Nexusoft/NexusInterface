@@ -345,11 +345,11 @@ export async function downloadAndInstall({
       type: TYPE.MODULE_DOWNLOAD_FINISH,
       payload: { moduleName },
     });
-    // if (filePath && fs.existsSync(filePath)) {
-    //   fs.unlink(filePath, (err) => {
-    //     if (err) console.error(err);
-    //   });
-    // }
+    if (filePath && fs.existsSync(filePath)) {
+      fs.unlink(filePath, (err) => {
+        if (err) console.error(err);
+      });
+    }
   }
 }
 
