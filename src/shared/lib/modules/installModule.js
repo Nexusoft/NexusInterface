@@ -71,53 +71,60 @@ async function copyModule(files, source, dest) {
  * @param {string} path
  * @returns
  */
-async function doInstall(path) {
-  let module;
-  try {
-    module = await loadModuleFromDir(path);
-  } catch (err) {
-    openErrorDialog({
-      message: __('Failed to load module'),
-      note: err.message,
-    });
-  }
+function doInstall(path) {
+  return new Promise(async (resolve) => {
+    let module;
+    try {
+      module = await loadModuleFromDir(path);
+    } catch (err) {
+      openErrorDialog({
+        message: __('Failed to load module'),
+        note: err.message,
+      });
+    }
 
-  if (!module) return;
+    if (!module) return resolve();
 
-  openModal(ModuleDetailsModal, {
-    module,
-    forInstall: true,
-    install: async () => {
-      try {
-        const dest = join(modulesDir, module.info.name);
-        if (fs.existsSync(dest)) {
-          const agreed = await confirm({
-            question: __('Overwrite module?'),
-            note: __('A module with the same directory name already exists'),
+    openModal(ModuleDetailsModal, {
+      module,
+      forInstall: true,
+      onClose: resolve(),
+      install: async () => {
+        try {
+          const dest = join(modulesDir, module.info.name);
+          if (fs.existsSync(dest)) {
+            const agreed = await confirm({
+              question: __('Overwrite module?'),
+              note: __('A module with the same directory name already exists'),
+            });
+            if (!agreed) return;
+
+            await deleteDirectory(dest, { glob: false });
+          }
+
+          await copyModule(module.info.files, path, dest);
+          GA.SendEvent('Modules', 'installModule', 'name', module.info.name);
+
+          resolve(dest);
+          openSuccessDialog({
+            message: __('Module has been successfully installed'),
+            note: __(
+              'The wallet will now be refreshed for the new module to take effect'
+            ),
+            onClose: () => {
+              location.reload();
+            },
           });
-          if (!agreed) return;
-
-          await deleteDirectory(dest, { glob: false });
+        } catch (err) {
+          console.error(err);
+          openErrorDialog({
+            message: __('Failed to install module'),
+            note: err.message,
+          });
+          return resolve();
         }
-
-        await copyModule(module.info.files, path, dest);
-        GA.SendEvent('Modules', 'installModule', 'name', module.info.name);
-
-        openSuccessDialog({
-          message: __('Module has been successfully installed'),
-          note: __(
-            'The wallet will now be refreshed for the new module to take effect'
-          ),
-          onClose: () => {
-            location.reload();
-          },
-        });
-      } catch (err) {
-        console.error(err);
-        showNotification(__('Error copying module files'), 'error');
-        return;
-      }
-    },
+      },
+    });
   });
 }
 
@@ -174,7 +181,10 @@ export async function installModule(path) {
     await doInstall(sourcePath);
   } catch (err) {
     console.error(err);
-    showNotification(__('An unknown error occurred'), 'error');
+    openErrorDialog({
+      message: __('Failed to load module'),
+      note: err.message,
+    });
     return;
   }
 }
