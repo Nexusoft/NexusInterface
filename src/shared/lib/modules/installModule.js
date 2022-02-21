@@ -88,7 +88,7 @@ function doInstall(path) {
     openModal(ModuleDetailsModal, {
       module,
       forInstall: true,
-      onClose: resolve(),
+      onClose: resolve,
       install: async () => {
         try {
           const dest = join(modulesDir, module.info.name);
