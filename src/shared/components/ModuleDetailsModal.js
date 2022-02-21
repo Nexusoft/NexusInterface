@@ -80,7 +80,12 @@ async function confirmDelete(module) {
  * @class ModuleDetailsModal
  * @extends {React.Component}
  */
-export default function ModuleDetailsModal({ module, forInstall, install }) {
+export default function ModuleDetailsModal({
+  module,
+  forInstall,
+  install,
+  ...rest
+}) {
   const moduleInfo = module.info;
   const { host, owner, repo, commit } = module.repository || {};
   const repoUrl = module.repository
@@ -101,7 +106,7 @@ export default function ModuleDetailsModal({ module, forInstall, install }) {
 
   const [isDownloading, setIsDownloading] = useState(false);
   return (
-    <ControlledModal>
+    <ControlledModal {...rest}>
       {(closeModal) => (
         <>
           <ControlledModal.Header className="relative">
