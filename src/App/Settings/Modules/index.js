@@ -37,12 +37,34 @@ const officalModules = [
   'Nexus-Interface-Invoice-Module',
 ];
 
-const OfficalSpan = styled.span(({ theme }) => ({
-  borderBottom: `1px solid ${theme.mixer(0.75)}`,
-  color: theme.mixer(0.75),
-  display: 'block',
-  textAlign: 'center',
+const OfficalSpan = styled.span(({ theme, label }) => ({
+  position: 'relative',
+  display: 'flex',
+  justifyContent: 'center',
+  marginTop: '2em',
+
+  '&::before': {
+    content: '""',
+    borderBottom: `1px solid ${theme.mixer(0.5)}`,
+    position: 'absolute',
+    top: '50%',
+    left: 0,
+    right: 0,
+  },
+
+  '&::after': {
+    content: `"${label}"`,
+    position: 'relative',
+    display: 'block',
+    padding: '0 1em',
+    background: theme.lower(theme.background, 0.3),
+    // color: theme.mixer(0.75),
+  },
 }));
+
+const OfficialModules = styled.div({
+  opacity: 0.67,
+});
 
 export default function SettingsModules() {
   const modules = useSelector((state) => state.modules);
@@ -87,22 +109,23 @@ export default function SettingsModules() {
           ))}
         </FailedModules>
       )}
-      {!!notInstalledOffialModules && notInstalledOffialModules.length > 0 && (
+      {!!notInstalledOffialModules?.length && (
         <>
-          <OfficalSpan>Offical Modules</OfficalSpan>
-          {notInstalledOffialModules.map((e) => (
-            <Module
-              style={{ opacity: '.25' }}
-              key={e}
-              module={{
-                disallowed: false,
-                notInstalled: true,
-                iconPath: null,
-                info: { displayName: e },
-                repository: { repo: e },
-              }}
-            />
-          ))}
+          <OfficalSpan label={__('Offical Modules')} />
+          <OfficialModules>
+            {notInstalledOffialModules.map((e) => (
+              <Module
+                key={e}
+                module={{
+                  disallowed: false,
+                  notInstalled: true,
+                  iconPath: null,
+                  info: { displayName: e },
+                  repository: { repo: e },
+                }}
+              />
+            ))}
+          </OfficialModules>
         </>
       )}
     </>
