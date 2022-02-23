@@ -22,7 +22,7 @@ const Svg = styled.svg(({ size = '1em' }) => ({
 
 const Icon = forwardRef(({ icon = {}, size, ...rest }, ref) => (
   <Svg viewBox={icon.viewBox} size={size} {...rest} ref={ref}>
-    <use href={`${icon.url ? icon.url : ''}#${icon.id}`} />
+    <use href={`${icon.url ? icon.url : ''}${icon.id ? '#' : ''}${icon.id}`} />
   </Svg>
 ));
 
