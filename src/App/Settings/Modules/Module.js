@@ -228,7 +228,7 @@ export default function Module({ module, ...rest }) {
   );
 }
 
-Module.PromotedModule = function ({ module, ...rest }) {
+Module.FeaturedModule = function ({ module, ...rest }) {
   return (
     <ModuleComponent {...rest}>
       <ModuleLogo>

@@ -12,7 +12,7 @@ import Tooltip from 'components/Tooltip';
 import Module from './Module';
 import AddModule from './AddModule';
 import AddDevModule from './AddDevModule';
-import officialModules from './officialModules';
+import featuredModules from './featuredModules';
 
 __ = __context('Settings.Modules');
 
@@ -58,7 +58,7 @@ const OfficalSpan = styled.span(({ theme, label }) => ({
   },
 }));
 
-const OfficialModules = styled.div({
+const FeaturedModules = styled.div({
   opacity: 0.67,
 });
 
@@ -68,7 +68,7 @@ export default function SettingsModules() {
   const devMode = useSelector((state) => state.settings.devMode);
   const moduleList = Object.values(modules);
 
-  const notInstalledOffialModules = officialModules.filter(
+  const notInstalledFeaturedModules = featuredModules.filter(
     (m) => !modules[m.name]
   );
 
@@ -105,17 +105,17 @@ export default function SettingsModules() {
           ))}
         </FailedModules>
       )}
-      {!!notInstalledOffialModules?.length && (
+      {!!notInstalledFeaturedModules?.length && (
         <>
-          <OfficalSpan label={__('Offical Modules')} />
-          <OfficialModules>
-            {notInstalledOffialModules.map((promotedModule) => (
-              <Module.PromotedModule
-                key={promotedModule.name}
-                module={promotedModule}
+          <OfficalSpan label={__('Developed by Nexus')} />
+          <FeaturedModules>
+            {notInstalledFeaturedModules.map((featuredModule) => (
+              <Module.FeaturedModule
+                key={featuredModule.name}
+                module={featuredModule}
               />
             ))}
-          </OfficialModules>
+          </FeaturedModules>
         </>
       )}
     </>
