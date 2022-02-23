@@ -12,6 +12,7 @@ import Tooltip from 'components/Tooltip';
 import Module from './Module';
 import AddModule from './AddModule';
 import AddDevModule from './AddDevModule';
+import officialModules from './officialModules';
 
 __ = __context('Settings.Modules');
 
@@ -31,11 +32,6 @@ const FailedModule = styled.div(({ theme }) => ({
     opacity: 1,
   },
 }));
-
-const officalModules = [
-  'nexus_module_catalog',
-  'Nexus-Interface-Invoice-Module',
-];
 
 const OfficalSpan = styled.span(({ theme, label }) => ({
   position: 'relative',
@@ -72,8 +68,8 @@ export default function SettingsModules() {
   const devMode = useSelector((state) => state.settings.devMode);
   const moduleList = Object.values(modules);
 
-  const notInstalledOffialModules = officalModules.filter(
-    (e) => !!!moduleList.find((d) => d?.repository?.repo === e)
+  const notInstalledOffialModules = officialModules.filter(
+    (m) => !modules[m.name]
   );
 
   useEffect(() => {
@@ -113,16 +109,10 @@ export default function SettingsModules() {
         <>
           <OfficalSpan label={__('Offical Modules')} />
           <OfficialModules>
-            {notInstalledOffialModules.map((e) => (
-              <Module
-                key={e}
-                module={{
-                  disallowed: false,
-                  notInstalled: true,
-                  iconPath: null,
-                  info: { displayName: e },
-                  repository: { repo: e },
-                }}
+            {notInstalledOffialModules.map((promotedModule) => (
+              <Module.PromotedModule
+                key={promotedModule.name}
+                module={promotedModule}
               />
             ))}
           </OfficialModules>
