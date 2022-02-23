@@ -142,7 +142,6 @@ export default function Module({ module, ...rest }) {
   };
 
   const openModuleDetails = () => {
-    if (module.notInstalled) return;
     openModal(ModuleDetailsModal, {
       module,
     });
@@ -163,7 +162,7 @@ export default function Module({ module, ...rest }) {
           {!!module.info.version && (
             <ModuleVersion>v{module.info.version}</ModuleVersion>
           )}
-          {!module.development && !module.notInstalled && (
+          {!module.development && (
             <>
               {module.incompatible && (
                 <Tooltip.Trigger
@@ -207,28 +206,49 @@ export default function Module({ module, ...rest }) {
       </ModuleInfo>
 
       <ModuleControls>
-        {!module.notInstalled ? (
-          module.development ? (
-            <Badge>{__('development')}</Badge>
-          ) : (
-            <Tooltip.Trigger
-              tooltip={
-                !module.disallowed &&
-                !module.development &&
-                (module.enabled ? 'Enabled' : 'Disabled')
-              }
-            >
-              <Switch
-                checked={module.enabled}
-                onChange={toggleModule}
-                disabled={module.disallowed || module.development}
-              />
-            </Tooltip.Trigger>
-          )
+        {module.development ? (
+          <Badge>{__('development')}</Badge>
         ) : (
-          <DownloadButton module={module} />
+          <Tooltip.Trigger
+            tooltip={
+              !module.disallowed &&
+              !module.development &&
+              (module.enabled ? 'Enabled' : 'Disabled')
+            }
+          >
+            <Switch
+              checked={module.enabled}
+              onChange={toggleModule}
+              disabled={module.disallowed || module.development}
+            />
+          </Tooltip.Trigger>
         )}
       </ModuleControls>
     </ModuleComponent>
   );
 }
+
+Module.PromotedModule = function ({ module, ...rest }) {
+  return (
+    <ModuleComponent {...rest}>
+      <ModuleLogo>
+        <Icon icon={module.icon} />
+      </ModuleLogo>
+
+      <ModuleInfo>
+        <div>
+          <ModuleName>{module.displayName}</ModuleName>
+          {!!module.version && <ModuleVersion>v{module.version}</ModuleVersion>}
+        </div>
+
+        <div>
+          <ModuleDescription>{module.description}</ModuleDescription>
+        </div>
+      </ModuleInfo>
+
+      <ModuleControls>
+        <DownloadButton module={module} />
+      </ModuleControls>
+    </ModuleComponent>
+  );
+};
