@@ -7,13 +7,17 @@ import ModuleIcon from 'components/ModuleIcon';
 import Switch from 'components/Switch';
 import Tooltip from 'components/Tooltip';
 import Icon from 'components/Icon';
+import Button from 'components/Button';
+import SimpleProgressBar from 'components/SimpleProgressBar';
 import { openModal } from 'lib/ui';
 import { confirm } from 'lib/dialog';
 import ModuleDetailsModal from 'components/ModuleDetailsModal';
 import { timing } from 'styles';
 import { updateSettings } from 'lib/settings';
+import { downloadAndInstall, abortModuleDownload } from 'lib/modules';
 import warningIcon from 'icons/warning.svg';
-import DownloadButton from './DownloadButton';
+import downloadIcon from 'icons/download.svg';
+import closeIcon from 'icons/x-circle.svg';
 
 __ = __context('Settings.Modules');
 
@@ -50,6 +54,8 @@ const ModuleInfo = styled.div({
 
 const ModuleControls = styled.div({
   gridArea: 'controls',
+  display: 'flex',
+  alignItems: 'center',
 });
 
 const ModuleName = styled.span(({ theme }) => ({
@@ -228,26 +234,79 @@ export default function Module({ module, ...rest }) {
   );
 }
 
-Module.FeaturedModule = function ({ module, ...rest }) {
+Module.FeaturedModule = function ({ featuredModule, ...rest }) {
+  const downloadProgress = useSelector((state) => {
+    const { downloaded, totalSize } =
+      state.moduleDownloads[featuredModule.name] || {};
+    return downloaded / totalSize;
+  });
+  const downloadRequest = useSelector(
+    (state) => state.moduleDownloads[featuredModule.name]?.downloadRequest
+  );
+  // `downloading` -> when the module package is being downloaded
+  // `busy` -> when the module package is being downloaded OR is in other preparation steps
+  const downloading = !!downloadRequest;
+  const busy = useSelector(
+    (state) => !!state.moduleDownloads[featuredModule.name]
+  );
+
   return (
     <ModuleComponent {...rest}>
       <ModuleLogo>
-        <Icon icon={module.icon} />
+        <Icon icon={featuredModule.icon} />
       </ModuleLogo>
 
       <ModuleInfo>
         <div>
-          <ModuleName>{module.displayName}</ModuleName>
-          {!!module.version && <ModuleVersion>v{module.version}</ModuleVersion>}
+          <ModuleName>{featuredModule.displayName}</ModuleName>
+          {!!featuredModule.version && (
+            <ModuleVersion>v{featuredModule.version}</ModuleVersion>
+          )}
         </div>
 
         <div>
-          <ModuleDescription>{module.description}</ModuleDescription>
+          <ModuleDescription>{featuredModule.description}</ModuleDescription>
         </div>
       </ModuleInfo>
 
       <ModuleControls>
-        <DownloadButton module={module} />
+        {downloading ? (
+          <>
+            <Tooltip.Trigger tooltip={__('Cancel download')}>
+              <Button
+                skin="plain-danger"
+                className="mr1"
+                onClick={abortModuleDownload}
+              >
+                <Icon icon={closeIcon} />
+              </Button>
+            </Tooltip.Trigger>
+            <SimpleProgressBar
+              label={__('Downloading %{percentage}%...', {
+                percentage: Math.round(downloadProgress * 100),
+              })}
+              progress={downloadProgress}
+              width={200}
+            />
+          </>
+        ) : (
+          <Button
+            skin="default"
+            uppercase
+            onClick={() => {
+              downloadAndInstall({
+                moduleName: featuredModule.name,
+                owner: featuredModule.repoInfo.owner,
+                repo: featuredModule.repoInfo.repo,
+                releaseId: 'latest',
+              });
+            }}
+            disabled={busy}
+          >
+            <Icon icon={downloadIcon} className="mr0_4" />
+            <span className="v-align">{__('Install')}</span>
+          </Button>
+        )}
       </ModuleControls>
     </ModuleComponent>
   );

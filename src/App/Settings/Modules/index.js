@@ -33,7 +33,7 @@ const FailedModule = styled.div(({ theme }) => ({
   },
 }));
 
-const OfficalSpan = styled.span(({ theme, label }) => ({
+const SectionSeparator = styled.span(({ theme, label }) => ({
   position: 'relative',
   display: 'flex',
   justifyContent: 'center',
@@ -59,7 +59,7 @@ const OfficalSpan = styled.span(({ theme, label }) => ({
 }));
 
 const FeaturedModules = styled.div({
-  opacity: 0.67,
+  opacity: 0.7,
 });
 
 export default function SettingsModules() {
@@ -107,12 +107,12 @@ export default function SettingsModules() {
       )}
       {!!notInstalledFeaturedModules?.length && (
         <>
-          <OfficalSpan label={__('Developed by Nexus')} />
+          <SectionSeparator label={__('Developed by Nexus')} />
           <FeaturedModules>
             {notInstalledFeaturedModules.map((featuredModule) => (
               <Module.FeaturedModule
                 key={featuredModule.name}
-                module={featuredModule}
+                featuredModule={featuredModule}
               />
             ))}
           </FeaturedModules>
