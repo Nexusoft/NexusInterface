@@ -238,7 +238,7 @@ const updateDownloadProgress = throttled((payload) => {
   });
 }, 1000);
 
-function download1(url, { moduleName, filePath }) {
+function download(url, { moduleName, filePath }) {
   return new Promise((resolve, reject) => {
     const downloadRequest = https
       .get(url)
@@ -246,7 +246,7 @@ function download1(url, { moduleName, filePath }) {
       .on('response', (response) => {
         if (String(response.statusCode).startsWith('3')) {
           // Redirecting
-          return download1(response.headers['location'], {
+          return download(response.headers['location'], {
             moduleName,
             filePath,
           })
@@ -308,7 +308,7 @@ async function downloadAsset({ moduleName, asset }) {
   }
 
   const filePath = join(dirPath, asset.name);
-  return download1(asset.browser_download_url, { moduleName, filePath });
+  return download(asset.browser_download_url, { moduleName, filePath });
 }
 
 export async function downloadAndInstall({
@@ -385,60 +385,5 @@ export function abortModuleDownload(moduleName) {
   const moduleDownload = store.getState().moduleDownloads[moduleName];
   if (moduleDownload?.downloadRequest) {
     moduleDownload.downloadRequest.abort();
-  }
-}
-
-export async function download(module) {
-  const repoId = `${module.owner}/${module.repo}`;
-  const url = `https://api.github.com/repos/${repoId}/releases/latest`;
-  try {
-    const response = await axios.get(url, {
-      headers: {
-        Accept: 'application/vnd.github.v3+json',
-      },
-    });
-    const data = response.data;
-    const assets = data.assets;
-    if (assets.length == 0) throw 'Nothing to download';
-    let tarzip;
-    for (let i = 0; i < assets.length; i++) {
-      const element = assets[i];
-      if (
-        element.content_type === 'application/x-gzip' ||
-        element.content_type === 'application/x-zip'
-      ) {
-        tarzip = element.browser_download_url;
-        break;
-      }
-    }
-
-    console.log(tarzip);
-    const file = fs.createWriteStream(
-      join(
-        walletDataDir,
-        'modules',
-        `${module.repo}_TEMP.${tarzip.endsWith('gz') ? 'tar.gz' : 'zip'}`
-      )
-    );
-    console.log(file);
-    const request = await https.get(tarzip, async function (response) {
-      console.log(response);
-      if (response.statusCode === 302) {
-        const request2 = await https.get(
-          response.headers.location,
-          async function (response) {
-            console.log(response);
-            response.pipe(file);
-            setTimeout(async () => {
-              await installModule(file.path);
-            }, 1000);
-          }
-        );
-      } else {
-        response.pipe(file);
-      }
-    });
-  } catch (e) {
-    console.log('error', e);
   }
 }
