@@ -324,6 +324,18 @@ export async function downloadAndInstall({
       payload: { moduleName },
     });
 
+    if (releaseId === 'latest') {
+      const { data: release } = await axios.get(
+        `https://api.github.com/repos/${owner}/${repo}/releases/latest`,
+        {
+          headers: {
+            Accept: 'application/vnd.github.v3+json',
+          },
+        }
+      );
+      releaseId = release.id;
+    }
+
     const { data: releaseAssets } = await axios.get(
       `https://api.github.com/repos/${owner}/${repo}/releases/${releaseId}/assets`,
       {
