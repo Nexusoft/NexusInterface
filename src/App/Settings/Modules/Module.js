@@ -259,9 +259,6 @@ Module.FeaturedModule = function ({ featuredModule, ...rest }) {
       <ModuleInfo>
         <div>
           <ModuleName>{featuredModule.displayName}</ModuleName>
-          {!!featuredModule.version && (
-            <ModuleVersion>v{featuredModule.version}</ModuleVersion>
-          )}
         </div>
 
         <div>
