@@ -5,7 +5,7 @@ export default [
   {
     name: 'nexus_interface_invoice_module',
     displayName: 'Nexus Invoice System',
-    description: 'Use Case for the Invoice System',
+    description: 'Send, pay, and manage invoices on Nexus blockchain',
     type: 'app',
     icon: invoiceIcon,
     repoInfo: {
