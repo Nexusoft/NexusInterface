@@ -18,7 +18,7 @@ export default [
     },
   },
   {
-    name: 'market-data-module',
+    name: 'market_data',
     displayName: 'Market Data',
     description: 'Market Data of Nexus trading on major exchanges',
     type: 'app',
