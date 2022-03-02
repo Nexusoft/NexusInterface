@@ -197,20 +197,7 @@ global.NEXUS = {
             typeof options
         );
       }
-      const requestId = newId();
-      return new Promise((resolve, reject) => {
-        ipcRenderer.once(
-          `proxy-response:${requestId}`,
-          (event, err, response) => {
-            if (err) {
-              reject(err);
-            } else {
-              resolve(response);
-            }
-          }
-        );
-        ipcRenderer.sendToHost('proxy-request', url, options, requestId);
-      });
+      return ipcRenderer.invoke('proxy-request', url, options);
     },
     showNotification: (options) => {
       if (!options) {
