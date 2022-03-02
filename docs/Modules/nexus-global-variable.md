@@ -249,16 +249,18 @@ secureApiCall('finance/debit/account', { address: foo, name_to: bar })
 
 ### `proxyRequest`
 
-`proxyRequest` function indirectly sends out a HTTP/HTTPS request proxied by the base wallet, and the response (or error) will be returned to your module via a Promise.
+`proxyRequest` function sends a request through the wallet's proxy, most commonly to avoid CORS issues.
 
-Normally, you don't need to call this function to send out a request from your module. You can import an `npm` package like `request` or `axios` and make HTTP requests with them as usual. However, if the server you're sending to doesn't accept CORS (Cross-origin resource sharing) requests from your module and you're having problems with CORS-related issues, then you might want to use `proxyRequest` function to bypass this. Because the base wallet isn't restricted by the same origin rule, it's free to send requests to servers even when they don't support CORS, you can use the base wallet as a proxy server for modules with `proxyRequest` function.
+Normally, you don't need to call this function to send a request from your module. However, if the server you're sending to isn't configured for CORS (Cross-origin resource sharing) requests and you don't have the necessary permission to re-configure that server, then you can use `proxyRequest` function to bypass the CORS restriction.
+
+Under the hood, this function uses `axios` to send request, so both its input and output align with `axios`'s, with an exception that is the `response` object returned will only contain these fields: `data`, `status`, `statusText`, and `headers`.
 
 ```js
-proxyRequest(url: string, options: object) : Promise<object>
+proxyRequest(url: string, config: object) : Promise<object>
 ```
 
 - `url`: string - The request URL, must be either `http://` or `https://`.
-- `options`: object - Request options that will be passed to [`axios`](https://github.com/axios/axios), so check out [`axios` documentation](https://github.com/axios/axios) for the full list of valid options. Keep in mind that function options won't work here.
+- `config`: object - Request config that will be passed to [`axios`](https://github.com/axios/axios), so check out [`axios` documentation](https://github.com/axios/axios) for the full list of valid config.
 
 Example usage:
 
