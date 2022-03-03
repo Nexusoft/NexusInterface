@@ -42,15 +42,25 @@ const ModuleComponent = styled.div(
     }
 );
 
-const ModuleLogo = styled.div({
-  fontSize: '2em',
-  cursor: 'pointer',
-});
+const ModuleLogo = styled.div(
+  ({ unclickable }) =>
+    !unclickable && {
+      cursor: 'pointer',
+    },
+  {
+    fontSize: '2em',
+  }
+);
 
-const ModuleInfo = styled.div({
-  gridArea: 'info',
-  cursor: 'pointer',
-});
+const ModuleInfo = styled.div(
+  {
+    gridArea: 'info',
+  },
+  ({ unclickable }) =>
+    !unclickable && {
+      cursor: 'pointer',
+    }
+);
 
 const ModuleControls = styled.div({
   gridArea: 'controls',
@@ -252,11 +262,11 @@ Module.FeaturedModule = function ({ featuredModule, ...rest }) {
 
   return (
     <ModuleComponent {...rest}>
-      <ModuleLogo>
+      <ModuleLogo unclickable>
         <Icon icon={featuredModule.icon} />
       </ModuleLogo>
 
-      <ModuleInfo>
+      <ModuleInfo unclickable>
         <div>
           <ModuleName>{featuredModule.displayName}</ModuleName>
         </div>
