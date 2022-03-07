@@ -44,6 +44,7 @@ Here are some topics that you can learn about:
 - [Module types](./module-types.md)
 - [Communicating between modules and the wallet](./communication.md)
 - [Module icon](./module-icon.md)
+- [Auto-update](./auto-update.md)
 
 API References
 
@@ -78,7 +79,7 @@ A tip for you is that if you already installed your module as suggested from ste
 
 You are free to choose how to deliver your module to your users, either uploading your packaged modules to your website or sending them directly via chat or forum, etc... But we **highly recommend** you to [create a release on github](https://help.github.com/en/articles/creating-releases) which enables the wallet to check and notify users whenever your module has a new version, then send the link to your module's release page via your blogs, social media, chat, or other communication channels that you use.
 
-In order for the automatic check for module updates feature to work, in your a release, the Tag version needs to be your module version number, either with or without a prefix 'v' character (e.g. `1.0.2` or `v1.0.2`), and the "This is a pre-release" check box is unchecked. The file name should be in `<module_name>_v<version>.<ext>` format (e.g. `my_module_v1.0.2.zip`). This file naming convention is not mandatory right now, but in the future, it's very possible that we will add the automatic module update feature, then this naming convention will help Nexus Wallet determine which file to download and install automatically.
+In order to make auto-update work on your module, check out [Auto-update guide](./auto-update.md).
 
 ---
 
