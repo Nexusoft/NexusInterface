@@ -8,7 +8,6 @@ import moveFile from 'move-file';
 import unzip from 'unzip-stream';
 
 // Internal
-import { walletDataDir } from 'consts/paths';
 import { backupWallet } from 'lib/wallet';
 import rpc from 'lib/rpc';
 import store, { observeStore } from 'store';
@@ -26,8 +25,7 @@ import { isSynchronized } from 'selectors';
 __ = __context('Bootstrap');
 
 const minFreeSpace = 15 * 1000 * 1000 * 1000; // 15 GB
-const fileLocation = path.join(walletDataDir, 'recent.tar.gz');
-const getExtractDest = () => {
+const getExtractDir = () => {
   const {
     settings: { coreDataDir },
   } = store.getState();
@@ -45,7 +43,8 @@ let downloadRequest = null;
  * @returns
  */
 async function checkFreeSpaceForBootstrap() {
-  const diskSpace = await checkDiskSpace(getExtractDest());
+  const extractDir = getExtractDir();
+  const diskSpace = await checkDiskSpace(extractDir);
   return diskSpace.free >= minFreeSpace;
 }
 
@@ -63,6 +62,7 @@ async function startBootstrap() {
       settings: { backupDirectory },
       core: { systemInfo },
     } = store.getState();
+    const extractDir = getExtractDir();
 
     aborting = false;
 
@@ -77,7 +77,7 @@ async function startBootstrap() {
 
     // Remove the old file if exists
     setStatus('preparing');
-    await cleanUp();
+    await cleanUp(extractDir);
 
     // Stop core if it's synchronizing to avoid downloading the db twice at the same time
     if (!isSynchronized(store.getState())) {
@@ -92,7 +92,7 @@ async function startBootstrap() {
     const downloadProgress = throttled((details) => {
       if (downloading) setStatus('downloading', details);
     }, 1000);
-    await downloadDb(downloadProgress);
+    await downloadDb({ downloadProgress, extractDir });
     downloading = false;
     if (aborting) {
       bootstrapEvents.emit('abort');
@@ -103,7 +103,7 @@ async function startBootstrap() {
     await stopCore();
 
     setStatus('moving_db');
-    await moveExtractedContent();
+    await moveExtractedContent(extractDir);
     if (aborting) {
       bootstrapEvents.emit('abort');
       return false;
@@ -122,14 +122,13 @@ async function startBootstrap() {
     }
 
     setStatus('cleaning_up');
-    await cleanUp();
+    await cleanUp(extractDir);
 
     bootstrapEvents.emit('success');
     return true;
   } catch (err) {
     bootstrapEvents.emit('error', err);
   } finally {
-    const lastStep = store.getState().bootstrap.step;
     aborting = false;
     setStatus('idle');
     // Ensure to start core after completion
@@ -144,8 +143,7 @@ async function startBootstrap() {
  * @param {*} downloadProgress
  * @returns
  */
-function downloadDb(downloadProgress) {
-  const destination = getExtractDest();
+function downloadDb({ downloadProgress, extractDir }) {
   let timerId;
   return new Promise((resolve, reject) => {
     downloadRequest = http
@@ -162,12 +160,12 @@ function downloadDb(downloadProgress) {
             timerId = downloadProgress({ downloaded, totalSize });
           })
           .on('close', () => {
-            resolve(destination);
+            resolve(extractDir);
           })
           .on('error', (err) => {
             reject(err);
           })
-          .pipe(unzip.Extract({ path: destination }));
+          .pipe(unzip.Extract({ path: extractDir }));
       })
       .on('error', (err) => {
         reject(err);
@@ -176,11 +174,13 @@ function downloadDb(downloadProgress) {
         if (downloadRequest) downloadRequest.abort();
         reject(new Error('Request timeout! ' + Date.now()));
       })
-      .on('abort', function () {
-        if (fs.existsSync(fileLocation)) {
-          fs.unlink(fileLocation, (err) => {
-            if (err) console.error(err);
-          });
+      .on('abort', async () => {
+        if (fs.existsSync(extractDir)) {
+          try {
+            await deleteDirectory(extractDir);
+          } catch (err) {
+            console.error(err);
+          }
         }
         resolve();
       });
@@ -195,41 +195,38 @@ function downloadDb(downloadProgress) {
  * Move the Extracted Database
  *
  */
-async function moveExtractedContent() {
+async function moveExtractedContent(extractDir) {
   const {
     settings: { coreDataDir },
   } = store.getState();
-  const extractDest = getExtractDest();
-  const recentContents = fs.readdirSync(extractDest);
+  const recentContents = fs.readdirSync(extractDir);
   try {
     for (let element of recentContents) {
-      if (fs.statSync(path.join(extractDest, element)).isDirectory()) {
-        const newcontents = fs.readdirSync(path.join(extractDest, element));
+      if (fs.statSync(path.join(extractDir, element)).isDirectory()) {
+        const newcontents = fs.readdirSync(path.join(extractDir, element));
         for (let deeperEle of newcontents) {
           if (
-            fs
-              .statSync(path.join(extractDest, element, deeperEle))
-              .isDirectory()
+            fs.statSync(path.join(extractDir, element, deeperEle)).isDirectory()
           ) {
             const newerContents = fs.readdirSync(
-              path.join(extractDest, element, deeperEle)
+              path.join(extractDir, element, deeperEle)
             );
             for (let evenDeeperEle of newerContents) {
               moveFile.sync(
-                path.join(extractDest, element, deeperEle, evenDeeperEle),
+                path.join(extractDir, element, deeperEle, evenDeeperEle),
                 path.join(coreDataDir, element, deeperEle, evenDeeperEle)
               );
             }
           } else {
             moveFile.sync(
-              path.join(extractDest, element, deeperEle),
+              path.join(extractDir, element, deeperEle),
               path.join(coreDataDir, element, deeperEle)
             );
           }
         }
       } else {
         moveFile.sync(
-          path.join(extractDest, element),
+          path.join(extractDir, element),
           path.join(coreDataDir, element)
         );
       }
@@ -277,18 +274,9 @@ function shouldRescan() {
  *
  * @returns
  */
-async function cleanUp() {
-  if (fs.existsSync(fileLocation)) {
-    fs.unlink(fileLocation, (err) => {
-      if (err) {
-        console.error(err);
-      }
-    });
-  }
-
-  const extractDest = getExtractDest();
-  if (fs.existsSync(extractDest)) {
-    await deleteDirectory(extractDest);
+async function cleanUp(extractDir) {
+  if (fs.existsSync(extractDir)) {
+    await deleteDirectory(extractDir);
   }
 }
 
