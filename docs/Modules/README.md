@@ -71,7 +71,7 @@ The purpose of this verification process is to ensure that all Nexus Wallet Modu
 
 #### Packaging your module
 
-Once your module is verified and you've received the repo_info.json file from Nexus team, copy this repo_info.json file to a new folder together with all production files (those that are listed in [nxs_package.json's `files` field](./nxs_package.json.md#files)) including nxs_package.json itself, compress that folder (currently only 2 compression formats are supported are `.zip` and `.tar.gz`) and distribute it.
+Once your module is verified and you've received the repo_info.json file from Nexus team, copy this repo_info.json file to a new folder together with all production files (those that are listed in [nxs_package.json's `files` field](./nxs_package.json.md#files)) including nxs_package.json itself, compress that folder (currently the only supported compression formats is `.zip`) and distribute it.
 
 A tip for you is that if you already installed your module as suggested from step 3, you can copy repo_info.json into your module installation folder (from wallet menu select "Help/Open Interface Data Folder", then open folder `modules/<your module name>`), by doing so you won't have to hand pick which file you need to include but the wallet has already done that for you. After you copied, restart your wallet to see if the non-open-source warning is gone for your module, if it's gone it means everything's right and your module is ready to be delivered.
 
