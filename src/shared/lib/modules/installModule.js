@@ -14,7 +14,6 @@ import { walletDataDir } from 'consts/paths';
 import ensureDirExists from 'utils/ensureDirExists';
 import deleteDirectory from 'utils/promisified/deleteDirectory';
 import extractZip from 'utils/promisified/extractZip';
-import extractTarball from 'utils/promisified/extractTarball';
 import { throttled } from 'utils/universal';
 import { confirm, openSuccessDialog, openErrorDialog } from 'lib/dialog';
 
@@ -24,7 +23,7 @@ __ = __context('Settings.Modules');
 
 // Temp directory for extracting module before installing
 const tempModuleDir = join(walletDataDir, '.temp_module');
-const supportedExtensions = ['.zip', '.tar.gz'];
+const supportedExtensions = ['.zip'];
 
 /**
  * Copy a module file from source to dest
@@ -157,8 +156,6 @@ export async function installModule(path) {
 
       if (path.endsWith('.zip')) {
         await extractZip(path, { dir: tempModuleDir });
-      } else if (path.endsWith('.tar.gz')) {
-        await extractTarball(path, tempModuleDir);
       }
       sourcePath = tempModuleDir;
 
@@ -345,9 +342,7 @@ export async function downloadAndInstall({
       }
     );
     const asset = releaseAssets.find(
-      ({ name }) =>
-        name.startsWith(moduleName) &&
-        (name.endsWith('.zip') || name.endsWith('.tar.gz'))
+      ({ name }) => name.startsWith(moduleName) && name.endsWith('.zip')
     );
     if (!asset) {
       openErrorDialog({
