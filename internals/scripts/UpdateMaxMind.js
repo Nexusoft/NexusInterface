@@ -2,26 +2,6 @@ const chalk = require('chalk');
 const https = require('https');
 const path = require('path');
 const fs = require('fs');
-const tar = require('tar');
-
-let extractedLoc = null;
-function extractTarball(source, dest) {
-  return new Promise((resolve, reject) => {
-    fs.createReadStream(source)
-      .pipe(tar.extract({ C: dest }))
-      .on('entry', (entry) => {
-        if (!extractedLoc) {
-          extractedLoc = entry.absolute;
-        }
-      })
-      .on('error', function (er) {
-        reject(er);
-      })
-      .on('end', function () {
-        resolve(null);
-      });
-  });
-}
 
 let downloadRequest = null;
 const fileLocation =
@@ -75,31 +55,6 @@ const promise = new Promise((resolve, reject) => {
 try {
   promise.then((e) => {
     console.log(chalk.green.bold('Finished Downloading'));
-    extractTarball(
-      fileLocation,
-      process.platform === 'win32' || process.platform === 'darwin'
-        ? appDataDir
-        : process.env.HOME
-    ).then((e) => {
-      const dest = path.join(
-        __dirname,
-        '../..',
-        '/assets/GeoLite2-City',
-        path.basename(extractedLoc)
-      );
-      fs.rename(extractedLoc, dest, (err) => {
-        if (err) return console.error(err);
-
-        console.log(chalk.yellowBright.bold('Success!'));
-        fs.unlink(fileLocation, (err) => {
-          if (err) console.error(err);
-        });
-        fs.unlink(extractedLoc, (err) => {
-          if (err) console.error(err);
-        });
-        console.log(chalk.yellowBright.bold('Deleted Old Files'));
-      });
-    });
   });
 } finally {
 }
