@@ -145,6 +145,13 @@ export const loadOwnedTokens = async () => {
   }
 };
 
+function processAccount(account) {
+  if (account.name?.startsWith?.('local:')) {
+    account.nameIsLocal = true;
+    account.name = account.name.substring(6);
+  }
+}
+
 export const loadAccounts = legacyMode
   ? // Legacy Mode
     async () => {
@@ -213,6 +220,7 @@ export const loadAccounts = legacyMode
     async () => {
       try {
         const accounts = await callApi('finance/list/all');
+        accounts.forEach(processAccount);
         store.dispatch({ type: TYPE.SET_TRITIUM_ACCOUNTS, payload: accounts });
       } catch (err) {
         console.error('finance/list/all failed', err);
