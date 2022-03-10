@@ -44,7 +44,7 @@ const getLegacyDefaultAddress = memoize((myAccounts) => {
   return account?.addresses?.[0];
 });
 const getTritiumDefaultAddress = memoize((accounts) => {
-  const account = accounts?.find((a) => a.name === '~default');
+  const account = accounts?.find((a) => a.name === 'default' && a.nameIsLocal);
   return account?.address;
 });
 
