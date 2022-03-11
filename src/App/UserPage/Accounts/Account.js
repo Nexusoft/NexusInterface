@@ -100,7 +100,7 @@ export default function Account({ account }) {
           <div className="flex center space-between">
             <span>
               {__(
-                '<b>%{account_name}</b> account address',
+                '<b>%{account_name}</b> address',
                 {
                   account_name: account.name || __('Unnamed'),
                 },
