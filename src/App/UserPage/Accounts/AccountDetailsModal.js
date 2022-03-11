@@ -5,10 +5,11 @@ import Button from 'components/Button';
 import InfoField from 'components/InfoField';
 import AdjustStakeModal from 'components/AdjustStakeModal';
 import QRButton from 'components/QRButton';
+import TokenName from 'components/TokenName';
 import { goToSend } from 'lib/send';
 import { formatDateTime, formatNumber } from 'lib/intl';
 import { openModal } from 'lib/ui';
-import TokenName from 'components/TokenName';
+import { selectUsername } from 'lib/user';
 
 import { totalBalance } from './utils';
 
@@ -25,6 +26,7 @@ const timeFormatOptions = {
 
 export default function AccountDetailsModal({ account }) {
   const stakeInfo = useSelector((state) => state.user.stakeInfo);
+  const username = useSelector(selectUsername);
   return (
     <ControlledModal>
       {(closeModal) => (
@@ -34,7 +36,14 @@ export default function AccountDetailsModal({ account }) {
           </ControlledModal.Header>
           <ControlledModal.Body>
             <InfoField ratio={[1, 2]} label={__('Account name')}>
-              {account.name || <span className="dim">{__('Unnamed')}</span>}
+              {account.name ? (
+                <span>
+                  {!!account.nameIsLocal && `${username}:`}
+                  {account.name}
+                </span>
+              ) : (
+                <span className="dim">{__('Unnamed')}</span>
+              )}
             </InfoField>
             <InfoField ratio={[1, 2]} label={__('Created at')}>
               {formatDateTime(account.created * 1000, timeFormatOptions)}
