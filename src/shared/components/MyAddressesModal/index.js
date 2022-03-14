@@ -92,7 +92,7 @@ export default function MyAddressesModal() {
             </Button>
           </Tooltip.Trigger>
         </Search>
-        {filteredAccounts().map((acc) => (
+        {filteredAccounts.map((acc) => (
           <Account key={acc.account} account={acc} searchQuery={searchQuery} />
         ))}
 
