@@ -38,7 +38,7 @@ const SendAllLink = styled(Link)({
   verticalAlign: 'middle',
 });
 
-function SendAll({ nxsToFiat, amountFieldName, form }) {
+function SendAll({ amountFieldName, form }) {
   const sendFrom = useFieldValue('sendFrom');
   const amount = useFieldValue(amountFieldName);
   const myAccounts = useSelector((state) => state.myAccounts);
@@ -53,7 +53,6 @@ function SendAll({ nxsToFiat, amountFieldName, form }) {
         onClick={(evt) => {
           evt.preventDefault();
           form.change(amountFieldName, fullAmount);
-          nxsToFiat(fullAmount);
         }}
       >
         {__('Send all')}
