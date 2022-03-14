@@ -1,5 +1,4 @@
 import memoize from 'utils/memoize';
-import axios from 'axios';
 
 import * as TYPE from 'consts/actionTypes';
 import store, { observeStore } from 'store';
@@ -68,9 +67,6 @@ function handleIpcMessage(event) {
     case 'send':
       send(event.args);
       break;
-    case 'proxy-request':
-      proxyRequest(event.args);
-      break;
     case 'rpc-call':
       rpcCall(event.args);
       break;
@@ -116,38 +112,6 @@ function send([{ sendFrom, recipients, advancedOptions }]) {
     }
   } else {
     goToSend({ sendFrom, recipients, advancedOptions });
-  }
-}
-
-async function proxyRequest([url, options, requestId]) {
-  const { activeAppModule } = store.getState();
-  try {
-    const lUrl = url.toLowerCase();
-    if (!lUrl.startsWith('http://') && !lUrl.startsWith('https://')) {
-      throw 'Proxy request must be in HTTP or HTTPS protocol';
-    }
-    if (options) {
-      // disallow baseURL and url options, url must be absolute
-      delete options.baseURL;
-      delete options.url;
-    }
-
-    const response = await axios(url, options);
-    if (activeAppModule?.webview) {
-      activeAppModule.webview.send(
-        `proxy-response${requestId ? `:${requestId}` : ''}`,
-        null,
-        response && JSON.parse(JSON.stringify(response))
-      );
-    }
-  } catch (err) {
-    console.error(err);
-    if (activeAppModule?.webview) {
-      activeAppModule.webview.send(
-        `proxy-response${requestId ? `:${requestId}` : ''}`,
-        err.toString ? err.toString() : err
-      );
-    }
   }
 }
 

@@ -116,6 +116,10 @@ onUserStatusUpdate(listener)
 
 were removed and replaced by `onWalletDataUpdated(listener)` which registers a single listener for any kind of wallet data change. `listener` will now also be called when there's a change in `addressBook`.
 
+## Dropped support for `.tar.gz` file type
+
+Starting from v3.1, in order to simplify the code and reduce the number of project dependencies, `.tar.gz` is no longer supported when you install a module. The only supported archive file type is `.zip`. Given the popularity of `.zip` type, this change is expected to have almost no impact on module developers.
+
 ---
 
 ## Notable non-breaking changes

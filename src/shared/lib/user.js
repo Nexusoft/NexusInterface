@@ -133,17 +133,36 @@ export const switchUser = async (session) => {
   store.dispatch({ type: TYPE.SWITCH_USER, payload: { session, status } });
 };
 
+function processToken(token) {
+  if (token.ticker?.startsWith?.('local:')) {
+    token.tickerIsLocal = true;
+    token.ticker = token.ticker.substring(6);
+  }
+}
+
 export const loadOwnedTokens = async () => {
   try {
-    const result = await listAll('finance/list/tokens');
+    const tokens = await listAll('finance/list/tokens');
+    tokens.forEach(processToken);
     store.dispatch({
       type: TYPE.SET_USER_OWNED_TOKENS,
-      payload: result,
+      payload: tokens,
     });
   } catch (err) {
     console.error('finance/list/tokens failed', err);
   }
 };
+
+function processAccount(account) {
+  if (account.name?.startsWith?.('local:')) {
+    account.nameIsLocal = true;
+    account.name = account.name.substring(6);
+  }
+  if (account.ticker?.startsWith?.('local:')) {
+    account.tickerIsLocal = true;
+    account.ticker = account.ticker.substring(6);
+  }
+}
 
 export const loadAccounts = legacyMode
   ? // Legacy Mode
@@ -213,6 +232,7 @@ export const loadAccounts = legacyMode
     async () => {
       try {
         const accounts = await callApi('finance/list/all');
+        accounts.forEach(processAccount);
         store.dispatch({ type: TYPE.SET_TRITIUM_ACCOUNTS, payload: accounts });
       } catch (err) {
         console.error('finance/list/all failed', err);

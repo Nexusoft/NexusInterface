@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { useSelector } from 'react-redux';
 
 import Link from 'components/Link';
 import NexusAddress from 'components/NexusAddress';
@@ -6,6 +7,8 @@ import QRButton from 'components/QRButton';
 import TokenName from 'components/TokenName';
 import { formatNumber } from 'lib/intl';
 import { openModal } from 'lib/ui';
+import { selectUsername } from 'lib/user';
+
 import AccountDetailsModal from './AccountDetailsModal';
 import AccountHistoryModal from './AccountHistoryModal';
 import RenameAccountModal from './RenameAccountModal';
@@ -27,7 +30,12 @@ const UnNamed = styled(AccountName)(({ theme }) => ({
   color: theme.mixer(0.8),
 }));
 
+const Prefix = styled.span(({ theme }) => ({
+  color: theme.mixer(0.5),
+}));
+
 export default function Account({ account }) {
+  const username = useSelector(selectUsername);
   return (
     <AccountComponent>
       <div className="flex space-between">
@@ -39,7 +47,10 @@ export default function Account({ account }) {
             }}
           >
             {account.name ? (
-              <AccountName>{account.name}</AccountName>
+              <AccountName>
+                {!!account.nameIsLocal && <Prefix>{username}:</Prefix>}
+                {account.name}
+              </AccountName>
             ) : (
               <UnNamed>{__('Unnamed account')}</UnNamed>
             )}
@@ -89,7 +100,7 @@ export default function Account({ account }) {
           <div className="flex center space-between">
             <span>
               {__(
-                '<b>%{account_name}</b> account address',
+                '<b>%{account_name}</b> address',
                 {
                   account_name: account.name || __('Unnamed'),
                 },

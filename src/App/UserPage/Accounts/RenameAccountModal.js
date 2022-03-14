@@ -10,6 +10,7 @@ import { callApi } from 'lib/tritiumApi';
 import { loadAccounts } from 'lib/user';
 import { showNotification } from 'lib/ui';
 import { createLocalNameFee } from 'lib/fees';
+import { selectUsername } from 'lib/user';
 import memoize from 'utils/memoize';
 import GA from 'lib/googleAnalytics';
 
@@ -88,7 +89,7 @@ function handleSubmitSuccess({ result, name, closeModal }) {
 }
 
 export default function RenameAccountForm({ account }) {
-  const username = useSelector((state) => state.user.status?.username);
+  const username = useSelector(selectUsername);
 
   return (
     <ControlledModal maxWidth={600}>

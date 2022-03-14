@@ -19,6 +19,7 @@ import {
   migrateToMainnet,
   setAllowPrerelease,
 } from './updater';
+import { proxyRequest } from './modules';
 
 let mainWindow;
 global.forceQuit = false;
@@ -95,6 +96,9 @@ ipcMain.on('get-path', (event, name) => {
 ipcMain.on('get-file-server-domain', (event) => {
   event.returnValue = getDomain();
 });
+
+// Modules
+ipcMain.handle('proxy-request', (event, ...params) => proxyRequest(...params));
 
 // START RENDERER
 // =============================================================================

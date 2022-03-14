@@ -179,7 +179,7 @@ global.NEXUS = {
         ipcRenderer.sendToHost('secure-api-call', endpoint, params, callId);
       });
     },
-    proxyRequest: (url, options) => {
+    proxyRequest: (url, config) => {
       if (!url) {
         throw new Error('`url` is required');
       }
@@ -188,29 +188,16 @@ global.NEXUS = {
           'Expected `url` to be `string` type, found: ' + typeof url
         );
       }
-      if (!options) {
-        throw new Error('`options` is required');
+      if (!config) {
+        throw new Error('`config` is required');
       }
-      if (typeof options !== 'object' && typeof options !== 'undefined') {
+      if (typeof config !== 'object' && typeof config !== 'undefined') {
         throw new Error(
-          'Expected `options` to be `object` or `undefined` type, found: ' +
-            typeof options
+          'Expected `config` to be `object` or `undefined` type, found: ' +
+            typeof config
         );
       }
-      const requestId = newId();
-      return new Promise((resolve, reject) => {
-        ipcRenderer.once(
-          `proxy-response:${requestId}`,
-          (event, err, response) => {
-            if (err) {
-              reject(err);
-            } else {
-              resolve(response);
-            }
-          }
-        );
-        ipcRenderer.sendToHost('proxy-request', url, options, requestId);
-      });
+      return ipcRenderer.invoke('proxy-request', url, config);
     },
     showNotification: (options) => {
       if (!options) {

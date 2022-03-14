@@ -7,13 +7,17 @@ import ModuleIcon from 'components/ModuleIcon';
 import Switch from 'components/Switch';
 import Tooltip from 'components/Tooltip';
 import Icon from 'components/Icon';
+import Button from 'components/Button';
+import SimpleProgressBar from 'components/SimpleProgressBar';
 import { openModal } from 'lib/ui';
 import { confirm } from 'lib/dialog';
 import ModuleDetailsModal from 'components/ModuleDetailsModal';
 import { timing } from 'styles';
 import { updateSettings } from 'lib/settings';
+import { downloadAndInstall, abortModuleDownload } from 'lib/modules';
 import warningIcon from 'icons/warning.svg';
-import DownloadButton from './DownloadButton';
+import downloadIcon from 'icons/download.svg';
+import closeIcon from 'icons/x-circle.svg';
 
 __ = __context('Settings.Modules');
 
@@ -38,18 +42,30 @@ const ModuleComponent = styled.div(
     }
 );
 
-const ModuleLogo = styled.div({
-  fontSize: '2em',
-  cursor: 'pointer',
-});
+const ModuleLogo = styled.div(
+  ({ unclickable }) =>
+    !unclickable && {
+      cursor: 'pointer',
+    },
+  {
+    fontSize: '2em',
+  }
+);
 
-const ModuleInfo = styled.div({
-  gridArea: 'info',
-  cursor: 'pointer',
-});
+const ModuleInfo = styled.div(
+  {
+    gridArea: 'info',
+  },
+  ({ unclickable }) =>
+    !unclickable && {
+      cursor: 'pointer',
+    }
+);
 
 const ModuleControls = styled.div({
   gridArea: 'controls',
+  display: 'flex',
+  alignItems: 'center',
 });
 
 const ModuleName = styled.span(({ theme }) => ({
@@ -142,7 +158,6 @@ export default function Module({ module, ...rest }) {
   };
 
   const openModuleDetails = () => {
-    if (module.notInstalled) return;
     openModal(ModuleDetailsModal, {
       module,
     });
@@ -163,7 +178,7 @@ export default function Module({ module, ...rest }) {
           {!!module.info.version && (
             <ModuleVersion>v{module.info.version}</ModuleVersion>
           )}
-          {!module.development && !module.notInstalled && (
+          {!module.development && (
             <>
               {module.incompatible && (
                 <Tooltip.Trigger
@@ -207,28 +222,99 @@ export default function Module({ module, ...rest }) {
       </ModuleInfo>
 
       <ModuleControls>
-        {!module.notInstalled ? (
-          module.development ? (
-            <Badge>{__('development')}</Badge>
-          ) : (
-            <Tooltip.Trigger
-              tooltip={
-                !module.disallowed &&
-                !module.development &&
-                (module.enabled ? 'Enabled' : 'Disabled')
-              }
-            >
-              <Switch
-                checked={module.enabled}
-                onChange={toggleModule}
-                disabled={module.disallowed || module.development}
-              />
-            </Tooltip.Trigger>
-          )
+        {module.development ? (
+          <Badge>{__('development')}</Badge>
         ) : (
-          <DownloadButton module={module} />
+          <Tooltip.Trigger
+            tooltip={
+              !module.disallowed &&
+              !module.development &&
+              (module.enabled ? 'Enabled' : 'Disabled')
+            }
+          >
+            <Switch
+              checked={module.enabled}
+              onChange={toggleModule}
+              disabled={module.disallowed || module.development}
+            />
+          </Tooltip.Trigger>
         )}
       </ModuleControls>
     </ModuleComponent>
   );
 }
+
+Module.FeaturedModule = function ({ featuredModule, ...rest }) {
+  const downloadProgress = useSelector((state) => {
+    const { downloaded, totalSize } =
+      state.moduleDownloads[featuredModule.name] || {};
+    return downloaded / totalSize;
+  });
+  const downloadRequest = useSelector(
+    (state) => state.moduleDownloads[featuredModule.name]?.downloadRequest
+  );
+  // `downloading` -> when the module package is being downloaded
+  // `busy` -> when the module package is being downloaded OR is in other preparation steps
+  const downloading = !!downloadRequest;
+  const busy = useSelector(
+    (state) => !!state.moduleDownloads[featuredModule.name]
+  );
+
+  return (
+    <ModuleComponent {...rest}>
+      <ModuleLogo unclickable>
+        <Icon icon={featuredModule.icon} />
+      </ModuleLogo>
+
+      <ModuleInfo unclickable>
+        <div>
+          <ModuleName>{featuredModule.displayName}</ModuleName>
+        </div>
+
+        <div>
+          <ModuleDescription>{featuredModule.description}</ModuleDescription>
+        </div>
+      </ModuleInfo>
+
+      <ModuleControls>
+        {downloading ? (
+          <>
+            <Tooltip.Trigger tooltip={__('Cancel download')}>
+              <Button
+                skin="plain-danger"
+                className="mr1"
+                onClick={abortModuleDownload}
+              >
+                <Icon icon={closeIcon} />
+              </Button>
+            </Tooltip.Trigger>
+            <SimpleProgressBar
+              label={__('Downloading %{percentage}%...', {
+                percentage: Math.round(downloadProgress * 100),
+              })}
+              progress={downloadProgress}
+              width={200}
+            />
+          </>
+        ) : (
+          <Button
+            skin="default"
+            uppercase
+            onClick={() => {
+              downloadAndInstall({
+                moduleName: featuredModule.name,
+                owner: featuredModule.repoInfo.owner,
+                repo: featuredModule.repoInfo.repo,
+                releaseId: 'latest',
+              });
+            }}
+            disabled={busy}
+          >
+            <Icon icon={downloadIcon} className="mr0_4" />
+            <span className="v-align">{__('Install')}</span>
+          </Button>
+        )}
+      </ModuleControls>
+    </ModuleComponent>
+  );
+};

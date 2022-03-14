@@ -36,7 +36,8 @@ async function getLatestRelease(repo) {
       },
     });
     const cacheObj = {
-      version: response.data.tag_name,
+      id: response.data.id,
+      tag_name: response.data.tag_name,
       assets: !!response.data.assets,
       etag: response.headers.etag,
       time: Date.now(),
@@ -46,7 +47,7 @@ async function getLatestRelease(repo) {
   } catch (err) {
     if (err.response?.status === 304) {
       // 304 = Not modified
-      return { tag_name: repoCache.version, assets: repoCache.assets };
+      return repoCache;
     }
     console.error(err);
     return null;

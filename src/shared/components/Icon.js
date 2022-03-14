@@ -26,4 +26,15 @@ const Icon = forwardRef(({ icon = {}, size, ...rest }, ref) => (
   </Svg>
 ));
 
+Icon.Raw = forwardRef(({ icon, size, ...rest }, ref) => (
+  <Svg
+    as="img"
+    src={icon.url}
+    viewBox={icon.viewBox}
+    size={size}
+    {...rest}
+    ref={ref}
+  />
+));
+
 export default Icon;

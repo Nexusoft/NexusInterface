@@ -95,6 +95,7 @@ export async function checkForUpdates() {
       settings: { autoUpdate },
     } = store.getState();
     if (autoUpdate) {
+      clearTimeout(timerId);
       timerId = setTimeout(checkForUpdates, autoUpdateInterval);
     }
   }

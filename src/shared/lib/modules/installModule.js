@@ -1,5 +1,7 @@
 import { join, dirname, normalize } from 'path';
 import fs from 'fs';
+import https from 'https';
+import axios from 'axios';
 
 import store from 'store';
 import * as TYPE from 'consts/actionTypes';
@@ -12,7 +14,7 @@ import { walletDataDir } from 'consts/paths';
 import ensureDirExists from 'utils/ensureDirExists';
 import deleteDirectory from 'utils/promisified/deleteDirectory';
 import extractZip from 'utils/promisified/extractZip';
-import extractTarball from 'utils/promisified/extractTarball';
+import { throttled } from 'utils/universal';
 import { confirm, openSuccessDialog, openErrorDialog } from 'lib/dialog';
 
 import { loadModuleFromDir, loadDevModuleFromDir } from './module';
@@ -21,7 +23,7 @@ __ = __context('Settings.Modules');
 
 // Temp directory for extracting module before installing
 const tempModuleDir = join(walletDataDir, '.temp_module');
-const supportedExtensions = ['.zip', '.tar.gz'];
+const supportedExtensions = ['.zip'];
 
 /**
  * Copy a module file from source to dest
@@ -68,53 +70,60 @@ async function copyModule(files, source, dest) {
  * @param {string} path
  * @returns
  */
-async function doInstall(path) {
-  let module;
-  try {
-    module = await loadModuleFromDir(path);
-  } catch (err) {
-    openErrorDialog({
-      message: __('Failed to load module'),
-      note: err.message,
-    });
-  }
+function doInstall(path) {
+  return new Promise(async (resolve) => {
+    let module;
+    try {
+      module = await loadModuleFromDir(path);
+    } catch (err) {
+      openErrorDialog({
+        message: __('Failed to load module'),
+        note: err.message,
+      });
+    }
 
-  if (!module) return;
+    if (!module) return resolve();
 
-  openModal(ModuleDetailsModal, {
-    module,
-    forInstall: true,
-    install: async () => {
-      try {
-        const dest = join(modulesDir, module.info.name);
-        if (fs.existsSync(dest)) {
-          const agreed = await confirm({
-            question: __('Overwrite module?'),
-            note: __('A module with the same directory name already exists'),
+    openModal(ModuleDetailsModal, {
+      module,
+      forInstall: true,
+      onClose: resolve,
+      install: async () => {
+        try {
+          const dest = join(modulesDir, module.info.name);
+          if (fs.existsSync(dest)) {
+            const agreed = await confirm({
+              question: __('Overwrite module?'),
+              note: __('A module with the same directory name already exists'),
+            });
+            if (!agreed) return;
+
+            await deleteDirectory(dest, { glob: false });
+          }
+
+          await copyModule(module.info.files, path, dest);
+          GA.SendEvent('Modules', 'installModule', 'name', module.info.name);
+
+          resolve(dest);
+          openSuccessDialog({
+            message: __('Module has been successfully installed'),
+            note: __(
+              'The wallet will now be refreshed for the new module to take effect'
+            ),
+            onClose: () => {
+              location.reload();
+            },
           });
-          if (!agreed) return;
-
-          await deleteDirectory(dest, { glob: false });
+        } catch (err) {
+          console.error(err);
+          openErrorDialog({
+            message: __('Failed to install module'),
+            note: err.message,
+          });
+          return resolve();
         }
-
-        await copyModule(module.info.files, path, dest);
-        GA.SendEvent('Modules', 'installModule', 'name', module.info.name);
-
-        openSuccessDialog({
-          message: __('Module has been successfully installed'),
-          note: __(
-            'The wallet will now be refreshed for the new module to take effect'
-          ),
-          onClose: () => {
-            location.reload();
-          },
-        });
-      } catch (err) {
-        console.error(err);
-        showNotification(__('Error copying module files'), 'error');
-        return;
-      }
-    },
+      },
+    });
   });
 }
 
@@ -147,8 +156,6 @@ export async function installModule(path) {
 
       if (path.endsWith('.zip')) {
         await extractZip(path, { dir: tempModuleDir });
-      } else if (path.endsWith('.tar.gz')) {
-        await extractTarball(path, tempModuleDir);
       }
       sourcePath = tempModuleDir;
 
@@ -171,7 +178,10 @@ export async function installModule(path) {
     await doInstall(sourcePath);
   } catch (err) {
     console.error(err);
-    showNotification(__('An unknown error occurred'), 'error');
+    openErrorDialog({
+      message: __('Failed to load module'),
+      note: err.message,
+    });
     return;
   }
 }
@@ -218,61 +228,157 @@ export async function addDevModule(dirPath) {
   });
 }
 
-import https from 'https';
-import axios from 'axios';
+const updateDownloadProgress = throttled((payload) => {
+  store.dispatch({
+    type: TYPE.MODULE_DOWNLOAD_PROGRESS,
+    payload,
+  });
+}, 1000);
 
-export async function download(module) {
-  const repoId = `${module.owner}/${module.repo}`;
-  const url = `https://api.github.com/repos/${repoId}/releases/latest`;
+function download(url, { moduleName, filePath }) {
+  return new Promise((resolve, reject) => {
+    const downloadRequest = https
+      .get(url)
+      .setTimeout(180000)
+      .on('response', (response) => {
+        if (String(response.statusCode).startsWith('3')) {
+          // Redirecting
+          return download(response.headers['location'], {
+            moduleName,
+            filePath,
+          })
+            .then(resolve)
+            .catch(reject);
+        }
+
+        const totalSize = parseInt(response.headers['content-length'], 10);
+
+        let downloaded = 0;
+        const file = fs.createWriteStream(filePath);
+
+        response
+          .on('data', (chunk) => {
+            downloaded += chunk.length;
+            updateDownloadProgress({
+              moduleName,
+              downloaded,
+              totalSize,
+              downloadRequest,
+            });
+          })
+          .on('close', () => {
+            resolve(filePath);
+          })
+          .on('error', (err) => {
+            reject(err);
+          })
+          .pipe(file);
+      })
+      .on('error', (err) => {
+        reject(err);
+      })
+      .on('timeout', function () {
+        if (downloadRequest) downloadRequest.abort();
+        reject(new Error('Request timeout!'));
+      })
+      .on('abort', function () {
+        resolve(null);
+      });
+  });
+}
+
+async function downloadAsset({ moduleName, asset }) {
+  const dirPath = join(walletDataDir, '.downloads');
+  let dirStat;
   try {
-    const response = await axios.get(url, {
-      headers: {
-        Accept: 'application/vnd.github.v3+json',
-      },
+    dirStat = await fs.promises.stat(dirPath);
+  } catch (err) {
+    if (err.code === 'ENOENT') {
+      // Create directory if it doesn't exist
+      await fs.promises.mkdir(dirPath, { recursive: true });
+    } else {
+      throw err;
+    }
+  }
+  if (dirStat && !dirStat.isDirectory()) {
+    throw new Error(`${dirPath} is not a directory`);
+  }
+
+  const filePath = join(dirPath, asset.name);
+  return download(asset.browser_download_url, { moduleName, filePath });
+}
+
+export async function downloadAndInstall({
+  moduleName,
+  owner,
+  repo,
+  releaseId,
+}) {
+  let filePath;
+  try {
+    store.dispatch({
+      type: TYPE.MODULE_DOWNLOAD_START,
+      payload: { moduleName },
     });
-    console.log(response);
-    const data = response.data;
-    const assets = data.assets;
-    if (assets.length == 0) throw 'Nothing to download';
-    let tarzip;
-    for (let i = 0; i < assets.length; i++) {
-      const element = assets[i];
-      if (
-        element.content_type === 'application/x-gzip' ||
-        element.content_type === 'application/x-zip'
-      ) {
-        tarzip = element.browser_download_url;
-        break;
-      }
+
+    if (releaseId === 'latest') {
+      const { data: release } = await axios.get(
+        `https://api.github.com/repos/${owner}/${repo}/releases/latest`,
+        {
+          headers: {
+            Accept: 'application/vnd.github.v3+json',
+          },
+        }
+      );
+      releaseId = release.id;
     }
 
-    console.log(tarzip);
-    const file = fs.createWriteStream(
-      join(
-        walletDataDir,
-        'modules',
-        `${module.repo}_TEMP.${tarzip.endsWith('gz') ? 'tar.gz' : 'zip'}`
-      )
-    );
-    console.log(file);
-    const request = await https.get(tarzip, async function (response) {
-      console.log(response);
-      if (response.statusCode === 302) {
-        const request2 = await https.get(
-          response.headers.location,
-          async function (response) {
-            console.log(response);
-            response.pipe(file);
-            setTimeout(async () => {
-              await installModule(file.path);
-            }, 1000);
-          }
-        );
-      } else {
-        response.pipe(file);
+    const { data: releaseAssets } = await axios.get(
+      `https://api.github.com/repos/${owner}/${repo}/releases/${releaseId}/assets`,
+      {
+        headers: {
+          Accept: 'application/vnd.github.v3+json',
+        },
       }
+    );
+    const asset = releaseAssets.find(
+      ({ name }) => name.startsWith(moduleName) && name.endsWith('.zip')
+    );
+    if (!asset) {
+      openErrorDialog({
+        message: __('Cannot find module archive file among assets'),
+      });
+      return;
+    }
+    filePath = await downloadAsset({
+      moduleName,
+      asset: asset,
     });
-  } catch (e) {
-    console.log('error', e);
+
+    if (filePath) {
+      await installModule(filePath);
+    }
+  } catch (err) {
+    openErrorDialog({
+      message: __('Error downloading module'),
+      note: err.message,
+    });
+  } finally {
+    store.dispatch({
+      type: TYPE.MODULE_DOWNLOAD_FINISH,
+      payload: { moduleName },
+    });
+    if (filePath && fs.existsSync(filePath)) {
+      fs.unlink(filePath, (err) => {
+        if (err) console.error(err);
+      });
+    }
+  }
+}
+
+export function abortModuleDownload(moduleName) {
+  const moduleDownload = store.getState().moduleDownloads[moduleName];
+  if (moduleDownload?.downloadRequest) {
+    moduleDownload.downloadRequest.abort();
   }
 }
