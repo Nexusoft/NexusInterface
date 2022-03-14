@@ -1,4 +1,5 @@
 import path from 'path';
+import { useSelector } from 'react-redux';
 
 import Form from 'components/Form';
 import SettingsField from 'components/SettingsField';
@@ -9,6 +10,7 @@ import { updateSettings } from 'lib/settings';
 import { confirm, openErrorDialog } from 'lib/dialog';
 import { restartCore } from 'lib/core';
 import { defaultConfig } from 'lib/coreConfig';
+import { isCoreConnected } from 'selectors';
 import { legacyMode } from 'consts/misc';
 import deleteDirectory from 'utils/promisified/deleteDirectory';
 import { consts } from 'styles';
@@ -346,6 +348,7 @@ function PortSettings() {
 }
 
 function LegacySettings() {
+  const coreConnected = useSelector(isCoreConnected);
   return (
     !!legacyMode && (
       <>
