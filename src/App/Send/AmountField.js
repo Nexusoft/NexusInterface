@@ -140,7 +140,10 @@ export default function AmountField({ parentFieldName = '', hideSendAll }) {
       <SendAmountEqual>=</SendAmountEqual>
 
       <SendAmountField>
-        <FormField connectLabel label={fiatCurrency}>
+        <FormField
+          connectLabel
+          label={__('%{currency} amount', { currency: fiatCurrency })}
+        >
           <Form.TextField name={fiatAmountFieldName} placeholder="0.00" />
         </FormField>
       </SendAmountField>
