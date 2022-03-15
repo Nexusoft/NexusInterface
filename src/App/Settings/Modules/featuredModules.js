@@ -1,5 +1,6 @@
 import chartIcon from 'icons/chart.svg';
 import invoiceIcon from 'icons/invoice.svg';
+import histoyryIcon from 'icons/history.svg';
 
 export default [
   {
@@ -30,6 +31,22 @@ export default [
     author: {
       name: 'Krysto',
       email: 'quy.hoang@nexus.io',
+    },
+  },
+  {
+    name: 'nexus_interface_history_module',
+    displayName: 'History Module',
+
+    description: 'Loads and Saves history data for your Nexus Account',
+    type: 'app',
+    icon: histoyryIcon,
+    repoInfo: {
+      owner: 'Nexusoft',
+      repo: 'nexus-interface-history-module',
+    },
+    author: {
+      name: 'Kendal Cormany',
+      email: 'kendal.cormany@nexus.io',
     },
   },
 ];
