@@ -16,12 +16,12 @@ __ = __context('Send');
 
 const floatRegex = /^[0-9]+(.[0-9]*)?$/;
 
-const SendAmount = styled.div({
-  display: 'flex',
+const AmountFieldWrapper = styled.div({
+  flex: '1 1 130px',
 });
 
-const SendAmountField = styled.div({
-  flex: 1,
+const FiatAmountFieldWrapper = styled.div({
+  flex: '1 1 100px',
 });
 
 const SendAllLink = styled(Link)({
@@ -30,6 +30,15 @@ const SendAllLink = styled(Link)({
   fontSize: '.9em',
   verticalAlign: 'middle',
 });
+
+const EqualSign = styled.div(({ theme }) => ({
+  flex: '0 0',
+  display: 'flex',
+  alignItems: 'flex-end',
+  padding: '.1em .4em',
+  fontSize: '1.2em',
+  color: theme.mixer(0.5),
+}));
 
 const nxsToFiat = (value, price) => {
   if (price) {
@@ -61,35 +70,33 @@ function FiatValue({ fieldName, source }) {
 
 export default function AmountField({ parentFieldName }) {
   const source = selectSource();
+  const fiatCurrency = useSelector((state) => state.settings.fiatCurrency);
+  const price = useSelector((state) => state.market?.price);
   const form = useForm();
   const fullAmount = (source?.account || source?.token)?.balance;
-  const fieldName = parentFieldName + '.amount';
+  const amountFieldName = parentFieldName + '.amount';
+  const fiatAmountFieldName = parentFieldName + '.fiatAmount';
 
   const sendAll = (evt) => {
     evt.preventDefault();
-    form.change(fieldName, fullAmount);
+    form.change(amountFieldName, fullAmount);
   };
 
   return (
-    <SendAmount>
-      <SendAmountField>
+    <>
+      <AmountFieldWrapper>
         <FormField
           connectLabel
           label={
             <span style={{ whiteSpace: 'nowrap' }}>
               <span className="v-align">
-                {__('Amount')}
-                {!!source && (
-                  <span>
-                    &nbsp;(
-                    {source.token ? (
-                      <TokenName token={source.token} />
-                    ) : (
-                      <TokenName account={source.account} />
-                    )}
-                    )
-                  </span>
-                )}
+                {source
+                  ? __('%{currency} amount', {
+                      currency: source.token
+                        ? TokenName.from({ token: source.token })
+                        : TokenName.from({ account: source.account }),
+                    })
+                  : __('Amount')}
               </span>
               {!!fullAmount && (
                 <SendAllLink as="a" onClick={sendAll}>
@@ -100,17 +107,48 @@ export default function AmountField({ parentFieldName }) {
           }
         >
           <Tooltip.Trigger
-            tooltip={<FiatValue fieldName={fieldName} source={source} />}
+            tooltip={<FiatValue fieldName={amountFieldName} source={source} />}
           >
             <Form.TextField
-              name={fieldName}
+              name={amountFieldName}
               skin="filled-inverted"
               placeholder="0.00000"
               validate={positiveNumber}
             />
           </Tooltip.Trigger>
         </FormField>
-      </SendAmountField>
-    </SendAmount>
+      </AmountFieldWrapper>
+
+      {!!fiatCurrency && !!price && (
+        <>
+          <EqualSign>≈</EqualSign>
+
+          <FiatAmountFieldWrapper>
+            <FormField
+              connectLabel
+              label={
+                <span style={{ whiteSpace: 'nowrap' }}>
+                  <span className="v-align">
+                    {__('%{currency} amount', { currency: fiatCurrency })}
+                  </span>
+                </span>
+              }
+            >
+              <Tooltip.Trigger
+                tooltip={
+                  <FiatValue fieldName={fiatAmountFieldName} source={source} />
+                }
+              >
+                <Form.TextField
+                  name={fiatAmountFieldName}
+                  skin="filled-inverted"
+                  placeholder="0.00"
+                />
+              </Tooltip.Trigger>
+            </FormField>
+          </FiatAmountFieldWrapper>
+        </>
+      )}
+    </>
   );
 }

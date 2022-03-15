@@ -31,7 +31,7 @@ import PreviewTransactionModal from './PreviewTransactionModal';
 __ = __context('Send');
 
 const SendFormComponent = styled.div({
-  maxWidth: 740,
+  maxWidth: 900,
   margin: '-.5em auto 0',
 });
 
