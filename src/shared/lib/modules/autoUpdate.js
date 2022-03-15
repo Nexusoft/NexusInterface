@@ -96,6 +96,27 @@ async function checkForModuleUpdate(module) {
 //   return targetPath;
 // }
 
+// Every month, check cache for junk and remove
+function checkCache() {
+  const cleanDate = cache.getItem('cleanDate');
+  if (
+    !cleanDate ||
+    (cleanDate && Date.now() - cacheStaleTime * 4 > cleanDate)
+  ) {
+    let dirty = [];
+    for (let i = 0; i < cache.length; i++) {
+      if (
+        Date.now() - cacheStaleTime >
+        JSON.parse(cache.getItem(cache.key(i))).time
+      ) {
+        dirty.push(cache.key(i));
+      }
+    }
+    dirty.forEach((e) => cache.removeItem(e));
+    cache.setItem('cleanDate', (Date.now() + cacheStaleTime * 4).toString());
+  }
+}
+
 export async function checkForModuleUpdates() {
   const state = store.getState();
   const modules = Object.values(state.modules);
@@ -110,7 +131,7 @@ export async function checkForModuleUpdates() {
   const updates = results
     .filter(({ status, value }) => value && status === 'fulfilled')
     .map(({ value }) => value);
-
+  checkCache();
   if (updates.length > 0) {
     // let downloadedUpdates = [];
     // for (const update of updates) {
