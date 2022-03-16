@@ -7,11 +7,9 @@ import styled from '@emotion/styled';
 
 // Internal
 import Form from 'components/Form';
-import Tooltip from 'components/Tooltip';
 import FormField from 'components/FormField';
 import Link from 'components/Link';
 import TokenName from 'components/TokenName';
-import { useFieldValue } from 'lib/form';
 import { selectSource } from 'lib/send';
 
 __ = __context('Send');
@@ -60,15 +58,15 @@ function positiveNumber(value) {
   }
 }
 
-function FiatValue({ fieldName, source }) {
-  const value = useFieldValue(fieldName);
-  const price = useSelector((state) => state.market?.price);
-  const currency = useSelector((state) => state.market?.currency);
-  const isInNXS = (source?.account?.token || source?.token?.address) === '0';
-  const fiat = isInNXS && nxsToFiat(value, price);
+// function FiatValue({ fieldName, source }) {
+//   const value = useFieldValue(fieldName);
+//   const price = useSelector((state) => state.market?.price);
+//   const currency = useSelector((state) => state.market?.currency);
+//   const isInNXS = (source?.account?.token || source?.token?.address) === '0';
+//   const fiat = isInNXS && nxsToFiat(value, price);
 
-  return fiat ? `≈ ${fiat} ${currency}` : null;
-}
+//   return fiat ? `≈ ${fiat} ${currency}` : null;
+// }
 
 export default function AmountField({ parentFieldName }) {
   const source = selectSource();
@@ -149,16 +147,16 @@ export default function AmountField({ parentFieldName }) {
             </span>
           }
         >
-          <Tooltip.Trigger
+          {/* <Tooltip.Trigger
             tooltip={<FiatValue fieldName={amountFieldName} source={source} />}
-          >
-            <Form.TextField
-              name={amountFieldName}
-              skin="filled-inverted"
-              placeholder="0.00000"
-              validate={positiveNumber}
-            />
-          </Tooltip.Trigger>
+          > */}
+          <Form.TextField
+            name={amountFieldName}
+            skin="filled-inverted"
+            placeholder="0.00000"
+            validate={positiveNumber}
+          />
+          {/* </Tooltip.Trigger> */}
         </FormField>
       </AmountFieldWrapper>
 
@@ -177,17 +175,11 @@ export default function AmountField({ parentFieldName }) {
                 </span>
               }
             >
-              <Tooltip.Trigger
-                tooltip={
-                  <FiatValue fieldName={fiatAmountFieldName} source={source} />
-                }
-              >
-                <Form.TextField
-                  name={fiatAmountFieldName}
-                  skin="filled-inverted"
-                  placeholder="0.00"
-                />
-              </Tooltip.Trigger>
+              <Form.TextField
+                name={fiatAmountFieldName}
+                skin="filled-inverted"
+                placeholder="0.00"
+              />
             </FormField>
           </FiatAmountFieldWrapper>
         </>
