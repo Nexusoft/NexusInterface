@@ -1,6 +1,8 @@
 // External
+import { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { useForm } from 'react-final-form';
+import { getIn } from 'final-form';
 import styled from '@emotion/styled';
 
 // Internal
@@ -81,6 +83,47 @@ export default function AmountField({ parentFieldName }) {
     evt.preventDefault();
     form.change(amountFieldName, fullAmount);
   };
+
+  const prevValuesRef = useRef(null);
+  const cascadingRef = useRef(false);
+  useEffect(() =>
+    form.subscribe(
+      ({ values }) => {
+        if (prevValuesRef.current) {
+          const amount = getIn(values, amountFieldName);
+          const fiatAmount = getIn(values, fiatAmountFieldName);
+          const oldAmount = getIn(prevValuesRef.current, amountFieldName);
+          const oldFiatAmount = getIn(
+            prevValuesRef.current,
+            fiatAmountFieldName
+          );
+          if (amount !== oldAmount) {
+            if (cascadingRef.current) {
+              cascadingRef.current = false;
+            } else if (floatRegex.test(amount) && price) {
+              const nxs = parseFloat(amount);
+              const fiat = nxs * price;
+              form.change(fiatAmountFieldName, fiat.toFixed(2));
+              cascadingRef.current = true;
+            }
+          } else if (fiatAmount !== oldFiatAmount) {
+            if (cascadingRef.current) {
+              cascadingRef.current = false;
+            } else if (floatRegex.test(fiatAmount) && price) {
+              const fiat = parseFloat(fiatAmount);
+              const nxs = fiat / price;
+              form.change(amountFieldName, nxs.toFixed(6));
+              cascadingRef.current = true;
+            }
+          }
+        }
+        prevValuesRef.current = values;
+      },
+      {
+        values: true,
+      }
+    )
+  );
 
   return (
     <>
