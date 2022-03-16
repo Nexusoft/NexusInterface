@@ -160,7 +160,7 @@ export default function AmountField({ parentFieldName }) {
         </FormField>
       </AmountFieldWrapper>
 
-      {!!fiatCurrency && !!price && (
+      {!!fiatCurrency && !!price && source?.account?.token === '0' && (
         <>
           <EqualSign>≈</EqualSign>
 
