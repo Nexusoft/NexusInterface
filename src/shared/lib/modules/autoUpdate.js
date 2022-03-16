@@ -17,6 +17,7 @@ import { navigate } from 'lib/wallet';
 //If expanded consider moving to own file.
 const cache = window.localStorage;
 const cacheStaleTime = 1000 * 60 * 60 * 24 * 7;
+var updateCache;
 
 // const getAssetName = (name, version) => `${name}_v${version}.zip`;
 
@@ -42,7 +43,7 @@ async function getLatestRelease(repo) {
       etag: response.headers.etag,
       time: Date.now(),
     };
-    cache.setItem(repoId, JSON.stringify(cacheObj));
+    updateCache[repoId] = cacheObj;
     return response.data;
   } catch (err) {
     if (err.response?.status === 304) {
@@ -96,29 +97,21 @@ async function checkForModuleUpdate(module) {
 //   return targetPath;
 // }
 
-// Every month, check cache for junk and remove
+// check cache for junk and remove
 function checkCache() {
-  const cleanDate = cache.getItem('cleanDate');
-  if (
-    !cleanDate ||
-    (cleanDate && Date.now() - cacheStaleTime * 4 > cleanDate)
-  ) {
-    let dirty = [];
-    for (let i = 0; i < cache.length; i++) {
-      if (
-        Date.now() - cacheStaleTime >
-        JSON.parse(cache.getItem(cache.key(i))).time
-      ) {
-        dirty.push(cache.key(i));
+  for (const key in updateCache) {
+    if (Object.hasOwnProperty.call(updateCache, key)) {
+      if (Date.now() - cacheStaleTime * 4 > updateCache[key].time) {
+        console.log('I found extreme stale key', key);
+        delete updateCache[key];
       }
     }
-    dirty.forEach((e) => cache.removeItem(e));
-    cache.setItem('cleanDate', (Date.now() + cacheStaleTime * 4).toString());
   }
 }
 
 export async function checkForModuleUpdates() {
   const state = store.getState();
+  updateCache = JSON.parse(cache.getItem('updateCache')) || {};
   const modules = Object.values(state.modules);
   const updateableModules = modules
     .filter((module) => !module.development && !!module.repository)
@@ -131,7 +124,8 @@ export async function checkForModuleUpdates() {
   const updates = results
     .filter(({ status, value }) => value && status === 'fulfilled')
     .map(({ value }) => value);
-  checkCache();
+
+  cache.setItem('updateCache', JSON.stringify(updateCache));
   if (updates.length > 0) {
     // let downloadedUpdates = [];
     // for (const update of updates) {
@@ -176,5 +170,7 @@ export async function checkForModuleUpdates() {
 
 export function removeUpdateCache(repo) {
   console.log(`${repo} is stale and removed`);
-  cache.removeItem(repo);
+  delete updateCache[repo];
+  checkCache();
+  cache.setItem('updateCache', JSON.stringify(updateCache));
 }
