@@ -1,5 +1,5 @@
 // External
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useForm } from 'react-final-form';
 import { getIn } from 'final-form';
@@ -72,7 +72,6 @@ export default function AmountField({ parentFieldName = '', hideSendAll }) {
   const price = useSelector((state) => state.market?.price);
   const fiatCurrency = useSelector((state) => state.settings.fiatCurrency);
   const form = useForm();
-  const prevValuesRef = useRef(null);
   const amountFieldName = parentFieldName
     ? parentFieldName + '.amount'
     : 'amount';
@@ -80,39 +79,44 @@ export default function AmountField({ parentFieldName = '', hideSendAll }) {
     ? parentFieldName + '.fiatAmount'
     : 'fiatAmount';
 
-  let cascading = false;
-  const valuesChanged = ({ values }) => {
-    if (prevValuesRef.current) {
-      const amount = getIn(values, amountFieldName);
-      const fiatAmount = getIn(values, fiatAmountFieldName);
-      const oldAmount = getIn(prevValuesRef.current, amountFieldName);
-      const oldFiatAmount = getIn(prevValuesRef.current, fiatAmountFieldName);
-      if (amount !== oldAmount) {
-        if (cascading) {
-          cascading = false;
-        } else if (floatRegex.test(amount)) {
-          const nxs = parseFloat(amount);
-          if (price) {
-            const fiat = nxs * price;
-            form.change(fiatAmountFieldName, fiat.toFixed(2));
-            cascading = true;
+  const prevValuesRef = useRef(null);
+  const cascadingRef = useRef(false);
+  useEffect(() =>
+    form.subscribe(
+      ({ values }) => {
+        if (prevValuesRef.current) {
+          const amount = getIn(values, amountFieldName);
+          const fiatAmount = getIn(values, fiatAmountFieldName);
+          const oldAmount = getIn(prevValuesRef.current, amountFieldName);
+          const oldFiatAmount = getIn(
+            prevValuesRef.current,
+            fiatAmountFieldName
+          );
+          if (amount !== oldAmount) {
+            if (cascadingRef.current) {
+              cascadingRef.current = false;
+            } else if (floatRegex.test(amount) && price) {
+              const nxs = parseFloat(amount);
+              const fiat = nxs * price;
+              form.change(fiatAmountFieldName, fiat.toFixed(2));
+              cascadingRef.current = true;
+            }
+          } else if (fiatAmount !== oldFiatAmount) {
+            if (cascadingRef.current) {
+              cascadingRef.current = false;
+            } else if (floatRegex.test(fiatAmount) && price) {
+              const fiat = parseFloat(fiatAmount);
+              const nxs = fiat / price;
+              form.change(amountFieldName, nxs.toFixed(6));
+              cascadingRef.current = true;
+            }
           }
         }
-      } else if (fiatAmount !== oldFiatAmount) {
-        if (cascading) {
-          cascading = false;
-        } else if (floatRegex.test(fiatAmount)) {
-          const fiat = parseFloat(fiatAmount);
-          if (price) {
-            const nxs = fiat / price;
-            form.change(amountFieldName, nxs.toFixed(6));
-            cascading = true;
-          }
-        }
-      }
-    }
-    prevValuesRef.current = values;
-  };
+        prevValuesRef.current = values;
+      },
+      { values: true }
+    )
+  );
 
   return (
     <SendAmount>
@@ -146,8 +150,6 @@ export default function AmountField({ parentFieldName = '', hideSendAll }) {
           <Form.TextField name={fiatAmountFieldName} placeholder="0.00" />
         </FormField>
       </SendAmountField>
-
-      <Form.Spy subscription={{ values: true }} onChange={valuesChanged} />
     </SendAmount>
   );
 }

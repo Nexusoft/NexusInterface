@@ -117,9 +117,7 @@ export default function AmountField({ parentFieldName }) {
         }
         prevValuesRef.current = values;
       },
-      {
-        values: true,
-      }
+      { values: true }
     )
   );
 
