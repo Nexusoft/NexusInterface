@@ -9,7 +9,7 @@ import Tooltip from 'components/Tooltip';
 import FormField from 'components/FormField';
 import Link from 'components/Link';
 import TokenName from 'components/TokenName';
-import { useFieldValue } from 'lib/form';
+import { numericOnly, useFieldValue } from 'lib/form';
 import { selectSource } from 'lib/send';
 
 __ = __context('Send');
@@ -105,6 +105,11 @@ export default function AmountField({ parentFieldName }) {
             <Form.TextField
               name={fieldName}
               skin="filled-inverted"
+              config={{
+                format: (value, name) => {
+                  return value ? value.replace(',', '.') : '';
+                },
+              }}
               placeholder="0.00000"
               validate={positiveNumber}
             />
