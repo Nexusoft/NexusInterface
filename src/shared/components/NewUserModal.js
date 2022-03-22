@@ -193,9 +193,15 @@ function UserConfirmBackgroundTask({ username, closeTask }) {
           if (txs?.[0]?.confirmations) {
             closeTaskRef.current?.();
             showNotification(
-              __('User registration for %{username} has been confirmed', {
-                username,
-              }),
+              __(
+                'User <b>%{username}</b> has been successfully registered',
+                {
+                  username,
+                },
+                {
+                  b: (text) => <strong>{text}</strong>,
+                }
+              ),
               'success'
             );
             if (!isLoggedIn(store.getState()) && !isModalOpen(LoginModal)) {
@@ -214,10 +220,7 @@ function UserConfirmBackgroundTask({ username, closeTask }) {
       style={{ cursor: 'default' }}
     >
       {__(
-        'User registration for %{username} is waiting to be confirmed on Nexus blockchain...',
-        {
-          username,
-        }
+        'Waiting for user registration to be confirmed on Nexus blockchain...'
       )}
     </BackgroundTask>
   );
