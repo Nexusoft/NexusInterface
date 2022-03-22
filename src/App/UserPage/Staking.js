@@ -82,6 +82,7 @@ function promptForStakeAmount() {
 
 export default function Staking() {
   const stakeInfo = useSelector((state) => state.user.stakeInfo);
+  const privateNet = useSelector((state) => state.core.systemInfo?.private);
   useEffect(() => {
     switchUserTab('Staking');
   }, []);
@@ -223,6 +224,16 @@ export default function Staking() {
       });
     }
   };
+
+  if (privateNet) {
+    return (
+      <TabContentWrapper maxWidth={400} className="text-center">
+        <span className="error">
+          {__('Staking is not available in private network')}
+        </span>
+      </TabContentWrapper>
+    );
+  }
 
   return (
     !!stakeInfo && (
