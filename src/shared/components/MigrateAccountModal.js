@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import ControlledModal from 'components/ControlledModal';
 import Button from 'components/Button';
@@ -10,7 +10,8 @@ import { updateSettings } from 'lib/settings';
 
 __ = __context('MigrateAccount');
 
-const MigrateAccountModal = ({ legacyBalance, accounts }) => {
+export default function MigrateAccountModal({ legacyBalance }) {
+  const accounts = useSelector((state) => state.user.accounts);
   useEffect(() => {
     if (!accounts) loadAccounts();
   }, []);
@@ -69,10 +70,4 @@ const MigrateAccountModal = ({ legacyBalance, accounts }) => {
       )}
     </ControlledModal>
   );
-};
-
-const mapStateToProps = (state) => ({
-  accounts: state.user.accounts,
-});
-
-export default connect(mapStateToProps)(MigrateAccountModal);
+}
