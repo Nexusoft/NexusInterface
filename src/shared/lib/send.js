@@ -108,11 +108,13 @@ export const selectAddressNameMap = memoize(
       });
     }
     if (myAccounts) {
-      myAccounts.forEach((element) => {
-        map[element.address] = {
-          type: 'account',
-          label: element.name,
-        };
+      myAccounts.forEach((account) => {
+        if (account.name) {
+          map[account.address] = {
+            type: 'account',
+            label: account.name,
+          };
+        }
       });
     }
     return map;
