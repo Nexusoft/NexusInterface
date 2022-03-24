@@ -156,7 +156,7 @@ export default function RecipientAddress({ parentFieldName }) {
       <Form.AutoSuggest
         name={fieldName}
         inputProps={{
-          placeholder: __('Recipient Address/Name'),
+          placeholder: __('Recipient Name or Address'),
           skin: 'filled-inverted',
         }}
         suggestions={suggestions}
