@@ -15,6 +15,7 @@ import { selectAddressNameMap, selectSource } from 'lib/send';
 import memoize from 'utils/memoize';
 import { addressRegex } from 'consts/misc';
 import plusIcon from 'icons/plus.svg';
+import addressBookIcon from 'icons/address-book.svg';
 import { getRecipientSuggestions } from './selectors';
 
 __ = __context('Send');
@@ -123,7 +124,12 @@ function RecipientLabel({ fieldName }) {
         {__('Send to')}
         &nbsp;&nbsp;
       </span>
-      <RecipientName>{recipientName}</RecipientName>
+      {!!recipientName && (
+        <RecipientName>
+          <Icon icon={addressBookIcon} className="mr0_4" />
+          <span className="v-align">{recipientName}</span>
+        </RecipientName>
+      )}
       {!recipientName && isAddress && (
         <Button skin="plain-link-primary" onClick={addToContact}>
           <Icon icon={plusIcon} style={{ fontSize: '0.9em' }} />
