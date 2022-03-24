@@ -7,6 +7,7 @@ import memoize from 'utils/memoize';
 import shortenAddress from 'utils/shortenAddress';
 import walletIcon from 'icons/wallet.svg';
 import tokenIcon from 'icons/token.svg';
+import contactIcon from 'icons/address-book.svg';
 
 __ = __context('Send');
 
@@ -110,10 +111,16 @@ export const getRecipientSuggestions = memoize(
               address: address,
               value: address,
               display: (
-                <span>
-                  {contact.name}
-                  {label ? ' - ' + label : ''} <Address>{address}</Address>
-                </span>
+                <div>
+                  <div>
+                    <Icon icon={contactIcon} className="mr0_4" />
+                    <span className="v-align">
+                      {contact.name}
+                      {label ? ' - ' + label : ''}
+                    </span>
+                  </div>
+                  <Address>{address}</Address>
+                </div>
               ),
             });
           }
@@ -130,17 +137,22 @@ export const getRecipientSuggestions = memoize(
           address: account.address,
           value: account.address,
           display: (
-            <span>
-              {account.name || (
-                <span style={{ fontStyle: 'italic' }}>
-                  {__('Unnamed account')}
+            <div>
+              <div>
+                <Icon icon={walletIcon} className="mr0_4" />
+                <span className="v-align">
+                  {account.name || (
+                    <span style={{ fontStyle: 'italic' }}>
+                      {__('Unnamed account')}
+                    </span>
+                  )}{' '}
+                  <TokenRecipientName>
+                    (<TokenName account={account} />)
+                  </TokenRecipientName>
                 </span>
-              )}{' '}
-              <TokenRecipientName>
-                (<TokenName account={account} />)
-              </TokenRecipientName>{' '}
+              </div>
               <Address>{account.address}</Address>
-            </span>
+            </div>
           ),
         });
       });
