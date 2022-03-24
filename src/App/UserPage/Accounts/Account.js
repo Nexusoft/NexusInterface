@@ -72,7 +72,7 @@ export default function Account({ account }) {
           </span>
         </AccountInfo>
         <div className="flex center">
-          <QRButton address={account.address} className="mr1" />
+          <QRButton address={account.address} className="mr0_4" />
           <Dropdown
             dropdown={({ closeDropdown }) => (
               <>
