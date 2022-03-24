@@ -1,8 +1,12 @@
 import styled from '@emotion/styled';
 
 import TokenName from 'components/TokenName';
+import Icon from 'components/Icon';
+import { selectUsername } from 'lib/user';
 import memoize from 'utils/memoize';
 import shortenAddress from 'utils/shortenAddress';
+import walletIcon from 'icons/wallet.svg';
+import tokenIcon from 'icons/token.svg';
 
 __ = __context('Send');
 
@@ -20,7 +24,7 @@ const Address = styled.span(({ theme }) => ({
 }));
 
 export const selectAccountOptions = memoize(
-  (myAccounts, myTokens) => {
+  (myAccounts, myTokens, username) => {
     let options = [];
 
     if (myAccounts?.length) {
@@ -35,13 +39,25 @@ export const selectAccountOptions = memoize(
           value: `account:${account.address}`,
           display: (
             <span>
-              {account.name || (
-                <span>
-                  <em>{__('Unnamed account')}</em>{' '}
-                  <span className="dim">{shortenAddress(account.address)}</span>
-                </span>
-              )}{' '}
-              ({account.balance} {TokenName.from({ account })})
+              <Icon icon={walletIcon} className="mr0_4" />
+              <span className="v-align">
+                {account.name ? (
+                  <span>
+                    {!!account.nameIsLocal && (
+                      <span className="dim">{username}:</span>
+                    )}
+                    {account.name}
+                  </span>
+                ) : (
+                  <span>
+                    <em>{__('Unnamed account')}</em>{' '}
+                    <span className="dim">
+                      {shortenAddress(account.address)}
+                    </span>
+                  </span>
+                )}{' '}
+                ({account.balance} {TokenName.from({ account })})
+              </span>
             </span>
           ),
           indent: true,
@@ -60,13 +76,16 @@ export const selectAccountOptions = memoize(
           value: `token:${token.address}`,
           display: (
             <span>
-              {token.ticker || (
-                <span>
-                  <em>{__('Unnamed token')}</em>{' '}
-                  <span className="dim">{shortenAddress(token.address)}</span>
-                </span>
-              )}{' '}
-              ({token.balance} {TokenName.from({ token })})
+              <Icon icon={tokenIcon} className="mr0_4" />
+              <span className="v-align">
+                {token.ticker || (
+                  <span>
+                    <em>{__('Unnamed token')}</em>{' '}
+                    <span className="dim">{shortenAddress(token.address)}</span>
+                  </span>
+                )}{' '}
+                ({token.balance} {TokenName.from({ token })})
+              </span>
             </span>
           ),
           indent: true,
@@ -76,7 +95,7 @@ export const selectAccountOptions = memoize(
 
     return options;
   },
-  (state) => [state.user.accounts, state.user.tokens]
+  (state) => [state.user.accounts, state.user.tokens, selectUsername(state)]
 );
 
 export const getRecipientSuggestions = memoize(
