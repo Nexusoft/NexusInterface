@@ -128,7 +128,7 @@ export const getRecipientSuggestions = memoize(
         suggestions.push({
           name: account.name,
           address: account.address,
-          value: account.name || account.address,
+          value: account.address,
           display: (
             <span>
               {account.name || (
