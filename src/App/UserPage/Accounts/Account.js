@@ -1,13 +1,17 @@
 import styled from '@emotion/styled';
 import { useSelector } from 'react-redux';
 
-import Link from 'components/Link';
 import NexusAddress from 'components/NexusAddress';
 import QRButton from 'components/QRButton';
 import TokenName from 'components/TokenName';
+import Dropdown from 'components/Dropdown';
+import Icon from 'components/Icon';
+import Button from 'components/Button';
 import { formatNumber } from 'lib/intl';
 import { openModal } from 'lib/ui';
 import { selectUsername } from 'lib/user';
+import walletIcon from 'icons/wallet.svg';
+import ellipsisIcon from 'icons/ellipsis.svg';
 
 import AccountDetailsModal from './AccountDetailsModal';
 import AccountHistoryModal from './AccountHistoryModal';
@@ -17,8 +21,12 @@ import { totalBalance } from './utils';
 __ = __context('User.Accounts');
 
 const AccountComponent = styled.div(({ theme }) => ({
-  padding: '1em 0 1.5em',
+  padding: '1em 0 3em',
 }));
+
+const AccountInfo = styled.div({
+  cursor: 'pointer',
+});
 
 const AccountName = styled.span(({ theme }) => ({
   fontWeight: 'bold',
@@ -39,9 +47,10 @@ export default function Account({ account }) {
   return (
     <AccountComponent>
       <div className="flex space-between">
-        <div>
+        <AccountInfo>
+          <Icon icon={walletIcon} className="mr0_4" />
           <span
-            style={{ cursor: 'pointer' }}
+            className="v-align"
             onClick={() => {
               openModal(AccountDetailsModal, { account });
             }}
@@ -61,63 +70,56 @@ export default function Account({ account }) {
               <TokenName account={account} />)
             </span>
           </span>
-        </div>
-        <div>
-          {account.name !== 'default' && (
-            <Link
-              as="a"
-              onClick={() => {
-                openModal(RenameAccountModal, { account });
-              }}
-            >
-              {__('Rename')}
-            </Link>
-          )}
-          &nbsp;&nbsp;
-          <Link
-            as="a"
-            onClick={() => {
-              openModal(AccountDetailsModal, { account });
-            }}
+        </AccountInfo>
+        <div className="flex center">
+          <QRButton address={account.address} className="mr1" />
+          <Dropdown
+            dropdown={({ closeDropdown }) => (
+              <>
+                <Dropdown.MenuItem
+                  onClick={() => {
+                    closeDropdown();
+                    openModal(AccountDetailsModal, { account });
+                  }}
+                >
+                  {__('Details')}
+                </Dropdown.MenuItem>
+                {account.name !== 'default' && (
+                  <Dropdown.MenuItem
+                    onClick={() => {
+                      closeDropdown();
+                      openModal(RenameAccountModal, { account });
+                    }}
+                  >
+                    {__('Rename')}
+                  </Dropdown.MenuItem>
+                )}
+                <Dropdown.MenuItem
+                  onClick={() => {
+                    closeDropdown();
+                    openModal(AccountHistoryModal, { account });
+                  }}
+                >
+                  {__('Transaction History')}
+                </Dropdown.MenuItem>
+              </>
+            )}
           >
-            {__('Details')}
-          </Link>
-          &nbsp;&nbsp;
-          <Link
-            as="a"
-            onClick={() => {
-              openModal(AccountHistoryModal, { account });
-            }}
-          >
-            {__('History')}
-          </Link>
+            {({ open, controlRef, openDropdown }) => (
+              <Button
+                skin="plain"
+                fitHeight
+                ref={controlRef}
+                onClick={openDropdown}
+                className={open ? 'hover' : undefined}
+              >
+                <Icon icon={ellipsisIcon} />
+              </Button>
+            )}
+          </Dropdown>
         </div>
       </div>
-      <NexusAddress
-        className="mt1"
-        address={account.address}
-        label={
-          <div className="flex center space-between">
-            <span>
-              {__(
-                '<b>%{account_name}</b> address',
-                {
-                  account_name: account.name || __('Unnamed'),
-                },
-                {
-                  b: (text) =>
-                    account.name ? (
-                      <strong>{text}</strong>
-                    ) : (
-                      <UnNamed>{text}</UnNamed>
-                    ),
-                }
-              )}
-            </span>
-            <QRButton address={account.address} />
-          </div>
-        }
-      />
+      <NexusAddress className="mt1" address={account.address} />
     </AccountComponent>
   );
 }
