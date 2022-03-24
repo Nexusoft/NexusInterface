@@ -99,14 +99,20 @@ export const selectAddressNameMap = memoize(
       Object.values(addressBook).forEach((contact) => {
         if (contact.addresses) {
           contact.addresses.forEach(({ address, label }) => {
-            map[address] = contact.name + (label ? ' - ' + label : '');
+            map[address] = {
+              type: 'contact',
+              label: contact.name + (label ? ' - ' + label : ''),
+            };
           });
         }
       });
     }
     if (myAccounts) {
       myAccounts.forEach((element) => {
-        map[element.address] = element.name;
+        map[element.address] = {
+          type: 'account',
+          label: element.name,
+        };
       });
     }
     return map;

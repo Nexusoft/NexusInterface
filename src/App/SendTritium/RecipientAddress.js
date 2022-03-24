@@ -16,6 +16,7 @@ import memoize from 'utils/memoize';
 import { addressRegex } from 'consts/misc';
 import plusIcon from 'icons/plus.svg';
 import addressBookIcon from 'icons/address-book.svg';
+import walletIcon from 'icons/wallet.svg';
 import { getRecipientSuggestions } from './selectors';
 
 __ = __context('Send');
@@ -99,7 +100,7 @@ function RecipientLabel({ fieldName }) {
   const address = useFieldValue(fieldName);
   const addressNameMap = useSelector(selectAddressNameMap);
 
-  const recipientName = addressNameMap[address];
+  const addressLabel = addressNameMap[address];
   const isAddress = addressRegex.test(address);
 
   const addToContact = async () => {
@@ -124,13 +125,18 @@ function RecipientLabel({ fieldName }) {
         {__('Send to')}
         &nbsp;&nbsp;
       </span>
-      {!!recipientName && (
+      {!!addressLabel && (
         <RecipientName>
-          <Icon icon={addressBookIcon} className="mr0_4" />
-          <span className="v-align">{recipientName}</span>
+          {addressLabel.type === 'contact' && (
+            <Icon icon={addressBookIcon} className="mr0_4" />
+          )}
+          {addressLabel.type === 'account' && (
+            <Icon icon={walletIcon} className="mr0_4" />
+          )}
+          <span className="v-align">{addressLabel.label}</span>
         </RecipientName>
       )}
-      {!recipientName && isAddress && (
+      {!addressLabel && isAddress && (
         <Button skin="plain-link-primary" onClick={addToContact}>
           <Icon icon={plusIcon} style={{ fontSize: '0.9em' }} />
           <span className="v-align ml0_4">{__('Add to Address Book')}</span>
