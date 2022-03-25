@@ -310,6 +310,9 @@ export default function Overview() {
     txtotal,
     interestweight,
     stakerate,
+    blockweight,
+    trustweight,
+    stakeweight,
     blocks,
     synccomplete,
   } = coreInfo || {};
