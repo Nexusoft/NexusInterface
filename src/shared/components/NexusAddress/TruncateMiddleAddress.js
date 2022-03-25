@@ -6,6 +6,7 @@ import styled from '@emotion/styled';
 // Internal
 import Tooltip from 'components/Tooltip';
 import { showNotification } from 'lib/ui';
+import { throttled } from 'utils/universal';
 import { timing, consts } from 'styles';
 
 const TruncateMiddleAddressComponent = styled.div({
@@ -43,11 +44,12 @@ const Address = styled.div({
   height: '100%',
   display: 'flex',
   alignItems: 'center',
+  fontFamily: consts.monoFontFamily,
 });
 
 const AddressCopy = styled.div(
   {
-    flexGrow: 1,
+    flex: '1 1 0',
     overflow: 'hidden',
   },
   ({ left, overflown }) =>
@@ -96,23 +98,27 @@ function useCheckOverflow() {
   const addressRef = useRef();
   const contentRef = useRef();
 
-  const checkOverflow = () => {
-    const containerWidth = addressRef.current.clientWidth;
-    const contentWidth = contentRef.current.offsetWidth;
-    if (contentWidth > containerWidth && !overflown) {
-      setOverflown(true);
-    }
-    if (contentWidth <= containerWidth && overflown) {
-      setOverflown(false);
-    }
-  };
-
-  useEffect(checkOverflow);
   useEffect(() => {
+    const checkOverflow = throttled(() => {
+      if (!addressRef.current || !contentRef.current) return;
+      const containerWidth = addressRef.current.clientWidth;
+      const contentWidth = contentRef.current.offsetWidth;
+      if (contentWidth > containerWidth && !overflown) {
+        setOverflown(true);
+      }
+      if (contentWidth <= containerWidth && overflown) {
+        setOverflown(false);
+      }
+    }, 500);
+
     const resizeObserver = new ResizeObserver(checkOverflow);
-    resizeObserver.observe(addressRef.current);
+    if (addressRef.current) {
+      resizeObserver.observe(addressRef.current);
+    }
     return () => {
-      resizeObserver.unobserve(addressRef.current);
+      if (addressRef.current) {
+        resizeObserver.unobserve(addressRef.current);
+      }
     };
   }, []);
 
