@@ -33,11 +33,6 @@ const AccountName = styled.span(({ theme }) => ({
   color: theme.foreground,
 }));
 
-const UnNamed = styled(AccountName)(({ theme }) => ({
-  fontStyle: 'italic',
-  color: theme.mixer(0.8),
-}));
-
 const Prefix = styled.span(({ theme }) => ({
   color: theme.mixer(0.5),
 }));
@@ -55,14 +50,16 @@ export default function Account({ account }) {
               openModal(AccountDetailsModal, { account });
             }}
           >
-            {account.name ? (
-              <AccountName>
-                {!!account.nameIsLocal && <Prefix>{username}:</Prefix>}
-                {account.name}
-              </AccountName>
-            ) : (
-              <UnNamed>{__('Unnamed account')}</UnNamed>
-            )}
+            <strong>
+              {account.name ? (
+                <AccountName>
+                  {!!account.nameIsLocal && <Prefix>{username}:</Prefix>}
+                  {account.name}
+                </AccountName>
+              ) : (
+                <em className="semi-dim">{__('Unnamed account')}</em>
+              )}
+            </strong>
 
             <span>
               {' '}
