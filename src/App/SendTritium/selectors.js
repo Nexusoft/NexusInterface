@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 
 import TokenName from 'components/TokenName';
 import Icon from 'components/Icon';
+import NexusAddress from 'components/NexusAddress';
 import { selectUsername } from 'lib/user';
 import memoize from 'utils/memoize';
 import shortenAddress from 'utils/shortenAddress';
@@ -18,10 +19,6 @@ const TokenRecipientName = styled.span({
 const Separator = styled.div(({ theme }) => ({
   fontWeight: 'bold',
   color: theme.primary,
-}));
-
-const Address = styled.span(({ theme }) => ({
-  color: theme.mixer(0.75),
 }));
 
 export const selectAccountOptions = memoize(
@@ -51,7 +48,7 @@ export const selectAccountOptions = memoize(
                   </span>
                 ) : (
                   <span>
-                    <em>{__('Unnamed account')}</em>{' '}
+                    <em className="semi-dim">{__('Unnamed account')}</em>{' '}
                     <span className="dim">
                       {shortenAddress(account.address)}
                     </span>
@@ -100,7 +97,7 @@ export const selectAccountOptions = memoize(
 );
 
 export const getRecipientSuggestions = memoize(
-  (addressBook, myAccounts, accountAddress) => {
+  (addressBook, myAccounts, accountAddress, username) => {
     const suggestions = [];
     if (addressBook) {
       Object.values(addressBook).forEach((contact) => {
@@ -119,7 +116,12 @@ export const getRecipientSuggestions = memoize(
                       {label ? ' - ' + label : ''}
                     </span>
                   </div>
-                  <Address>{address}</Address>
+                  <NexusAddress
+                    className="semi-dim"
+                    copyable={false}
+                    type="truncateMiddle"
+                    address={address}
+                  />
                 </div>
               ),
             });
@@ -141,22 +143,38 @@ export const getRecipientSuggestions = memoize(
               <div>
                 <Icon icon={walletIcon} className="mr0_4" />
                 <span className="v-align">
-                  {account.name || (
-                    <span style={{ fontStyle: 'italic' }}>
-                      {__('Unnamed account')}
+                  {account.name ? (
+                    <span>
+                      {!!account.nameIsLocal && (
+                        <span className="dim">{username}:</span>
+                      )}
+                      {account.name}
                     </span>
+                  ) : (
+                    <em className="semi-dim">{__('Unnamed account')}</em>
                   )}{' '}
                   <TokenRecipientName>
                     (<TokenName account={account} />)
                   </TokenRecipientName>
                 </span>
               </div>
-              <Address>{account.address}</Address>
+              <NexusAddress
+                className="semi-dim"
+                copyable={false}
+                type="truncateMiddle"
+                address={account.address}
+              />
             </div>
           ),
         });
       });
     }
     return suggestions;
-  }
+  },
+  (state, source) => [
+    state.addressBook,
+    state.user?.accounts,
+    source?.account?.address,
+    selectUsername(state),
+  ]
 );

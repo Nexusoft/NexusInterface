@@ -150,11 +150,7 @@ export default function RecipientAddress({ parentFieldName }) {
   const source = selectSource();
   const fieldName = `${parentFieldName}.address`;
   const suggestions = useSelector((state) =>
-    getRecipientSuggestions(
-      state.addressBook,
-      state.user?.accounts,
-      source?.account?.address
-    )
+    getRecipientSuggestions(state, source)
   );
 
   return (
