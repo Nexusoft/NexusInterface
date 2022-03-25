@@ -129,6 +129,9 @@ const utilityClasses = (theme) => css`
   .dim {
     opacity: 0.5;
   }
+  .semi-dim {
+    opacity: 0.75;
+  }
 
   .flex {
     display: flex;
