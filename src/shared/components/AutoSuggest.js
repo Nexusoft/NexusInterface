@@ -36,8 +36,6 @@ const getDisplay = (suggestion) =>
 
 const SuggestionComponent = styled.div(
   ({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
     padding: '0.4em 0.8em',
     overflow: 'hidden',
     cursor: 'pointer',
