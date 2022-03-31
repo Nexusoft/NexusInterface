@@ -3,14 +3,14 @@ import invoiceIcon from 'icons/invoice.svg';
 
 export default [
   {
-    name: 'nexus_interface_invoice_module',
-    displayName: 'Nexus Invoice System',
+    name: 'nexus-invoice',
+    displayName: 'Nexus Invoice',
     description: 'Send, pay, and manage invoices on Nexus blockchain',
     type: 'app',
     icon: invoiceIcon,
     repoInfo: {
       owner: 'Nexusoft',
-      repo: 'Nexus-Interface-Invoice-Module',
+      repo: 'nexus-invoice-module',
     },
     author: {
       name: 'Nexus Team',
@@ -18,14 +18,14 @@ export default [
     },
   },
   {
-    name: 'market_data',
+    name: 'nexus-market-data',
     displayName: 'Market Data',
     description: 'Market Data of Nexus trading on major exchanges',
     type: 'app',
     icon: chartIcon,
     repoInfo: {
       owner: 'Nexusoft',
-      repo: 'market-data-module',
+      repo: 'nexus-market-data-module',
     },
     author: {
       name: 'Krysto',
