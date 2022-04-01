@@ -27,6 +27,7 @@ import Switch from 'components/Switch';
 import Select from 'components/Select';
 import Icon from 'components/Icon';
 import HorizontalTab from 'components/HorizontalTab';
+import VerticalTab from 'components/VerticalTab';
 import FieldSet from 'components/FieldSet';
 import AutoSuggest from 'components/AutoSuggest';
 import Modal from 'components/Modal';
@@ -61,6 +62,7 @@ global.NEXUS = {
     Select,
     Switch,
     HorizontalTab,
+    VerticalTab,
     TextField,
     ThemeController,
     Tooltip,
