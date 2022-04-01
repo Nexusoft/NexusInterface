@@ -28,8 +28,8 @@ export default [
       repo: 'nexus-market-data-module',
     },
     author: {
-      name: 'Krysto',
-      email: 'quy.hoang@nexus.io',
+      name: 'Nexus Team',
+      email: 'developer@nexus.io',
     },
   },
 ];
