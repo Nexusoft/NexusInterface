@@ -58,7 +58,6 @@ const {
     FormField,
     GlobalStyles,
     Icon,
-    Link,
     Modal,
     Panel,
     Select,
@@ -81,7 +80,6 @@ List of included components:
 - [FormField](../../src/shared/components/FormField.js)
 - [GlobalStyles](../../src/shared/components/GlobalStyles/index.js)
 - [Icon](../../src/shared/components/Icon.js)
-- [Link](../../src/shared/components/Link.js)
 - [Modal](../../src/shared/components/Modal.js)
 - [Panel](../../src/shared/components/Panel.js)
 - [Select](../../src/shared/components/Select.js)
