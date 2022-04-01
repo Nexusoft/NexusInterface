@@ -65,9 +65,13 @@ const TextFieldReduxForm = ({ input, meta, ...rest }) => (
 );
 ```
 
-## DateTimePicker component is removed
+## `DateTimePicker` and `Link` components were removed. `Tab` component was replaced by `HorizontalTab`
 
-DateTimePicker component is removed because it's not being used by the wallet. Modules which need it should implement a DateTimePicker on its own.
+`DateTimePicker` component was removed because it's not being used by the wallet. Modules which need it should implement a DateTimePicker on its own.
+
+`Link` component was removed because in most cases it can be replaced by a `Button` with `skin="hyperlink"` prop. Furthermore, it requires `react-router-dom` library, which is not intended to be included in the preload script.
+
+`Tab` component was replaced by `HorizontalTab`, which purely focuses on the component's UI and doesn't depend on `react-router-dom` library. There's also a new `VerticalTab` component added.
 
 ## `options` param for `send()` now has a slightly different shape
 

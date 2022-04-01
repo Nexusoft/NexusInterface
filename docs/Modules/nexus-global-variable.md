@@ -62,7 +62,8 @@ const {
     Panel,
     Select,
     Switch,
-    Tab,
+    HorizontalTab,
+    VerticalTab,
     TextField,
     ThemeController,
     Tooltip,
@@ -84,7 +85,8 @@ List of included components:
 - [Panel](../../src/shared/components/Panel.js)
 - [Select](../../src/shared/components/Select.js)
 - [Switch](../../src/shared/components/Switch.js)
-- [Tab](../../src/shared/components/Tab.js)
+- [HorizontalTab](../../src/shared/components/HorizontalTab.js)
+- [VerticalTab](../../src/shared/components/VerticalTab.js)
 - [TextField](../../src/shared/components/TextField.js)
 - [ThemeController](../../src/shared/components/ThemeController.js)
 - [Tooltip](../../src/shared/components/Tooltip.js)
