@@ -25,7 +25,6 @@ import Tooltip from 'components/Tooltip';
 import TextField from 'components/TextField';
 import Switch from 'components/Switch';
 import Select from 'components/Select';
-import Link from 'components/Link';
 import Icon from 'components/Icon';
 import Tab from 'components/Tab';
 import FieldSet from 'components/FieldSet';
@@ -57,7 +56,6 @@ global.NEXUS = {
     FormField,
     GlobalStyles,
     Icon,
-    Link,
     Modal,
     Panel,
     Select,
