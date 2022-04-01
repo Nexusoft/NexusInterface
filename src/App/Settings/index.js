@@ -7,7 +7,7 @@ import GA from 'lib/googleAnalytics';
 
 // Internal Global
 import Panel from 'components/Panel';
-import Tab from 'components/Tab';
+import RouterHorizontalTab from 'components/RouterHorizontalTab';
 import { legacyMode } from 'consts/misc';
 import { selectModuleUpdateCount } from 'selectors';
 
@@ -36,7 +36,7 @@ const SettingsComponent = styled.div({
   position: 'relative',
 });
 
-const SettingsTabBar = styled(Tab.Bar)({
+const SettingsTabBar = styled(RouterHorizontalTab.TabBar)({
   gridArea: 'tab-bar',
 });
 
@@ -88,13 +88,25 @@ export default function Settings() {
     <Panel bodyScrollable={false} icon={settingsIcon} title={__('Settings')}>
       <SettingsComponent>
         <SettingsTabBar>
-          <Tab link="App" icon={logoIcon} text={__('Application')} />
-          <Tab link="Core" icon={coreIcon} text={__('Core')} />
+          <RouterHorizontalTab
+            link="App"
+            icon={logoIcon}
+            text={__('Application')}
+          />
+          <RouterHorizontalTab link="Core" icon={coreIcon} text={__('Core')} />
           {legacyMode && (
-            <Tab link="Security" icon={lockIcon} text={__('Security')} />
+            <RouterHorizontalTab
+              link="Security"
+              icon={lockIcon}
+              text={__('Security')}
+            />
           )}
-          <Tab link="Style" icon={leafIcon} text={__('Style')} />
-          <Tab
+          <RouterHorizontalTab
+            link="Style"
+            icon={leafIcon}
+            text={__('Style')}
+          />
+          <RouterHorizontalTab
             link="Modules"
             icon={legoIcon}
             text={

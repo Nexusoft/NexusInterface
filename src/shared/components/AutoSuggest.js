@@ -12,7 +12,6 @@
 // External
 import { useState, memo, useRef, useEffect, forwardRef } from 'react';
 import { findDOMNode } from 'react-dom';
-import memoize from 'utils/memoize';
 import styled from '@emotion/styled';
 
 // Internal
@@ -20,6 +19,7 @@ import TextField from 'components/TextField';
 import Button from 'components/Button';
 import Arrow from 'components/Arrow';
 import { refs } from 'utils/misc';
+import memoize from 'utils/memoize';
 import { timing } from 'styles';
 
 /**

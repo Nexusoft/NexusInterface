@@ -10,21 +10,14 @@
  */
 
 // External Dependencies
-import { forwardRef } from 'react';
 import styled from '@emotion/styled';
-import { NavLink } from 'react-router-dom';
 
 // Internal Global Dependencies
-import Tooltip from 'components/Tooltip';
-import Icon from 'components/Icon';
 import { timing } from 'styles';
 
-const TabLi = styled.li({
-  listStyle: 'none',
+const HorizontalTab = styled.div(({ theme }) => ({
   flexGrow: 1,
-  flexBasis: 0,
-});
-const TabLink = styled(NavLink)(({ theme }) => ({
+  flexShrink: 1,
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -34,6 +27,7 @@ const TabLink = styled(NavLink)(({ theme }) => ({
   borderBottom: `1px solid ${theme.mixer(0.25)}`,
   transitionProperties: 'color, borderBottom',
   transitionDuration: timing.normal,
+  cursor: 'pointer',
 
   '&:hover': {
     color: theme.foreground,
@@ -45,24 +39,13 @@ const TabLink = styled(NavLink)(({ theme }) => ({
   },
 }));
 
-const Tab = forwardRef(({ link, icon, text, toolTipText, ...rest }, ref) => (
-  <TabLi {...rest} ref={ref}>
-    <Tooltip.Trigger tooltip={toolTipText} position="top">
-      <TabLink to={link}>
-        {!!icon && <Icon className="mr0_4" icon={icon} />}
-        {text}
-      </TabLink>
-    </Tooltip.Trigger>
-  </TabLi>
-));
-
-const TabBar = styled.ul({
+const TabBar = styled.div({
   display: 'flex',
   justifyContent: 'space-between',
   margin: '0 0 1em',
   padding: 0,
 });
 
-Tab.Bar = TabBar;
+HorizontalTab.TabBar = TabBar;
 
-export default Tab;
+export default HorizontalTab;

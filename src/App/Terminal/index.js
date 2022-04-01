@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 
 // Internal Global Dependencies
 import Panel from 'components/Panel';
-import Tab from 'components/Tab';
+import RouterHorizontalTab from 'components/RouterHorizontalTab';
 import { legacyMode } from 'consts/misc';
 
 // Internal Local Dependencies
@@ -27,7 +27,7 @@ const TerminalComponent = styled.div({
   gridTemplateRows: 'min-content 1fr',
 });
 
-const TerminalTabBar = styled(Tab.Bar)({
+const TerminalTabBar = styled(RouterHorizontalTab.TabBar)({
   gridArea: 'tab-bar',
 });
 
@@ -41,12 +41,16 @@ export default function Terminal() {
     <Panel icon={consoleIcon} title={__('Console')} bodyScrollable={false}>
       <TerminalComponent>
         <TerminalTabBar>
-          <Tab
+          <RouterHorizontalTab
             link="Console"
             icon={logoIcon}
             text={legacyMode ? __('Console') : 'Nexus API'}
           />
-          <Tab link="Core" icon={coreIcon} text={__('Core output')} />
+          <RouterHorizontalTab
+            link="Core"
+            icon={coreIcon}
+            text={__('Core output')}
+          />
         </TerminalTabBar>
 
         <Routes>
