@@ -34,15 +34,15 @@ export default [
     },
   },
   {
-    name: 'nexus_interface_history_module',
-    displayName: 'History Module',
+    name: 'nexus_transaction_history_module',
+    displayName: 'Transaction History Module',
 
     description: 'Loads and Saves history data for your Nexus Account',
     type: 'app',
     icon: histoyryIcon,
     repoInfo: {
       owner: 'Nexusoft',
-      repo: 'nexus-interface-history-module',
+      repo: 'nexus-transaction-history-module',
     },
     author: {
       name: 'Kendal Cormany',
