@@ -16,36 +16,34 @@ import styled from '@emotion/styled';
 import { timing } from 'styles';
 
 const HorizontalTab = styled.div(
-  ({ theme }) => (
-    {
-      flexGrow: 1,
-      flexShrink: 1,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: '0 1.5em 0.75em',
-      fontSize: '1.125em',
-      color: theme.mixer(0.75),
-      borderBottom: `1px solid ${theme.mixer(0.25)}`,
-      transitionProperties: 'color, borderBottom',
-      transitionDuration: timing.normal,
-      cursor: 'pointer',
+  ({ theme }) => ({
+    flexGrow: 1,
+    flexShrink: 1,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '0 1.5em .75em',
+    fontSize: '1.125em',
+    color: theme.mixer(0.75),
+    borderBottom: `1px solid ${theme.mixer(0.25)}`,
+    transitionProperties: 'color, borderBottom',
+    transitionDuration: timing.normal,
+    cursor: 'pointer',
 
-      '&:hover': {
-        color: theme.foreground,
-      },
-
-      '&.active': {
-        color: theme.primary,
-        borderBottomColor: theme.primary,
-      },
+    '&:hover': {
+      color: theme.foreground,
     },
-    ({ active, theme }) =>
-      !!active && {
-        color: theme.primary,
-        borderBottomColor: theme.primary,
-      }
-  )
+
+    '&.active': {
+      color: theme.primary,
+      borderBottomColor: theme.primary,
+    },
+  }),
+  ({ active, theme }) =>
+    !!active && {
+      color: theme.primary,
+      borderBottomColor: theme.primary,
+    }
 );
 
 const TabBar = styled.div({
