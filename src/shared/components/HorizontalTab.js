@@ -41,8 +41,10 @@ const HorizontalTab = styled.div(
   }),
   ({ active, theme }) =>
     !!active && {
-      color: theme.primary,
-      borderBottomColor: theme.primary,
+      '&, &:hover': {
+        color: theme.primary,
+        borderBottomColor: theme.primary,
+      },
     }
 );
 
