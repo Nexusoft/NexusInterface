@@ -37,7 +37,7 @@ export const refreshUserStatus = async () => {
       core: { systemInfo },
     } = store.getState();
     if (!refreshUserStatusLock && (!systemInfo?.multiuser || session)) {
-      const status = await callApi('users/get/status');
+      const status = await callApi('sessions/status/local');
       store.dispatch({ type: TYPE.SET_USER_STATUS, payload: status });
       return status;
     }
@@ -58,7 +58,7 @@ export const refreshBalances = async () => {
 };
 
 export const logIn = async ({ username, password, pin }) => {
-  const result = await callApi('users/login/user', {
+  const result = await callApi('sessions/create/local', {
     username,
     password,
     pin,
@@ -115,7 +115,7 @@ export const unlockUser = async ({ pin, mining, staking, notifications }) => {
     settings: { enableMining },
     user: { status },
   } = store.getState();
-  return await callApi('users/unlock/user', {
+  return await callApi('sessions/unlock/local', {
     pin,
     notifications:
       notifications !== undefined
@@ -129,7 +129,7 @@ export const unlockUser = async ({ pin, mining, staking, notifications }) => {
 };
 
 export const switchUser = async (session) => {
-  const status = await callApi('users/get/status', { session });
+  const status = await callApi('sessions/status/local', { session });
   store.dispatch({ type: TYPE.SWITCH_USER, payload: { session, status } });
 };
 
