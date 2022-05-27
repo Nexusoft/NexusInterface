@@ -223,7 +223,7 @@ export async function loadTransactions() {
     if (query) {
       params.where = query;
     }
-    const transactions = await callApi('users/list/transactions', params);
+    const transactions = await callApi('ledger/list/transactions', params);
     store.dispatch({
       type: TYPE.FETCH_TXS_RESULT,
       payload: {
@@ -307,7 +307,7 @@ export function prepareTransactions() {
           typeof oldTxCount === 'number' &&
           txCount > oldTxCount
         ) {
-          const transactions = await callApi('users/list/transactions', {
+          const transactions = await callApi('ledger/list/transactions', {
             verbose: 'summary',
             limit: txCount - oldTxCount,
           });

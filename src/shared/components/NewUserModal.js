@@ -184,7 +184,7 @@ function UserConfirmBackgroundTask({ username, closeTask }) {
       observeStore(
         ({ core: { systemInfo } }) => systemInfo?.blocks,
         async () => {
-          const txs = await callApi('users/list/transactions', {
+          const txs = await callApi('ledger/list/transactions', {
             username,
             order: 'asc',
             limit: 1,
