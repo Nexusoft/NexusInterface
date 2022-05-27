@@ -4,7 +4,6 @@ import list from './list';
 import market from './market';
 import transactions from './transactions';
 import common from './common';
-import exchange from './exchange';
 import addressBook from './addressBook';
 import myAccounts from './myAccounts';
 import settings from './settings';
@@ -30,7 +29,6 @@ export default function createRootReducer() {
     list,
     market,
     transactions,
-    exchange,
     common,
     addressBook,
     myAccounts,
