@@ -6,6 +6,7 @@ import { arrowStyles } from 'components/Arrow';
 import LoginModal from 'components/LoginModal';
 import NewUserModal from 'components/NewUserModal';
 import SetRecoveryModal from 'components/SetRecoveryModal';
+import { confirmPin } from 'lib/dialog';
 import { isLoggedIn } from 'selectors';
 import { openModal, showNotification } from 'lib/ui';
 import { timing, animations, consts } from 'styles';
@@ -79,6 +80,7 @@ function LoggedInDropdown({ closeDropdown }) {
   const hasOtherSessions = useSelector(
     (state) => Object.keys(state.sessions).length > 1
   );
+  const blocking = true; //useSelector((state) => state.settings.)
 
   return (
     <>
@@ -132,7 +134,14 @@ function LoggedInDropdown({ closeDropdown }) {
       <MenuItem
         onClick={async () => {
           closeDropdown();
-          await logOut();
+          const pin =
+            blocking &&
+            (await confirmPin({
+              note: 'Logout blocking active, enter Pin to logout',
+            }));
+          if (blocking && !pin) return;
+
+          await logOut({ pin });
           showNotification('Logged out');
         }}
       >

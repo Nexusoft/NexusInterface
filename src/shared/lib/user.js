@@ -91,7 +91,7 @@ export const logIn = async ({ username, password, pin }) => {
   }
 };
 
-export const logOut = async () => {
+export const logOut = async ({ pin }) => {
   const {
     sessions,
     core: { systemInfo },
@@ -102,11 +102,11 @@ export const logOut = async () => {
   if (systemInfo?.multiuser) {
     await Promise.all([
       Object.keys(sessions).map((session) => {
-        callApi('users/logout/user', { session });
+        callApi('sessions/terminate/local', { session, pin });
       }),
     ]);
   } else {
-    await callApi('users/logout/user');
+    await callApi('sessions/terminate/local', pin && { pin });
   }
 };
 
