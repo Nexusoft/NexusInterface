@@ -15,7 +15,9 @@ import listAll from 'utils/listAll';
 __ = __context('User');
 
 export const selectUsername = (state) =>
-  state.user.status?.username || state.sessions[state.user.session]?.username;
+  state.user.status?.username ||
+  state.sessions[state.user.session]?.username ||
+  state.user.username;
 
 export const refreshStakeInfo = async () => {
   try {
@@ -68,7 +70,7 @@ export const logIn = async ({ username, password, pin }) => {
   try {
     const { session } = result;
     let [status, stakeInfo] = await Promise.all([
-      callApi('users/get/status', { session }),
+      callApi('sessions/status/local', { session }),
       callApi('finance/get/stakeinfo', { session }),
     ]);
     const unlockStaking = await shouldUnlockStaking({ stakeInfo, status });
@@ -77,7 +79,7 @@ export const logIn = async ({ username, password, pin }) => {
       staking: unlockStaking,
     });
     if (unlockStaking) {
-      status = await callApi('users/get/status', { session });
+      status = await callApi('sessions/status/local', { session });
     }
 
     store.dispatch({

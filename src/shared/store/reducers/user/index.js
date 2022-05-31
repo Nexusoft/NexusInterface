@@ -11,8 +11,10 @@ import nameRecords from './nameRecords';
 import namespaces from './namespaces';
 import assets from './assets';
 import startStakingAsked from './startStakingAsked';
+import username from './username';
 
 export default combineReducers({
+  username,
   session,
   status,
   stakeInfo,
