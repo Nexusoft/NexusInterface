@@ -58,12 +58,12 @@ const {
     FormField,
     GlobalStyles,
     Icon,
-    Link,
     Modal,
     Panel,
     Select,
     Switch,
-    Tab,
+    HorizontalTab,
+    VerticalTab,
     TextField,
     ThemeController,
     Tooltip,
@@ -81,12 +81,12 @@ List of included components:
 - [FormField](../../src/shared/components/FormField.js)
 - [GlobalStyles](../../src/shared/components/GlobalStyles/index.js)
 - [Icon](../../src/shared/components/Icon.js)
-- [Link](../../src/shared/components/Link.js)
 - [Modal](../../src/shared/components/Modal.js)
 - [Panel](../../src/shared/components/Panel.js)
 - [Select](../../src/shared/components/Select.js)
 - [Switch](../../src/shared/components/Switch.js)
-- [Tab](../../src/shared/components/Tab.js)
+- [HorizontalTab](../../src/shared/components/HorizontalTab.js)
+- [VerticalTab](../../src/shared/components/VerticalTab.js)
 - [TextField](../../src/shared/components/TextField.js)
 - [ThemeController](../../src/shared/components/ThemeController.js)
 - [Tooltip](../../src/shared/components/Tooltip.js)

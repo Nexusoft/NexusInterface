@@ -15,6 +15,8 @@ import { selectAddressNameMap, selectSource } from 'lib/send';
 import memoize from 'utils/memoize';
 import { addressRegex } from 'consts/misc';
 import plusIcon from 'icons/plus.svg';
+import addressBookIcon from 'icons/address-book.svg';
+import walletIcon from 'icons/wallet.svg';
 import { getRecipientSuggestions } from './selectors';
 
 __ = __context('Send');
@@ -98,7 +100,7 @@ function RecipientLabel({ fieldName }) {
   const address = useFieldValue(fieldName);
   const addressNameMap = useSelector(selectAddressNameMap);
 
-  const recipientName = addressNameMap[address];
+  const addressLabel = addressNameMap[address];
   const isAddress = addressRegex.test(address);
 
   const addToContact = async () => {
@@ -123,8 +125,18 @@ function RecipientLabel({ fieldName }) {
         {__('Send to')}
         &nbsp;&nbsp;
       </span>
-      <RecipientName>{recipientName}</RecipientName>
-      {!recipientName && isAddress && (
+      {!!addressLabel && (
+        <RecipientName>
+          {addressLabel.type === 'contact' && (
+            <Icon icon={addressBookIcon} className="mr0_4" />
+          )}
+          {addressLabel.type === 'account' && (
+            <Icon icon={walletIcon} className="mr0_4" />
+          )}
+          <span className="v-align">{addressLabel.label}</span>
+        </RecipientName>
+      )}
+      {!addressLabel && isAddress && (
         <Button skin="plain-link-primary" onClick={addToContact}>
           <Icon icon={plusIcon} style={{ fontSize: '0.9em' }} />
           <span className="v-align ml0_4">{__('Add to Address Book')}</span>
@@ -138,11 +150,7 @@ export default function RecipientAddress({ parentFieldName }) {
   const source = selectSource();
   const fieldName = `${parentFieldName}.address`;
   const suggestions = useSelector((state) =>
-    getRecipientSuggestions(
-      state.addressBook,
-      state.user?.accounts,
-      source?.account?.address
-    )
+    getRecipientSuggestions(state, source)
   );
 
   return (
@@ -150,7 +158,7 @@ export default function RecipientAddress({ parentFieldName }) {
       <Form.AutoSuggest
         name={fieldName}
         inputProps={{
-          placeholder: __('Recipient Address/Name'),
+          placeholder: __('Recipient Name or Address'),
           skin: 'filled-inverted',
         }}
         suggestions={suggestions}

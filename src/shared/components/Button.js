@@ -95,7 +95,7 @@ const ButtonComponent = styled.button(
             border: `1px solid ${theme.mixer(0.75)}`,
             color: theme.mixer(0.75),
           },
-          '&:hover': {
+          '&:hover, &.hover': {
             borderColor: theme.foreground,
             color: theme.foreground,
           },
@@ -116,7 +116,7 @@ const ButtonComponent = styled.button(
               fontWeight: 'normal',
             },
           },
-          '&:hover': {
+          '&:hover, &.hover': {
             borderColor: lighten(theme.primary, 0.3),
             color: lighten(theme.primary, 0.3),
             boxShadow: `0 0 7px ${fade(theme.primary, 0.3)}`,
@@ -139,7 +139,7 @@ const ButtonComponent = styled.button(
               fontWeight: 'normal',
             },
           },
-          '&:hover': {
+          '&:hover, &.hover': {
             borderColor: theme.raise(theme.danger, 0.3),
             color: theme.raise(theme.danger, 0.3),
             boxShadow: `0 0 7px ${fade(theme.danger, 0.3)}`,
@@ -153,7 +153,7 @@ const ButtonComponent = styled.button(
             color: theme.primaryAccent,
             transitionProperty: 'background-color',
           },
-          '&:hover': {
+          '&:hover, &.hover': {
             background: theme.primary,
           },
         };
@@ -164,7 +164,7 @@ const ButtonComponent = styled.button(
             color: theme.foreground,
             transitionProperty: 'background-color',
           },
-          '&:hover': {
+          '&:hover, &.hover': {
             background: theme.mixer(0.125),
           },
         };
@@ -175,7 +175,7 @@ const ButtonComponent = styled.button(
             color: theme.background,
             transitionProperty: 'background-color',
           },
-          '&:hover': {
+          '&:hover, &.hover': {
             background: theme.foreground,
           },
         };
@@ -186,7 +186,7 @@ const ButtonComponent = styled.button(
             color: theme.dangerAccent,
             transitionProperty: 'background-color',
           },
-          '&:hover': {
+          '&:hover, &.hover': {
             background: theme.raise(theme.danger, 0.2),
           },
         };
@@ -197,7 +197,7 @@ const ButtonComponent = styled.button(
             color: theme.mixer(0.25),
             transitionProperty: 'color',
           },
-          '&:hover': {
+          '&:hover, &.hover': {
             color: theme.background,
           },
         };
@@ -208,7 +208,7 @@ const ButtonComponent = styled.button(
             color: theme.mixer(0.25),
             transitionProperty: 'color',
           },
-          '&:hover': {
+          '&:hover, &.hover': {
             color: theme.background,
           },
         };
@@ -219,7 +219,7 @@ const ButtonComponent = styled.button(
             color: theme.mixer(0.75),
             transitionProperty: 'color',
           },
-          '&:hover': {
+          '&:hover, &.hover': {
             color: theme.foreground,
           },
         };
@@ -236,7 +236,7 @@ const ButtonComponent = styled.button(
             color: theme.mixer(0.75),
             transitionProperty: 'color',
           },
-          '&:hover': {
+          '&:hover, &.hover': {
             color: theme.foreground,
           },
         };
@@ -250,7 +250,7 @@ const ButtonComponent = styled.button(
             color: fade(theme.primary, 0.15),
             transitionProperty: 'color',
           },
-          '&:hover': {
+          '&:hover, &.hover': {
             color: theme.primary,
           },
         };

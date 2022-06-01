@@ -1,17 +1,16 @@
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import { categoryText } from './utils';
 import { isPending } from 'lib/transactions';
 
 __ = __context('Transactions');
 
-const CategoryCell = ({ transaction, minConfirmations }) =>
-  isPending(transaction, minConfirmations)
+export default function CategoryCell({ transaction }) {
+  const minConfirmations = useSelector(
+    (state) => state.settings.minConfirmations
+  );
+
+  return isPending(transaction, minConfirmations)
     ? `${__('Pending')} (${transaction.confirmations}/${minConfirmations})`
     : categoryText(transaction.category);
-
-const mapStateToProps = ({ settings: { minConfirmations } }) => ({
-  minConfirmations,
-});
-
-export default connect(mapStateToProps)(CategoryCell);
+}

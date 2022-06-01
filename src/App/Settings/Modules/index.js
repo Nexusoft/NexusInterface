@@ -87,7 +87,7 @@ export default function SettingsModules() {
           last={i === moduleList.length - 1}
         />
       ))}
-      {!!failedModules && failedModules.length > 0 && (
+      {failedModules?.length > 0 && (
         <FailedModules>
           {failedModules.map(({ name, path, message }) => (
             <FailedModule
@@ -104,6 +104,11 @@ export default function SettingsModules() {
             </FailedModule>
           ))}
         </FailedModules>
+      )}
+      {!moduleList.length && !failedModules.length && (
+        <div className="text-center dim mt3 mb3">
+          <em>{__('No modules have been installed')}</em>
+        </div>
       )}
       {!!notInstalledFeaturedModules?.length && (
         <>

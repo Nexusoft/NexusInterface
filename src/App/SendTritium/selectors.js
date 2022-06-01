@@ -1,8 +1,14 @@
 import styled from '@emotion/styled';
 
 import TokenName from 'components/TokenName';
+import Icon from 'components/Icon';
+import NexusAddress from 'components/NexusAddress';
+import { selectUsername } from 'lib/user';
 import memoize from 'utils/memoize';
 import shortenAddress from 'utils/shortenAddress';
+import walletIcon from 'icons/wallet.svg';
+import tokenIcon from 'icons/token.svg';
+import contactIcon from 'icons/address-book.svg';
 
 __ = __context('Send');
 
@@ -15,12 +21,8 @@ const Separator = styled.div(({ theme }) => ({
   color: theme.primary,
 }));
 
-const Address = styled.span(({ theme }) => ({
-  color: theme.mixer(0.75),
-}));
-
 export const selectAccountOptions = memoize(
-  (myAccounts, myTokens) => {
+  (myAccounts, myTokens, username) => {
     let options = [];
 
     if (myAccounts?.length) {
@@ -35,13 +37,25 @@ export const selectAccountOptions = memoize(
           value: `account:${account.address}`,
           display: (
             <span>
-              {account.name || (
-                <span>
-                  <em>{__('Unnamed account')}</em>{' '}
-                  <span className="dim">{shortenAddress(account.address)}</span>
-                </span>
-              )}{' '}
-              ({account.balance} {TokenName.from({ account })})
+              <Icon icon={walletIcon} className="mr0_4" />
+              <span className="v-align">
+                {account.name ? (
+                  <span>
+                    {!!account.nameIsLocal && (
+                      <span className="dim">{username}:</span>
+                    )}
+                    {account.name}
+                  </span>
+                ) : (
+                  <span>
+                    <em className="semi-dim">{__('Unnamed account')}</em>{' '}
+                    <span className="dim">
+                      {shortenAddress(account.address)}
+                    </span>
+                  </span>
+                )}{' '}
+                ({account.balance} {TokenName.from({ account })})
+              </span>
             </span>
           ),
           indent: true,
@@ -60,13 +74,16 @@ export const selectAccountOptions = memoize(
           value: `token:${token.address}`,
           display: (
             <span>
-              {token.ticker || (
-                <span>
-                  <em>{__('Unnamed token')}</em>{' '}
-                  <span className="dim">{shortenAddress(token.address)}</span>
-                </span>
-              )}{' '}
-              ({token.balance} {TokenName.from({ token })})
+              <Icon icon={tokenIcon} className="mr0_4" />
+              <span className="v-align">
+                {token.ticker || (
+                  <span>
+                    <em>{__('Unnamed token')}</em>{' '}
+                    <span className="dim">{shortenAddress(token.address)}</span>
+                  </span>
+                )}{' '}
+                ({token.balance} {TokenName.from({ token })})
+              </span>
             </span>
           ),
           indent: true,
@@ -76,11 +93,11 @@ export const selectAccountOptions = memoize(
 
     return options;
   },
-  (state) => [state.user.accounts, state.user.tokens]
+  (state) => [state.user.accounts, state.user.tokens, selectUsername(state)]
 );
 
 export const getRecipientSuggestions = memoize(
-  (addressBook, myAccounts, accountAddress) => {
+  (addressBook, myAccounts, accountAddress, username) => {
     const suggestions = [];
     if (addressBook) {
       Object.values(addressBook).forEach((contact) => {
@@ -91,10 +108,21 @@ export const getRecipientSuggestions = memoize(
               address: address,
               value: address,
               display: (
-                <span>
-                  {contact.name}
-                  {label ? ' - ' + label : ''} <Address>{address}</Address>
-                </span>
+                <div>
+                  <div>
+                    <Icon icon={contactIcon} className="mr0_4" />
+                    <span className="v-align">
+                      {contact.name}
+                      {label ? ' - ' + label : ''}
+                    </span>
+                  </div>
+                  <NexusAddress
+                    className="semi-dim"
+                    copyable={false}
+                    type="truncateMiddle"
+                    address={address}
+                  />
+                </div>
               ),
             });
           }
@@ -109,23 +137,44 @@ export const getRecipientSuggestions = memoize(
         suggestions.push({
           name: account.name,
           address: account.address,
-          value: account.name || account.address,
+          value: account.address,
           display: (
-            <span>
-              {account.name || (
-                <span style={{ fontStyle: 'italic' }}>
-                  {__('Unnamed account')}
+            <div>
+              <div>
+                <Icon icon={walletIcon} className="mr0_4" />
+                <span className="v-align">
+                  {account.name ? (
+                    <span>
+                      {!!account.nameIsLocal && (
+                        <span className="dim">{username}:</span>
+                      )}
+                      {account.name}
+                    </span>
+                  ) : (
+                    <em className="semi-dim">{__('Unnamed account')}</em>
+                  )}{' '}
+                  <TokenRecipientName>
+                    (<TokenName account={account} />)
+                  </TokenRecipientName>
                 </span>
-              )}{' '}
-              <TokenRecipientName>
-                (<TokenName account={account} />)
-              </TokenRecipientName>{' '}
-              <Address>{account.address}</Address>
-            </span>
+              </div>
+              <NexusAddress
+                className="semi-dim"
+                copyable={false}
+                type="truncateMiddle"
+                address={account.address}
+              />
+            </div>
           ),
         });
       });
     }
     return suggestions;
-  }
+  },
+  (state, source) => [
+    state.addressBook,
+    state.user?.accounts,
+    source?.account?.address,
+    selectUsername(state),
+  ]
 );

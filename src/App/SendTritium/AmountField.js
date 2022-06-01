@@ -1,27 +1,27 @@
 // External
+import { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { useForm } from 'react-final-form';
+import { getIn } from 'final-form';
 import styled from '@emotion/styled';
 
 // Internal
 import Form from 'components/Form';
-import Tooltip from 'components/Tooltip';
 import FormField from 'components/FormField';
 import Link from 'components/Link';
 import TokenName from 'components/TokenName';
-import { numericOnly, useFieldValue } from 'lib/form';
 import { selectSource } from 'lib/send';
 
 __ = __context('Send');
 
 const floatRegex = /^[0-9]+(.[0-9]*)?$/;
 
-const SendAmount = styled.div({
-  display: 'flex',
+const AmountFieldWrapper = styled.div({
+  flex: '1 1 130px',
 });
 
-const SendAmountField = styled.div({
-  flex: 1,
+const FiatAmountFieldWrapper = styled.div({
+  flex: '1 1 100px',
 });
 
 const SendAllLink = styled(Link)({
@@ -30,6 +30,15 @@ const SendAllLink = styled(Link)({
   fontSize: '.9em',
   verticalAlign: 'middle',
 });
+
+const EqualSign = styled.div(({ theme }) => ({
+  flex: '0 0',
+  display: 'flex',
+  alignItems: 'flex-end',
+  padding: '.1em .4em',
+  fontSize: '1.2em',
+  color: theme.mixer(0.5),
+}));
 
 const nxsToFiat = (value, price) => {
   if (price) {
@@ -49,47 +58,84 @@ function positiveNumber(value) {
   }
 }
 
-function FiatValue({ fieldName, source }) {
-  const value = useFieldValue(fieldName);
-  const price = useSelector((state) => state.market?.price);
-  const currency = useSelector((state) => state.market?.currency);
-  const isInNXS = (source?.account?.token || source?.token?.address) === '0';
-  const fiat = isInNXS && nxsToFiat(value, price);
+// function FiatValue({ fieldName, source }) {
+//   const value = useFieldValue(fieldName);
+//   const price = useSelector((state) => state.market?.price);
+//   const currency = useSelector((state) => state.market?.currency);
+//   const isInNXS = (source?.account?.token || source?.token?.address) === '0';
+//   const fiat = isInNXS && nxsToFiat(value, price);
 
-  return fiat ? `≈ ${fiat} ${currency}` : null;
-}
+//   return fiat ? `≈ ${fiat} ${currency}` : null;
+// }
 
 export default function AmountField({ parentFieldName }) {
   const source = selectSource();
+  const fiatCurrency = useSelector((state) => state.settings.fiatCurrency);
+  const price = useSelector((state) => state.market?.price);
   const form = useForm();
   const fullAmount = (source?.account || source?.token)?.balance;
-  const fieldName = parentFieldName + '.amount';
+  const amountFieldName = parentFieldName + '.amount';
+  const fiatAmountFieldName = parentFieldName + '.fiatAmount';
 
   const sendAll = (evt) => {
     evt.preventDefault();
-    form.change(fieldName, fullAmount);
+    form.change(amountFieldName, fullAmount);
   };
 
+  const prevValuesRef = useRef(null);
+  const cascadingRef = useRef(false);
+  useEffect(() =>
+    form.subscribe(
+      ({ values }) => {
+        if (prevValuesRef.current) {
+          const amount = getIn(values, amountFieldName);
+          const fiatAmount = getIn(values, fiatAmountFieldName);
+          const oldAmount = getIn(prevValuesRef.current, amountFieldName);
+          const oldFiatAmount = getIn(
+            prevValuesRef.current,
+            fiatAmountFieldName
+          );
+          if (amount !== oldAmount) {
+            if (cascadingRef.current) {
+              cascadingRef.current = false;
+            } else if (floatRegex.test(amount) && price) {
+              const nxs = parseFloat(amount);
+              const fiat = nxs * price;
+              form.change(fiatAmountFieldName, fiat.toFixed(2));
+              cascadingRef.current = true;
+            }
+          } else if (fiatAmount !== oldFiatAmount) {
+            if (cascadingRef.current) {
+              cascadingRef.current = false;
+            } else if (floatRegex.test(fiatAmount) && price) {
+              const fiat = parseFloat(fiatAmount);
+              const nxs = fiat / price;
+              form.change(amountFieldName, nxs.toFixed(6));
+              cascadingRef.current = true;
+            }
+          }
+        }
+        prevValuesRef.current = values;
+      },
+      { values: true }
+    )
+  );
+
   return (
-    <SendAmount>
-      <SendAmountField>
+    <>
+      <AmountFieldWrapper>
         <FormField
           connectLabel
           label={
             <span style={{ whiteSpace: 'nowrap' }}>
               <span className="v-align">
-                {__('Amount')}
-                {!!source && (
-                  <span>
-                    &nbsp;(
-                    {source.token ? (
-                      <TokenName token={source.token} />
-                    ) : (
-                      <TokenName account={source.account} />
-                    )}
-                    )
-                  </span>
-                )}
+                {source
+                  ? __('%{currency} amount', {
+                      currency: source.token
+                        ? TokenName.from({ token: source.token })
+                        : TokenName.from({ account: source.account }),
+                    })
+                  : __('Amount')}
               </span>
               {!!fullAmount && (
                 <SendAllLink as="a" onClick={sendAll}>
@@ -99,23 +145,48 @@ export default function AmountField({ parentFieldName }) {
             </span>
           }
         >
-          <Tooltip.Trigger
-            tooltip={<FiatValue fieldName={fieldName} source={source} />}
-          >
-            <Form.TextField
-              name={fieldName}
-              skin="filled-inverted"
-              config={{
-                format: (value, name) => {
-                  return value ? value.replace(',', '.') : '';
-                },
-              }}
-              placeholder="0.00000"
-              validate={positiveNumber}
-            />
-          </Tooltip.Trigger>
+          {/* <Tooltip.Trigger
+            tooltip={<FiatValue fieldName={amountFieldName} source={source} />}
+          > */}
+          <Form.TextField
+            name={amountFieldName}
+            skin="filled-inverted"
+            config={{
+              format: (value, name) => {
+                return value ? value.replace(',', '.') : '';
+              },
+            }}
+            placeholder="0.00000"
+            validate={positiveNumber}
+          />
+          {/* </Tooltip.Trigger> */}
         </FormField>
-      </SendAmountField>
-    </SendAmount>
+      </AmountFieldWrapper>
+
+      {!!fiatCurrency && !!price && source?.account?.token === '0' && (
+        <>
+          <EqualSign>≈</EqualSign>
+
+          <FiatAmountFieldWrapper>
+            <FormField
+              connectLabel
+              label={
+                <span style={{ whiteSpace: 'nowrap' }}>
+                  <span className="v-align">
+                    {__('%{currency} amount', { currency: fiatCurrency })}
+                  </span>
+                </span>
+              }
+            >
+              <Form.TextField
+                name={fiatAmountFieldName}
+                skin="filled-inverted"
+                placeholder="0.00"
+              />
+            </FormField>
+          </FiatAmountFieldWrapper>
+        </>
+      )}
+    </>
   );
 }

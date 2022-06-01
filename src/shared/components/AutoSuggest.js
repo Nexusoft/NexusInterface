@@ -12,7 +12,6 @@
 // External
 import { useState, memo, useRef, useEffect, forwardRef } from 'react';
 import { findDOMNode } from 'react-dom';
-import memoize from 'utils/memoize';
 import styled from '@emotion/styled';
 
 // Internal
@@ -20,7 +19,8 @@ import TextField from 'components/TextField';
 import Button from 'components/Button';
 import Arrow from 'components/Arrow';
 import { refs } from 'utils/misc';
-import { timing, consts } from 'styles';
+import memoize from 'utils/memoize';
+import { timing } from 'styles';
 
 /**
  * `suggestions` can be an object in `{value: string, display: any}` shape,
@@ -36,15 +36,12 @@ const getDisplay = (suggestion) =>
 
 const SuggestionComponent = styled.div(
   ({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    padding: '0 12px',
+    padding: '0.4em 0.8em',
     overflow: 'hidden',
     cursor: 'pointer',
     transition: `background-color ${timing.normal}`,
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
-    height: consts.inputHeightEm + 'em',
     color: theme.foreground,
     position: 'relative',
 

@@ -1,4 +1,4 @@
-import { connect, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/react';
 
@@ -93,13 +93,12 @@ const ModuleNavItem = ({ module }) => (
   </Tooltip.Trigger>
 );
 
-const ModuleNavItems = connect((state) => ({
-  modules: state.modules,
-}))(({ modules }) =>
-  Object.values(modules)
+function ModuleNavItems() {
+  const modules = useSelector((state) => state.modules);
+  return Object.values(modules)
     .filter((module) => module.enabled && module.info.type === 'app')
-    .map((module) => <ModuleNavItem key={module.info.name} module={module} />)
-);
+    .map((module) => <ModuleNavItem key={module.info.name} module={module} />);
+}
 
 /**
  * Returns the Navigation Bar

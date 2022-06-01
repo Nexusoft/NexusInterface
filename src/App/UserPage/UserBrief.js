@@ -1,9 +1,8 @@
 import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
-import { NavLink } from 'react-router-dom';
 
-import { timing, consts } from 'styles';
-import * as color from 'utils/color';
+import RouterVerticalTab from 'components/RouterVerticalTab';
+import { consts } from 'styles';
 import { selectUsername } from 'lib/user';
 
 __ = __context('User');
@@ -40,43 +39,10 @@ const GenesisId = styled.div({
   fontFamily: consts.monoFontFamily,
 });
 
-const MenuItem = styled(NavLink)(
-  ({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    padding: '.5em 30px',
-    margin: '0 -30px',
-    transitionProperty: 'background, color',
-    transitionDuration: timing.normal,
-    cursor: 'pointer',
-
-    '&:hover': {
-      background: theme.mixer(0.05),
-    },
-
-    '&.active, &.active:hover': {
-      background: theme.primary,
-      color: theme.primaryAccent,
-    },
-  }),
-  ({ disabled, theme }) =>
-    disabled && {
-      pointerEvents: 'none',
-      color: theme.mixer(0.05),
-    },
-  ({ selected, theme }) =>
-    selected && {
-      '&, &:hover': {
-        background: color.fade(theme.primary, 0.4),
-        color: theme.primaryAccent,
-      },
-    }
-);
-
 export default function UserBrief() {
   const username = useSelector(selectUsername);
   const genesis = useSelector((state) => state.user.status?.genesis);
-  const privateNet = useSelector((state) => state.core.systemInfo?.private);
+
   return (
     <UserBriefComponent>
       <Username>{username}</Username>
@@ -86,14 +52,12 @@ export default function UserBrief() {
         <GenesisId>{genesis}</GenesisId>
       </Genesis>
       <Separator />
-      <MenuItem to="Accounts">{__('Accounts')}</MenuItem>
-      <MenuItem disabled={privateNet ? true : null} to="Staking">
-        {__('Staking')}
-      </MenuItem>
-      <MenuItem to="Tokens">{__('Tokens')}</MenuItem>
-      <MenuItem to="Names">{__('Names')}</MenuItem>
-      <MenuItem to="Namespaces">{__('Namespaces')}</MenuItem>
-      <MenuItem to="Assets">{__('Assets')}</MenuItem>
+      <RouterVerticalTab to="Accounts" text={__('Accounts')} />
+      <RouterVerticalTab to="Staking" text={__('Staking')} />
+      <RouterVerticalTab to="Tokens" text={__('Tokens')} />
+      <RouterVerticalTab to="Names" text={__('Names')} />
+      <RouterVerticalTab to="Namespaces" text={__('Namespaces')} />
+      <RouterVerticalTab to="Assets" text={__('Assets')} />
     </UserBriefComponent>
   );
 }

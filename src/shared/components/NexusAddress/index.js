@@ -6,15 +6,15 @@ import SegmentedAddress from './SegmentedAddress';
 import TruncateMiddleAddress from './TruncateMiddleAddress';
 import RawAddress from './RawAddress';
 
-export default function NexusAddress(props) {
+export default function NexusAddress({ type, ...rest }) {
   const addressStyle = useSelector((state) => state.settings.addressStyle);
 
-  switch (addressStyle) {
+  switch (type || addressStyle) {
     case 'raw':
-      return <RawAddress {...props} />;
+      return <RawAddress {...rest} />;
     case 'truncateMiddle':
-      return <TruncateMiddleAddress {...props} />;
+      return <TruncateMiddleAddress {...rest} />;
     default:
-      return <SegmentedAddress {...props} />;
+      return <SegmentedAddress {...rest} />;
   }
 }

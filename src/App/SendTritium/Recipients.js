@@ -30,8 +30,6 @@ const RemoveButton = styled.div(({ theme }) => ({
 }));
 
 const Recipient = styled.div({
-  // display: 'flex',
-  // alignItems: 'center',
   marginLeft: -30,
   marginRight: -30,
   padding: '0 30px',
@@ -39,14 +37,13 @@ const Recipient = styled.div({
 });
 
 const AddressWrapper = styled.div({
-  flex: 8,
-  flexBasis: 0,
+  flex: '5 5 500px',
   marginRight: '1em',
 });
 
-const AmountWrapper = styled.div({
-  flex: 2,
-  flexBasis: 0,
+const BaseFields = styled.div({
+  display: 'flex',
+  alignItems: 'flex-end',
 });
 
 export default function Recipients({ fields }) {
@@ -89,15 +86,13 @@ export default function Recipients({ fields }) {
             </Tooltip.Trigger>
           )}
 
-          <div className="flex center">
+          <BaseFields>
             <AddressWrapper>
               <RecipientAddress parentFieldName={fieldName} />
             </AddressWrapper>
 
-            <AmountWrapper>
-              <AmountField parentFieldName={fieldName} />
-            </AmountWrapper>
-          </div>
+            <AmountField parentFieldName={fieldName} />
+          </BaseFields>
 
           <AdvancedFields parentFieldName={fieldName} />
         </Recipient>
