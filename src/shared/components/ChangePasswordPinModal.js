@@ -36,7 +36,7 @@ export default function ChangePasswordPinModal() {
                   });
 
                   if (correct) {
-                    return await callApi('users/update/user', {
+                    return await callApi('profiles/update/credentials', {
                       password,
                       pin,
                       new_password: newPassword,
