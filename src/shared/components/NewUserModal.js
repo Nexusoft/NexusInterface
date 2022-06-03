@@ -70,7 +70,7 @@ export default function NewUserModal() {
                   });
 
                   if (correct) {
-                    return await callApi('users/create/user', {
+                    return await callApi('profiles/create/master', {
                       username,
                       password,
                       pin,
