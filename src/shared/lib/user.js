@@ -266,8 +266,19 @@ export const loadNamespaces = async () => {
 
 export const loadAssets = async () => {
   try {
-    const assets = await listAll('assets/list/assets');
-    store.dispatch({ type: TYPE.SET_ASSETS, payload: assets });
+    let [assets] = await Promise.all([listAll('assets/list/assets')]);
+    //TODO: Partial returns an error instead of a empty array if there are no assets found which is not the best way to do that, consider revising
+    let partialAssets = [];
+    try {
+      partialAssets = await listAll('assets/list/partial');
+    } catch (error) {
+      if (error.code && error.code === -74) {
+      } else throw error;
+    }
+    store.dispatch({
+      type: TYPE.SET_ASSETS,
+      payload: assets.concat(partialAssets),
+    });
   } catch (err) {
     console.error('assets/list/assets failed', err);
   }
