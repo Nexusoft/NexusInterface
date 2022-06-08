@@ -73,6 +73,10 @@ export const logIn = async ({ username, password, pin }) => {
       callApi('sessions/status/local', { session }),
       callApi('finance/get/stakeinfo', { session }),
     ]);
+    store.dispatch({
+      type: TYPE.LOGIN,
+      payload: { username, session, status, stakeInfo },
+    });
     const unlockStaking = await shouldUnlockStaking({ stakeInfo, status });
     await unlockUser({
       pin,
@@ -82,10 +86,6 @@ export const logIn = async ({ username, password, pin }) => {
       status = await callApi('sessions/status/local', { session });
     }
 
-    store.dispatch({
-      type: TYPE.LOGIN,
-      payload: { username, session, status, stakeInfo },
-    });
     return { username, session, status, stakeInfo };
   } finally {
     // Release the lock

@@ -5,19 +5,16 @@ const initialState = null;
 export default (state = initialState, action) => {
   switch (action.type) {
     case '@@INIT':
-      return window.sessionStorage.getItem('LoggedInUsername') || null;
+      return window.sessionStorage.getItem('currentUsername') || null;
     case TYPE.LOGIN:
     case TYPE.SWITCH_USER:
-      window.sessionStorage.setItem(
-        'LoggedInUsername',
-        action.payload.username
-      );
+      window.sessionStorage.setItem('currentUsername', action.payload.username);
       return action.payload.username;
 
     case TYPE.DISCONNECT_CORE:
     case TYPE.CLEAR_USER:
     case TYPE.LOGOUT:
-      window.sessionStorage.removeItem('LoggedInUsername');
+      window.sessionStorage.removeItem('currentUsername');
       return initialState;
 
     default:
