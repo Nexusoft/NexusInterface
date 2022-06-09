@@ -123,8 +123,16 @@ export default function NexusApiConsole() {
   const inputRef = useRef();
   const outputRef = useRef();
   const consoleInput = useSelector(consoleInputSelector);
-  const apiUser = useSelector((state) => state.core.config.apiUser);
-  const apiPassword = useSelector((state) => state.core.config.apiPassword);
+  const apiUser = useSelector((state) =>
+    state.settings.manualDaemon
+      ? state.settings.manualDaemonApiUser
+      : state.core.config?.apiUser
+  );
+  const apiPassword = useSelector((state) =>
+    state.settings.manualDaemon
+      ? state.settings.manualDaemonApiPassword
+      : state.core.config?.apiPassword
+  );
   const currentCommand = useSelector(
     (state) => state.ui.console.console.currentCommand
   );
