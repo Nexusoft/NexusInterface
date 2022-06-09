@@ -19,6 +19,22 @@ export const selectUsername = (state) =>
   state.sessions[state.user.session]?.username ||
   state.user.username;
 
+export const authorizeMasterProfile = async ({ pin }) => {
+  try {
+    const profile = await callApi('profiles/status/master', { pin });
+    const username = profile.session?.username;
+    if (username) {
+      store.dispatch({
+        type: TYPE.SET_ACTIVE_USERNAME,
+        payload: { username },
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
 export const refreshStakeInfo = async () => {
   try {
     const stakeInfo = await callApi('finance/get/stakeinfo');

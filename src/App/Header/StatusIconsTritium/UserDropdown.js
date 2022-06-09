@@ -4,13 +4,14 @@ import { Link } from 'react-router-dom';
 
 import { arrowStyles } from 'components/Arrow';
 import LoginModal from 'components/LoginModal';
+import Button from 'components/Button';
 import NewUserModal from 'components/NewUserModal';
 import SetRecoveryModal from 'components/SetRecoveryModal';
-import { confirmPin } from 'lib/dialog';
+import { confirmPin, openErrorDialog } from 'lib/dialog';
 import { isLoggedIn } from 'selectors';
 import { openModal, showNotification } from 'lib/ui';
 import { timing, animations, consts } from 'styles';
-import { logOut, selectUsername } from 'lib/user';
+import { authorizeMasterProfile, logOut, selectUsername } from 'lib/user';
 
 import SwitchUserModal from './SwitchUserModal';
 
@@ -73,6 +74,8 @@ const Separator = styled.div(({ theme }) => ({
 
 function LoggedInDropdown({ closeDropdown }) {
   const currentUser = useSelector(selectUsername);
+  const manualNoUsername =
+    !currentUser && useSelector((state) => state.settings.manualDaemon);
   const hasRecoveryPhrase = useSelector(
     (state) => !!state.user.status?.recovery
   );
@@ -85,6 +88,26 @@ function LoggedInDropdown({ closeDropdown }) {
   return (
     <>
       <CurrentUser>
+        {manualNoUsername && (
+          <Button
+            onClick={async () => {
+              try {
+                const pin = await confirmPin({
+                  note: __('Authorize interface to gather more data.'), //TODO: re-word
+                });
+                await authorizeMasterProfile({ pin });
+              } catch (error) {
+                openErrorDialog({
+                  message: error.message,
+                  note: error.code,
+                });
+              }
+              closeDropdown();
+            }}
+          >
+            {__('Authorize')}
+          </Button>
+        )}
         <Username>{currentUser}</Username>
       </CurrentUser>
       <Separator />
