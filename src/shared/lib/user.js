@@ -9,7 +9,7 @@ import rpc from 'lib/rpc';
 import { openModal } from 'lib/ui';
 import { confirm } from 'lib/dialog';
 import { updateSettings } from 'lib/settings';
-import { addSession } from 'lib/session';
+import { saveSessionUsername, getCachedUsername } from 'lib/session';
 import { isLoggedIn } from 'selectors';
 import listAll from 'utils/listAll';
 
@@ -39,6 +39,15 @@ export const refreshUserStatus = async () => {
     } = store.getState();
     if (!refreshUserStatusLock && (!systemInfo?.multiuser || session)) {
       const status = await callApi('users/get/status');
+      if (!status.username) {
+        const state = store.getState();
+        const username = state.sessions[status.session]?.username;
+        if (!username && !getCachedUsername(status.session)) {
+          throw new Error(
+            'No username returned from users/get/status nor cached'
+          );
+        }
+      }
       store.dispatch({ type: TYPE.SET_USER_STATUS, payload: status });
       return status;
     }
