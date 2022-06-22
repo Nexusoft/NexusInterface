@@ -24,7 +24,7 @@ export function saveSessionCache(cache) {
 /**
  * Save session information including username into localStorage
  */
-export function addSession({ session, username }) {
+export function saveSessionUsername({ session, username }) {
   const cache = loadSessionCache();
   cache[session] = { username, time: Date.now() };
   saveSessionCache(cache);

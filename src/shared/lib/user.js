@@ -9,6 +9,7 @@ import rpc from 'lib/rpc';
 import { openModal } from 'lib/ui';
 import { confirm } from 'lib/dialog';
 import { updateSettings } from 'lib/settings';
+import { addSession } from 'lib/session';
 import { isLoggedIn } from 'selectors';
 import listAll from 'utils/listAll';
 
@@ -84,6 +85,7 @@ export const logIn = async ({ username, password, pin }) => {
       type: TYPE.LOGIN,
       payload: { username, session, status, stakeInfo },
     });
+    saveSessionUsername({ session, username });
     return { username, session, status, stakeInfo };
   } finally {
     // Release the lock
