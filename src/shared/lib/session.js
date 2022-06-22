@@ -29,3 +29,8 @@ export function saveSessionUsername({ session, username }) {
   cache[session] = { username, time: Date.now() };
   saveSessionCache(cache);
 }
+
+export function getCachedUsername(session) {
+  const cache = loadSessionCache();
+  return cache[session]?.username || null;
+}
