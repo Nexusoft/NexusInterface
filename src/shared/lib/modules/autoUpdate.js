@@ -17,7 +17,7 @@ import { tryParsingJson } from 'utils/json';
 
 //If expanded consider moving to own file.
 const localStorageKey = 'moduleUpdateCache';
-const cacheStaleTime = 1000 * 60 * 60 * 24 * 7;
+const cacheStaleTime = 1000 * 60 * 60 * 24 * 7; // 7 days
 
 // const getAssetName = (name, version) => `${name}_v${version}.zip`;
 
