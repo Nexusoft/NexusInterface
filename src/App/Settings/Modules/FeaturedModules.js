@@ -65,6 +65,10 @@ export default function FeaturedModules() {
     (m) => !modules?.[m.name]
   );
 
+  useEffect(() => {
+    loadFeaturedModules();
+  }, []);
+
   return (
     !!notInstalledFeaturedModules?.length && (
       <>
