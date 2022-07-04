@@ -12,7 +12,7 @@ import Tooltip from 'components/Tooltip';
 import Module from './Module';
 import AddModule from './AddModule';
 import AddDevModule from './AddDevModule';
-import featuredModules from './featuredModules';
+import FeaturedModules from './FeaturedModules';
 
 __ = __context('Settings.Modules');
 
@@ -33,44 +33,11 @@ const FailedModule = styled.div(({ theme }) => ({
   },
 }));
 
-const SectionSeparator = styled.span(({ theme, label }) => ({
-  position: 'relative',
-  display: 'flex',
-  justifyContent: 'center',
-  marginTop: '2em',
-
-  '&::before': {
-    content: '""',
-    borderBottom: `1px solid ${theme.mixer(0.5)}`,
-    position: 'absolute',
-    top: '50%',
-    left: 0,
-    right: 0,
-  },
-
-  '&::after': {
-    content: `"${label}"`,
-    position: 'relative',
-    display: 'block',
-    padding: '0 1em',
-    background: theme.lower(theme.background, 0.3),
-    // color: theme.mixer(0.75),
-  },
-}));
-
-const FeaturedModules = styled.div({
-  opacity: 0.7,
-});
-
 export default function SettingsModules() {
   const modules = useSelector((state) => state.modules);
   const failedModules = useSelector((state) => state.failedModules);
   const devMode = useSelector((state) => state.settings.devMode);
   const moduleList = Object.values(modules);
-
-  const notInstalledFeaturedModules = featuredModules.filter(
-    (m) => !modules[m.name]
-  );
 
   useEffect(() => {
     switchSettingsTab('Modules');
@@ -110,19 +77,7 @@ export default function SettingsModules() {
           <em>{__('No modules have been installed')}</em>
         </div>
       )}
-      {!!notInstalledFeaturedModules?.length && (
-        <>
-          <SectionSeparator label={__('Developed by Nexus')} />
-          <FeaturedModules>
-            {notInstalledFeaturedModules.map((featuredModule) => (
-              <Module.FeaturedModule
-                key={featuredModule.name}
-                featuredModule={featuredModule}
-              />
-            ))}
-          </FeaturedModules>
-        </>
-      )}
+      <FeaturedModules />
     </>
   );
 }
