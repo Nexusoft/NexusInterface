@@ -263,7 +263,13 @@ Module.FeaturedModule = function ({ featuredModule, ...rest }) {
   return (
     <ModuleComponent {...rest}>
       <ModuleLogo unclickable>
-        <Icon icon={featuredModule.icon} />
+        <Icon
+          icon={{
+            url: `https://nexus-wallet-external-services.herokuapp.com/resources/${featuredModule.icon?.name}`,
+            viewBox: featuredModule.icon?.viewBox,
+            id: 'icon',
+          }}
+        />
       </ModuleLogo>
 
       <ModuleInfo unclickable>
