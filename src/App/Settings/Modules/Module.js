@@ -4,6 +4,7 @@ import styled from '@emotion/styled';
 
 // Internal
 import ModuleIcon from 'components/ModuleIcon';
+import ExternalIcon from 'components/ExternalIcon';
 import Switch from 'components/Switch';
 import Tooltip from 'components/Tooltip';
 import Icon from 'components/Icon';
@@ -263,12 +264,8 @@ Module.FeaturedModule = function ({ featuredModule, ...rest }) {
   return (
     <ModuleComponent {...rest}>
       <ModuleLogo unclickable>
-        <Icon
-          icon={{
-            url: `https://nexus-wallet-external-services.herokuapp.com/resources/${featuredModule.icon?.name}`,
-            viewBox: featuredModule.icon?.viewBox,
-            id: 'icon',
-          }}
+        <ExternalIcon
+          url={`https://nexus-wallet-external-services.herokuapp.com/resources/${featuredModule.icon?.name}`}
         />
       </ModuleLogo>
 
