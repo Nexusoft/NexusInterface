@@ -20,6 +20,8 @@ import warningIcon from 'icons/warning.svg';
 import downloadIcon from 'icons/download.svg';
 import closeIcon from 'icons/x-circle.svg';
 
+import FeaturedModuleDetailsModal from './FeaturedModuleDetailsModal';
+
 __ = __context('Settings.Modules');
 
 const ModuleComponent = styled.div(
@@ -261,6 +263,12 @@ Module.FeaturedModule = function ({ featuredModule, ...rest }) {
     (state) => !!state.moduleDownloads[featuredModule.name]
   );
 
+  const openModuleDetails = () => {
+    openModal(FeaturedModuleDetailsModal, {
+      featuredModule,
+    });
+  };
+
   return (
     <ModuleComponent {...rest}>
       <ModuleLogo unclickable>
@@ -269,7 +277,7 @@ Module.FeaturedModule = function ({ featuredModule, ...rest }) {
         />
       </ModuleLogo>
 
-      <ModuleInfo unclickable>
+      <ModuleInfo onClick={openModuleDetails}>
         <div>
           <ModuleName>{featuredModule.displayName}</ModuleName>
         </div>
