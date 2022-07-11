@@ -29,9 +29,9 @@ export default function FeaturedModuleDetailsModal({
   featuredModule,
   ...rest
 }) {
-  const { host, owner, repo, commit } = featuredModule.repoInfo || {};
-  const repoUrl = featuredModule.repository
-    ? `https://${host}/${owner}/${repo}/tree/${commit}`
+  const { host, owner, repo } = featuredModule.repoInfo || {};
+  const repoUrl = featuredModule.repoInfo
+    ? `https://${host}/${owner}/${repo}`
     : null;
 
   return (
