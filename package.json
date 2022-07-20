@@ -268,8 +268,8 @@
     "wait-on": "^6.0.1"
   },
   "devEngines": {
-    "node": ">=10.x",
-    "npm": ">=6.x"
+    "node": ">=16.x",
+    "npm": ">=8.x"
   },
   "overrides": {
     "react-final-form-arrays": {
