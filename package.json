@@ -269,5 +269,10 @@
   "devEngines": {
     "node": ">=10.x",
     "npm": ">=6.x"
+  },
+  "overrides": {
+    "react-final-form-arrays": {
+      "react": "18.2.0"
+    }
   }
 }
