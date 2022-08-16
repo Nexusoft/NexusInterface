@@ -1,17 +1,17 @@
 import { loadTheme } from 'lib/theme';
 import { loadAddressBook } from 'lib/addressBook';
-import { loadSessionCache } from 'lib/session';
+import { loadUsernameByGenesis } from 'lib/username';
 import settings from 'data/initialSettings';
 
 export default function getInitialState() {
   const theme = loadTheme();
   const addressBook = loadAddressBook();
-  const sessionCache = loadSessionCache();
+  const usernameByGenesis = loadUsernameByGenesis();
 
   return {
     settings,
     theme,
     addressBook,
-    sessionCache,
+    usernameByGenesis,
   };
 }
