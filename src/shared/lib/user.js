@@ -14,10 +14,14 @@ import listAll from 'utils/listAll';
 
 __ = __context('User');
 
-export const selectUsername = (state) =>
-  state.user.status?.username ||
-  state.sessions[state.user.session]?.username ||
-  state.sessionCache[state.user.session]?.username;
+export const selectUsername = ({
+  user: { status, session },
+  sessions,
+  sessionCache,
+}) =>
+  status?.username ||
+  (session && sessions[session]?.username) ||
+  sessionCache[session]?.username;
 
 export const refreshStakeInfo = async () => {
   try {
