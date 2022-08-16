@@ -9,14 +9,15 @@ import rpc from 'lib/rpc';
 import { openModal } from 'lib/ui';
 import { confirm } from 'lib/dialog';
 import { updateSettings } from 'lib/settings';
-import { saveSessionUsername, getCachedUsername } from 'lib/session';
 import { isLoggedIn } from 'selectors';
 import listAll from 'utils/listAll';
 
 __ = __context('User');
 
 export const selectUsername = (state) =>
-  state.user.status?.username || state.sessions[state.user.session]?.username;
+  state.user.status?.username ||
+  state.sessions[state.user.session]?.username ||
+  state.sessionCache[state.user.session]?.username;
 
 export const refreshStakeInfo = async () => {
   try {
@@ -38,13 +39,12 @@ export const refreshUserStatus = async () => {
       core: { systemInfo },
     } = store.getState();
     if (!refreshUserStatusLock && (!systemInfo?.multiuser || session)) {
-      const status = await callApi('users/get/status');
+      const status = await callApi('sessions/status/local');
       if (!status.username) {
-        const state = store.getState();
-        const username = state.sessions[status.session]?.username;
-        if (!username && !getCachedUsername(status.session)) {
+        const hasCachedUsername = !!selectUsername(store.getState());
+        if (!hasCachedUsername) {
           throw new Error(
-            'No username returned from users/get/status nor cached'
+            'No username returned from sessions/status/local nor cached'
           );
         }
       }
@@ -52,6 +52,7 @@ export const refreshUserStatus = async () => {
       return status;
     }
   } catch (err) {
+    console.error(err);
     store.dispatch({ type: TYPE.CLEAR_USER });
   }
 };
@@ -68,7 +69,7 @@ export const refreshBalances = async () => {
 };
 
 export const logIn = async ({ username, password, pin }) => {
-  const result = await callApi('users/login/user', {
+  const result = await callApi('sessions/create/local', {
     username,
     password,
     pin,
@@ -78,7 +79,7 @@ export const logIn = async ({ username, password, pin }) => {
   try {
     const { session } = result;
     let [status, stakeInfo] = await Promise.all([
-      callApi('users/get/status', { session }),
+      callApi('sessions/status/local', { session }),
       callApi('finance/get/stakeinfo', { session }),
     ]);
     const unlockStaking = await shouldUnlockStaking({ stakeInfo, status });
@@ -87,14 +88,13 @@ export const logIn = async ({ username, password, pin }) => {
       staking: unlockStaking,
     });
     if (unlockStaking) {
-      status = await callApi('users/get/status', { session });
+      status = await callApi('sessions/status/local', { session });
     }
 
     store.dispatch({
       type: TYPE.LOGIN,
       payload: { username, session, status, stakeInfo },
     });
-    saveSessionUsername({ session, username });
     return { username, session, status, stakeInfo };
   } finally {
     // Release the lock
@@ -126,7 +126,7 @@ export const unlockUser = async ({ pin, mining, staking, notifications }) => {
     settings: { enableMining },
     user: { status },
   } = store.getState();
-  return await callApi('users/unlock/user', {
+  return await callApi('sessions/unlock/local', {
     pin,
     notifications:
       notifications !== undefined
@@ -140,7 +140,7 @@ export const unlockUser = async ({ pin, mining, staking, notifications }) => {
 };
 
 export const switchUser = async (session) => {
-  const status = await callApi('users/get/status', { session });
+  const status = await callApi('sessions/status/local', { session });
   store.dispatch({ type: TYPE.SWITCH_USER, payload: { session, status } });
 };
 
