@@ -17,11 +17,11 @@ __ = __context('User');
 export const selectUsername = ({
   user: { status, session },
   sessions,
-  sessionCache,
+  usernameByGenesis,
 }) =>
   status?.username ||
-  (session && sessions[session]?.username) ||
-  sessionCache[session]?.username;
+  usernameByGenesis[status?.genesis]?.username ||
+  (session && sessions[session]?.username);
 
 export const refreshStakeInfo = async () => {
   try {
