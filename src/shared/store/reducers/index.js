@@ -23,6 +23,7 @@ import sessions from './sessions';
 import forms from './forms';
 import moduleDownloads from './moduleDownloads';
 import featuredModules from './featuredModules';
+import sessionCache from './sessionCache';
 
 export default function createRootReducer() {
   return combineReducers({
@@ -49,5 +50,6 @@ export default function createRootReducer() {
     forms,
     moduleDownloads,
     featuredModules,
+    sessionCache,
   });
 }
