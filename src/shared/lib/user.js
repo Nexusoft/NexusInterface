@@ -20,7 +20,7 @@ export const selectUsername = ({
   usernameByGenesis,
 }) =>
   status?.username ||
-  usernameByGenesis[status?.genesis]?.username ||
+  usernameByGenesis[status?.genesis] ||
   (session && sessions[session]?.username);
 
 export const refreshStakeInfo = async () => {
