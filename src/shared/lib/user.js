@@ -81,7 +81,7 @@ export const logIn = async ({ username, password, pin }) => {
   // Stop refreshing user status
   refreshUserStatusLock = true;
   try {
-    const { session } = result;
+    const { session, genesis } = result;
     let [status, stakeInfo] = await Promise.all([
       callApi('sessions/status/local', { session }),
       callApi('finance/get/stakeinfo', { session }),
@@ -97,7 +97,7 @@ export const logIn = async ({ username, password, pin }) => {
 
     store.dispatch({
       type: TYPE.LOGIN,
-      payload: { username, session, status, stakeInfo },
+      payload: { username, session, status, stakeInfo, genesis },
     });
     return { username, session, status, stakeInfo };
   } finally {
