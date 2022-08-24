@@ -117,11 +117,11 @@ export const logOut = async () => {
   if (systemInfo?.multiuser) {
     await Promise.all([
       Object.keys(sessions).map((session) => {
-        callApi('users/logout/user', { session });
+        callApi('sessions/terminate/local', { session });
       }),
     ]);
   } else {
-    await callApi('users/logout/user');
+    await callApi('sessions/terminate/local');
   }
 };
 
