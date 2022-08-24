@@ -68,6 +68,7 @@ export const startCore = async () => {
     '-server',
     '-rpcthreads=4',
     '-fastsync',
+    '-noterminateauth',
     '-ssl=1',
     '-apissl=1',
     '-rpcssl=1',
