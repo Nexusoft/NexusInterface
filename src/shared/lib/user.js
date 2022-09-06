@@ -21,7 +21,8 @@ export const selectUsername = ({
 }) =>
   status?.username ||
   usernameByGenesis[status?.genesis] ||
-  (session && sessions[session]?.username);
+  (session && sessions[session]?.username) ||
+  '';
 
 export const refreshStakeInfo = async () => {
   try {
@@ -44,14 +45,6 @@ export const refreshUserStatus = async () => {
     } = store.getState();
     if (!refreshUserStatusLock && (!systemInfo?.multiuser || session)) {
       const status = await callApi('sessions/status/local');
-      if (!status.username) {
-        const hasCachedUsername = !!selectUsername(store.getState());
-        if (!hasCachedUsername) {
-          throw new Error(
-            'No username returned from sessions/status/local nor cached'
-          );
-        }
-      }
       store.dispatch({ type: TYPE.SET_USER_STATUS, payload: status });
       return status;
     }
