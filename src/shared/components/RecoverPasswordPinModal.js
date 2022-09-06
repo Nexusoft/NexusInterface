@@ -43,7 +43,7 @@ export default function RecoverPasswordPinModal() {
                   });
 
                   if (correct) {
-                    return await callApi('users/recover/user', {
+                    return await callApi('profiles/recover/master', {
                       username,
                       recovery: recoveryPhrase,
                       password: newPassword,
