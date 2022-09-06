@@ -245,7 +245,7 @@ const contractContent = (contract) => {
             <Operation>Credit</Operation> to{' '}
             <Account name={contract.to_name} address={contract.to} />
           </div>
-          <div>{from && 'from ' + from}</div>
+          <div>{from && <div>from {from}</div>}</div>
         </>
       );
     }
