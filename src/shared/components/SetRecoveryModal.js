@@ -76,7 +76,7 @@ export default function SetRecoveryModal() {
                 submit: async ({ password, pin, phrase, newPhrase }) => {
                   const confirmed = await confirmRecovery(newPhrase);
                   if (confirmed) {
-                    return await callApi('users/update/user', {
+                    return await callApi('profiles/update/recovery', {
                       password,
                       pin,
                       recovery: hasRecoveryPhrase ? phrase : undefined,
