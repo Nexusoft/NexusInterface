@@ -70,7 +70,7 @@ export default function NewUserModal() {
                   });
 
                   if (correct) {
-                    return await callApi('users/create/user', {
+                    return await callApi('profiles/create/master', {
                       username,
                       password,
                       pin,
@@ -177,20 +177,17 @@ export default function NewUserModal() {
   );
 }
 
-function UserConfirmBackgroundTask({ username, closeTask }) {
+function UserConfirmBackgroundTask({ username }) {
   const closeTaskRef = useRef();
   useEffect(
     () =>
       observeStore(
         ({ core: { systemInfo } }) => systemInfo?.blocks,
         async () => {
-          const txs = await callApi('users/list/transactions', {
+          const result = await callApi('profiles/status/master', {
             username,
-            order: 'asc',
-            limit: 1,
-            verbose: 'summary',
           });
-          if (txs?.[0]?.confirmations) {
+          if (result?.confirmed) {
             closeTaskRef.current?.();
             showNotification(
               __(
