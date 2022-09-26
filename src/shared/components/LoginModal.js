@@ -53,11 +53,17 @@ export default function LoginModal() {
                     let result;
                     try {
                       // In case the sigchain hasn't had a crypto object register initialized
-                      result = await callApi('profiles/create/auth', {
-                        username,
-                        password,
-                        pin,
-                      });
+                      const { crypto } = await callApi(
+                        'profiles/status/master',
+                        { username }
+                      );
+                      if (!crypto) {
+                        result = await callApi('profiles/create/auth', {
+                          username,
+                          password,
+                          pin,
+                        });
+                      }
                     } catch (err2) {
                       throw err;
                     }
