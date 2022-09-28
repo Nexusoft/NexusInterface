@@ -39,7 +39,7 @@ export function PriceStat() {
         value={price}
         currency={currency}
         btcDecimals={8}
-        fiatDecimals={2}
+        fiatDecimals={3}
       />
     </Stat>
   );
