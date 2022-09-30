@@ -9,6 +9,7 @@
  */
 
 import * as React from 'react';
+import ReactDefault from 'react';
 import * as jsxRuntime from 'react/jsx-runtime';
 import * as jsxDevRuntime from 'react/jsx-dev-runtime';
 import * as ReactDOM from 'react-dom';
@@ -44,7 +45,7 @@ const newId = (() => {
 global.NEXUS = {
   walletVersion: APP_VERSION,
   libraries: {
-    React: { ...React, jsxDevRuntime, jsxRuntime },
+    React: { ...React, jsxDevRuntime, jsxRuntime, default: ReactDefault },
     ReactDOM,
     emotion: { react, styled, cache },
   },

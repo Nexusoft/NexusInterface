@@ -4,6 +4,7 @@ import styled from '@emotion/styled';
 
 // Internal
 import ModuleIcon from 'components/ModuleIcon';
+import ExternalIcon from 'components/ExternalIcon';
 import Switch from 'components/Switch';
 import Tooltip from 'components/Tooltip';
 import Icon from 'components/Icon';
@@ -18,6 +19,8 @@ import { downloadAndInstall, abortModuleDownload } from 'lib/modules';
 import warningIcon from 'icons/warning.svg';
 import downloadIcon from 'icons/download.svg';
 import closeIcon from 'icons/x-circle.svg';
+
+import FeaturedModuleDetailsModal from './FeaturedModuleDetailsModal';
 
 __ = __context('Settings.Modules');
 
@@ -260,13 +263,21 @@ Module.FeaturedModule = function ({ featuredModule, ...rest }) {
     (state) => !!state.moduleDownloads[featuredModule.name]
   );
 
+  const openModuleDetails = () => {
+    openModal(FeaturedModuleDetailsModal, {
+      featuredModule,
+    });
+  };
+
   return (
     <ModuleComponent {...rest}>
       <ModuleLogo unclickable>
-        <Icon icon={featuredModule.icon} />
+        <ExternalIcon
+          url={`https://nexus-wallet-external-services.herokuapp.com/resources/${featuredModule.icon}`}
+        />
       </ModuleLogo>
 
-      <ModuleInfo unclickable>
+      <ModuleInfo onClick={openModuleDetails}>
         <div>
           <ModuleName>{featuredModule.displayName}</ModuleName>
         </div>

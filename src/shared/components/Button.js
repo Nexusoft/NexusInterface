@@ -205,11 +205,11 @@ const ButtonComponent = styled.button(
         return {
           '&, &:active, &&:disabled': {
             background: 'transparent',
-            color: theme.mixer(0.25),
+            color: theme.danger,
             transitionProperty: 'color',
           },
           '&:hover, &.hover': {
-            color: theme.background,
+            color: theme.lower(theme.danger, 0.2),
           },
         };
       case 'plain':

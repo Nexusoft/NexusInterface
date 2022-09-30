@@ -14,26 +14,15 @@ import listAll from 'utils/listAll';
 
 __ = __context('User');
 
-export const selectUsername = (state) =>
-  state.user.status?.username ||
-  state.sessions[state.user.session]?.username ||
-  state.user.username;
-
-export const authorizeMasterProfile = async ({ pin }) => {
-  try {
-    const profile = await callApi('profiles/status/master', { pin });
-    const username = profile.session?.username;
-    if (username) {
-      store.dispatch({
-        type: TYPE.SET_ACTIVE_USERNAME,
-        payload: { username },
-      });
-    }
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
+export const selectUsername = ({
+  user: { status, session },
+  sessions,
+  usernameByGenesis,
+}) =>
+  status?.username ||
+  usernameByGenesis[status?.genesis] ||
+  (session && sessions[session]?.username) ||
+  '';
 
 export const refreshStakeInfo = async () => {
   try {
@@ -60,6 +49,7 @@ export const refreshUserStatus = async () => {
       return status;
     }
   } catch (err) {
+    console.error(err);
     store.dispatch({ type: TYPE.CLEAR_USER });
   }
 };
@@ -84,7 +74,7 @@ export const logIn = async ({ username, password, pin }) => {
   // Stop refreshing user status
   refreshUserStatusLock = true;
   try {
-    const { session } = result;
+    const { session, genesis } = result;
     let [status, stakeInfo] = await Promise.all([
       callApi('sessions/status/local', { session }),
       callApi('finance/get/stakeinfo', { session }),
@@ -102,6 +92,10 @@ export const logIn = async ({ username, password, pin }) => {
       status = await callApi('sessions/status/local', { session });
     }
 
+    store.dispatch({
+      type: TYPE.LOGIN,
+      payload: { username, session, status, stakeInfo, genesis },
+    });
     return { username, session, status, stakeInfo };
   } finally {
     // Release the lock
@@ -120,11 +114,11 @@ export const logOut = async ({ pin }) => {
   if (systemInfo?.multiuser) {
     await Promise.all([
       Object.keys(sessions).map((session) => {
-        callApi('sessions/terminate/local', { session, pin });
+        callApi('sessions/terminate/local', { session });
       }),
     ]);
   } else {
-    await callApi('sessions/terminate/local', pin && { pin });
+    await callApi('sessions/terminate/local');
   }
 };
 

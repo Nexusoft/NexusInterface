@@ -66,7 +66,7 @@ async function confirmDelete(module) {
       });
     } else {
       await deleteDirectory(module.path);
-      removeUpdateCache(module.repository?.repo);
+      removeUpdateCache(module.repository);
       GA.SendEvent('Modules', 'uninstallModule', 'name', module.info.name);
     }
     location.reload();

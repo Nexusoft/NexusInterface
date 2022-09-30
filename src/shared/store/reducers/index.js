@@ -21,6 +21,8 @@ import assetSchemas from './assetSchemas';
 import sessions from './sessions';
 import forms from './forms';
 import moduleDownloads from './moduleDownloads';
+import featuredModules from './featuredModules';
+import usernameByGenesis from './usernameByGenesis';
 
 export default function createRootReducer() {
   return combineReducers({
@@ -45,5 +47,7 @@ export default function createRootReducer() {
     sessions,
     forms,
     moduleDownloads,
+    featuredModules,
+    usernameByGenesis,
   });
 }
