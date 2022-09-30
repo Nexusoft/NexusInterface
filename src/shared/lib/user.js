@@ -75,6 +75,10 @@ export const logIn = async ({ username, password, pin }) => {
   refreshUserStatusLock = true;
   try {
     const { session, genesis } = result;
+    //TODO: Remove.
+    //Currently there is a race condtition that prevents the user from unlocking, just wait 2 seconds and it will be ready.
+    //This is a core bug so should be fixed soon.
+    await new Promise((resolve) => setTimeout(resolve, 2000));
     let [status, stakeInfo] = await Promise.all([
       callApi('sessions/status/local', { session }),
       callApi('finance/get/stakeinfo', { session }),
