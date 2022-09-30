@@ -321,7 +321,10 @@ export function prepareUser() {
     observeStore(
       (state) => state.user.status,
       (userStatus) => {
-        if (userStatus) {
+        const {
+          core: { systemInfo },
+        } = store.getState();
+        if (userStatus && !systemInfo.private) {
           refreshStakeInfo();
         }
       }
