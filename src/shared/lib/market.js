@@ -17,7 +17,7 @@ async function fetchMarketData() {
       settings: { fiatCurrency },
     } = store.getState();
     const { data } = await axios.get(
-      `https://nexus-wallet-external-services.herokuapp.com/market-data?base_currency=${fiatCurrency}`
+      `https://nexus-wallet-server-nndj.onrender.com/market-data?base_currency=${fiatCurrency}`
     );
     data.currency = fiatCurrency;
 

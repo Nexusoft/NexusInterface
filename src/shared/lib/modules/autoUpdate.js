@@ -146,7 +146,6 @@ function checkCache() {
 
 export async function checkForModuleUpdates() {
   const state = store.getState();
-  updateCache = JSON.parse(cache.getItem('updateCache')) || {};
   const modules = Object.values(state.modules);
   const cache = loadCache();
 
@@ -163,7 +162,6 @@ export async function checkForModuleUpdates() {
     .map(({ value }) => value);
   saveCache(cache);
 
-  cache.setItem('updateCache', JSON.stringify(updateCache));
   if (updates.length > 0) {
     // let downloadedUpdates = [];
     // for (const update of updates) {
