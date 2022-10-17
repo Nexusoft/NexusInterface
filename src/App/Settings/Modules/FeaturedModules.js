@@ -9,32 +9,9 @@ import store from 'store';
 import * as TYPE from 'consts/actionTypes';
 
 import Module from './Module';
+import SectionSeparator from './SectionSeparator';
 
 __ = __context('Settings.Modules');
-
-const SectionSeparator = styled.span(({ theme, label }) => ({
-  position: 'relative',
-  display: 'flex',
-  justifyContent: 'center',
-  marginTop: '2em',
-
-  '&::before': {
-    content: '""',
-    borderBottom: `1px solid ${theme.mixer(0.5)}`,
-    position: 'absolute',
-    top: '50%',
-    left: 0,
-    right: 0,
-  },
-
-  '&::after': {
-    content: `"${label}"`,
-    position: 'relative',
-    display: 'block',
-    padding: '0 1em',
-    background: theme.lower(theme.background, 0.3),
-  },
-}));
 
 const FeaturedModuleList = styled.div({
   opacity: 0.7,
