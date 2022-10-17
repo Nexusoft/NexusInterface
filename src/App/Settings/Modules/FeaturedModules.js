@@ -47,7 +47,7 @@ async function loadFeaturedModules() {
     if (featuredModules) return;
 
     const { data } = await axios.get(
-      `https://nexus-wallet-external-services.herokuapp.com/featured-modules?wallet_version=${APP_VERSION}`
+      `https://nexus-featured-modules.netlify.app/featured-modules?wallet_version=${APP_VERSION}`
     );
     store.dispatch({
       type: TYPE.LOAD_FEATURED_MODULES,
