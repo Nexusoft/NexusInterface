@@ -69,7 +69,7 @@ export default function SelectLanguage() {
       {languages.map((lang, i) => (
         <Language
           key={lang.code}
-          selected={lang.code === this.state.selection}
+          selected={lang.code === selection}
           first={i === 0}
           onClick={() => setSelection(lang.code)}
         >

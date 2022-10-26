@@ -13,6 +13,7 @@ import Module from './Module';
 import AddModule from './AddModule';
 import AddDevModule from './AddDevModule';
 import FeaturedModules from './FeaturedModules';
+import SectionSeparator from './SectionSeparator';
 
 __ = __context('Settings.Modules');
 
@@ -47,6 +48,7 @@ export default function SettingsModules() {
     <>
       <AddModule />
       {devMode && <AddDevModule />}
+      <SectionSeparator label={__('Installed modules')} />
       {moduleList.map((module, i) => (
         <Module
           key={module.info.name}
