@@ -49,8 +49,11 @@ export const refreshUserStatus = async () => {
       return status;
     }
   } catch (err) {
-    console.error(err);
     store.dispatch({ type: TYPE.CLEAR_USER });
+    // Don't log error if it's 'Session not found' (user not logged in)
+    if (err?.code !== -11) {
+      console.error(err);
+    }
   }
 };
 
