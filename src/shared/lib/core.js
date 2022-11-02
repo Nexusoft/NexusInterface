@@ -119,9 +119,9 @@ export const startCore = async () => {
 
   if (TESTNET_BUILD) {
     params.push(
-      '-connect=testnet1.nexus-interactions.io',
-      '-connect=testnet2.nexus-interactions.io',
-      '-connect=testnet3.nexus-interactions.io',
+      '-connect=testnet1.interactions-nexus.io',
+      '-connect=testnet2.interactions-nexus.io',
+      '-connect=testnet3.interactions-nexus.io',
       '-nodns=1',
       '-testnet=1'
     );
