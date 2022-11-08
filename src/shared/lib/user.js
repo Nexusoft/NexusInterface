@@ -339,6 +339,7 @@ async function shouldUnlockStaking({ stakeInfo, status }) {
 
   if (
     !systemInfo?.litemode &&
+    !systemInfo?.multiuser &&
     status?.unlocked.staking === false &&
     enableStaking
   ) {
