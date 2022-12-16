@@ -242,11 +242,18 @@ export const loadAccounts = legacyMode
   : // Tritium Mode
     async () => {
       try {
-        const accounts = await callApi('finance/list/account');
-        accounts.forEach(processAccount);
-        store.dispatch({ type: TYPE.SET_TRITIUM_ACCOUNTS, payload: accounts });
+        const [trust, accounts] = await Promise.all([
+          callApi('finance/list/trust'),
+          callApi('finance/list/account'),
+        ]);
+        const allAccounts = trust.concat(accounts);
+        allAccounts.forEach(processAccount);
+        store.dispatch({
+          type: TYPE.SET_TRITIUM_ACCOUNTS,
+          payload: allAccounts,
+        });
       } catch (err) {
-        console.error('finance/list/account failed', err);
+        console.error('account listing failed', err);
       }
     };
 
