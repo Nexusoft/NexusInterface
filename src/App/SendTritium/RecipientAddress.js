@@ -81,7 +81,15 @@ const validateRecipient = (source) =>
         let token;
         try {
           token = await callApi('tokens/get/token', params);
-        } catch (err) {}
+        } catch (err) {
+          let trust;
+          try {
+            trust = await callApi('finance/get/trust', params);
+          } catch {}
+          if (trust && sourceToken !== 0) {
+            return __('Source and recipient must be of the same token');
+          }
+        }
         if (token) {
           return __('Source and recipient must be of the same token');
         }
