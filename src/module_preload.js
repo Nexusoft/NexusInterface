@@ -13,6 +13,8 @@ import ReactDefault from 'react';
 import * as jsxRuntime from 'react/jsx-runtime';
 import * as jsxDevRuntime from 'react/jsx-dev-runtime';
 import * as ReactDOM from 'react-dom';
+import * as ReactDOMClient from 'react-dom/client';
+import * as ReactDOMServer from 'react-dom/server';
 import cache from '@emotion/cache';
 import * as react from '@emotion/react';
 import styled from '@emotion/styled';
@@ -46,7 +48,7 @@ global.NEXUS = {
   walletVersion: APP_VERSION,
   libraries: {
     React: { ...React, jsxDevRuntime, jsxRuntime, default: ReactDefault },
-    ReactDOM,
+    ReactDOM: { ...ReactDOM, client: ReactDOMClient, server: ReactDOMServer },
     emotion: { react, styled, cache },
   },
   components: {
