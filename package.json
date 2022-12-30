@@ -210,7 +210,7 @@
     "glob": "^7.1.6",
     "html-webpack-plugin": "^4.2.0",
     "i18n-extract": "^0.6.7",
-    "mocha": "^7.1.1",
+    "mocha": "^10.2.0",
     "react-hot-loader": "^4.12.20",
     "rimraf": "^3.0.2",
     "spectron": "^10.0.1",
