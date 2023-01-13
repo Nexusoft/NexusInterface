@@ -237,7 +237,9 @@ export function prepareCoreInfo() {
           state.bootstrap.step === 'idle' &&
           !state.settings.manualDaemon &&
           systemInfo?.synccomplete < 50 &&
-          systemInfo?.synccomplete >= 0
+          systemInfo?.synccomplete >= 0 &&
+          !systemInfo?.private &&
+          !systemInfo?.testnet
         ) {
           bootstrap({ suggesting: true });
         }
