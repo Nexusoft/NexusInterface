@@ -76,20 +76,13 @@ const validateRecipient = (source) =>
     if (sourceToken !== address) {
       let account;
       try {
-        account = await callApi('finance/get/account', params);
+        account = await callApi('finance/get/any', params);
+        console.log(params, account);
       } catch (err) {
         let token;
         try {
           token = await callApi('tokens/get/token', params);
-        } catch (err) {
-          let trust;
-          try {
-            trust = await callApi('finance/get/trust', params);
-          } catch {}
-          if (trust && sourceToken !== '0') {
-            return __('Source and recipient must be of the same token');
-          }
-        }
+        } catch {}
         if (token) {
           return __('Source and recipient must be of the same token');
         }
