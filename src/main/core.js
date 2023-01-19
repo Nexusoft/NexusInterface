@@ -166,7 +166,7 @@ export async function killCoreProcess() {
  */
 export async function executeCommand(command) {
   try {
-    const result = await exec(`"${coreBinaryPath}" ${command}`);
+    const result = await exec(`"${coreBinaryPath}" -noapiauth ${command}`);
     return result;
   } catch (err) {
     console.error(err);
