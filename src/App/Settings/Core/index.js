@@ -108,7 +108,6 @@ const formKeys = [
   'manualDaemonApiPortSSL',
   'manualDaemonApiUser',
   'manualDaemonApiPassword',
-  'embeddedCoreAllowNonSSL',
   'embeddedCoreUseNonSSL',
   'embeddedCoreApiPort',
   'embeddedCoreApiPortSSL',

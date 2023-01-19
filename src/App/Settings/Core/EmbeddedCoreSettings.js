@@ -269,8 +269,6 @@ function SafeModeSetting() {
 }
 
 function PortSettings() {
-  const embeddedCoreAllowNonSSL = useFieldValue('embeddedCoreAllowNonSSL');
-
   return (
     <>
       <SettingsField
@@ -299,50 +297,37 @@ function PortSettings() {
 
       <SettingsField
         connectLabel
-        label={__('Allow Non-SSL Ports')}
-        subLabel={__('Allows Non-SSL plaintext communication to the core')}
+        label={__('Use non-SSL Ports')}
+        subLabel={__('Connect to Nexus Core using non-SSL Ports')}
       >
-        <Form.Switch name="embeddedCoreAllowNonSSL" />
+        <Form.Switch name="embeddedCoreUseNonSSL" />
       </SettingsField>
 
-      {!!embeddedCoreAllowNonSSL && (
-        <>
-          <SettingsField
-            connectLabel
-            indent={1}
-            label={__('Use non-SSL Ports')}
-            subLabel={__('Connect to Nexus Core using non-SSL Ports')}
-          >
-            <Form.Switch name="embeddedCoreUseNonSSL" />
-          </SettingsField>
+      <SettingsField
+        connectLabel
+        indent={1}
+        label={__('API non-SSL Port')}
+        subLabel={__('Nexus API server non-SSL Port')}
+      >
+        <Form.TextField
+          name="embeddedCoreApiPort"
+          placeholder={defaultConfig.apiPort}
+          size="5"
+        />
+      </SettingsField>
 
-          <SettingsField
-            connectLabel
-            indent={1}
-            label={__('API non-SSL Port')}
-            subLabel={__('Nexus API server non-SSL Port')}
-          >
-            <Form.TextField
-              name="embeddedCoreApiPort"
-              placeholder={defaultConfig.apiPort}
-              size="5"
-            />
-          </SettingsField>
-
-          <SettingsField
-            connectLabel
-            indent={1}
-            label={__('RPC non-SSL Port')}
-            subLabel={__('Nexus RPC server non-SSL Port')}
-          >
-            <Form.TextField
-              name="embeddedCoreRpcPort"
-              placeholder={defaultConfig.port}
-              size="5"
-            />
-          </SettingsField>
-        </>
-      )}
+      <SettingsField
+        connectLabel
+        indent={1}
+        label={__('RPC non-SSL Port')}
+        subLabel={__('Nexus RPC server non-SSL Port')}
+      >
+        <Form.TextField
+          name="embeddedCoreRpcPort"
+          placeholder={defaultConfig.port}
+          size="5"
+        />
+      </SettingsField>
     </>
   );
 }
