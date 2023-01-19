@@ -83,7 +83,7 @@ const validateRecipient = (source) =>
         try {
           token = await callApi('tokens/get/token', params);
         } catch {}
-        if (token) {
+        if (token && token.address !== sourceToken) {
           return __('Source and recipient must be of the same token');
         }
       }
