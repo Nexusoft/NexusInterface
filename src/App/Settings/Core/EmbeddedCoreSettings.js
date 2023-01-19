@@ -298,7 +298,9 @@ function PortSettings() {
       <SettingsField
         connectLabel
         label={__('Use non-SSL Ports')}
-        subLabel={__('Connect to Nexus Core using non-SSL Ports')}
+        subLabel={__(
+          'Connect to Nexus Core using non-SSL Ports (less secured)'
+        )}
       >
         <Form.Switch name="embeddedCoreUseNonSSL" />
       </SettingsField>
