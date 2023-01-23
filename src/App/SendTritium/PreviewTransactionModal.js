@@ -250,7 +250,7 @@ export default function PreviewTransactionModal({
                     return await callApi('finance/debit/token', params);
                   } else {
                     params.from = source.account.address;
-                    return await callApi('finance/debit/account', params);
+                    return await callApi('finance/debit/any', params);
                   }
                 },
                 onSuccess: () => {
