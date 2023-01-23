@@ -86,6 +86,7 @@ export const logIn = async ({ username, password, pin }) => {
     await unlockUser({
       pin,
       staking: unlockStaking,
+      session,
     });
     if (unlockStaking) {
       status = await callApi('sessions/status/local', { session });
@@ -121,10 +122,17 @@ export const logOut = async () => {
   }
 };
 
-export const unlockUser = async ({ pin, mining, staking, notifications }) => {
+export const unlockUser = async ({
+  pin,
+  mining,
+  staking,
+  notifications,
+  session,
+}) => {
   const {
     settings: { enableMining },
     user: { status },
+    core: { systemInfo },
   } = store.getState();
   return await callApi('sessions/unlock/local', {
     pin,
@@ -135,7 +143,8 @@ export const unlockUser = async ({ pin, mining, staking, notifications }) => {
         ? false
         : true,
     mining: mining !== undefined ? mining : !!enableMining,
-    staking: staking !== undefined ? staking : false,
+    staking: staking !== undefined && !systemInfo?.multiuser ? staking : false,
+    session,
   });
 };
 
