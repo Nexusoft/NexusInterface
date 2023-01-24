@@ -8,6 +8,7 @@ import ConfirmDialog from 'components/Dialogs/ConfirmDialog';
 import store from 'store';
 import { updateSettings } from 'lib/settings';
 import { restartCore } from 'lib/core';
+import { callApi } from 'lib/tritiumApi';
 import {
   openModal,
   removeModal,
@@ -20,7 +21,6 @@ import {
   openInfoDialog,
   openErrorDialog,
 } from 'lib/dialog';
-import { unlockUser } from 'lib/user';
 import { formatNumber, formatDateTime } from 'lib/intl';
 import { isSynchronized } from 'selectors';
 import QuestionCircle from 'components/QuestionCircle';
@@ -162,7 +162,7 @@ export default function Staking() {
           note: __('Enter your PIN to start staking'),
         });
         if (pin) {
-          await unlockUser({ pin, staking: true });
+          await callApi('sessions/unlock/local', { pin, staking: true });
         }
       }
 
