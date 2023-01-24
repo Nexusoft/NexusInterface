@@ -182,6 +182,11 @@ const menuItems = preprocess({
       bootstrap();
     },
   },
+  reloadUI: {
+    label: __('Reload wallet GUI'),
+    accelerator: 'F5',
+    role: 'reload',
+  },
   toggleFullScreen: {
     label: __('Toggle FullScreen'),
     accelerator: 'F11',
@@ -344,7 +349,7 @@ function buildDarwinTemplate() {
 
   const subMenuWindow = {
     label: __('View'),
-    submenu: [menuItems.toggleFullScreen],
+    submenu: [menuItems.reloadUI, menuItems.toggleFullScreen],
   };
   if (process.env.NODE_ENV === 'development' || state.settings.devMode) {
     subMenuWindow.submenu.push(menuItems.toggleDevTools);
@@ -429,7 +434,7 @@ function buildDefaultTemplate() {
   };
   const subMenuView = {
     label: __('View'),
-    submenu: [menuItems.toggleFullScreen],
+    submenu: [menuItems.reloadUI, menuItems.toggleFullScreen],
   };
   if (process.env.NODE_ENV === 'development' || state.settings.devMode) {
     subMenuView.submenu.push(menuItems.separator, menuItems.toggleDevTools);
