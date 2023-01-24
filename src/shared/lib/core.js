@@ -76,6 +76,8 @@ export const startCore = async () => {
     `-datadir=${settings.coreDataDir}`,
     `-rpcsslport=${conf.portSSL}`,
     `-apisslport=${conf.apiPortSSL}`,
+    `-rpcport=${conf.port}`,
+    `-apiport=${conf.apiPort}`,
     `-verbose=${settings.verboseLevel}`,
   ];
   if (settings.testnetIteration && settings.testnetIteration !== '0') {
@@ -106,11 +108,6 @@ export const startCore = async () => {
   }
   if (settings.enableStaking == true) params.push('-stake=1');
   if (settings.pooledStaking == true) params.push('-poolstaking=1');
-  if (settings.embeddedCoreAllowNonSSL == false) {
-    params.push('-apisslrequired', '-rpcsslrequired');
-  } else {
-    params.push(`-rpcport=${conf.port}`, `-apiport=${conf.apiPort}`);
-  }
   if (settings.liteMode == true) params.push('-client=1');
   if (settings.multiUser == true) params.push('-multiuser=1');
   if (settings.allowAdvancedCoreOptions) {

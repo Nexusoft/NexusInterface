@@ -191,11 +191,7 @@ export default function AccountHistoryModal({ account }) {
   useEffect(() => {
     (async () => {
       try {
-        const endpoint =
-          account.stake === undefined
-            ? 'finance/transactions/account'
-            : 'finance/transactions/trust';
-        const transactions = await listAll(endpoint, {
+        const transactions = await listAll('finance/transactions/any', {
           address: account.address,
           verbose: 'summary',
         });

@@ -49,8 +49,11 @@ export const refreshUserStatus = async () => {
       return status;
     }
   } catch (err) {
-    console.error(err);
     store.dispatch({ type: TYPE.CLEAR_USER });
+    // Don't log error if it's 'Session not found' (user not logged in)
+    if (err?.code !== -11) {
+      console.error(err);
+    }
   }
 };
 
@@ -91,6 +94,7 @@ export const logIn = async ({ username, password, pin }) => {
     await unlockUser({
       pin,
       staking: unlockStaking,
+      session,
     });
     if (unlockStaking) {
       status = await callApi('sessions/status/local', { session });
@@ -126,10 +130,17 @@ export const logOut = async ({ pin }) => {
   }
 };
 
-export const unlockUser = async ({ pin, mining, staking, notifications }) => {
+export const unlockUser = async ({
+  pin,
+  mining,
+  staking,
+  notifications,
+  session,
+}) => {
   const {
     settings: { enableMining },
     user: { status },
+    core: { systemInfo },
   } = store.getState();
   return await callApi('sessions/unlock/local', {
     pin,
@@ -140,7 +151,8 @@ export const unlockUser = async ({ pin, mining, staking, notifications }) => {
         ? false
         : true,
     mining: mining !== undefined ? mining : !!enableMining,
-    staking: staking !== undefined ? staking : false,
+    staking: staking !== undefined && !systemInfo?.multiuser ? staking : false,
+    session,
   });
 };
 
@@ -247,11 +259,18 @@ export const loadAccounts = legacyMode
   : // Tritium Mode
     async () => {
       try {
-        const accounts = await callApi('finance/list/account');
-        accounts.forEach(processAccount);
-        store.dispatch({ type: TYPE.SET_TRITIUM_ACCOUNTS, payload: accounts });
+        const [trust, accounts] = await Promise.all([
+          callApi('finance/list/trust'),
+          callApi('finance/list/account'),
+        ]);
+        const allAccounts = trust.concat(accounts);
+        allAccounts.forEach(processAccount);
+        store.dispatch({
+          type: TYPE.SET_TRITIUM_ACCOUNTS,
+          payload: allAccounts,
+        });
       } catch (err) {
-        console.error('finance/list/account failed', err);
+        console.error('account listing failed', err);
       }
     };
 

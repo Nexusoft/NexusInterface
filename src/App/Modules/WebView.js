@@ -66,6 +66,8 @@ export default function WebView({ module, className, style }) {
       ref={webviewRef}
       src={entryUrl}
       preload={preloadUrl}
+      /* Can't enable contextIsolation because it will
+      mess with react-dom and emotion */
       webpreferences="contextIsolation=no"
     />
   );

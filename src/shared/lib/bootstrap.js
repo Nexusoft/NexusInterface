@@ -309,7 +309,8 @@ export async function bootstrap({ suggesting } = {}) {
   setBootstrapStatus('prompting');
 
   const testPriv =
-    state.core.systemInfo.private || state.core.systemInfo.testnet; // if Private or on Testnet, prevent bootstrapping
+    state.core.systemInfo.private || state.core.systemInfo.testnet;
+  // if Private or on Testnet, prevent bootstrapping
   if (testPriv) {
     openErrorDialog({
       message: __('Can not Bootstrap on Testnet/Private networks.'),

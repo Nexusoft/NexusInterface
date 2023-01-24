@@ -111,26 +111,7 @@ function LoggedInDropdown({ closeDropdown }) {
         <Username>{currentUser}</Username>
       </CurrentUser>
       <Separator />
-      <Link to="/User/Accounts" onClick={closeDropdown}>
-        <MenuItem>{__('Accounts')}</MenuItem>
-      </Link>
-      <Link to="/User/Tokens" onClick={closeDropdown}>
-        <MenuItem>{__('Tokens')}</MenuItem>
-      </Link>
-      <Separator />
-      {!hasRecoveryPhrase && (
-        <>
-          <MenuItem
-            onClick={() => {
-              openModal(SetRecoveryModal);
-              closeDropdown();
-            }}
-          >
-            {__('Set recovery phrase')}
-          </MenuItem>
-          <Separator />
-        </>
-      )}
+
       {multiuser && (
         <>
           {hasOtherSessions && (
@@ -154,6 +135,29 @@ function LoggedInDropdown({ closeDropdown }) {
           <Separator />
         </>
       )}
+
+      <Link to="/User/Accounts" onClick={closeDropdown}>
+        <MenuItem>{__('Accounts')}</MenuItem>
+      </Link>
+      <Link to="/User/Tokens" onClick={closeDropdown}>
+        <MenuItem>{__('Tokens')}</MenuItem>
+      </Link>
+      <Separator />
+
+      {!hasRecoveryPhrase && (
+        <>
+          <MenuItem
+            onClick={() => {
+              openModal(SetRecoveryModal);
+              closeDropdown();
+            }}
+          >
+            {__('Set recovery phrase')}
+          </MenuItem>
+          <Separator />
+        </>
+      )}
+
       <MenuItem
         onClick={async () => {
           closeDropdown();

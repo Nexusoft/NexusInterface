@@ -71,7 +71,7 @@ function findMarketData(cache, currency) {
 
 function addToCache(cache, marketData) {
   const now = Date.now();
-  const newCache = [{ ...marketData, timestamp: Date.now() }];
+  const newCache = [{ ...marketData, timestamp: now }];
   // Remove outdated cache items
   cache?.forEach((data) => {
     if (
