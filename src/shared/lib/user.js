@@ -40,12 +40,25 @@ let refreshUserStatusLock = false;
 export const refreshUserStatus = async () => {
   try {
     const {
-      user: { session },
+      user: { session, profileStatus },
       core: { systemInfo },
     } = store.getState();
     if (!refreshUserStatusLock && (!systemInfo?.multiuser || session)) {
       const status = await callApi('sessions/status/local');
       store.dispatch({ type: TYPE.SET_USER_STATUS, payload: status });
+
+      try {
+        if (!profileStatus) {
+          const profileStatus = await callApi('profiles/status/master', {
+            genesis: status.genesis,
+          });
+          store.dispatch({
+            type: TYPE.SET_PROFILE_STATUS,
+            payload: profileStatus,
+          });
+        }
+      } catch {}
+
       return status;
     }
   } catch (err) {
@@ -79,24 +92,15 @@ export const logIn = async ({ username, password, pin }) => {
   try {
     const { session, genesis } = result;
     const stakeInfo = await callApi('finance/get/stakeinfo', { session });
-    const unlockStaking = await shouldUnlockStaking({ stakeInfo });
-    const {
-      settings: { enableMining },
-    } = store.getState();
-    await callApi('sessions/unlock/local', {
-      pin,
-      notifications: true,
-      staking: unlockStaking,
-      mining: !!enableMining,
-      // passing session through because it's not saved in the store yet
-      // so it wouldn't be automatically passed in all API calls
-      session,
-    });
+    const [r, profileStatus] = await Promise.all([
+      unlockUser({ pin, session, stakeInfo }),
+      callApi('profiles/status/master', { genesis }),
+    ]);
     const status = await callApi('sessions/status/local', { session });
 
     store.dispatch({
       type: TYPE.LOGIN,
-      payload: { username, session, status, stakeInfo, genesis },
+      payload: { username, session, status, stakeInfo, genesis, profileStatus },
     });
     return { username, session, status, stakeInfo };
   } finally {
@@ -374,4 +378,20 @@ async function shouldUnlockStaking({ stakeInfo }) {
   }
 
   return false;
+}
+
+async function unlockUser({ pin, session, stakeInfo }) {
+  const unlockStaking = await shouldUnlockStaking({ stakeInfo });
+  const {
+    settings: { enableMining },
+  } = store.getState();
+  await callApi('sessions/unlock/local', {
+    pin,
+    notifications: true,
+    staking: unlockStaking,
+    mining: !!enableMining,
+    // passing session through because it's not saved in the store yet
+    // so it wouldn't be automatically passed in all API calls
+    session,
+  });
 }
