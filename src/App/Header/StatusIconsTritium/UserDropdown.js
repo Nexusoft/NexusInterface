@@ -73,7 +73,7 @@ const Separator = styled.div(({ theme }) => ({
 function LoggedInDropdown({ closeDropdown }) {
   const currentUser = useSelector(selectUsername);
   const hasRecoveryPhrase = useSelector(
-    (state) => !!state.user.status?.recovery
+    (state) => !!state.user.profileStatus?.recovery
   );
   const multiuser = useSelector((state) => !!state.core.systemInfo?.multiuser);
   const hasOtherSessions = useSelector(
