@@ -223,7 +223,7 @@ export async function loadTransactions() {
     if (query) {
       params.where = query;
     }
-    const transactions = await callApi('ledger/list/transactions', params);
+    const transactions = await callApi('profiles/transactions/master', params);
     store.dispatch({
       type: TYPE.FETCH_TXS_RESULT,
       payload: {
