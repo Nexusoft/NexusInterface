@@ -9,7 +9,6 @@ import TokenName from 'components/TokenName';
 import { goToSend } from 'lib/send';
 import { formatDateTime, formatNumber } from 'lib/intl';
 import { openModal } from 'lib/ui';
-import { selectUsername } from 'lib/user';
 
 import { totalBalance } from './utils';
 
@@ -26,7 +25,6 @@ const timeFormatOptions = {
 
 export default function AccountDetailsModal({ account }) {
   const stakeInfo = useSelector((state) => state.user.stakeInfo);
-  const username = useSelector(selectUsername);
   return (
     <ControlledModal>
       {(closeModal) => (
@@ -37,10 +35,7 @@ export default function AccountDetailsModal({ account }) {
           <ControlledModal.Body>
             <InfoField ratio={[1, 2]} label={__('Account name')}>
               {account.name ? (
-                <span>
-                  {!!account.nameIsLocal && `${username}:`}
-                  {account.name}
-                </span>
+                <span>{account.name}</span>
               ) : (
                 <span className="dim">{__('Unnamed')}</span>
               )}

@@ -3,7 +3,6 @@ import styled from '@emotion/styled';
 import TokenName from 'components/TokenName';
 import Icon from 'components/Icon';
 import NexusAddress from 'components/NexusAddress';
-import { selectUsername } from 'lib/user';
 import memoize from 'utils/memoize';
 import shortenAddress from 'utils/shortenAddress';
 import walletIcon from 'icons/wallet.svg';
@@ -22,7 +21,7 @@ const Separator = styled.div(({ theme }) => ({
 }));
 
 export const selectAccountOptions = memoize(
-  (myAccounts, myTokens, username) => {
+  (myAccounts, myTokens) => {
     let options = [];
 
     if (myAccounts?.length) {
@@ -40,12 +39,7 @@ export const selectAccountOptions = memoize(
               <Icon icon={walletIcon} className="mr0_4" />
               <span className="v-align">
                 {account.name ? (
-                  <span>
-                    {!!account.nameIsLocal && (
-                      <span className="dim">{username}:</span>
-                    )}
-                    {account.name}
-                  </span>
+                  <span>{account.name}</span>
                 ) : (
                   <span>
                     <em className="semi-dim">{__('Unnamed account')}</em>{' '}
@@ -93,11 +87,11 @@ export const selectAccountOptions = memoize(
 
     return options;
   },
-  (state) => [state.user.accounts, state.user.tokens, selectUsername(state)]
+  (state) => [state.user.accounts, state.user.tokens]
 );
 
 export const getRecipientSuggestions = memoize(
-  (addressBook, myAccounts, accountAddress, username) => {
+  (addressBook, myAccounts, accountAddress) => {
     const suggestions = [];
     if (addressBook) {
       Object.values(addressBook).forEach((contact) => {
@@ -144,12 +138,7 @@ export const getRecipientSuggestions = memoize(
                 <Icon icon={walletIcon} className="mr0_4" />
                 <span className="v-align">
                   {account.name ? (
-                    <span>
-                      {!!account.nameIsLocal && (
-                        <span className="dim">{username}:</span>
-                      )}
-                      {account.name}
-                    </span>
+                    <span>{account.name}</span>
                   ) : (
                     <em className="semi-dim">{__('Unnamed account')}</em>
                   )}{' '}
@@ -175,6 +164,5 @@ export const getRecipientSuggestions = memoize(
     state.addressBook,
     state.user?.accounts,
     source?.account?.address,
-    selectUsername(state),
   ]
 );
