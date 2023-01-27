@@ -87,7 +87,13 @@ const Hash = ({ children, ...rest }) => {
 };
 
 const accountLabel = (name, address) => {
-  if (name) return name;
+  if (name) {
+    if (name.startsWith('local:')) {
+      return name.substring(6);
+    } else {
+      return name;
+    }
+  }
   if (!address) return null;
   const match = lookupAddress(address);
   if (match) return match.name + (match.label ? ' - ' + match.label : '');
