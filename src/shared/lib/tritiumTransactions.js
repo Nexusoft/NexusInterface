@@ -307,7 +307,7 @@ export function prepareTransactions() {
           typeof oldTxCount === 'number' &&
           txCount > oldTxCount
         ) {
-          const transactions = await callApi('ledger/list/transactions', {
+          const transactions = await callApi('profiles/transactions/master', {
             verbose: 'summary',
             limit: txCount - oldTxCount,
           });
