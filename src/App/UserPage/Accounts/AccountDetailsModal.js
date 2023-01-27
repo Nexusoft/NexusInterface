@@ -110,29 +110,31 @@ export default function AccountDetailsModal({ account }) {
             {account.stake !== undefined && (
               <div className="mt1 flex space-between">
                 <div />{' '}
-                {!stakeInfo.stake && !stakeInfo.balance ? (
-                  <div className="error">{__('Trust Account is empty.')}</div>
-                ) : (
-                  stakeInfo.new && (
-                    <div className="error">
-                      {__(
-                        'Trust Account must mature for 72 hours before staking'
-                      )}
-                    </div>
-                  )
-                )}
-                <Button
-                  disabled={
-                    !stakeInfo ||
-                    (!stakeInfo.stake && !stakeInfo.balance) ||
-                    stakeInfo.new
-                  }
-                  onClick={() => {
-                    openModal(AdjustStakeModal);
-                  }}
-                >
-                  {__('Adjust stake amount')}
-                </Button>
+                <div>
+                  <Button
+                    disabled={
+                      !stakeInfo ||
+                      (!stakeInfo.stake && !stakeInfo.balance) ||
+                      stakeInfo.new
+                    }
+                    onClick={() => {
+                      openModal(AdjustStakeModal);
+                    }}
+                  >
+                    {__('Adjust stake amount')}
+                  </Button>
+                  {!stakeInfo.stake && !stakeInfo.balance ? (
+                    <div className="error">{__('Trust Account is empty.')}</div>
+                  ) : (
+                    stakeInfo.new && (
+                      <div className="error">
+                        {__(
+                          'Trust Account must mature for 72 hours before staking'
+                        )}
+                      </div>
+                    )
+                  )}
+                </div>
               </div>
             )}
           </ControlledModal.Body>
