@@ -3,12 +3,14 @@ import styled from '@emotion/styled';
 import Tooltip from 'components/Tooltip';
 import ContractDetailsModal from 'components/ContractDetailsModal';
 import TransactionDetailsModal from 'components/TransactionDetailsModal';
+import Icon from 'components/Icon';
+import TokenName from 'components/TokenName';
 import { openModal } from 'lib/ui';
 import { popupContextMenu } from 'lib/contextMenu';
 import { formatNumber } from 'lib/intl';
 import { getDeltaSign } from 'lib/tritiumTransactions';
-import TokenName from 'components/TokenName';
 import { lookupAddress } from 'lib/addressBook';
+import contactIcon from 'icons/address-book.svg';
 import * as color from 'utils/color';
 import { consts, timing } from 'styles';
 
@@ -89,27 +91,42 @@ const Hash = ({ children, ...rest }) => {
 const accountLabel = (name, address) => {
   if (name) {
     if (name.startsWith('local:')) {
-      return name.substring(6);
+      return {
+        type: 'name',
+        text: name.substring(6),
+      };
     } else {
-      return name;
+      return {
+        type: 'name',
+        text: name,
+      };
     }
   }
   if (!address) return null;
   const match = lookupAddress(address);
-  if (match) return match.name + (match.label ? ' - ' + match.label : '');
-  else return null;
+  if (match) {
+    return {
+      type: 'contact',
+      text: match.name + (match.label ? ' - ' + match.label : ''),
+    };
+  } else return null;
 };
 
 const Account = ({ name, address }) => {
   const label = accountLabel(name, address);
-
-  return label ? (
-    <Tooltip.Trigger tooltip={address}>
-      <AccountName>{label}</AccountName>
-    </Tooltip.Trigger>
-  ) : (
-    <Hash>{address}</Hash>
-  );
+  if (label) {
+    const { type, text } = label;
+    return (
+      <Tooltip.Trigger tooltip={address}>
+        <AccountName>
+          {type === 'contact' && <Icon icon={contactIcon} className="mr0_4" />}
+          <span className="v-align">{text}</span>
+        </AccountName>
+      </Tooltip.Trigger>
+    );
+  } else {
+    return <Hash>{address}</Hash>;
+  }
 };
 
 const creditFrom = (contract) => {
