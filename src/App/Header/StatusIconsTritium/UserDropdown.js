@@ -77,7 +77,7 @@ function LoggedInDropdown({ closeDropdown }) {
   const manualNoUsername =
     !currentUser && useSelector((state) => state.settings.manualDaemon);
   const hasRecoveryPhrase = useSelector(
-    (state) => !!state.user.status?.recovery
+    (state) => !!state.user.profileStatus?.recovery
   );
   const multiuser = useSelector((state) => !!state.core.systemInfo?.multiuser);
   const hasOtherSessions = useSelector(

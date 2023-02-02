@@ -12,7 +12,7 @@ __ = __context('User');
 
 export default function UserOptions() {
   const hasRecoveryPhrase = useSelector(
-    ({ user: { status } }) => !!(status && status.recovery)
+    ({ user: { profileStatus } }) => !!profileStatus?.recovery
   );
 
   return (

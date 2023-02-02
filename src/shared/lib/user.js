@@ -40,12 +40,25 @@ let refreshUserStatusLock = false;
 export const refreshUserStatus = async () => {
   try {
     const {
-      user: { session },
+      user: { session, profileStatus },
       core: { systemInfo },
     } = store.getState();
     if (!refreshUserStatusLock && (!systemInfo?.multiuser || session)) {
       const status = await callApi('sessions/status/local');
       store.dispatch({ type: TYPE.SET_USER_STATUS, payload: status });
+
+      try {
+        if (!profileStatus) {
+          const profileStatus = await callApi('profiles/status/master', {
+            genesis: status.genesis,
+          });
+          store.dispatch({
+            type: TYPE.SET_PROFILE_STATUS,
+            payload: profileStatus,
+          });
+        }
+      } catch {}
+
       return status;
     }
   } catch (err) {
@@ -78,31 +91,16 @@ export const logIn = async ({ username, password, pin }) => {
   refreshUserStatusLock = true;
   try {
     const { session, genesis } = result;
-    //TODO: Remove.
-    //Currently there is a race condtition that prevents the user from unlocking, just wait 8 seconds and it will be ready.
-    //This is a core bug so should be fixed soon.
-    await new Promise((resolve) => setTimeout(resolve, 8000));
-    let [status, stakeInfo] = await Promise.all([
-      callApi('sessions/status/local', { session }),
-      callApi('finance/get/stakeinfo', { session }),
+    const stakeInfo = await callApi('finance/get/stakeinfo', { session });
+    const [r, profileStatus] = await Promise.all([
+      unlockUser({ pin, session, stakeInfo }),
+      callApi('profiles/status/master', { genesis }),
     ]);
-    store.dispatch({
-      type: TYPE.LOGIN,
-      payload: { username, session, status, stakeInfo },
-    });
-    const unlockStaking = await shouldUnlockStaking({ stakeInfo, status });
-    await unlockUser({
-      pin,
-      staking: unlockStaking,
-      session,
-    });
-    if (unlockStaking) {
-      status = await callApi('sessions/status/local', { session });
-    }
+    const status = await callApi('sessions/status/local', { session });
 
     store.dispatch({
       type: TYPE.LOGIN,
-      payload: { username, session, status, stakeInfo, genesis },
+      payload: { username, session, status, stakeInfo, genesis, profileStatus },
     });
     return { username, session, status, stakeInfo };
   } finally {
@@ -128,32 +126,6 @@ export const logOut = async ({ pin }) => {
   } else {
     await callApi('sessions/terminate/local');
   }
-};
-
-export const unlockUser = async ({
-  pin,
-  mining,
-  staking,
-  notifications,
-  session,
-}) => {
-  const {
-    settings: { enableMining },
-    user: { status },
-    core: { systemInfo },
-  } = store.getState();
-  return await callApi('sessions/unlock/local', {
-    pin,
-    notifications:
-      notifications !== undefined
-        ? notifications
-        : status?.unlocked?.notifications === true
-        ? false
-        : true,
-    mining: mining !== undefined ? mining : !!enableMining,
-    staking: staking !== undefined && !systemInfo?.multiuser ? staking : false,
-    session,
-  });
 };
 
 export const switchUser = async (session) => {
@@ -259,15 +231,11 @@ export const loadAccounts = legacyMode
   : // Tritium Mode
     async () => {
       try {
-        const [trust, accounts] = await Promise.all([
-          callApi('finance/list/trust'),
-          callApi('finance/list/account'),
-        ]);
-        const allAccounts = trust.concat(accounts);
-        allAccounts.forEach(processAccount);
+        const accounts = await callApi('finance/list/any');
+        accounts.forEach(processAccount);
         store.dispatch({
           type: TYPE.SET_TRITIUM_ACCOUNTS,
-          payload: allAccounts,
+          payload: accounts,
         });
       } catch (err) {
         console.error('account listing failed', err);
@@ -349,82 +317,95 @@ export function prepareUser() {
   }
 }
 
-async function shouldUnlockStaking({ stakeInfo, status }) {
+async function shouldUnlockStaking({ stakeInfo }) {
   const {
     settings: { enableStaking, dontAskToStartStaking },
     core: { systemInfo },
     user: { startStakingAsked },
   } = store.getState();
 
-  if (
-    !systemInfo?.litemode &&
-    !systemInfo?.multiuser &&
-    status?.unlocked.staking === false &&
-    enableStaking
-  ) {
-    if (!stakeInfo?.new) {
-      return true;
-    }
+  if (systemInfo?.litemode || systemInfo?.multiuser || !enableStaking) {
+    return false;
+  }
 
-    if (
-      stakeInfo?.new &&
-      stakeInfo?.balance &&
-      !startStakingAsked &&
-      !dontAskToStartStaking
-    ) {
-      let checkboxRef = createRef();
-      const accepted = await confirm({
-        question: __('Start staking?'),
-        note: (
-          <div style={{ textAlign: 'left' }}>
-            <p>
-              {__(
-                'You have %{amount} NXS in your trust account and can start staking now.',
-                {
-                  amount: stakeInfo.balance,
-                }
-              )}
-            </p>
-            <p>
-              {__(
-                'However, keep in mind that if you start staking, your stake amount will be locked, and the smaller the amount is, the longer it would likely take to unlock it.'
-              )}
-            </p>
-            <p>
-              {__(
-                'To learn more about staking, visit <link>crypto.nexus.io/stake</link>.',
-                null,
-                {
-                  link: () => (
-                    <ExternalLink href="https://crypto.nexus.io/staking-guide">
-                      crypto.nexus.io/staking-guide
-                    </ExternalLink>
-                  ),
-                }
-              )}
-            </p>
-            <div className="mt3">
-              <label>
-                <input type="checkbox" ref={checkboxRef} />{' '}
-                {__("Don't show this again")}
-              </label>
-            </div>
+  if (!stakeInfo?.new) {
+    return true;
+  }
+
+  if (
+    stakeInfo?.new &&
+    stakeInfo?.balance &&
+    !startStakingAsked &&
+    !dontAskToStartStaking
+  ) {
+    let checkboxRef = createRef();
+    const accepted = await confirm({
+      question: __('Start staking?'),
+      note: (
+        <div style={{ textAlign: 'left' }}>
+          <p>
+            {__(
+              'You have %{amount} NXS in your trust account and can start staking now.',
+              {
+                amount: stakeInfo.balance,
+              }
+            )}
+          </p>
+          <p>
+            {__(
+              'However, keep in mind that if you start staking, your stake amount will be locked, and the smaller the amount is, the longer it would likely take to unlock it.'
+            )}
+          </p>
+          <p>
+            {__(
+              'To learn more about staking, visit <link>crypto.nexus.io/stake</link>.',
+              null,
+              {
+                link: () => (
+                  <ExternalLink href="https://crypto.nexus.io/staking-guide">
+                    crypto.nexus.io/staking-guide
+                  </ExternalLink>
+                ),
+              }
+            )}
+          </p>
+          <div className="mt3">
+            <label>
+              <input type="checkbox" ref={checkboxRef} />{' '}
+              {__("Don't show this again")}
+            </label>
           </div>
-        ),
-        labelYes: __('Start staking'),
-        labelNo: __("Don't stake"),
-      });
-      store.dispatch({
-        type: TYPE.ASK_START_STAKING,
-      });
-      if (checkboxRef.current?.checked) {
-        updateSettings({ dontAskToStartStaking: true });
-      }
-      if (accepted) {
-        return true;
-      }
+        </div>
+      ),
+      labelYes: __('Start staking'),
+      labelNo: __("Don't stake"),
+    });
+    store.dispatch({
+      type: TYPE.ASK_START_STAKING,
+    });
+    if (checkboxRef.current?.checked) {
+      updateSettings({ dontAskToStartStaking: true });
+    }
+    if (accepted) {
+      return true;
     }
   }
 
   return false;
+}
+
+async function unlockUser({ pin, session, stakeInfo }) {
+  const unlockStaking = await shouldUnlockStaking({ stakeInfo });
+  const {
+    settings: { enableMining },
+  } = store.getState();
+  await callApi('sessions/unlock/local', {
+    pin,
+    notifications: true,
+    staking: unlockStaking,
+    mining: !!enableMining,
+    // passing session through because it's not saved in the store yet
+    // so it wouldn't be automatically passed in all API calls
+    session,
+  });
 }

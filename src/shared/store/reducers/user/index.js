@@ -11,6 +11,7 @@ import nameRecords from './nameRecords';
 import namespaces from './namespaces';
 import assets from './assets';
 import startStakingAsked from './startStakingAsked';
+import profileStatus from './profileStatus';
 
 export default combineReducers({
   session,
@@ -24,4 +25,5 @@ export default combineReducers({
   namespaces,
   assets,
   startStakingAsked,
+  profileStatus,
 });

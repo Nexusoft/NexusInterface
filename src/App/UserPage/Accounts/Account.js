@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import { useSelector } from 'react-redux';
 
 import NexusAddress from 'components/NexusAddress';
 import QRButton from 'components/QRButton';
@@ -9,7 +8,6 @@ import Icon from 'components/Icon';
 import Button from 'components/Button';
 import { formatNumber } from 'lib/intl';
 import { openModal } from 'lib/ui';
-import { selectUsername } from 'lib/user';
 import walletIcon from 'icons/wallet.svg';
 import ellipsisIcon from 'icons/ellipsis.svg';
 
@@ -33,12 +31,7 @@ const AccountName = styled.span(({ theme }) => ({
   color: theme.foreground,
 }));
 
-const Prefix = styled.span(({ theme }) => ({
-  color: theme.mixer(0.5),
-}));
-
 export default function Account({ account }) {
-  const username = useSelector(selectUsername);
   return (
     <AccountComponent>
       <div className="flex space-between">
@@ -52,10 +45,7 @@ export default function Account({ account }) {
           >
             <strong>
               {account.name ? (
-                <AccountName>
-                  {!!account.nameIsLocal && <Prefix>{username}:</Prefix>}
-                  {account.name}
-                </AccountName>
+                <AccountName>{account.name}</AccountName>
               ) : (
                 <em className="semi-dim">{__('Unnamed account')}</em>
               )}

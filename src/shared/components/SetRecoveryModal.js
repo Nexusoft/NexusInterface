@@ -43,7 +43,7 @@ const initialValues = {
 
 export default function SetRecoveryModal() {
   const hasRecoveryPhrase = useSelector(
-    ({ user: { status } }) => !!(status && status.recovery)
+    ({ user: { profileStatus } }) => !!profileStatus?.recovery
   );
   const [wordCount, setWordCount] = useState(20);
   const wordlistRef = useRef(null);

@@ -3,12 +3,14 @@ import styled from '@emotion/styled';
 import Tooltip from 'components/Tooltip';
 import ContractDetailsModal from 'components/ContractDetailsModal';
 import TransactionDetailsModal from 'components/TransactionDetailsModal';
+import Icon from 'components/Icon';
+import TokenName from 'components/TokenName';
 import { openModal } from 'lib/ui';
 import { popupContextMenu } from 'lib/contextMenu';
 import { formatNumber } from 'lib/intl';
 import { getDeltaSign } from 'lib/tritiumTransactions';
-import TokenName from 'components/TokenName';
 import { lookupAddress } from 'lib/addressBook';
+import contactIcon from 'icons/address-book.svg';
 import * as color from 'utils/color';
 import { consts, timing } from 'styles';
 
@@ -87,30 +89,52 @@ const Hash = ({ children, ...rest }) => {
 };
 
 const accountLabel = (name, address) => {
-  if (name) return name;
+  if (name) {
+    if (name.startsWith('local:')) {
+      return {
+        type: 'name',
+        text: name.substring(6),
+      };
+    } else {
+      return {
+        type: 'name',
+        text: name,
+      };
+    }
+  }
   if (!address) return null;
   const match = lookupAddress(address);
-  if (match) return match.name + (match.label ? ' - ' + match.label : '');
-  else return null;
+  if (match) {
+    return {
+      type: 'contact',
+      text: match.name + (match.label ? ' - ' + match.label : ''),
+    };
+  } else return null;
 };
 
 const Account = ({ name, address }) => {
   const label = accountLabel(name, address);
-
-  return label ? (
-    <Tooltip.Trigger tooltip={address}>
-      <AccountName>{label}</AccountName>
-    </Tooltip.Trigger>
-  ) : (
-    <Hash>{address}</Hash>
-  );
+  if (label) {
+    const { type, text } = label;
+    return (
+      <Tooltip.Trigger tooltip={address}>
+        <AccountName>
+          {type === 'contact' && <Icon icon={contactIcon} className="mr0_4" />}
+          <span className="v-align">{text}</span>
+        </AccountName>
+      </Tooltip.Trigger>
+    );
+  } else {
+    return <Hash>{address}</Hash>;
+  }
 };
 
 const creditFrom = (contract) => {
   switch (contract.for) {
     case 'DEBIT':
-      if (contract.from_name || contract.from) {
-        return <Account name={contract.from_name} address={contract.from} />;
+      if (contract.from) {
+        const { name, address } = contract.from;
+        return <Account name={name} address={address} />;
       } else {
         return '';
       }
@@ -132,7 +156,7 @@ const contractContent = (contract) => {
       return (
         <>
           <Operation>Write</Operation> data to{' '}
-          <Account address={contract.address} />
+          <Account name={contract.name} address={contract.address} />
         </>
       );
     }
@@ -141,7 +165,7 @@ const contractContent = (contract) => {
       return (
         <>
           <Operation>Append</Operation> data to{' '}
-          <Account address={contract.address} />
+          <Account name={contract.name} address={contract.address} />
         </>
       );
     }
@@ -158,7 +182,7 @@ const contractContent = (contract) => {
             register
           </div>
           <div>
-            at address <Hash>{contract.address}</Hash>
+            at <Account name={contract.name} address={contract.address} />
           </div>
         </>
       );
@@ -168,8 +192,8 @@ const contractContent = (contract) => {
       return (
         <>
           <Operation>Transfer</Operation> ownership of{' '}
-          <Account address={contract.address} /> to{' '}
-          <Account address={contract.destination} />
+          <Account name={contract.name} address={contract.address} /> to{' '}
+          <Account name={contract.name} address={contract.destination} />
         </>
       );
     }
@@ -178,7 +202,7 @@ const contractContent = (contract) => {
       return (
         <>
           <Operation>Claim</Operation> ownership of{' '}
-          <Account address={contract.address} />
+          <Account name={contract.name} address={contract.address} />
         </>
       );
     }
@@ -210,7 +234,8 @@ const contractContent = (contract) => {
     case 'GENESIS': {
       return (
         <>
-          <Operation>Genesis</Operation> <Hash>{contract.address}</Hash>
+          <Operation>Genesis</Operation> at{' '}
+          <Account name={contract.name} address={contract.address} />
         </>
       );
     }
@@ -218,7 +243,8 @@ const contractContent = (contract) => {
     case 'GENESISPOOL': {
       return (
         <>
-          <Operation>GenesisPool</Operation> <Hash>{contract.address}</Hash>
+          <Operation>GenesisPool</Operation> at{' '}
+          <Account name={contract.name} address={contract.address} />
         </>
       );
     }
@@ -228,10 +254,14 @@ const contractContent = (contract) => {
         <>
           <div>
             <Operation>Debit</Operation> from{' '}
-            <Account name={contract.from_name} address={contract.from} />
+            <Account
+              name={contract.from?.name}
+              address={contract.from?.address}
+            />
           </div>
           <div>
-            to <Account name={contract.to_name} address={contract.to} />
+            to{' '}
+            <Account name={contract.to?.name} address={contract.to?.address} />
           </div>
         </>
       );
@@ -243,7 +273,7 @@ const contractContent = (contract) => {
         <>
           <div>
             <Operation>Credit</Operation> to{' '}
-            <Account name={contract.to_name} address={contract.to} />
+            <Account name={contract.to?.name} address={contract.to?.address} />
           </div>
           <div>{from && <div>from {from}</div>}</div>
         </>
@@ -255,10 +285,10 @@ const contractContent = (contract) => {
         <>
           <div>
             <Operation>Migrate</Operation> trust key to{' '}
-            <Account name={contract.account_name} address={contract.account} />
+            <Account name={contract.name} address={contract.address} />
           </div>
           <div>
-            from <Hash>{contract.trustkey}</Hash>
+            from <Hash>{contract.last}</Hash>
           </div>
         </>
       );
@@ -282,7 +312,10 @@ const contractContent = (contract) => {
       return (
         <>
           <Operation>Fee</Operation> from{' '}
-          <Account name={contract.from_name} address={contract.from} />
+          <Account
+            name={contract.from?.name}
+            address={contract.from?.address}
+          />
         </>
       );
     }
@@ -292,7 +325,10 @@ const contractContent = (contract) => {
         <>
           <div>
             <Operation>Legacy</Operation> debit from{' '}
-            <Account name={contract.from_name} address={contract.from} />
+            <Account
+              name={contract.from?.name}
+              address={contract.from?.address}
+            />
           </div>
           <div>
             to <Account address={contract.to} />
