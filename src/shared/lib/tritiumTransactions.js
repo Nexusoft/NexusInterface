@@ -186,10 +186,9 @@ function buildQuery({ addressQuery, operation, timeSpan }) {
         `results.contracts.${field}=*${addressQuery}*`;
       const addressQueries = [
         buildAddressQuery('token'),
-        buildAddressQuery('from'),
-        buildAddressQuery('to'),
-        buildAddressQuery('account'),
-        buildAddressQuery('destination'),
+        buildAddressQuery('from.address'),
+        buildAddressQuery('to.address'),
+        buildAddressQuery('recipient.address'),
         buildAddressQuery('address'),
       ];
       queries.push(`(${addressQueries.join(' OR ')})`);
