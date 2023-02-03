@@ -193,7 +193,14 @@ const contractContent = (contract) => {
         <>
           <Operation>Transfer</Operation> ownership of{' '}
           <Account name={contract.name} address={contract.address} /> to{' '}
-          <Account name={contract.name} address={contract.destination} />
+          {typeof contract.recipient === 'string' ? (
+            <Account address={contract.recipient} />
+          ) : (
+            <Account
+              name={contract.recipient?.name}
+              address={contract.recipient?.address}
+            />
+          )}
         </>
       );
     }
