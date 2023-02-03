@@ -1,16 +1,18 @@
-import { createRef } from 'react';
+import { createRef, useRef, useEffect } from 'react';
 import MigrateAccountModal from 'components/MigrateAccountModal';
 import ExternalLink from 'components/ExternalLink';
+import BackgroundTask from 'components/BackgroundTask';
 import * as TYPE from 'consts/actionTypes';
 import store, { observeStore } from 'store';
 import { legacyMode } from 'consts/misc';
 import { callApi } from 'lib/tritiumApi';
 import rpc from 'lib/rpc';
-import { openModal } from 'lib/ui';
+import { openModal, showBackgroundTask, showNotification } from 'lib/ui';
 import { confirm } from 'lib/dialog';
 import { updateSettings } from 'lib/settings';
 import { isLoggedIn } from 'selectors';
 import listAll from 'utils/listAll';
+import sleep from 'utils/promisified/sleep';
 
 __ = __context('User');
 
@@ -89,6 +91,7 @@ export const logIn = async ({ username, password, pin }) => {
   });
   // Stop refreshing user status
   refreshUserStatusLock = true;
+  await sleep(500); // Let the core cycle, Possible delete this
   try {
     const { session, genesis } = result;
     const stakeInfo = await callApi('finance/get/stakeinfo', { session });
@@ -399,13 +402,69 @@ async function unlockUser({ pin, session, stakeInfo }) {
   const {
     settings: { enableMining },
   } = store.getState();
-  await callApi('sessions/unlock/local', {
-    pin,
-    notifications: true,
-    staking: unlockStaking,
-    mining: !!enableMining,
-    // passing session through because it's not saved in the store yet
-    // so it wouldn't be automatically passed in all API calls
-    session,
-  });
+  try {
+    await callApi('sessions/unlock/local', {
+      pin,
+      notifications: true,
+      staking: unlockStaking,
+      mining: !!enableMining,
+      // passing session through because it's not saved in the store yet
+      // so it wouldn't be automatically passed in all API calls
+      session,
+    });
+  } catch (error) {
+    if (error.code && error.code === -139) {
+      showBackgroundTask(UserUnLockIndexingBackgroundTask, {
+        pin,
+        notifications: true,
+        staking: unlockStaking,
+        mining: !!enableMining,
+        session,
+      });
+    } else throw error;
+  }
+}
+
+function UserUnLockIndexingBackgroundTask({
+  pin,
+  notifications,
+  staking,
+  mining,
+  session,
+}) {
+  const closeTaskRef = useRef();
+  useEffect(
+    () =>
+      observeStore(
+        ({ user: { status } }) => status?.indexing,
+        async (isIndexing) => {
+          if (!isIndexing) {
+            try {
+              await callApi('sessions/unlock/local', {
+                pin,
+                notifications,
+                staking,
+                mining,
+                session,
+              });
+            } catch (error) {
+              showNotification(__('User Failed to Unlock'), 'error');
+            }
+            closeTaskRef.current?.();
+            showNotification(__('User Unlocked'), 'success');
+          }
+        }
+      ),
+    []
+  );
+
+  return (
+    <BackgroundTask
+      assignClose={(close) => (closeTaskRef.current = close)}
+      onClick={null}
+      style={{ cursor: 'default' }}
+    >
+      {__('Indexing User...')}
+    </BackgroundTask>
+  );
 }
