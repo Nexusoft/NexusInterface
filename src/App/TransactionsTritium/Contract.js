@@ -331,7 +331,8 @@ const contractContent = (contract) => {
             />
           </div>
           <div>
-            to <Account address={contract.to} />
+            to{' '}
+            <Account name={contract.to?.name} address={contract.to?.address} />
           </div>
         </>
       );
