@@ -52,39 +52,7 @@ export default function EmbeddedCoreSettings() {
         <Form.TextField name="coreDataDir" />
       </SettingsField>
 
-      <SettingsField
-        connectLabel
-        label={__('Testnet Iteration')}
-        subLabel={
-          <>
-            {__('The iteration of Testnet to connect to.')}{' '}
-            <Form.Field
-              name="testnetIteration"
-              render={({ input }) =>
-                !!input.value &&
-                input.value !== '0' && (
-                  <Button
-                    style={{ height: '25%', width: '25%' }}
-                    onClick={() => {
-                      input.onChange(null);
-                    }}
-                  >
-                    {__('Turn Off')}
-                  </Button>
-                )
-              }
-            />
-          </>
-        }
-      >
-        <Form.TextField
-          name="testnetIteration"
-          type="number"
-          min={0}
-          max={99999999}
-          style={{ maxWidth: 50 }}
-        />
-      </SettingsField>
+      <TestnetSettings />
 
       <PortSettings />
 
@@ -265,6 +233,59 @@ function SafeModeSetting() {
         )}
       </Form.Field>
     </SettingsField>
+  );
+}
+
+function TestnetSettings() {
+  const testnetIteration = useFieldValue('testnetIteration');
+
+  return (
+    <>
+      <SettingsField
+        connectLabel
+        label={__('Testnet Iteration')}
+        subLabel={
+          <>
+            {__('The iteration of Testnet to connect to.')}{' '}
+            <Form.Field
+              name="testnetIteration"
+              render={({ input }) =>
+                !!input.value &&
+                input.value !== '0' && (
+                  <Button
+                    style={{ height: '25%', width: '25%' }}
+                    onClick={() => {
+                      input.onChange(null);
+                    }}
+                  >
+                    {__('Turn Off')}
+                  </Button>
+                )
+              }
+            />
+          </>
+        }
+      >
+        <Form.TextField
+          name="testnetIteration"
+          type="number"
+          min={0}
+          max={99999999}
+          style={{ maxWidth: 50 }}
+        />
+      </SettingsField>
+
+      {!!testnetIteration && testnetIteration !== '0' && (
+        <SettingsField
+          connectLabel
+          indent={1}
+          label={__('Private testnet')}
+          subLabel={__('Private testnet runs locally on your machine')}
+        >
+          <Form.Switch name="privateTestnet" />
+        </SettingsField>
+      )}
+    </>
   );
 }
 
