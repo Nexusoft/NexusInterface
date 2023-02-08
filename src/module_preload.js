@@ -18,7 +18,7 @@ import * as ReactDOMServer from 'react-dom/server';
 import cache from '@emotion/cache';
 import * as react from '@emotion/react';
 import styled from '@emotion/styled';
-import { ipcRenderer, clipboard, shell } from 'electron';
+import { ipcRenderer, clipboard } from 'electron';
 
 import GlobalStyles from 'components/GlobalStyles';
 import ThemeController from 'components/ThemeController';
@@ -320,13 +320,15 @@ global.NEXUS = {
 };
 
 // Open all external URLs on OS default browser instead of inside the wallet itself
-document.addEventListener('click', function (event) {
-  const {
-    target: { tagName, href },
-  } = event;
-  if ((tagName === 'a' || tagName === 'A') && href.startsWith('http')) {
+const { origin } = location;
+document.addEventListener('click', (event) => {
+  const anchor = event.target.closest('a');
+  if (!anchor) return;
+
+  const { href } = anchor;
+  if (!anchor.href.startsWith(origin)) {
     event.preventDefault();
-    shell.openExternal(href);
+    ipcRenderer.sendToHost('open-external', href);
   }
 });
 
