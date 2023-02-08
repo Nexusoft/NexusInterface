@@ -307,6 +307,14 @@ global.NEXUS = {
       }
       clipboard.writeText(text);
     },
+    openExternal: (url) => {
+      if (typeof url !== 'string') {
+        throw new Error(
+          'Expected `url` to be `string` type, found: ' + typeof text
+        );
+      }
+      ipcRenderer.sendToHost('open-external', url);
+    },
     color,
   },
 };

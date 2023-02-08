@@ -1,4 +1,4 @@
-import memoize from 'utils/memoize';
+import { clipboard, shell } from 'electron';
 
 import * as TYPE from 'consts/actionTypes';
 import store, { observeStore } from 'store';
@@ -16,6 +16,7 @@ import { goToSend } from 'lib/send';
 import rpc from 'lib/rpc';
 import { callApi } from 'lib/tritiumApi';
 import { legacyMode } from 'consts/misc';
+import memoize from 'utils/memoize';
 
 import { readModuleStorage, writeModuleStorage } from './storage';
 
@@ -99,6 +100,9 @@ function handleIpcMessage(event) {
       break;
     case 'context-menu':
       contextMenu(event.args);
+      break;
+    case 'open-external':
+      openExternal(event.args);
       break;
   }
 }
@@ -293,6 +297,10 @@ function contextMenu([template]) {
       activeAppModule.webview.getWebContentsId()
     );
   }
+}
+
+function openExternal([url]) {
+  shell.openExternal(url);
 }
 
 /**
