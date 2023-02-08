@@ -104,6 +104,9 @@ function handleIpcMessage(event) {
     case 'open-external':
       openExternal(event.args);
       break;
+    case 'copy-to-clipboard':
+      openExternal(event.args);
+      break;
   }
 }
 
@@ -301,6 +304,10 @@ function contextMenu([template]) {
 
 function openExternal([url]) {
   shell.openExternal(url);
+}
+
+function copyToClipboard([text]) {
+  clipboard.writeText(text);
 }
 
 /**

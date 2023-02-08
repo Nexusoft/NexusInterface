@@ -18,7 +18,7 @@ import * as ReactDOMServer from 'react-dom/server';
 import cache from '@emotion/cache';
 import * as react from '@emotion/react';
 import styled from '@emotion/styled';
-import { ipcRenderer, clipboard } from 'electron';
+import { ipcRenderer } from 'electron';
 
 import GlobalStyles from 'components/GlobalStyles';
 import ThemeController from 'components/ThemeController';
@@ -305,7 +305,7 @@ global.NEXUS = {
           'Expected `text` to be a `string`, found: ' + typeof text
         );
       }
-      clipboard.writeText(text);
+      ipcRenderer.sendToHost('copy-to-clipboard', text);
     },
     openExternal: (url) => {
       if (typeof url !== 'string') {
