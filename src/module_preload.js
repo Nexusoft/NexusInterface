@@ -99,12 +99,12 @@ global.NEXUS = {
       }
       if (typeof options !== 'object') {
         throw new Error(
-          'Expected `options` to be `object` type, found: ' + typeof options
+          'Expected `options` to be an `object`, found: ' + typeof options
         );
       }
       if (!Array.isArray(options.recipients)) {
         throw new Error(
-          'Expected `options.recipients` to be `array` type, found: ' +
+          'Expected `options.recipients` to be a `array`, found: ' +
             typeof options.recipients
         );
       }
@@ -116,12 +116,12 @@ global.NEXUS = {
       }
       if (typeof command !== 'string') {
         throw new Error(
-          'Expected `command` to be `string` type, found: ' + typeof command
+          'Expected `command` to be a `string`, found: ' + typeof command
         );
       }
       if (typeof params !== 'undefined' && !Array.isArray(params)) {
         throw new Error(
-          'Expected `params` to be `array` or `undefined` type, found: ' +
+          'Expected `params` to be a `array` `undefined` type, found: ' +
             typeof params
         );
       }
@@ -143,7 +143,7 @@ global.NEXUS = {
       }
       if (typeof endpoint !== 'string') {
         throw new Error(
-          'Expected `endpoint` to be `string` type, found: ' + typeof endpoint
+          'Expected `endpoint` to be a `string`, found: ' + typeof endpoint
         );
       }
       const callId = newId();
@@ -164,7 +164,7 @@ global.NEXUS = {
       }
       if (typeof endpoint !== 'string') {
         throw new Error(
-          'Expected `endpoint` to be `string` type, found: ' + typeof endpoint
+          'Expected `endpoint` to be a `string`, found: ' + typeof endpoint
         );
       }
       const callId = newId();
@@ -188,7 +188,7 @@ global.NEXUS = {
       }
       if (typeof url !== 'string') {
         throw new Error(
-          'Expected `url` to be `string` type, found: ' + typeof url
+          'Expected `url` to be a `string`, found: ' + typeof url
         );
       }
       if (!config) {
@@ -196,7 +196,7 @@ global.NEXUS = {
       }
       if (typeof config !== 'object' && typeof config !== 'undefined') {
         throw new Error(
-          'Expected `config` to be `object` or `undefined` type, found: ' +
+          'Expected `config` to be an `object` `undefined` type, found: ' +
             typeof config
         );
       }
@@ -208,7 +208,7 @@ global.NEXUS = {
       }
       if (typeof options !== 'object') {
         throw new Error(
-          'Expected `options` to be `object` type, found: ' + typeof options
+          'Expected `options` to be an `object`, found: ' + typeof options
         );
       }
       ipcRenderer.sendToHost('show-notification', options);
@@ -219,7 +219,7 @@ global.NEXUS = {
       }
       if (typeof options !== 'object') {
         throw new Error(
-          'Expected `options` to be `object` type, found: ' + typeof options
+          'Expected `options` to be an `object`, found: ' + typeof options
         );
       }
       ipcRenderer.sendToHost('show-error-dialog', options);
@@ -230,7 +230,7 @@ global.NEXUS = {
       }
       if (typeof options !== 'object') {
         throw new Error(
-          'Expected `options` to be `object` type, found: ' + typeof options
+          'Expected `options` to be an `object`, found: ' + typeof options
         );
       }
       ipcRenderer.sendToHost('show-success-dialog', options);
@@ -241,7 +241,7 @@ global.NEXUS = {
       }
       if (typeof options !== 'object') {
         throw new Error(
-          'Expected `options` to be `object` type, found: ' + typeof options
+          'Expected `options` to be an `object`, found: ' + typeof options
         );
       }
       ipcRenderer.sendToHost('show-info-dialog', options);
@@ -252,7 +252,7 @@ global.NEXUS = {
       }
       if (typeof options !== 'object') {
         throw new Error(
-          'Expected `options` to be `object` type, found: ' + typeof options
+          'Expected `options` to be an `object`, found: ' + typeof options
         );
       }
       const confirmationId = newId();
@@ -266,7 +266,7 @@ global.NEXUS = {
     updateState: (state) => {
       if (typeof state !== 'object') {
         throw new Error(
-          'Expected `state` to be `object` type, found: ' + typeof state
+          'Expected `state` to be an `object`, found: ' + typeof state
         );
       }
       ipcRenderer.sendToHost('update-state', state);
@@ -274,7 +274,7 @@ global.NEXUS = {
     updateStorage: (data) => {
       if (typeof data !== 'object') {
         throw new Error(
-          'Expected `data` to be `object` type, found: ' + typeof data
+          'Expected `data` to be an `object`, found: ' + typeof data
         );
       }
       ipcRenderer.sendToHost('update-storage', data);
@@ -282,7 +282,7 @@ global.NEXUS = {
     onceInitialize: (listener) => {
       if (typeof listener !== 'function') {
         throw new Error(
-          'Expected `listener` to be `function` type, found: ' + typeof listener
+          'Expected `listener` to be a `function`, found: ' + typeof listener
         );
       }
       ipcRenderer.once('initialize', (event, initialData) =>
@@ -292,7 +292,7 @@ global.NEXUS = {
     onWalletDataUpdated: (listener) => {
       if (typeof listener !== 'function') {
         throw new Error(
-          'Expected `listener` to be `function` type, found: ' + typeof listener
+          'Expected `listener` to be a `function`, found: ' + typeof listener
         );
       }
       ipcRenderer.on('wallet-data-updated', (event, walletData) =>
@@ -302,7 +302,7 @@ global.NEXUS = {
     copyToClipboard: (text) => {
       if (typeof text !== 'string') {
         throw new Error(
-          'Expected `text` to be `string` type, found: ' + typeof text
+          'Expected `text` to be a `string`, found: ' + typeof text
         );
       }
       clipboard.writeText(text);
@@ -310,7 +310,7 @@ global.NEXUS = {
     openExternal: (url) => {
       if (typeof url !== 'string') {
         throw new Error(
-          'Expected `url` to be `string` type, found: ' + typeof text
+          'Expected `url` to be a `string`, found: ' + typeof text
         );
       }
       ipcRenderer.sendToHost('open-external', url);
