@@ -101,11 +101,11 @@ function handleIpcMessage(event) {
     case 'context-menu':
       contextMenu(event.args);
       break;
-    case 'open-external':
-      openExternal(event.args);
+    case 'open-in-browser':
+      openInBrowser(event.args);
       break;
     case 'copy-to-clipboard':
-      openExternal(event.args);
+      copyToClipboard(event.args);
       break;
   }
 }
@@ -302,7 +302,7 @@ function contextMenu([template]) {
   }
 }
 
-function openExternal([url]) {
+function openInBrowser([url]) {
   shell.openExternal(url);
 }
 

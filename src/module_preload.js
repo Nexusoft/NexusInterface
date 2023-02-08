@@ -307,13 +307,13 @@ global.NEXUS = {
       }
       ipcRenderer.sendToHost('copy-to-clipboard', text);
     },
-    openExternal: (url) => {
+    openInBrowser: (url) => {
       if (typeof url !== 'string') {
         throw new Error(
           'Expected `url` to be a `string`, found: ' + typeof text
         );
       }
-      ipcRenderer.sendToHost('open-external', url);
+      ipcRenderer.sendToHost('open-in-browser', url);
     },
     color,
   },
