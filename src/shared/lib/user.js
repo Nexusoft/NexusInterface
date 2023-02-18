@@ -15,10 +15,11 @@ import listAll from 'utils/listAll';
 __ = __context('User');
 
 export const selectUsername = ({
-  user: { status, session },
+  user: { status, session, profileStatus },
   sessions,
   usernameByGenesis,
 }) =>
+  profileStatus?.session?.username ||
   status?.username ||
   usernameByGenesis[status?.genesis] ||
   (session && sessions[session]?.username) ||
@@ -45,20 +46,18 @@ export const refreshUserStatus = async () => {
     } = store.getState();
     if (!refreshUserStatusLock && (!systemInfo?.multiuser || session)) {
       const status = await callApi('sessions/status/local');
+
+      if (!profileStatus) {
+        const profileStatus = await callApi('profiles/status/master', {
+          genesis: status.genesis,
+        });
+        store.dispatch({
+          type: TYPE.SET_PROFILE_STATUS,
+          payload: profileStatus,
+        });
+      }
+
       store.dispatch({ type: TYPE.SET_USER_STATUS, payload: status });
-
-      try {
-        if (!profileStatus) {
-          const profileStatus = await callApi('profiles/status/master', {
-            genesis: status.genesis,
-          });
-          store.dispatch({
-            type: TYPE.SET_PROFILE_STATUS,
-            payload: profileStatus,
-          });
-        }
-      } catch {}
-
       return status;
     }
   } catch (err) {
