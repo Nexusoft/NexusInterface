@@ -17,11 +17,9 @@ __ = __context('User');
 export const selectUsername = ({
   user: { status, session, profileStatus },
   sessions,
-  usernameByGenesis,
 }) =>
   profileStatus?.session?.username ||
   status?.username ||
-  usernameByGenesis[status?.genesis] ||
   (session && sessions[session]?.username) ||
   '';
 
