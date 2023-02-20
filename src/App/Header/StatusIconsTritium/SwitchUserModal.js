@@ -55,15 +55,19 @@ function User({
     <UserWrapper
       active={active}
       switching={switching}
-      onClick={async () => {
-        setSwitchingTo(session);
-        try {
-          await setActiveUser(session);
-        } finally {
-          setSwitchingTo(null);
-          closeModal();
-        }
-      }}
+      onClick={
+        switching
+          ? undefined
+          : async () => {
+              setSwitchingTo(session);
+              try {
+                await setActiveUser(session);
+              } finally {
+                setSwitchingTo(null);
+                closeModal();
+              }
+            }
+      }
     >
       <Username>
         <Icon icon={userIcon} className="mr0_4" />
