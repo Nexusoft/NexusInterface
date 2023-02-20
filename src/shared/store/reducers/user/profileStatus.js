@@ -7,7 +7,7 @@ export default (state = initialState, action) => {
     case TYPE.SET_PROFILE_STATUS:
       return action.payload;
 
-    case TYPE.LOGIN:
+    case TYPE.ACTIVE_USER:
       return action.payload.profileStatus;
 
     case TYPE.DISCONNECT_CORE:

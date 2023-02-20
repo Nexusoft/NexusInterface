@@ -4,8 +4,7 @@ const initialState = null;
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case TYPE.LOGIN:
-    case TYPE.SWITCH_USER:
+    case TYPE.ACTIVE_USER:
       return action.payload.session || initialState;
 
     case TYPE.DISCONNECT_CORE:

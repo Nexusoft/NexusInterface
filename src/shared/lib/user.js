@@ -122,37 +122,14 @@ export const logIn = async ({ username, password, pin }) => {
   // Stop refreshing user status
   refreshUserStatusLock = true;
   try {
-    const result = await callApi('sessions/create/local', {
+    const { session, genesis } = await callApi('sessions/create/local', {
       username,
       password,
       pin,
     });
 
-    const { session, genesis } = result;
-    const {
-      core: { systemInfo },
-    } = store.getState();
+    const { username, status, stakeInfo } = setActiveUser(session, genesis);
 
-    const stakeInfo = await callApi('finance/get/stakeinfo', { session });
-    const [r, profileStatus, sessions] = await Promise.all([
-      unlockUser({ pin, session, stakeInfo }),
-      callApi('profiles/status/master', { genesis }),
-      systemInfo?.multiuser
-        ? callApi('sessions/list/local')
-        : Promise.resolve(null),
-    ]);
-    const status = await callApi('sessions/status/local', { session });
-
-    store.dispatch({
-      type: TYPE.LOGIN,
-      payload: {
-        session,
-        sessions,
-        status,
-        stakeInfo,
-        profileStatus,
-      },
-    });
     return { username, session, status, stakeInfo };
   } finally {
     // Release the lock
@@ -186,10 +163,34 @@ export const logOut = async () => {
   }
 };
 
-export const switchUser = async (session) => {
+export async function setActiveUser(session, genesis) {
+  const {
+    core: { systemInfo },
+  } = store.getState();
+
+  const stakeInfo = await callApi('finance/get/stakeinfo', { session });
+  const [r, profileStatus, sessions] = await Promise.all([
+    unlockUser({ pin, session, stakeInfo }),
+    callApi('profiles/status/master', { genesis }),
+    systemInfo?.multiuser
+      ? callApi('sessions/list/local')
+      : Promise.resolve(null),
+  ]);
   const status = await callApi('sessions/status/local', { session });
-  store.dispatch({ type: TYPE.SWITCH_USER, payload: { session, status } });
-};
+
+  const result = {
+    session,
+    sessions,
+    status,
+    stakeInfo,
+    profileStatus,
+  };
+  store.dispatch({
+    type: TYPE.ACTIVE_USER,
+    payload: result,
+  });
+  return result;
+}
 
 function processToken(token) {
   if (token.ticker?.startsWith?.('local:')) {
@@ -361,7 +362,7 @@ export function prepareUser() {
   }
 }
 
-async function shouldUnlockStaking({ stakeInfo }) {
+async function shouldUnlockStaking(stakeInfo) {
   const {
     settings: { enableStaking, dontAskToStartStaking },
     core: { systemInfo },
@@ -439,7 +440,7 @@ async function shouldUnlockStaking({ stakeInfo }) {
 }
 
 async function unlockUser({ pin, session, stakeInfo }) {
-  const unlockStaking = await shouldUnlockStaking({ stakeInfo });
+  const unlockStaking = await shouldUnlockStaking(stakeInfo);
   const {
     settings: { enableMining },
   } = store.getState();
