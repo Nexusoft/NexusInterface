@@ -16,10 +16,12 @@ __ = __context('User');
 
 export const selectActiveSession = ({ user: { session }, sessions }) => {
   if (session) return session;
-  if (!sessions?.[0]) return undefined;
+  if (!sessions) return undefined;
+  const sessionList = Object.values(sessions);
+  if (!sessionList.length) return undefined;
 
   // Active session is defaulted to the last accessed session
-  let lastAccessed = sessions?.reduce(
+  let lastAccessed = sessionList.reduce(
     (las, s) => (!las || s.accessed > las.accessed ? s : las),
     undefined
   );
