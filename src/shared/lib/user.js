@@ -119,14 +119,15 @@ export const refreshBalances = async () => {
 };
 
 export const logIn = async ({ username, password, pin }) => {
-  const result = await callApi('sessions/create/local', {
-    username,
-    password,
-    pin,
-  });
   // Stop refreshing user status
   refreshUserStatusLock = true;
   try {
+    const result = await callApi('sessions/create/local', {
+      username,
+      password,
+      pin,
+    });
+
     const { session, genesis } = result;
     const {
       core: { systemInfo },
@@ -145,12 +146,10 @@ export const logIn = async ({ username, password, pin }) => {
     store.dispatch({
       type: TYPE.LOGIN,
       payload: {
-        username,
         session,
         sessions,
         status,
         stakeInfo,
-        genesis,
         profileStatus,
       },
     });
