@@ -23,6 +23,18 @@ export const selectUsername = ({
   (session && sessions[session]?.username) ||
   '';
 
+export const selectActiveSession = ({ user: { session }, sessions }) => {
+  if (session) return session;
+  if (sessions?.[0]) return null;
+
+  // Active session is defaulted to the last accessed session
+  let lastAccessed = sessions.reduce(
+    (las, s) => (!las || s.accessed > las.accessed ? s : las),
+    null
+  );
+  return lastAccessed.session;
+};
+
 export const refreshStakeInfo = async () => {
   try {
     const stakeInfo = await callApi('finance/get/stakeinfo');
@@ -36,28 +48,42 @@ export const refreshStakeInfo = async () => {
 
 // Don't refresh user status while login process is not yet done
 let refreshUserStatusLock = false;
-export const refreshUserStatus = async () => {
+export async function refreshUserStatus() {
+  if (refreshUserStatusLock) return;
+
+  // If in multiuser mode, fetch the list of logged in sessions first
+  const {
+    core: { systemInfo },
+  } = store.getState();
+  if (systemInfo?.multiuser) {
+    refreshSessions();
+  }
+
+  // Get the active user status
   try {
+    const session = selectActiveSession(store.getState());
+    const status = await callApi(
+      'sessions/status/local',
+      session ? { session } : undefined
+    );
+
     const {
-      user: { session, profileStatus },
-      core: { systemInfo },
+      user: { profileStatus },
     } = store.getState();
-    if (!refreshUserStatusLock && (!systemInfo?.multiuser || session)) {
-      const status = await callApi('sessions/status/local');
 
-      if (!profileStatus) {
-        const profileStatus = await callApi('profiles/status/master', {
-          genesis: status.genesis,
-        });
-        store.dispatch({
-          type: TYPE.SET_PROFILE_STATUS,
-          payload: profileStatus,
-        });
-      }
-
-      store.dispatch({ type: TYPE.SET_USER_STATUS, payload: status });
-      return status;
+    if (!profileStatus) {
+      const profileStatus = await callApi('profiles/status/master', {
+        genesis: status.genesis,
+        session: session || undefined,
+      });
+      store.dispatch({
+        type: TYPE.SET_PROFILE_STATUS,
+        payload: profileStatus,
+      });
     }
+
+    store.dispatch({ type: TYPE.SET_USER_STATUS, payload: status });
+    return status;
   } catch (err) {
     store.dispatch({ type: TYPE.CLEAR_USER });
     // Don't log error if it's 'Session not found' (user not logged in)
@@ -65,7 +91,19 @@ export const refreshUserStatus = async () => {
       console.error(err);
     }
   }
-};
+}
+
+export async function refreshSessions() {
+  try {
+    const sessions = await callApi('sessions/list/local');
+    store.dispatch({
+      type: TYPE.SET_SESSIONS,
+      payload: sessions,
+    });
+  } catch (err) {
+    store.dispatch({ type: TYPE.CLEAR_SESSIONS });
+  }
+}
 
 export const refreshBalances = async () => {
   try {

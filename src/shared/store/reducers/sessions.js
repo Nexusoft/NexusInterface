@@ -1,15 +1,16 @@
 import * as TYPE from 'consts/actionTypes';
 
-const initialState = {};
+const initialState = null;
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case TYPE.LOGIN: {
-      const { session, username } = action.payload;
-      return { ...state, [session]: { username } };
-    }
+    case TYPE.SET_SESSIONS:
+      return action.payload?.reduce((sessions, s) => {
+        sessions[s.session] = s;
+        return sessions;
+      }, {});
 
-    case TYPE.LOGOUT:
+    case TYPE.CLEAR_SESSIONS:
       return initialState;
 
     default:
