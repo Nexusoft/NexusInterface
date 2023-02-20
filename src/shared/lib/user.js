@@ -133,7 +133,9 @@ export const logIn = async ({ username, password, pin }) => {
       pin,
     });
 
-    const { username, status, stakeInfo } = setActiveUser(session, genesis);
+    const stakeInfo = await callApi('finance/get/stakeinfo', { session });
+    await unlockUser({ pin, session, stakeInfo });
+    const { status } = await setActiveUser({ session, genesis, stakeInfo });
 
     return { username, session, status, stakeInfo };
   } finally {
@@ -168,26 +170,27 @@ export const logOut = async () => {
   }
 };
 
-export async function setActiveUser(session, genesis) {
+export async function setActiveUser({ session, genesis, stakeInfo }) {
   const {
     core: { systemInfo },
   } = store.getState();
 
-  const stakeInfo = await callApi('finance/get/stakeinfo', { session });
-  const [r, profileStatus, sessions] = await Promise.all([
-    unlockUser({ pin, session, stakeInfo }),
+  const [status, profileStatus, sessions, newStakeInfo] = await Promise.all([
+    callApi('sessions/status/local', { session }),
     callApi('profiles/status/master', { genesis }),
     systemInfo?.multiuser
       ? callApi('sessions/list/local')
       : Promise.resolve(null),
+    stakeInfo
+      ? Promise.resolve(null)
+      : callApi('finance/get/stakeinfo', { session }),
   ]);
-  const status = await callApi('sessions/status/local', { session });
 
   const result = {
     session,
     sessions,
     status,
-    stakeInfo,
+    stakeInfo: stakeInfo || newStakeInfo,
     profileStatus,
   };
   store.dispatch({

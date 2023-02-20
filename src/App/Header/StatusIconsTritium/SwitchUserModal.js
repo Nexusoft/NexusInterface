@@ -46,6 +46,7 @@ const Status = styled.div(({ active }) => ({
 function User({
   session,
   username,
+  genesis,
   active,
   switching,
   setSwitchingTo,
@@ -61,7 +62,7 @@ function User({
           : async () => {
               setSwitchingTo(session);
               try {
-                await setActiveUser(session);
+                await setActiveUser({ session, genesis });
               } finally {
                 setSwitchingTo(null);
                 closeModal();
@@ -97,11 +98,12 @@ export default function SwitchUserModal() {
           <ControlledModal.Body>
             {Object.values(sessions)
               .sort((a, b) => b.accessed - a.accessed)
-              .map(({ session, username }) => (
+              .map(({ session, username, genesis }) => (
                 <User
                   key={session}
                   session={session}
                   username={username}
+                  genesis={genesis}
                   active={
                     switchingTo
                       ? switchingTo === session
