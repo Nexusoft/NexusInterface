@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 import ControlledModal from 'components/ControlledModal';
 import Icon from 'components/Icon';
 import { timing } from 'styles';
-import { switchUser } from 'lib/user';
+import { setActiveUser, selectActiveSession } from 'lib/user';
 import userIcon from 'icons/user.svg';
 
 const UserWrapper = styled.div(({ theme, active, switching }) => ({
@@ -58,7 +58,7 @@ function User({
       onClick={async () => {
         setSwitchingTo(session);
         try {
-          await switchUser(session);
+          await setActiveUser(session);
         } finally {
           setSwitchingTo(null);
           closeModal();
@@ -82,7 +82,7 @@ function User({
 
 export default function SwitchUserModal() {
   const sessions = useSelector((state) => state.sessions);
-  const currentSession = useSelector((state) => state.user.session);
+  const currentSession = useSelector(selectActiveSession);
   const [switchingTo, setSwitchingTo] = useState(null);
 
   return (
@@ -91,9 +91,9 @@ export default function SwitchUserModal() {
         <>
           <ControlledModal.Header>{__('Switch user')}</ControlledModal.Header>
           <ControlledModal.Body>
-            {Object.entries(sessions)
-              .sort()
-              .map(([session, { username }]) => (
+            {Object.values(sessions)
+              .sort((a, b) => b.accessed - a.accessed)
+              .map(({ session, username }) => (
                 <User
                   key={session}
                   session={session}
