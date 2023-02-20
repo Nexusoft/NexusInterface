@@ -62,7 +62,15 @@ export async function refreshUserStatus() {
     core: { systemInfo },
   } = store.getState();
   if (systemInfo?.multiuser) {
-    refreshSessions();
+    try {
+      const sessions = await callApi('sessions/list/local');
+      store.dispatch({
+        type: TYPE.SET_SESSIONS,
+        payload: sessions,
+      });
+    } catch (err) {
+      store.dispatch({ type: TYPE.CLEAR_SESSIONS });
+    }
   }
 
   // Get the active user status
@@ -99,18 +107,6 @@ export async function refreshUserStatus() {
   }
 }
 
-export async function refreshSessions() {
-  try {
-    const sessions = await callApi('sessions/list/local');
-    store.dispatch({
-      type: TYPE.SET_SESSIONS,
-      payload: sessions,
-    });
-  } catch (err) {
-    store.dispatch({ type: TYPE.CLEAR_SESSIONS });
-  }
-}
-
 export const refreshBalances = async () => {
   try {
     const balances = await callApi('finance/get/balances');
@@ -132,16 +128,31 @@ export const logIn = async ({ username, password, pin }) => {
   refreshUserStatusLock = true;
   try {
     const { session, genesis } = result;
+    const {
+      core: { systemInfo },
+    } = store.getState();
+
     const stakeInfo = await callApi('finance/get/stakeinfo', { session });
-    const [r, profileStatus] = await Promise.all([
+    const [r, profileStatus, sessions] = await Promise.all([
       unlockUser({ pin, session, stakeInfo }),
       callApi('profiles/status/master', { genesis }),
+      systemInfo?.multiuser
+        ? callApi('sessions/list/local')
+        : Promise.resolve(null),
     ]);
     const status = await callApi('sessions/status/local', { session });
 
     store.dispatch({
       type: TYPE.LOGIN,
-      payload: { username, session, status, stakeInfo, genesis, profileStatus },
+      payload: {
+        username,
+        session,
+        sessions,
+        status,
+        stakeInfo,
+        genesis,
+        profileStatus,
+      },
     });
     return { username, session, status, stakeInfo };
   } finally {
@@ -151,21 +162,28 @@ export const logIn = async ({ username, password, pin }) => {
 };
 
 export const logOut = async () => {
-  const {
-    sessions,
-    core: { systemInfo },
-  } = store.getState();
-  store.dispatch({
-    type: TYPE.LOGOUT,
-  });
-  if (systemInfo?.multiuser) {
-    await Promise.all([
-      Object.keys(sessions).map((session) => {
-        callApi('sessions/terminate/local', { session });
-      }),
-    ]);
-  } else {
-    await callApi('sessions/terminate/local');
+  // Stop refreshing user status
+  refreshUserStatus = true;
+  try {
+    const {
+      sessions,
+      core: { systemInfo },
+    } = store.getState();
+    store.dispatch({
+      type: TYPE.LOGOUT,
+    });
+    if (systemInfo?.multiuser) {
+      await Promise.all([
+        Object.keys(sessions).map((session) => {
+          callApi('sessions/terminate/local', { session });
+        }),
+      ]);
+    } else {
+      await callApi('sessions/terminate/local');
+    }
+  } finally {
+    // Release the lock
+    refreshBalances = false;
   }
 };
 

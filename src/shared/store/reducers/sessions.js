@@ -10,7 +10,11 @@ export default (state = initialState, action) => {
         return sessions;
       }, {});
 
+    case TYPE.LOGIN:
+      return action.payload.sessions;
+
     case TYPE.CLEAR_SESSIONS:
+    case TYPE.LOGOUT:
       return initialState;
 
     default:
