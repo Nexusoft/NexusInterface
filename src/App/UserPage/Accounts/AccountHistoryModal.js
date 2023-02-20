@@ -43,8 +43,8 @@ const timeFormatOptions = {
   hour12: false,
 };
 
-const accountDisplay = (accountName, address) => {
-  if (accountName) return accountName;
+const accountDisplay = ({ name, address }) => {
+  if (name) return name;
   if (address) {
     const match = lookupAddress(address);
     if (match) {
@@ -76,9 +76,9 @@ const tableColumns = [
     Header: __('From'),
     Cell: (cell) => {
       const {
-        original: { from_name, from, trustkey, OP },
+        original: { from, trustkey, OP },
       } = cell;
-      const content = accountDisplay(from_name, from);
+      const content = accountDisplay(from);
       switch (OP) {
         case 'DEBIT':
         case 'FEE':
@@ -107,9 +107,11 @@ const tableColumns = [
     Header: __('To'),
     Cell: (cell) => {
       const {
-        original: { to_name, to, account_name, account, OP, currentAccount },
+        original: { to, account_name, account, OP, currentAccount },
       } = cell;
-      const content = accountDisplay(to_name, to);
+
+      if (OP === 'FEE') return <span>FEE</span>; //TODO: Since fee is an op should it be translated?
+      const content = accountDisplay(to);
       switch (OP) {
         case 'CREDIT':
           if (cell.original.for === 'COINBASE') {
