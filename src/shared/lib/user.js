@@ -16,14 +16,14 @@ __ = __context('User');
 
 export const selectActiveSession = ({ user: { session }, sessions }) => {
   if (session) return session;
-  if (sessions?.[0]) return null;
+  if (!sessions?.[0]) return undefined;
 
   // Active session is defaulted to the last accessed session
-  let lastAccessed = sessions.reduce(
+  let lastAccessed = sessions?.reduce(
     (las, s) => (!las || s.accessed > las.accessed ? s : las),
-    null
+    undefined
   );
-  return lastAccessed.session;
+  return lastAccessed?.session || undefined;
 };
 
 export const selectUsername = (state) => {
@@ -76,6 +76,11 @@ export async function refreshUserStatus() {
   // Get the active user status
   try {
     const session = selectActiveSession(store.getState());
+    if (systemInfo?.multiuser && !session) {
+      store.dispatch({ type: TYPE.CLEAR_USER });
+      return;
+    }
+
     const status = await callApi(
       'sessions/status/local',
       session ? { session } : undefined
@@ -88,7 +93,7 @@ export async function refreshUserStatus() {
     if (!profileStatus) {
       const profileStatus = await callApi('profiles/status/master', {
         genesis: status.genesis,
-        session: session || undefined,
+        session,
       });
       store.dispatch({
         type: TYPE.SET_PROFILE_STATUS,
@@ -102,7 +107,7 @@ export async function refreshUserStatus() {
     store.dispatch({ type: TYPE.CLEAR_USER });
     // Don't log error if it's 'Session not found' (user not logged in)
     if (err?.code !== -11) {
-      console.error(err);
+      console.error('Failed to get user status', err);
     }
   }
 }
