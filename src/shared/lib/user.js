@@ -14,15 +14,6 @@ import listAll from 'utils/listAll';
 
 __ = __context('User');
 
-export const selectUsername = ({
-  user: { status, session, profileStatus },
-  sessions,
-}) =>
-  profileStatus?.session?.username ||
-  status?.username ||
-  (session && sessions[session]?.username) ||
-  '';
-
 export const selectActiveSession = ({ user: { session }, sessions }) => {
   if (session) return session;
   if (sessions?.[0]) return null;
@@ -33,6 +24,21 @@ export const selectActiveSession = ({ user: { session }, sessions }) => {
     null
   );
   return lastAccessed.session;
+};
+
+export const selectUsername = (state) => {
+  const {
+    user: { status, profileStatus },
+    sessions,
+  } = state;
+  const session = selectActiveSession(state);
+
+  return (
+    profileStatus?.session?.username ||
+    status?.username ||
+    (session && sessions?.[session]?.username) ||
+    ''
+  );
 };
 
 export const refreshStakeInfo = async () => {
