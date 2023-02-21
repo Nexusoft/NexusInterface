@@ -57,7 +57,7 @@ function User({
       active={active}
       switching={switching}
       onClick={
-        switching
+        active || switching
           ? undefined
           : async () => {
               setSwitchingTo(session);
