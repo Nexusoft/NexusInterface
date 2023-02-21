@@ -1,5 +1,4 @@
 import { useEffect, forwardRef } from 'react';
-import { useSelector } from 'react-redux';
 import {
   Form as FinalForm,
   Field,
@@ -17,7 +16,7 @@ import AutoSuggest from 'components/AutoSuggest';
 import Switch from 'components/Switch';
 import Button from 'components/Button';
 import Slider from 'components/Slider';
-import { updateFormInstance, selectFormInstance } from 'lib/form';
+import { updateFormInstance, getFormInstance } from 'lib/form';
 
 export default function Form({
   name,
@@ -45,7 +44,7 @@ export default function Form({
     validate,
     validateOnBlur,
   };
-  const form = useSelector(selectFormInstance(name));
+  const form = getFormInstance(name);
   useEffect(() => {
     if (persistState && !form) {
       const form = createForm(config);

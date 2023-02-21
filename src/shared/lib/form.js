@@ -1,19 +1,15 @@
 import { FORM_ERROR } from 'final-form';
 import { useField } from 'react-final-form';
 
-import { UPDATE_FORM_INSTANCE } from 'consts/actionTypes';
-import store from 'store';
 import { openErrorDialog } from 'lib/dialog';
 
+const forms = {};
+
 export function updateFormInstance(formName, instance) {
-  store.dispatch({
-    type: UPDATE_FORM_INSTANCE,
-    payload: { formName, instance },
-  });
+  forms[formName] = instance;
 }
 
-export const selectFormInstance = (formName) => (state) =>
-  state.forms[formName];
+export const getFormInstance = (formName) => forms[formName];
 
 const defaultOnFail = (err, errorMessage) => {
   openErrorDialog({

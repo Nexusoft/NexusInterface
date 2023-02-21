@@ -4,7 +4,7 @@ import qs from 'querystring';
 import { useSelector } from 'react-redux';
 
 import { navigate } from 'lib/wallet';
-import { useFieldValue, selectFormInstance } from 'lib/form';
+import { useFieldValue, getFormInstance } from 'lib/form';
 import { timeToObject } from 'utils/misc';
 import store from 'store';
 import memoize from 'utils/memoize';
@@ -84,8 +84,7 @@ export function useInitialValues() {
   // Otherwise, always keep the form's current state
   useEffect(() => {
     if (customValues) {
-      const state = store.getState();
-      const form = selectFormInstance(formName)(state);
+      const form = getFormInstance(formName);
       form.restart(initialValues);
     }
   }, [stateJson]);

@@ -20,7 +20,6 @@ import bootstrap from './bootstrap';
 import failedModules from './failedModules';
 import assetSchemas from './assetSchemas';
 import sessions from './sessions';
-import forms from './forms';
 import moduleDownloads from './moduleDownloads';
 import featuredModules from './featuredModules';
 
@@ -46,7 +45,6 @@ export default function createRootReducer() {
     bootstrap,
     assetSchemas,
     sessions,
-    forms,
     moduleDownloads,
     featuredModules,
   });
