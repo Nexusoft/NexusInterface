@@ -104,6 +104,8 @@ export async function refreshUserStatus() {
     }
 
     store.dispatch({ type: TYPE.SET_USER_STATUS, payload: status });
+
+    refreshStakeInfo();
     return status;
   } catch (err) {
     store.dispatch({ type: TYPE.CLEAR_USER });
@@ -360,15 +362,6 @@ export function prepareUser() {
         }
       }
     });
-
-    observeStore(
-      (state) => state.user.status,
-      (userStatus) => {
-        if (userStatus) {
-          refreshStakeInfo();
-        }
-      }
-    );
   }
 }
 
