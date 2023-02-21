@@ -1,4 +1,5 @@
 // External
+import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 import arrayMutators from 'final-form-arrays';
@@ -9,6 +10,7 @@ import Icon from 'components/Icon';
 import Button from 'components/Button';
 import FormField from 'components/FormField';
 import { openModal } from 'lib/ui';
+import { loadAccounts, loadOwnedTokens } from 'lib/user';
 import {
   formName,
   getDefaultRecipient,
@@ -124,6 +126,10 @@ export default function SendForm() {
   const switchID = useUID();
   const accountOptions = useSelector(selectAccountOptions);
   const initialValues = useInitialValues();
+  useEffect(() => {
+    loadAccounts();
+    loadOwnedTokens();
+  }, []);
 
   return (
     <SendFormComponent>
