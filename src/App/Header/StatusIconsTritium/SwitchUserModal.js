@@ -96,24 +96,25 @@ export default function SwitchUserModal() {
         <>
           <ControlledModal.Header>{__('Switch user')}</ControlledModal.Header>
           <ControlledModal.Body>
-            {Object.values(sessions)
-              .sort((a, b) => b.accessed - a.accessed)
-              .map(({ session, username, genesis }) => (
-                <User
-                  key={session}
-                  session={session}
-                  username={username}
-                  genesis={genesis}
-                  active={
-                    switchingTo
-                      ? switchingTo === session
-                      : currentSession === session
-                  }
-                  switching={!!switchingTo}
-                  setSwitchingTo={setSwitchingTo}
-                  closeModal={closeModal}
-                />
-              ))}
+            {!!sessions &&
+              Object.values(sessions)
+                .sort((a, b) => b.accessed - a.accessed)
+                .map(({ session, username, genesis }) => (
+                  <User
+                    key={session}
+                    session={session}
+                    username={username}
+                    genesis={genesis}
+                    active={
+                      switchingTo
+                        ? switchingTo === session
+                        : currentSession === session
+                    }
+                    switching={!!switchingTo}
+                    setSwitchingTo={setSwitchingTo}
+                    closeModal={closeModal}
+                  />
+                ))}
           </ControlledModal.Body>
         </>
       )}

@@ -149,7 +149,7 @@ function LoggedInDropdown({ closeDropdown }) {
 function NotLoggedInDropdown({ closeDropdown }) {
   const multiuser = useSelector((state) => !!state.core.systemInfo?.multiuser);
   const hasOtherSessions = useSelector(
-    (state) => Object.keys(state.sessions).length > 1
+    ({ sessions }) => !!sessions && Object.keys(sessions).length > 1
   );
   return (
     <>
