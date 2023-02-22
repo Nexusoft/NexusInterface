@@ -181,7 +181,7 @@ export async function setActiveUser({ session, genesis, stakeInfo }) {
 
   const [status, profileStatus, sessions, newStakeInfo] = await Promise.all([
     callApi('sessions/status/local', { session }),
-    callApi('profiles/status/master', { genesis }),
+    callApi('profiles/status/master', { session, genesis }),
     systemInfo?.multiuser
       ? callApi('sessions/list/local')
       : Promise.resolve(null),
