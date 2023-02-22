@@ -150,7 +150,7 @@ export const logIn = async ({ username, password, pin }) => {
 
 export const logOut = async () => {
   // Stop refreshing user status
-  refreshUserStatus = true;
+  refreshUserStatusLock = true;
   try {
     const {
       sessions,
@@ -170,7 +170,7 @@ export const logOut = async () => {
     }
   } finally {
     // Release the lock
-    refreshBalances = false;
+    refreshUserStatusLock = false;
   }
 };
 
