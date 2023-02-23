@@ -13,7 +13,9 @@ export const formName = 'send';
 
 export function getDefaultRecipient({ txExpiry } = {}) {
   const recipient = {
-    address: null,
+    nameOrAddress: null,
+    name: null, // hidden field
+    address: null, // hidden field
     amount: '',
     fiatAmount: '',
     reference: null,
@@ -41,7 +43,7 @@ function getFormValues(customValues = {}) {
     // not accepting fiatAmount
     recipients: customValues.recipients?.map(
       ({
-        address,
+        nameOrAddress,
         amount,
         reference,
         expireDays,
@@ -50,7 +52,7 @@ function getFormValues(customValues = {}) {
         expireSeconds,
       }) => ({
         ...defaultRecipient,
-        address,
+        nameOrAddress,
         amount,
         reference,
         expireDays,

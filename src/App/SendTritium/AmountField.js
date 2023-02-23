@@ -36,6 +36,7 @@ const EqualSign = styled.div(({ theme }) => ({
   display: 'flex',
   alignItems: 'flex-end',
   padding: '.1em .4em',
+  marginTop: '2em',
   fontSize: '1.2em',
   color: theme.mixer(0.5),
 }));

@@ -87,6 +87,8 @@ function AddRecipientButton() {
 function getRecipientsParams(recipients, { advancedOptions }) {
   return recipients.map(
     ({
+      nameOrAddress,
+      name,
       address,
       amount,
       reference,
@@ -98,12 +100,12 @@ function getRecipientsParams(recipients, { advancedOptions }) {
       const recipParam = {};
 
       // TODO: update param keys
-      if (addressRegex.test(address)) {
-        recipParam.address_to = address;
-      } else {
-        recipParam.name_to =
-          address.charAt(0) === '~' ? address.substring(1) : address; //TODO: Finance is having issues with ~, core needs to be accept it or we remove the ~ on get/accounts;
+      recipParam.name = name;
+      recipParam.address = address;
+      if (!recipParam.address && addressRegex.test(nameOrAddress)) {
+        recipParam.address = nameOrAddress;
       }
+
       if (advancedOptions) {
         const expires =
           parseInt(expireSeconds) +
