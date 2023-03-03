@@ -159,7 +159,7 @@ export default function RecipientNameOrAddress({ parentFieldName }) {
   );
 
   return (
-    <FormField label={<RecipientLabel fieldName={fieldName} />}>
+    <FormField label={__('Send to')}>
       <Form.AutoSuggest
         name={fieldName}
         inputProps={{
@@ -185,18 +185,23 @@ export default function RecipientNameOrAddress({ parentFieldName }) {
         }
         validate={checkAll(
           required(),
-          notSameAccount,
-          validateRecipient(source)
+          notSameAccount
+          // validateRecipient(source)
         )}
       />
       <div className="mt1">
         <Field
-          name={fieldName}
-          render={({ input: { value, onChange } }) => (
+          name={`${parentFieldName}.address`}
+          render={({ input: { value, onChange }, meta: { error } }) => (
             <RecipientAddress
               nameOrAddress={nameOrAddress}
               address={value}
               setAddress={onChange}
+              validate={checkAll(
+                required(__('Recipient name cannot be resolved')),
+                notSameAccount
+              )}
+              error={error}
             />
           )}
         />

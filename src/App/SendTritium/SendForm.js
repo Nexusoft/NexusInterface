@@ -21,7 +21,6 @@ import { required } from 'lib/form';
 import store from 'store';
 import useUID from 'utils/useUID';
 import { timing } from 'styles';
-import { addressRegex } from 'consts/misc';
 import sendIcon from 'icons/send.svg';
 import plusIcon from 'icons/plus.svg';
 
@@ -87,8 +86,6 @@ function AddRecipientButton() {
 function getRecipientsParams(recipients, { advancedOptions }) {
   return recipients.map(
     ({
-      nameOrAddress,
-      name,
       address,
       amount,
       reference,
@@ -100,11 +97,11 @@ function getRecipientsParams(recipients, { advancedOptions }) {
       const recipParam = {};
 
       // TODO: update param keys
-      recipParam.name = name;
+      // recipParam.name = name;
       recipParam.address = address;
-      if (!recipParam.address && addressRegex.test(nameOrAddress)) {
-        recipParam.address = nameOrAddress;
-      }
+      // if (!recipParam.address && addressRegex.test(nameOrAddress)) {
+      //   recipParam.address = nameOrAddress;
+      // }
 
       if (advancedOptions) {
         const expires =

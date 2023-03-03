@@ -7,6 +7,7 @@ import { callApi } from 'lib/tritiumApi';
 import { addressRegex } from 'consts/misc';
 import { debounced } from 'utils/universal';
 import contactIcon from 'icons/address-book.svg';
+import warningIcon from 'icons/warning.svg';
 
 const resolveName = debounced(async (name, callback) => {
   try {
@@ -22,11 +23,16 @@ function useAddressLabel(address) {
   const contact = lookupAddress(address);
   useEffect(() => {
     if (!contact) {
+      // If address is not saved in address book, look up its name
       callApi('names/lookup/address', { address })
         .then(({ name }) => setName(name))
-        .catch();
-    } else if (label) {
+        .catch((err) => {
+          console.error('lookup address', err);
+        });
+    } else if (name) {
+      // If address is in address book, display contact name so reset name state to null
       setName(null);
+      // If name is already null, no need to do anything
     }
   }, [address]);
 
@@ -49,25 +55,35 @@ export default function RecipientAddress({
   nameOrAddress,
   address,
   setAddress,
+  error,
 }) {
   useEffect(() => {
-    if (!nameOrAddress) return;
     if (addressRegex.test(nameOrAddress)) {
       // Treat nameOrAddress as an address
-      setAddress(address);
+      setAddress(nameOrAddress);
     } else {
       // Treat nameOrAddress as a name
       // Temporarily clear the old address before the name is resolved
       setAddress(null);
-      // Resolve name whenever user stops typing for 0.5s
-      resolveName(nameOrAddress, setAddress);
+      if (nameOrAddress) {
+        // Resolve name whenever user stops typing for 0.5s
+        resolveName(nameOrAddress, setAddress);
+      }
     }
   }, [nameOrAddress]);
   const label = useAddressLabel(address);
 
   return (
-    !!address && (
-      <NexusAddress label={<span>Send to {label}</span>} address={address} />
-    )
+    <div>
+      {!!address && (
+        <NexusAddress label={<span>Send to {label}</span>} address={address} />
+      )}
+      {!!error && (
+        <div>
+          <Icon icon={warningIcon} className="mr0_4" />
+          <span className="v-align">{error}</span>
+        </div>
+      )}
+    </div>
   );
 }
