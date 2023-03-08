@@ -11,8 +11,8 @@ import warningIcon from 'icons/warning.svg';
 
 const resolveName = debounced(async (name, callback) => {
   try {
-    const { address } = await callApi('names/get/name', { name });
-    callback(address);
+    const { register } = await callApi('names/get/name', { name });
+    callback(register);
   } catch (err) {
     callback(null);
   }
