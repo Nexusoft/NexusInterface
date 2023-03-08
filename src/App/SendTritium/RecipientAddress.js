@@ -22,9 +22,13 @@ function useAddressLabel(address) {
   const [name, setName] = useState(null);
   const contact = lookupAddress(address);
   useEffect(() => {
+    if (!address) {
+      setName(null);
+      return;
+    }
     if (!contact) {
       // If address is not saved in address book, look up its name
-      callApi('names/lookup/address', { address })
+      callApi('names/reverse/lookup', { address })
         .then(({ name }) => setName(name))
         .catch((err) => {
           console.error('lookup address', err);
@@ -76,7 +80,14 @@ export default function RecipientAddress({
   return (
     <div>
       {!!address && (
-        <NexusAddress label={<span>Send to {label}</span>} address={address} />
+        <NexusAddress
+          label={
+            <span>
+              Sending to <strong>{label}</strong>
+            </span>
+          }
+          address={address}
+        />
       )}
       {!!error && (
         <div>
