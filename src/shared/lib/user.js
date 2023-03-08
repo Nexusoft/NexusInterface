@@ -229,6 +229,10 @@ function processAccount(account) {
     account.nameIsLocal = true;
     account.name = account.name.substring(6);
   }
+  if (account.name?.startsWith?.('user:')) {
+    account.nameIsLocal = true;
+    account.name = account.name.substring(5);
+  }
   if (account.ticker?.startsWith?.('local:')) {
     account.tickerIsLocal = true;
     account.ticker = account.ticker.substring(6);
