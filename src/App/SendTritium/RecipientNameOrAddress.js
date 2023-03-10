@@ -196,7 +196,7 @@ function RecipientAddressAdapter({
     <div>
       <RecipientAddress address={address} />
       {!!error && (
-        <div>
+        <div className="error">
           <Icon icon={warningIcon} className="mr0_4" />
           <span className="v-align">{error}</span>
         </div>
@@ -208,14 +208,10 @@ function RecipientAddressAdapter({
 export default function RecipientNameOrAddress({ parentFieldName }) {
   const fieldName = `${parentFieldName}.nameOrAddress`;
   const {
-    input: { value: nameOrAddress, onChange },
+    input: { value: nameOrAddress, onChange, ...inputRest },
     meta,
   } = useField(fieldName, {
-    validate: checkAll(
-      required(),
-      notSameAccount
-      // validateRecipient(source)
-    ),
+    validate: required(),
   });
   // A flag indicating whether user has just selected the suggestion
   // Useful to decide if name resolution should be debounced
@@ -229,6 +225,7 @@ export default function RecipientNameOrAddress({ parentFieldName }) {
     <FormField label={__('Send to')}>
       <AutoSuggest
         inputProps={{
+          ...inputRest,
           value: nameOrAddress,
           onChange: (...args) => {
             justSelectedRef.current = false;
@@ -263,17 +260,17 @@ export default function RecipientNameOrAddress({ parentFieldName }) {
       <div className="mt1">
         <Field
           name={`${parentFieldName}.address`}
+          validate={checkAll(
+            required(__('Recipient name cannot be resolved')),
+            notSameAccount
+          )}
           render={({ input: { value, onChange }, meta: { error } }) => (
             <RecipientAddressAdapter
               nameOrAddress={nameOrAddress}
               justSelected={justSelectedRef.current}
               address={value}
               setAddress={onChange}
-              validate={checkAll(
-                required(__('Recipient name cannot be resolved')),
-                notSameAccount
-              )}
-              error={error}
+              error={nameOrAddress ? error : null}
             />
           )}
         />
