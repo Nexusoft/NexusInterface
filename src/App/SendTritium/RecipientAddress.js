@@ -43,8 +43,10 @@ function useAddressLabel(address) {
   }
 }
 
-export default function RecipientAddress({ address }) {
+export default function RecipientAddress({ address, ...rest }) {
   const label = useAddressLabel(address);
 
-  return !!address && <NexusAddress label={label} address={address} />;
+  return (
+    !!address && <NexusAddress label={label} address={address} {...rest} />
+  );
 }

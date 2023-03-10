@@ -52,38 +52,27 @@ const filterSuggestions = memoize((suggestions, inputValue) => {
   );
 });
 
-const notSameAccount = (value, { sendFrom }) =>
-  value === sendFrom ? __('Cannot move to the same account') : undefined;
+const notSameAccount = (value, { sendFrom }) => {
+  let sourceAddress;
+  if (sendFrom?.startsWith('account:')) {
+    sourceAddress = sendFrom.substring(8);
+  } else if (sendFrom?.startsWith('token:')) {
+    sourceAddress = sendFrom.substring(6);
+  }
 
-const validateRecipient = (source) =>
+  if (value === sourceAddress) {
+    return __('Cannot move to the same account');
+  }
+  return undefined;
+};
+
+const isOfSameToken = (source) =>
   async function (address) {
-    const params = {};
-
-    // Check if it's a valid address/name
-    if (addressRegex.test(address)) {
-      const result = await callApi('system/validate/address', {
-        address,
-      });
-      if (result.valid) {
-        params.address = address;
-      }
-    }
-    if (!params.address) {
-      try {
-        const result = await callApi('names/get/name', { name: address });
-        params.address = result.register;
-      } catch (err) {
-        return __('Invalid name/address');
-      }
-    }
-
-    // Check if recipient is on the same token as source
     const sourceToken = source?.account?.token || source?.token?.address;
     if (sourceToken !== address) {
       let account;
       try {
-        account = await callApi('finance/get/any', params);
-        console.log(params, account);
+        account = await callApi('finance/get/any', { address });
       } catch (err) {
         let token;
         try {
@@ -155,7 +144,8 @@ function RecipientLabel({ fieldName }) {
 
 const resolveName = async (name, callback) => {
   try {
-    const { register } = await callApi('names/get/name', { name });
+    const result = await callApi('names/get/name', { name });
+    const { register } = result;
     callback(register);
   } catch (err) {
     callback(null);
@@ -194,7 +184,7 @@ function RecipientAddressAdapter({
 
   return (
     <div>
-      <RecipientAddress address={address} />
+      <RecipientAddress address={address} className="mb0_4" />
       {!!error && (
         <div className="error">
           <Icon icon={warningIcon} className="mr0_4" />
@@ -262,7 +252,8 @@ export default function RecipientNameOrAddress({ parentFieldName }) {
           name={`${parentFieldName}.address`}
           validate={checkAll(
             required(__('Recipient name cannot be resolved')),
-            notSameAccount
+            notSameAccount,
+            isOfSameToken(source)
           )}
           render={({ input: { value, onChange }, meta: { error } }) => (
             <RecipientAddressAdapter
