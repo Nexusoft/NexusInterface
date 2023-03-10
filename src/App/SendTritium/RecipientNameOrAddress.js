@@ -1,11 +1,11 @@
 // External
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
-import { Field } from 'react-final-form';
+import { Field, useField } from 'react-final-form';
 
 // Internal
-import Form from 'components/Form';
+import AutoSuggest from 'components/AutoSuggest';
 import FormField from 'components/FormField';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
@@ -153,20 +153,23 @@ function RecipientLabel({ fieldName }) {
   );
 }
 
-const resolveName = debounced(async (name, callback) => {
+const resolveName = async (name, callback) => {
   try {
     const { register } = await callApi('names/get/name', { name });
     callback(register);
   } catch (err) {
     callback(null);
   }
-}, 500);
+};
+
+const debouncedResolveName = debounced(resolveName, 500);
 
 function RecipientAddressAdapter({
   nameOrAddress,
   address,
   setAddress,
   error,
+  justSelected,
 }) {
   useEffect(() => {
     if (addressRegex.test(nameOrAddress)) {
@@ -177,8 +180,14 @@ function RecipientAddressAdapter({
       // Temporarily clear the old address before the name is resolved
       setAddress(null);
       if (nameOrAddress) {
-        // Resolve name whenever user stops typing for 0.5s
-        resolveName(nameOrAddress, setAddress);
+        if (justSelected) {
+          // Resolve name immediately if user selected a suggestion
+          debouncedResolveName.cancel();
+          resolveName(nameOrAddress, setAddress);
+        } else {
+          // Resolve name whenever user stops typing for 0.5s
+          debouncedResolveName(nameOrAddress, setAddress);
+        }
       }
     }
   }, [nameOrAddress]);
@@ -197,20 +206,41 @@ function RecipientAddressAdapter({
 }
 
 export default function RecipientNameOrAddress({ parentFieldName }) {
-  const source = selectSource();
   const fieldName = `${parentFieldName}.nameOrAddress`;
-  const nameOrAddress = useFieldValue(fieldName);
+  const {
+    input: { value: nameOrAddress, onChange },
+    meta,
+  } = useField(fieldName, {
+    validate: checkAll(
+      required(),
+      notSameAccount
+      // validateRecipient(source)
+    ),
+  });
+  // A flag indicating whether user has just selected the suggestion
+  // Useful to decide if name resolution should be debounced
+  const justSelectedRef = useRef(false);
+  const source = selectSource();
   const suggestions = useSelector((state) =>
     getRecipientSuggestions(state, source)
   );
 
   return (
     <FormField label={__('Send to')}>
-      <Form.AutoSuggest
-        name={fieldName}
+      <AutoSuggest
         inputProps={{
+          value: nameOrAddress,
+          onChange: (...args) => {
+            justSelectedRef.current = false;
+            onChange(...args);
+          },
+          error: meta.touched && meta.error,
           placeholder: __('Recipient Name or Address'),
           skin: 'filled-inverted',
+        }}
+        onSelect={(...args) => {
+          justSelectedRef.current = true;
+          onChange(...args);
         }}
         suggestions={suggestions}
         filterSuggestions={filterSuggestions}
@@ -229,11 +259,6 @@ export default function RecipientNameOrAddress({ parentFieldName }) {
             </EmptyMessage>
           )
         }
-        validate={checkAll(
-          required(),
-          notSameAccount
-          // validateRecipient(source)
-        )}
       />
       <div className="mt1">
         <Field
@@ -241,6 +266,7 @@ export default function RecipientNameOrAddress({ parentFieldName }) {
           render={({ input: { value, onChange }, meta: { error } }) => (
             <RecipientAddressAdapter
               nameOrAddress={nameOrAddress}
+              justSelected={justSelectedRef.current}
               address={value}
               setAddress={onChange}
               validate={checkAll(
