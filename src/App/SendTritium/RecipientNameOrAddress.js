@@ -11,15 +11,13 @@ import Button from 'components/Button';
 import Icon from 'components/Icon';
 import AddEditContactModal from 'components/AddEditContactModal';
 import { openModal } from 'lib/ui';
-import { useFieldValue, required, checkAll } from 'lib/form';
+import { required, checkAll } from 'lib/form';
 import { callApi } from 'lib/tritiumApi';
-import { selectAddressNameMap, selectSource } from 'lib/send';
+import { selectSource } from 'lib/send';
 import memoize from 'utils/memoize';
 import { debounced } from 'utils/universal';
 import { addressRegex } from 'consts/misc';
 import plusIcon from 'icons/plus.svg';
-import addressBookIcon from 'icons/address-book.svg';
-import walletIcon from 'icons/wallet.svg';
 import warningIcon from 'icons/warning.svg';
 
 import { getRecipientSuggestions } from './selectors';
@@ -90,56 +88,6 @@ const isOfSameToken = (source) =>
 
 function createContact() {
   openModal(AddEditContactModal);
-}
-
-function RecipientLabel({ fieldName }) {
-  const address = useFieldValue(fieldName);
-  const addressNameMap = useSelector(selectAddressNameMap);
-
-  const addressLabel = addressNameMap[address];
-  const isAddress = addressRegex.test(address);
-
-  const addToContact = async () => {
-    let isMine = false;
-    try {
-      const result = await callApi('system/validate/address', {
-        address,
-      });
-      isMine = result.mine;
-    } catch (err) {
-      console.error(err);
-    }
-    const prefill = isMine
-      ? { notMine: [], mine: [{ address, label: '' }] }
-      : { notMine: [{ address, label: '' }] };
-    openModal(AddEditContactModal, { prefill });
-  };
-
-  return (
-    <>
-      <span>
-        {__('Send to')}
-        &nbsp;&nbsp;
-      </span>
-      {!!addressLabel && (
-        <RecipientName>
-          {addressLabel.type === 'contact' && (
-            <Icon icon={addressBookIcon} className="mr0_4" />
-          )}
-          {addressLabel.type === 'account' && (
-            <Icon icon={walletIcon} className="mr0_4" />
-          )}
-          <span className="v-align">{addressLabel.label}</span>
-        </RecipientName>
-      )}
-      {!addressLabel && isAddress && (
-        <Button skin="plain-link-primary" onClick={addToContact}>
-          <Icon icon={plusIcon} style={{ fontSize: '0.9em' }} />
-          <span className="v-align ml0_4">{__('Add to Address Book')}</span>
-        </Button>
-      )}
-    </>
-  );
 }
 
 const resolveName = async (name, callback) => {
