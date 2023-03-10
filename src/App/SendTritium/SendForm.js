@@ -98,7 +98,7 @@ function getRecipientsParams(recipients, { advancedOptions }) {
 
       // TODO: update param keys
       // recipParam.name = name;
-      recipParam.address = address;
+      recipParam.address_to = address;
       // if (!recipParam.address && addressRegex.test(nameOrAddress)) {
       //   recipParam.address = nameOrAddress;
       // }

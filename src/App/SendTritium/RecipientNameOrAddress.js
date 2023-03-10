@@ -1,4 +1,5 @@
 // External
+import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 import { Field } from 'react-final-form';
@@ -14,10 +15,12 @@ import { useFieldValue, required, checkAll } from 'lib/form';
 import { callApi } from 'lib/tritiumApi';
 import { selectAddressNameMap, selectSource } from 'lib/send';
 import memoize from 'utils/memoize';
+import { debounced } from 'utils/universal';
 import { addressRegex } from 'consts/misc';
 import plusIcon from 'icons/plus.svg';
 import addressBookIcon from 'icons/address-book.svg';
 import walletIcon from 'icons/wallet.svg';
+import warningIcon from 'icons/warning.svg';
 
 import { getRecipientSuggestions } from './selectors';
 import RecipientAddress from './RecipientAddress';
@@ -150,6 +153,49 @@ function RecipientLabel({ fieldName }) {
   );
 }
 
+const resolveName = debounced(async (name, callback) => {
+  try {
+    const { register } = await callApi('names/get/name', { name });
+    callback(register);
+  } catch (err) {
+    callback(null);
+  }
+}, 500);
+
+function RecipientAddressAdapter({
+  nameOrAddress,
+  address,
+  setAddress,
+  error,
+}) {
+  useEffect(() => {
+    if (addressRegex.test(nameOrAddress)) {
+      // Treat nameOrAddress as an address
+      setAddress(nameOrAddress);
+    } else {
+      // Treat nameOrAddress as a name
+      // Temporarily clear the old address before the name is resolved
+      setAddress(null);
+      if (nameOrAddress) {
+        // Resolve name whenever user stops typing for 0.5s
+        resolveName(nameOrAddress, setAddress);
+      }
+    }
+  }, [nameOrAddress]);
+
+  return (
+    <div>
+      <RecipientAddress address={address} />
+      {!!error && (
+        <div>
+          <Icon icon={warningIcon} className="mr0_4" />
+          <span className="v-align">{error}</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function RecipientNameOrAddress({ parentFieldName }) {
   const source = selectSource();
   const fieldName = `${parentFieldName}.nameOrAddress`;
@@ -193,7 +239,7 @@ export default function RecipientNameOrAddress({ parentFieldName }) {
         <Field
           name={`${parentFieldName}.address`}
           render={({ input: { value, onChange }, meta: { error } }) => (
-            <RecipientAddress
+            <RecipientAddressAdapter
               nameOrAddress={nameOrAddress}
               address={value}
               setAddress={onChange}
