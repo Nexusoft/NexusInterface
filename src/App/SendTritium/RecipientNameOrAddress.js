@@ -25,11 +25,6 @@ import RecipientAddress from './RecipientAddress';
 
 __ = __context('Send');
 
-const RecipientName = styled.span(({ theme }) => ({
-  textTransform: 'none',
-  color: theme.primary,
-}));
-
 const EmptyMessage = styled.div(({ theme }) => ({
   fontSize: '.9em',
   color: theme.mixer(0.625),

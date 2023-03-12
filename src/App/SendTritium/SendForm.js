@@ -94,14 +94,10 @@ function getRecipientsParams(recipients, { advancedOptions }) {
       expireMinutes,
       expireSeconds,
     }) => {
-      const recipParam = {};
-
-      // TODO: update param keys
-      // recipParam.name = name;
-      recipParam.address_to = address;
-      // if (!recipParam.address && addressRegex.test(nameOrAddress)) {
-      //   recipParam.address = nameOrAddress;
-      // }
+      const recipParam = {
+        address_to: address,
+        amount: parseFloat(amount),
+      };
 
       if (advancedOptions) {
         const expires =
@@ -114,7 +110,6 @@ function getRecipientsParams(recipients, { advancedOptions }) {
         }
         if (reference) recipParam.reference = reference;
       }
-      recipParam.amount = parseFloat(amount);
 
       return recipParam;
     }
