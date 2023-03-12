@@ -1,10 +1,16 @@
 import { useEffect, useState } from 'react';
+import styled from '@emotion/styled';
 
 import NexusAddress from 'components/NexusAddress';
 import Icon from 'components/Icon';
 import { lookupAddress } from 'lib/addressBook';
 import { callApi } from 'lib/tritiumApi';
 import contactIcon from 'icons/address-book.svg';
+
+const Label = styled.span(({ theme }) => ({
+  fontWeight: 'bold',
+  color: theme.foreground,
+}));
 
 function useAddressLabel(address) {
   const [name, setName] = useState(null);
@@ -47,6 +53,12 @@ export default function RecipientAddress({ address, ...rest }) {
   const label = useAddressLabel(address);
 
   return (
-    !!address && <NexusAddress label={label} address={address} {...rest} />
+    !!address && (
+      <NexusAddress
+        label={label ? <Label>{label}</Label> : null}
+        address={address}
+        {...rest}
+      />
+    )
   );
 }
