@@ -90,19 +90,24 @@ const Hash = ({ children, ...rest }) => {
   );
 };
 
-const accountLabel = (name, address) => {
+const accountLabel = ({ name, address, local, namespace, mine, user }) => {
   if (name) {
-    if (name.startsWith('local:')) {
+    if (namespace) {
+      return namespace + '::' + name;
+    }
+
+    if (local) {
+      const prefix = mine ? user : <span className="dim">(?)</span>;
       return (
         <span>
-          <span className="dim">(?):</span>
-          {name.substring(6)}
+          {prefix}:{name}
         </span>
       );
-    } else {
-      return name;
     }
+
+    return name;
   }
+
   if (!address) return null;
   const match = lookupAddress(address);
   if (match) {
@@ -118,8 +123,9 @@ const accountLabel = (name, address) => {
   return null;
 };
 
-const Register = ({ name, address, type }) => {
-  const label = accountLabel(name, address);
+const Register = (props) => {
+  const label = accountLabel(props);
+  const { address, type } = props;
   const typeIcon =
     type === 'ACCOUNT' || type === 'TRUST'
       ? walletIcon
