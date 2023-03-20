@@ -47,13 +47,13 @@ const accountDisplay = (value) => {
   if (!value) return '';
   if (typeof value === 'string') return value;
 
-  const { name, address } = value;
+  const { name, address, namespace } = value;
   if (name) {
-    if (name.startsWith('local:')) {
-      return name.substring(6);
-    } else {
-      return name;
+    if (namespace) {
+      return namespace + '::' + name;
     }
+
+    return name;
   }
 
   if (address) {
@@ -64,6 +64,7 @@ const accountDisplay = (value) => {
       return address;
     }
   }
+
   return '';
 };
 
@@ -103,6 +104,8 @@ const tableColumns = [
         case 'CREDIT':
           if (cell.original.for === 'COINBASE') {
             return <i className="dim">{__('mining')}</i>;
+          } else if (cell.original.for === 'LEGACY') {
+            return <i className="dim">LEGACY</i>;
           } else {
             return content;
           }
@@ -118,7 +121,7 @@ const tableColumns = [
     Header: __('To'),
     Cell: (cell) => {
       const {
-        original: { to, name, address, OP, currentAccount },
+        original: { to, name, address, OP },
       } = cell;
       const content = accountDisplay(to);
       switch (OP) {
@@ -210,7 +213,6 @@ export default function AccountHistoryModal({ account }) {
                   ...contract,
                   txid: tx.txid,
                   timestamp: tx.timestamp,
-                  currentAccount: account.name,
                 });
               }
             });
