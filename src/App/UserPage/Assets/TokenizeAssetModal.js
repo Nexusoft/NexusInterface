@@ -47,7 +47,7 @@ const selectTokenSuggestions = memoize(
           ),
         }))
       : [],
-  (state) => state.user.tokens
+  (state) => [state.user.tokens]
 );
 
 const initialValues = {

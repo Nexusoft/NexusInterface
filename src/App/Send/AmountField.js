@@ -135,6 +135,11 @@ export default function AmountField({ parentFieldName = '', hideSendAll }) {
           <Form.TextField
             name={amountFieldName}
             placeholder="0.00000"
+            config={{
+              format: (value, name) => {
+                return value ? value.replace(',', '.') : '';
+              },
+            }}
             validate={positiveNumber}
           />
         </FormField>
@@ -147,7 +152,15 @@ export default function AmountField({ parentFieldName = '', hideSendAll }) {
           connectLabel
           label={__('%{currency} amount', { currency: fiatCurrency })}
         >
-          <Form.TextField name={fiatAmountFieldName} placeholder="0.00" />
+          <Form.TextField
+            name={fiatAmountFieldName}
+            config={{
+              format: (value, name) => {
+                return value ? value.replace(',', '.') : '';
+              },
+            }}
+            placeholder="0.00"
+          />
         </FormField>
       </SendAmountField>
     </SendAmount>

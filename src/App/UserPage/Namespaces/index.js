@@ -73,11 +73,12 @@ function Namespace({ namespace }) {
 }
 
 export default function Namespaces() {
+  const session = useSelector((state) => state.user.session);
   const namespaces = useSelector((state) => state.user.namespaces);
   useEffect(() => {
     switchUserTab('Namespaces');
     loadNamespaces();
-  }, []);
+  }, [session]);
 
   return (
     <TabContentWrapper maxWidth={400}>

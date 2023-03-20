@@ -134,6 +134,7 @@ const selectNameRecords = memoize(
 );
 
 export default function Names() {
+  const session = useSelector((state) => state.user.session);
   const nameRecords = useSelector(selectNameRecords);
   const username = useSelector(selectUsername);
   const showUnusedNames = useSelector(
@@ -142,7 +143,7 @@ export default function Names() {
   useEffect(() => {
     switchUserTab('Names');
     loadNameRecords();
-  }, []);
+  }, [session]);
 
   const toggle = () => updateSettings({ showUnusedNames: !showUnusedNames });
 

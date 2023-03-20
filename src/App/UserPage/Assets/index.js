@@ -21,11 +21,12 @@ const EmptyMessage = styled.div(({ theme }) => ({
 }));
 
 export default function Assets() {
+  const session = useSelector((state) => state.user.session);
   const assets = useSelector((state) => state.user.assets);
   useEffect(() => {
     switchUserTab('Assets');
     loadAssets();
-  }, []);
+  }, [session]);
 
   return (
     <TabContentWrapper maxWidth={400}>

@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 
 import ControlledModal from 'components/ControlledModal';
+import Form from 'components/Form';
 import FormField from 'components/FormField';
 import Spinner from 'components/Spinner';
 import { formSubmit } from 'lib/form';

@@ -152,6 +152,11 @@ export default function AmountField({ parentFieldName }) {
           <Form.TextField
             name={amountFieldName}
             skin="filled-inverted"
+            config={{
+              format: (value, name) => {
+                return value ? value.replace(',', '.') : '';
+              },
+            }}
             placeholder="0.00000"
             validate={positiveNumber}
           />

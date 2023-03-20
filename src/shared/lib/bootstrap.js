@@ -4,7 +4,7 @@ import checkDiskSpace from 'check-disk-space';
 import fs from 'fs';
 import path from 'path';
 import http from 'http';
-import moveFile from 'move-file';
+import { moveFile } from 'move-file';
 import unzip from 'unzip-stream';
 
 // Internal

@@ -39,6 +39,7 @@ const selectAccountTokens = memoize((accounts, ownedTokens) =>
 );
 
 export default function Tokens() {
+  const session = useSelector((state) => state.user.session);
   const ownedTokens = useSelector((state) => state.user.tokens);
   const accountTokens = useSelector((state) =>
     selectAccountTokens(state.user.accounts, ownedTokens)
@@ -47,7 +48,7 @@ export default function Tokens() {
     GA.SendScreen('Tokens');
     loadOwnedTokens();
     loadAccounts();
-  }, []);
+  }, [session]);
 
   return (
     <TabContentWrapper>

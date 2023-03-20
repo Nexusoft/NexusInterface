@@ -71,7 +71,7 @@ export default function Account({ account }) {
                 >
                   {__('Details')}
                 </Dropdown.MenuItem>
-                {account.name !== 'default' && (
+                {account.name !== 'default' && account.name !== 'trust' && (
                   <Dropdown.MenuItem
                     onClick={() => {
                       closeDropdown();

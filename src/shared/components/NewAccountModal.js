@@ -72,14 +72,14 @@ export default function NewAccountModal({ tokenName, tokenAddress }) {
               }}
               onSubmit={formSubmit({
                 submit: createToken,
-                onSuccess: (result) => {
+                onSuccess: (result, values) => {
                   if (!result) return; // Submission was cancelled
                   GA.SendEvent('Users', 'NewAccount', 'Accounts', 1);
                   loadAccounts();
                   closeModal();
                   showNotification(
                     __('New account %{account} has been created', {
-                      account: props.values.name,
+                      account: values.name,
                     }),
                     'success'
                   );

@@ -23,6 +23,7 @@ import {
   checkForUpdates,
   stopAutoUpdate,
   setAllowPrerelease,
+  migrateToMainnet,
 } from 'lib/updater';
 
 // Internal Local
@@ -254,10 +255,27 @@ export default function SettingsApp() {
           </div>
         }
       >
-        <Switch
-          checked={settings.allowPrerelease}
-          onChange={(evt) => setAllowPrerelease(evt.target.checked)}
-        />
+        {TESTNET_BUILD ? (
+          <Button
+            onClick={async () => {
+              const confirmed = await confirm({
+                question: 'Are you sure you want to move to mainnet?',
+                note: 'This will install the latest Alpha version of the wallet',
+              });
+              console.log(confirmed);
+              if (confirmed) {
+                migrateToMainnet();
+              }
+            }}
+          >
+            Migrate to Mainnet
+          </Button>
+        ) : (
+          <Switch
+            checked={settings.allowPrerelease}
+            onChange={(evt) => setAllowPrerelease(evt.target.checked)}
+          />
+        )}
       </SettingsField>
 
       <SettingsField

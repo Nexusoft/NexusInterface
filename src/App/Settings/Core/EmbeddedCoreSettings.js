@@ -244,6 +244,7 @@ function TestnetSettings() {
       <SettingsField
         connectLabel
         label={__('Testnet Iteration')}
+        disabled={!!TESTNET_BUILD} //TODO: Consider removing, depends on support from testnet maintainers
         subLabel={
           <>
             {__('The iteration of Testnet to connect to.')}{' '}
@@ -268,6 +269,7 @@ function TestnetSettings() {
       >
         <Form.TextField
           name="testnetIteration"
+          disabled={!!TESTNET_BUILD}
           type="number"
           min={0}
           max={99999999}

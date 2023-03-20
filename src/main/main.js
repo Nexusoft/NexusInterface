@@ -14,7 +14,11 @@ import { createWindow } from './renderer';
 import { setupTray } from './tray';
 import { setApplicationMenu, popupContextMenu } from './menu';
 import { openVirtualKeyboard } from './keyboard';
-import { initializeUpdater, setAllowPrerelease } from './updater';
+import {
+  initializeUpdater,
+  migrateToMainnet,
+  setAllowPrerelease,
+} from './updater';
 import { proxyRequest } from './modules';
 
 let mainWindow;
@@ -83,6 +87,7 @@ ipcMain.handle('quit-and-install-update', (event, ...args) =>
 ipcMain.handle('set-allow-prerelease', (event, value) =>
   setAllowPrerelease(value)
 );
+ipcMain.handle('migrate-to-mainnet', (event, value) => migrateToMainnet());
 
 // Sync message handlers
 ipcMain.on('get-path', (event, name) => {

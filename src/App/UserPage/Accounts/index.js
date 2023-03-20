@@ -14,13 +14,14 @@ import TabContentWrapper from '../TabContentWrapper';
 __ = __context('User.Accounts');
 
 export default function Accounts() {
+  const session = useSelector((state) => state.user.session);
   const accounts = useSelector((state) => state.user.accounts);
 
   useEffect(() => {
     switchUserTab('Accounts');
     loadAccounts();
     loadOwnedTokens();
-  }, []);
+  }, [session]);
 
   return (
     !!accounts && (

@@ -55,7 +55,7 @@ export const closeWallet = async (beforeExit) => {
   if (!manualDaemon) {
     await stopCore();
   } else if (manualDaemonLogOutOnClose) {
-    await logOut();
+    await logOut(); //TODO: Ask for pin/session
   }
 
   if (beforeExit) beforeExit();

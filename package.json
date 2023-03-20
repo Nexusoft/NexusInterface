@@ -1,9 +1,9 @@
 {
   "name": "nexus_wallet",
   "productName": "Nexus Wallet",
-  "version": "3.1.0-alpha1",
+  "version": "3.1.0-testnet.8",
   "backwardCompatible": "2.2.0",
-  "buildDate": "April 20st 2021",
+  "buildDate": "January 24th 2023",
   "description": "User interface for the Nexus blockchain and ecosystem.",
   "scripts": {
     "prebuild-dev": "concurrently \"npm run build-main-dev\" \"npm run build-preload-dev\" \"node -r @babel/register ./internals/scripts/checkDll.js\" ",
@@ -15,7 +15,7 @@
     "build-main-dev": "cross-env NODE_ENV=development webpack --config configs/webpack.config.main.dev.babel.js",
     "build-renderer": "cross-env NODE_ENV=production webpack --config configs/webpack.config.renderer.prod.babel.js",
     "build-preload": "cross-env NODE_ENV=production webpack --config configs/webpack.config.preload.prod.babel.js",
-    "package": "npm run build && electron-builder build --publish never",
+    "package": "node ./internals/scripts/packager.js",
     "package-all": "npm run build && electron-builder build -mwl",
     "package-linux": "npm run build && electron-builder build --linux",
     "package-mac": "npm run build && electron-builder build --mac",
@@ -35,6 +35,7 @@
   "main": "./build/main.prod.js",
   "build": {
     "productName": "Nexus Wallet",
+    "generateUpdatesFilesForAllChannels": true,
     "appId": "com.nexusearth.NexusTritium",
     "files": [
       "build/**/*",
@@ -65,7 +66,8 @@
     "publish": {
       "provider": "github",
       "owner": "Nexusoft",
-      "repo": "NexusInterface"
+      "repo": "NexusInterface",
+      "channel": "testnet"
     },
     "afterSign": "internals/aftersign.js",
     "mac": {
@@ -80,6 +82,7 @@
       ],
       "hardenedRuntime": true,
       "gatekeeperAssess": false,
+      "identity": "NEXUS DEVELOPMENT U S LLC",
       "entitlements": "internals/entitlements.mac.plist",
       "entitlementsInherit": "internals/entitlements.mac.plist"
     },

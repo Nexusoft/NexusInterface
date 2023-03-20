@@ -10,6 +10,7 @@ const GA = {};
 
 GA.visitor = null;
 GA.active = false;
+
 if (
   (settings.sendUsageData == null ||
     settings.sendUsageData == undefined ||
