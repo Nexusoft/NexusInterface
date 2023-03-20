@@ -12,6 +12,27 @@ const Label = styled.span(({ theme }) => ({
   color: theme.foreground,
 }));
 
+function resolveReverseLookup({ name, local, mine, namespace, user }) {
+  if (namespace) {
+    return namespace + '::' + name;
+  }
+
+  if (local) {
+    if (mine) {
+      return user + ':' + name;
+    } else {
+      return (
+        <span>
+          <span className="dim">(?):</span>
+          {name}
+        </span>
+      );
+    }
+  }
+
+  return name;
+}
+
 function useAddressLabel(address) {
   const [name, setName] = useState(null);
   const contact = lookupAddress(address);
@@ -23,7 +44,8 @@ function useAddressLabel(address) {
     if (!contact) {
       // If address is not saved in address book, look up its name
       callApi('names/reverse/lookup', { address })
-        .then(({ name }) => setName(name))
+        .then(resolveReverseLookup)
+        .then(setName)
         .catch((err) => {
           console.error('lookup address', err);
         });
