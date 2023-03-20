@@ -17,6 +17,8 @@ import addressBookIcon from 'icons/address-book.svg';
 import WarningIcon from 'icons/warning.svg';
 import sendIcon from 'icons/send.svg';
 
+import RecipientAddress from './RecipientAddress';
+
 __ = __context('PreviewTransaction');
 
 const Layout = styled.div({
@@ -92,46 +94,6 @@ function Source({ source }) {
   );
 }
 
-function NameTo({ name }) {
-  const [address, setAddress] = useState(null);
-  useEffect(() => {
-    (async () => {
-      const nameRecord = await callApi('finance/get/any', {
-        //Uses new "any" to resolve any name type to address
-        name: name.startsWith('local:') ? name.substring(6) : name, //TODO: Finance is having issues with ~, core needs to be accept it or we remove the ~ on get/accounts
-      });
-      setAddress(nameRecord?.address);
-    })();
-  }, []);
-  return (
-    <NexusAddress
-      label={<RecipientName>{name}</RecipientName>}
-      address={address || ''}
-    />
-  );
-}
-
-function AddressTo({ address }) {
-  const contactName = useMemo(() => {
-    const contact = lookupAddress(address);
-    if (!contact) return null;
-    return contact.name + (contact.label ? ' - ' + contact.label : '');
-  }, [address]);
-  return (
-    <NexusAddress
-      address={address}
-      label={
-        !!contactName && (
-          <span>
-            <Icon icon={addressBookIcon} />
-            <span className="ml0_4 v-align">{contactName}</span>
-          </span>
-        )
-      }
-    />
-  );
-}
-
 function TransactionDetails({ source, recipients }) {
   return (
     <Layout>
@@ -142,74 +104,71 @@ function TransactionDetails({ source, recipients }) {
         <Source source={source} />
       </ContentCell>
 
-      {recipients.map(
-        ({ name_to, address_to, amount, reference, expires }, i) => (
-          <Fragment key={i}>
-            <Separator />
+      {recipients.map(({ address_to, amount, reference, expires }, i) => (
+        <Fragment key={i}>
+          <Separator />
 
-            <LabelCell>
-              <Label>{__('To')}</Label>
-            </LabelCell>
+          <LabelCell>
+            <Label>{__('To')}</Label>
+          </LabelCell>
+          <ContentCell>
             <ContentCell>
-              <ContentCell>
-                {name_to && <NameTo name={name_to} />}
-                {address_to && <AddressTo address={address_to} />}
-              </ContentCell>
+              {address_to && <RecipientAddress address={address_to} />}
             </ContentCell>
+          </ContentCell>
 
-            <LabelCell>
-              <Label>{__('Amount')}</Label>
-            </LabelCell>
+          <LabelCell>
+            <Label>{__('Amount')}</Label>
+          </LabelCell>
+          <ContentCell>
             <ContentCell>
-              <ContentCell>
-                <Content>
-                  {amount}{' '}
-                  <TokenName account={source?.account} token={source?.token} />
-                </Content>
-              </ContentCell>
+              <Content>
+                {amount}{' '}
+                <TokenName account={source?.account} token={source?.token} />
+              </Content>
             </ContentCell>
+          </ContentCell>
 
-            {!!reference && (
-              <>
-                <LabelCell>
-                  <Label>{__('Reference')}</Label>
-                </LabelCell>
-                <ContentCell>
-                  <ContentCell>{reference}</ContentCell>
-                </ContentCell>
-              </>
-            )}
+          {!!reference && (
+            <>
+              <LabelCell>
+                <Label>{__('Reference')}</Label>
+              </LabelCell>
+              <ContentCell>
+                <ContentCell>{reference}</ContentCell>
+              </ContentCell>
+            </>
+          )}
 
-            {(!!expires || expires === 0) && (
-              <>
-                <LabelCell>
-                  <Label>{__('Expires')}</Label>
-                </LabelCell>
+          {(!!expires || expires === 0) && (
+            <>
+              <LabelCell>
+                <Label>{__('Expires')}</Label>
+              </LabelCell>
+              <ContentCell>
                 <ContentCell>
-                  <ContentCell>
-                    {expires === 0 ? (
-                      <span>
-                        <span className="v-align mr0_4">{__('NO EXPIRY')}</span>
-                        <Tooltip.Trigger
-                          tooltip={__(
-                            "Transaction never expires, and you won't be able to void it even if the recipient doesn't credit the transaction"
-                          )}
-                        >
-                          <Icon icon={WarningIcon} />
-                        </Tooltip.Trigger>
-                      </span>
-                    ) : (
-                      __('in %{time_span}', {
-                        time_span: timeToText(expires),
-                      })
-                    )}
-                  </ContentCell>
+                  {expires === 0 ? (
+                    <span>
+                      <span className="v-align mr0_4">{__('NO EXPIRY')}</span>
+                      <Tooltip.Trigger
+                        tooltip={__(
+                          "Transaction never expires, and you won't be able to void it even if the recipient doesn't credit the transaction"
+                        )}
+                      >
+                        <Icon icon={WarningIcon} />
+                      </Tooltip.Trigger>
+                    </span>
+                  ) : (
+                    __('in %{time_span}', {
+                      time_span: timeToText(expires),
+                    })
+                  )}
                 </ContentCell>
-              </>
-            )}
-          </Fragment>
-        )
-      )}
+              </ContentCell>
+            </>
+          )}
+        </Fragment>
+      ))}
     </Layout>
   );
 }

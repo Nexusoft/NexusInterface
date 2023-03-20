@@ -2,6 +2,7 @@ import http from 'http';
 import https from 'https';
 
 import store from 'store';
+import { selectActiveSession } from 'lib/user';
 import { getActiveCoreConfig } from 'lib/coreConfig';
 
 const getDefaultOptions = ({
@@ -91,10 +92,11 @@ function sendRequest({ params, options, ssl }) {
  */
 export async function callApi(endpoint, customParams) {
   const conf = await getActiveCoreConfig();
+  const state = store.getState();
+  const session = selectActiveSession(state);
   const {
-    user: { session },
     core: { systemInfo },
-  } = store.getState();
+  } = state;
 
   //TODO: There is a bug in the core and where HAS to be the last param. Remove when fixed.
   if (customParams?.where) {

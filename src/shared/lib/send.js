@@ -1,10 +1,10 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import qs from 'querystring';
 import { useSelector } from 'react-redux';
 
 import { navigate } from 'lib/wallet';
-import { useFieldValue, selectFormInstance } from 'lib/form';
+import { useFieldValue, getFormInstance } from 'lib/form';
 import { timeToObject } from 'utils/misc';
 import store from 'store';
 import memoize from 'utils/memoize';
@@ -13,7 +13,9 @@ export const formName = 'send';
 
 export function getDefaultRecipient({ txExpiry } = {}) {
   const recipient = {
-    address: null,
+    nameOrAddress: null,
+    name: null, // hidden field
+    address: null, // hidden field
     amount: '',
     fiatAmount: '',
     reference: null,
@@ -32,16 +34,29 @@ export function getDefaultRecipient({ txExpiry } = {}) {
   return recipient;
 }
 
+function getDefaultSendFrom({ user: { accounts } }) {
+  if (!accounts?.[0]) return null;
+  const defaultAccount = accounts.find((acc) => acc.name === 'default');
+  if (defaultAccount) {
+    if (defaultAccount.balance === 0) {
+      const accountHasBalance = accounts.find((acc) => acc.balance > 0);
+      if (accountHasBalance) return `account:${accountHasBalance.address}`;
+    }
+    return `account:${defaultAccount.address}`;
+  }
+  return null;
+}
+
 function getFormValues(customValues = {}) {
   const state = store.getState();
   const txExpiry = state.core.config?.txExpiry;
   const defaultRecipient = getDefaultRecipient({ txExpiry });
   return {
-    sendFrom: customValues.sendFrom || null,
+    sendFrom: customValues.sendFrom || getDefaultSendFrom(state),
     // not accepting fiatAmount
     recipients: customValues.recipients?.map(
       ({
-        address,
+        nameOrAddress,
         amount,
         reference,
         expireDays,
@@ -50,7 +65,7 @@ function getFormValues(customValues = {}) {
         expireSeconds,
       }) => ({
         ...defaultRecipient,
-        address,
+        nameOrAddress,
         amount,
         reference,
         expireDays,
@@ -80,15 +95,25 @@ export function useInitialValues() {
   } catch (err) {}
   const initialValues = getFormValues(customValues);
 
+  const { sendFrom } = initialValues;
+  const lastSendFromRef = useRef(sendFrom);
+  useEffect(() => {
+    if (!lastSendFromRef.current && sendFrom) {
+      const form = getFormInstance(formName);
+      form.change('sendFrom', sendFrom);
+    }
+    lastSendFromRef.current = sendFrom;
+  }, [sendFrom]);
+
   // Reset the form when a new specific Send state is passed through the query string
   // Otherwise, always keep the form's current state
   useEffect(() => {
     if (customValues) {
-      const state = store.getState();
-      const form = selectFormInstance(formName)(state);
+      const form = getFormInstance(formName);
       form.restart(initialValues);
     }
   }, [stateJson]);
+
   return initialValues;
 }
 

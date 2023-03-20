@@ -50,6 +50,7 @@ export const defaultSettings = {
   ipMineWhitelist: '',
   coreDataDir: defaultCoreDataDir,
   testnetIteration: 0,
+  privateTestnet: false,
   allowAdvancedCoreOptions: false,
   advancedCoreParams: '',
   manualDaemon: false,

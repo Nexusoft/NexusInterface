@@ -82,6 +82,9 @@ export const startCore = async () => {
   ];
   if (settings.testnetIteration && settings.testnetIteration !== '0') {
     params.push('-testnet=' + settings.testnetIteration);
+    if (settings.privateTestnet) {
+      params.push('-private=1');
+    }
   }
   if (settings.forkBlocks) {
     params.push('-forkblocks=' + settings.forkBlocks);
@@ -109,7 +112,7 @@ export const startCore = async () => {
   if (settings.enableStaking == true) params.push('-stake=1');
   if (settings.pooledStaking == true) params.push('-poolstaking=1');
   if (settings.liteMode == true) params.push('-no_wallet=1 -client=1');
-  if (settings.multiUser == true) params.push('-multiuser=1');
+  if (settings.multiUser == true) params.push('-multiusername=1');
   if (settings.allowAdvancedCoreOptions) {
     if (settings.advancedCoreParams) params.push(settings.advancedCoreParams);
   }

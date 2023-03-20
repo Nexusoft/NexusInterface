@@ -5,12 +5,16 @@
 
 export function debounced(fn, ms) {
   let timerId;
-  return function () {
+  const debouncedFunc = function () {
     const functionCall = () => fn.apply(this, arguments);
     clearTimeout(timerId);
     timerId = setTimeout(functionCall, ms);
     return timerId;
   };
+  debouncedFunc.cancel = () => {
+    clearTimeout(timerId);
+  };
+  return debouncedFunc;
 }
 
 export function throttled(fn, ms) {

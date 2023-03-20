@@ -43,8 +43,19 @@ const timeFormatOptions = {
   hour12: false,
 };
 
-const accountDisplay = ({ name, address }) => {
-  if (name) return name;
+const accountDisplay = (value) => {
+  if (!value) return '';
+  if (typeof value === 'string') return value;
+
+  const { name, address } = value;
+  if (name) {
+    if (name.startsWith('local:')) {
+      return name.substring(6);
+    } else {
+      return name;
+    }
+  }
+
   if (address) {
     const match = lookupAddress(address);
     if (match) {
@@ -107,25 +118,18 @@ const tableColumns = [
     Header: __('To'),
     Cell: (cell) => {
       const {
-        original: { to, account_name, account, OP, currentAccount },
+        original: { to, name, address, OP, currentAccount },
       } = cell;
-
-      if (OP === 'FEE') return <span>FEE</span>; //TODO: Since fee is an op should it be translated?
       const content = accountDisplay(to);
       switch (OP) {
         case 'CREDIT':
-          if (cell.original.for === 'COINBASE') {
-            return <span className="dim">{currentAccount}</span>;
-          } else {
-            return <span className="dim">{content}</span>;
-          }
+          return <span className="dim">{content}</span>;
         case 'TRUST':
         case 'GENESIS':
         case 'TRUSTPOOL':
         case 'GENESISPOOL':
-          return <span className="dim">{currentAccount}</span>;
         case 'MIGRATE':
-          return <span className="dim">{account_name || account || ''}</span>;
+          return <span className="dim">{name || address || ''}</span>;
         default:
           return content;
       }
@@ -211,6 +215,7 @@ export default function AccountHistoryModal({ account }) {
               }
             });
           }
+          console.log(contracts);
           return contracts.sort((c1, c2) => c1.timestamp - c2.timestamp);
         }, []);
         setContracts(contracts);

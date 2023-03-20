@@ -93,6 +93,7 @@ const formKeys = [
   'multiUser',
   'verboseLevel',
   'testnetIteration',
+  'privateTestnet',
   'avatarMode',
   'coreDataDir',
   'allowAdvancedCoreOptions',

@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 import ControlledModal from 'components/ControlledModal';
 import Icon from 'components/Icon';
 import { timing } from 'styles';
-import { switchUser } from 'lib/user';
+import { setActiveUser, selectActiveSession } from 'lib/user';
 import userIcon from 'icons/user.svg';
 
 const UserWrapper = styled.div(({ theme, active, switching }) => ({
@@ -46,6 +46,7 @@ const Status = styled.div(({ active }) => ({
 function User({
   session,
   username,
+  genesis,
   active,
   switching,
   setSwitchingTo,
@@ -55,15 +56,19 @@ function User({
     <UserWrapper
       active={active}
       switching={switching}
-      onClick={async () => {
-        setSwitchingTo(session);
-        try {
-          await switchUser(session);
-        } finally {
-          setSwitchingTo(null);
-          closeModal();
-        }
-      }}
+      onClick={
+        active || switching
+          ? undefined
+          : async () => {
+              setSwitchingTo(session);
+              try {
+                await setActiveUser({ session, genesis });
+              } finally {
+                setSwitchingTo(null);
+                closeModal();
+              }
+            }
+      }
     >
       <Username>
         <Icon icon={userIcon} className="mr0_4" />
@@ -82,7 +87,7 @@ function User({
 
 export default function SwitchUserModal() {
   const sessions = useSelector((state) => state.sessions);
-  const currentSession = useSelector((state) => state.user.session);
+  const currentSession = useSelector(selectActiveSession);
   const [switchingTo, setSwitchingTo] = useState(null);
 
   return (
@@ -91,23 +96,25 @@ export default function SwitchUserModal() {
         <>
           <ControlledModal.Header>{__('Switch user')}</ControlledModal.Header>
           <ControlledModal.Body>
-            {Object.entries(sessions)
-              .sort()
-              .map(([session, { username }]) => (
-                <User
-                  key={session}
-                  session={session}
-                  username={username}
-                  active={
-                    switchingTo
-                      ? switchingTo === session
-                      : currentSession === session
-                  }
-                  switching={!!switchingTo}
-                  setSwitchingTo={setSwitchingTo}
-                  closeModal={closeModal}
-                />
-              ))}
+            {!!sessions &&
+              Object.values(sessions)
+                .sort((a, b) => b.accessed - a.accessed)
+                .map(({ session, username, genesis }) => (
+                  <User
+                    key={session}
+                    session={session}
+                    username={username}
+                    genesis={genesis}
+                    active={
+                      switchingTo
+                        ? switchingTo === session
+                        : currentSession === session
+                    }
+                    switching={!!switchingTo}
+                    setSwitchingTo={setSwitchingTo}
+                    closeModal={closeModal}
+                  />
+                ))}
           </ControlledModal.Body>
         </>
       )}

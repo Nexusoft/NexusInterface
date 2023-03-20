@@ -1,4 +1,5 @@
 // External
+import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 import arrayMutators from 'final-form-arrays';
@@ -9,6 +10,7 @@ import Icon from 'components/Icon';
 import Button from 'components/Button';
 import FormField from 'components/FormField';
 import { openModal } from 'lib/ui';
+import { loadAccounts, loadOwnedTokens } from 'lib/user';
 import {
   formName,
   getDefaultRecipient,
@@ -19,7 +21,6 @@ import { required } from 'lib/form';
 import store from 'store';
 import useUID from 'utils/useUID';
 import { timing } from 'styles';
-import { addressRegex } from 'consts/misc';
 import sendIcon from 'icons/send.svg';
 import plusIcon from 'icons/plus.svg';
 
@@ -93,16 +94,11 @@ function getRecipientsParams(recipients, { advancedOptions }) {
       expireMinutes,
       expireSeconds,
     }) => {
-      const recipParam = {};
+      const recipParam = {
+        address_to: address,
+        amount: parseFloat(amount),
+      };
 
-      // TODO: update param keys
-      if (addressRegex.test(address)) {
-        recipParam.address_to = address;
-      } else {
-        recipParam.name_to = address.startsWith('local:')
-          ? address.substring(6)
-          : address; //TODO: Finance is having issues with ~, core needs to be accept it or we remove the ~ on get/accounts;
-      }
       if (advancedOptions) {
         const expires =
           parseInt(expireSeconds) +
@@ -114,7 +110,6 @@ function getRecipientsParams(recipients, { advancedOptions }) {
         }
         if (reference) recipParam.reference = reference;
       }
-      recipParam.amount = parseFloat(amount);
 
       return recipParam;
     }
@@ -125,6 +120,10 @@ export default function SendForm() {
   const switchID = useUID();
   const accountOptions = useSelector(selectAccountOptions);
   const initialValues = useInitialValues();
+  useEffect(() => {
+    loadAccounts();
+    loadOwnedTokens();
+  }, []);
 
   return (
     <SendFormComponent>

@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 // Internal
 import Tooltip from 'components/Tooltip';
 import { timing } from 'styles';
-import RecipientAddress from './RecipientAddress';
+import RecipientNameOrAddress from './RecipientNameOrAddress';
 import AmountField from './AmountField';
 import AdvancedFields from './AdvancedFields';
 
@@ -43,7 +43,7 @@ const AddressWrapper = styled.div({
 
 const BaseFields = styled.div({
   display: 'flex',
-  alignItems: 'flex-end',
+  alignItems: 'flex-start',
 });
 
 export default function Recipients({ fields }) {
@@ -54,7 +54,7 @@ export default function Recipients({ fields }) {
   //     <>
   //       <Field
   //         name={`${fields.name}[0].address`}
-  //         component={RecipientAddress}
+  //         component={RecipientNameOrAddress}
   //         change={change}
   //         sendFrom={sendFrom}
   //       />
@@ -88,7 +88,7 @@ export default function Recipients({ fields }) {
 
           <BaseFields>
             <AddressWrapper>
-              <RecipientAddress parentFieldName={fieldName} />
+              <RecipientNameOrAddress parentFieldName={fieldName} />
             </AddressWrapper>
 
             <AmountField parentFieldName={fieldName} />

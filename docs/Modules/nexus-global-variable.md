@@ -120,6 +120,7 @@ const {
     onceInitialize,
     onWalletDataUpdated,
     copyToClipboard,
+    openInBrowser,
     color,
   },
 } = NEXUS;
@@ -142,6 +143,7 @@ const {
 - [`onceInitialize`](#onceinitialize)
 - [`onWalletDataUpdated`](#onwalletdataupdated)
 - [`copyToClipboard`](#copytoclipboard)
+- [`openInBrowser`](#openinbrowser)
 - [`color`](#color)
 
 ---
@@ -459,6 +461,16 @@ copyToClipboard((text: string));
 ```
 
 - `text`: string - text to copy
+
+### `openInBrowser`
+
+Open an URL in the OS's default browser.
+
+```js
+openInBrowser((url: string));
+```
+
+- `url`: string - URL to open
 
 ### `color`
 

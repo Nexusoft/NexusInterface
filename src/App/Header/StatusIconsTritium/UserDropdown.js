@@ -4,14 +4,12 @@ import { Link } from 'react-router-dom';
 
 import { arrowStyles } from 'components/Arrow';
 import LoginModal from 'components/LoginModal';
-import Button from 'components/Button';
 import NewUserModal from 'components/NewUserModal';
 import SetRecoveryModal from 'components/SetRecoveryModal';
-import { confirmPin, openErrorDialog } from 'lib/dialog';
 import { isLoggedIn } from 'selectors';
 import { openModal, showNotification } from 'lib/ui';
 import { timing, animations, consts } from 'styles';
-import { authorizeMasterProfile, logOut, selectUsername } from 'lib/user';
+import { logOut, selectUsername } from 'lib/user';
 
 import SwitchUserModal from './SwitchUserModal';
 
@@ -74,40 +72,17 @@ const Separator = styled.div(({ theme }) => ({
 
 function LoggedInDropdown({ closeDropdown }) {
   const currentUser = useSelector(selectUsername);
-  const manualNoUsername =
-    !currentUser && useSelector((state) => state.settings.manualDaemon);
   const hasRecoveryPhrase = useSelector(
     (state) => !!state.user.profileStatus?.recovery
   );
   const multiuser = useSelector((state) => !!state.core.systemInfo?.multiuser);
   const hasOtherSessions = useSelector(
-    (state) => Object.keys(state.sessions).length > 1
+    ({ sessions }) => !!sessions && Object.keys(sessions).length > 1
   );
-  const blocking = true; //useSelector((state) => state.settings.)
 
   return (
     <>
       <CurrentUser>
-        {manualNoUsername && (
-          <Button
-            onClick={async () => {
-              try {
-                const pin = await confirmPin({
-                  note: __('Authorize interface to gather more data.'), //TODO: re-word
-                });
-                await authorizeMasterProfile({ pin });
-              } catch (error) {
-                openErrorDialog({
-                  message: error.message,
-                  note: error.code,
-                });
-              }
-              closeDropdown();
-            }}
-          >
-            {__('Authorize')}
-          </Button>
-        )}
         <Username>{currentUser}</Username>
       </CurrentUser>
       <Separator />
@@ -161,14 +136,7 @@ function LoggedInDropdown({ closeDropdown }) {
       <MenuItem
         onClick={async () => {
           closeDropdown();
-          const pin =
-            blocking &&
-            (await confirmPin({
-              note: 'Logout blocking active, enter Pin to logout',
-            }));
-          if (blocking && !pin) return;
-
-          await logOut({ pin });
+          await logOut();
           showNotification('Logged out');
         }}
       >
@@ -181,7 +149,7 @@ function LoggedInDropdown({ closeDropdown }) {
 function NotLoggedInDropdown({ closeDropdown }) {
   const multiuser = useSelector((state) => !!state.core.systemInfo?.multiuser);
   const hasOtherSessions = useSelector(
-    (state) => Object.keys(state.sessions).length > 1
+    ({ sessions }) => !!sessions && Object.keys(sessions).length > 1
   );
   return (
     <>

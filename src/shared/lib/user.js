@@ -16,15 +16,34 @@ import sleep from 'utils/promisified/sleep';
 
 __ = __context('User');
 
-export const selectUsername = ({
-  user: { status, session },
-  sessions,
-  usernameByGenesis,
-}) =>
-  status?.username ||
-  usernameByGenesis[status?.genesis] ||
-  (session && sessions[session]?.username) ||
-  '';
+export const selectActiveSession = ({ user: { session }, sessions }) => {
+  if (session) return session;
+  if (!sessions) return undefined;
+  const sessionList = Object.values(sessions);
+  if (!sessionList.length) return undefined;
+
+  // Active session is defaulted to the last accessed session
+  let lastAccessed = sessionList.reduce(
+    (las, s) => (!las || s.accessed > las.accessed ? s : las),
+    undefined
+  );
+  return lastAccessed?.session || undefined;
+};
+
+export const selectUsername = (state) => {
+  const {
+    user: { status, profileStatus },
+    sessions,
+  } = state;
+  const session = selectActiveSession(state);
+
+  return (
+    profileStatus?.session?.username ||
+    status?.username ||
+    (session && sessions?.[session]?.username) ||
+    ''
+  );
+};
 
 export const refreshStakeInfo = async () => {
   try {
@@ -39,38 +58,65 @@ export const refreshStakeInfo = async () => {
 
 // Don't refresh user status while login process is not yet done
 let refreshUserStatusLock = false;
-export const refreshUserStatus = async () => {
-  try {
-    const {
-      user: { session, profileStatus },
-      core: { systemInfo },
-    } = store.getState();
-    if (!refreshUserStatusLock && (!systemInfo?.multiuser || session)) {
-      const status = await callApi('sessions/status/local');
-      store.dispatch({ type: TYPE.SET_USER_STATUS, payload: status });
+export async function refreshUserStatus() {
+  if (refreshUserStatusLock) return;
 
-      try {
-        if (!profileStatus) {
-          const profileStatus = await callApi('profiles/status/master', {
-            genesis: status.genesis,
-          });
-          store.dispatch({
-            type: TYPE.SET_PROFILE_STATUS,
-            payload: profileStatus,
-          });
-        }
-      } catch {}
-
-      return status;
+  // If in multiuser mode, fetch the list of logged in sessions first
+  const {
+    core: { systemInfo },
+  } = store.getState();
+  if (systemInfo?.multiuser) {
+    try {
+      const sessions = await callApi('sessions/list/local');
+      store.dispatch({
+        type: TYPE.SET_SESSIONS,
+        payload: sessions,
+      });
+    } catch (err) {
+      store.dispatch({ type: TYPE.CLEAR_SESSIONS });
     }
+  }
+
+  // Get the active user status
+  try {
+    const session = selectActiveSession(store.getState());
+    if (systemInfo?.multiuser && !session) {
+      store.dispatch({ type: TYPE.CLEAR_USER });
+      return;
+    }
+
+    const status = await callApi(
+      'sessions/status/local',
+      session ? { session } : undefined
+    );
+
+    const {
+      user: { profileStatus },
+    } = store.getState();
+
+    if (!profileStatus) {
+      const profileStatus = await callApi('profiles/status/master', {
+        genesis: status.genesis,
+        session,
+      });
+      store.dispatch({
+        type: TYPE.SET_PROFILE_STATUS,
+        payload: profileStatus,
+      });
+    }
+
+    store.dispatch({ type: TYPE.SET_USER_STATUS, payload: status });
+
+    refreshStakeInfo();
+    return status;
   } catch (err) {
     store.dispatch({ type: TYPE.CLEAR_USER });
     // Don't log error if it's 'Session not found' (user not logged in)
     if (err?.code !== -11) {
-      console.error(err);
+      console.error('Failed to get user status', err);
     }
   }
-};
+}
 
 export const refreshBalances = async () => {
   try {
@@ -84,27 +130,20 @@ export const refreshBalances = async () => {
 };
 
 export const logIn = async ({ username, password, pin }) => {
-  const result = await callApi('sessions/create/local', {
-    username,
-    password,
-    pin,
-  });
   // Stop refreshing user status
   refreshUserStatusLock = true;
   await sleep(500); // Let the core cycle, Possible delete this
   try {
-    const { session, genesis } = result;
-    const stakeInfo = await callApi('finance/get/stakeinfo', { session });
-    const [r, profileStatus] = await Promise.all([
-      unlockUser({ pin, session, stakeInfo }),
-      callApi('profiles/status/master', { genesis }),
-    ]);
-    const status = await callApi('sessions/status/local', { session });
-
-    store.dispatch({
-      type: TYPE.LOGIN,
-      payload: { username, session, status, stakeInfo, genesis, profileStatus },
+    const { session, genesis } = await callApi('sessions/create/local', {
+      username,
+      password,
+      pin,
     });
+
+    const stakeInfo = await callApi('finance/get/stakeinfo', { session });
+    await unlockUser({ pin, session, stakeInfo });
+    const { status } = await setActiveUser({ session, genesis, stakeInfo });
+
     return { username, session, status, stakeInfo };
   } finally {
     // Release the lock
@@ -112,29 +151,61 @@ export const logIn = async ({ username, password, pin }) => {
   }
 };
 
-export const logOut = async ({ pin }) => {
-  const {
-    sessions,
-    core: { systemInfo },
-  } = store.getState();
-  store.dispatch({
-    type: TYPE.LOGOUT,
-  });
-  if (systemInfo?.multiuser) {
-    await Promise.all([
-      Object.keys(sessions).map((session) => {
-        callApi('sessions/terminate/local', { session });
-      }),
-    ]);
-  } else {
-    await callApi('sessions/terminate/local');
+export const logOut = async () => {
+  // Stop refreshing user status
+  refreshUserStatusLock = true;
+  try {
+    const {
+      sessions,
+      core: { systemInfo },
+    } = store.getState();
+    store.dispatch({
+      type: TYPE.LOGOUT,
+    });
+    if (systemInfo?.multiuser) {
+      await Promise.all([
+        Object.keys(sessions).map((session) => {
+          callApi('sessions/terminate/local', { session });
+        }),
+      ]);
+    } else {
+      await callApi('sessions/terminate/local');
+    }
+  } finally {
+    // Release the lock
+    refreshUserStatusLock = false;
   }
 };
 
-export const switchUser = async (session) => {
-  const status = await callApi('sessions/status/local', { session });
-  store.dispatch({ type: TYPE.SWITCH_USER, payload: { session, status } });
-};
+export async function setActiveUser({ session, genesis, stakeInfo }) {
+  const {
+    core: { systemInfo },
+  } = store.getState();
+
+  const [status, profileStatus, sessions, newStakeInfo] = await Promise.all([
+    callApi('sessions/status/local', { session }),
+    callApi('profiles/status/master', { session, genesis }),
+    systemInfo?.multiuser
+      ? callApi('sessions/list/local')
+      : Promise.resolve(null),
+    stakeInfo
+      ? Promise.resolve(null)
+      : callApi('finance/get/stakeinfo', { session }),
+  ]);
+
+  const result = {
+    session,
+    sessions,
+    status,
+    stakeInfo: stakeInfo || newStakeInfo,
+    profileStatus,
+  };
+  store.dispatch({
+    type: TYPE.ACTIVE_USER,
+    payload: result,
+  });
+  return result;
+}
 
 function processToken(token) {
   if (token.ticker?.startsWith?.('local:')) {
@@ -160,6 +231,10 @@ function processAccount(account) {
   if (account.name?.startsWith?.('local:')) {
     account.nameIsLocal = true;
     account.name = account.name.substring(6);
+  }
+  if (account.name?.startsWith?.('user:')) {
+    account.nameIsLocal = true;
+    account.name = account.name.substring(5);
   }
   if (account.ticker?.startsWith?.('local:')) {
     account.tickerIsLocal = true;
@@ -305,22 +380,10 @@ export function prepareUser() {
         }
       }
     });
-
-    observeStore(
-      (state) => state.user.status,
-      (userStatus) => {
-        const {
-          core: { systemInfo },
-        } = store.getState();
-        if (userStatus && !systemInfo.private) {
-          refreshStakeInfo();
-        }
-      }
-    );
   }
 }
 
-async function shouldUnlockStaking({ stakeInfo }) {
+async function shouldUnlockStaking(stakeInfo) {
   const {
     settings: { enableStaking, dontAskToStartStaking },
     core: { systemInfo },
@@ -398,7 +461,7 @@ async function shouldUnlockStaking({ stakeInfo }) {
 }
 
 async function unlockUser({ pin, session, stakeInfo }) {
-  const unlockStaking = await shouldUnlockStaking({ stakeInfo });
+  const unlockStaking = await shouldUnlockStaking(stakeInfo);
   const {
     settings: { enableMining },
   } = store.getState();
