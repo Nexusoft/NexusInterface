@@ -90,17 +90,18 @@ const Hash = ({ children, ...rest }) => {
   );
 };
 
-const accountLabel = ({ name, address, local, namespace, mine, user }) => {
+const accountLabel = ({ name, address, local, namespace, mine }) => {
   if (name) {
     if (namespace) {
       return namespace + '::' + name;
     }
 
     if (local) {
-      const prefix = mine ? user : <span className="dim">(?)</span>;
+      const prefix = mine ? '' : <span className="dim">(?):</span>;
       return (
         <span>
-          {prefix}:{name}
+          {prefix}
+          {name}
         </span>
       );
     }
