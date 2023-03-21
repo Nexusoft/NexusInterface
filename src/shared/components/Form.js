@@ -1,4 +1,4 @@
-import { useEffect, forwardRef } from 'react';
+import { useEffect, forwardRef, useState } from 'react';
 import {
   Form as FinalForm,
   Field,
@@ -44,11 +44,12 @@ export default function Form({
     validate,
     validateOnBlur,
   };
-  const form = getFormInstance(name);
+  const [form, setForm] = useState(getFormInstance(name));
   useEffect(() => {
     if (persistState && !form) {
       const form = createForm(config);
       updateFormInstance(name, form);
+      setForm(form);
     }
   }, []);
 
