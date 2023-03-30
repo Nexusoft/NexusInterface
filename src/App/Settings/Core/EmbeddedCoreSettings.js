@@ -8,12 +8,13 @@ import Switch from 'components/Switch';
 import { useFieldValue } from 'lib/form';
 import { updateSettings } from 'lib/settings';
 import { confirm, openErrorDialog } from 'lib/dialog';
-import { restartCore } from 'lib/core';
+import { restartCore, stopCore, startCore } from 'lib/core';
 import { defaultConfig } from 'lib/coreConfig';
 import { isCoreConnected } from 'selectors';
 import { legacyMode } from 'consts/misc';
 import deleteDirectory from 'utils/promisified/deleteDirectory';
 import { consts } from 'styles';
+import store from 'store';
 
 import RescanButton from './RescanButton';
 
