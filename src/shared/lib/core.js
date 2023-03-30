@@ -111,7 +111,7 @@ export const startCore = async () => {
   }
   if (settings.enableStaking == true) params.push('-stake=1');
   if (settings.pooledStaking == true) params.push('-poolstaking=1');
-  if (settings.liteMode == true) params.push('-no_wallet=1 -client=1');
+  if (settings.liteMode == true) params.push('-client=1');
   if (settings.multiUser == true) params.push('-multiusername=1');
   if (settings.allowAdvancedCoreOptions) {
     if (settings.advancedCoreParams) params.push(settings.advancedCoreParams);
