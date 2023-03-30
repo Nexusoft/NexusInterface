@@ -107,14 +107,14 @@ export default function Header() {
         {legacyMode ? (
           <>
             {__('Legacy Mode')}
-            {lite && ` (${__('Lite')})`}
+            {lite && ` [${__('Lite')}]`}
             {!!legacyTestnet && ' - testnet'}
           </>
         ) : (
           <>
             {__('Tritium Mode')}
-            {lite && ` (${__('Lite')})`}
-            {hybrid && `[ Hybrid ]`}
+            {lite && ` [${__('Lite')}]`}
+            {hybrid && ` [ ${__('Hybrid')} ]`}
             {!!testnet &&
               ` -${privateNet ? ' private' : ''} testnet ${testnet}`}
           </>
