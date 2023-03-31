@@ -114,7 +114,7 @@ export default function Header() {
           <>
             {__('Tritium Mode')}
             {lite && ` [${__('Lite')}]`}
-            {hybrid && ` [ ${__('Hybrid')} ]`}
+            {hybrid && ` [${__('Hybrid')}]`}
             {!!testnet &&
               ` -${privateNet ? ' private' : ''} testnet ${testnet}`}
           </>
