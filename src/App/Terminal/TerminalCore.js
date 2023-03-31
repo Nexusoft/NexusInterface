@@ -60,17 +60,17 @@ export default function TerminalCore() {
     }
   });
 
-  const handleScroll = () => {
-    const bottomPos =
-      outputRef.current.scrollHeight - outputRef.current.clientHeight - 2; // found a issue where the numbers would be plus or minus this do to floating point error. Just stepped back 2 it catch it.
-    const currentPos = parseInt(outputRef.current.scrollTop);
-    if (currentPos >= bottomPos) {
-      return;
-    }
-    if (!paused) {
-      pauseCoreOutput(true);
-    }
-  };
+  // const handleScroll = () => {
+  //   const bottomPos =
+  //     outputRef.current.scrollHeight - outputRef.current.clientHeight - 2; // found a issue where the numbers would be plus or minus this do to floating point error. Just stepped back 2 it catch it.
+  //   const currentPos = parseInt(outputRef.current.scrollTop);
+  //   if (currentPos >= bottomPos) {
+  //     return;
+  //   }
+  //   if (!paused) {
+  //     pauseCoreOutput(true);
+  //   }
+  // };
 
   return (
     <TerminalContent>
@@ -82,7 +82,7 @@ export default function TerminalCore() {
             <Output
               ref={outputRef}
               reverse={!settings.manualDaemon}
-              onScroll={handleScroll}
+              // onScroll={handleScroll}
             >
               {output.map((d, i) => (
                 <OutputLine key={i}>{d}</OutputLine>
