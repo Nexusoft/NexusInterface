@@ -22,10 +22,6 @@ function validateReference(value) {
   if (value) {
     if (!uintRegex.test(value)) {
       return __('Reference must be an unsigned integer');
-    } else {
-      if (Number(reference) > 18446744073709551615) {
-        return __('Number is too large');
-      }
     }
   }
 }
@@ -54,7 +50,6 @@ export default function AdvancedFields({ parentFieldName }) {
           <Form.TextField
             skin="filled-inverted"
             name={`${parentFieldName}.reference`}
-            normalize={numericOnly}
             placeholder={__('Reference number (optional)')}
             validate={validateReference}
           />
