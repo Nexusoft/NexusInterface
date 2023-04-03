@@ -14,7 +14,7 @@ __ = __context('CreateNamespace');
 const namespaceRegex = /^[a-z\d\.]+$/;
 
 const initialValues = {
-  name: '',
+  namespace: '',
 };
 
 export default function CreateNamespaceModal() {
@@ -31,13 +31,13 @@ export default function CreateNamespaceModal() {
               persistState
               initialValues={initialValues}
               onSubmit={formSubmit({
-                submit: async ({ name }) => {
+                submit: async ({ namespace }) => {
                   const pin = await confirmPin();
 
                   if (pin) {
                     return await callApi('names/create/namespace', {
                       pin,
-                      name,
+                      namespace,
                     });
                   }
                 },
@@ -55,7 +55,7 @@ export default function CreateNamespaceModal() {
             >
               <FormField connectLabel label={__('Name')}>
                 <Form.TextField
-                  name="name"
+                  name="namespace"
                   skin="filled-inverted"
                   className="mt0_4"
                   placeholder={__('Namespace name')}
