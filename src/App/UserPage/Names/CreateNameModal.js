@@ -160,7 +160,7 @@ export default function CreateNameModal() {
                             return <Prefix>{username + ':'}</Prefix>;
                           case 'namespaced':
                             return (
-                              <From.Field
+                              <Form.Field
                                 name="namespace"
                                 component={({ input }) => (
                                   <Prefix>
