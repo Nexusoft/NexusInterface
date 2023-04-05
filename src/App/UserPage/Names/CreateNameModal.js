@@ -34,7 +34,7 @@ const NameTypes = styled.div({
   marginBottom: '2em',
 });
 
-function NameType({ hasNamespaces }) {
+function NameType({ namespaces }) {
   const { input } = useField('type');
   return (
     <>
@@ -51,7 +51,7 @@ function NameType({ hasNamespaces }) {
         <Button
           uppercase
           skin={input.value === 'namespaced' ? 'filled-primary' : 'default'}
-          disabled={!hasNamespaces}
+          disabled={!namespaces?.length}
           onClick={() => {
             input.onChange('namespaced');
           }}
@@ -142,7 +142,7 @@ export default function CreateNameModal() {
                 errorMessage: __('Error creating name'),
               })}
             >
-              <NameType hasNamespaces={!!namespaces && namespaces.length > 0} />
+              <NameType namespaces={namespaces} />
 
               <FormField connectLabel label={__('Name')}>
                 <Form.TextField
