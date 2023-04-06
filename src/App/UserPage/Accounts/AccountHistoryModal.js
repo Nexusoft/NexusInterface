@@ -7,16 +7,18 @@ import WaitingMessage from 'components/WaitingMessage';
 import Table from 'components/Table';
 import ContractDetailsModal from 'components/ContractDetailsModal';
 import FieldSet from 'components/FieldSet';
+import Link from 'components/Link';
+import Icon from 'components/Icon';
+import Tooltip from 'components/Tooltip';
 import listAll from 'utils/listAll';
 import { formatDateTime, formatNumber, formatCurrency } from 'lib/intl';
 import { openModal, toggleUserBalanceDisplayFiat } from 'lib/ui';
 import { lookupAddress } from 'lib/addressBook';
 import TokenName from 'components/TokenName';
 import { handleError } from 'utils/form';
+import contactIcon from 'icons/address-book.svg';
 
 import { totalBalance } from './utils';
-import Link from 'components/Link';
-import Tooltip from 'components/Tooltip';
 
 __ = __context('User.Accounts.AccountHistory');
 
@@ -49,19 +51,34 @@ const accountDisplay = (value) => {
 
   const { name, address, namespace } = value;
   if (name) {
-    if (namespace) {
-      return namespace + '::' + name;
-    }
-
-    return name;
+    const nameDisplay = namespace ? namespace + '::' + name : name;
+    return (
+      <Tooltip.Trigger tooltip={nameDisplay}>
+        <span>{nameDisplay}</span>
+      </Tooltip.Trigger>
+    );
   }
 
   if (address) {
     const match = lookupAddress(address);
     if (match) {
-      return match.name + (match.label ? ' - ' + match.label : '');
+      const contactDisplay =
+        match.name + (match.label ? ' - ' + match.label : '');
+
+      return (
+        <Tooltip.Trigger tooltip={contactDisplay}>
+          <span>
+            <Icon icon={contactIcon} className="mr0_4" />
+            <span className="v-align">{contactDisplay}</span>
+          </span>
+        </Tooltip.Trigger>
+      );
     } else {
-      return address;
+      return (
+        <Tooltip.Trigger tooltip={address}>
+          <span className="monospace">{address}</span>
+        </Tooltip.Trigger>
+      );
     }
   }
 
