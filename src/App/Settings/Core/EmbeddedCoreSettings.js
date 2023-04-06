@@ -283,27 +283,9 @@ function TestnetSettings() {
         connectLabel
         label={__('Testnet Iteration')}
         disabled={!!TESTNET_BUILD} //TODO: Consider removing, depends on support from testnet maintainers
-        subLabel={
-          <>
-            {__('The iteration of Testnet to connect to.')}{' '}
-            <Form.Field
-              name="testnetIteration"
-              render={({ input }) =>
-                !!input.value &&
-                input.value !== '0' && (
-                  <Button
-                    style={{ height: '25%', width: '25%' }}
-                    onClick={() => {
-                      input.onChange(null);
-                    }}
-                  >
-                    {__('Turn Off')}
-                  </Button>
-                )
-              }
-            />
-          </>
-        }
+        subLabel={__(
+          'The iteration of Testnet to connect to. Leave it blank to connect to mainnet.'
+        )}
       >
         <Form.TextField
           name="testnetIteration"
@@ -311,6 +293,10 @@ function TestnetSettings() {
           type="number"
           min={0}
           max={99999999}
+          config={{
+            parse: (value) => parseInt(value) || null,
+            format: (value) => value || '',
+          }}
           style={{ maxWidth: 50 }}
         />
       </SettingsField>
