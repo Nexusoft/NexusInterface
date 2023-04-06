@@ -87,11 +87,20 @@ function BasicSettings() {
       <SettingsField
         connectLabel
         label={__('Lite mode')}
-        subLabel={__(
-          'Nexus Core under lite mode runs lighter and synchronize much faster, but you will <b>NOT</b> be able to stake, mine, or switch the wallet to Legacy Mode.',
-          null,
-          { b: (text) => <strong>{text}</strong> }
-        )}
+        subLabel={
+          <div>
+            <div>
+              {__(
+                'Nexus Core under lite mode runs lighter and synchronize much faster, but you will <b>NOT</b> be able to stake, mine, or switch the wallet to Legacy Mode.',
+                null,
+                { b: (text) => <strong>{text}</strong> }
+              )}
+            </div>
+            {!!multiUser && (
+              <div>{__('Disabled when Multi-user mode is on')}</div>
+            )}
+          </div>
+        }
         disabled={multiUser}
       >
         {multiUser ? (
@@ -121,9 +130,16 @@ function BasicSettings() {
       <SettingsField
         connectLabel
         label={__('Multi-user')}
-        subLabel={__(
-          'Allow multiple logged in users at the same time. Mining and staking will be unavailable.'
-        )}
+        subLabel={
+          <div>
+            <div>
+              {__(
+                'Allow multiple logged in users at the same time. Mining and staking will be unavailable.'
+              )}
+            </div>
+            {!!liteMode && <div>{__('Disabled when Lite mode is on')}</div>}
+          </div>
+        }
         disabled={liteMode}
       >
         {liteMode ? (
@@ -136,7 +152,16 @@ function BasicSettings() {
       <SettingsField
         connectLabel
         label={__('Enable staking')}
-        subLabel={__('Enable/Disable staking on the wallet.')}
+        subLabel={
+          <div>
+            <div>{__('Enable/Disable staking on the wallet.')}</div>
+            {!!(liteMode || multiUser) && (
+              <div>
+                {__('Disabled when either Lite mode or Multi-user mode is on')}
+              </div>
+            )}
+          </div>
+        }
         disabled={liteMode || multiUser}
       >
         {liteMode || multiUser ? (
@@ -168,7 +193,16 @@ function BasicSettings() {
       <SettingsField
         connectLabel
         label={__('Enable mining')}
-        subLabel={__('Enable/Disable mining to the wallet.')}
+        subLabel={
+          <div>
+            <div>{__('Enable/Disable mining to the wallet.')}</div>
+            {!!(liteMode || multiUser) && (
+              <div>
+                {__('Disabled when either Lite mode or Multi-user mode is on')}
+              </div>
+            )}
+          </div>
+        }
         disabled={liteMode || multiUser}
       >
         {liteMode || multiUser ? (
@@ -239,6 +273,9 @@ function SafeModeSetting() {
 
 function TestnetSettings() {
   const testnetIteration = useFieldValue('testnetIteration');
+
+  // Lock testnet setting in a Testnet build
+  if (TESTNET_BUILD) return null;
 
   return (
     <>
