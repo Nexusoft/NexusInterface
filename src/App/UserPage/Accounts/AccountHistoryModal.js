@@ -250,6 +250,7 @@ export default function AccountHistoryModal({ account }) {
       assignClose={(closeModal) => {
         closeModalRef.current = closeModal;
       }}
+      style={{ width: '80%' }}
     >
       <ControlledModal.Header>
         {account.name} {__('Account History')}
