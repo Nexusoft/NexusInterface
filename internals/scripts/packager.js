@@ -70,21 +70,27 @@ fs.writeFileSync(
 );
 
 if (process.platform === 'win32') {
-  execSync.execSync(`npm run package-win ${isTestnet && '--testnet=true'}`, {
-    stdio: 'inherit',
-  });
+  execSync.execSync(
+    `npm run package-win ${isTestnet ? '--testnet=true' : ''}`,
+    {
+      stdio: 'inherit',
+    }
+  );
 } else if (process.platform === 'darwin') {
   const unsigned = process.argv[3] === 'unsigned';
   execSync.execSync(
     `npm run package-mac${unsigned ? '-unsigned' : ''} ${
-      isTestnet && '--testnet=true'
+      isTestnet ? '--testnet=true' : ''
     }`,
     {
       stdio: 'inherit',
     }
   );
 } else {
-  execSync.execSync(`npm run package-linux ${isTestnet && '--testnet=true'}`, {
-    stdio: 'inherit',
-  });
+  execSync.execSync(
+    `npm run package-linux ${isTestnet ? '--testnet=true' : ''}`,
+    {
+      stdio: 'inherit',
+    }
+  );
 }
