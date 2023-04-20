@@ -6,6 +6,7 @@
 
 - **Lite Mode now available**
 - **Multi-user mode now available**
+- Nexus Core v5.1.0
 - Allow configuring embedded core's port
 - Added HTTPS support for core connection
 - Allow sending to multiple recipients
