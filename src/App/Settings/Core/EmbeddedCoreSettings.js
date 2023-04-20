@@ -29,19 +29,21 @@ export default function EmbeddedCoreSettings() {
 
       <SafeModeSetting />
 
-      <SettingsField
-        connectLabel
-        label={__('Verbose level')}
-        subLabel={__('Verbose level for logs.')}
-      >
-        <Form.TextField
-          name="verboseLevel"
-          type="number"
-          min={0}
-          max={5}
-          style={{ maxWidth: 50 }}
-        />
-      </SettingsField>
+      {!TESTNET_BUILD && (
+        <SettingsField
+          connectLabel
+          label={__('Verbose level')}
+          subLabel={__('Verbose level for logs.')}
+        >
+          <Form.TextField
+            name="verboseLevel"
+            type="number"
+            min={0}
+            max={5}
+            style={{ maxWidth: 50 }}
+          />
+        </SettingsField>
+      )}
 
       <SettingsField
         connectLabel
@@ -282,14 +284,12 @@ function TestnetSettings() {
       <SettingsField
         connectLabel
         label={__('Testnet Iteration')}
-        disabled={!!TESTNET_BUILD} //TODO: Consider removing, depends on support from testnet maintainers
         subLabel={__(
           'The iteration of Testnet to connect to. Leave it blank to connect to mainnet.'
         )}
       >
         <Form.TextField
           name="testnetIteration"
-          disabled={!!TESTNET_BUILD}
           type="number"
           min={0}
           max={99999999}

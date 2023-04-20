@@ -78,12 +78,23 @@ export const startCore = async () => {
     `-apisslport=${conf.apiPortSSL}`,
     `-rpcport=${conf.port}`,
     `-apiport=${conf.apiPort}`,
-    `-verbose=${settings.verboseLevel}`,
   ];
-  if (settings.testnetIteration && settings.testnetIteration !== '0') {
-    params.push('-testnet=' + settings.testnetIteration);
-    if (settings.privateTestnet) {
-      params.push('-private=1');
+  if (TESTNET_BUILD) {
+    params.push(
+      '-connect=testnet1.interactions-nexus.io',
+      '-connect=testnet2.interactions-nexus.io',
+      '-connect=testnet3.interactions-nexus.io',
+      '-nodns=1',
+      '-testnet=1',
+      `-verbose=3`
+    );
+  } else {
+    params.push(`-verbose=${settings.verboseLevel}`);
+    if (settings.testnetIteration && settings.testnetIteration !== '0') {
+      params.push('-testnet=' + settings.testnetIteration);
+      if (settings.privateTestnet) {
+        params.push('-private=1');
+      }
     }
   }
   if (settings.forkBlocks) {
@@ -115,16 +126,6 @@ export const startCore = async () => {
   if (settings.multiUser == true) params.push('-multiusername=1');
   if (settings.allowAdvancedCoreOptions) {
     if (settings.advancedCoreParams) params.push(settings.advancedCoreParams);
-  }
-
-  if (TESTNET_BUILD) {
-    params.push(
-      '-connect=testnet1.interactions-nexus.io',
-      '-connect=testnet2.interactions-nexus.io',
-      '-connect=testnet3.interactions-nexus.io',
-      '-nodns=1',
-      '-testnet=1'
-    );
   }
 
   // Start core
