@@ -37,25 +37,20 @@ export default function SyncStatus() {
 }
 
 function SyncTooltip() {
-  const sync = useSelector((state) => state.core.systemInfo?.sync);
-  if (!sync) return null;
+  const syncing = useSelector((state) => state.core.systemInfo?.syncing);
+  const blocks = useSelector((state) => state.core.systemInfo?.blocks);
+  if (!syncing) return null;
 
-  const {
-    currentBlock,
-    networkBlock,
-    percentSynchronized,
-    secondsRemaining,
-    syncProgress,
-  } = sync;
+  const { networkBlock, completed, secondsRemaining, progress } = syncing;
 
   return (
     <div className="text-center">
       <div>
-        {__('Synchronizing')} {syncProgress}%...
+        {__('Synchronizing')} {progress}%...
       </div>
       <div>
-        {__('Blocks')}: {formatNumber(currentBlock, 0)} /{' '}
-        {formatNumber(networkBlock, 0)} ({percentSynchronized}%)
+        {__('Blocks')}: {formatNumber(blocks, 0)} /{' '}
+        {formatNumber(networkBlock, 0)} ({completed}%)
       </div>
       <div>
         {__('Estimated %{time} remaining', {
