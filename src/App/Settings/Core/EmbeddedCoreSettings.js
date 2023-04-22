@@ -5,6 +5,7 @@ import Form from 'components/Form';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
 import Switch from 'components/Switch';
+import TextField from 'components/TextField';
 import { useFieldValue } from 'lib/form';
 import { updateSettings } from 'lib/settings';
 import { confirm, openErrorDialog } from 'lib/dialog';
