@@ -13,7 +13,6 @@ const appVersion = packageJson.version;
 const buildDate = packageJson.buildDate;
 const backwardCompatible = packageJson.backwardCompatible;
 const appId = packageJson.build.appId;
-const testnet = env.npm_config_testnet;
 
 let nexusPubKey = '';
 try {
@@ -48,7 +47,7 @@ export default {
       BACKWARD_COMPATIBLE_VERSION: JSON.stringify(backwardCompatible || ''),
       APP_ID: JSON.stringify(appId || ''),
       NEXUS_EMBASSY_PUBLIC_KEY: JSON.stringify(nexusPubKey),
-      TESTNET_BUILD: JSON.stringify(testnet || false),
+      LOCK_TESTNET: JSON.stringify(process.env.LOCK_TESTNET || ''),
     }),
   ],
 };

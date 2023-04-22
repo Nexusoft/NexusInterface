@@ -41,7 +41,7 @@ export default function Overlays({ children }) {
     openModal(PreReleaseWarningModal);
   }
 
-  if (TESTNET_BUILD) {
+  if (LOCK_TESTNET) {
     openModal(TestnetWarningModal);
   }
 

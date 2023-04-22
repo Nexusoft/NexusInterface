@@ -8,6 +8,7 @@ import { loadNexusConf, saveCoreConfig } from 'lib/coreConfig';
 import { callApi } from 'lib/tritiumApi';
 import { updateSettings } from 'lib/settings';
 import sleep from 'utils/promisified/sleep';
+import { preRelease } from 'consts/misc';
 
 export const getLedgerInfo = async () => {
   try {
@@ -78,18 +79,18 @@ export const startCore = async () => {
     `-apisslport=${conf.apiPortSSL}`,
     `-rpcport=${conf.port}`,
     `-apiport=${conf.apiPort}`,
+    `-verbose=${preRelease ? 3 : settings.verboseLevel}`,
   ];
-  if (TESTNET_BUILD) {
+
+  if (LOCK_TESTNET) {
     params.push(
       '-connect=testnet1.interactions-nexus.io',
       '-connect=testnet2.interactions-nexus.io',
       '-connect=testnet3.interactions-nexus.io',
       '-nodns=1',
-      '-testnet=1',
-      `-verbose=3`
+      `-testnet=${LOCK_TESTNET}`
     );
   } else {
-    params.push(`-verbose=${settings.verboseLevel}`);
     if (settings.testnetIteration && settings.testnetIteration !== '0') {
       params.push('-testnet=' + settings.testnetIteration);
       if (settings.privateTestnet) {
