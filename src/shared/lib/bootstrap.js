@@ -147,7 +147,7 @@ function downloadDb({ downloadProgress, extractDir }) {
   let timerId;
   return new Promise((resolve, reject) => {
     downloadRequest = http
-      .get(recentDbUrlTritium)
+      .get(recentDbUrlTritium, { insecureHTTPParser: true })
       .setTimeout(180000)
       .on('response', (response) => {
         const totalSize = parseInt(response.headers['content-length'], 10);
