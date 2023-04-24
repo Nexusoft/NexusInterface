@@ -73,4 +73,4 @@ export const alphaRelease = APP_VERSION.toString().includes('alpha');
 /**
  *  Retunrs true if the APP string contains beta OR alpha
  */
-export const preRelease = alphaRelease || betaRelease;
+export const preRelease = alphaRelease || betaRelease || !!LOCK_TESTNET;

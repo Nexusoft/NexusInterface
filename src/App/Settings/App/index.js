@@ -255,7 +255,7 @@ export default function SettingsApp() {
           </div>
         }
       >
-        {TESTNET_BUILD ? (
+        {LOCK_TESTNET ? (
           <Button
             onClick={async () => {
               const confirmed = await confirm({

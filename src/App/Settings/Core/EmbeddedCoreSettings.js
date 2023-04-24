@@ -5,13 +5,14 @@ import Form from 'components/Form';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
 import Switch from 'components/Switch';
+import TextField from 'components/TextField';
 import { useFieldValue } from 'lib/form';
 import { updateSettings } from 'lib/settings';
 import { confirm, openErrorDialog } from 'lib/dialog';
 import { restartCore, stopCore, startCore } from 'lib/core';
 import { defaultConfig } from 'lib/coreConfig';
 import { isCoreConnected } from 'selectors';
-import { legacyMode } from 'consts/misc';
+import { legacyMode, preRelease } from 'consts/misc';
 import deleteDirectory from 'utils/promisified/deleteDirectory';
 import { consts } from 'styles';
 import store from 'store';
@@ -29,12 +30,20 @@ export default function EmbeddedCoreSettings() {
 
       <SafeModeSetting />
 
-      {!TESTNET_BUILD && (
-        <SettingsField
-          connectLabel
-          label={__('Verbose level')}
-          subLabel={__('Verbose level for logs.')}
-        >
+      <SettingsField
+        connectLabel
+        label={__('Verbose level')}
+        subLabel={__('Verbose level for logs.')}
+        disabled={preRelease}
+      >
+        {preRelease ? (
+          <TextField
+            type="number"
+            style={{ maxWidth: 50 }}
+            value={3}
+            disabled
+          />
+        ) : (
           <Form.TextField
             name="verboseLevel"
             type="number"
@@ -42,8 +51,8 @@ export default function EmbeddedCoreSettings() {
             max={5}
             style={{ maxWidth: 50 }}
           />
-        </SettingsField>
-      )}
+        )}
+      </SettingsField>
 
       <SettingsField
         connectLabel
@@ -276,9 +285,6 @@ function SafeModeSetting() {
 function TestnetSettings() {
   const testnetIteration = useFieldValue('testnetIteration');
 
-  // Lock testnet setting in a Testnet build
-  if (TESTNET_BUILD) return null;
-
   return (
     <>
       <SettingsField
@@ -287,18 +293,28 @@ function TestnetSettings() {
         subLabel={__(
           'The iteration of Testnet to connect to. Leave it blank to connect to mainnet.'
         )}
+        disabled={!!LOCK_TESTNET}
       >
-        <Form.TextField
-          name="testnetIteration"
-          type="number"
-          min={0}
-          max={99999999}
-          config={{
-            parse: (value) => parseInt(value) || null,
-            format: (value) => value || '',
-          }}
-          style={{ maxWidth: 50 }}
-        />
+        {LOCK_TESTNET ? (
+          <TextField
+            type="number"
+            style={{ maxWidth: 50 }}
+            value={LOCK_TESTNET}
+            disabled
+          />
+        ) : (
+          <Form.TextField
+            name="testnetIteration"
+            type="number"
+            min={0}
+            max={99999999}
+            config={{
+              parse: (value) => parseInt(value) || null,
+              format: (value) => value || '',
+            }}
+            style={{ maxWidth: 50 }}
+          />
+        )}
       </SettingsField>
 
       {!!testnetIteration && testnetIteration !== '0' && (

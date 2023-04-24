@@ -12,7 +12,7 @@ export const isStaking = legacyMode
 
 export const isSynchronized = legacyMode
   ? ({ core: { info } }) => !!info && info.synccomplete === 100
-  : ({ core: { systemInfo } }) => !systemInfo?.synchronizing; // TODO: update to !systemInfo?.sync when `synchronizing` is removed
+  : ({ core: { systemInfo } }) => !systemInfo?.syncing;
 
 export const isLoggedIn = legacyMode
   ? () => false

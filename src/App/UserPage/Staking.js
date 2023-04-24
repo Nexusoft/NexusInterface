@@ -111,8 +111,7 @@ export default function Staking() {
         }
       }
 
-      // TODO: || multiUser
-      if (liteMode || !enableStaking) {
+      if (liteMode || !enableStaking || multiUser) {
         const confirmed = await confirm({
           question: __('Start staking'),
           note: (
@@ -128,11 +127,11 @@ export default function Staking() {
                     {__('Lite mode needs to be turned OFF')}
                   </li>
                 )}
-                {/* {!!multiUser && (
-                <li style={{ listStyle: 'initial' }}>
-                  {__('Multi-user needs to be turned OFF')}
-                </li>
-              )} */}
+                {!!multiUser && (
+                  <li style={{ listStyle: 'initial' }}>
+                    {__('Multi-user needs to be turned OFF')}
+                  </li>
+                )}
                 {!enableStaking && (
                   <li style={{ listStyle: 'initial' }}>
                     {__('Enable staking needs to be turned ON')}

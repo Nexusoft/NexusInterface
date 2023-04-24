@@ -99,7 +99,7 @@ export default function Header() {
     <HeaderComponent>
       <LogoLink to="/">
         <Logo icon={logoFull} />
-        {TESTNET_BUILD && <PreReleaseTag>TESTNET</PreReleaseTag>}
+        {LOCK_TESTNET && <PreReleaseTag>TESTNET</PreReleaseTag>}
         {preReleaseTag ? <PreReleaseTag>{preReleaseTag}</PreReleaseTag> : null}
       </LogoLink>
 
