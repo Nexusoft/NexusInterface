@@ -6,7 +6,7 @@ import { join } from 'path';
 import { ipcRenderer } from 'electron';
 
 // Internal Global
-import { setActiveWebView, unsetActiveWebView } from 'lib/modules';
+import { setActiveAppModule, unsetActiveAppModule } from 'lib/modules';
 
 const domain = ipcRenderer.sendSync('get-file-server-domain');
 
@@ -43,12 +43,12 @@ export default function WebView({ module, className, style }) {
 
   useEffect(() => {
     const {
-      info: { name, displayName },
+      info: { name },
     } = module;
-    setActiveWebView(webviewRef.current, name, displayName);
+    setActiveAppModule(webviewRef.current, name);
 
     return () => {
-      unsetActiveWebView();
+      unsetActiveAppModule();
     };
   }, []);
 

@@ -14,7 +14,7 @@ import moduleStates from './moduleStates';
 import core from './core';
 import user from './user';
 import updater from './updater';
-import activeAppModule from './activeAppModule';
+import activeAppModuleName from './activeAppModuleName';
 import bootstrap from './bootstrap';
 import failedModules from './failedModules';
 import assetSchemas from './assetSchemas';
@@ -39,7 +39,7 @@ export default function createRootReducer() {
     moduleStates,
     failedModules,
     updater,
-    activeAppModule,
+    activeAppModuleName,
     bootstrap,
     assetSchemas,
     sessions,

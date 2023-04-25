@@ -20,6 +20,8 @@ import memoize from 'utils/memoize';
 
 import { readModuleStorage, writeModuleStorage } from './storage';
 
+let activeWebView = null;
+
 /**
  * Utilities
  * ===========================================================================
@@ -53,8 +55,8 @@ const getWalletData = ({
 });
 
 const getActiveModule = () => {
-  const { activeAppModule, modules } = store.getState();
-  const module = modules[activeAppModule.moduleName];
+  const { activeAppModuleName, modules } = store.getState();
+  const module = modules[activeAppModuleName];
   return module.enabled ? module : null;
 };
 
@@ -123,11 +125,11 @@ function send([{ sendFrom, recipients, advancedOptions }]) {
 }
 
 async function rpcCall([command, params, callId]) {
-  const { activeAppModule } = store.getState();
+  const activeWebView = getActiveWebView();
   try {
     const response = await rpc(command, ...(params || []));
-    if (activeAppModule?.webview) {
-      activeAppModule.webview.send(
+    if (activeWebView) {
+      activeWebView.send(
         `rpc-return${callId ? `:${callId}` : ''}`,
         null,
         response && JSON.parse(JSON.stringify(response))
@@ -135,21 +137,18 @@ async function rpcCall([command, params, callId]) {
     }
   } catch (err) {
     console.error(err);
-    if (activeAppModule?.webview) {
-      activeAppModule.webview.send(
-        `rpc-return${callId ? `:${callId}` : ''}`,
-        err
-      );
+    if (activeWebView) {
+      activeWebView.send(`rpc-return${callId ? `:${callId}` : ''}`, err);
     }
   }
 }
 
 async function apiCall([endpoint, params, callId]) {
-  const { activeAppModule } = store.getState();
+  const activeWebView = getActiveWebView();
   try {
     const response = await callApi(endpoint, params);
-    if (activeAppModule?.webview) {
-      activeAppModule.webview.send(
+    if (activeWebView) {
+      activeWebView.send(
         `api-return${callId ? `:${callId}` : ''}`,
         null,
         response && JSON.parse(JSON.stringify(response))
@@ -157,24 +156,21 @@ async function apiCall([endpoint, params, callId]) {
     }
   } catch (err) {
     console.error(err);
-    if (activeAppModule?.webview) {
-      activeAppModule.webview.send(
-        `api-return${callId ? `:${callId}` : ''}`,
-        err
-      );
+    if (activeWebView) {
+      activeWebView.send(`api-return${callId ? `:${callId}` : ''}`, err);
     }
   }
 }
 
 async function secureApiCall([endpoint, params, callId]) {
-  const { activeAppModule } = store.getState();
+  const activeWebView = getActiveWebView();
+  const { displayName } = getActiveModule();
   try {
     const message = (
       <div style={{ overflow: 'scroll', maxHeight: '15em' }}>
         <div>
-          <strong>{activeAppModule.displayName}</strong> module is requesting to
-          call <strong>{endpoint}</strong> endpoint with the following
-          parameters:
+          <strong>{displayName}</strong> module is requesting to call{' '}
+          <strong>{endpoint}</strong> endpoint with the following parameters:
         </div>
         <code
           style={{
@@ -195,8 +191,8 @@ async function secureApiCall([endpoint, params, callId]) {
       pin === undefined
         ? undefined
         : await callApi(endpoint, { ...params, pin });
-    if (activeAppModule?.webview) {
-      activeAppModule.webview.send(
+    if (activeWebView) {
+      activeWebView.send(
         `secure-api-return${callId ? `:${callId}` : ''}`,
         null,
         response && JSON.parse(JSON.stringify(response))
@@ -204,8 +200,8 @@ async function secureApiCall([endpoint, params, callId]) {
     }
   } catch (error) {
     console.error(error);
-    if (activeAppModule?.webview) {
-      activeAppModule.webview.send(
+    if (activeWebView) {
+      activeWebView.send(
         `secure-api-return${callId ? `:${callId}` : ''}`,
         error
       );
@@ -243,6 +239,7 @@ function showInfoDialog([options = {}]) {
 }
 
 function confirm([options = {}, confirmationId]) {
+  const activeWebView = getActiveWebView();
   const { question, note, labelYes, skinYes, labelNo, skinNo } = options;
   openConfirmDialog({
     question,
@@ -250,9 +247,8 @@ function confirm([options = {}, confirmationId]) {
     labelYes,
     skinYes,
     callbackYes: () => {
-      const { activeAppModule } = store.getState();
-      if (activeAppModule?.webview) {
-        activeAppModule.webview.send(
+      if (activeWebView) {
+        activeWebView.send(
           `confirm-answer${confirmationId ? `:${confirmationId}` : ''}`,
           true
         );
@@ -261,9 +257,8 @@ function confirm([options = {}, confirmationId]) {
     labelNo,
     skinNo,
     callbackNo: () => {
-      const { activeAppModule } = store.getState();
-      if (activeAppModule?.webview) {
-        activeAppModule.webview.send(
+      if (activeWebView) {
+        activeWebView.send(
           `confirm-answer${confirmationId ? `:${confirmationId}` : ''}`,
           false
         );
@@ -273,16 +268,15 @@ function confirm([options = {}, confirmationId]) {
 }
 
 function updateState([moduleState]) {
-  const activeModule = getActiveModule();
-  const moduleName = activeModule.name;
+  const { activeAppModuleName } = store.getState();
   if (typeof moduleState === 'object') {
     store.dispatch({
       type: TYPE.UPDATE_MODULE_STATE,
-      payload: { moduleName, moduleState },
+      payload: { activeAppModuleName, moduleState },
     });
   } else {
     console.error(
-      `Module ${moduleName} is trying to update its state to a non-object value ${moduleState}`
+      `Module ${activeAppModuleName} is trying to update its state to a non-object value ${moduleState}`
     );
   }
 }
@@ -293,12 +287,9 @@ function updateStorage([data]) {
 }
 
 function contextMenu([template]) {
-  const { activeAppModule } = store.getState();
-  if (activeAppModule?.webview) {
-    popupContextMenu(
-      template || defaultMenu,
-      activeAppModule.webview.getWebContentsId()
-    );
+  const activeWebView = getActiveWebView();
+  if (activeWebView) {
+    popupContextMenu(template || defaultMenu, activeWebView.getWebContentsId());
   }
 }
 
@@ -315,50 +306,54 @@ function copyToClipboard([text]) {
  * ===========================================================================
  */
 
-export const setActiveWebView = (webview, moduleName, displayName) => {
+export const getActiveWebView = () => activeWebView;
+
+export const setActiveAppModule = (webview, moduleName) => {
+  activeWebView = webview;
   store.dispatch({
     type: TYPE.SET_ACTIVE_APP_MODULE,
-    payload: { webview, moduleName, displayName },
+    payload: moduleName,
   });
 };
 
-export const unsetActiveWebView = () => {
+export const unsetActiveAppModule = () => {
+  activeWebView = null;
   store.dispatch({
     type: TYPE.UNSET_ACTIVE_APP_MODULE,
   });
 };
 
 export const toggleWebViewDevTools = () => {
-  const { activeAppModule } = store.getState();
-  if (activeAppModule?.webview) {
-    const { webview } = activeAppModule;
-    if (webview.isDevToolsOpened()) {
-      webview.closeDevTools();
+  const activeWebView = getActiveWebView();
+  if (activeWebView) {
+    if (activeWebView.isDevToolsOpened()) {
+      activeWebView.closeDevTools();
     } else {
-      webview.openDevTools();
+      activeWebView.openDevTools();
     }
   }
 };
 
 function sendWalletDataUpdated(walletData) {
-  const { activeAppModule } = store.getState();
-  if (activeAppModule?.webview) {
+  const activeWebView = getActiveWebView();
+  if (activeWebView) {
     try {
-      activeAppModule.webview.send('wallet-data-updated', walletData);
+      activeWebView.send('wallet-data-updated', walletData);
     } catch (err) {}
   }
 }
 
 export function prepareWebView() {
   observeStore(
-    (state) => state.activeAppModule?.webview,
-    (webview) => {
+    (state) => state.activeAppModuleName,
+    (moduleName) => {
+      const webview = getActiveWebView();
       if (webview) {
         webview.addEventListener('ipc-message', handleIpcMessage);
         webview.addEventListener('dom-ready', async () => {
           const state = store.getState();
+          const moduleState = state.moduleStates[moduleName];
           const activeModule = getActiveModule();
-          const moduleState = state.moduleStates[activeModule.name];
           const storageData = await readModuleStorage(activeModule);
           webview.send('initialize', {
             ...getWalletData(state),

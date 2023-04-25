@@ -4,7 +4,7 @@ import fs from 'fs';
 
 // Internal
 import store, { observeStore } from 'store';
-import { toggleWebViewDevTools } from 'lib/modules';
+import { toggleWebViewDevTools, getActiveWebView } from 'lib/modules';
 import { updateSettings } from 'lib/settings';
 import { startCore, stopCore } from 'lib/core';
 import { backupWallet as backup, navigate } from 'lib/wallet';
@@ -296,9 +296,9 @@ function buildUpdaterMenu() {
 function buildDarwinTemplate() {
   const state = store.getState();
   const coreConnected = isCoreConnected(state);
+  const activeWebView = getActiveWebView();
   const {
     settings: { manualDaemon },
-    activeAppModule,
     core: { systemInfo },
   } = state;
 
@@ -354,7 +354,7 @@ function buildDarwinTemplate() {
   if (process.env.NODE_ENV === 'development' || state.settings.devMode) {
     subMenuWindow.submenu.push(menuItems.toggleDevTools);
 
-    if (activeAppModule && activeAppModule.webview) {
+    if (activeWebView) {
       subMenuWindow.submenu.push(menuItems.toggleModuleDevTools);
     }
   }
@@ -391,8 +391,8 @@ function buildDarwinTemplate() {
 function buildDefaultTemplate() {
   const state = store.getState();
   const coreConnected = isCoreConnected(state);
+  const activeWebView = getActiveWebView();
   const {
-    activeAppModule,
     settings: { manualDaemon },
     core: { systemInfo },
   } = state;
@@ -439,7 +439,7 @@ function buildDefaultTemplate() {
   if (process.env.NODE_ENV === 'development' || state.settings.devMode) {
     subMenuView.submenu.push(menuItems.separator, menuItems.toggleDevTools);
 
-    if (activeAppModule && activeAppModule.webview) {
+    if (activeWebView) {
       subMenuView.submenu.push(menuItems.toggleModuleDevTools);
     }
   }
@@ -503,7 +503,7 @@ export function prepareMenu() {
     (state) => state.settings && state.settings.devMode,
     rebuildMenu
   );
-  observeStore((state) => state.activeAppModule, rebuildMenu);
+  observeStore((state) => state.activeAppModuleName, rebuildMenu);
   observeStore((state) => state.settings.manualDaemon, rebuildMenu);
   observeStore((state) => state.core.systemInfo?.litemode, rebuildMenu);
   observeStore((state) => state.core.systemInfo?.nolegacy, rebuildMenu);

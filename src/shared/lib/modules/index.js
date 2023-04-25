@@ -5,8 +5,9 @@ export {
   abortModuleDownload,
 } from './installModule';
 export {
-  setActiveWebView,
-  unsetActiveWebView,
+  getActiveWebView,
+  setActiveAppModule,
+  unsetActiveAppModule,
   toggleWebViewDevTools,
   prepareWebView,
 } from './webview';
