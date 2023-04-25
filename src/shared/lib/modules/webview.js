@@ -66,48 +66,49 @@ const getActiveModule = () => {
  */
 
 function handleIpcMessage(event) {
-  switch (event.channel) {
+  const { srcElement: webview, channel, args } = event;
+  switch (channel) {
     case 'send':
-      send(event.args);
+      send(args, webview);
       break;
     case 'rpc-call':
-      rpcCall(event.args);
+      rpcCall(args, webview);
       break;
     case 'api-call':
-      apiCall(event.args);
+      apiCall(args, webview);
       break;
     case 'secure-api-call':
-      secureApiCall(event.args);
+      secureApiCall(args, webview);
       break;
     case 'show-notification':
-      showNotif(event.args);
+      showNotif(args, webview);
       break;
     case 'show-error-dialog':
-      showErrorDialog(event.args);
+      showErrorDialog(args, webview);
       break;
     case 'show-success-dialog':
-      showSuccessDialog(event.args);
+      showSuccessDialog(args, webview);
       break;
     case 'show-info-dialog':
-      showInfoDialog(event.args);
+      showInfoDialog(args, webview);
       break;
     case 'confirm':
-      confirm(event.args);
+      confirm(args, webview);
       break;
     case 'update-state':
-      updateState(event.args);
+      updateState(args, webview);
       break;
     case 'update-storage':
-      updateStorage(event.args);
+      updateStorage(args, webview);
       break;
     case 'context-menu':
-      contextMenu(event.args);
+      contextMenu(args, webview);
       break;
     case 'open-in-browser':
-      openInBrowser(event.args);
+      openInBrowser(args, webview);
       break;
     case 'copy-to-clipboard':
-      copyToClipboard(event.args);
+      copyToClipboard(args, webview);
       break;
   }
 }
@@ -124,12 +125,11 @@ function send([{ sendFrom, recipients, advancedOptions }]) {
   }
 }
 
-async function rpcCall([command, params, callId]) {
-  const activeWebView = getActiveWebView();
+async function rpcCall([command, params, callId], webview) {
   try {
     const response = await rpc(command, ...(params || []));
-    if (activeWebView) {
-      activeWebView.send(
+    if (webview) {
+      webview.send(
         `rpc-return${callId ? `:${callId}` : ''}`,
         null,
         response && JSON.parse(JSON.stringify(response))
@@ -137,18 +137,17 @@ async function rpcCall([command, params, callId]) {
     }
   } catch (err) {
     console.error(err);
-    if (activeWebView) {
-      activeWebView.send(`rpc-return${callId ? `:${callId}` : ''}`, err);
+    if (webview) {
+      webview.send(`rpc-return${callId ? `:${callId}` : ''}`, err);
     }
   }
 }
 
-async function apiCall([endpoint, params, callId]) {
-  const activeWebView = getActiveWebView();
+async function apiCall([endpoint, params, callId], webview) {
   try {
     const response = await callApi(endpoint, params);
-    if (activeWebView) {
-      activeWebView.send(
+    if (webview) {
+      webview.send(
         `api-return${callId ? `:${callId}` : ''}`,
         null,
         response && JSON.parse(JSON.stringify(response))
@@ -156,14 +155,13 @@ async function apiCall([endpoint, params, callId]) {
     }
   } catch (err) {
     console.error(err);
-    if (activeWebView) {
-      activeWebView.send(`api-return${callId ? `:${callId}` : ''}`, err);
+    if (webview) {
+      webview.send(`api-return${callId ? `:${callId}` : ''}`, err);
     }
   }
 }
 
-async function secureApiCall([endpoint, params, callId]) {
-  const activeWebView = getActiveWebView();
+async function secureApiCall([endpoint, params, callId], webview) {
   const { displayName } = getActiveModule();
   try {
     const message = (
@@ -191,8 +189,8 @@ async function secureApiCall([endpoint, params, callId]) {
       pin === undefined
         ? undefined
         : await callApi(endpoint, { ...params, pin });
-    if (activeWebView) {
-      activeWebView.send(
+    if (webview) {
+      webview.send(
         `secure-api-return${callId ? `:${callId}` : ''}`,
         null,
         response && JSON.parse(JSON.stringify(response))
@@ -200,11 +198,8 @@ async function secureApiCall([endpoint, params, callId]) {
     }
   } catch (error) {
     console.error(error);
-    if (activeWebView) {
-      activeWebView.send(
-        `secure-api-return${callId ? `:${callId}` : ''}`,
-        error
-      );
+    if (webview) {
+      webview.send(`secure-api-return${callId ? `:${callId}` : ''}`, error);
     }
   }
 }
@@ -238,8 +233,7 @@ function showInfoDialog([options = {}]) {
   });
 }
 
-function confirm([options = {}, confirmationId]) {
-  const activeWebView = getActiveWebView();
+function confirm([options = {}, confirmationId], webview) {
   const { question, note, labelYes, skinYes, labelNo, skinNo } = options;
   openConfirmDialog({
     question,
@@ -247,8 +241,8 @@ function confirm([options = {}, confirmationId]) {
     labelYes,
     skinYes,
     callbackYes: () => {
-      if (activeWebView) {
-        activeWebView.send(
+      if (webview) {
+        webview.send(
           `confirm-answer${confirmationId ? `:${confirmationId}` : ''}`,
           true
         );
@@ -257,8 +251,8 @@ function confirm([options = {}, confirmationId]) {
     labelNo,
     skinNo,
     callbackNo: () => {
-      if (activeWebView) {
-        activeWebView.send(
+      if (webview) {
+        webview.send(
           `confirm-answer${confirmationId ? `:${confirmationId}` : ''}`,
           false
         );
@@ -286,10 +280,9 @@ function updateStorage([data]) {
   writeModuleStorage(activeModule, data);
 }
 
-function contextMenu([template]) {
-  const activeWebView = getActiveWebView();
-  if (activeWebView) {
-    popupContextMenu(template || defaultMenu, activeWebView.getWebContentsId());
+function contextMenu([template], webview) {
+  if (webview) {
+    popupContextMenu(template || defaultMenu, webview.getWebContentsId());
   }
 }
 
