@@ -1,9 +1,9 @@
 {
   "name": "nexus_wallet",
   "productName": "Nexus Wallet",
-  "version": "3.1.0-beta.2",
+  "version": "3.1.0",
   "backwardCompatible": "2.2.0",
-  "buildDate": "April 20th 2023",
+  "buildDate": "April 26th 2023",
   "description": "User interface for the Nexus blockchain and ecosystem.",
   "scripts": {
     "prebuild-dev": "concurrently \"npm run build-main-dev\" \"npm run build-preload-dev\" \"node -r @babel/register ./internals/scripts/checkDll.js\" ",
@@ -66,8 +66,7 @@
     "publish": {
       "provider": "github",
       "owner": "Nexusoft",
-      "repo": "NexusInterface",
-      "channel": "beta"
+      "repo": "NexusInterface"
     },
     "afterSign": "internals/aftersign.js",
     "mac": {
