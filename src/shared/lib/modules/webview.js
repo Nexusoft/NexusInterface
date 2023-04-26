@@ -266,7 +266,7 @@ function updateState([moduleState]) {
   if (typeof moduleState === 'object') {
     store.dispatch({
       type: TYPE.UPDATE_MODULE_STATE,
-      payload: { activeAppModuleName, moduleState },
+      payload: { moduleName: activeAppModuleName, moduleState },
     });
   } else {
     console.error(
