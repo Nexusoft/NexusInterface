@@ -172,7 +172,7 @@ function buildQuery({ addressQuery, operation, timeSpan }) {
   if (timeSpan) {
     const pastDate = getThresholdDate(timeSpan);
     if (pastDate) {
-      queries.push(`results.timespan>${pastDate.getTime() / 1000}`);
+      queries.push(`results.timestamp>${pastDate.getTime() / 1000}`);
     }
   }
   if (operation) {
