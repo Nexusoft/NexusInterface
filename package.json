@@ -109,6 +109,10 @@
       "extraResources": [
         "./assets/win32/cores/**/*",
         "./assets/installerSidebar.bmp"
+      ],
+      "publisherName": [
+        "Nexus Development US LLC.",
+        "Nexus Development US, LLC."
       ]
     },
     "nsis": {
