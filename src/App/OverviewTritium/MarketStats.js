@@ -46,8 +46,10 @@ export function PriceStat() {
 }
 
 export function MarketCapStat() {
-  const marketCap = useSelector((state) => state.market?.marketCap);
+  const price = useSelector((state) => state.market?.price);
+  const supply = useSelector((state) => state.core.ledgerInfo?.supply?.total);
   const currency = useSelector((state) => state.market?.currency);
+  const marketCap = price * supply;
 
   return (
     <Stat

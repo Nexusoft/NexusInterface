@@ -104,16 +104,14 @@ function useGetBalances() {
   }, []);
 }
 
-function useGetDifficulty(overviewDisplay) {
+function useGetLedgerInfo() {
   useEffect(() => {
-    if (overviewDisplay === 'miner') {
-      getLedgerInfo();
-      const intervalID = setInterval(getLedgerInfo, 50000);
-      return () => {
-        clearInterval(intervalID);
-      };
-    }
-  }, [overviewDisplay]);
+    getLedgerInfo();
+    const intervalID = setInterval(getLedgerInfo, 50000);
+    return () => {
+      clearInterval(intervalID);
+    };
+  }, []);
 }
 
 // Mandatory React-Redux method
@@ -126,7 +124,7 @@ export default function Stats({ showingGlobe }) {
   );
 
   useGetBalances();
-  useGetDifficulty(overviewDisplay);
+  useGetLedgerInfo();
 
   if (overviewDisplay === 'none') {
     return <OverviewPage />;
