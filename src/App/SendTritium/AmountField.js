@@ -153,8 +153,11 @@ export default function AmountField({ parentFieldName }) {
             name={amountFieldName}
             skin="filled-inverted"
             config={{
-              format: (value, name) => {
-                return value ? value.replace(',', '.') : '';
+              format: (value) => {
+                if (value && typeof value === 'string') {
+                  return value.replace(',', '.');
+                }
+                return value;
               },
             }}
             placeholder="0.00000"
