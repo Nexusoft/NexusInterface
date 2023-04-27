@@ -1,16 +1,11 @@
-import React from 'react';
-import { reduxForm, Field } from 'redux-form';
-
-import Modal from 'components/Modal';
-import Button from 'components/Button';
+import Form from 'components/Form';
+import ControlledModal from 'components/ControlledModal';
 import FormField from 'components/FormField';
-import TextField from 'components/TextField';
 import Spinner from 'components/Spinner';
-import confirmPin from 'utils/promisified/confirmPin';
-import { errorHandler } from 'utils/form';
-import { openSuccessDialog } from 'lib/ui';
+import { formSubmit, required, checkAll, regex } from 'lib/form';
+import { confirmPin, openSuccessDialog } from 'lib/dialog';
 import { loadNamespaces } from 'lib/user';
-import { apiPost } from 'lib/tritiumApi';
+import { callApi } from 'lib/tritiumApi';
 import { createNamespaceFee } from 'lib/fees';
 
 __ = __context('CreateNamespace');
@@ -18,97 +13,86 @@ __ = __context('CreateNamespace');
 // Namespace names can only contain lowercase letters, numbers, and periods (.)
 const namespaceRegex = /^[a-z\d\.]+$/;
 
-@reduxForm({
-  form: 'create-namespace',
-  destroyOnUnmount: false,
-  initialValues: {
-    name: '',
-  },
-  validate: ({ name }) => {
-    const errors = {};
-    if (!name || !name.trim()) {
-      errors.name = __('Name is required');
-    } else if (!namespaceRegex.test(name)) {
-      errors.name = __(
-        'Namespace names can only contain lowercase letters, numbers, and periods (.)'
-      );
-    }
+const initialValues = {
+  namespace: '',
+};
 
-    return errors;
-  },
-  onSubmit: async ({ type, name, namespace, registerAddress }) => {
-    const pin = await confirmPin();
+export default function CreateNamespaceModal() {
+  return (
+    <ControlledModal maxWidth={450}>
+      {(closeModal) => (
+        <>
+          <ControlledModal.Header>
+            {__('Create a new namespace')}
+          </ControlledModal.Header>
+          <ControlledModal.Body>
+            <Form
+              name="create-namespace"
+              persistState
+              initialValues={initialValues}
+              onSubmit={formSubmit({
+                submit: async ({ namespace }) => {
+                  const pin = await confirmPin();
 
-    if (pin) {
-      return await apiPost('names/create/namespace', {
-        pin,
-        name,
-      });
-    }
-  },
-  onSubmitSuccess: async (result, dispatch, props) => {
-    if (!result) return; // Submission was cancelled
-    loadNamespaces();
-    props.reset();
-    props.closeModal();
-    openSuccessDialog({
-      message: __('New namespace has been created'),
-    });
-  },
-  onSubmitFail: errorHandler(__('Error creating namespace')),
-})
-class CreateNamespaceForm extends React.Component {
-  render() {
-    const { handleSubmit, submitting } = this.props;
-    return (
-      <form onSubmit={handleSubmit}>
-        <FormField connectLabel label={__('Name')}>
-          <Field
-            name="name"
-            component={TextField.RF}
-            skin="filled-inverted"
-            className="mt0_4"
-            placeholder={__('Namespace name')}
-          />
-        </FormField>
+                  if (pin) {
+                    return await callApi('names/create/namespace', {
+                      pin,
+                      namespace,
+                    });
+                  }
+                },
+                onSuccess: async (result, values, form) => {
+                  if (!result) return; // Submission was cancelled
+                  loadNamespaces();
+                  form.restart();
+                  closeModal();
+                  openSuccessDialog({
+                    message: __('New namespace has been created'),
+                  });
+                },
+                errorMessage: __('Error creating namespace'),
+              })}
+            >
+              <FormField connectLabel label={__('Name')}>
+                <Form.TextField
+                  name="namespace"
+                  skin="filled-inverted"
+                  className="mt0_4"
+                  placeholder={__('Namespace name')}
+                  validate={checkAll(
+                    required(),
+                    regex(
+                      namespaceRegex,
+                      __(
+                        'Namespace names can only contain lowercase letters, numbers, and periods (.)'
+                      )
+                    )
+                  )}
+                />
+              </FormField>
 
-        <div className="mt2" style={{ textAlign: 'left' }}>
-          {__('Namespace creation fee')}: {createNamespaceFee} NXS
-        </div>
+              <div className="mt2" style={{ textAlign: 'left' }}>
+                {__('Namespace creation fee')}: {createNamespaceFee} NXS
+              </div>
 
-        <Button
-          skin="primary"
-          wide
-          uppercase
-          className="mt3"
-          type="submit"
-          disabled={submitting}
-        >
-          {submitting ? (
-            <span>
-              <Spinner className="space-right" />
-              <span className="v-align">{__('Creating namespace')}...</span>
-            </span>
-          ) : (
-            __('Create namespace')
-          )}
-        </Button>
-      </form>
-    );
-  }
+              <Form.SubmitButton skin="primary" wide uppercase className="mt3">
+                {({ submitting }) =>
+                  submitting ? (
+                    <span>
+                      <Spinner className="mr0_4" />
+                      <span className="v-align">
+                        {__('Creating namespace')}...
+                      </span>
+                    </span>
+                  ) : (
+                    __('Create namespace')
+                  )
+                }
+              </Form.SubmitButton>
+            </Form>
+          </ControlledModal.Body>
+        </>
+      )}
+    </ControlledModal>
+  );
 }
-
-const CreateNamespaceModal = () => (
-  <Modal maxWidth={450}>
-    {closeModal => (
-      <>
-        <Modal.Header>{__('Create a new namespace')}</Modal.Header>
-        <Modal.Body>
-          <CreateNamespaceForm closeModal={closeModal} />
-        </Modal.Body>
-      </>
-    )}
-  </Modal>
-);
-
-export default CreateNamespaceModal;

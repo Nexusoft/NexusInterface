@@ -1,19 +1,19 @@
 // External
-import React, { Component } from 'react';
+import { cloneElement, Children } from 'react';
 import styled from '@emotion/styled';
-
-// Internal
-import { newUID } from 'utils/misc';
+import useUID from 'utils/useUID';
 
 const indentSpace = 20;
 
-const Field = styled.div(({ indent = 0, theme }) => ({
+const Field = styled.div(({ indent = 0, theme, disabled }) => ({
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
   padding: '1em 0',
   borderBottom: `1px solid ${theme.mixer(0.125)}`,
   marginLeft: indent * indentSpace,
+  opacity: disabled ? 0.5 : 1,
+  pointerEvents: disabled ? 'none' : 'initial',
 }));
 
 const Label = styled.label({
@@ -39,57 +39,40 @@ const Input = styled.div({
  * @class SettingsField
  * @extends {Component}
  */
-class SettingsField extends Component {
-  inputId = newUID();
+export default function SettingsField({
+  label,
+  subLabel,
+  connectLabel,
+  children,
+  indent,
+  disabled,
+  ...rest
+}) {
+  const inputId = useUID();
 
-  /**
-   *  Handles input to a settingsfield
-   *
-   * @memberof SettingsField
-   */
-  settingsInput = () => {
-    const { connectLabel, children } = this.props;
+  const settingsInput = () => {
     if (connectLabel) {
       if (typeof children === 'function') {
-        return children(this.inputId);
+        return children(inputId);
       } else {
-        return React.cloneElement(React.Children.only(children), {
-          id: this.inputId,
+        return cloneElement(Children.only(children), {
+          id: inputId,
         });
       }
     }
-
     return children;
   };
 
-  /**
-   * Component's Renderable JSX
-   *
-   * @returns
-   * @memberof SettingsField
-   */
-  render() {
-    const {
-      label,
-      subLabel,
-      connectLabel,
-      children,
-      indent,
-      ...rest
-    } = this.props;
-    return (
-      <Field indent={indent} {...rest}>
-        <Label
-          htmlFor={connectLabel ? this.inputId : undefined}
-          onClick={e => e.preventDefault()}
-        >
-          <div>{label}</div>
-          {subLabel && <SubLabel>{subLabel}</SubLabel>}
-        </Label>
-        <Input>{this.settingsInput()}</Input>
-      </Field>
-    );
-  }
+  return (
+    <Field indent={indent} disabled={disabled} {...rest}>
+      <Label
+        htmlFor={connectLabel ? inputId : undefined}
+        onClick={(e) => e.preventDefault()}
+      >
+        <div>{label}</div>
+        {subLabel && <SubLabel>{subLabel}</SubLabel>}
+      </Label>
+      <Input>{settingsInput()}</Input>
+    </Field>
+  );
 }
-
-export default SettingsField;

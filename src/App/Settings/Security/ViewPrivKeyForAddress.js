@@ -1,150 +1,90 @@
 // External
-import React, { Component } from 'react';
-import { reduxForm, Field } from 'redux-form';
+import { useState } from 'react';
 import { clipboard } from 'electron';
 
 // Internal
+import Form from 'components/Form';
 import Icon from 'components/Icon';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
 import InputGroup from 'components/InputGroup';
-import { openErrorDialog, showNotification } from 'lib/ui';
+import { formSubmit, required } from 'lib/form';
+import { showNotification } from 'lib/ui';
 import rpc from 'lib/rpc';
 import copyIcon from 'icons/copy.svg';
-import { errorHandler } from 'utils/form';
 
 __ = __context('Settings.Security');
 
-/**
- * View Private Keys for Address JSX
- *
- * @class ViewPrivKeyForAddress
- * @extends {Component}
- */
-@reduxForm({
-  form: 'viewPrivateKey',
-  destroyOnUnmount: false,
-  initialValues: {
-    address: '',
-    privateKey: '',
-  },
-  validate: ({ address }) => {
-    const errors = {};
-    if (!address) {
-      errors.address = __('Address cannot be empty');
-    }
-    return errors;
-  },
-  onSubmit: ({ address }) => rpc('dumpprivkey', [address]),
-  onSubmitSuccess: (result, dispatch, props) => {
-    props.change('privateKey', result);
-  },
-  onSubmitFail: errorHandler(__('Error getting private key')),
-})
-class ViewPrivKeyForAddress extends Component {
-  privKeyRef = React.createRef();
+const initialValues = {
+  address: '',
+};
 
-  /**
-   * Show Private Keys
-   *
-   * @param {*} e
-   * @memberof ViewPrivKeyForAddress
-   */
-  showPrivKey(e) {
-    e.preventDefault();
-    let address = this.inputRef.value;
-    if (address) {
-      rpc('dumpprivkey', [address])
-        .then(payload => {
-          this.outputRef.value = payload;
-        })
-        .catch(e => {
-          if (e.includes(address)) {
-            e = e.replace(address + ' ', '');
-          }
-          openErrorDialog({ message: e });
-        });
-    } else {
-      this.inputRef.focus();
-    }
-  }
+export default function ViewPrivKeyForAddress() {
+  const [privateKey, setPrivateKey] = useState('');
 
-  /**
-   * Copy Private Keys
-   *
-   * @memberof ViewPrivKeyForAddress
-   */
-  copyPrivkey = () => {
-    const privKey = this.privKeyRef.current.value;
-    clipboard.writeText(privKey);
+  const copyPrivkey = () => {
+    clipboard.writeText(privateKey);
     showNotification(__('Copied to clipboard'), 'success');
   };
 
-  /**
-   * Reset Private Keys
-   *
-   * @memberof ViewPrivKeyForAddress
-   */
-  resetPrivateKey = () => {
-    this.props.change('privateKey', '');
+  const handleStateChange = ({ values: { address } }) => {
+    if (address) {
+      setPrivateKey('');
+    }
   };
 
-  /**
-   * Component's Renderable JSX
-   *
-   * @returns
-   * @memberof ViewPrivKeyForAddress
-   */
-  render() {
-    const { handleSubmit, submitting } = this.props;
-    return (
-      <form onSubmit={handleSubmit}>
-        <FieldSet legend={__('View private key for address')}>
-          <FormField connectLabel label={__('Address')}>
-            {inputId => (
-              <InputGroup>
-                <Field
-                  component={TextField.RF}
-                  name="address"
-                  id={inputId}
-                  placeholder={__('Enter address here')}
-                  onChange={this.resetPrivateKey}
-                />
-
-                <Button
-                  type="submit"
-                  skin="primary"
-                  fitHeight
-                  disabled={submitting}
-                  waiting={submitting}
-                >
-                  {__('View private key')}
-                </Button>
-              </InputGroup>
-            )}
-          </FormField>
-
-          <FormField label={__('Private key')}>
+  return (
+    <Form
+      name="viewPrivateKey"
+      persistState
+      initialValues={initialValues}
+      onSubmit={formSubmit({
+        submit: ({ address }) => rpc('dumpprivkey', [address]),
+        onSuccess: (result) => {
+          setPrivateKey(result);
+        },
+        errorMessage: __('Error getting private key'),
+      })}
+    >
+      <FieldSet legend={__('View private key for address')}>
+        <Form.Spy
+          subscription={{ values: true }}
+          onChange={handleStateChange}
+        />
+        <FormField connectLabel label={__('Address')}>
+          {(inputId) => (
             <InputGroup>
-              <Field
-                component={TextField.RF}
-                name="privateKey"
-                readOnly
-                type="password"
-                placeholder={__('Private key will be displayed here')}
-                ref={this.privKeyRef}
+              <Form.TextField
+                name="address"
+                id={inputId}
+                placeholder={__('Enter address here')}
+                validate={required()}
               />
-              <Button fitHeight className="relative" onClick={this.copyPrivkey}>
-                <Icon icon={copyIcon} className="space-right" />
-                {__('Copy')}
-              </Button>
+
+              <Form.SubmitButton skin="primary" fitHeight>
+                {__('View private key')}
+              </Form.SubmitButton>
             </InputGroup>
-          </FormField>
-        </FieldSet>
-      </form>
-    );
-  }
+          )}
+        </FormField>
+
+        <FormField label={__('Private key')}>
+          <InputGroup>
+            <TextField
+              readOnly
+              type="password"
+              placeholder={__('Private key will be displayed here')}
+              value={privateKey}
+            />
+            <Button fitHeight className="relative" onClick={copyPrivkey}>
+              <Icon icon={copyIcon} className="mr0_4" />
+              {__('Copy')}
+            </Button>
+          </InputGroup>
+        </FormField>
+      </FieldSet>
+    </Form>
+  );
 }
-export default ViewPrivKeyForAddress;

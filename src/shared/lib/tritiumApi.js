@@ -1,20 +1,86 @@
-import axios from 'axios';
+import http from 'http';
+import https from 'https';
 
+import store from 'store';
+import { selectActiveSession } from 'lib/user';
 import { getActiveCoreConfig } from 'lib/coreConfig';
 
-const getDefaultOptions = ({ apiUser, apiPassword }) => ({
+const getDefaultOptions = ({
+  apiSSL,
+  ip,
+  apiPortSSL,
+  apiPort,
+  apiUser,
+  apiPassword,
+}) => ({
+  portocol: apiSSL ? 'https:' : 'http:',
+  host: ip,
+  port: apiSSL ? apiPortSSL : apiPort,
   headers: {
     'Content-Type': 'application/json',
   },
-  withCredentials: !!(apiUser && apiPassword),
-  auth:
-    apiUser && apiPassword
-      ? {
-          username: apiUser,
-          password: apiPassword,
-        }
-      : undefined,
+  auth: apiUser && apiPassword ? `${apiUser}:${apiPassword}` : undefined,
+  rejectUnauthorized: false,
 });
+
+function sendRequest({ params, options, ssl }) {
+  return new Promise((resolve, reject) => {
+    try {
+      const content = params && JSON.stringify(params);
+      if (content) {
+        options.headers = {
+          ...options?.headers,
+          'Content-Length': Buffer.byteLength(content),
+        };
+      }
+
+      const { request } = ssl ? https : http;
+      const req = request(options, (res) => {
+        let data = '';
+        res.setEncoding('utf8');
+
+        res.on('data', (chunk) => {
+          data += chunk;
+        });
+
+        res.on('end', () => {
+          let result = undefined;
+          if (data) {
+            try {
+              result = JSON.parse(data);
+            } catch (err) {
+              console.error('Response data is not valid JSON', data);
+            }
+          }
+          if (res.statusCode >= 200 && res.statusCode < 300) {
+            resolve(result?.result);
+          } else {
+            reject(result?.error);
+          }
+        });
+
+        res.on('aborted', () => {
+          reject(new Error('Aborted'));
+        });
+      });
+
+      req.on('error', (err) => {
+        reject(err);
+      });
+
+      req.on('abort', () => {
+        reject(new Error('Aborted'));
+      });
+
+      if (params) {
+        req.write(content);
+      }
+      req.end();
+    } catch (err) {
+      reject(err);
+    }
+  });
+}
 
 /**
  * Send a Tritium API request in POST method
@@ -24,18 +90,30 @@ const getDefaultOptions = ({ apiUser, apiPassword }) => ({
  * @param {*} params
  * @returns
  */
-export async function apiPost(endpoint, params) {
+export async function callApi(endpoint, customParams) {
   const conf = await getActiveCoreConfig();
-  try {
-    const response = await axios.post(
-      `${conf.apiHost}/${endpoint}`,
-      params,
-      getDefaultOptions(conf)
-    );
-    return response.data && response.data.result;
-  } catch (err) {
-    throw err.response && err.response.data && err.response.data.error;
+  const state = store.getState();
+  const session = selectActiveSession(state);
+  const {
+    core: { systemInfo },
+  } = state;
+
+  //TODO: There is a bug in the core and where HAS to be the last param. Remove when fixed.
+  if (customParams?.where) {
+    const tempWhere = customParams.where;
+    delete customParams.where;
+    customParams.where = tempWhere;
   }
+
+  const params = systemInfo?.multiuser
+    ? { session, ...customParams }
+    : customParams;
+  const options = {
+    method: 'POST',
+    path: `/${endpoint}`,
+    ...getDefaultOptions(conf),
+  };
+  return await sendRequest({ params, options, ssl: conf.apiSSL });
 }
 
 /**
@@ -45,15 +123,14 @@ export async function apiPost(endpoint, params) {
  * @param {*} url
  * @returns
  */
-export async function apiGet(url) {
+export async function callApiByUrl(url) {
   const conf = await getActiveCoreConfig();
-  try {
-    const response = await axios.get(
-      `${conf.apiHost}/${url}`,
-      getDefaultOptions(conf)
-    );
-    return response.data && response.data.result;
-  } catch (err) {
-    throw err.response && err.response.data && err.response.data.error;
-  }
+  return await sendRequest({
+    options: {
+      method: 'GET',
+      path: `/${url}`,
+      ...getDefaultOptions(conf),
+    },
+    ssl: conf.apiSSL,
+  });
 }

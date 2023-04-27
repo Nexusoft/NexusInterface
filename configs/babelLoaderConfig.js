@@ -4,12 +4,12 @@ const stage0Preset = [
   // Stage 1
   // '@babel/plugin-proposal-export-default-from',
   // '@babel/plugin-proposal-logical-assignment-operators',
-  // ['@babel/plugin-proposal-optional-chaining', { loose: false }],
+  ['@babel/plugin-proposal-optional-chaining', { loose: false }],
   // ['@babel/plugin-proposal-pipeline-operator', { proposal: 'minimal' }],
   // ['@babel/plugin-proposal-nullish-coalescing-operator', { loose: false }],
   // '@babel/plugin-proposal-do-expressions',
   // Stage 2
-  ['@babel/plugin-proposal-decorators', { legacy: true }],
+  // ['@babel/plugin-proposal-decorators', { legacy: true }],
   // '@babel/plugin-proposal-function-sent',
   // '@babel/plugin-proposal-export-namespace-from',
   // '@babel/plugin-proposal-numeric-separator',
@@ -42,18 +42,21 @@ const devPlugins = [];
 const prodPlugins = ['babel-plugin-dev-expression'];
 const development = process.env.NODE_ENV === 'development';
 
-export const rendererBabelConfig = hot => {
+export const rendererBabelConfig = ({ hot } = {}) => {
   const config = {
     plugins: [
-      ['emotion', { sourceMap: development }],
+      ['@emotion', { sourceMap: development }],
       ...stage0Preset,
       ...(development ? devPlugins : [...prodPlugins, ...reactOptimizePreset]),
     ],
-    presets: [presetEnv, ['@babel/preset-react', { development }]],
+    presets: [
+      presetEnv,
+      ['@babel/preset-react', { development, runtime: 'automatic' }],
+    ],
   };
 
   if (hot) {
-    config.plugins.push('react-hot-loader/babel');
+    config.plugins.unshift('react-refresh/babel');
   }
   return config;
 };
@@ -63,7 +66,7 @@ const mainBabelConfig = () => ({
   presets: [presetEnv],
 });
 
-const loaderConfig = options => ({
+const loaderConfig = (options) => ({
   test: /\.js$/,
   exclude: /node_modules/,
   use: {
@@ -77,5 +80,5 @@ const loaderConfig = options => ({
 
 export const babelLoaderMain = () => loaderConfig(mainBabelConfig());
 
-export const babelLoaderRenderer = hot =>
+export const babelLoaderRenderer = (hot) =>
   loaderConfig(rendererBabelConfig(hot));

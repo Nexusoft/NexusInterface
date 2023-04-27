@@ -1,22 +1,30 @@
+/**
+ * Important note - This file is imported into module_preload.js, either directly or
+ * indirectly, and will be a part of the preload script for modules, therefore:
+ * - Be picky with importing stuffs into this file, especially for big
+ * files and libraries. The bigger the preload scripts get, the slower the modules
+ * will load.
+ * - Don't assign anything to `global` variable because it will be passed
+ * into modules' execution environment.
+ * - Make sure this note also presents in other files which are imported here.
+ */
+
 // External
-import React, { PureComponent } from 'react';
+import { useEffect, useRef } from 'react';
 import styled from '@emotion/styled';
-import { keyframes } from '@emotion/core';
+import { keyframes } from '@emotion/react';
 
 // Internal
-import ModalContext from 'context/modal';
-import { removeModal } from 'lib/ui';
 import Overlay from 'components/Overlay';
 import { timing } from 'styles';
-import { passRef } from 'utils/misc';
-import * as color from 'utils/color';
+import { refs } from 'utils/misc';
 
 const intro = keyframes`
-  from { 
+  from {
     transform: translate(-50%, -50%) scale(0.9);
     opacity: 0 
   }
-  to { 
+  to {
     transform: translate(-50%, -50%) scale(1);
     opacity: 1
   }
@@ -61,7 +69,7 @@ const ModalComponent = styled.div(
     width: '60%',
     maxHeight: '80%',
     maxWidth: maxWidth,
-    background: color.darken(theme.background, 0.2),
+    background: theme.lower(theme.background, 0.2),
     color: theme.mixer(0.75),
     borderRadius: modalBorderRadius,
     boxShadow: '0 0 20px #000',
@@ -122,144 +130,81 @@ const ModalFooter = styled.div(
     }
 );
 
-/**
- * Modal Component
- *
- * @export
- * @class Modal
- * @extends {PureComponent}
- */
-export default class Modal extends PureComponent {
-  static defaultProps = {
-    dimBackground: true,
-    escToClose: true,
-  };
-
-  static contextType = ModalContext;
-
-  /**
-   *Creates an instance of Modal.
-   * @param {*} props
-   * @memberof Modal
-   */
-  constructor(props) {
-    super(props);
-    props.assignClose && props.assignClose(this.animatedClose);
-  }
-
-  componentDidMount() {
-    this.modalElem.focus();
-  }
-
-  componentWillUnmount() {
-    if (this.props.onClose) this.props.onClose();
-  }
-
-  /**
-   * Animate the Close event
-   *
-   * @memberof Modal
-   */
-  animatedClose = () => {
-    const modalID = this.context;
-    if (modalID) {
+export default function Modal({
+  visible,
+  removeModal,
+  onClose,
+  fullScreen,
+  dimBackground = true,
+  escToClose = true,
+  onBackgroundClick,
+  assignClose,
+  modalRef,
+  backgroundRef,
+  maxWidth,
+  children,
+  ...rest
+}) {
+  const modalElem = useRef();
+  const backgroundElem = useRef();
+  const closeWithAnimation = () =>
+    new Promise((resolve) => {
       const duration = parseInt(timing.quick);
-      const animation = this.props.fullScreen ? fullScreenOutro : outro;
+      const animation = fullScreen ? fullScreenOutro : outro;
       const options = {
         duration,
         easing: 'ease-in',
         fill: 'both',
       };
-      this.modalElem.animate(animation, options);
-      this.backgroundElem.animate(bgOutro, options);
-      setTimeout(this.remove, duration);
-    }
-  };
+      modalElem.current?.animate(animation, options);
+      backgroundElem.current?.animate(bgOutro, options);
+      setTimeout(() => {
+        removeModal();
+        resolve();
+      }, duration);
+    });
 
-  /**
-   * Remove Modal
-   *
-   * @memberof Modal
-   */
-  remove = () => {
-    const modalID = this.context;
-    removeModal(modalID);
-  };
+  useEffect(() => {
+    assignClose?.(closeWithAnimation);
+    modalElem.current?.focus();
+    return () => {
+      onClose?.();
+    };
+  }, []);
 
-  /**
-   * Pass Ref of this modal to state
-   *
-   * @memberof Modal
-   */
-  modalRef = el => {
-    this.modalElem = el;
-    if (this.props.modalRef) {
-      passRef(el, this.props.modalRef);
-    }
-  };
+  const handleKeyDown = escToClose
+    ? (e) => {
+        if (e.key === 'Escape') {
+          closeWithAnimation();
+        }
+      }
+    : undefined;
 
-  /**
-   * Pass Background Ref of this modal to state
-   *
-   * @memberof Modal
-   */
-  backgroundRef = el => {
-    this.backgroundElem = el;
-    if (this.props.backgroundRef) {
-      passRef(el, this.props.backgroundRef);
-    }
-  };
+  if (!visible) return null;
 
-  handleKeyDown = e => {
-    if (this.props.escToClose && e.key === 'Escape') {
-      this.animatedClose();
-    }
-  };
-
-  /**
-   * Component's Renderable JSX
-   *
-   * @returns
-   * @memberof Modal
-   */
-  render() {
-    const {
-      open,
-      dimBackground,
-      onBackgroundClick = this.animatedClose,
-      onClose,
-      fullScreen,
-      children,
-      assignClose,
-      modalRef,
-      backgroundRef,
-      escToClose,
-      maxWidth,
-      ...rest
-    } = this.props;
-
-    return (
-      <Overlay
-        dimBackground={this.props.dimBackground}
-        onBackgroundClick={onBackgroundClick}
-        backgroundRef={this.backgroundRef}
-        zPriority={fullScreen ? 1 : 0}
+  return (
+    <Overlay
+      dimBackground={dimBackground}
+      onBackgroundClick={
+        onBackgroundClick === undefined ? closeWithAnimation : onBackgroundClick
+      }
+      backgroundRef={refs(backgroundElem, backgroundRef)}
+      zPriority={fullScreen ? 1 : 0}
+    >
+      <ModalComponent
+        ref={refs(modalElem, modalRef)}
+        fullScreen={fullScreen}
+        tabIndex="0"
+        maxWidth={maxWidth}
+        onKeyDown={handleKeyDown}
+        {...rest}
       >
-        <ModalComponent
-          ref={this.modalRef}
-          fullScreen={fullScreen}
-          tabIndex="0"
-          maxWidth={maxWidth}
-          onKeyDown={this.handleKeyDown}
-          {...rest}
-        >
-          {typeof children === 'function'
-            ? children(this.animatedClose)
-            : children}
-        </ModalComponent>
-      </Overlay>
-    );
-  }
+        {typeof children === 'function'
+          ? children(closeWithAnimation)
+          : children}
+      </ModalComponent>
+    </Overlay>
+  );
 }
 
 Modal.Header = ModalHeader;

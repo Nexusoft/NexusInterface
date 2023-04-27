@@ -1,8 +1,8 @@
-import React, { useRef } from 'react';
+import { useRef, forwardRef } from 'react';
 import styled from '@emotion/styled';
 
 import { timing } from 'styles';
-import * as color from 'utils/color';
+import { passRef } from 'utils/misc';
 
 const SliderComponent = styled.input(({ theme }) => ({
   appearance: 'none',
@@ -28,28 +28,26 @@ const SliderComponent = styled.input(({ theme }) => ({
     transition: `background-color ${timing.normal}`,
 
     '&:hover': {
-      background: color.lighten(theme.primary, 0.15),
+      background: theme.raise(theme.primary, 0.15),
     },
   },
 }));
 
-const Slider = props => {
+const Slider = forwardRef((props, ref) => {
   const sliderRef = useRef();
   return (
     <SliderComponent
       type="range"
-      ref={sliderRef}
+      ref={(el) => {
+        passRef(el, sliderRef);
+        passRef(el, ref);
+      }}
       onMouseUp={() => {
-        sliderRef.current && sliderRef.current.blur();
+        sliderRef.current?.blur();
       }}
       {...props}
     />
   );
-};
-
-const SliderReduxForm = ({ input, meta, ...rest }) => (
-  <Slider error={meta.touched && meta.error} {...input} {...rest} />
-);
-Slider.RF = SliderReduxForm;
+});
 
 export default Slider;

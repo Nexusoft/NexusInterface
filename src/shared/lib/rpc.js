@@ -66,64 +66,83 @@ Available RPC methods:
 	Add new Interface Specific Utilities Here. Module Specific Functions go In Module Scripts.
 **/
 
-import axios from 'axios';
+import http from 'http';
+import https from 'https';
 
 import { getActiveCoreConfig } from 'lib/coreConfig';
 
-// export const GET = (cmd, args, Callback) => {
-//   var PostData = JSON.stringify({
-//     method: cmd,
-//     params: args,
-//   });
+const getDefaultOptions = ({ rpcSSL, ip, portSSL, port, user, password }) => ({
+  portocol: rpcSSL ? 'https:' : 'http:',
+  host: ip,
+  port: rpcSSL ? portSSL : port,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  auth: user && password ? `${user}:${password}` : undefined,
+  rejectUnauthorized: false,
+});
 
-//   POST(
-//     GETHOST(),
-//     PostData,
-//     'TAG-ID-deprecate',
-//     Callback,
-//     GETUSER(),
-//     GETPASSWORD()
-//   );
-// };
-
-export default async function rpc(cmd, args) {
-  const conf = await getActiveCoreConfig();
-  try {
-    const response = await axios.post(
-      conf.host,
-      {
+export default function rpc(cmd, args) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const conf = await getActiveCoreConfig();
+      const options = getDefaultOptions(conf);
+      const params = {
         method: cmd,
         params: args,
-      },
-      {
-        withCredentials: !!(conf.user && conf.password),
-        auth:
-          conf.user && conf.password
-            ? {
-                username: conf.user,
-                password: conf.password,
-              }
-            : undefined,
+      };
+      const content = params && JSON.stringify(params);
+      if (content) {
+        options.headers = {
+          ...options?.headers,
+          'Content-Length': Buffer.byteLength(content),
+        };
       }
-    );
 
-    return response.data && response.data.result;
-  } catch (err) {
-    if (err.response) {
-      const { status, data } = err.response;
-      if (status == 404) {
-        throw 'RPC Command {' + cmd + '} Not Found';
+      const { request } = conf.rpcSSL ? https : http;
+      const req = request(options, (res) => {
+        let data = '';
+        res.setEncoding('utf8');
+
+        res.on('data', (chunk) => {
+          data += chunk;
+        });
+
+        res.on('end', () => {
+          let result = undefined;
+          if (data) {
+            try {
+              result = JSON.parse(data);
+            } catch (err) {
+              console.error('Response data is not valid JSON', data);
+            }
+          }
+          if (res.statusCode >= 200 && res.statusCode < 300) {
+            resolve(result?.result);
+          } else {
+            reject(result?.error);
+          }
+        });
+
+        res.on('aborted', () => {
+          reject(new Error('Aborted'));
+        });
+      });
+
+      req.on('error', (err) => {
+        reject(err);
+      });
+
+      req.on('abort', () => {
+        reject(new Error('Aborted'));
+      });
+
+      if (params) {
+        req.write(content);
       }
-      if (status == 401) {
-        throw 'Bad Username and Password';
-      }
-      if (status == 400) {
-        throw 'Bad Request';
-      }
-      if (status == 500) {
-        throw data.error;
-      }
+      req.end();
+    } catch (err) {
+      reject(err);
     }
-    throw err.message || err;
-  }
+  });
 }

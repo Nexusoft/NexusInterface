@@ -7,6 +7,7 @@ import webpack from 'webpack';
 import { readFileSync } from 'fs';
 
 import packageJson from '../package.json';
+import { env } from 'process';
 
 const appVersion = packageJson.version;
 const buildDate = packageJson.buildDate;
@@ -23,8 +24,6 @@ try {
 }
 
 export default {
-  mode: process.env.NODE_ENV === 'development' ? 'development' : 'production',
-
   output: {
     // https://github.com/webpack/webpack/issues/1114
     libraryTarget: 'commonjs2',
@@ -48,8 +47,7 @@ export default {
       BACKWARD_COMPATIBLE_VERSION: JSON.stringify(backwardCompatible || ''),
       APP_ID: JSON.stringify(appId || ''),
       NEXUS_EMBASSY_PUBLIC_KEY: JSON.stringify(nexusPubKey),
+      LOCK_TESTNET: JSON.stringify(process.env.LOCK_TESTNET || ''),
     }),
-
-    new webpack.NamedModulesPlugin(),
   ],
 };

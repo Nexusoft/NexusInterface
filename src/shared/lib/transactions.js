@@ -33,7 +33,7 @@ async function fetchAllTransactions() {
   } = store.getState();
   loadTransactions(transactions, txtotal);
 
-  transactions.forEach(tx => {
+  transactions.forEach((tx) => {
     if (needsAutoUpdate(tx, minConfirmations)) {
       autoUpdateTxConfirmations(tx.txid);
     }
@@ -51,7 +51,7 @@ async function fetchNewTransactions(newTxCount) {
   } = store.getState();
   addTransactions(newTransactions.map(normalizeTransaction), txtotal);
 
-  newTransactions.forEach(tx => {
+  newTransactions.forEach((tx) => {
     if (needsAutoUpdate(tx, minConfirmations)) {
       autoUpdateTxConfirmations(tx.txid);
     }
@@ -62,7 +62,7 @@ function autoUpdateTxConfirmations(txid) {
   if (unsubscribers[txid]) return;
   unsubscribers[txid] = observeStore(
     ({ core: { info } }) => info && info.blocks,
-    async blocks => {
+    async (blocks) => {
       if (blocks) {
         await fetchTransaction(txid);
         const {
@@ -101,7 +101,7 @@ const addTransactions = (newTransactions, txtotal) => {
   });
 };
 
-const updateTransaction = tx => {
+const updateTransaction = (tx) => {
   store.dispatch({
     type: TYPE.UPDATE_TRANSACTION,
     payload: tx,
@@ -109,7 +109,7 @@ const updateTransaction = tx => {
 };
 
 // RPC commands return inconsistent transaction schemas so we have to normalize them before using
-const normalizeTransaction = tx => ({
+const normalizeTransaction = (tx) => ({
   ...tx,
   ...(tx.details && tx.details[0]),
 });
@@ -136,7 +136,7 @@ export async function autoUpdateTransactions() {
 
     observeStore(
       ({ core: { info } }) => info && info.txtotal,
-      txtotal => {
+      (txtotal) => {
         const {
           transactions: { lastTxtotal },
         } = store.getState();

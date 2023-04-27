@@ -1,9 +1,9 @@
-import configureStore from './configureStore';
+import createStore from './createStore';
 import createObserver from './createObserver';
 import getInitialState from './getInitialState';
 
 const initialState = getInitialState();
-const store = configureStore(initialState);
+const store = createStore(initialState);
 
 export const observeStore = createObserver(store);
 

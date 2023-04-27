@@ -1,18 +1,17 @@
 import * as TYPE from 'consts/actionTypes';
 import store, { observeStore } from 'store';
 import rpc from 'lib/rpc';
-import { apiPost } from 'lib/tritiumApi';
+import { callApi } from 'lib/tritiumApi';
 import { isCoreConnected, isLoggedIn } from 'selectors';
 import { loadAccounts } from 'lib/user';
-import { showNotification, openModal } from 'lib/ui';
+import { showNotification, openModal, isModalOpen } from 'lib/ui';
 import { updateSettings } from 'lib/settings';
 import { bootstrap } from 'lib/bootstrap';
-import { getUserStatus } from 'lib/user';
+import { refreshUserStatus } from 'lib/user';
 import { showDesktopNotif } from 'utils/misc';
 import LoginModal from 'components/LoginModal';
 import NewUserModal from 'components/NewUserModal';
 import { legacyMode } from 'consts/misc';
-import { walletEvents } from 'lib/wallet';
 import EncryptionWarningModal from 'components/EncryptionWarningModal';
 
 const incStep = 1000;
@@ -20,26 +19,38 @@ const maxTime = 10000;
 let waitTime = 0;
 let connected = false;
 let timerId = null;
+let liteModeChecked = false;
 
 const getInfo = legacyMode
   ? // Legacy
     async () => {
-      store.dispatch({
-        type: TYPE.ADD_RPC_CALL,
-        payload: 'getInfo',
-      });
       try {
-        const info = await rpc('getinfo', []);
-        const { connections } = await apiPost('system/get/info');
+        const [info, tritiumInfo] = await Promise.all([
+          rpc('getinfo', []),
+          callApi('system/get/info'),
+        ]);
         //Paul wants us to use the number of connections from API instead of RPC, but getinfo and get/info are not one to one.
         //This is a bit of a hack.
-        info.connections = connections;
+        info.connections = tritiumInfo.connections;
 
         store.dispatch({ type: TYPE.GET_INFO, payload: info });
       } catch (err) {
-        store.dispatch({ type: TYPE.CLEAR_CORE_INFO });
+        store.dispatch({ type: TYPE.DISCONNECT_CORE });
         console.error(err);
-        // Throws error so getInfo fails and autoFetchCoreInfo will
+
+        // Lite mode doesn't support RPC so might be the reason the RPC call failed
+        if (!liteModeChecked) {
+          try {
+            liteModeChecked = true;
+            const systemInfo = await callApi('system/get/info');
+            if (systemInfo?.litemode) {
+              updateSettings({ legacyMode: false });
+              location.reload();
+            }
+          } catch (err) {}
+        }
+
+        // Throws error so getInfo fails and refreshCoreInfo will
         // switch to using dynamic interval.
         throw err;
       }
@@ -47,22 +58,54 @@ const getInfo = legacyMode
   : // Tritium
     async () => {
       try {
-        const systemInfo = await apiPost('system/get/info');
+        const systemInfo = await callApi('system/get/info');
         store.dispatch({ type: TYPE.SET_SYSTEM_INFO, payload: systemInfo });
       } catch (err) {
-        store.dispatch({ type: TYPE.CLEAR_CORE_INFO });
+        store.dispatch({ type: TYPE.DISCONNECT_CORE });
         console.error('system/get/info failed', err);
-        // Throws error so getInfo fails and autoFetchCoreInfo will
+        // Throws error so getInfo fails and refreshCoreInfo will
         // switch to using dynamic interval.
         throw err;
       }
     };
 
-walletEvents.once('pre-render', function() {
+/**
+ *
+ *
+ * @export
+ */
+export async function refreshCoreInfo() {
+  try {
+    // Clear timeout in case this function is called again when
+    // the autoFetching is already running
+    clearTimeout(timerId);
+    await store.dispatch(getInfo());
+    connected = true;
+    waitTime = maxTime;
+  } catch (err) {
+    if (connected) waitTime = incStep;
+    else if (waitTime < maxTime) waitTime += incStep;
+    else waitTime = maxTime;
+    connected = false;
+  } finally {
+    const {
+      core: { autoConnect },
+    } = store.getState();
+    if (autoConnect) {
+      timerId = setTimeout(refreshCoreInfo, waitTime);
+    }
+  }
+}
+
+export function stopFetchingCoreInfo() {
+  clearTimeout(timerId);
+}
+
+export function prepareCoreInfo() {
   if (legacyMode) {
     observeStore(
       ({ core: { info } }) => info && info.locked,
-      locked => {
+      (locked) => {
         const state = store.getState();
         if (isCoreConnected(state) && locked === undefined) {
           if (
@@ -79,7 +122,7 @@ walletEvents.once('pre-render', function() {
       }
     );
 
-    observeStore(isCoreConnected, connected => {
+    observeStore(isCoreConnected, (connected) => {
       if (connected) {
         loadAccounts();
       }
@@ -122,7 +165,7 @@ walletEvents.once('pre-render', function() {
 
     observeStore(
       ({ core: { info } }) => info,
-      info => {
+      (info) => {
         const state = store.getState();
         if (
           !state.settings.bootstrapSuggestionDisabled &&
@@ -139,7 +182,7 @@ walletEvents.once('pre-render', function() {
 
     observeStore(
       ({ core: { info } }) => info && info.blocks,
-      blocks => {
+      (blocks) => {
         if (blocks) {
           store.dispatch({
             type: TYPE.UPDATE_BLOCK_DATE,
@@ -155,13 +198,17 @@ walletEvents.once('pre-render', function() {
       ({ core: { systemInfo } }) => systemInfo,
       async () => {
         if (isCoreConnected(store.getState())) {
-          await getUserStatus();
+          await refreshUserStatus();
           const state = store.getState();
           // The wallet will have to refresh after language is chosen
           // So NewUser modal won't be visible now
           if (justConnected && state.settings.locale) {
             justConnected = false;
-            if (!isLoggedIn(state)) {
+            if (
+              !isLoggedIn(state) &&
+              !isModalOpen(LoginModal) &&
+              !isModalOpen(NewUserModal)
+            ) {
               if (state.settings.firstCreateNewUserShown) {
                 openModal(LoginModal);
               } else {
@@ -173,7 +220,7 @@ walletEvents.once('pre-render', function() {
         }
       }
     );
-    observeStore(isCoreConnected, coreConnected => {
+    observeStore(isCoreConnected, (coreConnected) => {
       if (coreConnected) {
         justConnected = true;
       }
@@ -181,15 +228,18 @@ walletEvents.once('pre-render', function() {
 
     observeStore(
       ({ core: { systemInfo } }) => systemInfo,
-      systemInfo => {
+      (systemInfo) => {
         const state = store.getState();
         if (
           !state.settings.bootstrapSuggestionDisabled &&
           isCoreConnected(state) &&
+          !state.core.systemInfo?.litemode &&
           state.bootstrap.step === 'idle' &&
           !state.settings.manualDaemon &&
-          systemInfo.synccomplete < 50 &&
-          systemInfo.synccomplete >= 0
+          systemInfo?.synccomplete < 50 &&
+          systemInfo?.synccomplete >= 0 &&
+          !systemInfo?.private &&
+          !systemInfo?.testnet
         ) {
           bootstrap({ suggesting: true });
         }
@@ -197,8 +247,8 @@ walletEvents.once('pre-render', function() {
     );
 
     observeStore(
-      ({ core: { systemInfo } }) => systemInfo && systemInfo.blocks,
-      blocks => {
+      ({ core: { systemInfo } }) => systemInfo?.blocks,
+      (blocks) => {
         if (blocks) {
           store.dispatch({
             type: TYPE.UPDATE_BLOCK_DATE,
@@ -210,44 +260,12 @@ walletEvents.once('pre-render', function() {
   }
 
   // All modes
-  autoFetchCoreInfo();
+  refreshCoreInfo();
   observeStore(
-    state => state.core.autoConnect,
-    autoConnect => {
-      if (autoConnect) autoFetchCoreInfo();
+    (state) => state.core.autoConnect,
+    (autoConnect) => {
+      if (autoConnect) refreshCoreInfo();
       else stopFetchingCoreInfo();
     }
   );
-});
-
-/**
- *
- *
- * @export
- */
-export async function autoFetchCoreInfo() {
-  try {
-    // Clear timeout in case this function is called again when
-    // the autoFetching is already running
-    clearTimeout(timerId);
-    await store.dispatch(getInfo());
-    connected = true;
-    waitTime = maxTime;
-  } catch (err) {
-    if (connected) waitTime = incStep;
-    else if (waitTime < maxTime) waitTime += incStep;
-    else waitTime = maxTime;
-    connected = false;
-  } finally {
-    const {
-      core: { autoConnect },
-    } = store.getState();
-    if (autoConnect) {
-      timerId = setTimeout(autoFetchCoreInfo, waitTime);
-    }
-  }
-}
-
-export function stopFetchingCoreInfo() {
-  clearTimeout(timerId);
 }

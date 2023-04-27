@@ -1,5 +1,4 @@
 // External
-import React from 'react';
 import styled from '@emotion/styled';
 
 // Internal
@@ -31,8 +30,8 @@ const Account = ({
       </AccountName>{' '}
       ({formatNumber(balance, 6)} NXS)
     </div>
-    {addresses.map(addr => (
-      <NexusAddress key={addr} address={addr} />
+    {addresses.map((addr) => (
+      <NexusAddress className="mt1" key={addr} address={addr} />
     ))}
   </AccountComponent>
 );

@@ -1,13 +1,15 @@
 // External
-import React from 'react';
-import { Field } from 'redux-form';
+import { useRef, useEffect } from 'react';
+import { useField } from 'react-final-form';
 import styled from '@emotion/styled';
 
 // Internal
 import Tooltip from 'components/Tooltip';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
-import TextField from 'components/TextField';
+import Form from 'components/Form';
+import { required, checkAll, useFieldValue } from 'lib/form';
+import { callApi } from 'lib/tritiumApi';
 import { timing } from 'styles';
 import plusIcon from 'icons/plus.svg';
 
@@ -65,100 +67,93 @@ const PlusIcon = styled(Icon)({
   fontSize: '.8em',
 });
 
-/**
- * Input list for addresses
- *
- * @class Addresses
- * @extends {React.Component}
- */
-class Addresses extends React.Component {
-  lastInputRef = React.createRef();
-  justAdded = false;
+export default function Addresses({ fields, isMine }) {
+  const lastInputRef = useRef();
+  const justAddedRef = useRef(false);
+  const contactName = useFieldValue('name');
 
-  componentDidUpdate() {
+  useEffect(() => {
     // Focus the address input after it has just been added
-    if (this.justAdded) {
-      this.justAdded = false;
-      this.lastInputRef.current.focus();
+    if (justAddedRef.current) {
+      justAddedRef.current = false;
+      lastInputRef.current?.focus();
     }
-  }
+  });
 
-  addNewAddress = () => {
-    this.props.fields.push({ address: '', label: '' });
-    this.justAdded = true;
+  const validateAddress = async (value) => {
+    // Allow if it's genesis (User ID)
+    // TODO: improve this
+    if (value.startsWith('a') && value.length === 64) return;
+
+    try {
+      const { valid, mine } = await callApi('system/validate/address', {
+        address: value,
+      });
+      if (!valid) {
+        return __('Invalid address');
+      }
+      if (isMine && !mine) {
+        return __('This is not one of your addresses.');
+      } else if (!isMine && mine) {
+        return __('This is one of your addresses.');
+      }
+    } catch (err) {
+      console.error(err);
+      return __('Invalid address');
+    }
   };
 
-  getAddressLabel = name =>
-    this.props.isMine
-      ? name
-        ? __('My Nexus address for %{name}', { name })
-        : __('My Nexus address')
-      : name
-      ? __("%{name}'s Nexus address", { name })
-      : __('Their Nexus address');
+  const addNewAddress = () => {
+    fields.push({ address: '', label: '' });
+    justAddedRef.current = true;
+  };
 
-  /**
-   * React Render
-   *
-   * @returns
-   * @memberof Addresses
-   */
-  render() {
-    const { fields } = this.props;
+  const addressLabel = isMine
+    ? contactName
+      ? __('My Nexus address for %{name}', { name: contactName })
+      : __('My Nexus address')
+    : contactName
+    ? __("%{name}'s Nexus address", { name: contactName })
+    : __('Their Nexus address');
 
-    return (
-      <div className="mt2">
-        {fields.map((fieldName, i) => (
-          <NXSAddress key={i}>
-            <Tooltip.Trigger tooltip={__('Remove address')}>
-              <RemoveButton
-                onClick={() => {
-                  fields.remove(i);
-                }}
-              >
-                ✕
-              </RemoveButton>
-            </Tooltip.Trigger>
+  return (
+    <div className="mt2">
+      {fields.map((fieldName, i) => (
+        <NXSAddress key={i}>
+          <Tooltip.Trigger tooltip={__('Remove address')}>
+            <RemoveButton
+              onClick={() => {
+                fields.remove(i);
+              }}
+            >
+              ✕
+            </RemoveButton>
+          </Tooltip.Trigger>
 
-            <AddressWrapper>
-              <Field
-                name="name"
-                component={({ input }) => (
-                  <Field
-                    name={`${fieldName}.address`}
-                    component={TextField.RF}
-                    placeholder={this.getAddressLabel(input.value)}
-                    inputRef={
-                      i === fields.length - 1 ? this.lastInputRef : undefined
-                    }
-                  />
-                )}
-              />
-            </AddressWrapper>
+          <AddressWrapper>
+            <Form.TextField
+              name={`${fieldName}.address`}
+              placeholder={addressLabel}
+              ref={i === fields.length - 1 ? lastInputRef : undefined}
+              validate={checkAll(required(), validateAddress)}
+            />
+          </AddressWrapper>
 
-            <LabelWrapper>
-              <Field
-                name={`${fieldName}.label`}
-                component={TextField.RF}
-                placeholder={__('Label (optional)')}
-              />
-            </LabelWrapper>
-          </NXSAddress>
-        ))}
+          <LabelWrapper>
+            <Form.TextField
+              name={`${fieldName}.label`}
+              placeholder={__('Label (optional)')}
+            />
+          </LabelWrapper>
+        </NXSAddress>
+      ))}
 
-        <div className="mt1">
-          <AddButton skin="hyperlink" onClick={this.addNewAddress}>
-            <PlusIcon icon={plusIcon} className="space-right" />
-            <span className="v-align">
-              <Field
-                name="name"
-                component={({ input }) => this.getAddressLabel(input.value)}
-              />
-            </span>
-          </AddButton>
-        </div>
+      <div className="mt1">
+        <AddButton skin="hyperlink" onClick={addNewAddress}>
+          <PlusIcon icon={plusIcon} className="mr0_4" />
+          <span className="v-align">{addressLabel}</span>
+        </AddButton>
       </div>
-    );
-  }
+    </div>
+  );
 }
-export default Addresses;

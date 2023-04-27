@@ -1,18 +1,20 @@
 // External
-import React, { PureComponent } from 'react';
-import { connect } from 'react-redux';
+import { useRef, useEffect, useContext } from 'react';
+import { useSelector } from 'react-redux';
 import prettyBytes from 'utils/prettyBytes';
 import styled from '@emotion/styled';
-import { keyframes } from '@emotion/core';
+import { keyframes } from '@emotion/react';
 
 // Internal
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import Button from 'components/Button';
-import { showBackgroundTask, openConfirmDialog, removeModal } from 'lib/ui';
+import { showBackgroundTask, removeModal } from 'lib/ui';
+import { confirm } from 'lib/dialog';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import ModalContext from 'context/modal';
 import { bootstrapEvents, abortBootstrap } from 'lib/bootstrap';
+import memoize from 'utils/memoize';
 import { timing } from 'styles';
 import BootstrapBackgroundTask from 'components/BootstrapBackgroundTask';
 import arrowUpLeftIcon from 'icons/arrow-up-left.svg';
@@ -48,7 +50,7 @@ const fadeOut = {
   opacity: [1, 0],
 };
 
-const BootstrapModalComponent = styled(Modal)(
+const BootstrapModalComponent = styled(ControlledModal)(
   ({ maximizedFromBackground }) =>
     maximizedFromBackground && {
       animation: `${maximizeAnimation} ${timing.quick} linear`,
@@ -93,9 +95,10 @@ const MinimizeIcon = styled(Icon)(({ theme }) => ({
   },
 }));
 
-function getPercentage({ step, details }) {
+const getPercentage = ({ step, details }) => {
   switch (step) {
     case 'backing_up':
+    case 'preparing':
       return 0;
     case 'downloading':
       const { downloaded, totalSize } = details || {};
@@ -106,16 +109,21 @@ function getPercentage({ step, details }) {
     case 'moving_db':
     case 'restarting_core':
     case 'rescanning':
+    case 'cleaning_up':
       return 100;
     default:
       return 0;
   }
-}
+};
 
-function getStatusMsg({ step, details }, locale) {
+const selectPercentage = memoize(getPercentage, (state) => [state.bootstrap]);
+
+const getStatusMsg = ({ step, details }, locale) => {
   switch (step) {
     case 'backing_up':
       return __('Backing up your wallet...');
+    case 'preparing':
+      return __('Preparing...');
     case 'downloading':
       const { downloaded, totalSize } = details || {};
       const percentage = getPercentage({ step, details });
@@ -138,120 +146,90 @@ function getStatusMsg({ step, details }, locale) {
       return __('Restarting Nexus Core...');
     case 'rescanning':
       return __('Rescanning Wallet...');
+    case 'cleaning_up':
+      return __('Cleaning up...');
     default:
       return '';
   }
+};
+
+const selectStatusMsg = memoize(getStatusMsg, (state) => [
+  state.bootstrap,
+  state.settings.locale,
+]);
+
+async function confirmAbort() {
+  const confirmed = await confirm({
+    question: __('Are you sure you want to abort the process?'),
+    labelYes: __('Yes, abort'),
+    skinYes: 'danger',
+    labelNo: __('No, let it continue'),
+    skinNo: 'primary',
+  });
+  if (confirmed) {
+    abortBootstrap();
+  }
 }
 
-/**
- * Bootstrap Modal
- *
- * @class BootstrapModal
- * @extends {PureComponent}
- */
-@connect(state => ({
-  statusMsg: getStatusMsg(state.bootstrap, state.settings.locale),
-  percentage: getPercentage(state.bootstrap),
-}))
-class BootstrapModal extends PureComponent {
-  static contextType = ModalContext;
+export default function BootstrapModal(props) {
+  const statusMsg = useSelector(selectStatusMsg);
+  const percentage = useSelector(selectPercentage);
+  const modalID = useContext(ModalContext);
 
-  modalRef = React.createRef();
-  backgroundRef = React.createRef();
+  const modalRef = useRef();
+  const backgroundRef = useRef();
+  const closeModalRef = useRef();
 
-  componentDidMount() {
-    bootstrapEvents.on('abort', this.closeModal);
-    bootstrapEvents.on('error', this.closeModal);
-    bootstrapEvents.on('success', this.closeModal);
-  }
+  useEffect(() => {
+    bootstrapEvents.on('abort', closeModalRef.current);
+    bootstrapEvents.on('error', closeModalRef.current);
+    bootstrapEvents.on('success', closeModalRef.current);
+    return () => {
+      bootstrapEvents.off('abort', closeModalRef.current);
+      bootstrapEvents.off('error', closeModalRef.current);
+      bootstrapEvents.off('success', closeModalRef.current);
+    };
+  }, []);
 
-  componentWillUnmount() {
-    bootstrapEvents.off('abort', this.closeModal);
-    bootstrapEvents.off('error', this.closeModal);
-    bootstrapEvents.off('success', this.closeModal);
-  }
-
-  /**
-   * Handle Confrim Abort
-   *
-   * @memberof BootstrapModal
-   */
-  confirmAbort = () => {
-    openConfirmDialog({
-      question: __('Are you sure you want to abort the process?'),
-      labelYes: __('Yes, abort'),
-      skinYes: 'danger',
-      callbackYes: abortBootstrap,
-      labelNo: __('No, let it continue'),
-      skinNo: 'primary',
-    });
-  };
-
-  /**
-   * Handle Minimize
-   *
-   * @memberof BootstrapModal
-   */
-  minimize = () => {
+  const minimize = () => {
     showBackgroundTask(BootstrapBackgroundTask);
-
     const duration = parseInt(timing.quick);
     const options = { duration, easing: 'linear', fill: 'both' };
-    this.modalRef.current.animate(minimizeAnimation, options);
-    this.backgroundRef.current.animate(fadeOut, options);
-    setTimeout(this.remove, duration);
+    modalRef.current.animate(minimizeAnimation, options);
+    backgroundRef.current.animate(fadeOut, options);
+    setTimeout(() => removeModal(modalID), duration);
   };
 
-  /**
-   * Handle Remove
-   *
-   * @memberof BootstrapModal
-   */
-  remove = () => {
-    const modalID = this.context;
-    removeModal(modalID);
-  };
-
-  handleKeyDown = e => {
+  const handleKeyDown = (e) => {
     if (e.key === 'Escape') {
-      this.minimize();
+      minimize();
     }
   };
 
-  /**
-   * Component's Renderable JSX
-   *
-   * @returns
-   * @memberof BootstrapModal
-   */
-  render() {
-    const { statusMsg, percentage, ...rest } = this.props;
-    return (
-      <BootstrapModalComponent
-        modalRef={this.modalRef}
-        backgroundRef={this.backgroundRef}
-        onBackgroundClick={this.minimize}
-        onKeyDown={this.handleKeyDown}
-        assignClose={closeModal => (this.closeModal = closeModal)}
-        escToClose={false}
-        {...rest}
-      >
-        <Modal.Body>
-          <Title>{__('Bootstrap Recent Database')}</Title>
-          <p>{statusMsg}</p>
-          <ProgressBar percentage={percentage} />
-          <div className="flex space-between" style={{ marginTop: '2em' }}>
-            <div />
-            <Button skin="danger" onClick={this.confirmAbort}>
-              {__('Abort')}
-            </Button>
-          </div>
-          <Tooltip.Trigger tooltip="Minimize">
-            <MinimizeIcon onClick={this.minimize} icon={arrowUpLeftIcon} />
-          </Tooltip.Trigger>
-        </Modal.Body>
-      </BootstrapModalComponent>
-    );
-  }
+  return (
+    <BootstrapModalComponent
+      modalRef={modalRef}
+      backgroundRef={backgroundRef}
+      onBackgroundClick={minimize}
+      onKeyDown={handleKeyDown}
+      assignClose={(close) => (closeModalRef.current = close)}
+      escToClose={false}
+      {...props}
+    >
+      <ControlledModal.Body>
+        <Title>{__('Bootstrap Recent Database')}</Title>
+        <p>{statusMsg}</p>
+        <ProgressBar percentage={percentage} />
+        <div className="flex space-between" style={{ marginTop: '2em' }}>
+          <div />
+          <Button skin="danger" onClick={confirmAbort}>
+            {__('Abort')}
+          </Button>
+        </div>
+        <Tooltip.Trigger tooltip="Minimize">
+          <MinimizeIcon onClick={minimize} icon={arrowUpLeftIcon} />
+        </Tooltip.Trigger>
+      </ControlledModal.Body>
+    </BootstrapModalComponent>
+  );
 }
-export default BootstrapModal;

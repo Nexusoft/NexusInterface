@@ -35,35 +35,36 @@ Wallet is not staking,Portemonnee is niet aan het staken,Header
 Checking sync status,Sync status controleren,Header
 Synchronizing,Synchroniseren,Header
 Synchronized,Gesynchroniseerd,Header
+pooled,,Header
 You're not logged in,U bent niet ingelogd,Header
 You are staking but have not received a block in 30 minutes!,,Header
-Accounts,Accounts,Header.UserDropdown
-Tokens,Tokens,Header.UserDropdown
-Set recovery phrase,Stel herstelzin in,Header.UserDropdown
-Log out,Uitloggen,Header.UserDropdown
-Log in,Inloggen,Header.UserDropdown
-Create new user,Nieuwe gebruiker aanmaken,Header.UserDropdown
-Overview,Overzicht,NavigationBar
-User,Gebruiker,NavigationBar
-Send NXS,Zend NXS,NavigationBar
-Send,Verzenden,NavigationBar
-Transactions,Transacties,NavigationBar
-Address Book,Adresboek,NavigationBar
-Settings,Instellingen,NavigationBar
-Console,Console,NavigationBar
+Switching...,,
+Active,,
+Switch,,
+Switch user,,
 Closing Nexus Wallet,Sluiten van Nexus,
 Warning,Waarschuwing,
 IMPROPER USE OF THIS SOFTWARE COULD LEAD TO PERMANENT LOSS OF COIN.,VERKEERD GEBRUIK VAN DEZE SOFTWARE KAN LEIDEN TOT HET PERMANENT VERLIEZEN VAN COINS.,
 BACKUP YOUR WALLET OFTEN AND KEEP YOUR PASSWORDS SAFE.,Maak bij regelmaakt een backup en hou uw wachtwoord veilig.,
 I understand the risk,Ik begrijp het risico,
-Tritium Mode,Tritium modus,
-Your wallet is now in Tritium Mode!,Uw portemonnee is nu in Tritium Modus!,
-"Tritium Mode is currently in early development, therefore not all Tritium features are supported by the user interface. If you want to access a Tritium feature that hasn't had a user interface yet, you can go to Console/Tritium Console, or use any HTTP client to call Nexus APIs directly.","Tritium Modus is momenteel in vroege ontwikkeling, daarom worden niet alle Tritium functies ondersteund door de gebruikersinterface. Als u toegang wilt tot een Tritium functie die nog geen gebruikersinterface heeft u kunt naar de Console gaan, of een HTTP-client gebruiken om Nexus API's rechtstreeks op te roepen.",
-"If you need to switch back to Legacy Mode, you can select ""%{menu}"" menu option at any time.","U kunt op elk moment terugschakelen naar de Legacy modus door de ""%{menu}""menu optie te selecteren.",
-File,Bestand,
-Switch to Legacy Mode,Overschakelen naar verouderde modus,
-Continue to Tritium Mode,Ga verder naar Tritium modus,
 Close,Gesloten,
+Remote Core is disconnected,,
+Connecting to Nexus Core...,Verbinding maken met Nexus Core...,
+Nexus Core is stopped,Nexus Core is gestopt,
+Address has been copied to clipboard,Adres is gekopieerd naar het klembord,
+Copy to clipboard,Kopieer naar klembord,
+Click to copy to clipboard,Klik om naar klembord te kopiëren,
+Show QR code,,
+Log in,Inloggen,
+No Rows Found,Geen rijen gevonden,
+Page,Pagina,
+rows,rijen,
+Previous,Vorige,
+Next,Volgende,
+Use virtual keyboard,,
+<token_name></token_name> token,,
+Unnamed token,,
+Switch to Legacy Mode,Overschakelen naar verouderde modus,
 Are you sure you want to switch to Legacy Mode?,Weet u zeker dat u wilt overschakelen naar de Legacy modus?,
 Switch to Tritium Mode,Overschakelen naar Tritium Modus,
 Start Nexus Core,Start Nexus Core,
@@ -98,23 +99,11 @@ There are currently no updates available,Er zijn momenteel geen updates beschikb
 Checking for Updates...,Controleren op updates...,
 Update available! Downloading...,Update beschikbaar! Downloaden...,
 Quit and install update...,Afsluiten en update installeren...,
+File,Bestand,
 Edit,Bewerken,
 Settings,Instellingen,
 View,Weergave,
 Help,Help,
-Manual Core is disconnected,Manuale Daemon draait niet,
-Connecting to Nexus Core...,Verbinding maken met Nexus Core...,
-Nexus Core is stopped,Nexus Core is gestopt,
-Address has been copied to clipboard,Adres is gekopieerd naar het klembord,
-Copy to clipboard,Kopieer naar klembord,
-Click to copy to clipboard,Klik om naar klembord te kopiëren,
-Log in,Inloggen,
-No Rows Found,Geen rijen gevonden,
-Page,Pagina,
-rows,rijen,
-Previous,Vorige,
-Next,Volgende,
-Use virtual keyboard,,
 Transaction received,Transactie Ontvangen,
 Transaction sent,Transacti Verzonden,
 Genesis transaction,Genesis Transactie,
@@ -123,6 +112,33 @@ Update available for %{smart_count} module |||| Updates available for %{smart_co
 New transaction,Nieuwe transactie,
 Error,Fout,
 Unknown error,Onbekende fout,
+Accounts,Accounts,Header.UserDropdown
+Tokens,Tokens,Header.UserDropdown
+Set recovery phrase,Stel herstelzin in,Header.UserDropdown
+Switch user,,Header.UserDropdown
+Log in to another user,,Header.UserDropdown
+Log out of all users,,Header.UserDropdown
+Log out,Uitloggen,Header.UserDropdown
+Log in,Inloggen,Header.UserDropdown
+Create new user,Nieuwe gebruiker aanmaken,Header.UserDropdown
+Overview,Overzicht,NavigationBar
+User,Gebruiker,NavigationBar
+Send NXS,Zend NXS,NavigationBar
+Send,Verzenden,NavigationBar
+Transactions,Transacties,NavigationBar
+Address Book,Adresboek,NavigationBar
+Settings,Instellingen,NavigationBar
+Console,Console,NavigationBar
+Lite mode,,LiteModeNotice
+Lite mode is now available on Nexus Wallet! You can choose to enable lite mode now or just ignore it. You can change your decision anytime under Settings/Core.,,LiteModeNotice
+Why you might want to enable lite mode,,LiteModeNotice
+Nexus Core would take less resources (memory and storage) to run,,LiteModeNotice
+Synchronization would be much faster,,LiteModeNotice
+Why you might NOT want to enable lite mode,,LiteModeNotice
+You would NOT be able to mine or stake,,LiteModeNotice
+Legacy Mode would be disabled,,LiteModeNotice
+Ignore,,LiteModeNotice
+Enable lite mode,,LiteModeNotice
 "Last updated
 %{time}","Laatst bijgewerkt
 %{time}",Overview
@@ -186,17 +202,40 @@ There must be at least one recipient,Er moet ten minste één ontvanger zijn,Sen
 Address is required,Adres is verplicht,Send
 Transaction sent,Transacti Verzonden,Send
 Error sending NXS,Fout bij verzenden van NXS,Send
-%{tokenName} Amount,%{tokenName} Hoeveelheid,Send
+Reference,,Send
+"An optional number which may be provided by the recipient to identify this transaction from the others, e.g. invoice number, order number, etc.",,Send
+Reference number (optional),,Send
+Expires in,,Send
+"The amount of time since the transaction is created after which the transaction can no longer be credited by the recipient. By default, transactions will expire in 1 day (86400 seconds).",,Send
+Days,,Send
+Hours,,Send
+Minutes,,Send
+Seconds,,Send
+Amount,,Send
 Recipient Address/Name,Adres/naam van de ontvanger,Send
 Accounts,Accounts,Send
+Unnamed account,,Send
 Tokens,Tokens,Send
-More options,Meer opties,Send
-Reference number,Referentienummer,Send
-An optional number which may be provided by the recipient to identify this transaction from the others,Een optioneel nummer dat kan worden verstrekt om deze transactie te identificeren,Send
-"Invoice number, order number, etc... (Optional)","Factuurnummer, bestelnummer, etc... (Optioneel)",Send
-Reference must be a number,Referentie moet een getal zijn,Send
-Number is too large,Getal is te groot,Send
+Unnamed token,,Send
+Unnamed,,Send
+Invalid name/address,,Send
+Advanced options,,Send
 Address/Name is required,Adres/Naam is vereist,Send
+Reference must be an unsigned integer,,Send
+Number is too large,Getal is te groot,Send
+Unnamed,,PreviewTransaction
+%{smart_count} day |||| %{smart_count} days,,PreviewTransaction
+%{smart_count} hour |||| %{smart_count} hours,,PreviewTransaction
+%{smart_count} minute |||| %{smart_count} minutes,,PreviewTransaction
+%{smart_count} second |||| %{smart_count} seconds,,PreviewTransaction
+Preview Transaction,,PreviewTransaction
+You're sending,,PreviewTransaction
+From,,PreviewTransaction
+To,,PreviewTransaction
+Amount,,PreviewTransaction
+Reference,,PreviewTransaction
+Expires,,PreviewTransaction
+Send transaction,,PreviewTransaction
 Select backup directory,Selecteer back-up map,Settings.Application
 Backup directory,Backup folder,Settings.Application
 Browse,Blader,Settings.Application
@@ -238,23 +277,27 @@ Allow the presence of SymLinks in the module directory,De aanwezigheid van SymLi
 Fake Test Transactions,Fictieve Test Transacties,Settings.Application
 Display Test Transactions on the Transactions page,Test transacties op de Transactiepagina weergeven,Settings.Application
 Language,Taal,Settings.Application
-Exit manual Core mode?,Sluit de handmatige daemon-modus af?,Settings.Core
+Exit remote Core mode?,,Settings.Core
 (This will restart your Core),(Dit zal de back-end herstarten),Settings.Core
-Enter manual Core mode?,Ga naar handmatige daemon-modus?,Settings.Core
+Enter remote Core mode?,,Settings.Core
 Reload transaction history,Herlaad transactiegeschiedenis,Settings.Core
 Clear peer connections,Alle verbindingen verbreken,Settings.Core
+Resync database,,Settings.Core
+Nexus Core will be restarted. Lite mode database will be deleted and resynchronized from the beginning.,,Settings.Core
+Embedded Core,,Settings.Core
+Remote Core,,Settings.Core
+Lite mode,,Settings.Core
+"Nexus Core under lite mode runs lighter and synchronize much faster, but you will <b>NOT</b> be able to stake, mine, or switch the wallet to Legacy Mode.",,Settings.Core
+Multi-user,,Settings.Core
+Allow multiple logged in users at the same time. Mining and staking will be unavailable.,,Settings.Core
+Enable staking,Staking inschakelen,Settings.Core
+Enable/Disable staking on the wallet.,Schakel staking aan / uit voor de portemonnee.,Settings.Core
+Pooled staking,,Settings.Core
+"Pooled staking is a decentralized and trust-less mechanism allowing you to use the balances of others to increase your chances of finding a stake block. All participants receive their staking rewards and build trust, regardless of which user mines the block. A small portion of each reward is paid to the block finder by all pool participants.",,Settings.Core
 Enable mining,Mining inschakelen,Settings.Core
 Enable/Disable mining to the wallet.,Schakel mining aan / uit voor de portemonnee.,Settings.Core
 Mining IP Whitelist,Mining IP Whitelist,Settings.Core
 IP/Ports allowed to mine to. Separate by <b>;</b> . Wildcards supported only in IP,IP/Ports toegestaan om te minen. Scheid door <b>;</b> . Wildcards worden alleen ondersteund via IP,Settings.Core
-Enable staking,Staking inschakelen,Settings.Core
-Enable/Disable staking on the wallet.,Schakel staking aan / uit voor de portemonnee.,Settings.Core
-Rescan wallet,Herscan portemonnee,Settings.Core
-"Used to correct transaction/balance issues, scans over every block in the database. Could take up to 10 minutes.",Gebruiken om transactie/saldo inconsistenties te corrigeren. scant elk blok in de database. Dit kan tot 10 minuten duren.,Settings.Core
-Restart Nexus core with -walletclean parameter to clean out and reload all transaction history,,Settings.Core
-Reload,,Settings.Core
-Clear all stored peer connections and restart Nexus,Alle opgeslagen verbindingen wissen en daarna de Nexus-applicatie herstarten,Settings.Core
-Clear,Leegmaken,Settings.Core
 Verbose level,Verbose niveau,Settings.Core
 Verbose level for logs.,Niveau voor logboek opnamen.,Settings.Core
 Core Data Directory,,Settings.Core
@@ -264,23 +307,48 @@ The iteration of Testnet to connect to.,,Settings.Core
 Turn Off,,Settings.Core
 Avatar Mode,Avatar Modus,Settings.Core
 Disabling Avatar will make the core use a separate change key,Door de Avatar uit te schakelen zal de kern een aparte veranderingssleutel gebruiken,Settings.Core
-Manual Core mode,Manuele Daemon Modus,Settings.Core
-Enable manual Core mode if you are running the Nexus Core manually outside of the wallet.,Schakel de handmatige daemon modus in als u de daemon handmatig buiten de portemonnee uitvoert.,Settings.Core
-Username,Gebruikersnaam,Settings.Core
-Username configured for manual Core.,Gebruikersnaam geconfigureerd voor handmatige daemon.,Settings.Core
-Password,Wachtwoord,Settings.Core
-Password configured for manual Core.,Wachtwoord geconfigureerd voor handmatige daemon.,Settings.Core
+Rescan wallet,Herscan portemonnee,Settings.Core
+"Used to correct transaction/balance issues, scans over every block in the database. Could take up to 10 minutes.",Gebruiken om transactie/saldo inconsistenties te corrigeren. scant elk blok in de database. Dit kan tot 10 minuten duren.,Settings.Core
+Restart Nexus core with -walletclean parameter to clean out and reload all transaction history,,Settings.Core
+Reload,,Settings.Core
+Clear all stored peer connections and restart Nexus,Alle opgeslagen verbindingen wissen en daarna de Nexus-applicatie herstarten,Settings.Core
+Clear,Leegmaken,Settings.Core
+Delete lite mode database and resynchronize from the beginning,,Settings.Core
+Resynchronize,,Settings.Core
 IP address,IP Adres,Settings.Core
-IP address configured for manual Core.,IP adres geconfigureerd voor handmatige daemon.,Settings.Core
-Port,Poort,Settings.Core
-Port configured for manual Core.,Poort geconfigureerd voor handmatige daemon.,Settings.Core
+Remote Core IP address,,Settings.Core
+API SSL,,Settings.Core
+Use SSL for API calls,,Settings.Core
+API Port,,Settings.Core
+Nexus API server Port,,Settings.Core
+API SSL Port,,Settings.Core
+Nexus API server SSL Port,,Settings.Core
+API Username,,Settings.Core
+Nexus API server Username,,Settings.Core
+API Password,,Settings.Core
+Nexus API server Password,,Settings.Core
+RPC SSL,,Settings.Core
+Use SSL for RPC calls,,Settings.Core
+RPC Port,,Settings.Core
+Nexus RPC server Port,,Settings.Core
+RPC SSL Port,,Settings.Core
+Nexus RPC server SSL Port,,Settings.Core
+RPC Username,,Settings.Core
+Nexus RPC server Username,,Settings.Core
+RPC Password,,Settings.Core
+Nexus RPC server Password,,Settings.Core
+Log out on close,,Settings.Core
+Log out of all users before closing the wallet,,Settings.Core
 Restart Core for these changes to take effect,,Settings.Core
 Save settings,,Settings.Core
 Verbose level is required,,Settings.Core
-Manual Core username is required,Manual Core gebruikersnaam is vereist,Settings.Core
-Manual Core password is required,Manual Core wachtwoord is vereist,Settings.Core
-Manual Core IP is required,Manual Core IP is vereist,Settings.Core
-Manual Core port is required,Manual Core port is vereist,Settings.Core
+Remote Core IP is required,,Settings.Core
+RPC port is required,,Settings.Core
+RPC username is required,,Settings.Core
+RPC password is required,,Settings.Core
+API port is required,,Settings.Core
+API username is required,,Settings.Core
+API password is required,,Settings.Core
 Core settings saved,Basis Instellingen Opgeslagen,Settings.Core
 Restarting Core...,,Settings.Core
 Error rescanning,Fout bij herscannen,Settings.Core
@@ -392,7 +460,6 @@ Overview Display,Weergaveoverzicht,Settings.Style
 Nexus Addresses format,Format van Nexusadressen,Settings.Style
 Choose your Nexus Address display preference,Kies uw Nexus Adres weergave voorkeur,Settings.Style
 Sample Address,Adres voorbeeldweergave,Settings.Style
-This is your Default Address,Dit is uw standaard adres,Settings.Style
 Theme,Thema,Settings.Style
 Select Wallet Theme,Selecteer weergavethema voor de portemonnee,Settings.Style
 Background,Achtergrond,Settings.Style
@@ -495,14 +562,19 @@ The amount of NXS currently staked in the trust account,Het NXS-bedrag dat momen
 Immature,Ongeverifieerd,Transactions.Balances
 The sum of all coinbase transactions that have not yet reached maturity,De som van alle coinbasetransacties die nog niet uitgehard/volwassen zijn,Transactions.Balances
 Unnamed account,Naamloos account,User.Accounts
+Rename,,User.Accounts
 Details,Details,User.Accounts
 History,Geschiedenis,User.Accounts
+<b>%{account_name}</b> account address,,User.Accounts
+Unnamed,,User.Accounts
 Create new account,Nieuw account aanmaken,User.Accounts
 Account Details,Accountgegevens,User.Accounts.AccountDetails
 Account name,Account Naam,User.Accounts.AccountDetails
+Unnamed,,User.Accounts.AccountDetails
 Created at,Aangemaakt op,User.Accounts.AccountDetails
 Last modified,Laatst gewijzigd,User.Accounts.AccountDetails
 Token name,Tokennaam,User.Accounts.AccountDetails
+Data,,User.Accounts.AccountDetails
 Total account balance,Totale accountsaldo,User.Accounts.AccountDetails
 Available balance,Beschikbaar saldo,User.Accounts.AccountDetails
 Send %{token_name},,User.Accounts.AccountDetails
@@ -517,20 +589,32 @@ Adjust stake amount,Stake-aandeel aanpassen,User.Accounts.AccountDetails
 Time,Tijd,User.Accounts.AccountHistory
 Operation,Operatie,User.Accounts.AccountHistory
 From,Van,User.Accounts.AccountHistory
-staked,gestaket,User.Accounts.AccountHistory
-mined,gemined,User.Accounts.AccountHistory
+staking,,User.Accounts.AccountHistory
+mining,,User.Accounts.AccountHistory
 To,Naar,User.Accounts.AccountHistory
 Change,Wijzigen,User.Accounts.AccountHistory
 Account History,Accountgeschiedenis,User.Accounts.AccountHistory
 Loading account history,Accountgeschiedenis laden,User.Accounts.AccountHistory
-Account balance(,Accountsaldo(,User.Accounts.AccountHistory
-Show %{tokenName},Toon %{tokenName},User.Accounts.AccountHistory
 Account balance,Accountsaldo,User.Accounts.AccountHistory
+Show %{tokenName},Toon %{tokenName},User.Accounts.AccountHistory
 Total,Totaal,User.Accounts.AccountHistory
 Available,Beschikbaar,User.Accounts.AccountHistory
 Pending,In afwachting,User.Accounts.AccountHistory
 Unconfirmed,Onbevestigd,User.Accounts.AccountHistory
 Stake,Stake,User.Accounts.AccountHistory
+Rename account,,RenameAccount
+Account name,,RenameAccount
+Account renaming fee,,RenameAccount
+Cancel,,RenameAccount
+Renaming,,RenameAccount
+Rename,,RenameAccount
+Account name is required,,RenameAccount
+Name already in use,,RenameAccount
+The name you entered is already in use. Please choose another name.,,RenameAccount
+Insuffient balance,,RenameAccount
+Your default account balance is not enough to pay the fee.,,RenameAccount
+Account has been renamed to %{account_name},,RenameAccount
+Error renaming account,,RenameAccount
 Unnamed asset,,User.Assets
 You own %{percentage}% of this asset,,User.Assets
 Create new asset,,User.Assets
@@ -647,10 +731,12 @@ Create a new name,,CreateName
 View name details,,User.Names
 Change register address,,User.Names
 Transfer name,,User.Names
+Unused,,User.Names
 Global,,User.Names
 Namespaced,,User.Names
 Local,,User.Names
 Create new name,,User.Names
+Show unused names,,User.Names
 You don't own any name,,User.Names
 Name Details,,NameDetails
 Change register address,,NameDetails
@@ -738,6 +824,7 @@ Enable staking,Staking inschakelen,User.Staking
 Cancel,Annuleren,User.Staking
 Status,,User.Staking
 Staking,Aan het staken,User.Staking
+pooled,,User.Staking
 Not staking,,User.Staking
 Stake amount,,User.Staking
 The amount of NXS currently staked in the trust account,Het NXS-bedrag dat momenteel op de trust rekening staat,User.Staking
@@ -759,7 +846,7 @@ Account on hold for another %{stakeSeconds} Seconds,,User.Staking
 Stop staking,,User.Staking
 Start staking,,User.Staking
 Create new token,Nieuwe token aanmaken,User.Tokens
-Lookup a token,,User.Tokens
+Look up a token,,User.Tokens
 Unnamed token,,User.Tokens
  (Owned by you),(Uw eigendom),User.Tokens
 Details,Details,User.Tokens
@@ -784,13 +871,14 @@ You have successfully created token %{token} ! Would you like to make an account
 Yes,Ja,User.Tokens.NewToken
 No,Nee,User.Tokens.NewToken
 Error creating token,Fout bij het maken van token,User.Tokens.NewToken
-Can not find Token,Kan token niet vinden,User.Tokens.SearchToken
-Lookup Token,,User.Tokens.SearchToken
-Name/Address,,User.Tokens.SearchToken
-Lookup a Token on the network,,User.Tokens.SearchToken
-Lookup this token,,User.Tokens.SearchToken
+Cannot find Token,,User.Tokens.SearchToken
+Look up token,,User.Tokens.SearchToken
+Name or address,,User.Tokens.SearchToken
+Token name/address,,User.Tokens.SearchToken
+Look up,,User.Tokens.SearchToken
 No Value,,User.Tokens.SearchToken
 Error searching for token,Fout bij zoeken naar token,User.Tokens.SearchToken
+Unknown token name/address,,User.Tokens.SearchToken
 Token Details,,User.Tokens.TokenDetails
 Token name,Tokennaam,User.Tokens.TokenDetails
 Token address,,User.Tokens.TokenDetails
@@ -867,15 +955,15 @@ Are you sure you want to abort the process?,Weet u zeker dat u dit proces wilt a
 "No, let it continue","Nee, laat het doorgaan",Bootstrap
 Bootstrap Recent Database,Recente database downloaden,Bootstrap
 Abort,Annuleren,Bootstrap
-Bootstrap process has been aborted,Recente database downloaden is afgebroken,Bootstrap
-Error bootstrapping recent database,Fout bij het inladen van de recente database,Bootstrap
-Unknown error,Onbekende fout,Bootstrap
-Recent database has been successfully bootstrapped,Recente database is met succes opgestart,Bootstrap
 Not enough disk space! Minimum 15GB of free space is required.,Onvoldoende schijfruimte! Minimaal 15GB aan vrije ruimte is vereist.,Bootstrap
 Download recent database?,Recente database downloaden?,Bootstrap
 Downloading a recent version of the database might reduce the time it takes to synchronize your wallet,Het downloaden van een recente versie van de database kan de tijd reduceren die nodig is om uw wallet te synchroniseren,Bootstrap
 "Yes, let's bootstrap it","Ja, de blockchain bootstrappen",Bootstrap
 "No, let it sync","Nee, laat het synchroniseren",Bootstrap
+Bootstrap process has been aborted,Recente database downloaden is afgebroken,Bootstrap
+Error bootstrapping recent database,Fout bij het inladen van de recente database,Bootstrap
+Unknown error,Onbekende fout,Bootstrap
+Recent database has been successfully bootstrapped,Recente database is met succes opgestart,Bootstrap
 Change password and PIN,Wijzig wachtwoord en PIN,ChangePassword&PIN
 Current password,Huidig wachtwoord,ChangePassword&PIN
 Your current password,Uw huidige wachtwoord,ChangePassword&PIN
@@ -895,6 +983,10 @@ New PIN is required,Nieuwe pincode is vereist,ChangePassword&PIN
 PIN must be at least 4 characters,PIN moet ten minste 4 tekens bevatten,ChangePassword&PIN
 Password & PIN have been updated,Wachtwoord & PIN zijn bijgewerkt,ChangePassword&PIN
 Error updating password & PIN,Fout bij het updaten van wachtwoord & pincode,ChangePassword&PIN
+Contract Details,Contract details,ContractDetails
+View transaction details,,ContractDetails
+Yes,Ja,ConfirmDialog
+No,Nee,ConfirmDialog
 Password/PIN mismatch,Wachtwoord / pincode komen niet overeen,ConfirmPassword&PIN
 "You have entered either your password or your PIN incorrectly, please re-check","U heeft uw wachtwoord of uw pincode onjuist ingevoerd, controleer opnieuw",ConfirmPassword&PIN
 Confirm password and PIN,Bevestig wachtwoord en pincode,ConfirmPassword&PIN
@@ -907,11 +999,12 @@ PIN,pincode,ConfirmPassword&PIN
 Re-enter your new PIN,,ConfirmPassword&PIN
 Re-enter your PIN,,ConfirmPassword&PIN
 Confirm,Bevestig,ConfirmPassword&PIN
-Contract Details,Contract details,ContractDetails
-View transaction details,,ContractDetails
-Yes,Ja,ConfirmDialog
-No,Nee,ConfirmDialog
 Dismiss,Negeren,ErrorDialog
+Pin must be at least 4 characters,Pin moet ten minste 4 tekens bevatten,PinDialog
+Confirm,Bevestig,PinDialog
+Enter PIN,,PinDialog
+Your PIN,,PinDialog
+Cancel,Annuleren,PinDialog
 Dismiss,Negeren,SuccessDialog
 Your wallet is not encrypted!,Uw portemonnee is niet gecodeerd!,EncryptionWarning
 It is highly recommended that you should encrypt your wallet to keep your NXS safe.,Het is zeer aanbevolen dat u uw portemonnee versleutelt om uw NXS veilig te houden.,EncryptionWarning
@@ -931,6 +1024,7 @@ Username is required,Gebruikersnaam is vereist,Login
 Password is required,Wachtwoord vereist,Login
 PIN is required,Pincode is vereist,Login
 Logged in as %{username},Ingelogd als %{username},Login
+Not being fully synced may have caused this error.,,Login
 Error logging in,Fout bij aanmelden,Login
 Migrate account,Account migreren,MigrateAccount
 You have %{amount} NXS in your legacy account.,U hebt %{amount} NXS in uw legacy account.,MigrateAccount
@@ -980,16 +1074,16 @@ Error creating new address,Fout bij het aanmaken van een nieuw adres,MyAddresses
 New account,Nieuw account,NewAccount
 Account name (%{nameFee} NXS Fee) (Optional),Accountnaam (%{nameFee} NXS kostenheffing) (Optioneel),NewAccount
 New account's name,,NewAccount
-Token,,NewAccount
+Token name/address,,NewAccount
 Cancel,Annuleren,NewAccount
 Creating account,Account aanmaken,NewAccount
 Create account,Account aanmaken,NewAccount
-Create a account without a name?,Account zonder naam aanmaken?,NewAccount
+Create an account without a name?,,NewAccount
 Adding a name costs a NXS fee,Een naam toevoegen kost één NXS heffing,NewAccount
 That's Ok,,NewAccount
-Add Name,Voeg naam toe,NewAccount
-New account %{account} has been created,Nieuw account %{account} is aangemaakt,NewAccount
 Error creating account,Fout bij aanmaken account,NewAccount
+Unknown token name/address,,NewAccount
+New account %{account} has been created,Nieuw account %{account} is aangemaakt,NewAccount
 Create new user,Nieuwe gebruiker aanmaken,NewUser
 Username,Gebruikersnaam,NewUser
 A globally unique username,Een globaal unieke gebruikersnaam,NewUser
@@ -1013,11 +1107,6 @@ PIN must be at least 4 characters,PIN moet ten minste 4 tekens bevatten,NewUser
 Error creating user,Fout bij aanmaken gebruiker,NewUser
 User registration for %{username} has been confirmed,,NewUser
 User registration for %{username} is waiting to be confirmed on Nexus blockchain...,,NewUser
-Pin must be at least 4 characters,Pin moet ten minste 4 tekens bevatten,PinDialog
-Confirm,Bevestig,PinDialog
-Enter PIN,,PinDialog
-Your PIN,,PinDialog
-Cancel,Annuleren,PinDialog
 Recover password and PIN,,RecoverPassword&PIN
 Username,Gebruikersnaam,RecoverPassword&PIN
 Your username,,RecoverPassword&PIN

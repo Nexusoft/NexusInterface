@@ -1,19 +1,20 @@
 // External
-import React from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 
 // Internal
-import { deleteContact } from 'lib/addressBook';
 import ExternalLink from 'components/ExternalLink';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import NexusAddress from 'components/NexusAddress';
-import { openConfirmDialog, openModal } from 'lib/ui';
+import QRButton from 'components/QRButton';
 import AddEditContactModal from 'components/AddEditContactModal';
+import { deleteContact } from 'lib/addressBook';
+import { openModal } from 'lib/ui';
+import { confirm } from 'lib/dialog';
 import { isCoreConnected } from 'selectors';
 import timeZones from 'data/timeZones';
-import { timing } from 'styles';
+import { timing, consts } from 'styles';
 import trashIcon from 'icons/trash.svg';
 import editIcon from 'icons/edit.svg';
 
@@ -68,6 +69,11 @@ const FieldContent = styled.div({
   width: '60%',
 });
 
+const UserID = styled.span({
+  fontFamily: consts.monoFontFamily,
+  wordBreak: 'break-all',
+});
+
 /**
  * Returns a individual field
  * @memberof ContactDetails
@@ -88,7 +94,7 @@ const Field = ({ label, content }) => (
  * @param {*} tz TimeZone
  * @returns {string} Hours:Minutes AM/PM
  */
-const getLocalTime = tz => {
+const getLocalTime = (tz) => {
   const now = new Date();
   const utc = new Date().getTimezoneOffset();
   now.setMinutes(now.getMinutes() + utc + parseInt(tz));
@@ -110,130 +116,113 @@ const getLocalTime = tz => {
   return `${h}:${m} ${i}`;
 };
 
-/**
- * Contact details
- *
- * @class ContactDetails
- * @extends {Component}
- */
-@connect(state => {
-  const {
-    addressBook,
-    ui: {
-      addressBook: { selectedContactName },
-    },
-  } = state;
-  return {
-    contact: addressBook[selectedContactName] || null,
-    coreConnected: isCoreConnected(state),
-  };
-})
-class ContactDetails extends React.Component {
-  /**
-   * Opens a dialog to confirm contact delete
-   *
-   * @memberof ContactDetails
-   */
-  confirmDelete = () => {
-    openConfirmDialog({
-      question: __('Delete contact %{name}?', {
-        name: this.props.contact.name,
-      }),
-      skinYes: 'danger',
-      callbackYes: () => {
-        deleteContact(this.props.contact.name);
+export default function ContactDetails() {
+  const contact = useSelector(
+    ({
+      addressBook,
+      ui: {
+        addressBook: { selectedContactName },
       },
-    });
-  };
+    }) => addressBook[selectedContactName] || null
+  );
+  const coreConnected = useSelector(isCoreConnected);
+  if (!contact) return null;
 
-  /**
-   * Opens the Add/Edit Contact modal
-   *
-   * @memberof ContactDetails
-   */
-  editContact = () => {
-    openModal(AddEditContactModal, {
-      edit: true,
-      contact: this.props.contact,
-    });
-  };
+  const tz =
+    typeof contact.timeZone === 'number'
+      ? timeZones.find((t) => t.value === contact.timeZone)
+      : null;
 
-  /**
-   * Component's Renderable JSX
-   *
-   * @returns {JSX}
-   * @memberof ContactDetails
-   */
-  render() {
-    const { contact, coreConnected } = this.props;
-    if (!contact) return null;
-
-    const tz =
-      typeof contact.timeZone === 'number'
-        ? timeZones.find(t => t.value === contact.timeZone)
-        : null;
-
-    return (
-      <ContactDetailsComponent>
-        <Header>
-          <Tooltip.Trigger tooltip={__('Delete')}>
-            <HeaderAction danger onClick={this.confirmDelete}>
-              <Icon icon={trashIcon} />
+  return (
+    <ContactDetailsComponent>
+      <Header>
+        <Tooltip.Trigger tooltip={__('Delete')}>
+          <HeaderAction
+            danger
+            onClick={async () => {
+              const confirmed = await confirm({
+                question: __('Delete contact %{name}?', {
+                  name: contact.name,
+                }),
+                skinYes: 'danger',
+              });
+              if (confirmed) {
+                deleteContact(contact.name);
+              }
+            }}
+          >
+            <Icon icon={trashIcon} />
+          </HeaderAction>
+        </Tooltip.Trigger>
+        <ContactName>{contact.name}</ContactName>
+        {coreConnected ? (
+          <Tooltip.Trigger tooltip={__('Edit')}>
+            <HeaderAction
+              onClick={() => {
+                openModal(AddEditContactModal, {
+                  edit: true,
+                  contact: contact,
+                });
+              }}
+            >
+              <Icon icon={editIcon} />
             </HeaderAction>
           </Tooltip.Trigger>
-          <ContactName>{contact.name}</ContactName>
-          {coreConnected ? (
-            <Tooltip.Trigger tooltip={__('Edit')}>
-              <HeaderAction onClick={this.editContact}>
-                <Icon icon={editIcon} />
-              </HeaderAction>
-            </Tooltip.Trigger>
-          ) : (
-            <div style={{ width: '1em' }} />
-          )}
-        </Header>
+        ) : (
+          <div style={{ width: '1em' }} />
+        )}
+      </Header>
 
-        <SectionHeader>{__('NXS addresses')}</SectionHeader>
+      <SectionHeader>{__('NXS addresses')}</SectionHeader>
 
-        {contact.addresses.map(({ address, label, isMine }, i) => (
-          <NexusAddress
-            key={i}
-            address={address}
-            label={
-              label || (
-                <DefaultLabel>
-                  {isMine
-                    ? __('My address for %{name}')
-                    : __("%{name}'s Address", {
-                        name: contact.name,
-                      })}
-                </DefaultLabel>
-              )
-            }
-          />
-        ))}
-
-        <SectionHeader>{__('Contact info')}</SectionHeader>
-
-        <Field
-          label={__('Email')}
-          content={
-            contact.email && (
-              <ExternalLink href={`mailto:${contact.email}`}>
-                {contact.email}
-              </ExternalLink>
-            )
+      {contact.addresses.map(({ address, label, isMine }, i) => (
+        <NexusAddress
+          className="mt1"
+          key={i}
+          address={address}
+          label={
+            <div className="flex center space-between">
+              <div>
+                {label || (
+                  <DefaultLabel>
+                    {isMine
+                      ? __('My address for %{name}', {
+                          name: contact.name,
+                        })
+                      : __("%{name}'s Address", {
+                          name: contact.name,
+                        })}
+                  </DefaultLabel>
+                )}
+              </div>
+              <QRButton address={address} />
+            </div>
           }
         />
-        <Field label={__('Phone Number')} content={contact.phoneNumber} />
-        <Field
-          label={__('Local Time')}
-          content={tz && `${getLocalTime(tz.value)} (${tz.offset})`}
-        />
-        <Field label={__('Notes')} content={contact.notes} />
-      </ContactDetailsComponent>
-    );
-  }
-}
+      ))}
 
-export default ContactDetails;
+      <SectionHeader>{__('Contact info')}</SectionHeader>
+
+      <Field
+        label={__('Nexus user ID')}
+        content={!!contact.genesis && <UserID>{contact.genesis}</UserID>}
+      />
+      <Field
+        label={__('Email')}
+        content={
+          contact.email && (
+            <ExternalLink href={`mailto:${contact.email}`}>
+              {contact.email}
+            </ExternalLink>
+          )
+        }
+      />
+      <Field label={__('Phone Number')} content={contact.phoneNumber} />
+      <Field
+        label={__('Local Time')}
+        content={tz && `${getLocalTime(tz.value)} (${tz.offset})`}
+      />
+      <Field label={__('Notes')} content={contact.notes} />
+    </ContactDetailsComponent>
+  );
+}

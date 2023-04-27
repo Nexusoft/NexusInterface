@@ -23,7 +23,7 @@ function getKeys(node) {
     return [left[0] + right[0]];
   }
   if (node.type === 'TemplateLiteral') {
-    return [node.quasis.map(quasi => quasi.value.cooked).join('*')];
+    return [node.quasis.map((quasi) => quasi.value.cooked).join('*')];
   }
   if (node.type === 'ConditionalExpression') {
     return [...getKeys(node.consequent), ...getKeys(node.alternate)];
@@ -63,7 +63,7 @@ function extractFromCode(code) {
     plugins: [
       '@babel/plugin-syntax-jsx',
       ['@babel/plugin-syntax-class-properties', { loose: true }],
-      ['@babel/plugin-syntax-decorators', { legacy: true }],
+      // ['@babel/plugin-syntax-decorators', { legacy: true }],
     ],
   };
 
@@ -73,7 +73,7 @@ function extractFromCode(code) {
   const ignoredLines = [];
 
   // Look for keys in the comments.
-  ast.comments.forEach(comment => {
+  ast.comments.forEach((comment) => {
     let match = commentRegExp.exec(comment.value);
     if (match) {
       keys.push({
@@ -123,7 +123,7 @@ function extractFromCode(code) {
       ) {
         const foundKeys = getKeys(node.arguments[0]);
 
-        foundKeys.forEach(key => {
+        foundKeys.forEach((key) => {
           if (key) {
             keys.push({
               key,
@@ -143,7 +143,7 @@ function extractFromCode(code) {
         const tempContext = (contextNode && contextNode.value) || '';
         const foundKeys = getKeys(node.arguments[1]);
 
-        foundKeys.forEach(key => {
+        foundKeys.forEach((key) => {
           if (key) {
             keys.push({
               key,
@@ -169,14 +169,14 @@ export default function extractFromFiles(filenames, options) {
 
   let toScan = [];
 
-  filenames.forEach(filename => {
+  filenames.forEach((filename) => {
     toScan = toScan.concat(glob.sync(filename, {}));
   });
 
-  toScan.forEach(filename => {
+  toScan.forEach((filename) => {
     const code = fs.readFileSync(filename, 'utf8');
     const extractedKeys = extractFromCode(code, options);
-    extractedKeys.forEach(keyObj => {
+    extractedKeys.forEach((keyObj) => {
       keyObj.file = filename;
       keys.push(keyObj);
     });

@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import GA from 'lib/googleAnalytics';
 import styled from '@emotion/styled';
 
@@ -12,8 +12,7 @@ import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
 import Table from 'components/Table';
 import { formatDateTime } from 'lib/intl';
-import { openModal } from 'lib/ui';
-import { setTxsAccountFilter } from 'lib/ui';
+import { openModal, setTxsAccountFilter } from 'lib/ui';
 import { autoUpdateTransactions, isPending } from 'lib/transactions';
 import { isCoreConnected } from 'selectors';
 
@@ -49,14 +48,14 @@ const tableColumns = [
     id: 'time',
     Header: __('Time'),
     accessor: 'time',
-    Cell: cell => formatDateTime(cell.value * 1000, timeFormatOptions),
+    Cell: (cell) => formatDateTime(cell.value * 1000, timeFormatOptions),
     width: 200,
   },
   {
     id: 'category',
     Header: __('CATEGORY'),
     accessor: 'category',
-    Cell: cell => <CategoryCell transaction={cell.original} />,
+    Cell: (cell) => <CategoryCell transaction={cell.original} />,
     width: 120,
   },
   {
@@ -97,173 +96,125 @@ const TransactionsTable = styled(Table)({
   overflow: 'auto',
 });
 
-// React-Redux mandatory methods
-const mapStateToProps = state => {
-  const {
-    ui: {
-      transactions: { account, addressQuery, category, minAmount, timeSpan },
-    },
-    transactions: { map },
-    settings: { devMode, fakeTransactions, minConfirmations },
-    myAccounts,
-  } = state;
-  const txList = getTransactionsList(map);
-  const addFakeTxs = devMode && fakeTransactions;
-  const allTransactions = addFakeTxs
-    ? withFakeTxs(txList, state.myAccounts)
-    : txList;
+export default function Transactions() {
+  const coreConnected = useSelector(isCoreConnected);
+  const filteredTransactions = useSelector(
+    ({
+      ui: {
+        transactions: { account, addressQuery, category, minAmount, timeSpan },
+      },
+      transactions: { map },
+      settings: { devMode, fakeTransactions },
+    }) => {
+      const txList = getTransactionsList(map);
+      const addFakeTxs = devMode && fakeTransactions;
+      const allTransactions = addFakeTxs
+        ? withFakeTxs(txList, state.myAccounts)
+        : txList;
 
-  return {
-    coreConnected: isCoreConnected(state),
-    filteredTransactions: getFilteredTransactions(
-      allTransactions,
-      account,
-      addressQuery,
-      category,
-      minAmount,
-      timeSpan
-    ),
-    account,
-    accountOptions: getAccountOptions(myAccounts),
-    settings: state.settings,
-    minConfirmations,
-  };
-};
+      return getFilteredTransactions(
+        allTransactions,
+        account,
+        addressQuery,
+        category,
+        minAmount,
+        timeSpan
+      );
+    }
+  );
+  const account = useSelector((state) => state.ui.transactions.account);
+  const accountOptions = useSelector((state) =>
+    getAccountOptions(state.myAccounts)
+  );
+  const settings = useSelector((state) => state.settings);
+  const { minConfirmations } = settings;
 
-/**
- * Transactions Page
- *
- * @class Transactions
- * @extends {Component}
- */
-class Transactions extends Component {
-  /**
-   * Component Mount Callback
-   *
-   * @memberof Transactions
-   */
-  componentDidMount() {
+  useEffect(() => {
     GA.SendScreen('Transactions');
-    const { coreConnected, filteredTransactions } = this.props;
+  }, []);
+
+  useEffect(() => {
     if (coreConnected && !filteredTransactions) {
       autoUpdateTransactions();
     }
-  }
+  });
 
-  /**
-   * Component Updated Props Callback
-   *
-   * @param {*} previousprops
-   * @returns
-   * @memberof Transactions
-   */
-  componentDidUpdate() {
-    const { coreConnected, filteredTransactions } = this.props;
-    if (coreConnected && !filteredTransactions) {
-      autoUpdateTransactions();
-    }
-  }
+  return (
+    <Panel
+      icon={transactionIcon}
+      title={__('Transaction details')}
+      controls={
+        <div className="flex center">
+          <Tooltip.Trigger tooltip={__('Show transactions chart')}>
+            <Button
+              skin="plain"
+              onClick={() => openModal(TransactionsChartModal)}
+            >
+              <Icon icon={barChartIcon} width={20} height={20} />
+            </Button>
+          </Tooltip.Trigger>
 
-  /**
-   * creates a CSV file then prompts the user to save that file
-   *
-   * @param {[*]} DataToSave Transactions to save
-   * @memberof Transactions
-   */
-  saveCSV = () => {
-    saveCSV(this.props.filteredTransactions);
-    GA.SendEvent('Transaction', 'Data', 'Download CSV', 1);
-  };
+          <Tooltip.Trigger tooltip={__('Download transactions history')}>
+            <Button
+              skin="plain"
+              onClick={() => {
+                saveCSV(filteredTransactions);
+                GA.SendEvent('Transaction', 'Data', 'Download CSV', 1);
+              }}
+            >
+              <Icon icon={downloadIcon} />
+            </Button>
+          </Tooltip.Trigger>
 
-  // Mandatory React method
-  /**
-   * React Render
-   *
-   * @returns JSX for Element
-   * @memberof Transactions
-   */
-  render() {
-    const {
-      filteredTransactions,
-      account,
-      accountOptions,
-      minConfirmations,
-    } = this.props;
-
-    return (
-      <Panel
-        icon={transactionIcon}
-        title={__('Transaction details')}
-        controls={
-          <div className="flex center">
-            <Tooltip.Trigger tooltip={__('Show transactions chart')}>
-              <Button
-                skin="plain"
-                onClick={() => openModal(TransactionsChartModal)}
-              >
-                <Icon icon={barChartIcon} width={20} height={20} />
-              </Button>
-            </Tooltip.Trigger>
-
-            <Tooltip.Trigger tooltip={__('Download transactions history')}>
-              <Button skin="plain" onClick={this.saveCSV}>
-                <Icon icon={downloadIcon} />
-              </Button>
-            </Tooltip.Trigger>
-
-            <AccountSelect
-              value={account}
-              onChange={setTxsAccountFilter}
-              options={accountOptions}
+          <AccountSelect
+            value={account}
+            onChange={setTxsAccountFilter}
+            options={accountOptions}
+          />
+        </div>
+      }
+    >
+      <RequireCoreConnected>
+        {!filteredTransactions ? (
+          <WaitingMessage>
+            {__('Loading transactions')}
+            ...
+          </WaitingMessage>
+        ) : (
+          <TransactionsLayout>
+            <Filters />
+            <TransactionsTable
+              data={filteredTransactions}
+              columns={tableColumns}
+              defaultPageSize={10}
+              defaultSortingColumnIndex={0}
+              getTrProps={(state, row) => {
+                const tx = row && row.original;
+                return {
+                  onClick: tx
+                    ? () => {
+                        openModal(TransactionDetailsModal, {
+                          txid: tx.txid,
+                        });
+                      }
+                    : undefined,
+                  style: tx
+                    ? {
+                        cursor: 'pointer',
+                        opacity:
+                          tx.category === 'immature' ||
+                          tx.category === 'orphan' ||
+                          isPending(tx, minConfirmations)
+                            ? 0.5
+                            : 1,
+                      }
+                    : undefined,
+                };
+              }}
             />
-          </div>
-        }
-      >
-        <RequireCoreConnected>
-          {!filteredTransactions ? (
-            <WaitingMessage>
-              {__('Loading transactions')}
-              ...
-            </WaitingMessage>
-          ) : (
-            <TransactionsLayout>
-              <Filters />
-              <TransactionsTable
-                data={filteredTransactions}
-                columns={tableColumns}
-                defaultPageSize={10}
-                defaultSortingColumnIndex={0}
-                getTrProps={(state, row) => {
-                  const tx = row && row.original;
-                  return {
-                    onClick: tx
-                      ? () => {
-                          openModal(TransactionDetailsModal, {
-                            txid: tx.txid,
-                          });
-                        }
-                      : undefined,
-                    style: tx
-                      ? {
-                          cursor: 'pointer',
-                          opacity:
-                            tx.category === 'immature' ||
-                            tx.category === 'orphan' ||
-                            isPending(tx, minConfirmations)
-                              ? 0.5
-                              : 1,
-                        }
-                      : undefined,
-                  };
-                }}
-              />
-            </TransactionsLayout>
-          )}
-        </RequireCoreConnected>
-      </Panel>
-    );
-  }
+          </TransactionsLayout>
+        )}
+      </RequireCoreConnected>
+    </Panel>
+  );
 }
-
-// Mandatory React-Redux method
-export default connect(mapStateToProps)(Transactions);

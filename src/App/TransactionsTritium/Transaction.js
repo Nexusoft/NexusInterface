@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from '@emotion/styled';
 
 import { formatDateTime } from 'lib/intl';
@@ -30,7 +29,7 @@ const TransactionComponent = styled.div(
   ({ theme }) => ({
     margin: '10px 0',
     color: theme.mixer(0.75),
-    background: color.darken(theme.background, 0.1),
+    background: theme.lower(theme.background, 0.1),
     boxShadow: '0 0 5px 0 rgba(0,0,0,.5)',
     display: 'flex',
     alignItems: 'stretch',
@@ -51,7 +50,7 @@ const TransactionLeft = styled.div(({ theme }) => ({
   cursor: 'pointer',
   transition: `background ${timing.normal}`,
   '&:hover': {
-    background: color.lighten(theme.background, 0.2),
+    background: color.lighten(theme.lower(theme.background, 0.1), 0.2),
   },
 }));
 
@@ -74,7 +73,7 @@ const ShortDate = styled.div(({ theme }) => ({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-  background: color.darken(theme.background, 0.1),
+  background: theme.lower(theme.background, 0.1),
   transition: `opacity ${timing.normal}`,
 
   [`${TransactionLeft}:hover &`]: {
@@ -100,7 +99,7 @@ const TransactionRight = styled.div({
   justifyContent: 'center',
 });
 
-const Transaction = ({ transaction }) => {
+export default function Transaction({ transaction }) {
   const txTime = new Date(transaction.timestamp * 1000);
 
   return (
@@ -109,7 +108,7 @@ const Transaction = ({ transaction }) => {
         onClick={() =>
           openModal(TransactionDetailsModal, { txid: transaction.txid })
         }
-        onContextMenu={e => {
+        onContextMenu={(e) => {
           e.stopPropagation();
           popupContextMenu([
             {
@@ -145,6 +144,4 @@ const Transaction = ({ transaction }) => {
       </TransactionRight>
     </TransactionComponent>
   );
-};
-
-export default Transaction;
+}

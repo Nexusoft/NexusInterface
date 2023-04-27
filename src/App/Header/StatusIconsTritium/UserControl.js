@@ -1,6 +1,6 @@
 // External
-import React from 'react';
-import { connect } from 'react-redux';
+import { createRef, useState, useRef } from 'react';
+import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 
 // Internal
@@ -36,29 +36,21 @@ const UserControlComponent = styled(StatusIcon)(
   })
 );
 
-/**
- * Returns JSX of My Addresses
- *
- *@returns {JSX} JSX
- */
-@connect(state => ({ loggedIn: isLoggedIn(state) }))
-class UserControl extends React.Component {
-  state = {
-    open: false,
+export default function UserControl() {
+  const [open, setOpen] = useState(false);
+  const controlRef = useRef();
+  const loggedIn = useSelector(isLoggedIn);
+
+  const openDropdown = () => {
+    setOpen(true);
   };
 
-  controlRef = React.createRef();
-
-  openDropdown = () => {
-    this.setState({ open: true });
+  const closeDropdown = () => {
+    setOpen(false);
   };
 
-  closeDropdown = () => {
-    this.setState({ open: false });
-  };
-
-  getDropdownStyle = () => {
-    const el = this.controlRef.current;
+  const getDropdownStyle = () => {
+    const el = controlRef.current;
     if (!el) return {};
 
     const rect = el.getBoundingClientRect();
@@ -69,33 +61,29 @@ class UserControl extends React.Component {
     };
   };
 
-  render() {
-    return (
-      <>
-        <UserControlComponent
-          ref={this.controlRef}
-          onClick={this.openDropdown}
-          loggedIn={this.props.loggedIn}
-        >
-          <Icon icon={userIcon} />
-          <Arrow
-            direction="down"
-            width={10}
-            height={6}
-            style={{ marginLeft: 5 }}
+  return (
+    <>
+      <UserControlComponent
+        ref={controlRef}
+        onClick={openDropdown}
+        loggedIn={loggedIn}
+      >
+        <Icon icon={userIcon} />
+        <Arrow
+          direction="down"
+          width={10}
+          height={6}
+          style={{ marginLeft: 5 }}
+        />
+      </UserControlComponent>
+      {open && (
+        <Overlay onBackgroundClick={closeDropdown}>
+          <UserDropdown
+            closeDropdown={closeDropdown}
+            style={getDropdownStyle()}
           />
-        </UserControlComponent>
-        {this.state.open && (
-          <Overlay onBackgroundClick={this.closeDropdown}>
-            <UserDropdown
-              closeDropdown={this.closeDropdown}
-              style={this.getDropdownStyle()}
-            />
-          </Overlay>
-        )}
-      </>
-    );
-  }
+        </Overlay>
+      )}
+    </>
+  );
 }
-
-export default UserControl;

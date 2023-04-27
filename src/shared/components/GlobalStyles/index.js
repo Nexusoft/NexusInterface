@@ -10,8 +10,7 @@
  */
 
 // External
-import React from 'react';
-import { Global, css } from '@emotion/core';
+import { Global, css } from '@emotion/react';
 
 // Internal
 import * as color from 'utils/color';
@@ -19,7 +18,7 @@ import { consts } from 'styles';
 import fontStyles from './fonts';
 import tableStyles from './tableStyles';
 
-const resetStyles = theme => ({
+const resetStyles = (theme) => ({
   '*, *::before, *::after': {
     boxSizing: 'border-box',
   },
@@ -91,7 +90,7 @@ const resetStyles = theme => ({
   },
 });
 
-const customizedScrollbar = theme => ({
+const customizedScrollbar = (theme) => ({
   '::-webkit-scrollbar': {
     background: 'transparent',
     zIndex: 1,
@@ -114,7 +113,7 @@ const customizedScrollbar = theme => ({
   },
 });
 
-const utilityClasses = theme => css`
+const utilityClasses = (theme) => css`
   .relative {
     position: relative;
   }
@@ -130,6 +129,9 @@ const utilityClasses = theme => css`
   .dim {
     opacity: 0.5;
   }
+  .semi-dim {
+    opacity: 0.8;
+  }
 
   .flex {
     display: flex;
@@ -142,6 +144,15 @@ const utilityClasses = theme => css`
     &.space-between {
       justify-content: space-between;
     }
+    &.justify-start {
+      justify-content: flex-start;
+    }
+    &.justify-end {
+      justify-content: flex-end;
+    }
+  }
+  .flex1 {
+    flex: 1;
   }
 
   .error {
@@ -160,15 +171,49 @@ const utilityClasses = theme => css`
   .mt3 {
     margin-top: 3em;
   }
-
-  .space-left {
+  .ml0_4 {
     margin-left: 0.4em;
   }
-  .space-right {
+  .ml1 {
+    margin-left: 1em;
+  }
+  .ml2 {
+    margin-left: 2em;
+  }
+  .ml3 {
+    margin-left: 3em;
+  }
+  .mr0_4 {
     margin-right: 0.4em;
   }
+  .mr1 {
+    margin-right: 1em;
+  }
+  .mr2 {
+    margin-right: 2em;
+  }
+  .mr3 {
+    margin-right: 3em;
+  }
+  .mb0_4 {
+    margin-bottom: 0.4em;
+  }
+  .mb1 {
+    margin-bottom: 1em;
+  }
+  .mb2 {
+    margin-bottom: 2em;
+  }
+  .mb3 {
+    margin-bottom: 3em;
+  }
+
   .monospace {
     font-family: ${consts.monoFontFamily};
+  }
+
+  .pointer {
+    cursor: pointer;
   }
 `;
 

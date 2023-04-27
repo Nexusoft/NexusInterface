@@ -1,6 +1,5 @@
 // External Dependencies
-import React from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 // Internal Dependencies
@@ -15,73 +14,49 @@ import StatusIcon from './StatusIcon';
 
 __ = __context('Header');
 
-/**
- * Handles the Staking Status
- *
- * @class StakingStatus
- * @extends {React.Component}
- */
-@connect(state => {
-  const {
-    user: {
-      stakeInfo: { stakerate },
-    },
-  } = state;
-  return {
-    staking: isStaking(state),
-    stakerate,
-    synchronized: isSynchronized(state),
-  };
-})
-class StakingStatus extends React.Component {
-  renderTooltip = () => {};
+export default function StakingStatus() {
+  const staking = useSelector(isStaking);
+  const synchronized = useSelector(isSynchronized);
+  const stakeRate = useSelector((state) => state.user.stakeInfo?.stakerate);
+  const pooled = useSelector((state) => state.user.stakeInfo?.pooled);
 
-  /**
-   * Component's Renderable JSX
-   *
-   * @returns {JSX} JSX
-   * @memberof StakingStatus
-   */
-  render() {
-    const { staking, stakerate, synchronized } = this.props;
-
-    return (
-      <Tooltip.Trigger
-        tooltip={
-          staking ? (
-            synchronized ? (
-              <>
-                <div>
-                  <strong>{__('Wallet is staking')}</strong>
-                  {!!stakerate && (
-                    <div>
-                      {__('Stake Rate')}: {formatNumber(stakerate, 2)}%
-                    </div>
-                  )}
-                </div>
-              </>
-            ) : (
-              __('Waiting for 100% synchronization to start staking...')
-            )
+  return (
+    <Tooltip.Trigger
+      tooltip={
+        staking ? (
+          synchronized ? (
+            <>
+              <div>
+                <strong>
+                  {__('Wallet is staking')}
+                  {!!pooled && ` (${__('pooled')})`}
+                </strong>
+                {!!stakeRate && (
+                  <div>
+                    {__('Stake Rate')}: {formatNumber(stakeRate, 2)}%
+                  </div>
+                )}
+              </div>
+            </>
           ) : (
-            __('Wallet is not staking')
+            __('Waiting for 100% synchronization to start staking...')
           )
-        }
-        style={{ maxWidth: 200 }}
-      >
-        <StatusIcon>
-          <Link to="/User/Staking">
-            <Icon
-              icon={stakingIcon}
-              style={{
-                opacity: staking && synchronized ? 1 : 0.7,
-              }}
-            />
-          </Link>
-        </StatusIcon>
-      </Tooltip.Trigger>
-    );
-  }
+        ) : (
+          __('Wallet is not staking')
+        )
+      }
+      style={{ maxWidth: 200 }}
+    >
+      <StatusIcon>
+        <Link to="/User/Staking">
+          <Icon
+            icon={stakingIcon}
+            style={{
+              opacity: staking && synchronized ? 1 : 0.7,
+            }}
+          />
+        </Link>
+      </StatusIcon>
+    </Tooltip.Trigger>
+  );
 }
-
-export default StakingStatus;

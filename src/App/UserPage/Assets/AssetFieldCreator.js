@@ -1,17 +1,12 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { Field, getFormValues } from 'redux-form';
 import styled from '@emotion/styled';
 
+import Form from 'components/Form';
 import FormField from 'components/FormField';
-import TextField from 'components/TextField';
-import Switch from 'components/Switch';
-import Select from 'components/Select';
 import Tooltip from 'components/Tooltip';
 import QuestionCircle from 'components/QuestionCircle';
+import { useFieldValue, required } from 'lib/form';
 import { consts, timing } from 'styles';
 import { assetNumberTypes } from 'consts/misc';
-import { getDeep } from 'utils/misc';
 
 __ = __context('CreateAsset');
 
@@ -94,76 +89,69 @@ const ConditionalFormField = ({ showLabel, label, children, ...rest }) =>
     children
   );
 
-@connect((state, props) => ({
-  fieldValue: getDeep(getFormValues(props.form)(state), props.fieldName),
-}))
-export default class AssetFieldCreator extends React.PureComponent {
-  render() {
-    const { fieldName, first, fieldValue, remove, onlyField } = this.props;
-    const lengthDisabled = !(
-      fieldValue.mutable && fieldValue.type === 'string'
-    );
+export default function AssetFieldCreator({
+  fieldName,
+  first,
+  remove,
+  onlyField,
+}) {
+  const fieldValue = useFieldValue(fieldName);
+  const lengthDisabled = !(fieldValue.mutable && fieldValue.type === 'string');
 
-    return (
-      <FieldWrapper className={first ? undefined : 'mt1'}>
-        <ConditionalFormField showLabel={first} label={__('Name')}>
-          <Field
-            name={`${fieldName}.name`}
-            component={TextField.RF}
-            placeholder={__('Field name')}
-          />
-        </ConditionalFormField>
-        <ConditionalFormField showLabel={first} label={__('Value')}>
-          <Field
-            name={`${fieldName}.value`}
-            component={TextField.RF}
-            placeholder={__('Field value')}
-            type={
-              assetNumberTypes.includes(fieldValue.type) ? 'number' : 'text'
-            }
-            min={assetNumberTypes.includes(fieldValue.type) ? 0 : undefined}
-          />
-        </ConditionalFormField>
-        <ConditionalFormField showLabel={first} label={__('Mutable')}>
-          <SwitchWrapper>
-            <Field name={`${fieldName}.mutable`} component={Switch.RF} />
-          </SwitchWrapper>
-        </ConditionalFormField>
-        <ConditionalFormField showLabel={first} label={__('Type')}>
-          <Field
-            name={`${fieldName}.type`}
-            component={Select.RF}
-            options={typeOptions}
-          />
-        </ConditionalFormField>
+  return (
+    <FieldWrapper className={first ? undefined : 'mt1'}>
+      <ConditionalFormField showLabel={first} label={__('Name')}>
+        <Form.TextField
+          name={`${fieldName}.name`}
+          placeholder={__('Field name')}
+          validate={required()}
+        />
+      </ConditionalFormField>
 
-        <ConditionalFormField
-          showLabel={first}
-          label={
-            <span>
-              <span className="v-align">{__('Max. length')}</span>
-              <QuestionCircle
-                tooltip={__('Only applicable to mutable string fields')}
-              />
-            </span>
-          }
-          className={lengthDisabled ? 'dim' : undefined}
-        >
-          <Field
-            name={`${fieldName}.maxlength`}
-            type="number"
-            component={TextField.RF}
-            disabled={lengthDisabled}
-            placeholder={lengthDisabled ? 'N/A' : __('Unlimited')}
-          />
-        </ConditionalFormField>
+      <ConditionalFormField showLabel={first} label={__('Value')}>
+        <Form.TextField
+          name={`${fieldName}.value`}
+          placeholder={__('Field value')}
+          type={assetNumberTypes.includes(fieldValue.type) ? 'number' : 'text'}
+          min={assetNumberTypes.includes(fieldValue.type) ? 0 : undefined}
+        />
+      </ConditionalFormField>
 
-        {!onlyField && (
-          <Tooltip.Trigger tooltip={__('Remove field')}>
-            <RemoveButton onClick={remove}>✕</RemoveButton>
-          </Tooltip.Trigger>
-        )}
-      </FieldWrapper>
-    );
-  }
+      <ConditionalFormField showLabel={first} label={__('Mutable')}>
+        <SwitchWrapper>
+          <Form.Switch name={`${fieldName}.mutable`} />
+        </SwitchWrapper>
+      </ConditionalFormField>
+
+      <ConditionalFormField showLabel={first} label={__('Type')}>
+        <Form.Select name={`${fieldName}.type`} options={typeOptions} />
+      </ConditionalFormField>
+
+      <ConditionalFormField
+        showLabel={first}
+        label={
+          <span>
+            <span className="v-align">{__('Max. length')}</span>
+            <QuestionCircle
+              tooltip={__('Only applicable to mutable string fields')}
+            />
+          </span>
+        }
+        className={lengthDisabled ? 'dim' : undefined}
+      >
+        <Form.TextField
+          name={`${fieldName}.maxlength`}
+          type="number"
+          disabled={lengthDisabled}
+          placeholder={lengthDisabled ? 'N/A' : __('Unlimited')}
+        />
+      </ConditionalFormField>
+
+      {!onlyField && (
+        <Tooltip.Trigger tooltip={__('Remove field')}>
+          <RemoveButton onClick={remove}>✕</RemoveButton>
+        </Tooltip.Trigger>
+      )}
+    </FieldWrapper>
+  );
 }

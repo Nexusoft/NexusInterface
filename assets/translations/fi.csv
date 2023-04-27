@@ -35,35 +35,36 @@ Wallet is not staking,Lompakko ei panosta,Header
 Checking sync status,Tarkistetaan synkronoinnin tilaa,Header
 Synchronizing,Synkronoidaan,Header
 Synchronized,Synkronoitu,Header
+pooled,,Header
 You're not logged in,,Header
 You are staking but have not received a block in 30 minutes!,,Header
-Accounts,Tilit,Header.UserDropdown
-Tokens,,Header.UserDropdown
-Set recovery phrase,,Header.UserDropdown
-Log out,Kirjaudu ulos,Header.UserDropdown
-Log in,,Header.UserDropdown
-Create new user,,Header.UserDropdown
-Overview,Yleiskatsaus,NavigationBar
-User,,NavigationBar
-Send NXS,Lähetä NXS,NavigationBar
-Send,Lähetä,NavigationBar
-Transactions,Maksutapahtumat,NavigationBar
-Address Book,Osoitekirja,NavigationBar
-Settings,Asetukset,NavigationBar
-Console,Konsoli,NavigationBar
+Switching...,,
+Active,,
+Switch,,
+Switch user,,
 Closing Nexus Wallet,Suljetaan Nexus Lompakko,
 Warning,Varoitus,
 IMPROPER USE OF THIS SOFTWARE COULD LEAD TO PERMANENT LOSS OF COIN.,TÄMÄN OHJELMISTON SOPIMATON KÄYTTÖ VOI JOHTAA RAHOJESI PYSYVÄÄN KADOTUKSEEN.,
 BACKUP YOUR WALLET OFTEN AND KEEP YOUR PASSWORDS SAFE.,VARMUUSKOPIOI LOMPAKKOSI USEASTI JA PIDÄ SALASANA TALLESSA.,
 I understand the risk,Ymmärrän riskin,
-Tritium Mode,,
-Your wallet is now in Tritium Mode!,,
-"Tritium Mode is currently in early development, therefore not all Tritium features are supported by the user interface. If you want to access a Tritium feature that hasn't had a user interface yet, you can go to Console/Tritium Console, or use any HTTP client to call Nexus APIs directly.",,
-"If you need to switch back to Legacy Mode, you can select ""%{menu}"" menu option at any time.",,
-File,Tiedosto,
-Switch to Legacy Mode,,
-Continue to Tritium Mode,,
 Close,Sulje,
+Remote Core is disconnected,,
+Connecting to Nexus Core...,Yhdistetään Nexus Ytimeen...,
+Nexus Core is stopped,Nexus Ydin on pysäytetty,
+Address has been copied to clipboard,Osoite on kopioitu leikepöydälle,
+Copy to clipboard,Kopioi leikepöydälle,
+Click to copy to clipboard,Kopioi leikepöydälle,
+Show QR code,,
+Log in,,
+No Rows Found,Rivejä ei löytynyt,
+Page,Sivu,
+rows,rivit,
+Previous,Edellinen,
+Next,Seuraava,
+Use virtual keyboard,,
+<token_name></token_name> token,,
+Unnamed token,,
+Switch to Legacy Mode,,
 Are you sure you want to switch to Legacy Mode?,,
 Switch to Tritium Mode,,
 Start Nexus Core,Käynnistä Nexus Ydin,
@@ -98,23 +99,11 @@ There are currently no updates available,Tällä hetkellä päivityksiä ei ole 
 Checking for Updates...,Tarkistetaan päivityksiä...,
 Update available! Downloading...,Päivitys saatavilla! Ladataan...,
 Quit and install update...,Sammuta ja asenna päivitys...,
+File,Tiedosto,
 Edit,Muokkaa,
 Settings,Asetukset,
 View,Katsele,
 Help,Apua,
-Manual Core is disconnected,Manuaalinen Ydin ei ole yhdistetty,
-Connecting to Nexus Core...,Yhdistetään Nexus Ytimeen...,
-Nexus Core is stopped,Nexus Ydin on pysäytetty,
-Address has been copied to clipboard,Osoite on kopioitu leikepöydälle,
-Copy to clipboard,Kopioi leikepöydälle,
-Click to copy to clipboard,Kopioi leikepöydälle,
-Log in,,
-No Rows Found,Rivejä ei löytynyt,
-Page,Sivu,
-rows,rivit,
-Previous,Edellinen,
-Next,Seuraava,
-Use virtual keyboard,,
 Transaction received,Rahansiirto vastaanotettu,
 Transaction sent,Rahansiirto lähetetty,
 Genesis transaction,Genesis rahansiirto,
@@ -123,6 +112,33 @@ Update available for %{smart_count} module |||| Updates available for %{smart_co
 New transaction,,
 Error,,
 Unknown error,Tuntematon virhe,
+Accounts,Tilit,Header.UserDropdown
+Tokens,,Header.UserDropdown
+Set recovery phrase,,Header.UserDropdown
+Switch user,,Header.UserDropdown
+Log in to another user,,Header.UserDropdown
+Log out of all users,,Header.UserDropdown
+Log out,Kirjaudu ulos,Header.UserDropdown
+Log in,,Header.UserDropdown
+Create new user,,Header.UserDropdown
+Overview,Yleiskatsaus,NavigationBar
+User,,NavigationBar
+Send NXS,Lähetä NXS,NavigationBar
+Send,Lähetä,NavigationBar
+Transactions,Maksutapahtumat,NavigationBar
+Address Book,Osoitekirja,NavigationBar
+Settings,Asetukset,NavigationBar
+Console,Konsoli,NavigationBar
+Lite mode,,LiteModeNotice
+Lite mode is now available on Nexus Wallet! You can choose to enable lite mode now or just ignore it. You can change your decision anytime under Settings/Core.,,LiteModeNotice
+Why you might want to enable lite mode,,LiteModeNotice
+Nexus Core would take less resources (memory and storage) to run,,LiteModeNotice
+Synchronization would be much faster,,LiteModeNotice
+Why you might NOT want to enable lite mode,,LiteModeNotice
+You would NOT be able to mine or stake,,LiteModeNotice
+Legacy Mode would be disabled,,LiteModeNotice
+Ignore,,LiteModeNotice
+Enable lite mode,,LiteModeNotice
 "Last updated
 %{time}","Viimeksi päivitetty
 %{time}",Overview
@@ -186,17 +202,40 @@ There must be at least one recipient,Valitse vähintään yksi vastaanottaja,Sen
 Address is required,Osoite vaaditaan,Send
 Transaction sent,Rahansiirto lähetetty,Send
 Error sending NXS,Virhe siirrettäessä NXS,Send
-%{tokenName} Amount,%{tokenName} Määrä,Send
+Reference,,Send
+"An optional number which may be provided by the recipient to identify this transaction from the others, e.g. invoice number, order number, etc.",,Send
+Reference number (optional),,Send
+Expires in,,Send
+"The amount of time since the transaction is created after which the transaction can no longer be credited by the recipient. By default, transactions will expire in 1 day (86400 seconds).",,Send
+Days,,Send
+Hours,,Send
+Minutes,,Send
+Seconds,,Send
+Amount,,Send
 Recipient Address/Name,,Send
 Accounts,Tilit,Send
+Unnamed account,,Send
 Tokens,,Send
-More options,,Send
-Reference number,,Send
-An optional number which may be provided by the recipient to identify this transaction from the others,,Send
-"Invoice number, order number, etc... (Optional)",,Send
-Reference must be a number,,Send
-Number is too large,,Send
+Unnamed token,,Send
+Unnamed,,Send
+Invalid name/address,,Send
+Advanced options,,Send
 Address/Name is required,Osoite/Nimi vaaditaan,Send
+Reference must be an unsigned integer,,Send
+Number is too large,,Send
+Unnamed,,PreviewTransaction
+%{smart_count} day |||| %{smart_count} days,,PreviewTransaction
+%{smart_count} hour |||| %{smart_count} hours,,PreviewTransaction
+%{smart_count} minute |||| %{smart_count} minutes,,PreviewTransaction
+%{smart_count} second |||| %{smart_count} seconds,,PreviewTransaction
+Preview Transaction,,PreviewTransaction
+You're sending,,PreviewTransaction
+From,,PreviewTransaction
+To,,PreviewTransaction
+Amount,,PreviewTransaction
+Reference,,PreviewTransaction
+Expires,,PreviewTransaction
+Send transaction,,PreviewTransaction
 Select backup directory,Valitse hakemisto varmuuskopiolle,Settings.Application
 Backup directory,Varmuuskopiointikansio,Settings.Application
 Browse,Selaa,Settings.Application
@@ -242,23 +281,27 @@ Allow the presence of SymLinks in the module directory,Salli symbolisten linkkie
 Fake Test Transactions,Testaa Rahansiirtoja,Settings.Application
 Display Test Transactions on the Transactions page,Näytä Testi Rahansiirrot Rahansiirto sivulla,Settings.Application
 Language,Kieli,Settings.Application
-Exit manual Core mode?,Poistu manuaalisesta Ydin tilasta?,Settings.Core
+Exit remote Core mode?,,Settings.Core
 (This will restart your Core),(Tämä uudelleenkäynnistää ytimen),Settings.Core
-Enter manual Core mode?,Käynnistetäänkö manuaalinen Ydin tila?,Settings.Core
+Enter remote Core mode?,,Settings.Core
 Reload transaction history,Lataa rahansiirtohistoria uudestaan,Settings.Core
 Clear peer connections,,Settings.Core
+Resync database,,Settings.Core
+Nexus Core will be restarted. Lite mode database will be deleted and resynchronized from the beginning.,,Settings.Core
+Embedded Core,,Settings.Core
+Remote Core,,Settings.Core
+Lite mode,,Settings.Core
+"Nexus Core under lite mode runs lighter and synchronize much faster, but you will <b>NOT</b> be able to stake, mine, or switch the wallet to Legacy Mode.",,Settings.Core
+Multi-user,,Settings.Core
+Allow multiple logged in users at the same time. Mining and staking will be unavailable.,,Settings.Core
+Enable staking,Aktivoi panostus,Settings.Core
+Enable/Disable staking on the wallet.,Aktivoi/Deaktivoi panostus lompakkossa.,Settings.Core
+Pooled staking,,Settings.Core
+"Pooled staking is a decentralized and trust-less mechanism allowing you to use the balances of others to increase your chances of finding a stake block. All participants receive their staking rewards and build trust, regardless of which user mines the block. A small portion of each reward is paid to the block finder by all pool participants.",,Settings.Core
 Enable mining,Aktivoi louhinta,Settings.Core
 Enable/Disable mining to the wallet.,Aktivoi/Deaktivoi louhinta lompakkoon.,Settings.Core
 Mining IP Whitelist,Louhimisen IP Whitelist,Settings.Core
 IP/Ports allowed to mine to. Separate by <b>;</b> . Wildcards supported only in IP,IP/Portit joiden sallitaan louhivan. Erottele <b>;</b>. Villikortit sallittuja vain IP:ssä,Settings.Core
-Enable staking,Aktivoi panostus,Settings.Core
-Enable/Disable staking on the wallet.,Aktivoi/Deaktivoi panostus lompakkossa.,Settings.Core
-Rescan wallet,Uudelleenskannaa lompakko,Settings.Core
-"Used to correct transaction/balance issues, scans over every block in the database. Could take up to 10 minutes.","Käytetään rahansiirtojen/taseiden ongelmien selvitykseen, skannaa jokaisen lohkon tietokannassa. Voi kestää yli 10 min.",Settings.Core
-Restart Nexus core with -walletclean parameter to clean out and reload all transaction history,Uudelleenkäynnistä Nexus ydin -walletclean parametrillä puhdistaakesi ja ladataksesi siirtohistorian,Settings.Core
-Reload,Lataa uudelleen,Settings.Core
-Clear all stored peer connections and restart Nexus,,Settings.Core
-Clear,Tyhjennä,Settings.Core
 Verbose level,Verbose taso,Settings.Core
 Verbose level for logs.,Verbose taso lokeille.,Settings.Core
 Core Data Directory,,Settings.Core
@@ -268,23 +311,48 @@ The iteration of Testnet to connect to.,,Settings.Core
 Turn Off,,Settings.Core
 Avatar Mode,Avatar Tila,Settings.Core
 Disabling Avatar will make the core use a separate change key,Avatar Tilan pois päältä ottaminen vaihtaa ytimen käyttämään erillistä muutosavainta,Settings.Core
-Manual Core mode,Manuaalinen Ydin tila,Settings.Core
-Enable manual Core mode if you are running the Nexus Core manually outside of the wallet.,Laita manuaalinen Ydin tila päälle jos käytät Nexus Ydintä manuaalisesti lompakon ulkopuolella.,Settings.Core
-Username,Käyttäjänimi,Settings.Core
-Username configured for manual Core.,Käyttäjänimi konfiguroitu manuaaliselle Ytimelle.,Settings.Core
-Password,Salasana,Settings.Core
-Password configured for manual Core.,Salasana konfiguroitu manuaaliselle Ytimelle.,Settings.Core
+Rescan wallet,Uudelleenskannaa lompakko,Settings.Core
+"Used to correct transaction/balance issues, scans over every block in the database. Could take up to 10 minutes.","Käytetään rahansiirtojen/taseiden ongelmien selvitykseen, skannaa jokaisen lohkon tietokannassa. Voi kestää yli 10 min.",Settings.Core
+Restart Nexus core with -walletclean parameter to clean out and reload all transaction history,Uudelleenkäynnistä Nexus ydin -walletclean parametrillä puhdistaakesi ja ladataksesi siirtohistorian,Settings.Core
+Reload,Lataa uudelleen,Settings.Core
+Clear all stored peer connections and restart Nexus,,Settings.Core
+Clear,Tyhjennä,Settings.Core
+Delete lite mode database and resynchronize from the beginning,,Settings.Core
+Resynchronize,,Settings.Core
 IP address,IP osoite,Settings.Core
-IP address configured for manual Core.,IP osoite konfiguroitu manuaaliselle Ytimelle.,Settings.Core
-Port,Portti,Settings.Core
-Port configured for manual Core.,Portti konfiguroitu manuaaliselle Ytimelle.,Settings.Core
+Remote Core IP address,,Settings.Core
+API SSL,,Settings.Core
+Use SSL for API calls,,Settings.Core
+API Port,,Settings.Core
+Nexus API server Port,,Settings.Core
+API SSL Port,,Settings.Core
+Nexus API server SSL Port,,Settings.Core
+API Username,,Settings.Core
+Nexus API server Username,,Settings.Core
+API Password,,Settings.Core
+Nexus API server Password,,Settings.Core
+RPC SSL,,Settings.Core
+Use SSL for RPC calls,,Settings.Core
+RPC Port,,Settings.Core
+Nexus RPC server Port,,Settings.Core
+RPC SSL Port,,Settings.Core
+Nexus RPC server SSL Port,,Settings.Core
+RPC Username,,Settings.Core
+Nexus RPC server Username,,Settings.Core
+RPC Password,,Settings.Core
+Nexus RPC server Password,,Settings.Core
+Log out on close,,Settings.Core
+Log out of all users before closing the wallet,,Settings.Core
 Restart Core for these changes to take effect,,Settings.Core
 Save settings,,Settings.Core
 Verbose level is required,,Settings.Core
-Manual Core username is required,Manuaalisen Ytimen käyttäjänimi vaaditaan,Settings.Core
-Manual Core password is required,Manuaalisen Ytimen salasana vaaditaan,Settings.Core
-Manual Core IP is required,Manuaalinen Ydin IP vaaditaan,Settings.Core
-Manual Core port is required,Manuaalisen Ytimen portti vaaditaan,Settings.Core
+Remote Core IP is required,,Settings.Core
+RPC port is required,,Settings.Core
+RPC username is required,,Settings.Core
+RPC password is required,,Settings.Core
+API port is required,,Settings.Core
+API username is required,,Settings.Core
+API password is required,,Settings.Core
 Core settings saved,Ytimen asetukset tallennettu,Settings.Core
 Restarting Core...,Uudelleenkäynnistetään Ydintä...,Settings.Core
 Error rescanning,Virhe uudelleenskannatessa,Settings.Core
@@ -396,7 +464,6 @@ Overview Display,Yleiskatsaus Näyttö,Settings.Style
 Nexus Addresses format,Nexus Osoitteen formaatti,Settings.Style
 Choose your Nexus Address display preference,Valitse Nexus Osoitteesi esillepanon preferenssi,Settings.Style
 Sample Address,Malli Osoite,Settings.Style
-This is your Default Address,Tämä on oletusosoitteesi,Settings.Style
 Theme,Teema,Settings.Style
 Select Wallet Theme,Valitse Lompakon Teema,Settings.Style
 Background,Taustakuva,Settings.Style
@@ -499,14 +566,19 @@ The amount of NXS currently staked in the trust account,,Transactions.Balances
 Immature,Kypsymätön,Transactions.Balances
 The sum of all coinbase transactions that have not yet reached maturity,,Transactions.Balances
 Unnamed account,,User.Accounts
+Rename,,User.Accounts
 Details,,User.Accounts
 History,,User.Accounts
+<b>%{account_name}</b> account address,,User.Accounts
+Unnamed,,User.Accounts
 Create new account,,User.Accounts
 Account Details,Tilin tiedot,User.Accounts.AccountDetails
 Account name,Tilin nimi,User.Accounts.AccountDetails
+Unnamed,,User.Accounts.AccountDetails
 Created at,,User.Accounts.AccountDetails
 Last modified,,User.Accounts.AccountDetails
 Token name,,User.Accounts.AccountDetails
+Data,,User.Accounts.AccountDetails
 Total account balance,,User.Accounts.AccountDetails
 Available balance,Käytettävissä oleva saldo,User.Accounts.AccountDetails
 Send %{token_name},,User.Accounts.AccountDetails
@@ -521,20 +593,32 @@ Adjust stake amount,Muuta panostuksen määrää,User.Accounts.AccountDetails
 Time,Aika,User.Accounts.AccountHistory
 Operation,,User.Accounts.AccountHistory
 From,,User.Accounts.AccountHistory
-staked,,User.Accounts.AccountHistory
-mined,,User.Accounts.AccountHistory
+staking,,User.Accounts.AccountHistory
+mining,,User.Accounts.AccountHistory
 To,,User.Accounts.AccountHistory
 Change,Muuta,User.Accounts.AccountHistory
 Account History,Tilin historia,User.Accounts.AccountHistory
 Loading account history,,User.Accounts.AccountHistory
-Account balance(,,User.Accounts.AccountHistory
-Show %{tokenName},,User.Accounts.AccountHistory
 Account balance,Tilin saldo,User.Accounts.AccountHistory
+Show %{tokenName},,User.Accounts.AccountHistory
 Total,,User.Accounts.AccountHistory
 Available,Saatavilla,User.Accounts.AccountHistory
 Pending,Odottaa,User.Accounts.AccountHistory
 Unconfirmed,,User.Accounts.AccountHistory
 Stake,Panos,User.Accounts.AccountHistory
+Rename account,,RenameAccount
+Account name,,RenameAccount
+Account renaming fee,,RenameAccount
+Cancel,,RenameAccount
+Renaming,,RenameAccount
+Rename,,RenameAccount
+Account name is required,,RenameAccount
+Name already in use,,RenameAccount
+The name you entered is already in use. Please choose another name.,,RenameAccount
+Insuffient balance,,RenameAccount
+Your default account balance is not enough to pay the fee.,,RenameAccount
+Account has been renamed to %{account_name},,RenameAccount
+Error renaming account,,RenameAccount
 Unnamed asset,,User.Assets
 You own %{percentage}% of this asset,,User.Assets
 Create new asset,,User.Assets
@@ -651,10 +735,12 @@ Create a new name,,CreateName
 View name details,,User.Names
 Change register address,,User.Names
 Transfer name,,User.Names
+Unused,,User.Names
 Global,,User.Names
 Namespaced,,User.Names
 Local,,User.Names
 Create new name,,User.Names
+Show unused names,,User.Names
 You don't own any name,,User.Names
 Name Details,,NameDetails
 Change register address,,NameDetails
@@ -742,6 +828,7 @@ Enable staking,Aktivoi panostus,User.Staking
 Cancel,Peruuta,User.Staking
 Status,,User.Staking
 Staking,,User.Staking
+pooled,,User.Staking
 Not staking,,User.Staking
 Stake amount,,User.Staking
 The amount of NXS currently staked in the trust account,,User.Staking
@@ -763,7 +850,7 @@ Account on hold for another %{stakeSeconds} Seconds,,User.Staking
 Stop staking,,User.Staking
 Start staking,,User.Staking
 Create new token,,User.Tokens
-Lookup a token,,User.Tokens
+Look up a token,,User.Tokens
 Unnamed token,,User.Tokens
  (Owned by you), (Sinun omistamasi),User.Tokens
 Details,,User.Tokens
@@ -788,13 +875,14 @@ You have successfully created token %{token} ! Would you like to make an account
 Yes,Kyllä,User.Tokens.NewToken
 No,Ei,User.Tokens.NewToken
 Error creating token,,User.Tokens.NewToken
-Can not find Token,Tokenia ei löydy,User.Tokens.SearchToken
-Lookup Token,,User.Tokens.SearchToken
-Name/Address,,User.Tokens.SearchToken
-Lookup a Token on the network,,User.Tokens.SearchToken
-Lookup this token,,User.Tokens.SearchToken
+Cannot find Token,,User.Tokens.SearchToken
+Look up token,,User.Tokens.SearchToken
+Name or address,,User.Tokens.SearchToken
+Token name/address,,User.Tokens.SearchToken
+Look up,,User.Tokens.SearchToken
 No Value,,User.Tokens.SearchToken
 Error searching for token,,User.Tokens.SearchToken
+Unknown token name/address,,User.Tokens.SearchToken
 Token Details,,User.Tokens.TokenDetails
 Token name,,User.Tokens.TokenDetails
 Token address,,User.Tokens.TokenDetails
@@ -871,15 +959,15 @@ Are you sure you want to abort the process?,"Oletko varma, että haluat keskeytt
 "No, let it continue","Ei, anna sen jatkaa",Bootstrap
 Bootstrap Recent Database,Esilataa Tuore Tietokanta,Bootstrap
 Abort,Keskeytä,Bootstrap
-Bootstrap process has been aborted,Esilataus prosessi on keskeytetty,Bootstrap
-Error bootstrapping recent database,Virhe esiladatessa tuoretta tietokantaa,Bootstrap
-Unknown error,Tuntematon virhe,Bootstrap
-Recent database has been successfully bootstrapped,Tuore tietokanta on onnistuneesti esiladattu,Bootstrap
 Not enough disk space! Minimum 15GB of free space is required.,Ei tarpeeksi tilaa levyllä! Vähintään 15GB tilaa vaaditaan.,Bootstrap
 Download recent database?,Lataa tuore tietokanta?,Bootstrap
 Downloading a recent version of the database might reduce the time it takes to synchronize your wallet,"Tuoreen version lataus tietokannasta saattaa vähentää aikaa, joka vaaditaan lompakon synkronisointiin",Bootstrap
 "Yes, let's bootstrap it","Kyllä, esiladataan se",Bootstrap
 "No, let it sync","Ei, anna sen synkronoida",Bootstrap
+Bootstrap process has been aborted,Esilataus prosessi on keskeytetty,Bootstrap
+Error bootstrapping recent database,Virhe esiladatessa tuoretta tietokantaa,Bootstrap
+Unknown error,Tuntematon virhe,Bootstrap
+Recent database has been successfully bootstrapped,Tuore tietokanta on onnistuneesti esiladattu,Bootstrap
 Change password and PIN,,ChangePassword&PIN
 Current password,,ChangePassword&PIN
 Your current password,,ChangePassword&PIN
@@ -899,6 +987,10 @@ New PIN is required,,ChangePassword&PIN
 PIN must be at least 4 characters,,ChangePassword&PIN
 Password & PIN have been updated,,ChangePassword&PIN
 Error updating password & PIN,,ChangePassword&PIN
+Contract Details,,ContractDetails
+View transaction details,,ContractDetails
+Yes,Kyllä,ConfirmDialog
+No,Ei,ConfirmDialog
 Password/PIN mismatch,,ConfirmPassword&PIN
 "You have entered either your password or your PIN incorrectly, please re-check",,ConfirmPassword&PIN
 Confirm password and PIN,,ConfirmPassword&PIN
@@ -911,11 +1003,12 @@ PIN,,ConfirmPassword&PIN
 Re-enter your new PIN,,ConfirmPassword&PIN
 Re-enter your PIN,,ConfirmPassword&PIN
 Confirm,Vahvista,ConfirmPassword&PIN
-Contract Details,,ContractDetails
-View transaction details,,ContractDetails
-Yes,Kyllä,ConfirmDialog
-No,Ei,ConfirmDialog
 Dismiss,Hylkää,ErrorDialog
+Pin must be at least 4 characters,,PinDialog
+Confirm,Vahvista,PinDialog
+Enter PIN,,PinDialog
+Your PIN,,PinDialog
+Cancel,Peruuta,PinDialog
 Dismiss,Hylkää,SuccessDialog
 Your wallet is not encrypted!,Lompakkoa ei ole salattu!,EncryptionWarning
 It is highly recommended that you should encrypt your wallet to keep your NXS safe.,"On erittäin suositeltavaa, että salaat lompakkosi pitääksesi NXSsi turvassa.",EncryptionWarning
@@ -935,6 +1028,7 @@ Username is required,,Login
 Password is required,Salasana vaaditaan,Login
 PIN is required,,Login
 Logged in as %{username},,Login
+Not being fully synced may have caused this error.,,Login
 Error logging in,Kirjautumisvirhe,Login
 Migrate account,,MigrateAccount
 You have %{amount} NXS in your legacy account.,,MigrateAccount
@@ -987,16 +1081,16 @@ Error creating new address,Osoitteen luonnissa tapahtui virhe,MyAddresses.NewAdd
 New account,,NewAccount
 Account name (%{nameFee} NXS Fee) (Optional),Tilin nimi(%{nameFee} NXS Fee) (Vaihtoehtoinen),NewAccount
 New account's name,,NewAccount
-Token,,NewAccount
+Token name/address,,NewAccount
 Cancel,Peruuta,NewAccount
 Creating account,,NewAccount
 Create account,,NewAccount
-Create a account without a name?,,NewAccount
+Create an account without a name?,,NewAccount
 Adding a name costs a NXS fee,Nimen lisäämisellä on NXS taksa,NewAccount
 That's Ok,,NewAccount
-Add Name,Lisää nimi,NewAccount
-New account %{account} has been created,,NewAccount
 Error creating account,,NewAccount
+Unknown token name/address,,NewAccount
+New account %{account} has been created,,NewAccount
 Create new user,,NewUser
 Username,Käyttäjänimi,NewUser
 A globally unique username,Globaalisti uniikki käyttäjänimi,NewUser
@@ -1020,11 +1114,6 @@ PIN must be at least 4 characters,,NewUser
 Error creating user,,NewUser
 User registration for %{username} has been confirmed,,NewUser
 User registration for %{username} is waiting to be confirmed on Nexus blockchain...,,NewUser
-Pin must be at least 4 characters,,PinDialog
-Confirm,Vahvista,PinDialog
-Enter PIN,,PinDialog
-Your PIN,,PinDialog
-Cancel,Peruuta,PinDialog
 Recover password and PIN,,RecoverPassword&PIN
 Username,Käyttäjänimi,RecoverPassword&PIN
 Your username,,RecoverPassword&PIN

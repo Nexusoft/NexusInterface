@@ -1,6 +1,7 @@
 import { app, ipcMain, dialog } from 'electron';
 import { autoUpdater } from 'electron-updater';
 
+import { loadSettingsFromFile } from 'lib/settings/universal';
 import {
   startCore,
   coreBinaryExists,
@@ -13,7 +14,12 @@ import { createWindow } from './renderer';
 import { setupTray } from './tray';
 import { setApplicationMenu, popupContextMenu } from './menu';
 import { openVirtualKeyboard } from './keyboard';
-import './updater';
+import {
+  initializeUpdater,
+  migrateToMainnet,
+  setAllowPrerelease,
+} from './updater';
+import { proxyRequest } from './modules';
 
 let mainWindow;
 global.forceQuit = false;
@@ -23,7 +29,7 @@ app.setAppUserModelId(APP_ID);
 // cannot be caught (net::ERR_HTTP_RESPONSE_CODE_FAILURE).
 // This should be removed when the issue is resolved.
 // A similar issue: https://github.com/electron-userland/electron-builder/issues/2451
-process.on('uncaughtException', err => {
+process.on('uncaughtException', (err) => {
   console.error('Uncaught exception:', err);
 });
 
@@ -32,8 +38,12 @@ process.on('uncaughtException', err => {
 
 // App
 ipcMain.handle('is-force-quit', async () => global.forceQuit);
-ipcMain.handle('quit-app', () => app.quit());
-ipcMain.handle('exit-app', () => app.exit());
+ipcMain.handle('quit-app', async () => {
+  app.quit();
+});
+ipcMain.handle('exit-app', () => {
+  app.exit();
+});
 ipcMain.handle('hide-window', () => mainWindow.hide());
 ipcMain.handle('hide-dock', () => app.dock.hide());
 ipcMain.handle('show-open-dialog', (event, options) =>
@@ -42,8 +52,8 @@ ipcMain.handle('show-open-dialog', (event, options) =>
 ipcMain.handle('show-save-dialog', async (event, options) =>
   dialog.showSaveDialogSync(mainWindow, options)
 );
-ipcMain.handle('popup-context-menu', (event, menuTemplate) =>
-  popupContextMenu(menuTemplate)
+ipcMain.handle('popup-context-menu', (event, menuTemplate, webContentsId) =>
+  popupContextMenu(menuTemplate, webContentsId)
 );
 ipcMain.handle('set-app-menu', (event, menuTemplate) => {
   setApplicationMenu(menuTemplate);
@@ -74,14 +84,21 @@ ipcMain.handle('check-for-updates', (event, ...args) =>
 ipcMain.handle('quit-and-install-update', (event, ...args) =>
   autoUpdater.quitAndInstall(...args)
 );
+ipcMain.handle('set-allow-prerelease', (event, value) =>
+  setAllowPrerelease(value)
+);
+ipcMain.handle('migrate-to-mainnet', (event, value) => migrateToMainnet());
 
 // Sync message handlers
 ipcMain.on('get-path', (event, name) => {
   event.returnValue = app.getPath(name);
 });
-ipcMain.on('get-file-server-domain', event => {
+ipcMain.on('get-file-server-domain', (event) => {
   event.returnValue = getDomain();
 });
+
+// Modules
+ipcMain.handle('proxy-request', (event, ...params) => proxyRequest(...params));
 
 // START RENDERER
 // =============================================================================
@@ -105,10 +122,12 @@ if (!gotTheLock) {
 
   // Application Startup
   app.on('ready', async () => {
-    global.mainWindow = mainWindow = await createWindow();
-    mainWindow.on('close', (...args) =>
-      mainWindow.webContents.send('window-close', ...args)
-    );
+    const settings = loadSettingsFromFile();
+    initializeUpdater(settings);
+    global.mainWindow = mainWindow = await createWindow(settings);
+    mainWindow.on('close', () => {
+      mainWindow.webContents.send('window-close');
+    });
     global.tray = setupTray(mainWindow);
   });
 }

@@ -16,7 +16,7 @@ export default (state = initialState, action) => {
     case TYPE.UPDATE_MODULES_LATEST: {
       const newState = { ...state };
       const updates = action.payload;
-      Object.values(newState).forEach(module => {
+      Object.values(newState).forEach((module) => {
         const update = updates[module.info.name];
         if (update) {
           newState[module.info.name] = {

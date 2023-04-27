@@ -3,10 +3,11 @@ import fs from 'fs';
 import crypto from 'crypto';
 import Ajv from 'ajv';
 import axios from 'axios';
-import { isText } from 'istextorbinary';
-import normalizeEol from 'utils/normalizeEol';
 import Multistream from 'multistream';
 import { ipcRenderer } from 'electron';
+import https from 'https';
+import { isText } from 'istextorbinary';
+import normalizeEol from 'utils/normalizeEol';
 
 import { loadModuleFromDir } from './module';
 
@@ -14,6 +15,7 @@ const ajv = new Ajv();
 
 // Schema for repo_info.json
 const repoInfoSchema = {
+  type: 'object',
   additionalProperties: false,
   required: ['data'],
   properties: {
@@ -83,7 +85,7 @@ export async function getModuleHash(module) {
       const nxsPackagePath = join(module.path, 'nxs_package.json');
       const filePaths = module.info.files
         .sort()
-        .map(file => join(module.path, file));
+        .map((file) => join(module.path, file));
       const streams = [
         normalizeFile(nxsPackagePath),
         ...filePaths.map(normalizeFile),
@@ -145,11 +147,25 @@ export async function isRepoOnline({ host, owner, repo, commit }) {
 
   try {
     const apiUrls = {
-      'github.com': `https://api.github.com/repos/${owner}/${repo}/commits/${commit}`,
+      'github.com': `https://github.com/${owner}/${repo}/commit/${commit}`,
     };
     const url = apiUrls[host];
-    const response = await axios.get(url);
-    return !!response.data.sha && response.data.sha === commit;
+    const requestHead = (url) =>
+      new Promise((resolve, reject) => {
+        try {
+          https
+            .request(url, { method: 'HEAD' }, (res) => resolve(res))
+            .on('error', (err) => {
+              reject(err);
+            })
+            .end();
+        } catch (error) {
+          reject(error);
+        }
+      });
+
+    const res = await requestHead(url);
+    return res.statusCode === 200;
   } catch (err) {
     console.error(err);
     return false;
@@ -205,20 +221,40 @@ export async function isRepoFromNexus({ host, owner, repo, commit }) {
 
   if (owner === 'Nexusoft') return true;
 
-  try {
-    const apiUrls = {
-      'github.com': `https://api.github.com/users/${owner}/orgs`,
-    };
-    const url = apiUrls[host];
-    const response = await axios.get(url);
-    const listOfOrgs = JSON.parse(response.request.response);
-    const partOfNexus = listOfOrgs.find(e => e.login === 'Nexusoft');
-    return !!partOfNexus;
-  } catch (err) {
-    console.error(err);
-    return false;
-  }
+  const nexusOrgUsers = await getNexusOrgUsers();
+  if (!nexusOrgUsers) return false;
+  else return nexusOrgUsers.includes(owner);
 }
+
+export const getNexusOrgUsers = (() => {
+  let nexusOrgUsers = null;
+  // Cache the ongoing request promise so it won't send another request
+  // when the last one wasn't finished
+  let promise = null;
+  return () => {
+    if (!promise) {
+      promise = new Promise(async (resolve, reject) => {
+        if (!nexusOrgUsers) {
+          try {
+            const response = await axios.get(
+              'https://api.github.com/orgs/Nexusoft/members'
+            );
+            nexusOrgUsers = response.data.map((e) => e.login);
+          } catch (err) {
+            console.error(err);
+            return reject(err);
+          } finally {
+            // Signaling that the call has ended
+            // If it was successful, nexusOrgUsers would have been assigned
+            promise = null;
+          }
+        }
+        resolve(nexusOrgUsers);
+      });
+    }
+    return promise;
+  };
+})();
 
 /**
  * =============================================================================
@@ -233,7 +269,8 @@ async function signModuleRepo(
   repoUrl,
   { moduleDir, privKeyPath, privKeyPassphrase } = {}
 ) {
-  const repoUrlRegex = /https:\/\/github\.com\/([^\/]+)\/([^\/]+)\/commit\/([^\/]+)/i;
+  const repoUrlRegex =
+    /https:\/\/github\.com\/([^\/]+)\/([^\/]+)\/commit\/([^\/]+)/i;
   const matches = repoUrlRegex.exec(repoUrl);
   if (!matches) {
     throw '`repoUrl` is missing or invalid. Please remember to include the commit in the URL.';

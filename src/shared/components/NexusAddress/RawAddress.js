@@ -1,5 +1,5 @@
 // External
-import React from 'react';
+import { useRef, Component } from 'react';
 import { clipboard } from 'electron';
 import styled from '@emotion/styled';
 
@@ -12,7 +12,7 @@ import { showNotification } from 'lib/ui';
 import copyIcon from 'icons/copy.svg';
 
 const RawAddressComponent = styled.div({
-  marginTop: '1em',
+  // marginTop: '1em',
 });
 
 const AddressTextField = styled(TextField)(
@@ -35,6 +35,12 @@ const CopyButton = styled(Button)(({ theme }) => ({
   borderLeft: `1px solid ${theme.mixer(0.125)}`,
 }));
 
+function copyAddress(address, inputRef) {
+  clipboard.writeText(address);
+  inputRef.current.select();
+  showNotification(__('Address has been copied to clipboard'), 'success');
+}
+
 /**
  * Nexus Address with Copy functionality
  *
@@ -42,51 +48,38 @@ const CopyButton = styled(Button)(({ theme }) => ({
  * @class RawAddress
  * @extends {React.Component}
  */
-export default class RawAddress extends React.Component {
-  inputRef = React.createRef();
+export default function RawAddress({
+  address,
+  label,
+  copyable = true,
+  ...rest
+}) {
+  const inputRef = useRef();
 
-  /**
-   * Copy address to clipboard
-   *
-   * @memberof RawAddress
-   */
-  copyAddress = () => {
-    clipboard.writeText(this.props.address);
-    this.inputRef.current.select();
-    showNotification(__('Address has been copied to clipboard'), 'success');
-  };
-
-  /**
-   * React Render
-   *
-   * @returns
-   * @memberof RawAddress
-   */
-  render() {
-    const { address, label, ...rest } = this.props;
-    return (
-      <RawAddressComponent {...rest}>
-        {!!label && <Label>{label}</Label>}
-        <AddressTextField
-          readOnly
-          skin="filled-inverted"
-          value={address}
-          inputRef={this.inputRef}
-          right={
+  return (
+    <RawAddressComponent {...rest}>
+      {!!label && <Label>{label}</Label>}
+      <AddressTextField
+        readOnly
+        skin="filled-inverted"
+        value={address}
+        ref={inputRef}
+        right={
+          !!copyable && (
             <Tooltip.Trigger tooltip={__('Copy to clipboard')}>
               <CopyButton
                 skin="filled-inverted"
                 fitHeight
                 grouped="right"
-                onClick={this.copyAddress}
+                onClick={() => copyAddress(address, inputRef)}
               >
-                <Icon icon={copyIcon} className="space-right" />
+                <Icon icon={copyIcon} className="mr0_4" />
               </CopyButton>
             </Tooltip.Trigger>
-          }
-          hasLabel={!!label}
-        />
-      </RawAddressComponent>
-    );
-  }
+          )
+        }
+        hasLabel={!!label}
+      />
+    </RawAddressComponent>
+  );
 }

@@ -1,6 +1,6 @@
 // External
-import React from 'react';
-import { connect } from 'react-redux';
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
 // Internal
 import RequireCoreConnected from 'components/RequireCoreConnected';
@@ -12,46 +12,21 @@ import Unencrypted from './Unencrypted';
 
 __ = __context('Settings.Security');
 
-/**
- * SettingsSecurity Page on Settings Page
- *
- * @class SettingsSecurity
- * @extends {React.Component}
- */
-@connect(state => ({
-  locked: state.core.info.locked,
-}))
-class SettingsSecurity extends React.Component {
-  /**
-   *Creates an instance of SettingsSecurity.
-   * @param {*} props
-   * @memberof SettingsSecurity
-   */
-  constructor(props) {
-    super(props);
+export default function SettingsSecurity() {
+  const locked = useSelector((state) => state.core.info?.locked);
+  useEffect(() => {
     switchSettingsTab('Security');
-  }
+  }, []);
 
-  /**
-   * Component's Renderable JSX
-   *
-   * @returns
-   * @memberof SettingsSecurity
-   */
-  render() {
-    const { locked } = this.props;
-
-    return (
-      <RequireCoreConnected>
-        {locked === undefined ? (
-          <Unencrypted />
-        ) : locked ? (
-          <Login />
-        ) : (
-          <Encrypted />
-        )}
-      </RequireCoreConnected>
-    );
-  }
+  return (
+    <RequireCoreConnected>
+      {locked === undefined ? (
+        <Unencrypted />
+      ) : locked ? (
+        <Login />
+      ) : (
+        <Encrypted />
+      )}
+    </RequireCoreConnected>
+  );
 }
-export default SettingsSecurity;

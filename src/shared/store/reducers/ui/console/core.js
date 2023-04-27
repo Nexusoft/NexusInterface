@@ -30,6 +30,11 @@ export default (state = initialState, action) => {
         ...state,
         paused: false,
       };
+    case TYPE.CLEAR_CORE_OUTPUT:
+      return {
+        ...state,
+        output: [],
+      };
 
     default:
       return state;

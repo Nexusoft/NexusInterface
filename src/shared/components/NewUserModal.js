@@ -1,29 +1,26 @@
-import React, { Component } from 'react';
-import { reduxForm, Field } from 'redux-form';
+import { useEffect, useRef } from 'react';
+import * as React from 'react';
 import styled from '@emotion/styled';
-import { connect } from 'react-redux';
 
-import { apiPost } from 'lib/tritiumApi';
-import Modal from 'components/Modal';
+import Form from 'components/Form';
+import ControlledModal from 'components/ControlledModal';
 import FormField from 'components/FormField';
-import TextField from 'components/TextField';
-import TextFieldWithKeyboard from 'components/TextFieldWithKeyboard';
-import Button from 'components/Button';
 import Link from 'components/Link';
 import LoginModal from 'components/LoginModal';
 import Spinner from 'components/Spinner';
 import FieldSet from 'components/FieldSet';
 import BackgroundTask from 'components/BackgroundTask';
+import { formSubmit, checkAll, required, minChars } from 'lib/form';
+import { callApi } from 'lib/tritiumApi';
 import {
   showNotification,
   openModal,
-  removeModal,
   showBackgroundTask,
+  isModalOpen,
 } from 'lib/ui';
-import { errorHandler } from 'utils/form';
 import store, { observeStore } from 'store';
 import { isLoggedIn } from 'selectors';
-import confirmPasswordPin from 'utils/promisified/confirmPasswordPin';
+import { confirmPasswordPin } from 'lib/dialog';
 
 __ = __context('NewUser');
 
@@ -46,215 +43,182 @@ const Note = styled.div({
   marginTop: '.5em',
 });
 
-/**
- *  NewUserModal Form
- *
- * @class NewUserModal
- * @extends {Component}
- */
-@connect(({ enableMining, enableStaking }) => ({ enableMining, enableStaking }))
-@reduxForm({
-  form: 'new_user',
-  destroyOnUnmount: true,
-  initialValues: {
-    username: '',
-    password: '',
-    pin: '',
-  },
-  validate: ({ username, password, pin }) => {
-    const errors = {};
+const initialValues = {
+  username: '',
+  password: '',
+  pin: '',
+};
 
-    if (!username) {
-      errors.username = __('Username is required');
-    } else if (username.length < 3) {
-      errors.username = __('Username must be at least 3 characters');
-    }
+export default function NewUserModal() {
+  return (
+    <ControlledModal maxWidth={500}>
+      {(closeModal) => (
+        <>
+          <ControlledModal.Header>
+            {__('Create new user')}
+          </ControlledModal.Header>
+          <ControlledModal.Body>
+            <Form
+              name="new_user"
+              initialValues={initialValues}
+              onSubmit={formSubmit({
+                submit: async ({ username, password, pin }) => {
+                  const correct = await confirmPasswordPin({
+                    isNew: false,
+                    password,
+                    pin,
+                  });
 
-    if (!password) {
-      errors.password = __('Password is required');
-    } else if (password.length < 8) {
-      errors.password = __('Password must be at least 8 characters');
-    }
-
-    if (!pin) {
-      errors.pin = __('PIN is required');
-    } else if (pin.length < 4) {
-      errors.pin = __('PIN must be at least 4 characters');
-    }
-
-    return errors;
-  },
-  onSubmit: async ({ username, password, pin }) => {
-    const correct = await confirmPasswordPin({
-      isNew: false,
-      password,
-      pin,
-    });
-
-    if (correct) {
-      return await apiPost('users/create/user', {
-        username,
-        password,
-        pin,
-      });
-    } else {
-      return null;
-    }
-  },
-  onSubmitSuccess: async (result, dispatch, props) => {
-    if (!result) return;
-    const { username } = props.values;
-    removeModal(props.modalId);
-    props.reset();
-    showBackgroundTask(UserConfirmBackgroundTask, {
-      username,
-    });
-  },
-  onSubmitFail: errorHandler(__('Error creating user')),
-})
-export default class NewUserModal extends Component {
-  /**
-   * Component's Renderable JSX
-   *
-   * @returns
-   * @memberof NewUserModal
-   */
-  render() {
-    const { handleSubmit, submitting } = this.props;
-
-    return (
-      <Modal
-        maxWidth={500}
-        assignClose={closeModal => (this.closeModal = closeModal)}
-      >
-        <Modal.Header>{__('Create new user')}</Modal.Header>
-        <Modal.Body>
-          <form onSubmit={handleSubmit}>
-            <FormField
-              connectLabel
-              label={__('Username')}
-              style={{ marginTop: 0 }}
+                  if (correct) {
+                    return await callApi('profiles/create/master', {
+                      username,
+                      password,
+                      pin,
+                    });
+                  } else {
+                    return null;
+                  }
+                },
+                onSuccess: async (result, { username }, form) => {
+                  if (!result) return;
+                  closeModal();
+                  form.restart();
+                  showBackgroundTask(UserConfirmBackgroundTask, {
+                    username,
+                  });
+                },
+                errorMessage: __('Error creating user'),
+              })}
+              subscription={{ submitting: true }}
             >
-              <Field
-                component={TextFieldWithKeyboard.RF}
-                name="username"
-                placeholder={__('A globally unique username')}
-                autoFocus
-              />
-            </FormField>
+              {({ submitting }) => (
+                <>
+                  <FormField
+                    connectLabel
+                    label={__('Username')}
+                    style={{ marginTop: 0 }}
+                  >
+                    <Form.TextFieldWithKeyboard
+                      name="username"
+                      placeholder={__('A globally unique username')}
+                      autoFocus
+                      validate={checkAll(required(), minChars(3))}
+                    />
+                  </FormField>
 
-            <FormField connectLabel label={__('Password')}>
-              <Field
-                component={TextFieldWithKeyboard.RF}
-                maskable
-                name="password"
-                placeholder={__('Enter your password')}
-              />
-            </FormField>
+                  <FormField connectLabel label={__('Password')}>
+                    <Form.TextFieldWithKeyboard
+                      maskable
+                      name="password"
+                      placeholder={__('Enter your password')}
+                      validate={checkAll(required(), minChars(8))}
+                    />
+                  </FormField>
 
-            <FormField connectLabel label={__('PIN')}>
-              <Field
-                component={TextFieldWithKeyboard.RF}
-                maskable
-                name="pin"
-                placeholder={__('Enter your PIN')}
-              />
-            </FormField>
+                  <FormField connectLabel label={__('PIN')}>
+                    <Form.TextFieldWithKeyboard
+                      maskable
+                      name="pin"
+                      placeholder={__('Enter your PIN')}
+                      validate={checkAll(required(), minChars(4))}
+                    />
+                  </FormField>
 
-            <FieldSet legend={__('Attention')} style={{ fontSize: '.9em' }}>
-              {__(
-                'Please be sure to make a note of your username, password, and PIN, and keep it in a safe place. If you lose or forget them you will be unable to access your account.'
+                  <FieldSet
+                    legend={__('Attention')}
+                    style={{ fontSize: '.9em' }}
+                  >
+                    {__(
+                      'Please be sure to make a note of your username, password, and PIN, and keep it in a safe place. If you lose or forget them you will be unable to access your account.'
+                    )}
+                  </FieldSet>
+
+                  <Buttons>
+                    <Form.SubmitButton wide uppercase skin="primary">
+                      {({ submitting }) =>
+                        submitting ? (
+                          <span>
+                            <Spinner className="mr0_4" />
+                            <span className="v-align">
+                              {__('Creating user')}...
+                            </span>
+                          </span>
+                        ) : (
+                          __('Create user')
+                        )
+                      }
+                    </Form.SubmitButton>
+                  </Buttons>
+                  {submitting && (
+                    <Note>
+                      {__('Please wait, this may take up to 30 seconds')}
+                    </Note>
+                  )}
+
+                  <ExtraSection>
+                    <Link as="a">{__('Switch to Legacy Mode')}</Link>
+                    <Link
+                      as="a"
+                      onClick={() => {
+                        closeModal();
+                        openModal(LoginModal);
+                      }}
+                    >
+                      {__('Log in')}
+                    </Link>
+                  </ExtraSection>
+                </>
               )}
-            </FieldSet>
-
-            <Buttons>
-              <Button
-                type="submit"
-                wide
-                uppercase
-                skin="primary"
-                disabled={submitting}
-              >
-                {submitting ? (
-                  <span>
-                    <Spinner className="space-right" />
-                    <span className="v-align">{__('Creating user')}...</span>
-                  </span>
-                ) : (
-                  __('Create user')
-                )}
-              </Button>
-            </Buttons>
-            {submitting && (
-              <Note>{__('Please wait, this may take up to 30 seconds')}</Note>
-            )}
-
-            <ExtraSection>
-              <Link as="a">{__('Switch to Legacy Mode')}</Link>
-              <Link
-                as="a"
-                onClick={() => {
-                  this.closeModal();
-                  openModal(LoginModal);
-                }}
-              >
-                {__('Log in')}
-              </Link>
-            </ExtraSection>
-          </form>
-        </Modal.Body>
-      </Modal>
-    );
-  }
+            </Form>
+          </ControlledModal.Body>
+        </>
+      )}
+    </ControlledModal>
+  );
 }
 
-class UserConfirmBackgroundTask extends React.Component {
-  componentDidMount() {
-    const { username } = this.props;
-    this.unobserve = observeStore(
-      ({ core: { systemInfo } }) => systemInfo && systemInfo.blocks,
-      async () => {
-        const txs = await apiPost('users/list/transactions', {
-          username,
-          order: 'asc',
-          limit: 1,
-          verbose: 'summary',
-        });
-        if (txs && txs[0] && txs[0].confirmations) {
-          this.closeTask();
-          showNotification(
-            __('User registration for %{username} has been confirmed', {
-              username,
-            }),
-            'success'
-          );
-          if (!isLoggedIn(store.getState())) {
-            openModal(LoginModal);
+function UserConfirmBackgroundTask({ username }) {
+  const closeTaskRef = useRef();
+  useEffect(
+    () =>
+      observeStore(
+        ({ core: { systemInfo } }) => systemInfo?.blocks,
+        async () => {
+          const result = await callApi('profiles/status/master', {
+            username,
+          });
+          if (result?.confirmed) {
+            closeTaskRef.current?.();
+            showNotification(
+              __(
+                'User <b>%{username}</b> has been successfully registered',
+                {
+                  username,
+                },
+                {
+                  b: (text) => <strong>{text}</strong>,
+                }
+              ),
+              'success'
+            );
+            if (!isLoggedIn(store.getState()) && !isModalOpen(LoginModal)) {
+              openModal(LoginModal);
+            }
           }
         }
-      }
-    );
-  }
+      ),
+    []
+  );
 
-  componentWillUnmount() {
-    this.unobserve();
-  }
-
-  render() {
-    const { username } = this.props;
-    return (
-      <BackgroundTask
-        assignClose={close => (this.closeTask = close)}
-        onClick={null}
-        style={{ cursor: 'default' }}
-      >
-        {__(
-          'User registration for %{username} is waiting to be confirmed on Nexus blockchain...',
-          {
-            username,
-          }
-        )}
-      </BackgroundTask>
-    );
-  }
+  return (
+    <BackgroundTask
+      assignClose={(close) => (closeTaskRef.current = close)}
+      onClick={null}
+      style={{ cursor: 'default' }}
+    >
+      {__(
+        'Waiting for user registration to be confirmed on Nexus blockchain...'
+      )}
+    </BackgroundTask>
+  );
 }

@@ -1,28 +1,51 @@
-# 3.0.6 (2021.9.15)
+# 3.1.0 (2023.4.26)
 
-[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v3.0.6)
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v3.1.0)
+
+#### Additions
+
+- **Lite Mode now available**
+- **Multi-user mode now available**
+- Nexus Core v5.1.0
+- Allow configuring embedded core's port
+- Added HTTPS support for core connection
+- Allow sending to multiple recipients
+- Allow setting transaction exipiry
+- Added Preview Transaction screen before sending transactions
+- Token balances (if any) are now displayed on Overview and Transactions
+- Added support for 5 new currencies: MMK, IDR, PHP, THB, and VND
+- Added QR code for addresses
+- Allow renaming accounts
+- Added confirmation before setting a new recovery phrase
+- Added 'Allow Pre-releases' setting
+
+#### Adjustments
+
+- Start/Stop staking button on Staking page is now smarter
+- Contact names are now looked up and displayed where applicable
+- Hide Overview balances setting is now separated from Overview Display setting
+- Improved token selection when creating a new account
+- Secret fields are now censored on Nexus API Console, and Clear button now also clears the command history
+- Updated some icons
+- Updated menu links
+- Various other improvements
 
 #### Fixes
 
-- Fixed Nexus Core not starting on OSX 10.09 to 10.13
-  - Older versions will require compiling core manually
-- Fixed error with the bootstrap not downloading.
+- Fixed issue where modules saved as ZIP archives would be installed
+- Fixed issue with some modules failing to open
+- Legacy Debits in tritium mode in the account history section now display properly in negative
+- Correctly display unnamed token
+- Fixed issues with the globe: Resolved stretching at the poles, Fixed pillars not being removed on disconnect, Fixed animation issue with new blocks/connections
+- Fixed issue with the wallet not deleting the old bootstrap zip after installation
+- Fixed Mac try icon not displaying correctly
+- Various other fixes
 
-# 3.0.5 (2021.9.13)
+### Module system
 
-[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v3.0.5)
-
-#### Additions
-
-- Nexus Core v5.0.5
-
-# 3.0.4 (2021.9.07)
-
-[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v3.0.4-rc2)
-
-#### Additions
-
-- Nexus Core v5.0.4
+- Added `NEXUS.utilities.showInfoDialog`
+- `NEXUS.utilities.sendNXS` renamed to `NEXUS.utilities.send`
+- Minor changes on common component interface
 
 # 3.0.3 (2020.4.21)
 

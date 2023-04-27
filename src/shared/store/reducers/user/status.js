@@ -7,12 +7,14 @@ export default (state = initialState, action) => {
     case TYPE.SET_USER_STATUS:
       return action.payload;
 
-    case TYPE.CLEAR_CORE_INFO:
-    case TYPE.CLEAR_USER_STATUS:
+    case TYPE.ACTIVE_USER:
+      return action.payload.status;
+
+    case TYPE.DISCONNECT_CORE:
+    case TYPE.CLEAR_USER:
+    case TYPE.LOGOUT:
       return initialState;
 
-    case TYPE.LOGOUT_USER:
-      return initialState;
     default:
       return state;
   }

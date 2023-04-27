@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from '@emotion/styled';
 import { ipcRenderer } from 'electron';
 
@@ -25,20 +24,20 @@ async function handleClick() {
   await addDevModule(dirPath);
 }
 
-const AddDevModule = () => (
-  <Wrapper>
-    {__(
-      'Your module is still in development? <link>Add a development module</link>',
-      null,
-      {
-        link: txt => (
-          <Button skin="hyperlink" onClick={handleClick}>
-            {txt}
-          </Button>
-        ),
-      }
-    )}
-  </Wrapper>
-);
-
-export default AddDevModule;
+export default function AddDevModule() {
+  return (
+    <Wrapper>
+      {__(
+        'Your module is still in development? <link>Add a development module</link>',
+        null,
+        {
+          link: (txt) => (
+            <Button skin="hyperlink" onClick={handleClick}>
+              {txt}
+            </Button>
+          ),
+        }
+      )}
+    </Wrapper>
+  );
+}

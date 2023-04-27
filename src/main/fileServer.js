@@ -34,7 +34,7 @@ export function getDomain() {
 export function serveModuleFiles(files) {
   moduleFiles =
     files &&
-    files.map(file => {
+    files.map((file) => {
       let filePath = normalize(file);
       if (!filePath.startsWith('/') && !filePath.startsWith('\\')) {
         filePath = normalize('/' + filePath);

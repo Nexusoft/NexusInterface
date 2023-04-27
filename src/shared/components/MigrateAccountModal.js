@@ -1,32 +1,34 @@
-import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import Button from 'components/Button';
-import { history } from 'lib/wallet';
+import { navigate } from 'lib/wallet';
 import { formatNumber } from 'lib/intl';
-import { openModal } from 'lib/ui';
 import { loadAccounts } from 'lib/user';
 import { updateSettings } from 'lib/settings';
 
 __ = __context('MigrateAccount');
 
-const MigrateAccountModal = ({ legacyBalance, accounts }) => {
+export default function MigrateAccountModal({ legacyBalance }) {
+  const accounts = useSelector((state) => state.user.accounts);
   useEffect(() => {
     if (!accounts) loadAccounts();
   }, []);
   const defaultAccount =
     accounts && accounts.length
-      ? accounts.find(a => a.name === 'default') || accounts[0]
+      ? accounts.find((a) => a.name === 'default') || accounts[0]
       : null;
   const defaultAddress = defaultAccount && defaultAccount.address;
 
   return (
-    <Modal maxWidth={600}>
-      {closeModal => (
+    <ControlledModal maxWidth={600}>
+      {(closeModal) => (
         <>
-          <Modal.Header>{__('Migrate account')}</Modal.Header>
-          <Modal.Body>
+          <ControlledModal.Header>
+            {__('Migrate account')}
+          </ControlledModal.Header>
+          <ControlledModal.Body>
             <div>
               {__('You have %{amount} NXS in your legacy account.', {
                 amount: formatNumber(legacyBalance, 6),
@@ -42,7 +44,7 @@ const MigrateAccountModal = ({ legacyBalance, accounts }) => {
               <Button
                 onClick={() => {
                   updateSettings({ legacyMode: true });
-                  history.push(
+                  navigate(
                     `/Send${defaultAddress ? `?sendTo=${defaultAddress}` : ''}`
                   );
                   window.location.reload();
@@ -63,15 +65,9 @@ const MigrateAccountModal = ({ legacyBalance, accounts }) => {
                 {__("Don't show this again")}
               </Button>
             </div>
-          </Modal.Body>
+          </ControlledModal.Body>
         </>
       )}
-    </Modal>
+    </ControlledModal>
   );
-};
-
-const mapStateToProps = state => ({
-  accounts: state.user.accounts,
-});
-
-export default connect(mapStateToProps)(MigrateAccountModal);
+}

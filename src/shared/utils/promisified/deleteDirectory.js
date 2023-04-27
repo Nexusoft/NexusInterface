@@ -4,7 +4,7 @@ import rimraf from 'rimraf';
 export default function deleteDirectory(path, options = {}) {
   return new Promise((resolve, reject) => {
     try {
-      rimraf(path, options, err => {
+      rimraf(path, options, (err) => {
         if (err) {
           reject(err);
         } else {

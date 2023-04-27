@@ -35,35 +35,36 @@ Wallet is not staking,A pénztárca nem staking-el,Header
 Checking sync status,Szinkronizálási állapot ellenőrzése,Header
 Synchronizing,Szinkronizálás,Header
 Synchronized,Szinkronizálva,Header
+pooled,,Header
 You're not logged in,,Header
 You are staking but have not received a block in 30 minutes!,,Header
-Accounts,,Header.UserDropdown
-Tokens,,Header.UserDropdown
-Set recovery phrase,,Header.UserDropdown
-Log out,Kijelentkezés,Header.UserDropdown
-Log in,,Header.UserDropdown
-Create new user,,Header.UserDropdown
-Overview,Áttekintés,NavigationBar
-User,,NavigationBar
-Send NXS,NXS Küldése,NavigationBar
-Send,Küldés,NavigationBar
-Transactions,Tranzakciók,NavigationBar
-Address Book,Címjegyzék,NavigationBar
-Settings,Beállítások,NavigationBar
-Console,Konzol,NavigationBar
+Switching...,,
+Active,,
+Switch,,
+Switch user,,
 Closing Nexus Wallet,Kilépés a Nexus Pénztárcából,
 Warning,Figyelem,
 IMPROPER USE OF THIS SOFTWARE COULD LEAD TO PERMANENT LOSS OF COIN.,E SZOFTVER HELYTELEN HASZNÁLATA A COINOK TARTÓS VESZTESÉGÉHEZ VEZETHET.,
 BACKUP YOUR WALLET OFTEN AND KEEP YOUR PASSWORDS SAFE.,GYAKRAN KÉSZÍTSEN BIZTONSÁGI MÁSOLATOT A TÁRCÁJÁRÓL ÉS TARTSA BIZTONSÁGBAN A JELSZAVAIT.,
 I understand the risk,Megértettem a kockázatokat,
-Tritium Mode,,
-Your wallet is now in Tritium Mode!,,
-"Tritium Mode is currently in early development, therefore not all Tritium features are supported by the user interface. If you want to access a Tritium feature that hasn't had a user interface yet, you can go to Console/Tritium Console, or use any HTTP client to call Nexus APIs directly.",,
-"If you need to switch back to Legacy Mode, you can select ""%{menu}"" menu option at any time.",,
-File,Fájl,
-Switch to Legacy Mode,,
-Continue to Tritium Mode,,
 Close,Bezár,
+Remote Core is disconnected,,
+Connecting to Nexus Core...,Csatlakozás a Nexus Core-hoz...,
+Nexus Core is stopped,Nexus Core le van állítva,
+Address has been copied to clipboard,A cím a vágólapra lett másolva,
+Copy to clipboard,Vágólapra másolás,
+Click to copy to clipboard,Kattints ide a vágólapra helyezéshez,
+Show QR code,,
+Log in,,
+No Rows Found,Nem Talált Sort,
+Page,Oldal,
+rows,sorok,
+Previous,Előző,
+Next,Tovább,
+Use virtual keyboard,,
+<token_name></token_name> token,,
+Unnamed token,,
+Switch to Legacy Mode,,
 Are you sure you want to switch to Legacy Mode?,,
 Switch to Tritium Mode,,
 Start Nexus Core,Indítsa el Nexus Core-t,
@@ -98,23 +99,11 @@ There are currently no updates available,Jelenleg nincs elérhető frissítés,
 Checking for Updates...,Frissítések Ellenőrzése...,
 Update available! Downloading...,Frissítés elérhető! Letöltés...,
 Quit and install update...,Kilépés és a frissítés telepítése...,
+File,Fájl,
 Edit,Szerkeszt,
 Settings,Beállítások,
 View,Nézet,
 Help,Segítség,
-Manual Core is disconnected,Kézi Core nincs csatlakoztatva,
-Connecting to Nexus Core...,Csatlakozás a Nexus Core-hoz...,
-Nexus Core is stopped,Nexus Core le van állítva,
-Address has been copied to clipboard,A cím a vágólapra lett másolva,
-Copy to clipboard,Vágólapra másolás,
-Click to copy to clipboard,Kattints ide a vágólapra helyezéshez,
-Log in,,
-No Rows Found,Nem Talált Sort,
-Page,Oldal,
-rows,sorok,
-Previous,Előző,
-Next,Tovább,
-Use virtual keyboard,,
 Transaction received,Tranzakció érkezett,
 Transaction sent,Tranzakció elküldve,
 Genesis transaction,Genezis tranzakció,
@@ -123,6 +112,33 @@ Update available for %{smart_count} module |||| Updates available for %{smart_co
 New transaction,,
 Error,,
 Unknown error,Ismeretlen hiba,
+Accounts,,Header.UserDropdown
+Tokens,,Header.UserDropdown
+Set recovery phrase,,Header.UserDropdown
+Switch user,,Header.UserDropdown
+Log in to another user,,Header.UserDropdown
+Log out of all users,,Header.UserDropdown
+Log out,Kijelentkezés,Header.UserDropdown
+Log in,,Header.UserDropdown
+Create new user,,Header.UserDropdown
+Overview,Áttekintés,NavigationBar
+User,,NavigationBar
+Send NXS,NXS Küldése,NavigationBar
+Send,Küldés,NavigationBar
+Transactions,Tranzakciók,NavigationBar
+Address Book,Címjegyzék,NavigationBar
+Settings,Beállítások,NavigationBar
+Console,Konzol,NavigationBar
+Lite mode,,LiteModeNotice
+Lite mode is now available on Nexus Wallet! You can choose to enable lite mode now or just ignore it. You can change your decision anytime under Settings/Core.,,LiteModeNotice
+Why you might want to enable lite mode,,LiteModeNotice
+Nexus Core would take less resources (memory and storage) to run,,LiteModeNotice
+Synchronization would be much faster,,LiteModeNotice
+Why you might NOT want to enable lite mode,,LiteModeNotice
+You would NOT be able to mine or stake,,LiteModeNotice
+Legacy Mode would be disabled,,LiteModeNotice
+Ignore,,LiteModeNotice
+Enable lite mode,,LiteModeNotice
 "Last updated
 %{time}","Utolsó frissítés időpontja
 %{time}",Overview
@@ -186,17 +202,40 @@ There must be at least one recipient,Legalább egy címzettet adjon meg,Send
 Address is required,Egy érvényes cím szükséges,Send
 Transaction sent,Tranzakció elküldve,Send
 Error sending NXS,A NXS elküldése nem sikerult,Send
-%{tokenName} Amount,,Send
+Reference,,Send
+"An optional number which may be provided by the recipient to identify this transaction from the others, e.g. invoice number, order number, etc.",,Send
+Reference number (optional),,Send
+Expires in,,Send
+"The amount of time since the transaction is created after which the transaction can no longer be credited by the recipient. By default, transactions will expire in 1 day (86400 seconds).",,Send
+Days,,Send
+Hours,,Send
+Minutes,,Send
+Seconds,,Send
+Amount,,Send
 Recipient Address/Name,,Send
 Accounts,,Send
+Unnamed account,,Send
 Tokens,,Send
-More options,,Send
-Reference number,,Send
-An optional number which may be provided by the recipient to identify this transaction from the others,,Send
-"Invoice number, order number, etc... (Optional)",,Send
-Reference must be a number,,Send
-Number is too large,,Send
+Unnamed token,,Send
+Unnamed,,Send
+Invalid name/address,,Send
+Advanced options,,Send
 Address/Name is required,,Send
+Reference must be an unsigned integer,,Send
+Number is too large,,Send
+Unnamed,,PreviewTransaction
+%{smart_count} day |||| %{smart_count} days,,PreviewTransaction
+%{smart_count} hour |||| %{smart_count} hours,,PreviewTransaction
+%{smart_count} minute |||| %{smart_count} minutes,,PreviewTransaction
+%{smart_count} second |||| %{smart_count} seconds,,PreviewTransaction
+Preview Transaction,,PreviewTransaction
+You're sending,,PreviewTransaction
+From,,PreviewTransaction
+To,,PreviewTransaction
+Amount,,PreviewTransaction
+Reference,,PreviewTransaction
+Expires,,PreviewTransaction
+Send transaction,,PreviewTransaction
 Select backup directory,Biztonsági könyvtár kiválasztása,Settings.Application
 Backup directory,Biztonsági mentés mappája,Settings.Application
 Browse,Böngészés,Settings.Application
@@ -241,23 +280,27 @@ Allow the presence of SymLinks in the module directory,,Settings.Application
 Fake Test Transactions,Hamis teszt tranzakciók,Settings.Application
 Display Test Transactions on the Transactions page,A Teszt tranzakciók megjelenítése a Tranzakciók oldalon,Settings.Application
 Language,Nyelv,Settings.Application
-Exit manual Core mode?,Kilép a kézi Core módból?,Settings.Core
+Exit remote Core mode?,,Settings.Core
 (This will restart your Core),(Ez újra fogja indítani a Core-t),Settings.Core
-Enter manual Core mode?,Belép a kézi Core módba?,Settings.Core
+Enter remote Core mode?,,Settings.Core
 Reload transaction history,Korábbi tranzakciók újratöltése,Settings.Core
 Clear peer connections,,Settings.Core
+Resync database,,Settings.Core
+Nexus Core will be restarted. Lite mode database will be deleted and resynchronized from the beginning.,,Settings.Core
+Embedded Core,,Settings.Core
+Remote Core,,Settings.Core
+Lite mode,,Settings.Core
+"Nexus Core under lite mode runs lighter and synchronize much faster, but you will <b>NOT</b> be able to stake, mine, or switch the wallet to Legacy Mode.",,Settings.Core
+Multi-user,,Settings.Core
+Allow multiple logged in users at the same time. Mining and staking will be unavailable.,,Settings.Core
+Enable staking,Engedélyezze a staking-et,Settings.Core
+Enable/Disable staking on the wallet.,Staking Engedélyezése / Tiltása a pénztárcában.,Settings.Core
+Pooled staking,,Settings.Core
+"Pooled staking is a decentralized and trust-less mechanism allowing you to use the balances of others to increase your chances of finding a stake block. All participants receive their staking rewards and build trust, regardless of which user mines the block. A small portion of each reward is paid to the block finder by all pool participants.",,Settings.Core
 Enable mining,Engedélyezze a bányászatot,Settings.Core
 Enable/Disable mining to the wallet.,Bányászat Engedélyezése / Tiltása a pénztárcára.,Settings.Core
 Mining IP Whitelist,Bányászati IP Engedélyezési Lista,Settings.Core
 IP/Ports allowed to mine to. Separate by <b>;</b> . Wildcards supported only in IP,IP/Port-ok ahova a bányászat engedélyezett. Válaszd el <b>;</b>-vel. Helyettesítő karaktereket csak az IP-val lehet használni,Settings.Core
-Enable staking,Engedélyezze a staking-et,Settings.Core
-Enable/Disable staking on the wallet.,Staking Engedélyezése / Tiltása a pénztárcában.,Settings.Core
-Rescan wallet,Vizsgálja újra a pénztárcát,Settings.Core
-"Used to correct transaction/balance issues, scans over every block in the database. Could take up to 10 minutes.","Tranzakciós/egyenlegproblémák kijavítására szolgál, megvizsgálja az adatbázis minden blokkját. Tíz percig is eltarthat.",Settings.Core
-Restart Nexus core with -walletclean parameter to clean out and reload all transaction history,Nexus core újraindítása a -walletclean paraméterrel az összes tranzakciós előzmény tisztításához és újratöltéséhez,Settings.Core
-Reload,Újratöltés,Settings.Core
-Clear all stored peer connections and restart Nexus,,Settings.Core
-Clear,,Settings.Core
 Verbose level,Bőbeszédű szint,Settings.Core
 Verbose level for logs.,Logolás bőbeszédű szintje.,Settings.Core
 Core Data Directory,,Settings.Core
@@ -267,23 +310,48 @@ The iteration of Testnet to connect to.,,Settings.Core
 Turn Off,,Settings.Core
 Avatar Mode,Avatar Mód,Settings.Core
 Disabling Avatar will make the core use a separate change key,Az Avatár letiltása esetén a Core külön módosító kulcsot fog használni,Settings.Core
-Manual Core mode,Kézi Core mód,Settings.Core
-Enable manual Core mode if you are running the Nexus Core manually outside of the wallet.,"Engedélyezze a manuális Core-t, ha a Nexus Core-t manuálisan futtatja a pénztárcán kívül.",Settings.Core
-Username,Felhasználónév,Settings.Core
-Username configured for manual Core.,Felhasználónév a kézi Core-hoz konfigurálva.,Settings.Core
-Password,Jelszó,Settings.Core
-Password configured for manual Core.,Jelszó a kézi Core-hoz konfigurálva.,Settings.Core
+Rescan wallet,Vizsgálja újra a pénztárcát,Settings.Core
+"Used to correct transaction/balance issues, scans over every block in the database. Could take up to 10 minutes.","Tranzakciós/egyenlegproblémák kijavítására szolgál, megvizsgálja az adatbázis minden blokkját. Tíz percig is eltarthat.",Settings.Core
+Restart Nexus core with -walletclean parameter to clean out and reload all transaction history,Nexus core újraindítása a -walletclean paraméterrel az összes tranzakciós előzmény tisztításához és újratöltéséhez,Settings.Core
+Reload,Újratöltés,Settings.Core
+Clear all stored peer connections and restart Nexus,,Settings.Core
+Clear,,Settings.Core
+Delete lite mode database and resynchronize from the beginning,,Settings.Core
+Resynchronize,,Settings.Core
 IP address,IP cím,Settings.Core
-IP address configured for manual Core.,IP cím a kézi Core-hoz konfigurálva.,Settings.Core
-Port,Portszám,Settings.Core
-Port configured for manual Core.,Portszám a kézi Core-hoz konfigurálva.,Settings.Core
+Remote Core IP address,,Settings.Core
+API SSL,,Settings.Core
+Use SSL for API calls,,Settings.Core
+API Port,,Settings.Core
+Nexus API server Port,,Settings.Core
+API SSL Port,,Settings.Core
+Nexus API server SSL Port,,Settings.Core
+API Username,,Settings.Core
+Nexus API server Username,,Settings.Core
+API Password,,Settings.Core
+Nexus API server Password,,Settings.Core
+RPC SSL,,Settings.Core
+Use SSL for RPC calls,,Settings.Core
+RPC Port,,Settings.Core
+Nexus RPC server Port,,Settings.Core
+RPC SSL Port,,Settings.Core
+Nexus RPC server SSL Port,,Settings.Core
+RPC Username,,Settings.Core
+Nexus RPC server Username,,Settings.Core
+RPC Password,,Settings.Core
+Nexus RPC server Password,,Settings.Core
+Log out on close,,Settings.Core
+Log out of all users before closing the wallet,,Settings.Core
 Restart Core for these changes to take effect,,Settings.Core
 Save settings,,Settings.Core
 Verbose level is required,,Settings.Core
-Manual Core username is required,Kézi Core felhasználónév kötelező,Settings.Core
-Manual Core password is required,Kézi Core jelszó kötelező,Settings.Core
-Manual Core IP is required,Kézi Core IP szükséges,Settings.Core
-Manual Core port is required,Kézi Core port szükséges,Settings.Core
+Remote Core IP is required,,Settings.Core
+RPC port is required,,Settings.Core
+RPC username is required,,Settings.Core
+RPC password is required,,Settings.Core
+API port is required,,Settings.Core
+API username is required,,Settings.Core
+API password is required,,Settings.Core
 Core settings saved,Core beállítások elmentve,Settings.Core
 Restarting Core...,Core újraindítása...,Settings.Core
 Error rescanning,Hiba újraszkennelés közben,Settings.Core
@@ -395,7 +463,6 @@ Overview Display,Áttekintés Kijelző,Settings.Style
 Nexus Addresses format,Nexus Címek formátuma,Settings.Style
 Choose your Nexus Address display preference,Válaszd ki a Nexus Cím megjelenítési preferenciát,Settings.Style
 Sample Address,Minta Cím,Settings.Style
-This is your Default Address,Ez az Ön Alapértelmezett Címe,Settings.Style
 Theme,Kinézet,Settings.Style
 Select Wallet Theme,Pénztárca Kinézetének Választása,Settings.Style
 Background,Háttérkép,Settings.Style
@@ -498,14 +565,19 @@ The amount of NXS currently staked in the trust account,,Transactions.Balances
 Immature,Éretlen,Transactions.Balances
 The sum of all coinbase transactions that have not yet reached maturity,,Transactions.Balances
 Unnamed account,,User.Accounts
+Rename,,User.Accounts
 Details,,User.Accounts
 History,,User.Accounts
+<b>%{account_name}</b> account address,,User.Accounts
+Unnamed,,User.Accounts
 Create new account,,User.Accounts
 Account Details,,User.Accounts.AccountDetails
 Account name,Fiók neve,User.Accounts.AccountDetails
+Unnamed,,User.Accounts.AccountDetails
 Created at,,User.Accounts.AccountDetails
 Last modified,,User.Accounts.AccountDetails
 Token name,,User.Accounts.AccountDetails
+Data,,User.Accounts.AccountDetails
 Total account balance,,User.Accounts.AccountDetails
 Available balance,,User.Accounts.AccountDetails
 Send %{token_name},,User.Accounts.AccountDetails
@@ -520,20 +592,32 @@ Adjust stake amount,,User.Accounts.AccountDetails
 Time,Idő,User.Accounts.AccountHistory
 Operation,,User.Accounts.AccountHistory
 From,,User.Accounts.AccountHistory
-staked,,User.Accounts.AccountHistory
-mined,,User.Accounts.AccountHistory
+staking,,User.Accounts.AccountHistory
+mining,,User.Accounts.AccountHistory
 To,,User.Accounts.AccountHistory
 Change,,User.Accounts.AccountHistory
 Account History,,User.Accounts.AccountHistory
 Loading account history,,User.Accounts.AccountHistory
-Account balance(,,User.Accounts.AccountHistory
-Show %{tokenName},,User.Accounts.AccountHistory
 Account balance,,User.Accounts.AccountHistory
+Show %{tokenName},,User.Accounts.AccountHistory
 Total,,User.Accounts.AccountHistory
 Available,,User.Accounts.AccountHistory
 Pending,Függőben,User.Accounts.AccountHistory
 Unconfirmed,,User.Accounts.AccountHistory
 Stake,Stake,User.Accounts.AccountHistory
+Rename account,,RenameAccount
+Account name,,RenameAccount
+Account renaming fee,,RenameAccount
+Cancel,,RenameAccount
+Renaming,,RenameAccount
+Rename,,RenameAccount
+Account name is required,,RenameAccount
+Name already in use,,RenameAccount
+The name you entered is already in use. Please choose another name.,,RenameAccount
+Insuffient balance,,RenameAccount
+Your default account balance is not enough to pay the fee.,,RenameAccount
+Account has been renamed to %{account_name},,RenameAccount
+Error renaming account,,RenameAccount
 Unnamed asset,,User.Assets
 You own %{percentage}% of this asset,,User.Assets
 Create new asset,,User.Assets
@@ -650,10 +734,12 @@ Create a new name,,CreateName
 View name details,,User.Names
 Change register address,,User.Names
 Transfer name,,User.Names
+Unused,,User.Names
 Global,,User.Names
 Namespaced,,User.Names
 Local,,User.Names
 Create new name,,User.Names
+Show unused names,,User.Names
 You don't own any name,,User.Names
 Name Details,,NameDetails
 Change register address,,NameDetails
@@ -741,6 +827,7 @@ Enable staking,Engedélyezze a staking-et,User.Staking
 Cancel,Mégse,User.Staking
 Status,,User.Staking
 Staking,,User.Staking
+pooled,,User.Staking
 Not staking,,User.Staking
 Stake amount,,User.Staking
 The amount of NXS currently staked in the trust account,,User.Staking
@@ -762,7 +849,7 @@ Account on hold for another %{stakeSeconds} Seconds,,User.Staking
 Stop staking,,User.Staking
 Start staking,,User.Staking
 Create new token,,User.Tokens
-Lookup a token,,User.Tokens
+Look up a token,,User.Tokens
 Unnamed token,,User.Tokens
  (Owned by you),,User.Tokens
 Details,,User.Tokens
@@ -787,13 +874,14 @@ You have successfully created token %{token} ! Would you like to make an account
 Yes,Igen,User.Tokens.NewToken
 No,Nem,User.Tokens.NewToken
 Error creating token,,User.Tokens.NewToken
-Can not find Token,,User.Tokens.SearchToken
-Lookup Token,,User.Tokens.SearchToken
-Name/Address,,User.Tokens.SearchToken
-Lookup a Token on the network,,User.Tokens.SearchToken
-Lookup this token,,User.Tokens.SearchToken
+Cannot find Token,,User.Tokens.SearchToken
+Look up token,,User.Tokens.SearchToken
+Name or address,,User.Tokens.SearchToken
+Token name/address,,User.Tokens.SearchToken
+Look up,,User.Tokens.SearchToken
 No Value,,User.Tokens.SearchToken
 Error searching for token,,User.Tokens.SearchToken
+Unknown token name/address,,User.Tokens.SearchToken
 Token Details,,User.Tokens.TokenDetails
 Token name,,User.Tokens.TokenDetails
 Token address,,User.Tokens.TokenDetails
@@ -870,15 +958,15 @@ Are you sure you want to abort the process?,Biztosan meg akarja szakítani a fol
 "No, let it continue","Nem, hagyjuk folytatni",Bootstrap
 Bootstrap Recent Database,Tölts be Friss Adatbázist,Bootstrap
 Abort,Megszakít,Bootstrap
-Bootstrap process has been aborted,Betöltés folyamat megszakadt,Bootstrap
-Error bootstrapping recent database,Hiba történt a legutóbbi adatbázis betöltése során,Bootstrap
-Unknown error,Ismeretlen hiba,Bootstrap
-Recent database has been successfully bootstrapped,A legújabb adatbázis sikeresen betöltve,Bootstrap
 Not enough disk space! Minimum 15GB of free space is required.,Nincs elég hely a merevlemezen! Legalább 15GB szabad hely szükséges.,Bootstrap
 Download recent database?,Friss adatbázist letölteni?,Bootstrap
 Downloading a recent version of the database might reduce the time it takes to synchronize your wallet,Az adatbázis legújabb verziójának letöltése lerövidítheti a pénztárca szinkronizálásához szükséges időt,Bootstrap
 "Yes, let's bootstrap it","Igen, töltsük be",Bootstrap
 "No, let it sync","Nem, hagyja, hogy szinkronizáljon",Bootstrap
+Bootstrap process has been aborted,Betöltés folyamat megszakadt,Bootstrap
+Error bootstrapping recent database,Hiba történt a legutóbbi adatbázis betöltése során,Bootstrap
+Unknown error,Ismeretlen hiba,Bootstrap
+Recent database has been successfully bootstrapped,A legújabb adatbázis sikeresen betöltve,Bootstrap
 Change password and PIN,,ChangePassword&PIN
 Current password,,ChangePassword&PIN
 Your current password,,ChangePassword&PIN
@@ -898,6 +986,10 @@ New PIN is required,,ChangePassword&PIN
 PIN must be at least 4 characters,,ChangePassword&PIN
 Password & PIN have been updated,,ChangePassword&PIN
 Error updating password & PIN,,ChangePassword&PIN
+Contract Details,,ContractDetails
+View transaction details,,ContractDetails
+Yes,Igen,ConfirmDialog
+No,Nem,ConfirmDialog
 Password/PIN mismatch,,ConfirmPassword&PIN
 "You have entered either your password or your PIN incorrectly, please re-check",,ConfirmPassword&PIN
 Confirm password and PIN,,ConfirmPassword&PIN
@@ -910,11 +1002,12 @@ PIN,,ConfirmPassword&PIN
 Re-enter your new PIN,,ConfirmPassword&PIN
 Re-enter your PIN,,ConfirmPassword&PIN
 Confirm,Jóváhagyás,ConfirmPassword&PIN
-Contract Details,,ContractDetails
-View transaction details,,ContractDetails
-Yes,Igen,ConfirmDialog
-No,Nem,ConfirmDialog
 Dismiss,Elutasít,ErrorDialog
+Pin must be at least 4 characters,,PinDialog
+Confirm,Jóváhagyás,PinDialog
+Enter PIN,,PinDialog
+Your PIN,,PinDialog
+Cancel,Mégse,PinDialog
 Dismiss,Elutasít,SuccessDialog
 Your wallet is not encrypted!,A tárcád nincs titkosítva!,EncryptionWarning
 It is highly recommended that you should encrypt your wallet to keep your NXS safe.,"Nagyon ajánlott, hogy titkosítsa a pénztárcáját az NXS biztonságának megőrzése érdekében.",EncryptionWarning
@@ -934,6 +1027,7 @@ Username is required,,Login
 Password is required,Jelszó kötelező,Login
 PIN is required,,Login
 Logged in as %{username},,Login
+Not being fully synced may have caused this error.,,Login
 Error logging in,Bejelentkezési hiba,Login
 Migrate account,,MigrateAccount
 You have %{amount} NXS in your legacy account.,,MigrateAccount
@@ -986,16 +1080,16 @@ Error creating new address,Hiba az új cím létrehozásakor,MyAddresses.NewAddr
 New account,,NewAccount
 Account name (%{nameFee} NXS Fee) (Optional),,NewAccount
 New account's name,,NewAccount
-Token,,NewAccount
+Token name/address,,NewAccount
 Cancel,Mégse,NewAccount
 Creating account,,NewAccount
 Create account,,NewAccount
-Create a account without a name?,,NewAccount
+Create an account without a name?,,NewAccount
 Adding a name costs a NXS fee,,NewAccount
 That's Ok,,NewAccount
-Add Name,,NewAccount
-New account %{account} has been created,,NewAccount
 Error creating account,,NewAccount
+Unknown token name/address,,NewAccount
+New account %{account} has been created,,NewAccount
 Create new user,,NewUser
 Username,Felhasználónév,NewUser
 A globally unique username,,NewUser
@@ -1019,11 +1113,6 @@ PIN must be at least 4 characters,,NewUser
 Error creating user,,NewUser
 User registration for %{username} has been confirmed,,NewUser
 User registration for %{username} is waiting to be confirmed on Nexus blockchain...,,NewUser
-Pin must be at least 4 characters,,PinDialog
-Confirm,Jóváhagyás,PinDialog
-Enter PIN,,PinDialog
-Your PIN,,PinDialog
-Cancel,Mégse,PinDialog
 Recover password and PIN,,RecoverPassword&PIN
 Username,Felhasználónév,RecoverPassword&PIN
 Your username,,RecoverPassword&PIN

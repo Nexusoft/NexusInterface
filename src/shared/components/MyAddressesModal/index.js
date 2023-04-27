@@ -1,10 +1,10 @@
 // External
-import React from 'react';
-import { connect } from 'react-redux';
+import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 
 // Internal
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import TextField from 'components/TextField';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
@@ -20,7 +20,7 @@ import rpc from 'lib/rpc';
 
 __ = __context('MyAddresses');
 
-const MyAddressesModalComponent = styled(Modal)({
+const MyAddressesModalComponent = styled(ControlledModal)({
   // set a fixed height so that the modal won't jump when the search query changes
   height: '80%',
 });
@@ -37,138 +37,84 @@ const Buttons = styled.div({
   marginBottom: '1em',
 });
 
-/**
- * Handles the My Address from header
- *
- * @class MyAddressesModal
- * @extends {React.Component}
- */
-@connect(state => ({
-  myAccounts: state.myAccounts,
-  locale: state.settings.locale,
-  blockCount: state.core.info.blocks,
-}))
-class MyAddressesModal extends React.Component {
-  state = {
-    searchQuery: '',
-    creatingAddress: false,
-  };
-
-  componentDidMount() {
-    loadAccounts();
+async function checkwallet() {
+  try {
+    await rpc('checkwallet', []);
+  } catch (err) {
+    console.error(err);
+    showNotification(__('Check wallet failed'), 'error');
+    return;
   }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.blockCount !== this.props.blockCount) {
-      updateAccountBalances();
-    }
-  }
-  /**
-   * Handle search changes
-   *
-   * @memberof MyAddressesModal
-   */
-  handleChange = e => {
-    this.setState({
-      searchQuery: e.target.value,
-    });
-  };
-
-  checkwallet = async () => {
-    try {
-      await rpc('checkwallet', []);
-    } catch (err) {
-      console.log(err);
-      showNotification(__('Check wallet failed'), 'error');
-      return;
-    }
-    showNotification(__('Check wallet pass'), 'success');
-  };
-
-  /**
-   * Filter the Accounts
-   *
-   * @memberof MyAddressesModal
-   */
-  filteredAccounts = () => {
-    const allAccounts = this.props.myAccounts || [];
-    return allAccounts.filter(acc => {
-      const accName = acc.account || __('My Account');
-      const searchedName = accName.toLowerCase();
-      const query = this.state.searchQuery.toLowerCase();
-      return searchedName.indexOf(query) >= 0;
-    });
-  };
-
-  /**
-   * Start Creating
-   *
-   * @memberof MyAddressesModal
-   */
-  startCreating = () => {
-    this.setState({
-      creatingAddress: true,
-    });
-  };
-
-  /**
-   * End Creating
-   *
-   * @memberof MyAddressesModal
-   */
-  endCreating = () => {
-    this.setState({
-      creatingAddress: false,
-    });
-  };
-
-  /**
-   * React Render
-   *
-   * @returns
-   * @memberof MyAddressesModal
-   */
-  render() {
-    return (
-      <MyAddressesModalComponent>
-        <Modal.Header>My Addresses</Modal.Header>
-        <Modal.Body>
-          <Search>
-            <TextField
-              left={<Icon icon={searchIcon} className="space-right" />}
-              placeholder="Search account"
-              value={this.state.searchQuery}
-              onChange={this.handleChange}
-              style={{ width: 300 }}
-            />
-            <Tooltip.Trigger tooltip={__("Check wallet's integrity")}>
-              <Button fitHeight onClick={this.checkwallet}>
-                {__('Check wallet')}
-              </Button>
-            </Tooltip.Trigger>
-          </Search>
-          {this.filteredAccounts().map(acc => (
-            <Account
-              key={acc.account}
-              account={acc}
-              searchQuery={this.state.searchQuery}
-            />
-          ))}
-
-          {this.state.creatingAddress ? (
-            <NewAddressForm finish={this.endCreating} />
-          ) : (
-            <Buttons>
-              <Button onClick={this.startCreating}>
-                <Icon icon={plusIcon} className="space-right" />
-                {__('Create new address')}
-              </Button>
-            </Buttons>
-          )}
-        </Modal.Body>
-      </MyAddressesModalComponent>
-    );
-  }
+  showNotification(__('Check wallet pass'), 'success');
 }
 
-export default MyAddressesModal;
+export default function MyAddressesModal() {
+  const myAccounts = useSelector((state) => state.myAccounts);
+  const locale = useSelector((state) => state.settings.locale);
+  const blockCount = useSelector((state) => state.core.info.blocks);
+
+  const [searchQuery, setSearchQuery] = useState('');
+  const [creatingAddress, setCreatingAddress] = useState(false);
+
+  useEffect(() => {
+    loadAccounts();
+  }, []);
+
+  useEffect(() => {
+    updateAccountBalances();
+  }, [blockCount]);
+
+  const allAccounts = myAccounts || [];
+  const filteredAccounts = allAccounts.filter((acc) => {
+    const accName = acc.account || __('My Account');
+    const searchedName = accName.toLowerCase();
+    const query = searchQuery.toLowerCase();
+    return searchedName.indexOf(query) >= 0;
+  });
+
+  return (
+    <MyAddressesModalComponent>
+      <ControlledModal.Header>My Addresses</ControlledModal.Header>
+      <ControlledModal.Body>
+        <Search>
+          <TextField
+            left={<Icon icon={searchIcon} className="mr0_4" />}
+            placeholder="Search account"
+            value={searchQuery}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+            }}
+            style={{ width: 300 }}
+          />
+          <Tooltip.Trigger tooltip={__("Check wallet's integrity")}>
+            <Button fitHeight onClick={checkwallet}>
+              {__('Check wallet')}
+            </Button>
+          </Tooltip.Trigger>
+        </Search>
+        {filteredAccounts.map((acc) => (
+          <Account key={acc.account} account={acc} searchQuery={searchQuery} />
+        ))}
+
+        {creatingAddress ? (
+          <NewAddressForm
+            finish={() => {
+              setCreatingAddress(false);
+            }}
+          />
+        ) : (
+          <Buttons>
+            <Button
+              onClick={() => {
+                setCreatingAddress(true);
+              }}
+            >
+              <Icon icon={plusIcon} className="mr0_4" />
+              {__('Create new address')}
+            </Button>
+          </Buttons>
+        )}
+      </ControlledModal.Body>
+    </MyAddressesModalComponent>
+  );
+}

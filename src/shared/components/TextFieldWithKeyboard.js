@@ -1,5 +1,5 @@
 // External
-import React, { Component } from 'react';
+import { useEffect, useCallback, forwardRef } from 'react';
 import { ipcRenderer } from 'electron';
 
 // Internal
@@ -11,63 +11,61 @@ import Button from 'components/Button';
 import store from 'store';
 import keyboardIcon from 'icons/keyboard.svg';
 
-export default class TextFieldWithKeyboard extends Component {
-  handleInputChange = (evt, text) => {
-    this.props.onChange(text);
-  };
+const TextFieldWithKeyboard = forwardRef(function (
+  { value, onChange, placeholder, maskable, skin, ...rest },
+  ref
+) {
+  const handleInputChange = useCallback((evt, text) => {
+    onChange(text);
+  }, []);
 
-  openKeyboard = () => {
-    ipcRenderer.on('keyboard-input-change', this.handleInputChange);
+  const openKeyboard = () => {
+    ipcRenderer.on('keyboard-input-change', handleInputChange);
     ipcRenderer.once('keyboard-closed', () => {
-      ipcRenderer.off('keyboard-input-change', this.handleInputChange);
+      ipcRenderer.off('keyboard-input-change', handleInputChange);
     });
     ipcRenderer.invoke('open-virtual-keyboard', {
       theme: store.getState().theme,
-      defaultText: this.props.value,
-      maskable: this.props.maskable,
-      placeholder: this.props.placeholder,
+      defaultText: value,
+      maskable: maskable,
+      placeholder: placeholder,
     });
   };
 
-  componentWillUnmount() {
-    ipcRenderer.off('keyboard-input-change', this.handleInputChange);
-  }
+  useEffect(
+    () => () => {
+      ipcRenderer.off('keyboard-input-change', handleInputChange);
+    },
+    []
+  );
 
-  render() {
-    const { maskable, skin, ...rest } = this.props;
-    const Component = this.props.maskable ? MaskableTextField : TextField;
+  const Component = maskable ? MaskableTextField : TextField;
 
-    return (
-      <Component
-        skin={skin}
-        {...rest}
-        left={
-          <Tooltip.Trigger align="start" tooltip={__('Use virtual keyboard')}>
-            <Button
-              skin="plain"
-              onClick={this.openKeyboard}
-              tabIndex="-1"
-              style={
-                skin === 'filled' || skin === 'filled-inverted'
-                  ? { paddingRight: 0 }
-                  : { paddingLeft: 0 }
-              }
-            >
-              <Icon icon={keyboardIcon} />
-            </Button>
-          </Tooltip.Trigger>
-        }
-      />
-    );
-  }
-}
+  return (
+    <Component
+      {...{ value, onChange, placeholder, skin }}
+      skin={skin}
+      onChange={onChange}
+      ref={ref}
+      {...rest}
+      left={
+        <Tooltip.Trigger align="start" tooltip={__('Use virtual keyboard')}>
+          <Button
+            skin="plain"
+            onClick={openKeyboard}
+            tabIndex="-1"
+            style={
+              skin === 'filled' || skin === 'filled-inverted'
+                ? { paddingRight: 0 }
+                : { paddingLeft: 0 }
+            }
+          >
+            <Icon icon={keyboardIcon} />
+          </Button>
+        </Tooltip.Trigger>
+      }
+    />
+  );
+});
 
-// TextFieldWithKeyboard wrapper for redux-form
-const TextFieldWithKeyboardReduxForm = ({ input, meta, ...rest }) => (
-  <TextFieldWithKeyboard
-    error={meta.touched && meta.error}
-    {...input}
-    {...rest}
-  />
-);
-TextFieldWithKeyboard.RF = TextFieldWithKeyboardReduxForm;
+export default TextFieldWithKeyboard;

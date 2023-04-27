@@ -27,7 +27,7 @@ export function showDefaultMenu(e) {
  */
 function transformTemplate(template) {
   const actions = {};
-  template.forEach(item => {
+  template.forEach((item) => {
     if (typeof item.click === 'function') {
       actions[item.id] = item.click;
       item.click = true;
@@ -47,10 +47,14 @@ function transformTemplate(template) {
  * @export
  * @param {*} template
  */
-export async function popupContextMenu(template) {
+export async function popupContextMenu(template, webContentsId) {
   const templateCopy = [...template];
   const actions = transformTemplate(templateCopy);
-  const id = await ipcRenderer.invoke('popup-context-menu', templateCopy);
+  const id = await ipcRenderer.invoke(
+    'popup-context-menu',
+    templateCopy,
+    webContentsId
+  );
   if (id && actions[id]) {
     actions[id]();
   }

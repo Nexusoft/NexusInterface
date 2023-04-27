@@ -1,20 +1,18 @@
-import React, { Component } from 'react';
-import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 
-import { apiPost } from 'lib/tritiumApi';
-import Modal from 'components/Modal';
+import Form from 'components/Form';
+import ControlledModal from 'components/ControlledModal';
 import FormField from 'components/FormField';
-import TextField from 'components/TextField';
-import TextFieldWithKeyboard from 'components/TextFieldWithKeyboard';
 import Button from 'components/Button';
 import NewUserModal from 'components/NewUserModal';
 import RecoverPasswordPinModal from 'components/RecoverPasswordPinModal';
 import Spinner from 'components/Spinner';
-import { showNotification, openModal, removeModal } from 'lib/ui';
-import { getUserStatus } from 'lib/user';
-import { errorHandler } from 'utils/form';
+import { showNotification, openModal } from 'lib/ui';
+import { openErrorDialog } from 'lib/dialog';
+import { formSubmit, required } from 'lib/form';
+import { logIn } from 'lib/user';
+import { callApi } from 'lib/tritiumApi';
 
 __ = __context('Login');
 
@@ -29,172 +27,144 @@ const ExtraSection = styled.div({
   opacity: 0.9,
 });
 
-/**
- * Login Form
- *
- * @class Login
- * @extends {Component}
- */
-@connect(
-  ({ core: { systemInfo }, settings: { enableMining, enableStaking } }) => ({
-    enableMining,
-    enableStaking,
-    syncing: systemInfo.synchronizing,
-  })
-)
-@reduxForm({
-  form: 'login_tritium',
-  destroyOnUnmount: true,
-  initialValues: {
-    username: '',
-    password: '',
-    pin: '',
-  },
-  validate: ({ username, password, pin }, props) => {
-    const errors = {};
-    if (!username) {
-      errors.username = __('Username is required');
-    }
+const initialValues = {
+  username: '',
+  password: '',
+  pin: '',
+};
 
-    if (!password) {
-      errors.password = __('Password is required');
-    }
+export default function LoginModal() {
+  const syncing = useSelector((state) => state.core.systemInfo?.synchronizing);
 
-    if (!pin) {
-      errors.pin = __('PIN is required');
-    }
-
-    return errors;
-  },
-  onSubmit: ({ username, password, pin }) =>
-    apiPost('users/login/user', {
-      username,
-      password,
-      pin,
-    }),
-  onSubmitSuccess: async (result, dispatch, props) => {
-    removeModal(props.modalId);
-    props.reset();
-    showNotification(
-      __('Logged in as %{username}', { username: props.values.username }),
-      'success'
-    );
-
-    await apiPost('users/unlock/user', {
-      pin: props.values.pin,
-      notifications: true,
-      mining: !!props.enableMining,
-      staking: !!props.enableStaking,
-    });
-    getUserStatus();
-  },
-  onSubmitFail: (errors, dispatch, submitError, props) => {
-    const submissionError =
-      submitError.code === -139 && props.syncing
-        ? {
-            ...submitError,
-            message:
-              submitError.message +
-              '. ' +
-              __('Not being fully synced may of caused this error.'),
-          }
-        : submitError;
-    errorHandler(__('Error logging in'))(errors, dispatch, submissionError);
-  },
-})
-class Login extends Component {
-  /**
-   * Component's Renderable JSX
-   *
-   * @returns
-   * @memberof Login
-   */
-  render() {
-    const { handleSubmit, submitting } = this.props;
-
-    return (
-      <Modal
-        maxWidth={500}
-        assignClose={closeModal => (this.closeModal = closeModal)}
-      >
-        <Modal.Header>{__('Log in')}</Modal.Header>
-        <Modal.Body>
-          <form onSubmit={handleSubmit}>
-            <FormField
-              connectLabel
-              label={__('Username')}
-              style={{ marginTop: 0 }}
+  return (
+    <ControlledModal maxWidth={500}>
+      {(closeModal) => (
+        <>
+          <ControlledModal.Header>{__('Log in')}</ControlledModal.Header>
+          <ControlledModal.Body>
+            <Form
+              name="login_tritium"
+              initialValues={initialValues}
+              onSubmit={formSubmit({
+                submit: async ({ username, password, pin }) => {
+                  try {
+                    return await logIn({ username, password, pin });
+                  } catch (err) {
+                    let result;
+                    try {
+                      // In case the sigchain hasn't had a crypto object register initialized
+                      const { crypto } = await callApi(
+                        'profiles/status/master',
+                        { username }
+                      );
+                      if (!crypto) {
+                        result = await callApi('profiles/create/auth', {
+                          username,
+                          password,
+                          pin,
+                        });
+                      }
+                    } catch (err2) {
+                      throw err;
+                    }
+                    if (result?.success) {
+                      return await logIn({ username, password, pin });
+                    } else {
+                      throw err;
+                    }
+                  }
+                },
+                onSuccess: async (result, { username }) => {
+                  closeModal();
+                  showNotification(
+                    __('Logged in as %{username}', { username }),
+                    'success'
+                  );
+                },
+                onFail: (err) => {
+                  const message =
+                    syncing && err?.code === -139
+                      ? `${err?.message}. ${__(
+                          'Not being fully synced may have caused this error.'
+                        )}`
+                      : err?.message;
+                  openErrorDialog({
+                    message: __('Error logging in'),
+                    note: message,
+                  });
+                },
+              })}
             >
-              <Field
-                component={TextFieldWithKeyboard.RF}
-                name="username"
-                placeholder={__('Enter your username')}
-                autoFocus
-              />
-            </FormField>
-
-            <FormField connectLabel label={__('Password')}>
-              <Field
-                maskable
-                component={TextFieldWithKeyboard.RF}
-                name="password"
-                placeholder={__('Enter your password')}
-              />
-            </FormField>
-
-            <FormField connectLabel label={__('PIN')}>
-              <Field
-                maskable
-                component={TextFieldWithKeyboard.RF}
-                name="pin"
-                placeholder={__('Enter your PIN')}
-              />
-            </FormField>
-
-            <Buttons>
-              <Button
-                type="submit"
-                wide
-                uppercase
-                skin="primary"
-                disabled={submitting}
+              <FormField
+                connectLabel
+                label={__('Username')}
+                style={{ marginTop: 0 }}
               >
-                {submitting ? (
-                  <span>
-                    <Spinner className="space-right" />
-                    <span className="v-align">{__('Logging in')}...</span>
-                  </span>
-                ) : (
-                  __('Log in')
-                )}
-              </Button>
-            </Buttons>
+                <Form.TextFieldWithKeyboard
+                  name="username"
+                  validate={required()}
+                  placeholder={__('Enter your username')}
+                  autoFocus
+                />
+              </FormField>
 
-            <ExtraSection>
-              <Button
-                skin="hyperlink"
-                onClick={() => {
-                  this.closeModal();
-                  openModal(RecoverPasswordPinModal);
-                }}
-              >
-                {__('Forgot password?')}
-              </Button>
-              <Button
-                skin="hyperlink"
-                onClick={() => {
-                  this.closeModal();
-                  openModal(NewUserModal);
-                }}
-              >
-                {__('Create new user')}
-              </Button>
-            </ExtraSection>
-          </form>
-        </Modal.Body>
-      </Modal>
-    );
-  }
+              <FormField connectLabel label={__('Password')}>
+                <Form.TextFieldWithKeyboard
+                  name="password"
+                  validate={required()}
+                  maskable
+                  placeholder={__('Enter your password')}
+                />
+              </FormField>
+
+              <FormField connectLabel label={__('PIN')}>
+                <Form.TextFieldWithKeyboard
+                  name="pin"
+                  validate={required()}
+                  maskable
+                  placeholder={__('Enter your PIN')}
+                />
+              </FormField>
+
+              <Buttons>
+                <Form.SubmitButton wide uppercase skin="primary">
+                  {({ submitting }) =>
+                    submitting ? (
+                      <span>
+                        <Spinner className="mr0_4" />
+                        <span className="v-align">{__('Logging in')}...</span>
+                      </span>
+                    ) : (
+                      __('Log in')
+                    )
+                  }
+                </Form.SubmitButton>
+              </Buttons>
+
+              <ExtraSection>
+                <Button
+                  skin="hyperlink"
+                  onClick={() => {
+                    closeModal();
+                    openModal(RecoverPasswordPinModal);
+                  }}
+                >
+                  {__('Forgot password?')}
+                </Button>
+                <Button
+                  skin="hyperlink"
+                  onClick={() => {
+                    closeModal();
+                    openModal(NewUserModal);
+                  }}
+                >
+                  {__('Create new user')}
+                </Button>
+              </ExtraSection>
+            </Form>
+          </ControlledModal.Body>
+        </>
+      )}
+    </ControlledModal>
+  );
 }
-
-export default Login;

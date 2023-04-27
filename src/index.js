@@ -1,12 +1,18 @@
-import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 
-import 'appMenu';
-import 'lib/market';
 import store from 'store';
-import { walletEvents } from 'lib/wallet';
 import { startCore } from 'lib/core';
+import { prepareWallet } from 'lib/wallet';
+import { prepareMenu } from 'lib/appMenu';
+import { prepareBootstrap } from 'lib/bootstrap';
+import { prepareCoreInfo } from 'lib/coreInfo';
+import { prepareCoreOutput } from 'lib/coreOutput';
+import { prepareMarket } from 'lib/market';
+import { prepareTransactions } from 'lib/tritiumTransactions';
+import { prepareUser } from 'lib/user';
+import { prepareModules, prepareWebView } from 'lib/modules';
+import { prepareUpdater } from 'lib/updater';
 import initialSettings from 'data/initialSettings';
 import App from './App';
 
@@ -16,7 +22,11 @@ async function run() {
       await startCore();
     }
   } finally {
-    walletEvents.emit('pre-render');
+    prepareWallet();
+    prepareCoreInfo();
+    prepareUser();
+    prepareMarket();
+    prepareModules();
 
     render(
       <Provider store={store}>
@@ -25,7 +35,12 @@ async function run() {
       document.getElementById('root')
     );
 
-    walletEvents.emit('post-render');
+    prepareMenu();
+    prepareBootstrap();
+    prepareTransactions();
+    prepareUpdater();
+    prepareWebView();
+    prepareCoreOutput();
   }
 }
 

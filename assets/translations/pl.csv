@@ -35,35 +35,36 @@ Wallet is not staking,Portfel nie prowadzi stakingu,Header
 Checking sync status,Sprawdzanie stanu synchronizacji,Header
 Synchronizing,Synchronizacja,Header
 Synchronized,Zsynchronizowany,Header
+pooled,,Header
 You're not logged in,Nie jesteś zalogowany,Header
 You are staking but have not received a block in 30 minutes!,,Header
-Accounts,Konta,Header.UserDropdown
-Tokens,Tokeny,Header.UserDropdown
-Set recovery phrase,Stwórz frazę przywracającą,Header.UserDropdown
-Log out,Wyloguj,Header.UserDropdown
-Log in,Logowanie,Header.UserDropdown
-Create new user,Stwórz nowego użytkownika,Header.UserDropdown
-Overview,Przegląd,NavigationBar
-User,Użytkownik,NavigationBar
-Send NXS,Wyślij NXS,NavigationBar
-Send,Wyslij,NavigationBar
-Transactions,Transakcje,NavigationBar
-Address Book,Książka Adresowa,NavigationBar
-Settings,Ustawienia,NavigationBar
-Console,Konsola,NavigationBar
+Switching...,,
+Active,,
+Switch,,
+Switch user,,
 Closing Nexus Wallet,Zamykanie portfela Nexus,
 Warning,Ostrzeżenie,
 IMPROPER USE OF THIS SOFTWARE COULD LEAD TO PERMANENT LOSS OF COIN.,NIEPRAWIDŁOWE UŻYTKOWANIE TEGO OPROGRAMOWANIA MOŻE DOPROWADZIĆ DO PERMANENTNEJ UTRATY MONET.,
 BACKUP YOUR WALLET OFTEN AND KEEP YOUR PASSWORDS SAFE.,Uaktualniaj swój portfel czesto i przechowywuj swoje hasła w bezpiecznym miejscu.,
 I understand the risk,Rozumiem ryzyko,
-Tritium Mode,Tryb Tritium,
-Your wallet is now in Tritium Mode!,Twój portfel jest w trybie Tritium!,
-"Tritium Mode is currently in early development, therefore not all Tritium features are supported by the user interface. If you want to access a Tritium feature that hasn't had a user interface yet, you can go to Console/Tritium Console, or use any HTTP client to call Nexus APIs directly.","Tryb Tritium jest we wczesnym stadium rozwoju, dlatego nie wszystkie funkcje Tritium są wspierane przez interfejs użytkownika. Jeśli chcesz mieć dostęp do funkcji Tritium która nie miała interfejsu użytkownika, możesz przejść do Console/Tritium Console, albo użyć jakiegokolwiek klienta HTTP, żeby wezwać API Nexusa bezpośrednio.",
-"If you need to switch back to Legacy Mode, you can select ""%{menu}"" menu option at any time.","Jeśli chcesz wrócić z powrotem to trybu Legacy, możesz wybrać ""%{menu}"" opcje menu w kazdej chwili.",
-File,Plik,
-Switch to Legacy Mode,Przejdź do trybu Legacy,
-Continue to Tritium Mode,Kontynuuj do trybu Tritium,
 Close,Zamknij,
+Remote Core is disconnected,,
+Connecting to Nexus Core...,Łączenie do Nexus Core...,
+Nexus Core is stopped,Core jest wyłączony,
+Address has been copied to clipboard,Adres został skopiowany do schowka,
+Copy to clipboard,Skopiuj do schowka,
+Click to copy to clipboard,"Kliknij, aby skopiować",
+Show QR code,,
+Log in,Logowanie,
+No Rows Found,Nie znaleziono,
+Page,Strona,
+rows,rzędy,
+Previous,Poprzednie,
+Next,Nastepne,
+Use virtual keyboard,,
+<token_name></token_name> token,,
+Unnamed token,,
+Switch to Legacy Mode,Przejdź do trybu Legacy,
 Are you sure you want to switch to Legacy Mode?,Czy jesteś pewny ze chcesz przejść do trybu Legacy?,
 Switch to Tritium Mode,Przejdź do trybu Tritium,
 Start Nexus Core,Rozpocznij Nexus Core,
@@ -98,23 +99,11 @@ There are currently no updates available,Aktualnie nie ma dostępnych żadnych a
 Checking for Updates...,Sprawdzanie dostępności aktualizacji...,
 Update available! Downloading...,Aktualizacja jest dostępna! Pobieram...,
 Quit and install update...,Zakończ i zainstaluj aktualizacje...,
+File,Plik,
 Edit,Edytuj,
 Settings,Ustawienia,
 View,Zobacz,
 Help,Pomoc,
-Manual Core is disconnected,Manual daemon nie działa,
-Connecting to Nexus Core...,Łączenie do Nexus Core...,
-Nexus Core is stopped,Core jest wyłączony,
-Address has been copied to clipboard,Adres został skopiowany do schowka,
-Copy to clipboard,Skopiuj do schowka,
-Click to copy to clipboard,"Kliknij, aby skopiować",
-Log in,Logowanie,
-No Rows Found,Nie znaleziono,
-Page,Strona,
-rows,rzędy,
-Previous,Poprzednie,
-Next,Nastepne,
-Use virtual keyboard,,
 Transaction received,Transakcja otrzymana,
 Transaction sent,Transakcja wysłana,
 Genesis transaction,Transakcja Genesis,
@@ -123,6 +112,33 @@ Update available for %{smart_count} module |||| Updates available for %{smart_co
 New transaction,Nowa tranzakcja,
 Error,Błąd,
 Unknown error,Nieznany błąd,
+Accounts,Konta,Header.UserDropdown
+Tokens,Tokeny,Header.UserDropdown
+Set recovery phrase,Stwórz frazę przywracającą,Header.UserDropdown
+Switch user,,Header.UserDropdown
+Log in to another user,,Header.UserDropdown
+Log out of all users,,Header.UserDropdown
+Log out,Wyloguj,Header.UserDropdown
+Log in,Logowanie,Header.UserDropdown
+Create new user,Stwórz nowego użytkownika,Header.UserDropdown
+Overview,Przegląd,NavigationBar
+User,Użytkownik,NavigationBar
+Send NXS,Wyślij NXS,NavigationBar
+Send,Wyslij,NavigationBar
+Transactions,Transakcje,NavigationBar
+Address Book,Książka Adresowa,NavigationBar
+Settings,Ustawienia,NavigationBar
+Console,Konsola,NavigationBar
+Lite mode,,LiteModeNotice
+Lite mode is now available on Nexus Wallet! You can choose to enable lite mode now or just ignore it. You can change your decision anytime under Settings/Core.,,LiteModeNotice
+Why you might want to enable lite mode,,LiteModeNotice
+Nexus Core would take less resources (memory and storage) to run,,LiteModeNotice
+Synchronization would be much faster,,LiteModeNotice
+Why you might NOT want to enable lite mode,,LiteModeNotice
+You would NOT be able to mine or stake,,LiteModeNotice
+Legacy Mode would be disabled,,LiteModeNotice
+Ignore,,LiteModeNotice
+Enable lite mode,,LiteModeNotice
 "Last updated
 %{time}",Ostatnio aktualizowano %{time},Overview
 Getting next block...,Pobieranie następnego bloku...,Overview
@@ -185,17 +201,40 @@ There must be at least one recipient,Musi być dokładnie jeden odbiorca,Send
 Address is required,Wymagany jest adres,Send
 Transaction sent,Transakcja wysłana,Send
 Error sending NXS,Błąd przy przesyłaniu NXS,Send
-%{tokenName} Amount,%{tokenName} Kwota,Send
+Reference,,Send
+"An optional number which may be provided by the recipient to identify this transaction from the others, e.g. invoice number, order number, etc.",,Send
+Reference number (optional),,Send
+Expires in,,Send
+"The amount of time since the transaction is created after which the transaction can no longer be credited by the recipient. By default, transactions will expire in 1 day (86400 seconds).",,Send
+Days,,Send
+Hours,,Send
+Minutes,,Send
+Seconds,,Send
+Amount,,Send
 Recipient Address/Name,Adres/Nazwa odbiorcy,Send
 Accounts,Konta,Send
+Unnamed account,,Send
 Tokens,Tokeny,Send
-More options,Więcej opcji,Send
-Reference number,Numer referencyjny,Send
-An optional number which may be provided by the recipient to identify this transaction from the others,"Opcjonalny numer, który odbiorca może podać w celu identyfikacji tej transakcji od innych",Send
-"Invoice number, order number, etc... (Optional)","Numer faktury, numer zamówienia itp... (opcjonalnie)",Send
-Reference must be a number,Odniesienie musi być liczbą,Send
-Number is too large,Numer jest zbyt duży,Send
+Unnamed token,,Send
+Unnamed,,Send
+Invalid name/address,,Send
+Advanced options,,Send
 Address/Name is required,Adres/nazwa jest wymagana,Send
+Reference must be an unsigned integer,,Send
+Number is too large,Numer jest zbyt duży,Send
+Unnamed,,PreviewTransaction
+%{smart_count} day |||| %{smart_count} days,,PreviewTransaction
+%{smart_count} hour |||| %{smart_count} hours,,PreviewTransaction
+%{smart_count} minute |||| %{smart_count} minutes,,PreviewTransaction
+%{smart_count} second |||| %{smart_count} seconds,,PreviewTransaction
+Preview Transaction,,PreviewTransaction
+You're sending,,PreviewTransaction
+From,,PreviewTransaction
+To,,PreviewTransaction
+Amount,,PreviewTransaction
+Reference,,PreviewTransaction
+Expires,,PreviewTransaction
+Send transaction,,PreviewTransaction
 Select backup directory,Wybierz miejsce na kopię zapasowa,Settings.Application
 Backup directory,Miejsce na kopie zapasową,Settings.Application
 Browse,Przeglądaj,Settings.Application
@@ -241,23 +280,27 @@ Allow the presence of SymLinks in the module directory,Zezwalaj na obecność Sy
 Fake Test Transactions,Nieprawdziwe transakcje testowe,Settings.Application
 Display Test Transactions on the Transactions page,Pokazuj transakcje testowe na stronie transakcji,Settings.Application
 Language,Język,Settings.Application
-Exit manual Core mode?,Czy chcesz wyjśc z ręcznego trybu daemon?,Settings.Core
+Exit remote Core mode?,,Settings.Core
 (This will restart your Core),(Core zostanie zrestartowany),Settings.Core
-Enter manual Core mode?,Czy chcesz wejść w reczny tryb deamon?,Settings.Core
+Enter remote Core mode?,,Settings.Core
 Reload transaction history,Odśwież historię transakcji,Settings.Core
 Clear peer connections,Wyczyść połączenia peerów,Settings.Core
+Resync database,,Settings.Core
+Nexus Core will be restarted. Lite mode database will be deleted and resynchronized from the beginning.,,Settings.Core
+Embedded Core,,Settings.Core
+Remote Core,,Settings.Core
+Lite mode,,Settings.Core
+"Nexus Core under lite mode runs lighter and synchronize much faster, but you will <b>NOT</b> be able to stake, mine, or switch the wallet to Legacy Mode.",,Settings.Core
+Multi-user,,Settings.Core
+Allow multiple logged in users at the same time. Mining and staking will be unavailable.,,Settings.Core
+Enable staking,Zezwól na staking,Settings.Core
+Enable/Disable staking on the wallet.,Włącz/Wyłącz staking na portfelu.,Settings.Core
+Pooled staking,,Settings.Core
+"Pooled staking is a decentralized and trust-less mechanism allowing you to use the balances of others to increase your chances of finding a stake block. All participants receive their staking rewards and build trust, regardless of which user mines the block. A small portion of each reward is paid to the block finder by all pool participants.",,Settings.Core
 Enable mining,Zezwól na Mining,Settings.Core
 Enable/Disable mining to the wallet.,Włącz/Wyłącz mining na portfelu.,Settings.Core
 Mining IP Whitelist,Biała lista IP górnictwa,Settings.Core
 IP/Ports allowed to mine to. Separate by <b>;</b> . Wildcards supported only in IP,,Settings.Core
-Enable staking,Zezwól na staking,Settings.Core
-Enable/Disable staking on the wallet.,Włącz/Wyłącz staking na portfelu.,Settings.Core
-Rescan wallet,Rescan portfela,Settings.Core
-"Used to correct transaction/balance issues, scans over every block in the database. Could take up to 10 minutes.","Użyty do skorygowania transakcji/balansu usterki, Skanowanie każdego bloku w bazie danych. Operacja może potrwać do 10 minut.",Settings.Core
-Restart Nexus core with -walletclean parameter to clean out and reload all transaction history,,Settings.Core
-Reload,,Settings.Core
-Clear all stored peer connections and restart Nexus,,Settings.Core
-Clear,,Settings.Core
 Verbose level,,Settings.Core
 Verbose level for logs.,,Settings.Core
 Core Data Directory,,Settings.Core
@@ -267,23 +310,48 @@ The iteration of Testnet to connect to.,,Settings.Core
 Turn Off,,Settings.Core
 Avatar Mode,,Settings.Core
 Disabling Avatar will make the core use a separate change key,,Settings.Core
-Manual Core mode,Manualny tryb daemon,Settings.Core
-Enable manual Core mode if you are running the Nexus Core manually outside of the wallet.,Uruchom ręcznie daemon mode jeśli Daemon działa manualnie poza portfelem.,Settings.Core
-Username,Nazwa Użytkownika,Settings.Core
-Username configured for manual Core.,Nazwa użytkownika skonfigurowana dla manual daemon.,Settings.Core
-Password,Hasło,Settings.Core
-Password configured for manual Core.,Hasło skonfigurowane dla manual daemon.,Settings.Core
+Rescan wallet,Rescan portfela,Settings.Core
+"Used to correct transaction/balance issues, scans over every block in the database. Could take up to 10 minutes.","Użyty do skorygowania transakcji/balansu usterki, Skanowanie każdego bloku w bazie danych. Operacja może potrwać do 10 minut.",Settings.Core
+Restart Nexus core with -walletclean parameter to clean out and reload all transaction history,,Settings.Core
+Reload,,Settings.Core
+Clear all stored peer connections and restart Nexus,,Settings.Core
+Clear,,Settings.Core
+Delete lite mode database and resynchronize from the beginning,,Settings.Core
+Resynchronize,,Settings.Core
 IP address,Adres IP,Settings.Core
-IP address configured for manual Core.,Adres IP skonfigurowany dla manual daemon.,Settings.Core
-Port,Port,Settings.Core
-Port configured for manual Core.,Port skonfigurowany dla manual daemon.,Settings.Core
+Remote Core IP address,,Settings.Core
+API SSL,,Settings.Core
+Use SSL for API calls,,Settings.Core
+API Port,,Settings.Core
+Nexus API server Port,,Settings.Core
+API SSL Port,,Settings.Core
+Nexus API server SSL Port,,Settings.Core
+API Username,,Settings.Core
+Nexus API server Username,,Settings.Core
+API Password,,Settings.Core
+Nexus API server Password,,Settings.Core
+RPC SSL,,Settings.Core
+Use SSL for RPC calls,,Settings.Core
+RPC Port,,Settings.Core
+Nexus RPC server Port,,Settings.Core
+RPC SSL Port,,Settings.Core
+Nexus RPC server SSL Port,,Settings.Core
+RPC Username,,Settings.Core
+Nexus RPC server Username,,Settings.Core
+RPC Password,,Settings.Core
+Nexus RPC server Password,,Settings.Core
+Log out on close,,Settings.Core
+Log out of all users before closing the wallet,,Settings.Core
 Restart Core for these changes to take effect,,Settings.Core
 Save settings,,Settings.Core
 Verbose level is required,,Settings.Core
-Manual Core username is required,Wymagana jest Nazwa Użytkownika do Manual daemon username,Settings.Core
-Manual Core password is required,Wymagane jest Manual daemon hasło,Settings.Core
-Manual Core IP is required,Wymagane jest Manual daemon IP,Settings.Core
-Manual Core port is required,Wymagany jest Manual daemon port,Settings.Core
+Remote Core IP is required,,Settings.Core
+RPC port is required,,Settings.Core
+RPC username is required,,Settings.Core
+RPC password is required,,Settings.Core
+API port is required,,Settings.Core
+API username is required,,Settings.Core
+API password is required,,Settings.Core
 Core settings saved,Core ustawienia zapisane,Settings.Core
 Restarting Core...,,Settings.Core
 Error rescanning,Błąd przy rescanie,Settings.Core
@@ -395,7 +463,6 @@ Overview Display,Widok ogólny,Settings.Style
 Nexus Addresses format,Format adresów Nexus,Settings.Style
 Choose your Nexus Address display preference,Wybierz preferowany format wyświetlania adresów Nexus,Settings.Style
 Sample Address,Przykładowy adres,Settings.Style
-This is your Default Address,To jest Twój domyślny adres,Settings.Style
 Theme,Motyw,Settings.Style
 Select Wallet Theme,Wybierz skórkę portfela,Settings.Style
 Background,Tło,Settings.Style
@@ -498,14 +565,19 @@ The amount of NXS currently staked in the trust account,Kwota NXS aktualnie na k
 Immature,Niedojrzała,Transactions.Balances
 The sum of all coinbase transactions that have not yet reached maturity,"Suma wszystkich transakcji na podstawie monet, które nie osiągnęły jeszcze dojrzałości",Transactions.Balances
 Unnamed account,Konto bez nazwy,User.Accounts
+Rename,,User.Accounts
 Details,Szczegóły,User.Accounts
 History,Historia,User.Accounts
+<b>%{account_name}</b> account address,,User.Accounts
+Unnamed,,User.Accounts
 Create new account,Utwórz nowe konto,User.Accounts
 Account Details,Szczegóły konta,User.Accounts.AccountDetails
 Account name,Nazwa Konta,User.Accounts.AccountDetails
+Unnamed,,User.Accounts.AccountDetails
 Created at,Utworzono w,User.Accounts.AccountDetails
 Last modified,Ostatnio zmodyfikowane,User.Accounts.AccountDetails
 Token name,Nazwa tokenu,User.Accounts.AccountDetails
+Data,,User.Accounts.AccountDetails
 Total account balance,Całkowite saldo konta,User.Accounts.AccountDetails
 Available balance,Dostępne saldo,User.Accounts.AccountDetails
 Send %{token_name},,User.Accounts.AccountDetails
@@ -520,20 +592,32 @@ Adjust stake amount,Dostosuj saldo stake,User.Accounts.AccountDetails
 Time,,User.Accounts.AccountHistory
 Operation,,User.Accounts.AccountHistory
 From,Od,User.Accounts.AccountHistory
-staked,stawka,User.Accounts.AccountHistory
-mined,wykopane,User.Accounts.AccountHistory
+staking,,User.Accounts.AccountHistory
+mining,,User.Accounts.AccountHistory
 To,Do,User.Accounts.AccountHistory
 Change,Zmiana,User.Accounts.AccountHistory
 Account History,,User.Accounts.AccountHistory
 Loading account history,,User.Accounts.AccountHistory
-Account balance(,,User.Accounts.AccountHistory
-Show %{tokenName},,User.Accounts.AccountHistory
 Account balance,,User.Accounts.AccountHistory
+Show %{tokenName},,User.Accounts.AccountHistory
 Total,,User.Accounts.AccountHistory
 Available,,User.Accounts.AccountHistory
 Pending,,User.Accounts.AccountHistory
 Unconfirmed,,User.Accounts.AccountHistory
 Stake,Stawka,User.Accounts.AccountHistory
+Rename account,,RenameAccount
+Account name,,RenameAccount
+Account renaming fee,,RenameAccount
+Cancel,,RenameAccount
+Renaming,,RenameAccount
+Rename,,RenameAccount
+Account name is required,,RenameAccount
+Name already in use,,RenameAccount
+The name you entered is already in use. Please choose another name.,,RenameAccount
+Insuffient balance,,RenameAccount
+Your default account balance is not enough to pay the fee.,,RenameAccount
+Account has been renamed to %{account_name},,RenameAccount
+Error renaming account,,RenameAccount
 Unnamed asset,,User.Assets
 You own %{percentage}% of this asset,,User.Assets
 Create new asset,,User.Assets
@@ -650,10 +734,12 @@ Create a new name,,CreateName
 View name details,,User.Names
 Change register address,,User.Names
 Transfer name,,User.Names
+Unused,,User.Names
 Global,,User.Names
 Namespaced,,User.Names
 Local,,User.Names
 Create new name,,User.Names
+Show unused names,,User.Names
 You don't own any name,,User.Names
 Name Details,,NameDetails
 Change register address,,NameDetails
@@ -741,6 +827,7 @@ Enable staking,Zezwól na staking,User.Staking
 Cancel,Cofnij,User.Staking
 Status,,User.Staking
 Staking,,User.Staking
+pooled,,User.Staking
 Not staking,,User.Staking
 Stake amount,,User.Staking
 The amount of NXS currently staked in the trust account,Kwota NXS aktualnie na koncie trust,User.Staking
@@ -762,7 +849,7 @@ Account on hold for another %{stakeSeconds} Seconds,,User.Staking
 Stop staking,,User.Staking
 Start staking,,User.Staking
 Create new token,,User.Tokens
-Lookup a token,,User.Tokens
+Look up a token,,User.Tokens
 Unnamed token,,User.Tokens
  (Owned by you),,User.Tokens
 Details,Szczegóły,User.Tokens
@@ -787,13 +874,14 @@ You have successfully created token %{token} ! Would you like to make an account
 Yes,Tak,User.Tokens.NewToken
 No,Nie,User.Tokens.NewToken
 Error creating token,,User.Tokens.NewToken
-Can not find Token,,User.Tokens.SearchToken
-Lookup Token,,User.Tokens.SearchToken
-Name/Address,,User.Tokens.SearchToken
-Lookup a Token on the network,,User.Tokens.SearchToken
-Lookup this token,,User.Tokens.SearchToken
+Cannot find Token,,User.Tokens.SearchToken
+Look up token,,User.Tokens.SearchToken
+Name or address,,User.Tokens.SearchToken
+Token name/address,,User.Tokens.SearchToken
+Look up,,User.Tokens.SearchToken
 No Value,,User.Tokens.SearchToken
 Error searching for token,,User.Tokens.SearchToken
+Unknown token name/address,,User.Tokens.SearchToken
 Token Details,,User.Tokens.TokenDetails
 Token name,Nazwa tokenu,User.Tokens.TokenDetails
 Token address,,User.Tokens.TokenDetails
@@ -870,15 +958,15 @@ Are you sure you want to abort the process?,"Jesteś pewien, że chcesz przerwa�
 "No, let it continue","Nie, kontynuuj",Bootstrap
 Bootstrap Recent Database,Aktualna baza Bootstrap,Bootstrap
 Abort,Przerwij,Bootstrap
-Bootstrap process has been aborted,Proces pobierania bazy bootstrap został przerwany,Bootstrap
-Error bootstrapping recent database,Błąd podczas pobierania aktualnej bazy boostrap,Bootstrap
-Unknown error,Nieznany błąd,Bootstrap
-Recent database has been successfully bootstrapped,,Bootstrap
 Not enough disk space! Minimum 15GB of free space is required.,,Bootstrap
 Download recent database?,Pobrać aktualną bazę danych?,Bootstrap
 Downloading a recent version of the database might reduce the time it takes to synchronize your wallet,Pobranie aktualnej bazy danych może zmniejszyć czas potrzebny do zsynchronizowania portfela,Bootstrap
 "Yes, let's bootstrap it",,Bootstrap
 "No, let it sync","Nie, synchronizuj",Bootstrap
+Bootstrap process has been aborted,Proces pobierania bazy bootstrap został przerwany,Bootstrap
+Error bootstrapping recent database,Błąd podczas pobierania aktualnej bazy boostrap,Bootstrap
+Unknown error,Nieznany błąd,Bootstrap
+Recent database has been successfully bootstrapped,,Bootstrap
 Change password and PIN,,ChangePassword&PIN
 Current password,,ChangePassword&PIN
 Your current password,,ChangePassword&PIN
@@ -898,6 +986,10 @@ New PIN is required,,ChangePassword&PIN
 PIN must be at least 4 characters,,ChangePassword&PIN
 Password & PIN have been updated,,ChangePassword&PIN
 Error updating password & PIN,,ChangePassword&PIN
+Contract Details,,ContractDetails
+View transaction details,,ContractDetails
+Yes,Tak,ConfirmDialog
+No,Nie,ConfirmDialog
 Password/PIN mismatch,,ConfirmPassword&PIN
 "You have entered either your password or your PIN incorrectly, please re-check",,ConfirmPassword&PIN
 Confirm password and PIN,,ConfirmPassword&PIN
@@ -910,11 +1002,12 @@ PIN,,ConfirmPassword&PIN
 Re-enter your new PIN,,ConfirmPassword&PIN
 Re-enter your PIN,,ConfirmPassword&PIN
 Confirm,Potwierdź,ConfirmPassword&PIN
-Contract Details,,ContractDetails
-View transaction details,,ContractDetails
-Yes,Tak,ConfirmDialog
-No,Nie,ConfirmDialog
 Dismiss,Odrzuć,ErrorDialog
+Pin must be at least 4 characters,,PinDialog
+Confirm,Potwierdź,PinDialog
+Enter PIN,,PinDialog
+Your PIN,,PinDialog
+Cancel,Cofnij,PinDialog
 Dismiss,Odrzuć,SuccessDialog
 Your wallet is not encrypted!,Twój portfel nie jest zaszyfrowany!,EncryptionWarning
 It is highly recommended that you should encrypt your wallet to keep your NXS safe.,,EncryptionWarning
@@ -934,6 +1027,7 @@ Username is required,,Login
 Password is required,Wpisz hasło,Login
 PIN is required,,Login
 Logged in as %{username},,Login
+Not being fully synced may have caused this error.,,Login
 Error logging in,Błąd przy logowaniu,Login
 Migrate account,,MigrateAccount
 You have %{amount} NXS in your legacy account.,,MigrateAccount
@@ -983,16 +1077,16 @@ Error creating new address,Błąd podczas tworzenia nowego adresu,MyAddresses.Ne
 New account,,NewAccount
 Account name (%{nameFee} NXS Fee) (Optional),,NewAccount
 New account's name,,NewAccount
-Token,,NewAccount
+Token name/address,,NewAccount
 Cancel,Cofnij,NewAccount
 Creating account,,NewAccount
 Create account,,NewAccount
-Create a account without a name?,,NewAccount
+Create an account without a name?,,NewAccount
 Adding a name costs a NXS fee,,NewAccount
 That's Ok,,NewAccount
-Add Name,,NewAccount
-New account %{account} has been created,,NewAccount
 Error creating account,,NewAccount
+Unknown token name/address,,NewAccount
+New account %{account} has been created,,NewAccount
 Create new user,Stwórz nowego użytkownika,NewUser
 Username,Nazwa Użytkownika,NewUser
 A globally unique username,,NewUser
@@ -1016,11 +1110,6 @@ PIN must be at least 4 characters,,NewUser
 Error creating user,,NewUser
 User registration for %{username} has been confirmed,,NewUser
 User registration for %{username} is waiting to be confirmed on Nexus blockchain...,,NewUser
-Pin must be at least 4 characters,,PinDialog
-Confirm,Potwierdź,PinDialog
-Enter PIN,,PinDialog
-Your PIN,,PinDialog
-Cancel,Cofnij,PinDialog
 Recover password and PIN,,RecoverPassword&PIN
 Username,Nazwa Użytkownika,RecoverPassword&PIN
 Your username,,RecoverPassword&PIN

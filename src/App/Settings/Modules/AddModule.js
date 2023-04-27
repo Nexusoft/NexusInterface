@@ -1,5 +1,5 @@
 // External
-import React from 'react';
+import { useState } from 'react';
 import Dropzone from 'react-dropzone';
 import styled from '@emotion/styled';
 import { ipcRenderer } from 'electron';
@@ -51,22 +51,35 @@ const InnerMessage = styled.div(
 );
 
 /**
- * The Add Module section in Modules Settings tab
+ * Override react-dropzone's default getFilesFromEvent function because
+ * by default the full paths of dropped files are tripped off
  *
- * @class AddModule
- * @extends {React.Component}
  */
-class AddModule extends React.Component {
-  state = {
-    checking: false,
+function getFilesFromEvent(event) {
+  if (!event || !event.dataTransfer) return [];
+  if (event.type === 'drop') {
+    return Array.from(event.dataTransfer.files);
+  } else {
+    return Array.from(event.dataTransfer.items);
+  }
+}
+
+/**
+ * The Add Module section in Modules Settings tab
+ */
+export default function AddModule() {
+  const [checking, setChecking] = useState(false);
+
+  const startInstall = async (path) => {
+    setChecking(true);
+    try {
+      await installModule(path);
+    } finally {
+      setChecking(false);
+    }
   };
 
-  /**
-   * Open up a Dialog to select a module to install
-   *
-   * @memberof AddModule
-   */
-  browseFiles = async () => {
+  const browseFiles = async () => {
     const paths = await ipcRenderer.invoke('show-open-dialog', {
       title: __('Select module archive file'),
       properties: ['openFile'],
@@ -78,131 +91,74 @@ class AddModule extends React.Component {
       ],
     });
     if (paths && paths[0]) {
-      this.startInstall(paths[0]);
+      startInstall(paths[0]);
     }
   };
 
-  /**
-   * Open up a Dialog to select a directory of a module to install
-   *
-   * @memberof AddModule
-   */
-  browseDirectories = async () => {
+  const browseDirectories = async () => {
     const paths = await ipcRenderer.invoke('show-open-dialog', {
       title: __('Select module directory'),
       properties: ['openDirectory'],
     });
     if (paths && paths[0]) {
-      this.startInstall(paths[0]);
+      startInstall(paths[0]);
     }
   };
 
-  /**
-   * Override react-dropzone's default getFilesFromEvent function because
-   * by default the full paths of dropped files are tripped off
-   *
-   * @memberof AddModule
-   */
-  getFilesFromEvent = event => {
-    if (!event || !event.dataTransfer) return [];
-    if (event.type === 'drop') {
-      return Array.from(event.dataTransfer.files);
-    } else {
-      return Array.from(event.dataTransfer.items);
-    }
-  };
-
-  /**
-   * Handel the file drop event
-   *
-   * @memberof AddModule
-   */
-  handleDrop = acceptedFiles => {
+  const handleDrop = (acceptedFiles) => {
     if (acceptedFiles && acceptedFiles.length > 0) {
-      this.startInstall(acceptedFiles[0].path);
+      startInstall(acceptedFiles[0].path);
     }
   };
 
-  /**
-   * Install the module code into the wallet
-   *
-   * @memberof AddModule
-   */
-  startInstall = async path => {
-    this.setState({ checking: true });
-    try {
-      await installModule(path);
-    } finally {
-      this.setState({ checking: false });
-    }
-  };
-
-  /**
-   * Component's Renderable JSX
-   *
-   * @returns
-   * @memberof AddModule
-   */
-  render() {
-    const { checking } = this.state;
-
-    return (
-      <Dropzone
-        getFilesFromEvent={this.getFilesFromEvent}
-        onDrop={this.handleDrop}
-      >
-        {({ getRootProps, getInputProps, isDragActive }) => (
-          <AddModuleComponent
-            {...getRootProps()}
-            onClick={
-              /* disable dropzone's default file browsing dialog on click */ () => {}
-            }
-            legend={
-              <>
-                <Icon icon={plusCircleIcon} />
-                <span className="v-align space-left">{__('Add Module')}</span>
-              </>
-            }
-            active={isDragActive || checking}
-          >
-            <InnerMessage noPointerEvents={isDragActive || checking}>
-              {checking ? (
-                <div>{__('Checking module')}...</div>
-              ) : isDragActive ? (
-                <div>{__('Drop here to install')}</div>
-              ) : (
+  return (
+    <Dropzone getFilesFromEvent={getFilesFromEvent} onDrop={handleDrop}>
+      {({ getRootProps, getInputProps, isDragActive }) => (
+        <AddModuleComponent
+          {...getRootProps()}
+          onClick={
+            /* disable dropzone's default file browsing dialog on click */ () => {}
+          }
+          legend={
+            <>
+              <Icon icon={plusCircleIcon} />
+              <span className="v-align ml0_4">{__('Add Module')}</span>
+            </>
+          }
+          active={isDragActive || checking}
+        >
+          <InnerMessage noPointerEvents={isDragActive || checking}>
+            {checking ? (
+              <div>{__('Checking module')}...</div>
+            ) : isDragActive ? (
+              <div>{__('Drop here to install')}</div>
+            ) : (
+              <div>
                 <div>
-                  <div>
-                    {__(
-                      "Select module's <file>archive file</file> or <dir>directory</dir>",
-                      undefined,
-                      {
-                        file: txt => (
-                          <Button skin="hyperlink" onClick={this.browseFiles}>
-                            {txt}
-                          </Button>
-                        ),
-                        dir: txt => (
-                          <Button
-                            skin="hyperlink"
-                            onClick={this.browseDirectories}
-                          >
-                            {txt}
-                          </Button>
-                        ),
-                      }
-                    )}
-                  </div>
-                  <div>{__('or drag and drop it here')}</div>
+                  {__(
+                    "Select module's <file>archive file</file> or <dir>directory</dir>",
+                    undefined,
+                    {
+                      file: (txt) => (
+                        <Button skin="hyperlink" onClick={browseFiles}>
+                          {txt}
+                        </Button>
+                      ),
+                      dir: (txt) => (
+                        <Button skin="hyperlink" onClick={browseDirectories}>
+                          {txt}
+                        </Button>
+                      ),
+                    }
+                  )}
                 </div>
-              )}
-            </InnerMessage>
-            <input {...getInputProps()} />
-          </AddModuleComponent>
-        )}
-      </Dropzone>
-    );
-  }
+                <div>{__('or drag and drop it here')}</div>
+              </div>
+            )}
+          </InnerMessage>
+          <input {...getInputProps()} />
+        </AddModuleComponent>
+      )}
+    </Dropzone>
+  );
 }
-
-export default AddModule;

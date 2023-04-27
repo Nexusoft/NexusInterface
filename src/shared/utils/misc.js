@@ -9,7 +9,7 @@
  * - Make sure this note also presents in other files which are imported here.
  */
 
-export const newUID = (function() {
+export const newUID = (function () {
   let counter = 1;
   return () => `uid-${counter++}`;
 })();
@@ -27,17 +27,19 @@ export function passRef(el, ref) {
   }
 }
 
+export function refs(...list) {
+  return (el) => {
+    list.forEach((ref) => {
+      passRef(el, ref);
+    });
+  };
+}
+
 export async function showDesktopNotif(title, message) {
   const result = await Notification.requestPermission();
   if (result === 'granted') {
     new Notification(title, { body: message });
   }
-}
-
-export function getAssetData(asset) {
-  if (!asset) return asset;
-  const { name, created, modified, address, owner, ownership, ...data } = asset;
-  return data;
 }
 
 /**
@@ -77,4 +79,56 @@ export function getDeep(object, path) {
     }
   }
   return result;
+}
+
+export function timeToText(timeSpan) {
+  let string = '';
+  let seconds = timeSpan;
+
+  const days = Math.floor(seconds / 86400);
+  if (days) {
+    string += __('%{smart_count} day |||| %{smart_count} days', days) + ' ';
+  }
+  seconds %= 86400;
+
+  const hours = Math.floor(seconds / 3600);
+  if (hours) {
+    string += __('%{smart_count} hour |||| %{smart_count} hours', hours) + ' ';
+  }
+  seconds %= 3600;
+
+  const minutes = Math.floor(seconds / 60);
+  if (minutes) {
+    string +=
+      __('%{smart_count} minute |||| %{smart_count} minutes', minutes) + ' ';
+  }
+
+  seconds %= 60;
+  if (seconds) {
+    string +=
+      __('%{smart_count} second |||| %{smart_count} seconds', seconds) + ' ';
+  }
+
+  if (days || minutes || hours) {
+    string += `(${__(
+      '%{smart_count} second |||| %{smart_count} seconds',
+      timeSpan
+    )})`;
+  }
+  return string;
+}
+
+export function timeToObject(timeSpan) {
+  let seconds = timeSpan;
+
+  const days = Math.floor(seconds / 86400);
+  seconds %= 86400;
+
+  const hours = Math.floor(seconds / 3600);
+  seconds %= 3600;
+
+  const minutes = Math.floor(seconds / 60);
+  seconds %= 60;
+
+  return { days, hours, minutes, seconds };
 }

@@ -8,35 +8,36 @@
  * - Make sure a similar note also presents in other files which are imported here.
  */
 
-import React from 'react';
-import ReactDOM from 'react-dom';
-import * as ReactRouterDOM from 'react-router-dom';
-import * as Redux from 'redux';
-import * as ReactRedux from 'react-redux';
-import createCache from '@emotion/cache';
-import * as core from '@emotion/core';
+import * as React from 'react';
+import ReactDefault from 'react';
+import * as jsxRuntime from 'react/jsx-runtime';
+import * as jsxDevRuntime from 'react/jsx-dev-runtime';
+import * as ReactDOM from 'react-dom';
+import * as ReactDOMClient from 'react-dom/client';
+import * as ReactDOMServer from 'react-dom/server';
+import cache from '@emotion/cache';
+import * as react from '@emotion/react';
 import styled from '@emotion/styled';
-import * as theming from 'emotion-theming';
-import { ipcRenderer, clipboard } from 'electron';
-import * as ReduxForm from 'redux-form';
+import { ipcRenderer } from 'electron';
 
 import GlobalStyles from 'components/GlobalStyles';
+import ThemeController from 'components/ThemeController';
 import Panel from 'components/Panel';
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
 import TextField from 'components/TextField';
 import Switch from 'components/Switch';
 import Select from 'components/Select';
-import Link from 'components/Link';
 import Icon from 'components/Icon';
-import Tab from 'components/Tab';
+import HorizontalTab from 'components/HorizontalTab';
+import VerticalTab from 'components/VerticalTab';
 import FieldSet from 'components/FieldSet';
-import * as color from 'utils/color';
 import AutoSuggest from 'components/AutoSuggest';
-import ModuleModal from 'components/ModuleModal';
-import DateTime from 'components/DateTimePicker';
+import Modal from 'components/Modal';
 import FormField from 'components/FormField';
 import Arrow from 'components/Arrow';
+import Dropdown from 'components/Dropdown';
+import * as color from 'utils/color';
 
 const newId = (() => {
   let id = 0;
@@ -46,64 +47,68 @@ const newId = (() => {
 global.NEXUS = {
   walletVersion: APP_VERSION,
   libraries: {
-    React,
-    ReactDOM,
-    ReactRouterDOM,
-    Redux,
-    ReduxForm,
-    ReactRedux,
-    emotion: { core, styled, theming, createCache },
+    React: { ...React, jsxDevRuntime, jsxRuntime, default: ReactDefault },
+    ReactDOM: { ...ReactDOM, client: ReactDOMClient, server: ReactDOMServer },
+    emotion: { react, styled, cache },
+  },
+  components: {
+    Arrow,
+    AutoSuggest,
+    Button,
+    Dropdown,
+    FieldSet,
+    FormField,
+    GlobalStyles,
+    Icon,
+    Modal,
+    Panel,
+    Select,
+    Switch,
+    HorizontalTab,
+    VerticalTab,
+    TextField,
+    ThemeController,
+    Tooltip,
   },
   utilities: {
-    color,
-    copyToClipboard: text => {
-      if (typeof text !== 'string') {
-        throw new Error(
-          'Expected `text` to be `string` type, found: ' + typeof text
-        );
-      }
-      clipboard.writeText(text);
-    },
-    sendNXS: (recipients, message, tritium) => {
-      if (!Array.isArray(recipients)) {
-        throw new Error(
-          'Expected `recipients` to be `array` type, found: ' + typeof params
-        );
-      }
-      ipcRenderer.sendToHost('send-nxs', recipients, message, tritium);
-    },
-    showNotification: options => {
+    // `options` shape
+    //  For Legacy mode:
+    //  {
+    //    sendFrom,
+    //    recipients: [{
+    //      address
+    //    }]
+    //  }
+    //  For Tritium mode:
+    //  {
+    //    sendFrom,
+    //    recipients: [{
+    //      address,
+    //      amount,
+    //      reference,
+    //      expireDays,
+    //      expireHours,
+    //      expireMinutes,
+    //      expireSeconds,
+    //    }],
+    //    advancedOptions, // Boolean - whether reference and expire options take effect
+    //  }
+    send: (options) => {
       if (!options) {
         throw new Error('`options` is required');
       }
       if (typeof options !== 'object') {
         throw new Error(
-          'Expected `options` to be `object` type, found: ' + typeof options
+          'Expected `options` to be an `object`, found: ' + typeof options
         );
       }
-      ipcRenderer.sendToHost('show-notification', options);
-    },
-    showErrorDialog: options => {
-      if (!options) {
-        throw new Error('`options` is required');
-      }
-      if (typeof options !== 'object') {
+      if (!Array.isArray(options.recipients)) {
         throw new Error(
-          'Expected `options` to be `object` type, found: ' + typeof options
+          'Expected `options.recipients` to be a `array`, found: ' +
+            typeof options.recipients
         );
       }
-      ipcRenderer.sendToHost('show-error-dialog', options);
-    },
-    showSuccessDialog: options => {
-      if (!options) {
-        throw new Error('`options` is required');
-      }
-      if (typeof options !== 'object') {
-        throw new Error(
-          'Expected `options` to be `object` type, found: ' + typeof options
-        );
-      }
-      ipcRenderer.sendToHost('show-success-dialog', options);
+      ipcRenderer.sendToHost('send', options);
     },
     rpcCall: (command, params) => {
       if (!command) {
@@ -111,12 +116,12 @@ global.NEXUS = {
       }
       if (typeof command !== 'string') {
         throw new Error(
-          'Expected `command` to be `string` type, found: ' + typeof command
+          'Expected `command` to be a `string`, found: ' + typeof command
         );
       }
       if (typeof params !== 'undefined' && !Array.isArray(params)) {
         throw new Error(
-          'Expected `params` to be `array` or `undefined` type, found: ' +
+          'Expected `params` to be a `array` `undefined` type, found: ' +
             typeof params
         );
       }
@@ -138,7 +143,7 @@ global.NEXUS = {
       }
       if (typeof endpoint !== 'string') {
         throw new Error(
-          'Expected `endpoint` to be `string` type, found: ' + typeof endpoint
+          'Expected `endpoint` to be a `string`, found: ' + typeof endpoint
         );
       }
       const callId = newId();
@@ -159,7 +164,7 @@ global.NEXUS = {
       }
       if (typeof endpoint !== 'string') {
         throw new Error(
-          'Expected `endpoint` to be `string` type, found: ' + typeof endpoint
+          'Expected `endpoint` to be a `string`, found: ' + typeof endpoint
         );
       }
       const callId = newId();
@@ -177,46 +182,77 @@ global.NEXUS = {
         ipcRenderer.sendToHost('secure-api-call', endpoint, params, callId);
       });
     },
-    proxyRequest: (url, options) => {
+    proxyRequest: (url, config) => {
       if (!url) {
         throw new Error('`url` is required');
       }
       if (typeof url !== 'string') {
         throw new Error(
-          'Expected `url` to be `string` type, found: ' + typeof url
+          'Expected `url` to be a `string`, found: ' + typeof url
         );
       }
-      if (!options) {
-        throw new Error('`options` is required');
+      if (!config) {
+        throw new Error('`config` is required');
       }
-      if (typeof options !== 'object' && typeof options !== 'undefined') {
+      if (typeof config !== 'object' && typeof config !== 'undefined') {
         throw new Error(
-          'Expected `options` to be `object` or `undefined` type, found: ' +
-            typeof options
+          'Expected `config` to be an `object` `undefined` type, found: ' +
+            typeof config
         );
       }
-      const requestId = newId();
-      return new Promise((resolve, reject) => {
-        ipcRenderer.once(
-          `proxy-response:${requestId}`,
-          (event, err, response) => {
-            if (err) {
-              reject(err);
-            } else {
-              resolve(response);
-            }
-          }
-        );
-        ipcRenderer.sendToHost('proxy-request', url, options, requestId);
-      });
+      return ipcRenderer.invoke('proxy-request', url, config);
     },
-    confirm: options => {
+    showNotification: (options) => {
       if (!options) {
         throw new Error('`options` is required');
       }
       if (typeof options !== 'object') {
         throw new Error(
-          'Expected `options` to be `object` type, found: ' + typeof options
+          'Expected `options` to be an `object`, found: ' + typeof options
+        );
+      }
+      ipcRenderer.sendToHost('show-notification', options);
+    },
+    showErrorDialog: (options) => {
+      if (!options) {
+        throw new Error('`options` is required');
+      }
+      if (typeof options !== 'object') {
+        throw new Error(
+          'Expected `options` to be an `object`, found: ' + typeof options
+        );
+      }
+      ipcRenderer.sendToHost('show-error-dialog', options);
+    },
+    showSuccessDialog: (options) => {
+      if (!options) {
+        throw new Error('`options` is required');
+      }
+      if (typeof options !== 'object') {
+        throw new Error(
+          'Expected `options` to be an `object`, found: ' + typeof options
+        );
+      }
+      ipcRenderer.sendToHost('show-success-dialog', options);
+    },
+    showInfoDialog: (options) => {
+      if (!options) {
+        throw new Error('`options` is required');
+      }
+      if (typeof options !== 'object') {
+        throw new Error(
+          'Expected `options` to be an `object`, found: ' + typeof options
+        );
+      }
+      ipcRenderer.sendToHost('show-info-dialog', options);
+    },
+    confirm: (options) => {
+      if (!options) {
+        throw new Error('`options` is required');
+      }
+      if (typeof options !== 'object') {
+        throw new Error(
+          'Expected `options` to be an `object`, found: ' + typeof options
         );
       }
       const confirmationId = newId();
@@ -227,88 +263,75 @@ global.NEXUS = {
         ipcRenderer.sendToHost('confirm', options, confirmationId);
       });
     },
-    updateState: state => {
+    updateState: (state) => {
       if (typeof state !== 'object') {
         throw new Error(
-          'Expected `state` to be `object` type, found: ' + typeof state
+          'Expected `state` to be an `object`, found: ' + typeof state
         );
       }
       ipcRenderer.sendToHost('update-state', state);
     },
-    updateStorage: data => {
+    updateStorage: (data) => {
       if (typeof data !== 'object') {
         throw new Error(
-          'Expected `data` to be `object` type, found: ' + typeof data
+          'Expected `data` to be an `object`, found: ' + typeof data
         );
       }
       ipcRenderer.sendToHost('update-storage', data);
     },
-    onceInitialize: listener => {
+    onceInitialize: (listener) => {
       if (typeof listener !== 'function') {
         throw new Error(
-          'Expected `listener` to be `function` type, found: ' + typeof listener
+          'Expected `listener` to be a `function`, found: ' + typeof listener
         );
       }
       ipcRenderer.once('initialize', (event, initialData) =>
         listener(initialData)
       );
     },
-    onThemeUpdated: listener => {
+    onWalletDataUpdated: (listener) => {
       if (typeof listener !== 'function') {
         throw new Error(
-          'Expected `listener` to be `function` type, found: ' + typeof listener
+          'Expected `listener` to be a `function`, found: ' + typeof listener
         );
       }
-      ipcRenderer.on('theme-updated', (event, theme) => listener(theme));
-    },
-    onSettingsUpdated: listener => {
-      if (typeof listener !== 'function') {
-        throw new Error(
-          'Expected `listener` to be `function` type, found: ' + typeof listener
-        );
-      }
-      ipcRenderer.on('settings-updated', (event, settings) =>
-        listener(settings)
+      ipcRenderer.on('wallet-data-updated', (event, walletData) =>
+        listener(walletData)
       );
     },
-    onCoreInfoUpdated: listener => {
-      if (typeof listener !== 'function') {
+    copyToClipboard: (text) => {
+      if (typeof text !== 'string') {
         throw new Error(
-          'Expected `listener` to be `function` type, found: ' + typeof listener
+          'Expected `text` to be a `string`, found: ' + typeof text
         );
       }
-      ipcRenderer.on('core-info-updated', (event, coreInfo) =>
-        listener(coreInfo)
-      );
+      ipcRenderer.sendToHost('copy-to-clipboard', text);
     },
-    onUserStatusUpdated: listener => {
-      if (typeof listener !== 'function') {
+    openInBrowser: (url) => {
+      if (typeof url !== 'string') {
         throw new Error(
-          'Expected `listner` to be a `function` type, found: ' +
-            typeof listener
+          'Expected `url` to be a `string`, found: ' + typeof text
         );
       }
-      ipcRenderer.on('user-status-updated', (event, userStatus) =>
-        listener(userStatus)
-      );
+      ipcRenderer.sendToHost('open-in-browser', url);
     },
-  },
-  components: {
-    GlobalStyles,
-    Icon,
-    Panel,
-    AutoSuggest,
-    FieldSet,
-    Switch,
-    Modal: ModuleModal,
-    Tooltip,
-    Select,
-    DateTime,
-    TextField,
-    FormField,
-    Link,
-    Arrow,
-    Tab,
-    Button,
+    color,
   },
 };
+
+// Open all external URLs on OS default browser instead of inside the wallet itself
+const { origin } = location;
+document.addEventListener('click', (event) => {
+  const anchor = event.target.closest('a');
+  if (!anchor) return;
+
+  const { href } = anchor;
+  if (!anchor.href.startsWith(origin)) {
+    event.preventDefault();
+    ipcRenderer.sendToHost('open-external', href);
+  }
+});
+
+document.addEventListener('contextmenu', (event) => {
+  ipcRenderer.sendToHost('context-menu');
+});

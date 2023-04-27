@@ -1,7 +1,6 @@
-import React from 'react';
 import { useSelector } from 'react-redux';
 
-import DropdownMenu from 'components/DropdownMenu';
+import Dropdown from 'components/Dropdown';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
 import SetRecoveryModal from 'components/SetRecoveryModal';
@@ -11,14 +10,38 @@ import menuIcon from 'icons/menu.svg';
 
 __ = __context('User');
 
-const UserOptions = () => {
+export default function UserOptions() {
   const hasRecoveryPhrase = useSelector(
-    ({ user: { status } }) => !!(status && status.recovery)
+    ({ user: { profileStatus } }) => !!profileStatus?.recovery
   );
 
   return (
-    <DropdownMenu
-      renderControl={({ open, controlRef, openDropdown }) => (
+    <Dropdown
+      dropdown={({ closeDropdown }) => (
+        <>
+          <Dropdown.MenuItem
+            onClick={() => {
+              closeDropdown();
+              openModal(ChangePasswordPinModal);
+            }}
+          >
+            {__('Change password & PIN')}
+          </Dropdown.MenuItem>
+
+          <Dropdown.MenuItem
+            onClick={() => {
+              closeDropdown();
+              openModal(SetRecoveryModal);
+            }}
+          >
+            {hasRecoveryPhrase
+              ? __('Change recovery phrase')
+              : __('Set recovery phrase')}
+          </Dropdown.MenuItem>
+        </>
+      )}
+    >
+      {({ controlRef, openDropdown }) => (
         <Button
           skin="plain"
           ref={controlRef}
@@ -28,31 +51,6 @@ const UserOptions = () => {
           <Icon icon={menuIcon} />
         </Button>
       )}
-      renderDropdown={({ closeDropdown }) => (
-        <>
-          <DropdownMenu.MenuItem
-            onClick={() => {
-              closeDropdown();
-              openModal(ChangePasswordPinModal);
-            }}
-          >
-            {__('Change password & PIN')}
-          </DropdownMenu.MenuItem>
-
-          <DropdownMenu.MenuItem
-            onClick={() => {
-              closeDropdown();
-              openModal(SetRecoveryModal);
-            }}
-          >
-            {hasRecoveryPhrase
-              ? __('Change recovery phrase')
-              : __('Set recovery phrase')}
-          </DropdownMenu.MenuItem>
-        </>
-      )}
-    />
+    </Dropdown>
   );
-};
-
-export default UserOptions;
+}

@@ -35,35 +35,36 @@ Wallet is not staking,Staking på lommeboken er ikke aktivert,Header
 Checking sync status,Kontrollerer synkroniseringsstatus,Header
 Synchronizing,Synkroniserer,Header
 Synchronized,Synkronisert,Header
+pooled,,Header
 You're not logged in,,Header
 You are staking but have not received a block in 30 minutes!,,Header
-Accounts,,Header.UserDropdown
-Tokens,,Header.UserDropdown
-Set recovery phrase,,Header.UserDropdown
-Log out,,Header.UserDropdown
-Log in,,Header.UserDropdown
-Create new user,,Header.UserDropdown
-Overview,Oversikt,NavigationBar
-User,,NavigationBar
-Send NXS,Send NXS,NavigationBar
-Send,Send,NavigationBar
-Transactions,Transaksjoner,NavigationBar
-Address Book,Adressebok,NavigationBar
-Settings,Innstillinger,NavigationBar
-Console,Konsoll,NavigationBar
+Switching...,,
+Active,,
+Switch,,
+Switch user,,
 Closing Nexus Wallet,Lukker Nexus Lommebok,
 Warning,,
 IMPROPER USE OF THIS SOFTWARE COULD LEAD TO PERMANENT LOSS OF COIN.,,
 BACKUP YOUR WALLET OFTEN AND KEEP YOUR PASSWORDS SAFE.,,
 I understand the risk,,
-Tritium Mode,Tritium Modus,
-Your wallet is now in Tritium Mode!,,
-"Tritium Mode is currently in early development, therefore not all Tritium features are supported by the user interface. If you want to access a Tritium feature that hasn't had a user interface yet, you can go to Console/Tritium Console, or use any HTTP client to call Nexus APIs directly.",,
-"If you need to switch back to Legacy Mode, you can select ""%{menu}"" menu option at any time.",,
-File,Fil,
-Switch to Legacy Mode,,
-Continue to Tritium Mode,,
 Close,Lukk,
+Remote Core is disconnected,,
+Connecting to Nexus Core...,Kobler til Nexus Kjerne...,
+Nexus Core is stopped,Nexus Kjernen har stoppet,
+Address has been copied to clipboard,Adressen har blitt kopiert til utklippstavlen,
+Copy to clipboard,Kopier til utklippstavlen,
+Click to copy to clipboard,,
+Show QR code,,
+Log in,,
+No Rows Found,Ingen rader funnet,
+Page,Side,
+rows,,
+Previous,Forrige,
+Next,Neste,
+Use virtual keyboard,,
+<token_name></token_name> token,,
+Unnamed token,,
+Switch to Legacy Mode,,
 Are you sure you want to switch to Legacy Mode?,,
 Switch to Tritium Mode,,
 Start Nexus Core,Start Nexus Kjerne,
@@ -98,23 +99,11 @@ There are currently no updates available,,
 Checking for Updates...,Ser etter oppdateringer...,
 Update available! Downloading...,Oppdatering er tilgjengelig! Laster ned...,
 Quit and install update...,Lukk og innstaller oppdatering...,
+File,Fil,
 Edit,Rediger,
 Settings,Innstillinger,
 View,Vis,
 Help,Hjelp,
-Manual Core is disconnected,,
-Connecting to Nexus Core...,Kobler til Nexus Kjerne...,
-Nexus Core is stopped,Nexus Kjernen har stoppet,
-Address has been copied to clipboard,Adressen har blitt kopiert til utklippstavlen,
-Copy to clipboard,Kopier til utklippstavlen,
-Click to copy to clipboard,,
-Log in,,
-No Rows Found,Ingen rader funnet,
-Page,Side,
-rows,,
-Previous,Forrige,
-Next,Neste,
-Use virtual keyboard,,
 Transaction received,Transaksjons mottatt,
 Transaction sent,Transaksjon sendt,
 Genesis transaction,Genesis transaksjon,
@@ -123,6 +112,33 @@ Update available for %{smart_count} module |||| Updates available for %{smart_co
 New transaction,,
 Error,,
 Unknown error,,
+Accounts,,Header.UserDropdown
+Tokens,,Header.UserDropdown
+Set recovery phrase,,Header.UserDropdown
+Switch user,,Header.UserDropdown
+Log in to another user,,Header.UserDropdown
+Log out of all users,,Header.UserDropdown
+Log out,,Header.UserDropdown
+Log in,,Header.UserDropdown
+Create new user,,Header.UserDropdown
+Overview,Oversikt,NavigationBar
+User,,NavigationBar
+Send NXS,Send NXS,NavigationBar
+Send,Send,NavigationBar
+Transactions,Transaksjoner,NavigationBar
+Address Book,Adressebok,NavigationBar
+Settings,Innstillinger,NavigationBar
+Console,Konsoll,NavigationBar
+Lite mode,,LiteModeNotice
+Lite mode is now available on Nexus Wallet! You can choose to enable lite mode now or just ignore it. You can change your decision anytime under Settings/Core.,,LiteModeNotice
+Why you might want to enable lite mode,,LiteModeNotice
+Nexus Core would take less resources (memory and storage) to run,,LiteModeNotice
+Synchronization would be much faster,,LiteModeNotice
+Why you might NOT want to enable lite mode,,LiteModeNotice
+You would NOT be able to mine or stake,,LiteModeNotice
+Legacy Mode would be disabled,,LiteModeNotice
+Ignore,,LiteModeNotice
+Enable lite mode,,LiteModeNotice
 "Last updated
 %{time}",,Overview
 Getting next block...,Henter neste blokk...,Overview
@@ -185,17 +201,40 @@ There must be at least one recipient,Det må være minst en mottaker,Send
 Address is required,Adresse påkrevd,Send
 Transaction sent,Transaksjon sendt,Send
 Error sending NXS,Feil ved sending av NXS,Send
-%{tokenName} Amount,,Send
+Reference,,Send
+"An optional number which may be provided by the recipient to identify this transaction from the others, e.g. invoice number, order number, etc.",,Send
+Reference number (optional),,Send
+Expires in,,Send
+"The amount of time since the transaction is created after which the transaction can no longer be credited by the recipient. By default, transactions will expire in 1 day (86400 seconds).",,Send
+Days,,Send
+Hours,,Send
+Minutes,,Send
+Seconds,,Send
+Amount,,Send
 Recipient Address/Name,,Send
 Accounts,,Send
+Unnamed account,,Send
 Tokens,,Send
-More options,,Send
-Reference number,,Send
-An optional number which may be provided by the recipient to identify this transaction from the others,,Send
-"Invoice number, order number, etc... (Optional)",,Send
-Reference must be a number,,Send
-Number is too large,,Send
+Unnamed token,,Send
+Unnamed,,Send
+Invalid name/address,,Send
+Advanced options,,Send
 Address/Name is required,,Send
+Reference must be an unsigned integer,,Send
+Number is too large,,Send
+Unnamed,,PreviewTransaction
+%{smart_count} day |||| %{smart_count} days,,PreviewTransaction
+%{smart_count} hour |||| %{smart_count} hours,,PreviewTransaction
+%{smart_count} minute |||| %{smart_count} minutes,,PreviewTransaction
+%{smart_count} second |||| %{smart_count} seconds,,PreviewTransaction
+Preview Transaction,,PreviewTransaction
+You're sending,,PreviewTransaction
+From,,PreviewTransaction
+To,,PreviewTransaction
+Amount,,PreviewTransaction
+Reference,,PreviewTransaction
+Expires,,PreviewTransaction
+Send transaction,,PreviewTransaction
 Select backup directory,Velg katalog for sikkerhetskopier,Settings.Application
 Backup directory,Katalog for sikkerhetskopier,Settings.Application
 Browse,Bla gjennom,Settings.Application
@@ -236,23 +275,27 @@ Allow the presence of SymLinks in the module directory,,Settings.Application
 Fake Test Transactions,Falsk Test Transaksjoner,Settings.Application
 Display Test Transactions on the Transactions page,Vis Testtransaksjoner på Transakjsjonssiden,Settings.Application
 Language,,Settings.Application
-Exit manual Core mode?,Lukk manuell Kjerne modus?,Settings.Core
+Exit remote Core mode?,,Settings.Core
 (This will restart your Core),(Dette vil omstarte kjernen),Settings.Core
-Enter manual Core mode?,Aktiver manuell Kjerne modus?,Settings.Core
+Enter remote Core mode?,,Settings.Core
 Reload transaction history,,Settings.Core
 Clear peer connections,,Settings.Core
+Resync database,,Settings.Core
+Nexus Core will be restarted. Lite mode database will be deleted and resynchronized from the beginning.,,Settings.Core
+Embedded Core,,Settings.Core
+Remote Core,,Settings.Core
+Lite mode,,Settings.Core
+"Nexus Core under lite mode runs lighter and synchronize much faster, but you will <b>NOT</b> be able to stake, mine, or switch the wallet to Legacy Mode.",,Settings.Core
+Multi-user,,Settings.Core
+Allow multiple logged in users at the same time. Mining and staking will be unavailable.,,Settings.Core
+Enable staking,Aktiver staking,Settings.Core
+Enable/Disable staking on the wallet.,Aktiver/Deaktiver staking fra lommeboken.,Settings.Core
+Pooled staking,,Settings.Core
+"Pooled staking is a decentralized and trust-less mechanism allowing you to use the balances of others to increase your chances of finding a stake block. All participants receive their staking rewards and build trust, regardless of which user mines the block. A small portion of each reward is paid to the block finder by all pool participants.",,Settings.Core
 Enable mining,Aktiver mining,Settings.Core
 Enable/Disable mining to the wallet.,Aktiver/Deaktiver mining til lommeboken.,Settings.Core
 Mining IP Whitelist,,Settings.Core
 IP/Ports allowed to mine to. Separate by <b>;</b> . Wildcards supported only in IP,,Settings.Core
-Enable staking,Aktiver staking,Settings.Core
-Enable/Disable staking on the wallet.,Aktiver/Deaktiver staking fra lommeboken.,Settings.Core
-Rescan wallet,Skann lommeboken,Settings.Core
-"Used to correct transaction/balance issues, scans over every block in the database. Could take up to 10 minutes.",,Settings.Core
-Restart Nexus core with -walletclean parameter to clean out and reload all transaction history,,Settings.Core
-Reload,,Settings.Core
-Clear all stored peer connections and restart Nexus,,Settings.Core
-Clear,,Settings.Core
 Verbose level,,Settings.Core
 Verbose level for logs.,,Settings.Core
 Core Data Directory,,Settings.Core
@@ -262,23 +305,48 @@ The iteration of Testnet to connect to.,,Settings.Core
 Turn Off,,Settings.Core
 Avatar Mode,,Settings.Core
 Disabling Avatar will make the core use a separate change key,,Settings.Core
-Manual Core mode,,Settings.Core
-Enable manual Core mode if you are running the Nexus Core manually outside of the wallet.,Aktiver manuell Kjerne modus om du kjører Nexus Kjerne manuelt utenfor lommeboken.,Settings.Core
-Username,Brukernavn,Settings.Core
-Username configured for manual Core.,Brukernavn konfigurert for manuell Kjerne.,Settings.Core
-Password,Passord,Settings.Core
-Password configured for manual Core.,Passord konfigurert for manuell Kjerne.,Settings.Core
+Rescan wallet,Skann lommeboken,Settings.Core
+"Used to correct transaction/balance issues, scans over every block in the database. Could take up to 10 minutes.",,Settings.Core
+Restart Nexus core with -walletclean parameter to clean out and reload all transaction history,,Settings.Core
+Reload,,Settings.Core
+Clear all stored peer connections and restart Nexus,,Settings.Core
+Clear,,Settings.Core
+Delete lite mode database and resynchronize from the beginning,,Settings.Core
+Resynchronize,,Settings.Core
 IP address,IP-adresse,Settings.Core
-IP address configured for manual Core.,IP adresse konfigurert for manuell Kjerne.,Settings.Core
-Port,Port,Settings.Core
-Port configured for manual Core.,Port konfigurert for manuell Kjerne.,Settings.Core
+Remote Core IP address,,Settings.Core
+API SSL,,Settings.Core
+Use SSL for API calls,,Settings.Core
+API Port,,Settings.Core
+Nexus API server Port,,Settings.Core
+API SSL Port,,Settings.Core
+Nexus API server SSL Port,,Settings.Core
+API Username,,Settings.Core
+Nexus API server Username,,Settings.Core
+API Password,,Settings.Core
+Nexus API server Password,,Settings.Core
+RPC SSL,,Settings.Core
+Use SSL for RPC calls,,Settings.Core
+RPC Port,,Settings.Core
+Nexus RPC server Port,,Settings.Core
+RPC SSL Port,,Settings.Core
+Nexus RPC server SSL Port,,Settings.Core
+RPC Username,,Settings.Core
+Nexus RPC server Username,,Settings.Core
+RPC Password,,Settings.Core
+Nexus RPC server Password,,Settings.Core
+Log out on close,,Settings.Core
+Log out of all users before closing the wallet,,Settings.Core
 Restart Core for these changes to take effect,,Settings.Core
 Save settings,,Settings.Core
 Verbose level is required,,Settings.Core
-Manual Core username is required,,Settings.Core
-Manual Core password is required,,Settings.Core
-Manual Core IP is required,,Settings.Core
-Manual Core port is required,,Settings.Core
+Remote Core IP is required,,Settings.Core
+RPC port is required,,Settings.Core
+RPC username is required,,Settings.Core
+RPC password is required,,Settings.Core
+API port is required,,Settings.Core
+API username is required,,Settings.Core
+API password is required,,Settings.Core
 Core settings saved,Kjerneinnstillinger er lagret,Settings.Core
 Restarting Core...,Starter Kjernen på nytt...,Settings.Core
 Error rescanning,Feil ved skanning,Settings.Core
@@ -390,7 +458,6 @@ Overview Display,Oversiktsvisning,Settings.Style
 Nexus Addresses format,Nexus adresser format,Settings.Style
 Choose your Nexus Address display preference,,Settings.Style
 Sample Address,,Settings.Style
-This is your Default Address,Dette er din Deafult adresse,Settings.Style
 Theme,Tema,Settings.Style
 Select Wallet Theme,Velg Tema,Settings.Style
 Background,Bakgrunn,Settings.Style
@@ -493,14 +560,19 @@ The amount of NXS currently staked in the trust account,,Transactions.Balances
 Immature,Umoden,Transactions.Balances
 The sum of all coinbase transactions that have not yet reached maturity,,Transactions.Balances
 Unnamed account,,User.Accounts
+Rename,,User.Accounts
 Details,,User.Accounts
 History,,User.Accounts
+<b>%{account_name}</b> account address,,User.Accounts
+Unnamed,,User.Accounts
 Create new account,,User.Accounts
 Account Details,,User.Accounts.AccountDetails
 Account name,Kontonavn,User.Accounts.AccountDetails
+Unnamed,,User.Accounts.AccountDetails
 Created at,,User.Accounts.AccountDetails
 Last modified,,User.Accounts.AccountDetails
 Token name,,User.Accounts.AccountDetails
+Data,,User.Accounts.AccountDetails
 Total account balance,,User.Accounts.AccountDetails
 Available balance,,User.Accounts.AccountDetails
 Send %{token_name},,User.Accounts.AccountDetails
@@ -515,20 +587,32 @@ Adjust stake amount,,User.Accounts.AccountDetails
 Time,,User.Accounts.AccountHistory
 Operation,,User.Accounts.AccountHistory
 From,,User.Accounts.AccountHistory
-staked,,User.Accounts.AccountHistory
-mined,,User.Accounts.AccountHistory
+staking,,User.Accounts.AccountHistory
+mining,,User.Accounts.AccountHistory
 To,,User.Accounts.AccountHistory
 Change,,User.Accounts.AccountHistory
 Account History,,User.Accounts.AccountHistory
 Loading account history,,User.Accounts.AccountHistory
-Account balance(,,User.Accounts.AccountHistory
-Show %{tokenName},,User.Accounts.AccountHistory
 Account balance,,User.Accounts.AccountHistory
+Show %{tokenName},,User.Accounts.AccountHistory
 Total,,User.Accounts.AccountHistory
 Available,,User.Accounts.AccountHistory
 Pending,,User.Accounts.AccountHistory
 Unconfirmed,,User.Accounts.AccountHistory
 Stake,Stake,User.Accounts.AccountHistory
+Rename account,,RenameAccount
+Account name,,RenameAccount
+Account renaming fee,,RenameAccount
+Cancel,,RenameAccount
+Renaming,,RenameAccount
+Rename,,RenameAccount
+Account name is required,,RenameAccount
+Name already in use,,RenameAccount
+The name you entered is already in use. Please choose another name.,,RenameAccount
+Insuffient balance,,RenameAccount
+Your default account balance is not enough to pay the fee.,,RenameAccount
+Account has been renamed to %{account_name},,RenameAccount
+Error renaming account,,RenameAccount
 Unnamed asset,,User.Assets
 You own %{percentage}% of this asset,,User.Assets
 Create new asset,,User.Assets
@@ -645,10 +729,12 @@ Create a new name,,CreateName
 View name details,,User.Names
 Change register address,,User.Names
 Transfer name,,User.Names
+Unused,,User.Names
 Global,,User.Names
 Namespaced,,User.Names
 Local,,User.Names
 Create new name,,User.Names
+Show unused names,,User.Names
 You don't own any name,,User.Names
 Name Details,,NameDetails
 Change register address,,NameDetails
@@ -736,6 +822,7 @@ Enable staking,Aktiver staking,User.Staking
 Cancel,Avbryt,User.Staking
 Status,,User.Staking
 Staking,,User.Staking
+pooled,,User.Staking
 Not staking,,User.Staking
 Stake amount,,User.Staking
 The amount of NXS currently staked in the trust account,,User.Staking
@@ -757,7 +844,7 @@ Account on hold for another %{stakeSeconds} Seconds,,User.Staking
 Stop staking,,User.Staking
 Start staking,,User.Staking
 Create new token,,User.Tokens
-Lookup a token,,User.Tokens
+Look up a token,,User.Tokens
 Unnamed token,,User.Tokens
  (Owned by you),,User.Tokens
 Details,,User.Tokens
@@ -782,13 +869,14 @@ You have successfully created token %{token} ! Would you like to make an account
 Yes,Ja,User.Tokens.NewToken
 No,Nei,User.Tokens.NewToken
 Error creating token,,User.Tokens.NewToken
-Can not find Token,,User.Tokens.SearchToken
-Lookup Token,,User.Tokens.SearchToken
-Name/Address,,User.Tokens.SearchToken
-Lookup a Token on the network,,User.Tokens.SearchToken
-Lookup this token,,User.Tokens.SearchToken
+Cannot find Token,,User.Tokens.SearchToken
+Look up token,,User.Tokens.SearchToken
+Name or address,,User.Tokens.SearchToken
+Token name/address,,User.Tokens.SearchToken
+Look up,,User.Tokens.SearchToken
 No Value,,User.Tokens.SearchToken
 Error searching for token,,User.Tokens.SearchToken
+Unknown token name/address,,User.Tokens.SearchToken
 Token Details,,User.Tokens.TokenDetails
 Token name,,User.Tokens.TokenDetails
 Token address,,User.Tokens.TokenDetails
@@ -865,15 +953,15 @@ Are you sure you want to abort the process?,Er du sikker på at du vil avbryte p
 "No, let it continue","Nei, la den fortsette",Bootstrap
 Bootstrap Recent Database,Bootstrap Siste Database,Bootstrap
 Abort,Avbryt,Bootstrap
-Bootstrap process has been aborted,Bootstrapping har blitt avbrutt,Bootstrap
-Error bootstrapping recent database,Feil ved bootstrapping av siste database,Bootstrap
-Unknown error,,Bootstrap
-Recent database has been successfully bootstrapped,Bootstrapping av siste database var vellykket,Bootstrap
 Not enough disk space! Minimum 15GB of free space is required.,Ikke nok lagringsplass. Minimum 15GB lagrig er nødvendig.,Bootstrap
 Download recent database?,Last ned siste database?,Bootstrap
 Downloading a recent version of the database might reduce the time it takes to synchronize your wallet,Nedlasting av en nylig versjon av databasen kan redusere tiden det tar å synkronisere lommeboken din,Bootstrap
 "Yes, let's bootstrap it","Ja, ""bootstrap"" det",Bootstrap
 "No, let it sync","Nei, la den synkronisere",Bootstrap
+Bootstrap process has been aborted,Bootstrapping har blitt avbrutt,Bootstrap
+Error bootstrapping recent database,Feil ved bootstrapping av siste database,Bootstrap
+Unknown error,,Bootstrap
+Recent database has been successfully bootstrapped,Bootstrapping av siste database var vellykket,Bootstrap
 Change password and PIN,,ChangePassword&PIN
 Current password,,ChangePassword&PIN
 Your current password,,ChangePassword&PIN
@@ -893,6 +981,10 @@ New PIN is required,,ChangePassword&PIN
 PIN must be at least 4 characters,,ChangePassword&PIN
 Password & PIN have been updated,,ChangePassword&PIN
 Error updating password & PIN,,ChangePassword&PIN
+Contract Details,,ContractDetails
+View transaction details,,ContractDetails
+Yes,Ja,ConfirmDialog
+No,Nei,ConfirmDialog
 Password/PIN mismatch,,ConfirmPassword&PIN
 "You have entered either your password or your PIN incorrectly, please re-check",,ConfirmPassword&PIN
 Confirm password and PIN,,ConfirmPassword&PIN
@@ -905,11 +997,12 @@ PIN,,ConfirmPassword&PIN
 Re-enter your new PIN,,ConfirmPassword&PIN
 Re-enter your PIN,,ConfirmPassword&PIN
 Confirm,,ConfirmPassword&PIN
-Contract Details,,ContractDetails
-View transaction details,,ContractDetails
-Yes,Ja,ConfirmDialog
-No,Nei,ConfirmDialog
 Dismiss,Forkast,ErrorDialog
+Pin must be at least 4 characters,,PinDialog
+Confirm,,PinDialog
+Enter PIN,,PinDialog
+Your PIN,,PinDialog
+Cancel,Avbryt,PinDialog
 Dismiss,Forkast,SuccessDialog
 Your wallet is not encrypted!,Lommeboken din er ikke kryptert!,EncryptionWarning
 It is highly recommended that you should encrypt your wallet to keep your NXS safe.,,EncryptionWarning
@@ -929,6 +1022,7 @@ Username is required,,Login
 Password is required,Passord er påkrevd,Login
 PIN is required,,Login
 Logged in as %{username},,Login
+Not being fully synced may have caused this error.,,Login
 Error logging in,Feil ved innlogging,Login
 Migrate account,,MigrateAccount
 You have %{amount} NXS in your legacy account.,,MigrateAccount
@@ -978,16 +1072,16 @@ Error creating new address,Feil ved opprettelse av ny adresse,MyAddresses.NewAdd
 New account,,NewAccount
 Account name (%{nameFee} NXS Fee) (Optional),,NewAccount
 New account's name,,NewAccount
-Token,,NewAccount
+Token name/address,,NewAccount
 Cancel,Avbryt,NewAccount
 Creating account,,NewAccount
 Create account,,NewAccount
-Create a account without a name?,,NewAccount
+Create an account without a name?,,NewAccount
 Adding a name costs a NXS fee,,NewAccount
 That's Ok,,NewAccount
-Add Name,,NewAccount
-New account %{account} has been created,,NewAccount
 Error creating account,,NewAccount
+Unknown token name/address,,NewAccount
+New account %{account} has been created,,NewAccount
 Create new user,,NewUser
 Username,Brukernavn,NewUser
 A globally unique username,,NewUser
@@ -1011,11 +1105,6 @@ PIN must be at least 4 characters,,NewUser
 Error creating user,,NewUser
 User registration for %{username} has been confirmed,,NewUser
 User registration for %{username} is waiting to be confirmed on Nexus blockchain...,,NewUser
-Pin must be at least 4 characters,,PinDialog
-Confirm,,PinDialog
-Enter PIN,,PinDialog
-Your PIN,,PinDialog
-Cancel,Avbryt,PinDialog
 Recover password and PIN,,RecoverPassword&PIN
 Username,Brukernavn,RecoverPassword&PIN
 Your username,,RecoverPassword&PIN

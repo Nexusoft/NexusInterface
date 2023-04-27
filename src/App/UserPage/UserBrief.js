@@ -1,16 +1,14 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
-import { NavLink } from 'react-router-dom';
 
-import { timing, consts } from 'styles';
-import * as color from 'utils/color';
-import Button from 'components/Button';
+import RouterVerticalTab from 'components/RouterVerticalTab';
+import { consts } from 'styles';
+import { selectUsername } from 'lib/user';
 
 __ = __context('User');
 
 const UserBriefComponent = styled.div(({ theme }) => ({
-  width: 307,
+  width: 315,
   marginLeft: -30,
   padding: '0 30px',
   borderRight: `1px solid ${theme.mixer(0.125)}`,
@@ -41,54 +39,25 @@ const GenesisId = styled.div({
   fontFamily: consts.monoFontFamily,
 });
 
-const MenuItem = styled(NavLink)(
-  ({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    padding: '.5em 30px',
-    margin: '0 -30px',
-    transitionProperty: 'background, color',
-    transitionDuration: timing.normal,
-    cursor: 'pointer',
+export default function UserBrief() {
+  const username = useSelector(selectUsername);
+  const genesis = useSelector((state) => state.user.status?.genesis);
 
-    '&:hover': {
-      background: theme.mixer(0.05),
-    },
-
-    '&.active, &.active:hover': {
-      background: theme.primary,
-      color: theme.primaryAccent,
-    },
-  }),
-  ({ selected, theme }) =>
-    selected && {
-      '&, &:hover': {
-        background: color.fade(theme.primary, 0.4),
-        color: theme.primaryAccent,
-      },
-    }
-);
-
-const UserBrief = ({ status, match }) => (
-  <UserBriefComponent>
-    <Username>{status.username}</Username>
-    <Separator />
-    <Genesis>
-      <div>{__('User ID')}:</div>
-      <GenesisId>{status.genesis}</GenesisId>
-    </Genesis>
-    <Separator />
-    <MenuItem to={`${match.url}/Accounts`}>{__('Accounts')}</MenuItem>
-    <MenuItem to={`${match.url}/Staking`}>{__('Staking')}</MenuItem>
-    <MenuItem to={`${match.url}/Tokens`}>{__('Tokens')}</MenuItem>
-    <MenuItem to={`${match.url}/Names`}>{__('Names')}</MenuItem>
-    <MenuItem to={`${match.url}/Namespaces`}>{__('Namespaces')}</MenuItem>
-    <MenuItem to={`${match.url}/Assets`}>{__('Assets')}</MenuItem>
-  </UserBriefComponent>
-);
-
-const mapStateToProps = state => ({
-  status: state.user.status,
-});
-
-export default connect(mapStateToProps)(UserBrief);
+  return (
+    <UserBriefComponent>
+      <Username>{username}</Username>
+      <Separator />
+      <Genesis>
+        <div>{__('User ID')}:</div>
+        <GenesisId>{genesis}</GenesisId>
+      </Genesis>
+      <Separator />
+      <RouterVerticalTab to="Accounts" text={__('Accounts')} />
+      <RouterVerticalTab to="Staking" text={__('Staking')} />
+      <RouterVerticalTab to="Tokens" text={__('Tokens')} />
+      <RouterVerticalTab to="Names" text={__('Names')} />
+      <RouterVerticalTab to="Namespaces" text={__('Namespaces')} />
+      <RouterVerticalTab to="Assets" text={__('Assets')} />
+    </UserBriefComponent>
+  );
+}

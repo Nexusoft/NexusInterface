@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { app, ipcRenderer } from 'electron';
 
-const escapeSpace = path =>
+const escapeSpace = (path) =>
   process.platform === 'darwin' ? path.replace(' ', `\ `) : path;
 
 const exeDir = app

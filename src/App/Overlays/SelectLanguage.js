@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 import styled from '@emotion/styled';
 
 import Button from 'components/Button';
@@ -40,53 +40,43 @@ const Language = styled.div(
     }
 );
 
-class SelectLanguage extends React.Component {
-  state = {
-    selection: 'en',
-  };
+export default function SelectLanguage() {
+  const [selection, setSelection] = useState('en');
 
-  selectLanguage = lang => {
-    this.setState({ selection: lang });
-  };
-
-  proceed = () => {
-    updateSettingsFile({ locale: this.state.selection });
+  const proceed = () => {
+    updateSettingsFile({ locale: selection });
     location.reload();
   };
 
-  render() {
-    return (
-      <FullScreen
-        width={500}
-        header="Language"
-        footer={
-          <div>
-            <Button
-              wide
-              uppercase
-              skin="primary"
-              style={{ fontSize: 16 }}
-              onClick={this.proceed}
-            >
-              Select language
-            </Button>
-          </div>
-        }
-      >
-        {languages.map((lang, i) => (
-          <Language
-            key={lang.code}
-            selected={lang.code === this.state.selection}
-            first={i === 0}
-            onClick={() => this.selectLanguage(lang.code)}
+  return (
+    <FullScreen
+      width={500}
+      header="Language"
+      footer={
+        <div>
+          <Button
+            wide
+            uppercase
+            skin="primary"
+            style={{ fontSize: 16 }}
+            onClick={proceed}
           >
-            <Flag src={lang.flag} />
-            {lang.name}
-          </Language>
-        ))}
-      </FullScreen>
-    );
-  }
+            Select language
+          </Button>
+        </div>
+      }
+    >
+      {languages.map((lang, i) => (
+        <Language
+          key={lang.code}
+          selected={lang.code === selection}
+          first={i === 0}
+          onClick={() => setSelection(lang.code)}
+        >
+          <Flag src={lang.flag} />
+          {lang.name}
+        </Language>
+      ))}
+    </FullScreen>
+  );
 }
-
-export default SelectLanguage;

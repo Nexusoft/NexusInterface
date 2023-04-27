@@ -1,7 +1,7 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import InfoField from 'components/InfoField';
 import WaitingMessage from 'components/WaitingMessage';
 import { formatDateTime } from 'lib/intl';
@@ -20,61 +20,57 @@ const timeFormatOptions = {
   second: '2-digit',
 };
 
-@connect(
-  ({ settings: { minConfirmations }, transactions: { map } }, props) => ({
-    minConfirmations,
-    transaction: map[props.txid],
-  })
-)
-export default class TransactionDetailsModal extends React.Component {
-  constructor(props) {
-    super(props);
-    fetchTransaction(this.props.txid);
-  }
+export default function TransactionDetailsModal({ txid }) {
+  const minConfirmations = useSelector(
+    (state) => state.settings.minConfirmations
+  );
+  const transaction = useSelector((state) => state.transactions.map[txid]);
 
-  render() {
-    const { transaction, minConfirmations } = this.props;
+  useEffect(() => {
+    fetchTransaction(txid);
+  }, []);
 
-    return (
-      <Modal>
-        <Modal.Header>{__('Transactions Details')}</Modal.Header>
-        <Modal.Body>
-          {transaction ? (
-            <>
-              <InfoField label={__('Time')}>
-                {formatDateTime(transaction.time * 1000, timeFormatOptions)}
-              </InfoField>
-              <InfoField label={__('Category')}>
-                {categoryText(transaction.category)}
-              </InfoField>
-              <InfoField label={__('Amount')}>{transaction.amount}</InfoField>
-              {!!transaction.fee &&
-                ['debit', 'credit', 'receive', 'send'].includes(
-                  transaction.category
-                ) && <InfoField label={__('Fee')}>{transaction.fee}</InfoField>}
-              <InfoField label={__('Account')}>{transaction.account}</InfoField>
-              <InfoField label={__('Address')}>
-                <span className="monospace">{transaction.address}</span>
-              </InfoField>
-              <InfoField label={__('Confirmations')}>
-                {transaction.confirmations}
-                {isPending(transaction, minConfirmations) &&
-                  ` (${__('Pending')})`}
-              </InfoField>
-              <InfoField label={__('Transaction ID')}>
-                <span className="monospace">{transaction.txid}</span>
-              </InfoField>
-              <InfoField label={__('Block hash')}>
-                <span className="monospace">{transaction.blockhash}</span>
-              </InfoField>
-            </>
-          ) : (
-            <WaitingMessage>
-              {__('Loading transaction details...')}
-            </WaitingMessage>
-          )}
-        </Modal.Body>
-      </Modal>
-    );
-  }
+  return (
+    <ControlledModal>
+      <ControlledModal.Header>
+        {__('Transactions Details')}
+      </ControlledModal.Header>
+      <ControlledModal.Body>
+        {transaction ? (
+          <>
+            <InfoField label={__('Time')}>
+              {formatDateTime(transaction.time * 1000, timeFormatOptions)}
+            </InfoField>
+            <InfoField label={__('Category')}>
+              {categoryText(transaction.category)}
+            </InfoField>
+            <InfoField label={__('Amount')}>{transaction.amount}</InfoField>
+            {!!transaction.fee &&
+              ['debit', 'credit', 'receive', 'send'].includes(
+                transaction.category
+              ) && <InfoField label={__('Fee')}>{transaction.fee}</InfoField>}
+            <InfoField label={__('Account')}>{transaction.account}</InfoField>
+            <InfoField label={__('Address')}>
+              <span className="monospace">{transaction.address}</span>
+            </InfoField>
+            <InfoField label={__('Confirmations')}>
+              {transaction.confirmations}
+              {isPending(transaction, minConfirmations) &&
+                ` (${__('Pending')})`}
+            </InfoField>
+            <InfoField label={__('Transaction ID')}>
+              <span className="monospace">{transaction.txid}</span>
+            </InfoField>
+            <InfoField label={__('Block hash')}>
+              <span className="monospace">{transaction.blockhash}</span>
+            </InfoField>
+          </>
+        ) : (
+          <WaitingMessage>
+            {__('Loading transaction details...')}
+          </WaitingMessage>
+        )}
+      </ControlledModal.Body>
+    </ControlledModal>
+  );
 }

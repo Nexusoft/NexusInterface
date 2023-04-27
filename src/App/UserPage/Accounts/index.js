@@ -1,11 +1,10 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
 import Icon from 'components/Icon';
 import Button from 'components/Button';
-import { switchUserTab } from 'lib/ui';
+import { switchUserTab, openModal } from 'lib/ui';
 import { loadAccounts, loadOwnedTokens } from 'lib/user';
-import { openModal } from 'lib/ui';
 import plusIcon from 'icons/plus.svg';
 
 import Account from './Account';
@@ -14,45 +13,29 @@ import TabContentWrapper from '../TabContentWrapper';
 
 __ = __context('User.Accounts');
 
-@connect(state => ({
-  accounts: state.user.accounts,
-}))
-export default class Accounts extends React.Component {
-  constructor(props) {
-    super(props);
-    switchUserTab('Accounts');
-  }
+export default function Accounts() {
+  const session = useSelector((state) => state.user.session);
+  const accounts = useSelector((state) => state.user.accounts);
 
-  componentDidMount() {
+  useEffect(() => {
+    switchUserTab('Accounts');
     loadAccounts();
     loadOwnedTokens();
-  }
+  }, [session]);
 
-  render() {
-    const { accounts } = this.props;
-
-    return (
-      !!accounts && (
-        <TabContentWrapper>
-          <Button
-            wide
-            onClick={() =>
-              openModal(NewAccountModal, {
-                tokenName: 'NXS',
-                tokenAddress: '0',
-              })
-            }
-          >
-            <Icon icon={plusIcon} className="space-right" />
-            {__('Create new account')}
-          </Button>
-          <div className="mt1">
-            {accounts.map(account => (
-              <Account key={account.name + account.address} account={account} />
-            ))}
-          </div>
-        </TabContentWrapper>
-      )
-    );
-  }
+  return (
+    !!accounts && (
+      <TabContentWrapper>
+        <Button wide onClick={() => openModal(NewAccountModal)}>
+          <Icon icon={plusIcon} className="mr0_4" />
+          {__('Create new account')}
+        </Button>
+        <div className="mt1">
+          {accounts.map((account) => (
+            <Account key={account.name + account.address} account={account} />
+          ))}
+        </div>
+      </TabContentWrapper>
+    )
+  );
 }

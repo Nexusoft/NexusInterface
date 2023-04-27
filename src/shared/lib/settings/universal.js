@@ -24,7 +24,9 @@ export const defaultSettings = {
   // App
   locale: null,
   minimizeOnClose: false,
+  openOnStart: false,
   autoUpdate: true,
+  allowPrerelease: false,
   sendUsageData: true,
   fiatCurrency: 'USD',
   minConfirmations: 3,
@@ -33,25 +35,43 @@ export const defaultSettings = {
   verifyModuleSource: true,
   fakeTransactions: false,
   overviewDisplay: 'standard',
+  hideOverviewBalances: false,
   displayFiatBalance: false,
 
   // Core
+  liteMode: false,
+  safeMode: true,
   enableMining: false,
   enableStaking: true,
+  pooledStaking: false,
+  multiUser: false,
   verboseLevel: 0,
   avatarMode: true,
   ipMineWhitelist: '',
   coreDataDir: defaultCoreDataDir,
   testnetIteration: 0,
+  privateTestnet: false,
+  allowAdvancedCoreOptions: false,
+  advancedCoreParams: '',
   manualDaemon: false,
+  manualDaemonSSL: true,
   manualDaemonUser: 'rpcserver',
   manualDaemonPassword: defaultPassword,
   manualDaemonIP: '127.0.0.1',
   manualDaemonPort: '9336',
+  manualDaemonPortSSL: '7336',
+  manualDaemonApiSSL: true,
   manualDaemonApiUser: 'apiserver',
   manualDaemonApiPassword: defaultPassword,
   manualDaemonApiIP: '127.0.0.1',
   manualDaemonApiPort: '8080',
+  manualDaemonApiPortSSL: '7080',
+  manualDaemonLogOutOnClose: false,
+  embeddedCoreUseNonSSL: false,
+  embeddedCoreApiPort: undefined,
+  embeddedCoreApiPortSSL: undefined,
+  embeddedCoreRpcPort: undefined,
+  embeddedCoreRpcPortSSL: undefined,
 
   // Style
   renderGlobe: true,
@@ -62,12 +82,15 @@ export const defaultSettings = {
   allowSymLink: false,
   devModulePaths: [],
 
+  // Others
+  showUnusedNames: true,
+
   // Hidden settings
   acceptedAgreement: false,
-  experimentalWarningDisabled: false,
   encryptionWarningDisabled: false,
   bootstrapSuggestionDisabled: false,
   migrateSuggestionDisabled: false,
+  liteModeNoticeDisabled: false,
   windowWidth: 1200,
   windowHeight: 800,
   windowX: undefined,
@@ -75,40 +98,58 @@ export const defaultSettings = {
   forkBlocks: 0,
   walletClean: false,
   legacyMode: false,
-  tritiumModeNoticeDisabled: false,
   clearPeers: false,
   // If false, show Create new user modal instead of Login
   // modal automatically when core is connected
   firstCreateNewUserShown: false,
   consoleCliSyntax: true,
+  dontAskToStartStaking: false,
+  lastCheckForUpdates: null,
 };
 
-function filterValidSettings(settings) {
-  const validSettings = {};
-  Object.keys(settings || {}).map(key => {
-    if (defaultSettings.hasOwnProperty(key)) {
-      validSettings[key] = settings[key];
-    } else {
-      console.error(`Invalid setting \`${key}\``);
-    }
-  });
-  return validSettings;
-}
-
 function readSettings() {
-  return filterValidSettings(readJson(settingsFilePath));
+  return readJson(settingsFilePath);
 }
 
 function writeSettings(settings) {
-  return writeJson(settingsFilePath, filterValidSettings(settings));
+  return writeJson(settingsFilePath, settings);
 }
 
 export function loadSettingsFromFile() {
-  const customSettings = readSettings();
-  return { ...defaultSettings, ...customSettings };
+  let userSettings = readSettings();
+  let changed = false;
+
+  // Enable lite mode for new users
+  if (!userSettings) {
+    userSettings = {
+      liteMode: true,
+      liteModeNoticeDisabled: true,
+    };
+    changed = true;
+  }
+
+  // Convert balHidden value of overviewDisplay to hideOverviewBalances
+  // TODO: remove this after a few versions
+  if (userSettings.overviewDisplay === 'balHidden') {
+    userSettings.hideOverviewBalances = true;
+    userSettings.overviewDisplay = defaultSettings.overviewDisplay;
+    changed = true;
+  }
+
+  // Deprecating manualDaemonApiIP, copy to manualDaemonIP if manualDaemonApiIP is configured
+  const { manualDaemonIP, manualDaemonApiIP } = userSettings;
+  if (manualDaemonApiIP && !manualDaemonIP) {
+    userSettings.manualDaemonIP = manualDaemonApiIP;
+    changed = true;
+  }
+
+  if (changed) {
+    writeSettings(userSettings);
+  }
+  return { ...defaultSettings, ...userSettings };
 }
 
 export function updateSettingsFile(updates) {
-  const settings = readSettings();
+  const settings = readSettings() || {};
   return writeSettings({ ...settings, ...updates });
 }

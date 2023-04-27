@@ -1,19 +1,18 @@
-import React from 'react';
 import styled from '@emotion/styled';
-import { keyframes } from '@emotion/core';
+import { keyframes } from '@emotion/react';
 
 const spinning = keyframes`
   0% { transform: rotate(0deg) }  
   100% { transform: rotate(360deg) }
 `;
 
-const SpinnerComponent = styled.div({
+const SpinnerComponent = styled.div(({ size }) => ({
   display: 'inline-block',
   position: 'relative',
-  width: '1em',
-  height: '1em',
+  width: size !== undefined ? size : '1em',
+  height: size !== undefined ? size : '1em',
   verticalAlign: 'middle',
-});
+}));
 
 const SpinnerPart = styled.div(({ index = 0, thickness }) => ({
   position: 'absolute',
@@ -26,13 +25,13 @@ const SpinnerPart = styled.div(({ index = 0, thickness }) => ({
   animationDelay: `-${0.1 * index}s`,
 }));
 
-const Spinner = ({ thickness = 0.1, ...rest }) => (
-  <SpinnerComponent {...rest}>
-    <SpinnerPart index={0} thickness={thickness} />
-    <SpinnerPart index={1} thickness={thickness} />
-    <SpinnerPart index={2} thickness={thickness} />
-    <SpinnerPart index={3} thickness={thickness} />
-  </SpinnerComponent>
-);
-
-export default Spinner;
+export default function Spinner({ thickness = 0.1, size, ...rest }) {
+  return (
+    <SpinnerComponent size={size} {...rest}>
+      <SpinnerPart index={0} thickness={thickness} />
+      <SpinnerPart index={1} thickness={thickness} />
+      <SpinnerPart index={2} thickness={thickness} />
+      <SpinnerPart index={3} thickness={thickness} />
+    </SpinnerComponent>
+  );
+}

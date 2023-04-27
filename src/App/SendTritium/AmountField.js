@@ -1,33 +1,27 @@
 // External
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { Field } from 'redux-form';
+import { useEffect, useRef } from 'react';
+import { useSelector } from 'react-redux';
+import { useForm } from 'react-final-form';
+import { getIn } from 'final-form';
 import styled from '@emotion/styled';
 
 // Internal
-import TextField from 'components/TextField';
+import Form from 'components/Form';
 import FormField from 'components/FormField';
 import Link from 'components/Link';
-import { getNxsFiatPrice } from './selectors';
-import Tooltip from 'components/Tooltip';
+import TokenName from 'components/TokenName';
+import { selectSource } from 'lib/send';
 
 __ = __context('Send');
 
 const floatRegex = /^[0-9]+(.[0-9]*)?$/;
 
-const SendAmount = styled.div({
-  display: 'flex',
+const AmountFieldWrapper = styled.div({
+  flex: '1 1 130px',
 });
 
-const SendAmountField = styled.div({
-  flex: 1,
-});
-
-const SendAmountEqual = styled.div({
-  display: 'flex',
-  alignItems: 'flex-end',
-  padding: '.1em .6em',
-  fontSize: '1.2em',
+const FiatAmountFieldWrapper = styled.div({
+  flex: '1 1 100px',
 });
 
 const SendAllLink = styled(Link)({
@@ -37,142 +31,163 @@ const SendAllLink = styled(Link)({
   verticalAlign: 'middle',
 });
 
-const TokenAddress = styled.a(({ theme }) => ({
-  textTransform: 'none',
-  marginLeft: '1em',
+const EqualSign = styled.div(({ theme }) => ({
+  flex: '0 0',
+  display: 'flex',
+  alignItems: 'flex-end',
+  padding: '.1em .4em',
+  marginTop: '2em',
+  fontSize: '1.2em',
   color: theme.mixer(0.5),
 }));
 
-const mapStateToProps = ({
-  settings: { fiatCurrency },
-  market: {
-    cryptocompare: { rawNXSvalues },
-  },
-}) => ({
-  fiatCurrency: fiatCurrency,
-  nxsFiatPrice: getNxsFiatPrice(rawNXSvalues, fiatCurrency),
-});
-
-/**
- * The Amount Feild on the Send Page
- *
- * @class AmountField
- * @extends {Component}
- */
-@connect(mapStateToProps)
-class AmountField extends Component {
-  /**
-   * Convert the NXS to the User's currency
-   *
-   * @memberof AmountField
-   */
-  nxsToFiat = (e, value) => {
+const nxsToFiat = (value, price) => {
+  if (price) {
     if (floatRegex.test(value)) {
       const nxs = parseFloat(value);
-      const { nxsFiatPrice } = this.props;
-      if (nxsFiatPrice) {
-        const fiat = nxs * nxsFiatPrice;
-        this.props.change(this.fiatAmountFieldName(), fiat.toFixed(2));
-      }
+      const fiat = nxs * price;
+      return fiat.toFixed(2);
     }
-  };
+  }
+  return null;
+};
 
-  /**
-   * Returns the fiat from NXS
-   *
-   * @memberof AmountField
-   */
-  fiatToNxs = (e, value) => {
-    if (floatRegex.test(value)) {
-      const fiat = parseFloat(value);
-      const { nxsFiatPrice } = this.props;
-      if (nxsFiatPrice) {
-        const nxs = fiat / nxsFiatPrice;
-        this.props.change(this.amountFieldName(), nxs.toFixed(5));
-      }
-    }
-  };
-
-  /**
-   * Returns the Amount Feild Name
-   *
-   * @memberof AmountField
-   */
-  amountFieldName = () =>
-    (this.props.parentFieldName ? this.props.parentFieldName + '.' : '') +
-    'amount';
-  /**
-   * Returns the Fiat Amount Name
-   *
-   * @memberof AmountField
-   */
-  fiatAmountFieldName = () =>
-    (this.props.parentFieldName ? this.props.parentFieldName + '.' : '') +
-    'fiatAmount';
-
-  sendAll = evt => {
-    evt.preventDefault();
-    const { change, fullAmount } = this.props;
-    change(this.amountFieldName(), fullAmount);
-    this.nxsToFiat(null, fullAmount);
-  };
-
-  /**
-   * Component's Renderable JSX
-   *
-   * @returns
-   * @memberof AmountField
-   */
-  render() {
-    const token = this.props.token;
-    return (
-      <SendAmount>
-        <SendAmountField>
-          <FormField
-            connectLabel
-            label={
-              <>
-                <span className="v-align">
-                  {__('%{tokenName} Amount', {
-                    tokenName: token.name || 'Token',
-                  })}
-                </span>
-                {!token.name && <TokenAddress> {token.address} </TokenAddress>}
-                {!!this.props.fullAmount && (
-                  <SendAllLink as="a" onClick={this.sendAll}>
-                    {__('Send all')}
-                  </SendAllLink>
-                )}
-              </>
-            }
-          >
-            <Field
-              component={TextField.RF}
-              name={this.amountFieldName()}
-              placeholder="0.00000"
-              onChange={this.nxsToFiat}
-            />
-          </FormField>
-        </SendAmountField>
-
-        {token.address === '0' ? (
-          <>
-            <SendAmountEqual>=</SendAmountEqual>
-
-            <SendAmountField>
-              <FormField connectLabel label={this.props.fiatCurrency}>
-                <Field
-                  component={TextField.RF}
-                  name={this.fiatAmountFieldName()}
-                  placeholder="0.00"
-                  onChange={this.fiatToNxs}
-                />
-              </FormField>
-            </SendAmountField>
-          </>
-        ) : null}
-      </SendAmount>
-    );
+function positiveNumber(value) {
+  const floatAmount = parseFloat(value);
+  if (!floatAmount || floatAmount < 0) {
+    return __('Invalid amount');
   }
 }
-export default AmountField;
+
+// function FiatValue({ fieldName, source }) {
+//   const value = useFieldValue(fieldName);
+//   const price = useSelector((state) => state.market?.price);
+//   const currency = useSelector((state) => state.market?.currency);
+//   const isInNXS = (source?.account?.token || source?.token?.address) === '0';
+//   const fiat = isInNXS && nxsToFiat(value, price);
+
+//   return fiat ? `≈ ${fiat} ${currency}` : null;
+// }
+
+export default function AmountField({ parentFieldName }) {
+  const source = selectSource();
+  const fiatCurrency = useSelector((state) => state.settings.fiatCurrency);
+  const price = useSelector((state) => state.market?.price);
+  const form = useForm();
+  const fullAmount = (source?.account || source?.token)?.balance;
+  const amountFieldName = parentFieldName + '.amount';
+  const fiatAmountFieldName = parentFieldName + '.fiatAmount';
+
+  const sendAll = (evt) => {
+    evt.preventDefault();
+    form.change(amountFieldName, fullAmount);
+  };
+
+  const prevValuesRef = useRef(null);
+  const cascadingRef = useRef(false);
+  useEffect(() =>
+    form.subscribe(
+      ({ values }) => {
+        if (prevValuesRef.current) {
+          const amount = getIn(values, amountFieldName);
+          const fiatAmount = getIn(values, fiatAmountFieldName);
+          const oldAmount = getIn(prevValuesRef.current, amountFieldName);
+          const oldFiatAmount = getIn(
+            prevValuesRef.current,
+            fiatAmountFieldName
+          );
+          if (amount !== oldAmount) {
+            if (cascadingRef.current) {
+              cascadingRef.current = false;
+            } else if (floatRegex.test(amount) && price) {
+              const nxs = parseFloat(amount);
+              const fiat = nxs * price;
+              form.change(fiatAmountFieldName, fiat.toFixed(2));
+              cascadingRef.current = true;
+            }
+          } else if (fiatAmount !== oldFiatAmount) {
+            if (cascadingRef.current) {
+              cascadingRef.current = false;
+            } else if (floatRegex.test(fiatAmount) && price) {
+              const fiat = parseFloat(fiatAmount);
+              const nxs = fiat / price;
+              form.change(amountFieldName, nxs.toFixed(6));
+              cascadingRef.current = true;
+            }
+          }
+        }
+        prevValuesRef.current = values;
+      },
+      { values: true }
+    )
+  );
+
+  return (
+    <>
+      <AmountFieldWrapper>
+        <FormField
+          connectLabel
+          label={
+            <span style={{ whiteSpace: 'nowrap' }}>
+              <span className="v-align">
+                {source
+                  ? __('%{currency} amount', {
+                      currency: source.token
+                        ? TokenName.from({ token: source.token })
+                        : TokenName.from({ account: source.account }),
+                    })
+                  : __('Amount')}
+              </span>
+              {!!fullAmount && (
+                <SendAllLink as="a" onClick={sendAll}>
+                  {__('All')}
+                </SendAllLink>
+              )}
+            </span>
+          }
+        >
+          {/* <Tooltip.Trigger
+            tooltip={<FiatValue fieldName={amountFieldName} source={source} />}
+          > */}
+          <Form.TextField
+            name={amountFieldName}
+            skin="filled-inverted"
+            config={{
+              format: (value, name) => {
+                return value ? value.replace(',', '.') : '';
+              },
+            }}
+            placeholder="0.00000"
+            validate={positiveNumber}
+          />
+          {/* </Tooltip.Trigger> */}
+        </FormField>
+      </AmountFieldWrapper>
+
+      {!!fiatCurrency && !!price && source?.account?.token === '0' && (
+        <>
+          <EqualSign>≈</EqualSign>
+
+          <FiatAmountFieldWrapper>
+            <FormField
+              connectLabel
+              label={
+                <span style={{ whiteSpace: 'nowrap' }}>
+                  <span className="v-align">
+                    {__('%{currency} amount', { currency: fiatCurrency })}
+                  </span>
+                </span>
+              }
+            >
+              <Form.TextField
+                name={fiatAmountFieldName}
+                skin="filled-inverted"
+                placeholder="0.00"
+              />
+            </FormField>
+          </FiatAmountFieldWrapper>
+        </>
+      )}
+    </>
+  );
+}

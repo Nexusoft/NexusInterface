@@ -1,11 +1,9 @@
-import React from 'react';
 import styled from '@emotion/styled';
 
 import InfoField from 'components/InfoField';
 import Tooltip from 'components/Tooltip';
 import { openModal } from 'lib/ui';
-import { getAssetData } from 'utils/misc';
-import * as color from 'utils/color';
+import { getAssetData } from 'lib/asset';
 import { timing } from 'styles';
 
 import AssetDetailsModal from './AssetDetailsModal';
@@ -20,7 +18,7 @@ const AssetComponent = styled.div(({ theme }) => ({
   background: theme.background,
   transition: `background-color ${timing.normal}`,
   '&:hover': {
-    background: color.lighten(theme.background, 0.2),
+    background: theme.raise(theme.background, 0.2),
   },
 }));
 
@@ -33,7 +31,7 @@ const AssetHeader = styled.div(({ theme }) => ({
   background: theme.mixer(0.05),
   transition: `background-color ${timing.normal}`,
   [`${AssetComponent}:hover &`]: {
-    background: color.lighten(theme.mixer(0.05), 0.2),
+    background: theme.raise(theme.mixer(0.05), 0.2),
   },
 }));
 
@@ -54,42 +52,37 @@ const AssetData = styled.div({
   padding: '.6em 1em .1em',
 });
 
-class Asset extends React.Component {
-  render() {
-    const { asset } = this.props;
-    const data = getAssetData(asset);
+export default function Asset({ asset }) {
+  const data = getAssetData(asset);
 
-    return (
-      <AssetComponent
-        onClick={() => {
-          openModal(AssetDetailsModal, { asset });
-        }}
-      >
-        <AssetHeader>
-          <AssetName unnamed={!asset.name}>
-            {asset.name || __('Unnamed asset')}
-          </AssetName>
-          {typeof asset.ownership === 'number' && (
-            <Tooltip.Trigger
-              tooltip={__('You own %{percentage}% of this asset', {
-                percentage: asset.ownership,
-              })}
-            >
-              <Ownership>{asset.ownership}%</Ownership>
-            </Tooltip.Trigger>
-          )}
-        </AssetHeader>
+  return (
+    <AssetComponent
+      onClick={() => {
+        openModal(AssetDetailsModal, { asset });
+      }}
+    >
+      <AssetHeader>
+        <AssetName unnamed={!asset.name}>
+          {asset.name || __('Unnamed asset')}
+        </AssetName>
+        {typeof asset.ownership === 'number' && (
+          <Tooltip.Trigger
+            tooltip={__('You own %{percentage}% of this asset', {
+              percentage: asset.ownership,
+            })}
+          >
+            <Ownership>{asset.ownership}%</Ownership>
+          </Tooltip.Trigger>
+        )}
+      </AssetHeader>
 
-        <AssetData>
-          {Object.entries(data).map(([key, value]) => (
-            <InfoField key={key} label={key} ratio={[1, 2]}>
-              {value}
-            </InfoField>
-          ))}
-        </AssetData>
-      </AssetComponent>
-    );
-  }
+      <AssetData>
+        {Object.entries(data).map(([key, value]) => (
+          <InfoField key={key} label={key} ratio={[1, 2]}>
+            {value}
+          </InfoField>
+        ))}
+      </AssetData>
+    </AssetComponent>
+  );
 }
-
-export default Asset;

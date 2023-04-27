@@ -1,5 +1,3 @@
-// @jsx jsx
-
 /**
  * Important note - This file is imported into module_preload.js, either directly or
  * indirectly, and will be a part of the preload script for modules, therefore:
@@ -12,15 +10,13 @@
  */
 
 // External
-import React, { Component } from 'react';
+import { cloneElement, Children, useEffect, useState, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import styled from '@emotion/styled';
-import { jsx } from '@emotion/core';
 
 // Internal
 import { arrowStyles } from 'components/Arrow';
 import { timing, animations, zIndex } from 'styles';
-import * as color from 'utils/color';
 
 const spacing = 10;
 const arrowPadding = 15;
@@ -72,7 +68,7 @@ const tooltipAligning = (rect, position, align) => {
   }
 };
 
-const arrowPositioning = position => ({ [position]: '100%' });
+const arrowPositioning = (position) => ({ [position]: '100%' });
 
 const arrowAligning = (position, align) => {
   if (position === 'top' || position == 'bottom') {
@@ -100,7 +96,6 @@ const Tooltip = styled.div(
   {
     whiteSpace: 'pre-wrap',
     wordBreak: 'break-word',
-    maxWidth: 300,
     width: 'max-content',
     borderRadius: 4,
     boxShadow: '0 0 8px rgba(0,0,0,.7)',
@@ -112,11 +107,14 @@ const Tooltip = styled.div(
       position: 'absolute',
     },
   },
+  ({ maxWidth }) => ({
+    maxWidth: maxWidth || 300,
+  }),
   ({ skin, theme }) => {
     switch (skin) {
       case 'default':
         return {
-          background: color.lighten(theme.background, 0.2),
+          background: theme.raise(theme.background, 0.2),
           color: theme.foreground,
         };
       case 'error':
@@ -137,7 +135,7 @@ const Tooltip = styled.div(
       height: 8,
       color:
         skin === 'default'
-          ? color.lighten(theme.background, 0.2)
+          ? theme.raise(theme.background, 0.2)
           : skin === 'error'
           ? theme.danger
           : undefined,
@@ -151,44 +149,17 @@ const Tooltip = styled.div(
   })
 );
 
-class TooltipPortal extends Component {
-  /**
-   *Creates an instance of TooltipPortal.
-   * @param {*} props
-   * @memberof TooltipPortal
-   */
-  constructor(props) {
-    super(props);
-    this.el = document.createElement('div');
-  }
+function TooltipPortal(props) {
+  const ref = useRef();
+  if (!ref.current) ref.current = document.createElement('div');
+  useEffect(() => {
+    document.getElementsByTagName('body')[0].appendChild(ref.current);
+    return () => {
+      document.getElementsByTagName('body')[0].removeChild(ref.current);
+    };
+  }, []);
 
-  /**
-   * Component Mount Callback
-   *
-   * @memberof TooltipPortal
-   */
-  componentDidMount() {
-    document.getElementsByTagName('body')[0].appendChild(this.el);
-  }
-
-  /**
-   * Component Unmount Callback
-   *
-   * @memberof TooltipPortal
-   */
-  componentWillUnmount() {
-    document.getElementsByTagName('body')[0].removeChild(this.el);
-  }
-
-  /**
-   * Component's Renderable JSX
-   *
-   * @returns
-   * @memberof TooltipPortal
-   */
-  render() {
-    return ReactDOM.createPortal(<Tooltip {...this.props} />, this.el);
-  }
+  return ReactDOM.createPortal(<Tooltip {...props} />, ref.current);
 }
 
 /**
@@ -198,29 +169,23 @@ class TooltipPortal extends Component {
  * @memberof TooltipPortal
  * @extends {Component}
  */
-class TooltipTrigger extends Component {
-  static defaultProps = {
-    position: 'bottom',
-    align: 'center',
-    skin: 'default',
-  };
+function TooltipTrigger({
+  position = 'bottom',
+  align = 'center',
+  skin = 'default',
+  children,
+  tooltip,
+  style,
+  ...rest
+}) {
+  const [active, setActive] = useState(false);
+  const [tooltipStyles, setTooltipStyles] = useState({});
+  const triggerRef = useRef();
 
-  state = {
-    active: false,
-    tooltipStyles: {},
-  };
+  const showTooltip = () => {
+    if (!triggerRef.current) return;
 
-  /**
-   * Show the Tooltip
-   *
-   * @memberof TooltipTrigger
-   */
-  showTooltip = () => {
-    const trigger = ReactDOM.findDOMNode(this);
-    if (!trigger) return;
-
-    const { position, align } = this.props;
-    const rect = trigger.getBoundingClientRect();
+    const rect = triggerRef.current.getBoundingClientRect();
     const tooltipStyles = {
       position: 'fixed',
       zIndex: zIndex.tooltips,
@@ -228,41 +193,32 @@ class TooltipTrigger extends Component {
       ...tooltipAligning(rect, position, align),
     };
 
-    this.setState({ active: true, tooltipStyles });
+    setActive(true);
+    setTooltipStyles(tooltipStyles);
   };
 
-  /**
-   * Hide the Tooltip
-   *
-   * @memberof TooltipTrigger
-   */
-  hideTooltip = () => {
-    this.setState({ active: false });
+  const hideTooltip = () => {
+    setActive(false);
   };
 
-  /**
-   * Component's Renderable JSX
-   *
-   * @returns
-   * @memberof TooltipTrigger
-   */
-  render() {
-    const { children, tooltip, ...rest } = this.props;
-
-    return (
-      <>
-        {React.cloneElement(React.Children.only(children), {
-          onMouseEnter: this.showTooltip,
-          onMouseLeave: this.hideTooltip,
-        })}
-        {!!tooltip && this.state.active && (
-          <TooltipPortal css={this.state.tooltipStyles} {...rest}>
-            {tooltip}
-          </TooltipPortal>
-        )}
-      </>
-    );
-  }
+  return (
+    <>
+      {cloneElement(Children.only(children), {
+        onMouseEnter: showTooltip,
+        onMouseLeave: hideTooltip,
+        ref: triggerRef,
+      })}
+      {!!tooltip && active && (
+        <TooltipPortal
+          style={{ ...tooltipStyles, ...style }}
+          {...{ position, align, skin }}
+          {...rest}
+        >
+          {tooltip}
+        </TooltipPortal>
+      )}
+    </>
+  );
 }
 
 Tooltip.Portal = TooltipPortal;

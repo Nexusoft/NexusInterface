@@ -1,14 +1,12 @@
 import styled from '@emotion/styled';
 
-import * as color from 'utils/color';
-
 const Divider = styled.div(
   ({ theme, label, backgroundColor, labelColor, dividerColor }) => {
     const colors = {
       background:
         typeof backgroundColor === 'function'
           ? backgroundColor(theme)
-          : backgroundColor || color.darken(theme.background, 0.2),
+          : backgroundColor || theme.lower(theme.background, 0.2),
       label:
         typeof labelColor === 'function'
           ? labelColor(theme)

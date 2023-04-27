@@ -7,8 +7,10 @@ export default (state = initialState, action) => {
     case TYPE.SET_ASSETS:
       return action.payload;
 
-    case TYPE.CLEAR_CORE_INFO:
-    case TYPE.CLEAR_USER_STATUS:
+    case TYPE.DISCONNECT_CORE:
+    case TYPE.ACTIVE_USER:
+    case TYPE.CLEAR_USER:
+    case TYPE.LOGOUT:
       return initialState;
 
     default:

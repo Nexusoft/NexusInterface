@@ -1,6 +1,6 @@
 // External
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 import GA from 'lib/googleAnalytics';
 
@@ -31,80 +31,42 @@ const AddressBookLayout = styled.div({
   height: '100%',
 });
 
-const mapStateToProps = state => ({
-  addressBook: state.addressBook,
-  coreConnected: isCoreConnected(state),
-});
-
-/**
- * The Address Book Page
- *
- * @class AddressBook
- * @extends {Component}
- */
-@connect(mapStateToProps)
-class AddressBook extends Component {
-  state = {
-    activeIndex: 0,
-  };
-
-  /**
-   * componentDidMount
-   *
-   * @memberof AddressBook
-   */
-  componentDidMount() {
+export default function AddressBook() {
+  const addressBook = useSelector((state) => state.addressBook);
+  const coreConnected = useSelector(isCoreConnected);
+  useEffect(() => {
     GA.SendScreen('AddressBook');
-  }
+  }, []);
 
-  /**
-   * Opens Add/Edit Contact Modal
-   *
-   * @memberof AddressBook
-   */
-  showAddContact = () => {
-    openModal(AddEditContactModal);
-  };
-
-  /**
-   * Component's Renderable JSX
-   *
-   * @returns
-   * @memberof AddressBook
-   */
-  render() {
-    const { addressBook, coreConnected } = this.props;
-
-    return (
-      <Panel
-        icon={addressBookIcon}
-        title={__('Address book')}
-        controls={<PanelControls />}
-        bodyScrollable={false}
-      >
-        {addressBook && Object.values(addressBook).length > 0 ? (
-          <AddressBookLayout>
-            <ContactList />
-            <ContactDetails />
-          </AddressBookLayout>
-        ) : (
-          <div style={{ marginTop: 50, textAlign: 'center' }}>
-            <div className="dim">{__('Your address book is empty')}</div>
-            {coreConnected && (
-              <Button
-                skin="plain"
-                onClick={this.showAddContact}
-                className="mt1"
-              >
-                <Icon icon={addContactIcon} className="space-right" />
-                {__('Create new contact')}
-              </Button>
-            )}
-          </div>
-        )}
-      </Panel>
-    );
-  }
+  return (
+    <Panel
+      icon={addressBookIcon}
+      title={__('Address book')}
+      controls={<PanelControls />}
+      bodyScrollable={false}
+    >
+      {addressBook && Object.values(addressBook).length > 0 ? (
+        <AddressBookLayout>
+          <ContactList />
+          <ContactDetails />
+        </AddressBookLayout>
+      ) : (
+        <div style={{ marginTop: 50, textAlign: 'center' }}>
+          <div className="dim">{__('Your address book is empty')}</div>
+          {coreConnected && (
+            <Button
+              skin="plain"
+              onClick={() => {
+                openModal(AddEditContactModal);
+              }}
+              className="mt1"
+            >
+              <Icon icon={addContactIcon} className="mr0_4" />
+              {__('Create new contact')}
+            </Button>
+          )}
+        </div>
+      )}
+    </Panel>
+  );
 }
-
-export default AddressBook;

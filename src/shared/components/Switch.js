@@ -10,7 +10,7 @@
  */
 
 // External
-import React from 'react';
+import { forwardRef } from 'react';
 import styled from '@emotion/styled';
 
 // Internal
@@ -71,7 +71,7 @@ const SwitchInput = styled.input(({ theme }) => {
 
     '&:hover': {
       '&::before': {
-        background: color.lighten(theme.mixer(0.25), 0.15),
+        background: theme.raise(theme.mixer(0.25), 0.15),
       },
       '&::after': {
         background: theme.mixer(0.75),
@@ -87,17 +87,17 @@ const SwitchInput = styled.input(({ theme }) => {
         },
         '&::after': {
           transform: `translateX(${switchWidth - switchHeight}em)`,
-          background: color.lighten(theme.primary, 0.15),
+          background: theme.raise(theme.primary, 0.15),
           boxShadow: `0 0 5px ${checkedBg}`,
         },
       },
 
       '&:hover': {
         '&::before': {
-          background: color.lighten(checkedBg, 0.15),
+          background: theme.raise(checkedBg, 0.15),
         },
         '&::after': {
-          background: color.lighten(theme.primary, 0.3),
+          background: theme.raise(theme.primary, 0.3),
           boxShadow: `0 0 10px ${theme.primary}`,
         },
       },
@@ -105,13 +105,8 @@ const SwitchInput = styled.input(({ theme }) => {
   };
 });
 
-const Switch = React.forwardRef((props, ref) => (
+const Switch = forwardRef((props, ref) => (
   <SwitchInput type="checkbox" checked={!!props.value} {...props} ref={ref} />
 ));
-
-const SwitchReduxForm = ({ input, meta, ...rest }) => (
-  <Switch {...input} {...rest} />
-);
-Switch.RF = SwitchReduxForm;
 
 export default Switch;

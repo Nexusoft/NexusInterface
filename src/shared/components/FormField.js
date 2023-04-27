@@ -1,9 +1,20 @@
+/**
+ * Important note - This file is imported into module_preload.js, either directly or
+ * indirectly, and will be a part of the preload script for modules, therefore:
+ * - Be picky with importing stuffs into this file, especially for big
+ * files and libraries. The bigger the preload scripts get, the slower the modules
+ * will load.
+ * - Don't assign anything to `global` variable because it will be passed
+ * into modules' execution environment.
+ * - Make sure this note also presents in other files which are imported here.
+ */
+
 // External
-import React, { Component } from 'react';
+import { cloneElement, Children } from 'react';
 import styled from '@emotion/styled';
 
 // Internal
-import { newUID } from 'utils/misc';
+import useUID from 'utils/useUID';
 
 const FormFieldComponent = styled.div(
   { marginTop: '1em' },
@@ -68,21 +79,23 @@ const Hint = styled.div(({ theme }) => ({
   },
 }));
 
-class FormField extends Component {
-  static defaultProps = {
-    capitalizeLabel: true,
-  };
+export default function FormField({
+  label,
+  capitalizeLabel = true,
+  connectLabel,
+  children,
+  hint,
+  ...rest
+}) {
+  const inputId = useUID();
 
-  inputId = newUID();
-
-  formInput = () => {
-    const { connectLabel, children } = this.props;
+  const renderFormInput = () => {
     if (connectLabel) {
       if (typeof children === 'function') {
-        return children(this.inputId);
+        return children(inputId);
       } else {
-        return React.cloneElement(React.Children.only(children), {
-          id: this.inputId,
+        return cloneElement(Children.only(children), {
+          id: inputId,
         });
       }
     }
@@ -90,31 +103,18 @@ class FormField extends Component {
     return children;
   };
 
-  render() {
-    const {
-      label,
-      capitalizeLabel,
-      connectLabel,
-      children,
-      hint,
-      ...rest
-    } = this.props;
-
-    return (
-      <FormFieldComponent {...rest}>
-        <Label
-          capitalize={capitalizeLabel}
-          htmlFor={connectLabel ? this.inputId : undefined}
-        >
-          {label}
-        </Label>
-        <div className="relative">
-          {this.formInput()}
-          {!!hint && <Hint>{hint}</Hint>}
-        </div>
-      </FormFieldComponent>
-    );
-  }
+  return (
+    <FormFieldComponent {...rest}>
+      <Label
+        capitalize={capitalizeLabel}
+        htmlFor={connectLabel ? inputId : undefined}
+      >
+        {label}
+      </Label>
+      <div className="relative">
+        {renderFormInput()}
+        {!!hint && <Hint>{hint}</Hint>}
+      </div>
+    </FormFieldComponent>
+  );
 }
-
-export default FormField;

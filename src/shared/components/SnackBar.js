@@ -1,15 +1,14 @@
 // External
 import styled from '@emotion/styled';
-import { keyframes } from '@emotion/core';
+import { keyframes } from '@emotion/react';
 
 // Internal
 import { timing } from 'styles';
-import * as color from 'utils/color';
 
 const notifHeight = 40;
 const notifMargin = 15;
 
-const intro = index => keyframes`
+const intro = (index) => keyframes`
   from {
     opacity: 0;
     transform: translateY(-${(index - 1) * (notifHeight + notifMargin)}px)
@@ -51,20 +50,20 @@ const SnackBar = styled.div(
           background: theme.mixer(0.125),
           color: theme.foreground,
           '&:hover': {
-            background: color.lighten(theme.mixer(0.125), 0.2),
+            background: theme.raise(theme.mixer(0.125), 0.2),
           },
         };
       case 'success':
         return {
-          background: color.darken(theme.primary, 0.3),
+          background: theme.lower(theme.primary, 0.3),
           color: theme.primaryAccent,
           '&:hover': {
-            background: color.darken(theme.primary, 0.1),
+            background: theme.lower(theme.primary, 0.1),
           },
         };
       case 'error':
         return {
-          background: color.darken(theme.danger, 0.2),
+          background: theme.lower(theme.danger, 0.2),
           color: theme.dangerAccent,
           '&:hover': {
             background: theme.danger,
@@ -76,7 +75,7 @@ const SnackBar = styled.div(
           border: `1px solid ${theme.mixer(0.5)}`,
           color: theme.foreground,
           '&:hover': {
-            background: color.lighten(theme.background, 0.2),
+            background: theme.raise(theme.background, 0.2),
           },
         };
     }

@@ -35,35 +35,36 @@ Wallet is not staking,钱包不是挂起,Header
 Checking sync status,检查同步状态,Header
 Synchronizing,同步中,Header
 Synchronized,同步,Header
+pooled,,Header
 You're not logged in,,Header
 You are staking but have not received a block in 30 minutes!,,Header
-Accounts,,Header.UserDropdown
-Tokens,,Header.UserDropdown
-Set recovery phrase,,Header.UserDropdown
-Log out,退出,Header.UserDropdown
-Log in,,Header.UserDropdown
-Create new user,,Header.UserDropdown
-Overview,综述,NavigationBar
-User,,NavigationBar
-Send NXS,发送NXS,NavigationBar
-Send,发送,NavigationBar
-Transactions,交易记录（Transaction）,NavigationBar
-Address Book,通訊錄,NavigationBar
-Settings,设置,NavigationBar
-Console,控制台,NavigationBar
+Switching...,,
+Active,,
+Switch,,
+Switch user,,
 Closing Nexus Wallet,关闭Nexus钱包,
 Warning,警告,
 IMPROPER USE OF THIS SOFTWARE COULD LEAD TO PERMANENT LOSS OF COIN.,不正确使用本软件可能导致永久性的货币损失。,
 BACKUP YOUR WALLET OFTEN AND KEEP YOUR PASSWORDS SAFE.,随时备份你的钱包以保证你的密码安全,
 I understand the risk,我了解风险,
-Tritium Mode,,
-Your wallet is now in Tritium Mode!,,
-"Tritium Mode is currently in early development, therefore not all Tritium features are supported by the user interface. If you want to access a Tritium feature that hasn't had a user interface yet, you can go to Console/Tritium Console, or use any HTTP client to call Nexus APIs directly.",,
-"If you need to switch back to Legacy Mode, you can select ""%{menu}"" menu option at any time.",,
-File,文件,
-Switch to Legacy Mode,,
-Continue to Tritium Mode,,
 Close,关闭,
+Remote Core is disconnected,,
+Connecting to Nexus Core...,正在连接到Nexus核心...,
+Nexus Core is stopped,Nexus 核心已停止,
+Address has been copied to clipboard,地址已复制到剪切板,
+Copy to clipboard,复制到剪贴板,
+Click to copy to clipboard,点击复制到剪贴板,
+Show QR code,,
+Log in,,
+No Rows Found,未找到行,
+Page,页面,
+rows,行,
+Previous,上一步,
+Next,下一个,
+Use virtual keyboard,,
+<token_name></token_name> token,,
+Unnamed token,,
+Switch to Legacy Mode,,
 Are you sure you want to switch to Legacy Mode?,,
 Switch to Tritium Mode,,
 Start Nexus Core,开始 Nexus 核心,
@@ -98,23 +99,11 @@ There are currently no updates available,目前没有可用的更新,
 Checking for Updates...,正在检查更新...,
 Update available! Downloading...,更新可用！下载中...,
 Quit and install update...,退出并安装更新...,
+File,文件,
 Edit,编辑,
 Settings,设置,
 View,浏览,
 Help,帮助,
-Manual Core is disconnected,手动核心断开,
-Connecting to Nexus Core...,正在连接到Nexus核心...,
-Nexus Core is stopped,Nexus 核心已停止,
-Address has been copied to clipboard,地址已复制到剪切板,
-Copy to clipboard,复制到剪贴板,
-Click to copy to clipboard,点击复制到剪贴板,
-Log in,,
-No Rows Found,未找到行,
-Page,页面,
-rows,行,
-Previous,上一步,
-Next,下一个,
-Use virtual keyboard,,
 Transaction received,已收到交易,
 Transaction sent,交易已发送,
 Genesis transaction,创世块交易,
@@ -123,6 +112,33 @@ Update available for %{smart_count} module |||| Updates available for %{smart_co
 New transaction,,
 Error,,
 Unknown error,未知错误,
+Accounts,,Header.UserDropdown
+Tokens,,Header.UserDropdown
+Set recovery phrase,,Header.UserDropdown
+Switch user,,Header.UserDropdown
+Log in to another user,,Header.UserDropdown
+Log out of all users,,Header.UserDropdown
+Log out,退出,Header.UserDropdown
+Log in,,Header.UserDropdown
+Create new user,,Header.UserDropdown
+Overview,综述,NavigationBar
+User,,NavigationBar
+Send NXS,发送NXS,NavigationBar
+Send,发送,NavigationBar
+Transactions,交易记录（Transaction）,NavigationBar
+Address Book,通訊錄,NavigationBar
+Settings,设置,NavigationBar
+Console,控制台,NavigationBar
+Lite mode,,LiteModeNotice
+Lite mode is now available on Nexus Wallet! You can choose to enable lite mode now or just ignore it. You can change your decision anytime under Settings/Core.,,LiteModeNotice
+Why you might want to enable lite mode,,LiteModeNotice
+Nexus Core would take less resources (memory and storage) to run,,LiteModeNotice
+Synchronization would be much faster,,LiteModeNotice
+Why you might NOT want to enable lite mode,,LiteModeNotice
+You would NOT be able to mine or stake,,LiteModeNotice
+Legacy Mode would be disabled,,LiteModeNotice
+Ignore,,LiteModeNotice
+Enable lite mode,,LiteModeNotice
 "Last updated
 %{time}",最近一次更新的时间 %{time},Overview
 Getting next block...,正在获取下一块...,Overview
@@ -185,17 +201,40 @@ There must be at least one recipient,必须至少有一个收件人,Send
 Address is required,地址必填.,Send
 Transaction sent,交易已发送,Send
 Error sending NXS,发送NXS时出错,Send
-%{tokenName} Amount,,Send
+Reference,,Send
+"An optional number which may be provided by the recipient to identify this transaction from the others, e.g. invoice number, order number, etc.",,Send
+Reference number (optional),,Send
+Expires in,,Send
+"The amount of time since the transaction is created after which the transaction can no longer be credited by the recipient. By default, transactions will expire in 1 day (86400 seconds).",,Send
+Days,,Send
+Hours,,Send
+Minutes,,Send
+Seconds,,Send
+Amount,,Send
 Recipient Address/Name,,Send
 Accounts,,Send
+Unnamed account,,Send
 Tokens,,Send
-More options,,Send
-Reference number,,Send
-An optional number which may be provided by the recipient to identify this transaction from the others,,Send
-"Invoice number, order number, etc... (Optional)",,Send
-Reference must be a number,,Send
-Number is too large,,Send
+Unnamed token,,Send
+Unnamed,,Send
+Invalid name/address,,Send
+Advanced options,,Send
 Address/Name is required,,Send
+Reference must be an unsigned integer,,Send
+Number is too large,,Send
+Unnamed,,PreviewTransaction
+%{smart_count} day |||| %{smart_count} days,,PreviewTransaction
+%{smart_count} hour |||| %{smart_count} hours,,PreviewTransaction
+%{smart_count} minute |||| %{smart_count} minutes,,PreviewTransaction
+%{smart_count} second |||| %{smart_count} seconds,,PreviewTransaction
+Preview Transaction,,PreviewTransaction
+You're sending,,PreviewTransaction
+From,,PreviewTransaction
+To,,PreviewTransaction
+Amount,,PreviewTransaction
+Reference,,PreviewTransaction
+Expires,,PreviewTransaction
+Send transaction,,PreviewTransaction
 Select backup directory,选择备份目录,Settings.Application
 Backup directory,备份目录,Settings.Application
 Browse,浏览,Settings.Application
@@ -241,23 +280,27 @@ Allow the presence of SymLinks in the module directory,,Settings.Application
 Fake Test Transactions,假测试交易,Settings.Application
 Display Test Transactions on the Transactions page,在“交易”页面上显示“测试交易”,Settings.Application
 Language,语言,Settings.Application
-Exit manual Core mode?,退出手动核心模式？,Settings.Core
+Exit remote Core mode?,,Settings.Core
 (This will restart your Core),(这将重新启动您的核心),Settings.Core
-Enter manual Core mode?,输入手动核心模式？,Settings.Core
+Enter remote Core mode?,,Settings.Core
 Reload transaction history,重新加载交易记录,Settings.Core
 Clear peer connections,,Settings.Core
+Resync database,,Settings.Core
+Nexus Core will be restarted. Lite mode database will be deleted and resynchronized from the beginning.,,Settings.Core
+Embedded Core,,Settings.Core
+Remote Core,,Settings.Core
+Lite mode,,Settings.Core
+"Nexus Core under lite mode runs lighter and synchronize much faster, but you will <b>NOT</b> be able to stake, mine, or switch the wallet to Legacy Mode.",,Settings.Core
+Multi-user,,Settings.Core
+Allow multiple logged in users at the same time. Mining and staking will be unavailable.,,Settings.Core
+Enable staking,启用标记,Settings.Core
+Enable/Disable staking on the wallet.,启用/禁用钱包上的标记。,Settings.Core
+Pooled staking,,Settings.Core
+"Pooled staking is a decentralized and trust-less mechanism allowing you to use the balances of others to increase your chances of finding a stake block. All participants receive their staking rewards and build trust, regardless of which user mines the block. A small portion of each reward is paid to the block finder by all pool participants.",,Settings.Core
 Enable mining,启用采矿,Settings.Core
 Enable/Disable mining to the wallet.,启用/禁用开采到钱包。,Settings.Core
 Mining IP Whitelist,采矿 IP 白名单,Settings.Core
 IP/Ports allowed to mine to. Separate by <b>;</b> . Wildcards supported only in IP,IP/端口允许我自己。由 <b>分隔；</b> 。威尔德卡只在 IP 支持,Settings.Core
-Enable staking,启用标记,Settings.Core
-Enable/Disable staking on the wallet.,启用/禁用钱包上的标记。,Settings.Core
-Rescan wallet,重新扫描钱包,Settings.Core
-"Used to correct transaction/balance issues, scans over every block in the database. Could take up to 10 minutes.",用于纠正事务/余额问题，扫描数据库中的每个块。最多可能需要10分钟。,Settings.Core
-Restart Nexus core with -walletclean parameter to clean out and reload all transaction history,重新启动 Nexus 核心，使用 -waretclear 参数清理并重新加载所有交易历史,Settings.Core
-Reload,重载,Settings.Core
-Clear all stored peer connections and restart Nexus,,Settings.Core
-Clear,,Settings.Core
 Verbose level,详细级别,Settings.Core
 Verbose level for logs.,日志的详细级别。,Settings.Core
 Core Data Directory,,Settings.Core
@@ -267,23 +310,48 @@ The iteration of Testnet to connect to.,,Settings.Core
 Turn Off,,Settings.Core
 Avatar Mode,头像模式,Settings.Core
 Disabling Avatar will make the core use a separate change key,禁用头像将使核心使用一个单独的更换密钥,Settings.Core
-Manual Core mode,手动核心模式,Settings.Core
-Enable manual Core mode if you are running the Nexus Core manually outside of the wallet.,如果您在钱包外手动运行Nexus核心，请启用手动核心模式。,Settings.Core
-Username,用户名,Settings.Core
-Username configured for manual Core.,配置为手动核心的用户名。,Settings.Core
-Password,密码,Settings.Core
-Password configured for manual Core.,为手动核心配置密码。,Settings.Core
+Rescan wallet,重新扫描钱包,Settings.Core
+"Used to correct transaction/balance issues, scans over every block in the database. Could take up to 10 minutes.",用于纠正事务/余额问题，扫描数据库中的每个块。最多可能需要10分钟。,Settings.Core
+Restart Nexus core with -walletclean parameter to clean out and reload all transaction history,重新启动 Nexus 核心，使用 -waretclear 参数清理并重新加载所有交易历史,Settings.Core
+Reload,重载,Settings.Core
+Clear all stored peer connections and restart Nexus,,Settings.Core
+Clear,,Settings.Core
+Delete lite mode database and resynchronize from the beginning,,Settings.Core
+Resynchronize,,Settings.Core
 IP address,IP 地址,Settings.Core
-IP address configured for manual Core.,IP 地址已配置为手动核心。,Settings.Core
-Port,端口,Settings.Core
-Port configured for manual Core.,端口配置为手动核心。,Settings.Core
+Remote Core IP address,,Settings.Core
+API SSL,,Settings.Core
+Use SSL for API calls,,Settings.Core
+API Port,,Settings.Core
+Nexus API server Port,,Settings.Core
+API SSL Port,,Settings.Core
+Nexus API server SSL Port,,Settings.Core
+API Username,,Settings.Core
+Nexus API server Username,,Settings.Core
+API Password,,Settings.Core
+Nexus API server Password,,Settings.Core
+RPC SSL,,Settings.Core
+Use SSL for RPC calls,,Settings.Core
+RPC Port,,Settings.Core
+Nexus RPC server Port,,Settings.Core
+RPC SSL Port,,Settings.Core
+Nexus RPC server SSL Port,,Settings.Core
+RPC Username,,Settings.Core
+Nexus RPC server Username,,Settings.Core
+RPC Password,,Settings.Core
+Nexus RPC server Password,,Settings.Core
+Log out on close,,Settings.Core
+Log out of all users before closing the wallet,,Settings.Core
 Restart Core for these changes to take effect,,Settings.Core
 Save settings,,Settings.Core
 Verbose level is required,,Settings.Core
-Manual Core username is required,手动核心用户名是必需的,Settings.Core
-Manual Core password is required,需要手动核心密码,Settings.Core
-Manual Core IP is required,手动核心IP是必需的,Settings.Core
-Manual Core port is required,手动核心端口是必需的,Settings.Core
+Remote Core IP is required,,Settings.Core
+RPC port is required,,Settings.Core
+RPC username is required,,Settings.Core
+RPC password is required,,Settings.Core
+API port is required,,Settings.Core
+API username is required,,Settings.Core
+API password is required,,Settings.Core
 Core settings saved,保存核心设置,Settings.Core
 Restarting Core...,重新启动核心...,Settings.Core
 Error rescanning,重新扫描错误,Settings.Core
@@ -395,7 +463,6 @@ Overview Display,概览显示,Settings.Style
 Nexus Addresses format,Nexus 地址格式,Settings.Style
 Choose your Nexus Address display preference,选择您的Nexus地址显示偏好,Settings.Style
 Sample Address,示例地址,Settings.Style
-This is your Default Address,这是您的默认地址,Settings.Style
 Theme,主题,Settings.Style
 Select Wallet Theme,选择钱包主题,Settings.Style
 Background,背景，后台。,Settings.Style
@@ -498,14 +565,19 @@ The amount of NXS currently staked in the trust account,,Transactions.Balances
 Immature,未成熟,Transactions.Balances
 The sum of all coinbase transactions that have not yet reached maturity,,Transactions.Balances
 Unnamed account,,User.Accounts
+Rename,,User.Accounts
 Details,,User.Accounts
 History,,User.Accounts
+<b>%{account_name}</b> account address,,User.Accounts
+Unnamed,,User.Accounts
 Create new account,,User.Accounts
 Account Details,,User.Accounts.AccountDetails
 Account name,帐户名称,User.Accounts.AccountDetails
+Unnamed,,User.Accounts.AccountDetails
 Created at,,User.Accounts.AccountDetails
 Last modified,,User.Accounts.AccountDetails
 Token name,,User.Accounts.AccountDetails
+Data,,User.Accounts.AccountDetails
 Total account balance,,User.Accounts.AccountDetails
 Available balance,,User.Accounts.AccountDetails
 Send %{token_name},,User.Accounts.AccountDetails
@@ -520,20 +592,32 @@ Adjust stake amount,,User.Accounts.AccountDetails
 Time,时间,User.Accounts.AccountHistory
 Operation,,User.Accounts.AccountHistory
 From,,User.Accounts.AccountHistory
-staked,,User.Accounts.AccountHistory
-mined,,User.Accounts.AccountHistory
+staking,,User.Accounts.AccountHistory
+mining,,User.Accounts.AccountHistory
 To,,User.Accounts.AccountHistory
 Change,,User.Accounts.AccountHistory
 Account History,,User.Accounts.AccountHistory
 Loading account history,,User.Accounts.AccountHistory
-Account balance(,,User.Accounts.AccountHistory
-Show %{tokenName},,User.Accounts.AccountHistory
 Account balance,,User.Accounts.AccountHistory
+Show %{tokenName},,User.Accounts.AccountHistory
 Total,,User.Accounts.AccountHistory
 Available,,User.Accounts.AccountHistory
 Pending,待处理,User.Accounts.AccountHistory
 Unconfirmed,,User.Accounts.AccountHistory
 Stake,堆栈,User.Accounts.AccountHistory
+Rename account,,RenameAccount
+Account name,,RenameAccount
+Account renaming fee,,RenameAccount
+Cancel,,RenameAccount
+Renaming,,RenameAccount
+Rename,,RenameAccount
+Account name is required,,RenameAccount
+Name already in use,,RenameAccount
+The name you entered is already in use. Please choose another name.,,RenameAccount
+Insuffient balance,,RenameAccount
+Your default account balance is not enough to pay the fee.,,RenameAccount
+Account has been renamed to %{account_name},,RenameAccount
+Error renaming account,,RenameAccount
 Unnamed asset,,User.Assets
 You own %{percentage}% of this asset,,User.Assets
 Create new asset,,User.Assets
@@ -650,10 +734,12 @@ Create a new name,,CreateName
 View name details,,User.Names
 Change register address,,User.Names
 Transfer name,,User.Names
+Unused,,User.Names
 Global,,User.Names
 Namespaced,,User.Names
 Local,,User.Names
 Create new name,,User.Names
+Show unused names,,User.Names
 You don't own any name,,User.Names
 Name Details,,NameDetails
 Change register address,,NameDetails
@@ -741,6 +827,7 @@ Enable staking,启用标记,User.Staking
 Cancel,取消,User.Staking
 Status,,User.Staking
 Staking,,User.Staking
+pooled,,User.Staking
 Not staking,,User.Staking
 Stake amount,,User.Staking
 The amount of NXS currently staked in the trust account,,User.Staking
@@ -762,7 +849,7 @@ Account on hold for another %{stakeSeconds} Seconds,,User.Staking
 Stop staking,,User.Staking
 Start staking,,User.Staking
 Create new token,,User.Tokens
-Lookup a token,,User.Tokens
+Look up a token,,User.Tokens
 Unnamed token,,User.Tokens
  (Owned by you),,User.Tokens
 Details,,User.Tokens
@@ -787,13 +874,14 @@ You have successfully created token %{token} ! Would you like to make an account
 Yes,是,User.Tokens.NewToken
 No,否,User.Tokens.NewToken
 Error creating token,,User.Tokens.NewToken
-Can not find Token,,User.Tokens.SearchToken
-Lookup Token,,User.Tokens.SearchToken
-Name/Address,,User.Tokens.SearchToken
-Lookup a Token on the network,,User.Tokens.SearchToken
-Lookup this token,,User.Tokens.SearchToken
+Cannot find Token,,User.Tokens.SearchToken
+Look up token,,User.Tokens.SearchToken
+Name or address,,User.Tokens.SearchToken
+Token name/address,,User.Tokens.SearchToken
+Look up,,User.Tokens.SearchToken
 No Value,,User.Tokens.SearchToken
 Error searching for token,,User.Tokens.SearchToken
+Unknown token name/address,,User.Tokens.SearchToken
 Token Details,,User.Tokens.TokenDetails
 Token name,,User.Tokens.TokenDetails
 Token address,,User.Tokens.TokenDetails
@@ -870,15 +958,15 @@ Are you sure you want to abort the process?,你确定你想要开始更新过程
 "No, let it continue",不，让我们继续,Bootstrap
 Bootstrap Recent Database,启动最近数据库,Bootstrap
 Abort,取消，终止,Bootstrap
-Bootstrap process has been aborted,启动程序已被中止,Bootstrap
-Error bootstrapping recent database,启动最近的数据库时出错,Bootstrap
-Unknown error,未知错误,Bootstrap
-Recent database has been successfully bootstrapped,最近的数据库已成功启动,Bootstrap
 Not enough disk space! Minimum 15GB of free space is required.,磁盘空间不足！需要最低15GB可用空间。,Bootstrap
 Download recent database?,下载最近的数据库？,Bootstrap
 Downloading a recent version of the database might reduce the time it takes to synchronize your wallet,下载数据库最新版本可能会减少同步你的钱包所需的时间,Bootstrap
 "Yes, let's bootstrap it",是的，让我们来引导吧,Bootstrap
 "No, let it sync",不，让我们同步,Bootstrap
+Bootstrap process has been aborted,启动程序已被中止,Bootstrap
+Error bootstrapping recent database,启动最近的数据库时出错,Bootstrap
+Unknown error,未知错误,Bootstrap
+Recent database has been successfully bootstrapped,最近的数据库已成功启动,Bootstrap
 Change password and PIN,,ChangePassword&PIN
 Current password,,ChangePassword&PIN
 Your current password,,ChangePassword&PIN
@@ -898,6 +986,10 @@ New PIN is required,,ChangePassword&PIN
 PIN must be at least 4 characters,,ChangePassword&PIN
 Password & PIN have been updated,,ChangePassword&PIN
 Error updating password & PIN,,ChangePassword&PIN
+Contract Details,,ContractDetails
+View transaction details,,ContractDetails
+Yes,是,ConfirmDialog
+No,否,ConfirmDialog
 Password/PIN mismatch,,ConfirmPassword&PIN
 "You have entered either your password or your PIN incorrectly, please re-check",,ConfirmPassword&PIN
 Confirm password and PIN,,ConfirmPassword&PIN
@@ -910,11 +1002,12 @@ PIN,,ConfirmPassword&PIN
 Re-enter your new PIN,,ConfirmPassword&PIN
 Re-enter your PIN,,ConfirmPassword&PIN
 Confirm,确认,ConfirmPassword&PIN
-Contract Details,,ContractDetails
-View transaction details,,ContractDetails
-Yes,是,ConfirmDialog
-No,否,ConfirmDialog
 Dismiss,解除，取消。,ErrorDialog
+Pin must be at least 4 characters,,PinDialog
+Confirm,确认,PinDialog
+Enter PIN,,PinDialog
+Your PIN,,PinDialog
+Cancel,取消,PinDialog
 Dismiss,解除，取消。,SuccessDialog
 Your wallet is not encrypted!,您的钱包没有加密！,EncryptionWarning
 It is highly recommended that you should encrypt your wallet to keep your NXS safe.,非常建议您加密你的钱包，以保持你的 NXS 安全。,EncryptionWarning
@@ -934,6 +1027,7 @@ Username is required,,Login
 Password is required,密码为必填,Login
 PIN is required,,Login
 Logged in as %{username},,Login
+Not being fully synced may have caused this error.,,Login
 Error logging in,登录时出错,Login
 Migrate account,,MigrateAccount
 You have %{amount} NXS in your legacy account.,,MigrateAccount
@@ -986,16 +1080,16 @@ Error creating new address,创建新地址时出错,MyAddresses.NewAddressForm
 New account,,NewAccount
 Account name (%{nameFee} NXS Fee) (Optional),,NewAccount
 New account's name,,NewAccount
-Token,,NewAccount
+Token name/address,,NewAccount
 Cancel,取消,NewAccount
 Creating account,,NewAccount
 Create account,,NewAccount
-Create a account without a name?,,NewAccount
+Create an account without a name?,,NewAccount
 Adding a name costs a NXS fee,,NewAccount
 That's Ok,,NewAccount
-Add Name,,NewAccount
-New account %{account} has been created,,NewAccount
 Error creating account,,NewAccount
+Unknown token name/address,,NewAccount
+New account %{account} has been created,,NewAccount
 Create new user,,NewUser
 Username,用户名,NewUser
 A globally unique username,,NewUser
@@ -1019,11 +1113,6 @@ PIN must be at least 4 characters,,NewUser
 Error creating user,,NewUser
 User registration for %{username} has been confirmed,,NewUser
 User registration for %{username} is waiting to be confirmed on Nexus blockchain...,,NewUser
-Pin must be at least 4 characters,,PinDialog
-Confirm,确认,PinDialog
-Enter PIN,,PinDialog
-Your PIN,,PinDialog
-Cancel,取消,PinDialog
 Recover password and PIN,,RecoverPassword&PIN
 Username,用户名,RecoverPassword&PIN
 Your username,,RecoverPassword&PIN

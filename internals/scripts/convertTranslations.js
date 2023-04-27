@@ -33,7 +33,7 @@ const locales = [
  * =============================================================================
  */
 const oldDicts = {};
-locales.forEach(locale => {
+locales.forEach((locale) => {
   const json = fs.readFileSync(path.join(transDir, locale + '.json'));
   oldDicts[locale] = JSON.parse(json);
 });
@@ -63,7 +63,7 @@ Object.entries(oldDicts).forEach(([locale, oldDict]) => {
   if (locale === 'en') return;
   const newDict = {};
   Object.entries(newEnDict).forEach(([context, newStrings]) => {
-    Object.keys(newStrings).forEach(newString => {
+    Object.keys(newStrings).forEach((newString) => {
       if (!newDict[context]) {
         newDict[context] = {};
       }

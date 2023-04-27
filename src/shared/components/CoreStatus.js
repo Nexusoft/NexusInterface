@@ -1,20 +1,16 @@
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import { isCoreConnected } from 'selectors';
 
-const mapStateToProps = state => ({
-  manualDaemon: state.settings.manualDaemon,
-  autoConnect: state.core.autoConnect,
-  coreConnected: isCoreConnected(state),
-});
-
-const CoreStatus = ({ coreConnected, manualDaemon, autoConnect }) =>
-  coreConnected
+export default function CoreStatus() {
+  const coreConnected = useSelector(isCoreConnected);
+  const manualDaemon = useSelector((state) => state.settings.manualDaemon);
+  const autoConnect = useSelector((state) => state.core.autoConnect);
+  return coreConnected
     ? ''
     : manualDaemon
-    ? __('Manual Core is disconnected')
+    ? __('Remote Core is disconnected')
     : autoConnect
     ? __('Connecting to Nexus Core...')
     : __('Nexus Core is stopped');
-
-export default connect(mapStateToProps)(CoreStatus);
+}

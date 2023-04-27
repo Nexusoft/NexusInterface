@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from '@emotion/styled';
 
 import { consts, timing, animations } from 'styles';
@@ -17,12 +16,12 @@ const StatusIconsComponent = styled.div({
   fontSize: 20,
 });
 
-const StatusIcons = () => (
-  <StatusIconsComponent>
-    <SyncStatus />
-    <StakingStatus />
-    <UserControl />
-  </StatusIconsComponent>
-);
-
-export default StatusIcons;
+export default function StatusIcons() {
+  return (
+    <StatusIconsComponent>
+      <SyncStatus />
+      <StakingStatus />
+      <UserControl />
+    </StatusIconsComponent>
+  );
+}

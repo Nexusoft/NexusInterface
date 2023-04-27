@@ -13,7 +13,7 @@ import { assetsDir } from 'consts/paths';
 export function setupTray(mainWindow) {
   const fileName =
     process.platform == 'darwin'
-      ? 'Nexus_Tray_Icon_Template_16.png'
+      ? 'Nexus_Tray_Icon_16_Template.png'
       : 'Nexus_Tray_Icon_32.png';
   const trayImage = path.join(assetsDir, 'tray', fileName);
   const tray = new Tray(trayImage);
@@ -30,7 +30,7 @@ export function setupTray(mainWindow) {
   const contextMenu = Menu.buildFromTemplate([
     {
       label: 'Show Nexus Wallet',
-      click: function() {
+      click: function () {
         mainWindow.show();
         if (process.platform === 'darwin') {
           app.dock.show();

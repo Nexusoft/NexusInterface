@@ -1,5 +1,5 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 
 import Icon from 'components/Icon';
@@ -39,77 +39,70 @@ const EmptyMessage = styled(Item)(({ theme }) => ({
   color: theme.mixer(0.5),
 }));
 
-const Namespace = ({ namespace }) => (
-  <NamespaceComponent
-    onClick={() => {
-      openModal(NamespaceDetailsModal, {
-        namespace,
-      });
-    }}
-    onContextMenu={e => {
-      e.stopPropagation();
-      popupContextMenu([
-        {
-          id: 'view-details',
-          label: __('View name details'),
-          click: () => {
-            openModal(NamespaceDetailsModal, { namespace });
+function Namespace({ namespace }) {
+  return (
+    <NamespaceComponent
+      onClick={() => {
+        openModal(NamespaceDetailsModal, {
+          namespace,
+        });
+      }}
+      onContextMenu={(e) => {
+        e.stopPropagation();
+        popupContextMenu([
+          {
+            id: 'view-details',
+            label: __('View name details'),
+            click: () => {
+              openModal(NamespaceDetailsModal, { namespace });
+            },
           },
-        },
-        {
-          id: 'transfer-namespace',
-          label: __('Transfer namespace'),
-          click: () => {
-            openModal(TransferNamespaceModal, { namespace });
+          {
+            id: 'transfer-namespace',
+            label: __('Transfer namespace'),
+            click: () => {
+              openModal(TransferNamespaceModal, { namespace });
+            },
           },
-        },
-      ]);
-    }}
-  >
-    {namespace.name}
-  </NamespaceComponent>
-);
+        ]);
+      }}
+    >
+      {namespace.name}
+    </NamespaceComponent>
+  );
+}
 
-@connect(state => ({
-  namespaces: state.user.namespaces,
-}))
-export default class Namesspaces extends React.Component {
-  constructor(props) {
-    super(props);
+export default function Namespaces() {
+  const session = useSelector((state) => state.user.session);
+  const namespaces = useSelector((state) => state.user.namespaces);
+  useEffect(() => {
     switchUserTab('Namespaces');
-  }
-
-  componentDidMount() {
     loadNamespaces();
-  }
+  }, [session]);
 
-  render() {
-    const { namespaces } = this.props;
+  return (
+    <TabContentWrapper maxWidth={400}>
+      <div>
+        <Button
+          wide
+          onClick={() => {
+            openModal(CreateNamespaceModal);
+          }}
+        >
+          <Icon icon={plusIcon} className="mr0_4" />
+          <span className="v-align">{__('Create new namespace')}</span>
+        </Button>
 
-    return (
-      <TabContentWrapper maxWidth={400}>
-        <div>
-          <Button
-            wide
-            onClick={() => {
-              openModal(CreateNamespaceModal);
-            }}
-          >
-            <Icon icon={plusIcon} className="space-right" />
-            <span className="v-align">{__('Create new namespace')}</span>
-          </Button>
-
-          <div className="mt1">
-            {!!namespaces && namespaces.length > 0 ? (
-              namespaces.map(namespace => (
-                <Namespace key={namespace.address} namespace={namespace} />
-              ))
-            ) : (
-              <EmptyMessage>{__("You don't own any namespace")}</EmptyMessage>
-            )}
-          </div>
+        <div className="mt1">
+          {!!namespaces && namespaces.length > 0 ? (
+            namespaces.map((namespace) => (
+              <Namespace key={namespace.address} namespace={namespace} />
+            ))
+          ) : (
+            <EmptyMessage>{__("You don't own any namespace")}</EmptyMessage>
+          )}
         </div>
-      </TabContentWrapper>
-    );
-  }
+      </div>
+    </TabContentWrapper>
+  );
 }

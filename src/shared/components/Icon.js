@@ -9,21 +9,32 @@
  * - Make sure this note also presents in other files which are imported here.
  */
 
-import React from 'react';
+import { forwardRef } from 'react';
 import styled from '@emotion/styled';
 
-const Svg = styled.svg({
+const Svg = styled.svg(({ size = '1em' }) => ({
   verticalAlign: 'middle',
   transitionProperty: 'fill, stroke',
   transitionDuration: '.2s',
-  width: '1em',
-  height: '1em',
-});
+  width: size,
+  height: size,
+}));
 
-const Icon = React.forwardRef(({ icon = {}, ...rest }, ref) => (
-  <Svg viewBox={icon.viewBox} {...rest} ref={ref}>
+const Icon = forwardRef(({ icon = {}, size, ...rest }, ref) => (
+  <Svg viewBox={icon.viewBox} size={size} {...rest} ref={ref}>
     <use href={`${icon.url ? icon.url : ''}#${icon.id}`} />
   </Svg>
+));
+
+Icon.Raw = forwardRef(({ icon, size, ...rest }, ref) => (
+  <Svg
+    as="img"
+    src={icon.url}
+    viewBox={icon.viewBox}
+    size={size}
+    {...rest}
+    ref={ref}
+  />
 ));
 
 export default Icon;

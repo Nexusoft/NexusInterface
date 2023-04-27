@@ -10,10 +10,9 @@
  */
 
 // External Dependencies
-import React from 'react';
+import { forwardRef } from 'react';
 import styled from '@emotion/styled';
-import { keyframes } from '@emotion/core';
-import * as color from 'utils/color';
+import { keyframes } from '@emotion/react';
 
 // Internal Global Dependencies
 import Icon from 'components/Icon';
@@ -58,7 +57,7 @@ const PanelHeader = styled.div(({ theme }) => ({
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
-  color: theme.background,
+  color: theme.mixer(0.75),
 }));
 
 const PanelTitle = styled.h3(({ theme }) => ({
@@ -70,7 +69,7 @@ const PanelTitle = styled.h3(({ theme }) => ({
 
 const PanelBody = styled.div(({ theme }) => ({
   gridArea: 'body',
-  background: color.darken(theme.background, 0.3),
+  background: theme.lower(theme.background, 0.3),
   borderBottomLeftRadius: borderRadius,
   borderBottomRightRadius: borderRadius,
   padding: '20px 30px',
@@ -79,13 +78,13 @@ const PanelBody = styled.div(({ theme }) => ({
   overscrollBehavior: 'none',
 }));
 
-const Panel = React.forwardRef(
+const Panel = forwardRef(
   ({ icon, title, controls, children, ...rest }, ref) => (
     <PanelWrapper {...rest}>
       <PanelComponent ref={ref}>
         <PanelHeader>
           <PanelTitle>
-            {!!icon && <Icon className="space-right" icon={icon} />}
+            {!!icon && <Icon className="mr0_4" icon={icon} />}
             <span className="v-align">{title}</span>
           </PanelTitle>
           {controls}

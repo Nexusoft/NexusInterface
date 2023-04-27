@@ -1,19 +1,17 @@
-import React from 'react';
-import { reduxForm, Field, FieldArray } from 'redux-form';
+import arrayMutators from 'final-form-arrays';
 
-import Modal from 'components/Modal';
+import Form from 'components/Form';
+import ControlledModal from 'components/ControlledModal';
 import Button from 'components/Button';
 import FormField from 'components/FormField';
-import TextField from 'components/TextField';
 import Spinner from 'components/Spinner';
 import Divider from 'components/Divider';
 import Icon from 'components/Icon';
 import QuestionCircle from 'components/QuestionCircle';
-import confirmPin from 'utils/promisified/confirmPin';
-import { errorHandler } from 'utils/form';
-import { openSuccessDialog } from 'lib/ui';
+import { formSubmit } from 'lib/form';
+import { confirmPin, openSuccessDialog } from 'lib/dialog';
 import { loadAssets } from 'lib/user';
-import { apiPost } from 'lib/tritiumApi';
+import { callApi } from 'lib/tritiumApi';
 import { createLocalNameFee } from 'lib/fees';
 import plusIcon from 'icons/plus.svg';
 
@@ -29,179 +27,141 @@ const createInitialField = () => ({
   maxlength: '',
 });
 
-const AssetFields = ({ fields, form, removeField }) =>
-  fields.map((fieldName, i) => (
-    <AssetFieldCreator
-      key={fieldName}
-      fieldName={fieldName}
-      first={i === 0}
-      form={form}
-      remove={() => removeField(i)}
-      onlyField={fields.length === 1}
-    />
-  ));
+const initialValues = {
+  name: '',
+  fields: [createInitialField()],
+};
 
-@reduxForm({
-  form: 'create-asset',
-  destroyOnUnmount: false,
-  initialValues: {
-    name: '',
-    fields: [createInitialField()],
-  },
-  validate: ({ fields }) => {
-    const errors = {};
-    const fieldsErrors = [];
-
-    if (fields) {
-      fields.forEach(({ name }, i) => {
-        const fieldErrors = {};
-        if (!name) {
-          fieldErrors.name = __('Field name is required');
-        }
-        if (Object.keys(fieldErrors).length) {
-          fieldsErrors[i] = fieldErrors;
-        }
-      });
-    }
-
-    if (fieldsErrors.length) {
-      errors.fields = fieldsErrors;
-    }
-
-    return errors;
-  },
-  onSubmit: async ({ name, fields }) => {
-    const pin = await confirmPin();
-
-    if (pin) {
-      const params = {
-        pin,
-        format: 'JSON',
-        json: fields.map(({ name, value, mutable, type, maxlength }) => {
-          const field = { name, value, mutable, type };
-          if (mutable && type === 'string' && maxlength) {
-            field.maxlength = maxlength;
-          }
-          return field;
-        }),
-      };
-      if (name) params.name = name;
-      return await apiPost('assets/create/asset', params);
-    }
-  },
-  onSubmitSuccess: async (result, dispatch, props) => {
-    if (!result) return; // Submission was cancelled
-    loadAssets();
-    props.reset();
-    props.closeModal();
-    openSuccessDialog({
-      message: __('New asset has been created'),
-    });
-  },
-  onSubmitFail: errorHandler(__('Error creating asset')),
-})
-class CreateAssetForm extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
-  addField = () => {
-    this.props.array.push('fields', createInitialField());
-  };
-
-  removeField = index => {
-    this.props.array.remove('fields', index);
-  };
-
-  render() {
-    const { handleSubmit, submitting, form } = this.props;
-    return (
-      <form onSubmit={handleSubmit}>
-        <FormField
-          connectLabel
-          label={
-            <span>
-              <span className="v-align">{__('Asset name')}</span>
-              <QuestionCircle
-                tooltip={__(
-                  'A local Name object register will be created for this asset name'
-                )}
-              />
-            </span>
-          }
-        >
-          <Field
-            name="name"
-            component={TextField.RF}
-            placeholder={__('Asset name (optional)')}
-            autoFocus
-          />
-        </FormField>
-
-        <Divider label={__('Asset data')} style={{ marginBottom: 0 }} />
-
-        <FieldArray
-          name="fields"
-          component={AssetFields}
-          form={form}
-          removeField={this.removeField}
+function AssetFields({ fields }) {
+  return (
+    <>
+      {fields.map((fieldName, i) => (
+        <AssetFieldCreator
+          key={fieldName}
+          fieldName={fieldName}
+          first={i === 0}
+          remove={() => fields.remove(i)}
+          onlyField={fields.length === 1}
         />
-
-        <Button
-          uppercase
-          skin="hyperlink"
-          className="mt2"
-          onClick={this.addField}
-        >
-          <Icon icon={plusIcon} className="space-right" />
-          <span className="v-align">{__('Add field')}</span>
-        </Button>
-
-        <div className="mt3">
-          <div className="text-center dim">
-            <span>{__('Estimated fee')}: </span>
-            <Field
-              name="name"
-              component={({ input }) =>
-                !!input.value ? 1 + createLocalNameFee : 1
-              }
-            />{' '}
-            NXS
-          </div>
-          <Button
-            skin="primary"
-            wide
-            uppercase
-            className="mt1"
-            type="submit"
-            disabled={submitting}
-          >
-            {submitting ? (
-              <span>
-                <Spinner className="space-right" />
-                <span className="v-align">{__('Creating asset')}...</span>
-              </span>
-            ) : (
-              __('Create asset')
-            )}
-          </Button>
-        </div>
-      </form>
-    );
-  }
+      ))}
+      <Button
+        uppercase
+        skin="hyperlink"
+        className="mt2"
+        onClick={() => fields.push(createInitialField())}
+      >
+        <Icon icon={plusIcon} className="mr0_4" />
+        <span className="v-align">{__('Add field')}</span>
+      </Button>
+    </>
+  );
 }
 
-const CreateAssetModal = () => (
-  <Modal style={{ width: '80%' }} maxWidth={900}>
-    {closeModal => (
-      <>
-        <Modal.Header>{__('Create a new asset')}</Modal.Header>
-        <Modal.Body>
-          <CreateAssetForm closeModal={closeModal} />
-        </Modal.Body>
-      </>
-    )}
-  </Modal>
-);
+export default function CreateAssetModal() {
+  return (
+    <ControlledModal style={{ width: '80%' }} maxWidth={900}>
+      {(closeModal) => (
+        <>
+          <ControlledModal.Header>
+            {__('Create a new asset')}
+          </ControlledModal.Header>
+          <ControlledModal.Body>
+            <Form
+              name="create-asset"
+              initialValues={initialValues}
+              onSubmit={formSubmit({
+                submit: async ({ name, fields }) => {
+                  const pin = await confirmPin();
 
-export default CreateAssetModal;
+                  if (pin) {
+                    const params = {
+                      pin,
+                      format: 'JSON',
+                      json: fields.map(
+                        ({ name, value, mutable, type, maxlength }) => {
+                          const field = { name, value, mutable, type };
+                          if (mutable && type === 'string' && maxlength) {
+                            field.maxlength = maxlength;
+                          }
+                          return field;
+                        }
+                      ),
+                    };
+                    if (name) params.name = name;
+                    return await callApi('assets/create/asset', params);
+                  }
+                },
+                onSuccess: async (result) => {
+                  if (!result) return; // Submission was cancelled
+                  closeModal();
+                  loadAssets();
+                  openSuccessDialog({
+                    message: __('New asset has been created'),
+                  });
+                },
+                errorMessage: __('Error creating asset'),
+              })}
+              mutators={{ ...arrayMutators }}
+            >
+              <FormField
+                connectLabel
+                label={
+                  <span>
+                    <span className="v-align">{__('Asset name')}</span>
+                    <QuestionCircle
+                      tooltip={__(
+                        'A local Name object register will be created for this asset name'
+                      )}
+                    />
+                  </span>
+                }
+              >
+                <Form.TextField
+                  name="name"
+                  placeholder={__('Asset name (optional)')}
+                  autoFocus
+                />
+              </FormField>
+
+              <Divider label={__('Asset data')} style={{ marginBottom: 0 }} />
+
+              <Form.FieldArray name="fields" component={AssetFields} />
+
+              <div className="mt3">
+                <div className="text-center dim">
+                  <span>{__('Estimated fee')}: </span>
+                  <Form.Field
+                    name="name"
+                    render={({ input }) =>
+                      !!input.value ? 1 + createLocalNameFee : 1
+                    }
+                  />{' '}
+                  NXS
+                </div>
+                <Form.SubmitButton
+                  skin="primary"
+                  wide
+                  uppercase
+                  className="mt1"
+                >
+                  {({ submitting }) =>
+                    submitting ? (
+                      <span>
+                        <Spinner className="mr0_4" />
+                        <span className="v-align">
+                          {__('Creating asset')}...
+                        </span>
+                      </span>
+                    ) : (
+                      __('Create asset')
+                    )
+                  }
+                </Form.SubmitButton>
+              </div>
+            </Form>
+          </ControlledModal.Body>
+        </>
+      )}
+    </ControlledModal>
+  );
+}

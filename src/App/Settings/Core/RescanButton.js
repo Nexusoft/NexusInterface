@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 
 import rpc from 'lib/rpc';
 import { showNotification } from 'lib/ui';
@@ -14,7 +14,7 @@ __ = __context('Settings.Core');
  * @class RescanButton
  * @extends {React.Component}
  */
-class RescanButton extends React.Component {
+class RescanButton extends Component {
   state = {
     rescanning: false,
   };

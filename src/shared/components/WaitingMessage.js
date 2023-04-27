@@ -1,6 +1,6 @@
 // External Dependencies
 import styled from '@emotion/styled';
-import { keyframes } from '@emotion/core';
+import { keyframes } from '@emotion/react';
 
 const breathe = keyframes`
   0% {

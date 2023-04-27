@@ -1,5 +1,5 @@
 // External
-import React, { Component } from 'react';
+import { useRef, useEffect } from 'react';
 import styled from '@emotion/styled';
 
 // Internal
@@ -27,62 +27,55 @@ const NotificationComponent = styled(SnackBar)({
   },
 });
 
-export default class Notification extends Component {
-  static defaultProps = {
-    type: 'info',
-    autoClose: 5000, // ms
-  };
+export default function Notification({
+  notifID,
+  onClick,
+  type = 'info',
+  autoClose = 5000,
+  ...rest
+}) {
+  const notifRef = useRef();
+  const timerRef = useRef();
 
-  notifRef = React.createRef();
+  useEffect(() => {
+    startAutoClose();
+    return stopAutoClose;
+  }, []);
 
-  componentDidMount() {
-    if (this.props.autoClose) {
-      this.startAutoClose();
-    }
-  }
-
-  componentWillUnmount() {
-    this.stopAutoClose();
-  }
-
-  animatedClose = () => {
-    if (this.props.notifID) {
+  const closeWithAnimation = () => {
+    if (notifID) {
       const duration = parseInt(timing.quick);
-      this.stopAutoClose();
-      this.notifRef.current.animate(outro, {
+      stopAutoClose();
+      notifRef.current.animate(outro, {
         duration,
         easing: 'ease-in',
         fill: 'both',
       });
-      setTimeout(this.remove, duration);
+      setTimeout(() => {
+        removeNotification(notifID);
+      }, duration);
     }
   };
 
-  remove = () => {
-    removeNotification(this.props.notifID);
+  const stopAutoClose = () => {
+    clearTimeout(timerRef.current);
   };
 
-  stopAutoClose = () => {
-    clearTimeout(this.autoClose);
+  const startAutoClose = () => {
+    if (autoClose) {
+      stopAutoClose();
+      timerRef.current = setTimeout(closeWithAnimation, autoClose);
+    }
   };
 
-  startAutoClose = () => {
-    this.stopAutoClose();
-    this.autoClose = setTimeout(this.animatedClose, this.props.autoClose);
-  };
-
-  render() {
-    const { onClick, ...rest } = this.props;
-    return (
-      <NotificationComponent
-        ref={this.notifRef}
-        onClick={
-          onClick ? () => onClick(this.animatedClose) : this.animatedClose
-        }
-        onMouseEnter={this.stopAutoClose}
-        onMouseLeave={this.startAutoClose}
-        {...rest}
-      />
-    );
-  }
+  return (
+    <NotificationComponent
+      ref={notifRef}
+      type={type}
+      onClick={onClick ? () => onClick(closeWithAnimation) : closeWithAnimation}
+      onMouseEnter={stopAutoClose}
+      onMouseLeave={startAutoClose}
+      {...rest}
+    />
+  );
 }

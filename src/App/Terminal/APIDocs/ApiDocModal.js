@@ -1,10 +1,10 @@
 //External
-import React from 'react';
+import { Component } from 'react';
 import styled from '@emotion/styled';
 import ReactMarkdown from 'react-markdown';
 
 //Internal
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import Button from 'components/Button';
 import Link from 'components/Link';
 
@@ -35,15 +35,15 @@ const documents = [
   { path: Invoices, label: 'Invoices' },
 ];
 
-const getInnerText = children => {
+const getInnerText = (children) => {
   if (typeof children === 'string') return children;
   if (Array.isArray(children)) {
-    return children.map(child => getInnerText(child.props.children)).join('');
+    return children.map((child) => getInnerText(child.props.children)).join('');
   }
   return '';
 };
 
-const toHeadingId = text =>
+const toHeadingId = (text) =>
   text
     .replace(/\s/g, '-')
     .replace(/[^\d\w]/g, '')
@@ -62,7 +62,7 @@ const InlineCode = styled.code({
   overflowWrap: 'break-word',
 });
 
-class APIDocModal extends React.Component {
+class APIDocModal extends Component {
   constructor(props) {
     super(props);
     this.closeModal = null;
@@ -71,14 +71,14 @@ class APIDocModal extends React.Component {
 
   loadMD(inFile) {
     fetch(inFile)
-      .then(response => response.text())
-      .then(text => {
+      .then((response) => response.text())
+      .then((text) => {
         this.setState({ displayMD: text });
       });
   }
 
   renderDocList = () =>
-    documents.map(e => (
+    documents.map((e) => (
       <div key={e.label}>
         <Button skin={'hyperlink'} onClick={() => this.loadMD(e.path)}>
           {e.label}
@@ -90,9 +90,11 @@ class APIDocModal extends React.Component {
   render() {
     const { displayMD } = this.state;
     return (
-      <Modal assignClose={closeModal => (this.closeModal = closeModal)}>
-        <Modal.Header>{'API Documentation'}</Modal.Header>
-        <Modal.Body>
+      <ControlledModal
+        assignClose={(closeModal) => (this.closeModal = closeModal)}
+      >
+        <ControlledModal.Header>{'API Documentation'}</ControlledModal.Header>
+        <ControlledModal.Body>
           {displayMD ? (
             <ReactMarkdown
               source={this.state.displayMD}
@@ -102,7 +104,7 @@ class APIDocModal extends React.Component {
                     <Link
                       as="a"
                       href={href}
-                      onClick={evt => {
+                      onClick={(evt) => {
                         evt.preventDefault();
                         if (href && href.startsWith('#')) {
                           const element = document.getElementById(
@@ -137,8 +139,8 @@ class APIDocModal extends React.Component {
               {this.renderDocList()}
             </>
           )}
-        </Modal.Body>
-        <Modal.Footer>
+        </ControlledModal.Body>
+        <ControlledModal.Footer>
           <div className="flex space-between">
             {displayMD && (
               <>
@@ -154,8 +156,8 @@ class APIDocModal extends React.Component {
               {__('Close')}
             </Button>
           </div>
-        </Modal.Footer>
-      </Modal>
+        </ControlledModal.Footer>
+      </ControlledModal>
     );
   }
 }

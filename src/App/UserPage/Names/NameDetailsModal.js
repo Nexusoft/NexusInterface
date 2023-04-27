@@ -1,11 +1,11 @@
-import React from 'react';
 import styled from '@emotion/styled';
 
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import InfoField from 'components/InfoField';
+import QRButton from 'components/QRButton';
 import { formatDateTime } from 'lib/intl';
 import { openModal } from 'lib/ui';
 import editIcon from 'icons/edit.svg';
@@ -35,79 +35,83 @@ const EditName = styled.div({
   fontSize: '1rem',
 });
 
-const NameDetailsModal = ({ nameRecord }) => (
-  <Modal>
-    {closeModal => (
-      <>
-        <Modal.Header className="relative">
-          {__('Name Details')}
-          <EditName>
-            <Tooltip.Trigger tooltip={__('Change register address')}>
-              <Button
-                skin="plain"
-                onClick={() => {
-                  closeModal();
-                  openModal(ChangeRegisterAddressModal, { nameRecord });
-                }}
-              >
-                <Icon icon={editIcon} />
-              </Button>
-            </Tooltip.Trigger>
-          </EditName>
-        </Modal.Header>
-        <Modal.Body>
-          <InfoField label={__('Name')}>{nameRecord.name}</InfoField>
-          <InfoField label={__('Type')}>
-            {nameRecord.global
-              ? __('Global')
-              : nameRecord.namespace
-              ? __('Namespaced')
-              : __('Local')}
-          </InfoField>
-          {!!nameRecord.namespace && (
-            <InfoField label={__('Namespace')}>
-              {nameRecord.namespace}
-            </InfoField>
-          )}
-          <InfoField label={__('Address')}>{nameRecord.address}</InfoField>
-          <InfoField label={__('Points to')}>
-            {nameRecord.register_address}
-          </InfoField>
-          <InfoField label={__('Created at')}>
-            {formatDateTime(nameRecord.created * 1000, timeFormatOptions)}
-          </InfoField>
-          <InfoField label={__('Last modified')}>
-            {formatDateTime(nameRecord.modified * 1000, timeFormatOptions)}
-          </InfoField>
-
-          <div className="mt2 flex space-between">
-            <div />
-            <div>
-              <Button
-                onClick={() => {
-                  closeModal();
-                  openModal(NameHistoryModal, { nameRecord });
-                }}
-              >
-                {__('View history')}
-              </Button>
-              {(!!nameRecord.global || !!nameRecord.namespace) && (
+export default function NameDetailsModal({ nameRecord }) {
+  return (
+    <ControlledModal>
+      {(closeModal) => (
+        <>
+          <ControlledModal.Header className="relative">
+            {__('Name Details')}
+            <EditName>
+              <Tooltip.Trigger tooltip={__('Change register address')}>
                 <Button
-                  className="space-left"
+                  skin="plain"
                   onClick={() => {
                     closeModal();
-                    openModal(TransferNameModal, { nameRecord });
+                    openModal(ChangeRegisterAddressModal, { nameRecord });
                   }}
                 >
-                  {__('Transfer ownership')}
+                  <Icon icon={editIcon} />
                 </Button>
-              )}
-            </div>
-          </div>
-        </Modal.Body>
-      </>
-    )}
-  </Modal>
-);
+              </Tooltip.Trigger>
+            </EditName>
+          </ControlledModal.Header>
+          <ControlledModal.Body>
+            <InfoField label={__('Name')}>{nameRecord.name}</InfoField>
+            <InfoField label={__('Type')}>
+              {nameRecord.global
+                ? __('Global')
+                : nameRecord.namespace
+                ? __('Namespaced')
+                : __('Local')}
+            </InfoField>
+            {!!nameRecord.namespace && (
+              <InfoField label={__('Namespace')}>
+                {nameRecord.namespace}
+              </InfoField>
+            )}
+            <InfoField label={__('Address')}>
+              <span className="v-align monospace">{nameRecord.address}</span>
+              <QRButton className="ml0_4" address={nameRecord.address} />
+            </InfoField>
+            <InfoField label={__('Points to')}>
+              <span className="v-align monospace">{nameRecord.register}</span>
+              <QRButton className="ml0_4" address={nameRecord.register} />
+            </InfoField>
+            <InfoField label={__('Created at')}>
+              {formatDateTime(nameRecord.created * 1000, timeFormatOptions)}
+            </InfoField>
+            <InfoField label={__('Last modified')}>
+              {formatDateTime(nameRecord.modified * 1000, timeFormatOptions)}
+            </InfoField>
 
-export default NameDetailsModal;
+            <div className="mt2 flex space-between">
+              <div />
+              <div>
+                <Button
+                  onClick={() => {
+                    closeModal();
+                    openModal(NameHistoryModal, { nameRecord });
+                  }}
+                >
+                  {__('View history')}
+                </Button>
+                {(!!nameRecord.global || !!nameRecord.namespace) && (
+                  <Button
+                    className="ml0_4"
+                    onClick={() => {
+                      closeModal();
+                      openModal(TransferNameModal, { nameRecord });
+                    }}
+                  >
+                    {__('Transfer ownership')}
+                  </Button>
+                )}
+              </div>
+            </div>
+          </ControlledModal.Body>
+        </>
+      )}
+    </ControlledModal>
+  );
+}

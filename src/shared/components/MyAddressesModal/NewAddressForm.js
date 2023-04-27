@@ -1,22 +1,16 @@
 // External
-import React from 'react';
-import { connect } from 'react-redux';
-import { reduxForm, Field } from 'redux-form';
+import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 
 // Internal
-import AutoSuggest from 'components/AutoSuggest';
+import Form from 'components/Form';
 import Button from 'components/Button';
+import { formSubmit, checkAll, required } from 'lib/form';
 import { showNotification } from 'lib/ui';
 import rpc from 'lib/rpc';
 import { loadAccounts } from 'lib/user';
-import { errorHandler } from 'utils/form';
 
 __ = __context('MyAddresses.NewAddressForm');
-
-const NewAddressFormComponent = styled.form({
-  marginTop: '2em',
-});
 
 const Buttons = styled.div({
   marginTop: '2em',
@@ -24,76 +18,47 @@ const Buttons = styled.div({
   justifyContent: 'space-between',
 });
 
-/**
- * Handles the new address form from the header
- *
- * @class NewAddressForm
- * @extends {React.Component}
- */
-@connect(state => ({
-  accountNames: (state.myAccounts || []).map(acc => acc.account),
-}))
-@reduxForm({
-  form: 'newAddress',
-  initialValues: {
-    accountName: '',
-  },
-  validate: ({ accountName }) => {
-    const errors = {};
-    if (!accountName) {
-      errors.accountName = __('Account name is required');
-    }
-    if (accountName === '*') {
-      errors.accountName = __('Invalid account name');
-    }
-    return errors;
-  },
-  onSubmit: ({ accountName }) => rpc('getnewaddress', [accountName]),
-  onSubmitSuccess: (result, dispatch, props) => {
-    loadAccounts();
-    props.finish();
-    showNotification(__('New address has been created'), 'success');
-  },
-  onSubmitFail: errorHandler(__('Error creating new address')),
-})
-class NewAddressForm extends React.Component {
-  /**
-   * Sets the account name
-   *
-   * @memberof NewAddressForm
-   */
-  setAccountName = name => {
-    this.props.change('accountName', name);
-  };
+const initialValues = {
+  accountName: '',
+};
 
-  /**
-   * React Render
-   *
-   * @returns
-   * @memberof NewAddressForm
-   */
-  render() {
-    const { handleSubmit, submitting, accountNames, finish } = this.props;
-    return (
-      <NewAddressFormComponent onSubmit={handleSubmit}>
+const validName = (value) => value === '*' && __('Invalid account name');
+
+export default function NewAddressForm({ finish }) {
+  const accountNames = useSelector((state) =>
+    (state.myAccounts || []).map((acc) => acc.account)
+  );
+  return (
+    <Form
+      name="newAddress"
+      initialValues={initialValues}
+      onSubmit={formSubmit({
+        submit: ({ accountName }) => rpc('getnewaddress', [accountName]),
+        onSuccess: () => {
+          loadAccounts();
+          finish();
+          showNotification(__('New address has been created'), 'success');
+        },
+        errorMessage: __('Error creating new address'),
+      })}
+    >
+      <div className="mt2">
         <div>{__('Enter a new account name or pick an existing account:')}</div>
-        <Field
-          component={AutoSuggest.RF}
+        <Form.AutoSuggest
           name="accountName"
           suggestions={accountNames}
-          onSelect={this.setAccountName}
           inputProps={{
             placeholder: __('Account name'),
           }}
+          validate={checkAll(required(), validName)}
         />
         <Buttons>
           <Button onClick={finish}>{__('Cancel')}</Button>
-          <Button type="submit" skin="primary" disabled={submitting}>
+          <Form.SubmitButton skin="primary">
             {__('New address')}
-          </Button>
+          </Form.SubmitButton>
         </Buttons>
-      </NewAddressFormComponent>
-    );
-  }
+      </div>
+    </Form>
+  );
 }
-export default NewAddressForm;

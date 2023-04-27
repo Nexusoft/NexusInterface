@@ -1,11 +1,11 @@
 // External
-import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
+import { useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 import { ChromePicker } from 'react-color';
-import { withTheme } from 'emotion-theming';
 
 // Internal
+import { updateTheme } from 'lib/theme';
 import Button from 'components/Button';
 import Overlay from 'components/Overlay';
 import * as color from 'utils/color';
@@ -30,91 +30,56 @@ const ColorButton = styled(Button)(({ color: c, open }) => {
   };
 });
 
-/**
- * Pick Color Element
- *
- * @class ColorPicker
- * @extends {Component}
- */
-class ColorPicker extends Component {
-  btnRef = React.createRef();
+export default function ColorPicker({ colorName }) {
+  const btnRef = useRef();
+  const [open, setOpen] = useState(false);
+  const [pickerStyles, setPickerStyles] = useState({});
+  const theme = useSelector((state) => state.theme);
+  const currentColor = theme[colorName];
 
-  state = {
-    open: false,
-    pickerStyles: {},
-  };
-
-  /**
-   * Open Color Modal
-   *
-   * @memberof ColorPicker
-   */
-  openPicker = () => {
-    const btnRect = ReactDOM.findDOMNode(
-      this.btnRef.current
-    ).getBoundingClientRect();
+  const openPicker = () => {
+    const btnRect = btnRef.current.getBoundingClientRect();
     const styles = {
       position: 'fixed',
       left: btnRect.right + 10,
       top: (btnRect.top + btnRect.bottom) / 2,
       transform: 'translateY(-50%)',
     };
-    this.setState({ open: true, pickerStyles: styles });
+    setOpen(true);
+    setPickerStyles(styles);
   };
 
-  /**
-   * Close Modal
-   *
-   * @memberof ColorPicker
-   */
-  closePicker = () => {
-    this.setState({ open: false, pickerStyles: {} });
+  const closePicker = () => {
+    setOpen(false);
+    setPickerStyles({});
   };
 
-  /**
-   * Handle Color Change
-   *
-   * @memberof ColorPicker
-   */
-  handleColorChange = pickedColor => {
-    this.props.onChange(this.props.colorName, pickedColor.hex);
+  const handleColorChange = (pickedColor) => {
+    updateTheme({ [colorName]: pickedColor.hex });
   };
 
-  /**
-   * Component's Renderable JSX
-   *
-   * @returns
-   * @memberof ColorPicker
-   */
-  render() {
-    const currentColor = this.props.theme[this.props.colorName];
-
-    return (
-      <>
-        <ColorButton
-          ref={this.btnRef}
-          uppercase
-          color={currentColor}
-          open={this.state.open}
-          onClick={this.openPicker}
-          {...this.props}
-        >
-          {currentColor}
-        </ColorButton>
-        {this.state.open && (
-          <Overlay onBackgroundClick={this.closePicker}>
-            <div style={this.state.pickerStyles}>
-              <ChromePicker
-                color={currentColor}
-                disableAlpha={true}
-                onChangeComplete={this.handleColorChange}
-              />
-            </div>
-          </Overlay>
-        )}
-      </>
-    );
-  }
+  return (
+    <>
+      <ColorButton
+        ref={btnRef}
+        uppercase
+        color={currentColor}
+        open={open}
+        onClick={openPicker}
+      >
+        {currentColor}
+      </ColorButton>
+      {open && (
+        <Overlay onBackgroundClick={closePicker}>
+          <div style={pickerStyles}>
+            <ChromePicker
+              color={currentColor}
+              disableAlpha={true}
+              onChangeComplete={handleColorChange}
+            />
+          </div>
+        </Overlay>
+      )}
+    </>
+  );
 }
-
-export default withTheme(ColorPicker);

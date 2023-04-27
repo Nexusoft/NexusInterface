@@ -4,12 +4,12 @@
 
 import path from 'path';
 import webpack from 'webpack';
-import merge from 'webpack-merge';
+import { merge } from 'webpack-merge';
 
 import baseConfig from './webpack.config.base';
 import { babelLoaderMain } from './babelLoaderConfig';
 
-export default merge.smart(baseConfig, {
+export default merge(baseConfig, {
   target: 'electron-main',
 
   entry: './src/main/main.js',

@@ -1,6 +1,5 @@
 // External
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 import GA from 'lib/googleAnalytics';
 
@@ -35,167 +34,109 @@ const SearchInput = styled(TextField)({
   width: 200,
 });
 
-/**
- * A Searchbox to search for contacts
- *
- * @class SearchBox
- * @extends {Component}
- * @memberof PanelControls
- */
-@connect(state => ({
-  searchQuery: state.ui.addressBook.searchQuery,
-}))
-class SearchBox extends Component {
-  /**
-   * Component's Renderable JSX
-   *
-   * @returns
-   * @memberof SearchBox
-   */
-  render() {
-    return (
-      <SearchInput
-        left={<Icon icon={searchIcon} className="space-right" />}
-        placeholder={__('Search contact')}
-        value={this.props.searchQuery}
-        onChange={e => searchContact(e.target.value)}
-      />
-    );
-  }
+function SearchBox() {
+  const searchQuery = useSelector((state) => state.ui.addressBook.searchQuery);
+  return (
+    <SearchInput
+      left={<Icon icon={searchIcon} className="mr0_4" />}
+      placeholder={__('Search contact')}
+      value={searchQuery}
+      onChange={(e) => searchContact(e.target.value)}
+    />
+  );
 }
 
-/**
- * The controls in the Panel Header of Address Book Page
- *
- * @class PanelControls
- * @extends {Component}
- */
-@connect(state => ({
-  addressBook: state.addressBook,
-  coreConnected: isCoreConnected(state),
-}))
-class PanelControls extends Component {
-  /**
-   * Export the Address Book to a CSV File
-   *
-   * @memberof PanelControls
-   */
-  exportAddressBook = () => {
-    GA.SendEvent('AddressBook', 'IOAddress', 'Export', 1);
+function exportAddressBook(addressBook) {
+  GA.SendEvent('AddressBook', 'IOAddress', 'Export', 1);
 
-    const rows = []; //Set up a blank array for each row
-    let csvContent = 'data:text/csv;charset=utf-8,'; //Set formating
-    //This is so we can have named columns in the export, this will be row 1
-    let NameEntry = [
-      'AccountName', //a
-      'PhoneNumber', //b
-      'TimeZone', //c
-      'Notes', //d
-    ];
-    rows.push(NameEntry); //how we get our header line
-    Object.values(this.props.addressBook).map(e => {
-      let tempentry = [];
-      tempentry.push(e.name);
-      tempentry.push(e.phoneNumber);
+  const rows = []; //Set up a blank array for each row
+  let csvContent = 'data:text/csv;charset=utf-8,'; //Set formating
+  //This is so we can have named columns in the export, this will be row 1
+  let NameEntry = [
+    'AccountName', //a
+    'PhoneNumber', //b
+    'TimeZone', //c
+    'Notes', //d
+  ];
+  rows.push(NameEntry); //how we get our header line
+  Object.values(addressBook).map((e) => {
+    let tempentry = [];
+    tempentry.push(e.name);
+    tempentry.push(e.phoneNumber);
 
-      tempentry.push(e.timeZone);
-      tempentry.push(e.notes);
-      // rows.push(tempentry); // moving down.
-      let tempAddresses = [];
+    tempentry.push(e.timeZone);
+    tempentry.push(e.notes);
+    // rows.push(tempentry); // moving down.
+    let tempAddresses = [];
 
-      if (e.addresses.length > 0) {
-        e.addresses.map(add => {
-          const label =
-            add.label ||
-            (add.isMine ? 'My Address for ' + e.name : e.name + "'s Address");
-          tempAddresses.push([label, add.address]);
-        });
-        tempentry.push(tempAddresses);
-      }
-      rows.push(tempentry);
-    });
+    if (e.addresses.length > 0) {
+      e.addresses.map((add) => {
+        const label =
+          add.label ||
+          (add.isMine ? 'My Address for ' + e.name : e.name + "'s Address");
+        tempAddresses.push([label, add.address]);
+      });
+      tempentry.push(tempAddresses);
+    }
+    rows.push(tempentry);
+  });
 
-    rows.forEach(function(rowArray) {
-      let row = rowArray.join(',');
-      csvContent += row + '\r\n';
-    }); //format each row
-    let encodedUri = encodeURI(csvContent); //Set up a uri, in Javascript we are basically making a Link to this file
-    let link = document.createElement('a');
-    link.setAttribute('href', encodedUri);
-    link.setAttribute('download', 'nexus-addressbook.csv'); //give link an action and a default name for the file. MUST BE .csv
+  rows.forEach(function (rowArray) {
+    let row = rowArray.join(',');
+    csvContent += row + '\r\n';
+  }); //format each row
+  let encodedUri = encodeURI(csvContent); //Set up a uri, in Javascript we are basically making a Link to this file
+  let link = document.createElement('a');
+  link.setAttribute('href', encodedUri);
+  link.setAttribute('download', 'nexus-addressbook.csv'); //give link an action and a default name for the file. MUST BE .csv
 
-    document.body.appendChild(link); // Required for FF
+  document.body.appendChild(link); // Required for FF
 
-    link.click();
+  link.click();
 
-    document.body.removeChild(link);
-  };
+  document.body.removeChild(link);
+}
 
-  /**
-   * Opens Add/Edit Contact Modal
-   *
-   * @memberof PanelControls
-   */
-  showAddContact = () => {
-    openModal(AddEditContactModal);
-  };
+export default function PanelControls() {
+  const coreConnected = useSelector(isCoreConnected);
 
-  /**
-   * Opens My Addresses Modal
-   *
-   * @memberof PanelControls
-   */
-  showMyAddresses = () => {
-    openModal(MyAddressesModal);
-  };
-
-  /**
-   * Component's Renderable JSX
-   *
-   * @returns {JSX}
-   * @memberof PanelControls
-   */
-  render() {
-    return (
-      <div className="flex center">
-        {legacyMode && this.props.coreConnected && (
-          <Tooltip.Trigger tooltip={__('My Addresses')}>
-            <Button
-              skin="plain"
-              className="relative"
-              onClick={this.showMyAddresses}
-            >
-              <ControlIcon icon={userIcon} />
-            </Button>
-          </Tooltip.Trigger>
-        )}
-
-        {this.props.coreConnected && (
-          <Tooltip.Trigger tooltip={__('New contact')}>
-            <Button
-              skin="plain"
-              className="relative"
-              onClick={this.showAddContact}
-            >
-              <ControlIcon icon={addContactIcon} />
-            </Button>
-          </Tooltip.Trigger>
-        )}
-
-        <Tooltip.Trigger tooltip={__('Export contacts')}>
+  return (
+    <div className="flex center">
+      {legacyMode && coreConnected && (
+        <Tooltip.Trigger tooltip={__('My Addresses')}>
           <Button
             skin="plain"
             className="relative"
-            onClick={this.exportAddressBook}
+            onClick={() => {
+              openModal(MyAddressesModal);
+            }}
           >
-            <ControlIcon icon={exportIcon} />
+            <ControlIcon icon={userIcon} />
           </Button>
         </Tooltip.Trigger>
+      )}
 
-        <SearchBox />
-      </div>
-    );
-  }
+      {coreConnected && (
+        <Tooltip.Trigger tooltip={__('New contact')}>
+          <Button
+            skin="plain"
+            className="relative"
+            onClick={() => {
+              openModal(AddEditContactModal);
+            }}
+          >
+            <ControlIcon icon={addContactIcon} />
+          </Button>
+        </Tooltip.Trigger>
+      )}
+
+      <Tooltip.Trigger tooltip={__('Export contacts')}>
+        <Button skin="plain" className="relative" onClick={exportAddressBook}>
+          <ControlIcon icon={exportIcon} />
+        </Button>
+      </Tooltip.Trigger>
+
+      <SearchBox />
+    </div>
+  );
 }
-
-export default PanelControls;

@@ -1,17 +1,12 @@
 // External
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { existsSync } from 'fs';
 import styled from '@emotion/styled';
 
 // Internal
-import StarrySky from './StarrySky';
-import CosmicLight from './Light';
-
-const mapStateToProps = state => ({
-  wallpaper: state.theme.wallpaper,
-  defaultStyle: state.theme.defaultStyle,
-});
+import { starryNightBackground, cosmicLightBackground } from 'lib/theme';
+import StarryNight from './StarryNight';
+import lightImg from './Light_Space.jpg';
 
 const CustomWallpaper = styled.div(
   {
@@ -20,38 +15,43 @@ const CustomWallpaper = styled.div(
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundSize: 'cover',
     backgroundPosition: 'center center',
   },
-  ({ wallpaper }) =>
-    !!wallpaper && {
-      backgroundImage: `url("${wallpaper}")`,
-    }
+  ({ image }) =>
+    !!image && {
+      backgroundImage: `url("${image}")`,
+    },
+  ({ size = 'cover', backgroundColor = '#000' }) => ({
+    backgroundSize: size,
+    backgroundColor,
+  })
 );
 
-/**
- * Controls the background of the app
- *
- * @class AppBackground
- * @extends {Component}
- */
-class AppBackground extends Component {
-  /**
-   * Component's Renderable JSX
-   *
-   * @returns {JSX}
-   * @memberof AppBackground
-   */
-  render() {
-    const { wallpaper, defaultStyle } = this.props;
-    return !!wallpaper && existsSync(wallpaper) ? (
-      <CustomWallpaper wallpaper={wallpaper} />
-    ) : defaultStyle.startsWith('Dark') ? (
-      <StarrySky />
-    ) : (
-      <CosmicLight />
+export default function AppBackground() {
+  const { wallpaper, wallpaperSize, wallpaperBackgroundColor } = useSelector(
+    (state) => state.theme
+  );
+
+  if (wallpaper === starryNightBackground) {
+    return <StarryNight />;
+  }
+  if (wallpaper === cosmicLightBackground) {
+    return (
+      <CustomWallpaper
+        image={lightImg}
+        size={wallpaperSize}
+        backgroundColor={wallpaperBackgroundColor}
+      />
     );
   }
+  if (!!wallpaper && existsSync(wallpaper)) {
+    return (
+      <CustomWallpaper
+        image={wallpaper}
+        size={wallpaperSize}
+        backgroundColor={wallpaperBackgroundColor}
+      />
+    );
+  }
+  return <StarryNight />;
 }
-
-export default connect(mapStateToProps)(AppBackground);

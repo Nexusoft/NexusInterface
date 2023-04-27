@@ -1,376 +1,191 @@
 // External
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { reduxForm, Field, FieldArray, formValueSelector } from 'redux-form';
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
+import arrayMutators from 'final-form-arrays';
 
 // Internal Global
-import { apiPost } from 'lib/tritiumApi';
-import { loadAccounts } from 'lib/user';
-import { formName, defaultValues } from 'lib/send';
+import Form from 'components/Form';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
-import TextField from 'components/TextField';
-import Select from 'components/Select';
 import FormField from 'components/FormField';
-import Tooltip from 'components/Tooltip';
-import Arrow from 'components/Arrow';
-import { openSuccessDialog } from 'lib/ui';
-import { errorHandler } from 'utils/form';
+import { openModal } from 'lib/ui';
+import { loadAccounts, loadOwnedTokens } from 'lib/user';
+import {
+  formName,
+  getDefaultRecipient,
+  useInitialValues,
+  getSource,
+} from 'lib/send';
+import { required } from 'lib/form';
+import store from 'store';
+import useUID from 'utils/useUID';
+import { timing } from 'styles';
 import sendIcon from 'icons/send.svg';
-import { numericOnly } from 'utils/form';
-import confirmPin from 'utils/promisified/confirmPin';
-import questionIcon from 'icons/question-mark-circle.svg';
+import plusIcon from 'icons/plus.svg';
 
 // Internal Local
 import Recipients from './Recipients';
-import {
-  getAccountOptions,
-  getAddressNameMap,
-  getRegisteredFieldNames,
-  getAccountInfo,
-} from './selectors';
+import { selectAccountOptions } from './selectors';
+import PreviewTransactionModal from './PreviewTransactionModal';
 
 __ = __context('Send');
 
-const SendFormComponent = styled.form({
-  maxWidth: 800,
+const SendFormComponent = styled.div({
+  maxWidth: 900,
   margin: '-.5em auto 0',
 });
 
 const SendFormButtons = styled.div({
   display: 'flex',
   justifyContent: 'space-between',
-  marginTop: '2em',
+  marginTop: '3em',
 });
 
-const OptionsArrow = styled.span({
-  display: 'inline-block',
-  width: 15,
-  verticalAlign: 'middle',
+const SendBtn = styled(Form.SubmitButton)({
+  flex: 1,
 });
 
-const MoreOptions = styled.div({
-  paddingLeft: '1em',
+const MultiBtn = styled(Button)({
+  marginRight: '1em',
 });
 
-const valueSelector = formValueSelector(formName);
-const mapStateToProps = state => {
-  const {
-    addressBook,
-    user: { accounts, tokens },
-    form,
-  } = state;
-  const accountName = valueSelector(state, 'sendFrom');
-  const reference = valueSelector(state, 'reference');
-  const expires = valueSelector(state, 'expires');
-  const accountInfo = getAccountInfo(accountName, accounts, tokens);
-  return {
-    reference,
-    expires,
-    accountName,
-    accountInfo,
-    accountOptions: getAccountOptions(accounts, tokens),
-    addressNameMap: getAddressNameMap(addressBook),
-    fieldNames: getRegisteredFieldNames(
-      form[formName] && form[formName].registeredFields
-    ),
-  };
-};
+const AdvancedOptionsSwitch = styled.div({
+  display: 'flex',
+  alignItems: 'center',
+  cursor: 'pointer',
+  marginTop: 10,
+  fontSize: 15,
+});
 
-/**
- * The Internal Send Form in the Send Page
- *
- * @class SendForm
- * @extends {Component}
- */
-@connect(mapStateToProps)
-@reduxForm({
-  form: formName,
-  destroyOnUnmount: false,
-  initialValues: defaultValues,
-  validate: ({ sendFrom, recipients, reference, expires }) => {
-    const errors = {};
-    if (!sendFrom) {
-      errors.sendFrom = __('No accounts selected');
-    }
-    if (reference) {
-      if (!reference.match('^[0-9]+$')) {
-        errors.reference = __('Reference must be a number');
-      } else {
-        if (parseInt(reference) > 18446744073709551615) {
-          errors.reference = __('Number is too large');
-        }
-      }
-    }
+const AdvancedOptionsLabel = styled.label(({ active }) => ({
+  transition: `opacity ${timing.normal}`,
+  opacity: active ? 1 : 0.67,
+}));
 
-    if (!recipients || !recipients.length) {
-      errors.recipients = {
-        _error: __('There must be at least one recipient'),
-      };
-    } else {
-      const recipientsErrors = [];
+function AddRecipientButton() {
+  const txExpiry = useSelector((state) => state.core.config?.txExpiry);
+  return (
+    <Form.FieldArray
+      name="recipients"
+      render={({ fields }) => (
+        <MultiBtn
+          skin="default"
+          onClick={() => {
+            fields.push(getDefaultRecipient({ txExpiry }));
+          }}
+        >
+          <Icon icon={plusIcon} style={{ fontSize: '.8em' }} />
+          <span className="v-align ml0_4">{__('Add recipient')}</span>
+        </MultiBtn>
+      )}
+    />
+  );
+}
 
-      recipients.forEach(({ address, amount }, i) => {
-        const recipientErrors = {};
-        if (!address) {
-          recipientErrors.address = __('Address/Name is required');
-        }
-        const floatAmount = parseFloat(amount);
-        if (!floatAmount || floatAmount < 0) {
-          recipientErrors.amount = __('Invalid amount');
-        }
-        if (Object.keys(recipientErrors).length) {
-          recipientsErrors[i] = recipientErrors;
-        }
-      });
-
-      if (recipientsErrors.length) {
-        errors.recipients = recipientsErrors;
-      }
-    }
-
-    return errors;
-  },
-  asyncBlurFields: ['recipients[].address'],
-  asyncValidate: async ({ recipients }) => {
-    const recipientInputSize = new Blob([recipients[0].address]).size;
-
-    const isAddress =
-      recipientInputSize === 51 &&
-      recipients[0].address.match(/([0OIl+/])/g) === null;
-
-    if (isAddress) {
-      const isAddressResult = await apiPost('system/validate/address', {
-        address: recipients[0].address,
-      });
-      if (!isAddressResult.is_valid) {
-        throw { recipients: [{ address: __('Invalid address') }] };
-      }
-    }
-
-    return null;
-  },
-  onSubmit: async (
-    { sendFrom, recipients, reference, expires },
-    dispatch,
-    props
-  ) => {
-    const pin = await confirmPin();
-    if (pin) {
-      const params = {
-        pin,
-        address: props.accountInfo.address,
-        amount: parseFloat(recipients[0].amount),
+function getRecipientsParams(recipients, { advancedOptions }) {
+  return recipients.map(
+    ({
+      address,
+      amount,
+      reference,
+      expireDays,
+      expireHours,
+      expireMinutes,
+      expireSeconds,
+    }) => {
+      const recipParam = {
+        address_to: address,
+        amount: parseFloat(amount),
       };
 
-      const recipientInputSize = new Blob([recipients[0].address]).size;
-      const isAddress =
-        recipientInputSize === 51 &&
-        recipients[0].address.match(/([0OIl+/])/g) === null;
-
-      isAddress
-        ? (params.address_to = recipients[0].address)
-        : (params.name_to = recipients[0].address);
-      if (reference) params.reference = reference;
-      if (expires) params.expires = expires;
-
-      if (props.accountInfo.token_name === 'NXS') {
-        return await apiPost('finance/debit/account', params);
-      } else {
-        if (props.accountInfo.maxsupply) {
-          return await apiPost('tokens/debit/token', params);
-        } else {
-          return await apiPost('tokens/debit/account', params);
+      if (advancedOptions) {
+        const expires =
+          parseInt(expireSeconds) +
+          parseInt(expireMinutes) * 60 +
+          parseInt(expireHours) * 3600 +
+          parseInt(expireDays) * 86400;
+        if (Number.isInteger(expires)) {
+          recipParam.expires = expires;
         }
+        if (reference) recipParam.reference = reference;
       }
-    }
-  },
-  onSubmitSuccess: (result, dispatch, props) => {
-    if (!result) return;
 
-    props.reset();
+      return recipParam;
+    }
+  );
+}
+
+export default function SendForm() {
+  const switchID = useUID();
+  const accountOptions = useSelector(selectAccountOptions);
+  const initialValues = useInitialValues();
+  useEffect(() => {
     loadAccounts();
-    openSuccessDialog({
-      message: __('Transaction sent'),
-    });
-  },
-  onSubmitFail: errorHandler(__('Error sending NXS')),
-})
-class SendForm extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      optionalOpen: false,
-    };
-  }
+    loadOwnedTokens();
+  }, []);
 
-  componentDidUpdate(prevProps) {
-    // if you have EVER added to these items always show till form is reset.
+  return (
+    <SendFormComponent>
+      <Form
+        name={formName}
+        persistState
+        initialValues={initialValues}
+        initialValuesEqual={() => true}
+        onSubmit={({ sendFrom, recipients, advancedOptions }, form) => {
+          const state = store.getState();
+          const source = getSource(state, sendFrom);
+          openModal(PreviewTransactionModal, {
+            source,
+            recipients: getRecipientsParams(recipients, { advancedOptions }),
+            resetSendForm: form.reset,
+          });
+        }}
+        mutators={{ ...arrayMutators }}
+      >
+        <div className="flex justify-end">
+          <AdvancedOptionsSwitch>
+            <Form.Switch
+              name="advancedOptions"
+              style={{ fontSize: '.75em' }}
+              id={switchID}
+            />
+            <Form.Field
+              name="advancedOptions"
+              subscription={{ value: true }}
+              render={({ input: { value } }) => (
+                <AdvancedOptionsLabel
+                  className="ml0_4 pointer"
+                  htmlFor={switchID}
+                  active={value}
+                >
+                  {__('Advanced options')}
+                </AdvancedOptionsLabel>
+              )}
+            />
+          </AdvancedOptionsSwitch>
+        </div>
 
-    if (this.props.reference || this.props.expires) {
-      if (
-        this.props.reference !== prevProps.reference ||
-        this.props.expires !== prevProps.expires
-      ) {
-        this.setState({
-          optionalOpen: true,
-        });
-      }
-    }
-  }
-
-  componentDidMount() {
-    // if ref or experation was in the form then open the optionals.
-    // form is NOT reset on component unmount so we must show it on mount
-    if (this.props.reference || this.props.expires) {
-      this.setState({
-        optionalOpen: true,
-      });
-    }
-  }
-
-  /**
-   * Confirm the Send
-   *
-   * @memberof SendForm
-   */
-  confirmSend = e => {
-    e.preventDefault();
-    const { handleSubmit, invalid, touch, fieldNames } = this.props;
-
-    if (invalid) {
-      // Mark the form touched so that the validation errors will be shown.
-      // redux-form doesn't have the `touchAll` feature yet so we have to list all fields manually.
-      // redux-form also doesn't have the API to get all the field names yet so we have to connect to the store to retrieve it manually
-      touch(...fieldNames);
-      return;
-    }
-    handleSubmit();
-  };
-
-  toggleMoreOptions = e => {
-    this.setState({
-      optionalOpen: !this.state.optionalOpen,
-    });
-  };
-
-  /**
-   * Add Recipient to the queue
-   *
-   * @memberof SendForm
-   */
-  addRecipient = () => {
-    this.props.array.push('recipients', {
-      address: null,
-      amount: '',
-      fiatAmount: '',
-    });
-  };
-
-  /**
-   * Return JSX for the Add Recipient Button
-   *
-   * @memberof SendForm
-   */
-  renderAddRecipientButton = ({ fields }) =>
-    //BEING REMOVED TILL NEW API SUPPORTS MULTI SEND
-    fields.length === 1 ? (
-      <Button onClick={this.addRecipient}>
-        {__('Send To multiple recipients')}
-      </Button>
-    ) : (
-      <div />
-    );
-
-  /**
-   * Component's Renderable JSX
-   *
-   * @returns
-   * @memberof SendForm
-   */
-  render() {
-    const { accountOptions, change, accountInfo, submitting } = this.props;
-    const optionsOpen =
-      this.state.optionalOpen || this.props.reference || this.props.expires;
-    return (
-      <SendFormComponent onSubmit={this.confirmSend}>
         <FormField label={__('Send from')}>
-          <Field
-            component={Select.RF}
+          <Form.Select
             name="sendFrom"
+            skin="filled-inverted"
             placeholder={__('Select an account')}
             options={accountOptions}
+            validate={required()}
           />
         </FormField>
 
-        <FieldArray
-          component={Recipients}
-          name="recipients"
-          change={change}
-          addRecipient={this.addRecipient}
-          accBalance={accountInfo.balance}
-          sendFrom={accountInfo}
-        />
-
-        <div className="mt1" style={{ opacity: 0.7 }}>
-          <Button onClick={this.toggleMoreOptions} skin="hyperlink">
-            <OptionsArrow>
-              <Arrow
-                direction={optionsOpen ? 'down' : 'right'}
-                height={8}
-                width={10}
-              />
-            </OptionsArrow>
-            <span className="v-align">{__('More options')}</span>
-          </Button>
-        </div>
-        {optionsOpen && (
-          <MoreOptions>
-            {' '}
-            <FormField
-              label={
-                <span>
-                  <span className="v-align">{__('Reference number')}</span>
-                  <Tooltip.Trigger
-                    position="right"
-                    tooltip={__(
-                      'An optional number which may be provided by the recipient to identify this transaction from the others'
-                    )}
-                  >
-                    <Icon icon={questionIcon} className="space-left" />
-                  </Tooltip.Trigger>
-                </span>
-              }
-            >
-              <Field
-                component={TextField.RF}
-                name="reference"
-                normalize={numericOnly}
-                placeholder={__(
-                  'Invoice number, order number, etc... (Optional)'
-                )}
-              />
-            </FormField>
-            {/*<FormField label={__('Expiration')}>
-              <Field
-                component={TextField.RF}
-                name="expires"
-                placeholder={__('Seconds till experation (Optional)')}
-              />
-        </FormField>{' '}*/}
-          </MoreOptions>
-        )}
+        <Form.FieldArray component={Recipients} name="recipients" />
 
         <SendFormButtons>
-          <Button type="submit" skin="primary" wide disabled={submitting}>
-            <Icon icon={sendIcon} className="space-right" />
-            {__('Send')}
-          </Button>
+          <AddRecipientButton />
+          <SendBtn skin="primary">
+            <Icon icon={sendIcon} className="mr0_4" />
+            {__('Proceed')}
+          </SendBtn>
         </SendFormButtons>
-      </SendFormComponent>
-    );
-  }
+      </Form>
+    </SendFormComponent>
+  );
 }
-
-export default SendForm;

@@ -1,6 +1,4 @@
 import fs from 'fs';
-import EventEmitter from 'events';
-import { createHashHistory } from 'history';
 import { ipcRenderer } from 'electron';
 
 import * as TYPE from 'consts/actionTypes';
@@ -8,6 +6,16 @@ import store from 'store';
 import { defaultSettings } from 'lib/settings/universal';
 import rpc from 'lib/rpc';
 import { stopCore } from 'lib/core';
+import { logOut } from 'lib/user';
+
+let _navigate = null;
+export function navigate(...params) {
+  return _navigate?.(...params);
+}
+
+export function setNavigate(func) {
+  _navigate = func;
+}
 
 /**
  * Backs up wallet
@@ -35,9 +43,9 @@ export function backupWallet(backupFolder) {
   return rpc('backupwallet', [backupDir + '/NexusBackup_' + now + '.dat']);
 }
 
-export const closeWallet = async beforeExit => {
+export const closeWallet = async (beforeExit) => {
   const {
-    settings: { manualDaemon },
+    settings: { manualDaemon, manualDaemonLogOutOnClose },
   } = store.getState();
 
   store.dispatch({
@@ -46,17 +54,15 @@ export const closeWallet = async beforeExit => {
 
   if (!manualDaemon) {
     await stopCore();
+  } else if (manualDaemonLogOutOnClose) {
+    await logOut(); //TODO: Ask for pin/session
   }
 
   if (beforeExit) beforeExit();
   ipcRenderer.invoke('exit-app');
 };
 
-export const history = createHashHistory();
-
-export const walletEvents = new EventEmitter();
-
-walletEvents.once('pre-render', function() {
+export function prepareWallet() {
   ipcRenderer.on('window-close', async () => {
     const {
       settings: { minimizeOnClose },
@@ -76,4 +82,4 @@ walletEvents.once('pre-render', function() {
 
     await closeWallet();
   });
-});
+}

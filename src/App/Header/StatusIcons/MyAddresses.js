@@ -1,5 +1,4 @@
 // External
-import React from 'react';
 import styled from '@emotion/styled';
 
 // Internal
@@ -25,24 +24,19 @@ const MyAddressesIcon = styled(StatusIcon)(({ theme }) => ({
   },
 }));
 
-/**
- * Returns JSX of My Addresses
- *
- *@returns {JSX} JSX
- */
-const MyAddresses = () => (
-  <Tooltip.Trigger
-    align="end"
-    tooltip={__('My Addresses')}
-    style={{ transform: 'translateX(12px)' }}
-  >
-    <MyAddressesIcon
-      icon={userIcon}
-      onClick={() => {
-        openModal(MyAddressesModal);
-      }}
-    />
-  </Tooltip.Trigger>
-);
-
-export default MyAddresses;
+export default function MyAddresses() {
+  return (
+    <Tooltip.Trigger
+      align="end"
+      tooltip={__('My Addresses')}
+      style={{ transform: 'translateX(12px)' }}
+    >
+      <MyAddressesIcon
+        icon={userIcon}
+        onClick={() => {
+          openModal(MyAddressesModal);
+        }}
+      />
+    </Tooltip.Trigger>
+  );
+}

@@ -25,7 +25,7 @@ const exec = (command, options) =>
 /**
  * Check if core binary file exists
  *
- * @returns
+ * @returns {boolean} Does the core exist at coreBinaryPath
  */
 export function coreBinaryExists() {
   log.info('Checking if core binary exists: ' + coreBinaryPath);
@@ -42,7 +42,8 @@ export function coreBinaryExists() {
 /**
  * Get Process ID of core process if core is running
  *
- * @returns
+ * @returns {string} PID
+ * @memberof Core
  */
 async function getCorePID() {
   const modEnv = process.env;
@@ -68,7 +69,7 @@ async function getCorePID() {
     )
       .toString()
       .split('\n')
-      .find(output => output.includes(coreBinaryPath));
+      .find((output) => output.includes(coreBinaryPath));
 
     PID =
       PID &&
@@ -103,6 +104,11 @@ async function getCorePID() {
   }
 }
 
+/**
+ * Returns true if the PID is found.
+ * @returns { boolean } If the core is running.
+ * @memberof Core
+ */
 export async function isCoreRunning() {
   const pid = await getCorePID();
   return !!pid;
@@ -136,6 +142,10 @@ export function startCore(params) {
   }
 }
 
+/**
+ * Find the Core's PID and then kill the task.
+ * @memberof Core
+ */
 export async function killCoreProcess() {
   const corePID = await getCorePID();
   log.info('Core Manager: Killing process ' + corePID);
@@ -148,6 +158,18 @@ export async function killCoreProcess() {
   }
 }
 
+/**
+ * Execute either an API call or RPC call by using the shell to execute the core path plus a command.
+ * @param {string} command API/RPC command to run
+ * @returns {object} the result of the command
+ * @memberof Core
+ */
 export async function executeCommand(command) {
-  return await exec(`"${coreBinaryPath}" ${command}`);
+  try {
+    const result = await exec(`"${coreBinaryPath}" -noapiauth ${command}`);
+    return result;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
 }

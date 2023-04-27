@@ -10,6 +10,7 @@ const GA = {};
 
 GA.visitor = null;
 GA.active = false;
+
 if (
   (settings.sendUsageData == null ||
     settings.sendUsageData == undefined ||
@@ -20,6 +21,8 @@ if (
   GA.active = true;
   GA.visitor.set('ul', settings.locale || 'en');
   GA.visitor.set('aiid', process.platform);
+  GA.visitor.set('ds', 'app');
+  GA.visitor.set('aip', 1);
   try {
     const osVer = os.platform() + ' ' + os.release();
     GA.visitor.set('cd1', osVer);
@@ -37,7 +40,6 @@ GA.SendScreen = function (ScreenTitle) {
   if (GA.active == false) return;
 
   GA.visitor.screenview(ScreenTitle, 'Nexus Wallet', APP_VERSION).send();
-  console.log('Sent Screen: ' + ScreenTitle);
 };
 
 // Send Event
@@ -65,10 +67,12 @@ GA.DisableAnalytics = function () {
 // Turn on Analytics and create a new visitor
 GA.EnableAnalytics = function () {
   if (GA.visitor != null) return;
-  GA.visitor = ua('UA-117808839-1');
+  GA.visitor = ua('UA-207070578-1');
   GA.active = true;
   GA.visitor.set('ul', settings.locale || 'en');
   GA.visitor.set('aiid', process.platform);
+  GA.visitor.set('ds', 'app');
+  GA.visitor.set('aip', 1);
   try {
     const osVer = os.platform() + ' ' + os.release();
     GA.visitor.set('cd1', osVer);

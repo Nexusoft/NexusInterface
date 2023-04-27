@@ -1,14 +1,16 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 
 import Icon from 'components/Icon';
 import Button from 'components/Button';
-import { switchUserTab } from 'lib/ui';
-import { loadNameRecords } from 'lib/user';
-import { openModal } from 'lib/ui';
-import { timing } from 'styles';
+import Switch from 'components/Switch';
+import { switchUserTab, openModal } from 'lib/ui';
+import { loadNameRecords, selectUsername } from 'lib/user';
+import { updateSettings } from 'lib/settings';
 import { popupContextMenu } from 'lib/contextMenu';
+import { timing } from 'styles';
+import memoize from 'utils/memoize';
 import plusIcon from 'icons/plus.svg';
 
 import NameDetailsModal from './NameDetailsModal';
@@ -36,6 +38,11 @@ const NameComponent = styled(Item)(({ theme }) => ({
   },
 }));
 
+const Types = styled.div({
+  flexShrink: 0,
+  display: 'flex',
+});
+
 const Type = styled.span(({ theme }) => ({
   textTransform: 'uppercase',
   fontSize: '.75em',
@@ -44,7 +51,6 @@ const Type = styled.span(({ theme }) => ({
   padding: '.1em .3em',
   borderRadius: 4,
   whiteSpace: 'nowrap',
-  flexShrink: 0,
   marginLeft: '1em',
 }));
 
@@ -57,93 +63,117 @@ const EmptyMessage = styled(Item)(({ theme }) => ({
   color: theme.mixer(0.5),
 }));
 
-const Name = ({ nameRecord, username }) => (
-  <NameComponent
-    onClick={() => {
-      openModal(NameDetailsModal, {
-        nameRecord,
-      });
-    }}
-    onContextMenu={e => {
-      e.stopPropagation();
-      const template = [
-        {
-          id: 'view-details',
-          label: __('View name details'),
-          click: () => {
-            openModal(NameDetailsModal, { nameRecord });
-          },
-        },
-        {
-          id: 'change-register-address',
-          label: __('Change register address'),
-          click: () => {
-            openModal(ChangeRegisterAddressModal, { nameRecord });
-          },
-        },
-      ];
-      if (nameRecord.global || nameRecord.namespace) {
-        template.push({
-          id: 'transfer',
-          label: __('Transfer name'),
-          click: () => {
-            openModal(TransferNameModal, { nameRecord });
-          },
+function Name({ nameRecord, username }) {
+  return (
+    <NameComponent
+      onClick={() => {
+        openModal(NameDetailsModal, {
+          nameRecord,
         });
-      }
-      popupContextMenu(template);
-    }}
-  >
-    <span>
-      {!!nameRecord.namespace ? (
-        <Prefix>{nameRecord.namespace}::</Prefix>
-      ) : !nameRecord.global ? (
-        <Prefix>{username}:</Prefix>
-      ) : null}
-      {nameRecord.name}
-    </span>
-    <Type>
-      {nameRecord.global
-        ? __('Global')
-        : nameRecord.namespace
-        ? __('Namespaced')
-        : __('Local')}
-    </Type>
-  </NameComponent>
+      }}
+      onContextMenu={(e) => {
+        e.stopPropagation();
+        const template = [
+          {
+            id: 'view-details',
+            label: __('View name details'),
+            click: () => {
+              openModal(NameDetailsModal, { nameRecord });
+            },
+          },
+          {
+            id: 'change-register-address',
+            label: __('Change register address'),
+            click: () => {
+              openModal(ChangeRegisterAddressModal, { nameRecord });
+            },
+          },
+        ];
+        if (nameRecord.global || nameRecord.namespace) {
+          template.push({
+            id: 'transfer',
+            label: __('Transfer name'),
+            click: () => {
+              openModal(TransferNameModal, { nameRecord });
+            },
+          });
+        }
+        popupContextMenu(template);
+      }}
+    >
+      <span>
+        {!!nameRecord.namespace ? (
+          <Prefix>{nameRecord.namespace}::</Prefix>
+        ) : !nameRecord.global ? (
+          <Prefix>{username}:</Prefix>
+        ) : null}
+        {nameRecord.name}
+      </span>
+      <Types>
+        {!(nameRecord.register && nameRecord.register !== '0') && (
+          <Type>{__('Unused')}</Type>
+        )}
+        <Type>
+          {nameRecord.global
+            ? __('Global')
+            : nameRecord.namespace
+            ? __('Namespaced')
+            : __('Local')}
+        </Type>
+      </Types>
+    </NameComponent>
+  );
+}
+
+const selectNameRecords = memoize(
+  (nameRecords, showUnusedNames) =>
+    showUnusedNames
+      ? nameRecords
+      : nameRecords?.filter((nr) => nr.register && nr.register !== '0'),
+  (state) => [state.user.nameRecords, state.settings.showUnusedNames]
 );
 
-@connect(state => ({
-  nameRecords: state.user.nameRecords,
-  username: state.user.status && state.user.status.username,
-}))
-export default class Names extends React.Component {
-  constructor(props) {
-    super(props);
+export default function Names() {
+  const session = useSelector((state) => state.user.session);
+  const nameRecords = useSelector(selectNameRecords);
+  const username = useSelector(selectUsername);
+  const showUnusedNames = useSelector(
+    (state) => state.settings.showUnusedNames
+  );
+  useEffect(() => {
     switchUserTab('Names');
-  }
-
-  componentDidMount() {
     loadNameRecords();
-  }
+  }, [session]);
 
-  render() {
-    const { nameRecords, username } = this.props;
+  const toggle = () => updateSettings({ showUnusedNames: !showUnusedNames });
 
-    return (
-      <TabContentWrapper maxWidth={500}>
-        <Button
-          wide
-          onClick={() => {
-            openModal(CreateNameModal);
-          }}
-        >
-          <Icon icon={plusIcon} className="space-right" />
-          <span className="v-align">{__('Create new name')}</span>
-        </Button>
+  return (
+    <TabContentWrapper maxWidth={500}>
+      <Button
+        wide
+        onClick={() => {
+          openModal(CreateNameModal);
+        }}
+      >
+        <Icon icon={plusIcon} className="mr0_4" />
+        <span className="v-align">{__('Create new name')}</span>
+      </Button>
+
+      <div className="mt2">
+        <div className="flex center">
+          <Switch
+            style={{ fontSize: '.7em' }}
+            value={showUnusedNames}
+            onChange={toggle}
+          />
+          <span className="pointer ml0_4" onClick={toggle}>
+            {__('Show unused names')}
+          </span>
+        </div>
 
         <div className="mt1">
           {!!nameRecords && nameRecords.length > 0 ? (
-            nameRecords.map(nameRecord => (
+            nameRecords.map((nameRecord) => (
               <Name
                 key={nameRecord.address}
                 nameRecord={nameRecord}
@@ -154,7 +184,7 @@ export default class Names extends React.Component {
             <EmptyMessage>{__("You don't own any name")}</EmptyMessage>
           )}
         </div>
-      </TabContentWrapper>
-    );
-  }
+      </div>
+    </TabContentWrapper>
+  );
 }

@@ -30,14 +30,10 @@ const {
   libraries: {
     React,          // from 'react'
     ReactDOM,       // from 'react-dom'
-    ReactRouterDOM, // from 'react-router-dom
-    Redux,          // from 'redux'
-    ReactRedux,     // from 'react-redux'
     emotion: {
-      core,         // from '@emotion/core'
+      react,        // from '@emotion/react'
       styled,       // from '@emotion/styled'
-      theming,      // from 'emotion-themeing'
-      createCache,  // from '@emotion/cache'
+      cache,        // from '@emotion/cache'
     },
   }
 } = NEXUS
@@ -54,24 +50,46 @@ Please note that these components are built on React, so your module also need t
 ```js
 const {
   components: {
-    GlobalStyles,
-    Panel,
+    Arrow,
+    AutoSuggest,
     Button,
-    Tooltip,
-    TextField,
-    Switch,
-    Select,
-    Link,
-    Icon,
-    Tab,
+    Dropdown,
     FieldSet,
+    FormField,
+    GlobalStyles,
+    Icon,
+    Modal,
+    Panel,
+    Select,
+    Switch,
+    HorizontalTab,
+    VerticalTab,
+    TextField,
+    ThemeController,
+    Tooltip,
   },
 } = NEXUS;
 ```
 
-More documentations on how to use components will be updated.
+List of included components:
 
-<!-- See [React components](./react-components.md) for more details. -->
+- [Arrow](../../src/shared/components/Arrow.js)
+- [AutoSuggest](../../src/shared/components/AutoSuggest.js)
+- [Button](../../src/shared/components/Button.js)
+- [Dropdown](../../src/shared/components/Dropdown.js)
+- [FieldSet](../../src/shared/components/FieldSet.js)
+- [FormField](../../src/shared/components/FormField.js)
+- [GlobalStyles](../../src/shared/components/GlobalStyles/index.js)
+- [Icon](../../src/shared/components/Icon.js)
+- [Modal](../../src/shared/components/Modal.js)
+- [Panel](../../src/shared/components/Panel.js)
+- [Select](../../src/shared/components/Select.js)
+- [Switch](../../src/shared/components/Switch.js)
+- [HorizontalTab](../../src/shared/components/HorizontalTab.js)
+- [VerticalTab](../../src/shared/components/VerticalTab.js)
+- [TextField](../../src/shared/components/TextField.js)
+- [ThemeController](../../src/shared/components/ThemeController.js)
+- [Tooltip](../../src/shared/components/Tooltip.js)
 
 ---
 
@@ -87,25 +105,22 @@ Some notes about the utilities function:
 ```js
 const {
   utilities: {
-    showNotification,
-    showErrorDialog,
-    showSuccessDialog,
+    send,
     rpcCall,
     apiCall,
     secureApiCall,
     proxyRequest,
+    showNotification,
+    showErrorDialog,
+    showSuccessDialog,
+    showInfoDialog,
     confirm,
     updateState,
     updateStorage,
     onceInitialize,
-    onThemeUpdated,
-    onSettingsUpdate,
-    onCoreInfoUpdated,
-    onUserStatusUpdated,
-    onceRpcReturn,
-    onceProxyResponse,
-    onceCOnfirmAnswer,
+    onWalletDataUpdated,
     copyToClipboard,
+    openInBrowser,
     color,
   },
 } = NEXUS;
@@ -113,26 +128,154 @@ const {
 
 ### `utilities` API references
 
-- [`showNotification`](#shownotification)
-- [`showErrorDialog`](#showerrordialog)
-- [`showSuccessDialog`](#showsuccessdialog)
-- [`updateState`](#updatestate)
-- [`updateStorage`](#updatestorage)
-- [`onceInitialize`](#onceinitialize)
-- [`onThemeUpdated`](#onthemeupdated)
-- [`onSettingsUpdated`](#onsettingsupdated)
-- [`onCoreInfoUpdated`](#oncoreinfoupdated)
-- [`onUserStatusUpdated`](#onuserstatusupdated)
-- [`sendNXS`](#sendnxs)
+- [`send`](#send)
 - [`rpcCall`](#rpccall)
 - [`apiCall`](#apicall)
 - [`secureApiCall`](#secureapicall)
 - [`proxyRequest`](#proxyrequest)
+- [`showNotification`](#shownotification)
+- [`showErrorDialog`](#showerrordialog)
+- [`showSuccessDialog`](#showsuccessdialog)
+- [`showInfoDialog`](#showinfodialog)
 - [`confirm`](#confirm)
+- [`updateState`](#updatestate)
+- [`updateStorage`](#updatestorage)
+- [`onceInitialize`](#onceinitialize)
+- [`onWalletDataUpdated`](#onwalletdataupdated)
 - [`copyToClipboard`](#copytoclipboard)
+- [`openInBrowser`](#openinbrowser)
 - [`color`](#color)
 
 ---
+
+### `send`
+
+For security reasons, this function **won't really send NXS or any tokens**. It only **redirects** user to the built in Send page in the wallet, prefilled with data fields. User will then need to manually click Send to complete the transaction.
+
+```js
+send(options: object): void;
+```
+
+Depending on whether the wallet is in Tritium mode or Legacy mode, the `options` parameter shape is different.
+
+For Tritium mode:
+
+- `options.sendFrom`: string - The address of the account or token to send from.
+- `options.recipients`: array - An array of objects that contain recipient addresses and the NXS amount to send to the corresponding address.
+  - `options.recipients[].address`: string - Recipient's Nexus address to send to.
+  - `options.recipients[].amount`: string - Amount to send.
+  - `options.recipients[].reference`: string|number - An optional number which may be provided by the recipient to identify this transaction from the others. Reference should be an unsigned integer between 0 and 18446744073709551615.
+  - `options.recipients[].expireDays`: string|number - Expiration time in days.
+  - `options.recipients[].expireHours`: string|number - Expiration time in hours.
+  - `options.recipients[].expireMinutes`: string|number - Expiration time in minutes.
+  - `options.recipients[].expireSeconds`: string|number - Expiration time in seconds.
+- `options.advancedOptions`: boolean - Whether to turn on "Advanced options", which will enable reference and expiration settings.
+
+For Legacy mode:
+
+- `options.sendFrom`: string - The address of the account or token to send from.
+- `options.recipients`: array - An array of objects that contain recipient addresses and the NXS amount to send to the corresponding address.
+  - `options.recipients[].address`: string - Recipient's Nexus address to send to.
+
+### `rpcCall`
+
+`rpcCall` function sends an [RPC call](https://en.wikipedia.org/wiki/Remote_procedure_call) to Nexus core, and the call result (or error) will be returned to your module via a Promise.
+
+```js
+rpcCall(command: string, params: array) : Promise<object>
+```
+
+- `command`: string - A valid command that will be sent to Nexus core (see Nexus core documentation for list of all available commands).
+- `params`: array - List of all params that will be passed along with the command.
+- Returns a Promise that will be resolved to the RPC call result or rejected with an error.
+
+```js
+NEXUS.utilities
+  .rpcCall('getaccountaddress', ['default'])
+  .then((result) => {
+    // handle result...
+  })
+  .catch((err) => {
+    // handle error...
+  });
+```
+
+### `apiCall`
+
+`apiCall` method will be the interface between the module and executing API calls. To use API calls that will modify the sig chain use [secureApiCall](#secureapicall) . Will return a promise with the result, a result will only ever return if the nexus core accepts the request.
+
+```js
+apiCall(url: string, params: object) : Promise<object>
+```
+
+- `url`: string - The API endpoint.
+- `params`: object - parameters to pass to the endpoint
+- Return : promise - promise returns a object
+
+Example Usage
+
+```js
+apiCall('system/get/info', { foo: bar })
+  .then((result) => {
+    // handle result
+  })
+  .catch((err) => {
+    //handle error
+  });
+```
+
+### `secureApiCall`
+
+`secureApiCall` acts just like the `apiCall` method but will allow for secured operations that will result in a change to your sigchain, such as sending NXS to another address. All API methods that require a PIN must use this function. When `secureApiCall` is called, a modal will be displayed prompting the user to enter their PIN, it will also transparently display which API endpoint being called and what params being passed in.
+
+```js
+secureApiCall(url: string, params: object) : Promise<object>
+```
+
+- `url`: string - The api endpoint, must be on the whitelist.
+- `params`: object - parameters to pass to the endpoint
+- Return : promise - promise returns a object
+
+Example Usage:
+
+```js
+secureApiCall('finance/debit/account', { address: foo, name_to: bar })
+  .then((result) => {
+    // hendle result
+  })
+  .catch((err) => {
+    // handle error
+    // Also returns if prompt is canceled
+  });
+```
+
+### `proxyRequest`
+
+`proxyRequest` function sends a request through the wallet's proxy, most commonly to avoid CORS issues.
+
+Normally, you don't need to call this function to send a request from your module. However, if the server you're sending to isn't configured for CORS (Cross-origin resource sharing) requests and you don't have the necessary permission to re-configure that server, then you can use `proxyRequest` function to bypass the CORS restriction.
+
+Under the hood, this function uses `axios` to send request, so both its input and output align with `axios`'s, with an exception that is the `response` object returned will only contain these fields: `data`, `status`, `statusText`, and `headers`.
+
+```js
+proxyRequest(url: string, config: object) : Promise<object>
+```
+
+- `url`: string - The request URL, must be either `http://` or `https://`.
+- `config`: object - Request config that will be passed to [`axios`](https://github.com/axios/axios), so check out [`axios` documentation](https://github.com/axios/axios) for the full list of valid config.
+
+Example usage:
+
+```js
+NEXUS.utilities
+  .proxyRequest('getaccountaddress', ['default'])
+  .then((result) => {
+    // handle result...
+  })
+  .catch((err) => {
+    // handle error...
+  });
+```
 
 ### `showNotification`
 
@@ -174,6 +317,51 @@ Available options:
 - `message`: string - The main (larger) text shown in the success dialog.
 - `note`: string (optional) - The supporting (smaller) text shown in the success dialog below the `message`.
 
+### `showInfoDialog`
+
+Displays an info dialog in the wallet.
+
+```js
+showInfoDialog((options: object));
+```
+
+Available options:
+
+- `message`: string - The main (larger) text shown in the info dialog.
+- `note`: string (optional) - The supporting (smaller) text shown in the info dialog below the `message`.
+
+### `confirm`
+
+`confirm` function displays a confirmation dialog to the user. The confirmation dialog contains a question and two buttons for "Yes" and "No" answers, and the answer user selected (either `true` for "Yes" or `false` for "No") will be returned to your module via a Promise.
+
+```js
+confirm(options: object) : Promise<boolean>
+```
+
+- `options`: object
+  - `options.question`: string - The question (on larger text) to display on the confirmation dialog.
+  - `options.note`: string (optional) - The added information (on smaller text) to display on the confirmation dialog under the question.
+  - `options.labelYes`: string (default: `'Yes'`) - The custom label for the "Yes" button, which will send back the result `true` when chosen by user.
+  - `options.skinYes`: string (default: `'primary'`) - The button skin for the "Yes" button. List of available values for button skin can be found here (coming soon).
+  - `options.labelNo`: string (default: `'No'`) - The custom label for the "No" button, which will send back the result `false` when chosen by user.
+  - `options.skinNo`: string (default: `'default'`) - The button skin for the "No" button. List of available values for button skin can be found here (coming soon).
+
+Example usage:
+
+```js
+NEXUS.utilities
+  .confirm({
+    /* options... */
+  })
+  .then((agreed) => {
+    if (agreed) {
+      // proceed...
+    } else {
+      // cancel the action...
+    }
+  });
+```
+
 ### `updateState`
 
 Saves an arbitrary data object (usually your module's state data) into the base wallet's memory so that it won't be lost when user navigates away from your module.
@@ -213,7 +401,7 @@ Register a listener that receives the initial data passed from the base wallet.
 The listener registered in `onceInitialize` will be called only once when the `webview`'s DOM is ready.
 
 ```js
-const listener = initialData => {
+const listener = (initialData) => {
   const { theme, settings, coreInfo, moduleState, storageData } = initialData;
   // populate initial data in module...
 };
@@ -229,46 +417,24 @@ NEXUS.utilities.onceInitialize(listener);
   - `initialData.moduleState`: object - The last state object that your module has previously stored via [`updateState` function](#updatestate).
   - `initialData.storageData`: object - The last data object that your module has previously stored via [`updateStorage` function](#updatestorage).
 
-### `onThemeUpdated`
+### `onWalletDataUpdated`
 
 Example usage:
 
-Register a listener that will be called everytime the base wallet theme is changed.
+Register a listener that will be called everytime the wallet data is changed.
 
 ```js
-const listener = theme => {
-  // update theme in module...
+const listener = (walletData) => {
+  // update wallet data in module...
 };
-NEXUS.utilities.onThemeUpdated(listener);
+NEXUS.utilities.onWalletDataUpdated(listener);
 ```
 
-- `theme`: object - The current theme object that the base wallet is using. It is best used in combination with `NEXUS.utilities.color.getMixer` and pass to [Emotion](https://emotion.sh)'s `ThemeProvider`:
+- `walletData`: object - Includes `theme`, `settings`, `coreInfo`, `userStatus`, `addressBook`.
 
-  ```js
-  // Add the mixer function
-  const themeWithMixer = {
-    ...theme,
-    mixer: color.getMixer(theme.background, theme.foreground),
-  };
+  - `walletData.theme`: object - The current theme object that the base wallet is using. It is best used in combination with `NEXUS.utilities.color.getMixer` and pass to [Emotion](https://emotion.sh)'s `ThemeProvider`:
 
-  // Then render this...
-  <ThemeProvider theme={themeWithMixer}>{/* Your module... */}</ThemeProvider>;
-  ```
-
-  Check out usage example in [react-redux_module_example](https://github.com/Nexusoft/react_redux_module_example).
-
-### `onSettingsUpdated`
-
-Register a listener that will be called everytime the base wallet settings is changed.
-
-```js
-const listener = settings => {
-  // update settings in module...
-};
-NEXUS.utilities.onSettingsUpdated(listener);
-```
-
-- `settings`: object - The current user settings that the base wallet is using. It's not the full settings but only a few settings that modules might care about.
+  - `walletData.settings`: object - The current user settings that the base wallet is using. It's not the full settings but only a few settings that modules might care about.
 
 <!-- prettier-ignore -->
   ```js
@@ -280,266 +446,11 @@ NEXUS.utilities.onSettingsUpdated(listener);
   }
   ```
 
-### `onCoreInfoUpdated`
+<!-- prettier-ignore -->
+  - `walletData.coreInfo`: object - Returned data from `system/get/info` API calls (or `getinfo` RPC calls if wallet is in Legacy mode) updated at regular intervals (about every 10 seconds).
 
-Register a listener that will be called everytime the core info is updated in the base wallet.
 
-```js
-const listener = coreInfo => {
-  // update core info in module...
-};
-NEXUS.utilities.onCoreInfoUpdated(listener);
-```
-
-- `coreInfo`: object - Information that the Nexus core returned from `getinfo` RPC calls which are called at regular interval. What's contained inside `coreInfo` depends on the core that the Nexus Wallet is using.
-
-### `onUserStatusUpdated`
-
-Register a listener that will be called everytime the status of the user is updated in the base wallet.
-
-```js
-const listener = userStatus => {
-  // update user status in module...
-};
-NEXUS.utilities.onUserStatusUpdated(listener);
-```
-
-- `userStatus`: object - Contains information about the user, will return `null` if logged out.
-- `genesis`: User's Genesis
-- `username`: User's Username
-- `recovery`: Boobleon flag for if User has a recovery seed
-- `transactions`: Number of transactions on this Username
-- `notifications`: Number of Pending notifications,
-- `unlocked`: User Status on if the sigchain is unlocked, `mining`,`notifications`,`staking`,`transactions`
-
-### `sendNXS`
-
-For security reasons, this function **doesn't send out NXS directly**. It only **redirects** user to the built in Send NXS page with the recipient addresses, send amount, and the transaction message filled, so user can manually click Send to complete the transaction.
-
-```js
-sendNXS((recipients: array), (message: string));
-```
-
-- `recipients`: array - An array of objects that contain recipient addresses and the NXS amount to send to the corresponding address.
-  - `recipients[].address`: string - Recipient's Nexus address to send to.
-  - `recipients[].amount`: string - Amount to send.
-
-### `rpcCall`
-
-`rpcCall` function sends an [RPC call](https://en.wikipedia.org/wiki/Remote_procedure_call) to Nexus core, and the call result (or error) will be returned to your module via a Promise.
-
-```js
-rpcCall(command: string, params: array) : Promise<object>
-```
-
-- `command`: string - A valid command that will be sent to Nexus core (see Nexus core documentation for list of all available commands). There's a whitelist of commands that is allowed to be called (see the full list below).
-- `params`: array - List of all params that will be passed along with the command.
-- Returns a Promise that will be resolved to the RPC call result or rejected with an error.
-
-RPC command whitelist:
-
-```
-checkwallet
-getaccount
-getaccountaddress
-getaddressesbyaccount
-getbalance
-getblock
-getblockcount
-getblockhash
-getblocknumber
-getconnectioncount
-getdifficulty
-getinfo
-getmininginfo
-getmoneysupply
-getnetworkhashps
-getnetworkpps
-getnetworktrustkeys
-getnewaddress
-getpeerinfo
-getrawtransaction
-getreceivedbyaccount
-getreceivedbyaddress
-getsupplyrates
-gettransaction
-help
-isorphan
-listaccounts
-listaddresses
-listreceivedbyaccount
-listreceivedbyaddress
-listsinceblock
-listtransactions
-listtrustkeys
-listunspent
-unspentbalance
-validateaddress
-verifymessage
-```
-
-```js
-NEXUS.utilities
-  .rpcCall('getaccountaddress', ['default'])
-  .then(result => {
-    // handle result...
-  })
-  .catch(err => {
-    // handle error...
-  });
-```
-
-### `apiCall`
-
-`apiCall` method will be the interface between the module and executing api calls. All available api calls must be on the whitelist, all these calls are considered nondestructive. To use api calls that will modify the sig chain use [secureApiCall](#secureapicall) . Will return a promise with the result, a result will only ever return if the nexus core accepts the request. 
-
-Api Whitelist
-
-```
-system/get/info
-system/list/peers
-system/list/lisp-eids
-system/validate/address
-users/get/status
-users/list/accounts
-users/list/assets
-users/list/items
-users/list/names
-users/list/namespaces
-users/list/notifications
-users/list/tokens
-users/list/invoices
-users/list/transactions
-finance/get/account
-finance/list/account
-finance/list/account/transactions
-finance/get/stakeinfo
-finance/get/balances
-finance/list/trustaccounts
-ledger/get/blockhash
-ledger/get/block
-ledger/list/block
-ledger/get/transaction
-ledger/get/mininginfo
-tokens/get/token
-tokens/list/token/transactions
-tokens/get/account
-tokens/list/account/transactions
-names/get/namespace
-names/list/namespace/history
-names/get/name
-names/list/name/history
-assets/get/asset
-assets/list/asset/history
-objects/get/schema
-supply/get/item
-supply/list/item/history
-invoices/get/invoice
-invoices/list/invoice/history
-```
-
-```js
-apiCall(url: string, params: object) : Promise<object>
-```
-
-- `url`: string - The api endpoint, must be on the whitelist.
-- `params`: object - parameters to pass to the endpoint
-- Return : promise - promise returns a object  
-
-Example Usage
-
-```js
-apiCall('system/get/info', { foo: bar })
-  .then(result => {
-    // handle result
-  })
-  .catch(err => {
-    //handle error
-  });
-```
-
-### `secureApiCall`
-
-`secureApiCall` acts just like the `apiCall` method but will allow for dangerous operations that will result in a change to your sigchain. For example sending NXS to another address. All api methods that require a pin must use this function. When this method is called a pop up will display that will force the user to enter their pin, it will also say what methods are being used and what params are being passed in.
-
-```js
-secureApiCall(url: string, params: object) : Promise<object>
-```
-
-- `url`: string - The api endpoint, must be on the whitelist.
-- `params`: object - parameters to pass to the endpoint 
-- Return : promise - promise returns a object  
-
-Example Usage:
-
-````js
-secureApiCall('finance/debit/account',{address: foo, name_to:bar})
-.then(result => {
-  // hendle result
-})
-.catch(err => {
-  // handle error
-  // Also returns if prompt is canceled
-})
-````
-
-### `proxyRequest`
-
-`proxyRequest` function indirectly sends out a HTTP/HTTPS request proxied by the base wallet, and the response (or error) will be returned to your module via a Promise.
-
-Normally, you don't need to call this function to send out a request from your module. You can import an `npm` package like `request` or `axios` and make HTTP requests with them as usual. However, if the server you're sending to doesn't accept CORS (Cross-origin resource sharing) requests from your module and you're having problems with CORS-related issues, then you might want to use `proxyRequest` function to bypass this. Because the base wallet isn't restricted by the same origin rule, it's free to send requests to servers even when they don't support CORS, you can use the base wallet as a proxy server for modules with `proxyRequest` function.
-
-```js
-proxyRequest(url: string, options: object) : Promise<object>
-```
-
-- `url`: string - The request URL, must be either `http://` or `https://`.
-- `options`: object - Request options that will be passed to [`axios`](https://github.com/axios/axios), so check out [`axios` documentation](https://github.com/axios/axios) for the full list of valid options. Keep in mind that function options won't work here.
-
-Example usage:
-
-```js
-NEXUS.utilities
-  .proxyRequest('getaccountaddress', ['default'])
-  .then(result => {
-    // handle result...
-  })
-  .catch(err => {
-    // handle error...
-  });
-```
-
-### `confirm`
-
-`confirm` function displays a confirmation dialog to the user. The confirmation dialog contains a question and two buttons for "Yes" and "No" answers, and the answer user selected (either `true` for "Yes" or `false` for "No") will be returned to your module via a Promise.
-
-```js
-confirm(options: object) : Promise<boolean>
-```
-
-- `options`: object
-  - `options.question`: string - The question (on larger text) to display on the confirmation dialog.
-  - `options.note`: string (optional) - The added information (on smaller text) to display on the confirmation dialog under the question.
-  - `options.labelYes`: string (default: `'Yes'`) - The custom label for the "Yes" button, which will send back the result `true` when chosen by user.
-  - `options.skinYes`: string (default: `'primary'`) - The button skin for the "Yes" button. List of available values for button skin can be found here (coming soon).
-  - `options.labelNo`: string (default: `'No'`) - The custom label for the "No" button, which will send back the result `false` when chosen by user.
-  - `options.skinNo`: string (default: `'default'`) - The button skin for the "No" button. List of available values for button skin can be found here (coming soon).
-
-Example usage:
-
-```js
-NEXUS.utilities
-  .confirm({
-    /* options... */
-  })
-  .then(agreed => {
-    if (agreed) {
-      // proceed...
-    } else {
-      // cancel the action...
-    }
-  });
-```
+  - `walletData.userStatus`: object - Contains information about the user, will return `null` if logged out.
 
 ### `copyToClipboard`
 
@@ -550,6 +461,16 @@ copyToClipboard((text: string));
 ```
 
 - `text`: string - text to copy
+
+### `openInBrowser`
+
+Open an URL in the OS's default browser.
+
+```js
+openInBrowser((url: string));
+```
+
+- `url`: string - URL to open
 
 ### `color`
 
@@ -573,10 +494,4 @@ color.mix(color1, color2, value);
 color.isLight(color);
 color.isDark(color);
 color.toHex(color);
-// This is a special function that is intended to only be used together with
-// the wallet's `theme` object. You would probably not need to use this function
-// in most other cases.
-// For usage example, check out `react-redux-module-example` repository:
-// https://github.com/Nexusoft/react_redux_module_example
-color.getMixer(color1, color2);
 ```
