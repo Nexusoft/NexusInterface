@@ -1,33 +1,26 @@
-// External Dependencies
-import React from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
-import { keyframes } from '@emotion/core';
+import { keyframes } from '@emotion/react';
 
-// Internal Global Depnedencies
 import HorizontalLine from 'components/HorizontalLine';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import ModuleIcon from 'components/ModuleIcon';
-import { getActiveModules } from 'lib/modules';
 import { consts, timing } from 'styles';
+import { legacyMode } from 'consts/misc';
+import { selectModuleUpdateCount } from 'selectors';
 
-// Internal Local Dependencies
-import NavLinkItem from './NavLinkItem';
-
-// Images
 import logoIcon from 'icons/logo.svg';
 import sendIcon from 'icons/send.svg';
-import chartIcon from 'icons/chart.svg';
 import transactionsIcon from 'icons/transaction.svg';
 import addressBookIcon from 'icons/address-book.svg';
 import settingsIcon from 'icons/settings.svg';
 import consoleIcon from 'icons/console.svg';
 import userIcon from 'icons/user.svg';
-import tokenIcons from 'icons/blockexplorer-invert-white.svg';
-import { legacyMode } from 'consts/misc';
-// import shapeshiftIcon from 'icons/shapeshift.svg';
-// import trustListIcon from 'icons/trust-list.svg';
+
+import NavLinkItem from './NavLinkItem';
+
+__ = __context('NavigationBar');
 
 const slideUp = keyframes`
   from { opacity: 0; transform: translateY(70%) }
@@ -56,16 +49,32 @@ const AboveNav = styled.div({
   right: 0,
 });
 
+const Badge = styled.div(({ theme }) => ({
+  position: 'absolute',
+  top: '0.4em',
+  right: '0.4em',
+  background: theme.primary,
+  color: theme.primaryAccent,
+  fontSize: 13,
+  height: '1.4em',
+  width: '1.4em',
+  borderRadius: '50%',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+}));
+
 /**
  * Returns a Nav Item
  * These are prebuild modules
  * @param {*} { icon, children, ...rest }
  * @memberof Navigation
  */
-const NavItem = ({ icon, children, ...rest }) => (
+const NavItem = ({ icon, children, badge, ...rest }) => (
   <Tooltip.Trigger tooltip={children} position="top">
     <NavLinkItem {...rest}>
       <Icon icon={icon} />
+      {!!badge && <Badge>{badge}</Badge>}
     </NavLinkItem>
   </Tooltip.Trigger>
 );
@@ -77,77 +86,64 @@ const NavItem = ({ icon, children, ...rest }) => (
  * @memberof Navigation
  */
 const ModuleNavItem = ({ module }) => (
-  <Tooltip.Trigger tooltip={module.displayName} position="top">
-    <NavLinkItem to={`/Modules/${module.name}`}>
+  <Tooltip.Trigger tooltip={module.info.displayName} position="top">
+    <NavLinkItem to={`/Modules/${module.info.name}`}>
       <ModuleIcon module={module} />
     </NavLinkItem>
   </Tooltip.Trigger>
 );
 
-const ModuleNavItems = connect(
-  state => ({
-    modules: getActiveModules(state.modules, state.settings.disabledModules),
-  }),
-  null,
-  null
-  // { pure: false }
-)(({ modules }) =>
-  modules
-    .filter(module => module.type === 'app')
-    .map(module => <ModuleNavItem key={module.name} module={module} />)
-);
+function ModuleNavItems() {
+  const modules = useSelector((state) => state.modules);
+  return Object.values(modules)
+    .filter((module) => module.enabled && module.info.type === 'app')
+    .map((module) => <ModuleNavItem key={module.info.name} module={module} />);
+}
 
 /**
  * Returns the Navigation Bar
  *  @memberof Navigation
  */
-const Navigation = () => (
-  <Nav>
-    <AboveNav>
-      <HorizontalLine />
-    </AboveNav>
+export default function Navigation() {
+  const updateCount = useSelector(selectModuleUpdateCount);
+  return (
+    <Nav>
+      <AboveNav>
+        <HorizontalLine />
+      </AboveNav>
 
-    <NavBar>
-      <NavItem icon={logoIcon} exact to="/">
-        {__('Overview')}
-      </NavItem>
-
-      {!legacyMode && (
-        <NavItem icon={userIcon} to="/User">
-          {__('User')}
+      <NavBar>
+        <NavItem icon={logoIcon} end to="/">
+          {__('Overview')}
         </NavItem>
-      )}
 
-      <NavItem icon={sendIcon} to="/Send">
-        {legacyMode ? __('Send NXS') : __('Send')}
-      </NavItem>
+        {!legacyMode && (
+          <NavItem icon={userIcon} to="/User">
+            {__('User')}
+          </NavItem>
+        )}
 
-      <NavItem icon={transactionsIcon} to="/Transactions">
-        {__('Transactions')}
-      </NavItem>
+        <NavItem icon={sendIcon} to="/Send">
+          {legacyMode ? __('Send NXS') : __('Send')}
+        </NavItem>
 
-      <NavItem icon={chartIcon} to="/Market">
-        {__('Market Data')}
-      </NavItem>
+        <NavItem icon={transactionsIcon} to="/Transactions">
+          {__('Transactions')}
+        </NavItem>
 
-      <NavItem icon={addressBookIcon} to="/AddressBook">
-        {__('Address Book')}
-      </NavItem>
+        <NavItem icon={addressBookIcon} to="/AddressBook">
+          {__('Address Book')}
+        </NavItem>
 
-      <NavItem icon={settingsIcon} to="/Settings">
-        {__('Settings')}
-      </NavItem>
+        <NavItem icon={settingsIcon} to="/Settings" badge={updateCount}>
+          {__('Settings')}
+        </NavItem>
 
-      <NavItem icon={consoleIcon} to="/Terminal">
-        {__('Console')}
-      </NavItem>
-
-      <ModuleNavItems />
-    </NavBar>
-  </Nav>
-);
-
-/**
- *  @class Navigation
- */
-export default Navigation;
+        <NavItem icon={consoleIcon} to="/Terminal">
+          {__('Console')}
+        </NavItem>
+        <ModuleNavItems />
+      </NavBar>
+    </Nav>
+  );
+}

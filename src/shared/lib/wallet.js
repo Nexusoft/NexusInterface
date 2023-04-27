@@ -1,16 +1,21 @@
 import fs from 'fs';
-import EventEmitter from 'events';
-import { createHashHistory } from 'history';
-import { remote } from 'electron';
+import { ipcRenderer } from 'electron';
 
 import * as TYPE from 'consts/actionTypes';
 import store from 'store';
 import { defaultSettings } from 'lib/settings/universal';
 import rpc from 'lib/rpc';
 import { stopCore } from 'lib/core';
-import { openModal } from 'lib/ui';
-import { tritiumUpgradeTime } from 'consts/misc';
-import TritiumUpgradeModal from 'components/TritiumUpgradeModal';
+import { logOut } from 'lib/user';
+
+let _navigate = null;
+export function navigate(...params) {
+  return _navigate?.(...params);
+}
+
+export function setNavigate(func) {
+  _navigate = func;
+}
 
 /**
  * Backs up wallet
@@ -38,9 +43,9 @@ export function backupWallet(backupFolder) {
   return rpc('backupwallet', [backupDir + '/NexusBackup_' + now + '.dat']);
 }
 
-export const closeWallet = async beforeExit => {
+export const closeWallet = async (beforeExit) => {
   const {
-    settings: { manualDaemon },
+    settings: { manualDaemon, manualDaemonLogOutOnClose },
   } = store.getState();
 
   store.dispatch({
@@ -49,49 +54,32 @@ export const closeWallet = async beforeExit => {
 
   if (!manualDaemon) {
     await stopCore();
+  } else if (manualDaemonLogOutOnClose) {
+    await logOut(); //TODO: Ask for pin/session
   }
 
   if (beforeExit) beforeExit();
-  remote.app.exit();
+  ipcRenderer.invoke('exit-app');
 };
 
-export const history = createHashHistory();
-
-export const walletEvents = new EventEmitter();
-
-walletEvents.once('pre-render', function() {
-  remote.getCurrentWindow().on('close', async e => {
+export function prepareWallet() {
+  ipcRenderer.on('window-close', async () => {
     const {
       settings: { minimizeOnClose },
     } = store.getState();
 
     // forceQuit is set when user clicks Quit option in the Tray context menu
-    if (minimizeOnClose && !remote.getGlobal('forceQuit')) {
-      mainWindow.hide();
-      if (process.platform === 'darwin') {
-        remote.app.dock.hide();
+    if (minimizeOnClose) {
+      const forceQuit = await ipcRenderer.invoke('is-force-quit');
+      if (!forceQuit) {
+        ipcRenderer.invoke('hide-window');
+        if (process.platform === 'darwin') {
+          ipcRenderer.invoke('hide-dock');
+        }
+        return;
       }
-    } else {
-      await closeWallet();
     }
+
+    await closeWallet();
   });
-});
-
-walletEvents.once('post-render', function() {
-  const {
-    settings: { legacyMode },
-  } = store.getState();
-
-  const now = Date.now();
-  if (now < tritiumUpgradeTime) {
-    setTimeout(() => {
-      if (legacyMode !== false) {
-        openModal(TritiumUpgradeModal);
-      }
-    }, tritiumUpgradeTime - now);
-  } else {
-    if (legacyMode === undefined) {
-      openModal(TritiumUpgradeModal);
-    }
-  }
-});
+}

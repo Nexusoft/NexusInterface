@@ -1,102 +1,26 @@
-import memoize from 'utils/memoize';
-import axios from 'axios';
-import { reset, initialize } from 'redux-form';
+import { clipboard, shell } from 'electron';
 
 import * as TYPE from 'consts/actionTypes';
 import store, { observeStore } from 'store';
-import { history } from 'lib/wallet';
+import { navigate } from 'lib/wallet';
+import { showNotification } from 'lib/ui';
 import {
-  showNotification,
   openConfirmDialog,
   openErrorDialog,
   openSuccessDialog,
-} from 'lib/ui';
-import { walletEvents } from 'lib/wallet';
+  openInfoDialog,
+  confirmPin,
+} from 'lib/dialog';
+import { popupContextMenu, defaultMenu } from 'lib/contextMenu';
+import { goToSend } from 'lib/send';
 import rpc from 'lib/rpc';
-import { apiPost } from 'lib/tritiumApi';
+import { callApi } from 'lib/tritiumApi';
 import { legacyMode } from 'consts/misc';
+import memoize from 'utils/memoize';
 
 import { readModuleStorage, writeModuleStorage } from './storage';
-import { getModuleIfEnabled } from './utils';
 
-const cmdWhitelist = [
-  'checkwallet',
-  'getaccount',
-  'getaccountaddress',
-  'getaddressesbyaccount',
-  'getbalance',
-  'getblock',
-  'getblockcount',
-  'getblockhash',
-  'getblocknumber',
-  'getconnectioncount',
-  'getdifficulty',
-  'getinfo',
-  'getmininginfo',
-  'getmoneysupply',
-  'getnetworkhashps',
-  'getnetworkpps',
-  'getnetworktrustkeys',
-  'getnewaddress',
-  'getpeerinfo',
-  'getrawtransaction',
-  'getreceivedbyaccount',
-  'getreceivedbyaddress',
-  'getsupplyrates',
-  'gettransaction',
-  'help',
-  'isorphan',
-  'listaccounts',
-  'listaddresses',
-  'listreceivedbyaccount',
-  'listreceivedbyaddress',
-  'listsinceblock',
-  'listtransactions',
-  'listtrustkeys',
-  'listunspent',
-  'unspentbalance',
-  'validateaddress',
-  'verifymessage',
-];
-
-const apiWhiteList = [
-  'system/get/info',
-  'system/list/peers',
-  'system/list/lisp-eids',
-  'users/get/status',
-  'users/list/accounts',
-  'users/list/assets',
-  'users/list/items',
-  'users/list/names',
-  'users/list/namespaces',
-  'users/list/notifications',
-  'users/list/tokens',
-  'users/list/transactions',
-  'finance/get/account',
-  'finance/list/account',
-  'finance/list/account/transactions',
-  'finance/get/stakeinfo',
-  'finance/get/balances',
-  'finance/list/trustaccounts',
-  'ledger/get/blockhash',
-  'ledger/get/block',
-  'ledger/list/block',
-  'ledger/get/transaction',
-  'ledger/get/mininginfo',
-  'tokens/get/token',
-  'tokens/list/token/transactions',
-  'tokens/get/account',
-  'tokens/list/account/transactions',
-  'names/get/namespace',
-  'names/list/namespace/history',
-  'names/get/name',
-  'names/list/name/history',
-  'assets/get/asset',
-  'assets/list/asset/history',
-  'objects/get/schema',
-  'supply/get/item',
-  'supply/list/item/history',
-];
+let activeWebView = null;
 
 /**
  * Utilities
@@ -110,30 +34,30 @@ const getSettingsForModules = memoize((locale, fiatCurrency, addressStyle) => ({
 }));
 
 const settingsChanged = (settings1, settings2) =>
-  settings1 !== settings2 && (!!settings1 && !!settings2)
+  settings1 !== settings2 && !!settings1 && !!settings2
     ? settings1.locale !== settings2.locale ||
       settings1.fiatCurrency !== settings2.fiatCurrency ||
       settings1.addressStyle !== settings2.addressStyle
     : true;
 
-const getModuleData = ({
+const getWalletData = ({
   theme,
   core,
   settings: { locale, fiatCurrency, addressStyle },
+  user: { status },
+  addressBook,
 }) => ({
   theme,
   settings: getSettingsForModules(locale, fiatCurrency, addressStyle),
   coreInfo: legacyMode ? core.info : core.systemInfo,
+  userStatus: status,
+  addressBook,
 });
 
 const getActiveModule = () => {
-  const state = store.getState();
-  const { activeAppModule } = state;
-  return getModuleIfEnabled(
-    activeAppModule && activeAppModule.moduleName,
-    state.modules,
-    state.settings.disabledModules
-  );
+  const { activeAppModuleName, modules } = store.getState();
+  const module = modules[activeAppModuleName];
+  return module.enabled ? module : null;
 };
 
 /**
@@ -142,141 +66,140 @@ const getActiveModule = () => {
  */
 
 function handleIpcMessage(event) {
-  switch (event.channel) {
-    case 'send-nxs':
-      sendNXS(event.args);
-      break;
-    case 'proxy-request':
-      proxyRequest(event.args);
+  const { srcElement: webview, channel, args } = event;
+  switch (channel) {
+    case 'send':
+      send(args, webview);
       break;
     case 'rpc-call':
-      rpcCall(event.args);
+      rpcCall(args, webview);
       break;
     case 'api-call':
-      apiCall(event.args);
+      apiCall(args, webview);
+      break;
+    case 'secure-api-call':
+      secureApiCall(args, webview);
       break;
     case 'show-notification':
-      showNotif(event.args);
+      showNotif(args, webview);
       break;
     case 'show-error-dialog':
-      showErrorDialog(event.args);
+      showErrorDialog(args, webview);
       break;
     case 'show-success-dialog':
-      showSuccessDialog(event.args);
+      showSuccessDialog(args, webview);
+      break;
+    case 'show-info-dialog':
+      showInfoDialog(args, webview);
       break;
     case 'confirm':
-      confirm(event.args);
+      confirm(args, webview);
       break;
     case 'update-state':
-      updateState(event.args);
+      updateState(args, webview);
       break;
     case 'update-storage':
-      updateStorage(event.args);
+      updateStorage(args, webview);
+      break;
+    case 'context-menu':
+      contextMenu(args, webview);
+      break;
+    case 'open-in-browser':
+      openInBrowser(args, webview);
+      break;
+    case 'copy-to-clipboard':
+      copyToClipboard(args, webview);
       break;
   }
 }
 
-function sendNXS([recipients, message]) {
+function send([{ sendFrom, recipients, advancedOptions }]) {
   if (!Array.isArray(recipients)) return;
-
-  store.dispatch(
-    initialize('sendNXS', {
-      sendFrom: null,
-      recipients: recipients.map(r => ({
-        address: `${r.address}`,
-        amount: parseFloat(r.amount) || 0,
-        fiatAmount: '',
-      })),
-      message: message,
-    })
-  );
-  store.dispatch(reset('sendNXS'));
-  history.push('/Send');
-}
-
-async function proxyRequest([url, options, requestId]) {
-  try {
-    const lUrl = url.toLowerCase();
-    if (!lUrl.startsWith('http://') && !lUrl.startsWith('https://')) {
-      throw 'Proxy request must be in HTTP or HTTPS protocol';
+  if (legacyMode) {
+    const sendTo = recipients?.[0]?.address;
+    if (sendTo) {
+      navigate('/Send?sendTo=' + sendTo);
     }
-    if (options) {
-      // disallow baseURL and url options, url must be absolute
-      delete options.baseURL;
-      delete options.url;
-    }
-
-    const response = await axios(url, options);
-    const { activeAppModule } = store.getState();
-    if (activeAppModule) {
-      activeAppModule.webview.send(
-        `proxy-response${requestId ? `:${requestId}` : ''}`,
-        null,
-        response
-      );
-    }
-  } catch (err) {
-    console.error(err);
-    const { activeAppModule } = store.getState();
-    if (activeAppModule) {
-      activeAppModule.webview.send(
-        `proxy-response${requestId ? `:${requestId}` : ''}`,
-        err.toString ? err.toString() : err
-      );
-    }
+  } else {
+    goToSend({ sendFrom, recipients, advancedOptions });
   }
 }
 
-async function rpcCall([command, params, callId]) {
+async function rpcCall([command, params, callId], webview) {
   try {
-    if (!cmdWhitelist.includes(command)) {
-      throw 'Invalid command';
-    }
-
     const response = await rpc(command, ...(params || []));
-    const { activeAppModule } = store.getState();
-    if (activeAppModule) {
-      activeAppModule.webview.send(
+    if (webview) {
+      webview.send(
         `rpc-return${callId ? `:${callId}` : ''}`,
         null,
-        response
+        response && JSON.parse(JSON.stringify(response))
       );
     }
   } catch (err) {
     console.error(err);
-    const { activeAppModule } = store.getState();
-    if (activeAppModule) {
-      activeAppModule.webview.send(
-        `rpc-return${callId ? `:${callId}` : ''}`,
-        err
-      );
+    if (webview) {
+      webview.send(`rpc-return${callId ? `:${callId}` : ''}`, err);
     }
   }
 }
 
-async function apiCall([endpoint, params, callId]) {
+async function apiCall([endpoint, params, callId], webview) {
   try {
-    if (!apiWhiteList.includes(endpoint)) {
-      throw 'Invalid API endpoint';
-    }
-
-    const result = await apiPost(endpoint, params);
-    const { activeAppModule } = store.getState();
-    if (activeAppModule) {
-      activeAppModule.webview.send(
+    const response = await callApi(endpoint, params);
+    if (webview) {
+      webview.send(
         `api-return${callId ? `:${callId}` : ''}`,
         null,
-        result
+        response && JSON.parse(JSON.stringify(response))
       );
     }
   } catch (err) {
     console.error(err);
-    const { activeAppModule } = store.getState();
-    if (activeAppModule) {
-      activeAppModule.webview.send(
-        `api-return${callId ? `:${callId}` : ''}`,
-        err
+    if (webview) {
+      webview.send(`api-return${callId ? `:${callId}` : ''}`, err);
+    }
+  }
+}
+
+async function secureApiCall([endpoint, params, callId], webview) {
+  const { displayName } = getActiveModule();
+  try {
+    const message = (
+      <div style={{ overflow: 'scroll', maxHeight: '15em' }}>
+        <div>
+          <strong>{displayName}</strong> module is requesting to call{' '}
+          <strong>{endpoint}</strong> endpoint with the following parameters:
+        </div>
+        <code
+          style={{
+            wordBreak: 'break-word',
+            whiteSpace: 'pre',
+            display: 'block',
+            marginTop: '0.5em',
+            padding: '8px 0',
+          }}
+        >
+          {JSON.stringify(params, null, 2)}
+        </code>
+      </div>
+    );
+    const pin = await confirmPin({ note: message });
+
+    const response =
+      pin === undefined
+        ? undefined
+        : await callApi(endpoint, { ...params, pin });
+    if (webview) {
+      webview.send(
+        `secure-api-return${callId ? `:${callId}` : ''}`,
+        null,
+        response && JSON.parse(JSON.stringify(response))
       );
+    }
+  } catch (error) {
+    console.error(error);
+    if (webview) {
+      webview.send(`secure-api-return${callId ? `:${callId}` : ''}`, error);
     }
   }
 }
@@ -302,7 +225,15 @@ function showSuccessDialog([options = {}]) {
   });
 }
 
-function confirm([options = {}, confirmationId]) {
+function showInfoDialog([options = {}]) {
+  const { message, note } = options;
+  openInfoDialog({
+    message,
+    note,
+  });
+}
+
+function confirm([options = {}, confirmationId], webview) {
   const { question, note, labelYes, skinYes, labelNo, skinNo } = options;
   openConfirmDialog({
     question,
@@ -310,13 +241,8 @@ function confirm([options = {}, confirmationId]) {
     labelYes,
     skinYes,
     callbackYes: () => {
-      console.log(
-        'yes',
-        `confirm-answer${confirmationId ? `:${confirmationId}` : ''}`
-      );
-      const { activeAppModule } = store.getState();
-      if (activeAppModule) {
-        activeAppModule.webview.send(
+      if (webview) {
+        webview.send(
           `confirm-answer${confirmationId ? `:${confirmationId}` : ''}`,
           true
         );
@@ -325,9 +251,8 @@ function confirm([options = {}, confirmationId]) {
     labelNo,
     skinNo,
     callbackNo: () => {
-      const { activeAppModule } = store.getState();
-      if (activeAppModule) {
-        activeAppModule.webview.send(
+      if (webview) {
+        webview.send(
           `confirm-answer${confirmationId ? `:${confirmationId}` : ''}`,
           false
         );
@@ -337,16 +262,15 @@ function confirm([options = {}, confirmationId]) {
 }
 
 function updateState([moduleState]) {
-  const activeModule = getActiveModule();
-  const moduleName = activeModule.name;
+  const { activeAppModuleName } = store.getState();
   if (typeof moduleState === 'object') {
     store.dispatch({
       type: TYPE.UPDATE_MODULE_STATE,
-      payload: { moduleName, moduleState },
+      payload: { moduleName: activeAppModuleName, moduleState },
     });
   } else {
     console.error(
-      `Module ${moduleName} is trying to update its state to a non-object value ${moduleState}`
+      `Module ${activeAppModuleName} is trying to update its state to a non-object value ${moduleState}`
     );
   }
 }
@@ -356,20 +280,76 @@ function updateStorage([data]) {
   writeModuleStorage(activeModule, data);
 }
 
-walletEvents.once('post-render', function() {
+function contextMenu([template], webview) {
+  if (webview) {
+    popupContextMenu(template || defaultMenu, webview.getWebContentsId());
+  }
+}
+
+function openInBrowser([url]) {
+  shell.openExternal(url);
+}
+
+function copyToClipboard([text]) {
+  clipboard.writeText(text);
+}
+
+/**
+ * Public API
+ * ===========================================================================
+ */
+
+export const getActiveWebView = () => activeWebView;
+
+export const setActiveAppModule = (webview, moduleName) => {
+  activeWebView = webview;
+  store.dispatch({
+    type: TYPE.SET_ACTIVE_APP_MODULE,
+    payload: moduleName,
+  });
+};
+
+export const unsetActiveAppModule = () => {
+  activeWebView = null;
+  store.dispatch({
+    type: TYPE.UNSET_ACTIVE_APP_MODULE,
+  });
+};
+
+export const toggleWebViewDevTools = () => {
+  const activeWebView = getActiveWebView();
+  if (activeWebView) {
+    if (activeWebView.isDevToolsOpened()) {
+      activeWebView.closeDevTools();
+    } else {
+      activeWebView.openDevTools();
+    }
+  }
+};
+
+function sendWalletDataUpdated(walletData) {
+  const activeWebView = getActiveWebView();
+  if (activeWebView) {
+    try {
+      activeWebView.send('wallet-data-updated', walletData);
+    } catch (err) {}
+  }
+}
+
+export function prepareWebView() {
   observeStore(
-    state => state.activeAppModule,
-    activeAppModule => {
-      if (activeAppModule) {
-        const { webview } = activeAppModule;
+    (state) => state.activeAppModuleName,
+    (moduleName) => {
+      const webview = getActiveWebView();
+      if (webview) {
         webview.addEventListener('ipc-message', handleIpcMessage);
         webview.addEventListener('dom-ready', async () => {
           const state = store.getState();
+          const moduleState = state.moduleStates[moduleName];
           const activeModule = getActiveModule();
-          const moduleState = state.moduleStates[activeModule.name];
           const storageData = await readModuleStorage(activeModule);
           webview.send('initialize', {
-            ...getModuleData(state),
+            ...getWalletData(state),
             moduleState,
             storageData,
           });
@@ -379,70 +359,40 @@ walletEvents.once('post-render', function() {
   );
 
   observeStore(
-    state => state.settings,
-    (settings, oldSettings) => {
-      if (settingsChanged(oldSettings, settings)) {
-        const { activeAppModule } = store.getState();
-        if (activeAppModule) {
-          try {
-            activeAppModule.webview.send('settings-updated', settings);
-          } catch (err) {}
-        }
+    (state) => state.settings,
+    (newSettings, oldSettings) => {
+      if (settingsChanged(oldSettings, newSettings)) {
+        const settings = getSettingsForModules(newSettings);
+        sendWalletDataUpdated({ settings });
       }
     }
   );
 
   observeStore(
-    state => state.theme,
-    theme => {
-      const { activeAppModule } = store.getState();
-      if (activeAppModule) {
-        try {
-          activeAppModule.webview.send('theme-updated', theme);
-        } catch (err) {}
-      }
+    (state) => state.theme,
+    (theme) => {
+      sendWalletDataUpdated({ theme });
     }
   );
 
   observeStore(
-    state => (legacyMode ? state.core.info : state.core.systemInfo),
-    coreInfo => {
-      const { activeAppModule } = store.getState();
-      if (activeAppModule) {
-        try {
-          activeAppModule.webview.send('coreInfo-updated', coreInfo);
-        } catch (err) {}
-      }
+    (state) => (legacyMode ? state.core.info : state.core.systemInfo),
+    (coreInfo) => {
+      sendWalletDataUpdated({ coreInfo });
     }
   );
-});
 
-/**
- * Public API
- * ===========================================================================
- */
-
-export const setActiveWebView = (webview, moduleName) => {
-  store.dispatch({
-    type: TYPE.SET_ACTIVE_APP_MODULE,
-    payload: { webview, moduleName },
-  });
-};
-
-export const unsetActiveWebView = () => {
-  store.dispatch({
-    type: TYPE.UNSET_ACTIVE_APP_MODULE,
-  });
-};
-
-export const toggleWebViewDevTools = () => {
-  const { activeAppModule } = store.getState();
-  if (activeAppModule) {
-    const { webview } = activeAppModule;
-    if (webview.isDevToolsOpened()) {
-      webview.closeDevTools();
-    } else {
-      webview.openDevTools();
+  observeStore(
+    (state) => state.user.status,
+    (userStatus) => {
+      sendWalletDataUpdated({ userStatus });
     }
-  }
-};
+  );
+
+  observeStore(
+    (state) => state.addressBook,
+    (addressBook) => {
+      sendWalletDataUpdated({ addressBook });
+    }
+  );
+}

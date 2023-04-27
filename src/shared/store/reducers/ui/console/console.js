@@ -52,7 +52,7 @@ export default (state = initialState, action) => {
 
     case TYPE.PRINT_COMMAND_OUTPUT: {
       const newOutput = Array.isArray(action.payload)
-        ? action.payload.map(content => ({
+        ? action.payload.map((content) => ({
             type: 'text',
             content,
           }))
@@ -70,10 +70,12 @@ export default (state = initialState, action) => {
       };
     }
 
-    case TYPE.RESET_CONSOLE_OUTPUT:
+    case TYPE.RESET_CONSOLE:
       return {
         ...state,
         output: initialState.output,
+        commandHistory: [],
+        historyIndex: -1,
       };
 
     default:

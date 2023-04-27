@@ -11,7 +11,7 @@
 
 import styled from '@emotion/styled';
 
-export const arrowStyles = ({ direction, width, height, color }) => {
+export function arrowStyles({ direction, width, height, color }) {
   const styles = {
     display: 'block',
     width: 0,
@@ -58,7 +58,7 @@ export const arrowStyles = ({ direction, width, height, color }) => {
       };
   }
   return styles;
-};
+}
 
 const Arrow = styled.span(
   ({ direction, width, height, color = 'currentColor' }) =>

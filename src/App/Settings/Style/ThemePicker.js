@@ -1,146 +1,80 @@
 // External
-import React, { Component } from 'react';
-import styled from '@emotion/styled';
+import { useState } from 'react';
+import { useSelector } from 'react-redux';
 
 //Internal
-import { timing } from 'styles';
-import * as color from 'utils/color';
+import Button from 'components/Button';
+import { darkTheme, lightTheme, setTheme } from 'lib/theme';
 
-const OptionButton = styled.button(
-  ({ theme }) => ({
-    display: 'inline-flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 4,
-    padding: '0 1em',
-    height: '2.8em',
-    border: 'none',
-    outline: 'none',
-    background: 'transparent',
-    cursor: 'pointer',
-    whiteSpace: 'nowrap',
-    userSelect: 'none',
-    transitionProperty: 'border-color, color',
-    transitionDuration: timing.normal,
-    color: theme.foreground,
+__ = __context('Settings.Style');
 
-    '&:disabled': {
-      opacity: 0.5,
-      cursor: 'not-allowed',
-    },
-    transition: `background-color ${timing.normal}`,
-
-    '&:hover': {
-      background: theme.background,
-    },
-  }),
-  ({ selected, theme }) =>
-    selected && {
-      '&, &:hover': {
-        background: color.darken(theme.primary, 0.2),
-        color: theme.foreground,
-      },
-    }
-);
-
-/**
- * Theme Picker Element
- *
- * @class ThemePicker
- * @extends {Component}
- */
-class ThemePicker extends Component {
-  state = {
-    themeOn: 0,
-  };
-  componentDidMount() {
-    this.props.handleOnSetCustom(() => {
-      this.setToCustomTheme();
-    });
-    this.props.handleSetSelector(selectorIndex => {
-      this.setSelector(selectorIndex);
-    });
+function equals(theme1, theme2) {
+  if (theme1 === theme2) return true;
+  const entries1 = Object.entries(theme1);
+  if (entries1.length !== Object.keys(theme2).length) return false;
+  for (const [key, value] of entries1) {
+    if (theme2[key] !== value) return false;
   }
-
-  /**
-   * Set to Custom Theme
-   *
-   * @memberof ThemePicker
-   */
-  setToCustomTheme() {
-    console.log('Set To Custom');
-    this.setState({ themeOn: 2 }, () => {
-      console.log(this);
-    });
-  }
-
-  /**
-   * Set the Theme button selector
-   *
-   * @param {*} selectorIndex
-   * @memberof ThemePicker
-   */
-  setSelector(selectorIndex) {
-    this.setState({ themeOn: selectorIndex });
-  }
-
-  /**
-   * Component's Renderable JSX
-   *
-   * @returns
-   * @memberof ThemePicker
-   */
-  render() {
-    return (
-      <div>
-        <OptionButton
-          selected={this.state.themeOn == 0 ? true : false}
-          onClick={() => {
-            if (this.state.themeOn == 2) {
-              this.props.saveCustomCallback();
-            }
-            this.setState({ themeOn: 0 });
-            this.props.darkCallback();
-          }}
-        >
-          {__('Dark')}
-        </OptionButton>
-        <OptionButton
-          selected={this.state.themeOn == 1 ? true : false}
-          onClick={() => {
-            if (this.state.themeOn == 2) {
-              this.props.saveCustomCallback();
-            }
-            this.setState({ themeOn: 1 });
-            this.props.lightCallback();
-          }}
-        >
-          {__('Light')}
-        </OptionButton>
-        <OptionButton
-          selected={this.state.themeOn == 2 ? true : false}
-          onClick={() => {
-            this.setState({ themeOn: 2 });
-            this.props.customCallback();
-          }}
-        >
-          {__('Custom')}
-        </OptionButton>
-        <OptionButton
-          selected={this.state.themeOn == 3 ? true : false}
-          onClick={() => {
-            if (this.state.themeOn == 2) {
-              this.props.saveCustomCallback();
-            }
-            this.setState({ themeOn: 3 });
-            this.props.resetCallback();
-          }}
-        >
-          {__('Reset')}
-        </OptionButton>
-      </div>
-    );
-  }
+  return true;
 }
 
-export default ThemePicker;
+function getName(theme) {
+  if (equals(theme, darkTheme)) return 'dark';
+  if (equals(theme, lightTheme)) return 'light';
+  return 'custom';
+}
+
+export default function ThemePicker() {
+  const theme = useSelector((state) => state.theme);
+  const themeName = getName(theme);
+  const [customTheme, setCustomTheme] = useState(null);
+
+  return (
+    <div>
+      <Button
+        skin={themeName === 'dark' ? 'filled-primary' : 'plain'}
+        className="mr1"
+        onClick={
+          themeName !== 'dark'
+            ? () => {
+                if (themeName === 'custom') setCustomTheme(theme);
+                setTheme(darkTheme);
+              }
+            : undefined
+        }
+      >
+        {__('Dark')}
+      </Button>
+
+      <Button
+        skin={themeName === 'light' ? 'filled-primary' : 'plain'}
+        className="mr1"
+        onClick={
+          themeName !== 'light'
+            ? () => {
+                if (themeName === 'custom') setCustomTheme(theme);
+                setTheme(lightTheme);
+              }
+            : undefined
+        }
+      >
+        {__('Light')}
+      </Button>
+
+      {(customTheme || themeName === 'custom') && (
+        <Button
+          skin={themeName === 'custom' ? 'filled-primary' : 'plain'}
+          onClick={
+            themeName !== 'custom'
+              ? () => {
+                  setTheme(customTheme);
+                }
+              : undefined
+          }
+        >
+          {__('Custom')}
+        </Button>
+      )}
+    </div>
+  );
+}

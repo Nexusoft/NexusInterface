@@ -7,11 +7,11 @@ import webpack from 'webpack';
 import { readFileSync } from 'fs';
 
 import packageJson from '../package.json';
+import { env } from 'process';
 
 const appVersion = packageJson.version;
 const buildDate = packageJson.buildDate;
-const moduleSpecVersion = packageJson.moduleSpecVersion;
-const supportedModuleSpecVersion = packageJson.supportedModuleSpecVersion;
+const backwardCompatible = packageJson.backwardCompatible;
 const appId = packageJson.build.appId;
 
 let nexusPubKey = '';
@@ -24,8 +24,6 @@ try {
 }
 
 export default {
-  mode: process.env.NODE_ENV === 'development' ? 'development' : 'production',
-
   output: {
     // https://github.com/webpack/webpack/issues/1114
     libraryTarget: 'commonjs2',
@@ -46,14 +44,10 @@ export default {
       ),
       APP_VERSION: JSON.stringify(appVersion || ''),
       BUILD_DATE: JSON.stringify(buildDate || ''),
-      MODULE_SPEC_VERSION: JSON.stringify(moduleSpecVersion || ''),
-      SUPPORTED_MODULE_SPEC_VERSION: JSON.stringify(
-        supportedModuleSpecVersion || ''
-      ),
+      BACKWARD_COMPATIBLE_VERSION: JSON.stringify(backwardCompatible || ''),
       APP_ID: JSON.stringify(appId || ''),
       NEXUS_EMBASSY_PUBLIC_KEY: JSON.stringify(nexusPubKey),
+      LOCK_TESTNET: JSON.stringify(process.env.LOCK_TESTNET || ''),
     }),
-
-    new webpack.NamedModulesPlugin(),
   ],
 };

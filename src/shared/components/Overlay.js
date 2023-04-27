@@ -10,7 +10,7 @@
  */
 
 // External
-import React, { Component } from 'react';
+import { useRef, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import styled from '@emotion/styled';
 
@@ -46,37 +46,37 @@ const OverlayBackground = styled.div(
     }
 );
 
-export default class Overlay extends Component {
-  node = document.createElement('div');
+export default function Overlay({
+  dimBackground,
+  onBackgroundClick,
+  backgroundRef,
+  children,
+  zPriority,
+  ...rest
+}) {
+  const nodeRef = useRef(document.createElement('div'));
 
-  componentDidMount() {
-    document.getElementsByTagName('body')[0].appendChild(this.node);
-  }
+  useEffect(() => {
+    const body = document.getElementsByTagName('body')[0];
+    body.appendChild(nodeRef.current);
 
-  componentWillUnmount() {
-    document.getElementsByTagName('body')[0].removeChild(this.node);
-  }
+    return () => {
+      body.removeChild(nodeRef.current);
+    };
+  }, []);
 
-  render() {
-    const {
-      dimBackground,
-      onBackgroundClick,
-      backgroundRef,
-      children,
-      zPriority,
-      ...rest
-    } = this.props;
-    return ReactDOM.createPortal(
-      <OverlayComponent {...rest}>
-        <OverlayBackground
-          ref={backgroundRef}
-          dimmed={dimBackground}
-          onClick={onBackgroundClick}
-          zPriority={zPriority}
-        />
-        {children}
-      </OverlayComponent>,
-      this.node
-    );
-  }
+  if (!nodeRef.current) return null;
+
+  return ReactDOM.createPortal(
+    <OverlayComponent {...rest}>
+      <OverlayBackground
+        ref={backgroundRef}
+        dimmed={dimBackground}
+        onClick={onBackgroundClick}
+        zPriority={zPriority}
+      />
+      {children}
+    </OverlayComponent>,
+    nodeRef.current
+  );
 }

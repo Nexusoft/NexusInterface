@@ -1,12 +1,13 @@
 // External
-import React from 'react';
 import styled from '@emotion/styled';
 
 // Internal
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import Button from 'components/Button';
 import * as color from 'utils/color';
 import Dialog from './Dialog';
+
+__ = __context('ConfirmDialog');
 
 const QuestionMark = styled(Dialog.Icon)(({ theme }) => ({
   fontSize: 56,
@@ -15,7 +16,7 @@ const QuestionMark = styled(Dialog.Icon)(({ theme }) => ({
 }));
 
 const ConfirmationButton = styled(Button)({
-  minWidth: 180,
+  flexGrow: 1,
 });
 
 const ConfirmDialog = ({
@@ -29,9 +30,9 @@ const ConfirmDialog = ({
   callbackNo,
   ...rest
 }) => (
-  <Dialog onBackgroundClick={null} {...rest}>
-    {closeModal => (
-      <Modal.Body>
+  <Dialog onBackgroundClick={null} escToClose={false} {...rest}>
+    {(closeModal) => (
+      <ControlledModal.Body>
         <QuestionMark>?</QuestionMark>
         <Dialog.Message>{question}</Dialog.Message>
         {!!note && <Dialog.Note>{note}</Dialog.Note>}
@@ -46,6 +47,7 @@ const ConfirmDialog = ({
             {labelNo}
           </ConfirmationButton>
           <ConfirmationButton
+            className="ml1"
             skin={skinYes}
             onClick={() => {
               callbackYes && callbackYes();
@@ -55,7 +57,7 @@ const ConfirmDialog = ({
             {labelYes}
           </ConfirmationButton>
         </Dialog.Buttons>
-      </Modal.Body>
+      </ControlledModal.Body>
     )}
   </Dialog>
 );

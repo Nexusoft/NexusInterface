@@ -1,5 +1,5 @@
-import React from 'react';
+import { createContext } from 'react';
 
-const TaskContext = React.createContext(null);
+const TaskContext = createContext(null);
 
 export default TaskContext;

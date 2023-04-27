@@ -1,60 +1,32 @@
 // External
-import React from 'react';
-import { connect } from 'react-redux';
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
 // Internal
-import WaitingMessage from 'components/WaitingMessage';
+import RequireCoreConnected from 'components/RequireCoreConnected';
 import { switchSettingsTab } from 'lib/ui';
-import { isCoreConnected } from 'selectors';
+
 import Login from './Login';
 import Encrypted from './Encrypted';
 import Unencrypted from './Unencrypted';
 
-/**
- * SettingsSecurity Page on Settings Page
- *
- * @class SettingsSecurity
- * @extends {React.Component}
- */
-@connect(state => ({
-  locked: state.core.info.locked,
-  coreConnected: isCoreConnected(state),
-}))
-class SettingsSecurity extends React.Component {
-  /**
-   *Creates an instance of SettingsSecurity.
-   * @param {*} props
-   * @memberof SettingsSecurity
-   */
-  constructor(props) {
-    super(props);
+__ = __context('Settings.Security');
+
+export default function SettingsSecurity() {
+  const locked = useSelector((state) => state.core.info?.locked);
+  useEffect(() => {
     switchSettingsTab('Security');
-  }
+  }, []);
 
-  /**
-   * Component's Renderable JSX
-   *
-   * @returns
-   * @memberof SettingsSecurity
-   */
-  render() {
-    const { locked, coreConnected } = this.props;
-    if (!coreConnected) {
-      return (
-        <WaitingMessage>
-          {__('Connecting to Nexus Core')}
-          ...
-        </WaitingMessage>
-      );
-    }
-
-    if (locked === undefined) {
-      return <Unencrypted />;
-    } else if (locked) {
-      return <Login />;
-    } else {
-      return <Encrypted />;
-    }
-  }
+  return (
+    <RequireCoreConnected>
+      {locked === undefined ? (
+        <Unencrypted />
+      ) : locked ? (
+        <Login />
+      ) : (
+        <Encrypted />
+      )}
+    </RequireCoreConnected>
+  );
 }
-export default SettingsSecurity;

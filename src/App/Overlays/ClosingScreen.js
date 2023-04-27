@@ -1,6 +1,5 @@
-import React from 'react';
 import styled from '@emotion/styled';
-import { keyframes } from '@emotion/core';
+import { keyframes } from '@emotion/react';
 
 import FullScreen from './FullScreen';
 
@@ -26,12 +25,12 @@ const ClosingMessage = styled.div(({ theme }) => ({
   animation: `${breathe} 2s ease 0s infinite alternate`,
 }));
 
-const ClosingScreen = () => (
-  <FullScreen width={null}>
-    <Wrapper>
-      <ClosingMessage>{__('Closing Nexus Wallet')}</ClosingMessage>
-    </Wrapper>
-  </FullScreen>
-);
-
-export default ClosingScreen;
+export default function ClosingScreen() {
+  return (
+    <FullScreen width={null}>
+      <Wrapper>
+        <ClosingMessage>{__('Closing Nexus Wallet')}</ClosingMessage>
+      </Wrapper>
+    </FullScreen>
+  );
+}

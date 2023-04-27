@@ -1,48 +1,48 @@
-import React from 'react';
+import { useState } from 'react';
 
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import TextField from 'components/TextField';
 import Button from 'components/Button';
 
-export default class PasswordModal extends React.Component {
-  state = {
-    password: '',
-  };
+__ = __context('Send');
 
-  handleChange = evt => {
-    this.setState({ password: evt.target.value });
-  };
+export default function PasswordModal({ onSubmit }) {
+  const [password, setPassword] = useState('');
 
-  confirmPassword = () => {
-    this.props.onSubmit(this.state.password);
-    this.closeModal();
-  };
-
-  render() {
-    return (
-      <Modal
-        assignClose={closeModal => (this.closeModal = closeModal)}
-        style={{ maxWidth: 500 }}
-      >
-        <Modal.Header>{__('Wallet password')}</Modal.Header>
-        <Modal.Body>
-          <TextField
-            type="password"
-            placeholder={__('Enter your wallet password')}
-            value={this.state.password}
-            onChange={this.handleChange}
-            style={{ marginTop: '.5em' }}
-          />
-        </Modal.Body>
-        <Modal.Footer>
-          <div className="flex space-between">
-            <Button onClick={this.closeModal}>{__('Cancel')}</Button>
-            <Button skin="primary" onClick={this.confirmPassword}>
-              {__('Confirm')}
-            </Button>
-          </div>
-        </Modal.Footer>
-      </Modal>
-    );
-  }
+  return (
+    <ControlledModal maxWidth={500}>
+      {(closeModal) => (
+        <>
+          <ControlledModal.Header>
+            {__('Wallet password')}
+          </ControlledModal.Header>
+          <ControlledModal.Body>
+            <TextField
+              type="password"
+              placeholder={__('Enter your wallet password')}
+              value={password}
+              onChange={(evt) => {
+                setPassword(evt.target.value);
+              }}
+              style={{ marginTop: '.5em' }}
+            />
+          </ControlledModal.Body>
+          <ControlledModal.Footer>
+            <div className="flex space-between">
+              <Button onClick={closeModal}>{__('Cancel')}</Button>
+              <Button
+                skin="primary"
+                onClick={() => {
+                  onSubmit(password);
+                  closeModal();
+                }}
+              >
+                {__('Confirm')}
+              </Button>
+            </div>
+          </ControlledModal.Footer>
+        </>
+      )}
+    </ControlledModal>
+  );
 }

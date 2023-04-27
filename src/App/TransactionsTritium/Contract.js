@@ -1,13 +1,22 @@
-import React from 'react';
 import styled from '@emotion/styled';
 
 import Tooltip from 'components/Tooltip';
 import ContractDetailsModal from 'components/ContractDetailsModal';
+import TransactionDetailsModal from 'components/TransactionDetailsModal';
+import Icon from 'components/Icon';
+import TokenName from 'components/TokenName';
 import { openModal } from 'lib/ui';
+import { popupContextMenu } from 'lib/contextMenu';
 import { formatNumber } from 'lib/intl';
 import { getDeltaSign } from 'lib/tritiumTransactions';
-import { consts, timing } from 'styles';
+import { lookupAddress } from 'lib/addressBook';
+import contactIcon from 'icons/address-book.svg';
+import walletIcon from 'icons/wallet.svg';
+import tokenIcon from 'icons/token.svg';
 import * as color from 'utils/color';
+import { consts, timing } from 'styles';
+
+__ = __context('Transactions');
 
 const ContractComponent = styled.div(({ theme }) => ({
   flexGrow: 1,
@@ -21,7 +30,7 @@ const ContractComponent = styled.div(({ theme }) => ({
   cursor: 'pointer',
   transition: `background ${timing.normal}`,
   '&:hover': {
-    background: color.lighten(theme.background, 0.2),
+    background: color.lighten(theme.lower(theme.background, 0.1), 0.2),
   },
 }));
 
@@ -54,7 +63,7 @@ const Info = styled.span(({ theme }) => ({
   color: theme.foreground,
 }));
 
-const AccountName = styled(Info)(({ theme }) => ({
+const RegisterName = styled(Info)(({ theme }) => ({
   paddingBottom: '.15em ',
   borderBottom: `1px dotted ${theme.mixer(0.25)}`,
 }));
@@ -81,24 +90,77 @@ const Hash = ({ children, ...rest }) => {
   );
 };
 
-const Account = ({ name, address }) =>
-  name ? (
-    <>
-      account{' '}
-      <Tooltip.Trigger tooltip={address}>
-        <AccountName>{name}</AccountName>
-      </Tooltip.Trigger>
-    </>
+const accountLabel = ({ name, address, local, namespace, mine }) => {
+  if (name) {
+    if (namespace) {
+      return namespace + '::' + name;
+    }
+
+    if (local) {
+      const prefix = mine ? '' : <span className="dim">(?):</span>;
+      return (
+        <span>
+          {prefix}
+          {name}
+        </span>
+      );
+    }
+
+    return name;
+  }
+
+  if (!address) return null;
+  const match = lookupAddress(address);
+  if (match) {
+    return (
+      <span>
+        <Icon icon={contactIcon} className="mr0_4" />
+        <span className="v-align">
+          {match.name + (match.label ? ' - ' + match.label : '')}
+        </span>
+      </span>
+    );
+  }
+  return null;
+};
+
+const Register = (props) => {
+  const label = accountLabel(props);
+  const { address, type } = props;
+  const typeIcon =
+    type === 'ACCOUNT' || type === 'TRUST'
+      ? walletIcon
+      : type === 'TOKEN'
+      ? tokenIcon
+      : null;
+  const display = label ? (
+    <Tooltip.Trigger tooltip={address}>
+      <RegisterName>{label}</RegisterName>
+    </Tooltip.Trigger>
   ) : (
-    <>
-      address <Hash>{address}</Hash>
-    </>
+    <Hash>{address}</Hash>
   );
 
-const creditFrom = contract => {
+  return (
+    <span>
+      {!!typeIcon && (
+        <Tooltip.Trigger tooltip={type}>
+          <Icon icon={typeIcon} className="mr0_4" />
+        </Tooltip.Trigger>
+      )}
+      <span className="v-align">{display}</span>
+    </span>
+  );
+};
+
+const creditFrom = (contract) => {
   switch (contract.for) {
     case 'DEBIT':
-      return <Account name={contract.from_name} address={contract.from} />;
+      if (contract.from) {
+        return <Register {...contract.from} />;
+      } else {
+        return '';
+      }
 
     case 'LEGACY':
       return <Info>{__('Legacy transaction')}</Info>;
@@ -111,13 +173,13 @@ const creditFrom = contract => {
   }
 };
 
-const contractContent = contract => {
+const contractContent = (contract) => {
   switch (contract.OP) {
     case 'WRITE': {
       return (
         <>
           <Operation>Write</Operation> data to{' '}
-          <Account address={contract.address} />
+          <Register name={contract.name} address={contract.address} />
         </>
       );
     }
@@ -126,7 +188,7 @@ const contractContent = contract => {
       return (
         <>
           <Operation>Append</Operation> data to{' '}
-          <Account address={contract.address} />
+          <Register name={contract.name} address={contract.address} />
         </>
       );
     }
@@ -143,7 +205,7 @@ const contractContent = contract => {
             register
           </div>
           <div>
-            at address <Hash>{contract.address}</Hash>
+            at <Register name={contract.name} address={contract.address} />
           </div>
         </>
       );
@@ -153,8 +215,15 @@ const contractContent = contract => {
       return (
         <>
           <Operation>Transfer</Operation> ownership of{' '}
-          <Account address={contract.address} /> to{' '}
-          <Account address={contract.destination} />
+          <Register name={contract.name} address={contract.address} /> to{' '}
+          {typeof contract.recipient === 'string' ? (
+            <Register address={contract.recipient} />
+          ) : (
+            <Register
+              name={contract.recipient?.name}
+              address={contract.recipient?.address}
+            />
+          )}
         </>
       );
     }
@@ -163,7 +232,7 @@ const contractContent = contract => {
       return (
         <>
           <Operation>Claim</Operation> ownership of{' '}
-          <Account address={contract.address} />
+          <Register name={contract.name} address={contract.address} />
         </>
       );
     }
@@ -184,10 +253,28 @@ const contractContent = contract => {
       );
     }
 
+    case 'TRUSTPOOL': {
+      return (
+        <>
+          <Operation>TrustPool</Operation>
+        </>
+      );
+    }
+
     case 'GENESIS': {
       return (
         <>
-          <Operation>Genesis</Operation> <Hash>{contract.address}</Hash>
+          <Operation>Genesis</Operation> at{' '}
+          <Register name={contract.name} address={contract.address} />
+        </>
+      );
+    }
+
+    case 'GENESISPOOL': {
+      return (
+        <>
+          <Operation>GenesisPool</Operation> at{' '}
+          <Register name={contract.name} address={contract.address} />
         </>
       );
     }
@@ -196,24 +283,23 @@ const contractContent = contract => {
       return (
         <>
           <div>
-            <Operation>Debit</Operation> from{' '}
-            <Account name={contract.from_name} address={contract.from} />
+            <Operation>Debit</Operation> from <Register {...contract.from} />
           </div>
           <div>
-            to <Account name={contract.to_name} address={contract.to} />
+            to <Register {...contract.to} />
           </div>
         </>
       );
     }
 
     case 'CREDIT': {
+      const from = creditFrom(contract);
       return (
         <>
           <div>
-            <Operation>Credit</Operation> to{' '}
-            <Account name={contract.to_name} address={contract.to} />
+            <Operation>Credit</Operation> to <Register {...contract.to} />
           </div>
-          <div>from {creditFrom(contract)}</div>
+          <div>{from && <div>from {from}</div>}</div>
         </>
       );
     }
@@ -223,10 +309,10 @@ const contractContent = contract => {
         <>
           <div>
             <Operation>Migrate</Operation> trust key to{' '}
-            <Account name={contract.account_name} address={contract.account} />
+            <Register name={contract.name} address={contract.address} />
           </div>
           <div>
-            from <Hash>{contract.hashkey}</Hash>
+            from <Hash>{contract.last}</Hash>
           </div>
         </>
       );
@@ -249,8 +335,7 @@ const contractContent = contract => {
     case 'FEE': {
       return (
         <>
-          <Operation>Fee</Operation> from{' '}
-          <Account name={contract.from_name} address={contract.from} />
+          <Operation>Fee</Operation> from <Register {...contract.from} />
         </>
       );
     }
@@ -260,10 +345,10 @@ const contractContent = contract => {
         <>
           <div>
             <Operation>Legacy</Operation> debit from{' '}
-            <Account name={contract.from_name} address={contract.from} />
+            <Register {...contract.from} />
           </div>
           <div>
-            to <Account address={contract.to} />
+            to <Register {...contract.to} />
           </div>
         </>
       );
@@ -275,14 +360,34 @@ const contractContent = contract => {
   }
 };
 
-const Contract = ({ contract }) => (
+const Contract = ({ contract, txid }) => (
   <ContractComponent
-    onClick={() => openModal(ContractDetailsModal, { contract })}
+    onClick={() => openModal(ContractDetailsModal, { contract, txid })}
+    onContextMenu={(e) => {
+      e.stopPropagation();
+      popupContextMenu([
+        {
+          id: 'contract-details',
+          label: __('View contract details'),
+          click: () => {
+            openModal(ContractDetailsModal, { contract, txid });
+          },
+        },
+        {
+          id: 'tx-details',
+          label: __('View transaction details'),
+          click: () => {
+            openModal(TransactionDetailsModal, { txid });
+          },
+        },
+      ]);
+    }}
   >
     <ContractContent>{contractContent(contract)}</ContractContent>
     {!!contract.amount && (
       <ContractDelta sign={getDeltaSign(contract)}>
-        {formatNumber(contract.amount)} {contract.token_name || 'NXS'}
+        {formatNumber(contract.amount)}{' '}
+        {contract.token ? <TokenName contract={contract} /> : 'NXS'}
       </ContractDelta>
     )}
   </ContractComponent>

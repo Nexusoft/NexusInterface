@@ -1,38 +1,47 @@
+/**
+ * Important note - This file is imported into module_preload.js, either directly or
+ * indirectly, and will be a part of the preload script for modules, therefore:
+ * - Be picky with importing stuffs into this file, especially for big
+ * files and libraries. The bigger the preload scripts get, the slower the modules
+ * will load.
+ * - Don't assign anything to `global` variable because it will be passed
+ * into modules' execution environment.
+ * - Make sure this note also presents in other files which are imported here.
+ */
+
 // External
-import React from 'react';
+import { useState, memo, useRef, useEffect, forwardRef } from 'react';
 import { findDOMNode } from 'react-dom';
-import memoize from 'utils/memoize';
 import styled from '@emotion/styled';
 
 // Internal
 import TextField from 'components/TextField';
 import Button from 'components/Button';
 import Arrow from 'components/Arrow';
-import { timing, consts } from 'styles';
+import { refs } from 'utils/misc';
+import memoize from 'utils/memoize';
+import { timing } from 'styles';
 
 /**
  * `suggestions` can be an object in `{value: string, display: any}` shape,
  * or a string if value and display are the same
  */
 
-const getValue = suggestion =>
+const getValue = (suggestion) =>
   typeof suggestion === 'object' ? suggestion && suggestion.value : suggestion;
-const getDisplay = suggestion =>
+const getDisplay = (suggestion) =>
   typeof suggestion === 'object'
     ? suggestion && suggestion.display
     : suggestion;
 
 const SuggestionComponent = styled.div(
   ({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    padding: '0 12px',
+    padding: '0.4em 0.8em',
     overflow: 'hidden',
     cursor: 'pointer',
     transition: `background-color ${timing.normal}`,
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
-    height: consts.inputHeightEm + 'em',
     color: theme.foreground,
     position: 'relative',
 
@@ -70,51 +79,37 @@ const SuggestionComponent = styled.div(
     }
 );
 
-/**
- * Each Suggestion for a Auto Suggestion Component
- *
- * @class Suggestion
- * @extends {React.PureComponent}
- */
-class Suggestion extends React.PureComponent {
-  /**
-   * Handles Select Action
-   *
-   * @memberof Suggestion
-   */
-  handleSelect = () => {
-    const { suggestion, onSelect } = this.props;
-    onSelect && onSelect(getValue(suggestion));
+const Suggestion = memo(function ({
+  index,
+  activeIndex,
+  suggestion,
+  onSelect,
+  inputRef,
+  activate,
+}) {
+  const handleSelect = () => {
+    onSelect?.(getValue(suggestion));
+    // Fix selecting an option not triggering validation on blur event
+    inputRef.current?.focus();
+    setTimeout(() => {
+      inputRef.current?.blur();
+    }, 0);
   };
 
-  /**
-   * Handles Mouse Enter Action
-   *
-   * @memberof Suggestion
-   */
-  handleMouseEnter = () => {
-    this.props.activate(this.props.index);
+  const handleMouseEnter = () => {
+    activate(index);
   };
 
-  /**
-   * React Render Of Component
-   *
-   * @returns JSX
-   * @memberof Suggestion
-   */
-  render() {
-    const { index, activeIndex, suggestion } = this.props;
-    return (
-      <SuggestionComponent
-        active={index === activeIndex}
-        onClick={this.handleSelect}
-        onMouseEnter={this.handleMouseEnter}
-      >
-        {getDisplay(suggestion)}
-      </SuggestionComponent>
-    );
-  }
-}
+  return (
+    <SuggestionComponent
+      active={index === activeIndex}
+      onClick={handleSelect}
+      onMouseEnter={handleMouseEnter}
+    >
+      {getDisplay(suggestion)}
+    </SuggestionComponent>
+  );
+});
 
 const AutoSuggestComponent = styled.div({
   position: 'relative',
@@ -157,254 +152,150 @@ const ClearButton = styled(Button)(
     }
 );
 
-/**
- * Auto Suggest Element
- *
- * @export
- * @class AutoSuggest
- * @extends {React.Component}
- */
-export default class AutoSuggest extends React.Component {
-  static defaultProps = {
-    inputComponent: TextField,
-    keyControl: true,
-    suggestOn: 'focus',
-  };
-
-  state = {
-    open: false,
-    activeIndex: null,
-  };
-
-  inputRef = React.createRef();
-  suggestionsRef = React.createRef();
-
-  defaultFilterSuggestions = memoize((suggestions, inputValue) => {
-    if (!suggestions) return [];
-    const query = new String(inputValue || '').toLowerCase();
-    return suggestions.filter(suggestion => {
-      const value = getValue(suggestion);
-      return (
-        !!value &&
-        typeof value === 'string' &&
-        value.toLowerCase().includes(query)
-      );
-    });
+const defaultFilterSuggestions = memoize((suggestions, inputValue) => {
+  if (!suggestions) return [];
+  const query = new String(inputValue || '').toLowerCase();
+  return suggestions.filter((suggestion) => {
+    const value = getValue(suggestion);
+    return (
+      !!value &&
+      typeof value === 'string' &&
+      value.toLowerCase().includes(query)
+    );
   });
+});
 
-  /**
-   * React Did Get Updated Props
-   *
-   * @param {*} prevProps
-   * @memberof AutoSuggest
-   */
-  componentDidUpdate(prevProps) {
-    if (
-      prevProps.inputProps &&
-      this.props.inputProps &&
-      prevProps.inputProps.value !== this.props.inputProps.value
-    ) {
-      this.setState({ activeIndex: null });
-    }
-  }
-
-  /**
-   * Handles Input Focus Event
-   * @param {HTMLEvent} e HTMLEvent
-   * @memberof AutoSuggest
-   */
-  handleInputFocus = e => {
-    if (this.props.suggestOn === 'focus') {
-      this.setState({ open: true });
-    }
-    this.props.inputProps.onFocus && this.props.inputProps.onFocus(e);
-  };
-
-  /**
-   * Handles Input Blur Event
-   * @param {HTMLEvent} e HTMLEvent
-   * @memberof AutoSuggest
-   */
-  handleInputBlur = e => {
-    this.setState({ open: false });
-    this.props.inputProps.onBlur && this.props.inputProps.onBlur(e);
-  };
-
-  /**
-   * Handles Input Change Event
-   * @param {HTMLEvent} e HTMLEvent
-   * @memberof AutoSuggest
-   */
-  handleInputChange = e => {
-    if (this.props.suggestOn === 'change') {
-      this.setState({ open: true });
-    }
-    this.props.inputProps.onChange && this.props.inputProps.onChange(e);
-  };
-
-  /**
-   * Scroll Event
-   * @param {number} index Suggestion Number
-   * @memberof AutoSuggest
-   */
-  scrollToNewSelection = index => {
-    this.setState({ activeIndex: index });
-    if (index !== null) {
-      const suggestionsEl = findDOMNode(this.suggestionsRef.current);
-      const suggestionEl = suggestionsEl.children[index];
-      suggestionEl.scrollIntoView({
-        block: 'nearest',
-        inline: 'nearest',
-        behavior: 'smooth',
-      });
-    }
-  };
-
-  /**
-   * Handle Key Down Event
-   * @param {HTMLEvent} e HTMLEvent
-   * @memberof AutoSuggest
-   */
-  handleKeyDown = e => {
-    const {
-      filterSuggestions = this.defaultFilterSuggestions,
-      suggestions,
-      inputProps,
-      onSelect,
-    } = this.props;
-    const { activeIndex } = this.state;
-    const inputValue = inputProps && inputProps.value;
-    const currentSuggestions = filterSuggestions(suggestions, inputValue);
-
-    switch (e.key) {
-      case 'ArrowDown':
-        e.preventDefault();
-        if (activeIndex === null) {
-          this.scrollToNewSelection(0);
-        } else if (activeIndex < currentSuggestions.length - 1) {
-          this.scrollToNewSelection(activeIndex + 1);
-        } else {
-          this.scrollToNewSelection(null);
-        }
-        break;
-      case 'ArrowUp':
-        e.preventDefault();
-        if (activeIndex === null) {
-          this.scrollToNewSelection(currentSuggestions.length - 1);
-        } else if (activeIndex !== 0) {
-          this.scrollToNewSelection(activeIndex - 1);
-        } else {
-          this.scrollToNewSelection(null);
-        }
-        break;
-      case 'Tab':
-      case 'Enter':
-        if (activeIndex !== null) {
-          e.preventDefault();
-          const activeSuggestion = currentSuggestions[activeIndex];
-          const value = getValue(activeSuggestion);
-          onSelect && onSelect(value);
-        }
-        break;
-    }
-    inputProps.onKeyDown && inputProps.onKeyDown(e);
-  };
-
-  /**
-   * Clears the input field
-   *
-   * @memberof AutoSuggest
-   */
-  clearInput = () => {
-    this.props.onSelect && this.props.onSelect('');
-    this.focusInput();
-  };
-
-  /**
-   * Focus Input Div
-   *
-   * @memberof AutoSuggest
-   */
-  focusInput = () => {
-    this.inputRef.current.focus();
-  };
-
-  /**
-   * Blur Input Div
-   *
-   * @memberof AutoSuggest
-   */
-  blurInput = () => {
-    this.inputRef.current.blur();
-  };
-
-  /**
-   * Returns Controls JSX
-   *
-   * @memberof AutoSuggest
-   */
-  controls = () => (
-    <div className="flex center" style={{ alignSelf: 'stretch' }}>
-      <ClearButton
-        fitHeight
-        skin="plain"
-        onClick={this.clearInput}
-        shown={this.props.inputProps && this.props.inputProps.value}
-      >
-        ✕
-      </ClearButton>
-      <Button fitHeight skin="plain" onClick={this.focusInput}>
-        <Arrow direction="down" width={12} height={8} />
-      </Button>
-    </div>
-  );
-
-  /**
-   * Activate a suggestion
-   *
-   * @memberof AutoSuggest
-   */
-  activate = index => {
-    this.setState({ activeIndex: index });
-  };
-
-  /**
-   * React Render for component
-   *
-   * @returns {JSX} JSX
-   * @memberof AutoSuggest
-   */
-  render() {
-    const {
-      filterSuggestions = this.defaultFilterSuggestions,
+const AutoSuggest = forwardRef(
+  (
+    {
+      filterSuggestions = defaultFilterSuggestions,
+      suggestOn = 'focus',
       suggestions,
       onSelect,
-      inputProps,
-      inputComponent: Input,
-      keyControl,
+      inputProps = {},
+      inputComponent: Input = TextField,
+      keyControl = true,
       emptyFiller,
       ...rest
-    } = this.props;
-    const { open, activeIndex } = this.state;
-    const currentSuggestions = filterSuggestions(
-      suggestions,
-      inputProps && inputProps.value
-    );
+    },
+    ref
+  ) => {
+    const [open, setOpen] = useState(false);
+    const [activeIndex, setActiveIndex] = useState(null);
+    const currentSuggestions = filterSuggestions(suggestions, inputProps.value);
+
+    const inputRef = useRef();
+    const suggestionsRef = useRef();
+
+    useEffect(() => {
+      if (inputProps.value) {
+        setActiveIndex(null);
+      }
+    }, [inputProps.value]);
+
+    const handleInputFocus = (e) => {
+      if (suggestOn === 'focus') {
+        setOpen(true);
+      }
+      inputProps.onFocus?.(e);
+    };
+
+    const handleInputBlur = (e) => {
+      setOpen(false);
+      inputProps.onBlur?.(e);
+    };
+
+    const handleInputChange = (e) => {
+      if (suggestOn === 'change') {
+        setOpen(true);
+      }
+      inputProps.onChange?.(e);
+    };
+
+    const scrollToNewSelection = (index) => {
+      setActiveIndex(index);
+      if (index !== null) {
+        const suggestionsEl = findDOMNode(suggestionsRef.current);
+        const suggestionEl = suggestionsEl.children[index];
+        suggestionEl.scrollIntoView({
+          block: 'nearest',
+          inline: 'nearest',
+          behavior: 'smooth',
+        });
+      }
+    };
+
+    const handleKeyDown = (e) => {
+      switch (e.key) {
+        case 'ArrowDown':
+          e.preventDefault();
+          if (activeIndex === null) {
+            scrollToNewSelection(0);
+          } else if (activeIndex < currentSuggestions.length - 1) {
+            scrollToNewSelection(activeIndex + 1);
+          } else {
+            scrollToNewSelection(null);
+          }
+          break;
+        case 'ArrowUp':
+          e.preventDefault();
+          if (activeIndex === null) {
+            scrollToNewSelection(currentSuggestions.length - 1);
+          } else if (activeIndex !== 0) {
+            scrollToNewSelection(activeIndex - 1);
+          } else {
+            scrollToNewSelection(null);
+          }
+          break;
+        case 'Tab':
+        case 'Enter':
+          if (activeIndex !== null) {
+            e.preventDefault();
+            const activeSuggestion = currentSuggestions[activeIndex];
+            const value = getValue(activeSuggestion);
+            onSelect?.(value);
+          }
+          break;
+      }
+      inputProps.onKeyDown?.(e);
+    };
+
+    const clearInput = () => {
+      onSelect?.('');
+      focusInput();
+    };
+
+    const focusInput = () => {
+      inputRef.current?.focus();
+    };
+
     return (
       <AutoSuggestComponent {...rest}>
         <Input
-          inputRef={this.inputRef}
-          right={this.controls()}
-          {...inputProps}
-          onFocus={this.handleInputFocus}
-          onBlur={this.handleInputBlur}
-          onKeyDown={
-            keyControl ? this.handleKeyDown : inputProps && inputProps.onKeyDown
+          ref={refs(ref, inputRef)}
+          right={
+            <div className="flex center" style={{ alignSelf: 'stretch' }}>
+              <ClearButton
+                fitHeight
+                skin="plain"
+                onClick={clearInput}
+                shown={!!inputProps?.value}
+              >
+                ✕
+              </ClearButton>
+              <Button fitHeight skin="plain" onClick={focusInput}>
+                <Arrow direction="down" width={12} height={8} />
+              </Button>
+            </div>
           }
-          onChange={this.handleInputChange}
+          {...inputProps}
+          onFocus={handleInputFocus}
+          onBlur={handleInputBlur}
+          onKeyDown={keyControl ? handleKeyDown : inputProps.onKeyDown}
+          onChange={handleInputChange}
         />
         <Suggestions
-          ref={this.suggestionsRef}
+          ref={suggestionsRef}
           open={open && (!!emptyFiller || currentSuggestions.length > 0)}
         >
           {currentSuggestions.map((suggestion, i) => (
@@ -412,9 +303,10 @@ export default class AutoSuggest extends React.Component {
               key={i}
               index={i}
               activeIndex={activeIndex}
-              activate={this.activate}
+              activate={setActiveIndex}
               suggestion={suggestion}
               onSelect={onSelect}
+              inputRef={inputRef}
             />
           ))}
           {currentSuggestions.length === 0 && !!emptyFiller && (
@@ -424,12 +316,6 @@ export default class AutoSuggest extends React.Component {
       </AutoSuggestComponent>
     );
   }
-}
-
-const AutoSuggestReduxForm = ({ input, inputProps, meta, ...rest }) => (
-  <AutoSuggest
-    inputProps={{ ...input, error: meta.touched && meta.error, ...inputProps }}
-    {...rest}
-  />
 );
-AutoSuggest.RF = AutoSuggestReduxForm;
+
+export default AutoSuggest;

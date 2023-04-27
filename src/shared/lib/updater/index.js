@@ -1,8 +1,7 @@
 // External
-import { remote } from 'electron';
-import log from 'electron-log';
+import { ipcRenderer } from 'electron';
 import path from 'path';
-import fs from 'fs-extra';
+import fs from 'fs';
 import axios from 'axios';
 import semver from 'semver';
 
@@ -10,30 +9,23 @@ import semver from 'semver';
 import * as TYPE from 'consts/actionTypes';
 import store from 'store';
 import { showBackgroundTask, showNotification } from 'lib/ui';
+import { updateSettings } from 'lib/settings';
 import AutoUpdateBackgroundTask from './AutoUpdateBackgroundTask';
 import { assetsParentDir } from 'consts/paths';
-import { walletEvents } from 'lib/wallet';
+import { closeWallet } from 'lib/wallet';
+import { checkForModuleUpdates } from 'lib/modules';
 
-const mainUpdater = remote.getGlobal('updater');
-const autoUpdateInterval = 2 * 60 * 60 * 1000; // 2 hours
+__ = __context('AutoUpdate');
+
+const autoUpdateInterval = 4 * 60 * 60 * 1000; // 4 hours
 let timerId = null;
 
-const setUpdaterState = state => {
+const setUpdaterState = (state) => {
   store.dispatch({
     type: TYPE.SET_UPDATER_STATE,
     payload: state,
   });
 };
-
-/**
- * Check for updates
- *
- * @export
- * @returns
- */
-export function checkForUpdates() {
-  return mainUpdater.checkForUpdates();
-}
 
 /**
  * Quit wallet and install the update
@@ -42,7 +34,17 @@ export function checkForUpdates() {
  * @returns
  */
 export function quitAndInstall() {
-  return mainUpdater.quitAndInstall();
+  closeWallet(() => ipcRenderer.invoke('quit-and-install-update'));
+}
+
+export function setAllowPrerelease(value) {
+  updateSettings({ allowPrerelease: value });
+  ipcRenderer.invoke('set-allow-prerelease', value);
+}
+
+export function migrateToMainnet() {
+  updateSettings({ allowPrerelease: true });
+  ipcRenderer.invoke('migrate-to-mainnet', null);
 }
 
 /**
@@ -51,42 +53,50 @@ export function quitAndInstall() {
  * @export
  * @returns
  */
-export async function startAutoUpdate() {
-  const checkGithubManually =
-    process.platform === 'darwin' ||
-    !fs.existsSync(path.join(assetsParentDir, 'app-update.yml'));
+export async function checkForUpdates() {
+  const checkGithubManually = !fs.existsSync(
+    path.join(assetsParentDir, 'app-update.yml')
+  );
+  clearTimeout(timerId);
 
-  if (checkGithubManually) {
-    clearTimeout(timerId);
-    try {
-      const response = await axios.get(
-        'https://api.github.com/repos/Nexusoft/NexusInterface/releases/latest'
-      );
-      const latestVerion = response.data.tag_name;
-      if (
-        semver.lt('v' + APP_VERSION, latestVerion) &&
-        response.data.prerelease === false
-      ) {
-        showBackgroundTask(AutoUpdateBackgroundTask, {
-          version: response.data.tag_name,
-          quitAndInstall: null,
-          gitHub: true,
-        });
-      }
-    } catch (e) {
-      console.error(e);
-    }
-    timerId = setTimeout(startAutoUpdate, autoUpdateInterval);
-  } else {
-    try {
+  try {
+    await Promise.all([
+      (async () => {
+        if (process.env.NODE_ENV !== 'development' && checkGithubManually) {
+          const response = await axios.get(
+            'https://api.github.com/repos/Nexusoft/NexusInterface/releases/latest'
+          );
+          const latestVerion = response.data.tag_name;
+          if (
+            semver.lt('v' + APP_VERSION, latestVerion) &&
+            response.data.prerelease === false
+          ) {
+            showBackgroundTask(AutoUpdateBackgroundTask, {
+              version: response.data.tag_name,
+              quitAndInstall: null,
+              gitHub: true,
+            });
+          }
+        } else {
+          const result = await ipcRenderer.invoke('check-for-updates');
+          if (result && result.downloadPromise) {
+            await result.downloadPromise;
+          }
+        }
+      })(),
+      checkForModuleUpdates(),
+    ]);
+  } catch (e) {
+    console.error(e);
+  } finally {
+    updateSettings({ lastCheckForUpdates: Date.now() });
+
+    const {
+      settings: { autoUpdate },
+    } = store.getState();
+    if (autoUpdate) {
       clearTimeout(timerId);
-      const result = await mainUpdater.checkForUpdates();
-      if (result.downloadPromise) {
-        await result.downloadPromise;
-      }
-    } finally {
-      // Check for updates every 2 hours
-      timerId = setTimeout(startAutoUpdate, autoUpdateInterval);
+      timerId = setTimeout(checkForUpdates, autoUpdateInterval);
     }
   }
 }
@@ -105,22 +115,8 @@ export function stopAutoUpdate() {
  * Initialize the Updater
  *
  */
-walletEvents.once('post-render', function() {
-  mainUpdater.logger = log;
-  mainUpdater.currentVersion = APP_VERSION;
-  mainUpdater.autoDownload = true;
-  mainUpdater.autoInstallOnAppQuit = false;
-  if (process.env.NODE_ENV === 'development') {
-    mainUpdater.updateConfigPath = path.join(
-      process.cwd(),
-      'dev-app-update.yml'
-    );
-  }
-  mainUpdater.on('error', err => {
-    console.error(err);
-  });
-
-  mainUpdater.on('update-available', updateInfo => {
+export function prepareUpdater() {
+  ipcRenderer.on('updater:update-available', (event, updateInfo) => {
     showNotification(
       __('New wallet version %{version} available. Downloading...', {
         version: updateInfo.version,
@@ -129,37 +125,49 @@ walletEvents.once('post-render', function() {
     );
   });
 
-  mainUpdater.on('update-downloaded', updateInfo => {
+  ipcRenderer.on('updater:update-downloaded', (event, updateInfo) => {
     stopAutoUpdate();
     showBackgroundTask(AutoUpdateBackgroundTask, {
       version: updateInfo.version,
-      quitAndInstall: mainUpdater.quitAndInstall,
+      quitAndInstall: quitAndInstall,
     });
   });
 
-  mainUpdater.on('error', err => {
+  ipcRenderer.on('updater:error', (event, err) => {
+    console.error(
+      'Error Downloading Wallet Update:\n',
+      'Event: ',
+      event,
+      '\nError: ',
+      err
+    );
     setUpdaterState('idle');
   });
-  mainUpdater.on('checking-for-update', () => {
+  ipcRenderer.on('updater:checking-for-update', () => {
     setUpdaterState('checking');
   });
-  mainUpdater.on('update-available', () => {
+  ipcRenderer.on('updater:update-available', () => {
     setUpdaterState('downloading');
   });
-  mainUpdater.on('update-not-available', () => {
+  ipcRenderer.on('updater:update-not-available', () => {
     setUpdaterState('idle');
   });
-  mainUpdater.on('download-progress', () => {
+  ipcRenderer.on('updater:download-progress', () => {
     setUpdaterState('downloading');
   });
-  mainUpdater.on('update-downloaded', () => {
+  ipcRenderer.on('updater:update-downloaded', () => {
     setUpdaterState('downloaded');
   });
 
   const {
-    settings: { autoUpdate },
+    settings: { autoUpdate, lastCheckForUpdates },
   } = store.getState();
   if (autoUpdate) {
-    startAutoUpdate();
+    const timeFromLastCheck = Date.now() - lastCheckForUpdates;
+    if (!lastCheckForUpdates || timeFromLastCheck > autoUpdateInterval) {
+      checkForUpdates();
+    } else {
+      setTimeout(checkForUpdates, autoUpdateInterval - timeFromLastCheck);
+    }
   }
-});
+}

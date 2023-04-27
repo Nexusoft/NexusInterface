@@ -1,3 +1,432 @@
+# 3.1.0 (2023.4.26)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v3.1.0)
+
+#### Additions
+
+- **Lite Mode now available**
+- **Multi-user mode now available**
+- Nexus Core v5.1.0
+- Allow configuring embedded core's port
+- Added HTTPS support for core connection
+- Allow sending to multiple recipients
+- Allow setting transaction exipiry
+- Added Preview Transaction screen before sending transactions
+- Token balances (if any) are now displayed on Overview and Transactions
+- Added support for 5 new currencies: MMK, IDR, PHP, THB, and VND
+- Added QR code for addresses
+- Allow renaming accounts
+- Added confirmation before setting a new recovery phrase
+- Added 'Allow Pre-releases' setting
+
+#### Adjustments
+
+- Start/Stop staking button on Staking page is now smarter
+- Contact names are now looked up and displayed where applicable
+- Hide Overview balances setting is now separated from Overview Display setting
+- Improved token selection when creating a new account
+- Secret fields are now censored on Nexus API Console, and Clear button now also clears the command history
+- Updated some icons
+- Updated menu links
+- Various other improvements
+
+#### Fixes
+
+- Fixed issue where modules saved as ZIP archives would be installed
+- Fixed issue with some modules failing to open
+- Legacy Debits in tritium mode in the account history section now display properly in negative
+- Correctly display unnamed token
+- Fixed issues with the globe: Resolved stretching at the poles, Fixed pillars not being removed on disconnect, Fixed animation issue with new blocks/connections
+- Fixed issue with the wallet not deleting the old bootstrap zip after installation
+- Fixed Mac try icon not displaying correctly
+- Various other fixes
+
+### Module system
+
+- Added `NEXUS.utilities.showInfoDialog`
+- `NEXUS.utilities.sendNXS` renamed to `NEXUS.utilities.send`
+- Minor changes on common component interface
+
+# 3.0.3 (2020.4.21)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v3.0.3)
+
+#### Additions
+
+- Added additional core information for use with the module system
+
+#### Adjustments
+
+- If you are not in sync when you login with invalid credentials
+
+#### Fixes
+
+- Fixed the details popup showing that a trust account needs to mature even though the account was already matured
+- Fixed the GUI not notifying a module of a core update
+- Pressing the Turn Off button for testnet works requires confirming core restart
+
+# 3.0.2 (2020.3.25)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v3.0.2)
+
+#### Additions
+
+- Nexus Core v5.0.3
+- Serbian Language
+
+#### Adjustments
+
+- Staking Warning will not show if no balance/ logged in
+
+#### Fixes
+
+- Fixed typos
+
+# 3.0.1 (2020.3.16)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v3.0.1)
+
+#### Additions
+
+- Nexus Core v5.0.2
+- Added Invoice Documentation to Terminal
+
+#### Adjustments
+
+- Adjusted the pin popup for using the SecureAPICall
+
+#### Fixes
+
+- Fixed maxlength on new Asset creation page
+- Fixed confirm pin pop up not to have unnecessary space
+
+# 3.0.0 (2020.3.11)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v3.0.0)
+
+#### Additions
+
+- Nexus Core v5.0.1
+- Added Assets in the User page
+- Added Name and Namespace history
+- Added Indian Rupee and Polish Zloty
+- Display a plus sign when pending stake change occurs
+- Added ability to save Genesis in the Address Book
+- Modules will now check for updates
+- Added Norwegian Language
+
+#### Adjustments
+
+- REMOVED Migrate stake function
+- Updated Polish Language
+
+#### Fixes
+
+- Fixed issue with the Login screen was shown before Create user screen
+- Fixed bootstrap suggestion message
+- Fixed links in the Console documentation
+- Fixed recovery passphrase length error message
+- Fixed name not updating when creating new Tokens
+- Fixed Overview page linking to the market page which has been removed
+
+# 2.2.2 (2020.2.21)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.2.2)
+
+#### Additions
+
+- None
+
+#### Adjustments
+
+- None
+
+#### Fixes
+
+- Fixed issue with confirming Password and Pin when creating a user
+
+# 2.2.1 (2020.2.19)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.2.1)
+
+#### Additions
+
+- None
+
+#### Adjustments
+
+- Virtual keyboard Shift button now capitalizes only one next character
+
+#### Fixes
+
+- Fixed modules not being able to load when open source policy is on
+- Fixed CLI syntax Nexus API Console commands failing when binary path contains a space
+- Fixed virtual keyboard not working on Confirm password & PIN modal
+- Fixed core config bug on a fresh install
+
+# 2.2.0 (2020.2.17)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.2.0)
+
+#### Additions
+
+- Added Names and Namespaces functionalities
+- Added virtual (on-screen) keyboard
+- Added support for development modules
+- Added check for module updates feature
+- Added an Open App button on Module Details for `app` modules
+- Added logging for modules that fail to load
+
+#### Adjustments
+
+- Moved Market Data page out into a downloadable module
+- Tritium API console now let you explicitly choose which syntax you use (URL or CLI)
+- Improved error reporting when a module fails to install
+- Deprecated module specification version, using wallet version directly instead
+- Modules that are built on a deprecated wallet version now still work, only showing a warning
+
+#### Fixes
+
+- Fixed transactions not being loaded in some cases
+
+# 2.1.4 (2020.1.25)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.1.4)
+
+#### Additions
+
+- None
+
+#### Adjustments
+
+- Improved performance for loading a long transactions history
+
+#### Fixes
+
+- Fixed the core failing to start when the Nexus directory doesn't exist
+- Fixed legacy transactions not being loaded
+- Fixed module file server error
+
+# 2.1.3 (2020.1.03)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.1.3)
+
+#### Additions
+
+- Nexus Core 4.1.3
+
+#### Adjustments
+
+- none
+
+#### Fixes
+
+- none
+
+# 2.1.2 (2020.1.02)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.1.2)
+
+#### Additions
+
+- Nexus Core 4.1.2
+
+#### Adjustments
+
+- none
+
+#### Fixes
+
+- Fixed Auto Update on all platforms
+
+# 2.1.1 (2019.12.18)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.1.1)
+
+#### Additions
+
+- Added a link to Account Details modal for sending funds from that account
+- PINs now support all alphanumeric characters
+
+#### Adjustments
+
+- Address validation now uses backend api
+
+#### Fixes
+
+- Fixed the option for Change password & PIN and Change recovery phrase not being shown in User page
+
+# 2.1.0 (2019.12.16)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.1.0)
+
+#### Additions
+
+- Nexus Core 4.1.1
+- Added Change Password & PIN functionality
+- Added Set Recovery Phrase functionality
+- Added Recover Password & PIN functionality
+- Added the ability to toggle masked/unmasked content in secure textbox (e.g. password, PIN)
+- Added the ability to change the data directory for the core
+- Added fiat balance to NXS account's history modal
+- Added feature where if more than one peer is located in a city, that pillar gets larger
+- Added Wallet Health Status to Market Page
+- Added the ability to open Transaction details from Contract Details modal
+
+#### Adjustments
+
+- Removed Option for Avatar mode while in Tritium Mode
+- Removed Option for Backup Directory while in Tritium Mode
+- Changed terminology of Search Token to Lookup Token to better illustrate the function
+- Improved balances UI in Transactions page
+- Disallowed logging in to your sigchain before the sigchain creation is confirmed on the blockchain
+- You can now use Escape key to close most pop-up modals
+- Unconfirmed transactions are now dimmed on Transactions page
+- Allow setting stake amount to the current amount (for the case you want to undo the change you made)
+- Added Damper to the globe controls
+- Added equator to the globe
+- Incoming connections now animate to the peer
+
+#### Fixes
+
+- Fixed issue with sending from unnamed accounts
+- Fixed core settings not respecting testnet iteration off button
+- Fixed the error opening trust account's history
+- Fixed Adjust Stake modal not closing on success
+- Fixed issue where Legacy transactions did not display in Account History
+
+# 2.0.8 (2019.12.04)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.0.8)
+
+#### Additions
+
+- Nexus Core 4.0.8
+
+#### Adjustments
+
+- none
+
+#### Fixes
+
+- none
+
+# 2.0.7 (2019.11.17)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.0.7)
+
+#### Additions
+
+- Nexus Core 4.0.7
+
+#### Adjustments
+
+- none
+
+#### Fixes
+
+- Fixed issue with opening trust accout history
+
+# 2.0.6 (2019.11.15)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.0.6)
+
+#### Additions
+
+- Nexus Core 4.0.6
+- Ability to select the token when creating a account
+- Added Migrate transactions to the transactions history
+
+#### Adjustments
+
+- none
+
+#### Fixes
+
+- History now sorting newest first.
+
+# 2.0.5 (2019.11.12)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.0.5)
+
+#### Additions
+
+- Nexus Core 4.0.5
+
+#### Adjustments
+
+- none
+
+#### Fixes
+
+- none
+
+# 2.0.4 (2019.11.12)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.0.4)
+
+#### Additions
+
+- Nexus Core 4.0.4
+- Added Auto Updates for Mac
+
+#### Adjustments
+
+- Removed `Backup Wallet` from file menu.
+
+#### Fixes
+
+- none
+
+# 2.0.3 (2019.11.12)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.0.3)
+
+#### Additions
+
+- Nexus Core 4.0.3
+
+#### Adjustments
+
+- none
+
+#### Fixes
+
+- Fixed Migrating Stake
+- Fixed bug with clear peers
+
+# 2.0.2 (2019.11.10)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.0.2)
+
+#### Additions
+
+- Nexus Core 4.0.2
+
+#### Adjustments
+
+- Updated Languages
+
+#### Fixes
+
+- none
+
+# 2.0.1 (2019.11.07)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.0.1)
+
+#### Additions
+
+- Nexus Core 4.0.1
+
+#### Adjustments
+
+- Removed Alpha Testnet and replaced it with normal Testnet.
+
+#### Fixes
+
+- Minimize on close now works as intented
+
 # 2.0.0 (2019.11.05)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v2.0.0)

@@ -10,7 +10,7 @@
  */
 
 // External Dependencies
-import React, { Component } from 'react';
+import { useRef, forwardRef, useState, useEffect } from 'react';
 import styled from '@emotion/styled';
 
 // Internal Dependencies
@@ -19,7 +19,6 @@ import Arrow from 'components/Arrow';
 import Overlay from 'components/Overlay';
 import Tooltip from 'components/Tooltip';
 import { timing, consts, animations } from 'styles';
-import * as color from 'utils/color';
 import { passRef } from 'utils/misc';
 
 // Minimum gap from the dropdown to the edges of the screen
@@ -82,7 +81,7 @@ const SelectControl = styled.div(
             borderBottomColor: theme.mixer(0.75),
             '&::after': {
               background: error
-                ? color.lighten(theme.danger, 0.3)
+                ? theme.raise(theme.danger, 0.3)
                 : theme.mixer(0.75),
             },
           },
@@ -91,8 +90,8 @@ const SelectControl = styled.div(
                 color: theme.foreground,
                 '&&::after': {
                   background: error
-                    ? color.lighten(theme.danger, 0.3)
-                    : color.lighten(theme.primary, 0.3),
+                    ? theme.raise(theme.danger, 0.3)
+                    : theme.raise(theme.primary, 0.3),
                 },
               }
             : null),
@@ -112,6 +111,31 @@ const SelectControl = styled.div(
                 background: theme.foreground,
                 borderBottomLeftRadius: 0,
                 borderBottomRightRadius: 0,
+              }
+            : null),
+        };
+      case 'filled-inverted':
+        return {
+          paddingLeft: '.8em',
+          border: `1px solid ${theme.mixer(0.125)}`,
+          background: theme.background,
+          color: theme.foreground,
+          borderRadius: 2,
+          transitionProperty: 'background-color',
+          transitionDuration: timing.normal,
+          '&:hover': {
+            background: theme.mixer(0.125),
+          },
+          ...(active
+            ? {
+                background: theme.mixer(0.125),
+                borderBottomLeftRadius: 0,
+                borderBottomRightRadius: 0,
+              }
+            : null),
+          ...(error
+            ? {
+                borderColor: theme.danger,
               }
             : null),
         };
@@ -158,6 +182,11 @@ const OptionsComponent = styled.div(
           background: theme.foreground,
           color: theme.background,
         };
+      case 'filled-inverted':
+        return {
+          background: theme.background,
+          color: theme.foreground,
+        };
     }
   },
   ({ ready }) =>
@@ -201,34 +230,40 @@ const Option = styled.div(
             background: selectable ? theme.mixer(0.875) : undefined,
           },
         };
+      case 'filled-inverted':
+        return {
+          background: selected ? theme.primary : undefined,
+          color: selected ? theme.primaryAccent : undefined,
+          '&:hover': {
+            background: selected
+              ? theme.primary
+              : selectable
+              ? theme.mixer(0.125)
+              : undefined,
+          },
+        };
     }
   }
 );
 
-class Options extends Component {
-  anchorRef = React.createRef();
+function Options({ controlRef, skin, options, close, value, onChange }) {
+  const anchorRef = useRef();
+  const elemRef = useRef();
+  const scrollTopRef = useRef();
+  const styleRef = useRef({
+    fontSize: window
+      .getComputedStyle(controlRef.current)
+      .getPropertyValue('font-size'),
+  });
+  const [ready, setReady] = useState(false);
 
-  state = {
-    ready: false,
-    // Apply the same font-size with the Select control
-    styles: {
-      fontSize: window
-        .getComputedStyle(this.props.controlRef.current)
-        .getPropertyValue('font-size'),
-    },
-  };
-
-  componentDidMount() {
-    this.positionDropdown();
-  }
-
-  positionDropdown = () => {
-    if (!this.anchorRef.current) return;
-    const styles = { fontSize: this.state.styles.fontSize };
+  useEffect(() => {
+    if (!anchorRef.current) return;
+    const styles = { ...styleRef.current };
 
     // Horizontally align Options dropdown with the Select control
-    const controlRect = this.props.controlRef.current.getBoundingClientRect();
-    if (this.props.skin === 'underline') {
+    const controlRect = controlRef.current.getBoundingClientRect();
+    if (skin === 'underline') {
       styles.left = controlRect.left - optionHPadding;
       styles.width = controlRect.width + optionHPadding;
     } else {
@@ -237,8 +272,8 @@ class Options extends Component {
     }
 
     // Vertically align Selected Option with the Select control
-    const thisRect = this.el.getBoundingClientRect();
-    const selectedRect = this.anchorRef.current.getBoundingClientRect();
+    const thisRect = elemRef.current.getBoundingClientRect();
+    const selectedRect = anchorRef.current.getBoundingClientRect();
     const selectedOptTop = selectedRect.top - thisRect.top;
     styles.top = controlRect.top - selectedOptTop;
 
@@ -246,7 +281,7 @@ class Options extends Component {
 
     // Prevent the Options dropdown to outreach the top of the screen
     if (styles.top < minScreenGap) {
-      this.scrollTop = minScreenGap - styles.top;
+      scrollTopRef.current = minScreenGap - styles.top;
       styles.height = styles.top + styles.height - minScreenGap;
       styles.top = minScreenGap;
     }
@@ -256,153 +291,111 @@ class Options extends Component {
       styles.height = window.innerHeight - minScreenGap - styles.top;
     }
 
-    this.setState({ ready: true, styles });
-  };
+    styleRef.current = styles;
+    setReady(true);
+  }, []);
 
-  select = option => {
-    this.props.close();
+  const select = (option) => {
+    close();
     if (!option.isDummy) {
-      this.props.onChange(option.value);
+      onChange(option.value);
     }
   };
 
-  render() {
-    const { skin, options, close, value } = this.props;
-    const { ready, styles } = this.state;
-    const selectedIndex = options.findIndex(o => o.value === value);
-    const anchorIndex = selectedIndex !== -1 ? selectedIndex : 0;
-    return (
-      <Overlay onBackgroundClick={close}>
-        <OptionsComponent
-          skin={skin}
-          ref={el => {
-            if (el && this.scrollTop) {
-              el.scrollTop = this.scrollTop;
-              this.scrollTop = null;
-            }
-            this.el = el;
-          }}
-          style={styles}
-          ready={ready}
-        >
-          {options.map((option, i) => (
-            <Option
-              key={option.isDummy ? i : option.value}
-              skin={skin}
-              onClick={
-                !option.isSeparator ? () => this.select(option) : () => null
-              }
-              selected={option.value === value && !option.isDummy}
-              selectable={!option.isSeparator}
-              ref={i === anchorIndex ? this.anchorRef : undefined}
-            >
-              {option.indent && <>&nbsp;&nbsp;</>} {option.display}
-            </Option>
-          ))}
-        </OptionsComponent>
-      </Overlay>
-    );
-  }
+  const selectedIndex = options.findIndex((o) => o.value === value);
+  const anchorIndex = selectedIndex !== -1 ? selectedIndex : 0;
+  return (
+    <Overlay onBackgroundClick={close}>
+      <OptionsComponent
+        skin={skin}
+        ref={(el) => {
+          if (el && scrollTopRef.current) {
+            el.scrollTop = scrollTopRef.current;
+            scrollTopRef.current = null;
+          }
+          elemRef.current = el;
+        }}
+        style={styleRef.current}
+        ready={ready}
+      >
+        {options.map((option, i) => (
+          <Option
+            key={option.isDummy ? i : option.value}
+            skin={skin}
+            onClick={!option.isSeparator ? () => select(option) : () => null}
+            selected={option.value === value && !option.isDummy}
+            selectable={!option.isSeparator}
+            ref={i === anchorIndex ? anchorRef : undefined}
+          >
+            {option.indent && <>&nbsp;&nbsp;</>} {option.display}
+          </Option>
+        ))}
+      </OptionsComponent>
+    </Overlay>
+  );
 }
 
-class Select extends Component {
-  controlRef = React.createRef();
+const Select = forwardRef(function (
+  { options, skin = 'underline', value, error, onChange, placeholder, ...rest },
+  ref
+) {
+  const controlRef = useRef();
+  const [open, setOpen] = useState(false);
 
-  state = { open: false };
-
-  options = () => {
-    const { options } = this.props;
-    if (options && options.length > 0) {
-      return options;
-    } else {
-      // Default options with a dummy option to make the UI render
-      return [
+  options = options?.length
+    ? options
+    : [
         {
           isDummy: true,
         },
       ];
-    }
-  };
 
-  option = value =>
-    this.props.options && this.props.options.find(o => o.value === value);
+  const selectedOption = options.find((o) => o.value === value);
 
-  open = () => {
-    this.setState({ open: true });
-  };
-
-  close = () => {
-    this.setState({ open: false });
-  };
-
-  render() {
-    const {
-      skin = 'underline',
-      value,
-      error,
-      onChange,
-      placeholder,
-      controlRef,
-      ...rest
-    } = this.props;
-    const { open } = this.state;
-    const selectedOption = this.option(value);
-
-    return (
-      <>
-        <SelectControl
-          ref={el => {
-            passRef(el, this.controlRef);
-            passRef(el, controlRef);
-          }}
-          active={open}
-          onClick={this.open}
-          skin={skin}
-          error={error}
-          {...rest}
-        >
-          <CurrentValue>
-            {selectedOption ? (
-              selectedOption.display
-            ) : (
-              <Placeholder>{placeholder}</Placeholder>
-            )}
-          </CurrentValue>
-          <Button
-            fitHeight
-            skin={skin === 'filled' ? 'plain-inverted' : 'plain'}
-          >
-            <Arrow direction="down" width={12} height={8} />
-          </Button>
-          {!!error && (
-            <ErrorMessage skin="error" position="bottom" align="start">
-              {error}
-            </ErrorMessage>
+  return (
+    <>
+      <SelectControl
+        ref={(el) => {
+          passRef(el, controlRef);
+          passRef(el, ref);
+        }}
+        active={open}
+        onClick={() => {
+          setOpen(true);
+        }}
+        skin={skin}
+        error={error}
+        {...rest}
+      >
+        <CurrentValue>
+          {selectedOption ? (
+            selectedOption.display
+          ) : (
+            <Placeholder>{placeholder}</Placeholder>
           )}
-        </SelectControl>
-
-        {open && (
-          <Options
-            {...{ skin, value, onChange }}
-            options={this.options()}
-            close={this.close}
-            controlRef={this.controlRef}
-          />
+        </CurrentValue>
+        <Button fitHeight skin={skin === 'filled' ? 'plain-inverted' : 'plain'}>
+          <Arrow direction="down" width={12} height={8} />
+        </Button>
+        {!!error && (
+          <ErrorMessage skin="error" position="bottom" align="start">
+            {error}
+          </ErrorMessage>
         )}
-      </>
-    );
-  }
-}
+      </SelectControl>
 
-const SelectWrapper = React.forwardRef((props, ref) => (
-  <Select {...props} controlRef={ref} />
-));
+      {open && (
+        <Options
+          {...{ skin, value, onChange }}
+          options={options}
+          close={() => {
+            setOpen(false);
+          }}
+          controlRef={controlRef}
+        />
+      )}
+    </>
+  );
+});
 
-// Select wrapper for redux-form
-const SelectReduxForm = ({ input, meta, ...rest }) => (
-  <Select error={meta.touched && meta.error} {...input} {...rest} />
-);
-
-SelectWrapper.RF = SelectReduxForm;
-
-export default SelectWrapper;
+export default Select;

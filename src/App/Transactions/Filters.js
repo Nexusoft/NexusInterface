@@ -1,5 +1,4 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 
 import Icon from 'components/Icon';
@@ -14,6 +13,8 @@ import {
 } from 'lib/ui';
 
 import searchIcon from 'icons/search.svg';
+
+__ = __context('Transactions');
 
 const categories = [
   {
@@ -81,58 +82,49 @@ const FiltersWrapper = styled.div({
   marginTop: '-1em',
 });
 
-const Filters = ({ addressQuery, category, minAmount, timeSpan }) => (
-  <FiltersWrapper>
-    <FormField connectLabel label={__('Search address')}>
-      <TextField
-        type="search"
-        name="addressfilter"
-        placeholder={__('Search for Address')}
-        value={addressQuery}
-        onChange={evt => {
-          setTxsAddressQuery(evt.target.value);
-        }}
-        left={<Icon icon={searchIcon} className="space-right" />}
-      />
-    </FormField>
+export default function Filters() {
+  const transactionsUI = useSelector((state) => state.ui.transactions);
+  const { addressQuery, category, minAmount, timeSpan } = transactionsUI;
 
-    <FormField label={__('Category')}>
-      <Select
-        value={category}
-        onChange={setTxsCategoryFilter}
-        options={categories}
-      />
-    </FormField>
+  return (
+    <FiltersWrapper>
+      <FormField connectLabel label={__('Search address')}>
+        <TextField
+          name="addressfilter"
+          placeholder={__('Search for Address')}
+          value={addressQuery}
+          onChange={(evt) => {
+            setTxsAddressQuery(evt.target.value);
+          }}
+          left={<Icon icon={searchIcon} className="mr0_4" />}
+        />
+      </FormField>
 
-    <FormField connectLabel label={__('Min amount')}>
-      <TextField
-        type="number"
-        min="0"
-        placeholder="0.00"
-        value={minAmount}
-        onChange={evt => setTxsMinAmountFilter(evt.target.value)}
-      />
-    </FormField>
+      <FormField label={__('Category')}>
+        <Select
+          value={category}
+          onChange={setTxsCategoryFilter}
+          options={categories}
+        />
+      </FormField>
 
-    <FormField label={__('Time span')}>
-      <Select
-        value={timeSpan}
-        onChange={setTxsTimeFilter}
-        options={timeFrames}
-      />
-    </FormField>
-  </FiltersWrapper>
-);
+      <FormField connectLabel label={__('Min amount')}>
+        <TextField
+          type="number"
+          min="0"
+          placeholder="0.00"
+          value={minAmount}
+          onChange={(evt) => setTxsMinAmountFilter(evt.target.value)}
+        />
+      </FormField>
 
-const mapStateToProps = ({
-  ui: {
-    transactions: { addressQuery, category, minAmount, timeSpan },
-  },
-}) => ({
-  addressQuery,
-  category,
-  minAmount,
-  timeSpan,
-});
-
-export default connect(mapStateToProps)(Filters);
+      <FormField label={__('Time span')}>
+        <Select
+          value={timeSpan}
+          onChange={setTxsTimeFilter}
+          options={timeFrames}
+        />
+      </FormField>
+    </FiltersWrapper>
+  );
+}

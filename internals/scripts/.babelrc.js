@@ -1,4 +1,4 @@
-module.exports = function(api) {
+module.exports = function (api) {
   api.cache(true);
 
   return {
@@ -13,7 +13,7 @@ module.exports = function(api) {
       // ['@babel/plugin-proposal-nullish-coalescing-operator', { loose: false }],
       // '@babel/plugin-proposal-do-expressions',
       // Stage 2
-      ['@babel/plugin-proposal-decorators', { legacy: true }],
+      // ['@babel/plugin-proposal-decorators', { legacy: true }],
       // '@babel/plugin-proposal-function-sent',
       // '@babel/plugin-proposal-export-namespace-from',
       // '@babel/plugin-proposal-numeric-separator',

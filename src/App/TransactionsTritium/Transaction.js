@@ -1,13 +1,15 @@
-import React from 'react';
 import styled from '@emotion/styled';
 
 import { formatDateTime } from 'lib/intl';
+import { popupContextMenu } from 'lib/contextMenu';
 import * as color from 'utils/color';
 import { timing } from 'styles';
 import { openModal } from 'lib/ui';
 
-import TransactionDetailsModal from './TransactionDetailsModal';
+import TransactionDetailsModal from 'components/TransactionDetailsModal';
 import Contract from './Contract';
+
+__ = __context('Transactions');
 
 const dateFormat = {
   day: '2-digit',
@@ -23,14 +25,20 @@ const timeFormat = {
 const dayFormat = { day: '2-digit' };
 const monthFormat = { month: 'short' };
 
-const TransactionComponent = styled.div(({ theme }) => ({
-  margin: '10px 0',
-  color: theme.mixer(0.75),
-  background: color.darken(theme.background, 0.1),
-  boxShadow: '0 0 5px 0 rgba(0,0,0,.5)',
-  display: 'flex',
-  alignItems: 'stretch',
-}));
+const TransactionComponent = styled.div(
+  ({ theme }) => ({
+    margin: '10px 0',
+    color: theme.mixer(0.75),
+    background: theme.lower(theme.background, 0.1),
+    boxShadow: '0 0 5px 0 rgba(0,0,0,.5)',
+    display: 'flex',
+    alignItems: 'stretch',
+  }),
+  ({ unconfirmed }) =>
+    unconfirmed && {
+      opacity: 0.5,
+    }
+);
 
 const TransactionLeft = styled.div(({ theme }) => ({
   flexGrow: 0,
@@ -39,16 +47,16 @@ const TransactionLeft = styled.div(({ theme }) => ({
   alignItems: 'center',
   color: theme.foreground,
   borderRight: `1px solid ${color.fade(theme.primary, 0.5)}`,
-  padding: '12px',
   cursor: 'pointer',
   transition: `background ${timing.normal}`,
   '&:hover': {
-    background: color.lighten(theme.background, 0.2),
+    background: color.lighten(theme.lower(theme.background, 0.1), 0.2),
   },
 }));
 
 const TransactionDate = styled.div({
   textAlign: 'center',
+  padding: '12px',
   position: 'relative',
 });
 
@@ -65,7 +73,7 @@ const ShortDate = styled.div(({ theme }) => ({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-  background: color.darken(theme.background, 0.1),
+  background: theme.lower(theme.background, 0.1),
   transition: `opacity ${timing.normal}`,
 
   [`${TransactionLeft}:hover &`]: {
@@ -91,15 +99,27 @@ const TransactionRight = styled.div({
   justifyContent: 'center',
 });
 
-const Transaction = ({ transaction }) => {
+export default function Transaction({ transaction }) {
   const txTime = new Date(transaction.timestamp * 1000);
 
   return (
-    <TransactionComponent>
+    <TransactionComponent unconfirmed={transaction.confirmations === 0}>
       <TransactionLeft
         onClick={() =>
           openModal(TransactionDetailsModal, { txid: transaction.txid })
         }
+        onContextMenu={(e) => {
+          e.stopPropagation();
+          popupContextMenu([
+            {
+              id: 'tx-details',
+              label: __('View transaction details'),
+              click: () => {
+                openModal(TransactionDetailsModal, { txid: transaction.txid });
+              },
+            },
+          ]);
+        }}
       >
         <TransactionDate>
           <FullDateTime>
@@ -119,11 +139,9 @@ const Transaction = ({ transaction }) => {
       <TransactionRight>
         {transaction.contracts &&
           transaction.contracts.map((contract, i) => (
-            <Contract key={i} contract={contract} />
+            <Contract key={i} contract={contract} txid={transaction.txid} />
           ))}
       </TransactionRight>
     </TransactionComponent>
   );
-};
-
-export default Transaction;
+}

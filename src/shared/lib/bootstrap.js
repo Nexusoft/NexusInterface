@@ -3,35 +3,35 @@ import EventEmitter from 'events';
 import checkDiskSpace from 'check-disk-space';
 import fs from 'fs';
 import path from 'path';
-import https from 'https';
-import moveFile from 'move-file';
-import rimraf from 'rimraf';
+import http from 'http';
+import { moveFile } from 'move-file';
+import unzip from 'unzip-stream';
 
 // Internal
-import { coreDataDir } from 'consts/paths';
-import { walletDataDir } from 'consts/paths';
 import { backupWallet } from 'lib/wallet';
 import rpc from 'lib/rpc';
-import store from 'store';
+import store, { observeStore } from 'store';
 import { startCore, stopCore } from 'lib/core';
-import {
-  showNotification,
-  openErrorDialog,
-  openSuccessDialog,
-  openModal,
-} from 'lib/ui';
-import confirm from 'utils/promisified/confirm';
-import extractTarball from 'utils/promisified/extractTarball';
-import sleep from 'utils/promisified/sleep';
+import { showNotification, openModal } from 'lib/ui';
+import { confirm, openErrorDialog, openSuccessDialog } from 'lib/dialog';
+import deleteDirectory from 'utils/promisified/deleteDirectory';
 import { throttled } from 'utils/universal';
 import * as TYPE from 'consts/actionTypes';
-import { walletEvents } from 'lib/wallet';
 import { updateSettings } from 'lib/settings';
 import BootstrapModal from 'components/BootstrapModal';
+import { legacyMode } from 'consts/misc';
+import { isSynchronized } from 'selectors';
 
-const fileLocation = path.join(walletDataDir, 'recent.tar.gz');
-const extractDest = path.join(coreDataDir, 'recent');
-const recentDbUrlTritium = 'https://nexus.io/bootstrap/tritium/tritium.tar.gz'; // Tritium Bootstrap URL
+__ = __context('Bootstrap');
+
+const minFreeSpace = 15 * 1000 * 1000 * 1000; // 15 GB
+const getExtractDir = () => {
+  const {
+    settings: { coreDataDir },
+  } = store.getState();
+  return path.join(coreDataDir, 'recent');
+};
+const recentDbUrlTritium = 'http://bootstrap.nexus.io/tritium.zip';
 
 let aborting = false;
 let downloadRequest = null;
@@ -43,8 +43,9 @@ let downloadRequest = null;
  * @returns
  */
 async function checkFreeSpaceForBootstrap() {
-  const diskSpace = await checkDiskSpace(coreDataDir);
-  return diskSpace.free >= 15 * 1000 * 1000 * 1000; // 15 GB
+  const extractDir = getExtractDir();
+  const diskSpace = await checkDiskSpace(extractDir);
+  return diskSpace.free >= minFreeSpace;
 }
 
 /**
@@ -58,90 +59,80 @@ async function startBootstrap() {
 
   try {
     const {
-      core: { info },
       settings: { backupDirectory },
+      core: { systemInfo },
     } = store.getState();
-    const recentDbUrl = recentDbUrlTritium;
+    const extractDir = getExtractDir();
 
     aborting = false;
-    setStatus('backing_up');
-    await backupWallet(backupDirectory);
-    if (aborting) {
-      bootstrapEvents.emit('abort');
-      return false;
+
+    if (!systemInfo?.nolegacy) {
+      setStatus('backing_up');
+      await backupWallet(backupDirectory);
+      if (aborting) {
+        bootstrapEvents.emit('abort');
+        return false;
+      }
     }
 
     // Remove the old file if exists
-    if (fs.existsSync(fileLocation)) {
-      fs.unlinkSync(fileLocation, err => {
-        if (err) throw err;
-      });
-    }
-    if (fs.existsSync(extractDest)) {
-      console.log('Removing the old file');
-      rimraf.sync(extractDest, {}, () => console.log('done'));
-      cleanUp();
-    }
+    setStatus('preparing');
+    await cleanUp(extractDir);
 
-    setStatus('stopping_core');
-    await stopCore();
+    // Stop core if it's synchronizing to avoid downloading the db twice at the same time
+    if (!isSynchronized(store.getState())) {
+      setStatus('stopping_core');
+      await stopCore();
+    }
 
     setStatus('downloading', {});
     // A flag to prevent bootstrap status being set back to downloading
     // when download is already done or aborted
     let downloading = true;
-    const downloadProgress = throttled(details => {
+    const downloadProgress = throttled((details) => {
       if (downloading) setStatus('downloading', details);
     }, 1000);
-    await downloadDb(recentDbUrl, downloadProgress);
+    await downloadDb({ downloadProgress, extractDir });
     downloading = false;
     if (aborting) {
       bootstrapEvents.emit('abort');
       return false;
     }
 
-    setStatus('extracting');
-    await extractDb();
-    if (aborting) {
-      bootstrapEvents.emit('abort');
-      return false;
-    }
+    setStatus('stopping_core');
+    await stopCore();
 
     setStatus('moving_db');
-    await moveExtractedContent();
+    await moveExtractedContent(extractDir);
     if (aborting) {
       bootstrapEvents.emit('abort');
       return false;
     }
 
-    await stopCore();
     setStatus('restarting_core');
     await startCore();
 
-    setStatus('rescanning');
-    await rescan();
+    if (await shouldRescan()) {
+      setStatus('rescanning');
+      try {
+        await rpc('rescan', []);
+      } catch (err) {
+        console.error(err);
+      }
+    }
 
-    cleanUp();
+    setStatus('cleaning_up');
+    await cleanUp(extractDir);
 
     bootstrapEvents.emit('success');
     return true;
   } catch (err) {
     bootstrapEvents.emit('error', err);
   } finally {
-    const lastStep = store.getState().bootstrap.step;
     aborting = false;
     setStatus('idle');
-    if (
-      [
-        'stopping_core',
-        'downloading',
-        'extracting',
-        'moving_db',
-        'restarting_core',
-      ].includes(lastStep)
-    ) {
-      await startCore();
-    }
+    // Ensure to start core after completion
+    await startCore();
   }
 }
 
@@ -152,131 +143,130 @@ async function startBootstrap() {
  * @param {*} downloadProgress
  * @returns
  */
-async function downloadDb(recentDbUrl, downloadProgress) {
-  const promise = new Promise((resolve, reject) => {
-    let timerId;
-    downloadRequest = https
-      .get(recentDbUrl)
-      .setTimeout(60000)
-      .on('response', response => {
+function downloadDb({ downloadProgress, extractDir }) {
+  let timerId;
+  return new Promise((resolve, reject) => {
+    downloadRequest = http
+      .get(recentDbUrlTritium, { insecureHTTPParser: true })
+      .setTimeout(180000)
+      .on('response', (response) => {
         const totalSize = parseInt(response.headers['content-length'], 10);
+
         let downloaded = 0;
 
-        response.on('data', chunk => {
-          downloaded += chunk.length;
-          timerId = downloadProgress({ downloaded, totalSize });
-        });
-
-        response.pipe(
-          fs
-            .createWriteStream(fileLocation, { autoClose: true })
-            .on('error', e => {
-              reject(e);
-            })
-            .on('close', () => {
-              resolve();
-            })
-        );
+        response
+          .on('data', (chunk) => {
+            downloaded += chunk.length;
+            timerId = downloadProgress({ downloaded, totalSize });
+          })
+          .on('close', () => {
+            resolve(extractDir);
+          })
+          .on('error', (err) => {
+            reject(err);
+          })
+          .pipe(unzip.Extract({ path: extractDir }));
       })
-      .on('error', e => reject(e))
-      .on('timeout', function() {
+      .on('error', (err) => {
+        reject(err);
+      })
+      .on('timeout', function () {
         if (downloadRequest) downloadRequest.abort();
-        reject(new Error('Request timeout!'));
+        reject(new Error('Request timeout! ' + Date.now()));
       })
-      .on('abort', function() {
-        clearTimeout(timerId);
-        if (fs.existsSync(fileLocation)) {
-          fs.unlink(fileLocation, err => {
-            if (err) console.error(err);
-          });
+      .on('abort', async () => {
+        if (fs.existsSync(extractDir)) {
+          try {
+            await deleteDirectory(extractDir);
+          } catch (err) {
+            console.error(err);
+          }
         }
         resolve();
       });
-  });
-
-  // Ensure downloadRequest is always cleaned up
-  try {
-    return await promise;
-  } finally {
+  }).finally(() => {
+    // Ensure downloadRequest is always cleaned up
     downloadRequest = null;
-  }
-}
-
-/**
- * Extract the Database
- *
- * @returns
- */
-function extractDb() {
-  return extractTarball(fileLocation, extractDest);
+    clearTimeout(timerId);
+  });
 }
 
 /**
  * Move the Extracted Database
  *
  */
-async function moveExtractedContent() {
-  const recentContents = fs.readdirSync(extractDest);
+async function moveExtractedContent(extractDir) {
+  const {
+    settings: { coreDataDir },
+  } = store.getState();
+  const recentContents = fs.readdirSync(extractDir);
   try {
     for (let element of recentContents) {
-      if (fs.statSync(path.join(extractDest, element)).isDirectory()) {
-        const newcontents = fs.readdirSync(path.join(extractDest, element));
+      if (fs.statSync(path.join(extractDir, element)).isDirectory()) {
+        const newcontents = fs.readdirSync(path.join(extractDir, element));
         for (let deeperEle of newcontents) {
           if (
-            fs
-              .statSync(path.join(extractDest, element, deeperEle))
-              .isDirectory()
+            fs.statSync(path.join(extractDir, element, deeperEle)).isDirectory()
           ) {
             const newerContents = fs.readdirSync(
-              path.join(extractDest, element, deeperEle)
+              path.join(extractDir, element, deeperEle)
             );
             for (let evenDeeperEle of newerContents) {
               moveFile.sync(
-                path.join(extractDest, element, deeperEle, evenDeeperEle),
+                path.join(extractDir, element, deeperEle, evenDeeperEle),
                 path.join(coreDataDir, element, deeperEle, evenDeeperEle)
               );
             }
           } else {
             moveFile.sync(
-              path.join(extractDest, element, deeperEle),
+              path.join(extractDir, element, deeperEle),
               path.join(coreDataDir, element, deeperEle)
             );
           }
         }
       } else {
         moveFile.sync(
-          path.join(extractDest, element),
+          path.join(extractDir, element),
           path.join(coreDataDir, element)
         );
       }
     }
-    console.log('Moved Successfully');
   } catch (e) {
     console.log('Moving Extracted Content Error', e);
     throw e;
   }
 }
 
-/**
- * Rescan wallet
- *
- * @returns
- */
-async function rescan() {
-  let count = 1;
-  // Sometimes the core RPC server is not yet ready after restart, so rescan may fail
-  // Retry up to 5 times in 5 seconds
-  while (count <= 5) {
-    try {
-      await rpc('rescan', []);
-      return;
-    } catch (err) {
-      console.error('Rescan failed', err);
-      count++;
-      if (count < 5) await sleep(1000);
-      else throw err;
+function shouldRescan() {
+  return new Promise((resolve) => {
+    if (legacyMode) return true;
+
+    const {
+      core: { systemInfo },
+    } = store.getState();
+
+    if (systemInfo) {
+      resolve(!systemInfo.nolegacy);
+    } else {
+      // Core might not be ready right away. In that case,
+      // wait until systemInfo is available
+      const unobserve = observeStore(
+        (state) => state.core.systemInfo,
+        (systemInfo) => {
+          if (systemInfo) {
+            unobserve();
+            resolve(!systemInfo.nolegacy);
+            clearTimeout(timeoutId);
+          }
+        }
+      );
+      // Wait at most 5s
+      const timeoutId = setTimeout(() => {
+        unobserve();
+        resolve(false);
+      }, 5000);
     }
-  }
+  });
 }
 
 /**
@@ -284,22 +274,10 @@ async function rescan() {
  *
  * @returns
  */
-function cleanUp() {
-  // Clean up asynchornously
-  setTimeout(() => {
-    if (fs.existsSync(fileLocation)) {
-      fs.unlink(fileLocation, err => {
-        if (err) {
-          console.error(err);
-        }
-      });
-    }
-
-    if (fs.existsSync(extractDest)) {
-      rimraf.sync(extractDest, {}, () => console.log('done'));
-    }
-  }, 0);
-  return;
+async function cleanUp(extractDir) {
+  if (fs.existsSync(extractDir)) {
+    await deleteDirectory(extractDir);
+  }
 }
 
 const setBootstrapStatus = (step, details) => {
@@ -308,29 +286,6 @@ const setBootstrapStatus = (step, details) => {
     payload: { step, details },
   });
 };
-
-/**
- * Register bootstrap events listeners
- *
- * @export
- */
-walletEvents.once('post-render', function() {
-  bootstrapEvents.on('abort', () =>
-    showNotification(__('Bootstrap process has been aborted'), 'error')
-  );
-  bootstrapEvents.on('error', err => {
-    console.error(err);
-    openErrorDialog({
-      message: __('Error bootstrapping recent database'),
-      note: typeof err === 'string' ? err : err.message || __('Unknown error'),
-    });
-  });
-  bootstrapEvents.on('success', () =>
-    openSuccessDialog({
-      message: __('Recent database has been successfully bootstrapped'),
-    })
-  );
-});
 
 /**
  * Public API
@@ -352,6 +307,18 @@ export async function bootstrap({ suggesting } = {}) {
   if (state.bootstrap.step !== 'idle') return;
 
   setBootstrapStatus('prompting');
+
+  const testPriv =
+    state.core.systemInfo.private || state.core.systemInfo.testnet;
+  // if Private or on Testnet, prevent bootstrapping
+  if (testPriv) {
+    openErrorDialog({
+      message: __('Can not Bootstrap on Testnet/Private networks.'),
+    });
+    setBootstrapStatus('idle');
+    return;
+  }
+
   const enoughSpace = await checkFreeSpaceForBootstrap();
   if (!enoughSpace) {
     if (!suggesting) {
@@ -396,4 +363,27 @@ export async function bootstrap({ suggesting } = {}) {
 export function abortBootstrap() {
   aborting = true;
   if (downloadRequest) downloadRequest.abort();
+}
+
+/**
+ * Register bootstrap events listeners
+ *
+ * @export
+ */
+export function prepareBootstrap() {
+  bootstrapEvents.on('abort', () =>
+    showNotification(__('Bootstrap process has been aborted'), 'error')
+  );
+  bootstrapEvents.on('error', (err) => {
+    console.error(err);
+    openErrorDialog({
+      message: __('Error bootstrapping recent database'),
+      note: typeof err === 'string' ? err : err.message || __('Unknown error'),
+    });
+  });
+  bootstrapEvents.on('success', () =>
+    openSuccessDialog({
+      message: __('Recent database has been successfully bootstrapped'),
+    })
+  );
 }

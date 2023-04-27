@@ -4,14 +4,12 @@ import log from 'electron-log';
 import crypto from 'crypto';
 import macaddress from 'macaddress';
 
-import { coreDataDir } from 'consts/paths';
+import store from 'store';
+import * as TYPE from 'consts/actionTypes';
 
 function generateDefaultPassword() {
   let randomNumbers = ['', ''];
-  const ranByte = crypto
-    .randomBytes(64)
-    .toString('hex')
-    .split('');
+  const ranByte = crypto.randomBytes(64).toString('hex').split('');
   for (let index = 0; index < ranByte.length; index++) {
     const element = ranByte[index];
     if (index % 2) {
@@ -27,13 +25,10 @@ function generateDefaultPassword() {
     process.platform === 'darwin'
       ? process.env.USER + process.env.HOME + process.env.SHELL + randomValue
       : JSON.stringify(macaddress.networkInterfaces(), null, 2) + randomValue;
-  return crypto
-    .createHmac('sha256', secret)
-    .update('pass')
-    .digest('hex');
+  return crypto.createHmac('sha256', secret).update('pass').digest('hex');
 }
 
-const fromKeyValues = rawContent =>
+const fromKeyValues = (rawContent) =>
   rawContent
     ? rawContent.split('\n').reduce((obj, line) => {
         const equalIndex = line.indexOf('=');
@@ -46,50 +41,63 @@ const fromKeyValues = rawContent =>
       }, {})
     : {};
 
-const toKeyValues = obj =>
+const toKeyValues = (obj) =>
   Object.entries(obj)
     .map(([key, value]) => `${key}=${value}`)
     .join('\n');
 
-const defaultConfig = {
+export const defaultConfig = {
   ip: '127.0.0.1',
+  rpcSSL: true,
   port: '9336',
-  apiPort: '8080',
+  portSSL: '7336',
   user: 'rpcserver',
   password: generateDefaultPassword(),
+  apiSSL: true,
+  apiPort: '8080',
+  apiPortSSL: '7080',
   apiUser: 'apiserver',
   apiPassword: generateDefaultPassword(),
-  dataDir: coreDataDir,
-  verbose: 2,
 };
 
 /**
  * Returns either the given config or default Config
  *
- * @export
  * @param {*} [config={}]
  * @returns
  */
-export function customConfig(config = {}) {
+function customConfig(config = {}) {
   const ip = config.ip || defaultConfig.ip;
+  const rpcSSL =
+    typeof config.rpcSSL === 'boolean' ? config.rpcSSL : defaultConfig.rpcSSL;
+  const apiSSL =
+    typeof config.apiSSL === 'boolean' ? config.apiSSL : defaultConfig.apiSSL;
   const port = config.port || defaultConfig.port;
+  const portSSL = config.portSSL || defaultConfig.portSSL;
   const apiPort = config.apiPort || defaultConfig.apiPort;
+  const apiPortSSL = config.apiPortSSL || defaultConfig.apiPortSSL;
   return {
     ip,
+    rpcSSL,
     port,
+    portSSL,
+    host: `${rpcSSL ? 'https' : 'http'}://${ip}:${rpcSSL ? portSSL : port}`,
+    user: config.user !== undefined ? config.user : defaultConfig.user,
+    password:
+      config.password !== undefined ? config.password : defaultConfig.password,
+    apiSSL,
     apiPort,
-    host: `http://${ip}:${port}`,
-    apiHost: `http://${ip}:${apiPort}`,
-    user: config.user || config.rpcuser || defaultConfig.user,
-    password: config.password || config.rpcpassword || defaultConfig.password,
-    apiUser: config.apiUser || config.apiuser || defaultConfig.apiUser,
+    apiPortSSL,
+    apiHost: `${apiSSL ? 'https' : 'http'}://${ip}:${
+      apiSSL ? apiPortSSL : apiPort
+    }`,
+    apiUser:
+      config.apiUser !== undefined ? config.apiUser : defaultConfig.apiUser,
     apiPassword:
-      config.apiPassword || config.apipassword || defaultConfig.apiPassword,
-    dataDir: config.dataDir || defaultConfig.dataDir,
-    verbose:
-      config.verbose || config.verbose === 0
-        ? config.verbose
-        : defaultConfig.verbose,
+      config.apiPassword !== undefined
+        ? config.apiPassword
+        : defaultConfig.apiPassword,
+    txExpiry: parseInt(config.txExpiry),
   };
 }
 
@@ -98,27 +106,34 @@ export function customConfig(config = {}) {
  *
  * @returns
  */
-export function loadNexusConf() {
-  const confPath = path.join(coreDataDir, 'nexus.conf');
-  const confContent = fs.existsSync(confPath)
-    ? fs.readFileSync(confPath).toString()
-    : '';
-  const configs = fromKeyValues(confContent);
-  log.info(
-    'nexus.conf exists. Importing username and password for RPC server and API server.'
-  );
+export async function loadNexusConf() {
+  const {
+    settings: {
+      coreDataDir,
+      embeddedCoreUseNonSSL,
+      embeddedCoreApiPort,
+      embeddedCoreApiPortSSL,
+      embeddedCoreRpcPort,
+      embeddedCoreRpcPortSSL,
+    },
+  } = store.getState();
+  if (!fs.existsSync(coreDataDir)) {
+    log.info(
+      'Core Manager: Data Directory path not found. Creating folder: ' +
+        coreDataDir
+    );
+    await fs.promises.mkdir(coreDataDir);
+  }
 
-  // When Version is >1.5 remove this
-  const oldSecret =
-    process.platform === 'darwin'
-      ? process.env.USER + process.env.HOME + process.env.SHELL
-      : JSON.stringify(macaddress.networkInterfaces(), null, 2);
-  const oldPassword = crypto
-    .createHmac('sha256', oldSecret)
-    .update('pass')
-    .digest('hex');
-  if (configs['rpcpassword'] === oldPassword)
-    configs['rpcpassword'] = undefined;
+  const confPath = path.join(coreDataDir, 'nexus.conf');
+  let confContent = '';
+  if (fs.existsSync(confPath)) {
+    log.info(
+      'nexus.conf exists. Importing username and password for RPC server and API server.'
+    );
+    confContent = (await fs.promises.readFile(confPath)).toString();
+  }
+  let configs = fromKeyValues(confContent);
 
   // Fallback to default values if empty
   const fallbackConf = [
@@ -126,7 +141,21 @@ export function loadNexusConf() {
     ['rpcpassword', defaultConfig.password],
     ['apiuser', defaultConfig.apiUser],
     ['apipassword', defaultConfig.apiPassword],
+    ['apissl', defaultConfig.apiSSL],
+    ['apiport', defaultConfig.apiPort],
+    ['apiportssl', defaultConfig.apiPortSSL],
+    ['rpcssl', defaultConfig.rpcSSL],
+    ['rpcport', defaultConfig.port],
+    ['rpcportssl', defaultConfig.portSSL],
   ];
+  const settingsConf = {
+    apissl: !embeddedCoreUseNonSSL,
+    rpcssl: !embeddedCoreUseNonSSL,
+    apiport: embeddedCoreApiPort || undefined,
+    apiportssl: embeddedCoreApiPortSSL || undefined,
+    port: embeddedCoreRpcPort || undefined,
+    portssl: embeddedCoreRpcPortSSL || undefined,
+  };
   let updated = false;
   fallbackConf.forEach(([key, value]) => {
     // Don't replace it if value is an empty string
@@ -139,8 +168,68 @@ export function loadNexusConf() {
   // Save nexus.conf file if there were changes
   if (updated) {
     log.info('Filling up some missing configurations in nexus.conf');
-    fs.writeFileSync(confPath, toKeyValues(configs));
+    fs.writeFile(confPath, toKeyValues(configs), (err) => {
+      if (err) {
+        console.error(err);
+      } else {
+        log.info('nexus.conf has been updated');
+      }
+    });
   }
 
-  return configs;
+  configs = { ...configs, ...settingsConf };
+
+  return customConfig({
+    user: configs.rpcuser,
+    password: configs.rpcpassword,
+    apiUser: configs.apiuser,
+    apiPassword: configs.apipassword,
+    apiSSL: configs.apissl,
+    apiPort: configs.apiport,
+    apiPortSSL: configs.apiportssl,
+    rpcSSL: configs.rpcssl,
+    port: configs.rpcport,
+    portSSL: configs.rpcportssl,
+    txExpiry: configs.txexpiry,
+  });
+}
+
+export function saveCoreConfig(conf) {
+  return store.dispatch({
+    type: TYPE.SET_CORE_CONFIG,
+    payload: conf,
+  });
+}
+
+export async function getActiveCoreConfig() {
+  const {
+    settings,
+    core: { config },
+  } = store.getState();
+
+  if (settings.manualDaemon) {
+    return customConfig({
+      ip: settings.manualDaemonIP,
+      rpcSSL: settings.manualDaemonSSL,
+      port: settings.manualDaemonPort,
+      portSSL: settings.manualDaemonPortSSL,
+      user: settings.manualDaemonUser,
+      password: settings.manualDaemonPassword,
+      apiSSL: settings.manualDaemonApiSSL,
+      apiPort: settings.manualDaemonApiPort,
+      apiPortSSL: settings.manualDaemonApiPortSSL,
+      apiUser: settings.manualDaemonApiUser,
+      apiPassword: settings.manualDaemonApiPassword,
+    });
+  } else {
+    if (config) {
+      // Config cached when core was started,
+      return config;
+    } else {
+      // If there's no cached config, load it from nexus.conf
+      const conf = await loadNexusConf();
+      saveCoreConfig(conf);
+      return conf;
+    }
+  }
 }

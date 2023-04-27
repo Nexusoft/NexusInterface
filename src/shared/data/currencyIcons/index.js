@@ -14,6 +14,8 @@ import FrancSign from './CHF.svg';
 import TaiDollarSign from './TWD.svg';
 import DirhamSign from './AED.svg';
 import BitcoinSign from './BTC.svg';
+import DongSign from './VND.svg';
+import BahtSign from './THB.svg';
 
 export default function currencyIcon(ISOValue) {
   switch (ISOValue) {
@@ -49,6 +51,10 @@ export default function currencyIcon(ISOValue) {
       return TaiDollarSign;
     case 'AED':
       return DirhamSign;
+    case 'VND':
+      return DongSign;
+    case 'THB':
+      return BahtSign;
     default:
       return DollarSign;
   }

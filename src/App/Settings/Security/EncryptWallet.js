@@ -1,21 +1,25 @@
 // External
-import React, { Component } from 'react';
-import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
 
 // Internal
 import FormField from 'components/FormField';
-import TextField from 'components/TextField';
-import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
-import { openSuccessDialog } from 'lib/ui';
+import Form from 'components/Form';
+import { formSubmit, required, checkAll, regex } from 'lib/form';
+import { openSuccessDialog } from 'lib/dialog';
 import rpc from 'lib/rpc';
 import { startCore } from 'lib/core';
 import { consts } from 'styles';
-import { errorHandler } from 'utils/form';
-import passwordInvalidChars from './passwordInvalidChars';
+import {
+  passwordRegex,
+  passwordMinLength,
+  passwordNoSpaces,
+  passwordsMatch,
+} from './common';
 
-const EncryptWalletForm = styled.form({
+__ = __context('Settings.Security');
+
+const EncryptWalletForm = styled.div({
   flex: 2,
   marginRight: '1em',
 });
@@ -31,62 +35,34 @@ const Characters = styled.span({
   letterSpacing: 4,
 });
 
-/**
- * Encrypted Wallet
- *
- * @class EncryptWallet
- * @extends {Component}
- */
-@reduxForm({
-  form: 'encryptWallet',
-  destroyOnUnmount: false,
-  initialValues: {
-    password: '',
-    passwordRepeat: '',
-  },
-  validate: ({ password, passwordRepeat }) => {
-    const errors = {};
-    if (!password) {
-      errors.password = __('Password is required');
-    }
-    if (passwordInvalidChars.test(password)) {
-      errors.password =
-        __('Password cannot contain these characters:') + ' - $ / & * | < >';
-    } else if (!password || password.length < 8) {
-      errors.password = __('Password must be at least 8 characters');
-    } else if (password !== password.trim()) {
-      errors.password = __('Password cannot start or end with spaces');
-    }
-    if (passwordRepeat !== password) {
-      errors.passwordRepeat = __('Passwords do not match');
-    }
-    return errors;
-  },
-  onSubmit: ({ password }) => rpc('encryptwallet', [password]),
-  onSubmitSuccess: (result, dispatch, props) => {
-    props.reset();
-    openSuccessDialog({
-      message: __('Wallet has been encrypted.'),
-      onClose: () => {
-        // In some old version, core stops after wallet is encrypted
-        // So start the core here for legacy support
-        startCore();
-      },
-    });
-  },
-  onSubmitFail: errorHandler(__('Error encrypting wallet')),
-})
-class EncryptWallet extends Component {
-  /**
-   * Component's Renderable JSX
-   *
-   * @returns
-   * @memberof EncryptWallet
-   */
-  render() {
-    const { handleSubmit, submitting } = this.props;
-    return (
-      <EncryptWalletForm onSubmit={handleSubmit}>
+const initialValues = {
+  password: '',
+  passwordRepeat: '',
+};
+
+export default function EncryptWallet() {
+  return (
+    <Form
+      name="encryptWallet"
+      persistState
+      initialValues={initialValues}
+      onSubmit={formSubmit({
+        submit: ({ password }) => rpc('encryptwallet', [password]),
+        onSuccess: (result, values, form) => {
+          form.restart();
+          openSuccessDialog({
+            message: __('Wallet has been encrypted.'),
+            onClose: () => {
+              // In some old version, core stops after wallet is encrypted
+              // So start the core here for legacy support
+              startCore();
+            },
+          });
+        },
+        errorMessage: __('Error encrypting wallet'),
+      })}
+    >
+      <EncryptWalletForm>
         <FieldSet legend={__('Encrypt wallet')}>
           <Note>
             {__('Password cannot contain these characters:')}
@@ -94,35 +70,36 @@ class EncryptWallet extends Component {
             <Characters>{' -$/&*|<>'}</Characters>
           </Note>
           <FormField connectLabel label={__('Password')}>
-            <Field
-              component={TextField.RF}
+            <Form.TextField
               name="password"
               type="password"
               placeholder={__('New password')}
+              validate={checkAll(
+                required(),
+                regex(
+                  passwordRegex,
+                  __('Password cannot contain these characters:') +
+                    ' - $ / & * | < >'
+                ),
+                passwordMinLength,
+                passwordNoSpaces
+              )}
             />
           </FormField>
           <FormField connectLabel label={__('Re-enter password')}>
-            <Field
-              component={TextField.RF}
+            <Form.TextField
               name="passwordRepeat"
               type="password"
               placeholder={__('Confirm password')}
+              validate={passwordsMatch}
             />
           </FormField>
 
-          <Button
-            type="submit"
-            skin="primary"
-            wide
-            disabled={submitting}
-            waiting={submitting}
-            style={{ marginTop: '2em' }}
-          >
+          <Form.SubmitButton skin="primary" wide style={{ marginTop: '2em' }}>
             {__('Encrypt and restart')}
-          </Button>
+          </Form.SubmitButton>
         </FieldSet>
       </EncryptWalletForm>
-    );
-  }
+    </Form>
+  );
 }
-export default EncryptWallet;

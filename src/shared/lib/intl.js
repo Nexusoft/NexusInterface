@@ -1,7 +1,7 @@
-import React from 'react';
 import fs from 'fs';
 import path from 'path';
 import Polyglot from 'node-polyglot';
+import { parse } from 'csv-parse/sync';
 
 import { assetsDir } from 'consts/paths';
 import settings from 'data/initialSettings';
@@ -15,31 +15,43 @@ const locales = [
   'fr',
   'ja',
   'ko',
+  'no',
   'nl',
   'pl',
   'pt',
   'ru',
+  'sr',
   'zh-cn',
 ];
-const locale = locales.includes(settings.locale) ? settings.locale : 'en';
-const phrases =
-  locale === 'en'
-    ? null
-    : JSON.parse(
-        fs.readFileSync(path.join(assetsDir, 'translations', `${locale}.json`))
-      );
-const engTranslate = (string, data) =>
-  Polyglot.transformPhrase(string, data, 'en');
 
-const polyglot = new Polyglot({
-  locale,
-  phrases,
-  allowMissing: true,
-  onMissingKey: engTranslate,
-});
+function loadDict(loc) {
+  const csv = fs.readFileSync(
+    path.join(assetsDir, 'translations', `${locale}.csv`)
+  );
+  const records = parse(csv);
+  const dict = {};
+  records.forEach(([key, translation, context]) => {
+    if (!dict[context]) {
+      dict[context] = {};
+    }
+    dict[context][key] = translation;
+  });
+  return dict;
+}
+
+const locale = locales.includes(settings.locale) ? settings.locale : 'en';
+const dict = locale === 'en' ? null : loadDict(locale);
+const engTranslate = (context, phrase, data) =>
+  Polyglot.transformPhrase(phrase, data, 'en');
 
 const rawTranslate =
-  locale === 'en' ? engTranslate : (string, data) => polyglot.t(string, data);
+  locale === 'en'
+    ? engTranslate
+    : (context, string, data) => {
+        const phrases = dict[context];
+        const phrase = (phrases && phrases[string]) || string;
+        return Polyglot.transformPhrase(phrase, data, locale);
+      };
 
 function inject(string, injections) {
   if (injections) {
@@ -76,8 +88,14 @@ function inject(string, injections) {
   return string;
 }
 
+const translateWithContext = (context = '', string, data, injections) =>
+  inject(rawTranslate(context, string, data), injections);
+
 const translate = (string, data, injections) =>
-  inject(rawTranslate(string, data), injections);
+  translateWithContext('', string, data, injections);
+
+const withContext = (context) => (string, data, injections) =>
+  translateWithContext(context, string, data, injections);
 
 const ensureSignificantDigit = (decimalDigits, num) => {
   let digits = Number(decimalDigits) || 0;
@@ -92,7 +110,7 @@ const ensureSignificantDigit = (decimalDigits, num) => {
   return digits;
 };
 
-export { translate };
+export { translate, translateWithContext, withContext };
 
 export const formatNumber = (num, maxDecimalDigits = 3) => {
   const digits = ensureSignificantDigit(maxDecimalDigits, num);
@@ -102,10 +120,15 @@ export const formatNumber = (num, maxDecimalDigits = 3) => {
 };
 
 export const formatCurrency = (num, currency = 'USD', maxDecimalDigits = 3) => {
+  // VND doesn't have decimal digits
+  if (currency === 'VND') {
+    maxDecimalDigits = 0;
+  }
   const digits = ensureSignificantDigit(maxDecimalDigits, num);
   return new Intl.NumberFormat(locale, {
     style: 'currency',
     currency,
+    minimumFractionDigits: 0,
     maximumFractionDigits: digits,
   }).format(num);
 };
@@ -128,7 +151,7 @@ const relativeTimeUnit = [
   [1000 * 60 * 60 * 24, 'day'],
   [1000 * 60 * 60 * 24 * 7, 'week'],
 ];
-const toRelativeTime = timestamp => {
+const toRelativeTime = (timestamp) => {
   const ms = new Date(timestamp).valueOf() - Date.now();
   let count = Math.round(ms / 1000);
   let unit = 'second';

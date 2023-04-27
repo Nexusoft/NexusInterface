@@ -10,10 +10,19 @@ export function readJson(path) {
       `Cannot read JSON file at ${path}, returning an empty object as fallback`,
       err
     );
-    return {};
+    return null;
   }
 }
 
 export function writeJson(path, json) {
   return fs.writeFileSync(path, JSON.stringify(json, null, 2));
+}
+
+export function tryParsingJson(json) {
+  try {
+    return JSON.parse(json);
+  } catch (err) {
+    log.warn('Error parsing JSON', json);
+    return null;
+  }
 }

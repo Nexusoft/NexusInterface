@@ -1,16 +1,19 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 import { Link } from 'react-router-dom';
 
 import { arrowStyles } from 'components/Arrow';
 import LoginModal from 'components/LoginModal';
 import NewUserModal from 'components/NewUserModal';
-import MigrateStakeModal from 'components/MigrateStakeModal';
+import SetRecoveryModal from 'components/SetRecoveryModal';
 import { isLoggedIn } from 'selectors';
 import { openModal, showNotification } from 'lib/ui';
 import { timing, animations, consts } from 'styles';
-import { logOut } from 'lib/user';
+import { logOut, selectUsername } from 'lib/user';
+
+import SwitchUserModal from './SwitchUserModal';
+
+__ = __context('Header.UserDropdown');
 
 const UserDropdownComponent = styled.div(({ theme }) => ({
   position: 'fixed',
@@ -67,84 +70,128 @@ const Separator = styled.div(({ theme }) => ({
   borderBottom: `1px solid ${theme.mixer(0.125)}`,
 }));
 
-@connect(({ core: { userStatus, stakeInfo } }) => ({
-  currentUser: userStatus && userStatus.username,
-  trustIsNew: stakeInfo && stakeInfo.new,
-}))
-class LoggedInDropdown extends React.Component {
-  logOut = async () => {
-    this.props.closeDropdown();
-    await logOut();
-    showNotification('Logged out');
-  };
+function LoggedInDropdown({ closeDropdown }) {
+  const currentUser = useSelector(selectUsername);
+  const hasRecoveryPhrase = useSelector(
+    (state) => !!state.user.profileStatus?.recovery
+  );
+  const multiuser = useSelector((state) => !!state.core.systemInfo?.multiuser);
+  const hasOtherSessions = useSelector(
+    ({ sessions }) => !!sessions && Object.keys(sessions).length > 1
+  );
 
-  render() {
-    const { currentUser, closeDropdown, trustIsNew } = this.props;
-    return (
-      <>
-        <CurrentUser>
-          <Username>{currentUser}</Username>
-        </CurrentUser>
-        <Separator />
-        <Link to="/User/Accounts" onClick={closeDropdown}>
-          <MenuItem>{__('Accounts')}</MenuItem>
-        </Link>
-        <Link to="/User/Tokens" onClick={closeDropdown}>
-          <MenuItem>{__('Tokens')}</MenuItem>
-        </Link>
-        <Separator />
-        {!!trustIsNew && (
-          <>
+  return (
+    <>
+      <CurrentUser>
+        <Username>{currentUser}</Username>
+      </CurrentUser>
+      <Separator />
+
+      {multiuser && (
+        <>
+          {hasOtherSessions && (
             <MenuItem
               onClick={() => {
-                openModal(MigrateStakeModal);
+                openModal(SwitchUserModal);
                 closeDropdown();
               }}
             >
-              {__('Migrate stake')}
+              {__('Switch user')}
             </MenuItem>
-            <Separator />
-          </>
-        )}
-        <MenuItem onClick={this.logOut}>{__('Log out')}</MenuItem>
-      </>
-    );
-  }
+          )}
+          <MenuItem
+            onClick={() => {
+              openModal(LoginModal);
+              closeDropdown();
+            }}
+          >
+            {__('Log in to another user')}
+          </MenuItem>
+          <Separator />
+        </>
+      )}
+
+      <Link to="/User/Accounts" onClick={closeDropdown}>
+        <MenuItem>{__('Accounts')}</MenuItem>
+      </Link>
+      <Link to="/User/Tokens" onClick={closeDropdown}>
+        <MenuItem>{__('Tokens')}</MenuItem>
+      </Link>
+      <Separator />
+
+      {!hasRecoveryPhrase && (
+        <>
+          <MenuItem
+            onClick={() => {
+              openModal(SetRecoveryModal);
+              closeDropdown();
+            }}
+          >
+            {__('Set recovery phrase')}
+          </MenuItem>
+          <Separator />
+        </>
+      )}
+
+      <MenuItem
+        onClick={async () => {
+          closeDropdown();
+          await logOut();
+          showNotification('Logged out');
+        }}
+      >
+        {multiuser ? __('Log out of all users') : __('Log out')}
+      </MenuItem>
+    </>
+  );
 }
 
-const NotLoggedInDropdown = ({ closeDropdown }) => (
-  <>
-    <MenuItem
-      onClick={() => {
-        openModal(LoginModal);
-        closeDropdown();
-      }}
-    >
-      {__('Log in')}
-    </MenuItem>
-    <MenuItem
-      onClick={() => {
-        openModal(NewUserModal);
-        closeDropdown();
-      }}
-    >
-      {__('Create new user')}
-    </MenuItem>
-  </>
-);
+function NotLoggedInDropdown({ closeDropdown }) {
+  const multiuser = useSelector((state) => !!state.core.systemInfo?.multiuser);
+  const hasOtherSessions = useSelector(
+    ({ sessions }) => !!sessions && Object.keys(sessions).length > 1
+  );
+  return (
+    <>
+      <MenuItem
+        onClick={() => {
+          openModal(LoginModal);
+          closeDropdown();
+        }}
+      >
+        {__('Log in')}
+      </MenuItem>
+      {multiuser && hasOtherSessions && (
+        <MenuItem
+          onClick={() => {
+            openModal(SwitchUserModal);
+            closeDropdown();
+          }}
+        >
+          {__('Switch user')}
+        </MenuItem>
+      )}
+      <MenuItem
+        onClick={() => {
+          openModal(NewUserModal);
+          closeDropdown();
+        }}
+      >
+        {__('Create new user')}
+      </MenuItem>
+    </>
+  );
+}
 
-const UserDropdown = ({ loggedIn, closeDropdown, ...rest }) => (
-  <UserDropdownComponent {...rest}>
-    {loggedIn ? (
-      <LoggedInDropdown closeDropdown={closeDropdown} />
-    ) : (
-      <NotLoggedInDropdown closeDropdown={closeDropdown} />
-    )}
-  </UserDropdownComponent>
-);
-
-const mapStateToProps = state => ({
-  loggedIn: isLoggedIn(state),
-});
-
-export default connect(mapStateToProps)(UserDropdown);
+export default function UserDropdown({ closeDropdown, ...rest }) {
+  const loggedIn = useSelector(isLoggedIn);
+  return (
+    <UserDropdownComponent {...rest}>
+      {loggedIn ? (
+        <LoggedInDropdown closeDropdown={closeDropdown} />
+      ) : (
+        <NotLoggedInDropdown closeDropdown={closeDropdown} />
+      )}
+    </UserDropdownComponent>
+  );
+}

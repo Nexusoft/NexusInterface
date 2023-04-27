@@ -1,4 +1,4 @@
-import React from 'react';
+import { forwardRef } from 'react';
 import { shell } from 'electron';
 import Link from 'components/Link';
 
@@ -9,12 +9,12 @@ import Link from 'components/Link';
  *
  * @param {*} props
  */
-const ExternalLink = React.forwardRef((props, ref) => (
+const ExternalLink = forwardRef((props, ref) => (
   <Link
     {...props}
     ref={ref}
     as="a"
-    onClick={e => {
+    onClick={(e) => {
       e.preventDefault();
       shell.openExternal(e.target.href || props.href);
       props.onClick && props.onClick(e);

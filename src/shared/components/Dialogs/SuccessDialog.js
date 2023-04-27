@@ -1,13 +1,15 @@
 // External
-import React from 'react';
+import { createRef, Component } from 'react';
 import styled from '@emotion/styled';
 
 // Internal
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import Icon from 'components/Icon';
 import * as color from 'utils/color';
 import checkIcon from 'icons/check.svg';
 import Dialog from './Dialog';
+
+__ = __context('SuccessDialog');
 
 const CheckMark = styled(Dialog.Icon)(({ theme }) => ({
   fontSize: 44,
@@ -16,8 +18,8 @@ const CheckMark = styled(Dialog.Icon)(({ theme }) => ({
   filter: `drop-shadow(0 0 5px ${color.fade(theme.primary, 0.5)})`,
 }));
 
-class SuccessDialog extends React.Component {
-  buttonRef = React.createRef();
+class SuccessDialog extends Component {
+  buttonRef = createRef();
 
   componentDidMount() {
     if (this.buttonRef.current) {
@@ -25,33 +27,26 @@ class SuccessDialog extends React.Component {
     }
   }
 
-  handleKeyDown = e => {
-    if (e.key === 'Escape') {
-      this.closeModal();
-    }
-  };
-
   render() {
     const { message, note, ...rest } = this.props;
     return (
       <Dialog
-        assignClose={closeModal => {
+        assignClose={(closeModal) => {
           this.closeModal = closeModal;
         }}
         {...rest}
       >
-        <Modal.Body>
+        <ControlledModal.Body>
           <CheckMark>
             <Icon icon={checkIcon} />
           </CheckMark>
           <Dialog.Message>{message}</Dialog.Message>
           {!!note && <Dialog.Note>{note}</Dialog.Note>}
-        </Modal.Body>
+        </ControlledModal.Body>
         <Dialog.Button
           ref={this.buttonRef}
           skin="filled-primary"
           onClick={() => this.closeModal()}
-          onKeyDown={this.handleKeyDown}
         >
           {__('Dismiss')}
         </Dialog.Button>

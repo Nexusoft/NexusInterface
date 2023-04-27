@@ -1,106 +1,80 @@
-import React from 'react';
-import { reduxForm, Field } from 'redux-form';
-import styled from '@emotion/styled';
-
-import Modal from 'components/Modal';
-import Button from 'components/Button';
-import TextField from 'components/TextField';
+import Form from 'components/Form';
+import ControlledModal from 'components/ControlledModal';
 import FormField from 'components/FormField';
-import confirm from 'utils/promisified/confirm';
-import confirmPin from 'utils/promisified/confirmPin';
-import { apiPost } from 'lib/tritiumApi';
-import { errorHandler } from 'utils/form';
-import { loadAccounts } from 'lib/user';
-import { removeModal, showNotification } from 'lib/ui';
-import NewAccountModal from 'components/UserDialogs/NewAccountModal';
-import { openModal } from 'lib/ui';
-import searchIcon from 'icons/search.svg';
 import Icon from 'components/Icon';
+import { formSubmit, required } from 'lib/form';
+import { callApi } from 'lib/tritiumApi';
+import { openModal } from 'lib/ui';
+import { openErrorDialog } from 'lib/dialog';
+import searchIcon from 'icons/search.svg';
+import { addressRegex } from 'consts/misc';
 
 // Internal Local
 import TokenDetailsModal from './TokenDetailsModal';
 
-@reduxForm({
-  form: 'search_tokens',
-  destroyOnUnmount: true,
-  initialValues: {
-    searchValue: '',
-  },
-  validate: ({ searchValue }) => {
-    const errors = {};
-    if (!searchValue) {
-      errors.searchValue = __('No Value');
-    }
-    return errors;
-  },
-  onSubmit: async ({ searchValue }) => {
-    const params = {};
-    // Just for test net need a better way to validate token name/address
-    !searchValue.startsWith('8')
-      ? (params.name = searchValue)
-      : (params.address = searchValue);
-    return await apiPost('tokens/get/token', params);
-  },
-  onSubmitSuccess: async (result, dispatch, props) => {
-    if (!result) return; // Submission was cancelled
-    removeModal(props.modalId);
-    openModal(TokenDetailsModal, { token: result });
-  },
-  onSubmitFail: errorHandler(__('Error searching for token')),
-})
-class SearchTokenModal extends React.Component {
-  async openSearchedDetailsModal(props) {
-    try {
-      const token = await apiGet(
-        props.tokenName
-          ? `tokens/get/token?name=${props.tokenName}`
-          : `tokens/get/token?address=${props.tokenAddress}`
-      );
-      openModal(TokenDetailsModal, { token });
-    } catch (e) {
-      console.log(e);
-      openModal(ErrorDialog, {
-        message: __('Can not find Token'),
-        note: e.message + ' ' + e.code,
-      });
-    }
-  }
+__ = __context('User.Tokens.SearchToken');
 
-  render() {
-    const { handleSubmit, submitting } = this.props;
-    return (
-      <Modal
-        assignClose={closeModal => {
-          this.closeModal = closeModal;
-        }}
-        style={{ maxWidth: 800 }}
-      >
-        <Modal.Header>{__('Search Tokens')}</Modal.Header>
-        <Modal.Body>
-          <form onSubmit={handleSubmit}>
-            <FormField connectLabel label={__('Search Tokens')}>
-              <Field
-                name="searchValue"
-                component={TextField.RF}
-                placeholder={__(
-                  'Search for Token on the network ( Name or Address)'
-                )}
-                left={<Icon icon={searchIcon} className="space-right" />}
-              />
-            </FormField>
-            <Button
-              style={{ marginTop: '2em' }}
-              skin="primary"
-              type="submit"
-              disabled={submitting}
+const initialValues = {
+  searchValue: '',
+};
+
+export default function SearchTokenModal() {
+  return (
+    <ControlledModal maxWidth={600}>
+      {(closeModal) => (
+        <>
+          <ControlledModal.Header>{__('Look up token')}</ControlledModal.Header>
+          <ControlledModal.Body>
+            <Form
+              name="search_tokens"
+              initialValues={initialValues}
+              onSubmit={formSubmit({
+                submit: async ({ searchValue }) => {
+                  if (addressRegex.test(searchValue)) {
+                    try {
+                      // Test if searchValue is the token address
+                      return await callApi('tokens/get/token', {
+                        address: searchValue,
+                      });
+                    } catch (err) {}
+                  }
+
+                  // Assuming searchValue is token name
+                  try {
+                    return await callApi('tokens/get/token', {
+                      name: searchValue,
+                    });
+                  } catch (err) {
+                    openErrorDialog({
+                      message: __('Error searching for token'),
+                      note: __('Unknown token name/address'),
+                    });
+                  }
+                },
+                onSuccess: async (result) => {
+                  if (!result) return; // Submission was cancelled
+                  closeModal();
+                  openModal(TokenDetailsModal, { token: result });
+                },
+              })}
             >
-              {__('Search for token')}
-            </Button>
-          </form>
-        </Modal.Body>
-      </Modal>
-    );
-  }
+              <FormField connectLabel label={__('Name or address')}>
+                <Form.TextField
+                  name="searchValue"
+                  placeholder={__('Token name/address')}
+                  left={<Icon icon={searchIcon} className="mr0_4" />}
+                  validate={required()}
+                />
+              </FormField>
+              <div className="flex justify-end">
+                <Form.SubmitButton style={{ marginTop: '2em' }} skin="primary">
+                  {__('Look up')}
+                </Form.SubmitButton>
+              </div>
+            </Form>
+          </ControlledModal.Body>
+        </>
+      )}
+    </ControlledModal>
+  );
 }
-
-export default SearchTokenModal;

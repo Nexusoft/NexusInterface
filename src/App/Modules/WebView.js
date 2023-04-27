@@ -1,82 +1,74 @@
 // External
-import React from 'react';
+import { useRef, useEffect } from 'react';
 import { existsSync } from 'fs';
+import { URL } from 'url';
 import { join } from 'path';
-import { remote } from 'electron';
+import { ipcRenderer } from 'electron';
 
 // Internal Global
-import { modulesDir } from 'consts/paths';
-import { setActiveWebView, unsetActiveWebView } from 'lib/modules';
+import { setActiveAppModule, unsetActiveAppModule } from 'lib/modules';
 
-const fileServer = remote.getGlobal('fileServer');
+const domain = ipcRenderer.sendSync('get-file-server-domain');
 
-/**
- * WebView
- *
- * @class WebView
- * @extends {Component}
- */
-class WebView extends React.Component {
-  webviewRef = React.createRef();
-
-  /**
-   * Creates an instance of WebView.
-   * @param {*} props
-   * @memberof WebView
-   */
-  constructor(props) {
-    super(props);
-    const { module } = this.props;
-    const moduleFiles = module.files.map(file => join(module.dirName, file));
-    fileServer.serveModuleFiles(moduleFiles);
+const getEntryUrl = (module) => {
+  if (module.development) {
+    try {
+      // Check if entry is a URL itself
+      new URL(module.info.entry);
+      return module.info.entry;
+    } catch (err) {}
   }
 
-  /**
-   * Component Mount Callback
-   *
-   * @memberof WebView
-   */
-  componentDidMount() {
-    setActiveWebView(this.webviewRef.current, this.props.module.name);
+  const entry = module.info.entry || 'index.html';
+  const entryPath = join(module.path, entry);
+  if (!existsSync(entryPath)) return null;
+  if (module.development) {
+    return `file://${entryPath}`;
+  } else {
+    return `${domain}/modules/${module.info.name}/${entry}`;
   }
+};
 
-  /**
-   * Component Unmount Callback
-   *
-   * @memberof WebView
-   */
-  componentWillUnmount() {
-    unsetActiveWebView();
-  }
+export default function WebView({ module, className, style }) {
+  const webviewRef = useRef();
 
-  /**
-   * Component's Renderable JSX
-   *
-   * @returns
-   * @memberof WebView
-   */
-  render() {
-    const { module, className, style } = this.props;
-    const entry = module.entry || 'index.html';
-    const entryPath = join(modulesDir, module.dirName, entry);
-    if (!existsSync(entryPath)) return null;
+  useEffect(() => {
+    if (!module.development) {
+      const moduleFiles = module.info.files.map((file) =>
+        join(module.info.name, file)
+      );
+      ipcRenderer.invoke('serve-module-files', moduleFiles);
+    }
+  }, []);
 
-    const entryUrl = `${fileServer.domain}/modules/${module.name}/${entry}`;
-    const preloadUrl =
-      process.env.NODE_ENV === 'development'
-        ? `file://${process.cwd()}/build/module_preload.dev.js`
-        : 'module_preload.prod.js';
+  useEffect(() => {
+    const {
+      info: { name },
+    } = module;
+    setActiveAppModule(webviewRef.current, name);
 
-    return (
-      <webview
-        className={className}
-        style={style}
-        ref={this.webviewRef}
-        src={entryUrl}
-        preload={preloadUrl}
-      />
-    );
-  }
+    return () => {
+      unsetActiveAppModule();
+    };
+  }, []);
+
+  const entryUrl = getEntryUrl(module);
+
+  const preloadUrl =
+    process.env.NODE_ENV === 'development'
+      ? `file://${process.cwd()}/build/module_preload.dev.js`
+      : 'module_preload.prod.js';
+
+  return (
+    <webview
+      className={className}
+      style={style}
+      ref={webviewRef}
+      src={entryUrl}
+      preload={preloadUrl}
+      /* Can't enable contextIsolation because it will
+      mess with react-dom and emotion */
+      webpreferences="contextIsolation=no"
+    />
+  );
 }
-
-export default WebView;

@@ -21,9 +21,11 @@ The following methods are currently supported by this API
 [`logout/user`](#logoutuser)   
 [`unlock/user`](#unlockuser)  
 [`lock/user`](#lockuser)  
+[`update/user`](#updateuser)  
 [`get/status`](#getstatus)  
 [`list/accounts`](#listaccounts)   
 [`list/assets`](#listassets)    
+[`list/invoices`](#listinvoices)   
 [`list/items`](#listitems)    
 [`list/names`](#listnames)    
 [`list/namespaces`](#listnamespaces)  
@@ -284,6 +286,79 @@ The mining/staking/transactions/notifications parameters are optional and, if su
 ****
 
 
+# `update/user`
+
+This method provides the user with the ability to change the password, pin, or recovery seed for this signature chain.
+
+Updating the credentials will also result in each of the keys in the sig chain's Crypto object being regenerated based on the new password / pin.   
+
+If setting a recovery....
+
+This method requires the user to already be logged in. 
+
+### Endpoint:
+
+`/users/update/user`
+
+
+### Parameters:
+
+`session` : When using multi-user API mode the session parameter must be supplied to identify which user to update.
+
+`password` : The existing password for this signature chain.
+
+`pin` : The existing pin for this signature chain.
+
+`recovery` : The existing recovery seed for this signature chain.  This is only required if an existing recovery seed is being updated via `new_recovery` 
+
+`new_password` : The new password to set for for this signature chain.  This is optional if new_pin is provided
+
+`new_pin` : The new pin to set for this signature chain.  This is optional if new_password is provided.
+
+`new_recovery` : The new recovery seed to set on this sig chain.  This is optional if new_pin or new_password is provided.  The recovery seed must be a minimum of 40 characters. **NOTE**: the recovery seed is case sensitive. 
+
+### Example 1:
+
+The following example changes the existing password from `password1` to `password1234` and existing pin from `1234` to `12345`
+
+```
+{
+    "password": "password1",
+    "pin": "1234",
+    "new_password": "password12345",
+    "new_pin": "12345"
+}
+
+```
+
+### Example 2:
+
+The following example sets the initial recovery seed on the sig chain
+
+```
+{
+    "password": "password1",
+    "pin": "1234",
+    "new_recovery": "this is the recovery seed that I wish to use"
+}
+
+```
+
+### Return value JSON object:
+```
+{
+    "txid": "f9dcd28bce2563ab288fab76cf3ee5149ea938c735894ce4833b55e474e08e8a519e8005e09e2fc19623577a8839a280ca72b6430ee0bdf13b3d9f785bc7397d"
+}
+```
+
+
+### Return values:
+
+`txid` : The ID (hash) of the transaction that includes the update to the signature chain credentials.
+
+****
+
+
 # `get/status`
 
 Only available in single-user API mode (multiuser=0), this method will return status information for the currently logged in user
@@ -306,6 +381,7 @@ NONE
 {
     "username": "bob",
     "genesis": "a2e51edcd41a8152bfedb24e3c22ee5a65d6d7d524146b399145bced269ae000",
+    "recovery": true,
     "transactions": 272,
     "notifications": 10,
     "unlocked": {
@@ -323,6 +399,8 @@ NONE
 `username` : The username of the currently logged in user
 
 `genesis` : The signature chain genesis hash for the currently logged in user.
+
+`recovery` : Flag indicating whether the recovery seed has been set for this user. 
 
 `transactions` : The total transaction count in this sig chain
 
@@ -372,8 +450,9 @@ This will list off all of the assets owned by a signature chain.
     {
         "name": "myasset1",
         "address": "88dFaTWNYpoGuXtgkWrbQVfsJJ3Sfth5AP9yWqioxCLhHmTu6xo",
-        "timestamp": "1553227256"
-        "owner": "bf501d4f3d81c31f62038984e923ad01546ff678e305a7cc11b1931742524ce1"
+        "created": "1553227256",
+        "modified": "1553227256",
+        "owner": "bf501d4f3d81c31f62038984e923ad01546ff678e305a7cc11b1931742524ce1",
         "serial_number": "123456",
         "description": "This is the description of my asset",
         "shelf_location": "A9S2"
@@ -381,8 +460,9 @@ This will list off all of the assets owned by a signature chain.
     {
         "name": "myasset2",
         "address": "8B7SMKmECgYU1ydBQbzp5FCSe4AnkU2EwLE59D7eQDBpixmLZ2c",
-        "timestamp": "1553227128"
-        "owner": "bf501d4f3d81c31f62038984e923ad01546ff678e305a7cc11b1931742524ce1"
+        "created": "1553227128",
+        "modified": "1553227128",
+        "owner": "bf501d4f3d81c31f62038984e923ad01546ff678e305a7cc11b1931742524ce1",
         "serial_number": "78901234",
         "description": "This is the description of another asset",
         "shelf_location": "A3S6"
@@ -399,9 +479,9 @@ This will list off all of the assets owned by a signature chain.
 
 `address` : The register address of the asset.
 
-`ownership` : Only included for tokenized assets, this is the percentage of the asset owned by the caller, based on the number of tokens owned
+`owner` : The genesis hash of the signature chain that owns this asset.
 
-`timestamp` : The Unix timestamp of when the asset was last updated.
+`ownership` : Only included for tokenized assets, this is the percentage of the asset owned by the caller, based on the number of tokens owned
 
 `<fieldname>=<value>` : The key-value pair for each piece of data stored in the asset.
 
@@ -479,6 +559,103 @@ This will list off all of the token accounts belonging to a particular signature
 `pending` : This is the sum of all confirmed debit transactions that have been made to this account, that have not yet been credited.  To move coins from pending into the available balance you must create a corresponding credit transaction.  NOTE: if configured to run, the events processor does this for you.
 
 `unconfirmed` : This is the sum of all unconfirmed debit transactions that have been made to this account PLUS the sum of all unconfirmed credits that you have for confirmed debit transactions.  When someone makes a debit to your account it will immediately appear in the unconfirmed balance until that transaction is included in a block, at which point it moves into `pending`.  When you (or the events processor) creates the corresponding credit transaction for that debit, the amount will move from `pending` back into `unconfirmed` until the credit transaction is included in a block, at which point the amount moves to `balance`.  
+
+
+****
+
+
+# `list/invoices`
+
+This will list all invoices issued or received by the signature chain.
+
+**NOTE** : If you use the username parameter, it will take slightly longer to calculate the username genesis with our brute-force protected hashing algorithm. For higher performance, use the genesis parameter.
+
+
+### Endpoint:
+
+`/users/list/invoices`
+
+
+### Parameters:
+
+`genesis` : The genesis hash identifying the signature chain (optional if username is supplied).
+
+`username` : The username identifying the signature chain (optional if genesis is supplied).
+
+`page` : Allows the results to be returned by page (zero based).  E.g. passing in page=1 will return the second set of (limit) results.  The default value is 0 if not supplied.
+
+`limit` : The number of results to return for the current page.  Default is 100
+
+`status` : Optional filter by invoice status.  Values can be `OUTSTANDING` (the invoice has been issued but not paid), `PAID` (the invoice has been paid by the recipient), or `CANCELLED` (the invoice was cancelled by the issuer before payment)
+
+
+### Return value JSON object:
+```
+[
+    {
+        "address": "822G7ZSsHh1ncTj4AJt6FnZ6MTWG3Q9NNTZ9KvG3CWA1SP3aq97",
+        "created": 1581389015,
+        "modified": 1581389107,
+        "owner": "a2056d518d6e6d65c6c2e05af7fe2d3182a93def20e960fcfa0d35777a082440",
+        "account": "8Bx6ZmCev3DsGjoWuhfQSNmycdZT4cyKKJNc36NWTMik6Zkqh7N",
+        "recipient": "a2056d518d6e6d65c6c2e05af7fe2d3182a93def20e960fcfa0d35777a082440",
+        "number": "0004",
+        "PO": "Purch1234",
+        "contact": "accounts@mycompany.com",
+        "sender_detail": "My Company, 32 Some Street, Some Place",
+        "recipient_detail": "Some recipient details such as address or email",
+        "items": [
+            {
+                "description": "First item description",
+                "base_price": 1.0,
+                "tax": 0.1,
+                "unit_amount": "1.1",
+                "units": 3
+            },
+            {
+                "description": "Second item description",
+                "base_price": 5.0,
+                "tax": 0.5,
+                "unit_amount": "5.5",
+                "units": 1
+            }
+        ],
+        "amount": 8.8,
+        "token": "0",
+        "status": "PAID"
+    }
+]
+
+```
+### Return values:
+
+`owner` : The genesis hash of the signature chain that owns this invoice.
+
+`created` : The UNIX timestamp when the invoice was created.
+
+`modified` : The UNIX timestamp when the invoice was last modified.
+
+`name` : The name identifying the invoice. For privacy purposes, this is only included in the response if the caller is the owner of the invoice
+
+`address` : The register address of the invoice. 
+
+`recipient` : The genesis hash of the signature chain to issue the invoice to. 
+
+`account` : The register address of the account the invoice should be paid to. 
+
+`items` : Array of line items that make up this invoice.  
+{    
+&nbsp;&nbsp;&nbsp;`unit_amount` : The unit amount to be invoiced for this line item.  
+
+&nbsp;&nbsp;&nbsp;`units` : The number of units to be invoiced at the unit amount.   
+}
+
+`amount` : The total invoice amount.  This is the sum of all line item total amounts (unit_amount x units).
+
+`token` : The register address of the token that this invoice should be paid in.  Set to 0 for NXS transactions
+
+`status` : The current status of this invoice.  Values can be `OUTSTANDING` (the invoice has been issued but not paid), `PAID` (the invoice has been paid by the recipient), or `CANCELLED` (the invoice was cancelled by the issuer before payment).
+
 
 
 ****
@@ -820,6 +997,8 @@ This will list off all of the transactions for the requested signature chain gen
 `page` : Allows the results to be returned by page (zero based). E.g. passing in page=1 will return the second set of (limit) transactions. The default value is 0 if not supplied.
 
 `limit` : The number of transactions to return for the current page. The default is 100.
+
+`order` : The transaction order, based on signature chain sequence. 'asc' for oldest first, 'desc' for most recent first. The default is 'desc'.
 
 `verbose` : Optional, determines how much transaction data to include in the response. Supported values are :
  - `default` : hash

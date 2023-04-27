@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from '@emotion/styled';
 
 const Row = styled.div(({ leftSize, rightSize }) => ({
@@ -16,22 +15,22 @@ const Label = styled.div(({ theme }) => ({
   color: theme.mixer(0.875),
 }));
 
-const Value = styled.div({
+const Value = styled.div(({ theme }) => ({
   gridArea: 'value',
   wordBreak: 'break-word',
-});
+  color: theme.mixer(0.75),
+}));
 
-const InfoField = ({
-  leftSize = 1,
-  rightSize = 3,
+export default function InfoField({
+  ratio = [1, 3],
   label,
   children,
   ...rest
-}) => (
-  <Row leftSize={leftSize} rightSize={rightSize} {...rest}>
-    <Label>{label}</Label>
-    <Value>{children}</Value>
-  </Row>
-);
-
-export default InfoField;
+}) {
+  return (
+    <Row leftSize={ratio[0]} rightSize={ratio[1]} {...rest}>
+      <Label>{label}</Label>
+      <Value>{children}</Value>
+    </Row>
+  );
+}

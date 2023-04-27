@@ -1,0 +1,1160 @@
+Delete contact %{name}?,,AddressBook
+Edit contact,연락처 편집,AddressBook
+Delete contact,,AddressBook
+%{smart_count} address |||| %{smart_count} addresses,,AddressBook
+New contact,,AddressBook
+No information,,AddressBook
+Delete,,AddressBook
+Edit,,AddressBook
+NXS addresses,,AddressBook
+My address for %{name},,AddressBook
+%{name}'s Address,,AddressBook
+Contact info,,AddressBook
+Email,,AddressBook
+Phone Number,전화 번호,AddressBook
+Local Time,현지 시각,AddressBook
+Notes,노트,AddressBook
+Address book,주소록,AddressBook
+Your address book is empty,,AddressBook
+Create new contact,,AddressBook
+Search contact,연락처 검색,AddressBook
+My Addresses,내 주소,AddressBook
+Export contacts,연락처 내보내기,AddressBook
+Legacy Mode,,Header
+Tritium Mode,,Header
+Unknown login status,,Header
+Wallet is not encrypted,,Header
+Not logged in,월렛 잠금,Header
+Logged in<if_timed> until %{unlockDate}</if_timed><if_minting_only> for staking & mining</if_minting_only>,,Header
+My Addresses,내 주소,Header
+Wallet is staking,,Header
+Stake Rate,이자율,Header
+Waiting for 100% synchronization to start staking...,,Header
+Waiting for average age of balance to exceed 72 hours to start staking...,,Header
+Wallet is not staking,,Header
+Checking sync status,,Header
+Synchronizing,동기화 중,Header
+Synchronized,동기화 됨,Header
+pooled,,Header
+You're not logged in,,Header
+You are staking but have not received a block in 30 minutes!,,Header
+Switching...,,
+Active,,
+Switch,,
+Switch user,,
+Closing Nexus Wallet,,
+Warning,,
+IMPROPER USE OF THIS SOFTWARE COULD LEAD TO PERMANENT LOSS OF COIN.,,
+BACKUP YOUR WALLET OFTEN AND KEEP YOUR PASSWORDS SAFE.,,
+I understand the risk,,
+Close,닫기,
+Remote Core is disconnected,,
+Connecting to Nexus Core...,,
+Nexus Core is stopped,,
+Address has been copied to clipboard,,
+Copy to clipboard,,
+Click to copy to clipboard,,
+Show QR code,,
+Log in,,
+No Rows Found,행이 없습니다.,
+Page,페이지,
+rows,,
+Previous,너무 이른,
+Next,다음 것,
+Use virtual keyboard,,
+<token_name></token_name> token,,
+Unnamed token,,
+Switch to Legacy Mode,,
+Are you sure you want to switch to Legacy Mode?,,
+Switch to Tritium Mode,,
+Start Nexus Core,,
+Stop Nexus Core,,
+Quit Nexus,,
+About,,
+Backup Wallet,,
+Nexus Core is not connected,데몬이로드되지 않음,
+Wallet backed up,월렛 백업 됨,
+View Backups,,
+Cut,,
+Copy,부,
+Paste,풀,
+Core,핵심,
+Application,신청,
+Key Management,,
+Style,스타일,
+Modules,,
+Download Recent Database,,
+Cannot bootstrap recent database in manual mode,,
+Please wait for Nexus Core to start.,,
+Toggle FullScreen,,
+Toggle Developer Tools,,
+Toggle Module's Developer Tools,,
+Nexus Website,,
+Nexus Git Repository,,
+Nexus Wallet Guide,,
+Open Core Data Folder,,
+Open Interface Data Folder,,
+Check for Updates...,,
+There are currently no updates available,,
+Checking for Updates...,,
+Update available! Downloading...,,
+Quit and install update...,,
+File,,
+Edit,,
+Settings,설정,
+View,,
+Help,,
+Transaction received,거래 접수,
+Transaction sent,거래 송부,
+Genesis transaction,창세기 거래,
+Trust transaction,신탁 거래,
+Update available for %{smart_count} module |||| Updates available for %{smart_count} modules,,
+New transaction,,
+Error,,
+Unknown error,,
+Accounts,,Header.UserDropdown
+Tokens,,Header.UserDropdown
+Set recovery phrase,,Header.UserDropdown
+Switch user,,Header.UserDropdown
+Log in to another user,,Header.UserDropdown
+Log out of all users,,Header.UserDropdown
+Log out,,Header.UserDropdown
+Log in,,Header.UserDropdown
+Create new user,,Header.UserDropdown
+Overview,개요,NavigationBar
+User,,NavigationBar
+Send NXS,NXS 보내기,NavigationBar
+Send,보내다,NavigationBar
+Transactions,업무,NavigationBar
+Address Book,,NavigationBar
+Settings,설정,NavigationBar
+Console,콘솔,NavigationBar
+Lite mode,,LiteModeNotice
+Lite mode is now available on Nexus Wallet! You can choose to enable lite mode now or just ignore it. You can change your decision anytime under Settings/Core.,,LiteModeNotice
+Why you might want to enable lite mode,,LiteModeNotice
+Nexus Core would take less resources (memory and storage) to run,,LiteModeNotice
+Synchronization would be much faster,,LiteModeNotice
+Why you might NOT want to enable lite mode,,LiteModeNotice
+You would NOT be able to mine or stake,,LiteModeNotice
+Legacy Mode would be disabled,,LiteModeNotice
+Ignore,,LiteModeNotice
+Enable lite mode,,LiteModeNotice
+"Last updated
+%{time}",,Overview
+Getting next block...,다음 블록 얻기...,Overview
+Block Weight,블록 무게,Overview
+Trust Weight,신뢰 무게,Overview
+Stake Weight,스테이크 무게,Overview
+Prime Difficulty,,Overview
+Hash Difficulty,,Overview
+Stake Difficulty,,Overview
+Balance,균형,Overview
+Transactions,업무,Overview
+Market Price,시장 가격,Overview
+24hr Change,24 시간 변경,Overview
+Connections,사이,Overview
+Stake Rate,이자율,Overview
+Block Count,블록 수,Overview
+The balance displayed might not be up-to-date since the wallet is not yet fully synchronized,,Overview
+Staking and mining rewards that need to get past 120 block-old to become available,,Overview
+Immature Balance,,Overview
+Market Cap,시가 총액,Overview
+Available balance,,Overview
+balance,,Overview
+"This includes your pending balance, unconfirmed balance and immature balance",,Overview
+Incoming balances,,Overview
+NXS Amount,NXS 양,Send
+Send all,,Send
+Send NXS,NXS 보내기,Send
+Move NXS between accounts,계정간에 NXS 이동,Send
+You are not logged in,,Send
+You need to log in to your wallet before sending transactions,,Send
+Log in now,,Send
+Move NXS,NXS 이동,Send
+From account,계좌로부터,Send
+Select an account,계정 선택,Send
+To account,계정에,Send
+No accounts selected,,Send
+Cannot move to the same account,,Send
+Invalid amount,유효하지 않은 금액,Send
+Invalid address,잘못된 주소,Send
+This is an address registered to this wallet.,,Send
+NXS moved successfully,,Send
+Error moving NXS,,Send
+Wallet password,,Send
+Enter your wallet password,,Send
+Cancel,취소,Send
+Confirm,,Send
+Send to,,Send
+Recipient address,,Send
+Your address book is empty,,Send
+Create new contact,,Send
+Remove recipient,,Send
+Add recipient,,Send
+Send transaction?,거래를 보내시겠습니까?,Send
+Send To multiple recipients,,Send
+Send from,,Send
+Message,메시지,Send
+Enter your message,메시지 입력,Send
+Send,보내다,Send
+There must be at least one recipient,,Send
+Address is required,,Send
+Transaction sent,거래 송부,Send
+Error sending NXS,,Send
+Reference,,Send
+"An optional number which may be provided by the recipient to identify this transaction from the others, e.g. invoice number, order number, etc.",,Send
+Reference number (optional),,Send
+Expires in,,Send
+"The amount of time since the transaction is created after which the transaction can no longer be credited by the recipient. By default, transactions will expire in 1 day (86400 seconds).",,Send
+Days,,Send
+Hours,,Send
+Minutes,,Send
+Seconds,,Send
+Amount,,Send
+Recipient Address/Name,,Send
+Accounts,,Send
+Unnamed account,,Send
+Tokens,,Send
+Unnamed token,,Send
+Unnamed,,Send
+Invalid name/address,,Send
+Advanced options,,Send
+Address/Name is required,,Send
+Reference must be an unsigned integer,,Send
+Number is too large,,Send
+Unnamed,,PreviewTransaction
+%{smart_count} day |||| %{smart_count} days,,PreviewTransaction
+%{smart_count} hour |||| %{smart_count} hours,,PreviewTransaction
+%{smart_count} minute |||| %{smart_count} minutes,,PreviewTransaction
+%{smart_count} second |||| %{smart_count} seconds,,PreviewTransaction
+Preview Transaction,,PreviewTransaction
+You're sending,,PreviewTransaction
+From,,PreviewTransaction
+To,,PreviewTransaction
+Amount,,PreviewTransaction
+Reference,,PreviewTransaction
+Expires,,PreviewTransaction
+Send transaction,,PreviewTransaction
+Select backup directory,,Settings.Application
+Backup directory,,Settings.Application
+Browse,,Settings.Application
+Backup wallet,백업 월렛,Settings.Application
+Wallet has been backed up,,Settings.Application
+Connecting to Nexus Core,"데몬로드 중, 잠시 기다려주십시오.",Settings.Application
+Turn module open source policy on?,,Settings.Application
+"All modules without open source verifications, possibly including your own under-development modules, will become invalid. Wallet must be refreshed for the change to take effect.",,Settings.Application
+Turn module open source policy off?,,Settings.Application
+"This is only for module developers and can be dangerous for
+              regular users. Please make sure you know what you are doing!",,Settings.Application
+"It would be much easier for a closed source module to hide
+              malicious code than for an open source one. Therefore, in case you
+              still want to disable this setting, it is highly recommended that
+              you only install and run closed source modules that you are
+              developing yourself.",,Settings.Application
+Turn policy off,,Settings.Application
+Keep policy on,,Settings.Application
+Are you sure you want to disable auto update?,,Settings.Application
+Keeping your wallet up-to-date is important for your security and will ensure that you get the best possible user experience.,,Settings.Application
+Keep auto update On,,Settings.Application
+Turn auto update Off,,Settings.Application
+Minimize on close,트레이 최소화,Settings.Application
+Minimize the wallet when closing the window instead of closing it.,창을 닫지 않고 닫을 때 지갑을 최소화하십시오.,Settings.Application
+Auto update (Recommended),,Settings.Application
+Automatically check for new versions and notify if a new version is available.,,Settings.Application
+Send anonymous usage data,익명의 사용 데이터 보내기,Settings.Application
+Send anonymous usage data to allow the Nexus developers to improve the wallet.,익명의 사용 데이터를 전송하여 Nexus 개발자가 지갑을 개선 할 수있게합니다.,Settings.Application
+Base currency,,Settings.Application
+Minimum confirmations,최소 확인,Settings.Application
+Minimum amount of confirmations before a block is accepted. Local only.,Blank,Settings.Application
+Developer mode,개발자 모드,Settings.Application
+Development mode enables advanced features to aid in development. After enabling the wallet must be closed and reopened to enable those features.,개발 모드를 사용하면 개발을 지원하는 고급 기능을 사용할 수 있습니다. 이 기능을 사용하려면 지갑을 닫았다가 다시 열어야합니다.,Settings.Application
+Module open source policy,,Settings.Application
+Only modules which have valid open source repositories are allowed to be installed and run. You can disable this option to test run the modules that you're developing,,Settings.Application
+Allow SymLink,,Settings.Application
+Allow the presence of SymLinks in the module directory,,Settings.Application
+Fake Test Transactions,,Settings.Application
+Display Test Transactions on the Transactions page,,Settings.Application
+Language,언어,Settings.Application
+Exit remote Core mode?,,Settings.Core
+(This will restart your Core),,Settings.Core
+Enter remote Core mode?,,Settings.Core
+Reload transaction history,,Settings.Core
+Clear peer connections,,Settings.Core
+Resync database,,Settings.Core
+Nexus Core will be restarted. Lite mode database will be deleted and resynchronized from the beginning.,,Settings.Core
+Embedded Core,,Settings.Core
+Remote Core,,Settings.Core
+Lite mode,,Settings.Core
+"Nexus Core under lite mode runs lighter and synchronize much faster, but you will <b>NOT</b> be able to stake, mine, or switch the wallet to Legacy Mode.",,Settings.Core
+Multi-user,,Settings.Core
+Allow multiple logged in users at the same time. Mining and staking will be unavailable.,,Settings.Core
+Enable staking,측설 사용,Settings.Core
+Enable/Disable staking on the wallet.,지갑에 가위를 설정 / 해제합니다.,Settings.Core
+Pooled staking,,Settings.Core
+"Pooled staking is a decentralized and trust-less mechanism allowing you to use the balances of others to increase your chances of finding a stake block. All participants receive their staking rewards and build trust, regardless of which user mines the block. A small portion of each reward is paid to the block finder by all pool participants.",,Settings.Core
+Enable mining,광업 사용,Settings.Core
+Enable/Disable mining to the wallet.,지갑에 대한 마이닝 사용 / 사용 안함,Settings.Core
+Mining IP Whitelist,,Settings.Core
+IP/Ports allowed to mine to. Separate by <b>;</b> . Wildcards supported only in IP,,Settings.Core
+Verbose level,상세 수준,Settings.Core
+Verbose level for logs.,로그에 대한 상세 수준,Settings.Core
+Core Data Directory,,Settings.Core
+Where the blockchain data and your legacy wallet.dat are stored,,Settings.Core
+Testnet Iteration,,Settings.Core
+The iteration of Testnet to connect to.,,Settings.Core
+Turn Off,,Settings.Core
+Avatar Mode,,Settings.Core
+Disabling Avatar will make the core use a separate change key,,Settings.Core
+Rescan wallet,,Settings.Core
+"Used to correct transaction/balance issues, scans over every block in the database. Could take up to 10 minutes.",,Settings.Core
+Restart Nexus core with -walletclean parameter to clean out and reload all transaction history,,Settings.Core
+Reload,,Settings.Core
+Clear all stored peer connections and restart Nexus,,Settings.Core
+Clear,,Settings.Core
+Delete lite mode database and resynchronize from the beginning,,Settings.Core
+Resynchronize,,Settings.Core
+IP address,IP 주소,Settings.Core
+Remote Core IP address,,Settings.Core
+API SSL,,Settings.Core
+Use SSL for API calls,,Settings.Core
+API Port,,Settings.Core
+Nexus API server Port,,Settings.Core
+API SSL Port,,Settings.Core
+Nexus API server SSL Port,,Settings.Core
+API Username,,Settings.Core
+Nexus API server Username,,Settings.Core
+API Password,,Settings.Core
+Nexus API server Password,,Settings.Core
+RPC SSL,,Settings.Core
+Use SSL for RPC calls,,Settings.Core
+RPC Port,,Settings.Core
+Nexus RPC server Port,,Settings.Core
+RPC SSL Port,,Settings.Core
+Nexus RPC server SSL Port,,Settings.Core
+RPC Username,,Settings.Core
+Nexus RPC server Username,,Settings.Core
+RPC Password,,Settings.Core
+Nexus RPC server Password,,Settings.Core
+Log out on close,,Settings.Core
+Log out of all users before closing the wallet,,Settings.Core
+Restart Core for these changes to take effect,,Settings.Core
+Save settings,,Settings.Core
+Verbose level is required,,Settings.Core
+Remote Core IP is required,,Settings.Core
+RPC port is required,,Settings.Core
+RPC username is required,,Settings.Core
+RPC password is required,,Settings.Core
+API port is required,,Settings.Core
+API username is required,,Settings.Core
+API password is required,,Settings.Core
+Core settings saved,저장된 핵심 설정,Settings.Core
+Restarting Core...,,Settings.Core
+Error rescanning,,Settings.Core
+Rescanned successfully,,Settings.Core
+Rescanning...,,Settings.Core
+Settings,설정,Settings
+Application,신청,Settings
+Core,핵심,Settings
+Security,보안,Settings
+Style,스타일,Settings
+Modules,,Settings
+Select development module directory,,Settings.Modules
+Your module is still in development? <link>Add a development module</link>,,Settings.Modules
+Select module archive file,,Settings.Modules
+Select module directory,,Settings.Modules
+Add Module,,Settings.Modules
+Checking module,,Settings.Modules
+Drop here to install,,Settings.Modules
+Select module's <file>archive file</file> or <dir>directory</dir>,,Settings.Modules
+or drag and drop it here,,Settings.Modules
+Failed to load %{moduleName},,Settings.Modules
+Disable %{moduleName}?,,Settings.Modules
+Wallet will be automatically refreshed for the change to take effect,,Settings.Modules
+Enable %{moduleName}?,,Settings.Modules
+This module was built for an incompatible wallet version,,Settings.Modules
+Module is not open source,,Settings.Modules
+The provided repository is not verified to be the real source code of this module,,Settings.Modules
+%{version} update available,,Settings.Modules
+development,,Settings.Modules
+Failed to load module,,Settings.Modules
+Overwrite module?,,Settings.Modules
+A module with the same directory name already exists,,Settings.Modules
+Module has been successfully installed,,Settings.Modules
+The wallet will now be refreshed for the new module to take effect,,Settings.Modules
+Error copying module files,,Settings.Modules
+Cannot find module,,Settings.Modules
+Unsupported file type,,Settings.Modules
+Cannot install from this location,,Settings.Modules
+An unknown error occurred,,Settings.Modules
+Directory has already been added,,Settings.Modules
+Failed to load development module,,Settings.Modules
+A module with the same name already exists,,Settings.Modules
+Development module has been added,,Settings.Modules
+Are you sure you want to log out?,,Settings.Security
+Error logging out,,Settings.Security
+Change password,비밀번호 변경,Settings.Security
+Previous password,이전 비밀번호,Settings.Security
+Password,암호,Settings.Security
+New password,새 비밀번호,Settings.Security
+Re-enter password:,비밀번호를 다시 입력하세요:,Settings.Security
+Confirm password,비밀번호 확인,Settings.Security
+Log out,,Settings.Security
+Password is required,암호 필요,Settings.Security
+Password cannot contain these characters:,,Settings.Security
+Password must be at least 8 characters,,Settings.Security
+Password cannot start or end with spaces,,Settings.Security
+Passwords do not match,비밀번호가 일치하지 않습니다,Settings.Security
+Password has been changed.,비밀번호가 변경되었습니다.,Settings.Security
+Error changing password,,Settings.Security
+Encrypt wallet,월렛 암호화,Settings.Security
+Re-enter password,비밀번호를 다시 입력하세요,Settings.Security
+Encrypt and restart,암호화 및 재시작,Settings.Security
+Wallet has been encrypted.,월렛이 암호화되었습니다.,Settings.Security
+Error encrypting wallet,,Settings.Security
+Import private key,개인 키 가져 오기,Settings.Security
+Account name,계정 이름,Settings.Security
+Private key,비공개 키,Settings.Security
+Import,,Settings.Security
+Account name is required,,Settings.Security
+Private key is required,,Settings.Security
+Private key imported. Rescanning now,,Settings.Security
+Rescanning...,,Settings.Security
+Rescanning done,,Settings.Security
+Error rescanning,,Settings.Security
+An unknown error occurred,,Settings.Security
+Error importing private key,,Settings.Security
+Login until date,,Settings.Security
+Login until time,,Settings.Security
+Your wallet password,,Settings.Security
+Login for staking & mining only,,Settings.Security
+Set timeout for login,,Settings.Security
+Date is required,,Settings.Security
+Time is required,,Settings.Security
+Time must be at least one hour in the future,,Settings.Security
+Logged in successfully,,Settings.Security
+Error logging in,,Settings.Security
+Copied to clipboard,복사 됨,Settings.Security
+View private key for address,주소의 비공개 키보기,Settings.Security
+Address,주소,Settings.Security
+Enter address here,여기에 주소 입력,Settings.Security
+View private key,개인 키보기,Settings.Security
+Private key will be displayed here,개인 키가 여기에 표시됩니다.,Settings.Security
+Copy,부,Settings.Security
+Address cannot be empty,,Settings.Security
+Error getting private key,,Settings.Security
+Twinkling stars,,Settings.Style
+Cosmic light,,Settings.Style
+Custom wallpaper,,Settings.Style
+Select a custom wallpaper,,Settings.Style
+Color scheme has been reset to default,,Settings.Style
+Invalid file format! Custom theme file must be in JSON,,Settings.Style
+Select custom theme file,,Settings.Style
+Theme exported,,Settings.Style
+Theme has been reset to default,,Settings.Style
+Render globe,지구본 보이기,Settings.Style
+Render the globe on the Overview page.,개요 페이지에서 지구본 렌더링,Settings.Style
+Your computer does not support OPENGL 2.0,,Settings.Style
+Overview Display,,Settings.Style
+Nexus Addresses format,,Settings.Style
+Choose your Nexus Address display preference,,Settings.Style
+Sample Address,,Settings.Style
+Theme,,Settings.Style
+Select Wallet Theme,,Settings.Style
+Background,,Settings.Style
+Customize your background wallpaper,,Settings.Style
+Color scheme,,Settings.Style
+Background Color,패널 배경색,Settings.Style
+Foreground Color,텍스트 색상,Settings.Style
+Primary Color,,Settings.Style
+Primary Color Accent,,Settings.Style
+Danger Color,,Settings.Style
+Danger Color Accent,,Settings.Style
+Globe Color,글로브 색상,Settings.Style
+Globe Pillar Color,글로브 필라 색,Settings.Style
+Globe Arch Color,글로브 아치 색,Settings.Style
+Import custom theme,,Settings.Style
+Export custom theme,,Settings.Style
+Dark,,Settings.Style
+Light,,Settings.Style
+Custom,,Settings.Style
+Reset,,Settings.Style
+Console,콘솔,Console
+Core output,코어 출력,Console
+CLI syntax,,Console.NexusAPI
+URL syntax,,Console.NexusAPI
+Execute,실행,Console.NexusAPI
+API Documentation,,Console.NexusAPI
+Clear,,Console.NexusAPI
+"Enter console commands here (ex: getinfo, help)","여기에 콘솔 명령을 입력하십시오 (예 : getinfo, help)",Console.Console
+Execute,실행,Console.Console
+Clear console,클리어 콘솔,Console.Console
+Core is in Manual Mode,,Console.CoreOutput
+Pending,,Transactions
+All,모든,Transactions
+Receive,받다,Transactions
+Sent,전송 됨,Transactions
+Stake,,Transactions
+Generate,,Transactions
+Immature,,Transactions
+Orphan,,Transactions
+Genesis,창세기,Transactions
+Past Year,지난 해,Transactions
+Past Month,지난 달,Transactions
+Past Week,지난 주,Transactions
+Search address,,Transactions
+Search for Address,,Transactions
+Category,,Transactions
+Min amount,최소 금액,Transactions
+Time span,시간 범위,Transactions
+Time,,Transactions
+CATEGORY,범주,Transactions
+AMOUNT,양,Transactions
+ACCOUNT,계정,Transactions
+ADDRESS,주소,Transactions
+Transaction details,상세 거래 내역,Transactions
+Show transactions chart,,Transactions
+Download transactions history,,Transactions
+Loading transactions,,Transactions
+All Accounts,모든 계정,Transactions
+Send,보내다,Transactions
+Trust,믿음,Transactions
+Unknown,,Transactions
+Legacy transaction,,Transactions
+Coinbase transaction,,Transactions
+View contract details,,Transactions
+View transaction details,,Transactions
+Address,주소,Transactions
+Account/token address,,Transactions
+Name,이름,Transactions
+Operation,,Transactions
+Transactions,업무,Transactions
+Loading transactions...,,Transactions
+NXS balances,,Transactions
+Previous,너무 이른,Transactions
+Page <page></page> of %{total},,Transactions
+Next,다음 것,Transactions
+Transactions Details,,Transactions.TransactionDetails
+Time,,Transactions.TransactionDetails
+Category,,Transactions.TransactionDetails
+Amount,양,Transactions.TransactionDetails
+Fee,보수,Transactions.TransactionDetails
+Account,계정,Transactions.TransactionDetails
+Address,주소,Transactions.TransactionDetails
+Confirmations,확인,Transactions.TransactionDetails
+Pending,,Transactions.TransactionDetails
+Transaction ID,,Transactions.TransactionDetails
+Block hash,,Transactions.TransactionDetails
+Loading transaction details...,,Transactions.TransactionDetails
+Transactions chart,,Transactions.TransactionsChart
+Amount,양,Transactions.TransactionsChart
+Time,,Transactions.TransactionsChart
+Total,,Transactions.Balances
+Available,,Transactions.Balances
+The current balance across all NXS accounts that is available to be spent,,Transactions.Balances
+Pending,,Transactions.Balances
+The sum of all debit and coinbase transactions made to your NXS accounts that are confirmed but have not yet been credited. This does NOT include immature and unconfirmed amounts,,Transactions.Balances
+Unconfirmed,,Transactions.Balances
+"The sum of all debit transactions made to your NXS accounts that are not confirmed, or credits you have made to your accounts that are not yet confirmed (not yet included in a block)",,Transactions.Balances
+Stake,,Transactions.Balances
+The amount of NXS currently staked in the trust account,,Transactions.Balances
+Immature,,Transactions.Balances
+The sum of all coinbase transactions that have not yet reached maturity,,Transactions.Balances
+Unnamed account,,User.Accounts
+Rename,,User.Accounts
+Details,,User.Accounts
+History,,User.Accounts
+<b>%{account_name}</b> account address,,User.Accounts
+Unnamed,,User.Accounts
+Create new account,,User.Accounts
+Account Details,,User.Accounts.AccountDetails
+Account name,계정 이름,User.Accounts.AccountDetails
+Unnamed,,User.Accounts.AccountDetails
+Created at,,User.Accounts.AccountDetails
+Last modified,,User.Accounts.AccountDetails
+Token name,,User.Accounts.AccountDetails
+Data,,User.Accounts.AccountDetails
+Total account balance,,User.Accounts.AccountDetails
+Available balance,,User.Accounts.AccountDetails
+Send %{token_name},,User.Accounts.AccountDetails
+Pending balance,,User.Accounts.AccountDetails
+Unconfirmed balance,,User.Accounts.AccountDetails
+Stake balance,,User.Accounts.AccountDetails
+Immature balance,,User.Accounts.AccountDetails
+Address,주소,User.Accounts.AccountDetails
+Trust Account is empty.,,User.Accounts.AccountDetails
+Trust Account must mature for 72 hours before staking,,User.Accounts.AccountDetails
+Adjust stake amount,,User.Accounts.AccountDetails
+Time,,User.Accounts.AccountHistory
+Operation,,User.Accounts.AccountHistory
+From,,User.Accounts.AccountHistory
+staking,,User.Accounts.AccountHistory
+mining,,User.Accounts.AccountHistory
+To,,User.Accounts.AccountHistory
+Change,,User.Accounts.AccountHistory
+Account History,,User.Accounts.AccountHistory
+Loading account history,,User.Accounts.AccountHistory
+Account balance,,User.Accounts.AccountHistory
+Show %{tokenName},,User.Accounts.AccountHistory
+Total,,User.Accounts.AccountHistory
+Available,,User.Accounts.AccountHistory
+Pending,,User.Accounts.AccountHistory
+Unconfirmed,,User.Accounts.AccountHistory
+Stake,,User.Accounts.AccountHistory
+Rename account,,RenameAccount
+Account name,,RenameAccount
+Account renaming fee,,RenameAccount
+Cancel,,RenameAccount
+Renaming,,RenameAccount
+Rename,,RenameAccount
+Account name is required,,RenameAccount
+Name already in use,,RenameAccount
+The name you entered is already in use. Please choose another name.,,RenameAccount
+Insuffient balance,,RenameAccount
+Your default account balance is not enough to pay the fee.,,RenameAccount
+Account has been renamed to %{account_name},,RenameAccount
+Error renaming account,,RenameAccount
+Unnamed asset,,User.Assets
+You own %{percentage}% of this asset,,User.Assets
+Create new asset,,User.Assets
+You don't own any asset,,User.Assets
+Asset Details,,AssetDetails
+Edit asset,,AssetDetails
+Name,,AssetDetails
+Address,,AssetDetails
+Owner,,AssetDetails
+Ownership,,AssetDetails
+Created at,,AssetDetails
+Last modified,,AssetDetails
+View history,,AssetDetails
+Tokenize,,AssetDetails
+Transfer ownership,,AssetDetails
+Name,,CreateAsset
+Field name,,CreateAsset
+Value,,CreateAsset
+Field value,,CreateAsset
+Mutable,,CreateAsset
+Type,,CreateAsset
+Max. length,,CreateAsset
+Only applicable to mutable string fields,,CreateAsset
+Unlimited,,CreateAsset
+Remove field,,CreateAsset
+Asset name,,CreateAsset
+A local Name object register will be created for this asset name,,CreateAsset
+Asset name (optional),,CreateAsset
+Asset data,,CreateAsset
+Add field,,CreateAsset
+Estimated fee,,CreateAsset
+Creating asset,,CreateAsset
+Create asset,,CreateAsset
+Field name is required,,CreateAsset
+New asset has been created,,CreateAsset
+Error creating asset,,CreateAsset
+Create a new asset,,CreateAsset
+Asset History Event,,AssetHistoryDetails
+Type,,AssetHistoryDetails
+Time,,AssetHistoryDetails
+Owner,,AssetHistoryDetails
+Checksum,,AssetHistoryDetails
+Name,,AssetHistoryDetails
+Address,,AssetHistoryDetails
+Time,,AssetHistory
+Type,,AssetHistory
+Owner,,AssetHistory
+Asset History,,AssetHistory
+Loading asset history,,AssetHistory
+Name,,EditAsset
+Address,,EditAsset
+Updating asset,,EditAsset
+Update asset,,EditAsset
+Asset has been updated,,EditAsset
+Error updating asset,,EditAsset
+Edit asset,,EditAsset
+Asset name,,TokenizeAsset
+Asset address,,TokenizeAsset
+Token,,TokenizeAsset
+Token address,,TokenizeAsset
+Tokenizing asset,,TokenizeAsset
+Tokenize asset,,TokenizeAsset
+Token is required,,TokenizeAsset
+Asset has been tokenized,,TokenizeAsset
+Error tokenizing asset,,TokenizeAsset
+Asset name,,TransferAsset
+Asset address,,TransferAsset
+Transfer to,,TransferAsset
+Recipient username or user ID,,TransferAsset
+Transferring asset,,TransferAsset
+Transfer asset,,TransferAsset
+Recipient is required,,TransferAsset
+Asset has been transferred,,TransferAsset
+Error transferring asset,,TransferAsset
+User,,User
+User ID,,User
+Accounts,,User
+Staking,,User
+Tokens,,User
+Names,,User
+Namespaces,,User
+Assets,,User
+Change password & PIN,,User
+Change recovery phrase,,User
+Set recovery phrase,,User
+Name,,ChangeRegisterAddress
+Register address,,ChangeRegisterAddress
+Register address that this name points to,,ChangeRegisterAddress
+Name update fee,,ChangeRegisterAddress
+Updating name,,ChangeRegisterAddress
+Update name,,ChangeRegisterAddress
+Name has been updated,,ChangeRegisterAddress
+Error updating name,,ChangeRegisterAddress
+Change register address,,ChangeRegisterAddress
+Local,,CreateName
+Namespaced,,CreateName
+Global,,CreateName
+Namespace,,CreateName
+A namespace you own,,CreateName
+Name,,CreateName
+name,,CreateName
+namespace,,CreateName
+Register address,,CreateName
+Register address that this name points to,,CreateName
+Name creation fee,,CreateName
+Creating name,,CreateName
+Create name,,CreateName
+Name is required,,CreateName
+Name cannot start with a colon character,,CreateName
+Namespace is required,,CreateName
+New name has been created,,CreateName
+Error creating name,,CreateName
+Create a new name,,CreateName
+View name details,,User.Names
+Change register address,,User.Names
+Transfer name,,User.Names
+Unused,,User.Names
+Global,,User.Names
+Namespaced,,User.Names
+Local,,User.Names
+Create new name,,User.Names
+Show unused names,,User.Names
+You don't own any name,,User.Names
+Name Details,,NameDetails
+Change register address,,NameDetails
+Name,,NameDetails
+Type,,NameDetails
+Global,,NameDetails
+Namespaced,,NameDetails
+Local,,NameDetails
+Namespace,,NameDetails
+Address,,NameDetails
+Points to,,NameDetails
+Created at,,NameDetails
+Last modified,,NameDetails
+View history,,NameDetails
+Transfer ownership,,NameDetails
+Name History Event,,NameHistoryDetails
+Type,,NameHistoryDetails
+Time,,NameHistoryDetails
+Owner,,NameHistoryDetails
+Checksum,,NameHistoryDetails
+Name,,NameHistoryDetails
+Namespace,,NameHistoryDetails
+Address,,NameHistoryDetails
+Points to,,NameHistoryDetails
+Time,,NameHistory
+Type,,NameHistory
+Owner,,NameHistory
+Name History,,NameHistory
+Loading name history,,NameHistory
+Name,,TransferName
+Transfer to,,TransferName
+Recipient username or user ID,,TransferName
+Transferring name,,TransferName
+Transfer name,,TransferName
+Recipient is required,,TransferName
+Name has been transferred,,TransferName
+Error transferring name,,TransferName
+Name,,CreateNamespace
+Namespace name,,CreateNamespace
+Namespace creation fee,,CreateNamespace
+Creating namespace,,CreateNamespace
+Create namespace,,CreateNamespace
+Name is required,,CreateNamespace
+"Namespace names can only contain lowercase letters, numbers, and periods (.)",,CreateNamespace
+New namespace has been created,,CreateNamespace
+Error creating namespace,,CreateNamespace
+Create a new namespace,,CreateNamespace
+View name details,,User.Namespaces
+Transfer namespace,,User.Namespaces
+Create new namespace,,User.Namespaces
+You don't own any namespace,,User.Namespaces
+Namespace Details,,NamespaceDetails
+Name,,NamespaceDetails
+Address,,NamespaceDetails
+Created at,,NamespaceDetails
+Last modified,,NamespaceDetails
+View history,,NamespaceDetails
+Transfer ownership,,NamespaceDetails
+Namespace History Event,,NamespaceHistoryDetails
+Type,,NamespaceHistoryDetails
+Time,,NamespaceHistoryDetails
+Owner,,NamespaceHistoryDetails
+Checksum,,NamespaceHistoryDetails
+Name,,NamespaceHistoryDetails
+Address,,NamespaceHistoryDetails
+Time,,NamespaceHistory
+Type,,NamespaceHistory
+Owner,,NamespaceHistory
+Namespace History,,NamespaceHistory
+Loading namespace history,,NamespaceHistory
+Namespace,,TransferNamespace
+Transfer to,,TransferNamespace
+Recipient username or user ID,,TransferNamespace
+Transferring namespace,,TransferNamespace
+Transfer namespace,,TransferNamespace
+Destination is required,,TransferNamespace
+Namespace has been transferred,,TransferNamespace
+Error transferring namespace,,TransferNamespace
+The current NXS balance of the trust account that is not staked. You can spend this amount without affecting your Trust Score,,User.Staking
+"Balance that will be staked after the 72 holding period, any change to this balance will reset the hold timer",,User.Staking
+Restart Core?,,User.Staking
+Nexus Core needs to restart for this change to take effect,,User.Staking
+Disable staking,,User.Staking
+Enable staking,측설 사용,User.Staking
+Cancel,취소,User.Staking
+Status,,User.Staking
+Staking,,User.Staking
+pooled,,User.Staking
+Not staking,,User.Staking
+Stake amount,,User.Staking
+The amount of NXS currently staked in the trust account,,User.Staking
+Pending change,,User.Staking
+The pending stake amount change that will be applied on the next Trust transaction,,User.Staking
+Requested at,,User.Staking
+Expired in,,User.Staking
+Stake Rate,이자율,User.Staking
+The current annual reward rate earned for staking,,User.Staking
+Trust Weight,신뢰 무게,User.Staking
+"The percentage of the maximum Trust Score, which is gradually built over time when you consistently operate your node in an honest, trustworthy, and timely manner",,User.Staking
+Block Weight,블록 무게,User.Staking
+"Block Weight depends on the time passed since you received a Trust transaction and will be reset everytime you receive a Trust transaction. Otherwise, Block Weight will reach 100% after 3 days and your Trust Score will start decaying until you receive another Trust transaction",,User.Staking
+Stake Weight,스테이크 무게,User.Staking
+"Stake Weight depends on Trust Weight and Block Weight. Along with your Stake amount, Stake Weight affects how frequent you receive a Trust transaction",,User.Staking
+Available Balance,,User.Staking
+Adjust stake amount,,User.Staking
+Account on hold for another %{stakeSeconds} Seconds,,User.Staking
+Stop staking,,User.Staking
+Start staking,,User.Staking
+Create new token,,User.Tokens
+Look up a token,,User.Tokens
+Unnamed token,,User.Tokens
+ (Owned by you),,User.Tokens
+Details,,User.Tokens
+New Token,,User.Tokens.NewToken
+"There is a %{tokenfee} NXS token creation fee, based on supply",,User.Tokens.NewToken
+Token name,,User.Tokens.NewToken
+Name Creation Fee: %{tokenFee} NXS (Optional),,User.Tokens.NewToken
+New tokens's name,,User.Tokens.NewToken
+Supply,,User.Tokens.NewToken
+Max amount of tokens available,,User.Tokens.NewToken
+Decimal,,User.Tokens.NewToken
+Amount of significant digits a token can have,,User.Tokens.NewToken
+Cancel,취소,User.Tokens.NewToken
+Create token,,User.Tokens.NewToken
+Supply can not be zero or negative,,User.Tokens.NewToken
+Create a token without a name?,,User.Tokens.NewToken
+Adding a name costs a NXS fee,,User.Tokens.NewToken
+That's Ok,,User.Tokens.NewToken
+Add Name,,User.Tokens.NewToken
+New token %{token} has been created,,User.Tokens.NewToken
+You have successfully created token %{token} ! Would you like to make an account for this token?,,User.Tokens.NewToken
+Yes,예,User.Tokens.NewToken
+No,아니,User.Tokens.NewToken
+Error creating token,,User.Tokens.NewToken
+Cannot find Token,,User.Tokens.SearchToken
+Look up token,,User.Tokens.SearchToken
+Name or address,,User.Tokens.SearchToken
+Token name/address,,User.Tokens.SearchToken
+Look up,,User.Tokens.SearchToken
+No Value,,User.Tokens.SearchToken
+Error searching for token,,User.Tokens.SearchToken
+Unknown token name/address,,User.Tokens.SearchToken
+Token Details,,User.Tokens.TokenDetails
+Token name,,User.Tokens.TokenDetails
+Token address,,User.Tokens.TokenDetails
+Created at,,User.Tokens.TokenDetails
+Last modified,,User.Tokens.TokenDetails
+Token Owner,,User.Tokens.TokenDetails
+Current Supply,,User.Tokens.TokenDetails
+Max Supply,,User.Tokens.TokenDetails
+Decimals,,User.Tokens.TokenDetails
+Balance,균형,User.Tokens.TokenDetails
+Pending balance,,User.Tokens.TokenDetails
+Unconfirmed balance,,User.Tokens.TokenDetails
+Create new account with this token,,User.Tokens.TokenDetails
+Close,닫기,User.Tokens.TokenDetails
+Wallet version,,About
+Wallet build date,,About
+Nexus Core version,,About
+Core build date,,About
+Testnet,,About
+Private blockchain,,About
+Invalid address,잘못된 주소,AddEditContact
+This is not one of your addresses.,,AddEditContact
+This is one of your addresses.,,AddEditContact
+Name,이름,AddEditContact
+Contact name,,AddEditContact
+Email address,,AddEditContact
+Phone number,,AddEditContact
+Time zone,,AddEditContact
+Select a time zone,,AddEditContact
+Notes,노트,AddEditContact
+Cancel,취소,AddEditContact
+Reset,,AddEditContact
+Save changes,,AddEditContact
+Create,몹시 떠들어 대다,AddEditContact
+Name is required.,,AddEditContact
+A contact with the same name already exists.,,AddEditContact
+There must be at least one address.,,AddEditContact
+Invalid email,,AddEditContact
+Contact has been updated,,AddEditContact
+New contact has been added to address book,,AddEditContact
+My Nexus address for %{name},,AddEditContact
+My Nexus address,,AddEditContact
+%{name}'s Nexus address,,AddEditContact
+Their Nexus address,,AddEditContact
+Remove address,,AddEditContact
+Label (optional),,AddEditContact
+Edit contact,연락처 편집,AddEditContact
+Create new contact,,AddEditContact
+Adjust stake amount,,AdjustStake
+"Note: This change will not take effect immediately but will stay pending until you get the next Trust transaction. The pending change will be recorded locally in this machine, therefore if you switch to another machine for staking, the change will not take effect.",,AdjustStake
+Cancel,취소,AdjustStake
+Set stake amount,,AdjustStake
+Invalid number,,AdjustStake
+Out of range,,AdjustStake
+Reduce stake amount?,,AdjustStake
+Reducing stake amount might make your Stake Rate decrease,,AdjustStake
+Stake amount has been updated,,AdjustStake
+Error setting stake amount,,AdjustStake
+Backing up...,,Bootstrap
+Downloading,,Bootstrap
+Decompressing...,,Bootstrap
+Stopping Core...,,Bootstrap
+Moving...,,Bootstrap
+Restarting Core...,,Bootstrap
+Rescanning Wallet...,,Bootstrap
+Backing up your wallet...,,Bootstrap
+Downloading the database,,Bootstrap
+Decompressing the database...,,Bootstrap
+Stopping Nexus Core...,,Bootstrap
+Moving the database...,,Bootstrap
+Restarting Nexus Core...,,Bootstrap
+Are you sure you want to abort the process?,,Bootstrap
+"Yes, abort",,Bootstrap
+"No, let it continue",,Bootstrap
+Bootstrap Recent Database,,Bootstrap
+Abort,,Bootstrap
+Not enough disk space! Minimum 15GB of free space is required.,,Bootstrap
+Download recent database?,,Bootstrap
+Downloading a recent version of the database might reduce the time it takes to synchronize your wallet,,Bootstrap
+"Yes, let's bootstrap it",,Bootstrap
+"No, let it sync",,Bootstrap
+Bootstrap process has been aborted,,Bootstrap
+Error bootstrapping recent database,,Bootstrap
+Unknown error,,Bootstrap
+Recent database has been successfully bootstrapped,,Bootstrap
+Change password and PIN,,ChangePassword&PIN
+Current password,,ChangePassword&PIN
+Your current password,,ChangePassword&PIN
+Current PIN,,ChangePassword&PIN
+Your current PIN,,ChangePassword&PIN
+New Password,,ChangePassword&PIN
+Enter your new password,,ChangePassword&PIN
+New PIN,,ChangePassword&PIN
+Enter your new PIN,,ChangePassword&PIN
+Updating,,ChangePassword&PIN
+Update,,ChangePassword&PIN
+Current password is required,,ChangePassword&PIN
+Current PIN is required,,ChangePassword&PIN
+New password is required,,ChangePassword&PIN
+Password must be at least 8 characters,,ChangePassword&PIN
+New PIN is required,,ChangePassword&PIN
+PIN must be at least 4 characters,,ChangePassword&PIN
+Password & PIN have been updated,,ChangePassword&PIN
+Error updating password & PIN,,ChangePassword&PIN
+Contract Details,,ContractDetails
+View transaction details,,ContractDetails
+Yes,예,ConfirmDialog
+No,아니,ConfirmDialog
+Password/PIN mismatch,,ConfirmPassword&PIN
+"You have entered either your password or your PIN incorrectly, please re-check",,ConfirmPassword&PIN
+Confirm password and PIN,,ConfirmPassword&PIN
+Enter your new password & new PIN once again to make sure you have entered them correctly,,ConfirmPassword&PIN
+Enter your password & PIN once again to make sure you have entered them correctly,,ConfirmPassword&PIN
+Password,암호,ConfirmPassword&PIN
+Re-enter your new password,,ConfirmPassword&PIN
+Re-enter your password,,ConfirmPassword&PIN
+PIN,,ConfirmPassword&PIN
+Re-enter your new PIN,,ConfirmPassword&PIN
+Re-enter your PIN,,ConfirmPassword&PIN
+Confirm,,ConfirmPassword&PIN
+Dismiss,,ErrorDialog
+Pin must be at least 4 characters,,PinDialog
+Confirm,,PinDialog
+Enter PIN,,PinDialog
+Your PIN,,PinDialog
+Cancel,취소,PinDialog
+Dismiss,,SuccessDialog
+Your wallet is not encrypted!,월렛이 암호화되지 않았습니다!,EncryptionWarning
+It is highly recommended that you should encrypt your wallet to keep your NXS safe.,,EncryptionWarning
+Ignore,무시,EncryptionWarning
+Encrypt wallet,월렛 암호화,EncryptionWarning
+Log in,,Login
+Username,사용자 이름,Login
+Enter your username,,Login
+Password,암호,Login
+Enter your password,,Login
+PIN,,Login
+Enter your PIN,,Login
+Logging in,,Login
+Forgot password?,,Login
+Create new user,,Login
+Username is required,,Login
+Password is required,암호 필요,Login
+PIN is required,,Login
+Logged in as %{username},,Login
+Not being fully synced may have caused this error.,,Login
+Error logging in,,Login
+Migrate account,,MigrateAccount
+You have %{amount} NXS in your legacy account.,,MigrateAccount
+You can manually send your funds from legacy account to this new Tritium user.,,MigrateAccount
+Send NXS manually,,MigrateAccount
+Don't show this again,,MigrateAccount
+Module Details,,ModuleDetails
+Remove module,,ModuleDetails
+Module name,,ModuleDetails
+Display name,,ModuleDetails
+Module type,,ModuleDetails
+in development,,ModuleDetails
+Version,,ModuleDetails
+Target wallet version,,ModuleDetails
+incompatible,,ModuleDetails
+Description,,ModuleDetails
+Author,,ModuleDetails
+Source code,,ModuleDetails
+Visit repository,,ModuleDetails
+This module is developed by Nexus,,ModuleDetails
+This repository does not exist or is private,,ModuleDetails
+This repository is not verified to be the real source code of this module,,ModuleDetails
+Module hash,,ModuleDetails
+Download %{version} (manual),,ModuleDetails
+Open App,,ModuleDetails
+Module is disallowed,,ModuleDetails
+Installing Module...,,ModuleDetails
+Install Module,,ModuleDetails
+"Warning: This module is written by a third party, Nexus is NOT
+              responsible for its quality or legitimacy. Please make sure to do
+              your due diligence before installing third party modules and use
+              them with your own risk.",,ModuleDetails
+Check wallet failed,,MyAddresses
+Check wallet pass,,MyAddresses
+My Account,내 계정,MyAddresses
+Check wallet's integrity,,MyAddresses
+Check wallet,,MyAddresses
+Create new address,새 주소 만들기,MyAddresses
+Enter a new account name or pick an existing account:,,MyAddresses.NewAddressForm
+Account name,계정 이름,MyAddresses.NewAddressForm
+Cancel,취소,MyAddresses.NewAddressForm
+New address,,MyAddresses.NewAddressForm
+Account name is required,,MyAddresses.NewAddressForm
+Invalid account name,,MyAddresses.NewAddressForm
+New address has been created,,MyAddresses.NewAddressForm
+Error creating new address,,MyAddresses.NewAddressForm
+New account,,NewAccount
+Account name (%{nameFee} NXS Fee) (Optional),,NewAccount
+New account's name,,NewAccount
+Token name/address,,NewAccount
+Cancel,취소,NewAccount
+Creating account,,NewAccount
+Create account,,NewAccount
+Create an account without a name?,,NewAccount
+Adding a name costs a NXS fee,,NewAccount
+That's Ok,,NewAccount
+Error creating account,,NewAccount
+Unknown token name/address,,NewAccount
+New account %{account} has been created,,NewAccount
+Create new user,,NewUser
+Username,사용자 이름,NewUser
+A globally unique username,,NewUser
+Password,암호,NewUser
+Enter your password,,NewUser
+PIN,,NewUser
+Enter your PIN,,NewUser
+Attention,,NewUser
+"Please be sure to make a note of your username, password, and PIN, and keep it in a safe place. If you lose or forget them you will be unable to access your account.",,NewUser
+Creating user,,NewUser
+Create user,,NewUser
+"Please wait, this may take up to 30 seconds",,NewUser
+Switch to Legacy Mode,,NewUser
+Log in,,NewUser
+Username is required,,NewUser
+Username must be at least 3 characters,,NewUser
+Password is required,암호 필요,NewUser
+Password must be at least 8 characters,,NewUser
+PIN is required,,NewUser
+PIN must be at least 4 characters,,NewUser
+Error creating user,,NewUser
+User registration for %{username} has been confirmed,,NewUser
+User registration for %{username} is waiting to be confirmed on Nexus blockchain...,,NewUser
+Recover password and PIN,,RecoverPassword&PIN
+Username,사용자 이름,RecoverPassword&PIN
+Your username,,RecoverPassword&PIN
+Recovery phrase,,RecoverPassword&PIN
+Your recovery phrase,,RecoverPassword&PIN
+New Password,,RecoverPassword&PIN
+Enter your new password,,RecoverPassword&PIN
+New PIN,,RecoverPassword&PIN
+Enter your new PIN,,RecoverPassword&PIN
+Recovering password & PIN,,RecoverPassword&PIN
+Recover password & PIN,,RecoverPassword&PIN
+Username is required,,RecoverPassword&PIN
+Recovery phrase is required,,RecoverPassword&PIN
+New password is required,,RecoverPassword&PIN
+Password must be at least 8 characters,,RecoverPassword&PIN
+New PIN is required,,RecoverPassword&PIN
+PIN must be at least 4 characters,,RecoverPassword&PIN
+Password & PIN have been updated,,RecoverPassword&PIN
+Error updating password & PIN,,RecoverPassword&PIN
+%{smart_count} word |||| %{smart_count} words,,SetRecoveryPhrase
+Recovery phrase,,SetRecoveryPhrase
+"The recovery phrase can be used to recover your account and set a new password and PIN in the event that you lose or forget them. Your recovery phrase must be a minimum of 40 characters, and should ideally be made up of random words. Save this new recovery phrase in a safe place.",,SetRecoveryPhrase
+Password,암호,SetRecoveryPhrase
+Your current password,,SetRecoveryPhrase
+PIN,,SetRecoveryPhrase
+Your current PIN,,SetRecoveryPhrase
+Current recovery phrase,,SetRecoveryPhrase
+Enter your recovery phrase,,SetRecoveryPhrase
+Generate a recovery phrase,,SetRecoveryPhrase
+New recovery phrase,,SetRecoveryPhrase
+Enter your new recovery phrase or click Generate,,SetRecoveryPhrase
+Setting recovery phrase,,SetRecoveryPhrase
+Set recovery phrase,,SetRecoveryPhrase
+Password is required,암호 필요,SetRecoveryPhrase
+PIN is required,,SetRecoveryPhrase
+Current recovery phrase is required,,SetRecoveryPhrase
+Recovery phrase is required,,SetRecoveryPhrase
+Recovery phrase must be at least 8 characters,,SetRecoveryPhrase
+Recovery phrase has been updated,,SetRecoveryPhrase
+Error setting recovery phrase,,SetRecoveryPhrase
+Transaction Details,,TransactionDetails
+Time,,TransactionDetails
+Sequence,,TransactionDetails
+Type,,TransactionDetails
+Confirmations,,TransactionDetails
+Transaction ID,,TransactionDetails
+Loading transaction details...,,TransactionDetails
+Close the wallet and install update now?,,AutoUpdate
+Close and install,,AutoUpdate
+Install it later,,AutoUpdate
+New wallet version %{version} - Click here to download,,AutoUpdate
+New wallet version %{version} - Click here to update,,AutoUpdate
+New wallet version %{version} available. Downloading...,,AutoUpdate

@@ -9,11 +9,11 @@
  * - Make sure this note also presents in other files which are imported here.
  */
 
-import React, { Component } from 'react';
+import { forwardRef } from 'react';
 import styled from '@emotion/styled';
 
 import { timing } from 'styles';
-import * as color from 'utils/color';
+import { lighten, fade } from 'utils/color';
 
 const ButtonComponent = styled.button(
   {
@@ -95,7 +95,7 @@ const ButtonComponent = styled.button(
             border: `1px solid ${theme.mixer(0.75)}`,
             color: theme.mixer(0.75),
           },
-          '&:hover': {
+          '&:hover, &.hover': {
             borderColor: theme.foreground,
             color: theme.foreground,
           },
@@ -106,7 +106,8 @@ const ButtonComponent = styled.button(
             border: `2px solid ${theme.primary}`,
             color: theme.primary,
             fontWeight: 'bold',
-            transitionProperty: 'border-color, color, filter',
+            transitionProperty:
+              'border-color, color, filter, box-shadow, text-shadow',
             transitionTimingFunction: 'ease-out',
             boxShadow: 'none',
             textShadow: 'none',
@@ -115,11 +116,11 @@ const ButtonComponent = styled.button(
               fontWeight: 'normal',
             },
           },
-          '&:hover': {
-            borderColor: color.lighten(theme.primary, 0.3),
-            color: color.lighten(theme.primary, 0.3),
-            boxShadow: `0 0 7px ${color.fade(theme.primary, 0.3)}`,
-            textShadow: `0 0 7px ${color.fade(theme.primary, 0.3)}`,
+          '&:hover, &.hover': {
+            borderColor: lighten(theme.primary, 0.3),
+            color: lighten(theme.primary, 0.3),
+            boxShadow: `0 0 7px ${fade(theme.primary, 0.3)}`,
+            textShadow: `0 0 7px ${fade(theme.primary, 0.3)}`,
           },
         };
       case 'danger':
@@ -128,7 +129,8 @@ const ButtonComponent = styled.button(
             border: `2px solid ${theme.danger}`,
             color: theme.danger,
             fontWeight: 'bold',
-            transitionProperty: 'border-color, color, filter',
+            transitionProperty:
+              'border-color, color, filter, box-shadow, text-shadow',
             transitionTimingFunction: 'ease-out',
             boxShadow: 'none',
             textShadow: 'none',
@@ -137,21 +139,21 @@ const ButtonComponent = styled.button(
               fontWeight: 'normal',
             },
           },
-          '&:hover': {
-            borderColor: color.lighten(theme.danger, 0.3),
-            color: color.lighten(theme.danger, 0.3),
-            boxShadow: `0 0 7px ${color.fade(theme.danger, 0.3)}`,
-            textShadow: `0 0 7px ${color.fade(theme.danger, 0.3)}`,
+          '&:hover, &.hover': {
+            borderColor: theme.raise(theme.danger, 0.3),
+            color: theme.raise(theme.danger, 0.3),
+            boxShadow: `0 0 7px ${fade(theme.danger, 0.3)}`,
+            textShadow: `0 0 7px ${fade(theme.danger, 0.3)}`,
           },
         };
       case 'filled-primary':
         return {
           '&, &:active, &&:disabled': {
-            background: color.darken(theme.primary, 0.1),
+            background: theme.lower(theme.primary, 0.2),
             color: theme.primaryAccent,
             transitionProperty: 'background-color',
           },
-          '&:hover': {
+          '&:hover, &.hover': {
             background: theme.primary,
           },
         };
@@ -162,7 +164,7 @@ const ButtonComponent = styled.button(
             color: theme.foreground,
             transitionProperty: 'background-color',
           },
-          '&:hover': {
+          '&:hover, &.hover': {
             background: theme.mixer(0.125),
           },
         };
@@ -173,7 +175,7 @@ const ButtonComponent = styled.button(
             color: theme.background,
             transitionProperty: 'background-color',
           },
-          '&:hover': {
+          '&:hover, &.hover': {
             background: theme.foreground,
           },
         };
@@ -184,8 +186,8 @@ const ButtonComponent = styled.button(
             color: theme.dangerAccent,
             transitionProperty: 'background-color',
           },
-          '&:hover': {
-            background: color.lighten(theme.danger, 0.2),
+          '&:hover, &.hover': {
+            background: theme.raise(theme.danger, 0.2),
           },
         };
       case 'plain-inverted':
@@ -195,8 +197,19 @@ const ButtonComponent = styled.button(
             color: theme.mixer(0.25),
             transitionProperty: 'color',
           },
-          '&:hover': {
+          '&:hover, &.hover': {
             color: theme.background,
+          },
+        };
+      case 'plain-danger':
+        return {
+          '&, &:active, &&:disabled': {
+            background: 'transparent',
+            color: theme.danger,
+            transitionProperty: 'color',
+          },
+          '&:hover, &.hover': {
+            color: theme.lower(theme.danger, 0.2),
           },
         };
       case 'plain':
@@ -206,7 +219,7 @@ const ButtonComponent = styled.button(
             color: theme.mixer(0.75),
             transitionProperty: 'color',
           },
-          '&:hover': {
+          '&:hover, &.hover': {
             color: theme.foreground,
           },
         };
@@ -223,8 +236,22 @@ const ButtonComponent = styled.button(
             color: theme.mixer(0.75),
             transitionProperty: 'color',
           },
-          '&:hover': {
+          '&:hover, &.hover': {
             color: theme.foreground,
+          },
+        };
+      case 'plain-link-primary':
+        return {
+          '&, &:active, &&:disabled': {
+            display: 'inline',
+            padding: '.2em 0',
+            height: 'auto',
+            background: 'transparent',
+            color: fade(theme.primary, 0.15),
+            transitionProperty: 'color',
+          },
+          '&:hover, &.hover': {
+            color: theme.primary,
           },
         };
     }
@@ -235,7 +262,7 @@ const ButtonComponent = styled.button(
  * Note: the double & in &&:disabled is a css specificity hack so that the disabled styles take priority over the hover styles
  */
 
-const Button = React.forwardRef(
+const Button = forwardRef(
   ({ type = 'button', skin = 'default', ...rest }, ref) => (
     <ButtonComponent type={type} skin={skin} {...rest} ref={ref} />
   )

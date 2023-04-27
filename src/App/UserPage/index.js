@@ -1,23 +1,23 @@
 // External
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 import GA from 'lib/googleAnalytics';
 
 // Internal Global
-import Button from 'components/Button';
 import Panel from 'components/Panel';
-import LoginModal from 'components/LoginModal';
-import { openModal } from 'lib/ui';
-import AddEditContactModal from 'components/AddEditContactModal';
-import { isCoreConnected, isLoggedIn } from 'selectors';
-import { history } from 'lib/wallet';
+import RequireLoggedIn from 'components/RequireLoggedIn';
+import { isLoggedIn } from 'selectors';
+import { navigate } from 'lib/wallet';
 import { legacyMode } from 'consts/misc';
 import userIcon from 'icons/user.svg';
 
 // Internal Local
 import UserBrief from './UserBrief';
 import TabContent from './TabContent';
+import UserOptions from './UserOptions';
+
+__ = __context('User');
 
 const UserPageLayout = styled.div({
   display: 'flex',
@@ -25,77 +25,29 @@ const UserPageLayout = styled.div({
   height: '100%',
 });
 
-const mapStateToProps = state => ({
-  addressBook: state.addressBook,
-  coreConnected: isCoreConnected(state),
-  loggedIn: isLoggedIn(state),
-});
+export default function UserPage() {
+  const loggedIn = useSelector(isLoggedIn);
 
-/**
- * The Address Book Page
- *
- * @class UserPage
- * @extends {Component}
- */
-@connect(mapStateToProps)
-class UserPage extends Component {
-  state = {
-    activeIndex: 0,
-  };
-
-  /**
-   * componentDidMount
-   *
-   * @memberof UserPage
-   */
-  componentDidMount() {
+  useEffect(() => {
     if (legacyMode) {
-      history.push('/');
+      navigate('/');
     }
     GA.SendScreen('UserPage');
-  }
+  }, []);
 
-  /**
-   * Opens Add/Edit Contact Modal
-   *
-   * @memberof UserPage
-   */
-  showAddContact = () => {
-    openModal(AddEditContactModal);
-  };
-
-  /**
-   * Component's Renderable JSX
-   *
-   * @returns
-   * @memberof UserPage
-   */
-  render() {
-    const { loggedIn, match } = this.props;
-
-    return (
-      <Panel icon={userIcon} title={__('User')} bodyScrollable={false}>
-        {loggedIn ? (
-          <UserPageLayout>
-            <UserBrief match={match} />
-            <TabContent match={match} />
-          </UserPageLayout>
-        ) : (
-          <div style={{ marginTop: 50, textAlign: 'center' }}>
-            <Button
-              uppercase
-              skin="primary"
-              onClick={() => {
-                openModal(LoginModal);
-              }}
-            >
-              {__('Log in')}
-            </Button>
-          </div>
-        )}
-      </Panel>
-    );
-  }
+  return (
+    <Panel
+      icon={userIcon}
+      title={__('User')}
+      bodyScrollable={false}
+      controls={loggedIn ? <UserOptions /> : undefined}
+    >
+      <RequireLoggedIn>
+        <UserPageLayout>
+          <UserBrief />
+          <TabContent />
+        </UserPageLayout>
+      </RequireLoggedIn>
+    </Panel>
+  );
 }
-
-export default UserPage;

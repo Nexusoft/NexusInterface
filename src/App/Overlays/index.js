@@ -1,39 +1,26 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 
-import { legacyMode } from 'consts/misc';
+import { openModal } from 'lib/ui';
 
 import ClosingScreen from './ClosingScreen';
 import SelectLanguage from './SelectLanguage';
 import LicenseAgreement from './LicenseAgreement';
-import ExperimentalWarning from './ExperimentalWarning';
-import TritiumModeNotice from './TritiumModeNotice';
+import LiteModeNotice from './LiteModeNotice';
+import PreReleaseWarningModal from './PreReleaseWarningModal';
+import TestnetWarningModal from './TestnetWarningModal';
 import Wallet from './Wallet';
+import { preRelease } from 'consts/misc';
 
-const mapStateToProps = ({
-  settings: {
-    experimentalWarningDisabled,
-    tritiumModeNoticeDisabled,
-    acceptedAgreement,
-    locale,
-  },
-  ui: { closing },
-}) => ({
-  locale,
-  experimentalWarningDisabled,
-  tritiumModeNoticeDisabled,
-  acceptedAgreement,
-  closing,
-});
+export default function Overlays({ children }) {
+  const locale = useSelector((state) => state.settings.locale);
+  const liteModeNoticeDisabled = useSelector(
+    (state) => state.settings.liteModeNoticeDisabled
+  );
+  const acceptedAgreement = useSelector(
+    (state) => state.settings.acceptedAgreement
+  );
+  const closing = useSelector((state) => state.ui.closing);
 
-const Overlays = ({
-  locale,
-  experimentalWarningDisabled,
-  tritiumModeNoticeDisabled,
-  acceptedAgreement,
-  closing,
-  children,
-}) => {
   if (closing) {
     return <ClosingScreen />;
   }
@@ -46,15 +33,17 @@ const Overlays = ({
     return <LicenseAgreement />;
   }
 
-  if (!experimentalWarningDisabled) {
-    return <ExperimentalWarning />;
+  if (!liteModeNoticeDisabled) {
+    return <LiteModeNotice />;
   }
 
-  if (!legacyMode && !tritiumModeNoticeDisabled) {
-    return <TritiumModeNotice />;
+  if (preRelease) {
+    openModal(PreReleaseWarningModal);
+  }
+
+  if (LOCK_TESTNET) {
+    openModal(TestnetWarningModal);
   }
 
   return <Wallet>{children}</Wallet>;
-};
-
-export default connect(mapStateToProps)(Overlays);
+}

@@ -1,11 +1,14 @@
 import fs from 'fs';
 import path from 'path';
 import chalk from 'chalk';
-import { extractFromFiles } from 'i18n-extract';
+import csvStringify from 'csv-stringify';
+import { parse } from 'csv-parse/sync';
+import extractFromFiles from './i18nExtract';
 
 const transDir = path.join(__dirname, '../../assets/translations');
 
 const locales = [
+  'en',
   'ar',
   'de',
   'es',
@@ -14,87 +17,127 @@ const locales = [
   'ja',
   'hu',
   'ko',
+  'no',
   'nl',
   'pl',
   'pt',
   'ro',
+  'sr',
   'ru',
   'zh-cn',
 ];
-const oldTrans = {};
-locales.forEach(locale => {
-  oldTrans[locale] = JSON.parse(
-    fs.readFileSync(path.join(transDir, locale + '.json'))
-  );
-});
-const oldStrings = new Set();
-Object.values(oldTrans).forEach(translations =>
-  Object.keys(translations).forEach(str => oldStrings.add(str))
-);
 
-const keys = extractFromFiles('src/**/*.js', {
-  marker: '__',
-  babelOptions: {
-    ast: true,
-    plugins: [
-      '@babel/plugin-syntax-jsx',
-      ['@babel/plugin-syntax-class-properties', { loose: true }],
-      ['@babel/plugin-syntax-decorators', { legacy: true }],
-    ],
-  },
-});
-const strings = [...new Set(keys.map(e => e.key))].sort();
-
-const newStrings = strings.filter(string => !oldStrings.has(string));
-const obsoleteStrings = [...oldStrings].filter(
-  string => !strings.includes(string)
-);
-
-const newTrans = {};
-Object.entries(oldTrans).forEach(([locale, dict]) => {
-  const newDict = {};
-  strings.forEach(str => {
-    newDict[str] = dict[str] || null;
+/**
+ * Load old strings
+ * =============================================================================
+ */
+const oldDicts = {};
+locales.forEach((locale) => {
+  const oldDict = {};
+  const csv = fs.readFileSync(path.join(transDir, locale + '.csv'));
+  const records = parse(csv);
+  records.forEach(([key, translation, context]) => {
+    if (!oldDict[context]) {
+      oldDict[context] = {};
+    }
+    oldDict[context][key] = translation;
   });
-  newTrans[locale] = newDict;
+  oldDicts[locale] = oldDict;
+});
+const oldEnDict = oldDicts['en'];
+
+/**
+ * Extract new strings
+ * =============================================================================
+ */
+const keys = extractFromFiles('src/**/*.js');
+const newEnDict = {};
+keys.forEach(({ key, context }) => {
+  if (!newEnDict[context]) {
+    newEnDict[context] = {};
+  }
+  newEnDict[context][key] = key;
 });
 
+/**
+ * Calculate diff
+ * =============================================================================
+ */
+const newTranslations = [];
+Object.entries(newEnDict).forEach(([context, strings]) => {
+  Object.keys(strings).forEach((string) => {
+    if (!oldEnDict[context] || !oldEnDict[context][string]) {
+      newTranslations.push([context, string]);
+    }
+  });
+});
+
+const obsoleteTranslations = [];
+Object.entries(oldEnDict).forEach(([context, oldStrings]) => {
+  Object.keys(oldStrings).forEach((oldString) => {
+    if (!newEnDict[context] || !newEnDict[context][oldString]) {
+      obsoleteTranslations.push([context, oldString]);
+    }
+  });
+});
+
+const newDicts = { en: newEnDict };
+Object.entries(oldDicts).forEach(([locale, oldDict]) => {
+  if (locale === 'en') return;
+  const newDict = {};
+  Object.entries(newEnDict).forEach(([context, newStrings]) => {
+    Object.keys(newStrings).forEach((newString) => {
+      if (!newDict[context]) {
+        newDict[context] = {};
+      }
+      newDict[context][newString] =
+        (oldDict[context] && oldDict[context][newString]) || null;
+    });
+  });
+  newDicts[locale] = newDict;
+});
+
+/**
+ * Report to console
+ * =============================================================================
+ */
 console.log(
-  chalk.yellow.bold(`${obsoleteStrings.length} obsolete string(s):\n`)
+  chalk.yellow.bold(`${obsoleteTranslations.length} obsolete string(s):\n`)
 );
-obsoleteStrings.forEach(str => console.log(str));
+obsoleteTranslations.forEach(([context, string]) =>
+  console.log(`[${context}] ${string}`)
+);
 console.log('\n');
-console.log(chalk.yellow.bold(`${newStrings.length} new string(s):\n`));
-newStrings.forEach(str => console.log(str));
-
-Object.entries(newTrans).forEach(([locale, dict]) => {
-  fs.writeFileSync(
-    path.join(transDir, locale + '.json'),
-    JSON.stringify(dict, null, 2)
-  );
-});
-console.log(chalk.yellow.bold('\nTranslation files updated!'));
-
-console.log(chalk.yellow.bold('Creating Crowdin file'));
-const enDic = {};
-strings.forEach(str => {
-  enDic[str] = str;
-});
-fs.writeFileSync(
-  path.join(transDir, 'en.json'),
-  JSON.stringify(enDic, null, 2)
+console.log(chalk.yellow.bold(`${newTranslations.length} new string(s):\n`));
+newTranslations.forEach(([context, string]) =>
+  console.log(`[${context}] ${string}`)
 );
 
-var result = Object.keys(enDic).map(function(key) {
-  return [key, enDic[key]];
+/**
+ * Write changes to files
+ * =============================================================================
+ */
+// Object.entries(newDicts).forEach(([locale, newDict]) => {
+//   fs.writeFileSync(
+//     path.join(transDir, locale + '.json'),
+//     JSON.stringify(newDict, null, 2)
+//   );
+// });
+
+Object.entries(newDicts).forEach(([locale, newDict]) => {
+  const lines = [];
+  Object.entries(newDict).forEach(([context, newStrings]) => {
+    Object.entries(newStrings).forEach(([keyString, translation]) => {
+      lines.push([keyString, translation, context]);
+    });
+  });
+  csvStringify(lines, (err, output) => {
+    if (err) {
+      console.error(err);
+    } else {
+      fs.writeFileSync(path.join(transDir, locale + '.csv'), output);
+    }
+  });
 });
 
-var lineArray = [];
-result.forEach(function(infoArray, index) {
-  var line = '"' + infoArray[0] + '","' + infoArray[1] + '"';
-  lineArray.push(line);
-});
-var csvContent = lineArray.join('\n');
-fs.writeFileSync(path.join(transDir, 'en.csv'), csvContent);
-
-console.log(chalk.yellow.bold('Finished Crowdin file'));
+console.log(chalk.yellow.bold('\nTranslation files updated!'));

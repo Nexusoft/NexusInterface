@@ -1,6 +1,15 @@
-import React from 'react';
 import styled from '@emotion/styled';
+
+import TokenName from 'components/TokenName';
+import Icon from 'components/Icon';
+import NexusAddress from 'components/NexusAddress';
 import memoize from 'utils/memoize';
+import shortenAddress from 'utils/shortenAddress';
+import walletIcon from 'icons/wallet.svg';
+import tokenIcon from 'icons/token.svg';
+import contactIcon from 'icons/address-book.svg';
+
+__ = __context('Send');
 
 const TokenRecipientName = styled.span({
   color: 'gray',
@@ -11,151 +20,149 @@ const Separator = styled.div(({ theme }) => ({
   color: theme.primary,
 }));
 
-export const getAccountOptions = memoize((myAccounts, myTokens) => {
-  let options = [];
+export const selectAccountOptions = memoize(
+  (myAccounts, myTokens) => {
+    let options = [];
 
-  if (myAccounts && myAccounts.length > 0) {
-    options.push({
-      value: 'AccountsSeparator',
-      display: <Separator>{'Accounts'}</Separator>,
-      isSeparator: true,
-      indent: false,
-    });
-    options.push(
-      ...myAccounts.map(acc => ({
-        value: acc.name || acc.address,
-        display: `${acc.name || acc.address} (${acc.balance} ${acc.token_name ||
-          'Tokens'})`,
-        indent: true,
-      }))
-    );
-  }
-  if (myTokens && myTokens.length > 0) {
-    options.push({
-      value: 'TokensSeparator',
-      display: <Separator>{'Tokens'}</Separator>,
-      isSeparator: true,
-      indent: false,
-    });
-    options.push(
-      ...myTokens.map(token => ({
-        value: token.name || token.address,
-        display: `${token.name || token.address} (${
-          token.balance
-        } ${token.name || 'Tokens'})`,
-        indent: true,
-      }))
-    );
-  }
-
-  return options;
-});
-
-export const getAccountBalance = memoize(
-  (accountName, myAccounts, myTokens) => {
-    const account =
-      myAccounts && myAccounts.find(acc => acc.name === accountName);
-    const token = myTokens && myTokens(tkn => tkn.name === accountName);
-    return account && account.balance;
-  }
-);
-
-export const getAccountInfo = memoize((accountName, myAccounts, myTokens) => {
-  const account =
-    myAccounts &&
-    myAccounts.find(
-      acc => acc.name === accountName || acc.address === accountName
-    );
-  const token =
-    myTokens &&
-    myTokens.find(
-      tkn => tkn.name === accountName || tkn.address === accountName
-    );
-  return account || token || { balance: 0 };
-});
-
-export const getNxsFiatPrice = memoize((rawNXSvalues, fiatCurrency) => {
-  if (rawNXSvalues) {
-    const marketInfo = rawNXSvalues.find(e => e.name === fiatCurrency);
-    if (marketInfo) {
-      return marketInfo.price;
-    }
-  }
-  return null;
-});
-
-export const getAddressNameMap = memoize((addressBook, myTritiumAccounts) => {
-  const map = {};
-  if (addressBook) {
-    Object.values(addressBook).forEach(contact => {
-      if (contact.addresses) {
-        contact.addresses.forEach(({ address, label }) => {
-          map[address] = contact.name + (label ? ' - ' + label : '');
-        });
-      }
-    });
-  }
-  if (myTritiumAccounts) {
-    myTritiumAccounts.forEach(element => {
-      map[element.address] = element.name;
-    });
-  }
-  return map;
-});
-
-const Address = styled.span(({ theme }) => ({
-  color: theme.mixer(0.75),
-}));
-
-export const getRecipientSuggestions = memoize(
-  (addressBook, myTritiumAccounts) => {
-    console.log(myTritiumAccounts);
-    console.log(addressBook);
-    const suggestions = [];
-    if (addressBook) {
-      Object.values(addressBook).forEach(contact => {
-        if (contact.addresses) {
-          contact.addresses.forEach(({ address, label, isMine }) => {
-            if (!isMine) {
-              suggestions.push({
-                name: contact.name,
-                value: address,
-                token: '0',
-                display: (
-                  <span>
-                    {contact.name}
-                    {label ? ' - ' + label : ''}{' '}
-                    <TokenRecipientName>{'(NXS)'}</TokenRecipientName>{' '}
-                    <Address>{address}</Address>
-                  </span>
-                ),
-              });
-            }
-          });
-        }
+    if (myAccounts?.length) {
+      options.push({
+        value: 'AccountsSeparator',
+        display: <Separator>{__('Accounts')}</Separator>,
+        isSeparator: true,
+        indent: false,
       });
-    }
-    if (myTritiumAccounts) {
-      myTritiumAccounts.forEach(element => {
-        suggestions.push({
-          name: element.name || element.address,
-          value: element.address,
-          token: element.token,
+      options.push(
+        ...myAccounts.map((account) => ({
+          value: `account:${account.address}`,
           display: (
             <span>
-              {element.name} {'   '}
-              <TokenRecipientName>{`(${element.token_name ||
-                'Tokens'})`}</TokenRecipientName>{' '}
-              <Address>{element.address}</Address>
+              <Icon icon={walletIcon} className="mr0_4" />
+              <span className="v-align">
+                {account.name ? (
+                  <span>{account.name}</span>
+                ) : (
+                  <span>
+                    <em className="semi-dim">{__('Unnamed account')}</em>{' '}
+                    <span className="dim">
+                      {shortenAddress(account.address)}
+                    </span>
+                  </span>
+                )}{' '}
+                ({account.balance} {TokenName.from({ account })})
+              </span>
             </span>
+          ),
+          indent: true,
+        }))
+      );
+    }
+    if (myTokens && myTokens.length > 0) {
+      options.push({
+        value: 'TokensSeparator',
+        display: <Separator>{__('Tokens')}</Separator>,
+        isSeparator: true,
+        indent: false,
+      });
+      options.push(
+        ...myTokens.map((token) => ({
+          value: `token:${token.address}`,
+          display: (
+            <span>
+              <Icon icon={tokenIcon} className="mr0_4" />
+              <span className="v-align">
+                {token.ticker || (
+                  <span>
+                    <em>{__('Unnamed token')}</em>{' '}
+                    <span className="dim">{shortenAddress(token.address)}</span>
+                  </span>
+                )}{' '}
+                ({token.balance} {TokenName.from({ token })})
+              </span>
+            </span>
+          ),
+          indent: true,
+        }))
+      );
+    }
+
+    return options;
+  },
+  (state) => [state.user.accounts, state.user.tokens]
+);
+
+export const getRecipientSuggestions = memoize(
+  (addressBook, myAccounts, accountAddress) => {
+    const suggestions = [];
+    if (addressBook) {
+      Object.values(addressBook).forEach((contact) => {
+        contact.addresses?.forEach(({ address, label, isMine }) => {
+          if (!isMine) {
+            suggestions.push({
+              name: contact.name,
+              address: address,
+              value: address,
+              display: (
+                <div>
+                  <div>
+                    <Icon icon={contactIcon} className="mr0_4" />
+                    <span className="v-align">
+                      {contact.name}
+                      {label ? ' - ' + label : ''}
+                    </span>
+                  </div>
+                  <NexusAddress
+                    className="semi-dim"
+                    copyable={false}
+                    type="truncateMiddle"
+                    address={address}
+                  />
+                </div>
+              ),
+            });
+          }
+        });
+      });
+    }
+    if (myAccounts) {
+      myAccounts.forEach((account) => {
+        if (accountAddress && account.address === accountAddress) return;
+        // if (tokenAddress && account.token !== tokenAddress) return;
+
+        suggestions.push({
+          name: account.name,
+          address: account.address,
+          value: account.name || account.address,
+          display: (
+            <div>
+              <div>
+                <Icon icon={walletIcon} className="mr0_4" />
+                <span className="v-align">
+                  {account.name ? (
+                    <span>{account.name}</span>
+                  ) : (
+                    <em className="semi-dim">{__('Unnamed account')}</em>
+                  )}{' '}
+                  <TokenRecipientName>
+                    (<TokenName account={account} />)
+                  </TokenRecipientName>
+                </span>
+              </div>
+              <NexusAddress
+                className="semi-dim"
+                copyable={false}
+                type="truncateMiddle"
+                address={account.address}
+              />
+            </div>
           ),
         });
       });
     }
     return suggestions;
-  }
-);
-
-export const getRegisteredFieldNames = memoize(registeredFields =>
-  Object.keys(registeredFields || {})
+  },
+  (state, source) => [
+    state.addressBook,
+    state.user?.accounts,
+    source?.account?.address,
+  ]
 );

@@ -9,72 +9,36 @@ import log from 'electron-log';
 
 import { modulesDir } from 'consts/paths';
 
-/**
- * Express server serving static files for modules
- *
- * @class FileServer
- */
-class FileServer {
-  port = 9331;
-  host = 'localhost';
-  staticMiddleware = express.static(modulesDir);
-  server = null;
-  moduleFiles = [];
+const server = express();
+const staticMiddleware = express.static(modulesDir);
+let port = null;
+let moduleFiles = [];
 
-  /**
-   * Get the domain where the module is
-   *
-   * @readonly
-   * @memberof FileServer
-   */
-  get domain() {
-    return `http://localhost:${this.port}`;
+server.use('/modules', (req, res, next) => {
+  if (moduleFiles.includes(normalize(req.path))) {
+    return staticMiddleware(req, res, next);
+  } else {
+    return next();
   }
+});
 
-  /**
-   * Get the Module's Middleware
-   *
-   * @readonly
-   * @memberof FileServer
-   */
-  get moduleMiddleware() {
-    return (req, res, next) => {
-      if (this.moduleFiles.includes(normalize(req.path))) {
-        return this.staticMiddleware(req, res, next);
-      } else {
-        return next();
-      }
-    };
-  }
+const listener = server.listen(() => {
+  port = listener.address().port;
+  log.info(`File server listening on port ${port}!`);
+});
 
-  /**
-   *Creates an instance of FileServer.
-   * @memberof FileServer
-   */
-  constructor() {
-    this.server = express();
-    this.server.use('/modules', this.moduleMiddleware);
-    this.server.listen(this.port, this.host, () => {
-      log.info(`File server listening on port ${this.port}!`);
-    });
-  }
-
-  /**
-   * Serve the Module files to the client
-   *
-   * @memberof FileServer
-   */
-  serveModuleFiles = files => {
-    this.moduleFiles =
-      files &&
-      files.map(file => {
-        let filePath = normalize(file);
-        if (!filePath.startsWith('/') && !filePath.startsWith('\\')) {
-          filePath = normalize('/' + filePath);
-        }
-        return filePath;
-      });
-  };
+export function getDomain() {
+  return `http://localhost:${port}`;
 }
 
-export default new FileServer();
+export function serveModuleFiles(files) {
+  moduleFiles =
+    files &&
+    files.map((file) => {
+      let filePath = normalize(file);
+      if (!filePath.startsWith('/') && !filePath.startsWith('\\')) {
+        filePath = normalize('/' + filePath);
+      }
+      return filePath;
+    });
+}

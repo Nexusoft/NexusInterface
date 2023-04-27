@@ -1,0 +1,1169 @@
+Delete contact %{name}?,Obriši kontakt %{name}?,AddressBook
+Edit contact,Уреди контакт,AddressBook
+Delete contact,Обриши контакт,AddressBook
+%{smart_count} address |||| %{smart_count} addresses,%{smart_count} adresa |||| %{smart_count} adrese,AddressBook
+New contact,Нови контакт,AddressBook
+No information,Нема информација,AddressBook
+Delete,Обриши,AddressBook
+Edit,Уреди,AddressBook
+NXS addresses,NXS адресе,AddressBook
+My address for %{name},Моја адреса за %{name},AddressBook
+%{name}'s Address,%{name} Адреса,AddressBook
+Contact info,Контакт информације,AddressBook
+Email,Електронска пошта,AddressBook
+Phone Number,Број телефона,AddressBook
+Local Time,Локално Време,AddressBook
+Notes,Напомене,AddressBook
+Address book,Адресар,AddressBook
+Your address book is empty,Ваш адресар је празан,AddressBook
+Create new contact,Направи нови контакт,AddressBook
+Search contact,Тражи контакт,AddressBook
+My Addresses,Moje adrese,AddressBook
+Export contacts,Извоз контаката,AddressBook
+Legacy Mode,Легаси Мод,Header
+Tritium Mode,Тритиум Мод,Header
+Unknown login status,Непознат логин статус,Header
+Wallet is not encrypted,Новчаник није шифрован,Header
+Not logged in,Ниси пријављен,Header
+Logged in<if_timed> until %{unlockDate}</if_timed><if_minting_only> for staking & mining</if_minting_only>,Логован<if_timed> до %{unlockDate}</if_timed><if_minting_only> за штедњу и мајновање</if_minting_only>,Header
+My Addresses,Moje adrese,Header
+Wallet is staking,Новчаник је у режиму штедње уз учешће,Header
+Stake Rate,Проценат удела,Header
+Waiting for 100% synchronization to start staking...,Чека се да синхронизација достигне 100% да би започела штедња...,Header
+Waiting for average age of balance to exceed 72 hours to start staking...,Чека се да просечна старост баланса пређе 72 сата да би се започело са штедњом...,Header
+Wallet is not staking,Новчаник није у режиму штедње уз учешће,Header
+Checking sync status,Проверава се статус синхронизације,Header
+Synchronizing,Синхронизација,Header
+Synchronized,Синхронизовано,Header
+pooled,,Header
+You're not logged in,Нисте пријављени,Header
+You are staking but have not received a block in 30 minutes!,,Header
+Switching...,,
+Active,,
+Switch,,
+Switch user,,
+Closing Nexus Wallet,Затварање Нексус Новчаника,
+Warning,Упозорење,
+IMPROPER USE OF THIS SOFTWARE COULD LEAD TO PERMANENT LOSS OF COIN.,НЕПРАВИЛНА УПОТРЕБА ОВОГ СОФТВЕРА МОЖЕ ДОВЕСТИ ДО ПЕРМАНЕНТНОГ ГУБИТКА КОИНА.,
+BACKUP YOUR WALLET OFTEN AND KEEP YOUR PASSWORDS SAFE.,ЧЕСТО БЕКАПУЈТЕ ВАШ НОВЧАНИК И ЧУВАЈТЕ ВАШУ ЛОЗИНКУ.,
+I understand the risk,Разумем ризик,
+Close,Затвори,
+Remote Core is disconnected,,
+Connecting to Nexus Core...,Конектовање на Нексус Језгро...,
+Nexus Core is stopped,Нексус Језгро је заустављено,
+Address has been copied to clipboard,Адреса копирана у привремену меморију,
+Copy to clipboard,Копирај у привремену меморију,
+Click to copy to clipboard,Кликни да копираш у привремену меморију,
+Show QR code,,
+Log in,Пријави се,
+No Rows Found,Нема Пронађених Редова,
+Page,Страна,
+rows,редови,
+Previous,Претходно,
+Next,Следеће,
+Use virtual keyboard,,
+<token_name></token_name> token,,
+Unnamed token,,
+Switch to Legacy Mode,Пређи у Легат Мод,
+Are you sure you want to switch to Legacy Mode?,Да ли сте сигурни да желите да пређете у Легат Мод?,
+Switch to Tritium Mode,Пређи у Тритијум Мод,
+Start Nexus Core,Стартуј Нексус Језгро,
+Stop Nexus Core,Стопирај Нексус Језгро,
+Quit Nexus,Затвори Нексус,
+About,О апликацији,
+Backup Wallet,Резервна копија новчаника,
+Nexus Core is not connected,Нексус Језгро није повезано,
+Wallet backed up,Новчаник је бекапован,
+View Backups,Прегледај Резервне копије,
+Cut,Исеци,
+Copy,Копирај,
+Paste,Налепи,
+Core,Језгро,
+Application,Апликација,
+Key Management,Управљање Кључевима,
+Style,Стил,
+Modules,Модули,
+Download Recent Database,Преузимам Свежу Базу података,
+Cannot bootstrap recent database in manual mode,Није могуће да се нова база података bootstrap-ује у мануелном моду,
+Please wait for Nexus Core to start.,Молимо сачекајте да Нексус Језгро стартује.,
+Toggle FullScreen,Укључи ПунЕкран,
+Toggle Developer Tools,Укључи Развојне Алате,
+Toggle Module's Developer Tools,Укључи Модулске Развојне Алате,
+Nexus Website,Нексус Веб страница,
+Nexus Git Repository,Нексус Гит Репозиторијум,
+Nexus Wallet Guide,Нексус Водич за Новчаник,
+Open Core Data Folder,Дата Фолдер Отвореног Језгра,
+Open Interface Data Folder,Дата Фолдер Отвореног Интерфејса,
+Check for Updates...,Потражи ажурирања...,
+There are currently no updates available,Тренутно нема доступних ажурирања,
+Checking for Updates...,Провера ажурирања...,
+Update available! Downloading...,Ажурирање доступно! Преузимам...,
+Quit and install update...,Прекини и инсталирај ажурирање...,
+File,Фајл,
+Edit,Уреди,
+Settings,Подешавања,
+View,Преглед,
+Help,Помоћ,
+Transaction received,Трансакција примљена,
+Transaction sent,Трансакција послата,
+Genesis transaction,Генеза трансакција,
+Trust transaction,Поверљива трансакција,
+Update available for %{smart_count} module |||| Updates available for %{smart_count} modules,,
+New transaction,Нова трансакција,
+Error,Грешка,
+Unknown error,Непозната грешка,
+Accounts,Рачуни,Header.UserDropdown
+Tokens,Токени,Header.UserDropdown
+Set recovery phrase,Постави фразу за опоравак,Header.UserDropdown
+Switch user,,Header.UserDropdown
+Log in to another user,,Header.UserDropdown
+Log out of all users,,Header.UserDropdown
+Log out,Одјави се,Header.UserDropdown
+Log in,Пријави се,Header.UserDropdown
+Create new user,Креирај новог корисника,Header.UserDropdown
+Overview,Преглед,NavigationBar
+User,Корисник,NavigationBar
+Send NXS,Пошаљи Нексус,NavigationBar
+Send,Пошаљи,NavigationBar
+Transactions,Трансакције,NavigationBar
+Address Book,Именик,NavigationBar
+Settings,Подешавања,NavigationBar
+Console,Конзола,NavigationBar
+Lite mode,,LiteModeNotice
+Lite mode is now available on Nexus Wallet! You can choose to enable lite mode now or just ignore it. You can change your decision anytime under Settings/Core.,,LiteModeNotice
+Why you might want to enable lite mode,,LiteModeNotice
+Nexus Core would take less resources (memory and storage) to run,,LiteModeNotice
+Synchronization would be much faster,,LiteModeNotice
+Why you might NOT want to enable lite mode,,LiteModeNotice
+You would NOT be able to mine or stake,,LiteModeNotice
+Legacy Mode would be disabled,,LiteModeNotice
+Ignore,,LiteModeNotice
+Enable lite mode,,LiteModeNotice
+"Last updated
+%{time}","Последњи пут ажурирано
+%{time}",Overview
+Getting next block...,Стиже следећи блок...,Overview
+Block Weight,Величина блока,Overview
+Trust Weight,Величина Поверења,Overview
+Stake Weight,Величина Штедње,Overview
+Prime Difficulty,Тежина Примарног канала,Overview
+Hash Difficulty,Тежина Хаш канала,Overview
+Stake Difficulty,Тежина Штедње,Overview
+Balance,Стање,Overview
+Transactions,Трансакције,Overview
+Market Price,Тржишна Цена,Overview
+24hr Change,Промена током 24 часа,Overview
+Connections,Конекције,Overview
+Stake Rate,Проценат удела,Overview
+Block Count,Број Блока,Overview
+The balance displayed might not be up-to-date since the wallet is not yet fully synchronized,Приказано стање можда није ажурно јер новчаник још увек није синхронизован,Overview
+Staking and mining rewards that need to get past 120 block-old to become available,Награде за штедњу и мајновање које морају да чекају 120 блокова да би постале доступне,Overview
+Immature Balance,Незрео Баланс,Overview
+Market Cap,Тржишна Капитализација,Overview
+Available balance,Доступно стање,Overview
+balance,стање,Overview
+"This includes your pending balance, unconfirmed balance and immature balance","Ово укључује Ваш баланс на чекању, непотврђени баланс и незрели баланс",Overview
+Incoming balances,Баланси у приспећу,Overview
+NXS Amount,Количина Нексуса,Send
+Send all,Пошаљи све,Send
+Send NXS,Пошаљи Нексус,Send
+Move NXS between accounts,Премести Нексус на други рачун,Send
+You are not logged in,Нисте пријављени,Send
+You need to log in to your wallet before sending transactions,Мораш да се пријавиш у свој новчаник да би послао трансакције,Send
+Log in now,Пријави се сада,Send
+Move NXS,Помери Нексус,Send
+From account,Са рачуна,Send
+Select an account,Изабери рачун,Send
+To account,На рачун,Send
+No accounts selected,Рачун није изабран,Send
+Cannot move to the same account,Немогуће премештање на исти рачун,Send
+Invalid amount,Погрешан износ,Send
+Invalid address,Погрешна адреса,Send
+This is an address registered to this wallet.,Ова адреса је регистрована уз овај новчаник.,Send
+NXS moved successfully,NXS је успешно премештен,Send
+Error moving NXS,Грешка приликом премештања NXS-а,Send
+Wallet password,Лозинка новчаника,Send
+Enter your wallet password,Унеси лозинку твог новчаника,Send
+Cancel,Откажи,Send
+Confirm,Потврди,Send
+Send to,Пошаљи,Send
+Recipient address,Адреса примаоца,Send
+Your address book is empty,Ваш адресар је празан,Send
+Create new contact,Направи нови контакт,Send
+Remove recipient,Уклони примаоца,Send
+Add recipient,Додај примаоца,Send
+Send transaction?,Пошаљи трансакцију?,Send
+Send To multiple recipients,Пошаљи вишеструким примаоцима,Send
+Send from,Пошаљи са,Send
+Message,Порука,Send
+Enter your message,Унеси поруку,Send
+Send,Пошаљи,Send
+There must be at least one recipient,Бар један примаоц је обавезан,Send
+Address is required,Адреса је обавезна,Send
+Transaction sent,Трансакција послата,Send
+Error sending NXS,Грешка приликом слања NXS-а,Send
+Reference,,Send
+"An optional number which may be provided by the recipient to identify this transaction from the others, e.g. invoice number, order number, etc.",,Send
+Reference number (optional),,Send
+Expires in,,Send
+"The amount of time since the transaction is created after which the transaction can no longer be credited by the recipient. By default, transactions will expire in 1 day (86400 seconds).",,Send
+Days,,Send
+Hours,,Send
+Minutes,,Send
+Seconds,,Send
+Amount,,Send
+Recipient Address/Name,Адреса/Назив Примаоца,Send
+Accounts,Рачуни,Send
+Unnamed account,,Send
+Tokens,Токени,Send
+Unnamed token,,Send
+Unnamed,,Send
+Invalid name/address,,Send
+Advanced options,,Send
+Address/Name is required,Адреса/Назив је обавезна,Send
+Reference must be an unsigned integer,,Send
+Number is too large,Број је превелики,Send
+Unnamed,,PreviewTransaction
+%{smart_count} day |||| %{smart_count} days,,PreviewTransaction
+%{smart_count} hour |||| %{smart_count} hours,,PreviewTransaction
+%{smart_count} minute |||| %{smart_count} minutes,,PreviewTransaction
+%{smart_count} second |||| %{smart_count} seconds,,PreviewTransaction
+Preview Transaction,,PreviewTransaction
+You're sending,,PreviewTransaction
+From,,PreviewTransaction
+To,,PreviewTransaction
+Amount,,PreviewTransaction
+Reference,,PreviewTransaction
+Expires,,PreviewTransaction
+Send transaction,,PreviewTransaction
+Select backup directory,Одабери директоријум за резервну копију,Settings.Application
+Backup directory,Бекап директоријум,Settings.Application
+Browse,Претражи,Settings.Application
+Backup wallet,Направи бекап новчаника,Settings.Application
+Wallet has been backed up,Новчаник је бекапован,Settings.Application
+Connecting to Nexus Core,Конектовање на Нексус Језгро,Settings.Application
+Turn module open source policy on?,Укључи политику отвореног кода модула?,Settings.Application
+"All modules without open source verifications, possibly including your own under-development modules, will become invalid. Wallet must be refreshed for the change to take effect.","Сви модули без верификације отвореног кода, могуће укључујући ваше личне модуле у развоју, ће постати невалидни. Новчаник мора да се рефрешује да би промена била ефективна.",Settings.Application
+Turn module open source policy off?,Искључи политику отвореног кода модула?,Settings.Application
+"This is only for module developers and can be dangerous for
+              regular users. Please make sure you know what you are doing!","Ово је само за девелопере модула и може бити опасно за
+              обичне кориснике. Молимо будите сигурни да знате шта радите!",Settings.Application
+"It would be much easier for a closed source module to hide
+              malicious code than for an open source one. Therefore, in case you
+              still want to disable this setting, it is highly recommended that
+              you only install and run closed source modules that you are
+              developing yourself.","Много је лакше да се у модули са затвореним кодом сакрије
+             малициозни код него у модулу са отвореним кодом. Због тога, у случају да
+             и даље желите да искључите ово подешавање, крајње је препоручљиво да
+             инсталирате и покрећете модуле затвореног кода које сте
+             ви развијали.",Settings.Application
+Turn policy off,Искључи политику,Settings.Application
+Keep policy on,Задржи политику,Settings.Application
+Are you sure you want to disable auto update?,Да ли сте сигурни да желите да онемогућите ауто ажурирање?,Settings.Application
+Keeping your wallet up-to-date is important for your security and will ensure that you get the best possible user experience.,Ажурност вашег новчаника је важна за вашу безбедност и омогућиће да добијете најбоље могуће корисничко искуство.,Settings.Application
+Keep auto update On,Задржи ауто ажурирање на Укључено,Settings.Application
+Turn auto update Off,Пребаци ауто ажурирање на Искључено,Settings.Application
+Minimize on close,Минимизуј приликом затварања,Settings.Application
+Minimize the wallet when closing the window instead of closing it.,Минимизуј новчаник када затвараш прозор уместо затварања.,Settings.Application
+Auto update (Recommended),Ауто ажурирање (Препоручено),Settings.Application
+Automatically check for new versions and notify if a new version is available.,Аутоматски провери и обавести ме ако постоји нова верзија.,Settings.Application
+Send anonymous usage data,Шаљи анонимне податке о употреби,Settings.Application
+Send anonymous usage data to allow the Nexus developers to improve the wallet.,Шаљи анонимне податке коришћења да би омогућио Нексус девелоперима да побољшају новчаник.,Settings.Application
+Base currency,Основна валута,Settings.Application
+Minimum confirmations,Минимални број конфирмација,Settings.Application
+Minimum amount of confirmations before a block is accepted. Local only.,Минимални број конфирмација пре него што се блок прихвати. Само локално.,Settings.Application
+Developer mode,Развојни режим,Settings.Application
+Development mode enables advanced features to aid in development. After enabling the wallet must be closed and reopened to enable those features.,Развојни мод омогућава напредне опције у развоју. Након омогућавања новчаник мора да се затвори и поново отвори да би се ове опције активирале.,Settings.Application
+Module open source policy,Модул политике отвореног кода,Settings.Application
+Only modules which have valid open source repositories are allowed to be installed and run. You can disable this option to test run the modules that you're developing,Само модули који имају валидан репозиторијум отвореног кода се могу инсталирати и покретати. Можеш да онемогућиш ову опцију да би тестирао модуле које развијаш,Settings.Application
+Allow SymLink,Дозволи Симболичке Везе,Settings.Application
+Allow the presence of SymLinks in the module directory,Дозволи присуство Симболичких Веза у директоријуму модула,Settings.Application
+Fake Test Transactions,Лажне Тест Трансакције,Settings.Application
+Display Test Transactions on the Transactions page,Прикажи Тест Трансакције на страници Трансакција,Settings.Application
+Language,Језик,Settings.Application
+Exit remote Core mode?,,Settings.Core
+(This will restart your Core),(Ово ће рестартовати твоје Језгро),Settings.Core
+Enter remote Core mode?,,Settings.Core
+Reload transaction history,Поново учитај историју трансакција,Settings.Core
+Clear peer connections,Очисти пеер конекције,Settings.Core
+Resync database,,Settings.Core
+Nexus Core will be restarted. Lite mode database will be deleted and resynchronized from the beginning.,,Settings.Core
+Embedded Core,,Settings.Core
+Remote Core,,Settings.Core
+Lite mode,,Settings.Core
+"Nexus Core under lite mode runs lighter and synchronize much faster, but you will <b>NOT</b> be able to stake, mine, or switch the wallet to Legacy Mode.",,Settings.Core
+Multi-user,,Settings.Core
+Allow multiple logged in users at the same time. Mining and staking will be unavailable.,,Settings.Core
+Enable staking,Дозволи штедњу,Settings.Core
+Enable/Disable staking on the wallet.,Дозволи/Забрани штедњу у новчанику.,Settings.Core
+Pooled staking,,Settings.Core
+"Pooled staking is a decentralized and trust-less mechanism allowing you to use the balances of others to increase your chances of finding a stake block. All participants receive their staking rewards and build trust, regardless of which user mines the block. A small portion of each reward is paid to the block finder by all pool participants.",,Settings.Core
+Enable mining,Дозволи мајновање,Settings.Core
+Enable/Disable mining to the wallet.,Дозволи/Забрани мајновање у новчаник.,Settings.Core
+Mining IP Whitelist,Листа дозвољених ИП-ова за мајновање,Settings.Core
+IP/Ports allowed to mine to. Separate by <b>;</b> . Wildcards supported only in IP,ИП/Портови којима је дозвољено да мајнују. Раздвој помоћу <b>;</b> . Вајлдкарте подржане само у ИП,Settings.Core
+Verbose level,Опширан ниво,Settings.Core
+Verbose level for logs.,Опширан ниво за логове.,Settings.Core
+Core Data Directory,,Settings.Core
+Where the blockchain data and your legacy wallet.dat are stored,,Settings.Core
+Testnet Iteration,Итерације Тестнета,Settings.Core
+The iteration of Testnet to connect to.,Итерација Тестнета на коју се повезује.,Settings.Core
+Turn Off,Искључи,Settings.Core
+Avatar Mode,Аватар Мод,Settings.Core
+Disabling Avatar will make the core use a separate change key,Онемогућавање Аватара ће учинити да језгро користи посебан кључ за промену,Settings.Core
+Rescan wallet,Поново скенирај новчаник,Settings.Core
+"Used to correct transaction/balance issues, scans over every block in the database. Could take up to 10 minutes.","Користи се за корекцију проблема са трансакцијама/балансом, скенира сваки блок у бази података. Може да потраје и до 10 минута.",Settings.Core
+Restart Nexus core with -walletclean parameter to clean out and reload all transaction history,Рестартуј Нексус језгро са -walletclean параметром да би очистио и поново учитао целокупну историју трансакција,Settings.Core
+Reload,Поново учитај,Settings.Core
+Clear all stored peer connections and restart Nexus,Очисти све сачуване пеер конекције и рестартуј Нексус,Settings.Core
+Clear,Обриши,Settings.Core
+Delete lite mode database and resynchronize from the beginning,,Settings.Core
+Resynchronize,,Settings.Core
+IP address,IP адреса,Settings.Core
+Remote Core IP address,,Settings.Core
+API SSL,,Settings.Core
+Use SSL for API calls,,Settings.Core
+API Port,,Settings.Core
+Nexus API server Port,,Settings.Core
+API SSL Port,,Settings.Core
+Nexus API server SSL Port,,Settings.Core
+API Username,,Settings.Core
+Nexus API server Username,,Settings.Core
+API Password,,Settings.Core
+Nexus API server Password,,Settings.Core
+RPC SSL,,Settings.Core
+Use SSL for RPC calls,,Settings.Core
+RPC Port,,Settings.Core
+Nexus RPC server Port,,Settings.Core
+RPC SSL Port,,Settings.Core
+Nexus RPC server SSL Port,,Settings.Core
+RPC Username,,Settings.Core
+Nexus RPC server Username,,Settings.Core
+RPC Password,,Settings.Core
+Nexus RPC server Password,,Settings.Core
+Log out on close,,Settings.Core
+Log out of all users before closing the wallet,,Settings.Core
+Restart Core for these changes to take effect,Поново покрените Језгро да би ова промена постала ефективна,Settings.Core
+Save settings,Сачувај подешавања,Settings.Core
+Verbose level is required,Опширан ниво је обавезан,Settings.Core
+Remote Core IP is required,,Settings.Core
+RPC port is required,,Settings.Core
+RPC username is required,,Settings.Core
+RPC password is required,,Settings.Core
+API port is required,,Settings.Core
+API username is required,,Settings.Core
+API password is required,,Settings.Core
+Core settings saved,Подешавања Језгра сачувана,Settings.Core
+Restarting Core...,Рестартовање Језгра...,Settings.Core
+Error rescanning,Поновно скенирање Грешака,Settings.Core
+Rescanned successfully,Поновно скенирање успешно,Settings.Core
+Rescanning...,Поновно скенирање...,Settings.Core
+Settings,Подешавања,Settings
+Application,Апликација,Settings
+Core,Језгро,Settings
+Security,Безбедност,Settings
+Style,Стил,Settings
+Modules,Модули,Settings
+Select development module directory,,Settings.Modules
+Your module is still in development? <link>Add a development module</link>,,Settings.Modules
+Select module archive file,Означи фајл модула архиве,Settings.Modules
+Select module directory,Одабери директоријум модула,Settings.Modules
+Add Module,Додај Модул,Settings.Modules
+Checking module,Провера Модула,Settings.Modules
+Drop here to install,Спусти овде за инсталацију,Settings.Modules
+Select module's <file>archive file</file> or <dir>directory</dir>,Означи модулов <file>фајл архиве</file> или <dir>директоријум</dir>,Settings.Modules
+or drag and drop it here,или превуци и спусти овде,Settings.Modules
+Failed to load %{moduleName},,Settings.Modules
+Disable %{moduleName}?,Онемогући %{moduleName}?,Settings.Modules
+Wallet will be automatically refreshed for the change to take effect,Новчаник ће аутоматски бити освежен да би промене постале ефективне,Settings.Modules
+Enable %{moduleName}?,Омогући %{moduleName}?,Settings.Modules
+This module was built for an incompatible wallet version,,Settings.Modules
+Module is not open source,Модул нема отворени код,Settings.Modules
+The provided repository is not verified to be the real source code of this module,Задати репозиторијум није верификован као извор кода за овај модул,Settings.Modules
+%{version} update available,,Settings.Modules
+development,,Settings.Modules
+Failed to load module,,Settings.Modules
+Overwrite module?,Препиши модул?,Settings.Modules
+A module with the same directory name already exists,Модул са идентичним именом директоријума већ постоји,Settings.Modules
+Module has been successfully installed,Модул је успешно инсталиран,Settings.Modules
+The wallet will now be refreshed for the new module to take effect,Новчаник ће сада бити рефрешован како би нови модул постао ефективан,Settings.Modules
+Error copying module files,Грешка приликом копирања фајлова модула,Settings.Modules
+Cannot find module,Не могу да пронађем модул,Settings.Modules
+Unsupported file type,Неподржани тип фајла,Settings.Modules
+Cannot install from this location,,Settings.Modules
+An unknown error occurred,Десила се непозната грешка,Settings.Modules
+Directory has already been added,,Settings.Modules
+Failed to load development module,,Settings.Modules
+A module with the same name already exists,,Settings.Modules
+Development module has been added,,Settings.Modules
+Are you sure you want to log out?,Да ли се сигурни да желите да се одјавите?,Settings.Security
+Error logging out,Грешка приликом одјављивања,Settings.Security
+Change password,Промени лозинку,Settings.Security
+Previous password,Претходна лозинка,Settings.Security
+Password,Лозинка,Settings.Security
+New password,Нова лозинка,Settings.Security
+Re-enter password:,Поново унеси Лозинку:,Settings.Security
+Confirm password,Потврди лозинку,Settings.Security
+Log out,Одјави се,Settings.Security
+Password is required,Лозинка је обавезна,Settings.Security
+Password cannot contain these characters:,Лозинка не може да садржи ове карактере:,Settings.Security
+Password must be at least 8 characters,Лозинка мора имати најмање 8 знакова,Settings.Security
+Password cannot start or end with spaces,Лозинка не може да почиње или се завршава бланко карактерима,Settings.Security
+Passwords do not match,Лозинке се не поклапају,Settings.Security
+Password has been changed.,Лозинка је промењена.,Settings.Security
+Error changing password,Грешка при промени лозинке,Settings.Security
+Encrypt wallet,Шифрирај новчаник,Settings.Security
+Re-enter password,Поново унеси Лозинку,Settings.Security
+Encrypt and restart,Шифрирај и рестартуј,Settings.Security
+Wallet has been encrypted.,Новчаник је шифрован.,Settings.Security
+Error encrypting wallet,Грешка приликом шифровања новчаника,Settings.Security
+Import private key,Увези приватни кључ,Settings.Security
+Account name,Назив рачуна,Settings.Security
+Private key,Приватни кључ,Settings.Security
+Import,Увоз,Settings.Security
+Account name is required,Назив рачуна је обавезан,Settings.Security
+Private key is required,Приватни кључ је обавезан,Settings.Security
+Private key imported. Rescanning now,Приватни кључ је увезен. Поновно скенирање,Settings.Security
+Rescanning...,Поновно скенирање...,Settings.Security
+Rescanning done,Поновно скенирање је завршено,Settings.Security
+Error rescanning,Поновно скенирање Грешака,Settings.Security
+An unknown error occurred,Десила се непозната грешка,Settings.Security
+Error importing private key,Грешка приликом увоза приватног кључа,Settings.Security
+Login until date,Остани улогован до датума,Settings.Security
+Login until time,Остани улогован до времена,Settings.Security
+Your wallet password,Лозинка твог новчаника,Settings.Security
+Login for staking & mining only,Пријави се само за штедњу и мајновање,Settings.Security
+Set timeout for login,Подеси истек времена за логин,Settings.Security
+Date is required,Датум је обавезан,Settings.Security
+Time is required,Време је обавезно,Settings.Security
+Time must be at least one hour in the future,Време мора бити бар један сат у будућности,Settings.Security
+Logged in successfully,Успешно пријављивање,Settings.Security
+Error logging in,Грешка приликом пријављивања,Settings.Security
+Copied to clipboard,Копирано у привремену меморију,Settings.Security
+View private key for address,Види приватни кључ за адресу,Settings.Security
+Address,Адреса,Settings.Security
+Enter address here,Унеси адресу овде,Settings.Security
+View private key,Види приватни кључ,Settings.Security
+Private key will be displayed here,Приватни кључ ће бити приказан овде,Settings.Security
+Copy,Копирај,Settings.Security
+Address cannot be empty,Адреса не може бити празна,Settings.Security
+Error getting private key,Грешка приликом преузимања приватног кључа,Settings.Security
+Twinkling stars,Светлуцаве звезде,Settings.Style
+Cosmic light,Космичко светло,Settings.Style
+Custom wallpaper,Прилагођена позадина,Settings.Style
+Select a custom wallpaper,Селектуј прилагођену позадину,Settings.Style
+Color scheme has been reset to default,Колорна шема је ресетована на уобичајена подешавања,Settings.Style
+Invalid file format! Custom theme file must be in JSON,Погрешан формат фајла! Фајл за прилагођене теме мора бити JSON,Settings.Style
+Select custom theme file,Изабери фајл са прилагођеном темом,Settings.Style
+Theme exported,Тема је експортована,Settings.Style
+Theme has been reset to default,Тема је ресетована на уобичајена подешавања,Settings.Style
+Render globe,Рендеруј глобус,Settings.Style
+Render the globe on the Overview page.,Рендеруј глобус на страници Преглед.,Settings.Style
+Your computer does not support OPENGL 2.0,Твој компјутер не подржава OPENGL 2.0,Settings.Style
+Overview Display,Прегледни Приказ,Settings.Style
+Nexus Addresses format,Формат Нексусове адресе,Settings.Style
+Choose your Nexus Address display preference,Изаберите изглед преференци ваше Нексус адресе,Settings.Style
+Sample Address,Узорак Адресе,Settings.Style
+Theme,Тема,Settings.Style
+Select Wallet Theme,Изабери Тему за Новчаник,Settings.Style
+Background,Позадина,Settings.Style
+Customize your background wallpaper,Прилагоди своју позадину,Settings.Style
+Color scheme,Шема боја,Settings.Style
+Background Color,Боја позадине,Settings.Style
+Foreground Color,Боја у првом плану,Settings.Style
+Primary Color,Основна боја,Settings.Style
+Primary Color Accent,Акценат Основне Боје,Settings.Style
+Danger Color,Боја за Опасност,Settings.Style
+Danger Color Accent,Акценат Боје за Опасност,Settings.Style
+Globe Color,Боја Глобуса,Settings.Style
+Globe Pillar Color,Боја Стубова на Глобусу,Settings.Style
+Globe Arch Color,Архаична Боја Глобуса,Settings.Style
+Import custom theme,Увези прилагођену тему,Settings.Style
+Export custom theme,Извези прилагођену тему,Settings.Style
+Dark,Тамно,Settings.Style
+Light,Светло,Settings.Style
+Custom,Прилагођено,Settings.Style
+Reset,Ресетуј,Settings.Style
+Console,Конзола,Console
+Core output,Излаз Језгра,Console
+CLI syntax,,Console.NexusAPI
+URL syntax,,Console.NexusAPI
+Execute,Изврши,Console.NexusAPI
+API Documentation,АПИ Документација,Console.NexusAPI
+Clear,Обриши,Console.NexusAPI
+"Enter console commands here (ex: getinfo, help)","Унеси конзолне команде овде (ex: getinfo, help)",Console.Console
+Execute,Изврши,Console.Console
+Clear console,Очисти конзолу,Console.Console
+Core is in Manual Mode,Језгро је у Мануелном Моду,Console.CoreOutput
+Pending,Нa чекању,Transactions
+All,Све,Transactions
+Receive,Прими,Transactions
+Sent,Послато,Transactions
+Stake,Штедња,Transactions
+Generate,Генериши,Transactions
+Immature,Незрело,Transactions
+Orphan,Неважећи,Transactions
+Genesis,Генеза,Transactions
+Past Year,Претходна година,Transactions
+Past Month,Претходни месец,Transactions
+Past Week,Претходна недеља,Transactions
+Search address,Пронађи адресу,Transactions
+Search for Address,Пронађи Адресу,Transactions
+Category,Категорија,Transactions
+Min amount,Минимални износ,Transactions
+Time span,Временски распон,Transactions
+Time,Време,Transactions
+CATEGORY,КАТЕГОРИЈА,Transactions
+AMOUNT,СУМА,Transactions
+ACCOUNT,РАЧУН,Transactions
+ADDRESS,АДРЕСА,Transactions
+Transaction details,детаљи Трансакције,Transactions
+Show transactions chart,Прикажи график трансакција,Transactions
+Download transactions history,Преузми историју трансакција,Transactions
+Loading transactions,Учитавање трансакција,Transactions
+All Accounts,Сви Рачуни,Transactions
+Send,Пошаљи,Transactions
+Trust,Trust,Transactions
+Unknown,Непознато,Transactions
+Legacy transaction,Легат трансакција,Transactions
+Coinbase transaction,Coinbase трансакција,Transactions
+View contract details,,Transactions
+View transaction details,,Transactions
+Address,Адреса,Transactions
+Account/token address,Адреса рачуна/токена,Transactions
+Name,Име,Transactions
+Operation,Операција,Transactions
+Transactions,Трансакције,Transactions
+Loading transactions...,Учитавање трансакција...,Transactions
+NXS balances,NXS баланс,Transactions
+Previous,Претходно,Transactions
+Page <page></page> of %{total},Страна <page></page> од %{total},Transactions
+Next,Следеће,Transactions
+Transactions Details,Детаљи Трансакције,Transactions.TransactionDetails
+Time,Време,Transactions.TransactionDetails
+Category,Категорија,Transactions.TransactionDetails
+Amount,Iznos,Transactions.TransactionDetails
+Fee,Накнада,Transactions.TransactionDetails
+Account,Рачун,Transactions.TransactionDetails
+Address,Адреса,Transactions.TransactionDetails
+Confirmations,Потврде,Transactions.TransactionDetails
+Pending,Нa чекању,Transactions.TransactionDetails
+Transaction ID,ИД Трансакције,Transactions.TransactionDetails
+Block hash,Блок хаш,Transactions.TransactionDetails
+Loading transaction details...,Учитавање детаља трансакције...,Transactions.TransactionDetails
+Transactions chart,График трансакција,Transactions.TransactionsChart
+Amount,Iznos,Transactions.TransactionsChart
+Time,Време,Transactions.TransactionsChart
+Total,Укупно,Transactions.Balances
+Available,Доступно,Transactions.Balances
+The current balance across all NXS accounts that is available to be spent,Тренутни баланс на свим NXS рачунима који је доступан за трошење,Transactions.Balances
+Pending,Нa чекању,Transactions.Balances
+The sum of all debit and coinbase transactions made to your NXS accounts that are confirmed but have not yet been credited. This does NOT include immature and unconfirmed amounts,Сума свих дебитних и coinbase трансакција на твојим NXS рачунима који су потврђени али још нису кредитирани. Ово НЕ укључује несазреле и непотврђене износе,Transactions.Balances
+Unconfirmed,Непотврђено,Transactions.Balances
+"The sum of all debit transactions made to your NXS accounts that are not confirmed, or credits you have made to your accounts that are not yet confirmed (not yet included in a block)","Сума свих дебитних трансакција на твојим NXS рачунима које нису потврђене, или кредити које си имао према својим рачунима али нису још потврђени (још увек нису убачени у блок)",Transactions.Balances
+Stake,Штедња,Transactions.Balances
+The amount of NXS currently staked in the trust account,Количина NXS-а која је тренутно на штедњи на поверљивом рачуну,Transactions.Balances
+Immature,Незрело,Transactions.Balances
+The sum of all coinbase transactions that have not yet reached maturity,Сума свих coinbase трансакција које још увек нису достигле зрелост,Transactions.Balances
+Unnamed account,Неименовани рачун,User.Accounts
+Rename,,User.Accounts
+Details,Детаљи,User.Accounts
+History,Историја,User.Accounts
+<b>%{account_name}</b> account address,,User.Accounts
+Unnamed,,User.Accounts
+Create new account,Направи нови налог,User.Accounts
+Account Details,Детаљи рачуна,User.Accounts.AccountDetails
+Account name,Назив рачуна,User.Accounts.AccountDetails
+Unnamed,,User.Accounts.AccountDetails
+Created at,Направљено у,User.Accounts.AccountDetails
+Last modified,Последња измена,User.Accounts.AccountDetails
+Token name,Име токена,User.Accounts.AccountDetails
+Data,,User.Accounts.AccountDetails
+Total account balance,Укупни баланс рачуна,User.Accounts.AccountDetails
+Available balance,Доступно стање,User.Accounts.AccountDetails
+Send %{token_name},,User.Accounts.AccountDetails
+Pending balance,Баланс на чекању,User.Accounts.AccountDetails
+Unconfirmed balance,Непотврђени баланс,User.Accounts.AccountDetails
+Stake balance,Баланс на штедњи,User.Accounts.AccountDetails
+Immature balance,Незрео Баланс,User.Accounts.AccountDetails
+Address,Адреса,User.Accounts.AccountDetails
+Trust Account is empty.,Труст Рачун је празан.,User.Accounts.AccountDetails
+Trust Account must mature for 72 hours before staking,Труст Рачун мора да матурира током 72 сата пре почетка штедње,User.Accounts.AccountDetails
+Adjust stake amount,Подесите износ штедње,User.Accounts.AccountDetails
+Time,Време,User.Accounts.AccountHistory
+Operation,Операција,User.Accounts.AccountHistory
+From,Од,User.Accounts.AccountHistory
+staking,,User.Accounts.AccountHistory
+mining,,User.Accounts.AccountHistory
+To,За,User.Accounts.AccountHistory
+Change,Измени,User.Accounts.AccountHistory
+Account History,Историја Рачуна,User.Accounts.AccountHistory
+Loading account history,Учитавање историје рачуна,User.Accounts.AccountHistory
+Account balance,Стање на рачуну,User.Accounts.AccountHistory
+Show %{tokenName},Прикажи %{tokenName},User.Accounts.AccountHistory
+Total,Укупно,User.Accounts.AccountHistory
+Available,Доступно,User.Accounts.AccountHistory
+Pending,Нa чекању,User.Accounts.AccountHistory
+Unconfirmed,Непотврђено,User.Accounts.AccountHistory
+Stake,Штедња,User.Accounts.AccountHistory
+Rename account,,RenameAccount
+Account name,,RenameAccount
+Account renaming fee,,RenameAccount
+Cancel,,RenameAccount
+Renaming,,RenameAccount
+Rename,,RenameAccount
+Account name is required,,RenameAccount
+Name already in use,,RenameAccount
+The name you entered is already in use. Please choose another name.,,RenameAccount
+Insuffient balance,,RenameAccount
+Your default account balance is not enough to pay the fee.,,RenameAccount
+Account has been renamed to %{account_name},,RenameAccount
+Error renaming account,,RenameAccount
+Unnamed asset,,User.Assets
+You own %{percentage}% of this asset,,User.Assets
+Create new asset,,User.Assets
+You don't own any asset,,User.Assets
+Asset Details,,AssetDetails
+Edit asset,,AssetDetails
+Name,,AssetDetails
+Address,,AssetDetails
+Owner,,AssetDetails
+Ownership,,AssetDetails
+Created at,,AssetDetails
+Last modified,,AssetDetails
+View history,,AssetDetails
+Tokenize,,AssetDetails
+Transfer ownership,,AssetDetails
+Name,,CreateAsset
+Field name,,CreateAsset
+Value,,CreateAsset
+Field value,,CreateAsset
+Mutable,,CreateAsset
+Type,,CreateAsset
+Max. length,,CreateAsset
+Only applicable to mutable string fields,,CreateAsset
+Unlimited,,CreateAsset
+Remove field,,CreateAsset
+Asset name,,CreateAsset
+A local Name object register will be created for this asset name,,CreateAsset
+Asset name (optional),,CreateAsset
+Asset data,,CreateAsset
+Add field,,CreateAsset
+Estimated fee,,CreateAsset
+Creating asset,,CreateAsset
+Create asset,,CreateAsset
+Field name is required,,CreateAsset
+New asset has been created,,CreateAsset
+Error creating asset,,CreateAsset
+Create a new asset,,CreateAsset
+Asset History Event,,AssetHistoryDetails
+Type,,AssetHistoryDetails
+Time,,AssetHistoryDetails
+Owner,,AssetHistoryDetails
+Checksum,,AssetHistoryDetails
+Name,,AssetHistoryDetails
+Address,,AssetHistoryDetails
+Time,,AssetHistory
+Type,,AssetHistory
+Owner,,AssetHistory
+Asset History,,AssetHistory
+Loading asset history,,AssetHistory
+Name,,EditAsset
+Address,,EditAsset
+Updating asset,,EditAsset
+Update asset,,EditAsset
+Asset has been updated,,EditAsset
+Error updating asset,,EditAsset
+Edit asset,,EditAsset
+Asset name,,TokenizeAsset
+Asset address,,TokenizeAsset
+Token,,TokenizeAsset
+Token address,,TokenizeAsset
+Tokenizing asset,,TokenizeAsset
+Tokenize asset,,TokenizeAsset
+Token is required,,TokenizeAsset
+Asset has been tokenized,,TokenizeAsset
+Error tokenizing asset,,TokenizeAsset
+Asset name,,TransferAsset
+Asset address,,TransferAsset
+Transfer to,,TransferAsset
+Recipient username or user ID,,TransferAsset
+Transferring asset,,TransferAsset
+Transfer asset,,TransferAsset
+Recipient is required,,TransferAsset
+Asset has been transferred,,TransferAsset
+Error transferring asset,,TransferAsset
+User,Корисник,User
+User ID,Кориснички ИД,User
+Accounts,Рачуни,User
+Staking,Штедња,User
+Tokens,Токени,User
+Names,,User
+Namespaces,,User
+Assets,,User
+Change password & PIN,Промени лозинку и ПИН,User
+Change recovery phrase,Промени фразу за опоравак,User
+Set recovery phrase,Постави фразу за опоравак,User
+Name,,ChangeRegisterAddress
+Register address,,ChangeRegisterAddress
+Register address that this name points to,,ChangeRegisterAddress
+Name update fee,,ChangeRegisterAddress
+Updating name,,ChangeRegisterAddress
+Update name,,ChangeRegisterAddress
+Name has been updated,,ChangeRegisterAddress
+Error updating name,,ChangeRegisterAddress
+Change register address,,ChangeRegisterAddress
+Local,,CreateName
+Namespaced,,CreateName
+Global,,CreateName
+Namespace,,CreateName
+A namespace you own,,CreateName
+Name,,CreateName
+name,,CreateName
+namespace,,CreateName
+Register address,,CreateName
+Register address that this name points to,,CreateName
+Name creation fee,,CreateName
+Creating name,,CreateName
+Create name,,CreateName
+Name is required,,CreateName
+Name cannot start with a colon character,,CreateName
+Namespace is required,,CreateName
+New name has been created,,CreateName
+Error creating name,,CreateName
+Create a new name,,CreateName
+View name details,,User.Names
+Change register address,,User.Names
+Transfer name,,User.Names
+Unused,,User.Names
+Global,,User.Names
+Namespaced,,User.Names
+Local,,User.Names
+Create new name,,User.Names
+Show unused names,,User.Names
+You don't own any name,,User.Names
+Name Details,,NameDetails
+Change register address,,NameDetails
+Name,,NameDetails
+Type,,NameDetails
+Global,,NameDetails
+Namespaced,,NameDetails
+Local,,NameDetails
+Namespace,,NameDetails
+Address,,NameDetails
+Points to,,NameDetails
+Created at,,NameDetails
+Last modified,,NameDetails
+View history,,NameDetails
+Transfer ownership,,NameDetails
+Name History Event,,NameHistoryDetails
+Type,,NameHistoryDetails
+Time,,NameHistoryDetails
+Owner,,NameHistoryDetails
+Checksum,,NameHistoryDetails
+Name,,NameHistoryDetails
+Namespace,,NameHistoryDetails
+Address,,NameHistoryDetails
+Points to,,NameHistoryDetails
+Time,,NameHistory
+Type,,NameHistory
+Owner,,NameHistory
+Name History,,NameHistory
+Loading name history,,NameHistory
+Name,,TransferName
+Transfer to,,TransferName
+Recipient username or user ID,,TransferName
+Transferring name,,TransferName
+Transfer name,,TransferName
+Recipient is required,,TransferName
+Name has been transferred,,TransferName
+Error transferring name,,TransferName
+Name,,CreateNamespace
+Namespace name,,CreateNamespace
+Namespace creation fee,,CreateNamespace
+Creating namespace,,CreateNamespace
+Create namespace,,CreateNamespace
+Name is required,,CreateNamespace
+"Namespace names can only contain lowercase letters, numbers, and periods (.)",,CreateNamespace
+New namespace has been created,,CreateNamespace
+Error creating namespace,,CreateNamespace
+Create a new namespace,,CreateNamespace
+View name details,,User.Namespaces
+Transfer namespace,,User.Namespaces
+Create new namespace,,User.Namespaces
+You don't own any namespace,,User.Namespaces
+Namespace Details,,NamespaceDetails
+Name,,NamespaceDetails
+Address,,NamespaceDetails
+Created at,,NamespaceDetails
+Last modified,,NamespaceDetails
+View history,,NamespaceDetails
+Transfer ownership,,NamespaceDetails
+Namespace History Event,,NamespaceHistoryDetails
+Type,,NamespaceHistoryDetails
+Time,,NamespaceHistoryDetails
+Owner,,NamespaceHistoryDetails
+Checksum,,NamespaceHistoryDetails
+Name,,NamespaceHistoryDetails
+Address,,NamespaceHistoryDetails
+Time,,NamespaceHistory
+Type,,NamespaceHistory
+Owner,,NamespaceHistory
+Namespace History,,NamespaceHistory
+Loading namespace history,,NamespaceHistory
+Namespace,,TransferNamespace
+Transfer to,,TransferNamespace
+Recipient username or user ID,,TransferNamespace
+Transferring namespace,,TransferNamespace
+Transfer namespace,,TransferNamespace
+Destination is required,,TransferNamespace
+Namespace has been transferred,,TransferNamespace
+Error transferring namespace,,TransferNamespace
+The current NXS balance of the trust account that is not staked. You can spend this amount without affecting your Trust Score,Тренутни NXS баланс труст рачуна који није на штедњи. Можете да потрошите овај износ без утицаја на ваш Труст Скор,User.Staking
+"Balance that will be staked after the 72 holding period, any change to this balance will reset the hold timer","Баланс који ће бити на штедњи након периода од 72 сата чекања, било која промена овог баланса ће ресетовати тајмер чекања",User.Staking
+Restart Core?,Рестартуј Језгро?,User.Staking
+Nexus Core needs to restart for this change to take effect,Нексус Језгро мора да се рестартује да би ове промене постале ефективне,User.Staking
+Disable staking,Обустави штедњу,User.Staking
+Enable staking,Дозволи штедњу,User.Staking
+Cancel,Откажи,User.Staking
+Status,Статус,User.Staking
+Staking,Штедња,User.Staking
+pooled,,User.Staking
+Not staking,Штедња није активна,User.Staking
+Stake amount,Износ штедње,User.Staking
+The amount of NXS currently staked in the trust account,Количина NXS-а која је тренутно на штедњи на поверљивом рачуну,User.Staking
+Pending change,Промена на чекању,User.Staking
+The pending stake amount change that will be applied on the next Trust transaction,Износ штедње на чекању који ће бити примењен приликом следеће Труст трансакције,User.Staking
+Requested at,,User.Staking
+Expired in,Истиче за,User.Staking
+Stake Rate,Проценат удела,User.Staking
+The current annual reward rate earned for staking,Тренутна годишња стопа за награде зарађене штедњом,User.Staking
+Trust Weight,Величина Поверења,User.Staking
+"The percentage of the maximum Trust Score, which is gradually built over time when you consistently operate your node in an honest, trustworthy, and timely manner","Проценат максималног Труст Скора, који се постепено изграђује током времена када константно одржавате свој нод у поштеном, сигурном и сталном маниру",User.Staking
+Block Weight,Величина блока,User.Staking
+"Block Weight depends on the time passed since you received a Trust transaction and will be reset everytime you receive a Trust transaction. Otherwise, Block Weight will reach 100% after 3 days and your Trust Score will start decaying until you receive another Trust transaction","Тежина Блока зависи од времена које је прошло од када сте примили Труст трансакцију и биће ресетован сваки пут када примите Труст трансакцију. У супротном, Тежина Блока ће достићи 100% након 3 дана и ваш Труст Скор ће почети да опада све док поново не примите нову Труст трансакцију",User.Staking
+Stake Weight,Величина Штедње,User.Staking
+"Stake Weight depends on Trust Weight and Block Weight. Along with your Stake amount, Stake Weight affects how frequent you receive a Trust transaction","Тежина Штедње зависи од Тежине Труст-а и Тежине Блока. Уз износ ваше Штедње, Тежина Штедње утиче и на фреквенцију којом примате Труст трансакције",User.Staking
+Available Balance,Доступно Стање,User.Staking
+Adjust stake amount,Подесите износ штедње,User.Staking
+Account on hold for another %{stakeSeconds} Seconds,Рачун на чекању за још %{stakeSeconds} секунди,User.Staking
+Stop staking,,User.Staking
+Start staking,,User.Staking
+Create new token,Креирај нови токен,User.Tokens
+Look up a token,,User.Tokens
+Unnamed token,Неименовани токен,User.Tokens
+ (Owned by you), (У вашем власништву),User.Tokens
+Details,Детаљи,User.Tokens
+New Token,Нови Токен,User.Tokens.NewToken
+"There is a %{tokenfee} NXS token creation fee, based on supply","Постоји %{tokenfee} NXS такса за креирање токена, базирана на доступности залиха",User.Tokens.NewToken
+Token name,Име токена,User.Tokens.NewToken
+Name Creation Fee: %{tokenFee} NXS (Optional),Такса за Креирање Назива: %{tokenFee} NXS (Опционо),User.Tokens.NewToken
+New tokens's name,Назив новог токена,User.Tokens.NewToken
+Supply,Залиха,User.Tokens.NewToken
+Max amount of tokens available,Максимална количина доступних токена,User.Tokens.NewToken
+Decimal,Децимални,User.Tokens.NewToken
+Amount of significant digits a token can have,Број децимала које токен може да има,User.Tokens.NewToken
+Cancel,Откажи,User.Tokens.NewToken
+Create token,Креирај токен,User.Tokens.NewToken
+Supply can not be zero or negative,Залиха не може бити нула или негативна,User.Tokens.NewToken
+Create a token without a name?,Креирај токен без имена?,User.Tokens.NewToken
+Adding a name costs a NXS fee,Додавање имена вредности NXS накнаде,User.Tokens.NewToken
+That's Ok,То је у реду,User.Tokens.NewToken
+Add Name,Додај име,User.Tokens.NewToken
+New token %{token} has been created,Нови токен %{token} је креиран,User.Tokens.NewToken
+You have successfully created token %{token} ! Would you like to make an account for this token?,Успешно си креирао токен %{token} ! Да ли би желео да направиш рачун за овај токен?,User.Tokens.NewToken
+Yes,Да,User.Tokens.NewToken
+No,Не,User.Tokens.NewToken
+Error creating token,Грешка при креирању токена,User.Tokens.NewToken
+Cannot find Token,,User.Tokens.SearchToken
+Look up token,,User.Tokens.SearchToken
+Name or address,,User.Tokens.SearchToken
+Token name/address,,User.Tokens.SearchToken
+Look up,,User.Tokens.SearchToken
+No Value,Нема Вредности,User.Tokens.SearchToken
+Error searching for token,Грешка приликом тражења токена,User.Tokens.SearchToken
+Unknown token name/address,,User.Tokens.SearchToken
+Token Details,Детаљи Токена,User.Tokens.TokenDetails
+Token name,Име токена,User.Tokens.TokenDetails
+Token address,Адреса токена,User.Tokens.TokenDetails
+Created at,Направљено у,User.Tokens.TokenDetails
+Last modified,Последња измена,User.Tokens.TokenDetails
+Token Owner,Власник Токена,User.Tokens.TokenDetails
+Current Supply,Тренутне Залихе,User.Tokens.TokenDetails
+Max Supply,Максимална Залиха,User.Tokens.TokenDetails
+Decimals,Децимале,User.Tokens.TokenDetails
+Balance,Стање,User.Tokens.TokenDetails
+Pending balance,Баланс на чекању,User.Tokens.TokenDetails
+Unconfirmed balance,Непотврђени баланс,User.Tokens.TokenDetails
+Create new account with this token,Направи нови рачун са овим токеном,User.Tokens.TokenDetails
+Close,Затвори,User.Tokens.TokenDetails
+Wallet version,Верзија новчаника,About
+Wallet build date,Датум производње новчаника,About
+Nexus Core version,Верзија Нексус Језгра,About
+Core build date,Датум производње Језгра,About
+Testnet,Тестнет,About
+Private blockchain,Приватни блокчеин,About
+Invalid address,Погрешна адреса,AddEditContact
+This is not one of your addresses.,Ово није твоја адреса.,AddEditContact
+This is one of your addresses.,Ово је једна од твојих адреса.,AddEditContact
+Name,Име,AddEditContact
+Contact name,Име контакта,AddEditContact
+Email address,Адреса е-поште,AddEditContact
+Phone number,Број телефона,AddEditContact
+Time zone,Временска зона,AddEditContact
+Select a time zone,Изабери временску зону,AddEditContact
+Notes,Напомене,AddEditContact
+Cancel,Откажи,AddEditContact
+Reset,Ресетуј,AddEditContact
+Save changes,Сачувај измене,AddEditContact
+Create,Креирај,AddEditContact
+Name is required.,Име је обавезно.,AddEditContact
+A contact with the same name already exists.,Контакт са истим именом већ постоји.,AddEditContact
+There must be at least one address.,Бар једна адреса је обавезна.,AddEditContact
+Invalid email,Неважећа е-пошта,AddEditContact
+Contact has been updated,Контакт је ажуриран,AddEditContact
+New contact has been added to address book,Нови контакт је додат у именик,AddEditContact
+My Nexus address for %{name},Моја Нексус адреса за %{name},AddEditContact
+My Nexus address,Моја Нексус адреса,AddEditContact
+%{name}'s Nexus address,%{name}-ова/ина Нексус адреса,AddEditContact
+Their Nexus address,Њихова Нексус адреса,AddEditContact
+Remove address,Уклони адресу,AddEditContact
+Label (optional),Лабела (опционо),AddEditContact
+Edit contact,Уреди контакт,AddEditContact
+Create new contact,Направи нови контакт,AddEditContact
+Adjust stake amount,Подесите износ штедње,AdjustStake
+"Note: This change will not take effect immediately but will stay pending until you get the next Trust transaction. The pending change will be recorded locally in this machine, therefore if you switch to another machine for staking, the change will not take effect.","Белешка: Ова промена неће постати ефективна одмах већ бити на чекању док не примите следећу Труст трансакцију. Промена на чекању ће бити забележена локално на овом рачунару, због тога ако се пребаците на други рачунар за штедњу, промена неће бити примењена.",AdjustStake
+Cancel,Откажи,AdjustStake
+Set stake amount,Подесите износ штедње,AdjustStake
+Invalid number,Неважећи број,AdjustStake
+Out of range,Ван опсега,AdjustStake
+Reduce stake amount?,Смањите износ штедње?,AdjustStake
+Reducing stake amount might make your Stake Rate decrease,Смањивање износа штедње може да учини да се ваша Каматна Стопа смањи,AdjustStake
+Stake amount has been updated,Износ штедње је ажуриран,AdjustStake
+Error setting stake amount,Грешка приликом подешавања износа штедње,AdjustStake
+Backing up...,Правим резервну копију...,Bootstrap
+Downloading,Преузимање,Bootstrap
+Decompressing...,Распакивање...,Bootstrap
+Stopping Core...,Заустављање Језгра...,Bootstrap
+Moving...,Премештам...,Bootstrap
+Restarting Core...,Рестартовање Језгра...,Bootstrap
+Rescanning Wallet...,Поновно скенирање новчаника...,Bootstrap
+Backing up your wallet...,Бекаповање вашег новчаника...,Bootstrap
+Downloading the database,Преузимање базе података,Bootstrap
+Decompressing the database...,Распакивање базе података...,Bootstrap
+Stopping Nexus Core...,Заустављање Нексус Језгра...,Bootstrap
+Moving the database...,Премештање базе података...,Bootstrap
+Restarting Nexus Core...,Рестартовање Нексу Језгра...,Bootstrap
+Are you sure you want to abort the process?,Да ли сте сигурни да желите да зауставите процес?,Bootstrap
+"Yes, abort","Да, заустави",Bootstrap
+"No, let it continue","Не, нека настави",Bootstrap
+Bootstrap Recent Database,Бутстрап Свеже Базе података,Bootstrap
+Abort,Прекини,Bootstrap
+Not enough disk space! Minimum 15GB of free space is required.,Нема довољно места на диску! Неопходно је минимум 15GB слободног простора.,Bootstrap
+Download recent database?,Преузми Свежу Базу података?,Bootstrap
+Downloading a recent version of the database might reduce the time it takes to synchronize your wallet,Преузимање свеже верзије базе података може смањити време потребно за синхронизацију вашег новчаника,Bootstrap
+"Yes, let's bootstrap it","Да, бутстрапуј је",Bootstrap
+"No, let it sync","Не, остави да се синхронизује",Bootstrap
+Bootstrap process has been aborted,Бутстрап процес је прекинут,Bootstrap
+Error bootstrapping recent database,Грешка приликом бутстраповања свеже базе података,Bootstrap
+Unknown error,Непозната грешка,Bootstrap
+Recent database has been successfully bootstrapped,Свежа база података је успешно бутстрапована,Bootstrap
+Change password and PIN,Промени лозинку и ПИН,ChangePassword&PIN
+Current password,Тренутна лозинка,ChangePassword&PIN
+Your current password,Ваша актуелна лозинка,ChangePassword&PIN
+Current PIN,Актуелни ПИН,ChangePassword&PIN
+Your current PIN,,ChangePassword&PIN
+New Password,Нова лозинка,ChangePassword&PIN
+Enter your new password,Унесите вашу нову лозинку,ChangePassword&PIN
+New PIN,Нови ПИН,ChangePassword&PIN
+Enter your new PIN,,ChangePassword&PIN
+Updating,Ажурирање,ChangePassword&PIN
+Update,Ажурирај,ChangePassword&PIN
+Current password is required,Актуелна лозинка је обавезна,ChangePassword&PIN
+Current PIN is required,Актуелни ПИН је обавезан,ChangePassword&PIN
+New password is required,Нова лозинка је обавезна,ChangePassword&PIN
+Password must be at least 8 characters,Лозинка мора имати најмање 8 знакова,ChangePassword&PIN
+New PIN is required,Нови ПИН је обавезан,ChangePassword&PIN
+PIN must be at least 4 characters,ПИН мора да има најмање 4 знакова,ChangePassword&PIN
+Password & PIN have been updated,Лозинка и ПИН су ажурирани,ChangePassword&PIN
+Error updating password & PIN,Грешка приликом ажурирања лозинке и ПИН-а,ChangePassword&PIN
+Contract Details,Детаљи Уговора,ContractDetails
+View transaction details,,ContractDetails
+Yes,Да,ConfirmDialog
+No,Не,ConfirmDialog
+Password/PIN mismatch,Лозинка/ПИН се не слаже,ConfirmPassword&PIN
+"You have entered either your password or your PIN incorrectly, please re-check","Унели сте погрешну лозинку или ПИН, молим проверите",ConfirmPassword&PIN
+Confirm password and PIN,Потврди лозинку и ПИН,ConfirmPassword&PIN
+Enter your new password & new PIN once again to make sure you have entered them correctly,Унесите нову лозинку и нови ПИН још једанпут како би потврдили исправност уноса,ConfirmPassword&PIN
+Enter your password & PIN once again to make sure you have entered them correctly,Унесите лозинку и ПИН још једанпут како би потврдили исправност уноса,ConfirmPassword&PIN
+Password,Лозинка,ConfirmPassword&PIN
+Re-enter your new password,Поново унесите нову лозинку,ConfirmPassword&PIN
+Re-enter your password,Поново унесите своју лозинку,ConfirmPassword&PIN
+PIN,ПИН,ConfirmPassword&PIN
+Re-enter your new PIN,,ConfirmPassword&PIN
+Re-enter your PIN,,ConfirmPassword&PIN
+Confirm,Потврди,ConfirmPassword&PIN
+Dismiss,Одбаци,ErrorDialog
+Pin must be at least 4 characters,Пин мора да има најмање 4 карактера,PinDialog
+Confirm,Потврди,PinDialog
+Enter PIN,,PinDialog
+Your PIN,,PinDialog
+Cancel,Откажи,PinDialog
+Dismiss,Одбаци,SuccessDialog
+Your wallet is not encrypted!,Новчаник није шифрован!,EncryptionWarning
+It is highly recommended that you should encrypt your wallet to keep your NXS safe.,Максимално је препоручљиво да шифрирате свој новчаник како би ваш NXS био безбедан.,EncryptionWarning
+Ignore,Игнориши,EncryptionWarning
+Encrypt wallet,Шифрирај новчаник,EncryptionWarning
+Log in,Пријави се,Login
+Username,Корисничко име,Login
+Enter your username,Унеси корисничко име,Login
+Password,Лозинка,Login
+Enter your password,Унеси своју лозинку,Login
+PIN,ПИН,Login
+Enter your PIN,,Login
+Logging in,Пријављивање,Login
+Forgot password?,Заборављена лозинка?,Login
+Create new user,Креирај новог корисника,Login
+Username is required,Корисничко име је обавезно,Login
+Password is required,Лозинка је обавезна,Login
+PIN is required,ПИН је обавезан,Login
+Logged in as %{username},Пријављен као %{username},Login
+Not being fully synced may have caused this error.,,Login
+Error logging in,Грешка приликом пријављивања,Login
+Migrate account,Мигрирај рачун,MigrateAccount
+You have %{amount} NXS in your legacy account.,Имате %{amount} NXS на свом легат рачуну.,MigrateAccount
+You can manually send your funds from legacy account to this new Tritium user.,,MigrateAccount
+Send NXS manually,Пошаљи NXS мануелно,MigrateAccount
+Don't show this again,Не приказуј ово поново,MigrateAccount
+Module Details,Детаљи модула,ModuleDetails
+Remove module,,ModuleDetails
+Module name,Назив модула,ModuleDetails
+Display name,Надимак за приказ,ModuleDetails
+Module type,Тип модула,ModuleDetails
+in development,,ModuleDetails
+Version,Верзија,ModuleDetails
+Target wallet version,,ModuleDetails
+incompatible,,ModuleDetails
+Description,Опис,ModuleDetails
+Author,Аутор,ModuleDetails
+Source code,Изворни код,ModuleDetails
+Visit repository,Посети репозиторијум,ModuleDetails
+This module is developed by Nexus,Овај модул је развијен од стране Нексуса,ModuleDetails
+This repository does not exist or is private,Овај репозиторијум не постоји или је приватан,ModuleDetails
+This repository is not verified to be the real source code of this module,Задати репозиторијум није верификован као прави извор кода за овај модул,ModuleDetails
+Module hash,Хаш модула,ModuleDetails
+Download %{version} (manual),,ModuleDetails
+Open App,,ModuleDetails
+Module is disallowed,,ModuleDetails
+Installing Module...,Инсталирам Модул...,ModuleDetails
+Install Module,Инсталирај Модул,ModuleDetails
+"Warning: This module is written by a third party, Nexus is NOT
+              responsible for its quality or legitimacy. Please make sure to do
+              your due diligence before installing third party modules and use
+              them with your own risk.","Упозорење: Овај модул је написан од стране трећих лица, Нексус НИЈЕ
+                     одговоран за квалитет или легитимитет. Молимо будите сигурни да
+                     вашу пажњу пре инсталирања и коришћења модула трећих лица
+                     их на сопствени ризик.",ModuleDetails
+Check wallet failed,Провери грешку новчаника,MyAddresses
+Check wallet pass,Провери пропусницу новчаника,MyAddresses
+My Account,Мој налог,MyAddresses
+Check wallet's integrity,Провери интегритет новчаника,MyAddresses
+Check wallet,Провери новчаник,MyAddresses
+Create new address,Креирај нову адресу,MyAddresses
+Enter a new account name or pick an existing account:,Унеси име новог налога или изабери постојећи:,MyAddresses.NewAddressForm
+Account name,Назив рачуна,MyAddresses.NewAddressForm
+Cancel,Откажи,MyAddresses.NewAddressForm
+New address,Нова адреса,MyAddresses.NewAddressForm
+Account name is required,Назив рачуна је обавезан,MyAddresses.NewAddressForm
+Invalid account name,Погрешан назив налога,MyAddresses.NewAddressForm
+New address has been created,Нова адреса је креирана,MyAddresses.NewAddressForm
+Error creating new address,Грешка приликом креирања нове адресе,MyAddresses.NewAddressForm
+New account,Нови налог,NewAccount
+Account name (%{nameFee} NXS Fee) (Optional),Назив налога (%{nameFee} NXS такса) (Опционо),NewAccount
+New account's name,Назив новог налога,NewAccount
+Token name/address,,NewAccount
+Cancel,Откажи,NewAccount
+Creating account,Креирање налога,NewAccount
+Create account,Креирај налог,NewAccount
+Create an account without a name?,,NewAccount
+Adding a name costs a NXS fee,Додавање имена вредности NXS накнаде,NewAccount
+That's Ok,То је у реду,NewAccount
+Error creating account,Грешка приликом креирања налога,NewAccount
+Unknown token name/address,,NewAccount
+New account %{account} has been created,Нови налог %{account} је креиран,NewAccount
+Create new user,Креирај новог корисника,NewUser
+Username,Корисничко име,NewUser
+A globally unique username,Глобално уникатно корисничко име,NewUser
+Password,Лозинка,NewUser
+Enter your password,Унеси своју лозинку,NewUser
+PIN,ПИН,NewUser
+Enter your PIN,,NewUser
+Attention,Пажња,NewUser
+"Please be sure to make a note of your username, password, and PIN, and keep it in a safe place. If you lose or forget them you will be unable to access your account.",,NewUser
+Creating user,Креирање корисника,NewUser
+Create user,Креирај корисника,NewUser
+"Please wait, this may take up to 30 seconds","Молим сачекајте, ово може да траје до 30 секунди",NewUser
+Switch to Legacy Mode,Пређи у Легат Мод,NewUser
+Log in,Пријави се,NewUser
+Username is required,Корисничко име је обавезно,NewUser
+Username must be at least 3 characters,Корисничко име мора имати најмање 3 карактера,NewUser
+Password is required,Лозинка је обавезна,NewUser
+Password must be at least 8 characters,Лозинка мора имати најмање 8 знакова,NewUser
+PIN is required,ПИН је обавезан,NewUser
+PIN must be at least 4 characters,ПИН мора да има најмање 4 знакова,NewUser
+Error creating user,Грешка при креирању корисника,NewUser
+User registration for %{username} has been confirmed,Регистрација корисника %{username} је потврђена,NewUser
+User registration for %{username} is waiting to be confirmed on Nexus blockchain...,Регистрација корисника %{username} чека на потврду на Нексус блокчеину...,NewUser
+Recover password and PIN,Поврати лозинку и ПИН,RecoverPassword&PIN
+Username,Корисничко име,RecoverPassword&PIN
+Your username,Ваше корисничко име,RecoverPassword&PIN
+Recovery phrase,Фраза за опоравак,RecoverPassword&PIN
+Your recovery phrase,Ваша фраза за опоравак,RecoverPassword&PIN
+New Password,Нова лозинка,RecoverPassword&PIN
+Enter your new password,Унесите вашу нову лозинку,RecoverPassword&PIN
+New PIN,Нови ПИН,RecoverPassword&PIN
+Enter your new PIN,,RecoverPassword&PIN
+Recovering password & PIN,Опорављање лозинке и ПИН-а,RecoverPassword&PIN
+Recover password & PIN,Опорави лозинку и ПИН,RecoverPassword&PIN
+Username is required,Корисничко име је обавезно,RecoverPassword&PIN
+Recovery phrase is required,Фраза за опоравак је обавезна,RecoverPassword&PIN
+New password is required,Нова лозинка је обавезна,RecoverPassword&PIN
+Password must be at least 8 characters,Лозинка мора имати најмање 8 знакова,RecoverPassword&PIN
+New PIN is required,Нови ПИН је обавезан,RecoverPassword&PIN
+PIN must be at least 4 characters,ПИН мора да има најмање 4 знакова,RecoverPassword&PIN
+Password & PIN have been updated,Лозинка и ПИН су ажурирани,RecoverPassword&PIN
+Error updating password & PIN,Грешка приликом ажурирања лозинке и ПИН-а,RecoverPassword&PIN
+%{smart_count} word |||| %{smart_count} words,%{smart_count} реч |||| %{smart_count} речи,SetRecoveryPhrase
+Recovery phrase,Фраза за опоравак,SetRecoveryPhrase
+"The recovery phrase can be used to recover your account and set a new password and PIN in the event that you lose or forget them. Your recovery phrase must be a minimum of 40 characters, and should ideally be made up of random words. Save this new recovery phrase in a safe place.","Фраза за опоравак може да се користи за опоравак вашег рачуна и постављање нове лозинке и ПИН-а у случају губитка или заборављања. Ваша фраза за опоравак мора да има најмање 40 карактера, и идеално би требало да буде састављена од случајних речи. Чувај ову нову фразу за опоравак на сигурном месту.",SetRecoveryPhrase
+Password,Лозинка,SetRecoveryPhrase
+Your current password,Ваша актуелна лозинка,SetRecoveryPhrase
+PIN,ПИН,SetRecoveryPhrase
+Your current PIN,,SetRecoveryPhrase
+Current recovery phrase,Актуелна фраза за опоравак,SetRecoveryPhrase
+Enter your recovery phrase,Унеси своју фразу за опоравак,SetRecoveryPhrase
+Generate a recovery phrase,Генериши фразу за опоравак,SetRecoveryPhrase
+New recovery phrase,Нова фраза за опоравак,SetRecoveryPhrase
+Enter your new recovery phrase or click Generate,Унесите своју нову фразу за опоравак или кликните на Генериши,SetRecoveryPhrase
+Setting recovery phrase,Постављање фразе за опоравак,SetRecoveryPhrase
+Set recovery phrase,Постави фразу за опоравак,SetRecoveryPhrase
+Password is required,Лозинка је обавезна,SetRecoveryPhrase
+PIN is required,ПИН је обавезан,SetRecoveryPhrase
+Current recovery phrase is required,Актуелна фраза за опоравак је обавезна,SetRecoveryPhrase
+Recovery phrase is required,Фраза за опоравак је обавезна,SetRecoveryPhrase
+Recovery phrase must be at least 8 characters,,SetRecoveryPhrase
+Recovery phrase has been updated,Фраза за опоравак је ажурирана,SetRecoveryPhrase
+Error setting recovery phrase,Грешка приликом постављање фразе за опоравак,SetRecoveryPhrase
+Transaction Details,,TransactionDetails
+Time,,TransactionDetails
+Sequence,,TransactionDetails
+Type,,TransactionDetails
+Confirmations,,TransactionDetails
+Transaction ID,,TransactionDetails
+Loading transaction details...,,TransactionDetails
+Close the wallet and install update now?,Затвори новчаник и инсталирај ажурирања сада?,AutoUpdate
+Close and install,Затвори и инсталирај,AutoUpdate
+Install it later,Инсталирај касније,AutoUpdate
+New wallet version %{version} - Click here to download,Нова верзија новчаника %{version} - Кликни овде за преузимање,AutoUpdate
+New wallet version %{version} - Click here to update,Нова верзија новчаника %{version} - Кликни овде за ажурирање,AutoUpdate
+New wallet version %{version} available. Downloading...,Нова верзија новчаника %{version} - доступна. Преузимам...,AutoUpdate

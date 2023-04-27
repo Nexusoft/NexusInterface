@@ -1,3 +1,4 @@
 provider: github
 repo: NexusInterface
 owner: Nexusoft
+updaterCacheDirName: nexus_wallet-updater

@@ -1,13 +1,14 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import Icon from 'components/Icon';
 import InfoField from 'components/InfoField';
 import ExternalLink from 'components/ExternalLink';
 import styled from '@emotion/styled';
 import { legacyMode } from 'consts/misc';
 import nexusLogo from 'icons/logo-full.svg';
+
+__ = __context('About');
 
 const Section = styled.div({
   margin: '2em 2em',
@@ -87,229 +88,224 @@ const AgreementContent = styled.p({
   textAlign: 'justify',
 });
 
-const About = ({ version, testnet, privateBlockchain }) => (
-  <Modal>
-    <Modal.Header>
-      <NexusLogo icon={nexusLogo} />
-    </Modal.Header>
-    <Modal.Body>
-      <div>
-        <InfoField leftSize={1} rightSize={1} label={__('Wallet version')}>
-          {APP_VERSION}
-        </InfoField>
-        <InfoField leftSize={1} rightSize={1} label={__('Wallet build date')}>
-          {BUILD_DATE}
-        </InfoField>
-        <InfoField leftSize={1} rightSize={1} label={__('Nexus Core version')}>
-          {version}
-        </InfoField>
-        <InfoField leftSize={1} rightSize={1} label={__('Core build date')}>
-          November 3rd 2019
-        </InfoField>
-        {!!testnet && (
-          <InfoField leftSize={1} rightSize={1} label={__('Testnet')}>
-            {testnet}
+export default function About() {
+  const version = useSelector(({ core: { info, systemInfo } }) =>
+    legacyMode ? info?.version : systemInfo?.version
+  );
+  const testnet = useSelector(({ core: { systemInfo } }) =>
+    legacyMode ? undefined : systemInfo?.testnet
+  );
+  const privateBlockchain = useSelector(({ core: { systemInfo } }) =>
+    legacyMode ? undefined : systemInfo?.private
+  );
+  return (
+    <ControlledModal>
+      <ControlledModal.Header>
+        <NexusLogo icon={nexusLogo} />
+      </ControlledModal.Header>
+      <ControlledModal.Body>
+        <div>
+          <InfoField ratio={[1, 1]} label={__('Wallet version')}>
+            {APP_VERSION}
           </InfoField>
-        )}
-        {!!privateBlockchain && (
-          <InfoField
-            leftSize={1}
-            rightSize={1}
-            label={__('Private blockchain')}
-          >
-            {String(privateBlockchain)}
+          <InfoField ratio={[1, 1]} label={__('Wallet build date')}>
+            {BUILD_DATE}
           </InfoField>
-        )}
-      </div>
-
-      <Section>
-        <Strong> Copyright {new Date().getFullYear()}</Strong>{' '}
-        {'NEXUS DEVELOPMENT, U.S. LLC.'}
-        <br />
-      </Section>
-
-      <BusinessUnits>
-        <div>
-          <Strong>Nexus Embassy USA</Strong>
-          <br />
-          Tempe, Arizona, United States Of America
+          <InfoField ratio={[1, 1]} label={__('Nexus Core version')}>
+            {version}
+          </InfoField>
+          <InfoField ratio={[1, 1]} label={__('Core build date')}>
+            April 26th 2023
+          </InfoField>
+          {!!testnet && (
+            <InfoField ratio={[1, 1]} label={__('Testnet')}>
+              {testnet}
+            </InfoField>
+          )}
+          {!!privateBlockchain && (
+            <InfoField ratio={[1, 1]} label={__('Private blockchain')}>
+              {String(privateBlockchain)}
+            </InfoField>
+          )}
         </div>
-        <div>
-          <Strong>Nexus Embassy UK</Strong>
-          <br />
-          London, England, United Kingdom
-        </div>
-        <div>
-          <Strong>Nexus Embassy Australia</Strong>
-          <br />
-          Sydney, New South Wales, Australia
-        </div>
-      </BusinessUnits>
 
-      <Section>
-        <Strong>
-          THIS IS EXPERIMENTAL SOFTWARE AND THE NEXUS EMBASSY HOLDS NO LIABILITY
-          FOR THE USE OF THIS SOFTWARE
-        </Strong>
-      </Section>
+        <Section>
+          <Strong> Copyright {new Date().getFullYear()}</Strong>{' '}
+          {'NEXUS DEVELOPMENT, U.S. LLC.'}
+          <br />
+          <ExternalLink href={'https://nexus.io/'}>Nexus.io</ExternalLink>
+        </Section>
 
-      <Section>
-        <h3>
-          <Strong>License Agreement</Strong>
-        </h3>
-        <div>
-          <div className="text-center">
-            Copyright {new Date().getFullYear()} Nexus
+        <BusinessUnits>
+          <div>
+            <Strong>
+              <ExternalLink href={'https://crypto.nexus.io/embassies'}>
+                Nexus Embassy USA
+              </ExternalLink>
+            </Strong>
+            <br />
+            Tempe, Arizona, United States Of America
           </div>
-          <AgreementContent>
-            Permission is hereby granted, free of charge, to any person
-            obtaining a copy of this software and associated documentation files
-            (the "Software"), to deal in the Software without restriction,
-            including without limitation the rights to use, copy, modify, merge,
-            publish, distribute, sublicense, and/or sell copies of the Software,
-            and to permit persons to whom the Software is furnished to do so,
-            subject to the following conditions:
-          </AgreementContent>
-          <AgreementContent>
-            The above copyright notice and this permission notice shall be
-            included in all copies or substantial portions of the Software.
-          </AgreementContent>
-          <AgreementContent>
-            THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-            EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-            MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-            NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-            BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-            ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-            CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-            SOFTWARE.
-          </AgreementContent>
-        </div>
-        <br />
-      </Section>
+        </BusinessUnits>
 
-      <Section>
-        <h2>
-          <Strong>Open Source Credits</Strong>
-        </h2>
+        <Section>
+          <Strong>
+            THIS IS EXPERIMENTAL SOFTWARE AND THE NEXUS EMBASSY HOLDS NO
+            LIABILITY FOR THE USE OF THIS SOFTWARE
+          </Strong>
+        </Section>
 
-        <OpenSourceCreditsContainer>
-          {openSourceCredits.map((e, i) => (
-            <div key={i}>
-              <dt>{e.Title}</dt>
-              <div>
-                <ExternalLink href={e.URL}>{e.website}</ExternalLink> &middot;{' '}
-                {e.license}
-              </div>
+        <Section>
+          <h3>
+            <Strong>License Agreement</Strong>
+          </h3>
+          <div>
+            <div className="text-center">
+              Copyright {new Date().getFullYear()} Nexus
             </div>
-          ))}
-
-          <div className="mt1">
-            <dt>MaxMind</dt>
-            <dd>
-              Copyright &copy; 2018 MaxMind, Inc. This work is licensed under
-              the Creative Commons Attribution-ShareAlike 4.0 International
-              License. To view a copy of this license, visit&nbsp;
-              <ExternalLink href="http://creativecommons.org/licenses/by-sa/4.0/">
-                creativecommons.org
-              </ExternalLink>
-              . This database incorporates&nbsp;
-              <ExternalLink href="http://www.geonames.org">
-                GeoNames
-              </ExternalLink>
-              &nbsp;geographical data, which is made available under the
-              Creative Commons Attribution 3.0 License. To view a copy of this
-              license, visit&nbsp;
-              <ExternalLink href="http://www.creativecommons.org/licenses/by/3.0/us/">
-                creativecommons.org
-              </ExternalLink>
-              .
-            </dd>
+            <AgreementContent>
+              Permission is hereby granted, free of charge, to any person
+              obtaining a copy of this software and associated documentation
+              files (the "Software"), to deal in the Software without
+              restriction, including without limitation the rights to use, copy,
+              modify, merge, publish, distribute, sublicense, and/or sell copies
+              of the Software, and to permit persons to whom the Software is
+              furnished to do so, subject to the following conditions:
+            </AgreementContent>
+            <AgreementContent>
+              The above copyright notice and this permission notice shall be
+              included in all copies or substantial portions of the Software.
+            </AgreementContent>
+            <AgreementContent>
+              THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+              EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+              MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+              NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+              HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+              WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+              OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+              DEALINGS IN THE SOFTWARE.
+            </AgreementContent>
           </div>
-        </OpenSourceCreditsContainer>
-      </Section>
+          <br />
+        </Section>
 
-      <Section>
-        <div>Icons made by</div>
-        <div>
-          <ExternalLink
-            title="Freepik"
-            href="https://www.flaticon.com/authors/freepik"
-          >
-            Freepik
-          </ExternalLink>
-          ,&nbsp;
-          <ExternalLink
-            title="Gregor Cresnar"
-            href="https://www.flaticon.com/authors/gregor-cresnar"
-          >
-            Gregor Cresnar
-          </ExternalLink>
-          ,&nbsp;
-          <ExternalLink
-            title="Google"
-            href="https://www.flaticon.com/authors/google"
-          >
-            Google
-          </ExternalLink>
-          ,&nbsp;
-          <ExternalLink
-            title="Dave Gandy"
-            href="https://www.flaticon.com/authors/dave-gandy"
-          >
-            Dave Gandy
-          </ExternalLink>
-          ,&nbsp;
-          <ExternalLink
-            title="Pixel perfect"
-            href="https://www.flaticon.com/authors/pixel-perfect"
-          >
-            Pixel perfect
-          </ExternalLink>
-          ,&nbsp;
-          <ExternalLink
-            title="Kirill Kazachek"
-            href="https://www.flaticon.com/authors/kirill-kazachek"
-          >
-            Kirill Kazachek
-          </ExternalLink>
-          ,&nbsp;
-          <ExternalLink
-            title="srip"
-            href="https://www.flaticon.com/authors/srip"
-          >
-            srip
-          </ExternalLink>
-          ,&nbsp;
-          <ExternalLink
-            title="Kiranshastry"
-            href="https://www.flaticon.com/authors/kiranshastry"
-          >
-            Kiranshastry
-          </ExternalLink>
-          ,&nbsp;
-          <ExternalLink
-            title="Smashicons"
-            href="https://www.flaticon.com/authors/smashicons"
-          >
-            Smashicons
-          </ExternalLink>
-          ,&nbsp;
-        </div>
-        <div>
-          from{' '}
-          <ExternalLink href="https://www.flaticon.com/" title="Flaticon">
-            www.flaticon.com
-          </ExternalLink>
-        </div>
-      </Section>
-    </Modal.Body>
-  </Modal>
-);
+        <Section>
+          <h2>
+            <Strong>Open Source Credits</Strong>
+          </h2>
 
-const mapStateToProps = ({ core: { info, systemInfo } }) => ({
-  version: legacyMode ? info && info.version : systemInfo && systemInfo.version,
-  testnet: legacyMode ? undefined : systemInfo && systemInfo.testnet,
-  privateBlockchain: legacyMode ? undefined : systemInfo && systemInfo.private,
-});
-export default connect(mapStateToProps)(About);
+          <OpenSourceCreditsContainer>
+            {openSourceCredits.map((e, i) => (
+              <div key={i}>
+                <dt>{e.Title}</dt>
+                <div>
+                  <ExternalLink href={e.URL}>{e.website}</ExternalLink> &middot;{' '}
+                  {e.license}
+                </div>
+              </div>
+            ))}
+
+            <div className="mt1">
+              <dt>MaxMind</dt>
+              <dd>
+                Copyright &copy; 2018 MaxMind, Inc. This work is licensed under
+                the Creative Commons Attribution-ShareAlike 4.0 International
+                License. To view a copy of this license, visit&nbsp;
+                <ExternalLink href="http://creativecommons.org/licenses/by-sa/4.0/">
+                  creativecommons.org
+                </ExternalLink>
+                . This database incorporates&nbsp;
+                <ExternalLink href="http://www.geonames.org">
+                  GeoNames
+                </ExternalLink>
+                &nbsp;geographical data, which is made available under the
+                Creative Commons Attribution 3.0 License. To view a copy of this
+                license, visit&nbsp;
+                <ExternalLink href="http://www.creativecommons.org/licenses/by/3.0/us/">
+                  creativecommons.org
+                </ExternalLink>
+                .
+              </dd>
+            </div>
+          </OpenSourceCreditsContainer>
+        </Section>
+
+        <Section>
+          <div>Icons made by</div>
+          <div>
+            <ExternalLink
+              title="Freepik"
+              href="https://www.flaticon.com/authors/freepik"
+            >
+              Freepik
+            </ExternalLink>
+            ,&nbsp;
+            <ExternalLink
+              title="Gregor Cresnar"
+              href="https://www.flaticon.com/authors/gregor-cresnar"
+            >
+              Gregor Cresnar
+            </ExternalLink>
+            ,&nbsp;
+            <ExternalLink
+              title="Google"
+              href="https://www.flaticon.com/authors/google"
+            >
+              Google
+            </ExternalLink>
+            ,&nbsp;
+            <ExternalLink
+              title="Dave Gandy"
+              href="https://www.flaticon.com/authors/dave-gandy"
+            >
+              Dave Gandy
+            </ExternalLink>
+            ,&nbsp;
+            <ExternalLink
+              title="Pixel perfect"
+              href="https://www.flaticon.com/authors/pixel-perfect"
+            >
+              Pixel perfect
+            </ExternalLink>
+            ,&nbsp;
+            <ExternalLink
+              title="Kirill Kazachek"
+              href="https://www.flaticon.com/authors/kirill-kazachek"
+            >
+              Kirill Kazachek
+            </ExternalLink>
+            ,&nbsp;
+            <ExternalLink
+              title="srip"
+              href="https://www.flaticon.com/authors/srip"
+            >
+              srip
+            </ExternalLink>
+            ,&nbsp;
+            <ExternalLink
+              title="Kiranshastry"
+              href="https://www.flaticon.com/authors/kiranshastry"
+            >
+              Kiranshastry
+            </ExternalLink>
+            ,&nbsp;
+            <ExternalLink
+              title="Smashicons"
+              href="https://www.flaticon.com/authors/smashicons"
+            >
+              Smashicons
+            </ExternalLink>
+            ,&nbsp;
+          </div>
+          <div>
+            from{' '}
+            <ExternalLink href="https://www.flaticon.com/" title="Flaticon">
+              www.flaticon.com
+            </ExternalLink>
+          </div>
+        </Section>
+      </ControlledModal.Body>
+    </ControlledModal>
+  );
+}

@@ -66,133 +66,83 @@ Available RPC methods:
 	Add new Interface Specific Utilities Here. Module Specific Functions go In Module Scripts.
 **/
 
-import axios from 'axios';
-import { remote } from 'electron';
+import http from 'http';
+import https from 'https';
 
-import store from 'store';
-import { customConfig, loadNexusConf } from 'lib/coreConfig';
+import { getActiveCoreConfig } from 'lib/coreConfig';
 
-const core = remote.getGlobal('core');
+const getDefaultOptions = ({ rpcSSL, ip, portSSL, port, user, password }) => ({
+  portocol: rpcSSL ? 'https:' : 'http:',
+  host: ip,
+  port: rpcSSL ? portSSL : port,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  auth: user && password ? `${user}:${password}` : undefined,
+  rejectUnauthorized: false,
+});
 
-// export const GET = (cmd, args, Callback) => {
-//   var PostData = JSON.stringify({
-//     method: cmd,
-//     params: args,
-//   });
-
-//   POST(
-//     GETHOST(),
-//     PostData,
-//     'TAG-ID-deprecate',
-//     Callback,
-//     GETUSER(),
-//     GETPASSWORD()
-//   );
-// };
-
-export default async function rpc(cmd, args) {
-  const { settings } = store.getState();
-  const conf = settings.manualDaemon
-    ? customConfig({
-        ip: settings.manualDaemonIP,
-        port: settings.manualDaemonPort,
-        user: settings.manualDaemonUser,
-        password: settings.manualDaemonPassword,
-        dataDir: settings.manualDaemonDataDir,
-      })
-    : core.config || customConfig(loadNexusConf());
-  try {
-    const response = await axios.post(
-      conf.host,
-      {
+export default function rpc(cmd, args) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const conf = await getActiveCoreConfig();
+      const options = getDefaultOptions(conf);
+      const params = {
         method: cmd,
         params: args,
-      },
-      {
-        withCredentials: !!(conf.user && conf.password),
-        auth:
-          conf.user && conf.password
-            ? {
-                username: conf.user,
-                password: conf.password,
-              }
-            : undefined,
+      };
+      const content = params && JSON.stringify(params);
+      if (content) {
+        options.headers = {
+          ...options?.headers,
+          'Content-Length': Buffer.byteLength(content),
+        };
       }
-    );
 
-    return response.data && response.data.result;
-  } catch (err) {
-    if (err.response) {
-      const { status, data } = err.response;
-      if (status == 404) {
-        throw 'RPC Command {' + cmd + '} Not Found';
+      const { request } = conf.rpcSSL ? https : http;
+      const req = request(options, (res) => {
+        let data = '';
+        res.setEncoding('utf8');
+
+        res.on('data', (chunk) => {
+          data += chunk;
+        });
+
+        res.on('end', () => {
+          let result = undefined;
+          if (data) {
+            try {
+              result = JSON.parse(data);
+            } catch (err) {
+              console.error('Response data is not valid JSON', data);
+            }
+          }
+          if (res.statusCode >= 200 && res.statusCode < 300) {
+            resolve(result?.result);
+          } else {
+            reject(result?.error);
+          }
+        });
+
+        res.on('aborted', () => {
+          reject(new Error('Aborted'));
+        });
+      });
+
+      req.on('error', (err) => {
+        reject(err);
+      });
+
+      req.on('abort', () => {
+        reject(new Error('Aborted'));
+      });
+
+      if (params) {
+        req.write(content);
       }
-      if (status == 401) {
-        throw 'Bad Username and Password';
-      }
-      if (status == 400) {
-        throw 'Bad Request';
-      }
-      if (status == 500) {
-        throw data.error;
-      }
+      req.end();
+    } catch (err) {
+      reject(err);
     }
-    throw err.message || err;
-  }
+  });
 }
-
-//TODO: clean this up... still not diving into this yet. prototype first...
-// export const POST = (
-//   Address,
-//   PostData,
-//   TagID,
-//   Callback,
-//   Username,
-//   Password,
-//   Content
-// ) => {
-//   /** Object to handle the AJAX Requests. */
-//   var ResponseObject;
-
-//   /** Opera 8.0+, Firefox, Safari **/
-//   try {
-//     ResponseObject = new XMLHttpRequest();
-//   } catch (e) {
-//     /** Internet Explorer - All Versions **/
-//     try {
-//       ResponseObject = new ActiveXObject('Msxml2.XMLHTTP');
-//     } catch (e) {
-//       try {
-//         ResponseObject = new ActiveXObject('Microsoft.XMLHTTP');
-//       } catch (e) {
-//         try {
-//           ResponseObject = new ActiveXObject('Msxml2.XMLHTTP.6.0');
-//         } catch (e) {
-//           return false;
-//         }
-//       }
-//     }
-//   }
-
-//   /** Asynchronous event on AJAX Completion. */
-//   if (Callback == undefined) Callback = AJAX.CALLBACK.Post;
-
-//   /** Handle the Tag ID being omitted. **/
-//   if (TagID == undefined) TagID = '';
-
-//   /** Establish the Callback Function. **/
-//   ResponseObject.onreadystatechange = () => {
-//     Callback(ResponseObject, Address, PostData, TagID);
-//   };
-
-//   /** Generate the AJAX Request. **/
-//   if (Username == undefined && Password == undefined)
-//     ResponseObject.open('POST', Address, true);
-//   else ResponseObject.open('POST', Address, true, Username, Password);
-
-//   if (Content !== undefined)
-//     ResponseObject.setRequestHeader('Content-type', Content);
-
-//   /** Send off the Post Data. **/
-//   ResponseObject.send(PostData);
-// };

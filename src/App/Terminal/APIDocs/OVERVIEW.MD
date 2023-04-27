@@ -298,7 +298,7 @@ Error Codes
 | -161 | Name contains invalid characters |
 | -162 | Namespace can only contain lowercase letters, numbers, periods (.) |
 | -163 | Could not retrieve default NXS account to debit fees |
-| -164 | Account 'default' is not a NXS account |
+| -164 | Fee account is not a NXS account |
 | -165 | Invalid address_to |
 | -166 | Account is a NXS account.  Please use the finance API for accessing NXS accounts. |
 | -167 | Invalid reference |
@@ -348,3 +348,45 @@ Error Codes
 | -211 | Recipient object has not been tokenized |
 | -212 | Invalid token |
 | -213 | Cannot create transactions whilst synchronizing |
+| -214 | Insufficient funds to pay fee |
+| -215 | Max number of recipients (99) exceeded |
+| -216 | recipients field must be an array |
+| -217 | recipients array is empty |
+| -218 | User password / pin not changed |
+| -219 | Could not retrieve Crypto object |
+| -220 | Missing recovery seed |
+| -221 | Recovery seed must be a minimum of 40 characters |
+| -222 | User create pending confirmation |
+| -223 | Recovery seed not set on this signature chain |
+| -224 | Missing description |
+| -225 | Missing number |
+| -226 | Missing reference |
+| -227 | Missing payment account name / address |
+| -228 | Missing sender detail |
+| -229 | Missing recipient |
+| -230 | Recipient user does not exist | 
+| -231 | Missing recipient detail |
+| -232 | Missing items |
+| -233 | Invoice must include at least one item |
+| -234 | Missing item description |
+| -235 | Missing item unit amount |
+| -236 | Invalid item unit amount |
+| -237 | Item unit amount must be greater than 0 |
+| -238 | Missing item number of units |
+| -239 | Invalid item number of units |
+| -240 | Item units must be greater than 0 |
+| -241 | Invoice not found |
+| -242 | Data at this address is not an invoice |
+| -242 | Data exceeds max register size |
+| -243 | Data at this address is not a supply item |
+| -244 | Cannot send invoice to self |
+| -245 | Cannot cancel an invoice that has already been paid |
+| -246 | Cannot cancel an invoice that has already been cancelled |
+| -247 | Could not find invoice transfer transaction |
+| -248 | Cannot pay an invoice that has already been paid |
+| -249 | Cannot pay an invoice that has already been cancelled |
+| -250 | Invoice is not yours to pay |
+| -251 | Missing name from or address from |
+| -252 | Account to debit is not for the required token |
+| -254 | Invoices API not yet active |
+

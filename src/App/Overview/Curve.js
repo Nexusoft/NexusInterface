@@ -92,7 +92,7 @@ export default class Curve {
       points[j++] = vertex.z;
     }
 
-    this.curveGeometry.addAttribute(
+    this.curveGeometry.setAttribute(
       'position',
       new THREE.BufferAttribute(points, 3)
     );

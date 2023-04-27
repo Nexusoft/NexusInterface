@@ -9,7 +9,7 @@
  * - Make sure this note also presents in other files which are imported here.
  */
 
-import { keyframes } from '@emotion/core';
+import { keyframes } from '@emotion/react';
 import * as color from 'utils/color';
 
 const defaultColors = {

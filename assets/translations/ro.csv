@@ -1,0 +1,1168 @@
+Delete contact %{name}?,Şterge contactul %{name}?,AddressBook
+Edit contact,Editare contact,AddressBook
+Delete contact,Şterge contactul,AddressBook
+%{smart_count} address |||| %{smart_count} addresses,%{smart_count} adresă |||| %{smart_count} adrese,AddressBook
+New contact,Contact nou,AddressBook
+No information,Nu există informaţii,AddressBook
+Delete,Şterge,AddressBook
+Edit,Editează,AddressBook
+NXS addresses,Adrese NXS,AddressBook
+My address for %{name},Adresa mea pentru %{name},AddressBook
+%{name}'s Address,Adresă %{name},AddressBook
+Contact info,Informatii contact,AddressBook
+Email,Email,AddressBook
+Phone Number,Număr de telefon,AddressBook
+Local Time,Ora locală,AddressBook
+Notes,Note,AddressBook
+Address book,Agendă,AddressBook
+Your address book is empty,Agenda ta este goală,AddressBook
+Create new contact,Creează un contact nou,AddressBook
+Search contact,Caută contacte,AddressBook
+My Addresses,Adresele mele,AddressBook
+Export contacts,Exportă contacte,AddressBook
+Legacy Mode,Mod Legacy,Header
+Tritium Mode,Mod Tritium,Header
+Unknown login status,Status necunoscut,Header
+Wallet is not encrypted,Portofelul tău nu este criptat,Header
+Not logged in,Nu ești autentificat(ă),Header
+Logged in<if_timed> until %{unlockDate}</if_timed><if_minting_only> for staking & mining</if_minting_only>,Conectare<if_timed> până la %{unlockDate}</if_timed><if_minting_only> pentru staking şi minat</if_minting_only>,Header
+My Addresses,Adresele mele,Header
+Wallet is staking,Portofelul contribuie la miză,Header
+Stake Rate,Rată miză,Header
+Waiting for 100% synchronization to start staking...,Se asteaptă sincronizarea 100% pentru a începe procesul de miză...,Header
+Waiting for average age of balance to exceed 72 hours to start staking...,Vârsta soldului trebuie să depăşească 72 de ore pentru a se iniţia procesul de cotă parte...,Header
+Wallet is not staking,Portofelul nu contribuie la miză,Header
+Checking sync status,Verificare status sincronizare,Header
+Synchronizing,Sincronizare,Header
+Synchronized,Sincronizare Reușită,Header
+pooled,,Header
+You're not logged in,Nu eşti autentificat,Header
+You are staking but have not received a block in 30 minutes!,,Header
+Switching...,,
+Active,,
+Switch,,
+Switch user,,
+Closing Nexus Wallet,Portofelul Nexus se închide,
+Warning,Avertisment,
+IMPROPER USE OF THIS SOFTWARE COULD LEAD TO PERMANENT LOSS OF COIN.,FOLOSIREA NECONFORMĂ A ACESTUI SOFTWARE POATE DUCE LA PIERDEREA MONEDELOR.,
+BACKUP YOUR WALLET OFTEN AND KEEP YOUR PASSWORDS SAFE.,CREEAZĂ COPII DE REZERVĂ DES ŞI SALVEAZĂ-ŢI PAROLELE ÎN SIGURANŢĂ.,
+I understand the risk,Înţeleg riscurile,
+Close,Închide,
+Remote Core is disconnected,,
+Connecting to Nexus Core...,Conectare la Nucleul Nexus...,
+Nexus Core is stopped,Nucleul Nexus este oprit,
+Address has been copied to clipboard,Adresa a fost copiată,
+Copy to clipboard,Copiază în memoria temporară,
+Click to copy to clipboard,Fă clic pentru a copia în clipboard,
+Show QR code,,
+Log in,Autentificare,
+No Rows Found,Nu au fost găsite rânduri,
+Page,Pagină,
+rows,rânduri,
+Previous,Anteriorul,
+Next,Următorul,
+Use virtual keyboard,,
+<token_name></token_name> token,,
+Unnamed token,,
+Switch to Legacy Mode,Comutare la Modul Legacy,
+Are you sure you want to switch to Legacy Mode?,Eşti sigur că doreşti să comuţi pe Modul Legacy?,
+Switch to Tritium Mode,Comutare la Modul Tritium,
+Start Nexus Core,Pornește Nucleul Nexus,
+Stop Nexus Core,Oprește Nucleul Nexus,
+Quit Nexus,Închide Nexus,
+About,Despre,
+Backup Wallet,Copie de rezervă portofel,
+Nexus Core is not connected,Nucleul Nexus nu este conectat,
+Wallet backed up,S-a creat copie de rezervă,
+View Backups,Vizualizare copii de rezervă,
+Cut,Tăiere,
+Copy,Copiază,
+Paste,Lipește,
+Core,Nucleu,
+Application,Aplicație,
+Key Management,Administrare chei,
+Style,Stil,
+Modules,Module,
+Download Recent Database,Descarcă Baza de date recentă,
+Cannot bootstrap recent database in manual mode,"Baza de date recentă nu se poate încărca ""bootstrap"" în modul manual",
+Please wait for Nexus Core to start.,Te rugăm așteaptă pornirea Nucleului Nexus.,
+Toggle FullScreen,Comută ecran mic/mare,
+Toggle Developer Tools,Comutare instrumente de dezvoltare,
+Toggle Module's Developer Tools,Comutare instrumente de dezvoltare modul,
+Nexus Website,Website Nexus,
+Nexus Git Repository,Depozitul de informație Nexus Git,
+Nexus Wallet Guide,Ghid portofel Nexus,
+Open Core Data Folder,Deschide Directorul de Date al Nucleului,
+Open Interface Data Folder,Deschide Director Date Interfaţă,
+Check for Updates...,Verifică actualizări...,
+There are currently no updates available,În acest moment nu există actualizări disponibile,
+Checking for Updates...,Căutare actualizări...,
+Update available! Downloading...,Actualizare disponibilă! Se descarcă...,
+Quit and install update...,Închide și instalează actualizarea...,
+File,Fișier,
+Edit,Editează,
+Settings,Setări,
+View,Vizualizare,
+Help,Ajutor,
+Transaction received,Tranzacție primită,
+Transaction sent,Tranzacție trimisă,
+Genesis transaction,Transacţie geneză,
+Trust transaction,Tranzacție de acreditare,
+Update available for %{smart_count} module |||| Updates available for %{smart_count} modules,,
+New transaction,Tranzacţie nouă,
+Error,Eroare,
+Unknown error,Eroare necunoscută,
+Accounts,Conturi,Header.UserDropdown
+Tokens,Monede,Header.UserDropdown
+Set recovery phrase,,Header.UserDropdown
+Switch user,,Header.UserDropdown
+Log in to another user,,Header.UserDropdown
+Log out of all users,,Header.UserDropdown
+Log out,Deconectare,Header.UserDropdown
+Log in,Autentificare,Header.UserDropdown
+Create new user,Creare utilizator nou,Header.UserDropdown
+Overview,Prezentare generală,NavigationBar
+User,Utilizator,NavigationBar
+Send NXS,Trimite NXS,NavigationBar
+Send,Trimite,NavigationBar
+Transactions,Tranzacţii,NavigationBar
+Address Book,Agendă,NavigationBar
+Settings,Setări,NavigationBar
+Console,Consolă,NavigationBar
+Lite mode,,LiteModeNotice
+Lite mode is now available on Nexus Wallet! You can choose to enable lite mode now or just ignore it. You can change your decision anytime under Settings/Core.,,LiteModeNotice
+Why you might want to enable lite mode,,LiteModeNotice
+Nexus Core would take less resources (memory and storage) to run,,LiteModeNotice
+Synchronization would be much faster,,LiteModeNotice
+Why you might NOT want to enable lite mode,,LiteModeNotice
+You would NOT be able to mine or stake,,LiteModeNotice
+Legacy Mode would be disabled,,LiteModeNotice
+Ignore,,LiteModeNotice
+Enable lite mode,,LiteModeNotice
+"Last updated
+%{time}",Ultima actualizare la %{time},Overview
+Getting next block...,Se preia următorul bloc...,Overview
+Block Weight,Greutate bloc,Overview
+Trust Weight,Greutate acreditare,Overview
+Stake Weight,Greutate miză,Overview
+Prime Difficulty,Dificultate primă,Overview
+Hash Difficulty,Dificultate Hash,Overview
+Stake Difficulty,Dificultate miză,Overview
+Balance,Sold,Overview
+Transactions,Tranzacţii,Overview
+Market Price,Preț pe Piață,Overview
+24hr Change,Variații în 24 de ore,Overview
+Connections,Conexiuni,Overview
+Stake Rate,Rată miză,Overview
+Block Count,Număr bloc,Overview
+The balance displayed might not be up-to-date since the wallet is not yet fully synchronized,Este posibil ca soldul afişat să nu fie actualizat din moment ce portofelul nu este încă sincronizat complet,Overview
+Staking and mining rewards that need to get past 120 block-old to become available,Recompensele pentru minat și cotă parte trebuie să treacă de 120 de blocuri pentru a deveni disponibile,Overview
+Immature Balance,Sold Imatur,Overview
+Market Cap,Capacitatea pieței,Overview
+Available balance,Sold disponibil,Overview
+balance,sold,Overview
+"This includes your pending balance, unconfirmed balance and immature balance","Aceasta include soldurile tale în așteptare, neconfirmate sau imature",Overview
+Incoming balances,Solduri de primit,Overview
+NXS Amount,Cantitate NXS,Send
+Send all,Trimite tot,Send
+Send NXS,Trimite NXS,Send
+Move NXS between accounts,Transferă NXS între conturi,Send
+You are not logged in,Nu eşti autentificat,Send
+You need to log in to your wallet before sending transactions,Trebuie să te autentifici înainte de a face tranzacţii,Send
+Log in now,Autentifică-te acum,Send
+Move NXS,Mută NXS,Send
+From account,Din contul,Send
+Select an account,Alege un cont,Send
+To account,Către contul,Send
+No accounts selected,Niciun cont selectat,Send
+Cannot move to the same account,Nu se poate muta în acelaşi cont,Send
+Invalid amount,Sumă invalidă,Send
+Invalid address,Adresă invalidă,Send
+This is an address registered to this wallet.,Aceasta este o adresă înregistrată la acest portofel.,Send
+NXS moved successfully,NXS transferat cu succes,Send
+Error moving NXS,Eroare transfer NXS,Send
+Wallet password,Parola portofelului tău,Send
+Enter your wallet password,Introdu parola portofelului tău,Send
+Cancel,Anulează,Send
+Confirm,Confirmă,Send
+Send to,Trimite la,Send
+Recipient address,Adresa destinatarului,Send
+Your address book is empty,Agenda ta este goală,Send
+Create new contact,Creează un contact nou,Send
+Remove recipient,Elimină destinatar,Send
+Add recipient,Adaugă destinatar,Send
+Send transaction?,Trimite tranzacție?,Send
+Send To multiple recipients,Trimite la destinatari multipli,Send
+Send from,Trimite de la,Send
+Message,Mesaj,Send
+Enter your message,Introdu mesajul tău,Send
+Send,Trimite,Send
+There must be at least one recipient,Este necesar cel puțin un destinatar,Send
+Address is required,Adresa este necesară,Send
+Transaction sent,Tranzacție trimisă,Send
+Error sending NXS,Eroare trimitere NXS,Send
+Reference,,Send
+"An optional number which may be provided by the recipient to identify this transaction from the others, e.g. invoice number, order number, etc.",,Send
+Reference number (optional),,Send
+Expires in,,Send
+"The amount of time since the transaction is created after which the transaction can no longer be credited by the recipient. By default, transactions will expire in 1 day (86400 seconds).",,Send
+Days,,Send
+Hours,,Send
+Minutes,,Send
+Seconds,,Send
+Amount,,Send
+Recipient Address/Name,Adresă/Nume beneficiar,Send
+Accounts,Conturi,Send
+Unnamed account,,Send
+Tokens,Monede,Send
+Unnamed token,,Send
+Unnamed,,Send
+Invalid name/address,,Send
+Advanced options,,Send
+Address/Name is required,Nume/Adresă sunt necesare,Send
+Reference must be an unsigned integer,,Send
+Number is too large,Numărul este prea lung,Send
+Unnamed,,PreviewTransaction
+%{smart_count} day |||| %{smart_count} days,,PreviewTransaction
+%{smart_count} hour |||| %{smart_count} hours,,PreviewTransaction
+%{smart_count} minute |||| %{smart_count} minutes,,PreviewTransaction
+%{smart_count} second |||| %{smart_count} seconds,,PreviewTransaction
+Preview Transaction,,PreviewTransaction
+You're sending,,PreviewTransaction
+From,,PreviewTransaction
+To,,PreviewTransaction
+Amount,,PreviewTransaction
+Reference,,PreviewTransaction
+Expires,,PreviewTransaction
+Send transaction,,PreviewTransaction
+Select backup directory,Alege un director de rezervă,Settings.Application
+Backup directory,Registru copii de rezervă,Settings.Application
+Browse,Răsfoieşte,Settings.Application
+Backup wallet,Copie de rezervă portofel,Settings.Application
+Wallet has been backed up,S-a creat copie de rezervă portofel,Settings.Application
+Connecting to Nexus Core,Conectare la Nucleul Nexus,Settings.Application
+Turn module open source policy on?,"Activează politica ""open source"" pentru module?",Settings.Application
+"All modules without open source verifications, possibly including your own under-development modules, will become invalid. Wallet must be refreshed for the change to take effect.","Toate modulele fără verificare de tip ""open source"", incluzând posibil şi modulele tale incomplete vor deveni invalide. Portofelul trebuie reîncărcat pentru ca modificările să fie activate.",Settings.Application
+Turn module open source policy off?,"Dezactivează politica ""open source"" pentru module?",Settings.Application
+"This is only for module developers and can be dangerous for
+              regular users. Please make sure you know what you are doing!","Această funcție se adresează doar dezvoltatorilor de module și poate să fie periculoasă pentru
+              utilizatorii obișnuiți. Te rugăm asigură-te ca știi ce faci!",Settings.Application
+"It would be much easier for a closed source module to hide
+              malicious code than for an open source one. Therefore, in case you
+              still want to disable this setting, it is highly recommended that
+              you only install and run closed source modules that you are
+              developing yourself.","Este mult mai uşor ca un modul cu sursă închisă să ascundă
+              coduri maliţioase faţă de unul cu sursă deschisă. Astfel, în cazul în care
+              doreşti în continuare să dezactivezi această setare, este recomandat să
+              instalezi şi să rulezi doar modulele cu sursă închisă 
+              dezvoltate de tine.",Settings.Application
+Turn policy off,Dezactivează politica,Settings.Application
+Keep policy on,Păstrează politica activă,Settings.Application
+Are you sure you want to disable auto update?,Eşti sigur că vrei să dezactivezi actualizarea automată?,Settings.Application
+Keeping your wallet up-to-date is important for your security and will ensure that you get the best possible user experience.,Păstrarea portofelului actualizat este foarte importantă pentru securitate și pentru ca tu să te bucuri de cea mai bună experiență de utilizare.,Settings.Application
+Keep auto update On,Păstrează actualizarea automată activă,Settings.Application
+Turn auto update Off,Dezactivează actualizarea automată,Settings.Application
+Minimize on close,Minimizează la închidere,Settings.Application
+Minimize the wallet when closing the window instead of closing it.,Minimizează portofelul fără a-l închide atunci când închizi fereastra.,Settings.Application
+Auto update (Recommended),Actualizare automată (Recomandat),Settings.Application
+Automatically check for new versions and notify if a new version is available.,Caută automat versiuni noi şi anunţă-mă atunci când o nouă versiune este disponibilă.,Settings.Application
+Send anonymous usage data,Trimite date anonime de folosire,Settings.Application
+Send anonymous usage data to allow the Nexus developers to improve the wallet.,Trimite date anonime pentru a permite dezvoltatorilor Nexus să îmbunătățească portofelul.,Settings.Application
+Base currency,Valută de bază,Settings.Application
+Minimum confirmations,Numărul minim de confirmări,Settings.Application
+Minimum amount of confirmations before a block is accepted. Local only.,Numărul minim de confirmări necesare pentru acceptarea unui bloc. Doar local.,Settings.Application
+Developer mode,Mod dezvoltator,Settings.Application
+Development mode enables advanced features to aid in development. After enabling the wallet must be closed and reopened to enable those features.,"Modul ""dezvoltator"" permite utilizarea de funcţii avansate pentru dezvoltare. După activare, portofelul trebuie redeschis pentru ca funcţiile să fie utilizabile.",Settings.Application
+Module open source policy,"Politica ""open source"" a modulului",Settings.Application
+Only modules which have valid open source repositories are allowed to be installed and run. You can disable this option to test run the modules that you're developing,"Doar modulele cu o politică ""open source"" se pot descărca și rula. Poți dezactiva această opțiune pentru a testa modulele dezvoltate de tine",Settings.Application
+Allow SymLink,Permite SymLink,Settings.Application
+Allow the presence of SymLinks in the module directory,Permite prezenţa SymLinks în directorul de module,Settings.Application
+Fake Test Transactions,Tranzacţii de test,Settings.Application
+Display Test Transactions on the Transactions page,Afişază Tranzacţii Test în pagina de Tranzacţii,Settings.Application
+Language,Limbă,Settings.Application
+Exit remote Core mode?,,Settings.Core
+(This will restart your Core),(Această funcție va reporni Nucleul),Settings.Core
+Enter remote Core mode?,,Settings.Core
+Reload transaction history,Reîncarcă istoricul tranzacţiilor,Settings.Core
+Clear peer connections,Sterge conexiunile cu restul utilizatorilor,Settings.Core
+Resync database,,Settings.Core
+Nexus Core will be restarted. Lite mode database will be deleted and resynchronized from the beginning.,,Settings.Core
+Embedded Core,,Settings.Core
+Remote Core,,Settings.Core
+Lite mode,,Settings.Core
+"Nexus Core under lite mode runs lighter and synchronize much faster, but you will <b>NOT</b> be able to stake, mine, or switch the wallet to Legacy Mode.",,Settings.Core
+Multi-user,,Settings.Core
+Allow multiple logged in users at the same time. Mining and staking will be unavailable.,,Settings.Core
+Enable staking,Activează staking,Settings.Core
+Enable/Disable staking on the wallet.,"Activează/Dezactivează ""staking"" către portofel.",Settings.Core
+Pooled staking,,Settings.Core
+"Pooled staking is a decentralized and trust-less mechanism allowing you to use the balances of others to increase your chances of finding a stake block. All participants receive their staking rewards and build trust, regardless of which user mines the block. A small portion of each reward is paid to the block finder by all pool participants.",,Settings.Core
+Enable mining,Activează minatul,Settings.Core
+Enable/Disable mining to the wallet.,Activează/Dezactivează minatul către portofel.,Settings.Core
+Mining IP Whitelist,Listă IP-uri confirmate pentru minat,Settings.Core
+IP/Ports allowed to mine to. Separate by <b>;</b> . Wildcards supported only in IP,IP-urile/Port-urile cu permisiune de minat la. Separate cu <b>;</b> . Wildcards suportate doar în IP,Settings.Core
+Verbose level,Nivel prolix,Settings.Core
+Verbose level for logs.,Nivel prolix pentru jurnale.,Settings.Core
+Core Data Directory,,Settings.Core
+Where the blockchain data and your legacy wallet.dat are stored,,Settings.Core
+Testnet Iteration,,Settings.Core
+The iteration of Testnet to connect to.,,Settings.Core
+Turn Off,,Settings.Core
+Avatar Mode,Mod Avatar,Settings.Core
+Disabling Avatar will make the core use a separate change key,Dezactivarea modulul Avatar va face ca nucleul să folosească o altă cheie,Settings.Core
+Rescan wallet,Rescanează portofelul,Settings.Core
+"Used to correct transaction/balance issues, scans over every block in the database. Could take up to 10 minutes.",Folosit pentru a corecta probleme legate de sumă/tranzacții prin scanarea fiecărui bloc din baza de date. Poate dura până la 10 minute.,Settings.Core
+Restart Nexus core with -walletclean parameter to clean out and reload all transaction history,Reporneşte Nucleul Nexus cu parametrul -walletclean pentru a reseta şi reîncărca istoricul tranzacţiilor,Settings.Core
+Reload,Reîncarcă,Settings.Core
+Clear all stored peer connections and restart Nexus,Şterge toate conexiunile stocate şi reporneşte Nexus,Settings.Core
+Clear,Șterge,Settings.Core
+Delete lite mode database and resynchronize from the beginning,,Settings.Core
+Resynchronize,,Settings.Core
+IP address,Adresă IP,Settings.Core
+Remote Core IP address,,Settings.Core
+API SSL,,Settings.Core
+Use SSL for API calls,,Settings.Core
+API Port,,Settings.Core
+Nexus API server Port,,Settings.Core
+API SSL Port,,Settings.Core
+Nexus API server SSL Port,,Settings.Core
+API Username,,Settings.Core
+Nexus API server Username,,Settings.Core
+API Password,,Settings.Core
+Nexus API server Password,,Settings.Core
+RPC SSL,,Settings.Core
+Use SSL for RPC calls,,Settings.Core
+RPC Port,,Settings.Core
+Nexus RPC server Port,,Settings.Core
+RPC SSL Port,,Settings.Core
+Nexus RPC server SSL Port,,Settings.Core
+RPC Username,,Settings.Core
+Nexus RPC server Username,,Settings.Core
+RPC Password,,Settings.Core
+Nexus RPC server Password,,Settings.Core
+Log out on close,,Settings.Core
+Log out of all users before closing the wallet,,Settings.Core
+Restart Core for these changes to take effect,"Pentru ca schimbările să aibe loc, reporneşte Nucleul",Settings.Core
+Save settings,Salvează setările,Settings.Core
+Verbose level is required,Este necesar nivelul de notificări dorit,Settings.Core
+Remote Core IP is required,,Settings.Core
+RPC port is required,,Settings.Core
+RPC username is required,,Settings.Core
+RPC password is required,,Settings.Core
+API port is required,,Settings.Core
+API username is required,,Settings.Core
+API password is required,,Settings.Core
+Core settings saved,Setările Nucleului au fost salvate,Settings.Core
+Restarting Core...,Se repornește Nucleul...,Settings.Core
+Error rescanning,Eroare rescanare,Settings.Core
+Rescanned successfully,Rescanare reușită,Settings.Core
+Rescanning...,Se rescanează...,Settings.Core
+Settings,Setări,Settings
+Application,Aplicație,Settings
+Core,Nucleu,Settings
+Security,Securitate,Settings
+Style,Stil,Settings
+Modules,Module,Settings
+Select development module directory,,Settings.Modules
+Your module is still in development? <link>Add a development module</link>,,Settings.Modules
+Select module archive file,Selectează arhivă modul,Settings.Modules
+Select module directory,Selectează locația modulului,Settings.Modules
+Add Module,Adaugă Modul,Settings.Modules
+Checking module,Verificare modul,Settings.Modules
+Drop here to install,Plasează fișiere aici pentru instalare,Settings.Modules
+Select module's <file>archive file</file> or <dir>directory</dir>,Alege <file>arhiva</file> sau <dir>directorul</dir> modulului,Settings.Modules
+or drag and drop it here,sau trage aici,Settings.Modules
+Failed to load %{moduleName},,Settings.Modules
+Disable %{moduleName}?,Dezactivează %{moduleName}?,Settings.Modules
+Wallet will be automatically refreshed for the change to take effect,Portofelul se va reinițializa automat pentru ca modificările să aibă efect,Settings.Modules
+Enable %{moduleName}?,Activează %{moduleName}?,Settings.Modules
+This module was built for an incompatible wallet version,,Settings.Modules
+Module is not open source,"Modulul nu este de tip ""open source""",Settings.Modules
+The provided repository is not verified to be the real source code of this module,Depozitul furnizat nu este verificat ca fiind sursa reală de cod pentru acest modul,Settings.Modules
+%{version} update available,,Settings.Modules
+development,,Settings.Modules
+Failed to load module,,Settings.Modules
+Overwrite module?,Rescrie Modul?,Settings.Modules
+A module with the same directory name already exists,Un modul cu aceeași denumire de fișier există deja,Settings.Modules
+Module has been successfully installed,Modulul a fost instalat cu succes,Settings.Modules
+The wallet will now be refreshed for the new module to take effect,Portofelul se va reactualiza pentru ca noul modul să se activeze,Settings.Modules
+Error copying module files,Eroare copiere fişiere module,Settings.Modules
+Cannot find module,Modulul nu poate fi găsit,Settings.Modules
+Unsupported file type,Tip de fișier nesuportat,Settings.Modules
+Cannot install from this location,,Settings.Modules
+An unknown error occurred,S-a produs o eroare necunoscută,Settings.Modules
+Directory has already been added,,Settings.Modules
+Failed to load development module,,Settings.Modules
+A module with the same name already exists,,Settings.Modules
+Development module has been added,,Settings.Modules
+Are you sure you want to log out?,Eşti sigur că doreşti să te deconectezi?,Settings.Security
+Error logging out,Eroare deconectare,Settings.Security
+Change password,Schimbă parola,Settings.Security
+Previous password,Parola anterioară,Settings.Security
+Password,Parolă,Settings.Security
+New password,Parolă nouă,Settings.Security
+Re-enter password:,Reintrodu parola:,Settings.Security
+Confirm password,Confirmă parola,Settings.Security
+Log out,Deconectare,Settings.Security
+Password is required,Parola este necesară,Settings.Security
+Password cannot contain these characters:,Parola nu poate conține următoarele simboluri:,Settings.Security
+Password must be at least 8 characters,Parola trebuie să aibă cel puțin 8 caractere,Settings.Security
+Password cannot start or end with spaces,Parola nu poate să înceapă sau să se termine cu spații,Settings.Security
+Passwords do not match,Parolele nu se potrivesc,Settings.Security
+Password has been changed.,Parola a fost schimbată.,Settings.Security
+Error changing password,Eroare modificare parolă,Settings.Security
+Encrypt wallet,Criptează portofel,Settings.Security
+Re-enter password,Reintrodu parola,Settings.Security
+Encrypt and restart,Criptează şi reporneşte,Settings.Security
+Wallet has been encrypted.,Portofelul a fost criptat.,Settings.Security
+Error encrypting wallet,Eroare criptare portofel,Settings.Security
+Import private key,Importă cheia privată,Settings.Security
+Account name,Nume cont,Settings.Security
+Private key,Cheie privată,Settings.Security
+Import,Importă,Settings.Security
+Account name is required,Este necesar numele contului,Settings.Security
+Private key is required,Cheia privată este necesară,Settings.Security
+Private key imported. Rescanning now,Cheia privată a fost importată. Se rescanează,Settings.Security
+Rescanning...,Se rescanează...,Settings.Security
+Rescanning done,Rescanare finalizată,Settings.Security
+Error rescanning,Eroare rescanare,Settings.Security
+An unknown error occurred,S-a produs o eroare necunoscută,Settings.Security
+Error importing private key,Eroare importare cheie privată,Settings.Security
+Login until date,Conectare doar până la data de,Settings.Security
+Login until time,Conectare doar până la ora,Settings.Security
+Your wallet password,Parola portofelului tău,Settings.Security
+Login for staking & mining only,Conectare doar pentru staking şi minat,Settings.Security
+Set timeout for login,Setează cronometru pentru deconectare,Settings.Security
+Date is required,Data trebuie precizată,Settings.Security
+Time is required,Timp necesar,Settings.Security
+Time must be at least one hour in the future,Timpul trebuie setat cu cel puțin o oră în viitor,Settings.Security
+Logged in successfully,Conectare reuşită,Settings.Security
+Error logging in,Eroare autorizare,Settings.Security
+Copied to clipboard,Copiază în memoria temporară,Settings.Security
+View private key for address,Vezi cheia privată pentru adresă,Settings.Security
+Address,Adresă,Settings.Security
+Enter address here,Introdu adresa aici,Settings.Security
+View private key,Vezi cheia privată,Settings.Security
+Private key will be displayed here,Cheia privată se va afișa aici,Settings.Security
+Copy,Copiază,Settings.Security
+Address cannot be empty,Câmpul de adresă nu poate fi gol,Settings.Security
+Error getting private key,Eroare achiziţie cheie privată,Settings.Security
+Twinkling stars,Stele strălucitoare,Settings.Style
+Cosmic light,Lumină cosmos,Settings.Style
+Custom wallpaper,Fundal de ecran personalizat,Settings.Style
+Select a custom wallpaper,Selectează un fundal personalizat,Settings.Style
+Color scheme has been reset to default,Schema de culoare a fost resetată la valorile implicite,Settings.Style
+Invalid file format! Custom theme file must be in JSON,Format fişier invalid! Fişierul pentru teme personalizate trebuie să fie de tip JSON,Settings.Style
+Select custom theme file,Alege un fișier pentru tema personalizată,Settings.Style
+Theme exported,Temă exportată,Settings.Style
+Theme has been reset to default,Tema a fost resetată,Settings.Style
+Render globe,Randare glob,Settings.Style
+Render the globe on the Overview page.,Randare glob în pagina generală.,Settings.Style
+Your computer does not support OPENGL 2.0,Computerul tău nu suportă OPENGL 2.0,Settings.Style
+Overview Display,Afișaj general,Settings.Style
+Nexus Addresses format,Format adrese Nexus,Settings.Style
+Choose your Nexus Address display preference,Alege preferinţele de afişare pentru adresa ta Nexus,Settings.Style
+Sample Address,Mostră Adresă,Settings.Style
+Theme,Temă,Settings.Style
+Select Wallet Theme,Selectează o temă,Settings.Style
+Background,Fundal,Settings.Style
+Customize your background wallpaper,Personalizează imaginea de fundal,Settings.Style
+Color scheme,Schemă culoare,Settings.Style
+Background Color,Culoare fundal,Settings.Style
+Foreground Color,Culoare prim plan,Settings.Style
+Primary Color,Culoare primară,Settings.Style
+Primary Color Accent,Accent culoare primară,Settings.Style
+Danger Color,Culoare de alertă,Settings.Style
+Danger Color Accent,Accent culoare alertă,Settings.Style
+Globe Color,Culoare Glob,Settings.Style
+Globe Pillar Color,Culoare Stâlpi Glob,Settings.Style
+Globe Arch Color,Culoare arcuri Glob,Settings.Style
+Import custom theme,Importă tema personalizată,Settings.Style
+Export custom theme,Exportă tema personalizată,Settings.Style
+Dark,Intunecat,Settings.Style
+Light,Deschis,Settings.Style
+Custom,Personalizat,Settings.Style
+Reset,Resetare,Settings.Style
+Console,Consolă,Console
+Core output,Producţie date Nucleu,Console
+CLI syntax,,Console.NexusAPI
+URL syntax,,Console.NexusAPI
+Execute,Executare,Console.NexusAPI
+API Documentation,Documentație API,Console.NexusAPI
+Clear,Șterge,Console.NexusAPI
+"Enter console commands here (ex: getinfo, help)","Introdu comenzile de consolă aici (ex: getinfo, help)",Console.Console
+Execute,Executare,Console.Console
+Clear console,Goleşte consola,Console.Console
+Core is in Manual Mode,Nucleul este în modul manual,Console.CoreOutput
+Pending,În aşteptare,Transactions
+All,Toate,Transactions
+Receive,Primește,Transactions
+Sent,Trimis,Transactions
+Stake,Miză,Transactions
+Generate,Generează,Transactions
+Immature,Nematurizat,Transactions
+Orphan,Neasociată,Transactions
+Genesis,Geneză,Transactions
+Past Year,Anul trecut,Transactions
+Past Month,Luna trecută,Transactions
+Past Week,Săptămâna trecută,Transactions
+Search address,Caută după adresă,Transactions
+Search for Address,Cauta Adresele,Transactions
+Category,Categorie,Transactions
+Min amount,Suma minimă,Transactions
+Time span,Durată de timp,Transactions
+Time,Timp,Transactions
+CATEGORY,CATEGORIE,Transactions
+AMOUNT,SUMĂ,Transactions
+ACCOUNT,CONT,Transactions
+ADDRESS,ADRESĂ,Transactions
+Transaction details,Detaliile tranzacției,Transactions
+Show transactions chart,Arată tabelul cu tranzacții,Transactions
+Download transactions history,Descarcă istoricul tranzacţiilor,Transactions
+Loading transactions,Se încarcă tranzacțiile,Transactions
+All Accounts,Toate Conturile,Transactions
+Send,Trimite,Transactions
+Trust,Acreditare,Transactions
+Unknown,Necunoscut,Transactions
+Legacy transaction,Tranzacţie Legacy,Transactions
+Coinbase transaction,Tranzacţie Coinbase,Transactions
+View contract details,,Transactions
+View transaction details,,Transactions
+Address,Adresă,Transactions
+Account/token address,Adresă cont/monedă,Transactions
+Name,Nume,Transactions
+Operation,Operaţie,Transactions
+Transactions,Tranzacţii,Transactions
+Loading transactions...,,Transactions
+NXS balances,Cantităţi NXS,Transactions
+Previous,Anteriorul,Transactions
+Page <page></page> of %{total},Pagina <page></page> din %{total},Transactions
+Next,Următorul,Transactions
+Transactions Details,Detalii tranzacții,Transactions.TransactionDetails
+Time,Timp,Transactions.TransactionDetails
+Category,Categorie,Transactions.TransactionDetails
+Amount,Sumă,Transactions.TransactionDetails
+Fee,Taxă,Transactions.TransactionDetails
+Account,Cont,Transactions.TransactionDetails
+Address,Adresă,Transactions.TransactionDetails
+Confirmations,Confirmări,Transactions.TransactionDetails
+Pending,În aşteptare,Transactions.TransactionDetails
+Transaction ID,ID-ul tranzacţiei,Transactions.TransactionDetails
+Block hash,Hash bloc,Transactions.TransactionDetails
+Loading transaction details...,Se încarcă detaliile tranzacției...,Transactions.TransactionDetails
+Transactions chart,Tabel tranzacții,Transactions.TransactionsChart
+Amount,Sumă,Transactions.TransactionsChart
+Time,Timp,Transactions.TransactionsChart
+Total,Total,Transactions.Balances
+Available,Disponibil,Transactions.Balances
+The current balance across all NXS accounts that is available to be spent,Soldul actual din toate conturile NXS disponibil pentru a fi cheltuit,Transactions.Balances
+Pending,În aşteptare,Transactions.Balances
+The sum of all debit and coinbase transactions made to your NXS accounts that are confirmed but have not yet been credited. This does NOT include immature and unconfirmed amounts,Suma tuturor tranzacţiilor de debit şi a monedelor câştigate alocate conturilor tale NXS care sunt confirmate dar nu au fost creditate încă. Acestea NU includ sumele imature sau neconfirmate,Transactions.Balances
+Unconfirmed,Neconfirmat,Transactions.Balances
+"The sum of all debit transactions made to your NXS accounts that are not confirmed, or credits you have made to your accounts that are not yet confirmed (not yet included in a block)","Suma tuturor tranzacţiilor de debit către conturile tale NXS care nu sunt confirmate, sau a creditelor încă neconfirmate, (care nu au fost încă adăugate într-un bloc) pe care le-ai realizat către conturile tale",Transactions.Balances
+Stake,Miză,Transactions.Balances
+The amount of NXS currently staked in the trust account,Cantitatea de NXS cotă parte în mod curent în contul de încredere,Transactions.Balances
+Immature,Nematurizat,Transactions.Balances
+The sum of all coinbase transactions that have not yet reached maturity,Suma tuturor monedelor câştigate indisponibile momentan pentru ca nu au ajuns încă la maturitate,Transactions.Balances
+Unnamed account,Cont fără nume,User.Accounts
+Rename,,User.Accounts
+Details,Detalii,User.Accounts
+History,Istoric,User.Accounts
+<b>%{account_name}</b> account address,,User.Accounts
+Unnamed,,User.Accounts
+Create new account,Creează cont nou,User.Accounts
+Account Details,Detalii cont,User.Accounts.AccountDetails
+Account name,Nume cont,User.Accounts.AccountDetails
+Unnamed,,User.Accounts.AccountDetails
+Created at,Creat la,User.Accounts.AccountDetails
+Last modified,Ultima modificare,User.Accounts.AccountDetails
+Token name,Nume monedă,User.Accounts.AccountDetails
+Data,,User.Accounts.AccountDetails
+Total account balance,Sold total,User.Accounts.AccountDetails
+Available balance,Sold disponibil,User.Accounts.AccountDetails
+Send %{token_name},,User.Accounts.AccountDetails
+Pending balance,Valoare în aşteptare,User.Accounts.AccountDetails
+Unconfirmed balance,Sold Neconfirmat,User.Accounts.AccountDetails
+Stake balance,Sold cotă parte,User.Accounts.AccountDetails
+Immature balance,Sold Imatur,User.Accounts.AccountDetails
+Address,Adresă,User.Accounts.AccountDetails
+Trust Account is empty.,,User.Accounts.AccountDetails
+Trust Account must mature for 72 hours before staking,,User.Accounts.AccountDetails
+Adjust stake amount,Ajustează cantitatea mizei,User.Accounts.AccountDetails
+Time,Timp,User.Accounts.AccountHistory
+Operation,Operaţie,User.Accounts.AccountHistory
+From,De la,User.Accounts.AccountHistory
+staking,,User.Accounts.AccountHistory
+mining,,User.Accounts.AccountHistory
+To,Către,User.Accounts.AccountHistory
+Change,Modifică,User.Accounts.AccountHistory
+Account History,Istoricul contului,User.Accounts.AccountHistory
+Loading account history,Se încarcă istoricul contului,User.Accounts.AccountHistory
+Account balance,Sold cont,User.Accounts.AccountHistory
+Show %{tokenName},,User.Accounts.AccountHistory
+Total,Total,User.Accounts.AccountHistory
+Available,Disponibil,User.Accounts.AccountHistory
+Pending,În aşteptare,User.Accounts.AccountHistory
+Unconfirmed,Neconfirmat,User.Accounts.AccountHistory
+Stake,Miză,User.Accounts.AccountHistory
+Rename account,,RenameAccount
+Account name,,RenameAccount
+Account renaming fee,,RenameAccount
+Cancel,,RenameAccount
+Renaming,,RenameAccount
+Rename,,RenameAccount
+Account name is required,,RenameAccount
+Name already in use,,RenameAccount
+The name you entered is already in use. Please choose another name.,,RenameAccount
+Insuffient balance,,RenameAccount
+Your default account balance is not enough to pay the fee.,,RenameAccount
+Account has been renamed to %{account_name},,RenameAccount
+Error renaming account,,RenameAccount
+Unnamed asset,,User.Assets
+You own %{percentage}% of this asset,,User.Assets
+Create new asset,,User.Assets
+You don't own any asset,,User.Assets
+Asset Details,,AssetDetails
+Edit asset,,AssetDetails
+Name,,AssetDetails
+Address,,AssetDetails
+Owner,,AssetDetails
+Ownership,,AssetDetails
+Created at,,AssetDetails
+Last modified,,AssetDetails
+View history,,AssetDetails
+Tokenize,,AssetDetails
+Transfer ownership,,AssetDetails
+Name,,CreateAsset
+Field name,,CreateAsset
+Value,,CreateAsset
+Field value,,CreateAsset
+Mutable,,CreateAsset
+Type,,CreateAsset
+Max. length,,CreateAsset
+Only applicable to mutable string fields,,CreateAsset
+Unlimited,,CreateAsset
+Remove field,,CreateAsset
+Asset name,,CreateAsset
+A local Name object register will be created for this asset name,,CreateAsset
+Asset name (optional),,CreateAsset
+Asset data,,CreateAsset
+Add field,,CreateAsset
+Estimated fee,,CreateAsset
+Creating asset,,CreateAsset
+Create asset,,CreateAsset
+Field name is required,,CreateAsset
+New asset has been created,,CreateAsset
+Error creating asset,,CreateAsset
+Create a new asset,,CreateAsset
+Asset History Event,,AssetHistoryDetails
+Type,,AssetHistoryDetails
+Time,,AssetHistoryDetails
+Owner,,AssetHistoryDetails
+Checksum,,AssetHistoryDetails
+Name,,AssetHistoryDetails
+Address,,AssetHistoryDetails
+Time,,AssetHistory
+Type,,AssetHistory
+Owner,,AssetHistory
+Asset History,,AssetHistory
+Loading asset history,,AssetHistory
+Name,,EditAsset
+Address,,EditAsset
+Updating asset,,EditAsset
+Update asset,,EditAsset
+Asset has been updated,,EditAsset
+Error updating asset,,EditAsset
+Edit asset,,EditAsset
+Asset name,,TokenizeAsset
+Asset address,,TokenizeAsset
+Token,,TokenizeAsset
+Token address,,TokenizeAsset
+Tokenizing asset,,TokenizeAsset
+Tokenize asset,,TokenizeAsset
+Token is required,,TokenizeAsset
+Asset has been tokenized,,TokenizeAsset
+Error tokenizing asset,,TokenizeAsset
+Asset name,,TransferAsset
+Asset address,,TransferAsset
+Transfer to,,TransferAsset
+Recipient username or user ID,,TransferAsset
+Transferring asset,,TransferAsset
+Transfer asset,,TransferAsset
+Recipient is required,,TransferAsset
+Asset has been transferred,,TransferAsset
+Error transferring asset,,TransferAsset
+User,Utilizator,User
+User ID,ID utilizator,User
+Accounts,Conturi,User
+Staking,Cota parte este activă,User
+Tokens,Monede,User
+Names,,User
+Namespaces,,User
+Assets,,User
+Change password & PIN,,User
+Change recovery phrase,,User
+Set recovery phrase,,User
+Name,,ChangeRegisterAddress
+Register address,,ChangeRegisterAddress
+Register address that this name points to,,ChangeRegisterAddress
+Name update fee,,ChangeRegisterAddress
+Updating name,,ChangeRegisterAddress
+Update name,,ChangeRegisterAddress
+Name has been updated,,ChangeRegisterAddress
+Error updating name,,ChangeRegisterAddress
+Change register address,,ChangeRegisterAddress
+Local,,CreateName
+Namespaced,,CreateName
+Global,,CreateName
+Namespace,,CreateName
+A namespace you own,,CreateName
+Name,,CreateName
+name,,CreateName
+namespace,,CreateName
+Register address,,CreateName
+Register address that this name points to,,CreateName
+Name creation fee,,CreateName
+Creating name,,CreateName
+Create name,,CreateName
+Name is required,,CreateName
+Name cannot start with a colon character,,CreateName
+Namespace is required,,CreateName
+New name has been created,,CreateName
+Error creating name,,CreateName
+Create a new name,,CreateName
+View name details,,User.Names
+Change register address,,User.Names
+Transfer name,,User.Names
+Unused,,User.Names
+Global,,User.Names
+Namespaced,,User.Names
+Local,,User.Names
+Create new name,,User.Names
+Show unused names,,User.Names
+You don't own any name,,User.Names
+Name Details,,NameDetails
+Change register address,,NameDetails
+Name,,NameDetails
+Type,,NameDetails
+Global,,NameDetails
+Namespaced,,NameDetails
+Local,,NameDetails
+Namespace,,NameDetails
+Address,,NameDetails
+Points to,,NameDetails
+Created at,,NameDetails
+Last modified,,NameDetails
+View history,,NameDetails
+Transfer ownership,,NameDetails
+Name History Event,,NameHistoryDetails
+Type,,NameHistoryDetails
+Time,,NameHistoryDetails
+Owner,,NameHistoryDetails
+Checksum,,NameHistoryDetails
+Name,,NameHistoryDetails
+Namespace,,NameHistoryDetails
+Address,,NameHistoryDetails
+Points to,,NameHistoryDetails
+Time,,NameHistory
+Type,,NameHistory
+Owner,,NameHistory
+Name History,,NameHistory
+Loading name history,,NameHistory
+Name,,TransferName
+Transfer to,,TransferName
+Recipient username or user ID,,TransferName
+Transferring name,,TransferName
+Transfer name,,TransferName
+Recipient is required,,TransferName
+Name has been transferred,,TransferName
+Error transferring name,,TransferName
+Name,,CreateNamespace
+Namespace name,,CreateNamespace
+Namespace creation fee,,CreateNamespace
+Creating namespace,,CreateNamespace
+Create namespace,,CreateNamespace
+Name is required,,CreateNamespace
+"Namespace names can only contain lowercase letters, numbers, and periods (.)",,CreateNamespace
+New namespace has been created,,CreateNamespace
+Error creating namespace,,CreateNamespace
+Create a new namespace,,CreateNamespace
+View name details,,User.Namespaces
+Transfer namespace,,User.Namespaces
+Create new namespace,,User.Namespaces
+You don't own any namespace,,User.Namespaces
+Namespace Details,,NamespaceDetails
+Name,,NamespaceDetails
+Address,,NamespaceDetails
+Created at,,NamespaceDetails
+Last modified,,NamespaceDetails
+View history,,NamespaceDetails
+Transfer ownership,,NamespaceDetails
+Namespace History Event,,NamespaceHistoryDetails
+Type,,NamespaceHistoryDetails
+Time,,NamespaceHistoryDetails
+Owner,,NamespaceHistoryDetails
+Checksum,,NamespaceHistoryDetails
+Name,,NamespaceHistoryDetails
+Address,,NamespaceHistoryDetails
+Time,,NamespaceHistory
+Type,,NamespaceHistory
+Owner,,NamespaceHistory
+Namespace History,,NamespaceHistory
+Loading namespace history,,NamespaceHistory
+Namespace,,TransferNamespace
+Transfer to,,TransferNamespace
+Recipient username or user ID,,TransferNamespace
+Transferring namespace,,TransferNamespace
+Transfer namespace,,TransferNamespace
+Destination is required,,TransferNamespace
+Namespace has been transferred,,TransferNamespace
+Error transferring namespace,,TransferNamespace
+The current NXS balance of the trust account that is not staked. You can spend this amount without affecting your Trust Score,Soldul NXS actual pentru Contul de Încredere care nu participă la cota parte. Poți cheltui această sumă fără să îți afectezi Scorul de Încredere,User.Staking
+"Balance that will be staked after the 72 holding period, any change to this balance will reset the hold timer",,User.Staking
+Restart Core?,Repornește Nucleu?,User.Staking
+Nexus Core needs to restart for this change to take effect,Nucleul Nexus trebuie repornit pentru ca aceste modificări să aibă efect,User.Staking
+Disable staking,Dezactivează cota parte,User.Staking
+Enable staking,Activează staking,User.Staking
+Cancel,Anulează,User.Staking
+Status,Status,User.Staking
+Staking,Cota parte este activă,User.Staking
+pooled,,User.Staking
+Not staking,Nu este activată cota parte,User.Staking
+Stake amount,Sumă miză,User.Staking
+The amount of NXS currently staked in the trust account,Cantitatea de NXS cotă parte în mod curent în contul de încredere,User.Staking
+Pending change,Modificări în așteptare,User.Staking
+The pending stake amount change that will be applied on the next Trust transaction,Suma cotei parte în așteptare ce va fi aplicată la următoarea Tranzacție de Încredere,User.Staking
+Requested at,,User.Staking
+Expired in,Expiră în,User.Staking
+Stake Rate,Rată miză,User.Staking
+The current annual reward rate earned for staking,Rata recompensei anuale alocată pentru cota parte,User.Staking
+Trust Weight,Greutate acreditare,User.Staking
+"The percentage of the maximum Trust Score, which is gradually built over time when you consistently operate your node in an honest, trustworthy, and timely manner","Procentajul maxim al Scorului de Încredere care creşte gradual, în timp, atunci când operezi un nod în mod continuu, onest, de încredere şi la timp",User.Staking
+Block Weight,Greutate bloc,User.Staking
+"Block Weight depends on the time passed since you received a Trust transaction and will be reset everytime you receive a Trust transaction. Otherwise, Block Weight will reach 100% after 3 days and your Trust Score will start decaying until you receive another Trust transaction","Indicatorul Greutate Bloc este influenţat de timpul scurs între Tranzacţiile de Încredere şi se va reseta atunci când minezi/validezi o astfel de tranzacţie. În caz contrar, incicatorul Greutate Bloc va ajunge la 100% după 3 zile iar scorul tău de încredere va începe să scadă până când vei primi o nouă Tranzacţie de Încredere",User.Staking
+Stake Weight,Greutate miză,User.Staking
+"Stake Weight depends on Trust Weight and Block Weight. Along with your Stake amount, Stake Weight affects how frequent you receive a Trust transaction",,User.Staking
+Available Balance,,User.Staking
+Adjust stake amount,Ajustează cantitatea mizei,User.Staking
+Account on hold for another %{stakeSeconds} Seconds,,User.Staking
+Stop staking,,User.Staking
+Start staking,,User.Staking
+Create new token,Crează monedă nouă,User.Tokens
+Look up a token,,User.Tokens
+Unnamed token,Monedă fără nume,User.Tokens
+ (Owned by you), (Deţinut de tine),User.Tokens
+Details,Detalii,User.Tokens
+New Token,Monedă nouă,User.Tokens.NewToken
+"There is a %{tokenfee} NXS token creation fee, based on supply",,User.Tokens.NewToken
+Token name,Nume monedă,User.Tokens.NewToken
+Name Creation Fee: %{tokenFee} NXS (Optional),Taxă creare nume: %{tokenFee} NXS (Opţional),User.Tokens.NewToken
+New tokens's name,Nume monedă nouă,User.Tokens.NewToken
+Supply,Rezervă,User.Tokens.NewToken
+Max amount of tokens available,Numărul maxim de monede disponibile,User.Tokens.NewToken
+Decimal,Zecimal,User.Tokens.NewToken
+Amount of significant digits a token can have,Cantitatea de cifre importante pe care le poate avea o monedă,User.Tokens.NewToken
+Cancel,Anulează,User.Tokens.NewToken
+Create token,Creare monedă,User.Tokens.NewToken
+Supply can not be zero or negative,Rezerva nu poate să fie nulă sau negativă,User.Tokens.NewToken
+Create a token without a name?,Crează o monedă fără nume?,User.Tokens.NewToken
+Adding a name costs a NXS fee,Adăugarea unui nume necesită o taxă NXS,User.Tokens.NewToken
+That's Ok,Este în regulă,User.Tokens.NewToken
+Add Name,Adaugă numele,User.Tokens.NewToken
+New token %{token} has been created,Noua monedă %{token} a fost creată,User.Tokens.NewToken
+You have successfully created token %{token} ! Would you like to make an account for this token?,Ai creat cu succes moneda %{token} ! Doreşti să creezi un cont pentru această monedă?,User.Tokens.NewToken
+Yes,Da,User.Tokens.NewToken
+No,Nu,User.Tokens.NewToken
+Error creating token,Eroare creare monedă,User.Tokens.NewToken
+Cannot find Token,,User.Tokens.SearchToken
+Look up token,,User.Tokens.SearchToken
+Name or address,,User.Tokens.SearchToken
+Token name/address,,User.Tokens.SearchToken
+Look up,,User.Tokens.SearchToken
+No Value,Fără valoare,User.Tokens.SearchToken
+Error searching for token,Eroare la căutarea monedei,User.Tokens.SearchToken
+Unknown token name/address,,User.Tokens.SearchToken
+Token Details,Detalii Monedă,User.Tokens.TokenDetails
+Token name,Nume monedă,User.Tokens.TokenDetails
+Token address,Adresă monedă,User.Tokens.TokenDetails
+Created at,Creat la,User.Tokens.TokenDetails
+Last modified,Ultima modificare,User.Tokens.TokenDetails
+Token Owner,Posesor Monedă,User.Tokens.TokenDetails
+Current Supply,Rezervă curentă,User.Tokens.TokenDetails
+Max Supply,Rezervă maximă,User.Tokens.TokenDetails
+Decimals,Zecimale,User.Tokens.TokenDetails
+Balance,Sold,User.Tokens.TokenDetails
+Pending balance,Valoare în aşteptare,User.Tokens.TokenDetails
+Unconfirmed balance,Sold Neconfirmat,User.Tokens.TokenDetails
+Create new account with this token,Creează un cont nou cu această monedă,User.Tokens.TokenDetails
+Close,Închide,User.Tokens.TokenDetails
+Wallet version,Versiune portofel,About
+Wallet build date,Dată versiune portofel,About
+Nexus Core version,Versiune Nucleu Nexus,About
+Core build date,Dată versiune nucleu,About
+Testnet,Testnet,About
+Private blockchain,Blockchain privat,About
+Invalid address,Adresă invalidă,AddEditContact
+This is not one of your addresses.,Aceasta este una dintre adresele tale.,AddEditContact
+This is one of your addresses.,Aceasta este una dintre adresele tale.,AddEditContact
+Name,Nume,AddEditContact
+Contact name,Nume contact,AddEditContact
+Email address,Adresă de e-mail,AddEditContact
+Phone number,Număr de telefon,AddEditContact
+Time zone,Fus orar,AddEditContact
+Select a time zone,Selectează un fus orar,AddEditContact
+Notes,Note,AddEditContact
+Cancel,Anulează,AddEditContact
+Reset,Resetare,AddEditContact
+Save changes,Salvează modificările,AddEditContact
+Create,Creează,AddEditContact
+Name is required.,Numele este necesar.,AddEditContact
+A contact with the same name already exists.,Deja există un contact cu același nume.,AddEditContact
+There must be at least one address.,Este necesară cel puțin o adresă.,AddEditContact
+Invalid email,E-mail invalid,AddEditContact
+Contact has been updated,Persoana de contact a fost actualizată,AddEditContact
+New contact has been added to address book,Un nou contact a fost adăugat în agenda ta,AddEditContact
+My Nexus address for %{name},Adresa mea Nexus pentru %{name},AddEditContact
+My Nexus address,Adresele mele Nexus,AddEditContact
+%{name}'s Nexus address,Adresele Nexus ale utilizatorului %{name},AddEditContact
+Their Nexus address,Adresele lor Nexus,AddEditContact
+Remove address,Șterge adresa,AddEditContact
+Label (optional),Etichetă (Opţional),AddEditContact
+Edit contact,Editare contact,AddEditContact
+Create new contact,Creează un contact nou,AddEditContact
+Adjust stake amount,Ajustează cantitatea mizei,AdjustStake
+"Note: This change will not take effect immediately but will stay pending until you get the next Trust transaction. The pending change will be recorded locally in this machine, therefore if you switch to another machine for staking, the change will not take effect.","Notă: Această modificare nu se va activa automat, însă, va sta în așteptare până vei primi următoarea Tranzacție de Încredere. Modificarea în așteptare va fi înregistrată local pe acest computer, astfel ca dacă vei schimba terminalul pentru a iniția procesul de cotă parte, modificarea nu va avea loc.",AdjustStake
+Cancel,Anulează,AdjustStake
+Set stake amount,Setează suma mizei,AdjustStake
+Invalid number,Număr incorect,AdjustStake
+Out of range,În afara intervalului,AdjustStake
+Reduce stake amount?,Redu cantitatea mizei?,AdjustStake
+Reducing stake amount might make your Stake Rate decrease,Diminuarea cotei parte poate avea ca efect scăderea ratei cotei parte,AdjustStake
+Stake amount has been updated,Suma cotă parte a fost actualizată,AdjustStake
+Error setting stake amount,Eroare la setarea sumei cotă parte,AdjustStake
+Backing up...,Creare copie de rezervă...,Bootstrap
+Downloading,Descărcare,Bootstrap
+Decompressing...,Dezarhivare...,Bootstrap
+Stopping Core...,Nucleul se oprește...,Bootstrap
+Moving...,În curs de mutare...,Bootstrap
+Restarting Core...,Se repornește Nucleul...,Bootstrap
+Rescanning Wallet...,Se rescanează portofelul...,Bootstrap
+Backing up your wallet...,Se creează copie de rezervă...,Bootstrap
+Downloading the database,Se descarcă baza de date,Bootstrap
+Decompressing the database...,Dezarhivare bază de date...,Bootstrap
+Stopping Nexus Core...,Nucleul Nexus este în curs de oprire...,Bootstrap
+Moving the database...,Transfer bază de date...,Bootstrap
+Restarting Nexus Core...,Nucleul Nexus este în curs de repornire...,Bootstrap
+Are you sure you want to abort the process?,Ești sigur că vrei să anulezi procesul?,Bootstrap
+"Yes, abort","Da, anulează",Bootstrap
+"No, let it continue","Nu, continuă",Bootstrap
+Bootstrap Recent Database,"Încărcare ""bootstrap"" bază de date recentă",Bootstrap
+Abort,Anulare,Bootstrap
+Not enough disk space! Minimum 15GB of free space is required.,Spațiu de stocare insuficient! Sunt necesari cel puțin 15GB de spațiu liber.,Bootstrap
+Download recent database?,Doreşti să descarci Baza de date recentă?,Bootstrap
+Downloading a recent version of the database might reduce the time it takes to synchronize your wallet,Descărcarea unei versiuni recente a bazei de date poate reduce timpul necesar sincronizării portofelului,Bootstrap
+"Yes, let's bootstrap it","Da, iniţiază procesul de bootstrap",Bootstrap
+"No, let it sync","Nu, continuă sincronizarea",Bootstrap
+Bootstrap process has been aborted,"Procesul de încărcare ""bootstrap"" a fost anulat",Bootstrap
+Error bootstrapping recent database,"Eroare încărcare ""bootstrap"" bază de date recentă",Bootstrap
+Unknown error,Eroare necunoscută,Bootstrap
+Recent database has been successfully bootstrapped,Baza de date recentă a fost încărcată cu succes,Bootstrap
+Change password and PIN,,ChangePassword&PIN
+Current password,,ChangePassword&PIN
+Your current password,,ChangePassword&PIN
+Current PIN,,ChangePassword&PIN
+Your current PIN,,ChangePassword&PIN
+New Password,,ChangePassword&PIN
+Enter your new password,,ChangePassword&PIN
+New PIN,,ChangePassword&PIN
+Enter your new PIN,,ChangePassword&PIN
+Updating,,ChangePassword&PIN
+Update,,ChangePassword&PIN
+Current password is required,,ChangePassword&PIN
+Current PIN is required,,ChangePassword&PIN
+New password is required,,ChangePassword&PIN
+Password must be at least 8 characters,Parola trebuie să aibă cel puțin 8 caractere,ChangePassword&PIN
+New PIN is required,,ChangePassword&PIN
+PIN must be at least 4 characters,Codul PIN trebuie să aibă cel puțin 4 caractere,ChangePassword&PIN
+Password & PIN have been updated,,ChangePassword&PIN
+Error updating password & PIN,,ChangePassword&PIN
+Contract Details,Detalii contract,ContractDetails
+View transaction details,,ContractDetails
+Yes,Da,ConfirmDialog
+No,Nu,ConfirmDialog
+Password/PIN mismatch,,ConfirmPassword&PIN
+"You have entered either your password or your PIN incorrectly, please re-check",,ConfirmPassword&PIN
+Confirm password and PIN,,ConfirmPassword&PIN
+Enter your new password & new PIN once again to make sure you have entered them correctly,,ConfirmPassword&PIN
+Enter your password & PIN once again to make sure you have entered them correctly,,ConfirmPassword&PIN
+Password,Parolă,ConfirmPassword&PIN
+Re-enter your new password,,ConfirmPassword&PIN
+Re-enter your password,Reintrodu parola,ConfirmPassword&PIN
+PIN,PIN,ConfirmPassword&PIN
+Re-enter your new PIN,,ConfirmPassword&PIN
+Re-enter your PIN,,ConfirmPassword&PIN
+Confirm,Confirmă,ConfirmPassword&PIN
+Dismiss,Renunță,ErrorDialog
+Pin must be at least 4 characters,Codul Pin trebuie să aibă cel puțin 4 caractere,PinDialog
+Confirm,Confirmă,PinDialog
+Enter PIN,,PinDialog
+Your PIN,,PinDialog
+Cancel,Anulează,PinDialog
+Dismiss,Renunță,SuccessDialog
+Your wallet is not encrypted!,Portofelul tău nu este criptat!,EncryptionWarning
+It is highly recommended that you should encrypt your wallet to keep your NXS safe.,Este crucială criptarea portofelului tău pentru a îţi păstra monedele NEXUS în siguranţă.,EncryptionWarning
+Ignore,Ignoră,EncryptionWarning
+Encrypt wallet,Criptează portofel,EncryptionWarning
+Log in,Autentificare,Login
+Username,Nume de utilizator,Login
+Enter your username,Introdu numele tău de utilizator,Login
+Password,Parolă,Login
+Enter your password,Introdu parola,Login
+PIN,PIN,Login
+Enter your PIN,,Login
+Logging in,În curs de conectare,Login
+Forgot password?,,Login
+Create new user,Creare utilizator nou,Login
+Username is required,Este necesar numele de utilizator,Login
+Password is required,Parola este necesară,Login
+PIN is required,Codul PIN este necesar,Login
+Logged in as %{username},Autentificat ca %{username},Login
+Not being fully synced may have caused this error.,,Login
+Error logging in,Eroare autorizare,Login
+Migrate account,Migrare cont,MigrateAccount
+You have %{amount} NXS in your legacy account.,Ai suma de %{amount} NXS în contul tău legacy.,MigrateAccount
+You can manually send your funds from legacy account to this new Tritium user.,,MigrateAccount
+Send NXS manually,Trimite NXS manual,MigrateAccount
+Don't show this again,Nu afişa asta din nou,MigrateAccount
+Module Details,Detalii module,ModuleDetails
+Remove module,,ModuleDetails
+Module name,Denumire modul,ModuleDetails
+Display name,Afişază nume,ModuleDetails
+Module type,Tip modul,ModuleDetails
+in development,,ModuleDetails
+Version,Versiune,ModuleDetails
+Target wallet version,,ModuleDetails
+incompatible,,ModuleDetails
+Description,Descriere,ModuleDetails
+Author,Autor,ModuleDetails
+Source code,Cod sursă,ModuleDetails
+Visit repository,Vizitează depozitul de informație,ModuleDetails
+This module is developed by Nexus,Acest modul este dezvoltat de Nexus,ModuleDetails
+This repository does not exist or is private,Acest depozit nu există sau este privat,ModuleDetails
+This repository is not verified to be the real source code of this module,Acest depozit nu este verificat ca fiind sursa reală de cod pentru acest modul,ModuleDetails
+Module hash,Hash Modul,ModuleDetails
+Download %{version} (manual),,ModuleDetails
+Open App,,ModuleDetails
+Module is disallowed,,ModuleDetails
+Installing Module...,Se instaleaza modulul...,ModuleDetails
+Install Module,Instalează modulul,ModuleDetails
+"Warning: This module is written by a third party, Nexus is NOT
+              responsible for its quality or legitimacy. Please make sure to do
+              your due diligence before installing third party modules and use
+              them with your own risk.","Avertisment: Acest modul a fost creat de un terţ, Nexus NU este
+              responsabil pentru calitatea sau legalitatea lui. Te rugăm să îţi iei 
+              toate măsurile de siguranţă înainte de a instala module din alte surse
+              şi de a le folosi pe propria răspundere.",ModuleDetails
+Check wallet failed,Verificare portofel eşuată,MyAddresses
+Check wallet pass,Verificare portofel completă,MyAddresses
+My Account,Contul meu,MyAddresses
+Check wallet's integrity,Verifica integritatea portofelului,MyAddresses
+Check wallet,Verifică portofel,MyAddresses
+Create new address,Creeaza o adresa noua,MyAddresses
+Enter a new account name or pick an existing account:,Introdu un nume de cont nou sau alege un cont deja existent:,MyAddresses.NewAddressForm
+Account name,Nume cont,MyAddresses.NewAddressForm
+Cancel,Anulează,MyAddresses.NewAddressForm
+New address,Adresă nouă,MyAddresses.NewAddressForm
+Account name is required,Este necesar numele contului,MyAddresses.NewAddressForm
+Invalid account name,Nume de cont invalid,MyAddresses.NewAddressForm
+New address has been created,A fost creată o nouă adresă,MyAddresses.NewAddressForm
+Error creating new address,Eroare la crearea unei noi adrese,MyAddresses.NewAddressForm
+New account,Cont nou,NewAccount
+Account name (%{nameFee} NXS Fee) (Optional),Nume cont (%{nameFee} NXS Fee) (Opţional),NewAccount
+New account's name,Nume cont nou,NewAccount
+Token name/address,,NewAccount
+Cancel,Anulează,NewAccount
+Creating account,Se creează cont,NewAccount
+Create account,Creează cont,NewAccount
+Create an account without a name?,,NewAccount
+Adding a name costs a NXS fee,Adăugarea unui nume necesită o taxă NXS,NewAccount
+That's Ok,Este în regulă,NewAccount
+Error creating account,Eroare la crearea contului,NewAccount
+Unknown token name/address,,NewAccount
+New account %{account} has been created,Contul nou %{account} a fost creat,NewAccount
+Create new user,Creare utilizator nou,NewUser
+Username,Nume de utilizator,NewUser
+A globally unique username,"Un nume de utilizator global, unic",NewUser
+Password,Parolă,NewUser
+Enter your password,Introdu parola,NewUser
+PIN,PIN,NewUser
+Enter your PIN,,NewUser
+Attention,Atenție,NewUser
+"Please be sure to make a note of your username, password, and PIN, and keep it in a safe place. If you lose or forget them you will be unable to access your account.",,NewUser
+Creating user,Se creează utilizator,NewUser
+Create user,Creează utilizator,NewUser
+"Please wait, this may take up to 30 seconds","Te rugăm aşteaptă, operaţiunea poate dura până la 30 de secunde",NewUser
+Switch to Legacy Mode,Comutare la Modul Legacy,NewUser
+Log in,Autentificare,NewUser
+Username is required,Este necesar numele de utilizator,NewUser
+Username must be at least 3 characters,Numele de utilizator trebuie să aibă cel puțin 3 caractere,NewUser
+Password is required,Parola este necesară,NewUser
+Password must be at least 8 characters,Parola trebuie să aibă cel puțin 8 caractere,NewUser
+PIN is required,Codul PIN este necesar,NewUser
+PIN must be at least 4 characters,Codul PIN trebuie să aibă cel puțin 4 caractere,NewUser
+Error creating user,Eroare la crearea utilizatorului,NewUser
+User registration for %{username} has been confirmed,,NewUser
+User registration for %{username} is waiting to be confirmed on Nexus blockchain...,,NewUser
+Recover password and PIN,,RecoverPassword&PIN
+Username,Nume de utilizator,RecoverPassword&PIN
+Your username,,RecoverPassword&PIN
+Recovery phrase,,RecoverPassword&PIN
+Your recovery phrase,,RecoverPassword&PIN
+New Password,,RecoverPassword&PIN
+Enter your new password,,RecoverPassword&PIN
+New PIN,,RecoverPassword&PIN
+Enter your new PIN,,RecoverPassword&PIN
+Recovering password & PIN,,RecoverPassword&PIN
+Recover password & PIN,,RecoverPassword&PIN
+Username is required,Este necesar numele de utilizator,RecoverPassword&PIN
+Recovery phrase is required,,RecoverPassword&PIN
+New password is required,,RecoverPassword&PIN
+Password must be at least 8 characters,Parola trebuie să aibă cel puțin 8 caractere,RecoverPassword&PIN
+New PIN is required,,RecoverPassword&PIN
+PIN must be at least 4 characters,Codul PIN trebuie să aibă cel puțin 4 caractere,RecoverPassword&PIN
+Password & PIN have been updated,,RecoverPassword&PIN
+Error updating password & PIN,,RecoverPassword&PIN
+%{smart_count} word |||| %{smart_count} words,,SetRecoveryPhrase
+Recovery phrase,,SetRecoveryPhrase
+"The recovery phrase can be used to recover your account and set a new password and PIN in the event that you lose or forget them. Your recovery phrase must be a minimum of 40 characters, and should ideally be made up of random words. Save this new recovery phrase in a safe place.",,SetRecoveryPhrase
+Password,Parolă,SetRecoveryPhrase
+Your current password,,SetRecoveryPhrase
+PIN,PIN,SetRecoveryPhrase
+Your current PIN,,SetRecoveryPhrase
+Current recovery phrase,,SetRecoveryPhrase
+Enter your recovery phrase,,SetRecoveryPhrase
+Generate a recovery phrase,,SetRecoveryPhrase
+New recovery phrase,,SetRecoveryPhrase
+Enter your new recovery phrase or click Generate,,SetRecoveryPhrase
+Setting recovery phrase,,SetRecoveryPhrase
+Set recovery phrase,,SetRecoveryPhrase
+Password is required,Parola este necesară,SetRecoveryPhrase
+PIN is required,Codul PIN este necesar,SetRecoveryPhrase
+Current recovery phrase is required,,SetRecoveryPhrase
+Recovery phrase is required,,SetRecoveryPhrase
+Recovery phrase must be at least 8 characters,,SetRecoveryPhrase
+Recovery phrase has been updated,,SetRecoveryPhrase
+Error setting recovery phrase,,SetRecoveryPhrase
+Transaction Details,,TransactionDetails
+Time,,TransactionDetails
+Sequence,,TransactionDetails
+Type,,TransactionDetails
+Confirmations,,TransactionDetails
+Transaction ID,,TransactionDetails
+Loading transaction details...,,TransactionDetails
+Close the wallet and install update now?,Închide portofelul şi instalează actualizarea acum?,AutoUpdate
+Close and install,Închide şi instalează,AutoUpdate
+Install it later,Instalează mai târziu,AutoUpdate
+New wallet version %{version} - Click here to download,%{version} versiune nouă portofel - Apasă aici pentru a descărca,AutoUpdate
+New wallet version %{version} - Click here to update,%{version} versiune nouă portofel - Apasă aici pentru actualizare,AutoUpdate
+New wallet version %{version} available. Downloading...,Versiune nouă %{version} disponibilă. Se descarcă...,AutoUpdate

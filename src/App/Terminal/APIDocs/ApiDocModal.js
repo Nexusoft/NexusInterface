@@ -1,13 +1,12 @@
 //External
-import React from 'react';
-import { connect } from 'react-redux';
+import { Component } from 'react';
 import styled from '@emotion/styled';
-import ReactDom from 'react-dom';
 import ReactMarkdown from 'react-markdown';
 
 //Internal
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import Button from 'components/Button';
+import Link from 'components/Link';
 
 //DOCS
 import Assets from './ASSETS.MD';
@@ -20,6 +19,7 @@ import Supply from './SUPPLY.MD';
 import System from './SYSTEM.MD';
 import Tokens from './TOKENS.MD';
 import Users from './USERS.MD';
+import Invoices from './INVOICES.MD';
 
 const documents = [
   { path: Overview, label: 'Overview' },
@@ -32,9 +32,37 @@ const documents = [
   { path: System, label: 'System' },
   { path: Tokens, label: 'Tokens' },
   { path: Users, label: 'Users' },
+  { path: Invoices, label: 'Invoices' },
 ];
 
-class APIDocModal extends React.Component {
+const getInnerText = (children) => {
+  if (typeof children === 'string') return children;
+  if (Array.isArray(children)) {
+    return children.map((child) => getInnerText(child.props.children)).join('');
+  }
+  return '';
+};
+
+const toHeadingId = (text) =>
+  text
+    .replace(/\s/g, '-')
+    .replace(/[^\d\w]/g, '')
+    .toLowerCase();
+
+const CodeBlock = styled.code(({ theme }) => ({
+  display: 'block',
+  maxWidth: '100%',
+  overflow: 'auto',
+  border: `1px solid ${theme.mixer(0.125)}`,
+  padding: '.5em',
+  whiteSpace: 'pre',
+}));
+
+const InlineCode = styled.code({
+  overflowWrap: 'break-word',
+});
+
+class APIDocModal extends Component {
   constructor(props) {
     super(props);
     this.closeModal = null;
@@ -43,14 +71,14 @@ class APIDocModal extends React.Component {
 
   loadMD(inFile) {
     fetch(inFile)
-      .then(response => response.text())
-      .then(text => {
+      .then((response) => response.text())
+      .then((text) => {
         this.setState({ displayMD: text });
       });
   }
 
   renderDocList = () =>
-    documents.map(e => (
+    documents.map((e) => (
       <div key={e.label}>
         <Button skin={'hyperlink'} onClick={() => this.loadMD(e.path)}>
           {e.label}
@@ -62,19 +90,57 @@ class APIDocModal extends React.Component {
   render() {
     const { displayMD } = this.state;
     return (
-      <Modal assignClose={closeModal => (this.closeModal = closeModal)}>
-        <Modal.Header>{'API Documentation'}</Modal.Header>
-        <Modal.Body>
+      <ControlledModal
+        assignClose={(closeModal) => (this.closeModal = closeModal)}
+      >
+        <ControlledModal.Header>{'API Documentation'}</ControlledModal.Header>
+        <ControlledModal.Body>
           {displayMD ? (
-            <ReactMarkdown source={this.state.displayMD} />
+            <ReactMarkdown
+              source={this.state.displayMD}
+              renderers={{
+                link: ({ href, ...rest }) => {
+                  return (
+                    <Link
+                      as="a"
+                      href={href}
+                      onClick={(evt) => {
+                        evt.preventDefault();
+                        if (href && href.startsWith('#')) {
+                          const element = document.getElementById(
+                            href.substring(1)
+                          );
+                          element.scrollIntoView();
+                        }
+                      }}
+                      {...rest}
+                    />
+                  );
+                },
+                heading: ({ level, children, ...rest }) => {
+                  const Heading = 'h' + level;
+                  return (
+                    <Heading id={toHeadingId(getInnerText(children))} {...rest}>
+                      {children}
+                    </Heading>
+                  );
+                },
+                code: ({ value, ...rest }) => (
+                  <CodeBlock {...rest}>{value}</CodeBlock>
+                ),
+                inlineCode: ({ value, ...rest }) => (
+                  <InlineCode {...rest}>{value}</InlineCode>
+                ),
+              }}
+            />
           ) : (
             <>
               <span>{'Documentation'}</span>
               {this.renderDocList()}
             </>
           )}
-        </Modal.Body>
-        <Modal.Footer>
+        </ControlledModal.Body>
+        <ControlledModal.Footer>
           <div className="flex space-between">
             {displayMD && (
               <>
@@ -90,8 +156,8 @@ class APIDocModal extends React.Component {
               {__('Close')}
             </Button>
           </div>
-        </Modal.Footer>
-      </Modal>
+        </ControlledModal.Footer>
+      </ControlledModal>
     );
   }
 }

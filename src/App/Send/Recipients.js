@@ -1,6 +1,4 @@
 // External
-import React from 'react';
-import { Field } from 'redux-form';
 import styled from '@emotion/styled';
 
 // Internal
@@ -9,9 +7,10 @@ import Button from 'components/Button';
 import Icon from 'components/Icon';
 import { timing } from 'styles';
 import plusIcon from 'icons/plus.svg';
-import RecipientField from './RecipientField';
+import RecipientAddress from './RecipientAddress';
 import AmountField from './AmountField';
-import { subtract } from 'utils/calc';
+
+__ = __context('Send');
 
 const RemoveButton = styled.div(({ theme }) => ({
   position: 'absolute',
@@ -62,77 +61,57 @@ const PlusIcon = styled(Icon)({
   fontSize: '.8em',
 });
 
-/**
- * Recipients Field from the Send Page
- *
- * @class Recipients
- * @extends {React.Component}
- */
-class Recipients extends React.Component {
-  /**
-   * Component's Renderable JSX
-   *
-   * @returns
-   * @memberof Recipients
-   */
-  render() {
-    const { fields, change, addRecipient, accBalance } = this.props;
+export default function Recipients({ fields }) {
+  if (!fields || !fields.length) return null;
 
-    if (!fields || !fields.length) return null;
+  if (fields.length === 1) {
+    return (
+      <>
+        <RecipientAddress fieldName={`${fields.name}[0].address`} />
+        <AmountField parentFieldName={`${fields.name}[0]`} />
+      </>
+    );
+  } else {
+    return (
+      <>
+        {fields.map((fieldName, i) => (
+          <Recipient key={i}>
+            <Tooltip.Trigger tooltip={__('Remove recipient')}>
+              <RemoveButton
+                onClick={() => {
+                  fields.remove(i);
+                }}
+              >
+                ✕
+              </RemoveButton>
+            </Tooltip.Trigger>
 
-    if (fields.length === 1) {
-      return (
-        <>
-          <Field
-            name={`${fields.name}[0].address`}
-            component={RecipientField}
-            change={change}
-          />
-          <AmountField
-            fullAmount={subtract(accBalance, 0.01)} // 0.01 = network fee
-            parentFieldName={`${fields.name}[0]`}
-            change={change}
-          />
-        </>
-      );
-    } else {
-      return (
-        <>
-          {fields.map((fieldName, i) => (
-            <Recipient key={i}>
-              <Tooltip.Trigger tooltip={__('Remove recipient')}>
-                <RemoveButton
-                  onClick={() => {
-                    fields.remove(i);
-                  }}
-                >
-                  ✕
-                </RemoveButton>
-              </Tooltip.Trigger>
+            <AddressWrapper>
+              <RecipientAddress fieldName={`${fieldName}.address`} />
+            </AddressWrapper>
 
-              <AddressWrapper>
-                <Field
-                  name={`${fieldName}.address`}
-                  component={RecipientField}
-                  change={change}
-                />
-              </AddressWrapper>
+            <AmountWrapper>
+              <AmountField parentFieldName={fieldName} hideSendAll />
+            </AmountWrapper>
+          </Recipient>
+        ))}
 
-              <AmountWrapper>
-                <AmountField parentFieldName={fieldName} change={change} />
-              </AmountWrapper>
-            </Recipient>
-          ))}
-
-          <MoreInfo>
-            <Button skin="hyperlink" onClick={addRecipient}>
-              <PlusIcon icon={plusIcon} className="space-right" />
-              <span className="v-align">{__('Add recipient')}</span>
-            </Button>
-          </MoreInfo>
-        </>
-      );
-    }
+        <MoreInfo>
+          <Button
+            skin="hyperlink"
+            onClick={() => {
+              fields.push({
+                address: null,
+                amount: '',
+                fiatAmount: '',
+              });
+            }}
+          >
+            <PlusIcon icon={plusIcon} className="mr0_4" />
+            <span className="v-align">{__('Add recipient')}</span>
+          </Button>
+        </MoreInfo>
+      </>
+    );
   }
 }
-export default Recipients;

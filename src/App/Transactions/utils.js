@@ -1,4 +1,6 @@
-export const categoryText = category => {
+__ = __context('Transactions');
+
+export const categoryText = (category) => {
   switch (category) {
     case 'credit':
     case 'receive':
@@ -25,7 +27,7 @@ export const categoryText = category => {
 
 const fakeTxs = [];
 
-export const getFakeTransactions = accounts => {
+export const getFakeTransactions = (accounts) => {
   if (!fakeTxs.length) {
     for (let i = 0; i < 160; i++) {
       fakeTxs.push(newFakeTx(accounts));
@@ -34,12 +36,12 @@ export const getFakeTransactions = accounts => {
   return fakeTxs;
 };
 
-const enumRandom = arr => {
+const enumRandom = (arr) => {
   const index = Math.floor(Math.random() * arr.length);
   return arr[index];
 };
 
-const newFakeTx = accounts => {
+const newFakeTx = (accounts) => {
   const acc = enumRandom(accounts);
   const category = enumRandom(['receive', 'debit', 'stake', 'genesis']);
   const now = new Date();
@@ -61,7 +63,7 @@ const newFakeTx = accounts => {
   };
 };
 
-export const saveCSV = transactions => {
+export const saveCSV = (transactions) => {
   const nameRow = [
     'Number',
     'Account',

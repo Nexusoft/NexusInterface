@@ -4,7 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import Ajv from 'ajv';
 import { walletDataDir } from 'consts/paths';
-import { emailRegex } from 'utils/form';
+import { emailRegex } from 'consts/misc';
 import { readJson, writeJson } from 'utils/json';
 
 const fileName = 'addressbook.json';
@@ -38,10 +38,10 @@ function convertOldContact({
     name,
     addresses: [
       ...(notMine || []).map(
-        info => info && convertOldAddressInfo({ ...info, isMine: false })
+        (info) => info && convertOldAddressInfo({ ...info, isMine: false })
       ),
       ...(mine || []).map(
-        info => info && convertOldAddressInfo({ ...info, isMine: true })
+        (info) => info && convertOldAddressInfo({ ...info, isMine: true })
       ),
     ],
     phoneNumber,
@@ -59,33 +59,33 @@ function convertOldAddressInfo({ label, address, isMine }) {
   };
 }
 
-/**
- * Public API
- * =============================================================================
- */
-
 function loadAddressBookFromFile() {
+  // TODO: deprecate genesis usage in address fields
   const schema = {
+    type: 'object',
     patternProperties: {
       '^.+$': {
+        type: 'object',
         required: ['name', 'addresses'],
         properties: {
           name: { type: 'string' },
           addresses: {
             type: 'array',
             items: {
+              type: 'object',
               required: ['address', 'isMine'],
               properties: {
                 address: {
                   type: 'string',
                   minLength: 51,
-                  maxLength: 51,
+                  maxLength: 64,
                 },
                 isMine: { type: 'boolean' },
                 label: { type: 'string' },
               },
             },
           },
+          genesis: { type: 'string' },
           email: {
             type: 'string',
             // also accept empty strings
@@ -107,7 +107,7 @@ function loadAddressBookFromFile() {
   const validate = ajv.compile(schema);
 
   if (fs.existsSync(filePath)) {
-    const json = readJson(filePath);
+    const json = readJson(filePath) || {};
     let addressBook, valid;
     // `addressbook` (all lowercase) signals the old schema
     // New schema uses camel case `addressBook`
@@ -147,7 +147,21 @@ function saveAddressBookToFile(addressBook) {
 
 export const loadAddressBook = loadAddressBookFromFile;
 
-export const addNewContact = contact => {
+export const lookupAddress = (address) => {
+  const { addressBook } = store.getState();
+  for (const contact of Object.values(addressBook)) {
+    const match =
+      contact.addresses && contact.addresses.find((a) => a.address === address);
+    if (match) {
+      return {
+        name: contact.name,
+        label: match.label,
+      };
+    }
+  }
+};
+
+export const addNewContact = (contact) => {
   const result = store.dispatch({
     type: TYPE.ADD_NEW_CONTACT,
     payload: contact,
@@ -167,7 +181,7 @@ export const updateContact = (name, contact) => {
   return result;
 };
 
-export const deleteContact = name => {
+export const deleteContact = (name) => {
   const result = store.dispatch({
     type: TYPE.DELETE_CONTACT,
     payload: name,
@@ -177,14 +191,14 @@ export const deleteContact = name => {
   return result;
 };
 
-export const searchContact = query => {
+export const searchContact = (query) => {
   store.dispatch({
     type: TYPE.CONTACT_SEARCH,
     payload: query,
   });
 };
 
-export const selectContact = index => {
+export const selectContact = (index) => {
   store.dispatch({
     type: TYPE.SELECT_CONTACT,
     payload: index,

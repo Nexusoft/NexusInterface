@@ -1,6 +1,6 @@
 // External Dependencies
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import { useRef, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 
 // Internal Global Dependencies
@@ -8,21 +8,7 @@ import 'lib/coreOutput';
 import { switchConsoleTab, pauseCoreOutput, unpauseCoreOutput } from 'lib/ui';
 import Button from 'components/Button';
 
-// React-Redux mandatory methods
-const mapStateToProps = ({
-  settings,
-  common: { rpcCallList },
-  ui: {
-    console: {
-      core: { output, paused },
-    },
-  },
-}) => ({
-  settings,
-  rpcCallList,
-  output,
-  paused,
-});
+__ = __context('Console.CoreOutput');
 
 const TerminalContent = styled.div({
   gridArea: 'content',
@@ -57,97 +43,62 @@ const OutputLine = styled.code(({ theme }) => ({
   borderColor: theme.background,
 }));
 
-/**
- * Terminal Core page in the Terminal Page
- *
- * @class TerminalCore
- * @extends {Component}
- */
-class TerminalCore extends Component {
-  outputRef = React.createRef();
+export default function TerminalCore() {
+  const outputRef = useRef();
+  const settings = useSelector((state) => state.settings);
+  const output = useSelector((state) => state.ui.console.core.output);
+  const paused = useSelector((state) => state.ui.console.core.paused);
 
-  /**
-   *Creates an instance of TerminalCore.
-   * @param {*} props
-   * @memberof TerminalCore
-   */
-  constructor(props) {
-    super(props);
+  useEffect(() => {
     switchConsoleTab('Core');
-  }
+  }, []);
 
-  /**
-   * Component Received New Props Callback
-   *
-   * @param {*} nextProps
-   * @memberof TerminalCore
-   */
-  componentDidUpdate(prevProps) {
-    if (this.props.output.length != prevProps.output.length) {
-      const outputElem = this.outputRef.current;
-      outputElem.scrollTop = outputElem.scrollHeight;
+  const prevOutput = useRef(output);
+  useEffect(() => {
+    if (outputRef.current && output?.length != prevOutput?.length) {
+      outputRef.current.scrollTop = outputRef.current.scrollHeight;
     }
-  }
+  });
 
-  /**
-   * Handle on Scroll
-   *
-   * @returns
-   * @memberof TerminalCore
-   */
-  onScrollEvent() {
-    const bottomPos =
-      this.outputRef.current.scrollHeight -
-      this.outputRef.current.clientHeight -
-      2; // found a issue where the numbers would be plus or minus this do to floating point error. Just stepped back 2 it catch it.
-    const currentPos = parseInt(this.outputRef.current.scrollTop);
-    if (currentPos >= bottomPos) {
-      return;
-    }
-    if (!this.props.paused) {
-      pauseCoreOutput(true);
-    }
-  }
+  // const handleScroll = () => {
+  //   const bottomPos =
+  //     outputRef.current.scrollHeight - outputRef.current.clientHeight - 2; // found a issue where the numbers would be plus or minus this do to floating point error. Just stepped back 2 it catch it.
+  //   const currentPos = parseInt(outputRef.current.scrollTop);
+  //   if (currentPos >= bottomPos) {
+  //     return;
+  //   }
+  //   if (!paused) {
+  //     pauseCoreOutput(true);
+  //   }
+  // };
 
-  /**
-   * Component's Renderable JSX
-   *
-   * @returns
-   * @memberof TerminalCore
-   */
-  render() {
-    const { output, paused, settings } = this.props;
-    return (
-      <TerminalContent>
-        <TerminalCoreComponent>
-          {settings.manualDaemon ? (
-            <div className="dim">{__('Core is in Manual Mode')}</div>
-          ) : (
-            <>
-              <Output
-                ref={this.outputRef}
-                reverse={!settings.manualDaemon}
-                onScroll={() => this.onScrollEvent()}
-              >
-                {output.map((d, i) => (
-                  <OutputLine key={i}>{d}</OutputLine>
-                ))}
-              </Output>
-              <Button
-                skin="filled-inverted"
-                fullWidth
-                onClick={paused ? unpauseCoreOutput : pauseCoreOutput}
-                style={{ flexShrink: 0 }}
-              >
-                {paused ? 'Unpause' : 'Pause'}
-              </Button>
-            </>
-          )}
-        </TerminalCoreComponent>
-      </TerminalContent>
-    );
-  }
+  return (
+    <TerminalContent>
+      <TerminalCoreComponent>
+        {settings.manualDaemon ? (
+          <div className="dim">{__('Core is in Manual Mode')}</div>
+        ) : (
+          <>
+            <Output
+              ref={outputRef}
+              reverse={!settings.manualDaemon}
+              // onScroll={handleScroll}
+            >
+              {output.map((d, i) => (
+                <OutputLine key={i}>{d}</OutputLine>
+              ))}
+            </Output>
+            <Button
+              skin="filled-inverted"
+              fullWidth
+              onClick={paused ? unpauseCoreOutput : pauseCoreOutput}
+              style={{ flexShrink: 0 }}
+            >
+              {paused ? 'Unpause' : 'Pause'}
+            </Button>
+          </>
+        )}
+      </TerminalCoreComponent>
+    </TerminalContent>
+  );
 }
-
-// Mandatory React-Redux method
-export default connect(mapStateToProps)(TerminalCore);

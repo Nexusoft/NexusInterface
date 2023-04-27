@@ -1,223 +1,122 @@
 import axios from 'axios';
 
 import * as TYPE from 'consts/actionTypes';
-import store from 'store';
-import { walletEvents } from 'lib/wallet';
+import { callApi } from 'lib/tritiumApi';
+import store, { observeStore } from 'store';
+import { tryParsingJson } from 'utils/json';
 
-//action creator for loaded flag
+__ = __context('MarketData');
+
+let marketDataTimerId = null;
+let metricsTimerId = null;
+let unobserveMetrics = null;
+
+const localStorageKey = 'marketData';
+const interval = 900000; // 15 minutes
 
 async function fetchMarketData() {
-  const { data } = await axios.get(
-    'https://whispering-lake-14690.herokuapp.com/displaydata'
-  );
+  try {
+    clearTimeout(marketDataTimerId);
 
-  const rawBTC = Object.values(data.RAW.BTC).map(ele => {
-    return {
-      changePct24Hr: ele.CHANGEPCT24HOUR,
-      marketCap: ele.MKTCAP,
-      price: ele.PRICE,
-      name: ele.TOSYMBOL,
-    };
-  });
-  const rawNXS = Object.values(data.RAW.NXS).map(ele => {
-    return {
-      changePct24Hr: ele.CHANGEPCT24HOUR,
-      marketCap: ele.MKTCAP,
-      price: ele.PRICE,
-      name: ele.TOSYMBOL,
-    };
-  });
-  const displayBTC = Object.values(data.RAW.BTC).map(ele => {
-    const curCode = ele.TOSYMBOL;
-    const displayEle = data.DISPLAY.NXS[curCode];
-    return {
-      changePct24Hr: displayEle.CHANGEPCT24HOUR,
-      marketCap: displayEle.MKTCAP,
-      price: displayEle.PRICE,
-      name: curCode,
-      symbol: displayEle.TOSYMBOL,
-    };
-  });
-  const displayNXS = Object.values(data.RAW.NXS).map(ele => {
-    const curCode = ele.TOSYMBOL;
-    const displayEle = data.DISPLAY.NXS[curCode];
-    return {
-      changePct24Hr: displayEle.CHANGEPCT24HOUR,
-      marketCap: displayEle.MKTCAP,
-      price: displayEle.PRICE,
-      name: curCode,
-      symbol: displayEle.TOSYMBOL,
-    };
-  });
+    const {
+      settings: { fiatCurrency },
+    } = store.getState();
+    const cache = readCache();
+    const cachedData = findMarketData(cache, fiatCurrency);
+    let marketData;
+    if (cachedData) {
+      marketData = cachedData;
+    } else {
+      const { data } = await axios.get(
+        `https://nexus-wallet-server-nndj.onrender.com/market-data?base_currency=${fiatCurrency}`
+      );
+      marketData = data;
+    }
 
-  store.dispatch({
-    type: TYPE.SET_MKT_AVE_DATA,
-    payload: {
-      rawBTC: rawBTC,
-      rawNXS: rawNXS,
-      displayBTC: displayBTC,
-      displayNXS: displayNXS,
-    },
-  });
+    marketData.currency = fiatCurrency;
+    // cryptocompare's VND price is divided by 10
+    if (fiatCurrency === 'VND') {
+      marketData.price *= 10;
+    }
+
+    store.dispatch({
+      type: TYPE.SET_MARKET_DATA,
+      payload: marketData,
+    });
+
+    if (!cachedData) {
+      addToCache(cache, marketData);
+    }
+  } catch (err) {
+    console.error(err);
+  } finally {
+    marketDataTimerId = setTimeout(fetchMarketData, 900000); // 15 minutes
+  }
 }
 
-walletEvents.once('pre-render', function() {
+function readCache() {
+  const cacheJson = localStorage.getItem(localStorageKey);
+  const cache = tryParsingJson(cacheJson) || [];
+  return cache;
+}
+
+function findMarketData(cache, currency) {
+  const now = Date.now();
+  // cache is an array, each item is for a different currency
+  const marketData = cache?.find(
+    (data) => data.currency === currency && now - data.timestamp <= interval
+  );
+  return marketData || null;
+}
+
+function addToCache(cache, marketData) {
+  const now = Date.now();
+  const newCache = [{ ...marketData, timestamp: now }];
+  // Remove outdated cache items
+  cache?.forEach((data) => {
+    if (
+      now - data.timestamp < interval &&
+      data.currency !== marketData.currency
+    ) {
+      newCache.push(data);
+    }
+  });
+  localStorage.setItem(localStorageKey, JSON.stringify(newCache));
+}
+
+async function fetchMetrics() {
+  try {
+    clearTimeout(metricsTimerId);
+    unobserveMetrics?.();
+    const metrics = await callApi('system/get/metrics');
+    store.dispatch({
+      type: TYPE.SET_TOTAL_SUPPLY,
+      payload: metrics?.supply?.total,
+    });
+    metricsTimerId = setTimeout(fetchMetrics, 900000); // 15 minutes
+  } catch (err) {
+    unobserveMetrics = observeStore(
+      (state) => state.core.systemInfo,
+      (systemInfo) => {
+        if (systemInfo) {
+          fetchMetrics();
+          unobserveMetrics?.();
+          unobserveMetrics = null;
+        }
+      }
+    );
+  }
+}
+
+export async function refreshMarketData() {
   fetchMarketData();
-  setInterval(fetchMarketData, 900000); // 15 minutes
-});
+  fetchMetrics();
+}
 
-export const marketDataLoaded = () => {
-  store.dispatch({ type: TYPE.MARKET_DATA_LOADED });
-};
-
-// action creators for the alert list
-
-export const setAlertList = list => {
-  store.dispatch({ type: TYPE.SET_ALERTS, payload: list });
-};
-
-export const removeAlert = index => {
-  store.dispatch({ type: TYPE.REMOVE_ALERT, payload: index });
-};
-
-// action creators for the 24 hr market summery requests
-
-export const binance24hrInfo = async () => {
-  const { data } = await axios.get(
-    'https://api.binance.com/api/v1/ticker/24hr?symbol=NXSBTC'
+export function prepareMarket() {
+  refreshMarketData();
+  observeStore(
+    ({ settings: { fiatCurrency } }) => fiatCurrency,
+    refreshMarketData
   );
-  const res = {
-    change: data.priceChangePercent,
-    high: data.highPrice,
-    low: data.lowPrice,
-    volume: parseFloat(data.volume).toFixed(2),
-  };
-  store.dispatch({ type: TYPE.BINANCE_24, payload: res });
-};
-
-export const bittrex24hrInfo = async () => {
-  const result = await axios.get(
-    'https://bittrex.com/api/v1.1/public/getmarketsummary?market=btc-nxs'
-  );
-  const data = result.data.result[0];
-
-  const res = {
-    change: parseFloat(
-      (((data.Last - data.PrevDay) / data.PrevDay) * 100).toFixed(2)
-    ),
-    high: data.High,
-    low: data.Low,
-    volume: parseFloat(data.Volume).toFixed(2),
-  };
-  store.dispatch({ type: TYPE.BITTREX_24, payload: res });
-};
-
-// action creators for the market depth calls
-
-export const binanceDepthLoader = async () => {
-  const { data } = await axios.get(
-    'https://api.binance.com/api/v1/depth?symbol=NXSBTC'
-  );
-  const res = {
-    sell: data.asks
-      .map(ele => {
-        return {
-          Volume: parseFloat(ele[1]),
-          Price: parseFloat(ele[0]),
-        };
-      })
-      .sort((a, b) => b.Price - a.Price)
-      .reverse(),
-    buy: data.bids
-      .map(ele => {
-        return {
-          Volume: parseFloat(ele[1]),
-          Price: parseFloat(ele[0]),
-        };
-      })
-      .sort((a, b) => b.Price - a.Price),
-  };
-
-  store.dispatch({ type: TYPE.BINANCE_ORDERBOOK, payload: res });
-  marketDataLoaded();
-};
-
-export const bittrexDepthLoader = async () => {
-  const { data } = await axios.get(
-    'https://bittrex.com/api/v1.1/public/getorderbook?market=BTC-NXS&type=both'
-  );
-
-  const res = {
-    buy: data.result.buy
-      .sort((a, b) => b.Rate - a.Rate)
-      .map(e => {
-        return { Volume: e.Quantity, Price: e.Rate };
-      }),
-    sell: data.result.sell
-      .sort((a, b) => b.Rate - a.Rate)
-      .map(e => {
-        return { Volume: e.Quantity, Price: e.Rate };
-      })
-      .reverse(),
-  };
-  store.dispatch({ type: TYPE.BITTREX_ORDERBOOK, payload: res });
-  marketDataLoaded();
-};
-
-// actions creators for candlestick data
-
-export const binanceCandlestickLoader = async () => {
-  const { data } = await axios.get(
-    'https://api.binance.com/api/v1/klines?symbol=NXSBTC&interval=1d'
-  );
-
-  const res = data
-    .reverse()
-    .map(e => {
-      return {
-        x: new Date(e[0]),
-        open: parseFloat(e[1]),
-        close: parseFloat(e[4]),
-        high: parseFloat(e[2]),
-        low: parseFloat(e[3]),
-        label: `${__('Date')}: ${new Date(e[0]).getMonth() + 1}/${new Date(
-          e[0]
-        ).getDate()}/${new Date(e[0]).getFullYear()}
-             ${__('Open')}: ${parseFloat(e[1])}
-             ${__('Close')}: ${parseFloat(e[4])}
-             ${__('High')}: ${parseFloat(e[2])}
-             ${__('Low')}: ${parseFloat(e[3])}`,
-      };
-    })
-    .slice(0, 30);
-  store.dispatch({ type: TYPE.BINANCE_CANDLESTICK, payload: res });
-  marketDataLoaded();
-};
-
-export const bittrexCandlestickLoader = async () => {
-  const { data } = await axios.get(
-    'https://bittrex.com/api/v2.0/pub/market/GetTicks?marketName=BTC-NXS&tickInterval=day'
-  );
-
-  const res = data.result
-    .reverse()
-    .map(e => {
-      return {
-        x: new Date(e.T),
-        open: e.O,
-        close: e.C,
-        high: e.H,
-        low: e.L,
-        label: `${__('Date')}: ${new Date(e.T).getMonth() + 1}/${new Date(
-          e.T
-        ).getDate()}/${new Date(e.T).getFullYear()}
-                ${__('Open')}: ${e.O}
-                ${__('Close')}: ${e.C}
-                ${__('High')}: ${e.H}
-                ${__('Low')}: ${e.L}`,
-      };
-    })
-    .slice(0, 30);
-  store.dispatch({ type: TYPE.BITTREX_CANDLESTICK, payload: res });
-  marketDataLoaded();
-};
+}

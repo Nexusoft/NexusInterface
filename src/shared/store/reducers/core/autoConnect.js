@@ -1,5 +1,5 @@
 // Marking if the wallet should auto connect to the core
-// This should be false if user has stopped the core AND manual core mode is off
+// This should be false if user has stopped the core AND remote core mode is off
 import * as TYPE from 'consts/actionTypes';
 
 const initialState = true;

@@ -1,4 +1,3 @@
-import React from 'react';
 import DOMPurify from 'dompurify';
 import { readFileSync } from 'fs';
 import styled from '@emotion/styled';
@@ -25,7 +24,7 @@ const Img = styled.img({
   height: '1em',
 });
 
-const loadSVGContent = path => {
+const loadSVGContent = (path) => {
   try {
     const content = readFileSync(path);
     // IMPORTANT! MUST sanitize icon content for security
@@ -37,13 +36,13 @@ const loadSVGContent = path => {
 
 const getCachedSVG = (() => {
   const cache = {};
-  return path =>
+  return (path) =>
     cache[path] === undefined
       ? (cache[path] = loadSVGContent(path))
       : cache[path];
 })();
 
-const ModuleIcon = ({ module, ...rest }) => {
+export default function ModuleIcon({ module, ...rest }) {
   if (module.iconPath) {
     if (module.iconPath.endsWith('.svg')) {
       const iconContent = getCachedSVG(module.iconPath);
@@ -63,6 +62,4 @@ const ModuleIcon = ({ module, ...rest }) => {
   }
 
   return <Icon icon={legoBlockIcon} {...rest} />;
-};
-
-export default ModuleIcon;
+}

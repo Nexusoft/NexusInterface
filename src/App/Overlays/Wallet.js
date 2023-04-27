@@ -1,6 +1,5 @@
 // External
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 
 // Internal
@@ -52,37 +51,20 @@ const Notifications = ({ notifications, taskCount }) => (
   </SnackBars>
 );
 
-/**
- * Controls the elements that get rendered over the main app, so dialogs/modals etc
- *
- * @export
- * @class Wallet
- * @extends {Component}
- */
-@connect(({ ui: { modals, notifications, backgroundTasks } }) => ({
-  modals,
-  notifications,
-  backgroundTasks,
-}))
-export default class Wallet extends Component {
-  /**
-   * Component's Renderable JSX
-   *
-   * @returns
-   * @memberof Wallet
-   */
-  render() {
-    const { children, modals, notifications, backgroundTasks } = this.props;
-    return (
-      <>
-        <div>{children}</div>
-        <Modals modals={modals} />
-        <BackgroundTasks tasks={backgroundTasks} />
-        <Notifications
-          notifications={notifications}
-          taskCount={backgroundTasks.length}
-        />
-      </>
-    );
-  }
+export default function Wallet({ children }) {
+  const modals = useSelector((state) => state.ui.modals);
+  const notifications = useSelector((state) => state.ui.notifications);
+  const backgroundTasks = useSelector((state) => state.ui.backgroundTasks);
+
+  return (
+    <>
+      <div>{children}</div>
+      <Modals modals={modals} />
+      <BackgroundTasks tasks={backgroundTasks} />
+      <Notifications
+        notifications={notifications}
+        taskCount={backgroundTasks.length}
+      />
+    </>
+  );
 }

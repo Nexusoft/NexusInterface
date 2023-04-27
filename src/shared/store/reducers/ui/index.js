@@ -7,9 +7,9 @@ import modals from './modals';
 import notifications from './notifications';
 import backgroundTasks from './backgroundTasks';
 import closing from './closing';
-import transactions from './transactions';
-import transactionsTritium from './transactionsTritium';
+import transactionsFilter from './transactionsFilter';
 import user from './user';
+import transactions from './transactions';
 
 export default combineReducers({
   addressBook,
@@ -19,7 +19,7 @@ export default combineReducers({
   notifications,
   backgroundTasks,
   closing,
-  transactions,
-  transactionsTritium,
+  transactionsFilter,
   user,
+  transactions,
 });

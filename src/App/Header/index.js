@@ -1,7 +1,6 @@
 // External
-import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 
 // Internal Global
@@ -10,14 +9,15 @@ import HorizontalLine from 'components/HorizontalLine';
 import { consts, timing, animations } from 'styles';
 import * as color from 'utils/color';
 import { isCoreConnected } from 'selectors';
-import { legacyMode } from 'consts/misc';
+import { alphaRelease, betaRelease, legacyMode } from 'consts/misc';
 
 // Internal Local
 import StatusIcons from './StatusIcons';
 import StatusIconsTritium from './StatusIconsTritium';
 import WalletStatus from './WalletStatus';
-import TritiumCountdown from './TritiumCountdown';
 import logoFull from 'icons/logo-full.svg';
+
+__ = __context('Header');
 
 const HeaderComponent = styled.header(({ theme }) => ({
   gridArea: 'header',
@@ -44,7 +44,10 @@ const LogoLink = styled(Link)(({ theme }) => ({
   )})`,
 
   '&:hover': {
-    filter: `drop-shadow(0 0 10px ${theme.primary}) brightness(110%)`,
+    filter: `drop-shadow(0 0 10px ${color.lighten(
+      theme.primary,
+      0.2
+    )}) brightness(110%)`,
   },
 }));
 
@@ -82,76 +85,48 @@ const PreReleaseTag = styled.div(({ theme }) => ({
   color: theme.foreground,
 }));
 
-const preReleaseTag = APP_VERSION.toString().includes('alpha')
-  ? 'ALPHA'
-  : APP_VERSION.toString().includes('beta')
-  ? 'BETA'
-  : null;
+const preReleaseTag = alphaRelease ? 'ALPHA' : betaRelease ? 'BETA' : null;
 
-/**
- * Handles the App Header
- *
- * @class Header
- * @extends {Component}
- */
-@connect(state => {
-  const {
-    core: { info, systemInfo },
-  } = state;
-  return {
-    coreConnected: isCoreConnected(state),
-    testnet: systemInfo && systemInfo.testnet,
-    privateNet: systemInfo && systemInfo.private,
-    legacyTestnet: info && info.testnet,
-  };
-})
-class Header extends Component {
-  /**
-   * Component's Renderable JSX
-   *
-   * @returns
-   * @memberof Header
-   */
-  render() {
-    const { coreConnected, testnet, privateNet, legacyTestnet } = this.props;
+export default function Header() {
+  const coreConnected = useSelector(isCoreConnected);
+  const testnet = useSelector((state) => state.core.systemInfo?.testnet);
+  const privateNet = useSelector((state) => state.core.systemInfo?.private);
+  const legacyTestnet = useSelector((state) => state.core.info?.testnet);
+  const lite = useSelector((state) => state.core.systemInfo?.litemode);
+  const hybrid = useSelector((state) => state.core.systemInfo?.hybrid);
 
-    return (
-      <HeaderComponent>
-        {legacyMode && <TritiumCountdown />}
+  return (
+    <HeaderComponent>
+      <LogoLink to="/">
+        <Logo icon={logoFull} />
+        {LOCK_TESTNET && <PreReleaseTag>TESTNET</PreReleaseTag>}
+        {preReleaseTag ? <PreReleaseTag>{preReleaseTag}</PreReleaseTag> : null}
+      </LogoLink>
 
-        <LogoLink to="/">
-          <Logo icon={logoFull} />
+      <ModeDisplay>
+        {legacyMode ? (
+          <>
+            {__('Legacy Mode')}
+            {lite && ` [${__('Lite')}]`}
+            {!!legacyTestnet && ' - testnet'}
+          </>
+        ) : (
+          <>
+            {__('Tritium Mode')}
+            {lite && ` [${__('Lite')}]`}
+            {hybrid && ` [${__('Hybrid')}]`}
+            {!!testnet &&
+              ` -${privateNet ? ' private' : ''} testnet ${testnet}`}
+          </>
+        )}
+      </ModeDisplay>
 
-          {preReleaseTag ? (
-            <PreReleaseTag>{preReleaseTag}</PreReleaseTag>
-          ) : null}
-        </LogoLink>
+      <UnderHeader>
+        <HorizontalLine />
+        <WalletStatus />
+      </UnderHeader>
 
-        <ModeDisplay>
-          {legacyMode ? (
-            <>
-              {__('Legacy Mode')}
-              {!!legacyTestnet && ' - testnet'}
-            </>
-          ) : (
-            <>
-              {__('Tritium Mode')}
-              {!!testnet &&
-                ` -${privateNet ? ' private' : ''} testnet ${testnet}`}
-            </>
-          )}
-        </ModeDisplay>
-
-        <UnderHeader>
-          <HorizontalLine />
-          <WalletStatus />
-        </UnderHeader>
-
-        {coreConnected &&
-          (legacyMode ? <StatusIcons /> : <StatusIconsTritium />)}
-      </HeaderComponent>
-    );
-  }
+      {coreConnected && (legacyMode ? <StatusIcons /> : <StatusIconsTritium />)}
+    </HeaderComponent>
+  );
 }
-
-export default Header;

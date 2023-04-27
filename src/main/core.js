@@ -1,30 +1,33 @@
+import child_process from 'child_process';
 import spawn from 'cross-spawn';
 import log from 'electron-log';
 import fs from 'fs';
 import path from 'path';
-import axios from 'axios';
 
 import { assetsByPlatformDir } from 'consts/paths';
-import {
-  loadSettingsFromFile,
-  updateSettingsFile,
-} from 'lib/settings/universal';
-import { customConfig, loadNexusConf } from 'lib/coreConfig';
-import exec from 'utils/promisified/exec';
-import sleep from 'utils/promisified/sleep';
-import deleteDirectory from 'utils/promisified/deleteDirectory';
 
 const coreBinaryName = `nexus-${process.platform}-${process.arch}${
   process.platform === 'win32' ? '.exe' : ''
 }`;
 const coreBinaryPath = path.join(assetsByPlatformDir, 'cores', coreBinaryName);
 
+const exec = (command, options) =>
+  new Promise((resolve, reject) => {
+    child_process.exec(command, options, (err, stdout, stderr) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(stdout);
+      }
+    });
+  });
+
 /**
  * Check if core binary file exists
  *
- * @returns
+ * @returns {boolean} Does the core exist at coreBinaryPath
  */
-function coreBinaryExists() {
+export function coreBinaryExists() {
   log.info('Checking if core binary exists: ' + coreBinaryPath);
   try {
     fs.accessSync(coreBinaryPath);
@@ -39,7 +42,8 @@ function coreBinaryExists() {
 /**
  * Get Process ID of core process if core is running
  *
- * @returns
+ * @returns {string} PID
+ * @memberof Core
  */
 async function getCorePID() {
   const modEnv = process.env;
@@ -47,21 +51,25 @@ async function getCorePID() {
   let PID;
 
   if (process.platform == 'win32') {
-    PID = (await exec(
-      `tasklist /NH /v /fi "IMAGENAME eq ${coreBinaryName}" /fo CSV`,
-      [],
-      { env: modEnv }
-    ))
+    PID = (
+      await exec(
+        `tasklist /NH /v /fi "IMAGENAME eq ${coreBinaryName}" /fo CSV`,
+        [],
+        { env: modEnv }
+      )
+    )
       .toString()
       .split(',')[1];
     PID = PID && Number(PID.replace(/"/gm, ''));
   } else if (process.platform == 'darwin') {
-    PID = (await exec('ps -A', [], {
-      env: modEnv,
-    }))
+    PID = (
+      await exec('ps -A', [], {
+        env: modEnv,
+      })
+    )
       .toString()
       .split('\n')
-      .find(output => output.includes(coreBinaryPath));
+      .find((output) => output.includes(coreBinaryPath));
 
     PID =
       PID &&
@@ -72,9 +80,11 @@ async function getCorePID() {
           .replace(/^\s+|\s+$/gm, '')
       );
   } else {
-    PID = (await exec('ps -o pid --no-headers -p 1 -C ${Nexus_Daemon}', [], {
-      env: modEnv,
-    }))
+    PID = (
+      await exec('ps -o pid --no-headers -p 1 -C ${Nexus_Daemon}', [], {
+        env: modEnv,
+      })
+    )
       .toString()
       .split('\n')[1];
     PID =
@@ -95,212 +105,71 @@ async function getCorePID() {
 }
 
 /**
- *
- *
- * @class Core
+ * Returns true if the PID is found.
+ * @returns { boolean } If the core is running.
+ * @memberof Core
  */
-class Core {
-  // Store the config params that was used to start the core
-  _config = null;
-  get config() {
-    return this._config;
-  }
-
-  /**
-   * Start up the core with necessary parameters
-   *
-   * @memberof Core
-   */
-  start = async () => {
-    const settings = loadSettingsFromFile();
-    const corePID = await getCorePID();
-    this._config = null;
-
-    if (settings.manualDaemon == true) {
-      log.info('Core Manager: Manual Core mode, skipping starting core');
-      throw 'Manual Core mode';
-    }
-
-    if (corePID) {
-      log.info(
-        'Core Manager: Nexus Core Process already running. Skipping starting core'
-      );
-      this._config = customConfig(loadNexusConf());
-      return null;
-    }
-
-    const conf = (this._config = customConfig({
-      ...loadNexusConf(),
-      verbose: settings.verboseLevel,
-    }));
-
-    if (!coreBinaryExists()) {
-      log.info(
-        'Core Manager: Core not found, please run in manual deamon mode'
-      );
-      throw 'Core not found';
-    }
-
-    if (!fs.existsSync(conf.dataDir)) {
-      log.info(
-        'Core Manager: Data Directory path not found. Creating folder: ' +
-          conf.dataDir
-      );
-      fs.mkdirSync(conf.dataDir);
-    }
-
-    if (settings.clearPeers) {
-      if (fs.existsSync(path.join(conf.dataDir, 'addr.bak'))) {
-        await deleteDirectory(path.join(conf.dataDir, 'addr.bak'));
-      }
-      if (fs.existsSync(path.join(conf.dataDir, 'addr'))) {
-        fs.renameSync(
-          path.join(conf.dataDir, 'addr'),
-          path.join(conf.dataDir, 'addr.bak')
-        );
-      }
-      UpdateSettings({ clearPeers: false });
-    }
-
-    const params = [
-      '-daemon',
-      '-server',
-      '-rpcthreads=4',
-      '-fastsync',
-      `-datadir=${conf.dataDir}`,
-      `-rpcport=${conf.port}`,
-      `-verbose=${conf.verbose}`,
-    ];
-
-    //After core forksblocks clear out that field.
-    if (settings.forkBlocks) {
-      params.push('-forkblocks=' + settings.forkBlocks);
-      updateSettingsFile({ forkBlocks: 0 });
-    }
-    if (settings.walletClean) {
-      params.push('-walletclean');
-      updateSettingsFile({ walletClean: false });
-    }
-    //Avatar is default so only add it if it is off.
-    if (!settings.avatarMode) {
-      params.push('-avatar=0');
-    }
-    // Enable mining (default is 0)
-    if (settings.enableMining == true) {
-      params.push('-mining=1');
-      if (settings.ipMineWhitelist !== '') {
-        settings.ipMineWhitelist.split(';').forEach(element => {
-          params.push(`-llpallowip=${element}`);
-        });
-      }
-    }
-    // Enable staking (default is 0)
-    if (settings.enableStaking == true) params.push('-stake=1');
-
-    log.info('Core Parameters: ' + params.toString());
-    log.info('Core Manager: Starting core');
-    try {
-      const coreProcess = spawn(coreBinaryPath, params, {
-        shell: false,
-        detached: true,
-        stdio: ['ignore', 'ignore', 'ignore'],
-      });
-      if (coreProcess) {
-        log.info(
-          `Core Manager: Core has started (process id: ${coreProcess.pid})`
-        );
-        return coreProcess.pid;
-      } else {
-        throw 'Core failed to start';
-      }
-    } catch (err) {
-      console.error(err);
-      throw err;
-    }
-  };
-
-  /**
-   * Stop the core from running by sending stop command or SIGTERM to the process
-   *
-   * @memberof Core
-   */
-  stop = async () => {
-    log.info('Core Manager: Stop function called');
-    const settings = loadSettingsFromFile();
-
-    let corePID;
-    corePID = await getCorePID();
-    if (!corePID) {
-      log.info(`Core Manager: Core has already stopped.`);
-      return false;
-    }
-
-    const conf = settings.manualDaemon
-      ? customConfig({
-          ip: settings.manualDaemonIP,
-          port: settings.manualDaemonPort,
-          user: settings.manualDaemonUser,
-          password: settings.manualDaemonPassword,
-          dataDir: settings.manualDaemonDataDir,
-        })
-      : this.config || customConfig(loadNexusConf());
-
-    try {
-      await axios.post(
-        conf.host,
-        { method: 'stop', params: [] },
-        {
-          auth:
-            conf.user && conf.password
-              ? {
-                  username: conf.user,
-                  password: conf.password,
-                }
-              : undefined,
-        }
-      );
-    } catch (err) {
-      log.error('Error stopping core');
-      log.error(err);
-    }
-
-    // Check if the core really stopped
-
-    for (let i = 0; i < 30; i++) {
-      corePID = await getCorePID();
-
-      if (corePID) {
-        log.info(
-          `Core Manager: Core still running after stop command for: ${i} seconds, CorePID: ${corePID}`
-        );
-      } else {
-        log.info(`Core Manager: Core stopped gracefully.`);
-        return true;
-      }
-      await sleep(1000);
-    }
-
-    // If core still doesn't stop after 30 seconds, kill the process
-    log.info('Core Manager: Killing process ' + corePID);
-    const { env } = process;
-    env.KILL_PID = corePID;
-    if (process.platform == 'win32') {
-      await exec(`taskkill /F /PID ${corePID}`, [], { env });
-    } else {
-      await exec('kill -9 $KILL_PID', [], { env });
-    }
-    return false;
-  };
-
-  /**
-   * Restart the core process
-   *
-   * @memberof Core
-   */
-  restart = async () => {
-    await this.stop();
-    await this.start();
-  };
+export async function isCoreRunning() {
+  const pid = await getCorePID();
+  return !!pid;
 }
 
-export default new Core();
+/**
+ * Start up the core with necessary parameters
+ *
+ * @memberof Core
+ */
+export function startCore(params) {
+  log.info('Core Parameters: ' + (params && params.join(' ')));
+  log.info('Core Manager: Starting core');
+  try {
+    const coreProcess = spawn(coreBinaryPath, params, {
+      shell: false,
+      detached: true,
+      stdio: ['ignore', 'ignore', 'ignore'],
+    });
+    if (coreProcess) {
+      log.info(
+        `Core Manager: Core has started (process id: ${coreProcess.pid})`
+      );
+      return coreProcess.pid;
+    } else {
+      throw 'Core failed to start';
+    }
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+
+/**
+ * Find the Core's PID and then kill the task.
+ * @memberof Core
+ */
+export async function killCoreProcess() {
+  const corePID = await getCorePID();
+  log.info('Core Manager: Killing process ' + corePID);
+  const { env } = process;
+  env.KILL_PID = corePID;
+  if (process.platform == 'win32') {
+    await exec(`taskkill /F /PID ${corePID}`, [], { env });
+  } else {
+    await exec('kill -9 $KILL_PID', [], { env });
+  }
+}
+
+/**
+ * Execute either an API call or RPC call by using the shell to execute the core path plus a command.
+ * @param {string} command API/RPC command to run
+ * @returns {object} the result of the command
+ * @memberof Core
+ */
+export async function executeCommand(command) {
+  try {
+    const result = await exec(`"${coreBinaryPath}" -noapiauth ${command}`);
+    return result;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}

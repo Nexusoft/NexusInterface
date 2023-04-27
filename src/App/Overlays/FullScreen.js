@@ -1,9 +1,7 @@
-import React from 'react';
 import styled from '@emotion/styled';
-import { keyframes } from '@emotion/core';
+import { keyframes } from '@emotion/react';
 
 import { timing } from 'styles';
-import * as color from 'utils/color';
 
 const intro = keyframes`
   from { 
@@ -23,7 +21,7 @@ const FullScreenComponent = styled.div(({ theme }) => ({
   right: 0,
   bottom: 0,
   padding: '10px 30px',
-  background: color.darken(theme.background, 0.2),
+  background: theme.lower(theme.background, 0.2),
   color: theme.mixer(0.75),
   animation: `${intro} ${timing.quick} ease-out`,
   display: 'grid',
@@ -68,24 +66,30 @@ const FullScreenFooter = styled.div({
   gridArea: 'footer',
 });
 
-const FullScreen = ({ children, header, footer, width, ...rest }) => (
-  <FullScreenComponent {...rest}>
-    {!!header && (
-      <FullScreenHeader>
-        <Container width={width}>
-          <InnerHeader>{header}</InnerHeader>
-        </Container>
-      </FullScreenHeader>
-    )}
-    <FullScreenBody>
-      <Container width={width}>{children}</Container>
-    </FullScreenBody>
-    {!!footer && (
-      <FullScreenFooter>
-        <Container width={width}>{footer}</Container>
-      </FullScreenFooter>
-    )}
-  </FullScreenComponent>
-);
-
-export default FullScreen;
+export default function FullScreen({
+  children,
+  header,
+  footer,
+  width,
+  ...rest
+}) {
+  return (
+    <FullScreenComponent {...rest}>
+      {!!header && (
+        <FullScreenHeader>
+          <Container width={width}>
+            <InnerHeader>{header}</InnerHeader>
+          </Container>
+        </FullScreenHeader>
+      )}
+      <FullScreenBody>
+        <Container width={width}>{children}</Container>
+      </FullScreenBody>
+      {!!footer && (
+        <FullScreenFooter>
+          <Container width={width}>{footer}</Container>
+        </FullScreenFooter>
+      )}
+    </FullScreenComponent>
+  );
+}

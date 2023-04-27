@@ -1,3 +1,7 @@
+/**
+ * LEGACY TRANSACTIONS FILTER
+ */
+
 import * as TYPE from 'consts/actionTypes';
 
 const initialState = {

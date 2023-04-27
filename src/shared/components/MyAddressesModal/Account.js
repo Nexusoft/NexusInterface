@@ -1,5 +1,4 @@
 // External
-import React from 'react';
 import styled from '@emotion/styled';
 
 // Internal
@@ -7,6 +6,8 @@ import Highlight from 'components/Highlight';
 import NexusAddress from 'components/NexusAddress';
 import highlightMatchingText from 'utils/highlightMatchingText';
 import { formatNumber } from 'lib/intl';
+
+__ = __context('MyAddresses');
 
 const AccountComponent = styled.div(({ theme }) => ({
   padding: '1em 0',
@@ -29,8 +30,8 @@ const Account = ({
       </AccountName>{' '}
       ({formatNumber(balance, 6)} NXS)
     </div>
-    {addresses.map(addr => (
-      <NexusAddress key={addr} address={addr} />
+    {addresses.map((addr) => (
+      <NexusAddress className="mt1" key={addr} address={addr} />
     ))}
   </AccountComponent>
 );

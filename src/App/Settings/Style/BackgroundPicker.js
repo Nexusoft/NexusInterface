@@ -1,111 +1,76 @@
 // External
-import React, { Component } from 'react';
-import styled from '@emotion/styled';
+import { useSelector } from 'react-redux';
+import { ipcRenderer } from 'electron';
 
 // Internal
-import { timing } from 'styles';
-import { newUID } from 'utils/misc';
-import * as color from 'utils/color';
+import Button from 'components/Button';
+import {
+  starryNightBackground,
+  cosmicLightBackground,
+  updateTheme,
+} from 'lib/theme';
 
-const Option = styled.label(
-  ({ theme }) => ({
-    display: 'block',
-    padding: '.4em .8em',
-    transition: `background-color ${timing.normal}`,
-    cursor: 'pointer',
+__ = __context('Settings.Style');
 
-    '&:hover': {
-      background: theme.background,
-    },
-  }),
-  ({ selected, theme }) =>
-    selected && {
-      '&, &:hover': {
-        background: color.darken(theme.primary, 0.2),
+async function handleFilePick(e) {
+  const files = await ipcRenderer.invoke('show-open-dialog', {
+    title: __('Select wallpaper'),
+    properties: ['openFile'],
+    filters: [
+      {
+        name: 'Images',
+        extensions: ['jpg', 'jpeg', 'png', 'webp', 'bmp', 'gif'],
       },
+    ],
+  });
+  let path = files?.[0];
+  if (path) {
+    if (process.platform === 'win32') {
+      path = path.replace(/\\/g, '/');
     }
-);
-
-/**
- * The Background Picker Element
- *
- * @class BackgroundPicker
- * @extends {Component}
- */
-class BackgroundPicker extends Component {
-  fileInputID = newUID();
-
-  /**
-   * Set a Default background
-   *
-   * @memberof BackgroundPicker
-   */
-  setDefault = version => {
-    if (this.props.defaultStyle != version) {
-      version = version + 'Custom';
-    }
-    this.props.onChange(null, version);
-  };
-
-  /**
-   * Handle Picking a file
-   *
-   * @memberof BackgroundPicker
-   */
-  handleFilePick = e => {
-    if (!!e.target.files.length) {
-      let imagePath = e.target.files[0].path;
-      if (process.platform === 'win32') {
-        imagePath = imagePath.replace(/\\/g, '/');
-      }
-
-      this.props.onChange(imagePath, 'Custom');
-    }
-  };
-
-  /**
-   * Component's Renderable JSX
-   *
-   * @returns
-   * @memberof BackgroundPicker
-   */
-  render() {
-    const { wallpaper, defaultStyle } = this.props;
-    return (
-      <div>
-        <Option
-          onClick={() => this.setDefault('Dark')}
-          selected={!wallpaper && defaultStyle.startsWith('Dark')}
-          style={{ display: 'inline', marginBottom: '.5em' }}
-        >
-          {__('Twinkling stars')}
-        </Option>
-        <Option
-          onClick={() => this.setDefault('Light')}
-          selected={!wallpaper && defaultStyle.startsWith('Light')}
-          style={{ display: 'inline', marginBottom: '.5em' }}
-        >
-          {__('Cosmic light')}
-        </Option>
-        <Option htmlFor={this.fileInputID} selected={!!wallpaper}>
-          {wallpaper ? (
-            <span>
-              {__('Custom wallpaper')}: {wallpaper}
-            </span>
-          ) : (
-            __('Select a custom wallpaper')
-          )}
-        </Option>
-        <input
-          id={this.fileInputID}
-          type="file"
-          accept="image/*"
-          style={{ display: 'none' }}
-          onChange={this.handleFilePick}
-        />
-      </div>
-    );
+    updateTheme({ wallpaper: path });
   }
 }
 
-export default BackgroundPicker;
+export default function BackgroundPicker() {
+  const wallpaper = useSelector((state) => state.theme.wallpaper);
+  const customWallpaper =
+    wallpaper !== starryNightBackground && wallpaper !== cosmicLightBackground;
+
+  return (
+    <div>
+      <Button
+        skin={wallpaper === starryNightBackground ? 'filled-primary' : 'plain'}
+        className="mr1"
+        onClick={() => updateTheme({ wallpaper: starryNightBackground })}
+        selected={wallpaper === starryNightBackground}
+        style={{ display: 'inline', marginBottom: '.5em' }}
+      >
+        {__('Starry night')}
+      </Button>
+      <Button
+        skin={wallpaper === cosmicLightBackground ? 'filled-primary' : 'plain'}
+        className="mr1"
+        onClick={() => updateTheme({ wallpaper: cosmicLightBackground })}
+        selected={wallpaper === cosmicLightBackground}
+        style={{ display: 'inline', marginBottom: '.5em' }}
+      >
+        {__('Cosmic light')}
+      </Button>
+      <Button
+        skin={customWallpaper ? 'filled-primary' : 'plain'}
+        className="mr1"
+        selected={customWallpaper}
+        onClick={handleFilePick}
+      >
+        {customWallpaper ? (
+          <span>
+            {__('Custom wallpaper')}: {wallpaper}
+          </span>
+        ) : (
+          __('Select a custom wallpaper')
+        )}
+      </Button>
+    </div>
+  );
+}

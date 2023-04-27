@@ -1,5 +1,5 @@
 // External
-import React, { Component } from 'react';
+import { useRef, useContext, useEffect } from 'react';
 
 // Internal
 import { removeBackgroundTask } from 'lib/ui';
@@ -9,71 +9,35 @@ import { timing } from 'styles';
 
 const outro = { opacity: [1, 0] };
 
-/**
- * Creates a background task component
- *
- * @export
- * @class BackgroundTask
- * @extends {Component}
- */
-export default class BackgroundTask extends Component {
-  static contextType = TaskContext;
+export default function BackgroundTask({
+  type = 'work',
+  children,
+  assignClose,
+  ...rest
+}) {
+  const snackBarRef = useRef();
+  const taskID = useContext(TaskContext);
 
-  static defaultProps = {
-    type: 'work',
-  };
-
-  snackBarRef = React.createRef();
-
-  /**
-   *Creates an instance of BackgroundTask.
-   * @param {*} props
-   * @memberof BackgroundTask
-   */
-  constructor(props) {
-    super(props);
-    props.assignClose && props.assignClose(this.animatedClose);
-  }
-
-  /**
-   * Animate the closeout
-   *
-   * @memberof BackgroundTask
-   */
-  animatedClose = () => {
-    const taskID = this.context;
+  const animatedClose = () => {
     if (taskID) {
       const duration = parseInt(timing.quick);
-      this.snackBarRef.current.animate(outro, {
+      snackBarRef.current.animate(outro, {
         duration,
         fill: 'both',
       });
-      setTimeout(this.remove, duration);
+      setTimeout(() => {
+        removeBackgroundTask(taskID);
+      }, duration);
     }
   };
 
-  /**
-   * Remove This task
-   *
-   * @memberof BackgroundTask
-   */
-  remove = () => {
-    const taskID = this.context;
-    removeBackgroundTask(taskID);
-  };
+  useEffect(() => {
+    assignClose?.(animatedClose);
+  }, []);
 
-  /**
-   * Component's Renderable JSX
-   *
-   * @returns
-   * @memberof BackgroundTask
-   */
-  render() {
-    const { children, assignClose, ...rest } = this.props;
-    return (
-      <SnackBar ref={this.snackBarRef} onClick={this.animatedClose} {...rest}>
-        {children}
-      </SnackBar>
-    );
-  }
+  return (
+    <SnackBar type={type} ref={snackBarRef} onClick={animatedClose} {...rest}>
+      {children}
+    </SnackBar>
+  );
 }

@@ -4,11 +4,13 @@
 
 import path from 'path';
 import webpack from 'webpack';
-import merge from 'webpack-merge';
+import { merge } from 'webpack-merge';
 
 import baseConfig from './webpack.config.base';
 
-export default merge.smart(baseConfig, {
+const intlPath = path.join(process.cwd(), 'src', 'shared', 'lib', 'intl.js');
+
+export default merge(baseConfig, {
   target: 'electron-renderer',
 
   module: {
@@ -22,7 +24,7 @@ export default merge.smart(baseConfig, {
           {
             loader: 'svgo-loader',
             options: {
-              externalConfig: 'svgo-config.json',
+              configFile: path.join(process.cwd(), 'svgo.config.js'),
             },
           },
         ],
@@ -32,7 +34,7 @@ export default merge.smart(baseConfig, {
         use: 'url-loader',
       },
       {
-        test: /\.MD$/,
+        test: /\.(MD|css)$/,
         use: {
           loader: 'file-loader',
         },
@@ -42,10 +44,9 @@ export default merge.smart(baseConfig, {
 
   plugins: [
     new webpack.ProvidePlugin({
-      __: [
-        path.join(process.cwd(), 'src', 'shared', 'lib', 'intl.js'),
-        'translate',
-      ],
+      __: [intlPath, 'translate'],
+      ___: [intlPath, 'translateWithContext'],
+      __context: [intlPath, 'withContext'],
     }),
   ],
 });

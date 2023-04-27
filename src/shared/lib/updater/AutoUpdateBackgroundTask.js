@@ -1,24 +1,25 @@
-import React from 'react';
+import { Component } from 'react';
 import { shell } from 'electron';
 
 import BackgroundTask from 'components/BackgroundTask';
-import { openConfirmDialog, showBackgroundTask } from 'lib/ui';
-import { closeWallet } from 'lib/wallet';
+import { showBackgroundTask } from 'lib/ui';
+import { confirm } from 'lib/dialog';
 
-export default class AutoUpdateBackgroundTask extends React.Component {
-  confirmInstall = () => {
+__ = __context('AutoUpdate');
+
+export default class AutoUpdateBackgroundTask extends Component {
+  confirmInstall = async () => {
     this.closeTask();
-    openConfirmDialog({
+    const confirmed = await confirm({
       question: __('Close the wallet and install update now?'),
       labelYes: __('Close and install'),
-      callbackYes: () => {
-        closeWallet(this.props.quitAndInstall);
-      },
       labelNo: __('Install it later'),
-      callbackNo: () => {
-        showBackgroundTask(AutoUpdateBackgroundTask, this.props);
-      },
     });
+    if (confirmed) {
+      this.props.quitAndInstall();
+    } else {
+      showBackgroundTask(AutoUpdateBackgroundTask, this.props);
+    }
   };
 
   goToGitHub = () => {
@@ -33,7 +34,7 @@ export default class AutoUpdateBackgroundTask extends React.Component {
     return (
       <BackgroundTask
         type="success"
-        assignClose={close => {
+        assignClose={(close) => {
           this.closeTask = close;
         }}
         onClick={gitHub ? this.goToGitHub : this.confirmInstall}

@@ -1,6 +1,8 @@
 import * as THREE from 'three';
 import { geoInterpolate } from 'd3-geo';
 
+var millisecondsPerFrame = 40;
+
 /**
  * Creates a spline from one point to the next
  *
@@ -92,11 +94,17 @@ export default class Curve {
       points[j++] = vertex.z;
     }
 
-    this.curveGeometry.addAttribute(
+    this.curveGeometry.setAttribute(
       'position',
       new THREE.BufferAttribute(points, 3)
     );
     this.curveGeometry.setDrawRange(0, 50);
+
+    this.forward = params.forward;
+
+    if (!this.forward) {
+      this.index = this.curveSegments;
+    }
 
     this.arc = new THREE.Line(this.curveGeometry, material);
   }
@@ -107,16 +115,33 @@ export default class Curve {
    * @memberof Curve
    */
   play = () => {
-    if (this.index > this.curveSegments) {
-      this.index = 0;
-      return;
+    if (this.forward) {
+      if (this.index > this.curveSegments) {
+        this.index = 0;
+        this.isPlaying = false;
+        return;
+      }
+      this.isPlaying = true;
+      this.index += 1;
+      this.curveGeometry.setDrawRange(0, this.index);
+      this.curveGeometry.attributes.position.needsUpdate = true;
+      setTimeout(() => {
+        this.play();
+      }, millisecondsPerFrame);
+    } else {
+      if (this.index <= 0) {
+        this.index = this.curveSegments;
+        this.isPlaying = false;
+        return;
+      }
+      this.index -= 1;
+      this.isPlaying = true;
+      this.curveGeometry.setDrawRange(this.index, this.curveSegments);
+      this.curveGeometry.attributes.position.needsUpdate = true;
+      setTimeout(() => {
+        this.play();
+      }, millisecondsPerFrame);
     }
-    this.index += 1;
-    this.curveGeometry.setDrawRange(0, this.index);
-    this.curveGeometry.attributes.position.needsUpdate = true;
-    setTimeout(() => {
-      this.play();
-    }, 40);
   };
 
   /**
