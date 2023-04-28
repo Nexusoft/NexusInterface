@@ -14,7 +14,7 @@ import Stat from './Stat';
 __ = __context('Overview');
 
 function CurrencyValue({ value, currency, fiatDecimals, btcDecimals }) {
-  if (typeof value !== 'number') {
+  if (typeof value !== 'number' || Number.isNaN(value)) {
     return <span className="dim">-</span>;
   }
   const decimals = currency === 'BTC' ? btcDecimals : fiatDecimals;
