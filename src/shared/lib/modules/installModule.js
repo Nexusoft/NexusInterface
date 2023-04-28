@@ -228,12 +228,25 @@ export async function addDevModule(dirPath) {
   });
 }
 
-const updateDownloadProgress = throttled((payload) => {
-  store.dispatch({
-    type: TYPE.MODULE_DOWNLOAD_PROGRESS,
-    payload,
-  });
-}, 1000);
+// Mapping from module name to download request object of that module
+let downloadRequests = {};
+export const getDownloadRequest = (moduleName) => downloadRequests[moduleName];
+
+const updateDownloadProgress = throttled(
+  ({ moduleName, downloaded, totalSize, downloadRequest }) => {
+    downloadRequests[moduleName] = downloadRequest;
+    store.dispatch({
+      type: TYPE.MODULE_DOWNLOAD_PROGRESS,
+      payload: {
+        moduleName,
+        downloaded,
+        totalSize,
+        downloading: !!downloadRequest,
+      },
+    });
+  },
+  1000
+);
 
 function download(url, { moduleName, filePath }) {
   return new Promise((resolve, reject) => {
@@ -364,6 +377,7 @@ export async function downloadAndInstall({
       note: err.message,
     });
   } finally {
+    downloadRequests[moduleName] = null;
     store.dispatch({
       type: TYPE.MODULE_DOWNLOAD_FINISH,
       payload: { moduleName },
@@ -377,8 +391,6 @@ export async function downloadAndInstall({
 }
 
 export function abortModuleDownload(moduleName) {
-  const moduleDownload = store.getState().moduleDownloads[moduleName];
-  if (moduleDownload?.downloadRequest) {
-    moduleDownload.downloadRequest.abort();
-  }
+  const downloadRequest = getDownloadRequest(moduleName);
+  return downloadRequest?.abort();
 }

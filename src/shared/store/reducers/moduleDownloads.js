@@ -11,14 +11,13 @@ export default (state = initialState, action) => {
       };
 
     case TYPE.MODULE_DOWNLOAD_PROGRESS: {
-      const { moduleName, downloaded, totalSize, downloadRequest } =
-        action.payload;
+      const { moduleName, downloaded, totalSize, downloading } = action.payload;
       return {
         ...state,
         [moduleName]: {
           downloaded,
           totalSize,
-          downloadRequest,
+          downloading,
         },
       };
     }
