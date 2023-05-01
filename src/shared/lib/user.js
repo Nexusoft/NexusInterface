@@ -140,7 +140,15 @@ export const logIn = async ({ username, password, pin }) => {
       pin,
     });
 
-    const stakeInfo = await callApi('finance/get/stakeinfo', { session });
+    let stakeInfo;
+    try {
+      stakeinfo = await callApi('finance/get/stakeinfo', { session });
+    } catch (err) {
+      if (err.code !== -70) {
+        // 'Trust account not found' error
+        throw err;
+      }
+    }
     await unlockUser({ pin, session, stakeInfo });
     const { status } = await setActiveUser({ session, genesis, stakeInfo });
 
