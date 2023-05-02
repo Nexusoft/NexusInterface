@@ -12,6 +12,7 @@
 
 #### Fixes
 
+- Fixed crash when clicking the Send All function on the Send page
 - Fixed the Terminal's API Doc display
 
 # 3.1.0 (2023.4.26)
