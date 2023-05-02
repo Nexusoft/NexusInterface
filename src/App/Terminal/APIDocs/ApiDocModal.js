@@ -9,36 +9,76 @@ import Button from 'components/Button';
 import Link from 'components/Link';
 
 //DOCS
-import Assets from './ASSETS.MD';
-import Finance from './FINANCE.MD';
-import Ledger from './LEDGER.MD';
-import Names from './NAMES.MD';
-import Objects from './OBJECTS.MD';
-import Overview from './OVERVIEW.MD';
-import Supply from './SUPPLY.MD';
-import System from './SYSTEM.MD';
-import Tokens from './TOKENS.MD';
-import Users from './USERS.MD';
-import Invoices from './INVOICES.MD';
+import Overview from './API/OVERVIEW.MD';
+import Filtering from './API/FILTERING.MD';
+import Sorting from './API/SORTING.MD';
+import Queries from './API/QUERIES.MD';
+import Operators from './API/OPERATORS.MD';
+import Templates from './API/TEMPLATES.MD';
+
+import Assets from './API/COMMANDS/ASSETS.MD';
+import Finance from './API/COMMANDS/FINANCE.MD';
+import Invoices from './API/COMMANDS/INVOICES.MD';
+import Ledger from './API/COMMANDS/LEDGER.MD';
+import Market from './API/COMMANDS/MARKET.MD';
+import Names from './API/COMMANDS/NAMES.MD';
+import Profiles from './API/COMMANDS/PROFILES.MD';
+import Register from './API/COMMANDS/REGISTER.MD';
+import Sessions from './API/COMMANDS/SESSIONS.MD';
+import Supply from './API/COMMANDS/SUPPLY.MD';
+import System from './API/COMMANDS/SYSTEM.MD';
+
+//DEPRECATED DOCS
+import DepAssets from './DEPRECATED/ASSETS.MD';
+import DepFinance from './DEPRECATED/FINANCE.MD';
+import DepLedger from './DEPRECATED/LEDGER.MD';
+import DepNames from './DEPRECATED/NAMES.MD';
+import DepObjects from './DEPRECATED/OBJECTS.MD';
+import DepSupply from './DEPRECATED/SUPPLY.MD';
+import DepSystem from './DEPRECATED/SYSTEM.MD';
+import DepTokens from './DEPRECATED/TOKENS.MD';
+import DepUsers from './DEPRECATED/USERS.MD';
+import DepInvoices from './DEPRECATED/INVOICES.MD';
 
 const documents = [
   { path: Overview, label: 'Overview' },
-  { path: Assets, label: 'Assets' },
-  { path: Finance, label: 'Finance' },
-  { path: Ledger, label: 'Ledger' },
-  { path: Names, label: 'Names' },
-  { path: Objects, label: 'Objects' },
-  { path: Supply, label: 'Supply' },
-  { path: System, label: 'System' },
-  { path: Tokens, label: 'Tokens' },
-  { path: Users, label: 'Users' },
-  { path: Invoices, label: 'Invoices' },
+  { path: Filtering, label: 'Filtering' },
+  { path: Sorting, label: 'Sorting' },
+  { path: Queries, label: 'Queries' },
+  { path: Operators, label: 'Operators' },
+  { path: Templates, label: 'Templates' },
+  { path: Assets, label: 'Commands/Assets' },
+  { path: Finance, label: 'Commands/Finance' },
+  { path: Invoices, label: 'Commands/Invoices' },
+  { path: Ledger, label: 'Commands/Ledger' },
+  { path: Market, label: 'Commands/Market' },
+  { path: Names, label: 'Commands/Names' },
+  { path: Profiles, label: 'Commands/Profiles' },
+  { path: Register, label: 'Commands/Register' },
+  { path: Sessions, label: 'Commands/Sessions' },
+  { path: Supply, label: 'Commands/Supply' },
+  { path: System, label: 'Commands/System' },
+  { path: DepAssets, label: 'Deprecated/Assets' },
+  { path: DepFinance, label: 'Deprecated/Finance' },
+  { path: DepLedger, label: 'Deprecated/Ledger' },
+  { path: DepNames, label: 'Deprecated/Names' },
+  { path: DepObjects, label: 'Deprecated/Objects' },
+  { path: DepSupply, label: 'Deprecated/Supply' },
+  { path: DepSystem, label: 'Deprecated/System' },
+  { path: DepTokens, label: 'Deprecated/Tokens' },
+  { path: DepUsers, label: 'Deprecated/Users' },
+  { path: DepInvoices, label: 'Deprecated/Invoices' },
 ];
 
 const getInnerText = (children) => {
+  if (!children) return '';
   if (typeof children === 'string') return children;
   if (Array.isArray(children)) {
-    return children.map((child) => getInnerText(child.props.children)).join('');
+    return children
+      .map((child) => {
+        return getInnerText(child?.props?.children || child);
+      })
+      .join('');
   }
   return '';
 };
@@ -96,43 +136,58 @@ class APIDocModal extends Component {
         <ControlledModal.Header>{'API Documentation'}</ControlledModal.Header>
         <ControlledModal.Body>
           {displayMD ? (
-            <ReactMarkdown
-              source={this.state.displayMD}
-              renderers={{
-                link: ({ href, ...rest }) => {
-                  return (
-                    <Link
-                      as="a"
-                      href={href}
-                      onClick={(evt) => {
-                        evt.preventDefault();
-                        if (href && href.startsWith('#')) {
-                          const element = document.getElementById(
-                            href.substring(1)
-                          );
-                          element.scrollIntoView();
-                        }
-                      }}
-                      {...rest}
-                    />
-                  );
-                },
-                heading: ({ level, children, ...rest }) => {
-                  const Heading = 'h' + level;
-                  return (
-                    <Heading id={toHeadingId(getInnerText(children))} {...rest}>
-                      {children}
-                    </Heading>
-                  );
-                },
-                code: ({ value, ...rest }) => (
-                  <CodeBlock {...rest}>{value}</CodeBlock>
-                ),
-                inlineCode: ({ value, ...rest }) => (
-                  <InlineCode {...rest}>{value}</InlineCode>
-                ),
-              }}
-            />
+            <>
+              <ReactMarkdown
+                skipHtml={true}
+                components={{
+                  // Replace Code and Inline code?
+                  a: ({ href, ...rest }) => {
+                    return (
+                      <Link
+                        as="a"
+                        href={href}
+                        onClick={(evt) => {
+                          evt.preventDefault();
+                          if (href && href.startsWith('#')) {
+                            const element = document.getElementById(
+                              toHeadingId(href.substring(1))
+                            );
+                            element.scrollIntoView();
+                          }
+                        }}
+                        {...rest}
+                      />
+                    );
+                  },
+                  h1: ({ level, children, ...rest }) => {
+                    const innerText = getInnerText(children); // this is terrible but react-md replaced headers with individual tags
+                    return <h1 id={toHeadingId(innerText)}>{innerText}</h1>;
+                  },
+                  h2: ({ level, children, ...rest }) => {
+                    const innerText = getInnerText(children);
+                    return <h2 id={toHeadingId(innerText)}>{innerText}</h2>;
+                  },
+                  h3: ({ level, children, ...rest }) => {
+                    const innerText = getInnerText(children);
+                    return <h3 id={toHeadingId(innerText)}>{innerText}</h3>;
+                  },
+                  h4: ({ level, children, ...rest }) => {
+                    const innerText = getInnerText(children);
+                    return <h4 id={toHeadingId(innerText)}>{innerText}</h4>;
+                  },
+                  h5: ({ level, children, ...rest }) => {
+                    const innerText = getInnerText(children);
+                    return <h5 id={toHeadingId(innerText)}>{innerText}</h5>;
+                  },
+                  h6: ({ level, children, ...rest }) => {
+                    const innerText = getInnerText(children);
+                    return <h6 id={toHeadingId(innerText)}>{innerText}</h6>;
+                  },
+                }}
+              >
+                {displayMD}
+              </ReactMarkdown>
+            </>
           ) : (
             <>
               <span>{'Documentation'}</span>

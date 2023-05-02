@@ -1,7 +1,7 @@
 # Finance API
 -----------------------------------
 
-The Finance API provides methods for sending and receiving NXS coins (tokens) between users / accounts, creating accounts, and managing staking.
+The Finance API provides methods for sending and receiving NXS coins or other tokens between users / accounts, creating accounts, and managing staking.
 
 
 ## `Named Shortcuts`
@@ -29,6 +29,7 @@ The following methods are currently supported by this API
 [`set/stake`](#setstake)    
 [`migrate/accounts`](#migrateaccounts)    
 [`get/balances`](#getbalances)    
+[`list/balances`](#listbalances)    
 [`list/trustaccounts`](#listtrustaccounts)
 
 -----------------------------------
@@ -50,6 +51,10 @@ Create a new account for receiving NXS. The API supports an alternative endpoint
 
 `session` : For multi-user API mode, (configured with multiuser=1) the session is required to identify which session (sig-chain) the account should be created with. For single-user API mode the session should not be supplied.
 
+`token_name` : Optional name of a token to create the account for.  `token` can be supplied as an alternative to `token_name`.  Defaults to `NXS`.
+
+`token` : Optional token address to create the account for. `token_name` can be supplied as an alternative to `token`.  Defaults to `0` (`NXS`)
+
 `name` : An optional name to identify the account. If provided a Name object will also be created in the users local namespace, allowing the account to be accessed/retrieved by name. If no name is provided the account will need to be accessed/retrieved by its 256-bit register address.
 
 `data` : This optional field allows callers to add arbitrary data to an account register.  
@@ -57,7 +62,7 @@ Create a new account for receiving NXS. The API supports an alternative endpoint
 
 ### Example:
 
-This example creates an account called "main".
+This example creates a NXS account called "main".
 
 ```
 {
@@ -117,7 +122,7 @@ The method supports the ability to send to multiple recipients in one transactio
 
 `reference` : This optional field allows callers to provide a reference, which the recipient can then use to relate the transaction to an order number, invoice number etc.  The reference is be a `64-bit unsigned integer` in the range of 0 to 18446744073709551615
 
-`expires` : This optional field allows callers to specify an expiration for the debit transaction. The expires value is the `number of seconds` from the transaction creation time after which the transaction can no longer be credited by the recipient.  Conversely, when you apply an expiration to a transaction, you are unable to void the transaction until after the expiration time.  If omitted, a default expiration of 1 day (86400 seconds) is applied
+`expires` : This optional field allows callers to specify an expiration for the debit transaction.  The expires value is the `number of seconds` from the transaction creation time after which the transaction can no longer be credited by the recipient.  Conversely, when you apply an expiration to a transaction, you are unable to void the transaction until after the expiration time.  If expires is set to 0, the transaction will never expire, making the sender unable to ever void the transaction.  If omitted, a default expiration of 7 days (604800 seconds) is applied.
 
 `recipients` : This optional array can be provided as an alternative to the single `name_to`/`address_to`, `amount`, `reference`, and `expires` fields.  Each object in the array can have `name_to`/`address_to`, `amount`, `reference`, and `expires` fields, as described above. Up to 99 recipients can be included in the array.
 
@@ -195,11 +200,11 @@ Increment an amount received from another NXS account to an account owned by you
 
 `session` : For multi-user API mode, (configured with multiuser=1) the session is required to identify which session (sig-chain) owns the account. For single-user API mode the session should not be supplied.
 
-`txid` : The transaction ID (hash) of the corresponding debit transaction for which you are creating this credit for.  The transaction can also be a legacy transaction created from sendtoaddress or sendmany where the inputs are UTXO but the output is an account register address. 
+`txid` : The transaction ID (hash) of the corresponding debit transaction for which you are creating this credit for.  The transaction can also be a legacy transaction created from sendtoaddress or sendmany where the inputs are UTXO but the output is an account register address.
 
-`name` : The name identifying the account to credit. This is only required when crediting a coinbase or split payment transaction (where the receiving account is not included in the credit transaction) and is optional if the address is provided.  The name should be in the format username:name (for local names) or namespace::name (for names in a namespace).  However, if the account was created in the callers namespace (their username), then the username can be omitted from the name if the `session` parameter is provided (as we can deduce the username from the session)
+`name` : The name identifying the account to credit. This is only required when crediting a split payment transaction (where the receiving account is not included in the credit transaction) and is optional if the address is provided.  The name should be in the format username:name (for local names) or namespace::name (for names in a namespace).  However, if the account was created in the callers namespace (their username), then the username can be omitted from the name if the `session` parameter is provided (as we can deduce the username from the session)
 
-`address` : The register address of the account to credit. This is only required when crediting a coinbase or split payment transaction (where the receiving account is not included in the credit transaction) and is optional if the name is provided.
+`address` : The register address of the account to credit. This is only required when crediting a split payment transaction (where the receiving account is not included in the credit transaction) and is optional if the name is provided.
 
 `name_proof` : The name identifying the account that proves your ownership of the share of the debit. This is only required for split payments and is optional if the address is provided.  The name should be in the format username:name (for local names) or namespace::name (for names in a namespace).  However, if the account was created in the callers namespace (their username), then the username can be omitted from the name if the `session` parameter is provided (as we can deduce the username from the session)
 
@@ -254,6 +259,8 @@ Additionally the API supports passing a field name in the URL after the account 
 
 `address` : The register address of the NXS account to retrieve. This is optional if the name is provided.
 
+`count` : Optional boolean field that determines whether the response includes the transaction `count` field.  This defaults to false, as including the transaction count can slow the response time of the method considerably.   
+
 `fieldname`: This optional field can be used to filter the response to return only a single field from the account.
 
 
@@ -267,7 +274,7 @@ Additionally the API supports passing a field name in the URL after the account 
     "address": "8CbkwEQ9S8owmX74joU6XmiwxJq1aoiqUoXc9fLCKzw15HscM99",
     "token_name": "NXS",
     "token": "0",
-    "data": "abcd1234"
+    "data": "abcd1234",
     "balance": 2903.239792,
     "pending": 0.0,
     "unconfirmed": 76.492244
@@ -300,6 +307,8 @@ Additionally the API supports passing a field name in the URL after the account 
 
 `stake` : Only returned for the trust account, this is the amount of NXS currently staked in the trust account.
 
+`count` : Only returned if the caller requested `count` : true.  This is the number of transactions made to/from the account.
+
 
 ***
 
@@ -317,6 +326,15 @@ This will list off all of the NXS accounts belonging to the currently logged in 
 
 `session` : For multi-user API mode, (configured with multiuser=1) the session is required to identify which session (sig-chain) owns the account. For single-user API mode the session should not be supplied.
 
+`count` : Optional boolean field that determines whether the response includes the transaction `count` field.  This defaults to false, as including the transaction count can slow the response time of the method considerably.
+
+`limit` : The number of records to return for the current page. The default is 100.
+
+`page` : Allows the results to be returned by page (zero based). E.g. passing in page=1 will return the second set of (limit) records. The default value is 0 if not supplied.
+
+`offset` : An alternative to `page`, offset can be used to return a set of (limit) results from a particular index.
+
+`where` : An array of clauses to filter the JSON results.  More information on filtering the results from /list/xxx API methods can be found here [Filtering Results](filtering-results.md)
 
 ### Return value JSON object:
 ```
@@ -371,15 +389,16 @@ This will list off all of the NXS accounts belonging to the currently logged in 
 
 `stake` : Only returned for the trust account, this is the amount of NXS currently staked in the trust account.
 
+`count` : Only returned if the caller requested `count` : true.  This is the number of transactions made to/from the account.
 
 ****
 
 
 # `list/account/transactions`
 
-This will list off all of the transactions related to a given account. You DO NOT need to be logged in to use this command. If you are logged in, then neither username or genesis are required as it will default to the logged in user. 
+This will list off all of the transactions related to a given account. You DO NOT need to be logged in to use this command. If you are logged in, then neither username or genesis are required as it will default to the logged in user.
 
-**NOTE** : The returned transaction data will only include contracts that related to the requested account.  Any other contracts are omitted from the transaction result. 
+**NOTE** : The returned transaction data will only include contracts that related to the requested account.  Any other contracts are omitted from the transaction result.
 
 **NOTE** : If you use the username parameter it will take slightly longer to calculate the username genesis with our brute-force protected hashing algorithm. For higher performance, use the genesis parameter.
 
@@ -402,14 +421,20 @@ This will list off all of the transactions related to a given account. You DO NO
 
 `address` : The register address of the NXS account to list transactions for. This is optional if the name is provided.
 
-`page` : Allows the results to be returned by page (zero based). E.g. passing in page=1 will return the second set of (limit) transactions. The default value is 0 if not supplied.
-
-`limit` : The number of transactions to return for the current page. The default is 100.
-
 `verbose` : Optional, determines how much transaction data to include in the response. Supported values are :
  - `default` : hash, contracts
  - `summary` : type, version, sequence, timestamp, operation, and confirmations.
  - `detail` : genesis, nexthash, prevhash, pubkey and signature.
+
+`limit` : The number of records to return for the current page. The default is 100.
+
+`page` : Allows the results to be returned by page (zero based). E.g. passing in page=1 will return the second set of (limit) records. The default value is 0 if not supplied.
+
+`offset` : An alternative to `page`, offset can be used to return a set of (limit) results from a particular index.
+
+`where` : An array of clauses to filter the JSON results.  More information on filtering the results from /list/xxx API methods can be found here [Filtering Results](filtering-results.md)
+
+
 
 
 
@@ -527,8 +552,9 @@ This will retrieve account values and staking metrics for the trust account belo
     "stake": 5000,
     "trust": 54322,
     "new": false,
-    "staking": true
-    "onhold": false
+    "staking": true,
+    "pooled": false,
+    "onhold": false,
     "stakerate": 1.97,
     "trustweight": 58.97,
     "blockweight": 47.62,
@@ -540,7 +566,7 @@ This will retrieve account values and staking metrics for the trust account belo
 
 ### Return values:
 
-`address` : The register address of the trust account. 
+`address` : The register address of the trust account.
 
 `balance` : The current NXS balance of the trust account. This is general account balance that is not staked.
 
@@ -552,9 +578,11 @@ This will retrieve account values and staking metrics for the trust account belo
 
 `staking` : Indicates whether staking is actively running for user account (when false, weight metrics will be 0).
 
+`pooled` : Flag indicating whether pooled staking is enabled or not
+
 `onhold` : When trust account is new, any change to balance requires a minimum wait period before staking begins. During this period, staking is on hold and this field returns true. "staking" field will still be true when on hold.
 
-`holdtime` : Conditional field. Only appears when onhold=true and will contain number of seconds remaining in hold period. 
+`holdtime` : Conditional field. Only appears when onhold=true and will contain number of seconds remaining in hold period.
 
 `stakerate` : The current annual reward rate earned for staking as an annual percent.
 
@@ -570,21 +598,21 @@ This will retrieve account values and staking metrics for the trust account belo
 
 `requested` : Timestamp when the stake change request was created.
 
-`expires`: Timestamp when the stake change request expires, if assigned. Zero indicates does not expire. 
+`expires`: Timestamp when the stake change request expires, if assigned. Zero indicates does not expire.
 
- 
+
 
 ***
 
 # `set/stake`
 
-Creates a stake change request for a signature chain's trust account. This request will add or remove stake to set the stake value to the requested amount. If the new value is more than the current stake amount, it adds stake from the account balance. If the new value is less, it removes stake to the account balance (with appropriate trust penalty, if applicable). 
+Creates a stake change request for a signature chain's trust account. This request will add or remove stake to set the stake value to the requested amount. If the new value is more than the current stake amount, it adds stake from the account balance. If the new value is less, it removes stake to the account balance (with appropriate trust penalty, if applicable).
 
 Requests are saved locally and take effect with the next stake block found by staking the signature chain's trust account. Because they are saved locally, you must continue to stake on the machine where it was created until the next stake block is found, or the request will not be processed.
 
-Until implemented, you can update the request by calling set/stake again. 
+Until implemented, you can update the request by calling set/stake again.
 
-To remove a stake change request, you can either set an expiration time, or set the amount equal to the current trust account stake. 
+To remove a stake change request, you can either set an expiration time, or set the amount equal to the current trust account stake.
 
 
 ### Endpoint:
@@ -598,9 +626,9 @@ To remove a stake change request, you can either set an expiration time, or set 
 
 `session` : For multi-user API mode, (configured with multiuser=1) the session is required to identify which session (sig-chain) owns the trust account. For single-user API mode the session should not be supplied.
 
-`amount` : The new amount of NXS to stake. 
+`amount` : The new amount of NXS to stake.
 
-`expires` : Optional field to assign the number of seconds until the stake change request expires. A value of zero indicates it does not expire. Default is zero if not passed. 
+`expires` : Optional field to assign the number of seconds until the stake change request expires. A value of zero indicates it does not expire. Default is zero if not passed.
 
 
 ### Return value JSON object:
@@ -668,7 +696,7 @@ The method uses the arbitrary `data` field in the account object register to tra
 
 `amount` : The NXS amount transferred from the legacy account to the signature chain account.
 
-`txid` : If the the legacy send was successful, the ID (hash) of the legacy transaction. 
+`txid` : If the the legacy send was successful, the ID (hash) of the legacy transaction.
 
 `error` : If the legacy send failed, this field includes the legacy send error message
 
@@ -676,7 +704,8 @@ The method uses the arbitrary `data` field in the account object register to tra
 
 # `get/balances`
 
-This will retrieve a summary of balance information for all NXS accounts belonging to the currently logged in signature chain.
+This will retrieve a summary of balance information across all accounts belonging to the currently logged in signature chain
+for a particular token type.
 
 
 ### Endpoint:
@@ -686,12 +715,18 @@ This will retrieve a summary of balance information for all NXS accounts belongi
 
 ### Parameters:
 
-`session` : For multi-user API mode, (configured with multiuser=1) the session is required to identify which session (sig-chain) owns the trust account. For single-user API mode the session should not be supplied.
+`session` : For multi-user API mode, (configured with multiuser=1) the session is required to identify which session (sig-chain) to return data for. For single-user API mode the session should not be supplied.
+
+`token_name` : Optional name of a token to return the balances for.  `token` can be supplied as an alternative to `token_name`.  Defaults to `NXS`.
+
+`token` : Optional token address to return balances for. `token_name` can be supplied as an alternative to `token`.  Defaults to `0` (`NXS`)
 
 
 ### Return value JSON object:
 ```
 {
+    "token_name": "NXS",
+    "token": "0000000000000000000000000000000000000000000000000000000000000000",
     "available": 1000,
     "pending": 50,
     "unconfirmed": 5,
@@ -703,18 +738,87 @@ This will retrieve a summary of balance information for all NXS accounts belongi
 
 ### Return values:
 
-`available` : The current balance across all NXS accounts that is available to be spent.
+`token_name` : The name of the token that these balances are for, if known.  
 
-`pending` : The sum of all debit and coinbase transactions made to your NXS accounts that are confirmed but have not yet been credited.  This does NOT include immature and unconfirmed amounts
+`token` : The register address of the token that these balances are for.
 
-`unconfirmed` : The sum of all debit transactions made to your NXS accounts that are not confirmed, or credits you have made to your accounts that are not yet confirmed (not yet included in a block)
+`available` : The current balance across all  accounts that is available to be spent.
 
-`immature`  The sum of all coinbase transactions that have not yet reached maturity.   
+`pending` : The sum of all debit and coinbase transactions made to your accounts that are confirmed but have not yet been credited.  This does NOT include immature and unconfirmed amounts.
 
-`stake` : The amount of NXS currently staked in the trust account.
+`unconfirmed` : The sum of all debit transactions made to your accounts that are not confirmed, or credits you have made to your accounts that are not yet confirmed (not yet included in a block).
+
+`immature`  The sum of all coinbase transactions that have not yet reached maturity.  Only included when returning NXS balances.
+
+`stake` : The amount of NXS currently staked in the trust account.  Only included when returning NXS balances.
 
 
 ***
+
+# `list/balances`
+
+This will retrieve a summary of balance information across all accounts for each coin/token type owned, belonging to the currently logged in signature chain.
+
+
+### Endpoint:
+
+`/finance/list/balances`
+
+
+### Parameters:
+
+`session` : For multi-user API mode, (configured with multiuser=1) the session is required to identify which session (sig-chain) to return data for. For single-user API mode the session should not be supplied.
+
+`limit` : The number of records to return for the current page. The default is 100.
+
+`page` : Allows the results to be returned by page (zero based). E.g. passing in page=1 will return the second set of (limit) records. The default value is 0 if not supplied.
+
+`offset` : An alternative to `page`, offset can be used to return a set of (limit) results from a particular index.
+
+`where` : An array of clauses to filter the JSON results.  More information on filtering the results from /list/xxx API methods can be found here [Filtering Results](filtering-results.md)
+
+### Return value JSON object:
+```
+[
+     {
+        "token_name": "NXS",
+        "token": "0000000000000000000000000000000000000000000000000000000000000000",
+        "available": 17002.095753,
+        "pending": 1.0,
+        "unconfirmed": 0.0,
+        "stake": 9000.0,
+        "immature": 0.0
+    },
+    {
+        "token_name": "ABC",
+        "token": "d7885b8ce210375377ee23d6b54f922ddb64c9c8e70fabd392753337331bf29a",
+        "available": 250.0,
+        "pending": 0.0,
+        "unconfirmed": 0.0
+    }
+]
+```
+
+
+### Return values:
+
+`token_name` : The name of the token that these balances are for, if known.  
+
+`token` : The register address of the token that these balances are for.
+
+`available` : The current balance across all  accounts that is available to be spent.
+
+`pending` : The sum of all debit and coinbase transactions made to your accounts that are confirmed but have not yet been credited.  This does NOT include immature and unconfirmed amounts.
+
+`unconfirmed` : The sum of all debit transactions made to your accounts that are not confirmed, or credits you have made to your accounts that are not yet confirmed (not yet included in a block).
+
+`immature`  The sum of all coinbase transactions that have not yet reached maturity.  Only included when returning NXS balances.
+
+`stake` : The amount of NXS currently staked in the trust account.  Only included when returning NXS balances.
+
+
+***
+
 
 # `list/trustaccounts`
 
@@ -727,11 +831,18 @@ This will list all known trust accounts
 
 ### Parameters:
 
-`page` : Allows the results to be returned by page (zero based). E.g. passing in page=1 will return the second set of (limit) transactions. The default value is 0 if not supplied.
 
-`limit` : The number of transactions to return for the current page. The default is 100.
+`sort` : Determines which field the results should be sorted on.  Values can be `balance`, `stake`, or `trust`.  Default is `trust`
 
-`sort` : Determines the sort order of the results.  Values can be `balance`, `stake`, or `trust`.  Default is `trust`
+`order` : Determines the order of the sort.  Values can be `desc` for descending (the default) or `asc` for ascending.
+
+`limit` : The number of records to return for the current page. The default is 100.
+
+`page` : Allows the results to be returned by page (zero based). E.g. passing in page=1 will return the second set of (limit) records. The default value is 0 if not supplied.
+
+`offset` : An alternative to `page`, offset can be used to return a set of (limit) results from a particular index.
+
+`where` : An array of clauses to filter the JSON results.  More information on filtering the results from /list/xxx API methods can be found here [Filtering Results](filtering-results.md)
 
 
 ### Return value JSON object:

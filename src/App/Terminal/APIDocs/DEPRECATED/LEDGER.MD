@@ -217,13 +217,19 @@ Retrieves an array of block data for a sequential range of blocks from a given h
 
 `height` : The block height to retrieve the block data for.
 
-`limit` : The number of blocks to return data for.  This is optional (default 10). The limit must be between 1 and 1000.
-
 `verbose` : This is optional, determines how much transaction data to include in the response. Supported values are :
  - `none` : no transaction data
  - `default` : hash
  - `summary` : type, version, sequence, timestamp, and operation.
  - `detail` : genesis, nexthash, prevhash, pubkey and signature.
+
+`limit` : The number of records to return for the current page. The default is 100.
+
+`page` : Allows the results to be returned by page (zero based). E.g. passing in page=1 will return the second set of (limit) records. The default value is 0 if not supplied.
+
+`offset` : An alternative to `page`, offset can be used to return a set of (limit) results from a particular index.
+
+`where` : An array of clauses to filter the JSON results.  More information on filtering the results from /list/xxx API methods can be found here [Filtering Results](filtering-results.md)
 
 
 **NOTE** : Either the hash or the height needs to be supplied, but not both.  
@@ -519,7 +525,7 @@ Submits a transaction to be included in the mempool and broadcast to the network
 
 # `void/transaction`
 
-Voids (reverses) a debit or transfer transaction that you have previously made, that has not yet been credited or claimed by the recipient.  The method creates a corresponding credit or claim transaction but back to the originating account/signature chain.  This means that any applicable fees will apply, as will conditions on the debit/transfer transaction (such as expiration conditions). 
+Voids (reverses) a debit or transfer transaction that you have previously made, that has not yet been credited or claimed by the recipient.  The method creates a corresponding credit or claim transaction but back to the originating account/signature chain.  This means that any applicable fees will apply, as will conditions on the debit/transfer transaction (such as expiration conditions).
 
 For debits that were made to a tokenized asset as part of a split payment transaction, the reversing credit will be made for the debit amount minus any partial amounts that have already been credited by the token holders.   
 
@@ -576,6 +582,9 @@ NONE
     "stakeDifficulty": 0.0,
     "primeDifficulty": 3.8210223,
     "hashDifficulty": 0.0,
+    "stakeHeight"   : 1,
+    "primeHeight"   : 1,
+    "hashHeight"    : 2,
     "primeReserve": 21852246.988376,
     "hashReserve": 0.0,
     "primeValue": 74.893038,
@@ -599,6 +608,12 @@ NONE
 `primeDifficulty` : The current difficulty of the prime channel.
 
 `hashDifficulty` : The current difficulty of the hash channel.
+
+`stakeHeight` : The current number of blocks for the stake channel.
+
+`primeHeight` : The current number of blocks for the prime channel.
+
+`hashHeight` : The current number of blocks for the hash channel.
 
 `primeReserve` : The amount of NXS in the reserve balance for the prime channel.
 
