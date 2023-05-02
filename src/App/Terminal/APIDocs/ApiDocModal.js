@@ -127,6 +127,12 @@ class APIDocModal extends Component {
       </div>
     ));
 
+  Headers = ({ level, children, ...rest }) => {
+    const Heading = 'h' + level;
+    const innerText = getInnerText(children);
+    return <Heading id={toHeadingId(innerText)}>{innerText}</Heading>;
+  };
+
   render() {
     const { displayMD } = this.state;
     return (
@@ -136,58 +142,40 @@ class APIDocModal extends Component {
         <ControlledModal.Header>{'API Documentation'}</ControlledModal.Header>
         <ControlledModal.Body>
           {displayMD ? (
-            <>
-              <ReactMarkdown
-                skipHtml={true}
-                components={{
-                  // Replace Code and Inline code?
-                  a: ({ href, ...rest }) => {
-                    return (
-                      <Link
-                        as="a"
-                        href={href}
-                        onClick={(evt) => {
-                          evt.preventDefault();
-                          if (href && href.startsWith('#')) {
-                            const element = document.getElementById(
-                              toHeadingId(href.substring(1))
-                            );
-                            element.scrollIntoView();
-                          }
-                        }}
-                        {...rest}
-                      />
-                    );
-                  },
-                  h1: ({ level, children, ...rest }) => {
-                    const innerText = getInnerText(children); // this is terrible but react-md replaced headers with individual tags
-                    return <h1 id={toHeadingId(innerText)}>{innerText}</h1>;
-                  },
-                  h2: ({ level, children, ...rest }) => {
-                    const innerText = getInnerText(children);
-                    return <h2 id={toHeadingId(innerText)}>{innerText}</h2>;
-                  },
-                  h3: ({ level, children, ...rest }) => {
-                    const innerText = getInnerText(children);
-                    return <h3 id={toHeadingId(innerText)}>{innerText}</h3>;
-                  },
-                  h4: ({ level, children, ...rest }) => {
-                    const innerText = getInnerText(children);
-                    return <h4 id={toHeadingId(innerText)}>{innerText}</h4>;
-                  },
-                  h5: ({ level, children, ...rest }) => {
-                    const innerText = getInnerText(children);
-                    return <h5 id={toHeadingId(innerText)}>{innerText}</h5>;
-                  },
-                  h6: ({ level, children, ...rest }) => {
-                    const innerText = getInnerText(children);
-                    return <h6 id={toHeadingId(innerText)}>{innerText}</h6>;
-                  },
-                }}
-              >
-                {displayMD}
-              </ReactMarkdown>
-            </>
+            <ReactMarkdown
+              skipHtml={true}
+              components={{
+                // TODO: Links to places outside of the loaded MD do not work
+                a: ({ href, ...rest }) => {
+                  return (
+                    <Link
+                      as="a"
+                      href={href}
+                      onClick={(evt) => {
+                        evt.preventDefault();
+                        if (href && href.startsWith('#')) {
+                          const element = document.getElementById(
+                            toHeadingId(href.substring(1))
+                          );
+                          element.scrollIntoView();
+                        }
+                      }}
+                      {...rest}
+                    />
+                  );
+                },
+                h1: this.Headers,
+                h2: this.Headers,
+                h3: this.Headers,
+                h4: this.Headers,
+                h5: this.Headers,
+                h6: this.Headers,
+                code: ({ inline, ...props }) =>
+                  inline ? <InlineCode {...props} /> : <CodeBlock {...props} />,
+              }}
+            >
+              {displayMD}
+            </ReactMarkdown>
           ) : (
             <>
               <span>{'Documentation'}</span>

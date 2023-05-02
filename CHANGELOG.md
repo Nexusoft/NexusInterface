@@ -4,7 +4,7 @@
 
 #### Additions
 
--
+- Added 5.1 Documents to the Terminal's API menu
 
 #### Adjustments
 
@@ -12,7 +12,7 @@
 
 #### Fixes
 
--
+- Fixed the Terminal's API Doc display
 
 # 3.1.0 (2023.4.26)
 
