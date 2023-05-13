@@ -18,6 +18,7 @@ import WarningIcon from 'icons/warning.svg';
 import sendIcon from 'icons/send.svg';
 
 import RecipientAddress from './RecipientAddress';
+import { loadTransactions } from 'lib/tritiumTransactions';
 
 __ = __context('PreviewTransaction');
 
@@ -215,6 +216,7 @@ export default function PreviewTransactionModal({
                 onSuccess: () => {
                   resetSendForm();
                   loadAccounts();
+                  loadTransactions();
                   closeModal();
                   openSuccessDialog({
                     message: __('Transaction sent'),

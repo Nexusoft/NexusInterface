@@ -10,7 +10,7 @@ import TokenName from 'components/TokenName';
 import { legacyMode } from 'consts/misc';
 import { isLoggedIn } from 'selectors';
 
-const isConfirmed = (tx) => !!tx.confirmations;
+const isConfirmed = (tx) => !tx.confirmations;
 
 const txCountPerPage = 10;
 
@@ -44,6 +44,7 @@ function startWatcher() {
           unwatchTransaction(tx.txid);
           // Reload the account list
           // so that the account balances (available & unconfirmed) are up-to-date
+          loadTransactions();
           loadAccounts();
         }
       }
@@ -294,7 +295,7 @@ export async function fetchTransaction(txid) {
 export function prepareTransactions() {
   if (!legacyMode) {
     observeStore(
-      ({ user: { status } }) => status,
+      ({ user: { profileStatus } }) => profileStatus,
       async (status, oldStatus) => {
         // Skip if user was just switched
         if (status?.genesis !== oldStatus?.genesis) return;
