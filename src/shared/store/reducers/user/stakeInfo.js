@@ -5,10 +5,10 @@ const initialState = {};
 export default (state = initialState, action) => {
   switch (action.type) {
     case TYPE.SET_STAKE_INFO:
-      return action.payload;
+      return action.payload || initialState;
 
     case TYPE.ACTIVE_USER:
-      return action.payload.stakeInfo;
+      return action.payload.stakeInfo || initialState;
 
     case TYPE.DISCONNECT_CORE:
     case TYPE.CLEAR_USER:

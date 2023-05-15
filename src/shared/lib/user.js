@@ -134,12 +134,12 @@ export const logIn = async ({ username, password, pin }) => {
       pin,
     });
 
-    let stakeInfo;
+    let stakeInfo = null;
     try {
-      stakeinfo = await callApi('finance/get/stakeinfo', { session });
+      stakeInfo = await callApi('finance/get/stakeinfo', { session });
     } catch (err) {
       if (err.code !== -70) {
-        // 'Trust account not found' error
+        // Only ignore 'Trust account not found' error
         throw err;
       }
     }
@@ -192,14 +192,19 @@ export async function setActiveUser({ session, genesis, stakeInfo }) {
       : Promise.resolve(null),
     stakeInfo
       ? Promise.resolve(null)
-      : callApi('finance/get/stakeinfo', { session }),
+      : callApi('finance/get/stakeinfo', { session }).catch((err) => {
+          if (err.code !== -70) {
+            // Only ignore 'Trust account not found' error
+            throw err;
+          }
+        }),
   ]);
 
   const result = {
     session,
     sessions,
     status,
-    stakeInfo: stakeInfo || newStakeInfo,
+    stakeInfo: stakeInfo || newStakeInfo || null,
     profileStatus,
   };
   store.dispatch({
