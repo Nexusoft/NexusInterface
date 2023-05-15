@@ -36,86 +36,10 @@ http://127.0.0.1:8080/ledger/get/block
 
 **NOTE**:  URI's are always in lowercase.
 
------------------------------------
-***
-
-# `Verbs (actions)`
-The following list of verbs are used throughout the Nexus APIs.  While the action is generic in nature (i.e. list, get, create), implementations of these actions will adhere to certain semantics or mandatory parameters regardless of the noun (resource).
-
-* `list`
-   - Retrieves a sorted list of objects or data
-   - Sorting is always newest to oldest
-   - Supported parameters:
-     - `page` + `limit` (where the start point is known) *or* `index` + `limit`
-     - `verbose` to indicate the verbosity of the data returned.  Values can be `default`, `summary`, or `detail`
-     - `format` indicates the format of the returned data (where applicable). Values can be `raw`, `JSON`, `XML`   
-
-* `get`
-   - Retrieves a single object or piece of data
-   - Supported parameters:
-     - `format` indicates the format of the returned data (where applicable). Values can be `raw`, `JSON`, `XML`
-
-* `create`
-   - Creates a single resource / object
-   - Supported parameters:
-     - `format` indicates the format of the data being provided to create the item / object (where applicable). Values can be `basic`, `raw`, `JSON`, `XML`, and `ANSI C`
-* `debit`
-* `create`
-* `transfer`
-* `claim`
-* `reverse`
-* `buy`
-* `sell`
-* `login`
-* `logout`
-* `unlock`
-* `lock`
-* `subscribe`
 
 -----------------------------------
 ***
 
-# `Nouns (resources)`
-
-Within each API endpoint, a noun is used to describe the resource or object upon which the action is taking place.  
-
-The commonly used resources are described below:
-
-1. `transaction` :
-
-    A transaction is a cryptographic object that contains the contracts that operated on the registers.   
-    It is indexed by an uint512_t, so any index used must be sanitized to this format.
-
-2. `block` :
-
-    A block is a cryptographic object that contains the transactions in a specific sequence of time.  
-    It is indexed by an uint1024_t, so any index used must be sanitized to this format.  
-    A block index is prepended with 0x to imply hexadecimal encoding.
-    Base-16 encoding is all that is supported at present.
-    Other forms of encoding may be supported at a later time (possibly base-58).
-
-3. `account` :
-
-    An account is an object register of the following types: trust or base.   
-    It is responsible for holding the state of a user's account balance.
-
-4. `object` :
-
-    An object is a register with nType being REGISTER::OBJECT.
-    An object is always parsed, and access to it's data members given.
-
-5. `token` :
-
-    A token is an object register of standard OBJECT::TOKEN.   
-    It contains the domain parameters of a token such as supply or total number of significant digits.
-
-6. `asset` :
-
-    An asset is an object register of a specialized type.
-
-
------------------------------------
-***
 
 # `Error Handling`
 
@@ -125,112 +49,127 @@ In the event that an API call results in an error, a JSON object will be returne
     "error" :
     {
         "code" : -123,
-        "message" : An error has occurred"
+        "message" : "An error has occurred"
     }
 }
 ```
 
-Error Codes
+
+DSL Error Codes
 
 | Code   | Message   |
 | :-----:| :-------- |
-| -1 | Method not available |
-| -2 | Method not found (method) |
-| -3 | Unspecified API error |
+| 1 | Query Syntax Error: duplicate wildcard not allowed |
+| 2 | Query Syntax Error: only '=' and '!=' operator allowed for type [typename] |
+| 3 | Query Syntax Error: malformed where clause at [clause] |
+| 4 | Query Syntax Error: must use <key>=<value> with no extra characters. |
+| 5 | Query Syntax Error: must use '(' and ')' to mix AND/OR statements |
+| 6 | Query Syntax Error: missing logical operator for group |
+| 7 | Query Syntax Error: empty where clause at [clause] |
+| 8 |  |
+| 9 |  |
+
+
+API Error Codes
+
+| Code   | Message   |
+| :-----:| :-------- |
+| -1 | Method not available: [message] |
+| -2 | Method not found: [message] |
+| -3 | Method was deprecated at version [version]: [message] |
 | -4 | API not found (API name) |
-| -5 | content-type (content type) not supported |
-| -6 | content-type not provided when content included |
-| -7 | Invalid transaction id |
+| -5 | Object not available: [message] |
+| -6 | content-type [content type] not supported |
+| -7 | Unsupported type [type] for parameters. |
 | -8 | Unable to Extract Input Address |
 | -9 | Session (session) doesn't exist |
 | -10 | Invalid session ID |
 | -11 | User not logged in |
-| -12 | Missing Session ID |
-| -13 | Account not found |
-| -14 | Object failed to parse |
+| -12 | Malformed or missing object encoding for [type] |
+| -13 | Object not found |
+| -14 | Malformed request URL |
 | -15 | Object is not an account or token |
 | -16 | Account has not been unlocked for transactions |
 | -17 | Failed to create transaction |
-| -18 | Missing data |
-| -19 | Data must be a string with this asset format |
-| -20 | Missing asset value fields |
-| -21 | Missing json parameter |
-| -21 | json field must be an array |
-| -22 | Missing name field in json definition |
-| -23 | Missing type field in json definition |
-| -24 | Missing value field in json definition |
-| -25 | Missing mutable field in json definition |
-| -26 | maxlength value is less than the specified data length |
+| -18 | Invalid format for standard [name] |
+| -19 | Field [name] doesn't exist in object |
+| -20 | Field [name] is read-only and can't be updated |
+| -21 | Field [name] size exceeds maximum length [size] |
+| -22 | Field [name] is a reserved field name |
+| -23 | Object standard [name] not available for command |
+| -24 | No orders found for market |
+| -25 | Market order invalid contract: message |
+| -26 | Invalid parameter [from], [type] requires correct token |
 | -27 | Malformed base64 encoding |
-| -28 | Missing asset field definitions |
-| -29 | Unsupported format specified |
+| -28 | Missing parameter [name] for command |
+| -29 | Unsupported format [type] specified |
 | -30 | Operations failed to execute |
 | -31 | Ledger failed to sign transaction |
 | -32 | Failed to accept |
-| -33 | Missing name / address |
+| -33 | Incorrect or missing name / address |
 | -34 | Asset not found |
-| -35 | Specified name/address is not an asset |
-| -36 | Failed to parse object register |
+| -35 | Invalid parameter [key=type], expecting [type] |
+| -36 | Unsupported type [name] for command |
 | -37 | Missing token name / address |
 | -38 | Missing asset name / address |
 | -39 | Missing name_from / address_from |
 | -40 | Previous transaction not found |
-| -41 | Failed to parse object from debit transaction |
+| -41 | Invalid transaction-id |
 | -42 | No valid debits to buy from |
-| -43 | No valid contracts in debit tx |
+| -43 | No valid contracts in tx |
 | -44 | Transaction failed to build |
 | -45 | Missing name_to / address_to |
 | -46 | Missing amount |
 | -47 | Missing price |
-| -48 | Failed to read to state |
-| -49 | Failed to parse to state |
+| -48 | Token not found |
+| -49 | Unsupported type for name/address |
 | -50 | Missing txid |
-| -51 | Debit transaction is not for a NXS account.  Please use the tokens API for crediting token accounts |
-| -52 | Failed to parse asset owner object |
+| -51 | No available token accounts for recipient |
+| -52 | No more available accounts for debit |
 | -53 | Missing name / address of account to credit |
-| -54 | Missing name_proof / address_proof of token account that proves your credit share |
-| -55 | Invalid name / address of account to credit |
-| -56 | Failed to parse account to credit |
-| -57 | Failed to parse object to debit from |
-| -58 | Debit transaction is not from a NXS account |
+| -54 | Missing name_proof / address_proof to credit |
+| -55 | Must have at least two recipients to debit from any |
+| -56 | Invalid user-type enum [value] |
+| -57 | Invalid Parameter [name] |
+| -58 | Empty Parameter [name] |
 | -59 | Account to credit is not a NXS account |
-| -60 | Failed to parse proof object |
+| -60 | [name] out of range [max] |
 | -61 | Proof account is for a different token than the asset token |
 | -62 | Coinbase transaction mined by different user |
 | -63 | Could not retrieve default NXS account to credit |
 | -64 | Missing recipient account name_to / address_to |
 | -65 | Object is not an account |
-| -66 | Account is not a NXS account.  Please use the tokens API for debiting non-NXS token accounts |
-| -67 | Account is not a NXS account.  Please use the tokens API for accessing non-NXS token accounts |
+| -66 | Cannot use aggregate fieldnames with operations |
+| -67 | -safemode next hash mismatch, broadcast terminated |
 | -68 | Amount too small |
 | -69 | Insufficient funds |
 | -70 | Trust account not found |
-| -71 | Unable to parse trust account |
+| -71 | Fieldname [name] doesn't exist |
 | -72 | Register is not a trust account |
 | -73 | Trust account is not a NXS account |
 | -74 | No registers found |
-| -75 | Unable to retrieve trust account |
+| -75 | Value [key=value] exceeds dataset size [size] |
 | -76 | Cannot set stake for trust account until after Genesis transaction |
 | -77 | Insufficient trust account balance to add to stake |
 | -78 | Stake not changed |
 | -79 | getblockhash requires the daemon to be started with the -indexheight flag |
 | -80 | Missing height |
-| -81 | Invalid height parameter |
+| -81 | [command] cannot use parameter [name] combined with [name] |
 | -82 | Block number out of range |
 | -83 | Block not found |
 | -84 | Missing hash or height |
 | -85 | getblock by height requires the daemon to be started with the -indexheight flag |
 | -86 | Missing hash or txid |
 | -87 | Invalid or unknown transaction |
-| -88 | Missing name |
+| -88 | Missing or empty name |
 | -89 | Invalid register_address |
 | -90 | Namespace already exists |
 | -91 | Missing name / register_address |
 | -92 | Name not found |
 | -93 | Missing namespace name |
 | -94 | Invalid namespace |
-| -95 | Namespace does not exist: (namespace) |
-| -96 | Cannot create a name in namespace (namespace) as you are not the owner |
+| -95 | Namespace does not exist: [namespace] |
+| -96 | Cannot create name in [namespace] you don't own |
 | -97 | An object with this name already exists in this namespace |
 | -98 | An object with this name already exists for this user |
 | -99 | Transfer transaction not found |
@@ -252,13 +191,13 @@ Error Codes
 | -115 | Name / address is not of type (type) |
 | -116 | Cannot transfer names created without a namespace |
 | -117 | Item not found |
-| -118 | Missing type |
-| -119 | Missing supply |
-| -120 | Debit transaction is for a NXS account.  Please use the Finance API for crediting NXS accounts |
-| -121 | Account to credit is not for the same token as the debit |
-| -122 | Token/account not found |
-| -123 | Object is not a token |
-| -124 | Unknown token / account |
+| -118 | [type] operator not supported for this command-set |
+| -119 | [name] field(s) does not exist for result |
+| -120 | Maximum number of contracts exceeded (99), please try again or use -autotx mode. |
+| -121 | Aggregated type [noun] not allowed for [verb] |
+| -122 | Invalid operator [op] for command. |
+| -123 | [type] unsupported for operator [op] |
+| -124 | Operator [op] cannot be used on empty result |
 | -125 | Token not found |
 | -126 | Address is not for a NXS account" |
 | -127 | Missing username |
@@ -299,7 +238,7 @@ Error Codes
 | -162 | Namespace can only contain lowercase letters, numbers, periods (.) |
 | -163 | Could not retrieve default NXS account to debit fees |
 | -164 | Fee account is not a NXS account |
-| -165 | Invalid address_to |
+| -165 | Invalid address/name_to |
 | -166 | Account is a NXS account.  Please use the finance API for accessing NXS accounts. |
 | -167 | Invalid reference |
 | -168 | Invalid expiration time |
@@ -309,10 +248,10 @@ Error Codes
 | -172 | Cannot void a transaction that does not belong to you |
 | -173 | Cannot void debit transaction as it has already been fully credited by all recipients |
 | -174 | Transaction contains no contracts that can be voided |
-| -175 | Invalid supply amount.  Supply must be whole number value |
-| -176 | Invalid supply amount.  The maximum token supply is 18446744073709551615 |
-| -177 | Invalid decimals amount.  Decimals must be whole number value between 0 and 8 |
-| -178 | Invalid supply / decimals.  The maximum combination of supply and decimals (supply * 10^decimals) cannot exceed 18446744073709551615 |
+| -175 | Invalid supply amount. Supply must be whole number value |
+| -176 | Invalid supply amount. The maximum token supply is 18446744073709551615 |
+| -177 | Invalid decimals amount. Decimals must be whole number value between 0 and 8 |
+| -178 | Invalid supply/decimals. The maximum supply/decimals cannot exceed 18446744073709551615 |
 | -179 | Legacy wallet is locked. walletpassphrase required |
 | -180 | Incorrect walletpassphrase for Legacy wallet |
 | -181 | Trust key not found for Legacy wallet |
@@ -364,7 +303,7 @@ Error Codes
 | -227 | Missing payment account name / address |
 | -228 | Missing sender detail |
 | -229 | Missing recipient |
-| -230 | Recipient user does not exist | 
+| -230 | Recipient user does not exist |
 | -231 | Missing recipient detail |
 | -232 | Missing items |
 | -233 | Invoice must include at least one item |
@@ -380,13 +319,66 @@ Error Codes
 | -242 | Data exceeds max register size |
 | -243 | Data at this address is not a supply item |
 | -244 | Cannot send invoice to self |
-| -245 | Cannot cancel an invoice that has already been paid |
-| -246 | Cannot cancel an invoice that has already been cancelled |
+| -245 | Cannot [action] an invoice that has already been paid |
+| -246 | Cannot [action] an invoice that has already been cancelled |
 | -247 | Could not find invoice transfer transaction |
-| -248 | Cannot pay an invoice that has already been paid |
-| -249 | Cannot pay an invoice that has already been cancelled |
+| -248 | ------------------------- |
+| -249 | ------------------------- |
 | -250 | Invoice is not yours to pay |
 | -251 | Missing name from or address from |
 | -252 | Account to debit is not for the required token |
-| -254 | Invoices API not yet active |
-
+| -254 | ------------------------------- |
+| -255 | Cannot process notifications until peers are connected |
+| -256 | Cannot process notifications whilst synchronizing |
+| -257 | Contract failed peer validation |
+| -258 | Unknown genesis |
+| -259 | You must specify at least one unlock action |
+| -260 | Invalid key name |
+| -261 | Key already exists |
+| -262 | Invalid scheme |
+| -263 | Private keys cannot only be retrieved for keys in the crypto register |
+| -264 | Key not yet created |
+| -265 | Missing public key |
+| -266 | Malformed public key |
+| -267 | Shared key encryption only supported for EC (Brainpool) keys |
+| -268 | Failed to generate shared key |
+| -269 | Malformed private key |
+| -270 | Failed to encrypt data |
+| -271 | Failed to decrypt data |
+| -272 | Unsupported key type |
+| -273 | Failed to generate signature |
+| -274 | Missing signature |
+| -275 | Missing scheme |
+| -276 | Error generating hash |
+| -277 | Invalid hash function |
+| -278 | Scheme already in use |
+| -279 | P2P request not found |
+| -280 | P2P server not enabled on this node |
+| -281 | Missing App ID |
+| -282 | Connection not found |
+| -283 | A connection to this peer already exists |
+| -284 | Failed to connect to peer |
+| -285 | No messages available |
+| -286 | Timeout waiting for peer to accept connection request |
+| -287 | API method not supported in multiuser mode |
+| -288 | Cannot unlock for mining in multiuser mode |
+| -289 | Cannot unlock for staking in multiuser mode |
+| -290 | Invalid credentials.  User logged out due to too many password / pin attempts |
+| -291 | The cert key cannot be used to create a key pair as it is reserved for a TLS certificate.  Please use the create/certificate API method instead. |
+| -292 | The cert key cannot be used to sign data as it is reserved for a TLS certificate |
+| -293 | Invalid key name.  Keys in the crypto register cannot be used for encryption, only signature generation and verification |
+| -294 | Certificate has not yet been created for this signature chain.  Please use crypto/create/key to create the certificate first |
+| -295 | Public key mismatch. Unable to generate certificate |
+| -296 | Missing certificate |
+| -297 | Cannot log in while synchronizing |
+| -300 | API can only be used to lookup data for the currently logged in signature chain when running in client mode |
+| -301 | where field must be an array |
+| -302 | Missing field in where clause |
+| -303 | Missing op in where clause |
+| -304 | Missing value in where clause |
+| -305 | Unknown operand in where clause |
+| -306 | No connections available |
+| -307 | Failed to download signature chain |
+| -308 | API method only available in client mode |
+| -309 | Error loading session |
+| -310 | Cannot sent to ALL accounts

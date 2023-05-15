@@ -90,20 +90,14 @@ export async function refreshUserStatus() {
       session ? { session } : undefined
     );
 
-    const {
-      user: { profileStatus },
-    } = store.getState();
-
-    if (!profileStatus) {
-      const profileStatus = await callApi('profiles/status/master', {
-        genesis: status.genesis,
-        session,
-      });
-      store.dispatch({
-        type: TYPE.SET_PROFILE_STATUS,
-        payload: profileStatus,
-      });
-    }
+    const profileStatus = await callApi('profiles/status/master', {
+      genesis: status.genesis,
+      session,
+    });
+    store.dispatch({
+      type: TYPE.SET_PROFILE_STATUS,
+      payload: profileStatus,
+    });
 
     store.dispatch({ type: TYPE.SET_USER_STATUS, payload: status });
 
