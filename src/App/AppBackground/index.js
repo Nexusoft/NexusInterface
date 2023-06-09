@@ -12,7 +12,7 @@ import lightImg from './Light_Space.jpg';
 
 const CustomWallpaper = styled.div(
   {
-    position: 'absolute',
+    position: 'fixed',
     top: 0,
     left: 0,
     right: 0,
