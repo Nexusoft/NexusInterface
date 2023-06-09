@@ -4,13 +4,15 @@ import { existsSync } from 'fs';
 import styled from '@emotion/styled';
 
 // Internal
-import { starryNightBackground, cosmicLightBackground } from 'lib/theme';
+import { starryNightBackground, cosmicLightBackground, nexusThemeBackground } from 'lib/theme';
 import StarryNight from './StarryNight';
+import NexusThemeBg from './Particles';
 import lightImg from './Light_Space.jpg';
+
 
 const CustomWallpaper = styled.div(
   {
-    position: 'fixed',
+    position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
@@ -44,6 +46,11 @@ export default function AppBackground() {
       />
     );
   }
+
+  if (wallpaper === nexusThemeBackground) {
+    return <NexusThemeBg />;   
+  }
+
   if (!!wallpaper && existsSync(wallpaper)) {
     return (
       <CustomWallpaper
