@@ -6,8 +6,8 @@ import webpack from 'webpack';
 import path from 'path';
 import { merge } from 'webpack-merge';
 
-import baseConfig from './webpack.config.base';
-import devConfig from './webpack.config.base.dev';
+import baseConfig from './webpack.config.base.babel';
+import devConfig from './webpack.config.base.dev.babel';
 import { dependencies } from '../package.json';
 
 const dllPath = path.resolve(process.cwd(), 'dll');

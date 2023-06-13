@@ -2,7 +2,7 @@
  * Webpack base config for development environment
  */
 
-import CheckNodeEnv from '../internals/scripts/CheckNodeEnv';
+import CheckNodeEnv from './CheckNodeEnv.babel';
 
 CheckNodeEnv('development');
 

@@ -4,8 +4,8 @@
 
 import { merge } from 'webpack-merge';
 
-import baseMainConfig from './webpack.config.base.main';
-import devConfig from './webpack.config.base.dev';
+import baseMainConfig from './webpack.config.base.main.babel';
+import devConfig from './webpack.config.base.dev.babel';
 
 export default merge(baseMainConfig, devConfig, {
   output: {

@@ -7,9 +7,9 @@ import webpack from 'webpack';
 import { merge } from 'webpack-merge';
 import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 
-import baseRendererConfig from './webpack.config.base.renderer';
-import devConfig from './webpack.config.base.dev';
-import { babelLoaderRenderer } from './babelLoaderConfig';
+import baseRendererConfig from './webpack.config.base.renderer.babel';
+import devConfig from './webpack.config.base.dev.babel';
+import { babelLoaderRenderer } from './babelLoaderConfig.babel';
 
 const port = process.env.PORT || 1212;
 const publicPath = `http://localhost:${port}/`;

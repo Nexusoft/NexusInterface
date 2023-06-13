@@ -6,8 +6,8 @@ import path from 'path';
 import webpack from 'webpack';
 import { merge } from 'webpack-merge';
 
-import baseConfig from './webpack.config.base';
-import { babelLoaderMain } from './babelLoaderConfig';
+import baseConfig from './webpack.config.base.babel';
+import { babelLoaderMain } from './babelLoaderConfig.babel';
 
 export default merge(baseConfig, {
   target: 'electron-main',
