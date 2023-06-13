@@ -106,10 +106,21 @@ function useGetBalances() {
 
 function useGetLedgerInfo() {
   useEffect(() => {
-    getLedgerInfo();
-    const intervalID = setInterval(getLedgerInfo, 50000);
+    console.log('getLedgerInfo');
+    let timeoutID;
+    const updateLedgerInfo = async () => {
+      const result = await getLedgerInfo();
+      if (result) {
+        // update every 30 seconds
+        setTimeout(updateLedgerInfo, 30000);
+      } else {
+        // if failed, retry every 3 seconds
+        setTimeout(updateLedgerInfo, 3000);
+      }
+    };
+    updateLedgerInfo();
     return () => {
-      clearInterval(intervalID);
+      clearInterval(timeoutID);
     };
   }, []);
 }
