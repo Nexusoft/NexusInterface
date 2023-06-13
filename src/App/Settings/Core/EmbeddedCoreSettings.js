@@ -13,7 +13,7 @@ import { restartCore, stopCore, startCore } from 'lib/core';
 import { defaultConfig } from 'lib/coreConfig';
 import { isCoreConnected } from 'selectors';
 import { legacyMode, preRelease } from 'consts/misc';
-import deleteDirectory from 'utils/promisified/deleteDirectory';
+import { rm as deleteDirectory } from 'fs/promises';
 import { consts } from 'styles';
 import store from 'store';
 
@@ -514,7 +514,7 @@ async function resyncLiteMode() {
     } = store.getState();
     const clientFolder = path.join(coreDataDir, 'client');
     try {
-      await deleteDirectory(clientFolder);
+      await deleteDirectory(clientFolder, { recursive: true, force: true });
     } catch (err) {
       openErrorDialog({ message: err && err.message });
     }

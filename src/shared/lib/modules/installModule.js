@@ -12,7 +12,7 @@ import ModuleDetailsModal from 'components/ModuleDetailsModal';
 import { modulesDir } from 'consts/paths';
 import { walletDataDir } from 'consts/paths';
 import ensureDirExists from 'utils/ensureDirExists';
-import deleteDirectory from 'utils/promisified/deleteDirectory';
+import { rm as deleteDirectory } from 'fs/promises';
 import extractZip from 'utils/promisified/extractZip';
 import { throttled } from 'utils/universal';
 import { confirm, openSuccessDialog, openErrorDialog } from 'lib/dialog';
@@ -98,7 +98,7 @@ function doInstall(path) {
             });
             if (!agreed) return;
 
-            await deleteDirectory(dest, { glob: false });
+            await deleteDirectory(dest, { recursive: true, force: true });
           }
 
           await copyModule(module.info.files, path, dest);
@@ -151,7 +151,7 @@ export async function installModule(path) {
       }
 
       if (fs.existsSync(tempModuleDir)) {
-        await deleteDirectory(tempModuleDir);
+        await deleteDirectory(tempModuleDir, { recursive: true, force: true });
       }
 
       if (path.endsWith('.zip')) {

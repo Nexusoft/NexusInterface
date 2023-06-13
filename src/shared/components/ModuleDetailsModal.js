@@ -19,7 +19,7 @@ import { updateSettings } from 'lib/settings';
 import { downloadAndInstall, abortModuleDownload } from 'lib/modules';
 import { timing } from 'styles';
 import store from 'store';
-import deleteDirectory from 'utils/promisified/deleteDirectory';
+import { rm as deleteDirectory } from 'fs/promises';
 
 import warningIcon from 'icons/warning.svg';
 import linkIcon from 'icons/link.svg';
@@ -65,7 +65,7 @@ async function confirmDelete(module) {
         devModulePaths: devModulePaths.filter((path) => path !== module.path),
       });
     } else {
-      await deleteDirectory(module.path);
+      await deleteDirectory(module.path, { recursive: true, force: true });
       removeUpdateCache(module.repository);
       GA.SendEvent('Modules', 'uninstallModule', 'name', module.info.name);
     }

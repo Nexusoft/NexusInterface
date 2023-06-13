@@ -14,7 +14,7 @@ import store, { observeStore } from 'store';
 import { startCore, stopCore } from 'lib/core';
 import { showNotification, openModal } from 'lib/ui';
 import { confirm, openErrorDialog, openSuccessDialog } from 'lib/dialog';
-import deleteDirectory from 'utils/promisified/deleteDirectory';
+import { rm as deleteDirectory } from 'fs/promises';
 import { throttled } from 'utils/universal';
 import * as TYPE from 'consts/actionTypes';
 import { updateSettings } from 'lib/settings';
@@ -177,7 +177,7 @@ function downloadDb({ downloadProgress, extractDir }) {
       .on('abort', async () => {
         if (fs.existsSync(extractDir)) {
           try {
-            await deleteDirectory(extractDir);
+            await deleteDirectory(extractDir, { recursive: true, force: true });
           } catch (err) {
             console.error(err);
           }
@@ -276,7 +276,7 @@ function shouldRescan() {
  */
 async function cleanUp(extractDir) {
   if (fs.existsSync(extractDir)) {
-    await deleteDirectory(extractDir);
+    await deleteDirectory(extractDir, { recursive: true, force: true });
   }
 }
 
