@@ -12,6 +12,7 @@ const themeFilePath = path.join(walletDataDir, themeFileName);
 
 export const starryNightBackground = ':starry_night';
 export const cosmicLightBackground = ':cosmic_light';
+export const nexusThemeBackground = ':nexus_theme';
 
 export const darkTheme = {
   wallpaper: starryNightBackground,
@@ -37,6 +38,19 @@ export const lightTheme = {
   globePillarColor: '#00ffff',
   primary: '#07C5E9',
   primaryAccent: '#404244',
+};
+
+export const nexusTheme = {
+  wallpaper: nexusThemeBackground,
+  background: '#025E93',
+  danger: '#8F240E',
+  dangerAccent: '#EEF0F1',
+  foreground: '#E1F3FF',
+  globeArchColor: '#E8FF00',
+  globeColor: '#0CA4FB',
+  globePillarColor: '#FF0047',
+  primary: '#15AEF3',
+  primaryAccent: '#E1EFF8',
 };
 
 // TODO: remove this after a few versions
