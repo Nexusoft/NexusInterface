@@ -75,7 +75,7 @@ export default function ThemePicker() {
             : undefined
         }
       >
-        {__('Nexus')}
+        {__('Nexus.io')}
       </Button>
 
       {(customTheme || themeName === 'custom') && (
