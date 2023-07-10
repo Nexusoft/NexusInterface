@@ -4,7 +4,6 @@ import checkDiskSpace from 'check-disk-space';
 import fs from 'fs';
 import path from 'path';
 import http from 'http';
-import { moveFile } from 'move-file';
 import unzip from 'unzip-stream';
 
 // Internal
@@ -16,6 +15,7 @@ import { showNotification, openModal } from 'lib/ui';
 import { confirm, openErrorDialog, openSuccessDialog } from 'lib/dialog';
 import { rm as deleteDirectory } from 'fs/promises';
 import { throttled } from 'utils/universal';
+import move from 'utils/move';
 import * as TYPE from 'consts/actionTypes';
 import { updateSettings } from 'lib/settings';
 import BootstrapModal from 'components/BootstrapModal';
@@ -59,7 +59,7 @@ async function startBootstrap() {
 
   try {
     const {
-      settings: { backupDirectory },
+      settings: { backupDirectory, coreDataDir },
       core: { systemInfo },
     } = store.getState();
     const extractDir = getExtractDir();
@@ -103,7 +103,7 @@ async function startBootstrap() {
     await stopCore();
 
     setStatus('moving_db');
-    await moveExtractedContent(extractDir);
+    await move(extractDir, coreDataDir);
     if (aborting) {
       bootstrapEvents.emit('abort');
       return false;
@@ -189,52 +189,6 @@ function downloadDb({ downloadProgress, extractDir }) {
     downloadRequest = null;
     clearTimeout(timerId);
   });
-}
-
-/**
- * Move the Extracted Database
- *
- */
-async function moveExtractedContent(extractDir) {
-  const {
-    settings: { coreDataDir },
-  } = store.getState();
-  const recentContents = fs.readdirSync(extractDir);
-  try {
-    for (let element of recentContents) {
-      if (fs.statSync(path.join(extractDir, element)).isDirectory()) {
-        const newcontents = fs.readdirSync(path.join(extractDir, element));
-        for (let deeperEle of newcontents) {
-          if (
-            fs.statSync(path.join(extractDir, element, deeperEle)).isDirectory()
-          ) {
-            const newerContents = fs.readdirSync(
-              path.join(extractDir, element, deeperEle)
-            );
-            for (let evenDeeperEle of newerContents) {
-              moveFile.sync(
-                path.join(extractDir, element, deeperEle, evenDeeperEle),
-                path.join(coreDataDir, element, deeperEle, evenDeeperEle)
-              );
-            }
-          } else {
-            moveFile.sync(
-              path.join(extractDir, element, deeperEle),
-              path.join(coreDataDir, element, deeperEle)
-            );
-          }
-        }
-      } else {
-        moveFile.sync(
-          path.join(extractDir, element),
-          path.join(coreDataDir, element)
-        );
-      }
-    }
-  } catch (e) {
-    console.log('Moving Extracted Content Error', e);
-    throw e;
-  }
 }
 
 function shouldRescan() {
