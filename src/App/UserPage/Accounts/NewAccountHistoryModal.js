@@ -90,25 +90,27 @@ const accountDisplay = (value) => {
 const tableColumns = [
   {
     id: 'timestamp',
-    Header: __('Time'),
-    accessor: 'timestamp',
-    Cell: (cell) =>
-      cell.value ? formatDateTime(cell.value * 1000, timeFormatOptions) : '',
-    width: 180,
+    header: __('Time'),
+    accessorKey: 'timestamp',
+    cell: ({ getValue }) => {
+      const value = getValue();
+      return value ? formatDateTime(value * 1000, timeFormatOptions) : '';
+    },
+    size: 180,
   },
   {
     id: 'operation',
-    Header: __('Operation'),
-    accessor: 'OP',
-    width: 105,
+    header: __('Operation'),
+    accessorKey: 'OP',
+    size: 105,
   },
   {
     id: 'from',
-    Header: __('From'),
-    Cell: (cell) => {
+    header: __('From'),
+    cell: ({ row }) => {
       const {
         original: { from, trustkey, OP },
-      } = cell;
+      } = row;
       const content = accountDisplay(from);
       switch (OP) {
         case 'DEBIT':
@@ -137,105 +139,7 @@ const tableColumns = [
   },
   {
     id: 'to',
-    Header: __('To'),
-    Cell: (cell) => {
-      const {
-        original: { to, name, address, OP },
-      } = cell;
-      const content = accountDisplay(to);
-      switch (OP) {
-        case 'CREDIT':
-          return <span className="dim">{content}</span>;
-        case 'TRUST':
-        case 'GENESIS':
-        case 'TRUSTPOOL':
-        case 'GENESISPOOL':
-        case 'MIGRATE':
-          return <span className="dim">{name || address || ''}</span>;
-        default:
-          return content;
-      }
-    },
-  },
-  {
-    id: 'change',
-    Header: __('Change'),
-    Cell: ({ original: { OP, amount } }) =>
-      amount ? (
-        <Amount
-          possitive={
-            OP === 'CREDIT' ||
-            OP === 'GENESIS' ||
-            OP === 'TRUST' ||
-            OP === 'GENESISPOOL' ||
-            OP === 'TRUSTPOOL' ||
-            OP === 'COINBASE' ||
-            OP === 'MIGRATE'
-          }
-        >
-          {formatNumber(amount, 6)}
-        </Amount>
-      ) : (
-        ''
-      ),
-  },
-];
-
-const columns = [
-  {
-    id: 'timestamp',
-    header: __('Time'),
-    accessorKey: 'timestamp',
-    cell: ({ getValue }) => {
-      const value = getValue();
-      return value ? formatDateTime(value * 1000, timeFormatOptions) : '';
-    },
-    size: 180,
-  },
-  {
-    id: 'operation',
-    header: __('Operation'),
-    accessorKey: 'OP',
-    size: 105,
-  },
-  {
-    id: 'from',
-    header: __('From'),
-    accessorKey: 'from',
-    cell: ({ row }) => {
-      const {
-        original: { from, trustkey, OP },
-      } = row;
-      const content = accountDisplay(from);
-      switch (OP) {
-        case 'DEBIT':
-        case 'FEE':
-        case 'LEGACY':
-          return <span className="dim">{content}</span>;
-        case 'TRUST':
-        case 'GENESIS':
-        case 'TRUSTPOOL':
-        case 'GENESISPOOL':
-          return <i className="dim">{__('staking')}</i>;
-        case 'CREDIT':
-          if (row.original.for === 'COINBASE') {
-            return <i className="dim">{__('mining')}</i>;
-          } else if (row.original.for === 'LEGACY') {
-            return <i className="dim">LEGACY</i>;
-          } else {
-            return content;
-          }
-        case 'MIGRATE':
-          return trustkey || '';
-        default:
-          return content;
-      }
-    },
-  },
-  {
-    id: 'to',
     header: __('To'),
-    accessorKey: 'to',
     cell: ({ row }) => {
       const {
         original: { to, name, address, OP },
@@ -257,7 +161,6 @@ const columns = [
   },
   {
     id: 'change',
-    accessorKey: 'amount',
     header: __('Change'),
     cell: ({ row }) => {
       const {
@@ -304,12 +207,6 @@ const ContractsTable = styled(Table)(({ theme }) => ({
   overflow: 'auto',
 }));
 
-const NewContractsTable = styled(NewTable)(({ theme }) => ({
-  gridArea: 'table',
-  color: theme.foreground,
-  overflow: 'auto',
-}));
-
 const Amount = styled.span(({ theme, possitive }) => ({
   fontWeight: 'bold',
   color: possitive ? theme.primary : theme.danger,
@@ -345,6 +242,7 @@ export default function AccountHistoryModal({ account }) {
               }
             });
           }
+          console.log(contracts);
           return contracts.sort((c1, c2) => c1.timestamp - c2.timestamp);
         }, []);
         setContracts(contracts);
@@ -489,14 +387,6 @@ export default function AccountHistoryModal({ account }) {
                 };
               }}
             />
-
-            <div className="mt2">
-              <NewContractsTable
-                data={contracts}
-                columns={columns}
-                defaultPageSize={10}
-              />
-            </div>
           </Layout>
         )}
       </ControlledModal.Body>
