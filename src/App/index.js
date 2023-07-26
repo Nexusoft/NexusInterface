@@ -13,7 +13,7 @@ import { useSelector } from 'react-redux';
 // Internal
 import GlobalStyles from 'components/GlobalStyles';
 import ThemeController from 'components/ThemeController';
-import { legacyMode } from 'consts/misc';
+// import { legacyMode } from 'consts/misc';
 import { showDefaultMenu } from 'lib/contextMenu';
 import { setNavigate } from 'lib/wallet';
 
@@ -77,24 +77,26 @@ export default function App() {
                 <Routes>
                   <Route
                     index
-                    element={legacyMode ? <Overview /> : <OverviewTritium />}
+                    element={
+                      /*legacyMode ? <Overview /> : */ <OverviewTritium />
+                    }
                   />
                   <Route
                     path="Send"
-                    element={legacyMode ? <Send /> : <SendTritium />}
+                    element={/*legacyMode ? <Send /> : */ <SendTritium />}
                   />
                   <Route
                     path="Transactions"
                     element={
-                      legacyMode ? <Transactions /> : <TransactionsTritium />
+                      /*legacyMode ? <Transactions /> : */ <TransactionsTritium />
                     }
                   />
                   <Route path="AddressBook" element={<AddressBook />} />
                   <Route path="Settings/*" element={<Settings />} />
                   <Route path="Terminal/*" element={<Terminal />} />
-                  {!legacyMode && (
-                    <Route path="User/*" element={<UserPage />} />
-                  )}
+                  {/* {!legacyMode && ( */}
+                  <Route path="User/*" element={<UserPage />} />
+                  {/* )} */}
                   <Route path="Modules/:name" element={<Modules />} />
                   <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>

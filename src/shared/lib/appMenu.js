@@ -11,8 +11,8 @@ import { backupWallet as backup, navigate } from 'lib/wallet';
 import { showNotification, openModal } from 'lib/ui';
 import { bootstrap } from 'lib/bootstrap';
 import { isCoreConnected } from 'selectors';
-import { legacyMode, preRelease } from 'consts/misc';
-import { confirm } from 'lib/dialog';
+import { preRelease } from 'consts/misc';
+// import { confirm } from 'lib/dialog';
 import { walletDataDir } from 'consts/paths';
 import { checkForUpdates, quitAndInstall } from 'lib/updater';
 import AboutModal from 'components/AboutModal';
@@ -38,26 +38,26 @@ const menuItems = preprocess({
   separator: {
     type: 'separator',
   },
-  switchLegacyMode: {
-    label: __('Switch to Legacy Mode'),
-    click: async () => {
-      const confirmed = await confirm({
-        question: __('Are you sure you want to switch to Legacy Mode?'),
-        skinYes: 'danger',
-      });
-      if (confirmed) {
-        updateSettings({ legacyMode: true });
-        location.reload();
-      }
-    },
-  },
-  switchTritiumMode: {
-    label: __('Switch to Tritium Mode'),
-    click: () => {
-      updateSettings({ legacyMode: false });
-      location.reload();
-    },
-  },
+  // switchLegacyMode: {
+  //   label: __('Switch to Legacy Mode'),
+  //   click: async () => {
+  //     const confirmed = await confirm({
+  //       question: __('Are you sure you want to switch to Legacy Mode?'),
+  //       skinYes: 'danger',
+  //     });
+  //     if (confirmed) {
+  //       updateSettings({ legacyMode: true });
+  //       location.reload();
+  //     }
+  //   },
+  // },
+  // switchTritiumMode: {
+  //   label: __('Switch to Tritium Mode'),
+  //   click: () => {
+  //     updateSettings({ legacyMode: false });
+  //     location.reload();
+  //   },
+  // },
   startCoreMenu: {
     label: __('Start Nexus Core'),
     click: startCore,
@@ -313,11 +313,11 @@ function buildDarwinTemplate() {
           ? menuItems.stopCoreMenu
           : menuItems.startCoreMenu
         : null,
-      legacyMode
-        ? menuItems.switchTritiumMode
-        : systemInfo?.litemode || systemInfo?.nolegacy
-        ? null
-        : menuItems.switchLegacyMode,
+      // legacyMode
+      //   ? menuItems.switchTritiumMode
+      //   : systemInfo?.litemode || systemInfo?.nolegacy
+      //   ? null
+      //   : menuItems.switchLegacyMode,
       menuItems.separator,
       menuItems.quitNexus,
     ].filter((e) => e),
@@ -326,9 +326,9 @@ function buildDarwinTemplate() {
   const subMenuFile = {
     label: __('File'),
     submenu: [
-      legacyMode ? menuItems.backupWallet : null,
-      legacyMode ? menuItems.viewBackups : null,
-      legacyMode ? menuItems.separator : null,
+      // legacyMode ? menuItems.backupWallet : null,
+      // legacyMode ? menuItems.viewBackups : null,
+      // legacyMode ? menuItems.separator : null,
       !systemInfo?.litemode ? menuItems.downloadRecent : null,
     ].filter((e) => e),
   };
@@ -341,7 +341,7 @@ function buildDarwinTemplate() {
     submenu: [
       menuItems.appSettings,
       menuItems.coreSettings,
-      legacyMode ? menuItems.keyManagement : null,
+      // legacyMode ? menuItems.keyManagement : null,
       menuItems.styleSettings,
       menuItems.moduleSettings,
     ].filter((e) => e),
@@ -400,9 +400,9 @@ function buildDefaultTemplate() {
   const subMenuFile = {
     label: __('File'),
     submenu: [
-      legacyMode ? menuItems.backupWallet : null,
-      legacyMode ? menuItems.viewBackups : null,
-      menuItems.separator,
+      // legacyMode ? menuItems.backupWallet : null,
+      // legacyMode ? menuItems.viewBackups : null,
+      // menuItems.separator,
       !systemInfo?.litemode ? menuItems.downloadRecent : null,
       menuItems.separator,
       // If it's in remote core mode and core is not running, don't show
@@ -412,11 +412,11 @@ function buildDefaultTemplate() {
           ? menuItems.stopCoreMenu
           : menuItems.startCoreMenu
         : null,
-      legacyMode
-        ? menuItems.switchTritiumMode
-        : systemInfo?.litemode || systemInfo?.nolegacy
-        ? null
-        : menuItems.switchLegacyMode,
+      // legacyMode
+      //   ? menuItems.switchTritiumMode
+      //   : systemInfo?.litemode || systemInfo?.nolegacy
+      //   ? null
+      //   : menuItems.switchLegacyMode,
       menuItems.separator,
       menuItems.quitNexus,
     ].filter((e) => e),
@@ -427,7 +427,7 @@ function buildDefaultTemplate() {
     submenu: [
       menuItems.appSettings,
       menuItems.coreSettings,
-      legacyMode ? menuItems.keyManagement : null,
+      // legacyMode ? menuItems.keyManagement : null,
       menuItems.styleSettings,
       menuItems.moduleSettings,
     ].filter((e) => e),
@@ -506,5 +506,5 @@ export function prepareMenu() {
   observeStore((state) => state.activeAppModuleName, rebuildMenu);
   observeStore((state) => state.settings.manualDaemon, rebuildMenu);
   observeStore((state) => state.core.systemInfo?.litemode, rebuildMenu);
-  observeStore((state) => state.core.systemInfo?.nolegacy, rebuildMenu);
+  // observeStore((state) => state.core.systemInfo?.nolegacy, rebuildMenu);
 }

@@ -22,7 +22,7 @@ export const webGLAvailable = (() => {
 /**
  * Short-hand to see if the wallet is running in legacy mode.
  */
-export const legacyMode = settings.legacyMode === false ? false : true;
+export const legacyMode = false; //settings.legacyMode === false ? false : true;
 
 /**
  * Regex to get a SemVer from a string
