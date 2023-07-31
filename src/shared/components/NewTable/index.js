@@ -36,7 +36,7 @@ const TableStyled = styled.div(({ theme }) => ({
 
 const TableHeader = styled.div({
   display: 'flex',
-  flex: '1 0 auto',
+  flex: '1 1 auto',
   flexDirection: 'column',
   userSelect: 'none',
   boxFlex: 1,
@@ -60,12 +60,20 @@ const TableRow = styled.div(
     display: 'inline-flex',
     boxFlex: 1,
   },
-  ({ header }) =>
+  ({ header, resizable }) =>
     header && {
       textAlign: 'left',
       fontSize: '0.8125em',
       textTransform: 'uppercase',
       letterSpacing: '1px',
+      ...(resizable
+        ? {
+            overflow: visible,
+            '&:last-child': {
+              overflow: hidden,
+            },
+          }
+        : {}),
     },
   ({ odd }) =>
     odd && {
@@ -75,7 +83,7 @@ const TableRow = styled.div(
 
 const TableCell = styled.div(
   {
-    flex: `1 0 0`,
+    // flex: `1 1 auto`,
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
     padding: '7px 5px',
@@ -91,6 +99,9 @@ const TableCell = styled.div(
       backgroundColor: theme.background,
       padding: `${paddingVertical} ${paddingHorizontal}`,
       borderLeft: `1px solid ${theme.background}`,
+      '&:last-child': {
+        borderRight: 0,
+      },
     },
   ({ body, theme }) =>
     body && {
@@ -99,8 +110,25 @@ const TableCell = styled.div(
       '&:first-of-type': {
         borderLeft: 0,
       },
+    },
+  ({ resizing }) =>
+    resizing && {
+      transition: 'none',
+      cursor: 'col-resize',
+      userSelect: 'none',
     }
 );
+
+const HeaderResizer = styled.div({
+  display: 'inline-block',
+  position: 'absolute',
+  width: 36,
+  top: 0,
+  bottom: 0,
+  right: -18,
+  cursor: 'col-resize',
+  zIndex: 10,
+});
 
 export default function Table({
   data,
@@ -108,6 +136,7 @@ export default function Table({
   defaultColumn,
   getRowId,
   getCoreRowModel = defaultGetCoreRowModel(),
+  columnResizeMode = 'onChange',
   ...rest
 }) {
   const table = useReactTable({
@@ -116,38 +145,59 @@ export default function Table({
     defaultColumn,
     getRowId,
     getCoreRowModel,
+    columnResizeMode,
   });
-  console.log('options', {
-    data,
-    columns,
-    defaultColumn,
-    getRowId,
-    getCoreRowModel,
-  });
-  console.log('table', table, table.getSortedRowModel());
   return (
-    <TableWrapper>
-      <TableStyled role="grid" {...rest}>
+    <TableWrapper {...rest}>
+      <TableStyled role="grid">
         <TableHeader>
           <TableRow header role="row">
             {table.getFlatHeaders().map((header) => (
-              <TableCell header role="columnheader" key={header.id}>
+              <TableCell
+                header
+                role="columnheader"
+                key={header.id}
+                resizing={header.column.getIsResizing()}
+                style={{ width: header.getSize() }}
+              >
                 {header.isPlaceholder
                   ? null
                   : flexRender(
                       header.column.columnDef.header,
                       header.getContext()
                     )}
+                {header.column.getCanResize() && (
+                  <HeaderResizer
+                    onMouseDown={header.getResizeHandler()}
+                    onTouchStart={header.getResizeHandler()}
+                    resizing={header.column.getIsResizing()}
+                    style={{
+                      transform:
+                        columnResizeMode === 'onEnd' &&
+                        header.column.getIsResizing()
+                          ? `translateX(${
+                              table.getState().columnSizingInfo.deltaOffset
+                            }px)`
+                          : '',
+                    }}
+                  />
+                )}
               </TableCell>
             ))}
           </TableRow>
         </TableHeader>
 
         <TableBody>
-          {table.getRowModel().flatRows.map((row) => (
-            <TableRow role="row" key={row.id}>
+          {table.getRowModel().flatRows.map((row, i) => (
+            <TableRow role="row" key={row.id} odd={i % 2 === 0}>
               {row.getAllCells().map((cell) => (
-                <TableCell body role="gridcell" key={cell.id}>
+                <TableCell
+                  body
+                  role="gridcell"
+                  key={cell.id}
+                  resizing={cell.column.getIsResizing()}
+                  style={{ width: cell.column.getSize() }}
+                >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </TableCell>
               ))}

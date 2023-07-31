@@ -181,6 +181,11 @@ const tableColumns = [
   },
 ];
 
+const defaultColumn = {
+  size: 100,
+  enableResizing: true,
+};
+
 const columns = [
   {
     id: 'timestamp',
@@ -287,8 +292,8 @@ const columns = [
 const Layout = styled.div({
   height: '100%',
   display: 'grid',
-  gridTemplateAreas: '"balances" "table"',
-  gridTemplateRows: 'min-content 1fr',
+  gridTemplateAreas: '"balances" "table" "table2"',
+  gridTemplateRows: 'min-content 1fr 1fr',
   rowGap: '1em',
 });
 
@@ -305,9 +310,10 @@ const ContractsTable = styled(Table)(({ theme }) => ({
 }));
 
 const NewContractsTable = styled(NewTable)(({ theme }) => ({
-  gridArea: 'table',
+  gridArea: 'table2',
   color: theme.foreground,
   overflow: 'auto',
+  marginTop: '2em',
 }));
 
 const Amount = styled.span(({ theme, possitive }) => ({
@@ -490,13 +496,12 @@ export default function AccountHistoryModal({ account }) {
               }}
             />
 
-            <div className="mt2">
-              <NewContractsTable
-                data={contracts}
-                columns={columns}
-                defaultPageSize={10}
-              />
-            </div>
+            <NewContractsTable
+              data={contracts}
+              defaultColumn={defaultColumn}
+              columns={columns}
+              defaultPageSize={10}
+            />
           </Layout>
         )}
       </ControlledModal.Body>
