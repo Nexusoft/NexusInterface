@@ -181,6 +181,16 @@ const tableColumns = [
   },
 ];
 
+const positiveAmountOPs = [
+  'CREDIT',
+  'GENESIS',
+  'TRUST',
+  'GENESISPOOL',
+  'TRUSTPOOL',
+  'COINBASE',
+  'MIGRATE',
+];
+
 const defaultColumn = {
   size: 100,
   enableResizing: true,
@@ -269,24 +279,18 @@ const columns = [
   },
   {
     id: 'change',
-    accessorKey: 'amount',
+    accessorFn: (contract) => {
+      const amount = contract.amount || 0;
+      const positive = positiveAmountOPs.includes(contract.OP);
+      return positive ? amount : -amount;
+    },
     header: __('Change'),
     cell: ({ row }) => {
       const {
         original: { OP, amount },
       } = row;
       return amount ? (
-        <Amount
-          possitive={
-            OP === 'CREDIT' ||
-            OP === 'GENESIS' ||
-            OP === 'TRUST' ||
-            OP === 'GENESISPOOL' ||
-            OP === 'TRUSTPOOL' ||
-            OP === 'COINBASE' ||
-            OP === 'MIGRATE'
-          }
-        >
+        <Amount possitive={positiveAmountOPs.includes(OP)}>
           {formatNumber(amount, 6)}
         </Amount>
       ) : (

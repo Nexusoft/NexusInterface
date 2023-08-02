@@ -94,6 +94,7 @@ const TableCell = styled.div(
   },
   ({ header, theme }) =>
     header && {
+      fontWeight: 'bold',
       lineHeight: 'normal',
       position: 'relative',
       backgroundColor: theme.background,
@@ -159,6 +160,8 @@ export default function Table({
     getSortedRowModel,
     columnResizeMode,
   });
+  console.log(table.getSortedRowModel());
+  console.log(table.getPaginationRowModel());
   return (
     <TableWrapper {...rest}>
       <TableStyled role="grid">
@@ -207,7 +210,7 @@ export default function Table({
         </TableHeader>
 
         <TableBody>
-          {table.getSortedRowModel().flatRows.map((row, i) => (
+          {table.getPaginationRowModel().rows.map((row, i) => (
             <TableRow
               role="row"
               key={row.id}

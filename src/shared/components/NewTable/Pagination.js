@@ -119,7 +119,7 @@ export default function Pagination({ table, ...rest }) {
           <PaginationInput
             pageJump
             type="number"
-            defaultValue={table.getState().pagination.pageIndex + 1}
+            value={table.getState().pagination.pageIndex + 1}
             onChange={({ target: { value } }) => {
               const page = value ? Number(value) - 1 : 0;
               table.setPageIndex(page);
