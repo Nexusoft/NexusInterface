@@ -1,12 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
-import { createColumnHelper } from '@tanstack/react-table';
 
 import ControlledModal from 'components/ControlledModal';
 import WaitingMessage from 'components/WaitingMessage';
 import Table from 'components/Table';
-import NewTable from 'components/NewTable';
 import ContractDetailsModal from 'components/ContractDetailsModal';
 import FieldSet from 'components/FieldSet';
 import Link from 'components/Link';
@@ -87,100 +85,6 @@ const accountDisplay = (value) => {
   return '';
 };
 
-const tableColumns = [
-  {
-    id: 'timestamp',
-    Header: __('Time'),
-    accessor: 'timestamp',
-    Cell: (cell) =>
-      cell.value ? formatDateTime(cell.value * 1000, timeFormatOptions) : '',
-    width: 180,
-  },
-  {
-    id: 'operation',
-    Header: __('Operation'),
-    accessor: 'OP',
-    width: 105,
-  },
-  {
-    id: 'from',
-    Header: __('From'),
-    Cell: (cell) => {
-      const {
-        original: { from, trustkey, OP },
-      } = cell;
-      const content = accountDisplay(from);
-      switch (OP) {
-        case 'DEBIT':
-        case 'FEE':
-        case 'LEGACY':
-          return <span className="dim">{content}</span>;
-        case 'TRUST':
-        case 'GENESIS':
-        case 'TRUSTPOOL':
-        case 'GENESISPOOL':
-          return <i className="dim">{__('staking')}</i>;
-        case 'CREDIT':
-          if (cell.original.for === 'COINBASE') {
-            return <i className="dim">{__('mining')}</i>;
-          } else if (cell.original.for === 'LEGACY') {
-            return <i className="dim">LEGACY</i>;
-          } else {
-            return content;
-          }
-        case 'MIGRATE':
-          return trustkey || '';
-        default:
-          return content;
-      }
-    },
-  },
-  {
-    id: 'to',
-    Header: __('To'),
-    Cell: (cell) => {
-      const {
-        original: { to, name, address, OP },
-      } = cell;
-      const content = accountDisplay(to);
-      switch (OP) {
-        case 'CREDIT':
-          return <span className="dim">{content}</span>;
-        case 'TRUST':
-        case 'GENESIS':
-        case 'TRUSTPOOL':
-        case 'GENESISPOOL':
-        case 'MIGRATE':
-          return <span className="dim">{name || address || ''}</span>;
-        default:
-          return content;
-      }
-    },
-  },
-  {
-    id: 'change',
-    Header: __('Change'),
-    Cell: ({ original: { OP, amount } }) =>
-      amount ? (
-        <Amount
-          possitive={
-            OP === 'CREDIT' ||
-            OP === 'GENESIS' ||
-            OP === 'TRUST' ||
-            OP === 'GENESISPOOL' ||
-            OP === 'TRUSTPOOL' ||
-            OP === 'COINBASE' ||
-            OP === 'MIGRATE'
-          }
-        >
-          {formatNumber(amount, 6)}
-        </Amount>
-      ) : (
-        ''
-      ),
-  },
-];
-
 const positiveAmountOPs = [
   'CREDIT',
   'GENESIS',
@@ -193,8 +97,6 @@ const positiveAmountOPs = [
 
 const defaultColumn = {
   size: 100,
-  enableResizing: true,
-  enableSorting: true,
 };
 
 const columns = [
@@ -304,8 +206,8 @@ const columns = [
 const Layout = styled.div({
   height: '100%',
   display: 'grid',
-  gridTemplateAreas: '"balances" "table" "table2"',
-  gridTemplateRows: 'min-content 1fr 1fr',
+  gridTemplateAreas: '"balances" "table"',
+  gridTemplateRows: 'min-content 1fr',
   rowGap: '1em',
 });
 
@@ -319,13 +221,6 @@ const ContractsTable = styled(Table)(({ theme }) => ({
   gridArea: 'table',
   color: theme.foreground,
   overflow: 'auto',
-}));
-
-const NewContractsTable = styled(NewTable)(({ theme }) => ({
-  gridArea: 'table2',
-  color: theme.foreground,
-  overflow: 'auto',
-  marginTop: '2em',
 }));
 
 const Amount = styled.span(({ theme, possitive }) => ({
@@ -486,29 +381,6 @@ export default function AccountHistoryModal({ account }) {
             </BalancesFieldSet>
 
             <ContractsTable
-              data={contracts}
-              columns={tableColumns}
-              defaultPageSize={10}
-              getTrProps={(state, row) => {
-                const contract = row && row.original;
-                return {
-                  onClick: contract
-                    ? () => {
-                        openModal(ContractDetailsModal, {
-                          contract,
-                          txid: contract.txid,
-                        });
-                      }
-                    : undefined,
-                  style: {
-                    cursor: 'pointer',
-                    fontSize: 15,
-                  },
-                };
-              }}
-            />
-
-            <NewContractsTable
               data={contracts}
               defaultColumn={defaultColumn}
               columns={columns}

@@ -24,21 +24,25 @@ const timeFormatOptions = {
 export const tableColumns = [
   {
     id: 'time',
-    Header: __('Time'),
-    accessor: 'modified',
-    Cell: (cell) => formatDateTime(cell.value * 1000, timeFormatOptions),
-    width: 210,
+    header: __('Time'),
+    accessorKey: 'modified',
+    cell: ({ row }) =>
+      row.getValue()
+        ? formatDateTime(row.getValue() * 1000, timeFormatOptions)
+        : '',
+    size: 210,
   },
   {
     id: 'type',
-    Header: __('Type'),
-    accessor: 'type',
-    width: 100,
+    header: __('Type'),
+    accessorKey: 'type',
+    size: 100,
   },
   {
     id: 'owner',
-    Header: __('Owner'),
-    accessor: 'owner',
+    header: __('Owner'),
+    accessorKey: 'owner',
+    size: 100,
   },
 ];
 
@@ -77,22 +81,14 @@ export default function NamespaceHistoryModal() {
           </WaitingMessage>
         ) : (
           <Table
-            columns={tableColumns}
             data={events}
-            defaultPageSize={events.length < 10 ? events.length : 10}
-            getTrProps={(state, row) => {
-              const event = row && row.original;
-              return {
-                onClick: () => {
-                  openModal(NamespaceHistoryDetailsModal, {
-                    event,
-                  });
-                },
-                style: {
-                  cursor: 'pointer',
-                  fontSize: 15,
-                },
-              };
+            columns={tableColumns}
+            defaultPageSize={10}
+            onRowClick={(row) => {
+              const event = row?.original;
+              openModal(NamespaceHistoryDetailsModal, {
+                event,
+              });
             }}
           />
         )}

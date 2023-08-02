@@ -21,24 +21,28 @@ const timeFormatOptions = {
   second: '2-digit',
 };
 
-export const tableColumns = [
+export const columns = [
   {
     id: 'time',
-    Header: __('Time'),
-    accessor: 'modified',
-    Cell: (cell) => formatDateTime(cell.value * 1000, timeFormatOptions),
-    width: 210,
+    header: __('Time'),
+    accessorKey: 'modified',
+    cell: ({ row }) =>
+      row.getValue()
+        ? formatDateTime(row.getValue() * 1000, timeFormatOptions)
+        : '',
+    size: 210,
   },
   {
     id: 'type',
-    Header: __('Type'),
-    accessor: 'type',
-    width: 100,
+    header: __('Type'),
+    accessorKey: 'type',
+    size: 100,
   },
   {
     id: 'owner',
-    Header: __('Owner'),
-    accessor: 'owner',
+    header: __('Owner'),
+    accessorKey: 'owner',
+    size: 100,
   },
 ];
 
@@ -77,22 +81,14 @@ export default function AssetHistoryModal({ asset }) {
           </WaitingMessage>
         ) : (
           <Table
-            columns={tableColumns}
             data={events}
-            defaultPageSize={events.length < 10 ? events.length : 10}
-            getTrProps={(state, row) => {
-              const event = row && row.original;
-              return {
-                onClick: () => {
-                  openModal(AssetHistoryDetailsModal, {
-                    event,
-                  });
-                },
-                style: {
-                  cursor: 'pointer',
-                  fontSize: 15,
-                },
-              };
+            columns={columns}
+            defaultPageSize={10}
+            onRowClick={(row) => {
+              const event = row?.original;
+              openModal(AssetHistoryDetailsModal, {
+                event,
+              });
             }}
           />
         )}
