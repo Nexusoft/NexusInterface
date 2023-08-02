@@ -78,6 +78,12 @@ const TableRow = styled.div(
   ({ clickable }) =>
     clickable && {
       cursor: 'pointer',
+    },
+  ({ dummy }) =>
+    !dummy && {
+      '&:hover': {
+        background: 'rgba(255, 255, 255, 0.05)',
+      },
     }
 );
 
@@ -126,6 +132,20 @@ const TableCell = styled.div(
       },
     }
 );
+
+const NoData = styled.div({
+  display: 'block',
+  position: 'absolute',
+  left: '50%',
+  top: '50%',
+  transform: 'translate(-50%, -50%)',
+  background: 'rgba(255, 255, 255, 0.8)',
+  transition: 'all 0.3s ease',
+  zIndex: 1,
+  pointerEvents: 'none',
+  padding: 20,
+  color: 'rgba(0, 0, 0, 0.5)',
+});
 
 const HeaderResizer = styled.div({
   display: 'inline-block',
@@ -244,7 +264,7 @@ export default function Table({
           ))}
 
           {dummyRows.map((i) => (
-            <TableRow role="row" key={i} odd={i % 2 === 0}>
+            <TableRow dummy role="row" key={i} odd={i % 2 === 0}>
               {table.getAllColumns().map((column) => (
                 <TableCell
                   body
@@ -262,6 +282,7 @@ export default function Table({
       </TableStyled>
 
       <Pagination table={table} />
+      {!data?.length && <NoData>{__('No Rows Found')}</NoData>}
     </TableWrapper>
   );
 }

@@ -363,7 +363,7 @@ export default function AccountHistoryModal({ account }) {
               }
             });
           }
-          return contracts.sort((c1, c2) => c1.timestamp - c2.timestamp);
+          return contracts.sort((c1, c2) => c2.timestamp - c1.timestamp);
         }, []);
         setContracts(contracts);
       } catch (err) {
