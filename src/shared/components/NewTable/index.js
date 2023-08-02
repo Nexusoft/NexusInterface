@@ -160,8 +160,13 @@ export default function Table({
     getSortedRowModel,
     columnResizeMode,
   });
-  console.log(table.getSortedRowModel());
-  console.log(table.getPaginationRowModel());
+  const rows = table.getPaginationRowModel().rows;
+  const rowCount = rows.length;
+  const pageSize = table.getState().pagination.pageSize;
+  const dummyRows = Array.from(
+    { length: pageSize - rowCount },
+    (v, i) => i + rowCount
+  );
   return (
     <TableWrapper {...rest}>
       <TableStyled role="grid">
@@ -210,7 +215,7 @@ export default function Table({
         </TableHeader>
 
         <TableBody>
-          {table.getPaginationRowModel().rows.map((row, i) => (
+          {rows.map((row, i) => (
             <TableRow
               role="row"
               key={row.id}
@@ -233,6 +238,22 @@ export default function Table({
                   style={{ width: cell.column.getSize() }}
                 >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </TableCell>
+              ))}
+            </TableRow>
+          ))}
+
+          {dummyRows.map((i) => (
+            <TableRow role="row" key={i} odd={i % 2 === 0}>
+              {table.getAllColumns().map((column) => (
+                <TableCell
+                  body
+                  role="gridcell"
+                  key={column.id}
+                  resizing={column.getIsResizing()}
+                  style={{ width: column.getSize() }}
+                >
+                  &nbsp;
                 </TableCell>
               ))}
             </TableRow>
