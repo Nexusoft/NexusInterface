@@ -3,8 +3,11 @@ import {
   useReactTable,
   flexRender,
   getCoreRowModel as defaultGetCoreRowModel,
+  getPaginationRowModel as defaultGetPaginationRowModel,
 } from '@tanstack/react-table';
+
 import { consts } from 'styles';
+import Pagination from './Pagination';
 
 const paddingHorizontal = 0.5 * consts.lineHeight + 'em';
 const paddingVertical = 0.375 * consts.lineHeight + 'em';
@@ -83,7 +86,7 @@ const TableRow = styled.div(
 
 const TableCell = styled.div(
   {
-    // flex: `1 1 auto`,
+    flex: `1 1 auto`,
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
     padding: '7px 5px',
@@ -136,6 +139,7 @@ export default function Table({
   defaultColumn,
   getRowId,
   getCoreRowModel = defaultGetCoreRowModel(),
+  getPaginationRowModel = defaultGetPaginationRowModel(),
   columnResizeMode = 'onChange',
   ...rest
 }) {
@@ -145,6 +149,7 @@ export default function Table({
     defaultColumn,
     getRowId,
     getCoreRowModel,
+    getPaginationRowModel,
     columnResizeMode,
   });
   return (
@@ -205,6 +210,8 @@ export default function Table({
           ))}
         </TableBody>
       </TableStyled>
+
+      <Pagination table={table} />
     </TableWrapper>
   );
 }

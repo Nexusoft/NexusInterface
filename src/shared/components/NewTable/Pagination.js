@@ -12,6 +12,7 @@ const PaginationStyled = styled.div({
   marginTop: '0.5em',
   boxShadow: '0 0 15px 0 rgba(0, 0, 0, 0.1)',
   borderTop: '2px solid rgba(0, 0, 0, 0.1)',
+  flex: 'auto 0',
 });
 
 const PaginationSection = styled.div(
@@ -101,31 +102,55 @@ const PaginationOption = styled.option(({ theme }) => ({
   outline: 'none',
 }));
 
-export default function Pagination() {
+export default function Pagination({ table, ...rest }) {
   return (
-    <PaginationStyled>
+    <PaginationStyled {...rest}>
       <PaginationSection>
-        <PaginationButton>{'<'} Previous</PaginationButton>
+        <PaginationButton
+          onClick={table.previousPage}
+          disabled={!table.getCanPreviousPage()}
+        >
+          {'<'} Previous
+        </PaginationButton>
       </PaginationSection>
       <PaginationSection center>
         <PageInfo>
           Page
-          <PaginationInput />
-          of 10
+          <PaginationInput
+            pageJump
+            type="number"
+            defaultValue={table.getState().pagination.pageIndex + 1}
+            onChange={({ target: { value } }) => {
+              const page = value ? Number(value) - 1 : 0;
+              table.setPageIndex(page);
+            }}
+          />
+          of {table.getPageCount()}
         </PageInfo>
         <PageSizeOptions>
-          <PaginationInput as="select" aria-label="rows per page">
-            <option value="5">5 rows</option>
-            <option value="10">10 rows</option>
-            <option value="20">20 rows</option>
-            <option value="25">25 rows</option>
-            <option value="50">50 rows</option>
-            <option value="100">100 rows</option>
+          <PaginationInput
+            as="select"
+            aria-label="rows per page"
+            value={table.getState().pagination.pageSize}
+            onChange={(e) => {
+              table.setPageSize(Number(e.target.value));
+            }}
+          >
+            {[10, 20, 30, 40, 50].map((pageSize) => (
+              <PaginationOption key={pageSize} value={pageSize}>
+                {pageSize} rows
+              </PaginationOption>
+            ))}
           </PaginationInput>
         </PageSizeOptions>
       </PaginationSection>
       <PaginationSection>
-        <PaginationButton>Next {'>'}</PaginationButton>
+        <PaginationButton
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+        >
+          Next {'>'}
+        </PaginationButton>
       </PaginationSection>
     </PaginationStyled>
   );
