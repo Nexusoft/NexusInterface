@@ -509,6 +509,13 @@ export default function AccountHistoryModal({ account }) {
               defaultColumn={defaultColumn}
               columns={columns}
               defaultPageSize={10}
+              onRowClick={(row) => {
+                const contract = row?.original;
+                openModal(ContractDetailsModal, {
+                  contract,
+                  txid: contract?.txid,
+                });
+              }}
             />
           </Layout>
         )}

@@ -74,6 +74,10 @@ const TableRow = styled.div(
   ({ odd }) =>
     odd && {
       background: 'rgba(0, 0, 0, 0.1)',
+    },
+  ({ clickable }) =>
+    clickable && {
+      cursor: 'pointer',
     }
 );
 
@@ -142,6 +146,7 @@ export default function Table({
   getPaginationRowModel = defaultGetPaginationRowModel(),
   getSortedRowModel = defaultGetSortedRowModel(),
   columnResizeMode = 'onChange',
+  onRowClick,
   ...rest
 }) {
   const table = useReactTable({
@@ -203,7 +208,19 @@ export default function Table({
 
         <TableBody>
           {table.getSortedRowModel().flatRows.map((row, i) => (
-            <TableRow role="row" key={row.id} odd={i % 2 === 0}>
+            <TableRow
+              role="row"
+              key={row.id}
+              odd={i % 2 === 0}
+              clickable={!!onRowClick}
+              onClick={
+                onRowClick
+                  ? () => {
+                      onRowClick(row, i);
+                    }
+                  : undefined
+              }
+            >
               {row.getAllCells().map((cell) => (
                 <TableCell
                   body
