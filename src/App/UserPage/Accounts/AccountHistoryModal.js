@@ -184,6 +184,7 @@ const tableColumns = [
 const defaultColumn = {
   size: 100,
   enableResizing: true,
+  enableSorting: true,
 };
 
 const columns = [
@@ -196,12 +197,14 @@ const columns = [
       return value ? formatDateTime(value * 1000, timeFormatOptions) : '';
     },
     size: 180,
+    sortingFn: 'datetime',
   },
   {
     id: 'operation',
     header: __('Operation'),
     accessorKey: 'OP',
     size: 105,
+    sortingFn: 'text',
   },
   {
     id: 'from',
@@ -236,6 +239,8 @@ const columns = [
           return content;
       }
     },
+    sortingFn: 'alphanumericCaseSensitive',
+    sortDescFirst: false,
   },
   {
     id: 'to',
@@ -259,6 +264,8 @@ const columns = [
           return content;
       }
     },
+    sortingFn: 'alphanumericCaseSensitive',
+    sortDescFirst: false,
   },
   {
     id: 'change',
@@ -286,6 +293,7 @@ const columns = [
         ''
       );
     },
+    sortingFn: 'basic',
   },
 ];
 

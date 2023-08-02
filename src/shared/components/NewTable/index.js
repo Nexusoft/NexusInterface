@@ -4,6 +4,7 @@ import {
   flexRender,
   getCoreRowModel as defaultGetCoreRowModel,
   getPaginationRowModel as defaultGetPaginationRowModel,
+  getSortedRowModel as defaultGetSortedRowModel,
 } from '@tanstack/react-table';
 
 import { consts } from 'styles';
@@ -63,20 +64,12 @@ const TableRow = styled.div(
     display: 'inline-flex',
     boxFlex: 1,
   },
-  ({ header, resizable }) =>
+  ({ header }) =>
     header && {
       textAlign: 'left',
       fontSize: '0.8125em',
       textTransform: 'uppercase',
       letterSpacing: '1px',
-      ...(resizable
-        ? {
-            overflow: visible,
-            '&:last-child': {
-              overflow: hidden,
-            },
-          }
-        : {}),
     },
   ({ odd }) =>
     odd && {
@@ -106,6 +99,19 @@ const TableCell = styled.div(
         borderRight: 0,
       },
     },
+  ({ resizing }) =>
+    resizing && {
+      transition: 'none',
+      cursor: 'col-resize',
+      userSelect: 'none',
+    },
+  ({ sortable }) => sortable && { cursor: 'pointer', outline: 'none' },
+  ({ sorted, theme }) =>
+    sorted === 'asc'
+      ? { boxShadow: `inset 0 3px 0 0 ${theme.primary}` }
+      : sorted === 'desc'
+      ? { boxShadow: `inset 0 -3px 0 0 ${theme.primary}` }
+      : {},
   ({ body, theme }) =>
     body && {
       padding: `${paddingVertical} ${paddingHorizontal}`,
@@ -113,12 +119,6 @@ const TableCell = styled.div(
       '&:first-of-type': {
         borderLeft: 0,
       },
-    },
-  ({ resizing }) =>
-    resizing && {
-      transition: 'none',
-      cursor: 'col-resize',
-      userSelect: 'none',
     }
 );
 
@@ -140,6 +140,7 @@ export default function Table({
   getRowId,
   getCoreRowModel = defaultGetCoreRowModel(),
   getPaginationRowModel = defaultGetPaginationRowModel(),
+  getSortedRowModel = defaultGetSortedRowModel(),
   columnResizeMode = 'onChange',
   ...rest
 }) {
@@ -150,6 +151,7 @@ export default function Table({
     getRowId,
     getCoreRowModel,
     getPaginationRowModel,
+    getSortedRowModel,
     columnResizeMode,
   });
   return (
@@ -164,6 +166,13 @@ export default function Table({
                 key={header.id}
                 resizing={header.column.getIsResizing()}
                 style={{ width: header.getSize() }}
+                sortable={header.column.getCanSort()}
+                sorted={header.column.getIsSorted()}
+                onClick={
+                  header.column.getCanSort()
+                    ? header.column.getToggleSortingHandler()
+                    : undefined
+                }
               >
                 {header.isPlaceholder
                   ? null
@@ -193,7 +202,7 @@ export default function Table({
         </TableHeader>
 
         <TableBody>
-          {table.getRowModel().flatRows.map((row, i) => (
+          {table.getSortedRowModel().flatRows.map((row, i) => (
             <TableRow role="row" key={row.id} odd={i % 2 === 0}>
               {row.getAllCells().map((cell) => (
                 <TableCell
