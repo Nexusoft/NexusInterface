@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import ControlledModal from 'components/ControlledModal';
 import Table from 'components/Table';
 import WaitingMessage from 'components/WaitingMessage';
+import Tooltip from 'components/Tooltip';
 import { formatDateTime } from 'lib/intl';
 import { openModal } from 'lib/ui';
 import { callApi } from 'lib/tritiumApi';
@@ -21,28 +22,48 @@ const timeFormatOptions = {
   second: '2-digit',
 };
 
-export const columns = [
+export const tableColumns = [
   {
-    id: 'time',
+    id: 'modified',
     header: __('Time'),
     accessorKey: 'modified',
-    cell: ({ row }) =>
-      row.getValue()
-        ? formatDateTime(row.getValue() * 1000, timeFormatOptions)
-        : '',
-    size: 210,
+    cell: ({ getValue }) =>
+      getValue() ? formatDateTime(getValue() * 1000, timeFormatOptions) : '',
+    size: 200,
   },
   {
-    id: 'type',
-    header: __('Type'),
-    accessorKey: 'type',
+    id: 'action',
+    header: __('Action'),
+    accessorKey: 'action',
     size: 100,
+  },
+  {
+    id: 'register',
+    header: __('Register'),
+    accessorKey: 'register',
+    cell: ({ getValue }) => {
+      const value = getValue();
+      return (
+        <Tooltip.Trigger tooltip={value} align="start">
+          <span>{value}</span>
+        </Tooltip.Trigger>
+      );
+    },
+    size: 200,
   },
   {
     id: 'owner',
     header: __('Owner'),
     accessorKey: 'owner',
-    size: 100,
+    cell: ({ getValue }) => {
+      const value = getValue();
+      return (
+        <Tooltip.Trigger tooltip={value} align="start">
+          <span>{value}</span>
+        </Tooltip.Trigger>
+      );
+    },
+    size: 200,
   },
 ];
 
@@ -68,6 +89,7 @@ export default function AssetHistoryModal({ asset }) {
       assignClose={(closeModal) => {
         closeModalRef.current = closeModal;
       }}
+      style={{ width: '80%' }}
     >
       <ControlledModal.Header className="relative">
         {__('Asset History')}
