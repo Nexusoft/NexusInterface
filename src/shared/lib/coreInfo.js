@@ -1,6 +1,6 @@
 import * as TYPE from 'consts/actionTypes';
 import store, { observeStore } from 'store';
-import { callApi } from 'lib/tritiumApi';
+import { callApi } from 'lib/api';
 import { isCoreConnected, isLoggedIn } from 'selectors';
 import { openModal, isModalOpen } from 'lib/ui';
 import { updateSettings } from 'lib/settings';

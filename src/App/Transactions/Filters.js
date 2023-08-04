@@ -8,7 +8,7 @@ import FormField from 'components/FormField';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
-import { updateFilter } from 'lib/tritiumTransactions';
+import { updateFilter } from 'lib/transactions';
 import { loadOwnedTokens, loadAccounts } from 'lib/user';
 import { openModal } from 'lib/ui';
 import { debounced } from 'utils/universal';

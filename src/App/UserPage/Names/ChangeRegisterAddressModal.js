@@ -9,7 +9,7 @@ import Spinner from 'components/Spinner';
 import { formSubmit } from 'lib/form';
 import { confirmPin, openSuccessDialog } from 'lib/dialog';
 import { loadNameRecords, selectUsername } from 'lib/user';
-import { callApi } from 'lib/tritiumApi';
+import { callApi } from 'lib/api';
 import memoize from 'utils/memoize';
 
 __ = __context('ChangeRegisterAddress');

@@ -16,7 +16,7 @@ import {
   createGlobalNameFee,
 } from 'lib/fees';
 import { loadNameRecords, loadNamespaces, selectUsername } from 'lib/user';
-import { callApi } from 'lib/tritiumApi';
+import { callApi } from 'lib/api';
 
 __ = __context('CreateName');
 

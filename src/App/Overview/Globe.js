@@ -7,7 +7,7 @@ import world from 'icons/world-light-white.jpg';
 import geoip from 'data/geoip';
 import Curve from './Curve';
 import Point from './Point';
-import { callApi } from 'lib/tritiumApi';
+import { callApi } from 'lib/api';
 import Color from 'color';
 
 const MaxDisplayPoints = 64;

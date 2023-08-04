@@ -8,7 +8,7 @@ import TokenName from 'components/TokenName';
 import { openModal } from 'lib/ui';
 import { popupContextMenu } from 'lib/contextMenu';
 import { formatNumber } from 'lib/intl';
-import { getDeltaSign } from 'lib/tritiumTransactions';
+import { getDeltaSign } from 'lib/transactions';
 import { lookupAddress } from 'lib/addressBook';
 import contactIcon from 'icons/address-book.svg';
 import walletIcon from 'icons/wallet.svg';

@@ -17,11 +17,11 @@ import { showDefaultMenu } from 'lib/contextMenu';
 import { setNavigate } from 'lib/wallet';
 
 import Overlays from './Overlays';
-import OverviewTritium from './OverviewTritium';
+import Overview from './Overview';
 import Header from './Header';
 import Navigation from './Navigation';
-import SendTritium from './SendTritium';
-import TransactionsTritium from './TransactionsTritium';
+import Send from './Send';
+import Transactions from './Transactions';
 import AddressBook from './AddressBook';
 import Settings from './Settings';
 import Terminal from './Terminal';
@@ -71,12 +71,9 @@ export default function App() {
               <Header />
               <Main>
                 <Routes>
-                  <Route index element={<OverviewTritium />} />
-                  <Route path="Send" element={<SendTritium />} />
-                  <Route
-                    path="Transactions"
-                    element={<TransactionsTritium />}
-                  />
+                  <Route index element={<Overview />} />
+                  <Route path="Send" element={<Send />} />
+                  <Route path="Transactions" element={<Transactions />} />
                   <Route path="AddressBook" element={<AddressBook />} />
                   <Route path="Settings/*" element={<Settings />} />
                   <Route path="Terminal/*" element={<Terminal />} />

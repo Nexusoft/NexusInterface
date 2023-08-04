@@ -3,7 +3,7 @@ import ExternalLink from 'components/ExternalLink';
 import BackgroundTask from 'components/BackgroundTask';
 import * as TYPE from 'consts/actionTypes';
 import store, { observeStore } from 'store';
-import { callApi } from 'lib/tritiumApi';
+import { callApi } from 'lib/api';
 import { showBackgroundTask, showNotification } from 'lib/ui';
 import { confirm } from 'lib/dialog';
 import { updateSettings } from 'lib/settings';

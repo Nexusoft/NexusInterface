@@ -11,7 +11,7 @@ import Button from 'components/Button';
 import Select from 'components/Select';
 import TextField from 'components/TextField';
 import RequireCoreConnected from 'components/RequireCoreConnected';
-import { callApiByUrl } from 'lib/tritiumApi';
+import { callApiByUrl } from 'lib/api';
 import {
   switchConsoleTab,
   updateConsoleInput,

@@ -5,7 +5,7 @@ import Spinner from 'components/Spinner';
 import { formSubmit, required, checkAll, regex } from 'lib/form';
 import { confirmPin, openSuccessDialog } from 'lib/dialog';
 import { loadNamespaces } from 'lib/user';
-import { callApi } from 'lib/tritiumApi';
+import { callApi } from 'lib/api';
 import { createNamespaceFee } from 'lib/fees';
 
 __ = __context('CreateNamespace');

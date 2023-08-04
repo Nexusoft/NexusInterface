@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 import NexusAddress from 'components/NexusAddress';
 import Icon from 'components/Icon';
 import { lookupAddress } from 'lib/addressBook';
-import { callApi } from 'lib/tritiumApi';
+import { callApi } from 'lib/api';
 import contactIcon from 'icons/address-book.svg';
 
 const Label = styled.span(({ theme }) => ({

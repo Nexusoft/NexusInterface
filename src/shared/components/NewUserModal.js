@@ -11,7 +11,7 @@ import Spinner from 'components/Spinner';
 import FieldSet from 'components/FieldSet';
 import BackgroundTask from 'components/BackgroundTask';
 import { formSubmit, checkAll, required, minChars } from 'lib/form';
-import { callApi } from 'lib/tritiumApi';
+import { callApi } from 'lib/api';
 import {
   showNotification,
   openModal,

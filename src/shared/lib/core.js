@@ -4,7 +4,7 @@ import log from 'electron-log';
 import * as TYPE from 'consts/actionTypes';
 import store from 'store';
 import { loadNexusConf, saveCoreConfig } from 'lib/coreConfig';
-import { callApi } from 'lib/tritiumApi';
+import { callApi } from 'lib/api';
 import { updateSettings } from 'lib/settings';
 import sleep from 'utils/promisified/sleep';
 import { preRelease } from 'consts/misc';

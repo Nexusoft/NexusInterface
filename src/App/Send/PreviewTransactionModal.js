@@ -7,7 +7,7 @@ import Icon from 'components/Icon';
 import TokenName from 'components/TokenName';
 import Tooltip from 'components/Tooltip';
 import Form from 'components/Form';
-import { callApi } from 'lib/tritiumApi';
+import { callApi } from 'lib/api';
 import { lookupAddress } from 'lib/addressBook';
 import { openSuccessDialog } from 'lib/dialog';
 import { loadAccounts } from 'lib/user';
@@ -18,7 +18,7 @@ import WarningIcon from 'icons/warning.svg';
 import sendIcon from 'icons/send.svg';
 
 import RecipientAddress from './RecipientAddress';
-import { loadTransactions } from 'lib/tritiumTransactions';
+import { loadTransactions } from 'lib/transactions';
 
 __ = __context('PreviewTransaction');
 

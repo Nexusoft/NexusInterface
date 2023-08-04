@@ -7,7 +7,7 @@ import Form from 'components/Form';
 import ControlledModal from 'components/ControlledModal';
 import Button from 'components/Button';
 import { formSubmit, checkAll, useFieldValue } from 'lib/form';
-import { callApi } from 'lib/tritiumApi';
+import { callApi } from 'lib/api';
 import { confirm, confirmPin } from 'lib/dialog';
 import { formatNumber } from 'lib/intl';
 import { showNotification } from 'lib/ui';

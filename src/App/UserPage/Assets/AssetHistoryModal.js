@@ -6,7 +6,7 @@ import WaitingMessage from 'components/WaitingMessage';
 import Tooltip from 'components/Tooltip';
 import { formatDateTime } from 'lib/intl';
 import { openModal } from 'lib/ui';
-import { callApi } from 'lib/tritiumApi';
+import { callApi } from 'lib/api';
 import { handleError } from 'utils/form';
 
 import AssetHistoryDetailsModal from './AssetHistoryDetailsModal';

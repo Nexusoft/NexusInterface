@@ -6,7 +6,7 @@ import Button from 'components/Button';
 import FormField from 'components/FormField';
 import { formSubmit, required } from 'lib/form';
 import { confirmPin, openErrorDialog } from 'lib/dialog';
-import { callApi } from 'lib/tritiumApi';
+import { callApi } from 'lib/api';
 import { loadAccounts } from 'lib/user';
 import { showNotification } from 'lib/ui';
 import { createLocalNameFee } from 'lib/fees';

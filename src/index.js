@@ -9,7 +9,7 @@ import { prepareBootstrap } from 'lib/bootstrap';
 import { prepareCoreInfo } from 'lib/coreInfo';
 import { prepareCoreOutput } from 'lib/coreOutput';
 import { prepareMarket } from 'lib/market';
-import { prepareTransactions } from 'lib/tritiumTransactions';
+import { prepareTransactions } from 'lib/transactions';
 import { prepareModules, prepareWebView } from 'lib/modules';
 import { prepareUpdater } from 'lib/updater';
 import initialSettings from 'data/initialSettings';

@@ -12,7 +12,7 @@ import Icon from 'components/Icon';
 import AddEditContactModal from 'components/AddEditContactModal';
 import { openModal } from 'lib/ui';
 import { required, checkAll } from 'lib/form';
-import { callApi } from 'lib/tritiumApi';
+import { callApi } from 'lib/api';
 import { selectSource } from 'lib/send';
 import memoize from 'utils/memoize';
 import { debounced } from 'utils/universal';

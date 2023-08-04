@@ -8,7 +8,7 @@ import ConfirmDialog from 'components/Dialogs/ConfirmDialog';
 import store from 'store';
 import { updateSettings } from 'lib/settings';
 import { restartCore } from 'lib/core';
-import { callApi } from 'lib/tritiumApi';
+import { callApi } from 'lib/api';
 import {
   openModal,
   removeModal,

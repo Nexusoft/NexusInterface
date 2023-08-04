@@ -3,7 +3,7 @@ import ControlledModal from 'components/ControlledModal';
 import FormField from 'components/FormField';
 import Icon from 'components/Icon';
 import { formSubmit, required } from 'lib/form';
-import { callApi } from 'lib/tritiumApi';
+import { callApi } from 'lib/api';
 import { openModal } from 'lib/ui';
 import { openErrorDialog } from 'lib/dialog';
 import searchIcon from 'icons/search.svg';

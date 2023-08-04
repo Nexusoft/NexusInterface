@@ -10,7 +10,7 @@ import TextField from 'components/TextField';
 import RequireLoggedIn from 'components/RequireLoggedIn';
 import Spinner from 'components/Spinner';
 import Icon from 'components/Icon';
-import { loadTransactions, updatePage } from 'lib/tritiumTransactions';
+import { loadTransactions, updatePage } from 'lib/transactions';
 import transactionIcon from 'icons/transaction.svg';
 import warningIcon from 'icons/warning.svg';
 
@@ -86,7 +86,7 @@ const ErrorMessage = styled.div(({ theme }) => ({
 // /**
 //    * Component Mount Callback
 //    *
-//    * @memberof TransactionsTritium
+//    * @memberof Transactions
 //    */
 //  componentDidMount() {
 
@@ -117,12 +117,12 @@ const ErrorMessage = styled.div(({ theme }) => ({
 // const totalPages = 10;
 
 /**
- * TransactionsTritium Page
+ * Transactions Page
  *
- * @class TransactionsTritium
+ * @class Transactions
  * @extends {Component}
  */
-export default function TransactionsTritium() {
+export default function Transactions() {
   const { status, transactions, lastPage } = useSelector(
     (state) => state.user.transactions
   );
@@ -130,7 +130,7 @@ export default function TransactionsTritium() {
   const genesis = useSelector((state) => state.user.status?.genesis);
 
   useEffect(() => {
-    GA.SendScreen('TransactionsTritium');
+    GA.SendScreen('Transactions');
   }, []);
   // Reload transactions when user genesis changes, such as when user
   // is logged in or switched to another user

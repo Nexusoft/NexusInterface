@@ -13,7 +13,7 @@ import {
 } from 'lib/dialog';
 import { popupContextMenu, defaultMenu } from 'lib/contextMenu';
 import { goToSend } from 'lib/send';
-import { callApi } from 'lib/tritiumApi';
+import { callApi } from 'lib/api';
 import memoize from 'utils/memoize';
 
 import { readModuleStorage, writeModuleStorage } from './storage';

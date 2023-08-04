@@ -12,7 +12,7 @@ import { showNotification, openModal } from 'lib/ui';
 import { openErrorDialog } from 'lib/dialog';
 import { formSubmit, required } from 'lib/form';
 import { logIn } from 'lib/user';
-import { callApi } from 'lib/tritiumApi';
+import { callApi } from 'lib/api';
 
 __ = __context('Login');
 
@@ -43,7 +43,7 @@ export default function LoginModal() {
           <ControlledModal.Header>{__('Log in')}</ControlledModal.Header>
           <ControlledModal.Body>
             <Form
-              name="login_tritium"
+              name="login"
               initialValues={initialValues}
               onSubmit={formSubmit({
                 submit: async ({ username, password, pin }) => {

@@ -4,7 +4,7 @@ import FormField from 'components/FormField';
 import LoginModal from 'components/LoginModal';
 import Spinner from 'components/Spinner';
 import { formSubmit, checkAll, required, minChars } from 'lib/form';
-import { callApi } from 'lib/tritiumApi';
+import { callApi } from 'lib/api';
 import { openModal } from 'lib/ui';
 import { openSuccessDialog, confirmPasswordPin } from 'lib/dialog';
 

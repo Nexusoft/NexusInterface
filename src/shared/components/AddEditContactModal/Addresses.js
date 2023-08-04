@@ -9,7 +9,7 @@ import Icon from 'components/Icon';
 import Button from 'components/Button';
 import Form from 'components/Form';
 import { required, checkAll, useFieldValue } from 'lib/form';
-import { callApi } from 'lib/tritiumApi';
+import { callApi } from 'lib/api';
 import { timing } from 'styles';
 import plusIcon from 'icons/plus.svg';
 

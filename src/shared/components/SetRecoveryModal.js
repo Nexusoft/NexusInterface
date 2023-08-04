@@ -11,7 +11,7 @@ import TextField from 'components/TextField';
 import Button from 'components/Button';
 import Select from 'components/Select';
 import Spinner from 'components/Spinner';
-import { callApi } from 'lib/tritiumApi';
+import { callApi } from 'lib/api';
 import { formSubmit, checkAll, required, minChars } from 'lib/form';
 import { openModal } from 'lib/ui';
 import { openSuccessDialog, openErrorDialog } from 'lib/dialog';

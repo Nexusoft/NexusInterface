@@ -6,7 +6,7 @@ import Button from 'components/Button';
 import FormField from 'components/FormField';
 import { formSubmit, checkAll, useFieldValue } from 'lib/form';
 import { confirm, confirmPin } from 'lib/dialog';
-import { callApi } from 'lib/tritiumApi';
+import { callApi } from 'lib/api';
 import { loadAccounts, loadOwnedTokens } from 'lib/user';
 import { openModal, showNotification } from 'lib/ui';
 import NewAccountModal from 'components/NewAccountModal';
