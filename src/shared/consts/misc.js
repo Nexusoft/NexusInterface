@@ -1,5 +1,3 @@
-import settings from 'data/initialSettings';
-
 /*
   Misc short-hands to use within the wallet.
 */
@@ -18,11 +16,6 @@ export const webGLAvailable = (() => {
     return false;
   }
 })();
-
-/**
- * Short-hand to see if the wallet is running in legacy mode.
- */
-export const legacyMode = false; //settings.legacyMode === false ? false : true;
 
 /**
  * Regex to get a SemVer from a string

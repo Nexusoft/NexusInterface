@@ -177,7 +177,6 @@ export default function NexusApiConsole() {
       if (err.message !== undefined) {
         printCommandError(tab + `Error: ${err.message}(errorcode ${err.code})`);
       } else {
-        // This is the error if the rpc is unavailable
         try {
           printCommandError(tab + err.err.message);
         } catch (e) {

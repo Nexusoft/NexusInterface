@@ -99,11 +99,6 @@ const formKeys = [
   'allowAdvancedCoreOptions',
   'advancedCoreParams',
   'manualDaemonIP',
-  'manualDaemonSSL',
-  'manualDaemonPort',
-  'manualDaemonPortSSL',
-  'manualDaemonUser',
-  'manualDaemonPassword',
   'manualDaemonApiSSL',
   'manualDaemonApiPort',
   'manualDaemonApiPortSSL',
@@ -112,8 +107,6 @@ const formKeys = [
   'embeddedCoreUseNonSSL',
   'embeddedCoreApiPort',
   'embeddedCoreApiPortSSL',
-  'embeddedCoreRpcPort',
-  'embeddedCoreRpcPortSSL',
 ];
 
 const getInitialValues = (() => {

@@ -9,7 +9,6 @@ import Panel from 'components/Panel';
 import RequireLoggedIn from 'components/RequireLoggedIn';
 import { isLoggedIn } from 'selectors';
 import { navigate } from 'lib/wallet';
-import { legacyMode } from 'consts/misc';
 import userIcon from 'icons/user.svg';
 
 // Internal Local
@@ -29,9 +28,6 @@ export default function UserPage() {
   const loggedIn = useSelector(isLoggedIn);
 
   useEffect(() => {
-    if (legacyMode) {
-      navigate('/');
-    }
     GA.SendScreen('UserPage');
   }, []);
 

@@ -10,7 +10,6 @@ import { prepareCoreInfo } from 'lib/coreInfo';
 import { prepareCoreOutput } from 'lib/coreOutput';
 import { prepareMarket } from 'lib/market';
 import { prepareTransactions } from 'lib/tritiumTransactions';
-import { prepareUser } from 'lib/user';
 import { prepareModules, prepareWebView } from 'lib/modules';
 import { prepareUpdater } from 'lib/updater';
 import initialSettings from 'data/initialSettings';
@@ -24,7 +23,6 @@ async function run() {
   } finally {
     prepareWallet();
     prepareCoreInfo();
-    prepareUser();
     prepareMarket();
     prepareModules();
 

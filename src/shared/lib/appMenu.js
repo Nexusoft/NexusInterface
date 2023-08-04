@@ -5,9 +5,8 @@ import fs from 'fs';
 // Internal
 import store, { observeStore } from 'store';
 import { toggleWebViewDevTools, getActiveWebView } from 'lib/modules';
-import { updateSettings } from 'lib/settings';
 import { startCore, stopCore } from 'lib/core';
-import { backupWallet as backup, navigate } from 'lib/wallet';
+import { navigate } from 'lib/wallet';
 import { showNotification, openModal } from 'lib/ui';
 import { bootstrap } from 'lib/bootstrap';
 import { isCoreConnected } from 'selectors';
@@ -38,26 +37,6 @@ const menuItems = preprocess({
   separator: {
     type: 'separator',
   },
-  // switchLegacyMode: {
-  //   label: __('Switch to Legacy Mode'),
-  //   click: async () => {
-  //     const confirmed = await confirm({
-  //       question: __('Are you sure you want to switch to Legacy Mode?'),
-  //       skinYes: 'danger',
-  //     });
-  //     if (confirmed) {
-  //       updateSettings({ legacyMode: true });
-  //       location.reload();
-  //     }
-  //   },
-  // },
-  // switchTritiumMode: {
-  //   label: __('Switch to Tritium Mode'),
-  //   click: () => {
-  //     updateSettings({ legacyMode: false });
-  //     location.reload();
-  //   },
-  // },
   startCoreMenu: {
     label: __('Start Nexus Core'),
     click: startCore,
@@ -77,44 +56,6 @@ const menuItems = preprocess({
     label: __('About'),
     click: () => {
       openModal(AboutModal);
-    },
-  },
-  backupWallet: {
-    label: __('Backup Wallet'),
-    click: async () => {
-      const state = store.getState();
-      const folderPaths = await ipcRenderer.invoke('show-open-dialog', {
-        title: 'Select a folder',
-        defaultPath: state.settings.backupDirectory,
-        properties: ['openDirectory'],
-      });
-
-      if (!isCoreConnected(state)) {
-        showNotification(__('Nexus Core is not connected'));
-        return;
-      }
-
-      if (folderPaths && folderPaths.length > 0) {
-        updateSettings({ backupDirectory: folderPaths[0] });
-
-        await backup(folderPaths[0]);
-        showNotification(__('Wallet backed up'), 'success');
-      }
-    },
-  },
-  viewBackups: {
-    label: __('View Backups'),
-    click: () => {
-      let BackupDir = process.env.HOME + '/NexusBackups';
-      if (process.platform === 'win32') {
-        BackupDir = process.env.USERPROFILE + '/NexusBackups';
-        BackupDir = BackupDir.replace(/\\/g, '/');
-      }
-      let backupDirExists = fs.existsSync(BackupDir);
-      if (!backupDirExists) {
-        fs.mkdirSync(BackupDir);
-      }
-      shell.openPath(BackupDir);
     },
   },
   cut: {
@@ -313,11 +254,6 @@ function buildDarwinTemplate() {
           ? menuItems.stopCoreMenu
           : menuItems.startCoreMenu
         : null,
-      // legacyMode
-      //   ? menuItems.switchTritiumMode
-      //   : systemInfo?.litemode || systemInfo?.nolegacy
-      //   ? null
-      //   : menuItems.switchLegacyMode,
       menuItems.separator,
       menuItems.quitNexus,
     ].filter((e) => e),
@@ -325,12 +261,9 @@ function buildDarwinTemplate() {
 
   const subMenuFile = {
     label: __('File'),
-    submenu: [
-      // legacyMode ? menuItems.backupWallet : null,
-      // legacyMode ? menuItems.viewBackups : null,
-      // legacyMode ? menuItems.separator : null,
-      !systemInfo?.litemode ? menuItems.downloadRecent : null,
-    ].filter((e) => e),
+    submenu: [!systemInfo?.litemode ? menuItems.downloadRecent : null].filter(
+      (e) => e
+    ),
   };
   const subMenuEdit = {
     label: __('Edit'),
@@ -341,7 +274,6 @@ function buildDarwinTemplate() {
     submenu: [
       menuItems.appSettings,
       menuItems.coreSettings,
-      // legacyMode ? menuItems.keyManagement : null,
       menuItems.styleSettings,
       menuItems.moduleSettings,
     ].filter((e) => e),
@@ -400,9 +332,6 @@ function buildDefaultTemplate() {
   const subMenuFile = {
     label: __('File'),
     submenu: [
-      // legacyMode ? menuItems.backupWallet : null,
-      // legacyMode ? menuItems.viewBackups : null,
-      // menuItems.separator,
       !systemInfo?.litemode ? menuItems.downloadRecent : null,
       menuItems.separator,
       // If it's in remote core mode and core is not running, don't show
@@ -412,11 +341,6 @@ function buildDefaultTemplate() {
           ? menuItems.stopCoreMenu
           : menuItems.startCoreMenu
         : null,
-      // legacyMode
-      //   ? menuItems.switchTritiumMode
-      //   : systemInfo?.litemode || systemInfo?.nolegacy
-      //   ? null
-      //   : menuItems.switchLegacyMode,
       menuItems.separator,
       menuItems.quitNexus,
     ].filter((e) => e),
@@ -427,7 +351,6 @@ function buildDefaultTemplate() {
     submenu: [
       menuItems.appSettings,
       menuItems.coreSettings,
-      // legacyMode ? menuItems.keyManagement : null,
       menuItems.styleSettings,
       menuItems.moduleSettings,
     ].filter((e) => e),

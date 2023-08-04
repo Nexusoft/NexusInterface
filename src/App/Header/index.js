@@ -9,10 +9,9 @@ import HorizontalLine from 'components/HorizontalLine';
 import { consts, timing, animations } from 'styles';
 import * as color from 'utils/color';
 import { isCoreConnected } from 'selectors';
-import { alphaRelease, betaRelease, legacyMode } from 'consts/misc';
+import { alphaRelease, betaRelease } from 'consts/misc';
 
 // Internal Local
-import StatusIcons from './StatusIcons';
 import StatusIconsTritium from './StatusIconsTritium';
 import WalletStatus from './WalletStatus';
 import logoFull from 'icons/logo-full.svg';
@@ -91,7 +90,6 @@ export default function Header() {
   const coreConnected = useSelector(isCoreConnected);
   const testnet = useSelector((state) => state.core.systemInfo?.testnet);
   const privateNet = useSelector((state) => state.core.systemInfo?.private);
-  const legacyTestnet = useSelector((state) => state.core.info?.testnet);
   const lite = useSelector((state) => state.core.systemInfo?.litemode);
   const hybrid = useSelector((state) => state.core.systemInfo?.hybrid);
 
@@ -104,21 +102,10 @@ export default function Header() {
       </LogoLink>
 
       <ModeDisplay>
-        {legacyMode ? (
-          <>
-            {__('Legacy Mode')}
-            {lite && ` [${__('Lite')}]`}
-            {!!legacyTestnet && ' - testnet'}
-          </>
-        ) : (
-          <>
-            {__('Tritium Mode')}
-            {lite && ` [${__('Lite')}]`}
-            {hybrid && ` [${__('Hybrid')}]`}
-            {!!testnet &&
-              ` -${privateNet ? ' private' : ''} testnet ${testnet}`}
-          </>
-        )}
+        {__('Tritium Mode')}
+        {lite && ` [${__('Lite')}]`}
+        {hybrid && ` [${__('Hybrid')}]`}
+        {!!testnet && ` -${privateNet ? ' private' : ''} testnet ${testnet}`}
       </ModeDisplay>
 
       <UnderHeader>
@@ -126,7 +113,7 @@ export default function Header() {
         <WalletStatus />
       </UnderHeader>
 
-      {coreConnected && (legacyMode ? <StatusIcons /> : <StatusIconsTritium />)}
+      {coreConnected && <StatusIconsTritium />}
     </HeaderComponent>
   );
 }

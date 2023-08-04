@@ -8,21 +8,18 @@ import GA from 'lib/googleAnalytics';
 // Internal Global
 import Panel from 'components/Panel';
 import RouterHorizontalTab from 'components/RouterHorizontalTab';
-import { legacyMode } from 'consts/misc';
 import { selectModuleUpdateCount } from 'selectors';
 
 // Internal Local
 import SettingsApp from './App';
 import SettingsCore from './Core';
 import SettingsStyle from './Style';
-import SettingsSecurity from './Security';
 import SettingsModules from './Modules';
 
 // Images
 import settingsIcon from 'icons/settings.svg';
 import coreIcon from 'icons/core.svg';
 import logoIcon from 'icons/logo.svg';
-import lockIcon from 'icons/padlock.svg';
 import leafIcon from 'icons/leaf.svg';
 import legoIcon from 'icons/lego-block.svg';
 
@@ -94,13 +91,6 @@ export default function Settings() {
             text={__('Application')}
           />
           <RouterHorizontalTab link="Core" icon={coreIcon} text={__('Core')} />
-          {legacyMode && (
-            <RouterHorizontalTab
-              link="Security"
-              icon={lockIcon}
-              text={__('Security')}
-            />
-          )}
           <RouterHorizontalTab
             link="Style"
             icon={leafIcon}
@@ -125,9 +115,6 @@ export default function Settings() {
             <Routes>
               <Route path="App" element={<SettingsApp />} />
               <Route path="Core" element={<SettingsCore />} />
-              {legacyMode && (
-                <Route path="Security" element={<SettingsSecurity />} />
-              )}
               <Route path="Style" element={<SettingsStyle />} />
               <Route path="Modules" element={<SettingsModules />} />
               <Route path="*" element={<SettingsRedirect />} />

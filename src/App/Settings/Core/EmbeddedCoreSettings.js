@@ -12,12 +12,10 @@ import { confirm, openErrorDialog } from 'lib/dialog';
 import { restartCore, stopCore, startCore } from 'lib/core';
 import { defaultConfig } from 'lib/coreConfig';
 import { isCoreConnected } from 'selectors';
-import { legacyMode, preRelease } from 'consts/misc';
+import { preRelease } from 'consts/misc';
 import { rm as deleteDirectory } from 'fs/promises';
 import { consts } from 'styles';
 import store from 'store';
-
-import RescanButton from './RescanButton';
 
 __ = __context('Settings.Core');
 
@@ -67,8 +65,6 @@ export default function EmbeddedCoreSettings() {
       <TestnetSettings />
 
       <PortSettings />
-
-      <LegacySettings />
 
       <SettingsField
         connectLabel
@@ -348,18 +344,6 @@ function PortSettings() {
 
       <SettingsField
         connectLabel
-        label={__('RPC SSL Port')}
-        subLabel={__('Nexus RPC server SSL Port')}
-      >
-        <Form.TextField
-          name="embeddedCoreRpcPortSSL"
-          placeholder={defaultConfig.portSSL}
-          size="5"
-        />
-      </SettingsField>
-
-      <SettingsField
-        connectLabel
         label={__('Use non-SSL Ports')}
         subLabel={__(
           'Connect to Nexus Core using non-SSL Ports (less secured)'
@@ -380,64 +364,7 @@ function PortSettings() {
           size="5"
         />
       </SettingsField>
-
-      <SettingsField
-        connectLabel
-        indent={1}
-        label={__('RPC non-SSL Port')}
-        subLabel={__('Nexus RPC server non-SSL Port')}
-      >
-        <Form.TextField
-          name="embeddedCoreRpcPort"
-          placeholder={defaultConfig.port}
-          size="5"
-        />
-      </SettingsField>
     </>
-  );
-}
-
-function LegacySettings() {
-  const coreConnected = useSelector(isCoreConnected);
-  return (
-    !!legacyMode && (
-      <>
-        <SettingsField
-          connectLabel
-          label={__('Avatar Mode')}
-          subLabel={__(
-            'Disabling Avatar will make the core use a separate change key'
-          )}
-        >
-          <Form.Switch name="avatarMode" />
-        </SettingsField>
-
-        <SettingsField
-          connectLabel
-          label={__('Rescan wallet')}
-          subLabel={__(
-            'Used to correct transaction/balance issues, scans over every block in the database. Could take up to 10 minutes.'
-          )}
-        >
-          <RescanButton disabled={!coreConnected} />
-        </SettingsField>
-
-        <SettingsField
-          connectLabel
-          label={__('Reload transaction history')}
-          subLabel={__(
-            'Restart Nexus core with -walletclean parameter to clean out and reload all transaction history'
-          )}
-        >
-          <Button
-            onClick={reloadTxHistory}
-            style={{ height: consts.inputHeightEm + 'em' }}
-          >
-            {__('Reload')}
-          </Button>
-        </SettingsField>
-      </>
-    )
   );
 }
 

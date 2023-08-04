@@ -7,9 +7,7 @@ import http from 'http';
 import unzip from 'unzip-stream';
 
 // Internal
-import { backupWallet } from 'lib/wallet';
-import rpc from 'lib/rpc';
-import store, { observeStore } from 'store';
+import store from 'store';
 import { startCore, stopCore } from 'lib/core';
 import { showNotification, openModal } from 'lib/ui';
 import { confirm, openErrorDialog, openSuccessDialog } from 'lib/dialog';
@@ -19,7 +17,6 @@ import move from 'utils/move';
 import * as TYPE from 'consts/actionTypes';
 import { updateSettings } from 'lib/settings';
 import BootstrapModal from 'components/BootstrapModal';
-import { legacyMode } from 'consts/misc';
 import { isSynchronized } from 'selectors';
 
 __ = __context('Bootstrap');
@@ -66,15 +63,6 @@ async function startBootstrap() {
 
     aborting = false;
 
-    if (!systemInfo?.nolegacy) {
-      setStatus('backing_up');
-      await backupWallet(backupDirectory);
-      if (aborting) {
-        bootstrapEvents.emit('abort');
-        return false;
-      }
-    }
-
     // Remove the old file if exists
     setStatus('preparing');
     await cleanUp(extractDir);
@@ -111,15 +99,6 @@ async function startBootstrap() {
 
     setStatus('restarting_core');
     await startCore();
-
-    if (await shouldRescan()) {
-      setStatus('rescanning');
-      try {
-        await rpc('rescan', []);
-      } catch (err) {
-        console.error(err);
-      }
-    }
 
     setStatus('cleaning_up');
     await cleanUp(extractDir);
@@ -188,38 +167,6 @@ function downloadDb({ downloadProgress, extractDir }) {
     // Ensure downloadRequest is always cleaned up
     downloadRequest = null;
     clearTimeout(timerId);
-  });
-}
-
-function shouldRescan() {
-  return new Promise((resolve) => {
-    if (legacyMode) return true;
-
-    const {
-      core: { systemInfo },
-    } = store.getState();
-
-    if (systemInfo) {
-      resolve(!systemInfo.nolegacy);
-    } else {
-      // Core might not be ready right away. In that case,
-      // wait until systemInfo is available
-      const unobserve = observeStore(
-        (state) => state.core.systemInfo,
-        (systemInfo) => {
-          if (systemInfo) {
-            unobserve();
-            resolve(!systemInfo.nolegacy);
-            clearTimeout(timeoutId);
-          }
-        }
-      );
-      // Wait at most 5s
-      const timeoutId = setTimeout(() => {
-        unobserve();
-        resolve(false);
-      }, 5000);
-    }
   });
 }
 

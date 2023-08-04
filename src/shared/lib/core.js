@@ -3,7 +3,6 @@ import log from 'electron-log';
 
 import * as TYPE from 'consts/actionTypes';
 import store from 'store';
-import rpc from 'lib/rpc';
 import { loadNexusConf, saveCoreConfig } from 'lib/coreConfig';
 import { callApi } from 'lib/tritiumApi';
 import { updateSettings } from 'lib/settings';
@@ -19,11 +18,6 @@ export const getLedgerInfo = async () => {
     store.dispatch({ type: TYPE.CLEAR_LEDGER_INFO });
     console.error('ledger/get/info failed', err);
   }
-};
-
-export const getDifficulty = async () => {
-  const diff = await rpc('getdifficulty', []);
-  store.dispatch({ type: TYPE.GET_DIFFICULTY, payload: diff });
 };
 
 /**
@@ -68,17 +62,13 @@ export const startCore = async () => {
   const params = [
     '-daemon',
     '-server',
-    '-rpcthreads=4',
     '-fastsync',
     '-noterminateauth',
     '-ssl=1',
     '-apissl=1',
-    '-rpcssl=1',
     '-p2pssl=1',
     `-datadir=${settings.coreDataDir}`,
-    `-rpcsslport=${conf.portSSL}`,
     `-apisslport=${conf.apiPortSSL}`,
-    `-rpcport=${conf.port}`,
     `-apiport=${conf.apiPort}`,
     `-verbose=${preRelease ? 3 : settings.verboseLevel}`,
   ];

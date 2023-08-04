@@ -13,9 +13,7 @@ import {
 } from 'lib/dialog';
 import { popupContextMenu, defaultMenu } from 'lib/contextMenu';
 import { goToSend } from 'lib/send';
-import rpc from 'lib/rpc';
 import { callApi } from 'lib/tritiumApi';
-import { legacyMode } from 'consts/misc';
 import memoize from 'utils/memoize';
 
 import { readModuleStorage, writeModuleStorage } from './storage';
@@ -49,7 +47,7 @@ const getWalletData = ({
 }) => ({
   theme,
   settings: getSettingsForModules(locale, fiatCurrency, addressStyle),
-  coreInfo: legacyMode ? core.info : core.systemInfo,
+  coreInfo: core.systemInfo,
   userStatus: status,
   addressBook,
 });
@@ -70,9 +68,6 @@ function handleIpcMessage(event) {
   switch (channel) {
     case 'send':
       send(args, webview);
-      break;
-    case 'rpc-call':
-      rpcCall(args, webview);
       break;
     case 'api-call':
       apiCall(args, webview);
@@ -115,32 +110,7 @@ function handleIpcMessage(event) {
 
 function send([{ sendFrom, recipients, advancedOptions }]) {
   if (!Array.isArray(recipients)) return;
-  if (legacyMode) {
-    const sendTo = recipients?.[0]?.address;
-    if (sendTo) {
-      navigate('/Send?sendTo=' + sendTo);
-    }
-  } else {
-    goToSend({ sendFrom, recipients, advancedOptions });
-  }
-}
-
-async function rpcCall([command, params, callId], webview) {
-  try {
-    const response = await rpc(command, ...(params || []));
-    if (webview) {
-      webview.send(
-        `rpc-return${callId ? `:${callId}` : ''}`,
-        null,
-        response && JSON.parse(JSON.stringify(response))
-      );
-    }
-  } catch (err) {
-    console.error(err);
-    if (webview) {
-      webview.send(`rpc-return${callId ? `:${callId}` : ''}`, err);
-    }
-  }
+  goToSend({ sendFrom, recipients, advancedOptions });
 }
 
 async function apiCall([endpoint, params, callId], webview) {
@@ -376,7 +346,7 @@ export function prepareWebView() {
   );
 
   observeStore(
-    (state) => (legacyMode ? state.core.info : state.core.systemInfo),
+    (state) => state.core.systemInfo,
     (coreInfo) => {
       sendWalletDataUpdated({ coreInfo });
     }

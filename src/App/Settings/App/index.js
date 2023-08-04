@@ -7,16 +7,13 @@ import * as AutoLaunch from 'auto-launch';
 // Internal Global
 import { updateSettings } from 'lib/settings';
 import { switchSettingsTab, showNotification } from 'lib/ui';
-import { backupWallet } from 'lib/wallet';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
-import TextField from 'components/TextField';
 import Select from 'components/Select';
 import Switch from 'components/Switch';
 import Icon from 'components/Icon';
 import { confirm, openErrorDialog } from 'lib/dialog';
 import * as form from 'utils/form';
-import { legacyMode } from 'consts/misc';
 import { isCoreConnected } from 'selectors';
 import warningIcon from 'icons/warning.svg';
 import {
@@ -172,22 +169,6 @@ export default function SettingsApp() {
     switchSettingsTab('App');
   }, []);
 
-  const confirmBackupWallet = async () => {
-    const confirmed = await confirm({
-      question: __('Backup wallet'),
-    });
-    if (confirmed) {
-      if (coreConnected) {
-        backupWallet(settings.backupDirectory);
-        showNotification(__('Wallet has been backed up'), 'success');
-      } else {
-        openErrorDialog({
-          message: __('Connecting to Nexus Core'),
-        });
-      }
-    }
-  };
-
   const updateHandlers = (settingName) => (input) =>
     updateSettings({
       [settingName]: form.resolveValue(input),
@@ -300,30 +281,6 @@ export default function SettingsApp() {
         />
       </SettingsField>
 
-      {legacyMode && (
-        <SettingsField
-          connectLabel
-          label={__('Minimum confirmations')}
-          subLabel={__(
-            'Minimum amount of confirmations before a block is accepted. Local only.'
-          )}
-        >
-          <TextField
-            type="number"
-            value={settings.minConfirmations}
-            step="1"
-            min="1"
-            onChange={updateHandlers('minConfirmations')}
-            onKeyPress={(e) => {
-              e.preventDefault();
-            }}
-            style={{ width: 75 }}
-          />
-        </SettingsField>
-      )}
-
-      {legacyMode && <BackupDirSetting />}
-
       <SettingsField
         connectLabel
         label={__('Developer mode')}
@@ -364,31 +321,7 @@ export default function SettingsApp() {
             onChange={updateHandlers('allowSymLink')}
           />
         </SettingsField>
-
-        {legacyMode && (
-          <SettingsField
-            indent={1}
-            connectLabel
-            label={__('Fake Test Transactions')}
-            subLabel={__('Display Test Transactions on the Transactions page')}
-          >
-            <Switch
-              checked={settings.fakeTransactions}
-              onChange={updateHandlers('fakeTransactions')}
-            />
-          </SettingsField>
-        )}
       </div>
-
-      {legacyMode && (
-        <Button
-          disabled={!coreConnected}
-          style={{ marginTop: '2em' }}
-          onClick={confirmBackupWallet}
-        >
-          {__('Backup wallet')}
-        </Button>
-      )}
     </>
   );
 }

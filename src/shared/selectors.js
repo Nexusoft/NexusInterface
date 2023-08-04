@@ -1,22 +1,14 @@
-import { legacyMode } from 'consts/misc';
 import memoize from 'utils/memoize';
 
-export const isCoreConnected = legacyMode
-  ? ({ core: { info } }) =>
-      !!(info && (info.connections || info.connections === 0))
-  : ({ core: { systemInfo } }) => !!systemInfo;
+export const isCoreConnected = ({ core: { systemInfo } }) => !!systemInfo;
 
-export const isStaking = legacyMode
-  ? ({ core: { info } }) => !!info && info.staking === 'Started'
-  : ({ user: { stakeInfo } }) => !!(stakeInfo && stakeInfo.staking);
+export const isStaking = ({ user: { stakeInfo } }) =>
+  !!(stakeInfo && stakeInfo.staking);
 
-export const isSynchronized = legacyMode
-  ? ({ core: { info } }) => !!info && info.synccomplete === 100
-  : ({ core: { systemInfo } }) => !systemInfo?.syncing;
+export const isSynchronized = ({ core: { systemInfo } }) =>
+  !systemInfo?.syncing;
 
-export const isLoggedIn = legacyMode
-  ? () => false
-  : ({ user }) => !!(user && user.status);
+export const isLoggedIn = ({ user }) => !!(user && user.status);
 
 export const selectBalances = memoize(
   (balances) => {

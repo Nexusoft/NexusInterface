@@ -1,16 +1,12 @@
 import { createRef, useRef, useEffect } from 'react';
-import MigrateAccountModal from 'components/MigrateAccountModal';
 import ExternalLink from 'components/ExternalLink';
 import BackgroundTask from 'components/BackgroundTask';
 import * as TYPE from 'consts/actionTypes';
 import store, { observeStore } from 'store';
-import { legacyMode } from 'consts/misc';
 import { callApi } from 'lib/tritiumApi';
-import rpc from 'lib/rpc';
-import { openModal, showBackgroundTask, showNotification } from 'lib/ui';
+import { showBackgroundTask, showNotification } from 'lib/ui';
 import { confirm } from 'lib/dialog';
 import { updateSettings } from 'lib/settings';
-import { isLoggedIn } from 'selectors';
 import listAll from 'utils/listAll';
 import sleep from 'utils/promisified/sleep';
 
@@ -249,87 +245,17 @@ function processAccount(account) {
   }
 }
 
-export const loadAccounts = legacyMode
-  ? // Legacy Mode
-    async () => {
-      const accList = await rpc('listaccounts', []);
-
-      const addrList = await Promise.all(
-        Object.keys(accList || {}).map((account) =>
-          rpc('getaddressesbyaccount', [account])
-        )
-      );
-
-      const validateAddressPromises = addrList.reduce(
-        (list, element) => [
-          ...list,
-          ...element.map((address) => rpc('validateaddress', [address])),
-        ],
-        []
-      );
-      const validations = await Promise.all(validateAddressPromises);
-
-      const accountList = [];
-      validations.forEach((e) => {
-        if (e.ismine && e.isvalid) {
-          const index = accountList.findIndex(
-            (ele) => ele.account === e.account
-          );
-          const indexDefault = accountList.findIndex(
-            (ele) => ele.account === 'default'
-          );
-
-          if (e.account === '' || e.account === 'default') {
-            if (index === -1 && indexDefault === -1) {
-              accountList.push({
-                account: 'default',
-                addresses: [e.address],
-              });
-            } else {
-              accountList[indexDefault].addresses.push(e.address);
-            }
-          } else {
-            if (index === -1) {
-              accountList.push({
-                account: e.account,
-                addresses: [e.address],
-              });
-            } else {
-              accountList[index].addresses.push(e.address);
-            }
-          }
-        }
-      });
-
-      accountList.forEach((acc) => {
-        const accountName = acc.account || 'default';
-        if (accountName === 'default') {
-          acc.balance =
-            accList['default'] !== undefined ? accList['default'] : accList[''];
-        } else {
-          acc.balance = accList[accountName];
-        }
-      });
-
-      store.dispatch({ type: TYPE.MY_ACCOUNTS_LIST, payload: accountList });
-    }
-  : // Tritium Mode
-    async () => {
-      try {
-        const accounts = await callApi('finance/list/any');
-        accounts.forEach(processAccount);
-        store.dispatch({
-          type: TYPE.SET_TRITIUM_ACCOUNTS,
-          payload: accounts,
-        });
-      } catch (err) {
-        console.error('account listing failed', err);
-      }
-    };
-
-export const updateAccountBalances = async () => {
-  const accList = await rpc('listaccounts', []);
-  store.dispatch({ type: TYPE.UPDATE_MY_ACCOUNTS, payload: accList });
+export const loadAccounts = async () => {
+  try {
+    const accounts = await callApi('finance/list/any');
+    accounts.forEach(processAccount);
+    store.dispatch({
+      type: TYPE.SET_TRITIUM_ACCOUNTS,
+      payload: accounts,
+    });
+  } catch (err) {
+    console.error('account listing failed', err);
+  }
 };
 
 export const loadNameRecords = async () => {
@@ -369,26 +295,6 @@ export const loadAssets = async () => {
     console.error('assets/list/assets failed', err);
   }
 };
-
-export function prepareUser() {
-  if (!legacyMode) {
-    observeStore(isLoggedIn, async (loggedIn) => {
-      if (loggedIn) {
-        const {
-          settings: { migrateSuggestionDisabled },
-          core: { systemInfo },
-        } = store.getState();
-        if (!migrateSuggestionDisabled && !systemInfo?.nolegacy) {
-          const coreInfo = await rpc('getinfo', []);
-          const legacyBalance = (coreInfo.balance || 0) + (coreInfo.stake || 0);
-          if (legacyBalance) {
-            openModal(MigrateAccountModal, { legacyBalance });
-          }
-        }
-      }
-    });
-  }
-}
 
 async function shouldUnlockStaking(stakeInfo) {
   const {

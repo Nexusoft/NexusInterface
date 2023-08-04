@@ -159,8 +159,8 @@ export async function killCoreProcess() {
 }
 
 /**
- * Execute either an API call or RPC call by using the shell to execute the core path plus a command.
- * @param {string} command API/RPC command to run
+ * Execute either an API call  by using the shell to execute the core path plus a command.
+ * @param {string} command API command to run
  * @returns {object} the result of the command
  * @memberof Core
  */

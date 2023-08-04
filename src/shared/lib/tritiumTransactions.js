@@ -7,7 +7,6 @@ import { formatNumber } from 'lib/intl';
 import { showNotification } from 'lib/ui';
 import { openErrorDialog } from 'lib/dialog';
 import TokenName from 'components/TokenName';
-import { legacyMode } from 'consts/misc';
 import { isLoggedIn } from 'selectors';
 
 const isConfirmed = (tx) => !tx.confirmations;
@@ -293,53 +292,51 @@ export async function fetchTransaction(txid) {
 }
 
 export function prepareTransactions() {
-  if (!legacyMode) {
-    observeStore(
-      ({ user: { profileStatus } }) => profileStatus,
-      async (status, oldStatus) => {
-        // Skip if user was just switched
-        if (status?.genesis !== oldStatus?.genesis) return;
+  observeStore(
+    ({ user: { profileStatus } }) => profileStatus,
+    async (status, oldStatus) => {
+      // Skip if user was just switched
+      if (status?.genesis !== oldStatus?.genesis) return;
 
-        const txCount = status?.transactions;
-        const oldTxCount = oldStatus?.transactions;
-        if (
-          typeof txCount === 'number' &&
-          typeof oldTxCount === 'number' &&
-          txCount > oldTxCount
-        ) {
-          const transactions = await callApi('profiles/transactions/master', {
-            verbose: 'summary',
-            limit: txCount - oldTxCount,
-          });
+      const txCount = status?.transactions;
+      const oldTxCount = oldStatus?.transactions;
+      if (
+        typeof txCount === 'number' &&
+        typeof oldTxCount === 'number' &&
+        txCount > oldTxCount
+      ) {
+        const transactions = await callApi('profiles/transactions/master', {
+          verbose: 'summary',
+          limit: txCount - oldTxCount,
+        });
 
-          for (const tx of transactions) {
-            const changes = getBalanceChanges(tx);
-            if (changes.length) {
-              const changeLines = changes.map(
-                (change) =>
-                  `${change.amount >= 0 ? '+' : ''}${formatNumber(
-                    change.amount,
-                    6
-                  )} ${TokenName.from({ contract: change })}`
-              );
-              showDesktopNotif(__('New transaction'), changeLines.join(' \n'));
-              showNotification(
-                `${__('New transaction')}: ${changeLines.join(' | ')}`,
-                'success'
-              );
-            }
-          }
-
-          const filteredTransactions = filterTransactions(transactions);
-          if (filteredTransactions.length) {
-            store.dispatch({
-              type: TYPE.ADD_TRITIUM_TRANSACTIONS,
-              payload: filteredTransactions,
-            });
-            watchIfUnconfirmed(filteredTransactions);
+        for (const tx of transactions) {
+          const changes = getBalanceChanges(tx);
+          if (changes.length) {
+            const changeLines = changes.map(
+              (change) =>
+                `${change.amount >= 0 ? '+' : ''}${formatNumber(
+                  change.amount,
+                  6
+                )} ${TokenName.from({ contract: change })}`
+            );
+            showDesktopNotif(__('New transaction'), changeLines.join(' \n'));
+            showNotification(
+              `${__('New transaction')}: ${changeLines.join(' | ')}`,
+              'success'
+            );
           }
         }
+
+        const filteredTransactions = filterTransactions(transactions);
+        if (filteredTransactions.length) {
+          store.dispatch({
+            type: TYPE.ADD_TRITIUM_TRANSACTIONS,
+            payload: filteredTransactions,
+          });
+          watchIfUnconfirmed(filteredTransactions);
+        }
       }
-    );
-  }
+    }
+  );
 }

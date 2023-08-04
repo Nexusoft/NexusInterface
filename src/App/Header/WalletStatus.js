@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux';
 
 // Internal
 import CoreStatus from 'components/CoreStatus';
-import { legacyMode } from 'consts/misc';
 import { isCoreConnected, isLoggedIn } from 'selectors';
 import styled from '@emotion/styled';
 
@@ -27,7 +26,7 @@ export default function WalletStatus() {
       <CoreStatus />
     </span>
   ) : (
-    (!legacyMode && !loggedIn && (
+    (!loggedIn && (
       <span className="dim">{__("You're not logged in")}. </span>
     )) ||
       (!!(isInDanger && staking) && (

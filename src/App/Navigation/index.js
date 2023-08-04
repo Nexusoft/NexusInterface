@@ -7,7 +7,6 @@ import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import ModuleIcon from 'components/ModuleIcon';
 import { consts, timing } from 'styles';
-import { legacyMode } from 'consts/misc';
 import { selectModuleUpdateCount } from 'selectors';
 
 import logoIcon from 'icons/logo.svg';
@@ -117,14 +116,14 @@ export default function Navigation() {
           {__('Overview')}
         </NavItem>
 
-        {!legacyMode && (
+        {
           <NavItem icon={userIcon} to="/User">
             {__('User')}
           </NavItem>
-        )}
+        }
 
         <NavItem icon={sendIcon} to="/Send">
-          {legacyMode ? __('Send NXS') : __('Send')}
+          {__('Send')}
         </NavItem>
 
         <NavItem icon={transactionsIcon} to="/Transactions">

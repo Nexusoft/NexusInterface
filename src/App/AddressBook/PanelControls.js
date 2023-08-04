@@ -9,9 +9,7 @@ import Icon from 'components/Icon';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
 import Tooltip from 'components/Tooltip';
-import MyAddressesModal from 'components/MyAddressesModal';
 import { openModal } from 'lib/ui';
-import { legacyMode } from 'consts/misc';
 import { isCoreConnected } from 'selectors';
 import AddEditContactModal from 'components/AddEditContactModal';
 
@@ -102,20 +100,6 @@ export default function PanelControls() {
 
   return (
     <div className="flex center">
-      {legacyMode && coreConnected && (
-        <Tooltip.Trigger tooltip={__('My Addresses')}>
-          <Button
-            skin="plain"
-            className="relative"
-            onClick={() => {
-              openModal(MyAddressesModal);
-            }}
-          >
-            <ControlIcon icon={userIcon} />
-          </Button>
-        </Tooltip.Trigger>
-      )}
-
       {coreConnected && (
         <Tooltip.Trigger tooltip={__('New contact')}>
           <Button

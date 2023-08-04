@@ -32,7 +32,7 @@ export default (state = initialState, action) => {
       };
 
     case TYPE.UPDATE_TRITIUM_TRANSACTION: {
-      if (status === 'loaded') {
+      if (state.status === 'loaded') {
         const index = state.transactions.findIndex(
           (tx) => tx.txid === action.payload.txid
         );
@@ -45,18 +45,17 @@ export default (state = initialState, action) => {
           };
         }
       }
-      return state;
+      break;
     }
 
     case TYPE.ADD_TRITIUM_TRANSACTIONS:
-      if (status === 'loaded') {
+      if (state.status === 'loaded') {
         return {
           ...state,
           transactions: [...action.payload, ...state.transactions],
         };
-      } else {
-        return state;
       }
+      break;
 
     case TYPE.DISCONNECT_CORE:
     case TYPE.ACTIVE_USER:

@@ -6,10 +6,8 @@ import { useSelector } from 'react-redux';
 // Internal Global Dependencies
 import Panel from 'components/Panel';
 import RouterHorizontalTab from 'components/RouterHorizontalTab';
-import { legacyMode } from 'consts/misc';
 
 // Internal Local Dependencies
-import TerminalConsole from './TerminalConsole';
 import NexusApiConsole from './NexusApiConsole';
 import TerminalCore from './TerminalCore';
 
@@ -44,7 +42,7 @@ export default function Terminal() {
           <RouterHorizontalTab
             link="Console"
             icon={logoIcon}
-            text={legacyMode ? __('Console') : 'Nexus API'}
+            text={'Nexus API'}
           />
           <RouterHorizontalTab
             link="Core"
@@ -54,10 +52,7 @@ export default function Terminal() {
         </TerminalTabBar>
 
         <Routes>
-          <Route
-            path="Console"
-            element={legacyMode ? <TerminalConsole /> : <NexusApiConsole />}
-          />
+          <Route path="Console" element={<NexusApiConsole />} />
           <Route path="Core" element={<TerminalCore />} />
           <Route path="*" element={<ConsoleRedirect />} />
         </Routes>
