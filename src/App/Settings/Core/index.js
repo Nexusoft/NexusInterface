@@ -1,5 +1,5 @@
 // External
-import { useEffect } from 'react';
+import { useEffect, useId } from 'react';
 import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 
@@ -19,7 +19,6 @@ import { updateSettings } from 'lib/settings';
 import { formSubmit } from 'lib/form';
 import Button from 'components/Button';
 import Switch from 'components/Switch';
-import useUID from 'utils/useUID.js';
 
 import EmbeddedCoreSettings from './EmbeddedCoreSettings';
 import RemoteCoreSettings from './RemoteCoreSettings';
@@ -179,7 +178,7 @@ function handleRestartSwitch(e) {
 }
 
 export default function SettingsCore() {
-  const switchId = useUID();
+  const switchId = useId();
   const settings = useSelector((state) => state.settings);
   const { manualDaemon } = settings;
   const restartCoreOnSave = useSelector(

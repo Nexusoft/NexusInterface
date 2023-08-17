@@ -1,5 +1,5 @@
 // External
-import { useEffect } from 'react';
+import { useEffect, useId } from 'react';
 import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 import arrayMutators from 'final-form-arrays';
@@ -19,7 +19,6 @@ import {
 } from 'lib/send';
 import { required } from 'lib/form';
 import store from 'store';
-import useUID from 'utils/useUID';
 import { timing } from 'styles';
 import sendIcon from 'icons/send.svg';
 import plusIcon from 'icons/plus.svg';
@@ -117,7 +116,7 @@ function getRecipientsParams(recipients, { advancedOptions }) {
 }
 
 export default function SendForm() {
-  const switchID = useUID();
+  const switchID = useId();
   const accountOptions = useSelector(selectAccountOptions);
   const initialValues = useInitialValues();
   useEffect(() => {
