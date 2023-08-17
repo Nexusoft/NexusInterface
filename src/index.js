@@ -1,4 +1,4 @@
-import { render } from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 
 import store from 'store';
@@ -26,11 +26,12 @@ async function run() {
     prepareMarket();
     prepareModules();
 
-    render(
+    const domNode = document.getElementById('root');
+    const root = createRoot(domNode);
+    root.render(
       <Provider store={store}>
         <App />
-      </Provider>,
-      document.getElementById('root')
+      </Provider>
     );
 
     prepareMenu();

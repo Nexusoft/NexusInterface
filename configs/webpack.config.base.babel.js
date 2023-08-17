@@ -7,7 +7,6 @@ import webpack from 'webpack';
 import { readFileSync } from 'fs';
 
 import packageJson from '../package.json';
-import { env } from 'process';
 
 const appVersion = packageJson.version;
 const buildDate = packageJson.buildDate;
