@@ -132,18 +132,6 @@ async function checkForModuleUpdate(module, { cache }) {
 //   return targetPath;
 // }
 
-// check cache for junk and remove
-function checkCache() {
-  for (const key in updateCache) {
-    if (Object.hasOwnProperty.call(updateCache, key)) {
-      if (Date.now() - cacheStaleTime * 4 > updateCache[key].time) {
-        console.log('I found extreme stale key', key);
-        delete updateCache[key];
-      }
-    }
-  }
-}
-
 export async function checkForModuleUpdates() {
   const state = store.getState();
   const modules = Object.values(state.modules);

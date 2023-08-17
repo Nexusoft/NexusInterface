@@ -243,7 +243,6 @@ export default function SettingsApp() {
                 question: 'Are you sure you want to move to mainnet?',
                 note: 'This will install the latest Alpha version of the wallet',
               });
-              console.log(confirmed);
               if (confirmed) {
                 migrateToMainnet();
               }

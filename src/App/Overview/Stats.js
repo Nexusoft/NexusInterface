@@ -106,7 +106,6 @@ function useGetBalances() {
 
 function useGetLedgerInfo() {
   useEffect(() => {
-    console.log('getLedgerInfo');
     let timeoutID;
     const updateLedgerInfo = async () => {
       const result = await getLedgerInfo();
