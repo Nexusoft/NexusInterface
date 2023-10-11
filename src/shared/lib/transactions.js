@@ -9,7 +9,7 @@ import { openErrorDialog } from 'lib/dialog';
 import TokenName from 'components/TokenName';
 import { isLoggedIn } from 'selectors';
 
-const isConfirmed = (tx) => !tx.confirmations;
+const isConfirmed = (tx) => !!tx.confirmations;
 
 const txCountPerPage = 10;
 
