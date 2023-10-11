@@ -45,7 +45,7 @@ export default (state = initialState, action) => {
           };
         }
       }
-      break;
+      return state;
     }
 
     case TYPE.ADD_TRITIUM_TRANSACTIONS:
@@ -55,7 +55,7 @@ export default (state = initialState, action) => {
           transactions: [...action.payload, ...state.transactions],
         };
       }
-      break;
+      return state;
 
     case TYPE.DISCONNECT_CORE:
     case TYPE.ACTIVE_USER:
