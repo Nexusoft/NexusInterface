@@ -67,11 +67,12 @@ function getFormValues(customValues) {
       nameOrAddress,
       amount,
     })) || [defaultRecipient],
-    advancedOptions: {
-      reference: null,
+    reference: customValues?.reference || null,
+    expiry: {
       ...getDefaultExpiry(),
-      ...customValues?.advancedOptions,
+      ...customValues?.expiry,
     },
+    advancedOptions: customValues?.advancedOptions || false,
   };
 }
 

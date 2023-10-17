@@ -73,19 +73,19 @@ export default function AdvancedFields() {
         ></FormField>
 
         <FormField label={__('Days')} className="ml1">
-          <Form.TextField name={'expireDays'} {...numberInputProps} />
+          <Form.TextField name={'expiry.expireDays'} {...numberInputProps} />
         </FormField>
 
         <FormField label={__('Hours')} className="ml0_4">
-          <Form.TextField name={'expireHours'} {...numberInputProps} />
+          <Form.TextField name={'expiry.expireHours'} {...numberInputProps} />
         </FormField>
 
         <FormField label={__('Minutes')} className="ml0_4">
-          <Form.TextField name={'expireMinutes'} {...numberInputProps} />
+          <Form.TextField name={'expiry.expireMinutes'} {...numberInputProps} />
         </FormField>
 
         <FormField label={__('Seconds')} className="ml0_4">
-          <Form.TextField name={'expireSeconds'} {...numberInputProps} />
+          <Form.TextField name={'expiry.expireSeconds'} {...numberInputProps} />
         </FormField>
       </div>
     </div>
