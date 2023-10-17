@@ -6,7 +6,6 @@ import Tooltip from 'components/Tooltip';
 import { timing } from 'styles';
 import RecipientNameOrAddress from './RecipientNameOrAddress';
 import AmountField from './AmountField';
-import AdvancedFields from './AdvancedFields';
 
 __ = __context('Send');
 
@@ -70,10 +69,7 @@ export default function Recipients({ fields }) {
   return (
     <>
       {fields.map((fieldName, i) => (
-        <Recipient
-          key={i}
-          style={fields.length > 1 ? { marginTop: '0.5em' } : undefined}
-        >
+        <Recipient key={i} style={{ marginTop: i > 0 ? '-1em' : '0.5em' }}>
           {fields.length !== 1 && (
             <Tooltip.Trigger tooltip={__('Remove recipient')}>
               <RemoveButton
@@ -93,8 +89,6 @@ export default function Recipients({ fields }) {
 
             <AmountField parentFieldName={fieldName} />
           </BaseFields>
-
-          <AdvancedFields parentFieldName={fieldName} />
         </Recipient>
       ))}
     </>

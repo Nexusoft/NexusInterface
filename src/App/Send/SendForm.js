@@ -25,6 +25,7 @@ import plusIcon from 'icons/plus.svg';
 
 // Internal Local
 import Recipients from './Recipients';
+import AdvancedFields from './AdvancedFields';
 import { selectAccountOptions } from './selectors';
 import PreviewTransactionModal from './PreviewTransactionModal';
 
@@ -176,6 +177,8 @@ export default function SendForm() {
         </FormField>
 
         <Form.FieldArray component={Recipients} name="recipients" />
+
+        <AdvancedFields />
 
         <SendFormButtons>
           <AddRecipientButton />

@@ -11,30 +11,40 @@ import memoize from 'utils/memoize';
 
 export const formName = 'send';
 
-export function getDefaultRecipient({ txExpiry } = {}) {
+export function getDefaultRecipient() {
   const recipient = {
     nameOrAddress: null,
     name: null, // hidden field
     address: null, // hidden field
     amount: '',
     fiatAmount: '',
-    reference: null,
+  };
+  return recipient;
+}
+
+function getDefaultExpiry() {
+  const expiry = {
     expireDays: 7,
     expireHours: 0,
     expireMinutes: 0,
     expireSeconds: 0,
   };
+  const txExpiry = store.getState().core.config?.txExpiry;
   if (txExpiry) {
     const { days, hours, minutes, seconds } = timeToObject(txExpiry);
-    recipient.expireDays = days;
-    recipient.expireHours = hours;
-    recipient.expireMinutes = minutes;
-    recipient.expireSeconds = seconds;
+    expiry.expireDays = days;
+    expiry.expireHours = hours;
+    expiry.expireMinutes = minutes;
+    expiry.expireSeconds = seconds;
   }
-  return recipient;
+  return expiry;
 }
 
-function getDefaultSendFrom({ user: { accounts } }) {
+function getDefaultSendFrom() {
+  const state = store.getState();
+  const {
+    user: { accounts },
+  } = state;
   if (!accounts?.[0]) return null;
   const defaultAccount = accounts.find((acc) => acc.name === 'default');
   if (defaultAccount) {
@@ -47,34 +57,21 @@ function getDefaultSendFrom({ user: { accounts } }) {
   return null;
 }
 
-function getFormValues(customValues = {}) {
-  const state = store.getState();
-  const txExpiry = state.core.config?.txExpiry;
-  const defaultRecipient = getDefaultRecipient({ txExpiry });
+function getFormValues(customValues) {
+  const defaultRecipient = getDefaultRecipient();
   return {
-    sendFrom: customValues.sendFrom || getDefaultSendFrom(state),
+    sendFrom: customValues?.sendFrom || getDefaultSendFrom(),
     // not accepting fiatAmount
-    recipients: customValues.recipients?.map(
-      ({
-        nameOrAddress,
-        amount,
-        reference,
-        expireDays,
-        expireHours,
-        expireMinutes,
-        expireSeconds,
-      }) => ({
-        ...defaultRecipient,
-        nameOrAddress,
-        amount,
-        reference,
-        expireDays,
-        expireHours,
-        expireMinutes,
-        expireSeconds,
-      })
-    ) || [defaultRecipient],
-    advancedOptions: customValues.advancedOptions || false,
+    recipients: customValues?.recipients?.map(({ nameOrAddress, amount }) => ({
+      ...defaultRecipient,
+      nameOrAddress,
+      amount,
+    })) || [defaultRecipient],
+    advancedOptions: {
+      reference: null,
+      ...getDefaultExpiry(),
+      ...customValues?.advancedOptions,
+    },
   };
 }
 

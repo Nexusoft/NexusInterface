@@ -4,7 +4,6 @@ import FormField from 'components/FormField';
 import Form from 'components/Form';
 import QuestionCircle from 'components/QuestionCircle';
 import { useFieldValue } from 'lib/form';
-import { numericOnly } from 'utils/form';
 import { timeToText } from 'utils/misc';
 
 __ = __context('Send');
@@ -26,14 +25,14 @@ function validateReference(value) {
   }
 }
 
-export default function AdvancedFields({ parentFieldName }) {
+export default function AdvancedFields() {
   const txExpiry = useSelector((state) => state.core.config?.txExpiry);
   const turnedOn = useFieldValue('advancedOptions');
 
   if (!turnedOn) return null;
 
   return (
-    <div className="flex center space-between" style={{ marginTop: -8 }}>
+    <div className="flex center space-between">
       <div className="flex1 mr2">
         <FormField
           label={
@@ -49,7 +48,7 @@ export default function AdvancedFields({ parentFieldName }) {
         >
           <Form.TextField
             skin="filled-inverted"
-            name={`${parentFieldName}.reference`}
+            name="reference"
             placeholder={__('Reference number (optional)')}
             validate={validateReference}
           />
@@ -74,31 +73,19 @@ export default function AdvancedFields({ parentFieldName }) {
         ></FormField>
 
         <FormField label={__('Days')} className="ml1">
-          <Form.TextField
-            name={`${parentFieldName}.expireDays`}
-            {...numberInputProps}
-          />
+          <Form.TextField name={'expireDays'} {...numberInputProps} />
         </FormField>
 
         <FormField label={__('Hours')} className="ml0_4">
-          <Form.TextField
-            name={`${parentFieldName}.expireHours`}
-            {...numberInputProps}
-          />
+          <Form.TextField name={'expireHours'} {...numberInputProps} />
         </FormField>
 
         <FormField label={__('Minutes')} className="ml0_4">
-          <Form.TextField
-            name={`${parentFieldName}.expireMinutes`}
-            {...numberInputProps}
-          />
+          <Form.TextField name={'expireMinutes'} {...numberInputProps} />
         </FormField>
 
         <FormField label={__('Seconds')} className="ml0_4">
-          <Form.TextField
-            name={`${parentFieldName}.expireSeconds`}
-            {...numberInputProps}
-          />
+          <Form.TextField name={'expireSeconds'} {...numberInputProps} />
         </FormField>
       </div>
     </div>
