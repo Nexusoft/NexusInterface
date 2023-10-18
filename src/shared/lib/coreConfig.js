@@ -81,7 +81,7 @@ function customConfig(config = {}) {
       config.apiPassword !== undefined
         ? config.apiPassword
         : defaultConfig.apiPassword,
-    txExpiry: parseInt(config.txExpiry),
+    txExpiry: parseInt(config.txExpiry) || undefined,
   };
 }
 
