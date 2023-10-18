@@ -62,10 +62,7 @@ export default function AdvancedFields() {
               <span className="v-align">{__('Expires in')}</span>
               <QuestionCircle
                 tooltip={__(
-                  'The amount of time since the transaction is created after which the transaction can no longer be credited by the recipient. By default, transactions will expire in %{time}',
-                  {
-                    time: `${timeToText(txExpiry)} `,
-                  }
+                  'The amount of time since the transaction is created after which the transaction can no longer be credited by the recipient.'
                 )}
               />
             </span>
