@@ -18,6 +18,7 @@ export function getDefaultRecipient() {
     address: null, // hidden field
     amount: '',
     fiatAmount: '',
+    reference: null,
   };
   return recipient;
 }
@@ -62,12 +63,14 @@ function getFormValues(customValues) {
   return {
     sendFrom: customValues?.sendFrom || getDefaultSendFrom(),
     // not accepting fiatAmount
-    recipients: customValues?.recipients?.map(({ nameOrAddress, amount }) => ({
-      ...defaultRecipient,
-      nameOrAddress,
-      amount,
-    })) || [defaultRecipient],
-    reference: customValues?.reference || null,
+    recipients: customValues?.recipients?.map(
+      ({ nameOrAddress, amount, reference }) => ({
+        ...defaultRecipient,
+        nameOrAddress,
+        amount,
+        reference,
+      })
+    ) || [defaultRecipient],
     expiry: {
       ...getDefaultExpiry(),
       ...customValues?.expiry,

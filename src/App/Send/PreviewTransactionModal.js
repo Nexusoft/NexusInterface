@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, Fragment } from 'react';
+import { Fragment } from 'react';
 import styled from '@emotion/styled';
 
 import ControlledModal from 'components/ControlledModal';
@@ -8,12 +8,10 @@ import TokenName from 'components/TokenName';
 import Tooltip from 'components/Tooltip';
 import Form from 'components/Form';
 import { callApi } from 'lib/api';
-import { lookupAddress } from 'lib/addressBook';
 import { openSuccessDialog } from 'lib/dialog';
 import { loadAccounts } from 'lib/user';
 import { formSubmit, required } from 'lib/form';
 import { timeToText } from 'utils/misc';
-import addressBookIcon from 'icons/address-book.svg';
 import WarningIcon from 'icons/warning.svg';
 import sendIcon from 'icons/send.svg';
 
@@ -95,7 +93,7 @@ function Source({ source }) {
   );
 }
 
-function TransactionDetails({ source, recipients }) {
+function TransactionDetails({ source, recipients, reference, expires }) {
   return (
     <Layout>
       <LabelCell>
@@ -105,7 +103,7 @@ function TransactionDetails({ source, recipients }) {
         <Source source={source} />
       </ContentCell>
 
-      {recipients.map(({ address_to, amount, reference, expires }, i) => (
+      {recipients.map(({ address_to, amount }, i) => (
         <Fragment key={i}>
           <Separator />
 
@@ -129,47 +127,49 @@ function TransactionDetails({ source, recipients }) {
               </Content>
             </ContentCell>
           </ContentCell>
-
-          {!!reference && (
-            <>
-              <LabelCell>
-                <Label>{__('Reference')}</Label>
-              </LabelCell>
-              <ContentCell>
-                <ContentCell>{reference}</ContentCell>
-              </ContentCell>
-            </>
-          )}
-
-          {(!!expires || expires === 0) && (
-            <>
-              <LabelCell>
-                <Label>{__('Expires')}</Label>
-              </LabelCell>
-              <ContentCell>
-                <ContentCell>
-                  {expires === 0 ? (
-                    <span>
-                      <span className="v-align mr0_4">{__('NO EXPIRY')}</span>
-                      <Tooltip.Trigger
-                        tooltip={__(
-                          "Transaction never expires, and you won't be able to void it even if the recipient doesn't credit the transaction"
-                        )}
-                      >
-                        <Icon icon={WarningIcon} />
-                      </Tooltip.Trigger>
-                    </span>
-                  ) : (
-                    __('in %{time_span}', {
-                      time_span: timeToText(expires),
-                    })
-                  )}
-                </ContentCell>
-              </ContentCell>
-            </>
-          )}
         </Fragment>
       ))}
+
+      {!!reference && (
+        <>
+          <Separator />
+          <LabelCell>
+            <Label>{__('Reference')}</Label>
+          </LabelCell>
+          <ContentCell>
+            <ContentCell>{reference}</ContentCell>
+          </ContentCell>
+        </>
+      )}
+
+      {(!!expires || expires === 0) && (
+        <>
+          <Separator />
+          <LabelCell>
+            <Label>{__('Expires')}</Label>
+          </LabelCell>
+          <ContentCell>
+            <ContentCell>
+              {expires === 0 ? (
+                <span>
+                  <span className="v-align mr0_4">{__('NO EXPIRY')}</span>
+                  <Tooltip.Trigger
+                    tooltip={__(
+                      "Transaction never expires, and you won't be able to void it even if the recipient doesn't credit the transaction"
+                    )}
+                  >
+                    <Icon icon={WarningIcon} />
+                  </Tooltip.Trigger>
+                </span>
+              ) : (
+                __('in %{time_span}', {
+                  time_span: timeToText(expires),
+                })
+              )}
+            </ContentCell>
+          </ContentCell>
+        </>
+      )}
     </Layout>
   );
 }
@@ -181,6 +181,8 @@ const initialValues = {
 export default function PreviewTransactionModal({
   source,
   recipients,
+  reference,
+  expires,
   resetSendForm,
 }) {
   return (
@@ -191,7 +193,12 @@ export default function PreviewTransactionModal({
             {__("You're sending")}
           </ControlledModal.Header>
           <ControlledModal.Body>
-            <TransactionDetails source={source} recipients={recipients} />
+            <TransactionDetails
+              source={source}
+              recipients={recipients}
+              reference={reference}
+              expires={expires}
+            />
           </ControlledModal.Body>
 
           <ControlledModal.Footer>

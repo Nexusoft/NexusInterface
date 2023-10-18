@@ -16,8 +16,13 @@ __ = __context('Send');
 
 const floatRegex = /^[0-9]+(.[0-9]*)?$/;
 
+const Wrapper = styled.div({
+  display: 'flex',
+  alignItems: 'flex-start',
+});
+
 const AmountFieldWrapper = styled.div({
-  flex: '1 1 130px',
+  flex: '1 1 100px',
 });
 
 const FiatAmountFieldWrapper = styled.div({
@@ -123,7 +128,7 @@ export default function AmountField({ parentFieldName }) {
   );
 
   return (
-    <>
+    <Wrapper>
       <AmountFieldWrapper>
         <FormField
           connectLabel
@@ -191,6 +196,6 @@ export default function AmountField({ parentFieldName }) {
           </FiatAmountFieldWrapper>
         </>
       )}
-    </>
+    </Wrapper>
   );
 }

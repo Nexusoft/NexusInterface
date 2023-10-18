@@ -25,7 +25,7 @@ import plusIcon from 'icons/plus.svg';
 
 // Internal Local
 import Recipients from './Recipients';
-import AdvancedFields from './AdvancedFields';
+import ExpiryFields from './ExpiryFields';
 import { selectAccountOptions } from './selectors';
 import PreviewTransactionModal from './PreviewTransactionModal';
 
@@ -63,57 +63,27 @@ const AdvancedOptionsLabel = styled.label(({ active }) => ({
   opacity: active ? 1 : 0.67,
 }));
 
-function AddRecipientButton() {
-  const txExpiry = useSelector((state) => state.core.config?.txExpiry);
-  return (
-    <Form.FieldArray
-      name="recipients"
-      render={({ fields }) => (
-        <MultiBtn
-          skin="default"
-          onClick={() => {
-            fields.push(getDefaultRecipient({ txExpiry }));
-          }}
-        >
-          <Icon icon={plusIcon} style={{ fontSize: '.8em' }} />
-          <span className="v-align ml0_4">{__('Add recipient')}</span>
-        </MultiBtn>
-      )}
-    />
-  );
+function getRecipientsParams({ recipients, advancedOptions }) {
+  return recipients.map(({ address, amount, reference }) => ({
+    address_to: address,
+    amount: parseFloat(amount),
+    reference: (!!advancedOptions && reference) || undefined,
+  }));
 }
 
-function getRecipientsParams(recipients, { advancedOptions }) {
-  return recipients.map(
-    ({
-      address,
-      amount,
-      reference,
-      expireDays,
-      expireHours,
-      expireMinutes,
-      expireSeconds,
-    }) => {
-      const recipParam = {
-        address_to: address,
-        amount: parseFloat(amount),
-      };
-
-      if (advancedOptions) {
-        const expires =
-          parseInt(expireSeconds) +
-          parseInt(expireMinutes) * 60 +
-          parseInt(expireHours) * 3600 +
-          parseInt(expireDays) * 86400;
-        if (Number.isInteger(expires)) {
-          recipParam.expires = expires;
-        }
-        if (reference) recipParam.reference = reference;
-      }
-
-      return recipParam;
+function getAdvancedParams({ expiry, advancedOptions }) {
+  const params = {};
+  if (advancedOptions) {
+    const expires =
+      parseInt(expiry.expireSeconds) +
+      parseInt(expiry.expireMinutes) * 60 +
+      parseInt(expiry.expireHours) * 3600 +
+      parseInt(expiry.expireDays) * 86400;
+    if (Number.isInteger(expires)) {
+      params.expires = expires;
     }
-  );
+  }
+  return params;
 }
 
 export default function SendForm() {
@@ -132,12 +102,13 @@ export default function SendForm() {
         persistState
         initialValues={initialValues}
         initialValuesEqual={() => true}
-        onSubmit={({ sendFrom, recipients, advancedOptions }, form) => {
+        onSubmit={({ sendFrom, recipients, expiry, advancedOptions }, form) => {
           const state = store.getState();
           const source = getSource(state, sendFrom);
           openModal(PreviewTransactionModal, {
             source,
-            recipients: getRecipientsParams(recipients, { advancedOptions }),
+            recipients: getRecipientsParams({ recipients, advancedOptions }),
+            ...getAdvancedParams({ expiry, advancedOptions }),
             resetSendForm: form.reset,
           });
         }}
@@ -178,10 +149,23 @@ export default function SendForm() {
 
         <Form.FieldArray component={Recipients} name="recipients" />
 
-        <AdvancedFields />
+        <ExpiryFields />
 
         <SendFormButtons>
-          <AddRecipientButton />
+          <Form.FieldArray
+            name="recipients"
+            render={({ fields }) => (
+              <MultiBtn
+                skin="default"
+                onClick={() => {
+                  fields.push(getDefaultRecipient());
+                }}
+              >
+                <Icon icon={plusIcon} style={{ fontSize: '.8em' }} />
+                <span className="v-align ml0_4">{__('Add recipient')}</span>
+              </MultiBtn>
+            )}
+          />
           <SendBtn skin="primary">
             <Icon icon={sendIcon} className="mr0_4" />
             {__('Proceed')}
