@@ -2,35 +2,13 @@
 // Google Analytics
 ////////////////////////
 // Script that holds on to a visitor and is referenced when a visitor makes a action
-import ua from 'universal-analytics';
 import settings from 'data/initialSettings';
-import os from 'os';
+import { ipcRenderer } from 'electron';
 
 const GA = {};
 
 GA.visitor = null;
 GA.active = false;
-
-if (
-  (settings.sendUsageData == null ||
-    settings.sendUsageData == undefined ||
-    Boolean(settings.sendUsageData) == true) &&
-  process.env.NODE_ENV !== 'development'
-) {
-  GA.visitor = ua('UA-207070578-1');
-  GA.active = true;
-  GA.visitor.set('ul', settings.locale || 'en');
-  GA.visitor.set('aiid', process.platform);
-  GA.visitor.set('ds', 'app');
-  GA.visitor.set('aip', 1);
-  try {
-    const osVer = os.platform() + ' ' + os.release();
-    GA.visitor.set('cd1', osVer);
-    GA.visitor.set('cd2', os.cpus()[0].model);
-  } catch (e) {
-    console.error(e);
-  }
-}
 
 // Send Screen
 // Send A Screen Event to Google, this is like a url hit for websites
@@ -38,8 +16,7 @@ if (
 //     ScreenTitle || String || The Screen To Post
 GA.SendScreen = function (ScreenTitle) {
   if (GA.active == false) return;
-
-  GA.visitor.screenview(ScreenTitle, 'Nexus Wallet', APP_VERSION).send();
+  ipcRenderer.invoke('send-GA4-event', ScreenTitle);
 };
 
 // Send Event
@@ -52,34 +29,46 @@ GA.SendScreen = function (ScreenTitle) {
 
 GA.SendEvent = function (category, action, lable, value) {
   if (GA.active == false) return;
-  GA.visitor.event(category, action, lable, value).send();
+  //GA.visitor.event(category, action, lable, value).send();
 };
 
 // Disable Analytics
 // Turn off anayltics and destroys the old object
 GA.DisableAnalytics = function () {
-  if (GA.visitor == null) return;
-  GA.visitor = null;
+  if (GA.active == false) return;
   GA.active = false;
+  ipcRenderer.invoke('remove-GA4', ScreenTitle);
+  document.getElementById('gtag-loader').remove();
+  document.getElementById('gtag-init').remove();
 };
 
 // Enable Analytics
 // Turn on Analytics and create a new visitor
 GA.EnableAnalytics = function () {
-  if (GA.visitor != null) return;
-  GA.visitor = ua('UA-207070578-1');
+  addGTag();
+};
+
+GA.addGTag = function () {
   GA.active = true;
-  GA.visitor.set('ul', settings.locale || 'en');
-  GA.visitor.set('aiid', process.platform);
-  GA.visitor.set('ds', 'app');
-  GA.visitor.set('aip', 1);
-  try {
-    const osVer = os.platform() + ' ' + os.release();
-    GA.visitor.set('cd1', osVer);
-    GA.visitor.set('cd2', os.cpus()[0].model);
-  } catch (e) {
-    console.error(e);
-  }
+  var gtagLoader = document.createElement('script');
+  gtagLoader.setAttribute('id', 'gtag-loader');
+  gtagLoader.async = true;
+  gtagLoader.src = 'https://www.googletagmanager.com/gtag/js?id=G-5CX0RT2KGY';
+  gtagLoader.id = 'gtag-loader';
+  gtagLoader.onload = () => {
+    var gtagInit = document.createElement('script');
+    gtagInit.id = 'gtag-init';
+    gtagInit.innerHTML = `  window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+  
+    gtag('config', 'G-5CX0RT2KGY');`;
+
+    document.documentElement.insertBefore(gtagInit, document.body);
+  };
+  document.documentElement.insertBefore(gtagLoader, document.body);
 };
 
 export default GA;

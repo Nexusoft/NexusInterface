@@ -12,6 +12,7 @@ import { prepareMarket } from 'lib/market';
 import { prepareTransactions } from 'lib/transactions';
 import { prepareModules, prepareWebView } from 'lib/modules';
 import { prepareUpdater } from 'lib/updater';
+import GA from 'lib/googleAnalytics';
 import initialSettings from 'data/initialSettings';
 import App from './App';
 
@@ -40,6 +41,7 @@ async function run() {
     prepareUpdater();
     prepareWebView();
     prepareCoreOutput();
+    initialSettings.sendUsageData && GA.addGTag();
   }
 }
 

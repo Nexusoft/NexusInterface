@@ -20,10 +20,29 @@ import {
   setAllowPrerelease,
 } from './updater';
 import { proxyRequest } from './modules';
+import Analytics from 'electron-google-analytics4';
+import os from 'os';
 
 let mainWindow;
 global.forceQuit = false;
 app.setAppUserModelId(APP_ID);
+
+let ga;
+
+ipcMain.handle('send-GA4-event', async (event, screenTitle) => {
+  if (ga == undefined) {
+    ga = new Analytics('G-5CX0RT2KGY', 'XXXXXXXXXXXXXXXXXXXXXX');
+    const osVer = os.platform() + ' ' + os.release();
+    ga.setUserProperties('cd1', osVer);
+    ga.setUserProperties('cd2', os.cpus()[0].model);
+  }
+  await ga.event(screenTitle);
+  return;
+});
+
+ipcMain.handle('remove-GA4', () => {
+  ga = undefined;
+});
 
 // Temporarily add this because there are some errors in autoUpdater.checkForUpdates
 // cannot be caught (net::ERR_HTTP_RESPONSE_CODE_FAILURE).
