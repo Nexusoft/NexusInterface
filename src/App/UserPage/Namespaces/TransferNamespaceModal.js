@@ -59,7 +59,7 @@ export default function TransferNamespaceModal({ namespace }) {
               })}
             >
               <FormField label={__('Namespace')}>
-                <Namespace>{namespace.name}</Namespace>
+                <Namespace>{namespace.namespace}</Namespace>
               </FormField>
 
               <FormField connectLabel label={__('Transfer to')}>
