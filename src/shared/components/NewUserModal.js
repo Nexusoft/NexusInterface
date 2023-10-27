@@ -31,7 +31,7 @@ const Buttons = styled.div({
 const ExtraSection = styled.div({
   marginTop: '2em',
   display: 'flex',
-  justifyContent: 'space-between',
+  justifyContent: 'center',
   opacity: 0.9,
 });
 
@@ -156,7 +156,6 @@ export default function NewUserModal() {
                   )}
 
                   <ExtraSection>
-                    <Link as="a">{__('Switch to Legacy Mode')}</Link>
                     <Link
                       as="a"
                       onClick={() => {
