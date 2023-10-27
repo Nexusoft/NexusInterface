@@ -13,10 +13,11 @@ import { createLocalNameFee } from 'lib/fees';
 import { selectUsername } from 'lib/user';
 import memoize from 'utils/memoize';
 import GA from 'lib/googleAnalytics';
+import { useState } from 'react';
 
 __ = __context('RenameAccount');
 
-const getFee = (accountName) => (accountName ? 2 : 1);
+const getFee = (nameRecord) => (nameRecord ? 0 : 1);
 
 const getInitialValues = memoize((accountName) => ({ name: accountName }));
 
@@ -37,13 +38,18 @@ async function submit({ name, account, username }) {
     }
   } catch (err) {
     if (err.code !== -101) {
-      throw err;
+      nameRecord = await callApi('names/get/inactive', {
+        name: `${username}:${name}`,
+      });
+      if (!nameRecord) {
+        throw err;
+      }
     }
   }
 
   // Check if balance is enough to pay the fee, otherwise user might
   // end up creating a new name without nullifying the old name
-  const fee = getFee(account.name);
+  const fee = getFee(nameRecord);
   const defaultAccount = await callApi('finance/get/account', {
     name: 'default',
   });
@@ -57,22 +63,30 @@ async function submit({ name, account, username }) {
 
   const pin = await confirmPin();
   if (pin) {
-    await callApi(nameRecord ? 'names/update/name' : 'names/create/name', {
+    await callApi('names/rename/name', {
       pin,
-      name,
-      register: account.address,
+      name: account.name,
+      new: name,
     });
-
-    if (account.name) {
-      await callApi('names/update/name', {
-        pin,
-        name: account.name,
-        register: '0',
-      });
-    }
 
     return true;
   }
+}
+
+async function isAvailable({ name, username }) {
+  let nameRecord;
+  try {
+    nameRecord = await callApi('names/get/name', {
+      name: `${username}:${name}`,
+    });
+  } catch (err) {
+    if (err.code !== -101) {
+      nameRecord = await callApi('names/get/inactive', {
+        name: `${username}:${name}`,
+      });
+    }
+  }
+  return !!nameRecord;
 }
 
 function handleSubmitSuccess({ result, name, closeModal }) {
@@ -90,6 +104,8 @@ function handleSubmitSuccess({ result, name, closeModal }) {
 
 export default function RenameAccountForm({ account }) {
   const username = useSelector(selectUsername);
+  // If you already own a name but is inactive, you do not need to pay a fee.
+  const [alreadyOwn, setIsOwned] = useState(false);
 
   return (
     <ControlledModal maxWidth={600}>
@@ -108,7 +124,14 @@ export default function RenameAccountForm({ account }) {
                   handleSubmitSuccess({ result, name, closeModal }),
                 errorMessage: __('Error renaming account'),
               })}
-              subscription={{ submitting: true, pristine: true }}
+              subscription={{
+                submitting: true,
+                pristine: true,
+              }}
+              validate={async ({ name }) => {
+                setIsOwned(await isAvailable({ name, username }));
+                return {};
+              }}
             >
               {({ submitting, pristine }) => (
                 <>
@@ -122,7 +145,7 @@ export default function RenameAccountForm({ account }) {
 
                   <div className="mt1">
                     {__('Account renaming fee')}:{' '}
-                    {createLocalNameFee * getFee(account.name)} NXS
+                    {createLocalNameFee * getFee(alreadyOwn)} NXS
                   </div>
 
                   <div className="mt3 flex space-between">
