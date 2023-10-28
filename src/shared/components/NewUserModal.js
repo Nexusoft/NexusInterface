@@ -190,12 +190,16 @@ function UserConfirmBackgroundTask({ username }) {
             closeTaskRef.current?.();
             showNotification(
               __(
-                'User<b> %{username} </b>has been successfully registered',
+                'User <b>%{username}</b> has been successfully registered',
                 {
                   username,
                 },
                 {
-                  b: (text) => <strong>{text}</strong>,
+                  b: (text) => (
+                    <span>
+                      &nbsp;<strong>{text}</strong>&nbsp;
+                    </span>
+                  ),
                 }
               ),
               'success'
