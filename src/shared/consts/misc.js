@@ -67,3 +67,8 @@ export const alphaRelease = APP_VERSION.toString().includes('alpha');
  *  Retunrs true if the APP string contains beta OR alpha
  */
 export const preRelease = alphaRelease || betaRelease || !!LOCK_TESTNET;
+
+/**
+ * This will allow us to purge the `_API` folder if needed by core to refresh. Number is not tied to any specific version but must increment up by one.
+ */
+export const minimumCoreAPIPolicy = 1;

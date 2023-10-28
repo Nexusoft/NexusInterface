@@ -89,6 +89,7 @@ export const defaultSettings = {
   forkBlocks: 0,
   walletClean: false,
   clearPeers: false,
+  coreAPIPolicy: 0,
   // If false, show Create new user modal instead of Login
   // modal automatically when core is connected
   firstCreateNewUserShown: false,
