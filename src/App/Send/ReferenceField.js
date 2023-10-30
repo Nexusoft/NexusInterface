@@ -45,7 +45,7 @@ export default function ReferenceField({ parentFieldName }) {
         <Form.TextField
           skin="filled-inverted"
           name={`${parentFieldName}.reference`}
-          placeholder={__('Ref. number')}
+          placeholder={__('Ref. number (optional)')}
           validate={validateReference}
         />
       </FormField>

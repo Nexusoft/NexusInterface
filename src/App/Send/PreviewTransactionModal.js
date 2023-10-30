@@ -142,7 +142,7 @@ function TransactionDetails({ source, recipients, reference, expires }) {
         </>
       )}
 
-      {(!!expires || expires === 0) && (
+      {!!expires && (
         <>
           <Separator />
           <LabelCell>
@@ -181,7 +181,6 @@ const initialValues = {
 export default function PreviewTransactionModal({
   source,
   recipients,
-  reference,
   expires,
   resetSendForm,
 }) {
@@ -196,7 +195,6 @@ export default function PreviewTransactionModal({
             <TransactionDetails
               source={source}
               recipients={recipients}
-              reference={reference}
               expires={expires}
             />
           </ControlledModal.Body>
@@ -210,6 +208,7 @@ export default function PreviewTransactionModal({
                   const params = {
                     pin,
                     recipients,
+                    expires,
                   };
 
                   if (source?.token) {

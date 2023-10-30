@@ -79,7 +79,7 @@ function getAdvancedParams({ expiry, advancedOptions }) {
       parseInt(expiry.expireMinutes) * 60 +
       parseInt(expiry.expireHours) * 3600 +
       parseInt(expiry.expireDays) * 86400;
-    if (Number.isInteger(expires)) {
+    if (Number.isInteger(expires) && expires > 0) {
       params.expires = expires;
     }
   }
