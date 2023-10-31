@@ -6,7 +6,7 @@ import Tooltip from 'components/Tooltip';
 import { timing } from 'styles';
 import RecipientNameOrAddress from './RecipientNameOrAddress';
 import AmountField from './AmountField';
-import AdvancedFields from './AdvancedFields';
+import ReferenceField from './ReferenceField';
 
 __ = __context('Send');
 
@@ -36,14 +36,22 @@ const Recipient = styled.div({
   position: 'relative',
 });
 
-const AddressWrapper = styled.div({
+const BaseFields = styled.div({
+  display: 'flex',
+  alignItems: 'stretch',
+});
+
+const LeftHalf = styled.div({
   flex: '5 5 500px',
   marginRight: '1em',
 });
 
-const BaseFields = styled.div({
+const RightHalf = styled.div({
+  flex: '2 2 120px',
   display: 'flex',
-  alignItems: 'flex-start',
+  flexDirection: 'column',
+  alignItems: 'stretch',
+  justifyContent: 'space-between',
 });
 
 export default function Recipients({ fields }) {
@@ -70,10 +78,7 @@ export default function Recipients({ fields }) {
   return (
     <>
       {fields.map((fieldName, i) => (
-        <Recipient
-          key={i}
-          style={fields.length > 1 ? { marginTop: '0.5em' } : undefined}
-        >
+        <Recipient key={i} style={{ marginTop: i > 0 ? '-1em' : '0.5em' }}>
           {fields.length !== 1 && (
             <Tooltip.Trigger tooltip={__('Remove recipient')}>
               <RemoveButton
@@ -87,14 +92,15 @@ export default function Recipients({ fields }) {
           )}
 
           <BaseFields>
-            <AddressWrapper>
+            <LeftHalf>
               <RecipientNameOrAddress parentFieldName={fieldName} />
-            </AddressWrapper>
+            </LeftHalf>
 
-            <AmountField parentFieldName={fieldName} />
+            <RightHalf>
+              <AmountField parentFieldName={fieldName} />
+              <ReferenceField parentFieldName={fieldName} />
+            </RightHalf>
           </BaseFields>
-
-          <AdvancedFields parentFieldName={fieldName} />
         </Recipient>
       ))}
     </>

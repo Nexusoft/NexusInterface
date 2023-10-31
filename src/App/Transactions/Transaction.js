@@ -103,11 +103,7 @@ export default function Transaction({ transaction }) {
   const txTime = new Date(transaction.timestamp * 1000);
 
   return (
-    <TransactionComponent
-      unconfirmed={
-        !transaction.confirmations || transaction.confirmations === 0
-      }
-    >
+    <TransactionComponent unconfirmed={!(transaction.confirmations > 0)}>
       <TransactionLeft
         onClick={() =>
           openModal(TransactionDetailsModal, { txid: transaction.txid })
