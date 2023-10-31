@@ -2,7 +2,11 @@
 // Google Analytics
 ////////////////////////
 // Script that holds on to a visitor and is referenced when a visitor makes a action
+
+//TODO: WIP Script
+
 import settings from 'data/initialSettings';
+import os from 'os';
 import { ipcRenderer } from 'electron';
 
 const GA = {};
@@ -15,8 +19,7 @@ GA.active = false;
 // Input :
 //     ScreenTitle || String || The Screen To Post
 GA.SendScreen = function (ScreenTitle) {
-  if (GA.active == false) return;
-  ipcRenderer.invoke('send-GA4-event', ScreenTitle);
+  //ipcRenderer.invoke('send-GA4-event', ScreenTitle);
 };
 
 // Send Event
@@ -50,6 +53,7 @@ GA.EnableAnalytics = function () {
 
 GA.addGTag = function () {
   GA.active = true;
+  const osVer = os.platform() + ' ' + os.release();
   var gtagLoader = document.createElement('script');
   gtagLoader.setAttribute('id', 'gtag-loader');
   gtagLoader.async = true;
@@ -64,9 +68,12 @@ GA.addGTag = function () {
     }
     gtag('js', new Date());
   
-    gtag('config', 'G-5CX0RT2KGY');`;
+    gtag('config', 'G-5CX0RT2KGY',{'app_version': '${APP_VERSION}', 'os_version': '${osVer}', 'cpu_version' : '${
+      os.cpus()[0].model
+    }' } );`;
 
     document.documentElement.insertBefore(gtagInit, document.body);
+    ipcRenderer.invoke('send-GA4-event', 'user_engagement');
   };
   document.documentElement.insertBefore(gtagLoader, document.body);
 };

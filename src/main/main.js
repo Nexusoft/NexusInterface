@@ -31,11 +31,14 @@ let ga;
 
 ipcMain.handle('send-GA4-event', async (event, screenTitle) => {
   if (ga == undefined) {
-    ga = new Analytics('G-5CX0RT2KGY', 'XXXXXXXXXXXXXXXXXXXXXX');
-    const osVer = os.platform() + ' ' + os.release();
-    ga.setUserProperties('cd1', osVer);
-    ga.setUserProperties('cd2', os.cpus()[0].model);
+    ga = new Analytics('G-5CX0RT2KGY', 'AdhWOtVfSRGNnzjNbzAxLw');
   }
+  /*
+  ga.setParams({
+    app_version: '3.1.1-beta.11',
+    page_title: 'overview',
+    screen_name: screenTitle,
+  }); */
   await ga.event(screenTitle);
   return;
 });
