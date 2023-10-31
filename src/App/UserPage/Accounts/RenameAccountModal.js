@@ -13,11 +13,11 @@ import { createLocalNameFee } from 'lib/fees';
 import { selectUsername } from 'lib/user';
 import memoize from 'utils/memoize';
 import GA from 'lib/googleAnalytics';
-import { useState } from 'react';
 
 __ = __context('RenameAccount');
 
-const getFee = (nameRecord) => (nameRecord ? 0 : 1);
+// If you already own a name but is inactive, you do not need to pay a fee.
+const getFee = (nameRecord) => (nameRecord ? 0 : createLocalNameFee);
 
 const getInitialValues = memoize((accountName) => ({ name: accountName }));
 
@@ -37,7 +37,9 @@ async function submit({ name, account, username }) {
       return;
     }
   } catch (err) {
-    if (err.code !== -101) {
+    if (err.code === -49) {
+      // Error -49: Unsupported type for name/address
+      // When name is inactive
       nameRecord = await callApi('names/get/inactive', {
         name: `${username}:${name}`,
       });
@@ -47,21 +49,10 @@ async function submit({ name, account, username }) {
     }
   }
 
-  // Check if balance is enough to pay the fee, otherwise user might
-  // end up creating a new name without nullifying the old name
   const fee = getFee(nameRecord);
-  const defaultAccount = await callApi('finance/get/account', {
-    name: 'default',
+  const pin = await confirmPin({
+    note: fee ? `${__('Fee')}: ${fee} NXS` : undefined,
   });
-  if (defaultAccount.balance < fee) {
-    openErrorDialog({
-      message: __('Insufficient balance'),
-      note: __('Your default account balance is not enough to pay the fee.'),
-    });
-    return;
-  }
-
-  const pin = await confirmPin();
   if (pin) {
     if (account.name) {
       await callApi('names/rename/name', {
@@ -81,22 +72,6 @@ async function submit({ name, account, username }) {
   }
 }
 
-async function isAvailable({ name, username }) {
-  let nameRecord;
-  try {
-    nameRecord = await callApi('names/get/name', {
-      name: `${username}:${name}`,
-    });
-  } catch (err) {
-    if (err.code !== -101) {
-      nameRecord = await callApi('names/get/inactive', {
-        name: `${username}:${name}`,
-      });
-    }
-  }
-  return !!nameRecord;
-}
-
 function handleSubmitSuccess({ result, name, closeModal }) {
   if (!result) return; // Submission was cancelled
   GA.SendEvent('Users', 'RenameAccount', 'Accounts', 1);
@@ -112,8 +87,6 @@ function handleSubmitSuccess({ result, name, closeModal }) {
 
 export default function RenameAccountForm({ account }) {
   const username = useSelector(selectUsername);
-  // If you already own a name but is inactive, you do not need to pay a fee.
-  const [alreadyOwn, setIsOwned] = useState(false);
 
   return (
     <ControlledModal maxWidth={600}>
@@ -136,10 +109,6 @@ export default function RenameAccountForm({ account }) {
                 submitting: true,
                 pristine: true,
               }}
-              validate={async ({ name }) => {
-                setIsOwned(await isAvailable({ name, username }));
-                return {};
-              }}
             >
               {({ submitting, pristine }) => (
                 <>
@@ -150,11 +119,6 @@ export default function RenameAccountForm({ account }) {
                       validate={required()}
                     />
                   </FormField>
-
-                  <div className="mt1">
-                    {__('Account renaming fee')}:{' '}
-                    {createLocalNameFee * getFee(alreadyOwn)} NXS
-                  </div>
 
                   <div className="mt3 flex space-between">
                     <Button onClick={closeModal}>{__('Cancel')}</Button>
