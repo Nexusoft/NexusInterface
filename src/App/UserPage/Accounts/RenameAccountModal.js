@@ -63,11 +63,19 @@ async function submit({ name, account, username }) {
 
   const pin = await confirmPin();
   if (pin) {
-    await callApi('names/rename/name', {
-      pin,
-      name: account.name,
-      new: name,
-    });
+    if (account.name) {
+      await callApi('names/rename/name', {
+        pin,
+        name: account.name,
+        new: name,
+      });
+    } else {
+      await callApi('names/create/name', {
+        pin,
+        name,
+        register: account.address,
+      });
+    }
 
     return true;
   }
