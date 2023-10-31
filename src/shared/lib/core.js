@@ -7,7 +7,11 @@ import { loadNexusConf, saveCoreConfig } from 'lib/coreConfig';
 import { callApi } from 'lib/api';
 import { updateSettings } from 'lib/settings';
 import sleep from 'utils/promisified/sleep';
-import { preRelease } from 'consts/misc';
+import { minimumCoreAPIPolicy, preRelease } from 'consts/misc';
+import { defaultCoreDataDir } from 'consts/paths';
+import fs from 'fs';
+import { rm as deleteDirectory } from 'fs/promises';
+import * as path from 'path';
 
 export const getLedgerInfo = async () => {
   try {
@@ -118,6 +122,22 @@ export const startCore = async () => {
   if (settings.multiUser == true) params.push('-multiusername=1');
   if (settings.allowAdvancedCoreOptions) {
     if (settings.advancedCoreParams) params.push(settings.advancedCoreParams);
+  }
+
+  if (
+    !LOCK_TESTNET &&
+    !settings.testnetIteration &&
+    (!settings.coreAPIPolicy || settings.coreAPIPolicy < minimumCoreAPIPolicy)
+  ) {
+    updateSettings({ coreAPIPolicy: minimumCoreAPIPolicy });
+    const corePath =
+      conf.coreDataDir || settings.coreDataDir || defaultCoreDataDir;
+    if (fs.existsSync(path.join(corePath, '_API'))) {
+      await deleteDirectory(path.join(corePath, '_API'), {
+        recursive: true,
+        force: true,
+      });
+    }
   }
 
   // Start core

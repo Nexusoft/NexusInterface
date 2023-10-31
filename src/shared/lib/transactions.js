@@ -285,8 +285,8 @@ export async function fetchTransaction(txid) {
     verbose: 'summary',
   });
   store.dispatch({
-    type: TYPE.UPDATE_TRITIUM_TRANSACTION,
-    payload: tx,
+    type: TYPE.UPDATE_TRANSACTIONS,
+    payload: [tx],
   });
   return tx;
 }
@@ -331,7 +331,7 @@ export function prepareTransactions() {
         const filteredTransactions = filterTransactions(transactions);
         if (filteredTransactions.length) {
           store.dispatch({
-            type: TYPE.ADD_TRITIUM_TRANSACTIONS,
+            type: TYPE.UPDATE_TRANSACTIONS,
             payload: filteredTransactions,
           });
           watchIfUnconfirmed(filteredTransactions);

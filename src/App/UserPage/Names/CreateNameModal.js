@@ -74,8 +74,8 @@ function NameType({ namespaces }) {
           <Form.Select
             name="namespace"
             options={(namespaces || []).map((n) => ({
-              value: n.name,
-              display: n.name,
+              value: n.namespace,
+              display: n.namespace,
             }))}
             placeholder={__('A namespace you own')}
             validate={required()}

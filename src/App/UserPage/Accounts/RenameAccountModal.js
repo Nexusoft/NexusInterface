@@ -16,7 +16,8 @@ import GA from 'lib/googleAnalytics';
 
 __ = __context('RenameAccount');
 
-const getFee = (accountName) => (accountName ? 2 : 1);
+// If you already own a name but is inactive, you do not need to pay a fee.
+const getFee = (nameRecord) => (nameRecord ? 0 : createLocalNameFee);
 
 const getInitialValues = memoize((accountName) => ({ name: accountName }));
 
@@ -36,38 +37,34 @@ async function submit({ name, account, username }) {
       return;
     }
   } catch (err) {
-    if (err.code !== -101) {
-      throw err;
+    if (err.code === -49) {
+      // Error -49: Unsupported type for name/address
+      // When name is inactive
+      nameRecord = await callApi('names/get/inactive', {
+        name: `${username}:${name}`,
+      });
+      if (!nameRecord) {
+        throw err;
+      }
     }
   }
 
-  // Check if balance is enough to pay the fee, otherwise user might
-  // end up creating a new name without nullifying the old name
-  const fee = getFee(account.name);
-  const defaultAccount = await callApi('finance/get/account', {
-    name: 'default',
+  const fee = getFee(nameRecord);
+  const pin = await confirmPin({
+    note: fee ? `${__('Fee')}: ${fee} NXS` : undefined,
   });
-  if (defaultAccount.balance < fee) {
-    openErrorDialog({
-      message: __('Insufficient balance'),
-      note: __('Your default account balance is not enough to pay the fee.'),
-    });
-    return;
-  }
-
-  const pin = await confirmPin();
   if (pin) {
-    await callApi(nameRecord ? 'names/update/name' : 'names/create/name', {
-      pin,
-      name,
-      register: account.address,
-    });
-
     if (account.name) {
-      await callApi('names/update/name', {
+      await callApi('names/rename/name', {
         pin,
         name: account.name,
-        register: '0',
+        new: name,
+      });
+    } else {
+      await callApi('names/create/name', {
+        pin,
+        name,
+        register: account.address,
       });
     }
 
@@ -108,7 +105,10 @@ export default function RenameAccountForm({ account }) {
                   handleSubmitSuccess({ result, name, closeModal }),
                 errorMessage: __('Error renaming account'),
               })}
-              subscription={{ submitting: true, pristine: true }}
+              subscription={{
+                submitting: true,
+                pristine: true,
+              }}
             >
               {({ submitting, pristine }) => (
                 <>
@@ -119,11 +119,6 @@ export default function RenameAccountForm({ account }) {
                       validate={required()}
                     />
                   </FormField>
-
-                  <div className="mt1">
-                    {__('Account renaming fee')}:{' '}
-                    {createLocalNameFee * getFee(account.name)} NXS
-                  </div>
 
                   <div className="mt3 flex space-between">
                     <Button onClick={closeModal}>{__('Cancel')}</Button>

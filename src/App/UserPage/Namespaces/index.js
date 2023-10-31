@@ -67,7 +67,7 @@ function Namespace({ namespace }) {
         ]);
       }}
     >
-      {namespace.name}
+      {namespace.namespace}
     </NamespaceComponent>
   );
 }

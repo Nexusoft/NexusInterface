@@ -28,7 +28,7 @@ export default function NamespaceDetailsModal({ namespace }) {
             {__('Namespace Details')}
           </ControlledModal.Header>
           <ControlledModal.Body>
-            <InfoField label={__('Name')}>{namespace.name}</InfoField>
+            <InfoField label={__('Name')}>{namespace.namespace}</InfoField>
             <InfoField label={__('Address')}>
               <span className="v-align">{namespace.address}</span>
               <QRButton className="ml0_4" address={namespace.address} />

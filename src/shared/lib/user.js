@@ -261,7 +261,11 @@ export const loadAccounts = async () => {
 export const loadNameRecords = async () => {
   try {
     const nameRecords = await listAll('names/list/names');
-    store.dispatch({ type: TYPE.SET_NAME_RECORDS, payload: nameRecords });
+    const unusedRecords = await listAll('names/list/inactive');
+    store.dispatch({
+      type: TYPE.SET_NAME_RECORDS,
+      payload: [...nameRecords, ...unusedRecords],
+    });
   } catch (err) {
     console.error('names/list/names failed', err);
   }
