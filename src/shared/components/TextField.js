@@ -235,7 +235,10 @@ const TextArea = forwardRef((props, ref) => {
     if (inputElem) {
       inputElem.style.height = 'auto';
       const { scrollHeight } = inputElem;
-      inputElem.style.height = (scrollHeight > 114 ? 114 : scrollHeight) + 'px';
+      if (scrollHeight) {
+        inputElem.style.height =
+          (scrollHeight > 114 ? 114 : scrollHeight) + 'px';
+      }
     }
   });
 
