@@ -298,8 +298,8 @@ document.addEventListener('click', (event) => {
   const anchor = event.target.closest('a');
   if (!anchor) return;
 
-  const { href } = anchor;
-  if (!anchor.href.startsWith(origin)) {
+  const { href, download } = anchor;
+  if (!anchor.href.startsWith(origin) && !download) {
     event.preventDefault();
     ipcRenderer.sendToHost('open-external', href);
   }
