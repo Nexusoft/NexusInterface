@@ -19,7 +19,7 @@ GA.active = false;
 // Input :
 //     ScreenTitle || String || The Screen To Post
 GA.SendScreen = function (ScreenTitle) {
-  //ipcRenderer.invoke('send-GA4-event', ScreenTitle);
+  ipcRenderer.invoke('send-GA4-event', ScreenTitle);
 };
 
 // Send Event
@@ -31,15 +31,12 @@ GA.SendScreen = function (ScreenTitle) {
 //     value    || NonNegative Int || Event Value, must be NonNegative
 
 GA.SendEvent = function (category, action, lable, value) {
-  if (GA.active == false) return;
   //GA.visitor.event(category, action, lable, value).send();
 };
 
 // Disable Analytics
 // Turn off anayltics and destroys the old object
 GA.DisableAnalytics = function () {
-  if (GA.active == false) return;
-  GA.active = false;
   ipcRenderer.invoke('remove-GA4', ScreenTitle);
   document.getElementById('gtag-loader').remove();
   document.getElementById('gtag-init').remove();
