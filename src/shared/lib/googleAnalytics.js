@@ -5,21 +5,72 @@
 
 //TODO: WIP Script
 
-import settings from 'data/initialSettings';
 import os from 'os';
 import { ipcRenderer } from 'electron';
+import store from 'store';
 
 const GA = {};
 
 GA.visitor = null;
 GA.active = false;
 
+const getUserAgent = function () {
+  const { settings } = store.getState();
+  const userAgentPayload = {
+    cd_currency: {
+      value: settings.fiatCurrency,
+    },
+    app_version: {
+      value: APP_VERSION.toString(),
+    },
+    cd_language: {
+      value: settings.locale,
+    },
+    cd_overview_display_style: {
+      value: settings.overviewDisplay,
+    },
+  };
+
+  return userAgentPayload;
+};
+
 // Send Screen
 // Send A Screen Event to Google, this is like a url hit for websites
 // Input :
 //     ScreenTitle || String || The Screen To Post
-GA.SendScreen = function (ScreenTitle) {
-  ipcRenderer.invoke('send-GA4-event', ScreenTitle);
+GA.SendScreen = function (screenTitle) {
+  const params = {
+    engagement_time_msec: 1000,
+    page_title: screenTitle,
+    screen_name: screenTitle,
+  };
+  ipcRenderer.invoke('send-GA4-event', {
+    eventName: 'screen_view',
+    eventParams: params,
+    userAgent: getUserAgent(),
+  });
+};
+
+GA.LogIn = function () {
+  const params = {
+    engagement_time_msec: 500,
+  };
+  ipcRenderer.invoke('send-GA4-event', {
+    eventName: 'login',
+    eventParams: params,
+    userAgent: getUserAgent(),
+  });
+};
+
+GA.LogOut = function () {
+  const params = {
+    engagement_time_msec: 500,
+  };
+  ipcRenderer.invoke('send-GA4-event', {
+    eventName: 'logout',
+    eventParams: params,
+    userAgent: getUserAgent(),
+  });
 };
 
 // Send Event
@@ -70,7 +121,6 @@ GA.addGTag = function () {
     }' } );`;
 
     document.documentElement.insertBefore(gtagInit, document.body);
-    ipcRenderer.invoke('send-GA4-event', 'user_engagement');
   };
   document.documentElement.insertBefore(gtagLoader, document.body);
 };

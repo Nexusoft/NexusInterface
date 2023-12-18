@@ -29,17 +29,14 @@ app.setAppUserModelId(APP_ID);
 
 let ga;
 
-ipcMain.handle('send-GA4-event', async (event, screenTitle) => {
+ipcMain.handle('send-GA4-event', async (ipcevent, dataStruct) => {
   if (ga == undefined) {
     ga = new Analytics('G-5CX0RT2KGY', 'AdhWOtVfSRGNnzjNbzAxLw');
   }
-  /*
-  ga.setParams({
-    app_version: '3.1.1-beta.11',
-    page_title: 'overview',
-    screen_name: screenTitle,
-  }); */
-  await ga.event(screenTitle);
+  ga.setUserProperties(dataStruct.userAgent);
+  ga.setParams(dataStruct.eventParams);
+  await ga.event(dataStruct.eventName);
+  ga.setParams(); // resets Params;
   return;
 });
 

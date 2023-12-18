@@ -9,6 +9,7 @@ import { confirm } from 'lib/dialog';
 import { updateSettings } from 'lib/settings';
 import listAll from 'utils/listAll';
 import sleep from 'utils/promisified/sleep';
+import GA from './googleAnalytics';
 
 __ = __context('User');
 
@@ -142,6 +143,7 @@ export const logIn = async ({ username, password, pin }) => {
     await unlockUser({ pin, session, stakeInfo });
     const { status } = await setActiveUser({ session, genesis, stakeInfo });
 
+    GA.LogIn();
     return { username, session, status, stakeInfo };
   } finally {
     // Release the lock
@@ -169,6 +171,7 @@ export const logOut = async () => {
     } else {
       await callApi('sessions/terminate/local');
     }
+    GA.LogOut();
   } finally {
     // Release the lock
     refreshUserStatusLock = false;
