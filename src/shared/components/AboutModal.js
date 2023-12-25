@@ -114,7 +114,7 @@ export default function About() {
             {version}
           </InfoField>
           <InfoField ratio={[1, 1]} label={__('Core build date')}>
-            November 29th 2023
+            December 18th 2023
           </InfoField>
           {!!testnet && (
             <InfoField ratio={[1, 1]} label={__('Testnet')}>

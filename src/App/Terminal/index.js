@@ -1,4 +1,5 @@
 // External Dependencies
+import { useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { useSelector } from 'react-redux';
@@ -35,6 +36,9 @@ function ConsoleRedirect() {
 }
 
 export default function Terminal() {
+  useEffect(() => {
+    GA.SendScreen('Terminal');
+  }, []);
   return (
     <Panel icon={consoleIcon} title={__('Console')} bodyScrollable={false}>
       <TerminalComponent>
