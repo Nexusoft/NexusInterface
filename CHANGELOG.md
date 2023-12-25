@@ -1,19 +1,25 @@
-# 3.1.1 (2023.5.xx)
+# 3.1.1 (2023.12.25)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v3.1.1)
 
 #### Additions
 
 - Added 5.1 Documents to the Terminal's API menu
+- Added Nexus.io theme
 
 #### Adjustments
 
--
+- None
 
 #### Fixes
 
 - Fixed crash when clicking the Send All function on the Send page
 - Fixed the Terminal's API Doc display
+- Fixed Overview stats sometimes showing NaN
+- Fixed expiration settings on Send screen
+- Fixed Create name modal
+- Fixed Rename account modal
+- Various other fixes
 
 # 3.1.0 (2023.4.26)
 
