@@ -67,7 +67,7 @@ async function confirmDelete(module) {
     } else {
       await deleteDirectory(module.path, { recursive: true, force: true });
       removeUpdateCache(module.repository);
-      GA.SendEvent('Modules', 'uninstallModule', 'name', module.info.name);
+      GA.UninstallModule(module.info.name);
     }
     location.reload();
   }

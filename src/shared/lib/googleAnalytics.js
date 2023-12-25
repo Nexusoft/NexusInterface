@@ -3,8 +3,6 @@
 ////////////////////////
 // Script that holds on to a visitor and is referenced when a visitor makes a action
 
-//TODO: WIP Script
-
 import os from 'os';
 import { ipcRenderer } from 'electron';
 import store from 'store';
@@ -39,6 +37,7 @@ const getUserAgent = function () {
 // Input :
 //     ScreenTitle || String || The Screen To Post
 GA.SendScreen = function (screenTitle) {
+  if (!GA.active) return;
   const params = {
     engagement_time_msec: 1000,
     page_title: screenTitle,
@@ -52,6 +51,7 @@ GA.SendScreen = function (screenTitle) {
 };
 
 GA.LogIn = function () {
+  if (!GA.active) return;
   const params = {
     engagement_time_msec: 500,
   };
@@ -63,11 +63,38 @@ GA.LogIn = function () {
 };
 
 GA.LogOut = function () {
+  if (!GA.active) return;
   const params = {
     engagement_time_msec: 500,
   };
   ipcRenderer.invoke('send-GA4-event', {
     eventName: 'logout',
+    eventParams: params,
+    userAgent: getUserAgent(),
+  });
+};
+
+GA.InstallModule = function (moduleName) {
+  if (!GA.active) return;
+  const params = {
+    engagement_time_msec: 500,
+    module: moduleName,
+  };
+  ipcRenderer.invoke('send-GA4-event', {
+    eventName: 'install_module',
+    eventParams: params,
+    userAgent: getUserAgent(),
+  });
+};
+
+GA.UninstallModule = function (moduleName) {
+  if (!GA.active) return;
+  const params = {
+    engagement_time_msec: 500,
+    module: moduleName,
+  };
+  ipcRenderer.invoke('send-GA4-event', {
+    eventName: 'uninstall_module',
     eventParams: params,
     userAgent: getUserAgent(),
   });
@@ -88,19 +115,23 @@ GA.SendEvent = function (category, action, lable, value) {
 // Disable Analytics
 // Turn off anayltics and destroys the old object
 GA.DisableAnalytics = function () {
+  GA.active = false;
   ipcRenderer.invoke('remove-GA4', ScreenTitle);
-  document.getElementById('gtag-loader').remove();
-  document.getElementById('gtag-init').remove();
+  //document.getElementById('gtag-loader').remove();
+  //document.getElementById('gtag-init').remove();
 };
 
 // Enable Analytics
 // Turn on Analytics and create a new visitor
 GA.EnableAnalytics = function () {
-  addGTag();
+  GA.active = true;
+  //addGTag();
 };
 
 GA.addGTag = function () {
-  GA.active = true;
+  //Currenlty doesnt support production but I might use this block of code later.
+  return;
+  /*
   const osVer = os.platform() + ' ' + os.release();
   var gtagLoader = document.createElement('script');
   gtagLoader.setAttribute('id', 'gtag-loader');
@@ -123,6 +154,7 @@ GA.addGTag = function () {
     document.documentElement.insertBefore(gtagInit, document.body);
   };
   document.documentElement.insertBefore(gtagLoader, document.body);
+  */
 };
 
 export default GA;

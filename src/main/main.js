@@ -21,7 +21,6 @@ import {
 } from './updater';
 import { proxyRequest } from './modules';
 import Analytics from 'electron-google-analytics4';
-import os from 'os';
 
 let mainWindow;
 global.forceQuit = false;
