@@ -5,8 +5,8 @@
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import { merge } from 'webpack-merge';
 
-import baseMainConfig from './webpack.config.base.main';
-import prodConfig from './webpack.config.base.prod';
+import baseMainConfig from './webpack.config.base.main.babel';
+import prodConfig from './webpack.config.base.prod.babel';
 
 export default merge(baseMainConfig, prodConfig, {
   output: {

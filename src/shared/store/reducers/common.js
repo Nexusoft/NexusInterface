@@ -2,8 +2,6 @@ import * as TYPE from 'consts/actionTypes';
 
 const initialState = {
   blockDate: null,
-  rpcCallList: [],
-  encryptionModalShown: false,
 };
 
 export default (state = initialState, action) => {
@@ -12,12 +10,6 @@ export default (state = initialState, action) => {
       return {
         ...state,
         blockDate: action.payload,
-      };
-
-    case TYPE.SHOW_ENCRYPTION_MODAL:
-      return {
-        ...state,
-        encryptionModalShown: true,
       };
 
     default:

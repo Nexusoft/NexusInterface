@@ -5,7 +5,6 @@ import Icon from 'components/Icon';
 import InfoField from 'components/InfoField';
 import ExternalLink from 'components/ExternalLink';
 import styled from '@emotion/styled';
-import { legacyMode } from 'consts/misc';
 import nexusLogo from 'icons/logo-full.svg';
 
 __ = __context('About');
@@ -89,14 +88,14 @@ const AgreementContent = styled.p({
 });
 
 export default function About() {
-  const version = useSelector(({ core: { info, systemInfo } }) =>
-    legacyMode ? info?.version : systemInfo?.version
+  const version = useSelector(
+    ({ core: { systemInfo } }) => systemInfo?.version
   );
-  const testnet = useSelector(({ core: { systemInfo } }) =>
-    legacyMode ? undefined : systemInfo?.testnet
+  const testnet = useSelector(
+    ({ core: { systemInfo } }) => systemInfo?.testnet
   );
-  const privateBlockchain = useSelector(({ core: { systemInfo } }) =>
-    legacyMode ? undefined : systemInfo?.private
+  const privateBlockchain = useSelector(
+    ({ core: { systemInfo } }) => systemInfo?.private
   );
   return (
     <ControlledModal>
@@ -115,7 +114,7 @@ export default function About() {
             {version}
           </InfoField>
           <InfoField ratio={[1, 1]} label={__('Core build date')}>
-            April 26th 2023
+            December 18th 2023
           </InfoField>
           {!!testnet && (
             <InfoField ratio={[1, 1]} label={__('Testnet')}>

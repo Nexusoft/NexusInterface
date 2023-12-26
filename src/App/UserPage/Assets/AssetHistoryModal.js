@@ -3,9 +3,10 @@ import { useState, useEffect, useRef } from 'react';
 import ControlledModal from 'components/ControlledModal';
 import Table from 'components/Table';
 import WaitingMessage from 'components/WaitingMessage';
+import Tooltip from 'components/Tooltip';
 import { formatDateTime } from 'lib/intl';
 import { openModal } from 'lib/ui';
-import { callApi } from 'lib/tritiumApi';
+import { callApi } from 'lib/api';
 import { handleError } from 'utils/form';
 
 import AssetHistoryDetailsModal from './AssetHistoryDetailsModal';
@@ -23,22 +24,46 @@ const timeFormatOptions = {
 
 export const tableColumns = [
   {
-    id: 'time',
-    Header: __('Time'),
-    accessor: 'modified',
-    Cell: (cell) => formatDateTime(cell.value * 1000, timeFormatOptions),
-    width: 210,
+    id: 'modified',
+    header: __('Time'),
+    accessorKey: 'modified',
+    cell: ({ getValue }) =>
+      getValue() ? formatDateTime(getValue() * 1000, timeFormatOptions) : '',
+    size: 200,
   },
   {
-    id: 'type',
-    Header: __('Type'),
-    accessor: 'type',
-    width: 100,
+    id: 'action',
+    header: __('Action'),
+    accessorKey: 'action',
+    size: 100,
+  },
+  {
+    id: 'register',
+    header: __('Register'),
+    accessorKey: 'register',
+    cell: ({ getValue }) => {
+      const value = getValue();
+      return (
+        <Tooltip.Trigger tooltip={value} align="start">
+          <span>{value}</span>
+        </Tooltip.Trigger>
+      );
+    },
+    size: 200,
   },
   {
     id: 'owner',
-    Header: __('Owner'),
-    accessor: 'owner',
+    header: __('Owner'),
+    accessorKey: 'owner',
+    cell: ({ getValue }) => {
+      const value = getValue();
+      return (
+        <Tooltip.Trigger tooltip={value} align="start">
+          <span>{value}</span>
+        </Tooltip.Trigger>
+      );
+    },
+    size: 200,
   },
 ];
 
@@ -64,6 +89,7 @@ export default function AssetHistoryModal({ asset }) {
       assignClose={(closeModal) => {
         closeModalRef.current = closeModal;
       }}
+      style={{ width: '80%' }}
     >
       <ControlledModal.Header className="relative">
         {__('Asset History')}
@@ -77,22 +103,14 @@ export default function AssetHistoryModal({ asset }) {
           </WaitingMessage>
         ) : (
           <Table
-            columns={tableColumns}
             data={events}
-            defaultPageSize={events.length < 10 ? events.length : 10}
-            getTrProps={(state, row) => {
-              const event = row && row.original;
-              return {
-                onClick: () => {
-                  openModal(AssetHistoryDetailsModal, {
-                    event,
-                  });
-                },
-                style: {
-                  cursor: 'pointer',
-                  fontSize: 15,
-                },
-              };
+            columns={columns}
+            defaultPageSize={10}
+            onRowClick={(row) => {
+              const event = row?.original;
+              openModal(AssetHistoryDetailsModal, {
+                event,
+              });
             }}
           />
         )}

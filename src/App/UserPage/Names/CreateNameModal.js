@@ -16,7 +16,7 @@ import {
   createGlobalNameFee,
 } from 'lib/fees';
 import { loadNameRecords, loadNamespaces, selectUsername } from 'lib/user';
-import { callApi } from 'lib/tritiumApi';
+import { callApi } from 'lib/api';
 
 __ = __context('CreateName');
 
@@ -74,8 +74,8 @@ function NameType({ namespaces }) {
           <Form.Select
             name="namespace"
             options={(namespaces || []).map((n) => ({
-              value: n.name,
-              display: n.name,
+              value: n.namespace,
+              display: n.namespace,
             }))}
             placeholder={__('A namespace you own')}
             validate={required()}

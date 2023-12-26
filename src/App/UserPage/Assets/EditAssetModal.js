@@ -5,7 +5,7 @@ import Spinner from 'components/Spinner';
 import { formSubmit } from 'lib/form';
 import { confirmPin, openSuccessDialog } from 'lib/dialog';
 import { loadAssets } from 'lib/user';
-import { callApi } from 'lib/tritiumApi';
+import { callApi } from 'lib/api';
 import { getAssetData } from 'lib/asset';
 import { assetNumberTypes } from 'consts/misc';
 import memoize from 'utils/memoize';

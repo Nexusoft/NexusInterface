@@ -11,7 +11,7 @@ import Button from 'components/Button';
 import Select from 'components/Select';
 import TextField from 'components/TextField';
 import RequireCoreConnected from 'components/RequireCoreConnected';
-import { callApiByUrl } from 'lib/tritiumApi';
+import { callApiByUrl } from 'lib/api';
 import {
   switchConsoleTab,
   updateConsoleInput,
@@ -177,7 +177,6 @@ export default function NexusApiConsole() {
       if (err.message !== undefined) {
         printCommandError(tab + `Error: ${err.message}(errorcode ${err.code})`);
       } else {
-        // This is the error if the rpc is unavailable
         try {
           printCommandError(tab + err.err.message);
         } catch (e) {

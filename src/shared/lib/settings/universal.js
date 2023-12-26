@@ -54,12 +54,7 @@ export const defaultSettings = {
   allowAdvancedCoreOptions: false,
   advancedCoreParams: '',
   manualDaemon: false,
-  manualDaemonSSL: true,
-  manualDaemonUser: 'rpcserver',
-  manualDaemonPassword: defaultPassword,
   manualDaemonIP: '127.0.0.1',
-  manualDaemonPort: '9336',
-  manualDaemonPortSSL: '7336',
   manualDaemonApiSSL: true,
   manualDaemonApiUser: 'apiserver',
   manualDaemonApiPassword: defaultPassword,
@@ -70,8 +65,6 @@ export const defaultSettings = {
   embeddedCoreUseNonSSL: false,
   embeddedCoreApiPort: undefined,
   embeddedCoreApiPortSSL: undefined,
-  embeddedCoreRpcPort: undefined,
-  embeddedCoreRpcPortSSL: undefined,
 
   // Style
   renderGlobe: true,
@@ -87,9 +80,7 @@ export const defaultSettings = {
 
   // Hidden settings
   acceptedAgreement: false,
-  encryptionWarningDisabled: false,
   bootstrapSuggestionDisabled: false,
-  migrateSuggestionDisabled: false,
   liteModeNoticeDisabled: false,
   windowWidth: 1200,
   windowHeight: 800,
@@ -97,8 +88,8 @@ export const defaultSettings = {
   windowY: undefined,
   forkBlocks: 0,
   walletClean: false,
-  legacyMode: false,
   clearPeers: false,
+  coreAPIPolicy: 0,
   // If false, show Create new user modal instead of Login
   // modal automatically when core is connected
   firstCreateNewUserShown: false,

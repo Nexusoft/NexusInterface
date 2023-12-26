@@ -12,7 +12,7 @@ import ModuleDetailsModal from 'components/ModuleDetailsModal';
 import { modulesDir } from 'consts/paths';
 import { walletDataDir } from 'consts/paths';
 import ensureDirExists from 'utils/ensureDirExists';
-import deleteDirectory from 'utils/promisified/deleteDirectory';
+import { rm as deleteDirectory } from 'fs/promises';
 import extractZip from 'utils/promisified/extractZip';
 import { throttled } from 'utils/universal';
 import { confirm, openSuccessDialog, openErrorDialog } from 'lib/dialog';
@@ -98,12 +98,11 @@ function doInstall(path) {
             });
             if (!agreed) return;
 
-            await deleteDirectory(dest, { glob: false });
+            await deleteDirectory(dest, { recursive: true, force: true });
           }
 
           await copyModule(module.info.files, path, dest);
-          GA.SendEvent('Modules', 'installModule', 'name', module.info.name);
-
+          GA.InstallModule(module.info.name);
           resolve(dest);
           openSuccessDialog({
             message: __('Module has been successfully installed'),
@@ -151,7 +150,7 @@ export async function installModule(path) {
       }
 
       if (fs.existsSync(tempModuleDir)) {
-        await deleteDirectory(tempModuleDir);
+        await deleteDirectory(tempModuleDir, { recursive: true, force: true });
       }
 
       if (path.endsWith('.zip')) {
@@ -228,12 +227,25 @@ export async function addDevModule(dirPath) {
   });
 }
 
-const updateDownloadProgress = throttled((payload) => {
-  store.dispatch({
-    type: TYPE.MODULE_DOWNLOAD_PROGRESS,
-    payload,
-  });
-}, 1000);
+// Mapping from module name to download request object of that module
+let downloadRequests = {};
+export const getDownloadRequest = (moduleName) => downloadRequests[moduleName];
+
+const updateDownloadProgress = throttled(
+  ({ moduleName, downloaded, totalSize, downloadRequest }) => {
+    downloadRequests[moduleName] = downloadRequest;
+    store.dispatch({
+      type: TYPE.MODULE_DOWNLOAD_PROGRESS,
+      payload: {
+        moduleName,
+        downloaded,
+        totalSize,
+        downloading: !!downloadRequest,
+      },
+    });
+  },
+  1000
+);
 
 function download(url, { moduleName, filePath }) {
   return new Promise((resolve, reject) => {
@@ -364,6 +376,7 @@ export async function downloadAndInstall({
       note: err.message,
     });
   } finally {
+    downloadRequests[moduleName] = null;
     store.dispatch({
       type: TYPE.MODULE_DOWNLOAD_FINISH,
       payload: { moduleName },
@@ -377,8 +390,6 @@ export async function downloadAndInstall({
 }
 
 export function abortModuleDownload(moduleName) {
-  const moduleDownload = store.getState().moduleDownloads[moduleName];
-  if (moduleDownload?.downloadRequest) {
-    moduleDownload.downloadRequest.abort();
-  }
+  const downloadRequest = getDownloadRequest(moduleName);
+  return downloadRequest?.abort();
 }

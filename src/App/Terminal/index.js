@@ -1,4 +1,5 @@
 // External Dependencies
+import { useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { useSelector } from 'react-redux';
@@ -6,10 +7,9 @@ import { useSelector } from 'react-redux';
 // Internal Global Dependencies
 import Panel from 'components/Panel';
 import RouterHorizontalTab from 'components/RouterHorizontalTab';
-import { legacyMode } from 'consts/misc';
+import GA from 'lib/googleAnalytics';
 
 // Internal Local Dependencies
-import TerminalConsole from './TerminalConsole';
 import NexusApiConsole from './NexusApiConsole';
 import TerminalCore from './TerminalCore';
 
@@ -37,6 +37,9 @@ function ConsoleRedirect() {
 }
 
 export default function Terminal() {
+  useEffect(() => {
+    GA.SendScreen('Terminal');
+  }, []);
   return (
     <Panel icon={consoleIcon} title={__('Console')} bodyScrollable={false}>
       <TerminalComponent>
@@ -44,7 +47,7 @@ export default function Terminal() {
           <RouterHorizontalTab
             link="Console"
             icon={logoIcon}
-            text={legacyMode ? __('Console') : 'Nexus API'}
+            text={'Nexus API'}
           />
           <RouterHorizontalTab
             link="Core"
@@ -54,10 +57,7 @@ export default function Terminal() {
         </TerminalTabBar>
 
         <Routes>
-          <Route
-            path="Console"
-            element={legacyMode ? <TerminalConsole /> : <NexusApiConsole />}
-          />
+          <Route path="Console" element={<NexusApiConsole />} />
           <Route path="Core" element={<TerminalCore />} />
           <Route path="*" element={<ConsoleRedirect />} />
         </Routes>

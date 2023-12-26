@@ -1,9 +1,7 @@
 // External
-import { useEffect, useRef } from 'react';
+import { useEffect, useId } from 'react';
 import { useSelector } from 'react-redux';
-import { useLocation } from 'react-router-dom';
 import styled from '@emotion/styled';
-import qs from 'querystring';
 import arrayMutators from 'final-form-arrays';
 
 // Internal Global
@@ -11,187 +9,169 @@ import Form from 'components/Form';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
 import FormField from 'components/FormField';
-import rpc from 'lib/rpc';
-import { defaultSettings } from 'lib/settings/universal';
-import { loadAccounts, updateAccountBalances } from 'lib/user';
 import { openModal } from 'lib/ui';
-import { required, formSubmit } from 'lib/form';
-import { confirm, openSuccessDialog } from 'lib/dialog';
-import memoize from 'utils/memoize';
+import { loadAccounts, loadOwnedTokens } from 'lib/user';
+import {
+  formName,
+  getDefaultRecipient,
+  useInitialValues,
+  getSource,
+} from 'lib/send';
+import { required } from 'lib/form';
+import store from 'store';
+import { timing } from 'styles';
 import sendIcon from 'icons/send.svg';
+import plusIcon from 'icons/plus.svg';
 
 // Internal Local
 import Recipients from './Recipients';
+import ExpiryFields from './ExpiryFields';
 import { selectAccountOptions } from './selectors';
-import PasswordModal from './PasswordModal';
+import PreviewTransactionModal from './PreviewTransactionModal';
 
 __ = __context('Send');
 
-const SendFormComponent = styled(Form)({
-  maxWidth: 800,
+const SendFormComponent = styled.div({
+  maxWidth: 900,
   margin: '-.5em auto 0',
 });
 
 const SendFormButtons = styled.div({
   display: 'flex',
   justifyContent: 'space-between',
-  marginTop: '2em',
+  marginTop: '3em',
 });
 
-const confirmPassword = () =>
-  new Promise((resolve) => {
-    openModal(PasswordModal, {
-      onSubmit: resolve,
-    });
-  });
+const SendBtn = styled(Form.SubmitButton)({
+  flex: 1,
+});
 
-function SendMultipleButton() {
-  return (
-    <Form.FieldArray
-      name="recipients"
-      render={({ fields }) =>
-        fields.length === 1 ? (
-          <Button
-            onClick={() => {
-              fields.push({
-                address: null,
-                amount: '',
-                fiatAmount: '',
-              });
-            }}
-          >
-            {__('Send To multiple recipients')}
-          </Button>
-        ) : (
-          <div />
-        )
-      }
-    />
-  );
-}
+const MultiBtn = styled(Button)({
+  marginRight: '1em',
+});
 
-const initValues = memoize((sendTo) => ({
-  sendFrom: null,
-  recipients: [
-    {
-      address: sendTo || null,
-      amount: '',
-      fiatAmount: '',
-    },
-  ],
-  password: null,
-  message: '',
+const AdvancedOptionsSwitch = styled.div({
+  display: 'flex',
+  alignItems: 'center',
+  cursor: 'pointer',
+  marginTop: 10,
+  fontSize: 15,
+});
+
+const AdvancedOptionsLabel = styled.label(({ active }) => ({
+  transition: `opacity ${timing.normal}`,
+  opacity: active ? 1 : 0.67,
 }));
 
+function getRecipientsParams({ recipients, advancedOptions }) {
+  return recipients.map(({ address, amount, reference }) => ({
+    address_to: address,
+    amount: parseFloat(amount),
+    reference: (!!advancedOptions && reference) || undefined,
+  }));
+}
+
+function getAdvancedParams({ expiry, advancedOptions }) {
+  const params = {};
+  if (advancedOptions) {
+    const expires =
+      parseInt(expiry.expireSeconds) +
+      parseInt(expiry.expireMinutes) * 60 +
+      parseInt(expiry.expireHours) * 3600 +
+      parseInt(expiry.expireDays) * 86400;
+    if (Number.isInteger(expires) && expires > 0) {
+      params.expires = expires;
+    }
+  }
+  return params;
+}
+
 export default function SendForm() {
-  const minConfirmations = useSelector(
-    (state) => state.settings.minConfirmations
-  );
-  const locked = useSelector((state) => state.core.info?.locked);
-  const blocks = useSelector((state) => state.core.info?.blocks);
-  const mintingOnly = useSelector((state) => state.core.info?.minting_only);
+  const switchID = useId();
   const accountOptions = useSelector(selectAccountOptions);
-
-  const location = useLocation();
-  // React-router's search field has a leading ? mark but
-  // qs.parse will consider it invalid, so remove it
-  const queryParams = qs.parse(location.search.substring(1));
-  const sendTo = queryParams?.sendTo;
-
+  const initialValues = useInitialValues();
   useEffect(() => {
     loadAccounts();
+    loadOwnedTokens();
   }, []);
 
-  const lastBlocks = useRef(blocks);
-  useEffect(() => {
-    if (blocks !== lastBlocks.current) {
-      updateAccountBalances();
-      lastBlocks.current = blocks;
-    }
-  });
-
   return (
-    <SendFormComponent
-      name="send"
-      persistState
-      initialValues={initValues(sendTo)}
-      onSubmit={formSubmit({
-        submit: async ({ sendFrom, recipients, message }) => {
-          const confirmed = await confirm({
-            question: __('Send transaction?'),
+    <SendFormComponent>
+      <Form
+        name={formName}
+        persistState
+        initialValues={initialValues}
+        initialValuesEqual={() => true}
+        onSubmit={({ sendFrom, recipients, expiry, advancedOptions }, form) => {
+          const state = store.getState();
+          const source = getSource(state, sendFrom);
+          openModal(PreviewTransactionModal, {
+            source,
+            recipients: getRecipientsParams({ recipients, advancedOptions }),
+            ...getAdvancedParams({ expiry, advancedOptions }),
+            resetSendForm: form.reset,
           });
-          if (!confirmed) return;
+        }}
+        mutators={{ ...arrayMutators }}
+      >
+        <div className="flex justify-end">
+          <AdvancedOptionsSwitch>
+            <Form.Switch
+              name="advancedOptions"
+              style={{ fontSize: '.75em' }}
+              id={switchID}
+            />
+            <Form.Field
+              name="advancedOptions"
+              subscription={{ value: true }}
+              render={({ input: { value } }) => (
+                <AdvancedOptionsLabel
+                  className="ml0_4 pointer"
+                  htmlFor={switchID}
+                  active={value}
+                >
+                  {__('Advanced options')}
+                </AdvancedOptionsLabel>
+              )}
+            />
+          </AdvancedOptionsSwitch>
+        </div>
 
-          let password = null;
-          if (locked || mintingOnly) {
-            password = await confirmPassword();
-          }
+        <FormField label={__('Send from')}>
+          <Form.Select
+            name="sendFrom"
+            skin="filled-inverted"
+            placeholder={__('Select an account')}
+            options={accountOptions}
+            validate={required()}
+          />
+        </FormField>
 
-          let minConf = parseInt(minConfirmations);
-          if (isNaN(minConf)) {
-            minConf = defaultSettings.minConfirmations;
-          }
+        <Form.FieldArray component={Recipients} name="recipients" />
 
-          if (recipients.length === 1) {
-            const recipient = recipients[0];
-            const params = [
-              sendFrom,
-              recipient.address,
-              parseFloat(recipient.amount),
-              minConf,
-              message || null,
-              null,
-            ];
-            if (password) params.push(password);
-            return await rpc('sendfrom', params);
-          } else {
-            const queue = recipients.reduce(
-              (queue, r) => ({ ...queue, [r.address]: parseFloat(r.amount) }),
-              {}
-            );
-            return await rpc('sendmany', [sendFrom, queue], minConf, message);
-          }
-        },
-        onSuccess: (result, values, form) => {
-          if (!result) return;
-          form.reset();
-          loadAccounts();
-          openSuccessDialog({
-            message: __('Transaction sent'),
-          });
-        },
-        errorMessage: __('Error sending NXS'),
-      })}
-      mutators={{ ...arrayMutators }}
-    >
-      <FormField label={__('Send from')}>
-        <Form.Select
-          name="sendFrom"
-          placeholder={__('Select an account')}
-          options={accountOptions}
-          validate={required()}
-        />
-      </FormField>
+        <ExpiryFields />
 
-      <Form.FieldArray component={Recipients} name="recipients" />
-
-      <FormField connectLabel label={__('Message')}>
-        <Form.TextField
-          name="message"
-          multiline
-          rows={1}
-          placeholder={__('Enter your message')}
-        />
-      </FormField>
-
-      <SendFormButtons>
-        <SendMultipleButton />
-
-        <Form.SubmitButton skin="primary">
-          <Icon icon={sendIcon} className="mr0_4" />
-          {__('Send')}
-        </Form.SubmitButton>
-      </SendFormButtons>
+        <SendFormButtons>
+          <Form.FieldArray
+            name="recipients"
+            render={({ fields }) => (
+              <MultiBtn
+                skin="default"
+                onClick={() => {
+                  fields.push(getDefaultRecipient());
+                }}
+              >
+                <Icon icon={plusIcon} style={{ fontSize: '.8em' }} />
+                <span className="v-align ml0_4">{__('Add recipient')}</span>
+              </MultiBtn>
+            )}
+          />
+          <SendBtn skin="primary">
+            <Icon icon={sendIcon} className="mr0_4" />
+            {__('Proceed')}
+          </SendBtn>
+        </SendFormButtons>
+      </Form>
     </SendFormComponent>
   );
 }

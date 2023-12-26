@@ -1,11 +1,8 @@
 import { combineReducers } from 'redux';
 
-import list from './list';
 import market from './market';
-import transactions from './transactions';
 import common from './common';
 import addressBook from './addressBook';
-import myAccounts from './myAccounts';
 import settings from './settings';
 import theme from './theme';
 import ui from './ui';
@@ -26,12 +23,9 @@ export default function createRootReducer() {
   return combineReducers({
     core,
     user,
-    list,
     market,
-    transactions,
     common,
     addressBook,
-    myAccounts,
     settings,
     theme,
     ui,

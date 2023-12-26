@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import ControlledModal from 'components/ControlledModal';
 import InfoField from 'components/InfoField';
 import WaitingMessage from 'components/WaitingMessage';
-import { callApi } from 'lib/tritiumApi';
+import { callApi } from 'lib/api';
 import { openErrorDialog } from 'lib/dialog';
 import { formatDateTime } from 'lib/intl';
 

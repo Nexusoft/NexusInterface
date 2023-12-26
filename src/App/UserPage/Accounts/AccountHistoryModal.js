@@ -85,28 +85,47 @@ const accountDisplay = (value) => {
   return '';
 };
 
-const tableColumns = [
+const positiveAmountOPs = [
+  'CREDIT',
+  'GENESIS',
+  'TRUST',
+  'GENESISPOOL',
+  'TRUSTPOOL',
+  'COINBASE',
+  'MIGRATE',
+];
+
+const defaultColumn = {
+  size: 100,
+};
+
+const columns = [
   {
     id: 'timestamp',
-    Header: __('Time'),
-    accessor: 'timestamp',
-    Cell: (cell) =>
-      cell.value ? formatDateTime(cell.value * 1000, timeFormatOptions) : '',
-    width: 180,
+    header: __('Time'),
+    accessorKey: 'timestamp',
+    cell: ({ getValue }) => {
+      const value = getValue();
+      return value ? formatDateTime(value * 1000, timeFormatOptions) : '';
+    },
+    size: 180,
+    sortingFn: 'datetime',
   },
   {
     id: 'operation',
-    Header: __('Operation'),
-    accessor: 'OP',
-    width: 105,
+    header: __('Operation'),
+    accessorKey: 'OP',
+    size: 105,
+    sortingFn: 'text',
   },
   {
     id: 'from',
-    Header: __('From'),
-    Cell: (cell) => {
+    header: __('From'),
+    accessorKey: 'from',
+    cell: ({ row }) => {
       const {
         original: { from, trustkey, OP },
-      } = cell;
+      } = row;
       const content = accountDisplay(from);
       switch (OP) {
         case 'DEBIT':
@@ -119,9 +138,9 @@ const tableColumns = [
         case 'GENESISPOOL':
           return <i className="dim">{__('staking')}</i>;
         case 'CREDIT':
-          if (cell.original.for === 'COINBASE') {
+          if (row.original.for === 'COINBASE') {
             return <i className="dim">{__('mining')}</i>;
-          } else if (cell.original.for === 'LEGACY') {
+          } else if (row.original.for === 'LEGACY') {
             return <i className="dim">LEGACY</i>;
           } else {
             return content;
@@ -132,14 +151,17 @@ const tableColumns = [
           return content;
       }
     },
+    sortingFn: 'alphanumericCaseSensitive',
+    sortDescFirst: false,
   },
   {
     id: 'to',
-    Header: __('To'),
-    Cell: (cell) => {
+    header: __('To'),
+    accessorKey: 'to',
+    cell: ({ row }) => {
       const {
         original: { to, name, address, OP },
-      } = cell;
+      } = row;
       const content = accountDisplay(to);
       switch (OP) {
         case 'CREDIT':
@@ -154,28 +176,30 @@ const tableColumns = [
           return content;
       }
     },
+    sortingFn: 'alphanumericCaseSensitive',
+    sortDescFirst: false,
   },
   {
     id: 'change',
-    Header: __('Change'),
-    Cell: ({ original: { OP, amount } }) =>
-      amount ? (
-        <Amount
-          possitive={
-            OP === 'CREDIT' ||
-            OP === 'GENESIS' ||
-            OP === 'TRUST' ||
-            OP === 'GENESISPOOL' ||
-            OP === 'TRUSTPOOL' ||
-            OP === 'COINBASE' ||
-            OP === 'MIGRATE'
-          }
-        >
+    accessorFn: (contract) => {
+      const amount = contract.amount || 0;
+      const positive = positiveAmountOPs.includes(contract.OP);
+      return positive ? amount : -amount;
+    },
+    header: __('Change'),
+    cell: ({ row }) => {
+      const {
+        original: { OP, amount },
+      } = row;
+      return amount ? (
+        <Amount possitive={positiveAmountOPs.includes(OP)}>
           {formatNumber(amount, 6)}
         </Amount>
       ) : (
         ''
-      ),
+      );
+    },
+    sortingFn: 'basic',
   },
 ];
 
@@ -234,8 +258,7 @@ export default function AccountHistoryModal({ account }) {
               }
             });
           }
-          console.log(contracts);
-          return contracts.sort((c1, c2) => c1.timestamp - c2.timestamp);
+          return contracts.sort((c1, c2) => c2.timestamp - c1.timestamp);
         }, []);
         setContracts(contracts);
       } catch (err) {
@@ -359,24 +382,15 @@ export default function AccountHistoryModal({ account }) {
 
             <ContractsTable
               data={contracts}
-              columns={tableColumns}
+              defaultColumn={defaultColumn}
+              columns={columns}
               defaultPageSize={10}
-              getTrProps={(state, row) => {
-                const contract = row && row.original;
-                return {
-                  onClick: contract
-                    ? () => {
-                        openModal(ContractDetailsModal, {
-                          contract,
-                          txid: contract.txid,
-                        });
-                      }
-                    : undefined,
-                  style: {
-                    cursor: 'pointer',
-                    fontSize: 15,
-                  },
-                };
+              onRowClick={(row) => {
+                const contract = row?.original;
+                openModal(ContractDetailsModal, {
+                  contract,
+                  txid: contract?.txid,
+                });
               }}
             />
           </Layout>

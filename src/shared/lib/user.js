@@ -1,18 +1,15 @@
 import { createRef, useRef, useEffect } from 'react';
-import MigrateAccountModal from 'components/MigrateAccountModal';
 import ExternalLink from 'components/ExternalLink';
 import BackgroundTask from 'components/BackgroundTask';
 import * as TYPE from 'consts/actionTypes';
 import store, { observeStore } from 'store';
-import { legacyMode } from 'consts/misc';
-import { callApi } from 'lib/tritiumApi';
-import rpc from 'lib/rpc';
-import { openModal, showBackgroundTask, showNotification } from 'lib/ui';
+import { callApi } from 'lib/api';
+import { showBackgroundTask, showNotification } from 'lib/ui';
 import { confirm } from 'lib/dialog';
 import { updateSettings } from 'lib/settings';
-import { isLoggedIn } from 'selectors';
 import listAll from 'utils/listAll';
 import sleep from 'utils/promisified/sleep';
+import GA from './googleAnalytics';
 
 __ = __context('User');
 
@@ -90,20 +87,14 @@ export async function refreshUserStatus() {
       session ? { session } : undefined
     );
 
-    const {
-      user: { profileStatus },
-    } = store.getState();
-
-    if (!profileStatus) {
-      const profileStatus = await callApi('profiles/status/master', {
-        genesis: status.genesis,
-        session,
-      });
-      store.dispatch({
-        type: TYPE.SET_PROFILE_STATUS,
-        payload: profileStatus,
-      });
-    }
+    const profileStatus = await callApi('profiles/status/master', {
+      genesis: status.genesis,
+      session,
+    });
+    store.dispatch({
+      type: TYPE.SET_PROFILE_STATUS,
+      payload: profileStatus,
+    });
 
     store.dispatch({ type: TYPE.SET_USER_STATUS, payload: status });
 
@@ -140,10 +131,19 @@ export const logIn = async ({ username, password, pin }) => {
       pin,
     });
 
-    const stakeInfo = await callApi('finance/get/stakeinfo', { session });
+    let stakeInfo = null;
+    try {
+      stakeInfo = await callApi('finance/get/stakeinfo', { session });
+    } catch (err) {
+      if (err.code !== -70) {
+        // Only ignore 'Trust account not found' error
+        throw err;
+      }
+    }
     await unlockUser({ pin, session, stakeInfo });
     const { status } = await setActiveUser({ session, genesis, stakeInfo });
 
+    GA.LogIn();
     return { username, session, status, stakeInfo };
   } finally {
     // Release the lock
@@ -171,6 +171,7 @@ export const logOut = async () => {
     } else {
       await callApi('sessions/terminate/local');
     }
+    GA.LogOut();
   } finally {
     // Release the lock
     refreshUserStatusLock = false;
@@ -190,14 +191,19 @@ export async function setActiveUser({ session, genesis, stakeInfo }) {
       : Promise.resolve(null),
     stakeInfo
       ? Promise.resolve(null)
-      : callApi('finance/get/stakeinfo', { session }),
+      : callApi('finance/get/stakeinfo', { session }).catch((err) => {
+          if (err.code !== -70) {
+            // Only ignore 'Trust account not found' error
+            throw err;
+          }
+        }),
   ]);
 
   const result = {
     session,
     sessions,
     status,
-    stakeInfo: stakeInfo || newStakeInfo,
+    stakeInfo: stakeInfo || newStakeInfo || null,
     profileStatus,
   };
   store.dispatch({
@@ -242,93 +248,27 @@ function processAccount(account) {
   }
 }
 
-export const loadAccounts = legacyMode
-  ? // Legacy Mode
-    async () => {
-      const accList = await rpc('listaccounts', []);
-
-      const addrList = await Promise.all(
-        Object.keys(accList || {}).map((account) =>
-          rpc('getaddressesbyaccount', [account])
-        )
-      );
-
-      const validateAddressPromises = addrList.reduce(
-        (list, element) => [
-          ...list,
-          ...element.map((address) => rpc('validateaddress', [address])),
-        ],
-        []
-      );
-      const validations = await Promise.all(validateAddressPromises);
-
-      const accountList = [];
-      validations.forEach((e) => {
-        if (e.ismine && e.isvalid) {
-          const index = accountList.findIndex(
-            (ele) => ele.account === e.account
-          );
-          const indexDefault = accountList.findIndex(
-            (ele) => ele.account === 'default'
-          );
-
-          if (e.account === '' || e.account === 'default') {
-            if (index === -1 && indexDefault === -1) {
-              accountList.push({
-                account: 'default',
-                addresses: [e.address],
-              });
-            } else {
-              accountList[indexDefault].addresses.push(e.address);
-            }
-          } else {
-            if (index === -1) {
-              accountList.push({
-                account: e.account,
-                addresses: [e.address],
-              });
-            } else {
-              accountList[index].addresses.push(e.address);
-            }
-          }
-        }
-      });
-
-      accountList.forEach((acc) => {
-        const accountName = acc.account || 'default';
-        if (accountName === 'default') {
-          acc.balance =
-            accList['default'] !== undefined ? accList['default'] : accList[''];
-        } else {
-          acc.balance = accList[accountName];
-        }
-      });
-
-      store.dispatch({ type: TYPE.MY_ACCOUNTS_LIST, payload: accountList });
-    }
-  : // Tritium Mode
-    async () => {
-      try {
-        const accounts = await callApi('finance/list/any');
-        accounts.forEach(processAccount);
-        store.dispatch({
-          type: TYPE.SET_TRITIUM_ACCOUNTS,
-          payload: accounts,
-        });
-      } catch (err) {
-        console.error('account listing failed', err);
-      }
-    };
-
-export const updateAccountBalances = async () => {
-  const accList = await rpc('listaccounts', []);
-  store.dispatch({ type: TYPE.UPDATE_MY_ACCOUNTS, payload: accList });
+export const loadAccounts = async () => {
+  try {
+    const accounts = await callApi('finance/list/any');
+    accounts.forEach(processAccount);
+    store.dispatch({
+      type: TYPE.SET_TRITIUM_ACCOUNTS,
+      payload: accounts,
+    });
+  } catch (err) {
+    console.error('account listing failed', err);
+  }
 };
 
 export const loadNameRecords = async () => {
   try {
     const nameRecords = await listAll('names/list/names');
-    store.dispatch({ type: TYPE.SET_NAME_RECORDS, payload: nameRecords });
+    const unusedRecords = await listAll('names/list/inactive');
+    store.dispatch({
+      type: TYPE.SET_NAME_RECORDS,
+      payload: [...nameRecords, ...unusedRecords],
+    });
   } catch (err) {
     console.error('names/list/names failed', err);
   }
@@ -362,26 +302,6 @@ export const loadAssets = async () => {
     console.error('assets/list/assets failed', err);
   }
 };
-
-export function prepareUser() {
-  if (!legacyMode) {
-    observeStore(isLoggedIn, async (loggedIn) => {
-      if (loggedIn) {
-        const {
-          settings: { migrateSuggestionDisabled },
-          core: { systemInfo },
-        } = store.getState();
-        if (!migrateSuggestionDisabled && !systemInfo?.nolegacy) {
-          const coreInfo = await rpc('getinfo', []);
-          const legacyBalance = (coreInfo.balance || 0) + (coreInfo.stake || 0);
-          if (legacyBalance) {
-            openModal(MigrateAccountModal, { legacyBalance });
-          }
-        }
-      }
-    });
-  }
-}
 
 async function shouldUnlockStaking(stakeInfo) {
   const {

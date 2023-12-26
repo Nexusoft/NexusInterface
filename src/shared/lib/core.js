@@ -3,26 +3,25 @@ import log from 'electron-log';
 
 import * as TYPE from 'consts/actionTypes';
 import store from 'store';
-import rpc from 'lib/rpc';
 import { loadNexusConf, saveCoreConfig } from 'lib/coreConfig';
-import { callApi } from 'lib/tritiumApi';
+import { callApi } from 'lib/api';
 import { updateSettings } from 'lib/settings';
 import sleep from 'utils/promisified/sleep';
-import { preRelease } from 'consts/misc';
+import { minimumCoreAPIPolicy, preRelease } from 'consts/misc';
+import { defaultCoreDataDir } from 'consts/paths';
+import fs from 'fs';
+import { rm as deleteDirectory } from 'fs/promises';
+import * as path from 'path';
 
 export const getLedgerInfo = async () => {
   try {
     const ledgerInfo = await callApi('ledger/get/info');
     store.dispatch({ type: TYPE.SET_LEDGER_INFO, payload: ledgerInfo });
+    return ledgerInfo;
   } catch (err) {
     store.dispatch({ type: TYPE.CLEAR_LEDGER_INFO });
     console.error('ledger/get/info failed', err);
   }
-};
-
-export const getDifficulty = async () => {
-  const diff = await rpc('getdifficulty', []);
-  store.dispatch({ type: TYPE.GET_DIFFICULTY, payload: diff });
 };
 
 /**
@@ -67,17 +66,13 @@ export const startCore = async () => {
   const params = [
     '-daemon',
     '-server',
-    '-rpcthreads=4',
     '-fastsync',
     '-noterminateauth',
     '-ssl=1',
     '-apissl=1',
-    '-rpcssl=1',
     '-p2pssl=1',
     `-datadir=${settings.coreDataDir}`,
-    `-rpcsslport=${conf.portSSL}`,
     `-apisslport=${conf.apiPortSSL}`,
-    `-rpcport=${conf.port}`,
     `-apiport=${conf.apiPort}`,
     `-verbose=${preRelease ? 3 : settings.verboseLevel}`,
   ];
@@ -127,6 +122,22 @@ export const startCore = async () => {
   if (settings.multiUser == true) params.push('-multiusername=1');
   if (settings.allowAdvancedCoreOptions) {
     if (settings.advancedCoreParams) params.push(settings.advancedCoreParams);
+  }
+
+  if (
+    !LOCK_TESTNET &&
+    !settings.testnetIteration &&
+    (!settings.coreAPIPolicy || settings.coreAPIPolicy < minimumCoreAPIPolicy)
+  ) {
+    updateSettings({ coreAPIPolicy: minimumCoreAPIPolicy });
+    const corePath =
+      conf.coreDataDir || settings.coreDataDir || defaultCoreDataDir;
+    if (fs.existsSync(path.join(corePath, '_API'))) {
+      await deleteDirectory(path.join(corePath, '_API'), {
+        recursive: true,
+        force: true,
+      });
+    }
   }
 
   // Start core

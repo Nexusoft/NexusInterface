@@ -7,6 +7,7 @@ import Button from 'components/Button';
 import {
   starryNightBackground,
   cosmicLightBackground,
+  nexusThemeBackground,
   updateTheme,
 } from 'lib/theme';
 
@@ -34,8 +35,11 @@ async function handleFilePick(e) {
 
 export default function BackgroundPicker() {
   const wallpaper = useSelector((state) => state.theme.wallpaper);
+  console.log(wallpaper);
   const customWallpaper =
-    wallpaper !== starryNightBackground && wallpaper !== cosmicLightBackground;
+    wallpaper !== starryNightBackground &&
+    wallpaper !== cosmicLightBackground &&
+    wallpaper !== nexusThemeBackground;
 
   return (
     <div>
@@ -56,6 +60,15 @@ export default function BackgroundPicker() {
         style={{ display: 'inline', marginBottom: '.5em' }}
       >
         {__('Cosmic light')}
+      </Button>
+      <Button
+        skin={wallpaper === nexusThemeBackground ? 'filled-primary' : 'plain'}
+        className="mr1"
+        onClick={() => updateTheme({ wallpaper: nexusThemeBackground })}
+        selected={wallpaper === nexusThemeBackground}
+        style={{ display: 'inline', marginBottom: '.5em' }}
+      >
+        {__('Nexus.io')}
       </Button>
       <Button
         skin={customWallpaper ? 'filled-primary' : 'plain'}

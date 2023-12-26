@@ -3,19 +3,17 @@ import styled from '@emotion/styled';
 
 // Internal
 import Tooltip from 'components/Tooltip';
-import Button from 'components/Button';
-import Icon from 'components/Icon';
 import { timing } from 'styles';
-import plusIcon from 'icons/plus.svg';
-import RecipientAddress from './RecipientAddress';
+import RecipientNameOrAddress from './RecipientNameOrAddress';
 import AmountField from './AmountField';
+import ReferenceField from './ReferenceField';
 
 __ = __context('Send');
 
 const RemoveButton = styled.div(({ theme }) => ({
   position: 'absolute',
   left: 3,
-  bottom: 8,
+  top: '1em',
   cursor: 'pointer',
   width: '1.5em',
   height: '1.5em',
@@ -32,50 +30,56 @@ const RemoveButton = styled.div(({ theme }) => ({
 }));
 
 const Recipient = styled.div({
-  display: 'flex',
-  alignItems: 'center',
-  margin: '0 -30px',
+  marginLeft: -30,
+  marginRight: -30,
   padding: '0 30px',
   position: 'relative',
 });
 
-const AddressWrapper = styled.div({
-  flexGrow: 5,
-  flexBasis: 0,
+const BaseFields = styled.div({
+  display: 'flex',
+  alignItems: 'stretch',
+});
+
+const LeftHalf = styled.div({
+  flex: '5 5 500px',
   marginRight: '1em',
 });
 
-const AmountWrapper = styled.div({
-  flexGrow: 2,
-  flexBasis: 0,
-});
-
-const MoreInfo = styled.div({
-  marginTop: '1em',
-  marginBottom: '1.5em',
+const RightHalf = styled.div({
+  flex: '2 2 120px',
   display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'stretch',
   justifyContent: 'space-between',
 });
 
-const PlusIcon = styled(Icon)({
-  fontSize: '.8em',
-});
-
 export default function Recipients({ fields }) {
-  if (!fields || !fields.length) return null;
+  if (!fields?.length) return null;
 
-  if (fields.length === 1) {
-    return (
-      <>
-        <RecipientAddress fieldName={`${fields.name}[0].address`} />
-        <AmountField parentFieldName={`${fields.name}[0]`} />
-      </>
-    );
-  } else {
-    return (
-      <>
-        {fields.map((fieldName, i) => (
-          <Recipient key={i}>
+  // if (fields.length === 1) {
+  //   return (
+  //     <>
+  //       <Field
+  //         name={`${fields.name}[0].address`}
+  //         component={RecipientNameOrAddress}
+  //         change={change}
+  //         sendFrom={sendFrom}
+  //       />
+  //       <AmountField
+  //         fullAmount={accBalance}
+  //         parentFieldName={`${fields.name}[0]`}
+  //         change={change}
+  //         token={token}
+  //       />
+  //     </>
+  //   );
+  // } else {
+  return (
+    <>
+      {fields.map((fieldName, i) => (
+        <Recipient key={i} style={{ marginTop: i > 0 ? '-1em' : '0.5em' }}>
+          {fields.length !== 1 && (
             <Tooltip.Trigger tooltip={__('Remove recipient')}>
               <RemoveButton
                 onClick={() => {
@@ -85,33 +89,21 @@ export default function Recipients({ fields }) {
                 ✕
               </RemoveButton>
             </Tooltip.Trigger>
+          )}
 
-            <AddressWrapper>
-              <RecipientAddress fieldName={`${fieldName}.address`} />
-            </AddressWrapper>
+          <BaseFields>
+            <LeftHalf>
+              <RecipientNameOrAddress parentFieldName={fieldName} />
+            </LeftHalf>
 
-            <AmountWrapper>
-              <AmountField parentFieldName={fieldName} hideSendAll />
-            </AmountWrapper>
-          </Recipient>
-        ))}
-
-        <MoreInfo>
-          <Button
-            skin="hyperlink"
-            onClick={() => {
-              fields.push({
-                address: null,
-                amount: '',
-                fiatAmount: '',
-              });
-            }}
-          >
-            <PlusIcon icon={plusIcon} className="mr0_4" />
-            <span className="v-align">{__('Add recipient')}</span>
-          </Button>
-        </MoreInfo>
-      </>
-    );
-  }
+            <RightHalf>
+              <AmountField parentFieldName={fieldName} />
+              <ReferenceField parentFieldName={fieldName} />
+            </RightHalf>
+          </BaseFields>
+        </Recipient>
+      ))}
+    </>
+  );
+  // }
 }

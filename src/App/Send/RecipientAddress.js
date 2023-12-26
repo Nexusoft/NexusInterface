@@ -1,101 +1,86 @@
-// External
-import { useSelector } from 'react-redux';
-import memoize from 'utils/memoize';
+import { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 
-// Internal
-import Form from 'components/Form';
-import FormField from 'components/FormField';
-import Button from 'components/Button';
+import NexusAddress from 'components/NexusAddress';
 import Icon from 'components/Icon';
-import { openModal } from 'lib/ui';
-import { checkAll, required } from 'lib/form';
-import AddEditContactModal from 'components/AddEditContactModal';
-import plusIcon from 'icons/plus.svg';
-import {
-  lookUpContactName,
-  selectRecipientSuggestions,
-  notSameAccount,
-  validateAddress,
-} from './selectors';
+import { lookupAddress } from 'lib/addressBook';
+import { callApi } from 'lib/api';
+import contactIcon from 'icons/address-book.svg';
 
-__ = __context('Send');
-
-const RecipientName = styled.span(({ theme }) => ({
-  textTransform: 'none',
-  color: theme.primary,
+const Label = styled.span(({ theme }) => ({
+  fontWeight: 'bold',
+  color: theme.foreground,
 }));
 
-const EmptyMessage = styled.div(({ theme }) => ({
-  fontSize: '.9em',
-  color: theme.mixer(0.625),
-  width: '100%',
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-}));
+function resolveReverseLookup({ name, local, mine, namespace, user }) {
+  if (namespace) {
+    return namespace + '::' + name;
+  }
 
-const filterRecipients = memoize((suggestions, inputValue) => {
-  if (!suggestions) return [];
-  const query = inputValue || '';
-  return suggestions.filter(
-    ({ value, name }) =>
-      value === query ||
-      (!!name && name.toLowerCase().includes(query.toLowerCase()))
-  );
-});
+  if (local) {
+    if (mine) {
+      return user + ':' + name;
+    } else {
+      return (
+        <span>
+          <span className="dim">(?):</span>
+          {name}
+        </span>
+      );
+    }
+  }
 
-export default function RecipientAddress({ fieldName }) {
-  const suggestions = useSelector(selectRecipientSuggestions);
+  return name;
+}
+
+function useAddressLabel(address) {
+  const [name, setName] = useState(null);
+  const contact = lookupAddress(address);
+  useEffect(() => {
+    if (!address) {
+      setName(null);
+      return;
+    }
+    if (!contact) {
+      // If address is not saved in address book, look up its name
+      callApi('names/reverse/lookup', { address })
+        .then(resolveReverseLookup)
+        .then(setName)
+        .catch((err) => {
+          console.error('lookup address', err);
+        });
+    } else if (name) {
+      // If address is in address book, display contact name so reset name state to null
+      setName(null);
+      // If name is already null, no need to do anything
+    }
+  }, [address]);
+
+  if (contact) {
+    return (
+      <span>
+        <Icon icon={contactIcon} className="mr0_4" />
+        <span className="v-align">
+          {contact.name}
+          {contact.label ? ` - ${contact.label}` : ''}
+        </span>
+      </span>
+    );
+  } else {
+    return name;
+  }
+}
+
+export default function RecipientAddress({ address, ...rest }) {
+  const label = useAddressLabel(address);
 
   return (
-    <FormField
-      label={
-        <>
-          <span>
-            {__('Send to')}
-            &nbsp;&nbsp;
-          </span>
-          <RecipientName>
-            <Form.Field name={fieldName} subscription={{ value: true }}>
-              {({ input }) =>
-                useSelector(lookUpContactName(input.value)) || null
-              }
-            </Form.Field>
-          </RecipientName>
-        </>
-      }
-    >
-      <Form.AutoSuggest
-        name={fieldName}
-        validate={checkAll(required(), notSameAccount, validateAddress)}
-        inputProps={{
-          placeholder: __('Recipient address'),
-        }}
-        suggestions={suggestions}
-        filterSuggestions={filterRecipients}
-        emptyFiller={
-          suggestions.length === 0 && (
-            <EmptyMessage>
-              {__('Your address book is empty')}
-              <Button
-                as="a"
-                skin="hyperlink"
-                onClick={() => {
-                  openModal(AddEditContactModal);
-                }}
-              >
-                <Icon
-                  icon={plusIcon}
-                  className="mr0_4"
-                  style={{ fontSize: '.8em' }}
-                />
-                {__('Create new contact')}
-              </Button>
-            </EmptyMessage>
-          )
-        }
+    !!address && (
+      <NexusAddress
+        label={label ? <Label>{label}</Label> : null}
+        address={address}
+        {...rest}
       />
-    </FormField>
+    )
   );
 }

@@ -7,7 +7,7 @@ import Spinner from 'components/Spinner';
 import { formSubmit, required } from 'lib/form';
 import { confirmPin, openSuccessDialog } from 'lib/dialog';
 import { loadNamespaces } from 'lib/user';
-import { callApi } from 'lib/tritiumApi';
+import { callApi } from 'lib/api';
 import { userIdRegex } from 'consts/misc';
 
 __ = __context('TransferNamespace');
@@ -59,7 +59,7 @@ export default function TransferNamespaceModal({ namespace }) {
               })}
             >
               <FormField label={__('Namespace')}>
-                <Namespace>{namespace.name}</Namespace>
+                <Namespace>{namespace.namespace}</Namespace>
               </FormField>
 
               <FormField connectLabel label={__('Transfer to')}>

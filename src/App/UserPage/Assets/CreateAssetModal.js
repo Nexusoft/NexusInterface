@@ -11,7 +11,7 @@ import QuestionCircle from 'components/QuestionCircle';
 import { formSubmit } from 'lib/form';
 import { confirmPin, openSuccessDialog } from 'lib/dialog';
 import { loadAssets } from 'lib/user';
-import { callApi } from 'lib/tritiumApi';
+import { callApi } from 'lib/api';
 import { createLocalNameFee } from 'lib/fees';
 import plusIcon from 'icons/plus.svg';
 

@@ -109,20 +109,16 @@ const DownloadingSection = styled.div({
  * @extends {React.Component}
  */
 function Installer({ featuredModule }) {
-  const downloadProgress = useSelector((state) => {
-    const { downloaded, totalSize } =
-      state.moduleDownloads[featuredModule.name] || {};
-    return downloaded / totalSize;
-  });
-  const downloadRequest = useSelector(
-    (state) => state.moduleDownloads[featuredModule.name]?.downloadRequest
+  const moduleDownload = useSelector(
+    (state) => state.moduleDownloads[featuredModule.name]
   );
   // `downloading` -> when the module package is being downloaded
   // `busy` -> when the module package is being downloaded OR is in other preparation steps
-  const downloading = !!downloadRequest;
   const busy = useSelector(
     (state) => !!state.moduleDownloads[featuredModule.name]
   );
+  const { downloaded, totalSize, downloading } = moduleDownload || {};
+  const downloadProgress = downloaded / totalSize;
 
   const doInstall = () => {
     downloadAndInstall({

@@ -3,218 +3,235 @@ import { useSelector } from 'react-redux';
 import GA from 'lib/googleAnalytics';
 import styled from '@emotion/styled';
 
-import Icon from 'components/Icon';
 import Panel from 'components/Panel';
-import RequireCoreConnected from 'components/RequireCoreConnected';
 import WaitingMessage from 'components/WaitingMessage';
-import Select from 'components/Select';
 import Button from 'components/Button';
-import Tooltip from 'components/Tooltip';
-import Table from 'components/Table';
-import { formatDateTime } from 'lib/intl';
-import { openModal, setTxsAccountFilter } from 'lib/ui';
-import { autoUpdateTransactions, isPending } from 'lib/transactions';
-import { isCoreConnected } from 'selectors';
-
-import TransactionDetailsModal from './TransactionDetailsModal';
-import Filters from './Filters';
-import {
-  getFilteredTransactions,
-  getTransactionsList,
-  getAccountOptions,
-  withFakeTxs,
-} from './selectors';
-import { saveCSV } from './utils';
-import TransactionsChartModal from './TransactionsChartModal';
-import CategoryCell from './CategoryCell';
-
+import TextField from 'components/TextField';
+import RequireLoggedIn from 'components/RequireLoggedIn';
+import Spinner from 'components/Spinner';
+import Icon from 'components/Icon';
+import { loadTransactions, updatePage } from 'lib/transactions';
 import transactionIcon from 'icons/transaction.svg';
-import barChartIcon from 'icons/bar-chart.svg';
-import downloadIcon from 'icons/download.svg';
+import warningIcon from 'icons/warning.svg';
+
+import Transaction from './Transaction';
+import Balances from './Balances';
+import Filters from './Filters';
 
 __ = __context('Transactions');
 
-const timeFormatOptions = {
-  year: 'numeric',
-  month: 'short',
-  day: '2-digit',
-  hour: '2-digit',
-  minute: '2-digit',
-  second: '2-digit',
-};
-
-const tableColumns = [
-  {
-    id: 'time',
-    Header: __('Time'),
-    accessor: 'time',
-    Cell: (cell) => formatDateTime(cell.value * 1000, timeFormatOptions),
-    width: 200,
-  },
-  {
-    id: 'category',
-    Header: __('CATEGORY'),
-    accessor: 'category',
-    Cell: (cell) => <CategoryCell transaction={cell.original} />,
-    width: 120,
-  },
-  {
-    id: 'amount',
-    Header: __('AMOUNT'),
-    accessor: 'amount',
-    width: 100,
-  },
-  {
-    id: 'account',
-    Header: __('ACCOUNT'),
-    accessor: 'account',
-    width: 150,
-  },
-  {
-    id: 'address',
-    Header: __('ADDRESS'),
-    accessor: 'address',
-  },
-];
-
-const AccountSelect = styled(Select)({
-  marginLeft: '1em',
-  minWidth: 200,
-  fontSize: 15,
-});
-
-const TransactionsLayout = styled.div({
-  height: '100%',
+const PageLayout = styled.div({
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
   display: 'grid',
-  gridTemplateAreas: '"filters" "table"',
-  gridTemplateRows: 'min-content 1fr',
+  gridTemplateAreas: '"balances filters" "balances list" "balances pagination"',
+  gridTemplateRows: 'min-content 1fr min-content',
+  gridTemplateColumns: '1fr 2.7fr',
 });
 
-const TransactionsTable = styled(Table)({
-  gridArea: 'table',
-  fontSize: 14,
-  overflow: 'auto',
+const TransactionsList = styled.div({
+  gridArea: 'list',
+  overflowY: 'auto',
+  padding: '0 20px',
 });
 
+const Pagination = styled.div(({ morePadding }) => ({
+  gridArea: 'pagination',
+  fontSize: '.9em',
+  padding: `10px ${morePadding ? '26px' : '20px'} 20px 20px`,
+}));
+
+const Container = styled.div({
+  position: 'relative',
+  maxWidth: 650,
+  margin: '0 auto',
+});
+
+const PageInput = styled(TextField)({
+  width: 40,
+  '& > input': {
+    textAlign: 'center',
+  },
+});
+
+const PaginationButton = styled(Button)({
+  minWidth: 150,
+});
+
+const TransactionLoadingWarningSpinner = styled(Spinner)(({ theme }) => ({
+  color: theme.mixer(0.5),
+  width: '1.4em',
+  height: '1.4em',
+  position: 'absolute',
+  left: '100%',
+  marginLeft: '1em',
+}));
+
+const ErrorMessage = styled.div(({ theme }) => ({
+  textAlign: 'center',
+  padding: '30px 0',
+  color: theme.danger,
+}));
+
+// listRef = createRef();
+
+// state = {
+//   // Whether transaction list is having a scrollbar
+//   hasScroll: false,
+// };
+
+// /**
+//    * Component Mount Callback
+//    *
+//    * @memberof Transactions
+//    */
+//  componentDidMount() {
+
+//   this.checkScrollbar();
+// }
+
+// componentDidUpdate(prevProps) {
+//   if (prevProps.transactions !== this.props.transaction) {
+//     this.checkScrollbar();
+//   }
+// }
+
+// // When transactions list has a scrollbar, the alignment of elements
+// // will be affected, so set a state to adjust the paddings accordingly
+// checkScrollbar = () => {
+//   const listEl = this.listRef.current;
+//   if (listEl) {
+//     // If transactions list has a scrollbar
+//     if (listEl.clientHeight < listEl.scrollHeight && !this.state.hasScroll) {
+//       this.setState({ hasScroll: true });
+//     }
+//     if (listEl.clientHeight >= listEl.scrollHeight && this.state.hasScroll) {
+//       this.setState({ hasScroll: false });
+//     }
+//   }
+// };
+
+// const totalPages = 10;
+
+/**
+ * Transactions Page
+ *
+ * @class Transactions
+ * @extends {Component}
+ */
 export default function Transactions() {
-  const coreConnected = useSelector(isCoreConnected);
-  const filteredTransactions = useSelector(
-    ({
-      ui: {
-        transactions: { account, addressQuery, category, minAmount, timeSpan },
-      },
-      transactions: { map },
-      settings: { devMode, fakeTransactions },
-    }) => {
-      const txList = getTransactionsList(map);
-      const addFakeTxs = devMode && fakeTransactions;
-      const allTransactions = addFakeTxs
-        ? withFakeTxs(txList, state.myAccounts)
-        : txList;
-
-      return getFilteredTransactions(
-        allTransactions,
-        account,
-        addressQuery,
-        category,
-        minAmount,
-        timeSpan
-      );
-    }
+  const { status, transactions, lastPage } = useSelector(
+    (state) => state.user.transactions
   );
-  const account = useSelector((state) => state.ui.transactions.account);
-  const accountOptions = useSelector((state) =>
-    getAccountOptions(state.myAccounts)
-  );
-  const settings = useSelector((state) => state.settings);
-  const { minConfirmations } = settings;
+  const { page } = useSelector((state) => state.ui.transactionsFilter);
+  const genesis = useSelector((state) => state.user.status?.genesis);
 
   useEffect(() => {
     GA.SendScreen('Transactions');
   }, []);
-
+  // Reload transactions when user genesis changes, such as when user
+  // is logged in or switched to another user
   useEffect(() => {
-    if (coreConnected && !filteredTransactions) {
-      autoUpdateTransactions();
+    if (genesis && (status === 'notLoaded' || status === 'error')) {
+      loadTransactions();
     }
-  });
+  }, [genesis]);
 
   return (
-    <Panel
-      icon={transactionIcon}
-      title={__('Transaction details')}
-      controls={
-        <div className="flex center">
-          <Tooltip.Trigger tooltip={__('Show transactions chart')}>
-            <Button
-              skin="plain"
-              onClick={() => openModal(TransactionsChartModal)}
-            >
-              <Icon icon={barChartIcon} width={20} height={20} />
-            </Button>
-          </Tooltip.Trigger>
-
-          <Tooltip.Trigger tooltip={__('Download transactions history')}>
-            <Button
-              skin="plain"
-              onClick={() => {
-                saveCSV(filteredTransactions);
-                GA.SendEvent('Transaction', 'Data', 'Download CSV', 1);
-              }}
-            >
-              <Icon icon={downloadIcon} />
-            </Button>
-          </Tooltip.Trigger>
-
-          <AccountSelect
-            value={account}
-            onChange={setTxsAccountFilter}
-            options={accountOptions}
-          />
-        </div>
-      }
-    >
-      <RequireCoreConnected>
-        {!filteredTransactions ? (
-          <WaitingMessage>
-            {__('Loading transactions')}
-            ...
-          </WaitingMessage>
-        ) : (
-          <TransactionsLayout>
-            <Filters />
-            <TransactionsTable
-              data={filteredTransactions}
-              columns={tableColumns}
-              defaultPageSize={10}
-              defaultSortingColumnIndex={0}
-              getTrProps={(state, row) => {
-                const tx = row && row.original;
-                return {
-                  onClick: tx
+    <Panel icon={transactionIcon} title={__('Transactions')}>
+      <RequireLoggedIn>
+        <PageLayout>
+          <Balances />
+          <Filters /> {/*morePadding={this.state.hasScroll} */}
+          <TransactionsList>
+            {' '}
+            {/*ref={this.listRef} */}
+            {status === 'loading' && (
+              <WaitingMessage>{__('Loading transactions...')}</WaitingMessage>
+            )}
+            {status === 'error' && (
+              <ErrorMessage>
+                <div className="text-center">
+                  <Icon icon={warningIcon} size={32} />
+                </div>
+                <div className="mt0_4">{__('Failed to load transactions')}</div>
+              </ErrorMessage>
+            )}
+            {status === 'loaded' && (
+              <Container>
+                {transactions &&
+                  transactions.map((tx) => (
+                    <Transaction key={tx.txid} transaction={tx} />
+                  ))}
+              </Container>
+            )}
+          </TransactionsList>
+          <Pagination>
+            {' '}
+            {/*morePadding={this.state.hasScroll}*/}
+            <Container className="flex center space-between">
+              <PaginationButton
+                skin="filled-inverted"
+                disabled={page <= 1}
+                onClick={
+                  page > 1
                     ? () => {
-                        openModal(TransactionDetailsModal, {
-                          txid: tx.txid,
-                        });
+                        updatePage(page - 1);
                       }
-                    : undefined,
-                  style: tx
-                    ? {
-                        cursor: 'pointer',
-                        opacity:
-                          tx.category === 'immature' ||
-                          tx.category === 'orphan' ||
-                          isPending(tx, minConfirmations)
-                            ? 0.5
-                            : 1,
-                      }
-                    : undefined,
-                };
-              }}
-            />
-          </TransactionsLayout>
-        )}
-      </RequireCoreConnected>
+                    : undefined
+                }
+              >
+                &lt; {__('Previous')}
+              </PaginationButton>
+              <div className="flex center relative">
+                {__(
+                  'Page <page></page>',
+                  // 'Page <page></page> of %{total}',
+                  {
+                    // total: totalPages,
+                  },
+                  {
+                    page: () => (
+                      <>
+                        &nbsp;
+                        <PageInput
+                          type="number"
+                          min={1}
+                          // max={totalPages}
+                          value={page}
+                          onChange={(e) => {
+                            const page = parseInt(e.target.value);
+                            if (page) {
+                              updatePage(parseInt(e.target.value));
+                            }
+                          }}
+                        />
+                        &nbsp;
+                      </>
+                    ),
+                  }
+                )}
+              </div>
+              <PaginationButton
+                skin="filled-inverted"
+                // disabled={page >= totalPages}
+                onClick={
+                  // page < totalPages ?
+                  () => {
+                    updatePage(page + 1);
+                  }
+                  // : undefined
+                }
+              >
+                {__('Next')} &gt;
+              </PaginationButton>
+            </Container>
+          </Pagination>
+        </PageLayout>
+      </RequireLoggedIn>
     </Panel>
   );
 }

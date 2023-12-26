@@ -1,4 +1,4 @@
-import { render } from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 
 import store from 'store';
@@ -9,10 +9,10 @@ import { prepareBootstrap } from 'lib/bootstrap';
 import { prepareCoreInfo } from 'lib/coreInfo';
 import { prepareCoreOutput } from 'lib/coreOutput';
 import { prepareMarket } from 'lib/market';
-import { prepareTransactions } from 'lib/tritiumTransactions';
-import { prepareUser } from 'lib/user';
+import { prepareTransactions } from 'lib/transactions';
 import { prepareModules, prepareWebView } from 'lib/modules';
 import { prepareUpdater } from 'lib/updater';
+import GA from 'lib/googleAnalytics';
 import initialSettings from 'data/initialSettings';
 import App from './App';
 
@@ -24,15 +24,15 @@ async function run() {
   } finally {
     prepareWallet();
     prepareCoreInfo();
-    prepareUser();
     prepareMarket();
     prepareModules();
 
-    render(
+    const domNode = document.getElementById('root');
+    const root = createRoot(domNode);
+    root.render(
       <Provider store={store}>
         <App />
-      </Provider>,
-      document.getElementById('root')
+      </Provider>
     );
 
     prepareMenu();
@@ -41,6 +41,7 @@ async function run() {
     prepareUpdater();
     prepareWebView();
     prepareCoreOutput();
+    initialSettings.sendUsageData && GA.addGTag();
   }
 }
 

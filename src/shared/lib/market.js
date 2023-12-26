@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 import * as TYPE from 'consts/actionTypes';
-import { callApi } from 'lib/tritiumApi';
+import { callApi } from 'lib/api';
 import store, { observeStore } from 'store';
 import { tryParsingJson } from 'utils/json';
 

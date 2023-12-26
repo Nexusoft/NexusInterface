@@ -6,9 +6,9 @@ import path from 'path';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import { merge } from 'webpack-merge';
 
-import baseRendererConfig from './webpack.config.base.renderer';
-import prodConfig from './webpack.config.base.prod';
-import { babelLoaderRenderer } from './babelLoaderConfig';
+import baseRendererConfig from './webpack.config.base.renderer.babel';
+import prodConfig from './webpack.config.base.prod.babel';
+import { babelLoaderRenderer } from './babelLoaderConfig.babel';
 
 export default merge(baseRendererConfig, prodConfig, {
   entry: {

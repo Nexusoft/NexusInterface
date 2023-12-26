@@ -4,22 +4,19 @@ import checkDiskSpace from 'check-disk-space';
 import fs from 'fs';
 import path from 'path';
 import http from 'http';
-import { moveFile } from 'move-file';
 import unzip from 'unzip-stream';
 
 // Internal
-import { backupWallet } from 'lib/wallet';
-import rpc from 'lib/rpc';
-import store, { observeStore } from 'store';
+import store from 'store';
 import { startCore, stopCore } from 'lib/core';
 import { showNotification, openModal } from 'lib/ui';
 import { confirm, openErrorDialog, openSuccessDialog } from 'lib/dialog';
-import deleteDirectory from 'utils/promisified/deleteDirectory';
+import { rm as deleteDirectory } from 'fs/promises';
 import { throttled } from 'utils/universal';
+import move from 'utils/move';
 import * as TYPE from 'consts/actionTypes';
 import { updateSettings } from 'lib/settings';
 import BootstrapModal from 'components/BootstrapModal';
-import { legacyMode } from 'consts/misc';
 import { isSynchronized } from 'selectors';
 
 __ = __context('Bootstrap');
@@ -59,21 +56,12 @@ async function startBootstrap() {
 
   try {
     const {
-      settings: { backupDirectory },
+      settings: { backupDirectory, coreDataDir },
       core: { systemInfo },
     } = store.getState();
     const extractDir = getExtractDir();
 
     aborting = false;
-
-    if (!systemInfo?.nolegacy) {
-      setStatus('backing_up');
-      await backupWallet(backupDirectory);
-      if (aborting) {
-        bootstrapEvents.emit('abort');
-        return false;
-      }
-    }
 
     // Remove the old file if exists
     setStatus('preparing');
@@ -103,7 +91,7 @@ async function startBootstrap() {
     await stopCore();
 
     setStatus('moving_db');
-    await moveExtractedContent(extractDir);
+    await move(extractDir, coreDataDir);
     if (aborting) {
       bootstrapEvents.emit('abort');
       return false;
@@ -111,15 +99,6 @@ async function startBootstrap() {
 
     setStatus('restarting_core');
     await startCore();
-
-    if (await shouldRescan()) {
-      setStatus('rescanning');
-      try {
-        await rpc('rescan', []);
-      } catch (err) {
-        console.error(err);
-      }
-    }
 
     setStatus('cleaning_up');
     await cleanUp(extractDir);
@@ -177,7 +156,7 @@ function downloadDb({ downloadProgress, extractDir }) {
       .on('abort', async () => {
         if (fs.existsSync(extractDir)) {
           try {
-            await deleteDirectory(extractDir);
+            await deleteDirectory(extractDir, { recursive: true, force: true });
           } catch (err) {
             console.error(err);
           }
@@ -192,91 +171,13 @@ function downloadDb({ downloadProgress, extractDir }) {
 }
 
 /**
- * Move the Extracted Database
- *
- */
-async function moveExtractedContent(extractDir) {
-  const {
-    settings: { coreDataDir },
-  } = store.getState();
-  const recentContents = fs.readdirSync(extractDir);
-  try {
-    for (let element of recentContents) {
-      if (fs.statSync(path.join(extractDir, element)).isDirectory()) {
-        const newcontents = fs.readdirSync(path.join(extractDir, element));
-        for (let deeperEle of newcontents) {
-          if (
-            fs.statSync(path.join(extractDir, element, deeperEle)).isDirectory()
-          ) {
-            const newerContents = fs.readdirSync(
-              path.join(extractDir, element, deeperEle)
-            );
-            for (let evenDeeperEle of newerContents) {
-              moveFile.sync(
-                path.join(extractDir, element, deeperEle, evenDeeperEle),
-                path.join(coreDataDir, element, deeperEle, evenDeeperEle)
-              );
-            }
-          } else {
-            moveFile.sync(
-              path.join(extractDir, element, deeperEle),
-              path.join(coreDataDir, element, deeperEle)
-            );
-          }
-        }
-      } else {
-        moveFile.sync(
-          path.join(extractDir, element),
-          path.join(coreDataDir, element)
-        );
-      }
-    }
-  } catch (e) {
-    console.log('Moving Extracted Content Error', e);
-    throw e;
-  }
-}
-
-function shouldRescan() {
-  return new Promise((resolve) => {
-    if (legacyMode) return true;
-
-    const {
-      core: { systemInfo },
-    } = store.getState();
-
-    if (systemInfo) {
-      resolve(!systemInfo.nolegacy);
-    } else {
-      // Core might not be ready right away. In that case,
-      // wait until systemInfo is available
-      const unobserve = observeStore(
-        (state) => state.core.systemInfo,
-        (systemInfo) => {
-          if (systemInfo) {
-            unobserve();
-            resolve(!systemInfo.nolegacy);
-            clearTimeout(timeoutId);
-          }
-        }
-      );
-      // Wait at most 5s
-      const timeoutId = setTimeout(() => {
-        unobserve();
-        resolve(false);
-      }, 5000);
-    }
-  });
-}
-
-/**
  * Clean up files
  *
  * @returns
  */
 async function cleanUp(extractDir) {
   if (fs.existsSync(extractDir)) {
-    await deleteDirectory(extractDir);
+    await deleteDirectory(extractDir, { recursive: true, force: true });
   }
 }
 

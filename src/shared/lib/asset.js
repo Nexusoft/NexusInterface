@@ -1,4 +1,4 @@
-import { callApi } from 'lib/tritiumApi';
+import { callApi } from 'lib/api';
 import store from 'store';
 import * as TYPE from 'consts/actionTypes';
 

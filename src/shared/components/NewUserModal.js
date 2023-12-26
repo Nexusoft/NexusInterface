@@ -11,7 +11,7 @@ import Spinner from 'components/Spinner';
 import FieldSet from 'components/FieldSet';
 import BackgroundTask from 'components/BackgroundTask';
 import { formSubmit, checkAll, required, minChars } from 'lib/form';
-import { callApi } from 'lib/tritiumApi';
+import { callApi } from 'lib/api';
 import {
   showNotification,
   openModal,
@@ -31,7 +31,7 @@ const Buttons = styled.div({
 const ExtraSection = styled.div({
   marginTop: '2em',
   display: 'flex',
-  justifyContent: 'space-between',
+  justifyContent: 'center',
   opacity: 0.9,
 });
 
@@ -156,7 +156,6 @@ export default function NewUserModal() {
                   )}
 
                   <ExtraSection>
-                    <Link as="a">{__('Switch to Legacy Mode')}</Link>
                     <Link
                       as="a"
                       onClick={() => {
@@ -196,7 +195,11 @@ function UserConfirmBackgroundTask({ username }) {
                   username,
                 },
                 {
-                  b: (text) => <strong>{text}</strong>,
+                  b: (text) => (
+                    <span>
+                      &nbsp;<strong>{text}</strong>&nbsp;
+                    </span>
+                  ),
                 }
               ),
               'success'

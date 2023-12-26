@@ -11,7 +11,11 @@ export default class Point {
     this.lat = lat;
     this.lng = lng;
     this.params = params || {};
-    const geometry = new THREE.BoxGeometry(0.75, 17, 0.75);
+    const geometry = new THREE.BoxGeometry(
+      0.25 * this.params.peerConnections,
+      10 + 2 * this.params.peerConnections,
+      0.25 * this.params.peerConnections
+    );
     this.pillar = new THREE.Mesh(geometry);
 
     const latRad = lat * (Math.PI / 180);

@@ -7,8 +7,8 @@ import world from 'icons/world-light-white.jpg';
 import geoip from 'data/geoip';
 import Curve from './Curve';
 import Point from './Point';
-import rpc from 'lib/rpc';
-import { callApi } from 'lib/tritiumApi';
+import { callApi } from 'lib/api';
+import Color from 'color';
 
 const MaxDisplayPoints = 64;
 
@@ -37,12 +37,12 @@ export default class Globe extends Component {
     this.animate = this.animate.bind(this);
     this.onWindowResize = this.onWindowResize.bind(this);
     this.animateArcs = this.animateArcs.bind(this);
+    this.removeAllPoints = this.removeAllPoints.bind(this);
     this.pointRegister = this.pointRegister.bind(this);
     this.contextLostHandler = this.contextLostHandler.bind(this);
     this.contextRestoredHandler = this.contextRestoredHandler.bind(this);
     this.pointRegistry = [];
     this.curveRegistry = [];
-    this.timesSkipped = 0;
   }
 
   /**
@@ -190,13 +190,11 @@ export default class Globe extends Component {
       const newColor = new THREE.Color(this.props.globeColor);
       this.globe.children[0].material.color = newColor; // [0] == globe
     }
-    this.timesSkipped++;
-    if (
-      this.props.connections !== prevProps.connections ||
-      this.timesSkipped > 15
-    ) {
+    if (this.props.connections !== prevProps.connections) {
       this.pointRegister();
-      this.timesSkipped = 0;
+    }
+    if (this.props.blocks !== prevProps.blocks) {
+      this.animateArcs();
     }
   }
 
@@ -208,11 +206,10 @@ export default class Globe extends Component {
   componentWillUnmount() {
     this.stop();
     window.removeEventListener('resize', this.onWindowResize, false);
-
+    this.controls.dispose();
     if (this.threeRootElement.children.length > 0) {
       this.threeRootElement.removeChild(this.renderer.domElement);
     }
-    if (this.controls) this.controls.dispose();
   }
 
   /**
@@ -227,6 +224,9 @@ export default class Globe extends Component {
     if (peerInfo.length > MaxDisplayPoints) {
       peerInfo.length = MaxDisplayPoints;
     }
+
+    //console.error(peerInfo);
+
     // take the peerInfo look up the Geo Data in the maxmind DB
     // and if there are any points that exist and match coords
     // update the registery entry data
@@ -235,14 +235,34 @@ export default class Globe extends Component {
       .map((peer) => {
         let GeoData = geoip.get(peer.address.split(':')[0]);
         // TODO: add checks for lisp and change color appropreately
-
+        //console.log(this.props.pillarColor);
+        if (!GeoData) return {}; //Usecase for private or testnet when there is no outside ip address
         return {
           lat: GeoData.location.latitude,
           lng: GeoData.location.longitude,
           params: {
             type: peer.type,
+            outgoing: peer.outgoing,
             name: GeoData.location.time_zone,
             color: this.props.pillarColor,
+            peerConnections: 1,
+          },
+        };
+      })
+      .map((peer, i, array) => {
+        ///Find out how many peers will be on pillar
+        let duplicateIndex = array
+          .map(
+            (internalPoint) =>
+              peer.lat === internalPoint.lat && peer.lng === internalPoint.lng
+          )
+          .filter((e) => e);
+
+        return {
+          ...peer,
+          params: {
+            ...peer.params,
+            peerConnections: 1 + duplicateIndex.length,
           },
         };
       })
@@ -260,10 +280,7 @@ export default class Globe extends Component {
           return this.pointRegistry[existIndex];
         } else if (duplicateIndex === i) {
           let newPoint = new Point(peer.lat, peer.lng, peer.params);
-          // console.log(this.allPoints);
-          //if (this.allPoints.children.length <= 10) {
           this.allPoints.add(newPoint.pillar);
-          //}
           return newPoint;
         }
       })
@@ -278,7 +295,7 @@ export default class Globe extends Component {
         this.destroyPoint(point);
       }
     });
-
+    //console.error(newRegistry);
     this.pointRegistry = newRegistry;
     this.arcRegister();
   }
@@ -301,9 +318,10 @@ export default class Globe extends Component {
             parseFloat(data.geoplugin_latitude),
             parseFloat(data.geoplugin_longitude),
             {
-              color: '#44EB08',
+              color: new Color(this.props.pillarColor).negate().hex(),
               name: data.geoplugin_timezone,
               type: 'SELF',
+              peerConnections: 1.5,
             }
           );
           this.pointRegistry.push(self);
@@ -323,7 +341,7 @@ export default class Globe extends Component {
     this.pointRegistry.map((point) => {
       if (point.params.type === 'SELF') {
         setTimeout(() => {
-          this.destroyPoint(point);
+          //this.destroyPoint(point);
         }, 11000);
       } else {
         setTimeout(() => {
@@ -398,6 +416,7 @@ export default class Globe extends Component {
         } else {
           let temp = new Curve(point, self, {
             color: this.props.archColor,
+            forward: point.params.outgoing,
           });
           this.allArcs.add(temp.arc);
           temp.play();
@@ -415,9 +434,20 @@ export default class Globe extends Component {
    * @memberof Globe
    */
   animateArcs() {
+    if (this.curveRegistry.length <= 0) return;
+    if (this.curveRegistry[0].isPlaying) return;
     this.curveRegistry.map((arc) => {
-      arc.play();
+      if (arc.forward) {
+        arc.play();
+      }
     });
+    setTimeout(() => {
+      this.curveRegistry.map((arc) => {
+        if (!arc.forward) {
+          arc.play();
+        }
+      });
+    }, 2040);
   }
 
   /**
@@ -463,6 +493,7 @@ export default class Globe extends Component {
    * @memberof Globe
    */
   start() {
+    this.animateArcs();
     if (!this.frameId) {
       this.frameId = requestAnimationFrame(this.animate);
     }

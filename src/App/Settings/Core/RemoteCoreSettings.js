@@ -1,6 +1,5 @@
 import Form from 'components/Form';
 import SettingsField from 'components/SettingsField';
-import { legacyMode } from 'consts/misc';
 import { defaultConfig } from 'lib/coreConfig';
 
 __ = __context('Settings.Core');
@@ -25,95 +24,47 @@ export default function RemoteCoreSettings() {
         size="12"
       />
 
-      {!legacyMode && (
-        <>
-          <Setting
-            label={__('API SSL')}
-            subLabel={__('Use SSL for API calls')}
-            component={Form.Switch}
-            name="manualDaemonApiSSL"
-            placeholder={defaultConfig.apiSSL}
-          />
-
-          <Setting
-            label={__('API non-SSL Port')}
-            subLabel={__('Nexus API server non-SSL Port')}
-            component={Form.TextField}
-            name="manualDaemonApiPort"
-            placeholder={defaultConfig.apiPort}
-            size="5"
-          />
-
-          <Setting
-            label={__('API SSL Port')}
-            subLabel={__('Nexus API server SSL Port')}
-            component={Form.TextField}
-            name="manualDaemonApiPortSSL"
-            placeholder={defaultConfig.apiPortSSL}
-            size="5"
-          />
-
-          <Setting
-            label={__('API Username')}
-            subLabel={__('Nexus API server Username')}
-            component={Form.TextField}
-            name="manualDaemonApiUser"
-            placeholder={defaultConfig.apiUser}
-            size="12"
-          />
-
-          <Setting
-            label={__('API Password')}
-            subLabel={__('Nexus API server Password')}
-            component={Form.TextField}
-            name="manualDaemonApiPassword"
-            placeholder={defaultConfig.apiPassword}
-            size="12"
-          />
-        </>
-      )}
-
       <Setting
-        label={__('RPC SSL')}
-        subLabel={__('Use SSL for RPC calls')}
+        label={__('API SSL')}
+        subLabel={__('Use SSL for API calls')}
         component={Form.Switch}
-        name="manualDaemonSSL"
-        placeholder={defaultConfig.rpcSSL}
+        name="manualDaemonApiSSL"
+        placeholder={defaultConfig.apiSSL}
       />
 
       <Setting
-        label={__('RPC non-SSL Port')}
-        subLabel={__('Nexus RPC server non-SSL Port')}
+        label={__('API non-SSL Port')}
+        subLabel={__('Nexus API server non-SSL Port')}
         component={Form.TextField}
-        name="manualDaemonPort"
-        placeholder={defaultConfig.port}
+        name="manualDaemonApiPort"
+        placeholder={defaultConfig.apiPort}
         size="5"
       />
 
       <Setting
-        label={__('RPC SSL Port')}
-        subLabel={__('Nexus RPC server SSL Port')}
+        label={__('API SSL Port')}
+        subLabel={__('Nexus API server SSL Port')}
         component={Form.TextField}
-        name="manualDaemonPortSSL"
-        placeholder={defaultConfig.portSSL}
+        name="manualDaemonApiPortSSL"
+        placeholder={defaultConfig.apiPortSSL}
         size="5"
       />
 
       <Setting
-        label={__('RPC Username')}
-        subLabel={__('Nexus RPC server Username')}
+        label={__('API Username')}
+        subLabel={__('Nexus API server Username')}
         component={Form.TextField}
-        name="manualDaemonUser"
-        placeholder={defaultConfig.user}
+        name="manualDaemonApiUser"
+        placeholder={defaultConfig.apiUser}
         size="12"
       />
 
       <Setting
-        label={__('RPC Password')}
-        subLabel={__('Nexus RPC server Password')}
+        label={__('API Password')}
+        subLabel={__('Nexus API server Password')}
         component={Form.TextField}
-        name="manualDaemonPassword"
-        placeholder={defaultConfig.password}
+        name="manualDaemonApiPassword"
+        placeholder={defaultConfig.apiPassword}
         size="12"
       />
 

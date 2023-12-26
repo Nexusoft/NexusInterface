@@ -3,6 +3,7 @@ export {
   addDevModule,
   downloadAndInstall,
   abortModuleDownload,
+  getDownloadRequest,
 } from './installModule';
 export {
   getActiveWebView,

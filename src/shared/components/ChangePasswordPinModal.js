@@ -3,7 +3,7 @@ import ControlledModal from 'components/ControlledModal';
 import FormField from 'components/FormField';
 import Spinner from 'components/Spinner';
 import { formSubmit, checkAll, required, minChars } from 'lib/form';
-import { callApi } from 'lib/tritiumApi';
+import { callApi } from 'lib/api';
 import { openSuccessDialog, confirmPasswordPin } from 'lib/dialog';
 
 __ = __context('ChangePassword&PIN');

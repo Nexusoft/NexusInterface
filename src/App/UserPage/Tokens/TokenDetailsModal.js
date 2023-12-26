@@ -11,7 +11,7 @@ import Spinner from 'components/Spinner';
 import plusIcon from 'icons/plus.svg';
 import { formatDateTime, formatNumber } from 'lib/intl';
 import { openModal } from 'lib/ui';
-import { callApi } from 'lib/tritiumApi';
+import { callApi } from 'lib/api';
 
 __ = __context('User.Tokens.TokenDetails');
 

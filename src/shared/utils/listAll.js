@@ -1,4 +1,4 @@
-import { callApi } from 'lib/tritiumApi';
+import { callApi } from 'lib/api';
 
 export default async function listAll(endpoint, params, options = {}) {
   options = {

@@ -110,33 +110,6 @@ global.NEXUS = {
       }
       ipcRenderer.sendToHost('send', options);
     },
-    rpcCall: (command, params) => {
-      if (!command) {
-        throw new Error('`command` is required');
-      }
-      if (typeof command !== 'string') {
-        throw new Error(
-          'Expected `command` to be a `string`, found: ' + typeof command
-        );
-      }
-      if (typeof params !== 'undefined' && !Array.isArray(params)) {
-        throw new Error(
-          'Expected `params` to be a `array` `undefined` type, found: ' +
-            typeof params
-        );
-      }
-      const callId = newId();
-      return new Promise((resolve, reject) => {
-        ipcRenderer.once(`rpc-return:${callId}`, (event, err, result) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(result);
-          }
-        });
-        ipcRenderer.sendToHost('rpc-call', command, params, callId);
-      });
-    },
     apiCall: (endpoint, params) => {
       if (!endpoint) {
         throw new Error('`endpoint` is required');
@@ -325,8 +298,8 @@ document.addEventListener('click', (event) => {
   const anchor = event.target.closest('a');
   if (!anchor) return;
 
-  const { href } = anchor;
-  if (!anchor.href.startsWith(origin)) {
+  const { href, download } = anchor;
+  if (!anchor.href.startsWith(origin) && !download) {
     event.preventDefault();
     ipcRenderer.sendToHost('open-external', href);
   }

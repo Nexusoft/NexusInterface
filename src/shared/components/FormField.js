@@ -10,11 +10,8 @@
  */
 
 // External
-import { cloneElement, Children } from 'react';
+import { cloneElement, Children, useId } from 'react';
 import styled from '@emotion/styled';
-
-// Internal
-import useUID from 'utils/useUID';
 
 const FormFieldComponent = styled.div(
   { marginTop: '1em' },
@@ -87,7 +84,7 @@ export default function FormField({
   hint,
   ...rest
 }) {
-  const inputId = useUID();
+  const inputId = useId();
 
   const renderFormInput = () => {
     if (connectLabel) {

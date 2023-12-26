@@ -1,7 +1,6 @@
 // External
-import { cloneElement, Children } from 'react';
+import { cloneElement, Children, useId } from 'react';
 import styled from '@emotion/styled';
-import useUID from 'utils/useUID';
 
 const indentSpace = 20;
 
@@ -48,7 +47,7 @@ export default function SettingsField({
   disabled,
   ...rest
 }) {
-  const inputId = useUID();
+  const inputId = useId();
 
   const settingsInput = () => {
     if (connectLabel) {

@@ -1,54 +1,56 @@
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 
-import Icon from 'components/Icon';
 import Select from 'components/Select';
 import TextField from 'components/TextField';
 import FormField from 'components/FormField';
-import {
-  setTxsAddressQuery,
-  setTxsCategoryFilter,
-  setTxsMinAmountFilter,
-  setTxsTimeFilter,
-} from 'lib/ui';
-
-import searchIcon from 'icons/search.svg';
+import Icon from 'components/Icon';
+import Button from 'components/Button';
+import Tooltip from 'components/Tooltip';
+import { updateFilter } from 'lib/transactions';
+import { loadOwnedTokens, loadAccounts } from 'lib/user';
+import { openModal } from 'lib/ui';
+import { debounced } from 'utils/universal';
+import ListIcon from 'icons/list.svg';
+import SearchIcon from 'icons/search.svg';
+import SelectAddressModal from './SelectAddressModal';
 
 __ = __context('Transactions');
 
-const categories = [
+const debouncedUpdateFilter = debounced(
+  (updates) => updateFilter(updates),
+  500
+);
+
+const operations = [
+  'WRITE',
+  'APPEND',
+  'CREATE',
+  'TRANSFER',
+  'CLAIM',
+  'COINBASE',
+  'TRUST',
+  'GENESIS',
+  'TRUSTPOOL',
+  'GENESISPOOL',
+  'DEBIT',
+  'CREDIT',
+  'MIGRATE',
+  'AUTHORIZE',
+  'FEE',
+  'LEGACY',
+];
+
+const opOptions = [
   {
     value: null,
     display: __('All'),
   },
-  {
-    value: 'receive', // Should be made credit with tritium.
-    display: __('Receive'),
-  },
-  {
-    value: 'send',
-    display: __('Sent'),
-  },
-  {
-    value: 'stake',
-    display: __('Stake'),
-  },
-  {
-    value: 'generate',
-    display: __('Generate'),
-  },
-  {
-    value: 'immature',
-    display: __('Immature'),
-  },
-  {
-    value: 'orphan',
-    display: __('Orphan'),
-  },
-  {
-    value: 'genesis',
-    display: __('Genesis'),
-  },
+  ...operations.map((op) => ({
+    value: op,
+    display: op,
+  })),
 ];
 
 const timeFrames = [
@@ -70,59 +72,75 @@ const timeFrames = [
   },
 ];
 
-const FiltersWrapper = styled.div({
+const FiltersWrapper = styled.div(({ morePadding }) => ({
   gridArea: 'filters',
   display: 'grid',
-  gridTemplateAreas: '"search type minAmount timeFrame download"',
-  gridTemplateColumns: '1fr 110px 100px 140px auto',
+  gridTemplateAreas: '"addressSearch timeFrame operation"',
+  gridTemplateColumns: '3fr  100px 100px',
   columnGap: '.75em',
   alignItems: 'end',
   fontSize: 15,
-  marginBottom: '1em',
-  marginTop: '-1em',
-});
+  padding: `0 ${morePadding ? '26px' : '20px'} 10px 20px`,
+}));
 
-export default function Filters() {
-  const transactionsUI = useSelector((state) => state.ui.transactions);
-  const { addressQuery, category, minAmount, timeSpan } = transactionsUI;
-
+export default function Filters({ morePadding }) {
+  const { addressQuery, operation, timeSpan } = useSelector(
+    (state) => state.ui.transactionsFilter
+  );
+  const [addressInput, setAddressInput] = useState(addressQuery);
+  useEffect(() => {
+    loadOwnedTokens();
+    loadAccounts();
+  }, []);
   return (
-    <FiltersWrapper>
-      <FormField connectLabel label={__('Search address')}>
+    <FiltersWrapper morePadding={morePadding}>
+      <FormField connectLabel label={__('Address')}>
         <TextField
-          name="addressfilter"
-          placeholder={__('Search for Address')}
-          value={addressQuery}
-          onChange={(evt) => {
-            setTxsAddressQuery(evt.target.value);
+          placeholder={__('Search for account/token address')}
+          value={addressInput}
+          onChange={({ target: { value } }) => {
+            setAddressInput(value);
+            debouncedUpdateFilter({ addressQuery: value });
           }}
-          left={<Icon icon={searchIcon} className="mr0_4" />}
-        />
-      </FormField>
-
-      <FormField label={__('Category')}>
-        <Select
-          value={category}
-          onChange={setTxsCategoryFilter}
-          options={categories}
-        />
-      </FormField>
-
-      <FormField connectLabel label={__('Min amount')}>
-        <TextField
-          type="number"
-          min="0"
-          placeholder="0.00"
-          value={minAmount}
-          onChange={(evt) => setTxsMinAmountFilter(evt.target.value)}
+          left={<Icon icon={SearchIcon} className="mr1" />}
+          right={
+            <Tooltip.Trigger tooltip={__('Select an address')}>
+              <Button
+                skin="plain"
+                fitHeight
+                onClick={() => {
+                  openModal(SelectAddressModal, {
+                    onSelect: (address) => {
+                      setAddressInput(address);
+                      updateFilter({ addressQuery: address });
+                    },
+                  });
+                }}
+              >
+                <Icon icon={ListIcon} />
+              </Button>
+            </Tooltip.Trigger>
+          }
         />
       </FormField>
 
       <FormField label={__('Time span')}>
         <Select
           value={timeSpan}
-          onChange={setTxsTimeFilter}
+          onChange={(timeSpan) => {
+            updateFilter({ timeSpan });
+          }}
           options={timeFrames}
+        />
+      </FormField>
+
+      <FormField label={__('Operation')}>
+        <Select
+          value={operation}
+          onChange={(operation) => {
+            updateFilter({ operation });
+          }}
+          options={opOptions}
         />
       </FormField>
     </FiltersWrapper>

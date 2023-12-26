@@ -16,7 +16,7 @@ import { switchSettingsTab, showNotification } from 'lib/ui';
 import { loadCustomTheme } from 'lib/theme';
 import { loadAccounts } from 'lib/user';
 import { walletDataDir } from 'consts/paths';
-import { webGLAvailable, legacyMode } from 'consts/misc';
+import { webGLAvailable } from 'consts/misc';
 import memoize from 'utils/memoize';
 
 import ColorPicker from './ColorPicker';
@@ -39,12 +39,8 @@ const addressStyleOptions = [
   { value: 'raw', display: 'Raw' },
 ];
 
-const getLegacyDefaultAddress = memoize((myAccounts) => {
-  const account = myAccounts?.find((a) => a.account === 'default');
-  return account?.addresses?.[0];
-});
 const getTritiumDefaultAddress = memoize((accounts) => {
-  const account = accounts?.find((a) => a.name === 'default' && a.nameIsLocal);
+  const account = accounts?.find((a) => a.name === 'default');
   return account?.address;
 });
 
@@ -86,9 +82,7 @@ async function exportThemeFileDialog() {
 export default function SettingsStyle() {
   const settings = useSelector((state) => state.settings);
   const defaultAddress = useSelector((state) =>
-    legacyMode
-      ? getLegacyDefaultAddress(state.myAccounts)
-      : getTritiumDefaultAddress(state.user.accounts)
+    getTritiumDefaultAddress(state.user.accounts)
   );
   useEffect(() => {
     switchSettingsTab('Style');
