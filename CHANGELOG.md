@@ -12,7 +12,7 @@
 #### Adjustments
 
 - Disabled Legacy mode
-- UI only, you can still interact with the core via RPC
+  - UI only, you can still interact with the core via RPC
 
 #### Fixes
 
