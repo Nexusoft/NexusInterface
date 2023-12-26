@@ -102,8 +102,7 @@ function doInstall(path) {
           }
 
           await copyModule(module.info.files, path, dest);
-          GA.SendEvent('Modules', 'installModule', 'name', module.info.name);
-
+          GA.InstallModule(module.info.name);
           resolve(dest);
           openSuccessDialog({
             message: __('Module has been successfully installed'),

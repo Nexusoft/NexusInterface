@@ -1,19 +1,31 @@
-# 3.1.1 (2023.5.xx)
+# 3.1.1 (2023.12.25)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v3.1.1)
 
 #### Additions
 
+- Nexus Core v5.1.1
 - Added 5.1 Documents to the Terminal's API menu
+- Added Nexus.io theme
+- New inactive and active name records, allowing names to be marked as inactive and free to be used again
 
 #### Adjustments
 
--
+- Disabled Legacy mode
+  - UI only, you can still interact with the core via RPC
 
 #### Fixes
 
 - Fixed crash when clicking the Send All function on the Send page
 - Fixed the Terminal's API Doc display
+- Fixed Overview stats sometimes showing NaN
+- Fixed logging in with 'Trust account not found'
+- Fixed several issues with loading and displaying transactions
+- Fixed issues with transaction expiration
+- Fixed issue with Name and Namespaces
+- Fixed issue with modules that used the `download` tag in an anchor element
+- Fixed issue with some modules that had variable height text fields
+- Various other fixes
 
 # 3.1.0 (2023.4.26)
 
