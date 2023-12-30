@@ -1,8 +1,12 @@
 # Analytics Policy Statement
 
-###### rev 2.0 November 7th 2023
+###### Rev 3.0 December 29th 2023
 
 The Nexus Wallet, by default, will use Google analytics to track certain metrics about the wallet. The following outlines what is going on and your rights.
+
+### REV3.0 Changes:
+
+After consideration and evaluation on the features and needs of our app, we have decided remove Google Analytics 4 and migrated to using Aptabase. Aptabase intergrates better with Electron and is more privacy focused.
 
 ### REV2.0 Changes:
 
@@ -10,11 +14,11 @@ In June 2023 Google dropped all support and tracking for `Universal Analytics` a
 
 ### What services do you use?
 
-We ONLY use Google Analytics 4, using the `GTag.js` package.
+We ONLY use Aptabase Analytics System.
 
 ### Is my info anonymous?
 
-Yes and no, your IP is sent to Google, but we can not see it. Google can extract more info from your IP, however on our report can not tract, identify , or deduce any one user.
+Yes, Aptabase is also GDPR, CCPA and PECR compliant.
 
 ### What is being tracked?
 

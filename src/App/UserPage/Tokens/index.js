@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
 // Internal Global
-import GA from 'lib/googleAnalytics';
+import UT from 'lib/usageTracking';
 import Button from 'components/Button';
 import { openModal } from 'lib/ui';
 import { loadOwnedTokens, loadAccounts } from 'lib/user';
@@ -45,7 +45,7 @@ export default function Tokens() {
     selectAccountTokens(state.user.accounts, ownedTokens)
   );
   useEffect(() => {
-    GA.SendScreen('Tokens');
+    UT.SendScreen('Tokens');
     loadOwnedTokens();
     loadAccounts();
   }, [session]);

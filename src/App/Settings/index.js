@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import styled from '@emotion/styled';
-import GA from 'lib/googleAnalytics';
+import UT from 'lib/usageTracking';
 
 // Internal Global
 import Panel from 'components/Panel';
@@ -77,7 +77,7 @@ function SettingsRedirect() {
  */
 export default function Settings() {
   useEffect(() => {
-    GA.SendScreen('Settings');
+    UT.SendScreen('Settings');
   }, []);
   const updateCount = useSelector(selectModuleUpdateCount);
 

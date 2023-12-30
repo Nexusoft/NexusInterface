@@ -2,7 +2,7 @@
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
-import GA from 'lib/googleAnalytics';
+import UT from 'lib/usageTracking';
 
 // Internal Global
 import Icon from 'components/Icon';
@@ -35,7 +35,7 @@ export default function AddressBook() {
   const addressBook = useSelector((state) => state.addressBook);
   const coreConnected = useSelector(isCoreConnected);
   useEffect(() => {
-    GA.SendScreen('AddressBook');
+    UT.SendScreen('AddressBook');
   }, []);
 
   return (

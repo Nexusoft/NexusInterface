@@ -1,4 +1,4 @@
-import GA from 'lib/googleAnalytics';
+import UT from 'lib/usageTracking';
 import * as TYPE from 'consts/actionTypes';
 import store from 'store';
 import { updateSettingsFile } from './universal';
@@ -13,12 +13,10 @@ export const updateSettings = (updates) => {
       settings: { sendUsageData },
     } = oldState;
     if (!sendUsageData && updates.sendUsageData) {
-      GA.EnableAnalytics();
-      GA.SendEvent('Settings', 'Analytics', 'Enabled', 1);
+      UT.EnableAnalytics();
     }
     if (sendUsageData && !updates.sendUsageData) {
-      GA.DisableAnalytics();
-      GA.SendEvent('Settings', 'Analytics', 'Disabled', 1);
+      UT.DisableAnalytics();
     }
   }
 };

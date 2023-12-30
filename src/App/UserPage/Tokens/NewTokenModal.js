@@ -12,7 +12,7 @@ import { openModal, showNotification } from 'lib/ui';
 import NewAccountModal from 'components/NewAccountModal';
 
 import { createTokenFee, createLocalNameFee } from 'lib/fees';
-import GA from 'lib/googleAnalytics';
+import UT from 'lib/usageTracking';
 
 __ = __context('User.Tokens.NewToken');
 
@@ -76,7 +76,7 @@ export default function NewTokenModal() {
                 },
                 onSuccess: async (result, { name }) => {
                   if (!result) return; // Submission was cancelled
-                  GA.SendEvent('Users', 'NewToken', 'Token', 1);
+                  UT.CreateNewItem('token');
                   showNotification(
                     __('New token %{token} has been created', {
                       token: name,
