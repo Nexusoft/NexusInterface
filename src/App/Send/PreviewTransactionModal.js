@@ -17,6 +17,7 @@ import sendIcon from 'icons/send.svg';
 
 import RecipientAddress from './RecipientAddress';
 import { loadTransactions } from 'lib/transactions';
+import UT from 'lib/usageTracking';
 
 __ = __context('PreviewTransaction');
 
@@ -220,6 +221,7 @@ export default function PreviewTransactionModal({
                   }
                 },
                 onSuccess: () => {
+                  UT.Send(source?.token ? 'token' : 'nexus');
                   resetSendForm();
                   loadAccounts();
                   loadTransactions();

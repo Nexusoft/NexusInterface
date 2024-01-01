@@ -51,6 +51,14 @@ UT.LogOut = function () {
   trackEvent('logout');
 };
 
+UT.Send = function (tokenType) {
+  if (!UT.active) return;
+  const params = {
+    type: tokenType,
+  };
+  trackEvent('send', params);
+};
+
 UT.InstallModule = function (moduleName) {
   if (!UT.active) return;
   const params = {
@@ -89,6 +97,12 @@ UT.RenameAccount = function () {
   if (!UT.active) return;
   const params = {};
   trackEvent('rename_account');
+};
+
+UT.Exception = function (error) {
+  if (!UT.active) return;
+  const params = {};
+  trackEvent('error_exception');
 };
 
 // Send Event

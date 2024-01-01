@@ -2,7 +2,7 @@
 
 ###### Rev 3.0 December 29th 2023
 
-The Nexus Wallet, by default, will use Google analytics to track certain metrics about the wallet. The following outlines what is going on and your rights.
+The Nexus Wallet, by default, will use Aptabase Analytics to track certain metrics about the wallet. The following outlines what is going on and your rights.
 
 ### REV3.0 Changes:
 

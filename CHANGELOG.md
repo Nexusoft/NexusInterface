@@ -4,7 +4,7 @@
 
 #### Additions
 
--
+- Removed Google Analytics, Added Aptabase Analytics
 
 #### Adjustments
 
