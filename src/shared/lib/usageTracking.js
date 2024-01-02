@@ -5,6 +5,7 @@
 
 import store from 'store';
 import { trackEvent } from '@aptabase/electron/renderer';
+import { ipcRenderer } from 'electron';
 
 const UT = {};
 
@@ -101,8 +102,18 @@ UT.RenameAccount = function () {
 
 UT.Exception = function (error) {
   if (!UT.active) return;
-  const params = {};
-  trackEvent('error_exception');
+  try {
+    const messageSplit = error.split(':'); // Split type : message
+    const typeSplit = messageSplit[0].split(' '); // split type message
+    const errorType = typeSplit[typeSplit.length - 1]; // Last word is the type
+    const params = {
+      type: errorType,
+      message: messageSplit[1],
+    };
+    trackEvent('error_exception', params);
+  } catch (error) {
+    // If this fails just move on.
+  }
 };
 
 // Send Event
@@ -126,11 +137,14 @@ UT.DisableAnalytics = function () {
 // Enable Analytics
 // Turn on Analytics and create a new visitor
 UT.EnableAnalytics = function () {
-  UT.active = true;
+  UT.StartAnalytics();
 };
 
 UT.StartAnalytics = function () {
   UT.active = true;
+  ipcRenderer.on('usage-tracking-error-relay', (event, message) => {
+    UT.Exception(message);
+  });
   trackEvent('app_started');
 };
 
