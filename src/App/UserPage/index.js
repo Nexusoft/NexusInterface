@@ -2,7 +2,7 @@
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
-import GA from 'lib/googleAnalytics';
+import UT from 'lib/usageTracking';
 
 // Internal Global
 import Panel from 'components/Panel';
@@ -28,7 +28,7 @@ export default function UserPage() {
   const loggedIn = useSelector(isLoggedIn);
 
   useEffect(() => {
-    GA.SendScreen('UserPage');
+    UT.SendScreen('UserPage');
   }, []);
 
   return (

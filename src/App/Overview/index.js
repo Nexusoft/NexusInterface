@@ -2,7 +2,7 @@
 import { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
-import GA from 'lib/googleAnalytics';
+import UT from 'lib/usageTracking';
 
 // Internal
 import { webGLAvailable } from 'consts/misc';
@@ -68,7 +68,7 @@ export default function Overview() {
     settings.acceptedAgreement && settings.renderGlobe && webGLAvailable;
 
   useEffect(() => {
-    GA.SendScreen('Overview');
+    UT.SendScreen('Overview');
   }, []);
   const { redrawCurves, removeAllPoints } = useUpdateGlobe({
     settings,

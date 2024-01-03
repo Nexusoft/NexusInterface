@@ -96,6 +96,17 @@ export async function createWindow(settings) {
   }, 1000);
   mainWindow.on('resize', updateWindowSize);
 
+  mainWindow.webContents.addListener(
+    'console-message',
+    (event, level, message, line, sourceID) => {
+      if (level >= 3) {
+        if (!message.search('Error: connect ECONNREFUSED')) {
+          mainWindow.webContents.send('usage-tracking-error-relay', message); // If the user has Tracking off this will do nothing as there is no renderer listener
+        }
+      }
+    }
+  );
+
   const updateWindowPos = debounced(() => {
     const bounds = mainWindow.getBounds();
     updateSettingsFile({

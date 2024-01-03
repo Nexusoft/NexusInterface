@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
 // Internal Global
-import GA from 'lib/googleAnalytics';
+import UT from 'lib/usageTracking';
 
 // Internal Local
 import AppModule from './AppModule';
@@ -14,7 +14,7 @@ export default function Modules() {
   const { name } = useParams();
   const modules = useSelector((state) => state.modules);
   useEffect(() => {
-    GA.SendScreen('Module');
+    UT.SendScreen('Module');
   }, []);
   const module = modules[name];
   if (!module || module.info.type !== 'app' || !module.enabled) return null;

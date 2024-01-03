@@ -10,7 +10,7 @@ import { loadAccounts } from 'lib/user';
 import { showNotification } from 'lib/ui';
 import { createLocalNameFee } from 'lib/fees';
 import { formSubmit, required } from 'lib/form';
-import GA from 'lib/googleAnalytics';
+import UT from 'lib/usageTracking';
 import memoize from 'utils/memoize';
 
 __ = __context('NewAccount');
@@ -74,7 +74,7 @@ export default function NewAccountModal({ tokenName, tokenAddress }) {
                 submit: createToken,
                 onSuccess: (result, values) => {
                   if (!result) return; // Submission was cancelled
-                  GA.SendEvent('Users', 'NewAccount', 'Accounts', 1);
+                  UT.CreateNewItem('account');
                   loadAccounts();
                   closeModal();
                   showNotification(

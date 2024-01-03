@@ -1,3 +1,19 @@
+# 3.1.2 (2024.xx.xx)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v3.1.2)
+
+#### Additions
+
+- Removed Google Analytics, Added Aptabase Analytics
+
+#### Adjustments
+
+-
+
+#### Fixes
+
+-
+
 # 3.1.1 (2023.12.25)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v3.1.1)

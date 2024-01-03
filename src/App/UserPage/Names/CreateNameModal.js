@@ -17,6 +17,7 @@ import {
 } from 'lib/fees';
 import { loadNameRecords, loadNamespaces, selectUsername } from 'lib/user';
 import { callApi } from 'lib/api';
+import UT from 'lib/usageTracking';
 
 __ = __context('CreateName');
 
@@ -132,6 +133,7 @@ export default function CreateNameModal() {
                 },
                 onSuccess: async (result, values, form) => {
                   if (!result) return; // Submission was cancelled
+                  UT.CreateNewItem('name');
                   loadNameRecords();
                   form.restart();
                   closeModal();

@@ -1,7 +1,7 @@
 // External
 import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
-import GA from 'lib/googleAnalytics';
+import UT from 'lib/usageTracking';
 
 // Internal Global
 import { searchContact } from 'lib/addressBook';
@@ -45,7 +45,7 @@ function SearchBox() {
 }
 
 function exportAddressBook(addressBook) {
-  GA.SendEvent('AddressBook', 'IOAddress', 'Export', 1);
+  UT.ExportAddressBook();
 
   const rows = []; //Set up a blank array for each row
   let csvContent = 'data:text/csv;charset=utf-8,'; //Set formating

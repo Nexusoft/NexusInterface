@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { useRef, useEffect } from 'react';
 import styled from '@emotion/styled';
 import { ipcRenderer } from 'electron';
-import GA from 'lib/googleAnalytics';
+import UT from 'lib/usageTracking';
 import memoize from 'utils/memoize';
 
 // Internal Global Dependencies
@@ -158,8 +158,6 @@ export default function NexusApiConsole() {
     if (!currentCommand || !currentCommand.trim()) return;
 
     const cmd = currentCommand.trim();
-    GA.SendEvent('Terminal', 'NexusApiConsole', 'UseCommand', 1);
-
     executeCommand(censorSecuredFields(cmd, { consoleCliSyntax }));
 
     let result = undefined;

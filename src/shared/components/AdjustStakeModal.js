@@ -13,7 +13,7 @@ import { formatNumber } from 'lib/intl';
 import { showNotification } from 'lib/ui';
 import Link from 'components/Link';
 import memoize from 'utils/memoize';
-import GA from 'lib/googleAnalytics';
+import UT from 'lib/usageTracking';
 
 __ = __context('AdjustStake');
 
@@ -153,9 +153,9 @@ export default function AdjustStakeModal({
                   if (!result) return; // Submission was cancelled
 
                   if (stake < currentStake) {
-                    GA.SendEvent('Users', 'ReduceStake', 'Staking', 1);
+                    UT.AdjustStake('reduce');
                   } else {
-                    GA.SendEvent('Users', 'IncreaseStake', 'Staking', 1);
+                    UT.AdjustStake('increase');
                   }
 
                   closeModal();

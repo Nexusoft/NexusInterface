@@ -6,7 +6,7 @@ import axios from 'axios';
 import store from 'store';
 import * as TYPE from 'consts/actionTypes';
 import { showNotification, openModal } from 'lib/ui';
-import GA from 'lib/googleAnalytics';
+import UT from 'lib/usageTracking';
 import { updateSettings } from 'lib/settings';
 import ModuleDetailsModal from 'components/ModuleDetailsModal';
 import { modulesDir } from 'consts/paths';
@@ -102,7 +102,7 @@ function doInstall(path) {
           }
 
           await copyModule(module.info.files, path, dest);
-          GA.InstallModule(module.info.name);
+          UT.InstallModule(module.info.name);
           resolve(dest);
           openSuccessDialog({
             message: __('Module has been successfully installed'),
