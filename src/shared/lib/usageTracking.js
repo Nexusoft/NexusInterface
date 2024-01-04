@@ -52,6 +52,26 @@ UT.LogOut = function () {
   trackEvent('logout');
 };
 
+UT.CreateUserAccount = function () {
+  if (!UT.active) return;
+  const params = {};
+  trackEvent('create_user');
+};
+
+UT.RecoveredUserAccount = function () {
+  if (!UT.active) return;
+  const params = {};
+  trackEvent('recovered_user');
+};
+
+UT.RecoverPhrase = function (hadRecoverPhrase) {
+  if (!UT.active) return;
+  const params = {
+    new: hadRecoverPhrase,
+  };
+  trackEvent('set_recovery', params);
+};
+
 UT.Send = function (tokenType) {
   if (!UT.active) return;
   const params = {
