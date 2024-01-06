@@ -16,6 +16,7 @@ import { formSubmit, checkAll, required, minChars } from 'lib/form';
 import { openModal } from 'lib/ui';
 import { openSuccessDialog, openErrorDialog } from 'lib/dialog';
 import { assetsDir } from 'consts/paths';
+import UT from 'lib/usageTracking';
 
 __ = __context('SetRecoveryPhrase');
 
@@ -86,6 +87,7 @@ export default function SetRecoveryModal() {
                 },
                 onSuccess: async (result) => {
                   if (!result) return;
+                  UT.RecoverPhrase(hasRecoveryPhrase);
                   closeModal();
                   openSuccessDialog({
                     message: __('Recovery phrase has been updated'),

@@ -1,3 +1,20 @@
+# 3.1.2 (2024.1.06)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v3.1.2)
+
+#### Additions
+
+- Nexus Core v5.1.2
+- Removed Google Analytics, Added Aptabase Analytics
+
+#### Adjustments
+
+- None
+
+#### Fixes
+
+- None
+
 # 3.1.1 (2023.12.25)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v3.1.1)

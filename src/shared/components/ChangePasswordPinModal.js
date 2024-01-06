@@ -5,6 +5,7 @@ import Spinner from 'components/Spinner';
 import { formSubmit, checkAll, required, minChars } from 'lib/form';
 import { callApi } from 'lib/api';
 import { openSuccessDialog, confirmPasswordPin } from 'lib/dialog';
+import UT from 'lib/usageTracking';
 
 __ = __context('ChangePassword&PIN');
 
@@ -46,6 +47,7 @@ export default function ChangePasswordPinModal() {
                 },
                 onSuccess: async (result, values, form) => {
                   if (!result) return;
+                  UT.UpdateCredentials();
                   closeModal();
                   form.restart();
                   openSuccessDialog({

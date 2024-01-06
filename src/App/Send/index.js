@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-import GA from 'lib/googleAnalytics';
+import UT from 'lib/usageTracking';
 import Panel from 'components/Panel';
 import RequireLoggedIn from 'components/RequireLoggedIn';
 import sendIcon from 'icons/send.svg';
@@ -11,7 +11,7 @@ __ = __context('Send');
 
 export default function Send() {
   useEffect(() => {
-    GA.SendScreen('Send');
+    UT.SendScreen('Send');
   }, []);
   return (
     <Panel icon={sendIcon} title={__('Send')}>

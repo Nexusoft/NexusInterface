@@ -21,6 +21,7 @@ import {
 import store, { observeStore } from 'store';
 import { isLoggedIn } from 'selectors';
 import { confirmPasswordPin } from 'lib/dialog';
+import UT from 'lib/usageTracking';
 
 __ = __context('NewUser');
 
@@ -81,6 +82,7 @@ export default function NewUserModal() {
                 },
                 onSuccess: async (result, { username }, form) => {
                   if (!result) return;
+                  UT.CreateUserAccount();
                   closeModal();
                   form.restart();
                   showBackgroundTask(UserConfirmBackgroundTask, {

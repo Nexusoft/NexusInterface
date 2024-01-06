@@ -12,7 +12,7 @@ import { showNotification } from 'lib/ui';
 import { createLocalNameFee } from 'lib/fees';
 import { selectUsername } from 'lib/user';
 import memoize from 'utils/memoize';
-import GA from 'lib/googleAnalytics';
+import UT from 'lib/usageTracking';
 
 __ = __context('RenameAccount');
 
@@ -74,7 +74,7 @@ async function submit({ name, account, username }) {
 
 function handleSubmitSuccess({ result, name, closeModal }) {
   if (!result) return; // Submission was cancelled
-  GA.SendEvent('Users', 'RenameAccount', 'Accounts', 1);
+  UT.RenameAccount();
   loadAccounts();
   closeModal();
   showNotification(
