@@ -4,15 +4,16 @@
 
 #### Additions
 
+- Nexus Core v5.1.2
 - Removed Google Analytics, Added Aptabase Analytics
 
 #### Adjustments
 
--
+- None
 
 #### Fixes
 
--
+- None
 
 # 3.1.1 (2023.12.25)
 
