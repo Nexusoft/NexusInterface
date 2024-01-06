@@ -1,4 +1,4 @@
-# 3.1.2 (2024.xx.xx)
+# 3.1.2 (2024.1.06)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v3.1.2)
 
