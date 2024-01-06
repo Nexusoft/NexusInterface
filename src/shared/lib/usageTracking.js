@@ -72,6 +72,12 @@ UT.RecoverPhrase = function (hadRecoverPhrase) {
   trackEvent('set_recovery', params);
 };
 
+UT.UpdateCredentials = function () {
+  if (!UT.active) return;
+  const params = {};
+  trackEvent('update_credentials');
+};
+
 UT.Send = function (tokenType) {
   if (!UT.active) return;
   const params = {
@@ -94,6 +100,18 @@ UT.UninstallModule = function (moduleName) {
     module: moduleName,
   };
   trackEvent('uninstall_module', params);
+};
+
+UT.StartStake = function () {
+  if (!UT.active) return;
+  const params = {};
+  trackEvent('start_stake');
+};
+
+UT.StopStake = function () {
+  if (!UT.active) return;
+  const params = {};
+  trackEvent('stop_stake');
 };
 
 UT.AdjustStake = function (direction) {

@@ -26,6 +26,7 @@ import { isSynchronized } from 'selectors';
 import QuestionCircle from 'components/QuestionCircle';
 
 import TabContentWrapper from './TabContentWrapper';
+import UT from 'lib/usageTracking';
 
 __ = __context('User.Staking');
 
@@ -149,6 +150,7 @@ export default function Staking() {
             liteMode: false,
             multiUser: false,
           });
+          UT.StartStake(true);
           restartCore();
           showNotification(__('Restarting Core'));
         } else {
@@ -185,6 +187,7 @@ export default function Staking() {
       updateSettings({
         enableStaking: false,
       });
+      UT.StopStake();
       restartCore();
       showNotification(__('Restarting Core'));
     };
