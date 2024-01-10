@@ -15,6 +15,7 @@ import { formSubmit, required, checkAll } from 'lib/form';
 import { emailRegex } from 'consts/misc';
 import timeZones from 'data/timeZones';
 import Addresses from './Addresses';
+import UT from 'lib/usageTracking';
 
 __ = __context('AddEditContact');
 
@@ -113,6 +114,7 @@ export default function AddEditContactModal({ edit, contact, prefill }) {
                   }
                 },
                 onSuccess: (result, dispatch, props) => {
+                  UT.AddAddressBookEntry(edit);
                   closeModal();
                   if (edit) {
                     showNotification(__('Contact has been updated'), 'success');
