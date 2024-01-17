@@ -115,7 +115,6 @@ export const refreshBalances = async () => {
     store.dispatch({ type: TYPE.SET_BALANCES, payload: balances });
     return balances;
   } catch (err) {
-    store.dispatch({ type: TYPE.CLEAR_BALANCES });
     console.error('finance/get/balances failed', err);
   }
 };

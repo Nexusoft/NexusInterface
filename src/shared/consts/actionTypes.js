@@ -11,7 +11,6 @@ export const SET_BALANCES = 'SET_BALANCES';
 export const DISCONNECT_CORE = 'DISCONNECT_CORE';
 export const CLEAR_STAKE_INFO = 'CLEAR_STAKE_INFO';
 export const CLEAR_LEDGER_INFO = 'CLEAR_LEDGER_INFO';
-export const CLEAR_BALANCES = 'CLEAR_BALANCES';
 
 // Overview
 export const GET_DIFFICULTY = 'GET_DIFFICULTY';

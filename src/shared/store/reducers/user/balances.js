@@ -10,7 +10,6 @@ export default (state = initialState, action) => {
     case TYPE.DISCONNECT_CORE:
     case TYPE.ACTIVE_USER:
     case TYPE.CLEAR_USER:
-    case TYPE.CLEAR_BALANCES:
     case TYPE.LOGOUT:
       return initialState;
 
