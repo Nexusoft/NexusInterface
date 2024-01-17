@@ -34,10 +34,6 @@ async function fetchMarketData() {
     }
 
     marketData.currency = fiatCurrency;
-    // cryptocompare's VND price is divided by 10
-    if (fiatCurrency === 'VND') {
-      marketData.price *= 10;
-    }
 
     store.dispatch({
       type: TYPE.SET_MARKET_DATA,
