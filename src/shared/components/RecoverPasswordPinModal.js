@@ -7,6 +7,7 @@ import { formSubmit, checkAll, required, minChars } from 'lib/form';
 import { callAPI } from 'lib/api';
 import { openModal } from 'lib/ui';
 import { openSuccessDialog, confirmPasswordPin } from 'lib/dialog';
+import UT from 'lib/usageTracking';
 
 __ = __context('RecoverPassword&PIN');
 
@@ -56,6 +57,7 @@ export default function RecoverPasswordPinModal() {
                 onSuccess: async (result) => {
                   if (!result) return;
                   closeModal();
+                  UT.RecoveredUserAccount();
                   openSuccessDialog({
                     message: __('Password & PIN have been updated'),
                     onClose: () => {

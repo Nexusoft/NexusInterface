@@ -12,7 +12,7 @@ import Tooltip from 'components/Tooltip';
 import InfoField from 'components/InfoField';
 import ExternalLink from 'components/ExternalLink';
 import SimpleProgressBar from 'components/SimpleProgressBar';
-import GA from 'lib/googleAnalytics';
+import UT from 'lib/usageTracking';
 import { confirm } from 'lib/dialog';
 import { navigate } from 'lib/wallet';
 import { updateSettings } from 'lib/settings';
@@ -67,7 +67,7 @@ async function confirmDelete(module) {
     } else {
       await deleteDirectory(module.path, { recursive: true, force: true });
       removeUpdateCache(module.repository);
-      GA.UninstallModule(module.info.name);
+      UT.UninstallModule(module.info.name);
     }
     location.reload();
   }

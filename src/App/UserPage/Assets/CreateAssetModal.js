@@ -16,6 +16,7 @@ import { createLocalNameFee } from 'lib/fees';
 import plusIcon from 'icons/plus.svg';
 
 import AssetFieldCreator from './AssetFieldCreator';
+import UT from 'lib/usageTracking';
 
 __ = __context('CreateAsset');
 
@@ -93,6 +94,7 @@ export default function CreateAssetModal() {
                 },
                 onSuccess: async (result) => {
                   if (!result) return; // Submission was cancelled
+                  UT.CreateNewItem('asset');
                   closeModal();
                   loadAssets();
                   openSuccessDialog({

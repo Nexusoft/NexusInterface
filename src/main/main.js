@@ -20,28 +20,12 @@ import {
   setAllowPrerelease,
 } from './updater';
 import { proxyRequest } from './modules';
-import Analytics from 'electron-google-analytics4';
+import { initialize } from '@aptabase/electron/main';
 
 let mainWindow;
 global.forceQuit = false;
 app.setAppUserModelId(APP_ID);
-
-let ga;
-
-ipcMain.handle('send-GA4-event', async (ipcevent, dataStruct) => {
-  if (ga == undefined) {
-    ga = new Analytics('G-5CX0RT2KGY', 'AdhWOtVfSRGNnzjNbzAxLw');
-  }
-  ga.setUserProperties(dataStruct.userAgent);
-  ga.setParams(dataStruct.eventParams);
-  await ga.event(dataStruct.eventName);
-  ga.setParams(); // resets Params;
-  return;
-});
-
-ipcMain.handle('remove-GA4', () => {
-  ga = undefined;
-});
+initialize('A-US-0744437796'); // This doesn't send anything so it is safe to fire even if the user has turned tracking off
 
 // Temporarily add this because there are some errors in autoUpdater.checkForUpdates
 // cannot be caught (net::ERR_HTTP_RESPONSE_CODE_FAILURE).

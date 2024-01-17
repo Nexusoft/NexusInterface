@@ -7,6 +7,7 @@ import { confirmPin, openSuccessDialog } from 'lib/dialog';
 import { loadNamespaces } from 'lib/user';
 import { callAPI } from 'lib/api';
 import { createNamespaceFee } from 'lib/fees';
+import UT from 'lib/usageTracking';
 
 __ = __context('CreateNamespace');
 
@@ -43,6 +44,7 @@ export default function CreateNamespaceModal() {
                 },
                 onSuccess: async (result, values, form) => {
                   if (!result) return; // Submission was cancelled
+                  UT.CreateNewItem('namespace');
                   loadNamespaces();
                   form.restart();
                   closeModal();

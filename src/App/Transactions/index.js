@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import GA from 'lib/googleAnalytics';
+import UT from 'lib/usageTracking';
 import styled from '@emotion/styled';
 
 import Panel from 'components/Panel';
@@ -130,7 +130,7 @@ export default function Transactions() {
   const genesis = useSelector((state) => state.user.status?.genesis);
 
   useEffect(() => {
-    GA.SendScreen('Transactions');
+    UT.SendScreen('Transactions');
   }, []);
   // Reload transactions when user genesis changes, such as when user
   // is logged in or switched to another user

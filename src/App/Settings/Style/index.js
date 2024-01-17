@@ -10,7 +10,7 @@ import Button from 'components/Button';
 import Switch from 'components/Switch';
 import Select from 'components/Select';
 import NexusAddress from 'components/NexusAddress';
-import GA from 'lib/googleAnalytics';
+import UT from 'lib/usageTracking';
 import { updateSettings } from 'lib/settings';
 import { switchSettingsTab, showNotification } from 'lib/ui';
 import { loadCustomTheme } from 'lib/theme';
@@ -47,10 +47,7 @@ const getTritiumDefaultAddress = memoize((accounts) => {
 const setRenderGlobe = (renderGlobe) => updateSettings({ renderGlobe });
 const setOverviewDisplay = (overviewDisplay) =>
   updateSettings({ overviewDisplay });
-const setAddressStyle = (addressStyle) => {
-  GA.SendEvent('Settings', 'Style', 'setAddressStyle', addressStyle);
-  updateSettings({ addressStyle });
-};
+const setAddressStyle = (addressStyle) => updateSettings({ addressStyle });
 
 async function openPickThemeFileDialog() {
   const files = await ipcRenderer.invoke('show-open-dialog', {

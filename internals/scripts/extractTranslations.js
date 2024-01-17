@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import chalk from 'chalk';
-import csvStringify from 'csv-stringify';
+import { stringify } from 'csv-stringify';
 import { parse } from 'csv-parse/sync';
 import extractFromFiles from './i18nExtract';
 
@@ -131,7 +131,7 @@ Object.entries(newDicts).forEach(([locale, newDict]) => {
       lines.push([keyString, translation, context]);
     });
   });
-  csvStringify(lines, (err, output) => {
+  stringify(lines, (err, output) => {
     if (err) {
       console.error(err);
     } else {

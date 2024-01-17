@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 // Internal Global Dependencies
 import Panel from 'components/Panel';
 import RouterHorizontalTab from 'components/RouterHorizontalTab';
-import GA from 'lib/googleAnalytics';
+import UT from 'lib/usageTracking';
 
 // Internal Local Dependencies
 import NexusApiConsole from './NexusApiConsole';
@@ -38,7 +38,7 @@ function ConsoleRedirect() {
 
 export default function Terminal() {
   useEffect(() => {
-    GA.SendScreen('Terminal');
+    UT.SendScreen('Terminal');
   }, []);
   return (
     <Panel icon={consoleIcon} title={__('Console')} bodyScrollable={false}>
