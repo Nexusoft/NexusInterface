@@ -232,25 +232,25 @@ export const loadOwnedTokens = async () => {
   }
 };
 
-function processAccount(account) {
-  if (account.name?.startsWith?.('local:')) {
-    account.nameIsLocal = true;
-    account.name = account.name.substring(6);
-  }
-  if (account.name?.startsWith?.('user:')) {
-    account.nameIsLocal = true;
-    account.name = account.name.substring(5);
-  }
-  if (account.ticker?.startsWith?.('local:')) {
-    account.tickerIsLocal = true;
-    account.ticker = account.ticker.substring(6);
-  }
-}
+// function processAccount(account) {
+//   if (account.name?.startsWith?.('local:')) {
+//     account.nameIsLocal = true;
+//     account.name = account.name.substring(6);
+//   }
+//   if (account.name?.startsWith?.('user:')) {
+//     account.nameIsLocal = true;
+//     account.name = account.name.substring(5);
+//   }
+//   if (account.ticker?.startsWith?.('local:')) {
+//     account.tickerIsLocal = true;
+//     account.ticker = account.ticker.substring(6);
+//   }
+// }
 
 export const loadAccounts = async () => {
   try {
     const accounts = await callApi('finance/list/any');
-    accounts.forEach(processAccount);
+    // accounts.forEach(processAccount);
     store.dispatch({
       type: TYPE.SET_TRITIUM_ACCOUNTS,
       payload: accounts,
