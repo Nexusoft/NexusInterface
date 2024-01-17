@@ -6,7 +6,7 @@ import WaitingMessage from 'components/WaitingMessage';
 import Tooltip from 'components/Tooltip';
 import { formatDateTime } from 'lib/intl';
 import { openModal } from 'lib/ui';
-import { callApi } from 'lib/api';
+import { callAPI } from 'lib/api';
 import { handleError } from 'utils/form';
 
 import AssetHistoryDetailsModal from './AssetHistoryDetailsModal';
@@ -73,7 +73,7 @@ export default function AssetHistoryModal({ asset }) {
   useEffect(() => {
     (async () => {
       try {
-        const events = await callApi('assets/history/asset', {
+        const events = await callAPI('assets/history/asset', {
           address: asset.address,
         });
         setEvents(events.reverse());

@@ -8,7 +8,7 @@ import ConfirmDialog from 'components/Dialogs/ConfirmDialog';
 import store from 'store';
 import { updateSettings } from 'lib/settings';
 import { restartCore } from 'lib/core';
-import { callApi } from 'lib/api';
+import { callAPI } from 'lib/api';
 import {
   openModal,
   removeModal,
@@ -161,7 +161,7 @@ export default function Staking() {
           note: __('Enter your PIN to start staking'),
         });
         if (pin) {
-          await callApi('sessions/unlock/local', { pin, staking: true });
+          await callAPI('sessions/unlock/local', { pin, staking: true });
         }
       }
 

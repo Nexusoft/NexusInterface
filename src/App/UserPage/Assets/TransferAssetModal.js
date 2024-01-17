@@ -7,7 +7,7 @@ import Spinner from 'components/Spinner';
 import { formSubmit, required } from 'lib/form';
 import { confirmPin, openSuccessDialog } from 'lib/dialog';
 import { loadAssets } from 'lib/user';
-import { callApi } from 'lib/api';
+import { callAPI } from 'lib/api';
 import { userIdRegex } from 'consts/misc';
 
 __ = __context('TransferAsset');
@@ -44,7 +44,7 @@ export default function TransferAssetModal({ asset }) {
                   }
 
                   if (pin) {
-                    return await callApi('assets/transfer/asset', params);
+                    return await callAPI('assets/transfer/asset', params);
                   }
                 },
                 onSuccess: async (result) => {

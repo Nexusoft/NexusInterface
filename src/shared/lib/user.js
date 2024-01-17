@@ -3,7 +3,7 @@ import ExternalLink from 'components/ExternalLink';
 import BackgroundTask from 'components/BackgroundTask';
 import * as TYPE from 'consts/actionTypes';
 import store, { observeStore } from 'store';
-import { callApi } from 'lib/api';
+import { callAPI as callAPI } from 'lib/api';
 import { showBackgroundTask, showNotification } from 'lib/ui';
 import { confirm } from 'lib/dialog';
 import { updateSettings } from 'lib/settings';
@@ -44,7 +44,7 @@ export const selectUsername = (state) => {
 
 export const refreshStakeInfo = async () => {
   try {
-    const stakeInfo = await callApi('finance/get/stakeinfo');
+    const stakeInfo = await callAPI('finance/get/stakeinfo');
     store.dispatch({ type: TYPE.SET_STAKE_INFO, payload: stakeInfo });
     return stakeInfo;
   } catch (err) {
@@ -64,7 +64,7 @@ export async function refreshUserStatus() {
   } = store.getState();
   if (systemInfo?.multiuser) {
     try {
-      const sessions = await callApi('sessions/list/local');
+      const sessions = await callAPI('sessions/list/local');
       store.dispatch({
         type: TYPE.SET_SESSIONS,
         payload: sessions,
@@ -82,13 +82,13 @@ export async function refreshUserStatus() {
       return;
     }
 
-    const status = await callApi(
+    const status = await callAPI(
       'sessions/status/local',
       session ? { session } : undefined
     );
 
     if (store.getState().user.profileStatus?.genesis !== status.genesis) {
-      const profileStatus = await callApi('profiles/status/master', {
+      const profileStatus = await callAPI('profiles/status/master', {
         genesis: status.genesis,
         session,
       });
@@ -112,7 +112,7 @@ export async function refreshUserStatus() {
 
 export const refreshProfileStatus = async () => {
   try {
-    const profileStatus = await callApi('profiles/status/master');
+    const profileStatus = await callAPI('profiles/status/master');
     store.dispatch({ type: TYPE.SET_PROFILE_STATUS, payload: profileStatus });
     return profileStatus;
   } catch (err) {
@@ -122,7 +122,7 @@ export const refreshProfileStatus = async () => {
 
 export const refreshBalances = async () => {
   try {
-    const balances = await callApi('finance/get/balances');
+    const balances = await callAPI('finance/get/balances');
     store.dispatch({ type: TYPE.SET_BALANCES, payload: balances });
     return balances;
   } catch (err) {
@@ -135,7 +135,7 @@ export const logIn = async ({ username, password, pin }) => {
   refreshUserStatusLock = true;
   await sleep(500); // Let the core cycle, Possible delete this
   try {
-    const { session, genesis } = await callApi('sessions/create/local', {
+    const { session, genesis } = await callAPI('sessions/create/local', {
       username,
       password,
       pin,
@@ -143,7 +143,7 @@ export const logIn = async ({ username, password, pin }) => {
 
     let stakeInfo = null;
     try {
-      stakeInfo = await callApi('finance/get/stakeinfo', { session });
+      stakeInfo = await callAPI('finance/get/stakeinfo', { session });
     } catch (err) {
       if (err.code !== -70) {
         // Only ignore 'Trust account not found' error
@@ -175,11 +175,11 @@ export const logOut = async () => {
     if (systemInfo?.multiuser) {
       await Promise.all([
         Object.keys(sessions).map((session) => {
-          callApi('sessions/terminate/local', { session });
+          callAPI('sessions/terminate/local', { session });
         }),
       ]);
     } else {
-      await callApi('sessions/terminate/local');
+      await callAPI('sessions/terminate/local');
     }
     GA.LogOut();
   } finally {
@@ -194,14 +194,14 @@ export async function setActiveUser({ session, genesis, stakeInfo }) {
   } = store.getState();
 
   const [status, profileStatus, sessions, newStakeInfo] = await Promise.all([
-    callApi('sessions/status/local', { session }),
-    callApi('profiles/status/master', { session, genesis }),
+    callAPI('sessions/status/local', { session }),
+    callAPI('profiles/status/master', { session, genesis }),
     systemInfo?.multiuser
-      ? callApi('sessions/list/local')
+      ? callAPI('sessions/list/local')
       : Promise.resolve(null),
     stakeInfo
       ? Promise.resolve(null)
-      : callApi('finance/get/stakeinfo', { session }).catch((err) => {
+      : callAPI('finance/get/stakeinfo', { session }).catch((err) => {
           if (err.code !== -70) {
             // Only ignore 'Trust account not found' error
             throw err;
@@ -260,7 +260,7 @@ export const loadOwnedTokens = async () => {
 
 export const loadAccounts = async () => {
   try {
-    const accounts = await callApi('finance/list/any');
+    const accounts = await callAPI('finance/list/any');
     // accounts.forEach(processAccount);
     store.dispatch({
       type: TYPE.SET_TRITIUM_ACCOUNTS,
@@ -396,7 +396,7 @@ async function unlockUser({ pin, session, stakeInfo }) {
     settings: { enableMining },
   } = store.getState();
   try {
-    await callApi('sessions/unlock/local', {
+    await callAPI('sessions/unlock/local', {
       pin,
       notifications: true,
       staking: unlockStaking,
@@ -433,7 +433,7 @@ function UserUnLockIndexingBackgroundTask({
         async (isIndexing) => {
           if (!isIndexing) {
             try {
-              await callApi('sessions/unlock/local', {
+              await callAPI('sessions/unlock/local', {
                 pin,
                 notifications,
                 staking,

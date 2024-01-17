@@ -5,7 +5,7 @@ import Spinner from 'components/Spinner';
 import { formSubmit } from 'lib/form';
 import { confirmPin, openSuccessDialog } from 'lib/dialog';
 import { loadAssets } from 'lib/user';
-import { callApi } from 'lib/api';
+import { callAPI } from 'lib/api';
 import { getAssetData } from 'lib/asset';
 import { assetNumberTypes } from 'consts/misc';
 import memoize from 'utils/memoize';
@@ -35,7 +35,7 @@ export default function EditAssetModal({ schema, asset }) {
                   const pin = await confirmPin();
 
                   if (pin) {
-                    return await callApi('assets/update/asset', {
+                    return await callAPI('assets/update/asset', {
                       pin,
                       address: asset.address,
                       ...values,

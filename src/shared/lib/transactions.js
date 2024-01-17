@@ -1,4 +1,4 @@
-import { callApi } from 'lib/api';
+import { callAPI } from 'lib/api';
 import store, { observeStore } from 'store';
 import * as TYPE from 'consts/actionTypes';
 import { loadAccounts } from 'lib/user';
@@ -222,7 +222,7 @@ export async function loadTransactions() {
     if (query) {
       params.where = query;
     }
-    const transactions = await callApi('profiles/transactions/master', params);
+    const transactions = await callAPI('profiles/transactions/master', params);
     store.dispatch({
       type: TYPE.FETCH_TXS_RESULT,
       payload: {
@@ -280,7 +280,7 @@ export const getDeltaSign = (contract) => {
 };
 
 export async function fetchTransaction(txid) {
-  const tx = await callApi('ledger/get/transaction', {
+  const tx = await callAPI('ledger/get/transaction', {
     txid,
     verbose: 'summary',
   });
@@ -305,7 +305,7 @@ export function prepareTransactions() {
         typeof oldTxCount === 'number' &&
         txCount > oldTxCount
       ) {
-        const transactions = await callApi('profiles/transactions/master', {
+        const transactions = await callAPI('profiles/transactions/master', {
           verbose: 'summary',
           limit: txCount - oldTxCount,
         });

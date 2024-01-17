@@ -11,7 +11,7 @@ import QuestionCircle from 'components/QuestionCircle';
 import { formSubmit } from 'lib/form';
 import { confirmPin, openSuccessDialog } from 'lib/dialog';
 import { loadAssets } from 'lib/user';
-import { callApi } from 'lib/api';
+import { callAPI } from 'lib/api';
 import { createLocalNameFee } from 'lib/fees';
 import plusIcon from 'icons/plus.svg';
 
@@ -88,7 +88,7 @@ export default function CreateAssetModal() {
                       ),
                     };
                     if (name) params.name = name;
-                    return await callApi('assets/create/asset', params);
+                    return await callAPI('assets/create/asset', params);
                   }
                 },
                 onSuccess: async (result) => {

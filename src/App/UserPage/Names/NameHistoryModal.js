@@ -6,7 +6,7 @@ import WaitingMessage from 'components/WaitingMessage';
 import Tooltip from 'components/Tooltip';
 import { formatDateTime } from 'lib/intl';
 import { openModal } from 'lib/ui';
-import { callApi } from 'lib/api';
+import { callAPI } from 'lib/api';
 import { handleError } from 'utils/form';
 
 import NameHistoryDetailsModal from './NameHistoryDetailsModal';
@@ -73,7 +73,7 @@ export default function NameHistoryModal({ nameRecord }) {
   useEffect(() => {
     (async () => {
       try {
-        const events = await callApi('names/history/name', {
+        const events = await callAPI('names/history/name', {
           address: nameRecord.address,
         });
         setEvents(events.reverse());

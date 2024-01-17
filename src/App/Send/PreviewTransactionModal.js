@@ -7,7 +7,7 @@ import Icon from 'components/Icon';
 import TokenName from 'components/TokenName';
 import Tooltip from 'components/Tooltip';
 import Form from 'components/Form';
-import { callApi } from 'lib/api';
+import { callAPI } from 'lib/api';
 import { openSuccessDialog } from 'lib/dialog';
 import { loadAccounts } from 'lib/user';
 import { formSubmit, required } from 'lib/form';
@@ -213,10 +213,10 @@ export default function PreviewTransactionModal({
 
                   if (source?.token) {
                     params.from = source.token.address;
-                    return await callApi('finance/debit/token', params);
+                    return await callAPI('finance/debit/token', params);
                   } else {
                     params.from = source.account.address;
-                    return await callApi('finance/debit/any', params);
+                    return await callAPI('finance/debit/any', params);
                   }
                 },
                 onSuccess: () => {

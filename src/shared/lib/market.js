@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 import * as TYPE from 'consts/actionTypes';
-import { callApi } from 'lib/api';
+import { callAPI } from 'lib/api';
 import store, { observeStore } from 'store';
 import { tryParsingJson } from 'utils/json';
 
@@ -88,7 +88,7 @@ async function fetchMetrics() {
   try {
     clearTimeout(metricsTimerId);
     unobserveMetrics?.();
-    const metrics = await callApi('system/get/metrics');
+    const metrics = await callAPI('system/get/metrics');
     store.dispatch({
       type: TYPE.SET_TOTAL_SUPPLY,
       payload: metrics?.supply?.total,

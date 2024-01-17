@@ -7,7 +7,7 @@ import Form from 'components/Form';
 import ControlledModal from 'components/ControlledModal';
 import Button from 'components/Button';
 import { formSubmit, checkAll, useFieldValue } from 'lib/form';
-import { callApi } from 'lib/api';
+import { callAPI } from 'lib/api';
 import { confirm, confirmPin } from 'lib/dialog';
 import { formatNumber } from 'lib/intl';
 import { showNotification } from 'lib/ui';
@@ -143,7 +143,7 @@ export default function AdjustStakeModal({
 
                   const pin = await confirmPin();
                   if (pin) {
-                    return await callApi('finance/set/stake', {
+                    return await callAPI('finance/set/stake', {
                       pin,
                       amount: stake,
                     });

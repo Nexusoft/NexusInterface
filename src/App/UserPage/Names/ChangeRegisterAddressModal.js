@@ -9,7 +9,7 @@ import Spinner from 'components/Spinner';
 import { formSubmit } from 'lib/form';
 import { confirmPin, openSuccessDialog } from 'lib/dialog';
 import { loadNameRecords, selectUsername } from 'lib/user';
-import { callApi } from 'lib/api';
+import { callAPI } from 'lib/api';
 import memoize from 'utils/memoize';
 
 __ = __context('ChangeRegisterAddress');
@@ -51,7 +51,7 @@ export default function ChangeRegisterAddressModal({ nameRecord }) {
                 submit: async ({ registerAddress }) => {
                   const pin = await confirmPin();
                   if (pin) {
-                    return await callApi('names/update/name', {
+                    return await callAPI('names/update/name', {
                       pin,
                       address: nameRecord.address,
                       register: registerAddress,

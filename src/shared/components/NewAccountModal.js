@@ -5,7 +5,7 @@ import Button from 'components/Button';
 import FormField from 'components/FormField';
 import Form from 'components/Form';
 import { confirm, confirmPin } from 'lib/dialog';
-import { callApi } from 'lib/api';
+import { callAPI } from 'lib/api';
 import { loadAccounts } from 'lib/user';
 import { showNotification } from 'lib/ui';
 import { createLocalNameFee } from 'lib/fees';
@@ -36,12 +36,12 @@ async function createToken({ name, token }) {
     if (name) params.name = name;
 
     if (token === 'NXS') {
-      return await callApi('finance/create/account', params);
+      return await callAPI('finance/create/account', params);
     } else {
       // Token accepts Name or Address
       try {
         params.token = token;
-        return await callApi('tokens/create/account', params);
+        return await callAPI('tokens/create/account', params);
       } catch (err) {
         // TODO: check error code?
         throw new Error(__('Unknown token name/address'));

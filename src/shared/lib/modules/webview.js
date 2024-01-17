@@ -13,7 +13,7 @@ import {
 } from 'lib/dialog';
 import { popupContextMenu, defaultMenu } from 'lib/contextMenu';
 import { goToSend } from 'lib/send';
-import { callApi } from 'lib/api';
+import { callAPI } from 'lib/api';
 import memoize from 'utils/memoize';
 
 import { readModuleStorage, writeModuleStorage } from './storage';
@@ -115,7 +115,7 @@ function send([{ sendFrom, recipients, advancedOptions }]) {
 
 async function apiCall([endpoint, params, callId], webview) {
   try {
-    const response = await callApi(endpoint, params);
+    const response = await callAPI(endpoint, params);
     if (webview) {
       webview.send(
         `api-return${callId ? `:${callId}` : ''}`,
@@ -158,7 +158,7 @@ async function secureApiCall([endpoint, params, callId], webview) {
     const response =
       pin === undefined
         ? undefined
-        : await callApi(endpoint, { ...params, pin });
+        : await callAPI(endpoint, { ...params, pin });
     if (webview) {
       webview.send(
         `secure-api-return${callId ? `:${callId}` : ''}`,

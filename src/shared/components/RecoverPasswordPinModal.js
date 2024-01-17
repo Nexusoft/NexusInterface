@@ -4,7 +4,7 @@ import FormField from 'components/FormField';
 import LoginModal from 'components/LoginModal';
 import Spinner from 'components/Spinner';
 import { formSubmit, checkAll, required, minChars } from 'lib/form';
-import { callApi } from 'lib/api';
+import { callAPI } from 'lib/api';
 import { openModal } from 'lib/ui';
 import { openSuccessDialog, confirmPasswordPin } from 'lib/dialog';
 
@@ -43,7 +43,7 @@ export default function RecoverPasswordPinModal() {
                   });
 
                   if (correct) {
-                    return await callApi('profiles/recover/master', {
+                    return await callAPI('profiles/recover/master', {
                       username,
                       recovery: recoveryPhrase,
                       password: newPassword,

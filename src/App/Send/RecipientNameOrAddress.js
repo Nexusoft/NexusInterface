@@ -12,7 +12,7 @@ import Icon from 'components/Icon';
 import AddEditContactModal from 'components/AddEditContactModal';
 import { openModal } from 'lib/ui';
 import { required, checkAll } from 'lib/form';
-import { callApi } from 'lib/api';
+import { callAPI } from 'lib/api';
 import { selectSource } from 'lib/send';
 import memoize from 'utils/memoize';
 import { debounced } from 'utils/universal';
@@ -65,11 +65,11 @@ const isOfSameToken = (source) =>
     if (sourceToken !== address) {
       let account;
       try {
-        account = await callApi('finance/get/any', { address });
+        account = await callAPI('finance/get/any', { address });
       } catch (err) {
         let token;
         try {
-          token = await callApi('tokens/get/token', params);
+          token = await callAPI('tokens/get/token', params);
         } catch {}
         if (token && token.address !== sourceToken) {
           return __('Source and recipient must be of the same token');
@@ -87,7 +87,7 @@ function createContact() {
 
 const resolveName = async (name, callback) => {
   try {
-    const result = await callApi('names/get/name', { name });
+    const result = await callAPI('names/get/name', { name });
     const { register } = result;
     callback(register);
   } catch (err) {

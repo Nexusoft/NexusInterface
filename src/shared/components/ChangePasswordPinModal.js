@@ -3,7 +3,7 @@ import ControlledModal from 'components/ControlledModal';
 import FormField from 'components/FormField';
 import Spinner from 'components/Spinner';
 import { formSubmit, checkAll, required, minChars } from 'lib/form';
-import { callApi } from 'lib/api';
+import { callAPI } from 'lib/api';
 import { openSuccessDialog, confirmPasswordPin } from 'lib/dialog';
 
 __ = __context('ChangePassword&PIN');
@@ -36,7 +36,7 @@ export default function ChangePasswordPinModal() {
                   });
 
                   if (correct) {
-                    return await callApi('profiles/update/credentials', {
+                    return await callAPI('profiles/update/credentials', {
                       password,
                       pin,
                       new_password: newPassword,

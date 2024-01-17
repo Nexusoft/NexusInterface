@@ -10,7 +10,7 @@ import TextField from 'components/TextField';
 import Button from 'components/Button';
 import Select from 'components/Select';
 import Spinner from 'components/Spinner';
-import { callApi } from 'lib/api';
+import { callAPI } from 'lib/api';
 import { refreshProfileStatus } from 'lib/user';
 import { formSubmit, checkAll, required, minChars } from 'lib/form';
 import { openModal } from 'lib/ui';
@@ -76,7 +76,7 @@ export default function SetRecoveryModal() {
                 submit: async ({ password, pin, phrase, newPhrase }) => {
                   const confirmed = await confirmRecovery(newPhrase);
                   if (confirmed) {
-                    return await callApi('profiles/update/recovery', {
+                    return await callAPI('profiles/update/recovery', {
                       password,
                       pin,
                       recovery: hasRecoveryPhrase ? phrase : undefined,

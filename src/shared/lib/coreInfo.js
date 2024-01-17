@@ -1,6 +1,6 @@
 import * as TYPE from 'consts/actionTypes';
 import store, { observeStore } from 'store';
-import { callApi } from 'lib/api';
+import { callAPI } from 'lib/api';
 import { isCoreConnected, isLoggedIn } from 'selectors';
 import { openModal, isModalOpen } from 'lib/ui';
 import { updateSettings } from 'lib/settings';
@@ -17,7 +17,7 @@ let timerId = null;
 
 const getInfo = async () => {
   try {
-    const systemInfo = await callApi('system/get/info');
+    const systemInfo = await callAPI('system/get/info');
     store.dispatch({ type: TYPE.SET_SYSTEM_INFO, payload: systemInfo });
   } catch (err) {
     store.dispatch({ type: TYPE.DISCONNECT_CORE });

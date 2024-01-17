@@ -11,7 +11,7 @@ import Button from 'components/Button';
 import Select from 'components/Select';
 import TextField from 'components/TextField';
 import RequireCoreConnected from 'components/RequireCoreConnected';
-import { callApiByUrl } from 'lib/api';
+import { callAPIByUrl } from 'lib/api';
 import {
   switchConsoleTab,
   updateConsoleInput,
@@ -170,7 +170,7 @@ export default function NexusApiConsole() {
           `-apiuser=${apiUser} -apipassword=${apiPassword} ${cmd}`
         );
       } else {
-        result = await callApiByUrl(cmd);
+        result = await callAPIByUrl(cmd);
       }
     } catch (err) {
       console.error(err);

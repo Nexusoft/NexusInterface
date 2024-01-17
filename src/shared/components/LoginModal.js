@@ -12,7 +12,7 @@ import { showNotification, openModal } from 'lib/ui';
 import { openErrorDialog } from 'lib/dialog';
 import { formSubmit, required } from 'lib/form';
 import { logIn } from 'lib/user';
-import { callApi } from 'lib/api';
+import { callAPI } from 'lib/api';
 
 __ = __context('Login');
 
@@ -53,12 +53,12 @@ export default function LoginModal() {
                     let result;
                     try {
                       // In case the sigchain hasn't had a crypto object register initialized
-                      const { crypto } = await callApi(
+                      const { crypto } = await callAPI(
                         'profiles/status/master',
                         { username }
                       );
                       if (!crypto) {
-                        result = await callApi('profiles/create/auth', {
+                        result = await callAPI('profiles/create/auth', {
                           username,
                           password,
                           pin,
