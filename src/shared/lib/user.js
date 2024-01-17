@@ -87,15 +87,16 @@ export async function refreshUserStatus() {
       session ? { session } : undefined
     );
 
-    const profileStatus = await callApi('profiles/status/master', {
-      genesis: status.genesis,
-      session,
-    });
-    store.dispatch({
-      type: TYPE.SET_PROFILE_STATUS,
-      payload: profileStatus,
-    });
-
+    if (store.getState().user.profileStatus?.genesis !== status.genesis) {
+      const profileStatus = await callApi('profiles/status/master', {
+        genesis: status.genesis,
+        session,
+      });
+      store.dispatch({
+        type: TYPE.SET_PROFILE_STATUS,
+        payload: profileStatus,
+      });
+    }
     store.dispatch({ type: TYPE.SET_USER_STATUS, payload: status });
 
     refreshStakeInfo();
@@ -108,6 +109,16 @@ export async function refreshUserStatus() {
     }
   }
 }
+
+export const refreshProfileStatus = async () => {
+  try {
+    const profileStatus = await callApi('profiles/status/master');
+    store.dispatch({ type: TYPE.SET_PROFILE_STATUS, payload: profileStatus });
+    return profileStatus;
+  } catch (err) {
+    console.error('profiles/status/master failed', err);
+  }
+};
 
 export const refreshBalances = async () => {
   try {
