@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 // Internal Global Dependencies
 import Panel from 'components/Panel';
 import RouterHorizontalTab from 'components/RouterHorizontalTab';
+import GA from 'lib/googleAnalytics';
 
 // Internal Local Dependencies
 import NexusApiConsole from './NexusApiConsole';
