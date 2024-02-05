@@ -91,7 +91,22 @@ const resolveName = async (name, callback) => {
     const { register } = result;
     callback(register);
   } catch (err) {
-    callback(null);
+    if (err?.code === -101) {
+      // Unknown name
+      try {
+        // Test if it's username
+        const result = await callAPI('names/get/name', {
+          name: `${name}:default`,
+        });
+        const { register } = result;
+        return callback(register);
+      } catch (err) {
+        console.error(err);
+        return callback(null);
+      }
+    }
+    console.error(err);
+    return callback(null);
   }
 };
 

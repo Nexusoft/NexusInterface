@@ -34,7 +34,6 @@ async function fetchMarketData() {
     }
 
     marketData.currency = fiatCurrency;
-
     store.dispatch({
       type: TYPE.SET_MARKET_DATA,
       payload: marketData,
