@@ -112,14 +112,7 @@ const accountLabel = ({ name, address, local, namespace, mine }) => {
   if (!address) return null;
   const match = lookupAddress(address);
   if (match) {
-    return (
-      <span>
-        <Icon icon={contactIcon} className="mr0_4" />
-        <span className="v-align">
-          {match.name + (match.label ? ' - ' + match.label : '')}
-        </span>
-      </span>
-    );
+    return <span>{match.name + (match.label ? ' - ' + match.label : '')}</span>;
   }
   return null;
 };
