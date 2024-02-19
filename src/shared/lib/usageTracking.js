@@ -123,7 +123,7 @@ UT.AdjustStake = function (direction) {
 UT.AddAddressBookEntry = function (isEdit) {
   if (!UT.active) return;
   const params = {};
-  trackEvent('address_contact', isEdit ? { edited } : { added });
+  trackEvent('address_contact', isEdit ? 'edited' : 'added');
 };
 
 UT.CreateNewItem = function (itemType) {
