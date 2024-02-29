@@ -6,7 +6,7 @@ import Button from 'components/Button';
 import FormField from 'components/FormField';
 import { formSubmit, required } from 'lib/form';
 import { confirmPin, openErrorDialog } from 'lib/dialog';
-import { callApi } from 'lib/api';
+import { callAPI } from 'lib/api';
 import { loadAccounts } from 'lib/user';
 import { showNotification } from 'lib/ui';
 import { createLocalNameFee } from 'lib/fees';
@@ -24,7 +24,7 @@ const getInitialValues = memoize((accountName) => ({ name: accountName }));
 async function submit({ name, account, username }) {
   let nameRecord;
   try {
-    nameRecord = await callApi('names/get/name', {
+    nameRecord = await callAPI('names/get/name', {
       name: `${username}:${name}`,
     });
     if (nameRecord?.register && nameRecord.register !== '0') {
@@ -40,7 +40,7 @@ async function submit({ name, account, username }) {
     if (err.code === -49) {
       // Error -49: Unsupported type for name/address
       // When name is inactive
-      nameRecord = await callApi('names/get/inactive', {
+      nameRecord = await callAPI('names/get/inactive', {
         name: `${username}:${name}`,
       });
       if (!nameRecord) {
@@ -55,13 +55,13 @@ async function submit({ name, account, username }) {
   });
   if (pin) {
     if (account.name) {
-      await callApi('names/rename/name', {
+      await callAPI('names/rename/name', {
         pin,
         name: account.name,
         new: name,
       });
     } else {
-      await callApi('names/create/name', {
+      await callAPI('names/create/name', {
         pin,
         name,
         register: account.address,

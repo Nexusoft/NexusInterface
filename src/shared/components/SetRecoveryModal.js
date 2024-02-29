@@ -2,7 +2,6 @@ import fs from 'fs';
 import path from 'path';
 import { useSelector } from 'react-redux';
 import { useRef, useEffect, useState } from 'react';
-import { useField } from 'react-final-form';
 
 import Form from 'components/Form';
 import ControlledModal from 'components/ControlledModal';
@@ -11,7 +10,8 @@ import TextField from 'components/TextField';
 import Button from 'components/Button';
 import Select from 'components/Select';
 import Spinner from 'components/Spinner';
-import { callApi } from 'lib/api';
+import { callAPI } from 'lib/api';
+import { refreshProfileStatus } from 'lib/user';
 import { formSubmit, checkAll, required, minChars } from 'lib/form';
 import { openModal } from 'lib/ui';
 import { openSuccessDialog, openErrorDialog } from 'lib/dialog';
@@ -77,7 +77,7 @@ export default function SetRecoveryModal() {
                 submit: async ({ password, pin, phrase, newPhrase }) => {
                   const confirmed = await confirmRecovery(newPhrase);
                   if (confirmed) {
-                    return await callApi('profiles/update/recovery', {
+                    return await callAPI('profiles/update/recovery', {
                       password,
                       pin,
                       recovery: hasRecoveryPhrase ? phrase : undefined,
@@ -85,13 +85,16 @@ export default function SetRecoveryModal() {
                     });
                   }
                 },
-                onSuccess: async (result) => {
+                onSuccess: (result) => {
                   if (!result) return;
                   UT.RecoverPhrase(hasRecoveryPhrase);
                   closeModal();
                   openSuccessDialog({
                     message: __('Recovery phrase has been updated'),
                   });
+                  if (!hasRecoveryPhrase) {
+                    refreshProfileStatus();
+                  }
                 },
                 errorMessage: __('Error setting recovery phrase'),
               })}

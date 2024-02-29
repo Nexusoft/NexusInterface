@@ -11,7 +11,7 @@ import Spinner from 'components/Spinner';
 import FieldSet from 'components/FieldSet';
 import BackgroundTask from 'components/BackgroundTask';
 import { formSubmit, checkAll, required, minChars } from 'lib/form';
-import { callApi } from 'lib/api';
+import { callAPI } from 'lib/api';
 import {
   showNotification,
   openModal,
@@ -71,7 +71,7 @@ export default function NewUserModal() {
                   });
 
                   if (correct) {
-                    return await callApi('profiles/create/master', {
+                    return await callAPI('profiles/create/master', {
                       username,
                       password,
                       pin,
@@ -185,7 +185,7 @@ function UserConfirmBackgroundTask({ username }) {
       observeStore(
         ({ core: { systemInfo } }) => systemInfo?.blocks,
         async () => {
-          const result = await callApi('profiles/status/master', {
+          const result = await callAPI('profiles/status/master', {
             username,
           });
           if (result?.confirmed) {

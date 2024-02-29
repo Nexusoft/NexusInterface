@@ -91,6 +91,11 @@ const Hash = ({ children, ...rest }) => {
 };
 
 const accountLabel = ({ name, address, local, namespace, mine }) => {
+  const match = lookupAddress(address);
+  if (address && match) {
+    return <span>{match.name + (match.label ? ' - ' + match.label : '')}</span>;
+  }
+
   if (name) {
     if (namespace) {
       return namespace + '::' + name;
@@ -109,18 +114,6 @@ const accountLabel = ({ name, address, local, namespace, mine }) => {
     return name;
   }
 
-  if (!address) return null;
-  const match = lookupAddress(address);
-  if (match) {
-    return (
-      <span>
-        <Icon icon={contactIcon} className="mr0_4" />
-        <span className="v-align">
-          {match.name + (match.label ? ' - ' + match.label : '')}
-        </span>
-      </span>
-    );
-  }
   return null;
 };
 

@@ -1,1160 +1,1016 @@
-Delete contact %{name}?,Slett kontakt %{name}?,AddressBook
-Edit contact,Rediger kontakt,AddressBook
-Delete contact,Slett kontakt,AddressBook
-%{smart_count} address |||| %{smart_count} addresses,%{smart_count} adresse |||| %{smart_count} adresser,AddressBook
-New contact,Ny kontakt,AddressBook
-No information,Ingen informasjon,AddressBook
-Delete,Slett,AddressBook
-Edit,Rediger,AddressBook
-NXS addresses,NXS adresser,AddressBook
-My address for %{name},Min adresse for %{name},AddressBook
-%{name}'s Address,%{name}'s Adresse,AddressBook
-Contact info,Kontaktinfo,AddressBook
-Email,E-post,AddressBook
-Phone Number,Telefonnummer,AddressBook
-Local Time,Lokal tid,AddressBook
-Notes,Merknader,AddressBook
-Address book,Adressebok,AddressBook
-Your address book is empty,Din adressebok er tom,AddressBook
-Create new contact,Legg til ny kontakt,AddressBook
-Search contact,Søk i kontakter,AddressBook
-My Addresses,Mine adresser,AddressBook
-Export contacts,Eksporter kontakter,AddressBook
-Legacy Mode,Legacy Modus,Header
-Tritium Mode,Tritium Modus,Header
-Unknown login status,Ukjent innloggingstatus,Header
-Wallet is not encrypted,Lommeboken er ikke kryptert,Header
-Not logged in,Ikke logget inn,Header
-Logged in<if_timed> until %{unlockDate}</if_timed><if_minting_only> for staking & mining</if_minting_only>,Innlogget<if_timed> til%{unlockDate}</if_timed><if_minting_only> for staking & mining</if_minting_only>,Header
-My Addresses,Mine adresser,Header
-Wallet is staking,Staking på lommeboken er aktivert,Header
-Stake Rate,Stake Sats,Header
-Waiting for 100% synchronization to start staking...,,Header
-Waiting for average age of balance to exceed 72 hours to start staking...,,Header
-Wallet is not staking,Staking på lommeboken er ikke aktivert,Header
-Checking sync status,Kontrollerer synkroniseringsstatus,Header
-Synchronizing,Synkroniserer,Header
-Synchronized,Synkronisert,Header
-pooled,,Header
-You're not logged in,,Header
-You are staking but have not received a block in 30 minutes!,,Header
-Switching...,,
-Active,,
-Switch,,
-Switch user,,
-Closing Nexus Wallet,Lukker Nexus Lommebok,
-Warning,,
-IMPROPER USE OF THIS SOFTWARE COULD LEAD TO PERMANENT LOSS OF COIN.,,
-BACKUP YOUR WALLET OFTEN AND KEEP YOUR PASSWORDS SAFE.,,
-I understand the risk,,
-Close,Lukk,
-Remote Core is disconnected,,
-Connecting to Nexus Core...,Kobler til Nexus Kjerne...,
-Nexus Core is stopped,Nexus Kjernen har stoppet,
-Address has been copied to clipboard,Adressen har blitt kopiert til utklippstavlen,
-Copy to clipboard,Kopier til utklippstavlen,
-Click to copy to clipboard,,
-Show QR code,,
-Log in,,
-No Rows Found,Ingen rader funnet,
-Page,Side,
-rows,,
-Previous,Forrige,
-Next,Neste,
-Use virtual keyboard,,
-<token_name></token_name> token,,
-Unnamed token,,
-Switch to Legacy Mode,,
-Are you sure you want to switch to Legacy Mode?,,
-Switch to Tritium Mode,,
-Start Nexus Core,Start Nexus Kjerne,
-Stop Nexus Core,Stop Nexus Kjerne,
-Quit Nexus,Lukk Nexus,
-About,Om,
-Backup Wallet,Sikkerhetskopier Lommebok,
-Nexus Core is not connected,Nexus Kjernen er ikke tilkoblet,
-Wallet backed up,Lommbok er sikkerhetskopiert,
-View Backups,Vis sikkerhetskopier,
-Cut,Klipp ut,
-Copy,Kopier,
-Paste,Lim inn,
-Core,Kjerne,
-Application,Applikasjon,
-Key Management,,
-Style,Stil,
-Modules,Moduler,
-Download Recent Database,Last ned Siste Database,
-Cannot bootstrap recent database in manual mode,Kan ikke bootstrappe siste database i manuell modus,
-Please wait for Nexus Core to start.,Vennligst vent mens Nexus Kjernen starter.,
-Toggle FullScreen,Fullskjermsvisning av/på,
-Toggle Developer Tools,Aktiverer/deaktiverer utviklerverktøy,
-Toggle Module's Developer Tools,Aktiverer/deaktiverer utviklerverktøy,
-Nexus Website,Nexus Webside,
-Nexus Git Repository,Nexus Git Repository,
-Nexus Wallet Guide,Nexus Lommebokguide,
-Open Core Data Folder,,
-Open Interface Data Folder,,
-Check for Updates...,Se etter oppdateringer...,
-There are currently no updates available,,
-Checking for Updates...,Ser etter oppdateringer...,
-Update available! Downloading...,Oppdatering er tilgjengelig! Laster ned...,
-Quit and install update...,Lukk og innstaller oppdatering...,
-File,Fil,
-Edit,Rediger,
-Settings,Innstillinger,
-View,Vis,
-Help,Hjelp,
-Transaction received,Transaksjons mottatt,
-Transaction sent,Transaksjon sendt,
-Genesis transaction,Genesis transaksjon,
-Trust transaction,Tillit transaksjon,
-Update available for %{smart_count} module |||| Updates available for %{smart_count} modules,,
-New transaction,,
-Error,,
-Unknown error,,
-Accounts,,Header.UserDropdown
-Tokens,,Header.UserDropdown
-Set recovery phrase,,Header.UserDropdown
-Switch user,,Header.UserDropdown
-Log in to another user,,Header.UserDropdown
-Log out of all users,,Header.UserDropdown
-Log out,,Header.UserDropdown
-Log in,,Header.UserDropdown
-Create new user,,Header.UserDropdown
-Overview,Oversikt,NavigationBar
-User,,NavigationBar
-Send NXS,Send NXS,NavigationBar
-Send,Send,NavigationBar
-Transactions,Transaksjoner,NavigationBar
-Address Book,Adressebok,NavigationBar
-Settings,Innstillinger,NavigationBar
-Console,Konsoll,NavigationBar
-Lite mode,,LiteModeNotice
-Lite mode is now available on Nexus Wallet! You can choose to enable lite mode now or just ignore it. You can change your decision anytime under Settings/Core.,,LiteModeNotice
-Why you might want to enable lite mode,,LiteModeNotice
-Nexus Core would take less resources (memory and storage) to run,,LiteModeNotice
-Synchronization would be much faster,,LiteModeNotice
-Why you might NOT want to enable lite mode,,LiteModeNotice
-You would NOT be able to mine or stake,,LiteModeNotice
-Legacy Mode would be disabled,,LiteModeNotice
-Ignore,,LiteModeNotice
-Enable lite mode,,LiteModeNotice
+"Delete contact %{name}?","Slett kontakt %{name}?","AddressBook"
+"Edit contact","Rediger kontakt","AddressBook"
+"Delete contact","Slett kontakt","AddressBook"
+"%{smart_count} address |||| %{smart_count} addresses","%{smart_count} adresse |||| %{smart_count} adresser","AddressBook"
+"New contact","Ny kontakt","AddressBook"
+"No information","Ingen informasjon","AddressBook"
+"Delete","Slett","AddressBook"
+"Edit","Rediger","AddressBook"
+"NXS addresses","NXS adresser","AddressBook"
+"My address for %{name}","Min adresse for %{name}","AddressBook"
+"%{name}'s Address","%{name}'s Adresse","AddressBook"
+"Contact info","Kontaktinfo","AddressBook"
+"Nexus user ID","","AddressBook"
+"Email","E-post","AddressBook"
+"Phone Number","Telefonnummer","AddressBook"
+"Local Time","Lokal tid","AddressBook"
+"Notes","Merknader","AddressBook"
+"Address book","Adressebok","AddressBook"
+"Your address book is empty","Din adressebok er tom","AddressBook"
+"Create new contact","Legg til ny kontakt","AddressBook"
+"Search contact","Søk i kontakter","AddressBook"
+"Export contacts","Eksporter kontakter","AddressBook"
+"Tritium Mode","Tritium Modus","Header"
+"Lite","","Header"
+"Hybrid","","Header"
+"Wallet is staking","Staking på lommeboken er aktivert","Header"
+"pooled","","Header"
+"Stake Rate","Stake Sats","Header"
+"Waiting for 100% synchronization to start staking...","","Header"
+"Wallet is not staking","Staking på lommeboken er ikke aktivert","Header"
+"Synchronized","Synkronisert","Header"
+"Synchronizing","Synkroniserer","Header"
+"Blocks","","Header"
+"Estimated %{time} remaining","","Header"
+"%{smart_count} hour |||| %{smart_count} hours","","Header"
+"%{smart_count} minute |||| %{smart_count} minutes","","Header"
+"%{smart_count} second |||| %{smart_count} seconds","","Header"
+"You're not logged in","","Header"
+"You are staking but have not received a block in 30 minutes!","","Header"
+"Switching...","",""
+"Active","",""
+"Switch","",""
+"Switch user","",""
+"Closing Nexus Wallet","Lukker Nexus Lommebok",""
+"Pre-Release Active","",""
+"You are currenctly running a * version of the wallet. ","",""
+"Thank you for testing our wallet, please ","",""
+"Click here","",""
+" To send feedback to the developers. ","",""
+"Or join us on the offical ","",""
+"Ok","",""
+"Testnet Only Mode","",""
+"You are currenctly running a Testnet only version of the wallet. ","",""
+"The core will only connect to nexus-interactions.io:testnet1 ","",""
+"Close","Lukk",""
+"Remote Core is disconnected","",""
+"Connecting to Nexus Core...","Kobler til Nexus Kjerne...",""
+"Nexus Core is stopped","Nexus Kjernen har stoppet",""
+"Address has been copied to clipboard","Adressen har blitt kopiert til utklippstavlen",""
+"Copy to clipboard","Kopier til utklippstavlen",""
+"Click to copy to clipboard","",""
+"Show QR code","",""
+"Log in","",""
+"No Rows Found","Ingen rader funnet",""
+"Use virtual keyboard","",""
+"<token_name></token_name> token","",""
+"Unnamed token","",""
+"Start Nexus Core","Start Nexus Kjerne",""
+"Stop Nexus Core","Stop Nexus Kjerne",""
+"Quit Nexus","Lukk Nexus",""
+"About","Om",""
+"Cut","Klipp ut",""
+"Copy","Kopier",""
+"Paste","Lim inn",""
+"Core","Kjerne",""
+"Application","Applikasjon",""
+"Key Management","",""
+"Style","Stil",""
+"Modules","Moduler",""
+"Download Recent Database","Last ned Siste Database",""
+"Cannot bootstrap recent database in manual mode","Kan ikke bootstrappe siste database i manuell modus",""
+"Please wait for Nexus Core to start.","Vennligst vent mens Nexus Kjernen starter.",""
+"Reload wallet GUI","",""
+"Toggle FullScreen","Fullskjermsvisning av/på",""
+"Toggle Developer Tools","Aktiverer/deaktiverer utviklerverktøy",""
+"Toggle Module's Developer Tools","Aktiverer/deaktiverer utviklerverktøy",""
+"Nexus Website","Nexus Webside",""
+"Nexus Git Repository","Nexus Git Repository",""
+"Nexus Wallet Guide","Nexus Lommebokguide",""
+"Report Bug","",""
+"Open Core Data Folder","",""
+"Open Interface Data Folder","",""
+"Check for Updates...","Se etter oppdateringer...",""
+"There are currently no updates available","",""
+"Checking for Updates...","Ser etter oppdateringer...",""
+"Update available! Downloading...","Oppdatering er tilgjengelig! Laster ned...",""
+"Quit and install update...","Lukk og innstaller oppdatering...",""
+"File","Fil",""
+"Edit","Rediger",""
+"Settings","Innstillinger",""
+"View","Vis",""
+"Help","Hjelp",""
+"Error","",""
+"Unknown error","",""
+"Required!","",""
+"Invalid!","",""
+"Out of range!","",""
+"Must be at least %{min} characters","",""
+"Update available for %{smart_count} module |||| Updates available for %{smart_count} modules","",""
+"Error fetching transactions","",""
+"New transaction","",""
+"%{smart_count} day |||| %{smart_count} days","",""
+"%{smart_count} hour |||| %{smart_count} hours","",""
+"%{smart_count} minute |||| %{smart_count} minutes","",""
+"%{smart_count} second |||| %{smart_count} seconds","",""
+"Switch user","","Header.UserDropdown"
+"Log in to another user","","Header.UserDropdown"
+"Accounts","","Header.UserDropdown"
+"Tokens","","Header.UserDropdown"
+"Set recovery phrase","","Header.UserDropdown"
+"Log out of all users","","Header.UserDropdown"
+"Log out","","Header.UserDropdown"
+"Log in","","Header.UserDropdown"
+"Create new user","","Header.UserDropdown"
+"Overview","Oversikt","NavigationBar"
+"User","","NavigationBar"
+"Send","Send","NavigationBar"
+"Transactions","Transaksjoner","NavigationBar"
+"Address Book","Adressebok","NavigationBar"
+"Settings","Innstillinger","NavigationBar"
+"Console","Konsoll","NavigationBar"
+"Lite mode","","LiteModeNotice"
+"Lite mode is now available on Nexus Wallet! You can choose to enable lite mode now or just ignore it. You can change your decision anytime under Settings/Core.","","LiteModeNotice"
+"Why you might want to enable lite mode","","LiteModeNotice"
+"Nexus Core would take less resources (memory and storage) to run","","LiteModeNotice"
+"Synchronization would be much faster","","LiteModeNotice"
+"Why you might NOT want to enable lite mode","","LiteModeNotice"
+"You would NOT be able to mine or stake","","LiteModeNotice"
+"Legacy Mode would be disabled","","LiteModeNotice"
+"Ignore","Ignorer","LiteModeNotice"
+"Enable lite mode","","LiteModeNotice"
+"Token balances","","Overview"
+"The balance displayed might not be up-to-date since the wallet is not yet fully synchronized","Saldo kan være ukorrekt da lommeboken ikke er synkronisert","Overview"
+"Balance","Saldo","Overview"
+"OTHER TOKENS","","Overview"
+"NXS Balance","","Overview"
+"%{token_name} balance","","Overview"
+"This includes your unclaimed balance, unconfirmed balance and immature balance","","Overview"
+"Incoming balances","","Overview"
+"Connections","Tilkoblinger","Overview"
 "Last updated
-%{time}",,Overview
-Getting next block...,Henter neste blokk...,Overview
-Block Weight,Block Weight,Overview
-Trust Weight,Tillit Vekt,Overview
-Stake Weight,Stake Vekt,Overview
-Prime Difficulty,Prime Vanskelighetsgrad,Overview
-Hash Difficulty,,Overview
-Stake Difficulty,Stake Vanskelighetsgrad,Overview
-Balance,Saldo,Overview
-Transactions,Transaksjoner,Overview
-Market Price,,Overview
-24hr Change,24hr Endring,Overview
-Connections,Tilkoblinger,Overview
-Stake Rate,Stake Sats,Overview
-Block Count,Blokknummer,Overview
-The balance displayed might not be up-to-date since the wallet is not yet fully synchronized,Saldo kan være ukorrekt da lommeboken ikke er synkronisert,Overview
-Staking and mining rewards that need to get past 120 block-old to become available,,Overview
-Immature Balance,,Overview
-Market Cap,,Overview
-Available balance,,Overview
-balance,,Overview
-"This includes your pending balance, unconfirmed balance and immature balance",,Overview
-Incoming balances,,Overview
-NXS Amount,NXS Beløp,Send
-Send all,,Send
-Send NXS,Send NXS,Send
-Move NXS between accounts,Flytt NXS mellom kontoer,Send
-You are not logged in,Du er ikke innlogget,Send
-You need to log in to your wallet before sending transactions,Du må være innlogget før du kan gjennmføre transaksjoner,Send
-Log in now,,Send
-Move NXS,Flytt NXS,Send
-From account,Fra konto,Send
-Select an account,Velg en konto,Send
-To account,Til konto,Send
-No accounts selected,Ingen konto er valgt,Send
-Cannot move to the same account,Kan ikke flytte til samme konto,Send
-Invalid amount,Ugyldig beløp,Send
-Invalid address,Ugyldig adresse,Send
-This is an address registered to this wallet.,Dette ern en adresse knyttet til denne lommeboken.,Send
-NXS moved successfully,Flytting av NXS vellykket,Send
-Error moving NXS,Feil ved flytting av NXS,Send
-Wallet password,,Send
-Enter your wallet password,,Send
-Cancel,Avbryt,Send
-Confirm,,Send
-Send to,Send til,Send
-Recipient address,Mottakeradresse,Send
-Your address book is empty,Din adressebok er tom,Send
-Create new contact,Legg til ny kontakt,Send
-Remove recipient,Slett mottaker,Send
-Add recipient,Legg til mottaker,Send
-Send transaction?,Send transaksjon?,Send
-Send To multiple recipients,Send Til flere mottakere,Send
-Send from,Sende fra,Send
-Message,,Send
-Enter your message,Skriv din melding,Send
-Send,Send,Send
-There must be at least one recipient,Det må være minst en mottaker,Send
-Address is required,Adresse påkrevd,Send
-Transaction sent,Transaksjon sendt,Send
-Error sending NXS,Feil ved sending av NXS,Send
-Reference,,Send
-"An optional number which may be provided by the recipient to identify this transaction from the others, e.g. invoice number, order number, etc.",,Send
-Reference number (optional),,Send
-Expires in,,Send
-"The amount of time since the transaction is created after which the transaction can no longer be credited by the recipient. By default, transactions will expire in 1 day (86400 seconds).",,Send
-Days,,Send
-Hours,,Send
-Minutes,,Send
-Seconds,,Send
-Amount,,Send
-Recipient Address/Name,,Send
-Accounts,,Send
-Unnamed account,,Send
-Tokens,,Send
-Unnamed token,,Send
-Unnamed,,Send
-Invalid name/address,,Send
-Advanced options,,Send
-Address/Name is required,,Send
-Reference must be an unsigned integer,,Send
-Number is too large,,Send
-Unnamed,,PreviewTransaction
-%{smart_count} day |||| %{smart_count} days,,PreviewTransaction
-%{smart_count} hour |||| %{smart_count} hours,,PreviewTransaction
-%{smart_count} minute |||| %{smart_count} minutes,,PreviewTransaction
-%{smart_count} second |||| %{smart_count} seconds,,PreviewTransaction
-Preview Transaction,,PreviewTransaction
-You're sending,,PreviewTransaction
-From,,PreviewTransaction
-To,,PreviewTransaction
-Amount,,PreviewTransaction
-Reference,,PreviewTransaction
-Expires,,PreviewTransaction
-Send transaction,,PreviewTransaction
-Select backup directory,Velg katalog for sikkerhetskopier,Settings.Application
-Backup directory,Katalog for sikkerhetskopier,Settings.Application
-Browse,Bla gjennom,Settings.Application
-Backup wallet,Sikkerhetskopier Lommebok,Settings.Application
-Wallet has been backed up,Lommeboken har blitt sikkerhetskopiert,Settings.Application
-Connecting to Nexus Core,Kobler til Nexus Kjerne,Settings.Application
-Turn module open source policy on?,,Settings.Application
-"All modules without open source verifications, possibly including your own under-development modules, will become invalid. Wallet must be refreshed for the change to take effect.","Alle moduler uten åpen kilde verifikasjoner, muligens inkludert dine egne moduler under utvikling, vil bli ugyldige. Lommeboken må lastes inn på nytt for at endringene skal tre i kraft.",Settings.Application
-Turn module open source policy off?,,Settings.Application
+%{time}","","Overview"
+"Block Count","Blokknummer","Overview"
+"Market Price","","Overview"
+"Market Cap","","Overview"
+"24hr Change","24hr Endring","Overview"
+"Prime Difficulty","Prime Vanskelighetsgrad","Overview"
+"Hash Difficulty","","Overview"
+"Staking Difficulty","","Overview"
+"Staking stats not yet available until you get a genesis transaction","","Overview"
+"Stake Rate","Stake Sats","Overview"
+"Block Weight","Block Weight","Overview"
+"Trust Weight","Tillit Vekt","Overview"
+"Stake Weight","Stake Vekt","Overview"
+"Invalid amount","Ugyldig beløp","Send"
+"%{currency} amount","","Send"
+"Amount","Beløp","Send"
+"All","Alle","Send"
+"Expires in","","Send"
+"The amount of time since the transaction is created after which the transaction can no longer be credited by the recipient.","","Send"
+"Days","","Send"
+"Hours","","Send"
+"Minutes","","Send"
+"Seconds","","Send"
+"Send","Send","Send"
+"Cannot move to the same account","Kan ikke flytte til samme konto","Send"
+"Source and recipient must be of the same token","","Send"
+"Send to","Send til","Send"
+"Recipient Name or Address","","Send"
+"Your address book is empty","Din adressebok er tom","Send"
+"Create new contact","Legg til ny kontakt","Send"
+"Recipient name cannot be resolved","","Send"
+"Remove recipient","Slett mottaker","Send"
+"Reference must be an unsigned integer","","Send"
+"Reference","","Send"
+"An optional number which may be provided by the recipient to identify this transaction from the others, e.g. invoice number, order number, etc.","","Send"
+"Ref. number (optional)","","Send"
+"Accounts","","Send"
+"Unnamed account","","Send"
+"Tokens","","Send"
+"Unnamed token","","Send"
+"Advanced options","","Send"
+"Send from","Sende fra","Send"
+"Select an account","Velg en konto","Send"
+"Add recipient","Legg til mottaker","Send"
+"Proceed","","Send"
+"Unnamed token","","PreviewTransaction"
+"Unnamed account","","PreviewTransaction"
+"From","","PreviewTransaction"
+"To","","PreviewTransaction"
+"Amount","Beløp","PreviewTransaction"
+"Reference","","PreviewTransaction"
+"Expires","","PreviewTransaction"
+"NO EXPIRY","","PreviewTransaction"
+"Transaction never expires, and you won't be able to void it even if the recipient doesn't credit the transaction","","PreviewTransaction"
+"in %{time_span}","","PreviewTransaction"
+"You're sending","","PreviewTransaction"
+"Transaction sent","Transaksjon sendt","PreviewTransaction"
+"Error sending transaction","","PreviewTransaction"
+"Enter your PIN to confirm","","PreviewTransaction"
+"Sending transaction...","","PreviewTransaction"
+"Send transaction","","PreviewTransaction"
+"Select backup directory","Velg katalog for sikkerhetskopier","Settings.Application"
+"Backup directory","Katalog for sikkerhetskopier","Settings.Application"
+"Browse","Bla gjennom","Settings.Application"
+"Turn module open source policy on?","","Settings.Application"
+"All modules without open source verifications, possibly including your own under-development modules, will become invalid. Wallet must be refreshed for the change to take effect.","Alle moduler uten åpen kilde verifikasjoner, muligens inkludert dine egne moduler under utvikling, vil bli ugyldige. Lommeboken må lastes inn på nytt for at endringene skal tre i kraft.","Settings.Application"
+"Turn module open source policy off?","","Settings.Application"
 "This is only for module developers and can be dangerous for
-              regular users. Please make sure you know what you are doing!",,Settings.Application
+            regular users. Please make sure you know what you are doing!","","Settings.Application"
 "It would be much easier for a closed source module to hide
-              malicious code than for an open source one. Therefore, in case you
-              still want to disable this setting, it is highly recommended that
-              you only install and run closed source modules that you are
-              developing yourself.",,Settings.Application
-Turn policy off,,Settings.Application
-Keep policy on,,Settings.Application
-Are you sure you want to disable auto update?,Er du sikker på at du vil skru av automatiske oppdateringer?,Settings.Application
-Keeping your wallet up-to-date is important for your security and will ensure that you get the best possible user experience.,,Settings.Application
-Keep auto update On,Behold automatiske oppdateringer på,Settings.Application
-Turn auto update Off,Skru automatiske oppdateringer av,Settings.Application
-Minimize on close,,Settings.Application
-Minimize the wallet when closing the window instead of closing it.,,Settings.Application
-Auto update (Recommended),Automatisk oppdatering (Anbefalt),Settings.Application
-Automatically check for new versions and notify if a new version is available.,Sjekk etter nye versjoner automatisk og gi beskjed om en ny versjon er tilgjengelig.,Settings.Application
-Send anonymous usage data,Send anonym brukerdata,Settings.Application
-Send anonymous usage data to allow the Nexus developers to improve the wallet.,,Settings.Application
-Base currency,,Settings.Application
-Minimum confirmations,,Settings.Application
-Minimum amount of confirmations before a block is accepted. Local only.,,Settings.Application
-Developer mode,Utviklermodus,Settings.Application
-Development mode enables advanced features to aid in development. After enabling the wallet must be closed and reopened to enable those features.,Utviklermodus åpner for avanserte funksjoner for å hjelpe til med utvikling. Etter å ha aktivert utviklermodus må lommeboken startes på ny for at endringene skal tre i kraft.,Settings.Application
-Module open source policy,Module open source policy,Settings.Application
-Only modules which have valid open source repositories are allowed to be installed and run. You can disable this option to test run the modules that you're developing,Kun moduler som har gyldige åpen kilde repositories er tillat å innstalleres å kjøres. Du kan deaktivere denne muligheten til å teste ut modulene du utvikler,Settings.Application
-Allow SymLink,,Settings.Application
-Allow the presence of SymLinks in the module directory,,Settings.Application
-Fake Test Transactions,Falsk Test Transaksjoner,Settings.Application
-Display Test Transactions on the Transactions page,Vis Testtransaksjoner på Transakjsjonssiden,Settings.Application
-Language,,Settings.Application
-Exit remote Core mode?,,Settings.Core
-(This will restart your Core),(Dette vil omstarte kjernen),Settings.Core
-Enter remote Core mode?,,Settings.Core
-Reload transaction history,,Settings.Core
-Clear peer connections,,Settings.Core
-Resync database,,Settings.Core
-Nexus Core will be restarted. Lite mode database will be deleted and resynchronized from the beginning.,,Settings.Core
-Embedded Core,,Settings.Core
-Remote Core,,Settings.Core
-Lite mode,,Settings.Core
-"Nexus Core under lite mode runs lighter and synchronize much faster, but you will <b>NOT</b> be able to stake, mine, or switch the wallet to Legacy Mode.",,Settings.Core
-Multi-user,,Settings.Core
-Allow multiple logged in users at the same time. Mining and staking will be unavailable.,,Settings.Core
-Enable staking,Aktiver staking,Settings.Core
-Enable/Disable staking on the wallet.,Aktiver/Deaktiver staking fra lommeboken.,Settings.Core
-Pooled staking,,Settings.Core
-"Pooled staking is a decentralized and trust-less mechanism allowing you to use the balances of others to increase your chances of finding a stake block. All participants receive their staking rewards and build trust, regardless of which user mines the block. A small portion of each reward is paid to the block finder by all pool participants.",,Settings.Core
-Enable mining,Aktiver mining,Settings.Core
-Enable/Disable mining to the wallet.,Aktiver/Deaktiver mining til lommeboken.,Settings.Core
-Mining IP Whitelist,,Settings.Core
-IP/Ports allowed to mine to. Separate by <b>;</b> . Wildcards supported only in IP,,Settings.Core
-Verbose level,,Settings.Core
-Verbose level for logs.,,Settings.Core
-Core Data Directory,,Settings.Core
-Where the blockchain data and your legacy wallet.dat are stored,,Settings.Core
-Testnet Iteration,,Settings.Core
-The iteration of Testnet to connect to.,,Settings.Core
-Turn Off,,Settings.Core
-Avatar Mode,,Settings.Core
-Disabling Avatar will make the core use a separate change key,,Settings.Core
-Rescan wallet,Skann lommeboken,Settings.Core
-"Used to correct transaction/balance issues, scans over every block in the database. Could take up to 10 minutes.",,Settings.Core
-Restart Nexus core with -walletclean parameter to clean out and reload all transaction history,,Settings.Core
-Reload,,Settings.Core
-Clear all stored peer connections and restart Nexus,,Settings.Core
-Clear,,Settings.Core
-Delete lite mode database and resynchronize from the beginning,,Settings.Core
-Resynchronize,,Settings.Core
-IP address,IP-adresse,Settings.Core
-Remote Core IP address,,Settings.Core
-API SSL,,Settings.Core
-Use SSL for API calls,,Settings.Core
-API Port,,Settings.Core
-Nexus API server Port,,Settings.Core
-API SSL Port,,Settings.Core
-Nexus API server SSL Port,,Settings.Core
-API Username,,Settings.Core
-Nexus API server Username,,Settings.Core
-API Password,,Settings.Core
-Nexus API server Password,,Settings.Core
-RPC SSL,,Settings.Core
-Use SSL for RPC calls,,Settings.Core
-RPC Port,,Settings.Core
-Nexus RPC server Port,,Settings.Core
-RPC SSL Port,,Settings.Core
-Nexus RPC server SSL Port,,Settings.Core
-RPC Username,,Settings.Core
-Nexus RPC server Username,,Settings.Core
-RPC Password,,Settings.Core
-Nexus RPC server Password,,Settings.Core
-Log out on close,,Settings.Core
-Log out of all users before closing the wallet,,Settings.Core
-Restart Core for these changes to take effect,,Settings.Core
-Save settings,,Settings.Core
-Verbose level is required,,Settings.Core
-Remote Core IP is required,,Settings.Core
-RPC port is required,,Settings.Core
-RPC username is required,,Settings.Core
-RPC password is required,,Settings.Core
-API port is required,,Settings.Core
-API username is required,,Settings.Core
-API password is required,,Settings.Core
-Core settings saved,Kjerneinnstillinger er lagret,Settings.Core
-Restarting Core...,Starter Kjernen på nytt...,Settings.Core
-Error rescanning,Feil ved skanning,Settings.Core
-Rescanned successfully,Skanning av lommebok vellykket,Settings.Core
-Rescanning...,Skanner...,Settings.Core
-Settings,Innstillinger,Settings
-Application,Applikasjon,Settings
-Core,Kjerne,Settings
-Security,Sikkerhet,Settings
-Style,Stil,Settings
-Modules,Moduler,Settings
-Select development module directory,,Settings.Modules
-Your module is still in development? <link>Add a development module</link>,,Settings.Modules
-Select module archive file,Velg modul arkiv fil,Settings.Modules
-Select module directory,Velg modul katalog,Settings.Modules
-Add Module,Legg til Modul,Settings.Modules
-Checking module,Kontrollerer modul,Settings.Modules
-Drop here to install,Slipp her for å innstallere,Settings.Modules
-Select module's <file>archive file</file> or <dir>directory</dir>,,Settings.Modules
-or drag and drop it here,eller dra og slipp det her,Settings.Modules
-Failed to load %{moduleName},,Settings.Modules
-Disable %{moduleName}?,Deaktiver %{moduleName}?,Settings.Modules
-Wallet will be automatically refreshed for the change to take effect,,Settings.Modules
-Enable %{moduleName}?,Aktiver %{moduleName}?,Settings.Modules
-This module was built for an incompatible wallet version,,Settings.Modules
-Module is not open source,Modul er ikke åpen kilde,Settings.Modules
-The provided repository is not verified to be the real source code of this module,,Settings.Modules
-%{version} update available,,Settings.Modules
-development,,Settings.Modules
-Failed to load module,,Settings.Modules
-Overwrite module?,Skriv over modulen?,Settings.Modules
-A module with the same directory name already exists,En modul med det samme navnet eksisterer allerede,Settings.Modules
-Module has been successfully installed,,Settings.Modules
-The wallet will now be refreshed for the new module to take effect,,Settings.Modules
-Error copying module files,Feil ved kopiering av modulfilene,Settings.Modules
-Cannot find module,Finner ikke modul,Settings.Modules
-Unsupported file type,Filtypen støttes ikke,Settings.Modules
-Cannot install from this location,,Settings.Modules
-An unknown error occurred,Det oppsto en ukjent feil,Settings.Modules
-Directory has already been added,,Settings.Modules
-Failed to load development module,,Settings.Modules
-A module with the same name already exists,,Settings.Modules
-Development module has been added,,Settings.Modules
-Are you sure you want to log out?,Er du sikker på at du vil logge ut?,Settings.Security
-Error logging out,Feil ved utlogging,Settings.Security
-Change password,Endre passord,Settings.Security
-Previous password,Forrige passord,Settings.Security
-Password,Passord,Settings.Security
-New password,Nytt passord,Settings.Security
-Re-enter password:,Gjenta passordet:,Settings.Security
-Confirm password,Bekreft passord,Settings.Security
-Log out,,Settings.Security
-Password is required,Passord er påkrevd,Settings.Security
-Password cannot contain these characters:,Passordet kan ikke inneholde disse symbolene:,Settings.Security
-Password must be at least 8 characters,Passord må bestå av minst 8 tegn,Settings.Security
-Password cannot start or end with spaces,Passordet kan ikke starte eller slutte med mellomrom,Settings.Security
-Passwords do not match,Passordene samsvarer ikke,Settings.Security
-Password has been changed.,Passord er endret.,Settings.Security
-Error changing password,Feil ved endring av passord,Settings.Security
-Encrypt wallet,Krypter lommebok,Settings.Security
-Re-enter password,Gjenta passordet,Settings.Security
-Encrypt and restart,Krypter og start på nytt,Settings.Security
-Wallet has been encrypted.,Lommeboken har blitt kryptert.,Settings.Security
-Error encrypting wallet,Feil ved kryptering av lommebok,Settings.Security
-Import private key,Importer privat nøkkel,Settings.Security
-Account name,Kontonavn,Settings.Security
-Private key,Privat Nøkkel,Settings.Security
-Import,Importer,Settings.Security
-Account name is required,Kontonavn påkrevd,Settings.Security
-Private key is required,Privat nøkkel påkrevd,Settings.Security
-Private key imported. Rescanning now,Privat nøkkel importert. Skanner på ny,Settings.Security
-Rescanning...,Skanner...,Settings.Security
-Rescanning done,Skanning ferdig,Settings.Security
-Error rescanning,Feil ved skanning,Settings.Security
-An unknown error occurred,Det oppsto en ukjent feil,Settings.Security
-Error importing private key,Feil ved importering av privat nøkkel,Settings.Security
-Login until date,,Settings.Security
-Login until time,,Settings.Security
-Your wallet password,Ditt lommebokpassord,Settings.Security
-Login for staking & mining only,,Settings.Security
-Set timeout for login,,Settings.Security
-Date is required,Dato er påkrevd,Settings.Security
-Time is required,,Settings.Security
-Time must be at least one hour in the future,,Settings.Security
-Logged in successfully,,Settings.Security
-Error logging in,Feil ved innlogging,Settings.Security
-Copied to clipboard,Kopiert til utklippstavle,Settings.Security
-View private key for address,Vis privat nøkkel for adresse,Settings.Security
-Address,Adresse,Settings.Security
-Enter address here,Legg inn en adresse her,Settings.Security
-View private key,Vis privat nøkkel,Settings.Security
-Private key will be displayed here,Privat nøkkel vil vises her,Settings.Security
-Copy,Kopier,Settings.Security
-Address cannot be empty,Adresse kan ikke være tom,Settings.Security
-Error getting private key,Feil ved mottakelse av privat nøkkel,Settings.Security
-Twinkling stars,Twinkeling stars,Settings.Style
-Cosmic light,Cosmic Light,Settings.Style
-Custom wallpaper,Egendefinert bakgrunnsbilde,Settings.Style
-Select a custom wallpaper,Velg en egendefinert bakgrunn,Settings.Style
-Color scheme has been reset to default,,Settings.Style
-Invalid file format! Custom theme file must be in JSON,,Settings.Style
-Select custom theme file,Velg et tilpasset tema fil,Settings.Style
-Theme exported,,Settings.Style
-Theme has been reset to default,Tema har blitt tilbakestillt til default,Settings.Style
-Render globe,Vis Klode,Settings.Style
-Render the globe on the Overview page.,Vis kloden på oversiktssiden.,Settings.Style
-Your computer does not support OPENGL 2.0,Din datamaskin har ikke støtte for OPENGL 2.0,Settings.Style
-Overview Display,Oversiktsvisning,Settings.Style
-Nexus Addresses format,Nexus adresser format,Settings.Style
-Choose your Nexus Address display preference,,Settings.Style
-Sample Address,,Settings.Style
-Theme,Tema,Settings.Style
-Select Wallet Theme,Velg Tema,Settings.Style
-Background,Bakgrunn,Settings.Style
-Customize your background wallpaper,Tilpass ditt bakgrunnsbilde,Settings.Style
-Color scheme,Fargevalg,Settings.Style
-Background Color,Bakgrunnsfarge,Settings.Style
-Foreground Color,Forgrunnsfarge,Settings.Style
-Primary Color,Hovedfarge,Settings.Style
-Primary Color Accent,Primær farge aksent,Settings.Style
-Danger Color,Feil Farge,Settings.Style
-Danger Color Accent,Feil farge aksent,Settings.Style
-Globe Color,,Settings.Style
-Globe Pillar Color,,Settings.Style
-Globe Arch Color,,Settings.Style
-Import custom theme,Importer tilpasset tema,Settings.Style
-Export custom theme,Eksportere tilpasset tema,Settings.Style
-Dark,Mørk,Settings.Style
-Light,,Settings.Style
-Custom,Egendefinert,Settings.Style
-Reset,Tilbakestill,Settings.Style
-Console,Konsoll,Console
-Core output,,Console
-CLI syntax,,Console.NexusAPI
-URL syntax,,Console.NexusAPI
-Execute,Utfør,Console.NexusAPI
-API Documentation,,Console.NexusAPI
-Clear,,Console.NexusAPI
-"Enter console commands here (ex: getinfo, help)","Tast inn konsollkommandoer her (ex: getinfo, help)",Console.Console
-Execute,Utfør,Console.Console
-Clear console,,Console.Console
-Core is in Manual Mode,Kjernen er i Manuell Modus,Console.CoreOutput
-Pending,,Transactions
-All,Alle,Transactions
-Receive,Motta,Transactions
-Sent,Sendt,Transactions
-Stake,Stake,Transactions
-Generate,Generer,Transactions
-Immature,Umoden,Transactions
-Orphan,Foreldreløs,Transactions
-Genesis,Genesis,Transactions
-Past Year,Siste Året,Transactions
-Past Month,Siste Måneden,Transactions
-Past Week,Siste Uken,Transactions
-Search address,Søk adresse,Transactions
-Search for Address,,Transactions
-Category,,Transactions
-Min amount,,Transactions
-Time span,Tidsperiode,Transactions
-Time,,Transactions
-CATEGORY,KATEGORI,Transactions
-AMOUNT,BELØP,Transactions
-ACCOUNT,KONTO,Transactions
-ADDRESS,ADRESSE,Transactions
-Transaction details,Transaksjonsdetaljer,Transactions
-Show transactions chart,,Transactions
-Download transactions history,,Transactions
-Loading transactions,,Transactions
-All Accounts,Alle kontoer,Transactions
-Send,Send,Transactions
-Trust,Tillit,Transactions
-Unknown,Ukjent,Transactions
-Legacy transaction,,Transactions
-Coinbase transaction,,Transactions
-View contract details,,Transactions
-View transaction details,,Transactions
-Address,Adresse,Transactions
-Account/token address,,Transactions
-Name,Navn,Transactions
-Operation,,Transactions
-Transactions,Transaksjoner,Transactions
-Loading transactions...,,Transactions
-NXS balances,,Transactions
-Previous,Forrige,Transactions
-Page <page></page> of %{total},,Transactions
-Next,Neste,Transactions
-Transactions Details,,Transactions.TransactionDetails
-Time,,Transactions.TransactionDetails
-Category,,Transactions.TransactionDetails
-Amount,Beløp,Transactions.TransactionDetails
-Fee,Gebyr,Transactions.TransactionDetails
-Account,Konto,Transactions.TransactionDetails
-Address,Adresse,Transactions.TransactionDetails
-Confirmations,Bekreftelser,Transactions.TransactionDetails
-Pending,,Transactions.TransactionDetails
-Transaction ID,,Transactions.TransactionDetails
-Block hash,,Transactions.TransactionDetails
-Loading transaction details...,,Transactions.TransactionDetails
-Transactions chart,,Transactions.TransactionsChart
-Amount,Beløp,Transactions.TransactionsChart
-Time,,Transactions.TransactionsChart
-Total,,Transactions.Balances
-Available,,Transactions.Balances
-The current balance across all NXS accounts that is available to be spent,,Transactions.Balances
-Pending,,Transactions.Balances
-The sum of all debit and coinbase transactions made to your NXS accounts that are confirmed but have not yet been credited. This does NOT include immature and unconfirmed amounts,,Transactions.Balances
-Unconfirmed,,Transactions.Balances
-"The sum of all debit transactions made to your NXS accounts that are not confirmed, or credits you have made to your accounts that are not yet confirmed (not yet included in a block)",,Transactions.Balances
-Stake,Stake,Transactions.Balances
-The amount of NXS currently staked in the trust account,,Transactions.Balances
-Immature,Umoden,Transactions.Balances
-The sum of all coinbase transactions that have not yet reached maturity,,Transactions.Balances
-Unnamed account,,User.Accounts
-Rename,,User.Accounts
-Details,,User.Accounts
-History,,User.Accounts
-<b>%{account_name}</b> account address,,User.Accounts
-Unnamed,,User.Accounts
-Create new account,,User.Accounts
-Account Details,,User.Accounts.AccountDetails
-Account name,Kontonavn,User.Accounts.AccountDetails
-Unnamed,,User.Accounts.AccountDetails
-Created at,,User.Accounts.AccountDetails
-Last modified,,User.Accounts.AccountDetails
-Token name,,User.Accounts.AccountDetails
-Data,,User.Accounts.AccountDetails
-Total account balance,,User.Accounts.AccountDetails
-Available balance,,User.Accounts.AccountDetails
-Send %{token_name},,User.Accounts.AccountDetails
-Pending balance,,User.Accounts.AccountDetails
-Unconfirmed balance,,User.Accounts.AccountDetails
-Stake balance,,User.Accounts.AccountDetails
-Immature balance,,User.Accounts.AccountDetails
-Address,Adresse,User.Accounts.AccountDetails
-Trust Account is empty.,,User.Accounts.AccountDetails
-Trust Account must mature for 72 hours before staking,,User.Accounts.AccountDetails
-Adjust stake amount,,User.Accounts.AccountDetails
-Time,,User.Accounts.AccountHistory
-Operation,,User.Accounts.AccountHistory
-From,,User.Accounts.AccountHistory
-staking,,User.Accounts.AccountHistory
-mining,,User.Accounts.AccountHistory
-To,,User.Accounts.AccountHistory
-Change,,User.Accounts.AccountHistory
-Account History,,User.Accounts.AccountHistory
-Loading account history,,User.Accounts.AccountHistory
-Account balance,,User.Accounts.AccountHistory
-Show %{tokenName},,User.Accounts.AccountHistory
-Total,,User.Accounts.AccountHistory
-Available,,User.Accounts.AccountHistory
-Pending,,User.Accounts.AccountHistory
-Unconfirmed,,User.Accounts.AccountHistory
-Stake,Stake,User.Accounts.AccountHistory
-Rename account,,RenameAccount
-Account name,,RenameAccount
-Account renaming fee,,RenameAccount
-Cancel,,RenameAccount
-Renaming,,RenameAccount
-Rename,,RenameAccount
-Account name is required,,RenameAccount
-Name already in use,,RenameAccount
-The name you entered is already in use. Please choose another name.,,RenameAccount
-Insuffient balance,,RenameAccount
-Your default account balance is not enough to pay the fee.,,RenameAccount
-Account has been renamed to %{account_name},,RenameAccount
-Error renaming account,,RenameAccount
-Unnamed asset,,User.Assets
-You own %{percentage}% of this asset,,User.Assets
-Create new asset,,User.Assets
-You don't own any asset,,User.Assets
-Asset Details,,AssetDetails
-Edit asset,,AssetDetails
-Name,,AssetDetails
-Address,,AssetDetails
-Owner,,AssetDetails
-Ownership,,AssetDetails
-Created at,,AssetDetails
-Last modified,,AssetDetails
-View history,,AssetDetails
-Tokenize,,AssetDetails
-Transfer ownership,,AssetDetails
-Name,,CreateAsset
-Field name,,CreateAsset
-Value,,CreateAsset
-Field value,,CreateAsset
-Mutable,,CreateAsset
-Type,,CreateAsset
-Max. length,,CreateAsset
-Only applicable to mutable string fields,,CreateAsset
-Unlimited,,CreateAsset
-Remove field,,CreateAsset
-Asset name,,CreateAsset
-A local Name object register will be created for this asset name,,CreateAsset
-Asset name (optional),,CreateAsset
-Asset data,,CreateAsset
-Add field,,CreateAsset
-Estimated fee,,CreateAsset
-Creating asset,,CreateAsset
-Create asset,,CreateAsset
-Field name is required,,CreateAsset
-New asset has been created,,CreateAsset
-Error creating asset,,CreateAsset
-Create a new asset,,CreateAsset
-Asset History Event,,AssetHistoryDetails
-Type,,AssetHistoryDetails
-Time,,AssetHistoryDetails
-Owner,,AssetHistoryDetails
-Checksum,,AssetHistoryDetails
-Name,,AssetHistoryDetails
-Address,,AssetHistoryDetails
-Time,,AssetHistory
-Type,,AssetHistory
-Owner,,AssetHistory
-Asset History,,AssetHistory
-Loading asset history,,AssetHistory
-Name,,EditAsset
-Address,,EditAsset
-Updating asset,,EditAsset
-Update asset,,EditAsset
-Asset has been updated,,EditAsset
-Error updating asset,,EditAsset
-Edit asset,,EditAsset
-Asset name,,TokenizeAsset
-Asset address,,TokenizeAsset
-Token,,TokenizeAsset
-Token address,,TokenizeAsset
-Tokenizing asset,,TokenizeAsset
-Tokenize asset,,TokenizeAsset
-Token is required,,TokenizeAsset
-Asset has been tokenized,,TokenizeAsset
-Error tokenizing asset,,TokenizeAsset
-Asset name,,TransferAsset
-Asset address,,TransferAsset
-Transfer to,,TransferAsset
-Recipient username or user ID,,TransferAsset
-Transferring asset,,TransferAsset
-Transfer asset,,TransferAsset
-Recipient is required,,TransferAsset
-Asset has been transferred,,TransferAsset
-Error transferring asset,,TransferAsset
-User,,User
-User ID,,User
-Accounts,,User
-Staking,,User
-Tokens,,User
-Names,,User
-Namespaces,,User
-Assets,,User
-Change password & PIN,,User
-Change recovery phrase,,User
-Set recovery phrase,,User
-Name,,ChangeRegisterAddress
-Register address,,ChangeRegisterAddress
-Register address that this name points to,,ChangeRegisterAddress
-Name update fee,,ChangeRegisterAddress
-Updating name,,ChangeRegisterAddress
-Update name,,ChangeRegisterAddress
-Name has been updated,,ChangeRegisterAddress
-Error updating name,,ChangeRegisterAddress
-Change register address,,ChangeRegisterAddress
-Local,,CreateName
-Namespaced,,CreateName
-Global,,CreateName
-Namespace,,CreateName
-A namespace you own,,CreateName
-Name,,CreateName
-name,,CreateName
-namespace,,CreateName
-Register address,,CreateName
-Register address that this name points to,,CreateName
-Name creation fee,,CreateName
-Creating name,,CreateName
-Create name,,CreateName
-Name is required,,CreateName
-Name cannot start with a colon character,,CreateName
-Namespace is required,,CreateName
-New name has been created,,CreateName
-Error creating name,,CreateName
-Create a new name,,CreateName
-View name details,,User.Names
-Change register address,,User.Names
-Transfer name,,User.Names
-Unused,,User.Names
-Global,,User.Names
-Namespaced,,User.Names
-Local,,User.Names
-Create new name,,User.Names
-Show unused names,,User.Names
-You don't own any name,,User.Names
-Name Details,,NameDetails
-Change register address,,NameDetails
-Name,,NameDetails
-Type,,NameDetails
-Global,,NameDetails
-Namespaced,,NameDetails
-Local,,NameDetails
-Namespace,,NameDetails
-Address,,NameDetails
-Points to,,NameDetails
-Created at,,NameDetails
-Last modified,,NameDetails
-View history,,NameDetails
-Transfer ownership,,NameDetails
-Name History Event,,NameHistoryDetails
-Type,,NameHistoryDetails
-Time,,NameHistoryDetails
-Owner,,NameHistoryDetails
-Checksum,,NameHistoryDetails
-Name,,NameHistoryDetails
-Namespace,,NameHistoryDetails
-Address,,NameHistoryDetails
-Points to,,NameHistoryDetails
-Time,,NameHistory
-Type,,NameHistory
-Owner,,NameHistory
-Name History,,NameHistory
-Loading name history,,NameHistory
-Name,,TransferName
-Transfer to,,TransferName
-Recipient username or user ID,,TransferName
-Transferring name,,TransferName
-Transfer name,,TransferName
-Recipient is required,,TransferName
-Name has been transferred,,TransferName
-Error transferring name,,TransferName
-Name,,CreateNamespace
-Namespace name,,CreateNamespace
-Namespace creation fee,,CreateNamespace
-Creating namespace,,CreateNamespace
-Create namespace,,CreateNamespace
-Name is required,,CreateNamespace
-"Namespace names can only contain lowercase letters, numbers, and periods (.)",,CreateNamespace
-New namespace has been created,,CreateNamespace
-Error creating namespace,,CreateNamespace
-Create a new namespace,,CreateNamespace
-View name details,,User.Namespaces
-Transfer namespace,,User.Namespaces
-Create new namespace,,User.Namespaces
-You don't own any namespace,,User.Namespaces
-Namespace Details,,NamespaceDetails
-Name,,NamespaceDetails
-Address,,NamespaceDetails
-Created at,,NamespaceDetails
-Last modified,,NamespaceDetails
-View history,,NamespaceDetails
-Transfer ownership,,NamespaceDetails
-Namespace History Event,,NamespaceHistoryDetails
-Type,,NamespaceHistoryDetails
-Time,,NamespaceHistoryDetails
-Owner,,NamespaceHistoryDetails
-Checksum,,NamespaceHistoryDetails
-Name,,NamespaceHistoryDetails
-Address,,NamespaceHistoryDetails
-Time,,NamespaceHistory
-Type,,NamespaceHistory
-Owner,,NamespaceHistory
-Namespace History,,NamespaceHistory
-Loading namespace history,,NamespaceHistory
-Namespace,,TransferNamespace
-Transfer to,,TransferNamespace
-Recipient username or user ID,,TransferNamespace
-Transferring namespace,,TransferNamespace
-Transfer namespace,,TransferNamespace
-Destination is required,,TransferNamespace
-Namespace has been transferred,,TransferNamespace
-Error transferring namespace,,TransferNamespace
-The current NXS balance of the trust account that is not staked. You can spend this amount without affecting your Trust Score,,User.Staking
-"Balance that will be staked after the 72 holding period, any change to this balance will reset the hold timer",,User.Staking
-Restart Core?,Start Kjernen på ny?,User.Staking
-Nexus Core needs to restart for this change to take effect,,User.Staking
-Disable staking,,User.Staking
-Enable staking,Aktiver staking,User.Staking
-Cancel,Avbryt,User.Staking
-Status,,User.Staking
-Staking,,User.Staking
-pooled,,User.Staking
-Not staking,,User.Staking
-Stake amount,,User.Staking
-The amount of NXS currently staked in the trust account,,User.Staking
-Pending change,,User.Staking
-The pending stake amount change that will be applied on the next Trust transaction,,User.Staking
-Requested at,,User.Staking
-Expired in,,User.Staking
-Stake Rate,Stake Sats,User.Staking
-The current annual reward rate earned for staking,,User.Staking
-Trust Weight,Tillit Vekt,User.Staking
-"The percentage of the maximum Trust Score, which is gradually built over time when you consistently operate your node in an honest, trustworthy, and timely manner",,User.Staking
-Block Weight,Block Weight,User.Staking
-"Block Weight depends on the time passed since you received a Trust transaction and will be reset everytime you receive a Trust transaction. Otherwise, Block Weight will reach 100% after 3 days and your Trust Score will start decaying until you receive another Trust transaction",,User.Staking
-Stake Weight,Stake Vekt,User.Staking
-"Stake Weight depends on Trust Weight and Block Weight. Along with your Stake amount, Stake Weight affects how frequent you receive a Trust transaction",,User.Staking
-Available Balance,,User.Staking
-Adjust stake amount,,User.Staking
-Account on hold for another %{stakeSeconds} Seconds,,User.Staking
-Stop staking,,User.Staking
-Start staking,,User.Staking
-Create new token,,User.Tokens
-Look up a token,,User.Tokens
-Unnamed token,,User.Tokens
- (Owned by you),,User.Tokens
-Details,,User.Tokens
-New Token,,User.Tokens.NewToken
-"There is a %{tokenfee} NXS token creation fee, based on supply",,User.Tokens.NewToken
-Token name,,User.Tokens.NewToken
-Name Creation Fee: %{tokenFee} NXS (Optional),,User.Tokens.NewToken
-New tokens's name,,User.Tokens.NewToken
-Supply,,User.Tokens.NewToken
-Max amount of tokens available,,User.Tokens.NewToken
-Decimal,,User.Tokens.NewToken
-Amount of significant digits a token can have,,User.Tokens.NewToken
-Cancel,Avbryt,User.Tokens.NewToken
-Create token,,User.Tokens.NewToken
-Supply can not be zero or negative,,User.Tokens.NewToken
-Create a token without a name?,,User.Tokens.NewToken
-Adding a name costs a NXS fee,,User.Tokens.NewToken
-That's Ok,,User.Tokens.NewToken
-Add Name,,User.Tokens.NewToken
-New token %{token} has been created,,User.Tokens.NewToken
-You have successfully created token %{token} ! Would you like to make an account for this token?,,User.Tokens.NewToken
-Yes,Ja,User.Tokens.NewToken
-No,Nei,User.Tokens.NewToken
-Error creating token,,User.Tokens.NewToken
-Cannot find Token,,User.Tokens.SearchToken
-Look up token,,User.Tokens.SearchToken
-Name or address,,User.Tokens.SearchToken
-Token name/address,,User.Tokens.SearchToken
-Look up,,User.Tokens.SearchToken
-No Value,,User.Tokens.SearchToken
-Error searching for token,,User.Tokens.SearchToken
-Unknown token name/address,,User.Tokens.SearchToken
-Token Details,,User.Tokens.TokenDetails
-Token name,,User.Tokens.TokenDetails
-Token address,,User.Tokens.TokenDetails
-Created at,,User.Tokens.TokenDetails
-Last modified,,User.Tokens.TokenDetails
-Token Owner,,User.Tokens.TokenDetails
-Current Supply,,User.Tokens.TokenDetails
-Max Supply,,User.Tokens.TokenDetails
-Decimals,,User.Tokens.TokenDetails
-Balance,Saldo,User.Tokens.TokenDetails
-Pending balance,,User.Tokens.TokenDetails
-Unconfirmed balance,,User.Tokens.TokenDetails
-Create new account with this token,,User.Tokens.TokenDetails
-Close,Lukk,User.Tokens.TokenDetails
-Wallet version,,About
-Wallet build date,,About
-Nexus Core version,,About
-Core build date,,About
-Testnet,,About
-Private blockchain,,About
-Invalid address,Ugyldig adresse,AddEditContact
-This is not one of your addresses.,Dett er ikke en av dine adresser.,AddEditContact
-This is one of your addresses.,Dette er en av dine adresser.,AddEditContact
-Name,Navn,AddEditContact
-Contact name,Kontaktnavn,AddEditContact
-Email address,E-postadresse,AddEditContact
-Phone number,Telefonnummer,AddEditContact
-Time zone,Tidssone,AddEditContact
-Select a time zone,Velg tidssone,AddEditContact
-Notes,Merknader,AddEditContact
-Cancel,Avbryt,AddEditContact
-Reset,Tilbakestill,AddEditContact
-Save changes,Lagre endringer,AddEditContact
-Create,Opprett,AddEditContact
-Name is required.,Navn er påkrevd.,AddEditContact
-A contact with the same name already exists.,En kontakt med det samme navnet eksisterer allerede.,AddEditContact
-There must be at least one address.,Det må være minst en adresse.,AddEditContact
-Invalid email,Ugyldig epost,AddEditContact
-Contact has been updated,Kontakten har blitt oppdatert,AddEditContact
-New contact has been added to address book,En ny kontakt har blitt lagt til i adresseboken,AddEditContact
-My Nexus address for %{name},Min Nexus adresse for %{name},AddEditContact
-My Nexus address,Min Nexus adresse,AddEditContact
-%{name}'s Nexus address,%{name}'s Nexus addresse,AddEditContact
-Their Nexus address,,AddEditContact
-Remove address,Slett adresse,AddEditContact
-Label (optional),,AddEditContact
-Edit contact,Rediger kontakt,AddEditContact
-Create new contact,Legg til ny kontakt,AddEditContact
-Adjust stake amount,,AdjustStake
-"Note: This change will not take effect immediately but will stay pending until you get the next Trust transaction. The pending change will be recorded locally in this machine, therefore if you switch to another machine for staking, the change will not take effect.",,AdjustStake
-Cancel,Avbryt,AdjustStake
-Set stake amount,,AdjustStake
-Invalid number,,AdjustStake
-Out of range,,AdjustStake
-Reduce stake amount?,,AdjustStake
-Reducing stake amount might make your Stake Rate decrease,,AdjustStake
-Stake amount has been updated,,AdjustStake
-Error setting stake amount,,AdjustStake
-Backing up...,Tar sikkerhetskopi...,Bootstrap
-Downloading,Laster ned,Bootstrap
-Decompressing...,Dekomprimerer...,Bootstrap
-Stopping Core...,Stopper Kjerne...,Bootstrap
-Moving...,Flytter...,Bootstrap
-Restarting Core...,Starter Kjernen på nytt...,Bootstrap
-Rescanning Wallet...,Skanner Lommebok...,Bootstrap
-Backing up your wallet...,Sikkerhetskopierer din lommebok...,Bootstrap
-Downloading the database,Laster ned databasen,Bootstrap
-Decompressing the database...,Dekomprimerer databasen...,Bootstrap
-Stopping Nexus Core...,Stopper Nexus Kjerne...,Bootstrap
-Moving the database...,Flytter databasen...,Bootstrap
-Restarting Nexus Core...,Omstarter Nexus Kjerne...,Bootstrap
-Are you sure you want to abort the process?,Er du sikker på at du vil avbryte prosessen?,Bootstrap
-"Yes, abort","Ja, avbryt",Bootstrap
-"No, let it continue","Nei, la den fortsette",Bootstrap
-Bootstrap Recent Database,Bootstrap Siste Database,Bootstrap
-Abort,Avbryt,Bootstrap
-Not enough disk space! Minimum 15GB of free space is required.,Ikke nok lagringsplass. Minimum 15GB lagrig er nødvendig.,Bootstrap
-Download recent database?,Last ned siste database?,Bootstrap
-Downloading a recent version of the database might reduce the time it takes to synchronize your wallet,Nedlasting av en nylig versjon av databasen kan redusere tiden det tar å synkronisere lommeboken din,Bootstrap
-"Yes, let's bootstrap it","Ja, ""bootstrap"" det",Bootstrap
-"No, let it sync","Nei, la den synkronisere",Bootstrap
-Bootstrap process has been aborted,Bootstrapping har blitt avbrutt,Bootstrap
-Error bootstrapping recent database,Feil ved bootstrapping av siste database,Bootstrap
-Unknown error,,Bootstrap
-Recent database has been successfully bootstrapped,Bootstrapping av siste database var vellykket,Bootstrap
-Change password and PIN,,ChangePassword&PIN
-Current password,,ChangePassword&PIN
-Your current password,,ChangePassword&PIN
-Current PIN,,ChangePassword&PIN
-Your current PIN,,ChangePassword&PIN
-New Password,,ChangePassword&PIN
-Enter your new password,,ChangePassword&PIN
-New PIN,,ChangePassword&PIN
-Enter your new PIN,,ChangePassword&PIN
-Updating,,ChangePassword&PIN
-Update,,ChangePassword&PIN
-Current password is required,,ChangePassword&PIN
-Current PIN is required,,ChangePassword&PIN
-New password is required,,ChangePassword&PIN
-Password must be at least 8 characters,Passord må bestå av minst 8 tegn,ChangePassword&PIN
-New PIN is required,,ChangePassword&PIN
-PIN must be at least 4 characters,,ChangePassword&PIN
-Password & PIN have been updated,,ChangePassword&PIN
-Error updating password & PIN,,ChangePassword&PIN
-Contract Details,,ContractDetails
-View transaction details,,ContractDetails
-Yes,Ja,ConfirmDialog
-No,Nei,ConfirmDialog
-Password/PIN mismatch,,ConfirmPassword&PIN
-"You have entered either your password or your PIN incorrectly, please re-check",,ConfirmPassword&PIN
-Confirm password and PIN,,ConfirmPassword&PIN
-Enter your new password & new PIN once again to make sure you have entered them correctly,,ConfirmPassword&PIN
-Enter your password & PIN once again to make sure you have entered them correctly,,ConfirmPassword&PIN
-Password,Passord,ConfirmPassword&PIN
-Re-enter your new password,,ConfirmPassword&PIN
-Re-enter your password,,ConfirmPassword&PIN
-PIN,,ConfirmPassword&PIN
-Re-enter your new PIN,,ConfirmPassword&PIN
-Re-enter your PIN,,ConfirmPassword&PIN
-Confirm,,ConfirmPassword&PIN
-Dismiss,Forkast,ErrorDialog
-Pin must be at least 4 characters,,PinDialog
-Confirm,,PinDialog
-Enter PIN,,PinDialog
-Your PIN,,PinDialog
-Cancel,Avbryt,PinDialog
-Dismiss,Forkast,SuccessDialog
-Your wallet is not encrypted!,Lommeboken din er ikke kryptert!,EncryptionWarning
-It is highly recommended that you should encrypt your wallet to keep your NXS safe.,,EncryptionWarning
-Ignore,Ignorer,EncryptionWarning
-Encrypt wallet,Krypter lommebok,EncryptionWarning
-Log in,,Login
-Username,Brukernavn,Login
-Enter your username,,Login
-Password,Passord,Login
-Enter your password,,Login
-PIN,,Login
-Enter your PIN,,Login
-Logging in,,Login
-Forgot password?,,Login
-Create new user,,Login
-Username is required,,Login
-Password is required,Passord er påkrevd,Login
-PIN is required,,Login
-Logged in as %{username},,Login
-Not being fully synced may have caused this error.,,Login
-Error logging in,Feil ved innlogging,Login
-Migrate account,,MigrateAccount
-You have %{amount} NXS in your legacy account.,,MigrateAccount
-You can manually send your funds from legacy account to this new Tritium user.,,MigrateAccount
-Send NXS manually,,MigrateAccount
-Don't show this again,,MigrateAccount
-Module Details,,ModuleDetails
-Remove module,,ModuleDetails
-Module name,Modulnavn,ModuleDetails
-Display name,Vis navn,ModuleDetails
-Module type,Modultype,ModuleDetails
-in development,,ModuleDetails
-Version,Versjon,ModuleDetails
-Target wallet version,,ModuleDetails
-incompatible,,ModuleDetails
-Description,Beskrivelse,ModuleDetails
-Author,Forfatter,ModuleDetails
-Source code,Kildekode,ModuleDetails
-Visit repository,Besøk repository,ModuleDetails
-This module is developed by Nexus,Denne modulen er utviklet av Nexus,ModuleDetails
-This repository does not exist or is private,,ModuleDetails
-This repository is not verified to be the real source code of this module,,ModuleDetails
-Module hash,,ModuleDetails
-Download %{version} (manual),,ModuleDetails
-Open App,,ModuleDetails
-Module is disallowed,,ModuleDetails
-Installing Module...,Innstallerer modul...,ModuleDetails
-Install Module,Installer modul,ModuleDetails
+            malicious code than for an open source one. Therefore, in case you
+            still want to disable this setting, it is highly recommended that
+            you only install and run closed source modules that you are
+            developing yourself.","","Settings.Application"
+"Turn policy off","","Settings.Application"
+"Keep policy on","","Settings.Application"
+"Are you sure you want to disable auto update?","Er du sikker på at du vil skru av automatiske oppdateringer?","Settings.Application"
+"Keeping your wallet up-to-date is important for your security and will ensure that you get the best possible user experience.","","Settings.Application"
+"Keep auto update On","Behold automatiske oppdateringer på","Settings.Application"
+"Turn auto update Off","Skru automatiske oppdateringer av","Settings.Application"
+"Minimize on close","","Settings.Application"
+"Minimize the wallet when closing the window instead of closing it.","","Settings.Application"
+"Open on startup","","Settings.Application"
+"Open the wallet when ever the OS starts.","","Settings.Application"
+"Auto update (Recommended)","Automatisk oppdatering (Anbefalt)","Settings.Application"
+"Automatically check for new versions and notify if a new version is available.","Sjekk etter nye versjoner automatisk og gi beskjed om en ny versjon er tilgjengelig.","Settings.Application"
+"Allow Pre-releases","","Settings.Application"
+"Accept pre-release versions (e.g. alpha, beta) when checking for updates.","","Settings.Application"
+"Send anonymous usage data","Send anonym brukerdata","Settings.Application"
+"Send anonymous usage data to allow the Nexus developers to improve the wallet.","","Settings.Application"
+"Base currency","","Settings.Application"
+"Developer mode","Utviklermodus","Settings.Application"
+"Development mode enables advanced features to aid in development. After enabling the wallet must be closed and reopened to enable those features.","Utviklermodus åpner for avanserte funksjoner for å hjelpe til med utvikling. Etter å ha aktivert utviklermodus må lommeboken startes på ny for at endringene skal tre i kraft.","Settings.Application"
+"Module open source policy","Module open source policy","Settings.Application"
+"Only modules which have valid open source repositories are allowed to be installed and run. You can disable this option to test run the modules that you're developing","Kun moduler som har gyldige åpen kilde repositories er tillat å innstalleres å kjøres. Du kan deaktivere denne muligheten til å teste ut modulene du utvikler","Settings.Application"
+"Allow SymLink","","Settings.Application"
+"Allow the presence of SymLinks in the module directory","","Settings.Application"
+"Switch language?","","Settings.Application"
+"Translations for %{language} are contributed by our amazing community members","","Settings.Application"
+"Switch to %{language}","","Settings.Application"
+"Cancel","Avbryt","Settings.Application"
+"Language","","Settings.Application"
+"Verbose level","","Settings.Core"
+"Verbose level for logs.","","Settings.Core"
+"Core Data Directory","","Settings.Core"
+"Where the blockchain data and your legacy wallet.dat are stored","","Settings.Core"
+"Clear peer connections","","Settings.Core"
+"Clear all stored peer connections and restart Nexus","","Settings.Core"
+"Clear","","Settings.Core"
+"Lite mode","","Settings.Core"
+"Nexus Core under lite mode runs lighter and synchronize much faster, but you will <b>NOT</b> be able to stake, mine, or switch the wallet to Legacy Mode.","","Settings.Core"
+"Disabled when Multi-user mode is on","","Settings.Core"
+"Resync database","","Settings.Core"
+"Delete lite mode database and resynchronize from the beginning","","Settings.Core"
+"Resynchronize","","Settings.Core"
+"Multi-user","","Settings.Core"
+"Allow multiple logged in users at the same time. Mining and staking will be unavailable.","","Settings.Core"
+"Disabled when Lite mode is on","","Settings.Core"
+"Enable staking","Aktiver staking","Settings.Core"
+"Enable/Disable staking on the wallet.","Aktiver/Deaktiver staking fra lommeboken.","Settings.Core"
+"Disabled when either Lite mode or Multi-user mode is on","","Settings.Core"
+"Enable mining","Aktiver mining","Settings.Core"
+"Enable/Disable mining to the wallet.","Aktiver/Deaktiver mining til lommeboken.","Settings.Core"
+"Mining IP Whitelist","","Settings.Core"
+"IP/Ports allowed to mine to. Separate by <b>;</b> . Wildcards supported only in IP","","Settings.Core"
+"Safe Mode","","Settings.Core"
+"Enables NextHash verification to protect against corruption, but adds computation time.","","Settings.Core"
+"Are you sure you want to disable Safe Mode","","Settings.Core"
+"Testnet Iteration","","Settings.Core"
+"The iteration of Testnet to connect to. Leave it blank to connect to mainnet.","","Settings.Core"
+"Private testnet","","Settings.Core"
+"Private testnet runs locally on your machine","","Settings.Core"
+"API SSL Port","","Settings.Core"
+"Nexus API server SSL Port","","Settings.Core"
+"Use non-SSL Ports","","Settings.Core"
+"Connect to Nexus Core using non-SSL Ports (less secured)","","Settings.Core"
+"API non-SSL Port","","Settings.Core"
+"Nexus API server non-SSL Port","","Settings.Core"
+"Advanced","","Settings.Core"
+"Allow advanced core options","","Settings.Core"
+"Core Flags","","Settings.Core"
+"Pass these flags to the core on start","","Settings.Core"
+"Reload transaction history","","Settings.Core"
+"Nexus Core will be restarted. Lite mode database will be deleted and resynchronized from the beginning.","","Settings.Core"
+"Exit remote Core mode?","","Settings.Core"
+"(This will restart your Core)","(Dette vil omstarte kjernen)","Settings.Core"
+"Enter remote Core mode?","","Settings.Core"
+"(Remote core will continue to run, but internal core will restart)","","Settings.Core"
+"Core settings saved","Kjerneinnstillinger er lagret","Settings.Core"
+"Restarting Core...","Starter Kjernen på nytt...","Settings.Core"
+"Error saving settings","","Settings.Core"
+"Embedded Core","","Settings.Core"
+"Remote Core","","Settings.Core"
+"Restart Core for these changes to take effect","","Settings.Core"
+"Save settings","","Settings.Core"
+"IP address","IP-adresse","Settings.Core"
+"Remote Core IP address","","Settings.Core"
+"API SSL","","Settings.Core"
+"Use SSL for API calls","","Settings.Core"
+"API Username","","Settings.Core"
+"Nexus API server Username","","Settings.Core"
+"API Password","","Settings.Core"
+"Nexus API server Password","","Settings.Core"
+"Log out on close","","Settings.Core"
+"Log out of all users before closing the wallet","","Settings.Core"
+"Settings","Innstillinger","Settings"
+"Application","Applikasjon","Settings"
+"Core","Kjerne","Settings"
+"Style","Stil","Settings"
+"Modules","Moduler","Settings"
+"Select development module directory","","Settings.Modules"
+"Your module is still in development? <link>Add a development module</link>","","Settings.Modules"
+"Select module archive file","Velg modul arkiv fil","Settings.Modules"
+"Select module directory","Velg modul katalog","Settings.Modules"
+"Add Module","Legg til Modul","Settings.Modules"
+"Checking module","Kontrollerer modul","Settings.Modules"
+"Drop here to install","Slipp her for å innstallere","Settings.Modules"
+"Select module's <file>archive file</file> or <dir>directory</dir>","","Settings.Modules"
+"or drag and drop it here","eller dra og slipp det her","Settings.Modules"
+"Developed by Nexus","","Settings.Modules"
+"Installed modules","","Settings.Modules"
+"Failed to load %{moduleName}","","Settings.Modules"
+"No modules have been installed","","Settings.Modules"
+"Disable %{moduleName}?","Deaktiver %{moduleName}?","Settings.Modules"
+"Wallet will be automatically refreshed for the change to take effect","","Settings.Modules"
+"Enable %{moduleName}?","Aktiver %{moduleName}?","Settings.Modules"
+"This module was built for an incompatible wallet version","","Settings.Modules"
+"Module is not open source","Modul er ikke åpen kilde","Settings.Modules"
+"The provided repository is not verified to be the real source code of this module","","Settings.Modules"
+"%{version} update available","","Settings.Modules"
+"development","","Settings.Modules"
+"Cancel download","","Settings.Modules"
+"Downloading %{percentage}%...","","Settings.Modules"
+"Install","","Settings.Modules"
+"Failed to load module","","Settings.Modules"
+"Overwrite module?","Skriv over modulen?","Settings.Modules"
+"A module with the same directory name already exists","En modul med det samme navnet eksisterer allerede","Settings.Modules"
+"Module has been successfully installed","","Settings.Modules"
+"The wallet will now be refreshed for the new module to take effect","","Settings.Modules"
+"Failed to install module","","Settings.Modules"
+"Cannot find module","Finner ikke modul","Settings.Modules"
+"Unsupported file type","Filtypen støttes ikke","Settings.Modules"
+"Cannot install from this location","","Settings.Modules"
+"Directory has already been added","","Settings.Modules"
+"Failed to load development module","","Settings.Modules"
+"A module with the same name already exists","","Settings.Modules"
+"Development module has been added","","Settings.Modules"
+"Cannot find module archive file among assets","","Settings.Modules"
+"Error downloading module","","Settings.Modules"
+"Module Details","","ModuleDetails"
+"Module name","Modulnavn","ModuleDetails"
+"Display name","Vis navn","ModuleDetails"
+"Module type","Modultype","ModuleDetails"
+"Description","Beskrivelse","ModuleDetails"
+"Author","Forfatter","ModuleDetails"
+"Source code","Kildekode","ModuleDetails"
+"Visit repository","Besøk repository","ModuleDetails"
+"Cancel download","","ModuleDetails"
+"Downloading %{percentage}%...","","ModuleDetails"
+"Install","","ModuleDetails"
+"Remove module","","ModuleDetails"
+"in development","","ModuleDetails"
+"Entry","","ModuleDetails"
+"Version","Versjon","ModuleDetails"
+"Target wallet version","","ModuleDetails"
+"incompatible","","ModuleDetails"
+"This module is developed by Nexus","Denne modulen er utviklet av Nexus","ModuleDetails"
+"This repository does not exist or is private","","ModuleDetails"
+"This repository is not verified to be the real source code of this module","","ModuleDetails"
+"Module hash","","ModuleDetails"
+"Update to %{version}","","ModuleDetails"
+"View the release","","ModuleDetails"
+"Open App","","ModuleDetails"
+"Module is disallowed","","ModuleDetails"
+"Installing Module...","Innstallerer modul...","ModuleDetails"
+"Install Module","Installer modul","ModuleDetails"
 "Warning: This module is written by a third party, Nexus is NOT
               responsible for its quality or legitimacy. Please make sure to do
               your due diligence before installing third party modules and use
-              them with your own risk.",,ModuleDetails
-Check wallet failed,Kontroll av lommebok feilet,MyAddresses
-Check wallet pass,Kontroll av lommebok vellykket,MyAddresses
-My Account,Min Konto,MyAddresses
-Check wallet's integrity,Kontroller lommebokens integritet,MyAddresses
-Check wallet,Kontroller lommebok,MyAddresses
-Create new address,Opprett ny adresse,MyAddresses
-Enter a new account name or pick an existing account:,Tast inn et nytt kontonavn eller velg en eksisterende konto:,MyAddresses.NewAddressForm
-Account name,Kontonavn,MyAddresses.NewAddressForm
-Cancel,Avbryt,MyAddresses.NewAddressForm
-New address,Ny adresse,MyAddresses.NewAddressForm
-Account name is required,Kontonavn påkrevd,MyAddresses.NewAddressForm
-Invalid account name,Ugyldig kontonavn,MyAddresses.NewAddressForm
-New address has been created,En ny adresse har blitt opprettet,MyAddresses.NewAddressForm
-Error creating new address,Feil ved opprettelse av ny adresse,MyAddresses.NewAddressForm
-New account,,NewAccount
-Account name (%{nameFee} NXS Fee) (Optional),,NewAccount
-New account's name,,NewAccount
-Token name/address,,NewAccount
-Cancel,Avbryt,NewAccount
-Creating account,,NewAccount
-Create account,,NewAccount
-Create an account without a name?,,NewAccount
-Adding a name costs a NXS fee,,NewAccount
-That's Ok,,NewAccount
-Error creating account,,NewAccount
-Unknown token name/address,,NewAccount
-New account %{account} has been created,,NewAccount
-Create new user,,NewUser
-Username,Brukernavn,NewUser
-A globally unique username,,NewUser
-Password,Passord,NewUser
-Enter your password,,NewUser
-PIN,,NewUser
-Enter your PIN,,NewUser
-Attention,,NewUser
-"Please be sure to make a note of your username, password, and PIN, and keep it in a safe place. If you lose or forget them you will be unable to access your account.",,NewUser
-Creating user,,NewUser
-Create user,,NewUser
-"Please wait, this may take up to 30 seconds",,NewUser
-Switch to Legacy Mode,,NewUser
-Log in,,NewUser
-Username is required,,NewUser
-Username must be at least 3 characters,,NewUser
-Password is required,Passord er påkrevd,NewUser
-Password must be at least 8 characters,Passord må bestå av minst 8 tegn,NewUser
-PIN is required,,NewUser
-PIN must be at least 4 characters,,NewUser
-Error creating user,,NewUser
-User registration for %{username} has been confirmed,,NewUser
-User registration for %{username} is waiting to be confirmed on Nexus blockchain...,,NewUser
-Recover password and PIN,,RecoverPassword&PIN
-Username,Brukernavn,RecoverPassword&PIN
-Your username,,RecoverPassword&PIN
-Recovery phrase,,RecoverPassword&PIN
-Your recovery phrase,,RecoverPassword&PIN
-New Password,,RecoverPassword&PIN
-Enter your new password,,RecoverPassword&PIN
-New PIN,,RecoverPassword&PIN
-Enter your new PIN,,RecoverPassword&PIN
-Recovering password & PIN,,RecoverPassword&PIN
-Recover password & PIN,,RecoverPassword&PIN
-Username is required,,RecoverPassword&PIN
-Recovery phrase is required,,RecoverPassword&PIN
-New password is required,,RecoverPassword&PIN
-Password must be at least 8 characters,Passord må bestå av minst 8 tegn,RecoverPassword&PIN
-New PIN is required,,RecoverPassword&PIN
-PIN must be at least 4 characters,,RecoverPassword&PIN
-Password & PIN have been updated,,RecoverPassword&PIN
-Error updating password & PIN,,RecoverPassword&PIN
-%{smart_count} word |||| %{smart_count} words,,SetRecoveryPhrase
-Recovery phrase,,SetRecoveryPhrase
-"The recovery phrase can be used to recover your account and set a new password and PIN in the event that you lose or forget them. Your recovery phrase must be a minimum of 40 characters, and should ideally be made up of random words. Save this new recovery phrase in a safe place.",,SetRecoveryPhrase
-Password,Passord,SetRecoveryPhrase
-Your current password,,SetRecoveryPhrase
-PIN,,SetRecoveryPhrase
-Your current PIN,,SetRecoveryPhrase
-Current recovery phrase,,SetRecoveryPhrase
-Enter your recovery phrase,,SetRecoveryPhrase
-Generate a recovery phrase,,SetRecoveryPhrase
-New recovery phrase,,SetRecoveryPhrase
-Enter your new recovery phrase or click Generate,,SetRecoveryPhrase
-Setting recovery phrase,,SetRecoveryPhrase
-Set recovery phrase,,SetRecoveryPhrase
-Password is required,Passord er påkrevd,SetRecoveryPhrase
-PIN is required,,SetRecoveryPhrase
-Current recovery phrase is required,,SetRecoveryPhrase
-Recovery phrase is required,,SetRecoveryPhrase
-Recovery phrase must be at least 8 characters,,SetRecoveryPhrase
-Recovery phrase has been updated,,SetRecoveryPhrase
-Error setting recovery phrase,,SetRecoveryPhrase
-Transaction Details,,TransactionDetails
-Time,,TransactionDetails
-Sequence,,TransactionDetails
-Type,,TransactionDetails
-Confirmations,,TransactionDetails
-Transaction ID,,TransactionDetails
-Loading transaction details...,,TransactionDetails
-Close the wallet and install update now?,Lukke lommebok ig installer nå?,AutoUpdate
-Close and install,Lukk og installer,AutoUpdate
-Install it later,Innstaller det senere,AutoUpdate
-New wallet version %{version} - Click here to download,,AutoUpdate
-New wallet version %{version} - Click here to update,,AutoUpdate
-New wallet version %{version} available. Downloading...,Ny versjon av lommeboken %{version} tilgjengelig. Laster ned...,AutoUpdate
+              them with your own risk.","","ModuleDetails"
+"Select wallpaper","","Settings.Style"
+"Starry night","","Settings.Style"
+"Cosmic light","Cosmic Light","Settings.Style"
+"Nexus.io","","Settings.Style"
+"Custom wallpaper","Egendefinert bakgrunnsbilde","Settings.Style"
+"Select a custom wallpaper","Velg en egendefinert bakgrunn","Settings.Style"
+"Select custom theme file","Velg et tilpasset tema fil","Settings.Style"
+"Theme exported","","Settings.Style"
+"Render globe","Vis Klode","Settings.Style"
+"Render the globe on the Overview page.","Vis kloden på oversiktssiden.","Settings.Style"
+"Your computer does not support OPENGL 2.0","Din datamaskin har ikke støtte for OPENGL 2.0","Settings.Style"
+"Overview Display","Oversiktsvisning","Settings.Style"
+"Hide Overview balances","","Settings.Style"
+"Hide the balances on the Overview page for privacy.","","Settings.Style"
+"Nexus Addresses format","Nexus adresser format","Settings.Style"
+"Choose your Nexus Address display preference","","Settings.Style"
+"Sample Address","","Settings.Style"
+"Wallet theme","","Settings.Style"
+"Background","Bakgrunn","Settings.Style"
+"Customize your background wallpaper","Tilpass ditt bakgrunnsbilde","Settings.Style"
+"Color scheme","Fargevalg","Settings.Style"
+"Background Color","Bakgrunnsfarge","Settings.Style"
+"Foreground Color","Forgrunnsfarge","Settings.Style"
+"Primary Color","Hovedfarge","Settings.Style"
+"Primary Color Accent","Primær farge aksent","Settings.Style"
+"Danger Color","Feil Farge","Settings.Style"
+"Danger Color Accent","Feil farge aksent","Settings.Style"
+"Globe Color","","Settings.Style"
+"Globe Pillar Color","","Settings.Style"
+"Globe Arch Color","","Settings.Style"
+"Import custom theme","Importer tilpasset tema","Settings.Style"
+"Export custom theme","Eksportere tilpasset tema","Settings.Style"
+"Dark","Mørk","Settings.Style"
+"Light","","Settings.Style"
+"Custom","Egendefinert","Settings.Style"
+"Console","Konsoll","Console"
+"Core output","","Console"
+"CLI syntax","","Console.NexusAPI"
+"URL syntax","","Console.NexusAPI"
+"Execute","Utfør","Console.NexusAPI"
+"API Documentation","","Console.NexusAPI"
+"Clear","","Console.NexusAPI"
+"Core is in Manual Mode","Kjernen er i Manuell Modus","Console.CoreOutput"
+"NXS balances","","Transactions.Balances"
+"Total","","Transactions.Balances"
+"Available","","Transactions.Balances"
+"The current balance across all NXS accounts that is available to be spent","","Transactions.Balances"
+"Stake","Stake","Transactions.Balances"
+"The amount of NXS currently staked in the trust account","","Transactions.Balances"
+"Unclaimed","","Transactions.Balances"
+"The sum of all debit and coinbase transactions made to your NXS accounts that are confirmed but have not yet been credited. This does NOT include immature and unconfirmed amounts","","Transactions.Balances"
+"Unconfirmed","","Transactions.Balances"
+"The sum of all debit transactions made to your NXS accounts that are not confirmed, or credits you have made to your accounts that are not yet confirmed (not yet included in a block)","","Transactions.Balances"
+"Immature","Umoden","Transactions.Balances"
+"The sum of all coinbase transactions that have not yet reached maturity","","Transactions.Balances"
+"%{token_name} balances","","Transactions.Balances"
+"Legacy transaction","","Transactions"
+"Coinbase transaction","","Transactions"
+"View contract details","","Transactions"
+"View transaction details","","Transactions"
+"All","Alle","Transactions"
+"Past Year","Siste Året","Transactions"
+"Past Month","Siste Måneden","Transactions"
+"Past Week","Siste Uken","Transactions"
+"Address","Adresse","Transactions"
+"Search for account/token address","","Transactions"
+"Select an address","","Transactions"
+"Time span","Tidsperiode","Transactions"
+"Operation","","Transactions"
+"Transactions","Transaksjoner","Transactions"
+"Loading transactions...","","Transactions"
+"Failed to load transactions","","Transactions"
+"Previous","Forrige","Transactions"
+"Page <page></page>","","Transactions"
+"Next","Neste","Transactions"
+"Accounts","","SelectAddress"
+"Unnamed account","","SelectAddress"
+"Tokens","","SelectAddress"
+"Contacts","","SelectAddress"
+"My address for %{name}","Min adresse for %{name}","SelectAddress"
+"%{name}'s address","","SelectAddress"
+"Unnamed account","","User.Accounts"
+"Details","","User.Accounts"
+"Rename","","User.Accounts"
+"Transaction History","","User.Accounts"
+"Create new account","","User.Accounts"
+"Account Details","","User.Accounts.AccountDetails"
+"Account name","Kontonavn","User.Accounts.AccountDetails"
+"Unnamed","","User.Accounts.AccountDetails"
+"Created at","","User.Accounts.AccountDetails"
+"Last modified","","User.Accounts.AccountDetails"
+"Token","","User.Accounts.AccountDetails"
+"Data","","User.Accounts.AccountDetails"
+"Total account balance","","User.Accounts.AccountDetails"
+"Available balance","","User.Accounts.AccountDetails"
+"Send %{token_name}","","User.Accounts.AccountDetails"
+"Unclaimed balance","","User.Accounts.AccountDetails"
+"Unconfirmed balance","","User.Accounts.AccountDetails"
+"Stake balance","","User.Accounts.AccountDetails"
+"Immature balance","","User.Accounts.AccountDetails"
+"Address","Adresse","User.Accounts.AccountDetails"
+"Adjust stake amount","","User.Accounts.AccountDetails"
+"Trust Account is empty.","","User.Accounts.AccountDetails"
+"Trust Account must mature for 72 hours before staking","","User.Accounts.AccountDetails"
+"Time","","User.Accounts.AccountHistory"
+"Operation","","User.Accounts.AccountHistory"
+"From","","User.Accounts.AccountHistory"
+"staking","","User.Accounts.AccountHistory"
+"mining","","User.Accounts.AccountHistory"
+"To","","User.Accounts.AccountHistory"
+"Change","","User.Accounts.AccountHistory"
+"Account History","","User.Accounts.AccountHistory"
+"Loading account history","","User.Accounts.AccountHistory"
+"Account balance","","User.Accounts.AccountHistory"
+"Show %{tokenName}","","User.Accounts.AccountHistory"
+"Total","","User.Accounts.AccountHistory"
+"Available","","User.Accounts.AccountHistory"
+"Unclaimed","","User.Accounts.AccountHistory"
+"Unconfirmed","","User.Accounts.AccountHistory"
+"Stake","Stake","User.Accounts.AccountHistory"
+"Name already in use","","RenameAccount"
+"The name you entered is already in use. Please choose another name.","","RenameAccount"
+"Fee","Gebyr","RenameAccount"
+"Account has been renamed to %{account_name}","","RenameAccount"
+"Rename account","","RenameAccount"
+"Error renaming account","","RenameAccount"
+"Account name","Kontonavn","RenameAccount"
+"Cancel","Avbryt","RenameAccount"
+"Renaming","","RenameAccount"
+"Rename","","RenameAccount"
+"Unnamed asset","","User.Assets"
+"You own %{percentage}% of this asset","","User.Assets"
+"Create new asset","","User.Assets"
+"You don't own any asset","","User.Assets"
+"Asset Details","","AssetDetails"
+"Edit asset","","AssetDetails"
+"Name","Navn","AssetDetails"
+"Address","Adresse","AssetDetails"
+"Owner","","AssetDetails"
+"Ownership","","AssetDetails"
+"Created at","","AssetDetails"
+"Last modified","","AssetDetails"
+"View history","","AssetDetails"
+"Tokenize","","AssetDetails"
+"Transfer ownership","","AssetDetails"
+"Name","Navn","CreateAsset"
+"Field name","","CreateAsset"
+"Value","","CreateAsset"
+"Field value","","CreateAsset"
+"Mutable","","CreateAsset"
+"Type","","CreateAsset"
+"Max. length","","CreateAsset"
+"Only applicable to mutable string fields","","CreateAsset"
+"Unlimited","","CreateAsset"
+"Remove field","","CreateAsset"
+"Add field","","CreateAsset"
+"Create a new asset","","CreateAsset"
+"New asset has been created","","CreateAsset"
+"Error creating asset","","CreateAsset"
+"Asset name","","CreateAsset"
+"A local Name object register will be created for this asset name","","CreateAsset"
+"Asset name (optional)","","CreateAsset"
+"Asset data","","CreateAsset"
+"Estimated fee","","CreateAsset"
+"Creating asset","","CreateAsset"
+"Create asset","","CreateAsset"
+"Asset History Event","","AssetHistoryDetails"
+"Type","","AssetHistoryDetails"
+"Time","","AssetHistoryDetails"
+"Owner","","AssetHistoryDetails"
+"Checksum","","AssetHistoryDetails"
+"Name","Navn","AssetHistoryDetails"
+"Address","Adresse","AssetHistoryDetails"
+"Time","","AssetHistory"
+"Action","","AssetHistory"
+"Register","","AssetHistory"
+"Owner","","AssetHistory"
+"Asset History","","AssetHistory"
+"Loading asset history","","AssetHistory"
+"Edit asset","","EditAsset"
+"Asset has been updated","","EditAsset"
+"Error updating asset","","EditAsset"
+"Name","Navn","EditAsset"
+"Address","Adresse","EditAsset"
+"Updating asset","","EditAsset"
+"Update asset","","EditAsset"
+"Tokenize asset","","TokenizeAsset"
+"Asset has been tokenized","","TokenizeAsset"
+"Error tokenizing asset","","TokenizeAsset"
+"Asset name","","TokenizeAsset"
+"Asset address","","TokenizeAsset"
+"Token","","TokenizeAsset"
+"Token address","","TokenizeAsset"
+"Tokenizing asset","","TokenizeAsset"
+"Transfer asset","","TransferAsset"
+"Asset has been transferred","","TransferAsset"
+"Error transferring asset","","TransferAsset"
+"Asset name","","TransferAsset"
+"Asset address","","TransferAsset"
+"Transfer to","","TransferAsset"
+"Recipient username or user ID","","TransferAsset"
+"Transferring asset","","TransferAsset"
+"User","","User"
+"User ID","","User"
+"Accounts","","User"
+"Staking","","User"
+"Tokens","","User"
+"Names","","User"
+"Namespaces","","User"
+"Assets","","User"
+"Change password & PIN","","User"
+"Change recovery phrase","","User"
+"Set recovery phrase","","User"
+"Start staking?","","User"
+"You have %{amount} NXS in your trust account and can start staking now.","","User"
+"However, keep in mind that if you start staking, your stake amount will be locked, and the smaller the amount is, the longer it would likely take to unlock it.","","User"
+"To learn more about staking, visit <link>crypto.nexus.io/stake</link>.","","User"
+"Don't show this again","","User"
+"Start staking","","User"
+"Don't stake","","User"
+"User Failed to Unlock","","User"
+"User Unlocked","","User"
+"Indexing User...","","User"
+"Change register address","","ChangeRegisterAddress"
+"Name has been updated","","ChangeRegisterAddress"
+"Error updating name","","ChangeRegisterAddress"
+"Name","Navn","ChangeRegisterAddress"
+"Register address","","ChangeRegisterAddress"
+"Register address that this name points to","","ChangeRegisterAddress"
+"Name update fee","","ChangeRegisterAddress"
+"Updating name","","ChangeRegisterAddress"
+"Update name","","ChangeRegisterAddress"
+"Local","","CreateName"
+"Namespaced","","CreateName"
+"Global","","CreateName"
+"Namespace","","CreateName"
+"A namespace you own","","CreateName"
+"Name cannot start with a colon character","","CreateName"
+"Create a new name","","CreateName"
+"New name has been created","","CreateName"
+"Error creating name","","CreateName"
+"Name","Navn","CreateName"
+"name","","CreateName"
+"namespace","","CreateName"
+"Register address","","CreateName"
+"Register address that this name points to","","CreateName"
+"Name creation fee","","CreateName"
+"Creating name","","CreateName"
+"Create name","","CreateName"
+"View name details","","User.Names"
+"Change register address","","User.Names"
+"Transfer name","","User.Names"
+"Unused","","User.Names"
+"Global","","User.Names"
+"Namespaced","","User.Names"
+"Local","","User.Names"
+"Create new name","","User.Names"
+"Show unused names","","User.Names"
+"You don't own any name","","User.Names"
+"Name Details","","NameDetails"
+"Change register address","","NameDetails"
+"Name","Navn","NameDetails"
+"Type","","NameDetails"
+"Global","","NameDetails"
+"Namespaced","","NameDetails"
+"Local","","NameDetails"
+"Namespace","","NameDetails"
+"Address","Adresse","NameDetails"
+"Points to","","NameDetails"
+"Created at","","NameDetails"
+"Last modified","","NameDetails"
+"View history","","NameDetails"
+"Transfer ownership","","NameDetails"
+"Name History Event","","NameHistoryDetails"
+"Type","","NameHistoryDetails"
+"Time","","NameHistoryDetails"
+"Owner","","NameHistoryDetails"
+"Checksum","","NameHistoryDetails"
+"Name","Navn","NameHistoryDetails"
+"Namespace","","NameHistoryDetails"
+"Address","Adresse","NameHistoryDetails"
+"Points to","","NameHistoryDetails"
+"Time","","NameHistory"
+"Action","","NameHistory"
+"Register","","NameHistory"
+"Owner","","NameHistory"
+"Name History","","NameHistory"
+"Loading name history","","NameHistory"
+"Transfer name","","TransferName"
+"Name has been transferred","","TransferName"
+"Error transferring name","","TransferName"
+"Name","Navn","TransferName"
+"Transfer to","","TransferName"
+"Recipient username or user ID","","TransferName"
+"Transferring name","","TransferName"
+"Create a new namespace","","CreateNamespace"
+"New namespace has been created","","CreateNamespace"
+"Error creating namespace","","CreateNamespace"
+"Name","Navn","CreateNamespace"
+"Namespace name","","CreateNamespace"
+"Namespace names can only contain lowercase letters, numbers, and periods (.)","","CreateNamespace"
+"Namespace creation fee","","CreateNamespace"
+"Creating namespace","","CreateNamespace"
+"Create namespace","","CreateNamespace"
+"View name details","","User.Namespaces"
+"Transfer namespace","","User.Namespaces"
+"Create new namespace","","User.Namespaces"
+"You don't own any namespace","","User.Namespaces"
+"Namespace Details","","NamespaceDetails"
+"Name","Navn","NamespaceDetails"
+"Address","Adresse","NamespaceDetails"
+"Created at","","NamespaceDetails"
+"Last modified","","NamespaceDetails"
+"View history","","NamespaceDetails"
+"Transfer ownership","","NamespaceDetails"
+"Namespace History Event","","NamespaceHistoryDetails"
+"Type","","NamespaceHistoryDetails"
+"Time","","NamespaceHistoryDetails"
+"Owner","","NamespaceHistoryDetails"
+"Checksum","","NamespaceHistoryDetails"
+"Name","Navn","NamespaceHistoryDetails"
+"Address","Adresse","NamespaceHistoryDetails"
+"Time","","NamespaceHistory"
+"Action","","NamespaceHistory"
+"Register","","NamespaceHistory"
+"Owner","","NamespaceHistory"
+"Namespace History","","NamespaceHistory"
+"Loading namespace history","","NamespaceHistory"
+"Transfer namespace","","TransferNamespace"
+"Namespace has been transferred","","TransferNamespace"
+"Error transferring namespace","","TransferNamespace"
+"Namespace","","TransferNamespace"
+"Transfer to","","TransferNamespace"
+"Recipient username or user ID","","TransferNamespace"
+"Transferring namespace","","TransferNamespace"
+"The current NXS balance of the trust account that is not staked. You can spend this amount without affecting your Trust Score","","User.Staking"
+"Balance that will be staked after the 72 holding period, any change to this balance will reset the hold timer","","User.Staking"
+"Trust balance empty!","","User.Staking"
+"You must send some NXS to your <b>trust</b> account first","","User.Staking"
+"Start staking","","User.Staking"
+"In order to start staking, the following settings need to be changed:","","User.Staking"
+"Lite mode needs to be turned OFF","","User.Staking"
+"Multi-user needs to be turned OFF","","User.Staking"
+"Enable staking needs to be turned ON","","User.Staking"
+"Apply changes","","User.Staking"
+"Cancel","Avbryt","User.Staking"
+"Restarting Core","","User.Staking"
+"Enter your PIN to start staking","","User.Staking"
+"Staking will automatically start when your wallet is synchronized","","User.Staking"
+"Error","","User.Staking"
+"Stop staking?","","User.Staking"
+"If you stop staking, stake amount will still stay locked. In case you want to unlock the stake amount, <link>set your stake amount to 0</link> and keep staking until the next Trust transaction is mined.","","User.Staking"
+"Stop staking","","User.Staking"
+"Staking is not available in private network","","User.Staking"
+"Status","","User.Staking"
+"Staking","","User.Staking"
+"pooled","","User.Staking"
+"Not staking","","User.Staking"
+"Stake amount (locked)","","User.Staking"
+"The amount of NXS currently staked in the trust account","","User.Staking"
+"Pending change","","User.Staking"
+"The pending stake amount change that will be applied on the next Trust transaction","","User.Staking"
+"Requested at","","User.Staking"
+"Expired in","","User.Staking"
+"Stake Rate","Stake Sats","User.Staking"
+"The current annual reward rate earned for staking","","User.Staking"
+"Trust Weight","Tillit Vekt","User.Staking"
+"The percentage of the maximum Trust Score, which is gradually built over time when you consistently operate your node in an honest, trustworthy, and timely manner","","User.Staking"
+"Block Weight","Block Weight","User.Staking"
+"Block Weight depends on the time passed since you received a Trust transaction and will be reset everytime you receive a Trust transaction. Otherwise, Block Weight will reach 100% after 3 days and your Trust Score will start decaying until you receive another Trust transaction","","User.Staking"
+"Stake Weight","Stake Vekt","User.Staking"
+"Stake Weight depends on Trust Weight and Block Weight. Along with your Stake amount, Stake Weight affects how frequent you receive a Trust transaction","","User.Staking"
+"Available Balance","","User.Staking"
+"Adjust stake amount","","User.Staking"
+"Account on hold for another %{stakeSeconds} Seconds","","User.Staking"
+"Create new token","","User.Tokens"
+"Look up a token","","User.Tokens"
+"Unnamed token","","User.Tokens"
+" (Owned by you)","","User.Tokens"
+"Details","","User.Tokens"
+"There is a %{tokenfee} NXS token creation fee, based on supply","","User.Tokens.NewToken"
+"Must be an integer","","User.Tokens.NewToken"
+"Supply cannot be zero or negative","","User.Tokens.NewToken"
+"New Token","","User.Tokens.NewToken"
+"Create a token without a name?","","User.Tokens.NewToken"
+"Adding a name costs a NXS fee","","User.Tokens.NewToken"
+"That's Ok","","User.Tokens.NewToken"
+"Cancel","Avbryt","User.Tokens.NewToken"
+"Add Name","","User.Tokens.NewToken"
+"New token %{token} has been created","","User.Tokens.NewToken"
+"You have successfully created token %{token} ! Would you like to make an account for this token?","","User.Tokens.NewToken"
+"Yes","Ja","User.Tokens.NewToken"
+"No","Nei","User.Tokens.NewToken"
+"Error creating token","","User.Tokens.NewToken"
+"Token name","","User.Tokens.NewToken"
+"Name Creation Fee: %{tokenFee} NXS (Optional)","","User.Tokens.NewToken"
+"New tokens's name","","User.Tokens.NewToken"
+"Supply","","User.Tokens.NewToken"
+"Max amount of tokens available","","User.Tokens.NewToken"
+"Decimal","","User.Tokens.NewToken"
+"Amount of significant digits a token can have","","User.Tokens.NewToken"
+"Create token","","User.Tokens.NewToken"
+"Look up token","","User.Tokens.SearchToken"
+"Error searching for token","","User.Tokens.SearchToken"
+"Unknown token name/address","","User.Tokens.SearchToken"
+"Name or address","","User.Tokens.SearchToken"
+"Token name/address","","User.Tokens.SearchToken"
+"Look up","","User.Tokens.SearchToken"
+"Token Details","","User.Tokens.TokenDetails"
+"Token name","","User.Tokens.TokenDetails"
+"Token address","","User.Tokens.TokenDetails"
+"Created at","","User.Tokens.TokenDetails"
+"Last modified","","User.Tokens.TokenDetails"
+"Token Owner","","User.Tokens.TokenDetails"
+"Current Supply","","User.Tokens.TokenDetails"
+"Max Supply","","User.Tokens.TokenDetails"
+"Decimals","","User.Tokens.TokenDetails"
+"Balance","Saldo","User.Tokens.TokenDetails"
+"Unclaimed balance","","User.Tokens.TokenDetails"
+"Unconfirmed balance","","User.Tokens.TokenDetails"
+"Create new account with this token","","User.Tokens.TokenDetails"
+"Close","Lukk","User.Tokens.TokenDetails"
+"Wallet version","","About"
+"Wallet build date","","About"
+"Nexus Core version","","About"
+"Core build date","","About"
+"Testnet","","About"
+"Private blockchain","","About"
+"Invalid address","Ugyldig adresse","AddEditContact"
+"This is not one of your addresses.","Dett er ikke en av dine adresser.","AddEditContact"
+"This is one of your addresses.","Dette er en av dine adresser.","AddEditContact"
+"My Nexus address for %{name}","Min Nexus adresse for %{name}","AddEditContact"
+"My Nexus address","Min Nexus adresse","AddEditContact"
+"%{name}'s Nexus address","%{name}'s Nexus addresse","AddEditContact"
+"Their Nexus address","","AddEditContact"
+"Remove address","Slett adresse","AddEditContact"
+"Label (optional)","","AddEditContact"
+"Invalid user ID","","AddEditContact"
+"Invalid email","Ugyldig epost","AddEditContact"
+"A contact with the same name already exists.","En kontakt med det samme navnet eksisterer allerede.","AddEditContact"
+"Edit contact","Rediger kontakt","AddEditContact"
+"Create new contact","Legg til ny kontakt","AddEditContact"
+"At least one address is required.","","AddEditContact"
+"Contact has been updated","Kontakten har blitt oppdatert","AddEditContact"
+"New contact has been added to address book","En ny kontakt har blitt lagt til i adresseboken","AddEditContact"
+"Name","Navn","AddEditContact"
+"Contact name","Kontaktnavn","AddEditContact"
+"Nexus user ID","","AddEditContact"
+"Email address","E-postadresse","AddEditContact"
+"Phone number","Telefonnummer","AddEditContact"
+"Time zone","Tidssone","AddEditContact"
+"Select a time zone","Velg tidssone","AddEditContact"
+"Notes","Merknader","AddEditContact"
+"Cancel","Avbryt","AddEditContact"
+"Reset","Tilbakestill","AddEditContact"
+"Save changes","Lagre endringer","AddEditContact"
+"Create","Opprett","AddEditContact"
+"Invalid number","","AdjustStake"
+"Out of range","","AdjustStake"
+"Set stake amount","","AdjustStake"
+"Reduce stake amount?","","AdjustStake"
+"Reducing stake amount might make your Stake Rate decrease","","AdjustStake"
+"Stake amount has been updated","","AdjustStake"
+"Error setting stake amount","","AdjustStake"
+"Note: This change will not take effect immediately but will stay pending until you get the next Trust transaction. The pending change will be recorded locally in this machine, therefore if you switch to another machine for staking, the change will not take effect.","","AdjustStake"
+"Cancel","Avbryt","AdjustStake"
+"Backing up...","Tar sikkerhetskopi...","Bootstrap"
+"Preparing...","","Bootstrap"
+"Downloading","Laster ned","Bootstrap"
+"Decompressing...","Dekomprimerer...","Bootstrap"
+"Stopping Core...","Stopper Kjerne...","Bootstrap"
+"Moving...","Flytter...","Bootstrap"
+"Restarting Core...","Starter Kjernen på nytt...","Bootstrap"
+"Rescanning Wallet...","Skanner Lommebok...","Bootstrap"
+"Cleaning up...","","Bootstrap"
+"Backing up your wallet...","Sikkerhetskopierer din lommebok...","Bootstrap"
+"Downloading the database","Laster ned databasen","Bootstrap"
+"Decompressing the database...","Dekomprimerer databasen...","Bootstrap"
+"Stopping Nexus Core...","Stopper Nexus Kjerne...","Bootstrap"
+"Moving the database...","Flytter databasen...","Bootstrap"
+"Restarting Nexus Core...","Omstarter Nexus Kjerne...","Bootstrap"
+"Are you sure you want to abort the process?","Er du sikker på at du vil avbryte prosessen?","Bootstrap"
+"Yes, abort","Ja, avbryt","Bootstrap"
+"No, let it continue","Nei, la den fortsette","Bootstrap"
+"Bootstrap Recent Database","Bootstrap Siste Database","Bootstrap"
+"Abort","Avbryt","Bootstrap"
+"Can not Bootstrap on Testnet/Private networks.","","Bootstrap"
+"Not enough disk space! Minimum 15GB of free space is required.","Ikke nok lagringsplass. Minimum 15GB lagrig er nødvendig.","Bootstrap"
+"Download recent database?","Last ned siste database?","Bootstrap"
+"Downloading a recent version of the database might reduce the time it takes to synchronize your wallet","Nedlasting av en nylig versjon av databasen kan redusere tiden det tar å synkronisere lommeboken din","Bootstrap"
+"Yes, let's bootstrap it","Ja, ""bootstrap"" det","Bootstrap"
+"No, let it sync","Nei, la den synkronisere","Bootstrap"
+"Bootstrap process has been aborted","Bootstrapping har blitt avbrutt","Bootstrap"
+"Error bootstrapping recent database","Feil ved bootstrapping av siste database","Bootstrap"
+"Unknown error","","Bootstrap"
+"Recent database has been successfully bootstrapped","Bootstrapping av siste database var vellykket","Bootstrap"
+"Change password and PIN","","ChangePassword&PIN"
+"Password & PIN have been updated","","ChangePassword&PIN"
+"Error updating password & PIN","","ChangePassword&PIN"
+"Current password","","ChangePassword&PIN"
+"Your current password","","ChangePassword&PIN"
+"Current PIN","","ChangePassword&PIN"
+"Your current PIN","","ChangePassword&PIN"
+"New Password","","ChangePassword&PIN"
+"Enter your new password","","ChangePassword&PIN"
+"New PIN","","ChangePassword&PIN"
+"Enter your new PIN","","ChangePassword&PIN"
+"Updating","","ChangePassword&PIN"
+"Update","","ChangePassword&PIN"
+"Contract Details","","ContractDetails"
+"View transaction details","","ContractDetails"
+"Yes","Ja","ConfirmDialog"
+"No","Nei","ConfirmDialog"
+"Password/PIN mismatch","","ConfirmPassword&PIN"
+"You have entered either your password or your PIN incorrectly, please re-check","","ConfirmPassword&PIN"
+"Confirm password and PIN","","ConfirmPassword&PIN"
+"Enter your new password & new PIN once again to make sure you have entered them correctly","","ConfirmPassword&PIN"
+"Enter your password & PIN once again to make sure you have entered them correctly","","ConfirmPassword&PIN"
+"Password","Passord","ConfirmPassword&PIN"
+"Re-enter your new password","","ConfirmPassword&PIN"
+"Re-enter your password","","ConfirmPassword&PIN"
+"PIN","","ConfirmPassword&PIN"
+"Re-enter your new PIN","","ConfirmPassword&PIN"
+"Re-enter your PIN","","ConfirmPassword&PIN"
+"Confirm","","ConfirmPassword&PIN"
+"Dismiss","Forkast","ErrorDialog"
+"Dismiss","Forkast","InfoDialog"
+"Confirm","","PinDialog"
+"Enter PIN","","PinDialog"
+"Your PIN","","PinDialog"
+"Cancel","Avbryt","PinDialog"
+"Dismiss","Forkast","SuccessDialog"
+"Log in","","Login"
+"Logged in as %{username}","","Login"
+"Not being fully synced may have caused this error.","","Login"
+"Error logging in","Feil ved innlogging","Login"
+"Username","Brukernavn","Login"
+"Enter your username","","Login"
+"Password","Passord","Login"
+"Enter your password","","Login"
+"PIN","","Login"
+"Enter your PIN","","Login"
+"Logging in","","Login"
+"Forgot password?","","Login"
+"Create new user","","Login"
+"Create an account without a name?","","NewAccount"
+"Adding a name costs a NXS fee","","NewAccount"
+"That's Ok","","NewAccount"
+"Cancel","Avbryt","NewAccount"
+"Unknown token name/address","","NewAccount"
+"New account","","NewAccount"
+"New account %{account} has been created","","NewAccount"
+"Error creating account","","NewAccount"
+"Account name (Optional)","","NewAccount"
+"New account's name","","NewAccount"
+"Fee: %{nameFee} NXS","","NewAccount"
+"Token name/address","","NewAccount"
+"Creating account","","NewAccount"
+"Create account","","NewAccount"
+"Create new user","","NewUser"
+"Error creating user","","NewUser"
+"Username","Brukernavn","NewUser"
+"A globally unique username","","NewUser"
+"Password","Passord","NewUser"
+"Enter your password","","NewUser"
+"PIN","","NewUser"
+"Enter your PIN","","NewUser"
+"Attention","","NewUser"
+"Please be sure to make a note of your username, password, and PIN, and keep it in a safe place. If you lose or forget them you will be unable to access your account.","","NewUser"
+"Creating user","","NewUser"
+"Create user","","NewUser"
+"Please wait, this may take up to 30 seconds","","NewUser"
+"Log in","","NewUser"
+"User <b>%{username}</b> has been successfully registered","","NewUser"
+"Waiting for user registration to be confirmed on Nexus blockchain...","","NewUser"
+"Recover password and PIN","","RecoverPassword&PIN"
+"Password & PIN have been updated","","RecoverPassword&PIN"
+"Error updating password & PIN","","RecoverPassword&PIN"
+"Username","Brukernavn","RecoverPassword&PIN"
+"Your username","","RecoverPassword&PIN"
+"Recovery phrase","","RecoverPassword&PIN"
+"Your recovery phrase","","RecoverPassword&PIN"
+"New Password","","RecoverPassword&PIN"
+"Enter your new password","","RecoverPassword&PIN"
+"New PIN","","RecoverPassword&PIN"
+"Enter your new PIN","","RecoverPassword&PIN"
+"Recovering password & PIN","","RecoverPassword&PIN"
+"Recover password & PIN","","RecoverPassword&PIN"
+"%{smart_count} word |||| %{smart_count} words","","SetRecoveryPhrase"
+"Recovery phrase","","SetRecoveryPhrase"
+"Recovery phrase has been updated","","SetRecoveryPhrase"
+"Error setting recovery phrase","","SetRecoveryPhrase"
+"The recovery phrase can be used to recover your account and set a new password and PIN in the event that you lose or forget them. Your recovery phrase must be a minimum of 40 characters, and should ideally be made up of random words.","","SetRecoveryPhrase"
+"<b>Save your new recovery phrase in a safe place</b>, because if you lose it, there will be <b>no way</b> to recover it.","","SetRecoveryPhrase"
+"Password","Passord","SetRecoveryPhrase"
+"Your current password","","SetRecoveryPhrase"
+"PIN","","SetRecoveryPhrase"
+"Your current PIN","","SetRecoveryPhrase"
+"Current recovery phrase","","SetRecoveryPhrase"
+"Enter your recovery phrase","","SetRecoveryPhrase"
+"Generate a recovery phrase","","SetRecoveryPhrase"
+"New recovery phrase","","SetRecoveryPhrase"
+"Enter your new recovery phrase or click Generate","","SetRecoveryPhrase"
+"Setting recovery phrase","","SetRecoveryPhrase"
+"Set recovery phrase","","SetRecoveryPhrase"
+"Confirm recovery phrase","","SetRecoveryPhrase"
+"Enter your new recovery phrase again","","SetRecoveryPhrase"
+"Cancel","Avbryt","SetRecoveryPhrase"
+"Recovery phrase confirmation doesn't match!","","SetRecoveryPhrase"
+"Please make sure that you have a good backup of your recovery phrase and try again.","","SetRecoveryPhrase"
+"Confirm","","SetRecoveryPhrase"
+"Error loading transaction","","TransactionDetails"
+"Transaction Details","","TransactionDetails"
+"Time","","TransactionDetails"
+"Sequence","","TransactionDetails"
+"Type","","TransactionDetails"
+"Confirmations","Bekreftelser","TransactionDetails"
+"Transaction ID","","TransactionDetails"
+"Loading transaction details...","","TransactionDetails"
+"Close the wallet and install update now?","Lukke lommebok ig installer nå?","AutoUpdate"
+"Close and install","Lukk og installer","AutoUpdate"
+"Install it later","Innstaller det senere","AutoUpdate"
+"New wallet version %{version} - Click here to download","","AutoUpdate"
+"New wallet version %{version} - Click here to update","","AutoUpdate"
+"New wallet version %{version} available. Downloading...","Ny versjon av lommeboken %{version} tilgjengelig. Laster ned...","AutoUpdate"

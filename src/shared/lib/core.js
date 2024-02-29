@@ -4,7 +4,7 @@ import log from 'electron-log';
 import * as TYPE from 'consts/actionTypes';
 import store from 'store';
 import { loadNexusConf, saveCoreConfig } from 'lib/coreConfig';
-import { callApi } from 'lib/api';
+import { callAPI } from 'lib/api';
 import { updateSettings } from 'lib/settings';
 import sleep from 'utils/promisified/sleep';
 import { minimumCoreAPIPolicy, preRelease } from 'consts/misc';
@@ -15,7 +15,7 @@ import * as path from 'path';
 
 export const getLedgerInfo = async () => {
   try {
-    const ledgerInfo = await callApi('ledger/get/info');
+    const ledgerInfo = await callAPI('ledger/get/info');
     store.dispatch({ type: TYPE.SET_LEDGER_INFO, payload: ledgerInfo });
     return ledgerInfo;
   } catch (err) {
@@ -156,7 +156,7 @@ export const stopCore = async (forRestart) => {
   const { manualDaemon } = store.getState().settings;
   store.dispatch({ type: TYPE.DISCONNECT_CORE });
   try {
-    await callApi('system/stop');
+    await callAPI('system/stop');
 
     // Wait for core to gracefully stop for 10 seconds
     let coreStillRunning;

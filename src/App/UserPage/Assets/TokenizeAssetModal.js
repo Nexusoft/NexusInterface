@@ -9,7 +9,7 @@ import Spinner from 'components/Spinner';
 import { formSubmit, required } from 'lib/form';
 import { confirmPin, openSuccessDialog } from 'lib/dialog';
 import { loadAssets, loadOwnedTokens } from 'lib/user';
-import { callApi } from 'lib/api';
+import { callAPI } from 'lib/api';
 import memoize from 'utils/memoize';
 
 __ = __context('TokenizeAsset');
@@ -75,7 +75,7 @@ export default function TokenizeAssetModal({ asset }) {
                 submit: async ({ token }) => {
                   const pin = await confirmPin();
                   if (pin) {
-                    return await callApi('assets/tokenize/asset', {
+                    return await callAPI('assets/tokenize/asset', {
                       pin,
                       address: asset.address,
                       token,

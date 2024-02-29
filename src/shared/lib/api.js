@@ -90,7 +90,7 @@ function sendRequest({ params, options, ssl }) {
  * @param {*} params
  * @returns
  */
-export async function callApi(endpoint, customParams) {
+export async function callAPI(endpoint, customParams) {
   const conf = await getActiveCoreConfig();
   const state = store.getState();
   const session = selectActiveSession(state);
@@ -123,7 +123,7 @@ export async function callApi(endpoint, customParams) {
  * @param {*} url
  * @returns
  */
-export async function callApiByUrl(url) {
+export async function callAPIByUrl(url) {
   const conf = await getActiveCoreConfig();
   return await sendRequest({
     options: {

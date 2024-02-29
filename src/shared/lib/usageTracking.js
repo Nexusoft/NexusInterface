@@ -120,6 +120,12 @@ UT.AdjustStake = function (direction) {
   trackEvent('adjust_stake', direction);
 };
 
+UT.AddAddressBookEntry = function (isEdit) {
+  if (!UT.active) return;
+  const params = {};
+  trackEvent('address_contact', isEdit ? 'edited' : 'added');
+};
+
 UT.CreateNewItem = function (itemType) {
   if (!UT.active) return;
   const params = {};

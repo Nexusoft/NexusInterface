@@ -6,7 +6,7 @@ import Button from 'components/Button';
 import FormField from 'components/FormField';
 import { formSubmit, checkAll, useFieldValue } from 'lib/form';
 import { confirm, confirmPin } from 'lib/dialog';
-import { callApi } from 'lib/api';
+import { callAPI } from 'lib/api';
 import { loadAccounts, loadOwnedTokens } from 'lib/user';
 import { openModal, showNotification } from 'lib/ui';
 import NewAccountModal from 'components/NewAccountModal';
@@ -71,7 +71,7 @@ export default function NewTokenModal() {
                   if (pin) {
                     const params = { pin, supply, decimals };
                     if (name) params.name = name;
-                    return await callApi('tokens/create/token', params);
+                    return await callAPI('tokens/create/token', params);
                   }
                 },
                 onSuccess: async (result, { name }) => {

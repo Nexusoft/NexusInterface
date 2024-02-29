@@ -7,7 +7,7 @@ import world from 'icons/world-light-white.jpg';
 import geoip from 'data/geoip';
 import Curve from './Curve';
 import Point from './Point';
-import { callApi } from 'lib/api';
+import { callAPI } from 'lib/api';
 import Color from 'color';
 
 const MaxDisplayPoints = 64;
@@ -219,7 +219,7 @@ export default class Globe extends Component {
    * @memberof Globe
    */
   async pointRegister() {
-    const peerInfo = await callApi('system/list/peers', null);
+    const peerInfo = await callAPI('system/list/peers', null);
     if (!peerInfo) return;
     if (peerInfo.length > MaxDisplayPoints) {
       peerInfo.length = MaxDisplayPoints;

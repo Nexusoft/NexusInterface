@@ -17,7 +17,6 @@ import AddEditContactModal from 'components/AddEditContactModal';
 import exportIcon from 'icons/export.svg';
 import addContactIcon from 'icons/add-contact.svg';
 import searchIcon from 'icons/search.svg';
-import userIcon from 'icons/user.svg';
 
 __ = __context('AddressBook');
 

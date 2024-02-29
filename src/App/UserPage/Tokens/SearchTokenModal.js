@@ -3,7 +3,7 @@ import ControlledModal from 'components/ControlledModal';
 import FormField from 'components/FormField';
 import Icon from 'components/Icon';
 import { formSubmit, required } from 'lib/form';
-import { callApi } from 'lib/api';
+import { callAPI } from 'lib/api';
 import { openModal } from 'lib/ui';
 import { openErrorDialog } from 'lib/dialog';
 import searchIcon from 'icons/search.svg';
@@ -33,7 +33,7 @@ export default function SearchTokenModal() {
                   if (addressRegex.test(searchValue)) {
                     try {
                       // Test if searchValue is the token address
-                      return await callApi('tokens/get/token', {
+                      return await callAPI('tokens/get/token', {
                         address: searchValue,
                       });
                     } catch (err) {}
@@ -41,7 +41,7 @@ export default function SearchTokenModal() {
 
                   // Assuming searchValue is token name
                   try {
-                    return await callApi('tokens/get/token', {
+                    return await callAPI('tokens/get/token', {
                       name: searchValue,
                     });
                   } catch (err) {

@@ -1,4 +1,4 @@
-import { callApi } from 'lib/api';
+import { callAPI } from 'lib/api';
 
 export default async function listAll(endpoint, params, options = {}) {
   options = {
@@ -10,7 +10,7 @@ export default async function listAll(endpoint, params, options = {}) {
   let results = null;
   let page = 0;
   do {
-    results = await callApi(endpoint, {
+    results = await callAPI(endpoint, {
       ...params,
       limit: options.limit,
       page: page++,

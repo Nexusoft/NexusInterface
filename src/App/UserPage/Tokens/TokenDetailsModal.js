@@ -11,7 +11,7 @@ import Spinner from 'components/Spinner';
 import plusIcon from 'icons/plus.svg';
 import { formatDateTime, formatNumber } from 'lib/intl';
 import { openModal } from 'lib/ui';
-import { callApi } from 'lib/api';
+import { callAPI } from 'lib/api';
 
 __ = __context('User.Tokens.TokenDetails');
 
@@ -33,7 +33,7 @@ export default function TokenDetailsModal({ token: tokenProp, tokenAddress }) {
   const [tokenState, setTokenState] = useState(null);
   useEffect(() => {
     if (!tokenProp) {
-      callApi('tokens/get/token', {
+      callAPI('tokens/get/token', {
         address: tokenAddress,
       }).then(setTokenState);
     }

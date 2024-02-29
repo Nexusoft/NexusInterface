@@ -7,7 +7,7 @@ import Spinner from 'components/Spinner';
 import { formSubmit, required } from 'lib/form';
 import { confirmPin, openSuccessDialog } from 'lib/dialog';
 import { loadNamespaces } from 'lib/user';
-import { callApi } from 'lib/api';
+import { callAPI } from 'lib/api';
 import { userIdRegex } from 'consts/misc';
 
 __ = __context('TransferNamespace');
@@ -44,7 +44,7 @@ export default function TransferNamespaceModal({ namespace }) {
                   }
 
                   if (pin) {
-                    return await callApi('names/transfer/namespace', params);
+                    return await callAPI('names/transfer/namespace', params);
                   }
                 },
                 onSuccess: async (result) => {

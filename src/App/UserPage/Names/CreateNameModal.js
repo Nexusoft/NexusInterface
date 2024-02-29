@@ -16,7 +16,7 @@ import {
   createGlobalNameFee,
 } from 'lib/fees';
 import { loadNameRecords, loadNamespaces, selectUsername } from 'lib/user';
-import { callApi } from 'lib/api';
+import { callAPI } from 'lib/api';
 import UT from 'lib/usageTracking';
 
 __ = __context('CreateName');
@@ -122,7 +122,7 @@ export default function CreateNameModal() {
                   const pin = await confirmPin();
 
                   if (pin) {
-                    return await callApi('names/create/name', {
+                    return await callAPI('names/create/name', {
                       pin,
                       name,
                       global: type === 'global',

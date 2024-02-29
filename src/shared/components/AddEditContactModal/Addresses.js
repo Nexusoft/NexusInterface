@@ -9,7 +9,7 @@ import Icon from 'components/Icon';
 import Button from 'components/Button';
 import Form from 'components/Form';
 import { required, checkAll, useFieldValue } from 'lib/form';
-import { callApi } from 'lib/api';
+import { callAPI } from 'lib/api';
 import { timing } from 'styles';
 import plusIcon from 'icons/plus.svg';
 
@@ -86,7 +86,7 @@ export default function Addresses({ fields, isMine }) {
     if (value.startsWith('a') && value.length === 64) return;
 
     try {
-      const { valid, mine } = await callApi('system/validate/address', {
+      const { valid, mine } = await callAPI('system/validate/address', {
         address: value,
       });
       if (!valid) {

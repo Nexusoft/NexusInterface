@@ -5,7 +5,7 @@ import Spinner from 'components/Spinner';
 import { formSubmit, required, checkAll, regex } from 'lib/form';
 import { confirmPin, openSuccessDialog } from 'lib/dialog';
 import { loadNamespaces } from 'lib/user';
-import { callApi } from 'lib/api';
+import { callAPI } from 'lib/api';
 import { createNamespaceFee } from 'lib/fees';
 import UT from 'lib/usageTracking';
 
@@ -36,7 +36,7 @@ export default function CreateNamespaceModal() {
                   const pin = await confirmPin();
 
                   if (pin) {
-                    return await callApi('names/create/namespace', {
+                    return await callAPI('names/create/namespace', {
                       pin,
                       namespace,
                     });

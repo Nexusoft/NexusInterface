@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 import NexusAddress from 'components/NexusAddress';
 import Icon from 'components/Icon';
 import { lookupAddress } from 'lib/addressBook';
-import { callApi } from 'lib/api';
+import { callAPI } from 'lib/api';
 import contactIcon from 'icons/address-book.svg';
 
 const Label = styled.span(({ theme }) => ({
@@ -43,7 +43,7 @@ function useAddressLabel(address) {
     }
     if (!contact) {
       // If address is not saved in address book, look up its name
-      callApi('names/reverse/lookup', { address })
+      callAPI('names/reverse/lookup', { address })
         .then(resolveReverseLookup)
         .then(setName)
         .catch((err) => {

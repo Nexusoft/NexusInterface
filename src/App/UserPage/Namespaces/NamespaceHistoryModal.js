@@ -6,7 +6,7 @@ import WaitingMessage from 'components/WaitingMessage';
 import Tooltip from 'components/Tooltip';
 import { formatDateTime } from 'lib/intl';
 import { openModal } from 'lib/ui';
-import { callApi } from 'lib/api';
+import { callAPI } from 'lib/api';
 import { handleError } from 'utils/form';
 
 import NamespaceHistoryDetailsModal from './NamespaceHistoryDetailsModal';
@@ -73,7 +73,7 @@ export default function NamespaceHistoryModal() {
   useEffect(() => {
     (async () => {
       try {
-        const events = await callApi('names/history/namespace', {
+        const events = await callAPI('names/history/namespace', {
           address: namespace.address,
         });
         setEvents(events.reverse());
