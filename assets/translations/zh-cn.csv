@@ -1,1168 +1,1019 @@
-Delete contact %{name}?,删除联系人 %{name}?,AddressBook
-Edit contact,编辑联系人,AddressBook
-Delete contact,删除联系人,AddressBook
-%{smart_count} address |||| %{smart_count} addresses,%{smart_count}地址 |||| %{smart_count}地址 ,AddressBook
-New contact,新建联系人,AddressBook
-No information,没有信息,AddressBook
-Delete,删除,AddressBook
-Edit,编辑,AddressBook
-NXS addresses,NXS 地址,AddressBook
-My address for %{name},我的地址 %{name},AddressBook
-%{name}'s Address,%{name} 地址,AddressBook
-Contact info,联系人信息,AddressBook
-Email,电子邮件,AddressBook
-Phone Number,电话号码,AddressBook
-Local Time,当地时间,AddressBook
-Notes,注,AddressBook
-Address book,地址簿,AddressBook
-Your address book is empty,您的地址簿为空,AddressBook
-Create new contact,创建新的联系人,AddressBook
-Search contact,搜索联系人,AddressBook
-My Addresses,我的地址,AddressBook
-Export contacts,导出联系人,AddressBook
-Legacy Mode,,Header
-Tritium Mode,,Header
-Unknown login status,未知登录状态,Header
-Wallet is not encrypted,钱包未加密,Header
-Not logged in,未登录,Header
-Logged in<if_timed> until %{unlockDate}</if_timed><if_minting_only> for staking & mining</if_minting_only>,登录<if_timed> 到 %{unlockDate}</if_timed><if_minting_only> 用于标记和采矿</if_minting_only>,Header
-My Addresses,我的地址,Header
-Wallet is staking,钱包正在挂起,Header
-Stake Rate,稳定率,Header
-Waiting for 100% synchronization to start staking...,等待 100% 同步开始打造...,Header
-Waiting for average age of balance to exceed 72 hours to start staking...,等待平均余额年龄超过72小时开始打进游戏...,Header
-Wallet is not staking,钱包不是挂起,Header
-Checking sync status,检查同步状态,Header
-Synchronizing,同步中,Header
-Synchronized,同步,Header
-pooled,,Header
-You're not logged in,,Header
-You are staking but have not received a block in 30 minutes!,,Header
-Switching...,,
-Active,,
-Switch,,
-Switch user,,
-Closing Nexus Wallet,关闭Nexus钱包,
-Warning,警告,
-IMPROPER USE OF THIS SOFTWARE COULD LEAD TO PERMANENT LOSS OF COIN.,不正确使用本软件可能导致永久性的货币损失。,
-BACKUP YOUR WALLET OFTEN AND KEEP YOUR PASSWORDS SAFE.,随时备份你的钱包以保证你的密码安全,
-I understand the risk,我了解风险,
-Close,关闭,
-Remote Core is disconnected,,
-Connecting to Nexus Core...,正在连接到Nexus核心...,
-Nexus Core is stopped,Nexus 核心已停止,
-Address has been copied to clipboard,地址已复制到剪切板,
-Copy to clipboard,复制到剪贴板,
-Click to copy to clipboard,点击复制到剪贴板,
-Show QR code,,
-Log in,,
-No Rows Found,未找到行,
-Page,页面,
-rows,行,
-Previous,上一步,
-Next,下一个,
-Use virtual keyboard,,
-<token_name></token_name> token,,
-Unnamed token,,
-Switch to Legacy Mode,,
-Are you sure you want to switch to Legacy Mode?,,
-Switch to Tritium Mode,,
-Start Nexus Core,开始 Nexus 核心,
-Stop Nexus Core,停止 Nexus 核心,
-Quit Nexus,退出 Nexus,
-About,关于,
-Backup Wallet,备份钱包,
-Nexus Core is not connected,Nexus 核心未连接,
-Wallet backed up,钱包备份,
-View Backups,查看备份,
-Cut,剪切,
-Copy,复制,
-Paste,粘贴,
-Core,核心,
-Application,申请表,
-Key Management,密钥管理,
-Style,样式,
-Modules,模块化,
-Download Recent Database,下载最近的数据库,
-Cannot bootstrap recent database in manual mode,无法在手动模式下启动最近的数据库,
-Please wait for Nexus Core to start.,请等待 Nexus 核心开始。,
-Toggle FullScreen,切换全屏,
-Toggle Developer Tools,切换开发者工具,
-Toggle Module's Developer Tools,切换模块开发者工具,
-Nexus Website,Nexus 网站,
-Nexus Git Repository,Nexus Git 仓库,
-Nexus Wallet Guide,Nexus 钱包指南,
-Open Core Data Folder,,
-Open Interface Data Folder,,
-Check for Updates...,检查更新...,
-There are currently no updates available,目前没有可用的更新,
-Checking for Updates...,正在检查更新...,
-Update available! Downloading...,更新可用！下载中...,
-Quit and install update...,退出并安装更新...,
-File,文件,
-Edit,编辑,
-Settings,设置,
-View,浏览,
-Help,帮助,
-Transaction received,已收到交易,
-Transaction sent,交易已发送,
-Genesis transaction,创世块交易,
-Trust transaction,信托交易,
-Update available for %{smart_count} module |||| Updates available for %{smart_count} modules,,
-New transaction,,
-Error,,
-Unknown error,未知错误,
-Accounts,,Header.UserDropdown
-Tokens,,Header.UserDropdown
-Set recovery phrase,,Header.UserDropdown
-Switch user,,Header.UserDropdown
-Log in to another user,,Header.UserDropdown
-Log out of all users,,Header.UserDropdown
-Log out,退出,Header.UserDropdown
-Log in,,Header.UserDropdown
-Create new user,,Header.UserDropdown
-Overview,综述,NavigationBar
-User,,NavigationBar
-Send NXS,发送NXS,NavigationBar
-Send,发送,NavigationBar
-Transactions,交易记录（Transaction）,NavigationBar
-Address Book,通訊錄,NavigationBar
-Settings,设置,NavigationBar
-Console,控制台,NavigationBar
-Lite mode,,LiteModeNotice
-Lite mode is now available on Nexus Wallet! You can choose to enable lite mode now or just ignore it. You can change your decision anytime under Settings/Core.,,LiteModeNotice
-Why you might want to enable lite mode,,LiteModeNotice
-Nexus Core would take less resources (memory and storage) to run,,LiteModeNotice
-Synchronization would be much faster,,LiteModeNotice
-Why you might NOT want to enable lite mode,,LiteModeNotice
-You would NOT be able to mine or stake,,LiteModeNotice
-Legacy Mode would be disabled,,LiteModeNotice
-Ignore,,LiteModeNotice
-Enable lite mode,,LiteModeNotice
+"Delete contact %{name}?","删除联系人 %{name}?","AddressBook"
+"Edit contact","编辑联系人","AddressBook"
+"Delete contact","删除联系人","AddressBook"
+"%{smart_count} address |||| %{smart_count} addresses","%{smart_count}地址 |||| %{smart_count}地址 ","AddressBook"
+"New contact","新建联系人","AddressBook"
+"No information","没有信息","AddressBook"
+"Delete","删除","AddressBook"
+"Edit","编辑","AddressBook"
+"NXS addresses","NXS 地址","AddressBook"
+"My address for %{name}","我的地址 %{name}","AddressBook"
+"%{name}'s Address","%{name} 地址","AddressBook"
+"Contact info","联系人信息","AddressBook"
+"Nexus user ID","","AddressBook"
+"Email","电子邮件","AddressBook"
+"Phone Number","电话号码","AddressBook"
+"Local Time","当地时间","AddressBook"
+"Notes","注","AddressBook"
+"Address book","地址簿","AddressBook"
+"Your address book is empty","您的地址簿为空","AddressBook"
+"Create new contact","创建新的联系人","AddressBook"
+"Search contact","搜索联系人","AddressBook"
+"Export contacts","导出联系人","AddressBook"
+"Tritium Mode","","Header"
+"Lite","","Header"
+"Hybrid","","Header"
+"Wallet is staking","钱包正在挂起","Header"
+"pooled","","Header"
+"Stake Rate","稳定率","Header"
+"Waiting for 100% synchronization to start staking...","等待 100% 同步开始打造...","Header"
+"Wallet is not staking","钱包不是挂起","Header"
+"Synchronized","同步","Header"
+"Synchronizing","同步中","Header"
+"Blocks","","Header"
+"Estimated %{time} remaining","","Header"
+"%{smart_count} hour |||| %{smart_count} hours","","Header"
+"%{smart_count} minute |||| %{smart_count} minutes","","Header"
+"%{smart_count} second |||| %{smart_count} seconds","","Header"
+"You're not logged in","","Header"
+"You are staking but have not received a block in 30 minutes!","","Header"
+"Switching...","",""
+"Active","",""
+"Switch","",""
+"Switch user","",""
+"Closing Nexus Wallet","关闭Nexus钱包",""
+"Pre-Release Active","",""
+"You are currenctly running a * version of the wallet. ","",""
+"Thank you for testing our wallet, please ","",""
+"Click here","",""
+" To send feedback to the developers. ","",""
+"Or join us on the offical ","",""
+"Ok","",""
+"Testnet Only Mode","",""
+"You are currenctly running a Testnet only version of the wallet. ","",""
+"The core will only connect to nexus-interactions.io:testnet1 ","",""
+"Close","关闭",""
+"Remote Core is disconnected","",""
+"Connecting to Nexus Core...","正在连接到Nexus核心...",""
+"Nexus Core is stopped","Nexus 核心已停止",""
+"Address has been copied to clipboard","地址已复制到剪切板",""
+"Copy to clipboard","复制到剪贴板",""
+"Click to copy to clipboard","点击复制到剪贴板",""
+"Show QR code","",""
+"Log in","",""
+"No Rows Found","未找到行",""
+"Use virtual keyboard","",""
+"<token_name></token_name> token","",""
+"Unnamed token","",""
+"Start Nexus Core","开始 Nexus 核心",""
+"Stop Nexus Core","停止 Nexus 核心",""
+"Quit Nexus","退出 Nexus",""
+"About","关于",""
+"Cut","剪切",""
+"Copy","复制",""
+"Paste","粘贴",""
+"Core","核心",""
+"Application","申请表",""
+"Key Management","密钥管理",""
+"Style","样式",""
+"Modules","模块化",""
+"Download Recent Database","下载最近的数据库",""
+"Cannot bootstrap recent database in manual mode","无法在手动模式下启动最近的数据库",""
+"Please wait for Nexus Core to start.","请等待 Nexus 核心开始。",""
+"Reload wallet GUI","",""
+"Toggle FullScreen","切换全屏",""
+"Toggle Developer Tools","切换开发者工具",""
+"Toggle Module's Developer Tools","切换模块开发者工具",""
+"Nexus Website","Nexus 网站",""
+"Nexus Git Repository","Nexus Git 仓库",""
+"Nexus Wallet Guide","Nexus 钱包指南",""
+"Report Bug","",""
+"Open Core Data Folder","",""
+"Open Interface Data Folder","",""
+"Check for Updates...","检查更新...",""
+"There are currently no updates available","目前没有可用的更新",""
+"Checking for Updates...","正在检查更新...",""
+"Update available! Downloading...","更新可用！下载中...",""
+"Quit and install update...","退出并安装更新...",""
+"File","文件",""
+"Edit","编辑",""
+"Settings","设置",""
+"View","浏览",""
+"Help","帮助",""
+"Error","",""
+"Unknown error","未知错误",""
+"Required!","",""
+"Invalid!","",""
+"Out of range!","",""
+"Must be at least %{min} characters","",""
+"Update available for %{smart_count} module |||| Updates available for %{smart_count} modules","",""
+"Error fetching transactions","",""
+"New transaction","",""
+"%{smart_count} day |||| %{smart_count} days","",""
+"%{smart_count} hour |||| %{smart_count} hours","",""
+"%{smart_count} minute |||| %{smart_count} minutes","",""
+"%{smart_count} second |||| %{smart_count} seconds","",""
+"Switch user","","Header.UserDropdown"
+"Log in to another user","","Header.UserDropdown"
+"Accounts","","Header.UserDropdown"
+"Tokens","","Header.UserDropdown"
+"Set recovery phrase","","Header.UserDropdown"
+"Log out of all users","","Header.UserDropdown"
+"Log out","退出","Header.UserDropdown"
+"Log in","","Header.UserDropdown"
+"Create new user","","Header.UserDropdown"
+"Overview","综述","NavigationBar"
+"User","","NavigationBar"
+"Send","发送","NavigationBar"
+"Transactions","交易记录（Transaction）","NavigationBar"
+"Address Book","通訊錄","NavigationBar"
+"Settings","设置","NavigationBar"
+"Console","控制台","NavigationBar"
+"Lite mode","","LiteModeNotice"
+"Lite mode is now available on Nexus Wallet! You can choose to enable lite mode now or just ignore it. You can change your decision anytime under Settings/Core.","","LiteModeNotice"
+"Why you might want to enable lite mode","","LiteModeNotice"
+"Nexus Core would take less resources (memory and storage) to run","","LiteModeNotice"
+"Synchronization would be much faster","","LiteModeNotice"
+"Why you might NOT want to enable lite mode","","LiteModeNotice"
+"You would NOT be able to mine or stake","","LiteModeNotice"
+"Legacy Mode would be disabled","","LiteModeNotice"
+"Ignore","忽略","LiteModeNotice"
+"Enable lite mode","","LiteModeNotice"
+"Token balances","","Overview"
+"The balance displayed might not be up-to-date since the wallet is not yet fully synchronized","显示的余额可能不是最新的，因为钱包尚未完全同步","Overview"
+"Balance","余额","Overview"
+"OTHER TOKENS","","Overview"
+"NXS Balance","","Overview"
+"%{token_name} balance","","Overview"
+"This includes your unclaimed balance, unconfirmed balance and immature balance","","Overview"
+"Incoming balances","","Overview"
+"Connections","连接","Overview"
 "Last updated
-%{time}",最近一次更新的时间 %{time},Overview
-Getting next block...,正在获取下一块...,Overview
-Block Weight,块重量,Overview
-Trust Weight,信任权重,Overview
-Stake Weight,堆积重量,Overview
-Prime Difficulty,总理难度,Overview
-Hash Difficulty,哈希难度,Overview
-Stake Difficulty,堆栈难度,Overview
-Balance,余额,Overview
-Transactions,交易记录（Transaction）,Overview
-Market Price,市场 价格,Overview
-24hr Change,24小时更改,Overview
-Connections,连接,Overview
-Stake Rate,稳定率,Overview
-Block Count,块计数,Overview
-The balance displayed might not be up-to-date since the wallet is not yet fully synchronized,显示的余额可能不是最新的，因为钱包尚未完全同步,Overview
-Staking and mining rewards that need to get past 120 block-old to become available,需要获得120块块的堆积奖励，才能获得,Overview
-Immature Balance,不饱和余额,Overview
-Market Cap,市值,Overview
-Available balance,,Overview
-balance,,Overview
-"This includes your pending balance, unconfirmed balance and immature balance",,Overview
-Incoming balances,,Overview
-NXS Amount,NXS 金额,Send
-Send all,发送全部,Send
-Send NXS,发送NXS,Send
-Move NXS between accounts,在帐户之间移动NXS,Send
-You are not logged in,您尚未登录,Send
-You need to log in to your wallet before sending transactions,在发送交易之前，您需要登录到您的钱包,Send
-Log in now,立即登录,Send
-Move NXS,移动NXS,Send
-From account,从帐户,Send
-Select an account,选择一个帐户,Send
-To account,到账户,Send
-No accounts selected,没有选择账户,Send
-Cannot move to the same account,无法移动到同一帐户,Send
-Invalid amount,无效的数额,Send
-Invalid address,无效地址,Send
-This is an address registered to this wallet.,这是一个已注册到该钱包的地址。,Send
-NXS moved successfully,NXS 成功移动,Send
-Error moving NXS,移动NXS时出错,Send
-Wallet password,钱包密码,Send
-Enter your wallet password,输入您的钱包密码,Send
-Cancel,取消,Send
-Confirm,确认,Send
-Send to,发送到,Send
-Recipient address,收件人地址,Send
-Your address book is empty,您的地址簿为空,Send
-Create new contact,创建新的联系人,Send
-Remove recipient,移除收件人,Send
-Add recipient,添加接收人,Send
-Send transaction?,发送交易？,Send
-Send To multiple recipients,发送给多个收件人,Send
-Send from,发送自,Send
-Message,消息,Send
-Enter your message,输入您的讯息,Send
-Send,发送,Send
-There must be at least one recipient,必须至少有一个收件人,Send
-Address is required,地址必填.,Send
-Transaction sent,交易已发送,Send
-Error sending NXS,发送NXS时出错,Send
-Reference,,Send
-"An optional number which may be provided by the recipient to identify this transaction from the others, e.g. invoice number, order number, etc.",,Send
-Reference number (optional),,Send
-Expires in,,Send
-"The amount of time since the transaction is created after which the transaction can no longer be credited by the recipient. By default, transactions will expire in 1 day (86400 seconds).",,Send
-Days,,Send
-Hours,,Send
-Minutes,,Send
-Seconds,,Send
-Amount,,Send
-Recipient Address/Name,,Send
-Accounts,,Send
-Unnamed account,,Send
-Tokens,,Send
-Unnamed token,,Send
-Unnamed,,Send
-Invalid name/address,,Send
-Advanced options,,Send
-Address/Name is required,,Send
-Reference must be an unsigned integer,,Send
-Number is too large,,Send
-Unnamed,,PreviewTransaction
-%{smart_count} day |||| %{smart_count} days,,PreviewTransaction
-%{smart_count} hour |||| %{smart_count} hours,,PreviewTransaction
-%{smart_count} minute |||| %{smart_count} minutes,,PreviewTransaction
-%{smart_count} second |||| %{smart_count} seconds,,PreviewTransaction
-Preview Transaction,,PreviewTransaction
-You're sending,,PreviewTransaction
-From,,PreviewTransaction
-To,,PreviewTransaction
-Amount,,PreviewTransaction
-Reference,,PreviewTransaction
-Expires,,PreviewTransaction
-Send transaction,,PreviewTransaction
-Select backup directory,选择备份目录,Settings.Application
-Backup directory,备份目录,Settings.Application
-Browse,浏览,Settings.Application
-Backup wallet,备份钱包,Settings.Application
-Wallet has been backed up,钱包已备份,Settings.Application
-Connecting to Nexus Core,连接到Nexus核心,Settings.Application
-Turn module open source policy on?,打开模块打开源代码？,Settings.Application
-"All modules without open source verifications, possibly including your own under-development modules, will become invalid. Wallet must be refreshed for the change to take effect.",所有没有公开源验证的模块，可能包括您自己的发展模块，都将无效。钱包必须刷新，以便更改生效。,Settings.Application
-Turn module open source policy off?,关闭模块打开源代码政策？,Settings.Application
+%{time}","最近一次更新的时间 %{time}","Overview"
+"Block Count","块计数","Overview"
+"Market Price","市场 价格","Overview"
+"Market Cap","市值","Overview"
+"24hr Change","24小时更改","Overview"
+"Prime Difficulty","总理难度","Overview"
+"Hash Difficulty","哈希难度","Overview"
+"Staking Difficulty","","Overview"
+"Staking stats not yet available until you get a genesis transaction","","Overview"
+"Stake Rate","稳定率","Overview"
+"Block Weight","块重量","Overview"
+"Trust Weight","信任权重","Overview"
+"Stake Weight","堆积重量","Overview"
+"Invalid amount","无效的数额","Send"
+"%{currency} amount","","Send"
+"Amount","金额，数量","Send"
+"All","全部","Send"
+"Expires in","","Send"
+"The amount of time since the transaction is created after which the transaction can no longer be credited by the recipient.","","Send"
+"Days","","Send"
+"Hours","","Send"
+"Minutes","","Send"
+"Seconds","","Send"
+"Send","发送","Send"
+"Cannot move to the same account","无法移动到同一帐户","Send"
+"Source and recipient must be of the same token","","Send"
+"Send to","发送到","Send"
+"Recipient Name or Address","","Send"
+"Your address book is empty","您的地址簿为空","Send"
+"Create new contact","创建新的联系人","Send"
+"Recipient name cannot be resolved","","Send"
+"Remove recipient","移除收件人","Send"
+"Reference must be an unsigned integer","","Send"
+"Reference","","Send"
+"An optional number which may be provided by the recipient to identify this transaction from the others, e.g. invoice number, order number, etc.","","Send"
+"Ref. number (optional)","","Send"
+"Accounts","","Send"
+"Unnamed account","","Send"
+"Tokens","","Send"
+"Unnamed token","","Send"
+"Advanced options","","Send"
+"Send from","发送自","Send"
+"Select an account","选择一个帐户","Send"
+"Add recipient","添加接收人","Send"
+"Proceed","","Send"
+"Unnamed token","","PreviewTransaction"
+"Unnamed account","","PreviewTransaction"
+"From","","PreviewTransaction"
+"To","","PreviewTransaction"
+"Amount","金额，数量","PreviewTransaction"
+"Reference","","PreviewTransaction"
+"Expires","","PreviewTransaction"
+"NO EXPIRY","","PreviewTransaction"
+"Transaction never expires, and you won't be able to void it even if the recipient doesn't credit the transaction","","PreviewTransaction"
+"in %{time_span}","","PreviewTransaction"
+"You're sending","","PreviewTransaction"
+"Transaction sent","交易已发送","PreviewTransaction"
+"Error sending transaction","","PreviewTransaction"
+"Enter your PIN to confirm","","PreviewTransaction"
+"Sending transaction...","","PreviewTransaction"
+"Send transaction","","PreviewTransaction"
+"Select backup directory","选择备份目录","Settings.Application"
+"Backup directory","备份目录","Settings.Application"
+"Browse","浏览","Settings.Application"
+"Turn module open source policy on?","打开模块打开源代码？","Settings.Application"
+"All modules without open source verifications, possibly including your own under-development modules, will become invalid. Wallet must be refreshed for the change to take effect.","所有没有公开源验证的模块，可能包括您自己的发展模块，都将无效。钱包必须刷新，以便更改生效。","Settings.Application"
+"Turn module open source policy off?","关闭模块打开源代码政策？","Settings.Application"
 "This is only for module developers and can be dangerous for
-              regular users. Please make sure you know what you are doing!","这仅对模块开发者构成危险，可能对
-              常规用户造成危险。请确保您知道您正在做什么！",Settings.Application
+            regular users. Please make sure you know what you are doing!","","Settings.Application"
 "It would be much easier for a closed source module to hide
-              malicious code than for an open source one. Therefore, in case you
-              still want to disable this setting, it is highly recommended that
-              you only install and run closed source modules that you are
-              developing yourself.","封闭的源模块隐藏起来会容易得多
-恶意代码比开源代码。 因此，万一你
-仍然想要禁用此设置，强烈建议
-您只能安装和运行您所在的闭源模块
-发展自己。",Settings.Application
-Turn policy off,关闭策略,Settings.Application
-Keep policy on,保持政策开启,Settings.Application
-Are you sure you want to disable auto update?,您确定要禁用自动更新吗？,Settings.Application
-Keeping your wallet up-to-date is important for your security and will ensure that you get the best possible user experience.,更新你的钱包对于你的安全非常重要，并确保您获得尽可能最好的用户体验。,Settings.Application
-Keep auto update On,保持自动更新开启,Settings.Application
-Turn auto update Off,关闭自动更新,Settings.Application
-Minimize on close,关闭时最&小化,Settings.Application
-Minimize the wallet when closing the window instead of closing it.,关闭窗口而不关闭钱包时最小化钱包。,Settings.Application
-Auto update (Recommended),自动更新 (推荐),Settings.Application
-Automatically check for new versions and notify if a new version is available.,自动检查新版本并通知新版本是否可用。,Settings.Application
-Send anonymous usage data,发送匿名使用数据,Settings.Application
-Send anonymous usage data to allow the Nexus developers to improve the wallet.,发送匿名使用数据，以便 Nexus 开发者改善钱包。,Settings.Application
-Base currency,基准货币,Settings.Application
-Minimum confirmations,最小确认,Settings.Application
-Minimum amount of confirmations before a block is accepted. Local only.,在块接受前确认的最小数量。仅本地。,Settings.Application
-Developer mode,开发人员模式,Settings.Application
-Development mode enables advanced features to aid in development. After enabling the wallet must be closed and reopened to enable those features.,开发模式使高级功能有助于开发。启用钱包后，必须关闭并重新打开以启用这些功能。,Settings.Application
-Module open source policy,模块打开源代码策略,Settings.Application
-Only modules which have valid open source repositories are allowed to be installed and run. You can disable this option to test run the modules that you're developing,只有有效的开源仓库被允许安装并运行的模块。您可以禁用此选项以测试您正在开发的模块,Settings.Application
-Allow SymLink,,Settings.Application
-Allow the presence of SymLinks in the module directory,,Settings.Application
-Fake Test Transactions,假测试交易,Settings.Application
-Display Test Transactions on the Transactions page,在“交易”页面上显示“测试交易”,Settings.Application
-Language,语言,Settings.Application
-Exit remote Core mode?,,Settings.Core
-(This will restart your Core),(这将重新启动您的核心),Settings.Core
-Enter remote Core mode?,,Settings.Core
-Reload transaction history,重新加载交易记录,Settings.Core
-Clear peer connections,,Settings.Core
-Resync database,,Settings.Core
-Nexus Core will be restarted. Lite mode database will be deleted and resynchronized from the beginning.,,Settings.Core
-Embedded Core,,Settings.Core
-Remote Core,,Settings.Core
-Lite mode,,Settings.Core
-"Nexus Core under lite mode runs lighter and synchronize much faster, but you will <b>NOT</b> be able to stake, mine, or switch the wallet to Legacy Mode.",,Settings.Core
-Multi-user,,Settings.Core
-Allow multiple logged in users at the same time. Mining and staking will be unavailable.,,Settings.Core
-Enable staking,启用标记,Settings.Core
-Enable/Disable staking on the wallet.,启用/禁用钱包上的标记。,Settings.Core
-Pooled staking,,Settings.Core
-"Pooled staking is a decentralized and trust-less mechanism allowing you to use the balances of others to increase your chances of finding a stake block. All participants receive their staking rewards and build trust, regardless of which user mines the block. A small portion of each reward is paid to the block finder by all pool participants.",,Settings.Core
-Enable mining,启用采矿,Settings.Core
-Enable/Disable mining to the wallet.,启用/禁用开采到钱包。,Settings.Core
-Mining IP Whitelist,采矿 IP 白名单,Settings.Core
-IP/Ports allowed to mine to. Separate by <b>;</b> . Wildcards supported only in IP,IP/端口允许我自己。由 <b>分隔；</b> 。威尔德卡只在 IP 支持,Settings.Core
-Verbose level,详细级别,Settings.Core
-Verbose level for logs.,日志的详细级别。,Settings.Core
-Core Data Directory,,Settings.Core
-Where the blockchain data and your legacy wallet.dat are stored,,Settings.Core
-Testnet Iteration,,Settings.Core
-The iteration of Testnet to connect to.,,Settings.Core
-Turn Off,,Settings.Core
-Avatar Mode,头像模式,Settings.Core
-Disabling Avatar will make the core use a separate change key,禁用头像将使核心使用一个单独的更换密钥,Settings.Core
-Rescan wallet,重新扫描钱包,Settings.Core
-"Used to correct transaction/balance issues, scans over every block in the database. Could take up to 10 minutes.",用于纠正事务/余额问题，扫描数据库中的每个块。最多可能需要10分钟。,Settings.Core
-Restart Nexus core with -walletclean parameter to clean out and reload all transaction history,重新启动 Nexus 核心，使用 -waretclear 参数清理并重新加载所有交易历史,Settings.Core
-Reload,重载,Settings.Core
-Clear all stored peer connections and restart Nexus,,Settings.Core
-Clear,,Settings.Core
-Delete lite mode database and resynchronize from the beginning,,Settings.Core
-Resynchronize,,Settings.Core
-IP address,IP 地址,Settings.Core
-Remote Core IP address,,Settings.Core
-API SSL,,Settings.Core
-Use SSL for API calls,,Settings.Core
-API Port,,Settings.Core
-Nexus API server Port,,Settings.Core
-API SSL Port,,Settings.Core
-Nexus API server SSL Port,,Settings.Core
-API Username,,Settings.Core
-Nexus API server Username,,Settings.Core
-API Password,,Settings.Core
-Nexus API server Password,,Settings.Core
-RPC SSL,,Settings.Core
-Use SSL for RPC calls,,Settings.Core
-RPC Port,,Settings.Core
-Nexus RPC server Port,,Settings.Core
-RPC SSL Port,,Settings.Core
-Nexus RPC server SSL Port,,Settings.Core
-RPC Username,,Settings.Core
-Nexus RPC server Username,,Settings.Core
-RPC Password,,Settings.Core
-Nexus RPC server Password,,Settings.Core
-Log out on close,,Settings.Core
-Log out of all users before closing the wallet,,Settings.Core
-Restart Core for these changes to take effect,,Settings.Core
-Save settings,,Settings.Core
-Verbose level is required,,Settings.Core
-Remote Core IP is required,,Settings.Core
-RPC port is required,,Settings.Core
-RPC username is required,,Settings.Core
-RPC password is required,,Settings.Core
-API port is required,,Settings.Core
-API username is required,,Settings.Core
-API password is required,,Settings.Core
-Core settings saved,保存核心设置,Settings.Core
-Restarting Core...,重新启动核心...,Settings.Core
-Error rescanning,重新扫描错误,Settings.Core
-Rescanned successfully,重新装入成功,Settings.Core
-Rescanning...,重新扫描中...,Settings.Core
-Settings,设置,Settings
-Application,申请表,Settings
-Core,核心,Settings
-Security,安全设置,Settings
-Style,样式,Settings
-Modules,模块化,Settings
-Select development module directory,,Settings.Modules
-Your module is still in development? <link>Add a development module</link>,,Settings.Modules
-Select module archive file,选择模块存档文件,Settings.Modules
-Select module directory,选择模块目录,Settings.Modules
-Add Module,添加模组,Settings.Modules
-Checking module,检查模块,Settings.Modules
-Drop here to install,单击这里立即安装更新,Settings.Modules
-Select module's <file>archive file</file> or <dir>directory</dir>,选择模块 <file>存档文件</file> 或 <dir>目录</dir>,Settings.Modules
-or drag and drop it here,或者拖放到这里,Settings.Modules
-Failed to load %{moduleName},,Settings.Modules
-Disable %{moduleName}?,禁用 %{moduleName}?,Settings.Modules
-Wallet will be automatically refreshed for the change to take effect,钱包将自动刷新，以便更改生效,Settings.Modules
-Enable %{moduleName}?,禁用 %{moduleName}?,Settings.Modules
-This module was built for an incompatible wallet version,,Settings.Modules
-Module is not open source,模块不是打开源,Settings.Modules
-The provided repository is not verified to be the real source code of this module,提供的仓库没有被验证为本模块的真正源代码,Settings.Modules
-%{version} update available,,Settings.Modules
-development,,Settings.Modules
-Failed to load module,,Settings.Modules
-Overwrite module?,覆盖模块？,Settings.Modules
-A module with the same directory name already exists,该数据库链接名已存在,Settings.Modules
-Module has been successfully installed,模块已成功安装,Settings.Modules
-The wallet will now be refreshed for the new module to take effect,钱包现在将被刷新，以便新模块生效,Settings.Modules
-Error copying module files,复制模块文件时出错,Settings.Modules
-Cannot find module,找不到模块,Settings.Modules
-Unsupported file type,不支持的文件类型,Settings.Modules
-Cannot install from this location,,Settings.Modules
-An unknown error occurred,发生了一个未知错误：,Settings.Modules
-Directory has already been added,,Settings.Modules
-Failed to load development module,,Settings.Modules
-A module with the same name already exists,,Settings.Modules
-Development module has been added,,Settings.Modules
-Are you sure you want to log out?,确定要退出吗？,Settings.Security
-Error logging out,注销时出错,Settings.Security
-Change password,更改密码,Settings.Security
-Previous password,上一个密码,Settings.Security
-Password,密码,Settings.Security
-New password,新密码,Settings.Security
-Re-enter password:,再次输入密码:,Settings.Security
-Confirm password,确认密码,Settings.Security
-Log out,退出,Settings.Security
-Password is required,密码为必填,Settings.Security
-Password cannot contain these characters:,密码不能包含这些字符：,Settings.Security
-Password must be at least 8 characters,密码必须至少8个字符,Settings.Security
-Password cannot start or end with spaces,密码不能以空格开始或结束,Settings.Security
-Passwords do not match,密码不匹配,Settings.Security
-Password has been changed.,密码已更改。,Settings.Security
-Error changing password,更改密码出错,Settings.Security
-Encrypt wallet,加密钱包,Settings.Security
-Re-enter password,再次输入密码,Settings.Security
-Encrypt and restart,加密并重启,Settings.Security
-Wallet has been encrypted.,钱包已加密。,Settings.Security
-Error encrypting wallet,加密钱包时出错,Settings.Security
-Import private key,导入私钥,Settings.Security
-Account name,帐户名称,Settings.Security
-Private key,私钥,Settings.Security
-Import,导入,Settings.Security
-Account name is required,请输入账户名称,Settings.Security
-Private key is required,需要私钥,Settings.Security
-Private key imported. Rescanning now,私钥导入。现在重新装填,Settings.Security
-Rescanning...,重新扫描中...,Settings.Security
-Rescanning done,重新扫描完成,Settings.Security
-Error rescanning,重新扫描错误,Settings.Security
-An unknown error occurred,发生了一个未知错误：,Settings.Security
-Error importing private key,导入私钥时出错,Settings.Security
-Login until date,登录到日期,Settings.Security
-Login until time,登录到日期,Settings.Security
-Your wallet password,您的钱包密码,Settings.Security
-Login for staking & mining only,仅登录以标记和采矿,Settings.Security
-Set timeout for login,设置登录超时,Settings.Security
-Date is required,日期是必填项,Settings.Security
-Time is required,时间是必需的,Settings.Security
-Time must be at least one hour in the future,时间必须在今后至少一个小时,Settings.Security
-Logged in successfully,登录成功。,Settings.Security
-Error logging in,登录时出错,Settings.Security
-Copied to clipboard,复制到剪贴板,Settings.Security
-View private key for address,查看私钥地址,Settings.Security
-Address,地址,Settings.Security
-Enter address here,请在此处输入地址,Settings.Security
-View private key,查看私钥,Settings.Security
-Private key will be displayed here,私钥将在此处显示,Settings.Security
-Copy,复制,Settings.Security
-Address cannot be empty,地址栏位不能为空,Settings.Security
-Error getting private key,获取私钥时出错,Settings.Security
-Twinkling stars,闪烁的星星,Settings.Style
-Cosmic light,宇宙光线,Settings.Style
-Custom wallpaper,自定义壁纸,Settings.Style
-Select a custom wallpaper,选择自定义壁纸,Settings.Style
-Color scheme has been reset to default,颜色方案已被重置为默认,Settings.Style
-Invalid file format! Custom theme file must be in JSON,无效的文件格式！自定义主题文件必须在 JSON 中,Settings.Style
-Select custom theme file,选择自定义主题文件,Settings.Style
-Theme exported,主题导出,Settings.Style
-Theme has been reset to default,主题已被重置为默认,Settings.Style
-Render globe,渲染地球,Settings.Style
-Render the globe on the Overview page.,在“概述”页面上渲染地球。,Settings.Style
-Your computer does not support OPENGL 2.0,您的计算机不支持OpenocungL 2.0,Settings.Style
-Overview Display,概览显示,Settings.Style
-Nexus Addresses format,Nexus 地址格式,Settings.Style
-Choose your Nexus Address display preference,选择您的Nexus地址显示偏好,Settings.Style
-Sample Address,示例地址,Settings.Style
-Theme,主题,Settings.Style
-Select Wallet Theme,选择钱包主题,Settings.Style
-Background,背景，后台。,Settings.Style
-Customize your background wallpaper,自定义背景壁纸,Settings.Style
-Color scheme,配色方案,Settings.Style
-Background Color,背景色,Settings.Style
-Foreground Color,前景颜色,Settings.Style
-Primary Color,主色调,Settings.Style
-Primary Color Accent,主颜色加速度,Settings.Style
-Danger Color,危险颜色,Settings.Style
-Danger Color Accent,危险颜色加速度,Settings.Style
-Globe Color,全球颜色,Settings.Style
-Globe Pillar Color,全球支柱颜色,Settings.Style
-Globe Arch Color,地球拱门颜色,Settings.Style
-Import custom theme,导入自定义主题,Settings.Style
-Export custom theme,导出自定义主题,Settings.Style
-Dark,暗色调,Settings.Style
-Light,浅,Settings.Style
-Custom,自定义,Settings.Style
-Reset,重置,Settings.Style
-Console,控制台,Console
-Core output,核心输出,Console
-CLI syntax,,Console.NexusAPI
-URL syntax,,Console.NexusAPI
-Execute,执行,Console.NexusAPI
-API Documentation,,Console.NexusAPI
-Clear,,Console.NexusAPI
-"Enter console commands here (ex: getinfo, help)",在此输入控制台命令 (前称：getinfo，帮助),Console.Console
-Execute,执行,Console.Console
-Clear console,清空控制台,Console.Console
-Core is in Manual Mode,核心处于手动模式,Console.CoreOutput
-Pending,待处理,Transactions
-All,全部,Transactions
-Receive,接收,Transactions
-Sent,发送,Transactions
-Stake,堆栈,Transactions
-Generate,生成,Transactions
-Immature,未成熟,Transactions
-Orphan,孤立,Transactions
-Genesis,创世块,Transactions
-Past Year,去年,Transactions
-Past Month,上个月,Transactions
-Past Week,上周,Transactions
-Search address,搜索地址,Transactions
-Search for Address,搜索地址,Transactions
-Category,分类,Transactions
-Min amount,最小金额,Transactions
-Time span,时间间隔,Transactions
-Time,时间,Transactions
-CATEGORY,类别,Transactions
-AMOUNT,金额，数量,Transactions
-ACCOUNT,帐户,Transactions
-ADDRESS,地址,Transactions
-Transaction details,交易详情,Transactions
-Show transactions chart,显示交易表,Transactions
-Download transactions history,下载交易记录,Transactions
-Loading transactions,正在加载交易,Transactions
-All Accounts,所有账户,Transactions
-Send,发送,Transactions
-Trust,信任,Transactions
-Unknown,未知,Transactions
-Legacy transaction,,Transactions
-Coinbase transaction,,Transactions
-View contract details,,Transactions
-View transaction details,,Transactions
-Address,地址,Transactions
-Account/token address,,Transactions
-Name,名称,Transactions
-Operation,,Transactions
-Transactions,交易记录（Transaction）,Transactions
-Loading transactions...,,Transactions
-NXS balances,,Transactions
-Previous,上一步,Transactions
-Page <page></page> of %{total},,Transactions
-Next,下一个,Transactions
-Transactions Details,交易详情,Transactions.TransactionDetails
-Time,时间,Transactions.TransactionDetails
-Category,分类,Transactions.TransactionDetails
-Amount,金额，数量,Transactions.TransactionDetails
-Fee,费用,Transactions.TransactionDetails
-Account,账户,Transactions.TransactionDetails
-Address,地址,Transactions.TransactionDetails
-Confirmations,确认,Transactions.TransactionDetails
-Pending,待处理,Transactions.TransactionDetails
-Transaction ID,交易 ID,Transactions.TransactionDetails
-Block hash,块哈希,Transactions.TransactionDetails
-Loading transaction details...,正在加载交易详情...,Transactions.TransactionDetails
-Transactions chart,交易表,Transactions.TransactionsChart
-Amount,金额，数量,Transactions.TransactionsChart
-Time,时间,Transactions.TransactionsChart
-Total,,Transactions.Balances
-Available,,Transactions.Balances
-The current balance across all NXS accounts that is available to be spent,,Transactions.Balances
-Pending,待处理,Transactions.Balances
-The sum of all debit and coinbase transactions made to your NXS accounts that are confirmed but have not yet been credited. This does NOT include immature and unconfirmed amounts,,Transactions.Balances
-Unconfirmed,,Transactions.Balances
-"The sum of all debit transactions made to your NXS accounts that are not confirmed, or credits you have made to your accounts that are not yet confirmed (not yet included in a block)",,Transactions.Balances
-Stake,堆栈,Transactions.Balances
-The amount of NXS currently staked in the trust account,,Transactions.Balances
-Immature,未成熟,Transactions.Balances
-The sum of all coinbase transactions that have not yet reached maturity,,Transactions.Balances
-Unnamed account,,User.Accounts
-Rename,,User.Accounts
-Details,,User.Accounts
-History,,User.Accounts
-<b>%{account_name}</b> account address,,User.Accounts
-Unnamed,,User.Accounts
-Create new account,,User.Accounts
-Account Details,,User.Accounts.AccountDetails
-Account name,帐户名称,User.Accounts.AccountDetails
-Unnamed,,User.Accounts.AccountDetails
-Created at,,User.Accounts.AccountDetails
-Last modified,,User.Accounts.AccountDetails
-Token name,,User.Accounts.AccountDetails
-Data,,User.Accounts.AccountDetails
-Total account balance,,User.Accounts.AccountDetails
-Available balance,,User.Accounts.AccountDetails
-Send %{token_name},,User.Accounts.AccountDetails
-Pending balance,,User.Accounts.AccountDetails
-Unconfirmed balance,,User.Accounts.AccountDetails
-Stake balance,,User.Accounts.AccountDetails
-Immature balance,,User.Accounts.AccountDetails
-Address,地址,User.Accounts.AccountDetails
-Trust Account is empty.,,User.Accounts.AccountDetails
-Trust Account must mature for 72 hours before staking,,User.Accounts.AccountDetails
-Adjust stake amount,,User.Accounts.AccountDetails
-Time,时间,User.Accounts.AccountHistory
-Operation,,User.Accounts.AccountHistory
-From,,User.Accounts.AccountHistory
-staking,,User.Accounts.AccountHistory
-mining,,User.Accounts.AccountHistory
-To,,User.Accounts.AccountHistory
-Change,,User.Accounts.AccountHistory
-Account History,,User.Accounts.AccountHistory
-Loading account history,,User.Accounts.AccountHistory
-Account balance,,User.Accounts.AccountHistory
-Show %{tokenName},,User.Accounts.AccountHistory
-Total,,User.Accounts.AccountHistory
-Available,,User.Accounts.AccountHistory
-Pending,待处理,User.Accounts.AccountHistory
-Unconfirmed,,User.Accounts.AccountHistory
-Stake,堆栈,User.Accounts.AccountHistory
-Rename account,,RenameAccount
-Account name,,RenameAccount
-Account renaming fee,,RenameAccount
-Cancel,,RenameAccount
-Renaming,,RenameAccount
-Rename,,RenameAccount
-Account name is required,,RenameAccount
-Name already in use,,RenameAccount
-The name you entered is already in use. Please choose another name.,,RenameAccount
-Insuffient balance,,RenameAccount
-Your default account balance is not enough to pay the fee.,,RenameAccount
-Account has been renamed to %{account_name},,RenameAccount
-Error renaming account,,RenameAccount
-Unnamed asset,,User.Assets
-You own %{percentage}% of this asset,,User.Assets
-Create new asset,,User.Assets
-You don't own any asset,,User.Assets
-Asset Details,,AssetDetails
-Edit asset,,AssetDetails
-Name,,AssetDetails
-Address,,AssetDetails
-Owner,,AssetDetails
-Ownership,,AssetDetails
-Created at,,AssetDetails
-Last modified,,AssetDetails
-View history,,AssetDetails
-Tokenize,,AssetDetails
-Transfer ownership,,AssetDetails
-Name,,CreateAsset
-Field name,,CreateAsset
-Value,,CreateAsset
-Field value,,CreateAsset
-Mutable,,CreateAsset
-Type,,CreateAsset
-Max. length,,CreateAsset
-Only applicable to mutable string fields,,CreateAsset
-Unlimited,,CreateAsset
-Remove field,,CreateAsset
-Asset name,,CreateAsset
-A local Name object register will be created for this asset name,,CreateAsset
-Asset name (optional),,CreateAsset
-Asset data,,CreateAsset
-Add field,,CreateAsset
-Estimated fee,,CreateAsset
-Creating asset,,CreateAsset
-Create asset,,CreateAsset
-Field name is required,,CreateAsset
-New asset has been created,,CreateAsset
-Error creating asset,,CreateAsset
-Create a new asset,,CreateAsset
-Asset History Event,,AssetHistoryDetails
-Type,,AssetHistoryDetails
-Time,,AssetHistoryDetails
-Owner,,AssetHistoryDetails
-Checksum,,AssetHistoryDetails
-Name,,AssetHistoryDetails
-Address,,AssetHistoryDetails
-Time,,AssetHistory
-Type,,AssetHistory
-Owner,,AssetHistory
-Asset History,,AssetHistory
-Loading asset history,,AssetHistory
-Name,,EditAsset
-Address,,EditAsset
-Updating asset,,EditAsset
-Update asset,,EditAsset
-Asset has been updated,,EditAsset
-Error updating asset,,EditAsset
-Edit asset,,EditAsset
-Asset name,,TokenizeAsset
-Asset address,,TokenizeAsset
-Token,,TokenizeAsset
-Token address,,TokenizeAsset
-Tokenizing asset,,TokenizeAsset
-Tokenize asset,,TokenizeAsset
-Token is required,,TokenizeAsset
-Asset has been tokenized,,TokenizeAsset
-Error tokenizing asset,,TokenizeAsset
-Asset name,,TransferAsset
-Asset address,,TransferAsset
-Transfer to,,TransferAsset
-Recipient username or user ID,,TransferAsset
-Transferring asset,,TransferAsset
-Transfer asset,,TransferAsset
-Recipient is required,,TransferAsset
-Asset has been transferred,,TransferAsset
-Error transferring asset,,TransferAsset
-User,,User
-User ID,,User
-Accounts,,User
-Staking,,User
-Tokens,,User
-Names,,User
-Namespaces,,User
-Assets,,User
-Change password & PIN,,User
-Change recovery phrase,,User
-Set recovery phrase,,User
-Name,,ChangeRegisterAddress
-Register address,,ChangeRegisterAddress
-Register address that this name points to,,ChangeRegisterAddress
-Name update fee,,ChangeRegisterAddress
-Updating name,,ChangeRegisterAddress
-Update name,,ChangeRegisterAddress
-Name has been updated,,ChangeRegisterAddress
-Error updating name,,ChangeRegisterAddress
-Change register address,,ChangeRegisterAddress
-Local,,CreateName
-Namespaced,,CreateName
-Global,,CreateName
-Namespace,,CreateName
-A namespace you own,,CreateName
-Name,,CreateName
-name,,CreateName
-namespace,,CreateName
-Register address,,CreateName
-Register address that this name points to,,CreateName
-Name creation fee,,CreateName
-Creating name,,CreateName
-Create name,,CreateName
-Name is required,,CreateName
-Name cannot start with a colon character,,CreateName
-Namespace is required,,CreateName
-New name has been created,,CreateName
-Error creating name,,CreateName
-Create a new name,,CreateName
-View name details,,User.Names
-Change register address,,User.Names
-Transfer name,,User.Names
-Unused,,User.Names
-Global,,User.Names
-Namespaced,,User.Names
-Local,,User.Names
-Create new name,,User.Names
-Show unused names,,User.Names
-You don't own any name,,User.Names
-Name Details,,NameDetails
-Change register address,,NameDetails
-Name,,NameDetails
-Type,,NameDetails
-Global,,NameDetails
-Namespaced,,NameDetails
-Local,,NameDetails
-Namespace,,NameDetails
-Address,,NameDetails
-Points to,,NameDetails
-Created at,,NameDetails
-Last modified,,NameDetails
-View history,,NameDetails
-Transfer ownership,,NameDetails
-Name History Event,,NameHistoryDetails
-Type,,NameHistoryDetails
-Time,,NameHistoryDetails
-Owner,,NameHistoryDetails
-Checksum,,NameHistoryDetails
-Name,,NameHistoryDetails
-Namespace,,NameHistoryDetails
-Address,,NameHistoryDetails
-Points to,,NameHistoryDetails
-Time,,NameHistory
-Type,,NameHistory
-Owner,,NameHistory
-Name History,,NameHistory
-Loading name history,,NameHistory
-Name,,TransferName
-Transfer to,,TransferName
-Recipient username or user ID,,TransferName
-Transferring name,,TransferName
-Transfer name,,TransferName
-Recipient is required,,TransferName
-Name has been transferred,,TransferName
-Error transferring name,,TransferName
-Name,,CreateNamespace
-Namespace name,,CreateNamespace
-Namespace creation fee,,CreateNamespace
-Creating namespace,,CreateNamespace
-Create namespace,,CreateNamespace
-Name is required,,CreateNamespace
-"Namespace names can only contain lowercase letters, numbers, and periods (.)",,CreateNamespace
-New namespace has been created,,CreateNamespace
-Error creating namespace,,CreateNamespace
-Create a new namespace,,CreateNamespace
-View name details,,User.Namespaces
-Transfer namespace,,User.Namespaces
-Create new namespace,,User.Namespaces
-You don't own any namespace,,User.Namespaces
-Namespace Details,,NamespaceDetails
-Name,,NamespaceDetails
-Address,,NamespaceDetails
-Created at,,NamespaceDetails
-Last modified,,NamespaceDetails
-View history,,NamespaceDetails
-Transfer ownership,,NamespaceDetails
-Namespace History Event,,NamespaceHistoryDetails
-Type,,NamespaceHistoryDetails
-Time,,NamespaceHistoryDetails
-Owner,,NamespaceHistoryDetails
-Checksum,,NamespaceHistoryDetails
-Name,,NamespaceHistoryDetails
-Address,,NamespaceHistoryDetails
-Time,,NamespaceHistory
-Type,,NamespaceHistory
-Owner,,NamespaceHistory
-Namespace History,,NamespaceHistory
-Loading namespace history,,NamespaceHistory
-Namespace,,TransferNamespace
-Transfer to,,TransferNamespace
-Recipient username or user ID,,TransferNamespace
-Transferring namespace,,TransferNamespace
-Transfer namespace,,TransferNamespace
-Destination is required,,TransferNamespace
-Namespace has been transferred,,TransferNamespace
-Error transferring namespace,,TransferNamespace
-The current NXS balance of the trust account that is not staked. You can spend this amount without affecting your Trust Score,,User.Staking
-"Balance that will be staked after the 72 holding period, any change to this balance will reset the hold timer",,User.Staking
-Restart Core?,重启核心?,User.Staking
-Nexus Core needs to restart for this change to take effect,,User.Staking
-Disable staking,,User.Staking
-Enable staking,启用标记,User.Staking
-Cancel,取消,User.Staking
-Status,,User.Staking
-Staking,,User.Staking
-pooled,,User.Staking
-Not staking,,User.Staking
-Stake amount,,User.Staking
-The amount of NXS currently staked in the trust account,,User.Staking
-Pending change,,User.Staking
-The pending stake amount change that will be applied on the next Trust transaction,,User.Staking
-Requested at,,User.Staking
-Expired in,,User.Staking
-Stake Rate,稳定率,User.Staking
-The current annual reward rate earned for staking,,User.Staking
-Trust Weight,信任权重,User.Staking
-"The percentage of the maximum Trust Score, which is gradually built over time when you consistently operate your node in an honest, trustworthy, and timely manner",,User.Staking
-Block Weight,块重量,User.Staking
-"Block Weight depends on the time passed since you received a Trust transaction and will be reset everytime you receive a Trust transaction. Otherwise, Block Weight will reach 100% after 3 days and your Trust Score will start decaying until you receive another Trust transaction",,User.Staking
-Stake Weight,堆积重量,User.Staking
-"Stake Weight depends on Trust Weight and Block Weight. Along with your Stake amount, Stake Weight affects how frequent you receive a Trust transaction",,User.Staking
-Available Balance,,User.Staking
-Adjust stake amount,,User.Staking
-Account on hold for another %{stakeSeconds} Seconds,,User.Staking
-Stop staking,,User.Staking
-Start staking,,User.Staking
-Create new token,,User.Tokens
-Look up a token,,User.Tokens
-Unnamed token,,User.Tokens
- (Owned by you),,User.Tokens
-Details,,User.Tokens
-New Token,,User.Tokens.NewToken
-"There is a %{tokenfee} NXS token creation fee, based on supply",,User.Tokens.NewToken
-Token name,,User.Tokens.NewToken
-Name Creation Fee: %{tokenFee} NXS (Optional),,User.Tokens.NewToken
-New tokens's name,,User.Tokens.NewToken
-Supply,,User.Tokens.NewToken
-Max amount of tokens available,,User.Tokens.NewToken
-Decimal,,User.Tokens.NewToken
-Amount of significant digits a token can have,,User.Tokens.NewToken
-Cancel,取消,User.Tokens.NewToken
-Create token,,User.Tokens.NewToken
-Supply can not be zero or negative,,User.Tokens.NewToken
-Create a token without a name?,,User.Tokens.NewToken
-Adding a name costs a NXS fee,,User.Tokens.NewToken
-That's Ok,,User.Tokens.NewToken
-Add Name,,User.Tokens.NewToken
-New token %{token} has been created,,User.Tokens.NewToken
-You have successfully created token %{token} ! Would you like to make an account for this token?,,User.Tokens.NewToken
-Yes,是,User.Tokens.NewToken
-No,否,User.Tokens.NewToken
-Error creating token,,User.Tokens.NewToken
-Cannot find Token,,User.Tokens.SearchToken
-Look up token,,User.Tokens.SearchToken
-Name or address,,User.Tokens.SearchToken
-Token name/address,,User.Tokens.SearchToken
-Look up,,User.Tokens.SearchToken
-No Value,,User.Tokens.SearchToken
-Error searching for token,,User.Tokens.SearchToken
-Unknown token name/address,,User.Tokens.SearchToken
-Token Details,,User.Tokens.TokenDetails
-Token name,,User.Tokens.TokenDetails
-Token address,,User.Tokens.TokenDetails
-Created at,,User.Tokens.TokenDetails
-Last modified,,User.Tokens.TokenDetails
-Token Owner,,User.Tokens.TokenDetails
-Current Supply,,User.Tokens.TokenDetails
-Max Supply,,User.Tokens.TokenDetails
-Decimals,,User.Tokens.TokenDetails
-Balance,余额,User.Tokens.TokenDetails
-Pending balance,,User.Tokens.TokenDetails
-Unconfirmed balance,,User.Tokens.TokenDetails
-Create new account with this token,,User.Tokens.TokenDetails
-Close,关闭,User.Tokens.TokenDetails
-Wallet version,,About
-Wallet build date,,About
-Nexus Core version,,About
-Core build date,,About
-Testnet,,About
-Private blockchain,,About
-Invalid address,无效地址,AddEditContact
-This is not one of your addresses.,这不是您的地址之一。,AddEditContact
-This is one of your addresses.,这是你的地址之一。,AddEditContact
-Name,名称,AddEditContact
-Contact name,联系人名称,AddEditContact
-Email address,电子邮件地址,AddEditContact
-Phone number,电话号码,AddEditContact
-Time zone,时区,AddEditContact
-Select a time zone,选择一个时间区,AddEditContact
-Notes,注,AddEditContact
-Cancel,取消,AddEditContact
-Reset,重置,AddEditContact
-Save changes,保存修改,AddEditContact
-Create,创建,AddEditContact
-Name is required.,名称是必填项。,AddEditContact
-A contact with the same name already exists.,已存在同一个名称的联系人。,AddEditContact
-There must be at least one address.,必须至少有一个地址。,AddEditContact
-Invalid email,无效的电子邮件,AddEditContact
-Contact has been updated,联系人已更新,AddEditContact
-New contact has been added to address book,新联系人已添加到地址簿,AddEditContact
-My Nexus address for %{name},我的 %{name} 的Nexus 地址,AddEditContact
-My Nexus address,我的Nexus地址,AddEditContact
-%{name}'s Nexus address,%{name} Nexus地址,AddEditContact
-Their Nexus address,他们的Nexus地址,AddEditContact
-Remove address,删除地址,AddEditContact
-Label (optional),标签（可选）,AddEditContact
-Edit contact,编辑联系人,AddEditContact
-Create new contact,创建新的联系人,AddEditContact
-Adjust stake amount,,AdjustStake
-"Note: This change will not take effect immediately but will stay pending until you get the next Trust transaction. The pending change will be recorded locally in this machine, therefore if you switch to another machine for staking, the change will not take effect.",,AdjustStake
-Cancel,取消,AdjustStake
-Set stake amount,,AdjustStake
-Invalid number,,AdjustStake
-Out of range,,AdjustStake
-Reduce stake amount?,,AdjustStake
-Reducing stake amount might make your Stake Rate decrease,,AdjustStake
-Stake amount has been updated,,AdjustStake
-Error setting stake amount,,AdjustStake
-Backing up...,正在备份,Bootstrap
-Downloading,正在下载,Bootstrap
-Decompressing...,正在解压缩,Bootstrap
-Stopping Core...,停止核心...,Bootstrap
-Moving...,正在移动...,Bootstrap
-Restarting Core...,重新启动核心...,Bootstrap
-Rescanning Wallet...,重新扫描钱包...,Bootstrap
-Backing up your wallet...,正在备份你的钱包...,Bootstrap
-Downloading the database,正在下载数据库,Bootstrap
-Decompressing the database...,解压缩数据库......,Bootstrap
-Stopping Nexus Core...,停止Nexus核心...,Bootstrap
-Moving the database...,正在移动数据库...,Bootstrap
-Restarting Nexus Core...,重新启动 Nexus 核心...,Bootstrap
-Are you sure you want to abort the process?,你确定你想要开始更新过程?,Bootstrap
-"Yes, abort",是，中止,Bootstrap
-"No, let it continue",不，让我们继续,Bootstrap
-Bootstrap Recent Database,启动最近数据库,Bootstrap
-Abort,取消，终止,Bootstrap
-Not enough disk space! Minimum 15GB of free space is required.,磁盘空间不足！需要最低15GB可用空间。,Bootstrap
-Download recent database?,下载最近的数据库？,Bootstrap
-Downloading a recent version of the database might reduce the time it takes to synchronize your wallet,下载数据库最新版本可能会减少同步你的钱包所需的时间,Bootstrap
-"Yes, let's bootstrap it",是的，让我们来引导吧,Bootstrap
-"No, let it sync",不，让我们同步,Bootstrap
-Bootstrap process has been aborted,启动程序已被中止,Bootstrap
-Error bootstrapping recent database,启动最近的数据库时出错,Bootstrap
-Unknown error,未知错误,Bootstrap
-Recent database has been successfully bootstrapped,最近的数据库已成功启动,Bootstrap
-Change password and PIN,,ChangePassword&PIN
-Current password,,ChangePassword&PIN
-Your current password,,ChangePassword&PIN
-Current PIN,,ChangePassword&PIN
-Your current PIN,,ChangePassword&PIN
-New Password,,ChangePassword&PIN
-Enter your new password,,ChangePassword&PIN
-New PIN,,ChangePassword&PIN
-Enter your new PIN,,ChangePassword&PIN
-Updating,,ChangePassword&PIN
-Update,,ChangePassword&PIN
-Current password is required,,ChangePassword&PIN
-Current PIN is required,,ChangePassword&PIN
-New password is required,,ChangePassword&PIN
-Password must be at least 8 characters,密码必须至少8个字符,ChangePassword&PIN
-New PIN is required,,ChangePassword&PIN
-PIN must be at least 4 characters,,ChangePassword&PIN
-Password & PIN have been updated,,ChangePassword&PIN
-Error updating password & PIN,,ChangePassword&PIN
-Contract Details,,ContractDetails
-View transaction details,,ContractDetails
-Yes,是,ConfirmDialog
-No,否,ConfirmDialog
-Password/PIN mismatch,,ConfirmPassword&PIN
-"You have entered either your password or your PIN incorrectly, please re-check",,ConfirmPassword&PIN
-Confirm password and PIN,,ConfirmPassword&PIN
-Enter your new password & new PIN once again to make sure you have entered them correctly,,ConfirmPassword&PIN
-Enter your password & PIN once again to make sure you have entered them correctly,,ConfirmPassword&PIN
-Password,密码,ConfirmPassword&PIN
-Re-enter your new password,,ConfirmPassword&PIN
-Re-enter your password,,ConfirmPassword&PIN
-PIN,,ConfirmPassword&PIN
-Re-enter your new PIN,,ConfirmPassword&PIN
-Re-enter your PIN,,ConfirmPassword&PIN
-Confirm,确认,ConfirmPassword&PIN
-Dismiss,解除，取消。,ErrorDialog
-Pin must be at least 4 characters,,PinDialog
-Confirm,确认,PinDialog
-Enter PIN,,PinDialog
-Your PIN,,PinDialog
-Cancel,取消,PinDialog
-Dismiss,解除，取消。,SuccessDialog
-Your wallet is not encrypted!,您的钱包没有加密！,EncryptionWarning
-It is highly recommended that you should encrypt your wallet to keep your NXS safe.,非常建议您加密你的钱包，以保持你的 NXS 安全。,EncryptionWarning
-Ignore,忽略,EncryptionWarning
-Encrypt wallet,加密钱包,EncryptionWarning
-Log in,,Login
-Username,用户名,Login
-Enter your username,,Login
-Password,密码,Login
-Enter your password,,Login
-PIN,,Login
-Enter your PIN,,Login
-Logging in,,Login
-Forgot password?,,Login
-Create new user,,Login
-Username is required,,Login
-Password is required,密码为必填,Login
-PIN is required,,Login
-Logged in as %{username},,Login
-Not being fully synced may have caused this error.,,Login
-Error logging in,登录时出错,Login
-Migrate account,,MigrateAccount
-You have %{amount} NXS in your legacy account.,,MigrateAccount
-You can manually send your funds from legacy account to this new Tritium user.,,MigrateAccount
-Send NXS manually,,MigrateAccount
-Don't show this again,,MigrateAccount
-Module Details,模块详细信息,ModuleDetails
-Remove module,,ModuleDetails
-Module name,模块名称,ModuleDetails
-Display name,显示昵称,ModuleDetails
-Module type,模块类型,ModuleDetails
-in development,,ModuleDetails
-Version,版本,ModuleDetails
-Target wallet version,,ModuleDetails
-incompatible,,ModuleDetails
-Description,说明：,ModuleDetails
-Author,作者,ModuleDetails
-Source code,源代码,ModuleDetails
-Visit repository,访问仓库,ModuleDetails
-This module is developed by Nexus,此模块由Nexus开发,ModuleDetails
-This repository does not exist or is private,此存储库不存在或是私有的,ModuleDetails
-This repository is not verified to be the real source code of this module,此存储库未经验证是此模块的真正源代码,ModuleDetails
-Module hash,模块哈希,ModuleDetails
-Download %{version} (manual),,ModuleDetails
-Open App,,ModuleDetails
-Module is disallowed,,ModuleDetails
-Installing Module...,正在安装模块...,ModuleDetails
-Install Module,安装模块,ModuleDetails
+            malicious code than for an open source one. Therefore, in case you
+            still want to disable this setting, it is highly recommended that
+            you only install and run closed source modules that you are
+            developing yourself.","","Settings.Application"
+"Turn policy off","关闭策略","Settings.Application"
+"Keep policy on","保持政策开启","Settings.Application"
+"Are you sure you want to disable auto update?","您确定要禁用自动更新吗？","Settings.Application"
+"Keeping your wallet up-to-date is important for your security and will ensure that you get the best possible user experience.","更新你的钱包对于你的安全非常重要，并确保您获得尽可能最好的用户体验。","Settings.Application"
+"Keep auto update On","保持自动更新开启","Settings.Application"
+"Turn auto update Off","关闭自动更新","Settings.Application"
+"Minimize on close","关闭时最&小化","Settings.Application"
+"Minimize the wallet when closing the window instead of closing it.","关闭窗口而不关闭钱包时最小化钱包。","Settings.Application"
+"Open on startup","","Settings.Application"
+"Open the wallet when ever the OS starts.","","Settings.Application"
+"Auto update (Recommended)","自动更新 (推荐)","Settings.Application"
+"Automatically check for new versions and notify if a new version is available.","自动检查新版本并通知新版本是否可用。","Settings.Application"
+"Allow Pre-releases","","Settings.Application"
+"Accept pre-release versions (e.g. alpha, beta) when checking for updates.","","Settings.Application"
+"Send anonymous usage data","发送匿名使用数据","Settings.Application"
+"Send anonymous usage data to allow the Nexus developers to improve the wallet.","发送匿名使用数据，以便 Nexus 开发者改善钱包。","Settings.Application"
+"Base currency","基准货币","Settings.Application"
+"Developer mode","开发人员模式","Settings.Application"
+"Development mode enables advanced features to aid in development. After enabling the wallet must be closed and reopened to enable those features.","开发模式使高级功能有助于开发。启用钱包后，必须关闭并重新打开以启用这些功能。","Settings.Application"
+"Module open source policy","模块打开源代码策略","Settings.Application"
+"Only modules which have valid open source repositories are allowed to be installed and run. You can disable this option to test run the modules that you're developing","只有有效的开源仓库被允许安装并运行的模块。您可以禁用此选项以测试您正在开发的模块","Settings.Application"
+"Allow SymLink","","Settings.Application"
+"Allow the presence of SymLinks in the module directory","","Settings.Application"
+"Switch language?","","Settings.Application"
+"Translations for %{language} are contributed by our amazing community members","","Settings.Application"
+"Switch to %{language}","","Settings.Application"
+"Cancel","取消","Settings.Application"
+"Language","语言","Settings.Application"
+"Verbose level","详细级别","Settings.Core"
+"Verbose level for logs.","日志的详细级别。","Settings.Core"
+"Core Data Directory","","Settings.Core"
+"Where the blockchain data and your legacy wallet.dat are stored","","Settings.Core"
+"Clear peer connections","","Settings.Core"
+"Clear all stored peer connections and restart Nexus","","Settings.Core"
+"Clear","","Settings.Core"
+"Lite mode","","Settings.Core"
+"Nexus Core under lite mode runs lighter and synchronize much faster, but you will <b>NOT</b> be able to stake, mine, or switch the wallet to Legacy Mode.","","Settings.Core"
+"Disabled when Multi-user mode is on","","Settings.Core"
+"Resync database","","Settings.Core"
+"Delete lite mode database and resynchronize from the beginning","","Settings.Core"
+"Resynchronize","","Settings.Core"
+"Multi-user","","Settings.Core"
+"Allow multiple logged in users at the same time. Mining and staking will be unavailable.","","Settings.Core"
+"Disabled when Lite mode is on","","Settings.Core"
+"Enable staking","启用标记","Settings.Core"
+"Enable/Disable staking on the wallet.","启用/禁用钱包上的标记。","Settings.Core"
+"Disabled when either Lite mode or Multi-user mode is on","","Settings.Core"
+"Enable mining","启用采矿","Settings.Core"
+"Enable/Disable mining to the wallet.","启用/禁用开采到钱包。","Settings.Core"
+"Mining IP Whitelist","采矿 IP 白名单","Settings.Core"
+"IP/Ports allowed to mine to. Separate by <b>;</b> . Wildcards supported only in IP","IP/端口允许我自己。由 <b>分隔；</b> 。威尔德卡只在 IP 支持","Settings.Core"
+"Safe Mode","","Settings.Core"
+"Enables NextHash verification to protect against corruption, but adds computation time.","","Settings.Core"
+"Are you sure you want to disable Safe Mode","","Settings.Core"
+"Testnet Iteration","","Settings.Core"
+"The iteration of Testnet to connect to. Leave it blank to connect to mainnet.","","Settings.Core"
+"Private testnet","","Settings.Core"
+"Private testnet runs locally on your machine","","Settings.Core"
+"API SSL Port","","Settings.Core"
+"Nexus API server SSL Port","","Settings.Core"
+"Use non-SSL Ports","","Settings.Core"
+"Connect to Nexus Core using non-SSL Ports (less secured)","","Settings.Core"
+"API non-SSL Port","","Settings.Core"
+"Nexus API server non-SSL Port","","Settings.Core"
+"Advanced","","Settings.Core"
+"Allow advanced core options","","Settings.Core"
+"Core Flags","","Settings.Core"
+"Pass these flags to the core on start","","Settings.Core"
+"Reload transaction history","重新加载交易记录","Settings.Core"
+"Nexus Core will be restarted. Lite mode database will be deleted and resynchronized from the beginning.","","Settings.Core"
+"Exit remote Core mode?","","Settings.Core"
+"(This will restart your Core)","(这将重新启动您的核心)","Settings.Core"
+"Enter remote Core mode?","","Settings.Core"
+"(Remote core will continue to run, but internal core will restart)","","Settings.Core"
+"Core settings saved","保存核心设置","Settings.Core"
+"Restarting Core...","重新启动核心...","Settings.Core"
+"Error saving settings","","Settings.Core"
+"Embedded Core","","Settings.Core"
+"Remote Core","","Settings.Core"
+"Restart Core for these changes to take effect","","Settings.Core"
+"Save settings","","Settings.Core"
+"IP address","IP 地址","Settings.Core"
+"Remote Core IP address","","Settings.Core"
+"API SSL","","Settings.Core"
+"Use SSL for API calls","","Settings.Core"
+"API Username","","Settings.Core"
+"Nexus API server Username","","Settings.Core"
+"API Password","","Settings.Core"
+"Nexus API server Password","","Settings.Core"
+"Log out on close","","Settings.Core"
+"Log out of all users before closing the wallet","","Settings.Core"
+"Settings","设置","Settings"
+"Application","申请表","Settings"
+"Core","核心","Settings"
+"Style","样式","Settings"
+"Modules","模块化","Settings"
+"Select development module directory","","Settings.Modules"
+"Your module is still in development? <link>Add a development module</link>","","Settings.Modules"
+"Select module archive file","选择模块存档文件","Settings.Modules"
+"Select module directory","选择模块目录","Settings.Modules"
+"Add Module","添加模组","Settings.Modules"
+"Checking module","检查模块","Settings.Modules"
+"Drop here to install","单击这里立即安装更新","Settings.Modules"
+"Select module's <file>archive file</file> or <dir>directory</dir>","选择模块 <file>存档文件</file> 或 <dir>目录</dir>","Settings.Modules"
+"or drag and drop it here","或者拖放到这里","Settings.Modules"
+"Developed by Nexus","","Settings.Modules"
+"Installed modules","","Settings.Modules"
+"Failed to load %{moduleName}","","Settings.Modules"
+"No modules have been installed","","Settings.Modules"
+"Disable %{moduleName}?","禁用 %{moduleName}?","Settings.Modules"
+"Wallet will be automatically refreshed for the change to take effect","钱包将自动刷新，以便更改生效","Settings.Modules"
+"Enable %{moduleName}?","禁用 %{moduleName}?","Settings.Modules"
+"This module was built for an incompatible wallet version","","Settings.Modules"
+"Module is not open source","模块不是打开源","Settings.Modules"
+"The provided repository is not verified to be the real source code of this module","提供的仓库没有被验证为本模块的真正源代码","Settings.Modules"
+"%{version} update available","","Settings.Modules"
+"development","","Settings.Modules"
+"Cancel download","","Settings.Modules"
+"Downloading %{percentage}%...","","Settings.Modules"
+"Install","","Settings.Modules"
+"Failed to load module","","Settings.Modules"
+"Overwrite module?","覆盖模块？","Settings.Modules"
+"A module with the same directory name already exists","该数据库链接名已存在","Settings.Modules"
+"Module has been successfully installed","模块已成功安装","Settings.Modules"
+"The wallet will now be refreshed for the new module to take effect","钱包现在将被刷新，以便新模块生效","Settings.Modules"
+"Failed to install module","","Settings.Modules"
+"Cannot find module","找不到模块","Settings.Modules"
+"Unsupported file type","不支持的文件类型","Settings.Modules"
+"Cannot install from this location","","Settings.Modules"
+"Directory has already been added","","Settings.Modules"
+"Failed to load development module","","Settings.Modules"
+"A module with the same name already exists","","Settings.Modules"
+"Development module has been added","","Settings.Modules"
+"Cannot find module archive file among assets","","Settings.Modules"
+"Error downloading module","","Settings.Modules"
+"Module Details","模块详细信息","ModuleDetails"
+"Module name","模块名称","ModuleDetails"
+"Display name","显示昵称","ModuleDetails"
+"Module type","模块类型","ModuleDetails"
+"Description","说明：","ModuleDetails"
+"Author","作者","ModuleDetails"
+"Source code","源代码","ModuleDetails"
+"Visit repository","访问仓库","ModuleDetails"
+"Cancel download","","ModuleDetails"
+"Downloading %{percentage}%...","","ModuleDetails"
+"Install","","ModuleDetails"
+"Remove module","","ModuleDetails"
+"in development","","ModuleDetails"
+"Entry","","ModuleDetails"
+"Version","版本","ModuleDetails"
+"Target wallet version","","ModuleDetails"
+"incompatible","","ModuleDetails"
+"This module is developed by Nexus","此模块由Nexus开发","ModuleDetails"
+"This repository does not exist or is private","此存储库不存在或是私有的","ModuleDetails"
+"This repository is not verified to be the real source code of this module","此存储库未经验证是此模块的真正源代码","ModuleDetails"
+"Module hash","模块哈希","ModuleDetails"
+"Update to %{version}","","ModuleDetails"
+"View the release","","ModuleDetails"
+"Open App","","ModuleDetails"
+"Module is disallowed","","ModuleDetails"
+"Installing Module...","正在安装模块...","ModuleDetails"
+"Install Module","安装模块","ModuleDetails"
 "Warning: This module is written by a third party, Nexus is NOT
               responsible for its quality or legitimacy. Please make sure to do
               your due diligence before installing third party modules and use
               them with your own risk.","警告：此模块由第三方编写，Nexus不是
                对其质量或合法性负责。 请务必这样做
                您在安装第三方模块和使用之前的尽职调查
-               他们有你自己的风险。",ModuleDetails
-Check wallet failed,检查钱包失败,MyAddresses
-Check wallet pass,检查钱包通过,MyAddresses
-My Account,我的帐户,MyAddresses
-Check wallet's integrity,检查钱包的完整性,MyAddresses
-Check wallet,检查钱包,MyAddresses
-Create new address,创建新的地址,MyAddresses
-Enter a new account name or pick an existing account:,输入新帐户名称或选择一个现有帐户：,MyAddresses.NewAddressForm
-Account name,帐户名称,MyAddresses.NewAddressForm
-Cancel,取消,MyAddresses.NewAddressForm
-New address,新地址,MyAddresses.NewAddressForm
-Account name is required,请输入账户名称,MyAddresses.NewAddressForm
-Invalid account name,无效的帐户名,MyAddresses.NewAddressForm
-New address has been created,新地址已创建,MyAddresses.NewAddressForm
-Error creating new address,创建新地址时出错,MyAddresses.NewAddressForm
-New account,,NewAccount
-Account name (%{nameFee} NXS Fee) (Optional),,NewAccount
-New account's name,,NewAccount
-Token name/address,,NewAccount
-Cancel,取消,NewAccount
-Creating account,,NewAccount
-Create account,,NewAccount
-Create an account without a name?,,NewAccount
-Adding a name costs a NXS fee,,NewAccount
-That's Ok,,NewAccount
-Error creating account,,NewAccount
-Unknown token name/address,,NewAccount
-New account %{account} has been created,,NewAccount
-Create new user,,NewUser
-Username,用户名,NewUser
-A globally unique username,,NewUser
-Password,密码,NewUser
-Enter your password,,NewUser
-PIN,,NewUser
-Enter your PIN,,NewUser
-Attention,,NewUser
-"Please be sure to make a note of your username, password, and PIN, and keep it in a safe place. If you lose or forget them you will be unable to access your account.",,NewUser
-Creating user,,NewUser
-Create user,,NewUser
-"Please wait, this may take up to 30 seconds",,NewUser
-Switch to Legacy Mode,,NewUser
-Log in,,NewUser
-Username is required,,NewUser
-Username must be at least 3 characters,,NewUser
-Password is required,密码为必填,NewUser
-Password must be at least 8 characters,密码必须至少8个字符,NewUser
-PIN is required,,NewUser
-PIN must be at least 4 characters,,NewUser
-Error creating user,,NewUser
-User registration for %{username} has been confirmed,,NewUser
-User registration for %{username} is waiting to be confirmed on Nexus blockchain...,,NewUser
-Recover password and PIN,,RecoverPassword&PIN
-Username,用户名,RecoverPassword&PIN
-Your username,,RecoverPassword&PIN
-Recovery phrase,,RecoverPassword&PIN
-Your recovery phrase,,RecoverPassword&PIN
-New Password,,RecoverPassword&PIN
-Enter your new password,,RecoverPassword&PIN
-New PIN,,RecoverPassword&PIN
-Enter your new PIN,,RecoverPassword&PIN
-Recovering password & PIN,,RecoverPassword&PIN
-Recover password & PIN,,RecoverPassword&PIN
-Username is required,,RecoverPassword&PIN
-Recovery phrase is required,,RecoverPassword&PIN
-New password is required,,RecoverPassword&PIN
-Password must be at least 8 characters,密码必须至少8个字符,RecoverPassword&PIN
-New PIN is required,,RecoverPassword&PIN
-PIN must be at least 4 characters,,RecoverPassword&PIN
-Password & PIN have been updated,,RecoverPassword&PIN
-Error updating password & PIN,,RecoverPassword&PIN
-%{smart_count} word |||| %{smart_count} words,,SetRecoveryPhrase
-Recovery phrase,,SetRecoveryPhrase
-"The recovery phrase can be used to recover your account and set a new password and PIN in the event that you lose or forget them. Your recovery phrase must be a minimum of 40 characters, and should ideally be made up of random words. Save this new recovery phrase in a safe place.",,SetRecoveryPhrase
-Password,密码,SetRecoveryPhrase
-Your current password,,SetRecoveryPhrase
-PIN,,SetRecoveryPhrase
-Your current PIN,,SetRecoveryPhrase
-Current recovery phrase,,SetRecoveryPhrase
-Enter your recovery phrase,,SetRecoveryPhrase
-Generate a recovery phrase,,SetRecoveryPhrase
-New recovery phrase,,SetRecoveryPhrase
-Enter your new recovery phrase or click Generate,,SetRecoveryPhrase
-Setting recovery phrase,,SetRecoveryPhrase
-Set recovery phrase,,SetRecoveryPhrase
-Password is required,密码为必填,SetRecoveryPhrase
-PIN is required,,SetRecoveryPhrase
-Current recovery phrase is required,,SetRecoveryPhrase
-Recovery phrase is required,,SetRecoveryPhrase
-Recovery phrase must be at least 8 characters,,SetRecoveryPhrase
-Recovery phrase has been updated,,SetRecoveryPhrase
-Error setting recovery phrase,,SetRecoveryPhrase
-Transaction Details,,TransactionDetails
-Time,,TransactionDetails
-Sequence,,TransactionDetails
-Type,,TransactionDetails
-Confirmations,,TransactionDetails
-Transaction ID,,TransactionDetails
-Loading transaction details...,,TransactionDetails
-Close the wallet and install update now?,立即关闭钱包并安装更新？,AutoUpdate
-Close and install,关闭并安装,AutoUpdate
-Install it later,稍后安装,AutoUpdate
-New wallet version %{version} - Click here to download,,AutoUpdate
-New wallet version %{version} - Click here to update,,AutoUpdate
-New wallet version %{version} available. Downloading...,新的钱包版本 %{version} 可用。正在下载...,AutoUpdate
+               他们有你自己的风险。","ModuleDetails"
+"Select wallpaper","","Settings.Style"
+"Starry night","","Settings.Style"
+"Cosmic light","宇宙光线","Settings.Style"
+"Nexus.io","","Settings.Style"
+"Custom wallpaper","自定义壁纸","Settings.Style"
+"Select a custom wallpaper","选择自定义壁纸","Settings.Style"
+"Select custom theme file","选择自定义主题文件","Settings.Style"
+"Theme exported","主题导出","Settings.Style"
+"Render globe","渲染地球","Settings.Style"
+"Render the globe on the Overview page.","在“概述”页面上渲染地球。","Settings.Style"
+"Your computer does not support OPENGL 2.0","您的计算机不支持OpenocungL 2.0","Settings.Style"
+"Overview Display","概览显示","Settings.Style"
+"Hide Overview balances","","Settings.Style"
+"Hide the balances on the Overview page for privacy.","","Settings.Style"
+"Nexus Addresses format","Nexus 地址格式","Settings.Style"
+"Choose your Nexus Address display preference","选择您的Nexus地址显示偏好","Settings.Style"
+"Sample Address","示例地址","Settings.Style"
+"Wallet theme","","Settings.Style"
+"Background","背景，后台。","Settings.Style"
+"Customize your background wallpaper","自定义背景壁纸","Settings.Style"
+"Color scheme","配色方案","Settings.Style"
+"Background Color","背景色","Settings.Style"
+"Foreground Color","前景颜色","Settings.Style"
+"Primary Color","主色调","Settings.Style"
+"Primary Color Accent","主颜色加速度","Settings.Style"
+"Danger Color","危险颜色","Settings.Style"
+"Danger Color Accent","危险颜色加速度","Settings.Style"
+"Globe Color","全球颜色","Settings.Style"
+"Globe Pillar Color","全球支柱颜色","Settings.Style"
+"Globe Arch Color","地球拱门颜色","Settings.Style"
+"Import custom theme","导入自定义主题","Settings.Style"
+"Export custom theme","导出自定义主题","Settings.Style"
+"Dark","暗色调","Settings.Style"
+"Light","浅","Settings.Style"
+"Custom","自定义","Settings.Style"
+"Console","控制台","Console"
+"Core output","核心输出","Console"
+"CLI syntax","","Console.NexusAPI"
+"URL syntax","","Console.NexusAPI"
+"Execute","执行","Console.NexusAPI"
+"API Documentation","","Console.NexusAPI"
+"Clear","","Console.NexusAPI"
+"Core is in Manual Mode","核心处于手动模式","Console.CoreOutput"
+"NXS balances","","Transactions.Balances"
+"Total","","Transactions.Balances"
+"Available","","Transactions.Balances"
+"The current balance across all NXS accounts that is available to be spent","","Transactions.Balances"
+"Stake","堆栈","Transactions.Balances"
+"The amount of NXS currently staked in the trust account","","Transactions.Balances"
+"Unclaimed","","Transactions.Balances"
+"The sum of all debit and coinbase transactions made to your NXS accounts that are confirmed but have not yet been credited. This does NOT include immature and unconfirmed amounts","","Transactions.Balances"
+"Unconfirmed","","Transactions.Balances"
+"The sum of all debit transactions made to your NXS accounts that are not confirmed, or credits you have made to your accounts that are not yet confirmed (not yet included in a block)","","Transactions.Balances"
+"Immature","未成熟","Transactions.Balances"
+"The sum of all coinbase transactions that have not yet reached maturity","","Transactions.Balances"
+"%{token_name} balances","","Transactions.Balances"
+"Legacy transaction","","Transactions"
+"Coinbase transaction","","Transactions"
+"View contract details","","Transactions"
+"View transaction details","","Transactions"
+"All","全部","Transactions"
+"Past Year","去年","Transactions"
+"Past Month","上个月","Transactions"
+"Past Week","上周","Transactions"
+"Address","地址","Transactions"
+"Search for account/token address","","Transactions"
+"Select an address","","Transactions"
+"Time span","时间间隔","Transactions"
+"Operation","","Transactions"
+"Transactions","交易记录（Transaction）","Transactions"
+"Loading transactions...","","Transactions"
+"Failed to load transactions","","Transactions"
+"Previous","上一步","Transactions"
+"Page <page></page>","","Transactions"
+"Next","下一个","Transactions"
+"Accounts","","SelectAddress"
+"Unnamed account","","SelectAddress"
+"Tokens","","SelectAddress"
+"Contacts","","SelectAddress"
+"My address for %{name}","我的地址 %{name}","SelectAddress"
+"%{name}'s address","","SelectAddress"
+"Unnamed account","","User.Accounts"
+"Details","","User.Accounts"
+"Rename","","User.Accounts"
+"Transaction History","","User.Accounts"
+"Create new account","","User.Accounts"
+"Account Details","","User.Accounts.AccountDetails"
+"Account name","帐户名称","User.Accounts.AccountDetails"
+"Unnamed","","User.Accounts.AccountDetails"
+"Created at","","User.Accounts.AccountDetails"
+"Last modified","","User.Accounts.AccountDetails"
+"Token","","User.Accounts.AccountDetails"
+"Data","","User.Accounts.AccountDetails"
+"Total account balance","","User.Accounts.AccountDetails"
+"Available balance","","User.Accounts.AccountDetails"
+"Send %{token_name}","","User.Accounts.AccountDetails"
+"Unclaimed balance","","User.Accounts.AccountDetails"
+"Unconfirmed balance","","User.Accounts.AccountDetails"
+"Stake balance","","User.Accounts.AccountDetails"
+"Immature balance","","User.Accounts.AccountDetails"
+"Address","地址","User.Accounts.AccountDetails"
+"Adjust stake amount","","User.Accounts.AccountDetails"
+"Trust Account is empty.","","User.Accounts.AccountDetails"
+"Trust Account must mature for 72 hours before staking","","User.Accounts.AccountDetails"
+"Time","时间","User.Accounts.AccountHistory"
+"Operation","","User.Accounts.AccountHistory"
+"From","","User.Accounts.AccountHistory"
+"staking","","User.Accounts.AccountHistory"
+"mining","","User.Accounts.AccountHistory"
+"To","","User.Accounts.AccountHistory"
+"Change","","User.Accounts.AccountHistory"
+"Account History","","User.Accounts.AccountHistory"
+"Loading account history","","User.Accounts.AccountHistory"
+"Account balance","","User.Accounts.AccountHistory"
+"Show %{tokenName}","","User.Accounts.AccountHistory"
+"Total","","User.Accounts.AccountHistory"
+"Available","","User.Accounts.AccountHistory"
+"Unclaimed","","User.Accounts.AccountHistory"
+"Unconfirmed","","User.Accounts.AccountHistory"
+"Stake","堆栈","User.Accounts.AccountHistory"
+"Name already in use","","RenameAccount"
+"The name you entered is already in use. Please choose another name.","","RenameAccount"
+"Fee","费用","RenameAccount"
+"Account has been renamed to %{account_name}","","RenameAccount"
+"Rename account","","RenameAccount"
+"Error renaming account","","RenameAccount"
+"Account name","帐户名称","RenameAccount"
+"Cancel","取消","RenameAccount"
+"Renaming","","RenameAccount"
+"Rename","","RenameAccount"
+"Unnamed asset","","User.Assets"
+"You own %{percentage}% of this asset","","User.Assets"
+"Create new asset","","User.Assets"
+"You don't own any asset","","User.Assets"
+"Asset Details","","AssetDetails"
+"Edit asset","","AssetDetails"
+"Name","名称","AssetDetails"
+"Address","地址","AssetDetails"
+"Owner","","AssetDetails"
+"Ownership","","AssetDetails"
+"Created at","","AssetDetails"
+"Last modified","","AssetDetails"
+"View history","","AssetDetails"
+"Tokenize","","AssetDetails"
+"Transfer ownership","","AssetDetails"
+"Name","名称","CreateAsset"
+"Field name","","CreateAsset"
+"Value","","CreateAsset"
+"Field value","","CreateAsset"
+"Mutable","","CreateAsset"
+"Type","","CreateAsset"
+"Max. length","","CreateAsset"
+"Only applicable to mutable string fields","","CreateAsset"
+"Unlimited","","CreateAsset"
+"Remove field","","CreateAsset"
+"Add field","","CreateAsset"
+"Create a new asset","","CreateAsset"
+"New asset has been created","","CreateAsset"
+"Error creating asset","","CreateAsset"
+"Asset name","","CreateAsset"
+"A local Name object register will be created for this asset name","","CreateAsset"
+"Asset name (optional)","","CreateAsset"
+"Asset data","","CreateAsset"
+"Estimated fee","","CreateAsset"
+"Creating asset","","CreateAsset"
+"Create asset","","CreateAsset"
+"Asset History Event","","AssetHistoryDetails"
+"Type","","AssetHistoryDetails"
+"Time","时间","AssetHistoryDetails"
+"Owner","","AssetHistoryDetails"
+"Checksum","","AssetHistoryDetails"
+"Name","名称","AssetHistoryDetails"
+"Address","地址","AssetHistoryDetails"
+"Time","时间","AssetHistory"
+"Action","","AssetHistory"
+"Register","","AssetHistory"
+"Owner","","AssetHistory"
+"Asset History","","AssetHistory"
+"Loading asset history","","AssetHistory"
+"Edit asset","","EditAsset"
+"Asset has been updated","","EditAsset"
+"Error updating asset","","EditAsset"
+"Name","名称","EditAsset"
+"Address","地址","EditAsset"
+"Updating asset","","EditAsset"
+"Update asset","","EditAsset"
+"Tokenize asset","","TokenizeAsset"
+"Asset has been tokenized","","TokenizeAsset"
+"Error tokenizing asset","","TokenizeAsset"
+"Asset name","","TokenizeAsset"
+"Asset address","","TokenizeAsset"
+"Token","","TokenizeAsset"
+"Token address","","TokenizeAsset"
+"Tokenizing asset","","TokenizeAsset"
+"Transfer asset","","TransferAsset"
+"Asset has been transferred","","TransferAsset"
+"Error transferring asset","","TransferAsset"
+"Asset name","","TransferAsset"
+"Asset address","","TransferAsset"
+"Transfer to","","TransferAsset"
+"Recipient username or user ID","","TransferAsset"
+"Transferring asset","","TransferAsset"
+"User","","User"
+"User ID","","User"
+"Accounts","","User"
+"Staking","","User"
+"Tokens","","User"
+"Names","","User"
+"Namespaces","","User"
+"Assets","","User"
+"Change password & PIN","","User"
+"Change recovery phrase","","User"
+"Set recovery phrase","","User"
+"Start staking?","","User"
+"You have %{amount} NXS in your trust account and can start staking now.","","User"
+"However, keep in mind that if you start staking, your stake amount will be locked, and the smaller the amount is, the longer it would likely take to unlock it.","","User"
+"To learn more about staking, visit <link>crypto.nexus.io/stake</link>.","","User"
+"Don't show this again","","User"
+"Start staking","","User"
+"Don't stake","","User"
+"User Failed to Unlock","","User"
+"User Unlocked","","User"
+"Indexing User...","","User"
+"Change register address","","ChangeRegisterAddress"
+"Name has been updated","","ChangeRegisterAddress"
+"Error updating name","","ChangeRegisterAddress"
+"Name","名称","ChangeRegisterAddress"
+"Register address","","ChangeRegisterAddress"
+"Register address that this name points to","","ChangeRegisterAddress"
+"Name update fee","","ChangeRegisterAddress"
+"Updating name","","ChangeRegisterAddress"
+"Update name","","ChangeRegisterAddress"
+"Local","","CreateName"
+"Namespaced","","CreateName"
+"Global","","CreateName"
+"Namespace","","CreateName"
+"A namespace you own","","CreateName"
+"Name cannot start with a colon character","","CreateName"
+"Create a new name","","CreateName"
+"New name has been created","","CreateName"
+"Error creating name","","CreateName"
+"Name","名称","CreateName"
+"name","","CreateName"
+"namespace","","CreateName"
+"Register address","","CreateName"
+"Register address that this name points to","","CreateName"
+"Name creation fee","","CreateName"
+"Creating name","","CreateName"
+"Create name","","CreateName"
+"View name details","","User.Names"
+"Change register address","","User.Names"
+"Transfer name","","User.Names"
+"Unused","","User.Names"
+"Global","","User.Names"
+"Namespaced","","User.Names"
+"Local","","User.Names"
+"Create new name","","User.Names"
+"Show unused names","","User.Names"
+"You don't own any name","","User.Names"
+"Name Details","","NameDetails"
+"Change register address","","NameDetails"
+"Name","名称","NameDetails"
+"Type","","NameDetails"
+"Global","","NameDetails"
+"Namespaced","","NameDetails"
+"Local","","NameDetails"
+"Namespace","","NameDetails"
+"Address","地址","NameDetails"
+"Points to","","NameDetails"
+"Created at","","NameDetails"
+"Last modified","","NameDetails"
+"View history","","NameDetails"
+"Transfer ownership","","NameDetails"
+"Name History Event","","NameHistoryDetails"
+"Type","","NameHistoryDetails"
+"Time","时间","NameHistoryDetails"
+"Owner","","NameHistoryDetails"
+"Checksum","","NameHistoryDetails"
+"Name","名称","NameHistoryDetails"
+"Namespace","","NameHistoryDetails"
+"Address","地址","NameHistoryDetails"
+"Points to","","NameHistoryDetails"
+"Time","时间","NameHistory"
+"Action","","NameHistory"
+"Register","","NameHistory"
+"Owner","","NameHistory"
+"Name History","","NameHistory"
+"Loading name history","","NameHistory"
+"Transfer name","","TransferName"
+"Name has been transferred","","TransferName"
+"Error transferring name","","TransferName"
+"Name","名称","TransferName"
+"Transfer to","","TransferName"
+"Recipient username or user ID","","TransferName"
+"Transferring name","","TransferName"
+"Create a new namespace","","CreateNamespace"
+"New namespace has been created","","CreateNamespace"
+"Error creating namespace","","CreateNamespace"
+"Name","名称","CreateNamespace"
+"Namespace name","","CreateNamespace"
+"Namespace names can only contain lowercase letters, numbers, and periods (.)","","CreateNamespace"
+"Namespace creation fee","","CreateNamespace"
+"Creating namespace","","CreateNamespace"
+"Create namespace","","CreateNamespace"
+"View name details","","User.Namespaces"
+"Transfer namespace","","User.Namespaces"
+"Create new namespace","","User.Namespaces"
+"You don't own any namespace","","User.Namespaces"
+"Namespace Details","","NamespaceDetails"
+"Name","名称","NamespaceDetails"
+"Address","地址","NamespaceDetails"
+"Created at","","NamespaceDetails"
+"Last modified","","NamespaceDetails"
+"View history","","NamespaceDetails"
+"Transfer ownership","","NamespaceDetails"
+"Namespace History Event","","NamespaceHistoryDetails"
+"Type","","NamespaceHistoryDetails"
+"Time","时间","NamespaceHistoryDetails"
+"Owner","","NamespaceHistoryDetails"
+"Checksum","","NamespaceHistoryDetails"
+"Name","名称","NamespaceHistoryDetails"
+"Address","地址","NamespaceHistoryDetails"
+"Time","时间","NamespaceHistory"
+"Action","","NamespaceHistory"
+"Register","","NamespaceHistory"
+"Owner","","NamespaceHistory"
+"Namespace History","","NamespaceHistory"
+"Loading namespace history","","NamespaceHistory"
+"Transfer namespace","","TransferNamespace"
+"Namespace has been transferred","","TransferNamespace"
+"Error transferring namespace","","TransferNamespace"
+"Namespace","","TransferNamespace"
+"Transfer to","","TransferNamespace"
+"Recipient username or user ID","","TransferNamespace"
+"Transferring namespace","","TransferNamespace"
+"The current NXS balance of the trust account that is not staked. You can spend this amount without affecting your Trust Score","","User.Staking"
+"Balance that will be staked after the 72 holding period, any change to this balance will reset the hold timer","","User.Staking"
+"Trust balance empty!","","User.Staking"
+"You must send some NXS to your <b>trust</b> account first","","User.Staking"
+"Start staking","","User.Staking"
+"In order to start staking, the following settings need to be changed:","","User.Staking"
+"Lite mode needs to be turned OFF","","User.Staking"
+"Multi-user needs to be turned OFF","","User.Staking"
+"Enable staking needs to be turned ON","","User.Staking"
+"Apply changes","","User.Staking"
+"Cancel","取消","User.Staking"
+"Restarting Core","","User.Staking"
+"Enter your PIN to start staking","","User.Staking"
+"Staking will automatically start when your wallet is synchronized","","User.Staking"
+"Error","","User.Staking"
+"Stop staking?","","User.Staking"
+"If you stop staking, stake amount will still stay locked. In case you want to unlock the stake amount, <link>set your stake amount to 0</link> and keep staking until the next Trust transaction is mined.","","User.Staking"
+"Stop staking","","User.Staking"
+"Staking is not available in private network","","User.Staking"
+"Status","","User.Staking"
+"Staking","","User.Staking"
+"pooled","","User.Staking"
+"Not staking","","User.Staking"
+"Stake amount (locked)","","User.Staking"
+"The amount of NXS currently staked in the trust account","","User.Staking"
+"Pending change","","User.Staking"
+"The pending stake amount change that will be applied on the next Trust transaction","","User.Staking"
+"Requested at","","User.Staking"
+"Expired in","","User.Staking"
+"Stake Rate","稳定率","User.Staking"
+"The current annual reward rate earned for staking","","User.Staking"
+"Trust Weight","信任权重","User.Staking"
+"The percentage of the maximum Trust Score, which is gradually built over time when you consistently operate your node in an honest, trustworthy, and timely manner","","User.Staking"
+"Block Weight","块重量","User.Staking"
+"Block Weight depends on the time passed since you received a Trust transaction and will be reset everytime you receive a Trust transaction. Otherwise, Block Weight will reach 100% after 3 days and your Trust Score will start decaying until you receive another Trust transaction","","User.Staking"
+"Stake Weight","堆积重量","User.Staking"
+"Stake Weight depends on Trust Weight and Block Weight. Along with your Stake amount, Stake Weight affects how frequent you receive a Trust transaction","","User.Staking"
+"Available Balance","","User.Staking"
+"Adjust stake amount","","User.Staking"
+"Account on hold for another %{stakeSeconds} Seconds","","User.Staking"
+"Create new token","","User.Tokens"
+"Look up a token","","User.Tokens"
+"Unnamed token","","User.Tokens"
+" (Owned by you)","","User.Tokens"
+"Details","","User.Tokens"
+"There is a %{tokenfee} NXS token creation fee, based on supply","","User.Tokens.NewToken"
+"Must be an integer","","User.Tokens.NewToken"
+"Supply cannot be zero or negative","","User.Tokens.NewToken"
+"New Token","","User.Tokens.NewToken"
+"Create a token without a name?","","User.Tokens.NewToken"
+"Adding a name costs a NXS fee","","User.Tokens.NewToken"
+"That's Ok","","User.Tokens.NewToken"
+"Cancel","取消","User.Tokens.NewToken"
+"Add Name","","User.Tokens.NewToken"
+"New token %{token} has been created","","User.Tokens.NewToken"
+"You have successfully created token %{token} ! Would you like to make an account for this token?","","User.Tokens.NewToken"
+"Yes","是","User.Tokens.NewToken"
+"No","否","User.Tokens.NewToken"
+"Error creating token","","User.Tokens.NewToken"
+"Token name","","User.Tokens.NewToken"
+"Name Creation Fee: %{tokenFee} NXS (Optional)","","User.Tokens.NewToken"
+"New tokens's name","","User.Tokens.NewToken"
+"Supply","","User.Tokens.NewToken"
+"Max amount of tokens available","","User.Tokens.NewToken"
+"Decimal","","User.Tokens.NewToken"
+"Amount of significant digits a token can have","","User.Tokens.NewToken"
+"Create token","","User.Tokens.NewToken"
+"Look up token","","User.Tokens.SearchToken"
+"Error searching for token","","User.Tokens.SearchToken"
+"Unknown token name/address","","User.Tokens.SearchToken"
+"Name or address","","User.Tokens.SearchToken"
+"Token name/address","","User.Tokens.SearchToken"
+"Look up","","User.Tokens.SearchToken"
+"Token Details","","User.Tokens.TokenDetails"
+"Token name","","User.Tokens.TokenDetails"
+"Token address","","User.Tokens.TokenDetails"
+"Created at","","User.Tokens.TokenDetails"
+"Last modified","","User.Tokens.TokenDetails"
+"Token Owner","","User.Tokens.TokenDetails"
+"Current Supply","","User.Tokens.TokenDetails"
+"Max Supply","","User.Tokens.TokenDetails"
+"Decimals","","User.Tokens.TokenDetails"
+"Balance","余额","User.Tokens.TokenDetails"
+"Unclaimed balance","","User.Tokens.TokenDetails"
+"Unconfirmed balance","","User.Tokens.TokenDetails"
+"Create new account with this token","","User.Tokens.TokenDetails"
+"Close","关闭","User.Tokens.TokenDetails"
+"Wallet version","","About"
+"Wallet build date","","About"
+"Nexus Core version","","About"
+"Core build date","","About"
+"Testnet","","About"
+"Private blockchain","","About"
+"Invalid address","无效地址","AddEditContact"
+"This is not one of your addresses.","这不是您的地址之一。","AddEditContact"
+"This is one of your addresses.","这是你的地址之一。","AddEditContact"
+"My Nexus address for %{name}","我的 %{name} 的Nexus 地址","AddEditContact"
+"My Nexus address","我的Nexus地址","AddEditContact"
+"%{name}'s Nexus address","%{name} Nexus地址","AddEditContact"
+"Their Nexus address","他们的Nexus地址","AddEditContact"
+"Remove address","删除地址","AddEditContact"
+"Label (optional)","标签（可选）","AddEditContact"
+"Invalid user ID","","AddEditContact"
+"Invalid email","无效的电子邮件","AddEditContact"
+"A contact with the same name already exists.","已存在同一个名称的联系人。","AddEditContact"
+"Edit contact","编辑联系人","AddEditContact"
+"Create new contact","创建新的联系人","AddEditContact"
+"At least one address is required.","","AddEditContact"
+"Contact has been updated","联系人已更新","AddEditContact"
+"New contact has been added to address book","新联系人已添加到地址簿","AddEditContact"
+"Name","名称","AddEditContact"
+"Contact name","联系人名称","AddEditContact"
+"Nexus user ID","","AddEditContact"
+"Email address","电子邮件地址","AddEditContact"
+"Phone number","电话号码","AddEditContact"
+"Time zone","时区","AddEditContact"
+"Select a time zone","选择一个时间区","AddEditContact"
+"Notes","注","AddEditContact"
+"Cancel","取消","AddEditContact"
+"Reset","重置","AddEditContact"
+"Save changes","保存修改","AddEditContact"
+"Create","创建","AddEditContact"
+"Invalid number","","AdjustStake"
+"Out of range","","AdjustStake"
+"Set stake amount","","AdjustStake"
+"Reduce stake amount?","","AdjustStake"
+"Reducing stake amount might make your Stake Rate decrease","","AdjustStake"
+"Stake amount has been updated","","AdjustStake"
+"Error setting stake amount","","AdjustStake"
+"Note: This change will not take effect immediately but will stay pending until you get the next Trust transaction. The pending change will be recorded locally in this machine, therefore if you switch to another machine for staking, the change will not take effect.","","AdjustStake"
+"Cancel","取消","AdjustStake"
+"Backing up...","正在备份","Bootstrap"
+"Preparing...","","Bootstrap"
+"Downloading","正在下载","Bootstrap"
+"Decompressing...","正在解压缩","Bootstrap"
+"Stopping Core...","停止核心...","Bootstrap"
+"Moving...","正在移动...","Bootstrap"
+"Restarting Core...","重新启动核心...","Bootstrap"
+"Rescanning Wallet...","重新扫描钱包...","Bootstrap"
+"Cleaning up...","","Bootstrap"
+"Backing up your wallet...","正在备份你的钱包...","Bootstrap"
+"Downloading the database","正在下载数据库","Bootstrap"
+"Decompressing the database...","解压缩数据库......","Bootstrap"
+"Stopping Nexus Core...","停止Nexus核心...","Bootstrap"
+"Moving the database...","正在移动数据库...","Bootstrap"
+"Restarting Nexus Core...","重新启动 Nexus 核心...","Bootstrap"
+"Are you sure you want to abort the process?","你确定你想要开始更新过程?","Bootstrap"
+"Yes, abort","是，中止","Bootstrap"
+"No, let it continue","不，让我们继续","Bootstrap"
+"Bootstrap Recent Database","启动最近数据库","Bootstrap"
+"Abort","取消，终止","Bootstrap"
+"Can not Bootstrap on Testnet/Private networks.","","Bootstrap"
+"Not enough disk space! Minimum 15GB of free space is required.","磁盘空间不足！需要最低15GB可用空间。","Bootstrap"
+"Download recent database?","下载最近的数据库？","Bootstrap"
+"Downloading a recent version of the database might reduce the time it takes to synchronize your wallet","下载数据库最新版本可能会减少同步你的钱包所需的时间","Bootstrap"
+"Yes, let's bootstrap it","是的，让我们来引导吧","Bootstrap"
+"No, let it sync","不，让我们同步","Bootstrap"
+"Bootstrap process has been aborted","启动程序已被中止","Bootstrap"
+"Error bootstrapping recent database","启动最近的数据库时出错","Bootstrap"
+"Unknown error","未知错误","Bootstrap"
+"Recent database has been successfully bootstrapped","最近的数据库已成功启动","Bootstrap"
+"Change password and PIN","","ChangePassword&PIN"
+"Password & PIN have been updated","","ChangePassword&PIN"
+"Error updating password & PIN","","ChangePassword&PIN"
+"Current password","","ChangePassword&PIN"
+"Your current password","","ChangePassword&PIN"
+"Current PIN","","ChangePassword&PIN"
+"Your current PIN","","ChangePassword&PIN"
+"New Password","","ChangePassword&PIN"
+"Enter your new password","","ChangePassword&PIN"
+"New PIN","","ChangePassword&PIN"
+"Enter your new PIN","","ChangePassword&PIN"
+"Updating","","ChangePassword&PIN"
+"Update","","ChangePassword&PIN"
+"Contract Details","","ContractDetails"
+"View transaction details","","ContractDetails"
+"Yes","是","ConfirmDialog"
+"No","否","ConfirmDialog"
+"Password/PIN mismatch","","ConfirmPassword&PIN"
+"You have entered either your password or your PIN incorrectly, please re-check","","ConfirmPassword&PIN"
+"Confirm password and PIN","","ConfirmPassword&PIN"
+"Enter your new password & new PIN once again to make sure you have entered them correctly","","ConfirmPassword&PIN"
+"Enter your password & PIN once again to make sure you have entered them correctly","","ConfirmPassword&PIN"
+"Password","密码","ConfirmPassword&PIN"
+"Re-enter your new password","","ConfirmPassword&PIN"
+"Re-enter your password","","ConfirmPassword&PIN"
+"PIN","","ConfirmPassword&PIN"
+"Re-enter your new PIN","","ConfirmPassword&PIN"
+"Re-enter your PIN","","ConfirmPassword&PIN"
+"Confirm","确认","ConfirmPassword&PIN"
+"Dismiss","解除，取消。","ErrorDialog"
+"Dismiss","解除，取消。","InfoDialog"
+"Confirm","确认","PinDialog"
+"Enter PIN","","PinDialog"
+"Your PIN","","PinDialog"
+"Cancel","取消","PinDialog"
+"Dismiss","解除，取消。","SuccessDialog"
+"Log in","","Login"
+"Logged in as %{username}","","Login"
+"Not being fully synced may have caused this error.","","Login"
+"Error logging in","登录时出错","Login"
+"Username","用户名","Login"
+"Enter your username","","Login"
+"Password","密码","Login"
+"Enter your password","","Login"
+"PIN","","Login"
+"Enter your PIN","","Login"
+"Logging in","","Login"
+"Forgot password?","","Login"
+"Create new user","","Login"
+"Create an account without a name?","","NewAccount"
+"Adding a name costs a NXS fee","","NewAccount"
+"That's Ok","","NewAccount"
+"Cancel","取消","NewAccount"
+"Unknown token name/address","","NewAccount"
+"New account","","NewAccount"
+"New account %{account} has been created","","NewAccount"
+"Error creating account","","NewAccount"
+"Account name (Optional)","","NewAccount"
+"New account's name","","NewAccount"
+"Fee: %{nameFee} NXS","","NewAccount"
+"Token name/address","","NewAccount"
+"Creating account","","NewAccount"
+"Create account","","NewAccount"
+"Create new user","","NewUser"
+"Error creating user","","NewUser"
+"Username","用户名","NewUser"
+"A globally unique username","","NewUser"
+"Password","密码","NewUser"
+"Enter your password","","NewUser"
+"PIN","","NewUser"
+"Enter your PIN","","NewUser"
+"Attention","","NewUser"
+"Please be sure to make a note of your username, password, and PIN, and keep it in a safe place. If you lose or forget them you will be unable to access your account.","","NewUser"
+"Creating user","","NewUser"
+"Create user","","NewUser"
+"Please wait, this may take up to 30 seconds","","NewUser"
+"Log in","","NewUser"
+"User <b>%{username}</b> has been successfully registered","","NewUser"
+"Waiting for user registration to be confirmed on Nexus blockchain...","","NewUser"
+"Recover password and PIN","","RecoverPassword&PIN"
+"Password & PIN have been updated","","RecoverPassword&PIN"
+"Error updating password & PIN","","RecoverPassword&PIN"
+"Username","用户名","RecoverPassword&PIN"
+"Your username","","RecoverPassword&PIN"
+"Recovery phrase","","RecoverPassword&PIN"
+"Your recovery phrase","","RecoverPassword&PIN"
+"New Password","","RecoverPassword&PIN"
+"Enter your new password","","RecoverPassword&PIN"
+"New PIN","","RecoverPassword&PIN"
+"Enter your new PIN","","RecoverPassword&PIN"
+"Recovering password & PIN","","RecoverPassword&PIN"
+"Recover password & PIN","","RecoverPassword&PIN"
+"%{smart_count} word |||| %{smart_count} words","","SetRecoveryPhrase"
+"Recovery phrase","","SetRecoveryPhrase"
+"Recovery phrase has been updated","","SetRecoveryPhrase"
+"Error setting recovery phrase","","SetRecoveryPhrase"
+"The recovery phrase can be used to recover your account and set a new password and PIN in the event that you lose or forget them. Your recovery phrase must be a minimum of 40 characters, and should ideally be made up of random words.","","SetRecoveryPhrase"
+"<b>Save your new recovery phrase in a safe place</b>, because if you lose it, there will be <b>no way</b> to recover it.","","SetRecoveryPhrase"
+"Password","密码","SetRecoveryPhrase"
+"Your current password","","SetRecoveryPhrase"
+"PIN","","SetRecoveryPhrase"
+"Your current PIN","","SetRecoveryPhrase"
+"Current recovery phrase","","SetRecoveryPhrase"
+"Enter your recovery phrase","","SetRecoveryPhrase"
+"Generate a recovery phrase","","SetRecoveryPhrase"
+"New recovery phrase","","SetRecoveryPhrase"
+"Enter your new recovery phrase or click Generate","","SetRecoveryPhrase"
+"Setting recovery phrase","","SetRecoveryPhrase"
+"Set recovery phrase","","SetRecoveryPhrase"
+"Confirm recovery phrase","","SetRecoveryPhrase"
+"Enter your new recovery phrase again","","SetRecoveryPhrase"
+"Cancel","取消","SetRecoveryPhrase"
+"Recovery phrase confirmation doesn't match!","","SetRecoveryPhrase"
+"Please make sure that you have a good backup of your recovery phrase and try again.","","SetRecoveryPhrase"
+"Confirm","确认","SetRecoveryPhrase"
+"Error loading transaction","","TransactionDetails"
+"Transaction Details","","TransactionDetails"
+"Time","时间","TransactionDetails"
+"Sequence","","TransactionDetails"
+"Type","","TransactionDetails"
+"Confirmations","确认","TransactionDetails"
+"Transaction ID","交易 ID","TransactionDetails"
+"Loading transaction details...","正在加载交易详情...","TransactionDetails"
+"Close the wallet and install update now?","立即关闭钱包并安装更新？","AutoUpdate"
+"Close and install","关闭并安装","AutoUpdate"
+"Install it later","稍后安装","AutoUpdate"
+"New wallet version %{version} - Click here to download","","AutoUpdate"
+"New wallet version %{version} - Click here to update","","AutoUpdate"
+"New wallet version %{version} available. Downloading...","新的钱包版本 %{version} 可用。正在下载...","AutoUpdate"

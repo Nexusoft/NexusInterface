@@ -1,1161 +1,1017 @@
-Delete contact %{name}?,Kontakt %{name} löschen?,AddressBook
-Edit contact,Kontakt bearbeiten,AddressBook
-Delete contact,Kontakt löschen,AddressBook
-%{smart_count} address |||| %{smart_count} addresses,%{smart_count} Adresse ||||| %{smart_count} Adressen,AddressBook
-New contact,Neuer Kontakt,AddressBook
-No information,Keine Informationen,AddressBook
-Delete,Löschen,AddressBook
-Edit,Bearbeiten,AddressBook
-NXS addresses,NXS-Adressen,AddressBook
-My address for %{name},Meine Nexus-Adresse für %{name},AddressBook
-%{name}'s Address,%{name}'s Adresse,AddressBook
-Contact info,Kontaktinfo,AddressBook
-Email,E-Mail,AddressBook
-Phone Number,Telefonnummer,AddressBook
-Local Time,Ortszeit,AddressBook
-Notes,Anmerkungen,AddressBook
-Address book,Adressbuch,AddressBook
-Your address book is empty,Ihr Adressbuch ist leer,AddressBook
-Create new contact,Neuer Kontakt,AddressBook
-Search contact,Kontakt suchen,AddressBook
-My Addresses,Meine Adressen,AddressBook
-Export contacts,Kontakte exportieren,AddressBook
-Legacy Mode,,Header
-Tritium Mode,,Header
-Unknown login status,Unbekannter Login-Status,Header
-Wallet is not encrypted,Wallet ist nicht verschlüsselt,Header
-Not logged in,Die Wallet ist verschlüsselt,Header
-Logged in<if_timed> until %{unlockDate}</if_timed><if_minting_only> for staking & mining</if_minting_only>,Angemeldet<if_timed> bis %{unlockDate}</if_timed><if_minting_only> für Staking & Mining</if_minting_only>,Header
-My Addresses,Meine Adressen,Header
-Wallet is staking,Wallet ist im Staking mode,Header
-Stake Rate,Zinssatz,Header
-Waiting for 100% synchronization to start staking...,"Warten auf 100% Synchronisation, um zu staken...",Header
-Waiting for average age of balance to exceed 72 hours to start staking...,"Warten auf ein durchschnittliches Alter von Saldo bis zu 72 Stunden, um zu staking...",Header
-Wallet is not staking,Wallet ist nicht im staking mode,Header
-Checking sync status,Synchronisationsstatus überprüfen,Header
-Synchronizing,Synchronisiere,Header
-Synchronized,Synchronisiert,Header
-pooled,,Header
-You're not logged in,,Header
-You are staking but have not received a block in 30 minutes!,,Header
-Switching...,,
-Active,,
-Switch,,
-Switch user,,
-Closing Nexus Wallet,Nexus schließen,
-Warning,Warnung,
-IMPROPER USE OF THIS SOFTWARE COULD LEAD TO PERMANENT LOSS OF COIN.,FALSCHES VERWENDEN DIESER SOFTWARE KÖNNTE ZUM PERMANENTE VERLIEREN VON MÜNZEN FÜHREREN.,
-BACKUP YOUR WALLET OFTEN AND KEEP YOUR PASSWORDS SAFE.,ERSTELLEN SIE IN REGELMÄSSIGEN ABSTÄNDEN EINE SICHERUNGSKOPIE UND BESCHÜTZEN SIE IHRE KENNWÖRTER.,
-I understand the risk,Ich verstehe das Risiko,
-Close,Schließen,
-Remote Core is disconnected,,
-Connecting to Nexus Core...,Verbinde mit Nexus Core...,
-Nexus Core is stopped,Nexus-Core ist gestoppt,
-Address has been copied to clipboard,Adresse wurde in die Zwischenspeicher kopiert,
-Copy to clipboard,In die Zwischenablage kopiert,
-Click to copy to clipboard,Zum Kopieren in die Zwischenablage klicken,
-Show QR code,,
-Log in,,
-No Rows Found,Keinen Eintrag gefunden,
-Page,Seite,
-rows,reihen,
-Previous,Vorheriger,
-Next,Nächster,
-Use virtual keyboard,,
-<token_name></token_name> token,,
-Unnamed token,,
-Switch to Legacy Mode,,
-Are you sure you want to switch to Legacy Mode?,,
-Switch to Tritium Mode,,
-Start Nexus Core,Nexus Core starten,
-Stop Nexus Core,Nexus Core stoppen,
-Quit Nexus,Nexus beenden,
-About,Über,
-Backup Wallet,Wallet sichern,
-Nexus Core is not connected,Daemon nicht geladen,
-Wallet backed up,Wallet gesichert,
-View Backups,Backups anzeigen,
-Cut,Ausschneiden,
-Copy,Kopieren,
-Paste,Einfügen,
-Core,Core,
-Application,Anwendung,
-Key Management,Schlüsselverwaltung,
-Style,Design,
-Modules,Modul,
-Download Recent Database,Letzte Datenbank herunterladen,
-Cannot bootstrap recent database in manual mode,Das Bootstrapen kann im manuellen Modus nicht gestartet werden,
-Please wait for Nexus Core to start.,"Nexus Core wird gestartet, bitte warten.",
-Toggle FullScreen,Vollbild umschalten,
-Toggle Developer Tools,Entwickler-Tools umschalten,
-Toggle Module's Developer Tools,Modul-Entwickler-Tools umschalten,
-Nexus Website,Nexus-Website,
-Nexus Git Repository,Nexus Git Repository,
-Nexus Wallet Guide,Nexus Wallet-Guide,
-Open Core Data Folder,,
-Open Interface Data Folder,,
-Check for Updates...,Auf Updates prüfen...,
-There are currently no updates available,Derzeit sind keine Aktualisierungen verfügbar,
-Checking for Updates...,Suche nach Updates...,
-Update available! Downloading...,Update verfügbar! Herunterladen...,
-Quit and install update...,Wallet beenden und Update installieren...,
-File,Datei,
-Edit,Bearbeiten,
-Settings,Einstellungen,
-View,Ansicht,
-Help,Hilfe,
-Transaction received,Transaktion empfangen,
-Transaction sent,Transaktion gesendet,
-Genesis transaction,Genesis Transaktion,
-Trust transaction,Trust Transaktion,
-Update available for %{smart_count} module |||| Updates available for %{smart_count} modules,,
-New transaction,,
-Error,,
-Unknown error,Unbekannter Fehler,
-Accounts,,Header.UserDropdown
-Tokens,,Header.UserDropdown
-Set recovery phrase,,Header.UserDropdown
-Switch user,,Header.UserDropdown
-Log in to another user,,Header.UserDropdown
-Log out of all users,,Header.UserDropdown
-Log out,Ausloggen,Header.UserDropdown
-Log in,,Header.UserDropdown
-Create new user,,Header.UserDropdown
-Overview,Überblick,NavigationBar
-User,,NavigationBar
-Send NXS,Nexus Senden,NavigationBar
-Send,Senden,NavigationBar
-Transactions,Transaktionen,NavigationBar
-Address Book,Adressbuch,NavigationBar
-Settings,Einstellungen,NavigationBar
-Console,Konsole,NavigationBar
-Lite mode,,LiteModeNotice
-Lite mode is now available on Nexus Wallet! You can choose to enable lite mode now or just ignore it. You can change your decision anytime under Settings/Core.,,LiteModeNotice
-Why you might want to enable lite mode,,LiteModeNotice
-Nexus Core would take less resources (memory and storage) to run,,LiteModeNotice
-Synchronization would be much faster,,LiteModeNotice
-Why you might NOT want to enable lite mode,,LiteModeNotice
-You would NOT be able to mine or stake,,LiteModeNotice
-Legacy Mode would be disabled,,LiteModeNotice
-Ignore,,LiteModeNotice
-Enable lite mode,,LiteModeNotice
+"Delete contact %{name}?","Kontakt %{name} löschen?","AddressBook"
+"Edit contact","Kontakt bearbeiten","AddressBook"
+"Delete contact","Kontakt löschen","AddressBook"
+"%{smart_count} address |||| %{smart_count} addresses","%{smart_count} Adresse ||||| %{smart_count} Adressen","AddressBook"
+"New contact","Neuer Kontakt","AddressBook"
+"No information","Keine Informationen","AddressBook"
+"Delete","Löschen","AddressBook"
+"Edit","Bearbeiten","AddressBook"
+"NXS addresses","NXS-Adressen","AddressBook"
+"My address for %{name}","Meine Nexus-Adresse für %{name}","AddressBook"
+"%{name}'s Address","%{name}'s Adresse","AddressBook"
+"Contact info","Kontaktinfo","AddressBook"
+"Nexus user ID","Nexus Benutzername","AddressBook"
+"Email","E-Mail","AddressBook"
+"Phone Number","Telefonnummer","AddressBook"
+"Local Time","Ortszeit","AddressBook"
+"Notes","Anmerkungen","AddressBook"
+"Address book","Adressbuch","AddressBook"
+"Your address book is empty","Ihr Adressbuch ist leer","AddressBook"
+"Create new contact","Neuer Kontakt","AddressBook"
+"Search contact","Kontakt suchen","AddressBook"
+"Export contacts","Kontakte exportieren","AddressBook"
+"Tritium Mode","Tritium Mode","Header"
+"Lite","Lite","Header"
+"Hybrid","Hybrid","Header"
+"Wallet is staking","Wallet ist im Staking mode","Header"
+"pooled","gepoolt","Header"
+"Stake Rate","Zinssatz","Header"
+"Waiting for 100% synchronization to start staking...","Warten auf 100% Synchronisation, um zu staken...","Header"
+"Wallet is not staking","Wallet ist nicht im staking mode","Header"
+"Synchronized","Synchronisiert","Header"
+"Synchronizing","Synchronisiere","Header"
+"Blocks","Blöcke","Header"
+"Estimated %{time} remaining","Geschätzte %{time} verbleibend","Header"
+"%{smart_count} hour |||| %{smart_count} hours","%{smart_count} Stunde ||| %{smart_count} Stunden","Header"
+"%{smart_count} minute |||| %{smart_count} minutes","%{smart_count} Minute |||| %{smart_count} Minuten","Header"
+"%{smart_count} second |||| %{smart_count} seconds","%{smart_count} Sekunde ||| %{smart_count} Sekunden","Header"
+"You're not logged in","Sie sind nicht angemeldet","Header"
+"You are staking but have not received a block in 30 minutes!","Sie sind am staken haben aber keinen Block innerhalb von 30 Minuten erhalten!","Header"
+"Switching...","Wird gewechselt...",""
+"Active","Aktiv",""
+"Switch","Wechseln",""
+"Switch user","Benutzer wechseln",""
+"Closing Nexus Wallet","Nexus schließen",""
+"Pre-Release Active","Vor-Veröffentlichung aktiv",""
+"You are currenctly running a * version of the wallet. ","Deine Wallet/Geldbörse läuft auf Version *. ",""
+"Thank you for testing our wallet, please ","",""
+"Click here","Hier klicken",""
+" To send feedback to the developers. ","Um den Entwicklern Feedback zu senden",""
+"Or join us on the offical ","",""
+"Ok","Ok",""
+"Testnet Only Mode","",""
+"You are currenctly running a Testnet only version of the wallet. ","",""
+"The core will only connect to nexus-interactions.io:testnet1 ","",""
+"Close","Schließen",""
+"Remote Core is disconnected","Remote Core ist getrennt",""
+"Connecting to Nexus Core...","Verbinde mit Nexus Core...",""
+"Nexus Core is stopped","Nexus-Core ist gestoppt",""
+"Address has been copied to clipboard","Adresse wurde in die Zwischenspeicher kopiert",""
+"Copy to clipboard","In die Zwischenablage kopiert",""
+"Click to copy to clipboard","Zum Kopieren in die Zwischenablage klicken",""
+"Show QR code","QR-Code anzeigen",""
+"Log in","Anmelden",""
+"No Rows Found","Keinen Eintrag gefunden",""
+"Use virtual keyboard","Virtuelle Tastatur einblenden",""
+"<token_name></token_name> token","<token_name></token_name> Token",""
+"Unnamed token","Unbenanntes Token",""
+"Start Nexus Core","Nexus Core starten",""
+"Stop Nexus Core","Nexus Core stoppen",""
+"Quit Nexus","Nexus beenden",""
+"About","Über",""
+"Cut","Ausschneiden",""
+"Copy","Kopieren",""
+"Paste","Einfügen",""
+"Core","Core",""
+"Application","Anwendung",""
+"Key Management","Schlüsselverwaltung",""
+"Style","Design",""
+"Modules","Modul",""
+"Download Recent Database","Letzte Datenbank herunterladen",""
+"Cannot bootstrap recent database in manual mode","Das Bootstrapen kann im manuellen Modus nicht gestartet werden",""
+"Please wait for Nexus Core to start.","Nexus Core wird gestartet, bitte warten.",""
+"Reload wallet GUI","",""
+"Toggle FullScreen","Vollbild umschalten",""
+"Toggle Developer Tools","Entwickler-Tools umschalten",""
+"Toggle Module's Developer Tools","Modul-Entwickler-Tools umschalten",""
+"Nexus Website","Nexus-Website",""
+"Nexus Git Repository","Nexus Git Repository",""
+"Nexus Wallet Guide","Nexus Wallet-Guide",""
+"Report Bug","Fehler melden",""
+"Open Core Data Folder","Öffne Core Datenordner",""
+"Open Interface Data Folder","Interface-Datenordner öffnen",""
+"Check for Updates...","Auf Updates prüfen...",""
+"There are currently no updates available","Derzeit sind keine Aktualisierungen verfügbar",""
+"Checking for Updates...","Suche nach Updates...",""
+"Update available! Downloading...","Update verfügbar! Herunterladen...",""
+"Quit and install update...","Wallet beenden und Update installieren...",""
+"File","Datei",""
+"Edit","Bearbeiten",""
+"Settings","Einstellungen",""
+"View","Ansicht",""
+"Help","Hilfe",""
+"Error","Error",""
+"Unknown error","Unbekannter Fehler",""
+"Required!","Notwendig!",""
+"Invalid!","Ungültig!",""
+"Out of range!","Außer Reichweite!",""
+"Must be at least %{min} characters","",""
+"Update available for %{smart_count} module |||| Updates available for %{smart_count} modules","Update verfügbar für %{smart_count} Modul |||| Updates für %{smart_count} Module verfügbar",""
+"Error fetching transactions","",""
+"New transaction","Neue Transaktion",""
+"%{smart_count} day |||| %{smart_count} days","%{smart_count} Tag |||| %{smart_count} Tage",""
+"%{smart_count} hour |||| %{smart_count} hours","%{smart_count} Stunde ||| %{smart_count} Stunden",""
+"%{smart_count} minute |||| %{smart_count} minutes","%{smart_count} Minute |||| %{smart_count} Minuten",""
+"%{smart_count} second |||| %{smart_count} seconds","%{smart_count} Sekunde ||| %{smart_count} Sekunden",""
+"Switch user","Benutzer wechseln","Header.UserDropdown"
+"Log in to another user","Als anderer Benutzer anmelden","Header.UserDropdown"
+"Accounts","Accounts","Header.UserDropdown"
+"Tokens","Tokens","Header.UserDropdown"
+"Set recovery phrase","Wiederherstellungspassword setzen","Header.UserDropdown"
+"Log out of all users","Alle User abmelden","Header.UserDropdown"
+"Log out","Ausloggen","Header.UserDropdown"
+"Log in","Anmelden","Header.UserDropdown"
+"Create new user","Neuen Benutzer erstellen","Header.UserDropdown"
+"Overview","Überblick","NavigationBar"
+"User","Benutzer","NavigationBar"
+"Send","Senden","NavigationBar"
+"Transactions","Transaktionen","NavigationBar"
+"Address Book","Adressbuch","NavigationBar"
+"Settings","Einstellungen","NavigationBar"
+"Console","Konsole","NavigationBar"
+"Lite mode","Lite-Modus","LiteModeNotice"
+"Lite mode is now available on Nexus Wallet! You can choose to enable lite mode now or just ignore it. You can change your decision anytime under Settings/Core.","Der Lite-Modus ist nun Verfügbar und kann in den Einstellungen aktiviert werden. Einstellungen können jederzeit unter Einstellungen/Kern Rückgängig gemacht werden.","LiteModeNotice"
+"Why you might want to enable lite mode","Warum Sie den Lite-Modus aktivieren möchten","LiteModeNotice"
+"Nexus Core would take less resources (memory and storage) to run","Nexus Core benötigt weniger Ressourcen im Ram und auf der Festplatte","LiteModeNotice"
+"Synchronization would be much faster","Synchronisierung wäre viel schneller","LiteModeNotice"
+"Why you might NOT want to enable lite mode","Warum Sie den Lite-Modus NICHT aktivieren möchten","LiteModeNotice"
+"You would NOT be able to mine or stake","Du wärst NICHT in der Lage zu minen oder zu staken","LiteModeNotice"
+"Legacy Mode would be disabled","Legacy-Modus wäre deaktiviert","LiteModeNotice"
+"Ignore","Ignorieren","LiteModeNotice"
+"Enable lite mode","Lite-Modus aktivieren","LiteModeNotice"
+"Token balances","","Overview"
+"The balance displayed might not be up-to-date since the wallet is not yet fully synchronized","Der angezeigte Kontostand ist möglicherweise nicht aktuell, da das Konto noch nicht vollständig synchronisiert ist","Overview"
+"Balance","Kontostand","Overview"
+"OTHER TOKENS","","Overview"
+"NXS Balance","NXS Guthaben","Overview"
+"%{token_name} balance","%{token_name} Guthaben","Overview"
+"This includes your unclaimed balance, unconfirmed balance and immature balance","","Overview"
+"Incoming balances","Zahlungseingänge","Overview"
+"Connections","Verbindungen","Overview"
 "Last updated
 %{time}","Zuletzt aktualisiert
-%{time}",Overview
-Getting next block...,Nächster Block wird empfangen...,Overview
-Block Weight,Block Faktor,Overview
-Trust Weight,Trust Faktor,Overview
-Stake Weight,Stake Faktor,Overview
-Prime Difficulty,Prime Schwierigkeit,Overview
-Hash Difficulty,Hash Schwierigkeit,Overview
-Stake Difficulty,Stake Schwierigkeit,Overview
-Balance,Kontostand,Overview
-Transactions,Transaktionen,Overview
-Market Price,Marktpreis,Overview
-24hr Change,Wertentwicklung 24h,Overview
-Connections,Verbindungen,Overview
-Stake Rate,Zinssatz,Overview
-Block Count,Blockhöhe,Overview
-The balance displayed might not be up-to-date since the wallet is not yet fully synchronized,"Der angezeigte Kontostand ist möglicherweise nicht aktuell, da das Konto noch nicht vollständig synchronisiert ist",Overview
-Staking and mining rewards that need to get past 120 block-old to become available,"Staking- und Miningerträge, die 120 Blöcke alt werden müssen, bevor sie verfügbar werden",Overview
-Immature Balance,Unreife Saldo,Overview
-Market Cap,Marktkapitalisierung,Overview
-Available balance,,Overview
-balance,,Overview
-"This includes your pending balance, unconfirmed balance and immature balance",,Overview
-Incoming balances,,Overview
-NXS Amount,NXS Betrag,Send
-Send all,Alle senden,Send
-Send NXS,Nexus Senden,Send
-Move NXS between accounts,Eigenübertrag zwischen den Konten,Send
-You are not logged in,Sie sind nicht eingeloggt,Send
-You need to log in to your wallet before sending transactions,"Sie müssen sich einloggen, bevor Sie etwas überweisen können",Send
-Log in now,Jetzt einloggen,Send
-Move NXS,Jetzt Übertragen,Send
-From account,Vom Konto,Send
-Select an account,Wählen Sie ein Konto aus,Send
-To account,Zum Konto,Send
-No accounts selected,Kein Konto ausgewählt,Send
-Cannot move to the same account,Kann nicht auf das gleiche Konto überwiesen werden,Send
-Invalid amount,Unglültiger Betrag,Send
-Invalid address,Ungültige Adresse,Send
-This is an address registered to this wallet.,Diese Adresse ist in dieser Wallet registriert.,Send
-NXS moved successfully,NXS erfolgreich überwiesen,Send
-Error moving NXS,NXS überweisen fehlgeschlagen,Send
-Wallet password,Wallet-Passwort,Send
-Enter your wallet password,Geben Sie ihr Wallet Passwort ein,Send
-Cancel,Abbrechen,Send
-Confirm,Bestätigen,Send
-Send to,Send nach,Send
-Recipient address,Empfängeradresse,Send
-Your address book is empty,Ihr Adressbuch ist leer,Send
-Create new contact,Neuer Kontakt,Send
-Remove recipient,Empfänger entfernen,Send
-Add recipient,Empfänger hinzufügen,Send
-Send transaction?,Transaktion senden?,Send
-Send To multiple recipients,An mehrere Empfänger senden,Send
-Send from,Sende von,Send
-Message,Nachricht,Send
-Enter your message,Geben Sie Ihre Nachricht ein,Send
-Send,Senden,Send
-There must be at least one recipient,Es muss zumindest einen Empfänger geben,Send
-Address is required,Adresse ist erforderlich,Send
-Transaction sent,Transaktion gesendet,Send
-Error sending NXS,NXS senden fehlgeschlagen,Send
-Reference,,Send
-"An optional number which may be provided by the recipient to identify this transaction from the others, e.g. invoice number, order number, etc.",,Send
-Reference number (optional),,Send
-Expires in,,Send
-"The amount of time since the transaction is created after which the transaction can no longer be credited by the recipient. By default, transactions will expire in 1 day (86400 seconds).",,Send
-Days,,Send
-Hours,,Send
-Minutes,,Send
-Seconds,,Send
-Amount,,Send
-Recipient Address/Name,,Send
-Accounts,,Send
-Unnamed account,,Send
-Tokens,,Send
-Unnamed token,,Send
-Unnamed,,Send
-Invalid name/address,,Send
-Advanced options,,Send
-Address/Name is required,,Send
-Reference must be an unsigned integer,,Send
-Number is too large,,Send
-Unnamed,,PreviewTransaction
-%{smart_count} day |||| %{smart_count} days,,PreviewTransaction
-%{smart_count} hour |||| %{smart_count} hours,,PreviewTransaction
-%{smart_count} minute |||| %{smart_count} minutes,,PreviewTransaction
-%{smart_count} second |||| %{smart_count} seconds,,PreviewTransaction
-Preview Transaction,,PreviewTransaction
-You're sending,,PreviewTransaction
-From,,PreviewTransaction
-To,,PreviewTransaction
-Amount,,PreviewTransaction
-Reference,,PreviewTransaction
-Expires,,PreviewTransaction
-Send transaction,,PreviewTransaction
-Select backup directory,Backup Verzeichnis auswählen,Settings.Application
-Backup directory,Backup Verzeichnis,Settings.Application
-Browse,Suchen,Settings.Application
-Backup wallet,Sicherung der Wallet erstellen,Settings.Application
-Wallet has been backed up,Wallet wurde gesichert,Settings.Application
-Connecting to Nexus Core,"Wallet wird geladen, bitte warten",Settings.Application
-Turn module open source policy on?,Modul Open Source Policy einschalten?,Settings.Application
-"All modules without open source verifications, possibly including your own under-development modules, will become invalid. Wallet must be refreshed for the change to take effect.","Alle Module ohne Open Source-Verifikationen, möglicherweise auch Ihre eigenen Entwicklungsmodule, werden ungültig. Wallet muss aktualisiert werden, damit die Änderung wirksam wird.",Settings.Application
-Turn module open source policy off?,Modul Open Source Policy aus?,Settings.Application
+%{time}","Overview"
+"Block Count","Blockhöhe","Overview"
+"Market Price","Marktpreis","Overview"
+"Market Cap","Marktkapitalisierung","Overview"
+"24hr Change","Wertentwicklung 24h","Overview"
+"Prime Difficulty","Prime Schwierigkeit","Overview"
+"Hash Difficulty","Hash Schwierigkeit","Overview"
+"Staking Difficulty","","Overview"
+"Staking stats not yet available until you get a genesis transaction","","Overview"
+"Stake Rate","Zinssatz","Overview"
+"Block Weight","Block Faktor","Overview"
+"Trust Weight","Trust Faktor","Overview"
+"Stake Weight","Stake Faktor","Overview"
+"Invalid amount","Unglültiger Betrag","Send"
+"%{currency} amount","","Send"
+"Amount","Betrag","Send"
+"All","Alle","Send"
+"Expires in","Läuft ab in","Send"
+"The amount of time since the transaction is created after which the transaction can no longer be credited by the recipient.","","Send"
+"Days","Tage","Send"
+"Hours","Stunden","Send"
+"Minutes","Minuten","Send"
+"Seconds","Sekunden","Send"
+"Send","Senden","Send"
+"Cannot move to the same account","Kann nicht auf das gleiche Konto überwiesen werden","Send"
+"Source and recipient must be of the same token","","Send"
+"Send to","Send nach","Send"
+"Recipient Name or Address","Empfänger Name oder Adresse ","Send"
+"Your address book is empty","Ihr Adressbuch ist leer","Send"
+"Create new contact","Neuer Kontakt","Send"
+"Recipient name cannot be resolved","","Send"
+"Remove recipient","Empfänger entfernen","Send"
+"Reference must be an unsigned integer","Referenz muss eine natürliche Zahl sein","Send"
+"Reference","Referenz","Send"
+"An optional number which may be provided by the recipient to identify this transaction from the others, e.g. invoice number, order number, etc.","Eine optionale Identifikationsnummer vom Empfänger, die es ermöglicht Zahlungen zu unterscheiden, zum Beispiel Rechnungsnummer, Bestellnummer, etc.","Send"
+"Ref. number (optional)","","Send"
+"Accounts","Accounts","Send"
+"Unnamed account","Unbenanntes Konto","Send"
+"Tokens","Tokens","Send"
+"Unnamed token","Unbenanntes Token","Send"
+"Advanced options","Erweiterte Optionen","Send"
+"Send from","Sende von","Send"
+"Select an account","Wählen Sie ein Konto aus","Send"
+"Add recipient","Empfänger hinzufügen","Send"
+"Proceed","Weiter","Send"
+"Unnamed token","Unbenanntes Token","PreviewTransaction"
+"Unnamed account","Unbenanntes Konto","PreviewTransaction"
+"From","Von","PreviewTransaction"
+"To","An","PreviewTransaction"
+"Amount","Betrag","PreviewTransaction"
+"Reference","Referenz","PreviewTransaction"
+"Expires","Läuft ab","PreviewTransaction"
+"NO EXPIRY","Kein Verfall","PreviewTransaction"
+"Transaction never expires, and you won't be able to void it even if the recipient doesn't credit the transaction","","PreviewTransaction"
+"in %{time_span}","","PreviewTransaction"
+"You're sending","Du sendest","PreviewTransaction"
+"Transaction sent","Transaktion gesendet","PreviewTransaction"
+"Error sending transaction","Fehler beim Senden der Transaktion ","PreviewTransaction"
+"Enter your PIN to confirm","","PreviewTransaction"
+"Sending transaction...","","PreviewTransaction"
+"Send transaction","Transaktion senden","PreviewTransaction"
+"Select backup directory","Backup Verzeichnis auswählen","Settings.Application"
+"Backup directory","Backup Verzeichnis","Settings.Application"
+"Browse","Suchen","Settings.Application"
+"Turn module open source policy on?","Modul Open Source Policy einschalten?","Settings.Application"
+"All modules without open source verifications, possibly including your own under-development modules, will become invalid. Wallet must be refreshed for the change to take effect.","Alle Module ohne Open Source-Verifikationen, möglicherweise auch Ihre eigenen Entwicklungsmodule, werden ungültig. Wallet muss aktualisiert werden, damit die Änderung wirksam wird.","Settings.Application"
+"Turn module open source policy off?","Modul Open Source Policy aus?","Settings.Application"
 "This is only for module developers and can be dangerous for
-              regular users. Please make sure you know what you are doing!","Dies ist nur für Modulentwickler und kann für reguläre Benutzer gefährlich sein. Bitte stellen Sie sicher, dass Sie wissen, was Sie tun!",Settings.Application
+            regular users. Please make sure you know what you are doing!","","Settings.Application"
 "It would be much easier for a closed source module to hide
-              malicious code than for an open source one. Therefore, in case you
-              still want to disable this setting, it is highly recommended that
-              you only install and run closed source modules that you are
-              developing yourself.","Es wäre viel einfacher für ein Modul mit geschlossenem Quelltext, bösartigen Code zu verstecken als für ein Modul mit Open-Source Quelltext. Deshalb wird empfolen, wenn Sie diese Einstellung trotzdem deaktivieren möchten, dass Sie nur Module mit geschlossenem Quelltext installieren und ausführen, wenn Sie diese selbst entwickeln.",Settings.Application
-Turn policy off,Richtlinien aus,Settings.Application
-Keep policy on,Regel weiterhin anwenden,Settings.Application
-Are you sure you want to disable auto update?,"Sind Sie sich sicher, dass Sie das automatische Update deaktivieren wollen?",Settings.Application
-Keeping your wallet up-to-date is important for your security and will ensure that you get the best possible user experience.,Aus Sicherheitsgründen ist es wichtig immer die aktuellste Version der Wallet zu verwenden.,Settings.Application
-Keep auto update On,Automatisches Update aktiviert lassen,Settings.Application
-Turn auto update Off,Automatisches Update deaktivieren,Settings.Application
-Minimize on close,Beim Schließen minimieren,Settings.Application
-Minimize the wallet when closing the window instead of closing it.,Die Wallet beim Schließen des Fensters minimieren anstatt zu beenden.,Settings.Application
-Auto update (Recommended),Automatisches Update (Empfohlen),Settings.Application
-Automatically check for new versions and notify if a new version is available.,Automatisch nach einer neuen Walletversion suchen und mich benachrichtigen.,Settings.Application
-Send anonymous usage data,Nutzungsdaten anonym senden,Settings.Application
-Send anonymous usage data to allow the Nexus developers to improve the wallet.,Helfen Sie den Nexus-Entwickler die Wallet stetig zu verbessern und senden Sie uns Ihre Nutzungsdaten anonym zu.,Settings.Application
-Base currency,Basiswährung,Settings.Application
-Minimum confirmations,Mindestanzahl der Bestätigungen,Settings.Application
-Minimum amount of confirmations before a block is accepted. Local only.,Minimale Anzahl an Bestätigungen bevor ein Block akzeptiert wird. Nur Lokal.,Settings.Application
-Developer mode,Entwicklermodus,Settings.Application
-Development mode enables advanced features to aid in development. After enabling the wallet must be closed and reopened to enable those features.,"Der Entwicklungsmodus ermöglicht erweiterte Funktionen zur Unterstützung bei der Entwicklung. Um diese Funktionen nutzen zu können, muss nach der Aktivierung die Wallet geschlossen und wieder geöffnet werden.",Settings.Application
-Module open source policy,Modul Open Source Policy,Settings.Application
-Only modules which have valid open source repositories are allowed to be installed and run. You can disable this option to test run the modules that you're developing,"Nur Module mit gültigen Open-Source-Repositories ist es gestattet, installiert und ausgeführt zu werden. Sie können diese Option deaktivieren, um die Module zu testen, die Sie selbst entwickeln",Settings.Application
-Allow SymLink,,Settings.Application
-Allow the presence of SymLinks in the module directory,,Settings.Application
-Fake Test Transactions,Fake-Test-Transaktionen,Settings.Application
-Display Test Transactions on the Transactions page,Test Transaktionen auf der Transaktionsseite anzeigen,Settings.Application
-Language,Sprache,Settings.Application
-Exit remote Core mode?,,Settings.Core
-(This will restart your Core),(Dadurch wird dein Core neu gestartet),Settings.Core
-Enter remote Core mode?,,Settings.Core
-Reload transaction history,Transaktionsverlauf erneut laden,Settings.Core
-Clear peer connections,,Settings.Core
-Resync database,,Settings.Core
-Nexus Core will be restarted. Lite mode database will be deleted and resynchronized from the beginning.,,Settings.Core
-Embedded Core,,Settings.Core
-Remote Core,,Settings.Core
-Lite mode,,Settings.Core
-"Nexus Core under lite mode runs lighter and synchronize much faster, but you will <b>NOT</b> be able to stake, mine, or switch the wallet to Legacy Mode.",,Settings.Core
-Multi-user,,Settings.Core
-Allow multiple logged in users at the same time. Mining and staking will be unavailable.,,Settings.Core
-Enable staking,Staking aktivieren,Settings.Core
-Enable/Disable staking on the wallet.,Aktivieren / Deaktivieren des Stakings in der Wallet.,Settings.Core
-Pooled staking,,Settings.Core
-"Pooled staking is a decentralized and trust-less mechanism allowing you to use the balances of others to increase your chances of finding a stake block. All participants receive their staking rewards and build trust, regardless of which user mines the block. A small portion of each reward is paid to the block finder by all pool participants.",,Settings.Core
-Enable mining,Mining aktivieren,Settings.Core
-Enable/Disable mining to the wallet.,Aktivieren / Deaktivieren des Minings in der Wallet.,Settings.Core
-Mining IP Whitelist,Mining IP Positivliste,Settings.Core
-IP/Ports allowed to mine to. Separate by <b>;</b> . Wildcards supported only in IP,IP/Ports dürfen abgebaut werden. Separate von <b>;</b> . Wildcards werden nur in IP unterstützt,Settings.Core
-Verbose level,Informationstiefe,Settings.Core
-Verbose level for logs.,Informationstiefe der Protokolle.,Settings.Core
-Core Data Directory,,Settings.Core
-Where the blockchain data and your legacy wallet.dat are stored,,Settings.Core
-Testnet Iteration,,Settings.Core
-The iteration of Testnet to connect to.,,Settings.Core
-Turn Off,,Settings.Core
-Avatar Mode,Avatar Modus,Settings.Core
-Disabling Avatar will make the core use a separate change key,Das Deaktivieren des Avatar zwingt den Kern einem separaten Change-Key zu benutzen,Settings.Core
-Rescan wallet,Wallet nachscannen,Settings.Core
-"Used to correct transaction/balance issues, scans over every block in the database. Could take up to 10 minutes.","Wird verwendet, um Transaktions-/Saldo-Probleme zu korrigieren, durchsucht jeden Block in der Datenbank. Kann bis zu 10 Minuten dauern.",Settings.Core
-Restart Nexus core with -walletclean parameter to clean out and reload all transaction history,"Starten Sie den Nexus Core mit dem -walletclean Parameter neu, um dieTransaktionshistorie zu löschen und neu zu laden",Settings.Core
-Reload,Erneut laden,Settings.Core
-Clear all stored peer connections and restart Nexus,,Settings.Core
-Clear,,Settings.Core
-Delete lite mode database and resynchronize from the beginning,,Settings.Core
-Resynchronize,,Settings.Core
-IP address,IP Adresse,Settings.Core
-Remote Core IP address,,Settings.Core
-API SSL,,Settings.Core
-Use SSL for API calls,,Settings.Core
-API Port,,Settings.Core
-Nexus API server Port,,Settings.Core
-API SSL Port,,Settings.Core
-Nexus API server SSL Port,,Settings.Core
-API Username,,Settings.Core
-Nexus API server Username,,Settings.Core
-API Password,,Settings.Core
-Nexus API server Password,,Settings.Core
-RPC SSL,,Settings.Core
-Use SSL for RPC calls,,Settings.Core
-RPC Port,,Settings.Core
-Nexus RPC server Port,,Settings.Core
-RPC SSL Port,,Settings.Core
-Nexus RPC server SSL Port,,Settings.Core
-RPC Username,,Settings.Core
-Nexus RPC server Username,,Settings.Core
-RPC Password,,Settings.Core
-Nexus RPC server Password,,Settings.Core
-Log out on close,,Settings.Core
-Log out of all users before closing the wallet,,Settings.Core
-Restart Core for these changes to take effect,,Settings.Core
-Save settings,,Settings.Core
-Verbose level is required,,Settings.Core
-Remote Core IP is required,,Settings.Core
-RPC port is required,,Settings.Core
-RPC username is required,,Settings.Core
-RPC password is required,,Settings.Core
-API port is required,,Settings.Core
-API username is required,,Settings.Core
-API password is required,,Settings.Core
-Core settings saved,Core Einstellungen gespeichert,Settings.Core
-Restarting Core...,Core wird neu gestartet...,Settings.Core
-Error rescanning,Fehler beim neu Einlesen der Wallet,Settings.Core
-Rescanned successfully,Erfolgreich durchsucht,Settings.Core
-Rescanning...,Überprüfe...,Settings.Core
-Settings,Einstellungen,Settings
-Application,Anwendung,Settings
-Core,Core,Settings
-Security,Sicherheit,Settings
-Style,Design,Settings
-Modules,Modul,Settings
-Select development module directory,,Settings.Modules
-Your module is still in development? <link>Add a development module</link>,,Settings.Modules
-Select module archive file,Modul-Archivdatei auswählen,Settings.Modules
-Select module directory,Modulverzeichnis auswählen,Settings.Modules
-Add Module,Modul hinzufügen,Settings.Modules
-Checking module,Modul wird überprüft,Settings.Modules
-Drop here to install,Hier ablegen zum Installieren,Settings.Modules
-Select module's <file>archive file</file> or <dir>directory</dir>,Wählen Sie die Modul <file>-Archiv-Datei</file> oder <dir>Verzeichnis</dir>,Settings.Modules
-or drag and drop it here,hier herein ziehen,Settings.Modules
-Failed to load %{moduleName},,Settings.Modules
-Disable %{moduleName}?,%{moduleName} deaktivieren?,Settings.Modules
-Wallet will be automatically refreshed for the change to take effect,"Wallet wird automatisch aktualisiert, damit die Änderung wirksam wird",Settings.Modules
-Enable %{moduleName}?,Aktiviere %{moduleName}?,Settings.Modules
-This module was built for an incompatible wallet version,,Settings.Modules
-Module is not open source,Modul ist nicht Open Source,Settings.Modules
-The provided repository is not verified to be the real source code of this module,"Dieses Repository ist nicht verifiziert, um der tatsächliche Quellcode dieses Moduls zu sein",Settings.Modules
-%{version} update available,,Settings.Modules
-development,,Settings.Modules
-Failed to load module,,Settings.Modules
-Overwrite module?,Modul überschreiben?,Settings.Modules
-A module with the same directory name already exists,Ein Modul mit dem gleichen Verzeichnisnamen existiert bereits,Settings.Modules
-Module has been successfully installed,Modul wurde erfolgreich installiert,Settings.Modules
-The wallet will now be refreshed for the new module to take effect,"Das Konto wird nun aktualisiert, damit das neue Modul aktiviert wird",Settings.Modules
-Error copying module files,Fehler beim Kopieren der Moduldateien,Settings.Modules
-Cannot find module,Modul kann nicht gefunden werden,Settings.Modules
-Unsupported file type,Nicht unterstützter Dateityp,Settings.Modules
-Cannot install from this location,,Settings.Modules
-An unknown error occurred,Ein unbekannter Fehler ist aufgetreten,Settings.Modules
-Directory has already been added,,Settings.Modules
-Failed to load development module,,Settings.Modules
-A module with the same name already exists,,Settings.Modules
-Development module has been added,,Settings.Modules
-Are you sure you want to log out?,Sind Sie sicher dass Sie ausloggen wollen?,Settings.Security
-Error logging out,Fehler beim ausloggen,Settings.Security
-Change password,Ändern Sie das Passwort,Settings.Security
-Previous password,Altes Passwort,Settings.Security
-Password,Passwort,Settings.Security
-New password,Neues Passwort,Settings.Security
-Re-enter password:,Passwort erneut eingeben:,Settings.Security
-Confirm password,Passwort bestätigen,Settings.Security
-Log out,Ausloggen,Settings.Security
-Password is required,Passwort wird benötigt,Settings.Security
-Password cannot contain these characters:,Das Passwort darf diese Zeichen nicht enthalten:,Settings.Security
-Password must be at least 8 characters,!! Passwort muss mindestens 8 Zeichen enthalten !!,Settings.Security
-Password cannot start or end with spaces,Das Passwort darf nicht mit einem Leerzeichen beginnen oder enden,Settings.Security
-Passwords do not match,Passwörter stimmen nicht überein,Settings.Security
-Password has been changed.,Das Passwort wurde geändert.,Settings.Security
-Error changing password,Fehler beim ändern des Passwort,Settings.Security
-Encrypt wallet,Wallet verschlüsseln,Settings.Security
-Re-enter password,Passwort erneut eingeben,Settings.Security
-Encrypt and restart,Verschlüsseln und Neustarten,Settings.Security
-Wallet has been encrypted.,Die Wallet wurde verschlüsselt.,Settings.Security
-Error encrypting wallet,Fehler beim entsperren der Wallet,Settings.Security
-Import private key,Private Key importieren,Settings.Security
-Account name,Kontoname,Settings.Security
-Private key,Private Key,Settings.Security
-Import,Importieren,Settings.Security
-Account name is required,Kontoname erforderlich,Settings.Security
-Private key is required,Private Key erforderlich,Settings.Security
-Private key imported. Rescanning now,Private Key importiert. Überprüfung läuft,Settings.Security
-Rescanning...,Überprüfe...,Settings.Security
-Rescanning done,Überprüfung abgeschlossen,Settings.Security
-Error rescanning,Fehler beim neu Einlesen der Wallet,Settings.Security
-An unknown error occurred,Ein unbekannter Fehler ist aufgetreten,Settings.Security
-Error importing private key,Fehler beim Importieren des Private Key,Settings.Security
-Login until date,Einloggen bis Datum,Settings.Security
-Login until time,Anmelden bis Uhrzeit,Settings.Security
-Your wallet password,Ihr Wallet Passwort,Settings.Security
-Login for staking & mining only,Nur zum Staken freigeben,Settings.Security
-Set timeout for login,Timeout für Anmeldung festlegen,Settings.Security
-Date is required,Datum erforderlich,Settings.Security
-Time is required,Uhrzeit erforderlich,Settings.Security
-Time must be at least one hour in the future,Die Zeit muss mindestens eine stunde in der Zukunft liegen,Settings.Security
-Logged in successfully,Erfolgreich eingeloggt,Settings.Security
-Error logging in,Fehler beim einloggen,Settings.Security
-Copied to clipboard,In die Zwischenablage kopiert,Settings.Security
-View private key for address,Den Private Key für diese Adresse anzeigen,Settings.Security
-Address,Adresse,Settings.Security
-Enter address here,Adresse hier eingeben,Settings.Security
-View private key,Private Key anzeigen,Settings.Security
-Private key will be displayed here,Der Private Key wird hier angezeigt,Settings.Security
-Copy,Kopieren,Settings.Security
-Address cannot be empty,Adressfeld darf nicht leer sein,Settings.Security
-Error getting private key,Fehler den Private Key anzuzeigen,Settings.Security
-Twinkling stars,Sternenhimmel,Settings.Style
-Cosmic light,Kosmisches Licht,Settings.Style
-Custom wallpaper,Benutzerdefiniertes Hintergrundbild,Settings.Style
-Select a custom wallpaper,Benutzerdefiniertes Hintergrundbild auswählen,Settings.Style
-Color scheme has been reset to default,Das Farbschema wurde zurückgesetzt,Settings.Style
-Invalid file format! Custom theme file must be in JSON,Ungültiges Dateiformat! Das benutzerdefinierte Design muss im JSON Format vorliegen,Settings.Style
-Select custom theme file,Benutzerdefiniertes Design auswählen,Settings.Style
-Theme exported,Design exportiert,Settings.Style
-Theme has been reset to default,Das Design wurde zurückgesetzt,Settings.Style
-Render globe,Globus rendern,Settings.Style
-Render the globe on the Overview page.,Rendern Sie den Globus auf der Benutzeroberfläche.,Settings.Style
-Your computer does not support OPENGL 2.0,Ihr Computer unterstützt OPENGL 2.0 nicht,Settings.Style
-Overview Display,Übersicht anzeigen,Settings.Style
-Nexus Addresses format,Nexus Adressen Format,Settings.Style
-Choose your Nexus Address display preference,Wählen Sie Ihre Einstellung für die Anzeige der Nexus-Adresse aus,Settings.Style
-Sample Address,Beispieladresse,Settings.Style
-Theme,Design,Settings.Style
-Select Wallet Theme,Design auswählen,Settings.Style
-Background,Hintergrund,Settings.Style
-Customize your background wallpaper,Hintergrundbild anpassen,Settings.Style
-Color scheme,Farbschema,Settings.Style
-Background Color,Hintergrundfarbe des Panels,Settings.Style
-Foreground Color,Textfarbe,Settings.Style
-Primary Color,Primäre Farbe,Settings.Style
-Primary Color Accent,Primärer Farbton,Settings.Style
-Danger Color,Danger Farbton,Settings.Style
-Danger Color Accent,Farbakzent Danger,Settings.Style
-Globe Color,Farbe der Erde,Settings.Style
-Globe Pillar Color,Farbe der Standorte,Settings.Style
-Globe Arch Color,Farbe der Verbindungen,Settings.Style
-Import custom theme,Design auswählen,Settings.Style
-Export custom theme,Farbschema exportieren,Settings.Style
-Dark,Dunkel,Settings.Style
-Light,Hell,Settings.Style
-Custom,Erweitert,Settings.Style
-Reset,Zurücksetzen,Settings.Style
-Console,Konsole,Console
-Core output,Core Ausgabe,Console
-CLI syntax,,Console.NexusAPI
-URL syntax,,Console.NexusAPI
-Execute,Ausführen,Console.NexusAPI
-API Documentation,,Console.NexusAPI
-Clear,,Console.NexusAPI
-"Enter console commands here (ex: getinfo, help)","Konsolenbefehle hier eingeben (Beispiel: getinfo, help)",Console.Console
-Execute,Ausführen,Console.Console
-Clear console,Konsole löschen,Console.Console
-Core is in Manual Mode,Der Core ist im Modus manuell,Console.CoreOutput
-Pending,Ausstehend,Transactions
-All,Alle,Transactions
-Receive,Empfangen,Transactions
-Sent,Versendet,Transactions
-Stake,Stake,Transactions
-Generate,Generieren,Transactions
-Immature,Unreif,Transactions
-Orphan,Orphan,Transactions
-Genesis,Genesis,Transactions
-Past Year,Letztes Jahr,Transactions
-Past Month,Letzten Monat,Transactions
-Past Week,Letzte Woche,Transactions
-Search address,Adresse durchsuchen,Transactions
-Search for Address,Nach Adresse suchen,Transactions
-Category,Kategorie,Transactions
-Min amount,Mindestbetrag,Transactions
-Time span,Zeitpunkt,Transactions
-Time,Zeit,Transactions
-CATEGORY,KATEGORIE,Transactions
-AMOUNT,MENGE,Transactions
-ACCOUNT,KONTO,Transactions
-ADDRESS,ADRESSE,Transactions
-Transaction details,Details zu den Transaktionen,Transactions
-Show transactions chart,Transaktionsgraph anzeigen,Transactions
-Download transactions history,Transaktionsverlauf herunterladen,Transactions
-Loading transactions,Transaktionen werden geladen,Transactions
-All Accounts,Alle Konten,Transactions
-Send,Senden,Transactions
-Trust,Vertrauen,Transactions
-Unknown,Unbekannt,Transactions
-Legacy transaction,,Transactions
-Coinbase transaction,,Transactions
-View contract details,,Transactions
-View transaction details,,Transactions
-Address,Adresse,Transactions
-Account/token address,,Transactions
-Name,Name,Transactions
-Operation,,Transactions
-Transactions,Transaktionen,Transactions
-Loading transactions...,,Transactions
-NXS balances,,Transactions
-Previous,Vorheriger,Transactions
-Page <page></page> of %{total},,Transactions
-Next,Nächster,Transactions
-Transactions Details,Transaktionsdetails,Transactions.TransactionDetails
-Time,Zeit,Transactions.TransactionDetails
-Category,Kategorie,Transactions.TransactionDetails
-Amount,Betrag,Transactions.TransactionDetails
-Fee,Gebühr,Transactions.TransactionDetails
-Account,Konto,Transactions.TransactionDetails
-Address,Adresse,Transactions.TransactionDetails
-Confirmations,Bestätigungen,Transactions.TransactionDetails
-Pending,Ausstehend,Transactions.TransactionDetails
-Transaction ID,Transaktions-ID,Transactions.TransactionDetails
-Block hash,Blockhash,Transactions.TransactionDetails
-Loading transaction details...,Transaktionsdetails werden geladen...,Transactions.TransactionDetails
-Transactions chart,Transaktionsdetails,Transactions.TransactionsChart
-Amount,Betrag,Transactions.TransactionsChart
-Time,Zeit,Transactions.TransactionsChart
-Total,,Transactions.Balances
-Available,,Transactions.Balances
-The current balance across all NXS accounts that is available to be spent,,Transactions.Balances
-Pending,Ausstehend,Transactions.Balances
-The sum of all debit and coinbase transactions made to your NXS accounts that are confirmed but have not yet been credited. This does NOT include immature and unconfirmed amounts,,Transactions.Balances
-Unconfirmed,,Transactions.Balances
-"The sum of all debit transactions made to your NXS accounts that are not confirmed, or credits you have made to your accounts that are not yet confirmed (not yet included in a block)",,Transactions.Balances
-Stake,Stake,Transactions.Balances
-The amount of NXS currently staked in the trust account,,Transactions.Balances
-Immature,Unreif,Transactions.Balances
-The sum of all coinbase transactions that have not yet reached maturity,,Transactions.Balances
-Unnamed account,,User.Accounts
-Rename,,User.Accounts
-Details,,User.Accounts
-History,,User.Accounts
-<b>%{account_name}</b> account address,,User.Accounts
-Unnamed,,User.Accounts
-Create new account,,User.Accounts
-Account Details,,User.Accounts.AccountDetails
-Account name,Kontoname,User.Accounts.AccountDetails
-Unnamed,,User.Accounts.AccountDetails
-Created at,,User.Accounts.AccountDetails
-Last modified,,User.Accounts.AccountDetails
-Token name,,User.Accounts.AccountDetails
-Data,,User.Accounts.AccountDetails
-Total account balance,,User.Accounts.AccountDetails
-Available balance,,User.Accounts.AccountDetails
-Send %{token_name},,User.Accounts.AccountDetails
-Pending balance,,User.Accounts.AccountDetails
-Unconfirmed balance,,User.Accounts.AccountDetails
-Stake balance,,User.Accounts.AccountDetails
-Immature balance,,User.Accounts.AccountDetails
-Address,Adresse,User.Accounts.AccountDetails
-Trust Account is empty.,,User.Accounts.AccountDetails
-Trust Account must mature for 72 hours before staking,,User.Accounts.AccountDetails
-Adjust stake amount,,User.Accounts.AccountDetails
-Time,Zeit,User.Accounts.AccountHistory
-Operation,,User.Accounts.AccountHistory
-From,,User.Accounts.AccountHistory
-staking,,User.Accounts.AccountHistory
-mining,,User.Accounts.AccountHistory
-To,,User.Accounts.AccountHistory
-Change,,User.Accounts.AccountHistory
-Account History,,User.Accounts.AccountHistory
-Loading account history,,User.Accounts.AccountHistory
-Account balance,,User.Accounts.AccountHistory
-Show %{tokenName},,User.Accounts.AccountHistory
-Total,,User.Accounts.AccountHistory
-Available,,User.Accounts.AccountHistory
-Pending,Ausstehend,User.Accounts.AccountHistory
-Unconfirmed,,User.Accounts.AccountHistory
-Stake,Stake,User.Accounts.AccountHistory
-Rename account,,RenameAccount
-Account name,,RenameAccount
-Account renaming fee,,RenameAccount
-Cancel,,RenameAccount
-Renaming,,RenameAccount
-Rename,,RenameAccount
-Account name is required,,RenameAccount
-Name already in use,,RenameAccount
-The name you entered is already in use. Please choose another name.,,RenameAccount
-Insuffient balance,,RenameAccount
-Your default account balance is not enough to pay the fee.,,RenameAccount
-Account has been renamed to %{account_name},,RenameAccount
-Error renaming account,,RenameAccount
-Unnamed asset,,User.Assets
-You own %{percentage}% of this asset,,User.Assets
-Create new asset,,User.Assets
-You don't own any asset,,User.Assets
-Asset Details,,AssetDetails
-Edit asset,,AssetDetails
-Name,,AssetDetails
-Address,,AssetDetails
-Owner,,AssetDetails
-Ownership,,AssetDetails
-Created at,,AssetDetails
-Last modified,,AssetDetails
-View history,,AssetDetails
-Tokenize,,AssetDetails
-Transfer ownership,,AssetDetails
-Name,,CreateAsset
-Field name,,CreateAsset
-Value,,CreateAsset
-Field value,,CreateAsset
-Mutable,,CreateAsset
-Type,,CreateAsset
-Max. length,,CreateAsset
-Only applicable to mutable string fields,,CreateAsset
-Unlimited,,CreateAsset
-Remove field,,CreateAsset
-Asset name,,CreateAsset
-A local Name object register will be created for this asset name,,CreateAsset
-Asset name (optional),,CreateAsset
-Asset data,,CreateAsset
-Add field,,CreateAsset
-Estimated fee,,CreateAsset
-Creating asset,,CreateAsset
-Create asset,,CreateAsset
-Field name is required,,CreateAsset
-New asset has been created,,CreateAsset
-Error creating asset,,CreateAsset
-Create a new asset,,CreateAsset
-Asset History Event,,AssetHistoryDetails
-Type,,AssetHistoryDetails
-Time,,AssetHistoryDetails
-Owner,,AssetHistoryDetails
-Checksum,,AssetHistoryDetails
-Name,,AssetHistoryDetails
-Address,,AssetHistoryDetails
-Time,,AssetHistory
-Type,,AssetHistory
-Owner,,AssetHistory
-Asset History,,AssetHistory
-Loading asset history,,AssetHistory
-Name,,EditAsset
-Address,,EditAsset
-Updating asset,,EditAsset
-Update asset,,EditAsset
-Asset has been updated,,EditAsset
-Error updating asset,,EditAsset
-Edit asset,,EditAsset
-Asset name,,TokenizeAsset
-Asset address,,TokenizeAsset
-Token,,TokenizeAsset
-Token address,,TokenizeAsset
-Tokenizing asset,,TokenizeAsset
-Tokenize asset,,TokenizeAsset
-Token is required,,TokenizeAsset
-Asset has been tokenized,,TokenizeAsset
-Error tokenizing asset,,TokenizeAsset
-Asset name,,TransferAsset
-Asset address,,TransferAsset
-Transfer to,,TransferAsset
-Recipient username or user ID,,TransferAsset
-Transferring asset,,TransferAsset
-Transfer asset,,TransferAsset
-Recipient is required,,TransferAsset
-Asset has been transferred,,TransferAsset
-Error transferring asset,,TransferAsset
-User,,User
-User ID,,User
-Accounts,,User
-Staking,,User
-Tokens,,User
-Names,,User
-Namespaces,,User
-Assets,,User
-Change password & PIN,,User
-Change recovery phrase,,User
-Set recovery phrase,,User
-Name,,ChangeRegisterAddress
-Register address,,ChangeRegisterAddress
-Register address that this name points to,,ChangeRegisterAddress
-Name update fee,,ChangeRegisterAddress
-Updating name,,ChangeRegisterAddress
-Update name,,ChangeRegisterAddress
-Name has been updated,,ChangeRegisterAddress
-Error updating name,,ChangeRegisterAddress
-Change register address,,ChangeRegisterAddress
-Local,,CreateName
-Namespaced,,CreateName
-Global,,CreateName
-Namespace,,CreateName
-A namespace you own,,CreateName
-Name,,CreateName
-name,,CreateName
-namespace,,CreateName
-Register address,,CreateName
-Register address that this name points to,,CreateName
-Name creation fee,,CreateName
-Creating name,,CreateName
-Create name,,CreateName
-Name is required,,CreateName
-Name cannot start with a colon character,,CreateName
-Namespace is required,,CreateName
-New name has been created,,CreateName
-Error creating name,,CreateName
-Create a new name,,CreateName
-View name details,,User.Names
-Change register address,,User.Names
-Transfer name,,User.Names
-Unused,,User.Names
-Global,,User.Names
-Namespaced,,User.Names
-Local,,User.Names
-Create new name,,User.Names
-Show unused names,,User.Names
-You don't own any name,,User.Names
-Name Details,,NameDetails
-Change register address,,NameDetails
-Name,,NameDetails
-Type,,NameDetails
-Global,,NameDetails
-Namespaced,,NameDetails
-Local,,NameDetails
-Namespace,,NameDetails
-Address,,NameDetails
-Points to,,NameDetails
-Created at,,NameDetails
-Last modified,,NameDetails
-View history,,NameDetails
-Transfer ownership,,NameDetails
-Name History Event,,NameHistoryDetails
-Type,,NameHistoryDetails
-Time,,NameHistoryDetails
-Owner,,NameHistoryDetails
-Checksum,,NameHistoryDetails
-Name,,NameHistoryDetails
-Namespace,,NameHistoryDetails
-Address,,NameHistoryDetails
-Points to,,NameHistoryDetails
-Time,,NameHistory
-Type,,NameHistory
-Owner,,NameHistory
-Name History,,NameHistory
-Loading name history,,NameHistory
-Name,,TransferName
-Transfer to,,TransferName
-Recipient username or user ID,,TransferName
-Transferring name,,TransferName
-Transfer name,,TransferName
-Recipient is required,,TransferName
-Name has been transferred,,TransferName
-Error transferring name,,TransferName
-Name,,CreateNamespace
-Namespace name,,CreateNamespace
-Namespace creation fee,,CreateNamespace
-Creating namespace,,CreateNamespace
-Create namespace,,CreateNamespace
-Name is required,,CreateNamespace
-"Namespace names can only contain lowercase letters, numbers, and periods (.)",,CreateNamespace
-New namespace has been created,,CreateNamespace
-Error creating namespace,,CreateNamespace
-Create a new namespace,,CreateNamespace
-View name details,,User.Namespaces
-Transfer namespace,,User.Namespaces
-Create new namespace,,User.Namespaces
-You don't own any namespace,,User.Namespaces
-Namespace Details,,NamespaceDetails
-Name,,NamespaceDetails
-Address,,NamespaceDetails
-Created at,,NamespaceDetails
-Last modified,,NamespaceDetails
-View history,,NamespaceDetails
-Transfer ownership,,NamespaceDetails
-Namespace History Event,,NamespaceHistoryDetails
-Type,,NamespaceHistoryDetails
-Time,,NamespaceHistoryDetails
-Owner,,NamespaceHistoryDetails
-Checksum,,NamespaceHistoryDetails
-Name,,NamespaceHistoryDetails
-Address,,NamespaceHistoryDetails
-Time,,NamespaceHistory
-Type,,NamespaceHistory
-Owner,,NamespaceHistory
-Namespace History,,NamespaceHistory
-Loading namespace history,,NamespaceHistory
-Namespace,,TransferNamespace
-Transfer to,,TransferNamespace
-Recipient username or user ID,,TransferNamespace
-Transferring namespace,,TransferNamespace
-Transfer namespace,,TransferNamespace
-Destination is required,,TransferNamespace
-Namespace has been transferred,,TransferNamespace
-Error transferring namespace,,TransferNamespace
-The current NXS balance of the trust account that is not staked. You can spend this amount without affecting your Trust Score,,User.Staking
-"Balance that will be staked after the 72 holding period, any change to this balance will reset the hold timer",,User.Staking
-Restart Core?,Core neustarten?,User.Staking
-Nexus Core needs to restart for this change to take effect,,User.Staking
-Disable staking,,User.Staking
-Enable staking,Staking aktivieren,User.Staking
-Cancel,Abbrechen,User.Staking
-Status,,User.Staking
-Staking,,User.Staking
-pooled,,User.Staking
-Not staking,,User.Staking
-Stake amount,,User.Staking
-The amount of NXS currently staked in the trust account,,User.Staking
-Pending change,,User.Staking
-The pending stake amount change that will be applied on the next Trust transaction,,User.Staking
-Requested at,,User.Staking
-Expired in,,User.Staking
-Stake Rate,Zinssatz,User.Staking
-The current annual reward rate earned for staking,,User.Staking
-Trust Weight,Trust Faktor,User.Staking
-"The percentage of the maximum Trust Score, which is gradually built over time when you consistently operate your node in an honest, trustworthy, and timely manner",,User.Staking
-Block Weight,Block Faktor,User.Staking
-"Block Weight depends on the time passed since you received a Trust transaction and will be reset everytime you receive a Trust transaction. Otherwise, Block Weight will reach 100% after 3 days and your Trust Score will start decaying until you receive another Trust transaction",,User.Staking
-Stake Weight,Stake Faktor,User.Staking
-"Stake Weight depends on Trust Weight and Block Weight. Along with your Stake amount, Stake Weight affects how frequent you receive a Trust transaction",,User.Staking
-Available Balance,,User.Staking
-Adjust stake amount,,User.Staking
-Account on hold for another %{stakeSeconds} Seconds,,User.Staking
-Stop staking,,User.Staking
-Start staking,,User.Staking
-Create new token,,User.Tokens
-Look up a token,,User.Tokens
-Unnamed token,,User.Tokens
- (Owned by you),,User.Tokens
-Details,,User.Tokens
-New Token,,User.Tokens.NewToken
-"There is a %{tokenfee} NXS token creation fee, based on supply",,User.Tokens.NewToken
-Token name,,User.Tokens.NewToken
-Name Creation Fee: %{tokenFee} NXS (Optional),,User.Tokens.NewToken
-New tokens's name,,User.Tokens.NewToken
-Supply,,User.Tokens.NewToken
-Max amount of tokens available,,User.Tokens.NewToken
-Decimal,,User.Tokens.NewToken
-Amount of significant digits a token can have,,User.Tokens.NewToken
-Cancel,Abbrechen,User.Tokens.NewToken
-Create token,,User.Tokens.NewToken
-Supply can not be zero or negative,,User.Tokens.NewToken
-Create a token without a name?,,User.Tokens.NewToken
-Adding a name costs a NXS fee,,User.Tokens.NewToken
-That's Ok,,User.Tokens.NewToken
-Add Name,,User.Tokens.NewToken
-New token %{token} has been created,,User.Tokens.NewToken
-You have successfully created token %{token} ! Would you like to make an account for this token?,,User.Tokens.NewToken
-Yes,Ja,User.Tokens.NewToken
-No,Nein,User.Tokens.NewToken
-Error creating token,,User.Tokens.NewToken
-Cannot find Token,,User.Tokens.SearchToken
-Look up token,,User.Tokens.SearchToken
-Name or address,,User.Tokens.SearchToken
-Token name/address,,User.Tokens.SearchToken
-Look up,,User.Tokens.SearchToken
-No Value,,User.Tokens.SearchToken
-Error searching for token,,User.Tokens.SearchToken
-Unknown token name/address,,User.Tokens.SearchToken
-Token Details,,User.Tokens.TokenDetails
-Token name,,User.Tokens.TokenDetails
-Token address,,User.Tokens.TokenDetails
-Created at,,User.Tokens.TokenDetails
-Last modified,,User.Tokens.TokenDetails
-Token Owner,,User.Tokens.TokenDetails
-Current Supply,,User.Tokens.TokenDetails
-Max Supply,,User.Tokens.TokenDetails
-Decimals,,User.Tokens.TokenDetails
-Balance,Kontostand,User.Tokens.TokenDetails
-Pending balance,,User.Tokens.TokenDetails
-Unconfirmed balance,,User.Tokens.TokenDetails
-Create new account with this token,,User.Tokens.TokenDetails
-Close,Schließen,User.Tokens.TokenDetails
-Wallet version,,About
-Wallet build date,,About
-Nexus Core version,,About
-Core build date,,About
-Testnet,,About
-Private blockchain,,About
-Invalid address,Ungültige Adresse,AddEditContact
-This is not one of your addresses.,Dies ist keine Ihrer Adressen.,AddEditContact
-This is one of your addresses.,Dies ist eine Ihrer Adressen.,AddEditContact
-Name,Name,AddEditContact
-Contact name,Kontaktname,AddEditContact
-Email address,E-Mail-Adresse,AddEditContact
-Phone number,Telefonnummer,AddEditContact
-Time zone,Zeitzone,AddEditContact
-Select a time zone,Zeitzone auswählen,AddEditContact
-Notes,Anmerkungen,AddEditContact
-Cancel,Abbrechen,AddEditContact
-Reset,Zurücksetzen,AddEditContact
-Save changes,Änderungen speichern,AddEditContact
-Create,Erstellen,AddEditContact
-Name is required.,Ein Name ist erforderlich.,AddEditContact
-A contact with the same name already exists.,Ein gleichnamiger Kontakt ist bereits vorhanden.,AddEditContact
-There must be at least one address.,Es muss mindestens eine Adresse geben.,AddEditContact
-Invalid email,Ungültige E-Mail Adresse,AddEditContact
-Contact has been updated,Kontakt wurde aktualisiert,AddEditContact
-New contact has been added to address book,Neuer Kontakt wurde zum Adressbuch hinzugefügt,AddEditContact
-My Nexus address for %{name},Meine Nexus-Adresse für %{name},AddEditContact
-My Nexus address,Meine Nexus-Adresse,AddEditContact
-%{name}'s Nexus address,%{name}'s Nexus Adresse,AddEditContact
-Their Nexus address,Nexus Adresse des Empfängers,AddEditContact
-Remove address,Adresse entfernen,AddEditContact
-Label (optional),Beschreibung (optional),AddEditContact
-Edit contact,Kontakt bearbeiten,AddEditContact
-Create new contact,Neuer Kontakt,AddEditContact
-Adjust stake amount,,AdjustStake
-"Note: This change will not take effect immediately but will stay pending until you get the next Trust transaction. The pending change will be recorded locally in this machine, therefore if you switch to another machine for staking, the change will not take effect.",,AdjustStake
-Cancel,Abbrechen,AdjustStake
-Set stake amount,,AdjustStake
-Invalid number,,AdjustStake
-Out of range,,AdjustStake
-Reduce stake amount?,,AdjustStake
-Reducing stake amount might make your Stake Rate decrease,,AdjustStake
-Stake amount has been updated,,AdjustStake
-Error setting stake amount,,AdjustStake
-Backing up...,Sichern...,Bootstrap
-Downloading,Ladet herunter,Bootstrap
-Decompressing...,Dekomprimieren...,Bootstrap
-Stopping Core...,Core wird gestoppt...,Bootstrap
-Moving...,Verschieben...,Bootstrap
-Restarting Core...,Core wird neu gestartet...,Bootstrap
-Rescanning Wallet...,Durchsuche Konto...,Bootstrap
-Backing up your wallet...,Wallet wird gesichert...,Bootstrap
-Downloading the database,Datenbank wird heruntergeladen,Bootstrap
-Decompressing the database...,Datenbank wird dekomprimiert...,Bootstrap
-Stopping Nexus Core...,Nexus Core wird gestoppt...,Bootstrap
-Moving the database...,Datenbank wird verschoben...,Bootstrap
-Restarting Nexus Core...,Starte Daemon neu...,Bootstrap
-Are you sure you want to abort the process?,"Sind Sie sicher, dass Sie den Prozess abbrechen möchten?",Bootstrap
-"Yes, abort","Ja, Abbruch",Bootstrap
-"No, let it continue","Nein, lassen Sie es fortfahren",Bootstrap
-Bootstrap Recent Database,Bootstrap die aktuelle Datenbank,Bootstrap
-Abort,Abbrechen,Bootstrap
-Not enough disk space! Minimum 15GB of free space is required.,Nicht genügend Speicherplatz! Mindestens 15GB freier Speicherplatz sind erforderlich.,Bootstrap
-Download recent database?,Letzte Datenbank herunterladen?,Bootstrap
-Downloading a recent version of the database might reduce the time it takes to synchronize your wallet,"Das Herunterladen einer aktuellen Version der Datenbank könnte die Zeit verringern, die es benötigt, um Ihre Wallet zu synchronisieren",Bootstrap
-"Yes, let's bootstrap it","Ja, lass es bootstrapen",Bootstrap
-"No, let it sync","Nein, synchronisieren lassen",Bootstrap
-Bootstrap process has been aborted,Bootstrap-Prozess wurde abgebrochen,Bootstrap
-Error bootstrapping recent database,Fehler beim Starten der aktuellen Datenbank,Bootstrap
-Unknown error,Unbekannter Fehler,Bootstrap
-Recent database has been successfully bootstrapped,Die aktuelle Datenbank wurde erfolgreich bootstrapped,Bootstrap
-Change password and PIN,,ChangePassword&PIN
-Current password,,ChangePassword&PIN
-Your current password,,ChangePassword&PIN
-Current PIN,,ChangePassword&PIN
-Your current PIN,,ChangePassword&PIN
-New Password,,ChangePassword&PIN
-Enter your new password,,ChangePassword&PIN
-New PIN,,ChangePassword&PIN
-Enter your new PIN,,ChangePassword&PIN
-Updating,,ChangePassword&PIN
-Update,,ChangePassword&PIN
-Current password is required,,ChangePassword&PIN
-Current PIN is required,,ChangePassword&PIN
-New password is required,,ChangePassword&PIN
-Password must be at least 8 characters,!! Passwort muss mindestens 8 Zeichen enthalten !!,ChangePassword&PIN
-New PIN is required,,ChangePassword&PIN
-PIN must be at least 4 characters,,ChangePassword&PIN
-Password & PIN have been updated,,ChangePassword&PIN
-Error updating password & PIN,,ChangePassword&PIN
-Contract Details,,ContractDetails
-View transaction details,,ContractDetails
-Yes,Ja,ConfirmDialog
-No,Nein,ConfirmDialog
-Password/PIN mismatch,,ConfirmPassword&PIN
-"You have entered either your password or your PIN incorrectly, please re-check",,ConfirmPassword&PIN
-Confirm password and PIN,,ConfirmPassword&PIN
-Enter your new password & new PIN once again to make sure you have entered them correctly,,ConfirmPassword&PIN
-Enter your password & PIN once again to make sure you have entered them correctly,,ConfirmPassword&PIN
-Password,Passwort,ConfirmPassword&PIN
-Re-enter your new password,,ConfirmPassword&PIN
-Re-enter your password,,ConfirmPassword&PIN
-PIN,,ConfirmPassword&PIN
-Re-enter your new PIN,,ConfirmPassword&PIN
-Re-enter your PIN,,ConfirmPassword&PIN
-Confirm,Bestätigen,ConfirmPassword&PIN
-Dismiss,Verwerfen,ErrorDialog
-Pin must be at least 4 characters,,PinDialog
-Confirm,Bestätigen,PinDialog
-Enter PIN,,PinDialog
-Your PIN,,PinDialog
-Cancel,Abbrechen,PinDialog
-Dismiss,Verwerfen,SuccessDialog
-Your wallet is not encrypted!,Ihre Wallet ist nicht verschlüsselt!,EncryptionWarning
-It is highly recommended that you should encrypt your wallet to keep your NXS safe.,"Es wird dringend empfohlen, dass Sie Ihr Konto verschlüsseln, um Ihre NXS sicher zu halten.",EncryptionWarning
-Ignore,Ignorieren,EncryptionWarning
-Encrypt wallet,Wallet verschlüsseln,EncryptionWarning
-Log in,,Login
-Username,Nutzername,Login
-Enter your username,,Login
-Password,Passwort,Login
-Enter your password,,Login
-PIN,,Login
-Enter your PIN,,Login
-Logging in,,Login
-Forgot password?,,Login
-Create new user,,Login
-Username is required,,Login
-Password is required,Passwort wird benötigt,Login
-PIN is required,,Login
-Logged in as %{username},,Login
-Not being fully synced may have caused this error.,,Login
-Error logging in,Fehler beim einloggen,Login
-Migrate account,,MigrateAccount
-You have %{amount} NXS in your legacy account.,,MigrateAccount
-You can manually send your funds from legacy account to this new Tritium user.,,MigrateAccount
-Send NXS manually,,MigrateAccount
-Don't show this again,,MigrateAccount
-Module Details,Moduldetails,ModuleDetails
-Remove module,,ModuleDetails
-Module name,Modulname,ModuleDetails
-Display name,Anzeigename,ModuleDetails
-Module type,Modultyp,ModuleDetails
-in development,,ModuleDetails
-Version,Version,ModuleDetails
-Target wallet version,,ModuleDetails
-incompatible,,ModuleDetails
-Description,Beschreibung,ModuleDetails
-Author,Autor,ModuleDetails
-Source code,Quelltext,ModuleDetails
-Visit repository,Repository besuchen,ModuleDetails
-This module is developed by Nexus,Dieses Modul wird von Nexus entwickelt,ModuleDetails
-This repository does not exist or is private,Dieses Repository existiert nicht oder ist privat,ModuleDetails
-This repository is not verified to be the real source code of this module,"Dieses Repository ist nicht verifiziert, um der eigentliche Quellcode dieses Moduls zu sein",ModuleDetails
-Module hash,Modul Hash,ModuleDetails
-Download %{version} (manual),,ModuleDetails
-Open App,,ModuleDetails
-Module is disallowed,,ModuleDetails
-Installing Module...,Modul wird installiert...,ModuleDetails
-Install Module,Modul installieren,ModuleDetails
+            malicious code than for an open source one. Therefore, in case you
+            still want to disable this setting, it is highly recommended that
+            you only install and run closed source modules that you are
+            developing yourself.","","Settings.Application"
+"Turn policy off","Richtlinien aus","Settings.Application"
+"Keep policy on","Regel weiterhin anwenden","Settings.Application"
+"Are you sure you want to disable auto update?","Sind Sie sich sicher, dass Sie das automatische Update deaktivieren wollen?","Settings.Application"
+"Keeping your wallet up-to-date is important for your security and will ensure that you get the best possible user experience.","Aus Sicherheitsgründen ist es wichtig immer die aktuellste Version der Wallet zu verwenden.","Settings.Application"
+"Keep auto update On","Automatisches Update aktiviert lassen","Settings.Application"
+"Turn auto update Off","Automatisches Update deaktivieren","Settings.Application"
+"Minimize on close","Beim Schließen minimieren","Settings.Application"
+"Minimize the wallet when closing the window instead of closing it.","Die Wallet beim Schließen des Fensters minimieren anstatt zu beenden.","Settings.Application"
+"Open on startup","Öffnen nach Hochfahren ","Settings.Application"
+"Open the wallet when ever the OS starts.","","Settings.Application"
+"Auto update (Recommended)","Automatisches Update (Empfohlen)","Settings.Application"
+"Automatically check for new versions and notify if a new version is available.","Automatisch nach einer neuen Walletversion suchen und mich benachrichtigen.","Settings.Application"
+"Allow Pre-releases","","Settings.Application"
+"Accept pre-release versions (e.g. alpha, beta) when checking for updates.","","Settings.Application"
+"Send anonymous usage data","Nutzungsdaten anonym senden","Settings.Application"
+"Send anonymous usage data to allow the Nexus developers to improve the wallet.","Helfen Sie den Nexus-Entwickler die Wallet stetig zu verbessern und senden Sie uns Ihre Nutzungsdaten anonym zu.","Settings.Application"
+"Base currency","Basiswährung","Settings.Application"
+"Developer mode","Entwicklermodus","Settings.Application"
+"Development mode enables advanced features to aid in development. After enabling the wallet must be closed and reopened to enable those features.","Der Entwicklungsmodus ermöglicht erweiterte Funktionen zur Unterstützung bei der Entwicklung. Um diese Funktionen nutzen zu können, muss nach der Aktivierung die Wallet geschlossen und wieder geöffnet werden.","Settings.Application"
+"Module open source policy","Modul Open Source Policy","Settings.Application"
+"Only modules which have valid open source repositories are allowed to be installed and run. You can disable this option to test run the modules that you're developing","Nur Module mit gültigen Open-Source-Repositories ist es gestattet, installiert und ausgeführt zu werden. Sie können diese Option deaktivieren, um die Module zu testen, die Sie selbst entwickeln","Settings.Application"
+"Allow SymLink","Erlaube SymLink","Settings.Application"
+"Allow the presence of SymLinks in the module directory","Erlaube die Existenz von SymLinks im Modulverzeichnis","Settings.Application"
+"Switch language?","Sprache wechseln? ","Settings.Application"
+"Translations for %{language} are contributed by our amazing community members","Übersetzungen für %{language} sind von unseren großartigen Community-Mitgliedern bereitgestellt ","Settings.Application"
+"Switch to %{language}","","Settings.Application"
+"Cancel","Abbrechen","Settings.Application"
+"Language","Sprache","Settings.Application"
+"Verbose level","Informationstiefe","Settings.Core"
+"Verbose level for logs.","Informationstiefe der Protokolle.","Settings.Core"
+"Core Data Directory","Core Datenverzeichnis","Settings.Core"
+"Where the blockchain data and your legacy wallet.dat are stored","Wo Blockchain-Daten und die veraltete wallet.dat gespeichert sind","Settings.Core"
+"Clear peer connections","Peer-Verbindungen löschen","Settings.Core"
+"Clear all stored peer connections and restart Nexus","Lösche alle gespeicherten Peer-Verbindungen und starte Nexus neu","Settings.Core"
+"Clear","Leeren","Settings.Core"
+"Lite mode","Lite-Modus","Settings.Core"
+"Nexus Core under lite mode runs lighter and synchronize much faster, but you will <b>NOT</b> be able to stake, mine, or switch the wallet to Legacy Mode.","Nexus Core im Lite Modus verwendet weniger Ressourcen und synchronisiert viel schneller, jedoch wirst du damit <b>NICHT</b> staken, minen oder die Brieftasche im Legacy Modus betreiben können.","Settings.Core"
+"Disabled when Multi-user mode is on","","Settings.Core"
+"Resync database","Datenbank neu synchronisieren","Settings.Core"
+"Delete lite mode database and resynchronize from the beginning","Lösche Lite-Modus Datenbank und synchronisiere von Anfang an","Settings.Core"
+"Resynchronize","Neu synchronisieren","Settings.Core"
+"Multi-user","Mehrbenutzer","Settings.Core"
+"Allow multiple logged in users at the same time. Mining and staking will be unavailable.","Erlaubt mehrere angemeldete Benutzer zur gleichen Zeit. Minen und Staken stehen nicht zur Verfügung.","Settings.Core"
+"Disabled when Lite mode is on","","Settings.Core"
+"Enable staking","Staking aktivieren","Settings.Core"
+"Enable/Disable staking on the wallet.","Aktivieren / Deaktivieren des Stakings in der Wallet.","Settings.Core"
+"Disabled when either Lite mode or Multi-user mode is on","","Settings.Core"
+"Enable mining","Mining aktivieren","Settings.Core"
+"Enable/Disable mining to the wallet.","Aktivieren / Deaktivieren des Minings in der Wallet.","Settings.Core"
+"Mining IP Whitelist","Mining IP Positivliste","Settings.Core"
+"IP/Ports allowed to mine to. Separate by <b>;</b> . Wildcards supported only in IP","IP/Ports dürfen abgebaut werden. Separate von <b>;</b> . Wildcards werden nur in IP unterstützt","Settings.Core"
+"Safe Mode","","Settings.Core"
+"Enables NextHash verification to protect against corruption, but adds computation time.","","Settings.Core"
+"Are you sure you want to disable Safe Mode","","Settings.Core"
+"Testnet Iteration","Testnetz-Iteration","Settings.Core"
+"The iteration of Testnet to connect to. Leave it blank to connect to mainnet.","","Settings.Core"
+"Private testnet","","Settings.Core"
+"Private testnet runs locally on your machine","","Settings.Core"
+"API SSL Port","API SSL-Port","Settings.Core"
+"Nexus API server SSL Port","Nexus API Server SSL-Port","Settings.Core"
+"Use non-SSL Ports","","Settings.Core"
+"Connect to Nexus Core using non-SSL Ports (less secured)","","Settings.Core"
+"API non-SSL Port","","Settings.Core"
+"Nexus API server non-SSL Port","","Settings.Core"
+"Advanced","","Settings.Core"
+"Allow advanced core options","","Settings.Core"
+"Core Flags","","Settings.Core"
+"Pass these flags to the core on start","","Settings.Core"
+"Reload transaction history","Transaktionsverlauf erneut laden","Settings.Core"
+"Nexus Core will be restarted. Lite mode database will be deleted and resynchronized from the beginning.","Nexus Core wird neu gestartet. Die Lite-Modus-Datenbank wird gelöscht und von Anfang an neu synchronisiert.","Settings.Core"
+"Exit remote Core mode?","""Remote Core"" Modus beenden?","Settings.Core"
+"(This will restart your Core)","(Dadurch wird dein Core neu gestartet)","Settings.Core"
+"Enter remote Core mode?","""Remote Core"" Modus starten?","Settings.Core"
+"(Remote core will continue to run, but internal core will restart)","","Settings.Core"
+"Core settings saved","Core Einstellungen gespeichert","Settings.Core"
+"Restarting Core...","Core wird neu gestartet...","Settings.Core"
+"Error saving settings","","Settings.Core"
+"Embedded Core","Eingebetteter Core","Settings.Core"
+"Remote Core","Remote-Core","Settings.Core"
+"Restart Core for these changes to take effect","Starte den Core neu, damit die Änderungen wirksam werden","Settings.Core"
+"Save settings","Einstellungen speichern","Settings.Core"
+"IP address","IP Adresse","Settings.Core"
+"Remote Core IP address","Remote Core IP-Adresse","Settings.Core"
+"API SSL","API SSL","Settings.Core"
+"Use SSL for API calls","SSL für API-Aufrufe verwenden","Settings.Core"
+"API Username","API-Benutzername","Settings.Core"
+"Nexus API server Username","Nexus API Server Benutzername","Settings.Core"
+"API Password","API-Passwort","Settings.Core"
+"Nexus API server Password","Nexus API Server Passwort","Settings.Core"
+"Log out on close","Beim Schließen abmelden","Settings.Core"
+"Log out of all users before closing the wallet","Melde alle Benutzer ab, bevor die Brieftasche geschlossen wird","Settings.Core"
+"Settings","Einstellungen","Settings"
+"Application","Anwendung","Settings"
+"Core","Core","Settings"
+"Style","Design","Settings"
+"Modules","Modul","Settings"
+"Select development module directory","Verzeichnis für Entwicklungsmodul auswählen","Settings.Modules"
+"Your module is still in development? <link>Add a development module</link>","Ihr Modul ist noch in Entwicklung? <link>Entwicklungsmodul hinzufügen</link>","Settings.Modules"
+"Select module archive file","Modul-Archivdatei auswählen","Settings.Modules"
+"Select module directory","Modulverzeichnis auswählen","Settings.Modules"
+"Add Module","Modul hinzufügen","Settings.Modules"
+"Checking module","Modul wird überprüft","Settings.Modules"
+"Drop here to install","Hier ablegen zum Installieren","Settings.Modules"
+"Select module's <file>archive file</file> or <dir>directory</dir>","Wählen Sie die Modul <file>-Archiv-Datei</file> oder <dir>Verzeichnis</dir>","Settings.Modules"
+"or drag and drop it here","hier herein ziehen","Settings.Modules"
+"Developed by Nexus","","Settings.Modules"
+"Installed modules","","Settings.Modules"
+"Failed to load %{moduleName}","Laden von %{moduleName} fehlgeschlagen","Settings.Modules"
+"No modules have been installed","","Settings.Modules"
+"Disable %{moduleName}?","%{moduleName} deaktivieren?","Settings.Modules"
+"Wallet will be automatically refreshed for the change to take effect","Wallet wird automatisch aktualisiert, damit die Änderung wirksam wird","Settings.Modules"
+"Enable %{moduleName}?","Aktiviere %{moduleName}?","Settings.Modules"
+"This module was built for an incompatible wallet version","Dieses Modul wurde für eine inkompatible Brieftaschen-Version entwickelt","Settings.Modules"
+"Module is not open source","Modul ist nicht Open Source","Settings.Modules"
+"The provided repository is not verified to be the real source code of this module","Dieses Repository ist nicht verifiziert, um der tatsächliche Quellcode dieses Moduls zu sein","Settings.Modules"
+"%{version} update available","%{version} Update verfügbar","Settings.Modules"
+"development","Entwicklung","Settings.Modules"
+"Cancel download","","Settings.Modules"
+"Downloading %{percentage}%...","","Settings.Modules"
+"Install","","Settings.Modules"
+"Failed to load module","Laden des Moduls fehlgeschlagen","Settings.Modules"
+"Overwrite module?","Modul überschreiben?","Settings.Modules"
+"A module with the same directory name already exists","Ein Modul mit dem gleichen Verzeichnisnamen existiert bereits","Settings.Modules"
+"Module has been successfully installed","Modul wurde erfolgreich installiert","Settings.Modules"
+"The wallet will now be refreshed for the new module to take effect","Das Konto wird nun aktualisiert, damit das neue Modul aktiviert wird","Settings.Modules"
+"Failed to install module","","Settings.Modules"
+"Cannot find module","Modul kann nicht gefunden werden","Settings.Modules"
+"Unsupported file type","Nicht unterstützter Dateityp","Settings.Modules"
+"Cannot install from this location","Installation von diesem Speicherort nicht möglich","Settings.Modules"
+"Directory has already been added","Verzeichnis wurde bereits hinzugefügt","Settings.Modules"
+"Failed to load development module","Laden des Entwicklungsmoduls fehlgeschlagen","Settings.Modules"
+"A module with the same name already exists","Ein Modul mit gleichem Namen existiert bereits","Settings.Modules"
+"Development module has been added","Entwicklungsmodul wurde hinzugefügt","Settings.Modules"
+"Cannot find module archive file among assets","","Settings.Modules"
+"Error downloading module","","Settings.Modules"
+"Module Details","Moduldetails","ModuleDetails"
+"Module name","Modulname","ModuleDetails"
+"Display name","Anzeigename","ModuleDetails"
+"Module type","Modultyp","ModuleDetails"
+"Description","Beschreibung","ModuleDetails"
+"Author","Autor","ModuleDetails"
+"Source code","Quelltext","ModuleDetails"
+"Visit repository","Repository besuchen","ModuleDetails"
+"Cancel download","","ModuleDetails"
+"Downloading %{percentage}%...","","ModuleDetails"
+"Install","","ModuleDetails"
+"Remove module","Modul entfernen","ModuleDetails"
+"in development","in Entwicklung","ModuleDetails"
+"Entry","","ModuleDetails"
+"Version","Version","ModuleDetails"
+"Target wallet version","Zielversion der Brieftasche","ModuleDetails"
+"incompatible","inkompatibel","ModuleDetails"
+"This module is developed by Nexus","Dieses Modul wird von Nexus entwickelt","ModuleDetails"
+"This repository does not exist or is private","Dieses Repository existiert nicht oder ist privat","ModuleDetails"
+"This repository is not verified to be the real source code of this module","Dieses Repository ist nicht verifiziert, um der eigentliche Quellcode dieses Moduls zu sein","ModuleDetails"
+"Module hash","Modul Hash","ModuleDetails"
+"Update to %{version}","","ModuleDetails"
+"View the release","","ModuleDetails"
+"Open App","App öffnen","ModuleDetails"
+"Module is disallowed","Modul ist nicht erlaubt","ModuleDetails"
+"Installing Module...","Modul wird installiert...","ModuleDetails"
+"Install Module","Modul installieren","ModuleDetails"
 "Warning: This module is written by a third party, Nexus is NOT
               responsible for its quality or legitimacy. Please make sure to do
               your due diligence before installing third party modules and use
-              them with your own risk.","Achtung: Dieses Modul wird von Dritten bereitgestellt, Nexus ist NICHT für die Qualität und Integrität verantwortlich. Bitte stellen Sie sicher, dass Sie diesem Modul vertrauen können, und verwenden Sie es nur mit Anerkennung Ihres eigenen Risikos.",ModuleDetails
-Check wallet failed,Überprüfung des Wallets fehlgeschlagen,MyAddresses
-Check wallet pass,Wallet Pass prüfen,MyAddresses
-My Account,Mein Konto,MyAddresses
-Check wallet's integrity,Integrität des Wallets wird überprüft,MyAddresses
-Check wallet,Wallet überprüfen,MyAddresses
-Create new address,Neue Adresse erstellen,MyAddresses
-Enter a new account name or pick an existing account:,Geben Sie einen neuen Kontonamen ein oder wählen Sie ein bestehendes Konto:,MyAddresses.NewAddressForm
-Account name,Kontoname,MyAddresses.NewAddressForm
-Cancel,Abbrechen,MyAddresses.NewAddressForm
-New address,Neue Adresse,MyAddresses.NewAddressForm
-Account name is required,Kontoname erforderlich,MyAddresses.NewAddressForm
-Invalid account name,Ungültiger Kontoname,MyAddresses.NewAddressForm
-New address has been created,Neue Adresse wurde erstellt,MyAddresses.NewAddressForm
-Error creating new address,Fehler beim Erstellen der neuen Adresse,MyAddresses.NewAddressForm
-New account,,NewAccount
-Account name (%{nameFee} NXS Fee) (Optional),,NewAccount
-New account's name,,NewAccount
-Token name/address,,NewAccount
-Cancel,Abbrechen,NewAccount
-Creating account,,NewAccount
-Create account,,NewAccount
-Create an account without a name?,,NewAccount
-Adding a name costs a NXS fee,,NewAccount
-That's Ok,,NewAccount
-Error creating account,,NewAccount
-Unknown token name/address,,NewAccount
-New account %{account} has been created,,NewAccount
-Create new user,,NewUser
-Username,Nutzername,NewUser
-A globally unique username,,NewUser
-Password,Passwort,NewUser
-Enter your password,,NewUser
-PIN,,NewUser
-Enter your PIN,,NewUser
-Attention,,NewUser
-"Please be sure to make a note of your username, password, and PIN, and keep it in a safe place. If you lose or forget them you will be unable to access your account.",,NewUser
-Creating user,,NewUser
-Create user,,NewUser
-"Please wait, this may take up to 30 seconds",,NewUser
-Switch to Legacy Mode,,NewUser
-Log in,,NewUser
-Username is required,,NewUser
-Username must be at least 3 characters,,NewUser
-Password is required,Passwort wird benötigt,NewUser
-Password must be at least 8 characters,!! Passwort muss mindestens 8 Zeichen enthalten !!,NewUser
-PIN is required,,NewUser
-PIN must be at least 4 characters,,NewUser
-Error creating user,,NewUser
-User registration for %{username} has been confirmed,,NewUser
-User registration for %{username} is waiting to be confirmed on Nexus blockchain...,,NewUser
-Recover password and PIN,,RecoverPassword&PIN
-Username,Nutzername,RecoverPassword&PIN
-Your username,,RecoverPassword&PIN
-Recovery phrase,,RecoverPassword&PIN
-Your recovery phrase,,RecoverPassword&PIN
-New Password,,RecoverPassword&PIN
-Enter your new password,,RecoverPassword&PIN
-New PIN,,RecoverPassword&PIN
-Enter your new PIN,,RecoverPassword&PIN
-Recovering password & PIN,,RecoverPassword&PIN
-Recover password & PIN,,RecoverPassword&PIN
-Username is required,,RecoverPassword&PIN
-Recovery phrase is required,,RecoverPassword&PIN
-New password is required,,RecoverPassword&PIN
-Password must be at least 8 characters,!! Passwort muss mindestens 8 Zeichen enthalten !!,RecoverPassword&PIN
-New PIN is required,,RecoverPassword&PIN
-PIN must be at least 4 characters,,RecoverPassword&PIN
-Password & PIN have been updated,,RecoverPassword&PIN
-Error updating password & PIN,,RecoverPassword&PIN
-%{smart_count} word |||| %{smart_count} words,,SetRecoveryPhrase
-Recovery phrase,,SetRecoveryPhrase
-"The recovery phrase can be used to recover your account and set a new password and PIN in the event that you lose or forget them. Your recovery phrase must be a minimum of 40 characters, and should ideally be made up of random words. Save this new recovery phrase in a safe place.",,SetRecoveryPhrase
-Password,Passwort,SetRecoveryPhrase
-Your current password,,SetRecoveryPhrase
-PIN,,SetRecoveryPhrase
-Your current PIN,,SetRecoveryPhrase
-Current recovery phrase,,SetRecoveryPhrase
-Enter your recovery phrase,,SetRecoveryPhrase
-Generate a recovery phrase,,SetRecoveryPhrase
-New recovery phrase,,SetRecoveryPhrase
-Enter your new recovery phrase or click Generate,,SetRecoveryPhrase
-Setting recovery phrase,,SetRecoveryPhrase
-Set recovery phrase,,SetRecoveryPhrase
-Password is required,Passwort wird benötigt,SetRecoveryPhrase
-PIN is required,,SetRecoveryPhrase
-Current recovery phrase is required,,SetRecoveryPhrase
-Recovery phrase is required,,SetRecoveryPhrase
-Recovery phrase must be at least 8 characters,,SetRecoveryPhrase
-Recovery phrase has been updated,,SetRecoveryPhrase
-Error setting recovery phrase,,SetRecoveryPhrase
-Transaction Details,,TransactionDetails
-Time,,TransactionDetails
-Sequence,,TransactionDetails
-Type,,TransactionDetails
-Confirmations,,TransactionDetails
-Transaction ID,,TransactionDetails
-Loading transaction details...,,TransactionDetails
-Close the wallet and install update now?,Wallet schließen und Update jetzt installieren?,AutoUpdate
-Close and install,Schließen und installieren,AutoUpdate
-Install it later,Später installieren,AutoUpdate
-New wallet version %{version} - Click here to download,,AutoUpdate
-New wallet version %{version} - Click here to update,,AutoUpdate
-New wallet version %{version} available. Downloading...,Neue Wallet-Version %{version} verfügbar. Herunterladen...,AutoUpdate
+              them with your own risk.","Achtung: Dieses Modul wird von Dritten bereitgestellt, Nexus ist NICHT für die Qualität und Integrität verantwortlich. Bitte stellen Sie sicher, dass Sie diesem Modul vertrauen können, und verwenden Sie es nur mit Anerkennung Ihres eigenen Risikos.","ModuleDetails"
+"Select wallpaper","","Settings.Style"
+"Starry night","","Settings.Style"
+"Cosmic light","Kosmisches Licht","Settings.Style"
+"Nexus.io","","Settings.Style"
+"Custom wallpaper","Benutzerdefiniertes Hintergrundbild","Settings.Style"
+"Select a custom wallpaper","Benutzerdefiniertes Hintergrundbild auswählen","Settings.Style"
+"Select custom theme file","Benutzerdefiniertes Design auswählen","Settings.Style"
+"Theme exported","Design exportiert","Settings.Style"
+"Render globe","Globus rendern","Settings.Style"
+"Render the globe on the Overview page.","Rendern Sie den Globus auf der Benutzeroberfläche.","Settings.Style"
+"Your computer does not support OPENGL 2.0","Ihr Computer unterstützt OPENGL 2.0 nicht","Settings.Style"
+"Overview Display","Übersicht anzeigen","Settings.Style"
+"Hide Overview balances","","Settings.Style"
+"Hide the balances on the Overview page for privacy.","","Settings.Style"
+"Nexus Addresses format","Nexus Adressen Format","Settings.Style"
+"Choose your Nexus Address display preference","Wählen Sie Ihre Einstellung für die Anzeige der Nexus-Adresse aus","Settings.Style"
+"Sample Address","Beispieladresse","Settings.Style"
+"Wallet theme","","Settings.Style"
+"Background","Hintergrund","Settings.Style"
+"Customize your background wallpaper","Hintergrundbild anpassen","Settings.Style"
+"Color scheme","Farbschema","Settings.Style"
+"Background Color","Hintergrundfarbe des Panels","Settings.Style"
+"Foreground Color","Textfarbe","Settings.Style"
+"Primary Color","Primäre Farbe","Settings.Style"
+"Primary Color Accent","Primärer Farbton","Settings.Style"
+"Danger Color","Danger Farbton","Settings.Style"
+"Danger Color Accent","Farbakzent Danger","Settings.Style"
+"Globe Color","Farbe der Erde","Settings.Style"
+"Globe Pillar Color","Farbe der Standorte","Settings.Style"
+"Globe Arch Color","Farbe der Verbindungen","Settings.Style"
+"Import custom theme","Design auswählen","Settings.Style"
+"Export custom theme","Farbschema exportieren","Settings.Style"
+"Dark","Dunkel","Settings.Style"
+"Light","Hell","Settings.Style"
+"Custom","Erweitert","Settings.Style"
+"Console","Konsole","Console"
+"Core output","Core Ausgabe","Console"
+"CLI syntax","CLI Syntax","Console.NexusAPI"
+"URL syntax","URL Syntax","Console.NexusAPI"
+"Execute","Ausführen","Console.NexusAPI"
+"API Documentation","API Dokumentation","Console.NexusAPI"
+"Clear","Leeren","Console.NexusAPI"
+"Core is in Manual Mode","Der Core ist im Modus manuell","Console.CoreOutput"
+"NXS balances","NXS-Guthaben","Transactions.Balances"
+"Total","Total","Transactions.Balances"
+"Available","Verfügbar","Transactions.Balances"
+"The current balance across all NXS accounts that is available to be spent","Der aktuelle Saldo aller NXS-Konten, der ausgegeben werden kann","Transactions.Balances"
+"Stake","Stake","Transactions.Balances"
+"The amount of NXS currently staked in the trust account","Der Betrag an NXS der aktuell im Trust Account gestaked wird","Transactions.Balances"
+"Unclaimed","","Transactions.Balances"
+"The sum of all debit and coinbase transactions made to your NXS accounts that are confirmed but have not yet been credited. This does NOT include immature and unconfirmed amounts","Die Summe aller auf Ihren NXS-Konten getätigten Debit- und Coinbase-Transaktionen, die bestätigt, aber noch nicht gutgeschrieben wurden. Dies beinhaltet KEINE unreifen und unbestätigten Beträge","Transactions.Balances"
+"Unconfirmed","Unbestätigt","Transactions.Balances"
+"The sum of all debit transactions made to your NXS accounts that are not confirmed, or credits you have made to your accounts that are not yet confirmed (not yet included in a block)","Die Summe aller Debittransaktionen auf Ihren NXS-Konten, die nicht bestätigt sind, oder Guthaben, die Sie für Ihre Konten gemacht haben, die noch nicht bestätigt sind (noch nicht in einem Block enthalten)","Transactions.Balances"
+"Immature","Unreif","Transactions.Balances"
+"The sum of all coinbase transactions that have not yet reached maturity","Die Summe aller Coinbase-Transaktionen, die noch keine Fälligkeit erreicht haben","Transactions.Balances"
+"%{token_name} balances","","Transactions.Balances"
+"Legacy transaction","Legacy-Transaktion","Transactions"
+"Coinbase transaction","Coinbase Transaktion","Transactions"
+"View contract details","Vertragsdetails anzeigen","Transactions"
+"View transaction details","Transaktionsdetails anzeigen","Transactions"
+"All","Alle","Transactions"
+"Past Year","Letztes Jahr","Transactions"
+"Past Month","Letzten Monat","Transactions"
+"Past Week","Letzte Woche","Transactions"
+"Address","Adresse","Transactions"
+"Search for account/token address","","Transactions"
+"Select an address","","Transactions"
+"Time span","Zeitpunkt","Transactions"
+"Operation","Bedienung","Transactions"
+"Transactions","Transaktionen","Transactions"
+"Loading transactions...","Lade Transaktionen...","Transactions"
+"Failed to load transactions","","Transactions"
+"Previous","Vorheriger","Transactions"
+"Page <page></page>","","Transactions"
+"Next","Nächster","Transactions"
+"Accounts","Accounts","SelectAddress"
+"Unnamed account","Unbenanntes Konto","SelectAddress"
+"Tokens","Tokens","SelectAddress"
+"Contacts","","SelectAddress"
+"My address for %{name}","Meine Nexus-Adresse für %{name}","SelectAddress"
+"%{name}'s address","","SelectAddress"
+"Unnamed account","Unbenanntes Konto","User.Accounts"
+"Details","Details","User.Accounts"
+"Rename","Umbenennen","User.Accounts"
+"Transaction History","","User.Accounts"
+"Create new account","Erstelle neues Konto","User.Accounts"
+"Account Details","Kontodetails","User.Accounts.AccountDetails"
+"Account name","Kontoname","User.Accounts.AccountDetails"
+"Unnamed","Unbenannt","User.Accounts.AccountDetails"
+"Created at","Erstellt am","User.Accounts.AccountDetails"
+"Last modified","Zuletzt geändert","User.Accounts.AccountDetails"
+"Token","Token","User.Accounts.AccountDetails"
+"Data","Daten","User.Accounts.AccountDetails"
+"Total account balance","Gesamtsaldo des Kontos","User.Accounts.AccountDetails"
+"Available balance","Verfügbares Guthaben","User.Accounts.AccountDetails"
+"Send %{token_name}","%{token_name} senden","User.Accounts.AccountDetails"
+"Unclaimed balance","","User.Accounts.AccountDetails"
+"Unconfirmed balance","Unbestätigter Kontostand","User.Accounts.AccountDetails"
+"Stake balance","Staking-Guthaben","User.Accounts.AccountDetails"
+"Immature balance","Unreifes Guthaben","User.Accounts.AccountDetails"
+"Address","Adresse","User.Accounts.AccountDetails"
+"Adjust stake amount","Stake-Betrag anpassen","User.Accounts.AccountDetails"
+"Trust Account is empty.","Trust-Konto ist leer.","User.Accounts.AccountDetails"
+"Trust Account must mature for 72 hours before staking","Das Trust-Konto muss 72 Stunden vor dem Staken ""reifen""","User.Accounts.AccountDetails"
+"Time","Zeit","User.Accounts.AccountHistory"
+"Operation","Bedienung","User.Accounts.AccountHistory"
+"From","Von","User.Accounts.AccountHistory"
+"staking","staking","User.Accounts.AccountHistory"
+"mining","mining","User.Accounts.AccountHistory"
+"To","An","User.Accounts.AccountHistory"
+"Change","Ändern","User.Accounts.AccountHistory"
+"Account History","Kontoverlauf","User.Accounts.AccountHistory"
+"Loading account history","Kontoverlauf wird geladen","User.Accounts.AccountHistory"
+"Account balance","Kontostand","User.Accounts.AccountHistory"
+"Show %{tokenName}","%{tokenName} anzeigen","User.Accounts.AccountHistory"
+"Total","Total","User.Accounts.AccountHistory"
+"Available","Verfügbar","User.Accounts.AccountHistory"
+"Unclaimed","","User.Accounts.AccountHistory"
+"Unconfirmed","Unbestätigt","User.Accounts.AccountHistory"
+"Stake","Stake","User.Accounts.AccountHistory"
+"Name already in use","Name wird bereits verwendet","RenameAccount"
+"The name you entered is already in use. Please choose another name.","Der eingegebene Name wird bereits verwendet. Bitte wählen Sie einen anderen Namen.","RenameAccount"
+"Fee","Gebühr","RenameAccount"
+"Account has been renamed to %{account_name}","Konto wurde in %{account_name} umbenannt","RenameAccount"
+"Rename account","Konto umbenennen","RenameAccount"
+"Error renaming account","Fehler beim Umbenennen des Kontos","RenameAccount"
+"Account name","Kontoname","RenameAccount"
+"Cancel","Abbrechen","RenameAccount"
+"Renaming","Umbenennen","RenameAccount"
+"Rename","Umbenennen","RenameAccount"
+"Unnamed asset","Unbenanntes Asset","User.Assets"
+"You own %{percentage}% of this asset","Sie besitzen %{percentage}% dieses Assets","User.Assets"
+"Create new asset","Neues Asset erstellen","User.Assets"
+"You don't own any asset","Sie besitzen keine Assets","User.Assets"
+"Asset Details","Asset-Details","AssetDetails"
+"Edit asset","Asset bearbeiten","AssetDetails"
+"Name","Name","AssetDetails"
+"Address","Adresse","AssetDetails"
+"Owner","Besitzer","AssetDetails"
+"Ownership","Eigentum","AssetDetails"
+"Created at","Erstellt am","AssetDetails"
+"Last modified","Zuletzt geändert","AssetDetails"
+"View history","Verlauf anzeigen","AssetDetails"
+"Tokenize","Tokenisieren","AssetDetails"
+"Transfer ownership","Eigentum übertragen","AssetDetails"
+"Name","Name","CreateAsset"
+"Field name","Feldname","CreateAsset"
+"Value","Wert","CreateAsset"
+"Field value","Feldwert","CreateAsset"
+"Mutable","Veränderlich","CreateAsset"
+"Type","Typ","CreateAsset"
+"Max. length","Max. Länge","CreateAsset"
+"Only applicable to mutable string fields","Nur anwendbar auf veränderbare Zeichenkettenfelder","CreateAsset"
+"Unlimited","Unlimitiert","CreateAsset"
+"Remove field","Entferne Feld","CreateAsset"
+"Add field","Feld hinzufügen","CreateAsset"
+"Create a new asset","Erstelle ein neues Asset","CreateAsset"
+"New asset has been created","Asset wurde erstellt","CreateAsset"
+"Error creating asset","Fehler beim Erstellen des Assets","CreateAsset"
+"Asset name","Asset-Name","CreateAsset"
+"A local Name object register will be created for this asset name","Für diesen Asset-Namen wird ein lokales Name-Objektregister erstellt","CreateAsset"
+"Asset name (optional)","Asset-Name (optional)","CreateAsset"
+"Asset data","Asset Daten","CreateAsset"
+"Estimated fee","Geschätzte Gebühr","CreateAsset"
+"Creating asset","Erstelle Asset","CreateAsset"
+"Create asset","Asset erstellen","CreateAsset"
+"Asset History Event","","AssetHistoryDetails"
+"Type","Typ","AssetHistoryDetails"
+"Time","Zeit","AssetHistoryDetails"
+"Owner","Besitzer","AssetHistoryDetails"
+"Checksum","Prüfsumme","AssetHistoryDetails"
+"Name","Name","AssetHistoryDetails"
+"Address","Adresse","AssetHistoryDetails"
+"Time","Zeit","AssetHistory"
+"Action","Aktion","AssetHistory"
+"Register","","AssetHistory"
+"Owner","Besitzer","AssetHistory"
+"Asset History","Asset-Verlauf","AssetHistory"
+"Loading asset history","Asset-Verlauf wird geladen","AssetHistory"
+"Edit asset","Asset bearbeiten","EditAsset"
+"Asset has been updated","Asset wurde aktualisiert","EditAsset"
+"Error updating asset","Fehler bei der Aktualisierung des Assets","EditAsset"
+"Name","Name","EditAsset"
+"Address","Adresse","EditAsset"
+"Updating asset","Aktualisiere Asset","EditAsset"
+"Update asset","Asset aktualisieren","EditAsset"
+"Tokenize asset","Asset tokenisieren","TokenizeAsset"
+"Asset has been tokenized","Asset wurde tokenisiert","TokenizeAsset"
+"Error tokenizing asset","Fehler bei der Tokenisierung des Assets","TokenizeAsset"
+"Asset name","Asset-Name","TokenizeAsset"
+"Asset address","Asset-Adresse","TokenizeAsset"
+"Token","Token","TokenizeAsset"
+"Token address","Token-Adresse","TokenizeAsset"
+"Tokenizing asset","Tokenisierung eines Assets","TokenizeAsset"
+"Transfer asset","Asset übertragen","TransferAsset"
+"Asset has been transferred","Asset wurde übertragen","TransferAsset"
+"Error transferring asset","Fehler beim Transfer des Assets","TransferAsset"
+"Asset name","Asset-Name","TransferAsset"
+"Asset address","Asset-Adresse","TransferAsset"
+"Transfer to","Übertragen nach","TransferAsset"
+"Recipient username or user ID","Empfänger-Benutzername oder Benutzer-ID","TransferAsset"
+"Transferring asset","Asset wird übertragen","TransferAsset"
+"User","Benutzer","User"
+"User ID","Benutzer-ID","User"
+"Accounts","Accounts","User"
+"Staking","Staking","User"
+"Tokens","Tokens","User"
+"Names","Namen","User"
+"Namespaces","Namensräume","User"
+"Assets","Assets","User"
+"Change password & PIN","Passwort & PIN ändern","User"
+"Change recovery phrase","Wiederherstellungsphrase ändern","User"
+"Set recovery phrase","Wiederherstellungspassword setzen","User"
+"Start staking?","Beginne Staking","User"
+"You have %{amount} NXS in your trust account and can start staking now.","","User"
+"However, keep in mind that if you start staking, your stake amount will be locked, and the smaller the amount is, the longer it would likely take to unlock it.","","User"
+"To learn more about staking, visit <link>crypto.nexus.io/stake</link>.","","User"
+"Don't show this again","Nicht erneut anzeigen","User"
+"Start staking","Staking starten","User"
+"Don't stake","Stake nicht","User"
+"User Failed to Unlock","Freischaltung durch Benutzer fehlgeschlagen ","User"
+"User Unlocked","Benutzer freischalten ","User"
+"Indexing User...","Benutzer wird registriert... ","User"
+"Change register address","Register-Adresse ändern","ChangeRegisterAddress"
+"Name has been updated","Name wurde aktualisiert","ChangeRegisterAddress"
+"Error updating name","Fehler beim Aktualisieren des Namen","ChangeRegisterAddress"
+"Name","Name","ChangeRegisterAddress"
+"Register address","Adresse registrieren ","ChangeRegisterAddress"
+"Register address that this name points to","Register-Adresse, auf die dieser Name zeigt","ChangeRegisterAddress"
+"Name update fee","Gebühr für Aktualisierung des Namen","ChangeRegisterAddress"
+"Updating name","Aktualisiere Name","ChangeRegisterAddress"
+"Update name","Namen aktualisieren","ChangeRegisterAddress"
+"Local","Lokal","CreateName"
+"Namespaced","Namespaced","CreateName"
+"Global","Global","CreateName"
+"Namespace","Namensraum","CreateName"
+"A namespace you own","Ein Namensraum, den Sie besitzen","CreateName"
+"Name cannot start with a colon character","Der Name kann nicht mit einem Doppelzeichen beginnen","CreateName"
+"Create a new name","Neuen Namen erstellen","CreateName"
+"New name has been created","Neuer Name wurde erstellt","CreateName"
+"Error creating name","Fehler beim Erstellen des Namens","CreateName"
+"Name","Name","CreateName"
+"name","Name","CreateName"
+"namespace","Namensraum","CreateName"
+"Register address","Adresse registrieren ","CreateName"
+"Register address that this name points to","Register-Adresse, auf die dieser Name zeigt","CreateName"
+"Name creation fee","Erstellungsgebühr für Namen","CreateName"
+"Creating name","Erstelle Name","CreateName"
+"Create name","Name erstellen","CreateName"
+"View name details","Namensdetails anzeigen","User.Names"
+"Change register address","Register-Adresse ändern","User.Names"
+"Transfer name","Name übertragen","User.Names"
+"Unused","Unbenutzt","User.Names"
+"Global","Global","User.Names"
+"Namespaced","Namespaced","User.Names"
+"Local","Lokal","User.Names"
+"Create new name","Neuen Namen erstellen","User.Names"
+"Show unused names","Unbenutzte Namen anzeigen","User.Names"
+"You don't own any name","Sie besitzt keinen ""Namen""","User.Names"
+"Name Details","Namensdetails","NameDetails"
+"Change register address","Register-Adresse ändern","NameDetails"
+"Name","Name","NameDetails"
+"Type","Typ","NameDetails"
+"Global","Global","NameDetails"
+"Namespaced","Namespaced","NameDetails"
+"Local","Lokal","NameDetails"
+"Namespace","Namensraum","NameDetails"
+"Address","Adresse","NameDetails"
+"Points to","Zeigt auf","NameDetails"
+"Created at","Erstellt am","NameDetails"
+"Last modified","Zuletzt geändert","NameDetails"
+"View history","Verlauf anzeigen","NameDetails"
+"Transfer ownership","Eigentum übertragen","NameDetails"
+"Name History Event","","NameHistoryDetails"
+"Type","Typ","NameHistoryDetails"
+"Time","Zeit","NameHistoryDetails"
+"Owner","Besitzer","NameHistoryDetails"
+"Checksum","Prüfsumme","NameHistoryDetails"
+"Name","Name","NameHistoryDetails"
+"Namespace","Namensraum","NameHistoryDetails"
+"Address","Adresse","NameHistoryDetails"
+"Points to","Zeigt auf","NameHistoryDetails"
+"Time","Zeit","NameHistory"
+"Action","Aktion","NameHistory"
+"Register","","NameHistory"
+"Owner","Besitzer","NameHistory"
+"Name History","Namenshistorie","NameHistory"
+"Loading name history","Lade Namensverlauf","NameHistory"
+"Transfer name","Name übertragen","TransferName"
+"Name has been transferred","Der Name wurde übertragen","TransferName"
+"Error transferring name","Fehler beim Übertragen des Namens","TransferName"
+"Name","Name","TransferName"
+"Transfer to","Übertragen nach","TransferName"
+"Recipient username or user ID","Empfänger-Benutzername oder Benutzer-ID","TransferName"
+"Transferring name","Name wird übertragen","TransferName"
+"Create a new namespace","Neuen Namensraum erstellen","CreateNamespace"
+"New namespace has been created","Neuer Namensraum wurde erstellt","CreateNamespace"
+"Error creating namespace","Fehler beim Erstellen des Namensraums","CreateNamespace"
+"Name","Name","CreateNamespace"
+"Namespace name","Namensraum-Name","CreateNamespace"
+"Namespace names can only contain lowercase letters, numbers, and periods (.)","Namespace-Namen dürfen nur Kleinbuchstaben, Zahlen und Punkte (.) enthalten","CreateNamespace"
+"Namespace creation fee","Erstellungsgebühr für Namensraum","CreateNamespace"
+"Creating namespace","Namensraum wird erstellt","CreateNamespace"
+"Create namespace","Namespace erstellen","CreateNamespace"
+"View name details","Namensdetails anzeigen","User.Namespaces"
+"Transfer namespace","Namensraum übertragen","User.Namespaces"
+"Create new namespace","Neuen Namensraum erstellen","User.Namespaces"
+"You don't own any namespace","Sie besitzen keinen Namensraum","User.Namespaces"
+"Namespace Details","Namensraum-Details","NamespaceDetails"
+"Name","Name","NamespaceDetails"
+"Address","Adresse","NamespaceDetails"
+"Created at","Erstellt am","NamespaceDetails"
+"Last modified","Zuletzt geändert","NamespaceDetails"
+"View history","Verlauf anzeigen","NamespaceDetails"
+"Transfer ownership","Eigentum übertragen","NamespaceDetails"
+"Namespace History Event","","NamespaceHistoryDetails"
+"Type","Typ","NamespaceHistoryDetails"
+"Time","Zeit","NamespaceHistoryDetails"
+"Owner","Besitzer","NamespaceHistoryDetails"
+"Checksum","Prüfsumme","NamespaceHistoryDetails"
+"Name","Name","NamespaceHistoryDetails"
+"Address","Adresse","NamespaceHistoryDetails"
+"Time","Zeit","NamespaceHistory"
+"Action","Aktion","NamespaceHistory"
+"Register","","NamespaceHistory"
+"Owner","Besitzer","NamespaceHistory"
+"Namespace History","","NamespaceHistory"
+"Loading namespace history","Lade Namespace Verlauf","NamespaceHistory"
+"Transfer namespace","Namensraum übertragen","TransferNamespace"
+"Namespace has been transferred","Der Namensraum wurde übertragen","TransferNamespace"
+"Error transferring namespace","Fehler beim Übertragen des Namensraums","TransferNamespace"
+"Namespace","Namensraum","TransferNamespace"
+"Transfer to","Übertragen nach","TransferNamespace"
+"Recipient username or user ID","Empfänger-Benutzername oder Benutzer-ID","TransferNamespace"
+"Transferring namespace","Namensraum wird übertragen","TransferNamespace"
+"The current NXS balance of the trust account that is not staked. You can spend this amount without affecting your Trust Score","Das aktuelle NXS-Guthaben des Trust-Kontos das nicht für das Staken verwendet wird. Sie können diesen Betrag ausgeben, ohne Ihren Trust Score zu beeinflussen","User.Staking"
+"Balance that will be staked after the 72 holding period, any change to this balance will reset the hold timer","Das Guthaben, das nach der 72 Stunden Haltezeit gestaked wird. Jede Änderung des Saldos setzt den 72 Stunden-Timer wieder zurück","User.Staking"
+"Trust balance empty!","Trust Guthaben leer! ","User.Staking"
+"You must send some NXS to your <b>trust</b> account first","","User.Staking"
+"Start staking","Staking starten","User.Staking"
+"In order to start staking, the following settings need to be changed:","","User.Staking"
+"Lite mode needs to be turned OFF","Lite Modus muss AUS-geschalten sein","User.Staking"
+"Multi-user needs to be turned OFF","Multi-user muss AUS-geschalten sein ","User.Staking"
+"Enable staking needs to be turned ON","Staking aktivieren muss angeschalten sein","User.Staking"
+"Apply changes","Veränderungen anwenden ","User.Staking"
+"Cancel","Abbrechen","User.Staking"
+"Restarting Core","Core wird neugestartet ","User.Staking"
+"Enter your PIN to start staking","Gib deine PIN ein um das Staking zu starten","User.Staking"
+"Staking will automatically start when your wallet is synchronized","","User.Staking"
+"Error","Error","User.Staking"
+"Stop staking?","Staking stoppen? ","User.Staking"
+"If you stop staking, stake amount will still stay locked. In case you want to unlock the stake amount, <link>set your stake amount to 0</link> and keep staking until the next Trust transaction is mined.","","User.Staking"
+"Stop staking","Staking stoppen","User.Staking"
+"Staking is not available in private network","","User.Staking"
+"Status","Status","User.Staking"
+"Staking","Staking","User.Staking"
+"pooled","gepoolt","User.Staking"
+"Not staking","Kein Staking","User.Staking"
+"Stake amount (locked)","Stake-Anzahl (verschlossen) ","User.Staking"
+"The amount of NXS currently staked in the trust account","Der Betrag an NXS der aktuell im Trust Account gestaked wird","User.Staking"
+"Pending change","Ausstehende Änderungen","User.Staking"
+"The pending stake amount change that will be applied on the next Trust transaction","Die ausstehende Änderung des Betrags, die auf die nächste Trust Transaktion angewendet wird","User.Staking"
+"Requested at","Angefordert am","User.Staking"
+"Expired in","Läuft ab in","User.Staking"
+"Stake Rate","Zinssatz","User.Staking"
+"The current annual reward rate earned for staking","Die momentane jährliche Vergütung für das Staking","User.Staking"
+"Trust Weight","Trust Faktor","User.Staking"
+"The percentage of the maximum Trust Score, which is gradually built over time when you consistently operate your node in an honest, trustworthy, and timely manner","Der Prozentsatz des maximalen Trust Scores, der im Laufe der Zeit schrittweise aufgebaut wird, wenn Sie Ihren Knoten in ehrlicher, vertrauenswürdiger und zeitnaher Weise bedienen","User.Staking"
+"Block Weight","Block Faktor","User.Staking"
+"Block Weight depends on the time passed since you received a Trust transaction and will be reset everytime you receive a Trust transaction. Otherwise, Block Weight will reach 100% after 3 days and your Trust Score will start decaying until you receive another Trust transaction","Das Blockgewicht hängt von der Zeit ab, die seit dem Erhalt einer Trust-Transaktion vergangen ist, und wird jedes Mal zurückgesetzt, wenn Sie eine Trust-Transaktion erhalten. Andernfalls erreicht das Blockgewicht nach 3 Tagen 100% und Ihr Trust Score beginnt zu sinken, bis Sie eine weitere Trust-Transaktion erhalten","User.Staking"
+"Stake Weight","Stake Faktor","User.Staking"
+"Stake Weight depends on Trust Weight and Block Weight. Along with your Stake amount, Stake Weight affects how frequent you receive a Trust transaction","Stake-Weight hängt vom Trust-Weight und Block-Weight ab. Zusammen mit deiner Stake-Anzahl beeinflusst das Stake-Weight wie oft du eine Trust-Transaktion erhältst. ","User.Staking"
+"Available Balance","Verfügbares Guthaben","User.Staking"
+"Adjust stake amount","Stake-Betrag anpassen","User.Staking"
+"Account on hold for another %{stakeSeconds} Seconds","Konto für weitere %{stakeSeconds} Sekunden gesperrt","User.Staking"
+"Create new token","Neuen Token erstellen","User.Tokens"
+"Look up a token","Nach Token suchen","User.Tokens"
+"Unnamed token","Unbenanntes Token","User.Tokens"
+" (Owned by you)","(in deinem Besitz)","User.Tokens"
+"Details","Details","User.Tokens"
+"There is a %{tokenfee} NXS token creation fee, based on supply","","User.Tokens.NewToken"
+"Must be an integer","","User.Tokens.NewToken"
+"Supply cannot be zero or negative","","User.Tokens.NewToken"
+"New Token","Neuer Token","User.Tokens.NewToken"
+"Create a token without a name?","Ein Token ohne Namen erstellen?","User.Tokens.NewToken"
+"Adding a name costs a NXS fee","Das Hinzufügen eines Namens kostet eine NXS-Gebühr","User.Tokens.NewToken"
+"That's Ok","Das ist Ok","User.Tokens.NewToken"
+"Cancel","Abbrechen","User.Tokens.NewToken"
+"Add Name","Name hinzufügen","User.Tokens.NewToken"
+"New token %{token} has been created","Neuer Token %{token} wurde erstellt","User.Tokens.NewToken"
+"You have successfully created token %{token} ! Would you like to make an account for this token?","Sie haben den Token %{token} erfolgreich erstellt! Möchten Sie ein Konto für diesen Token erstellen?","User.Tokens.NewToken"
+"Yes","Ja","User.Tokens.NewToken"
+"No","Nein","User.Tokens.NewToken"
+"Error creating token","Fehler beim Erstellen des Token","User.Tokens.NewToken"
+"Token name","Token-Name","User.Tokens.NewToken"
+"Name Creation Fee: %{tokenFee} NXS (Optional)","Erstellungsgebühr für Namen: %{tokenFee} NXS (Optional)","User.Tokens.NewToken"
+"New tokens's name","Name des neuen Token","User.Tokens.NewToken"
+"Supply","Vorrat","User.Tokens.NewToken"
+"Max amount of tokens available","Maximale Anzahl verfügbarer Token","User.Tokens.NewToken"
+"Decimal","Dezimal","User.Tokens.NewToken"
+"Amount of significant digits a token can have","","User.Tokens.NewToken"
+"Create token","Token erstellen","User.Tokens.NewToken"
+"Look up token","Nach Token suchen","User.Tokens.SearchToken"
+"Error searching for token","Fehler bei der Suche nach Token","User.Tokens.SearchToken"
+"Unknown token name/address","Unbekannter Token-Name/Adresse","User.Tokens.SearchToken"
+"Name or address","Name oder Adresse","User.Tokens.SearchToken"
+"Token name/address","Token-Name/Adresse","User.Tokens.SearchToken"
+"Look up","Nachschlagen","User.Tokens.SearchToken"
+"Token Details","Token-Details","User.Tokens.TokenDetails"
+"Token name","Token-Name","User.Tokens.TokenDetails"
+"Token address","Token-Adresse","User.Tokens.TokenDetails"
+"Created at","Erstellt am","User.Tokens.TokenDetails"
+"Last modified","Zuletzt geändert","User.Tokens.TokenDetails"
+"Token Owner","Token-Besitzer","User.Tokens.TokenDetails"
+"Current Supply","Aktuelle Verfügbarkeit","User.Tokens.TokenDetails"
+"Max Supply","Maximale Verfügbarkeit","User.Tokens.TokenDetails"
+"Decimals","Dezimalstellen","User.Tokens.TokenDetails"
+"Balance","Kontostand","User.Tokens.TokenDetails"
+"Unclaimed balance","","User.Tokens.TokenDetails"
+"Unconfirmed balance","Unbestätigter Kontostand","User.Tokens.TokenDetails"
+"Create new account with this token","Neues Konto mit diesem Token erstellen","User.Tokens.TokenDetails"
+"Close","Schließen","User.Tokens.TokenDetails"
+"Wallet version","Brieftaschen-Version","About"
+"Wallet build date","Brieftaschen-Erstellungsdatum","About"
+"Nexus Core version","Nexus Core Version","About"
+"Core build date","Core-Erstellungsdatum","About"
+"Testnet","Testnetz","About"
+"Private blockchain","Private Blockchain","About"
+"Invalid address","Ungültige Adresse","AddEditContact"
+"This is not one of your addresses.","Dies ist keine Ihrer Adressen.","AddEditContact"
+"This is one of your addresses.","Dies ist eine Ihrer Adressen.","AddEditContact"
+"My Nexus address for %{name}","Meine Nexus-Adresse für %{name}","AddEditContact"
+"My Nexus address","Meine Nexus-Adresse","AddEditContact"
+"%{name}'s Nexus address","%{name}'s Nexus Adresse","AddEditContact"
+"Their Nexus address","Nexus Adresse des Empfängers","AddEditContact"
+"Remove address","Adresse entfernen","AddEditContact"
+"Label (optional)","Beschreibung (optional)","AddEditContact"
+"Invalid user ID","","AddEditContact"
+"Invalid email","Ungültige E-Mail Adresse","AddEditContact"
+"A contact with the same name already exists.","Ein gleichnamiger Kontakt ist bereits vorhanden.","AddEditContact"
+"Edit contact","Kontakt bearbeiten","AddEditContact"
+"Create new contact","Neuer Kontakt","AddEditContact"
+"At least one address is required.","","AddEditContact"
+"Contact has been updated","Kontakt wurde aktualisiert","AddEditContact"
+"New contact has been added to address book","Neuer Kontakt wurde zum Adressbuch hinzugefügt","AddEditContact"
+"Name","Name","AddEditContact"
+"Contact name","Kontaktname","AddEditContact"
+"Nexus user ID","Nexus Benutzername","AddEditContact"
+"Email address","E-Mail-Adresse","AddEditContact"
+"Phone number","Telefonnummer","AddEditContact"
+"Time zone","Zeitzone","AddEditContact"
+"Select a time zone","Zeitzone auswählen","AddEditContact"
+"Notes","Anmerkungen","AddEditContact"
+"Cancel","Abbrechen","AddEditContact"
+"Reset","Zurücksetzen","AddEditContact"
+"Save changes","Änderungen speichern","AddEditContact"
+"Create","Erstellen","AddEditContact"
+"Invalid number","Ungültige Nummer","AdjustStake"
+"Out of range","Außerhalb des Bereichs","AdjustStake"
+"Set stake amount","Staking-Betrag festlegen","AdjustStake"
+"Reduce stake amount?","Stake-Anzahl verringern? ","AdjustStake"
+"Reducing stake amount might make your Stake Rate decrease","","AdjustStake"
+"Stake amount has been updated","","AdjustStake"
+"Error setting stake amount","","AdjustStake"
+"Note: This change will not take effect immediately but will stay pending until you get the next Trust transaction. The pending change will be recorded locally in this machine, therefore if you switch to another machine for staking, the change will not take effect.","Hinweis: Diese Änderung tritt nicht sofort in Kraft, wird jedoch mit der nächsten Trust Transaktion ausgeführt. Die ausstehende Änderung wird lokal auf dieser Maschine aufgezeichnet. Wenn Sie also zu einer anderen Maschine wechseln, wird die Änderung nicht wirksam.","AdjustStake"
+"Cancel","Abbrechen","AdjustStake"
+"Backing up...","Sichern...","Bootstrap"
+"Preparing...","","Bootstrap"
+"Downloading","Ladet herunter","Bootstrap"
+"Decompressing...","Dekomprimieren...","Bootstrap"
+"Stopping Core...","Core wird gestoppt...","Bootstrap"
+"Moving...","Verschieben...","Bootstrap"
+"Restarting Core...","Core wird neu gestartet...","Bootstrap"
+"Rescanning Wallet...","Durchsuche Konto...","Bootstrap"
+"Cleaning up...","","Bootstrap"
+"Backing up your wallet...","Wallet wird gesichert...","Bootstrap"
+"Downloading the database","Datenbank wird heruntergeladen","Bootstrap"
+"Decompressing the database...","Datenbank wird dekomprimiert...","Bootstrap"
+"Stopping Nexus Core...","Nexus Core wird gestoppt...","Bootstrap"
+"Moving the database...","Datenbank wird verschoben...","Bootstrap"
+"Restarting Nexus Core...","Starte Daemon neu...","Bootstrap"
+"Are you sure you want to abort the process?","Sind Sie sicher, dass Sie den Prozess abbrechen möchten?","Bootstrap"
+"Yes, abort","Ja, Abbruch","Bootstrap"
+"No, let it continue","Nein, lassen Sie es fortfahren","Bootstrap"
+"Bootstrap Recent Database","Bootstrap die aktuelle Datenbank","Bootstrap"
+"Abort","Abbrechen","Bootstrap"
+"Can not Bootstrap on Testnet/Private networks.","","Bootstrap"
+"Not enough disk space! Minimum 15GB of free space is required.","Nicht genügend Speicherplatz! Mindestens 15GB freier Speicherplatz sind erforderlich.","Bootstrap"
+"Download recent database?","Letzte Datenbank herunterladen?","Bootstrap"
+"Downloading a recent version of the database might reduce the time it takes to synchronize your wallet","Das Herunterladen einer aktuellen Version der Datenbank könnte die Zeit verringern, die es benötigt, um Ihre Wallet zu synchronisieren","Bootstrap"
+"Yes, let's bootstrap it","Ja, lass es bootstrapen","Bootstrap"
+"No, let it sync","Nein, synchronisieren lassen","Bootstrap"
+"Bootstrap process has been aborted","Bootstrap-Prozess wurde abgebrochen","Bootstrap"
+"Error bootstrapping recent database","Fehler beim Starten der aktuellen Datenbank","Bootstrap"
+"Unknown error","Unbekannter Fehler","Bootstrap"
+"Recent database has been successfully bootstrapped","Die aktuelle Datenbank wurde erfolgreich bootstrapped","Bootstrap"
+"Change password and PIN","Passwort und PIN ändern","ChangePassword&PIN"
+"Password & PIN have been updated","Passwort & PIN wurden aktualisiert","ChangePassword&PIN"
+"Error updating password & PIN","Fehler beim Aktualisieren von Passwort & PIN","ChangePassword&PIN"
+"Current password","Aktuelles Passwort","ChangePassword&PIN"
+"Your current password","Ihr aktuelles Passwort","ChangePassword&PIN"
+"Current PIN","Aktuelle PIN","ChangePassword&PIN"
+"Your current PIN","Ihre aktuelle PIN","ChangePassword&PIN"
+"New Password","Neues Passwort","ChangePassword&PIN"
+"Enter your new password","Geben Sie Ihr neues Passwort ein","ChangePassword&PIN"
+"New PIN","Neue PIN","ChangePassword&PIN"
+"Enter your new PIN","Neue PIN eingeben","ChangePassword&PIN"
+"Updating","Aktualisierung","ChangePassword&PIN"
+"Update","Aktualisierung","ChangePassword&PIN"
+"Contract Details","Vertragsdetails","ContractDetails"
+"View transaction details","Transaktionsdetails anzeigen","ContractDetails"
+"Yes","Ja","ConfirmDialog"
+"No","Nein","ConfirmDialog"
+"Password/PIN mismatch","Passwort/PIN stimmen nicht überein","ConfirmPassword&PIN"
+"You have entered either your password or your PIN incorrectly, please re-check","Sie haben entweder Ihr Passwort oder Ihre PIN falsch eingegeben, bitte überprüfen Sie erneut","ConfirmPassword&PIN"
+"Confirm password and PIN","Passwort und PIN bestätigen","ConfirmPassword&PIN"
+"Enter your new password & new PIN once again to make sure you have entered them correctly","Geben Sie Ihr neues Passwort & neue PIN erneut ein, um sicherzustellen, dass Sie es korrekt eingegeben haben","ConfirmPassword&PIN"
+"Enter your password & PIN once again to make sure you have entered them correctly","Geben Sie Ihr Passwort und PIN erneut ein, um sicherzustellen, dass Sie es korrekt eingegeben haben","ConfirmPassword&PIN"
+"Password","Passwort","ConfirmPassword&PIN"
+"Re-enter your new password","Geben Sie Ihr neues Passwort erneut ein","ConfirmPassword&PIN"
+"Re-enter your password","Passwort erneut eingeben","ConfirmPassword&PIN"
+"PIN","PIN","ConfirmPassword&PIN"
+"Re-enter your new PIN","Bitte PIN erneut eingeben","ConfirmPassword&PIN"
+"Re-enter your PIN","Bitte PIN erneut eingeben","ConfirmPassword&PIN"
+"Confirm","Bestätigen","ConfirmPassword&PIN"
+"Dismiss","Verwerfen","ErrorDialog"
+"Dismiss","Verwerfen","InfoDialog"
+"Confirm","Bestätigen","PinDialog"
+"Enter PIN","PIN eingeben","PinDialog"
+"Your PIN","Ihre PIN","PinDialog"
+"Cancel","Abbrechen","PinDialog"
+"Dismiss","Verwerfen","SuccessDialog"
+"Log in","Anmelden","Login"
+"Logged in as %{username}","Angemeldet als %{username}","Login"
+"Not being fully synced may have caused this error.","Nicht vollständig synchronisiert zu sein, könnte diesen Fehler verursacht haben.","Login"
+"Error logging in","Fehler beim einloggen","Login"
+"Username","Nutzername","Login"
+"Enter your username","Benutzernamen eingeben","Login"
+"Password","Passwort","Login"
+"Enter your password","Passwort eingeben","Login"
+"PIN","PIN","Login"
+"Enter your PIN","PIN eingeben","Login"
+"Logging in","Anmeldung läuft","Login"
+"Forgot password?","Passwort vergessen?","Login"
+"Create new user","Neuen Benutzer erstellen","Login"
+"Create an account without a name?","Ein Konto ohne Namen erstellen?","NewAccount"
+"Adding a name costs a NXS fee","Das Hinzufügen eines Namens kostet eine NXS-Gebühr","NewAccount"
+"That's Ok","Das ist Ok","NewAccount"
+"Cancel","Abbrechen","NewAccount"
+"Unknown token name/address","Unbekannter Token-Name/Adresse","NewAccount"
+"New account","Neues Konto","NewAccount"
+"New account %{account} has been created","Neues Konto %{account} wurde erstellt","NewAccount"
+"Error creating account","Fehler beim Erstellen des Kontos","NewAccount"
+"Account name (Optional)","","NewAccount"
+"New account's name","Name des neuen Kontos","NewAccount"
+"Fee: %{nameFee} NXS","","NewAccount"
+"Token name/address","Token-Name/Adresse","NewAccount"
+"Creating account","Konto erstellen","NewAccount"
+"Create account","Konto erstellen","NewAccount"
+"Create new user","Neuen Benutzer erstellen","NewUser"
+"Error creating user","Fehler beim Erstellen des Benutzers","NewUser"
+"Username","Nutzername","NewUser"
+"A globally unique username","Ein global eindeutiger Benutzername","NewUser"
+"Password","Passwort","NewUser"
+"Enter your password","Passwort eingeben","NewUser"
+"PIN","PIN","NewUser"
+"Enter your PIN","PIN eingeben","NewUser"
+"Attention","Achtung","NewUser"
+"Please be sure to make a note of your username, password, and PIN, and keep it in a safe place. If you lose or forget them you will be unable to access your account.","Bitte schreiben Sie Ihren Benutzernamen, Passwort und PIN auf und hinterlegen Sie die Informationen an einem sicheren Ort. Wenn Sie diese verlieren oder vergessen, können Sie nicht mehr auf Ihr Konto zugreifen.","NewUser"
+"Creating user","Benutzer wird erstellt","NewUser"
+"Create user","Benutzer erstellen","NewUser"
+"Please wait, this may take up to 30 seconds","Bitte haben Sie etwas Geduld, dieser Vorgang kann bis zu 30 Sekunden dauern","NewUser"
+"Log in","Anmelden","NewUser"
+"User <b>%{username}</b> has been successfully registered","","NewUser"
+"Waiting for user registration to be confirmed on Nexus blockchain...","","NewUser"
+"Recover password and PIN","Passwort und PIN wiederherstellen","RecoverPassword&PIN"
+"Password & PIN have been updated","Passwort & PIN wurden aktualisiert","RecoverPassword&PIN"
+"Error updating password & PIN","Fehler beim Aktualisieren von Passwort & PIN","RecoverPassword&PIN"
+"Username","Nutzername","RecoverPassword&PIN"
+"Your username","Ihr Benutzername","RecoverPassword&PIN"
+"Recovery phrase","Wiederherstellungsphrase","RecoverPassword&PIN"
+"Your recovery phrase","Ihre Wiederherstellungsphrase","RecoverPassword&PIN"
+"New Password","Neues Passwort","RecoverPassword&PIN"
+"Enter your new password","Geben Sie Ihr neues Passwort ein","RecoverPassword&PIN"
+"New PIN","Neue PIN","RecoverPassword&PIN"
+"Enter your new PIN","Neue PIN eingeben","RecoverPassword&PIN"
+"Recovering password & PIN","Passwort & PIN wiederherstellen","RecoverPassword&PIN"
+"Recover password & PIN","Passwort & PIN wiederherstellen","RecoverPassword&PIN"
+"%{smart_count} word |||| %{smart_count} words","%{smart_count} Wort |||| %{smart_count} Wörter","SetRecoveryPhrase"
+"Recovery phrase","Wiederherstellungsphrase","SetRecoveryPhrase"
+"Recovery phrase has been updated","Wiederherstellungsphrase wurde aktualisiert","SetRecoveryPhrase"
+"Error setting recovery phrase","Fehler beim Setzen der Wiederherstellungsphrase","SetRecoveryPhrase"
+"The recovery phrase can be used to recover your account and set a new password and PIN in the event that you lose or forget them. Your recovery phrase must be a minimum of 40 characters, and should ideally be made up of random words.","","SetRecoveryPhrase"
+"<b>Save your new recovery phrase in a safe place</b>, because if you lose it, there will be <b>no way</b> to recover it.","","SetRecoveryPhrase"
+"Password","Passwort","SetRecoveryPhrase"
+"Your current password","Ihr aktuelles Passwort","SetRecoveryPhrase"
+"PIN","PIN","SetRecoveryPhrase"
+"Your current PIN","Ihre aktuelle PIN","SetRecoveryPhrase"
+"Current recovery phrase","Aktuelle Wiederherstellungsphrase","SetRecoveryPhrase"
+"Enter your recovery phrase","Geben Sie Ihre Wiederherstellungsphrase ein","SetRecoveryPhrase"
+"Generate a recovery phrase","Wiederherstellungsphrase generieren","SetRecoveryPhrase"
+"New recovery phrase","Neue Wiederherstellungsphrase","SetRecoveryPhrase"
+"Enter your new recovery phrase or click Generate","Geben Sie Ihre neue Wiederherstellungsphrase ein oder klicken Sie auf Generieren","SetRecoveryPhrase"
+"Setting recovery phrase","Wiederherstellungsphrase wird gesetzt","SetRecoveryPhrase"
+"Set recovery phrase","Wiederherstellungspassword setzen","SetRecoveryPhrase"
+"Confirm recovery phrase","","SetRecoveryPhrase"
+"Enter your new recovery phrase again","","SetRecoveryPhrase"
+"Cancel","Abbrechen","SetRecoveryPhrase"
+"Recovery phrase confirmation doesn't match!","","SetRecoveryPhrase"
+"Please make sure that you have a good backup of your recovery phrase and try again.","","SetRecoveryPhrase"
+"Confirm","Bestätigen","SetRecoveryPhrase"
+"Error loading transaction","","TransactionDetails"
+"Transaction Details","Transaktionsdetails","TransactionDetails"
+"Time","Zeit","TransactionDetails"
+"Sequence","Sequenz","TransactionDetails"
+"Type","Typ","TransactionDetails"
+"Confirmations","Bestätigungen","TransactionDetails"
+"Transaction ID","Transaktions-ID","TransactionDetails"
+"Loading transaction details...","Transaktionsdetails werden geladen...","TransactionDetails"
+"Close the wallet and install update now?","Wallet schließen und Update jetzt installieren?","AutoUpdate"
+"Close and install","Schließen und installieren","AutoUpdate"
+"Install it later","Später installieren","AutoUpdate"
+"New wallet version %{version} - Click here to download","Neue Brieftaschen-Version %{version} - Klicken Sie hier zum Herunterladen","AutoUpdate"
+"New wallet version %{version} - Click here to update","Neue Brieftaschen-Version %{version} - Klicken Sie hier, um zu aktualisieren","AutoUpdate"
+"New wallet version %{version} available. Downloading...","Neue Wallet-Version %{version} verfügbar. Herunterladen...","AutoUpdate"
