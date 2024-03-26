@@ -10,19 +10,21 @@ import LoginModal from 'components/LoginModal';
 import NewUserModal from 'components/NewUserModal';
 
 const incStep = 1000;
-const maxTime = 10000;
+const maxInterval = 10000;
+const syncInterval = 1000;
 let waitTime = 0;
 let connected = false;
 let timerId = null;
 
-const getInfo = async () => {
+const getSystemInfo = async () => {
   try {
     const systemInfo = await callAPI('system/get/info');
     store.dispatch({ type: TYPE.SET_SYSTEM_INFO, payload: systemInfo });
+    return systemInfo;
   } catch (err) {
     store.dispatch({ type: TYPE.DISCONNECT_CORE });
     console.error('system/get/info failed', err);
-    // Throws error so getInfo fails and refreshCoreInfo will
+    // Throws error so getSystemInfo fails and refreshCoreInfo will
     // switch to using dynamic interval.
     throw err;
   }
@@ -38,13 +40,13 @@ export async function refreshCoreInfo() {
     // Clear timeout in case this function is called again when
     // the autoFetching is already running
     clearTimeout(timerId);
-    await store.dispatch(getInfo());
+    const systemInfo = await getSystemInfo();
     connected = true;
-    waitTime = maxTime;
+    waitTime = systemInfo?.syncing ? syncInterval : maxInterval;
   } catch (err) {
     if (connected) waitTime = incStep;
-    else if (waitTime < maxTime) waitTime += incStep;
-    else waitTime = maxTime;
+    else if (waitTime < maxInterval) waitTime += incStep;
+    else waitTime = maxInterval;
     connected = false;
   } finally {
     const {
