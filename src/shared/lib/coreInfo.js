@@ -104,8 +104,8 @@ export function prepareCoreInfo() {
         !state.core.systemInfo?.litemode &&
         state.bootstrap.step === 'idle' &&
         !state.settings.manualDaemon &&
-        systemInfo?.synccomplete < 50 &&
-        systemInfo?.synccomplete >= 0 &&
+        systemInfo?.syncing?.completed < 50 &&
+        systemInfo?.syncing?.completed >= 0 &&
         !systemInfo?.private &&
         !systemInfo?.testnet
       ) {
