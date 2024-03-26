@@ -1,3 +1,24 @@
+# 3.1.3 (2024.2.28)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v3.1.3)
+
+#### Additions
+
+- Nexus Core v5.1.3
+- Added more analytic endpoints
+- Updated translations from Crowdin
+- Can now send to a user's default address just by providing their username
+
+#### Adjustments
+
+- Contact name now has priority
+- Updated some error messaging
+
+#### Fixes
+
+- Balances now clear when get/balance fails
+- Master profile no longer refreshed when not needed
+
 # 3.1.2 (2024.1.06)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v3.1.2)
