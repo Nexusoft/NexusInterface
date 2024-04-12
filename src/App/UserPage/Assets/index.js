@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
 import { switchUserTab, openModal } from 'lib/ui';
-import { loadAssets } from 'lib/user';
+import { refreshAssets } from 'lib/user';
 import plusIcon from 'icons/plus.svg';
 
 import Asset from './Asset';
@@ -25,7 +25,7 @@ export default function Assets() {
   const assets = useSelector((state) => state.user.assets);
   useEffect(() => {
     switchUserTab('Assets');
-    loadAssets();
+    refreshAssets();
   }, [session]);
 
   return (

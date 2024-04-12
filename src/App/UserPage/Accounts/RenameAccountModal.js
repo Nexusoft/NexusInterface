@@ -7,7 +7,7 @@ import FormField from 'components/FormField';
 import { formSubmit, required } from 'lib/form';
 import { confirmPin, openErrorDialog } from 'lib/dialog';
 import { callAPI } from 'lib/api';
-import { loadAccounts } from 'lib/user';
+import { refreshAccounts } from 'lib/user';
 import { showNotification } from 'lib/ui';
 import { createLocalNameFee } from 'lib/fees';
 import { selectUsername } from 'lib/user';
@@ -75,7 +75,7 @@ async function submit({ name, account, username }) {
 function handleSubmitSuccess({ result, name, closeModal }) {
   if (!result) return; // Submission was cancelled
   UT.RenameAccount();
-  loadAccounts();
+  refreshAccounts();
   closeModal();
   showNotification(
     __('Account has been renamed to %{account_name}', {

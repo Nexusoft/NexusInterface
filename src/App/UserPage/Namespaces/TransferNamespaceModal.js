@@ -6,7 +6,7 @@ import FormField from 'components/FormField';
 import Spinner from 'components/Spinner';
 import { formSubmit, required } from 'lib/form';
 import { confirmPin, openSuccessDialog } from 'lib/dialog';
-import { loadNamespaces } from 'lib/user';
+import { refreshNamespaces } from 'lib/user';
 import { callAPI } from 'lib/api';
 import { userIdRegex } from 'consts/misc';
 
@@ -49,7 +49,7 @@ export default function TransferNamespaceModal({ namespace }) {
                 },
                 onSuccess: async (result) => {
                   if (!result) return; // Submission was cancelled
-                  loadNamespaces();
+                  refreshNamespaces();
                   closeModal();
                   openSuccessDialog({
                     message: __('Namespace has been transferred'),

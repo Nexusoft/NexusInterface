@@ -1,7 +1,7 @@
 import { callAPI } from 'lib/api';
 import store, { observeStore } from 'store';
 import * as TYPE from 'consts/actionTypes';
-import { loadAccounts } from 'lib/user';
+import { refreshAccounts } from 'lib/user';
 import { showDesktopNotif } from 'utils/misc';
 import { formatNumber } from 'lib/intl';
 import { showNotification } from 'lib/ui';
@@ -44,7 +44,7 @@ function startWatcher() {
           // Reload the account list
           // so that the account balances (available & unconfirmed) are up-to-date
           loadTransactions();
-          loadAccounts();
+          refreshAccounts();
         }
       }
     }

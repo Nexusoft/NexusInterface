@@ -8,7 +8,7 @@ import FormField from 'components/FormField';
 import Spinner from 'components/Spinner';
 import { formSubmit, required } from 'lib/form';
 import { confirmPin, openSuccessDialog } from 'lib/dialog';
-import { loadAssets, loadOwnedTokens } from 'lib/user';
+import { refreshAssets, refreshOwnedTokens } from 'lib/user';
 import { callAPI } from 'lib/api';
 import memoize from 'utils/memoize';
 
@@ -57,7 +57,7 @@ const initialValues = {
 export default function TokenizeAssetModal({ asset }) {
   const tokenSuggestions = useSelector(selectTokenSuggestions);
   useEffect(() => {
-    loadOwnedTokens();
+    refreshOwnedTokens();
   }, []);
 
   return (
@@ -84,7 +84,7 @@ export default function TokenizeAssetModal({ asset }) {
                 },
                 onSuccess: async (result) => {
                   if (!result) return; // Submission was cancelled
-                  loadAssets();
+                  refreshAssets();
                   closeModal();
                   openSuccessDialog({
                     message: __('Asset has been tokenized'),

@@ -7,7 +7,7 @@ import FormField from 'components/FormField';
 import { formSubmit, checkAll, useFieldValue } from 'lib/form';
 import { confirm, confirmPin } from 'lib/dialog';
 import { callAPI } from 'lib/api';
-import { loadAccounts, loadOwnedTokens } from 'lib/user';
+import { refreshAccounts, refreshOwnedTokens } from 'lib/user';
 import { openModal, showNotification } from 'lib/ui';
 import NewAccountModal from 'components/NewAccountModal';
 
@@ -83,7 +83,7 @@ export default function NewTokenModal() {
                     }),
                     'success'
                   );
-                  loadOwnedTokens();
+                  refreshOwnedTokens();
                   closeModal();
                   const createAccount = await confirm({
                     question: __(
@@ -103,7 +103,7 @@ export default function NewTokenModal() {
                     );
                   }
 
-                  loadAccounts();
+                  refreshAccounts();
                 },
                 errorMessage: __('Error creating token'),
               })}
