@@ -15,11 +15,8 @@ import {
   createNamespacedNameFee,
   createGlobalNameFee,
 } from 'lib/fees';
-import {
-  refreshNameRecords,
-  refreshNamespaces,
-  selectUsername,
-} from 'lib/user';
+import { refreshNameRecords, refreshNamespaces } from 'lib/user';
+import { selectUsername } from 'lib/session';
 import { callAPI } from 'lib/api';
 import UT from 'lib/usageTracking';
 

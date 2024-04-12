@@ -4,7 +4,7 @@ import { ipcRenderer } from 'electron';
 import * as TYPE from 'consts/actionTypes';
 import store from 'store';
 import { stopCore } from 'lib/core';
-import { logOut } from 'lib/user';
+import { logOut } from 'lib/session';
 
 let _navigate = null;
 export function navigate(...params) {

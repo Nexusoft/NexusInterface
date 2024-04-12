@@ -11,7 +11,7 @@ import Spinner from 'components/Spinner';
 import { showNotification, openModal } from 'lib/ui';
 import { openErrorDialog } from 'lib/dialog';
 import { formSubmit, required } from 'lib/form';
-import { logIn } from 'lib/user';
+import { logIn } from 'lib/session';
 import { callAPI } from 'lib/api';
 
 __ = __context('Login');

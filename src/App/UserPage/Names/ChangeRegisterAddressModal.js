@@ -8,7 +8,8 @@ import FormField from 'components/FormField';
 import Spinner from 'components/Spinner';
 import { formSubmit } from 'lib/form';
 import { confirmPin, openSuccessDialog } from 'lib/dialog';
-import { refreshNameRecords, selectUsername } from 'lib/user';
+import { refreshNameRecords } from 'lib/user';
+import { selectUsername } from 'lib/session';
 import { callAPI } from 'lib/api';
 import memoize from 'utils/memoize';
 

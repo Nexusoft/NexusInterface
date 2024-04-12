@@ -10,7 +10,7 @@ import { callAPI } from 'lib/api';
 import { refreshAccounts } from 'lib/user';
 import { showNotification } from 'lib/ui';
 import { createLocalNameFee } from 'lib/fees';
-import { selectUsername } from 'lib/user';
+import { selectUsername } from 'lib/session';
 import memoize from 'utils/memoize';
 import UT from 'lib/usageTracking';
 

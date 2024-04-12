@@ -5,7 +5,7 @@ import { isCoreConnected, isLoggedIn } from 'selectors';
 import { openModal, isModalOpen } from 'lib/ui';
 import { updateSettings } from 'lib/settings';
 import { bootstrap } from 'lib/bootstrap';
-import { refreshUserStatus } from 'lib/user';
+import { refreshUserStatus } from 'lib/session';
 import LoginModal from 'components/LoginModal';
 import NewUserModal from 'components/NewUserModal';
 
