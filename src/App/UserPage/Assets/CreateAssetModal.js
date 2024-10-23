@@ -10,7 +10,7 @@ import Icon from 'components/Icon';
 import QuestionCircle from 'components/QuestionCircle';
 import { formSubmit } from 'lib/form';
 import { confirmPin, openSuccessDialog } from 'lib/dialog';
-import { loadAssets } from 'lib/user';
+import { refreshAssets } from 'lib/user';
 import { callAPI } from 'lib/api';
 import { createLocalNameFee } from 'lib/fees';
 import plusIcon from 'icons/plus.svg';
@@ -96,7 +96,7 @@ export default function CreateAssetModal() {
                   if (!result) return; // Submission was cancelled
                   UT.CreateNewItem('asset');
                   closeModal();
-                  loadAssets();
+                  refreshAssets();
                   openSuccessDialog({
                     message: __('New asset has been created'),
                   });

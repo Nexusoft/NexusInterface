@@ -6,7 +6,7 @@ import FormField from 'components/FormField';
 import Form from 'components/Form';
 import { confirm, confirmPin } from 'lib/dialog';
 import { callAPI } from 'lib/api';
-import { loadAccounts } from 'lib/user';
+import { refreshAccounts } from 'lib/user';
 import { showNotification } from 'lib/ui';
 import { createLocalNameFee } from 'lib/fees';
 import { formSubmit, required } from 'lib/form';
@@ -75,7 +75,7 @@ export default function NewAccountModal({ tokenName, tokenAddress }) {
                 onSuccess: (result, values) => {
                   if (!result) return; // Submission was cancelled
                   UT.CreateNewItem('account');
-                  loadAccounts();
+                  refreshAccounts();
                   closeModal();
                   showNotification(
                     __('New account %{account} has been created', {

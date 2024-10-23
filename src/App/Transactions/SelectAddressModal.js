@@ -6,7 +6,7 @@ import ControlledModal from 'components/ControlledModal';
 import NexusAddress from 'components/NexusAddress';
 import TokenName from 'components/TokenName';
 import { timing } from 'styles';
-import { loadAccounts, loadOwnedTokens } from 'lib/user';
+import { refreshAccounts, refreshOwnedTokens } from 'lib/user';
 import memoize from 'utils/memoize';
 
 __ = __context('SelectAddress');
@@ -68,8 +68,8 @@ export default function SelectAddressModal({ onSelect }) {
   const tokens = useSelector(selectKnownTokens);
   const contacts = useSelector(selectContacts);
   useEffect(() => {
-    loadAccounts();
-    loadOwnedTokens();
+    refreshAccounts();
+    refreshOwnedTokens();
   }, []);
 
   return (

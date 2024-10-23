@@ -9,7 +9,7 @@ import Tooltip from 'components/Tooltip';
 import Form from 'components/Form';
 import { callAPI } from 'lib/api';
 import { openSuccessDialog } from 'lib/dialog';
-import { loadAccounts } from 'lib/user';
+import { refreshAccounts } from 'lib/user';
 import { formSubmit, required } from 'lib/form';
 import { timeToText } from 'utils/misc';
 import WarningIcon from 'icons/warning.svg';
@@ -223,7 +223,7 @@ export default function PreviewTransactionModal({
                 onSuccess: () => {
                   UT.Send(source?.token ? 'token' : 'nexus');
                   resetSendForm();
-                  loadAccounts();
+                  refreshAccounts();
                   loadTransactions();
                   closeModal();
                   openSuccessDialog({

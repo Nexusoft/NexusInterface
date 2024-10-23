@@ -6,7 +6,7 @@ import Icon from 'components/Icon';
 import Button from 'components/Button';
 import { switchUserTab, openModal } from 'lib/ui';
 import { popupContextMenu } from 'lib/contextMenu';
-import { loadNamespaces } from 'lib/user';
+import { refreshNamespaces } from 'lib/user';
 import { timing } from 'styles';
 import plusIcon from 'icons/plus.svg';
 
@@ -77,7 +77,7 @@ export default function Namespaces() {
   const namespaces = useSelector((state) => state.user.namespaces);
   useEffect(() => {
     switchUserTab('Namespaces');
-    loadNamespaces();
+    refreshNamespaces();
   }, [session]);
 
   return (

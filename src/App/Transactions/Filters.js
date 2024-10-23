@@ -9,7 +9,7 @@ import Icon from 'components/Icon';
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
 import { updateFilter } from 'lib/transactions';
-import { loadOwnedTokens, loadAccounts } from 'lib/user';
+import { refreshOwnedTokens, refreshAccounts } from 'lib/user';
 import { openModal } from 'lib/ui';
 import { debounced } from 'utils/universal';
 import ListIcon from 'icons/list.svg';
@@ -89,8 +89,8 @@ export default function Filters({ morePadding }) {
   );
   const [addressInput, setAddressInput] = useState(addressQuery);
   useEffect(() => {
-    loadOwnedTokens();
-    loadAccounts();
+    refreshOwnedTokens();
+    refreshAccounts();
   }, []);
   return (
     <FiltersWrapper morePadding={morePadding}>

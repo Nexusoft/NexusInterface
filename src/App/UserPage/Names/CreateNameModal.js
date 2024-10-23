@@ -15,7 +15,8 @@ import {
   createNamespacedNameFee,
   createGlobalNameFee,
 } from 'lib/fees';
-import { loadNameRecords, loadNamespaces, selectUsername } from 'lib/user';
+import { refreshNameRecords, refreshNamespaces } from 'lib/user';
+import { selectUsername } from 'lib/session';
 import { callAPI } from 'lib/api';
 import UT from 'lib/usageTracking';
 
@@ -103,7 +104,7 @@ export default function CreateNameModal() {
   const username = useSelector(selectUsername);
   const namespaces = useSelector((state) => state.user.namespaces);
   useEffect(() => {
-    loadNamespaces();
+    refreshNamespaces();
   }, []);
   return (
     <ControlledModal maxWidth={500}>
@@ -134,7 +135,7 @@ export default function CreateNameModal() {
                 onSuccess: async (result, values, form) => {
                   if (!result) return; // Submission was cancelled
                   UT.CreateNewItem('name');
-                  loadNameRecords();
+                  refreshNameRecords();
                   form.restart();
                   closeModal();
                   openSuccessDialog({

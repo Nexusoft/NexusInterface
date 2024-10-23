@@ -6,7 +6,8 @@ import Icon from 'components/Icon';
 import Button from 'components/Button';
 import Switch from 'components/Switch';
 import { switchUserTab, openModal } from 'lib/ui';
-import { loadNameRecords, selectUsername } from 'lib/user';
+import { refreshNameRecords } from 'lib/user';
+import { selectUsername } from 'lib/session';
 import { updateSettings } from 'lib/settings';
 import { popupContextMenu } from 'lib/contextMenu';
 import { timing } from 'styles';
@@ -142,7 +143,7 @@ export default function Names() {
   );
   useEffect(() => {
     switchUserTab('Names');
-    loadNameRecords();
+    refreshNameRecords();
   }, [session]);
 
   const toggle = () => updateSettings({ showUnusedNames: !showUnusedNames });
