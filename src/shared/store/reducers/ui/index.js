@@ -7,6 +7,7 @@ import modals from './modals';
 import notifications from './notifications';
 import backgroundTasks from './backgroundTasks';
 import closing from './closing';
+import locked from './locked';
 import transactionsFilter from './transactionsFilter';
 import user from './user';
 
@@ -18,6 +19,7 @@ export default combineReducers({
   notifications,
   backgroundTasks,
   closing,
+  locked,
   transactionsFilter,
   user,
 });

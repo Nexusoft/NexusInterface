@@ -9,7 +9,7 @@ import SetRecoveryModal from 'components/SetRecoveryModal';
 import { isLoggedIn } from 'selectors';
 import { openModal, showNotification } from 'lib/ui';
 import { timing, animations, consts } from 'styles';
-import { logOut, selectUsername } from 'lib/user';
+import { logOut, selectUsername } from 'lib/session';
 
 import SwitchUserModal from './SwitchUserModal';
 

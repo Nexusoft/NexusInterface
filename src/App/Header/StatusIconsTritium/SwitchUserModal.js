@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 import ControlledModal from 'components/ControlledModal';
 import Icon from 'components/Icon';
 import { timing } from 'styles';
-import { setActiveUser, selectActiveSession } from 'lib/user';
+import { setActiveUser, selectActiveSession } from 'lib/session';
 import userIcon from 'icons/user.svg';
 
 const UserWrapper = styled.div(({ theme, active, switching }) => ({

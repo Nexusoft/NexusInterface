@@ -7,7 +7,8 @@ import FormField from 'components/FormField';
 import Spinner from 'components/Spinner';
 import { formSubmit, required } from 'lib/form';
 import { confirmPin, openSuccessDialog } from 'lib/dialog';
-import { loadNameRecords, selectUsername } from 'lib/user';
+import { refreshNameRecords } from 'lib/user';
+import { selectUsername } from 'lib/session';
 import { callAPI } from 'lib/api';
 import { userIdRegex } from 'consts/misc';
 
@@ -53,7 +54,7 @@ export default function TransferNameModal({ nameRecord }) {
                 },
                 onSuccess: async (result) => {
                   if (!result) return; // Submission was cancelled
-                  loadNameRecords();
+                  refreshNameRecords();
                   closeModal();
                   openSuccessDialog({
                     message: __('Name has been transferred'),

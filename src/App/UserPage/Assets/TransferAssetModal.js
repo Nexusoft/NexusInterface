@@ -6,7 +6,7 @@ import FormField from 'components/FormField';
 import Spinner from 'components/Spinner';
 import { formSubmit, required } from 'lib/form';
 import { confirmPin, openSuccessDialog } from 'lib/dialog';
-import { loadAssets } from 'lib/user';
+import { refreshAssets } from 'lib/user';
 import { callAPI } from 'lib/api';
 import { userIdRegex } from 'consts/misc';
 
@@ -49,7 +49,7 @@ export default function TransferAssetModal({ asset }) {
                 },
                 onSuccess: async (result) => {
                   if (!result) return; // Submission was cancelled
-                  loadAssets();
+                  refreshAssets();
                   closeModal();
                   openSuccessDialog({
                     message: __('Asset has been transferred'),

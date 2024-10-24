@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
 import { switchUserTab, openModal } from 'lib/ui';
-import { loadAccounts, loadOwnedTokens } from 'lib/user';
+import { refreshAccounts, refreshOwnedTokens } from 'lib/user';
 import plusIcon from 'icons/plus.svg';
 
 import Account from './Account';
@@ -19,8 +19,8 @@ export default function Accounts() {
 
   useEffect(() => {
     switchUserTab('Accounts');
-    loadAccounts();
-    loadOwnedTokens();
+    refreshAccounts();
+    refreshOwnedTokens();
   }, [session]);
 
   return (

@@ -14,7 +14,7 @@ import UT from 'lib/usageTracking';
 import { updateSettings } from 'lib/settings';
 import { switchSettingsTab, showNotification } from 'lib/ui';
 import { loadCustomTheme } from 'lib/theme';
-import { loadAccounts } from 'lib/user';
+import { refreshAccounts } from 'lib/user';
 import { walletDataDir } from 'consts/paths';
 import { webGLAvailable } from 'consts/misc';
 import memoize from 'utils/memoize';
@@ -84,7 +84,7 @@ export default function SettingsStyle() {
   useEffect(() => {
     switchSettingsTab('Style');
     if (!defaultAddress) {
-      loadAccounts();
+      refreshAccounts();
     }
   }, []);
 

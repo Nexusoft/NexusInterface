@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import UT from 'lib/usageTracking';
 import Button from 'components/Button';
 import { openModal } from 'lib/ui';
-import { loadOwnedTokens, loadAccounts } from 'lib/user';
+import { refreshOwnedTokens, refreshAccounts } from 'lib/user';
 import Icon from 'components/Icon';
 import memoize from 'utils/memoize';
 
@@ -46,8 +46,8 @@ export default function Tokens() {
   );
   useEffect(() => {
     UT.SendScreen('Tokens');
-    loadOwnedTokens();
-    loadAccounts();
+    refreshOwnedTokens();
+    refreshAccounts();
   }, [session]);
 
   return (

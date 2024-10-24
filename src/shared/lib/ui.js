@@ -274,3 +274,14 @@ export const toggleUserBalanceDisplayFiat = (toggleBool) => {
     payload: toggleBool,
   });
 };
+
+/**
+ * Other
+ * ===========================
+ */
+export const toggleLockScreen = (toggleLock) => {
+  store.dispatch({
+    type: TYPE.LOCK_SCREEN,
+    payload: toggleLock,
+  });
+};

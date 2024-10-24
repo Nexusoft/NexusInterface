@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 
 import RouterVerticalTab from 'components/RouterVerticalTab';
 import { consts } from 'styles';
-import { selectUsername } from 'lib/user';
+import { selectUsername } from 'lib/session';
 
 __ = __context('User');
 

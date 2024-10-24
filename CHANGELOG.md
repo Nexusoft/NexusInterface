@@ -1,3 +1,20 @@
+# 3.1.4 (2024.10.23)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v3.1.4)
+
+#### Additions
+
+- Nexus Core v5.1.4
+- UI Pin Lock
+
+#### Adjustments
+
+- None
+
+#### Fixes
+
+- UI Fixes
+
 # 3.1.3 (2024.2.28)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v3.1.3)

@@ -10,7 +10,7 @@ import Icon from 'components/Icon';
 import Button from 'components/Button';
 import FormField from 'components/FormField';
 import { openModal } from 'lib/ui';
-import { loadAccounts, loadOwnedTokens } from 'lib/user';
+import { refreshAccounts, refreshOwnedTokens } from 'lib/user';
 import {
   formName,
   getDefaultRecipient,
@@ -91,8 +91,8 @@ export default function SendForm() {
   const accountOptions = useSelector(selectAccountOptions);
   const initialValues = useInitialValues();
   useEffect(() => {
-    loadAccounts();
-    loadOwnedTokens();
+    refreshAccounts();
+    refreshOwnedTokens();
   }, []);
 
   return (

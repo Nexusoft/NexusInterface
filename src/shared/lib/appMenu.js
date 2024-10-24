@@ -1,15 +1,14 @@
 // External
 import { shell, ipcRenderer } from 'electron';
-import fs from 'fs';
 
 // Internal
 import store, { observeStore } from 'store';
 import { toggleWebViewDevTools, getActiveWebView } from 'lib/modules';
 import { startCore, stopCore } from 'lib/core';
 import { navigate } from 'lib/wallet';
-import { showNotification, openModal } from 'lib/ui';
+import { showNotification, openModal, toggleLockScreen } from 'lib/ui';
 import { bootstrap } from 'lib/bootstrap';
-import { isCoreConnected } from 'selectors';
+import { isCoreConnected, isLoggedIn } from 'selectors';
 import { preRelease } from 'consts/misc';
 // import { confirm } from 'lib/dialog';
 import { walletDataDir } from 'consts/paths';
@@ -208,6 +207,17 @@ const menuItems = preprocess({
     enabled: true,
     click: quitAndInstall,
   },
+  lockScreen: {
+    label: __('Lock Screen'),
+    accelerator: 'CmdOrCtrl+L',
+    click: () => {
+      const state = store.getState();
+      if (state.ui.locked) {
+        return;
+      }
+      toggleLockScreen(true);
+    },
+  },
 });
 
 /**
@@ -238,6 +248,8 @@ function buildDarwinTemplate() {
   const state = store.getState();
   const coreConnected = isCoreConnected(state);
   const activeWebView = getActiveWebView();
+  const addLockedMenu = isLoggedIn(state);
+
   const {
     settings: { manualDaemon },
     core: { systemInfo },
@@ -254,6 +266,8 @@ function buildDarwinTemplate() {
           ? menuItems.stopCoreMenu
           : menuItems.startCoreMenu
         : null,
+      menuItems.separator,
+      addLockedMenu ? menuItems.lockScreen : null,
       menuItems.separator,
       menuItems.quitNexus,
     ].filter((e) => e),
@@ -324,6 +338,8 @@ function buildDefaultTemplate() {
   const state = store.getState();
   const coreConnected = isCoreConnected(state);
   const activeWebView = getActiveWebView();
+  const addLockedMenu = isLoggedIn(state);
+
   const {
     settings: { manualDaemon },
     core: { systemInfo },
@@ -341,6 +357,8 @@ function buildDefaultTemplate() {
           ? menuItems.stopCoreMenu
           : menuItems.startCoreMenu
         : null,
+      menuItems.separator,
+      addLockedMenu ? menuItems.lockScreen : null,
       menuItems.separator,
       menuItems.quitNexus,
     ].filter((e) => e),
@@ -416,6 +434,15 @@ function rebuildMenu() {
   rebuildTimerId = setTimeout(buildMenu, 0);
 }
 
+const observeLockedState = (lockedState) =>
+  lockedState
+    ? window.addEventListener('beforeunload', preventReload)
+    : window.removeEventListener('beforeunload', preventReload);
+
+const preventReload = (ev) => {
+  ev.returnValue = true;
+};
+
 // Update the updater menu item when the updater state changes
 // Changing menu item labels directly has no effect so we have to rebuild the whole menu
 export function prepareMenu() {
@@ -429,5 +456,7 @@ export function prepareMenu() {
   observeStore((state) => state.activeAppModuleName, rebuildMenu);
   observeStore((state) => state.settings.manualDaemon, rebuildMenu);
   observeStore((state) => state.core.systemInfo?.litemode, rebuildMenu);
+  observeStore(isLoggedIn, rebuildMenu);
+  observeStore((state) => state.ui.locked, observeLockedState); // Consider moving this to a more appropriate spot.
   // observeStore((state) => state.core.systemInfo?.nolegacy, rebuildMenu);
 }

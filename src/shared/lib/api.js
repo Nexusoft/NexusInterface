@@ -2,7 +2,7 @@ import http from 'http';
 import https from 'https';
 
 import store from 'store';
-import { selectActiveSession } from 'lib/user';
+import { selectActiveSession } from 'lib/session';
 import { getActiveCoreConfig } from 'lib/coreConfig';
 
 const getDefaultOptions = ({
