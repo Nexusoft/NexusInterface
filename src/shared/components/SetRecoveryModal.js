@@ -106,11 +106,14 @@ export default function SetRecoveryModal() {
               </p>
               <p>
                 {__(
-                  '<b>Save your new recovery phrase in a safe place</b>, because if you lose it, there will be <b>no way</b> to recover it.',
+                  '<b>Securely store your new recovery phrase in a safe and accessible location, as it cannot be recovered if lost.</b>',
                   null,
                   {
                     b: (text) => <strong>{text}</strong>,
                   }
+                )}{' '}
+                {__(
+                  'In the next step, you will be prompted to re-enter it to confirm you have recorded it accurately.'
                 )}
               </p>
 
@@ -199,7 +202,7 @@ export default function SetRecoveryModal() {
                         </span>
                       </span>
                     ) : (
-                      __('Set recovery phrase')
+                      __('Next')
                     )
                   }
                 </Form.SubmitButton>
