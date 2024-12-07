@@ -1,10 +1,26 @@
+# 3.1.5 (2024.12.06)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v3.1.5)
+
+#### Additions
+
+- Nexus Core v5.1.4
+
+#### Adjustments
+
+- Enabled UPNP
+
+#### Fixes
+
+- None
+
 # 3.1.4 (2024.10.23)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v3.1.4)
 
 #### Additions
 
-- Nexus Core v5.1.4
+- Nexus Core v5.1.4-rc1
 - UI Pin Lock
 
 #### Adjustments
