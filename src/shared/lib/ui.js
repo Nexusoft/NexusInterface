@@ -1,5 +1,6 @@
 import * as TYPE from 'consts/actionTypes';
 import store from 'store';
+import { atom } from 'jotai';
 
 const newModalId = (function () {
   let counter = 1;
@@ -285,3 +286,5 @@ export const toggleLockScreen = (toggleLock) => {
     payload: toggleLock,
   });
 };
+
+export const jotaiDevToolsOpenAtom = atom(false);

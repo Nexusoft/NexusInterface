@@ -8,3 +8,5 @@ const store = createStore(initialState);
 export const observeStore = createObserver(store);
 
 export default store;
+
+export { jotaiStore, JotaiWrapper } from './jotai';

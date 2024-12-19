@@ -52,6 +52,10 @@ export const rendererBabelConfig = ({ hot } = {}) => {
     presets: [
       presetEnv,
       ['@babel/preset-react', { development, runtime: 'automatic' }],
+      // The preset includes two plugins:
+      // - jotai/babel/plugin-react-refresh to enable hot reaload for atoms
+      // - jotai/babel/plugin-debug-label to automatically adds debug labels to atoms
+      'jotai/babel/preset',
     ],
   };
 

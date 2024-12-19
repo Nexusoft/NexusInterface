@@ -2,11 +2,16 @@
 import { shell, ipcRenderer } from 'electron';
 
 // Internal
-import store, { observeStore } from 'store';
+import store, { observeStore, jotaiStore } from 'store';
 import { toggleWebViewDevTools, getActiveWebView } from 'lib/modules';
 import { startCore, stopCore } from 'lib/core';
 import { navigate } from 'lib/wallet';
-import { showNotification, openModal, toggleLockScreen } from 'lib/ui';
+import {
+  showNotification,
+  openModal,
+  toggleLockScreen,
+  jotaiDevToolsOpenAtom,
+} from 'lib/ui';
 import { bootstrap } from 'lib/bootstrap';
 import { isCoreConnected, isLoggedIn } from 'selectors';
 import { preRelease } from 'consts/misc';
@@ -144,6 +149,13 @@ const menuItems = preprocess({
       toggleWebViewDevTools();
     },
   },
+  toggleJotaiDevTools: {
+    label: __('Toggle Jotai Developer Tools'),
+    click: () => {
+      const open = jotaiStore.get(jotaiDevToolsOpenAtom);
+      jotaiStore.set(jotaiDevToolsOpenAtom, !open);
+    },
+  },
   websiteLink: {
     label: __('Nexus Website'),
     click: () => {
@@ -248,7 +260,7 @@ function buildDarwinTemplate() {
   const state = store.getState();
   const coreConnected = isCoreConnected(state);
   const activeWebView = getActiveWebView();
-  const addLockedMenu = isLoggedIn(state);
+  const loggedIn = isLoggedIn(state);
 
   const {
     settings: { manualDaemon },
@@ -267,7 +279,7 @@ function buildDarwinTemplate() {
           : menuItems.startCoreMenu
         : null,
       menuItems.separator,
-      addLockedMenu ? menuItems.lockScreen : null,
+      loggedIn ? menuItems.lockScreen : null,
       menuItems.separator,
       menuItems.quitNexus,
     ].filter((e) => e),
@@ -299,7 +311,9 @@ function buildDarwinTemplate() {
   };
   if (process.env.NODE_ENV === 'development' || state.settings.devMode) {
     subMenuWindow.submenu.push(menuItems.toggleDevTools);
-
+    if (process.env.NODE_ENV === 'development') {
+      subMenuWindow.submenu.push(menuItems.toggleJotaiDevTools);
+    }
     if (activeWebView) {
       subMenuWindow.submenu.push(menuItems.toggleModuleDevTools);
     }
@@ -338,7 +352,7 @@ function buildDefaultTemplate() {
   const state = store.getState();
   const coreConnected = isCoreConnected(state);
   const activeWebView = getActiveWebView();
-  const addLockedMenu = isLoggedIn(state);
+  const loggedIn = isLoggedIn(state);
 
   const {
     settings: { manualDaemon },
@@ -358,7 +372,7 @@ function buildDefaultTemplate() {
           : menuItems.startCoreMenu
         : null,
       menuItems.separator,
-      addLockedMenu ? menuItems.lockScreen : null,
+      loggedIn ? menuItems.lockScreen : null,
       menuItems.separator,
       menuItems.quitNexus,
     ].filter((e) => e),
@@ -379,7 +393,9 @@ function buildDefaultTemplate() {
   };
   if (process.env.NODE_ENV === 'development' || state.settings.devMode) {
     subMenuView.submenu.push(menuItems.separator, menuItems.toggleDevTools);
-
+    if (process.env.NODE_ENV === 'development') {
+      subMenuView.submenu.push(menuItems.toggleJotaiDevTools);
+    }
     if (activeWebView) {
       subMenuView.submenu.push(menuItems.toggleModuleDevTools);
     }

@@ -1,7 +1,7 @@
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 
-import store from 'store';
+import store, { JotaiWrapper } from 'store';
 import { startCore } from 'lib/core';
 import { prepareWallet } from 'lib/wallet';
 import { prepareMenu } from 'lib/appMenu';
@@ -30,9 +30,11 @@ async function run() {
     const domNode = document.getElementById('root');
     const root = createRoot(domNode);
     root.render(
-      <Provider store={store}>
-        <App />
-      </Provider>
+      <JotaiWrapper>
+        <Provider store={store}>
+          <App />
+        </Provider>
+      </JotaiWrapper>
     );
 
     prepareMenu();

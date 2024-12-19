@@ -2,7 +2,6 @@ import { clipboard, shell } from 'electron';
 
 import * as TYPE from 'consts/actionTypes';
 import store, { observeStore } from 'store';
-import { navigate } from 'lib/wallet';
 import { showNotification } from 'lib/ui';
 import {
   openConfirmDialog,
