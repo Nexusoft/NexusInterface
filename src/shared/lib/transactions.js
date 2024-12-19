@@ -1,3 +1,6 @@
+import { atom, useAtomValue } from 'jotai';
+import { useQuery } from '@tanstack/react-query';
+import { useSelector } from 'react-redux';
 import { callAPI } from 'lib/api';
 import store, { observeStore } from 'store';
 import * as TYPE from 'consts/actionTypes';
@@ -242,22 +245,6 @@ export async function loadTransactions() {
   }
 }
 
-export async function updateFilter(updates) {
-  store.dispatch({
-    type: TYPE.UPDATE_TRANSACTIONS_FILTER,
-    payload: { ...updates, page: 1 },
-  });
-  return await loadTransactions();
-}
-
-export async function updatePage(page) {
-  store.dispatch({
-    type: TYPE.UPDATE_TRANSACTIONS_FILTER,
-    payload: { page },
-  });
-  return await loadTransactions();
-}
-
 export const getDeltaSign = (contract) => {
   switch (contract.OP) {
     case 'CREDIT':
@@ -278,18 +265,6 @@ export const getDeltaSign = (contract) => {
       return '';
   }
 };
-
-export async function fetchTransaction(txid) {
-  const tx = await callAPI('ledger/get/transaction', {
-    txid,
-    verbose: 'summary',
-  });
-  store.dispatch({
-    type: TYPE.UPDATE_TRANSACTIONS,
-    payload: [tx],
-  });
-  return tx;
-}
 
 export function prepareTransactions() {
   observeStore(
@@ -339,4 +314,57 @@ export function prepareTransactions() {
       }
     }
   );
+}
+
+/**
+ * New
+ * =============================================================================
+ */
+
+export const pageAtom = atom(1);
+export const addressQueryAtom = atom('');
+export const operationAtom = atom(null);
+export const timeSpanAtom = atom(null);
+
+export function useFetchTransactions() {
+  const page = useAtomValue(pageAtom);
+  const addressQuery = useAtomValue(addressQueryAtom);
+  const operation = useAtomValue(operationAtom);
+  const timeSpan = useAtomValue(timeSpanAtom);
+  const genesis = useSelector((state) => state.user.status?.genesis);
+
+  return useQuery({
+    queryKey: [
+      'transactions',
+      { genesis, page, addressQuery, operation, timeSpan },
+    ],
+    queryFn: async () => {
+      try {
+        const params = {
+          verbose: 'summary',
+          limit: txCountPerPage,
+          // API page param is 0 based, while the page number on the UI is 1 based
+          page: page - 1,
+        };
+        const query = buildQuery({ addressQuery, operation, timeSpan });
+        if (query) {
+          params.where = query;
+        }
+        return await callAPI('profiles/transactions/master', params);
+      } catch (err) {
+        openErrorDialog({
+          message: __('Error fetching transactions'),
+          note:
+            typeof err === 'string' ? err : err?.message || __('Unknown error'),
+        });
+        throw err;
+      }
+    },
+    staleTime: 300000, // 5 minutes
+    gcTime: 0,
+    refetchInterval: ({ state: { data } }) =>
+      data?.some((tx) => !isConfirmed(tx)) ? 5000 : false,
+    refetchOnMount: 'always',
+    refetchOnReconnect: 'always',
+  });
 }

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
+import { useAtom } from 'jotai';
 
 import Select from 'components/Select';
 import TextField from 'components/TextField';
@@ -8,7 +8,11 @@ import FormField from 'components/FormField';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
-import { updateFilter } from 'lib/transactions';
+import {
+  addressQueryAtom,
+  timeSpanAtom,
+  operationAtom,
+} from 'lib/transactions';
 import { refreshOwnedTokens, refreshAccounts } from 'lib/user';
 import { openModal } from 'lib/ui';
 import { debounced } from 'utils/universal';
@@ -17,11 +21,6 @@ import SearchIcon from 'icons/search.svg';
 import SelectAddressModal from './SelectAddressModal';
 
 __ = __context('Transactions');
-
-const debouncedUpdateFilter = debounced(
-  (updates) => updateFilter(updates),
-  500
-);
 
 const operations = [
   'WRITE',
@@ -84,14 +83,20 @@ const FiltersWrapper = styled.div(({ morePadding }) => ({
 }));
 
 export default function Filters({ morePadding }) {
-  const { addressQuery, operation, timeSpan } = useSelector(
-    (state) => state.ui.transactionsFilter
-  );
+  const [addressQuery, setAddressQuery] = useAtom(addressQueryAtom);
+  const [operation, setOperation] = useAtom(operationAtom);
+  const [timeSpan, setTimeSpan] = useAtom(timeSpanAtom);
   const [addressInput, setAddressInput] = useState(addressQuery);
   useEffect(() => {
     refreshOwnedTokens();
     refreshAccounts();
   }, []);
+
+  const debouncedSetAddressQuery = debounced(
+    (address) => setAddressQuery(address),
+    500
+  );
+
   return (
     <FiltersWrapper morePadding={morePadding}>
       <FormField connectLabel label={__('Address')}>
@@ -100,7 +105,7 @@ export default function Filters({ morePadding }) {
           value={addressInput}
           onChange={({ target: { value } }) => {
             setAddressInput(value);
-            debouncedUpdateFilter({ addressQuery: value });
+            debouncedSetAddressQuery({ addressQuery: value });
           }}
           left={<Icon icon={SearchIcon} className="mr1" />}
           right={
@@ -112,7 +117,7 @@ export default function Filters({ morePadding }) {
                   openModal(SelectAddressModal, {
                     onSelect: (address) => {
                       setAddressInput(address);
-                      updateFilter({ addressQuery: address });
+                      setAddressQuery(address);
                     },
                   });
                 }}
@@ -128,7 +133,7 @@ export default function Filters({ morePadding }) {
         <Select
           value={timeSpan}
           onChange={(timeSpan) => {
-            updateFilter({ timeSpan });
+            setTimeSpan(timeSpan);
           }}
           options={timeFrames}
         />
@@ -138,7 +143,7 @@ export default function Filters({ morePadding }) {
         <Select
           value={operation}
           onChange={(operation) => {
-            updateFilter({ operation });
+            setOperation(operation);
           }}
           options={opOptions}
         />

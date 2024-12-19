@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { createStore, Provider, useAtom } from 'jotai';
+import { createStore, Provider, useAtomValue } from 'jotai';
 import { DevTools } from 'jotai-devtools';
 import { jotaiDevToolsOpenAtom } from 'lib/ui';
 import jotaiDevToolsStyles from 'jotai-devtools/styles.css';
@@ -28,6 +28,6 @@ function JotaiDevTools() {
     }
   }, []);
 
-  const [open] = useAtom(jotaiDevToolsOpenAtom);
+  const open = useAtomValue(jotaiDevToolsOpenAtom);
   return isDev && open ? <DevTools store={jotaiStore} /> : null;
 }
