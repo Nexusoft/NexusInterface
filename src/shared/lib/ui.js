@@ -287,4 +287,6 @@ export const toggleLockScreen = (toggleLock) => {
   });
 };
 
+export const rqDevToolsOpenAtom = atom(false);
+
 export const jotaiDevToolsOpenAtom = atom(false);

@@ -10,3 +10,5 @@ export const observeStore = createObserver(store);
 export default store;
 
 export { jotaiStore, JotaiWrapper } from './jotai';
+
+export { default as queryClient } from './queryClient';

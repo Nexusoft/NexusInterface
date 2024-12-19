@@ -10,6 +10,7 @@ import {
   showNotification,
   openModal,
   toggleLockScreen,
+  rqDevToolsOpenAtom,
   jotaiDevToolsOpenAtom,
 } from 'lib/ui';
 import { bootstrap } from 'lib/bootstrap';
@@ -154,6 +155,13 @@ const menuItems = preprocess({
     click: () => {
       const open = jotaiStore.get(jotaiDevToolsOpenAtom);
       jotaiStore.set(jotaiDevToolsOpenAtom, !open);
+    },
+  },
+  toggleReactQueryDevTools: {
+    label: __('Toggle React Query Developer Tools'),
+    click: () => {
+      const open = jotaiStore.get(rqDevToolsOpenAtom);
+      jotaiStore.set(rqDevToolsOpenAtom, !open);
     },
   },
   websiteLink: {
@@ -313,6 +321,7 @@ function buildDarwinTemplate() {
     subMenuWindow.submenu.push(menuItems.toggleDevTools);
     if (process.env.NODE_ENV === 'development') {
       subMenuWindow.submenu.push(menuItems.toggleJotaiDevTools);
+      subMenuWindow.submenu.push(menuItems.toggleReactQueryDevTools);
     }
     if (activeWebView) {
       subMenuWindow.submenu.push(menuItems.toggleModuleDevTools);
@@ -395,6 +404,7 @@ function buildDefaultTemplate() {
     subMenuView.submenu.push(menuItems.separator, menuItems.toggleDevTools);
     if (process.env.NODE_ENV === 'development') {
       subMenuView.submenu.push(menuItems.toggleJotaiDevTools);
+      subMenuView.submenu.push(menuItems.toggleReactQueryDevTools);
     }
     if (activeWebView) {
       subMenuView.submenu.push(menuItems.toggleModuleDevTools);

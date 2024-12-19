@@ -230,6 +230,8 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@reduxjs/toolkit": "^1.9.5",
+    "@tanstack/react-query": "^5.62.8",
+    "@tanstack/react-query-devtools": "^5.62.8",
     "@tanstack/react-table": "^8.9.3",
     "ajv": "^8.12.0",
     "auto-launch": "^5.0.6",
