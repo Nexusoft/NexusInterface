@@ -1,6 +1,4 @@
 // Core
-export const START_CORE_AUTO_CONNECT = 'START_CORE_AUTO_CONNECT';
-export const STOP_CORE_AUTO_CONNECT = 'STOP_CORE_AUTO_CONNECT';
 export const SET_CORE_CONFIG = 'SET_CORE_CONFIG';
 
 export const GET_INFO = 'GET_INFO';

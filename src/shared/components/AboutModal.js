@@ -1,10 +1,10 @@
-import { useSelector } from 'react-redux';
+import styled from '@emotion/styled';
 
 import ControlledModal from 'components/ControlledModal';
 import Icon from 'components/Icon';
 import InfoField from 'components/InfoField';
 import ExternalLink from 'components/ExternalLink';
-import styled from '@emotion/styled';
+import { useCoreInfo } from 'lib/coreInfo';
 import nexusLogo from 'icons/logo-full.svg';
 
 __ = __context('About');
@@ -88,15 +88,8 @@ const AgreementContent = styled.p({
 });
 
 export default function About() {
-  const version = useSelector(
-    ({ core: { systemInfo } }) => systemInfo?.version
-  );
-  const testnet = useSelector(
-    ({ core: { systemInfo } }) => systemInfo?.testnet
-  );
-  const privateBlockchain = useSelector(
-    ({ core: { systemInfo } }) => systemInfo?.private
-  );
+  const coreInfo = useCoreInfo();
+  const { version, testnet, privateBlockchain } = coreInfo || {};
   return (
     <ControlledModal>
       <ControlledModal.Header>

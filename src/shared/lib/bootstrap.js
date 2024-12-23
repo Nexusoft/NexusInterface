@@ -7,8 +7,9 @@ import http from 'http';
 import unzip from 'unzip-stream';
 
 // Internal
-import store from 'store';
+import store, { jotaiStore } from 'store';
 import { startCore, stopCore } from 'lib/core';
+import { coreInfoAtom, isSynchronized } from './coreInfo';
 import { showNotification, openModal } from 'lib/ui';
 import { confirm, openErrorDialog, openSuccessDialog } from 'lib/dialog';
 import { rm as deleteDirectory } from 'fs/promises';
@@ -17,7 +18,6 @@ import move from 'utils/move';
 import * as TYPE from 'consts/actionTypes';
 import { updateSettings } from 'lib/settings';
 import BootstrapModal from 'components/BootstrapModal';
-import { isSynchronized } from 'selectors';
 
 __ = __context('Bootstrap');
 
@@ -57,7 +57,6 @@ async function startBootstrap() {
   try {
     const {
       settings: { backupDirectory, coreDataDir },
-      core: { systemInfo },
     } = store.getState();
     const extractDir = getExtractDir();
 
@@ -68,7 +67,7 @@ async function startBootstrap() {
     await cleanUp(extractDir);
 
     // Stop core if it's synchronizing to avoid downloading the db twice at the same time
-    if (!isSynchronized(store.getState())) {
+    if (!isSynchronized()) {
       setStatus('stopping_core');
       await stopCore();
     }
@@ -209,8 +208,8 @@ export async function bootstrap({ suggesting } = {}) {
 
   setBootstrapStatus('prompting');
 
-  const testPriv =
-    state.core.systemInfo.private || state.core.systemInfo.testnet;
+  const coreInfo = jotaiStore.get(coreInfoAtom);
+  const testPriv = coreInfo?.private || coreInfo?.testnet;
   // if Private or on Testnet, prevent bootstrapping
   if (testPriv) {
     openErrorDialog({

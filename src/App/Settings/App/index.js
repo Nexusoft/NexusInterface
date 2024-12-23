@@ -6,15 +6,14 @@ import * as AutoLaunch from 'auto-launch';
 
 // Internal Global
 import { updateSettings } from 'lib/settings';
-import { switchSettingsTab, showNotification } from 'lib/ui';
+import { switchSettingsTab } from 'lib/ui';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
 import Select from 'components/Select';
 import Switch from 'components/Switch';
 import Icon from 'components/Icon';
-import { confirm, openErrorDialog } from 'lib/dialog';
+import { confirm } from 'lib/dialog';
 import * as form from 'utils/form';
-import { isCoreConnected } from 'selectors';
 import warningIcon from 'icons/warning.svg';
 import {
   checkForUpdates,
@@ -25,7 +24,6 @@ import {
 
 // Internal Local
 import LanguageSetting from './LanguageSetting';
-import BackupDirSetting from './BackupDirSetting';
 
 __ = __context('Settings.Application');
 
@@ -163,7 +161,6 @@ async function handleAutoUpdateChange(e) {
 }
 
 export default function SettingsApp() {
-  const coreConnected = useSelector(isCoreConnected);
   const settings = useSelector((state) => state.settings);
   useEffect(() => {
     switchSettingsTab('App');

@@ -1,16 +1,16 @@
 import { useSelector } from 'react-redux';
-
-import { isCoreConnected } from 'selectors';
+import { useAtomValue } from 'jotai';
+import { useCoreConnected, coreInfoPausedAtom } from 'lib/coreInfo';
 
 export default function CoreStatus() {
-  const coreConnected = useSelector(isCoreConnected);
+  const coreConnected = useCoreConnected();
   const manualDaemon = useSelector((state) => state.settings.manualDaemon);
-  const autoConnect = useSelector((state) => state.core.autoConnect);
+  const paused = useAtomValue(coreInfoPausedAtom);
   return coreConnected
     ? ''
     : manualDaemon
     ? __('Remote Core is disconnected')
-    : autoConnect
-    ? __('Connecting to Nexus Core...')
-    : __('Nexus Core is stopped');
+    : paused
+    ? __('Nexus Core is stopped')
+    : __('Connecting to Nexus Core...');
 }

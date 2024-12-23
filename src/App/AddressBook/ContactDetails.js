@@ -12,7 +12,7 @@ import AddEditContactModal from 'components/AddEditContactModal';
 import { deleteContact } from 'lib/addressBook';
 import { openModal } from 'lib/ui';
 import { confirm } from 'lib/dialog';
-import { isCoreConnected } from 'selectors';
+import { useCoreConnected } from 'lib/coreInfo';
 import timeZones from 'data/timeZones';
 import { timing, consts } from 'styles';
 import trashIcon from 'icons/trash.svg';
@@ -125,7 +125,7 @@ export default function ContactDetails() {
       },
     }) => addressBook[selectedContactName] || null
   );
-  const coreConnected = useSelector(isCoreConnected);
+  const coreConnected = useCoreConnected();
   if (!contact) return null;
 
   const tz =

@@ -1,5 +1,6 @@
 // External
 import { shell, ipcRenderer } from 'electron';
+import { atom } from 'jotai';
 
 // Internal
 import store, { observeStore, jotaiStore } from 'store';
@@ -14,8 +15,14 @@ import {
   jotaiDevToolsOpenAtom,
 } from 'lib/ui';
 import { bootstrap } from 'lib/bootstrap';
-import { isCoreConnected, isLoggedIn } from 'selectors';
+import { isLoggedIn } from 'selectors';
 import { preRelease } from 'consts/misc';
+import {
+  coreInfoAtom,
+  isCoreConnected,
+  coreConnectedAtom,
+  liteModeAtom,
+} from 'lib/coreInfo';
 // import { confirm } from 'lib/dialog';
 import { walletDataDir } from 'consts/paths';
 import { checkForUpdates, quitAndInstall } from 'lib/updater';
@@ -120,7 +127,7 @@ const menuItems = preprocess({
         return;
       }
 
-      if (!isCoreConnected(state)) {
+      if (!isCoreConnected()) {
         showNotification(__('Please wait for Nexus Core to start.'));
         return;
       }
@@ -266,13 +273,13 @@ function buildUpdaterMenu() {
  */
 function buildDarwinTemplate() {
   const state = store.getState();
-  const coreConnected = isCoreConnected(state);
+  const coreConnected = isCoreConnected();
   const activeWebView = getActiveWebView();
   const loggedIn = isLoggedIn(state);
+  const coreInfo = jotaiStore.get(coreInfoAtom);
 
   const {
     settings: { manualDaemon },
-    core: { systemInfo },
   } = state;
 
   const subMenuAbout = {
@@ -295,7 +302,7 @@ function buildDarwinTemplate() {
 
   const subMenuFile = {
     label: __('File'),
-    submenu: [!systemInfo?.litemode ? menuItems.downloadRecent : null].filter(
+    submenu: [!coreInfo?.litemode ? menuItems.downloadRecent : null].filter(
       (e) => e
     ),
   };
@@ -359,19 +366,19 @@ function buildDarwinTemplate() {
  */
 function buildDefaultTemplate() {
   const state = store.getState();
-  const coreConnected = isCoreConnected(state);
+  const coreConnected = isCoreConnected();
   const activeWebView = getActiveWebView();
   const loggedIn = isLoggedIn(state);
+  const coreInfo = jotaiStore.get(coreInfoAtom);
 
   const {
     settings: { manualDaemon },
-    core: { systemInfo },
   } = state;
 
   const subMenuFile = {
     label: __('File'),
     submenu: [
-      !systemInfo?.litemode ? menuItems.downloadRecent : null,
+      !coreInfo?.litemode ? menuItems.downloadRecent : null,
       menuItems.separator,
       // If it's in remote core mode and core is not running, don't show
       // Start Core option because it does nothing
@@ -474,14 +481,14 @@ const preventReload = (ev) => {
 export function prepareMenu() {
   buildMenu();
   observeStore((state) => state.updater.state, rebuildMenu);
-  observeStore(isCoreConnected, rebuildMenu);
+  jotaiStore.sub(coreConnectedAtom, rebuildMenu);
   observeStore(
     (state) => state.settings && state.settings.devMode,
     rebuildMenu
   );
   observeStore((state) => state.activeAppModuleName, rebuildMenu);
   observeStore((state) => state.settings.manualDaemon, rebuildMenu);
-  observeStore((state) => state.core.systemInfo?.litemode, rebuildMenu);
+  jotaiStore.sub(liteModeAtom, rebuildMenu);
   observeStore(isLoggedIn, rebuildMenu);
   observeStore((state) => state.ui.locked, observeLockedState); // Consider moving this to a more appropriate spot.
   // observeStore((state) => state.core.systemInfo?.nolegacy, rebuildMenu);

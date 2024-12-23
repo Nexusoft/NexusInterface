@@ -1,9 +1,10 @@
 import http from 'http';
 import https from 'https';
 
-import store from 'store';
+import store, { jotaiStore } from 'store';
 import { selectActiveSession } from 'lib/session';
 import { getActiveCoreConfig } from 'lib/coreConfig';
+import { coreInfoAtom } from 'lib/coreInfo';
 
 const getDefaultOptions = ({
   apiSSL,
@@ -94,9 +95,7 @@ export async function callAPI(endpoint, customParams) {
   const conf = await getActiveCoreConfig();
   const state = store.getState();
   const session = selectActiveSession(state);
-  const {
-    core: { systemInfo },
-  } = state;
+  const coreInfo = jotaiStore.get(coreInfoAtom);
 
   //TODO: There is a bug in the core and where HAS to be the last param. Remove when fixed.
   if (customParams?.where) {
@@ -105,7 +104,7 @@ export async function callAPI(endpoint, customParams) {
     customParams.where = tempWhere;
   }
 
-  const params = systemInfo?.multiuser
+  const params = coreInfo?.multiuser
     ? { session, ...customParams }
     : customParams;
   const options = {

@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 
 // Internal
 import { formatNumber, formatRelativeTime } from 'lib/intl';
+import { useCoreInfo } from 'lib/coreInfo';
 
 // Images
 import Connections0 from 'icons/Connections0.svg';
@@ -34,10 +35,8 @@ function getConnectionsIcon(conn) {
 }
 
 export function ConnectionsStat() {
-  const connections = useSelector(
-    (state) => state.core.systemInfo?.connections
-  );
-
+  const coreInfo = useCoreInfo();
+  const connections = coreInfo?.connections;
   return (
     <Stat label={__('Connections')} icon={getConnectionsIcon(connections)}>
       {typeof connections === 'number' ? connections : 'N/A'}
@@ -46,7 +45,8 @@ export function ConnectionsStat() {
 }
 
 export function BlockCountStat() {
-  const blocks = useSelector((state) => state.core.systemInfo?.blocks);
+  const coreInfo = useCoreInfo();
+  const blocks = coreInfo?.blocks;
   const blockDate = useSelector((state) => state.common.blockDate);
 
   return (

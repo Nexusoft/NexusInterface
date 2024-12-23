@@ -11,7 +11,6 @@ import { updateSettings } from 'lib/settings';
 import { confirm, openErrorDialog } from 'lib/dialog';
 import { restartCore, stopCore, startCore } from 'lib/core';
 import { defaultConfig } from 'lib/coreConfig';
-import { isCoreConnected } from 'selectors';
 import { preRelease } from 'consts/misc';
 import { rm as deleteDirectory } from 'fs/promises';
 import { consts } from 'styles';

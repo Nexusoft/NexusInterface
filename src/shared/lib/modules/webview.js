@@ -1,7 +1,7 @@
 import { clipboard, shell } from 'electron';
 
 import * as TYPE from 'consts/actionTypes';
-import store, { observeStore } from 'store';
+import store, { jotaiStore, observeStore } from 'store';
 import { showNotification } from 'lib/ui';
 import {
   openConfirmDialog,
@@ -10,6 +10,7 @@ import {
   openInfoDialog,
   confirmPin,
 } from 'lib/dialog';
+import { coreInfoAtom } from 'lib/coreInfo';
 import { popupContextMenu, defaultMenu } from 'lib/contextMenu';
 import { goToSend } from 'lib/send';
 import { callAPI } from 'lib/api';
@@ -46,7 +47,7 @@ const getWalletData = ({
 }) => ({
   theme,
   settings: getSettingsForModules(locale, fiatCurrency, addressStyle),
-  coreInfo: core.systemInfo,
+  coreInfo: jotaiStore.get(coreInfoAtom),
   userStatus: status,
   addressBook,
 });
@@ -344,12 +345,9 @@ export function prepareWebView() {
     }
   );
 
-  observeStore(
-    (state) => state.core.systemInfo,
-    (coreInfo) => {
-      sendWalletDataUpdated({ coreInfo });
-    }
-  );
+  jotaiStore.sub(coreInfoAtom, () => {
+    sendWalletDataUpdated({ coreInfo: jotaiStore.get(coreInfoAtom) });
+  });
 
   observeStore(
     (state) => state.user.status,

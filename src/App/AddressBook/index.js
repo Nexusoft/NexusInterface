@@ -9,8 +9,8 @@ import Icon from 'components/Icon';
 import Button from 'components/Button';
 import Panel from 'components/Panel';
 import { openModal } from 'lib/ui';
+import { useCoreConnected } from 'lib/coreInfo';
 import AddEditContactModal from 'components/AddEditContactModal';
-import { isCoreConnected } from 'selectors';
 
 // Internal Local
 import PanelControls from './PanelControls';
@@ -33,7 +33,7 @@ const AddressBookLayout = styled.div({
 
 export default function AddressBook() {
   const addressBook = useSelector((state) => state.addressBook);
-  const coreConnected = useSelector(isCoreConnected);
+  const coreConnected = useCoreConnected();
   useEffect(() => {
     UT.SendScreen('AddressBook');
   }, []);

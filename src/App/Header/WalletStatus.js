@@ -3,7 +3,8 @@ import { useSelector } from 'react-redux';
 
 // Internal
 import CoreStatus from 'components/CoreStatus';
-import { isCoreConnected, isLoggedIn } from 'selectors';
+import { isLoggedIn } from 'selectors';
+import { useCoreConnected } from 'lib/coreInfo';
 import styled from '@emotion/styled';
 
 __ = __context('Header');
@@ -15,7 +16,7 @@ const StakingDanger = styled.div({
 export default function WalletStatus() {
   const staking = useSelector((state) => state.user.stakeInfo.staking);
   const blockDate = useSelector((state) => state.common.blockDate);
-  const coreConnected = useSelector(isCoreConnected);
+  const coreConnected = useCoreConnected();
   const loggedIn = useSelector(isLoggedIn);
 
   let nowTime = new Date();

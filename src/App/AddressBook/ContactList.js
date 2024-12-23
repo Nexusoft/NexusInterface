@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 
 import AddEditContactModal from 'components/AddEditContactModal';
 import { openModal } from 'lib/ui';
-import { isCoreConnected } from 'selectors';
+import { useCoreConnected } from 'lib/coreInfo';
 
 import Contact from './Contact';
 
@@ -26,7 +26,7 @@ const Separator = styled.div(({ theme }) => ({
 export default function ContactList() {
   const addressBook = useSelector((state) => state.addressBook);
   const searchQuery = useSelector((state) => state.ui.addressBook.searchQuery);
-  const coreConnected = useSelector(isCoreConnected);
+  const coreConnected = useCoreConnected();
 
   return (
     <ContactListComponent>

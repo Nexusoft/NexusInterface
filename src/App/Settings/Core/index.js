@@ -14,7 +14,7 @@ import {
 } from 'lib/ui';
 import { confirm } from 'lib/dialog';
 import { stopCore, startCore, restartCore } from 'lib/core';
-import { refreshCoreInfo } from 'lib/coreInfo';
+import { refetchCoreInfo } from 'lib/coreInfo';
 import { updateSettings } from 'lib/settings';
 import { formSubmit } from 'lib/form';
 import Button from 'components/Button';
@@ -146,7 +146,7 @@ async function turnOffRemoteCore(restartForm) {
     store.dispatch({ type: TYPE.DISCONNECT_CORE });
     updateSettings({ manualDaemon: false });
     await startCore();
-    refreshCoreInfo();
+    refetchCoreInfo();
   }
 }
 
@@ -165,7 +165,7 @@ async function turnOnRemoteCore(restartForm) {
     store.dispatch({ type: TYPE.DISCONNECT_CORE });
     updateSettings({ manualDaemon: true });
     await stopCore();
-    refreshCoreInfo();
+    refetchCoreInfo();
   }
 }
 

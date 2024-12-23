@@ -6,7 +6,6 @@ import { startCore } from 'lib/core';
 import { prepareWallet } from 'lib/wallet';
 import { prepareMenu } from 'lib/appMenu';
 import { prepareBootstrap } from 'lib/bootstrap';
-import { prepareCoreInfo } from 'lib/coreInfo';
 import { prepareCoreOutput } from 'lib/coreOutput';
 import { prepareMarket } from 'lib/market';
 import { prepareTransactions } from 'lib/transactions';
@@ -23,7 +22,6 @@ async function run() {
     }
   } finally {
     prepareWallet();
-    prepareCoreInfo();
     prepareMarket();
     prepareModules();
 

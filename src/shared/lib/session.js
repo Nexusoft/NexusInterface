@@ -1,4 +1,5 @@
 import { createRef, useRef, useEffect } from 'react';
+import { atom } from 'jotai';
 import ExternalLink from 'components/ExternalLink';
 import BackgroundTask from 'components/BackgroundTask';
 import * as TYPE from 'consts/actionTypes';
@@ -350,3 +351,48 @@ function UserUnLockIndexingBackgroundTask({
     </BackgroundTask>
   );
 }
+
+/**
+ * New
+ * =============================================================================
+ */
+
+const sessionsAtom = atom(null);
+const selectedSessionIdAtom = atom(null);
+const userStatusAtom = atom(null);
+const profileStatusAtom = atom(null);
+
+const activeSessionIdAtom = atom((get) => {
+  const sessions = get(sessionsAtom);
+  const selectedSessionId = get(selectedSessionIdAtom);
+  if (selectedSessionId) return selectedSessionId;
+  if (!sessions) return null;
+  const sessionList = Object.values(sessions);
+  if (!sessionList.length) return null;
+
+  // Active session is defaulted to the last accessed session
+  const lastAccessed = sessionList.reduce(
+    (las, s) => (!las || s.accessed > las.accessed ? s : las),
+    null
+  );
+  return lastAccessed?.session || null;
+});
+
+const activeSessionAtom = atom((get) => {
+  const sessions = get(sessionsAtom);
+  const activeSessionId = get(activeSessionIdAtom);
+  return activeSessionId && sessions?.[activeSessionId];
+});
+
+const usernameAtom = atom((get) => {
+  const profileStatus = get(profileStatusAtom);
+  const userStatus = get(userStatusAtom);
+  const activeSession = get(activeSessionAtom);
+
+  return (
+    profileStatus?.session?.username ||
+    userStatus?.username ||
+    activeSession?.username ||
+    ''
+  );
+});

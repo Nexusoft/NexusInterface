@@ -8,6 +8,7 @@ import Button from 'components/Button';
 import NewUserModal from 'components/NewUserModal';
 import RecoverPasswordPinModal from 'components/RecoverPasswordPinModal';
 import Spinner from 'components/Spinner';
+import { useCoreInfo } from 'lib/coreInfo';
 import { showNotification, openModal } from 'lib/ui';
 import { openErrorDialog } from 'lib/dialog';
 import { formSubmit, required } from 'lib/form';
@@ -34,7 +35,8 @@ const initialValues = {
 };
 
 export default function LoginModal() {
-  const syncing = useSelector((state) => state.core.systemInfo?.synchronizing);
+  const coreInfo = useCoreInfo();
+  const syncing = coreInfo?.synchronizing;
 
   return (
     <ControlledModal maxWidth={500}>

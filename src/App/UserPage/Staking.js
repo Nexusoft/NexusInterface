@@ -9,6 +9,7 @@ import store from 'store';
 import { updateSettings } from 'lib/settings';
 import { restartCore } from 'lib/core';
 import { callAPI } from 'lib/api';
+import { useCoreInfo, isSynchronized } from 'lib/coreInfo';
 import {
   openModal,
   removeModal,
@@ -22,7 +23,6 @@ import {
   openErrorDialog,
 } from 'lib/dialog';
 import { formatNumber, formatDateTime } from 'lib/intl';
-import { isSynchronized } from 'selectors';
 import QuestionCircle from 'components/QuestionCircle';
 
 import TabContentWrapper from './TabContentWrapper';
@@ -83,7 +83,8 @@ function promptForStakeAmount() {
 
 export default function Staking() {
   const stakeInfo = useSelector((state) => state.user.stakeInfo);
-  const privateNet = useSelector((state) => state.core.systemInfo?.private);
+  const coreInfo = useCoreInfo();
+  const privateNet = coreInfo?.private;
   useEffect(() => {
     switchUserTab('Staking');
   }, []);
@@ -95,7 +96,7 @@ export default function Staking() {
         settings: { liteMode, multiUser, enableStaking },
         user: { status },
       } = state;
-      const synchronized = isSynchronized(state);
+      const synchronized = isSynchronized();
 
       if (stakeInfo?.amount === 0) {
         if (stakeInfo?.balance === 0) {

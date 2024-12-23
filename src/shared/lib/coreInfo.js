@@ -1,79 +1,33 @@
-import * as TYPE from 'consts/actionTypes';
-import store, { observeStore } from 'store';
+import { useEffect, useRef } from 'react';
+import { atom, useAtomValue, useAtom } from 'jotai';
+import { atomWithQuery } from 'jotai-tanstack-query';
+import store, { jotaiStore } from 'store';
 import { callAPI } from 'lib/api';
-import { isCoreConnected, isLoggedIn } from 'selectors';
+import { isLoggedIn } from 'selectors';
 import { openModal, isModalOpen } from 'lib/ui';
+import * as TYPE from 'consts/actionTypes';
 import { updateSettings } from 'lib/settings';
 import { bootstrap } from 'lib/bootstrap';
 import { refreshUserStatus } from 'lib/session';
 import LoginModal from 'components/LoginModal';
 import NewUserModal from 'components/NewUserModal';
 
-const incStep = 1000;
-const maxInterval = 10000;
-const syncInterval = 1000;
-let waitTime = 0;
-let connected = false;
-let timerId = null;
+// TODO: move to right places
+export function useCoreInfoPolling() {
+  const lastCoreInfoRef = useRef(null);
+  useEffect(() => {
+    return jotaiStore.sub(coreInfoAtom, async () => {
+      const coreInfo = jotaiStore.get(coreInfoAtom);
+      const coreConnected = !!coreInfo;
+      const state = store.getState();
 
-const getSystemInfo = async () => {
-  try {
-    const systemInfo = await callAPI('system/get/info');
-    store.dispatch({ type: TYPE.SET_SYSTEM_INFO, payload: systemInfo });
-    return systemInfo;
-  } catch (err) {
-    store.dispatch({ type: TYPE.DISCONNECT_CORE });
-    console.error('system/get/info failed', err);
-    // Throws error so getSystemInfo fails and refreshCoreInfo will
-    // switch to using dynamic interval.
-    throw err;
-  }
-};
-
-/**
- *
- *
- * @export
- */
-export async function refreshCoreInfo() {
-  try {
-    // Clear timeout in case this function is called again when
-    // the autoFetching is already running
-    clearTimeout(timerId);
-    const systemInfo = await getSystemInfo();
-    connected = true;
-    waitTime = systemInfo?.syncing ? syncInterval : maxInterval;
-  } catch (err) {
-    if (connected) waitTime = incStep;
-    else if (waitTime < maxInterval) waitTime += incStep;
-    else waitTime = maxInterval;
-    connected = false;
-  } finally {
-    const {
-      core: { autoConnect },
-    } = store.getState();
-    if (autoConnect) {
-      timerId = setTimeout(refreshCoreInfo, waitTime);
-    }
-  }
-}
-
-export function stopFetchingCoreInfo() {
-  clearTimeout(timerId);
-}
-
-export function prepareCoreInfo() {
-  let justConnected = false;
-  observeStore(
-    ({ core: { systemInfo } }) => systemInfo,
-    async () => {
-      if (isCoreConnected(store.getState())) {
+      if (coreConnected) {
         await refreshUserStatus();
-        const state = store.getState();
+
         // The wallet will have to refresh after language is chosen
         // So NewUser modal won't be visible now
+        const justConnected = !lastCoreInfoRef.current;
         if (justConnected && state.settings.locale) {
-          justConnected = false;
           if (
             !isLoggedIn(state) &&
             !isModalOpen(LoginModal) &&
@@ -87,54 +41,82 @@ export function prepareCoreInfo() {
             }
           }
         }
-      }
-    }
-  );
-  observeStore(isCoreConnected, (coreConnected) => {
-    if (coreConnected) {
-      justConnected = true;
-    }
-  });
 
-  observeStore(
-    ({ core: { systemInfo } }) => systemInfo,
-    (systemInfo) => {
-      const state = store.getState();
-      if (
-        !state.settings.bootstrapSuggestionDisabled &&
-        isCoreConnected(state) &&
-        !state.core.systemInfo?.litemode &&
-        state.bootstrap.step === 'idle' &&
-        !state.settings.manualDaemon &&
-        systemInfo?.syncing?.completed < 50 &&
-        systemInfo?.syncing?.completed >= 0 &&
-        !systemInfo?.private &&
-        !systemInfo?.testnet
-      ) {
-        bootstrap({ suggesting: true });
-      }
-    }
-  );
+        if (
+          !state.settings.bootstrapSuggestionDisabled &&
+          state.bootstrap.step === 'idle' &&
+          !state.settings.manualDaemon &&
+          !coreInfo?.litemode &&
+          coreInfo?.syncing?.completed < 50 &&
+          coreInfo?.syncing?.completed >= 0 &&
+          !coreInfo?.private &&
+          !coreInfo?.testnet
+        ) {
+          bootstrap({ suggesting: true });
+        }
 
-  observeStore(
-    ({ core: { systemInfo } }) => systemInfo?.blocks,
-    (blocks) => {
-      if (blocks) {
-        store.dispatch({
-          type: TYPE.UPDATE_BLOCK_DATE,
-          payload: new Date(),
-        });
+        if (lastCoreInfoRef.current?.blocks !== coreInfo.blocks) {
+          store.dispatch({
+            type: TYPE.UPDATE_BLOCK_DATE,
+            payload: new Date(),
+          });
+        }
       }
-    }
-  );
 
-  // All modes
-  refreshCoreInfo();
-  observeStore(
-    (state) => state.core.autoConnect,
-    (autoConnect) => {
-      if (autoConnect) refreshCoreInfo();
-      else stopFetchingCoreInfo();
-    }
-  );
+      lastCoreInfoRef.current = coreInfo;
+    });
+  }, []);
 }
+
+/**
+ * New
+ * =============================================================================
+ */
+
+export const coreInfoPausedAtom = atom(false);
+
+export const coreInfoPollingAtom = atomWithQuery((get) => ({
+  queryKey: ['coreInfo'],
+  queryFn: () => callAPI('system/get/info'),
+  enabled: !get(coreInfoPausedAtom),
+  retry: 5,
+  retryDelay: (attempt) => 500 + attempt * 1000,
+  staleTime: 600000, // 10 minutes
+  refetchInterval: 10000, // 10 seconds
+  refetchIntervalInBackground: true,
+  refetchOnReconnect: 'always',
+  placeholderData: (previousData) => previousData,
+}));
+
+export const coreInfoAtom = atom((get) => {
+  const query = get(coreInfoPollingAtom);
+  if (!query || query.isError) {
+    return null;
+  } else {
+    return query.data;
+  }
+});
+
+const refetchCoreInfoAtom = atom(
+  (get) => get(coreInfoPollingAtom)?.refetch || (() => {})
+);
+
+export function refetchCoreInfo() {
+  jotaiStore.get(refetchCoreInfoAtom)?.();
+}
+
+export const coreConnectedAtom = atom((get) => !!get(coreInfoAtom));
+
+export const liteModeAtom = atom((get) => get(coreInfoAtom)?.litemode);
+
+export const synchronizedAtom = atom((get) => !get(coreInfoAtom)?.syncing);
+
+export const useCoreInfo = () => useAtomValue(coreInfoAtom);
+
+export const useCoreConnected = () => useAtomValue(coreConnectedAtom);
+
+export const useSynchronized = () => useAtomValue(synchronizedAtom);
+
+export const isCoreConnected = () => jotaiStore.get(coreConnectedAtom);
+
+export const isSynchronized = () => jotaiStore.get(synchronizedAtom);

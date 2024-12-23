@@ -7,7 +7,8 @@ import Tooltip from 'components/Tooltip';
 import TokenName from 'components/TokenName';
 import QuestionCircle from 'components/QuestionCircle';
 import { formatNumber, formatCurrency } from 'lib/intl';
-import { isSynchronized, selectBalances } from 'selectors';
+import { selectBalances } from 'selectors';
+import { useSynchronized } from 'lib/coreInfo';
 
 // Images
 import logoIcon from 'icons/NXS_coin.svg';
@@ -61,7 +62,7 @@ function BalanceValue({ children }) {
 
 export function NXSBalanceStat() {
   const [nxsBalances, tokenBalances] = useSelector(selectBalances);
-  const synchronized = useSelector(isSynchronized);
+  const synchronized = useSynchronized();
   const hideOverviewBalances = useSelector(
     (state) => state.settings.hideOverviewBalances
   );

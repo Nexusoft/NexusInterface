@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 // Internal Dependencies
 import Tooltip from 'components/Tooltip';
 import Icon from 'components/Icon';
-import { isSynchronized } from 'selectors';
+import { useSynchronized } from 'lib/coreInfo';
 import { formatNumber } from 'lib/intl';
 import { isStaking } from 'selectors';
 import stakingIcon from 'icons/staking.svg';
@@ -16,7 +16,7 @@ __ = __context('Header');
 
 export default function StakingStatus() {
   const staking = useSelector(isStaking);
-  const synchronized = useSelector(isSynchronized);
+  const synchronized = useSynchronized();
   const stakeRate = useSelector((state) => state.user.stakeInfo?.stakerate);
   const pooled = useSelector((state) => state.user.stakeInfo?.pooled);
 

@@ -1,11 +1,9 @@
-import { useSelector } from 'react-redux';
-
 import WaitingMessage from 'components/WaitingMessage';
 import CoreStatus from 'components/CoreStatus';
-import { isCoreConnected } from 'selectors';
+import { useCoreConnected } from 'lib/coreInfo';
 
 export default function RequireCoreConnected({ children }) {
-  const coreConnected = useSelector(isCoreConnected);
+  const coreConnected = useCoreConnected();
   return coreConnected ? (
     children
   ) : (

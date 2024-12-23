@@ -4,6 +4,8 @@ import log from 'electron-log';
 import * as TYPE from 'consts/actionTypes';
 import store from 'store';
 import { loadNexusConf, saveCoreConfig } from 'lib/coreConfig';
+import { jotaiStore } from 'store';
+import { coreInfoPausedAtom } from './coreInfo';
 import { callAPI } from 'lib/api';
 import { updateSettings } from 'lib/settings';
 import sleep from 'utils/promisified/sleep';
@@ -143,9 +145,7 @@ export const startCore = async () => {
   // Start core
   await ipcRenderer.invoke('start-core', params);
   saveCoreConfig(conf);
-  store.dispatch({
-    type: TYPE.START_CORE_AUTO_CONNECT,
-  });
+  jotaiStore.set(coreInfoPausedAtom, false);
 };
 
 /**
@@ -179,9 +179,7 @@ export const stopCore = async (forRestart) => {
   } catch (err) {}
 
   if (!forRestart && !manualDaemon) {
-    store.dispatch({
-      type: TYPE.STOP_CORE_AUTO_CONNECT,
-    });
+    jotaiStore.set(coreInfoPausedAtom, true);
   }
 };
 
@@ -191,7 +189,5 @@ export const stopCore = async (forRestart) => {
 export const restartCore = async () => {
   await stopCore(true);
   await startCore();
-  store.dispatch({
-    type: TYPE.START_CORE_AUTO_CONNECT,
-  });
+  jotaiStore.set(coreInfoPausedAtom, false);
 };

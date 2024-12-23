@@ -10,7 +10,7 @@ import Button from 'components/Button';
 import TextField from 'components/TextField';
 import Tooltip from 'components/Tooltip';
 import { openModal } from 'lib/ui';
-import { isCoreConnected } from 'selectors';
+import { useCoreConnected } from 'lib/coreInfo';
 import AddEditContactModal from 'components/AddEditContactModal';
 
 // Icons
@@ -95,7 +95,7 @@ function exportAddressBook(addressBook) {
 }
 
 export default function PanelControls() {
-  const coreConnected = useSelector(isCoreConnected);
+  const coreConnected = useCoreConnected();
 
   return (
     <div className="flex center">

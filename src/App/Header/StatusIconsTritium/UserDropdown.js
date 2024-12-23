@@ -7,6 +7,7 @@ import LoginModal from 'components/LoginModal';
 import NewUserModal from 'components/NewUserModal';
 import SetRecoveryModal from 'components/SetRecoveryModal';
 import { isLoggedIn } from 'selectors';
+import { useCoreInfo } from 'lib/coreInfo';
 import { openModal, showNotification } from 'lib/ui';
 import { timing, animations, consts } from 'styles';
 import { logOut, selectUsername } from 'lib/session';
@@ -75,7 +76,8 @@ function LoggedInDropdown({ closeDropdown }) {
   const hasRecoveryPhrase = useSelector(
     (state) => !!state.user.profileStatus?.recovery
   );
-  const multiuser = useSelector((state) => !!state.core.systemInfo?.multiuser);
+  const coreInfo = useCoreInfo();
+  const multiuser = coreInfo?.multiuser;
   const hasOtherSessions = useSelector(
     ({ sessions }) => !!sessions && Object.keys(sessions).length > 1
   );
@@ -147,7 +149,8 @@ function LoggedInDropdown({ closeDropdown }) {
 }
 
 function NotLoggedInDropdown({ closeDropdown }) {
-  const multiuser = useSelector((state) => !!state.core.systemInfo?.multiuser);
+  const coreInfo = useCoreInfo();
+  const multiuser = coreInfo?.multiuser;
   const hasOtherSessions = useSelector(
     ({ sessions }) => !!sessions && Object.keys(sessions).length > 1
   );

@@ -8,7 +8,7 @@ import { selectContact, deleteContact } from 'lib/addressBook';
 import { openModal } from 'lib/ui';
 import { confirm } from 'lib/dialog';
 import { popupContextMenu } from 'lib/contextMenu';
-import { isCoreConnected } from 'selectors';
+import { useCoreConnected } from 'lib/coreInfo';
 import { timing } from 'styles';
 import * as color from 'utils/color';
 import { defaultMenu } from 'lib/contextMenu';
@@ -71,7 +71,7 @@ const AddressesCount = styled.div(({ theme }) => ({
 
 // contact=null -> New Contact button
 export default function Contact({ contact, ...rest }) {
-  const coreConnected = useSelector(isCoreConnected);
+  const coreConnected = useCoreConnected();
   const selectedContactName = useSelector(
     (state) => state.ui.addressBook.selectedContactName
   );
