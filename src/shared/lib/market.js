@@ -1,26 +1,18 @@
 import axios from 'axios';
-
-import * as TYPE from 'consts/actionTypes';
-import { callAPI } from 'lib/api';
-import store, { observeStore } from 'store';
+import { atom } from 'jotai';
+import { atomWithQuery } from 'jotai-tanstack-query';
+import { ledgerInfoAtom } from './ledger';
+import store, { observeStore, jotaiStore } from 'store';
 import { tryParsingJson } from 'utils/json';
 
 __ = __context('MarketData');
 
-let marketDataTimerId = null;
-let metricsTimerId = null;
-let unobserveMetrics = null;
-
 const localStorageKey = 'marketData';
 const interval = 900000; // 15 minutes
 
-async function fetchMarketData() {
+async function fetchMarketData(fiatCurrency) {
   try {
-    clearTimeout(marketDataTimerId);
-
-    const {
-      settings: { fiatCurrency },
-    } = store.getState();
+    // Cache the result so that it won't have to reach the server again on UI refreshes
     const cache = readCache();
     const cachedData = findMarketData(cache, fiatCurrency);
     let marketData;
@@ -34,18 +26,14 @@ async function fetchMarketData() {
     }
 
     marketData.currency = fiatCurrency;
-    store.dispatch({
-      type: TYPE.SET_MARKET_DATA,
-      payload: marketData,
-    });
 
     if (!cachedData) {
       addToCache(cache, marketData);
     }
+    return marketData;
   } catch (err) {
     console.error(err);
-  } finally {
-    marketDataTimerId = setTimeout(fetchMarketData, 900000); // 15 minutes
+    throw err;
   }
 }
 
@@ -79,39 +67,42 @@ function addToCache(cache, marketData) {
   localStorage.setItem(localStorageKey, JSON.stringify(newCache));
 }
 
-async function fetchMetrics() {
-  try {
-    clearTimeout(metricsTimerId);
-    unobserveMetrics?.();
-    const metrics = await callAPI('system/get/metrics');
-    store.dispatch({
-      type: TYPE.SET_TOTAL_SUPPLY,
-      payload: metrics?.supply?.total,
-    });
-    metricsTimerId = setTimeout(fetchMetrics, 900000); // 15 minutes
-  } catch (err) {
-    unobserveMetrics = observeStore(
-      (state) => state.core.systemInfo,
-      (systemInfo) => {
-        if (systemInfo) {
-          fetchMetrics();
-          unobserveMetrics?.();
-          unobserveMetrics = null;
-        }
-      }
-    );
-  }
-}
-
-export async function refreshMarketData() {
-  fetchMarketData();
-  fetchMetrics();
-}
-
 export function prepareMarket() {
-  refreshMarketData();
   observeStore(
     ({ settings: { fiatCurrency } }) => fiatCurrency,
-    refreshMarketData
+    () => {
+      const refetchMarketData = jotaiStore.get(refetchMarketDataAtom);
+      refetchMarketData();
+    }
   );
 }
+
+// Temporary atom
+// TODO: remove this after settings get converted into jotai
+export const fiatCurrencyAtom = atom(
+  (get) => store.getState()?.settings.fiatCurrency
+);
+
+export const marketDataPollingAtom = atomWithQuery((get) => ({
+  queryKey: ['market-data', get(fiatCurrencyAtom)],
+  queryFn: () => fetchMarketData(get(fiatCurrencyAtom)),
+  retry: 2,
+  retryDelay: 5000,
+  staleTime: 3600000, // 1 hour
+  refetchInterval: 900000, // 15 minutes
+  refetchOnReconnect: 'always',
+  placeholderData: (previousData) => previousData,
+}));
+
+export const marketDataAtom = atom(
+  (get) => get(marketDataPollingAtom)?.data || null
+);
+
+export const refetchMarketDataAtom = atom(
+  (get) => get(marketDataPollingAtom)?.refetch || (() => {})
+);
+
+export const marketCapAtom = atom(
+  (get) =>
+    get(marketDataAtom)?.price * get(ledgerInfoAtom)?.supply?.total || null
+);

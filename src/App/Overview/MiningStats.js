@@ -1,8 +1,10 @@
 // External
 import { useSelector } from 'react-redux';
+import { useAtomValue } from 'jotai';
 
 // Internal
 import { formatNumber } from 'lib/intl';
+import { ledgerInfoAtom } from 'lib/ledger';
 
 // Images
 import mathIcon from 'icons/math.svg';
@@ -22,7 +24,7 @@ function MiningStat({ value, ...props }) {
 }
 
 export function PrimeDiffStat() {
-  const ledgerInfo = useSelector((state) => state.core.ledgerInfo);
+  const ledgerInfo = useAtomValue(ledgerInfoAtom);
   return (
     <MiningStat
       label={__('Prime Difficulty')}
@@ -33,7 +35,7 @@ export function PrimeDiffStat() {
 }
 
 export function HashDiffStat() {
-  const ledgerInfo = useSelector((state) => state.core.ledgerInfo);
+  const ledgerInfo = useAtomValue(ledgerInfoAtom);
   return (
     <MiningStat
       label={__('Hash Difficulty')}
@@ -44,7 +46,7 @@ export function HashDiffStat() {
 }
 
 export function StakingDiffStat() {
-  const ledgerInfo = useSelector((state) => state.core.ledgerInfo);
+  const ledgerInfo = useAtomValue(ledgerInfoAtom);
   return (
     <MiningStat
       label={__('Staking Difficulty')}

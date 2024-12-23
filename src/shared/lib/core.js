@@ -15,17 +15,6 @@ import fs from 'fs';
 import { rm as deleteDirectory } from 'fs/promises';
 import * as path from 'path';
 
-export const getLedgerInfo = async () => {
-  try {
-    const ledgerInfo = await callAPI('ledger/get/info');
-    store.dispatch({ type: TYPE.SET_LEDGER_INFO, payload: ledgerInfo });
-    return ledgerInfo;
-  } catch (err) {
-    store.dispatch({ type: TYPE.CLEAR_LEDGER_INFO });
-    console.error('ledger/get/info failed', err);
-  }
-};
-
 /**
  * Start Nexus Core
  */

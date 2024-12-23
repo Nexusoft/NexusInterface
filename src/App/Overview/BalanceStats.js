@@ -1,5 +1,6 @@
 // External
 import { useSelector } from 'react-redux';
+import { useAtomValue } from 'jotai';
 
 // Internal
 import Icon from 'components/Icon';
@@ -7,6 +8,7 @@ import Tooltip from 'components/Tooltip';
 import TokenName from 'components/TokenName';
 import QuestionCircle from 'components/QuestionCircle';
 import { formatNumber, formatCurrency } from 'lib/intl';
+import { marketDataAtom } from 'lib/market';
 import { selectBalances } from 'selectors';
 import { useSynchronized } from 'lib/coreInfo';
 
@@ -109,8 +111,8 @@ export function NXSBalanceStat() {
 
 export function NXSFiatBalanceStat() {
   const [nxsBalances] = useSelector(selectBalances);
-  const price = useSelector((state) => state.market?.price);
-  const currency = useSelector((state) => state.market?.currency);
+  const marketData = useAtomValue(marketDataAtom);
+  const { price, currency } = marketData || {};
 
   return (
     <Stat

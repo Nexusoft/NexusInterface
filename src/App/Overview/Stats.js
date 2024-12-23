@@ -6,7 +6,6 @@ import { keyframes } from '@emotion/react';
 
 // Internal
 import { refreshBalances } from 'lib/user';
-import { getLedgerInfo } from 'lib/core';
 import { timing, consts } from 'styles';
 import { observeStore } from 'store';
 
@@ -104,26 +103,6 @@ function useGetBalances() {
   }, []);
 }
 
-function useGetLedgerInfo() {
-  useEffect(() => {
-    let timeoutID;
-    const updateLedgerInfo = async () => {
-      const result = await getLedgerInfo();
-      if (result) {
-        // update every 30 seconds
-        setTimeout(updateLedgerInfo, 30000);
-      } else {
-        // if failed, retry every 3 seconds
-        setTimeout(updateLedgerInfo, 3000);
-      }
-    };
-    updateLedgerInfo();
-    return () => {
-      clearInterval(timeoutID);
-    };
-  }, []);
-}
-
 // Mandatory React-Redux method
 export default function Stats({ showingGlobe }) {
   const overviewDisplay = useSelector(
@@ -134,7 +113,6 @@ export default function Stats({ showingGlobe }) {
   );
 
   useGetBalances();
-  useGetLedgerInfo();
 
   if (overviewDisplay === 'none') {
     return <OverviewPage />;

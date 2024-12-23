@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
+import { useAtomValue } from 'jotai';
 
 import ControlledModal from 'components/ControlledModal';
 import WaitingMessage from 'components/WaitingMessage';
@@ -13,6 +14,7 @@ import Tooltip from 'components/Tooltip';
 import listAll from 'utils/listAll';
 import { formatDateTime, formatNumber, formatCurrency } from 'lib/intl';
 import { openModal, toggleUserBalanceDisplayFiat } from 'lib/ui';
+import { marketDataAtom } from 'lib/market';
 import { lookupAddress } from 'lib/addressBook';
 import TokenName from 'components/TokenName';
 import { handleError } from 'utils/form';
@@ -234,8 +236,8 @@ const Amount = styled.span(({ theme, possitive }) => ({
 export default function AccountHistoryModal({ account }) {
   const [contracts, setContracts] = useState(null);
   const showFiat = useSelector((state) => state.ui.user.balancesShowFiat);
-  const price = useSelector((state) => state.market?.price);
-  const currency = useSelector((state) => state.market?.currency);
+  const marketData = useAtomValue(marketDataAtom);
+  const { price, currency } = marketData || {};
   const closeModalRef = useRef();
 
   useEffect(() => {
