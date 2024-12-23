@@ -4,9 +4,9 @@ import {
   Provider as JotaiProvider,
   useAtomValue,
   useAtom,
-  useHydrateAtoms,
 } from 'jotai';
 import { DevTools } from 'jotai-devtools';
+import { useHydrateAtoms } from 'jotai/react/utils';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools';
 import { queryClientAtom } from 'jotai-tanstack-query';
