@@ -111,6 +111,8 @@ export const liteModeAtom = atom((get) => get(coreInfoAtom)?.litemode);
 
 export const synchronizedAtom = atom((get) => !get(coreInfoAtom)?.syncing);
 
+export const blocksAtom = atom((get) => get(coreInfoAtom)?.blocks);
+
 export const useCoreInfo = () => useAtomValue(coreInfoAtom);
 
 export const useCoreConnected = () => useAtomValue(coreConnectedAtom);

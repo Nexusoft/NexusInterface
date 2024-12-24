@@ -491,5 +491,4 @@ export function prepareMenu() {
   jotaiStore.sub(liteModeAtom, rebuildMenu);
   observeStore(isLoggedIn, rebuildMenu);
   observeStore((state) => state.ui.locked, observeLockedState); // Consider moving this to a more appropriate spot.
-  // observeStore((state) => state.core.systemInfo?.nolegacy, rebuildMenu);
 }

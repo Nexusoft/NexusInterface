@@ -11,6 +11,7 @@ import Spinner from 'components/Spinner';
 import FieldSet from 'components/FieldSet';
 import BackgroundTask from 'components/BackgroundTask';
 import { formSubmit, checkAll, required, minChars } from 'lib/form';
+import { blocksAtom } from 'lib/coreInfo';
 import { callAPI } from 'lib/api';
 import {
   showNotification,
@@ -18,7 +19,7 @@ import {
   showBackgroundTask,
   isModalOpen,
 } from 'lib/ui';
-import store, { observeStore } from 'store';
+import store, { jotaiStore } from 'store';
 import { isLoggedIn } from 'selectors';
 import { confirmPasswordPin } from 'lib/dialog';
 import UT from 'lib/usageTracking';
@@ -182,8 +183,7 @@ function UserConfirmBackgroundTask({ username }) {
   const closeTaskRef = useRef();
   useEffect(
     () =>
-      observeStore(
-        ({ core: { systemInfo } }) => systemInfo?.blocks,
+      jotaiStore.sub(blocksAtom, () => {
         async () => {
           const result = await callAPI('profiles/status/master', {
             username,
@@ -210,8 +210,8 @@ function UserConfirmBackgroundTask({ username }) {
               openModal(LoginModal);
             }
           }
-        }
-      ),
+        };
+      }),
     []
   );
 
