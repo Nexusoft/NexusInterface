@@ -95,8 +95,8 @@ export const logIn = async ({ username, password, pin }) => {
     pin,
   });
 
+  await refetchUserStatus();
   await unlockUser({ pin, sessionId });
-  refetchUserStatus();
 
   UT.LogIn();
   return { username, sessionId };
@@ -368,11 +368,11 @@ export const activeSessionAtom = atom((get) => {
 export const userStatusPollingAtom = atomWithQuery((get) => ({
   queryKey: ['userStatus', get(activeSessionIdAtom)],
   queryFn: async () => {
-    const session = get(activeSessionIdAtom);
+    const sessionId = get(activeSessionIdAtom);
     try {
       const result = await callAPI(
         'sessions/status/local',
-        session ? { session } : undefined
+        sessionId ? { session: sessionId } : undefined
       );
       return result;
     } catch (err) {
@@ -388,8 +388,6 @@ export const userStatusPollingAtom = atomWithQuery((get) => ({
     get(coreConnectedAtom) && (!get(multiUserAtom) || get(activeSessionIdAtom)),
   retry: 0,
   refetchInterval: ({ state: { data } }) => (data?.indexing ? 1000 : 10000), // 1 second if indexing, else 10 seconds
-  refetchOnWindowFocus: 'always',
-  refetchOnReconnect: 'always',
 }));
 
 export const userStatusAtom = atom((get) => {
@@ -411,7 +409,7 @@ const refetchUserStatusAtom = atom(
 );
 
 export function refetchUserStatus() {
-  jotaiStore.get(refetchUserStatusAtom)?.();
+  return jotaiStore.get(refetchUserStatusAtom)?.();
 }
 
 export const loggedInAtom = atom((get) => !!get(userStatusAtom));
@@ -421,19 +419,34 @@ export const hasRecoveryPhraseAtom = atom(
 );
 const userIndexingAtom = atom((get) => get(userStatusAtom)?.indexing);
 
-const profileStatusAtom = atom(null);
+export const profileStatusPollingAtom = atomWithQuery((get) => ({
+  queryKey: ['profileStatus', get(userGenesisAtom)],
+  queryFn: async () => {
+    const genesis = get(userGenesisAtom);
+    return await callAPI('profiles/status/master', {
+      genesis,
+    });
+  },
+  enabled: get(loggedInAtom),
+  retry: 2,
+  refetchInterval: 10000, // 10 seconds
+}));
 
-export async function loadProfileStatus() {
-  const genesis = jotaiStore.get(userGenesisAtom);
-  if (!genesis) {
-    jotaiStore.set(profileStatusAtom, null);
+export const profileStatusAtom = atom((get) => {
+  const query = get(profileStatusPollingAtom);
+  if (!query || query.isError || !get(loggedInAtom)) {
+    return null;
+  } else {
+    return query.data;
   }
-  const sessionId = jotaiStore.get(activeSessionIdAtom);
-  const profileStatus = await callAPI('profiles/status/master', {
-    genesis,
-    ...(sessionId ? { session: sessionId } : null),
-  });
-  jotaiStore.set(profileStatusAtom, profileStatus);
+});
+
+const refetchProfileStatusAtom = atom(
+  (get) => get(profileStatusPollingAtom)?.refetch || (() => {})
+);
+
+export function refetchProfileStatus() {
+  jotaiStore.get(refetchProfileStatusAtom)?.();
 }
 
 export const usernameAtom = atom((get) => {
@@ -450,14 +463,6 @@ export const usernameAtom = atom((get) => {
 });
 
 export function prepareSessionInfo() {
-  jotaiStore.sub(userGenesisAtom, () => {
-    if (jotaiStore.get(userGenesisAtom)) {
-      loadProfileStatus();
-    } else {
-      jotaiStore.set(profileStatusAtom, null);
-    }
-  });
-
   jotaiStore.sub(coreConnectedAtom, async () => {
     const coreConnected = jotaiStore.get(coreConnectedAtom);
     if (coreConnected) {
@@ -508,8 +513,6 @@ export const stakeInfoPollingAtom = atomWithQuery((get) => ({
   enabled: get(loggedInAtom),
   retry: 0,
   refetchInterval: ({ state: { data } }) => (data?.staking ? 10000 : 60000), // 10 seconds if staking, 1 minute if not
-  refetchOnWindowFocus: 'always',
-  refetchOnReconnect: 'always',
 }));
 
 export const stakeInfoAtom = atom(
