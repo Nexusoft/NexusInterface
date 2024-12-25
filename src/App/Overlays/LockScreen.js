@@ -1,9 +1,9 @@
 import styled from '@emotion/styled';
-import { useSelector } from 'react-redux';
+import { useAtomValue } from 'jotai';
 import Button from 'components/Button';
 import { confirmPin } from 'lib/dialog';
 import { toggleLockScreen } from 'lib/ui';
-import { selectUsername } from 'lib/session';
+import { usernameAtom } from 'lib/session';
 
 import FullScreen from './FullScreen';
 
@@ -26,7 +26,7 @@ const UnlockButton = styled(Button)({
 });
 
 export default function LockedScreen() {
-  const username = useSelector(selectUsername)
+  const username = useAtomValue(usernameAtom);
   return (
     <FullScreen width={null}>
       <Wrapper>

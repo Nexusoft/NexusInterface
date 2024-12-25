@@ -14,7 +14,6 @@ import activeAppModuleName from './activeAppModuleName';
 import bootstrap from './bootstrap';
 import failedModules from './failedModules';
 import assetSchemas from './assetSchemas';
-import sessions from './sessions';
 import moduleDownloads from './moduleDownloads';
 import featuredModules from './featuredModules';
 
@@ -34,7 +33,6 @@ export default function createRootReducer() {
     activeAppModuleName,
     bootstrap,
     assetSchemas,
-    sessions,
     moduleDownloads,
     featuredModules,
   });

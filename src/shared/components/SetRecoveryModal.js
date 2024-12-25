@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { useSelector } from 'react-redux';
+import { useAtomValue } from 'jotai';
 import { useRef, useEffect, useState } from 'react';
 
 import Form from 'components/Form';
@@ -11,7 +11,7 @@ import Button from 'components/Button';
 import Select from 'components/Select';
 import Spinner from 'components/Spinner';
 import { callAPI } from 'lib/api';
-import { refreshProfileStatus } from 'lib/user';
+import { loadProfileStatus, hasRecoveryPhraseAtom } from 'lib/session';
 import { formSubmit, checkAll, required, minChars } from 'lib/form';
 import { openModal } from 'lib/ui';
 import { openSuccessDialog, openErrorDialog } from 'lib/dialog';
@@ -43,9 +43,7 @@ const initialValues = {
 };
 
 export default function SetRecoveryModal() {
-  const hasRecoveryPhrase = useSelector(
-    ({ user: { profileStatus } }) => !!profileStatus?.recovery
-  );
+  const hasRecoveryPhrase = useAtomValue(hasRecoveryPhraseAtom);
   const [wordCount, setWordCount] = useState(20);
   const wordlistRef = useRef(null);
 
@@ -93,7 +91,7 @@ export default function SetRecoveryModal() {
                     message: __('Recovery phrase has been updated'),
                   });
                   if (!hasRecoveryPhrase) {
-                    refreshProfileStatus();
+                    loadProfileStatus();
                   }
                 },
                 errorMessage: __('Error setting recovery phrase'),

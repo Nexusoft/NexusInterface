@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useField } from 'react-final-form';
 import styled from '@emotion/styled';
+import { useAtomValue } from 'jotai';
 
 import Form from 'components/Form';
 import ControlledModal from 'components/ControlledModal';
@@ -16,7 +17,7 @@ import {
   createGlobalNameFee,
 } from 'lib/fees';
 import { refreshNameRecords, refreshNamespaces } from 'lib/user';
-import { selectUsername } from 'lib/session';
+import { usernameAtom } from 'lib/session';
 import { callAPI } from 'lib/api';
 import UT from 'lib/usageTracking';
 
@@ -101,7 +102,7 @@ const notStartWithColon = (value) =>
     : undefined;
 
 export default function CreateNameModal() {
-  const username = useSelector(selectUsername);
+  const username = useAtomValue(usernameAtom);
   const namespaces = useSelector((state) => state.user.namespaces);
   useEffect(() => {
     refreshNamespaces();

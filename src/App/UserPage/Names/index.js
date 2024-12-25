@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { useAtomValue } from 'jotai';
 import styled from '@emotion/styled';
 
 import Icon from 'components/Icon';
@@ -7,7 +8,7 @@ import Button from 'components/Button';
 import Switch from 'components/Switch';
 import { switchUserTab, openModal } from 'lib/ui';
 import { refreshNameRecords } from 'lib/user';
-import { selectUsername } from 'lib/session';
+import { usernameAtom } from 'lib/session';
 import { updateSettings } from 'lib/settings';
 import { popupContextMenu } from 'lib/contextMenu';
 import { timing } from 'styles';
@@ -137,7 +138,7 @@ const selectNameRecords = memoize(
 export default function Names() {
   const session = useSelector((state) => state.user.session);
   const nameRecords = useSelector(selectNameRecords);
-  const username = useSelector(selectUsername);
+  const username = useAtomValue(usernameAtom);
   const showUnusedNames = useSelector(
     (state) => state.settings.showUnusedNames
   );

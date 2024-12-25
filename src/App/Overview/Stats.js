@@ -7,7 +7,8 @@ import { keyframes } from '@emotion/react';
 // Internal
 import { refreshBalances } from 'lib/user';
 import { timing, consts } from 'styles';
-import { observeStore } from 'store';
+import { jotaiStore } from 'store';
+import { loggedInAtom } from 'lib/session';
 
 import {
   NXSBalanceStat,
@@ -93,17 +94,15 @@ const StatsColumn = styled.div(
 
 function useGetBalances() {
   useEffect(() => {
-    const unobserve = observeStore(
-      ({ user }) => user && user.status,
-      (status) => {
-        status && refreshBalances();
+    refreshBalances();
+    return jotaiStore.sub(loggedInAtom, () => {
+      if (jotaiStore.get(loggedInAtom)) {
+        refreshBalances();
       }
-    );
-    return unobserve;
+    });
   }, []);
 }
 
-// Mandatory React-Redux method
 export default function Stats({ showingGlobe }) {
   const overviewDisplay = useSelector(
     (state) => state.settings.overviewDisplay

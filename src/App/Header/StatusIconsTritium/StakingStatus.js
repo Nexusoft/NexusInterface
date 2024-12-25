@@ -1,13 +1,13 @@
 // External Dependencies
-import { useSelector } from 'react-redux';
+import { useAtomValue } from 'jotai';
 import { Link } from 'react-router-dom';
 
 // Internal Dependencies
 import Tooltip from 'components/Tooltip';
 import Icon from 'components/Icon';
 import { useSynchronized } from 'lib/coreInfo';
+import { stakeInfoAtom } from 'lib/session';
 import { formatNumber } from 'lib/intl';
-import { isStaking } from 'selectors';
 import stakingIcon from 'icons/staking.svg';
 
 import StatusIcon from './StatusIcon';
@@ -15,10 +15,8 @@ import StatusIcon from './StatusIcon';
 __ = __context('Header');
 
 export default function StakingStatus() {
-  const staking = useSelector(isStaking);
+  const { staking, stakeRate, pooled } = useAtomValue(stakeInfoAtom) || {};
   const synchronized = useSynchronized();
-  const stakeRate = useSelector((state) => state.user.stakeInfo?.stakerate);
-  const pooled = useSelector((state) => state.user.stakeInfo?.pooled);
 
   return (
     <Tooltip.Trigger

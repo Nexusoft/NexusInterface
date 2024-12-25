@@ -11,6 +11,7 @@ import { prepareMarket } from 'lib/market';
 import { prepareTransactions } from 'lib/transactions';
 import { prepareModules, prepareWebView } from 'lib/modules';
 import { prepareUpdater } from 'lib/updater';
+import { prepareSessionInfo } from 'lib/session';
 import UT from 'lib/usageTracking';
 import initialSettings from 'data/initialSettings';
 import App from './App';
@@ -41,6 +42,7 @@ async function run() {
     prepareUpdater();
     prepareWebView();
     prepareCoreOutput();
+    prepareSessionInfo();
     initialSettings.sendUsageData && UT.StartAnalytics();
   }
 }

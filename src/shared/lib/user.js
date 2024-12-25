@@ -3,16 +3,6 @@ import store from 'store';
 import { callAPI as callAPI } from 'lib/api';
 import listAll from 'utils/listAll';
 
-export const refreshProfileStatus = async () => {
-  try {
-    const profileStatus = await callAPI('profiles/status/master');
-    store.dispatch({ type: TYPE.SET_PROFILE_STATUS, payload: profileStatus });
-    return profileStatus;
-  } catch (err) {
-    console.error('profiles/status/master failed', err);
-  }
-};
-
 export const refreshBalances = async () => {
   try {
     const balances = await callAPI('finance/get/balances');

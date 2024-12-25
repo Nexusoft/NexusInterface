@@ -1,7 +1,7 @@
-import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 import { useField } from 'react-final-form';
 import { useTheme } from '@emotion/react';
+import { useAtomValue } from 'jotai';
 
 import Form from 'components/Form';
 import ControlledModal from 'components/ControlledModal';
@@ -10,6 +10,7 @@ import { formSubmit, checkAll, useFieldValue } from 'lib/form';
 import { callAPI } from 'lib/api';
 import { confirm, confirmPin } from 'lib/dialog';
 import { formatNumber } from 'lib/intl';
+import { stakeInfoAtom } from 'lib/session';
 import { showNotification } from 'lib/ui';
 import Link from 'components/Link';
 import memoize from 'utils/memoize';
@@ -112,11 +113,9 @@ export default function AdjustStakeModal({
   onClose,
   onComplete,
 }) {
-  const currentStake = useSelector((state) => state.user.stakeInfo?.stake);
-  const total = useSelector(
-    ({ user: { stakeInfo } }) =>
-      stakeInfo && stakeInfo.stake + stakeInfo.balance
-  );
+  const { stake: currentStake, balance } = useAtomValue(stakeInfoAtom) || {};
+  const total = currentStake + balance || 0;
+
   return (
     <ControlledModal maxWidth={600} onClose={onClose}>
       {(closeModal) => (

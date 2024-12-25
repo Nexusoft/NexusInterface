@@ -1,10 +1,5 @@
 import memoize from 'utils/memoize';
 
-export const isStaking = ({ user: { stakeInfo } }) =>
-  !!(stakeInfo && stakeInfo.staking);
-
-export const isLoggedIn = ({ user }) => !!(user && user.status);
-
 export const selectBalances = memoize(
   (balances) => {
     if (!balances) return [undefined, undefined];

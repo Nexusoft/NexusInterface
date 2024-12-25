@@ -1,19 +1,18 @@
-import { useSelector } from 'react-redux';
+import { useAtomValue } from 'jotai';
 
 import Dropdown from 'components/Dropdown';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
 import SetRecoveryModal from 'components/SetRecoveryModal';
 import ChangePasswordPinModal from 'components/ChangePasswordPinModal';
+import { hasRecoveryPhraseAtom } from 'lib/session';
 import { openModal } from 'lib/ui';
 import menuIcon from 'icons/menu.svg';
 
 __ = __context('User');
 
 export default function UserOptions() {
-  const hasRecoveryPhrase = useSelector(
-    ({ user: { profileStatus } }) => !!profileStatus?.recovery
-  );
+  const hasRecoveryPhrase = useAtomValue(hasRecoveryPhraseAtom);
 
   return (
     <Dropdown

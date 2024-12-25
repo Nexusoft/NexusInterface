@@ -1,4 +1,5 @@
 import { useSelector } from 'react-redux';
+import { useAtomValue } from 'jotai';
 import styled from '@emotion/styled';
 
 import Form from 'components/Form';
@@ -8,7 +9,7 @@ import Spinner from 'components/Spinner';
 import { formSubmit, required } from 'lib/form';
 import { confirmPin, openSuccessDialog } from 'lib/dialog';
 import { refreshNameRecords } from 'lib/user';
-import { selectUsername } from 'lib/session';
+import { usernameAtom } from 'lib/session';
 import { callAPI } from 'lib/api';
 import { userIdRegex } from 'consts/misc';
 
@@ -27,7 +28,7 @@ const initialValues = {
 };
 
 export default function TransferNameModal({ nameRecord }) {
-  const username = useSelector(selectUsername);
+  const username = useAtomValue(usernameAtom);
   return (
     <ControlledModal maxWidth={600}>
       {(closeModal) => (

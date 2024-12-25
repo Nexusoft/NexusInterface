@@ -276,7 +276,17 @@ let tail;
 let tryTailingTimer;
 let printCoreOutputTimer;
 
-export function startCoreOuputWatch() {
+export function stopCoreOuputWatch() {
+  if (tail) {
+    tail.unwatch();
+    tail = null;
+  }
+  clearCoreOutput();
+  clearInterval(printCoreOutputTimer);
+  clearTimeout(tryTailingTimer);
+}
+
+export function prepareCoreOutput() {
   jotaiStore.sub(coreConnectedAtom, () => {
     if (isCoreConnected()) {
       const state = store.getState();
@@ -299,18 +309,4 @@ export function startCoreOuputWatch() {
       stopCoreOuputWatch();
     }
   });
-}
-
-export function stopCoreOuputWatch() {
-  if (tail) {
-    tail.unwatch();
-    tail = null;
-  }
-  clearCoreOutput();
-  clearInterval(printCoreOutputTimer);
-  clearTimeout(tryTailingTimer);
-}
-
-export function prepareCoreOutput() {
-  startCoreOuputWatch();
 }

@@ -84,7 +84,7 @@ export const fiatCurrencyAtom = atom(
 );
 
 export const marketDataPollingAtom = atomWithQuery((get) => ({
-  queryKey: ['market-data', get(fiatCurrencyAtom)],
+  queryKey: ['marketData', get(fiatCurrencyAtom)],
   queryFn: () => fetchMarketData(get(fiatCurrencyAtom)),
   retry: 2,
   retryDelay: 5000,

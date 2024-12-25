@@ -1,13 +1,13 @@
-import { useSelector } from 'react-redux';
+import { useAtomValue } from 'jotai';
 
 import LoginModal from 'components/LoginModal';
 import RequireCoreConnected from 'components/RequireCoreConnected';
 import Button from 'components/Button';
 import { openModal } from 'lib/ui';
-import { isLoggedIn } from 'selectors';
+import { loggedInAtom } from 'lib/session';
 
 export default function RequireLoggedIn({ children }) {
-  const loggedIn = useSelector(isLoggedIn);
+  const loggedIn = useAtomValue(loggedInAtom);
 
   return (
     <RequireCoreConnected>

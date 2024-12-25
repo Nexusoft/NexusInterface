@@ -1,223 +1,178 @@
 import { createRef, useRef, useEffect } from 'react';
 import { atom } from 'jotai';
+import { atomWithQuery } from 'jotai-tanstack-query';
 import ExternalLink from 'components/ExternalLink';
 import BackgroundTask from 'components/BackgroundTask';
-import * as TYPE from 'consts/actionTypes';
-import store, { observeStore } from 'store';
+import store, { jotaiStore, queryClient } from 'store';
 import { callAPI as callAPI } from 'lib/api';
-import { showBackgroundTask, showNotification } from 'lib/ui';
+import { coreConnectedAtom, multiUserAtom, liteModeAtom } from './coreInfo';
+import {
+  openModal,
+  isModalOpen,
+  showBackgroundTask,
+  showNotification,
+} from 'lib/ui';
 import { confirm } from 'lib/dialog';
 import { updateSettings } from 'lib/settings';
-import sleep from 'utils/promisified/sleep';
+import LoginModal from 'components/LoginModal';
+import NewUserModal from 'components/NewUserModal';
 import UT from './usageTracking';
 
 __ = __context('User');
 
-export const selectActiveSession = ({ user: { session }, sessions }) => {
-  if (session) return session;
-  if (!sessions) return undefined;
-  const sessionList = Object.values(sessions);
-  if (!sessionList.length) return undefined;
+// export const refreshStakeInfo = async () => {
+//   try {
+//     const stakeInfo = await callAPI('finance/get/stakeinfo');
+//     store.dispatch({ type: TYPE.SET_STAKE_INFO, payload: stakeInfo });
+//     return stakeInfo;
+//   } catch (err) {
+//     store.dispatch({ type: TYPE.CLEAR_STAKE_INFO });
+//     console.error('finance/get/stakeinfo failed', err);
+//   }
+// };
 
-  // Active session is defaulted to the last accessed session
-  let lastAccessed = sessionList.reduce(
-    (las, s) => (!las || s.accessed > las.accessed ? s : las),
-    undefined
-  );
-  return lastAccessed?.session || undefined;
-};
+// // Don't refresh user status while login process is not yet done
+// let refreshUserStatusLock = false;
+// export async function refreshUserStatus() {
+//   if (refreshUserStatusLock) return;
 
-export const selectUsername = (state) => {
-  const {
-    user: { status, profileStatus },
-    sessions,
-  } = state;
-  const session = selectActiveSession(state);
+//   // If in multiuser mode, fetch the list of logged in sessions first
+//   const {
+//     core: { systemInfo },
+//   } = store.getState();
+//   if (systemInfo?.multiuser) {
+//     try {
+//       const sessions = await callAPI('sessions/list/local');
+//       store.dispatch({
+//         type: TYPE.SET_SESSIONS,
+//         payload: sessions,
+//       });
+//     } catch (err) {
+//       store.dispatch({ type: TYPE.CLEAR_SESSIONS });
+//     }
+//   }
 
-  return (
-    profileStatus?.session?.username ||
-    status?.username ||
-    (session && sessions?.[session]?.username) ||
-    ''
-  );
-};
+//   // Get the active user status
+//   try {
+//     const session = selectActiveSession(store.getState());
+//     if (systemInfo?.multiuser && !session) {
+//       store.dispatch({ type: TYPE.CLEAR_USER });
+//       return;
+//     }
 
-export const refreshStakeInfo = async () => {
-  try {
-    const stakeInfo = await callAPI('finance/get/stakeinfo');
-    store.dispatch({ type: TYPE.SET_STAKE_INFO, payload: stakeInfo });
-    return stakeInfo;
-  } catch (err) {
-    store.dispatch({ type: TYPE.CLEAR_STAKE_INFO });
-    console.error('finance/get/stakeinfo failed', err);
-  }
-};
+//     const status = await callAPI(
+//       'sessions/status/local',
+//       session ? { session } : undefined
+//     );
 
-// Don't refresh user status while login process is not yet done
-let refreshUserStatusLock = false;
-export async function refreshUserStatus() {
-  if (refreshUserStatusLock) return;
+//     if (store.getState().user.profileStatus?.genesis !== status.genesis) {
+//       const profileStatus = await callAPI('profiles/status/master', {
+//         genesis: status.genesis,
+//         session,
+//       });
+//       store.dispatch({
+//         type: TYPE.SET_PROFILE_STATUS,
+//         payload: profileStatus,
+//       });
+//     }
+//     store.dispatch({ type: TYPE.SET_USER_STATUS, payload: status });
 
-  // If in multiuser mode, fetch the list of logged in sessions first
-  const {
-    core: { systemInfo },
-  } = store.getState();
-  if (systemInfo?.multiuser) {
-    try {
-      const sessions = await callAPI('sessions/list/local');
-      store.dispatch({
-        type: TYPE.SET_SESSIONS,
-        payload: sessions,
-      });
-    } catch (err) {
-      store.dispatch({ type: TYPE.CLEAR_SESSIONS });
-    }
-  }
-
-  // Get the active user status
-  try {
-    const session = selectActiveSession(store.getState());
-    if (systemInfo?.multiuser && !session) {
-      store.dispatch({ type: TYPE.CLEAR_USER });
-      return;
-    }
-
-    const status = await callAPI(
-      'sessions/status/local',
-      session ? { session } : undefined
-    );
-
-    if (store.getState().user.profileStatus?.genesis !== status.genesis) {
-      const profileStatus = await callAPI('profiles/status/master', {
-        genesis: status.genesis,
-        session,
-      });
-      store.dispatch({
-        type: TYPE.SET_PROFILE_STATUS,
-        payload: profileStatus,
-      });
-    }
-    store.dispatch({ type: TYPE.SET_USER_STATUS, payload: status });
-
-    refreshStakeInfo();
-    return status;
-  } catch (err) {
-    store.dispatch({ type: TYPE.CLEAR_USER });
-    // Don't log error if it's 'Session not found' (user not logged in)
-    if (err?.code !== -11) {
-      console.error('Failed to get user status', err);
-    }
-  }
-}
+//     refreshStakeInfo();
+//     return status;
+//   } catch (err) {
+//     store.dispatch({ type: TYPE.CLEAR_USER });
+//     // Don't log error if it's 'Session not found' (user not logged in)
+//     if (err?.code !== -11) {
+//       console.error('Failed to get user status', err);
+//     }
+//   }
+// }
 
 export const logIn = async ({ username, password, pin }) => {
-  // Stop refreshing user status
-  refreshUserStatusLock = true;
-  await sleep(500); // Let the core cycle, Possible delete this
-  try {
-    const { session, genesis } = await callAPI('sessions/create/local', {
-      username,
-      password,
-      pin,
-    });
+  const { session: sessionId } = await callAPI('sessions/create/local', {
+    username,
+    password,
+    pin,
+  });
 
-    let stakeInfo = null;
-    try {
-      stakeInfo = await callAPI('finance/get/stakeinfo', { session });
-    } catch (err) {
-      if (err.code !== -70) {
-        // Only ignore 'Trust account not found' error
-        throw err;
-      }
-    }
-    await unlockUser({ pin, session, stakeInfo });
-    const { status } = await setActiveUser({ session, genesis, stakeInfo });
+  await unlockUser({ pin, sessionId });
+  refetchUserStatus();
 
-    UT.LogIn();
-    return { username, session, status, stakeInfo };
-  } finally {
-    // Release the lock
-    refreshUserStatusLock = false;
-  }
+  UT.LogIn();
+  return { username, sessionId };
 };
 
 export const logOut = async () => {
-  // Stop refreshing user status
-  refreshUserStatusLock = true;
-  try {
-    const {
-      sessions,
-      core: { systemInfo },
-    } = store.getState();
-    store.dispatch({
-      type: TYPE.LOGOUT,
-    });
-    if (systemInfo?.multiuser) {
-      await Promise.all([
-        Object.keys(sessions).map((session) => {
-          callAPI('sessions/terminate/local', { session });
-        }),
-      ]);
-    } else {
-      await callAPI('sessions/terminate/local');
-    }
-    UT.LogOut();
-  } finally {
-    // Release the lock
-    refreshUserStatusLock = false;
+  const sessions = jotaiStore.get(sessionsAtom);
+  if (sessions) {
+    await Promise.all([
+      Object.keys(sessions).map((session) => {
+        callAPI('sessions/terminate/local', { session });
+      }),
+    ]);
+  } else {
+    await callAPI('sessions/terminate/local');
   }
+  queryClient.clear();
+  refetchUserStatus();
+  UT.LogOut();
 };
 
-export async function setActiveUser({ session, genesis, stakeInfo }) {
-  const {
-    core: { systemInfo },
-  } = store.getState();
+// export async function setActiveUser({ sessionId, genesis, stakeInfo }) {
+//   const {
+//     core: { systemInfo },
+//   } = store.getState();
 
-  const [status, profileStatus, sessions, newStakeInfo] = await Promise.all([
-    callAPI('sessions/status/local', { session }),
-    callAPI('profiles/status/master', { session, genesis }),
-    systemInfo?.multiuser
-      ? callAPI('sessions/list/local')
-      : Promise.resolve(null),
-    stakeInfo
-      ? Promise.resolve(null)
-      : callAPI('finance/get/stakeinfo', { session }).catch((err) => {
-          if (err.code !== -70) {
-            // Only ignore 'Trust account not found' error
-            throw err;
-          }
-        }),
-  ]);
+//   const [status, profileStatus, sessions, newStakeInfo] = await Promise.all([
+//     callAPI('sessions/status/local', { session: sessionId }),
+//     callAPI('profiles/status/master', { session: sessionId, genesis }),
+//     systemInfo?.multiuser
+//       ? callAPI('sessions/list/local')
+//       : Promise.resolve(null),
+//     stakeInfo
+//       ? Promise.resolve(null)
+//       : callAPI('finance/get/stakeinfo', { session: sessionId }).catch((err) => {
+//           if (err.code !== -70) {
+//             // Only ignore 'Trust account not found' error
+//             throw err;
+//           }
+//         }),
+//   ]);
 
-  const result = {
-    session,
-    sessions,
-    status,
-    stakeInfo: stakeInfo || newStakeInfo || null,
-    profileStatus,
-  };
-  store.dispatch({
-    type: TYPE.ACTIVE_USER,
-    payload: result,
-  });
-  return result;
-}
+//   const result = {
+//     sessionId,
+//     sessions,
+//     status,
+//     stakeInfo: stakeInfo || newStakeInfo || null,
+//     profileStatus,
+//   };
+//   store.dispatch({
+//     type: TYPE.ACTIVE_USER,
+//     payload: result,
+//   });
+//   return result;
+// }
 
-async function shouldUnlockStaking(stakeInfo) {
+async function shouldUnlockStaking() {
   const {
     settings: { enableStaking, dontAskToStartStaking },
-    core: { systemInfo },
-    user: { startStakingAsked },
   } = store.getState();
-
-  if (systemInfo?.litemode || systemInfo?.multiuser || !enableStaking) {
+  if (
+    jotaiStore.get(liteModeAtom) ||
+    jotaiStore.get(multiUserAtom) ||
+    !enableStaking
+  ) {
     return false;
   }
 
+  const stakeInfo = await queryClient.ensureQueryData({
+    queryKey: ['stakeInfo', jotaiStore.get(userGenesisAtom)],
+  });
   if (!stakeInfo?.new) {
     return true;
   }
 
+  const startStakingAsked = jotaiStore.get(startStakingAskedAtom);
   if (
     stakeInfo?.new &&
     stakeInfo?.balance &&
@@ -266,9 +221,7 @@ async function shouldUnlockStaking(stakeInfo) {
       labelYes: __('Start staking'),
       labelNo: __("Don't stake"),
     });
-    store.dispatch({
-      type: TYPE.ASK_START_STAKING,
-    });
+    jotaiStore.set(startStakingAsked, true);
     if (checkboxRef.current?.checked) {
       updateSettings({ dontAskToStartStaking: true });
     }
@@ -280,8 +233,8 @@ async function shouldUnlockStaking(stakeInfo) {
   return false;
 }
 
-async function unlockUser({ pin, session, stakeInfo }) {
-  const unlockStaking = await shouldUnlockStaking(stakeInfo);
+async function unlockUser({ pin, sessionId }) {
+  const unlockStaking = await shouldUnlockStaking();
   const {
     settings: { enableMining },
   } = store.getState();
@@ -293,16 +246,17 @@ async function unlockUser({ pin, session, stakeInfo }) {
       mining: !!enableMining,
       // passing session through because it's not saved in the store yet
       // so it wouldn't be automatically passed in all API calls
-      session,
+      session: sessionId || undefined,
     });
   } catch (error) {
-    if (error.code && error.code === -139) {
+    const indexing = jotaiStore.get(userIndexingAtom);
+    if (indexing) {
       showBackgroundTask(UserUnLockIndexingBackgroundTask, {
         pin,
         notifications: true,
         staking: unlockStaking,
         mining: !!enableMining,
-        session,
+        sessionId,
       });
     } else throw error;
   }
@@ -313,31 +267,29 @@ function UserUnLockIndexingBackgroundTask({
   notifications,
   staking,
   mining,
-  session,
+  sessionId,
 }) {
   const closeTaskRef = useRef();
   useEffect(
     () =>
-      observeStore(
-        ({ user: { status } }) => status?.indexing,
-        async (isIndexing) => {
-          if (!isIndexing) {
-            try {
-              await callAPI('sessions/unlock/local', {
-                pin,
-                notifications,
-                staking,
-                mining,
-                session,
-              });
-            } catch (error) {
-              showNotification(__('User Failed to Unlock'), 'error');
-            }
-            closeTaskRef.current?.();
+      jotaiStore.sub(userIndexingAtom, async () => {
+        const indexing = jotaiStore.get(userIndexingAtom);
+        if (!indexing) {
+          try {
+            await callAPI('sessions/unlock/local', {
+              pin,
+              notifications,
+              staking,
+              mining,
+              session: sessionId || undefined,
+            });
             showNotification(__('User Unlocked'), 'success');
+          } catch (error) {
+            showNotification(__('User Failed to Unlock'), 'error');
           }
+          closeTaskRef.current?.();
         }
-      ),
+      }),
     []
   );
 
@@ -357,16 +309,40 @@ function UserUnLockIndexingBackgroundTask({
  * =============================================================================
  */
 
-const sessionsAtom = atom(null);
-const selectedSessionIdAtom = atom(null);
-const userStatusAtom = atom(null);
-const profileStatusAtom = atom(null);
+const sessionsPollingAtom = atomWithQuery((get) => ({
+  queryKey: ['sessions'],
+  queryFn: () => callAPI('sessions/list/local'),
+  enabled: !!get(multiUserAtom),
+  retry: 5,
+  retryDelay: (attempt) => 500 + attempt * 1000,
+  staleTime: 600000, // 10 minutes
+  refetchInterval: 10000, // 10 seconds
+  refetchIntervalInBackground: true,
+  refetchOnReconnect: 'always',
+  placeholderData: (previousData) => previousData,
+}));
 
-const activeSessionIdAtom = atom((get) => {
-  const sessions = get(sessionsAtom);
+export const sessionsAtom = atom((get) => {
+  if (!get(multiUserAtom)) {
+    return null;
+  }
+  const query = get(sessionsPollingAtom);
+  if (!query || query.isError) {
+    return null;
+  } else {
+    return query.data;
+  }
+});
+
+export const selectedSessionIdAtom = atom(null);
+
+export const activeSessionIdAtom = atom((get) => {
   const selectedSessionId = get(selectedSessionIdAtom);
   if (selectedSessionId) return selectedSessionId;
+
+  const sessions = get(sessionsAtom);
   if (!sessions) return null;
+
   const sessionList = Object.values(sessions);
   if (!sessionList.length) return null;
 
@@ -378,13 +354,89 @@ const activeSessionIdAtom = atom((get) => {
   return lastAccessed?.session || null;
 });
 
-const activeSessionAtom = atom((get) => {
+export const activeSessionAtom = atom((get) => {
   const sessions = get(sessionsAtom);
   const activeSessionId = get(activeSessionIdAtom);
-  return activeSessionId && sessions?.[activeSessionId];
+  return (activeSessionId && sessions?.[activeSessionId]) || null;
 });
 
-const usernameAtom = atom((get) => {
+/**
+ * User & profile status
+ * =============================================================================
+ */
+
+export const userStatusPollingAtom = atomWithQuery((get) => ({
+  queryKey: ['userStatus', get(activeSessionIdAtom)],
+  queryFn: async () => {
+    const session = get(activeSessionIdAtom);
+    try {
+      const result = await callAPI(
+        'sessions/status/local',
+        session ? { session } : undefined
+      );
+      return result;
+    } catch (err) {
+      // Don't log error if it's 'Session not found' (user not logged in)
+      if (err?.code === -11) {
+        return null;
+      }
+      console.error(err);
+      throw err;
+    }
+  },
+  enabled:
+    get(coreConnectedAtom) && (!get(multiUserAtom) || get(activeSessionIdAtom)),
+  retry: 0,
+  refetchInterval: ({ state: { data } }) => (data?.indexing ? 1000 : 10000), // 1 second if indexing, else 10 seconds
+  refetchOnWindowFocus: 'always',
+  refetchOnReconnect: 'always',
+}));
+
+export const userStatusAtom = atom((get) => {
+  const query = get(userStatusPollingAtom);
+  if (
+    !query ||
+    query.isError ||
+    !get(coreConnectedAtom) ||
+    (get(multiUserAtom) && !get(activeSessionIdAtom))
+  ) {
+    return null;
+  } else {
+    return query.data;
+  }
+});
+
+const refetchUserStatusAtom = atom(
+  (get) => get(userStatusPollingAtom)?.refetch || (() => {})
+);
+
+export function refetchUserStatus() {
+  jotaiStore.get(refetchUserStatusAtom)?.();
+}
+
+export const loggedInAtom = atom((get) => !!get(userStatusAtom));
+export const userGenesisAtom = atom((get) => get(userStatusAtom)?.genesis);
+export const hasRecoveryPhraseAtom = atom(
+  (get) => !!get(profileStatusAtom)?.recovery
+);
+const userIndexingAtom = atom((get) => get(userStatusAtom)?.indexing);
+
+const profileStatusAtom = atom(null);
+
+export async function loadProfileStatus() {
+  const genesis = jotaiStore.get(userGenesisAtom);
+  if (!genesis) {
+    jotaiStore.set(profileStatusAtom, null);
+  }
+  const sessionId = jotaiStore.get(activeSessionIdAtom);
+  const profileStatus = await callAPI('profiles/status/master', {
+    genesis,
+    ...(sessionId ? { session: sessionId } : null),
+  });
+  jotaiStore.set(profileStatusAtom, profileStatus);
+}
+
+export const usernameAtom = atom((get) => {
   const profileStatus = get(profileStatusAtom);
   const userStatus = get(userStatusAtom);
   const activeSession = get(activeSessionAtom);
@@ -396,3 +448,81 @@ const usernameAtom = atom((get) => {
     ''
   );
 });
+
+export function prepareSessionInfo() {
+  jotaiStore.sub(userGenesisAtom, () => {
+    if (jotaiStore.get(userGenesisAtom)) {
+      loadProfileStatus();
+    } else {
+      jotaiStore.set(profileStatusAtom, null);
+    }
+  });
+
+  jotaiStore.sub(coreConnectedAtom, async () => {
+    const coreConnected = jotaiStore.get(coreConnectedAtom);
+    if (coreConnected) {
+      const userStatus = await queryClient.ensureQueryData({
+        queryKey: ['userStatus', jotaiStore.get(activeSessionIdAtom)],
+      });
+      // Query has just finished, userStatusAtom and loggedInAtom haven't been updated yet
+      const loggedIn = !!userStatus;
+      const state = store.getState();
+      // The wallet will have to refresh after language is chosen
+      // So NewUser modal shouldn't be visible now
+      if (
+        state.settings.locale &&
+        !loggedIn &&
+        !isModalOpen(LoginModal) &&
+        !isModalOpen(NewUserModal)
+      ) {
+        if (state.settings.firstCreateNewUserShown) {
+          openModal(LoginModal);
+        } else {
+          openModal(NewUserModal);
+          updateSettings({ firstCreateNewUserShown: true });
+        }
+      }
+    }
+  });
+}
+
+/**
+ * Stake info
+ * =============================================================================
+ */
+
+export const stakeInfoPollingAtom = atomWithQuery((get) => ({
+  queryKey: ['stakeInfo', get(userGenesisAtom)],
+  queryFn: async () => {
+    try {
+      return await callAPI('finance/get/stakeinfo');
+    } catch (err) {
+      // Ignore 'Trust account not found' error
+      if (err.code === -70) {
+        return null;
+      }
+      console.error(err);
+      throw err;
+    }
+  },
+  enabled: get(loggedInAtom),
+  retry: 0,
+  refetchInterval: ({ state: { data } }) => (data?.staking ? 10000 : 60000), // 10 seconds if staking, 1 minute if not
+  refetchOnWindowFocus: 'always',
+  refetchOnReconnect: 'always',
+}));
+
+export const stakeInfoAtom = atom(
+  (get) => get(stakeInfoPollingAtom)?.data || null
+);
+
+const refetchStakeInfoAtom = atom(
+  (get) => get(stakeInfoPollingAtom)?.refetch || (() => {})
+);
+
+export function refetchStakeInfo() {
+  jotaiStore.get(refetchStakeInfoAtom)?.();
+}
+
+const startStakingAskedAtom = atom(false);
+export const stakingAtom = atom((get) => !!get(stakeInfoAtom)?.staking);

@@ -11,6 +11,7 @@ import {
   confirmPin,
 } from 'lib/dialog';
 import { coreInfoAtom } from 'lib/coreInfo';
+import { userStatusAtom } from 'lib/session';
 import { popupContextMenu, defaultMenu } from 'lib/contextMenu';
 import { goToSend } from 'lib/send';
 import { callAPI } from 'lib/api';
@@ -40,15 +41,13 @@ const settingsChanged = (settings1, settings2) =>
 
 const getWalletData = ({
   theme,
-  core,
   settings: { locale, fiatCurrency, addressStyle },
-  user: { status },
   addressBook,
 }) => ({
   theme,
   settings: getSettingsForModules(locale, fiatCurrency, addressStyle),
   coreInfo: jotaiStore.get(coreInfoAtom),
-  userStatus: status,
+  userStatus: jotaiStore.get(userStatusAtom),
   addressBook,
 });
 
@@ -349,12 +348,9 @@ export function prepareWebView() {
     sendWalletDataUpdated({ coreInfo: jotaiStore.get(coreInfoAtom) });
   });
 
-  observeStore(
-    (state) => state.user.status,
-    (userStatus) => {
-      sendWalletDataUpdated({ userStatus });
-    }
-  );
+  jotaiStore.sub(userStatusAtom, () => {
+    sendWalletDataUpdated({ userStatus: jotaiStore.get(userStatusAtom) });
+  });
 
   observeStore(
     (state) => state.addressBook,

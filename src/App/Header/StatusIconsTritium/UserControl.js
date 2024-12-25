@@ -1,13 +1,13 @@
 // External
-import { createRef, useState, useRef } from 'react';
-import { useSelector } from 'react-redux';
+import { useState, useRef } from 'react';
 import styled from '@emotion/styled';
+import { useAtomValue } from 'jotai';
 
 // Internal
 import Icon from 'components/Icon';
 import Arrow from 'components/Arrow';
 import Overlay from 'components/Overlay';
-import { isLoggedIn } from 'selectors';
+import { loggedInAtom } from 'lib/session';
 import userIcon from 'icons/user.svg';
 import { timing } from 'styles';
 import * as color from 'utils/color';
@@ -39,7 +39,7 @@ const UserControlComponent = styled(StatusIcon)(
 export default function UserControl() {
   const [open, setOpen] = useState(false);
   const controlRef = useRef();
-  const loggedIn = useSelector(isLoggedIn);
+  const loggedIn = useAtomValue(loggedInAtom);
 
   const openDropdown = () => {
     setOpen(true);

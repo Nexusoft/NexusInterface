@@ -15,7 +15,7 @@ import {
   jotaiDevToolsOpenAtom,
 } from 'lib/ui';
 import { bootstrap } from 'lib/bootstrap';
-import { isLoggedIn } from 'selectors';
+import { loggedInAtom } from 'lib/session';
 import { preRelease } from 'consts/misc';
 import {
   coreInfoAtom,
@@ -275,7 +275,7 @@ function buildDarwinTemplate() {
   const state = store.getState();
   const coreConnected = isCoreConnected();
   const activeWebView = getActiveWebView();
-  const loggedIn = isLoggedIn(state);
+  const loggedIn = jotaiStore.get(loggedInAtom);
   const coreInfo = jotaiStore.get(coreInfoAtom);
 
   const {
@@ -368,7 +368,7 @@ function buildDefaultTemplate() {
   const state = store.getState();
   const coreConnected = isCoreConnected();
   const activeWebView = getActiveWebView();
-  const loggedIn = isLoggedIn(state);
+  const loggedIn = jotaiStore.get(loggedInAtom);
   const coreInfo = jotaiStore.get(coreInfoAtom);
 
   const {
@@ -489,6 +489,6 @@ export function prepareMenu() {
   observeStore((state) => state.activeAppModuleName, rebuildMenu);
   observeStore((state) => state.settings.manualDaemon, rebuildMenu);
   jotaiStore.sub(liteModeAtom, rebuildMenu);
-  observeStore(isLoggedIn, rebuildMenu);
+  jotaiStore.sub(loggedInAtom, rebuildMenu);
   observeStore((state) => state.ui.locked, observeLockedState); // Consider moving this to a more appropriate spot.
 }

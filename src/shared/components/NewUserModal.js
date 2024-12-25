@@ -20,7 +20,7 @@ import {
   isModalOpen,
 } from 'lib/ui';
 import store, { jotaiStore } from 'store';
-import { isLoggedIn } from 'selectors';
+import { loggedInAtom } from 'lib/session';
 import { confirmPasswordPin } from 'lib/dialog';
 import UT from 'lib/usageTracking';
 
@@ -206,7 +206,7 @@ function UserConfirmBackgroundTask({ username }) {
               ),
               'success'
             );
-            if (!isLoggedIn(store.getState()) && !isModalOpen(LoginModal)) {
+            if (!jotaiStore.get(loggedInAtom) && !isModalOpen(LoginModal)) {
               openModal(LoginModal);
             }
           }

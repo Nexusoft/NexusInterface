@@ -1,5 +1,6 @@
 import { useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { useAtomValue } from 'jotai';
 import styled from '@emotion/styled';
 
 import ControlledModal from 'components/ControlledModal';
@@ -9,7 +10,7 @@ import Spinner from 'components/Spinner';
 import { formSubmit } from 'lib/form';
 import { confirmPin, openSuccessDialog } from 'lib/dialog';
 import { refreshNameRecords } from 'lib/user';
-import { selectUsername } from 'lib/session';
+import { usernameAtom } from 'lib/session';
 import { callAPI } from 'lib/api';
 import memoize from 'utils/memoize';
 
@@ -28,7 +29,7 @@ const getInitialValues = memoize((registerAddress) => ({
 }));
 
 export default function ChangeRegisterAddressModal({ nameRecord }) {
-  const username = useSelector(selectUsername);
+  const username = useAtomValue(usernameAtom);
   const inputRef = useRef();
   useEffect(() => {
     setTimeout(() => {

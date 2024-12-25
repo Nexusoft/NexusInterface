@@ -2,7 +2,7 @@ import http from 'http';
 import https from 'https';
 
 import store, { jotaiStore } from 'store';
-import { selectActiveSession } from 'lib/session';
+import { activeSessionIdAtom } from 'lib/session';
 import { getActiveCoreConfig } from 'lib/coreConfig';
 import { coreInfoAtom } from 'lib/coreInfo';
 
@@ -93,8 +93,7 @@ function sendRequest({ params, options, ssl }) {
  */
 export async function callAPI(endpoint, customParams) {
   const conf = await getActiveCoreConfig();
-  const state = store.getState();
-  const session = selectActiveSession(state);
+  const sessionId = jotaiStore.get(activeSessionIdAtom);
   const coreInfo = jotaiStore.get(coreInfoAtom);
 
   //TODO: There is a bug in the core and where HAS to be the last param. Remove when fixed.
@@ -105,7 +104,7 @@ export async function callAPI(endpoint, customParams) {
   }
 
   const params = coreInfo?.multiuser
-    ? { session, ...customParams }
+    ? { session: sessionId, ...customParams }
     : customParams;
   const options = {
     method: 'POST',

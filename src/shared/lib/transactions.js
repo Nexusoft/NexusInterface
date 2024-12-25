@@ -1,16 +1,15 @@
 import { atom, useAtomValue } from 'jotai';
 import { useQuery } from '@tanstack/react-query';
-import { useSelector } from 'react-redux';
 import { callAPI } from 'lib/api';
 import store, { observeStore } from 'store';
 import * as TYPE from 'consts/actionTypes';
 import { refreshAccounts } from 'lib/user';
+import { userGenesisAtom } from './session';
 import { showDesktopNotif } from 'utils/misc';
 import { formatNumber } from 'lib/intl';
 import { showNotification } from 'lib/ui';
 import { openErrorDialog } from 'lib/dialog';
 import TokenName from 'components/TokenName';
-import { isLoggedIn } from 'selectors';
 
 const isConfirmed = (tx) => !!tx.confirmations;
 
@@ -25,7 +24,8 @@ function startWatcher() {
       // Clear watcher if user is logged out or core is disconnected or user is switched
       const genesis = state?.user.status?.genesis;
       const oldGenesis = oldState?.user.status?.genesis;
-      if (!isLoggedIn(state) || genesis !== oldGenesis) {
+      // if (!isLoggedIn(state) || genesis !== oldGenesis) {
+      if (genesis !== oldGenesis) {
         unsubscribe?.();
         unsubscribe = null;
         watchedIds = [];
@@ -331,7 +331,7 @@ export function useFetchTransactions() {
   const addressQuery = useAtomValue(addressQueryAtom);
   const operation = useAtomValue(operationAtom);
   const timeSpan = useAtomValue(timeSpanAtom);
-  const genesis = useSelector((state) => state.user.status?.genesis);
+  const genesis = useAtomValue(userGenesisAtom);
 
   return useQuery({
     queryKey: [

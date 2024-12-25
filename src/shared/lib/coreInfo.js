@@ -1,16 +1,10 @@
 import { useEffect, useRef } from 'react';
-import { atom, useAtomValue, useAtom } from 'jotai';
+import { atom, useAtomValue } from 'jotai';
 import { atomWithQuery } from 'jotai-tanstack-query';
 import store, { jotaiStore } from 'store';
 import { callAPI } from 'lib/api';
-import { isLoggedIn } from 'selectors';
-import { openModal, isModalOpen } from 'lib/ui';
 import * as TYPE from 'consts/actionTypes';
-import { updateSettings } from 'lib/settings';
 import { bootstrap } from 'lib/bootstrap';
-import { refreshUserStatus } from 'lib/session';
-import LoginModal from 'components/LoginModal';
-import NewUserModal from 'components/NewUserModal';
 
 // TODO: move to right places
 export function useCoreInfoPolling() {
@@ -22,26 +16,6 @@ export function useCoreInfoPolling() {
       const state = store.getState();
 
       if (coreConnected) {
-        await refreshUserStatus();
-
-        // The wallet will have to refresh after language is chosen
-        // So NewUser modal won't be visible now
-        const justConnected = !lastCoreInfoRef.current;
-        if (justConnected && state.settings.locale) {
-          if (
-            !isLoggedIn(state) &&
-            !isModalOpen(LoginModal) &&
-            !isModalOpen(NewUserModal)
-          ) {
-            if (state.settings.firstCreateNewUserShown) {
-              openModal(LoginModal);
-            } else {
-              openModal(NewUserModal);
-              updateSettings({ firstCreateNewUserShown: true });
-            }
-          }
-        }
-
         if (
           !state.settings.bootstrapSuggestionDisabled &&
           state.bootstrap.step === 'idle' &&
@@ -83,17 +57,17 @@ export const coreInfoPollingAtom = atomWithQuery((get) => ({
   retryDelay: (attempt) => 500 + attempt * 1000,
   staleTime: 600000, // 10 minutes
   refetchInterval: 10000, // 10 seconds
-  refetchIntervalInBackground: true,
+  refetchOnWindowFocus: 'always',
   refetchOnReconnect: 'always',
   placeholderData: (previousData) => previousData,
 }));
 
 export const coreInfoAtom = atom((get) => {
   const query = get(coreInfoPollingAtom);
-  if (!query || query.isError) {
+  if (!query || query.isError || get(coreInfoPausedAtom)) {
     return null;
   } else {
-    return query.data;
+    return query.data || null;
   }
 });
 
@@ -112,6 +86,8 @@ export const liteModeAtom = atom((get) => get(coreInfoAtom)?.litemode);
 export const synchronizedAtom = atom((get) => !get(coreInfoAtom)?.syncing);
 
 export const blocksAtom = atom((get) => get(coreInfoAtom)?.blocks);
+
+export const multiUserAtom = atom((get) => get(coreInfoAtom)?.multiuser);
 
 export const useCoreInfo = () => useAtomValue(coreInfoAtom);
 

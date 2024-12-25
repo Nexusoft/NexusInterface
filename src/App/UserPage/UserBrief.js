@@ -1,9 +1,9 @@
-import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
+import { useAtomValue } from 'jotai';
 
 import RouterVerticalTab from 'components/RouterVerticalTab';
 import { consts } from 'styles';
-import { selectUsername } from 'lib/session';
+import { usernameAtom, userGenesisAtom } from 'lib/session';
 
 __ = __context('User');
 
@@ -40,8 +40,8 @@ const GenesisId = styled.div({
 });
 
 export default function UserBrief() {
-  const username = useSelector(selectUsername);
-  const genesis = useSelector((state) => state.user.status?.genesis);
+  const username = useAtomValue(usernameAtom);
+  const genesis = useAtomValue(userGenesisAtom);
 
   return (
     <UserBriefComponent>
