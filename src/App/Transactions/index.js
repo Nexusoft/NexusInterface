@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { useAtom } from 'jotai';
+import { useAtom, useSetAtom, useAtomValue } from 'jotai';
 import UT from 'lib/usageTracking';
 import styled from '@emotion/styled';
 
@@ -12,9 +11,9 @@ import RequireLoggedIn from 'components/RequireLoggedIn';
 import Spinner from 'components/Spinner';
 import Icon from 'components/Icon';
 import {
-  loadTransactions,
+  transactionsFetchingEnabledAtom,
   pageAtom,
-  useFetchTransactions,
+  transactionsFetchingAtom,
 } from 'lib/transactions';
 import transactionIcon from 'icons/transaction.svg';
 import warningIcon from 'icons/warning.svg';
@@ -128,10 +127,19 @@ const ErrorMessage = styled.div(({ theme }) => ({
  * @extends {Component}
  */
 export default function Transactions() {
-  const { data: transactions, isPending, isError } = useFetchTransactions();
+  const {
+    data: transactions,
+    isPending,
+    isError,
+  } = useAtomValue(transactionsFetchingAtom);
   const [page, setPage] = useAtom(pageAtom);
+  const setEnabled = useSetAtom(transactionsFetchingEnabledAtom);
   useEffect(() => {
     UT.SendScreen('Transactions');
+    setEnabled(true);
+    return () => {
+      setEnabled(false);
+    };
   }, []);
 
   return (
