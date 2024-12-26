@@ -1,9 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 import EventEmitter from 'events';
-import { atom } from 'jotai';
 
-import store, { jotaiStore } from 'store';
+import store, { jotaiStore, subscribe } from 'store';
 import { coreInfoAtom, coreConnectedAtom, isCoreConnected } from './coreInfo';
 import { printCoreOutput, clearCoreOutput } from 'lib/ui';
 
@@ -287,8 +286,8 @@ export function stopCoreOuputWatch() {
 }
 
 export function prepareCoreOutput() {
-  jotaiStore.sub(coreConnectedAtom, () => {
-    if (isCoreConnected()) {
+  subscribe(coreConnectedAtom, (coreConnected) => {
+    if (coreConnected) {
       const state = store.getState();
       if (state.settings.manualDaemon) {
         return;

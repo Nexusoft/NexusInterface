@@ -1,7 +1,7 @@
 import { clipboard, shell } from 'electron';
 
 import * as TYPE from 'consts/actionTypes';
-import store, { jotaiStore, observeStore } from 'store';
+import store, { jotaiStore, subscribe, observeStore } from 'store';
 import { showNotification } from 'lib/ui';
 import {
   openConfirmDialog,
@@ -344,12 +344,12 @@ export function prepareWebView() {
     }
   );
 
-  jotaiStore.sub(coreInfoAtom, () => {
-    sendWalletDataUpdated({ coreInfo: jotaiStore.get(coreInfoAtom) });
+  subscribe(coreInfoAtom, (coreInfo) => {
+    sendWalletDataUpdated({ coreInfo });
   });
 
-  jotaiStore.sub(userStatusAtom, () => {
-    sendWalletDataUpdated({ userStatus: jotaiStore.get(userStatusAtom) });
+  subscribe(userStatusAtom, (userStatus) => {
+    sendWalletDataUpdated({ userStatus });
   });
 
   observeStore(

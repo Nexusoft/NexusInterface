@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { atom, useAtomValue } from 'jotai';
 import { atomWithQuery } from 'jotai-tanstack-query';
-import store, { jotaiStore } from 'store';
+import store, { jotaiStore, subscribe } from 'store';
 import { callAPI } from 'lib/api';
 import * as TYPE from 'consts/actionTypes';
 import { bootstrap } from 'lib/bootstrap';
@@ -10,8 +10,7 @@ import { bootstrap } from 'lib/bootstrap';
 export function useCoreInfoPolling() {
   const lastCoreInfoRef = useRef(null);
   useEffect(() => {
-    return jotaiStore.sub(coreInfoAtom, async () => {
-      const coreInfo = jotaiStore.get(coreInfoAtom);
+    return subscribe(coreInfoAtom, async (coreInfo) => {
       const coreConnected = !!coreInfo;
       const state = store.getState();
 

@@ -1,7 +1,7 @@
 import { atom } from 'jotai';
 import { atomWithQuery } from 'jotai-tanstack-query';
 import { callAPI } from 'lib/api';
-import { jotaiStore } from 'store';
+import { jotaiStore, subscribeWithPrevious } from 'store';
 import { userGenesisAtom, loggedInAtom, profileStatusAtom } from './session';
 import { showDesktopNotif } from 'utils/misc';
 import { formatNumber } from 'lib/intl';
@@ -264,50 +264,48 @@ export const getDeltaSign = (contract) => {
   }
 };
 
-const lastProfileStatusAtom = atom(null);
-
 export function prepareTransactions() {
-  jotaiStore.sub(profileStatusAtom, async () => {
-    const profileStatus = jotaiStore.get(profileStatusAtom);
-    const lastProfileStatus = jotaiStore.get(lastProfileStatusAtom);
-    const justLoggedIn = !lastProfileStatus?.genesis;
-    const justSwitched = profileStatus?.genesis !== lastProfileStatus?.genesis;
+  subscribeWithPrevious(
+    profileStatusAtom,
+    async (profileStatus, lastProfileStatus) => {
+      const justLoggedIn = !lastProfileStatus?.genesis;
+      const justSwitched =
+        profileStatus?.genesis !== lastProfileStatus?.genesis;
 
-    if (!justLoggedIn && !justSwitched) {
-      const txCount = profileStatus?.transactions;
-      const oldTxCount = lastProfileStatus?.transactions;
-      if (
-        typeof txCount === 'number' &&
-        typeof oldTxCount === 'number' &&
-        txCount > oldTxCount
-      ) {
-        const transactions = await callAPI('profiles/transactions/master', {
-          verbose: 'summary',
-          limit: txCount - oldTxCount,
-        });
+      if (!justLoggedIn && !justSwitched) {
+        const txCount = profileStatus?.transactions;
+        const oldTxCount = lastProfileStatus?.transactions;
+        if (
+          typeof txCount === 'number' &&
+          typeof oldTxCount === 'number' &&
+          txCount > oldTxCount
+        ) {
+          const transactions = await callAPI('profiles/transactions/master', {
+            verbose: 'summary',
+            limit: txCount - oldTxCount,
+          });
 
-        for (const tx of transactions) {
-          const changes = getBalanceChanges(tx);
-          if (changes.length) {
-            const changeLines = changes.map(
-              (change) =>
-                `${change.amount >= 0 ? '+' : ''}${formatNumber(
-                  change.amount,
-                  6
-                )} ${TokenName.from({ contract: change })}`
-            );
-            showDesktopNotif(__('New transaction'), changeLines.join(' \n'));
-            showNotification(
-              `${__('New transaction')}: ${changeLines.join(' | ')}`,
-              'success'
-            );
+          for (const tx of transactions) {
+            const changes = getBalanceChanges(tx);
+            if (changes.length) {
+              const changeLines = changes.map(
+                (change) =>
+                  `${change.amount >= 0 ? '+' : ''}${formatNumber(
+                    change.amount,
+                    6
+                  )} ${TokenName.from({ contract: change })}`
+              );
+              showDesktopNotif(__('New transaction'), changeLines.join(' \n'));
+              showNotification(
+                `${__('New transaction')}: ${changeLines.join(' | ')}`,
+                'success'
+              );
+            }
           }
         }
       }
     }
-
-    jotaiStore.set(lastProfileStatusAtom, profileStatus);
-  });
+  );
 }
 
 /**

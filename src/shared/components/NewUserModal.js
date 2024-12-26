@@ -19,7 +19,7 @@ import {
   showBackgroundTask,
   isModalOpen,
 } from 'lib/ui';
-import store, { jotaiStore } from 'store';
+import { jotaiStore } from 'store';
 import { loggedInAtom } from 'lib/session';
 import { confirmPasswordPin } from 'lib/dialog';
 import UT from 'lib/usageTracking';

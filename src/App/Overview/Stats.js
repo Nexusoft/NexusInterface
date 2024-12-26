@@ -7,7 +7,7 @@ import { keyframes } from '@emotion/react';
 // Internal
 import { refreshBalances } from 'lib/user';
 import { timing, consts } from 'styles';
-import { jotaiStore } from 'store';
+import { subscribe } from 'store';
 import { loggedInAtom } from 'lib/session';
 
 import {
@@ -95,8 +95,8 @@ const StatsColumn = styled.div(
 function useGetBalances() {
   useEffect(() => {
     refreshBalances();
-    return jotaiStore.sub(loggedInAtom, () => {
-      if (jotaiStore.get(loggedInAtom)) {
+    return subscribe(loggedInAtom, (loggedIn) => {
+      if (loggedIn) {
         refreshBalances();
       }
     });

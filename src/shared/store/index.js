@@ -9,4 +9,10 @@ export const observeStore = createObserver(store);
 
 export default store;
 
-export { jotaiStore, queryClient, Providers } from './jotai';
+export {
+  jotaiStore,
+  subscribe,
+  subscribeWithPrevious,
+  queryClient,
+  Providers,
+} from './jotai';

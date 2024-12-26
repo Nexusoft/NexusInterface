@@ -6,7 +6,7 @@ import QuestionCircle from 'components/QuestionCircle';
 import TokenName from 'components/TokenName';
 import { refreshBalances } from 'lib/user';
 import { selectBalances } from 'selectors';
-import { jotaiStore } from 'store';
+import { subscribe } from 'store';
 import { formatNumber } from 'lib/intl';
 import { loggedInAtom } from 'lib/session';
 
@@ -63,8 +63,8 @@ export default function Balances() {
   const [nxsBalances, tokenBalances] = useSelector(selectBalances);
   useEffect(() => {
     refreshBalances();
-    return jotaiStore.sub(loggedInAtom, () => {
-      if (jotaiStore.get(loggedInAtom)) {
+    return subscribe(loggedInAtom, (loggedIn) => {
+      if (loggedIn) {
         refreshBalances();
       }
     });

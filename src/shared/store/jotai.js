@@ -17,6 +17,22 @@ const isDev = process.env.NODE_ENV === 'development';
 
 export const jotaiStore = createStore();
 
+export function subscribe(atom, listener) {
+  return jotaiStore.sub(atom, () => {
+    const value = jotaiStore.get(atom);
+    listener?.(value);
+  });
+}
+
+export function subscribeWithPrevious(atom, listener) {
+  let previousValue = jotaiStore.get(atom);
+  return jotaiStore.sub(atom, () => {
+    const value = jotaiStore.get(atom);
+    listener?.(value, previousValue);
+    previousValue = value;
+  });
+}
+
 export const queryClient = new QueryClient();
 
 function JotaiDevTools() {

@@ -3,7 +3,7 @@ import { atom } from 'jotai';
 import { atomWithQuery } from 'jotai-tanstack-query';
 import ExternalLink from 'components/ExternalLink';
 import BackgroundTask from 'components/BackgroundTask';
-import store, { jotaiStore, queryClient } from 'store';
+import store, { jotaiStore, subscribe, queryClient } from 'store';
 import { callAPI as callAPI } from 'lib/api';
 import { coreConnectedAtom, multiUserAtom, liteModeAtom } from './coreInfo';
 import {
@@ -272,8 +272,7 @@ function UserUnLockIndexingBackgroundTask({
   const closeTaskRef = useRef();
   useEffect(
     () =>
-      jotaiStore.sub(userIndexingAtom, async () => {
-        const indexing = jotaiStore.get(userIndexingAtom);
+      subscribe(userIndexingAtom, async (indexing) => {
         if (!indexing) {
           try {
             await callAPI('sessions/unlock/local', {
@@ -463,8 +462,7 @@ export const usernameAtom = atom((get) => {
 });
 
 export function prepareSessionInfo() {
-  jotaiStore.sub(coreConnectedAtom, async () => {
-    const coreConnected = jotaiStore.get(coreConnectedAtom);
+  subscribe(coreConnectedAtom, async (coreConnected) => {
     if (coreConnected) {
       const userStatus = await queryClient.ensureQueryData({
         queryKey: ['userStatus', jotaiStore.get(activeSessionIdAtom)],
