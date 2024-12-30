@@ -94,66 +94,6 @@ export function removeBackgroundTask(taskId) {
 }
 
 /**
- * Transactions
- * ===========================
- */
-export const setTxsAccountFilter = (account) => {
-  store.dispatch({
-    type: TYPE.SET_TXS_ACCOUNT_FILTER,
-    payload: account,
-  });
-};
-
-export const setTxsAddressQuery = (query) => {
-  store.dispatch({
-    type: TYPE.SET_TXS_ADDRESS_QUERY,
-    payload: query,
-  });
-};
-
-export const setTxsCategoryFilter = (category) => {
-  store.dispatch({
-    type: TYPE.SET_TXS_CATEGORY_FILTER,
-    payload: category,
-  });
-};
-
-export const setTxsMinAmountFilter = (minAmount) => {
-  store.dispatch({
-    type: TYPE.SET_TXS_MIN_AMOUNT_FILTER,
-    payload: minAmount,
-  });
-};
-
-export const setTxsTimeFilter = (timeSpan) => {
-  store.dispatch({
-    type: TYPE.SET_TXS_TIME_FILTER,
-    payload: timeSpan,
-  });
-};
-
-export const setTxsNameQuery = (accountName) => {
-  store.dispatch({
-    type: TYPE.SET_TXS_NAME_QUERY,
-    payload: accountName,
-  });
-};
-
-export const setTxsOperationFilter = (operation) => {
-  store.dispatch({
-    type: TYPE.SET_TXS_OP_FILTER,
-    payload: operation,
-  });
-};
-
-export const goToTxsPage = (page) => {
-  store.dispatch({
-    type: TYPE.SET_TXS_PAGE,
-    payload: page < 1 ? 1 : page,
-  });
-};
-
-/**
  * Settings
  * ===========================
  */

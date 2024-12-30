@@ -20,74 +20,6 @@ import UT from './usageTracking';
 
 __ = __context('User');
 
-// export const refreshStakeInfo = async () => {
-//   try {
-//     const stakeInfo = await callAPI('finance/get/stakeinfo');
-//     store.dispatch({ type: TYPE.SET_STAKE_INFO, payload: stakeInfo });
-//     return stakeInfo;
-//   } catch (err) {
-//     store.dispatch({ type: TYPE.CLEAR_STAKE_INFO });
-//     console.error('finance/get/stakeinfo failed', err);
-//   }
-// };
-
-// // Don't refresh user status while login process is not yet done
-// let refreshUserStatusLock = false;
-// export async function refreshUserStatus() {
-//   if (refreshUserStatusLock) return;
-
-//   // If in multiuser mode, fetch the list of logged in sessions first
-//   const {
-//     core: { systemInfo },
-//   } = store.getState();
-//   if (systemInfo?.multiuser) {
-//     try {
-//       const sessions = await callAPI('sessions/list/local');
-//       store.dispatch({
-//         type: TYPE.SET_SESSIONS,
-//         payload: sessions,
-//       });
-//     } catch (err) {
-//       store.dispatch({ type: TYPE.CLEAR_SESSIONS });
-//     }
-//   }
-
-//   // Get the active user status
-//   try {
-//     const session = selectActiveSession(store.getState());
-//     if (systemInfo?.multiuser && !session) {
-//       store.dispatch({ type: TYPE.CLEAR_USER });
-//       return;
-//     }
-
-//     const status = await callAPI(
-//       'sessions/status/local',
-//       session ? { session } : undefined
-//     );
-
-//     if (store.getState().user.profileStatus?.genesis !== status.genesis) {
-//       const profileStatus = await callAPI('profiles/status/master', {
-//         genesis: status.genesis,
-//         session,
-//       });
-//       store.dispatch({
-//         type: TYPE.SET_PROFILE_STATUS,
-//         payload: profileStatus,
-//       });
-//     }
-//     store.dispatch({ type: TYPE.SET_USER_STATUS, payload: status });
-
-//     refreshStakeInfo();
-//     return status;
-//   } catch (err) {
-//     store.dispatch({ type: TYPE.CLEAR_USER });
-//     // Don't log error if it's 'Session not found' (user not logged in)
-//     if (err?.code !== -11) {
-//       console.error('Failed to get user status', err);
-//     }
-//   }
-// }
-
 export const logIn = async ({ username, password, pin }) => {
   const { session: sessionId } = await callAPI('sessions/create/local', {
     username,
@@ -118,193 +50,8 @@ export const logOut = async () => {
   UT.LogOut();
 };
 
-// export async function setActiveUser({ sessionId, genesis, stakeInfo }) {
-//   const {
-//     core: { systemInfo },
-//   } = store.getState();
-
-//   const [status, profileStatus, sessions, newStakeInfo] = await Promise.all([
-//     callAPI('sessions/status/local', { session: sessionId }),
-//     callAPI('profiles/status/master', { session: sessionId, genesis }),
-//     systemInfo?.multiuser
-//       ? callAPI('sessions/list/local')
-//       : Promise.resolve(null),
-//     stakeInfo
-//       ? Promise.resolve(null)
-//       : callAPI('finance/get/stakeinfo', { session: sessionId }).catch((err) => {
-//           if (err.code !== -70) {
-//             // Only ignore 'Trust account not found' error
-//             throw err;
-//           }
-//         }),
-//   ]);
-
-//   const result = {
-//     sessionId,
-//     sessions,
-//     status,
-//     stakeInfo: stakeInfo || newStakeInfo || null,
-//     profileStatus,
-//   };
-//   store.dispatch({
-//     type: TYPE.ACTIVE_USER,
-//     payload: result,
-//   });
-//   return result;
-// }
-
-async function shouldUnlockStaking() {
-  const {
-    settings: { enableStaking, dontAskToStartStaking },
-  } = store.getState();
-  if (
-    jotaiStore.get(liteModeAtom) ||
-    jotaiStore.get(multiUserAtom) ||
-    !enableStaking
-  ) {
-    return false;
-  }
-
-  const stakeInfo = await queryClient.ensureQueryData({
-    queryKey: ['stakeInfo', jotaiStore.get(userGenesisAtom)],
-  });
-  if (!stakeInfo?.new) {
-    return true;
-  }
-
-  const startStakingAsked = jotaiStore.get(startStakingAskedAtom);
-  if (
-    stakeInfo?.new &&
-    stakeInfo?.balance &&
-    !startStakingAsked &&
-    !dontAskToStartStaking
-  ) {
-    let checkboxRef = createRef();
-    const accepted = await confirm({
-      question: __('Start staking?'),
-      note: (
-        <div style={{ textAlign: 'left' }}>
-          <p>
-            {__(
-              'You have %{amount} NXS in your trust account and can start staking now.',
-              {
-                amount: stakeInfo.balance,
-              }
-            )}
-          </p>
-          <p>
-            {__(
-              'However, keep in mind that if you start staking, your stake amount will be locked, and the smaller the amount is, the longer it would likely take to unlock it.'
-            )}
-          </p>
-          <p>
-            {__(
-              'To learn more about staking, visit <link>crypto.nexus.io/stake</link>.',
-              null,
-              {
-                link: () => (
-                  <ExternalLink href="https://crypto.nexus.io/staking-guide">
-                    crypto.nexus.io/staking-guide
-                  </ExternalLink>
-                ),
-              }
-            )}
-          </p>
-          <div className="mt3">
-            <label>
-              <input type="checkbox" ref={checkboxRef} />{' '}
-              {__("Don't show this again")}
-            </label>
-          </div>
-        </div>
-      ),
-      labelYes: __('Start staking'),
-      labelNo: __("Don't stake"),
-    });
-    jotaiStore.set(startStakingAsked, true);
-    if (checkboxRef.current?.checked) {
-      updateSettings({ dontAskToStartStaking: true });
-    }
-    if (accepted) {
-      return true;
-    }
-  }
-
-  return false;
-}
-
-async function unlockUser({ pin, sessionId }) {
-  const unlockStaking = await shouldUnlockStaking();
-  const {
-    settings: { enableMining },
-  } = store.getState();
-  try {
-    await callAPI('sessions/unlock/local', {
-      pin,
-      notifications: true,
-      staking: unlockStaking,
-      mining: !!enableMining,
-      // passing session through because it's not saved in the store yet
-      // so it wouldn't be automatically passed in all API calls
-      session: sessionId || undefined,
-    });
-  } catch (error) {
-    const indexing = jotaiStore.get(userIndexingAtom);
-    if (indexing) {
-      showBackgroundTask(UserUnLockIndexingBackgroundTask, {
-        pin,
-        notifications: true,
-        staking: unlockStaking,
-        mining: !!enableMining,
-        sessionId,
-      });
-    } else throw error;
-  }
-}
-
-function UserUnLockIndexingBackgroundTask({
-  pin,
-  notifications,
-  staking,
-  mining,
-  sessionId,
-}) {
-  const closeTaskRef = useRef();
-  useEffect(
-    () =>
-      subscribe(userIndexingAtom, async (indexing) => {
-        if (!indexing) {
-          try {
-            await callAPI('sessions/unlock/local', {
-              pin,
-              notifications,
-              staking,
-              mining,
-              session: sessionId || undefined,
-            });
-            showNotification(__('User Unlocked'), 'success');
-          } catch (error) {
-            showNotification(__('User Failed to Unlock'), 'error');
-          }
-          closeTaskRef.current?.();
-        }
-      }),
-    []
-  );
-
-  return (
-    <BackgroundTask
-      assignClose={(close) => (closeTaskRef.current = close)}
-      onClick={null}
-      style={{ cursor: 'default' }}
-    >
-      {__('Indexing User...')}
-    </BackgroundTask>
-  );
-}
-
 /**
- * New
+ * Sessions
  * =============================================================================
  */
 
@@ -527,3 +274,153 @@ export function refetchStakeInfo() {
 
 const startStakingAskedAtom = atom(false);
 export const stakingAtom = atom((get) => !!get(stakeInfoAtom)?.staking);
+
+async function shouldUnlockStaking() {
+  const {
+    settings: { enableStaking, dontAskToStartStaking },
+  } = store.getState();
+  if (
+    jotaiStore.get(liteModeAtom) ||
+    jotaiStore.get(multiUserAtom) ||
+    !enableStaking
+  ) {
+    return false;
+  }
+
+  const stakeInfo = await queryClient.ensureQueryData({
+    queryKey: ['stakeInfo', jotaiStore.get(userGenesisAtom)],
+  });
+  if (!stakeInfo?.new) {
+    return true;
+  }
+
+  const startStakingAsked = jotaiStore.get(startStakingAskedAtom);
+  if (
+    stakeInfo?.new &&
+    stakeInfo?.balance &&
+    !startStakingAsked &&
+    !dontAskToStartStaking
+  ) {
+    let checkboxRef = createRef();
+    const accepted = await confirm({
+      question: __('Start staking?'),
+      note: (
+        <div style={{ textAlign: 'left' }}>
+          <p>
+            {__(
+              'You have %{amount} NXS in your trust account and can start staking now.',
+              {
+                amount: stakeInfo.balance,
+              }
+            )}
+          </p>
+          <p>
+            {__(
+              'However, keep in mind that if you start staking, your stake amount will be locked, and the smaller the amount is, the longer it would likely take to unlock it.'
+            )}
+          </p>
+          <p>
+            {__(
+              'To learn more about staking, visit <link>crypto.nexus.io/stake</link>.',
+              null,
+              {
+                link: () => (
+                  <ExternalLink href="https://crypto.nexus.io/staking-guide">
+                    crypto.nexus.io/staking-guide
+                  </ExternalLink>
+                ),
+              }
+            )}
+          </p>
+          <div className="mt3">
+            <label>
+              <input type="checkbox" ref={checkboxRef} />{' '}
+              {__("Don't show this again")}
+            </label>
+          </div>
+        </div>
+      ),
+      labelYes: __('Start staking'),
+      labelNo: __("Don't stake"),
+    });
+    jotaiStore.set(startStakingAsked, true);
+    if (checkboxRef.current?.checked) {
+      updateSettings({ dontAskToStartStaking: true });
+    }
+    if (accepted) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+async function unlockUser({ pin, sessionId }) {
+  const unlockStaking = await shouldUnlockStaking();
+  const {
+    settings: { enableMining },
+  } = store.getState();
+  try {
+    await callAPI('sessions/unlock/local', {
+      pin,
+      notifications: true,
+      staking: unlockStaking,
+      mining: !!enableMining,
+      // passing session through because it's not saved in the store yet
+      // so it wouldn't be automatically passed in all API calls
+      session: sessionId || undefined,
+    });
+  } catch (error) {
+    const indexing = jotaiStore.get(userIndexingAtom);
+    if (indexing) {
+      showBackgroundTask(UserUnLockIndexingBackgroundTask, {
+        pin,
+        notifications: true,
+        staking: unlockStaking,
+        mining: !!enableMining,
+        sessionId,
+      });
+    } else throw error;
+  }
+}
+
+function UserUnLockIndexingBackgroundTask({
+  pin,
+  notifications,
+  staking,
+  mining,
+  sessionId,
+}) {
+  const closeTaskRef = useRef();
+  useEffect(
+    () =>
+      subscribe(userIndexingAtom, async (indexing) => {
+        if (!indexing) {
+          try {
+            await callAPI('sessions/unlock/local', {
+              pin,
+              notifications,
+              staking,
+              mining,
+              session: sessionId || undefined,
+            });
+            showNotification(__('User Unlocked'), 'success');
+          } catch (error) {
+            showNotification(__('User Failed to Unlock'), 'error');
+          }
+          closeTaskRef.current?.();
+        }
+      }),
+    []
+  );
+
+  return (
+    <BackgroundTask
+      assignClose={(close) => (closeTaskRef.current = close)}
+      onClick={null}
+      style={{ cursor: 'default' }}
+    >
+      {__('Indexing User...')}
+    </BackgroundTask>
+  );
+}
