@@ -4,7 +4,9 @@ import {
   Provider as JotaiProvider,
   useAtomValue,
   useAtom,
+  atom,
 } from 'jotai';
+import { atomWithQuery } from 'jotai-tanstack-query';
 import { DevTools } from 'jotai-devtools';
 import { useHydrateAtoms } from 'jotai/react/utils';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -75,4 +77,71 @@ export function Providers({ children }) {
       </JotaiProvider>
     </QueryClientProvider>
   );
+}
+
+export function jotaiQuery({
+  condition,
+  getQueryConfig,
+  selectValue,
+  refetchTriggers,
+}) {
+  const symbols = new Set();
+  const turnedOnAtom = atom(false);
+  const queryAtom = atomWithQuery((get) => {
+    const enabled = get(turnedOnAtom) && condition(get);
+    return {
+      enabled,
+      ...getQueryConfig(get),
+    };
+  });
+  const valueAtom = atom((get) => {
+    const enabled = get(turnedOnAtom) && condition(get);
+    const query = get(queryAtom);
+    if (!enabled || !query || query.isError) {
+      return null;
+    } else {
+      return query.data;
+    }
+  });
+  const refetch = () => {
+    jotaiStore.get(queryAtom)?.refetch?.();
+  };
+
+  return {
+    use: () => {
+      useEffect(() => {
+        const unsubs = [];
+        if (symbols.size === 0) {
+          jotaiStore.set(turnedOnAtom, true);
+          if (refetchTriggers?.length) {
+            refetchTriggers.forEach((triggerAtom) => {
+              unsubs.push(jotaiStore.sub(triggerAtom, refetch));
+            });
+          }
+        }
+        const symbol = Symbol();
+        symbols.add(symbol);
+        return () => {
+          symbols.delete(symbol);
+          if (symbols.size === 0) {
+            jotaiStore.set(turnedOnAtom, false);
+            if (unsubs.length) {
+              unsubs.forEach((unsub) => {
+                unsub();
+              });
+            }
+          }
+        };
+      }, []);
+      const value = useAtomValue(valueAtom);
+      if (selectValue) {
+        return selectValue(value);
+      } else {
+        return value;
+      }
+    },
+    queryAtom,
+    valueAtom,
+    refetch,
+  };
 }

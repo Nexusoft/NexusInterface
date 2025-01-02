@@ -15,4 +15,5 @@ export {
   subscribeWithPrevious,
   queryClient,
   Providers,
+  jotaiQuery,
 } from './jotai';
