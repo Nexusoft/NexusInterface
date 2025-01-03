@@ -10,7 +10,7 @@ import Form from 'components/Form';
 import { callAPI } from 'lib/api';
 import { refetchCoreInfo } from 'lib/coreInfo';
 import { openSuccessDialog } from 'lib/dialog';
-import { refreshAccounts } from 'lib/user';
+import { accountsQuery } from 'lib/user';
 import { refetchTransactions } from 'lib/transactions';
 import { formSubmit, required } from 'lib/form';
 import { timeToText } from 'utils/misc';
@@ -224,7 +224,7 @@ export default function PreviewTransactionModal({
                 onSuccess: () => {
                   UT.Send(source?.token ? 'token' : 'nexus');
                   resetSendForm();
-                  refreshAccounts();
+                  accountsQuery.refetch();
                   refetchCoreInfo();
                   refetchTransactions();
                   closeModal();

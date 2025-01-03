@@ -1,12 +1,13 @@
 // External
 import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useAtomValue } from 'jotai';
 
 // Internal Global
 import UT from 'lib/usageTracking';
 import Button from 'components/Button';
 import { openModal } from 'lib/ui';
-import { refreshOwnedTokens, refreshAccounts } from 'lib/user';
+import { tokensQuery, accountsQuery } from 'lib/user';
+import { activeSessionIdAtom } from 'lib/session';
 import Icon from 'components/Icon';
 import memoize from 'utils/memoize';
 
@@ -22,11 +23,11 @@ import TabContentWrapper from '../TabContentWrapper';
 
 __ = __context('User.Tokens');
 
-const selectAccountTokens = memoize((accounts, ownedTokens) =>
+const getAccountTokens = memoize((accounts, ownedTokens) =>
   accounts?.reduce((tokens, account) => {
     if (
       account.token !== '0' &&
-      !ownedTokens.some((token) => token.address === account.token) &&
+      !ownedTokens?.some((token) => token.address === account.token) &&
       !tokens?.some((token) => token.address === account.token)
     ) {
       tokens.push({
@@ -39,16 +40,14 @@ const selectAccountTokens = memoize((accounts, ownedTokens) =>
 );
 
 export default function Tokens() {
-  const session = useSelector((state) => state.user.session);
-  const ownedTokens = useSelector((state) => state.user.tokens);
-  const accountTokens = useSelector((state) =>
-    selectAccountTokens(state.user.accounts, ownedTokens)
-  );
+  const sessionId = useAtomValue(activeSessionIdAtom);
+  const accounts = accountsQuery.use();
+  const ownedTokens = tokensQuery.use();
+  const accountTokens = getAccountTokens(accounts, ownedTokens);
+
   useEffect(() => {
     UT.SendScreen('Tokens');
-    refreshOwnedTokens();
-    refreshAccounts();
-  }, [session]);
+  }, [sessionId]);
 
   return (
     <TabContentWrapper>

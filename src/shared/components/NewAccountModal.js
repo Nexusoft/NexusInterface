@@ -6,7 +6,7 @@ import FormField from 'components/FormField';
 import Form from 'components/Form';
 import { confirm, confirmPin } from 'lib/dialog';
 import { callAPI } from 'lib/api';
-import { refreshAccounts } from 'lib/user';
+import { accountsQuery, tokensQuery } from 'lib/user';
 import { showNotification } from 'lib/ui';
 import { createLocalNameFee } from 'lib/fees';
 import { formSubmit, required } from 'lib/form';
@@ -51,11 +51,9 @@ async function createToken({ name, token }) {
 }
 
 export default function NewAccountModal({ tokenName, tokenAddress }) {
-  const suggestions = useSelector((state) =>
-    tokenName || tokenAddress ? [] : getSuggestions(state.user.tokens)
-  );
-
+  const tokens = tokensQuery.use();
   const tokenPreset = !!(tokenName || tokenAddress);
+  const suggestions = tokenPreset ? [] : getSuggestions(tokens);
   const SelectToken = tokenPreset ? Form.TextField : Form.AutoSuggest;
 
   return (
@@ -75,7 +73,7 @@ export default function NewAccountModal({ tokenName, tokenAddress }) {
                 onSuccess: (result, values) => {
                   if (!result) return; // Submission was cancelled
                   UT.CreateNewItem('account');
-                  refreshAccounts();
+                  accountsQuery.refetch();
                   closeModal();
                   showNotification(
                     __('New account %{account} has been created', {

@@ -9,7 +9,7 @@ import TokenName from 'components/TokenName';
 import QuestionCircle from 'components/QuestionCircle';
 import { formatNumber, formatCurrency } from 'lib/intl';
 import { marketDataAtom } from 'lib/market';
-import { selectBalances } from 'selectors';
+import { balancesQuery } from 'lib/user';
 import { useSynchronized } from 'lib/coreInfo';
 
 // Images
@@ -63,7 +63,7 @@ function BalanceValue({ children }) {
 }
 
 export function NXSBalanceStat() {
-  const [nxsBalances, tokenBalances] = useSelector(selectBalances);
+  const [nxsBalances, tokenBalances] = balancesQuery.use();
   const synchronized = useSynchronized();
   const hideOverviewBalances = useSelector(
     (state) => state.settings.hideOverviewBalances
@@ -110,7 +110,7 @@ export function NXSBalanceStat() {
 }
 
 export function NXSFiatBalanceStat() {
-  const [nxsBalances] = useSelector(selectBalances);
+  const [nxsBalances] = balancesQuery.use();
   const marketData = useAtomValue(marketDataAtom);
   const { price, currency } = marketData || {};
 
@@ -138,7 +138,7 @@ export function NXSFiatBalanceStat() {
 
 export function FeaturedTokenBalanceStat() {
   const theme = useSelector((state) => state.theme);
-  const [nxsBalances, tokenBalances] = useSelector(selectBalances);
+  const [nxsBalances, tokenBalances] = balancesQuery.use();
   const featuredToken = theme.featuredTokenName
     ? tokenBalances?.find((token) => token.ticker === theme.featuredTokenName)
     : undefined;
@@ -161,7 +161,7 @@ export function FeaturedTokenBalanceStat() {
 }
 
 export function IncomingBalanceStat() {
-  const [nxsBalances] = useSelector(selectBalances);
+  const [nxsBalances] = balancesQuery.use();
   const incoming =
     nxsBalances?.unclaimed + nxsBalances?.unconfirmed + nxsBalances?.immature;
 

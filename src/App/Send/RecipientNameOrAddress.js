@@ -13,14 +13,18 @@ import AddEditContactModal from 'components/AddEditContactModal';
 import { openModal } from 'lib/ui';
 import { required, checkAll } from 'lib/form';
 import { callAPI } from 'lib/api';
-import { selectSource } from 'lib/send';
+import { useSource } from 'lib/send';
+import { accountsQuery } from 'lib/user';
 import memoize from 'utils/memoize';
 import { debounced } from 'utils/universal';
 import { addressRegex } from 'consts/misc';
 import plusIcon from 'icons/plus.svg';
 import warningIcon from 'icons/warning.svg';
+import TokenName from 'components/TokenName';
+import NexusAddress from 'components/NexusAddress';
+import walletIcon from 'icons/wallet.svg';
+import contactIcon from 'icons/address-book.svg';
 
-import { getRecipientSuggestions } from './selectors';
 import RecipientAddress from './RecipientAddress';
 
 __ = __context('Send');
@@ -33,6 +37,10 @@ const EmptyMessage = styled.div(({ theme }) => ({
   justifyContent: 'space-between',
   alignItems: 'center',
 }));
+
+const TokenRecipientName = styled.span({
+  color: 'gray',
+});
 
 const filterSuggestions = memoize((suggestions, inputValue) => {
   if (!suggestions) return [];
@@ -153,6 +161,78 @@ function RecipientAddressAdapter({
   );
 }
 
+export const getRecipientSuggestions = memoize(
+  (addressBook, myAccounts, accountAddress) => {
+    const suggestions = [];
+    if (addressBook) {
+      Object.values(addressBook).forEach((contact) => {
+        contact.addresses?.forEach(({ address, label, isMine }) => {
+          if (!isMine) {
+            suggestions.push({
+              name: contact.name,
+              address: address,
+              value: address,
+              display: (
+                <div>
+                  <div>
+                    <Icon icon={contactIcon} className="mr0_4" />
+                    <span className="v-align">
+                      {contact.name}
+                      {label ? ' - ' + label : ''}
+                    </span>
+                  </div>
+                  <NexusAddress
+                    className="semi-dim"
+                    copyable={false}
+                    type="truncateMiddle"
+                    address={address}
+                  />
+                </div>
+              ),
+            });
+          }
+        });
+      });
+    }
+    if (myAccounts) {
+      myAccounts.forEach((account) => {
+        if (accountAddress && account.address === accountAddress) return;
+        // if (tokenAddress && account.token !== tokenAddress) return;
+
+        suggestions.push({
+          name: account.name,
+          address: account.address,
+          value: account.name || account.address,
+          display: (
+            <div>
+              <div>
+                <Icon icon={walletIcon} className="mr0_4" />
+                <span className="v-align">
+                  {account.name ? (
+                    <span>{account.name}</span>
+                  ) : (
+                    <em className="semi-dim">{__('Unnamed account')}</em>
+                  )}{' '}
+                  <TokenRecipientName>
+                    (<TokenName account={account} />)
+                  </TokenRecipientName>
+                </span>
+              </div>
+              <NexusAddress
+                className="semi-dim"
+                copyable={false}
+                type="truncateMiddle"
+                address={account.address}
+              />
+            </div>
+          ),
+        });
+      });
+    }
+    return suggestions;
+  }
+);
+
 export default function RecipientNameOrAddress({ parentFieldName }) {
   const fieldName = `${parentFieldName}.nameOrAddress`;
   const {
@@ -164,9 +244,13 @@ export default function RecipientNameOrAddress({ parentFieldName }) {
   // A flag indicating whether user has just selected the suggestion
   // Useful to decide if name resolution should be debounced
   const justSelectedRef = useRef(false);
-  const source = selectSource();
-  const suggestions = useSelector((state) =>
-    getRecipientSuggestions(state, source)
+  const addressBook = useSelector((state) => state.addressBook);
+  const accounts = accountsQuery.use();
+  const source = useSource();
+  const suggestions = getRecipientSuggestions(
+    addressBook,
+    accounts,
+    source?.account?.address
   );
 
   return (

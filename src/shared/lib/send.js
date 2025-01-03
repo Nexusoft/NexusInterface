@@ -1,10 +1,10 @@
 import { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import qs from 'querystring';
-import { useSelector } from 'react-redux';
 
 import { navigate } from 'lib/wallet';
 import { useFieldValue, getFormInstance } from 'lib/form';
+import { accountsQuery, tokensQuery } from './user';
 import { timeToObject } from 'utils/misc';
 import store from 'store';
 import memoize from 'utils/memoize';
@@ -41,11 +41,7 @@ function getDefaultExpiry() {
   return expiry;
 }
 
-function getDefaultSendFrom() {
-  const state = store.getState();
-  const {
-    user: { accounts },
-  } = state;
+function getDefaultSendFrom(accounts) {
   if (!accounts?.[0]) return null;
   const defaultAccount = accounts.find((acc) => acc.name === 'default');
   if (defaultAccount) {
@@ -58,10 +54,10 @@ function getDefaultSendFrom() {
   return null;
 }
 
-function getFormValues(customValues) {
+function getFormValues({ customValues, accounts } = {}) {
   const defaultRecipient = getDefaultRecipient();
   return {
-    sendFrom: customValues?.sendFrom || getDefaultSendFrom(),
+    sendFrom: customValues?.sendFrom || getDefaultSendFrom(accounts),
     // not accepting fiatAmount
     recipients: customValues?.recipients?.map(
       ({ nameOrAddress, amount, reference }) => ({
@@ -88,13 +84,14 @@ export function useInitialValues() {
   // React-router's search field has a leading ? mark but
   // qs.parse will consider it invalid, so remove it
   const queryParams = qs.parse(location.search.substring(1));
+  const accounts = accountsQuery.use();
 
   const stateJson = queryParams?.state;
   let customValues = null;
   try {
     customValues = stateJson && JSON.parse(stateJson);
   } catch (err) {}
-  const initialValues = getFormValues(customValues);
+  const initialValues = getFormValues({ customValues, accounts });
 
   const { sendFrom } = initialValues;
   const lastSendFromRef = useRef(sendFrom);
@@ -118,58 +115,27 @@ export function useInitialValues() {
   return initialValues;
 }
 
-export const selectAddressNameMap = memoize(
-  (addressBook, myAccounts) => {
-    const map = {};
-    if (addressBook) {
-      Object.values(addressBook).forEach((contact) => {
-        if (contact.addresses) {
-          contact.addresses.forEach(({ address, label }) => {
-            map[address] = {
-              type: 'contact',
-              label: contact.name + (label ? ' - ' + label : ''),
-            };
-          });
-        }
-      });
-    }
-    if (myAccounts) {
-      myAccounts.forEach((account) => {
-        if (account.name) {
-          map[account.address] = {
-            type: 'account',
-            label: account.name,
-          };
-        }
-      });
-    }
-    return map;
-  },
-  (state) => [state.addressBook, state.user.accounts]
-);
+export const getSource = memoize((sendFrom, accounts, userTokens) => {
+  const matches = /^(account|token):(.+)/.exec(sendFrom);
+  const [_, type, address] = matches || [];
 
-export const getSource = memoize(
-  (sendFrom, myAccounts, myTokens) => {
-    const matches = /^(account|token):(.+)/.exec(sendFrom);
-    const [_, type, address] = matches || [];
+  if (type === 'account') {
+    const account = accounts?.find((acc) => acc.address === address);
+    if (account) return { account };
+  }
 
-    if (type === 'account') {
-      const account = myAccounts?.find((acc) => acc.address === address);
-      if (account) return { account };
-    }
+  if (type === 'token') {
+    const token = userTokens?.find((tkn) => tkn.address === address);
+    if (token) return { token };
+  }
 
-    if (type === 'token') {
-      const token = myTokens?.find((tkn) => tkn.address === address);
-      if (token) return { token };
-    }
+  return null;
+});
 
-    return null;
-  },
-  (state, sendFrom) => [sendFrom, state.user.accounts, state.user.tokens]
-);
-
-export const selectSource = () => {
+export const useSource = () => {
   const sendFrom = useFieldValue('sendFrom');
-  const source = useSelector((state) => getSource(state, sendFrom));
+  const accounts = accountsQuery.use();
+  const userTokens = tokensQuery.use();
+  const source = getSource(sendFrom, accounts, userTokens);
   return source;
 };

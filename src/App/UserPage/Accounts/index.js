@@ -1,10 +1,11 @@
 import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useAtomValue } from 'jotai';
 
 import Icon from 'components/Icon';
 import Button from 'components/Button';
 import { switchUserTab, openModal } from 'lib/ui';
-import { refreshAccounts, refreshOwnedTokens } from 'lib/user';
+import { activeSessionIdAtom } from 'lib/session';
+import { accountsQuery } from 'lib/user';
 import plusIcon from 'icons/plus.svg';
 
 import Account from './Account';
@@ -14,14 +15,12 @@ import TabContentWrapper from '../TabContentWrapper';
 __ = __context('User.Accounts');
 
 export default function Accounts() {
-  const session = useSelector((state) => state.user.session);
-  const accounts = useSelector((state) => state.user.accounts);
+  const sessionId = useAtomValue(activeSessionIdAtom);
+  const accounts = accountsQuery.use();
 
   useEffect(() => {
     switchUserTab('Accounts');
-    refreshAccounts();
-    refreshOwnedTokens();
-  }, [session]);
+  }, [sessionId]);
 
   return (
     !!accounts && (

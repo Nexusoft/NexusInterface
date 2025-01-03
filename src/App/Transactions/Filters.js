@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import styled from '@emotion/styled';
 import { useAtom } from 'jotai';
 
@@ -13,7 +13,7 @@ import {
   timeSpanAtom,
   operationAtom,
 } from 'lib/transactions';
-import { refreshOwnedTokens, refreshAccounts } from 'lib/user';
+// import { tokensQuery, accountsQuery } from 'lib/user';
 import { openModal } from 'lib/ui';
 import { debounced } from 'utils/universal';
 import ListIcon from 'icons/list.svg';
@@ -87,10 +87,8 @@ export default function Filters({ morePadding }) {
   const [operation, setOperation] = useAtom(operationAtom);
   const [timeSpan, setTimeSpan] = useAtom(timeSpanAtom);
   const [addressInput, setAddressInput] = useState(addressQuery);
-  useEffect(() => {
-    refreshOwnedTokens();
-    refreshAccounts();
-  }, []);
+  // tokensQuery.use();
+  // accountsQuery.use();
 
   const debouncedSetAddressQuery = debounced(
     (address) => setAddressQuery(address),

@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 
@@ -8,7 +7,7 @@ import FormField from 'components/FormField';
 import Spinner from 'components/Spinner';
 import { formSubmit, required } from 'lib/form';
 import { confirmPin, openSuccessDialog } from 'lib/dialog';
-import { refreshAssets, refreshOwnedTokens } from 'lib/user';
+import { refreshAssets, tokensQuery } from 'lib/user';
 import { callAPI } from 'lib/api';
 import memoize from 'utils/memoize';
 
@@ -34,20 +33,18 @@ const filterSuggestions = memoize((suggestions, inputValue) => {
   });
 });
 
-const selectTokenSuggestions = memoize(
-  (tokens) =>
-    tokens
-      ? tokens.map((token) => ({
-          value: token.address,
-          name: token.ticker,
-          display: (
-            <span>
-              {token.ticker} -<span className="dim"> {token.address}</span>
-            </span>
-          ),
-        }))
-      : [],
-  (state) => [state.user.tokens]
+const getTokenSuggestions = memoize((ownedTokens) =>
+  ownedTokens
+    ? ownedTokens.map((token) => ({
+        value: token.address,
+        name: token.ticker,
+        display: (
+          <span>
+            {token.ticker} -<span className="dim"> {token.address}</span>
+          </span>
+        ),
+      }))
+    : []
 );
 
 const initialValues = {
@@ -55,10 +52,8 @@ const initialValues = {
 };
 
 export default function TokenizeAssetModal({ asset }) {
-  const tokenSuggestions = useSelector(selectTokenSuggestions);
-  useEffect(() => {
-    refreshOwnedTokens();
-  }, []);
+  const ownedTokens = tokensQuery.use();
+  const tokenSuggestions = getTokenSuggestions(ownedTokens);
 
   return (
     <ControlledModal maxWidth={600}>

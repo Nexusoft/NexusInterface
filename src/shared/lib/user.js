@@ -1,17 +1,28 @@
 import * as TYPE from 'consts/actionTypes';
-import store from 'store';
+import store, { jotaiQuery } from 'store';
 import { callAPI as callAPI } from 'lib/api';
+import memoize from 'utils/memoize';
+import { loggedInAtom, userGenesisAtom, txCountAtom } from './session';
 import listAll from 'utils/listAll';
 
-export const refreshBalances = async () => {
-  try {
-    const balances = await callAPI('finance/get/balances');
-    store.dispatch({ type: TYPE.SET_BALANCES, payload: balances });
-    return balances;
-  } catch (err) {
-    console.error('finance/get/balances failed', err);
-  }
-};
+export const balancesQuery = jotaiQuery({
+  condition: (get) => get(loggedInAtom),
+  getQueryConfig: (get) => ({
+    queryKey: ['balances', get(userGenesisAtom)],
+    queryFn: () => callAPI('finance/get/balances'),
+    staleTime: 300000, // 5 minutes
+    refetchOnMount: 'always',
+  }),
+  selectValue: memoize((balances) => {
+    if (!balances) return [undefined, undefined];
+    const nxsIndex = balances.findIndex(({ token }) => token === '0');
+    const tokenBalances = [...balances];
+    const [nxsBalances] =
+      nxsIndex >= 0 ? tokenBalances.splice(nxsIndex, 1) : [undefined];
+    return [nxsBalances, tokenBalances];
+  }),
+  refetchTriggers: [txCountAtom],
+});
 
 function processToken(token) {
   if (token.ticker?.startsWith?.('local:')) {
@@ -20,18 +31,17 @@ function processToken(token) {
   }
 }
 
-export const refreshOwnedTokens = async () => {
-  try {
-    const tokens = await listAll('finance/list/tokens');
-    tokens.forEach(processToken);
-    store.dispatch({
-      type: TYPE.SET_USER_OWNED_TOKENS,
-      payload: tokens,
-    });
-  } catch (err) {
-    console.error('finance/list/tokens failed', err);
-  }
-};
+export const tokensQuery = jotaiQuery({
+  condition: (get) => get(loggedInAtom),
+  getQueryConfig: (get) => ({
+    queryKey: ['tokens', get(userGenesisAtom)],
+    queryFn: () => listAll('finance/list/tokens'),
+    staleTime: 300000, // 5 minutes
+    refetchOnMount: 'always',
+  }),
+  selectValue: memoize((tokens) => tokens?.map(processToken)),
+  refetchTriggers: [txCountAtom],
+});
 
 // function processAccount(account) {
 //   if (account.name?.startsWith?.('local:')) {
@@ -48,18 +58,16 @@ export const refreshOwnedTokens = async () => {
 //   }
 // }
 
-export const refreshAccounts = async () => {
-  try {
-    const accounts = await callAPI('finance/list/any');
-    // accounts.forEach(processAccount);
-    store.dispatch({
-      type: TYPE.SET_TRITIUM_ACCOUNTS,
-      payload: accounts,
-    });
-  } catch (err) {
-    console.error('account listing failed', err);
-  }
-};
+export const accountsQuery = jotaiQuery({
+  condition: (get) => get(loggedInAtom),
+  getQueryConfig: (get) => ({
+    queryKey: ['accounts', get(userGenesisAtom)],
+    queryFn: () => callAPI('finance/list/any'),
+    staleTime: 300000, // 5 minutes
+    refetchOnMount: 'always',
+  }),
+  refetchTriggers: [txCountAtom],
+});
 
 export const refreshNameRecords = async () => {
   try {

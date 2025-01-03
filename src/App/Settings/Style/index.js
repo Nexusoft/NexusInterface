@@ -14,7 +14,7 @@ import UT from 'lib/usageTracking';
 import { updateSettings } from 'lib/settings';
 import { switchSettingsTab, showNotification } from 'lib/ui';
 import { loadCustomTheme } from 'lib/theme';
-import { refreshAccounts } from 'lib/user';
+import { accountsQuery } from 'lib/user';
 import { walletDataDir } from 'consts/paths';
 import { webGLAvailable } from 'consts/misc';
 import memoize from 'utils/memoize';
@@ -78,14 +78,10 @@ async function exportThemeFileDialog() {
 
 export default function SettingsStyle() {
   const settings = useSelector((state) => state.settings);
-  const defaultAddress = useSelector((state) =>
-    getTritiumDefaultAddress(state.user.accounts)
-  );
+  const accounts = accountsQuery.use();
+  const defaultAddress = getTritiumDefaultAddress(accounts);
   useEffect(() => {
     switchSettingsTab('Style');
-    if (!defaultAddress) {
-      refreshAccounts();
-    }
   }, []);
 
   return (

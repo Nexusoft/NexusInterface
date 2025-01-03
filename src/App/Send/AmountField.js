@@ -1,6 +1,5 @@
 // External
 import { useEffect, useRef } from 'react';
-import { useSelector } from 'react-redux';
 import { useForm } from 'react-final-form';
 import { getIn } from 'final-form';
 import styled from '@emotion/styled';
@@ -11,7 +10,7 @@ import Form from 'components/Form';
 import FormField from 'components/FormField';
 import Link from 'components/Link';
 import TokenName from 'components/TokenName';
-import { selectSource } from 'lib/send';
+import { useSource } from 'lib/send';
 import { marketDataAtom } from 'lib/market';
 
 __ = __context('Send');
@@ -77,7 +76,7 @@ function positiveNumber(value) {
 // }
 
 export default function AmountField({ parentFieldName }) {
-  const source = selectSource();
+  const source = useSource();
   const marketData = useAtomValue(marketDataAtom);
   const { price, currency } = marketData || {};
   const form = useForm();

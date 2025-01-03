@@ -1,14 +1,10 @@
 // External
-import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/react';
 
 // Internal
-import { refreshBalances } from 'lib/user';
 import { timing, consts } from 'styles';
-import { subscribe } from 'store';
-import { loggedInAtom } from 'lib/session';
 
 import {
   NXSBalanceStat,
@@ -92,17 +88,6 @@ const StatsColumn = styled.div(
     }
 );
 
-function useGetBalances() {
-  useEffect(() => {
-    refreshBalances();
-    return subscribe(loggedInAtom, (loggedIn) => {
-      if (loggedIn) {
-        refreshBalances();
-      }
-    });
-  }, []);
-}
-
 export default function Stats({ showingGlobe }) {
   const overviewDisplay = useSelector(
     (state) => state.settings.overviewDisplay
@@ -110,8 +95,6 @@ export default function Stats({ showingGlobe }) {
   const featuredTokenName = useSelector(
     (state) => state.theme?.featuredTokenName
   );
-
-  useGetBalances();
 
   if (overviewDisplay === 'none') {
     return <OverviewPage />;

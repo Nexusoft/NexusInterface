@@ -1,14 +1,10 @@
-import { Fragment, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { Fragment } from 'react';
 import styled from '@emotion/styled';
 
 import QuestionCircle from 'components/QuestionCircle';
 import TokenName from 'components/TokenName';
-import { refreshBalances } from 'lib/user';
-import { selectBalances } from 'selectors';
-import { subscribe } from 'store';
+import { balancesQuery } from 'lib/user';
 import { formatNumber } from 'lib/intl';
-import { loggedInAtom } from 'lib/session';
 
 __ = __context('Transactions.Balances');
 
@@ -60,15 +56,7 @@ const Value = styled.div({
 });
 
 export default function Balances() {
-  const [nxsBalances, tokenBalances] = useSelector(selectBalances);
-  useEffect(() => {
-    refreshBalances();
-    return subscribe(loggedInAtom, (loggedIn) => {
-      if (loggedIn) {
-        refreshBalances();
-      }
-    });
-  }, []);
+  const [nxsBalances, tokenBalances] = balancesQuery.use();
 
   const total =
     nxsBalances &&

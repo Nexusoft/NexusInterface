@@ -1,12 +1,11 @@
 import styled from '@emotion/styled';
-import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
 import ControlledModal from 'components/ControlledModal';
 import NexusAddress from 'components/NexusAddress';
 import TokenName from 'components/TokenName';
 import { timing } from 'styles';
-import { refreshAccounts, refreshOwnedTokens } from 'lib/user';
+import { accountsQuery, tokensQuery } from 'lib/user';
 import memoize from 'utils/memoize';
 
 __ = __context('SelectAddress');
@@ -29,26 +28,23 @@ const Option = styled.div(({ theme }) => ({
   },
 }));
 
-const selectKnownTokens = memoize(
-  (userTokens, accounts) => {
-    userTokens = userTokens || [];
-    const tokens = [{ address: '0', name: 'NXS' }, ...userTokens];
-    for (const account of accounts || []) {
-      const tokenAddress = account.token;
-      if (
-        tokenAddress !== '0' &&
-        !userTokens.some((token) => token.address === tokenAddress)
-      ) {
-        tokens.push({
-          name: account.ticker || account.token_name,
-          address: tokenAddress,
-        });
-      }
+const getKnownTokens = memoize((userTokens, accounts) => {
+  userTokens = userTokens || [];
+  const tokens = [{ address: '0', name: 'NXS' }, ...userTokens];
+  for (const account of accounts || []) {
+    const tokenAddress = account.token;
+    if (
+      tokenAddress !== '0' &&
+      !userTokens.some((token) => token.address === tokenAddress)
+    ) {
+      tokens.push({
+        name: account.ticker || account.token_name,
+        address: tokenAddress,
+      });
     }
-    return tokens;
-  },
-  (state) => [state.user.tokens, state.user.accounts]
-);
+  }
+  return tokens;
+});
 
 const selectContacts = memoize(
   (addressBook) =>
@@ -64,13 +60,10 @@ const selectContacts = memoize(
 );
 
 export default function SelectAddressModal({ onSelect }) {
-  const accounts = useSelector((state) => state.user.accounts);
-  const tokens = useSelector(selectKnownTokens);
+  const accounts = accountsQuery.use();
+  const userTokens = tokensQuery.use();
+  const knownTokens = getKnownTokens(userTokens, accounts);
   const contacts = useSelector(selectContacts);
-  useEffect(() => {
-    refreshAccounts();
-    refreshOwnedTokens();
-  }, []);
 
   return (
     <ControlledModal maxWidth={500}>
@@ -100,10 +93,10 @@ export default function SelectAddressModal({ onSelect }) {
               ))}
             </div>
           )}
-          {!!tokens?.length && (
+          {!!knownTokens?.length && (
             <div className="mt2">
               <SubHeading>{__('Tokens')}</SubHeading>
-              {tokens.map((token) => (
+              {knownTokens.map((token) => (
                 <Option
                   key={token.address}
                   onClick={() => {

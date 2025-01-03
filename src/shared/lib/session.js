@@ -195,6 +195,8 @@ export function refetchProfileStatus() {
   jotaiStore.get(refetchProfileStatusAtom)?.();
 }
 
+export const txCountAtom = atom((get) => get(profileStatusAtom)?.transactions);
+
 export const usernameAtom = atom((get) => {
   const profileStatus = get(profileStatusAtom);
   const userStatus = get(userStatusAtom);
