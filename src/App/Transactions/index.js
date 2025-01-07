@@ -10,11 +10,7 @@ import TextField from 'components/TextField';
 import RequireLoggedIn from 'components/RequireLoggedIn';
 import Spinner from 'components/Spinner';
 import Icon from 'components/Icon';
-import {
-  transactionsFetchingEnabledAtom,
-  pageAtom,
-  transactionsFetchingAtom,
-} from 'lib/transactions';
+import { pageAtom, transactionsQuery } from 'lib/transactions';
 import transactionIcon from 'icons/transaction.svg';
 import warningIcon from 'icons/warning.svg';
 
@@ -127,19 +123,15 @@ const ErrorMessage = styled.div(({ theme }) => ({
  * @extends {Component}
  */
 export default function Transactions() {
+  transactionsQuery.use();
   const {
     data: transactions,
     isPending,
     isError,
-  } = useAtomValue(transactionsFetchingAtom);
+  } = useAtomValue(transactionsQuery.queryAtom);
   const [page, setPage] = useAtom(pageAtom);
-  const setEnabled = useSetAtom(transactionsFetchingEnabledAtom);
   useEffect(() => {
     UT.SendScreen('Transactions');
-    setEnabled(true);
-    return () => {
-      setEnabled(false);
-    };
   }, []);
 
   return (

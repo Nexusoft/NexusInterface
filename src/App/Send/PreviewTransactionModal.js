@@ -11,7 +11,7 @@ import { callAPI } from 'lib/api';
 import { refetchCoreInfo } from 'lib/coreInfo';
 import { openSuccessDialog } from 'lib/dialog';
 import { accountsQuery } from 'lib/user';
-import { refetchTransactions } from 'lib/transactions';
+import { transactionsQuery } from 'lib/transactions';
 import { formSubmit, required } from 'lib/form';
 import { timeToText } from 'utils/misc';
 import WarningIcon from 'icons/warning.svg';
@@ -226,7 +226,7 @@ export default function PreviewTransactionModal({
                   resetSendForm();
                   accountsQuery.refetch();
                   refetchCoreInfo();
-                  refetchTransactions();
+                  transactionsQuery.refetch();
                   closeModal();
                   openSuccessDialog({
                     message: __('Transaction sent'),

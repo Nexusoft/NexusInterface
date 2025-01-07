@@ -1,8 +1,12 @@
 import { atom } from 'jotai';
-import { atomWithQuery } from 'jotai-tanstack-query';
 import { callAPI } from 'lib/api';
-import { jotaiStore, subscribeWithPrevious } from 'store';
-import { userGenesisAtom, loggedInAtom, profileStatusAtom } from './session';
+import { subscribeWithPrevious, jotaiQuery } from 'store';
+import {
+  userGenesisAtom,
+  loggedInAtom,
+  profileStatusAtom,
+  txCountAtom,
+} from './session';
 import { showDesktopNotif } from 'utils/misc';
 import { formatNumber } from 'lib/intl';
 import { showNotification } from 'lib/ui';
@@ -150,75 +154,56 @@ export function prepareTransactions() {
   );
 }
 
-export const transactionsFetchingEnabledAtom = atom(false);
 export const pageAtom = atom(1);
 export const addressQueryAtom = atom('');
 export const operationAtom = atom(null);
 export const timeSpanAtom = atom(null);
 
-export const transactionsFetchingAtom = atomWithQuery((get) => {
-  const enabled = get(transactionsFetchingEnabledAtom) && get(loggedInAtom);
-  const page = get(pageAtom);
-  const addressQuery = get(addressQueryAtom);
-  const operation = get(operationAtom);
-  const timeSpan = get(timeSpanAtom);
-  const genesis = get(userGenesisAtom);
+export const transactionsQuery = jotaiQuery({
+  condition: (get) => get(loggedInAtom),
+  getQueryConfig: (get) => {
+    const page = get(pageAtom);
+    const addressQuery = get(addressQueryAtom);
+    const operation = get(operationAtom);
+    const timeSpan = get(timeSpanAtom);
+    const genesis = get(userGenesisAtom);
 
-  return {
-    queryKey: [
-      'transactions',
-      { genesis, page, addressQuery, operation, timeSpan },
-    ],
-    queryFn: async () => {
-      try {
-        const params = {
-          verbose: 'summary',
-          limit: txCountPerPage,
-          // API page param is 0 based, while the page number on the UI is 1 based
-          page: page - 1,
-        };
-        const query = buildQuery({ addressQuery, operation, timeSpan });
-        if (query) {
-          params.where = query;
+    return {
+      queryKey: [
+        'transactions',
+        { genesis, page, addressQuery, operation, timeSpan },
+      ],
+      queryFn: async () => {
+        try {
+          const params = {
+            verbose: 'summary',
+            limit: txCountPerPage,
+            // API page param is 0 based, while the page number on the UI is 1 based
+            page: page - 1,
+          };
+          const query = buildQuery({ addressQuery, operation, timeSpan });
+          if (query) {
+            params.where = query;
+          }
+          return await callAPI('profiles/transactions/master', params);
+        } catch (err) {
+          openErrorDialog({
+            message: __('Error fetching transactions'),
+            note:
+              typeof err === 'string'
+                ? err
+                : err?.message || __('Unknown error'),
+          });
+          throw err;
         }
-        return await callAPI('profiles/transactions/master', params);
-      } catch (err) {
-        openErrorDialog({
-          message: __('Error fetching transactions'),
-          note:
-            typeof err === 'string' ? err : err?.message || __('Unknown error'),
-        });
-        throw err;
-      }
-    },
-    enabled,
-    staleTime: 300000, // 5 minutes
-    gcTime: 0,
-    refetchInterval: ({ state: { data } }) =>
-      data?.some((tx) => !isConfirmed(tx)) ? 5000 : false,
-    refetchOnMount: 'always',
-    refetchOnReconnect: 'always',
-  };
+      },
+      staleTime: 300000, // 5 minutes
+      gcTime: 0,
+      refetchInterval: ({ state: { data } }) =>
+        data?.some((tx) => !isConfirmed(tx)) ? 5000 : false,
+      refetchOnMount: 'always',
+      refetchOnReconnect: 'always',
+    };
+  },
+  refetchTriggers: [txCountAtom],
 });
-
-export const transactionsAtom = atom((get) => {
-  const query = get(transactionsFetchingAtom);
-  if (
-    !query ||
-    query.isError ||
-    !get(transactionsFetchingEnabledAtom) ||
-    !get(loggedInAtom)
-  ) {
-    return null;
-  } else {
-    return query.data || null;
-  }
-});
-
-const refetchTransactionsAtom = atom(
-  (get) => get(transactionsFetchingAtom)?.refetch || (() => {})
-);
-
-export function refetchTransactions() {
-  jotaiStore.get(refetchTransactionsAtom)?.();
-}
