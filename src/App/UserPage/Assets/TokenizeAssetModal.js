@@ -7,7 +7,7 @@ import FormField from 'components/FormField';
 import Spinner from 'components/Spinner';
 import { formSubmit, required } from 'lib/form';
 import { confirmPin, openSuccessDialog } from 'lib/dialog';
-import { refreshAssets, tokensQuery } from 'lib/user';
+import { assetsQuery, tokensQuery } from 'lib/user';
 import { callAPI } from 'lib/api';
 import memoize from 'utils/memoize';
 
@@ -79,7 +79,7 @@ export default function TokenizeAssetModal({ asset }) {
                 },
                 onSuccess: async (result) => {
                   if (!result) return; // Submission was cancelled
-                  refreshAssets();
+                  assetsQuery.refetch();
                   closeModal();
                   openSuccessDialog({
                     message: __('Asset has been tokenized'),

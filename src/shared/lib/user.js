@@ -69,44 +69,52 @@ export const accountsQuery = jotaiQuery({
   refetchTriggers: [txCountAtom],
 });
 
-export const refreshNameRecords = async () => {
-  try {
-    const nameRecords = await listAll('names/list/names');
-    const unusedRecords = await listAll('names/list/inactive');
-    store.dispatch({
-      type: TYPE.SET_NAME_RECORDS,
-      payload: [...nameRecords, ...unusedRecords],
-    });
-  } catch (err) {
-    console.error('names/list/names failed', err);
-  }
-};
+export const nameRecordsQuery = jotaiQuery({
+  condition: (get) => get(loggedInAtom),
+  getQueryConfig: (get) => ({
+    queryKey: ['nameRecords', get(userGenesisAtom)],
+    queryFn: async () => {
+      const nameRecords = await listAll('names/list/names');
+      const unusedRecords = await listAll('names/list/inactive');
+      return [...nameRecords, ...unusedRecords];
+    },
+    staleTime: 300000, // 5 minutes
+    refetchOnMount: 'always',
+  }),
+  refetchTriggers: [txCountAtom],
+});
 
-export const refreshNamespaces = async () => {
-  try {
-    const namespaces = await listAll('names/list/namespaces');
-    store.dispatch({ type: TYPE.SET_NAMESPACES, payload: namespaces });
-  } catch (err) {
-    console.error('names/list/namespaces failed', err);
-  }
-};
+export const namespacesQuery = jotaiQuery({
+  condition: (get) => get(loggedInAtom),
+  getQueryConfig: (get) => ({
+    queryKey: ['namespacesQuery', get(userGenesisAtom)],
+    queryFn: () => listAll('names/list/namespaces'),
+    staleTime: 300000, // 5 minutes
+    refetchOnMount: 'always',
+  }),
+  refetchTriggers: [txCountAtom],
+});
 
-export const refreshAssets = async () => {
-  try {
-    let [assets] = await Promise.all([listAll('assets/list/assets')]);
-    //TODO: Partial returns an error instead of a empty array if there are no assets found which is not the best way to do that, consider revising
-    let partialAssets = [];
-    try {
-      partialAssets = await listAll('assets/list/partial');
-    } catch (error) {
-      if (error.code && error.code === -74) {
-      } else throw error;
-    }
-    store.dispatch({
-      type: TYPE.SET_ASSETS,
-      payload: assets.concat(partialAssets),
-    });
-  } catch (err) {
-    console.error('assets/list/assets failed', err);
-  }
-};
+export const assetsQuery = jotaiQuery({
+  condition: (get) => get(loggedInAtom),
+  getQueryConfig: async (get) => ({
+    queryKey: ['assets', get(userGenesisAtom)],
+    queryFn: async () => {
+      let [assets] = await Promise.all([listAll('assets/list/assets')]);
+      //TODO: Partial returns an error instead of a empty array if there are no assets found which is not the best way to do that, consider revising
+      let partialAssets = [];
+      try {
+        partialAssets = await listAll('assets/list/partial');
+      } catch (error) {
+        // Reason?
+        if (error?.code !== -74) {
+          throw error;
+        }
+      }
+      return assets.concat(partialAssets);
+    },
+    staleTime: 300000, // 5 minutes
+    refetchOnMount: 'always',
+  }),
+  refetchTriggers: [txCountAtom],
+});

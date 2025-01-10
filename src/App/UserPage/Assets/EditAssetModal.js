@@ -4,7 +4,7 @@ import InfoField from 'components/InfoField';
 import Spinner from 'components/Spinner';
 import { formSubmit } from 'lib/form';
 import { confirmPin, openSuccessDialog } from 'lib/dialog';
-import { refreshAssets } from 'lib/user';
+import { assetsQuery } from 'lib/user';
 import { callAPI } from 'lib/api';
 import { getAssetData } from 'lib/asset';
 import { assetNumberTypes } from 'consts/misc';
@@ -44,7 +44,7 @@ export default function EditAssetModal({ schema, asset }) {
                 },
                 onSuccess: async (result, values, form) => {
                   if (!result) return; // Submission was cancelled
-                  refreshAssets();
+                  assetsQuery.refetch();
                   form.restart();
                   closeModal();
                   openSuccessDialog({

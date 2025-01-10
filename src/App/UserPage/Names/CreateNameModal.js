@@ -1,5 +1,3 @@
-import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
 import { useField } from 'react-final-form';
 import styled from '@emotion/styled';
 import { useAtomValue } from 'jotai';
@@ -16,7 +14,7 @@ import {
   createNamespacedNameFee,
   createGlobalNameFee,
 } from 'lib/fees';
-import { refreshNameRecords, refreshNamespaces } from 'lib/user';
+import { nameRecordsQuery, namespacesQuery } from 'lib/user';
 import { usernameAtom } from 'lib/session';
 import { callAPI } from 'lib/api';
 import UT from 'lib/usageTracking';
@@ -103,10 +101,7 @@ const notStartWithColon = (value) =>
 
 export default function CreateNameModal() {
   const username = useAtomValue(usernameAtom);
-  const namespaces = useSelector((state) => state.user.namespaces);
-  useEffect(() => {
-    refreshNamespaces();
-  }, []);
+  const namespaces = namespacesQuery.use();
   return (
     <ControlledModal maxWidth={500}>
       {(closeModal) => (
@@ -136,7 +131,7 @@ export default function CreateNameModal() {
                 onSuccess: async (result, values, form) => {
                   if (!result) return; // Submission was cancelled
                   UT.CreateNewItem('name');
-                  refreshNameRecords();
+                  nameRecordsQuery.refetch();
                   form.restart();
                   closeModal();
                   openSuccessDialog({

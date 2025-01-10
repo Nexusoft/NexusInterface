@@ -7,7 +7,7 @@ import Icon from 'components/Icon';
 import Button from 'components/Button';
 import Switch from 'components/Switch';
 import { switchUserTab, openModal } from 'lib/ui';
-import { refreshNameRecords } from 'lib/user';
+import { nameRecordsQuery } from 'lib/user';
 import { usernameAtom } from 'lib/session';
 import { updateSettings } from 'lib/settings';
 import { popupContextMenu } from 'lib/contextMenu';
@@ -127,25 +127,22 @@ function Name({ nameRecord, username }) {
   );
 }
 
-const selectNameRecords = memoize(
-  (nameRecords, showUnusedNames) =>
-    showUnusedNames
-      ? nameRecords
-      : nameRecords?.filter((nr) => nr.register && nr.register !== '0'),
-  (state) => [state.user.nameRecords, state.settings.showUnusedNames]
+const filterNames = memoize((nameRecords, showUnusedNames) =>
+  showUnusedNames
+    ? nameRecords
+    : nameRecords?.filter((nr) => nr.register && nr.register !== '0')
 );
 
 export default function Names() {
-  const session = useSelector((state) => state.user.session);
-  const nameRecords = useSelector(selectNameRecords);
-  const username = useAtomValue(usernameAtom);
+  const nameRecords = nameRecordsQuery.use();
   const showUnusedNames = useSelector(
     (state) => state.settings.showUnusedNames
   );
+  const filteredNames = filterNames(nameRecords, showUnusedNames);
+  const username = useAtomValue(usernameAtom);
   useEffect(() => {
     switchUserTab('Names');
-    refreshNameRecords();
-  }, [session]);
+  }, []);
 
   const toggle = () => updateSettings({ showUnusedNames: !showUnusedNames });
 
@@ -174,8 +171,8 @@ export default function Names() {
         </div>
 
         <div className="mt1">
-          {!!nameRecords && nameRecords.length > 0 ? (
-            nameRecords.map((nameRecord) => (
+          {!!filteredNames && filteredNames.length > 0 ? (
+            filteredNames.map((nameRecord) => (
               <Name
                 key={nameRecord.address}
                 nameRecord={nameRecord}
