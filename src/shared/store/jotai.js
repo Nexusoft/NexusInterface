@@ -3,14 +3,13 @@ import {
   createStore,
   Provider as JotaiProvider,
   useAtomValue,
-  useAtom,
   atom,
 } from 'jotai';
 import { atomWithQuery } from 'jotai-tanstack-query';
 import { DevTools } from 'jotai-devtools';
 import { useHydrateAtoms } from 'jotai/react/utils';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { queryClientAtom } from 'jotai-tanstack-query';
 import { rqDevToolsOpenAtom, jotaiDevToolsOpenAtom } from 'lib/ui';
 import jotaiDevToolsStyles from 'jotai-devtools/styles.css';
@@ -53,13 +52,8 @@ function JotaiDevTools() {
 }
 
 function QueryDevTools() {
-  const [rqDevToolsOpen, setRqDevToolsOpen] = useAtom(rqDevToolsOpenAtom);
-  return (
-    isDev &&
-    rqDevToolsOpen && (
-      <ReactQueryDevtoolsPanel onClose={() => setRqDevToolsOpen(false)} />
-    )
-  );
+  const rqDevToolsOpen = useAtomValue(rqDevToolsOpenAtom);
+  return isDev && rqDevToolsOpen && <ReactQueryDevtools />;
 }
 
 const HydrateAtoms = ({ children }) => {
@@ -72,8 +66,8 @@ export function Providers({ children }) {
     <QueryClientProvider client={queryClient}>
       <JotaiProvider store={jotaiStore}>
         <JotaiDevTools />
-        <QueryDevTools />
         <HydrateAtoms>{children}</HydrateAtoms>
+        <QueryDevTools />
       </JotaiProvider>
     </QueryClientProvider>
   );
@@ -88,14 +82,18 @@ export function jotaiQuery({
   const symbols = new Set();
   const turnedOnAtom = atom(false);
   const queryAtom = atomWithQuery((get) => {
-    const enabled = get(turnedOnAtom) && condition(get);
+    const turnedOn = get(turnedOnAtom);
+    const conditionMet = !condition || condition(get);
+    const enabled = turnedOn && conditionMet;
     return {
       enabled,
       ...getQueryConfig(get),
     };
   });
   const valueAtom = atom((get) => {
-    const enabled = get(turnedOnAtom) && condition(get);
+    const turnedOn = get(turnedOnAtom);
+    const conditionMet = !condition || condition(get);
+    const enabled = turnedOn && conditionMet;
     const query = get(queryAtom);
     if (!enabled || !query || query.isError) {
       return null;
