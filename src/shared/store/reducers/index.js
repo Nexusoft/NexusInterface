@@ -1,6 +1,5 @@
 import { combineReducers } from 'redux';
 
-import common from './common';
 import addressBook from './addressBook';
 import settings from './settings';
 import theme from './theme';
@@ -21,7 +20,6 @@ export default function createRootReducer() {
   return combineReducers({
     core,
     user,
-    common,
     addressBook,
     settings,
     theme,

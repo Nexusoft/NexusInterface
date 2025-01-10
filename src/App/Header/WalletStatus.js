@@ -1,11 +1,10 @@
 // External
-import { useSelector } from 'react-redux';
 import { useAtomValue } from 'jotai';
 
 // Internal
 import CoreStatus from 'components/CoreStatus';
 import { loggedInAtom, stakingAtom } from 'lib/session';
-import { useCoreConnected } from 'lib/coreInfo';
+import { useCoreConnected, blockDateAtom } from 'lib/coreInfo';
 import styled from '@emotion/styled';
 
 __ = __context('Header');
@@ -16,7 +15,7 @@ const StakingDanger = styled.div({
 
 export default function WalletStatus() {
   const staking = useAtomValue(stakingAtom);
-  const blockDate = useSelector((state) => state.common.blockDate);
+  const blockDate = useAtomValue(blockDateAtom);
   const coreConnected = useCoreConnected();
   const loggedIn = useAtomValue(loggedInAtom);
 

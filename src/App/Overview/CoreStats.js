@@ -1,9 +1,9 @@
 // External
-import { useSelector } from 'react-redux';
+import { useAtomValue } from 'jotai';
 
 // Internal
 import { formatNumber, formatRelativeTime } from 'lib/intl';
-import { useCoreInfo } from 'lib/coreInfo';
+import { useCoreInfo, blockDateAtom } from 'lib/coreInfo';
 
 // Images
 import Connections0 from 'icons/Connections0.svg';
@@ -47,7 +47,7 @@ export function ConnectionsStat() {
 export function BlockCountStat() {
   const coreInfo = useCoreInfo();
   const blocks = coreInfo?.blocks;
-  const blockDate = useSelector((state) => state.common.blockDate);
+  const blockDate = useAtomValue(blockDateAtom);
 
   return (
     <Stat

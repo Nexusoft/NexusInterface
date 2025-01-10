@@ -1,14 +1,12 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { atom, useAtomValue } from 'jotai';
 import { atomWithQuery } from 'jotai-tanstack-query';
 import store, { jotaiStore, subscribe } from 'store';
 import { callAPI } from 'lib/api';
-import * as TYPE from 'consts/actionTypes';
 import { bootstrap } from 'lib/bootstrap';
 
 // TODO: move to right places
 export function useCoreInfoPolling() {
-  const lastCoreInfoRef = useRef(null);
   useEffect(() => {
     return subscribe(coreInfoAtom, async (coreInfo) => {
       const coreConnected = !!coreInfo;
@@ -27,18 +25,14 @@ export function useCoreInfoPolling() {
         ) {
           bootstrap({ suggesting: true });
         }
-
-        if (lastCoreInfoRef.current?.blocks !== coreInfo.blocks) {
-          store.dispatch({
-            type: TYPE.UPDATE_BLOCK_DATE,
-            payload: new Date(),
-          });
-        }
       }
-
-      lastCoreInfoRef.current = coreInfo;
     });
   }, []);
+  useEffect(() => {
+    return subscribe(blocksAtom, () => {
+      jotaiStore.set(blockDateAtom, new Date());
+    });
+  });
 }
 
 /**
@@ -97,3 +91,5 @@ export const useSynchronized = () => useAtomValue(synchronizedAtom);
 export const isCoreConnected = () => jotaiStore.get(coreConnectedAtom);
 
 export const isSynchronized = () => jotaiStore.get(synchronizedAtom);
+
+export const blockDateAtom = atom(null);
