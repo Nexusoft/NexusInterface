@@ -102,7 +102,12 @@ export function jotaiQuery({
     }
   });
   const refetch = () => {
-    jotaiStore.get(queryAtom)?.refetch?.();
+    const turnedOn = jotaiStore.get(turnedOnAtom);
+    const conditionMet = !condition || condition(jotaiStore.get);
+    const enabled = turnedOn && conditionMet;
+    if (enabled) {
+      jotaiStore.get(queryAtom)?.refetch?.();
+    }
   };
 
   return {
