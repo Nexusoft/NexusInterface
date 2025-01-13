@@ -7,7 +7,7 @@ import { loadNexusConf, saveCoreConfig } from 'lib/coreConfig';
 import { jotaiStore } from 'store';
 import { coreInfoPausedAtom } from './coreInfo';
 import { callAPI } from 'lib/api';
-import { updateSettings } from 'lib/settings';
+import { updateSettings, settingsAtom } from 'lib/settings';
 import sleep from 'utils/promisified/sleep';
 import { minimumCoreAPIPolicy, preRelease } from 'consts/misc';
 import { defaultCoreDataDir } from 'consts/paths';
@@ -20,7 +20,7 @@ import * as path from 'path';
  */
 export const startCore = async () => {
   // Check remote core mode
-  const { settings } = store.getState();
+  const settings = jotaiStore.get(settingsAtom);
   if (settings.manualDaemon) {
     log.info('Core Manager: Remote Core mode, skipping starting core');
     return;
@@ -86,14 +86,14 @@ export const startCore = async () => {
   }
   if (settings.forkBlocks) {
     params.push('-forkblocks=' + settings.forkBlocks);
-    updateSettings({ forkBlocks: 0 });
+    updateSettings('forkBlocks', 0);
   }
   if (settings.safeMode) {
     params.push('-safemode=1');
   }
   if (settings.walletClean) {
     params.push('-walletclean');
-    updateSettings({ walletClean: false });
+    updateSettings('walletClean', false);
   }
   // Avatar is default so only add it if it is off.
   if (!settings.avatarMode) {
@@ -120,7 +120,7 @@ export const startCore = async () => {
     !settings.testnetIteration &&
     (!settings.coreAPIPolicy || settings.coreAPIPolicy < minimumCoreAPIPolicy)
   ) {
-    updateSettings({ coreAPIPolicy: minimumCoreAPIPolicy });
+    updateSettings('coreAPIPolicy', minimumCoreAPIPolicy);
     const corePath =
       conf.coreDataDir || settings.coreDataDir || defaultCoreDataDir;
     if (fs.existsSync(path.join(corePath, '_API'))) {
@@ -142,7 +142,7 @@ export const startCore = async () => {
  */
 export const stopCore = async (forRestart) => {
   log.info('Core Manager: Stop function called');
-  const { manualDaemon } = store.getState().settings;
+  const { manualDaemon } = jotaiStore.get(settingsAtom);
   store.dispatch({ type: TYPE.DISCONNECT_CORE });
   try {
     await callAPI('system/stop');

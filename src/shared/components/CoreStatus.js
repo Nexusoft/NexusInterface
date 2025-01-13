@@ -1,10 +1,10 @@
-import { useSelector } from 'react-redux';
 import { useAtomValue } from 'jotai';
 import { useCoreConnected, coreInfoPausedAtom } from 'lib/coreInfo';
+import { settingAtoms } from 'lib/settings';
 
 export default function CoreStatus() {
   const coreConnected = useCoreConnected();
-  const manualDaemon = useSelector((state) => state.settings.manualDaemon);
+  const manualDaemon = useAtomValue(settingAtoms.manualDaemon);
   const paused = useAtomValue(coreInfoPausedAtom);
   return coreConnected
     ? ''

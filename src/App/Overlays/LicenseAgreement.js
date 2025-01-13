@@ -3,7 +3,7 @@ import { updateSettings } from 'lib/settings';
 
 import FullScreen from './FullScreen';
 
-const acceptAgreement = () => updateSettings({ acceptedAgreement: true });
+const acceptAgreement = () => updateSettings('acceptedAgreement', true);
 
 export default function LicenseAgreement() {
   return (

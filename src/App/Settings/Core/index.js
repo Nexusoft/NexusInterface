@@ -1,6 +1,7 @@
 // External
 import { useEffect, useId } from 'react';
 import { useSelector } from 'react-redux';
+import { useAtomValue } from 'jotai';
 import styled from '@emotion/styled';
 
 // Internal
@@ -15,7 +16,7 @@ import {
 import { confirm } from 'lib/dialog';
 import { stopCore, startCore, restartCore } from 'lib/core';
 import { refetchCoreInfo } from 'lib/coreInfo';
-import { updateSettings } from 'lib/settings';
+import { updateSettings, settingsAtom } from 'lib/settings';
 import { formSubmit } from 'lib/form';
 import Button from 'components/Button';
 import Switch from 'components/Switch';
@@ -144,7 +145,7 @@ async function turnOffRemoteCore(restartForm) {
   if (confirmed) {
     restartForm();
     store.dispatch({ type: TYPE.DISCONNECT_CORE });
-    updateSettings({ manualDaemon: false });
+    updateSettings('manualDaemon', false);
     await startCore();
     refetchCoreInfo();
   }
@@ -163,7 +164,7 @@ async function turnOnRemoteCore(restartForm) {
   if (confirmed) {
     restartForm();
     store.dispatch({ type: TYPE.DISCONNECT_CORE });
-    updateSettings({ manualDaemon: true });
+    updateSettings('manualDaemon', true);
     await stopCore();
     refetchCoreInfo();
   }
@@ -179,7 +180,7 @@ function handleRestartSwitch(e) {
 
 export default function SettingsCore() {
   const switchId = useId();
-  const settings = useSelector((state) => state.settings);
+  const settings = useAtomValue(settingsAtom);
   const { manualDaemon } = settings;
   const restartCoreOnSave = useSelector(
     (state) => state.ui.settings.restartCoreOnSave

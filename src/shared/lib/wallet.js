@@ -2,9 +2,10 @@ import fs from 'fs';
 import { ipcRenderer } from 'electron';
 
 import * as TYPE from 'consts/actionTypes';
-import store from 'store';
+import store, { jotaiStore } from 'store';
 import { stopCore } from 'lib/core';
 import { logOut } from 'lib/session';
+import { settingsAtom } from './settings';
 
 let _navigate = null;
 export function navigate(...params) {
@@ -16,9 +17,8 @@ export function setNavigate(func) {
 }
 
 export const closeWallet = async (beforeExit) => {
-  const {
-    settings: { manualDaemon, manualDaemonLogOutOnClose },
-  } = store.getState();
+  const { manualDaemon, manualDaemonLogOutOnClose } =
+    jotaiStore.get(settingsAtom);
 
   store.dispatch({
     type: TYPE.CLOSE_WALLET,
@@ -36,9 +36,7 @@ export const closeWallet = async (beforeExit) => {
 
 export function prepareWallet() {
   ipcRenderer.on('window-close', async () => {
-    const {
-      settings: { minimizeOnClose },
-    } = store.getState();
+    const { minimizeOnClose } = jotaiStore.get(settingsAtom);
 
     // forceQuit is set when user clicks Quit option in the Tray context menu
     if (minimizeOnClose) {

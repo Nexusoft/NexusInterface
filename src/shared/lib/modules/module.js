@@ -3,7 +3,8 @@ import fs from 'fs';
 import Ajv from 'ajv';
 import semver from 'semver';
 
-import store from 'store';
+import store, { jotaiStore } from 'store';
+import { settingsAtom } from 'lib/settings';
 import { semverRegex, emailRegex } from 'consts/misc';
 import * as TYPE from 'consts/actionTypes';
 import { modulesDir } from 'consts/paths';
@@ -272,9 +273,7 @@ async function validateModuleInfo(moduleInfo, dirPath) {
     ...moduleInfo.files.map((file) => getAllUpperFolders(file))
   );
   const filePaths = relativePaths.map((path) => join(dirPath, path));
-  const {
-    settings: { devMode, allowSymLink },
-  } = store.getState();
+  const { devMode, allowSymLink } = jotaiStore.get(settingsAtom);
   const checkSymLink = !(devMode && allowSymLink);
   try {
     await Promise.all(filePaths.map((path) => checkPath(path, checkSymLink)));
@@ -370,9 +369,8 @@ async function initializeModule(module) {
     });
   }
 
-  const {
-    settings: { devMode, verifyModuleSource, disabledModules },
-  } = store.getState();
+  const { devMode, verifyModuleSource, disabledModules } =
+    jotaiStore.get(settingsAtom);
   module.incompatible =
     !module.info.targetWalletVersion ||
     semver.lt(module.info.targetWalletVersion, BACKWARD_COMPATIBLE_VERSION);
@@ -441,7 +439,7 @@ export async function prepareModules() {
     if (!fs.existsSync(modulesDir)) return {};
     // Call getNexusOrgUsers() to fire up the request as early as possible
     getNexusOrgUsers();
-    const { devModulePaths = [] } = store.getState().settings;
+    const { devModulePaths = [] } = jotaiStore.get(settingsAtom);
     const childNames = await fs.promises.readdir(modulesDir);
     const childPaths = childNames.map((name) => join(modulesDir, name));
     const stats = await Promise.all(

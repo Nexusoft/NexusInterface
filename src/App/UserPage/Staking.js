@@ -5,8 +5,8 @@ import styled from '@emotion/styled';
 import Button from 'components/Button';
 import AdjustStakeModal from 'components/AdjustStakeModal';
 import ConfirmDialog from 'components/Dialogs/ConfirmDialog';
-import store, { jotaiStore } from 'store';
-import { updateSettings } from 'lib/settings';
+import { jotaiStore } from 'store';
+import { updateSettings, settingsAtom } from 'lib/settings';
 import { restartCore } from 'lib/core';
 import { userStatusAtom, stakeInfoAtom } from 'lib/session';
 import { callAPI } from 'lib/api';
@@ -92,10 +92,8 @@ export default function Staking() {
 
   const startStaking = async () => {
     try {
-      const state = store.getState();
-      const {
-        settings: { liteMode, multiUser, enableStaking },
-      } = state;
+      const { liteMode, multiUser, enableStaking } =
+        jotaiStore.get(settingsAtom);
       const synchronized = isSynchronized();
 
       if (stakeInfo?.amount === 0) {
@@ -146,11 +144,9 @@ export default function Staking() {
           labelNo: __('Cancel'),
         });
         if (confirmed) {
-          updateSettings({
-            enableStaking: true,
-            liteMode: false,
-            multiUser: false,
-          });
+          updateSettings('enableStaking', true);
+          updateSettings('liteMode', false);
+          updateSettings('multiUser', false);
           UT.StartStake(true);
           restartCore();
           showNotification(__('Restarting Core'));
@@ -186,9 +182,7 @@ export default function Staking() {
 
   const stopStaking = async () => {
     const doStop = () => {
-      updateSettings({
-        enableStaking: false,
-      });
+      updateSettings('enableStaking', false);
       UT.StopStake();
       restartCore();
       showNotification(__('Restarting Core'));

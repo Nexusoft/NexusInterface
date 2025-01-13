@@ -13,7 +13,7 @@ import {
   showNotification,
 } from 'lib/ui';
 import { confirm } from 'lib/dialog';
-import { updateSettings } from 'lib/settings';
+import { updateSettings, settingsAtom } from 'lib/settings';
 import LoginModal from 'components/LoginModal';
 import NewUserModal from 'components/NewUserModal';
 import UT from './usageTracking';
@@ -218,20 +218,20 @@ export function prepareSessionInfo() {
       });
       // Query has just finished, userStatusAtom and loggedInAtom haven't been updated yet
       const loggedIn = !!userStatus;
-      const state = store.getState();
+      const { locale, firstCreateNewUserShown } = jotaiStore.get(settingsAtom);
       // The wallet will have to refresh after language is chosen
       // So NewUser modal shouldn't be visible now
       if (
-        state.settings.locale &&
+        locale &&
         !loggedIn &&
         !isModalOpen(LoginModal) &&
         !isModalOpen(NewUserModal)
       ) {
-        if (state.settings.firstCreateNewUserShown) {
+        if (firstCreateNewUserShown) {
           openModal(LoginModal);
         } else {
           openModal(NewUserModal);
-          updateSettings({ firstCreateNewUserShown: true });
+          updateSettings('firstCreateNewUserShown', true);
         }
       }
     }
@@ -278,9 +278,7 @@ const startStakingAskedAtom = atom(false);
 export const stakingAtom = atom((get) => !!get(stakeInfoAtom)?.staking);
 
 async function shouldUnlockStaking() {
-  const {
-    settings: { enableStaking, dontAskToStartStaking },
-  } = store.getState();
+  const { enableStaking, dontAskToStartStaking } = jotaiStore.get(settingsAtom);
   if (
     jotaiStore.get(liteModeAtom) ||
     jotaiStore.get(multiUserAtom) ||
@@ -347,7 +345,7 @@ async function shouldUnlockStaking() {
     });
     jotaiStore.set(startStakingAsked, true);
     if (checkboxRef.current?.checked) {
-      updateSettings({ dontAskToStartStaking: true });
+      updateSettings('dontAskToStartStaking', true);
     }
     if (accepted) {
       return true;
@@ -359,9 +357,7 @@ async function shouldUnlockStaking() {
 
 async function unlockUser({ pin, sessionId }) {
   const unlockStaking = await shouldUnlockStaking();
-  const {
-    settings: { enableMining },
-  } = store.getState();
+  const { enableMining } = jotaiStore.get(settingsAtom);
   try {
     await callAPI('sessions/unlock/local', {
       pin,

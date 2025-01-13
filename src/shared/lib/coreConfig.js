@@ -4,7 +4,8 @@ import log from 'electron-log';
 import crypto from 'crypto';
 import macaddress from 'macaddress';
 
-import store from 'store';
+import store, { jotaiStore } from 'store';
+import { settingsAtom } from './settings';
 import * as TYPE from 'consts/actionTypes';
 
 function generateDefaultPassword() {
@@ -92,13 +93,11 @@ function customConfig(config = {}) {
  */
 export async function loadNexusConf() {
   const {
-    settings: {
-      coreDataDir,
-      embeddedCoreUseNonSSL,
-      embeddedCoreApiPort,
-      embeddedCoreApiPortSSL,
-    },
-  } = store.getState();
+    coreDataDir,
+    embeddedCoreUseNonSSL,
+    embeddedCoreApiPort,
+    embeddedCoreApiPortSSL,
+  } = jotaiStore.get(settingsAtom);
   if (!fs.existsSync(coreDataDir)) {
     log.info(
       'Core Manager: Data Directory path not found. Creating folder: ' +
@@ -171,8 +170,8 @@ export function saveCoreConfig(conf) {
 }
 
 export async function getActiveCoreConfig() {
+  const settings = jotaiStore.get(settingsAtom);
   const {
-    settings,
     core: { config },
   } = store.getState();
 

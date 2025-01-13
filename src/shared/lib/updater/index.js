@@ -7,9 +7,9 @@ import semver from 'semver';
 
 // Internal
 import * as TYPE from 'consts/actionTypes';
-import store from 'store';
+import store, { jotaiStore } from 'store';
 import { showBackgroundTask, showNotification } from 'lib/ui';
-import { updateSettings } from 'lib/settings';
+import { updateSettings, settingsAtom } from 'lib/settings';
 import AutoUpdateBackgroundTask from './AutoUpdateBackgroundTask';
 import { assetsParentDir } from 'consts/paths';
 import { closeWallet } from 'lib/wallet';
@@ -38,12 +38,12 @@ export function quitAndInstall() {
 }
 
 export function setAllowPrerelease(value) {
-  updateSettings({ allowPrerelease: value });
+  updateSettings('allowPrerelease', value);
   ipcRenderer.invoke('set-allow-prerelease', value);
 }
 
 export function migrateToMainnet() {
-  updateSettings({ allowPrerelease: true });
+  updateSettings('allowPrerelease', true);
   ipcRenderer.invoke('migrate-to-mainnet', null);
 }
 
@@ -89,11 +89,9 @@ export async function checkForUpdates() {
   } catch (e) {
     console.error(e);
   } finally {
-    updateSettings({ lastCheckForUpdates: Date.now() });
+    updateSettings('lastCheckForUpdates', Date.now());
 
-    const {
-      settings: { autoUpdate },
-    } = store.getState();
+    const { autoUpdate } = jotaiStore.get(settingsAtom);
     if (autoUpdate) {
       clearTimeout(timerId);
       timerId = setTimeout(checkForUpdates, autoUpdateInterval);
@@ -159,9 +157,7 @@ export function prepareUpdater() {
     setUpdaterState('downloaded');
   });
 
-  const {
-    settings: { autoUpdate, lastCheckForUpdates },
-  } = store.getState();
+  const { autoUpdate, lastCheckForUpdates } = jotaiStore.get(settingsAtom);
   if (autoUpdate) {
     const timeFromLastCheck = Date.now() - lastCheckForUpdates;
     if (!lastCheckForUpdates || timeFromLastCheck > autoUpdateInterval) {

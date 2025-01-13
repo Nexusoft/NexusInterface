@@ -1,22 +1,48 @@
-import UT from 'lib/usageTracking';
-import * as TYPE from 'consts/actionTypes';
-import store from 'store';
-import { updateSettingsFile } from './universal';
+import { atom } from 'jotai';
+import { jotaiStore, subscribe } from 'store';
+import memoize from 'utils/memoize';
+import defaultSettings from './defaultSettings';
+import { readSettings, writeSettings } from './universal';
 
-export const updateSettings = (updates) => {
-  const oldState = store.getState();
-  store.dispatch({ type: TYPE.UPDATE_SETTINGS, payload: updates });
-  updateSettingsFile(updates);
+const initialUserSettings = readSettings();
+const userSettingsAtom = atom(initialUserSettings);
 
-  if (updates.sendUsageData !== undefined) {
-    const {
-      settings: { sendUsageData },
-    } = oldState;
-    if (!sendUsageData && updates.sendUsageData) {
-      UT.EnableAnalytics();
-    }
-    if (sendUsageData && !updates.sendUsageData) {
-      UT.DisableAnalytics();
-    }
-  }
-};
+const mergeSettings = memoize((defaultSettings, userSettings) => ({
+  ...defaultSettings,
+  ...userSettings,
+}));
+export const settingsAtom = atom((get) =>
+  mergeSettings(defaultSettings, get(userSettingsAtom))
+);
+
+const timerId = null;
+subscribe(userSettingsAtom, (settings) => {
+  clearTimeout(timerId);
+  // Write to file asynchronously to batch multiple consecutive updates into one disk write
+  setTimeout(() => {
+    writeSettings(settings);
+  }, 0);
+});
+
+export const settingKeys = Object.keys(defaultSettings);
+export const settingAtoms = Object.fromEntries(
+  settingKeys.map((key) => [
+    key,
+    atom(
+      (get) => get(settingsAtom)?.[key],
+      (get, set, value) => {
+        const userSettings = get(userSettingsAtom);
+        if (userSettings?.[key] === value) return;
+        const updatedUserSettings = {
+          ...userSettings,
+          [key]: value,
+        };
+        set(userSettingsAtom, updatedUserSettings);
+      }
+    ),
+  ])
+);
+
+export function updateSettings(key, value) {
+  jotaiStore.set(settingAtoms[key], value);
+}

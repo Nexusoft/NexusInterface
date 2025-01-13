@@ -1,10 +1,12 @@
 // External
 import { useSelector } from 'react-redux';
+import { useAtomValue } from 'jotai';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/react';
 
 // Internal
 import { timing, consts } from 'styles';
+import { settingAtoms } from 'lib/settings';
 
 import {
   NXSBalanceStat,
@@ -89,9 +91,7 @@ const StatsColumn = styled.div(
 );
 
 export default function Stats({ showingGlobe }) {
-  const overviewDisplay = useSelector(
-    (state) => state.settings.overviewDisplay
-  );
+  const overviewDisplay = useAtomValue(settingAtoms.overviewDisplay);
   const featuredTokenName = useSelector(
     (state) => state.theme?.featuredTokenName
   );

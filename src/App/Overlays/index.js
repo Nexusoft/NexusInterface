@@ -1,6 +1,8 @@
 import { useSelector } from 'react-redux';
+import { useAtomValue } from 'jotai';
 
 import { openModal } from 'lib/ui';
+import { settingsAtom } from 'lib/settings';
 
 import ClosingScreen from './ClosingScreen';
 import LockScreen from './LockScreen';
@@ -13,13 +15,8 @@ import Wallet from './Wallet';
 import { preRelease } from 'consts/misc';
 
 export default function Overlays({ children }) {
-  const locale = useSelector((state) => state.settings.locale);
-  const liteModeNoticeDisabled = useSelector(
-    (state) => state.settings.liteModeNoticeDisabled
-  );
-  const acceptedAgreement = useSelector(
-    (state) => state.settings.acceptedAgreement
-  );
+  const { locale, liteModeNoticeDisabled, acceptedAgreement } =
+    useAtomValue(settingsAtom);
   const closing = useSelector((state) => state.ui.closing);
   const locked = useSelector((state) => state.ui.locked);
 

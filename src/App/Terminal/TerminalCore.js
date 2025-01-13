@@ -1,11 +1,13 @@
 // External Dependencies
 import { useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { useAtomValue } from 'jotai';
 import styled from '@emotion/styled';
 
 // Internal Global Dependencies
 import 'lib/coreOutput';
 import { switchConsoleTab, pauseCoreOutput, unpauseCoreOutput } from 'lib/ui';
+import { settingAtoms } from 'lib/settings';
 import Button from 'components/Button';
 
 __ = __context('Console.CoreOutput');
@@ -45,7 +47,7 @@ const OutputLine = styled.code(({ theme }) => ({
 
 export default function TerminalCore() {
   const outputRef = useRef();
-  const settings = useSelector((state) => state.settings);
+  const manualDaemon = useAtomValue(settingAtoms.manualDaemon);
   const output = useSelector((state) => state.ui.console.core.output);
   const paused = useSelector((state) => state.ui.console.core.paused);
 
@@ -75,13 +77,13 @@ export default function TerminalCore() {
   return (
     <TerminalContent>
       <TerminalCoreComponent>
-        {settings.manualDaemon ? (
+        {manualDaemon ? (
           <div className="dim">{__('Core is in Manual Mode')}</div>
         ) : (
           <>
             <Output
               ref={outputRef}
-              reverse={!settings.manualDaemon}
+              reverse={!manualDaemon}
               // onScroll={handleScroll}
             >
               {output.map((d, i) => (

@@ -1,6 +1,5 @@
 // External
 import { shell, ipcRenderer } from 'electron';
-import { atom } from 'jotai';
 
 // Internal
 import store, { observeStore, jotaiStore } from 'store';
@@ -17,6 +16,7 @@ import {
 import { bootstrap } from 'lib/bootstrap';
 import { loggedInAtom } from 'lib/session';
 import { preRelease } from 'consts/misc';
+import { settingsAtom, settingAtoms } from './settings';
 import {
   coreInfoAtom,
   isCoreConnected,
@@ -118,8 +118,8 @@ const menuItems = preprocess({
   downloadRecent: {
     label: __('Download Recent Database'),
     click: () => {
-      const state = store.getState();
-      if (state.settings.manualDaemon) {
+      const { manualDaemon } = jotaiStore.get(settingsAtom);
+      if (manualDaemon) {
         showNotification(
           __('Cannot bootstrap recent database in manual mode'),
           'error'
@@ -198,8 +198,8 @@ const menuItems = preprocess({
   openCoreDataDir: {
     label: __('Open Core Data Folder'),
     click: () => {
-      const state = store.getState();
-      shell.openPath(state.settings.coreDataDir);
+      const { coreDataDir } = jotaiStore.get(settingsAtom);
+      shell.openPath(coreDataDir);
     },
   },
   openInterfaceDataDir: {
@@ -272,15 +272,11 @@ function buildUpdaterMenu() {
  * @memberof AppMenu
  */
 function buildDarwinTemplate() {
-  const state = store.getState();
   const coreConnected = isCoreConnected();
   const activeWebView = getActiveWebView();
   const loggedIn = jotaiStore.get(loggedInAtom);
   const coreInfo = jotaiStore.get(coreInfoAtom);
-
-  const {
-    settings: { manualDaemon },
-  } = state;
+  const { manualDaemon, devMode } = jotaiStore.get(settingsAtom);
 
   const subMenuAbout = {
     label: 'Nexus',
@@ -324,7 +320,7 @@ function buildDarwinTemplate() {
     label: __('View'),
     submenu: [menuItems.reloadUI, menuItems.toggleFullScreen],
   };
-  if (process.env.NODE_ENV === 'development' || state.settings.devMode) {
+  if (process.env.NODE_ENV === 'development' || devMode) {
     subMenuWindow.submenu.push(menuItems.toggleDevTools);
     if (process.env.NODE_ENV === 'development') {
       subMenuWindow.submenu.push(menuItems.toggleJotaiDevTools);
@@ -365,15 +361,11 @@ function buildDarwinTemplate() {
  * @memberof AppMenu
  */
 function buildDefaultTemplate() {
-  const state = store.getState();
   const coreConnected = isCoreConnected();
   const activeWebView = getActiveWebView();
   const loggedIn = jotaiStore.get(loggedInAtom);
   const coreInfo = jotaiStore.get(coreInfoAtom);
-
-  const {
-    settings: { manualDaemon },
-  } = state;
+  const { manualDaemon, devMode } = jotaiStore.get(settingsAtom);
 
   const subMenuFile = {
     label: __('File'),
@@ -407,7 +399,7 @@ function buildDefaultTemplate() {
     label: __('View'),
     submenu: [menuItems.reloadUI, menuItems.toggleFullScreen],
   };
-  if (process.env.NODE_ENV === 'development' || state.settings.devMode) {
+  if (process.env.NODE_ENV === 'development' || devMode) {
     subMenuView.submenu.push(menuItems.separator, menuItems.toggleDevTools);
     if (process.env.NODE_ENV === 'development') {
       subMenuView.submenu.push(menuItems.toggleJotaiDevTools);
@@ -482,12 +474,9 @@ export function prepareMenu() {
   buildMenu();
   observeStore((state) => state.updater.state, rebuildMenu);
   jotaiStore.sub(coreConnectedAtom, rebuildMenu);
-  observeStore(
-    (state) => state.settings && state.settings.devMode,
-    rebuildMenu
-  );
+  jotaiStore.sub(settingAtoms.devMode, rebuildMenu);
+  jotaiStore.sub(settingAtoms.manualDaemon, rebuildMenu);
   observeStore((state) => state.activeAppModuleName, rebuildMenu);
-  observeStore((state) => state.settings.manualDaemon, rebuildMenu);
   jotaiStore.sub(liteModeAtom, rebuildMenu);
   jotaiStore.sub(loggedInAtom, rebuildMenu);
   observeStore((state) => state.ui.locked, observeLockedState); // Consider moving this to a more appropriate spot.
