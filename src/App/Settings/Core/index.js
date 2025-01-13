@@ -198,7 +198,14 @@ export default function SettingsCore() {
         initialValues={getInitialValues(settings)}
         keepDirtyOnReinitialize={false}
         onSubmit={formSubmit({
-          submit: updateSettings,
+          submit: (updatedSettings) => {
+            Object.keys(updatedSettings).forEach((key) => {
+              const value = updatedSettings[key];
+              if (value !== settings[key]) {
+                updateSettings(key, value);
+              }
+            });
+          },
           onSuccess: () => {
             showNotification(__('Core settings saved'), 'success');
             if (!manualDaemon && restartCoreOnSave) {
