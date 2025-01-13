@@ -5,8 +5,6 @@ import theme from './theme';
 import ui from './ui';
 import modules from './modules';
 import moduleStates from './moduleStates';
-import core from './core';
-import user from './user';
 import updater from './updater';
 import activeAppModuleName from './activeAppModuleName';
 import bootstrap from './bootstrap';
@@ -17,8 +15,6 @@ import featuredModules from './featuredModules';
 
 export default function createRootReducer() {
   return combineReducers({
-    core,
-    user,
     addressBook,
     theme,
     ui,

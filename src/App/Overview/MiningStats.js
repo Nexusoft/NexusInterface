@@ -1,5 +1,4 @@
 // External
-import { useSelector } from 'react-redux';
 import { useAtomValue } from 'jotai';
 
 // Internal
