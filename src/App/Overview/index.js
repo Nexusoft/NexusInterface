@@ -1,11 +1,13 @@
 // External
 import { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
+import { useAtomValue } from 'jotai';
 import styled from '@emotion/styled';
 
 // Internal
 import { webGLAvailable } from 'consts/misc';
 import UT from 'lib/usageTracking';
+import { settingsAtom } from 'lib/settings';
 import { useCoreInfo } from 'lib/coreInfo';
 import Globe from './Globe';
 import Stats from './Stats';
@@ -59,7 +61,7 @@ function useUpdateGlobe({ settings, connections, blocks }) {
 }
 
 export default function Overview() {
-  const settings = useSelector((state) => state.settings);
+  const settings = useAtomValue(settingsAtom);
   const theme = useSelector((state) => state.theme);
   const coreInfo = useCoreInfo();
   const connections = coreInfo?.connections;

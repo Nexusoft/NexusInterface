@@ -1,5 +1,6 @@
 // External
 import { useSelector } from 'react-redux';
+import { useAtomValue } from 'jotai';
 import styled from '@emotion/styled';
 
 // Internal
@@ -14,7 +15,7 @@ import { openModal } from 'lib/ui';
 import { confirm } from 'lib/dialog';
 import ModuleDetailsModal from 'components/ModuleDetailsModal';
 import { timing } from 'styles';
-import { updateSettings } from 'lib/settings';
+import { updateSettings, settingsAtom } from 'lib/settings';
 import { downloadAndInstall, abortModuleDownload } from 'lib/modules';
 import warningIcon from 'icons/warning.svg';
 import downloadIcon from 'icons/download.svg';
@@ -110,22 +111,17 @@ const LatestVersion = styled.span(({ theme }) => ({
 }));
 
 export default function Module({ module, ...rest }) {
-  const disabledModules = useSelector(
-    (state) => state.settings.disabledModules
-  );
+  const { disabledModules } = useAtomValue(settingsAtom);
 
   const enableModule = () => {
-    updateSettings({
-      disabledModules: disabledModules.filter(
-        (moduleName) => moduleName !== module.info.name
-      ),
-    });
+    updateSettings(
+      'disabledModules',
+      disabledModules.filter((moduleName) => moduleName !== module.info.name)
+    );
   };
 
   const disableModule = () => {
-    updateSettings({
-      disabledModules: [...disabledModules, module.info.name],
-    });
+    updateSettings('disabledModules', [...disabledModules, module.info.name]);
   };
 
   const toggleModule = async () => {

@@ -1,7 +1,7 @@
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 
-import store, { Providers } from 'store';
+import store, { Providers, jotaiStore } from 'store';
 import { startCore } from 'lib/core';
 import { prepareWallet } from 'lib/wallet';
 import { prepareMenu } from 'lib/appMenu';
@@ -9,16 +9,17 @@ import { prepareBootstrap } from 'lib/bootstrap';
 import { prepareCoreOutput } from 'lib/coreOutput';
 import { prepareMarket } from 'lib/market';
 import { prepareTransactions } from 'lib/transactions';
+import { settingsAtom } from 'lib/settings';
 import { prepareModules, prepareWebView } from 'lib/modules';
 import { prepareUpdater } from 'lib/updater';
 import { prepareSessionInfo } from 'lib/session';
 import UT from 'lib/usageTracking';
-import initialSettings from 'data/initialSettings';
 import App from './App';
 
 async function run() {
   try {
-    if (!initialSettings.manualDaemon) {
+    const { manualDaemon } = jotaiStore.get(settingsAtom);
+    if (!manualDaemon) {
       await startCore();
     }
   } finally {
@@ -43,7 +44,10 @@ async function run() {
     prepareWebView();
     prepareCoreOutput();
     prepareSessionInfo();
-    initialSettings.sendUsageData && UT.StartAnalytics();
+    const { sendUsageData } = jotaiStore.get(settingsAtom);
+    if (sendUsageData) {
+      UT.StartAnalytics();
+    }
   }
 }
 

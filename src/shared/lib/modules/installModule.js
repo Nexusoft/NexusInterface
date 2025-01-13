@@ -3,11 +3,11 @@ import fs from 'fs';
 import https from 'https';
 import axios from 'axios';
 
-import store from 'store';
+import store, { jotaiStore } from 'store';
 import * as TYPE from 'consts/actionTypes';
 import { showNotification, openModal } from 'lib/ui';
 import UT from 'lib/usageTracking';
-import { updateSettings } from 'lib/settings';
+import { updateSettings, settingsAtom } from 'lib/settings';
 import ModuleDetailsModal from 'components/ModuleDetailsModal';
 import { modulesDir } from 'consts/paths';
 import { walletDataDir } from 'consts/paths';
@@ -186,10 +186,8 @@ export async function installModule(path) {
 }
 
 export async function addDevModule(dirPath) {
-  const {
-    modules,
-    settings: { devModulePaths },
-  } = store.getState();
+  const { modules } = store.getState();
+  const { devModulePaths } = jotaiStore.get(settingsAtom);
   if (devModulePaths.includes(dirPath)) {
     openErrorDialog({
       message: __('Directory has already been added'),
@@ -215,9 +213,7 @@ export async function addDevModule(dirPath) {
     return;
   }
 
-  updateSettings({
-    devModulePaths: [dirPath, ...devModulePaths],
-  });
+  updateSettings('devModulePaths', [dirPath, ...devModulePaths]);
   store.dispatch({
     type: TYPE.ADD_DEV_MODULE,
     payload: module,

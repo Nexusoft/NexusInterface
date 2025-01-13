@@ -1,6 +1,6 @@
 // External
 import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useAtomValue } from 'jotai';
 import { ipcRenderer } from 'electron';
 import fs from 'fs';
 
@@ -11,7 +11,7 @@ import Switch from 'components/Switch';
 import Select from 'components/Select';
 import NexusAddress from 'components/NexusAddress';
 import UT from 'lib/usageTracking';
-import { updateSettings } from 'lib/settings';
+import { updateSettings, settingsAtom } from 'lib/settings';
 import { switchSettingsTab, showNotification } from 'lib/ui';
 import { loadCustomTheme } from 'lib/theme';
 import { accountsQuery } from 'lib/user';
@@ -44,10 +44,12 @@ const getTritiumDefaultAddress = memoize((accounts) => {
   return account?.address;
 });
 
-const setRenderGlobe = (renderGlobe) => updateSettings({ renderGlobe });
+const setRenderGlobe = (renderGlobe) =>
+  updateSettings('renderGlobe', renderGlobe);
 const setOverviewDisplay = (overviewDisplay) =>
-  updateSettings({ overviewDisplay });
-const setAddressStyle = (addressStyle) => updateSettings({ addressStyle });
+  updateSettings('overviewDisplay', overviewDisplay);
+const setAddressStyle = (addressStyle) =>
+  updateSettings('addressStyle', addressStyle);
 
 async function openPickThemeFileDialog() {
   const files = await ipcRenderer.invoke('show-open-dialog', {
@@ -77,7 +79,7 @@ async function exportThemeFileDialog() {
 }
 
 export default function SettingsStyle() {
-  const settings = useSelector((state) => state.settings);
+  const settings = useAtomValue(settingsAtom);
   const accounts = accountsQuery.use();
   const defaultAddress = getTritiumDefaultAddress(accounts);
   useEffect(() => {
@@ -128,7 +130,7 @@ export default function SettingsStyle() {
         <Switch
           checked={settings.hideOverviewBalances}
           onChange={(e) => {
-            updateSettings({ hideOverviewBalances: e.target.checked });
+            updateSettings('hideOverviewBalances', e.target.checked);
           }}
         />
       </SettingsField>

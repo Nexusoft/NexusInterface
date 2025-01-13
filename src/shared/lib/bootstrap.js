@@ -16,16 +16,14 @@ import { rm as deleteDirectory } from 'fs/promises';
 import { throttled } from 'utils/universal';
 import move from 'utils/move';
 import * as TYPE from 'consts/actionTypes';
-import { updateSettings } from 'lib/settings';
+import { updateSettings, settingAtoms } from 'lib/settings';
 import BootstrapModal from 'components/BootstrapModal';
 
 __ = __context('Bootstrap');
 
 const minFreeSpace = 15 * 1000 * 1000 * 1000; // 15 GB
 const getExtractDir = () => {
-  const {
-    settings: { coreDataDir },
-  } = store.getState();
+  const coreDataDir = jotaiStore.get(settingAtoms.coreDataDir);
   return path.join(coreDataDir, 'recent');
 };
 const recentDbUrlTritium = 'http://bootstrap.nexus.io/tritium.zip';
@@ -55,9 +53,7 @@ async function startBootstrap() {
   const setStatus = (step, details) => setBootstrapStatus(step, details);
 
   try {
-    const {
-      settings: { backupDirectory, coreDataDir },
-    } = store.getState();
+    const coreDataDir = jotaiStore.get(settingAtoms.coreDataDir);
     const extractDir = getExtractDir();
 
     aborting = false;
@@ -247,9 +243,7 @@ export async function bootstrap({ suggesting } = {}) {
     openModal(BootstrapModal);
   } else {
     if (suggesting) {
-      updateSettings({
-        bootstrapSuggestionDisabled: true,
-      });
+      updateSettings('bootstrapSuggestionDisabled', true);
     }
     setBootstrapStatus('idle');
   }

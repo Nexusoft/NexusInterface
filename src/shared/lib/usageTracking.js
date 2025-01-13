@@ -3,7 +3,7 @@
 ////////////////////////
 // Script that holds on to a visitor and is referenced when a visitor makes a action
 
-import store from 'store';
+// import store from 'store';
 import { trackEvent } from '@aptabase/electron/renderer';
 import { ipcRenderer } from 'electron';
 
@@ -11,25 +11,25 @@ const UT = {};
 
 UT.active = false;
 
-const getUserAgent = function () {
-  const { settings } = store.getState();
-  const userAgentPayload = {
-    cd_currency: {
-      value: settings.fiatCurrency,
-    },
-    app_version: {
-      value: APP_VERSION.toString(),
-    },
-    cd_language: {
-      value: settings.locale,
-    },
-    cd_overview_display_style: {
-      value: settings.overviewDisplay,
-    },
-  };
+// const getUserAgent = function () {
+//   const { settings } = store.getState();
+//   const userAgentPayload = {
+//     cd_currency: {
+//       value: settings.fiatCurrency,
+//     },
+//     app_version: {
+//       value: APP_VERSION.toString(),
+//     },
+//     cd_language: {
+//       value: settings.locale,
+//     },
+//     cd_overview_display_style: {
+//       value: settings.overviewDisplay,
+//     },
+//   };
 
-  return userAgentPayload;
-};
+//   return userAgentPayload;
+// };
 
 UT.SendScreen = function (screenTitle) {
   return; // right now lets not push too many events

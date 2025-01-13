@@ -1,6 +1,7 @@
 // External Dependencies
 import { useSelector } from 'react-redux';
 import { useRef, useEffect } from 'react';
+import { useAtomValue } from 'jotai';
 import styled from '@emotion/styled';
 import { ipcRenderer } from 'electron';
 import UT from 'lib/usageTracking';
@@ -23,7 +24,7 @@ import {
   resetConsole,
   openModal,
 } from 'lib/ui';
-import { updateSettings } from 'lib/settings';
+import { updateSettings, settingsAtom } from 'lib/settings';
 import documentsIcon from 'icons/documents.svg';
 import Tooltip from 'components/Tooltip';
 import Icon from 'components/Icon';
@@ -123,23 +124,22 @@ export default function NexusApiConsole() {
   const inputRef = useRef();
   const outputRef = useRef();
   const consoleInput = useSelector(consoleInputSelector);
+  const {
+    manualDaemon,
+    manualDaemonApiUser,
+    manualDaemonApiPassword,
+    consoleCliSyntax,
+  } = useAtomValue(settingsAtom);
   const apiUser = useSelector((state) =>
-    state.settings.manualDaemon
-      ? state.settings.manualDaemonApiUser
-      : state.core.config?.apiUser
+    manualDaemon ? manualDaemonApiUser : state.core.config?.apiUser
   );
   const apiPassword = useSelector((state) =>
-    state.settings.manualDaemon
-      ? state.settings.manualDaemonApiPassword
-      : state.core.config?.apiPassword
+    manualDaemon ? manualDaemonApiPassword : state.core.config?.apiPassword
   );
   const currentCommand = useSelector(
     (state) => state.ui.console.console.currentCommand
   );
   const output = useSelector((state) => state.ui.console.console.output);
-  const consoleCliSyntax = useSelector(
-    (state) => state.settings.consoleCliSyntax
-  );
 
   useEffect(() => {
     switchConsoleTab('Console');
@@ -258,7 +258,7 @@ export default function NexusApiConsole() {
                   options={syntaxOptions}
                   value={consoleCliSyntax}
                   onChange={(v) => {
-                    updateSettings({ consoleCliSyntax: v });
+                    updateSettings('consoleCliSyntax', v);
                     if (inputRef.current) {
                       inputRef.current.focus();
                     }

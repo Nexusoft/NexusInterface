@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
 import { useAtomValue } from 'jotai';
 import styled from '@emotion/styled';
 
@@ -9,7 +8,7 @@ import Switch from 'components/Switch';
 import { switchUserTab, openModal } from 'lib/ui';
 import { nameRecordsQuery } from 'lib/user';
 import { usernameAtom } from 'lib/session';
-import { updateSettings } from 'lib/settings';
+import { updateSettings, settingsAtom } from 'lib/settings';
 import { popupContextMenu } from 'lib/contextMenu';
 import { timing } from 'styles';
 import memoize from 'utils/memoize';
@@ -135,16 +134,14 @@ const filterNames = memoize((nameRecords, showUnusedNames) =>
 
 export default function Names() {
   const nameRecords = nameRecordsQuery.use();
-  const showUnusedNames = useSelector(
-    (state) => state.settings.showUnusedNames
-  );
+  const { showUnusedNames } = useAtomValue(settingsAtom);
   const filteredNames = filterNames(nameRecords, showUnusedNames);
   const username = useAtomValue(usernameAtom);
   useEffect(() => {
     switchUserTab('Names');
   }, []);
 
-  const toggle = () => updateSettings({ showUnusedNames: !showUnusedNames });
+  const toggle = () => updateSettings('showUnusedNames', !showUnusedNames);
 
   return (
     <TabContentWrapper maxWidth={500}>

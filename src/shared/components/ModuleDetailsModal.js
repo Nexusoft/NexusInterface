@@ -1,7 +1,6 @@
 // External
 import { useState } from 'react';
 import styled from '@emotion/styled';
-import { shell } from 'electron';
 import { useSelector } from 'react-redux';
 
 // Internal
@@ -15,10 +14,10 @@ import SimpleProgressBar from 'components/SimpleProgressBar';
 import UT from 'lib/usageTracking';
 import { confirm } from 'lib/dialog';
 import { navigate } from 'lib/wallet';
-import { updateSettings } from 'lib/settings';
+import { updateSettings, settingAtoms } from 'lib/settings';
 import { downloadAndInstall, abortModuleDownload } from 'lib/modules';
 import { timing } from 'styles';
-import store from 'store';
+import store, { jotaiStore } from 'store';
 import { rm as deleteDirectory } from 'fs/promises';
 
 import warningIcon from 'icons/warning.svg';
@@ -60,10 +59,11 @@ async function confirmDelete(module) {
   });
   if (confirmed) {
     if (module.development) {
-      const { devModulePaths } = store.getState().settings;
-      updateSettings({
-        devModulePaths: devModulePaths.filter((path) => path !== module.path),
-      });
+      const devModulePaths = jotaiStore.get(settingAtoms.devModulePaths);
+      updateSettings(
+        'devModulePaths',
+        devModulePaths.filter((path) => path !== module.path)
+      );
     } else {
       await deleteDirectory(module.path, { recursive: true, force: true });
       removeUpdateCache(module.repository);

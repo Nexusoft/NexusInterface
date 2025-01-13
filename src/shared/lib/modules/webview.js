@@ -1,7 +1,12 @@
 import { clipboard, shell } from 'electron';
 
 import * as TYPE from 'consts/actionTypes';
-import store, { jotaiStore, subscribe, observeStore } from 'store';
+import store, {
+  jotaiStore,
+  subscribe,
+  observeStore,
+  subscribeWithPrevious,
+} from 'store';
 import { showNotification } from 'lib/ui';
 import {
   openConfirmDialog,
@@ -10,6 +15,7 @@ import {
   openInfoDialog,
   confirmPin,
 } from 'lib/dialog';
+import { settingsAtom } from 'lib/settings';
 import { coreInfoAtom } from 'lib/coreInfo';
 import { userStatusAtom } from 'lib/session';
 import { popupContextMenu, defaultMenu } from 'lib/contextMenu';
@@ -39,11 +45,10 @@ const settingsChanged = (settings1, settings2) =>
       settings1.addressStyle !== settings2.addressStyle
     : true;
 
-const getWalletData = ({
-  theme,
-  settings: { locale, fiatCurrency, addressStyle },
-  addressBook,
-}) => ({
+const getWalletData = (
+  { theme, addressBook },
+  { locale, fiatCurrency, addressStyle }
+) => ({
   theme,
   settings: getSettingsForModules(locale, fiatCurrency, addressStyle),
   coreInfo: jotaiStore.get(coreInfoAtom),
@@ -314,11 +319,12 @@ export function prepareWebView() {
         webview.addEventListener('ipc-message', handleIpcMessage);
         webview.addEventListener('dom-ready', async () => {
           const state = store.getState();
+          const settings = jotaiStore.get(settingsAtom);
           const moduleState = state.moduleStates[moduleName];
           const activeModule = getActiveModule();
           const storageData = await readModuleStorage(activeModule);
           webview.send('initialize', {
-            ...getWalletData(state),
+            ...getWalletData(state, settings),
             moduleState,
             storageData,
           });
@@ -327,15 +333,12 @@ export function prepareWebView() {
     }
   );
 
-  observeStore(
-    (state) => state.settings,
-    (newSettings, oldSettings) => {
-      if (settingsChanged(oldSettings, newSettings)) {
-        const settings = getSettingsForModules(newSettings);
-        sendWalletDataUpdated({ settings });
-      }
+  subscribeWithPrevious(settingsAtom, (newSettings, oldSettings) => {
+    if (settingsChanged(oldSettings, newSettings)) {
+      const settings = getSettingsForModules(newSettings);
+      sendWalletDataUpdated({ settings });
     }
-  );
+  });
 
   observeStore(
     (state) => state.theme,

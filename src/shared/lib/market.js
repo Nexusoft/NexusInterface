@@ -2,7 +2,8 @@ import axios from 'axios';
 import { atom } from 'jotai';
 import { atomWithQuery } from 'jotai-tanstack-query';
 import { ledgerInfoAtom } from './ledger';
-import store, { observeStore, jotaiStore } from 'store';
+import { jotaiStore } from 'store';
+import { settingAtoms } from './settings';
 import { tryParsingJson } from 'utils/json';
 
 __ = __context('MarketData');
@@ -68,24 +69,16 @@ function addToCache(cache, marketData) {
 }
 
 export function prepareMarket() {
-  observeStore(
-    ({ settings: { fiatCurrency } }) => fiatCurrency,
-    () => {
-      const refetchMarketData = jotaiStore.get(refetchMarketDataAtom);
-      refetchMarketData();
-    }
-  );
+  jotaiStore.sub(settingAtoms.fiatCurrency, () => {
+    const refetchMarketData = jotaiStore.get(refetchMarketDataAtom);
+    refetchMarketData();
+  });
 }
 
-// Temporary atom
-// TODO: remove this after settings get converted into jotai
-export const fiatCurrencyAtom = atom(
-  (get) => store.getState()?.settings.fiatCurrency
-);
-
+// TODO: convert to jotaiQuery
 export const marketDataPollingAtom = atomWithQuery((get) => ({
-  queryKey: ['marketData', get(fiatCurrencyAtom)],
-  queryFn: () => fetchMarketData(get(fiatCurrencyAtom)),
+  queryKey: ['marketData', get(settingAtoms.fiatCurrency)],
+  queryFn: () => fetchMarketData(get(settingAtoms.fiatCurrency)),
   retry: 2,
   retryDelay: 5000,
   staleTime: 3600000, // 1 hour

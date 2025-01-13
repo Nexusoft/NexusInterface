@@ -1,13 +1,14 @@
 // External
-import { useSelector } from 'react-redux';
+import { useAtomValue } from 'jotai';
 
 // Internal
+import { settingsAtom } from 'lib/settings';
 import SegmentedAddress from './SegmentedAddress';
 import TruncateMiddleAddress from './TruncateMiddleAddress';
 import RawAddress from './RawAddress';
 
 export default function NexusAddress({ type, ...rest }) {
-  const addressStyle = useSelector((state) => state.settings.addressStyle);
+  const { addressStyle } = useAtomValue(settingsAtom);
 
   switch (type || addressStyle) {
     case 'raw':

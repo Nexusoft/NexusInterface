@@ -9,6 +9,7 @@ import TokenName from 'components/TokenName';
 import QuestionCircle from 'components/QuestionCircle';
 import { formatNumber, formatCurrency } from 'lib/intl';
 import { marketDataAtom } from 'lib/market';
+import { settingsAtom } from 'lib/settings';
 import { balancesQuery } from 'lib/user';
 import { useSynchronized } from 'lib/coreInfo';
 
@@ -52,9 +53,7 @@ function UnsyncWarning() {
 const blank = <span className="dim">-</span>;
 
 function BalanceValue({ children }) {
-  const hideOverviewBalances = useSelector(
-    (state) => state.settings.hideOverviewBalances
-  );
+  const { hideOverviewBalances } = useAtomValue(settingsAtom);
 
   if (hideOverviewBalances) {
     return blank;
@@ -65,9 +64,7 @@ function BalanceValue({ children }) {
 export function NXSBalanceStat() {
   const [nxsBalances, tokenBalances] = balancesQuery.use();
   const synchronized = useSynchronized();
-  const hideOverviewBalances = useSelector(
-    (state) => state.settings.hideOverviewBalances
-  );
+  const { hideOverviewBalances } = useAtomValue(settingsAtom);
 
   return (
     <Stat

@@ -13,12 +13,13 @@ const ListItem = styled.li({
 });
 
 async function enableLiteMode() {
-  updateSettings({ liteMode: true, liteModeNoticeDisabled: true });
+  updateSettings('liteMode', true);
+  updateSettings('liteModeNoticeDisabled', true);
   await restartCore();
 }
 
 function ignore() {
-  updateSettings({ liteModeNoticeDisabled: true });
+  updateSettings('liteModeNoticeDisabled', true);
 }
 
 export default function LiteModeNotice() {

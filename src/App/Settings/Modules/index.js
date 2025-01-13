@@ -1,11 +1,13 @@
 // External
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { useAtomValue } from 'jotai';
 import styled from '@emotion/styled';
 import { shell } from 'electron';
 
 // Internal
 import { switchSettingsTab } from 'lib/ui';
+import { settingsAtom } from 'lib/settings';
 import { timing } from 'styles';
 import Tooltip from 'components/Tooltip';
 
@@ -37,7 +39,7 @@ const FailedModule = styled.div(({ theme }) => ({
 export default function SettingsModules() {
   const modules = useSelector((state) => state.modules);
   const failedModules = useSelector((state) => state.failedModules);
-  const devMode = useSelector((state) => state.settings.devMode);
+  const { devMode } = useAtomValue(settingsAtom);
   const moduleList = Object.values(modules);
 
   useEffect(() => {

@@ -1,11 +1,13 @@
 // External
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { useAtomValue } from 'jotai';
 import styled from '@emotion/styled';
+import UT from 'lib/usageTracking';
 import * as AutoLaunch from 'auto-launch';
 
 // Internal Global
-import { updateSettings } from 'lib/settings';
+import { updateSettings, settingsAtom } from 'lib/settings';
 import { switchSettingsTab } from 'lib/ui';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
@@ -82,10 +84,10 @@ async function toggleOpenOnStart(e) {
   });
   if (checked) {
     nexusAutoLaunch.enabled();
-    updateSettings({ openOnStart: true });
+    updateSettings('openOnStart', true);
   } else {
     nexusAutoLaunch.disabled();
-    updateSettings({ openOnStart: false });
+    updateSettings('openOnStart', false);
   }
 }
 
@@ -101,7 +103,7 @@ async function toggleVerifyModuleSource(e) {
       ),
     });
     if (confirmed) {
-      updateSettings({ verifyModuleSource: true });
+      updateSettings('verifyModuleSource', true);
       location.reload();
     }
   } else {
@@ -129,7 +131,7 @@ async function toggleVerifyModuleSource(e) {
       style: { width: 600 },
     });
     if (confirmed) {
-      updateSettings({ verifyModuleSource: false });
+      updateSettings('verifyModuleSource', false);
       location.reload();
     }
   }
@@ -151,25 +153,23 @@ async function handleAutoUpdateChange(e) {
       style: { width: 580 },
     });
     if (!confirmed) {
-      updateSettings({ autoUpdate: false });
+      updateSettings('autoUpdate', false);
       stopAutoUpdate();
     }
   } else {
-    updateSettings({ autoUpdate: true });
+    updateSettings('autoUpdate', true);
     checkForUpdates();
   }
 }
 
 export default function SettingsApp() {
-  const settings = useSelector((state) => state.settings);
+  const settings = useAtomValue(settingsAtom);
   useEffect(() => {
     switchSettingsTab('App');
   }, []);
 
   const updateHandlers = (settingName) => (input) =>
-    updateSettings({
-      [settingName]: form.resolveValue(input),
-    });
+    updateSettings(settingName, form.resolveValue(input));
 
   return (
     <>
@@ -264,7 +264,14 @@ export default function SettingsApp() {
       >
         <Switch
           checked={settings.sendUsageData}
-          onChange={updateHandlers('sendUsageData')}
+          onChange={(value) => {
+            if (value) {
+              UT.EnableAnalytics();
+            } else {
+              UT.DisableAnalytics();
+            }
+            updateSettings('sendUsageData', value);
+          }}
         />
       </SettingsField>
 

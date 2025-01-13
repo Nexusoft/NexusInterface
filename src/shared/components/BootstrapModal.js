@@ -1,6 +1,7 @@
 // External
 import { useRef, useEffect, useContext } from 'react';
 import { useSelector } from 'react-redux';
+import { useAtomValue } from 'jotai';
 import prettyBytes from 'utils/prettyBytes';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/react';
@@ -10,6 +11,7 @@ import ControlledModal from 'components/ControlledModal';
 import Button from 'components/Button';
 import { showBackgroundTask, removeModal } from 'lib/ui';
 import { confirm } from 'lib/dialog';
+import { settingsAtom } from 'lib/settings';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import ModalContext from 'context/modal';
@@ -153,11 +155,6 @@ const getStatusMsg = ({ step, details }, locale) => {
   }
 };
 
-const selectStatusMsg = memoize(getStatusMsg, (state) => [
-  state.bootstrap,
-  state.settings.locale,
-]);
-
 async function confirmAbort() {
   const confirmed = await confirm({
     question: __('Are you sure you want to abort the process?'),
@@ -172,7 +169,9 @@ async function confirmAbort() {
 }
 
 export default function BootstrapModal(props) {
-  const statusMsg = useSelector(selectStatusMsg);
+  const { locale } = useAtomValue(settingsAtom);
+  const bootstrap = useSelector((state) => state.bootstrap);
+  const statusMsg = getStatusMsg(bootstrap, locale);
   const percentage = useSelector(selectPercentage);
   const modalID = useContext(ModalContext);
 

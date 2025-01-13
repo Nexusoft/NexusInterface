@@ -1,5 +1,4 @@
 import path from 'path';
-import { useSelector } from 'react-redux';
 
 import Form from 'components/Form';
 import SettingsField from 'components/SettingsField';
@@ -7,14 +6,14 @@ import Button from 'components/Button';
 import Switch from 'components/Switch';
 import TextField from 'components/TextField';
 import { useFieldValue } from 'lib/form';
-import { updateSettings } from 'lib/settings';
+import { updateSettings, settingAtoms } from 'lib/settings';
 import { confirm, openErrorDialog } from 'lib/dialog';
 import { restartCore, stopCore, startCore } from 'lib/core';
 import { defaultConfig } from 'lib/coreConfig';
 import { preRelease } from 'consts/misc';
 import { rm as deleteDirectory } from 'fs/promises';
 import { consts } from 'styles';
-import store from 'store';
+import store, { jotaiStore } from 'store';
 
 __ = __context('Settings.Core');
 
@@ -403,7 +402,7 @@ async function reloadTxHistory() {
     note: 'Nexus Core will be restarted, after that, it will take a while for the transaction history to be reloaded',
   });
   if (confirmed) {
-    updateSettings({ walletClean: true });
+    updateSettings('walletClean', true);
     restartCore();
   }
 }
@@ -417,7 +416,7 @@ async function clearPeerConnections() {
     note: 'Nexus Core will be restarted. After that, all stored peer connections will be reset.',
   });
   if (confirmed) {
-    updateSettings({ clearPeers: true });
+    updateSettings('clearPeers', true);
     restartCore();
   }
 }
@@ -433,11 +432,9 @@ async function resyncLiteMode() {
     ),
   });
   if (confirmed) {
-    updateSettings({ clearPeers: true });
+    updateSettings('clearPeers', true);
     await stopCore();
-    const {
-      settings: { coreDataDir },
-    } = store.getState();
+    const coreDataDir = jotaiStore.get(settingAtoms.coreDataDir);
     const clientFolder = path.join(coreDataDir, 'client');
     try {
       await deleteDirectory(clientFolder, { recursive: true, force: true });
