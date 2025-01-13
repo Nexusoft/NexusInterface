@@ -2,9 +2,8 @@ import { ipcRenderer } from 'electron';
 import log from 'electron-log';
 
 import * as TYPE from 'consts/actionTypes';
-import store from 'store';
-import { loadNexusConf, saveCoreConfig } from 'lib/coreConfig';
-import { jotaiStore } from 'store';
+import store, { jotaiStore } from 'store';
+import { loadNexusConf, coreConfigAtom } from 'lib/coreConfig';
 import { coreInfoPausedAtom } from './coreInfo';
 import { callAPI } from 'lib/api';
 import { updateSettings, settingsAtom } from 'lib/settings';
@@ -25,17 +24,22 @@ export const startCore = async () => {
     log.info('Core Manager: Remote Core mode, skipping starting core');
     return;
   }
+
+  // Check if core exists
+  if (!(await ipcRenderer.invoke('check-core-exists'))) {
+    throw new Error('Core not found');
+  }
+
+  // Load config
+  const conf = await loadNexusConf();
+  jotaiStore.set(coreConfigAtom, conf);
+
   // Check if core's already running
   if (await ipcRenderer.invoke('check-core-running')) {
     log.info(
       'Core Manager: Nexus Core Process already running. Skipping starting core'
     );
-    saveCoreConfig(await loadNexusConf());
     return;
-  }
-  // Check if core exists
-  if (!(await ipcRenderer.invoke('check-core-exists'))) {
-    throw new Error('Core not found');
   }
   // if (settings.clearPeers) {
   //   if (fs.existsSync(path.join(conf.dataDir, 'addr.bak'))) {
@@ -49,9 +53,6 @@ export const startCore = async () => {
   //   }
   //   updateSettingsFile({ clearPeers: false });
   // }
-
-  // Load config
-  const conf = await loadNexusConf();
 
   // Prepare parameters
   const params = [
@@ -133,7 +134,6 @@ export const startCore = async () => {
 
   // Start core
   await ipcRenderer.invoke('start-core', params);
-  saveCoreConfig(conf);
   jotaiStore.set(coreInfoPausedAtom, false);
 };
 

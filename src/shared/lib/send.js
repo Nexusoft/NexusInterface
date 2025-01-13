@@ -4,9 +4,10 @@ import qs from 'querystring';
 
 import { navigate } from 'lib/wallet';
 import { useFieldValue, getFormInstance } from 'lib/form';
+import { coreConfigAtom } from './coreConfig';
 import { accountsQuery, tokensQuery } from './user';
 import { timeToObject } from 'utils/misc';
-import store from 'store';
+import store, { jotaiStore } from 'store';
 import memoize from 'utils/memoize';
 
 export const formName = 'send';
@@ -30,7 +31,7 @@ function getDefaultExpiry() {
     expireMinutes: 0,
     expireSeconds: 0,
   };
-  const txExpiry = store.getState().core.config?.txExpiry;
+  const txExpiry = jotaiStore.get(coreConfigAtom)?.txExpiry;
   if (txExpiry) {
     const { days, hours, minutes, seconds } = timeToObject(txExpiry);
     expiry.expireDays = days;

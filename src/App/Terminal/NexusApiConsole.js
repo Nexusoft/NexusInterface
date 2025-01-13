@@ -25,6 +25,7 @@ import {
   openModal,
 } from 'lib/ui';
 import { updateSettings, settingsAtom } from 'lib/settings';
+import { coreConfigAtom } from 'lib/coreConfig';
 import documentsIcon from 'icons/documents.svg';
 import Tooltip from 'components/Tooltip';
 import Icon from 'components/Icon';
@@ -130,12 +131,11 @@ export default function NexusApiConsole() {
     manualDaemonApiPassword,
     consoleCliSyntax,
   } = useAtomValue(settingsAtom);
-  const apiUser = useSelector((state) =>
-    manualDaemon ? manualDaemonApiUser : state.core.config?.apiUser
-  );
-  const apiPassword = useSelector((state) =>
-    manualDaemon ? manualDaemonApiPassword : state.core.config?.apiPassword
-  );
+  const coreConfig = useAtomValue(coreConfigAtom);
+  const apiUser = manualDaemon ? manualDaemonApiUser : coreConfig?.apiUser;
+  const apiPassword = manualDaemon
+    ? manualDaemonApiPassword
+    : coreConfig?.apiPassword;
   const currentCommand = useSelector(
     (state) => state.ui.console.console.currentCommand
   );

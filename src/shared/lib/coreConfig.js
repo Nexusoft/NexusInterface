@@ -3,10 +3,15 @@ import path from 'path';
 import log from 'electron-log';
 import crypto from 'crypto';
 import macaddress from 'macaddress';
+import { atom } from 'jotai';
 
-import store, { jotaiStore } from 'store';
+import { jotaiStore } from 'store';
 import { settingsAtom } from './settings';
-import * as TYPE from 'consts/actionTypes';
+
+/**
+ * Cache the core config used at the most recent time core was started
+ */
+export const coreConfigAtom = atom(null);
 
 function generateDefaultPassword() {
   let randomNumbers = ['', ''];
@@ -162,18 +167,8 @@ export async function loadNexusConf() {
   });
 }
 
-export function saveCoreConfig(conf) {
-  return store.dispatch({
-    type: TYPE.SET_CORE_CONFIG,
-    payload: conf,
-  });
-}
-
 export async function getActiveCoreConfig() {
   const settings = jotaiStore.get(settingsAtom);
-  const {
-    core: { config },
-  } = store.getState();
 
   if (settings.manualDaemon) {
     return customConfig({
@@ -185,13 +180,14 @@ export async function getActiveCoreConfig() {
       apiPassword: settings.manualDaemonApiPassword,
     });
   } else {
+    const config = jotaiStore.get(coreConfigAtom);
     if (config) {
       // Config cached when core was started,
       return config;
     } else {
       // If there's no cached config, load it from nexus.conf
       const conf = await loadNexusConf();
-      saveCoreConfig(conf);
+      jotaiStore.set(coreConfigAtom, conf);
       return conf;
     }
   }
