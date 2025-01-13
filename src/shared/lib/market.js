@@ -2,7 +2,7 @@ import axios from 'axios';
 import { atom } from 'jotai';
 import { atomWithQuery } from 'jotai-tanstack-query';
 import { ledgerInfoAtom } from './ledger';
-import { jotaiStore } from 'store';
+import { jotaiStore, jotaiQuery } from 'store';
 import { settingAtoms } from './settings';
 import { tryParsingJson } from 'utils/json';
 
@@ -68,34 +68,22 @@ function addToCache(cache, marketData) {
   localStorage.setItem(localStorageKey, JSON.stringify(newCache));
 }
 
-export function prepareMarket() {
-  jotaiStore.sub(settingAtoms.fiatCurrency, () => {
-    const refetchMarketData = jotaiStore.get(refetchMarketDataAtom);
-    refetchMarketData();
-  });
-}
-
-// TODO: convert to jotaiQuery
-export const marketDataPollingAtom = atomWithQuery((get) => ({
-  queryKey: ['marketData', get(settingAtoms.fiatCurrency)],
-  queryFn: () => fetchMarketData(get(settingAtoms.fiatCurrency)),
-  retry: 2,
-  retryDelay: 5000,
-  staleTime: 3600000, // 1 hour
-  refetchInterval: 900000, // 15 minutes
-  refetchOnReconnect: 'always',
-  placeholderData: (previousData) => previousData,
-}));
-
-export const marketDataAtom = atom(
-  (get) => get(marketDataPollingAtom)?.data || null
-);
-
-export const refetchMarketDataAtom = atom(
-  (get) => get(marketDataPollingAtom)?.refetch || (() => {})
-);
+export const marketDataQuery = jotaiQuery({
+  getQueryConfig: (get) => ({
+    queryKey: ['marketData', get(settingAtoms.fiatCurrency)],
+    queryFn: () => fetchMarketData(get(settingAtoms.fiatCurrency)),
+    retry: 2,
+    retryDelay: 5000,
+    staleTime: 3600000, // 1 hour
+    refetchInterval: 900000, // 15 minutes
+    refetchOnReconnect: 'always',
+    placeholderData: (previousData) => previousData,
+  }),
+  refetchTriggers: [settingAtoms.fiatCurrency],
+});
 
 export const marketCapAtom = atom(
   (get) =>
-    get(marketDataAtom)?.price * get(ledgerInfoAtom)?.supply?.total || null
+    get(marketDataQuery.valueAtom)?.price *
+      get(ledgerInfoAtom)?.supply?.total || null
 );

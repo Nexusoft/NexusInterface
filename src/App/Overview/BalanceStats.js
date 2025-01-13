@@ -8,7 +8,7 @@ import Tooltip from 'components/Tooltip';
 import TokenName from 'components/TokenName';
 import QuestionCircle from 'components/QuestionCircle';
 import { formatNumber, formatCurrency } from 'lib/intl';
-import { marketDataAtom } from 'lib/market';
+import { marketDataQuery } from 'lib/market';
 import { settingsAtom } from 'lib/settings';
 import { balancesQuery } from 'lib/user';
 import { useSynchronized } from 'lib/coreInfo';
@@ -108,7 +108,7 @@ export function NXSBalanceStat() {
 
 export function NXSFiatBalanceStat() {
   const [nxsBalances] = balancesQuery.use();
-  const marketData = useAtomValue(marketDataAtom);
+  const marketData = marketDataQuery.use();
   const { price, currency } = marketData || {};
 
   return (

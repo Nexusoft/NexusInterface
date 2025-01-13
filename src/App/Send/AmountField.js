@@ -11,7 +11,7 @@ import FormField from 'components/FormField';
 import Link from 'components/Link';
 import TokenName from 'components/TokenName';
 import { useSource } from 'lib/send';
-import { marketDataAtom } from 'lib/market';
+import { marketDataQuery } from 'lib/market';
 
 __ = __context('Send');
 
@@ -77,7 +77,7 @@ function positiveNumber(value) {
 
 export default function AmountField({ parentFieldName }) {
   const source = useSource();
-  const marketData = useAtomValue(marketDataAtom);
+  const marketData = marketDataQuery.use();
   const { price, currency } = marketData || {};
   const form = useForm();
   const fullAmount = (source?.account || source?.token)?.balance;

@@ -14,7 +14,7 @@ import Tooltip from 'components/Tooltip';
 import listAll from 'utils/listAll';
 import { formatDateTime, formatNumber, formatCurrency } from 'lib/intl';
 import { openModal, toggleUserBalanceDisplayFiat } from 'lib/ui';
-import { marketDataAtom } from 'lib/market';
+import { marketDataQuery } from 'lib/market';
 import { lookupAddress } from 'lib/addressBook';
 import TokenName from 'components/TokenName';
 import { handleError } from 'utils/form';
@@ -236,7 +236,7 @@ const Amount = styled.span(({ theme, possitive }) => ({
 export default function AccountHistoryModal({ account }) {
   const [contracts, setContracts] = useState(null);
   const showFiat = useSelector((state) => state.ui.user.balancesShowFiat);
-  const marketData = useAtomValue(marketDataAtom);
+  const marketData = marketDataQuery.use();
   const { price, currency } = marketData || {};
   const closeModalRef = useRef();
 

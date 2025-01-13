@@ -3,7 +3,7 @@ import { useAtomValue } from 'jotai';
 
 // Internal
 import { formatNumber, formatCurrency } from 'lib/intl';
-import { marketDataAtom, marketCapAtom } from 'lib/market';
+import { marketDataQuery, marketCapAtom } from 'lib/market';
 
 // Images
 import chartIcon from 'icons/chart.svg';
@@ -23,7 +23,7 @@ function CurrencyValue({ value, currency, fiatDecimals, btcDecimals }) {
 }
 
 export function PriceStat() {
-  const marketData = useAtomValue(marketDataAtom);
+  const marketData = marketDataQuery.use();
   const { price, currency } = marketData || {};
 
   return (
@@ -47,7 +47,7 @@ export function PriceStat() {
 }
 
 export function MarketCapStat() {
-  const marketData = useAtomValue(marketDataAtom);
+  const marketData = marketDataQuery.use();
   const marketCap = useAtomValue(marketCapAtom);
   const { currency } = marketData || {};
 
@@ -72,7 +72,7 @@ export function MarketCapStat() {
 }
 
 export function PctChangeStat() {
-  const marketData = useAtomValue(marketDataAtom);
+  const marketData = marketDataQuery.use();
   const { changePct24Hr, currency } = marketData || {};
 
   return (

@@ -7,7 +7,6 @@ import { prepareWallet } from 'lib/wallet';
 import { prepareMenu } from 'lib/appMenu';
 import { prepareBootstrap } from 'lib/bootstrap';
 import { prepareCoreOutput } from 'lib/coreOutput';
-import { prepareMarket } from 'lib/market';
 import { prepareTransactions } from 'lib/transactions';
 import { settingsAtom } from 'lib/settings';
 import { prepareModules, prepareWebView } from 'lib/modules';
@@ -24,7 +23,6 @@ async function run() {
     }
   } finally {
     prepareWallet();
-    prepareMarket();
     prepareModules();
 
     const domNode = document.getElementById('root');
