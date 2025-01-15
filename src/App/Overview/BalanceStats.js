@@ -1,5 +1,4 @@
 // External
-import { useSelector } from 'react-redux';
 import { useAtomValue } from 'jotai';
 
 // Internal
@@ -10,6 +9,7 @@ import QuestionCircle from 'components/QuestionCircle';
 import { formatNumber, formatCurrency } from 'lib/intl';
 import { marketDataQuery } from 'lib/market';
 import { settingsAtom } from 'lib/settings';
+import { themeAtom } from 'lib/theme';
 import { balancesQuery } from 'lib/user';
 import { useSynchronized } from 'lib/coreInfo';
 
@@ -134,7 +134,7 @@ export function NXSFiatBalanceStat() {
 }
 
 export function FeaturedTokenBalanceStat() {
-  const theme = useSelector((state) => state.theme);
+  const theme = useAtomValue(themeAtom);
   const [nxsBalances, tokenBalances] = balancesQuery.use();
   const featuredToken = theme.featuredTokenName
     ? tokenBalances?.find((token) => token.ticker === theme.featuredTokenName)

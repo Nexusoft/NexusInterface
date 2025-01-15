@@ -7,12 +7,12 @@ import { readSettings, writeSettings } from './universal';
 const initialUserSettings = readSettings();
 const userSettingsAtom = atom(initialUserSettings);
 
-const mergeSettings = memoize((defaultSettings, userSettings) => ({
+const mergeWithDefault = memoize((userSettings) => ({
   ...defaultSettings,
   ...userSettings,
 }));
 export const settingsAtom = atom((get) =>
-  mergeSettings(defaultSettings, get(userSettingsAtom))
+  mergeWithDefault(get(userSettingsAtom))
 );
 
 const timerId = null;

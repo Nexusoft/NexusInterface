@@ -16,6 +16,7 @@ import {
   confirmPin,
 } from 'lib/dialog';
 import { settingsAtom } from 'lib/settings';
+import { themeAtom } from 'lib/theme';
 import { coreInfoAtom } from 'lib/coreInfo';
 import { userStatusAtom } from 'lib/session';
 import { popupContextMenu, defaultMenu } from 'lib/contextMenu';
@@ -340,12 +341,9 @@ export function prepareWebView() {
     }
   });
 
-  observeStore(
-    (state) => state.theme,
-    (theme) => {
-      sendWalletDataUpdated({ theme });
-    }
-  );
+  subscribe(themeAtom, (theme) => {
+    sendWalletDataUpdated({ theme });
+  });
 
   subscribe(coreInfoAtom, (coreInfo) => {
     sendWalletDataUpdated({ coreInfo });

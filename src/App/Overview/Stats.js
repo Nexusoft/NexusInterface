@@ -1,5 +1,4 @@
 // External
-import { useSelector } from 'react-redux';
 import { useAtomValue } from 'jotai';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/react';
@@ -7,7 +6,7 @@ import { keyframes } from '@emotion/react';
 // Internal
 import { timing, consts } from 'styles';
 import { settingsAtom } from 'lib/settings';
-
+import { themeAtom } from 'lib/theme';
 import {
   NXSBalanceStat,
   NXSFiatBalanceStat,
@@ -92,9 +91,7 @@ const StatsColumn = styled.div(
 
 export default function Stats({ showingGlobe }) {
   const { overviewDisplay } = useAtomValue(settingsAtom);
-  const featuredTokenName = useSelector(
-    (state) => state.theme?.featuredTokenName
-  );
+  const featuredTokenName = useAtomValue(themeAtom)?.featuredTokenName;
 
   if (overviewDisplay === 'none') {
     return <OverviewPage />;

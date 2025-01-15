@@ -1,6 +1,6 @@
 // External
-import { useSelector } from 'react-redux';
 import { ipcRenderer } from 'electron';
+import { useAtomValue } from 'jotai';
 
 // Internal
 import Button from 'components/Button';
@@ -9,6 +9,7 @@ import {
   cosmicLightBackground,
   nexusThemeBackground,
   updateTheme,
+  themeAtom,
 } from 'lib/theme';
 
 __ = __context('Settings.Style');
@@ -34,8 +35,7 @@ async function handleFilePick(e) {
 }
 
 export default function BackgroundPicker() {
-  const wallpaper = useSelector((state) => state.theme.wallpaper);
-  console.log(wallpaper);
+  const wallpaper = useAtomValue(themeAtom)?.wallpaper;
   const customWallpaper =
     wallpaper !== starryNightBackground &&
     wallpaper !== cosmicLightBackground &&

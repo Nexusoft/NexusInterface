@@ -8,7 +8,7 @@ import {
   useNavigate,
 } from 'react-router-dom';
 import styled from '@emotion/styled';
-import { useSelector } from 'react-redux';
+import { useAtomValue } from 'jotai';
 
 // Internal
 import GlobalStyles from 'components/GlobalStyles';
@@ -16,6 +16,7 @@ import ThemeController from 'components/ThemeController';
 import { showDefaultMenu } from 'lib/contextMenu';
 import { setNavigate } from 'lib/wallet';
 import { useCoreInfoPolling } from 'lib/coreInfo';
+import { themeAtom } from 'lib/theme';
 
 import Overlays from './Overlays';
 import Overview from './Overview';
@@ -60,7 +61,7 @@ function NavigateExporter() {
 
 export default function App() {
   useCoreInfoPolling();
-  const theme = useSelector((state) => state.theme);
+  const theme = useAtomValue(themeAtom);
   return (
     <HashRouter>
       <NavigateExporter />

@@ -1,8 +1,9 @@
 import https from 'https';
 import fs from 'fs';
+import { atom } from 'jotai';
 
-import * as TYPE from 'consts/actionTypes';
-import store from 'store';
+import memoize from 'utils/memoize';
+import { jotaiStore, subscribe } from 'store';
 import path from 'path';
 import { walletDataDir } from 'consts/paths';
 import { readJson, writeJson } from 'utils/json';
@@ -53,33 +54,15 @@ export const nexusTheme = {
   primaryAccent: '#E1EFF8',
 };
 
-// TODO: remove this after a few versions
-function transformTheme(theme) {
-  let changed = false;
-  if (theme.defaultStyle) {
-    changed = true;
-    if (theme.defaultStyle?.startsWith('Light')) {
-      theme.dark = false;
-      if (!theme.wallpaper) {
-        theme.wallpaper = cosmicLightBackground;
-      }
-    } else {
-      theme.dark = true;
-      if (!theme.wallpaper) {
-        theme.wallpaper = starryNightBackground;
-      }
-    }
-    delete theme.defaultStyle;
-  }
-  return changed;
-}
+const defaultTheme = darkTheme;
 
 function readTheme() {
   if (fs.existsSync(themeFilePath)) {
     const json = readJson(themeFilePath) || {};
     return json;
   } else {
-    return darkTheme;
+    // return darkTheme;
+    return {};
   }
 }
 
@@ -87,19 +70,23 @@ function writeTheme(theme) {
   return writeJson(themeFilePath, theme);
 }
 
-function loadThemeFromFile() {
-  const customTheme = readTheme();
-  const changed = transformTheme(customTheme);
-  if (changed) {
-    writeTheme(customTheme);
-  }
-  return { ...darkTheme, ...customTheme };
-}
+const initialUserTheme = readTheme();
+const userThemeAtom = atom(initialUserTheme);
 
-function updateThemeFile(updates) {
-  const theme = readTheme();
-  return writeTheme({ ...theme, ...updates });
-}
+const mergeWithDefault = memoize((userTheme) => ({
+  ...defaultTheme,
+  ...userTheme,
+}));
+export const themeAtom = atom((get) => mergeWithDefault(get(userThemeAtom)));
+
+const timerId = null;
+subscribe(userThemeAtom, (theme) => {
+  clearTimeout(timerId);
+  // Write to file asynchronously to batch multiple consecutive updates into one disk write
+  setTimeout(() => {
+    writeTheme(theme);
+  }, 0);
+});
 
 const downloadWallpaper = (wallpaper) =>
   new Promise((resolve, reject) => {
@@ -125,35 +112,18 @@ const downloadWallpaper = (wallpaper) =>
       });
   });
 
-export const loadTheme = loadThemeFromFile;
-
 export const updateTheme = (updates) => {
-  store.dispatch({ type: TYPE.UPDATE_THEME, payload: updates });
-  updateThemeFile(updates);
+  jotaiStore.set(userThemeAtom, (userTheme) => ({ ...userTheme, ...updates }));
 };
 
 export const setTheme = (theme) => {
-  store.dispatch({ type: TYPE.SET_THEME, payload: theme });
-  writeTheme(theme);
-};
-
-export const resetColors = () => {
-  const theme = readTheme();
-  const newTheme = {};
-  if (theme.wallpaper) newTheme.wallpaper = theme.wallpaper;
-  store.dispatch({ type: TYPE.SET_THEME, payload: newTheme });
-  return writeTheme(newTheme);
+  jotaiStore.set(userThemeAtom, theme);
 };
 
 export async function loadCustomTheme(path) {
   const theme = readJson(path);
   if (!theme) {
     throw new Error('Fail to read json file at ' + path);
-  }
-
-  const changed = transformTheme(theme);
-  if (changed) {
-    writeJson(path, theme);
   }
 
   if (theme.wallpaper && theme.wallpaper.startsWith('http')) {
