@@ -231,7 +231,7 @@ export function prepareSessionInfo() {
           openModal(LoginModal);
         } else {
           openModal(NewUserModal);
-          updateSettings('firstCreateNewUserShown', true);
+          updateSettings({ firstCreateNewUserShown: true });
         }
       }
     }
@@ -345,7 +345,7 @@ async function shouldUnlockStaking() {
     });
     jotaiStore.set(startStakingAsked, true);
     if (checkboxRef.current?.checked) {
-      updateSettings('dontAskToStartStaking', true);
+      updateSettings({ dontAskToStartStaking: true });
     }
     if (accepted) {
       return true;

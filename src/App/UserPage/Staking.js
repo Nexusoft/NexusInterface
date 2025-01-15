@@ -144,9 +144,11 @@ export default function Staking() {
           labelNo: __('Cancel'),
         });
         if (confirmed) {
-          updateSettings('enableStaking', true);
-          updateSettings('liteMode', false);
-          updateSettings('multiUser', false);
+          updateSettings({
+            enableStaking: true,
+            liteMode: false,
+            multiUser: false,
+          });
           UT.StartStake(true);
           restartCore();
           showNotification(__('Restarting Core'));
@@ -182,7 +184,7 @@ export default function Staking() {
 
   const stopStaking = async () => {
     const doStop = () => {
-      updateSettings('enableStaking', false);
+      updateSettings({ enableStaking: false });
       UT.StopStake();
       restartCore();
       showNotification(__('Restarting Core'));

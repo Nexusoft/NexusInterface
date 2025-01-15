@@ -60,10 +60,9 @@ async function confirmDelete(module) {
   if (confirmed) {
     if (module.development) {
       const devModulePaths = jotaiStore.get(settingAtoms.devModulePaths);
-      updateSettings(
-        'devModulePaths',
-        devModulePaths.filter((path) => path !== module.path)
-      );
+      updateSettings({
+        devModulePaths: devModulePaths.filter((path) => path !== module.path),
+      });
     } else {
       await deleteDirectory(module.path, { recursive: true, force: true });
       removeUpdateCache(module.repository);

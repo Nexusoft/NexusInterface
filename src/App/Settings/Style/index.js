@@ -44,12 +44,10 @@ const getTritiumDefaultAddress = memoize((accounts) => {
   return account?.address;
 });
 
-const setRenderGlobe = (renderGlobe) =>
-  updateSettings('renderGlobe', renderGlobe);
+const setRenderGlobe = (renderGlobe) => updateSettings({ renderGlobe });
 const setOverviewDisplay = (overviewDisplay) =>
-  updateSettings('overviewDisplay', overviewDisplay);
-const setAddressStyle = (addressStyle) =>
-  updateSettings('addressStyle', addressStyle);
+  updateSettings({ overviewDisplay });
+const setAddressStyle = (addressStyle) => updateSettings({ addressStyle });
 
 async function openPickThemeFileDialog() {
   const files = await ipcRenderer.invoke('show-open-dialog', {
@@ -130,7 +128,7 @@ export default function SettingsStyle() {
         <Switch
           checked={settings.hideOverviewBalances}
           onChange={(e) => {
-            updateSettings('hideOverviewBalances', e.target.checked);
+            updateSettings({ hideOverviewBalances: e.target.checked });
           }}
         />
       </SettingsField>

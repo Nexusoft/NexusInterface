@@ -38,12 +38,12 @@ export function quitAndInstall() {
 }
 
 export function setAllowPrerelease(value) {
-  updateSettings('allowPrerelease', value);
+  updateSettings({ allowPrerelease: value });
   ipcRenderer.invoke('set-allow-prerelease', value);
 }
 
 export function migrateToMainnet() {
-  updateSettings('allowPrerelease', true);
+  updateSettings({ allowPrerelease: true });
   ipcRenderer.invoke('migrate-to-mainnet', null);
 }
 
@@ -89,7 +89,7 @@ export async function checkForUpdates() {
   } catch (e) {
     console.error(e);
   } finally {
-    updateSettings('lastCheckForUpdates', Date.now());
+    updateSettings({ lastCheckForUpdates: Date.now() });
 
     const { autoUpdate } = jotaiStore.get(settingsAtom);
     if (autoUpdate) {

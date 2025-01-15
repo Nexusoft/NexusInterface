@@ -87,14 +87,14 @@ export const startCore = async () => {
   }
   if (settings.forkBlocks) {
     params.push('-forkblocks=' + settings.forkBlocks);
-    updateSettings('forkBlocks', 0);
+    updateSettings({ forkBlocks: 0 });
   }
   if (settings.safeMode) {
     params.push('-safemode=1');
   }
   if (settings.walletClean) {
     params.push('-walletclean');
-    updateSettings('walletClean', false);
+    updateSettings({ walletClean: false });
   }
   // Avatar is default so only add it if it is off.
   if (!settings.avatarMode) {
@@ -121,7 +121,7 @@ export const startCore = async () => {
     !settings.testnetIteration &&
     (!settings.coreAPIPolicy || settings.coreAPIPolicy < minimumCoreAPIPolicy)
   ) {
-    updateSettings('coreAPIPolicy', minimumCoreAPIPolicy);
+    updateSettings({ coreAPIPolicy: minimumCoreAPIPolicy });
     const corePath =
       conf.coreDataDir || settings.coreDataDir || defaultCoreDataDir;
     if (fs.existsSync(path.join(corePath, '_API'))) {

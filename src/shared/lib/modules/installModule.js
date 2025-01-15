@@ -213,7 +213,7 @@ export async function addDevModule(dirPath) {
     return;
   }
 
-  updateSettings('devModulePaths', [dirPath, ...devModulePaths]);
+  updateSettings({ devModulePaths: [dirPath, ...devModulePaths] });
   store.dispatch({
     type: TYPE.ADD_DEV_MODULE,
     payload: module,

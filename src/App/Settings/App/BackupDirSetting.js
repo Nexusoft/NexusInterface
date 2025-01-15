@@ -20,7 +20,7 @@ export default function SettingsApp() {
       properties: ['openDirectory'],
     });
     if (folderPaths && folderPaths.length > 0) {
-      updateSettings('backupDirectory', folderPaths[0]);
+      updateSettings({ backupDirectory: folderPaths[0] });
     }
   };
 

@@ -141,7 +141,7 @@ export default function Names() {
     switchUserTab('Names');
   }, []);
 
-  const toggle = () => updateSettings('showUnusedNames', !showUnusedNames);
+  const toggle = () => updateSettings({ showUnusedNames: !showUnusedNames });
 
   return (
     <TabContentWrapper maxWidth={500}>

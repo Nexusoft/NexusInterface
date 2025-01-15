@@ -402,7 +402,7 @@ async function reloadTxHistory() {
     note: 'Nexus Core will be restarted, after that, it will take a while for the transaction history to be reloaded',
   });
   if (confirmed) {
-    updateSettings('walletClean', true);
+    updateSettings({ walletClean: true });
     restartCore();
   }
 }
@@ -416,7 +416,7 @@ async function clearPeerConnections() {
     note: 'Nexus Core will be restarted. After that, all stored peer connections will be reset.',
   });
   if (confirmed) {
-    updateSettings('clearPeers', true);
+    updateSettings({ clearPeers: true });
     restartCore();
   }
 }
@@ -432,7 +432,7 @@ async function resyncLiteMode() {
     ),
   });
   if (confirmed) {
-    updateSettings('clearPeers', true);
+    updateSettings({ clearPeers: true });
     await stopCore();
     const coreDataDir = jotaiStore.get(settingAtoms.coreDataDir);
     const clientFolder = path.join(coreDataDir, 'client');

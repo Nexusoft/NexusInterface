@@ -43,7 +43,7 @@ export default function LanguageSetting() {
       labelNo: __('Cancel'),
     });
     if (!agreed) return;
-    updateSettings('locale', locale);
+    updateSettings({ locale });
     location.reload();
   };
 

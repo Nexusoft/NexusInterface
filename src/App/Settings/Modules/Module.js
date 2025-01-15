@@ -114,14 +114,15 @@ export default function Module({ module, ...rest }) {
   const { disabledModules } = useAtomValue(settingsAtom);
 
   const enableModule = () => {
-    updateSettings(
-      'disabledModules',
-      disabledModules.filter((moduleName) => moduleName !== module.info.name)
-    );
+    updateSettings({
+      disabledModules: disabledModules.filter(
+        (moduleName) => moduleName !== module.info.name
+      ),
+    });
   };
 
   const disableModule = () => {
-    updateSettings('disabledModules', [...disabledModules, module.info.name]);
+    updateSettings({ disabledModules: [...disabledModules, module.info.name] });
   };
 
   const toggleModule = async () => {

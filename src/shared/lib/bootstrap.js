@@ -243,7 +243,7 @@ export async function bootstrap({ suggesting } = {}) {
     openModal(BootstrapModal);
   } else {
     if (suggesting) {
-      updateSettings('bootstrapSuggestionDisabled', true);
+      updateSettings({ bootstrapSuggestionDisabled: true });
     }
     setBootstrapStatus('idle');
   }

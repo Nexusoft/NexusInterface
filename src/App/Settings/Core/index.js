@@ -145,7 +145,7 @@ async function turnOffRemoteCore(restartForm) {
   if (confirmed) {
     restartForm();
     store.dispatch({ type: TYPE.DISCONNECT_CORE });
-    updateSettings('manualDaemon', false);
+    updateSettings({ manualDaemon: false });
     await startCore();
     refetchCoreInfo();
   }
@@ -164,7 +164,7 @@ async function turnOnRemoteCore(restartForm) {
   if (confirmed) {
     restartForm();
     store.dispatch({ type: TYPE.DISCONNECT_CORE });
-    updateSettings('manualDaemon', true);
+    updateSettings({ manualDaemon: true });
     await stopCore();
     refetchCoreInfo();
   }
@@ -202,7 +202,7 @@ export default function SettingsCore() {
             Object.keys(updatedSettings).forEach((key) => {
               const value = updatedSettings[key];
               if (value !== settings[key]) {
-                updateSettings(key, value);
+                updateSettings({ [key]: value });
               }
             });
           },

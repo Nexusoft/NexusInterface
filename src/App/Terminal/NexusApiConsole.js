@@ -258,7 +258,7 @@ export default function NexusApiConsole() {
                   options={syntaxOptions}
                   value={consoleCliSyntax}
                   onChange={(v) => {
-                    updateSettings('consoleCliSyntax', v);
+                    updateSettings({ consoleCliSyntax: v });
                     if (inputRef.current) {
                       inputRef.current.focus();
                     }

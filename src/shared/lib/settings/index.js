@@ -43,6 +43,10 @@ export const settingAtoms = Object.fromEntries(
   ])
 );
 
-export function updateSettings(key, value) {
-  jotaiStore.set(settingAtoms[key], value);
+export function updateSettings(updates) {
+  const userSettings = jotaiStore.get(userSettingsAtom);
+  jotaiStore.set(userSettingsAtom, {
+    ...userSettings,
+    ...updates,
+  });
 }

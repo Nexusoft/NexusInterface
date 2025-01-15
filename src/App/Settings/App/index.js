@@ -1,6 +1,5 @@
 // External
 import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
 import { useAtomValue } from 'jotai';
 import styled from '@emotion/styled';
 import UT from 'lib/usageTracking';
@@ -84,10 +83,10 @@ async function toggleOpenOnStart(e) {
   });
   if (checked) {
     nexusAutoLaunch.enabled();
-    updateSettings('openOnStart', true);
+    updateSettings({ openOnStart: true });
   } else {
     nexusAutoLaunch.disabled();
-    updateSettings('openOnStart', false);
+    updateSettings({ openOnStart: false });
   }
 }
 
@@ -103,7 +102,7 @@ async function toggleVerifyModuleSource(e) {
       ),
     });
     if (confirmed) {
-      updateSettings('verifyModuleSource', true);
+      updateSettings({ verifyModuleSource: true });
       location.reload();
     }
   } else {
@@ -131,7 +130,7 @@ async function toggleVerifyModuleSource(e) {
       style: { width: 600 },
     });
     if (confirmed) {
-      updateSettings('verifyModuleSource', false);
+      updateSettings({ verifyModuleSource: false });
       location.reload();
     }
   }
@@ -153,11 +152,11 @@ async function handleAutoUpdateChange(e) {
       style: { width: 580 },
     });
     if (!confirmed) {
-      updateSettings('autoUpdate', false);
+      updateSettings({ autoUpdate: false });
       stopAutoUpdate();
     }
   } else {
-    updateSettings('autoUpdate', true);
+    updateSettings({ autoUpdate: true });
     checkForUpdates();
   }
 }
@@ -169,7 +168,7 @@ export default function SettingsApp() {
   }, []);
 
   const updateHandlers = (settingName) => (input) =>
-    updateSettings(settingName, form.resolveValue(input));
+    updateSettings({ [settingName]: form.resolveValue(input) });
 
   return (
     <>
@@ -270,7 +269,7 @@ export default function SettingsApp() {
             } else {
               UT.DisableAnalytics();
             }
-            updateSettings('sendUsageData', value);
+            updateSettings({ sendUsageData: value });
           }}
         />
       </SettingsField>
