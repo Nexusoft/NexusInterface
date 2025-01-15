@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 import UT from 'lib/usageTracking';
 
 // Internal Global
-import { searchContact } from 'lib/addressBook';
+import { searchContact, contactsAtom } from 'lib/addressBook';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
@@ -12,6 +12,7 @@ import Tooltip from 'components/Tooltip';
 import { openModal } from 'lib/ui';
 import { useCoreConnected } from 'lib/coreInfo';
 import AddEditContactModal from 'components/AddEditContactModal';
+import { jotaiStore } from 'store';
 
 // Icons
 import exportIcon from 'icons/export.svg';
@@ -43,7 +44,7 @@ function SearchBox() {
   );
 }
 
-function exportAddressBook(addressBook) {
+function exportAddressBook() {
   UT.ExportAddressBook();
 
   const rows = []; //Set up a blank array for each row
@@ -56,7 +57,8 @@ function exportAddressBook(addressBook) {
     'Notes', //d
   ];
   rows.push(NameEntry); //how we get our header line
-  Object.values(addressBook).map((e) => {
+  const contacts = jotaiStore.get(contactsAtom);
+  contacts.map((e) => {
     let tempentry = [];
     tempentry.push(e.name);
     tempentry.push(e.phoneNumber);

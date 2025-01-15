@@ -1,11 +1,12 @@
 import styled from '@emotion/styled';
-import { useSelector } from 'react-redux';
+import { useAtomValue } from 'jotai';
 
 import ControlledModal from 'components/ControlledModal';
 import NexusAddress from 'components/NexusAddress';
 import TokenName from 'components/TokenName';
 import { timing } from 'styles';
 import { accountsQuery, tokensQuery } from 'lib/user';
+import { addressBookAtom } from 'lib/addressBook';
 import memoize from 'utils/memoize';
 
 __ = __context('SelectAddress');
@@ -46,24 +47,24 @@ const getKnownTokens = memoize((userTokens, accounts) => {
   return tokens;
 });
 
-const selectContacts = memoize(
+const getAddressList = memoize(
   (addressBook) =>
     addressBook &&
     Object.entries(addressBook).reduce(
-      (contacts, [name, { addresses }]) => [
-        ...contacts,
-        ...addresses.map((contact) => ({ ...contact, name })),
+      (list, [name, { addresses }]) => [
+        ...list,
+        ...addresses.map((addressInfo) => ({ ...addressInfo, name })),
       ],
       []
-    ),
-  (state) => [state.addressBook]
+    )
 );
 
 export default function SelectAddressModal({ onSelect }) {
   const accounts = accountsQuery.use();
   const userTokens = tokensQuery.use();
   const knownTokens = getKnownTokens(userTokens, accounts);
-  const contacts = useSelector(selectContacts);
+  const addressBook = useAtomValue(addressBookAtom);
+  const addressList = getAddressList(addressBook);
 
   return (
     <ControlledModal maxWidth={500}>
@@ -113,28 +114,28 @@ export default function SelectAddressModal({ onSelect }) {
               ))}
             </div>
           )}
-          {!!contacts?.length && (
+          {!!addressList?.length && (
             <div className="mt2">
               <SubHeading>{__('Contacts')}</SubHeading>
-              {contacts.map((contact) => (
+              {addressList.map((addressInfo) => (
                 <Option
-                  key={contact.address}
+                  key={addressInfo.address}
                   onClick={() => {
-                    onSelect?.(contact.address);
+                    onSelect?.(addressInfo.address);
                     closeModal();
                   }}
                 >
                   <NexusAddress
                     label={
-                      contact.label
-                        ? `${contact.name} - ${contact.label}`
-                        : contact.isMine
+                      addressInfo.label
+                        ? `${addressInfo.name} - ${addressInfo.label}`
+                        : addressInfo.isMine
                         ? __('My address for %{name}')
                         : __("%{name}'s address", {
-                            name: contact.name,
+                            name: addressInfo.name,
                           })
                     }
-                    address={contact.address}
+                    address={addressInfo.address}
                     copyable={false}
                   />
                 </Option>

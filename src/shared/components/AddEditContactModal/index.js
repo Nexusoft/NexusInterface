@@ -1,15 +1,15 @@
 // External
 import { useRef, useEffect } from 'react';
-import { useSelector } from 'react-redux';
 import { FORM_ERROR } from 'final-form';
 import arrayMutators from 'final-form-arrays';
+import { useAtomValue } from 'jotai';
 
 // Internal
 import ControlledModal from 'components/ControlledModal';
 import Form from 'components/Form';
 import FormField from 'components/FormField';
 import Button from 'components/Button';
-import { addNewContact, updateContact } from 'lib/addressBook';
+import { addNewContact, updateContact, addressBookAtom } from 'lib/addressBook';
 import { showNotification } from 'lib/ui';
 import { formSubmit, required, checkAll } from 'lib/form';
 import { emailRegex } from 'consts/misc';
@@ -56,7 +56,7 @@ const validateEmail = (value) =>
 
 export default function AddEditContactModal({ edit, contact, prefill }) {
   const inputRef = useRef();
-  const addressBook = useSelector((state) => state.addressBook);
+  const addressBook = useAtomValue(addressBookAtom);
   const oldName = contact?.name;
 
   useEffect(() => {

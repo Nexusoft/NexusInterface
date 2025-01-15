@@ -1,6 +1,7 @@
 // External
 import { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
+import { useAtomValue } from 'jotai';
 import styled from '@emotion/styled';
 import { Field, useField } from 'react-final-form';
 
@@ -15,6 +16,7 @@ import { required, checkAll } from 'lib/form';
 import { callAPI } from 'lib/api';
 import { useSource } from 'lib/send';
 import { accountsQuery } from 'lib/user';
+import { contactsAtom } from 'lib/addressBook';
 import memoize from 'utils/memoize';
 import { debounced } from 'utils/universal';
 import { addressRegex } from 'consts/misc';
@@ -162,10 +164,10 @@ function RecipientAddressAdapter({
 }
 
 export const getRecipientSuggestions = memoize(
-  (addressBook, myAccounts, accountAddress) => {
+  (contacts, myAccounts, accountAddress) => {
     const suggestions = [];
-    if (addressBook) {
-      Object.values(addressBook).forEach((contact) => {
+    if (contacts) {
+      contacts.forEach((contact) => {
         contact.addresses?.forEach(({ address, label, isMine }) => {
           if (!isMine) {
             suggestions.push({
@@ -244,11 +246,11 @@ export default function RecipientNameOrAddress({ parentFieldName }) {
   // A flag indicating whether user has just selected the suggestion
   // Useful to decide if name resolution should be debounced
   const justSelectedRef = useRef(false);
-  const addressBook = useSelector((state) => state.addressBook);
+  const contacts = useAtomValue(contactsAtom);
   const accounts = accountsQuery.use();
   const source = useSource();
   const suggestions = getRecipientSuggestions(
-    addressBook,
+    contacts,
     accounts,
     source?.account?.address
   );

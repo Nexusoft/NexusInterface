@@ -1,8 +1,7 @@
 import createStore from './createStore';
 import createObserver from './createObserver';
-import getInitialState from './getInitialState';
 
-const initialState = getInitialState();
+const initialState = {};
 const store = createStore(initialState);
 
 export const observeStore = createObserver(store);

@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
-import { useAtomValue } from 'jotai';
 
 import ControlledModal from 'components/ControlledModal';
 import WaitingMessage from 'components/WaitingMessage';

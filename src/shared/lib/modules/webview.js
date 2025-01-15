@@ -19,6 +19,7 @@ import { settingsAtom } from 'lib/settings';
 import { themeAtom } from 'lib/theme';
 import { coreInfoAtom } from 'lib/coreInfo';
 import { userStatusAtom } from 'lib/session';
+import { addressBookAtom } from 'lib/addressBook';
 import { popupContextMenu, defaultMenu } from 'lib/contextMenu';
 import { goToSend } from 'lib/send';
 import { callAPI } from 'lib/api';
@@ -45,17 +46,6 @@ const settingsChanged = (settings1, settings2) =>
       settings1.fiatCurrency !== settings2.fiatCurrency ||
       settings1.addressStyle !== settings2.addressStyle
     : true;
-
-const getWalletData = (
-  { theme, addressBook },
-  { locale, fiatCurrency, addressStyle }
-) => ({
-  theme,
-  settings: getSettingsForModules(locale, fiatCurrency, addressStyle),
-  coreInfo: jotaiStore.get(coreInfoAtom),
-  userStatus: jotaiStore.get(userStatusAtom),
-  addressBook,
-});
 
 const getActiveModule = () => {
   const { activeAppModuleName, modules } = store.getState();
@@ -321,11 +311,16 @@ export function prepareWebView() {
         webview.addEventListener('dom-ready', async () => {
           const state = store.getState();
           const settings = jotaiStore.get(settingsAtom);
+          const { locale, fiatCurrency, addressStyle } = settings;
           const moduleState = state.moduleStates[moduleName];
           const activeModule = getActiveModule();
           const storageData = await readModuleStorage(activeModule);
           webview.send('initialize', {
-            ...getWalletData(state, settings),
+            theme: jotaiStore.get(themeAtom),
+            settings: getSettingsForModules(locale, fiatCurrency, addressStyle),
+            coreInfo: jotaiStore.get(coreInfoAtom),
+            userStatus: jotaiStore.get(userStatusAtom),
+            addressBook: jotaiStore.get(addressBookAtom),
             moduleState,
             storageData,
           });
@@ -336,7 +331,12 @@ export function prepareWebView() {
 
   subscribeWithPrevious(settingsAtom, (newSettings, oldSettings) => {
     if (settingsChanged(oldSettings, newSettings)) {
-      const settings = getSettingsForModules(newSettings);
+      const { locale, fiatCurrency, addressStyle } = newSettings;
+      const settings = getSettingsForModules(
+        locale,
+        fiatCurrency,
+        addressStyle
+      );
       sendWalletDataUpdated({ settings });
     }
   });
@@ -353,10 +353,7 @@ export function prepareWebView() {
     sendWalletDataUpdated({ userStatus });
   });
 
-  observeStore(
-    (state) => state.addressBook,
-    (addressBook) => {
-      sendWalletDataUpdated({ addressBook });
-    }
-  );
+  subscribe(addressBookAtom, (addressBook) => {
+    sendWalletDataUpdated({ addressBook });
+  });
 }

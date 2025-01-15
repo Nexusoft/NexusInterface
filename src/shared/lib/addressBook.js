@@ -1,19 +1,16 @@
 import * as TYPE from 'consts/actionTypes';
-import store from 'store';
 import fs from 'fs';
 import path from 'path';
 import Ajv from 'ajv';
+import { atom } from 'jotai';
+import memoize from 'utils/memoize';
+import store, { jotaiStore, subscribe } from 'store';
 import { walletDataDir } from 'consts/paths';
 import { emailRegex } from 'consts/misc';
 import { readJson, writeJson } from 'utils/json';
 
 const fileName = 'addressbook.json';
 const filePath = path.join(walletDataDir, fileName);
-
-/**
- * Convert the old addressbook.json schema
- * =============================================================================
- */
 
 function convertOldAddressBook(addressBook) {
   if (!Array.isArray(addressBook)) return [];
@@ -140,15 +137,8 @@ function saveAddressBookToFile(addressBook) {
   return writeJson(filePath, { addressBook });
 }
 
-/**
- * Public API
- * =============================================================================
- */
-
-export const loadAddressBook = loadAddressBookFromFile;
-
 export const lookupAddress = (address) => {
-  const { addressBook } = store.getState();
+  const addressBook = jotaiStore.get(addressBookAtom);
   for (const contact of Object.values(addressBook)) {
     const match =
       contact.addresses && contact.addresses.find((a) => a.address === address);
@@ -162,33 +152,24 @@ export const lookupAddress = (address) => {
 };
 
 export const addNewContact = (contact) => {
-  const result = store.dispatch({
-    type: TYPE.ADD_NEW_CONTACT,
-    payload: contact,
-  });
-  const { addressBook } = store.getState();
-  saveAddressBookToFile(addressBook);
-  return result;
+  const addressBook = jotaiStore.get(addressBookAtom);
+  const updatedAddressBook = { ...addressBook, [contact?.name]: contact };
+  jotaiStore.set(addressBookAtom, updatedAddressBook);
 };
 
-export const updateContact = (name, contact) => {
-  const result = store.dispatch({
-    type: TYPE.UPDATE_CONTACT,
-    payload: { name, contact },
-  });
-  const { addressBook } = store.getState();
-  saveAddressBookToFile(addressBook);
-  return result;
+export const updateContact = (oldName, contact) => {
+  const addressBook = jotaiStore.get(addressBookAtom);
+  const updatedAddressBook = { ...addressBook, [contact?.name]: contact };
+  if (oldName !== contact?.name) {
+    delete updatedAddressBook[oldName];
+  }
+  jotaiStore.set(addressBookAtom, updatedAddressBook);
 };
 
 export const deleteContact = (name) => {
-  const result = store.dispatch({
-    type: TYPE.DELETE_CONTACT,
-    payload: name,
-  });
-  const { addressBook } = store.getState();
-  saveAddressBookToFile(addressBook);
-  return result;
+  const updatedAddressBook = { ...jotaiStore.get(addressBookAtom) };
+  delete updatedAddressBook[name];
+  jotaiStore.set(addressBookAtom, updatedAddressBook);
 };
 
 export const searchContact = (query) => {
@@ -204,3 +185,31 @@ export const selectContact = (index) => {
     payload: index,
   });
 };
+
+const compareNames = (a, b) => {
+  let nameA = a.name.toUpperCase();
+  let nameB = b.name.toUpperCase();
+  if (nameA < nameB) {
+    return -1;
+  }
+  if (nameA > nameB) {
+    return 1;
+  }
+  return 0;
+};
+
+const getContacts = memoize(
+  (addressBook) => addressBook && Object.values(addressBook).sort(compareNames)
+);
+
+const initialAddressBook = loadAddressBookFromFile();
+export const addressBookAtom = atom(initialAddressBook);
+export const contactsAtom = atom((get) => getContacts(get(addressBookAtom)));
+
+const timerId = null;
+subscribe(addressBookAtom, (addressBook) => {
+  clearTimeout(timerId);
+  setTimeout(() => {
+    saveAddressBookToFile(addressBook);
+  }, 0);
+});
