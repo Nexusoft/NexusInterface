@@ -4,10 +4,10 @@ import path from 'path';
 import fs from 'fs';
 import axios from 'axios';
 import semver from 'semver';
+import { atom } from 'jotai';
 
 // Internal
-import * as TYPE from 'consts/actionTypes';
-import store, { jotaiStore } from 'store';
+import { jotaiStore } from 'store';
 import { showBackgroundTask, showNotification } from 'lib/ui';
 import { updateSettings, settingsAtom } from 'lib/settings';
 import AutoUpdateBackgroundTask from './AutoUpdateBackgroundTask';
@@ -20,12 +20,7 @@ __ = __context('AutoUpdate');
 const autoUpdateInterval = 4 * 60 * 60 * 1000; // 4 hours
 let timerId = null;
 
-const setUpdaterState = (state) => {
-  store.dispatch({
-    type: TYPE.SET_UPDATER_STATE,
-    payload: state,
-  });
-};
+export const updaterStateAtom = atom('idle');
 
 /**
  * Quit wallet and install the update
@@ -139,22 +134,22 @@ export function prepareUpdater() {
       '\nError: ',
       err
     );
-    setUpdaterState('idle');
+    jotaiStore.set(updaterStateAtom, 'idle');
   });
   ipcRenderer.on('updater:checking-for-update', () => {
-    setUpdaterState('checking');
+    jotaiStore.set(updaterStateAtom, 'checking');
   });
   ipcRenderer.on('updater:update-available', () => {
-    setUpdaterState('downloading');
+    jotaiStore.set(updaterStateAtom, 'downloading');
   });
   ipcRenderer.on('updater:update-not-available', () => {
-    setUpdaterState('idle');
+    jotaiStore.set(updaterStateAtom, 'idle');
   });
   ipcRenderer.on('updater:download-progress', () => {
-    setUpdaterState('downloading');
+    jotaiStore.set(updaterStateAtom, 'downloading');
   });
   ipcRenderer.on('updater:update-downloaded', () => {
-    setUpdaterState('downloaded');
+    jotaiStore.set(updaterStateAtom, 'downloaded');
   });
 
   const { autoUpdate, lastCheckForUpdates } = jotaiStore.get(settingsAtom);

@@ -25,7 +25,7 @@ import {
 } from 'lib/coreInfo';
 // import { confirm } from 'lib/dialog';
 import { walletDataDir } from 'consts/paths';
-import { checkForUpdates, quitAndInstall } from 'lib/updater';
+import { checkForUpdates, quitAndInstall, updaterStateAtom } from 'lib/updater';
 import AboutModal from 'components/AboutModal';
 
 // Because functions can't be passed through IPC messages so we have
@@ -253,7 +253,7 @@ const menuItems = preprocess({
  * @memberof AppMenu
  */
 function buildUpdaterMenu() {
-  const updaterState = store.getState().updater.state;
+  const updaterState = jotaiStore.get(updaterStateAtom);
   switch (updaterState) {
     case 'idle':
       return menuItems.updaterIdle;
@@ -472,7 +472,7 @@ const preventReload = (ev) => {
 // Changing menu item labels directly has no effect so we have to rebuild the whole menu
 export function prepareMenu() {
   buildMenu();
-  observeStore((state) => state.updater.state, rebuildMenu);
+  jotaiStore.sub(updaterStateAtom, rebuildMenu);
   jotaiStore.sub(coreConnectedAtom, rebuildMenu);
   jotaiStore.sub(settingAtoms.devMode, rebuildMenu);
   jotaiStore.sub(settingAtoms.manualDaemon, rebuildMenu);
