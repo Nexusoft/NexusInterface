@@ -1,15 +1,14 @@
 // External
 import { useEffect, useRef } from 'react';
-import { useSelector } from 'react-redux';
+import { atom, useAtomValue } from 'jotai';
 import styled from '@emotion/styled';
 
 // Internal
 import { openModal } from 'lib/ui';
 import BackgroundTask from 'components/BackgroundTask';
 import Icon from 'components/Icon';
-import { bootstrapEvents } from 'lib/bootstrap';
+import { bootstrapEvents, bootstrapStatusAtom } from 'lib/bootstrap';
 import { animations, timing } from 'styles';
-import memoize from 'utils/memoize';
 import workIcon from 'icons/work.svg';
 import BootstrapModal from 'components/BootstrapModal';
 
@@ -47,38 +46,35 @@ function getPercentage({ step, details }) {
   }
 }
 
-const selectStatusMsg = memoize(
-  (bootstrap) => {
-    const { step, details } = bootstrap;
-    switch (step) {
-      case 'backing_up':
-        return __('Backing up...');
-      case 'preparing':
-        return __('Preparing...');
-      case 'downloading':
-        const percentage = getPercentage({ step, details });
-        return `${__('Downloading')}... ${percentage}%`;
-      case 'extracting':
-        return __('Decompressing...');
-      case 'stopping_core':
-        return __('Stopping Core...');
-      case 'moving_db':
-        return __('Moving...');
-      case 'restarting_core':
-        return __('Restarting Core...');
-      case 'rescanning':
-        return __('Rescanning Wallet...');
-      case 'cleaning_up':
-        return __('Cleaning up...');
-      default:
-        return '';
-    }
-  },
-  (state) => [state.bootstrap]
-);
+const statusMsgAtom = atom((get) => {
+  const { step, details } = get(bootstrapStatusAtom);
+  switch (step) {
+    case 'backing_up':
+      return __('Backing up...');
+    case 'preparing':
+      return __('Preparing...');
+    case 'downloading':
+      const percentage = getPercentage({ step, details });
+      return `${__('Downloading')}... ${percentage}%`;
+    case 'extracting':
+      return __('Decompressing...');
+    case 'stopping_core':
+      return __('Stopping Core...');
+    case 'moving_db':
+      return __('Moving...');
+    case 'restarting_core':
+      return __('Restarting Core...');
+    case 'rescanning':
+      return __('Rescanning Wallet...');
+    case 'cleaning_up':
+      return __('Cleaning up...');
+    default:
+      return '';
+  }
+});
 
 export default function BootstrapBackgroundTask({ index }) {
-  const statusMsg = useSelector(selectStatusMsg);
+  const statusMsg = useAtomValue(statusMsgAtom);
   const closeTaskRef = useRef();
   useEffect(() => {
     bootstrapEvents.on('abort', closeTaskRef.current);

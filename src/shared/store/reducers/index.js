@@ -5,7 +5,6 @@ import modules from './modules';
 import moduleStates from './moduleStates';
 import updater from './updater';
 import activeAppModuleName from './activeAppModuleName';
-import bootstrap from './bootstrap';
 import failedModules from './failedModules';
 import assetSchemas from './assetSchemas';
 import moduleDownloads from './moduleDownloads';
@@ -19,7 +18,6 @@ export default function createRootReducer() {
     failedModules,
     updater,
     activeAppModuleName,
-    bootstrap,
     assetSchemas,
     moduleDownloads,
     featuredModules,

@@ -5,9 +5,10 @@ import fs from 'fs';
 import path from 'path';
 import http from 'http';
 import unzip from 'unzip-stream';
+import { atom } from 'jotai';
 
 // Internal
-import store, { jotaiStore } from 'store';
+import { jotaiStore } from 'store';
 import { startCore, stopCore } from 'lib/core';
 import { coreInfoAtom, isSynchronized } from './coreInfo';
 import { showNotification, openModal } from 'lib/ui';
@@ -15,7 +16,6 @@ import { confirm, openErrorDialog, openSuccessDialog } from 'lib/dialog';
 import { rm as deleteDirectory } from 'fs/promises';
 import { throttled } from 'utils/universal';
 import move from 'utils/move';
-import * as TYPE from 'consts/actionTypes';
 import { updateSettings, settingAtoms } from 'lib/settings';
 import BootstrapModal from 'components/BootstrapModal';
 
@@ -50,8 +50,6 @@ async function checkFreeSpaceForBootstrap() {
  * @returns
  */
 async function startBootstrap() {
-  const setStatus = (step, details) => setBootstrapStatus(step, details);
-
   try {
     const coreDataDir = jotaiStore.get(settingAtoms.coreDataDir);
     const extractDir = getExtractDir();
@@ -176,11 +174,8 @@ async function cleanUp(extractDir) {
   }
 }
 
-const setBootstrapStatus = (step, details) => {
-  store.dispatch({
-    type: TYPE.BOOTSTRAP_STATUS,
-    payload: { step, details },
-  });
+const setStatus = (step, details) => {
+  jotaiStore.set(bootstrapStatusAtom, { step, details });
 };
 
 /**
@@ -199,10 +194,10 @@ export const bootstrapEvents = new EventEmitter();
  */
 export async function bootstrap({ suggesting } = {}) {
   // Only one instance at the same time
-  const state = store.getState();
-  if (state.bootstrap.step !== 'idle') return;
+  const status = jotaiStore.get(bootstrapStatusAtom);
+  if (status.step !== 'idle') return;
 
-  setBootstrapStatus('prompting');
+  setStatus('prompting');
 
   const coreInfo = jotaiStore.get(coreInfoAtom);
   const testPriv = coreInfo?.private || coreInfo?.testnet;
@@ -211,7 +206,7 @@ export async function bootstrap({ suggesting } = {}) {
     openErrorDialog({
       message: __('Can not Bootstrap on Testnet/Private networks.'),
     });
-    setBootstrapStatus('idle');
+    setStatus('idle');
     return;
   }
 
@@ -224,7 +219,7 @@ export async function bootstrap({ suggesting } = {}) {
         ),
       });
     }
-    setBootstrapStatus('idle');
+    setStatus('idle');
     return;
   }
 
@@ -245,7 +240,7 @@ export async function bootstrap({ suggesting } = {}) {
     if (suggesting) {
       updateSettings({ bootstrapSuggestionDisabled: true });
     }
-    setBootstrapStatus('idle');
+    setStatus('idle');
   }
 }
 
@@ -281,3 +276,8 @@ export function prepareBootstrap() {
     })
   );
 }
+
+export const bootstrapStatusAtom = atom({
+  step: 'idle',
+  details: undefined,
+});

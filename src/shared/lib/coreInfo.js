@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 import { atom, useAtomValue } from 'jotai';
 import { atomWithQuery } from 'jotai-tanstack-query';
-import store, { jotaiStore, subscribe } from 'store';
+import { jotaiStore, subscribe } from 'store';
 import { callAPI } from 'lib/api';
 import { settingsAtom } from './settings';
-import { bootstrap } from 'lib/bootstrap';
+import { bootstrap, bootstrapStatusAtom } from 'lib/bootstrap';
 
 // TODO: move to right places
 export function useCoreInfoPolling() {
@@ -13,12 +13,12 @@ export function useCoreInfoPolling() {
       const coreConnected = !!coreInfo;
       const { bootstrapSuggestionDisabled, manualDaemon } =
         jotaiStore.get(settingsAtom);
-      const state = store.getState();
+      const bootstrapStatus = jotaiStore.get(bootstrapStatusAtom);
 
       if (coreConnected) {
         if (
           !bootstrapSuggestionDisabled &&
-          state.bootstrap.step === 'idle' &&
+          bootstrapStatus.step === 'idle' &&
           !manualDaemon &&
           !coreInfo?.litemode &&
           coreInfo?.syncing?.completed < 50 &&

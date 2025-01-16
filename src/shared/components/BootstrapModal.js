@@ -1,7 +1,6 @@
 // External
 import { useRef, useEffect, useContext } from 'react';
-import { useSelector } from 'react-redux';
-import { useAtomValue } from 'jotai';
+import { atom, useAtomValue } from 'jotai';
 import prettyBytes from 'utils/prettyBytes';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/react';
@@ -11,12 +10,15 @@ import ControlledModal from 'components/ControlledModal';
 import Button from 'components/Button';
 import { showBackgroundTask, removeModal } from 'lib/ui';
 import { confirm } from 'lib/dialog';
-import { settingsAtom } from 'lib/settings';
+import { settingAtoms } from 'lib/settings';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import ModalContext from 'context/modal';
-import { bootstrapEvents, abortBootstrap } from 'lib/bootstrap';
-import memoize from 'utils/memoize';
+import {
+  bootstrapEvents,
+  abortBootstrap,
+  bootstrapStatusAtom,
+} from 'lib/bootstrap';
 import { timing } from 'styles';
 import BootstrapBackgroundTask from 'components/BootstrapBackgroundTask';
 import arrowUpLeftIcon from 'icons/arrow-up-left.svg';
@@ -97,7 +99,8 @@ const MinimizeIcon = styled(Icon)(({ theme }) => ({
   },
 }));
 
-const getPercentage = ({ step, details }) => {
+const percentageAtom = atom((get) => {
+  const { step, details } = get(bootstrapStatusAtom);
   switch (step) {
     case 'backing_up':
     case 'preparing':
@@ -116,11 +119,11 @@ const getPercentage = ({ step, details }) => {
     default:
       return 0;
   }
-};
+});
 
-const selectPercentage = memoize(getPercentage, (state) => [state.bootstrap]);
-
-const getStatusMsg = ({ step, details }, locale) => {
+const statusMsgAtom = atom((get) => {
+  const { step, details } = get(bootstrapStatusAtom);
+  const locale = get(settingAtoms.locale);
   switch (step) {
     case 'backing_up':
       return __('Backing up your wallet...');
@@ -128,7 +131,7 @@ const getStatusMsg = ({ step, details }, locale) => {
       return __('Preparing...');
     case 'downloading':
       const { downloaded, totalSize } = details || {};
-      const percentage = getPercentage({ step, details });
+      const percentage = get(percentageAtom);
       const sizeProgress = totalSize
         ? `(${prettyBytes(downloaded, locale)} / ${prettyBytes(
             totalSize,
@@ -153,7 +156,7 @@ const getStatusMsg = ({ step, details }, locale) => {
     default:
       return '';
   }
-};
+});
 
 async function confirmAbort() {
   const confirmed = await confirm({
@@ -169,12 +172,9 @@ async function confirmAbort() {
 }
 
 export default function BootstrapModal(props) {
-  const { locale } = useAtomValue(settingsAtom);
-  const bootstrap = useSelector((state) => state.bootstrap);
-  const statusMsg = getStatusMsg(bootstrap, locale);
-  const percentage = useSelector(selectPercentage);
+  const statusMsg = useAtomValue(statusMsgAtom);
+  const percentage = useAtomValue(percentageAtom);
   const modalID = useContext(ModalContext);
-
   const modalRef = useRef();
   const backgroundRef = useRef();
   const closeModalRef = useRef();
