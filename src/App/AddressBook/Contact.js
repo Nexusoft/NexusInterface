@@ -1,10 +1,10 @@
-import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
+import { useAtomValue } from 'jotai';
 
 import Tooltip from 'components/Tooltip';
 import Icon from 'components/Icon';
 import AddEditContactModal from 'components/AddEditContactModal';
-import { selectContact, deleteContact } from 'lib/addressBook';
+import { deleteContact, selectedContactNameAtom } from 'lib/addressBook';
 import { openModal } from 'lib/ui';
 import { confirm } from 'lib/dialog';
 import { popupContextMenu } from 'lib/contextMenu';
@@ -12,6 +12,7 @@ import { useCoreConnected } from 'lib/coreInfo';
 import { timing } from 'styles';
 import * as color from 'utils/color';
 import { defaultMenu } from 'lib/contextMenu';
+import { jotaiStore } from 'store';
 import plusIcon from 'icons/plus.svg';
 
 __ = __context('AddressBook');
@@ -72,9 +73,7 @@ const AddressesCount = styled.div(({ theme }) => ({
 // contact=null -> New Contact button
 export default function Contact({ contact, ...rest }) {
   const coreConnected = useCoreConnected();
-  const selectedContactName = useSelector(
-    (state) => state.ui.addressBook.selectedContactName
-  );
+  const selectedContactName = useAtomValue(selectedContactNameAtom);
   const editContact = () => {
     openModal(AddEditContactModal, {
       edit: true,
@@ -114,7 +113,7 @@ export default function Contact({ contact, ...rest }) {
   return contact ? (
     <ContactComponent
       onClick={() => {
-        selectContact(contact.name);
+        jotaiStore.set(selectedContactNameAtom, contact.name);
       }}
       selected={contact.name === selectedContactName}
       onContextMenu={showContextMenu}

@@ -1,10 +1,10 @@
 // External
-import { useSelector } from 'react-redux';
+import { useAtomValue } from 'jotai';
 import styled from '@emotion/styled';
 import UT from 'lib/usageTracking';
 
 // Internal Global
-import { searchContact, contactsAtom } from 'lib/addressBook';
+import { contactsAtom, searchQueryAtom } from 'lib/addressBook';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
@@ -33,13 +33,13 @@ const SearchInput = styled(TextField)({
 });
 
 function SearchBox() {
-  const searchQuery = useSelector((state) => state.ui.addressBook.searchQuery);
+  const searchQuery = useAtomValue(searchQueryAtom);
   return (
     <SearchInput
       left={<Icon icon={searchIcon} className="mr0_4" />}
       placeholder={__('Search contact')}
       value={searchQuery}
-      onChange={(e) => searchContact(e.target.value)}
+      onChange={(e) => jotaiStore.set(searchQueryAtom, e.target.value)}
     />
   );
 }

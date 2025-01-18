@@ -1,13 +1,10 @@
-import { useSelector } from 'react-redux';
-import { useAtomValue } from 'jotai';
+import { atom, useAtomValue } from 'jotai';
 import styled from '@emotion/styled';
 
 import AddEditContactModal from 'components/AddEditContactModal';
 import { openModal } from 'lib/ui';
-import { contactsAtom } from 'lib/addressBook';
+import { contactsAtom, searchQueryAtom } from 'lib/addressBook';
 import { useCoreConnected } from 'lib/coreInfo';
-import memoize from 'utils/memoize';
-
 import Contact from './Contact';
 
 __ = __context('AddressBook');
@@ -26,18 +23,18 @@ const Separator = styled.div(({ theme }) => ({
   background: theme.mixer(0.125),
 }));
 
-const filterContacts = memoize((contacts, searchQuery) =>
-  contacts.filter(
+const filteredContactsAtom = atom((get) => {
+  const contacts = get(contactsAtom);
+  const searchQuery = get(searchQueryAtom);
+  return contacts.filter(
     (contact) =>
       contact.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       contact.addresses.find(({ address }) => address === searchQuery)
-  )
-);
+  );
+});
 
 export default function ContactList() {
-  const contacts = useAtomValue(contactsAtom);
-  const searchQuery = useSelector((state) => state.ui.addressBook.searchQuery);
-  const filteredContacts = filterContacts(contacts, searchQuery);
+  const filteredContacts = useAtomValue(filteredContactsAtom);
   const coreConnected = useCoreConnected();
 
   return (

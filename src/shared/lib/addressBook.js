@@ -1,10 +1,9 @@
-import * as TYPE from 'consts/actionTypes';
 import fs from 'fs';
 import path from 'path';
 import Ajv from 'ajv';
 import { atom } from 'jotai';
 import memoize from 'utils/memoize';
-import store, { jotaiStore, subscribe } from 'store';
+import { jotaiStore, subscribe } from 'store';
 import { walletDataDir } from 'consts/paths';
 import { emailRegex } from 'consts/misc';
 import { readJson, writeJson } from 'utils/json';
@@ -162,6 +161,9 @@ export const updateContact = (oldName, contact) => {
   const updatedAddressBook = { ...addressBook, [contact?.name]: contact };
   if (oldName !== contact?.name) {
     delete updatedAddressBook[oldName];
+    if (jotaiStore.get(selectedContactNameAtom) === oldName) {
+      jotaiStore.set(selectedContactNameAtom, contact?.name);
+    }
   }
   jotaiStore.set(addressBookAtom, updatedAddressBook);
 };
@@ -170,20 +172,6 @@ export const deleteContact = (name) => {
   const updatedAddressBook = { ...jotaiStore.get(addressBookAtom) };
   delete updatedAddressBook[name];
   jotaiStore.set(addressBookAtom, updatedAddressBook);
-};
-
-export const searchContact = (query) => {
-  store.dispatch({
-    type: TYPE.CONTACT_SEARCH,
-    payload: query,
-  });
-};
-
-export const selectContact = (index) => {
-  store.dispatch({
-    type: TYPE.SELECT_CONTACT,
-    payload: index,
-  });
 };
 
 const compareNames = (a, b) => {
@@ -205,6 +193,8 @@ const getContacts = memoize(
 const initialAddressBook = loadAddressBookFromFile();
 export const addressBookAtom = atom(initialAddressBook);
 export const contactsAtom = atom((get) => getContacts(get(addressBookAtom)));
+export const searchQueryAtom = atom('');
+export const selectedContactNameAtom = atom(null);
 
 const timerId = null;
 subscribe(addressBookAtom, (addressBook) => {
