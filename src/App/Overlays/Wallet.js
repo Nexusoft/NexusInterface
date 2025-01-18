@@ -1,9 +1,10 @@
 // External
-import { useSelector } from 'react-redux';
+import { useAtomValue } from 'jotai';
 import styled from '@emotion/styled';
 
 // Internal
 import Notification from 'components/Notification';
+import { modalsAtom, notificationsAtom, backgroundTasksAtom } from 'lib/ui';
 import ModalContext from 'context/modal';
 import TaskContext from 'context/task';
 import { zIndex } from 'styles';
@@ -52,9 +53,9 @@ const Notifications = ({ notifications, taskCount }) => (
 );
 
 export default function Wallet({ children }) {
-  const modals = useSelector((state) => state.ui.modals);
-  const notifications = useSelector((state) => state.ui.notifications);
-  const backgroundTasks = useSelector((state) => state.ui.backgroundTasks);
+  const modals = useAtomValue(modalsAtom);
+  const notifications = useAtomValue(notificationsAtom);
+  const backgroundTasks = useAtomValue(backgroundTasksAtom);
 
   return (
     <>

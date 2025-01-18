@@ -1,5 +1,4 @@
-import * as TYPE from 'consts/actionTypes';
-import store from 'store';
+import { jotaiStore } from 'store';
 import { atom } from 'jotai';
 
 const newModalId = (function () {
@@ -18,34 +17,41 @@ const newTaskId = (function () {
 })();
 
 /**
+ * Atoms
+ * ===========================
+ */
+export const modalsAtom = atom([]);
+export const notificationsAtom = atom([]);
+export const backgroundTasksAtom = atom([]);
+export const rqDevToolsOpenAtom = atom(false);
+export const jotaiDevToolsOpenAtom = atom(false);
+
+/**
  * Modal
  * ===========================
  */
 export function openModal(component, props) {
   const id = newModalId();
-  store.dispatch({
-    type: TYPE.CREATE_MODAL,
-    payload: {
+  jotaiStore.set(modalsAtom, (modals) => [
+    ...modals,
+    {
       id,
       component,
       props,
     },
-  });
+  ]);
   return id;
 }
 
 // Using regular function here to avoid circular dependency which causes error
 export function removeModal(modalId) {
-  store.dispatch({
-    type: TYPE.REMOVE_MODAL,
-    payload: { id: modalId },
-  });
+  jotaiStore.set(modalsAtom, (modals) =>
+    modals.filter((modal) => modal.id !== modalId)
+  );
 }
 
 export function isModalOpen(modalComponent) {
-  const {
-    ui: { modals },
-  } = store.getState();
+  const modals = jotaiStore.get(modalsAtom);
   return modals.some(({ component }) => component === modalComponent);
 }
 
@@ -54,21 +60,22 @@ export function isModalOpen(modalComponent) {
  * ===========================
  */
 export function showNotification(content, options) {
-  store.dispatch({
-    type: TYPE.CREATE_NOTIFICATION,
-    payload: {
-      id: newNotifId(),
+  const id = newNotifId();
+  jotaiStore.set(notificationsAtom, (notifications) => [
+    {
+      id,
       content,
       ...(typeof options === 'string' ? { type: options } : options),
     },
-  });
+    ...notifications,
+  ]);
+  return id;
 }
 
 export function removeNotification(notifId) {
-  store.dispatch({
-    type: TYPE.REMOVE_NOTIFICATION,
-    payload: { id: notifId },
-  });
+  jotaiStore.set(notificationsAtom, (notifications) =>
+    notifications.filter((notification) => notification.id !== notifId)
+  );
 }
 
 /**
@@ -76,28 +83,20 @@ export function removeNotification(notifId) {
  * ===========================
  */
 export function showBackgroundTask(component, props) {
-  store.dispatch({
-    type: TYPE.CREATE_BACKGROUND_TASK,
-    payload: {
-      id: newTaskId(),
+  const id = newTaskId();
+  jotaiStore.set(backgroundTasksAtom, (backgroundTasks) => [
+    ...backgroundTasks,
+    {
+      id,
       component,
       props,
     },
-  });
+  ]);
+  return id;
 }
 
 export function removeBackgroundTask(taskId) {
-  store.dispatch({
-    type: TYPE.REMOVE_BACKGROUND_TASK,
-    payload: { id: taskId },
-  });
+  jotaiStore.set(backgroundTasksAtom, (tasks) =>
+    tasks.filter((task) => task.id !== taskId)
+  );
 }
-
-/**
- * Other
- * ===========================
- */
-
-export const rqDevToolsOpenAtom = atom(false);
-
-export const jotaiDevToolsOpenAtom = atom(false);
