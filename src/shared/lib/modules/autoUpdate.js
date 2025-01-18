@@ -3,8 +3,7 @@
 import axios from 'axios';
 import semver from 'semver';
 
-import store, { jotaiStore } from 'store';
-import * as TYPE from 'consts/actionTypes';
+import { jotaiStore } from 'store';
 import { showNotification } from 'lib/ui';
 import { navigate } from 'lib/wallet';
 import { modulesAtom, modulesMapAtom } from './atoms';

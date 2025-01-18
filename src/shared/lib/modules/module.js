@@ -3,10 +3,9 @@ import fs from 'fs';
 import Ajv from 'ajv';
 import semver from 'semver';
 
-import store, { jotaiStore } from 'store';
+import { jotaiStore } from 'store';
 import { settingsAtom } from 'lib/settings';
 import { semverRegex, emailRegex } from 'consts/misc';
-import * as TYPE from 'consts/actionTypes';
 import { modulesDir } from 'consts/paths';
 
 import {

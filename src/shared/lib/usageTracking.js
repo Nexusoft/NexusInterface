@@ -3,7 +3,6 @@
 ////////////////////////
 // Script that holds on to a visitor and is referenced when a visitor makes a action
 
-// import store from 'store';
 import { trackEvent } from '@aptabase/electron/renderer';
 import { ipcRenderer } from 'electron';
 

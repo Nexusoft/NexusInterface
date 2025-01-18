@@ -36,18 +36,6 @@ const syntaxOptions = [
 ];
 const tab = ' '.repeat(2);
 
-const consoleInputSelector = memoize(
-  (currentCommand, commandHistory, historyIndex) =>
-    historyIndex === -1 ? currentCommand : commandHistory[historyIndex],
-  ({
-    ui: {
-      console: {
-        console: { currentCommand, commandHistory, historyIndex },
-      },
-    },
-  }) => [currentCommand, commandHistory, historyIndex]
-);
-
 function censorSecuredFields(cmd, { consoleCliSyntax }) {
   const securedFields = [
     'pin',

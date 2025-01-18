@@ -1,5 +1,3 @@
-import { useSelector } from 'react-redux';
-
 import ControlledModal from 'components/ControlledModal';
 import Button from 'components/Button';
 import FormField from 'components/FormField';

@@ -13,7 +13,7 @@ import { defaultConfig } from 'lib/coreConfig';
 import { preRelease } from 'consts/misc';
 import { rm as deleteDirectory } from 'fs/promises';
 import { consts } from 'styles';
-import store, { jotaiStore } from 'store';
+import { jotaiStore } from 'store';
 
 __ = __context('Settings.Core');
 

@@ -1,7 +1,7 @@
 import http from 'http';
 import https from 'https';
 
-import store, { jotaiStore } from 'store';
+import { jotaiStore } from 'store';
 import { activeSessionIdAtom } from 'lib/session';
 import { getActiveCoreConfig } from 'lib/coreConfig';
 import { coreInfoAtom } from 'lib/coreInfo';

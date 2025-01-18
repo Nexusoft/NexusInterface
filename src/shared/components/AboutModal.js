@@ -28,9 +28,9 @@ const openSourceCredits = [
     license: 'MIT License',
   },
   {
-    Title: 'Redux',
-    website: 'redux.js.org',
-    URL: 'https://redux.js.org/',
+    Title: 'Jotai',
+    website: 'jotai.org',
+    URL: 'https://jotai.org/',
     license: 'MIT License',
   },
   {

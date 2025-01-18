@@ -1,4 +1,3 @@
-import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 
 import Form from 'components/Form';

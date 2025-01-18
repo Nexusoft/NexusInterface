@@ -3,7 +3,7 @@ import { atom } from 'jotai';
 import { atomWithQuery } from 'jotai-tanstack-query';
 import ExternalLink from 'components/ExternalLink';
 import BackgroundTask from 'components/BackgroundTask';
-import store, { jotaiStore, subscribe, queryClient } from 'store';
+import { jotaiStore, subscribe, queryClient } from 'store';
 import { callAPI as callAPI } from 'lib/api';
 import { coreConnectedAtom, multiUserAtom, liteModeAtom } from './coreInfo';
 import {

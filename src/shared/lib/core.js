@@ -1,8 +1,7 @@
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
 
-import * as TYPE from 'consts/actionTypes';
-import store, { jotaiStore } from 'store';
+import { jotaiStore } from 'store';
 import { loadNexusConf, coreConfigAtom } from 'lib/coreConfig';
 import { coreInfoPausedAtom } from './coreInfo';
 import { callAPI } from 'lib/api';
@@ -143,7 +142,6 @@ export const startCore = async () => {
 export const stopCore = async (forRestart) => {
   log.info('Core Manager: Stop function called');
   const { manualDaemon } = jotaiStore.get(settingsAtom);
-  store.dispatch({ type: TYPE.DISCONNECT_CORE });
   try {
     await callAPI('system/stop');
 

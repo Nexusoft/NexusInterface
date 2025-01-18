@@ -44,9 +44,13 @@ export function useCoreInfoPolling() {
  */
 
 export const coreInfoPausedAtom = atom(false);
+const manualDaemonAtom = atom((get) => {
+  const settings = get(settingsAtom);
+  return !!settings?.manualDaemon;
+});
 
 export const coreInfoPollingAtom = atomWithQuery((get) => ({
-  queryKey: ['coreInfo'],
+  queryKey: ['coreInfo', get(manualDaemonAtom)],
   queryFn: () => callAPI('system/get/info'),
   enabled: !get(coreInfoPausedAtom),
   retry: 5,

@@ -1,5 +1,4 @@
 import { useRef, useEffect } from 'react';
-import { useSelector } from 'react-redux';
 import { useAtomValue } from 'jotai';
 import styled from '@emotion/styled';
 

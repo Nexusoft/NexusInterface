@@ -5,8 +5,6 @@ import styled from '@emotion/styled';
 
 // Internal
 import Form from 'components/Form';
-import store from 'store';
-import * as TYPE from 'consts/actionTypes';
 import { showNotification } from 'lib/ui';
 import { confirm } from 'lib/dialog';
 import { stopCore, startCore, restartCore } from 'lib/core';
@@ -140,9 +138,8 @@ async function turnOffRemoteCore(restartForm) {
   });
   if (confirmed) {
     restartForm();
-    store.dispatch({ type: TYPE.DISCONNECT_CORE });
-    updateSettings({ manualDaemon: false });
     await startCore();
+    updateSettings({ manualDaemon: false });
     refetchCoreInfo();
   }
 }
@@ -159,9 +156,8 @@ async function turnOnRemoteCore(restartForm) {
   });
   if (confirmed) {
     restartForm();
-    store.dispatch({ type: TYPE.DISCONNECT_CORE });
-    updateSettings({ manualDaemon: true });
     await stopCore();
+    updateSettings({ manualDaemon: true });
     refetchCoreInfo();
   }
 }

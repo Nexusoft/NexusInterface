@@ -1,4 +1,3 @@
-import { useSelector } from 'react-redux';
 import { useAtomValue } from 'jotai';
 
 import Form from 'components/Form';

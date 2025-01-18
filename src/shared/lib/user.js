@@ -1,5 +1,4 @@
-import * as TYPE from 'consts/actionTypes';
-import store, { jotaiQuery } from 'store';
+import { jotaiQuery } from 'store';
 import { callAPI as callAPI } from 'lib/api';
 import memoize from 'utils/memoize';
 import { loggedInAtom, userGenesisAtom, txCountAtom } from './session';

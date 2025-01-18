@@ -3,8 +3,7 @@ import fs from 'fs';
 import https from 'https';
 import axios from 'axios';
 
-import store, { jotaiStore } from 'store';
-import * as TYPE from 'consts/actionTypes';
+import { jotaiStore } from 'store';
 import { showNotification, openModal } from 'lib/ui';
 import UT from 'lib/usageTracking';
 import { updateSettings, settingsAtom } from 'lib/settings';

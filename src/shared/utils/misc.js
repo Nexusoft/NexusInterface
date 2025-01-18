@@ -42,45 +42,6 @@ export async function showDesktopNotif(title, message) {
   }
 }
 
-/**
- * Retrieve value deep inside an object by a path.
- * Useful for redux-form's Fields component
- *
- * @export
- * @param {object} object the containing object
- * @param {string} path example: foo.bar[0].abc.x
- */
-export function getDeep(object, path) {
-  let result = object;
-  let cursor = 0;
-  for (let i = 0; i <= path.length; ++i) {
-    const char = path[i];
-
-    if (char === '.' || char === '[' || i === path.length) {
-      if (path[cursor] === '[') {
-        // array notation [index] => remove the starting [ and
-        // the ending ] characters to get the index
-        const index = parseInt(path.slice(cursor + 1, i - 1));
-        result = result[index];
-      } else {
-        // property notation .key => remove the starting . character
-        // (if any) to get the property key
-        const key =
-          path[cursor] === '.'
-            ? path.slice(cursor + 1, i)
-            : path.slice(cursor, i);
-        result = result[key];
-      }
-      cursor = i;
-
-      if (result === undefined || result === null) {
-        break;
-      }
-    }
-  }
-  return result;
-}
-
 export function timeToText(timeSpan) {
   let string = '';
   let seconds = timeSpan;

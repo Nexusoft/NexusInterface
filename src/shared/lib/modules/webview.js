@@ -1,12 +1,6 @@
 import { clipboard, shell } from 'electron';
 
-import * as TYPE from 'consts/actionTypes';
-import store, {
-  jotaiStore,
-  subscribe,
-  observeStore,
-  subscribeWithPrevious,
-} from 'store';
+import { jotaiStore, subscribe, subscribeWithPrevious } from 'store';
 import { showNotification } from 'lib/ui';
 import {
   openConfirmDialog,

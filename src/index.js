@@ -1,7 +1,6 @@
 import { createRoot } from 'react-dom/client';
-import { Provider } from 'react-redux';
 
-import store, { Providers, jotaiStore } from 'store';
+import { Providers, jotaiStore } from 'store';
 import { startCore } from 'lib/core';
 import { prepareWallet } from 'lib/wallet';
 import { prepareMenu } from 'lib/appMenu';
@@ -28,9 +27,7 @@ async function run() {
     const root = createRoot(domNode);
     root.render(
       <Providers>
-        <Provider store={store}>
-          <App />
-        </Provider>
+        <App />
       </Providers>
     );
 

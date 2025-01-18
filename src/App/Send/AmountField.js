@@ -3,7 +3,6 @@ import { useEffect, useRef } from 'react';
 import { useForm } from 'react-final-form';
 import { getIn } from 'final-form';
 import styled from '@emotion/styled';
-import { useAtomValue } from 'jotai';
 
 // Internal
 import Form from 'components/Form';

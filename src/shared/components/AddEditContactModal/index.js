@@ -113,7 +113,7 @@ export default function AddEditContactModal({ edit, contact, prefill }) {
                     addNewContact(contact);
                   }
                 },
-                onSuccess: (result, dispatch, props) => {
+                onSuccess: () => {
                   UT.AddAddressBookEntry(edit);
                   closeModal();
                   if (edit) {

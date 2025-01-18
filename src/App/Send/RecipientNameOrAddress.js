@@ -1,6 +1,5 @@
 // External
 import { useEffect, useRef } from 'react';
-import { useSelector } from 'react-redux';
 import { useAtomValue } from 'jotai';
 import styled from '@emotion/styled';
 import { Field, useField } from 'react-final-form';

@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import { useSelector } from 'react-redux';
 
 import Form from 'components/Form';
 import ControlledModal from 'components/ControlledModal';

@@ -176,7 +176,6 @@
   "keywords": [
     "electron",
     "react",
-    "redux",
     "sass",
     "webpack"
   ],
@@ -229,7 +228,6 @@
     "@emotion/cache": "^11.11.0",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
-    "@reduxjs/toolkit": "^1.9.5",
     "@tanstack/query-core": "^5.62.8",
     "@tanstack/react-query": "^5.62.8",
     "@tanstack/react-query-devtools": "^5.62.8",
@@ -262,11 +260,9 @@
     "react-final-form": "^6.5.9",
     "react-final-form-arrays": "^3.1.4",
     "react-markdown": "^8.0.7",
-    "react-redux": "^8.1.2",
     "react-router-dom": "^6.15.0",
     "react-simple-keyboard": "^3.6.53",
     "react-tsparticles": "^2.12.2",
-    "redux": "^4.2.1",
     "semver": "^7.5.4",
     "string_decoder": "^1.3.0",
     "three": "^0.145.0",
