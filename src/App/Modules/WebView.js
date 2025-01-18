@@ -57,6 +57,8 @@ export default function WebView({ module, className, style }) {
   const preloadUrl =
     process.env.NODE_ENV === 'development'
       ? `file://${process.cwd()}/build/module_preload.dev.js`
+      : module.development
+      ? 'module_preload.dev.js '
       : 'module_preload.prod.js';
 
   return (

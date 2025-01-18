@@ -8,7 +8,7 @@
   "scripts": {
     "prebuild-dev": "concurrently \"npm run build-main-dev\" \"npm run build-preload-dev\" \"node -r @babel/register ./internals/scripts/checkDll.js\" ",
     "dev": "npm run prebuild-dev && concurrently \"npm run start-renderer-dev\" \"npx wait-on http://localhost:1212/assets/app.html && npm run start-main-dev\"",
-    "build": "concurrently \"npm run build-main\" \"npm run build-renderer\" \"npm run build-preload\"",
+    "build": "concurrently \"npm run build-main\" \"npm run build-renderer\" \"npm run build-preload\" \"npm run build-preload-dev\"",
     "build-dll": "cross-env NODE_ENV=development webpack --config configs/webpack.config.dll.dev.babel.js",
     "build-main": "cross-env NODE_ENV=production webpack --config configs/webpack.config.main.prod.babel.js",
     "build-preload-dev": "cross-env NODE_ENV=development webpack --config configs/webpack.config.preload.dev.babel.js",
@@ -38,6 +38,7 @@
       "build/**/*",
       "!build/*.map",
       "!build/*.dev.js",
+      "build/module_preload.dev.js",
       "!node_modules/**/*",
       {
         "from": "assets/static",
