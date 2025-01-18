@@ -1,6 +1,5 @@
 // External Dependencies
-import { useSelector } from 'react-redux';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { useAtomValue } from 'jotai';
 import styled from '@emotion/styled';
 import { ipcRenderer } from 'electron';
@@ -13,23 +12,14 @@ import Select from 'components/Select';
 import TextField from 'components/TextField';
 import RequireCoreConnected from 'components/RequireCoreConnected';
 import { callAPIByUrl } from 'lib/api';
-import {
-  switchConsoleTab,
-  updateConsoleInput,
-  commandHistoryUp,
-  commandHistoryDown,
-  executeCommand,
-  printCommandOutput,
-  printCommandError,
-  resetConsole,
-  openModal,
-} from 'lib/ui';
+import { openModal } from 'lib/ui';
 import { updateSettings, settingsAtom } from 'lib/settings';
 import { coreConfigAtom } from 'lib/coreConfig';
 import documentsIcon from 'icons/documents.svg';
 import Tooltip from 'components/Tooltip';
 import Icon from 'components/Icon';
 
+import { useConsoleTab } from './atoms';
 import APIDocModal from './APIDocs/ApiDocModal';
 
 __ = __context('Console.NexusAPI');
@@ -122,9 +112,13 @@ const SyntaxSelect = styled(Select)(({ theme }) => ({
 }));
 
 export default function NexusApiConsole() {
+  useConsoleTab('Console');
+  const [currentCommand, setCurrentCommand] = useState('');
+  const [historyIndex, setHistoryIndex] = useState(-1);
+  const [commandHistory, setCommandHistory] = useState([]);
+  const [output, setOutput] = useState([]);
   const inputRef = useRef();
   const outputRef = useRef();
-  const consoleInput = useSelector(consoleInputSelector);
   const {
     manualDaemon,
     manualDaemonApiUser,
@@ -136,14 +130,6 @@ export default function NexusApiConsole() {
   const apiPassword = manualDaemon
     ? manualDaemonApiPassword
     : coreConfig?.apiPassword;
-  const currentCommand = useSelector(
-    (state) => state.ui.console.console.currentCommand
-  );
-  const output = useSelector((state) => state.ui.console.console.output);
-
-  useEffect(() => {
-    switchConsoleTab('Console');
-  }, []);
 
   const prevOutput = useRef(output);
   useEffect(() => {
@@ -154,11 +140,41 @@ export default function NexusApiConsole() {
     prevOutput.current = output;
   });
 
+  const consoleInput =
+    historyIndex === -1 ? currentCommand : commandHistory[historyIndex];
+
+  const printCommandOutput = (cmdOutput) => {
+    const newOutput = Array.isArray(cmdOutput)
+      ? cmdOutput.map((content) => ({
+          type: 'text',
+          content,
+        }))
+      : [{ type: 'text', content: cmdOutput }];
+    setOutput((output) => [...output, ...newOutput]);
+  };
+
+  const printCommandError = (cmdError) => {
+    setOutput((output) => [...output, { type: 'error', content: cmdError }]);
+  };
+
+  const resetConsole = () => {
+    setOutput([]);
+    setCommandHistory([]);
+    setHistoryIndex(-1);
+  };
+
   const execute = async () => {
     if (!currentCommand || !currentCommand.trim()) return;
 
     const cmd = currentCommand.trim();
-    executeCommand(censorSecuredFields(cmd, { consoleCliSyntax }));
+    const censoredCmd = censorSecuredFields(cmd, { consoleCliSyntax });
+    setHistoryIndex(-1);
+    setCurrentCommand('');
+    setCommandHistory((commandHistory) => [censoredCmd, ...commandHistory]);
+    setOutput((output) => [
+      ...output,
+      { type: 'command', content: censoredCmd },
+    ]);
 
     let result = undefined;
     try {
@@ -217,11 +233,17 @@ export default function NexusApiConsole() {
     switch (e.key) {
       case 'ArrowDown':
         e.preventDefault();
-        commandHistoryDown();
+        if (historyIndex > -1) {
+          setHistoryIndex((historyIndex) => historyIndex - 1);
+          setCurrentCommand(commandHistory[historyIndex - 1] || '');
+        }
         break;
       case 'ArrowUp':
         e.preventDefault();
-        commandHistoryUp();
+        if (historyIndex < commandHistory.length - 1) {
+          setHistoryIndex((historyIndex) => historyIndex + 1);
+          setCurrentCommand(commandHistory[historyIndex + 1] || '');
+        }
         break;
       case 'Enter':
         e.preventDefault();
@@ -249,7 +271,8 @@ export default function NexusApiConsole() {
                   : 'api/verb/noun?param1=value1&param2=value2'
               }
               onChange={(e) => {
-                updateConsoleInput(e.target.value);
+                setCurrentCommand(e.target.value);
+                setHistoryIndex(-1);
               }}
               onKeyDown={handleKeyDown}
               left={

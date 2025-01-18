@@ -6,7 +6,6 @@ import { startCore } from 'lib/core';
 import { prepareWallet } from 'lib/wallet';
 import { prepareMenu } from 'lib/appMenu';
 import { prepareBootstrap } from 'lib/bootstrap';
-import { prepareCoreOutput } from 'lib/coreOutput';
 import { prepareTransactions } from 'lib/transactions';
 import { settingsAtom } from 'lib/settings';
 import { prepareModules, prepareWebView } from 'lib/modules';
@@ -40,7 +39,6 @@ async function run() {
     prepareTransactions();
     prepareUpdater();
     prepareWebView();
-    prepareCoreOutput();
     prepareSessionInfo();
     const { sendUsageData } = jotaiStore.get(settingsAtom);
     if (sendUsageData) {
