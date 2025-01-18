@@ -14,3 +14,12 @@ export {
 } from './webview';
 export { prepareModules } from './module';
 export { checkForModuleUpdates } from './autoUpdate';
+export {
+  modulesMapAtom,
+  modulesAtom,
+  moduleStatesAtom,
+  moduleDownloadsAtom,
+  failedModulesAtom,
+  activeAppModuleNameAtom,
+  moduleUpdateCountAtom,
+} from './atoms';

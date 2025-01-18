@@ -8,6 +8,7 @@ import { shell } from 'electron';
 // Internal
 import { switchSettingsTab } from 'lib/ui';
 import { settingsAtom } from 'lib/settings';
+import { failedModulesAtom, modulesAtom } from 'lib/modules';
 import { timing } from 'styles';
 import Tooltip from 'components/Tooltip';
 
@@ -37,10 +38,9 @@ const FailedModule = styled.div(({ theme }) => ({
 }));
 
 export default function SettingsModules() {
-  const modules = useSelector((state) => state.modules);
-  const failedModules = useSelector((state) => state.failedModules);
+  const modules = useAtomValue(modulesAtom);
+  const failedModules = useAtomValue(failedModulesAtom);
   const { devMode } = useAtomValue(settingsAtom);
-  const moduleList = Object.values(modules);
 
   useEffect(() => {
     switchSettingsTab('Modules');
@@ -51,11 +51,11 @@ export default function SettingsModules() {
       <AddModule />
       {devMode && <AddDevModule />}
       <SectionSeparator label={__('Installed modules')} />
-      {moduleList.map((module, i) => (
+      {modules.map((module, i) => (
         <Module
           key={module.info.name}
           module={module}
-          last={i === moduleList.length - 1}
+          last={i === modules.length - 1}
         />
       ))}
       {failedModules?.length > 0 && (
@@ -76,7 +76,7 @@ export default function SettingsModules() {
           ))}
         </FailedModules>
       )}
-      {!moduleList.length && !failedModules.length && (
+      {!modules.length && !failedModules.length && (
         <div className="text-center dim mt3 mb3">
           <em>{__('No modules have been installed')}</em>
         </div>

@@ -1,6 +1,7 @@
 // External
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { useAtomValue } from 'jotai';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 import UT from 'lib/usageTracking';
@@ -8,7 +9,7 @@ import UT from 'lib/usageTracking';
 // Internal Global
 import Panel from 'components/Panel';
 import RouterHorizontalTab from 'components/RouterHorizontalTab';
-import { selectModuleUpdateCount } from 'selectors';
+import { moduleUpdateCountAtom } from 'lib/modules';
 
 // Internal Local
 import SettingsApp from './App';
@@ -79,7 +80,7 @@ export default function Settings() {
   useEffect(() => {
     UT.SendScreen('Settings');
   }, []);
-  const updateCount = useSelector(selectModuleUpdateCount);
+  const updateCount = useAtomValue(moduleUpdateCountAtom);
 
   return (
     <Panel bodyScrollable={false} icon={settingsIcon} title={__('Settings')}>

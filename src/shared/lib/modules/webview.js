@@ -26,6 +26,11 @@ import { callAPI } from 'lib/api';
 import memoize from 'utils/memoize';
 
 import { readModuleStorage, writeModuleStorage } from './storage';
+import {
+  activeAppModuleNameAtom,
+  modulesMapAtom,
+  moduleStatesAtom,
+} from './atoms';
 
 let activeWebView = null;
 
@@ -48,8 +53,9 @@ const settingsChanged = (settings1, settings2) =>
     : true;
 
 const getActiveModule = () => {
-  const { activeAppModuleName, modules } = store.getState();
-  const module = modules[activeAppModuleName];
+  const activeAppModuleName = jotaiStore.get(activeAppModuleNameAtom);
+  const modulesMap = jotaiStore.get(modulesMapAtom);
+  const module = modulesMap[activeAppModuleName];
   return module.enabled ? module : null;
 };
 
@@ -227,12 +233,12 @@ function confirm([options = {}, confirmationId], webview) {
 }
 
 function updateState([moduleState]) {
-  const { activeAppModuleName } = store.getState();
+  const activeAppModuleName = jotaiStore.get(activeAppModuleNameAtom);
   if (typeof moduleState === 'object') {
-    store.dispatch({
-      type: TYPE.UPDATE_MODULE_STATE,
-      payload: { moduleName: activeAppModuleName, moduleState },
-    });
+    jotaiStore.set(moduleStatesAtom, (states) => ({
+      ...states,
+      [activeAppModuleName]: moduleState,
+    }));
   } else {
     console.error(
       `Module ${activeAppModuleName} is trying to update its state to a non-object value ${moduleState}`
@@ -268,17 +274,12 @@ export const getActiveWebView = () => activeWebView;
 
 export const setActiveAppModule = (webview, moduleName) => {
   activeWebView = webview;
-  store.dispatch({
-    type: TYPE.SET_ACTIVE_APP_MODULE,
-    payload: moduleName,
-  });
+  jotaiStore.set(activeAppModuleNameAtom, moduleName);
 };
 
 export const unsetActiveAppModule = () => {
   activeWebView = null;
-  store.dispatch({
-    type: TYPE.UNSET_ACTIVE_APP_MODULE,
-  });
+  jotaiStore.set(activeAppModuleNameAtom, null);
 };
 
 export const toggleWebViewDevTools = () => {
@@ -302,32 +303,28 @@ function sendWalletDataUpdated(walletData) {
 }
 
 export function prepareWebView() {
-  observeStore(
-    (state) => state.activeAppModuleName,
-    (moduleName) => {
-      const webview = getActiveWebView();
-      if (webview) {
-        webview.addEventListener('ipc-message', handleIpcMessage);
-        webview.addEventListener('dom-ready', async () => {
-          const state = store.getState();
-          const settings = jotaiStore.get(settingsAtom);
-          const { locale, fiatCurrency, addressStyle } = settings;
-          const moduleState = state.moduleStates[moduleName];
-          const activeModule = getActiveModule();
-          const storageData = await readModuleStorage(activeModule);
-          webview.send('initialize', {
-            theme: jotaiStore.get(themeAtom),
-            settings: getSettingsForModules(locale, fiatCurrency, addressStyle),
-            coreInfo: jotaiStore.get(coreInfoAtom),
-            userStatus: jotaiStore.get(userStatusAtom),
-            addressBook: jotaiStore.get(addressBookAtom),
-            moduleState,
-            storageData,
-          });
+  subscribe(activeAppModuleNameAtom, (moduleName) => {
+    const webview = getActiveWebView();
+    if (webview) {
+      webview.addEventListener('ipc-message', handleIpcMessage);
+      webview.addEventListener('dom-ready', async () => {
+        const settings = jotaiStore.get(settingsAtom);
+        const { locale, fiatCurrency, addressStyle } = settings;
+        const moduleState = jotaiStore.get(moduleStatesAtom)[moduleName];
+        const activeModule = getActiveModule();
+        const storageData = await readModuleStorage(activeModule);
+        webview.send('initialize', {
+          theme: jotaiStore.get(themeAtom),
+          settings: getSettingsForModules(locale, fiatCurrency, addressStyle),
+          coreInfo: jotaiStore.get(coreInfoAtom),
+          userStatus: jotaiStore.get(userStatusAtom),
+          addressBook: jotaiStore.get(addressBookAtom),
+          moduleState,
+          storageData,
         });
-      }
+      });
     }
-  );
+  });
 
   subscribeWithPrevious(settingsAtom, (newSettings, oldSettings) => {
     if (settingsChanged(oldSettings, newSettings)) {

@@ -3,10 +3,11 @@
 import axios from 'axios';
 import semver from 'semver';
 
-import store from 'store';
+import store, { jotaiStore } from 'store';
 import * as TYPE from 'consts/actionTypes';
 import { showNotification } from 'lib/ui';
 import { navigate } from 'lib/wallet';
+import { modulesAtom, modulesMapAtom } from './atoms';
 import { tryParsingJson } from 'utils/json';
 // import { walletDataDir } from 'consts/paths';
 // import ensureDirExists from 'utils/ensureDirExists';
@@ -133,8 +134,7 @@ async function checkForModuleUpdate(module, { cache }) {
 // }
 
 export async function checkForModuleUpdates() {
-  const state = store.getState();
-  const modules = Object.values(state.modules);
+  const modules = jotaiStore.get(modulesAtom);
   const cache = loadCache();
 
   const updateableModules = modules
@@ -176,18 +176,15 @@ export async function checkForModuleUpdates() {
     );
   }
 
-  const updatesMapping = updates.reduce(
-    (map, { module, latestVersion, latestRelease }) => {
-      map[module.info.name] = {
-        version: latestVersion,
-        release: latestRelease,
-      };
-      return map;
-    },
-    {}
-  );
-  store.dispatch({
-    type: TYPE.UPDATE_MODULES_LATEST,
-    payload: updatesMapping,
+  const modulesMap = { ...jotaiStore.get(modulesMapAtom) };
+  updates.forEach(({ module, latestVersion, latestRelease }) => {
+    const currentModule = modulesMap[module.info.name];
+    modulesMap[module.info.name] = {
+      ...currentModule,
+      hasNewVersion: true,
+      latestVersion: latestVersion,
+      latestRelease: latestRelease,
+    };
   });
+  jotaiStore.set(modulesMapAtom, modulesMap);
 }

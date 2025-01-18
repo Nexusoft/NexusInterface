@@ -17,6 +17,7 @@ import {
   getModuleHash,
   getNexusOrgUsers,
 } from './repo';
+import { failedModulesAtom, modulesMapAtom } from './atoms';
 import { checkForModuleUpdates } from './autoUpdate';
 
 const ajv = new Ajv();
@@ -455,7 +456,7 @@ export async function prepareModules() {
       .filter(({ status }) => status === 'fulfilled')
       .map(({ value }) => value);
 
-    const modules = moduleList.reduce((map, module) => {
+    const modulesMap = moduleList.reduce((map, module) => {
       if (module) {
         const { name, version } = module.info;
         try {
@@ -475,11 +476,7 @@ export async function prepareModules() {
       }
       return map;
     }, {});
-
-    store.dispatch({
-      type: TYPE.LOAD_MODULES,
-      payload: modules,
-    });
+    jotaiStore.set(modulesMapAtom, modulesMap);
 
     const failedModules = [];
     for (let i = 0; i < dirNames.length; ++i) {
@@ -493,10 +490,7 @@ export async function prepareModules() {
       }
     }
     if (failedModules.length > 0) {
-      store.dispatch({
-        type: TYPE.LOAD_MODULES_FAILED,
-        payload: failedModules,
-      });
+      jotaiStore.set(failedModulesAtom, failedModules);
     }
 
     checkForModuleUpdates();

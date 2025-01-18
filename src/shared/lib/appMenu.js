@@ -3,7 +3,11 @@ import { shell, ipcRenderer } from 'electron';
 
 // Internal
 import store, { observeStore, jotaiStore } from 'store';
-import { toggleWebViewDevTools, getActiveWebView } from 'lib/modules';
+import {
+  toggleWebViewDevTools,
+  getActiveWebView,
+  activeAppModuleNameAtom,
+} from 'lib/modules';
 import { startCore, stopCore } from 'lib/core';
 import { navigate } from 'lib/wallet';
 import {
@@ -476,7 +480,7 @@ export function prepareMenu() {
   jotaiStore.sub(coreConnectedAtom, rebuildMenu);
   jotaiStore.sub(settingAtoms.devMode, rebuildMenu);
   jotaiStore.sub(settingAtoms.manualDaemon, rebuildMenu);
-  observeStore((state) => state.activeAppModuleName, rebuildMenu);
+  jotaiStore.sub(activeAppModuleNameAtom, rebuildMenu);
   jotaiStore.sub(liteModeAtom, rebuildMenu);
   jotaiStore.sub(loggedInAtom, rebuildMenu);
   observeStore((state) => state.ui.locked, observeLockedState); // Consider moving this to a more appropriate spot.

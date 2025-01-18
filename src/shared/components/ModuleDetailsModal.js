@@ -1,7 +1,7 @@
 // External
 import { useState } from 'react';
 import styled from '@emotion/styled';
-import { useSelector } from 'react-redux';
+import { useAtomValue } from 'jotai';
 
 // Internal
 import ControlledModal from 'components/ControlledModal';
@@ -15,9 +15,13 @@ import UT from 'lib/usageTracking';
 import { confirm } from 'lib/dialog';
 import { navigate } from 'lib/wallet';
 import { updateSettings, settingAtoms } from 'lib/settings';
-import { downloadAndInstall, abortModuleDownload } from 'lib/modules';
+import {
+  downloadAndInstall,
+  abortModuleDownload,
+  moduleDownloadsAtom,
+} from 'lib/modules';
 import { timing } from 'styles';
-import store, { jotaiStore } from 'store';
+import { jotaiStore } from 'store';
 import { rm as deleteDirectory } from 'fs/promises';
 
 import warningIcon from 'icons/warning.svg';
@@ -90,20 +94,16 @@ export default function ModuleDetailsModal({
   const repoUrl = module.repository
     ? `https://${host}/${owner}/${repo}/tree/${commit}`
     : null;
-  const downloadProgress = useSelector((state) => {
-    const { downloaded, totalSize } =
-      state.moduleDownloads[moduleInfo.name] || {};
-    return downloaded / totalSize;
-  });
-  const downloadRequest = useSelector(
-    (state) => state.moduleDownloads[moduleInfo.name]?.downloadRequest
-  );
+  const moduleDownloads = useAtomValue(moduleDownloadsAtom);
+  const downloadInfo = moduleDownloads[moduleInfo.name];
+  const { downloaded, totalSize } = downloadInfo || {};
+  const downloadProgress = downloaded / totalSize;
+  const downloadRequest = downloadInfo?.downloadRequest;
   // `downloading` -> when the module package is being downloaded
   // `busy` -> when the module package is being downloaded OR is in other preparation steps
   const downloading = !!downloadRequest;
-  const busy = useSelector((state) => !!state.moduleDownloads[moduleInfo.name]);
+  const busy = !!downloadInfo;
 
-  const [isDownloading, setIsDownloading] = useState(false);
   return (
     <ControlledModal {...rest}>
       {(closeModal) => (

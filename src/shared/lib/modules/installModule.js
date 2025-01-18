@@ -18,6 +18,7 @@ import { throttled } from 'utils/universal';
 import { confirm, openSuccessDialog, openErrorDialog } from 'lib/dialog';
 
 import { loadModuleFromDir, loadDevModuleFromDir } from './module';
+import { modulesMapAtom, moduleDownloadsAtom } from './atoms';
 
 __ = __context('Settings.Modules');
 
@@ -186,7 +187,6 @@ export async function installModule(path) {
 }
 
 export async function addDevModule(dirPath) {
-  const { modules } = store.getState();
   const { devModulePaths } = jotaiStore.get(settingsAtom);
   if (devModulePaths.includes(dirPath)) {
     openErrorDialog({
@@ -206,7 +206,8 @@ export async function addDevModule(dirPath) {
   }
   if (!module) return;
 
-  if (modules[module.info.name]) {
+  const modulesMap = jotaiStore.get(modulesMapAtom);
+  if (modulesMap[module.info.name]) {
     openErrorDialog({
       message: __('A module with the same name already exists'),
     });
@@ -214,10 +215,10 @@ export async function addDevModule(dirPath) {
   }
 
   updateSettings({ devModulePaths: [dirPath, ...devModulePaths] });
-  store.dispatch({
-    type: TYPE.ADD_DEV_MODULE,
-    payload: module,
-  });
+  jotaiStore.set(modulesMapAtom, (modulesMap) => ({
+    ...modulesMap,
+    [module?.info.name]: module,
+  }));
   openSuccessDialog({
     message: __('Development module has been added'),
   });
@@ -230,15 +231,14 @@ export const getDownloadRequest = (moduleName) => downloadRequests[moduleName];
 const updateDownloadProgress = throttled(
   ({ moduleName, downloaded, totalSize, downloadRequest }) => {
     downloadRequests[moduleName] = downloadRequest;
-    store.dispatch({
-      type: TYPE.MODULE_DOWNLOAD_PROGRESS,
-      payload: {
-        moduleName,
+    jotaiStore.set(moduleDownloadsAtom, (downloads) => ({
+      ...downloads,
+      [moduleName]: {
         downloaded,
         totalSize,
         downloading: !!downloadRequest,
       },
-    });
+    }));
   },
   1000
 );
@@ -324,10 +324,10 @@ export async function downloadAndInstall({
 }) {
   let filePath;
   try {
-    store.dispatch({
-      type: TYPE.MODULE_DOWNLOAD_START,
-      payload: { moduleName },
-    });
+    jotaiStore.set(moduleDownloadsAtom, (downloads) => ({
+      ...downloads,
+      [moduleName]: {},
+    }));
 
     if (releaseId === 'latest') {
       const { data: release } = await axios.get(
@@ -373,10 +373,10 @@ export async function downloadAndInstall({
     });
   } finally {
     downloadRequests[moduleName] = null;
-    store.dispatch({
-      type: TYPE.MODULE_DOWNLOAD_FINISH,
-      payload: { moduleName },
-    });
+    jotaiStore.set(moduleDownloadsAtom, (downloads) => ({
+      ...downloads,
+      [moduleName]: undefined,
+    }));
     if (filePath && fs.existsSync(filePath)) {
       fs.unlink(filePath, (err) => {
         if (err) console.error(err);
