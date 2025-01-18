@@ -1,5 +1,4 @@
 // External
-import { useEffect } from 'react';
 import { useAtomValue } from 'jotai';
 import styled from '@emotion/styled';
 import UT from 'lib/usageTracking';
@@ -7,7 +6,6 @@ import * as AutoLaunch from 'auto-launch';
 
 // Internal Global
 import { updateSettings, settingsAtom } from 'lib/settings';
-import { switchSettingsTab } from 'lib/ui';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
 import Select from 'components/Select';
@@ -24,6 +22,7 @@ import {
 } from 'lib/updater';
 
 // Internal Local
+import { useSettingsTab } from '../atoms';
 import LanguageSetting from './LanguageSetting';
 
 __ = __context('Settings.Application');
@@ -162,10 +161,8 @@ async function handleAutoUpdateChange(e) {
 }
 
 export default function SettingsApp() {
+  useSettingsTab('App');
   const settings = useAtomValue(settingsAtom);
-  useEffect(() => {
-    switchSettingsTab('App');
-  }, []);
 
   const updateHandlers = (settingName) => (input) =>
     updateSettings({ [settingName]: form.resolveValue(input) });

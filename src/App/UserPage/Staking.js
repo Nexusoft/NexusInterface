@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useAtomValue } from 'jotai';
 import styled from '@emotion/styled';
 
@@ -11,12 +10,7 @@ import { restartCore } from 'lib/core';
 import { userStatusAtom, stakeInfoAtom } from 'lib/session';
 import { callAPI } from 'lib/api';
 import { useCoreInfo, isSynchronized } from 'lib/coreInfo';
-import {
-  openModal,
-  removeModal,
-  showNotification,
-  switchUserTab,
-} from 'lib/ui';
+import { openModal, removeModal, showNotification } from 'lib/ui';
 import {
   confirm,
   confirmPin,
@@ -26,6 +20,7 @@ import {
 import { formatNumber, formatDateTime } from 'lib/intl';
 import QuestionCircle from 'components/QuestionCircle';
 
+import { useUserTab } from './atoms';
 import TabContentWrapper from './TabContentWrapper';
 import UT from 'lib/usageTracking';
 
@@ -83,12 +78,10 @@ function promptForStakeAmount() {
 }
 
 export default function Staking() {
+  useUserTab('Staking');
   const stakeInfo = useAtomValue(stakeInfoAtom);
   const coreInfo = useCoreInfo();
   const privateNet = coreInfo?.private;
-  useEffect(() => {
-    switchUserTab('Staking');
-  }, []);
 
   const startStaking = async () => {
     try {

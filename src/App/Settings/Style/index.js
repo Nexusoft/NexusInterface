@@ -1,5 +1,4 @@
 // External
-import { useEffect } from 'react';
 import { useAtomValue } from 'jotai';
 import { ipcRenderer } from 'electron';
 import fs from 'fs';
@@ -12,13 +11,14 @@ import Select from 'components/Select';
 import NexusAddress from 'components/NexusAddress';
 import UT from 'lib/usageTracking';
 import { updateSettings, settingsAtom } from 'lib/settings';
-import { switchSettingsTab, showNotification } from 'lib/ui';
+import { showNotification } from 'lib/ui';
 import { loadCustomTheme } from 'lib/theme';
 import { accountsQuery } from 'lib/user';
 import { walletDataDir } from 'consts/paths';
 import { webGLAvailable } from 'consts/misc';
 import memoize from 'utils/memoize';
 
+import { useSettingsTab } from '../atoms';
 import ColorPicker from './ColorPicker';
 import BackgroundPicker from './BackgroundPicker';
 import ThemePicker from './ThemePicker';
@@ -77,12 +77,10 @@ async function exportThemeFileDialog() {
 }
 
 export default function SettingsStyle() {
+  useSettingsTab('Style');
   const settings = useAtomValue(settingsAtom);
   const accounts = accountsQuery.use();
   const defaultAddress = getTritiumDefaultAddress(accounts);
-  useEffect(() => {
-    switchSettingsTab('Style');
-  }, []);
 
   return (
     <>

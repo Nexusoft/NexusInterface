@@ -1,8 +1,7 @@
-import fs from 'fs';
+import { atom } from 'jotai';
 import { ipcRenderer } from 'electron';
 
-import * as TYPE from 'consts/actionTypes';
-import store, { jotaiStore } from 'store';
+import { jotaiStore } from 'store';
 import { stopCore } from 'lib/core';
 import { logOut } from 'lib/session';
 import { settingsAtom } from './settings';
@@ -16,13 +15,13 @@ export function setNavigate(func) {
   _navigate = func;
 }
 
+export const walletClosingAtom = atom(false);
+export const walletLockedAtom = atom(false);
+
 export const closeWallet = async (beforeExit) => {
   const { manualDaemon, manualDaemonLogOutOnClose } =
     jotaiStore.get(settingsAtom);
-
-  store.dispatch({
-    type: TYPE.CLOSE_WALLET,
-  });
+  jotaiStore.set(walletClosingAtom, true);
 
   if (!manualDaemon) {
     await stopCore();

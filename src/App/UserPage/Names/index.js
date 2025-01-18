@@ -1,11 +1,10 @@
-import { useEffect } from 'react';
 import { useAtomValue } from 'jotai';
 import styled from '@emotion/styled';
 
 import Icon from 'components/Icon';
 import Button from 'components/Button';
 import Switch from 'components/Switch';
-import { switchUserTab, openModal } from 'lib/ui';
+import { openModal } from 'lib/ui';
 import { nameRecordsQuery } from 'lib/user';
 import { usernameAtom } from 'lib/session';
 import { updateSettings, settingsAtom } from 'lib/settings';
@@ -14,6 +13,7 @@ import { timing } from 'styles';
 import memoize from 'utils/memoize';
 import plusIcon from 'icons/plus.svg';
 
+import { useUserTab } from '../atoms';
 import NameDetailsModal from './NameDetailsModal';
 import CreateNameModal from './CreateNameModal';
 import ChangeRegisterAddressModal from './ChangeRegisterAddressModal';
@@ -133,13 +133,11 @@ const filterNames = memoize((nameRecords, showUnusedNames) =>
 );
 
 export default function Names() {
+  useUserTab('Names');
   const nameRecords = nameRecordsQuery.use();
   const { showUnusedNames } = useAtomValue(settingsAtom);
   const filteredNames = filterNames(nameRecords, showUnusedNames);
   const username = useAtomValue(usernameAtom);
-  useEffect(() => {
-    switchUserTab('Names');
-  }, []);
 
   const toggle = () => updateSettings({ showUnusedNames: !showUnusedNames });
 

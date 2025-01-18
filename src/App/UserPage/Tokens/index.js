@@ -16,6 +16,7 @@ import plusIcon from 'icons/plus.svg';
 import searchIcon from 'icons/search.svg';
 
 // Internal Local
+import { useUserTab } from '../atoms';
 import NewTokenModal from './NewTokenModal';
 import Token from './Token';
 import SearchTokenModal from './SearchTokenModal';
@@ -40,6 +41,7 @@ const getAccountTokens = memoize((accounts, ownedTokens) =>
 );
 
 export default function Tokens() {
+  useUserTab('Tokens');
   const sessionId = useAtomValue(activeSessionIdAtom);
   const accounts = accountsQuery.use();
   const ownedTokens = tokensQuery.use();

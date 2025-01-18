@@ -2,8 +2,9 @@ import styled from '@emotion/styled';
 import { useAtomValue } from 'jotai';
 import Button from 'components/Button';
 import { confirmPin } from 'lib/dialog';
-import { toggleLockScreen } from 'lib/ui';
 import { usernameAtom } from 'lib/session';
+import { walletLockedAtom } from 'lib/wallet';
+import { jotaiStore } from 'store';
 
 import FullScreen from './FullScreen';
 
@@ -39,7 +40,7 @@ export default function LockedScreen() {
               confirmLabel: 'Unlock',
             });
             if (pin) {
-              toggleLockScreen(false);
+              jotaiStore.set(walletLockedAtom, false);
             }
           }}
         >

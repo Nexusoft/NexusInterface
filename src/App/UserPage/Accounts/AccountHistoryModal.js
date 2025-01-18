@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useSelector } from 'react-redux';
+import { useAtom } from 'jotai';
 import styled from '@emotion/styled';
 
 import ControlledModal from 'components/ControlledModal';
@@ -12,13 +12,14 @@ import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import listAll from 'utils/listAll';
 import { formatDateTime, formatNumber, formatCurrency } from 'lib/intl';
-import { openModal, toggleUserBalanceDisplayFiat } from 'lib/ui';
+import { openModal } from 'lib/ui';
 import { marketDataQuery } from 'lib/market';
 import { lookupAddress } from 'lib/addressBook';
 import TokenName from 'components/TokenName';
 import { handleError } from 'utils/form';
 import contactIcon from 'icons/address-book.svg';
 
+import { balancesShowFiatAtom } from '../atoms';
 import { totalBalance } from './utils';
 
 __ = __context('User.Accounts.AccountHistory');
@@ -234,7 +235,7 @@ const Amount = styled.span(({ theme, possitive }) => ({
 
 export default function AccountHistoryModal({ account }) {
   const [contracts, setContracts] = useState(null);
-  const showFiat = useSelector((state) => state.ui.user.balancesShowFiat);
+  const [showFiat, setShowFiat] = useAtom(balancesShowFiatAtom);
   const marketData = marketDataQuery.use();
   const { price, currency } = marketData || {};
   const closeModalRef = useRef();
@@ -301,7 +302,7 @@ export default function AccountHistoryModal({ account }) {
                       <Link
                         as={''}
                         to={''}
-                        onClick={(e) => toggleUserBalanceDisplayFiat(!showFiat)}
+                        onClick={() => setShowFiat((v) => !v)}
                       >
                         {showFiat ? currency : 'NXS'}
                       </Link>

@@ -94,35 +94,6 @@ export function removeBackgroundTask(taskId) {
 }
 
 /**
- * Settings
- * ===========================
- */
-export const switchSettingsTab = (tab) => {
-  store.dispatch({
-    type: TYPE.SWITCH_SETTINGS_TAB,
-    payload: tab,
-  });
-};
-
-export const setCoreSettingsRestart = (restart) => {
-  store.dispatch({
-    type: TYPE.SET_CORE_SETTINGS_RESTART,
-    payload: restart,
-  });
-};
-
-/**
- * Console
- * ===========================
- */
-export const switchConsoleTab = (tab) => {
-  store.dispatch({
-    type: TYPE.SWITCH_CONSOLE_TAB,
-    payload: tab,
-  });
-};
-
-/**
  * Console/Console
  * ===========================
  */
@@ -198,34 +169,11 @@ export const clearCoreOutput = () => {
     type: TYPE.CLEAR_CORE_OUTPUT,
   });
 };
-/**
- * User
- * ===========================
- */
-export const switchUserTab = (tab) => {
-  store.dispatch({
-    type: TYPE.SWITCH_USER_TAB,
-    payload: tab,
-  });
-};
-
-export const toggleUserBalanceDisplayFiat = (toggleBool) => {
-  store.dispatch({
-    type: TYPE.USERS_BALANCE_DISPLAY_FIAT,
-    payload: toggleBool,
-  });
-};
 
 /**
  * Other
  * ===========================
  */
-export const toggleLockScreen = (toggleLock) => {
-  store.dispatch({
-    type: TYPE.LOCK_SCREEN,
-    payload: toggleLock,
-  });
-};
 
 export const rqDevToolsOpenAtom = atom(false);
 

@@ -1,15 +1,14 @@
-import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 
 import Icon from 'components/Icon';
 import Button from 'components/Button';
-import { switchUserTab, openModal } from 'lib/ui';
+import { openModal } from 'lib/ui';
 import { popupContextMenu } from 'lib/contextMenu';
 import { namespacesQuery } from 'lib/user';
 import { timing } from 'styles';
 import plusIcon from 'icons/plus.svg';
 
+import { useUserTab } from '../atoms';
 import NamespaceDetailsModal from './NamespaceDetailsModal';
 import CreateNamespaceModal from './CreateNamespaceModal';
 import TransferNamespaceModal from './TransferNamespaceModal';
@@ -73,10 +72,8 @@ function Namespace({ namespace }) {
 }
 
 export default function Namespaces() {
+  useUserTab('Namespaces');
   const namespaces = namespacesQuery.use();
-  useEffect(() => {
-    switchUserTab('Namespaces');
-  }, []);
 
   return (
     <TabContentWrapper maxWidth={400}>

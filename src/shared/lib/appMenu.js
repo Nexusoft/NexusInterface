@@ -2,18 +2,17 @@
 import { shell, ipcRenderer } from 'electron';
 
 // Internal
-import store, { observeStore, jotaiStore } from 'store';
+import { jotaiStore, subscribe } from 'store';
 import {
   toggleWebViewDevTools,
   getActiveWebView,
   activeAppModuleNameAtom,
 } from 'lib/modules';
 import { startCore, stopCore } from 'lib/core';
-import { navigate } from 'lib/wallet';
+import { navigate, walletLockedAtom } from 'lib/wallet';
 import {
   showNotification,
   openModal,
-  toggleLockScreen,
   rqDevToolsOpenAtom,
   jotaiDevToolsOpenAtom,
 } from 'lib/ui';
@@ -242,11 +241,8 @@ const menuItems = preprocess({
     label: __('Lock Screen'),
     accelerator: 'CmdOrCtrl+L',
     click: () => {
-      const state = store.getState();
-      if (state.ui.locked) {
-        return;
-      }
-      toggleLockScreen(true);
+      const locked = jotaiStore.get(walletLockedAtom);
+      if (!locked) jotaiStore.set(walletLockedAtom, true);
     },
   },
 });
@@ -476,12 +472,12 @@ const preventReload = (ev) => {
 // Changing menu item labels directly has no effect so we have to rebuild the whole menu
 export function prepareMenu() {
   buildMenu();
-  jotaiStore.sub(updaterStateAtom, rebuildMenu);
-  jotaiStore.sub(coreConnectedAtom, rebuildMenu);
-  jotaiStore.sub(settingAtoms.devMode, rebuildMenu);
-  jotaiStore.sub(settingAtoms.manualDaemon, rebuildMenu);
-  jotaiStore.sub(activeAppModuleNameAtom, rebuildMenu);
-  jotaiStore.sub(liteModeAtom, rebuildMenu);
-  jotaiStore.sub(loggedInAtom, rebuildMenu);
-  observeStore((state) => state.ui.locked, observeLockedState); // Consider moving this to a more appropriate spot.
+  subscribe(updaterStateAtom, rebuildMenu);
+  subscribe(coreConnectedAtom, rebuildMenu);
+  subscribe(settingAtoms.devMode, rebuildMenu);
+  subscribe(settingAtoms.manualDaemon, rebuildMenu);
+  subscribe(activeAppModuleNameAtom, rebuildMenu);
+  subscribe(liteModeAtom, rebuildMenu);
+  subscribe(loggedInAtom, rebuildMenu);
+  subscribe(walletLockedAtom, observeLockedState); // TODO: Consider moving this to a more appropriate spot.
 }

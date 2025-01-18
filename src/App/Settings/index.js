@@ -1,6 +1,5 @@
 // External
 import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
 import { useAtomValue } from 'jotai';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import styled from '@emotion/styled';
@@ -12,6 +11,7 @@ import RouterHorizontalTab from 'components/RouterHorizontalTab';
 import { moduleUpdateCountAtom } from 'lib/modules';
 
 // Internal Local
+import { lastActiveTabAtom } from './atoms';
 import SettingsApp from './App';
 import SettingsCore from './Core';
 import SettingsStyle from './Style';
@@ -65,7 +65,7 @@ const Badge = styled.div(({ theme }) => ({
 }));
 
 function SettingsRedirect() {
-  const lastActiveTab = useSelector((state) => state.ui.settings.lastActiveTab);
+  const lastActiveTab = useAtomValue(lastActiveTabAtom);
   return <Navigate to={lastActiveTab} replace />;
 }
 

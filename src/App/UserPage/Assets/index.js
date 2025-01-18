@@ -1,12 +1,12 @@
-import { useEffect } from 'react';
 import styled from '@emotion/styled';
 
 import Icon from 'components/Icon';
 import Button from 'components/Button';
-import { switchUserTab, openModal } from 'lib/ui';
+import { openModal } from 'lib/ui';
 import { assetsQuery } from 'lib/user';
 import plusIcon from 'icons/plus.svg';
 
+import { useUserTab } from '../atoms';
 import Asset from './Asset';
 import CreateAssetModal from './CreateAssetModal';
 import TabContentWrapper from '../TabContentWrapper';
@@ -20,10 +20,8 @@ const EmptyMessage = styled.div(({ theme }) => ({
 }));
 
 export default function Assets() {
+  useUserTab('Assets');
   const assets = assetsQuery.use();
-  useEffect(() => {
-    switchUserTab('Assets');
-  }, []);
 
   return (
     <TabContentWrapper maxWidth={400}>

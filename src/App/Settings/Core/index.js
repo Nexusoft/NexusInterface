@@ -1,6 +1,5 @@
 // External
-import { useEffect, useId } from 'react';
-import { useSelector } from 'react-redux';
+import { useId, useState } from 'react';
 import { useAtomValue } from 'jotai';
 import styled from '@emotion/styled';
 
@@ -8,11 +7,7 @@ import styled from '@emotion/styled';
 import Form from 'components/Form';
 import store from 'store';
 import * as TYPE from 'consts/actionTypes';
-import {
-  switchSettingsTab,
-  setCoreSettingsRestart,
-  showNotification,
-} from 'lib/ui';
+import { showNotification } from 'lib/ui';
 import { confirm } from 'lib/dialog';
 import { stopCore, startCore, restartCore } from 'lib/core';
 import { refetchCoreInfo } from 'lib/coreInfo';
@@ -21,6 +16,7 @@ import { formSubmit } from 'lib/form';
 import Button from 'components/Button';
 import Switch from 'components/Switch';
 
+import { useSettingsTab } from '../atoms';
 import EmbeddedCoreSettings from './EmbeddedCoreSettings';
 import RemoteCoreSettings from './RemoteCoreSettings';
 
@@ -170,25 +166,15 @@ async function turnOnRemoteCore(restartForm) {
   }
 }
 
-/**
- * Handles the logic when the switch is activated
- * @param {element} e Attached element
- */
-function handleRestartSwitch(e) {
-  setCoreSettingsRestart(!!e.target.checked);
-}
-
 export default function SettingsCore() {
+  useSettingsTab('Core');
   const switchId = useId();
   const settings = useAtomValue(settingsAtom);
   const { manualDaemon } = settings;
-  const restartCoreOnSave = useSelector(
-    (state) => state.ui.settings.restartCoreOnSave
-  );
-
-  useEffect(() => {
-    switchSettingsTab('Core');
-  }, []);
+  const [restartCoreOnSave, setRestartCoreOnSave] = useState(true);
+  const handleRestartSwitch = () => {
+    setRestartCoreOnSave(!restartCoreOnSave);
+  };
 
   return (
     <>
