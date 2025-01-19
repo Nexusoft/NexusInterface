@@ -3,7 +3,7 @@ import fs from 'fs';
 import Ajv from 'ajv';
 import semver from 'semver';
 
-import { jotaiStore } from 'store';
+import { store } from 'lib/store';
 import { settingsAtom } from 'lib/settings';
 import { semverRegex, emailRegex } from 'consts/misc';
 import { modulesDir } from 'consts/paths';
@@ -273,7 +273,7 @@ async function validateModuleInfo(moduleInfo, dirPath) {
     ...moduleInfo.files.map((file) => getAllUpperFolders(file))
   );
   const filePaths = relativePaths.map((path) => join(dirPath, path));
-  const { devMode, allowSymLink } = jotaiStore.get(settingsAtom);
+  const { devMode, allowSymLink } = store.get(settingsAtom);
   const checkSymLink = !(devMode && allowSymLink);
   try {
     await Promise.all(filePaths.map((path) => checkPath(path, checkSymLink)));
@@ -370,7 +370,7 @@ async function initializeModule(module) {
   }
 
   const { devMode, verifyModuleSource, disabledModules } =
-    jotaiStore.get(settingsAtom);
+    store.get(settingsAtom);
   module.incompatible =
     !module.info.targetWalletVersion ||
     semver.lt(module.info.targetWalletVersion, BACKWARD_COMPATIBLE_VERSION);
@@ -439,7 +439,7 @@ export async function prepareModules() {
     if (!fs.existsSync(modulesDir)) return {};
     // Call getNexusOrgUsers() to fire up the request as early as possible
     getNexusOrgUsers();
-    const { devModulePaths = [] } = jotaiStore.get(settingsAtom);
+    const { devModulePaths = [] } = store.get(settingsAtom);
     const childNames = await fs.promises.readdir(modulesDir);
     const childPaths = childNames.map((name) => join(modulesDir, name));
     const stats = await Promise.all(
@@ -475,7 +475,7 @@ export async function prepareModules() {
       }
       return map;
     }, {});
-    jotaiStore.set(modulesMapAtom, modulesMap);
+    store.set(modulesMapAtom, modulesMap);
 
     const failedModules = [];
     for (let i = 0; i < dirNames.length; ++i) {
@@ -489,7 +489,7 @@ export async function prepareModules() {
       }
     }
     if (failedModules.length > 0) {
-      jotaiStore.set(failedModulesAtom, failedModules);
+      store.set(failedModulesAtom, failedModules);
     }
 
     checkForModuleUpdates();

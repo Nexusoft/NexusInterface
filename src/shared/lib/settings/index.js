@@ -1,5 +1,5 @@
 import { atom } from 'jotai';
-import { jotaiStore, subscribe } from 'store';
+import { store, subscribe } from 'lib/store';
 import memoize from 'utils/memoize';
 import defaultSettings from './defaultSettings';
 import { readSettings, writeSettings } from './universal';
@@ -44,8 +44,8 @@ export const settingAtoms = Object.fromEntries(
 );
 
 export function updateSettings(updates) {
-  const userSettings = jotaiStore.get(userSettingsAtom);
-  jotaiStore.set(userSettingsAtom, {
+  const userSettings = store.get(userSettingsAtom);
+  store.set(userSettingsAtom, {
     ...userSettings,
     ...updates,
   });

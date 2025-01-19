@@ -5,7 +5,7 @@ import ControlledModal from 'components/ControlledModal';
 import Icon from 'components/Icon';
 import { timing } from 'styles';
 import {
-  sessionsAtom,
+  sessionsQuery,
   activeSessionIdAtom,
   selectedSessionIdAtom,
 } from 'lib/session';
@@ -70,7 +70,7 @@ function User({ sessionId, username, active, closeModal }) {
 }
 
 export default function SwitchUserModal() {
-  const sessions = useAtomValue(sessionsAtom);
+  const sessions = sessionsQuery.use();
   const activeSessionId = useAtomValue(activeSessionIdAtom);
 
   return (

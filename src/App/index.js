@@ -15,7 +15,6 @@ import GlobalStyles from 'components/GlobalStyles';
 import ThemeController from 'components/ThemeController';
 import { showDefaultMenu } from 'lib/contextMenu';
 import { setNavigate } from 'lib/wallet';
-import { useCoreInfoPolling } from 'lib/coreInfo';
 import { themeAtom } from 'lib/theme';
 
 import Overlays from './Overlays';
@@ -60,7 +59,6 @@ function NavigateExporter() {
 }
 
 export default function App() {
-  useCoreInfoPolling();
   const theme = useAtomValue(themeAtom);
   return (
     <HashRouter>

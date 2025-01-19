@@ -19,7 +19,7 @@ import {
   showBackgroundTask,
   isModalOpen,
 } from 'lib/ui';
-import { jotaiStore } from 'store';
+import { store } from 'lib/store';
 import { loggedInAtom } from 'lib/session';
 import { confirmPasswordPin } from 'lib/dialog';
 import UT from 'lib/usageTracking';
@@ -183,7 +183,7 @@ function UserConfirmBackgroundTask({ username }) {
   const closeTaskRef = useRef();
   useEffect(
     () =>
-      jotaiStore.sub(blocksAtom, () => {
+      store.sub(blocksAtom, () => {
         async () => {
           const result = await callAPI('profiles/status/master', {
             username,
@@ -206,7 +206,7 @@ function UserConfirmBackgroundTask({ username }) {
               ),
               'success'
             );
-            if (!jotaiStore.get(loggedInAtom) && !isModalOpen(LoginModal)) {
+            if (!store.get(loggedInAtom) && !isModalOpen(LoginModal)) {
               openModal(LoginModal);
             }
           }

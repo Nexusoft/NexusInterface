@@ -1,13 +1,12 @@
-import { useAtomValue } from 'jotai';
 import styled from '@emotion/styled';
 
 import Button from 'components/Button';
 import AdjustStakeModal from 'components/AdjustStakeModal';
 import ConfirmDialog from 'components/Dialogs/ConfirmDialog';
-import { jotaiStore } from 'store';
+import { store } from 'lib/store';
 import { updateSettings, settingsAtom } from 'lib/settings';
 import { restartCore } from 'lib/core';
-import { userStatusAtom, stakeInfoAtom } from 'lib/session';
+import { userStatusQuery, stakeInfoQuery } from 'lib/session';
 import { callAPI } from 'lib/api';
 import { useCoreInfo, isSynchronized } from 'lib/coreInfo';
 import { openModal, removeModal, showNotification } from 'lib/ui';
@@ -79,14 +78,13 @@ function promptForStakeAmount() {
 
 export default function Staking() {
   useUserTab('Staking');
-  const stakeInfo = useAtomValue(stakeInfoAtom);
+  const stakeInfo = stakeInfoQuery.use();
   const coreInfo = useCoreInfo();
   const privateNet = coreInfo?.private;
 
   const startStaking = async () => {
     try {
-      const { liteMode, multiUser, enableStaking } =
-        jotaiStore.get(settingsAtom);
+      const { liteMode, multiUser, enableStaking } = store.get(settingsAtom);
       const synchronized = isSynchronized();
 
       if (stakeInfo?.amount === 0) {
@@ -150,7 +148,7 @@ export default function Staking() {
         }
       }
 
-      const userStatus = jotaiStore.get(userStatusAtom);
+      const userStatus = store.get(userStatusQuery.valueAtom);
       if (userStatus?.unlocked.staking === false) {
         const pin = await confirmPin({
           note: __('Enter your PIN to start staking'),

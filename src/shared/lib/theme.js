@@ -3,7 +3,7 @@ import fs from 'fs';
 import { atom } from 'jotai';
 
 import memoize from 'utils/memoize';
-import { jotaiStore, subscribe } from 'store';
+import { store, subscribe } from 'lib/store';
 import path from 'path';
 import { walletDataDir } from 'consts/paths';
 import { readJson, writeJson } from 'utils/json';
@@ -113,11 +113,11 @@ const downloadWallpaper = (wallpaper) =>
   });
 
 export const updateTheme = (updates) => {
-  jotaiStore.set(userThemeAtom, (userTheme) => ({ ...userTheme, ...updates }));
+  store.set(userThemeAtom, (userTheme) => ({ ...userTheme, ...updates }));
 };
 
 export const setTheme = (theme) => {
-  jotaiStore.set(userThemeAtom, theme);
+  store.set(userThemeAtom, theme);
 };
 
 export async function loadCustomTheme(path) {

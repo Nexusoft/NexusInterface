@@ -1,9 +1,8 @@
 import { createRef, useRef, useEffect } from 'react';
 import { atom } from 'jotai';
-import { atomWithQuery } from 'jotai-tanstack-query';
 import ExternalLink from 'components/ExternalLink';
 import BackgroundTask from 'components/BackgroundTask';
-import { jotaiStore, subscribe, queryClient } from 'store';
+import { store, subscribe, queryClient } from 'lib/store';
 import { callAPI as callAPI } from 'lib/api';
 import { coreConnectedAtom, multiUserAtom, liteModeAtom } from './coreInfo';
 import {
@@ -13,7 +12,8 @@ import {
   showNotification,
 } from 'lib/ui';
 import { confirm } from 'lib/dialog';
-import { updateSettings, settingsAtom } from 'lib/settings';
+import { updateSettings, settingsAtom, settingAtoms } from 'lib/settings';
+import jotaiQuery from 'utils/jotaiQuery';
 import LoginModal from 'components/LoginModal';
 import NewUserModal from 'components/NewUserModal';
 import UT from './usageTracking';
@@ -27,7 +27,7 @@ export const logIn = async ({ username, password, pin }) => {
     pin,
   });
 
-  await refetchUserStatus();
+  await userStatusQuery.refetch();
   await unlockUser({ pin, sessionId });
 
   UT.LogIn();
@@ -35,7 +35,7 @@ export const logIn = async ({ username, password, pin }) => {
 };
 
 export const logOut = async () => {
-  const sessions = jotaiStore.get(sessionsAtom);
+  const sessions = store.get(sessionsQuery.valueAtom);
   if (sessions) {
     await Promise.all([
       Object.keys(sessions).map((session) => {
@@ -46,7 +46,7 @@ export const logOut = async () => {
     await callAPI('sessions/terminate/local');
   }
   queryClient.clear();
-  refetchUserStatus();
+  userStatusQuery.refetch();
   UT.LogOut();
 };
 
@@ -55,29 +55,20 @@ export const logOut = async () => {
  * =============================================================================
  */
 
-const sessionsPollingAtom = atomWithQuery((get) => ({
-  queryKey: ['sessions'],
-  queryFn: () => callAPI('sessions/list/local'),
-  enabled: !!get(multiUserAtom),
-  retry: 5,
-  retryDelay: (attempt) => 500 + attempt * 1000,
-  staleTime: 600000, // 10 minutes
-  refetchInterval: 10000, // 10 seconds
-  refetchIntervalInBackground: true,
-  refetchOnReconnect: 'always',
-  placeholderData: (previousData) => previousData,
-}));
-
-export const sessionsAtom = atom((get) => {
-  if (!get(multiUserAtom)) {
-    return null;
-  }
-  const query = get(sessionsPollingAtom);
-  if (!query || query.isError) {
-    return null;
-  } else {
-    return query.data;
-  }
+export const sessionsQuery = jotaiQuery({
+  alwaysOn: true,
+  condition: (get) => !!get(multiUserAtom),
+  getQueryConfig: (get) => ({
+    queryKey: ['sessions', !!get(settingAtoms.manualDaemon)],
+    queryFn: () => callAPI('sessions/list/local'),
+    retry: 5,
+    retryDelay: (attempt) => 500 + attempt * 1000,
+    staleTime: 600000, // 10 minutes
+    refetchInterval: 10000, // 10 seconds
+    refetchIntervalInBackground: true,
+    refetchOnReconnect: 'always',
+    placeholderData: (previousData) => previousData,
+  }),
 });
 
 export const selectedSessionIdAtom = atom(null);
@@ -86,7 +77,7 @@ export const activeSessionIdAtom = atom((get) => {
   const selectedSessionId = get(selectedSessionIdAtom);
   if (selectedSessionId) return selectedSessionId;
 
-  const sessions = get(sessionsAtom);
+  const sessions = get(sessionsQuery.valueAtom);
   if (!sessions) return null;
 
   const sessionList = Object.values(sessions);
@@ -101,7 +92,7 @@ export const activeSessionIdAtom = atom((get) => {
 });
 
 export const activeSessionAtom = atom((get) => {
-  const sessions = get(sessionsAtom);
+  const sessions = get(sessionsQuery.valueAtom);
   const activeSessionId = get(activeSessionIdAtom);
   return (activeSessionId && sessions?.[activeSessionId]) || null;
 });
@@ -111,95 +102,68 @@ export const activeSessionAtom = atom((get) => {
  * =============================================================================
  */
 
-export const userStatusPollingAtom = atomWithQuery((get) => ({
-  queryKey: ['userStatus', get(activeSessionIdAtom)],
-  queryFn: async () => {
-    const sessionId = get(activeSessionIdAtom);
-    try {
-      const result = await callAPI(
-        'sessions/status/local',
-        sessionId ? { session: sessionId } : undefined
-      );
-      return result;
-    } catch (err) {
-      // Don't log error if it's 'Session not found' (user not logged in)
-      if (err?.code === -11) {
-        return null;
-      }
-      console.error(err);
-      throw err;
-    }
-  },
-  enabled:
+export const userStatusQuery = jotaiQuery({
+  alwaysOn: true,
+  condition: (get) =>
     get(coreConnectedAtom) && (!get(multiUserAtom) || get(activeSessionIdAtom)),
-  retry: 0,
-  refetchInterval: ({ state: { data } }) => (data?.indexing ? 1000 : 10000), // 1 second if indexing, else 10 seconds
-}));
-
-export const userStatusAtom = atom((get) => {
-  const query = get(userStatusPollingAtom);
-  if (
-    !query ||
-    query.isError ||
-    !get(coreConnectedAtom) ||
-    (get(multiUserAtom) && !get(activeSessionIdAtom))
-  ) {
-    return null;
-  } else {
-    return query.data;
-  }
+  getQueryConfig: (get) => ({
+    queryKey: ['userStatus', get(activeSessionIdAtom)],
+    queryFn: async () => {
+      const sessionId = get(activeSessionIdAtom);
+      try {
+        const result = await callAPI(
+          'sessions/status/local',
+          sessionId ? { session: sessionId } : undefined
+        );
+        return result;
+      } catch (err) {
+        // Don't log error if it's 'Session not found' (user not logged in)
+        if (err?.code === -11) {
+          return null;
+        }
+        console.error(err);
+        throw err;
+      }
+    },
+    retry: 0,
+    refetchInterval: ({ state: { data } }) => (data?.indexing ? 1000 : 10000), // 1 second if indexing, else 10 seconds
+  }),
 });
 
-const refetchUserStatusAtom = atom(
-  (get) => get(userStatusPollingAtom)?.refetch || (() => {})
+export const loggedInAtom = atom((get) => !!get(userStatusQuery.valueAtom));
+export const userGenesisAtom = atom(
+  (get) => get(userStatusQuery.valueAtom)?.genesis
 );
-
-export function refetchUserStatus() {
-  return jotaiStore.get(refetchUserStatusAtom)?.();
-}
-
-export const loggedInAtom = atom((get) => !!get(userStatusAtom));
-export const userGenesisAtom = atom((get) => get(userStatusAtom)?.genesis);
 export const hasRecoveryPhraseAtom = atom(
-  (get) => !!get(profileStatusAtom)?.recovery
+  (get) => !!get(profileStatusQuery.valueAtom)?.recovery
 );
-const userIndexingAtom = atom((get) => get(userStatusAtom)?.indexing);
+const userIndexingAtom = atom(
+  (get) => get(userStatusQuery.valueAtom)?.indexing
+);
 
-export const profileStatusPollingAtom = atomWithQuery((get) => ({
-  queryKey: ['profileStatus', get(userGenesisAtom)],
-  queryFn: async () => {
-    const genesis = get(userGenesisAtom);
-    return await callAPI('profiles/status/master', {
-      genesis,
-    });
-  },
-  enabled: get(loggedInAtom),
-  retry: 2,
-  refetchInterval: 10000, // 10 seconds
-}));
-
-export const profileStatusAtom = atom((get) => {
-  const query = get(profileStatusPollingAtom);
-  if (!query || query.isError || !get(loggedInAtom)) {
-    return null;
-  } else {
-    return query.data;
-  }
+export const profileStatusQuery = jotaiQuery({
+  alwaysOn: true,
+  condition: (get) => get(loggedInAtom),
+  getQueryConfig: (get) => ({
+    queryKey: ['profileStatus', get(userGenesisAtom)],
+    queryFn: async () => {
+      const genesis = get(userGenesisAtom);
+      return await callAPI('profiles/status/master', {
+        genesis,
+      });
+    },
+    retry: 2,
+    refetchInterval: 10000, // 10 seconds
+  }),
 });
 
-const refetchProfileStatusAtom = atom(
-  (get) => get(profileStatusPollingAtom)?.refetch || (() => {})
+export const txCountAtom = atom(
+  (get) => get(profileStatusQuery.valueAtom)?.transactions
 );
-
-export function refetchProfileStatus() {
-  jotaiStore.get(refetchProfileStatusAtom)?.();
-}
-
-export const txCountAtom = atom((get) => get(profileStatusAtom)?.transactions);
 
 export const usernameAtom = atom((get) => {
-  const profileStatus = get(profileStatusAtom);
-  const userStatus = get(userStatusAtom);
+  const profileStatus = get(profileStatusQuery.valueAtom);
+  const userStatus = get(userStatusQuery.valueAtom);
   const activeSession = get(activeSessionAtom);
 
   return (
@@ -214,11 +178,11 @@ export function prepareSessionInfo() {
   subscribe(coreConnectedAtom, async (coreConnected) => {
     if (coreConnected) {
       const userStatus = await queryClient.ensureQueryData({
-        queryKey: ['userStatus', jotaiStore.get(activeSessionIdAtom)],
+        queryKey: ['userStatus', store.get(activeSessionIdAtom)],
       });
-      // Query has just finished, userStatusAtom and loggedInAtom haven't been updated yet
+      // Query has just finished, userStatusQuery and loggedInAtom haven't been updated yet
       const loggedIn = !!userStatus;
-      const { locale, firstCreateNewUserShown } = jotaiStore.get(settingsAtom);
+      const { locale, firstCreateNewUserShown } = store.get(settingsAtom);
       // The wallet will have to refresh after language is chosen
       // So NewUser modal shouldn't be visible now
       if (
@@ -243,58 +207,47 @@ export function prepareSessionInfo() {
  * =============================================================================
  */
 
-export const stakeInfoPollingAtom = atomWithQuery((get) => ({
-  queryKey: ['stakeInfo', get(userGenesisAtom)],
-  queryFn: async () => {
-    try {
-      return await callAPI('finance/get/stakeinfo');
-    } catch (err) {
-      // Ignore 'Trust account not found' error
-      if (err.code === -70) {
-        return null;
+export const stakeInfoQuery = jotaiQuery({
+  alwaysOn: true,
+  condition: (get) => get(loggedInAtom),
+  getQueryConfig: (get) => ({
+    queryKey: ['stakeInfo', get(userGenesisAtom)],
+    queryFn: async () => {
+      try {
+        return await callAPI('finance/get/stakeinfo');
+      } catch (err) {
+        // Ignore 'Trust account not found' error
+        if (err.code === -70) {
+          return null;
+        }
+        console.error(err);
+        throw err;
       }
-      console.error(err);
-      throw err;
-    }
-  },
-  enabled: get(loggedInAtom),
-  retry: 0,
-  refetchInterval: ({ state: { data } }) => (data?.staking ? 10000 : 60000), // 10 seconds if staking, 1 minute if not
-}));
-
-export const stakeInfoAtom = atom(
-  (get) => get(stakeInfoPollingAtom)?.data || null
-);
-
-const refetchStakeInfoAtom = atom(
-  (get) => get(stakeInfoPollingAtom)?.refetch || (() => {})
-);
-
-export function refetchStakeInfo() {
-  jotaiStore.get(refetchStakeInfoAtom)?.();
-}
+    },
+    retry: 0,
+    refetchInterval: ({ state: { data } }) => (data?.staking ? 10000 : 60000), // 10 seconds if staking, 1 minute if not
+  }),
+});
 
 const startStakingAskedAtom = atom(false);
-export const stakingAtom = atom((get) => !!get(stakeInfoAtom)?.staking);
+export const stakingAtom = atom(
+  (get) => !!get(stakeInfoQuery.valueAtom)?.staking
+);
 
 async function shouldUnlockStaking() {
-  const { enableStaking, dontAskToStartStaking } = jotaiStore.get(settingsAtom);
-  if (
-    jotaiStore.get(liteModeAtom) ||
-    jotaiStore.get(multiUserAtom) ||
-    !enableStaking
-  ) {
+  const { enableStaking, dontAskToStartStaking } = store.get(settingsAtom);
+  if (store.get(liteModeAtom) || store.get(multiUserAtom) || !enableStaking) {
     return false;
   }
 
   const stakeInfo = await queryClient.ensureQueryData({
-    queryKey: ['stakeInfo', jotaiStore.get(userGenesisAtom)],
+    queryKey: ['stakeInfo', store.get(userGenesisAtom)],
   });
   if (!stakeInfo?.new) {
     return true;
   }
 
-  const startStakingAsked = jotaiStore.get(startStakingAskedAtom);
+  const startStakingAsked = store.get(startStakingAskedAtom);
   if (
     stakeInfo?.new &&
     stakeInfo?.balance &&
@@ -343,7 +296,7 @@ async function shouldUnlockStaking() {
       labelYes: __('Start staking'),
       labelNo: __("Don't stake"),
     });
-    jotaiStore.set(startStakingAsked, true);
+    store.set(startStakingAsked, true);
     if (checkboxRef.current?.checked) {
       updateSettings({ dontAskToStartStaking: true });
     }
@@ -357,7 +310,7 @@ async function shouldUnlockStaking() {
 
 async function unlockUser({ pin, sessionId }) {
   const unlockStaking = await shouldUnlockStaking();
-  const { enableMining } = jotaiStore.get(settingsAtom);
+  const { enableMining } = store.get(settingsAtom);
   try {
     await callAPI('sessions/unlock/local', {
       pin,
@@ -369,7 +322,7 @@ async function unlockUser({ pin, sessionId }) {
       session: sessionId || undefined,
     });
   } catch (error) {
-    const indexing = jotaiStore.get(userIndexingAtom);
+    const indexing = store.get(userIndexingAtom);
     if (indexing) {
       showBackgroundTask(UserUnLockIndexingBackgroundTask, {
         pin,

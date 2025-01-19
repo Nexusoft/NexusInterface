@@ -4,7 +4,7 @@ import Button from 'components/Button';
 import { confirmPin } from 'lib/dialog';
 import { usernameAtom } from 'lib/session';
 import { walletLockedAtom } from 'lib/wallet';
-import { jotaiStore } from 'store';
+import { store } from 'lib/store';
 
 import FullScreen from './FullScreen';
 
@@ -40,7 +40,7 @@ export default function LockedScreen() {
               confirmLabel: 'Unlock',
             });
             if (pin) {
-              jotaiStore.set(walletLockedAtom, false);
+              store.set(walletLockedAtom, false);
             }
           }}
         >

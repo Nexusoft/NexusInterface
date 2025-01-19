@@ -13,7 +13,7 @@ import { defaultConfig } from 'lib/coreConfig';
 import { preRelease } from 'consts/misc';
 import { rm as deleteDirectory } from 'fs/promises';
 import { consts } from 'styles';
-import { jotaiStore } from 'store';
+import { store } from 'lib/store';
 
 __ = __context('Settings.Core');
 
@@ -434,7 +434,7 @@ async function resyncLiteMode() {
   if (confirmed) {
     updateSettings({ clearPeers: true });
     await stopCore();
-    const coreDataDir = jotaiStore.get(settingAtoms.coreDataDir);
+    const coreDataDir = store.get(settingAtoms.coreDataDir);
     const clientFolder = path.join(coreDataDir, 'client');
     try {
       await deleteDirectory(clientFolder, { recursive: true, force: true });

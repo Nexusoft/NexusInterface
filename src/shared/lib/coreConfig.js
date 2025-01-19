@@ -5,7 +5,7 @@ import crypto from 'crypto';
 import macaddress from 'macaddress';
 import { atom } from 'jotai';
 
-import { jotaiStore } from 'store';
+import { store } from 'lib/store';
 import { settingsAtom } from './settings';
 
 /**
@@ -102,7 +102,7 @@ export async function loadNexusConf() {
     embeddedCoreUseNonSSL,
     embeddedCoreApiPort,
     embeddedCoreApiPortSSL,
-  } = jotaiStore.get(settingsAtom);
+  } = store.get(settingsAtom);
   if (!fs.existsSync(coreDataDir)) {
     log.info(
       'Core Manager: Data Directory path not found. Creating folder: ' +
@@ -168,7 +168,7 @@ export async function loadNexusConf() {
 }
 
 export async function getActiveCoreConfig() {
-  const settings = jotaiStore.get(settingsAtom);
+  const settings = store.get(settingsAtom);
 
   if (settings.manualDaemon) {
     return customConfig({
@@ -180,14 +180,14 @@ export async function getActiveCoreConfig() {
       apiPassword: settings.manualDaemonApiPassword,
     });
   } else {
-    const config = jotaiStore.get(coreConfigAtom);
+    const config = store.get(coreConfigAtom);
     if (config) {
       // Config cached when core was started,
       return config;
     } else {
       // If there's no cached config, load it from nexus.conf
       const conf = await loadNexusConf();
-      jotaiStore.set(coreConfigAtom, conf);
+      store.set(coreConfigAtom, conf);
       return conf;
     }
   }

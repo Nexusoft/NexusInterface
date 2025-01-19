@@ -1,5 +1,3 @@
-import { useAtomValue } from 'jotai';
-
 import ControlledModal from 'components/ControlledModal';
 import Button from 'components/Button';
 import InfoField from 'components/InfoField';
@@ -8,7 +6,7 @@ import QRButton from 'components/QRButton';
 import TokenName from 'components/TokenName';
 import { goToSend } from 'lib/send';
 import { formatDateTime, formatNumber } from 'lib/intl';
-import { stakeInfoAtom } from 'lib/session';
+import { stakeInfoQuery } from 'lib/session';
 import { openModal } from 'lib/ui';
 
 import { totalBalance } from './utils';
@@ -25,7 +23,7 @@ const timeFormatOptions = {
 };
 
 export default function AccountDetailsModal({ account }) {
-  const stakeInfo = useAtomValue(stakeInfoAtom);
+  const stakeInfo = stakeInfoQuery.use();
   return (
     <ControlledModal>
       {(closeModal) => (

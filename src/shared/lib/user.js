@@ -1,4 +1,4 @@
-import { jotaiQuery } from 'store';
+import jotaiQuery from 'utils/jotaiQuery';
 import { callAPI as callAPI } from 'lib/api';
 import memoize from 'utils/memoize';
 import { loggedInAtom, userGenesisAtom, txCountAtom } from './session';

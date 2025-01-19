@@ -8,7 +8,7 @@ import Form from 'components/Form';
 import { showNotification } from 'lib/ui';
 import { confirm } from 'lib/dialog';
 import { stopCore, startCore, restartCore } from 'lib/core';
-import { refetchCoreInfo } from 'lib/coreInfo';
+import { coreInfoQuery } from 'lib/coreInfo';
 import { updateSettings, settingsAtom } from 'lib/settings';
 import { formSubmit } from 'lib/form';
 import Button from 'components/Button';
@@ -140,7 +140,7 @@ async function turnOffRemoteCore(restartForm) {
     restartForm();
     await startCore();
     updateSettings({ manualDaemon: false });
-    refetchCoreInfo();
+    coreInfoQuery.refetch();
   }
 }
 
@@ -158,7 +158,7 @@ async function turnOnRemoteCore(restartForm) {
     restartForm();
     await stopCore();
     updateSettings({ manualDaemon: true });
-    refetchCoreInfo();
+    coreInfoQuery.refetch();
   }
 }
 

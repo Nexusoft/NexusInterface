@@ -1,7 +1,7 @@
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
 
-import { jotaiStore } from 'store';
+import { store } from 'lib/store';
 import { loadNexusConf, coreConfigAtom } from 'lib/coreConfig';
 import { coreInfoPausedAtom } from './coreInfo';
 import { callAPI } from 'lib/api';
@@ -18,7 +18,7 @@ import * as path from 'path';
  */
 export const startCore = async () => {
   // Check remote core mode
-  const settings = jotaiStore.get(settingsAtom);
+  const settings = store.get(settingsAtom);
   if (settings.manualDaemon) {
     log.info('Core Manager: Remote Core mode, skipping starting core');
     return;
@@ -31,7 +31,7 @@ export const startCore = async () => {
 
   // Load config
   const conf = await loadNexusConf();
-  jotaiStore.set(coreConfigAtom, conf);
+  store.set(coreConfigAtom, conf);
 
   // Check if core's already running
   if (await ipcRenderer.invoke('check-core-running')) {
@@ -133,7 +133,7 @@ export const startCore = async () => {
 
   // Start core
   await ipcRenderer.invoke('start-core', params);
-  jotaiStore.set(coreInfoPausedAtom, false);
+  store.set(coreInfoPausedAtom, false);
 };
 
 /**
@@ -141,7 +141,7 @@ export const startCore = async () => {
  */
 export const stopCore = async (forRestart) => {
   log.info('Core Manager: Stop function called');
-  const { manualDaemon } = jotaiStore.get(settingsAtom);
+  const { manualDaemon } = store.get(settingsAtom);
   try {
     await callAPI('system/stop');
 
@@ -166,7 +166,7 @@ export const stopCore = async (forRestart) => {
   } catch (err) {}
 
   if (!forRestart && !manualDaemon) {
-    jotaiStore.set(coreInfoPausedAtom, true);
+    store.set(coreInfoPausedAtom, true);
   }
 };
 
@@ -176,5 +176,5 @@ export const stopCore = async (forRestart) => {
 export const restartCore = async () => {
   await stopCore(true);
   await startCore();
-  jotaiStore.set(coreInfoPausedAtom, false);
+  store.set(coreInfoPausedAtom, false);
 };

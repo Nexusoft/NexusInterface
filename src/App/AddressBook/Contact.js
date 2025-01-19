@@ -12,7 +12,7 @@ import { useCoreConnected } from 'lib/coreInfo';
 import { timing } from 'styles';
 import * as color from 'utils/color';
 import { defaultMenu } from 'lib/contextMenu';
-import { jotaiStore } from 'store';
+import { store } from 'lib/store';
 import plusIcon from 'icons/plus.svg';
 
 __ = __context('AddressBook');
@@ -113,7 +113,7 @@ export default function Contact({ contact, ...rest }) {
   return contact ? (
     <ContactComponent
       onClick={() => {
-        jotaiStore.set(selectedContactNameAtom, contact.name);
+        store.set(selectedContactNameAtom, contact.name);
       }}
       selected={contact.name === selectedContactName}
       onContextMenu={showContextMenu}

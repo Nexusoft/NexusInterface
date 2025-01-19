@@ -3,7 +3,7 @@ import { useAtomValue } from 'jotai';
 
 // Internal
 import { formatNumber } from 'lib/intl';
-import { ledgerInfoAtom } from 'lib/ledger';
+import { ledgerInfoQuery } from 'lib/ledger';
 
 // Images
 import mathIcon from 'icons/math.svg';
@@ -23,7 +23,7 @@ function MiningStat({ value, ...props }) {
 }
 
 export function PrimeDiffStat() {
-  const ledgerInfo = useAtomValue(ledgerInfoAtom);
+  const ledgerInfo = ledgerInfoQuery.use();
   return (
     <MiningStat
       label={__('Prime Difficulty')}
@@ -34,7 +34,7 @@ export function PrimeDiffStat() {
 }
 
 export function HashDiffStat() {
-  const ledgerInfo = useAtomValue(ledgerInfoAtom);
+  const ledgerInfo = ledgerInfoQuery.use();
   return (
     <MiningStat
       label={__('Hash Difficulty')}
@@ -45,7 +45,7 @@ export function HashDiffStat() {
 }
 
 export function StakingDiffStat() {
-  const ledgerInfo = useAtomValue(ledgerInfoAtom);
+  const ledgerInfo = ledgerInfoQuery.use();
   return (
     <MiningStat
       label={__('Staking Difficulty')}

@@ -1,10 +1,10 @@
 import http from 'http';
 import https from 'https';
 
-import { jotaiStore } from 'store';
+import { store } from 'lib/store';
 import { activeSessionIdAtom } from 'lib/session';
 import { getActiveCoreConfig } from 'lib/coreConfig';
-import { coreInfoAtom } from 'lib/coreInfo';
+import { coreInfoQuery } from 'lib/coreInfo';
 
 const getDefaultOptions = ({
   apiSSL,
@@ -93,8 +93,8 @@ function sendRequest({ params, options, ssl }) {
  */
 export async function callAPI(endpoint, customParams) {
   const conf = await getActiveCoreConfig();
-  const sessionId = jotaiStore.get(activeSessionIdAtom);
-  const coreInfo = jotaiStore.get(coreInfoAtom);
+  const sessionId = store.get(activeSessionIdAtom);
+  const coreInfo = store.get(coreInfoQuery.valueAtom);
 
   //TODO: There is a bug in the core and where HAS to be the last param. Remove when fixed.
   if (customParams?.where) {

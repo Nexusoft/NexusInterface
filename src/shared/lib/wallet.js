@@ -1,7 +1,7 @@
 import { atom } from 'jotai';
 import { ipcRenderer } from 'electron';
 
-import { jotaiStore } from 'store';
+import { store } from 'lib/store';
 import { stopCore } from 'lib/core';
 import { logOut } from 'lib/session';
 import { settingsAtom } from './settings';
@@ -19,9 +19,8 @@ export const walletClosingAtom = atom(false);
 export const walletLockedAtom = atom(false);
 
 export const closeWallet = async (beforeExit) => {
-  const { manualDaemon, manualDaemonLogOutOnClose } =
-    jotaiStore.get(settingsAtom);
-  jotaiStore.set(walletClosingAtom, true);
+  const { manualDaemon, manualDaemonLogOutOnClose } = store.get(settingsAtom);
+  store.set(walletClosingAtom, true);
 
   if (!manualDaemon) {
     await stopCore();
@@ -35,7 +34,7 @@ export const closeWallet = async (beforeExit) => {
 
 export function prepareWallet() {
   ipcRenderer.on('window-close', async () => {
-    const { minimizeOnClose } = jotaiStore.get(settingsAtom);
+    const { minimizeOnClose } = store.get(settingsAtom);
 
     // forceQuit is set when user clicks Quit option in the Tray context menu
     if (minimizeOnClose) {

@@ -1,6 +1,6 @@
 import { clipboard, shell } from 'electron';
 
-import { jotaiStore, subscribe, subscribeWithPrevious } from 'store';
+import { store, subscribe, subscribeWithPrevious } from 'lib/store';
 import { showNotification } from 'lib/ui';
 import {
   openConfirmDialog,
@@ -11,8 +11,8 @@ import {
 } from 'lib/dialog';
 import { settingsAtom } from 'lib/settings';
 import { themeAtom } from 'lib/theme';
-import { coreInfoAtom } from 'lib/coreInfo';
-import { userStatusAtom } from 'lib/session';
+import { coreInfoQuery } from 'lib/coreInfo';
+import { userStatusQuery } from 'lib/session';
 import { addressBookAtom } from 'lib/addressBook';
 import { popupContextMenu, defaultMenu } from 'lib/contextMenu';
 import { goToSend } from 'lib/send';
@@ -47,8 +47,8 @@ const settingsChanged = (settings1, settings2) =>
     : true;
 
 const getActiveModule = () => {
-  const activeAppModuleName = jotaiStore.get(activeAppModuleNameAtom);
-  const modulesMap = jotaiStore.get(modulesMapAtom);
+  const activeAppModuleName = store.get(activeAppModuleNameAtom);
+  const modulesMap = store.get(modulesMapAtom);
   const module = modulesMap[activeAppModuleName];
   return module.enabled ? module : null;
 };
@@ -227,9 +227,9 @@ function confirm([options = {}, confirmationId], webview) {
 }
 
 function updateState([moduleState]) {
-  const activeAppModuleName = jotaiStore.get(activeAppModuleNameAtom);
+  const activeAppModuleName = store.get(activeAppModuleNameAtom);
   if (typeof moduleState === 'object') {
-    jotaiStore.set(moduleStatesAtom, (states) => ({
+    store.set(moduleStatesAtom, (states) => ({
       ...states,
       [activeAppModuleName]: moduleState,
     }));
@@ -268,12 +268,12 @@ export const getActiveWebView = () => activeWebView;
 
 export const setActiveAppModule = (webview, moduleName) => {
   activeWebView = webview;
-  jotaiStore.set(activeAppModuleNameAtom, moduleName);
+  store.set(activeAppModuleNameAtom, moduleName);
 };
 
 export const unsetActiveAppModule = () => {
   activeWebView = null;
-  jotaiStore.set(activeAppModuleNameAtom, null);
+  store.set(activeAppModuleNameAtom, null);
 };
 
 export const toggleWebViewDevTools = () => {
@@ -302,17 +302,17 @@ export function prepareWebView() {
     if (webview) {
       webview.addEventListener('ipc-message', handleIpcMessage);
       webview.addEventListener('dom-ready', async () => {
-        const settings = jotaiStore.get(settingsAtom);
+        const settings = store.get(settingsAtom);
         const { locale, fiatCurrency, addressStyle } = settings;
-        const moduleState = jotaiStore.get(moduleStatesAtom)[moduleName];
+        const moduleState = store.get(moduleStatesAtom)[moduleName];
         const activeModule = getActiveModule();
         const storageData = await readModuleStorage(activeModule);
         webview.send('initialize', {
-          theme: jotaiStore.get(themeAtom),
+          theme: store.get(themeAtom),
           settings: getSettingsForModules(locale, fiatCurrency, addressStyle),
-          coreInfo: jotaiStore.get(coreInfoAtom),
-          userStatus: jotaiStore.get(userStatusAtom),
-          addressBook: jotaiStore.get(addressBookAtom),
+          coreInfo: store.get(coreInfoQuery.valueAtom),
+          userStatus: store.get(userStatusQuery.valueAtom),
+          addressBook: store.get(addressBookAtom),
           moduleState,
           storageData,
         });
@@ -336,11 +336,11 @@ export function prepareWebView() {
     sendWalletDataUpdated({ theme });
   });
 
-  subscribe(coreInfoAtom, (coreInfo) => {
+  subscribe(coreInfoQuery.valueAtom, (coreInfo) => {
     sendWalletDataUpdated({ coreInfo });
   });
 
-  subscribe(userStatusAtom, (userStatus) => {
+  subscribe(userStatusQuery.valueAtom, (userStatus) => {
     sendWalletDataUpdated({ userStatus });
   });
 

@@ -1,6 +1,6 @@
 import { createRoot } from 'react-dom/client';
 
-import { Providers, jotaiStore } from 'store';
+import { Providers, store } from 'lib/store';
 import { startCore } from 'lib/core';
 import { prepareWallet } from 'lib/wallet';
 import { prepareMenu } from 'lib/appMenu';
@@ -15,7 +15,7 @@ import App from './App';
 
 async function run() {
   try {
-    const { manualDaemon } = jotaiStore.get(settingsAtom);
+    const { manualDaemon } = store.get(settingsAtom);
     if (!manualDaemon) {
       await startCore();
     }
@@ -37,7 +37,7 @@ async function run() {
     prepareUpdater();
     prepareWebView();
     prepareSessionInfo();
-    const { sendUsageData } = jotaiStore.get(settingsAtom);
+    const { sendUsageData } = store.get(settingsAtom);
     if (sendUsageData) {
       UT.StartAnalytics();
     }

@@ -2,7 +2,7 @@
 import { shell, ipcRenderer } from 'electron';
 
 // Internal
-import { jotaiStore, subscribe } from 'store';
+import { store, subscribe } from 'lib/store';
 import {
   toggleWebViewDevTools,
   getActiveWebView,
@@ -21,7 +21,7 @@ import { loggedInAtom } from 'lib/session';
 import { preRelease } from 'consts/misc';
 import { settingsAtom, settingAtoms } from './settings';
 import {
-  coreInfoAtom,
+  coreInfoQuery,
   isCoreConnected,
   coreConnectedAtom,
   liteModeAtom,
@@ -121,7 +121,7 @@ const menuItems = preprocess({
   downloadRecent: {
     label: __('Download Recent Database'),
     click: () => {
-      const { manualDaemon } = jotaiStore.get(settingsAtom);
+      const { manualDaemon } = store.get(settingsAtom);
       if (manualDaemon) {
         showNotification(
           __('Cannot bootstrap recent database in manual mode'),
@@ -163,15 +163,15 @@ const menuItems = preprocess({
   toggleJotaiDevTools: {
     label: __('Toggle Jotai Developer Tools'),
     click: () => {
-      const open = jotaiStore.get(jotaiDevToolsOpenAtom);
-      jotaiStore.set(jotaiDevToolsOpenAtom, !open);
+      const open = store.get(jotaiDevToolsOpenAtom);
+      store.set(jotaiDevToolsOpenAtom, !open);
     },
   },
   toggleReactQueryDevTools: {
     label: __('Toggle React Query Developer Tools'),
     click: () => {
-      const open = jotaiStore.get(rqDevToolsOpenAtom);
-      jotaiStore.set(rqDevToolsOpenAtom, !open);
+      const open = store.get(rqDevToolsOpenAtom);
+      store.set(rqDevToolsOpenAtom, !open);
     },
   },
   websiteLink: {
@@ -201,7 +201,7 @@ const menuItems = preprocess({
   openCoreDataDir: {
     label: __('Open Core Data Folder'),
     click: () => {
-      const { coreDataDir } = jotaiStore.get(settingsAtom);
+      const { coreDataDir } = store.get(settingsAtom);
       shell.openPath(coreDataDir);
     },
   },
@@ -241,8 +241,8 @@ const menuItems = preprocess({
     label: __('Lock Screen'),
     accelerator: 'CmdOrCtrl+L',
     click: () => {
-      const locked = jotaiStore.get(walletLockedAtom);
-      if (!locked) jotaiStore.set(walletLockedAtom, true);
+      const locked = store.get(walletLockedAtom);
+      if (!locked) store.set(walletLockedAtom, true);
     },
   },
 });
@@ -253,7 +253,7 @@ const menuItems = preprocess({
  * @memberof AppMenu
  */
 function buildUpdaterMenu() {
-  const updaterState = jotaiStore.get(updaterStateAtom);
+  const updaterState = store.get(updaterStateAtom);
   switch (updaterState) {
     case 'idle':
       return menuItems.updaterIdle;
@@ -274,9 +274,9 @@ function buildUpdaterMenu() {
 function buildDarwinTemplate() {
   const coreConnected = isCoreConnected();
   const activeWebView = getActiveWebView();
-  const loggedIn = jotaiStore.get(loggedInAtom);
-  const coreInfo = jotaiStore.get(coreInfoAtom);
-  const { manualDaemon, devMode } = jotaiStore.get(settingsAtom);
+  const loggedIn = store.get(loggedInAtom);
+  const coreInfo = store.get(coreInfoQuery.valueAtom);
+  const { manualDaemon, devMode } = store.get(settingsAtom);
 
   const subMenuAbout = {
     label: 'Nexus',
@@ -363,9 +363,9 @@ function buildDarwinTemplate() {
 function buildDefaultTemplate() {
   const coreConnected = isCoreConnected();
   const activeWebView = getActiveWebView();
-  const loggedIn = jotaiStore.get(loggedInAtom);
-  const coreInfo = jotaiStore.get(coreInfoAtom);
-  const { manualDaemon, devMode } = jotaiStore.get(settingsAtom);
+  const loggedIn = store.get(loggedInAtom);
+  const coreInfo = store.get(coreInfoQuery.valueAtom);
+  const { manualDaemon, devMode } = store.get(settingsAtom);
 
   const subMenuFile = {
     label: __('File'),

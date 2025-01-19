@@ -1,12 +1,13 @@
 import { atom } from 'jotai';
 import { callAPI } from 'lib/api';
-import { subscribeWithPrevious, jotaiQuery } from 'store';
+import { subscribeWithPrevious } from 'lib/store';
 import {
   userGenesisAtom,
   loggedInAtom,
-  profileStatusAtom,
+  profileStatusQuery,
   txCountAtom,
 } from './session';
+import jotaiQuery from 'utils/jotaiQuery';
 import { showDesktopNotif } from 'utils/misc';
 import { formatNumber } from 'lib/intl';
 import { showNotification } from 'lib/ui';
@@ -112,7 +113,7 @@ export const getDeltaSign = (contract) => {
 
 export function prepareTransactions() {
   subscribeWithPrevious(
-    profileStatusAtom,
+    profileStatusQuery.valueAtom,
     async (profileStatus, lastProfileStatus) => {
       const justLoggedIn = !lastProfileStatus?.genesis;
       const justSwitched =

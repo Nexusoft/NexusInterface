@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 import { atom } from 'jotai';
-import { jotaiStore } from 'store';
+import { store } from 'lib/store';
 
 export const lastActiveTabAtom = atom('App');
 export function useSettingsTab(tab) {
   useEffect(() => {
-    jotaiStore.set(lastActiveTabAtom, tab);
+    store.set(lastActiveTabAtom, tab);
   }, []);
 }

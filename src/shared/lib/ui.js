@@ -1,4 +1,4 @@
-import { jotaiStore } from 'store';
+import { store } from 'lib/store';
 import { atom } from 'jotai';
 
 const newModalId = (function () {
@@ -32,7 +32,7 @@ export const jotaiDevToolsOpenAtom = atom(false);
  */
 export function openModal(component, props) {
   const id = newModalId();
-  jotaiStore.set(modalsAtom, (modals) => [
+  store.set(modalsAtom, (modals) => [
     ...modals,
     {
       id,
@@ -45,13 +45,13 @@ export function openModal(component, props) {
 
 // Using regular function here to avoid circular dependency which causes error
 export function removeModal(modalId) {
-  jotaiStore.set(modalsAtom, (modals) =>
+  store.set(modalsAtom, (modals) =>
     modals.filter((modal) => modal.id !== modalId)
   );
 }
 
 export function isModalOpen(modalComponent) {
-  const modals = jotaiStore.get(modalsAtom);
+  const modals = store.get(modalsAtom);
   return modals.some(({ component }) => component === modalComponent);
 }
 
@@ -61,7 +61,7 @@ export function isModalOpen(modalComponent) {
  */
 export function showNotification(content, options) {
   const id = newNotifId();
-  jotaiStore.set(notificationsAtom, (notifications) => [
+  store.set(notificationsAtom, (notifications) => [
     {
       id,
       content,
@@ -73,7 +73,7 @@ export function showNotification(content, options) {
 }
 
 export function removeNotification(notifId) {
-  jotaiStore.set(notificationsAtom, (notifications) =>
+  store.set(notificationsAtom, (notifications) =>
     notifications.filter((notification) => notification.id !== notifId)
   );
 }
@@ -84,7 +84,7 @@ export function removeNotification(notifId) {
  */
 export function showBackgroundTask(component, props) {
   const id = newTaskId();
-  jotaiStore.set(backgroundTasksAtom, (backgroundTasks) => [
+  store.set(backgroundTasksAtom, (backgroundTasks) => [
     ...backgroundTasks,
     {
       id,
@@ -96,7 +96,7 @@ export function showBackgroundTask(component, props) {
 }
 
 export function removeBackgroundTask(taskId) {
-  jotaiStore.set(backgroundTasksAtom, (tasks) =>
+  store.set(backgroundTasksAtom, (tasks) =>
     tasks.filter((task) => task.id !== taskId)
   );
 }

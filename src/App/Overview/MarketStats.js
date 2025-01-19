@@ -4,6 +4,7 @@ import { useAtomValue } from 'jotai';
 // Internal
 import { formatNumber, formatCurrency } from 'lib/intl';
 import { marketDataQuery, marketCapAtom } from 'lib/market';
+import { ledgerInfoQuery } from 'lib/ledger';
 
 // Images
 import chartIcon from 'icons/chart.svg';
@@ -48,6 +49,7 @@ export function PriceStat() {
 
 export function MarketCapStat() {
   const marketData = marketDataQuery.use();
+  ledgerInfoQuery.use();
   const marketCap = useAtomValue(marketCapAtom);
   const { currency } = marketData || {};
 

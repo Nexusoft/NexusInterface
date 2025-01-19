@@ -11,7 +11,7 @@ import Button from 'components/Button';
 import Select from 'components/Select';
 import Spinner from 'components/Spinner';
 import { callAPI } from 'lib/api';
-import { refetchProfileStatus, hasRecoveryPhraseAtom } from 'lib/session';
+import { profileStatusQuery, hasRecoveryPhraseAtom } from 'lib/session';
 import { formSubmit, checkAll, required, minChars } from 'lib/form';
 import { openModal } from 'lib/ui';
 import { openSuccessDialog, openErrorDialog } from 'lib/dialog';
@@ -91,7 +91,7 @@ export default function SetRecoveryModal() {
                     message: __('Recovery phrase has been updated'),
                   });
                   if (!hasRecoveryPhrase) {
-                    refetchProfileStatus();
+                    profileStatusQuery.refetch();
                   }
                 },
                 errorMessage: __('Error setting recovery phrase'),

@@ -12,7 +12,7 @@ import Tooltip from 'components/Tooltip';
 import { openModal } from 'lib/ui';
 import { useCoreConnected } from 'lib/coreInfo';
 import AddEditContactModal from 'components/AddEditContactModal';
-import { jotaiStore } from 'store';
+import { store } from 'lib/store';
 
 // Icons
 import exportIcon from 'icons/export.svg';
@@ -39,7 +39,7 @@ function SearchBox() {
       left={<Icon icon={searchIcon} className="mr0_4" />}
       placeholder={__('Search contact')}
       value={searchQuery}
-      onChange={(e) => jotaiStore.set(searchQueryAtom, e.target.value)}
+      onChange={(e) => store.set(searchQueryAtom, e.target.value)}
     />
   );
 }
@@ -57,7 +57,7 @@ function exportAddressBook() {
     'Notes', //d
   ];
   rows.push(NameEntry); //how we get our header line
-  const contacts = jotaiStore.get(contactsAtom);
+  const contacts = store.get(contactsAtom);
   contacts.map((e) => {
     let tempentry = [];
     tempentry.push(e.name);

@@ -3,7 +3,7 @@ import path from 'path';
 import Ajv from 'ajv';
 import { atom } from 'jotai';
 import memoize from 'utils/memoize';
-import { jotaiStore, subscribe } from 'store';
+import { store, subscribe } from 'lib/store';
 import { walletDataDir } from 'consts/paths';
 import { emailRegex } from 'consts/misc';
 import { readJson, writeJson } from 'utils/json';
@@ -137,7 +137,7 @@ function saveAddressBookToFile(addressBook) {
 }
 
 export const lookupAddress = (address) => {
-  const addressBook = jotaiStore.get(addressBookAtom);
+  const addressBook = store.get(addressBookAtom);
   for (const contact of Object.values(addressBook)) {
     const match =
       contact.addresses && contact.addresses.find((a) => a.address === address);
@@ -151,27 +151,27 @@ export const lookupAddress = (address) => {
 };
 
 export const addNewContact = (contact) => {
-  const addressBook = jotaiStore.get(addressBookAtom);
+  const addressBook = store.get(addressBookAtom);
   const updatedAddressBook = { ...addressBook, [contact?.name]: contact };
-  jotaiStore.set(addressBookAtom, updatedAddressBook);
+  store.set(addressBookAtom, updatedAddressBook);
 };
 
 export const updateContact = (oldName, contact) => {
-  const addressBook = jotaiStore.get(addressBookAtom);
+  const addressBook = store.get(addressBookAtom);
   const updatedAddressBook = { ...addressBook, [contact?.name]: contact };
   if (oldName !== contact?.name) {
     delete updatedAddressBook[oldName];
-    if (jotaiStore.get(selectedContactNameAtom) === oldName) {
-      jotaiStore.set(selectedContactNameAtom, contact?.name);
+    if (store.get(selectedContactNameAtom) === oldName) {
+      store.set(selectedContactNameAtom, contact?.name);
     }
   }
-  jotaiStore.set(addressBookAtom, updatedAddressBook);
+  store.set(addressBookAtom, updatedAddressBook);
 };
 
 export const deleteContact = (name) => {
-  const updatedAddressBook = { ...jotaiStore.get(addressBookAtom) };
+  const updatedAddressBook = { ...store.get(addressBookAtom) };
   delete updatedAddressBook[name];
-  jotaiStore.set(addressBookAtom, updatedAddressBook);
+  store.set(addressBookAtom, updatedAddressBook);
 };
 
 const compareNames = (a, b) => {

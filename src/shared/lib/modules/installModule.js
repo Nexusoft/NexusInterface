@@ -3,7 +3,7 @@ import fs from 'fs';
 import https from 'https';
 import axios from 'axios';
 
-import { jotaiStore } from 'store';
+import { store } from 'lib/store';
 import { showNotification, openModal } from 'lib/ui';
 import UT from 'lib/usageTracking';
 import { updateSettings, settingsAtom } from 'lib/settings';
@@ -186,7 +186,7 @@ export async function installModule(path) {
 }
 
 export async function addDevModule(dirPath) {
-  const { devModulePaths } = jotaiStore.get(settingsAtom);
+  const { devModulePaths } = store.get(settingsAtom);
   if (devModulePaths.includes(dirPath)) {
     openErrorDialog({
       message: __('Directory has already been added'),
@@ -205,7 +205,7 @@ export async function addDevModule(dirPath) {
   }
   if (!module) return;
 
-  const modulesMap = jotaiStore.get(modulesMapAtom);
+  const modulesMap = store.get(modulesMapAtom);
   if (modulesMap[module.info.name]) {
     openErrorDialog({
       message: __('A module with the same name already exists'),
@@ -214,7 +214,7 @@ export async function addDevModule(dirPath) {
   }
 
   updateSettings({ devModulePaths: [dirPath, ...devModulePaths] });
-  jotaiStore.set(modulesMapAtom, (modulesMap) => ({
+  store.set(modulesMapAtom, (modulesMap) => ({
     ...modulesMap,
     [module?.info.name]: module,
   }));
@@ -230,7 +230,7 @@ export const getDownloadRequest = (moduleName) => downloadRequests[moduleName];
 const updateDownloadProgress = throttled(
   ({ moduleName, downloaded, totalSize, downloadRequest }) => {
     downloadRequests[moduleName] = downloadRequest;
-    jotaiStore.set(moduleDownloadsAtom, (downloads) => ({
+    store.set(moduleDownloadsAtom, (downloads) => ({
       ...downloads,
       [moduleName]: {
         downloaded,
@@ -323,7 +323,7 @@ export async function downloadAndInstall({
 }) {
   let filePath;
   try {
-    jotaiStore.set(moduleDownloadsAtom, (downloads) => ({
+    store.set(moduleDownloadsAtom, (downloads) => ({
       ...downloads,
       [moduleName]: {},
     }));
@@ -372,7 +372,7 @@ export async function downloadAndInstall({
     });
   } finally {
     downloadRequests[moduleName] = null;
-    jotaiStore.set(moduleDownloadsAtom, (downloads) => ({
+    store.set(moduleDownloadsAtom, (downloads) => ({
       ...downloads,
       [moduleName]: undefined,
     }));

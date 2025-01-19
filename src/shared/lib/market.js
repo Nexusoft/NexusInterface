@@ -1,8 +1,7 @@
 import axios from 'axios';
 import { atom } from 'jotai';
-import { atomWithQuery } from 'jotai-tanstack-query';
-import { ledgerInfoAtom } from './ledger';
-import { jotaiStore, jotaiQuery } from 'store';
+import { ledgerInfoQuery } from './ledger';
+import jotaiQuery from 'utils/jotaiQuery';
 import { settingAtoms } from './settings';
 import { tryParsingJson } from 'utils/json';
 
@@ -85,5 +84,5 @@ export const marketDataQuery = jotaiQuery({
 export const marketCapAtom = atom(
   (get) =>
     get(marketDataQuery.valueAtom)?.price *
-      get(ledgerInfoAtom)?.supply?.total || null
+      get(ledgerInfoQuery.valueAtom)?.supply?.total || null
 );

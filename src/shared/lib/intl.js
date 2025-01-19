@@ -3,7 +3,7 @@ import path from 'path';
 import Polyglot from 'node-polyglot';
 import { parse } from 'csv-parse/sync';
 
-import { jotaiStore } from 'store';
+import { store } from 'lib/store';
 import { assetsDir } from 'consts/paths';
 import { settingsAtom } from './settings';
 import { escapeRegExp } from 'utils/misc';
@@ -40,7 +40,7 @@ function loadDict(loc) {
   return dict;
 }
 
-const settings = jotaiStore.get(settingsAtom);
+const settings = store.get(settingsAtom);
 const locale = locales.includes(settings.locale) ? settings.locale : 'en';
 const dict = locale === 'en' ? null : loadDict(locale);
 const engTranslate = (context, phrase, data) =>

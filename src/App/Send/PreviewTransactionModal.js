@@ -8,7 +8,7 @@ import TokenName from 'components/TokenName';
 import Tooltip from 'components/Tooltip';
 import Form from 'components/Form';
 import { callAPI } from 'lib/api';
-import { refetchCoreInfo } from 'lib/coreInfo';
+import { coreInfoQuery } from 'lib/coreInfo';
 import { openSuccessDialog } from 'lib/dialog';
 import { accountsQuery } from 'lib/user';
 import { transactionsQuery } from 'lib/transactions';
@@ -225,7 +225,7 @@ export default function PreviewTransactionModal({
                   UT.Send(source?.token ? 'token' : 'nexus');
                   resetSendForm();
                   accountsQuery.refetch();
-                  refetchCoreInfo();
+                  coreInfoQuery.refetch();
                   transactionsQuery.refetch();
                   closeModal();
                   openSuccessDialog({

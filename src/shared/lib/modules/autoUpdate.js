@@ -3,7 +3,7 @@
 import axios from 'axios';
 import semver from 'semver';
 
-import { jotaiStore } from 'store';
+import { store } from 'lib/store';
 import { showNotification } from 'lib/ui';
 import { navigate } from 'lib/wallet';
 import { modulesAtom, modulesMapAtom } from './atoms';
@@ -133,7 +133,7 @@ async function checkForModuleUpdate(module, { cache }) {
 // }
 
 export async function checkForModuleUpdates() {
-  const modules = jotaiStore.get(modulesAtom);
+  const modules = store.get(modulesAtom);
   const cache = loadCache();
 
   const updateableModules = modules
@@ -175,7 +175,7 @@ export async function checkForModuleUpdates() {
     );
   }
 
-  const modulesMap = { ...jotaiStore.get(modulesMapAtom) };
+  const modulesMap = { ...store.get(modulesMapAtom) };
   updates.forEach(({ module, latestVersion, latestRelease }) => {
     const currentModule = modulesMap[module.info.name];
     modulesMap[module.info.name] = {
@@ -185,5 +185,5 @@ export async function checkForModuleUpdates() {
       latestRelease: latestRelease,
     };
   });
-  jotaiStore.set(modulesMapAtom, modulesMap);
+  store.set(modulesMapAtom, modulesMap);
 }

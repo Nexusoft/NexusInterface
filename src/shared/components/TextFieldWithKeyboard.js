@@ -9,7 +9,7 @@ import Tooltip from 'components/Tooltip';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
 import { themeAtom } from 'lib/theme';
-import { jotaiStore } from 'store';
+import { store } from 'lib/store';
 import keyboardIcon from 'icons/keyboard.svg';
 
 const TextFieldWithKeyboard = forwardRef(function (
@@ -26,7 +26,7 @@ const TextFieldWithKeyboard = forwardRef(function (
       ipcRenderer.off('keyboard-input-change', handleInputChange);
     });
     ipcRenderer.invoke('open-virtual-keyboard', {
-      theme: jotaiStore.get(themeAtom),
+      theme: store.get(themeAtom),
       defaultText: value,
       maskable: maskable,
       placeholder: placeholder,

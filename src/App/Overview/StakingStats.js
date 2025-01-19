@@ -1,9 +1,6 @@
-// External
-import { useAtomValue } from 'jotai';
-
 // Internal
 import { formatNumber } from 'lib/intl';
-import { stakeInfoAtom } from 'lib/session';
+import { stakeInfoQuery } from 'lib/session';
 
 // Images
 import blockweight0 from 'icons/BlockWeight-0.svg';
@@ -90,7 +87,7 @@ function StakingStat({ stakeInfo, value, ...props }) {
 }
 
 export function StakeRateStat() {
-  const stakeInfo = useAtomValue(stakeInfoAtom);
+  const stakeInfo = stakeInfoQuery.use();
   return (
     <StakingStat
       stakeInfo={stakeInfo}
@@ -102,7 +99,7 @@ export function StakeRateStat() {
 }
 
 export function BlockWeightStat() {
-  const stakeInfo = useAtomValue(stakeInfoAtom);
+  const stakeInfo = stakeInfoQuery.use();
   return (
     <StakingStat
       stakeInfo={stakeInfo}
@@ -114,7 +111,7 @@ export function BlockWeightStat() {
 }
 
 export function TrustWeightStat() {
-  const stakeInfo = useAtomValue(stakeInfoAtom);
+  const stakeInfo = stakeInfoQuery.use();
   return (
     <StakingStat
       stakeInfo={stakeInfo}
@@ -126,7 +123,7 @@ export function TrustWeightStat() {
 }
 
 export function StakeWeightStat() {
-  const stakeInfo = useAtomValue(stakeInfoAtom);
+  const stakeInfo = stakeInfoQuery.use();
   return (
     <StakingStat
       stakeInfo={stakeInfo}

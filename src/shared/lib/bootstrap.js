@@ -8,22 +8,22 @@ import unzip from 'unzip-stream';
 import { atom } from 'jotai';
 
 // Internal
-import { jotaiStore } from 'store';
+import { store, subscribe } from 'lib/store';
 import { startCore, stopCore } from 'lib/core';
-import { coreInfoAtom, isSynchronized } from './coreInfo';
+import { coreInfoQuery, isSynchronized } from './coreInfo';
 import { showNotification, openModal } from 'lib/ui';
 import { confirm, openErrorDialog, openSuccessDialog } from 'lib/dialog';
 import { rm as deleteDirectory } from 'fs/promises';
 import { throttled } from 'utils/universal';
 import move from 'utils/move';
-import { updateSettings, settingAtoms } from 'lib/settings';
+import { updateSettings, settingAtoms, settingsAtom } from 'lib/settings';
 import BootstrapModal from 'components/BootstrapModal';
 
 __ = __context('Bootstrap');
 
 const minFreeSpace = 15 * 1000 * 1000 * 1000; // 15 GB
 const getExtractDir = () => {
-  const coreDataDir = jotaiStore.get(settingAtoms.coreDataDir);
+  const coreDataDir = store.get(settingAtoms.coreDataDir);
   return path.join(coreDataDir, 'recent');
 };
 const recentDbUrlTritium = 'http://bootstrap.nexus.io/tritium.zip';
@@ -51,7 +51,7 @@ async function checkFreeSpaceForBootstrap() {
  */
 async function startBootstrap() {
   try {
-    const coreDataDir = jotaiStore.get(settingAtoms.coreDataDir);
+    const coreDataDir = store.get(settingAtoms.coreDataDir);
     const extractDir = getExtractDir();
 
     aborting = false;
@@ -175,8 +175,29 @@ async function cleanUp(extractDir) {
 }
 
 const setStatus = (step, details) => {
-  jotaiStore.set(bootstrapStatusAtom, { step, details });
+  store.set(bootstrapStatusAtom, { step, details });
 };
+
+subscribe(coreInfoQuery.valueAtom, async (coreInfo) => {
+  const coreConnected = !!coreInfo;
+  const { bootstrapSuggestionDisabled, manualDaemon } = store.get(settingsAtom);
+  const bootstrapStatus = store.get(bootstrapStatusAtom);
+
+  if (coreConnected) {
+    if (
+      !bootstrapSuggestionDisabled &&
+      bootstrapStatus.step === 'idle' &&
+      !manualDaemon &&
+      !coreInfo?.litemode &&
+      coreInfo?.syncing?.completed < 50 &&
+      coreInfo?.syncing?.completed >= 0 &&
+      !coreInfo?.private &&
+      !coreInfo?.testnet
+    ) {
+      bootstrap({ suggesting: true });
+    }
+  }
+});
 
 /**
  * Public API
@@ -194,12 +215,12 @@ export const bootstrapEvents = new EventEmitter();
  */
 export async function bootstrap({ suggesting } = {}) {
   // Only one instance at the same time
-  const status = jotaiStore.get(bootstrapStatusAtom);
+  const status = store.get(bootstrapStatusAtom);
   if (status.step !== 'idle') return;
 
   setStatus('prompting');
 
-  const coreInfo = jotaiStore.get(coreInfoAtom);
+  const coreInfo = store.get(coreInfoQuery.valueAtom);
   const testPriv = coreInfo?.private || coreInfo?.testnet;
   // if Private or on Testnet, prevent bootstrapping
   if (testPriv) {

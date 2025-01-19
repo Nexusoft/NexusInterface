@@ -7,7 +7,7 @@ import semver from 'semver';
 import { atom } from 'jotai';
 
 // Internal
-import { jotaiStore } from 'store';
+import { store } from 'lib/store';
 import { showBackgroundTask, showNotification } from 'lib/ui';
 import { updateSettings, settingsAtom } from 'lib/settings';
 import AutoUpdateBackgroundTask from './AutoUpdateBackgroundTask';
@@ -86,7 +86,7 @@ export async function checkForUpdates() {
   } finally {
     updateSettings({ lastCheckForUpdates: Date.now() });
 
-    const { autoUpdate } = jotaiStore.get(settingsAtom);
+    const { autoUpdate } = store.get(settingsAtom);
     if (autoUpdate) {
       clearTimeout(timerId);
       timerId = setTimeout(checkForUpdates, autoUpdateInterval);
@@ -134,25 +134,25 @@ export function prepareUpdater() {
       '\nError: ',
       err
     );
-    jotaiStore.set(updaterStateAtom, 'idle');
+    store.set(updaterStateAtom, 'idle');
   });
   ipcRenderer.on('updater:checking-for-update', () => {
-    jotaiStore.set(updaterStateAtom, 'checking');
+    store.set(updaterStateAtom, 'checking');
   });
   ipcRenderer.on('updater:update-available', () => {
-    jotaiStore.set(updaterStateAtom, 'downloading');
+    store.set(updaterStateAtom, 'downloading');
   });
   ipcRenderer.on('updater:update-not-available', () => {
-    jotaiStore.set(updaterStateAtom, 'idle');
+    store.set(updaterStateAtom, 'idle');
   });
   ipcRenderer.on('updater:download-progress', () => {
-    jotaiStore.set(updaterStateAtom, 'downloading');
+    store.set(updaterStateAtom, 'downloading');
   });
   ipcRenderer.on('updater:update-downloaded', () => {
-    jotaiStore.set(updaterStateAtom, 'downloaded');
+    store.set(updaterStateAtom, 'downloaded');
   });
 
-  const { autoUpdate, lastCheckForUpdates } = jotaiStore.get(settingsAtom);
+  const { autoUpdate, lastCheckForUpdates } = store.get(settingsAtom);
   if (autoUpdate) {
     const timeFromLastCheck = Date.now() - lastCheckForUpdates;
     if (!lastCheckForUpdates || timeFromLastCheck > autoUpdateInterval) {

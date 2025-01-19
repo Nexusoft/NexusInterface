@@ -21,7 +21,7 @@ import {
   moduleDownloadsAtom,
 } from 'lib/modules';
 import { timing } from 'styles';
-import { jotaiStore } from 'store';
+import { store } from 'lib/store';
 import { rm as deleteDirectory } from 'fs/promises';
 
 import warningIcon from 'icons/warning.svg';
@@ -63,7 +63,7 @@ async function confirmDelete(module) {
   });
   if (confirmed) {
     if (module.development) {
-      const devModulePaths = jotaiStore.get(settingAtoms.devModulePaths);
+      const devModulePaths = store.get(settingAtoms.devModulePaths);
       updateSettings({
         devModulePaths: devModulePaths.filter((path) => path !== module.path),
       });
