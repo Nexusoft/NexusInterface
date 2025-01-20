@@ -56,7 +56,7 @@ const StatIcon = styled(Icon)(({ theme }) => ({
 
 export default function Stat({
   tooltip,
-  tooltipAlign,
+  tooltipAlign = 'end',
   tooltipPosition,
   linkTo,
   label,
@@ -69,7 +69,6 @@ export default function Stat({
     waitForCore && !coreConnected ? <span className="dim">-</span> : children;
   return (
     <Tooltip.Trigger
-      align="end"
       tooltip={tooltip}
       align={tooltipAlign}
       position={tooltipPosition}
