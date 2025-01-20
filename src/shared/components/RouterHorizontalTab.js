@@ -11,7 +11,7 @@
 
 // External Dependencies
 import { forwardRef } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router';
 
 // Internal Global Dependencies
 import HorizontalTab from 'components/HorizontalTab';

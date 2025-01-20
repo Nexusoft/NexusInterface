@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import styled from '@emotion/styled';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { useAtomValue } from 'jotai';
 
 import { arrowStyles } from 'components/Arrow';

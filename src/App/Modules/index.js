@@ -1,6 +1,6 @@
 // External
 import { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 import { useAtomValue } from 'jotai';
 
 // Internal Global

@@ -1,7 +1,7 @@
 // External
 import { useEffect } from 'react';
 import { useAtomValue } from 'jotai';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router';
 import styled from '@emotion/styled';
 import UT from 'lib/usageTracking';
 

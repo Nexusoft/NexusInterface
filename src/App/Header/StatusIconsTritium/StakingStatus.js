@@ -1,5 +1,5 @@
 // External Dependencies
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 // Internal Dependencies
 import Tooltip from 'components/Tooltip';

@@ -39,12 +39,6 @@ const openSourceCredits = [
     URL: 'https://babeljs.io/',
     license: 'MIT License',
   },
-  {
-    Title: 'Victory Chart',
-    website: 'formidable.com',
-    URL: 'https://formidable.com/open-source/victory/',
-    license: 'MIT License',
-  },
 ];
 
 const OpenSourceCreditsContainer = styled.div({

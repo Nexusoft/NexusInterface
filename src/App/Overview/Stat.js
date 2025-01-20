@@ -1,5 +1,5 @@
 // External
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import styled from '@emotion/styled';
 
 // Internal
