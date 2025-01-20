@@ -23,6 +23,7 @@ const UserControlComponent = styled(StatusIcon)(
     alignItems: 'center',
     cursor: 'pointer',
     color: theme.primary,
+    padding: '4px 0 0 0',
     transitionProperty: 'color, filter',
     transitionDuration: timing.normal,
 
