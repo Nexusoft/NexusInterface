@@ -46,12 +46,12 @@ export default function Terminal() {
       <TerminalComponent>
         <TerminalTabBar>
           <RouterHorizontalTab
-            link="Console"
+            link="/Terminal/Console"
             icon={logoIcon}
             text={'Nexus API'}
           />
           <RouterHorizontalTab
-            link="Core"
+            link="/Terminal/Core"
             icon={coreIcon}
             text={__('Core output')}
           />

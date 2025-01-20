@@ -87,18 +87,22 @@ export default function Settings() {
       <SettingsComponent>
         <SettingsTabBar>
           <RouterHorizontalTab
-            link="App"
+            link="/Settings/App"
             icon={logoIcon}
             text={__('Application')}
           />
-          <RouterHorizontalTab link="Core" icon={coreIcon} text={__('Core')} />
           <RouterHorizontalTab
-            link="Style"
+            link="/Settings/Core"
+            icon={coreIcon}
+            text={__('Core')}
+          />
+          <RouterHorizontalTab
+            link="/Settings/Style"
             icon={leafIcon}
             text={__('Style')}
           />
           <RouterHorizontalTab
-            link="Modules"
+            link="/Settings/Modules"
             icon={legoIcon}
             text={
               <>

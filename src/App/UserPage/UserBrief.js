@@ -52,12 +52,12 @@ export default function UserBrief() {
         <GenesisId>{genesis}</GenesisId>
       </Genesis>
       <Separator />
-      <RouterVerticalTab to="Accounts" text={__('Accounts')} />
-      <RouterVerticalTab to="Staking" text={__('Staking')} />
-      <RouterVerticalTab to="Tokens" text={__('Tokens')} />
-      <RouterVerticalTab to="Names" text={__('Names')} />
-      <RouterVerticalTab to="Namespaces" text={__('Namespaces')} />
-      <RouterVerticalTab to="Assets" text={__('Assets')} />
+      <RouterVerticalTab to="/User/Accounts" text={__('Accounts')} />
+      <RouterVerticalTab to="/User/Staking" text={__('Staking')} />
+      <RouterVerticalTab to="/User/Tokens" text={__('Tokens')} />
+      <RouterVerticalTab to="/User/Names" text={__('Names')} />
+      <RouterVerticalTab to="/User/Namespaces" text={__('Namespaces')} />
+      <RouterVerticalTab to="/User/Assets" text={__('Assets')} />
     </UserBriefComponent>
   );
 }
