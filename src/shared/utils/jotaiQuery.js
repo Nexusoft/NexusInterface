@@ -27,11 +27,13 @@ export default function jotaiQuery({
   const valueAtom = atom((get) => {
     const enabled = get(enabledAtom);
     const query = get(queryAtom);
+    let value;
     if (!enabled || !query || query.isError) {
-      return null;
+      value = null;
     } else {
-      return query.data;
+      value = query.data;
     }
+    return selectValue ? selectValue(value) : value;
   });
 
   const refetch = () => {
@@ -66,11 +68,7 @@ export default function jotaiQuery({
       };
     }, []);
     const value = useAtomValue(valueAtom);
-    if (selectValue) {
-      return selectValue(value);
-    } else {
-      return value;
-    }
+    return value;
   };
 
   if (alwaysOn) {
