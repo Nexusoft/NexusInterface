@@ -1,5 +1,6 @@
 import { app, ipcMain, dialog } from 'electron';
 import { autoUpdater } from 'electron-updater';
+import log from 'electron-log';
 
 import { loadSettingsFromFile } from 'lib/settings/universal';
 import {
@@ -26,6 +27,8 @@ let mainWindow;
 global.forceQuit = false;
 app.setAppUserModelId(APP_ID);
 initialize('A-US-0744437796'); // This doesn't send anything so it is safe to fire even if the user has turned tracking off
+
+log.initialize();
 
 // Temporarily add this because there are some errors in autoUpdater.checkForUpdates
 // cannot be caught (net::ERR_HTTP_RESPONSE_CODE_FAILURE).
