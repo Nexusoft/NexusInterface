@@ -6,7 +6,7 @@ import { loadNexusConf, coreConfigAtom } from 'lib/coreConfig';
 import { coreInfoPausedAtom } from './coreInfo';
 import { callAPI } from 'lib/api';
 import { updateSettings, settingsAtom } from 'lib/settings';
-import sleep from 'utils/promisified/sleep';
+import sleep from 'utils/sleep';
 import { minimumCoreAPIPolicy, preRelease } from 'consts/misc';
 import { defaultCoreDataDir } from 'consts/paths';
 import fs from 'fs';

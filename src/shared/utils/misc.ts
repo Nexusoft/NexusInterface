@@ -8,6 +8,7 @@
  * into modules' execution environment.
  * - Make sure this note also presents in other files which are imported here.
  */
+import { MutableRefObject, ForwardedRef } from 'react';
 
 export const newUID = (function () {
   let counter = 1;
@@ -19,7 +20,10 @@ export function escapeRegExp(s) {
   return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
 }
 
-export function passRef(el, ref) {
+export function passRef(
+  el: HTMLElement | null,
+  ref: MutableRefObject<unknown> | ForwardedRef<unknown>
+) {
   if (typeof ref === 'function') {
     ref(el);
   } else if (ref) {
@@ -27,22 +31,24 @@ export function passRef(el, ref) {
   }
 }
 
-export function refs(...list) {
-  return (el) => {
+export function refs(
+  ...list: Array<MutableRefObject<unknown> | ForwardedRef<unknown>>
+) {
+  return (el: HTMLElement | null) => {
     list.forEach((ref) => {
       passRef(el, ref);
     });
   };
 }
 
-export async function showDesktopNotif(title, message) {
+export async function showDesktopNotif(title: string, message?: string) {
   const result = await Notification.requestPermission();
   if (result === 'granted') {
-    new Notification(title, { body: message });
+    new Notification(title, message ? { body: message } : undefined);
   }
 }
 
-export function timeToText(timeSpan) {
+export function timeToText(timeSpan: number) {
   let string = '';
   let seconds = timeSpan;
 
@@ -79,7 +85,7 @@ export function timeToText(timeSpan) {
   return string;
 }
 
-export function timeToObject(timeSpan) {
+export function timeToObject(timeSpan: number) {
   let seconds = timeSpan;
 
   const days = Math.floor(seconds / 86400);

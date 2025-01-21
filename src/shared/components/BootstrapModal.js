@@ -133,10 +133,9 @@ const statusMsgAtom = atom((get) => {
       const { downloaded, totalSize } = details || {};
       const percentage = get(percentageAtom);
       const sizeProgress = totalSize
-        ? `(${prettyBytes(downloaded, locale)} / ${prettyBytes(
-            totalSize,
-            locale
-          )})`
+        ? `(${prettyBytes(downloaded, { locale })} / ${prettyBytes(totalSize, {
+            locale,
+          })})`
         : '';
       return `${__(
         'Downloading the database'

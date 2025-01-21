@@ -1,4 +1,10 @@
-export default [
+type TimeZone = {
+  value: number;
+  offset: string;
+  description: string;
+};
+
+const timeZones: TimeZone[] = [
   { value: 0, offset: 'UTC+0.00', description: 'London, Casablanca, Accra' },
   {
     value: -60,
@@ -107,3 +113,5 @@ export default [
   },
   { value: 60, offset: 'UTC+1.00', description: 'Berlin, Lagos, Madrid' },
 ];
+
+export default timeZones;

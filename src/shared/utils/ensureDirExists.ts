@@ -7,7 +7,7 @@ import { dirname } from 'path';
  *
  * @param {string} path
  */
-export default async function ensureDirExists(path) {
+export default async function ensureDirExists(path: string) {
   if (!fs.existsSync(path)) {
     const parent = dirname(path);
     await ensureDirExists(parent);

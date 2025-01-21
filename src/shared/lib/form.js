@@ -85,3 +85,24 @@ export const minChars = (min) => (value) =>
   value.length < min
     ? __('Must be at least %{min} characters', { min })
     : undefined;
+
+export function resolveValue(input) {
+  if (input && input.target) {
+    const el = input.target;
+    if (el.type === 'checkbox') {
+      return el.checked;
+    } else if (el.type === 'number') {
+      return parseInt(el.value);
+    } else {
+      return el.value;
+    }
+  }
+  return input;
+}
+
+export function handleError(error, message = __('Error')) {
+  openErrorDialog({
+    message,
+    note: (error && error.message) || __('Unknown error'),
+  });
+}

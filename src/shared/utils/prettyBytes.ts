@@ -20,8 +20,8 @@ Formats the given number using `Number#toLocaleString`.
 - If locale is true, the system default locale is used for translation.
 - If no value for locale is specified, the number is returned unmodified.
 */
-const toLocaleString = (number, locale) => {
-  let result = number;
+const toLocaleString = (number: number, locale?: string | true) => {
+  let result = String(number);
   if (typeof locale === 'string') {
     result = number.toLocaleString(locale);
   } else if (locale === true) {
@@ -31,7 +31,14 @@ const toLocaleString = (number, locale) => {
   return result;
 };
 
-export default (number, options) => {
+export default (
+  number: number,
+  options?: {
+    signed?: boolean;
+    bits?: boolean;
+    locale?: string | true;
+  }
+) => {
   if (!Number.isFinite(number)) {
     throw new TypeError(
       `Expected a finite number, got ${typeof number}: ${number}`

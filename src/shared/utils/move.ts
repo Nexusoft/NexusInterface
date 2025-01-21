@@ -8,7 +8,7 @@ import {
 } from 'node:fs/promises';
 import path from 'node:path';
 
-export default async function move(source, destination) {
+export default async function move(source: string, destination: string) {
   const sourceStat = await stat(source);
   if (sourceStat.isDirectory()) {
     await mkdir(path.dirname(destination), {
@@ -24,7 +24,7 @@ export default async function move(source, destination) {
   } else {
     try {
       await rename(source, destination);
-    } catch (error) {
+    } catch (error: any) {
       if (error.code === 'EXDEV') {
         // source and destination are not on the same partition
         await copyFile(source, destination);

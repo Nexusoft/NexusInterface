@@ -10,31 +10,6 @@
  */
 
 import { keyframes } from '@emotion/react';
-import * as color from 'utils/color';
-
-const defaultColors = {
-  background: '#1c1d1f',
-  foreground: '#ebebe6',
-  primary: '#00b7fa',
-  primaryAccent: '#ffffff',
-  danger: '#8f240e',
-  dangerAccent: '#ffffff',
-};
-
-function deriveColors(colors) {
-  return {
-    ...colors,
-    darkerGray: color.mix(colors.dark, colors.light, 0.125),
-    darkGray: color.mix(colors.dark, colors.light, 0.25),
-    gray: color.mix(colors.dark, colors.light),
-    lightGray: color.mix(colors.dark, colors.light, 0.75),
-    lighterGray: color.mix(colors.dark, colors.light, 0.875),
-  };
-}
-
-export const colors = deriveColors({ ...defaultColors });
-colors.default = defaultColors;
-colors.derive = deriveColors;
 
 export const consts = {
   monoFontFamily: '"Roboto Mono", "Lucida Console", "Courier New", monospace',

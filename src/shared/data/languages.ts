@@ -16,11 +16,17 @@ import NorwegianFlag from './flags/no.png';
 import SerbianFlag from './flags/rs.png';
 import USUKFlag from './flags/US-UK.png';
 
+type LanguageInfo = {
+  code: string,
+  flag: string,
+  name: string,
+};
+
 /**
  * NOTE: If this list is updated, also update the one in
  * /internals/scripts/extractTransactions.js
  */
-const languages = [
+const languages: LanguageInfo[] = [
   {
     code: 'en',
     flag: USUKFlag,

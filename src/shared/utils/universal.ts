@@ -3,9 +3,9 @@
  * renderer process and main process code
  */
 
-export function debounced(fn, ms) {
-  let timerId;
-  const debouncedFunc = function () {
+export function debounced<Callback extends Function>(fn: Callback, ms: number) {
+  let timerId: NodeJS.Timeout;
+  const debouncedFunc = function (this: any) {
     const functionCall = () => fn.apply(this, arguments);
     clearTimeout(timerId);
     timerId = setTimeout(functionCall, ms);
@@ -17,10 +17,10 @@ export function debounced(fn, ms) {
   return debouncedFunc;
 }
 
-export function throttled(fn, ms) {
-  let lastTimerId;
-  let lastRan;
-  return function () {
+export function throttled<Callback extends Function>(fn: Callback, ms: number) {
+  let lastTimerId: NodeJS.Timeout;
+  let lastRan: number;
+  return function (this: any) {
     const context = this;
     const args = arguments;
     if (!lastRan) {

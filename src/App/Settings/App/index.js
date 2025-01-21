@@ -12,7 +12,7 @@ import Select from 'components/Select';
 import Switch from 'components/Switch';
 import Icon from 'components/Icon';
 import { confirm } from 'lib/dialog';
-import * as form from 'utils/form';
+import * as form from 'lib/form';
 import warningIcon from 'icons/warning.svg';
 import {
   checkForUpdates,

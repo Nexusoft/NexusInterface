@@ -1,38 +1,38 @@
-export default function memoize(
-  resultFn,
-  transformArgs = keepArgs,
-  isEqual = areInputsEqual
+export default function memoize<TCallback extends (...args: any[] | []) => any>(
+  callback: (...args: Parameters<TCallback>) => ReturnType<TCallback>,
+  isEqual: (
+    args: Parameters<TCallback>,
+    lastArgs: Parameters<TCallback>
+  ) => boolean = areInputsEqual
 ) {
-  let lastThis;
-  let lastArgs = [];
-  let lastResult;
+  let lastThis: any;
+  let lastArgs: Parameters<TCallback> = [] as Parameters<TCallback>;
+  let lastResult: ReturnType<TCallback>;
   let calledOnce = false;
 
   // breaking cache when context (this) or arguments change
-  function memoized(...newArgs) {
-    const transformedArgs = transformArgs(...newArgs);
-    if (calledOnce && lastThis === this && isEqual(transformedArgs, lastArgs)) {
+  function memoized(this: any, ...newArgs: Parameters<TCallback>) {
+    if (calledOnce && lastThis === this && isEqual(newArgs, lastArgs)) {
       return lastResult;
     }
 
     // Throwing during an assignment aborts the assignment: https://codepen.io/alexreardon/pen/RYKoaz
     // Doing the lastResult assignment first so that if it throws
     // nothing will be overwritten
-    lastResult = resultFn.apply(this, transformedArgs);
+    lastResult = callback.apply(this, newArgs);
     calledOnce = true;
     lastThis = this;
-    lastArgs = transformedArgs;
+    lastArgs = newArgs;
     return lastResult;
   }
 
   return memoized;
 }
 
-function keepArgs(...params) {
-  return params;
-}
-
-function areInputsEqual(newInputs, lastInputs) {
+function areInputsEqual<TParams extends any[]>(
+  newInputs: TParams,
+  lastInputs: TParams
+) {
   // no checks needed if the inputs length has changed
   if (newInputs.length !== lastInputs.length) {
     return false;

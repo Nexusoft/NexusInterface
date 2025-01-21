@@ -1,15 +1,15 @@
 // Source https://github.com/gourmetjs/stream-normalize-eol
-
-import stream from 'stream';
+import { Transform, TransformCallback } from 'stream';
 import { StringDecoder } from 'string_decoder';
 
 function getDecoder() {
-  var decoder = new StringDecoder('utf8');
-  var prevChunk;
+  const decoder = new StringDecoder('utf8');
+  let prevChunk: string | null = null;
 
   return {
-    write: function (chunk) {
-      var idx, ch;
+    write: (chunk: Buffer | string): string => {
+      let idx: number;
+      let ch: string;
 
       if (typeof chunk !== 'string') chunk = decoder.write(chunk);
 
@@ -25,14 +25,14 @@ function getDecoder() {
       idx++;
 
       if (idx && idx < chunk.length) {
-        prevChunk = chunk.substr(idx);
+        prevChunk = chunk.substring(idx);
         chunk = chunk.substring(0, idx);
       }
 
       return chunk;
     },
-    end: function () {
-      var chunk;
+    end: (): string => {
+      let chunk: string | undefined;
 
       if (typeof decoder.end === 'function') chunk = decoder.end();
 
@@ -50,12 +50,12 @@ function getDecoder() {
 //
 // Internally, this stream assumes that the input data is encoded as `utf8`.
 // If you supply non-`utf8` encoded multi-byte data, it will not be processed correctly.
-export default function normalizeEol(format) {
-  var ts = new stream.Transform({ decodeStrings: false });
-  var decoder = getDecoder();
-  var find;
-
-  format = format || '\n';
+export default function normalizeEol(
+  format: '\n' | '\r\n' | '\r' = '\n'
+): Transform {
+  const ts = new Transform({ decodeStrings: false });
+  const decoder = getDecoder();
+  let find: RegExp;
 
   if (format === '\n') {
     find = /\r\n|\r/g;
@@ -64,19 +64,24 @@ export default function normalizeEol(format) {
   } else if (format === '\r') {
     find = /\r\n|\n/g;
   } else {
-    throw Error('Unknown EOL format: ' + format);
+    throw new Error('Unknown EOL format: ' + format);
   }
 
-  ts._transform = function (chunk, encoding, callback) {
-    chunk = decoder.write(chunk);
-    if (chunk) this.push(chunk.replace(find, format));
+  ts._transform = function (
+    chunk: Buffer,
+    _encoding: string,
+    callback: TransformCallback
+  ): void {
+    let transformedChunk = decoder.write(chunk);
+    if (chunk) this.push(transformedChunk.replace(find, format));
     callback();
   };
 
-  ts._flush = function () {
-    var chunk = decoder.end();
+  ts._flush = function (callback: TransformCallback): void {
+    const chunk = decoder.end();
     if (chunk) this.push(chunk.replace(find, format));
     this.push(null);
+    callback();
   };
 
   return ts;

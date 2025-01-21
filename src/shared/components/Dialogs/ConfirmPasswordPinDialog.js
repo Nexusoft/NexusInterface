@@ -5,7 +5,7 @@ import FormField from 'components/FormField';
 import TextFieldWithKeyboard from 'components/TextFieldWithKeyboard';
 import Button from 'components/Button';
 import { openErrorDialog } from 'lib/dialog';
-import { resolveValue } from 'utils/form';
+import { resolveValue } from 'lib/form';
 
 __ = __context('ConfirmPassword&PIN');
 

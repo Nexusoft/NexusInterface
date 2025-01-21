@@ -1,8 +1,7 @@
 import jotaiQuery from 'utils/jotaiQuery';
-import { callAPI as callAPI } from 'lib/api';
+import { callAPI, listAll } from 'lib/api';
 import memoize from 'utils/memoize';
 import { loggedInAtom, userGenesisAtom, txCountAtom } from './session';
-import listAll from 'utils/listAll';
 
 export const balancesQuery = jotaiQuery({
   condition: (get) => get(loggedInAtom),

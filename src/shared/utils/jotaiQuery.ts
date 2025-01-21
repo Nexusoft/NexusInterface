@@ -1,15 +1,25 @@
 import { useEffect } from 'react';
-import { useAtomValue, atom } from 'jotai';
-import { atomWithQuery } from 'jotai-tanstack-query';
+import { useAtomValue, atom, Getter, Atom } from 'jotai';
+import { atomWithQuery, AtomWithQueryOptions } from 'jotai-tanstack-query';
 import { store } from 'lib/store';
 
-export default function jotaiQuery({
+interface JotaiQueryOptions<TQueryFnData, TData = TQueryFnData> {
+  condition?: (get: Getter) => boolean;
+  getQueryConfig: (
+    get: Getter
+  ) => Omit<AtomWithQueryOptions<TQueryFnData>, 'enabled'>;
+  selectValue?: (value: TQueryFnData | undefined) => TData | undefined;
+  refetchTriggers?: Atom<any>[];
+  alwaysOn?: boolean;
+}
+
+export default function jotaiQuery<TQueryFnData, TData>({
   condition,
   getQueryConfig,
   selectValue,
   refetchTriggers,
   alwaysOn = false,
-}) {
+}: JotaiQueryOptions<TQueryFnData, TData>) {
   const symbols = new Set();
   const turnedOnAtom = atom(false);
 
@@ -27,9 +37,9 @@ export default function jotaiQuery({
   const valueAtom = atom((get) => {
     const enabled = get(enabledAtom);
     const query = get(queryAtom);
-    let value;
+    let value: TQueryFnData | undefined;
     if (!enabled || !query || query.isError) {
-      value = null;
+      value = undefined;
     } else {
       value = query.data;
     }
@@ -48,7 +58,7 @@ export default function jotaiQuery({
   const use = () => {
     useEffect(() => {
       if (alwaysOn) return;
-      const unsubs = [];
+      const unsubs: Array<() => void> = [];
       if (symbols.size === 0) {
         store.set(turnedOnAtom, true);
         refetchTriggers?.forEach((triggerAtom) => {

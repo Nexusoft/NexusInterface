@@ -2,6 +2,7 @@ import { join, dirname, normalize } from 'path';
 import fs from 'fs';
 import https from 'https';
 import axios from 'axios';
+import extractZip from 'extract-zip';
 
 import { store } from 'lib/store';
 import { showNotification, openModal } from 'lib/ui';
@@ -12,7 +13,6 @@ import { modulesDir } from 'consts/paths';
 import { walletDataDir } from 'consts/paths';
 import ensureDirExists from 'utils/ensureDirExists';
 import { rm as deleteDirectory } from 'fs/promises';
-import extractZip from 'utils/promisified/extractZip';
 import { throttled } from 'utils/universal';
 import { confirm, openSuccessDialog, openErrorDialog } from 'lib/dialog';
 

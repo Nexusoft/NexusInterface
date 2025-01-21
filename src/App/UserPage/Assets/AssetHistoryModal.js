@@ -7,7 +7,7 @@ import Tooltip from 'components/Tooltip';
 import { formatDateTime } from 'lib/intl';
 import { openModal } from 'lib/ui';
 import { callAPI } from 'lib/api';
-import { handleError } from 'utils/form';
+import { handleError } from 'lib/form';
 
 import AssetHistoryDetailsModal from './AssetHistoryDetailsModal';
 

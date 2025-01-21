@@ -11,66 +11,66 @@
 
 import Color from 'color';
 
-export function negate(color) {
+export function negate(color: string) {
   return Color(color).negate().string();
 }
 
-export function lighten(color, value) {
+export function lighten(color: string, value: number) {
   return Color(color).lighten(value).string();
 }
 
-export function darken(color, value) {
+export function darken(color: string, value: number) {
   return Color(color).darken(value).string();
 }
 
-export function saturate(color, value) {
+export function saturate(color: string, value: number) {
   return Color(color).saturate(value).string();
 }
 
-export function desaturate(color, value) {
+export function desaturate(color: string, value: number) {
   return Color(color).desaturate(value).string();
 }
 
-export function grayscale(color) {
+export function grayscale(color: string) {
   return Color(color).grayscale().string();
 }
 
-export function whiten(color, value) {
+export function whiten(color: string, value: number) {
   return Color(color).whiten(value).string();
 }
 
-export function blacken(color, value) {
+export function blacken(color: string, value: number) {
   return Color(color).blacken(value).string();
 }
 
-export function fade(color, value) {
+export function fade(color: string, value: number) {
   return Color(color).fade(value).string();
 }
 
-export function opaquer(color, value) {
+export function opaquer(color: string, value: number) {
   return Color(color).opaquer(value).string();
 }
 
-export function rotate(color, value) {
+export function rotate(color: string, value: number) {
   return Color(color).rotate(value).string();
 }
 
-export function mix(color1, color2, value) {
+export function mix(color1: string, color2: string, value: number) {
   return Color(color1).mix(Color(color2), value).string();
 }
 
-export function isLight(color) {
+export function isLight(color: string) {
   return Color(color).isLight();
 }
 
-export function isDark(color) {
+export function isDark(color: string) {
   return Color(color).isDark();
 }
 
-export function toHex(color) {
+export function toHex(color: string) {
   return Color(color).hex();
 }
 
-export function luminosity(color) {
+export function luminosity(color: string) {
   return Color(color).luminosity();
 }
