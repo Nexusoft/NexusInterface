@@ -51,6 +51,7 @@ export const rendererBabelConfig = ({ hot } = {}) => {
     ],
     presets: [
       presetEnv,
+      ['@babel/preset-typescript', {}],
       ['@babel/preset-react', { development, runtime: 'automatic' }],
       // The preset includes two plugins:
       // - jotai/babel/plugin-react-refresh to enable hot reaload for atoms
@@ -71,7 +72,7 @@ const mainBabelConfig = () => ({
 });
 
 const loaderConfig = (options) => ({
-  test: /\.js$/,
+  test: /\.(js|ts)x?$/,
   exclude: /node_modules/,
   use: {
     loader: 'babel-loader',
