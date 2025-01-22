@@ -37,8 +37,9 @@ const presetEnv = [
   },
 ];
 
-const devPlugins = [];
+const presetTypescript = ['@babel/preset-typescript', {}];
 
+const devPlugins = [];
 const prodPlugins = ['babel-plugin-dev-expression'];
 const development = process.env.NODE_ENV === 'development';
 
@@ -51,7 +52,7 @@ export const rendererBabelConfig = ({ hot } = {}) => {
     ],
     presets: [
       presetEnv,
-      ['@babel/preset-typescript', {}],
+      presetTypescript,
       ['@babel/preset-react', { development, runtime: 'automatic' }],
       // The preset includes two plugins:
       // - jotai/babel/plugin-react-refresh to enable hot reaload for atoms
@@ -68,7 +69,7 @@ export const rendererBabelConfig = ({ hot } = {}) => {
 
 const mainBabelConfig = () => ({
   plugins: [...stage0Preset, ...(development ? devPlugins : prodPlugins)],
-  presets: [presetEnv],
+  presets: [presetEnv, presetTypescript],
 });
 
 const loaderConfig = (options) => ({
