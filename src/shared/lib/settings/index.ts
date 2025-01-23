@@ -1,21 +1,23 @@
-import { atom } from 'jotai';
+import { atom, Atom } from 'jotai';
 import { store, subscribe } from 'lib/store';
-import memoize from 'utils/memoize';
-import defaultSettings from './defaultSettings';
+import {
+  defaultSettings,
+  settingKeys,
+  Settings,
+  PartialSettings,
+  SettingsKey,
+} from './defaultSettings';
 import { readSettings, writeSettings } from './universal';
 
 const initialUserSettings = readSettings();
 const userSettingsAtom = atom(initialUserSettings);
 
-const mergeWithDefault = memoize((userSettings) => ({
+export const settingsAtom = atom((get) => ({
   ...defaultSettings,
-  ...userSettings,
+  ...get(userSettingsAtom),
 }));
-export const settingsAtom = atom((get) =>
-  mergeWithDefault(get(userSettingsAtom))
-);
 
-const timerId = null;
+const timerId: NodeJS.Timeout | undefined = undefined;
 subscribe(userSettingsAtom, (settings) => {
   clearTimeout(timerId);
   // Write to file asynchronously to batch multiple consecutive updates into one disk write
@@ -24,7 +26,10 @@ subscribe(userSettingsAtom, (settings) => {
   }, 0);
 });
 
-export const settingKeys = Object.keys(defaultSettings);
+type SettingAtoms = {
+  [K in SettingsKey]: Atom<Settings[K]>;
+};
+
 export const settingAtoms = Object.fromEntries(
   settingKeys.map((key) => [
     key,
@@ -41,12 +46,14 @@ export const settingAtoms = Object.fromEntries(
       }
     ),
   ])
-);
+) as unknown as SettingAtoms;
 
-export function updateSettings(updates) {
+export function updateSettings(updates: PartialSettings) {
   const userSettings = store.get(userSettingsAtom);
   store.set(userSettingsAtom, {
     ...userSettings,
     ...updates,
   });
 }
+
+export type { Settings, SettingsKey as SettingKeys, PartialSettings };

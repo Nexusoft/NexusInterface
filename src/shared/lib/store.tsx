@@ -1,5 +1,10 @@
-import { useEffect } from 'react';
-import { createStore, Provider as JotaiProvider, useAtomValue } from 'jotai';
+import { useEffect, ReactNode } from 'react';
+import {
+  createStore,
+  Provider as JotaiProvider,
+  useAtomValue,
+  Atom,
+} from 'jotai';
 import { DevTools } from 'jotai-devtools';
 import { useHydrateAtoms } from 'jotai/react/utils';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -8,18 +13,21 @@ import { queryClientAtom } from 'jotai-tanstack-query';
 import { rqDevToolsOpenAtom, jotaiDevToolsOpenAtom } from 'lib/ui';
 import jotaiDevToolsStyles from 'jotai-devtools/styles.css';
 
-const isDev = process.env.NODE_ENV === 'development';
+const isDev = process.env['NODE_ENV'] === 'development';
 
 export const store = createStore();
 
-export function subscribe(atom, listener) {
+export function subscribe<T>(atom: Atom<T>, listener: (value: T) => void) {
   return store.sub(atom, () => {
     const value = store.get(atom);
     listener?.(value);
   });
 }
 
-export function subscribeWithPrevious(atom, listener) {
+export function subscribeWithPrevious<T>(
+  atom: Atom<T>,
+  listener: (value: T, previousValue: T) => void
+) {
   let previousValue = store.get(atom);
   return store.sub(atom, () => {
     const value = store.get(atom);
@@ -50,12 +58,12 @@ function QueryDevTools() {
   return isDev && rqDevToolsOpen && <ReactQueryDevtools />;
 }
 
-const HydrateAtoms = ({ children }) => {
+const HydrateAtoms = ({ children }: { children: ReactNode }) => {
   useHydrateAtoms([[queryClientAtom, queryClient]]);
   return children;
 };
 
-export function Providers({ children }) {
+export function Providers({ children }: { children: ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
       <JotaiProvider store={store}>

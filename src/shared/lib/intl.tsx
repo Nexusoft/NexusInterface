@@ -1,14 +1,33 @@
 import fs from 'fs';
 import path from 'path';
+import { ReactNode } from 'react';
 import Polyglot from 'node-polyglot';
 import { parse } from 'csv-parse/sync';
 
 import { store } from 'lib/store';
 import { assetsDir } from 'consts/paths';
-import { settingsAtom } from './settings';
+import { settingAtoms } from 'lib/settings';
 import { escapeRegExp } from 'utils/misc';
 
-const locales = [
+export type Locale =
+  | 'en'
+  | 'ar'
+  | 'de'
+  | 'es'
+  | 'fi'
+  | 'fr'
+  | 'ja'
+  | 'ko'
+  | 'no'
+  | 'nl'
+  | 'pl'
+  | 'pt'
+  | 'ru'
+  | 'sr'
+  | 'zh-cn';
+
+const locales: Locale[] = [
+  'en',
   'ar',
   'de',
   'es',
@@ -25,12 +44,12 @@ const locales = [
   'zh-cn',
 ];
 
-function loadDict(loc) {
+function loadDict(locale: Locale) {
   const csv = fs.readFileSync(
     path.join(assetsDir, 'translations', `${locale}.csv`)
   );
-  const records = parse(csv);
-  const dict = {};
+  const records: any[] = parse(csv);
+  const dict: Record<string, Record<string, string>> = {};
   records.forEach(([key, translation, context]) => {
     if (!dict[context]) {
       dict[context] = {};
@@ -40,38 +59,50 @@ function loadDict(loc) {
   return dict;
 }
 
-const settings = store.get(settingsAtom);
-const locale = locales.includes(settings.locale) ? settings.locale : 'en';
+type Interpolations = Parameters<typeof Polyglot.transformPhrase>[1];
+
+const locale = (() => {
+  const loc = store.get(settingAtoms['locale']);
+  return locales.includes(loc) ? loc : 'en';
+})();
 const dict = locale === 'en' ? null : loadDict(locale);
-const engTranslate = (context, phrase, data) =>
+const engTranslate = (_context: string, phrase: string, data: Interpolations) =>
   Polyglot.transformPhrase(phrase, data, 'en');
 
 const rawTranslate =
   locale === 'en'
     ? engTranslate
-    : (context, string, data) => {
-        const phrases = dict[context];
+    : (context: string, string: string, data: Interpolations) => {
+        const phrases = dict?.[context];
         const phrase = (phrases && phrases[string]) || string;
         return Polyglot.transformPhrase(phrase, data, locale);
       };
 
-function inject(string, injections) {
+type FirstMatch = { match: RegExpMatchArray; key: string };
+type Injections = Record<string, string | ((inner: ReactNode) => ReactNode)>;
+
+function inject(string: string, injections?: Injections): ReactNode {
   if (injections) {
     // Process from the first match in the string
-    let firstMatch = null;
+    let first: FirstMatch | null = null;
     for (let key in injections) {
       const escaped = escapeRegExp(String(key));
       const regex = new RegExp(`<${escaped}>(.*?)<\/${escaped}>`, 'm');
       const match = string.match(regex);
-      if (match && (!firstMatch || match.index < firstMatch.index)) {
-        firstMatch = { ...match, key };
+      if (
+        match &&
+        (!first?.match.index || !match.index || match.index < first.match.index)
+      ) {
+        first = { match, key };
       }
     }
-    if (firstMatch) {
-      const before = string.slice(0, firstMatch.index);
-      const after = string.slice(firstMatch.index + firstMatch[0].length);
-      const inner = inject(firstMatch[1], injections);
-      const injection = injections[firstMatch.key];
+    if (first) {
+      const before = string.slice(0, first.match.index);
+      const after = string.slice(
+        (first.match.index || 0) + first.match[0].length
+      );
+      const inner = inject(first.match[1], injections);
+      const injection = injections[first.key];
       const replacement =
         typeof injection === 'function'
           ? injection(inner)
@@ -90,16 +121,25 @@ function inject(string, injections) {
   return string;
 }
 
-const translateWithContext = (context = '', string, data, injections) =>
-  inject(rawTranslate(context, string, data), injections);
+export const translateWithContext = (
+  context = '',
+  string: string,
+  data?: Interpolations,
+  injections?: Injections
+) => inject(rawTranslate(context, string, data), injections);
 
-const translate = (string, data, injections) =>
-  translateWithContext('', string, data, injections);
+export const translate = (
+  string: string,
+  data?: Interpolations,
+  injections?: Injections
+) => translateWithContext('', string, data, injections);
 
-const withContext = (context) => (string, data, injections) =>
-  translateWithContext(context, string, data, injections);
+export const withContext =
+  (context: string) =>
+  (string: string, data?: Interpolations, injections?: Injections) =>
+    translateWithContext(context, string, data, injections);
 
-const ensureSignificantDigit = (decimalDigits, num) => {
+const ensureSignificantDigit = (decimalDigits: number, num: number) => {
   let digits = Number(decimalDigits) || 0;
   if (num && typeof num === 'number') {
     let threshold = 10 ** -digits;
@@ -112,16 +152,18 @@ const ensureSignificantDigit = (decimalDigits, num) => {
   return digits;
 };
 
-export { translate, translateWithContext, withContext };
-
-export const formatNumber = (num, maxDecimalDigits = 3) => {
+export const formatNumber = (num: number, maxDecimalDigits = 3) => {
   const digits = ensureSignificantDigit(maxDecimalDigits, num);
   return new Intl.NumberFormat(locale, {
     maximumFractionDigits: digits,
   }).format(num);
 };
 
-export const formatCurrency = (num, currency = 'USD', maxDecimalDigits = 3) => {
+export const formatCurrency = (
+  num: number,
+  currency = 'USD',
+  maxDecimalDigits = 3
+) => {
   // VND doesn't have decimal digits
   if (currency === 'VND') {
     maxDecimalDigits = 0;
@@ -135,7 +177,7 @@ export const formatCurrency = (num, currency = 'USD', maxDecimalDigits = 3) => {
   }).format(num);
 };
 
-export const formatPercent = (num, maxDecimalDigits) => {
+export const formatPercent = (num: number, maxDecimalDigits: number) => {
   const digits = ensureSignificantDigit(maxDecimalDigits, num);
   return new Intl.NumberFormat(locale, {
     style: 'percent',
@@ -143,8 +185,10 @@ export const formatPercent = (num, maxDecimalDigits) => {
   }).format(num);
 };
 
-export const formatDateTime = (date, options) =>
-  date ? new Intl.DateTimeFormat(locale, options).format(date) : 'Invalid';
+export const formatDateTime = (
+  date: Date,
+  options: Intl.DateTimeFormatOptions
+) => (date ? new Intl.DateTimeFormat(locale, options).format(date) : 'Invalid');
 
 const relativeTimeUnit = [
   [1000, 'second'],
@@ -152,11 +196,12 @@ const relativeTimeUnit = [
   [1000 * 60 * 60, 'hour'],
   [1000 * 60 * 60 * 24, 'day'],
   [1000 * 60 * 60 * 24 * 7, 'week'],
-];
-const toRelativeTime = (timestamp) => {
+] as const;
+
+const toRelativeTime = (timestamp: number) => {
   const ms = new Date(timestamp).valueOf() - Date.now();
   let count = Math.round(ms / 1000);
-  let unit = 'second';
+  let unit: Intl.RelativeTimeFormatUnit = 'second';
   for (let [threshold, tempUnit] of relativeTimeUnit) {
     const tempCount = Math.round(ms / threshold);
     if (tempCount === 0) break;
@@ -165,10 +210,13 @@ const toRelativeTime = (timestamp) => {
       unit = tempUnit;
     }
   }
-  return [count, unit];
+  return [count, unit] as const;
 };
 
-export const formatRelativeTime = (timestamp, options) =>
+export const formatRelativeTime = (
+  timestamp: number,
+  options: Intl.RelativeTimeFormatOptions
+) =>
   new Intl.RelativeTimeFormat(locale, {
     style: 'long',
     numeric: 'auto',

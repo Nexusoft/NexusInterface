@@ -1,10 +1,14 @@
-// Global variables injected by webpack (configs/webpack.config.base.babel.js)
+// Global variables injected by webpack base config (configs/webpack.config.base.babel.js)
 declare const APP_VERSION: string;
 declare const BUILD_DATE: string;
 declare const BACKWARD_COMPATIBLE_VERSION: string;
 declare const APP_ID: string;
 declare const NEXUS_EMBASSY_PUBLIC_KEY: string;
 declare const LOCK_TESTNET: string;
+
+declare var __: typeof import('lib/intl').translate;
+declare var ___: typeof import('lib/intl').translateWithContext;
+declare var __context: typeof import('lib/intl').withContext;
 
 // File types that can be imported by webpack loaders
 declare module '*.svg' {
@@ -40,6 +44,10 @@ declare module '*.MD' {
   export default content;
 }
 declare module '*.woff2' {
+  const content: string;
+  export default content;
+}
+declare module '*.css' {
   const content: string;
   export default content;
 }
