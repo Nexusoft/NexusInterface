@@ -6,12 +6,12 @@ import macaddress from 'macaddress';
 import { atom } from 'jotai';
 
 import { store } from 'lib/store';
-import { settingsAtom } from './settings';
+import { settingsAtom } from 'lib/settings';
 
 /**
  * Cache the core config used at the most recent time core was started
  */
-export const coreConfigAtom = atom(null);
+export const coreConfigAtom = atom<CoreConfig | null>(null);
 
 function generateDefaultPassword() {
   let randomNumbers = ['', ''];
@@ -24,19 +24,21 @@ function generateDefaultPassword() {
       randomNumbers[1] += element.charCodeAt(0);
     }
   }
-  randomNumbers[0] = parseInt(randomNumbers[0]);
-  randomNumbers[1] = parseInt(randomNumbers[1]);
-  const randomValue = randomNumbers[0] * randomNumbers[1];
+  const randomValue = parseInt(randomNumbers[0]) * parseInt(randomNumbers[1]);
   const secret =
     process.platform === 'darwin'
-      ? process.env.USER + process.env.HOME + process.env.SHELL + randomValue
+      ? '' +
+        process.env['USER'] +
+        process.env['HOME'] +
+        process.env['SHELL'] +
+        randomValue
       : JSON.stringify(macaddress.networkInterfaces(), null, 2) + randomValue;
   return crypto.createHmac('sha256', secret).update('pass').digest('hex');
 }
 
-const fromKeyValues = (rawContent) =>
+const fromKeyValues = (rawContent: string) =>
   rawContent
-    ? rawContent.split('\n').reduce((obj, line) => {
+    ? rawContent.split('\n').reduce((obj: Record<string, any>, line) => {
         const equalIndex = line.indexOf('=');
         if (equalIndex >= 0) {
           const key = line.substring(0, equalIndex);
@@ -45,12 +47,23 @@ const fromKeyValues = (rawContent) =>
         }
         return obj;
       }, {})
-    : {};
+    : ({} as Record<string, any>);
 
-const toKeyValues = (obj) =>
+const toKeyValues = (obj: Record<string, string>) =>
   Object.entries(obj)
     .map(([key, value]) => `${key}=${value}`)
     .join('\n');
+
+export interface CoreConfig {
+  ip: string;
+  apiSSL: boolean;
+  apiPort: string;
+  apiPortSSL: string;
+  apiHost: string;
+  apiUser: string;
+  apiPassword: string;
+  txExpiry?: number;
+}
 
 export const defaultConfig = {
   ip: '127.0.0.1',
@@ -63,11 +76,8 @@ export const defaultConfig = {
 
 /**
  * Returns either the given config or default Config
- *
- * @param {*} [config={}]
- * @returns
  */
-function customConfig(config = {}) {
+function customConfig(config: Partial<CoreConfig> = {}) {
   const ip = config.ip || defaultConfig.ip;
   const apiSSL =
     typeof config.apiSSL === 'boolean' ? config.apiSSL : defaultConfig.apiSSL;
@@ -87,7 +97,7 @@ function customConfig(config = {}) {
       config.apiPassword !== undefined
         ? config.apiPassword
         : defaultConfig.apiPassword,
-    txExpiry: parseInt(config.txExpiry) || undefined,
+    txExpiry: config.txExpiry || undefined,
   };
 }
 
@@ -128,7 +138,7 @@ export async function loadNexusConf() {
     ['apissl', defaultConfig.apiSSL],
     ['apiport', defaultConfig.apiPort],
     ['apiportssl', defaultConfig.apiPortSSL],
-  ];
+  ] as const;
   const settingsConf = {
     apissl: !embeddedCoreUseNonSSL,
     apiport: embeddedCoreApiPort || undefined,
@@ -158,12 +168,12 @@ export async function loadNexusConf() {
   configs = { ...configs, ...settingsConf };
 
   return customConfig({
-    apiUser: configs.apiuser,
-    apiPassword: configs.apipassword,
-    apiSSL: configs.apissl,
-    apiPort: configs.apiport,
-    apiPortSSL: configs.apiportssl,
-    txExpiry: configs.txexpiry,
+    apiUser: configs['apiuser'],
+    apiPassword: configs['apipassword'],
+    apiSSL: configs['apissl'] === 'false' ? false : !!configs['apissl'],
+    apiPort: configs['apiport'],
+    apiPortSSL: configs['apiportssl'],
+    txExpiry: parseInt(configs['txexpiry']),
   });
 }
 

@@ -1,10 +1,10 @@
-export const asset = (bytes) => 0.01 * bytes;
+export const asset = (bytes: number) => 0.01 * bytes;
 
-const roundTo6DecimalPlaces = (number) =>
+const roundTo6DecimalPlaces = (number: number) =>
   Math.round(number * 1000000) / 1000000;
 
-export const createTokenFee = (supply, decimal) => {
-  const totalSupply = supply * Math.pow(10, decimal || 0);
+export const createTokenFee = (supply: number, decimal: number = 0) => {
+  const totalSupply = supply * Math.pow(10, decimal);
   const fee = roundTo6DecimalPlaces((Math.log10(totalSupply) - 2) * 100);
   return fee ? (fee <= 0 ? 1 : fee) : 1;
 };

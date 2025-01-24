@@ -2,7 +2,6 @@ import https from 'https';
 import fs from 'fs';
 import { atom } from 'jotai';
 
-import memoize from 'utils/memoize';
 import { store, subscribe } from 'lib/store';
 import path from 'path';
 import { walletDataDir } from 'consts/paths';
@@ -11,11 +10,26 @@ import { readJson, writeJson } from 'utils/json';
 const themeFileName = 'theme.json';
 const themeFilePath = path.join(walletDataDir, themeFileName);
 
+export interface Theme {
+  wallpaper: string;
+  background: string;
+  foreground: string;
+  primary: string;
+  primaryAccent: string;
+  danger: string;
+  dangerAccent: string;
+  globeColor: string;
+  globePillarColor: string;
+  globeArchColor: string;
+}
+
+export type PartialTheme = Partial<Theme>;
+
 export const starryNightBackground = ':starry_night';
 export const cosmicLightBackground = ':cosmic_light';
 export const nexusThemeBackground = ':nexus_theme';
 
-export const darkTheme = {
+export const darkTheme: Theme = {
   wallpaper: starryNightBackground,
   background: '#1c1d1f',
   foreground: '#ebebe6',
@@ -28,7 +42,7 @@ export const darkTheme = {
   globeArchColor: '#00ffff',
 };
 
-export const lightTheme = {
+export const lightTheme: Theme = {
   wallpaper: cosmicLightBackground,
   background: '#C6D1D2',
   danger: '#8F240E',
@@ -41,7 +55,7 @@ export const lightTheme = {
   primaryAccent: '#404244',
 };
 
-export const nexusTheme = {
+export const nexusTheme: Theme = {
   wallpaper: nexusThemeBackground,
   background: '#025E93',
   danger: '#8F240E',
@@ -58,28 +72,26 @@ const defaultTheme = darkTheme;
 
 function readTheme() {
   if (fs.existsSync(themeFilePath)) {
-    const json = readJson(themeFilePath) || {};
+    const json = (readJson(themeFilePath) || {}) as PartialTheme;
     return json;
   } else {
-    // return darkTheme;
-    return {};
+    return {} as PartialTheme;
   }
 }
 
-function writeTheme(theme) {
+function writeTheme(theme: PartialTheme) {
   return writeJson(themeFilePath, theme);
 }
 
 const initialUserTheme = readTheme();
-const userThemeAtom = atom(initialUserTheme);
+const userThemeAtom = atom<PartialTheme>(initialUserTheme);
 
-const mergeWithDefault = memoize((userTheme) => ({
+export const themeAtom = atom<Theme>((get) => ({
   ...defaultTheme,
-  ...userTheme,
+  ...get(userThemeAtom),
 }));
-export const themeAtom = atom((get) => mergeWithDefault(get(userThemeAtom)));
 
-const timerId = null;
+const timerId: NodeJS.Timeout | undefined = undefined;
 subscribe(userThemeAtom, (theme) => {
   clearTimeout(timerId);
   // Write to file asynchronously to batch multiple consecutive updates into one disk write
@@ -88,7 +100,7 @@ subscribe(userThemeAtom, (theme) => {
   }, 0);
 });
 
-const downloadWallpaper = (wallpaper) =>
+const downloadWallpaper = (wallpaper: string) =>
   new Promise((resolve, reject) => {
     const wallpaperPathSplit = wallpaper.split('.');
     const fileEnding = wallpaperPathSplit[wallpaperPathSplit.length - 1];
@@ -101,7 +113,7 @@ const downloadWallpaper = (wallpaper) =>
       });
     });
     https
-      .get(customTheme.wallpaper)
+      .get(wallpaper)
       .setTimeout(10000)
       .on('response', (response) => {
         response.pipe(file);
@@ -112,15 +124,15 @@ const downloadWallpaper = (wallpaper) =>
       });
   });
 
-export const updateTheme = (updates) => {
+export const updateTheme = (updates: PartialTheme) => {
   store.set(userThemeAtom, (userTheme) => ({ ...userTheme, ...updates }));
 };
 
-export const setTheme = (theme) => {
+export const setTheme = (theme: PartialTheme) => {
   store.set(userThemeAtom, theme);
 };
 
-export async function loadCustomTheme(path) {
+export async function loadCustomTheme(path: string) {
   const theme = readJson(path);
   if (!theme) {
     throw new Error('Fail to read json file at ' + path);

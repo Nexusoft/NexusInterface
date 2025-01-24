@@ -272,7 +272,8 @@
     "three": "^0.145.0",
     "tsparticles": "^3.7.1",
     "universal-analytics": "^0.5.3",
-    "unzip-stream": "^0.3.4"
+    "unzip-stream": "^0.3.4",
+    "zod": "^3.24.1"
   },
   "devEngines": {
     "node": ">=16.x",
