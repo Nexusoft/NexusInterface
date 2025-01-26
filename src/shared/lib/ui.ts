@@ -4,6 +4,7 @@ import { ComponentType, ReactNode } from 'react';
 import { ModalProps } from 'components/Modal';
 import { NotificationProps } from 'components/Notification';
 import { BackgroundTaskProps } from 'components/BackgroundTask';
+import { SnackBarType } from 'components/SnackBar';
 
 const newModalId = (function () {
   let counter = 1;
@@ -24,23 +25,23 @@ const newTaskId = (function () {
  * Types
  * ===========================
  */
-interface ModalDescriptor {
+export interface ModalDescriptor {
   id: string;
-  component: ComponentType<ModalProps>;
-  props: ModalProps;
+  component: ComponentType<any>;
+  props: any;
 }
 
-interface NotificationDescriptor {
+export interface NotificationDescriptor {
   id: string;
   content: ReactNode;
-  type?: NotificationProps['type'];
+  type: SnackBarType;
   autoClose?: number;
 }
 
-interface BackgroundTaskDescriptor {
+export interface BackgroundTaskDescriptor {
   id: string;
-  component: ComponentType<BackgroundTaskProps>;
-  props: BackgroundTaskProps;
+  component: ComponentType<any>;
+  props: any;
 }
 
 /**
@@ -57,9 +58,9 @@ export const jotaiDevToolsOpenAtom = atom(false);
  * Modal
  * ===========================
  */
-export function openModal(
-  component: ComponentType<ModalProps>,
-  props: ModalProps
+export function openModal<TProps extends Omit<ModalProps, 'removeModal'>>(
+  component: ComponentType<TProps>,
+  props: TProps
 ) {
   const id = newModalId();
   store.set(modalsAtom, (modals) => [
@@ -74,7 +75,7 @@ export function openModal(
 }
 
 // Using regular function here to avoid circular dependency which causes error
-export function removeModal(modalId: string) {
+export function removeModal(modalId?: string) {
   store.set(modalsAtom, (modals) =>
     modals.filter((modal) => modal.id !== modalId)
   );
@@ -115,9 +116,9 @@ export function removeNotification(notifId: string) {
  * Background task
  * ===========================
  */
-export function showBackgroundTask(
-  component: ComponentType<BackgroundTaskProps>,
-  props: BackgroundTaskProps
+export function showBackgroundTask<TProps extends BackgroundTaskProps>(
+  component: ComponentType<TProps>,
+  props: TProps
 ) {
   const id = newTaskId();
   store.set(backgroundTasksAtom, (backgroundTasks) => [

@@ -1,10 +1,18 @@
 // External
+import { ReactNode } from 'react';
 import { useAtomValue } from 'jotai';
 import styled from '@emotion/styled';
 
 // Internal
 import Notification from 'components/Notification';
-import { modalsAtom, notificationsAtom, backgroundTasksAtom } from 'lib/ui';
+import {
+  modalsAtom,
+  notificationsAtom,
+  backgroundTasksAtom,
+  ModalDescriptor,
+  NotificationDescriptor,
+  BackgroundTaskDescriptor,
+} from 'lib/ui';
 import ModalContext from 'context/modal';
 import TaskContext from 'context/task';
 import { zIndex } from 'styles';
@@ -16,29 +24,35 @@ const SnackBars = styled.div({
   zIndex: zIndex.snackBars,
 });
 
-const Modals = ({ modals }) => (
+const Modals = ({ modals }: { modals: ModalDescriptor[] }) => (
   <>
     {modals.map(({ id, component: Comp, props }) => (
       <ModalContext.Provider key={id} value={id}>
-        <Comp {...props} modalId={id} />
+        <Comp {...props} />
       </ModalContext.Provider>
     ))}
   </>
 );
 
-const BackgroundTasks = ({ tasks }) => (
+const BackgroundTasks = ({ tasks }: { tasks: BackgroundTaskDescriptor[] }) => (
   <SnackBars>
     {tasks.map(({ id, component: Comp, props }, i) => (
       <TaskContext.Provider key={id} value={id}>
-        <Comp index={i} {...props} taskId={id} />
+        <Comp index={i} {...props} />
       </TaskContext.Provider>
     ))}
   </SnackBars>
 );
 
-const Notifications = ({ notifications, taskCount }) => (
+const Notifications = ({
+  notifications,
+  taskCount,
+}: {
+  notifications: NotificationDescriptor[];
+  taskCount: number;
+}) => (
   <SnackBars>
-    {notifications.map(({ id, type, children, content, ...props }, i) => (
+    {notifications.map(({ id, type, content, ...props }, i) => (
       <Notification
         key={id}
         notifID={id}
@@ -46,13 +60,13 @@ const Notifications = ({ notifications, taskCount }) => (
         index={taskCount + i}
         {...props}
       >
-        {children || content}
+        {content}
       </Notification>
     ))}
   </SnackBars>
 );
 
-export default function Wallet({ children }) {
+export default function Wallet({ children }: { children: ReactNode }) {
   const modals = useAtomValue(modalsAtom);
   const notifications = useAtomValue(notificationsAtom);
   const backgroundTasks = useAtomValue(backgroundTasksAtom);

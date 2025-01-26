@@ -61,7 +61,7 @@ const fullScreenOutro = {
 const modalBorderRadius = 4;
 
 const ModalComponent = styled.div<{
-  maxWidth?: string;
+  maxWidth?: string | number;
   fullScreen?: boolean;
 }>(
   ({ theme, maxWidth }) => ({
@@ -129,7 +129,7 @@ const ModalFooter = styled.div<{ separator?: boolean }>(
 
 export interface ModalProps
   extends Omit<ComponentProps<typeof ModalComponent>, 'children'> {
-  visible: boolean;
+  visible?: boolean;
   removeModal: () => void;
   onClose?: () => void;
   dimBackground?: boolean;
@@ -138,11 +138,11 @@ export interface ModalProps
   assignClose?: (close: () => Promise<void>) => void;
   modalRef?: Ref<HTMLDivElement>;
   backgroundRef?: Ref<HTMLDivElement>;
-  children: ReactNode | ((close: () => Promise<void>) => ReactNode);
+  children?: ReactNode | ((close: () => Promise<void>) => ReactNode);
 }
 
 export default function Modal({
-  visible,
+  visible = true,
   removeModal,
   onClose,
   fullScreen,

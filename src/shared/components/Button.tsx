@@ -9,13 +9,35 @@
  * - Make sure this note also presents in other files which are imported here.
  */
 
-import { forwardRef } from 'react';
+import { forwardRef, ComponentProps } from 'react';
 import styled from '@emotion/styled';
 
 import { timing } from 'styles';
 import { lighten, fade } from 'utils/color';
 
-const ButtonComponent = styled.button(
+export type ButtonSkin =
+  | 'default'
+  | 'primary'
+  | 'danger'
+  | 'filled-primary'
+  | 'filled-inverted'
+  | 'filled'
+  | 'filled-danger'
+  | 'plain-inverted'
+  | 'plain-danger'
+  | 'plain'
+  | 'hyperlink'
+  | 'plain-link-primary';
+
+const ButtonComponent = styled.button<{
+  square?: boolean | string;
+  wide?: boolean;
+  fitHeight?: boolean;
+  grouped?: 'left' | 'right' | 'top' | 'bottom';
+  uppercase?: boolean;
+  waiting?: boolean;
+  skin?: ButtonSkin;
+}>(
   {
     display: 'inline-flex',
     justifyContent: 'center',
@@ -71,6 +93,8 @@ const ButtonComponent = styled.button(
           borderTopLeftRadius: 0,
           borderTopRightRadius: 0,
         };
+      default:
+        return null;
     }
   },
 
@@ -87,7 +111,7 @@ const ButtonComponent = styled.button(
       },
     },
 
-  ({ skin, theme }) => {
+  ({ skin = 'default', theme }) => {
     switch (skin) {
       case 'default':
         return {
@@ -258,12 +282,14 @@ const ButtonComponent = styled.button(
   }
 );
 
+export type ButtonProps = ComponentProps<typeof ButtonComponent>;
+
 /**
  * Note: the double & in &&:disabled is a css specificity hack so that the disabled styles take priority over the hover styles
  */
 
-const Button = forwardRef(
-  ({ type = 'button', skin = 'default', ...rest }, ref) => (
+const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ type = 'button', skin, ...rest }, ref) => (
     <ButtonComponent type={type} skin={skin} {...rest} ref={ref} />
   )
 );

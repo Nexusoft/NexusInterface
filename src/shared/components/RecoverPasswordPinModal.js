@@ -39,8 +39,8 @@ export default function RecoverPasswordPinModal() {
                 }) => {
                   const correct = await confirmPasswordPin({
                     isNew: true,
-                    password: newPassword,
-                    pin: newPin,
+                    enteredPassword: newPassword,
+                    enteredPin: newPin,
                   });
 
                   if (correct) {

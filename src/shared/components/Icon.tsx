@@ -12,7 +12,9 @@
 import { forwardRef } from 'react';
 import styled from '@emotion/styled';
 
-const Svg = styled.svg(({ size = '1em' }) => ({
+const Svg = styled.svg<{
+  size?: string | number;
+}>(({ size = '1em' }) => ({
   verticalAlign: 'middle',
   transitionProperty: 'fill, stroke',
   transitionDuration: '.2s',
@@ -20,21 +22,32 @@ const Svg = styled.svg(({ size = '1em' }) => ({
   height: size,
 }));
 
-const Icon = forwardRef(({ icon = {}, size, ...rest }, ref) => (
-  <Svg viewBox={icon.viewBox} size={size} {...rest} ref={ref}>
-    <use href={`${icon.url ? icon.url : ''}#${icon.id}`} />
-  </Svg>
-));
+interface IconProps {
+  icon: {
+    id: string;
+    viewBox: string;
+    url?: string;
+  };
+  size?: string | number;
+}
 
-Icon.Raw = forwardRef(({ icon, size, ...rest }, ref) => (
-  <Svg
-    as="img"
-    src={icon.url}
-    viewBox={icon.viewBox}
-    size={size}
-    {...rest}
-    ref={ref}
-  />
-));
+const Icon = forwardRef<SVGSVGElement, IconProps>(
+  ({ icon, size, ...rest }, ref) => (
+    <Svg viewBox={icon.viewBox} size={size} {...rest} ref={ref}>
+      <use href={`${icon.url ? icon.url : ''}#${icon.id}`} />
+    </Svg>
+  )
+);
+
+// Icon.Raw = forwardRef(({ icon, size, ...rest }, ref) => (
+//   <Svg
+//     as="img"
+//     src={icon.url}
+//     viewBox={icon.viewBox}
+//     size={size}
+//     {...rest}
+//     ref={ref}
+//   />
+// ));
 
 export default Icon;

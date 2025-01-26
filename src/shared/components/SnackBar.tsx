@@ -5,6 +5,8 @@ import { keyframes } from '@emotion/react';
 // Internal
 import { timing } from 'styles';
 
+export type SnackBarType = 'info' | 'success' | 'error' | 'work';
+
 const notifHeight = 40;
 const notifMargin = 15;
 
@@ -21,7 +23,7 @@ const intro = (index: number) => keyframes`
 
 const SnackBar = styled.div<{
   index: number;
-  type: 'info' | 'success' | 'error' | 'work';
+  type: SnackBarType;
 }>(
   {
     position: 'absolute',

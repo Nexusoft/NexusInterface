@@ -67,8 +67,8 @@ export default function NewUserModal() {
                 submit: async ({ username, password, pin }) => {
                   const correct = await confirmPasswordPin({
                     isNew: false,
-                    password,
-                    pin,
+                    enteredPassword: password,
+                    enteredPin: pin,
                   });
 
                   if (correct) {

@@ -1,5 +1,5 @@
 import Button from 'components/Button';
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import { alphaRelease } from 'consts/misc';
 import { shell } from 'electron';
 
@@ -7,11 +7,13 @@ export default function PreReleaseWarningModal() {
   const versionRunning = APP_VERSION.toString();
   const releaseType = alphaRelease ? 'Alpha' : 'Beta';
   return (
-    <Modal maxWidth={600}>
+    <ControlledModal maxWidth={600}>
       {(closeModal) => (
         <>
-          <Modal.Header>{__('Pre-Release Active')}</Modal.Header>
-          <Modal.Body>
+          <ControlledModal.Header>
+            {__('Pre-Release Active')}
+          </ControlledModal.Header>
+          <ControlledModal.Body>
             <div className="text-center">{versionRunning}</div>
 
             <div className="mt1 text-center">
@@ -52,9 +54,9 @@ export default function PreReleaseWarningModal() {
                 {__('Ok')}
               </Button>
             </div>
-          </Modal.Body>
+          </ControlledModal.Body>
         </>
       )}
-    </Modal>
+    </ControlledModal>
   );
 }

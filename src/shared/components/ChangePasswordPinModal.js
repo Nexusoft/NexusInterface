@@ -32,8 +32,8 @@ export default function ChangePasswordPinModal() {
                 submit: async ({ password, pin, newPassword, newPin }) => {
                   const correct = await confirmPasswordPin({
                     isNew: true,
-                    password: newPassword,
-                    pin: newPin,
+                    enteredPassword: newPassword,
+                    enteredPin: newPin,
                   });
 
                   if (correct) {

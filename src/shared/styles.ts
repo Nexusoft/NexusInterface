@@ -56,6 +56,6 @@ export const animations = {
 
 export const zIndex = {
   overlays: 10,
-  snackbars: 20,
+  snackBars: 20,
   tooltips: 30,
 };

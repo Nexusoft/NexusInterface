@@ -11,6 +11,6 @@
 
 import { createContext } from 'react';
 
-const ModalContext = createContext<string | null>(null);
+const ModalContext = createContext<string | undefined>(undefined);
 
 export default ModalContext;
