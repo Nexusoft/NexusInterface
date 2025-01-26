@@ -6,13 +6,17 @@ declare const APP_ID: string;
 declare const NEXUS_EMBASSY_PUBLIC_KEY: string;
 declare const LOCK_TESTNET: string;
 
-declare const __: typeof import('lib/intl').translate;
-declare const ___: typeof import('lib/intl').translateWithContext;
-declare const __context: typeof import('lib/intl').withContext;
+declare var __: typeof import('lib/intl').translate;
+declare var ___: typeof import('lib/intl').translateWithContext;
+declare var __context: typeof import('lib/intl').withContext;
 
 // File types that can be imported by webpack loaders
 declare module '*.svg' {
-  const content: string;
+  const content: {
+    id: string;
+    viewBox: string;
+    url: string;
+  };
   export default content;
 }
 declare module '*.ico' {

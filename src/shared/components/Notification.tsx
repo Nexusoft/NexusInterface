@@ -1,5 +1,5 @@
 // External
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, ComponentProps } from 'react';
 import styled from '@emotion/styled';
 
 // Internal
@@ -27,15 +27,22 @@ const NotificationComponent = styled(SnackBar)({
   },
 });
 
+export interface NotificationProps
+  extends Omit<ComponentProps<typeof NotificationComponent>, 'onClick'> {
+  notifID: string;
+  autoClose?: number;
+  onClick?: (close: () => void) => void;
+}
+
 export default function Notification({
   notifID,
   onClick,
   type = 'info',
   autoClose = 5000,
   ...rest
-}) {
-  const notifRef = useRef();
-  const timerRef = useRef();
+}: NotificationProps) {
+  const notifRef = useRef<HTMLDivElement>(null);
+  const timerRef = useRef<NodeJS.Timeout>();
 
   useEffect(() => {
     startAutoClose();
@@ -46,7 +53,7 @@ export default function Notification({
     if (notifID) {
       const duration = parseInt(timing.quick);
       stopAutoClose();
-      notifRef.current.animate(outro, {
+      notifRef.current?.animate(outro, {
         duration,
         easing: 'ease-in',
         fill: 'both',

@@ -8,7 +8,7 @@ import { timing } from 'styles';
 const notifHeight = 40;
 const notifMargin = 15;
 
-const intro = (index) => keyframes`
+const intro = (index: number) => keyframes`
   from {
     opacity: 0;
     transform: translateY(-${(index - 1) * (notifHeight + notifMargin)}px)
@@ -19,7 +19,10 @@ const intro = (index) => keyframes`
   }
 `;
 
-const SnackBar = styled.div(
+const SnackBar = styled.div<{
+  index: number;
+  type: 'info' | 'success' | 'error' | 'work';
+}>(
   {
     position: 'absolute',
     top: 0,

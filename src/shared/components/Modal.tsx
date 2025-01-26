@@ -10,7 +10,7 @@
  */
 
 // External
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, Ref, ReactNode, ComponentProps } from 'react';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/react';
 
@@ -60,7 +60,10 @@ const fullScreenOutro = {
 
 const modalBorderRadius = 4;
 
-const ModalComponent = styled.div(
+const ModalComponent = styled.div<{
+  maxWidth?: string;
+  fullScreen?: boolean;
+}>(
   ({ theme, maxWidth }) => ({
     position: 'fixed',
     top: '50%',
@@ -91,12 +94,6 @@ const ModalComponent = styled.div(
       maxHeight: 'none',
       borderRadius: 0,
       animation: `${fullScreenIntro} ${timing.quick} ease-out`,
-    },
-  ({ closing, fullScreen }) =>
-    closing && {
-      animation: `${fullScreen ? fullScreenOutro : outro} ${
-        timing.quick
-      } ease-in`,
     }
 );
 
@@ -118,7 +115,7 @@ const ModalBody = styled.div({
   gridArea: 'body',
 });
 
-const ModalFooter = styled.div(
+const ModalFooter = styled.div<{ separator?: boolean }>(
   {
     gridArea: 'footer',
     padding: '20px 0',
@@ -129,6 +126,20 @@ const ModalFooter = styled.div(
       borderTop: `2px solid ${theme.primary}`,
     }
 );
+
+export interface ModalProps
+  extends Omit<ComponentProps<typeof ModalComponent>, 'children'> {
+  visible: boolean;
+  removeModal: () => void;
+  onClose?: () => void;
+  dimBackground?: boolean;
+  escToClose?: boolean;
+  onBackgroundClick?: () => void;
+  assignClose?: (close: () => Promise<void>) => void;
+  modalRef?: Ref<HTMLDivElement>;
+  backgroundRef?: Ref<HTMLDivElement>;
+  children: ReactNode | ((close: () => Promise<void>) => ReactNode);
+}
 
 export default function Modal({
   visible,
@@ -144,23 +155,23 @@ export default function Modal({
   maxWidth,
   children,
   ...rest
-}) {
-  const modalElem = useRef();
-  const backgroundElem = useRef();
+}: ModalProps) {
+  const modalElem = useRef<HTMLDivElement>();
+  const backgroundElem = useRef<HTMLDivElement>();
   const closeWithAnimation = () =>
-    new Promise((resolve) => {
+    new Promise<void>((resolve) => {
       const duration = parseInt(timing.quick);
       const animation = fullScreen ? fullScreenOutro : outro;
       const options = {
         duration,
         easing: 'ease-in',
         fill: 'both',
-      };
+      } as const;
       modalElem.current?.animate(animation, options);
       backgroundElem.current?.animate(bgOutro, options);
       setTimeout(() => {
         removeModal();
-        resolve();
+        resolve(undefined);
       }, duration);
     });
 
@@ -171,14 +182,6 @@ export default function Modal({
       onClose?.();
     };
   }, []);
-
-  const handleKeyDown = escToClose
-    ? (e) => {
-        if (e.key === 'Escape') {
-          closeWithAnimation();
-        }
-      }
-    : undefined;
 
   if (!visible) return null;
 
@@ -194,9 +197,17 @@ export default function Modal({
       <ModalComponent
         ref={refs(modalElem, modalRef)}
         fullScreen={fullScreen}
-        tabIndex="0"
+        tabIndex={0}
         maxWidth={maxWidth}
-        onKeyDown={handleKeyDown}
+        onKeyDown={
+          escToClose
+            ? (e) => {
+                if (e.key === 'Escape') {
+                  closeWithAnimation();
+                }
+              }
+            : undefined
+        }
         {...rest}
       >
         {typeof children === 'function'

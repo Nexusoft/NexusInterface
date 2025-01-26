@@ -1,5 +1,9 @@
 import { store } from 'lib/store';
 import { atom } from 'jotai';
+import { ComponentType, ReactNode } from 'react';
+import { ModalProps } from 'components/Modal';
+import { NotificationProps } from 'components/Notification';
+import { BackgroundTaskProps } from 'components/BackgroundTask';
 
 const newModalId = (function () {
   let counter = 1;
@@ -17,12 +21,35 @@ const newTaskId = (function () {
 })();
 
 /**
+ * Types
+ * ===========================
+ */
+interface ModalDescriptor {
+  id: string;
+  component: ComponentType<ModalProps>;
+  props: ModalProps;
+}
+
+interface NotificationDescriptor {
+  id: string;
+  content: ReactNode;
+  type?: NotificationProps['type'];
+  autoClose?: number;
+}
+
+interface BackgroundTaskDescriptor {
+  id: string;
+  component: ComponentType<BackgroundTaskProps>;
+  props: BackgroundTaskProps;
+}
+
+/**
  * Atoms
  * ===========================
  */
-export const modalsAtom = atom([]);
-export const notificationsAtom = atom([]);
-export const backgroundTasksAtom = atom([]);
+export const modalsAtom = atom<ModalDescriptor[]>([]);
+export const notificationsAtom = atom<NotificationDescriptor[]>([]);
+export const backgroundTasksAtom = atom<BackgroundTaskDescriptor[]>([]);
 export const rqDevToolsOpenAtom = atom(false);
 export const jotaiDevToolsOpenAtom = atom(false);
 
@@ -30,7 +57,10 @@ export const jotaiDevToolsOpenAtom = atom(false);
  * Modal
  * ===========================
  */
-export function openModal(component, props) {
+export function openModal(
+  component: ComponentType<ModalProps>,
+  props: ModalProps
+) {
   const id = newModalId();
   store.set(modalsAtom, (modals) => [
     ...modals,
@@ -44,13 +74,13 @@ export function openModal(component, props) {
 }
 
 // Using regular function here to avoid circular dependency which causes error
-export function removeModal(modalId) {
+export function removeModal(modalId: string) {
   store.set(modalsAtom, (modals) =>
     modals.filter((modal) => modal.id !== modalId)
   );
 }
 
-export function isModalOpen(modalComponent) {
+export function isModalOpen(modalComponent: ComponentType<ModalProps>) {
   const modals = store.get(modalsAtom);
   return modals.some(({ component }) => component === modalComponent);
 }
@@ -59,7 +89,10 @@ export function isModalOpen(modalComponent) {
  * Notification
  * ===========================
  */
-export function showNotification(content, options) {
+export function showNotification(
+  content: ReactNode,
+  options: NotificationProps['type'] | NotificationProps
+) {
   const id = newNotifId();
   store.set(notificationsAtom, (notifications) => [
     {
@@ -72,7 +105,7 @@ export function showNotification(content, options) {
   return id;
 }
 
-export function removeNotification(notifId) {
+export function removeNotification(notifId: string) {
   store.set(notificationsAtom, (notifications) =>
     notifications.filter((notification) => notification.id !== notifId)
   );
@@ -82,7 +115,10 @@ export function removeNotification(notifId) {
  * Background task
  * ===========================
  */
-export function showBackgroundTask(component, props) {
+export function showBackgroundTask(
+  component: ComponentType<BackgroundTaskProps>,
+  props: BackgroundTaskProps
+) {
   const id = newTaskId();
   store.set(backgroundTasksAtom, (backgroundTasks) => [
     ...backgroundTasks,
@@ -95,7 +131,7 @@ export function showBackgroundTask(component, props) {
   return id;
 }
 
-export function removeBackgroundTask(taskId) {
+export function removeBackgroundTask(taskId: string) {
   store.set(backgroundTasksAtom, (tasks) =>
     tasks.filter((task) => task.id !== taskId)
   );
