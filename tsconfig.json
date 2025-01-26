@@ -42,6 +42,6 @@
     "esModuleInterop": true,
     "isolatedModules": true
   },
-  "include": ["custom.d.ts", "src/**/*"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules", "release", "dll", "build"]
 }

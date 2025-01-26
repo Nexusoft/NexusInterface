@@ -8,7 +8,7 @@
  * into modules' execution environment.
  * - Make sure this note also presents in other files which are imported here.
  */
-import { MutableRefObject, ForwardedRef } from 'react';
+import { MutableRefObject, ForwardedRef, Ref } from 'react';
 
 export const newUID = (function () {
   let counter = 1;
@@ -16,7 +16,7 @@ export const newUID = (function () {
 })();
 
 // https://stackoverflow.com/questions/3561493/is-there-a-regexp-escape-function-in-javascript/3561711
-export function escapeRegExp(s) {
+export function escapeRegExp(s: string) {
   return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
 }
 
@@ -31,12 +31,12 @@ export function passRef(
   }
 }
 
-export function refs(
-  ...list: Array<MutableRefObject<unknown> | ForwardedRef<unknown>>
-) {
+export function refs(...list: Array<Ref<unknown> | undefined>) {
   return (el: HTMLElement | null) => {
     list.forEach((ref) => {
-      passRef(el, ref);
+      if (ref) {
+        passRef(el, ref);
+      }
     });
   };
 }
