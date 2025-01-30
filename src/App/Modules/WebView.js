@@ -61,6 +61,10 @@ export default function WebView({ module, className, style }) {
       ? 'module_preload.dev.js '
       : 'module_preload.prod.js';
 
+  module.development &&
+    console.warn(
+      'Node Intergration is disabled when modules are built for production.'
+    );
   return (
     <webview
       className={className}
@@ -70,7 +74,9 @@ export default function WebView({ module, className, style }) {
       preload={preloadUrl}
       /* Can't enable contextIsolation because it will
       mess with react-dom and emotion */
-      webpreferences="contextIsolation=no"
+      webpreferences={`contextIsolation=no${
+        module.development ? ', nodeIntegration=yes' : ''
+      }`}
     />
   );
 }
