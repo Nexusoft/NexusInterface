@@ -1,5 +1,6 @@
 import '@emotion/react';
+import { FortifiedTheme } from 'components/ThemeController';
 
 declare module '@emotion/react' {
-  export type Theme = import('components/ThemeController').FortifiedTheme;
+  export interface Theme extends FortifiedTheme {}
 }
