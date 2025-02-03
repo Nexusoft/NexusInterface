@@ -10,10 +10,12 @@
  */
 
 // External
-import { cloneElement, Children, useId } from 'react';
+import { cloneElement, Children, useId, ReactNode, ReactElement } from 'react';
 import styled from '@emotion/styled';
 
-const FormFieldComponent = styled.div(
+const FormFieldComponent = styled.div<{
+  inline?: boolean;
+}>(
   { marginTop: '1em' },
   ({ inline }) =>
     inline && {
@@ -24,7 +26,9 @@ const FormFieldComponent = styled.div(
     }
 );
 
-const Label = styled.label(
+const Label = styled.label<{
+  capitalize?: boolean;
+}>(
   {
     display: 'flex',
     alignItems: 'center',
@@ -76,6 +80,15 @@ const Hint = styled.div(({ theme }) => ({
   },
 }));
 
+export type FormFieldProps = {
+  label: string;
+  capitalizeLabel?: boolean;
+  connectLabel?: boolean;
+  children: ReactElement | ((id: string) => ReactNode);
+  hint?: string;
+  inline?: boolean;
+};
+
 export default function FormField({
   label,
   capitalizeLabel = true,
@@ -83,20 +96,18 @@ export default function FormField({
   children,
   hint,
   ...rest
-}) {
+}: FormFieldProps) {
   const inputId = useId();
 
   const renderFormInput = () => {
-    if (connectLabel) {
-      if (typeof children === 'function') {
-        return children(inputId);
-      } else {
-        return cloneElement(Children.only(children), {
-          id: inputId,
-        });
-      }
+    if (typeof children === 'function') {
+      return children(inputId);
     }
-
+    if (connectLabel) {
+      return cloneElement(Children.only(children), {
+        id: inputId,
+      });
+    }
     return children;
   };
 

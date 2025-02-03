@@ -10,14 +10,16 @@
  */
 
 // External
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, HTMLAttributes, RefObject } from 'react';
 import ReactDOM from 'react-dom';
 import styled from '@emotion/styled';
 
 // Internal
 import { animations, timing, zIndex } from 'styles';
 
-const OverlayComponent = styled.div(
+const OverlayComponent = styled.div<{
+  zPriority?: number;
+}>(
   {
     position: 'fixed',
     top: 0,
@@ -30,7 +32,9 @@ const OverlayComponent = styled.div(
   })
 );
 
-const OverlayBackground = styled.div(
+const OverlayBackground = styled.div<{
+  dimmed?: boolean;
+}>(
   {
     position: 'fixed',
     top: 0,
@@ -46,6 +50,13 @@ const OverlayBackground = styled.div(
     }
 );
 
+export interface OverlayProps extends HTMLAttributes<HTMLDivElement> {
+  dimBackground?: boolean;
+  onBackgroundClick?: () => void;
+  backgroundRef?: RefObject<HTMLDivElement>;
+  zPriority?: number;
+}
+
 export default function Overlay({
   dimBackground,
   onBackgroundClick,
@@ -53,30 +64,32 @@ export default function Overlay({
   children,
   zPriority,
   ...rest
-}) {
-  const nodeRef = useRef(document.createElement('div'));
+}: OverlayProps) {
+  const nodeRef = useRef<HTMLDivElement>();
+  const getNode = () => {
+    if (!nodeRef.current) {
+      nodeRef.current = document.createElement('div');
+    }
+    return nodeRef.current;
+  };
 
   useEffect(() => {
     const body = document.getElementsByTagName('body')[0];
-    body.appendChild(nodeRef.current);
-
+    body.appendChild(getNode());
     return () => {
-      body.removeChild(nodeRef.current);
+      body.removeChild(getNode());
     };
   }, []);
 
-  if (!nodeRef.current) return null;
-
   return ReactDOM.createPortal(
-    <OverlayComponent {...rest}>
+    <OverlayComponent zPriority={zPriority} {...rest}>
       <OverlayBackground
         ref={backgroundRef}
         dimmed={dimBackground}
         onClick={onBackgroundClick}
-        zPriority={zPriority}
       />
       {children}
     </OverlayComponent>,
-    nodeRef.current
+    getNode()
   );
 }

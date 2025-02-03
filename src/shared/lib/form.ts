@@ -4,15 +4,15 @@ import { useField } from 'react-final-form';
 
 import { openErrorDialog } from 'lib/dialog';
 
-const forms: Record<string, FormApi> = {};
+const forms: Record<string, FormApi<any>> = {};
 
-export function updateFormInstance(formName: string, instance: FormApi) {
+export function updateFormInstance(formName: string, instance: FormApi<any>) {
   forms[formName] = instance;
 }
 
 export const getFormInstance = (formName: string) => forms[formName];
 
-const defaultOnFail = (err: any, errorMessage: ReactNode) => {
+const defaultOnFail = (err: any, errorMessage?: ReactNode) => {
   openErrorDialog({
     message: errorMessage || __('Error'),
     note: err?.message || (typeof err === 'string' ? err : __('Unknown error')),
@@ -22,34 +22,27 @@ const defaultOnFail = (err: any, errorMessage: ReactNode) => {
   };
 };
 
-interface FormSubmitOptions<
-  FormValues,
-  InitialFormValues,
-  SubmitResult = void
-> {
+interface FormSubmitOptions<FormValues, SubmitResult = void> {
   submit: (
     values: FormValues,
-    form: FormApi<FormValues, InitialFormValues>
+    form: FormApi<FormValues>
   ) => SubmitResult | Promise<SubmitResult>;
   onSuccess: (
     result: SubmitResult,
     values: FormValues,
-    form: FormApi<FormValues, InitialFormValues>
+    form: FormApi<FormValues>
   ) => void;
-  onFail: (err: any, errorMessage: ReactNode) => void;
-  errorMessage: ReactNode;
+  onFail?: (err: any, errorMessage: ReactNode) => void;
+  errorMessage?: ReactNode;
 }
 
-export function formSubmit<FormValues, InitialFormValues>({
+export function formSubmit<FormValues>({
   submit,
   onSuccess,
   onFail = defaultOnFail,
   errorMessage,
-}: FormSubmitOptions<FormValues, InitialFormValues>) {
-  return async (
-    values: FormValues,
-    form: FormApi<FormValues, InitialFormValues>
-  ) => {
+}: FormSubmitOptions<FormValues>) {
+  return async (values: FormValues, form: FormApi<FormValues>) => {
     let result;
     try {
       result = await Promise.resolve(submit(values, form));

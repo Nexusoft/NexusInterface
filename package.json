@@ -196,6 +196,7 @@
     "@types/color": "^4.2.0",
     "@types/node-polyglot": "^2.5.0",
     "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
     "babel-loader": "^9.2.1",
     "babel-plugin-dev-expression": "^0.2.3",
     "babel-plugin-transform-react-pure-class-to-function": "^1.0.1",

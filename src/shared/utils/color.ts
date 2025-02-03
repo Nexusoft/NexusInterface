@@ -55,7 +55,7 @@ export function rotate(color: string, value: number) {
   return Color(color).rotate(value).string();
 }
 
-export function mix(color1: string, color2: string, value: number) {
+export function mix(color1: string, color2: string, value?: number) {
   return Color(color1).mix(Color(color2), value).string();
 }
 

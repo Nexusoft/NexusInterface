@@ -3,7 +3,7 @@ import { useEffect, useCallback, forwardRef } from 'react';
 import { ipcRenderer } from 'electron';
 
 // Internal
-import TextField from 'components/TextField';
+import TextField, { TextFieldProps } from 'components/TextField';
 import MaskableTextField from 'components/MaskableTextField';
 import Tooltip from 'components/Tooltip';
 import Icon from 'components/Icon';
@@ -12,12 +12,16 @@ import { themeAtom } from 'lib/theme';
 import { store } from 'lib/store';
 import keyboardIcon from 'icons/keyboard.svg';
 
-const TextFieldWithKeyboard = forwardRef(function (
-  { value, onChange, placeholder, maskable, skin, ...rest },
-  ref
-) {
-  const handleInputChange = useCallback((evt, text) => {
-    onChange(text);
+export interface TextFieldWithKeyboardProps extends TextFieldProps {
+  maskable?: boolean;
+}
+
+const TextFieldWithKeyboard = forwardRef<
+  HTMLInputElement,
+  TextFieldWithKeyboardProps
+>(function ({ value, onChange, placeholder, maskable, skin, ...rest }, ref) {
+  const handleInputChange = useCallback((_evt: any, text: any) => {
+    onChange?.(text);
   }, []);
 
   const openKeyboard = () => {
@@ -54,7 +58,7 @@ const TextFieldWithKeyboard = forwardRef(function (
           <Button
             skin="plain"
             onClick={openKeyboard}
-            tabIndex="-1"
+            tabIndex={-1}
             style={
               skin === 'filled' || skin === 'filled-inverted'
                 ? { paddingRight: 0 }

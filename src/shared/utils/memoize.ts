@@ -1,18 +1,20 @@
-export default function memoize<TCallback extends (...args: any[] | []) => any>(
-  callback: (...args: Parameters<TCallback>) => ReturnType<TCallback>,
+export default function memoize<TCallback extends (...args: any[]) => any>(
+  callback: TCallback,
   isEqual: (
     args: Parameters<TCallback>,
-    lastArgs: Parameters<TCallback>
+    lastArgs?: Parameters<TCallback>
   ) => boolean = areInputsEqual
-) {
+): TCallback {
   let lastThis: any;
-  let lastArgs: Parameters<TCallback> = [] as Parameters<TCallback>;
+  let lastArgs: Parameters<TCallback> | undefined = undefined;
   let lastResult: ReturnType<TCallback>;
-  let calledOnce = false;
 
   // breaking cache when context (this) or arguments change
-  function memoized(this: any, ...newArgs: Parameters<TCallback>) {
-    if (calledOnce && lastThis === this && isEqual(newArgs, lastArgs)) {
+  function memoized(
+    this: any,
+    ...newArgs: Parameters<TCallback>
+  ): ReturnType<TCallback> {
+    if (lastThis === this && isEqual(newArgs, lastArgs)) {
       return lastResult;
     }
 
@@ -20,21 +22,20 @@ export default function memoize<TCallback extends (...args: any[] | []) => any>(
     // Doing the lastResult assignment first so that if it throws
     // nothing will be overwritten
     lastResult = callback.apply(this, newArgs);
-    calledOnce = true;
     lastThis = this;
     lastArgs = newArgs;
     return lastResult;
   }
 
-  return memoized;
+  return memoized as TCallback;
 }
 
 function areInputsEqual<TParams extends any[]>(
   newInputs: TParams,
-  lastInputs: TParams
-) {
-  // no checks needed if the inputs length has changed
-  if (newInputs.length !== lastInputs.length) {
+  lastInputs?: TParams
+): boolean {
+  // no checks needed if the inputs length has changed or if there were no previous inputs
+  if (!lastInputs || newInputs.length !== lastInputs.length) {
     return false;
   }
   // Using for loop for speed. It generally performs better than array.every

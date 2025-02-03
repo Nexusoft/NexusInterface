@@ -10,7 +10,15 @@
  */
 
 // External Dependencies
-import { useRef, forwardRef, useState, useEffect } from 'react';
+import {
+  useRef,
+  forwardRef,
+  useState,
+  useEffect,
+  MutableRefObject,
+  CSSProperties,
+  ReactNode,
+} from 'react';
 import styled from '@emotion/styled';
 
 // Internal Dependencies
@@ -19,7 +27,29 @@ import Arrow from 'components/Arrow';
 import Overlay from 'components/Overlay';
 import Tooltip from 'components/Tooltip';
 import { timing, consts, animations } from 'styles';
-import { passRef } from 'utils/misc';
+import { refs } from 'utils/misc';
+
+export type SelectSkin = 'underline' | 'filled' | 'filled-inverted';
+
+export type SelectValue = string | number | boolean | null;
+
+interface RealSelectOption {
+  value: SelectValue;
+  display?: string;
+  indent?: boolean;
+  isSeparator?: boolean;
+  isDummy?: false;
+}
+
+interface DummyOption {
+  value?: undefined;
+  display?: undefined;
+  indent?: undefined;
+  isSeparator?: undefined;
+  isDummy: true;
+}
+
+export type SelectOption = RealSelectOption | DummyOption;
 
 // Minimum gap from the dropdown to the edges of the screen
 const minScreenGap = 10;
@@ -39,7 +69,11 @@ const ErrorMessage = styled(Tooltip)({
   textAlign: 'left',
 });
 
-const SelectControl = styled.div(
+const SelectControl = styled.div<{
+  skin: SelectSkin;
+  active?: boolean;
+  error?: ReactNode;
+}>(
   {
     display: 'flex',
     alignItems: 'stretch',
@@ -48,7 +82,7 @@ const SelectControl = styled.div(
     position: 'relative',
 
     '&:hover': {
-      [ErrorMessage]: {
+      [ErrorMessage as any]: {
         opacity: 1,
         visibility: 'visible',
       },
@@ -156,7 +190,10 @@ const Placeholder = styled.span(({ theme }) => ({
   color: theme.mixer(0.5),
 }));
 
-const OptionsComponent = styled.div(
+const OptionsComponent = styled.div<{
+  skin: SelectSkin;
+  ready?: boolean;
+}>(
   {
     position: 'absolute',
     top: 0,
@@ -196,7 +233,11 @@ const OptionsComponent = styled.div(
     }
 );
 
-const Option = styled.div(
+const Option = styled.div<{
+  skin: SelectSkin;
+  selected?: boolean;
+  selectable?: boolean;
+}>(
   {
     display: 'flex',
     alignItems: 'center',
@@ -246,19 +287,35 @@ const Option = styled.div(
   }
 );
 
-function Options({ controlRef, skin, options, close, value, onChange }) {
-  const anchorRef = useRef();
-  const elemRef = useRef();
-  const scrollTopRef = useRef();
-  const styleRef = useRef({
-    fontSize: window
-      .getComputedStyle(controlRef.current)
-      .getPropertyValue('font-size'),
+function Options({
+  controlRef,
+  skin,
+  options,
+  close,
+  value,
+  onChange,
+}: {
+  controlRef: MutableRefObject<HTMLDivElement | undefined>;
+  skin: SelectSkin;
+  options: SelectOption[];
+  close: () => void;
+  value: SelectValue;
+  onChange: (value: SelectValue) => void;
+}) {
+  const anchorRef = useRef<HTMLDivElement>(null);
+  const elemRef = useRef<HTMLDivElement>();
+  const scrollTopRef = useRef<number>();
+  const styleRef = useRef<CSSProperties>({
+    fontSize: controlRef.current
+      ? window
+          .getComputedStyle(controlRef.current)
+          .getPropertyValue('font-size')
+      : undefined,
   });
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    if (!anchorRef.current) return;
+    if (!anchorRef.current || !controlRef.current || !elemRef.current) return;
     const styles = { ...styleRef.current };
 
     // Horizontally align Options dropdown with the Select control
@@ -274,10 +331,10 @@ function Options({ controlRef, skin, options, close, value, onChange }) {
     // Vertically align Selected Option with the Select control
     const thisRect = elemRef.current.getBoundingClientRect();
     const selectedRect = anchorRef.current.getBoundingClientRect();
-    const selectedOptTop = selectedRect.top - thisRect.top;
+    const selectedOptTop = selectedRect.top - (thisRect.top || 0);
     styles.top = controlRect.top - selectedOptTop;
 
-    styles.height = thisRect.height;
+    styles.height = thisRect.height || 0;
 
     // Prevent the Options dropdown to outreach the top of the screen
     if (styles.top < minScreenGap) {
@@ -295,7 +352,7 @@ function Options({ controlRef, skin, options, close, value, onChange }) {
     setReady(true);
   }, []);
 
-  const select = (option) => {
+  const select = (option: SelectOption) => {
     close();
     if (!option.isDummy) {
       onChange(option.value);
@@ -311,23 +368,24 @@ function Options({ controlRef, skin, options, close, value, onChange }) {
         ref={(el) => {
           if (el && scrollTopRef.current) {
             el.scrollTop = scrollTopRef.current;
-            scrollTopRef.current = null;
+            scrollTopRef.current = undefined;
           }
-          elemRef.current = el;
+          elemRef.current = el || undefined;
         }}
         style={styleRef.current}
         ready={ready}
       >
         {options.map((option, i) => (
           <Option
-            key={option.isDummy ? i : option.value}
+            key={option.isDummy ? i : String(option.value)}
             skin={skin}
             onClick={!option.isSeparator ? () => select(option) : () => null}
             selected={option.value === value && !option.isDummy}
             selectable={!option.isSeparator}
             ref={i === anchorIndex ? anchorRef : undefined}
           >
-            {option.indent && <>&nbsp;&nbsp;</>} {option.display}
+            {option.indent && <>&nbsp;&nbsp;</>}{' '}
+            {option.display || option.value}
           </Option>
         ))}
       </OptionsComponent>
@@ -335,11 +393,20 @@ function Options({ controlRef, skin, options, close, value, onChange }) {
   );
 }
 
-const Select = forwardRef(function (
+interface SelectProps {
+  options?: SelectOption[];
+  skin?: SelectSkin;
+  value: SelectValue;
+  error?: ReactNode;
+  onChange: (value: SelectValue) => void;
+  placeholder: string;
+}
+
+const Select = forwardRef<HTMLDivElement, SelectProps>(function (
   { options, skin = 'underline', value, error, onChange, placeholder, ...rest },
   ref
 ) {
-  const controlRef = useRef();
+  const controlRef = useRef<HTMLDivElement>();
   const [open, setOpen] = useState(false);
 
   options = options?.length
@@ -355,10 +422,7 @@ const Select = forwardRef(function (
   return (
     <>
       <SelectControl
-        ref={(el) => {
-          passRef(el, controlRef);
-          passRef(el, ref);
-        }}
+        ref={refs(controlRef, ref)}
         active={open}
         onClick={() => {
           setOpen(true);
@@ -369,7 +433,7 @@ const Select = forwardRef(function (
       >
         <CurrentValue>
           {selectedOption ? (
-            selectedOption.display
+            selectedOption.display || selectedOption.value
           ) : (
             <Placeholder>{placeholder}</Placeholder>
           )}

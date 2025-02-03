@@ -10,15 +10,28 @@
  */
 
 // External
-import { useEffect, useRef, useState, forwardRef } from 'react';
+import {
+  useEffect,
+  useRef,
+  useState,
+  forwardRef,
+  ComponentProps,
+  ReactNode,
+  FocusEvent,
+  CSSProperties,
+} from 'react';
 import styled from '@emotion/styled';
 
 // Internal
 import Tooltip from 'components/Tooltip';
 import { timing, consts } from 'styles';
-import { passRef } from 'utils/misc';
+import { refs } from 'utils/misc';
 
-const ErrorMessage = styled(Tooltip)(
+export type TextFieldSkin = 'underline' | 'filled' | 'filled-inverted';
+
+const ErrorMessage = styled(Tooltip)<{
+  focus?: boolean;
+}>(
   {
     position: 'absolute',
     top: 'calc(100% + 10px)',
@@ -38,14 +51,20 @@ const ErrorMessage = styled(Tooltip)(
     }
 );
 
-const TextFieldComponent = styled.div(
+const TextFieldComponent = styled.div<{
+  size?: number;
+  skin: TextFieldSkin;
+  focus?: boolean;
+  error?: ReactNode;
+  multiline?: boolean;
+}>(
   {
     position: 'relative',
     height: consts.inputHeightEm + 'em',
     alignItems: 'center',
 
     '&:hover': {
-      [ErrorMessage]: {
+      [ErrorMessage as any]: {
         opacity: 1,
         visibility: 'visible',
       },
@@ -154,7 +173,12 @@ const TextFieldComponent = styled.div(
     }
 );
 
-const Input = styled.input(
+const Input = styled.input<{
+  skin?: TextFieldSkin;
+  grouped?: 'left' | 'right' | 'top' | 'bottom';
+  type?: string;
+  multiline?: boolean;
+}>(
   ({ theme }) => ({
     display: 'block',
     background: 'transparent',
@@ -209,6 +233,8 @@ const Input = styled.input(
           borderTopLeftRadius: 0,
           borderTopRightRadius: 0,
         };
+      default:
+        return null;
     }
   },
 
@@ -227,8 +253,11 @@ const MultilineInput = styled(Input)({
   lineHeight: 1.28,
 });
 
-const TextArea = forwardRef((props, ref) => {
-  const inputRef = useRef();
+const TextArea = forwardRef<
+  HTMLTextAreaElement,
+  ComponentProps<typeof MultilineInput>
+>((props, ref) => {
+  const inputRef = useRef<HTMLTextAreaElement>();
 
   useEffect(() => {
     const inputElem = inputRef.current;
@@ -242,21 +271,17 @@ const TextArea = forwardRef((props, ref) => {
     }
   });
 
-  return (
-    <MultilineInput
-      ref={(el) => {
-        inputRef.current = el;
-        if (ref) {
-          passRef(el, ref);
-        }
-      }}
-      as="textarea"
-      {...props}
-    />
-  );
+  return <MultilineInput ref={refs(inputRef, ref)} as="textarea" {...props} />;
 });
 
-const TextField = forwardRef(function (
+export interface TextFieldProps extends ComponentProps<typeof Input> {
+  left?: ReactNode;
+  right?: ReactNode;
+  error?: ReactNode;
+  inputStyle?: CSSProperties;
+}
+
+const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function (
   {
     className,
     style,
@@ -276,42 +301,31 @@ const TextField = forwardRef(function (
   ref
 ) {
   const [focus, setFocus] = useState(false);
-  const inputRef = useRef();
-
-  const handleRef = (el) => {
-    inputRef.current = el;
-    if (ref) {
-      passRef(el, ref);
-    }
-  };
+  const inputRef = useRef<HTMLInputElement>();
 
   useEffect(() => {
     // Somehow React's autoFocus doesn't work, so handle it manually
     if (autoFocus && inputRef.current) {
       // This needs setTimeout to work
       setTimeout(() => {
-        inputRef.current.focus();
+        inputRef.current?.focus();
       }, 0);
     }
   }, []);
-
-  const handleFocus = (e) => {
-    setFocus(true);
-    onFocus?.(e);
-  };
-
-  const handleBlur = (e) => {
-    setFocus(false);
-    onBlur?.(e);
-  };
 
   const inputProps = {
     skin,
     size,
     readOnly,
     ...rest,
-    onFocus: handleFocus,
-    onBlur: handleBlur,
+    onFocus: (e: FocusEvent<HTMLInputElement>) => {
+      setFocus(true);
+      onFocus?.(e);
+    },
+    onBlur: (e: FocusEvent<HTMLInputElement>) => {
+      setFocus(false);
+      onBlur?.(e);
+    },
     style: inputStyle,
   };
 
@@ -322,9 +336,9 @@ const TextField = forwardRef(function (
     >
       {left}
       {multiline ? (
-        <TextArea {...inputProps} ref={handleRef} />
+        <TextArea {...inputProps} ref={refs(inputRef, ref)} />
       ) : (
-        <Input {...inputProps} ref={handleRef} />
+        <Input {...inputProps} ref={refs(inputRef, ref)} />
       )}
       {right}
       {!!error && (

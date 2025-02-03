@@ -10,7 +10,7 @@
  */
 
 // External
-import { forwardRef } from 'react';
+import { forwardRef, ComponentProps } from 'react';
 import styled from '@emotion/styled';
 
 // Internal
@@ -105,8 +105,10 @@ const SwitchInput = styled.input(({ theme }) => {
   };
 });
 
-const Switch = forwardRef((props, ref) => (
-  <SwitchInput type="checkbox" checked={!!props.value} {...props} ref={ref} />
-));
+const Switch = forwardRef<HTMLInputElement, ComponentProps<typeof SwitchInput>>(
+  (props, ref) => (
+    <SwitchInput type="checkbox" checked={!!props.value} {...props} ref={ref} />
+  )
+);
 
 export default Switch;

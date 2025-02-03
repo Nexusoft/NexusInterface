@@ -1,3 +1,4 @@
+import { ComponentProps, ReactNode } from 'react';
 import styled from '@emotion/styled';
 
 import ControlledModal from 'components/ControlledModal';
@@ -17,14 +18,26 @@ const Note = styled.div({
   marginBottom: '1.5em',
 });
 
+export type PinDialogProps = ComponentProps<typeof ControlledModal> & {
+  submitPin: (pin: string) => void;
+  note?: ReactNode;
+  confirmLabel?: ReactNode;
+  onClose?: () => void;
+};
+
+interface FormValues {
+  pin: string;
+}
+
 export default function PinDialog({
   submitPin,
   note = null,
   confirmLabel = __('Confirm'),
   onClose,
-}) {
+  ...rest
+}: PinDialogProps) {
   return (
-    <ControlledModal maxWidth={350} onClose={onClose}>
+    <ControlledModal maxWidth={350} onClose={onClose} {...rest}>
       {(closeModal) => {
         return (
           <>
@@ -35,9 +48,9 @@ export default function PinDialog({
                 initialValues={{
                   pin: '',
                 }}
-                onSubmit={formSubmit({
+                onSubmit={formSubmit<FormValues>({
                   submit: ({ pin }) => {
-                    submitPin?.(pin);
+                    submitPin(pin);
                   },
                   onSuccess: closeModal,
                 })}

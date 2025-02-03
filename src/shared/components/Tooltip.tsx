@@ -10,7 +10,14 @@
  */
 
 // External
-import { cloneElement, Children, useEffect, useState, useRef } from 'react';
+import {
+  cloneElement,
+  Children,
+  useEffect,
+  useState,
+  useRef,
+  ComponentProps,
+} from 'react';
 import ReactDOM from 'react-dom';
 import styled from '@emotion/styled';
 
@@ -25,9 +32,13 @@ const positionToArrowDirection = {
   bottom: 'up',
   left: 'right',
   right: 'left',
-};
+} as const;
 
-const tooltipPositioning = (rect, position) => {
+export type TooltipPosition = 'top' | 'bottom' | 'left' | 'right';
+export type TooltipAlign = 'start' | 'center' | 'end';
+export type TooltipSkin = 'default' | 'error';
+
+const tooltipPositioning = (rect: DOMRect, position: TooltipPosition) => {
   switch (position) {
     case 'top':
       return { bottom: window.innerHeight + spacing - rect.top };
@@ -40,7 +51,11 @@ const tooltipPositioning = (rect, position) => {
   }
 };
 
-const tooltipAligning = (rect, position, align) => {
+const tooltipAligning = (
+  rect: DOMRect,
+  position: TooltipPosition,
+  align: TooltipAlign
+) => {
   if (position === 'top' || position === 'bottom') {
     switch (align) {
       case 'start':
@@ -53,7 +68,8 @@ const tooltipAligning = (rect, position, align) => {
           transform: 'translateX(-50%)',
         };
     }
-  } else if (position === 'left' || position === 'right') {
+  } else {
+    // if (position === 'left' || position === 'right')
     switch (align) {
       case 'start':
         return { top: rect.top };
@@ -68,9 +84,11 @@ const tooltipAligning = (rect, position, align) => {
   }
 };
 
-const arrowPositioning = (position) => ({ [position]: '100%' });
+const arrowPositioning = (position: TooltipPosition) => ({
+  [position]: '100%',
+});
 
-const arrowAligning = (position, align) => {
+const arrowAligning = (position: TooltipPosition, align: TooltipAlign) => {
   if (position === 'top' || position == 'bottom') {
     switch (align) {
       case 'start':
@@ -80,7 +98,8 @@ const arrowAligning = (position, align) => {
       case 'center':
         return { left: '50%', transform: 'translateX(-50%)' };
     }
-  } else if (position === 'left' || position == 'right') {
+  } else {
+    // if (position === 'left' || position == 'right')
     switch (align) {
       case 'start':
         return { top: arrowPadding };
@@ -92,7 +111,12 @@ const arrowAligning = (position, align) => {
   }
 };
 
-const Tooltip = styled.div(
+const TooltipComponent = styled.div<{
+  position: TooltipPosition;
+  align: TooltipAlign;
+  skin: TooltipSkin;
+  maxWidth?: number;
+}>(
   {
     whiteSpace: 'pre-wrap',
     wordBreak: 'break-word',
@@ -149,25 +173,32 @@ const Tooltip = styled.div(
   })
 );
 
-function TooltipPortal(props) {
-  const ref = useRef();
+function TooltipPortal(props: ComponentProps<typeof TooltipComponent>) {
+  const ref = useRef<HTMLDivElement>();
   if (!ref.current) ref.current = document.createElement('div');
   useEffect(() => {
+    if (!ref.current) return;
     document.getElementsByTagName('body')[0].appendChild(ref.current);
     return () => {
+      if (!ref.current) return;
       document.getElementsByTagName('body')[0].removeChild(ref.current);
     };
-  }, []);
+  }, [ref.current]);
 
-  return ReactDOM.createPortal(<Tooltip {...props} />, ref.current);
+  return ReactDOM.createPortal(<TooltipComponent {...props} />, ref.current);
 }
+
+export type TooltipTriggerProps = {
+  position?: TooltipPosition;
+  align?: TooltipAlign;
+  skin?: TooltipSkin;
+  tooltip?: React.ReactNode;
+  children: React.ReactElement;
+  style?: React.CSSProperties;
+};
 
 /**
  * Triggers the Tooltip
- *
- * @class TooltipTrigger
- * @memberof TooltipPortal
- * @extends {Component}
  */
 function TooltipTrigger({
   position = 'bottom',
@@ -177,10 +208,10 @@ function TooltipTrigger({
   tooltip,
   style,
   ...rest
-}) {
+}: TooltipTriggerProps) {
   const [active, setActive] = useState(false);
   const [tooltipStyles, setTooltipStyles] = useState({});
-  const triggerRef = useRef();
+  const triggerRef = useRef<HTMLElement>();
 
   const showTooltip = () => {
     if (!triggerRef.current) return;
@@ -221,6 +252,11 @@ function TooltipTrigger({
   );
 }
 
+type TooltipType = typeof TooltipComponent & {
+  Portal: typeof TooltipPortal;
+  Trigger: typeof TooltipTrigger;
+};
+const Tooltip: TooltipType = TooltipComponent as TooltipType;
 Tooltip.Portal = TooltipPortal;
 Tooltip.Trigger = TooltipTrigger;
 

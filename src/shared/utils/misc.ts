@@ -21,7 +21,7 @@ export function escapeRegExp(s: string) {
 }
 
 export function passRef(
-  el: HTMLElement | null,
+  el: unknown,
   ref: MutableRefObject<unknown> | ForwardedRef<unknown>
 ) {
   if (typeof ref === 'function') {
@@ -32,7 +32,7 @@ export function passRef(
 }
 
 export function refs(...list: Array<Ref<unknown> | undefined>) {
-  return (el: HTMLElement | null) => {
+  return (el: unknown) => {
     list.forEach((ref) => {
       if (ref) {
         passRef(el, ref);

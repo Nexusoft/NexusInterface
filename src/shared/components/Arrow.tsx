@@ -11,7 +11,14 @@
 
 import styled from '@emotion/styled';
 
-export function arrowStyles({ direction, width, height, color }) {
+export interface ArrowStyles {
+  direction: 'up' | 'down' | 'left' | 'right';
+  width: number;
+  height: number;
+  color?: string;
+}
+
+export function arrowStyles({ direction, width, height, color }: ArrowStyles) {
   const styles = {
     display: 'block',
     width: 0,
@@ -57,11 +64,10 @@ export function arrowStyles({ direction, width, height, color }) {
         borderBottomWidth: width / 2,
       };
   }
-  return styles;
 }
 
 const Arrow = styled.span(
-  ({ direction, width, height, color = 'currentColor' }) =>
+  ({ direction, width, height, color = 'currentColor' }: ArrowStyles) =>
     arrowStyles({ direction, width, height, color })
 );
 
