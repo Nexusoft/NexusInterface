@@ -81,7 +81,9 @@ const rawTranslate =
 type FirstMatch = { match: RegExpMatchArray; key: string };
 type Injections = Record<string, string | ((inner: ReactNode) => ReactNode)>;
 
-function inject(string: string, injections?: Injections): ReactNode {
+function inject(string: string): string;
+function inject(string: string, injections: Injections): ReactNode;
+function inject(string: string, injections?: Injections): string | ReactNode {
   if (injections) {
     // Process from the first match in the string
     let first: FirstMatch | null = null;
@@ -121,23 +123,61 @@ function inject(string: string, injections?: Injections): ReactNode {
   return string;
 }
 
-export const translateWithContext = (
+export function translateWithContext(
+  context: string,
+  string: string,
+  data?: Interpolations
+): string;
+export function translateWithContext(
+  context: string,
+  string: string,
+  data: Interpolations | undefined,
+  injections: Injections
+): ReactNode;
+export function translateWithContext(
   context = '',
   string: string,
   data?: Interpolations,
   injections?: Injections
-) => inject(rawTranslate(context, string, data), injections);
+) {
+  const translated = rawTranslate(context, string, data);
+  if (injections) return inject(translated, injections);
+  return translated;
+}
 
-export const translate = (
+export function translate(string: string, data?: Interpolations): string;
+export function translate(
+  string: string,
+  data: Interpolations | undefined,
+  injections: Injections
+): ReactNode;
+export function translate(
   string: string,
   data?: Interpolations,
   injections?: Injections
-) => translateWithContext('', string, data, injections);
+) {
+  if (injections) return translateWithContext('', string, data, injections);
+  return translateWithContext('', string, data);
+}
 
-export const withContext =
-  (context: string) =>
-  (string: string, data?: Interpolations, injections?: Injections) =>
-    translateWithContext(context, string, data, injections);
+export function withContext(context: string) {
+  function trans(string: string, data?: Interpolations): string;
+  function trans(
+    string: string,
+    data: Interpolations | undefined,
+    injections: Injections
+  ): ReactNode;
+  function trans(
+    string: string,
+    data?: Interpolations,
+    injections?: Injections
+  ) {
+    if (injections)
+      return translateWithContext(context, string, data, injections);
+    return translateWithContext(context, string, data);
+  }
+  return trans;
+}
 
 const ensureSignificantDigit = (decimalDigits: number, num: number) => {
   let digits = Number(decimalDigits) || 0;
