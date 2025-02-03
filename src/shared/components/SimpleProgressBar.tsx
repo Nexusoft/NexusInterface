@@ -1,8 +1,11 @@
 import styled from '@emotion/styled';
+import { ReactNode } from 'react';
 
 import { consts, timing } from 'styles';
 
-const Wrapper = styled.div(({ width }) => ({
+const Wrapper = styled.div<{
+  width?: string | number;
+}>(({ width }) => ({
   height: consts.inputHeightEm + 'em',
   display: 'flex',
   alignItems: 'center',
@@ -11,7 +14,9 @@ const Wrapper = styled.div(({ width }) => ({
   width,
 }));
 
-const ProgressBar = styled.div(({ progress, theme }) => ({
+const ProgressBar = styled.div<{
+  progress: number;
+}>(({ progress, theme }) => ({
   position: 'absolute',
   height: 1,
   bottom: 0,
@@ -23,7 +28,15 @@ const ProgressBar = styled.div(({ progress, theme }) => ({
   transition: `transform ${timing.quick}`,
 }));
 
-export default function SimpleProgressBar({ label, width, progress }) {
+export default function SimpleProgressBar({
+  label,
+  width,
+  progress,
+}: {
+  label?: ReactNode;
+  width?: string | number;
+  progress: number;
+}) {
   return (
     <Wrapper width={width}>
       {label}

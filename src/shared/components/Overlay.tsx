@@ -10,7 +10,7 @@
  */
 
 // External
-import { useRef, useEffect, HTMLAttributes, RefObject } from 'react';
+import { useRef, useEffect, HTMLAttributes, LegacyRef } from 'react';
 import ReactDOM from 'react-dom';
 import styled from '@emotion/styled';
 
@@ -53,7 +53,7 @@ const OverlayBackground = styled.div<{
 export interface OverlayProps extends HTMLAttributes<HTMLDivElement> {
   dimBackground?: boolean;
   onBackgroundClick?: () => void;
-  backgroundRef?: RefObject<HTMLDivElement>;
+  backgroundRef?: LegacyRef<HTMLDivElement>;
   zPriority?: number;
 }
 

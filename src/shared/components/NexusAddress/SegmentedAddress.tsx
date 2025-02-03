@@ -1,5 +1,5 @@
 // External
-import { useRef } from 'react';
+import { HTMLAttributes, ReactNode, useRef } from 'react';
 import { clipboard } from 'electron';
 import styled from '@emotion/styled';
 
@@ -12,7 +12,10 @@ const SegmentedAddressComponent = styled.div({
   // marginTop: '1em',
 });
 
-const Address = styled.div(
+const Address = styled.div<{
+  copyable?: boolean;
+  hasLabel?: boolean;
+}>(
   ({ theme }) => ({
     width: '100%',
     background: theme.background,
@@ -49,12 +52,12 @@ const Label = styled.div(({ theme }) => ({
   padding: '.1em .8em',
 }));
 
-function copyAddress(address) {
+function copyAddress(address: string) {
   clipboard.writeText(address);
   showNotification(__('Address has been copied to clipboard'), 'success');
 }
 
-function renderAddress(address) {
+function renderAddress(address: string) {
   const line1 = [
     address.substring(0, 6),
     address.substring(6, 11),
@@ -72,20 +75,22 @@ function renderAddress(address) {
   return `${line1.join(' ')}\n${line2.join(' ')}`;
 }
 
+export interface SegmentedAddressProps extends HTMLAttributes<HTMLDivElement> {
+  address: string;
+  label?: ReactNode;
+  copyable?: boolean;
+}
+
 /**
  * Nexus Address with Copy functionality
- *
- * @export
- * @class SegmentedAddress
- * @extends {React.Component}
  */
 export default function SegmentedAddress({
   address,
   label,
   copyable = true,
   ...rest
-}) {
-  const addressRef = useRef();
+}: SegmentedAddressProps) {
+  const addressRef = useRef<HTMLDivElement>(null);
   return (
     <SegmentedAddressComponent {...rest}>
       {!!label && <Label>{label}</Label>}
@@ -94,7 +99,6 @@ export default function SegmentedAddress({
         tooltip={copyable ? __('Click to copy to clipboard') : undefined}
       >
         <Address
-          readOnly
           ref={addressRef}
           hasLabel={!!label}
           copyable={copyable}

@@ -1,5 +1,5 @@
 // External
-import { useRef, Component } from 'react';
+import { useRef, MutableRefObject, HTMLAttributes, ReactNode } from 'react';
 import { clipboard } from 'electron';
 import styled from '@emotion/styled';
 
@@ -15,7 +15,9 @@ const RawAddressComponent = styled.div({
   // marginTop: '1em',
 });
 
-const AddressTextField = styled(TextField)(
+const AddressTextField = styled(TextField)<{
+  hasLabel?: boolean;
+}>(
   ({ hasLabel }) =>
     hasLabel && {
       borderTopLeftRadius: 0,
@@ -35,26 +37,31 @@ const CopyButton = styled(Button)(({ theme }) => ({
   borderLeft: `1px solid ${theme.mixer(0.125)}`,
 }));
 
-function copyAddress(address, inputRef) {
+function copyAddress(
+  address: string,
+  inputRef: MutableRefObject<HTMLInputElement | null>
+) {
   clipboard.writeText(address);
-  inputRef.current.select();
+  inputRef.current?.select();
   showNotification(__('Address has been copied to clipboard'), 'success');
+}
+
+export interface RawAddressProps extends HTMLAttributes<HTMLDivElement> {
+  address: string;
+  label?: ReactNode;
+  copyable?: boolean;
 }
 
 /**
  * Nexus Address with Copy functionality
- *
- * @export
- * @class RawAddress
- * @extends {React.Component}
  */
 export default function RawAddress({
   address,
   label,
   copyable = true,
   ...rest
-}) {
-  const inputRef = useRef();
+}: RawAddressProps) {
+  const inputRef = useRef<HTMLInputElement>(null);
 
   return (
     <RawAddressComponent {...rest}>

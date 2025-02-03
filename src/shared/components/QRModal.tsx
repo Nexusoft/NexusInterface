@@ -4,6 +4,7 @@ import QRCode from 'qrcode';
 import { useTheme } from '@emotion/react';
 
 import ControlledModal from 'components/ControlledModal';
+import { ControlledModalProps } from 'components/ControlledModal';
 import NexusAddress from 'components/NexusAddress';
 
 const size = 322;
@@ -14,9 +15,13 @@ const QRWrapper = styled.div({
   alignItems: 'center',
 });
 
-export default function QRModal({ address }) {
+export interface QRModalProps extends ControlledModalProps {
+  address: string;
+}
+
+export default function QRModal({ address, ...rest }: QRModalProps) {
   const theme = useTheme();
-  const canvasRef = useRef();
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
     QRCode.toCanvas(canvasRef.current, address, {
       width: size,
@@ -25,7 +30,7 @@ export default function QRModal({ address }) {
     });
   }, []);
   return (
-    <ControlledModal maxWidth={500}>
+    <ControlledModal maxWidth={500} {...rest}>
       <ControlledModal.Body>
         <QRWrapper>
           <canvas ref={canvasRef} width={size} />

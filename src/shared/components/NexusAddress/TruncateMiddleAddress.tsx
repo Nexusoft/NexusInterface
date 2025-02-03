@@ -1,5 +1,5 @@
 // External
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, HTMLAttributes, ReactNode } from 'react';
 import { clipboard } from 'electron';
 import styled from '@emotion/styled';
 
@@ -13,7 +13,10 @@ const TruncateMiddleAddressComponent = styled.div({
   // marginTop: '1em',
 });
 
-const AddressWrapper = styled.div(
+const AddressWrapper = styled.div<{
+  copyable?: boolean;
+  hasLabel?: boolean;
+}>(
   ({ theme }) => ({
     width: '100%',
     height: consts.inputHeightEm + 'em',
@@ -47,24 +50,27 @@ const Address = styled.div({
   fontFamily: consts.monoFontFamily,
 });
 
-const AddressCopy = styled.div(
+const AddressCopy = styled.div<{
+  left?: boolean;
+  right?: boolean;
+  overflown?: boolean;
+}>(
   {
     flex: '1 1 0',
     overflow: 'hidden',
   },
   ({ left, overflown }) =>
     left && {
-      maskImage:
-        'linear-gradient(to left, transparent 0%, black 10%, black 100%)',
-      maskImage: overflown ? undefined : 'none',
+      maskImage: overflown
+        ? 'linear-gradient(to left, transparent 0%, black 10%, black 100%)'
+        : 'none',
     },
   ({ right, overflown }) =>
     right && {
-      display: 'flex',
       justifyContent: 'flex-end',
       maskImage:
         'linear-gradient(to right, transparent 0%, black 10%, black 100%)',
-      display: overflown ? undefined : 'none',
+      display: overflown ? 'flex' : 'none',
     }
 );
 
@@ -95,8 +101,8 @@ const Label = styled.div(({ theme }) => ({
 
 function useCheckOverflow() {
   const [overflown, setOverflown] = useState(false);
-  const addressRef = useRef();
-  const contentRef = useRef();
+  const addressRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const checkOverflow = throttled(() => {
@@ -125,24 +131,27 @@ function useCheckOverflow() {
   return { overflown, addressRef, contentRef };
 }
 
-function copyAddress(address) {
+function copyAddress(address: string) {
   clipboard.writeText(address);
   showNotification(__('Address has been copied to clipboard'), 'success');
 }
 
+export interface TruncateMiddleAddressProps
+  extends HTMLAttributes<HTMLDivElement> {
+  address: string;
+  label?: ReactNode;
+  copyable?: boolean;
+}
+
 /**
  * Nexus Address with Copy functionality
- *
- * @export
- * @class TruncateMiddleAddress
- * @extends {React.Component}
  */
 export default function TruncateMiddleAddress({
   address,
   label,
   copyable = true,
   ...rest
-}) {
+}: TruncateMiddleAddressProps) {
   const { overflown, addressRef, contentRef } = useCheckOverflow();
 
   return (
@@ -154,9 +163,7 @@ export default function TruncateMiddleAddress({
       >
         <AddressWrapper
           hasLabel={!!label}
-          inputProps={{
-            style: { cursor: 'pointer' },
-          }}
+          style={{ cursor: 'pointer' }}
           copyable={copyable}
           onClick={copyable ? () => copyAddress(address) : undefined}
         >

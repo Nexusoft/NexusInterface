@@ -1,9 +1,16 @@
-import { useRef, useState, Children, cloneElement } from 'react';
 import styled from '@emotion/styled';
+import {
+  Children,
+  cloneElement,
+  ReactElement,
+  ReactNode,
+  useRef,
+  useState,
+} from 'react';
 
-import Overlay from 'components/Overlay';
 import { arrowStyles } from 'components/Arrow';
-import { timing, animations, consts } from 'styles';
+import Overlay from 'components/Overlay';
+import { animations, consts, timing } from 'styles';
 
 const DropdownComponent = styled.div(({ theme }) => ({
   position: 'fixed',
@@ -50,7 +57,7 @@ const Separator = styled.div(({ theme }) => ({
   borderBottom: `1px solid ${theme.mixer(0.125)}`,
 }));
 
-function getDropdownStyle(controlElem) {
+function getDropdownStyle(controlElem?: HTMLElement) {
   if (!controlElem) return {};
   const rect = controlElem.getBoundingClientRect();
   return {
@@ -60,9 +67,17 @@ function getDropdownStyle(controlElem) {
   };
 }
 
-export default function Dropdown({ children, dropdown }) {
+export default function Dropdown({
+  children,
+  dropdown,
+}: {
+  children:
+    | ReactElement
+    | ((props: { openDropdown: () => void }) => ReactElement);
+  dropdown: ReactNode | ((props: { closeDropdown: () => void }) => ReactNode);
+}) {
   const [open, setOpen] = useState(false);
-  const controlRef = useRef();
+  const controlRef = useRef<HTMLElement>();
 
   const openDropdown = () => {
     setOpen(true);

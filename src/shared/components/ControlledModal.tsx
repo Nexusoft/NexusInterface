@@ -1,20 +1,13 @@
 // External
-import { memo, useContext } from 'react';
+import { memo, useContext, forwardRef, ComponentProps } from 'react';
 
 // Internal
 import Modal, { ModalProps } from 'components/Modal';
 import ModalContext from 'context/modal';
 import { removeModal } from 'lib/ui';
 
-interface ControlledModalType
-  extends React.MemoExoticComponent<React.FC<Omit<ModalProps, 'removeModal'>>> {
-  Header: typeof Modal.Header;
-  Body: typeof Modal.Body;
-  Footer: typeof Modal.Footer;
-}
-
-const ControlledModal: ControlledModalType = memo(
-  ({ ...props }: ModalProps) => {
+const ControlledModalComponent = memo(
+  forwardRef<HTMLDivElement, Omit<ModalProps, 'removeModal'>>((props, ref) => {
     const modalID = useContext(ModalContext);
 
     return (
@@ -24,14 +17,22 @@ const ControlledModal: ControlledModalType = memo(
         removeModal={() => {
           removeModal(modalID);
         }}
+        ref={ref}
       />
     );
-  }
-) as ControlledModalType;
+  })
+);
 
-ControlledModal.displayName = 'ControlledModal';
+type ControlledModalType = typeof ControlledModalComponent & {
+  Header: typeof Modal.Header;
+  Body: typeof Modal.Body;
+  Footer: typeof Modal.Footer;
+};
+const ControlledModal = ControlledModalComponent as ControlledModalType;
 ControlledModal.Header = Modal.Header;
 ControlledModal.Body = Modal.Body;
 ControlledModal.Footer = Modal.Footer;
 
 export default ControlledModal;
+
+export type ControlledModalProps = ComponentProps<typeof ControlledModal>;

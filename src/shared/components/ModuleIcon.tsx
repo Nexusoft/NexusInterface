@@ -24,9 +24,9 @@ const Img = styled.img({
   height: '1em',
 });
 
-const loadSVGContent = (path) => {
+const loadSVGContent = (path: string) => {
   try {
-    const content = readFileSync(path);
+    const content = readFileSync(path, 'utf8');
     // IMPORTANT! MUST sanitize icon content for security
     return DOMPurify.sanitize(content);
   } catch (err) {
@@ -35,8 +35,8 @@ const loadSVGContent = (path) => {
 };
 
 const getCachedSVG = (() => {
-  const cache = {};
-  return (path) =>
+  const cache: Record<string, string | null> = {};
+  return (path: string) =>
     cache[path] === undefined
       ? (cache[path] = loadSVGContent(path))
       : cache[path];

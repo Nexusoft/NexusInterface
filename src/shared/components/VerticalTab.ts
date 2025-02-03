@@ -2,7 +2,9 @@ import styled from '@emotion/styled';
 
 import { timing } from 'styles';
 
-export default styled.div(
+export default styled.div<{
+  active?: boolean;
+}>(
   ({ theme }) => ({
     display: 'flex',
     alignItems: 'center',

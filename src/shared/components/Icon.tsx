@@ -9,8 +9,8 @@
  * - Make sure this note also presents in other files which are imported here.
  */
 
-import { forwardRef } from 'react';
 import styled from '@emotion/styled';
+import { forwardRef, HTMLAttributes } from 'react';
 
 const Svg = styled.svg<{
   size?: string | number;
@@ -22,12 +22,8 @@ const Svg = styled.svg<{
   height: size,
 }));
 
-interface IconProps {
-  icon: {
-    id: string;
-    viewBox: string;
-    url?: string;
-  };
+interface IconProps extends HTMLAttributes<SVGSVGElement> {
+  icon: SvgIcon;
   size?: string | number;
 }
 
@@ -51,3 +47,9 @@ const Icon = forwardRef<SVGSVGElement, IconProps>(
 // ));
 
 export default Icon;
+
+export interface SvgIcon {
+  id: string;
+  viewBox: string;
+  url?: string;
+}

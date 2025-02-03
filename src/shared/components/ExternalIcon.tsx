@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { HTMLAttributes, useEffect, useState } from 'react';
 import DOMPurify from 'dompurify';
 import { promises } from 'fs';
 import styled from '@emotion/styled';
@@ -15,7 +15,7 @@ const SvgWrapper = styled.span({
   },
 });
 
-async function loadSVGContent(path) {
+async function loadSVGContent(path: string) {
   try {
     const content = await promises.readFile(path);
     return content;
@@ -24,7 +24,7 @@ async function loadSVGContent(path) {
   }
 }
 
-async function fetchSVGContent(url) {
+async function fetchSVGContent(url: string) {
   try {
     const { data } = await axios.get(url);
     return data;
@@ -34,9 +34,9 @@ async function fetchSVGContent(url) {
 }
 
 const getCachedSVG = (() => {
-  const cache = {};
-  return async ({ path, url }) => {
-    const key = path ? path : url;
+  const cache: Record<string, string> = {};
+  return async ({ path, url }: { path?: string; url?: string }) => {
+    const key = (path ? path : url) || '';
     const getContent = path ? loadSVGContent : fetchSVGContent;
     if (cache[key] === undefined) {
       const content = await getContent(key);
@@ -48,8 +48,17 @@ const getCachedSVG = (() => {
   };
 })();
 
-export default function ExternalIcon({ path, url, ...rest }) {
-  const [svgContent, setSvgContent] = useState(null);
+export interface ExternalIconProps extends HTMLAttributes<HTMLSpanElement> {
+  path?: string;
+  url?: string;
+}
+
+export default function ExternalIcon({
+  path,
+  url,
+  ...rest
+}: ExternalIconProps) {
+  const [svgContent, setSvgContent] = useState<string>();
   useEffect(() => {
     getCachedSVG({ path, url }).then((svg) => {
       setSvgContent(svg);

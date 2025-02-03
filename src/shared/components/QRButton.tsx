@@ -1,3 +1,4 @@
+import { ComponentProps } from 'react';
 import styled from '@emotion/styled';
 
 import Button from 'components/Button';
@@ -14,7 +15,10 @@ const QRButtonComponent = styled(Button)({
   height: 'auto',
 });
 
-export default function QRButton({ address, ...rest }) {
+export default function QRButton({
+  address,
+  ...rest
+}: ComponentProps<typeof Button> & { address: string }) {
   return (
     <Tooltip.Trigger tooltip={__('Show QR code')}>
       <QRButtonComponent

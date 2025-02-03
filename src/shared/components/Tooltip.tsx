@@ -188,14 +188,18 @@ function TooltipPortal(props: ComponentProps<typeof TooltipComponent>) {
   return ReactDOM.createPortal(<TooltipComponent {...props} />, ref.current);
 }
 
-export type TooltipTriggerProps = {
+export interface TooltipTriggerProps
+  extends Omit<
+    ComponentProps<typeof TooltipPortal>,
+    'position' | 'align' | 'skin'
+  > {
   position?: TooltipPosition;
   align?: TooltipAlign;
   skin?: TooltipSkin;
   tooltip?: React.ReactNode;
   children: React.ReactElement;
   style?: React.CSSProperties;
-};
+}
 
 /**
  * Triggers the Tooltip

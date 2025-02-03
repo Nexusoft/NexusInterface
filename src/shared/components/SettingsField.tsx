@@ -1,10 +1,20 @@
 // External
-import { cloneElement, Children, useId } from 'react';
+import {
+  cloneElement,
+  Children,
+  useId,
+  ReactNode,
+  ComponentProps,
+  ReactElement,
+} from 'react';
 import styled from '@emotion/styled';
 
 const indentSpace = 20;
 
-const Field = styled.div(({ indent = 0, theme, disabled }) => ({
+const Field = styled.div<{
+  indent?: number;
+  disabled?: boolean;
+}>(({ indent = 0, theme, disabled }) => ({
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
@@ -32,11 +42,16 @@ const Input = styled.div({
   width: 350,
 });
 
+export interface SettingsFieldProps
+  extends Omit<ComponentProps<typeof Field>, 'children'> {
+  label: ReactNode;
+  subLabel?: ReactNode;
+  connectLabel?: boolean;
+  children: ReactElement | ((inputId: string) => ReactNode);
+}
+
 /**
  * A Field on the Settings Page
- *
- * @class SettingsField
- * @extends {Component}
  */
 export default function SettingsField({
   label,
@@ -46,18 +61,17 @@ export default function SettingsField({
   indent,
   disabled,
   ...rest
-}) {
+}: SettingsFieldProps) {
   const inputId = useId();
 
   const settingsInput = () => {
+    if (typeof children === 'function') {
+      return children(inputId);
+    }
     if (connectLabel) {
-      if (typeof children === 'function') {
-        return children(inputId);
-      } else {
-        return cloneElement(Children.only(children), {
-          id: inputId,
-        });
-      }
+      return cloneElement(Children.only(children), {
+        id: inputId,
+      });
     }
     return children;
   };

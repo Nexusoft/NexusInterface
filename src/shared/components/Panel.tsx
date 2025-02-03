@@ -10,12 +10,12 @@
  */
 
 // External Dependencies
-import { forwardRef } from 'react';
-import styled from '@emotion/styled';
 import { keyframes } from '@emotion/react';
+import styled from '@emotion/styled';
+import { ComponentProps, forwardRef, ReactNode } from 'react';
 
 // Internal Global Dependencies
-import Icon from 'components/Icon';
+import Icon, { SvgIcon } from 'components/Icon';
 
 const intro = keyframes`
   from { 
@@ -78,7 +78,14 @@ const PanelBody = styled.div(({ theme }) => ({
   overscrollBehavior: 'none',
 }));
 
-const Panel = forwardRef(
+export interface PanelProps
+  extends Omit<ComponentProps<typeof PanelWrapper>, 'title'> {
+  icon?: SvgIcon;
+  title?: ReactNode;
+  controls?: ReactNode;
+}
+
+const Panel = forwardRef<HTMLDivElement, PanelProps>(
   ({ icon, title, controls, children, ...rest }, ref) => (
     <PanelWrapper {...rest}>
       <PanelComponent ref={ref}>

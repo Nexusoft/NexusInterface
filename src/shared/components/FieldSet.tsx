@@ -10,12 +10,14 @@
  */
 
 // External Dependencies
-import { forwardRef } from 'react';
+import { ComponentProps, forwardRef, ReactNode } from 'react';
 import styled from '@emotion/styled';
 
 import { consts, timing } from 'styles';
 
-const FieldSetComponent = styled.fieldset(({ theme, color }) => ({
+const FieldSetComponent = styled.fieldset<{
+  color?: string;
+}>(({ theme, color }) => ({
   padding: '.5em 1.5em 1.5em',
   borderRadius: 4,
   border: `1px solid ${color || theme.mixer(0.25)}`,
@@ -23,7 +25,9 @@ const FieldSetComponent = styled.fieldset(({ theme, color }) => ({
   transition: `border-color ${timing.normal}`,
 }));
 
-const Legend = styled.legend(({ theme, color }) => ({
+const Legend = styled.legend<{
+  color?: string;
+}>(({ theme, color }) => ({
   textTransform: 'uppercase',
   textAlign: 'center',
   padding: '0 .5em',
@@ -31,13 +35,16 @@ const Legend = styled.legend(({ theme, color }) => ({
   transition: `color ${timing.normal}`,
 }));
 
-const FieldSet = forwardRef(
-  ({ legend, children, color, ...rest }, ref) => (
-    <FieldSetComponent {...rest} ref={ref} color={color}>
-      <Legend color={color}>{legend}</Legend>
-      {children}
-    </FieldSetComponent>
-  )
-);
+const FieldSet = forwardRef<
+  HTMLFieldSetElement,
+  ComponentProps<typeof FieldSetComponent> & {
+    legend?: ReactNode;
+  }
+>(({ legend, children, color, ...rest }, ref) => (
+  <FieldSetComponent {...rest} ref={ref} color={color}>
+    <Legend color={color}>{legend}</Legend>
+    {children}
+  </FieldSetComponent>
+));
 
 export default FieldSet;

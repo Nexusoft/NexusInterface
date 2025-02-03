@@ -1,12 +1,15 @@
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/react';
+import { HTMLAttributes } from 'react';
 
 const spinning = keyframes`
   0% { transform: rotate(0deg) }  
   100% { transform: rotate(360deg) }
 `;
 
-const SpinnerComponent = styled.div(({ size }) => ({
+const SpinnerComponent = styled.div<{
+  size?: number | string;
+}>(({ size }) => ({
   display: 'inline-block',
   position: 'relative',
   width: size !== undefined ? size : '1em',
@@ -14,7 +17,10 @@ const SpinnerComponent = styled.div(({ size }) => ({
   verticalAlign: 'middle',
 }));
 
-const SpinnerPart = styled.div(({ index = 0, thickness }) => ({
+const SpinnerPart = styled.div<{
+  index: number;
+  thickness: number;
+}>(({ index = 0, thickness }) => ({
   position: 'absolute',
   width: '100%',
   height: '100%',
@@ -25,7 +31,16 @@ const SpinnerPart = styled.div(({ index = 0, thickness }) => ({
   animationDelay: `-${0.1 * index}s`,
 }));
 
-export default function Spinner({ thickness = 0.1, size, ...rest }) {
+export interface SpinnerProps extends HTMLAttributes<HTMLDivElement> {
+  size?: number | string;
+  thickness?: number;
+}
+
+export default function Spinner({
+  thickness = 0.1,
+  size,
+  ...rest
+}: SpinnerProps) {
   return (
     <SpinnerComponent size={size} {...rest}>
       <SpinnerPart index={0} thickness={thickness} />

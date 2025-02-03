@@ -1,12 +1,13 @@
 import { useAtomValue } from 'jotai';
 
+import Button from 'components/Button';
 import LoginModal from 'components/LoginModal';
 import RequireCoreConnected from 'components/RequireCoreConnected';
-import Button from 'components/Button';
-import { openModal } from 'lib/ui';
 import { loggedInAtom } from 'lib/session';
+import { openModal } from 'lib/ui';
+import { ReactNode } from 'react';
 
-export default function RequireLoggedIn({ children }) {
+export default function RequireLoggedIn({ children }: { children: ReactNode }) {
   const loggedIn = useAtomValue(loggedInAtom);
 
   return (

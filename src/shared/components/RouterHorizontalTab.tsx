@@ -10,20 +10,33 @@
  */
 
 // External Dependencies
-import { forwardRef } from 'react';
+import { ComponentProps, forwardRef, ReactNode } from 'react';
 import { NavLink } from 'react-router';
 
 // Internal Global Dependencies
 import HorizontalTab from 'components/HorizontalTab';
-import Icon from 'components/Icon';
+import Icon, { SvgIcon } from 'components/Icon';
 
-const RouterHorizontalTab = forwardRef(({ link, icon, text, ...rest }, ref) => (
-  <HorizontalTab as={NavLink} to={link} ref={ref} {...rest}>
+const NavLinkHorizontalTab = HorizontalTab.withComponent(NavLink);
+
+const RouterHorizontalTabTemp = forwardRef<
+  HTMLAnchorElement,
+  Omit<ComponentProps<typeof NavLinkHorizontalTab>, 'to'> & {
+    link: string;
+    icon?: SvgIcon;
+    text: ReactNode;
+  }
+>(({ link, icon, text, ...rest }, ref) => (
+  <NavLinkHorizontalTab to={link} ref={ref} {...rest}>
     {!!icon && <Icon className="mr0_4" icon={icon} />}
     {text}
-  </HorizontalTab>
+  </NavLinkHorizontalTab>
 ));
 
+type RouterHorizontalTabType = typeof RouterHorizontalTabTemp & {
+  TabBar: typeof HorizontalTab.TabBar;
+};
+const RouterHorizontalTab = RouterHorizontalTabTemp as RouterHorizontalTabType;
 RouterHorizontalTab.TabBar = HorizontalTab.TabBar;
 
 export default RouterHorizontalTab;

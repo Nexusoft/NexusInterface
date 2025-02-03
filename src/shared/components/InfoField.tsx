@@ -1,6 +1,10 @@
 import styled from '@emotion/styled';
+import { HTMLAttributes } from 'react';
 
-const Row = styled.div(({ leftSize, rightSize }) => ({
+const Row = styled.div<{
+  leftSize: number;
+  rightSize: number;
+}>(({ leftSize, rightSize }) => ({
   display: 'grid',
   gridTemplateAreas: '"label value"',
   gridTemplateColumns: `${leftSize}fr ${rightSize}fr`,
@@ -21,12 +25,17 @@ const Value = styled.div(({ theme }) => ({
   color: theme.mixer(0.75),
 }));
 
+export interface InfoFieldProps extends HTMLAttributes<HTMLDivElement> {
+  ratio?: [number, number];
+  label: string;
+}
+
 export default function InfoField({
   ratio = [1, 3],
   label,
   children,
   ...rest
-}) {
+}: InfoFieldProps) {
   return (
     <Row leftSize={ratio[0]} rightSize={ratio[1]} {...rest}>
       <Label>{label}</Label>

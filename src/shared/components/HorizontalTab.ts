@@ -15,7 +15,9 @@ import styled from '@emotion/styled';
 // Internal Global Dependencies
 import { timing } from 'styles';
 
-const HorizontalTab = styled.div(
+const HorizontalTabComponent = styled.div<{
+  active?: boolean;
+}>(
   ({ theme }) => ({
     flexGrow: 1,
     flexShrink: 1,
@@ -55,6 +57,10 @@ const TabBar = styled.div({
   padding: 0,
 });
 
+type HorizontalTabType = typeof HorizontalTabComponent & {
+  TabBar: typeof TabBar;
+};
+const HorizontalTab = HorizontalTabComponent as HorizontalTabType;
 HorizontalTab.TabBar = TabBar;
 
 export default HorizontalTab;

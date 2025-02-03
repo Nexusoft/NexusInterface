@@ -1,10 +1,10 @@
-import { store } from 'lib/store';
-import { atom } from 'jotai';
-import { ComponentType, ReactNode } from 'react';
-import { ModalProps } from 'components/Modal';
-import { NotificationProps } from 'components/Notification';
 import { BackgroundTaskProps } from 'components/BackgroundTask';
+import { ControlledModalProps } from 'components/ControlledModal';
+import { NotificationProps } from 'components/Notification';
 import { SnackBarType } from 'components/SnackBar';
+import { atom } from 'jotai';
+import { store } from 'lib/store';
+import { ComponentType, ReactNode } from 'react';
 
 const newModalId = (function () {
   let counter = 1;
@@ -58,7 +58,7 @@ export const jotaiDevToolsOpenAtom = atom(false);
  * Modal
  * ===========================
  */
-export function openModal<TProps extends Omit<ModalProps, 'removeModal'>>(
+export function openModal<TProps extends ControlledModalProps>(
   component: ComponentType<TProps>,
   props: TProps
 ) {
@@ -81,7 +81,7 @@ export function removeModal(modalId?: string) {
   );
 }
 
-export function isModalOpen(modalComponent: ComponentType<ModalProps>) {
+export function isModalOpen(modalComponent: ComponentType) {
   const modals = store.get(modalsAtom);
   return modals.some(({ component }) => component === modalComponent);
 }

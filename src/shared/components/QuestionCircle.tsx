@@ -1,3 +1,4 @@
+import { ComponentProps } from 'react';
 import styled from '@emotion/styled';
 
 import Icon from 'components/Icon';
@@ -9,9 +10,11 @@ const QuestionMarkComponent = styled(Icon)({
   marginLeft: 6,
 });
 
-export default function QuestionMark({ tooltip, align, position }) {
+export default function QuestionMark(
+  props: ComponentProps<typeof Tooltip.Trigger>
+) {
   return (
-    <Tooltip.Trigger tooltip={tooltip} align={align} position={position}>
+    <Tooltip.Trigger {...props}>
       <QuestionMarkComponent icon={questionIcon} />
     </Tooltip.Trigger>
   );
