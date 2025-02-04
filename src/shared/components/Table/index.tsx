@@ -1,12 +1,19 @@
 import styled from '@emotion/styled';
 import {
-  useReactTable,
-  flexRender,
+  ColumnDef,
+  ColumnResizeMode,
   getCoreRowModel as defaultGetCoreRowModel,
   getPaginationRowModel as defaultGetPaginationRowModel,
   getSortedRowModel as defaultGetSortedRowModel,
+  flexRender,
+  Row,
+  RowModel,
+  SortDirection,
+  Table as TableType,
+  useReactTable,
 } from '@tanstack/react-table';
 
+import { HTMLAttributes } from 'react';
 import { consts } from 'styles';
 import Pagination from './Pagination';
 
@@ -58,7 +65,12 @@ const TableBody = styled.div({
   boxDirection: 'normal',
 });
 
-const TableRow = styled.div(
+const TableRow = styled.div<{
+  header?: boolean;
+  odd?: boolean;
+  clickable?: boolean;
+  dummy?: boolean;
+}>(
   {
     flex: '1 0 auto',
     display: 'inline-flex',
@@ -87,7 +99,13 @@ const TableRow = styled.div(
     }
 );
 
-const TableCell = styled.div(
+const TableCell = styled.div<{
+  header?: boolean;
+  resizing?: boolean;
+  sortable?: boolean;
+  sorted?: false | SortDirection;
+  body?: boolean;
+}>(
   {
     flex: `1 1 auto`,
     whiteSpace: 'nowrap',
@@ -158,12 +176,30 @@ const HeaderResizer = styled.div({
   zIndex: 10,
 });
 
-export default function Table({
+export interface TableProps<TData> extends HTMLAttributes<HTMLDivElement> {
+  data: TData[];
+  columns: ColumnDef<TData>[];
+  defaultColumn?: Partial<ColumnDef<TData>>;
+  getRowId?: (
+    originalRow: TData,
+    index: number,
+    parent?: Row<TData> | undefined
+  ) => string;
+  enableColumnResizing?: boolean;
+  enableSorting?: boolean;
+  getCoreRowModel?: (table: TableType<TData>) => () => RowModel<TData>;
+  getPaginationRowModel?: (table: TableType<any>) => () => RowModel<any>;
+  getSortedRowModel?: (table: TableType<any>) => () => RowModel<any>;
+  columnResizeMode?: ColumnResizeMode;
+  onRowClick?: (row: Row<TData>, index: number) => void;
+}
+
+export default function Table<TData>({
   data,
   columns,
   defaultColumn,
   getRowId,
-  enableResizing = true,
+  enableColumnResizing = true,
   enableSorting = true,
   getCoreRowModel = defaultGetCoreRowModel(),
   getPaginationRowModel = defaultGetPaginationRowModel(),
@@ -171,13 +207,13 @@ export default function Table({
   columnResizeMode = 'onChange',
   onRowClick,
   ...rest
-}) {
-  const table = useReactTable({
+}: TableProps<TData>) {
+  const table = useReactTable<TData>({
     data,
     columns,
     defaultColumn,
     getRowId,
-    enableResizing,
+    enableColumnResizing,
     enableSorting,
     getCoreRowModel,
     getPaginationRowModel,
@@ -189,7 +225,7 @@ export default function Table({
   const pageSize = table.getState().pagination.pageSize;
   const dummyRows = Array.from(
     { length: pageSize - rowCount },
-    (v, i) => i + rowCount
+    (_v, i) => i + rowCount
   );
   return (
     <TableWrapper {...rest}>
@@ -221,7 +257,6 @@ export default function Table({
                   <HeaderResizer
                     onMouseDown={header.getResizeHandler()}
                     onTouchStart={header.getResizeHandler()}
-                    resizing={header.column.getIsResizing()}
                     style={{
                       transform:
                         columnResizeMode === 'onEnd' &&
@@ -290,5 +325,3 @@ export default function Table({
     </TableWrapper>
   );
 }
-
-Table.Head;

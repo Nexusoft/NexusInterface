@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
-import { consts } from 'styles';
+import { Table } from '@tanstack/react-table';
+import { HTMLAttributes } from 'react';
 
 const PaginationStyled = styled.div({
   zIndex: 1,
@@ -15,7 +16,9 @@ const PaginationStyled = styled.div({
   flex: 'auto 0',
 });
 
-const PaginationSection = styled.div(
+const PaginationSection = styled.div<{
+  center?: boolean;
+}>(
   {
     flex: 1,
     textAlign: 'center',
@@ -76,7 +79,9 @@ const PageSizeOptions = styled.span(({ theme }) => ({
   background: 'rgba(0, 0, 0, 0.02)',
 }));
 
-const PaginationInput = styled.input(
+const PaginationInput = styled.input<{
+  pageJump?: boolean;
+}>(
   ({ theme }) => ({
     border: '1px solid rgba(0, 0, 0, 0.1)',
     background: 'transparent',
@@ -102,7 +107,12 @@ const PaginationOption = styled.option(({ theme }) => ({
   outline: 'none',
 }));
 
-export default function Pagination({ table, ...rest }) {
+export default function Pagination<TData>({
+  table,
+  ...rest
+}: HTMLAttributes<HTMLDivElement> & {
+  table: Table<TData>;
+}) {
   return (
     <PaginationStyled {...rest}>
       <PaginationSection>
