@@ -1,66 +1,52 @@
-import { join } from 'path';
-import fs from 'fs';
-import crypto from 'crypto';
-import Ajv from 'ajv';
 import axios from 'axios';
-import Multistream from 'multistream';
+
+import crypto from 'crypto';
 import { ipcRenderer } from 'electron';
+import fs from 'fs';
+import type { IncomingMessage } from 'http';
 import https from 'https';
 import { isText } from 'istextorbinary';
+import Multistream from 'multistream';
+import { join } from 'path';
 import normalizeEol from 'utils/normalizeEol';
+import z from 'zod';
 
-import { loadModuleFromDir } from './module';
+import { loadModuleFromDir, ModuleInfo } from './module';
 
-const ajv = new Ajv();
+const repoSchema = z.object({
+  type: z.enum(['git']),
+  // Allowed hosting: github.com
+  host: z.enum(['github.com']),
+  owner: z.string(),
+  repo: z.string(),
+  // Full SHA-1 hash of the git commit this version was built on
+  commit: z.string().min(40).max(40),
+});
 
 // Schema for repo_info.json
-const repoInfoSchema = {
-  type: 'object',
-  additionalProperties: false,
-  required: ['data'],
-  properties: {
-    verification: {
-      type: 'object',
-      required: ['signature'],
-      properties: {
-        signature: { type: 'string' },
-      },
-    },
-    data: {
-      type: 'object',
-      additionalProperties: false,
-      required: ['repository'],
-      properties: {
-        moduleHash: { type: 'string' },
-        repository: {
-          type: 'object',
-          required: ['type', 'host', 'owner', 'repo', 'commit'],
-          properties: {
-            type: { type: 'string', enum: ['git'] },
-            // Allowed hosting: github.com
-            host: { type: 'string', enum: ['github.com'] },
-            owner: { type: 'string' },
-            repo: { type: 'string' },
-            // Full SHA-1 hash of the git commit this version was built on
-            commit: { type: 'string', minLength: 40, maxLength: 40 },
-          },
-        },
-      },
-    },
-  },
-};
-const validateRepoInfo = ajv.compile(repoInfoSchema);
+const repoInfoSchema = z.object({
+  verification: z
+    .object({
+      signature: z.string(),
+    })
+    .optional(),
+  data: z.object({
+    moduleHash: z.string().optional(),
+    repository: repoSchema,
+  }),
+});
+
+export type Repository = z.infer<typeof repoSchema>;
+export type RepoInfo = z.infer<typeof repoInfoSchema>;
 
 /**
  * Normalize the newline character so the same file will produce the same
  * hash in different Operating Systems
- *
- * @param {*} path
- * @returns
  */
-function normalizeFile(path) {
+function normalizeFile(path: string) {
   const stream = fs.createReadStream(path);
-  if (isText(path, stream)) {
+  const buffer = fs.readFileSync(path);
+  if (isText(path, buffer)) {
     const normalizeNewline = normalizeEol('\n');
     return stream.pipe(normalizeNewline);
   } else {
@@ -75,17 +61,14 @@ function normalizeFile(path) {
 
 /**
  * Get the module hash, calculated by hashing all the files that it uses, concatenated
- *
- * @param {*} dirPath
- * @returns
  */
-export async function getModuleHash(module) {
-  return new Promise(async (resolve, reject) => {
+export function getModuleHash(moduleInfo: ModuleInfo, dirPath: string) {
+  return new Promise<string | undefined>(async (resolve, reject) => {
     try {
       const nxsPackagePath = join(module.path, 'nxs_package.json');
-      const filePaths = module.info.files
+      const filePaths = moduleInfo.files
         .sort()
-        .map((file) => join(module.path, file));
+        .map((file) => join(dirPath, file));
       const streams = [
         normalizeFile(nxsPackagePath),
         ...filePaths.map(normalizeFile),
@@ -94,7 +77,8 @@ export async function getModuleHash(module) {
       const hash = crypto.createHash('sha256');
       hash.setEncoding('base64');
       hash.on('readable', () => {
-        resolve(hash.read());
+        const result = hash.read();
+        resolve(result ? String(result) : undefined);
       });
       new Multistream(streams).pipe(hash);
     } catch (err) {
@@ -107,42 +91,37 @@ export async function getModuleHash(module) {
 /**
  * Returns the repository info including the Nexus signature
  * if repo_info.json file does exist and is valid
- *
- * @param {*} dirPath
- * @returns
  */
-export async function loadRepoInfo(dirPath) {
+export async function loadRepoInfo(dirPath: string) {
   const filePath = join(dirPath, 'repo_info.json');
   // Check repo_info.json file exists
-  if (!fs.existsSync(filePath)) return null;
+  if (!fs.existsSync(filePath)) return undefined;
 
   // Check repo_info.json file is a symbolic link
   const lstat = await fs.promises.lstat(filePath);
-  if (lstat.isSymbolicLink()) return null;
+  if (lstat.isSymbolicLink()) return undefined;
 
   try {
     // Load file content
     const fileContent = await fs.promises.readFile(filePath);
-    const repoInfo = JSON.parse(fileContent);
+    const rawRepoInfo = JSON.parse(String(fileContent));
 
     // Validate schema
-    if (validateRepoInfo(repoInfo)) {
-      return repoInfo;
-    }
+    const repoInfo = repoInfoSchema.parse(rawRepoInfo);
+    return repoInfo;
   } catch (err) {
     console.error(err);
   }
 
-  return null;
+  return undefined;
 }
 
 /**
  * Check if the specified repository is currently still online
- *
- * @param {*} repoInfo
- * @returns
  */
-export async function isRepoOnline({ host, owner, repo, commit }) {
+export async function isRepoOnline(repository: Repository | undefined) {
+  if (!repository) return false;
+  const { host, owner, repo, commit } = repository;
   if (!host || !owner || !repo || !commit) return false;
 
   try {
@@ -150,8 +129,8 @@ export async function isRepoOnline({ host, owner, repo, commit }) {
       'github.com': `https://github.com/${owner}/${repo}/commit/${commit}`,
     };
     const url = apiUrls[host];
-    const requestHead = (url) =>
-      new Promise((resolve, reject) => {
+    const requestHead = (url: string) =>
+      new Promise<IncomingMessage>((resolve, reject) => {
         try {
           https
             .request(url, { method: 'HEAD' }, (res) => resolve(res))
@@ -174,19 +153,18 @@ export async function isRepoOnline({ host, owner, repo, commit }) {
 
 /**
  * Check if the module hash and Nexus signature do exist and are valid
- *
- * @param {*} repoInfo
- * @param {*} module
- * @param {*} dirPath
- * @returns
  */
-export async function isModuleVerified(module, repoInfo) {
+export async function isModuleVerified(
+  moduleHash: string | undefined,
+  repoInfo: RepoInfo | undefined
+) {
+  if (!repoInfo) return false;
   const { data, verification } = repoInfo;
   if (!verification || !data || !data.moduleHash) return false;
 
   try {
     // Check if hash of module files matching
-    if (data.moduleHash !== module.hash) return false;
+    if (data.moduleHash !== moduleHash) return false;
 
     // Check signature
     const serializedData = JSON.stringify(data);
@@ -211,12 +189,10 @@ export async function isModuleVerified(module, repoInfo) {
 
 /**
  * Check to see if Author is part of NexusSoft
- *
- * @export
- * @param {*} repoInfo
- * @returns {boolean} Is Author apart of Nexus
  */
-export async function isRepoFromNexus({ host, owner, repo, commit }) {
+export async function isRepoFromNexus(repository: Repository | undefined) {
+  if (!repository) return false;
+  const { host, owner, repo, commit } = repository;
   if (!host || !owner || !repo || !commit) return false;
 
   if (owner === 'Nexusoft') return true;
@@ -226,11 +202,14 @@ export async function isRepoFromNexus({ host, owner, repo, commit }) {
   else return nexusOrgUsers.includes(owner);
 }
 
+/**
+ * Get the list of github users that belongs to Nexusoft organization
+ */
 export const getNexusOrgUsers = (() => {
-  let nexusOrgUsers = null;
+  let nexusOrgUsers: string[];
   // Cache the ongoing request promise so it won't send another request
   // when the last one wasn't finished
-  let promise = null;
+  let promise: Promise<string[]> | null = null;
   return () => {
     if (!promise) {
       promise = new Promise(async (resolve, reject) => {
@@ -239,7 +218,9 @@ export const getNexusOrgUsers = (() => {
             const response = await axios.get(
               'https://api.github.com/orgs/Nexusoft/members'
             );
-            nexusOrgUsers = response.data.map((e) => e.login);
+            nexusOrgUsers = response.data.map(
+              (e: { login: string }) => e.login
+            );
           } catch (err) {
             console.error(err);
             return reject(err);
@@ -260,20 +241,26 @@ export const getNexusOrgUsers = (() => {
  * =============================================================================
  * This script is for Nexus team to sign the repo verification
  * =============================================================================
- *
- * @param {*} repoUrl
- * @param {*} [{ moduleDir, privKeyPath, privKeyPassphrase }={}]
- * @returns
  */
 async function signModuleRepo(
-  repoUrl,
-  { moduleDir, privKeyPath, privKeyPassphrase } = {}
+  repoUrl: string,
+  {
+    moduleDir,
+    privKeyPath,
+    privKeyPassphrase,
+  }: {
+    moduleDir?: string;
+    privKeyPath?: string;
+    privKeyPassphrase?: string;
+  } = {}
 ) {
   const repoUrlRegex =
     /https:\/\/github\.com\/([^\/]+)\/([^\/]+)\/commit\/([^\/]+)/i;
   const matches = repoUrlRegex.exec(repoUrl);
   if (!matches) {
-    throw '`repoUrl` is missing or invalid. Please remember to include the commit in the URL.';
+    throw new Error(
+      '`repoUrl` is missing or invalid. Please remember to include the commit in the URL.'
+    );
   }
   const repo = {
     type: 'git',
@@ -294,8 +281,8 @@ async function signModuleRepo(
       return;
     }
   }
-  if (!fs.existsSync(moduleDir)) {
-    throw '`moduleDir` does not exist';
+  if (!moduleDir || !fs.existsSync(moduleDir)) {
+    throw new Error('`moduleDir` does not exist');
   }
 
   const module = await loadModuleFromDir(moduleDir);
@@ -310,9 +297,8 @@ async function signModuleRepo(
     });
     if (paths && paths.length > 0) {
       privKeyPath = paths[0];
-    } else {
-      return;
     }
+    if (!privKeyPath) return;
   }
   const privKey = await fs.promises.readFile(privKeyPath);
 
@@ -340,4 +326,9 @@ async function signModuleRepo(
 }
 
 // So that the function can be called on DevTools
+declare global {
+  interface Window {
+    __signModuleRepo: typeof signModuleRepo;
+  }
+}
 window.__signModuleRepo = signModuleRepo;

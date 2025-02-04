@@ -1,9 +1,12 @@
+import styled from '@emotion/styled';
 import DOMPurify from 'dompurify';
 import { readFileSync } from 'fs';
-import styled from '@emotion/styled';
 
 import Icon from 'components/Icon';
 import legoBlockIcon from 'icons/lego-block.svg';
+import { Module } from 'lib/modules';
+import { HTMLAttributes } from 'react';
+import { CommonProperties } from 'utils/universal';
 
 const SvgWrapper = styled.span({
   display: 'inline-flex',
@@ -42,7 +45,18 @@ const getCachedSVG = (() => {
       : cache[path];
 })();
 
-export default function ModuleIcon({ module, ...rest }) {
+type CommonHTMLAttributes = CommonProperties<
+  HTMLAttributes<SVGSVGElement>,
+  CommonProperties<
+    HTMLAttributes<HTMLSpanElement>,
+    HTMLAttributes<HTMLImageElement>
+  >
+>;
+
+export default function ModuleIcon({
+  module,
+  ...rest
+}: CommonHTMLAttributes & { module: Module }) {
   if (module.iconPath) {
     if (module.iconPath.endsWith('.svg')) {
       const iconContent = getCachedSVG(module.iconPath);

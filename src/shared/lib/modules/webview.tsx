@@ -1,32 +1,33 @@
-import { clipboard, shell } from 'electron';
+import { clipboard, IpcMessageEvent, shell, WebviewTag } from 'electron';
 
-import { store, subscribe, subscribeWithPrevious } from 'lib/store';
-import { showNotification } from 'lib/ui';
+import { AddressBook, addressBookAtom } from 'lib/addressBook';
+import { callAPI } from 'lib/api';
+import { defaultMenu, popupContextMenu } from 'lib/contextMenu';
+import { coreInfoQuery } from 'lib/coreInfo';
 import {
+  confirmPin,
   openConfirmDialog,
   openErrorDialog,
-  openSuccessDialog,
   openInfoDialog,
-  confirmPin,
+  openSuccessDialog,
 } from 'lib/dialog';
-import { settingsAtom } from 'lib/settings';
-import { themeAtom } from 'lib/theme';
-import { coreInfoQuery } from 'lib/coreInfo';
-import { userStatusQuery } from 'lib/session';
-import { addressBookAtom } from 'lib/addressBook';
-import { popupContextMenu, defaultMenu } from 'lib/contextMenu';
 import { goToSend } from 'lib/send';
-import { callAPI } from 'lib/api';
+import { userStatusQuery } from 'lib/session';
+import { Settings, settingsAtom } from 'lib/settings';
+import { store, subscribe, subscribeWithPrevious } from 'lib/store';
+import { themeAtom } from 'lib/theme';
+import { showNotification } from 'lib/ui';
 import memoize from 'utils/memoize';
 
-import { readModuleStorage, writeModuleStorage } from './storage';
+import { Theme } from 'lib/theme';
 import {
   activeAppModuleNameAtom,
   modulesMapAtom,
   moduleStatesAtom,
 } from './atoms';
+import { readModuleStorage, writeModuleStorage } from './storage';
 
-let activeWebView = null;
+let activeWebView: WebviewTag | null = null;
 
 /**
  * Utilities
@@ -39,7 +40,10 @@ const getSettingsForModules = memoize((locale, fiatCurrency, addressStyle) => ({
   addressStyle,
 }));
 
-const settingsChanged = (settings1, settings2) =>
+const settingsChanged = (
+  settings1: SettingsForModule,
+  settings2: SettingsForModule
+) =>
   settings1 !== settings2 && !!settings1 && !!settings2
     ? settings1.locale !== settings2.locale ||
       settings1.fiatCurrency !== settings2.fiatCurrency ||
@@ -49,8 +53,8 @@ const settingsChanged = (settings1, settings2) =>
 const getActiveModule = () => {
   const activeAppModuleName = store.get(activeAppModuleNameAtom);
   const modulesMap = store.get(modulesMapAtom);
-  const module = modulesMap[activeAppModuleName];
-  return module.enabled ? module : null;
+  const module = activeAppModuleName && modulesMap[activeAppModuleName];
+  return module && module.enabled ? module : null;
 };
 
 /**
@@ -58,11 +62,11 @@ const getActiveModule = () => {
  * ===========================================================================
  */
 
-function handleIpcMessage(event) {
-  const { srcElement: webview, channel, args } = event;
+function handleIpcMessage({ target, channel, args }: IpcMessageEvent) {
+  const webview = target as WebviewTag;
   switch (channel) {
     case 'send':
-      send(args, webview);
+      send(args);
       break;
     case 'api-call':
       apiCall(args, webview);
@@ -71,44 +75,44 @@ function handleIpcMessage(event) {
       secureApiCall(args, webview);
       break;
     case 'show-notification':
-      showNotif(args, webview);
+      showNotif(args);
       break;
     case 'show-error-dialog':
-      showErrorDialog(args, webview);
+      showErrorDialog(args);
       break;
     case 'show-success-dialog':
-      showSuccessDialog(args, webview);
+      showSuccessDialog(args);
       break;
     case 'show-info-dialog':
-      showInfoDialog(args, webview);
+      showInfoDialog(args);
       break;
     case 'confirm':
       confirm(args, webview);
       break;
     case 'update-state':
-      updateState(args, webview);
+      updateState(args);
       break;
     case 'update-storage':
-      updateStorage(args, webview);
+      updateStorage(args);
       break;
     case 'context-menu':
       contextMenu(args, webview);
       break;
     case 'open-in-browser':
-      openInBrowser(args, webview);
+      openInBrowser(args);
       break;
     case 'copy-to-clipboard':
-      copyToClipboard(args, webview);
+      copyToClipboard(args);
       break;
   }
 }
 
-function send([{ sendFrom, recipients, advancedOptions }]) {
+function send([{ sendFrom, recipients, advancedOptions }]: any[]) {
   if (!Array.isArray(recipients)) return;
   goToSend({ sendFrom, recipients, advancedOptions });
 }
 
-async function apiCall([endpoint, params, callId], webview) {
+async function apiCall([endpoint, params, callId]: any[], webview: WebviewTag) {
   try {
     const response = await callAPI(endpoint, params);
     if (webview) {
@@ -126,8 +130,15 @@ async function apiCall([endpoint, params, callId], webview) {
   }
 }
 
-async function secureApiCall([endpoint, params, callId], webview) {
-  const { displayName } = getActiveModule();
+async function secureApiCall(
+  [endpoint, params, callId]: any[],
+  webview: WebviewTag
+) {
+  const activeModule = getActiveModule();
+  if (!activeModule) return;
+  const {
+    info: { displayName },
+  } = activeModule;
   try {
     const message = (
       <div style={{ overflow: 'scroll', maxHeight: '15em' }}>
@@ -169,12 +180,12 @@ async function secureApiCall([endpoint, params, callId], webview) {
   }
 }
 
-function showNotif([options = {}]) {
+function showNotif([options = {}]: any[]) {
   const { content, type, autoClose } = options;
   showNotification(content, { content, type, autoClose });
 }
 
-function showErrorDialog([options = {}]) {
+function showErrorDialog([options = {}]: any[]) {
   const { message, note } = options;
   openErrorDialog({
     message,
@@ -182,7 +193,7 @@ function showErrorDialog([options = {}]) {
   });
 }
 
-function showSuccessDialog([options = {}]) {
+function showSuccessDialog([options = {}]: any[]) {
   const { message, note } = options;
   openSuccessDialog({
     message,
@@ -190,7 +201,7 @@ function showSuccessDialog([options = {}]) {
   });
 }
 
-function showInfoDialog([options = {}]) {
+function showInfoDialog([options = {}]: any[]) {
   const { message, note } = options;
   openInfoDialog({
     message,
@@ -198,7 +209,7 @@ function showInfoDialog([options = {}]) {
   });
 }
 
-function confirm([options = {}, confirmationId], webview) {
+function confirm([options = {}, confirmationId]: any[], webview: WebviewTag) {
   const { question, note, labelYes, skinYes, labelNo, skinNo } = options;
   openConfirmDialog({
     question,
@@ -226,8 +237,9 @@ function confirm([options = {}, confirmationId], webview) {
   });
 }
 
-function updateState([moduleState]) {
+function updateState([moduleState]: any[]) {
   const activeAppModuleName = store.get(activeAppModuleNameAtom);
+  if (!activeAppModuleName) return;
   if (typeof moduleState === 'object') {
     store.set(moduleStatesAtom, (states) => ({
       ...states,
@@ -240,33 +252,35 @@ function updateState([moduleState]) {
   }
 }
 
-function updateStorage([data]) {
+function updateStorage([data]: any[]) {
   const activeModule = getActiveModule();
+  if (!activeModule) return;
   writeModuleStorage(activeModule, data);
 }
 
-function contextMenu([template], webview) {
+function contextMenu([template]: any[], webview: WebviewTag) {
   if (webview) {
     popupContextMenu(template || defaultMenu, webview.getWebContentsId());
   }
 }
 
-function openInBrowser([url]) {
+function openInBrowser([url]: any[]) {
   shell.openExternal(url);
 }
 
-function copyToClipboard([text]) {
+function copyToClipboard([text]: any[]) {
   clipboard.writeText(text);
 }
 
 /**
+ * ===========================================================================
  * Public API
  * ===========================================================================
  */
 
 export const getActiveWebView = () => activeWebView;
 
-export const setActiveAppModule = (webview, moduleName) => {
+export const setActiveAppModule = (webview: WebviewTag, moduleName: string) => {
   activeWebView = webview;
   store.set(activeAppModuleNameAtom, moduleName);
 };
@@ -287,7 +301,7 @@ export const toggleWebViewDevTools = () => {
   }
 };
 
-function sendWalletDataUpdated(walletData) {
+function sendWalletDataUpdated(walletData: WalletData) {
   const activeWebView = getActiveWebView();
   if (activeWebView) {
     try {
@@ -304,9 +318,13 @@ export function prepareWebView() {
       webview.addEventListener('dom-ready', async () => {
         const settings = store.get(settingsAtom);
         const { locale, fiatCurrency, addressStyle } = settings;
-        const moduleState = store.get(moduleStatesAtom)[moduleName];
+        const moduleState = moduleName
+          ? store.get(moduleStatesAtom)[moduleName]
+          : null;
         const activeModule = getActiveModule();
-        const storageData = await readModuleStorage(activeModule);
+        const storageData = activeModule
+          ? await readModuleStorage(activeModule)
+          : null;
         webview.send('initialize', {
           theme: store.get(themeAtom),
           settings: getSettingsForModules(locale, fiatCurrency, addressStyle),
@@ -347,4 +365,20 @@ export function prepareWebView() {
   subscribe(addressBookAtom, (addressBook) => {
     sendWalletDataUpdated({ addressBook });
   });
+}
+
+type SettingsForModule = Pick<
+  Settings,
+  'locale' | 'fiatCurrency' | 'addressStyle'
+>;
+
+interface WalletData {
+  theme?: Theme;
+  settings?: SettingsForModule;
+  // TODO: replace real types
+  coreInfo?: any;
+  userStatus?: any;
+  addressBook?: AddressBook;
+  moduleState?: Object | null;
+  storageData?: any;
 }

@@ -1,24 +1,18 @@
-import { join } from 'path';
 import fs from 'fs';
+import { join } from 'path';
+import { Module } from './module';
 
 const storageFileName = 'storage.json';
 
-/**
- *
- *
- * @export
- * @param {*} module
- * @returns
- */
-export async function readModuleStorage(module) {
+export async function readModuleStorage(module: Module) {
   try {
     const storagePath = join(module.path, storageFileName);
     if ((await fs.promises.stat(storagePath)).isFile()) {
       const content = await fs.promises.readFile(storagePath);
-      const data = JSON.parse(content);
+      const data = JSON.parse(String(content));
       return data;
     }
-  } catch (err) {
+  } catch (err: any) {
     if (err.code !== 'ENOENT') {
       console.error(err);
     }
@@ -26,15 +20,7 @@ export async function readModuleStorage(module) {
   return {};
 }
 
-/**
- *
- *
- * @export
- * @param {*} module
- * @param {*} data
- * @returns
- */
-export async function writeModuleStorage(module, data) {
+export async function writeModuleStorage(module: Module, data: any) {
   if (!data || typeof data !== 'object') {
     console.error('Module storage data must be an object');
     return;

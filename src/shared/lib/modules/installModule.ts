@@ -1,23 +1,23 @@
-import { join, dirname, normalize } from 'path';
-import fs from 'fs';
-import https from 'https';
 import axios from 'axios';
 import extractZip from 'extract-zip';
+import fs from 'fs';
+import https from 'https';
+import { dirname, join, normalize } from 'path';
 
-import { store } from 'lib/store';
-import { showNotification, openModal } from 'lib/ui';
-import UT from 'lib/usageTracking';
-import { updateSettings, settingsAtom } from 'lib/settings';
 import ModuleDetailsModal from 'components/ModuleDetailsModal';
-import { modulesDir } from 'consts/paths';
-import { walletDataDir } from 'consts/paths';
-import ensureDirExists from 'utils/ensureDirExists';
+import { modulesDir, walletDataDir } from 'consts/paths';
 import { rm as deleteDirectory } from 'fs/promises';
+import { confirm, openErrorDialog, openSuccessDialog } from 'lib/dialog';
+import { settingsAtom, updateSettings } from 'lib/settings';
+import { store } from 'lib/store';
+import { openModal, showNotification } from 'lib/ui';
+import UT from 'lib/usageTracking';
+import ensureDirExists from 'utils/ensureDirExists';
 import { throttled } from 'utils/universal';
-import { confirm, openSuccessDialog, openErrorDialog } from 'lib/dialog';
 
-import { loadModuleFromDir, loadDevModuleFromDir } from './module';
-import { modulesMapAtom, moduleDownloadsAtom } from './atoms';
+import { ClientRequest } from 'http';
+import { moduleDownloadsAtom, modulesMapAtom } from './atoms';
+import { loadDevModuleFromDir, loadModuleFromDir } from './module';
 
 __ = __context('Settings.Modules');
 
@@ -27,26 +27,16 @@ const supportedExtensions = ['.zip'];
 
 /**
  * Copy a module file from source to dest
- *
- * @param {*} file - file's relative path from source
- * @param {*} source
- * @param {*} dest
- * @returns
  */
-function copyFile(file, source, dest) {
+function copyFile(file: string, source: string, dest: string) {
   return fs.promises.copyFile(join(source, file), join(dest, file));
 }
 
 /**
  * Copy all files of a module from source to the destination
  * including nxs_package.json and repo_info.json
- *
- * @param {*} files
- * @param {*} source
- * @param {*} dest
- * @returns
  */
-async function copyModule(files, source, dest) {
+async function copyModule(files: string[], source: string, dest: string) {
   // Create all the missing sub-directories sequentially first
   // The creations would be duplicated if they're parallel
   for (let file of files) {
@@ -66,23 +56,20 @@ async function copyModule(files, source, dest) {
 
 /**
  * Install a module from a directory
- *
- * @param {string} path
- * @returns
  */
-function doInstall(path) {
+function doInstall(path: string) {
   return new Promise(async (resolve) => {
     let module;
     try {
       module = await loadModuleFromDir(path);
-    } catch (err) {
+    } catch (err: any) {
       openErrorDialog({
         message: __('Failed to load module'),
-        note: err.message,
+        note: err?.message,
       });
     }
 
-    if (!module) return resolve();
+    if (!module) return resolve(undefined);
 
     openModal(ModuleDetailsModal, {
       module,
@@ -113,13 +100,13 @@ function doInstall(path) {
               location.reload();
             },
           });
-        } catch (err) {
+        } catch (err: any) {
           console.error(err);
           openErrorDialog({
             message: __('Failed to install module'),
-            note: err.message,
+            note: err?.message,
           });
-          return resolve();
+          return resolve(undefined);
         }
       },
     });
@@ -130,12 +117,8 @@ function doInstall(path) {
  * Install a module from either an archive file or a directory.
  * In case of an archive file, it will be extracted to a
  * temp directory then continue to install from that directory.
- *
- * @export
- * @param {string} path
- * @returns
  */
-export async function installModule(path) {
+export async function installModule(path: string) {
   try {
     if (!fs.existsSync(path)) {
       showNotification(__('Cannot find module'), 'error');
@@ -175,17 +158,17 @@ export async function installModule(path) {
     }
 
     await doInstall(sourcePath);
-  } catch (err) {
+  } catch (err: any) {
     console.error(err);
     openErrorDialog({
       message: __('Failed to load module'),
-      note: err.message,
+      note: err?.message,
     });
     return;
   }
 }
 
-export async function addDevModule(dirPath) {
+export async function addDevModule(dirPath: string) {
   const { devModulePaths } = store.get(settingsAtom);
   if (devModulePaths.includes(dirPath)) {
     openErrorDialog({
@@ -197,10 +180,10 @@ export async function addDevModule(dirPath) {
   let module;
   try {
     module = await loadDevModuleFromDir(dirPath);
-  } catch (err) {
+  } catch (err: any) {
     openErrorDialog({
       message: __('Failed to load development module'),
-      note: err.message,
+      note: err?.message,
     });
   }
   if (!module) return;
@@ -223,12 +206,31 @@ export async function addDevModule(dirPath) {
   });
 }
 
+export interface ModuleDownload {
+  // Downloaded size in bytes
+  downloaded?: number;
+  // Total size in bytes
+  totalSize?: number;
+  downloading?: boolean;
+}
+
 // Mapping from module name to download request object of that module
-let downloadRequests = {};
-export const getDownloadRequest = (moduleName) => downloadRequests[moduleName];
+let downloadRequests: Record<string, ClientRequest | null> = {};
+export const getDownloadRequest = (moduleName: string) =>
+  downloadRequests[moduleName];
 
 const updateDownloadProgress = throttled(
-  ({ moduleName, downloaded, totalSize, downloadRequest }) => {
+  ({
+    moduleName,
+    downloaded,
+    totalSize,
+    downloadRequest,
+  }: {
+    moduleName: string;
+    downloaded: number;
+    totalSize: number;
+    downloadRequest: ClientRequest;
+  }) => {
     downloadRequests[moduleName] = downloadRequest;
     store.set(moduleDownloadsAtom, (downloads) => ({
       ...downloads,
@@ -242,23 +244,33 @@ const updateDownloadProgress = throttled(
   1000
 );
 
-function download(url, { moduleName, filePath }) {
-  return new Promise((resolve, reject) => {
+function download(
+  url: string,
+  { moduleName, filePath }: { moduleName: string; filePath: string }
+) {
+  return new Promise<string | null>((resolve, reject) => {
     const downloadRequest = https
       .get(url)
       .setTimeout(180000)
       .on('response', (response) => {
-        if (String(response.statusCode).startsWith('3')) {
+        if (
+          String(response.statusCode).startsWith('3') &&
+          response.headers['location']
+        ) {
           // Redirecting
-          return download(response.headers['location'], {
+          download(response.headers['location'], {
             moduleName,
             filePath,
           })
             .then(resolve)
             .catch(reject);
+          return;
         }
 
-        const totalSize = parseInt(response.headers['content-length'], 10);
+        const totalSize = parseInt(
+          response.headers['content-length'] || '',
+          10
+        );
 
         let downloaded = 0;
         const file = fs.createWriteStream(filePath);
@@ -294,13 +306,24 @@ function download(url, { moduleName, filePath }) {
   });
 }
 
-async function downloadAsset({ moduleName, asset }) {
+interface Asset {
+  name: string;
+  browser_download_url: string;
+}
+
+async function downloadAsset({
+  moduleName,
+  asset,
+}: {
+  moduleName: string;
+  asset: Asset;
+}) {
   const dirPath = join(walletDataDir, '.downloads');
   let dirStat;
   try {
     dirStat = await fs.promises.stat(dirPath);
-  } catch (err) {
-    if (err.code === 'ENOENT') {
+  } catch (err: any) {
+    if (err?.code === 'ENOENT') {
       // Create directory if it doesn't exist
       await fs.promises.mkdir(dirPath, { recursive: true });
     } else {
@@ -320,8 +343,13 @@ export async function downloadAndInstall({
   owner,
   repo,
   releaseId,
+}: {
+  moduleName: string;
+  owner: string;
+  repo: string;
+  releaseId: string;
 }) {
-  let filePath;
+  let filePath: string | null = null;
   try {
     store.set(moduleDownloadsAtom, (downloads) => ({
       ...downloads,
@@ -348,7 +376,7 @@ export async function downloadAndInstall({
         },
       }
     );
-    const asset = releaseAssets.find(
+    const asset = (releaseAssets as Asset[]).find(
       ({ name }) => name.startsWith(moduleName) && name.endsWith('.zip')
     );
     if (!asset) {
@@ -365,16 +393,16 @@ export async function downloadAndInstall({
     if (filePath) {
       await installModule(filePath);
     }
-  } catch (err) {
+  } catch (err: any) {
     openErrorDialog({
       message: __('Error downloading module'),
-      note: err.message,
+      note: err?.message,
     });
   } finally {
     downloadRequests[moduleName] = null;
     store.set(moduleDownloadsAtom, (downloads) => ({
       ...downloads,
-      [moduleName]: undefined,
+      [moduleName]: null,
     }));
     if (filePath && fs.existsSync(filePath)) {
       fs.unlink(filePath, (err) => {
@@ -384,7 +412,7 @@ export async function downloadAndInstall({
   }
 }
 
-export function abortModuleDownload(moduleName) {
+export function abortModuleDownload(moduleName: string) {
   const downloadRequest = getDownloadRequest(moduleName);
   return downloadRequest?.abort();
 }

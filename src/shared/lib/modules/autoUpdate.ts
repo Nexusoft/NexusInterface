@@ -1,35 +1,26 @@
-// import fs from 'fs';
-// import { join } from 'path';
 import axios from 'axios';
 import semver from 'semver';
 
 import { store } from 'lib/store';
 import { showNotification } from 'lib/ui';
 import { navigate } from 'lib/wallet';
-import { modulesAtom, modulesMapAtom } from './atoms';
 import { tryParsingJson } from 'utils/json';
-// import { walletDataDir } from 'consts/paths';
-// import ensureDirExists from 'utils/ensureDirExists';
-// import downloadFile from 'utils/downloadFile';
-
-// const pendingDir = join(walletDataDir, 'module_updates', 'pending');
-// const completeDir = join(walletDataDir, 'module_updates', 'complete');
+import { modulesAtom, modulesMapAtom } from './atoms';
+import { Module, ProductionModule, isDevModule } from './module';
+import { Repository } from './repo';
 
 //If expanded consider moving to own file.
 const localStorageKey = 'moduleUpdateCache';
 const cacheStaleTime = 1000 * 60 * 60 * 24 * 7; // 7 days
 
-// const getAssetName = (name, version) => `${name}_v${version}.zip`;
-
-function getRepoId(repo) {
-  if (!repo?.owner || !repo?.repo) return null;
+function getRepoId(repo: Repository) {
   return `${repo.owner}/${repo.repo}`;
 }
 
 // Load cache and check cache for junk and remove
 function loadCache() {
   const cacheJson = localStorage.getItem(localStorageKey);
-  const cache = tryParsingJson(cacheJson) || {};
+  const cache = (cacheJson && tryParsingJson(cacheJson)) || {};
   for (const key in cache) {
     if (cache?.hasOwnProperty(key)) {
       if (Date.now() - cacheStaleTime * 4 > cache[key].time) {
@@ -41,11 +32,11 @@ function loadCache() {
   return cache;
 }
 
-function saveCache(cache) {
+function saveCache(cache: any) {
   localStorage.setItem(localStorageKey, JSON.stringify(cache));
 }
 
-export function removeUpdateCache(repo) {
+export function removeUpdateCache(repo: Repository) {
   const repoId = getRepoId(repo);
   if (!repoId) return;
   const cache = loadCache();
@@ -53,7 +44,7 @@ export function removeUpdateCache(repo) {
   saveCache(cache);
 }
 
-async function getLatestRelease(repo, { cache }) {
+async function getLatestRelease(repo: Repository, { cache }: { cache: any }) {
   const repoId = getRepoId(repo);
   let repoCache = cache[repoId];
   if (repoCache && Date.now() - cacheStaleTime > repoCache.time) {
@@ -73,13 +64,13 @@ async function getLatestRelease(repo, { cache }) {
       id: response.data.id,
       tag_name: response.data.tag_name,
       assets: !!response.data.assets,
-      etag: response.headers.etag,
+      etag: response.headers['etag'],
       time: Date.now(),
     };
     // cache.setItem(repoId, JSON.stringify(cacheObj));
     cache[repoId] = cacheObj;
     return response.data;
-  } catch (err) {
+  } catch (err: any) {
     if (err?.response?.status === 304) {
       // 304 = Not modified
       return repoCache;
@@ -89,9 +80,9 @@ async function getLatestRelease(repo, { cache }) {
   }
 }
 
-async function checkForModuleUpdate(module, { cache }) {
+async function checkForModuleUpdate(module: Module, { cache }: { cache: any }) {
   try {
-    if (!module.repository) return null;
+    if (isDevModule(module) || !module.repository) return null;
     const release = await getLatestRelease(module.repository, { cache });
     if (!release || !release.tag_name || !release.assets) return null;
 
@@ -107,37 +98,21 @@ async function checkForModuleUpdate(module, { cache }) {
     }
 
     return { module, latestVersion, latestRelease: release };
-
-    // const assetName = getAssetName(module.info.name, latestVer);
-    // const asset = latest.assets.find(a => a.name === assetName);
-    // if (!asset) return null;
-
-    // return { module, asset };
   } catch (err) {
     console.error(err);
     throw err;
   }
 }
 
-// async function downloadModuleUpdate(asset) {
-//   const targetPath = join(completeDir, asset.name);
-//   if (fs.existsSync(targetPath)) {
-//     return targetPath;
-//   }
-
-//   const tempPath = join(pendingDir, asset.name);
-//   await downloadFile(asset.browser_download_url, tempPath);
-//   await ensureDirExists(completeDir);
-//   await fs.promises.rename(tempPath, targetPath);
-//   return targetPath;
-// }
-
 export async function checkForModuleUpdates() {
   const modules = store.get(modulesAtom);
   const cache = loadCache();
 
-  const updateableModules = modules
-    .filter((module) => !module.development && !!module.repository)
+  const prodModules = modules.filter(
+    (m) => !isDevModule(m)
+  ) as ProductionModule[];
+  const updateableModules = prodModules
+    .filter((module) => !!module.repository)
     .sort((a, b) =>
       a.hasNewVersion === b.hasNewVersion ? 1 : a.hasNewVersion ? 1 : -1
     );
@@ -145,8 +120,8 @@ export async function checkForModuleUpdates() {
     updateableModules.map((m) => checkForModuleUpdate(m, { cache }))
   );
   const updates = results
-    .filter(({ status, value }) => value && status === 'fulfilled')
-    .map(({ value }) => value);
+    .filter(({ status, value }: any) => value && status === 'fulfilled')
+    .map(({ value }: any) => value);
   saveCache(cache);
 
   if (updates.length > 0) {
@@ -183,7 +158,7 @@ export async function checkForModuleUpdates() {
       hasNewVersion: true,
       latestVersion: latestVersion,
       latestRelease: latestRelease,
-    };
+    } as ProductionModule;
   });
   store.set(modulesMapAtom, modulesMap);
 }

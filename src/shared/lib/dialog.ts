@@ -1,15 +1,15 @@
 import ConfirmDialog, {
   ConfirmDialogProps,
 } from 'components/Dialogs/ConfirmDialog';
-import ErrorDialog, { ErrorDialogProps } from 'components/Dialogs/ErrorDialog';
-import SuccessDialog, {
-  SuccessDialogProps,
-} from 'components/Dialogs/SuccessDialog';
-import InfoDialog, { InfoDialogProps } from 'components/Dialogs/InfoDialog';
-import PinDialog, { PinDialogProps } from 'components/Dialogs/PinDialog';
 import ConfirmPasswordPinDialog, {
   ConfirmPasswordPinDialogProps,
 } from 'components/Dialogs/ConfirmPasswordPinDialog';
+import ErrorDialog, { ErrorDialogProps } from 'components/Dialogs/ErrorDialog';
+import InfoDialog, { InfoDialogProps } from 'components/Dialogs/InfoDialog';
+import PinDialog, { PinDialogProps } from 'components/Dialogs/PinDialog';
+import SuccessDialog, {
+  SuccessDialogProps,
+} from 'components/Dialogs/SuccessDialog';
 import { openModal } from 'lib/ui';
 
 export const openConfirmDialog = (props: ConfirmDialogProps) =>
@@ -45,7 +45,10 @@ export function confirm(
   });
 }
 
-export function confirmPin({ note, confirmLabel }: PinDialogProps) {
+export function confirmPin({
+  note,
+  confirmLabel,
+}: Omit<PinDialogProps, 'submitPin' | 'onClose'>) {
   return new Promise((resolve) => {
     openModal(PinDialog, {
       note,
