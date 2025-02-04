@@ -11,7 +11,7 @@ export default function memoize<TCallback extends (...args: any[]) => any>(
 
   // breaking cache when context (this) or arguments change
   function memoized(
-    this: any,
+    this: ThisParameterType<TCallback>,
     ...newArgs: Parameters<TCallback>
   ): ReturnType<TCallback> {
     if (lastThis === this && isEqual(newArgs, lastArgs)) {

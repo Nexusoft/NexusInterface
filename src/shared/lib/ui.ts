@@ -28,7 +28,7 @@ const newTaskId = (function () {
 export interface ModalDescriptor {
   id: string;
   component: ComponentType<any>;
-  props: any;
+  props?: any;
 }
 
 export interface NotificationDescriptor {
@@ -41,7 +41,7 @@ export interface NotificationDescriptor {
 export interface BackgroundTaskDescriptor {
   id: string;
   component: ComponentType<any>;
-  props: any;
+  props?: any;
 }
 
 /**
@@ -60,7 +60,7 @@ export const jotaiDevToolsOpenAtom = atom(false);
  */
 export function openModal<TProps extends ControlledModalProps>(
   component: ComponentType<TProps>,
-  props: TProps
+  props?: TProps
 ) {
   const id = newModalId();
   store.set(modalsAtom, (modals) => [
@@ -92,7 +92,9 @@ export function isModalOpen(modalComponent: ComponentType) {
  */
 export function showNotification(
   content: ReactNode,
-  options: NotificationProps['type'] | NotificationProps
+  options:
+    | NotificationProps['type']
+    | Omit<NotificationProps, 'notifID' | 'index'>
 ) {
   const id = newNotifId();
   store.set(notificationsAtom, (notifications) => [
@@ -118,7 +120,7 @@ export function removeNotification(notifId: string) {
  */
 export function showBackgroundTask<TProps extends BackgroundTaskProps>(
   component: ComponentType<TProps>,
-  props: TProps
+  props?: TProps
 ) {
   const id = newTaskId();
   store.set(backgroundTasksAtom, (backgroundTasks) => [
