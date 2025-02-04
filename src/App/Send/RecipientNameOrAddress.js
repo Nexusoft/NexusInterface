@@ -1,30 +1,30 @@
 // External
-import { useEffect, useRef } from 'react';
-import { useAtomValue } from 'jotai';
 import styled from '@emotion/styled';
+import { useAtomValue } from 'jotai';
+import { useEffect, useRef } from 'react';
 import { Field, useField } from 'react-final-form';
 
 // Internal
-import AutoSuggest from 'components/AutoSuggest';
-import FormField from 'components/FormField';
-import Button from 'components/Button';
-import Icon from 'components/Icon';
 import AddEditContactModal from 'components/AddEditContactModal';
-import { openModal } from 'lib/ui';
-import { required, checkAll } from 'lib/form';
-import { callAPI } from 'lib/api';
-import { useSource } from 'lib/send';
-import { accountsQuery } from 'lib/user';
+import AutoSuggest from 'components/AutoSuggest';
+import Button from 'components/Button';
+import FormField from 'components/FormField';
+import Icon from 'components/Icon';
+import NexusAddress from 'components/NexusAddress';
+import TokenName from 'components/TokenName';
+import { addressRegex } from 'consts/misc';
+import contactIcon from 'icons/address-book.svg';
+import plusIcon from 'icons/plus.svg';
+import walletIcon from 'icons/wallet.svg';
+import warningIcon from 'icons/warning.svg';
 import { contactsAtom } from 'lib/addressBook';
+import { callAPI } from 'lib/api';
+import { checkAll, required } from 'lib/form';
+import { useSource } from 'lib/send';
+import { openModal } from 'lib/ui';
+import { accountsQuery } from 'lib/user';
 import memoize from 'utils/memoize';
 import { debounced } from 'utils/universal';
-import { addressRegex } from 'consts/misc';
-import plusIcon from 'icons/plus.svg';
-import warningIcon from 'icons/warning.svg';
-import TokenName from 'components/TokenName';
-import NexusAddress from 'components/NexusAddress';
-import walletIcon from 'icons/wallet.svg';
-import contactIcon from 'icons/address-book.svg';
 
 import RecipientAddress from './RecipientAddress';
 
@@ -78,7 +78,7 @@ const isOfSameToken = (source) =>
       } catch (err) {
         let token;
         try {
-          token = await callAPI('tokens/get/token', params);
+          token = await callAPI('tokens/get/token', { address });
         } catch {}
         if (token && token.address !== sourceToken) {
           return __('Source and recipient must be of the same token');
