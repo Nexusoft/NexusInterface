@@ -106,34 +106,6 @@ export async function callAPIByUrl(url: string) {
   });
 }
 
-export async function listAll(
-  endpoint: string,
-  params: Record<string, any>,
-  options: { limit?: number; callback?: Function } = {}
-) {
-  const { limit = 100, callback = () => {} } = options;
-  let list: any[] = [];
-  let results = null;
-  let page = 0;
-  do {
-    results = await callAPI(endpoint, {
-      ...params,
-      limit,
-      page: page++,
-    });
-    if (!results) break;
-    if (Array.isArray(results)) {
-      callback?.(results);
-      list = list.concat(results);
-    } else {
-      throw new Error(
-        `API result is expected to be an array, got ${typeof results}`
-      );
-    }
-  } while (results.length === limit);
-  return list;
-}
-
 /**
  * =============================================================================
  * Types
@@ -246,6 +218,20 @@ export interface ProfileStatus {
   };
 }
 
+export interface StakeInfo {
+  address: string;
+  balance: number;
+  stake: number;
+  trust: number;
+  stakerate: number;
+  trustweight: number;
+  blockweight: number;
+  stakeweight: number;
+  new: boolean;
+  staking: boolean;
+  change: boolean;
+}
+
 export interface QueryParams {
   limit?: number;
   page?: number;
@@ -346,7 +332,7 @@ export interface Token extends NxsObject {
   ticker?: string;
 }
 
-export interface Name extends NxsObject {
+export interface NameRecord extends NxsObject {
   register: string;
   name: string;
   local: boolean;
@@ -572,19 +558,7 @@ async function callAPI(
     name?: string;
   }
 ): Promise<OperationResultWithAddress>;
-async function callAPI(endpoint: 'finance/get/stakeinfo'): Promise<{
-  address: string;
-  balance: number;
-  stake: number;
-  trust: number;
-  stakerate: number;
-  trustweight: number;
-  blockweight: number;
-  stakeweight: number;
-  new: boolean;
-  staking: boolean;
-  change: boolean;
-}>;
+async function callAPI(endpoint: 'finance/get/stakeinfo'): Promise<StakeInfo>;
 async function callAPI(
   endpoint: 'finance/get/balances'
 ): Promise<Array<NexusBalance | TokenBalance>>;
@@ -625,21 +599,21 @@ async function callAPI(
 async function callAPI(
   endpoint: 'names/reverse/lookup',
   customParams: { address: string }
-): Promise<Name>;
+): Promise<NameRecord>;
 async function callAPI(
   endpoint: 'names/get/name',
   customParams: QueryParams & {
     name?: string;
     address?: string;
   }
-): Promise<Name>;
+): Promise<NameRecord>;
 async function callAPI(
   endpoint: 'names/get/inactive',
   customParams: QueryParams & {
     name?: string;
     address?: string;
   }
-): Promise<Name>;
+): Promise<NameRecord>;
 async function callAPI(
   endpoint: 'names/rename/name',
   customParams: {
@@ -710,11 +684,11 @@ async function callAPI(
 async function callAPI(
   endpoint: 'names/list/names',
   customParams?: QueryParams
-): Promise<Name[]>;
+): Promise<NameRecord[]>;
 async function callAPI(
   endpoint: 'names/list/inactive',
   customParams?: QueryParams
-): Promise<Name[]>;
+): Promise<NameRecord[]>;
 async function callAPI(
   endpoint: 'names/list/namespaces',
   customParams?: QueryParams
@@ -812,3 +786,72 @@ async function callAPI(endpoint: string, customParams?: Record<string, any>) {
   return await sendRequest({ params, options, ssl: conf.apiSSL });
 }
 export { callAPI };
+
+/**
+ * =============================================================================
+ * ListAll overloads
+ * =============================================================================
+ */
+
+async function listAll(
+  endpoint: 'finance/transactions/any',
+  customParams?: QueryParams & {
+    verbose?: 'summary';
+    name?: string;
+    address?: string;
+  }
+): Promise<Transaction[]>;
+async function listAll(
+  endpoint: 'finance/list/tokens',
+  customParams?: QueryParams
+): Promise<Token[]>;
+async function listAll(
+  endpoint: 'names/list/names',
+  customParams?: QueryParams
+): Promise<NameRecord[]>;
+async function listAll(
+  endpoint: 'names/list/inactive',
+  customParams?: QueryParams
+): Promise<NameRecord[]>;
+async function listAll(
+  endpoint: 'names/list/namespaces',
+  customParams?: QueryParams
+): Promise<Namespace[]>;
+async function listAll(
+  endpoint: 'assets/list/assets',
+  customParams?: QueryParams
+): Promise<Asset[]>;
+async function listAll(
+  endpoint: 'assets/list/partial',
+  customParams?: QueryParams
+): Promise<PartialAsset[]>;
+
+async function listAll(
+  endpoint: string,
+  customParams?: Record<string, any>
+): Promise<any>;
+
+async function listAll(endpoint: string, customParams?: Record<string, any>) {
+  let list: any[] = [];
+  let results = null;
+  let page = 0;
+  const limit = customParams?.['limit'] || 100;
+  do {
+    results = await callAPI(endpoint, {
+      limit,
+      ...customParams,
+      page: page++,
+    });
+    if (!results) break;
+    if (Array.isArray(results)) {
+      list = list.concat(results);
+    } else {
+      throw new Error(
+        `API result is expected to be an array, got ${typeof results}`
+      );
+    }
+  } while (results.length === limit);
+  return list;
+}
+
+export { listAll };
