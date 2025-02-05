@@ -13,7 +13,7 @@ interface JotaiQueryOptions<TQueryFnData, TData = TQueryFnData> {
   alwaysOn?: boolean;
 }
 
-export default function jotaiQuery<TQueryFnData, TData>({
+export default function jotaiQuery<TQueryFnData, TData = TQueryFnData>({
   condition,
   getQueryConfig,
   selectValue,

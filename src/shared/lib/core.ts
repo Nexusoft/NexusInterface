@@ -3,7 +3,7 @@ import log from 'electron-log';
 
 import { store } from 'lib/store';
 import { loadNexusConf, coreConfigAtom } from 'lib/coreConfig';
-import { coreInfoPausedAtom } from './coreInfo';
+import { coreInfoPausedAtom } from 'lib/coreInfo';
 import { callAPI } from 'lib/api';
 import { updateSettings, settingsAtom } from 'lib/settings';
 import sleep from 'utils/sleep';
@@ -77,7 +77,10 @@ export const startCore = async () => {
       `-testnet=${LOCK_TESTNET}`
     );
   } else {
-    if (settings.testnetIteration && settings.testnetIteration !== '0') {
+    if (
+      settings.testnetIteration &&
+      String(settings.testnetIteration) !== '0'
+    ) {
       params.push('-testnet=' + settings.testnetIteration);
       if (settings.privateTestnet) {
         params.push('-private=1');
@@ -121,8 +124,7 @@ export const startCore = async () => {
     (!settings.coreAPIPolicy || settings.coreAPIPolicy < minimumCoreAPIPolicy)
   ) {
     updateSettings({ coreAPIPolicy: minimumCoreAPIPolicy });
-    const corePath =
-      conf.coreDataDir || settings.coreDataDir || defaultCoreDataDir;
+    const corePath = settings.coreDataDir || defaultCoreDataDir;
     if (fs.existsSync(path.join(corePath, '_API'))) {
       await deleteDirectory(path.join(corePath, '_API'), {
         recursive: true,
@@ -139,7 +141,7 @@ export const startCore = async () => {
 /**
  * Stop Nexus Core
  */
-export const stopCore = async (forRestart) => {
+export const stopCore = async (forRestart?: boolean) => {
   log.info('Core Manager: Stop function called');
   const { manualDaemon } = store.get(settingsAtom);
   try {

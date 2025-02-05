@@ -1,6 +1,6 @@
 import { atom, useAtomValue } from 'jotai';
 import { store } from 'lib/store';
-import { callAPI } from 'lib/api';
+import { callAPI, CoreInfo } from 'lib/api';
 import { settingAtoms } from 'lib/settings';
 import jotaiQuery from 'utils/jotaiQuery';
 
@@ -11,7 +11,7 @@ import jotaiQuery from 'utils/jotaiQuery';
 
 export const coreInfoPausedAtom = atom(false);
 
-export const coreInfoQuery = jotaiQuery({
+export const coreInfoQuery = jotaiQuery<CoreInfo>({
   alwaysOn: true,
   condition: (get) => !get(coreInfoPausedAtom),
   getQueryConfig: (get) => ({

@@ -157,6 +157,7 @@ export interface CoreInfo {
   syncing: boolean;
   txtotal: number;
   connections: number;
+  testnet?: number;
 }
 
 export interface PeerInfo {
