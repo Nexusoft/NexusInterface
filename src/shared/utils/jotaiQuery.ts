@@ -8,7 +8,7 @@ interface JotaiQueryOptions<TQueryFnData, TData = TQueryFnData> {
   getQueryConfig: (
     get: Getter
   ) => Omit<AtomWithQueryOptions<TQueryFnData>, 'enabled'>;
-  selectValue?: (value: TQueryFnData | undefined) => TData | undefined;
+  selectValue?: (value: TQueryFnData | undefined) => TData;
   refetchTriggers?: Atom<any>[];
   alwaysOn?: boolean;
 }
@@ -34,7 +34,7 @@ export default function jotaiQuery<TQueryFnData, TData = TQueryFnData>({
     ...getQueryConfig(get),
   }));
 
-  const valueAtom = atom((get) => {
+  const getValue = (get: Getter) => {
     const enabled = get(enabledAtom);
     const query = get(queryAtom);
     let value: TQueryFnData | undefined;
@@ -43,8 +43,12 @@ export default function jotaiQuery<TQueryFnData, TData = TQueryFnData>({
     } else {
       value = query.data;
     }
-    return selectValue ? selectValue(value) : value;
-  });
+    return value;
+  };
+
+  const valueAtom = selectValue
+    ? atom<TData | undefined>((get) => selectValue(getValue(get)))
+    : atom<TQueryFnData | undefined>(getValue);
 
   const refetch = () => {
     const enabled = store.get(enabledAtom);
