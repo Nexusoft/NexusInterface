@@ -11,13 +11,13 @@ import { confirm, confirmPin } from 'lib/dialog';
 import { formatNumber } from 'lib/intl';
 import { stakeInfoQuery } from 'lib/session';
 import { showNotification } from 'lib/ui';
-import Link from 'components/Link';
+import { NativeLink } from 'components/Link';
 import memoize from 'utils/memoize';
 import UT from 'lib/usageTracking';
 
 __ = __context('AdjustStake');
 
-const LimitNumber = styled(Link)(
+const LimitNumber = styled(NativeLink)(
   {
     position: 'absolute',
     top: '50%',
@@ -76,7 +76,6 @@ function LimitNumbers({ total }) {
   return (
     <>
       <LimitNumber
-        as="a"
         onClick={() => {
           input.onChange(0);
         }}
@@ -85,7 +84,6 @@ function LimitNumbers({ total }) {
         0
       </LimitNumber>
       <LimitNumber
-        as="a"
         onClick={() => {
           input.onChange(total);
         }}

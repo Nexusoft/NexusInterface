@@ -1,9 +1,21 @@
 import jotaiQuery from 'utils/jotaiQuery';
 import { callAPI, listAll } from 'lib/api';
-import memoize from 'utils/memoize';
-import { loggedInAtom, userGenesisAtom, txCountAtom } from './session';
+import { loggedInAtom, userGenesisAtom, txCountAtom } from 'lib/session';
+import {
+  NexusBalance,
+  TokenBalance,
+  Token,
+  Account,
+  NameRecord,
+  Namespace,
+  Asset,
+  PartialAsset,
+} from 'lib/api';
 
-export const balancesQuery = jotaiQuery({
+export const balancesQuery = jotaiQuery<
+  Array<NexusBalance | TokenBalance>,
+  [NexusBalance, TokenBalance[]] | readonly [undefined, undefined]
+>({
   condition: (get) => get(loggedInAtom),
   getQueryConfig: (get) => ({
     queryKey: ['balances', get(userGenesisAtom)],
@@ -11,25 +23,18 @@ export const balancesQuery = jotaiQuery({
     staleTime: 300000, // 5 minutes
     refetchOnMount: 'always',
   }),
-  selectValue: memoize((balances) => {
-    if (!balances) return [undefined, undefined];
+  selectValue: (balances) => {
+    if (!balances) return [undefined, undefined] as const;
     const nxsIndex = balances.findIndex(({ token }) => token === '0');
     const tokenBalances = [...balances];
     const [nxsBalances] =
       nxsIndex >= 0 ? tokenBalances.splice(nxsIndex, 1) : [undefined];
-    return [nxsBalances, tokenBalances];
-  }),
+    return [nxsBalances, tokenBalances] as [NexusBalance, TokenBalance[]];
+  },
   refetchTriggers: [txCountAtom],
 });
 
-function processToken(token) {
-  if (token.ticker?.startsWith?.('local:')) {
-    token.tickerIsLocal = true;
-    token.ticker = token.ticker.substring(6);
-  }
-}
-
-export const tokensQuery = jotaiQuery({
+export const tokensQuery = jotaiQuery<Token[]>({
   condition: (get) => get(loggedInAtom),
   getQueryConfig: (get) => ({
     queryKey: ['tokens', get(userGenesisAtom)],
@@ -37,26 +42,10 @@ export const tokensQuery = jotaiQuery({
     staleTime: 300000, // 5 minutes
     refetchOnMount: 'always',
   }),
-  selectValue: memoize((tokens) => tokens?.map(processToken)),
   refetchTriggers: [txCountAtom],
 });
 
-// function processAccount(account) {
-//   if (account.name?.startsWith?.('local:')) {
-//     account.nameIsLocal = true;
-//     account.name = account.name.substring(6);
-//   }
-//   if (account.name?.startsWith?.('user:')) {
-//     account.nameIsLocal = true;
-//     account.name = account.name.substring(5);
-//   }
-//   if (account.ticker?.startsWith?.('local:')) {
-//     account.tickerIsLocal = true;
-//     account.ticker = account.ticker.substring(6);
-//   }
-// }
-
-export const accountsQuery = jotaiQuery({
+export const accountsQuery = jotaiQuery<Account[]>({
   condition: (get) => get(loggedInAtom),
   getQueryConfig: (get) => ({
     queryKey: ['accounts', get(userGenesisAtom)],
@@ -67,7 +56,7 @@ export const accountsQuery = jotaiQuery({
   refetchTriggers: [txCountAtom],
 });
 
-export const nameRecordsQuery = jotaiQuery({
+export const nameRecordsQuery = jotaiQuery<NameRecord[]>({
   condition: (get) => get(loggedInAtom),
   getQueryConfig: (get) => ({
     queryKey: ['nameRecords', get(userGenesisAtom)],
@@ -82,7 +71,7 @@ export const nameRecordsQuery = jotaiQuery({
   refetchTriggers: [txCountAtom],
 });
 
-export const namespacesQuery = jotaiQuery({
+export const namespacesQuery = jotaiQuery<Namespace[]>({
   condition: (get) => get(loggedInAtom),
   getQueryConfig: (get) => ({
     queryKey: ['namespacesQuery', get(userGenesisAtom)],
@@ -93,23 +82,23 @@ export const namespacesQuery = jotaiQuery({
   refetchTriggers: [txCountAtom],
 });
 
-export const assetsQuery = jotaiQuery({
+export const assetsQuery = jotaiQuery<(Asset | PartialAsset)[]>({
   condition: (get) => get(loggedInAtom),
-  getQueryConfig: async (get) => ({
+  getQueryConfig: (get) => ({
     queryKey: ['assets', get(userGenesisAtom)],
     queryFn: async () => {
       let [assets] = await Promise.all([listAll('assets/list/assets')]);
       //TODO: Partial returns an error instead of a empty array if there are no assets found which is not the best way to do that, consider revising
-      let partialAssets = [];
       try {
-        partialAssets = await listAll('assets/list/partial');
-      } catch (error) {
+        const partialAssets = await listAll('assets/list/partial');
+        return [...assets, ...partialAssets];
+      } catch (error: any) {
         // Reason?
         if (error?.code !== -74) {
           throw error;
         }
       }
-      return assets.concat(partialAssets);
+      return assets;
     },
     staleTime: 300000, // 5 minutes
     refetchOnMount: 'always',

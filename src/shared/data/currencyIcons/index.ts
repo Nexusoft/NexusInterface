@@ -1,3 +1,4 @@
+import { CurrencyTicker } from 'data/currencies';
 import DollarSign from './USD.svg';
 import PoundSign from './GBP.svg';
 import PesoSign from './CLP.svg';
@@ -17,7 +18,7 @@ import BitcoinSign from './BTC.svg';
 import DongSign from './VND.svg';
 import BahtSign from './THB.svg';
 
-export default function currencyIcon(ISOValue) {
+export default function currencyIcon(ISOValue: CurrencyTicker) {
   switch (ISOValue) {
     case 'BTC':
       return BitcoinSign;

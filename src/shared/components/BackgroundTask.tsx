@@ -9,13 +9,12 @@ import { timing } from 'styles';
 
 const outro = { opacity: [1, 0] };
 
-export interface BackgroundTaskProps extends ComponentProps<typeof SnackBar> {
+export interface BackgroundTaskProps
+  extends Omit<ComponentProps<typeof SnackBar>, 'type' | 'onClick'> {
   assignClose?: (close: () => void) => void;
 }
 
 export default function BackgroundTask({
-  type = 'work',
-  children,
   assignClose,
   ...rest
 }: BackgroundTaskProps) {
@@ -40,8 +39,6 @@ export default function BackgroundTask({
   }, []);
 
   return (
-    <SnackBar type={type} ref={snackBarRef} onClick={animatedClose} {...rest}>
-      {children}
-    </SnackBar>
+    <SnackBar type="work" ref={snackBarRef} onClick={animatedClose} {...rest} />
   );
 }

@@ -3,8 +3,14 @@ import { atom } from 'jotai';
 import ExternalLink from 'components/ExternalLink';
 import BackgroundTask from 'components/BackgroundTask';
 import { store, subscribe, queryClient } from 'lib/store';
-import { callAPI as callAPI } from 'lib/api';
-import { coreConnectedAtom, multiUserAtom, liteModeAtom } from './coreInfo';
+import {
+  callAPI,
+  Session,
+  UserStatus,
+  ProfileStatus,
+  StakeInfo,
+} from 'lib/api';
+import { coreConnectedAtom, multiUserAtom, liteModeAtom } from 'lib/coreInfo';
 import {
   openModal,
   isModalOpen,
@@ -16,11 +22,20 @@ import { updateSettings, settingsAtom, settingAtoms } from 'lib/settings';
 import jotaiQuery from 'utils/jotaiQuery';
 import LoginModal from 'components/LoginModal';
 import NewUserModal from 'components/NewUserModal';
+import { BackgroundTaskProps } from 'components/BackgroundTask';
 import UT from './usageTracking';
 
 __ = __context('User');
 
-export const logIn = async ({ username, password, pin }) => {
+export const logIn = async ({
+  username,
+  password,
+  pin,
+}: {
+  username: string;
+  password: string;
+  pin: string;
+}) => {
   const { session: sessionId } = await callAPI('sessions/create/local', {
     username,
     password,
@@ -55,7 +70,7 @@ export const logOut = async () => {
  * =============================================================================
  */
 
-export const sessionsQuery = jotaiQuery({
+export const sessionsQuery = jotaiQuery<Session[]>({
   alwaysOn: true,
   condition: (get) => !!get(multiUserAtom),
   getQueryConfig: (get) => ({
@@ -71,22 +86,19 @@ export const sessionsQuery = jotaiQuery({
   }),
 });
 
-export const selectedSessionIdAtom = atom(null);
+export const selectedSessionIdAtom = atom<string | null>(null);
 
 export const activeSessionIdAtom = atom((get) => {
   const selectedSessionId = get(selectedSessionIdAtom);
   if (selectedSessionId) return selectedSessionId;
 
   const sessions = get(sessionsQuery.valueAtom);
-  if (!sessions) return null;
-
-  const sessionList = Object.values(sessions);
-  if (!sessionList.length) return null;
+  if (!sessions || !sessions.length) return null;
 
   // Active session is defaulted to the last accessed session
-  const lastAccessed = sessionList.reduce(
+  const lastAccessed = sessions.reduce(
     (las, s) => (!las || s.accessed > las.accessed ? s : las),
-    null
+    null as Session | null
   );
   return lastAccessed?.session || null;
 });
@@ -94,7 +106,9 @@ export const activeSessionIdAtom = atom((get) => {
 export const activeSessionAtom = atom((get) => {
   const sessions = get(sessionsQuery.valueAtom);
   const activeSessionId = get(activeSessionIdAtom);
-  return (activeSessionId && sessions?.[activeSessionId]) || null;
+  if (!activeSessionId || !sessions) return null;
+  const activeSession = sessions.find((s) => s.session === activeSessionId);
+  return activeSession || null;
 });
 
 /**
@@ -102,10 +116,11 @@ export const activeSessionAtom = atom((get) => {
  * =============================================================================
  */
 
-export const userStatusQuery = jotaiQuery({
+export const userStatusQuery = jotaiQuery<UserStatus>({
   alwaysOn: true,
   condition: (get) =>
-    get(coreConnectedAtom) && (!get(multiUserAtom) || get(activeSessionIdAtom)),
+    get(coreConnectedAtom) &&
+    (!get(multiUserAtom) || !!get(activeSessionIdAtom)),
   getQueryConfig: (get) => ({
     queryKey: ['userStatus', get(activeSessionIdAtom)],
     queryFn: async () => {
@@ -116,7 +131,7 @@ export const userStatusQuery = jotaiQuery({
           sessionId ? { session: sessionId } : undefined
         );
         return result;
-      } catch (err) {
+      } catch (err: any) {
         // Don't log error if it's 'Session not found' (user not logged in)
         if (err?.code === -11) {
           return null;
@@ -141,7 +156,7 @@ const userIndexingAtom = atom(
   (get) => get(userStatusQuery.valueAtom)?.indexing
 );
 
-export const profileStatusQuery = jotaiQuery({
+export const profileStatusQuery = jotaiQuery<ProfileStatus>({
   alwaysOn: true,
   condition: (get) => get(loggedInAtom),
   getQueryConfig: (get) => ({
@@ -163,15 +178,9 @@ export const txCountAtom = atom(
 
 export const usernameAtom = atom((get) => {
   const profileStatus = get(profileStatusQuery.valueAtom);
-  const userStatus = get(userStatusQuery.valueAtom);
   const activeSession = get(activeSessionAtom);
 
-  return (
-    profileStatus?.session?.username ||
-    userStatus?.username ||
-    activeSession?.username ||
-    ''
-  );
+  return profileStatus?.session?.username || activeSession?.username || '';
 });
 
 export function prepareSessionInfo() {
@@ -207,7 +216,7 @@ export function prepareSessionInfo() {
  * =============================================================================
  */
 
-export const stakeInfoQuery = jotaiQuery({
+export const stakeInfoQuery = jotaiQuery<StakeInfo | null>({
   alwaysOn: true,
   condition: (get) => get(loggedInAtom),
   getQueryConfig: (get) => ({
@@ -215,7 +224,7 @@ export const stakeInfoQuery = jotaiQuery({
     queryFn: async () => {
       try {
         return await callAPI('finance/get/stakeinfo');
-      } catch (err) {
+      } catch (err: any) {
         // Ignore 'Trust account not found' error
         if (err.code === -70) {
           return null;
@@ -240,7 +249,7 @@ async function shouldUnlockStaking() {
     return false;
   }
 
-  const stakeInfo = await queryClient.ensureQueryData({
+  const stakeInfo = await queryClient.ensureQueryData<StakeInfo | null>({
     queryKey: ['stakeInfo', store.get(userGenesisAtom)],
   });
   if (!stakeInfo?.new) {
@@ -254,7 +263,7 @@ async function shouldUnlockStaking() {
     !startStakingAsked &&
     !dontAskToStartStaking
   ) {
-    let checkboxRef = createRef();
+    let checkboxRef = createRef<HTMLInputElement>();
     const accepted = await confirm({
       question: __('Start staking?'),
       note: (
@@ -275,7 +284,7 @@ async function shouldUnlockStaking() {
           <p>
             {__(
               'To learn more about staking, visit <link>crypto.nexus.io/stake</link>.',
-              null,
+              undefined,
               {
                 link: () => (
                   <ExternalLink href="https://crypto.nexus.io/staking-guide">
@@ -296,7 +305,7 @@ async function shouldUnlockStaking() {
       labelYes: __('Start staking'),
       labelNo: __("Don't stake"),
     });
-    store.set(startStakingAsked, true);
+    store.set(startStakingAskedAtom, true);
     if (checkboxRef.current?.checked) {
       updateSettings({ dontAskToStartStaking: true });
     }
@@ -308,7 +317,13 @@ async function shouldUnlockStaking() {
   return false;
 }
 
-async function unlockUser({ pin, sessionId }) {
+async function unlockUser({
+  pin,
+  sessionId,
+}: {
+  pin: string;
+  sessionId?: string;
+}) {
   const unlockStaking = await shouldUnlockStaking();
   const { enableMining } = store.get(settingsAtom);
   try {
@@ -341,8 +356,15 @@ function UserUnLockIndexingBackgroundTask({
   staking,
   mining,
   sessionId,
+  ...rest
+}: BackgroundTaskProps & {
+  pin: string;
+  notifications: boolean;
+  staking: boolean;
+  mining: boolean;
+  sessionId?: string;
 }) {
-  const closeTaskRef = useRef();
+  const closeTaskRef = useRef<() => void>();
   useEffect(
     () =>
       subscribe(userIndexingAtom, async (indexing) => {
@@ -368,8 +390,8 @@ function UserUnLockIndexingBackgroundTask({
   return (
     <BackgroundTask
       assignClose={(close) => (closeTaskRef.current = close)}
-      onClick={null}
       style={{ cursor: 'default' }}
+      {...rest}
     >
       {__('Indexing User...')}
     </BackgroundTask>

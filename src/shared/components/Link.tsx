@@ -1,5 +1,4 @@
 // External
-import { ElementType, forwardRef, HTMLAttributes } from 'react';
 import styled from '@emotion/styled';
 import { Link as RouterLink } from 'react-router';
 import { FortifiedTheme } from './ThemeController';
@@ -22,23 +21,6 @@ const linkStyles = ({ theme }: { theme: FortifiedTheme }) =>
     },
   } as const);
 
-const NativeLink = styled.a(linkStyles);
+export const NativeLink = styled.a(linkStyles);
 
-const ComponentLink = styled(RouterLink)(linkStyles);
-
-const Link = forwardRef<
-  HTMLAnchorElement,
-  HTMLAttributes<HTMLAnchorElement> & {
-    href?: string;
-    as?: ElementType;
-    to: string;
-  }
->(({ as, ...rest }, ref) => {
-  if (as && typeof as === 'string') {
-    return <NativeLink as={as} {...rest} ref={ref} />;
-  } else {
-    return <ComponentLink {...rest} ref={ref} />;
-  }
-});
-
-export default Link;
+export const Link = styled(RouterLink)(linkStyles);

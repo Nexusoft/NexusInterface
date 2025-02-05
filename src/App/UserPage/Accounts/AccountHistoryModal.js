@@ -7,7 +7,7 @@ import WaitingMessage from 'components/WaitingMessage';
 import Table from 'components/Table';
 import ContractDetailsModal from 'components/ContractDetailsModal';
 import FieldSet from 'components/FieldSet';
-import Link from 'components/Link';
+import { NativeLink } from 'components/Link';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import { listAll } from 'lib/api';
@@ -299,13 +299,9 @@ export default function AccountHistoryModal({ account }) {
                       })}
                       position="top"
                     >
-                      <Link
-                        as={''}
-                        to={''}
-                        onClick={() => setShowFiat((v) => !v)}
-                      >
+                      <NativeLink onClick={() => setShowFiat((v) => !v)}>
                         {showFiat ? currency : 'NXS'}
-                      </Link>
+                      </NativeLink>
                     </Tooltip.Trigger>
                     )
                   </>

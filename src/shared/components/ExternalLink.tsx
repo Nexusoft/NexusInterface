@@ -1,6 +1,6 @@
-import { ComponentProps, forwardRef } from 'react';
+import { forwardRef, HTMLAttributes } from 'react';
 import { shell } from 'electron';
-import Link from 'components/Link';
+import { NativeLink } from 'components/Link';
 
 /**
  * External links to be opened on browser.
@@ -9,21 +9,23 @@ import Link from 'components/Link';
  *
  * @param {*} props
  */
-const ExternalLink = forwardRef<HTMLAnchorElement, ComponentProps<typeof Link>>(
-  (props, ref) => (
-    <Link
-      {...props}
-      ref={ref}
-      as="a"
-      onClick={(e) => {
-        e.preventDefault();
-        const target = e.target as HTMLAnchorElement;
-        const url = target.href || props.href;
-        if (url) shell.openExternal(url);
-        props.onClick && props.onClick(e);
-      }}
-    />
-  )
-);
+const ExternalLink = forwardRef<
+  HTMLAnchorElement,
+  HTMLAttributes<HTMLAnchorElement> & {
+    href: string;
+  }
+>((props, ref) => (
+  <NativeLink
+    {...props}
+    ref={ref}
+    onClick={(e) => {
+      e.preventDefault();
+      const target = e.target as HTMLAnchorElement;
+      const url = target.href || props.href;
+      if (url) shell.openExternal(url);
+      props.onClick && props.onClick(e);
+    }}
+  />
+));
 
 export default ExternalLink;

@@ -7,7 +7,7 @@ import styled from '@emotion/styled';
 // Internal
 import Form from 'components/Form';
 import FormField from 'components/FormField';
-import Link from 'components/Link';
+import { NativeLink } from 'components/Link';
 import TokenName from 'components/TokenName';
 import { useSource } from 'lib/send';
 import { marketDataQuery } from 'lib/market';
@@ -29,7 +29,7 @@ const FiatAmountFieldWrapper = styled.div({
   flex: '1 1 100px',
 });
 
-const SendAllLink = styled(Link)({
+const SendAllLink = styled(NativeLink)({
   textTransform: 'uppercase',
   marginLeft: '1em',
   fontSize: '.9em',
@@ -144,9 +144,7 @@ export default function AmountField({ parentFieldName }) {
                   : __('Amount')}
               </span>
               {!!fullAmount && (
-                <SendAllLink as="a" onClick={sendAll}>
-                  {__('All')}
-                </SendAllLink>
+                <SendAllLink onClick={sendAll}>{__('All')}</SendAllLink>
               )}
             </span>
           }

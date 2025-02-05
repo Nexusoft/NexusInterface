@@ -1,11 +1,10 @@
 import { useEffect, useRef } from 'react';
-import * as React from 'react';
 import styled from '@emotion/styled';
 
 import Form from 'components/Form';
 import ControlledModal from 'components/ControlledModal';
 import FormField from 'components/FormField';
-import Link from 'components/Link';
+import { NativeLink } from 'components/Link';
 import LoginModal from 'components/LoginModal';
 import Spinner from 'components/Spinner';
 import FieldSet from 'components/FieldSet';
@@ -159,15 +158,14 @@ export default function NewUserModal() {
                   )}
 
                   <ExtraSection>
-                    <Link
-                      as="a"
+                    <NativeLink
                       onClick={() => {
                         closeModal();
                         openModal(LoginModal);
                       }}
                     >
                       {__('Log in')}
-                    </Link>
+                    </NativeLink>
                   </ExtraSection>
                 </>
               )}

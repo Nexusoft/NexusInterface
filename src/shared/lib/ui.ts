@@ -1,5 +1,3 @@
-import { BackgroundTaskProps } from 'components/BackgroundTask';
-import { ControlledModalProps } from 'components/ControlledModal';
 import { NotificationProps } from 'components/Notification';
 import { SnackBarType } from 'components/SnackBar';
 import { atom } from 'jotai';
@@ -58,7 +56,7 @@ export const jotaiDevToolsOpenAtom = atom(false);
  * Modal
  * ===========================
  */
-export function openModal<TProps extends ControlledModalProps>(
+export function openModal<TProps extends Record<string, any>>(
   component: ComponentType<TProps>,
   props?: TProps
 ) {
@@ -118,9 +116,9 @@ export function removeNotification(notifId: string) {
  * Background task
  * ===========================
  */
-export function showBackgroundTask<TProps extends BackgroundTaskProps>(
+export function showBackgroundTask<TProps extends Record<string, any>>(
   component: ComponentType<TProps>,
-  props?: TProps
+  props?: Omit<TProps, 'index'>
 ) {
   const id = newTaskId();
   store.set(backgroundTasksAtom, (backgroundTasks) => [

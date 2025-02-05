@@ -1,24 +1,30 @@
 import { atom } from 'jotai';
+import { useEffect } from 'react';
 import { ipcRenderer } from 'electron';
+import { useNavigate, NavigateFunction } from 'react-router';
 
 import { store } from 'lib/store';
 import { stopCore } from 'lib/core';
 import { logOut } from 'lib/session';
-import { settingsAtom } from './settings';
+import { settingsAtom } from 'lib/settings';
 
-let _navigate = null;
-export function navigate(...params) {
+let _navigate: NavigateFunction | null = null;
+export function navigate(...params: Parameters<NavigateFunction>) {
   return _navigate?.(...params);
 }
 
-export function setNavigate(func) {
-  _navigate = func;
+export function NavigateExporter() {
+  const navigate = useNavigate();
+  useEffect(() => {
+    _navigate = navigate;
+  }, [navigate]);
+  return null;
 }
 
 export const walletClosingAtom = atom(false);
 export const walletLockedAtom = atom(false);
 
-export const closeWallet = async (beforeExit) => {
+export const closeWallet = async (beforeExit?: () => void) => {
   const { manualDaemon, manualDaemonLogOutOnClose } = store.get(settingsAtom);
   store.set(walletClosingAtom, true);
 
@@ -28,7 +34,7 @@ export const closeWallet = async (beforeExit) => {
     await logOut(); //TODO: Ask for pin/session
   }
 
-  if (beforeExit) beforeExit();
+  beforeExit?.();
   ipcRenderer.invoke('exit-app');
 };
 

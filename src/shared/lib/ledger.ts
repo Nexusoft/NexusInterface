@@ -1,9 +1,10 @@
 import { callAPI } from 'lib/api';
-import { settingAtoms } from './settings';
+import { settingAtoms } from 'lib/settings';
 import jotaiQuery from 'utils/jotaiQuery';
-import { coreConnectedAtom } from './coreInfo';
+import { coreConnectedAtom } from 'lib/coreInfo';
+import { LedgerInfo } from 'lib/api';
 
-export const ledgerInfoQuery = jotaiQuery({
+export const ledgerInfoQuery = jotaiQuery<LedgerInfo>({
   condition: (get) => get(coreConnectedAtom),
   getQueryConfig: (get) => ({
     queryKey: ['ledgerInfo', !!get(settingAtoms.manualDaemon)],

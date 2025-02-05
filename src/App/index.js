@@ -1,6 +1,5 @@
 // External
-import { useEffect } from 'react';
-import { Routes, Route, Navigate, HashRouter, useNavigate } from 'react-router';
+import { Routes, Route, Navigate, HashRouter } from 'react-router';
 import styled from '@emotion/styled';
 import { useAtomValue } from 'jotai';
 
@@ -8,7 +7,7 @@ import { useAtomValue } from 'jotai';
 import GlobalStyles from 'components/GlobalStyles';
 import ThemeController from 'components/ThemeController';
 import { showDefaultMenu } from 'lib/contextMenu';
-import { setNavigate } from 'lib/wallet';
+import { NavigateExporter } from 'lib/wallet';
 import { themeAtom } from 'lib/theme';
 
 import Overlays from './Overlays';
@@ -43,14 +42,6 @@ const Main = styled.main({
   display: 'flex',
   alignItems: 'stretch',
 });
-
-function NavigateExporter() {
-  const navigate = useNavigate();
-  useEffect(() => {
-    setNavigate(navigate);
-  }, [navigate]);
-  return null;
-}
 
 export default function App() {
   const theme = useAtomValue(themeAtom);

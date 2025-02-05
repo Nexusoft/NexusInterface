@@ -3,6 +3,7 @@ import crypto from 'crypto';
 import macaddress from 'macaddress';
 import { homeDir, defaultCoreDataDir } from 'consts/paths';
 import { Locale } from 'lib/intl';
+import { CurrencyTicker } from 'data/currencies';
 
 const defaultBackupDir = path.join(homeDir || '', '/NexusBackups');
 
@@ -23,7 +24,7 @@ export type Settings = {
   autoUpdate: boolean;
   allowPrerelease: boolean;
   sendUsageData: boolean;
-  fiatCurrency: string;
+  fiatCurrency: CurrencyTicker;
   minConfirmations: number;
   backupDirectory: string;
   devMode: boolean;
