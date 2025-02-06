@@ -110,7 +110,7 @@ export function useInitialValues() {
   const queryParams = qs.parse(location.search.substring(1));
   const accounts = accountsQuery.use();
 
-  const stateJson = queryParams?.['state'];
+  const stateJson = queryParams?.state;
   let customValues = undefined;
   try {
     if (Array.isArray(stateJson)) {

@@ -28,9 +28,9 @@ function generateDefaultPassword() {
   const secret =
     process.platform === 'darwin'
       ? '' +
-        process.env['USER'] +
-        process.env['HOME'] +
-        process.env['SHELL'] +
+        process.env.USER +
+        process.env.HOME +
+        process.env.SHELL +
         randomValue
       : JSON.stringify(macaddress.networkInterfaces(), null, 2) + randomValue;
   return crypto.createHmac('sha256', secret).update('pass').digest('hex');
@@ -168,12 +168,12 @@ export async function loadNexusConf() {
   configs = { ...configs, ...settingsConf };
 
   return customConfig({
-    apiUser: configs['apiuser'],
-    apiPassword: configs['apipassword'],
-    apiSSL: configs['apissl'] === 'false' ? false : !!configs['apissl'],
-    apiPort: configs['apiport'],
-    apiPortSSL: configs['apiportssl'],
-    txExpiry: parseInt(configs['txexpiry']),
+    apiUser: configs.apiuser,
+    apiPassword: configs.apipassword,
+    apiSSL: configs.apissl === 'false' ? false : !!configs.apissl,
+    apiPort: configs.apiport,
+    apiPortSSL: configs.apiportssl,
+    txExpiry: parseInt(configs.txexpiry),
   });
 }
 

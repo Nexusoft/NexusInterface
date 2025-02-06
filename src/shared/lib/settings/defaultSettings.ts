@@ -9,7 +9,7 @@ const defaultBackupDir = path.join(homeDir || '', '/NexusBackups');
 
 const secret =
   process.platform === 'darwin'
-    ? '' + process.env['USER'] + process.env['HOME'] + process.env['SHELL']
+    ? '' + process.env.USER + process.env.HOME + process.env.SHELL
     : JSON.stringify(macaddress.networkInterfaces(), null, 2);
 const defaultPassword = crypto
   .createHmac('sha256', secret)

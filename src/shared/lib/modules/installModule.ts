@@ -255,10 +255,10 @@ function download(
       .on('response', (response) => {
         if (
           String(response.statusCode).startsWith('3') &&
-          response.headers['location']
+          response.headers.location
         ) {
           // Redirecting
-          download(response.headers['location'], {
+          download(response.headers.location, {
             moduleName,
             filePath,
           })

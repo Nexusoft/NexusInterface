@@ -64,7 +64,7 @@ async function getLatestRelease(repo: Repository, { cache }: { cache: any }) {
       id: response.data.id,
       tag_name: response.data.tag_name,
       assets: !!response.data.assets,
-      etag: response.headers['etag'],
+      etag: response.headers.etag,
       time: Date.now(),
     };
     // cache.setItem(repoId, JSON.stringify(cacheObj));

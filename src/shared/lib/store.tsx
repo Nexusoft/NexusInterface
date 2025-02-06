@@ -13,7 +13,7 @@ import { queryClientAtom } from 'jotai-tanstack-query';
 import { rqDevToolsOpenAtom, jotaiDevToolsOpenAtom } from 'lib/ui';
 import jotaiDevToolsStyles from 'jotai-devtools/styles.css';
 
-const isDev = process.env['NODE_ENV'] === 'development';
+const isDev = process.env.NODE_ENV === 'development';
 
 export const store = createStore();
 

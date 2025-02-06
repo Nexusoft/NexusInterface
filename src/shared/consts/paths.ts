@@ -23,10 +23,10 @@ export const settingsFilePath = path.join(walletDataDir, settingsFileName);
 export const defaultCoreDataDir =
   process.platform === 'win32' || process.platform === 'darwin'
     ? path.join(appDataDir, 'Nexus')
-    : path.join(process.env['HOME'] || '', '/.Nexus');
+    : path.join(process.env.HOME || '', '/.Nexus');
 
 export const assetsParentDir =
-  process.env['NODE_ENV'] === 'development'
+  process.env.NODE_ENV === 'development'
     ? process.cwd()
     : process.platform === 'darwin'
     ? path.resolve(exeDir, '..', '..', 'Resources')
@@ -39,9 +39,7 @@ export const assetsByPlatformDir =
     : path.join(assetsDir, 'linux');
 
 export const homeDir =
-  process.platform === 'win32'
-    ? process.env['USERPROFILE']
-    : process.env['HOME'];
+  process.platform === 'win32' ? process.env.USERPROFILE : process.env.HOME;
 
 export const modulesDir = path.join(walletDataDir, 'modules');
 

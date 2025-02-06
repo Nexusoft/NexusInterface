@@ -62,7 +62,7 @@ function loadDict(locale: Locale) {
 type Interpolations = Parameters<typeof Polyglot.transformPhrase>[1];
 
 const locale = (() => {
-  const loc = store.get(settingAtoms['locale']);
+  const loc = store.get(settingAtoms.locale);
   return locales.includes(loc) ? loc : 'en';
 })();
 const dict = locale === 'en' ? null : loadDict(locale);
