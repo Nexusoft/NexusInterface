@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 import crypto from 'crypto';
 import { ipcRenderer } from 'electron';
 import fs from 'fs';
@@ -12,6 +10,7 @@ import normalizeEol from 'utils/normalizeEol';
 import z from 'zod';
 
 import { loadModuleFromDir, ModuleInfo } from './module';
+import { getMembers } from 'lib/github';
 
 const repoSchema = z.object({
   type: z.enum(['git']),
@@ -215,9 +214,7 @@ export const getNexusOrgUsers = (() => {
       promise = new Promise(async (resolve, reject) => {
         if (!nexusOrgUsers) {
           try {
-            const response = await axios.get(
-              'https://api.github.com/orgs/Nexusoft/members'
-            );
+            const response = await getMembers('Nexusoft');
             nexusOrgUsers = response.data.map(
               (e: { login: string }) => e.login
             );

@@ -1,4 +1,3 @@
-import axios from 'axios';
 import semver from 'semver';
 
 import { store } from 'lib/store';
@@ -8,19 +7,25 @@ import { tryParsingJson } from 'utils/json';
 import { modulesAtom, modulesMapAtom } from './atoms';
 import { Module, ProductionModule, isDevModule } from './module';
 import { Repository } from './repo';
+import { fetchGithubLatestRelease, getRepoId } from 'lib/github';
+
+export interface CachedRelease {
+  id: number;
+  tag_name: string;
+  assets: boolean;
+  etag: string;
+  time: number;
+}
+type RepoCache = Record<string, CachedRelease>;
 
 //If expanded consider moving to own file.
 const localStorageKey = 'moduleUpdateCache';
 const cacheStaleTime = 1000 * 60 * 60 * 24 * 7; // 7 days
 
-function getRepoId(repo: Repository) {
-  return `${repo.owner}/${repo.repo}`;
-}
-
 // Load cache and check cache for junk and remove
 function loadCache() {
   const cacheJson = localStorage.getItem(localStorageKey);
-  const cache = (cacheJson && tryParsingJson(cacheJson)) || {};
+  const cache = ((cacheJson && tryParsingJson(cacheJson)) || {}) as RepoCache;
   for (const key in cache) {
     if (cache?.hasOwnProperty(key)) {
       if (Date.now() - cacheStaleTime * 4 > cache[key].time) {
@@ -32,7 +37,7 @@ function loadCache() {
   return cache;
 }
 
-function saveCache(cache: any) {
+function saveCache(cache: RepoCache) {
   localStorage.setItem(localStorageKey, JSON.stringify(cache));
 }
 
@@ -44,32 +49,34 @@ export function removeUpdateCache(repo: Repository) {
   saveCache(cache);
 }
 
-async function getLatestRelease(repo: Repository, { cache }: { cache: any }) {
+async function getLatestRelease(
+  repo: Repository,
+  { cache }: { cache: RepoCache }
+) {
   const repoId = getRepoId(repo);
-  let repoCache = cache[repoId];
+  let repoCache: CachedRelease | null = cache[repoId];
   if (repoCache && Date.now() - cacheStaleTime > repoCache.time) {
     delete cache[repoId];
     repoCache = null;
   }
 
-  const url = `https://api.github.com/repos/${repoId}/releases/latest`;
   try {
-    const response = await axios.get(url, {
+    const response = await fetchGithubLatestRelease(repoId, {
       headers: {
         Accept: 'application/vnd.github.v3+json',
         ...(repoCache?.etag && { 'If-None-Match': repoCache.etag }),
       },
     });
-    const cacheObj = {
+    const cachedRelease: CachedRelease = {
       id: response.data.id,
       tag_name: response.data.tag_name,
       assets: !!response.data.assets,
       etag: response.headers.etag,
       time: Date.now(),
     };
-    // cache.setItem(repoId, JSON.stringify(cacheObj));
-    cache[repoId] = cacheObj;
-    return response.data;
+    // cache.setItem(repoId, JSON.stringify(cachedRelease));
+    cache[repoId] = cachedRelease;
+    return cachedRelease;
   } catch (err: any) {
     if (err?.response?.status === 304) {
       // 304 = Not modified
@@ -80,7 +87,10 @@ async function getLatestRelease(repo: Repository, { cache }: { cache: any }) {
   }
 }
 
-async function checkForModuleUpdate(module: Module, { cache }: { cache: any }) {
+async function checkForModuleUpdate(
+  module: Module,
+  { cache }: { cache: RepoCache }
+) {
   try {
     if (isDevModule(module) || !module.repository) return null;
     const release = await getLatestRelease(module.repository, { cache });

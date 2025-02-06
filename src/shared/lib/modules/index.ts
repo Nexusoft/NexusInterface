@@ -30,5 +30,6 @@ export type {
   FailedModule,
   Module,
   ModuleInfo,
+  ProductionModule,
 } from './module';
 export type { Repository } from './repo';

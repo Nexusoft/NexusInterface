@@ -2,7 +2,6 @@
 import { ipcRenderer } from 'electron';
 import path from 'path';
 import fs from 'fs';
-import axios from 'axios';
 import semver from 'semver';
 import { atom } from 'jotai';
 
@@ -14,6 +13,7 @@ import AutoUpdateBackgroundTask from './AutoUpdateBackgroundTask';
 import { assetsParentDir } from 'consts/paths';
 import { closeWallet } from 'lib/wallet';
 import { checkForModuleUpdates } from 'lib/modules';
+import { fetchGithubLatestRelease } from 'lib/github';
 
 __ = __context('AutoUpdate');
 
@@ -58,8 +58,8 @@ export async function checkForUpdates() {
     await Promise.all([
       (async () => {
         if (process.env.NODE_ENV !== 'development' && checkGithubManually) {
-          const response = await axios.get(
-            'https://api.github.com/repos/Nexusoft/NexusInterface/releases/latest'
+          const response = await fetchGithubLatestRelease(
+            'Nexusoft/NexusInterface'
           );
           const latestVerion = response.data.tag_name;
           if (

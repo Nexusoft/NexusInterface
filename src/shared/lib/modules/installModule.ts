@@ -18,6 +18,7 @@ import { throttled } from 'utils/universal';
 import { ClientRequest } from 'http';
 import { moduleDownloadsAtom, modulesMapAtom } from './atoms';
 import { loadDevModuleFromDir, loadModuleFromDir } from './module';
+import { fetchGithubLatestRelease, getRepoId } from 'lib/github';
 
 __ = __context('Settings.Modules');
 
@@ -73,8 +74,7 @@ function doInstall(path: string) {
 
     openModal(ModuleDetailsModal, {
       module,
-      forInstall: true,
-      onClose: resolve,
+      onClose: () => resolve(undefined),
       install: async () => {
         try {
           const dest = join(modulesDir, module.info.name);
@@ -212,6 +212,7 @@ export interface ModuleDownload {
   // Total size in bytes
   totalSize?: number;
   downloading?: boolean;
+  downloadRequest?: ClientRequest;
 }
 
 // Mapping from module name to download request object of that module
@@ -347,7 +348,7 @@ export async function downloadAndInstall({
   moduleName: string;
   owner: string;
   repo: string;
-  releaseId: string;
+  releaseId: number | 'latest';
 }) {
   let filePath: string | null = null;
   try {
@@ -357,8 +358,8 @@ export async function downloadAndInstall({
     }));
 
     if (releaseId === 'latest') {
-      const { data: release } = await axios.get(
-        `https://api.github.com/repos/${owner}/${repo}/releases/latest`,
+      const { data: release } = await fetchGithubLatestRelease(
+        getRepoId({ owner, repo }),
         {
           headers: {
             Accept: 'application/vnd.github.v3+json',

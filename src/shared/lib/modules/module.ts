@@ -9,7 +9,7 @@ import { settingsAtom } from 'lib/settings';
 import { store } from 'lib/store';
 
 import { failedModulesAtom, modulesMapAtom } from './atoms';
-import { checkForModuleUpdates } from './autoUpdate';
+import { CachedRelease, checkForModuleUpdates } from './autoUpdate';
 import {
   getModuleHash,
   getNexusOrgUsers,
@@ -88,6 +88,19 @@ const nxsPackageDevSchema = z.object({
   displayName: z.string(),
   description: z.string().optional(),
   type: z.enum(['app']),
+  entry: z
+    .string()
+    .regex(/^(.(?<!\.\.\/|\.\.\\))+$|^$/)
+    .optional(),
+  icon: z
+    .string()
+    .regex(/^(.(?<!\.\.\/|\.\.\\))+\.(svg|png)$|^$/)
+    .optional(),
+  options: z
+    .object({
+      wrapInPanel: z.boolean().optional(),
+    })
+    .optional(),
 });
 
 /**
@@ -339,7 +352,6 @@ interface ModuleBase {
   path: string;
   info: ModuleInfo | DevModuleInfo;
   iconPath?: string;
-  enabled?: boolean;
 }
 
 interface ModuleInitialization {
@@ -349,6 +361,8 @@ interface ModuleInitialization {
   disallowed: boolean;
   repoOnline: boolean;
   repoVerified: boolean;
+  repoFromNexus: boolean;
+  enabled: boolean;
 }
 
 export interface ProductionModule extends ModuleBase, ModuleInitialization {
@@ -356,15 +370,13 @@ export interface ProductionModule extends ModuleBase, ModuleInitialization {
   info: ModuleInfo;
   hasNewVersion?: boolean;
   latestVersion?: string;
-  latestRelease?: string;
+  latestRelease?: CachedRelease;
 }
 
 export interface DevModule extends ModuleBase {
   development: true;
   info: DevModuleInfo;
-  hasNewVersion?: undefined;
-  latestVersion?: undefined;
-  latestRelease?: undefined;
+  enabled: boolean;
 }
 
 export type Module = ProductionModule | DevModule;
