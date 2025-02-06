@@ -1,7 +1,12 @@
 import { atom } from 'jotai';
 import { useEffect } from 'react';
 import { ipcRenderer } from 'electron';
-import { useNavigate, NavigateFunction } from 'react-router';
+import {
+  useNavigate,
+  NavigateFunction,
+  NavigateOptions,
+  To,
+} from 'react-router';
 
 import { store } from 'lib/store';
 import { stopCore } from 'lib/core';
@@ -9,8 +14,8 @@ import { logOut } from 'lib/session';
 import { settingsAtom } from 'lib/settings';
 
 let _navigate: NavigateFunction | null = null;
-export function navigate(...params: Parameters<NavigateFunction>) {
-  return _navigate?.(...params);
+export function navigate(to: To, options?: NavigateOptions) {
+  return _navigate?.(to, options);
 }
 
 export function NavigateExporter() {

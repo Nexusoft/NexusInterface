@@ -3,19 +3,22 @@ import { useRef, useContext, useEffect, ComponentProps } from 'react';
 
 // Internal
 import { removeBackgroundTask } from 'lib/ui';
-import SnackBar from 'components/SnackBar';
+import SnackBar, { SnackBarType } from 'components/SnackBar';
 import TaskContext from 'context/task';
 import { timing } from 'styles';
 
 const outro = { opacity: [1, 0] };
 
 export interface BackgroundTaskProps
-  extends Omit<ComponentProps<typeof SnackBar>, 'type' | 'onClick'> {
+  extends Omit<ComponentProps<typeof SnackBar>, 'type'> {
   assignClose?: (close: () => void) => void;
+  type?: SnackBarType;
 }
 
 export default function BackgroundTask({
+  type = 'work',
   assignClose,
+  onClick,
   ...rest
 }: BackgroundTaskProps) {
   const snackBarRef = useRef<HTMLDivElement>(null);
@@ -39,6 +42,11 @@ export default function BackgroundTask({
   }, []);
 
   return (
-    <SnackBar type="work" ref={snackBarRef} onClick={animatedClose} {...rest} />
+    <SnackBar
+      type={type}
+      ref={snackBarRef}
+      onClick={onClick || animatedClose}
+      {...rest}
+    />
   );
 }

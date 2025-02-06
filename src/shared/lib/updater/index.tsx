@@ -18,7 +18,7 @@ import { checkForModuleUpdates } from 'lib/modules';
 __ = __context('AutoUpdate');
 
 const autoUpdateInterval = 4 * 60 * 60 * 1000; // 4 hours
-let timerId = null;
+let timerId: NodeJS.Timeout | undefined = undefined;
 
 export const updaterStateAtom = atom('idle');
 
@@ -32,7 +32,7 @@ export function quitAndInstall() {
   closeWallet(() => ipcRenderer.invoke('quit-and-install-update'));
 }
 
-export function setAllowPrerelease(value) {
+export function setAllowPrerelease(value: boolean) {
   updateSettings({ allowPrerelease: value });
   ipcRenderer.invoke('set-allow-prerelease', value);
 }
@@ -68,7 +68,6 @@ export async function checkForUpdates() {
           ) {
             showBackgroundTask(AutoUpdateBackgroundTask, {
               version: response.data.tag_name,
-              quitAndInstall: null,
               gitHub: true,
             });
           }
@@ -101,7 +100,7 @@ export async function checkForUpdates() {
  */
 export function stopAutoUpdate() {
   clearTimeout(timerId);
-  timerId = null;
+  timerId = undefined;
 }
 
 /**
@@ -109,7 +108,7 @@ export function stopAutoUpdate() {
  *
  */
 export function prepareUpdater() {
-  ipcRenderer.on('updater:update-available', (event, updateInfo) => {
+  ipcRenderer.on('updater:update-available', (_event, updateInfo) => {
     showNotification(
       __('New wallet version %{version} available. Downloading...', {
         version: updateInfo.version,
@@ -118,11 +117,11 @@ export function prepareUpdater() {
     );
   });
 
-  ipcRenderer.on('updater:update-downloaded', (event, updateInfo) => {
+  ipcRenderer.on('updater:update-downloaded', (_event, updateInfo) => {
     stopAutoUpdate();
     showBackgroundTask(AutoUpdateBackgroundTask, {
       version: updateInfo.version,
-      quitAndInstall: quitAndInstall,
+      quitAndInstall,
     });
   });
 
@@ -154,7 +153,9 @@ export function prepareUpdater() {
 
   const { autoUpdate, lastCheckForUpdates } = store.get(settingsAtom);
   if (autoUpdate) {
-    const timeFromLastCheck = Date.now() - lastCheckForUpdates;
+    const timeFromLastCheck = lastCheckForUpdates
+      ? Date.now() - lastCheckForUpdates
+      : 0;
     if (!lastCheckForUpdates || timeFromLastCheck > autoUpdateInterval) {
       checkForUpdates();
     } else {

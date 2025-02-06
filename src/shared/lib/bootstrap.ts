@@ -3,7 +3,7 @@ import EventEmitter from 'events';
 import checkDiskSpace from 'check-disk-space';
 import fs from 'fs';
 import path from 'path';
-import http from 'http';
+import http, { ClientRequest } from 'http';
 import unzip from 'unzip-stream';
 import { atom } from 'jotai';
 
@@ -21,6 +21,29 @@ import BootstrapModal from 'components/BootstrapModal';
 
 __ = __context('Bootstrap');
 
+type BootstrapStep =
+  | 'idle'
+  | 'prompting'
+  | 'backing_up'
+  | 'preparing'
+  | 'downloading'
+  | 'extracting'
+  | 'stopping_core'
+  | 'moving_db'
+  | 'restarting_core'
+  | 'rescanning'
+  | 'cleaning_up';
+
+interface BootstrapDownloadDetails {
+  downloaded?: number;
+  totalSize?: number;
+}
+
+interface BootstrapStatus {
+  step: BootstrapStep;
+  details?: BootstrapDownloadDetails;
+}
+
 const minFreeSpace = 15 * 1000 * 1000 * 1000; // 15 GB
 const getExtractDir = () => {
   const coreDataDir = store.get(settingAtoms.coreDataDir);
@@ -29,13 +52,15 @@ const getExtractDir = () => {
 const recentDbUrlTritium = 'http://bootstrap.nexus.io/tritium.zip';
 
 let aborting = false;
-let downloadRequest = null;
+let downloadRequest: ClientRequest | null = null;
+
+export const bootstrapStatusAtom = atom<BootstrapStatus>({
+  step: 'idle',
+  details: undefined,
+});
 
 /**
  * Check if there's enough free disk space to bootstrap
- *
- * @export
- * @returns
  */
 async function checkFreeSpaceForBootstrap() {
   const extractDir = getExtractDir();
@@ -45,9 +70,6 @@ async function checkFreeSpaceForBootstrap() {
 
 /**
  * Start bootstrap process
- *
- * @export
- * @returns
  */
 async function startBootstrap() {
   try {
@@ -106,23 +128,38 @@ async function startBootstrap() {
     // Ensure to start core after completion
     await startCore();
   }
+  return false;
 }
 
 /**
+ * Downloads the recent database from the given URL, extracts it to the given
+ * directory and returns the path to the extracted directory.
  *
- *
- * @param {*} recentDbUrl
- * @param {*} downloadProgress
- * @returns
+ * @param {Object} options - Options to pass to the function
+ * @param {Function} options.downloadProgress - A function that will be called
+ *   with the progress of the download
+ * @param {String} options.extractDir - The directory to extract the database to
+ * @returns {Promise<String | null>} A promise that resolves to the path to the
+ *   extracted directory if the download and extraction is successful, or
+ *   `null` if the download is aborted.
  */
-function downloadDb({ downloadProgress, extractDir }) {
-  let timerId;
-  return new Promise((resolve, reject) => {
+function downloadDb({
+  downloadProgress,
+  extractDir,
+}: {
+  downloadProgress: (details: BootstrapDownloadDetails) => NodeJS.Timeout;
+  extractDir: string;
+}) {
+  let timerId: NodeJS.Timeout;
+  return new Promise<string | null>((resolve, reject) => {
     downloadRequest = http
       .get(recentDbUrlTritium, { insecureHTTPParser: true })
       .setTimeout(180000)
       .on('response', (response) => {
-        const totalSize = parseInt(response.headers['content-length'], 10);
+        const totalSize = parseInt(
+          response.headers['content-length'] || '',
+          10
+        );
 
         let downloaded = 0;
 
@@ -154,7 +191,7 @@ function downloadDb({ downloadProgress, extractDir }) {
             console.error(err);
           }
         }
-        resolve();
+        resolve(null);
       });
   }).finally(() => {
     // Ensure downloadRequest is always cleaned up
@@ -165,16 +202,14 @@ function downloadDb({ downloadProgress, extractDir }) {
 
 /**
  * Clean up files
- *
- * @returns
  */
-async function cleanUp(extractDir) {
+async function cleanUp(extractDir: string) {
   if (fs.existsSync(extractDir)) {
     await deleteDirectory(extractDir, { recursive: true, force: true });
   }
 }
 
-const setStatus = (step, details) => {
+const setStatus = (step: BootstrapStep, details?: BootstrapDownloadDetails) => {
   store.set(bootstrapStatusAtom, { step, details });
 };
 
@@ -189,8 +224,9 @@ subscribe(coreInfoQuery.valueAtom, async (coreInfo) => {
       bootstrapStatus.step === 'idle' &&
       !manualDaemon &&
       !coreInfo?.litemode &&
-      coreInfo?.syncing?.completed < 50 &&
-      coreInfo?.syncing?.completed >= 0 &&
+      coreInfo?.syncing !== false &&
+      coreInfo.syncing.completed < 50 &&
+      coreInfo.syncing.completed >= 0 &&
       !coreInfo?.private &&
       !coreInfo?.testnet
     ) {
@@ -207,13 +243,18 @@ subscribe(coreInfoQuery.valueAtom, async (coreInfo) => {
 export const bootstrapEvents = new EventEmitter();
 
 /**
- * Bootstrap Modal element
+ * Download recent database from tritium bootstrap server, extract it to
+ * the given directory and restart Nexus Core.
  *
- * @export
- * @param {*} [{ suggesting }={}]
- * @returns
+ * @param {Object} options - Options to pass to the function
+ * @param {boolean} options.suggesting - Whether this is a suggestion or not.
+ *   If it is a suggestion, a confirmation dialog will be shown and the
+ *   user will have the option to decline the suggestion.
+ * @returns {Promise<void>} A promise that resolves when the bootstrap
+ *   process is complete.
  */
-export async function bootstrap({ suggesting } = {}) {
+export async function bootstrap(options: { suggesting?: boolean }) {
+  const { suggesting } = options || {};
   // Only one instance at the same time
   const status = store.get(bootstrapStatusAtom);
   if (status.step !== 'idle') return;
@@ -266,9 +307,8 @@ export async function bootstrap({ suggesting } = {}) {
 }
 
 /**
- * Abort the bootstrap process
- *
- * @export
+ * Aborts the current bootstrap process by setting the aborting flag to true
+ * and aborting the active download request if it exists.
  */
 export function abortBootstrap() {
   aborting = true;
@@ -277,8 +317,6 @@ export function abortBootstrap() {
 
 /**
  * Register bootstrap events listeners
- *
- * @export
  */
 export function prepareBootstrap() {
   bootstrapEvents.on('abort', () =>
@@ -297,8 +335,3 @@ export function prepareBootstrap() {
     })
   );
 }
-
-export const bootstrapStatusAtom = atom({
-  step: 'idle',
-  details: undefined,
-});

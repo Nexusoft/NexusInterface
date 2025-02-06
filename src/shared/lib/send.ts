@@ -4,28 +4,45 @@ import qs from 'querystring';
 
 import { navigate } from 'lib/wallet';
 import { useFieldValue, getFormInstance } from 'lib/form';
-import { coreConfigAtom } from './coreConfig';
-import { accountsQuery, tokensQuery } from './user';
+import { coreConfigAtom } from 'lib/coreConfig';
+import { accountsQuery, tokensQuery } from 'lib/user';
 import { timeToObject } from 'utils/misc';
 import { store } from 'lib/store';
 import memoize from 'utils/memoize';
+import { Account, Token } from 'lib/api';
+
+interface Recipient {
+  nameOrAddress?: string;
+  name?: string;
+  address?: string;
+  amount?: string;
+  fiatAmount?: string;
+  reference?: number;
+}
+
+interface Expiry {
+  expireDays: number;
+  expireHours: number;
+  expireMinutes: number;
+  expireSeconds: number;
+}
 
 export const formName = 'send';
 
 export function getDefaultRecipient() {
-  const recipient = {
-    nameOrAddress: null,
-    name: null, // hidden field
-    address: null, // hidden field
+  const recipient: Recipient = {
+    nameOrAddress: undefined,
+    name: undefined, // hidden field
+    address: undefined, // hidden field
     amount: '',
     fiatAmount: '',
-    reference: null,
+    reference: undefined,
   };
   return recipient;
 }
 
 function getDefaultExpiry() {
-  const expiry = {
+  const expiry: Expiry = {
     expireDays: 7,
     expireHours: 0,
     expireMinutes: 0,
@@ -42,7 +59,7 @@ function getDefaultExpiry() {
   return expiry;
 }
 
-function getDefaultSendFrom(accounts) {
+function getDefaultSendFrom(accounts?: Account[]) {
   if (!accounts?.[0]) return null;
   const defaultAccount = accounts.find((acc) => acc.name === 'default');
   if (defaultAccount) {
@@ -55,13 +72,19 @@ function getDefaultSendFrom(accounts) {
   return null;
 }
 
-function getFormValues({ customValues, accounts } = {}) {
+function getFormValues({
+  customValues,
+  accounts,
+}: {
+  customValues?: any;
+  accounts?: Account[];
+}) {
   const defaultRecipient = getDefaultRecipient();
   return {
     sendFrom: customValues?.sendFrom || getDefaultSendFrom(accounts),
     // not accepting fiatAmount
     recipients: customValues?.recipients?.map(
-      ({ nameOrAddress, amount, reference }) => ({
+      ({ nameOrAddress, amount, reference }: Recipient) => ({
         ...defaultRecipient,
         nameOrAddress,
         amount,
@@ -76,8 +99,8 @@ function getFormValues({ customValues, accounts } = {}) {
   };
 }
 
-export function goToSend(customValues) {
-  navigate('/Send?state=' + JSON.stringify(customValues));
+export function goToSend(customValues: any) {
+  navigate(`/Send?state=${JSON.stringify(customValues)}`);
 }
 
 export function useInitialValues() {
@@ -87,10 +110,14 @@ export function useInitialValues() {
   const queryParams = qs.parse(location.search.substring(1));
   const accounts = accountsQuery.use();
 
-  const stateJson = queryParams?.state;
-  let customValues = null;
+  const stateJson = queryParams?.['state'];
+  let customValues = undefined;
   try {
-    customValues = stateJson && JSON.parse(stateJson);
+    if (Array.isArray(stateJson)) {
+      customValues = JSON.parse(stateJson?.join(''));
+    } else if (stateJson) {
+      customValues = JSON.parse(stateJson);
+    }
   } catch (err) {}
   const initialValues = getFormValues({ customValues, accounts });
 
@@ -116,25 +143,31 @@ export function useInitialValues() {
   return initialValues;
 }
 
-export const getSource = memoize((sendFrom, accounts, userTokens) => {
-  const matches = /^(account|token):(.+)/.exec(sendFrom);
-  const [_, type, address] = matches || [];
+export const getSource = memoize(
+  (
+    sendFrom: string,
+    accounts: Account[] | undefined,
+    userTokens: Token[] | undefined
+  ) => {
+    const matches = /^(account|token):(.+)/.exec(sendFrom);
+    const [_, type, address] = matches || [];
 
-  if (type === 'account') {
-    const account = accounts?.find((acc) => acc.address === address);
-    if (account) return { account };
+    if (type === 'account') {
+      const account = accounts?.find((acc) => acc.address === address);
+      if (account) return { account };
+    }
+
+    if (type === 'token') {
+      const token = userTokens?.find((tkn) => tkn.address === address);
+      if (token) return { token };
+    }
+
+    return null;
   }
-
-  if (type === 'token') {
-    const token = userTokens?.find((tkn) => tkn.address === address);
-    if (token) return { token };
-  }
-
-  return null;
-});
+);
 
 export const useSource = () => {
-  const sendFrom = useFieldValue('sendFrom');
+  const sendFrom = useFieldValue('sendFrom') as string;
   const accounts = accountsQuery.use();
   const userTokens = tokensQuery.use();
   const source = getSource(sendFrom, accounts, userTokens);

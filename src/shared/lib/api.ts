@@ -126,7 +126,16 @@ export interface CoreInfo {
   nolegacy: boolean;
   blocks: number;
   synchronized: boolean;
-  syncing: boolean;
+  syncing:
+    | false
+    | {
+        networkBlock: number;
+        downloadRate: number;
+        completed: number;
+        progress: number;
+        secondsRemaining: number;
+        timeRemaining: string;
+      };
   txtotal: number;
   connections: number;
   testnet?: number;
