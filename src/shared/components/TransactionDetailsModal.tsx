@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import ControlledModal from 'components/ControlledModal';
 import InfoField from 'components/InfoField';
 import WaitingMessage from 'components/WaitingMessage';
-import { callAPI } from 'lib/api';
+import { callAPI, Transaction } from 'lib/api';
 import { openErrorDialog } from 'lib/dialog';
 import { formatDateTime } from 'lib/intl';
 
@@ -16,10 +16,10 @@ const timeFormatOptions = {
   hour: '2-digit',
   minute: '2-digit',
   second: '2-digit',
-};
+} as Intl.DateTimeFormatOptions;
 
-export default function TransactionDetailsModal({ txid }) {
-  const [transaction, setTransaction] = useState(null);
+export default function TransactionDetailsModal({ txid }: { txid: string }) {
+  const [transaction, setTransaction] = useState<Transaction>();
   useEffect(() => {
     callAPI('ledger/get/transaction', {
       txid,

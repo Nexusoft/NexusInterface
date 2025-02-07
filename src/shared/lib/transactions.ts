@@ -1,5 +1,5 @@
 import { atom } from 'jotai';
-import { callAPI } from 'lib/api';
+import { callAPI, Contract, Transaction, ContractOP } from 'lib/api';
 import { subscribeWithPrevious } from 'lib/store';
 import {
   userGenesisAtom,
@@ -14,19 +14,26 @@ import { showNotification } from 'lib/ui';
 import { openErrorDialog } from 'lib/dialog';
 import TokenName from 'components/TokenName';
 
-const isConfirmed = (tx) => !!tx.confirmations;
+const isConfirmed = (tx: Transaction) => !!tx.confirmations;
 
 const txCountPerPage = 10;
 
-const getBalanceChanges = (tx) =>
+interface BalanceChange {
+  ticker?: string;
+  token: string;
+  amount: number;
+}
+
+type TimeSpan = 'week' | 'month' | 'year';
+
+const getBalanceChanges = (tx: Transaction) =>
   tx.contracts
     ? tx.contracts.reduce((changes, contract) => {
         const sign = getDeltaSign(contract);
         if (sign && contract.amount) {
           let change = changes.find(
-            contract.ticker || contract.token_name
-              ? (change) =>
-                  change.ticker === contract.ticker || contract.token_name
+            contract.ticker
+              ? (change) => change.ticker === contract.ticker
               : (change) => change.token === contract.token
           );
           if (change) {
@@ -34,7 +41,7 @@ const getBalanceChanges = (tx) =>
               change.amount + (sign === '-' ? -1 : 1) * contract.amount;
           } else {
             change = {
-              ticker: contract.ticker || contract.token_name,
+              ticker: contract.ticker,
               token: contract.token,
               amount: (sign === '-' ? -1 : 1) * contract.amount,
             };
@@ -42,10 +49,10 @@ const getBalanceChanges = (tx) =>
           }
         }
         return changes;
-      }, [])
-    : 0;
+      }, [] as BalanceChange[])
+    : ([] as BalanceChange[]);
 
-const getThresholdDate = (timeSpan) => {
+const getThresholdDate = (timeSpan: TimeSpan) => {
   const now = new Date();
   switch (timeSpan) {
     case 'week':
@@ -59,7 +66,15 @@ const getThresholdDate = (timeSpan) => {
   }
 };
 
-function buildQuery({ addressQuery, operation, timeSpan }) {
+function buildQuery({
+  addressQuery,
+  operation,
+  timeSpan,
+}: {
+  addressQuery?: string;
+  operation?: string;
+  timeSpan?: TimeSpan;
+}) {
   const queries = [];
   if (timeSpan) {
     const pastDate = getThresholdDate(timeSpan);
@@ -74,7 +89,7 @@ function buildQuery({ addressQuery, operation, timeSpan }) {
     if (addressQuery === '0') {
       queries.push(`results.contracts.token=0`);
     } else {
-      const buildAddressQuery = (field) =>
+      const buildAddressQuery = (field: string) =>
         `results.contracts.${field}=*${addressQuery}*`;
       const addressQueries = [
         buildAddressQuery('token'),
@@ -90,7 +105,7 @@ function buildQuery({ addressQuery, operation, timeSpan }) {
   return queries.join(' AND ') || undefined;
 }
 
-export const getDeltaSign = (contract) => {
+export const getDeltaSign = (contract: Contract) => {
   switch (contract.OP) {
     case 'CREDIT':
     case 'COINBASE':
@@ -157,10 +172,10 @@ export function prepareTransactions() {
 
 export const pageAtom = atom(1);
 export const addressQueryAtom = atom('');
-export const operationAtom = atom(null);
-export const timeSpanAtom = atom(null);
+export const operationAtom = atom<ContractOP>();
+export const timeSpanAtom = atom<TimeSpan>();
 
-export const transactionsQuery = jotaiQuery({
+export const transactionsQuery = jotaiQuery<Transaction[]>({
   condition: (get) => get(loggedInAtom),
   getQueryConfig: (get) => {
     const page = get(pageAtom);
@@ -176,18 +191,20 @@ export const transactionsQuery = jotaiQuery({
       ],
       queryFn: async () => {
         try {
+          const where = buildQuery({ addressQuery, operation, timeSpan });
           const params = {
             verbose: 'summary',
             limit: txCountPerPage,
             // API page param is 0 based, while the page number on the UI is 1 based
             page: page - 1,
+            where,
           };
-          const query = buildQuery({ addressQuery, operation, timeSpan });
-          if (query) {
-            params.where = query;
-          }
-          return await callAPI('profiles/transactions/master', params);
-        } catch (err) {
+          const transactions = await callAPI(
+            'profiles/transactions/master',
+            params
+          );
+          return transactions;
+        } catch (err: any) {
           openErrorDialog({
             message: __('Error fetching transactions'),
             note:

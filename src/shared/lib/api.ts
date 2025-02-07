@@ -258,9 +258,27 @@ export interface Session {
   duration: number;
 }
 
+export type ContractOP =
+  | 'WRITE'
+  | 'APPEND'
+  | 'CREATE'
+  | 'TRANSFER'
+  | 'CLAIM'
+  | 'COINBASE'
+  | 'TRUST'
+  | 'TRUSTPOOL'
+  | 'GENESIS'
+  | 'GENESISPOOL'
+  | 'DEBIT'
+  | 'CREDIT'
+  | 'MIGRATE'
+  | 'AUTHORIZE'
+  | 'FEE'
+  | 'LEGACY';
+
 export interface Contract {
   id: number;
-  OP: string;
+  OP: ContractOP;
   for: string;
   txid: string;
   contract: number;

@@ -7,6 +7,7 @@ import CodeBlock from 'components/CodeBlock';
 import TransactionDetailsModal from 'components/TransactionDetailsModal';
 import { openModal } from 'lib/ui';
 import { addressRegex } from 'consts/misc';
+import { Contract } from 'lib/api';
 
 __ = __context('ContractDetails');
 
@@ -14,7 +15,7 @@ const KeyName = styled.span({
   textTransform: 'capitalize',
 });
 
-const translateKey = (key) => {
+const translateKey = (key: string) => {
   switch (key) {
     case 'id':
       return 'Contract #';
@@ -34,7 +35,7 @@ const translateKey = (key) => {
   }
 };
 
-function displayValue(value, key) {
+function displayValue(value: any, key: string) {
   if (value === null || value === undefined) return null;
 
   if (typeof value === 'object') {
@@ -52,7 +53,13 @@ function displayValue(value, key) {
   return String(value);
 }
 
-export default function ContractDetailsModal({ contract, txid }) {
+export default function ContractDetailsModal({
+  contract,
+  txid,
+}: {
+  contract: Contract;
+  txid: string;
+}) {
   if (!contract) return;
 
   return (
