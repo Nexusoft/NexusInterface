@@ -399,9 +399,9 @@ export type OperationResultWithAddress =
 async function callAPI(endpoint: 'system/get/info'): Promise<CoreInfo>;
 async function callAPI(endpoint: 'system/stop'): Promise<void>;
 async function callAPI(endpoint: 'system/list/peers'): Promise<Array<PeerInfo>>;
-async function callAPI(
+async function callAPI<TParams extends { address: string }>(
   endpoint: 'system/validate/address',
-  customParams: { address: string }
+  customParams: TParams
 ): Promise<{
   address: string;
   valid: boolean;
@@ -411,42 +411,49 @@ async function callAPI(
 }>;
 
 async function callAPI(endpoint: 'ledger/get/info'): Promise<LedgerInfo>;
-async function callAPI(
-  endpoint: 'ledger/get/transaction',
-  customParams: {
+async function callAPI<
+  TParams extends {
     txid: string;
-    verbose?: 'summary';
+    verbose?: string;
   }
+>(
+  endpoint: 'ledger/get/transaction',
+  customParams: TParams
 ): Promise<Transaction>;
 
-async function callAPI(endpoint: 'sessions/status/local'): Promise<UserStatus>;
-async function callAPI(
-  endpoint: 'sessions/create/local',
-  customParams: {
+async function callAPI<TParams extends { session?: string }>(
+  endpoint: 'sessions/status/local',
+  customParams?: TParams
+): Promise<UserStatus>;
+async function callAPI<
+  TParams extends {
     username: string;
     password: string;
     pin: string;
   }
+>(
+  endpoint: 'sessions/create/local',
+  customParams: TParams
 ): Promise<{
   genesis: string;
   session: string;
 }>;
-async function callAPI(
+async function callAPI<TParams extends { session?: string }>(
   endpoint: 'sessions/terminate/local',
-  customParams?: {
-    session?: string;
-  }
+  customParams?: TParams
 ): Promise<void>;
 async function callAPI(endpoint: 'sessions/list/local'): Promise<Session[]>;
-async function callAPI(
-  endpoint: 'sessions/unlock/local',
-  customParams: {
+async function callAPI<
+  TParams extends {
     pin: string;
     notifications?: boolean;
     staking?: boolean;
     mining?: boolean;
     session?: string;
   }
+>(
+  endpoint: 'sessions/unlock/local',
+  customParams: TParams
 ): Promise<{
   unlocked: {
     mining: boolean;
@@ -456,65 +463,94 @@ async function callAPI(
   };
 }>;
 
-async function callAPI(
-  endpoint: 'profiles/status/master',
-  customParams?: {
+async function callAPI<
+  TParams extends {
     username?: string;
+    genesis?: string;
   }
+>(
+  endpoint: 'profiles/status/master',
+  customParams?: TParams
 ): Promise<ProfileStatus>;
-async function callAPI(
-  endpoint: 'profiles/transactions/master',
-  customParams?: QueryParams & {
-    verbose?: 'summary';
+async function callAPI<
+  TParams extends QueryParams & {
+    verbose?: string;
   }
+>(
+  endpoint: 'profiles/transactions/master',
+  customParams?: TParams
 ): Promise<Transaction[]>;
-async function callAPI(
-  endpoint: 'profiles/update/credentials',
-  customParams: {
+async function callAPI<
+  TParams extends {
     password: string;
     pin: string;
     new_password: string;
     new_pin: string;
   }
+>(
+  endpoint: 'profiles/update/credentials',
+  customParams: TParams
 ): Promise<OperationResult>;
-async function callAPI(
+async function callAPI<
+  TParams extends {
+    username: string;
+    password: string;
+    pin: string;
+  }
+>(
   endpoint: 'profiles/create/auth',
-  customParams: {
-    username: string;
-    password: string;
-    pin: string;
-  }
+  customParams: TParams
 ): Promise<OperationResult>;
-async function callAPI(
-  endpoint: 'profiles/create/master',
-  customParams: {
+async function callAPI<
+  TParams extends {
     username: string;
     password: string;
     pin: string;
   }
+>(
+  endpoint: 'profiles/create/master',
+  customParams: TParams
 ): Promise<{ success: boolean; txid?: string }>;
-async function callAPI(
-  endpoint: 'profiles/recover/master',
-  customParams: {
+async function callAPI<
+  TParams extends {
     username: string;
     password: string;
     pin: string;
     recovery: string;
   }
+>(
+  endpoint: 'profiles/recover/master',
+  customParams: TParams
 ): Promise<OperationResult>;
-async function callAPI(
-  endpoint: 'profiles/update/recovery',
-  customParams: {
+async function callAPI<
+  TParams extends {
     password: string;
     pin: string;
     recovery: string;
     new_recovery: string;
   }
+>(
+  endpoint: 'profiles/update/recovery',
+  customParams: TParams
 ): Promise<OperationResult>;
 
-async function callAPI(
+async function callAPI<
+  TParams extends {
+    pin: string;
+    from: string;
+    recipients: {
+      address_to: string;
+      amount: number;
+    };
+    reference?: number;
+    expires?: number;
+  }
+>(
   endpoint: 'finance/debit/any',
-  customParams: {
+  customParams: TParams
+): Promise<OperationResult>;
+async function callAPI<
+  TParams extends {
     pin: string;
     from: string;
     recipients: {
@@ -524,249 +560,61 @@ async function callAPI(
     reference?: number;
     expires?: number;
   }
-): Promise<OperationResult>;
-async function callAPI(
+>(
   endpoint: 'finance/debit/token',
-  customParams: {
-    pin: string;
-    from: string;
-    recipients: {
-      address_to: string;
-      amount: number;
-    };
-    reference?: number;
-    expires?: number;
-  }
+  customParams: TParams
 ): Promise<OperationResult>;
-async function callAPI(
-  endpoint: 'finance/get/any',
-  customParams: {
+async function callAPI<
+  TParams extends {
     name?: string;
     address?: string;
   }
-): Promise<Account>;
-async function callAPI(
+>(endpoint: 'finance/get/any', customParams: TParams): Promise<Account>;
+async function callAPI<
+  TParams extends QueryParams & {
+    verbose?: string;
+    name?: string;
+    address?: string;
+  }
+>(
   endpoint: 'finance/transactions/any',
-  customParams?: QueryParams & {
-    verbose?: 'summary';
-    name?: string;
-    address?: string;
-  }
+  customParams?: TParams
 ): Promise<Transaction[]>;
-async function callAPI(
-  endpoint: 'finance/set/stake',
-  customParams: {
+async function callAPI<
+  TParams extends {
     pin: string;
     amount: number;
   }
+>(
+  endpoint: 'finance/set/stake',
+  customParams: TParams
 ): Promise<OperationResult>;
-async function callAPI(
-  endpoint: 'finance/create/account',
-  customParams: {
+async function callAPI<
+  TParams extends {
     pin: string;
     name?: string;
   }
+>(
+  endpoint: 'finance/create/account',
+  customParams: TParams
 ): Promise<OperationResultWithAddress>;
 async function callAPI(endpoint: 'finance/get/stakeinfo'): Promise<StakeInfo>;
 async function callAPI(
   endpoint: 'finance/get/balances'
 ): Promise<Array<NexusBalance | TokenBalance>>;
-async function callAPI(
+async function callAPI<TParams extends QueryParams>(
   endpoint: 'finance/list/tokens',
-  customParams?: QueryParams
+  customParams?: TParams
 ): Promise<Token[]>;
-async function callAPI(
+async function callAPI<TParams extends QueryParams>(
   endpoint: 'finance/list/any',
-  customParams?: QueryParams
+  customParams?: TParams
 ): Promise<Account[]>;
-
-async function callAPI(
-  endpoint: 'tokens/get/token',
-  customParams: {
-    name?: string;
-    address?: string;
-  }
-): Promise<Token>;
-async function callAPI(
-  endpoint: 'tokens/create/token',
-  customParams: {
-    pin: string;
-    supply: number;
-    decimals: number;
-    name?: string;
-  }
-): Promise<OperationResultWithAddress>;
-async function callAPI(
-  endpoint: 'tokens/create/account',
-  customParams: {
-    pin: string;
-    token: string;
-    name?: string;
-  }
-): Promise<OperationResultWithAddress>;
-
-async function callAPI(
-  endpoint: 'names/reverse/lookup',
-  customParams: { address: string }
-): Promise<NameRecord>;
-async function callAPI(
-  endpoint: 'names/get/name',
-  customParams: QueryParams & {
-    name?: string;
-    address?: string;
-  }
-): Promise<NameRecord>;
-async function callAPI(
-  endpoint: 'names/get/inactive',
-  customParams: QueryParams & {
-    name?: string;
-    address?: string;
-  }
-): Promise<NameRecord>;
-async function callAPI(
-  endpoint: 'names/rename/name',
-  customParams: {
-    pin: string;
-    name?: string;
-    address?: string;
-    new: string;
-  }
-): Promise<OperationResult>;
-async function callAPI(
-  endpoint: 'names/create/name',
-  customParams?: {
-    pin: string;
-    name: string;
-    register: string;
-  }
-): Promise<OperationResultWithAddress>;
-async function callAPI(
-  endpoint: 'names/update/name',
-  customParams?: {
-    pin: string;
-    name?: string;
-    address?: string;
-    register: string;
-  }
-): Promise<OperationResult>;
-async function callAPI(
-  endpoint: 'names/history/name',
-  customParams?: {
-    name?: string;
-    address?: string;
-  }
-): Promise<NameEvent[]>;
-async function callAPI(
-  endpoint: 'names/transfer/name',
-  customParams?: {
-    pin: string;
-    name?: string;
-    address?: string;
-    username?: string;
-    destination?: string;
-  }
-): Promise<OperationResultWithAddress>;
-async function callAPI(
-  endpoint: 'names/create/namespace',
-  customParams: {
-    pin: string;
-    namespace: string;
-  }
-): Promise<OperationResultWithAddress>;
-async function callAPI(
-  endpoint: 'names/history/namespace',
-  customParams?: {
-    name?: string;
-    address?: string;
-  }
-): Promise<NameEvent[]>;
-async function callAPI(
-  endpoint: 'names/transfer/namespace',
-  customParams?: {
-    pin: string;
-    name?: string;
-    address?: string;
-    username?: string;
-    destination?: string;
-  }
-): Promise<OperationResultWithAddress>;
-async function callAPI(
-  endpoint: 'names/list/names',
-  customParams?: QueryParams
-): Promise<NameRecord[]>;
-async function callAPI(
-  endpoint: 'names/list/inactive',
-  customParams?: QueryParams
-): Promise<NameRecord[]>;
-async function callAPI(
-  endpoint: 'names/list/namespaces',
-  customParams?: QueryParams
-): Promise<Namespace[]>;
-
-async function callAPI(
-  endpoint: 'assets/get/schema',
-  customParams: {
-    name?: string;
-    address?: string;
-  }
-): Promise<Asset>;
-async function callAPI(
-  endpoint: 'assets/history/asset',
-  customParams?: {
-    name?: string;
-    address?: string;
-  }
-): Promise<NameEvent[]>;
-async function callAPI(
-  endpoint: 'assets/create/asset',
-  customParams: {
-    pin: string;
-    format: AssetFormat;
-    name?: string;
-    json: Record<string, any>;
-  }
-): Promise<OperationResultWithAddress>;
-async function callAPI(
-  endpoint: 'assets/update/asset',
-  customParams: {
-    pin: string;
-    name?: string;
-    address?: string;
-    [key: string]: any;
-  }
-): Promise<OperationResult>;
-async function callAPI(
-  endpoint: 'assets/tokenize/asset',
-  customParams: {
-    pin: string;
-    name?: string;
-    address?: string;
-    token: string;
-  }
-): Promise<OperationResult>;
-async function callAPI(
-  endpoint: 'assets/transfer/asset',
-  customParams?: {
-    pin: string;
-    name?: string;
-    address?: string;
-    username?: string;
-    destination?: string;
-  }
-): Promise<OperationResultWithAddress>;
-async function callAPI(
-  endpoint: 'assets/list/assets',
-  customParams?: QueryParams
-): Promise<Asset[]>;
-async function callAPI(
-  endpoint: 'assets/list/partial',
-  customParams?: QueryParams
-): Promise<PartialAsset[]>;
 
 async function callAPI(
   endpoint: string,
   customParams?: Record<string, any>
-): Promise<any>;
+): Promise<unknown>;
 
 /**
  * callAPI Implementation
@@ -802,37 +650,39 @@ export { callAPI };
  * =============================================================================
  */
 
-async function listAll(
-  endpoint: 'finance/transactions/any',
-  customParams?: QueryParams & {
-    verbose?: 'summary';
+async function listAll<
+  TParams extends QueryParams & {
+    verbose?: string;
     name?: string;
     address?: string;
   }
+>(
+  endpoint: 'finance/transactions/any',
+  customParams?: TParams
 ): Promise<Transaction[]>;
-async function listAll(
+async function listAll<TParams extends QueryParams>(
   endpoint: 'finance/list/tokens',
-  customParams?: QueryParams
+  customParams?: TParams
 ): Promise<Token[]>;
-async function listAll(
+async function listAll<TParams extends QueryParams>(
   endpoint: 'names/list/names',
-  customParams?: QueryParams
+  customParams?: TParams
 ): Promise<NameRecord[]>;
-async function listAll(
+async function listAll<TParams extends QueryParams>(
   endpoint: 'names/list/inactive',
-  customParams?: QueryParams
+  customParams?: TParams
 ): Promise<NameRecord[]>;
-async function listAll(
+async function listAll<TParams extends QueryParams>(
   endpoint: 'names/list/namespaces',
-  customParams?: QueryParams
+  customParams?: TParams
 ): Promise<Namespace[]>;
-async function listAll(
+async function listAll<TParams extends QueryParams>(
   endpoint: 'assets/list/assets',
-  customParams?: QueryParams
+  customParams?: TParams
 ): Promise<Asset[]>;
-async function listAll(
+async function listAll<TParams extends QueryParams>(
   endpoint: 'assets/list/partial',
-  customParams?: QueryParams
+  customParams?: TParams
 ): Promise<PartialAsset[]>;
 
 async function listAll(
