@@ -15,7 +15,6 @@ import {
   memo,
   useRef,
   useEffect,
-  forwardRef,
   ReactNode,
   ComponentProps,
   RefObject,
@@ -198,149 +197,142 @@ export interface AutoSuggestProps
   emptyFiller?: ReactNode;
 }
 
-const AutoSuggest = forwardRef<HTMLInputElement, AutoSuggestProps>(
-  ({
-    filterSuggestions = defaultFilterSuggestions,
-    suggestOn = 'focus',
-    suggestions,
-    onSelect,
-    inputProps,
-    keyControl = true,
-    emptyFiller,
-    ...rest
-  }: AutoSuggestProps) => {
-    const [open, setOpen] = useState(false);
-    const [activeIndex, setActiveIndex] = useState<number | null>(null);
-    const currentSuggestions = filterSuggestions(
-      suggestions,
-      inputProps?.value
-    );
+export default function AutoSuggest({
+  filterSuggestions = defaultFilterSuggestions,
+  suggestOn = 'focus',
+  suggestions,
+  onSelect,
+  inputProps,
+  keyControl = true,
+  emptyFiller,
+  ...rest
+}: AutoSuggestProps) {
+  const [open, setOpen] = useState(false);
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const currentSuggestions = filterSuggestions(suggestions, inputProps?.value);
 
-    const inputRef = useRef<HTMLInputElement>(null);
-    const suggestionsRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const suggestionsRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
-      if (inputProps?.value) {
-        setActiveIndex(null);
-      }
-    }, [inputProps?.value]);
+  useEffect(() => {
+    if (inputProps?.value) {
+      setActiveIndex(null);
+    }
+  }, [inputProps?.value]);
 
-    const scrollToNewSelection = (index: number | null) => {
-      setActiveIndex(index);
-      if (index !== null) {
-        const suggestionEl = suggestionsRef.current?.children[index];
-        suggestionEl?.scrollIntoView({
-          block: 'nearest',
-          inline: 'nearest',
-          behavior: 'smooth',
-        });
-      }
-    };
+  const scrollToNewSelection = (index: number | null) => {
+    setActiveIndex(index);
+    if (index !== null) {
+      const suggestionEl = suggestionsRef.current?.children[index];
+      suggestionEl?.scrollIntoView({
+        block: 'nearest',
+        inline: 'nearest',
+        behavior: 'smooth',
+      });
+    }
+  };
 
-    const clearInput = () => {
-      onSelect?.('');
-      focusInput();
-    };
+  const clearInput = () => {
+    onSelect?.('');
+    focusInput();
+  };
 
-    const focusInput = () => {
-      inputRef.current?.focus();
-    };
+  const focusInput = () => {
+    inputRef.current?.focus();
+  };
 
-    return (
-      <AutoSuggestComponent {...rest}>
-        <TextField
-          ref={inputRef}
-          right={
-            <div className="flex center" style={{ alignSelf: 'stretch' }}>
-              <ClearButton
-                fitHeight
-                skin="plain"
-                onClick={clearInput}
-                shown={!!inputProps?.value}
-              >
-                ✕
-              </ClearButton>
-              <Button fitHeight skin="plain" onClick={focusInput}>
-                <Arrow direction="down" width={12} height={8} />
-              </Button>
-            </div>
+  return (
+    <AutoSuggestComponent {...rest}>
+      <TextField
+        ref={inputRef}
+        right={
+          <div className="flex center" style={{ alignSelf: 'stretch' }}>
+            <ClearButton
+              fitHeight
+              skin="plain"
+              onClick={clearInput}
+              shown={!!inputProps?.value}
+            >
+              ✕
+            </ClearButton>
+            <Button fitHeight skin="plain" onClick={focusInput}>
+              <Arrow direction="down" width={12} height={8} />
+            </Button>
+          </div>
+        }
+        {...inputProps}
+        onFocus={(e) => {
+          if (suggestOn === 'focus') {
+            setOpen(true);
           }
-          {...inputProps}
-          onFocus={(e) => {
-            if (suggestOn === 'focus') {
-              setOpen(true);
-            }
-            inputProps?.onFocus?.(e);
-          }}
-          onBlur={(e) => {
-            setOpen(false);
-            inputProps?.onBlur?.(e);
-          }}
-          onKeyDown={(e) => {
-            if (keyControl) {
-              switch (e.key) {
-                case 'ArrowDown':
+          inputProps?.onFocus?.(e);
+        }}
+        onBlur={(e) => {
+          setOpen(false);
+          inputProps?.onBlur?.(e);
+        }}
+        onKeyDown={(e) => {
+          if (keyControl) {
+            switch (e.key) {
+              case 'ArrowDown':
+                e.preventDefault();
+                if (activeIndex === null) {
+                  scrollToNewSelection(0);
+                } else if (activeIndex < currentSuggestions.length - 1) {
+                  scrollToNewSelection(activeIndex + 1);
+                } else {
+                  scrollToNewSelection(null);
+                }
+                break;
+              case 'ArrowUp':
+                e.preventDefault();
+                if (activeIndex === null) {
+                  scrollToNewSelection(currentSuggestions.length - 1);
+                } else if (activeIndex !== 0) {
+                  scrollToNewSelection(activeIndex - 1);
+                } else {
+                  scrollToNewSelection(null);
+                }
+                break;
+              case 'Tab':
+              case 'Enter':
+                if (activeIndex !== null) {
                   e.preventDefault();
-                  if (activeIndex === null) {
-                    scrollToNewSelection(0);
-                  } else if (activeIndex < currentSuggestions.length - 1) {
-                    scrollToNewSelection(activeIndex + 1);
-                  } else {
-                    scrollToNewSelection(null);
-                  }
-                  break;
-                case 'ArrowUp':
-                  e.preventDefault();
-                  if (activeIndex === null) {
-                    scrollToNewSelection(currentSuggestions.length - 1);
-                  } else if (activeIndex !== 0) {
-                    scrollToNewSelection(activeIndex - 1);
-                  } else {
-                    scrollToNewSelection(null);
-                  }
-                  break;
-                case 'Tab':
-                case 'Enter':
-                  if (activeIndex !== null) {
-                    e.preventDefault();
-                    const activeSuggestion = currentSuggestions[activeIndex];
-                    const value = getValue(activeSuggestion);
-                    onSelect?.(value);
-                  }
-                  break;
-              }
+                  const activeSuggestion = currentSuggestions[activeIndex];
+                  const value = getValue(activeSuggestion);
+                  onSelect?.(value);
+                }
+                break;
             }
-            inputProps?.onKeyDown?.(e);
-          }}
-          onChange={(e) => {
-            if (suggestOn === 'change') {
-              setOpen(true);
-            }
-            inputProps?.onChange?.(e);
-          }}
-        />
-        <Suggestions
-          ref={suggestionsRef}
-          open={open && (!!emptyFiller || currentSuggestions.length > 0)}
-        >
-          {currentSuggestions.map((suggestion, i) => (
-            <Suggestion
-              key={i}
-              index={i}
-              activeIndex={activeIndex}
-              activate={setActiveIndex}
-              suggestion={suggestion}
-              onSelect={onSelect}
-              inputRef={inputRef}
-            />
-          ))}
-          {currentSuggestions.length === 0 && !!emptyFiller && (
-            <SuggestionComponent>{emptyFiller}</SuggestionComponent>
-          )}
-        </Suggestions>
-      </AutoSuggestComponent>
-    );
-  }
-);
-
-export default AutoSuggest;
+          }
+          inputProps?.onKeyDown?.(e);
+        }}
+        onChange={(e) => {
+          if (suggestOn === 'change') {
+            setOpen(true);
+          }
+          inputProps?.onChange?.(e);
+        }}
+      />
+      <Suggestions
+        ref={suggestionsRef}
+        open={open && (!!emptyFiller || currentSuggestions.length > 0)}
+      >
+        {currentSuggestions.map((suggestion, i) => (
+          <Suggestion
+            key={i}
+            index={i}
+            activeIndex={activeIndex}
+            activate={setActiveIndex}
+            suggestion={suggestion}
+            onSelect={onSelect}
+            inputRef={inputRef}
+          />
+        ))}
+        {currentSuggestions.length === 0 && !!emptyFiller && (
+          <SuggestionComponent>{emptyFiller}</SuggestionComponent>
+        )}
+      </Suggestions>
+    </AutoSuggestComponent>
+  );
+}

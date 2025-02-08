@@ -9,7 +9,7 @@
  * - Make sure this note also presents in other files which are imported here.
  */
 
-import { forwardRef, ComponentProps } from 'react';
+import { ComponentProps } from 'react';
 import styled from '@emotion/styled';
 
 import { timing } from 'styles';
@@ -111,6 +111,9 @@ const ButtonComponent = styled.button<{
       },
     },
 
+  /**
+   * Note: the double & in &&:disabled is a css specificity hack so that the disabled styles take priority over the hover styles
+   */
   ({ skin = 'default', theme }) => {
     switch (skin) {
       case 'default':
@@ -284,14 +287,8 @@ const ButtonComponent = styled.button<{
 
 export type ButtonProps = ComponentProps<typeof ButtonComponent>;
 
-/**
- * Note: the double & in &&:disabled is a css specificity hack so that the disabled styles take priority over the hover styles
- */
-
-const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ type = 'button', skin, ...rest }, ref) => (
-    <ButtonComponent type={type} skin={skin} {...rest} ref={ref} />
-  )
+const Button = ({ type = 'button', skin, ...rest }: ButtonProps) => (
+  <ButtonComponent type={type} skin={skin} {...rest} />
 );
 
 export default Button;

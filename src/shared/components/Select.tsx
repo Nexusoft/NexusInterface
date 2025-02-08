@@ -12,7 +12,6 @@
 // External Dependencies
 import {
   useRef,
-  forwardRef,
   useState,
   useEffect,
   MutableRefObject,
@@ -403,20 +402,19 @@ interface SelectProps<TValue extends SelectValue> {
   error?: ReactNode;
   onChange: (value: TValue) => void;
   placeholder?: string;
+  ref: ForwardedRef<HTMLDivElement>;
 }
 
-function RawSelect<TValue extends SelectValue>(
-  {
-    options,
-    skin = 'underline',
-    value,
-    error,
-    onChange,
-    placeholder,
-    ...rest
-  }: SelectProps<TValue>,
-  ref: ForwardedRef<HTMLDivElement>
-) {
+export default function Select<TValue extends SelectValue>({
+  options,
+  skin = 'underline',
+  value,
+  error,
+  onChange,
+  placeholder,
+  ref,
+  ...rest
+}: SelectProps<TValue>) {
   const controlRef = useRef<HTMLDivElement>();
   const [open, setOpen] = useState(false);
 
@@ -472,7 +470,3 @@ function RawSelect<TValue extends SelectValue>(
     </>
   );
 }
-
-const Select = forwardRef(RawSelect);
-
-export default Select;

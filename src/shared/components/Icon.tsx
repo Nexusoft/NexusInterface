@@ -10,7 +10,7 @@
  */
 
 import styled from '@emotion/styled';
-import { forwardRef, HTMLAttributes } from 'react';
+import { HTMLAttributes } from 'react';
 
 const Svg = styled.svg<{
   size?: string | number;
@@ -27,12 +27,10 @@ interface IconProps extends HTMLAttributes<SVGSVGElement> {
   size?: string | number;
 }
 
-const Icon = forwardRef<SVGSVGElement, IconProps>(
-  ({ icon, size, ...rest }, ref) => (
-    <Svg viewBox={icon.viewBox} size={size} {...rest} ref={ref}>
-      <use href={`${icon.url ? icon.url : ''}#${icon.id}`} />
-    </Svg>
-  )
+const Icon = ({ icon, size, ...rest }: IconProps) => (
+  <Svg viewBox={icon.viewBox} size={size} {...rest}>
+    <use href={`${icon.url ? icon.url : ''}#${icon.id}`} />
+  </Svg>
 );
 
 // Icon.Raw = forwardRef(({ icon, size, ...rest }, ref) => (

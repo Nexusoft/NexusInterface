@@ -1,4 +1,4 @@
-import { useRef, forwardRef, ComponentProps, ReactNode } from 'react';
+import { useRef, ForwardedRef, ComponentProps, ReactNode } from 'react';
 import styled from '@emotion/styled';
 
 import { timing } from 'styles';
@@ -33,12 +33,14 @@ const SliderComponent = styled.input(({ theme }) => ({
   },
 }));
 
-const Slider = forwardRef<
-  HTMLInputElement,
-  ComponentProps<typeof SliderComponent> & {
-    error?: ReactNode;
-  }
->(({ error, ...rest }, ref) => {
+const Slider = ({
+  error,
+  ref,
+  ...rest
+}: ComponentProps<typeof SliderComponent> & {
+  error?: ReactNode;
+  ref: ForwardedRef<HTMLInputElement>;
+}) => {
   const sliderRef = useRef<HTMLInputElement>();
   return (
     <SliderComponent
@@ -50,6 +52,6 @@ const Slider = forwardRef<
       {...rest}
     />
   );
-});
+};
 
 export default Slider;

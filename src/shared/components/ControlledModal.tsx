@@ -1,5 +1,5 @@
 // External
-import { memo, useContext, forwardRef, ComponentProps } from 'react';
+import { memo, useContext, ComponentProps } from 'react';
 
 // Internal
 import Modal, { ModalProps } from 'components/Modal';
@@ -7,7 +7,7 @@ import ModalContext from 'context/modal';
 import { removeModal } from 'lib/ui';
 
 const ControlledModalComponent = memo(
-  forwardRef<HTMLDivElement, Omit<ModalProps, 'removeModal'>>((props, ref) => {
+  (props: Omit<ModalProps, 'removeModal'>) => {
     const modalID = useContext(ModalContext);
 
     return (
@@ -17,10 +17,9 @@ const ControlledModalComponent = memo(
         removeModal={() => {
           removeModal(modalID);
         }}
-        ref={ref}
       />
     );
-  })
+  }
 );
 
 type ControlledModalType = typeof ControlledModalComponent & {

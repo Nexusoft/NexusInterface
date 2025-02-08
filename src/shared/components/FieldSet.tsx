@@ -10,7 +10,7 @@
  */
 
 // External Dependencies
-import { ComponentProps, forwardRef, ReactNode } from 'react';
+import { ComponentProps, ReactNode } from 'react';
 import styled from '@emotion/styled';
 
 import { consts, timing } from 'styles';
@@ -35,16 +35,18 @@ const Legend = styled.legend<{
   transition: `color ${timing.normal}`,
 }));
 
-const FieldSet = forwardRef<
-  HTMLFieldSetElement,
-  ComponentProps<typeof FieldSetComponent> & {
-    legend?: ReactNode;
-  }
->(({ legend, children, color, ...rest }, ref) => (
-  <FieldSetComponent {...rest} ref={ref} color={color}>
+const FieldSet = ({
+  legend,
+  children,
+  color,
+  ...rest
+}: ComponentProps<typeof FieldSetComponent> & {
+  legend?: ReactNode;
+}) => (
+  <FieldSetComponent {...rest} color={color}>
     <Legend color={color}>{legend}</Legend>
     {children}
   </FieldSetComponent>
-));
+);
 
 export default FieldSet;

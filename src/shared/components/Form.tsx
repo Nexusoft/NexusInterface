@@ -1,6 +1,5 @@
 import {
   useEffect,
-  forwardRef,
   useState,
   ComponentType,
   ReactNode,
@@ -195,11 +194,7 @@ Form.Select = function ({
   config,
   validate,
   ...rest
-}: ComponentProps<typeof Select> & {
-  name: string;
-  config?: Config<any>;
-  validate?: FieldValidator<any>;
-}) {
+}: ComponentProps<typeof Select> & FormComponentProps) {
   const { input, meta } = useField(name, { validate, ...config });
   return <Select error={meta.touched && meta.error} {...input} {...rest} />;
 };
@@ -211,11 +206,7 @@ Form.AutoSuggest = function ({
   inputProps,
   onSelect,
   ...rest
-}: ComponentProps<typeof AutoSuggest> & {
-  name: string;
-  config?: Config<any>;
-  validate?: FieldValidator<any>;
-}) {
+}: ComponentProps<typeof AutoSuggest> & FormComponentProps) {
   const { input, meta } = useField(name, { validate, ...config });
   return (
     <AutoSuggest
@@ -230,34 +221,28 @@ Form.AutoSuggest = function ({
   );
 };
 
-Form.Switch = forwardRef<
-  HTMLInputElement,
-  ComponentProps<typeof Switch> & {
-    name: string;
-    config?: Config<any>;
-    validate?: FieldValidator<any>;
-  }
->(function ({ name, config, validate, ...rest }, ref) {
+Form.Switch = function ({
+  name,
+  config,
+  validate,
+  ...rest
+}: ComponentProps<typeof Switch> & FormComponentProps) {
   const { input } = useField(name, { validate, type: 'checkbox', ...config });
-  return <Switch ref={ref} {...input} {...rest} />;
-});
+  return <Switch {...input} {...rest} />;
+};
 
-Form.Slider = forwardRef<
-  HTMLInputElement,
-  ComponentProps<typeof Slider> & {
-    name: string;
-    config?: Config<any>;
-    validate?: FieldValidator<any>;
-  }
->(function ({ name, config, validate, ...rest }, ref) {
+Form.Slider = function ({
+  name,
+  config,
+  validate,
+  ...rest
+}: ComponentProps<typeof Slider> & FormComponentProps) {
   const { input, meta } = useField(name, {
     validate,
     ...config,
   });
-  return (
-    <Slider ref={ref} error={meta.touched && meta.error} {...input} {...rest} />
-  );
-});
+  return <Slider error={meta.touched && meta.error} {...input} {...rest} />;
+};
 
 Form.SubmitButton = ({
   children,

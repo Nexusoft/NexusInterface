@@ -14,7 +14,6 @@ import {
   useEffect,
   useRef,
   useState,
-  forwardRef,
   ComponentProps,
   ReactNode,
   CSSProperties,
@@ -254,10 +253,11 @@ const TextArea = styled(Input.withComponent('textarea'))({
   lineHeight: 1.28,
 });
 
-const MultilineInput = forwardRef<
-  HTMLTextAreaElement,
-  ComponentProps<typeof TextArea>
->((props, ref) => {
+const MultilineInput = (
+  props: ComponentProps<typeof TextArea> & {
+    ref?: ForwardedRef<HTMLTextAreaElement>;
+  }
+) => {
   const inputRef = useRef<HTMLTextAreaElement>();
 
   useEffect(() => {
@@ -272,8 +272,8 @@ const MultilineInput = forwardRef<
     }
   });
 
-  return <TextArea ref={refs(inputRef, ref)} {...props} />;
-});
+  return <TextArea ref={refs(inputRef, props.ref)} {...props} />;
+};
 
 export interface CommonTextFieldProps {
   left?: ReactNode;

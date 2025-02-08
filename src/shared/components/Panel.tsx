@@ -12,7 +12,7 @@
 // External Dependencies
 import { keyframes } from '@emotion/react';
 import styled from '@emotion/styled';
-import { ComponentProps, forwardRef, ReactNode } from 'react';
+import { ComponentProps, ReactNode } from 'react';
 
 // Internal Global Dependencies
 import Icon, { SvgIcon } from 'components/Icon';
@@ -85,22 +85,27 @@ export interface PanelProps
   controls?: ReactNode;
 }
 
-const Panel = forwardRef<HTMLDivElement, PanelProps>(
-  ({ icon, title, controls, children, ...rest }, ref) => (
-    <PanelWrapper {...rest}>
-      <PanelComponent ref={ref}>
-        <PanelHeader>
-          <PanelTitle>
-            {!!icon && <Icon className="mr0_4" icon={icon} />}
-            <span className="v-align">{title}</span>
-          </PanelTitle>
-          {controls}
-        </PanelHeader>
+const Panel = ({
+  icon,
+  title,
+  controls,
+  ref,
+  children,
+  ...rest
+}: PanelProps) => (
+  <PanelWrapper {...rest}>
+    <PanelComponent ref={ref}>
+      <PanelHeader>
+        <PanelTitle>
+          {!!icon && <Icon className="mr0_4" icon={icon} />}
+          <span className="v-align">{title}</span>
+        </PanelTitle>
+        {controls}
+      </PanelHeader>
 
-        <PanelBody>{children}</PanelBody>
-      </PanelComponent>
-    </PanelWrapper>
-  )
+      <PanelBody>{children}</PanelBody>
+    </PanelComponent>
+  </PanelWrapper>
 );
 
 export default Panel;
