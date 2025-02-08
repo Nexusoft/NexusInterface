@@ -78,8 +78,7 @@ export default function RecoverPasswordPinModal() {
               </FormField>
 
               <FormField label={__('Recovery phrase')}>
-                <Form.TextField
-                  multiline
+                <Form.MultilineTextField
                   rows={1}
                   name="recoveryPhrase"
                   placeholder={__('Your recovery phrase')}

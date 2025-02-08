@@ -8,7 +8,7 @@
  * into modules' execution environment.
  * - Make sure this note also presents in other files which are imported here.
  */
-import { MutableRefObject, ForwardedRef, Ref } from 'react';
+import { ForwardedRef } from 'react';
 
 export const newUID = (function () {
   let counter = 1;
@@ -20,10 +20,7 @@ export function escapeRegExp(s: string) {
   return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
 }
 
-export function passRef(
-  el: unknown,
-  ref: MutableRefObject<unknown> | ForwardedRef<unknown>
-) {
+export function passRef(el: any, ref: ForwardedRef<any>) {
   if (typeof ref === 'function') {
     ref(el);
   } else if (ref) {
@@ -31,8 +28,8 @@ export function passRef(
   }
 }
 
-export function refs(...list: Array<Ref<unknown> | undefined>) {
-  return (el: unknown) => {
+export function refs(...list: Array<ForwardedRef<any> | undefined>) {
+  return (el: any) => {
     list.forEach((ref) => {
       if (ref) {
         passRef(el, ref);

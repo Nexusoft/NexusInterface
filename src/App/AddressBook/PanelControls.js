@@ -7,7 +7,7 @@ import UT from 'lib/usageTracking';
 import { contactsAtom, searchQueryAtom } from 'lib/addressBook';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
-import TextField from 'components/TextField';
+import { TextField } from 'components/TextField';
 import Tooltip from 'components/Tooltip';
 import { openModal } from 'lib/ui';
 import { useCoreConnected } from 'lib/coreInfo';

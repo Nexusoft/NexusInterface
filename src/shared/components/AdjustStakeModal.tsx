@@ -17,7 +17,9 @@ import UT from 'lib/usageTracking';
 
 __ = __context('AdjustStake');
 
-const LimitNumber = styled(NativeLink)(
+const LimitNumber = styled(NativeLink)<{
+  align: 'left' | 'right';
+}>(
   {
     position: 'absolute',
     top: '50%',
@@ -53,7 +55,7 @@ const Note = styled.div(({ theme }) => ({
   marginTop: 20,
 }));
 
-function StakeSlider({ min, max }) {
+function StakeSlider({ min, max }: { min: number; max: number }) {
   const theme = useTheme();
   const stake = useFieldValue('stake');
   const percentage = (stake / max) * 100;
@@ -71,7 +73,7 @@ function StakeSlider({ min, max }) {
   );
 }
 
-function LimitNumbers({ total }) {
+function LimitNumbers({ total }: { total: number }) {
   const { input } = useField('stake', { subscription: {} });
   return (
     <>
@@ -95,23 +97,29 @@ function LimitNumbers({ total }) {
   );
 }
 
-const isNumber = (value) =>
+const isNumber = (value: any) =>
   Number.isNaN(Number(value)) ? __('Invalid number') : undefined;
 
-const isInRange = (total) => (value) =>
+const isInRange = (total: number) => (value: number) =>
   value < 0 || value > total ? __('Out of range') : undefined;
 
-const getInitialValues = memoize((initialStake, currentStake) => ({
-  stake: typeof initialStake === 'number' ? initialStake : currentStake || 0,
-}));
+const getInitialValues = memoize(
+  (initialStake?: number, currentStake?: number) => ({
+    stake: typeof initialStake === 'number' ? initialStake : currentStake || 0,
+  })
+);
 
 export default function AdjustStakeModal({
   initialStake,
   onClose,
   onComplete,
+}: {
+  initialStake?: number;
+  onClose: () => void;
+  onComplete?: () => void;
 }) {
   const { stake: currentStake, balance } = stakeInfoQuery.use() || {};
-  const total = currentStake + balance || 0;
+  const total = currentStake && balance ? currentStake + balance : 0;
 
   return (
     <ControlledModal maxWidth={600} onClose={onClose}>
@@ -126,7 +134,7 @@ export default function AdjustStakeModal({
               initialValues={getInitialValues(initialStake, currentStake)}
               onSubmit={formSubmit({
                 submit: async ({ stake }) => {
-                  if (stake < currentStake) {
+                  if (currentStake && stake < currentStake) {
                     const confirmed = await confirm({
                       question: __('Reduce stake amount?'),
                       note: __(
@@ -134,7 +142,7 @@ export default function AdjustStakeModal({
                       ),
                       skinYes: 'danger',
                     });
-                    if (!confirmed) return;
+                    if (!confirmed) return undefined;
                   }
 
                   const pin = await confirmPin();
@@ -144,11 +152,12 @@ export default function AdjustStakeModal({
                       amount: stake,
                     });
                   }
+                  return undefined;
                 },
                 onSuccess: async (result, { stake }) => {
                   if (!result) return; // Submission was cancelled
 
-                  if (stake < currentStake) {
+                  if (currentStake && stake < currentStake) {
                     UT.AdjustStake('reduce');
                   } else {
                     UT.AdjustStake('increase');

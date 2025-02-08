@@ -177,7 +177,6 @@ const Input = styled.input<{
   skin?: TextFieldSkin;
   grouped?: 'left' | 'right' | 'top' | 'bottom';
   type?: string;
-  multiline?: boolean;
 }>(
   ({ theme }) => ({
     display: 'block',
@@ -282,43 +281,35 @@ export interface CommonTextFieldProps {
   inputStyle?: CSSProperties;
 }
 
-export interface SinglelineTextFieldProps
+export interface TextFieldProps
   extends CommonTextFieldProps,
     ComponentProps<typeof Input> {
-  multiline?: false;
   ref?: ForwardedRef<HTMLInputElement>;
 }
-
 export interface MultilineTextFieldProps
   extends CommonTextFieldProps,
     ComponentProps<typeof TextArea> {
-  multiline: true;
   ref?: ForwardedRef<HTMLTextAreaElement>;
 }
 
-export type TextFieldProps = SinglelineTextFieldProps | MultilineTextFieldProps;
-
-export default function TextField(props: SinglelineTextFieldProps): ReactNode;
-export default function TextField(props: MultilineTextFieldProps): ReactNode;
-export default function TextField(props: TextFieldProps) {
+function GenericTextField(
+  props:
+    | (TextFieldProps & { multiline: false })
+    | (MultilineTextFieldProps & { multiline: true })
+) {
+  // Don't destructure `multiline` here so it can act as a discrimination type guard for `rest` later
   const {
     className,
     style,
     inputStyle,
     skin = 'underline',
-    multiline,
     left,
     right,
     readOnly,
     autoFocus,
     error,
-    ...htmlProps
+    ...rest
   } = props;
-  const commonProps = {
-    skin,
-    readOnly,
-    style: inputStyle,
-  };
 
   const [focus, setFocus] = useState(false);
   const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement>();
@@ -332,21 +323,19 @@ export default function TextField(props: TextFieldProps) {
     }
   }, []);
 
-  const isForInput = (_rest: any): _rest is ComponentProps<typeof Input> =>
-    multiline !== true;
-  const isForTextArea = (
-    _rest: any
-  ): _rest is ComponentProps<typeof TextArea> => multiline === true;
-
-  let innerTextField: ReactElement | null = null;
-  if (isForInput(htmlProps)) {
-    const { ref, size, onFocus, onBlur, ...inputProps } = htmlProps;
+  const commonProps = {
+    skin,
+    readOnly,
+    style: inputStyle,
+  };
+  let innerTextField: ReactElement;
+  if (!rest.multiline) {
+    const { multiline, ref, onFocus, onBlur, ...inputProps } = rest;
     innerTextField = (
       <Input
         {...commonProps}
         {...inputProps}
         ref={refs(inputRef, ref)}
-        size={size}
         onFocus={(e) => {
           setFocus(true);
           onFocus?.(e);
@@ -357,9 +346,8 @@ export default function TextField(props: TextFieldProps) {
         }}
       />
     );
-  }
-  if (isForTextArea(htmlProps)) {
-    const { ref, onFocus, onBlur, ...textAreaProps } = htmlProps;
+  } else {
+    const { multiline, ref, onFocus, onBlur, ...textAreaProps } = rest;
     innerTextField = (
       <MultilineInput
         {...commonProps}
@@ -379,7 +367,8 @@ export default function TextField(props: TextFieldProps) {
 
   return (
     <TextFieldWrapper
-      {...{ className, style, skin, error, multiline }}
+      {...{ className, style, skin, error }}
+      multiline={rest.multiline}
       focus={!readOnly && focus}
     >
       {left}
@@ -397,4 +386,12 @@ export default function TextField(props: TextFieldProps) {
       )}
     </TextFieldWrapper>
   );
+}
+
+export function TextField(props: TextFieldProps) {
+  return <GenericTextField {...props} multiline={false} />;
+}
+
+export function MultilineTextField(props: MultilineTextFieldProps) {
+  return <GenericTextField {...props} multiline={true} />;
 }

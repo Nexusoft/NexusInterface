@@ -1,6 +1,5 @@
 // External
 import { useRef, useEffect } from 'react';
-import { useField } from 'react-final-form';
 import styled from '@emotion/styled';
 
 // Internal
@@ -53,7 +52,7 @@ const LabelWrapper = styled.div({
   flexBasis: 0,
 });
 
-const AddButton = styled(Button)(({ theme }) => ({
+const AddButton = styled(Button)({
   // fontSize: '.9em',
   // '&, &:active, &&:disabled': {
   //   color: theme.mixer(0.5),
@@ -61,14 +60,20 @@ const AddButton = styled(Button)(({ theme }) => ({
   // '&:hover': {
   //   color: theme.mixer(0.75),
   // },
-}));
+});
 
 const PlusIcon = styled(Icon)({
   fontSize: '.8em',
 });
 
-export default function Addresses({ fields, isMine }) {
-  const lastInputRef = useRef();
+export default function Addresses({
+  fields,
+  isMine,
+}: {
+  fields: any; // some weird type from react-final-form-arrays
+  isMine?: boolean;
+}) {
+  const lastInputRef = useRef<HTMLInputElement>(null);
   const justAddedRef = useRef(false);
   const contactName = useFieldValue('name');
 
@@ -80,10 +85,10 @@ export default function Addresses({ fields, isMine }) {
     }
   });
 
-  const validateAddress = async (value) => {
+  const validateAddress = async (value: string) => {
     // Allow if it's genesis (User ID)
     // TODO: improve this
-    if (value.startsWith('a') && value.length === 64) return;
+    if (value.startsWith('a') && value.length === 64) return undefined;
 
     try {
       const { valid, mine } = await callAPI('system/validate/address', {
@@ -101,6 +106,7 @@ export default function Addresses({ fields, isMine }) {
       console.error(err);
       return __('Invalid address');
     }
+    return undefined;
   };
 
   const addNewAddress = () => {
@@ -118,7 +124,7 @@ export default function Addresses({ fields, isMine }) {
 
   return (
     <div className="mt2">
-      {fields.map((fieldName, i) => (
+      {fields.map((fieldName: string, i: number) => (
         <NXSAddress key={i}>
           <Tooltip.Trigger tooltip={__('Remove address')}>
             <RemoveButton

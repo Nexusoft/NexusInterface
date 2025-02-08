@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import { useAtom } from 'jotai';
 
 import Select from 'components/Select';
-import TextField from 'components/TextField';
+import { TextField } from 'components/TextField';
 import FormField from 'components/FormField';
 import Icon from 'components/Icon';
 import Button from 'components/Button';

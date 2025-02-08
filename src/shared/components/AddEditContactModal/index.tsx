@@ -9,7 +9,12 @@ import ControlledModal from 'components/ControlledModal';
 import Form from 'components/Form';
 import FormField from 'components/FormField';
 import Button from 'components/Button';
-import { addNewContact, updateContact, addressBookAtom } from 'lib/addressBook';
+import {
+  addNewContact,
+  updateContact,
+  addressBookAtom,
+  Contact,
+} from 'lib/addressBook';
 import { showNotification } from 'lib/ui';
 import { formSubmit, required, checkAll } from 'lib/form';
 import { emailRegex } from 'consts/misc';
@@ -19,7 +24,24 @@ import UT from 'lib/usageTracking';
 
 __ = __context('AddEditContact');
 
-const initialContact = {
+interface FormValues {
+  name: string;
+  notMine: {
+    address: string;
+    label: string;
+  }[];
+  mine: {
+    address: string;
+    label: string;
+  }[];
+  genesis: string;
+  email: string;
+  phoneNumber: string;
+  timeZone: number | undefined;
+  notes: string;
+}
+
+const initialContact: Partial<FormValues> = {
   name: '',
   notMine: [
     {
@@ -31,7 +53,7 @@ const initialContact = {
   genesis: '',
   email: '',
   phoneNumber: '',
-  timeZone: null,
+  timeZone: undefined,
   notes: '',
 };
 
@@ -40,33 +62,44 @@ const tzOptions = timeZones.map((tz) => ({
   display: `(${tz.offset}) ${tz.description}`,
 }));
 
-function getInitialValues(contact) {
+function getInitialValues(contact: Contact) {
   const mine = contact.addresses.filter((c) => c.isMine);
   const notMine = contact.addresses.filter((c) => !c.isMine);
-  return { ...contact, mine, notMine };
+  return { ...contact, mine, notMine } as Partial<FormValues>;
 }
 
-const validateGenesis = (value) =>
-  value && value?.length !== 64 ? __('Invalid user ID') : undefined;
+const validateGenesis = (value?: string) =>
+  value?.length !== 64 ? __('Invalid user ID') : undefined;
 
-const validateEmail = (value) =>
+const validateEmail = (value?: string) =>
   value && !emailRegex.test(value.toLowerCase())
     ? __('Invalid email')
     : undefined;
 
-export default function AddEditContactModal({ edit, contact, prefill }) {
-  const inputRef = useRef();
+export default function AddEditContactModal({
+  edit,
+  contact,
+}:
+  | {
+      edit?: false;
+      contact?: undefined;
+    }
+  | {
+      edit: true;
+      contact: Contact;
+    }) {
+  const inputRef = useRef<HTMLInputElement>(null);
   const addressBook = useAtomValue(addressBookAtom);
   const oldName = contact?.name;
 
   useEffect(() => {
     // Not sure why but calling focus directly doesn't work
     setTimeout(() => {
-      inputRef.current.focus();
+      inputRef.current?.focus();
     }, 0);
   }, []);
 
-  const nameUnique = (value) =>
+  const nameUnique = (value: string) =>
     addressBook?.[value] &&
     (!edit || value !== oldName) &&
     __('A contact with the same name already exists.');
@@ -81,40 +114,35 @@ export default function AddEditContactModal({ edit, contact, prefill }) {
           <ControlledModal.Body>
             <Form
               name={edit ? `editContact:${contact.name}` : 'createContact'}
-              initialValues={
-                edit
-                  ? getInitialValues(contact)
-                  : { ...initialContact, ...prefill }
-              }
+              initialValues={edit ? getInitialValues(contact) : initialContact}
               validate={({ mine, notMine }) => {
                 if (!mine?.length && !notMine?.length) {
                   return {
                     [FORM_ERROR]: __('At least one address is required.'),
                   };
                 }
+                return undefined;
               }}
-              onSubmit={formSubmit({
+              onSubmit={formSubmit<FormValues>({
                 submit: (values) => {
-                  const contact = { ...values };
                   const addresses = [
-                    ...contact.notMine.map((addr) => ({
+                    ...values.notMine.map((addr) => ({
                       ...addr,
                       isMine: false,
                     })),
-                    ...contact.mine.map((addr) => ({ ...addr, isMine: true })),
+                    ...values.mine.map((addr) => ({ ...addr, isMine: true })),
                   ];
-                  delete contact.mine;
-                  delete contact.notMine;
-                  contact.addresses = addresses;
+                  const { mine, notMine, ...tempContact } = values;
+                  const contact: Contact = { ...tempContact, addresses };
 
                   if (edit) {
-                    updateContact(oldName, contact);
+                    updateContact(oldName!, contact);
                   } else {
                     addNewContact(contact);
                   }
                 },
                 onSuccess: () => {
-                  UT.AddAddressBookEntry(edit);
+                  UT.AddAddressBookEntry(!!edit);
                   closeModal();
                   if (edit) {
                     showNotification(__('Contact has been updated'), 'success');
@@ -190,10 +218,9 @@ export default function AddEditContactModal({ edit, contact, prefill }) {
                 </FormField>
 
                 <FormField connectLabel label={__('Notes')}>
-                  <Form.TextField
+                  <Form.MultilineTextField
                     name="notes"
                     placeholder={__('Notes')}
-                    multiline
                     rows={1}
                   />
                 </FormField>

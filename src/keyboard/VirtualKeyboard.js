@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 
 import GlobalStyles from 'components/GlobalStyles';
 import ThemeController from 'components/ThemeController';
-import TextField from 'components/TextField';
+import { TextField } from 'components/TextField';
 import MaskableTextField from 'components/MaskableTextField';
 
 import KeyboardStyles from './KeyboardStyles';

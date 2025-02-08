@@ -22,7 +22,7 @@ import {
 import styled from '@emotion/styled';
 
 // Internal
-import TextField, { SinglelineTextFieldProps } from 'components/TextField';
+import { TextField, TextFieldProps } from 'components/TextField';
 import Button from 'components/Button';
 import Arrow from 'components/Arrow';
 import memoize from 'utils/memoize';
@@ -192,7 +192,7 @@ export interface AutoSuggestProps
   suggestOn?: 'focus' | 'change';
   suggestions: SuggestionType[];
   onSelect: (value: string) => void;
-  inputProps?: SinglelineTextFieldProps;
+  inputProps?: TextFieldProps;
   keyControl?: boolean;
   emptyFiller?: ReactNode;
 }

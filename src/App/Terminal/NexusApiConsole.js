@@ -3,13 +3,11 @@ import { useRef, useEffect, useState } from 'react';
 import { useAtomValue } from 'jotai';
 import styled from '@emotion/styled';
 import { ipcRenderer } from 'electron';
-import UT from 'lib/usageTracking';
-import memoize from 'utils/memoize';
 
 // Internal Global Dependencies
 import Button from 'components/Button';
 import Select from 'components/Select';
-import TextField from 'components/TextField';
+import { MultilineTextField } from 'components/TextField';
 import RequireCoreConnected from 'components/RequireCoreConnected';
 import { callAPIByUrl } from 'lib/api';
 import { openModal } from 'lib/ui';
@@ -245,12 +243,11 @@ export default function NexusApiConsole() {
       <TerminalContent>
         <Console>
           <ConsoleInput>
-            <TextField
+            <MultilineTextField
               autoFocus
               ref={inputRef}
               skin="filled-inverted"
               value={consoleInput}
-              multiline
               rows={1}
               inputStyle={{ resize: 'none' }}
               placeholder={

@@ -17,13 +17,17 @@ import {
 import { FieldArray } from 'react-final-form-arrays';
 import { Config, createForm, FieldValidator } from 'final-form';
 
-import TextField, {
-  SinglelineTextFieldProps,
+import {
+  TextField,
+  TextFieldProps,
   MultilineTextFieldProps,
+  MultilineTextField,
 } from 'components/TextField';
-import TextFieldWithKeyboard, {
-  SinglelineTextFieldWithKeyboardProps,
+import {
+  TextFieldWithKeyboard,
+  TextFieldWithKeyboardProps,
   MultilineTextFieldWithKeyboardProps,
+  MultilineTextFieldWithKeyboard,
 } from 'components/TextFieldWithKeyboard';
 import Select from 'components/Select';
 import AutoSuggest from 'components/AutoSuggest';
@@ -117,86 +121,73 @@ export interface FormComponentProps {
   validate?: FieldValidator<any>;
 }
 
-interface SinglelineFormTextFieldProps
-  extends FormComponentProps,
-    Omit<SinglelineTextFieldProps, 'name'> {}
-interface MultilineFormTextFieldProps
-  extends FormComponentProps,
-    Omit<MultilineTextFieldProps, 'name'> {}
-function FormTextField(props: SinglelineFormTextFieldProps): ReactNode;
-function FormTextField(props: MultilineFormTextFieldProps): ReactNode;
-function FormTextField({
+Form.TextField = ({
   name,
   config,
   validate,
   ...rest
-}: SinglelineFormTextFieldProps | MultilineFormTextFieldProps) {
+}: FormComponentProps & Omit<TextFieldProps, 'name'>) => {
   const { input, meta } = useField(name, { validate, ...config });
-  // Need this discrimination type guard to narrow the rest type down to
-  // either SinglelineTextFieldProps or MultilineTextFieldProps
-  if (rest.multiline) {
-    return (
-      <TextField error={meta.touched && meta.error} {...input} {...rest} />
-    );
-  } else {
-    return (
-      <TextField error={meta.touched && meta.error} {...input} {...rest} />
-    );
-  }
-}
-Form.TextField = FormTextField;
+  return <TextField error={meta.touched && meta.error} {...rest} {...input} />;
+};
 
-interface SinglelineFormTextFieldWithKeyboardProps
-  extends FormComponentProps,
-    Omit<SinglelineTextFieldWithKeyboardProps, 'name'> {}
-interface MultilineFormTextFieldWithKeyboardProps
-  extends FormComponentProps,
-    Omit<MultilineTextFieldWithKeyboardProps, 'name'> {}
-function FormTextFieldWithKeyboard(
-  props: SinglelineFormTextFieldWithKeyboardProps
-): ReactNode;
-function FormTextFieldWithKeyboard(
-  props: MultilineFormTextFieldWithKeyboardProps
-): ReactNode;
-function FormTextFieldWithKeyboard({
+Form.MultilineTextField = ({
   name,
   config,
   validate,
   ...rest
-}:
-  | SinglelineFormTextFieldWithKeyboardProps
-  | MultilineFormTextFieldWithKeyboardProps) {
+}: FormComponentProps & Omit<MultilineTextFieldProps, 'name'>) => {
   const { input, meta } = useField(name, { validate, ...config });
-  // Need this discrimination type guard to narrow the rest type down to
-  // either SinglelineTextFieldProps or MultilineTextFieldProps
-  if (rest.multiline) {
-    return (
-      <TextFieldWithKeyboard
-        error={meta.touched && meta.error}
-        {...input}
-        {...rest}
-      />
-    );
-  } else {
-    return (
-      <TextFieldWithKeyboard
-        error={meta.touched && meta.error}
-        {...input}
-        {...rest}
-      />
-    );
-  }
-}
-Form.TextFieldWithKeyboard = FormTextFieldWithKeyboard;
+  return (
+    <MultilineTextField
+      error={meta.touched && meta.error}
+      {...input}
+      {...rest}
+    />
+  );
+};
+
+Form.TextFieldWithKeyboard = ({
+  name,
+  config,
+  validate,
+  ...rest
+}: FormComponentProps & Omit<TextFieldWithKeyboardProps, 'name'>) => {
+  const { input, meta } = useField(name, { validate, ...config });
+  return (
+    <TextFieldWithKeyboard
+      error={meta.touched && meta.error}
+      {...input}
+      {...rest}
+    />
+  );
+};
+
+Form.MultilineTextFieldWithKeyboard = ({
+  name,
+  config,
+  validate,
+  ...rest
+}: FormComponentProps & Omit<MultilineTextFieldWithKeyboardProps, 'name'>) => {
+  const { input, meta } = useField(name, { validate, ...config });
+  return (
+    <MultilineTextFieldWithKeyboard
+      error={meta.touched && meta.error}
+      {...input}
+      {...rest}
+    />
+  );
+};
 
 Form.Select = function ({
   name,
   config,
   validate,
   ...rest
-}: ComponentProps<typeof Select> & FormComponentProps) {
+}: Omit<ComponentProps<typeof Select>, 'value' | 'onChange'> &
+  FormComponentProps) {
   const { input, meta } = useField(name, { validate, ...config });
-  return <Select error={meta.touched && meta.error} {...input} {...rest} />;
+  return <Select error={meta.touched && meta.error} {...rest} {...input} />;
 };
 
 Form.AutoSuggest = function ({
@@ -228,7 +219,7 @@ Form.Switch = function ({
   ...rest
 }: ComponentProps<typeof Switch> & FormComponentProps) {
   const { input } = useField(name, { validate, type: 'checkbox', ...config });
-  return <Switch {...input} {...rest} />;
+  return <Switch {...rest} {...input} />;
 };
 
 Form.Slider = function ({
@@ -241,7 +232,7 @@ Form.Slider = function ({
     validate,
     ...config,
   });
-  return <Slider error={meta.touched && meta.error} {...input} {...rest} />;
+  return <Slider error={meta.touched && meta.error} {...rest} {...input} />;
 };
 
 Form.SubmitButton = ({

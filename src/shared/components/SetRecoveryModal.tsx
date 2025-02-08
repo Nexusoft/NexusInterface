@@ -8,7 +8,7 @@ import ControlledModal, {
   ControlledModalProps,
 } from 'components/ControlledModal';
 import FormField from 'components/FormField';
-import TextField from 'components/TextField';
+import { MultilineTextField } from 'components/TextField';
 import Button from 'components/Button';
 import Select from 'components/Select';
 import Spinner from 'components/Spinner';
@@ -138,8 +138,7 @@ export default function SetRecoveryModal() {
 
               {hasRecoveryPhrase && (
                 <FormField label={__('Current recovery phrase')}>
-                  <Form.TextField
-                    multiline
+                  <Form.MultilineTextField
                     name="phrase"
                     placeholder={__('Enter your recovery phrase')}
                     rows={1}
@@ -180,8 +179,7 @@ export default function SetRecoveryModal() {
                 </div>
 
                 <FormField label={__('New recovery phrase')}>
-                  <Form.TextField
-                    multiline
+                  <Form.MultilineTextField
                     name="newPhrase"
                     placeholder={__(
                       'Enter your new recovery phrase or click Generate'
@@ -230,8 +228,7 @@ function ConfirmRecoveryDialog({
             {__('Confirm recovery phrase')}
           </ControlledModal.Header>
           <ControlledModal.Body>
-            <TextField
-              multiline
+            <MultilineTextField
               rows={1}
               value={inputValue}
               onChange={(e) => {

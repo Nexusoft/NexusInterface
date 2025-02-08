@@ -39,7 +39,7 @@ const Slider = ({
   ...rest
 }: ComponentProps<typeof SliderComponent> & {
   error?: ReactNode;
-  ref: ForwardedRef<HTMLInputElement>;
+  ref?: ForwardedRef<HTMLInputElement>;
 }) => {
   const sliderRef = useRef<HTMLInputElement>();
   return (

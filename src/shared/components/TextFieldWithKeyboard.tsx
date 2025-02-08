@@ -1,14 +1,14 @@
 // External
-import { useEffect, useCallback, ReactNode } from 'react';
+import { useEffect, useCallback } from 'react';
 import { ipcRenderer } from 'electron';
 
 // Internal
-import TextField, {
+import {
+  TextField,
   TextFieldProps,
-  SinglelineTextFieldProps,
+  MultilineTextField,
   MultilineTextFieldProps,
 } from 'components/TextField';
-import MaskableTextField from 'components/MaskableTextField';
 import Tooltip from 'components/Tooltip';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
@@ -16,35 +16,24 @@ import { themeAtom } from 'lib/theme';
 import { store } from 'lib/store';
 import keyboardIcon from 'icons/keyboard.svg';
 
-export interface UniqueTextFieldWithKeyboardProps {
+export interface TextFieldWithKeyboardProps extends TextFieldProps {
   maskable?: boolean;
 }
 
-export interface SinglelineTextFieldWithKeyboardProps
-  extends SinglelineTextFieldProps,
-    UniqueTextFieldWithKeyboardProps {}
-
 export interface MultilineTextFieldWithKeyboardProps
-  extends MultilineTextFieldProps,
-    UniqueTextFieldWithKeyboardProps {}
+  extends MultilineTextFieldProps {
+  maskable?: false;
+}
 
-export type TextFieldWithKeyboardProps = TextFieldProps & {
-  maskable?: boolean;
-};
-
-export default function TextFieldWithKeyboard(
-  props: SinglelineTextFieldWithKeyboardProps
-): ReactNode;
-export default function TextFieldWithKeyboard(
+function useTextFieldProps(props: TextFieldWithKeyboardProps): TextFieldProps;
+function useTextFieldProps(
   props: MultilineTextFieldWithKeyboardProps
-): ReactNode;
-export default function TextFieldWithKeyboard(
-  props:
-    | SinglelineTextFieldWithKeyboardProps
-    | MultilineTextFieldWithKeyboardProps
+): MultilineTextFieldProps;
+function useTextFieldProps(
+  props: TextFieldWithKeyboardProps | MultilineTextFieldWithKeyboardProps
 ) {
   const { maskable, ...textFieldProps } = props;
-  const { value, onChange, placeholder, skin, multiline } = textFieldProps;
+  const { value, onChange, placeholder, skin } = textFieldProps;
   const handleInputChange = useCallback((_evt: any, text: any) => {
     onChange?.(text);
   }, []);
@@ -85,17 +74,20 @@ export default function TextFieldWithKeyboard(
     </Tooltip.Trigger>
   );
 
-  // Need this discrimination type guard to narrow the textFieldProps type down to
-  // either SinglelineTextFieldProps or MultilineTextFieldProps
-  if (multiline === true) {
-    if (maskable) {
-      return <MaskableTextField left={left} {...textFieldProps} />;
-    }
-    return <TextField left={left} {...textFieldProps} />;
-  } else {
-    if (maskable) {
-      return <MaskableTextField left={left} {...textFieldProps} />;
-    }
-    return <TextField left={left} {...textFieldProps} />;
-  }
+  return {
+    left,
+    ...textFieldProps,
+  } as TextFieldProps | MultilineTextFieldProps;
+}
+
+export function TextFieldWithKeyboard(props: TextFieldWithKeyboardProps) {
+  const textFieldProps = useTextFieldProps(props);
+  return <TextField {...textFieldProps} />;
+}
+
+export function MultilineTextFieldWithKeyboard(
+  props: MultilineTextFieldWithKeyboardProps
+) {
+  const textFieldProps = useTextFieldProps(props);
+  return <MultilineTextField {...textFieldProps} />;
 }

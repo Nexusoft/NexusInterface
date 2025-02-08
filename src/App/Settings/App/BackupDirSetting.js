@@ -6,7 +6,7 @@ import { ipcRenderer } from 'electron';
 import { updateSettings, settingsAtom } from 'lib/settings';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
-import TextField from 'components/TextField';
+import { TextField } from 'components/TextField';
 
 __ = __context('Settings.Application');
 

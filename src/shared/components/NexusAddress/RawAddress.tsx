@@ -4,7 +4,7 @@ import { clipboard } from 'electron';
 import styled from '@emotion/styled';
 
 // Internal
-import TextField from 'components/TextField';
+import { TextField } from 'components/TextField';
 import Tooltip from 'components/Tooltip';
 import Icon from 'components/Icon';
 import Button from 'components/Button';

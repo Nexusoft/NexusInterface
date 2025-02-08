@@ -402,7 +402,7 @@ interface SelectProps<TValue extends SelectValue> {
   error?: ReactNode;
   onChange: (value: TValue) => void;
   placeholder?: string;
-  ref: ForwardedRef<HTMLDivElement>;
+  ref?: ForwardedRef<HTMLDivElement>;
 }
 
 export default function Select<TValue extends SelectValue>({
