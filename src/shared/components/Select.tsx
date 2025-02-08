@@ -18,6 +18,7 @@ import {
   MutableRefObject,
   CSSProperties,
   ReactNode,
+  ForwardedRef,
 } from 'react';
 import styled from '@emotion/styled';
 
@@ -33,9 +34,9 @@ export type SelectSkin = 'underline' | 'filled' | 'filled-inverted';
 
 export type SelectValue = string | number | boolean | null;
 
-interface RealSelectOption {
-  value: SelectValue;
-  display?: string;
+interface RealSelectOption<TValue extends SelectValue> {
+  value: TValue;
+  display?: ReactNode;
   indent?: boolean;
   isSeparator?: boolean;
   isDummy?: false;
@@ -49,7 +50,9 @@ interface DummyOption {
   isDummy: true;
 }
 
-export type SelectOption = RealSelectOption | DummyOption;
+export type SelectOption<TValue extends SelectValue> =
+  | RealSelectOption<TValue>
+  | DummyOption;
 
 // Minimum gap from the dropdown to the edges of the screen
 const minScreenGap = 10;
@@ -287,7 +290,7 @@ const Option = styled.div<{
   }
 );
 
-function Options({
+function Options<TValue extends SelectValue>({
   controlRef,
   skin,
   options,
@@ -297,10 +300,10 @@ function Options({
 }: {
   controlRef: MutableRefObject<HTMLDivElement | undefined>;
   skin: SelectSkin;
-  options: SelectOption[];
+  options: SelectOption<TValue>[];
   close: () => void;
-  value: SelectValue;
-  onChange: (value: SelectValue) => void;
+  value: TValue;
+  onChange: (value: TValue) => void;
 }) {
   const anchorRef = useRef<HTMLDivElement>(null);
   const elemRef = useRef<HTMLDivElement>();
@@ -352,7 +355,7 @@ function Options({
     setReady(true);
   }, []);
 
-  const select = (option: SelectOption) => {
+  const select = (option: SelectOption<TValue>) => {
     close();
     if (!option.isDummy) {
       onChange(option.value);
@@ -393,18 +396,26 @@ function Options({
   );
 }
 
-interface SelectProps {
-  options?: SelectOption[];
+interface SelectProps<TValue extends SelectValue> {
+  options?: SelectOption<TValue>[];
   skin?: SelectSkin;
-  value: SelectValue;
+  value: TValue;
   error?: ReactNode;
-  onChange: (value: SelectValue) => void;
-  placeholder: string;
+  onChange: (value: TValue) => void;
+  placeholder?: string;
 }
 
-const Select = forwardRef<HTMLDivElement, SelectProps>(function (
-  { options, skin = 'underline', value, error, onChange, placeholder, ...rest },
-  ref
+function RawSelect<TValue extends SelectValue>(
+  {
+    options,
+    skin = 'underline',
+    value,
+    error,
+    onChange,
+    placeholder,
+    ...rest
+  }: SelectProps<TValue>,
+  ref: ForwardedRef<HTMLDivElement>
 ) {
   const controlRef = useRef<HTMLDivElement>();
   const [open, setOpen] = useState(false);
@@ -460,6 +471,8 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(function (
       )}
     </>
   );
-});
+}
+
+const Select = forwardRef(RawSelect);
 
 export default Select;

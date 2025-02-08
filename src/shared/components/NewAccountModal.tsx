@@ -3,22 +3,23 @@ import Button from 'components/Button';
 import FormField from 'components/FormField';
 import Form from 'components/Form';
 import { confirm, confirmPin } from 'lib/dialog';
-import { callAPI } from 'lib/api';
+import { callAPI, Token } from 'lib/api';
 import { accountsQuery, tokensQuery } from 'lib/user';
 import { showNotification } from 'lib/ui';
 import { createLocalNameFee } from 'lib/fees';
 import { formSubmit, required } from 'lib/form';
 import UT from 'lib/usageTracking';
 import memoize from 'utils/memoize';
+import { SuggestionType } from './AutoSuggest';
 
 __ = __context('NewAccount');
 
-const getSuggestions = memoize((userTokens) => [
+const getSuggestions = memoize((userTokens: Token[] | undefined) => [
   'NXS',
-  ...(userTokens ? userTokens.map((t) => t.name || t.address) : []),
+  ...(userTokens ? userTokens.map((t) => t.ticker || t.address) : []),
 ]);
 
-async function createToken({ name, token }) {
+async function createAccount({ name, token }: { name: string; token: string }) {
   if (!name) {
     const confirmed = await confirm({
       question: __('Create an account without a name?'),
@@ -26,33 +27,48 @@ async function createToken({ name, token }) {
       labelYes: __("That's Ok"),
       labelNo: __('Cancel'),
     });
-    if (!confirmed) return;
+    if (!confirmed) return undefined;
   }
   const pin = await confirmPin();
   if (pin) {
-    const params = { pin };
-    if (name) params.name = name;
-
     if (token === 'NXS') {
-      return await callAPI('finance/create/account', params);
+      return await callAPI('finance/create/account', { pin, name });
     } else {
       // Token accepts Name or Address
       try {
-        params.token = token;
-        return await callAPI('tokens/create/account', params);
+        return await callAPI('tokens/create/account', { pin, token });
       } catch (err) {
         // TODO: check error code?
-        throw new Error(__('Unknown token name/address'));
+        throw new Error(__(`Unknown token name/address: ${token}`));
       }
     }
   }
+  return undefined;
 }
 
-export default function NewAccountModal({ tokenName, tokenAddress }) {
+export default function NewAccountModal({
+  tokenName,
+  tokenAddress,
+}: {
+  tokenName?: string;
+  tokenAddress?: string;
+}) {
   const tokens = tokensQuery.use();
   const tokenPreset = !!(tokenName || tokenAddress);
   const suggestions = tokenPreset ? [] : getSuggestions(tokens);
-  const SelectToken = tokenPreset ? Form.TextField : Form.AutoSuggest;
+  const selectTokenProps = {
+    name: 'token',
+    validate: required(),
+    suggestions: suggestions,
+    filterSuggestions: (suggestions: SuggestionType[]) => suggestions,
+    disabled: tokenPreset,
+    className: tokenPreset ? 'dim' : undefined,
+  };
+
+  const initialValues = {
+    name: '',
+    token: tokenName || tokenAddress || 'NXS',
+  };
 
   return (
     <ControlledModal maxWidth={700}>
@@ -62,12 +78,9 @@ export default function NewAccountModal({ tokenName, tokenAddress }) {
           <ControlledModal.Body>
             <Form
               name="new_account"
-              initialValues={{
-                name: '',
-                token: tokenName || tokenAddress || 'NXS',
-              }}
+              initialValues={initialValues}
               onSubmit={formSubmit({
-                submit: createToken,
+                submit: createAccount,
                 onSuccess: (result, values) => {
                   if (!result) return; // Submission was cancelled
                   UT.CreateNewItem('account');
@@ -82,8 +95,7 @@ export default function NewAccountModal({ tokenName, tokenAddress }) {
                 },
                 errorMessage: __('Error creating account'),
               })}
-            >
-              {({ form }) => (
+              render={({ form }) => (
                 <>
                   <FormField
                     connectLabel
@@ -114,19 +126,16 @@ export default function NewAccountModal({ tokenName, tokenAddress }) {
 
                   <div className="mt2">
                     <FormField connectLabel label={__('Token name/address')}>
-                      <SelectToken
-                        name="token"
-                        validate={required()}
-                        suggestions={suggestions}
-                        filterSuggestions={(suggestions) => suggestions}
-                        disabled={tokenPreset}
-                        className={tokenPreset ? 'dim' : undefined}
-                        onSelect={
-                          tokenPreset
-                            ? undefined
-                            : (suggestion) => form.change('token', suggestion)
-                        }
-                      />
+                      {tokenPreset ? (
+                        <Form.TextField {...selectTokenProps} />
+                      ) : (
+                        <Form.AutoSuggest
+                          {...selectTokenProps}
+                          onSelect={(suggestion) =>
+                            form.change('token', suggestion)
+                          }
+                        />
+                      )}
                     </FormField>
                   </div>
 
@@ -142,7 +151,7 @@ export default function NewAccountModal({ tokenName, tokenAddress }) {
                   </div>
                 </>
               )}
-            </Form>
+            />
           </ControlledModal.Body>
         </>
       )}

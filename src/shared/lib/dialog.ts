@@ -12,16 +12,16 @@ import SuccessDialog, {
 } from 'components/Dialogs/SuccessDialog';
 import { openModal } from 'lib/ui';
 
-export const openConfirmDialog = (props: ConfirmDialogProps) =>
+export const openConfirmDialog = (props?: ConfirmDialogProps) =>
   openModal(ConfirmDialog, props);
 
-export const openErrorDialog = (props: ErrorDialogProps) =>
+export const openErrorDialog = (props?: ErrorDialogProps) =>
   openModal(ErrorDialog, props);
 
-export const openSuccessDialog = (props: SuccessDialogProps) =>
+export const openSuccessDialog = (props?: SuccessDialogProps) =>
   openModal(SuccessDialog, props);
 
-export const openInfoDialog = (props: InfoDialogProps) =>
+export const openInfoDialog = (props?: InfoDialogProps) =>
   openModal(InfoDialog, props);
 
 export function confirm(
@@ -45,14 +45,12 @@ export function confirm(
   });
 }
 
-export function confirmPin({
-  note,
-  confirmLabel,
-}: Omit<PinDialogProps, 'submitPin' | 'onClose'>) {
-  return new Promise((resolve) => {
+export function confirmPin(
+  options?: Omit<PinDialogProps, 'submitPin' | 'onClose'>
+) {
+  return new Promise<string | undefined>((resolve) => {
     openModal(PinDialog, {
-      note,
-      confirmLabel,
+      ...options,
       submitPin: (pin) => {
         resolve(pin);
       },

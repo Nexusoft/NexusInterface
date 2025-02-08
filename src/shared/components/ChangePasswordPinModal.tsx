@@ -44,8 +44,9 @@ export default function ChangePasswordPinModal() {
                       new_pin: newPin,
                     });
                   }
+                  return undefined;
                 },
-                onSuccess: async (result, values, form) => {
+                onSuccess: async (result, _values, form) => {
                   if (!result) return;
                   UT.UpdateCredentials();
                   closeModal();

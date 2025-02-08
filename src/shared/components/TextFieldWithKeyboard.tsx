@@ -1,9 +1,13 @@
 // External
-import { useEffect, useCallback, forwardRef } from 'react';
+import { useEffect, useCallback, ReactNode } from 'react';
 import { ipcRenderer } from 'electron';
 
 // Internal
-import TextField, { TextFieldProps } from 'components/TextField';
+import TextField, {
+  TextFieldProps,
+  SinglelineTextFieldProps,
+  MultilineTextFieldProps,
+} from 'components/TextField';
 import MaskableTextField from 'components/MaskableTextField';
 import Tooltip from 'components/Tooltip';
 import Icon from 'components/Icon';
@@ -12,14 +16,35 @@ import { themeAtom } from 'lib/theme';
 import { store } from 'lib/store';
 import keyboardIcon from 'icons/keyboard.svg';
 
-export interface TextFieldWithKeyboardProps extends TextFieldProps {
+export interface UniqueTextFieldWithKeyboardProps {
   maskable?: boolean;
 }
 
-const TextFieldWithKeyboard = forwardRef<
-  HTMLInputElement,
-  TextFieldWithKeyboardProps
->(function ({ value, onChange, placeholder, maskable, skin, ...rest }, ref) {
+export interface SinglelineTextFieldWithKeyboardProps
+  extends SinglelineTextFieldProps,
+    UniqueTextFieldWithKeyboardProps {}
+
+export interface MultilineTextFieldWithKeyboardProps
+  extends MultilineTextFieldProps,
+    UniqueTextFieldWithKeyboardProps {}
+
+export type TextFieldWithKeyboardProps = TextFieldProps & {
+  maskable?: boolean;
+};
+
+export default function TextFieldWithKeyboard(
+  props: SinglelineTextFieldWithKeyboardProps
+): ReactNode;
+export default function TextFieldWithKeyboard(
+  props: MultilineTextFieldWithKeyboardProps
+): ReactNode;
+export default function TextFieldWithKeyboard(
+  props:
+    | SinglelineTextFieldWithKeyboardProps
+    | MultilineTextFieldWithKeyboardProps
+) {
+  const { maskable, ...textFieldProps } = props;
+  const { value, onChange, placeholder, skin, multiline } = textFieldProps;
   const handleInputChange = useCallback((_evt: any, text: any) => {
     onChange?.(text);
   }, []);
@@ -43,34 +68,34 @@ const TextFieldWithKeyboard = forwardRef<
     },
     []
   );
-
-  const Component = maskable ? MaskableTextField : TextField;
-
-  return (
-    <Component
-      {...{ value, onChange, placeholder, skin }}
-      skin={skin}
-      onChange={onChange}
-      ref={ref}
-      {...rest}
-      left={
-        <Tooltip.Trigger align="start" tooltip={__('Use virtual keyboard')}>
-          <Button
-            skin="plain"
-            onClick={openKeyboard}
-            tabIndex={-1}
-            style={
-              skin === 'filled' || skin === 'filled-inverted'
-                ? { paddingRight: 0 }
-                : { paddingLeft: 0 }
-            }
-          >
-            <Icon icon={keyboardIcon} />
-          </Button>
-        </Tooltip.Trigger>
-      }
-    />
+  const left = (
+    <Tooltip.Trigger align="start" tooltip={__('Use virtual keyboard')}>
+      <Button
+        skin="plain"
+        onClick={openKeyboard}
+        tabIndex={-1}
+        style={
+          skin === 'filled' || skin === 'filled-inverted'
+            ? { paddingRight: 0 }
+            : { paddingLeft: 0 }
+        }
+      >
+        <Icon icon={keyboardIcon} />
+      </Button>
+    </Tooltip.Trigger>
   );
-});
 
-export default TextFieldWithKeyboard;
+  // Need this discrimination type guard to narrow the textFieldProps type down to
+  // either SinglelineTextFieldProps or MultilineTextFieldProps
+  if (multiline === true) {
+    if (maskable) {
+      return <MaskableTextField left={left} {...textFieldProps} />;
+    }
+    return <TextField left={left} {...textFieldProps} />;
+  } else {
+    if (maskable) {
+      return <MaskableTextField left={left} {...textFieldProps} />;
+    }
+    return <TextField left={left} {...textFieldProps} />;
+  }
+}

@@ -17,8 +17,9 @@ import {
   forwardRef,
   ComponentProps,
   ReactNode,
-  FocusEvent,
   CSSProperties,
+  ReactElement,
+  ForwardedRef,
 } from 'react';
 import styled from '@emotion/styled';
 
@@ -51,7 +52,7 @@ const ErrorMessage = styled(Tooltip)<{
     }
 );
 
-const TextFieldComponent = styled.div<{
+const TextFieldWrapper = styled.div<{
   size?: number;
   skin: TextFieldSkin;
   focus?: boolean;
@@ -244,7 +245,7 @@ const Input = styled.input<{
     }
 );
 
-const MultilineInput = styled(Input)({
+const TextArea = styled(Input.withComponent('textarea'))({
   height: 'auto',
   width: '100%',
   paddingTop: '.4em',
@@ -253,9 +254,9 @@ const MultilineInput = styled(Input)({
   lineHeight: 1.28,
 });
 
-const TextArea = forwardRef<
+const MultilineInput = forwardRef<
   HTMLTextAreaElement,
-  ComponentProps<typeof MultilineInput>
+  ComponentProps<typeof TextArea>
 >((props, ref) => {
   const inputRef = useRef<HTMLTextAreaElement>();
 
@@ -271,18 +272,36 @@ const TextArea = forwardRef<
     }
   });
 
-  return <MultilineInput ref={refs(inputRef, ref)} as="textarea" {...props} />;
+  return <TextArea ref={refs(inputRef, ref)} {...props} />;
 });
 
-export interface TextFieldProps extends ComponentProps<typeof Input> {
+export interface CommonTextFieldProps {
   left?: ReactNode;
   right?: ReactNode;
   error?: ReactNode;
   inputStyle?: CSSProperties;
 }
 
-const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function (
-  {
+export interface SinglelineTextFieldProps
+  extends CommonTextFieldProps,
+    ComponentProps<typeof Input> {
+  multiline?: false;
+  ref?: ForwardedRef<HTMLInputElement>;
+}
+
+export interface MultilineTextFieldProps
+  extends CommonTextFieldProps,
+    ComponentProps<typeof TextArea> {
+  multiline: true;
+  ref?: ForwardedRef<HTMLTextAreaElement>;
+}
+
+export type TextFieldProps = SinglelineTextFieldProps | MultilineTextFieldProps;
+
+export default function TextField(props: SinglelineTextFieldProps): ReactNode;
+export default function TextField(props: MultilineTextFieldProps): ReactNode;
+export default function TextField(props: TextFieldProps) {
+  const {
     className,
     style,
     inputStyle,
@@ -290,19 +309,19 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function (
     multiline,
     left,
     right,
-    size,
     readOnly,
     autoFocus,
-    onFocus,
-    onBlur,
     error,
-    ...rest
-  },
-  ref
-) {
-  const [focus, setFocus] = useState(false);
-  const inputRef = useRef<HTMLInputElement>();
+    ...htmlProps
+  } = props;
+  const commonProps = {
+    skin,
+    readOnly,
+    style: inputStyle,
+  };
 
+  const [focus, setFocus] = useState(false);
+  const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement>();
   useEffect(() => {
     // Somehow React's autoFocus doesn't work, so handle it manually
     if (autoFocus && inputRef.current) {
@@ -313,33 +332,58 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function (
     }
   }, []);
 
-  const inputProps = {
-    skin,
-    size,
-    readOnly,
-    ...rest,
-    onFocus: (e: FocusEvent<HTMLInputElement>) => {
-      setFocus(true);
-      onFocus?.(e);
-    },
-    onBlur: (e: FocusEvent<HTMLInputElement>) => {
-      setFocus(false);
-      onBlur?.(e);
-    },
-    style: inputStyle,
-  };
+  const isForInput = (_rest: any): _rest is ComponentProps<typeof Input> =>
+    multiline !== true;
+  const isForTextArea = (
+    _rest: any
+  ): _rest is ComponentProps<typeof TextArea> => multiline === true;
+
+  let innerTextField: ReactElement | null = null;
+  if (isForInput(htmlProps)) {
+    const { ref, size, onFocus, onBlur, ...inputProps } = htmlProps;
+    innerTextField = (
+      <Input
+        {...commonProps}
+        {...inputProps}
+        ref={refs(inputRef, ref)}
+        size={size}
+        onFocus={(e) => {
+          setFocus(true);
+          onFocus?.(e);
+        }}
+        onBlur={(e) => {
+          setFocus(false);
+          onBlur?.(e);
+        }}
+      />
+    );
+  }
+  if (isForTextArea(htmlProps)) {
+    const { ref, onFocus, onBlur, ...textAreaProps } = htmlProps;
+    innerTextField = (
+      <MultilineInput
+        {...commonProps}
+        {...textAreaProps}
+        ref={refs(inputRef, ref)}
+        onFocus={(e) => {
+          setFocus(true);
+          onFocus?.(e);
+        }}
+        onBlur={(e) => {
+          setFocus(false);
+          onBlur?.(e);
+        }}
+      />
+    );
+  }
 
   return (
-    <TextFieldComponent
-      {...{ className, style, skin, size, error, multiline }}
+    <TextFieldWrapper
+      {...{ className, style, skin, error, multiline }}
       focus={!readOnly && focus}
     >
       {left}
-      {multiline ? (
-        <TextArea {...inputProps} ref={refs(inputRef, ref)} />
-      ) : (
-        <Input {...inputProps} ref={refs(inputRef, ref)} />
-      )}
+      {innerTextField}
       {right}
       {!!error && (
         <ErrorMessage
@@ -351,8 +395,6 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function (
           {error}
         </ErrorMessage>
       )}
-    </TextFieldComponent>
+    </TextFieldWrapper>
   );
-});
-
-export default TextField;
+}

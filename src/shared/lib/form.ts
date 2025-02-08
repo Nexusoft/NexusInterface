@@ -36,12 +36,12 @@ interface FormSubmitOptions<FormValues, SubmitResult = void> {
   errorMessage?: ReactNode;
 }
 
-export function formSubmit<FormValues>({
+export function formSubmit<FormValues, SubmitResult = void>({
   submit,
   onSuccess,
   onFail = defaultOnFail,
   errorMessage,
-}: FormSubmitOptions<FormValues>) {
+}: FormSubmitOptions<FormValues, SubmitResult>) {
   return async (values: FormValues, form: FormApi<FormValues>) => {
     let result;
     try {
@@ -70,7 +70,7 @@ export const numericOnly = (value: unknown) =>
 type Validator = (
   value: any,
   allValues: Record<string, any>,
-  meta: FieldState<any>
+  meta: FieldState<any> | undefined
 ) => any;
 
 export const checkAll =

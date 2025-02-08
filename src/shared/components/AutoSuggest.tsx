@@ -18,16 +18,14 @@ import {
   forwardRef,
   ReactNode,
   ComponentProps,
-  ComponentType,
-  MutableRefObject,
+  RefObject,
 } from 'react';
 import styled from '@emotion/styled';
 
 // Internal
-import TextField from 'components/TextField';
+import TextField, { SinglelineTextFieldProps } from 'components/TextField';
 import Button from 'components/Button';
 import Arrow from 'components/Arrow';
-import { refs } from 'utils/misc';
 import memoize from 'utils/memoize';
 import { timing } from 'styles';
 
@@ -99,7 +97,7 @@ const Suggestion = memo(function ({
   activeIndex: number | null;
   suggestion: SuggestionType;
   onSelect: (value: string) => void;
-  inputRef: MutableRefObject<HTMLInputElement | undefined>;
+  inputRef: RefObject<HTMLInputElement | undefined>;
   activate: (index: number) => void;
 }) {
   const handleSelect = () => {
@@ -195,39 +193,37 @@ export interface AutoSuggestProps
   suggestOn?: 'focus' | 'change';
   suggestions: SuggestionType[];
   onSelect: (value: string) => void;
-  inputProps?: ComponentProps<typeof TextField>;
-  inputComponent?: ComponentType<ComponentProps<typeof TextField>>;
+  inputProps?: SinglelineTextFieldProps;
   keyControl?: boolean;
   emptyFiller?: ReactNode;
 }
 
 const AutoSuggest = forwardRef<HTMLInputElement, AutoSuggestProps>(
-  (
-    {
-      filterSuggestions = defaultFilterSuggestions,
-      suggestOn = 'focus',
-      suggestions,
-      onSelect,
-      inputProps = {},
-      inputComponent: Input = TextField,
-      keyControl = true,
-      emptyFiller,
-      ...rest
-    },
-    ref
-  ) => {
+  ({
+    filterSuggestions = defaultFilterSuggestions,
+    suggestOn = 'focus',
+    suggestions,
+    onSelect,
+    inputProps,
+    keyControl = true,
+    emptyFiller,
+    ...rest
+  }: AutoSuggestProps) => {
     const [open, setOpen] = useState(false);
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
-    const currentSuggestions = filterSuggestions(suggestions, inputProps.value);
+    const currentSuggestions = filterSuggestions(
+      suggestions,
+      inputProps?.value
+    );
 
-    const inputRef = useRef<HTMLInputElement>();
+    const inputRef = useRef<HTMLInputElement>(null);
     const suggestionsRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-      if (inputProps.value) {
+      if (inputProps?.value) {
         setActiveIndex(null);
       }
-    }, [inputProps.value]);
+    }, [inputProps?.value]);
 
     const scrollToNewSelection = (index: number | null) => {
       setActiveIndex(index);
@@ -252,8 +248,8 @@ const AutoSuggest = forwardRef<HTMLInputElement, AutoSuggestProps>(
 
     return (
       <AutoSuggestComponent {...rest}>
-        <Input
-          ref={refs(ref, inputRef)}
+        <TextField
+          ref={inputRef}
           right={
             <div className="flex center" style={{ alignSelf: 'stretch' }}>
               <ClearButton
@@ -274,11 +270,11 @@ const AutoSuggest = forwardRef<HTMLInputElement, AutoSuggestProps>(
             if (suggestOn === 'focus') {
               setOpen(true);
             }
-            inputProps.onFocus?.(e);
+            inputProps?.onFocus?.(e);
           }}
           onBlur={(e) => {
             setOpen(false);
-            inputProps.onBlur?.(e);
+            inputProps?.onBlur?.(e);
           }}
           onKeyDown={(e) => {
             if (keyControl) {
@@ -314,13 +310,13 @@ const AutoSuggest = forwardRef<HTMLInputElement, AutoSuggestProps>(
                   break;
               }
             }
-            inputProps.onKeyDown?.(e);
+            inputProps?.onKeyDown?.(e);
           }}
           onChange={(e) => {
             if (suggestOn === 'change') {
               setOpen(true);
             }
-            inputProps.onChange?.(e);
+            inputProps?.onChange?.(e);
           }}
         />
         <Suggestions

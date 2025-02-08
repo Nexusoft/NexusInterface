@@ -226,7 +226,7 @@ export const formatPercent = (num: number, maxDecimalDigits: number) => {
 };
 
 export const formatDateTime = (
-  date: Date,
+  date: Date | number,
   options: Intl.DateTimeFormatOptions
 ) => (date ? new Intl.DateTimeFormat(locale, options).format(date) : 'Invalid');
 

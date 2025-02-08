@@ -116,7 +116,7 @@ export const activeSessionAtom = atom((get) => {
  * =============================================================================
  */
 
-export const userStatusQuery = jotaiQuery<UserStatus>({
+export const userStatusQuery = jotaiQuery<UserStatus | undefined>({
   alwaysOn: true,
   condition: (get) =>
     get(coreConnectedAtom) &&
@@ -126,15 +126,15 @@ export const userStatusQuery = jotaiQuery<UserStatus>({
     queryFn: async () => {
       const sessionId = get(activeSessionIdAtom);
       try {
-        const result = await callAPI(
+        const userStatus = await callAPI(
           'sessions/status/local',
           sessionId ? { session: sessionId } : undefined
         );
-        return result;
+        return userStatus;
       } catch (err: any) {
         // Don't log error if it's 'Session not found' (user not logged in)
         if (err?.code === -11) {
-          return null;
+          return undefined;
         }
         console.error(err);
         throw err;
@@ -163,9 +163,10 @@ export const profileStatusQuery = jotaiQuery<ProfileStatus>({
     queryKey: ['profileStatus', get(userGenesisAtom)],
     queryFn: async () => {
       const genesis = get(userGenesisAtom);
-      return await callAPI('profiles/status/master', {
+      const profileStatus = await callAPI('profiles/status/master', {
         genesis,
       });
+      return profileStatus;
     },
     retry: 2,
     refetchInterval: 10000, // 10 seconds

@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { HTMLAttributes } from 'react';
+import { HTMLAttributes, ReactNode } from 'react';
 
 const Row = styled.div<{
   leftSize: number;
@@ -27,7 +27,7 @@ const Value = styled.div(({ theme }) => ({
 
 export interface InfoFieldProps extends HTMLAttributes<HTMLDivElement> {
   ratio?: [number, number];
-  label: string;
+  label: ReactNode;
 }
 
 export default function InfoField({

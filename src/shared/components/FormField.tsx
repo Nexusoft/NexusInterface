@@ -10,7 +10,14 @@
  */
 
 // External
-import { cloneElement, Children, useId, ReactNode, ReactElement } from 'react';
+import {
+  cloneElement,
+  Children,
+  useId,
+  ReactNode,
+  ReactElement,
+  ComponentProps,
+} from 'react';
 import styled from '@emotion/styled';
 
 const FormFieldComponent = styled.div<{
@@ -80,13 +87,15 @@ const Hint = styled.div(({ theme }) => ({
   },
 }));
 
-export type FormFieldProps = {
+export type FormFieldProps = Omit<
+  ComponentProps<typeof FormFieldComponent>,
+  'children'
+> & {
   label: string;
   capitalizeLabel?: boolean;
   connectLabel?: boolean;
   children: ReactElement | ((id: string) => ReactNode);
   hint?: string;
-  inline?: boolean;
 };
 
 export default function FormField({

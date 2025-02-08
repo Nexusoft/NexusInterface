@@ -1,10 +1,12 @@
 import fs from 'fs';
 import path from 'path';
 import { useAtomValue } from 'jotai';
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, ReactNode } from 'react';
 
 import Form from 'components/Form';
-import ControlledModal from 'components/ControlledModal';
+import ControlledModal, {
+  ControlledModalProps,
+} from 'components/ControlledModal';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import Button from 'components/Button';
@@ -20,7 +22,7 @@ import UT from 'lib/usageTracking';
 
 __ = __context('SetRecoveryPhrase');
 
-const options = [
+const options: Array<{ value: number; display: ReactNode }> = [
   {
     value: 10,
     display: __('%{smart_count} word |||| %{smart_count} words', 10),
@@ -45,7 +47,7 @@ const initialValues = {
 export default function SetRecoveryModal() {
   const hasRecoveryPhrase = useAtomValue(hasRecoveryPhraseAtom);
   const [wordCount, setWordCount] = useState(20);
-  const wordlistRef = useRef(null);
+  const wordlistRef = useRef<string[]>();
 
   useEffect(() => {
     (async () => {
@@ -82,6 +84,7 @@ export default function SetRecoveryModal() {
                       new_recovery: newPhrase,
                     });
                   }
+                  return undefined;
                 },
                 onSuccess: (result) => {
                   if (!result) return;
@@ -105,7 +108,7 @@ export default function SetRecoveryModal() {
               <p>
                 {__(
                   '<b>Securely store your new recovery phrase in a safe and accessible location, as it cannot be recovered if lost.</b>',
-                  null,
+                  undefined,
                   {
                     b: (text) => <strong>{text}</strong>,
                   }
@@ -171,7 +174,7 @@ export default function SetRecoveryModal() {
                     options={options}
                     value={wordCount}
                     onChange={(wordCount) => {
-                      setWordCount({ wordCount });
+                      setWordCount(wordCount);
                     }}
                   />
                 </div>
@@ -213,7 +216,11 @@ export default function SetRecoveryModal() {
   );
 }
 
-function ConfirmRecoveryDialog({ phrase, onConfirm, ...rest }) {
+function ConfirmRecoveryDialog({
+  phrase,
+  onConfirm,
+  ...rest
+}: ControlledModalProps & { phrase: string; onConfirm?: () => void }) {
   const [inputValue, setInputValue] = useState('');
   return (
     <ControlledModal maxWidth={500} {...rest}>
@@ -264,7 +271,7 @@ function ConfirmRecoveryDialog({ phrase, onConfirm, ...rest }) {
   );
 }
 
-async function confirmRecovery(phrase) {
+async function confirmRecovery(phrase: string) {
   return new Promise((resolve) => {
     openModal(ConfirmRecoveryDialog, {
       phrase,

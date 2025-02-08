@@ -83,7 +83,7 @@ const AgreementContent = styled.p({
 
 export default function About() {
   const coreInfo = useCoreInfo();
-  const { version, testnet, privateBlockchain } = coreInfo || {};
+  const { version, testnet, private: priv } = coreInfo || {};
   return (
     <ControlledModal>
       <ControlledModal.Header>
@@ -108,9 +108,9 @@ export default function About() {
               {testnet}
             </InfoField>
           )}
-          {!!privateBlockchain && (
+          {!!priv && (
             <InfoField ratio={[1, 1]} label={__('Private blockchain')}>
-              {String(privateBlockchain)}
+              {String(priv)}
             </InfoField>
           )}
         </div>

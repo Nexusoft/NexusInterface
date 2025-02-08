@@ -8,7 +8,7 @@ import { NativeLink } from 'components/Link';
 import LoginModal from 'components/LoginModal';
 import Spinner from 'components/Spinner';
 import FieldSet from 'components/FieldSet';
-import BackgroundTask from 'components/BackgroundTask';
+import BackgroundTask, { BackgroundTaskProps } from 'components/BackgroundTask';
 import { formSubmit, checkAll, required, minChars } from 'lib/form';
 import { blocksAtom } from 'lib/coreInfo';
 import { callAPI } from 'lib/api';
@@ -92,8 +92,7 @@ export default function NewUserModal() {
                 errorMessage: __('Error creating user'),
               })}
               subscription={{ submitting: true }}
-            >
-              {({ submitting }) => (
+              render={({ submitting }) => (
                 <>
                   <FormField
                     connectLabel
@@ -169,7 +168,7 @@ export default function NewUserModal() {
                   </ExtraSection>
                 </>
               )}
-            </Form>
+            />
           </ControlledModal.Body>
         </>
       )}
@@ -177,8 +176,11 @@ export default function NewUserModal() {
   );
 }
 
-function UserConfirmBackgroundTask({ username }) {
-  const closeTaskRef = useRef();
+function UserConfirmBackgroundTask({
+  username,
+  ...rest
+}: BackgroundTaskProps & { username: string }) {
+  const closeTaskRef = useRef(() => {});
   useEffect(
     () =>
       store.sub(blocksAtom, () => {
@@ -216,8 +218,9 @@ function UserConfirmBackgroundTask({ username }) {
   return (
     <BackgroundTask
       assignClose={(close) => (closeTaskRef.current = close)}
-      onClick={null}
+      onClick={undefined}
       style={{ cursor: 'default' }}
+      {...rest}
     >
       {__(
         'Waiting for user registration to be confirmed on Nexus blockchain...'

@@ -16,6 +16,12 @@ import { callAPI } from 'lib/api';
 
 __ = __context('Login');
 
+interface LoginFormValues {
+  username: string;
+  password: string;
+  pin: string;
+}
+
 const Buttons = styled.div({
   marginTop: '2em',
 });
@@ -27,7 +33,7 @@ const ExtraSection = styled.div({
   opacity: 0.9,
 });
 
-const initialValues = {
+const initialValues: LoginFormValues = {
   username: '',
   password: '',
   pin: '',
@@ -35,7 +41,7 @@ const initialValues = {
 
 export default function LoginModal() {
   const coreInfo = useCoreInfo();
-  const syncing = coreInfo?.synchronizing;
+  const syncing = coreInfo?.syncing;
 
   return (
     <ControlledModal maxWidth={500}>
@@ -75,7 +81,7 @@ export default function LoginModal() {
                     }
                   }
                 },
-                onSuccess: async (result, { username }) => {
+                onSuccess: async ({ username }) => {
                   closeModal();
                   showNotification(
                     __('Logged in as %{username}', { username }),
