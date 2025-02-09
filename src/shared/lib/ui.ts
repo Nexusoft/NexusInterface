@@ -32,7 +32,7 @@ export interface ModalDescriptor {
 export interface NotificationDescriptor {
   id: string;
   content: ReactNode;
-  type: SnackBarType;
+  type?: SnackBarType;
   autoClose?: number;
 }
 
@@ -90,7 +90,7 @@ export function isModalOpen(modalComponent: ComponentType) {
  */
 export function showNotification(
   content: ReactNode,
-  options:
+  options?:
     | NotificationProps['type']
     | Omit<NotificationProps, 'notifID' | 'index'>
 ) {

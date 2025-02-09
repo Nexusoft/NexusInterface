@@ -21,7 +21,7 @@ import BootstrapModal from 'components/BootstrapModal';
 
 __ = __context('Bootstrap');
 
-type BootstrapStep =
+export type BootstrapStep =
   | 'idle'
   | 'prompting'
   | 'backing_up'
@@ -34,12 +34,12 @@ type BootstrapStep =
   | 'rescanning'
   | 'cleaning_up';
 
-interface BootstrapDownloadDetails {
-  downloaded?: number;
+export interface BootstrapDownloadDetails {
+  downloaded: number;
   totalSize?: number;
 }
 
-interface BootstrapStatus {
+export interface BootstrapStatus {
   step: BootstrapStep;
   details?: BootstrapDownloadDetails;
 }
@@ -88,7 +88,7 @@ async function startBootstrap() {
       await stopCore();
     }
 
-    setStatus('downloading', {});
+    setStatus('downloading', { downloaded: 0 });
     // A flag to prevent bootstrap status being set back to downloading
     // when download is already done or aborted
     let downloading = true;
@@ -253,7 +253,7 @@ export const bootstrapEvents = new EventEmitter();
  * @returns {Promise<void>} A promise that resolves when the bootstrap
  *   process is complete.
  */
-export async function bootstrap(options: { suggesting?: boolean }) {
+export async function bootstrap(options?: { suggesting?: boolean }) {
   const { suggesting } = options || {};
   // Only one instance at the same time
   const status = store.get(bootstrapStatusAtom);

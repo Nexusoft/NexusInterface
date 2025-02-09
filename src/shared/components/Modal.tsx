@@ -10,7 +10,13 @@
  */
 
 // External
-import { useEffect, useRef, Ref, ReactNode, ComponentProps } from 'react';
+import {
+  useEffect,
+  useRef,
+  ReactNode,
+  ComponentProps,
+  ForwardedRef,
+} from 'react';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/react';
 
@@ -136,8 +142,8 @@ export interface ModalProps
   escToClose?: boolean;
   onBackgroundClick?: () => void;
   assignClose?: (close: () => Promise<void>) => void;
-  modalRef?: Ref<HTMLDivElement>;
-  backgroundRef?: Ref<HTMLDivElement>;
+  modalRef?: ForwardedRef<HTMLDivElement>;
+  backgroundRef?: ForwardedRef<HTMLDivElement>;
   children?: ReactNode | ((close: () => Promise<void>) => ReactNode);
 }
 

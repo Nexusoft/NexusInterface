@@ -7,14 +7,20 @@ import styled from '@emotion/styled';
 import { openModal } from 'lib/ui';
 import BackgroundTask from 'components/BackgroundTask';
 import Icon from 'components/Icon';
-import { bootstrapEvents, bootstrapStatusAtom } from 'lib/bootstrap';
+import {
+  bootstrapEvents,
+  bootstrapStatusAtom,
+  BootstrapStatus,
+} from 'lib/bootstrap';
 import { animations, timing } from 'styles';
 import workIcon from 'icons/work.svg';
 import BootstrapModal from 'components/BootstrapModal';
 
 __ = __context('Bootstrap');
 
-const BootstrapBackgroundTaskComponent = styled(BackgroundTask)(
+const BootstrapBackgroundTaskComponent = styled(BackgroundTask)<{
+  closing?: boolean;
+}>(
   {
     animation: `${animations.fadeIn} ${timing.normal} ease-out`,
   },
@@ -24,16 +30,15 @@ const BootstrapBackgroundTaskComponent = styled(BackgroundTask)(
     }
 );
 
-function getPercentage({ step, details }) {
+function getPercentage({ step, details }: BootstrapStatus) {
   switch (step) {
     case 'backing_up':
     case 'preparing':
       return 0;
     case 'downloading':
-      const { downloaded, totalSize } = details || {};
-      return totalSize
-        ? Math.min(Math.round((1000 * downloaded) / totalSize), 1000) / 10
-        : 0;
+      if (!details?.totalSize) return 0;
+      const { downloaded, totalSize } = details;
+      return Math.min(Math.round((1000 * downloaded) / totalSize), 1000) / 10;
     case 'extracting':
     case 'stopping_core':
     case 'moving_db':
@@ -73,9 +78,9 @@ const statusMsgAtom = atom((get) => {
   }
 });
 
-export default function BootstrapBackgroundTask({ index }) {
+export default function BootstrapBackgroundTask({ index }: { index: number }) {
   const statusMsg = useAtomValue(statusMsgAtom);
-  const closeTaskRef = useRef();
+  const closeTaskRef = useRef(() => {});
   useEffect(() => {
     bootstrapEvents.on('abort', closeTaskRef.current);
     bootstrapEvents.on('error', closeTaskRef.current);

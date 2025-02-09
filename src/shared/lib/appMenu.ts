@@ -31,19 +31,49 @@ import { walletDataDir } from 'consts/paths';
 import { checkForUpdates, quitAndInstall, updaterStateAtom } from 'lib/updater';
 import AboutModal from 'components/AboutModal';
 
+interface MenuItem {
+  label: string;
+  enabled?: boolean;
+  accelerator?: string;
+  role?: string;
+  id?: string;
+}
+
+interface MenuSeparator {
+  type: 'separator';
+}
+
+interface RendererMenuItem extends MenuItem {
+  click?: (...args: any[]) => void;
+}
+
+interface CleanMenuItem extends MenuItem {
+  click?: boolean;
+  submenu?: CleanMenuItem[];
+}
+
 // Because functions can't be passed through IPC messages so we have
 // to preprocess menu template so that click handlers function properly
-const preprocess = (menuItems) => {
+const preprocess = (
+  menuItems: Record<string, RendererMenuItem | MenuSeparator>
+) => {
+  const cleanMenuItems: Record<string, CleanMenuItem | MenuSeparator> = {};
   Object.entries(menuItems).forEach(([id, item]) => {
+    if ('type' in item) {
+      cleanMenuItems[id] = item;
+      return;
+    }
+    const cleanItem: CleanMenuItem = { ...item, click: undefined };
     // Only add id if menu item has a click handler
     if (item.click) {
-      item.id = id;
+      cleanItem.id = id;
       const handleClick = item.click;
-      ipcRenderer.on('menu-click:' + id, (event, ...args) => {
+      ipcRenderer.on('menu-click:' + id, (_event, ...args) => {
         handleClick(...args);
       });
-      item.click = true;
+      cleanItem.click = true;
     }
+    cleanMenuItems[id] = cleanItem;
   });
   return menuItems;
 };
@@ -215,13 +245,7 @@ const menuItems = preprocess({
     label: __('Check for Updates...'),
     enabled: true,
     click: async () => {
-      const result = await checkForUpdates();
-      // Not sure if this is the best way to check if there's an update
-      // available because autoUpdater.checkForUpdates() doesn't return
-      // any reliable results like a boolean `updateAvailable` property
-      if (result?.updateInfo.version === APP_VERSION) {
-        showNotification(__('There are currently no updates available'));
-      }
+      await checkForUpdates();
     },
   },
   updaterChecking: {
@@ -249,8 +273,6 @@ const menuItems = preprocess({
 
 /**
  * Get the Updater
- *
- * @memberof AppMenu
  */
 function buildUpdaterMenu() {
   const updaterState = store.get(updaterStateAtom);
@@ -268,8 +290,6 @@ function buildUpdaterMenu() {
 
 /**
  * Build Menu for OSX
- *
- * @memberof AppMenu
  */
 function buildDarwinTemplate() {
   const coreConnected = isCoreConnected();
@@ -357,8 +377,6 @@ function buildDarwinTemplate() {
 
 /**
  * Build Menu to Windows / Linux
- *
- * @memberof AppMenu
  */
 function buildDefaultTemplate() {
   const coreConnected = isCoreConnected();
@@ -431,42 +449,25 @@ function buildDefaultTemplate() {
 
 /**
  * Build the menu
- *
- * @memberof AppMenu
  */
 function buildMenu() {
-  let template;
-
-  if (process.platform === 'darwin') {
-    template = buildDarwinTemplate();
-  } else {
-    template = buildDefaultTemplate();
-  }
-
+  const template =
+    process.platform === 'darwin'
+      ? buildDarwinTemplate()
+      : buildDefaultTemplate();
   ipcRenderer.invoke('set-app-menu', template);
-  return menu;
 }
 
-let rebuildTimerId = null;
+let rebuildTimerId: NodeJS.Timeout | undefined;
 
 /**
  * Rebuild the menu asynchronously so that if multiple rebuild requests come
  * at the same time, it only rebuilds once
- *
  */
 function rebuildMenu() {
   clearTimeout(rebuildTimerId);
   rebuildTimerId = setTimeout(buildMenu, 0);
 }
-
-const observeLockedState = (lockedState) =>
-  lockedState
-    ? window.addEventListener('beforeunload', preventReload)
-    : window.removeEventListener('beforeunload', preventReload);
-
-const preventReload = (ev) => {
-  ev.returnValue = true;
-};
 
 // Update the updater menu item when the updater state changes
 // Changing menu item labels directly has no effect so we have to rebuild the whole menu
@@ -479,5 +480,4 @@ export function prepareMenu() {
   subscribe(activeAppModuleNameAtom, rebuildMenu);
   subscribe(liteModeAtom, rebuildMenu);
   subscribe(loggedInAtom, rebuildMenu);
-  subscribe(walletLockedAtom, observeLockedState); // TODO: Consider moving this to a more appropriate spot.
 }

@@ -1,5 +1,5 @@
 // External
-import { useRef, useEffect, useContext } from 'react';
+import { useRef, useEffect, useContext, ComponentProps } from 'react';
 import { atom, useAtomValue } from 'jotai';
 import prettyBytes from 'utils/prettyBytes';
 import styled from '@emotion/styled';
@@ -54,7 +54,9 @@ const fadeOut = {
   opacity: [1, 0],
 };
 
-const BootstrapModalComponent = styled(ControlledModal)(
+const BootstrapModalComponent = styled(ControlledModal)<{
+  maximizedFromBackground: boolean;
+}>(
   ({ maximizedFromBackground }) =>
     maximizedFromBackground && {
       animation: `${maximizeAnimation} ${timing.quick} linear`,
@@ -65,26 +67,28 @@ const Title = styled.div({
   fontSize: 28,
 });
 
-const ProgressBar = styled.div(({ percentage, theme }) => ({
-  height: 20,
-  borderRadius: 10,
-  border: `1px solid ${theme.mixer(0.5)}`,
-  overflow: 'hidden',
-  animation:
-    percentage >= 100
-      ? `pulse 1.25s infinite cubic-bezier(0.66, 0, 0, 1)`
-      : null,
-  '&::before': {
-    content: '""',
-    display: 'block',
-    background: theme.primary,
-    height: '100%',
-    width: '100%',
-    transformOrigin: 'left center',
-    transform: `scaleX(${percentage / 100})`,
-    transition: `transform ${timing.normal}`,
-  },
-}));
+const ProgressBar = styled.div<{ percentage: number }>(
+  ({ percentage, theme }) => ({
+    height: 20,
+    borderRadius: 10,
+    border: `1px solid ${theme.mixer(0.5)}`,
+    overflow: 'hidden',
+    animation:
+      percentage >= 100
+        ? `pulse 1.25s infinite cubic-bezier(0.66, 0, 0, 1)`
+        : undefined,
+    '&::before': {
+      content: '""',
+      display: 'block',
+      background: theme.primary,
+      height: '100%',
+      width: '100%',
+      transformOrigin: 'left center',
+      transform: `scaleX(${percentage / 100})`,
+      transition: `transform ${timing.normal}`,
+    },
+  })
+);
 
 const MinimizeIcon = styled(Icon)(({ theme }) => ({
   position: 'absolute',
@@ -106,10 +110,9 @@ const percentageAtom = atom((get) => {
     case 'preparing':
       return 0;
     case 'downloading':
-      const { downloaded, totalSize } = details || {};
-      return totalSize
-        ? Math.min(Math.round((1000 * downloaded) / totalSize), 1000) / 10
-        : 0;
+      if (!details?.totalSize) return 0;
+      const { downloaded, totalSize } = details;
+      return Math.min(Math.round((1000 * downloaded) / totalSize), 1000) / 10;
     case 'extracting':
     case 'moving_db':
     case 'restarting_core':
@@ -130,13 +133,14 @@ const statusMsgAtom = atom((get) => {
     case 'preparing':
       return __('Preparing...');
     case 'downloading':
-      const { downloaded, totalSize } = details || {};
+      if (!details?.totalSize) return __('Downloading the database');
+      const { downloaded, totalSize } = details;
       const percentage = get(percentageAtom);
-      const sizeProgress = totalSize
-        ? `(${prettyBytes(downloaded, { locale })} / ${prettyBytes(totalSize, {
-            locale,
-          })})`
-        : '';
+      const sizeProgress = `(${prettyBytes(downloaded, {
+        locale,
+      })} / ${prettyBytes(totalSize, {
+        locale,
+      })})`;
       return `${__(
         'Downloading the database'
       )}... ${percentage}% ${sizeProgress}`;
@@ -170,13 +174,15 @@ async function confirmAbort() {
   }
 }
 
-export default function BootstrapModal(props) {
+export default function BootstrapModal(
+  props: ComponentProps<typeof BootstrapModalComponent>
+) {
   const statusMsg = useAtomValue(statusMsgAtom);
   const percentage = useAtomValue(percentageAtom);
   const modalID = useContext(ModalContext);
-  const modalRef = useRef();
-  const backgroundRef = useRef();
-  const closeModalRef = useRef();
+  const modalRef = useRef<HTMLDivElement>(null);
+  const backgroundRef = useRef<HTMLDivElement>(null);
+  const closeModalRef = useRef(() => {});
 
   useEffect(() => {
     bootstrapEvents.on('abort', closeModalRef.current);
@@ -192,27 +198,25 @@ export default function BootstrapModal(props) {
   const minimize = () => {
     showBackgroundTask(BootstrapBackgroundTask);
     const duration = parseInt(timing.quick);
-    const options = { duration, easing: 'linear', fill: 'both' };
-    modalRef.current.animate(minimizeAnimation, options);
-    backgroundRef.current.animate(fadeOut, options);
+    const options = { duration, easing: 'linear', fill: 'both' as const };
+    modalRef.current?.animate(minimizeAnimation, options);
+    backgroundRef.current?.animate(fadeOut, options);
     setTimeout(() => removeModal(modalID), duration);
-  };
-
-  const handleKeyDown = (e) => {
-    if (e.key === 'Escape') {
-      minimize();
-    }
   };
 
   return (
     <BootstrapModalComponent
+      {...props}
       modalRef={modalRef}
       backgroundRef={backgroundRef}
       onBackgroundClick={minimize}
-      onKeyDown={handleKeyDown}
+      onKeyDown={(e) => {
+        if (e.key === 'Escape') {
+          minimize();
+        }
+      }}
       assignClose={(close) => (closeModalRef.current = close)}
       escToClose={false}
-      {...props}
     >
       <ControlledModal.Body>
         <Title>{__('Bootstrap Recent Database')}</Title>

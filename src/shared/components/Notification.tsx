@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 
 // Internal
 import { removeNotification } from 'lib/ui';
-import SnackBar from 'components/SnackBar';
+import SnackBar, { SnackBarType } from 'components/SnackBar';
 import { timing } from 'styles';
 
 const outro = { opacity: [1, 0] };
@@ -28,10 +28,14 @@ const NotificationComponent = styled(SnackBar)({
 });
 
 export interface NotificationProps
-  extends Omit<ComponentProps<typeof NotificationComponent>, 'onClick'> {
+  extends Omit<
+    ComponentProps<typeof NotificationComponent>,
+    'type' | 'onClick'
+  > {
   notifID: string;
   autoClose?: number;
   onClick?: (close: () => void) => void;
+  type?: SnackBarType;
 }
 
 export default function Notification({

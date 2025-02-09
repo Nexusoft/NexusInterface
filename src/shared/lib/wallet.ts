@@ -8,7 +8,7 @@ import {
   To,
 } from 'react-router';
 
-import { store } from 'lib/store';
+import { store, subscribe } from 'lib/store';
 import { stopCore } from 'lib/core';
 import { logOut } from 'lib/session';
 import { settingsAtom } from 'lib/settings';
@@ -46,7 +46,6 @@ export const closeWallet = async (beforeExit?: () => void) => {
 export function prepareWallet() {
   ipcRenderer.on('window-close', async () => {
     const { minimizeOnClose } = store.get(settingsAtom);
-
     // forceQuit is set when user clicks Quit option in the Tray context menu
     if (minimizeOnClose) {
       const forceQuit = await ipcRenderer.invoke('is-force-quit');
@@ -58,7 +57,17 @@ export function prepareWallet() {
         return;
       }
     }
-
     await closeWallet();
+  });
+
+  const preventReload = (ev: BeforeUnloadEvent) => {
+    ev.returnValue = true;
+  };
+  subscribe(walletLockedAtom, (lockedState) => {
+    if (lockedState) {
+      window.addEventListener('beforeunload', preventReload);
+    } else {
+      window.removeEventListener('beforeunload', preventReload);
+    }
   });
 }

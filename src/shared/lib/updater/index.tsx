@@ -20,13 +20,12 @@ __ = __context('AutoUpdate');
 const autoUpdateInterval = 4 * 60 * 60 * 1000; // 4 hours
 let timerId: NodeJS.Timeout | undefined = undefined;
 
-export const updaterStateAtom = atom('idle');
+export type UpdaterState = 'idle' | 'checking' | 'downloading' | 'downloaded';
+
+export const updaterStateAtom = atom<UpdaterState>('idle');
 
 /**
  * Quit wallet and install the update
- *
- * @export
- * @returns
  */
 export function quitAndInstall() {
   closeWallet(() => ipcRenderer.invoke('quit-and-install-update'));
@@ -44,9 +43,6 @@ export function migrateToMainnet() {
 
 /**
  * Start automatically checking for updates by interval
- *
- * @export
- * @returns
  */
 export async function checkForUpdates() {
   const checkGithubManually = !fs.existsSync(
@@ -57,6 +53,8 @@ export async function checkForUpdates() {
   try {
     await Promise.all([
       (async () => {
+        if (process.env.NODE_ENV === 'development') return;
+        let updateAvailable = false;
         if (process.env.NODE_ENV !== 'development' && checkGithubManually) {
           const response = await fetchGithubLatestRelease(
             'Nexusoft/NexusInterface'
@@ -66,6 +64,7 @@ export async function checkForUpdates() {
             semver.lt('v' + APP_VERSION, latestVerion) &&
             response.data.prerelease === false
           ) {
+            updateAvailable = true;
             showBackgroundTask(AutoUpdateBackgroundTask, {
               version: response.data.tag_name,
               gitHub: true,
@@ -73,9 +72,23 @@ export async function checkForUpdates() {
           }
         } else {
           const result = await ipcRenderer.invoke('check-for-updates');
-          if (result && result.downloadPromise) {
-            await result.downloadPromise;
+
+          // Not sure if this is the best way to check if there's an update
+          // available because autoUpdater.checkForUpdates() doesn't return
+          // any reliable results like a boolean `updateAvailable` property
+          if (
+            result?.updateInfo?.version &&
+            result.updateInfo.version !== APP_VERSION
+          ) {
+            updateAvailable = true;
+            if (result?.downloadPromise) {
+              await result.downloadPromise;
+            }
           }
+        }
+
+        if (!updateAvailable) {
+          showNotification(__('There are currently no updates available'));
         }
       })(),
       checkForModuleUpdates(),
@@ -95,8 +108,6 @@ export async function checkForUpdates() {
 
 /**
  * Stop automatically checking for updates
- *
- * @export
  */
 export function stopAutoUpdate() {
   clearTimeout(timerId);
