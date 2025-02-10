@@ -116,7 +116,7 @@ export const activeSessionAtom = atom((get) => {
  * =============================================================================
  */
 
-export const userStatusQuery = jotaiQuery<UserStatus | undefined>({
+export const userStatusQuery = jotaiQuery<UserStatus | null>({
   alwaysOn: true,
   condition: (get) =>
     get(coreConnectedAtom) &&
@@ -134,7 +134,7 @@ export const userStatusQuery = jotaiQuery<UserStatus | undefined>({
       } catch (err: any) {
         // Don't log error if it's 'Session not found' (user not logged in)
         if (err?.code === -11) {
-          return undefined;
+          return null;
         }
         console.error(err);
         throw err;
