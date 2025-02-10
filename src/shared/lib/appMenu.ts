@@ -75,7 +75,7 @@ const preprocess = (
     }
     cleanMenuItems[id] = cleanItem;
   });
-  return menuItems;
+  return cleanMenuItems;
 };
 
 const menuItems = preprocess({
