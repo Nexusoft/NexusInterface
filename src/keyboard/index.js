@@ -1,4 +1,4 @@
-import { render } from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import cssUrl from 'react-simple-keyboard/build/css/index.css';
 
 import VirtualKeyboard from './VirtualKeyboard';
@@ -9,4 +9,6 @@ linkEl.setAttribute('type', 'text/css');
 linkEl.setAttribute('href', cssUrl);
 document.head.appendChild(linkEl);
 
-render(<VirtualKeyboard />, document.getElementById('root'));
+const rootNode = document.getElementById('root');
+const root = createRoot(rootNode);
+root.render(<VirtualKeyboard />);
