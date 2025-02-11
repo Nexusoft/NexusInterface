@@ -72,14 +72,12 @@ export async function checkForUpdates() {
           }
         } else {
           const result = await ipcRenderer.invoke('check-for-updates');
+          const version = result?.updateInfo?.version;
 
           // Not sure if this is the best way to check if there's an update
           // available because autoUpdater.checkForUpdates() doesn't return
           // any reliable results like a boolean `updateAvailable` property
-          if (
-            result?.updateInfo?.version &&
-            result.updateInfo.version !== APP_VERSION
-          ) {
+          if (version && semver.lt(version, APP_VERSION)) {
             updateAvailable = true;
             if (result?.downloadPromise) {
               await result.downloadPromise;
