@@ -1,6 +1,7 @@
 import { app, ipcMain, dialog } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
+import { initialize } from '@aptabase/electron/main';
 
 import { loadSettingsFromFile } from 'lib/settings/universal';
 import {
@@ -21,7 +22,6 @@ import {
   setAllowPrerelease,
 } from './updater';
 import { proxyRequest } from './modules';
-import { initialize } from '@aptabase/electron/main';
 
 let mainWindow;
 global.forceQuit = false;
