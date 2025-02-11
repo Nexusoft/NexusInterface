@@ -19,7 +19,7 @@ const manifest = path.resolve(dllPath, 'renderer.json');
 export default merge(baseRendererConfig, devConfig, {
   entry: {
     'renderer.dev': './src/index',
-    'keyboard.dev': './src/keyboard/index.js',
+    'keyboard.dev': './src/keyboard/index.tsx',
   },
 
   output: {
