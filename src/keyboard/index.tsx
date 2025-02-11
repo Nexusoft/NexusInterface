@@ -10,5 +10,6 @@ linkEl.setAttribute('href', cssUrl);
 document.head.appendChild(linkEl);
 
 const rootNode = document.getElementById('root');
+if (!rootNode) throw new Error('No root node found');
 const root = createRoot(rootNode);
 root.render(<VirtualKeyboard />);

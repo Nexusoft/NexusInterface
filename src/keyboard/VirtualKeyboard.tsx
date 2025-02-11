@@ -4,11 +4,18 @@ import Keyboard from 'react-simple-keyboard';
 import styled from '@emotion/styled';
 
 import GlobalStyles from 'components/GlobalStyles';
-import ThemeController from 'components/ThemeController';
+import ThemeController, { FortifiedTheme } from 'components/ThemeController';
 import { TextField } from 'components/TextField';
 import MaskableTextField from 'components/MaskableTextField';
 
 import KeyboardStyles from './KeyboardStyles';
+
+interface Options {
+  theme: FortifiedTheme;
+  defaultText: string;
+  maskable: boolean;
+  placeholder: string;
+}
 
 const KeyboardWrapper = styled.div({
   padding: 5,
@@ -21,45 +28,18 @@ const InputWrapper = styled.div({
 });
 
 export default function App() {
-  const [options, setOptions] = useState(null);
+  const [options, setOptions] = useState<Options | null>(null);
   const [text, setText] = useState('');
   const [capslock, setCapslock] = useState(false);
   const [shift, setShift] = useState(false);
   const populatedRef = useRef(false);
 
   useEffect(() => {
-    ipcRenderer.once('options', (evt, options) => {
+    ipcRenderer.once('options', (_evt, options: Options) => {
       setOptions(options);
       setText(options.defaultText);
     });
   }, []);
-
-  const handleChange = (text) => {
-    setText(text);
-    ipcRenderer.send('keyboard-input-change', text);
-  };
-
-  const handleInputChange = (e) => {
-    setText(e.target.value);
-  };
-
-  const handleKeyPress = (btn) => {
-    switch (btn) {
-      case '{shift}':
-        setShift(!shift);
-        break;
-      case '{lock}':
-        setCapslock(!capslock);
-        break;
-      case '{enter}':
-        ipcRenderer.send('close-keyboard');
-        break;
-      default:
-        if (shift) {
-          setShift(false);
-        }
-    }
-  };
 
   if (!options) return null;
 
@@ -76,7 +56,9 @@ export default function App() {
           <Input
             readOnly
             value={text}
-            onChange={handleInputChange}
+            onChange={(e) => {
+              setText(e.target.value);
+            }}
             placeholder={placeholder}
             skin="filled-inverted"
             style={{ borderRadius: 5, fontSize: 18 }}
@@ -119,8 +101,27 @@ export default function App() {
               buttons: '{enter}',
             },
           ]}
-          onChange={handleChange}
-          onKeyPress={handleKeyPress}
+          onChange={(text) => {
+            setText(text);
+            ipcRenderer.send('keyboard-input-change', text);
+          }}
+          onKeyPress={(btn) => {
+            switch (btn) {
+              case '{shift}':
+                setShift(!shift);
+                break;
+              case '{lock}':
+                setCapslock(!capslock);
+                break;
+              case '{enter}':
+                ipcRenderer.send('close-keyboard');
+                break;
+              default:
+                if (shift) {
+                  setShift(false);
+                }
+            }
+          }}
           tabCharOnTab={false}
         />
       </KeyboardWrapper>
