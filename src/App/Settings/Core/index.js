@@ -1,25 +1,20 @@
 // External
-import { useEffect, useId } from 'react';
-import { useSelector } from 'react-redux';
+import { useId, useState } from 'react';
+import { useAtomValue } from 'jotai';
 import styled from '@emotion/styled';
 
 // Internal
 import Form from 'components/Form';
-import store from 'store';
-import * as TYPE from 'consts/actionTypes';
-import {
-  switchSettingsTab,
-  setCoreSettingsRestart,
-  showNotification,
-} from 'lib/ui';
+import { showNotification } from 'lib/ui';
 import { confirm } from 'lib/dialog';
 import { stopCore, startCore, restartCore } from 'lib/core';
-import { refreshCoreInfo } from 'lib/coreInfo';
-import { updateSettings } from 'lib/settings';
+import { coreInfoQuery } from 'lib/coreInfo';
+import { updateSettings, settingsAtom } from 'lib/settings';
 import { formSubmit } from 'lib/form';
 import Button from 'components/Button';
 import Switch from 'components/Switch';
 
+import { useSettingsTab } from '../atoms';
 import EmbeddedCoreSettings from './EmbeddedCoreSettings';
 import RemoteCoreSettings from './RemoteCoreSettings';
 
@@ -143,10 +138,9 @@ async function turnOffRemoteCore(restartForm) {
   });
   if (confirmed) {
     restartForm();
-    store.dispatch({ type: TYPE.DISCONNECT_CORE });
-    updateSettings({ manualDaemon: false });
     await startCore();
-    refreshCoreInfo();
+    updateSettings({ manualDaemon: false });
+    coreInfoQuery.refetch();
   }
 }
 
@@ -162,32 +156,21 @@ async function turnOnRemoteCore(restartForm) {
   });
   if (confirmed) {
     restartForm();
-    store.dispatch({ type: TYPE.DISCONNECT_CORE });
-    updateSettings({ manualDaemon: true });
     await stopCore();
-    refreshCoreInfo();
+    updateSettings({ manualDaemon: true });
+    coreInfoQuery.refetch();
   }
 }
 
-/**
- * Handles the logic when the switch is activated
- * @param {element} e Attached element
- */
-function handleRestartSwitch(e) {
-  setCoreSettingsRestart(!!e.target.checked);
-}
-
 export default function SettingsCore() {
+  useSettingsTab('Core');
   const switchId = useId();
-  const settings = useSelector((state) => state.settings);
+  const settings = useAtomValue(settingsAtom);
   const { manualDaemon } = settings;
-  const restartCoreOnSave = useSelector(
-    (state) => state.ui.settings.restartCoreOnSave
-  );
-
-  useEffect(() => {
-    switchSettingsTab('Core');
-  }, []);
+  const [restartCoreOnSave, setRestartCoreOnSave] = useState(true);
+  const handleRestartSwitch = () => {
+    setRestartCoreOnSave(!restartCoreOnSave);
+  };
 
   return (
     <>
@@ -197,7 +180,14 @@ export default function SettingsCore() {
         initialValues={getInitialValues(settings)}
         keepDirtyOnReinitialize={false}
         onSubmit={formSubmit({
-          submit: updateSettings,
+          submit: (updatedSettings) => {
+            Object.keys(updatedSettings).forEach((key) => {
+              const value = updatedSettings[key];
+              if (value !== settings[key]) {
+                updateSettings({ [key]: value });
+              }
+            });
+          },
           onSuccess: () => {
             showNotification(__('Core settings saved'), 'success');
             if (!manualDaemon && restartCoreOnSave) {

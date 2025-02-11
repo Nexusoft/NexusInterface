@@ -1,19 +1,19 @@
-import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useAtomValue } from 'jotai';
 import styled from '@emotion/styled';
 
 import Icon from 'components/Icon';
 import Button from 'components/Button';
 import Switch from 'components/Switch';
-import { switchUserTab, openModal } from 'lib/ui';
-import { refreshNameRecords } from 'lib/user';
-import { selectUsername } from 'lib/session';
-import { updateSettings } from 'lib/settings';
+import { openModal } from 'lib/ui';
+import { nameRecordsQuery } from 'lib/user';
+import { usernameAtom } from 'lib/session';
+import { updateSettings, settingsAtom } from 'lib/settings';
 import { popupContextMenu } from 'lib/contextMenu';
 import { timing } from 'styles';
 import memoize from 'utils/memoize';
 import plusIcon from 'icons/plus.svg';
 
+import { useUserTab } from '../atoms';
 import NameDetailsModal from './NameDetailsModal';
 import CreateNameModal from './CreateNameModal';
 import ChangeRegisterAddressModal from './ChangeRegisterAddressModal';
@@ -126,25 +126,18 @@ function Name({ nameRecord, username }) {
   );
 }
 
-const selectNameRecords = memoize(
-  (nameRecords, showUnusedNames) =>
-    showUnusedNames
-      ? nameRecords
-      : nameRecords?.filter((nr) => nr.register && nr.register !== '0'),
-  (state) => [state.user.nameRecords, state.settings.showUnusedNames]
+const filterNames = memoize((nameRecords, showUnusedNames) =>
+  showUnusedNames
+    ? nameRecords
+    : nameRecords?.filter((nr) => nr.register && nr.register !== '0')
 );
 
 export default function Names() {
-  const session = useSelector((state) => state.user.session);
-  const nameRecords = useSelector(selectNameRecords);
-  const username = useSelector(selectUsername);
-  const showUnusedNames = useSelector(
-    (state) => state.settings.showUnusedNames
-  );
-  useEffect(() => {
-    switchUserTab('Names');
-    refreshNameRecords();
-  }, [session]);
+  useUserTab('Names');
+  const nameRecords = nameRecordsQuery.use();
+  const { showUnusedNames } = useAtomValue(settingsAtom);
+  const filteredNames = filterNames(nameRecords, showUnusedNames);
+  const username = useAtomValue(usernameAtom);
 
   const toggle = () => updateSettings({ showUnusedNames: !showUnusedNames });
 
@@ -173,8 +166,8 @@ export default function Names() {
         </div>
 
         <div className="mt1">
-          {!!nameRecords && nameRecords.length > 0 ? (
-            nameRecords.map((nameRecord) => (
+          {!!filteredNames && filteredNames.length > 0 ? (
+            filteredNames.map((nameRecord) => (
               <Name
                 key={nameRecord.address}
                 nameRecord={nameRecord}

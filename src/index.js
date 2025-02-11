@@ -1,38 +1,34 @@
 import { createRoot } from 'react-dom/client';
-import { Provider } from 'react-redux';
 
-import store from 'store';
+import { Providers, store } from 'lib/store';
 import { startCore } from 'lib/core';
 import { prepareWallet } from 'lib/wallet';
 import { prepareMenu } from 'lib/appMenu';
 import { prepareBootstrap } from 'lib/bootstrap';
-import { prepareCoreInfo } from 'lib/coreInfo';
-import { prepareCoreOutput } from 'lib/coreOutput';
-import { prepareMarket } from 'lib/market';
 import { prepareTransactions } from 'lib/transactions';
+import { settingsAtom } from 'lib/settings';
 import { prepareModules, prepareWebView } from 'lib/modules';
 import { prepareUpdater } from 'lib/updater';
+import { prepareSessionInfo } from 'lib/session';
 import UT from 'lib/usageTracking';
-import initialSettings from 'data/initialSettings';
 import App from './App';
 
 async function run() {
   try {
-    if (!initialSettings.manualDaemon) {
+    const { manualDaemon } = store.get(settingsAtom);
+    if (!manualDaemon) {
       await startCore();
     }
   } finally {
     prepareWallet();
-    prepareCoreInfo();
-    prepareMarket();
     prepareModules();
 
     const domNode = document.getElementById('root');
     const root = createRoot(domNode);
     root.render(
-      <Provider store={store}>
+      <Providers>
         <App />
-      </Provider>
+      </Providers>
     );
 
     prepareMenu();
@@ -40,8 +36,11 @@ async function run() {
     prepareTransactions();
     prepareUpdater();
     prepareWebView();
-    prepareCoreOutput();
-    initialSettings.sendUsageData && UT.StartAnalytics();
+    prepareSessionInfo();
+    const { sendUsageData } = store.get(settingsAtom);
+    if (sendUsageData) {
+      UT.StartAnalytics();
+    }
   }
 }
 

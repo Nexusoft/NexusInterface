@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useAtomValue } from 'jotai';
+import { useQuery } from '@tanstack/react-query';
 import styled from '@emotion/styled';
 
 import ControlledModal from 'components/ControlledModal';
@@ -9,8 +9,9 @@ import Tooltip from 'components/Tooltip';
 import InfoField from 'components/InfoField';
 import { formatDateTime } from 'lib/intl';
 import { openModal } from 'lib/ui';
-import { fetchAssetSchema } from 'lib/asset';
 import { getAssetData } from 'lib/asset';
+import { userGenesisAtom } from 'lib/session';
+import { callAPI } from 'lib/api';
 import editIcon from 'icons/edit.svg';
 
 import EditAssetModal from './EditAssetModal';
@@ -43,17 +44,16 @@ const isEditable = (schema) =>
   !!Array.isArray(schema) && schema.some((field) => field.mutable);
 
 export default function AssetDetailsModal({ asset }) {
-  const isOwner = useSelector(
-    (state) => !!asset?.owner && state.user.status?.genesis === asset.owner
-  );
-  const schema = useSelector((state) => state.assetSchemas[asset?.address]);
+  const address = asset?.address;
+  const genesis = useAtomValue(userGenesisAtom);
+  const isOwner = !!asset?.owner && genesis === asset.owner;
+  const { data: schema } = useQuery({
+    queryKey: ['assetSchema', address],
+    queryFn: () => callAPI('assets/get/schema', { address }),
+    enabled: isOwner,
+    staleTime: 3600000, // 1 hour
+  });
   const data = getAssetData(asset);
-
-  useEffect(() => {
-    if (!schema && isOwner) {
-      fetchAssetSchema(asset.address);
-    }
-  }, []);
 
   return (
     <ControlledModal>

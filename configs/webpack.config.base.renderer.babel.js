@@ -8,7 +8,7 @@ import { merge } from 'webpack-merge';
 
 import baseConfig from './webpack.config.base.babel';
 
-const intlPath = path.join(process.cwd(), 'src', 'shared', 'lib', 'intl.js');
+const intlPath = path.join(process.cwd(), 'src', 'shared', 'lib', 'intl.tsx');
 
 export default merge(baseConfig, {
   target: 'electron-renderer',

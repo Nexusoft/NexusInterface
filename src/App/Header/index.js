@@ -1,6 +1,5 @@
 // External
-import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { Link } from 'react-router';
 import styled from '@emotion/styled';
 
 // Internal Global
@@ -8,7 +7,7 @@ import Icon from 'components/Icon';
 import HorizontalLine from 'components/HorizontalLine';
 import { consts, timing, animations } from 'styles';
 import * as color from 'utils/color';
-import { isCoreConnected } from 'selectors';
+import { useCoreInfo, useCoreConnected } from 'lib/coreInfo';
 import { alphaRelease, betaRelease } from 'consts/misc';
 
 // Internal Local
@@ -87,11 +86,9 @@ const PreReleaseTag = styled.div(({ theme }) => ({
 const preReleaseTag = alphaRelease ? 'ALPHA' : betaRelease ? 'BETA' : null;
 
 export default function Header() {
-  const coreConnected = useSelector(isCoreConnected);
-  const testnet = useSelector((state) => state.core.systemInfo?.testnet);
-  const privateNet = useSelector((state) => state.core.systemInfo?.private);
-  const lite = useSelector((state) => state.core.systemInfo?.litemode);
-  const hybrid = useSelector((state) => state.core.systemInfo?.hybrid);
+  const coreConnected = useCoreConnected();
+  const coreInfo = useCoreInfo();
+  const { testnet, privateNet, lite, hybrid } = coreInfo || {};
 
   return (
     <HeaderComponent>

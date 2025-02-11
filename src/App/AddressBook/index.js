@@ -1,6 +1,6 @@
 // External
 import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useAtomValue } from 'jotai';
 import styled from '@emotion/styled';
 import UT from 'lib/usageTracking';
 
@@ -9,8 +9,9 @@ import Icon from 'components/Icon';
 import Button from 'components/Button';
 import Panel from 'components/Panel';
 import { openModal } from 'lib/ui';
+import { useCoreConnected } from 'lib/coreInfo';
+import { contactsAtom } from 'lib/addressBook';
 import AddEditContactModal from 'components/AddEditContactModal';
-import { isCoreConnected } from 'selectors';
 
 // Internal Local
 import PanelControls from './PanelControls';
@@ -32,8 +33,8 @@ const AddressBookLayout = styled.div({
 });
 
 export default function AddressBook() {
-  const addressBook = useSelector((state) => state.addressBook);
-  const coreConnected = useSelector(isCoreConnected);
+  const contacts = useAtomValue(contactsAtom);
+  const coreConnected = useCoreConnected();
   useEffect(() => {
     UT.SendScreen('AddressBook');
   }, []);
@@ -45,7 +46,7 @@ export default function AddressBook() {
       controls={<PanelControls />}
       bodyScrollable={false}
     >
-      {addressBook && Object.values(addressBook).length > 0 ? (
+      {contacts.length > 0 ? (
         <AddressBookLayout>
           <ContactList />
           <ContactDetails />

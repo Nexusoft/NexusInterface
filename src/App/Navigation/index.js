@@ -1,13 +1,13 @@
-import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/react';
+import { useAtomValue } from 'jotai';
 
 import HorizontalLine from 'components/HorizontalLine';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import ModuleIcon from 'components/ModuleIcon';
 import { consts, timing } from 'styles';
-import { selectModuleUpdateCount } from 'selectors';
+import { modulesAtom, moduleUpdateCountAtom } from 'lib/modules';
 
 import logoIcon from 'icons/logo.svg';
 import sendIcon from 'icons/send.svg';
@@ -93,8 +93,8 @@ const ModuleNavItem = ({ module }) => (
 );
 
 function ModuleNavItems() {
-  const modules = useSelector((state) => state.modules);
-  return Object.values(modules)
+  const modules = useAtomValue(modulesAtom);
+  return modules
     .filter((module) => module.enabled && module.info.type === 'app')
     .map((module) => <ModuleNavItem key={module.info.name} module={module} />);
 }
@@ -104,7 +104,7 @@ function ModuleNavItems() {
  *  @memberof Navigation
  */
 export default function Navigation() {
-  const updateCount = useSelector(selectModuleUpdateCount);
+  const updateCount = useAtomValue(moduleUpdateCountAtom);
   return (
     <Nav>
       <AboveNav>

@@ -1,6 +1,6 @@
 // External
 import styled from '@emotion/styled';
-import { useSelector } from 'react-redux';
+import { useAtomValue } from 'jotai';
 
 // Internal
 import ControlledModal from 'components/ControlledModal';
@@ -10,7 +10,11 @@ import Tooltip from 'components/Tooltip';
 import InfoField from 'components/InfoField';
 import ExternalLink from 'components/ExternalLink';
 import SimpleProgressBar from 'components/SimpleProgressBar';
-import { downloadAndInstall, abortModuleDownload } from 'lib/modules';
+import {
+  downloadAndInstall,
+  abortModuleDownload,
+  moduleDownloadsAtom,
+} from 'lib/modules';
 
 import linkIcon from 'icons/link.svg';
 import closeIcon from 'icons/x-circle.svg';
@@ -109,14 +113,11 @@ const DownloadingSection = styled.div({
  * @extends {React.Component}
  */
 function Installer({ featuredModule }) {
-  const moduleDownload = useSelector(
-    (state) => state.moduleDownloads[featuredModule.name]
-  );
+  const moduleDownload = useAtomValue(moduleDownloadsAtom)[featuredModule.name];
   // `downloading` -> when the module package is being downloaded
   // `busy` -> when the module package is being downloaded OR is in other preparation steps
-  const busy = useSelector(
-    (state) => !!state.moduleDownloads[featuredModule.name]
-  );
+  const busy = !!moduleDownload;
+
   const { downloaded, totalSize, downloading } = moduleDownload || {};
   const downloadProgress = downloaded / totalSize;
 

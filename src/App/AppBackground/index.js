@@ -1,14 +1,18 @@
 // External
-import { useSelector } from 'react-redux';
 import { existsSync } from 'fs';
 import styled from '@emotion/styled';
+import { useAtomValue } from 'jotai';
 
 // Internal
-import { starryNightBackground, cosmicLightBackground, nexusThemeBackground } from 'lib/theme';
+import {
+  starryNightBackground,
+  cosmicLightBackground,
+  nexusThemeBackground,
+  themeAtom,
+} from 'lib/theme';
 import StarryNight from './StarryNight';
 import NexusThemeBg from './Particles';
 import lightImg from './Light_Space.jpg';
-
 
 const CustomWallpaper = styled.div(
   {
@@ -30,9 +34,8 @@ const CustomWallpaper = styled.div(
 );
 
 export default function AppBackground() {
-  const { wallpaper, wallpaperSize, wallpaperBackgroundColor } = useSelector(
-    (state) => state.theme
-  );
+  const { wallpaper, wallpaperSize, wallpaperBackgroundColor } =
+    useAtomValue(themeAtom);
 
   if (wallpaper === starryNightBackground) {
     return <StarryNight />;
@@ -48,7 +51,7 @@ export default function AppBackground() {
   }
 
   if (wallpaper === nexusThemeBackground) {
-    return <NexusThemeBg />;   
+    return <NexusThemeBg />;
   }
 
   if (!!wallpaper && existsSync(wallpaper)) {

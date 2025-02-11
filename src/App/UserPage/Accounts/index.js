@@ -1,12 +1,10 @@
-import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
-
 import Icon from 'components/Icon';
 import Button from 'components/Button';
-import { switchUserTab, openModal } from 'lib/ui';
-import { refreshAccounts, refreshOwnedTokens } from 'lib/user';
+import { openModal } from 'lib/ui';
+import { accountsQuery } from 'lib/user';
 import plusIcon from 'icons/plus.svg';
 
+import { useUserTab } from '../atoms';
 import Account from './Account';
 import NewAccountModal from 'components/NewAccountModal';
 import TabContentWrapper from '../TabContentWrapper';
@@ -14,14 +12,8 @@ import TabContentWrapper from '../TabContentWrapper';
 __ = __context('User.Accounts');
 
 export default function Accounts() {
-  const session = useSelector((state) => state.user.session);
-  const accounts = useSelector((state) => state.user.accounts);
-
-  useEffect(() => {
-    switchUserTab('Accounts');
-    refreshAccounts();
-    refreshOwnedTokens();
-  }, [session]);
+  useUserTab('Accounts');
+  const accounts = accountsQuery.use();
 
   return (
     !!accounts && (

@@ -1,15 +1,12 @@
 // External
-import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useAtomValue } from 'jotai';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/react';
 
 // Internal
-import { refreshBalances } from 'lib/user';
-import { getLedgerInfo } from 'lib/core';
 import { timing, consts } from 'styles';
-import { observeStore } from 'store';
-
+import { settingsAtom } from 'lib/settings';
+import { themeAtom } from 'lib/theme';
 import {
   NXSBalanceStat,
   NXSFiatBalanceStat,
@@ -92,49 +89,9 @@ const StatsColumn = styled.div(
     }
 );
 
-function useGetBalances() {
-  useEffect(() => {
-    const unobserve = observeStore(
-      ({ user }) => user && user.status,
-      (status) => {
-        status && refreshBalances();
-      }
-    );
-    return unobserve;
-  }, []);
-}
-
-function useGetLedgerInfo() {
-  useEffect(() => {
-    let timeoutID;
-    const updateLedgerInfo = async () => {
-      const result = await getLedgerInfo();
-      if (result) {
-        // update every 30 seconds
-        setTimeout(updateLedgerInfo, 30000);
-      } else {
-        // if failed, retry every 3 seconds
-        setTimeout(updateLedgerInfo, 3000);
-      }
-    };
-    updateLedgerInfo();
-    return () => {
-      clearInterval(timeoutID);
-    };
-  }, []);
-}
-
-// Mandatory React-Redux method
 export default function Stats({ showingGlobe }) {
-  const overviewDisplay = useSelector(
-    (state) => state.settings.overviewDisplay
-  );
-  const featuredTokenName = useSelector(
-    (state) => state.theme?.featuredTokenName
-  );
-
-  useGetBalances();
-  useGetLedgerInfo();
+  const { overviewDisplay } = useAtomValue(settingsAtom);
+  const featuredTokenName = useAtomValue(themeAtom)?.featuredTokenName;
 
   if (overviewDisplay === 'none') {
     return <OverviewPage />;

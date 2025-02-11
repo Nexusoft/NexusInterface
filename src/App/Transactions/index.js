@@ -1,16 +1,16 @@
 import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useAtom, useAtomValue } from 'jotai';
 import UT from 'lib/usageTracking';
 import styled from '@emotion/styled';
 
 import Panel from 'components/Panel';
 import WaitingMessage from 'components/WaitingMessage';
 import Button from 'components/Button';
-import TextField from 'components/TextField';
+import { TextField } from 'components/TextField';
 import RequireLoggedIn from 'components/RequireLoggedIn';
 import Spinner from 'components/Spinner';
 import Icon from 'components/Icon';
-import { loadTransactions, updatePage } from 'lib/transactions';
+import { pageAtom, transactionsQuery } from 'lib/transactions';
 import transactionIcon from 'icons/transaction.svg';
 import warningIcon from 'icons/warning.svg';
 
@@ -123,22 +123,16 @@ const ErrorMessage = styled.div(({ theme }) => ({
  * @extends {Component}
  */
 export default function Transactions() {
-  const { status, transactions, lastPage } = useSelector(
-    (state) => state.user.transactions
-  );
-  const { page } = useSelector((state) => state.ui.transactionsFilter);
-  const genesis = useSelector((state) => state.user.status?.genesis);
-
+  transactionsQuery.use();
+  const {
+    data: transactions,
+    isPending,
+    isError,
+  } = useAtomValue(transactionsQuery.queryAtom);
+  const [page, setPage] = useAtom(pageAtom);
   useEffect(() => {
     UT.SendScreen('Transactions');
   }, []);
-  // Reload transactions when user genesis changes, such as when user
-  // is logged in or switched to another user
-  useEffect(() => {
-    if (genesis && (status === 'notLoaded' || status === 'error')) {
-      loadTransactions();
-    }
-  }, [genesis]);
 
   return (
     <Panel icon={transactionIcon} title={__('Transactions')}>
@@ -149,10 +143,10 @@ export default function Transactions() {
           <TransactionsList>
             {' '}
             {/*ref={this.listRef} */}
-            {status === 'loading' && (
+            {isPending && (
               <WaitingMessage>{__('Loading transactions...')}</WaitingMessage>
             )}
-            {status === 'error' && (
+            {isError && (
               <ErrorMessage>
                 <div className="text-center">
                   <Icon icon={warningIcon} size={32} />
@@ -160,7 +154,7 @@ export default function Transactions() {
                 <div className="mt0_4">{__('Failed to load transactions')}</div>
               </ErrorMessage>
             )}
-            {status === 'loaded' && (
+            {!!transactions?.length && (
               <Container>
                 {transactions &&
                   transactions.map((tx) => (
@@ -179,7 +173,7 @@ export default function Transactions() {
                 onClick={
                   page > 1
                     ? () => {
-                        updatePage(page - 1);
+                        setPage(page - 1);
                       }
                     : undefined
                 }
@@ -205,7 +199,7 @@ export default function Transactions() {
                           onChange={(e) => {
                             const page = parseInt(e.target.value);
                             if (page) {
-                              updatePage(parseInt(e.target.value));
+                              setPage(parseInt(e.target.value));
                             }
                           }}
                         />
@@ -221,7 +215,7 @@ export default function Transactions() {
                 onClick={
                   // page < totalPages ?
                   () => {
-                    updatePage(page + 1);
+                    setPage(page + 1);
                   }
                   // : undefined
                 }

@@ -1,12 +1,11 @@
 // External
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import styled from '@emotion/styled';
-import { useSelector } from 'react-redux';
 
 // Internal
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
-import { isCoreConnected } from 'selectors';
+import { useCoreConnected } from 'lib/coreInfo';
 import { timing } from 'styles';
 
 __ = __context('Overview');
@@ -57,7 +56,7 @@ const StatIcon = styled(Icon)(({ theme }) => ({
 
 export default function Stat({
   tooltip,
-  tooltipAlign,
+  tooltipAlign = 'end',
   tooltipPosition,
   linkTo,
   label,
@@ -65,12 +64,11 @@ export default function Stat({
   waitForCore = true,
   children,
 }) {
-  const coreConnected = useSelector(isCoreConnected);
+  const coreConnected = useCoreConnected();
   const value =
     waitForCore && !coreConnected ? <span className="dim">-</span> : children;
   return (
     <Tooltip.Trigger
-      align="end"
       tooltip={tooltip}
       align={tooltipAlign}
       position={tooltipPosition}

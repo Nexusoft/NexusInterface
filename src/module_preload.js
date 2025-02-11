@@ -25,7 +25,7 @@ import ThemeController from 'components/ThemeController';
 import Panel from 'components/Panel';
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
-import TextField from 'components/TextField';
+import { TextField, MultilineTextField } from 'components/TextField';
 import Switch from 'components/Switch';
 import Select from 'components/Select';
 import Icon from 'components/Icon';
@@ -67,6 +67,7 @@ global.NEXUS = {
     HorizontalTab,
     VerticalTab,
     TextField,
+    MultilineTextField,
     ThemeController,
     Tooltip,
   },

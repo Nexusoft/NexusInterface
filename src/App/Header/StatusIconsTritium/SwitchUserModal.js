@@ -1,11 +1,14 @@
-import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useAtomValue, useSetAtom } from 'jotai';
 import styled from '@emotion/styled';
 
 import ControlledModal from 'components/ControlledModal';
 import Icon from 'components/Icon';
 import { timing } from 'styles';
-import { setActiveUser, selectActiveSession } from 'lib/session';
+import {
+  sessionsQuery,
+  activeSessionIdAtom,
+  selectedSessionIdAtom,
+} from 'lib/session';
 import userIcon from 'icons/user.svg';
 
 const UserWrapper = styled.div(({ theme, active, switching }) => ({
@@ -43,30 +46,17 @@ const Status = styled.div(({ active }) => ({
   transition: `opacity ${timing.normal}`,
 }));
 
-function User({
-  session,
-  username,
-  genesis,
-  active,
-  switching,
-  setSwitchingTo,
-  closeModal,
-}) {
+function User({ sessionId, username, active, closeModal }) {
+  const selectSessionId = useSetAtom(selectedSessionIdAtom);
   return (
     <UserWrapper
       active={active}
-      switching={switching}
       onClick={
-        active || switching
+        active
           ? undefined
-          : async () => {
-              setSwitchingTo(session);
-              try {
-                await setActiveUser({ session, genesis });
-              } finally {
-                setSwitchingTo(null);
-                closeModal();
-              }
+          : () => {
+              selectSessionId(sessionId);
+              closeModal();
             }
       }
     >
@@ -74,21 +64,14 @@ function User({
         <Icon icon={userIcon} className="mr0_4" />
         <span>{username}</span>
       </Username>
-      <Status active={active}>
-        {active
-          ? switching
-            ? __('Switching...')
-            : __('Active')
-          : __('Switch')}
-      </Status>
+      <Status active={active}>{active ? __('Active') : __('Switch')}</Status>
     </UserWrapper>
   );
 }
 
 export default function SwitchUserModal() {
-  const sessions = useSelector((state) => state.sessions);
-  const currentSession = useSelector(selectActiveSession);
-  const [switchingTo, setSwitchingTo] = useState(null);
+  const sessions = sessionsQuery.use();
+  const activeSessionId = useAtomValue(activeSessionIdAtom);
 
   return (
     <ControlledModal maxWidth={500}>
@@ -99,19 +82,13 @@ export default function SwitchUserModal() {
             {!!sessions &&
               Object.values(sessions)
                 .sort((a, b) => b.accessed - a.accessed)
-                .map(({ session, username, genesis }) => (
+                .map(({ session: sessionId, username, genesis }) => (
                   <User
-                    key={session}
-                    session={session}
+                    key={sessionId}
+                    sessionId={sessionId}
                     username={username}
                     genesis={genesis}
-                    active={
-                      switchingTo
-                        ? switchingTo === session
-                        : currentSession === session
-                    }
-                    switching={!!switchingTo}
-                    setSwitchingTo={setSwitchingTo}
+                    active={activeSessionId === sessionId}
                     closeModal={closeModal}
                   />
                 ))}

@@ -219,7 +219,10 @@ export default class Globe extends Component {
    * @memberof Globe
    */
   async pointRegister() {
-    const peerInfo = await callAPI('system/list/peers', null);
+    let peerInfo;
+    try {
+      peerInfo = await callAPI('system/list/peers', null);
+    } catch (err) {}
     if (!peerInfo) return;
     if (peerInfo.length > MaxDisplayPoints) {
       peerInfo.length = MaxDisplayPoints;

@@ -1,12 +1,17 @@
 // External Dependencies
 import { useRef, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useAtomValue } from 'jotai';
 import styled from '@emotion/styled';
 
 // Internal Global Dependencies
-import 'lib/coreOutput';
-import { switchConsoleTab, pauseCoreOutput, unpauseCoreOutput } from 'lib/ui';
+import { settingsAtom } from 'lib/settings';
+import {
+  coreOutputAtom,
+  coreOutputPausedAtom,
+  togglePaused,
+} from 'lib/coreOutput';
 import Button from 'components/Button';
+import { useConsoleTab } from './atoms';
 
 __ = __context('Console.CoreOutput');
 
@@ -44,14 +49,11 @@ const OutputLine = styled.code(({ theme }) => ({
 }));
 
 export default function TerminalCore() {
+  useConsoleTab('Core');
   const outputRef = useRef();
-  const settings = useSelector((state) => state.settings);
-  const output = useSelector((state) => state.ui.console.core.output);
-  const paused = useSelector((state) => state.ui.console.core.paused);
-
-  useEffect(() => {
-    switchConsoleTab('Core');
-  }, []);
+  const { manualDaemon } = useAtomValue(settingsAtom);
+  const output = useAtomValue(coreOutputAtom);
+  const paused = useAtomValue(coreOutputPausedAtom);
 
   const prevOutput = useRef(output);
   useEffect(() => {
@@ -75,13 +77,13 @@ export default function TerminalCore() {
   return (
     <TerminalContent>
       <TerminalCoreComponent>
-        {settings.manualDaemon ? (
+        {manualDaemon ? (
           <div className="dim">{__('Core is in Manual Mode')}</div>
         ) : (
           <>
             <Output
               ref={outputRef}
-              reverse={!settings.manualDaemon}
+              reverse={!manualDaemon}
               // onScroll={handleScroll}
             >
               {output.map((d, i) => (
@@ -91,7 +93,7 @@ export default function TerminalCore() {
             <Button
               skin="filled-inverted"
               fullWidth
-              onClick={paused ? unpauseCoreOutput : pauseCoreOutput}
+              onClick={togglePaused}
               style={{ flexShrink: 0 }}
             >
               {paused ? 'Unpause' : 'Pause'}

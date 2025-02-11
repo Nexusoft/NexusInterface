@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 
-import Link from 'components/Link';
+import { NativeLink } from 'components/Link';
 import NexusAddress from 'components/NexusAddress';
 import { openModal } from 'lib/ui';
 
@@ -37,8 +37,7 @@ export default function Token({ token, mine }) {
           {mine && <Owner>{__(' (Owned by you)')}</Owner>}
         </div>
         <div>
-          <Link
-            as="a"
+          <NativeLink
             onClick={() => {
               openModal(TokenDetailsModal, {
                 token: mine ? token : undefined,
@@ -47,7 +46,7 @@ export default function Token({ token, mine }) {
             }}
           >
             {__('Details')}
-          </Link>
+          </NativeLink>
         </div>
       </div>
       <NexusAddress className="mt1" address={token.address} />

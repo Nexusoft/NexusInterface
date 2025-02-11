@@ -1,5 +1,5 @@
 // External
-import { useSelector } from 'react-redux';
+import { useAtomValue, atom } from 'jotai';
 import styled from '@emotion/styled';
 
 // Internal
@@ -9,10 +9,14 @@ import Tooltip from 'components/Tooltip';
 import NexusAddress from 'components/NexusAddress';
 import QRButton from 'components/QRButton';
 import AddEditContactModal from 'components/AddEditContactModal';
-import { deleteContact } from 'lib/addressBook';
+import {
+  deleteContact,
+  addressBookAtom,
+  selectedContactNameAtom,
+} from 'lib/addressBook';
 import { openModal } from 'lib/ui';
 import { confirm } from 'lib/dialog';
-import { isCoreConnected } from 'selectors';
+import { useCoreConnected } from 'lib/coreInfo';
 import timeZones from 'data/timeZones';
 import { timing, consts } from 'styles';
 import trashIcon from 'icons/trash.svg';
@@ -116,16 +120,15 @@ const getLocalTime = (tz) => {
   return `${h}:${m} ${i}`;
 };
 
+const contactAtom = atom((get) => {
+  const addressBook = get(addressBookAtom);
+  const selectedContactName = get(selectedContactNameAtom);
+  return addressBook[selectedContactName] || null;
+});
+
 export default function ContactDetails() {
-  const contact = useSelector(
-    ({
-      addressBook,
-      ui: {
-        addressBook: { selectedContactName },
-      },
-    }) => addressBook[selectedContactName] || null
-  );
-  const coreConnected = useSelector(isCoreConnected);
+  const contact = useAtomValue(contactAtom);
+  const coreConnected = useCoreConnected();
   if (!contact) return null;
 
   const tz =

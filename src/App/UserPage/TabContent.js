@@ -1,7 +1,8 @@
-import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router';
+import { useAtomValue } from 'jotai';
 
+import { lastActiveTabAtom } from './atoms';
 import Staking from './Staking';
 import Accounts from './Accounts';
 import Tokens from './Tokens';
@@ -17,7 +18,7 @@ const TabContentComponent = styled.div({
 });
 
 function UserRedirect() {
-  const lastActiveTab = useSelector((state) => state.ui.user.lastActiveTab);
+  const lastActiveTab = useAtomValue(lastActiveTabAtom);
   return <Navigate to={lastActiveTab} replace />;
 }
 

@@ -1,8 +1,10 @@
 // External
-import { useSelector } from 'react-redux';
+import { useAtomValue } from 'jotai';
 
 // Internal
 import { formatNumber, formatCurrency } from 'lib/intl';
+import { marketDataQuery, marketCapAtom } from 'lib/market';
+import { ledgerInfoQuery } from 'lib/ledger';
 
 // Images
 import chartIcon from 'icons/chart.svg';
@@ -22,8 +24,8 @@ function CurrencyValue({ value, currency, fiatDecimals, btcDecimals }) {
 }
 
 export function PriceStat() {
-  const price = useSelector((state) => state.market?.price);
-  const currency = useSelector((state) => state.market?.currency);
+  const marketData = marketDataQuery.use();
+  const { price, currency } = marketData || {};
 
   return (
     <Stat
@@ -46,10 +48,10 @@ export function PriceStat() {
 }
 
 export function MarketCapStat() {
-  const price = useSelector((state) => state.market?.price);
-  const supply = useSelector((state) => state.core.ledgerInfo?.supply?.total);
-  const currency = useSelector((state) => state.market?.currency);
-  const marketCap = price * supply;
+  const marketData = marketDataQuery.use();
+  ledgerInfoQuery.use();
+  const marketCap = useAtomValue(marketCapAtom);
+  const { currency } = marketData || {};
 
   return (
     <Stat
@@ -72,8 +74,8 @@ export function MarketCapStat() {
 }
 
 export function PctChangeStat() {
-  const changePct24Hr = useSelector((state) => state.market?.changePct24Hr);
-  const currency = useSelector((state) => state.market?.currency);
+  const marketData = marketDataQuery.use();
+  const { changePct24Hr, currency } = marketData || {};
 
   return (
     <Stat

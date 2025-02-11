@@ -1,19 +1,12 @@
 import styled from '@emotion/styled';
-import { keyframes } from '@emotion/react';
-
-import FullScreen from './FullScreen';
+import { useAtomValue } from 'jotai';
 import Button from 'components/Button';
 import { confirmPin } from 'lib/dialog';
-import { toggleLockScreen } from 'lib/ui';
+import { usernameAtom } from 'lib/session';
+import { walletLockedAtom } from 'lib/wallet';
+import { store } from 'lib/store';
 
-const breathe = keyframes`
-  0% {
-    opacity: 1
-  }
-  100% {
-    opacity: .5
-  }
-`;
+import FullScreen from './FullScreen';
 
 const Wrapper = styled.div({
   height: '100%',
@@ -27,15 +20,19 @@ const BannerMessage = styled.div(({ theme }) => ({
   color: theme.primary,
   fontSize: 24,
   paddingBottom: '2em',
-  animation: `${breathe} 2s ease 0s infinite alternate`,
 }));
 
+const UnlockButton = styled(Button)({
+  maxWidth: 300,
+});
+
 export default function LockedScreen() {
+  const username = useAtomValue(usernameAtom);
   return (
     <FullScreen width={null}>
       <Wrapper>
-        <BannerMessage>{__('Locked')}</BannerMessage>
-        <Button
+        <BannerMessage>{__('Wallet is locked')}</BannerMessage>
+        <UnlockButton
           skin="primary"
           wide
           onClick={async () => {
@@ -43,12 +40,12 @@ export default function LockedScreen() {
               confirmLabel: 'Unlock',
             });
             if (pin) {
-              toggleLockScreen(false);
+              store.set(walletLockedAtom, false);
             }
           }}
         >
           Unlock
-        </Button>
+        </UnlockButton>
       </Wrapper>
     </FullScreen>
   );
