@@ -465,8 +465,11 @@ let rebuildTimerId: NodeJS.Timeout | undefined;
  * at the same time, it only rebuilds once
  */
 function rebuildMenu() {
-  clearTimeout(rebuildTimerId);
-  rebuildTimerId = setTimeout(buildMenu, 0);
+  if (rebuildTimerId) return;
+  rebuildTimerId = setTimeout(() => {
+    buildMenu();
+    rebuildTimerId = undefined;
+  }, 0);
 }
 
 // Update the updater menu item when the updater state changes

@@ -365,7 +365,7 @@ function UserUnLockIndexingBackgroundTask({
   mining: boolean;
   sessionId?: string;
 }) {
-  const closeTaskRef = useRef<() => void>();
+  const closeTaskRef = useRef(() => {});
   useEffect(
     () =>
       subscribe(userIndexingAtom, async (indexing) => {
