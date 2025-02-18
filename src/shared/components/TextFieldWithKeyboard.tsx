@@ -15,6 +15,7 @@ import Button from 'components/Button';
 import { themeAtom } from 'lib/theme';
 import { store } from 'lib/store';
 import keyboardIcon from 'icons/keyboard.svg';
+import MaskableTextField from './MaskableTextField';
 
 export interface TextFieldWithKeyboardProps extends TextFieldProps {
   maskable?: boolean;
@@ -82,7 +83,11 @@ function useTextFieldProps(
 
 export function TextFieldWithKeyboard(props: TextFieldWithKeyboardProps) {
   const textFieldProps = useTextFieldProps(props);
-  return <TextField {...textFieldProps} />;
+  if (props.maskable) {
+    return <MaskableTextField {...textFieldProps} />;
+  } else {
+    return <TextField {...textFieldProps} />;
+  }
 }
 
 export function MultilineTextFieldWithKeyboard(
