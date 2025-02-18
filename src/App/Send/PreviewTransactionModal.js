@@ -95,7 +95,7 @@ function Source({ source }) {
   );
 }
 
-function TransactionDetails({ source, recipients, reference, expires }) {
+function TransactionDetails({ source, recipients, expires }) {
   return (
     <Layout>
       <LabelCell>
@@ -105,7 +105,7 @@ function TransactionDetails({ source, recipients, reference, expires }) {
         <Source source={source} />
       </ContentCell>
 
-      {recipients.map(({ address_to, amount }, i) => (
+      {recipients.map(({ address_to, amount, reference }, i) => (
         <Fragment key={i}>
           <Separator />
 
@@ -129,20 +129,19 @@ function TransactionDetails({ source, recipients, reference, expires }) {
               </Content>
             </ContentCell>
           </ContentCell>
+
+          {!!reference && (
+            <>
+              <LabelCell>
+                <Label>{__('Reference')}</Label>
+              </LabelCell>
+              <ContentCell>
+                <ContentCell>{reference}</ContentCell>
+              </ContentCell>
+            </>
+          )}
         </Fragment>
       ))}
-
-      {!!reference && (
-        <>
-          <Separator />
-          <LabelCell>
-            <Label>{__('Reference')}</Label>
-          </LabelCell>
-          <ContentCell>
-            <ContentCell>{reference}</ContentCell>
-          </ContentCell>
-        </>
-      )}
 
       {!!expires && (
         <>
