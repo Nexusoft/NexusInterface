@@ -119,7 +119,10 @@ export default function AdjustStakeModal({
   onComplete?: () => void;
 }) {
   const { stake: currentStake, balance } = stakeInfoQuery.use() || {};
-  const total = currentStake && balance ? currentStake + balance : 0;
+  const total =
+    typeof currentStake === 'number' && typeof balance === 'number'
+      ? currentStake + balance
+      : 0;
 
   return (
     <ControlledModal maxWidth={600} onClose={onClose}>
