@@ -116,6 +116,23 @@ export const activeSessionAtom = atom((get) => {
  * =============================================================================
  */
 
+async function getUserStatus(sessionId: string | null) {
+  try {
+    const userStatus = await callAPI(
+      'sessions/status/local',
+      sessionId ? { session: sessionId } : undefined
+    );
+    return userStatus;
+  } catch (err: any) {
+    // Don't log error if it's 'Session not found' (user not logged in)
+    if (err?.code === -11) {
+      return null;
+    }
+    console.error(err);
+    throw err;
+  }
+}
+
 export const userStatusQuery = jotaiQuery<UserStatus | null>({
   alwaysOn: true,
   condition: (get) =>
@@ -123,23 +140,7 @@ export const userStatusQuery = jotaiQuery<UserStatus | null>({
     (!get(multiUserAtom) || !!get(activeSessionIdAtom)),
   getQueryConfig: (get) => ({
     queryKey: ['userStatus', get(activeSessionIdAtom)],
-    queryFn: async () => {
-      const sessionId = get(activeSessionIdAtom);
-      try {
-        const userStatus = await callAPI(
-          'sessions/status/local',
-          sessionId ? { session: sessionId } : undefined
-        );
-        return userStatus;
-      } catch (err: any) {
-        // Don't log error if it's 'Session not found' (user not logged in)
-        if (err?.code === -11) {
-          return null;
-        }
-        console.error(err);
-        throw err;
-      }
-    },
+    queryFn: () => getUserStatus(get(activeSessionIdAtom)),
     retry: 0,
     refetchInterval: ({ state: { data } }) => (data?.indexing ? 1000 : 10000), // 1 second if indexing, else 10 seconds
   }),
@@ -189,6 +190,7 @@ export function prepareSessionInfo() {
     if (coreConnected) {
       const userStatus = await queryClient.ensureQueryData({
         queryKey: ['userStatus', store.get(activeSessionIdAtom)],
+        queryFn: () => getUserStatus(store.get(activeSessionIdAtom)),
       });
       // Query has just finished, userStatusQuery and loggedInAtom haven't been updated yet
       const loggedIn = !!userStatus;
@@ -217,23 +219,25 @@ export function prepareSessionInfo() {
  * =============================================================================
  */
 
+async function getStakeInfo() {
+  try {
+    return await callAPI('finance/get/stakeinfo');
+  } catch (err: any) {
+    // Ignore 'Trust account not found' error
+    if (err.code === -70) {
+      return null;
+    }
+    console.error(err);
+    throw err;
+  }
+}
+
 export const stakeInfoQuery = jotaiQuery<StakeInfo | null>({
   alwaysOn: true,
   condition: (get) => get(loggedInAtom),
   getQueryConfig: (get) => ({
     queryKey: ['stakeInfo', get(userGenesisAtom)],
-    queryFn: async () => {
-      try {
-        return await callAPI('finance/get/stakeinfo');
-      } catch (err: any) {
-        // Ignore 'Trust account not found' error
-        if (err.code === -70) {
-          return null;
-        }
-        console.error(err);
-        throw err;
-      }
-    },
+    queryFn: getStakeInfo,
     retry: 0,
     refetchInterval: ({ state: { data } }) => (data?.staking ? 10000 : 60000), // 10 seconds if staking, 1 minute if not
   }),
@@ -252,6 +256,7 @@ async function shouldUnlockStaking() {
 
   const stakeInfo = await queryClient.ensureQueryData<StakeInfo | null>({
     queryKey: ['stakeInfo', store.get(userGenesisAtom)],
+    queryFn: getStakeInfo,
   });
   if (!stakeInfo?.new) {
     return true;
