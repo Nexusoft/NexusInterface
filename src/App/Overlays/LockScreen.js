@@ -5,6 +5,8 @@ import { confirmPin } from 'lib/dialog';
 import { usernameAtom } from 'lib/session';
 import { walletLockedAtom } from 'lib/wallet';
 import { store } from 'lib/store';
+import { callAPI } from 'lib/api';
+import { useState } from 'react';
 
 import FullScreen from './FullScreen';
 
@@ -26,8 +28,10 @@ const UnlockButton = styled(Button)({
   maxWidth: 300,
 });
 
+
 export default function LockedScreen() {
-  const username = useAtomValue(usernameAtom);
+  const [hasError, setHasError] = useState(false);
+const username = useAtomValue(usernameAtom);
   return (
     <FullScreen width={null}>
       <Wrapper>
@@ -40,12 +44,25 @@ export default function LockedScreen() {
               confirmLabel: 'Unlock',
             });
             if (pin) {
-              store.set(walletLockedAtom, false);
+              try {
+                const valid = await callAPI('profiles/validpin/master', {
+                  pin,
+                });
+                console.log(valid);
+                if (valid.valid) {
+                  store.set(walletLockedAtom, false);
+                } else {
+                  setHasError(true);
+                }
+              } catch (error) {
+                setHasError(true);
+              }
             }
           }}
         >
           Unlock
         </UnlockButton>
+        {hasError && <ErrorMessage>{__('Invalid Pin')}</ErrorMessage>}
       </Wrapper>
     </FullScreen>
   );
