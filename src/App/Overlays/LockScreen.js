@@ -5,6 +5,8 @@ import FullScreen from './FullScreen';
 import Button from 'components/Button';
 import { confirmPin } from 'lib/dialog';
 import { toggleLockScreen } from 'lib/ui';
+import { callAPI } from 'lib/api';
+import { useState } from 'react';
 
 const breathe = keyframes`
   0% {
@@ -30,7 +32,15 @@ const BannerMessage = styled.div(({ theme }) => ({
   animation: `${breathe} 2s ease 0s infinite alternate`,
 }));
 
+const ErrorMessage = styled.div(({ theme }) => ({
+  color: theme.danger,
+  marginTop: '1em',
+  textAlign: 'center',
+}));
+
 export default function LockedScreen() {
+  const [hasError, setHasError] = useState(false);
+
   return (
     <FullScreen width={null}>
       <Wrapper>
@@ -43,12 +53,25 @@ export default function LockedScreen() {
               confirmLabel: 'Unlock',
             });
             if (pin) {
-              toggleLockScreen(false);
+              try {
+                const valid = await callAPI('profiles/validpin/master', {
+                  pin,
+                });
+                console.log(valid);
+                if (valid.valid) {
+                  toggleLockScreen(false);
+                } else {
+                  setHasError(true);
+                }
+              } catch (error) {
+                setHasError(true);
+              }
             }
           }}
         >
           Unlock
         </Button>
+        {hasError && <ErrorMessage>{__('Invalid Pin')}</ErrorMessage>}
       </Wrapper>
     </FullScreen>
   );
