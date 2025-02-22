@@ -1,9 +1,9 @@
 {
   "name": "nexus_wallet",
   "productName": "Nexus Wallet",
-  "version": "3.2.0",
+  "version": "3.2.0-alpha.0",
   "backwardCompatible": "2.2.0",
-  "buildDate": "December 6th 2024",
+  "buildDate": "February 21st 2025",
   "description": "User interface for the Nexus blockchain and ecosystem.",
   "scripts": {
     "prebuild-dev": "concurrently \"npm run build-main-dev\" \"npm run build-preload-dev\" \"node -r @babel/register ./internals/scripts/checkDll.js\" ",
@@ -106,10 +106,6 @@
       "extraResources": [
         "./assets/win32/cores/**/*",
         "./assets/installerSidebar.bmp"
-      ],
-      "publisherName": [
-        "Nexus Development US LLC.",
-        "Nexus Development US, LLC."
       ]
     },
     "nsis": {
@@ -214,7 +210,7 @@
     "csv-parse": "^5.6.0",
     "csv-stringify": "^6.5.2",
     "electron": "^26.6.10",
-    "electron-builder": "^25.1.8",
+    "electron-builder": "^26.0.8",
     "electron-devtools-installer": "^4.0.0",
     "electron-notarize": "^1.2.2",
     "express": "^4.21.2",
