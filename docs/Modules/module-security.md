@@ -1,43 +1,49 @@
-# Module security
+# Module Security
 
-Nexus Wallet Modules can be written by any third-party developers, therefore security is one of our primary concerns when we design the module system.
+Since Nexus Wallet Modules can be developed by third-party developers, security is a primary concern in the design of our module system.
 
-In this article, we will talk about the main security mechanisms that we have employed to minimize the security risks that third-party modules can bring to wallet users.
+This article outlines the main security mechanisms we've implemented to minimize risks that third-party modules may pose to wallet users.
 
-## WebView security
+## WebView Security
 
-Code inside a WebView is executed in a separate process from the base wallet, therefore there is very few things that module code can do to maliciously affect the base wallet.
+Modules run inside a WebView, which is isolated in a separate process from the base wallet. This separation ensures that module code cannot directly affect the wallet’s functionality.
 
-Module's entry HTML is fetched from a static file server running locally (e.g. `http://localhost:9331/...`) that only serves exactly the files listed in [`files` field of `nxs_package.json`](./nxs_package.json.md#files) so it is not possible for modules to retrieve private files in user's computer via `file://` protocol.
+The module's entry HTML is served from a local static file server (e.g., `http://localhost:9331/`) that only provides the files listed in the [`files` field of `nxs_package.json`](./nxs_package.json.md#files). This prevents modules from accessing private files on the user's computer through the `file://` protocol.
 
-The only bridge that connects modules with the base wallet is the [`NEXUS` global variable](./nexus-globalvariable.md) which is injected into modules by WebView's `preload` script. `NEXUS` global variable provides modules with the data and functions they need, while still making sure modules don't get access to what they shouldn't be authorized to access. For example, functions that [`NEXUS.utilities`](./nexus-global-variable.md#utilities) provides use IPC messages under the hood, but wrap them all inside functions. Modules only have access to these functionaliities, and cannot send arbitrary IPC messages or get access to Electron's `remote` module. Moreover, because `NEXUS.utilities` functions use IPC messages under the hood, all arguments passed to these functions will be serialized in JSON, so only plain data (e.g. strings, numbers, objects,...) can get through and functions can't. Therefore, it's not possible for modules to pass malicious code to the base wallet to execute.
+The only bridge between the module and the base wallet is the [`NEXUS` global variable](./nexus-global-variable.md), injected into modules via WebView’s `preload` script. The `NEXUS` global variable provides the necessary data and functions to modules, while limiting access to sensitive resources. For instance, functions in [`NEXUS.utilities`](./nexus-global-variable.md#utilities) use IPC messages under the hood but wrap them in functions. Modules can only invoke these functions, and they cannot send arbitrary IPC messages or access Electron’s `remote` module.
 
-See [`NEXUS` global variable](./nexus-globalvariable.md) for more details about what modules can access to.
+Additionally, since `NEXUS.utilities` functions rely on IPC messaging, all arguments are serialized in JSON, allowing only plain data (e.g., strings, numbers, objects) to pass through. This prevents modules from injecting malicious code into the wallet.
 
-### A note about Electron's warning
+For more details on what modules can access, see the [`NEXUS` global variable documentation](./nexus-global-variable.md).
 
-You may have noticed, in [Electron's documentation on `<webview>`](https://electronjs.org/docs/api/webview-tag) there is a warning about `<webview>` tag's stability. However, the reason for that warning is only about `webview`'s possible changes in architecture and API in the future, not about the security. This has already been [confirmed by Electron team](https://github.com/electron/electron/issues/18187). Architectural and API changes are not really a big concern for us because we control when and whether to update new Electron versions, and can decide to hold off the updates until we can adapt to the changes. So in short, it is safe to use `<webview>` tag.
+### Electron's `<webview>` Tag Warning
 
-## SVG icon security
+You may have seen a warning in [Electron’s `<webview>` documentation](https://electronjs.org/docs/api/webview-tag) regarding the tag’s stability. This warning pertains only to potential future changes in architecture and API, not security. The [Electron team has confirmed](https://github.com/electron/electron/issues/18187) that the warning does not indicate security risks.
 
-Module SVG icon's security is a concern, because unlike the rest of the module code, which is isolated in a `webview`, module icon is embedded directly in the base wallet, and SVG icons, by nature are XML files and can contain code. Therefore, we use [DOMPurify](https://github.com/cure53/DOMPurify) library to sanitize module SVG icons before rendering, making sure there are no dirty pieces of SVG can make their way into the HTML.
+Since we control when and how Electron versions are updated, we can hold off on updates until we adapt to any necessary changes. Therefore, it is safe to use the `<webview>` tag.
 
-## Module open source policy
+## SVG Icon Security
 
-Another layer of security that we have created to minimize the risk of malicious code inside modules is the Module open source policy.
+Module SVG icons, unlike the module code which runs in a `webview`, are embedded directly into the base wallet. Since SVG files are XML-based and can contain executable code, we use the [DOMPurify](https://github.com/cure53/DOMPurify) library to sanitize module icons before rendering. This ensures no harmful SVG code is injected into the HTML.
 
-This policy requires all the modules to have a publicly accessible source code repository in order to be installed and run on Nexus Wallet. When this policy is turned on (it is by default), Nexus Wallet will do the following checks everytime the wallet loads modules or user tries to install a new module:
+## Module Open Source Policy
 
-- Check if module has a valid [`repo_info.json` file](./repo_info.json.md) containing repository information, module hash, and a valid `RSA-SHA256` signature from Nexus team. This signature verifies that the provided repository is truly the source code that was compiled to the module with the provided hash. Module hash is calculated by hasing contents of all the files that module uses, including the `nxs_package.json` file.
+To further enhance security, we have implemented an open-source policy for all modules.
 
-- Check if the provided hash matches the hash calculated.
+This policy requires that every module has a publicly accessible source code repository in order to be installed or run on Nexus Wallet. When this policy is enabled (which is the default), Nexus Wallet performs the following checks when loading or installing a module:
 
-- Check if the repository is publicly accessible by calling github API.
+- Verifies that the module includes a valid [`repo_info.json`](./repo_info.json.md) file containing repository details, module hash, and an `RSA-SHA256` signature from the Nexus team. This signature ensures that the provided repository matches the compiled module hash. The hash is computed based on the contents of all module files, including `nxs_package.json`.
 
-If any one of the above checks fails, it will mark the module as _invalid_ and the module will not be able to be loaded or installed.
+- Verifies that the provided module hash matches the computed hash.
 
-With this policy in place, in case a module developer has found a security hole that they can exploit (which is expected to be relatively unlikely already), they would also have to hope that the Nexus team wouldn't detect the malicious code during the [Repository verification process](./repo-verification-process.md). Even in case the Nexus team doesn't detect the malicious code and allow them to distribute their module, there will still be a whole community to look into their code because it must be kept open source. If they take down the repository or set it private, their module will stop running on users' wallets. If someone find out the bad intention in the code, they can alarm the community about it and Nexus team can also add it to the blacklist so no one can install or run it anymore.
+- Confirms that the repository is publicly accessible via the GitHub API.
+
+If any of these checks fail, the module will be marked as _invalid_, preventing it from being loaded or installed.
+
+This open-source policy ensures that even if a module developer tries to exploit a security vulnerability, the Nexus team can likely detect malicious code during the [repository verification process](./repo-verification-process.md). If the malicious code is missed, the community can still scrutinize the source code because it must remain open source. Should the developer make the repository private or take it down, the module will stop working on users' wallets.
+
+If malicious intent is detected, the community can alert others, and the Nexus team can add the module to a blacklist, preventing future installations.
 
 ---
 
-We are also considering adding more security mechanism, for example we might allow module authors to get their information verified, so that in case their module turns out to be malicious, we will have more information on who is responsible.
+We are also considering additional security mechanisms, such as verifying module authors. This would help identify the responsible party if a module is found to be malicious.
