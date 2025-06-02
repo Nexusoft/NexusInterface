@@ -1,21 +1,19 @@
 import path from 'path';
-import { useSelector } from 'react-redux';
 
 import Form from 'components/Form';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
 import Switch from 'components/Switch';
-import TextField from 'components/TextField';
+import { TextField } from 'components/TextField';
 import { useFieldValue } from 'lib/form';
-import { updateSettings } from 'lib/settings';
+import { updateSettings, settingAtoms } from 'lib/settings';
 import { confirm, openErrorDialog } from 'lib/dialog';
 import { restartCore, stopCore, startCore } from 'lib/core';
 import { defaultConfig } from 'lib/coreConfig';
-import { isCoreConnected } from 'selectors';
 import { preRelease } from 'consts/misc';
 import { rm as deleteDirectory } from 'fs/promises';
 import { consts } from 'styles';
-import store from 'store';
+import { store } from 'lib/store';
 
 __ = __context('Settings.Core');
 
@@ -436,9 +434,7 @@ async function resyncLiteMode() {
   if (confirmed) {
     updateSettings({ clearPeers: true });
     await stopCore();
-    const {
-      settings: { coreDataDir },
-    } = store.getState();
+    const coreDataDir = store.get(settingAtoms.coreDataDir);
     const clientFolder = path.join(coreDataDir, 'client');
     try {
       await deleteDirectory(clientFolder, { recursive: true, force: true });

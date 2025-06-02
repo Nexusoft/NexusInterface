@@ -1,10 +1,16 @@
 // External
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useAtomValue } from 'jotai';
 
 //Internal
 import Button from 'components/Button';
-import { darkTheme, lightTheme, nexusTheme, setTheme } from 'lib/theme';
+import {
+  darkTheme,
+  lightTheme,
+  nexusTheme,
+  setTheme,
+  themeAtom,
+} from 'lib/theme';
 
 __ = __context('Settings.Style');
 
@@ -26,7 +32,7 @@ function getName(theme) {
 }
 
 export default function ThemePicker() {
-  const theme = useSelector((state) => state.theme);
+  const theme = useAtomValue(themeAtom);
   const themeName = getName(theme);
   const [customTheme, setCustomTheme] = useState(null);
 
@@ -62,7 +68,6 @@ export default function ThemePicker() {
         {__('Light')}
       </Button>
 
-      
       <Button
         skin={themeName === 'nexus' ? 'filled-primary' : 'plain'}
         className="mr1"

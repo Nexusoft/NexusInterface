@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useSelector } from 'react-redux';
+import { useAtom } from 'jotai';
 import styled from '@emotion/styled';
 
 import ControlledModal from 'components/ControlledModal';
@@ -7,17 +7,19 @@ import WaitingMessage from 'components/WaitingMessage';
 import Table from 'components/Table';
 import ContractDetailsModal from 'components/ContractDetailsModal';
 import FieldSet from 'components/FieldSet';
-import Link from 'components/Link';
+import { NativeLink } from 'components/Link';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
-import listAll from 'utils/listAll';
+import { listAll } from 'lib/api';
 import { formatDateTime, formatNumber, formatCurrency } from 'lib/intl';
-import { openModal, toggleUserBalanceDisplayFiat } from 'lib/ui';
+import { openModal } from 'lib/ui';
+import { marketDataQuery } from 'lib/market';
 import { lookupAddress } from 'lib/addressBook';
 import TokenName from 'components/TokenName';
-import { handleError } from 'utils/form';
+import { handleError } from 'lib/form';
 import contactIcon from 'icons/address-book.svg';
 
+import { balancesShowFiatAtom } from '../atoms';
 import { totalBalance } from './utils';
 
 __ = __context('User.Accounts.AccountHistory');
@@ -233,9 +235,9 @@ const Amount = styled.span(({ theme, possitive }) => ({
 
 export default function AccountHistoryModal({ account }) {
   const [contracts, setContracts] = useState(null);
-  const showFiat = useSelector((state) => state.ui.user.balancesShowFiat);
-  const price = useSelector((state) => state.market?.price);
-  const currency = useSelector((state) => state.market?.currency);
+  const [showFiat, setShowFiat] = useAtom(balancesShowFiatAtom);
+  const marketData = marketDataQuery.use();
+  const { price, currency } = marketData || {};
   const closeModalRef = useRef();
 
   useEffect(() => {
@@ -297,13 +299,9 @@ export default function AccountHistoryModal({ account }) {
                       })}
                       position="top"
                     >
-                      <Link
-                        as={''}
-                        to={''}
-                        onClick={(e) => toggleUserBalanceDisplayFiat(!showFiat)}
-                      >
+                      <NativeLink onClick={() => setShowFiat((v) => !v)}>
                         {showFiat ? currency : 'NXS'}
-                      </Link>
+                      </NativeLink>
                     </Tooltip.Trigger>
                     )
                   </>

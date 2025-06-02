@@ -1,21 +1,14 @@
 import styled from '@emotion/styled';
-import { keyframes } from '@emotion/react';
-
-import FullScreen from './FullScreen';
+import { useAtomValue } from 'jotai';
 import Button from 'components/Button';
 import { confirmPin } from 'lib/dialog';
-import { toggleLockScreen } from 'lib/ui';
+import { usernameAtom } from 'lib/session';
+import { walletLockedAtom } from 'lib/wallet';
+import { store } from 'lib/store';
 import { callAPI } from 'lib/api';
 import { useState } from 'react';
 
-const breathe = keyframes`
-  0% {
-    opacity: 1
-  }
-  100% {
-    opacity: .5
-  }
-`;
+import FullScreen from './FullScreen';
 
 const Wrapper = styled.div({
   height: '100%',
@@ -29,23 +22,21 @@ const BannerMessage = styled.div(({ theme }) => ({
   color: theme.primary,
   fontSize: 24,
   paddingBottom: '2em',
-  animation: `${breathe} 2s ease 0s infinite alternate`,
 }));
 
-const ErrorMessage = styled.div(({ theme }) => ({
-  color: theme.danger,
-  marginTop: '1em',
-  textAlign: 'center',
-}));
+const UnlockButton = styled(Button)({
+  maxWidth: 300,
+});
+
 
 export default function LockedScreen() {
   const [hasError, setHasError] = useState(false);
-
+const username = useAtomValue(usernameAtom);
   return (
     <FullScreen width={null}>
       <Wrapper>
-        <BannerMessage>{__('Locked')}</BannerMessage>
-        <Button
+        <BannerMessage>{__('Wallet is locked')}</BannerMessage>
+        <UnlockButton
           skin="primary"
           wide
           onClick={async () => {
@@ -53,24 +44,24 @@ export default function LockedScreen() {
               confirmLabel: 'Unlock',
             });
             if (pin) {
-              try {
-                const valid = await callAPI('sessions/validate/pin', {
-                  pin,
-                });
-                console.log(valid);
-                if (valid.valid) {
-                  toggleLockScreen(false);
-                } else {
-                  setHasError(true);
-                }
+              }
               } catch (error) {
                 setHasError(true);
-              }
+                }
+                  setHasError(true);
+                } else {
+                if (valid.valid) {
+                  store.set(walletLockedAtom, false);
+                console.log(valid);
+                const valid = await callAPI('sessions/validate/pin', {
+              try {
+                  pin,
+                });
             }
           }}
         >
           Unlock
-        </Button>
+        </UnlockButton>
         {hasError && <ErrorMessage>{__('Invalid Pin')}</ErrorMessage>}
       </Wrapper>
     </FullScreen>

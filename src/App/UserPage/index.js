@@ -1,14 +1,13 @@
 // External
 import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 import UT from 'lib/usageTracking';
+import { useAtomValue } from 'jotai';
 
 // Internal Global
 import Panel from 'components/Panel';
 import RequireLoggedIn from 'components/RequireLoggedIn';
-import { isLoggedIn } from 'selectors';
-import { navigate } from 'lib/wallet';
+import { loggedInAtom } from 'lib/session';
 import userIcon from 'icons/user.svg';
 
 // Internal Local
@@ -25,7 +24,7 @@ const UserPageLayout = styled.div({
 });
 
 export default function UserPage() {
-  const loggedIn = useSelector(isLoggedIn);
+  const loggedIn = useAtomValue(loggedInAtom);
 
   useEffect(() => {
     UT.SendScreen('UserPage');

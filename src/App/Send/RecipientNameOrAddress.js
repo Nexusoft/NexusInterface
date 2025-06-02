@@ -1,26 +1,31 @@
 // External
-import { useEffect, useRef } from 'react';
-import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
+import { useAtomValue } from 'jotai';
+import { useEffect, useRef } from 'react';
 import { Field, useField } from 'react-final-form';
 
 // Internal
-import AutoSuggest from 'components/AutoSuggest';
-import FormField from 'components/FormField';
-import Button from 'components/Button';
-import Icon from 'components/Icon';
 import AddEditContactModal from 'components/AddEditContactModal';
-import { openModal } from 'lib/ui';
-import { required, checkAll } from 'lib/form';
+import AutoSuggest from 'components/AutoSuggest';
+import Button from 'components/Button';
+import FormField from 'components/FormField';
+import Icon from 'components/Icon';
+import NexusAddress from 'components/NexusAddress';
+import TokenName from 'components/TokenName';
+import { addressRegex } from 'consts/misc';
+import contactIcon from 'icons/address-book.svg';
+import plusIcon from 'icons/plus.svg';
+import walletIcon from 'icons/wallet.svg';
+import warningIcon from 'icons/warning.svg';
+import { contactsAtom } from 'lib/addressBook';
 import { callAPI } from 'lib/api';
-import { selectSource } from 'lib/send';
+import { checkAll, required } from 'lib/form';
+import { useSource } from 'lib/send';
+import { openModal } from 'lib/ui';
+import { accountsQuery } from 'lib/user';
 import memoize from 'utils/memoize';
 import { debounced } from 'utils/universal';
-import { addressRegex } from 'consts/misc';
-import plusIcon from 'icons/plus.svg';
-import warningIcon from 'icons/warning.svg';
 
-import { getRecipientSuggestions } from './selectors';
 import RecipientAddress from './RecipientAddress';
 
 __ = __context('Send');
@@ -33,6 +38,10 @@ const EmptyMessage = styled.div(({ theme }) => ({
   justifyContent: 'space-between',
   alignItems: 'center',
 }));
+
+const TokenRecipientName = styled.span({
+  color: 'gray',
+});
 
 const filterSuggestions = memoize((suggestions, inputValue) => {
   if (!suggestions) return [];
@@ -69,7 +78,7 @@ const isOfSameToken = (source) =>
       } catch (err) {
         let token;
         try {
-          token = await callAPI('tokens/get/token', params);
+          token = await callAPI('tokens/get/token', { address });
         } catch {}
         if (token && token.address !== sourceToken) {
           return __('Source and recipient must be of the same token');
@@ -153,6 +162,78 @@ function RecipientAddressAdapter({
   );
 }
 
+export const getRecipientSuggestions = memoize(
+  (contacts, myAccounts, accountAddress) => {
+    const suggestions = [];
+    if (contacts) {
+      contacts.forEach((contact) => {
+        contact.addresses?.forEach(({ address, label, isMine }) => {
+          if (!isMine) {
+            suggestions.push({
+              name: contact.name,
+              address: address,
+              value: address,
+              display: (
+                <div>
+                  <div>
+                    <Icon icon={contactIcon} className="mr0_4" />
+                    <span className="v-align">
+                      {contact.name}
+                      {label ? ' - ' + label : ''}
+                    </span>
+                  </div>
+                  <NexusAddress
+                    className="semi-dim"
+                    copyable={false}
+                    type="truncateMiddle"
+                    address={address}
+                  />
+                </div>
+              ),
+            });
+          }
+        });
+      });
+    }
+    if (myAccounts) {
+      myAccounts.forEach((account) => {
+        if (accountAddress && account.address === accountAddress) return;
+        // if (tokenAddress && account.token !== tokenAddress) return;
+
+        suggestions.push({
+          name: account.name,
+          address: account.address,
+          value: account.name || account.address,
+          display: (
+            <div>
+              <div>
+                <Icon icon={walletIcon} className="mr0_4" />
+                <span className="v-align">
+                  {account.name ? (
+                    <span>{account.name}</span>
+                  ) : (
+                    <em className="semi-dim">{__('Unnamed account')}</em>
+                  )}{' '}
+                  <TokenRecipientName>
+                    (<TokenName account={account} />)
+                  </TokenRecipientName>
+                </span>
+              </div>
+              <NexusAddress
+                className="semi-dim"
+                copyable={false}
+                type="truncateMiddle"
+                address={account.address}
+              />
+            </div>
+          ),
+        });
+      });
+    }
+    return suggestions;
+  }
+);
+
 export default function RecipientNameOrAddress({ parentFieldName }) {
   const fieldName = `${parentFieldName}.nameOrAddress`;
   const {
@@ -164,9 +245,13 @@ export default function RecipientNameOrAddress({ parentFieldName }) {
   // A flag indicating whether user has just selected the suggestion
   // Useful to decide if name resolution should be debounced
   const justSelectedRef = useRef(false);
-  const source = selectSource();
-  const suggestions = useSelector((state) =>
-    getRecipientSuggestions(state, source)
+  const contacts = useAtomValue(contactsAtom);
+  const accounts = accountsQuery.use();
+  const source = useSource();
+  const suggestions = getRecipientSuggestions(
+    contacts,
+    accounts,
+    source?.account?.address
   );
 
   return (

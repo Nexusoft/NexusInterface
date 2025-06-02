@@ -8,15 +8,16 @@ import TokenName from 'components/TokenName';
 import Tooltip from 'components/Tooltip';
 import Form from 'components/Form';
 import { callAPI } from 'lib/api';
+import { coreInfoQuery } from 'lib/coreInfo';
 import { openSuccessDialog } from 'lib/dialog';
-import { refreshAccounts } from 'lib/user';
+import { accountsQuery } from 'lib/user';
+import { transactionsQuery } from 'lib/transactions';
 import { formSubmit, required } from 'lib/form';
 import { timeToText } from 'utils/misc';
 import WarningIcon from 'icons/warning.svg';
 import sendIcon from 'icons/send.svg';
 
 import RecipientAddress from './RecipientAddress';
-import { loadTransactions } from 'lib/transactions';
 import UT from 'lib/usageTracking';
 
 __ = __context('PreviewTransaction');
@@ -94,7 +95,7 @@ function Source({ source }) {
   );
 }
 
-function TransactionDetails({ source, recipients, reference, expires }) {
+function TransactionDetails({ source, recipients, expires }) {
   return (
     <Layout>
       <LabelCell>
@@ -104,7 +105,7 @@ function TransactionDetails({ source, recipients, reference, expires }) {
         <Source source={source} />
       </ContentCell>
 
-      {recipients.map(({ address_to, amount }, i) => (
+      {recipients.map(({ address_to, amount, reference }, i) => (
         <Fragment key={i}>
           <Separator />
 
@@ -128,20 +129,19 @@ function TransactionDetails({ source, recipients, reference, expires }) {
               </Content>
             </ContentCell>
           </ContentCell>
+
+          {!!reference && (
+            <>
+              <LabelCell>
+                <Label>{__('Reference')}</Label>
+              </LabelCell>
+              <ContentCell>
+                <ContentCell>{reference}</ContentCell>
+              </ContentCell>
+            </>
+          )}
         </Fragment>
       ))}
-
-      {!!reference && (
-        <>
-          <Separator />
-          <LabelCell>
-            <Label>{__('Reference')}</Label>
-          </LabelCell>
-          <ContentCell>
-            <ContentCell>{reference}</ContentCell>
-          </ContentCell>
-        </>
-      )}
 
       {!!expires && (
         <>
@@ -223,8 +223,9 @@ export default function PreviewTransactionModal({
                 onSuccess: () => {
                   UT.Send(source?.token ? 'token' : 'nexus');
                   resetSendForm();
-                  refreshAccounts();
-                  loadTransactions();
+                  accountsQuery.refetch();
+                  coreInfoQuery.refetch();
+                  transactionsQuery.refetch();
                   closeModal();
                   openSuccessDialog({
                     message: __('Transaction sent'),

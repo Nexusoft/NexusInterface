@@ -1,15 +1,21 @@
-import { useSelector } from 'react-redux';
+import { useState } from 'react';
 import styled from '@emotion/styled';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
+import { useAtomValue } from 'jotai';
 
 import { arrowStyles } from 'components/Arrow';
 import LoginModal from 'components/LoginModal';
 import NewUserModal from 'components/NewUserModal';
 import SetRecoveryModal from 'components/SetRecoveryModal';
-import { isLoggedIn } from 'selectors';
+import { multiUserAtom } from 'lib/coreInfo';
 import { openModal, showNotification } from 'lib/ui';
 import { timing, animations, consts } from 'styles';
-import { logOut, selectUsername } from 'lib/session';
+import {
+  logOut,
+  loggedInAtom,
+  usernameAtom,
+  hasRecoveryPhraseAtom,
+} from 'lib/session';
 
 import SwitchUserModal from './SwitchUserModal';
 
@@ -50,7 +56,7 @@ const Username = styled.div(({ theme }) => ({
   fontWeight: 'bold',
 }));
 
-const MenuItem = styled.div(({ theme }) => ({
+const MenuItem = styled.div(({ theme, disabled }) => ({
   display: 'flex',
   alignItems: 'center',
   padding: `0 15px`,
@@ -60,6 +66,8 @@ const MenuItem = styled.div(({ theme }) => ({
   whiteSpace: 'nowrap',
   textOverflow: 'ellipsis',
   height: consts.inputHeightEm + 'em',
+  opacity: disabled ? 0.5 : 1,
+  pointerEvents: disabled ? 'none' : 'initial',
   '&:hover': {
     background: theme.mixer(0.125),
   },
@@ -71,34 +79,28 @@ const Separator = styled.div(({ theme }) => ({
 }));
 
 function LoggedInDropdown({ closeDropdown }) {
-  const currentUser = useSelector(selectUsername);
-  const hasRecoveryPhrase = useSelector(
-    (state) => !!state.user.profileStatus?.recovery
-  );
-  const multiuser = useSelector((state) => !!state.core.systemInfo?.multiuser);
-  const hasOtherSessions = useSelector(
-    ({ sessions }) => !!sessions && Object.keys(sessions).length > 1
-  );
+  const username = useAtomValue(usernameAtom);
+  const hasRecoveryPhrase = useAtomValue(hasRecoveryPhraseAtom);
+  const multiUser = useAtomValue(multiUserAtom);
+  const [loggingOut, setLoggingOut] = useState(false);
 
   return (
     <>
       <CurrentUser>
-        <Username>{currentUser}</Username>
+        <Username>{username}</Username>
       </CurrentUser>
       <Separator />
 
-      {multiuser && (
+      {multiUser && (
         <>
-          {hasOtherSessions && (
-            <MenuItem
-              onClick={() => {
-                openModal(SwitchUserModal);
-                closeDropdown();
-              }}
-            >
-              {__('Switch user')}
-            </MenuItem>
-          )}
+          <MenuItem
+            onClick={() => {
+              openModal(SwitchUserModal);
+              closeDropdown();
+            }}
+          >
+            {__('Switch user')}
+          </MenuItem>
           <MenuItem
             onClick={() => {
               openModal(LoginModal);
@@ -134,23 +136,26 @@ function LoggedInDropdown({ closeDropdown }) {
       )}
 
       <MenuItem
+        disabled={loggingOut}
         onClick={async () => {
+          setLoggingOut(true);
+          try {
+            await logOut();
+          } finally {
+            setLoggingOut(false);
+          }
           closeDropdown();
-          await logOut();
           showNotification('Logged out');
         }}
       >
-        {multiuser ? __('Log out of all users') : __('Log out')}
+        {multiUser ? __('Log out of all users') : __('Log out')}
       </MenuItem>
     </>
   );
 }
 
 function NotLoggedInDropdown({ closeDropdown }) {
-  const multiuser = useSelector((state) => !!state.core.systemInfo?.multiuser);
-  const hasOtherSessions = useSelector(
-    ({ sessions }) => !!sessions && Object.keys(sessions).length > 1
-  );
+  const multiUser = useAtomValue(multiUserAtom);
   return (
     <>
       <MenuItem
@@ -161,7 +166,7 @@ function NotLoggedInDropdown({ closeDropdown }) {
       >
         {__('Log in')}
       </MenuItem>
-      {multiuser && hasOtherSessions && (
+      {multiUser && (
         <MenuItem
           onClick={() => {
             openModal(SwitchUserModal);
@@ -184,7 +189,7 @@ function NotLoggedInDropdown({ closeDropdown }) {
 }
 
 export default function UserDropdown({ closeDropdown, ...rest }) {
-  const loggedIn = useSelector(isLoggedIn);
+  const loggedIn = useAtomValue(loggedInAtom);
   return (
     <UserDropdownComponent {...rest}>
       {loggedIn ? (

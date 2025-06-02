@@ -1,6 +1,5 @@
 // External
-import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useAtomValue } from 'jotai';
 import { ipcRenderer } from 'electron';
 import fs from 'fs';
 
@@ -11,14 +10,15 @@ import Switch from 'components/Switch';
 import Select from 'components/Select';
 import NexusAddress from 'components/NexusAddress';
 import UT from 'lib/usageTracking';
-import { updateSettings } from 'lib/settings';
-import { switchSettingsTab, showNotification } from 'lib/ui';
+import { updateSettings, settingsAtom } from 'lib/settings';
+import { showNotification } from 'lib/ui';
 import { loadCustomTheme } from 'lib/theme';
-import { refreshAccounts } from 'lib/user';
+import { accountsQuery } from 'lib/user';
 import { walletDataDir } from 'consts/paths';
 import { webGLAvailable } from 'consts/misc';
 import memoize from 'utils/memoize';
 
+import { useSettingsTab } from '../atoms';
 import ColorPicker from './ColorPicker';
 import BackgroundPicker from './BackgroundPicker';
 import ThemePicker from './ThemePicker';
@@ -77,16 +77,10 @@ async function exportThemeFileDialog() {
 }
 
 export default function SettingsStyle() {
-  const settings = useSelector((state) => state.settings);
-  const defaultAddress = useSelector((state) =>
-    getTritiumDefaultAddress(state.user.accounts)
-  );
-  useEffect(() => {
-    switchSettingsTab('Style');
-    if (!defaultAddress) {
-      refreshAccounts();
-    }
-  }, []);
+  useSettingsTab('Style');
+  const settings = useAtomValue(settingsAtom);
+  const accounts = accountsQuery.use();
+  const defaultAddress = getTritiumDefaultAddress(accounts);
 
   return (
     <>

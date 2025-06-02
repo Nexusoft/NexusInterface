@@ -1,6 +1,5 @@
 // External
-import { useEffect, useId } from 'react';
-import { useSelector } from 'react-redux';
+import { useId } from 'react';
 import styled from '@emotion/styled';
 import arrayMutators from 'final-form-arrays';
 
@@ -10,7 +9,7 @@ import Icon from 'components/Icon';
 import Button from 'components/Button';
 import FormField from 'components/FormField';
 import { openModal } from 'lib/ui';
-import { refreshAccounts, refreshOwnedTokens } from 'lib/user';
+import { accountsQuery, tokensQuery } from 'lib/user';
 import {
   formName,
   getDefaultRecipient,
@@ -18,15 +17,18 @@ import {
   getSource,
 } from 'lib/send';
 import { required } from 'lib/form';
-import store from 'store';
 import { timing } from 'styles';
+import TokenName from 'components/TokenName';
+import memoize from 'utils/memoize';
+import shortenAddress from 'utils/shortenAddress';
+import walletIcon from 'icons/wallet.svg';
+import tokenIcon from 'icons/token.svg';
 import sendIcon from 'icons/send.svg';
 import plusIcon from 'icons/plus.svg';
 
 // Internal Local
 import Recipients from './Recipients';
 import ExpiryFields from './ExpiryFields';
-import { selectAccountOptions } from './selectors';
 import PreviewTransactionModal from './PreviewTransactionModal';
 
 __ = __context('Send');
@@ -63,6 +65,11 @@ const AdvancedOptionsLabel = styled.label(({ active }) => ({
   opacity: active ? 1 : 0.67,
 }));
 
+const Separator = styled.div(({ theme }) => ({
+  fontWeight: 'bold',
+  color: theme.primary,
+}));
+
 function getRecipientsParams({ recipients, advancedOptions }) {
   return recipients.map(({ address, amount, reference }) => ({
     address_to: address,
@@ -86,14 +93,77 @@ function getAdvancedParams({ expiry, advancedOptions }) {
   return params;
 }
 
+const getAccountOptions = memoize((accounts, userTokens) => {
+  let options = [];
+
+  if (accounts?.length) {
+    options.push({
+      value: 'AccountsSeparator',
+      display: <Separator>{__('Accounts')}</Separator>,
+      isSeparator: true,
+      indent: false,
+    });
+    options.push(
+      ...accounts.map((account) => ({
+        value: `account:${account.address}`,
+        display: (
+          <span>
+            <Icon icon={walletIcon} className="mr0_4" />
+            <span className="v-align">
+              {account.name ? (
+                <span>{account.name}</span>
+              ) : (
+                <span>
+                  <em className="semi-dim">{__('Unnamed account')}</em>{' '}
+                  <span className="dim">{shortenAddress(account.address)}</span>
+                </span>
+              )}{' '}
+              ({account.balance} {TokenName.from({ account })})
+            </span>
+          </span>
+        ),
+        indent: true,
+      }))
+    );
+  }
+  if (userTokens && userTokens.length > 0) {
+    options.push({
+      value: 'TokensSeparator',
+      display: <Separator>{__('Tokens')}</Separator>,
+      isSeparator: true,
+      indent: false,
+    });
+    options.push(
+      ...userTokens.map((token) => ({
+        value: `token:${token.address}`,
+        display: (
+          <span>
+            <Icon icon={tokenIcon} className="mr0_4" />
+            <span className="v-align">
+              {token.ticker || (
+                <span>
+                  <em>{__('Unnamed token')}</em>{' '}
+                  <span className="dim">{shortenAddress(token.address)}</span>
+                </span>
+              )}{' '}
+              ({token.balance} {TokenName.from({ token })})
+            </span>
+          </span>
+        ),
+        indent: true,
+      }))
+    );
+  }
+
+  return options;
+});
+
 export default function SendForm() {
   const switchID = useId();
-  const accountOptions = useSelector(selectAccountOptions);
   const initialValues = useInitialValues();
-  useEffect(() => {
-    refreshAccounts();
-    refreshOwnedTokens();
-  }, []);
+  const accounts = accountsQuery.use();
+  const userTokens = tokensQuery.use();
+  const accountOptions = getAccountOptions(accounts, userTokens);
 
   return (
     <SendFormComponent>
@@ -103,8 +173,7 @@ export default function SendForm() {
         initialValues={initialValues}
         initialValuesEqual={() => true}
         onSubmit={({ sendFrom, recipients, expiry, advancedOptions }, form) => {
-          const state = store.getState();
-          const source = getSource(state, sendFrom);
+          const source = getSource(sendFrom, accounts, userTokens);
           openModal(PreviewTransactionModal, {
             source,
             recipients: getRecipientsParams({ recipients, advancedOptions }),

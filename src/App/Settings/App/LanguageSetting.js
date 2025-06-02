@@ -1,10 +1,10 @@
 // External
-import { useSelector } from 'react-redux';
+import { useAtomValue } from 'jotai';
 import styled from '@emotion/styled';
 
 // Internal
 import languages from 'data/languages';
-import { updateSettings } from 'lib/settings';
+import { updateSettings, settingsAtom } from 'lib/settings';
 import SettingsField from 'components/SettingsField';
 import Select from 'components/Select';
 import { confirm } from 'lib/dialog';
@@ -27,24 +27,22 @@ const languageOptions = languages.map((lang) => ({
 }));
 
 export default function LanguageSetting() {
-  const locale = useSelector((state) => state.settings.locale);
+  const { locale } = useAtomValue(settingsAtom);
 
   const handleChange = async (locale) => {
-    if (locale !== 'en') {
-      const language = languages.find((lang) => lang.code === locale);
-      const agreed = await confirm({
-        question: __('Switch language?'),
-        note: __(
-          'Translations for %{language} are contributed by our amazing community members',
-          {
-            language: language.name,
-          }
-        ),
-        labelYes: __('Switch to %{language}', { language: language.name }),
-        labelNo: __('Cancel'),
-      });
-      if (!agreed) return;
-    }
+    const language = languages.find((lang) => lang.code === locale);
+    const agreed = await confirm({
+      question: __('Switch language?'),
+      note: __(
+        'Translations for %{language} are contributed by our amazing community members',
+        {
+          language: language.name,
+        }
+      ),
+      labelYes: __('Switch to %{language}', { language: language.name }),
+      labelNo: __('Cancel'),
+    });
+    if (!agreed) return;
     updateSettings({ locale });
     location.reload();
   };

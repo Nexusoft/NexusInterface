@@ -1,20 +1,14 @@
 // External
-import { useEffect } from 'react';
-import {
-  Routes,
-  Route,
-  Navigate,
-  HashRouter,
-  useNavigate,
-} from 'react-router-dom';
+import { Routes, Route, Navigate, HashRouter } from 'react-router';
 import styled from '@emotion/styled';
-import { useSelector } from 'react-redux';
+import { useAtomValue } from 'jotai';
 
 // Internal
 import GlobalStyles from 'components/GlobalStyles';
 import ThemeController from 'components/ThemeController';
 import { showDefaultMenu } from 'lib/contextMenu';
-import { setNavigate } from 'lib/wallet';
+import { NavigateExporter } from 'lib/wallet';
+import { themeAtom } from 'lib/theme';
 
 import Overlays from './Overlays';
 import Overview from './Overview';
@@ -49,16 +43,8 @@ const Main = styled.main({
   alignItems: 'stretch',
 });
 
-function NavigateExporter() {
-  const navigate = useNavigate();
-  useEffect(() => {
-    setNavigate(navigate);
-  }, [navigate]);
-  return null;
-}
-
 export default function App() {
-  const theme = useSelector((state) => state.theme);
+  const theme = useAtomValue(themeAtom);
   return (
     <HashRouter>
       <NavigateExporter />

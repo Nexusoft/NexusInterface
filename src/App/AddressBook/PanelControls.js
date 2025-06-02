@@ -1,17 +1,18 @@
 // External
-import { useSelector } from 'react-redux';
+import { useAtomValue } from 'jotai';
 import styled from '@emotion/styled';
 import UT from 'lib/usageTracking';
 
 // Internal Global
-import { searchContact } from 'lib/addressBook';
+import { contactsAtom, searchQueryAtom } from 'lib/addressBook';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
-import TextField from 'components/TextField';
+import { TextField } from 'components/TextField';
 import Tooltip from 'components/Tooltip';
 import { openModal } from 'lib/ui';
-import { isCoreConnected } from 'selectors';
+import { useCoreConnected } from 'lib/coreInfo';
 import AddEditContactModal from 'components/AddEditContactModal';
+import { store } from 'lib/store';
 
 // Icons
 import exportIcon from 'icons/export.svg';
@@ -32,18 +33,18 @@ const SearchInput = styled(TextField)({
 });
 
 function SearchBox() {
-  const searchQuery = useSelector((state) => state.ui.addressBook.searchQuery);
+  const searchQuery = useAtomValue(searchQueryAtom);
   return (
     <SearchInput
       left={<Icon icon={searchIcon} className="mr0_4" />}
       placeholder={__('Search contact')}
       value={searchQuery}
-      onChange={(e) => searchContact(e.target.value)}
+      onChange={(e) => store.set(searchQueryAtom, e.target.value)}
     />
   );
 }
 
-function exportAddressBook(addressBook) {
+function exportAddressBook() {
   UT.ExportAddressBook();
 
   const rows = []; //Set up a blank array for each row
@@ -56,7 +57,8 @@ function exportAddressBook(addressBook) {
     'Notes', //d
   ];
   rows.push(NameEntry); //how we get our header line
-  Object.values(addressBook).map((e) => {
+  const contacts = store.get(contactsAtom);
+  contacts.map((e) => {
     let tempentry = [];
     tempentry.push(e.name);
     tempentry.push(e.phoneNumber);
@@ -95,7 +97,7 @@ function exportAddressBook(addressBook) {
 }
 
 export default function PanelControls() {
-  const coreConnected = useSelector(isCoreConnected);
+  const coreConnected = useCoreConnected();
 
   return (
     <div className="flex center">

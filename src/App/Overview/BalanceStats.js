@@ -1,5 +1,5 @@
 // External
-import { useSelector } from 'react-redux';
+import { useAtomValue } from 'jotai';
 
 // Internal
 import Icon from 'components/Icon';
@@ -7,7 +7,11 @@ import Tooltip from 'components/Tooltip';
 import TokenName from 'components/TokenName';
 import QuestionCircle from 'components/QuestionCircle';
 import { formatNumber, formatCurrency } from 'lib/intl';
-import { isSynchronized, selectBalances } from 'selectors';
+import { marketDataQuery } from 'lib/market';
+import { settingsAtom } from 'lib/settings';
+import { themeAtom } from 'lib/theme';
+import { balancesQuery } from 'lib/user';
+import { useSynchronized } from 'lib/coreInfo';
 
 // Images
 import logoIcon from 'icons/NXS_coin.svg';
@@ -49,9 +53,7 @@ function UnsyncWarning() {
 const blank = <span className="dim">-</span>;
 
 function BalanceValue({ children }) {
-  const hideOverviewBalances = useSelector(
-    (state) => state.settings.hideOverviewBalances
-  );
+  const { hideOverviewBalances } = useAtomValue(settingsAtom);
 
   if (hideOverviewBalances) {
     return blank;
@@ -60,11 +62,9 @@ function BalanceValue({ children }) {
 }
 
 export function NXSBalanceStat() {
-  const [nxsBalances, tokenBalances] = useSelector(selectBalances);
-  const synchronized = useSelector(isSynchronized);
-  const hideOverviewBalances = useSelector(
-    (state) => state.settings.hideOverviewBalances
-  );
+  const [nxsBalances, tokenBalances] = balancesQuery.use();
+  const synchronized = useSynchronized();
+  const { hideOverviewBalances } = useAtomValue(settingsAtom);
 
   return (
     <Stat
@@ -107,9 +107,9 @@ export function NXSBalanceStat() {
 }
 
 export function NXSFiatBalanceStat() {
-  const [nxsBalances] = useSelector(selectBalances);
-  const price = useSelector((state) => state.market?.price);
-  const currency = useSelector((state) => state.market?.currency);
+  const [nxsBalances] = balancesQuery.use();
+  const marketData = marketDataQuery.use();
+  const { price, currency } = marketData || {};
 
   return (
     <Stat
@@ -134,8 +134,8 @@ export function NXSFiatBalanceStat() {
 }
 
 export function FeaturedTokenBalanceStat() {
-  const theme = useSelector((state) => state.theme);
-  const [nxsBalances, tokenBalances] = useSelector(selectBalances);
+  const theme = useAtomValue(themeAtom);
+  const [nxsBalances, tokenBalances] = balancesQuery.use();
   const featuredToken = theme.featuredTokenName
     ? tokenBalances?.find((token) => token.ticker === theme.featuredTokenName)
     : undefined;
@@ -158,7 +158,7 @@ export function FeaturedTokenBalanceStat() {
 }
 
 export function IncomingBalanceStat() {
-  const [nxsBalances] = useSelector(selectBalances);
+  const [nxsBalances] = balancesQuery.use();
   const incoming =
     nxsBalances?.unclaimed + nxsBalances?.unconfirmed + nxsBalances?.immature;
 

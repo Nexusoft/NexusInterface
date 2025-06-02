@@ -1,5 +1,4 @@
 // External Dependencies
-import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 
 // Internal Global Dependencies
@@ -7,7 +6,7 @@ import { animations } from 'styles';
 import Tooltip from 'components/Tooltip';
 import Icon from 'components/Icon';
 import { formatNumber } from 'lib/intl';
-import { isSynchronized } from 'selectors';
+import { useCoreInfo, useSynchronized } from 'lib/coreInfo';
 import checkIcon from 'icons/check.svg';
 import syncingIcon from 'icons/syncing.svg';
 
@@ -20,7 +19,7 @@ const SpinningIcon = styled(Icon)({
 });
 
 export default function SyncStatus() {
-  const synchronized = useSelector(isSynchronized);
+  const synchronized = useSynchronized();
   return synchronized ? (
     <Tooltip.Trigger tooltip={__('Synchronized')}>
       <StatusIcon>
@@ -37,8 +36,8 @@ export default function SyncStatus() {
 }
 
 function SyncTooltip() {
-  const syncing = useSelector((state) => state.core.systemInfo?.syncing);
-  const blocks = useSelector((state) => state.core.systemInfo?.blocks);
+  const coreInfo = useCoreInfo();
+  const { syncing, blocks } = coreInfo || {};
   if (!syncing) return null;
 
   const { networkBlock, completed, secondsRemaining, progress } = syncing;

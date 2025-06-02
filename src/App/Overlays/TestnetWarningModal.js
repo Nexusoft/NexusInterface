@@ -1,20 +1,18 @@
 import Button from 'components/Button';
-import Modal from 'components/Modal';
+import ControlledModal from 'components/ControlledModal';
 import { shell } from 'electron';
-import { removeModal } from 'lib/ui';
+import ModalContext from 'context/modal';
 
 export default function TestnetWarningModal(props) {
   const versionRunning = APP_VERSION.toString();
   return (
-    <Modal
-      maxWidth={600}
-      visible={true}
-      removeModal={() => removeModal(props.modalId)}
-    >
+    <ControlledModal maxWidth={600}>
       {(closeModal) => (
         <>
-          <Modal.Header>{__('Testnet Only Mode')}</Modal.Header>
-          <Modal.Body>
+          <ControlledModal.Header>
+            {__('Testnet Only Mode')}
+          </ControlledModal.Header>
+          <ControlledModal.Body>
             <div className="text-center">{versionRunning}</div>
 
             <div className="mt1 text-center">
@@ -61,9 +59,9 @@ export default function TestnetWarningModal(props) {
                 {__('Ok')}
               </Button>
             </div>
-          </Modal.Body>
+          </ControlledModal.Body>
         </>
       )}
-    </Modal>
+    </ControlledModal>
   );
 }

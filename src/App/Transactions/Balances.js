@@ -1,12 +1,9 @@
-import { Fragment, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { Fragment } from 'react';
 import styled from '@emotion/styled';
 
 import QuestionCircle from 'components/QuestionCircle';
 import TokenName from 'components/TokenName';
-import { refreshBalances } from 'lib/user';
-import { selectBalances } from 'selectors';
-import { observeStore } from 'store';
+import { balancesQuery } from 'lib/user';
 import { formatNumber } from 'lib/intl';
 
 __ = __context('Transactions.Balances');
@@ -59,14 +56,7 @@ const Value = styled.div({
 });
 
 export default function Balances() {
-  const [nxsBalances, tokenBalances] = useSelector(selectBalances);
-  useEffect(() => {
-    refreshBalances();
-    return observeStore(
-      ({ user }) => user.status,
-      (userStatus) => userStatus && refreshBalances()
-    );
-  }, []);
+  const [nxsBalances, tokenBalances] = balancesQuery.use();
 
   const total =
     nxsBalances &&

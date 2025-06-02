@@ -1,16 +1,17 @@
 // External
 import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { useAtomValue } from 'jotai';
+import { Routes, Route, Navigate } from 'react-router';
 import styled from '@emotion/styled';
 import UT from 'lib/usageTracking';
 
 // Internal Global
 import Panel from 'components/Panel';
 import RouterHorizontalTab from 'components/RouterHorizontalTab';
-import { selectModuleUpdateCount } from 'selectors';
+import { moduleUpdateCountAtom } from 'lib/modules';
 
 // Internal Local
+import { lastActiveTabAtom } from './atoms';
 import SettingsApp from './App';
 import SettingsCore from './Core';
 import SettingsStyle from './Style';
@@ -64,7 +65,7 @@ const Badge = styled.div(({ theme }) => ({
 }));
 
 function SettingsRedirect() {
-  const lastActiveTab = useSelector((state) => state.ui.settings.lastActiveTab);
+  const lastActiveTab = useAtomValue(lastActiveTabAtom);
   return <Navigate to={lastActiveTab} replace />;
 }
 
@@ -79,25 +80,29 @@ export default function Settings() {
   useEffect(() => {
     UT.SendScreen('Settings');
   }, []);
-  const updateCount = useSelector(selectModuleUpdateCount);
+  const updateCount = useAtomValue(moduleUpdateCountAtom);
 
   return (
     <Panel bodyScrollable={false} icon={settingsIcon} title={__('Settings')}>
       <SettingsComponent>
         <SettingsTabBar>
           <RouterHorizontalTab
-            link="App"
+            link="/Settings/App"
             icon={logoIcon}
             text={__('Application')}
           />
-          <RouterHorizontalTab link="Core" icon={coreIcon} text={__('Core')} />
           <RouterHorizontalTab
-            link="Style"
+            link="/Settings/Core"
+            icon={coreIcon}
+            text={__('Core')}
+          />
+          <RouterHorizontalTab
+            link="/Settings/Style"
             icon={leafIcon}
             text={__('Style')}
           />
           <RouterHorizontalTab
-            link="Modules"
+            link="/Settings/Modules"
             icon={legoIcon}
             text={
               <>

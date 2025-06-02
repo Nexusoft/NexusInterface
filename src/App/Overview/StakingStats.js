@@ -1,8 +1,6 @@
-// External
-import { useSelector } from 'react-redux';
-
 // Internal
 import { formatNumber } from 'lib/intl';
+import { stakeInfoQuery } from 'lib/session';
 
 // Images
 import blockweight0 from 'icons/BlockWeight-0.svg';
@@ -89,48 +87,48 @@ function StakingStat({ stakeInfo, value, ...props }) {
 }
 
 export function StakeRateStat() {
-  const stakeInfo = useSelector((state) => state.user.stakeInfo);
+  const stakeInfo = stakeInfoQuery.use();
   return (
     <StakingStat
       stakeInfo={stakeInfo}
       label={__('Stake Rate')}
-      value={stakeInfo.stakerate}
+      value={stakeInfo?.stakerate}
       icon={interestIcon}
     />
   );
 }
 
 export function BlockWeightStat() {
-  const stakeInfo = useSelector((state) => state.user.stakeInfo);
+  const stakeInfo = stakeInfoQuery.use();
   return (
     <StakingStat
       stakeInfo={stakeInfo}
       label={__('Block Weight')}
-      value={stakeInfo.blockweight}
-      icon={getBlockWeightIcon(stakeInfo.blockweight)}
+      value={stakeInfo?.blockweight}
+      icon={getBlockWeightIcon(stakeInfo?.blockweight)}
     />
   );
 }
 
 export function TrustWeightStat() {
-  const stakeInfo = useSelector((state) => state.user.stakeInfo);
+  const stakeInfo = stakeInfoQuery.use();
   return (
     <StakingStat
       stakeInfo={stakeInfo}
       label={__('Trust Weight')}
-      value={stakeInfo.trustweight}
-      icon={getTrustWeightIcon(stakeInfo.trustweight)}
+      value={stakeInfo?.trustweight}
+      icon={getTrustWeightIcon(stakeInfo?.trustweight)}
     />
   );
 }
 
 export function StakeWeightStat() {
-  const stakeInfo = useSelector((state) => state.user.stakeInfo);
+  const stakeInfo = stakeInfoQuery.use();
   return (
     <StakingStat
       stakeInfo={stakeInfo}
       label={__('Stake Weight')}
-      value={stakeInfo.stakeweight}
+      value={stakeInfo?.stakeweight}
       icon={stakeIcon}
     />
   );

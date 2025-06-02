@@ -1,13 +1,12 @@
-import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 
 import Icon from 'components/Icon';
 import Button from 'components/Button';
-import { switchUserTab, openModal } from 'lib/ui';
-import { refreshAssets } from 'lib/user';
+import { openModal } from 'lib/ui';
+import { assetsQuery } from 'lib/user';
 import plusIcon from 'icons/plus.svg';
 
+import { useUserTab } from '../atoms';
 import Asset from './Asset';
 import CreateAssetModal from './CreateAssetModal';
 import TabContentWrapper from '../TabContentWrapper';
@@ -21,12 +20,8 @@ const EmptyMessage = styled.div(({ theme }) => ({
 }));
 
 export default function Assets() {
-  const session = useSelector((state) => state.user.session);
-  const assets = useSelector((state) => state.user.assets);
-  useEffect(() => {
-    switchUserTab('Assets');
-    refreshAssets();
-  }, [session]);
+  useUserTab('Assets');
+  const assets = assetsQuery.use();
 
   return (
     <TabContentWrapper maxWidth={400}>

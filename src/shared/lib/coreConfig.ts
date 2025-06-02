@@ -1,0 +1,204 @@
+import fs from 'fs';
+import path from 'path';
+import log from 'electron-log';
+import crypto from 'crypto';
+import macaddress from 'macaddress';
+import { atom } from 'jotai';
+
+import { store } from 'lib/store';
+import { settingsAtom } from 'lib/settings';
+
+/**
+ * Cache the core config used at the most recent time core was started
+ */
+export const coreConfigAtom = atom<CoreConfig | null>(null);
+
+function generateDefaultPassword() {
+  let randomNumbers = ['', ''];
+  const ranByte = crypto.randomBytes(64).toString('hex').split('');
+  for (let index = 0; index < ranByte.length; index++) {
+    const element = ranByte[index];
+    if (index % 2) {
+      randomNumbers[0] += element.charCodeAt(0);
+    } else {
+      randomNumbers[1] += element.charCodeAt(0);
+    }
+  }
+  const randomValue = parseInt(randomNumbers[0]) * parseInt(randomNumbers[1]);
+  const secret =
+    process.platform === 'darwin'
+      ? '' +
+        process.env.USER +
+        process.env.HOME +
+        process.env.SHELL +
+        randomValue
+      : JSON.stringify(macaddress.networkInterfaces(), null, 2) + randomValue;
+  return crypto.createHmac('sha256', secret).update('pass').digest('hex');
+}
+
+const fromKeyValues = (rawContent: string) =>
+  rawContent
+    ? rawContent.split('\n').reduce((obj: Record<string, any>, line) => {
+        const equalIndex = line.indexOf('=');
+        if (equalIndex >= 0) {
+          const key = line.substring(0, equalIndex);
+          const value = line.substring(equalIndex + 1);
+          if (key) obj[key] = value;
+        }
+        return obj;
+      }, {})
+    : ({} as Record<string, any>);
+
+const toKeyValues = (obj: Record<string, string>) =>
+  Object.entries(obj)
+    .map(([key, value]) => `${key}=${value}`)
+    .join('\n');
+
+export interface CoreConfig {
+  ip: string;
+  apiSSL: boolean;
+  apiPort: string;
+  apiPortSSL: string;
+  apiHost: string;
+  apiUser: string;
+  apiPassword: string;
+  txExpiry?: number;
+}
+
+export const defaultConfig = {
+  ip: '127.0.0.1',
+  apiSSL: true,
+  apiPort: '8080',
+  apiPortSSL: '7080',
+  apiUser: 'apiserver',
+  apiPassword: generateDefaultPassword(),
+};
+
+/**
+ * Returns either the given config or default Config
+ */
+function customConfig(config: Partial<CoreConfig> = {}) {
+  const ip = config.ip || defaultConfig.ip;
+  const apiSSL =
+    typeof config.apiSSL === 'boolean' ? config.apiSSL : defaultConfig.apiSSL;
+  const apiPort = config.apiPort || defaultConfig.apiPort;
+  const apiPortSSL = config.apiPortSSL || defaultConfig.apiPortSSL;
+  return {
+    ip,
+    apiSSL,
+    apiPort,
+    apiPortSSL,
+    apiHost: `${apiSSL ? 'https' : 'http'}://${ip}:${
+      apiSSL ? apiPortSSL : apiPort
+    }`,
+    apiUser:
+      config.apiUser !== undefined ? config.apiUser : defaultConfig.apiUser,
+    apiPassword:
+      config.apiPassword !== undefined
+        ? config.apiPassword
+        : defaultConfig.apiPassword,
+    txExpiry: config.txExpiry || undefined,
+  };
+}
+
+/**
+ * Load user & password from the nexus.conf file
+ *
+ * @returns
+ */
+export async function loadNexusConf() {
+  const {
+    coreDataDir,
+    embeddedCoreUseNonSSL,
+    embeddedCoreApiPort,
+    embeddedCoreApiPortSSL,
+  } = store.get(settingsAtom);
+  if (!fs.existsSync(coreDataDir)) {
+    log.info(
+      'Core Manager: Data Directory path not found. Creating folder: ' +
+        coreDataDir
+    );
+    await fs.promises.mkdir(coreDataDir);
+  }
+
+  const confPath = path.join(coreDataDir, 'nexus.conf');
+  let confContent = '';
+  if (fs.existsSync(confPath)) {
+    log.info(
+      'nexus.conf exists. Importing username and password for API server.'
+    );
+    confContent = (await fs.promises.readFile(confPath)).toString();
+  }
+  let configs = fromKeyValues(confContent);
+
+  // Fallback to default values if empty
+  const fallbackConf = [
+    ['apiuser', defaultConfig.apiUser],
+    ['apipassword', defaultConfig.apiPassword],
+    ['apissl', defaultConfig.apiSSL],
+    ['apiport', defaultConfig.apiPort],
+    ['apiportssl', defaultConfig.apiPortSSL],
+  ] as const;
+  const settingsConf = {
+    apissl: !embeddedCoreUseNonSSL,
+    apiport: embeddedCoreApiPort || undefined,
+    apiportssl: embeddedCoreApiPortSSL || undefined,
+  };
+  let updated = false;
+  fallbackConf.forEach(([key, value]) => {
+    // Don't replace it if value is an empty string
+    if (configs[key] === undefined) {
+      configs[key] = value;
+      updated = true;
+    }
+  });
+
+  // Save nexus.conf file if there were changes
+  if (updated) {
+    log.info('Filling up some missing configurations in nexus.conf');
+    fs.writeFile(confPath, toKeyValues(configs), (err) => {
+      if (err) {
+        console.error(err);
+      } else {
+        log.info('nexus.conf has been updated');
+      }
+    });
+  }
+
+  configs = { ...configs, ...settingsConf };
+
+  return customConfig({
+    apiUser: configs.apiuser,
+    apiPassword: configs.apipassword,
+    apiSSL: configs.apissl === 'false' ? false : !!configs.apissl,
+    apiPort: configs.apiport,
+    apiPortSSL: configs.apiportssl,
+    txExpiry: parseInt(configs.txexpiry),
+  });
+}
+
+export async function getActiveCoreConfig() {
+  const settings = store.get(settingsAtom);
+
+  if (settings.manualDaemon) {
+    return customConfig({
+      ip: settings.manualDaemonIP,
+      apiSSL: settings.manualDaemonApiSSL,
+      apiPort: settings.manualDaemonApiPort,
+      apiPortSSL: settings.manualDaemonApiPortSSL,
+      apiUser: settings.manualDaemonApiUser,
+      apiPassword: settings.manualDaemonApiPassword,
+    });
+  } else {
+    const config = store.get(coreConfigAtom);
+    if (config) {
+      // Config cached when core was started,
+      return config;
+    } else {
+      // If there's no cached config, load it from nexus.conf
+      const conf = await loadNexusConf();
+      store.set(coreConfigAtom, conf);
+      return conf;
+    }
+  }
+}

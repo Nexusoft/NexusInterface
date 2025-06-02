@@ -1,6 +1,5 @@
 // External
 import { useEffect, useRef } from 'react';
-import { useSelector } from 'react-redux';
 import { useForm } from 'react-final-form';
 import { getIn } from 'final-form';
 import styled from '@emotion/styled';
@@ -8,9 +7,10 @@ import styled from '@emotion/styled';
 // Internal
 import Form from 'components/Form';
 import FormField from 'components/FormField';
-import Link from 'components/Link';
+import { NativeLink } from 'components/Link';
 import TokenName from 'components/TokenName';
-import { selectSource } from 'lib/send';
+import { useSource } from 'lib/send';
+import { marketDataQuery } from 'lib/market';
 
 __ = __context('Send');
 
@@ -29,7 +29,7 @@ const FiatAmountFieldWrapper = styled.div({
   flex: '1 1 100px',
 });
 
-const SendAllLink = styled(Link)({
+const SendAllLink = styled(NativeLink)({
   textTransform: 'uppercase',
   marginLeft: '1em',
   fontSize: '.9em',
@@ -75,9 +75,9 @@ function positiveNumber(value) {
 // }
 
 export default function AmountField({ parentFieldName }) {
-  const source = selectSource();
-  const fiatCurrency = useSelector((state) => state.settings.fiatCurrency);
-  const price = useSelector((state) => state.market?.price);
+  const source = useSource();
+  const marketData = marketDataQuery.use();
+  const { price, currency } = marketData || {};
   const form = useForm();
   const fullAmount = (source?.account || source?.token)?.balance;
   const amountFieldName = parentFieldName + '.amount';
@@ -144,9 +144,7 @@ export default function AmountField({ parentFieldName }) {
                   : __('Amount')}
               </span>
               {!!fullAmount && (
-                <SendAllLink as="a" onClick={sendAll}>
-                  {__('All')}
-                </SendAllLink>
+                <SendAllLink onClick={sendAll}>{__('All')}</SendAllLink>
               )}
             </span>
           }
@@ -172,7 +170,7 @@ export default function AmountField({ parentFieldName }) {
         </FormField>
       </AmountFieldWrapper>
 
-      {!!fiatCurrency && !!price && source?.account?.token === '0' && (
+      {!!currency && !!price && source?.account?.token === '0' && (
         <>
           <EqualSign>≈</EqualSign>
 
@@ -182,7 +180,7 @@ export default function AmountField({ parentFieldName }) {
               label={
                 <span style={{ whiteSpace: 'nowrap' }}>
                   <span className="v-align">
-                    {__('%{currency} amount', { currency: fiatCurrency })}
+                    {__('%{currency} amount', { currency: currency })}
                   </span>
                 </span>
               }

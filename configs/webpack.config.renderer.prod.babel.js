@@ -8,12 +8,12 @@ import { merge } from 'webpack-merge';
 
 import baseRendererConfig from './webpack.config.base.renderer.babel';
 import prodConfig from './webpack.config.base.prod.babel';
-import { babelLoaderRenderer } from './babelLoaderConfig.babel';
+import { rendererBabelConfig } from './babelLoaderConfig.babel';
 
 export default merge(baseRendererConfig, prodConfig, {
   entry: {
     'renderer.prod': './src/index.js',
-    'keyboard.prod': './src/keyboard/index.js',
+    'keyboard.prod': './src/keyboard/index.tsx',
   },
 
   output: {
@@ -23,7 +23,7 @@ export default merge(baseRendererConfig, prodConfig, {
 
   module: {
     rules: [
-      babelLoaderRenderer(),
+      ...rendererBabelConfig(),
       {
         test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
         use: {

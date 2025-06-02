@@ -1,11 +1,11 @@
 // External
 import { useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useAtomValue } from 'jotai';
 import styled from '@emotion/styled';
 import { ChromePicker } from 'react-color';
 
 // Internal
-import { updateTheme } from 'lib/theme';
+import { themeAtom, updateTheme } from 'lib/theme';
 import Button from 'components/Button';
 import Overlay from 'components/Overlay';
 import * as color from 'utils/color';
@@ -34,7 +34,7 @@ export default function ColorPicker({ colorName }) {
   const btnRef = useRef();
   const [open, setOpen] = useState(false);
   const [pickerStyles, setPickerStyles] = useState({});
-  const theme = useSelector((state) => state.theme);
+  const theme = useAtomValue(themeAtom);
   const currentColor = theme[colorName];
 
   const openPicker = () => {

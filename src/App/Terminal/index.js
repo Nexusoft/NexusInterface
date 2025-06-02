@@ -1,8 +1,8 @@
 // External Dependencies
 import { useEffect } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router';
 import styled from '@emotion/styled';
-import { useSelector } from 'react-redux';
+import { useAtomValue } from 'jotai';
 
 // Internal Global Dependencies
 import Panel from 'components/Panel';
@@ -10,6 +10,7 @@ import RouterHorizontalTab from 'components/RouterHorizontalTab';
 import UT from 'lib/usageTracking';
 
 // Internal Local Dependencies
+import { lastActiveTabAtom } from './atoms';
 import NexusApiConsole from './NexusApiConsole';
 import TerminalCore from './TerminalCore';
 
@@ -32,7 +33,7 @@ const TerminalTabBar = styled(RouterHorizontalTab.TabBar)({
 });
 
 function ConsoleRedirect() {
-  const lastActiveTab = useSelector((state) => state.ui.console.lastActiveTab);
+  const lastActiveTab = useAtomValue(lastActiveTabAtom);
   return <Navigate to={lastActiveTab} replace />;
 }
 
@@ -45,12 +46,12 @@ export default function Terminal() {
       <TerminalComponent>
         <TerminalTabBar>
           <RouterHorizontalTab
-            link="Console"
+            link="/Terminal/Console"
             icon={logoIcon}
             text={'Nexus API'}
           />
           <RouterHorizontalTab
-            link="Core"
+            link="/Terminal/Core"
             icon={coreIcon}
             text={__('Core output')}
           />

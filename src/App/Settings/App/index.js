@@ -1,20 +1,19 @@
 // External
-import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useAtomValue } from 'jotai';
 import styled from '@emotion/styled';
+import UT from 'lib/usageTracking';
 import * as AutoLaunch from 'auto-launch';
 
 // Internal Global
-import { updateSettings } from 'lib/settings';
-import { switchSettingsTab, showNotification } from 'lib/ui';
+import { updateSettings, settingsAtom } from 'lib/settings';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
 import Select from 'components/Select';
 import Switch from 'components/Switch';
 import Icon from 'components/Icon';
-import { confirm, openErrorDialog } from 'lib/dialog';
-import * as form from 'utils/form';
-import { isCoreConnected } from 'selectors';
+import { confirm } from 'lib/dialog';
+import * as form from 'lib/form';
+import fiatCurrencies from 'data/currencies';
 import warningIcon from 'icons/warning.svg';
 import {
   checkForUpdates,
@@ -24,8 +23,8 @@ import {
 } from 'lib/updater';
 
 // Internal Local
+import { useSettingsTab } from '../atoms';
 import LanguageSetting from './LanguageSetting';
-import BackupDirSetting from './BackupDirSetting';
 
 __ = __context('Settings.Application');
 
@@ -33,45 +32,6 @@ const WarningIcon = styled(Icon)(({ theme }) => ({
   color: theme.raise(theme.danger, 0.3),
   fontSize: '1.1em',
 }));
-
-/**
- * List of the Fiat Currencies the wallet supports. Corresponds to the data taken from our server.
- * @memberof SettingsApp
- */
-const fiatCurrencies = [
-  { value: 'AUD', display: 'Australian Dollar (AUD)' },
-  { value: 'BTC', display: 'Bitcoin (BTC)' },
-  { value: 'BRL', display: 'Brazilian Real (BRL)' },
-  { value: 'GBP', display: 'British Pound (GBP)' },
-  { value: 'MMK', display: 'Burmese Kyat (MMK)' },
-  { value: 'CAD', display: 'Canadian Dollar (CAD)' },
-  { value: 'CLP', display: 'Chilean Peso (CLP)' },
-  { value: 'CNY', display: 'Chinese Yuan (CNY)' },
-  { value: 'CZK', display: 'Czeck Koruna (CZK)' },
-  { value: 'EUR', display: 'Euro (EUR)' },
-  { value: 'HKD', display: 'Hong Kong Dollar (HKD)' },
-  { value: 'ILS', display: 'Israeli Shekel (ILS)' },
-  { value: 'INR', display: 'Indian Rupee (INR)' },
-  { value: 'IDR', display: 'Indonesian Rupiah (IDR)' },
-  { value: 'JPY', display: 'Japanese Yen (JPY)' },
-  { value: 'KRW', display: 'Korean Won (KRW)' },
-  { value: 'MYR', display: 'Malaysian Ringgit (MYR)' },
-  { value: 'MXN', display: 'Mexican Peso (MXN)' },
-  { value: 'NZD', display: 'New Zealand Dollar (NZD)' },
-  { value: 'PKR', display: 'Pakistan Rupee (PKR)' },
-  { value: 'PHP', display: 'Philippine Peso (PHP)' },
-  { value: 'PLN', display: 'Polish Złoty (PLN)' },
-  { value: 'RUB', display: 'Russian Ruble (RUB)' },
-  { value: 'SAR', display: 'Saudi Riyal (SAR)' },
-  { value: 'SGD', display: 'Singapore Dollar (SGD)' },
-  { value: 'ZAR', display: 'South African Rand (ZAR)' },
-  { value: 'CHF', display: 'Swiss Franc (CHF)' },
-  { value: 'TWD', display: 'Taiwan Dollar (TWD)' },
-  { value: 'THB', display: 'Thai Baht (THB)' },
-  { value: 'AED', display: 'United Arab Emirates Dirham (AED)' },
-  { value: 'USD', display: 'United States Dollar (USD)' },
-  { value: 'VND', display: 'Vietnamese Dong (VND)' },
-];
 
 /**
  * Handles setting the auto launch function.
@@ -163,16 +123,11 @@ async function handleAutoUpdateChange(e) {
 }
 
 export default function SettingsApp() {
-  const coreConnected = useSelector(isCoreConnected);
-  const settings = useSelector((state) => state.settings);
-  useEffect(() => {
-    switchSettingsTab('App');
-  }, []);
+  useSettingsTab('App');
+  const settings = useAtomValue(settingsAtom);
 
   const updateHandlers = (settingName) => (input) =>
-    updateSettings({
-      [settingName]: form.resolveValue(input),
-    });
+    updateSettings({ [settingName]: form.resolveValue(input) });
 
   return (
     <>
@@ -267,7 +222,14 @@ export default function SettingsApp() {
       >
         <Switch
           checked={settings.sendUsageData}
-          onChange={updateHandlers('sendUsageData')}
+          onChange={(value) => {
+            if (value) {
+              UT.EnableAnalytics();
+            } else {
+              UT.DisableAnalytics();
+            }
+            updateSettings({ sendUsageData: value });
+          }}
         />
       </SettingsField>
 
