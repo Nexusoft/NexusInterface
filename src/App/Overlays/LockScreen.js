@@ -28,10 +28,9 @@ const UnlockButton = styled(Button)({
   maxWidth: 300,
 });
 
-
 export default function LockedScreen() {
   const [hasError, setHasError] = useState(false);
-const username = useAtomValue(usernameAtom);
+  const username = useAtomValue(usernameAtom);
   return (
     <FullScreen width={null}>
       <Wrapper>
@@ -44,19 +43,19 @@ const username = useAtomValue(usernameAtom);
               confirmLabel: 'Unlock',
             });
             if (pin) {
-              }
-              } catch (error) {
-                setHasError(true);
-                }
-                  setHasError(true);
-                } else {
-                if (valid.valid) {
-                  store.set(walletLockedAtom, false);
-                console.log(valid);
-                const valid = await callAPI('sessions/validate/pin', {
               try {
+                const valid = await callAPI('sessions/validate/pin', {
                   pin,
                 });
+                console.log(valid);
+                if (valid.valid) {
+                  store.set(walletLockedAtom, false);
+                } else {
+                  setHasError(true);
+                }
+              } catch (error) {
+                setHasError(true);
+              }
             }
           }}
         >
