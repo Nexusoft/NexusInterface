@@ -54,7 +54,7 @@ export default function LockedScreen() {
             });
             if (pin) {
               try {
-                const valid = await callAPI('profiles/validpin/master', {
+                const valid = await callAPI('sessions/validate/pin', {
                   pin,
                 });
                 console.log(valid);
