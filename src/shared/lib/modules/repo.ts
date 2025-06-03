@@ -30,8 +30,8 @@ const repoInfoSchema = z.object({
     })
     .optional(),
   data: z.object({
-    moduleHash: z.string().optional(),
     repository: repoSchema,
+    moduleHash: z.string().optional(),
   }),
 });
 

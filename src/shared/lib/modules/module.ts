@@ -67,8 +67,8 @@ const nxsPackageSchema = z.object({
     .optional(),
   author: z
     .object({
-      name: z.string(),
-      email: z.string().email(),
+      name: z.string().optional(),
+      email: z.string().email().optional(),
     })
     .optional(),
   // Lists ALL the files which is used by the module in relative paths from the module directory.
@@ -306,8 +306,7 @@ function getModuleIconPath(iconName: string | undefined, dirPath: string) {
 async function initializeModule(moduleInfo: ModuleInfo, dirPath: string) {
   // Check the repository info and verification
   const hash = await getModuleHash(moduleInfo, dirPath);
-
-  const repoInfo = await loadRepoInfo(module.path);
+  const repoInfo = await loadRepoInfo(dirPath);
   const repository = repoInfo?.data.repository;
   const [repoOnline, repoVerified, repoFromNexus] = await Promise.all([
     isRepoOnline(repository),
