@@ -6,7 +6,7 @@ import { merge } from 'webpack-merge';
 
 import basePreloadConfig from './webpack.config.base.preload.babel';
 import prodConfig from './webpack.config.base.prod.babel';
-import { babelLoaderRenderer } from './babelLoaderConfig.babel';
+import { rendererBabelConfig } from './babelLoaderConfig.babel';
 
 export default merge(basePreloadConfig, prodConfig, {
   devtool: 'eval-nosources-cheap-module-source-map',
@@ -17,6 +17,7 @@ export default merge(basePreloadConfig, prodConfig, {
   },
   module: {
     rules: [
+      ...rendererBabelConfig(),
       {
         test: /\.js$/,
         exclude: {
@@ -53,7 +54,6 @@ export default merge(basePreloadConfig, prodConfig, {
           },
         },
       },
-      babelLoaderRenderer(),
     ],
   },
 });
