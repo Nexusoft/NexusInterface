@@ -24,6 +24,12 @@ const BannerMessage = styled.div(({ theme }) => ({
   paddingBottom: '2em',
 }));
 
+const ErrorMessage = styled.div(({ theme }) => ({
+  color: theme.danger,
+  marginTop: '1em',
+  textAlign: 'center',
+}));
+
 const UnlockButton = styled(Button)({
   maxWidth: 300,
 });
@@ -48,7 +54,7 @@ export default function LockedScreen() {
                   pin,
                 });
                 console.log(valid);
-                if (valid.valid) {
+                if (valid) {
                   store.set(walletLockedAtom, false);
                 } else {
                   setHasError(true);
