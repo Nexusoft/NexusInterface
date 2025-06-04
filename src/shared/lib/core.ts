@@ -88,7 +88,7 @@ export const startCore = async () => {
     }
   }
   if (settings.forkBlocks) {
-    params.push('-forkblocks=' + settings.forkBlocks);
+    params.push('-revertblocks=' + settings.forkBlocks);
     updateSettings({ forkBlocks: 0 });
   }
   if (settings.safeMode) {
