@@ -13,7 +13,7 @@ export default merge(basePreloadConfig, prodConfig, {
 
   mode: 'production',
   output: {
-    filename: 'module_preload.dev.js',
+    filename: 'module_preload.prod-dev.js',
   },
   module: {
     rules: [

@@ -39,7 +39,7 @@
       "build/**/*",
       "!build/*.map",
       "!build/*.dev.js",
-      "build/module_preload.dev.js",
+      "build/module_preload.prod-dev.js",
       "!node_modules/**/*",
       {
         "from": "assets/static",
