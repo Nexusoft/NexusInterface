@@ -242,10 +242,11 @@ function ProductionModuleDetails({
                   <Button
                     skin="primary"
                     onClick={() => {
+                      if (!module.repository) return;
                       downloadAndInstall({
                         moduleName: moduleInfo.name,
-                        owner: module.repository?.owner,
-                        repo: module.repository?.repo,
+                        owner: module.repository.owner,
+                        repo: module.repository.repo,
                         releaseId: 'latest',
                       });
                     }}

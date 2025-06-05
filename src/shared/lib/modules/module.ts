@@ -355,7 +355,7 @@ interface ModuleBase {
 
 interface ModuleInitialization {
   hash: string;
-  repository: Repository;
+  repository?: Repository;
   incompatible: boolean;
   disallowed: boolean;
   repoOnline: boolean;
