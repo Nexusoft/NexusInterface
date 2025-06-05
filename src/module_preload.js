@@ -48,7 +48,13 @@ global.NEXUS = {
   walletVersion: APP_VERSION,
   libraries: {
     React: { ...React, jsxDevRuntime, jsxRuntime, default: ReactDefault },
-    ReactDOM: { ...ReactDOM, client: ReactDOMClient, server: ReactDOMServer },
+    ReactDOM: {
+      ...ReactDOM,
+      client: ReactDOMClient,
+      server: ReactDOMServer,
+      render: (jsxElement, rootElement) =>
+        ReactDOMClient.hydrateRoot(rootElement, jsxElement), // Adds React-Dom <17 support by exposing render method, maybe remove if we can have a better solution.
+    },
     emotion: { react, styled, cache },
   },
   components: {
