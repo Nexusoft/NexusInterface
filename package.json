@@ -2,7 +2,7 @@
   "name": "nexus_wallet",
   "productName": "Nexus Wallet",
   "version": "3.2.0-beta.1",
-  "backwardCompatible": "2.2.0",
+  "backwardCompatible": "3.2.0",
   "buildDate": "June 2nd 2025",
   "description": "User interface for the Nexus blockchain and ecosystem.",
   "scripts": {
