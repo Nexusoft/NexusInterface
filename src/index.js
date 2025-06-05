@@ -21,7 +21,10 @@ async function run() {
     }
   } finally {
     prepareWallet();
-    prepareModules();
+    // ********************
+    // WIP, as we make adjustments to the modules, disable the functionallity so nothing breaks.
+    // ********************
+    //prepareModules();
 
     const domNode = document.getElementById('root');
     const root = createRoot(domNode);
