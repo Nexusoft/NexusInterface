@@ -5,14 +5,21 @@
 #### Additions
 
 - Nexus Core v5.1.5
+- Module Scheme changes, modules will need to be updated
+- You can now develop modules using a released version of the wallet
 
 #### Adjustments
 
-- XXXX
+- Updated Electron and React 
+- Translated UI libraries to typescript
+- Improved Update UI
+- Changed 24hr and Supply icons
+
 
 #### Fixes
 
-- XXXX
+- Pin lock now uses core validation
+- No longer sets max amount to 0 if balance is also 0
 
 # 3.1.5 (2024.12.06)
 
