@@ -3,7 +3,7 @@
   "productName": "Nexus Wallet",
   "version": "3.2.0-beta.1",
   "backwardCompatible": "2.2.0",
-  "buildDate": "June 2nd 2025",
+  "buildDate": "June 5th 2025",
   "description": "User interface for the Nexus blockchain and ecosystem.",
   "scripts": {
     "prebuild-dev": "concurrently \"npm run build-main-dev\" \"npm run build-preload-dev\" \"node -r @babel/register ./internals/scripts/checkDll.js\" ",
@@ -65,7 +65,8 @@
     "publish": {
       "provider": "github",
       "owner": "Nexusoft",
-      "repo": "NexusInterface"
+      "repo": "NexusInterface",
+      "channel": "beta"
     },
     "afterSign": "internals/aftersign.js",
     "mac": {
@@ -105,6 +106,12 @@
       "target": [
         "nsis"
       ],
+      "azureSignOptions": {
+        "publisherName": "Nexus Development US, LLC.",
+        "endpoint": "https://wus2.codesigning.azure.net",
+        "TimestampRfc3161": "http://timestamp.acs.microsoft.com",
+        "TimestampDigest": "SHA256"
+      },
       "extraResources": [
         "./assets/win32/cores/**/*",
         "./assets/installerSidebar.bmp"
