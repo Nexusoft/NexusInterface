@@ -82,7 +82,7 @@ export type Settings = {
   windowHeight: number;
   windowX: number | undefined;
   windowY: number | undefined;
-  forkBlocks: number;
+  revertBlocks: number;
   walletClean: boolean;
   clearPeers: boolean;
   coreAPIPolicy: number;
@@ -164,7 +164,7 @@ export const defaultSettings: Settings = {
   windowHeight: 800,
   windowX: undefined,
   windowY: undefined,
-  forkBlocks: 0,
+  revertBlocks: 0,
   walletClean: false,
   clearPeers: false,
   coreAPIPolicy: 0,
