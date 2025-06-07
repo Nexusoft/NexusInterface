@@ -3,7 +3,7 @@
   "productName": "Nexus Wallet",
   "version": "3.2.0-beta.1",
   "backwardCompatible": "2.2.0",
-  "buildDate": "June 5th 2025",
+  "buildDate": "June 7th 2025",
   "description": "User interface for the Nexus blockchain and ecosystem.",
   "scripts": {
     "prebuild-dev": "concurrently \"npm run build-main-dev\" \"npm run build-preload-dev\" \"node -r @babel/register ./internals/scripts/checkDll.js\" ",
@@ -20,7 +20,6 @@
     "package-all": "npm run build && electron-builder build -mwl",
     "package-linux": "npm run build && electron-builder build --linux",
     "package-mac": "npm run build && electron-builder build --mac",
-    "package-mac-unsigned": "npm run build && electron-builder build --mac -c.mac.identity=\"null\"",
     "package-win": "npm run build && electron-builder build --win --x64",
     "start": "npm run dev",
     "start-main-dev": "cross-env HOT=1 NODE_ENV=development electron ./build/main.dev.js",
@@ -81,7 +80,7 @@
       ],
       "hardenedRuntime": true,
       "gatekeeperAssess": false,
-      "identity": "NEXUS DEVELOPMENT U S LLC",
+      "identity": null,
       "entitlements": "internals/entitlements.mac.plist",
       "entitlementsInherit": "internals/entitlements.mac.plist"
     },
@@ -106,12 +105,6 @@
       "target": [
         "nsis"
       ],
-      "azureSignOptions": {
-        "publisherName": "Nexus Development US, LLC.",
-        "endpoint": "https://wus2.codesigning.azure.net",
-        "TimestampRfc3161": "http://timestamp.acs.microsoft.com",
-        "TimestampDigest": "SHA256"
-      },
       "extraResources": [
         "./assets/win32/cores/**/*",
         "./assets/installerSidebar.bmp"
