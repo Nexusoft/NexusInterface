@@ -13,12 +13,14 @@ if (!validChannels.includes(channel)) {
   throw 'INVALID BUILD CHANNEL';
 }
 
-const azureSignOptions = JSON.stringify({
+const azureSignOptions = {
   publisherName: 'Nexus Development US, LLC.',
   endpoint: 'https://wus2.codesigning.azure.net',
   TimestampRfc3161: 'http://timestamp.acs.microsoft.com',
   TimestampDigest: 'SHA256',
-});
+  certificateProfileName: "xxxxxxxxxxx",
+  codeSigningAccountName: "xxxxxxxxxxx"
+};
 
 const macId = '"NEXUS DEVELOPMENT U S LLC"';
 
@@ -77,18 +79,18 @@ fs.writeFileSync(
     if (err) return console.log(err);
   }
 );
-
+const unsigned = process.argv[3] === 'unsigned';
 if (process.platform === 'win32') {
+  const processedAzureSignOptions  = Object.keys(azureSignOptions).map(e => `-c.win.azureSignOptions.${e}=\"${azureSignOptions[e]}\"`).join(' ')
   execSync.execSync(
     `npm run package-win ${isTestnet ? '--testnet=true' : ''} ${
-      unsigned ? '' : '-- -c.win.azureSignOptions=' + azureSignOptions
+      unsigned ? '' : '-- ' + processedAzureSignOptions
     }`,
     {
       stdio: 'inherit',
     }
   );
 } else if (process.platform === 'darwin') {
-  const unsigned = process.argv[3] === 'unsigned';
   execSync.execSync(
     `npm run package-mac ${unsigned ? '' : '-- -c.mac.identity=' + macId} ${
       isTestnet ? '--testnet=true' : ''
