@@ -77,7 +77,7 @@ export async function checkForUpdates() {
           // Not sure if this is the best way to check if there's an update
           // available because autoUpdater.checkForUpdates() doesn't return
           // any reliable results like a boolean `updateAvailable` property
-          if (version && semver.lt(version, APP_VERSION)) {
+          if (version && semver.lt(APP_VERSION, version)) {
             updateAvailable = true;
             if (result?.downloadPromise) {
               await result.downloadPromise;

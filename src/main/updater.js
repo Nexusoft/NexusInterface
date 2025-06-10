@@ -5,7 +5,7 @@ import semver from 'semver';
 
 export function initializeUpdater(settings) {
   autoUpdater.logger = log;
-  autoUpdater.currentVersion = APP_VERSION;
+  autoUpdater.currentVersion = semver.parse(APP_VERSION);
   autoUpdater.autoDownload = true;
   autoUpdater.autoInstallOnAppQuit = false;
   if (process.env.NODE_ENV === 'development') {
@@ -21,6 +21,7 @@ export function initializeUpdater(settings) {
   if (currentChannel) {
     autoUpdater.allowPrerelease = true;
     autoUpdater.channel = currentChannel;
+    autoUpdater.allowDowngrade = false; // We do not have any mechanism to downgrade, as well as there can be issues with your core's chain.
     autoUpdater.autoDownload = false;
   }
 
