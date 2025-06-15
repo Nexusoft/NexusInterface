@@ -41,8 +41,10 @@ function saveCache(cache: RepoCache) {
   localStorage.setItem(localStorageKey, JSON.stringify(cache));
 }
 
-export function removeUpdateCache(repo: Repository) {
-  const repoId = getRepoId(repo);
+export function removeUpdateCache(repository?: Repository) {
+  if (!repository) return;
+  const { owner, repo } = repository;
+  const repoId = getRepoId({ owner, repo });
   if (!repoId) return;
   const cache = loadCache();
   delete cache[repoId];

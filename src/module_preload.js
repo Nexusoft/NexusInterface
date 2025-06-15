@@ -14,7 +14,6 @@ import * as jsxRuntime from 'react/jsx-runtime';
 import * as jsxDevRuntime from 'react/jsx-dev-runtime';
 import * as ReactDOM from 'react-dom';
 import * as ReactDOMClient from 'react-dom/client';
-import * as ReactDOMServer from 'react-dom/server';
 import cache from '@emotion/cache';
 import * as react from '@emotion/react';
 import styled from '@emotion/styled';
@@ -48,13 +47,7 @@ global.NEXUS = {
   walletVersion: APP_VERSION,
   libraries: {
     React: { ...React, jsxDevRuntime, jsxRuntime, default: ReactDefault },
-    ReactDOM: {
-      ...ReactDOM,
-      client: ReactDOMClient,
-      server: ReactDOMServer,
-      render: (jsxElement, rootElement) =>
-        ReactDOMClient.hydrateRoot(rootElement, jsxElement), // Adds React-Dom <17 support by exposing render method, maybe remove if we can have a better solution.
-    },
+    ReactDOM: { ...ReactDOM, client: ReactDOMClient },
     emotion: { react, styled, cache },
   },
   components: {

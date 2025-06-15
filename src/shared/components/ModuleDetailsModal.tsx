@@ -242,10 +242,11 @@ function ProductionModuleDetails({
                   <Button
                     skin="primary"
                     onClick={() => {
+                      if (!module.repository) return;
                       downloadAndInstall({
                         moduleName: moduleInfo.name,
-                        owner: module.repository?.owner,
-                        repo: module.repository?.repo,
+                        owner: module.repository.owner,
+                        repo: module.repository.repo,
                         releaseId: 'latest',
                       });
                     }}
@@ -352,6 +353,7 @@ export default function ModuleDetailsModal({
               </DeleteModule>
             )}
           </ControlledModal.Header>
+
           <ControlledModal.Body>
             <InfoField ratio={[1, 2]} label={__('Module name')}>
               {moduleInfo.name}
@@ -367,13 +369,13 @@ export default function ModuleDetailsModal({
                 </span>
               )}
             </InfoField>
-          </ControlledModal.Body>
 
-          {isDevModule(module) ? (
-            <DevModuleDetails module={module} closeModal={closeModal} />
-          ) : (
-            <ProductionModuleDetails {...{ module, install, closeModal }} />
-          )}
+            {isDevModule(module) ? (
+              <DevModuleDetails module={module} closeModal={closeModal} />
+            ) : (
+              <ProductionModuleDetails {...{ module, install, closeModal }} />
+            )}
+          </ControlledModal.Body>
         </>
       )}
     </ControlledModal>
