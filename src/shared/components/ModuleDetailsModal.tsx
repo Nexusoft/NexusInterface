@@ -309,6 +309,7 @@ function DevModuleDetails({
         </InfoField>
       )}
       <div className="mt2 flex space-between">
+        <div />
         <Button
           skin="primary"
           onClick={() => {
