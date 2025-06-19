@@ -419,7 +419,7 @@ export async function loadModuleFromDir(dirPath: string) {
 export async function loadDevModuleFromDir(dirPath: string) {
   const rawModuleInfo = await loadModuleDevInfo(dirPath);
   const moduleInfo = parseModuleDevInfo(rawModuleInfo);
-  const iconPath = getModuleIconPath(undefined, dirPath);
+  const iconPath = getModuleIconPath(moduleInfo.icon, dirPath);
   const module: DevModule = {
     development: true,
     path: dirPath,
