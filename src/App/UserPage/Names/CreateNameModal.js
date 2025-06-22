@@ -126,7 +126,7 @@ export default function CreateNameModal() {
                       name,
                       global: type === 'global',
                       namespace: type === 'namespaced' ? namespace : undefined,
-                      address: registerAddress,
+                      register: registerAddress,
                     });
                   }
                 },
