@@ -173,7 +173,7 @@ UT.SendEvent = function (category, action, lable, value) {
 };
 
 // Disable Analytics
-// Turn off anayltics and destroys the old object
+// Turn off analytics and destroys the old object
 UT.DisableAnalytics = function () {
   UT.active = false;
 };

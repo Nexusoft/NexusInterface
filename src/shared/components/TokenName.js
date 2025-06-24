@@ -4,7 +4,7 @@ import NexusAddress from 'components/NexusAddress';
 const getToken = ({ token, account, contract }) => {
   const obj = token || account || contract;
   return {
-    name: obj?.ticker || obj?.token_name, //token_name might be depercated
+    name: obj?.ticker || obj?.token_name, //token_name might be deprecated
     address: obj?.token,
   };
 };
