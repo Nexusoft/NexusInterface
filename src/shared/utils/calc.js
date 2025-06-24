@@ -4,7 +4,7 @@
 const precision = 1000000;
 
 /**
- * Subtracts all params and delivers reesult
+ * Subtracts all params and delivers result
  *
  * @param {[float]} numbers
  * @returns {float} result of subtracted numbers

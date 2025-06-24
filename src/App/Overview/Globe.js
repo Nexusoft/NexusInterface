@@ -229,7 +229,7 @@ export default class Globe extends Component {
 
     // take the peerInfo look up the Geo Data in the maxmind DB
     // and if there are any points that exist and match coords
-    // update the registery entry data
+    // update the registry entry data
 
     let newRegistry = peerInfo
       .map((peer) => {
