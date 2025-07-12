@@ -4,18 +4,17 @@ This document will be a living document about issues and resolutions with differ
 
 For comparison, the Nexus Wallet is build on a 16.04 machine, with testing done on 16.04 and 18.04.
 
-#### Debian Buster Fix for AppImage
+#### Debian Buster Fix 
 
-Run before running AppImage
-`sudo sysctl kernel.unprivileged_userns_clone=1`
+cd NexusInterface
 
-#### Can not install gir1.2-gnomekeyring-1.0
+ Make it executable:
+chmod +x build_deb.sh
 
-gnomeKeyring has been deprecated but is still being required by electron 5
-you must remove this dep from the package
+Run it:
+    ./build_deb.sh
 
-To do this unpack the deb.
-Unpack of the control archive.
-Remove the dependency from the control file
-repackage the control.tar.gz
-repackage deb
+
+The resulting .deb should appear in the dist/ directory inside the NexusInterface folder.
+
+
