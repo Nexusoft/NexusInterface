@@ -16,7 +16,7 @@ See [Translation Guide](docs/Translation.md).
 
 ## Build and Dev-server Instructions
 
-To get started, you will first need to set up node.js (version 10 or higher) and npm (version 6 or higher) they come together as a package and can be found [here](https://nodejs.org). You will then need to clone into this repository, cd into the NexusInterface dir, run `npm install`, then run `npm run dev` and the dev server will spin up launching the app for you.
+To get started, install Node.js 22.12.0 or newer and npm 10.9.0 or newer. This repository currently builds against Electron 43. Clone this repository, cd into the NexusInterface directory, run `npm install`, then run `npm run dev` and the dev server will spin up launching the app for you.
 
 To test a production build run `npm run package` and navigate to the _release_ directory in the root of the project and install as you would any other program.
 

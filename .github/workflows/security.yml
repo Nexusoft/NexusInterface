@@ -1,0 +1,23 @@
+name: Security validation
+
+on:
+  pull_request:
+  push:
+
+permissions:
+  contents: read
+
+jobs:
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.2.2
+      - uses: actions/setup-node@v4.4.0
+        with:
+          node-version: 22.12.0
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm run test:security
+      - run: npm run build-renderer
+      - run: npm run build-main
+      - run: npm run build-preload

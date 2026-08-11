@@ -1,0 +1,164 @@
+import styled from '@emotion/styled';
+
+import Form from 'components/Form';
+import ControlledModal from 'components/ControlledModal';
+import FormField from 'components/FormField';
+import Spinner from 'components/Spinner';
+import { formSubmit, required } from 'lib/form';
+import { confirmPin, openSuccessDialog } from 'lib/dialog';
+import { assetsQuery, tokensQuery } from 'lib/user';
+import { Asset, callAPI, Token } from 'lib/api';
+import memoize from 'utils/memoize';
+import { SuggestionType } from 'components/AutoSuggest';
+
+__ = __context('TokenizeAsset');
+
+const Value = styled.span(({ theme }) => ({
+  color: theme.foreground,
+}));
+
+const TokenName = styled.span(({ theme }) => ({
+  color: theme.primary,
+  marginLeft: '.5em',
+}));
+
+type TokenSuggestion = SuggestionType & {
+  name?: string;
+};
+
+const filterSuggestions = memoize(
+  (suggestions: TokenSuggestion[], inputValue: string) => {
+    if (!suggestions) return [];
+    const query = new String(inputValue || '').toLowerCase();
+    return suggestions.filter((suggestion) => {
+      const { name } = suggestion;
+      return (
+        !!name && typeof name === 'string' && name.toLowerCase().includes(query)
+      );
+    });
+  }
+);
+
+const getTokenSuggestions = memoize(
+  (ownedTokens?: Token[]): TokenSuggestion[] =>
+    ownedTokens
+      ? ownedTokens.map((token) => ({
+          value: token.address,
+          name: token.ticker,
+          display: (
+            <span>
+              {token.ticker} -<span className="dim"> {token.address}</span>
+            </span>
+          ),
+        }))
+      : []
+);
+
+const initialValues = {
+  token: '',
+};
+
+export default function TokenizeAssetModal({ asset }: { asset: Asset }) {
+  const ownedTokens = tokensQuery.use();
+  const tokenSuggestions = getTokenSuggestions(ownedTokens);
+
+  return (
+    <ControlledModal maxWidth={600}>
+      {(closeModal) => (
+        <>
+          <ControlledModal.Header>
+            {__('Tokenize asset')}
+          </ControlledModal.Header>
+          <ControlledModal.Body>
+            <Form
+              name="tokenize-asset"
+              initialValues={initialValues}
+              onSubmit={formSubmit({
+                submit: async ({ token }) => {
+                  const pin = await confirmPin();
+                  if (pin) {
+                    return await callAPI('assets/tokenize/asset', {
+                      pin,
+                      address: asset.address,
+                      token,
+                    });
+                  }
+                  return undefined;
+                },
+                onSuccess: async (result) => {
+                  if (!result) return; // Submission was cancelled
+                  assetsQuery.refetch();
+                  closeModal();
+                  openSuccessDialog({
+                    message: __('Asset has been tokenized'),
+                  });
+                },
+                errorMessage: __('Error tokenizing asset'),
+              })}
+            >
+              <FormField label={__('Asset name')}>
+                <Value>{asset.name}</Value>
+              </FormField>
+
+              <FormField label={__('Asset address')}>
+                <Value>{asset.address}</Value>
+              </FormField>
+
+              <FormField
+                connectLabel
+                label={
+                  <span>
+                    <span>{__('Token')}</span>
+                    {
+                      <Form.Field
+                        name="token"
+                        render={({ input }) => {
+                          const suggestion = tokenSuggestions?.find(
+                            (suggestion) =>
+                              (typeof suggestion === 'string'
+                                ? suggestion
+                                : suggestion.value) === input.value
+                          );
+                          const tokenName = suggestion?.name;
+                          return (
+                            !!tokenName && <TokenName>{tokenName}</TokenName>
+                          );
+                        }}
+                      />
+                    }
+                  </span>
+                }
+              >
+                <Form.AutoSuggest
+                  name="token"
+                  suggestions={tokenSuggestions}
+                  filterSuggestions={filterSuggestions}
+                  inputProps={{
+                    placeholder: __('Token address'),
+                    autoFocus: true,
+                  }}
+                  validate={required()}
+                />
+              </FormField>
+
+              <Form.SubmitButton skin="primary" wide uppercase className="mt3">
+                {({ submitting }) =>
+                  submitting ? (
+                    <span>
+                      <Spinner className="mr0_4" />
+                      <span className="v-align">
+                        {__('Tokenizing asset')}...
+                      </span>
+                    </span>
+                  ) : (
+                    __('Tokenize asset')
+                  )
+                }
+              </Form.SubmitButton>
+            </Form>
+          </ControlledModal.Body>
+        </>
+      )}
+    </ControlledModal>
+  );
+}

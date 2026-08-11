@@ -32,7 +32,7 @@ export function setApplicationMenu(template) {
 export function popupContextMenu(template, webContentsId) {
   return new Promise((resolve, reject) => {
     try {
-      const refillClick = (template) => {
+      const reconstructTemplate = (template) => {
         template.forEach((item) => {
           if (item.click) {
             item.click = () => {
@@ -40,11 +40,11 @@ export function popupContextMenu(template, webContentsId) {
             };
           }
           if (item.submenu) {
-            refillClick(item.submenu);
+            reconstructTemplate(item.submenu);
           }
         });
       };
-      refillClick(template);
+      reconstructTemplate(template);
 
       const menu = Menu.buildFromTemplate(template);
       const window = webContentsId

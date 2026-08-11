@@ -1,0 +1,60 @@
+// External
+import { useAtomValue } from 'jotai';
+import styled from '@emotion/styled';
+
+// Internal
+import languages from 'data/languages';
+import { updateSettings, settingsAtom } from 'lib/settings';
+import SettingsField from 'components/SettingsField';
+import Select, { SelectOption } from 'components/Select';
+import { confirm } from 'lib/dialog';
+import { Locale } from 'lib/intl';
+
+__ = __context('Settings.Application');
+
+const Flag = styled.img({
+  marginRight: '.5em',
+  verticalAlign: 'middle',
+});
+
+const languageOptions: SelectOption<Locale>[] = languages.map((lang) => ({
+  value: lang.code,
+  display: (
+    <span>
+      <Flag src={lang.flag} />
+      <span className="v-align">{lang.name}</span>
+    </span>
+  ),
+}));
+
+export default function LanguageSetting() {
+  const { locale } = useAtomValue(settingsAtom);
+
+  const handleChange = async (locale: Locale) => {
+    const language = languages.find((lang) => lang.code === locale);
+    const agreed = await confirm({
+      question: __('Switch language?'),
+      note: __(
+        'Translations for %{language} are contributed by our amazing community members',
+        {
+          language: language?.name,
+        }
+      ),
+      labelYes: __('Switch to %{language}', { language: language?.name }),
+      labelNo: __('Cancel'),
+    });
+    if (!agreed) return;
+    updateSettings({ locale });
+    location.reload();
+  };
+
+  return (
+    <SettingsField label={__('Language')}>
+      <Select
+        options={languageOptions}
+        value={locale}
+        onChange={handleChange}
+      />
+    </SettingsField>
+  );
+}

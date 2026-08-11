@@ -1,19 +1,18 @@
-import { BrowserWindow, screen, app } from 'electron';
+import { BrowserWindow, screen } from 'electron';
 import path from 'path';
 import installExtension, {
   REACT_DEVELOPER_TOOLS,
-  REDUX_DEVTOOLS,
 } from 'electron-devtools-installer';
 
 // Internal
-import { assetsDir } from 'consts/paths';
-import { updateSettingsFile } from 'lib/settings/universal';
+import { assetsDir } from './paths';
+import { updateSettingsFile } from './settings';
 import { debounced } from 'utils/universal';
 
 const port = process.env.PORT || 1212;
 
 /**
- * Enable development tools for REACT and REDUX
+ * Enable development tools for REACT
  *
  * @returns
  */
@@ -21,10 +20,6 @@ function installExtensions() {
   const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
   return Promise.all([
     installExtension(REACT_DEVELOPER_TOOLS, {
-      loadExtensionOptions: { allowFileAccess: true },
-      forceDownload: forceDownload,
-    }),
-    installExtension(REDUX_DEVTOOLS, {
       loadExtensionOptions: { allowFileAccess: true },
       forceDownload: forceDownload,
     }),
@@ -58,8 +53,21 @@ export async function createWindow(settings) {
     backgroundColor: '#171719',
     show: false,
     webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false,
+      preload:
+        process.env.NODE_ENV === 'development'
+          ? path.resolve(process.cwd(), 'build', 'main_preload.dev.js')
+          : path.resolve(__dirname, 'main_preload.prod.js'),
+      nodeIntegration: false,
+      contextIsolation: true,
+      // Diagnostic-only: NEXUS_DISABLE_SANDBOX=1 may disable sandbox but only
+      // in development/debug builds. It has no effect in packaged production
+      // builds so an injected environment variable cannot weaken hardening.
+      sandbox:
+        process.env.NEXUS_DISABLE_SANDBOX === '1' &&
+        (process.env.NODE_ENV === 'development' ||
+          process.env.DEBUG_PROD === 'true')
+          ? false
+          : true,
       webviewTag: true,
       enableRemoteModule: false,
     },
