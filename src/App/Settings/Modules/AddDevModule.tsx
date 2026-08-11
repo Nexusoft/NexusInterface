@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import { ipcRenderer } from 'electron';
 
 import Button from 'components/Button';
 import { addDevModule } from 'lib/modules';
@@ -14,10 +13,8 @@ const Wrapper = styled.div(({ theme }) => ({
 }));
 
 async function handleClick() {
-  const paths = await ipcRenderer.invoke('show-open-dialog', {
-    title: __('Select development module directory'),
-    properties: ['openDirectory'],
-  });
+  const paths =
+    await window.nexusElectron.dialogs.selectDevModuleDirectory();
   const dirPath = paths && paths[0];
   if (!dirPath) return;
 

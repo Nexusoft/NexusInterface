@@ -1,6 +1,3 @@
-import { trackEvent } from '@aptabase/electron/renderer';
-import { ipcRenderer } from 'electron';
-
 interface UsageTracker {
   active: boolean;
   SendScreen(screenTitle: string): void;
@@ -41,22 +38,22 @@ const UT: UsageTracker = {
 
   LogIn(): void {
     if (!UT.active) return;
-    trackEvent('login');
+    void window.nexusElectron.aptabase.trackEvent('login');
   },
 
   LogOut(): void {
     if (!UT.active) return;
-    trackEvent('logout');
+    void window.nexusElectron.aptabase.trackEvent('logout');
   },
 
   CreateUserAccount(): void {
     if (!UT.active) return;
-    trackEvent('create_user_account');
+    void window.nexusElectron.aptabase.trackEvent('create_user_account');
   },
 
   RecoveredUserAccount(): void {
     if (!UT.active) return;
-    trackEvent('recovered_user_account');
+    void window.nexusElectron.aptabase.trackEvent('recovered_user_account');
   },
 
   RecoverPhrase(hadRecoverPhrase: boolean): void {
@@ -64,12 +61,12 @@ const UT: UsageTracker = {
     const params = {
       had_recover_phrase: hadRecoverPhrase,
     };
-    trackEvent('recover_phrase', params);
+    void window.nexusElectron.aptabase.trackEvent('recover_phrase', params);
   },
 
   UpdateCredentials(): void {
     if (!UT.active) return;
-    trackEvent('update_credentials');
+    void window.nexusElectron.aptabase.trackEvent('update_credentials');
   },
 
   Send(tokenType: string): void {
@@ -77,7 +74,7 @@ const UT: UsageTracker = {
     const params = {
       token_type: tokenType,
     };
-    trackEvent('send', params);
+    void window.nexusElectron.aptabase.trackEvent('send', params);
   },
 
   InstallModule(moduleName: string): void {
@@ -85,7 +82,7 @@ const UT: UsageTracker = {
     const params = {
       module_name: moduleName,
     };
-    trackEvent('install_module', params);
+    void window.nexusElectron.aptabase.trackEvent('install_module', params);
   },
 
   UninstallModule(moduleName: string): void {
@@ -93,17 +90,17 @@ const UT: UsageTracker = {
     const params = {
       module_name: moduleName,
     };
-    trackEvent('uninstall_module', params);
+    void window.nexusElectron.aptabase.trackEvent('uninstall_module', params);
   },
 
   StartStake(): void {
     if (!UT.active) return;
-    trackEvent('start_stake');
+    void window.nexusElectron.aptabase.trackEvent('start_stake');
   },
 
   StopStake(): void {
     if (!UT.active) return;
-    trackEvent('stop_stake');
+    void window.nexusElectron.aptabase.trackEvent('stop_stake');
   },
 
   AdjustStake(direction: string): void {
@@ -111,7 +108,7 @@ const UT: UsageTracker = {
     const params = {
       direction: direction,
     };
-    trackEvent('adjust_stake', params);
+    void window.nexusElectron.aptabase.trackEvent('adjust_stake', params);
   },
 
   AddAddressBookEntry(isEdit: boolean): void {
@@ -119,7 +116,10 @@ const UT: UsageTracker = {
     const params = {
       is_edit: isEdit,
     };
-    trackEvent('add_address_book_entry', params);
+    void window.nexusElectron.aptabase.trackEvent(
+      'add_address_book_entry',
+      params
+    );
   },
 
   CreateNewItem(itemType: string): void {
@@ -127,17 +127,17 @@ const UT: UsageTracker = {
     const params = {
       item_type: itemType,
     };
-    trackEvent('create_new_item', params);
+    void window.nexusElectron.aptabase.trackEvent('create_new_item', params);
   },
 
   ExportAddressBook(): void {
     if (!UT.active) return;
-    trackEvent('export_address_book');
+    void window.nexusElectron.aptabase.trackEvent('export_address_book');
   },
 
   RenameAccount(): void {
     if (!UT.active) return;
-    trackEvent('rename_account');
+    void window.nexusElectron.aptabase.trackEvent('rename_account');
   },
 
   Exception(error: string): void {
@@ -150,7 +150,7 @@ const UT: UsageTracker = {
         type: errorType,
         message: messageSplit[1],
       };
-      trackEvent('error_exception', params);
+      void window.nexusElectron.aptabase.trackEvent('error_exception', params);
     } catch (error) {
       // If this fails just move on.
     }
@@ -170,10 +170,10 @@ const UT: UsageTracker = {
 
   StartAnalytics(): void {
     UT.active = true;
-    ipcRenderer.on('usage-tracking-error-relay', (_event, message: string) => {
+    window.nexusElectron.app.onUsageTrackingError((message: string) => {
       UT.Exception(message);
     });
-    trackEvent('app_started');
+    void window.nexusElectron.aptabase.trackEvent('app_started');
   },
 };
 

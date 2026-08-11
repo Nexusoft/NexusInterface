@@ -1,4 +1,3 @@
-import { shell } from 'electron';
 import Button from 'components/Button';
 import Modal, { ModalProps } from 'components/Modal';
 import { alphaRelease } from 'consts/misc';
@@ -24,7 +23,7 @@ export default function PreReleaseWarningModal(props: ModalProps) {
               <Button
                 skin="plain-link-primary"
                 onClick={() =>
-                  shell.openExternal(
+                  window.nexusElectron.app.openExternal(
                     'https://github.com/Nexusoft/NexusInterface/issues'
                   )
                 }
@@ -36,7 +35,9 @@ export default function PreReleaseWarningModal(props: ModalProps) {
               <Button
                 skin="plain-link-primary"
                 onClick={() =>
-                  shell.openExternal('https://t.me/joinchat/jrfQGVfaNe03MWM8')
+                  window.nexusElectron.app.openExternal(
+                    'https://t.me/joinchat/jrfQGVfaNe03MWM8'
+                  )
                 }
               >
                 Nexus Testing Telegram group

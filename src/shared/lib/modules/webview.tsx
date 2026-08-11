@@ -1,16 +1,5 @@
-import { clipboard, IpcMessageEvent, shell, WebviewTag } from 'electron';
-
-import { AddressBook, addressBookAtom } from 'lib/addressBook';
-import { callAPI } from 'lib/api';
-import { defaultMenu, popupContextMenu } from 'lib/contextMenu';
 import { coreInfoQuery } from 'lib/coreInfo';
-import {
-  confirmPin,
-  openConfirmDialog,
-  openErrorDialog,
-  openInfoDialog,
-  openSuccessDialog,
-} from 'lib/dialog';
+import { openConfirmDialog } from 'lib/dialog';
 import { goToSend } from 'lib/send';
 import { userStatusQuery } from 'lib/session';
 import { Settings, settingsAtom } from 'lib/settings';
@@ -25,14 +14,24 @@ import {
   modulesMapAtom,
   moduleStatesAtom,
 } from './atoms';
-import { readModuleStorage, writeModuleStorage } from './storage';
+import { readModuleStorage } from './rendererStorage';
+
+type WebviewTag = HTMLWebViewElement & {
+  send(channel: string, ...args: unknown[]): void;
+  openDevTools(): void;
+  closeDevTools(): void;
+  isDevToolsOpened(): boolean;
+  getWebContentsId(): number;
+};
+
+type IpcMessageEvent = Event & {
+  target: EventTarget & WebviewTag;
+  channel: string;
+  args: any[];
+};
 
 let activeWebView: WebviewTag | null = null;
-
-/**
- * Utilities
- * ===========================================================================
- */
+let hostRequestUnsub: (() => void) | null = null;
 
 const getSettingsForModules = memoize((locale, fiatCurrency, addressStyle) => ({
   locale,
@@ -57,34 +56,34 @@ const getActiveModule = () => {
   return module && module.enabled ? module : null;
 };
 
-/**
- * Incoming IPC messages FROM modules
- * ===========================================================================
- */
+function buildSanitizedContextExtras(moduleName?: string | null) {
+  const settings = store.get(settingsAtom);
+  const { locale, fiatCurrency, addressStyle } = settings;
+  const name = moduleName ?? store.get(activeAppModuleNameAtom);
+  return {
+    walletVersion: typeof APP_VERSION === 'string' ? APP_VERSION : '',
+    theme: store.get(themeAtom),
+    settings: getSettingsForModules(locale, fiatCurrency, addressStyle),
+    coreInfo: store.get(coreInfoQuery.valueAtom),
+    userStatus: store.get(userStatusQuery.valueAtom),
+    moduleState: name ? store.get(moduleStatesAtom)[name] : null,
+  };
+}
 
+/**
+ * Legacy ipc-message channels from pre-v2 guests.
+ * Production v2 modules use the main-process broker exclusively.
+ * Generic apiCall / secureApiCall / proxyRequest are rejected.
+ */
 function handleIpcMessage({ target, channel, args }: IpcMessageEvent) {
   const webview = target as WebviewTag;
+  if (webview !== activeWebView) return;
   switch (channel) {
     case 'send':
-      send(args);
-      break;
-    case 'api-call':
-      apiCall(args, webview);
-      break;
-    case 'secure-api-call':
-      secureApiCall(args, webview);
+      legacySend(args);
       break;
     case 'show-notification':
       showNotif(args);
-      break;
-    case 'show-error-dialog':
-      showErrorDialog(args);
-      break;
-    case 'show-success-dialog':
-      showSuccessDialog(args);
-      break;
-    case 'show-info-dialog':
-      showInfoDialog(args);
       break;
     case 'confirm':
       confirm(args, webview);
@@ -93,120 +92,39 @@ function handleIpcMessage({ target, channel, args }: IpcMessageEvent) {
       updateState(args);
       break;
     case 'update-storage':
-      updateStorage(args);
-      break;
-    case 'context-menu':
-      contextMenu(args, webview);
-      break;
     case 'open-in-browser':
-      openInBrowser(args);
-      break;
+    case 'open-external':
     case 'copy-to-clipboard':
-      copyToClipboard(args);
+    case 'api-call':
+    case 'secure-api-call':
+    case 'proxy-request':
+      console.warn(`Rejected privileged legacy module channel: ${channel}`);
+      break;
+    default:
       break;
   }
 }
 
-function send([{ sendFrom, recipients, advancedOptions }]: any[]) {
+function legacySend([{ sendFrom, recipients, advancedOptions }]: any[]) {
   if (!Array.isArray(recipients)) return;
-  goToSend({ sendFrom, recipients, advancedOptions });
-}
-
-async function apiCall([endpoint, params, callId]: any[], webview: WebviewTag) {
-  try {
-    const response = await callAPI(endpoint, params);
-    if (webview) {
-      webview.send(
-        `api-return${callId ? `:${callId}` : ''}`,
-        null,
-        response && JSON.parse(JSON.stringify(response))
-      );
-    }
-  } catch (err) {
-    console.error(err);
-    if (webview) {
-      webview.send(`api-return${callId ? `:${callId}` : ''}`, err);
-    }
-  }
-}
-
-async function secureApiCall(
-  [endpoint, params, callId]: any[],
-  webview: WebviewTag
-) {
   const activeModule = getActiveModule();
-  if (!activeModule) return;
-  const {
-    info: { displayName },
-  } = activeModule;
-  try {
-    const message = (
-      <div style={{ overflow: 'scroll', maxHeight: '15em' }}>
-        <div>
-          <strong>{displayName}</strong> module is requesting to call{' '}
-          <strong>{endpoint}</strong> endpoint with the following parameters:
-        </div>
-        <code
-          style={{
-            wordBreak: 'break-word',
-            whiteSpace: 'pre',
-            display: 'block',
-            marginTop: '0.5em',
-            padding: '8px 0',
-          }}
-        >
-          {JSON.stringify(params, null, 2)}
-        </code>
-      </div>
-    );
-    const pin = await confirmPin({ note: message });
-
-    const response =
-      pin === undefined
-        ? undefined
-        : await callAPI(endpoint, { ...params, pin });
-    if (webview) {
-      webview.send(
-        `secure-api-return${callId ? `:${callId}` : ''}`,
-        null,
-        response && JSON.parse(JSON.stringify(response))
-      );
-    }
-  } catch (error) {
-    console.error(error);
-    if (webview) {
-      webview.send(`secure-api-return${callId ? `:${callId}` : ''}`, error);
-    }
-  }
+  goToSend({
+    sendFrom,
+    recipients,
+    advancedOptions,
+    originatingModule: activeModule
+      ? {
+          name: activeModule.info.name,
+          displayName: (activeModule.info as { displayName?: string })
+            .displayName,
+        }
+      : undefined,
+  });
 }
 
 function showNotif([options = {}]: any[]) {
   const { content, type, autoClose } = options;
   showNotification(content, { content, type, autoClose });
-}
-
-function showErrorDialog([options = {}]: any[]) {
-  const { message, note } = options;
-  openErrorDialog({
-    message,
-    note,
-  });
-}
-
-function showSuccessDialog([options = {}]: any[]) {
-  const { message, note } = options;
-  openSuccessDialog({
-    message,
-    note,
-  });
-}
-
-function showInfoDialog([options = {}]: any[]) {
-  const { message, note } = options;
-  openInfoDialog({
-    message,
-    note,
-  });
 }
 
 function confirm([options = {}, confirmationId]: any[], webview: WebviewTag) {
@@ -240,7 +158,11 @@ function confirm([options = {}, confirmationId]: any[], webview: WebviewTag) {
 function updateState([moduleState]: any[]) {
   const activeAppModuleName = store.get(activeAppModuleNameAtom);
   if (!activeAppModuleName) return;
-  if (typeof moduleState === 'object') {
+  if (
+    typeof moduleState === 'object' &&
+    moduleState &&
+    !Array.isArray(moduleState)
+  ) {
     store.set(moduleStatesAtom, (states) => ({
       ...states,
       [activeAppModuleName]: moduleState,
@@ -252,31 +174,131 @@ function updateState([moduleState]: any[]) {
   }
 }
 
-function updateStorage([data]: any[]) {
-  const activeModule = getActiveModule();
-  if (!activeModule) return;
-  writeModuleStorage(activeModule, data);
-}
+type HostRequest = {
+  requestId: string;
+  action: string;
+  moduleName: string;
+  displayName: string;
+  payload?: any;
+};
 
-function contextMenu([template]: any[], webview: WebviewTag) {
-  if (webview) {
-    popupContextMenu(template || defaultMenu, webview.getWebContentsId());
+async function handleHostRequest(request: HostRequest) {
+  const respond = async (
+    ok: boolean,
+    value?: unknown,
+    error?: { code?: string; message?: string }
+  ) => {
+    try {
+      await window.nexusElectron.modules.respondModuleApiHost({
+        requestId: request.requestId,
+        ok,
+        value,
+        error,
+      });
+    } catch (err) {
+      console.error('Failed to respond to module host request', err);
+    }
+  };
+
+  try {
+    switch (request.action) {
+      case 'getContext': {
+        const extras = buildSanitizedContextExtras(request.moduleName);
+        const modulesMap = store.get(modulesMapAtom);
+        const module = modulesMap[request.moduleName];
+        const storageData =
+          module && module.enabled ? await readModuleStorage(module) : {};
+        await respond(true, {
+          ...extras,
+          storageData,
+        });
+        break;
+      }
+      case 'notify': {
+        const { content, type, autoClose } = request.payload || {};
+        showNotification(content, { content, type, autoClose });
+        await respond(true, undefined);
+        break;
+      }
+      case 'confirm': {
+        const { question, note, labelYes, skinYes, labelNo, skinNo } =
+          request.payload || {};
+        const agreed = await new Promise<boolean>((resolve) => {
+          openConfirmDialog({
+            question:
+              question || `${request.displayName} requests confirmation`,
+            note,
+            labelYes,
+            skinYes,
+            labelNo,
+            skinNo,
+            callbackYes: () => resolve(true),
+            callbackNo: () => resolve(false),
+          });
+        });
+        await respond(true, agreed);
+        break;
+      }
+      case 'state.get': {
+        const moduleName = request.moduleName;
+        const state = moduleName
+          ? store.get(moduleStatesAtom)[moduleName] ?? null
+          : null;
+        await respond(true, state);
+        break;
+      }
+      case 'state.set': {
+        const moduleName = request.moduleName;
+        const value = request.payload?.value;
+        if (
+          moduleName &&
+          value &&
+          typeof value === 'object' &&
+          !Array.isArray(value)
+        ) {
+          store.set(moduleStatesAtom, (states) => ({
+            ...states,
+            [moduleName]: value,
+          }));
+        }
+        await respond(true, undefined);
+        break;
+      }
+      case 'requestSend': {
+        const { sendFrom, recipients, advancedOptions, originatingModule } =
+          request.payload || {};
+        if (!Array.isArray(recipients)) {
+          await respond(false, undefined, {
+            code: 'module.validation_failed',
+            message: 'Send draft recipients are required',
+          });
+          break;
+        }
+        goToSend({
+          sendFrom,
+          recipients,
+          advancedOptions,
+          originatingModule: originatingModule || {
+            name: request.moduleName,
+            displayName: request.displayName,
+          },
+        });
+        await respond(true, undefined);
+        break;
+      }
+      default:
+        await respond(false, undefined, {
+          code: 'module.unknown_method',
+          message: `Unknown host action: ${request.action}`,
+        });
+    }
+  } catch (error: any) {
+    await respond(false, undefined, {
+      code: 'module.internal',
+      message: error?.message || 'Host action failed',
+    });
   }
 }
-
-function openInBrowser([url]: any[]) {
-  shell.openExternal(url);
-}
-
-function copyToClipboard([text]: any[]) {
-  clipboard.writeText(text);
-}
-
-/**
- * ===========================================================================
- * Public API
- * ===========================================================================
- */
 
 export const getActiveWebView = () => activeWebView;
 
@@ -291,79 +313,90 @@ export const unsetActiveAppModule = () => {
 };
 
 export const toggleWebViewDevTools = () => {
-  const activeWebView = getActiveWebView();
-  if (activeWebView) {
-    if (activeWebView.isDevToolsOpened()) {
-      activeWebView.closeDevTools();
+  const active = getActiveWebView();
+  if (active) {
+    if (active.isDevToolsOpened()) {
+      active.closeDevTools();
     } else {
-      activeWebView.openDevTools();
+      active.openDevTools();
     }
   }
 };
 
-function sendWalletDataUpdated(walletData: WalletData) {
-  const activeWebView = getActiveWebView();
-  if (activeWebView) {
-    try {
-      activeWebView.send('wallet-data-updated', walletData);
-    } catch (err) {}
+async function publishContextUpdate(partial?: Partial<WalletData>) {
+  const active = getActiveWebView();
+  if (!active) return;
+
+  const extras = buildSanitizedContextExtras();
+  const activeModule = getActiveModule();
+  let storageData = partial?.storageData;
+  if (storageData === undefined && activeModule) {
+    storageData = await readModuleStorage(activeModule);
+  }
+
+  try {
+    await window.nexusElectron.modules.pushModuleContext({
+      webContentsId: active.getWebContentsId(),
+      context: {
+        ...extras,
+        ...partial,
+        storageData: storageData ?? {},
+      },
+    });
+  } catch {
+    // Fail closed: never push unsanitized context from the renderer if the
+    // main-process sanitizer path is unavailable.
+  }
+}
+
+export function disposeModuleHostRelay() {
+  if (hostRequestUnsub) {
+    hostRequestUnsub();
+    hostRequestUnsub = null;
   }
 }
 
 export function prepareWebView() {
+
   subscribe(activeAppModuleNameAtom, (moduleName) => {
     const webview = getActiveWebView();
     if (webview) {
       webview.addEventListener('ipc-message', handleIpcMessage);
-      webview.addEventListener('dom-ready', async () => {
-        const settings = store.get(settingsAtom);
-        const { locale, fiatCurrency, addressStyle } = settings;
-        const moduleState = moduleName
-          ? store.get(moduleStatesAtom)[moduleName]
-          : null;
-        const activeModule = getActiveModule();
-        const storageData = activeModule
-          ? await readModuleStorage(activeModule)
-          : null;
-        webview.send('initialize', {
-          theme: store.get(themeAtom),
-          settings: getSettingsForModules(locale, fiatCurrency, addressStyle),
-          coreInfo: store.get(coreInfoQuery.valueAtom),
-          userStatus: store.get(userStatusQuery.valueAtom),
-          addressBook: store.get(addressBookAtom),
-          moduleState,
-          storageData,
-        });
+      webview.addEventListener('dom-ready', () => {
+        void publishContextUpdate();
       });
     }
+    if (moduleName) {
+      void publishContextUpdate();
+    }
   });
+
+  if (hostRequestUnsub) {
+    hostRequestUnsub();
+    hostRequestUnsub = null;
+  }
+  hostRequestUnsub = window.nexusElectron.modules.onModuleApiHostRequest(
+    (request: HostRequest) => {
+      void handleHostRequest(request);
+    }
+  );
 
   subscribeWithPrevious(settingsAtom, (newSettings, oldSettings) => {
     if (settingsChanged(oldSettings, newSettings)) {
-      const { locale, fiatCurrency, addressStyle } = newSettings;
-      const settings = getSettingsForModules(
-        locale,
-        fiatCurrency,
-        addressStyle
-      );
-      sendWalletDataUpdated({ settings });
+      void publishContextUpdate();
     }
   });
 
-  subscribe(themeAtom, (theme) => {
-    sendWalletDataUpdated({ theme });
+  subscribe(themeAtom, () => {
+    void publishContextUpdate();
   });
 
-  subscribe(coreInfoQuery.valueAtom, (coreInfo) => {
-    sendWalletDataUpdated({ coreInfo });
+  subscribe(coreInfoQuery.valueAtom, () => {
+    void publishContextUpdate();
   });
 
-  subscribe(userStatusQuery.valueAtom, (userStatus) => {
-    sendWalletDataUpdated({ userStatus });
-  });
-
-  subscribe(addressBookAtom, (addressBook) => {
-    sendWalletDataUpdated({ addressBook });
+  subscribe(userStatusQuery.valueAtom, () => {
+    void publishContextUpdate();
   });
 }
 
@@ -375,10 +408,10 @@ type SettingsForModule = Pick<
 interface WalletData {
   theme?: Theme;
   settings?: SettingsForModule;
-  // TODO: replace real types
   coreInfo?: any;
   userStatus?: any;
-  addressBook?: AddressBook;
   moduleState?: Object | null;
   storageData?: any;
 }
+
+declare const APP_VERSION: string;

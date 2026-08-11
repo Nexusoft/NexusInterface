@@ -1,3 +1,9 @@
+> **Important (NEXUS v2):** Production modules now receive an isolated
+> `window.NEXUS` API via `contextBridge`. React/Emotion libraries, wallet
+> components, and generic `apiCall` / `secureApiCall` are **not** exposed.
+> See [NEXUS v2 migration](./nexus-v2-migration.md) for the supported surface.
+> The sections below document the historical v1 API for reference during migration.
+
 # `NEXUS` global variable
 
 `NEXUS` global variable is a javascript object injected into the global scope of every module's javascript execution environment. It contains all the libraries, data and methods that you need to be able to interact and communicate with the base wallet.

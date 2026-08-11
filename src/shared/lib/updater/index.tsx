@@ -1,7 +1,4 @@
 // External
-import { ipcRenderer } from 'electron';
-import path from 'path';
-import fs from 'fs';
 import semver from 'semver';
 import { atom } from 'jotai';
 
@@ -10,78 +7,74 @@ import { store } from 'lib/store';
 import { showBackgroundTask, showNotification } from 'lib/ui';
 import { updateSettings, settingsAtom } from 'lib/settings';
 import AutoUpdateBackgroundTask from './AutoUpdateBackgroundTask';
-import { assetsParentDir } from 'consts/paths';
-import { closeWallet } from 'lib/wallet';
+import { walletClosingAtom } from 'lib/wallet';
+import { coreInfoPausedAtom } from 'lib/coreInfo';
 import { checkForModuleUpdates } from 'lib/modules';
-import { fetchGithubLatestRelease } from 'lib/github';
 
 __ = __context('AutoUpdate');
 
 const autoUpdateInterval = 4 * 60 * 60 * 1000; // 4 hours
-let timerId: NodeJS.Timeout | undefined = undefined;
+let timerId: ReturnType<typeof setTimeout> | undefined = undefined;
 
 export type UpdaterState = 'idle' | 'checking' | 'downloading' | 'downloaded';
 
 export const updaterStateAtom = atom<UpdaterState>('idle');
 
 /**
- * Quit wallet and install the update
+ * Quit wallet and install the update.
+ * Main-process quitAndInstall stops Core and exits; do not also call
+ * app.exit via closeWallet or the two paths race and the installer may never run.
  */
 export function quitAndInstall() {
-  closeWallet(() => ipcRenderer.invoke('quit-and-install-update'));
+  store.set(walletClosingAtom, true);
+  store.set(coreInfoPausedAtom, true);
+  void window.nexusElectron.updater.quitAndInstall();
 }
 
 export function setAllowPrerelease(value: boolean) {
   updateSettings({ allowPrerelease: value });
-  ipcRenderer.invoke('set-allow-prerelease', value);
+  void window.nexusElectron.updater.setAllowPrerelease(value);
 }
 
 export function migrateToMainnet() {
   updateSettings({ allowPrerelease: true });
-  ipcRenderer.invoke('migrate-to-mainnet', null);
+  void window.nexusElectron.updater.migrateToMainnet();
 }
 
 /**
  * Start automatically checking for updates by interval
  */
 export async function checkForUpdates() {
-  const checkGithubManually = !fs.existsSync(
-    path.join(assetsParentDir, 'app-update.yml')
-  );
   clearTimeout(timerId);
 
   try {
     await Promise.all([
       (async () => {
-        if (process.env.NODE_ENV === 'development') return;
         let updateAvailable = false;
-        if (process.env.NODE_ENV !== 'development' && checkGithubManually) {
-          const response = await fetchGithubLatestRelease(
-            'Nexusoft/NexusInterface'
-          );
-          const latestVerion = response.data.tag_name;
+        const result = (await window.nexusElectron.updater.check()) as {
+          mode?: 'disabled' | 'github' | 'auto';
+          release?: { tagName: string; prerelease: boolean };
+          updateInfo?: { version?: string };
+        };
+        if (result.mode === 'github' && result.release) {
+          const latestVersion = result.release.tagName;
           if (
-            semver.lt('v' + APP_VERSION, latestVerion) &&
-            response.data.prerelease === false
+            semver.lt('v' + APP_VERSION, latestVersion) &&
+            result.release.prerelease === false
           ) {
             updateAvailable = true;
             showBackgroundTask(AutoUpdateBackgroundTask, {
-              version: response.data.tag_name,
+              version: latestVersion,
               gitHub: true,
             });
           }
-        } else {
-          const result = await ipcRenderer.invoke('check-for-updates');
-          const version = result?.updateInfo?.version;
-
+        } else if (result.mode === 'auto') {
+          const version = result.updateInfo?.version;
           // Not sure if this is the best way to check if there's an update
           // available because autoUpdater.checkForUpdates() doesn't return
           // any reliable results like a boolean `updateAvailable` property
           if (version && semver.lt(APP_VERSION, version)) {
             updateAvailable = true;
-            if (result?.downloadPromise) {
-              await result.downloadPromise;
-            }
           }
         }
 
@@ -117,7 +110,7 @@ export function stopAutoUpdate() {
  *
  */
 export function prepareUpdater() {
-  ipcRenderer.on('updater:update-available', (_event, updateInfo) => {
+  window.nexusElectron.updaterEvents.onAvailable((updateInfo: any) => {
     showNotification(
       __('New wallet version %{version} available. Downloading...', {
         version: updateInfo.version,
@@ -126,7 +119,7 @@ export function prepareUpdater() {
     );
   });
 
-  ipcRenderer.on('updater:update-downloaded', (_event, updateInfo) => {
+  window.nexusElectron.updaterEvents.onDownloaded((updateInfo: any) => {
     stopAutoUpdate();
     showBackgroundTask(AutoUpdateBackgroundTask, {
       version: updateInfo.version,
@@ -134,29 +127,27 @@ export function prepareUpdater() {
     });
   });
 
-  ipcRenderer.on('updater:error', (event, err) => {
+  window.nexusElectron.updaterEvents.onError((err) => {
     console.error(
       'Error Downloading Wallet Update:\n',
-      'Event: ',
-      event,
       '\nError: ',
       err
     );
     store.set(updaterStateAtom, 'idle');
   });
-  ipcRenderer.on('updater:checking-for-update', () => {
+  window.nexusElectron.updaterEvents.onChecking(() => {
     store.set(updaterStateAtom, 'checking');
   });
-  ipcRenderer.on('updater:update-available', () => {
+  window.nexusElectron.updaterEvents.onAvailable(() => {
     store.set(updaterStateAtom, 'downloading');
   });
-  ipcRenderer.on('updater:update-not-available', () => {
+  window.nexusElectron.updaterEvents.onNotAvailable(() => {
     store.set(updaterStateAtom, 'idle');
   });
-  ipcRenderer.on('updater:download-progress', () => {
+  window.nexusElectron.updaterEvents.onDownloadProgress(() => {
     store.set(updaterStateAtom, 'downloading');
   });
-  ipcRenderer.on('updater:update-downloaded', () => {
+  window.nexusElectron.updaterEvents.onDownloaded(() => {
     store.set(updaterStateAtom, 'downloaded');
   });
 

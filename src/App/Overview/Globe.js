@@ -4,7 +4,6 @@ import styled from '@emotion/styled';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 import world from 'icons/world-light-white.jpg';
-import geoip from 'data/geoip';
 import Curve from './Curve';
 import Point from './Point';
 import { callAPI } from 'lib/api';
@@ -183,9 +182,6 @@ export default class Globe extends Component {
    * @memberof Globe
    */
   componentDidUpdate(prevProps) {
-    if (geoip == null) {
-      return;
-    }
     if (this.props.globeColor != prevProps.globeColor) {
       const newColor = new THREE.Color(this.props.globeColor);
       this.globe.children[0].material.color = newColor; // [0] == globe
@@ -234,19 +230,32 @@ export default class Globe extends Component {
     // and if there are any points that exist and match coords
     // update the registry entry data
 
+    const addresses = peerInfo.map((peer) => peer.address.split(':')[0]);
+    let geoLocations;
+    try {
+      geoLocations = await window.nexusElectron.fileAssets.lookupGeoIp(addresses);
+    } catch (error) {
+      console.error(error);
+      return;
+    }
+    const geoDataByAddress = new Map(
+      geoLocations
+        .filter(Boolean)
+        .map((location) => [location.address, location])
+    );
     let newRegistry = peerInfo
       .map((peer) => {
-        let GeoData = geoip.get(peer.address.split(':')[0]);
+        const GeoData = geoDataByAddress.get(peer.address.split(':')[0]);
         // TODO: add checks for lisp and change color appropreately
         //console.log(this.props.pillarColor);
         if (!GeoData) return {}; //Usecase for private or testnet when there is no outside ip address
         return {
-          lat: GeoData.location.latitude,
-          lng: GeoData.location.longitude,
+          lat: GeoData.latitude,
+          lng: GeoData.longitude,
           params: {
             type: peer.type,
             outgoing: peer.outgoing,
-            name: GeoData.location.time_zone,
+            name: GeoData.timeZone,
             color: this.props.pillarColor,
             peerConnections: 1,
           },
@@ -314,12 +323,12 @@ export default class Globe extends Component {
     );
 
     if (selfIndex < 0) {
-      fetch('http://ip-api.com/json/?fields=450')
-        .then((response) => response.json())
+      window.nexusElectron.fileAssets
+        .lookupPublicGeoIp()
         .then((data) => {
-          let self = new Point(parseFloat(data.lat), parseFloat(data.lon), {
+          let self = new Point(data.latitude, data.longitude, {
             color: new Color(this.props.pillarColor).negate().hex(),
-            name: data.timezone,
+            name: data.timeZone,
             type: 'SELF',
             peerConnections: 1.5,
           });

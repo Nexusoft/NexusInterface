@@ -1,109 +1,12 @@
-import http from 'http';
-import https, { RequestOptions } from 'https';
-
-import { CoreConfig, getActiveCoreConfig } from 'lib/coreConfig';
 import { coreInfoQuery } from 'lib/coreInfo';
 import { activeSessionIdAtom } from 'lib/session';
 import { store } from 'lib/store';
-
-const getDefaultOptions = ({
-  apiSSL,
-  ip,
-  apiPortSSL,
-  apiPort,
-  apiUser,
-  apiPassword,
-}: CoreConfig) => ({
-  portocol: apiSSL ? 'https:' : 'http:',
-  host: ip,
-  port: apiSSL ? apiPortSSL : apiPort,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  auth: apiUser && apiPassword ? `${apiUser}:${apiPassword}` : undefined,
-  rejectUnauthorized: false,
-});
-
-function sendRequest({
-  params,
-  options,
-  ssl,
-}: {
-  params?: Object;
-  options: RequestOptions;
-  ssl?: boolean;
-}) {
-  return new Promise<any>((resolve, reject) => {
-    try {
-      const content = params && JSON.stringify(params);
-      if (content) {
-        options.headers = {
-          ...options?.headers,
-          'Content-Length': Buffer.byteLength(content),
-        };
-      }
-
-      const { request } = ssl ? https : http;
-      const req = request(options, (res) => {
-        let data = '';
-        res.setEncoding('utf8');
-
-        res.on('data', (chunk) => {
-          data += chunk;
-        });
-
-        res.on('end', () => {
-          let result = undefined;
-          if (data) {
-            try {
-              result = JSON.parse(data);
-            } catch (err) {
-              console.error('Response data is not valid JSON', data);
-            }
-          }
-          if (res.statusCode && res.statusCode >= 200 && res.statusCode < 300) {
-            resolve(result?.result);
-          } else {
-            reject(result?.error);
-          }
-        });
-
-        res.on('aborted', () => {
-          reject(new Error('Aborted'));
-        });
-      });
-
-      req.on('error', (err) => {
-        reject(err);
-      });
-
-      req.on('abort', () => {
-        reject(new Error('Aborted'));
-      });
-
-      if (params) {
-        req.write(content);
-      }
-      req.end();
-    } catch (err) {
-      reject(err);
-    }
-  });
-}
 
 /**
  * Send a Tritium API request in GET method
  */
 export async function callAPIByUrl(url: string) {
-  const conf = await getActiveCoreConfig();
-  return await sendRequest({
-    options: {
-      method: 'GET',
-      path: `/${url}`,
-      ...getDefaultOptions(conf),
-    },
-    ssl: conf.apiSSL,
-  });
+  return window.nexusElectron.coreRpc.callByUrl(url);
 }
 
 /**
@@ -774,7 +677,6 @@ async function callAPI(
  * Send a Tritium API request in POST method
  */
 async function callAPI(endpoint: string, customParams?: Record<string, any>) {
-  const conf = await getActiveCoreConfig();
   const sessionId = store.get(activeSessionIdAtom);
   const coreInfo = store.get(coreInfoQuery.valueAtom);
 
@@ -788,12 +690,7 @@ async function callAPI(endpoint: string, customParams?: Record<string, any>) {
   const params = coreInfo?.multiuser
     ? { session: sessionId, ...customParams }
     : customParams;
-  const options = {
-    method: 'POST',
-    path: `/${endpoint}`,
-    ...getDefaultOptions(conf),
-  };
-  return await sendRequest({ params, options, ssl: conf.apiSSL });
+  return window.nexusElectron.coreRpc.call({ endpoint, params });
 }
 export { callAPI };
 

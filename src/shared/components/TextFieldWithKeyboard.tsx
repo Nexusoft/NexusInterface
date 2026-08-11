@@ -1,6 +1,5 @@
 // External
-import { useEffect, useCallback } from 'react';
-import { ipcRenderer } from 'electron';
+import { useEffect, useCallback, useRef } from 'react';
 
 // Internal
 import {
@@ -35,16 +34,21 @@ function useTextFieldProps(
 ) {
   const { maskable, ...textFieldProps } = props;
   const { value, onChange, placeholder, skin } = textFieldProps;
+  const keyboardUnsubscribe = useRef<(() => void) | undefined>(undefined);
   const handleInputChange = useCallback((_evt: any, text: any) => {
     onChange?.(text);
   }, []);
 
   const openKeyboard = () => {
-    ipcRenderer.on('keyboard-input-change', handleInputChange);
-    ipcRenderer.once('keyboard-closed', () => {
-      ipcRenderer.off('keyboard-input-change', handleInputChange);
+    keyboardUnsubscribe.current?.();
+    keyboardUnsubscribe.current = window.nexusElectron.app.onKeyboardInputChange(
+      handleInputChange
+    );
+    window.nexusElectron.app.onceKeyboardClosed(() => {
+      keyboardUnsubscribe.current?.();
+      keyboardUnsubscribe.current = undefined;
     });
-    ipcRenderer.invoke('open-virtual-keyboard', {
+    void window.nexusElectron.app.openVirtualKeyboard({
       theme: store.get(themeAtom),
       defaultText: value,
       maskable: maskable,
@@ -54,7 +58,8 @@ function useTextFieldProps(
 
   useEffect(
     () => () => {
-      ipcRenderer.off('keyboard-input-change', handleInputChange);
+      keyboardUnsubscribe.current?.();
+      keyboardUnsubscribe.current = undefined;
     },
     []
   );

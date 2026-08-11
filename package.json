@@ -6,9 +6,9 @@
   "buildDate": "April 13th 2026",
   "description": "User interface for the Nexus blockchain and ecosystem.",
   "scripts": {
-    "prebuild-dev": "concurrently \"npm run build-main-dev\" \"npm run build-preload-dev\" \"node -r @babel/register ./internals/scripts/checkDll.js\" ",
+    "prebuild-dev": "concurrently \"npm run build-main-dev\" \"npm run build-window-preloads-dev\" \"npm run build-preload-dev\" \"node -r @babel/register ./internals/scripts/checkDll.js\"",
     "dev": "npm run prebuild-dev && concurrently \"npm run start-renderer-dev\" \"npx wait-on http://localhost:1212/assets/app.html && npm run start-main-dev\"",
-    "build": "concurrently \"npm run build-main\" \"npm run build-renderer\" \"npm run build-preload\" \"npm run build-preload-prod-dev\"",
+    "build": "concurrently \"npm run build-main\" \"npm run build-renderer\" \"npm run build-window-preloads\" \"npm run build-preload\" \"npm run build-preload-prod-dev\"",
     "build-dll": "cross-env NODE_ENV=development webpack --config configs/webpack.config.dll.dev.babel.js",
     "build-main": "cross-env NODE_ENV=production webpack --config configs/webpack.config.main.prod.babel.js",
     "build-preload-dev": "cross-env NODE_ENV=development webpack --config configs/webpack.config.preload.dev.babel.js",
@@ -16,6 +16,8 @@
     "build-renderer": "cross-env NODE_ENV=production webpack --config configs/webpack.config.renderer.prod.babel.js",
     "build-preload-prod-dev": "cross-env NODE_ENV=production webpack --config configs/webpack.config.preload.prod-dev.babel.js",
     "build-preload": "cross-env NODE_ENV=production webpack --config configs/webpack.config.preload.prod.babel.js",
+    "build-window-preloads": "cross-env NODE_ENV=production webpack --config configs/webpack.config.window-preloads.prod.babel.js",
+    "build-window-preloads-dev": "cross-env NODE_ENV=development webpack --config configs/webpack.config.window-preloads.dev.babel.js",
     "package": "node ./internals/scripts/packager.js",
     "package-all": "npm run build && electron-builder build -mwl",
     "package-linux": "npm run build && electron-builder build --linux",
@@ -24,6 +26,7 @@
     "start": "npm run dev",
     "start-main-dev": "cross-env HOT=1 NODE_ENV=development electron ./build/main.dev.js",
     "start-renderer-dev": "cross-env NODE_ENV=development webpack serve --config configs/webpack.config.renderer.dev.babel.js",
+    "test:security": "node --test test/security/*.test.js",
     "trans-extract": "node -r @babel/register ./internals/scripts/extractTranslations.js",
     "update-documentation": "./UpdateDocumentation.sh",
     "update-maxmind": "node -r @babel/register ./internals/scripts/UpdateMaxMind.js",
@@ -201,8 +204,7 @@
     "@types/react-dom": "^19.0.3",
     "@types/semver": "^7.5.8",
     "@types/three": "^0.180.0",
-    "@types/unzip-stream": "^0.3.4",
-    "babel-loader": "^9.2.1",
+    "babel-loader": "10.1.1",
     "babel-plugin-dev-expression": "^0.2.3",
     "babel-plugin-transform-react-pure-class-to-function": "^1.0.1",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
@@ -214,8 +216,8 @@
     "cross-spawn": "^7.0.6",
     "csv-parse": "^5.6.0",
     "csv-stringify": "^6.5.2",
-    "electron": "^26.6.10",
-    "electron-builder": "^26.0.8",
+    "electron": "43.1.0",
+    "electron-builder": "26.15.3",
     "electron-devtools-installer": "^4.0.0",
     "electron-notarize": "^1.2.2",
     "express": "^4.21.2",
@@ -227,11 +229,11 @@
     "svgo": "^3.3.2",
     "svgo-loader": "^4.0.0",
     "url-loader": "^4.1.1",
-    "webpack": "^5.97.1",
+    "webpack": "5.108.4",
     "webpack-bundle-analyzer": "^4.10.2",
-    "webpack-cli": "^6.0.1",
-    "webpack-dev-server": "^5.2.0",
-    "webpack-merge": "^6.0.1"
+    "webpack-cli": "6.0.1",
+    "webpack-dev-server": "5.2.6",
+    "webpack-merge": "6.0.1"
   },
   "dependencies": {
     "@aptabase/electron": "^0.3.1",
@@ -249,7 +251,7 @@
     "d3-geo": "^3.1.1",
     "dompurify": "^3.2.4",
     "electron-log": "^5.3.0",
-    "electron-updater": "^6.3.9",
+    "electron-updater": "6.8.9",
     "extract-zip": "^2.0.1",
     "final-form": "^4.20.10",
     "final-form-arrays": "^3.1.0",
@@ -277,15 +279,16 @@
     "three": "^0.145.0",
     "tsparticles": "^2.12.0",
     "universal-analytics": "^0.5.3",
-    "unzip-stream": "^0.3.4",
+    "yauzl": "2.10.0",
     "zod": "^3.24.1"
   },
-  "devEngines": {
-    "node": ">=16.x",
-    "npm": ">=8.x"
+  "engines": {
+    "node": ">=22.12.0",
+    "npm": ">=10.9.0"
   },
   "overrides": {
     "react": "$react",
-    "react-dom": "$react-dom"
+    "react-dom": "$react-dom",
+    "@noble/hashes": "1.8.0"
   }
 }

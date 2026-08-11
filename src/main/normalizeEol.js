@@ -1,15 +1,15 @@
 // Source https://github.com/gourmetjs/stream-normalize-eol
-import { Transform, TransformCallback } from 'stream';
+import { Transform } from 'stream';
 import { StringDecoder } from 'string_decoder';
 
 function getDecoder() {
   const decoder = new StringDecoder('utf8');
-  let prevChunk: string | null = null;
+  let prevChunk = null;
 
   return {
-    write: (chunk: Buffer | string): string => {
-      let idx: number;
-      let ch: string;
+    write: (chunk) => {
+      let idx;
+      let ch;
 
       if (typeof chunk !== 'string') chunk = decoder.write(chunk);
 
@@ -31,8 +31,8 @@ function getDecoder() {
 
       return chunk;
     },
-    end: (): string => {
-      let chunk: string | undefined;
+    end: () => {
+      let chunk;
 
       if (typeof decoder.end === 'function') chunk = decoder.end();
 
@@ -50,12 +50,10 @@ function getDecoder() {
 //
 // Internally, this stream assumes that the input data is encoded as `utf8`.
 // If you supply non-`utf8` encoded multi-byte data, it will not be processed correctly.
-export default function normalizeEol(
-  format: '\n' | '\r\n' | '\r' = '\n'
-): Transform {
+export default function normalizeEol(format = '\n') {
   const ts = new Transform({ decodeStrings: false });
   const decoder = getDecoder();
-  let find: RegExp;
+  let find;
 
   if (format === '\n') {
     find = /\r\n|\r/g;
@@ -67,17 +65,13 @@ export default function normalizeEol(
     throw new Error('Unknown EOL format: ' + format);
   }
 
-  ts._transform = function (
-    chunk: Buffer,
-    _encoding: string,
-    callback: TransformCallback
-  ): void {
-    let transformedChunk = decoder.write(chunk);
+  ts._transform = function (chunk, _encoding, callback) {
+    const transformedChunk = decoder.write(chunk);
     if (chunk) this.push(transformedChunk.replace(find, format));
     callback();
   };
 
-  ts._flush = function (callback: TransformCallback): void {
+  ts._flush = function (callback) {
     const chunk = decoder.end();
     if (chunk) this.push(chunk.replace(find, format));
     this.push(null);

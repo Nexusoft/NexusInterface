@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router';
-import qs from 'querystring';
 
 import { navigate } from 'lib/wallet';
 import { useFieldValue, getFormInstance } from 'lib/form';
@@ -100,22 +99,21 @@ function getFormValues({
 }
 
 export function goToSend(customValues: any) {
-  navigate(`/Send?state=${JSON.stringify(customValues)}`);
+  const search = new URLSearchParams({
+    state: JSON.stringify(customValues),
+  });
+  navigate(`/Send?${search.toString()}`);
 }
 
 export function useInitialValues() {
   const location = useLocation();
-  // React-router's search field has a leading ? mark but
-  // qs.parse will consider it invalid, so remove it
-  const queryParams = qs.parse(location.search.substring(1));
+  const queryParams = new URLSearchParams(location.search);
   const accounts = accountsQuery.use();
 
-  const stateJson = queryParams?.state;
+  const stateJson = queryParams.get('state');
   let customValues = undefined;
   try {
-    if (Array.isArray(stateJson)) {
-      customValues = JSON.parse(stateJson?.join(''));
-    } else if (stateJson) {
+    if (stateJson) {
       customValues = JSON.parse(stateJson);
     }
   } catch (err) {}

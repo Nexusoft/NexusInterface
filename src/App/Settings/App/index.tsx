@@ -2,7 +2,6 @@
 import { useAtomValue } from 'jotai';
 import styled from '@emotion/styled';
 import UT from 'lib/usageTracking';
-import AutoLaunch from 'auto-launch';
 
 // Internal Global
 import { updateSettings, settingsAtom } from 'lib/settings';
@@ -36,15 +35,11 @@ const WarningIcon = styled(Icon)(({ theme }) => ({
  * @param {element} e Attached element
  */
 async function toggleOpenOnStart(checked: boolean) {
-  const nexusAutoLaunch = new AutoLaunch({
-    name: 'Nexus Wallet',
-  });
-  if (checked) {
-    nexusAutoLaunch.enable();
-    updateSettings({ openOnStart: true });
-  } else {
-    nexusAutoLaunch.disable();
-    updateSettings({ openOnStart: false });
+  try {
+    await window.nexusElectron.app.setOpenOnStart(checked);
+    updateSettings({ openOnStart: checked });
+  } catch (error) {
+    console.error(error);
   }
 }
 

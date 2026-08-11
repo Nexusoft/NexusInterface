@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { atom } from 'jotai';
 import { ledgerInfoQuery } from 'lib/ledger';
 import jotaiQuery from 'utils/jotaiQuery';
@@ -32,13 +31,12 @@ async function fetchMarketData() {
     if (cachedData) {
       marketData = cachedData;
     } else {
-      const { data } = await axios.get(
-        `https://api.dex-trade.com/v1/public/ticker?pair=NXSUSDT`
-      );
-      if (data?.status && data?.data) {
+      const data = (await window.nexusElectron.updater.getMarketData()) as
+        | MarketData
+        | undefined;
+      if (data) {
         marketData = {
-          price: Number(data.data.last),
-          changePct24Hr: Number(data.data['percent_сhange'] || data.data.percent_change || 0),
+          ...data,
           currency: fiatCurrency as CurrencyTicker,
         };
         addToCache(cache, marketData);

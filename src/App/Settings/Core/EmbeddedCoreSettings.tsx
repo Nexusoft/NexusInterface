@@ -1,4 +1,4 @@
-import path from 'path';
+import { useField } from 'react-final-form';
 
 import Form from 'components/Form';
 import SettingsField from 'components/SettingsField';
@@ -6,14 +6,12 @@ import Button from 'components/Button';
 import Switch from 'components/Switch';
 import { TextField } from 'components/TextField';
 import { useFieldValue } from 'lib/form';
-import { updateSettings, settingAtoms } from 'lib/settings';
+import { updateSettings } from 'lib/settings';
 import { confirm, openErrorDialog } from 'lib/dialog';
 import { restartCore, stopCore, startCore } from 'lib/core';
 import { defaultConfig } from 'lib/coreConfig';
 import { preRelease } from 'consts/misc';
-import { rm as deleteDirectory } from 'fs/promises';
 import { consts } from 'styles';
-import { store } from 'lib/store';
 
 __ = __context('Settings.Core');
 
@@ -60,6 +58,16 @@ export default function EmbeddedCoreSettings() {
         <Form.TextField name="coreDataDir" />
       </SettingsField>
 
+      <SettingsField
+        connectLabel
+        label={__('Core Binary Path')}
+        subLabel={__(
+          'Optional path to a Nexus Core binary to use instead of the bundled binary'
+        )}
+      >
+        <CoreBinaryPathField />
+      </SettingsField>
+
       <TestnetSettings />
 
       <PortSettings />
@@ -79,6 +87,34 @@ export default function EmbeddedCoreSettings() {
 
       <AdvancedOptions />
     </>
+  );
+}
+
+function CoreBinaryPathField() {
+  const { input } = useField('embeddedCoreBinaryPath');
+
+  const pickCoreBinary = async () => {
+    const filePaths = await window.nexusElectron.dialogs.selectCoreBinary();
+
+    if (filePaths?.[0]) {
+      input.onChange(filePaths[0]);
+    }
+  };
+
+  return (
+    <div style={{ display: 'flex', width: '100%' }}>
+      <Form.TextField
+        name="embeddedCoreBinaryPath"
+        style={{ flexGrow: 1 }}
+        readOnly
+      />
+      <Button
+        onClick={pickCoreBinary}
+        style={{ height: consts.inputHeightEm + 'em', marginLeft: '0.5em' }}
+      >
+        {__('Browse')}
+      </Button>
+    </div>
   );
 }
 
@@ -420,10 +456,8 @@ async function resyncLiteMode() {
   if (confirmed) {
     updateSettings({ clearPeers: true });
     await stopCore();
-    const coreDataDir = store.get(settingAtoms.coreDataDir);
-    const clientFolder = path.join(coreDataDir, 'client');
     try {
-      await deleteDirectory(clientFolder, { recursive: true, force: true });
+      await window.nexusElectron.core.resyncLiteDatabase();
     } catch (err: any) {
       openErrorDialog({ message: err && err.message });
     }

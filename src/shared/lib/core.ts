@@ -1,174 +1,159 @@
-import { ipcRenderer } from 'electron';
-import log from 'electron-log';
-
 import { store } from 'lib/store';
-import { loadNexusConf, coreConfigAtom } from 'lib/coreConfig';
-import { coreInfoPausedAtom } from 'lib/coreInfo';
+import { coreConfigAtom } from 'lib/coreConfig';
+import {
+  clearCoreConnectionError,
+  coreInfoPausedAtom,
+  setCoreConnectionError,
+} from 'lib/coreInfo';
 import { callAPI } from 'lib/api';
-import { updateSettings, settingsAtom } from 'lib/settings';
+import { settingsAtom } from 'lib/settings';
 import sleep from 'utils/sleep';
-import { minimumCoreAPIPolicy, preRelease } from 'consts/misc';
-import { defaultCoreDataDir } from 'consts/paths';
-import fs from 'fs';
-import { rm as deleteDirectory } from 'fs/promises';
-import * as path from 'path';
+
+export type CoreStartResult = {
+  started?: boolean;
+  reason?: string;
+  apiReachable?: boolean;
+  apiError?: string;
+  pid?: number;
+};
 
 /**
  * Start Nexus Core
  */
 export const startCore = async () => {
-  // Check remote core mode
-  const settings = store.get(settingsAtom);
-  if (settings.manualDaemon) {
-    log.info('Core Manager: Remote Core mode, skipping starting core');
-    return;
-  }
+  console.info('core.start.requested');
+  try {
+    // Check remote core mode
+    const settings = store.get(settingsAtom);
+    if (settings.manualDaemon) {
+      console.info('Core Manager: Remote Core mode, skipping starting core');
+      // Still load public connection metadata for UI consumers.
+      store.set(
+        coreConfigAtom,
+        await window.nexusElectron.core.getConfiguration()
+      );
+      store.set(coreInfoPausedAtom, false);
+      clearCoreConnectionError();
+      return;
+    }
 
-  // Check if core exists
-  if (!(await ipcRenderer.invoke('check-core-exists'))) {
-    throw new Error('Core not found');
-  }
+    const status = (await window.nexusElectron.core.getStatus()) as {
+      exists?: boolean;
+      running?: boolean;
+      status?: { error?: string };
+    };
+    console.info('core.start.status', {
+      exists: !!status.exists,
+      running: !!status.running,
+      error: status.status?.error,
+    });
+    if (!status.exists) {
+      throw new Error(status.status?.error || 'Nexus Core binary not found');
+    }
 
-  // Load config
-  const conf = await loadNexusConf();
-  store.set(coreConfigAtom, conf);
+    // Always delegate to main. If a Core process is already running, main probes
+    // the configured local API and restarts Core when P2P is up but the API bind
+    // / auth / port does not match the wallet configuration.
+    const startResult = (await window.nexusElectron.core.start()) as CoreStartResult;
+    console.info('core.start.result', {
+      started: !!startResult?.started,
+      reason: startResult?.reason,
+      apiReachable: startResult?.apiReachable,
+      apiError: startResult?.apiError,
+      pid: startResult?.pid,
+    });
+    if (status.running && startResult?.reason === 'already-running') {
+      console.info(
+        'Core Manager: Nexus Core Process already running with a reachable API'
+      );
+    } else if (startResult?.started) {
+      console.info('Core Manager: Nexus Core start requested by wallet');
+    }
 
-  // Check if core's already running
-  if (await ipcRenderer.invoke('check-core-running')) {
-    log.info(
-      'Core Manager: Nexus Core Process already running. Skipping starting core'
+    if (startResult?.apiReachable === false) {
+      const message =
+        startResult.apiError ||
+        'Nexus Core started but the API is not reachable yet';
+      console.error('core.api.wait.timeout', message);
+      setCoreConnectionError(message);
+    } else {
+      clearCoreConnectionError();
+    }
+
+    store.set(
+      coreConfigAtom,
+      await window.nexusElectron.core.getConfiguration()
     );
-    return;
+    store.set(coreInfoPausedAtom, false);
+  } catch (error) {
+    setCoreConnectionError(error);
+    console.error('core.start.failed', error);
+    throw error;
   }
-  // if (settings.clearPeers) {
-  //   if (fs.existsSync(path.join(conf.dataDir, 'addr.bak'))) {
-  //     await deleteDirectory(path.join(conf.dataDir, 'addr.bak'));
-  //   }
-  //   if (fs.existsSync(path.join(conf.dataDir, 'addr'))) {
-  //     fs.renameSync(
-  //       path.join(conf.dataDir, 'addr'),
-  //       path.join(conf.dataDir, 'addr.bak')
-  //     );
-  //   }
-  //   updateSettingsFile({ clearPeers: false });
-  // }
-
-  // Prepare parameters
-  const params = [
-    '-daemon',
-    '-server',
-    '-fastsync',
-    '-noterminateauth',
-    '-ssl=1',
-    '-apissl=1',
-    '-p2pssl=1',
-    `-datadir=${settings.coreDataDir}`,
-    `-apisslport=${conf.apiPortSSL}`,
-    `-apiport=${conf.apiPort}`,
-    `-verbose=${preRelease ? 3 : settings.verboseLevel}`,
-  ];
-
-  if (LOCK_TESTNET) {
-    params.push(
-      '-connect=testnet1.interactions-nexus.io',
-      '-connect=testnet2.interactions-nexus.io',
-      '-connect=testnet3.interactions-nexus.io',
-      '-nodns=1',
-      `-testnet=${LOCK_TESTNET}`
-    );
-  } else {
-    if (
-      settings.testnetIteration &&
-      String(settings.testnetIteration) !== '0'
-    ) {
-      params.push('-testnet=' + settings.testnetIteration);
-      if (settings.privateTestnet) {
-        params.push('-private=1');
-      }
-    }
-  }
-  if (settings.revertBlocks) {
-    params.push('-revertblocks=' + settings.revertBlocks);
-    updateSettings({ revertBlocks: 0 });
-  }
-  if (settings.safeMode) {
-    params.push('-safemode=1');
-  }
-  if (settings.walletClean) {
-    params.push('-walletclean');
-    updateSettings({ walletClean: false });
-  }
-  // Avatar is default so only add it if it is off.
-  if (!settings.avatarMode) {
-    params.push('-avatar=0');
-  }
-  if (settings.enableMining == true) {
-    params.push('-mining=1');
-    if (settings.ipMineWhitelist !== '') {
-      settings.ipMineWhitelist.split(';').forEach((element) => {
-        params.push(`-llpallowip=${element}`);
-      });
-    }
-  }
-  if (settings.enableStaking == true) params.push('-stake=1');
-  if (settings.pooledStaking == true) params.push('-poolstaking=1');
-  if (settings.liteMode == true) params.push('-client=1');
-  if (settings.multiUser == true) params.push('-multiusername=1');
-  if (settings.allowAdvancedCoreOptions) {
-    if (settings.advancedCoreParams) params.push(settings.advancedCoreParams);
-  }
-
-  if (
-    !LOCK_TESTNET &&
-    !settings.testnetIteration &&
-    (!settings.coreAPIPolicy || settings.coreAPIPolicy < minimumCoreAPIPolicy)
-  ) {
-    updateSettings({ coreAPIPolicy: minimumCoreAPIPolicy });
-    const corePath = settings.coreDataDir || defaultCoreDataDir;
-    if (fs.existsSync(path.join(corePath, '_API'))) {
-      await deleteDirectory(path.join(corePath, '_API'), {
-        recursive: true,
-        force: true,
-      });
-    }
-  }
-
-  // Start core
-  await ipcRenderer.invoke('start-core', params);
-  store.set(coreInfoPausedAtom, false);
 };
 
 /**
  * Stop Nexus Core
+ *
+ * IMPORTANT: A disconnected Core cannot receive system/stop. The previous
+ * implementation wrapped the whole sequence in try/catch, so a failed API
+ * stop skipped the force-kill path and left an orphaned nexus process that
+ * required an OS-level kill. Always fall through to process kill when the
+ * Core binary is still running.
  */
 export const stopCore = async (forRestart?: boolean) => {
-  log.info('Core Manager: Stop function called');
+  console.info('Core Manager: Stop function called');
   const { manualDaemon } = store.get(settingsAtom);
+
+  // Pause info polling before shutdown so transient ECONNREFUSED during stop
+  // is not recorded as a connection failure in the UI.
+  if (!forRestart) {
+    store.set(coreInfoPausedAtom, true);
+    clearCoreConnectionError();
+  }
+
+  if (manualDaemon) {
+    return;
+  }
+
   try {
     await callAPI('system/stop');
+  } catch (err) {
+    console.info(
+      'Core Manager: Graceful stop request failed; checking if process is still running',
+      err
+    );
+  }
 
-    // Wait for core to gracefully stop for 10 seconds
-    let coreStillRunning;
-    for (let i = 0; i < 10; i++) {
-      coreStillRunning = await ipcRenderer.invoke('check-core-running');
-      if (coreStillRunning) {
-        log.info(
-          `Core Manager: Core still running after stop command for: ${i} seconds`
-        );
-      } else {
-        log.info(`Core Manager: Core stopped gracefully.`);
-        break;
-      }
-      await sleep(1000);
+  // Wait for core to gracefully stop for 10 seconds, then force-kill.
+  let coreStillRunning = false;
+  for (let i = 0; i < 10; i++) {
+    try {
+      const coreStatus = (await window.nexusElectron.core.getStatus()) as {
+        running?: boolean;
+      };
+      coreStillRunning = !!coreStatus.running;
+    } catch {
+      // Status IPC failure should not prevent a kill attempt.
+      coreStillRunning = true;
     }
-
     if (coreStillRunning) {
-      await ipcRenderer.invoke('kill-core-process');
+      console.info(
+        `Core Manager: Core still running after stop command for: ${i} seconds`
+      );
+    } else {
+      console.info(`Core Manager: Core stopped gracefully.`);
+      break;
     }
-  } catch (err) {}
+    await sleep(1000);
+  }
 
-  if (!forRestart && !manualDaemon) {
-    store.set(coreInfoPausedAtom, true);
+  if (coreStillRunning) {
+    try {
+      await window.nexusElectron.core.kill();
+    } catch (err) {
+      console.error('Core Manager: Failed to kill Core process', err);
+    }
   }
 };
 

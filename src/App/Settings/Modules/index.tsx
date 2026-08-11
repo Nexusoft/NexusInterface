@@ -1,7 +1,6 @@
 // External
 import { useAtomValue } from 'jotai';
 import styled from '@emotion/styled';
-import { shell } from 'electron';
 
 // Internal
 import { settingsAtom } from 'lib/settings';
@@ -55,11 +54,11 @@ export default function SettingsModules() {
       ))}
       {failedModules?.length > 0 && (
         <FailedModules>
-          {failedModules.map(({ name, path, message }) => (
+          {failedModules.map(({ name, message }) => (
             <FailedModule
               key={name}
               onClick={() => {
-                shell.openPath(path);
+                void window.nexusElectron.modules.openFailureLocation(name);
               }}
             >
               <Tooltip.Trigger tooltip={message}>

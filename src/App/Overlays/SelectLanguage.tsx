@@ -5,7 +5,6 @@ import Button from 'components/Button';
 import languages from 'data/languages';
 import { timing } from 'styles';
 import * as color from 'utils/color';
-import { updateSettingsFile } from 'lib/settings/universal';
 import { Locale, locales } from 'lib/intl';
 
 import FullScreen from './FullScreen';
@@ -44,8 +43,8 @@ const Language = styled.div<{ first?: boolean; selected?: boolean }>(
 export default function SelectLanguage() {
   const [selection, setSelection] = useState<Locale>('en');
 
-  const proceed = () => {
-    updateSettingsFile({ locale: selection });
+  const proceed = async () => {
+    await window.nexusElectron.settings.update({ locale: selection });
     location.reload();
   };
 

@@ -1,87 +1,71 @@
-// External
-import { useRef, useEffect, HTMLAttributes } from 'react';
-import { existsSync } from 'fs';
-import { URL } from 'url';
-import { join } from 'path';
-import { ipcRenderer, WebviewTag } from 'electron';
+import { HTMLAttributes, useEffect, useRef, useState } from 'react';
 
-// Internal Global
 import { Module, setActiveAppModule, unsetActiveAppModule } from 'lib/modules';
 
-const domain = ipcRenderer.sendSync('get-file-server-domain');
-
-const getEntryUrl = (module: Module) => {
-  if (module.development) {
-    try {
-      // Check if entry is a URL itself
-      new URL(module.info.entry || '');
-      return module.info.entry;
-    } catch (err) {}
-  }
-
-  const entry = module.info.entry || 'index.html';
-  const entryPath = join(module.path, entry);
-  if (!existsSync(entryPath)) return null;
-  if (module.development) {
-    return `file://${entryPath}`;
-  } else {
-    return `${domain}/modules/${module.info.name}/${entry}`;
-  }
+type WebviewTag = HTMLWebViewElement & {
+  send(channel: string, ...args: unknown[]): void;
+  openDevTools(): void;
+  closeDevTools(): void;
+  isDevToolsOpened(): boolean;
+  getWebContentsId(): number;
 };
 
 export interface WebViewProps extends HTMLAttributes<HTMLWebViewElement> {
   module: Module;
 }
 
+/**
+ * Module guest WebView.
+ * Privileged path resolution and file serving happen in the main process.
+ * Production preferences are forced again in main via will-attach-webview:
+ * contextIsolation=yes, nodeIntegration=no, sandbox=yes.
+ */
 export default function WebView({ module, ...rest }: WebViewProps) {
   const webviewRef = useRef<HTMLWebViewElement>(null);
+  const [entryUrl, setEntryUrl] = useState<string>();
 
   useEffect(() => {
-    if (!module.development) {
-      const moduleFiles = module.info.files.map((file) =>
-        join(module.info.name, file)
-      );
-      ipcRenderer.invoke('serve-module-files', moduleFiles);
-    }
-  }, []);
+    let active = true;
+    const prepare = async () => {
+      try {
+        if (!module.development) {
+          await window.nexusElectron.modules.prepareFiles(
+            module.info.name,
+            module.info.files
+          );
+        }
+        const entry = await window.nexusElectron.modules.getEntry(
+          module.info.name
+        );
+        if (active && typeof entry === 'string') setEntryUrl(entry);
+      } catch (error) {
+        console.error('Unable to prepare module WebView', error);
+        if (active) setEntryUrl(undefined);
+      }
+    };
+    prepare();
+    return () => {
+      active = false;
+    };
+  }, [module]);
 
   useEffect(() => {
-    if (!webviewRef.current) return;
-    const {
-      info: { name },
-    } = module;
-    setActiveAppModule(webviewRef.current as WebviewTag, name);
-
+    if (!webviewRef.current || !entryUrl) return;
+    setActiveAppModule(webviewRef.current as WebviewTag, module.info.name);
     return () => {
       unsetActiveAppModule();
     };
-  }, [webviewRef.current]);
+  }, [module.info.name, entryUrl]);
 
-  const entryUrl = getEntryUrl(module);
   if (!entryUrl) return null;
 
-  const preloadUrl =
-    process.env.NODE_ENV === 'development'
-      ? `file://${process.cwd()}/build/module_preload.dev.js`
-      : module.development
-      ? 'module_preload.prod-dev.js '
-      : 'module_preload.prod.js';
-
-  module.development &&
-    console.warn(
-      'Node Intergration is disabled when modules are built for production.'
-    );
   return (
     <webview
       {...rest}
       ref={webviewRef}
       src={entryUrl}
-      preload={preloadUrl}
-      /* Can't enable contextIsolation because it will
-      mess with react-dom and emotion */
-      webpreferences={`contextIsolation=no${
-        module.development ? ', nodeIntegration=yes' : ''
-      }`}
+      // Renderer hint only — main process overwrites these securely.
+      webpreferences="contextIsolation=yes, nodeIntegration=no, sandbox=yes, webSecurity=yes"
     />
   );
 }

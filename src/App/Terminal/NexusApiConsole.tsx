@@ -2,7 +2,6 @@
 import { useRef, useEffect, useState } from 'react';
 import { useAtomValue } from 'jotai';
 import styled from '@emotion/styled';
-import { ipcRenderer } from 'electron';
 
 // Internal Global Dependencies
 import Button from 'components/Button';
@@ -12,7 +11,6 @@ import RequireCoreConnected from 'components/RequireCoreConnected';
 import { callAPIByUrl } from 'lib/api';
 import { openModal } from 'lib/ui';
 import { updateSettings, settingsAtom } from 'lib/settings';
-import { coreConfigAtom } from 'lib/coreConfig';
 import documentsIcon from 'icons/documents.svg';
 import Tooltip from 'components/Tooltip';
 import Icon from 'components/Icon';
@@ -117,17 +115,7 @@ export default function NexusApiConsole() {
   const [output, setOutput] = useState<OutputLine[]>([]);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const outputRef = useRef<HTMLDivElement>(null);
-  const {
-    manualDaemon,
-    manualDaemonApiUser,
-    manualDaemonApiPassword,
-    consoleCliSyntax,
-  } = useAtomValue(settingsAtom);
-  const coreConfig = useAtomValue(coreConfigAtom);
-  const apiUser = manualDaemon ? manualDaemonApiUser : coreConfig?.apiUser;
-  const apiPassword = manualDaemon
-    ? manualDaemonApiPassword
-    : coreConfig?.apiPassword;
+  const { consoleCliSyntax } = useAtomValue(settingsAtom);
 
   const prevOutput = useRef(output);
   useEffect(() => {
@@ -177,10 +165,7 @@ export default function NexusApiConsole() {
     let result = undefined;
     try {
       if (consoleCliSyntax) {
-        result = await ipcRenderer.invoke(
-          'execute-core-command',
-          `-apiuser=${apiUser} -apipassword=${apiPassword} ${cmd}`
-        );
+        result = await window.nexusElectron.core.executeConsoleCommand(cmd);
       } else {
         result = await callAPIByUrl(cmd);
       }

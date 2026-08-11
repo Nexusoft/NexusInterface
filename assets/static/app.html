@@ -9,18 +9,23 @@
     <div style="overflow: hidden" id="root"></div>
     <script>
       {
+        // window.nexusEnv is exposed by the main preload script (works
+        // whether or not this window has contextIsolation enabled -- see
+        // src/main/preload.js), since this page cannot reliably read
+        // process.env directly across all supported window configurations.
+        const nexusEnv = window.nexusEnv || {};
         const scripts = [];
 
         // Dynamically insert the DLL script in development env in the
         // renderer process
-        if (process.env.NODE_ENV === 'development') {
+        if (nexusEnv.NODE_ENV === 'development') {
           scripts.push('renderer.dev.dll.js');
         }
 
         // Dynamically insert the bundled app script in the renderer process
-        const port = process.env.PORT || 1212;
+        const port = nexusEnv.PORT || 1212;
         scripts.push(
-          process.env.NODE_ENV === 'development'
+          nexusEnv.NODE_ENV === 'development'
             ? 'http://localhost:' + port + '/renderer.dev.js'
             : './renderer.prod.js'
         );

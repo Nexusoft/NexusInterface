@@ -1,5 +1,5 @@
 import { atom, Atom } from 'jotai';
-import { store, subscribe } from 'lib/store';
+import { store, subscribeWithPrevious } from 'lib/store';
 import {
   defaultSettings,
   settingKeys,
@@ -7,9 +7,9 @@ import {
   PartialSettings,
   SettingsKey,
 } from './defaultSettings';
-import { readSettings, writeSettings } from './universal';
 
-const initialUserSettings = readSettings();
+const initialUserSettings = window.nexusElectron.settings.getInitial()
+  .settings as PartialSettings;
 const userSettingsAtom = atom(initialUserSettings);
 
 export const settingsAtom = atom((get) => ({
@@ -17,12 +17,18 @@ export const settingsAtom = atom((get) => ({
   ...get(userSettingsAtom),
 }));
 
-const timerId: NodeJS.Timeout | undefined = undefined;
-subscribe(userSettingsAtom, (settings) => {
+let timerId: ReturnType<typeof setTimeout> | undefined;
+subscribeWithPrevious(userSettingsAtom, (settings, previousSettings) => {
   clearTimeout(timerId);
-  // Write to file asynchronously to batch multiple consecutive updates into one disk write
-  setTimeout(() => {
-    writeSettings(settings);
+  timerId = setTimeout(() => {
+    const updates = Object.fromEntries(
+      Object.entries(settings).filter(
+        ([key, value]) => previousSettings?.[key as SettingsKey] !== value
+      )
+    ) as PartialSettings;
+    if (Object.keys(updates).length) {
+      window.nexusElectron.settings.update(updates).catch(console.error);
+    }
   }, 0);
 });
 
