@@ -86,6 +86,29 @@ test('malformed PIN, session, recipient, and query fields are rejected', () => {
   assert.throws(() => validatePin(1234), TypeError);
   assert.throws(() => validatePin({ value: '1234' }), TypeError);
   assert.equal(validatePin('1234'), '1234');
+  assert.equal(validatePin('x'.repeat(1024)), 'x'.repeat(1024));
+  assert.throws(() => validatePin('x'.repeat(1025)), TypeError);
+  assert.deepEqual(
+    validateCoreRpcParamsForEndpoint('sessions/create/local', {
+      username: 'alice',
+      password: 'x'.repeat(1024),
+      pin: 'x'.repeat(1024),
+    }),
+    {
+      username: 'alice',
+      password: 'x'.repeat(1024),
+      pin: 'x'.repeat(1024),
+    }
+  );
+  assert.throws(
+    () =>
+      validateCoreRpcParamsForEndpoint('sessions/create/local', {
+        username: 'alice',
+        password: 'x'.repeat(1025),
+        pin: '1234',
+      }),
+    TypeError
+  );
 
   assert.throws(() => validateSession(''), TypeError);
   assert.throws(() => validateSession('short'), TypeError);

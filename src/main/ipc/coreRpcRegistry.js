@@ -34,6 +34,7 @@ const SENSITIVE_PARAM_KEYS = Object.freeze([
 
 const SENSITIVE_PARAM_KEY_SET = new Set(SENSITIVE_PARAM_KEYS);
 const MUTABLE_ASSET_RESERVED_NAMES = new Set(['pin', 'address', 'session']);
+const MAX_CORE_CREDENTIAL_LENGTH = 1024;
 const MAX_UINT64 = 18446744073709551615n;
 
 // Multi-user Core installs automatically attach a session id to structured
@@ -143,13 +144,19 @@ function validateUint64(value, name, { min = 0 } = {}) {
 }
 
 function validatePin(value, name = 'pin') {
-  // Core PINs are short secrets. Accept numeric or general strings within bounds
+  // Core PINs are secrets. Accept numeric or general strings within bounds
   // without echoing the value back in errors.
-  return assertString(value, name, { min: 1, max: 128 });
+  return assertString(value, name, {
+    min: 1,
+    max: MAX_CORE_CREDENTIAL_LENGTH,
+  });
 }
 
 function validatePassword(value, name = 'password') {
-  return assertString(value, name, { min: 1, max: 1024 });
+  return assertString(value, name, {
+    min: 1,
+    max: MAX_CORE_CREDENTIAL_LENGTH,
+  });
 }
 
 function validateSession(value, name = 'session') {
