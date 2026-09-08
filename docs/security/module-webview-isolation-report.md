@@ -20,8 +20,9 @@ libraries, generic Core RPC, or a network proxy.
 
 - Read-only sanitized wallet context + change subscription
 - UI notify / confirm
-- External open (`http`/`https`/`mailto`) via main
-- Clipboard write via main
+- Opt-in external open (`http`/`https`/`mailto`) via a confirmed, rate-limited
+  main-process action
+- Opt-in clipboard write via a confirmed, rate-limited main-process action
 - Per-module JSON storage and in-memory module state
 - Send **intent** navigation to wallet-owned review UI
 
@@ -41,6 +42,9 @@ Automated (see `npm run test:security`):
 - WebView preference hardening expectations
 - Preload bridge shape (no React/ipc export to page)
 - File server allowlisting / path rules (static review)
+- Per-session network denial / proxy policy for production and development
+  modules (shared module-scoped loopback asset prefix; `file:` rejected).
+  Packaged-Electron WebRTC/STUN/TURN denial remains a manual release gate.
 - Renderer boundary still forbids Node imports outside main/preload
 - Malicious fixture static checks
 
@@ -63,9 +67,10 @@ Manual matrix (pre-release):
 2. No production code path sets module `contextIsolation` false.
 3. No production preload assigns `global.NEXUS` libraries/components.
 4. `proxyRequest` remains disabled.
-5. At least one real production module migrated to v2 and smoke-tested.
-6. Manual matrix above completed on target platforms.
-7. Docs published: isolation threat model + v2 migration guide.
+5. Module-session egress denial remains enabled for production and development.
+6. At least one real production module migrated to v2 and smoke-tested.
+7. Manual matrix above completed on target platforms.
+8. Docs published: isolation threat model + v2 migration guide.
 
 ## Key paths
 

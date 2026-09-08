@@ -12,15 +12,27 @@ const read = (...segments) =>
 test('window startup configuration keeps wallet and keyboard renderers isolated', () => {
   const renderer = read('src', 'main', 'renderer.js');
   const keyboard = read('src', 'main', 'keyboard.js');
+  const paths = read('src', 'main', 'paths.js');
   const preload = read('src', 'main', 'preload.js');
+  const main = read('src', 'main', 'main.js');
 
   assert.match(renderer, /nodeIntegration:\s*false/);
   assert.match(renderer, /contextIsolation:\s*true/);
-  // Default remains sandboxed; NEXUS_DISABLE_SANDBOX=1 only takes effect in
-  // development/debug builds, not in packaged production builds.
+  assert.match(
+    paths,
+    /export const isDevelopment =\s*!app\.isPackaged && process\.env\.NODE_ENV === 'development'/
+  );
+  assert.match(renderer, /import \{ assetsDir, isDevelopment \} from '.\/paths'/);
+  assert.match(keyboard, /import \{ isDevelopment \} from '.\/paths'/);
+  assert.doesNotMatch(paths, /process\.env\.NODE_ENV === 'development'\s*\?/);
+  assert.doesNotMatch(keyboard, /process\.env\.NODE_ENV === 'development'/);
+  assert.doesNotMatch(preload, /NODE_ENV:\s*process\.env\.NODE_ENV/);
+  assert.match(preload, /nexus-development/);
+  // Default remains sandboxed; the override is unavailable to packaged apps.
+  assert.match(renderer, /const allowSandboxOverride =\s*!app\.isPackaged/);
   assert.match(
     renderer,
-    /NEXUS_DISABLE_SANDBOX[\s\S]{0,200}NODE_ENV.*development/
+    /sandbox:\s*!\(\s*allowSandboxOverride\s*&&\s*process\.env\.NEXUS_DISABLE_SANDBOX/
   );
   // The sandbox expression must guard with a dev/debug check so production
   // builds cannot have sandbox disabled by an environment variable alone.
@@ -36,6 +48,22 @@ test('window startup configuration keeps wallet and keyboard renderers isolated'
   assert.match(preload, /preload\.init/);
   assert.doesNotMatch(preload, /from ['"]electron['"].*clipboard|clipboard.*from ['"]electron['"]/);
   assert.doesNotMatch(preload, /@aptabase\/electron\/renderer/);
+  assert.match(renderer, /setWindowOpenHandler\(\(\) => \(\{ action: 'deny' \}\)\)/);
+  assert.match(renderer, /will-navigate/);
+  assert.match(renderer, /will-redirect/);
+  assert.doesNotMatch(renderer, /await mainWindow\.loadURL/);
+  assert.match(renderer, /mainWindow\.loadURL\(htmlPath\)\.catch/);
+  assert.doesNotMatch(renderer, /await installExtensions/);
+  assert.match(renderer, /additionalArguments:[\s\S]*--nexus-development/);
+  assert.match(main, /mainWindow = createWindow\(settings\)/);
+  assert.ok(
+    renderer.indexOf('hardenModuleWebviews(mainWindow)') <
+      renderer.indexOf('mainWindow.loadURL(htmlPath)')
+  );
+  assert.match(main, /event\.senderFrame === windowContents\.mainFrame/);
+  assert.match(main, /isTrustedWindowUrl\(event\.senderFrame\?\.url/);
+  const appSettings = read('src', 'App', 'Settings', 'App', 'index.tsx');
+  assert.doesNotMatch(appSettings, /updateHandlers\(['"]devMode['"]\)/);
 });
 
 test('renderer build fails rather than externalizing Node or Electron imports', () => {
@@ -43,17 +71,32 @@ test('renderer build fails rather than externalizing Node or Electron imports', 
     'configs',
     'webpack.config.base.renderer.babel.js'
   );
+  const dllConfig = read('configs', 'webpack.config.dll.dev.babel.js');
+  const bootstrap = read('assets', 'static', 'app-bootstrap.js');
 
   assert.match(webpackConfig, /node:\s*false/);
   assert.match(webpackConfig, /electron:\s*false/);
   assert.match(webpackConfig, /electronRenderer:\s*false/);
   assert.match(webpackConfig, /conditionNames:.*browser/);
+  assert.match(bootstrap, /renderer\.dev\.dll\.js/);
+  assert.match(dllConfig, /devtool:\s*['"]cheap-module-source-map['"]/);
+  assert.doesNotMatch(dllConfig, /devtool:\s*['"]eval/);
 });
 
 test('embedded Core start always supplies API auth and probes already-running Core', () => {
   const core = read('src', 'main', 'core.js');
   const coreRpc = read('src', 'main', 'coreRpc.js');
   const rendererCore = read('src', 'shared', 'lib', 'core.ts');
+  const coreSettings = read('src', 'App', 'Settings', 'Core', 'index.tsx');
+  const embeddedCoreSettings = read(
+    'src',
+    'App',
+    'Settings',
+    'Core',
+    'EmbeddedCoreSettings.tsx'
+  );
+  const liteModeNotice = read('src', 'App', 'Overlays', 'LiteModeNotice.tsx');
+  const staking = read('src', 'App', 'UserPage', 'Staking.tsx');
   const main = read('src', 'main', 'main.js');
   const coreConf = read('src', 'main', 'ipc', 'coreConf.js');
   const wallet = read('src', 'shared', 'lib', 'wallet.ts');
@@ -73,6 +116,11 @@ test('embedded Core start always supplies API auth and probes already-running Co
   assert.match(core, /stopEmbeddedCore/);
   // Never kill an unrelated Core that merely shares the binary name/path.
   assert.match(core, /commandUsesDataDir/);
+  assert.match(core, /let walletManagedCorePid = null/);
+  assert.match(core, /let walletManagedCoreDataDir = null/);
+  assert.match(core, /requiresTrackedPid = !!dataDir && \/\\s\/\.test\(dataDir\)/);
+  assert.match(core, /walletManagedCorePid = coreProcess\.pid/);
+  assert.match(core, /walletManagedCoreDataDir = dataDirParam/);
   assert.match(core, /unmanaged-core-api-unreachable/);
   assert.match(core, /getCorePID\(\{\s*dataDir:\s*settings\.coreDataDir\s*\}\)/);
   assert.match(coreRpc, /probeCoreApi/);
@@ -90,21 +138,37 @@ test('embedded Core start always supplies API auth and probes already-running Co
   // Main process must stop Core on quit/exit so orphans are not left behind.
   assert.match(main, /stopEmbeddedCore|ensureEmbeddedCoreStopped|shutdownEmbeddedCoreAndAllowQuit/);
   assert.match(main, /before-quit/);
+  assert.doesNotMatch(
+    main,
+    /shutdownEmbeddedCoreAndAllowQuit\(\)\.finally\([\s\S]*app\.exit\(0\)/
+  );
+  assert.match(
+    main,
+    /shutdownEmbeddedCoreAndAllowQuit\(\)[\s\S]*\.then\(\(\) => app\.exit\(0\)\)[\s\S]*\.catch/
+  );
+  assert.doesNotMatch(
+    read('src', 'main', 'core.js'),
+    /executeCommand[\s\S]*console\.error\(err\)/
+  );
   // Menu/IPC quit must hard-exit: window close is always preventDefault'd so
   // app.quit() alone cannot terminate after allowingFinalQuit is set.
   assert.match(
     main,
     /registerOperation\(\s*CHANNELS\.app\.quit,\s*undefined,\s*async \(\) => \{\s*await shutdownEmbeddedCoreAndAllowQuit\(\);\s*app\.exit\(0\);\s*\}\)/
   );
-  // Renderer stop must still force-kill when system/stop fails.
-  assert.match(rendererCore, /window\.nexusElectron\.core\.kill\(\)/);
-  assert.match(
-    rendererCore,
-    /Graceful stop request failed[\s\S]*core\.kill\(\)/
-  );
+  // Renderer delegates the complete graceful-stop/kill/confirmation sequence
+  // to the serialized main-process lifecycle operation.
+  assert.match(rendererCore, /window\.nexusElectron\.core\.stop\(\)/);
+  assert.match(main, /coreLifecycle\.run\(['"]stop['"]/);
+  assert.match(core, /core\.stop\.confirmed/);
+  assert.match(core, /core\.stop\.unconfirmed/);
   // Wallet close relies on main-process exit to stop Core (no double wait).
   assert.match(wallet, /app\.exit\(\)/);
   assert.doesNotMatch(wallet, /await stopCore\(\)/);
+  assert.match(
+    wallet,
+    /try \{[\s\S]*await logOut\(\)[\s\S]*await window\.nexusElectron\.app\.exit\(\)[\s\S]*catch \(error\)[\s\S]*walletClosingAtom,\s*false[\s\S]*coreInfoPausedAtom,\s*false[\s\S]*Unable to close Nexus Wallet[\s\S]*Please try again/
+  );
   // Renderer must not short-circuit before main can probe/restart a mismatched Core.
   assert.match(rendererCore, /window\.nexusElectron\.core\.start\(\)/);
   assert.doesNotMatch(
@@ -115,6 +179,32 @@ test('embedded Core start always supplies API auth and probes already-running Co
   assert.match(core, /apiError:\s*ready\.ok \? undefined : ready\.error/);
   assert.match(core, /core\.api\.wait\.timeout|core\.api\.wait\.ready/);
   assert.match(rendererCore, /setCoreConnectionError|apiReachable === false/);
+  assert.match(
+    rendererCore,
+    /restartResult\?\.apiReachable === false[\s\S]*setCoreConnectionError/
+  );
+  assert.match(
+    coreSettings,
+    /submit:\s*async[\s\S]*await updateSettings\(updates\)[\s\S]*onSuccess:[\s\S]*restartCore\(\)\.catch/
+  );
+  assert.doesNotMatch(coreSettings, /await stopCore\(\)/);
+  assert.doesNotMatch(coreSettings, /window\.nexusElectron\.settings\.update/);
+  assert.match(
+    embeddedCoreSettings,
+    /await updateSettings\(\{ clearPeers: true \}\);[\s\S]*await restartCore\(\)/
+  );
+  assert.match(
+    embeddedCoreSettings,
+    /await updateSettings\(\{ clearPeers: true \}\);[\s\S]*await resyncLiteCore\(\)/
+  );
+  assert.match(
+    liteModeNotice,
+    /await updateSettings\([\s\S]*await restartCore\(\)/
+  );
+  assert.match(
+    staking,
+    /await updateSettings\([\s\S]*await restartCore\(\)/
+  );
 });
 
 test('renderer surfaces Core connection failures instead of silent spinner', () => {
@@ -163,9 +253,26 @@ test('main process emits structured Core lifecycle diagnostics', () => {
   assert.match(core, /core\.api\.ready|core\.api\.wait\.timeout/);
   assert.match(coreRpc, /core\.probe\.begin|core\.probe\.failed|core\.probe\.ok/);
   assert.match(coreRpc, /summarizeConfig/);
+  assert.match(
+    coreRpc,
+    /endpoint:\s*redactSensitiveText\(endpoint\.split\('\?'\)\[0\]\)/
+  );
+  assert.match(coreRpc, /message:\s*redactSensitiveText\(message\)/);
   assert.match(main, /ipc\.core\.enter/);
   assert.match(main, /ipc\.core\.exit/);
   assert.match(main, /CORE_TRACE_CHANNELS/);
+  assert.match(
+    main,
+    /endpoint = assertAllowedCoreRpcEndpoint\(request\.endpoint\)/
+  );
+  assert.match(
+    main,
+    /endpoint = validateCoreConsoleRpcUrl\(request\)\.split\(\/\[\/\?\]\//
+  );
+  assert.match(
+    main,
+    /const message = redactSensitiveText\([\s\S]*log\.warn\('ipc\.core\.exit'/
+  );
 });
 
 test('default backup directory uses os.homedir instead of HOME-only env', () => {
@@ -185,6 +292,21 @@ test('language selection persists locale once before reload', () => {
     /await window\.nexusElectron\.settings\.update\(\{\s*locale:\s*selection\s*\}\)/
   );
   assert.doesNotMatch(selectLanguage, /updateSettings\(\{\s*locale:/);
+});
+
+test('renderer settings persistence serializes versioned batches', () => {
+  const settings = read('src', 'shared', 'lib', 'settings', 'index.ts');
+
+  assert.match(settings, /let persistenceQueue = Promise\.resolve\(\)/);
+  assert.match(
+    settings,
+    /const targetSettings = store\.get\(userSettingsAtom\)[\s\S]*const targetVersions = \{ \.\.\.settingVersions \}[\s\S]*Object\.entries\(targetSettings\)[\s\S]*queuedSettings[\s\S]*queuedSettings = targetSettings[\s\S]*if \(!Object\.keys\(batchUpdates\)\.length\) \{[\s\S]*targetAlreadyPersisted[\s\S]*persistenceQueue\.then\([\s\S]*persistenceQueue = persistenceQueue[\s\S]*Object\.entries\(batchUpdates\)[\s\S]*await window\.nexusElectron\.settings\.update\(updates\)[\s\S]*persistedSettings =[\s\S]*persistenceQueue\.then\([\s\S]*waiters\.forEach\(\(\{ resolve \}\) => resolve\(\)\)/
+  );
+  assert.match(
+    settings,
+    /settingVersions\[settingsKey\] !== targetVersions\[settingsKey\][\s\S]*persistedSettings\[settingsKey\] === value[\s\S]*currentSettings\[settingsKey\] !== value[\s\S]*delete rolledBackSettings\[settingsKey\][\s\S]*queuedSettings\[settingsKey\] === value[\s\S]*reconciledQueuedSettings[\s\S]*queuedSettings = reconciledQueuedSettings[\s\S]*store\.set\(userSettingsAtom, rolledBackSettings\)[\s\S]*throw error[\s\S]*waiters\.forEach\(\(\{ reject \}\) => reject\(error\)\)/
+  );
+  assert.doesNotMatch(settings, /do \{[\s\S]*\} while/);
 });
 
 test('updater GitHub release version variable is spelled correctly', () => {

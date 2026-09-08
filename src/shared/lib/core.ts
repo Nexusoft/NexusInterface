@@ -5,9 +5,7 @@ import {
   coreInfoPausedAtom,
   setCoreConnectionError,
 } from 'lib/coreInfo';
-import { callAPI } from 'lib/api';
 import { settingsAtom } from 'lib/settings';
-import sleep from 'utils/sleep';
 
 export type CoreStartResult = {
   started?: boolean;
@@ -95,11 +93,8 @@ export const startCore = async () => {
 /**
  * Stop Nexus Core
  *
- * IMPORTANT: A disconnected Core cannot receive system/stop. The previous
- * implementation wrapped the whole sequence in try/catch, so a failed API
- * stop skipped the force-kill path and left an orphaned nexus process that
- * required an OS-level kill. Always fall through to process kill when the
- * Core binary is still running.
+ * Main owns the complete graceful-stop, force-kill, and confirmation sequence
+ * under the lifecycle lock.
  */
 export const stopCore = async (forRestart?: boolean) => {
   console.info('Core Manager: Stop function called');
@@ -117,43 +112,21 @@ export const stopCore = async (forRestart?: boolean) => {
   }
 
   try {
-    await callAPI('system/stop');
-  } catch (err) {
-    console.info(
-      'Core Manager: Graceful stop request failed; checking if process is still running',
-      err
-    );
-  }
-
-  // Wait for core to gracefully stop for 10 seconds, then force-kill.
-  let coreStillRunning = false;
-  for (let i = 0; i < 10; i++) {
-    try {
-      const coreStatus = (await window.nexusElectron.core.getStatus()) as {
-        running?: boolean;
-      };
-      coreStillRunning = !!coreStatus.running;
-    } catch {
-      // Status IPC failure should not prevent a kill attempt.
-      coreStillRunning = true;
-    }
-    if (coreStillRunning) {
-      console.info(
-        `Core Manager: Core still running after stop command for: ${i} seconds`
+    const result = (await window.nexusElectron.core.stop()) as {
+      stopped?: boolean;
+      reason?: string;
+    };
+    if (!result?.stopped) {
+      throw new Error(
+        `Nexus Core shutdown could not be confirmed${
+          result?.reason ? ` (${result.reason})` : ''
+        }`
       );
-    } else {
-      console.info(`Core Manager: Core stopped gracefully.`);
-      break;
     }
-    await sleep(1000);
-  }
-
-  if (coreStillRunning) {
-    try {
-      await window.nexusElectron.core.kill();
-    } catch (err) {
-      console.error('Core Manager: Failed to kill Core process', err);
-    }
+  } catch (error) {
+    if (!forRestart) store.set(coreInfoPausedAtom, false);
+    setCoreConnectionError(error);
+    throw error;
   }
 };
 
@@ -161,7 +134,40 @@ export const stopCore = async (forRestart?: boolean) => {
  * Restart Nexus Core
  */
 export const restartCore = async () => {
-  await stopCore(true);
-  await startCore();
-  store.set(coreInfoPausedAtom, false);
+  try {
+    const restartResult =
+      (await window.nexusElectron.core.restart()) as CoreStartResult;
+    store.set(
+      coreConfigAtom,
+      await window.nexusElectron.core.getConfiguration()
+    );
+    if (restartResult?.apiReachable === false) {
+      setCoreConnectionError(
+        restartResult.apiError ||
+          'Nexus Core started but the API is not reachable yet'
+      );
+    } else {
+      clearCoreConnectionError();
+    }
+    store.set(coreInfoPausedAtom, false);
+    return true;
+  } catch (error) {
+    store.set(coreInfoPausedAtom, false);
+    setCoreConnectionError(error);
+    console.error('core.restart.failed', error);
+    throw error;
+  }
+};
+
+export const resyncLiteCore = async () => {
+  store.set(coreInfoPausedAtom, true);
+  clearCoreConnectionError();
+  try {
+    return await window.nexusElectron.core.resyncLiteDatabase();
+  } catch (error) {
+    setCoreConnectionError(error);
+    throw error;
+  } finally {
+    store.set(coreInfoPausedAtom, false);
+  }
 };

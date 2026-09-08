@@ -8,7 +8,7 @@ import { TextField } from 'components/TextField';
 import { useFieldValue } from 'lib/form';
 import { updateSettings } from 'lib/settings';
 import { confirm, openErrorDialog } from 'lib/dialog';
-import { restartCore, stopCore, startCore } from 'lib/core';
+import { restartCore, resyncLiteCore } from 'lib/core';
 import { defaultConfig } from 'lib/coreConfig';
 import { preRelease } from 'consts/misc';
 import { consts } from 'styles';
@@ -438,8 +438,12 @@ async function clearPeerConnections() {
     note: 'Nexus Core will be restarted. After that, all stored peer connections will be reset.',
   });
   if (confirmed) {
-    updateSettings({ clearPeers: true });
-    restartCore();
+    try {
+      await updateSettings({ clearPeers: true });
+      await restartCore();
+    } catch (err: any) {
+      openErrorDialog({ message: err && err.message });
+    }
   }
 }
 
@@ -454,13 +458,11 @@ async function resyncLiteMode() {
     ),
   });
   if (confirmed) {
-    updateSettings({ clearPeers: true });
-    await stopCore();
     try {
-      await window.nexusElectron.core.resyncLiteDatabase();
+      await updateSettings({ clearPeers: true });
+      await resyncLiteCore();
     } catch (err: any) {
       openErrorDialog({ message: err && err.message });
     }
-    await startCore();
   }
 }

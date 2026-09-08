@@ -1,6 +1,6 @@
 'use strict';
 
-import { clipboard, ipcMain, shell, webContents } from 'electron';
+import { clipboard, dialog, ipcMain, shell, webContents } from 'electron';
 import log from 'electron-log';
 import fs from 'fs/promises';
 import path from 'path';
@@ -11,6 +11,7 @@ import {
   ERROR_CODES,
   METHOD_CAPABILITY,
   METHODS,
+  createMethodRateLimiter,
   normalizeManifestCapabilities,
   sanitizeWalletContext,
   validateInvokeRequest,
@@ -36,6 +37,8 @@ import { assertSafeModuleName } from './ipc/contracts';
 const guestsByWebContentsId = new Map();
 const pendingHostRequests = new Map();
 const storageWriteBuckets = new Map();
+const sideEffectRateLimiter = createMethodRateLimiter();
+const pendingSideEffectPrompts = new Set();
 const auditLog = [];
 
 const STORAGE_WRITE_LIMIT = 30;
@@ -172,6 +175,8 @@ export function unregisterModuleGuest(webContentsId) {
   const guest = guestsByWebContentsId.get(webContentsId);
   if (guest) {
     guestsByWebContentsId.delete(webContentsId);
+    sideEffectRateLimiter.clear(webContentsId);
+    pendingSideEffectPrompts.delete(webContentsId);
     audit({
       moduleId: guest.moduleName,
       version: guest.version,
@@ -246,6 +251,70 @@ function getMainWindowContents() {
   const mainWindow = global.mainWindow;
   if (!mainWindow || mainWindow.isDestroyed()) return null;
   return mainWindow.webContents;
+}
+
+async function confirmModuleSideEffect(guest, method, payload) {
+  const mainWindow = global.mainWindow;
+  if (!mainWindow || mainWindow.isDestroyed()) {
+    throw moduleError(
+      ERROR_CODES.HOST_UNAVAILABLE,
+      'Wallet confirmation window is unavailable'
+    );
+  }
+  if (pendingSideEffectPrompts.has(guest.webContentsId)) {
+    throw moduleError(
+      ERROR_CODES.RATE_LIMITED,
+      'A module side-effect confirmation is already pending'
+    );
+  }
+
+  const opensLink = method === METHODS.UI_OPEN_EXTERNAL;
+  const action = opensLink ? 'Open Link' : 'Copy Text';
+  const detail = opensLink
+    ? payload.url
+    : `Text preview: ${JSON.stringify(payload.text.slice(0, 500))}${
+        payload.text.length > 500 ? '…' : ''
+      }\n${payload.text.length} characters`;
+
+  pendingSideEffectPrompts.add(guest.webContentsId);
+  try {
+    const { response } = await dialog.showMessageBox(mainWindow, {
+      type: 'warning',
+      buttons: ['Deny', action],
+      defaultId: 0,
+      cancelId: 0,
+      noLink: true,
+      title: 'Module permission request',
+      message: `${guest.moduleName} requests permission to ${
+        opensLink ? 'open an external link' : 'replace clipboard contents'
+      }.`,
+      detail,
+    });
+    if (response !== 1) {
+      throw moduleError(
+        ERROR_CODES.USER_DENIED,
+        `User denied ${method} for this module`
+      );
+    }
+    try {
+      const contents = webContents.fromId(guest.webContentsId);
+      if (
+        guestsByWebContentsId.get(guest.webContentsId) !== guest ||
+        !contents ||
+        contents.isDestroyed()
+      ) {
+        throw moduleError(
+          ERROR_CODES.UNAUTHORIZED,
+          'Module guest is no longer active'
+        );
+      }
+    } catch (error) {
+      if (error?.code) throw error;
+      throw moduleError(ERROR_CODES.UNAUTHORIZED, 'Invalid module guest');
+    }
+  } finally {
+    pendingSideEffectPrompts.delete(guest.webContentsId);
+  }
 }
 
 function requestHostAction(guest, action, payload) {
@@ -334,11 +403,15 @@ async function handleInvoke(guest, request) {
       }
       case METHODS.UI_OPEN_EXTERNAL: {
         const url = validateModuleOpenUrl(payload.url);
+        sideEffectRateLimiter.consume(guest.webContentsId, method);
+        await confirmModuleSideEffect(guest, method, { url });
         await shell.openExternal(url);
         value = undefined;
         break;
       }
       case METHODS.UI_COPY_TEXT: {
+        sideEffectRateLimiter.consume(guest.webContentsId, method);
+        await confirmModuleSideEffect(guest, method, payload);
         clipboard.writeText(payload.text);
         value = undefined;
         break;

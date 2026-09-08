@@ -28,12 +28,10 @@ export default function WebView({ module, ...rest }: WebViewProps) {
     let active = true;
     const prepare = async () => {
       try {
-        if (!module.development) {
-          await window.nexusElectron.modules.prepareFiles(
-            module.info.name,
-            module.info.files
-          );
-        }
+        await window.nexusElectron.modules.prepareFiles(
+          module.info.name,
+          module.info.files
+        );
         const entry = await window.nexusElectron.modules.getEntry(
           module.info.name
         );

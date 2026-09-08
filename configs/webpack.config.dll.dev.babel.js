@@ -20,7 +20,7 @@ dependencies.push('@aptabase/electron/renderer');
 export default merge(baseConfig, devConfig, {
   context: process.cwd(),
 
-  devtool: 'eval',
+  devtool: 'cheap-module-source-map',
 
   target: 'electron-renderer',
 

@@ -2,7 +2,9 @@
 
 `nxs_package.dev.json` is the development version of [nxs_package.json](./nxs_package.json.md). It will be used instead of `nxs_package.json` when and only when you add your module as a **development module**.
 
-This is useful when you need to point your module entry to a different file or URL (e.g. from the dev server) in order to use Live Reload (or Hot Module Replacement) feature for a better developer experience.
+This is useful when you need to point your module entry to a different local development build.
+
+Development modules are served through the wallet's module-scoped asset server. Existing development manifests that use a dev-server URL must migrate to a module-relative `entry` and add a `files` array containing every asset needed by the module.
 
 ## Schema
 
@@ -53,13 +55,23 @@ Should be the same as in [nxs_package.json](./nxs_package.json.md).
 - Type: `string`
 - Constraints: none
 
+### `files`
+
+- **Mandatory**
+- Type: `string[]`
+- Constraints:
+  - Each item must be a valid [internal file path](./nxs_package.json.md#internal-file-paths)
+  - All listed files must exist
+
+List every local file needed to run the development module, including the `entry` file and its scripts, styles, and other assets. The wallet only authorizes files listed in this on-disk manifest.
+
 ### `entry`
 
 - Optional
 - Type: `string`
-- Constraints: [internal file paths](./nxs_package.json.md#internal-file-paths) OR a URL
+- Constraints: [internal file paths](./nxs_package.json.md#internal-file-paths)
 
-This field is what makes `nxs_package.dev.json` useful. The entry file or URL in your development environment should be different from that of production environment, so that you can use development features like Live Reload.
+The development entry can differ from the production entry, but it must identify a local file included in `files`.
 
 ### `icon`
 

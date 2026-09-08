@@ -9,6 +9,8 @@ import BootstrapModal from 'components/BootstrapModal';
 
 __ = __context('Bootstrap');
 
+export const remoteBootstrapEnabled = false;
+
 export type BootstrapStep =
   | 'idle'
   | 'prompting'
@@ -76,6 +78,7 @@ async function startBootstrap() {
 }
 
 subscribe(coreInfoQuery.valueAtom, async (coreInfo) => {
+  if (!remoteBootstrapEnabled) return;
   const coreConnected = !!coreInfo;
   const { bootstrapSuggestionDisabled, manualDaemon } = store.get(settingsAtom);
   const bootstrapStatus = store.get(bootstrapStatusAtom);
@@ -97,6 +100,16 @@ subscribe(coreInfoQuery.valueAtom, async (coreInfo) => {
 });
 
 export async function bootstrap(options?: { suggesting?: boolean }) {
+  if (!remoteBootstrapEnabled) {
+    openErrorDialog({
+      message: __('Recent database bootstrap is temporarily unavailable'),
+      note: __(
+        'Bootstrap artifacts require an authenticated signed manifest before this feature can be enabled safely.'
+      ),
+    });
+    return;
+  }
+
   const { suggesting } = options || {};
   if (store.get(bootstrapStatusAtom).step !== 'idle') return;
 

@@ -1,5 +1,6 @@
 import path from 'path';
 import { BrowserWindow, screen } from 'electron';
+import { isDevelopment } from './paths';
 
 const randomRange = (min, max) => Math.floor(Math.random() * (max - min) + min);
 
@@ -27,7 +28,7 @@ export async function openVirtualKeyboard(options) {
     fullscreenable: false,
     webPreferences: {
       preload:
-        process.env.NODE_ENV === 'development'
+        isDevelopment
           ? path.resolve(process.cwd(), 'build', 'keyboard_preload.dev.js')
           : path.resolve(__dirname, 'keyboard_preload.prod.js'),
       nodeIntegration: false,
@@ -58,7 +59,7 @@ export async function openVirtualKeyboard(options) {
   });
 
   const htmlPath =
-    process.env.NODE_ENV === 'development'
+    isDevelopment
       ? '../src/keyboard/keyboard.html'
       : 'keyboard.html';
   await bw.loadURL(`file://${path.resolve(__dirname, htmlPath)}`);

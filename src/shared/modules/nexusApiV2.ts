@@ -14,6 +14,7 @@ export type NexusModuleErrorCode =
   | 'module.unknown'
   | 'module.payload_too_large'
   | 'module.rate_limited'
+  | 'module.user_denied'
   | 'module.validation_failed'
   | 'module.host_unavailable'
   | 'module.internal';

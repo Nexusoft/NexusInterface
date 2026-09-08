@@ -230,13 +230,10 @@ export default function SettingsApp() {
         connectLabel
         label={__('Developer mode')}
         subLabel={__(
-          'Development mode enables advanced features to aid in development. After enabling the wallet must be closed and reopened to enable those features.'
+          'Developer mode is a startup-only setting and cannot be changed while the wallet is running.'
         )}
       >
-        <Switch
-          checked={settings.devMode}
-          onCheckedChange={updateHandlers('devMode')}
-        />
+        <Switch checked={settings.devMode} disabled />
       </SettingsField>
 
       <div style={{ display: settings.devMode ? 'block' : 'none' }}>

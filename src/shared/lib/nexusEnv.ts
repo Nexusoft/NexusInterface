@@ -8,8 +8,6 @@
 export interface NexusEnv {
   /** Build environment from the main-process preload snapshot. */
   NODE_ENV: string;
-  /** Dev server port, only meaningful when `NODE_ENV === 'development'`. */
-  PORT: string;
   /** Host platform from the main-process preload snapshot. */
   platform: NexusPlatform;
   /** Host CPU architecture from the main-process preload snapshot. */
@@ -18,7 +16,6 @@ export interface NexusEnv {
 
 const fallbackNexusEnv: NexusEnv = {
   NODE_ENV: 'production',
-  PORT: '',
   platform: 'linux',
   arch: '',
 };

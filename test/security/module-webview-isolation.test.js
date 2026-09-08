@@ -15,6 +15,7 @@ const {
   DEFAULT_CAPABILITIES,
   ERROR_CODES,
   METHODS,
+  createMethodRateLimiter,
   normalizeManifestCapabilities,
   sanitizeWalletContext,
   validateInvokeRequest,
@@ -30,6 +31,11 @@ test('NEXUS v2 contract exports a frozen method/capability map', () => {
     DEFAULT_CAPABILITIES.includes(CAPABILITIES.LEGACY_API),
     false
   );
+  assert.equal(
+    DEFAULT_CAPABILITIES.includes(CAPABILITIES.UI_OPEN_EXTERNAL),
+    false
+  );
+  assert.equal(DEFAULT_CAPABILITIES.includes(CAPABILITIES.UI_COPY_TEXT), false);
   assert.equal(METHODS.WALLET_GET_CONTEXT, 'wallet.getContext');
 });
 
@@ -113,6 +119,32 @@ test('manifest capabilities default safely and reject production legacy.api', ()
     () => normalizeManifestCapabilities(['wallet.destroyWorld']),
     TypeError
   );
+  assert.deepEqual(
+    normalizeManifestCapabilities(['ui.openExternal', 'ui.copyText']),
+    ['ui.openExternal', 'ui.copyText']
+  );
+});
+
+test('module side effects are rate-limited per guest session', () => {
+  const limiter = createMethodRateLimiter();
+  for (let count = 0; count < 5; count += 1) {
+    limiter.consume(101, METHODS.UI_OPEN_EXTERNAL, count);
+  }
+  assert.throws(
+    () => limiter.consume(101, METHODS.UI_OPEN_EXTERNAL, 5),
+    (error) => error.code === ERROR_CODES.RATE_LIMITED
+  );
+  assert.doesNotThrow(() =>
+    limiter.consume(202, METHODS.UI_OPEN_EXTERNAL, 5)
+  );
+  assert.doesNotThrow(() =>
+    limiter.consume(101, METHODS.UI_OPEN_EXTERNAL, 60_001)
+  );
+
+  limiter.clear(101);
+  assert.doesNotThrow(() =>
+    limiter.consume(101, METHODS.UI_OPEN_EXTERNAL, 60_002)
+  );
 });
 
 test('wallet context sanitizer strips address book and secrets', () => {
@@ -152,6 +184,9 @@ test('module webview hardening enforces isolation preferences', () => {
   assert.match(security, /registerModuleGuest/);
   assert.match(security, /setWindowOpenHandler/);
   assert.match(security, /setPermissionRequestHandler/);
+  assert.match(security, /setPermissionCheckHandler/);
+  assert.match(security, /webRequest\.onBeforeRequest/);
+  assert.match(security, /setProxy/);
   assert.doesNotMatch(security, /contextIsolation\s*=\s*false/);
   // Guest identity is loaded during entry authorization; registration is sync.
   assert.match(broker, /export async function loadModuleGuestIdentity/);
@@ -159,10 +194,24 @@ test('module webview hardening enforces isolation preferences', () => {
   assert.doesNotMatch(broker, /export async function registerModuleGuest/);
   // Policies must be bound to the guest session, not a global FIFO queue.
   assert.match(security, /pendingPoliciesBySession/);
+  assert.match(security, /setTimeout/);
+  assert.match(security, /clearTimeout/);
+  assert.match(security, /webRequest\.onBeforeRequest\(null\)/);
   assert.match(security, /session\.fromPartition/);
   assert.match(security, /webPreferences\.partition/);
+  assert.match(
+    security,
+    /pendingPoliciesBySession\.set\(guestSession,\s*pending\)[\s\S]*guestSession\s*\n?\s*\.setProxy/
+  );
+  assert.match(
+    security,
+    /Failed to set module network proxy[\s\S]*closePendingContents/
+  );
   assert.doesNotMatch(security, /pendingPolicies\.shift\(/);
   assert.doesNotMatch(security, /pendingPolicies\.push\(/);
+  assert.match(broker, /dialog\.showMessageBox/);
+  assert.match(broker, /sideEffectRateLimiter\.consume/);
+  assert.match(broker, /response !== 1/);
 });
 
 test('module preload is a minimal contextBridge surface without React or ipc leaks', () => {
@@ -216,6 +265,7 @@ test('file server uses per-module allowlists and security headers', () => {
   assert.match(server, /assertSafeModuleName/);
   assert.match(server, /resolveAssetAbsolute/);
   assert.match(server, /realpathSync/);
+  assert.doesNotMatch(server, /authorizedAssets\.clear\(\)/);
   assert.match(server, /isRateLimited/);
   assert.match(server, /RATE_LIMIT_MAX/);
   // Must not bind all interfaces; module assets are local-only.

@@ -65,7 +65,10 @@ await NEXUS.ui.copyText('NXS...');
 await NEXUS.ui.openExternal('https://example.com/docs');
 ```
 
-`openExternal` allows only `http:`, `https:`, and `mailto:`.
+`openExternal` allows only `http:`, `https:`, and `mailto:`. Clipboard writes
+and external-link opening require explicit manifest capabilities, display a
+wallet-owned confirmation for every attempt, and are rate-limited per module
+session.
 
 ### Module state and storage
 
@@ -104,16 +107,24 @@ Optional field in `nxs_package.json`:
     "wallet.context",
     "ui.notify",
     "ui.confirm",
-    "ui.openExternal",
-    "ui.copyText",
     "storage",
     "state",
-    "wallet.requestSend"
+    "wallet.requestSend",
+    "ui.openExternal",
+    "ui.copyText"
   ]
 }
 ```
 
-If omitted, the default set above is granted. Unknown capabilities are rejected.
+If omitted, the default set grants `wallet.context`, `ui.notify`, `ui.confirm`,
+`storage`, `state`, and `wallet.requestSend`. Side-effecting
+`ui.openExternal` and `ui.copyText` are never granted by default. Unknown
+capabilities are rejected.
+
+Module WebViews cannot access the Internet directly. Both production and
+development module sessions load only through their module-scoped loopback
+asset prefix (`file:` requests are rejected); network access must use a
+separately reviewed broker capability.
 
 ## Bundling your own UI
 

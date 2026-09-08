@@ -2,48 +2,15 @@
 <html>
   <head>
     <meta charset="utf-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: file:; font-src 'self' data:; connect-src 'self'; frame-src http://127.0.0.1:*; object-src 'none'; base-uri 'none'; form-action 'none'"
+    />
     <title>Nexus</title>
+    <script defer src="./app-bootstrap.js"></script>
   </head>
 
   <body>
     <div style="overflow: hidden" id="root"></div>
-    <script>
-      {
-        // window.nexusEnv is exposed by the main preload script (works
-        // whether or not this window has contextIsolation enabled -- see
-        // src/main/preload.js), since this page cannot reliably read
-        // process.env directly across all supported window configurations.
-        const nexusEnv = window.nexusEnv || {};
-        const scripts = [];
-
-        // Dynamically insert the DLL script in development env in the
-        // renderer process
-        if (nexusEnv.NODE_ENV === 'development') {
-          scripts.push('renderer.dev.dll.js');
-        }
-
-        // Dynamically insert the bundled app script in the renderer process
-        const port = nexusEnv.PORT || 1212;
-        scripts.push(
-          nexusEnv.NODE_ENV === 'development'
-            ? 'http://localhost:' + port + '/renderer.dev.js'
-            : './renderer.prod.js'
-        );
-
-        document.write(
-          scripts
-            .map((script) => '<script defer src="' + script + '"><\/script>')
-            .join('')
-        );
-
-        window.onload = () => {
-          document.addEventListener('auxclick', function handleNonLeftClick(e) {
-            if (e.button === 1 || e.ctrlKey) {
-              e.preventDefault();
-            }
-          });
-        };
-      }
-    </script>
   </body>
 </html>

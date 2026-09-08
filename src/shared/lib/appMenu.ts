@@ -87,7 +87,14 @@ const menuItems = preprocess({
   },
   stopCoreMenu: {
     label: __('Stop Nexus Core'),
-    click: stopCore,
+    click: () => {
+      void stopCore().catch((error) => {
+        showNotification(
+          (error as Error)?.message || __('Unable to stop Nexus Core'),
+          'error'
+        );
+      });
+    },
   },
   quitNexus: {
     label: __('Quit Nexus'),

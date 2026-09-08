@@ -9,6 +9,7 @@ import log from 'electron-log';
 
 import { modulesDir } from './paths';
 import { assertRelativeModulePath, assertSafeModuleName } from './ipc/contracts';
+import { readRegularFileNoFollow } from './ipc/safeCopy';
 
 const server = express();
 let port = null;
@@ -18,7 +19,7 @@ let port = null;
  * moduleName -> Map(relativePath -> absolute real path)
  * Request handling never joins user path segments into filesystem paths.
  */
-/** @type {Map<string, Map<string, string>>} */
+/** @type {Map<string, Map<string, { absolutePath: string, root: string, allowPathFallback: boolean }>>} */
 const authorizedAssets = new Map();
 
 const SECURITY_HEADERS = {
@@ -32,8 +33,19 @@ const SECURITY_HEADERS = {
 
 const RATE_LIMIT_WINDOW_MS = 1000;
 const RATE_LIMIT_MAX = 120;
+const MAX_MODULE_ASSET_BYTES = 16 * 1024 * 1024;
+const MAX_CONCURRENT_ASSET_READS = 8;
+let activeAssetReads = 0;
 /** @type {Map<string, { count: number, resetAt: number }>} */
 const rateBuckets = new Map();
+
+function reserveAssetReadSlot() {
+  if (activeAssetReads >= MAX_CONCURRENT_ASSET_READS) {
+    return false;
+  }
+  activeAssetReads += 1;
+  return true;
+}
 
 function normalizeRelativeFile(file) {
   let filePath = normalize(String(file)).replace(/\\/g, '/');
@@ -62,9 +74,10 @@ function isRateLimited(req) {
   return false;
 }
 
-function resolveAssetAbsolute(moduleName, relativeFile) {
-  const moduleRoot = path.resolve(modulesDir, moduleName);
-  const candidate = path.resolve(moduleRoot, relativeFile);
+function resolveAssetAbsolute(moduleName, relativeFile, resolvedFile) {
+  const moduleRoot = resolvedFile?.root || path.resolve(modulesDir, moduleName);
+  const candidate =
+    resolvedFile?.absolutePath || path.resolve(moduleRoot, relativeFile);
   if (candidate !== moduleRoot && !candidate.startsWith(`${moduleRoot}${sep}`)) {
     throw new Error('Module file escapes module root');
   }
@@ -81,7 +94,7 @@ function resolveAssetAbsolute(moduleName, relativeFile) {
   return realFile;
 }
 
-server.get('/modules/:moduleName/*', (req, res) => {
+server.get('/modules/:moduleName/*', async (req, res) => {
   // Rate-limit this filesystem-serving route before any work.
   if (isRateLimited(req)) {
     setSecurityHeaders(res);
@@ -111,14 +124,49 @@ server.get('/modules/:moduleName/*', (req, res) => {
   }
 
   // Lookup only — absolute path was authorized when the module was prepared.
-  const absolute = assets.get(relative);
-  if (!absolute) {
+  const asset = assets.get(relative);
+  if (!asset) {
     return res.status(404).end('Not found');
   }
-
-  return res.sendFile(absolute, (error) => {
-    if (error && !res.headersSent) res.status(404).end('Not found');
-  });
+  if (!reserveAssetReadSlot()) {
+    return res.status(503).end('Module file server busy');
+  }
+  let released = false;
+  let readDone = false;
+  let responseDone = false;
+  const release = () => {
+    if (released || !readDone || !responseDone) return;
+    released = true;
+    activeAssetReads -= 1;
+  };
+  const finishResponse = () => {
+    responseDone = true;
+    release();
+  };
+  res.once('finish', finishResponse);
+  res.once('close', finishResponse);
+  try {
+    const content = await readRegularFileNoFollow(asset.absolutePath, {
+      root: asset.root,
+      label: relative,
+      maxBytes: MAX_MODULE_ASSET_BYTES,
+      allowPathFallback: asset.allowPathFallback,
+    });
+    readDone = true;
+    if (responseDone) {
+      release();
+      return;
+    }
+    return res.type(path.basename(relative)).send(content);
+  } catch {
+    readDone = true;
+    if (responseDone) {
+      release();
+      return;
+    }
+    release();
+    return res.status(404).end('Not found');
+  }
 });
 
 // Loopback-only: module assets must never be reachable from the LAN/WAN.
@@ -135,27 +183,25 @@ export function getDomain() {
  * Authorize a module's static files for serving.
  * Computes and stores absolute real paths up front so request handlers never
  * build filesystem paths from request input.
- * @param {string[]} files paths like `${moduleName}/${relativeFile}`
+ * @param {string} moduleName validated module name
+ * @param {{ path: string, absolutePath: string, root: string, allowPathFallback?: boolean }[]} files
  */
-export function serveModuleFiles(files) {
-  /** @type {Map<string, Map<string, string>>} */
+export function serveModuleFiles(moduleName, files) {
+  const safeModuleName = assertSafeModuleName(moduleName);
+  /** @type {Map<string, { absolutePath: string, root: string, allowPathFallback: boolean }>} */
   const next = new Map();
 
   for (const file of files || []) {
-    const normalized = normalize(String(file)).replace(/\\/g, '/');
-    const parts = normalized.replace(/^\/+/, '').split('/');
-    if (parts.length < 2) continue;
-    const moduleName = assertSafeModuleName(parts[0]);
-    const relative = normalizeRelativeFile(parts.slice(1).join('/'));
-    const absolute = resolveAssetAbsolute(moduleName, relative);
-    if (!next.has(moduleName)) next.set(moduleName, new Map());
-    next.get(moduleName).set(relative, absolute);
+    const relative = normalizeRelativeFile(file.path);
+    const absolute = resolveAssetAbsolute(safeModuleName, relative, file);
+    next.set(relative, {
+      absolutePath: absolute,
+      root: file.root,
+      allowPathFallback: Boolean(file.allowPathFallback),
+    });
   }
 
-  authorizedAssets.clear();
-  for (const [moduleName, map] of next) {
-    authorizedAssets.set(moduleName, map);
-  }
+  authorizedAssets.set(safeModuleName, next);
 }
 
 export function getAllowedModuleFiles(moduleName) {

@@ -132,10 +132,12 @@ Information about the module's author.
 
 - Optional
 - Type: `string[]`
-- Default: NEXUS v2 baseline capabilities (`wallet.context`, `ui.*`, `storage`, `state`, `wallet.requestSend`)
+- Default: NEXUS v2 baseline capabilities (`wallet.context`, `ui.notify`,
+  `ui.confirm`, `storage`, `state`, `wallet.requestSend`)
 
 Declares which isolated NEXUS v2 capabilities this module may use. Unknown values
-are rejected. `legacy.api` is not allowed for production modules.
+are rejected. `ui.openExternal` and `ui.copyText` are opt-in, user-confirmed,
+and rate-limited. `legacy.api` is not allowed for production modules.
 
 See [NEXUS v2 migration](./nexus-v2-migration.md) and
 [Module WebView isolation](../security/module-webview-isolation.md).

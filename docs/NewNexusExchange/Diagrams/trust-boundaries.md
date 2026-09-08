@@ -21,7 +21,7 @@ flowchart TB
         ex["Exchange service (broker core)"]
         ad["Provider adapters + EXCHANGE_PROVIDERS allowlist"]
         ltc["LTC RPC transport (PR #36, cookie auth in main)"]
-        e1["E1 session-level deny-all (webRequest local-content policy + blackhole w/ loopback bypass; WebRTC suppressed)"]
+        e1["E1 session-level deny-all (loopback module prefix allowlist + blackhole w/ loopback bypass; WebRTC disable requested, packaged denial manual)"]
     end
 
     subgraph external["External (untrusted)"]

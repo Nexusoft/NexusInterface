@@ -1,15 +1,24 @@
-import { BrowserWindow, screen } from 'electron';
+import { app, BrowserWindow, screen } from 'electron';
 import path from 'path';
+import { pathToFileURL } from 'url';
 import installExtension, {
   REACT_DEVELOPER_TOOLS,
 } from 'electron-devtools-installer';
 
 // Internal
-import { assetsDir } from './paths';
+import { isTrustedWindowUrl } from './ipc/navigationPolicy';
+import { hardenModuleWebviews } from './webviewSecurity';
+import { assetsDir, isDevelopment } from './paths';
 import { updateSettingsFile } from './settings';
 import { debounced } from 'utils/universal';
 
 const port = process.env.PORT || 1212;
+
+export function getMainWindowUrl() {
+  return isDevelopment
+    ? `http://localhost:${port}/assets/app.html`
+    : pathToFileURL(path.resolve(__dirname, 'app.html')).toString();
+}
 
 /**
  * Enable development tools for REACT
@@ -31,7 +40,7 @@ function installExtensions() {
  *
  * @export
  */
-export async function createWindow(settings) {
+export function createWindow(settings) {
   const fileName =
     process.platform == 'darwin' ? 'nexuslogo.ico' : 'Nexus_App_Icon_64.png';
   const iconPath = path.join(assetsDir, 'tray', fileName);
@@ -41,6 +50,10 @@ export async function createWindow(settings) {
   const display = screen.getPrimaryDisplay().workAreaSize;
   const width = Math.min(settings.windowWidth, display.width);
   const height = Math.min(settings.windowHeight, display.height);
+  const allowSandboxOverride =
+    !app.isPackaged &&
+    (isDevelopment || process.env.DEBUG_PROD === 'true');
+
   // Create the main browser window
   const mainWindow = new BrowserWindow({
     x,
@@ -54,31 +67,40 @@ export async function createWindow(settings) {
     show: false,
     webPreferences: {
       preload:
-        process.env.NODE_ENV === 'development'
+        isDevelopment
           ? path.resolve(process.cwd(), 'build', 'main_preload.dev.js')
           : path.resolve(__dirname, 'main_preload.prod.js'),
+      additionalArguments: [
+        `--nexus-development=${isDevelopment ? '1' : '0'}`,
+      ],
       nodeIntegration: false,
       contextIsolation: true,
       // Diagnostic-only: NEXUS_DISABLE_SANDBOX=1 may disable sandbox but only
-      // in development/debug builds. It has no effect in packaged production
-      // builds so an injected environment variable cannot weaken hardening.
-      sandbox:
-        process.env.NEXUS_DISABLE_SANDBOX === '1' &&
-        (process.env.NODE_ENV === 'development' ||
-          process.env.DEBUG_PROD === 'true')
-          ? false
-          : true,
+      // in an unpackaged development/debug app.
+      sandbox: !(
+        allowSandboxOverride &&
+        process.env.NEXUS_DISABLE_SANDBOX === '1'
+      ),
       webviewTag: true,
       enableRemoteModule: false,
     },
   });
 
+  const htmlPath = getMainWindowUrl();
+  const preventUntrustedNavigation = (event, url) => {
+    if (!isTrustedWindowUrl(url, htmlPath)) {
+      event.preventDefault();
+    }
+  };
+  mainWindow.webContents.on('will-navigate', preventUntrustedNavigation);
+  mainWindow.webContents.on('will-redirect', preventUntrustedNavigation);
+  mainWindow.webContents.setWindowOpenHandler(() => ({ action: 'deny' }));
+  hardenModuleWebviews(mainWindow);
+
   // Load the index.html into the new browser window
-  const htmlPath =
-    process.env.NODE_ENV === 'development'
-      ? `http://localhost:${port}/assets/app.html`
-      : `file://${path.resolve(__dirname, 'app.html')}`;
-  mainWindow.loadURL(htmlPath);
+  mainWindow.loadURL(htmlPath).catch((err) => {
+    console.error('Failed to load main window', err);
+  });
 
   // Show the window only once the contents finish loading, then check for updates
   mainWindow.webContents.on('did-finish-load', function () {
@@ -131,15 +153,13 @@ export async function createWindow(settings) {
   });
 
   if (
-    process.env.NODE_ENV === 'development' ||
-    process.env.DEBUG_PROD === 'true' ||
-    settings.devMode
+    isDevelopment ||
+    (!app.isPackaged &&
+      (process.env.DEBUG_PROD === 'true' || settings.devMode))
   ) {
-    try {
-      await installExtensions();
-    } catch (err) {
+    installExtensions().catch((err) => {
       console.error('Failed to install extensions', err);
-    }
+    });
   }
 
   return mainWindow;

@@ -55,9 +55,9 @@ test('module paths reject traversal and platform-specific absolute paths', () =>
 });
 
 test('IPC request validators reject malformed and unexpected requests', () => {
-  assert.deepEqual(
-    validateCoreRpcRequest({ endpoint: 'system/stop', params: {} }),
-    { endpoint: 'system/stop', params: {} }
+  assert.throws(
+    () => validateCoreRpcRequest({ endpoint: 'system/stop', params: {} }),
+    TypeError
   );
   assert.deepEqual(
     validateModuleDownloadRequest({
@@ -81,6 +81,9 @@ test('IPC request validators reject malformed and unexpected requests', () => {
     { endpoint: 'system/stop', params: [] },
     { endpoint: 'evil/get/info' },
     { endpoint: 'shell/exec' },
+    // Namespace alone is no longer enough for structured calls.
+    { endpoint: 'system/eval/code' },
+    { endpoint: 'finance/raw/execute' },
   ]) {
     assert.throws(() => validateCoreRpcRequest(request), TypeError);
   }
@@ -98,7 +101,7 @@ test('IPC request validators reject malformed and unexpected requests', () => {
   assert.throws(() => validateNoArguments({}), TypeError);
 });
 
-test('Core RPC URL validation enforces relative paths and namespaces', () => {
+test('Core RPC URL validation enforces relative paths and console namespaces', () => {
   assert.equal(validateCoreRpcUrl('system/get/info'), 'system/get/info');
   assert.equal(validateCoreRpcUrl('/finance/list/any'), 'finance/list/any');
   assert.equal(
@@ -118,6 +121,8 @@ test('Core RPC URL validation enforces relative paths and namespaces', () => {
     'System/get/info',
     'system/get/info#frag',
     'system/get/info?redirect=https://evil.example',
+    'system/get/info?redirect=https%3A%2F%2Fevil.example',
+    'system/get/info?path=%2E%2E%2Fsecret',
     '',
   ]) {
     assert.throws(() => validateCoreRpcUrl(value), TypeError);
@@ -152,6 +157,38 @@ test('settings updates reject dangerous Core overrides and relative paths', () =
     assertAdvancedCoreParams('-mining=1 -stake=1'),
     '-mining=1 -stake=1'
   );
+  const coreSettingsBatch = {
+    liteMode: true,
+    safeMode: true,
+    enableMining: true,
+    ipMineWhitelist: '127.0.0.1',
+    enableStaking: true,
+    pooledStaking: true,
+    multiUser: true,
+    verboseLevel: 3,
+    testnetIteration: 0,
+    privateTestnet: false,
+    avatarMode: true,
+    allowAdvancedCoreOptions: false,
+    advancedCoreParams: '',
+    manualDaemonIP: 'localhost',
+    manualDaemonApiSSL: false,
+    manualDaemonApiPort: '8080',
+    manualDaemonApiPortSSL: '8443',
+    manualDaemonApiUser: 'user',
+    manualDaemonApiPassword: 'password',
+    embeddedCoreUseNonSSL: false,
+    embeddedCoreApiPort: '9336',
+    embeddedCoreApiPortSSL: '9337',
+  };
+  assert.deepEqual(validateSettingsUpdate(coreSettingsBatch), coreSettingsBatch);
+  assert.throws(
+    () =>
+      validateSettingsUpdate({
+        disabledModules: Array.from({ length: 100 }, () => 'x'.repeat(1024)),
+      }),
+    TypeError
+  );
 
   for (const updates of [
     { coreDataDir: 'relative/path' },
@@ -177,6 +214,7 @@ test('settings updates reject dangerous Core overrides and relative paths', () =
     { walletClean: 1 },
     { revertBlocks: -1 },
     { embeddedCoreBinaryPath: 'nexus' },
+    { devMode: true },
   ]) {
     assert.throws(() => validateSettingsUpdate(updates), TypeError);
   }

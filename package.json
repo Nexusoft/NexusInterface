@@ -47,7 +47,8 @@
         "from": "assets/static",
         "to": "build",
         "filter": [
-          "app.html"
+          "app.html",
+          "app-bootstrap.js"
         ]
       },
       {
@@ -246,7 +247,6 @@
     "@tanstack/react-table": "^8.20.6",
     "auto-launch": "^5.0.6",
     "axios": "^1.7.9",
-    "check-disk-space": "^3.4.0",
     "color": "^4.2.3",
     "d3-geo": "^3.1.1",
     "dompurify": "^3.2.4",

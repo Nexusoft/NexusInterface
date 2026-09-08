@@ -5,6 +5,7 @@ import { initialize, trackEvent } from '@aptabase/electron/main';
 
 import { ensureApplicationDirectories } from './paths';
 import { loadSettingsFromFile } from './settings';
+import { createCoreLifecycleCoordinator } from './coreLifecycle';
 import {
   coreBinaryExists,
   coreBinaryStatus,
@@ -16,8 +17,10 @@ import {
   stopEmbeddedCore,
 } from './core';
 import { getDomain, serveModuleFiles } from './fileServer';
-import { createWindow } from './renderer';
-import { authorizeModuleEntry, hardenModuleWebviews } from './webviewSecurity';
+import { createWindow, getMainWindowUrl } from './renderer';
+import { isTrustedWindowUrl } from './ipc/navigationPolicy';
+import { createCoreRpcSessionPolicy } from './ipc/coreRpcSessionPolicy';
+import { authorizeModuleEntry } from './webviewSecurity';
 import {
   registerModuleBrokerHandlers,
   pushContextToGuest,
@@ -37,6 +40,7 @@ import {
   CHANNELS,
   EVENTS,
   assertBoolean,
+  assertAllowedCoreRpcEndpoint,
   assertExternalUrl,
   assertRecord,
   assertSafeModuleName,
@@ -45,8 +49,9 @@ import {
   result as ipcResult,
   validateClipboardText,
   validateCoreConsoleCommand,
+  redactSensitiveText,
   validateCoreRpcRequest,
-  validateCoreRpcUrl,
+  validateCoreConsoleRpcUrl,
   validateMenuTemplate,
   validateTrackEventRequest,
   validateModuleDownloadRequest,
@@ -56,6 +61,7 @@ import {
   validateSettingsUpdate,
   validateThemeUpdate,
 } from './ipc/contracts';
+import { assertCoreConsoleAllowed } from './ipc/coreConsolePolicy';
 import { abortBootstrap, startBootstrap } from './bootstrap';
 import { subscribeCoreOutput, unsubscribeCoreOutput } from './coreOutput';
 import {
@@ -104,6 +110,23 @@ import {
 
 let mainWindow;
 global.forceQuit = false;
+const coreLifecycle = createCoreLifecycleCoordinator();
+const coreRpcSessionPolicy = createCoreRpcSessionPolicy();
+const CORE_TARGET_SETTINGS = new Set([
+  'coreDataDir',
+  'embeddedCoreBinaryPath',
+  'embeddedCoreUseNonSSL',
+  'embeddedCoreApiPort',
+  'embeddedCoreApiPortSSL',
+  'manualDaemon',
+  'manualDaemonIP',
+  'manualDaemonApiIP',
+  'manualDaemonApiSSL',
+  'manualDaemonApiUser',
+  'manualDaemonApiPassword',
+  'manualDaemonApiPort',
+  'manualDaemonApiPortSSL',
+]);
 // Guards against re-entrant Core shutdown during quit/exit (IPC + before-quit).
 let embeddedCoreShutdownPromise = null;
 // Once Core cleanup finished, allow Electron to complete quit/exit/install.
@@ -116,20 +139,29 @@ log.initialize();
 
 async function ensureEmbeddedCoreStopped() {
   if (!embeddedCoreShutdownPromise) {
-    embeddedCoreShutdownPromise = stopEmbeddedCore().catch((error) => {
-      log.warn(
-        `Core Manager: shutdown during app quit failed: ${
-          error?.message || error
-        }`
-      );
-    });
+    embeddedCoreShutdownPromise = coreLifecycle
+      .shutdown(() => stopEmbeddedCore())
+      .catch((error) => {
+        log.warn(
+          `Core Manager: shutdown during app quit failed: ${
+            error?.message || error
+          }`
+        );
+        return { stopped: false, reason: 'error' };
+      });
   }
   return embeddedCoreShutdownPromise;
 }
 
 async function shutdownEmbeddedCoreAndAllowQuit() {
   global.forceQuit = true;
-  await ensureEmbeddedCoreStopped();
+  const result = await ensureEmbeddedCoreStopped();
+  if (!result?.stopped && result?.reason !== 'manual-daemon') {
+    global.forceQuit = false;
+    embeddedCoreShutdownPromise = null;
+    coreLifecycle.cancelShutdown();
+    throw new Error('Nexus Core shutdown could not be confirmed');
+  }
   allowingFinalQuit = true;
 }
 
@@ -458,7 +490,12 @@ function sanitizeProxyRequest(url, config = {}) {
 
 function isMainWindowSender(event) {
   const windowContents = mainWindow?.webContents || global.mainWindow?.webContents;
-  return !!windowContents && event.sender.id === windowContents.id;
+  return (
+    !!windowContents &&
+    event.sender.id === windowContents.id &&
+    event.senderFrame === windowContents.mainFrame &&
+    isTrustedWindowUrl(event.senderFrame?.url, getMainWindowUrl())
+  );
 }
 
 function senderError() {
@@ -466,7 +503,10 @@ function senderError() {
 }
 
 function operationError(err) {
-  const message = err instanceof Error ? err.message : 'Operation failed';
+  const rawMessage = err instanceof Error ? err.message : 'Operation failed';
+  // Defense in depth: never write credentials/session material to logs even if
+  // a lower layer accidentally included them in an Error message.
+  const message = redactSensitiveText(rawMessage) || 'Operation failed';
   log.warn(`IPC operation failed: ${message}`);
   return ipcError('OPERATION_FAILED', message);
 }
@@ -475,7 +515,10 @@ const CORE_TRACE_CHANNELS = new Set([
   CHANNELS.core.getStatus,
   CHANNELS.core.getConfiguration,
   CHANNELS.core.start,
+  CHANNELS.core.restart,
+  CHANNELS.core.stop,
   CHANNELS.core.kill,
+  CHANNELS.core.resyncLiteDatabase,
   CHANNELS.core.subscribeOutput,
   CHANNELS.core.unsubscribeOutput,
   CHANNELS.coreRpc.call,
@@ -487,16 +530,23 @@ function registerOperation(channel, validateRequest, operation) {
     if (!isMainWindowSender(event)) return senderError();
     const traceCore = CORE_TRACE_CHANNELS.has(channel);
     if (traceCore) {
+      let endpoint;
+      if (channel === CHANNELS.coreRpc.call && request?.endpoint) {
+        try {
+          endpoint = assertAllowedCoreRpcEndpoint(request.endpoint);
+        } catch {
+          endpoint = undefined;
+        }
+      } else if (typeof request === 'string') {
+        try {
+          endpoint = validateCoreConsoleRpcUrl(request).split(/[/?]/)[0];
+        } catch {
+          endpoint = undefined;
+        }
+      }
       log.info('ipc.core.enter', {
         channel,
-        // Never log credentials or full RPC params — endpoint only when present.
-        // For string requests (call-by-url), log only the query-free relative path.
-        endpoint:
-          request && typeof request === 'object'
-            ? request.endpoint
-            : typeof request === 'string'
-            ? request.split('?')[0]
-            : undefined,
+        endpoint,
       });
     }
     try {
@@ -515,10 +565,13 @@ function registerOperation(channel, validateRequest, operation) {
       return ipcResult(value);
     } catch (err) {
       if (traceCore) {
+        const message = redactSensitiveText(
+          err instanceof Error ? err.message : String(err)
+        );
         log.warn('ipc.core.exit', {
           channel,
           ok: false,
-          message: err instanceof Error ? err.message : String(err),
+          message,
         });
       }
       return operationError(err);
@@ -763,9 +816,43 @@ registerOperation(
     return validated;
   },
   async (updates) => {
-    updateSettingsFile(updates);
-    clearCoreConfigCache();
-    return getRendererSettings();
+    return coreLifecycle.run('update-settings', async () => {
+      const previousSettings = loadSettingsFromFile();
+      let stoppedPreviousCore = false;
+      const coreTargetChanged = Object.keys(updates).some(
+        (key) =>
+          CORE_TARGET_SETTINGS.has(key) &&
+          updates[key] !== previousSettings[key]
+      );
+      if (coreTargetChanged) {
+        const stopResult = await stopEmbeddedCore();
+        if (!stopResult?.stopped && stopResult?.reason !== 'manual-daemon') {
+          throw new Error(
+            'Core settings cannot change until Nexus Core shutdown is confirmed'
+          );
+        }
+        stoppedPreviousCore =
+          stopResult.stopped && stopResult.reason !== 'not-running';
+      }
+      try {
+        updateSettingsFile(updates);
+      } catch (error) {
+        if (stoppedPreviousCore) {
+          coreRpcSessionPolicy.reset();
+          try {
+            await startConfiguredCore();
+          } catch (restartError) {
+            log.error('core.settings.rollback.restart.failed', {
+              error: restartError?.message || String(restartError),
+            });
+          }
+        }
+        throw error;
+      }
+      clearCoreConfigCache();
+      if (coreTargetChanged) coreRpcSessionPolicy.reset();
+      return getRendererSettings();
+    });
   }
 );
 registerOperation(
@@ -815,9 +902,37 @@ registerOperation(
     }
     return undefined;
   },
-  async () => startConfiguredCore()
+  async () =>
+    coreLifecycle.run('start', async () => {
+      const result = await startConfiguredCore();
+      if (result?.started) coreRpcSessionPolicy.reset();
+      return result;
+    })
 );
-registerOperation(CHANNELS.core.kill, undefined, async () => killCoreProcess());
+registerOperation(CHANNELS.core.restart, undefined, async () =>
+  coreLifecycle.run('restart', async () => {
+    const result = await stopEmbeddedCore();
+    if (!result?.stopped && result?.reason !== 'manual-daemon') {
+      throw new Error('Nexus Core shutdown could not be confirmed');
+    }
+    if (result?.stopped) coreRpcSessionPolicy.reset();
+    return startConfiguredCore();
+  })
+);
+registerOperation(CHANNELS.core.stop, undefined, async () =>
+  coreLifecycle.run('stop', async () => {
+    const result = await stopEmbeddedCore();
+    if (result?.stopped) coreRpcSessionPolicy.reset();
+    return result;
+  })
+);
+registerOperation(CHANNELS.core.kill, undefined, async () =>
+  coreLifecycle.run('kill', async () => {
+    const killed = await killCoreProcess();
+    if (killed) coreRpcSessionPolicy.reset();
+    return killed;
+  })
+);
 registerOperation(
   CHANNELS.core.resyncLiteDatabase,
   (request) => {
@@ -826,7 +941,12 @@ registerOperation(
     }
     return undefined;
   },
-  async () => resyncLiteDatabase()
+  async () =>
+    coreLifecycle.run('resync-lite', async () => {
+      return resyncLiteDatabase({
+        onCoreStopped: () => coreRpcSessionPolicy.reset(),
+      });
+    })
 );
 registerOperation(
   CHANNELS.core.subscribeOutput,
@@ -847,17 +967,36 @@ registerOperation(
 registerOperation(
   CHANNELS.core.executeConsoleCommand,
   validateCoreConsoleCommand,
-  async (command) => executeCommand(command)
+  async (command) => {
+    assertCoreConsoleAllowed(loadSettingsFromFile());
+    return executeCommand(command);
+  }
 );
 registerOperation(
   CHANNELS.coreRpc.call,
   validateCoreRpcRequest,
-  async (request) => callCoreRpc(request)
+  async (request) => {
+    const authorizedRequest = coreRpcSessionPolicy.authorize(request);
+    try {
+      const result = await callCoreRpc(authorizedRequest);
+      coreRpcSessionPolicy.observe(authorizedRequest, result);
+      return result;
+    } catch (error) {
+      coreRpcSessionPolicy.cancel(authorizedRequest);
+      throw error;
+    }
+  }
 );
+// Terminal / Nexus API console capability. Broader than structured call():
+// relative paths under allowlisted namespaces, including query strings.
+// See docs/security/core-rpc-endpoint-registry.md.
 registerOperation(
   CHANNELS.coreRpc.callByUrl,
-  validateCoreRpcUrl,
-  async (url) => callCoreRpcByUrl(url)
+  validateCoreConsoleRpcUrl,
+  async (url) => {
+    assertCoreConsoleAllowed(loadSettingsFromFile());
+    return callCoreRpcByUrl(url);
+  }
 );
 
 registerOperation(
@@ -869,8 +1008,10 @@ registerOperation(
     return undefined;
   },
   async () =>
-    startBootstrap((status) =>
-      mainWindow?.webContents.send(EVENTS.bootstrapStatus, status)
+    coreLifecycle.run('bootstrap', () =>
+      startBootstrap((status) =>
+        mainWindow?.webContents.send(EVENTS.bootstrapStatus, status)
+      )
     )
 );
 registerOperation(
@@ -947,9 +1088,9 @@ registerOperation(
       files: validateModuleFilePaths(value.files),
     };
   },
-  async ({ moduleName, files }) => {
-    const validFiles = await validateModuleFiles(moduleName, files);
-    return serveModuleFiles(validFiles.map((file) => `${moduleName}/${file}`));
+  async ({ moduleName }) => {
+    const validFiles = await validateModuleFiles(moduleName);
+    return serveModuleFiles(moduleName, validFiles);
   }
 );
 registerOperation(
@@ -1145,17 +1286,20 @@ if (!gotTheLock) {
       return;
     }
     event.preventDefault();
-    shutdownEmbeddedCoreAndAllowQuit().finally(() => {
-      app.exit(0);
-    });
+    shutdownEmbeddedCoreAndAllowQuit()
+      .then(() => app.exit(0))
+      .catch((error) => {
+        log.error('Core Manager: app quit cancelled', {
+          error: redactSensitiveText(error?.message || String(error)),
+        });
+      });
   });
 
   // Application Startup
   app.on('ready', async () => {
     const settings = loadSettingsFromFile();
     initializeUpdater(settings);
-    global.mainWindow = mainWindow = await createWindow(settings);
-    hardenModuleWebviews(mainWindow);
+    global.mainWindow = mainWindow = createWindow(settings);
     mainWindow.on('close', () => {
       mainWindow.webContents.send('window-close');
     });

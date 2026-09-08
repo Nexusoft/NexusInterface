@@ -9,6 +9,7 @@ import {
   getCoreTransportOptions,
   validateCoreRpcPath,
 } from './ipc/coreTransport';
+import { redactSensitiveText } from './ipc/coreRpcRegistry';
 import {
   fromKeyValues,
   parseBooleanFlag,
@@ -149,14 +150,14 @@ function requestCore({ method, endpoint, params, config, timeout = 30000 }) {
         const code = error?.code || error?.errno;
         const message = error?.message || String(error);
         console.warn('core.rpc.request.failed', {
-          endpoint,
+          endpoint: redactSensitiveText(endpoint.split('?')[0]),
           method,
           target: `${config.ip}:${port}`,
           apiSSL: !!apiSSL,
           timeout,
           statusCode: error?.statusCode,
           code,
-          message,
+          message: redactSensitiveText(message),
         });
       }
       // Build an enriched error that exposes the safe endpoint context (no

@@ -6,10 +6,10 @@ the compiled renderer must also pass the renderer build boundary below.
 
 | Surface | Node integration | Context isolation | Sandbox | Privileged interface | Status |
 | --- | --- | --- | --- | --- | --- |
-| Main wallet window | Disabled | Enabled | Enabled | `window.nexusElectron`, exposed by `src/main/preload.js` | Complete for the current migration phase |
+| Main wallet window | Disabled | Enabled | Enabled | `window.nexusElectron`, exposed by `src/main/preload.js` | Complete |
 | Virtual keyboard window | Disabled | Enabled | Enabled | `src/keyboard/preload.js` | Complete |
-| Production module WebViews | Disabled | Disabled | Disabled | Module preload and authorized module-file origin | Deferred compatibility milestone |
-| Development module WebViews | Enabled for local development modules only | Disabled | Disabled | Module preload and local developer-selected directory | Deferred compatibility milestone |
+| Production module WebViews | Disabled | Enabled | Enabled | Isolated NEXUS v2 preload and authorized module-file origin | Complete |
+| Development module WebViews | Disabled | Enabled | Enabled | Isolated NEXUS v2 preload and module-scoped loopback origin | Complete |
 | Main-process IPC | N/A | N/A | N/A | Named channels in `src/main/ipc/contracts.js`, registered in `src/main/main.js` | Complete |
 | Renderer bundle | N/A | N/A | N/A | Browser-safe Electron bridge alias | Complete |
 
@@ -24,8 +24,13 @@ the compiled renderer must also pass the renderer build boundary below.
   or third-party renderer SDKs.
 - Every registered operation validates its request before invoking a
   main-process service. Operations with no request reject supplied arguments.
-- Core RPC calls require an allowlisted API namespace in addition to path-shape
-  validation.
+- The main window cannot navigate or redirect away from its exact trusted
+  application document, and popup creation is denied. Privileged IPC also
+  verifies the trusted top-frame URL rather than relying only on a
+  `webContents` id.
+- Core RPC calls require a concrete registered endpoint and endpoint-specific
+  parameter schema. The broader Terminal URL/CLI capability requires persisted
+  Developer mode and is enforced in the main process.
 - `npm run build-renderer` uses
   `configs/webpack.config.base.renderer.babel.js`, which disables Node and
   Electron externals and resolves browser package conditions. A Node-core
@@ -42,9 +47,9 @@ the compiled renderer must also pass the renderer build boundary below.
 | Application path bootstrap | `src/main/paths.js` | `paths.getBootstrap()` | `paths:get-bootstrap` | No arguments; no FS paths returned | Complete |
 | Settings / address book files | `src/main/settings.js` | `settings.*` | `settings:*` | Field allowlists | Complete |
 | Theme / wallpaper files | `src/main/theme.js` | `theme.*` | `theme:*` | Theme field allowlist / dialog-only import-export | Complete |
-| Core lifecycle / console | `src/main/core.js` | `core.*` | `core:*` | Console command bounds | Complete |
-| Core RPC HTTP(S) | `src/main/coreRpc.js` | `coreRpc.call` / `callByUrl` | `core-rpc:*` | Endpoint shape + namespace allowlist + TLS policy | Complete |
-| Bootstrap download/extract | `src/main/bootstrap.js` | `bootstrap.*` | `bootstrap:*` | Progress events; archive preflight | Complete |
+| Core lifecycle / console | `src/main/core.js` | `core.*` | `core:*` | Serialized lifecycle; confirmed stop; console bounds + Developer-mode policy | Complete |
+| Core RPC HTTP(S) | `src/main/coreRpc.js` | `coreRpc.call` / `callByUrl` | `core-rpc:*` | Concrete endpoint schemas; Developer-only console path; TLS policy | Complete |
+| Bootstrap download/extract | `src/main/bootstrap.js` | `bootstrap.*` | `bootstrap:*` | Disabled until an authenticated signed-manifest contract exists | Disabled (fail closed) |
 | Module install/storage/repo | `src/main/modules.js` | `modules.*` | `modules:*` | Safe module names, archive limits | Complete |
 | Module icons / recovery / geoip / i18n | `src/main/fileAssets.js` | `fileAssets.*` | `file-assets:*` | Host/path allowlists | Complete |
 | Updater / market data | `src/main/updater.js` | `updater.*` | `updater:*` | Boolean/option validation | Complete |
@@ -60,45 +65,51 @@ the compiled renderer must also pass the renderer build boundary below.
 | `src/shared/components/ModuleIcon.tsx` | Module filesystem icon reads | `fileAssets.readModuleIcon` |
 | `src/App/Modules/WebView.tsx` | Module entry/file serving | `modules.getEntry` / `modules.prepareFiles` + WebView host bridge |
 
-## Module-WebView deferral
+## Module-WebView isolation
 
-Module WebViews are intentionally not included in the main-window isolation
-completion. They retain their existing bridge behavior until React, Emotion,
-the module preload, and both production and development modules have a
-dedicated compatibility and smoke-test milestone. `src/main/webviewSecurity.js`
-still enforces authorized entry URLs, restricts navigation, disables the
-remote module, and denies `window.open`; it does **not** claim the isolation
-properties of the main wallet window.
+Production and development module WebViews now use the isolated NEXUS v2
+bridge with `nodeIntegration: false`, `contextIsolation: true`, and
+`sandbox: true`. The former React/Emotion bridge, generic Core RPC, generic
+network proxy, raw Electron access, and production v1 compatibility path are
+not exposed.
+
+Module side effects are capability-based. Clipboard writes and external-link
+opens are excluded from defaults, require an explicit manifest capability,
+show a wallet-owned confirmation for every request, and are rate-limited per
+module session. Each module receives a unique session partition whose network
+policy allows only its assigned local content, rejects other requests, uses a
+blackhole proxy, and requests WebRTC suppression. Packaged peer-connection and
+STUN/TURN denial remain a manual release gate.
+
+See [module-webview-isolation.md](./module-webview-isolation.md) and
+[module-webview-isolation-report.md](./module-webview-isolation-report.md).
 
 ## Bootstrap artifact integrity prerequisite
 
-Bootstrap extraction now preflights every ZIP entry and rejects traversal,
-duplicate paths, links, encryption, excessive entry counts, excessive
-expansion, and unsafe compression ratios before it writes any destination
-path. The archive is downloaded to a private temporary file and extracted only
-after that preflight completes. The download is bounded by currently available
-disk space, and the preflight checks that the declared expanded size fits before
-creating the extraction directory.
+Bootstrap download and extraction are disabled and reject all requests. The
+previous flow could not authenticate its archive and merged extracted files
+non-atomically into the live Core data directory. Keeping that behavior would
+put live wallet state at risk if a download were corrupted, malicious, or
+interrupted.
 
-A cryptographic bootstrap-artifact verification cannot safely be enabled until
-the bootstrap service publishes a stable, authenticated digest or signed
-manifest and its signing contract is supplied to the client. No such artifact
-is defined by this repository. Inventing an endpoint or a digest would either
-silently provide no assurance or disable bootstrap for existing users, so that
-server-side prerequisite remains explicitly outstanding.
+Re-enabling bootstrap requires a publisher-defined, authenticated signed
+manifest contract, verification before extraction, a confirmed Core shutdown,
+and a staged data-directory swap with rollback. No such artifact contract is
+defined by this repository, so the current implementation fails closed rather
+than pretending an unauthenticated digest provides assurance.
 
 ## Required validation commands
 
 ```sh
 npm run test:security
-npm run build-renderer
-npm run build-main
-npm run build-preload
+npm run build
+npx electron-builder --dir --publish never
 ```
 
 The repository workflow at `.github/workflows/security.yml` runs these checks
-on pull requests and pushes. A full GUI launch smoke test remains a separate
-environment-dependent release check because it requires Electron display and
-Core fixtures.
+on Ubuntu, macOS, and Windows for pull requests and pushes. CI creates an
+unpacked application on every platform; interactive GUI/Core behavior remains
+a separate release check because it requires a display and controlled Core
+fixtures.
 
 See also: [context-isolation-migration-report.md](./context-isolation-migration-report.md).

@@ -1,6 +1,5 @@
 import { randomBytes } from 'crypto';
 import { app, session } from 'electron';
-import { fileURLToPath } from 'url';
 
 import { getDomain } from './fileServer';
 import { getModulePreloadPath } from './paths';
@@ -10,10 +9,15 @@ import {
   registerModuleGuest,
   unregisterModuleGuest,
 } from './moduleBroker';
+import {
+  getModuleProxyConfig,
+  isAllowedModuleRequest,
+} from './ipc/moduleNetworkPolicy';
 
 const authorizedEntries = new Map();
 /** @type {Map<Electron.Session, object>} */
 const pendingPoliciesBySession = new Map();
+const pendingPolicyTimeoutMs = 30000;
 
 function moduleUrlPrefix(moduleName) {
   return `${getDomain()}/modules/${encodeURIComponent(moduleName)}/`;
@@ -22,14 +26,6 @@ function moduleUrlPrefix(moduleName) {
 function isAllowedNavigation(url, policy) {
   try {
     const target = new URL(url);
-    if (policy.development) {
-      if (target.protocol !== 'file:') return false;
-      const targetPath = fileURLToPath(target);
-      return (
-        targetPath === policy.root ||
-        targetPath.startsWith(`${policy.root}${policy.separator}`)
-      );
-    }
     return target.toString().startsWith(moduleUrlPrefix(policy.moduleName));
   } catch {
     return false;
@@ -78,6 +74,7 @@ export function hardenModuleWebviews(mainWindow) {
       webPreferences.webSecurity = true;
       webPreferences.allowRunningInsecureContent = false;
       webPreferences.experimentalFeatures = false;
+      webPreferences.disableBlinkFeatures = 'WebRTC';
       webPreferences.preload = getModulePreloadPath();
       delete webPreferences.preloadURL;
 
@@ -85,15 +82,79 @@ export function hardenModuleWebviews(mainWindow) {
       // attaches cannot apply the wrong navigation/window-open restrictions.
       const partition = `nexus-module:${randomBytes(16).toString('hex')}`;
       webPreferences.partition = partition;
-      pendingPoliciesBySession.set(session.fromPartition(partition), policy);
+      const guestSession = session.fromPartition(partition);
+      const fileServerDomain = getDomain();
+      const pending = {
+        policy,
+        cleanupTimer: null,
+        contents: null,
+        proxyReady: false,
+      };
+      guestSession.webRequest.onBeforeRequest(
+        { urls: ['<all_urls>'] },
+        (details, callback) => {
+          callback({
+            cancel: !isAllowedModuleRequest(
+              details.url,
+              policy,
+              fileServerDomain
+            ),
+          });
+        }
+      );
+      const cleanupPending = () => {
+        const currentPending = pendingPoliciesBySession.get(guestSession);
+        if (currentPending !== pending) return false;
+        pendingPoliciesBySession.delete(guestSession);
+        guestSession.webRequest.onBeforeRequest(null);
+        guestSession.setProxy({ mode: 'direct' }).catch(() => {});
+        return true;
+      };
+      const closePendingContents = () => {
+        const guestContents = pending.contents;
+        if (!guestContents || guestContents.isDestroyed()) return;
+        unregisterModuleGuest(guestContents.id);
+        try {
+          guestContents.close();
+        } catch {
+          // ignore
+        }
+      };
+      const cleanupTimer = setTimeout(() => {
+        if (!cleanupPending()) return;
+        closePendingContents();
+      }, pendingPolicyTimeoutMs);
+      pending.cleanupTimer = cleanupTimer;
+      cleanupTimer.unref?.();
+      pendingPoliciesBySession.set(guestSession, pending);
+      guestSession
+        .setProxy(getModuleProxyConfig(policy, fileServerDomain))
+        .then(() => {
+          pending.proxyReady = true;
+          if (pending.contents) {
+            pendingPoliciesBySession.delete(guestSession);
+          }
+        })
+        .catch((error) => {
+          console.error('Failed to set module network proxy', error);
+          if (!cleanupPending()) return;
+          closePendingContents();
+        });
     }
   );
 }
 
 app.on('web-contents-created', (_event, contents) => {
   if (contents.getType() !== 'webview') return;
-  const policy = pendingPoliciesBySession.get(contents.session);
-  pendingPoliciesBySession.delete(contents.session);
+  const pending = pendingPoliciesBySession.get(contents.session);
+  if (pending) clearTimeout(pending.cleanupTimer);
+  if (pending) {
+    pending.contents = contents;
+    if (pending.proxyReady) {
+      pendingPoliciesBySession.delete(contents.session);
+    }
+  }
+  const policy = pending?.policy;
   if (!policy?.identity) {
     contents.close();
     return;
@@ -125,6 +186,7 @@ app.on('web-contents-created', (_event, contents) => {
   contents.session.setPermissionRequestHandler((_wc, _permission, callback) => {
     callback(false);
   });
+  contents.session.setPermissionCheckHandler(() => false);
 
   contents.on('destroyed', () => {
     unregisterModuleGuest(contents.id);

@@ -16,6 +16,7 @@ const ERROR_CODES = Object.freeze({
   MODULE_UNKNOWN: 'module.unknown',
   PAYLOAD_TOO_LARGE: 'module.payload_too_large',
   RATE_LIMITED: 'module.rate_limited',
+  USER_DENIED: 'module.user_denied',
   VALIDATION_FAILED: 'module.validation_failed',
   HOST_UNAVAILABLE: 'module.host_unavailable',
   INTERNAL: 'module.internal',
@@ -38,8 +39,6 @@ const DEFAULT_CAPABILITIES = Object.freeze([
   CAPABILITIES.WALLET_CONTEXT,
   CAPABILITIES.UI_NOTIFY,
   CAPABILITIES.UI_CONFIRM,
-  CAPABILITIES.UI_OPEN_EXTERNAL,
-  CAPABILITIES.UI_COPY_TEXT,
   CAPABILITIES.STORAGE,
   CAPABILITIES.STATE,
   CAPABILITIES.WALLET_REQUEST_SEND,
@@ -88,11 +87,50 @@ const MAX_STATE_JSON_BYTES = 256_000;
 const MAX_COPY_TEXT = 100_000;
 const MAX_RECIPIENTS = 25;
 const MAX_NESTING = 8;
+const SIDE_EFFECT_RATE_LIMITS = Object.freeze({
+  [METHODS.UI_OPEN_EXTERNAL]: Object.freeze({
+    limit: 5,
+    windowMs: 60_000,
+  }),
+  [METHODS.UI_COPY_TEXT]: Object.freeze({
+    limit: 10,
+    windowMs: 60_000,
+  }),
+});
 
 function fail(code, message) {
   const error = new TypeError(message);
   error.code = code;
   throw error;
+}
+
+function createMethodRateLimiter(limits = SIDE_EFFECT_RATE_LIMITS) {
+  const buckets = new Map();
+
+  return Object.freeze({
+    consume(sessionId, method, now = Date.now()) {
+      const policy = limits[method];
+      if (!policy) return;
+      const key = `${sessionId}:${method}`;
+      const recent = (buckets.get(key) || []).filter(
+        (timestamp) => now - timestamp < policy.windowMs
+      );
+      if (recent.length >= policy.limit) {
+        fail(
+          ERROR_CODES.RATE_LIMITED,
+          `${method} rate limit exceeded for this module session`
+        );
+      }
+      recent.push(now);
+      buckets.set(key, recent);
+    },
+    clear(sessionId) {
+      const prefix = `${sessionId}:`;
+      for (const key of buckets.keys()) {
+        if (key.startsWith(prefix)) buckets.delete(key);
+      }
+    },
+  });
 }
 
 function assertRecord(value, name) {
@@ -530,6 +568,8 @@ module.exports = {
   MAX_STATE_JSON_BYTES,
   METHOD_CAPABILITY,
   METHODS,
+  SIDE_EFFECT_RATE_LIMITS,
+  createMethodRateLimiter,
   normalizeManifestCapabilities,
   sanitizeWalletContext,
   validateConfirmOptions,

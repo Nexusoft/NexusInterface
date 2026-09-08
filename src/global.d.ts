@@ -21,7 +21,6 @@ type NexusPlatform =
 
 interface NexusEnvironment {
   NODE_ENV: string;
-  PORT: string;
   platform: NexusPlatform;
   arch: string;
 }
@@ -66,6 +65,8 @@ interface NexusElectronBridge {
       txExpiry?: number;
     }>;
     start(): Promise<unknown>;
+    restart(): Promise<unknown>;
+    stop(): Promise<unknown>;
     kill(): Promise<unknown>;
     resyncLiteDatabase(): Promise<unknown>;
     subscribeOutput(): Promise<unknown>;

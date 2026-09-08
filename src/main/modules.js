@@ -106,7 +106,10 @@ const nxsPackageSchema = z.object({
       email: z.string().email().optional(),
     })
     .optional(),
-  files: z.array(z.string().regex(/^(.(?<!\.\.\/|\.\.\\))+$/)),
+  files: z
+    .array(z.string().regex(/^(.(?<!\.\.\/|\.\.\\))+$/))
+    .min(1)
+    .max(10000),
 });
 
 const nxsPackageDevSchema = z.object({
@@ -127,6 +130,10 @@ const nxsPackageDevSchema = z.object({
       wrapInPanel: z.boolean().optional(),
     })
     .optional(),
+  files: z
+    .array(z.string().regex(/^(.(?<!\.\.\/|\.\.\\))+$/))
+    .min(1)
+    .max(10000),
 });
 
 const repositorySchema = z.object({

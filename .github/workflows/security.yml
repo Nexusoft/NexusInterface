@@ -9,7 +9,18 @@ permissions:
 
 jobs:
   security:
-    runs-on: ubuntu-latest
+    name: Security and package smoke (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+          - windows-latest
+    env:
+      CSC_IDENTITY_AUTO_DISCOVERY: 'false'
     steps:
       - uses: actions/checkout@v4.2.2
       - uses: actions/setup-node@v4.4.0
@@ -18,6 +29,5 @@ jobs:
           cache: npm
       - run: npm ci --ignore-scripts
       - run: npm run test:security
-      - run: npm run build-renderer
-      - run: npm run build-main
-      - run: npm run build-preload
+      - run: npm run build
+      - run: npx electron-builder --dir --publish never

@@ -1,8 +1,11 @@
 import fs from 'fs/promises';
 import path from 'path';
-import { pathToFileURL } from 'url';
 
-import { assertRelativeModulePath, assertSafeModuleName } from './ipc/contracts';
+import {
+  assertRelativeModulePath,
+  assertSafeModuleName,
+  validateModuleFiles as validateModuleFilePaths,
+} from './ipc/contracts';
 import { modulesDir } from './paths';
 import { loadSettingsFromFile } from './settings';
 
@@ -110,9 +113,7 @@ export async function getModuleEntry(name, fileServerDomain) {
   const info = await readJson(packageFile);
   const entry = info?.entry || 'index.html';
   const allowSymlink = development && developmentAllowsSymlinks();
-  const entryPath = await resolveModuleFile(root, entry, { allowSymlink });
-
-  if (development) return pathToFileURL(entryPath).toString();
+  await resolveModuleFile(root, entry, { allowSymlink });
   const encodedEntry = entry
     .split(/[\\/]/)
     .map((part) => encodeURIComponent(part))
@@ -120,13 +121,26 @@ export async function getModuleEntry(name, fileServerDomain) {
   return `${fileServerDomain}/modules/${encodeURIComponent(name)}/${encodedEntry}`;
 }
 
-export async function validateModuleFiles(name, files) {
+export async function validateModuleFiles(name) {
   const { root, development } = await resolveModuleRoot(name);
   const allowSymlink = development && developmentAllowsSymlinks();
+  const manifest = development ? 'nxs_package.dev.json' : 'nxs_package.json';
+  const info = await readJson(path.join(root, manifest));
+  const moduleFiles = validateModuleFilePaths(info?.files);
+  const entry = assertRelativeModulePath(info?.entry || 'index.html');
+  if (!moduleFiles.includes(entry)) {
+    throw new Error('Module entry must be included in module files');
+  }
+  const realRoot = await fs.realpath(root);
   return Promise.all(
-    files.map(async (file) => {
-      await resolveModuleFile(root, file, { allowSymlink });
-      return file;
+    moduleFiles.map(async (file) => {
+      const absolutePath = await resolveModuleFile(root, file, { allowSymlink });
+      return {
+        path: file,
+        absolutePath,
+        root: realRoot,
+        allowPathFallback: !development || process.platform !== 'win32',
+      };
     })
   );
 }

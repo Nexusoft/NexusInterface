@@ -4,6 +4,8 @@ import { app } from 'electron';
 
 const exeDir = app.getPath('exe');
 const appDataDir = app.getPath('appData');
+export const isDevelopment =
+  !app.isPackaged && process.env.NODE_ENV === 'development';
 
 export const walletDataDir = path.join(appDataDir, 'Nexus Wallet');
 export const settingsFilePath = path.join(walletDataDir, 'settings.json');
@@ -19,7 +21,7 @@ export const defaultCoreDataDir =
     : path.join(process.env.HOME || app.getPath('home'), '.Nexus');
 
 export const assetsParentDir =
-  process.env.NODE_ENV === 'development'
+  isDevelopment
     ? process.cwd()
     : process.platform === 'darwin'
     ? path.resolve(exeDir, '..', '..', 'Resources')
@@ -39,7 +41,7 @@ export function ensureApplicationDirectories() {
 }
 
 export function getModulePreloadPath() {
-  return process.env.NODE_ENV === 'development'
+  return isDevelopment
     ? path.resolve(process.cwd(), 'build', 'module_preload.dev.js')
     : path.resolve(__dirname, 'module_preload.prod.js');
 }

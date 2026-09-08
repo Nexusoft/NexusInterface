@@ -34,6 +34,8 @@ const CHANNELS = Object.freeze({
     getStatus: 'core:get-status',
     getConfiguration: 'core:get-configuration',
     start: 'core:start',
+    restart: 'core:restart',
+    stop: 'core:stop',
     kill: 'core:kill',
     resyncLiteDatabase: 'core:resync-lite-database',
     executeConsoleCommand: 'core:execute-console-command',
@@ -130,9 +132,17 @@ const ALLOWED_EXTERNAL_HOSTS = new Set([
   't.me',
 ]);
 
-// First path segment of Core API endpoints the renderer/modules may request.
-// Unknown namespaces are rejected even when the path shape is otherwise valid.
-const ALLOWED_CORE_RPC_NAMESPACES = new Set([
+const {
+  assertRegisteredCoreRpcEndpoint,
+  redactSensitiveText,
+  validateCoreRpcParamsForEndpoint,
+} = require('./coreRpcRegistry');
+
+// First path segment allowed for the Terminal/console `callByUrl` capability.
+// Structured `core-rpc:call` no longer uses namespace-only policy; it requires a
+// concrete registered endpoint from coreRpcRegistry.js.
+// See docs/security/core-rpc-endpoint-registry.md.
+const ALLOWED_CORE_CONSOLE_RPC_NAMESPACES = new Set([
   'assets',
   'finance',
   'ledger',
@@ -148,6 +158,9 @@ const ALLOWED_CORE_RPC_NAMESPACES = new Set([
   'tokens',
   'users',
 ]);
+
+// Back-compat export name used by older tests/docs.
+const ALLOWED_CORE_RPC_NAMESPACES = ALLOWED_CORE_CONSOLE_RPC_NAMESPACES;
 
 const MAX_CLIPBOARD_TEXT_LENGTH = 1000000;
 
@@ -177,7 +190,6 @@ const ALLOWED_SETTINGS_FIELDS = new Set([
   'fiatCurrency',
   'minConfirmations',
   'backupDirectory',
-  'devMode',
   'verifyModuleSource',
   'fakeTransactions',
   'overviewDisplay',
@@ -228,6 +240,7 @@ const ALLOWED_SETTINGS_FIELDS = new Set([
   'dontAskToStartStaking',
   'lastCheckForUpdates',
 ]);
+const MAX_SETTINGS_UPDATE_BYTES = 64 * 1024;
 
 function fail(message) {
   throw new TypeError(message);
@@ -440,8 +453,14 @@ function assertAdvancedCoreParams(value) {
 function validateSettingsUpdate(value) {
   const updates = assertRecord(value, 'Settings update');
   const entries = Object.entries(updates);
-  if (!entries.length || entries.length > 16) {
-    fail('Settings update must contain between 1 and 16 fields');
+  if (!entries.length || entries.length > ALLOWED_SETTINGS_FIELDS.size) {
+    fail('Settings update contains an invalid number of fields');
+  }
+  if (
+    Buffer.byteLength(JSON.stringify(updates), 'utf8') >
+    MAX_SETTINGS_UPDATE_BYTES
+  ) {
+    fail('Settings update exceeds the maximum payload size');
   }
   const validated = {};
   for (const [key, fieldValue] of entries) {
@@ -586,32 +605,37 @@ function validateThemeUpdate(value) {
 }
 
 function assertAllowedCoreRpcEndpoint(endpoint, name = 'Core RPC endpoint') {
-  const value = assertString(endpoint, name, {
-    min: 3,
-    max: 96,
-  });
-  if (!/^[a-z]+(?:\/[a-z0-9_-]+){1,4}$/.test(value)) {
-    fail(`${name} is invalid`);
-  }
-  const namespace = value.split('/')[0];
-  if (!ALLOWED_CORE_RPC_NAMESPACES.has(namespace)) {
-    fail(`${name} namespace is not allowed`);
-  }
-  return value;
+  // Structured calls require a concrete registered endpoint, not merely an
+  // allowed namespace.
+  return assertRegisteredCoreRpcEndpoint(endpoint, name);
 }
 
 function validateCoreRpcRequest(value) {
   const request = assertRecord(value, 'Core RPC request');
-  const endpoint = assertAllowedCoreRpcEndpoint(request.endpoint);
-  const params =
-    request.params === undefined ? undefined : assertRecord(request.params, 'Core RPC params');
-  if (params && JSON.stringify(params).length > 64 * 1024) {
-    fail('Core RPC parameters are too large');
+  const endpoint = assertRegisteredCoreRpcEndpoint(request.endpoint);
+  // Treat null like omitted params (some legacy callers pass null).
+  const rawParams = request.params === null ? undefined : request.params;
+  if (rawParams !== undefined && rawParams !== null) {
+    if (!rawParams || typeof rawParams !== 'object' || Array.isArray(rawParams)) {
+      fail('Core RPC params must be an object');
+    }
+    if (JSON.stringify(rawParams).length > 64 * 1024) {
+      fail('Core RPC parameters are too large');
+    }
   }
+  const params = validateCoreRpcParamsForEndpoint(endpoint, rawParams);
   return { endpoint, params };
 }
 
-function validateCoreRpcUrl(value) {
+/**
+ * Console-only Core RPC URL validation used by `core-rpc:call-by-url`.
+ *
+ * This is intentionally broader than structured `core-rpc:call`: the Terminal
+ * Nexus API console may exercise relative paths under approved namespaces,
+ * including query strings. It is NOT an open proxy — absolute URLs, traversal,
+ * and unknown namespaces are rejected.
+ */
+function validateCoreConsoleRpcUrl(value) {
   const raw = assertString(value, 'Core RPC URL', { min: 1, max: 2048 });
   const normalizedPath = raw.replace(/^\/+/, '');
   if (!normalizedPath) {
@@ -634,11 +658,17 @@ function validateCoreRpcUrl(value) {
   }
   if (queryParts[0] !== undefined) {
     // Allow console-style query strings, but reject nested URLs or traversal.
+    let decodedQuery;
+    try {
+      decodedQuery = decodeURIComponent(queryParts[0]);
+    } catch {
+      fail('Core RPC URL query is invalid');
+    }
     if (
-      queryParts[0].includes('://') ||
-      queryParts[0].includes('\\') ||
-      queryParts[0].includes('/../') ||
-      queryParts[0].includes('%2e%2e')
+      decodedQuery.includes('://') ||
+      decodedQuery.includes('\\') ||
+      /(^|[=&/])\.\.([/&]|$)/.test(decodedQuery) ||
+      decodedQuery.includes('\0')
     ) {
       fail('Core RPC URL query is invalid');
     }
@@ -667,13 +697,16 @@ function validateCoreRpcUrl(value) {
     }
   }
 
-  // Console callers may use richer path/query shapes than structured call(),
-  // but the first segment must still be an approved lowercase Core API
-  // namespace (same policy as validateCoreRpcRequest).
-  if (!ALLOWED_CORE_RPC_NAMESPACES.has(segments[0])) {
+  // Constrained console exception: namespace allowlist only (not full registry).
+  if (!ALLOWED_CORE_CONSOLE_RPC_NAMESPACES.has(segments[0])) {
     fail('Core RPC URL namespace is not allowed');
   }
   return normalizedPath;
+}
+
+// Historical name kept for call sites / tests; console capability only.
+function validateCoreRpcUrl(value) {
+  return validateCoreConsoleRpcUrl(value);
 }
 
 function validateClipboardText(value) {
@@ -774,6 +807,7 @@ function error(code, message) {
 }
 
 module.exports = {
+  ALLOWED_CORE_CONSOLE_RPC_NAMESPACES,
   ALLOWED_CORE_RPC_NAMESPACES,
   ALLOWED_EXTERNAL_HOSTS,
   CHANNELS,
@@ -790,9 +824,11 @@ module.exports = {
   assertSafeModuleName,
   assertString,
   error,
+  redactSensitiveText,
   result,
   validateClipboardText,
   validateCoreConsoleCommand,
+  validateCoreConsoleRpcUrl,
   validateCoreRpcRequest,
   validateCoreRpcUrl,
   validateMenuTemplate,

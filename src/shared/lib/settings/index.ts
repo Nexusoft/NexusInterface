@@ -18,17 +18,93 @@ export const settingsAtom = atom((get) => ({
 }));
 
 let timerId: ReturnType<typeof setTimeout> | undefined;
-subscribeWithPrevious(userSettingsAtom, (settings, previousSettings) => {
+let persistedSettings = initialUserSettings;
+let queuedSettings = initialUserSettings;
+const settingVersions: Partial<Record<SettingsKey, number>> = {};
+let persistenceQueue = Promise.resolve();
+let pendingPersistenceWaiters: Array<{
+  resolve: () => void;
+  reject: (error: unknown) => void;
+}> = [];
+subscribeWithPrevious(userSettingsAtom, () => {
   clearTimeout(timerId);
   timerId = setTimeout(() => {
-    const updates = Object.fromEntries(
-      Object.entries(settings).filter(
-        ([key, value]) => previousSettings?.[key as SettingsKey] !== value
+    const waiters = pendingPersistenceWaiters;
+    pendingPersistenceWaiters = [];
+    const targetSettings = store.get(userSettingsAtom);
+    const targetVersions = { ...settingVersions };
+    const batchUpdates = Object.fromEntries(
+      Object.entries(targetSettings).filter(
+        ([key, value]) => queuedSettings?.[key as SettingsKey] !== value
       )
     ) as PartialSettings;
-    if (Object.keys(updates).length) {
-      window.nexusElectron.settings.update(updates).catch(console.error);
+    queuedSettings = targetSettings;
+    if (!Object.keys(batchUpdates).length) {
+      const targetAlreadyPersisted = Object.entries(targetSettings).every(
+        ([key, value]) => persistedSettings?.[key as SettingsKey] === value
+      );
+      if (targetAlreadyPersisted) {
+        waiters.forEach(({ resolve }) => resolve());
+        return;
+      }
+      persistenceQueue.then(
+        () => waiters.forEach(({ resolve }) => resolve()),
+        (error) => waiters.forEach(({ reject }) => reject(error))
+      );
+      return;
     }
+    persistenceQueue = persistenceQueue
+      .catch(() => {})
+      .then(async () => {
+        const updates = Object.fromEntries(
+          Object.entries(batchUpdates).filter(
+            ([key, value]) =>
+              persistedSettings?.[key as SettingsKey] !== value
+          )
+        ) as PartialSettings;
+        if (Object.keys(updates).length) {
+          await window.nexusElectron.settings.update(updates);
+          persistedSettings = { ...persistedSettings, ...updates };
+        }
+      })
+      .catch((error) => {
+        const currentSettings = store.get(userSettingsAtom);
+        const rolledBackSettings = { ...currentSettings };
+        const reconciledQueuedSettings = { ...queuedSettings };
+        let changed = false;
+        Object.entries(batchUpdates).forEach(([key, value]) => {
+          const settingsKey = key as SettingsKey;
+          if (
+            settingVersions[settingsKey] !== targetVersions[settingsKey] ||
+            persistedSettings[settingsKey] === value ||
+            currentSettings[settingsKey] !== value
+          ) {
+            return;
+          }
+          if (Object.prototype.hasOwnProperty.call(persistedSettings, key)) {
+            rolledBackSettings[settingsKey] = persistedSettings[settingsKey];
+          } else {
+            delete rolledBackSettings[settingsKey];
+          }
+          changed = true;
+          if (queuedSettings[settingsKey] === value) {
+            if (Object.prototype.hasOwnProperty.call(persistedSettings, key)) {
+              reconciledQueuedSettings[settingsKey] =
+                persistedSettings[settingsKey];
+            } else {
+              delete reconciledQueuedSettings[settingsKey];
+            }
+          }
+        });
+        queuedSettings = reconciledQueuedSettings;
+        if (changed) store.set(userSettingsAtom, rolledBackSettings);
+        console.error(error);
+        throw error;
+      });
+    persistenceQueue.then(
+      () => waiters.forEach(({ resolve }) => resolve()),
+      (error) => waiters.forEach(({ reject }) => reject(error))
+    );
   }, 0);
 });
 
@@ -48,6 +124,7 @@ export const settingAtoms = Object.fromEntries(
           ...userSettings,
           [key]: value,
         };
+        settingVersions[key] = (settingVersions[key] || 0) + 1;
         set(userSettingsAtom, updatedUserSettings);
       }
     ),
@@ -55,11 +132,22 @@ export const settingAtoms = Object.fromEntries(
 ) as unknown as SettingAtoms;
 
 export function updateSettings(updates: PartialSettings) {
+  const persisted = new Promise<void>((resolve, reject) => {
+    pendingPersistenceWaiters.push({ resolve, reject });
+  });
+  persisted.catch(() => {});
   const userSettings = store.get(userSettingsAtom);
+  Object.entries(updates).forEach(([key, value]) => {
+    const settingsKey = key as SettingsKey;
+    if (userSettings[settingsKey] !== value) {
+      settingVersions[settingsKey] = (settingVersions[settingsKey] || 0) + 1;
+    }
+  });
   store.set(userSettingsAtom, {
     ...userSettings,
     ...updates,
   });
+  return persisted;
 }
 
 export type { Settings, SettingsKey as SettingKeys, PartialSettings };

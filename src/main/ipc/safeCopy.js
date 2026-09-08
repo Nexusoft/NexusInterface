@@ -19,6 +19,7 @@ const DEFAULT_MAX_FILE_BYTES = 100 * 1024 * 1024;
 const STAGING_DIR_INFIX = '.installing-';
 const REPLACED_DIR_INFIX = '.replaced-';
 const READ_CHUNK_BYTES = 64 * 1024;
+const WINDOWS_STAT_TIME_TOLERANCE_MS = 2;
 const COPY_CONCURRENCY = 1;
 const publishLocks = new Map();
 /** Absolute paths of staging/backup dirs currently owned by an in-flight install. */
@@ -53,6 +54,35 @@ function assertPathInsideRoot(candidatePath, rootPath, label) {
   if (!isPathWithinDirectory(candidatePath, rootPath)) {
     throw new Error(`${label} realpath escapes module root`);
   }
+}
+
+function statTimesMatch(expected, actual) {
+  if (!Number.isFinite(expected) || !Number.isFinite(actual)) {
+    return expected === actual;
+  }
+  const tolerance =
+    process.platform === 'win32' ? WINDOWS_STAT_TIME_TOLERANCE_MS : 0;
+  return Math.abs(expected - actual) <= tolerance;
+}
+
+function matchesTrustedPathIdentity(expected, actual) {
+  if (!actual.isFile() || actual.size !== expected.size) {
+    return false;
+  }
+  if (
+    !statTimesMatch(expected.mtimeMs, actual.mtimeMs) ||
+    !statTimesMatch(expected.ctimeMs, actual.ctimeMs) ||
+    !statTimesMatch(expected.birthtimeMs, actual.birthtimeMs)
+  ) {
+    return false;
+  }
+  if (
+    process.platform !== 'win32' &&
+    (actual.ino !== expected.ino || actual.dev !== expected.dev)
+  ) {
+    return false;
+  }
+  return true;
 }
 
 function hasNoFollowOpen() {
@@ -153,7 +183,7 @@ async function assertNoSymlinkComponents(rootPath, targetPath, label) {
   }
 }
 
-async function resolveOpenedPath(handle, openPath) {
+async function resolveOpenedPath(handle, openPath, allowPathFallback = true) {
   if (typeof handle.fd === 'number') {
     if (process.platform === 'linux') {
       try {
@@ -173,24 +203,45 @@ async function resolveOpenedPath(handle, openPath) {
     ) {
       // Prefer handle identity via /dev/fd rather than the mutable open path.
       try {
-        return await fsp.realpath(`/dev/fd/${handle.fd}`);
-      } catch {
-        try {
-          const fdPath = await fsp.readlink(`/dev/fd/${handle.fd}`);
-          return path.resolve(fdPath);
-        } catch {
-          // Fall through.
+        const fdRealPath = await fsp.realpath(`/dev/fd/${handle.fd}`);
+        if (!fdRealPath.startsWith('/dev/fd/')) {
+          return fdRealPath;
         }
+      } catch {
+        // Fall through.
+      }
+      try {
+        const fdPath = await fsp.readlink(`/dev/fd/${handle.fd}`);
+        if (!fdPath.startsWith('/dev/fd/')) {
+          return path.resolve(fdPath);
+        }
+      } catch {
+        // Fall through.
       }
     }
+  }
+  if (!allowPathFallback) {
+    throw new Error(
+      'Secure module directory installs require descriptor-relative opens on this platform; use a module archive or an app-owned trusted source'
+    );
   }
   // Last resort: never treat this as a strong binding on its own.
   return fsp.realpath(openPath);
 }
 
-async function assertOpenedFileInsideRoot(handle, openPath, rootPath, label) {
+async function assertOpenedFileInsideRoot(
+  handle,
+  openPath,
+  rootPath,
+  label,
+  allowPathFallback = true
+) {
   const realRoot = await fsp.realpath(rootPath);
-  const openedPath = await resolveOpenedPath(handle, openPath);
+  const openedPath = await resolveOpenedPath(
+    handle,
+    openPath,
+    allowPathFallback
+  );
   assertPathInsideRoot(openedPath, realRoot, label);
 
   const stat = await handle.stat();
@@ -314,7 +365,8 @@ async function openRegularFileNoFollowFdRelative(
   filePath,
   rootPath,
   label,
-  maxBytes
+  maxBytes,
+  allowPathFallback
 ) {
   const { resolvedRoot, segments } = splitRelativeSegments(
     rootPath,
@@ -352,6 +404,7 @@ async function openRegularFileNoFollowFdRelative(
     throw err;
   }
   try {
+    let concreteParentPath = resolvedRoot;
     for (let index = 0; index < segments.length; index += 1) {
       const segment = segments[index];
       const isLast = index === segments.length - 1;
@@ -360,39 +413,64 @@ async function openRegularFileNoFollowFdRelative(
         fs.constants.O_NOFOLLOW |
         (isLast ? 0 : fs.constants.O_DIRECTORY);
       const childPath = path.join(directoryFdPath(dirHandle.fd), segment);
+      const concreteChildPath = path.join(concreteParentPath, segment);
+      let openedPath = concreteChildPath;
       let nextHandle;
       try {
         nextHandle = await fsp.open(childPath, flags);
       } catch (err) {
         if (
-          err?.code === 'ELOOP' ||
-          err?.code === 'EMLINK' ||
-          err?.code === 'EINVAL'
+          err?.code === 'ENOENT' &&
+          allowPathFallback &&
+          process.platform !== 'linux' &&
+          process.platform !== 'win32'
         ) {
-          throw new Error(`${label} path contains a symbolic link`);
-        }
-        if (err?.code === 'ENOENT') {
-          throw new Error(`${label} not found`);
-        }
-        if (err?.code === 'ENOTDIR') {
-          throw new Error(
-            isLast
-              ? `${label} must be a regular non-symlink file`
-              : `${label} path contains a symbolic link`
+          const resolvedParent = await resolveOpenedPath(
+            dirHandle,
+            concreteParentPath,
+            allowPathFallback
           );
+          const fallbackChildPath = path.join(resolvedParent, segment);
+          try {
+            nextHandle = await fsp.open(fallbackChildPath, flags);
+            openedPath = fallbackChildPath;
+          } catch (fallbackErr) {
+            err = fallbackErr;
+          }
         }
-        throw err;
+        if (!nextHandle) {
+          if (
+            err?.code === 'ELOOP' ||
+            err?.code === 'EMLINK' ||
+            err?.code === 'EINVAL'
+          ) {
+            throw new Error(`${label} path contains a symbolic link`);
+          }
+          if (err?.code === 'ENOENT') {
+            throw new Error(`${label} not found`);
+          }
+          if (err?.code === 'ENOTDIR') {
+            throw new Error(
+              isLast
+                ? `${label} must be a regular non-symlink file`
+                : `${label} path contains a symbolic link`
+            );
+          }
+          throw err;
+        }
       }
       const previousHandle = dirHandle;
       dirHandle = nextHandle;
       await previousHandle.close().catch(() => {});
+      concreteParentPath = openedPath;
 
       if (isLast) {
         const { stat } = await assertOpenedFileInsideRoot(
           dirHandle,
-          childPath,
+          openedPath,
           resolvedRoot,
-          label
+          label,
+          allowPathFallback
         );
         if (stat.size > maxBytes) {
           throw new Error(`${label} exceeds the size limit`);
@@ -420,11 +498,9 @@ async function openRegularFileNoFollowFdRelative(
 }
 
 /**
- * Best-effort path-based read used only against an already app-owned tree
- * whose parents the untrusted module author cannot replace (for example an
- * archive extract under the application temp directory). Mutable user-selected
- * install sources must not use this path: platforms without fd-relative opens
- * fail closed instead.
+ * Identity-checked path fallback for platforms without descriptor-relative
+ * opens. It verifies the opened handle against pre-open metadata and rechecks
+ * the path after reading so replacement attempts fail closed.
  */
 async function readRegularFileFromTrustedRoot(
   filePath,
@@ -470,19 +546,16 @@ async function readRegularFileFromTrustedRoot(
   const handle = await fsp.open(resolvedFile, fs.constants.O_RDONLY);
   let content;
   try {
+    const opened = await handle.stat();
+    if (!matchesTrustedPathIdentity(before, opened)) {
+      throw new Error(`${label} changed before open`);
+    }
     content = await readFileHandleBounded(handle, maxBytes, label);
   } finally {
     await handle.close();
   }
   const after = await fsp.lstat(resolvedFile);
-  if (
-    after.isSymbolicLink() ||
-    !after.isFile() ||
-    after.size !== before.size ||
-    after.mtimeMs !== before.mtimeMs ||
-    after.ino !== before.ino ||
-    after.dev !== before.dev
-  ) {
+  if (after.isSymbolicLink() || !matchesTrustedPathIdentity(before, after)) {
     throw new Error(`${label} changed during install`);
   }
   await assertNoSymlinkComponents(resolvedRoot, resolvedFile, label);
@@ -497,9 +570,8 @@ async function readRegularFileFromTrustedRoot(
  * symlinks. Used to safely read source files during module installation.
  *
  * On platforms without descriptor-relative no-follow opens (notably Windows),
- * path-based reads of a mutable source remain TOCTOU-prone. Mutable directory
- * installs therefore fail closed; callers may only opt into the path fallback
- * for already app-owned trees (archive extracts, installed module roots).
+ * mutable roots fail closed unless callers explicitly opt into the
+ * identity-checked path fallback.
  */
 async function readRegularFileNoFollow(
   filePath,
@@ -523,14 +595,15 @@ async function readRegularFileNoFollow(
       resolvedFile,
       resolvedRoot,
       label,
-      maxBytes
+      maxBytes,
+      allowPathFallback
     );
   }
 
   // Windows and other platforms without openat-style fd paths cannot bind
   // intermediate components to directory handles. Refuse path-based reads of
-  // mutable sources unless the caller explicitly opts into a trusted-root
-  // fallback (app-owned extract/install trees only).
+  // mutable sources unless the caller explicitly opts into the identity-checked
+  // path fallback.
   if (!allowPathFallback) {
     throw new Error(
       `${label} secure module file reads require descriptor-relative opens or an app-owned trusted root`

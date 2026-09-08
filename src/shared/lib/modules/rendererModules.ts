@@ -36,6 +36,7 @@ export interface DevModuleInfo {
   type: 'app';
   entry?: string;
   icon?: string;
+  files: string[];
 }
 
 export interface ProductionModule {
