@@ -9,7 +9,7 @@ import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 
 import baseRendererConfig from './webpack.config.base.renderer.babel';
 import devConfig from './webpack.config.base.dev.babel';
-import { babelLoaderRenderer } from './babelLoaderConfig.babel';
+import { rendererBabelConfig } from './babelLoaderConfig.babel';
 
 const port = process.env.PORT || 1212;
 const publicPath = `http://localhost:${port}/`;
@@ -19,7 +19,7 @@ const manifest = path.resolve(dllPath, 'renderer.json');
 export default merge(baseRendererConfig, devConfig, {
   entry: {
     'renderer.dev': './src/index',
-    'keyboard.dev': './src/keyboard/index.js',
+    'keyboard.dev': './src/keyboard/index.tsx',
   },
 
   output: {
@@ -29,7 +29,7 @@ export default merge(baseRendererConfig, devConfig, {
 
   module: {
     rules: [
-      babelLoaderRenderer({ hot: true }),
+      ...rendererBabelConfig({ hot: true }),
       {
         test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
         use: {

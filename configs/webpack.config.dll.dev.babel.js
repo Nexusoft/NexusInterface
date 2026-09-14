@@ -8,21 +8,26 @@ import { merge } from 'webpack-merge';
 
 import baseConfig from './webpack.config.base.babel';
 import devConfig from './webpack.config.base.dev.babel';
-import { dependencies } from '../package.json';
+import packageJson from '../package.json';
 
 const dllPath = path.resolve(process.cwd(), 'dll');
+const dependencies = Object.keys(packageJson.dependencies).filter(
+  (d) => d !== '@aptabase/electron'
+);
+dependencies.push('@aptabase/electron/main');
+dependencies.push('@aptabase/electron/renderer');
 
 export default merge(baseConfig, devConfig, {
   context: process.cwd(),
 
-  devtool: 'eval',
+  devtool: 'cheap-module-source-map',
 
   target: 'electron-renderer',
 
   externals: ['fsevents', 'crypto-browserify'],
 
   entry: {
-    renderer: Object.keys(dependencies || {}),
+    renderer: dependencies,
   },
 
   output: {

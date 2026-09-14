@@ -6,12 +6,12 @@ import path from 'path';
 import { merge } from 'webpack-merge';
 
 import baseConfig from './webpack.config.base.babel';
-import { babelLoaderRenderer } from './babelLoaderConfig.babel';
+import { rendererBabelConfig } from './babelLoaderConfig.babel';
 
 export default merge(baseConfig, {
-  target: 'electron-renderer',
+  target: 'electron-preload',
 
-  entry: './src/module_preload',
+  entry: './src/module/preload/index.ts',
 
   output: {
     path: path.join(process.cwd(), 'build'),
@@ -19,7 +19,7 @@ export default merge(baseConfig, {
 
   module: {
     rules: [
-      babelLoaderRenderer(),
+      ...rendererBabelConfig(),
 
       // WOFF2 Font
       {

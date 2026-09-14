@@ -10,8 +10,8 @@
 Install the following
 
 - Code editor of choice (VSCode)
-- Node.js (min v14.0.0)
-- NPM (min v6.14.4)
+- Node.js (min v22.12.0)
+- NPM (min v10.9.0)
 
 ### Step 2
 
@@ -20,6 +20,12 @@ Clone Repo into a empty folder and open that folder in your editor
 ### Step 3
 
 Run the command `npm install`
+
+For a reproducible install that exactly matches the committed `package-lock.json`
+(recommended for release builds and CI), run `npm ci` instead. `npm ci` will fail
+fast if the lockfile is out of sync rather than silently resolving newer
+transitive dependencies, which has caused build breaks in `electron-builder` in
+the past.
 
 ### Step 4 (Development)
 
@@ -31,11 +37,17 @@ Run command `npm run dev`
 Run command `npm run package-platform*`
 
 - replace `platform` with your desired platform
-  Platforms: `win`, `darwin`(Mac OSX), `linux`
+  Platforms: `win`, `darwin`(macOS), `linux`
   This will build the project and place the build in the `release` folder. The file format will depend on the provided formats in the `package.json`
-- Mac OSX should use `npm run package-mac-unsigned` to skip code notarization
+- macOS should use `npm run package-mac`; this repository sets `mac.identity` to `null`, so notarization is skipped unless you override the signing configuration.
 
 ### FAQ
+
+- If you compile a replacement Nexus core daemon and otherwise keep the upstream NexusInterface unchanged, replace the bundled core binary in `assets/<platform>/cores/` before packaging:
+  - Linux x64: `assets/linux/cores/nexus-linux-x64`
+  - macOS x64: `assets/darwin/cores/nexus-darwin-x64`
+  - Windows x64: `assets/win32/cores/nexus-win32-x64.exe`
+- The wallet starts whichever bundled binary matches the current platform and architecture.
 
 ## Cores
 

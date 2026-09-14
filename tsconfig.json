@@ -1,9 +1,47 @@
 {
   "compilerOptions": {
     "experimentalDecorators": true,
-    "allowJs": true,
+    // Emit Configuration
     "noEmit": true,
-    "baseUrl": "./src/shared"
+
+    // Type Checking Configuration
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "exactOptionalPropertyTypes": false,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitThis": true,
+    "noPropertyAccessFromIndexSignature": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitOverride": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    // Strict Rules - v4.8
+    "alwaysStrict": true,
+    "strictBindCallApply": true,
+    "strictFunctionTypes": true,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": true,
+    "useUnknownInCatchVariables": true,
+
+    // Modules Configuration
+    "baseUrl": "./src/shared",
+    "module": "ES2022",
+    "moduleResolution": "node",
+    "allowArbitraryExtensions":true,
+
+    // Language and Environment Configuration
+    "target": "ES2022",
+    "jsx": "react-jsx",
+
+    // JavaScript Support Configuration
+    "allowJs": true,
+    "checkJs": false,
+
+    // Interop Constraints Configuration
+    "esModuleInterop": true,
+    "isolatedModules": true
   },
+  "include": ["src/**/*"],
   "exclude": ["node_modules", "release", "dll", "build"]
 }

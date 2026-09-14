@@ -1,0 +1,63 @@
+import styled from '@emotion/styled';
+
+import { NativeLink } from 'components/Link';
+import NexusAddress from 'components/NexusAddress';
+import { openModal } from 'lib/ui';
+
+import TokenDetailsModal from './TokenDetailsModal';
+
+__ = __context('User.Tokens');
+
+const TokenComponent = styled.div({
+  padding: '1em 0 1.5em',
+});
+
+const AccountName = styled.span(({ theme }) => ({
+  fontWeight: 'bold',
+  color: theme.foreground,
+}));
+
+const UnNamed = styled(AccountName)(({ theme }) => ({
+  fontStyle: 'italic',
+  color: theme.mixer(0.8),
+}));
+
+const Owner = styled.span(({ theme }) => ({
+  color: theme.mixer(0.75),
+  fontWeight: '75%',
+}));
+
+export default function Token({
+  token,
+  mine,
+}: {
+  token: {
+    ticker?: string;
+    address: string;
+  };
+  mine?: boolean;
+}) {
+  return (
+    <TokenComponent>
+      <div className="flex space-between">
+        <div>
+          <AccountName>{token.ticker}</AccountName>
+          {!token.ticker && <UnNamed>{__('Unnamed token')}</UnNamed>}
+          {mine && <Owner>{__(' (Owned by you)')}</Owner>}
+        </div>
+        <div>
+          <NativeLink
+            onClick={() => {
+              openModal(TokenDetailsModal, {
+                tokenAddress: token.address,
+              });
+            }}
+          >
+            {__('Details')}
+          </NativeLink>
+        </div>
+      </div>
+      <NexusAddress className="mt1" address={token.address} />
+    </TokenComponent>
+  );
+}
