@@ -1,5 +1,4 @@
 import { HTMLAttributes } from 'react';
-import { shell } from 'electron';
 import { NativeLink } from 'components/Link';
 
 /**
@@ -19,7 +18,7 @@ export default function ExternalLink(
         e.preventDefault();
         const target = e.target as HTMLAnchorElement;
         const url = target.href || props.href;
-        if (url) shell.openExternal(url);
+        if (url) void window.nexusElectron.app.openExternal(url);
         props.onClick && props.onClick(e);
       }}
     />

@@ -67,7 +67,7 @@ export default function RemoteCoreSettings() {
         subLabel={__('Nexus API server Username')}
         component={Form.TextField}
         name="manualDaemonApiUser"
-        placeholder={defaultConfig.apiUser}
+        placeholder="apiserver"
         size={12}
       />
 
@@ -76,7 +76,7 @@ export default function RemoteCoreSettings() {
         subLabel={__('Nexus API server Password')}
         component={Form.TextField}
         name="manualDaemonApiPassword"
-        placeholder={defaultConfig.apiPassword}
+        placeholder=""
         size={12}
       />
 

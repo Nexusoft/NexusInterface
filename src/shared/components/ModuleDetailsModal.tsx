@@ -28,14 +28,12 @@ import {
 } from 'lib/modules';
 import { timing } from 'styles';
 import { store } from 'lib/store';
-import { rm as deleteDirectory } from 'fs/promises';
 
 import warningIcon from 'icons/warning.svg';
 import linkIcon from 'icons/link.svg';
 import trashIcon from 'icons/trash.svg';
 import updateIcon from 'icons/update.svg';
 import closeIcon from 'icons/x-circle.svg';
-import { removeUpdateCache } from 'lib/modules/autoUpdate';
 
 __ = __context('ModuleDetails');
 
@@ -74,8 +72,7 @@ async function confirmDelete(module: Module) {
         devModulePaths: devModulePaths.filter((path) => path !== module.path),
       });
     } else {
-      await deleteDirectory(module.path, { recursive: true, force: true });
-      removeUpdateCache(module.repository);
+      await window.nexusElectron.modules.remove(module.info.name);
       UT.UninstallModule(module.info.name);
     }
     location.reload();
@@ -101,10 +98,9 @@ function ProductionModuleDetails({
   const { downloaded, totalSize } = downloadInfo || {};
   const downloadProgress =
     (downloaded && totalSize && downloaded / totalSize) || 0;
-  const downloadRequest = downloadInfo?.downloadRequest;
   // `downloading` -> when the module package is being downloaded
   // `busy` -> when the module package is being downloaded OR is in other preparation steps
-  const downloading = !!downloadRequest;
+  const downloading = !!downloadInfo?.downloading;
   const busy = !!downloadInfo;
 
   return (

@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from 'react';
-import { ipcRenderer } from 'electron';
 import Keyboard from 'react-simple-keyboard';
 import styled from '@emotion/styled';
 
@@ -15,6 +14,16 @@ interface Options {
   defaultText: string;
   maskable: boolean;
   placeholder: string;
+}
+
+declare global {
+  interface Window {
+    virtualKeyboard: {
+      onOptions(listener: (options: Options) => void): void;
+      inputChanged(text: string): void;
+      close(): void;
+    };
+  }
 }
 
 const KeyboardWrapper = styled.div({
@@ -35,7 +44,7 @@ export default function App() {
   const populatedRef = useRef(false);
 
   useEffect(() => {
-    ipcRenderer.once('options', (_evt, options: Options) => {
+    window.virtualKeyboard.onOptions((options: Options) => {
       setOptions(options);
       setText(options.defaultText);
     });
@@ -103,7 +112,7 @@ export default function App() {
           ]}
           onChange={(text) => {
             setText(text);
-            ipcRenderer.send('keyboard-input-change', text);
+            window.virtualKeyboard.inputChanged(text);
           }}
           onKeyPress={(btn) => {
             switch (btn) {
@@ -114,7 +123,7 @@ export default function App() {
                 setCapslock(!capslock);
                 break;
               case '{enter}':
-                ipcRenderer.send('close-keyboard');
+                window.virtualKeyboard.close();
                 break;
               default:
                 if (shift) {

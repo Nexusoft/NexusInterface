@@ -225,28 +225,24 @@ export default function PreviewTransactionModal({
               initialValues={initialValues}
               onSubmit={formSubmit({
                 submit: async ({ pin }) => {
-                  const params: {
-                    pin: string;
-                    recipients: {
-                      address_to: string;
-                      amount: number;
-                      reference?: string;
-                    }[];
-                    expires?: number;
-                    from?: string;
-                  } = {
+                  const params = {
                     pin,
                     recipients,
                     expires,
                   };
 
                   if (source?.token) {
-                    params.from = source.token.address;
-                    return await callAPI('finance/debit/token', params);
-                  } else {
-                    params.from = source?.account?.address;
-                    return await callAPI('finance/debit/any', params);
+                    return await callAPI('finance/debit/token', {
+                      ...params,
+                      from: source.token.address,
+                    });
                   }
+                  const from = source?.account?.address;
+                  if (!from) throw new Error('A source account is required');
+                  return await callAPI('finance/debit/any', {
+                    ...params,
+                    from,
+                  });
                 },
                 onSuccess: () => {
                   UT.Send(source?.token ? 'token' : 'nexus');

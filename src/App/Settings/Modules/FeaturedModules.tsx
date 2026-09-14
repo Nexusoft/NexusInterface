@@ -2,7 +2,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useAtomValue } from 'jotai';
 import styled from '@emotion/styled';
-import axios from 'axios';
 
 // Internal
 import memoize from 'utils/memoize';
@@ -23,15 +22,12 @@ const getNotInstalled = memoize(
 
 export default function FeaturedModules() {
   const modulesMap = useAtomValue(modulesMapAtom);
-  const { data: res } = useQuery({
+  const { data: featuredModules = [] } = useQuery({
     queryKey: ['featuredModules'],
-    queryFn: () =>
-      axios.get(
-        `https://nexus-featured-modules.netlify.app/featured-modules?wallet_version=${APP_VERSION}`
-      ),
+    queryFn: async () =>
+      (await window.nexusElectron.modules.getFeatured()) as any[],
     staleTime: 3600000, // 1 hour
   });
-  const featuredModules = res?.data;
   const notInstalledFeaturedModules = getNotInstalled(
     featuredModules,
     modulesMap

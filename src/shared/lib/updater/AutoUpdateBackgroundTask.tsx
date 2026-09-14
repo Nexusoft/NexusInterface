@@ -1,5 +1,4 @@
 import { useRef } from 'react';
-import { shell } from 'electron';
 
 import BackgroundTask, { BackgroundTaskProps } from 'components/BackgroundTask';
 import { showBackgroundTask } from 'lib/ui';
@@ -40,7 +39,7 @@ export default function AutoUpdateBackgroundTask(
 
   const goToGitHub = () => {
     closeTaskRef.current();
-    shell.openExternal(
+    void window.nexusElectron.app.openExternal(
       `https://github.com/Nexusoft/NexusInterface/releases/tag/${version}`
     );
   };

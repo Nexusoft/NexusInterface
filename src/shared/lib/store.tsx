@@ -12,8 +12,9 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { queryClientAtom } from 'jotai-tanstack-query';
 import { rqDevToolsOpenAtom, jotaiDevToolsOpenAtom } from 'lib/ui';
 import jotaiDevToolsStyles from 'jotai-devtools/styles.css';
+import { isDevelopment } from 'lib/nexusEnv';
 
-const isDev = process.env.NODE_ENV === 'development';
+const isDev = isDevelopment;
 
 export const store = createStore();
 

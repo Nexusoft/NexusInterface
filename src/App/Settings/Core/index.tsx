@@ -7,7 +7,7 @@ import styled from '@emotion/styled';
 import Form from 'components/Form';
 import { showNotification } from 'lib/ui';
 import { confirm } from 'lib/dialog';
-import { stopCore, startCore, restartCore } from 'lib/core';
+import { startCore, restartCore } from 'lib/core';
 import { coreInfoQuery } from 'lib/coreInfo';
 import {
   updateSettings,
@@ -144,10 +144,17 @@ async function turnOffRemoteCore(restartForm: () => void) {
     note: __('(This will restart your Core)'),
   });
   if (confirmed) {
-    restartForm();
-    await startCore();
-    updateSettings({ manualDaemon: false });
-    coreInfoQuery.refetch();
+    try {
+      await updateSettings({ manualDaemon: false });
+      restartForm();
+      await startCore();
+      coreInfoQuery.refetch();
+    } catch (error) {
+      showNotification(
+        (error as Error)?.message || __('Unable to start Nexus Core'),
+        'error'
+      );
+    }
   }
 }
 
@@ -163,9 +170,15 @@ async function turnOnRemoteCore(restartForm: () => void) {
   });
   if (confirmed) {
     restartForm();
-    await stopCore();
-    updateSettings({ manualDaemon: true });
-    coreInfoQuery.refetch();
+    try {
+      await updateSettings({ manualDaemon: true });
+      coreInfoQuery.refetch();
+    } catch (error) {
+      showNotification(
+        (error as Error)?.message || __('Unable to stop Nexus Core'),
+        'error'
+      );
+    }
   }
 }
 
@@ -187,19 +200,27 @@ export default function SettingsCore() {
         initialValues={getInitialValues(settings)}
         keepDirtyOnReinitialize={false}
         onSubmit={formSubmit({
-          submit: (updatedSettings) => {
-            Object.keys(updatedSettings).forEach((key) => {
-              const value = updatedSettings[key as SettingKeys];
-              if (value !== settings[key as SettingKeys]) {
-                updateSettings({ [key]: value });
-              }
-            });
+          submit: async (updatedSettings) => {
+            const updates = Object.fromEntries(
+              Object.entries(updatedSettings).filter(
+                ([key, value]) => value !== settings[key as SettingKeys]
+              )
+            );
+            if (Object.keys(updates).length) {
+              await updateSettings(updates);
+            }
           },
           onSuccess: () => {
             showNotification(__('Core settings saved'), 'success');
             if (!manualDaemon && restartCoreOnSave) {
               showNotification(__('Restarting Core...'));
-              restartCore();
+              restartCore().catch((error) => {
+                showNotification(
+                  (error as Error)?.message ||
+                    __('Unable to restart Nexus Core'),
+                  'error'
+                );
+              });
             }
           },
           errorMessage: __('Error saving settings'),

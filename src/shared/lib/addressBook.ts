@@ -1,14 +1,7 @@
-import fs from 'fs';
-import path from 'path';
 import { z } from 'zod';
 import { atom } from 'jotai';
 import { store, subscribe } from 'lib/store';
-import { walletDataDir } from 'consts/paths';
 import { emailRegex } from 'consts/misc';
-import { readJson, writeJson } from 'utils/json';
-
-const fileName = 'addressbook.json';
-const filePath = path.join(walletDataDir, fileName);
 
 const contactSchema = z.object({
   name: z.string(),
@@ -31,30 +24,15 @@ const addressBookSchema = z.record(contactSchema);
 export type Contact = z.infer<typeof contactSchema>;
 export type AddressBook = z.infer<typeof addressBookSchema>;
 
-function loadAddressBookFromFile() {
+function loadAddressBook() {
   // TODO: deprecate genesis usage in address fields
-  if (fs.existsSync(filePath)) {
-    const json = readJson(filePath) || {};
-    if (json) {
-      try {
-        const parsedAddressBook = addressBookSchema.parse(json.addressBook);
-        if (json.addressbook) {
-          saveAddressBookToFile(parsedAddressBook);
-        }
-        return parsedAddressBook;
-      } catch (error) {
-        console.error('Address Book validation error: ', error);
-      }
-    }
+  const addressBook = window.nexusElectron.settings.getInitial().addressBook;
+  try {
+    return addressBookSchema.parse(addressBook);
+  } catch (error) {
+    console.error('Address Book validation error: ', error);
+    return {} as AddressBook;
   }
-  writeJson(filePath, {
-    addressBook: {},
-  });
-  return {} as AddressBook;
-}
-
-function saveAddressBookToFile(addressBook: AddressBook) {
-  return writeJson(filePath, { addressBook });
 }
 
 const compareNames = (a: Contact, b: Contact) => {
@@ -69,7 +47,7 @@ const compareNames = (a: Contact, b: Contact) => {
   return 0;
 };
 
-const initialAddressBook = loadAddressBookFromFile();
+const initialAddressBook = loadAddressBook();
 export const addressBookAtom = atom<AddressBook>(initialAddressBook);
 export const contactsAtom = atom((get) => {
   const addressBook = get(addressBookAtom);
@@ -78,11 +56,11 @@ export const contactsAtom = atom((get) => {
 export const searchQueryAtom = atom('');
 export const selectedContactNameAtom = atom<string | null>(null);
 
-const timerId: NodeJS.Timeout | undefined = undefined;
+let timerId: ReturnType<typeof setTimeout> | undefined;
 subscribe(addressBookAtom, (addressBook) => {
   clearTimeout(timerId);
-  setTimeout(() => {
-    saveAddressBookToFile(addressBook);
+  timerId = setTimeout(() => {
+    window.nexusElectron.settings.saveAddressBook(addressBook).catch(console.error);
   }, 0);
 });
 

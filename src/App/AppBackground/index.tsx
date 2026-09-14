@@ -1,5 +1,4 @@
 // External
-import { existsSync } from 'fs';
 import styled from '@emotion/styled';
 import { useAtomValue } from 'jotai';
 
@@ -58,7 +57,7 @@ export default function AppBackground() {
     return <NexusThemeBg />;
   }
 
-  if (!!wallpaper && existsSync(wallpaper)) {
+  if (wallpaper) {
     return (
       <CustomWallpaper
         image={wallpaper}

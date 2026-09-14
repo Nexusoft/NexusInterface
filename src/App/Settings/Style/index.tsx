@@ -1,7 +1,5 @@
 // External
 import { useAtomValue } from 'jotai';
-import { ipcRenderer } from 'electron';
-import fs from 'fs';
 
 // Internal
 import SettingsField from 'components/SettingsField';
@@ -13,7 +11,6 @@ import { updateSettings, settingsAtom } from 'lib/settings';
 import { showNotification } from 'lib/ui';
 import { loadCustomTheme } from 'lib/theme';
 import { accountsQuery } from 'lib/user';
-import { walletDataDir } from 'consts/paths';
 import { webGLAvailable } from 'consts/misc';
 import memoize from 'utils/memoize';
 
@@ -53,30 +50,18 @@ const setAddressStyle = (addressStyle: AddressStyle) =>
   updateSettings({ addressStyle });
 
 async function openPickThemeFileDialog() {
-  const files = await ipcRenderer.invoke('show-open-dialog', {
-    title: __('Select custom theme file'),
-    properties: ['openFile'],
-    filters: [{ name: 'Theme JSON', extensions: ['json'] }],
-  });
-  if (files?.[0]) {
-    loadCustomTheme(files[0]);
-  }
+  await loadCustomTheme();
 }
 
 async function exportThemeFileDialog() {
-  const path = await ipcRenderer.invoke('show-save-dialog', {
-    title: 'Save Theme File',
-    properties: ['saveFile'],
-    filters: [{ name: 'Theme JSON', extensions: ['json'] }],
-  });
-  if (!path) return;
-  fs.copyFile(walletDataDir + '/theme.json', path, (err) => {
-    if (err) {
-      console.error(err);
-      showNotification(err?.message, 'error');
+  try {
+    const exported = await window.nexusElectron.theme.exportToDialog();
+    if (exported) {
+      showNotification(__('Theme exported'), 'success');
     }
-    showNotification(__('Theme exported'), 'success');
-  });
+  } catch (err: any) {
+    showNotification(err?.message, 'error');
+  }
 }
 
 export default function SettingsStyle() {

@@ -1,5 +1,17 @@
-import { ipcRenderer, MenuItemConstructorOptions } from 'electron';
 import { MouseEvent } from 'react';
+
+export interface MenuItemConstructorOptions {
+  label?: string;
+  accelerator?: string;
+  role?: string;
+  type?: string;
+  id?: string;
+  enabled?: boolean;
+  visible?: boolean;
+  checked?: boolean;
+  click?: (...args: any[]) => void;
+  submenu?: MenuItemConstructorOptions[];
+}
 
 export const defaultMenu: MenuItemConstructorOptions[] = [
   {
@@ -16,7 +28,7 @@ export const defaultMenu: MenuItemConstructorOptions[] = [
 
 export function showDefaultMenu(e: MouseEvent<HTMLElement>) {
   e.preventDefault();
-  ipcRenderer.invoke('popup-context-menu', defaultMenu);
+  void window.nexusElectron.app.popupContextMenu(defaultMenu);
 }
 
 type CleanTemplateItem = Omit<
@@ -66,8 +78,7 @@ export async function popupContextMenu(
 ) {
   const actions: Record<string, Function> = {};
   const cleanTemplate = template.map((item) => deconstructItem(item, actions));
-  const id = await ipcRenderer.invoke(
-    'popup-context-menu',
+  const id = await window.nexusElectron.app.popupContextMenu(
     cleanTemplate,
     webContentsId
   );

@@ -1,6 +1,5 @@
 // External
 import { useRef, useState, useEffect, HTMLAttributes, ReactNode } from 'react';
-import { clipboard } from 'electron';
 import styled from '@emotion/styled';
 
 // Internal
@@ -132,7 +131,7 @@ function useCheckOverflow() {
 }
 
 function copyAddress(address: string) {
-  clipboard.writeText(address);
+  window.nexusElectron.clipboard.writeText(address);
   showNotification(__('Address has been copied to clipboard'), 'success');
 }
 

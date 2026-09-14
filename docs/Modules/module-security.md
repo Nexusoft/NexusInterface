@@ -4,7 +4,13 @@ Since Nexus Wallet Modules can be developed by third-party developers, security 
 
 This article outlines the main security mechanisms we've implemented to minimize risks that third-party modules may pose to wallet users.
 
-## WebView Security
+## WebView Security (NEXUS v2)
+
+> Production module WebViews run with `contextIsolation: true`,
+> `nodeIntegration: false`, and `sandbox: true`. The page receives only the
+> documented `window.NEXUS` API via `contextBridge`. See
+> [Module WebView isolation](../security/module-webview-isolation.md) and
+> [NEXUS v2 migration](./nexus-v2-migration.md).
 
 Modules run inside a WebView, which is isolated in a separate process from the base wallet. This separation ensures that module code cannot directly affect the wallet’s functionality.
 

@@ -13,13 +13,38 @@ import { prepareSessionInfo } from 'lib/session';
 import UT from 'lib/usageTracking';
 import App from './App';
 
+async function bridgeSelfTest() {
+  try {
+    const status = await window.nexusElectron.core.getStatus();
+    console.info('renderer.bridge.selftest.core_get_status.ok', {
+      exists: !!status?.exists,
+      running: !!status?.running,
+    });
+  } catch (error) {
+    console.error('renderer.bridge.selftest.core_get_status.failed', {
+      message: error?.message || String(error),
+      code: error?.code,
+    });
+  }
+}
+
 async function run() {
+  console.info('renderer.bootstrap.start');
+  await bridgeSelfTest();
   try {
     const { manualDaemon } = store.get(settingsAtom);
     if (!manualDaemon) {
-      await startCore();
+      console.info('renderer.bootstrap.startCore.begin');
+      try {
+        await startCore();
+      } catch (error) {
+        // startCore already records coreConnectionErrorAtom; keep rendering so
+        // the UI can show the concrete failure instead of a blank window.
+        console.error('renderer.bootstrap.startCore.error', error);
+      }
     }
   } finally {
+    console.info('renderer.bootstrap.render.begin');
     prepareWallet();
     prepareModules();
 
