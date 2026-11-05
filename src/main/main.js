@@ -508,7 +508,12 @@ function operationError(err) {
   // a lower layer accidentally included them in an Error message.
   const message = redactSensitiveText(rawMessage) || 'Operation failed';
   log.warn(`IPC operation failed: ${message}`);
-  return ipcError('OPERATION_FAILED', message);
+  return ipcError(
+    err?.code === 'CORE_OUTCOME_UNKNOWN'
+      ? 'CORE_OUTCOME_UNKNOWN'
+      : 'OPERATION_FAILED',
+    message
+  );
 }
 
 const CORE_TRACE_CHANNELS = new Set([

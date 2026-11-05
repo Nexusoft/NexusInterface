@@ -36,6 +36,7 @@ const SENSITIVE_PARAM_KEY_SET = new Set(SENSITIVE_PARAM_KEYS);
 const MUTABLE_ASSET_RESERVED_NAMES = new Set(['pin', 'address', 'session']);
 const MAX_CORE_CREDENTIAL_LENGTH = 1024;
 const MAX_UINT64 = 18446744073709551615n;
+const { validateCoreAmount } = require('../../shared/utils/amount');
 
 // Multi-user Core installs automatically attach a session id to structured
 // calls. Every registered endpoint therefore accepts an optional session.
@@ -204,9 +205,7 @@ function validateRecipient(value, index) {
   }
   const recipient = {
     address_to: validateAddress(value.address_to, `recipients[${index}].address_to`),
-    amount: assertFiniteNumber(value.amount, `recipients[${index}].amount`, {
-      min: 0,
-    }),
+    amount: validateCoreAmount(value.amount),
   };
   if (value.reference !== undefined) {
     recipient.reference = validateUint64(

@@ -1,4 +1,5 @@
 import fs from 'fs/promises';
+import { renameSync } from 'fs';
 import http from 'http';
 import https from 'https';
 import path from 'path';
@@ -10,15 +11,13 @@ import {
   validateCoreRpcPath,
 } from './ipc/coreTransport';
 import { redactSensitiveText } from './ipc/coreRpcRegistry';
+import { createConfigOwner } from './ipc/configOwner';
 import {
   fromKeyValues,
   parseBooleanFlag,
   resolveEmbeddedCoreConnection,
   toKeyValues,
 } from './ipc/coreConf';
-
-let cachedEmbeddedConfig;
-let embeddedConfigLoadPromise;
 
 /**
  * Build the connection config the wallet will use, matching historical
@@ -27,19 +26,17 @@ let embeddedConfigLoadPromise;
  * - SSL/port preferences from wallet settings overlay conf values so the GUI
  *   and the Core process it launches stay aligned
  */
-async function loadEmbeddedConfig(settings) {
-  if (cachedEmbeddedConfig) return cachedEmbeddedConfig;
-  if (embeddedConfigLoadPromise) return embeddedConfigLoadPromise;
-
-  embeddedConfigLoadPromise = (async () => {
+const embeddedConfigOwner = createConfigOwner(
+  async (settings, assertCurrent) => {
     await fs.mkdir(settings.coreDataDir, { recursive: true });
     const configPath = path.join(settings.coreDataDir, 'nexus.conf');
     let config = {};
     try {
       config = fromKeyValues(await fs.readFile(configPath, 'utf8'));
-    } catch {
-      // A first launch creates the configuration below.
+    } catch (error) {
+      if (error.code !== 'ENOENT') throw error;
     }
+    assertCurrent();
 
     const resolved = resolveEmbeddedCoreConnection(config, {
       embeddedCoreUseNonSSL: settings.embeddedCoreUseNonSSL,
@@ -49,37 +46,55 @@ async function loadEmbeddedConfig(settings) {
     });
 
     if (resolved.changed) {
-      await fs.writeFile(configPath, toKeyValues(resolved.conf), {
-        encoding: 'utf8',
-        mode: 0o600,
-      });
+      const temporaryPath = `${configPath}.${crypto
+        .randomBytes(16)
+        .toString('hex')}.tmp`;
+      let cleanupTemporary = true;
+      try {
+        try {
+          await fs.writeFile(temporaryPath, toKeyValues(resolved.conf), {
+            encoding: 'utf8',
+            mode: 0o600,
+            flag: 'wx',
+          });
+        } catch (error) {
+          if (error.code === 'EEXIST') cleanupTemporary = false;
+          throw error;
+        }
+        assertCurrent();
+        renameSync(temporaryPath, configPath);
+      } finally {
+        if (cleanupTemporary) {
+          try {
+            await fs.unlink(temporaryPath);
+          } catch (error) {
+            if (error.code !== 'ENOENT') {
+              console.warn('core.config.temp_cleanup.failed', {
+                configPath,
+                code: error.code,
+              });
+            }
+          }
+        }
+      }
+      assertCurrent();
       console.info('core.config.written', {
         configPath,
         ...summarizeConfig(resolved.connection),
       });
     }
 
-    cachedEmbeddedConfig = resolved.connection;
     console.info('core.config.resolved', {
       mode: 'embedded',
       configPath,
       ...summarizeConfig(resolved.connection),
     });
-    return cachedEmbeddedConfig;
-  })();
-
-  try {
-    return await embeddedConfigLoadPromise;
-  } finally {
-    // Clear the in-flight promise so a failed load can be retried on the next
-    // call. Successful loads are still short-circuited by cachedEmbeddedConfig.
-    embeddedConfigLoadPromise = undefined;
+    return resolved.connection;
   }
-}
+);
 
 export function clearCoreConfigCache() {
-  cachedEmbeddedConfig = undefined;
-  embeddedConfigLoadPromise = undefined;
+  embeddedConfigOwner.invalidate();
 }
 
 function summarizeConfig(config) {
@@ -105,7 +120,7 @@ export async function getCoreConfiguration() {
       apiPassword: settings.manualDaemonApiPassword || '',
     };
   }
-  return loadEmbeddedConfig(settings);
+  return embeddedConfigOwner.get(settings);
 }
 
 export async function getPublicCoreConfiguration() {
@@ -143,7 +158,13 @@ function requestCore({ method, endpoint, params, config, timeout = 30000 }) {
 
   return new Promise((resolve, reject) => {
     const endpointDesc = `${apiSSL ? 'HTTPS' : 'HTTP'} ${config.ip}:${port}`;
-    const fail = (error) => {
+    let settled = false;
+    let responseStream;
+    let deadline;
+    const fail = (error, transportFailure = false) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(deadline);
       // Probe/wait loops can fail many times while Core is still binding; keep
       // transport failure logs for non-probe callers (callCoreRpc).
       if (endpoint !== 'system/get/info' || timeout > 2500) {
@@ -163,30 +184,75 @@ function requestCore({ method, endpoint, params, config, timeout = 30000 }) {
       // Build an enriched error that exposes the safe endpoint context (no
       // credentials) so the renderer can show a useful diagnostic message.
       const safeMessage = error?.message || String(error);
-      const enriched = new Error(`${endpointDesc}: ${safeMessage}`);
+      const pathSegments = endpoint.split('?')[0].split('/');
+      const potentialMutation = ![
+        'get',
+        'list',
+        'status',
+        'transactions',
+        'validate',
+      ].includes(pathSegments[1]);
+      const unknownOutcome = transportFailure && potentialMutation;
+      const debit = pathSegments[0] === 'finance' && pathSegments[1] === 'debit';
+      const enriched = new Error(unknownOutcome
+        ? debit
+          ? `Transaction outcome is unknown: Core may have submitted it. Check transaction history and balances before sending again. ${endpointDesc}: ${safeMessage}`
+          : `Core operation outcome is unknown: Core may have completed it. Check its state before retrying. ${endpointDesc}: ${safeMessage}`
+        : `${endpointDesc}: ${safeMessage}`);
       // Preserve metadata so callers can distinguish ECONNREFUSED, timeout,
       // HTTP status errors, auth failures, and malformed JSON.
       if (error?.code !== undefined) enriched.code = error.code;
       if (error?.statusCode !== undefined) enriched.statusCode = error.statusCode;
       if (error?.errno !== undefined) enriched.errno = error.errno;
+      if (unknownOutcome) enriched.code = 'CORE_OUTCOME_UNKNOWN';
       reject(enriched);
     };
 
     const request = client.request(options, (response) => {
-      let data = '';
-      response.setEncoding('utf8');
+      responseStream = response;
+      const chunks = [];
+      let size = 0;
       response.on('data', (chunk) => {
-        data += chunk;
-      });
-      response.on('end', () => {
-        let parsed;
-        try {
-          parsed = data ? JSON.parse(data) : undefined;
-        } catch {
-          fail(new Error('Core response is not valid JSON'));
+        size += chunk.length;
+        if (size > 32 * 1024 * 1024) {
+          const error = new Error('Core response exceeds the 32 MiB limit');
+          fail(error, true);
+          response.destroy();
+          request.destroy();
           return;
         }
-        if (response.statusCode && response.statusCode >= 200 && response.statusCode < 300) {
+        chunks.push(chunk);
+      });
+      response.once('error', (error) => {
+        fail(error, true);
+        response.destroy();
+        request.destroy();
+      });
+      response.once('aborted', () => fail(new Error('Core response was aborted'), true));
+      response.once('close', () => {
+        if (!response.complete) fail(new Error('Core response closed prematurely'), true);
+      });
+      response.on('end', () => {
+        if (settled) return;
+        let parsed;
+        try {
+          const data = Buffer.concat(chunks).toString('utf8');
+          parsed = data ? JSON.parse(data) : undefined;
+        } catch {
+          fail(new Error('Core response is not valid JSON'), true);
+          return;
+        }
+        if (parsed?.error) {
+          const error = parsed.error;
+          if (typeof error === 'object') error.statusCode = response.statusCode;
+          fail(error);
+        } else if (response.statusCode && response.statusCode >= 200 && response.statusCode < 300) {
+          if (/^finance\/debit\//.test(endpoint) && parsed?.result?.success !== true) {
+            fail(new Error('Core response did not confirm the transaction'), true);
+            return;
+          }
+          settled = true;
+          clearTimeout(deadline);
           resolve(parsed?.result);
         } else {
           const error =
@@ -198,10 +264,16 @@ function requestCore({ method, endpoint, params, config, timeout = 30000 }) {
         }
       });
     });
+    deadline = setTimeout(() => {
+      const error = new Error('Core request deadline exceeded');
+      fail(error, true);
+      responseStream?.destroy();
+      request.destroy();
+    }, timeout);
     request.once('timeout', () =>
       request.destroy(new Error('Core request timed out'))
     );
-    request.once('error', fail);
+    request.once('error', (error) => fail(error, true));
     if (body) request.write(body);
     request.end();
   });
