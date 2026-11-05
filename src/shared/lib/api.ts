@@ -37,9 +37,11 @@ export interface CoreInfo {
   litemode: boolean;
   nolegacy: boolean;
   blocks: number;
-  synchronized: boolean;
-  syncing:
+  synchronized?: boolean;
+  synchronizing?: boolean;
+  syncing?:
     | false
+    | true
     | {
         networkBlock: number;
         downloadRate: number;

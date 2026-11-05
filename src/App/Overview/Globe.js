@@ -8,6 +8,9 @@ import Curve from './Curve';
 import Point from './Point';
 import { callAPI } from 'lib/api';
 import Color from 'color';
+import { createPeerRefresh } from './peerRefresh';
+
+__ = __context('Overview');
 
 const MaxDisplayPoints = 64;
 
@@ -18,6 +21,13 @@ const GlobeContainer = styled.div({
   right: 0,
   bottom: 0,
   overflow: 'hidden',
+});
+
+const PeerError = styled.div({
+  position: 'absolute',
+  bottom: 20,
+  left: 20,
+  pointerEvents: 'none',
 });
 
 /**
@@ -42,6 +52,19 @@ export default class Globe extends Component {
     this.contextRestoredHandler = this.contextRestoredHandler.bind(this);
     this.pointRegistry = [];
     this.curveRegistry = [];
+    this.state = { peerError: null };
+    this.peerRefresh = createPeerRefresh({
+      load: () => this.loadPeerLocations(),
+      onSuccess: (peers) => {
+        this.pointRegister(peers);
+        this.setState({ peerError: null });
+      },
+      onError: (error) => {
+        console.error('core.peer_list.failed', error);
+        this.removeAllPoints();
+        this.setState({ peerError: String(error?.message || error) });
+      },
+    });
   }
 
   /**
@@ -51,9 +74,6 @@ export default class Globe extends Component {
    */
   componentDidMount() {
     try {
-      this.props.handleOnLineRender(this.animateArcs);
-      this.props.handleRemoveAllPoints(this.removeAllPoints);
-
       const WIDTH = window.innerWidth;
       const HEIGHT = window.innerHeight;
       const VIEW_ANGLE = 45;
@@ -114,7 +134,7 @@ export default class Globe extends Component {
 
       // Add pin for user
       this.addSelfPoint();
-      this.pointRegister();
+      if (this.props.coreAvailable) this.peerRefresh.start();
 
       const context = this.renderer.getContext();
 
@@ -186,8 +206,14 @@ export default class Globe extends Component {
       const newColor = new THREE.Color(this.props.globeColor);
       this.globe.children[0].material.color = newColor; // [0] == globe
     }
-    if (this.props.connections !== prevProps.connections) {
-      this.pointRegister();
+    if (this.props.coreAvailable !== prevProps.coreAvailable) {
+      if (this.props.coreAvailable) {
+        this.peerRefresh.start();
+      } else {
+        this.peerRefresh.stop();
+        this.removeAllPoints();
+        this.setState({ peerError: null });
+      }
     }
     if (this.props.blocks !== prevProps.blocks) {
       this.animateArcs();
@@ -200,10 +226,12 @@ export default class Globe extends Component {
    * @memberof Globe
    */
   componentWillUnmount() {
+    this.peerRefresh.stop();
+    this.unmounted = true;
     this.stop();
     window.removeEventListener('resize', this.onWindowResize, false);
-    this.controls.dispose();
-    if (this.threeRootElement.children.length > 0) {
+    this.controls?.dispose();
+    if (this.renderer && this.threeRootElement?.children.length > 0) {
       this.threeRootElement.removeChild(this.renderer.domElement);
     }
   }
@@ -214,101 +242,64 @@ export default class Globe extends Component {
    * @returns
    * @memberof Globe
    */
-  async pointRegister() {
-    let peerInfo;
-    try {
-      peerInfo = await callAPI('system/list/peers');
-    } catch (err) {}
-    if (!peerInfo) return;
-    if (peerInfo.length > MaxDisplayPoints) {
-      peerInfo.length = MaxDisplayPoints;
+  async loadPeerLocations() {
+    const peers = await callAPI('system/list/peers');
+    if (
+      !Array.isArray(peers) ||
+      peers.some((peer) => typeof peer?.address !== 'string')
+    ) {
+      throw new Error('Invalid peer list returned by Core');
     }
-
-    //console.error(peerInfo);
-
-    // take the peerInfo look up the Geo Data in the maxmind DB
-    // and if there are any points that exist and match coords
-    // update the registry entry data
-
+    const peerInfo = peers.slice(0, MaxDisplayPoints);
     const addresses = peerInfo.map((peer) => peer.address.split(':')[0]);
-    let geoLocations;
-    try {
-      geoLocations = await window.nexusElectron.fileAssets.lookupGeoIp(addresses);
-    } catch (error) {
-      console.error(error);
-      return;
-    }
+    const geoLocations = addresses.length
+      ? await window.nexusElectron.fileAssets.lookupGeoIp(addresses)
+      : [];
+    return { peerInfo, geoLocations };
+  }
+
+  pointRegister({ peerInfo, geoLocations }) {
+    const signature = JSON.stringify([
+      peerInfo.map(({ address, type, outgoing }) => [address, type, outgoing]),
+      geoLocations,
+      this.props.pillarColor,
+      this.props.archColor,
+    ]);
+    if (signature === this.peerSignature) return;
     const geoDataByAddress = new Map(
       geoLocations
         .filter(Boolean)
         .map((location) => [location.address, location])
     );
-    let newRegistry = peerInfo
-      .map((peer) => {
-        const GeoData = geoDataByAddress.get(peer.address.split(':')[0]);
-        // TODO: add checks for lisp and change color appropreately
-        //console.log(this.props.pillarColor);
-        if (!GeoData) return {}; //Usecase for private or testnet when there is no outside ip address
-        return {
-          lat: GeoData.latitude,
-          lng: GeoData.longitude,
+    const points = new Map();
+    peerInfo.forEach((peer) => {
+      const location = geoDataByAddress.get(peer.address.split(':')[0]);
+      if (!location) return;
+      const key = JSON.stringify([location.latitude, location.longitude]);
+      const existing = points.get(key);
+      if (existing) {
+        existing.params.peerConnections++;
+      } else {
+        points.set(key, {
+          lat: location.latitude,
+          lng: location.longitude,
           params: {
             type: peer.type,
             outgoing: peer.outgoing,
-            name: GeoData.timeZone,
+            name: location.timeZone,
             color: this.props.pillarColor,
             peerConnections: 1,
           },
-        };
-      })
-      .map((peer, i, array) => {
-        ///Find out how many peers will be on pillar
-        let duplicateIndex = array
-          .map(
-            (internalPoint) =>
-              peer.lat === internalPoint.lat && peer.lng === internalPoint.lng
-          )
-          .filter((e) => e);
-
-        return {
-          ...peer,
-          params: {
-            ...peer.params,
-            peerConnections: 1 + duplicateIndex.length,
-          },
-        };
-      })
-      .map((peer, i, array) => {
-        let existIndex = this.pointRegistry.findIndex(
-          (point) => peer.lat === point.lat && peer.lng === point.lng
-        );
-        let duplicateIndex = array.findIndex(
-          (internalPoint) =>
-            peer.lat === internalPoint.lat && peer.lng === internalPoint.lng
-        );
-
-        // if not an internal duplicate and already exists
-        if (existIndex >= 0 && duplicateIndex === i) {
-          return this.pointRegistry[existIndex];
-        } else if (duplicateIndex === i) {
-          let newPoint = new Point(peer.lat, peer.lng, peer.params);
-          this.allPoints.add(newPoint.pillar);
-          return newPoint;
-        }
-      })
-      .filter((e) => e);
-
-    this.pointRegistry.map((point) => {
-      let existIndex = newRegistry.findIndex(
-        (peer) => peer.lat === point.lat && peer.lng === point.lng
-      );
-
-      if (existIndex < 0 && point.params.type !== 'SELF') {
-        this.destroyPoint(point);
+        });
       }
     });
-    //console.error(newRegistry);
-    this.pointRegistry = newRegistry;
+    this.removeAllPoints();
+    points.forEach(({ lat, lng, params }) => {
+      const point = new Point(lat, lng, params);
+      this.allPoints.add(point.pillar);
+      this.pointRegistry.push(point);
+    });
+    this.peerSignature = signature;
     this.arcRegister();
   }
 
@@ -318,14 +309,16 @@ export default class Globe extends Component {
    * @memberof Globe
    */
   addSelfPoint() {
-    let selfIndex = this.pointRegistry.indexOf(
+    let selfIndex = this.pointRegistry.findIndex(
       (point) => point.params.type === 'SELF'
     );
 
-    if (selfIndex < 0) {
+    if (selfIndex < 0 && !this.selfLookupPending) {
+      this.selfLookupPending = true;
       window.nexusElectron.fileAssets
         .lookupPublicGeoIp()
         .then((data) => {
+          if (this.unmounted) return;
           let self = new Point(data.latitude, data.longitude, {
             color: new Color(this.props.pillarColor).negate().hex(),
             name: data.timeZone,
@@ -336,7 +329,10 @@ export default class Globe extends Component {
           this.allPoints.add(self.pillar);
           this.arcRegister();
         })
-        .catch((e) => console.error(e));
+        .catch((e) => console.error(e))
+        .finally(() => {
+          this.selfLookupPending = false;
+        });
     }
   }
 
@@ -346,16 +342,9 @@ export default class Globe extends Component {
    * @memberof Globe
    */
   removeAllPoints() {
-    this.pointRegistry.map((point) => {
-      if (point.params.type === 'SELF') {
-        setTimeout(() => {
-          //this.destroyPoint(point);
-        }, 11000);
-      } else {
-        setTimeout(() => {
-          this.destroyPoint(point);
-        }, Math.random() * 10000);
-      }
+    this.peerSignature = undefined;
+    this.pointRegistry.slice().forEach((point) => {
+      if (point.params.type !== 'SELF') this.destroyPoint(point);
     });
   }
 
@@ -372,15 +361,7 @@ export default class Globe extends Component {
 
     this.allPoints.remove(deadPoint.pillar);
     this.curveRegistry
-      .filter((arc) => {
-        if (
-          (arc.pointOne.lat === deadPoint.lat &&
-            arc.pointOne.lat === deadPoint.lat) ||
-          (arc.pointTwo.lat === deadPoint.lat &&
-            arc.pointTwo.lat === deadPoint.lat)
-        )
-          return arc;
-      })
+      .filter((arc) => arc.pointOne === deadPoint || arc.pointTwo === deadPoint)
       .map((arc) => {
         this.destroyArc(arc);
       });
@@ -537,6 +518,11 @@ export default class Globe extends Component {
     return (
       <GlobeContainer>
         <div ref={(element) => (this.threeRootElement = element)} />
+        {this.state.peerError && (
+          <PeerError>
+            {__('Peer locations unavailable')}: {this.state.peerError}
+          </PeerError>
+        )}
       </GlobeContainer>
     );
   }

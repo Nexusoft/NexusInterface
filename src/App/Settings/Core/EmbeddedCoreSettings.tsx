@@ -6,9 +6,8 @@ import Button from 'components/Button';
 import Switch from 'components/Switch';
 import { TextField } from 'components/TextField';
 import { useFieldValue } from 'lib/form';
-import { updateSettings } from 'lib/settings';
 import { confirm, openErrorDialog } from 'lib/dialog';
-import { restartCore, resyncLiteCore } from 'lib/core';
+import { resyncLiteCore } from 'lib/core';
 import { defaultConfig } from 'lib/coreConfig';
 import { preRelease } from 'consts/misc';
 import { consts } from 'styles';
@@ -71,19 +70,6 @@ export default function EmbeddedCoreSettings() {
       <TestnetSettings />
 
       <PortSettings />
-
-      <SettingsField
-        connectLabel
-        label={__('Clear peer connections')}
-        subLabel={__('Clear all stored peer connections and restart Nexus')}
-      >
-        <Button
-          onClick={clearPeerConnections}
-          style={{ height: consts.inputHeightEm + 'em' }}
-        >
-          {__('Clear')}
-        </Button>
-      </SettingsField>
 
       <AdvancedOptions />
     </>
@@ -430,24 +416,6 @@ function AdvancedOptions() {
 }
 
 /**
- *  Asks to clear Peer Connections. Only for legacy mode.
- */
-async function clearPeerConnections() {
-  const confirmed = await confirm({
-    question: __('Clear peer connections') + '?',
-    note: 'Nexus Core will be restarted. After that, all stored peer connections will be reset.',
-  });
-  if (confirmed) {
-    try {
-      await updateSettings({ clearPeers: true });
-      await restartCore();
-    } catch (err: any) {
-      openErrorDialog({ message: err && err.message });
-    }
-  }
-}
-
-/**
  * Asks to resync when using Lite mode
  */
 async function resyncLiteMode() {
@@ -459,7 +427,6 @@ async function resyncLiteMode() {
   });
   if (confirmed) {
     try {
-      await updateSettings({ clearPeers: true });
       await resyncLiteCore();
     } catch (err: any) {
       openErrorDialog({ message: err && err.message });

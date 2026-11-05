@@ -3,7 +3,7 @@ import { useAtomValue } from 'jotai';
 
 // Internal
 import { formatNumber, formatRelativeTime } from 'lib/intl';
-import { useCoreInfo, blockDateAtom } from 'lib/coreInfo';
+import { useCoreInfo, useSyncState, blockDateAtom } from 'lib/coreInfo';
 
 // Images
 import Connections0 from 'icons/Connections0.svg';
@@ -39,9 +39,35 @@ function getConnectionsIcon(conn?: number) {
 
 export function ConnectionsStat() {
   const coreInfo = useCoreInfo();
+  const syncState = useSyncState();
   const connections = coreInfo?.connections;
   return (
-    <Stat label={__('Connections')} icon={getConnectionsIcon(connections)}>
+    <Stat
+      label={__('Connections')}
+      icon={getConnectionsIcon(connections)}
+      waitForCore={false}
+      tooltip={
+        <div>
+          <div>
+            {coreInfo ? __('Core API reachable') : __('Core API status unknown')}
+          </div>
+          <div>
+            {typeof connections !== 'number'
+              ? __('Peer connectivity unknown')
+              : connections > 0
+                ? __('Peer connectivity active')
+                : __('No peer connections')}
+          </div>
+          <div>
+            {syncState === 'synchronized'
+              ? __('Synchronized')
+              : syncState === 'synchronizing'
+                ? __('Synchronizing')
+                : __('Synchronization status unknown')}
+          </div>
+        </div>
+      }
+    >
       {typeof connections === 'number' ? connections : 'N/A'}
     </Stat>
   );

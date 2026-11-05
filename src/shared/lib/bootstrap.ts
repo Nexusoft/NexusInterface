@@ -89,7 +89,8 @@ subscribe(coreInfoQuery.valueAtom, async (coreInfo) => {
     bootstrapStatus.step === 'idle' &&
     !manualDaemon &&
     !coreInfo?.litemode &&
-    coreInfo?.syncing !== false &&
+    typeof coreInfo?.syncing === 'object' &&
+    coreInfo.syncing !== null &&
     coreInfo.syncing.completed < 50 &&
     coreInfo.syncing.completed >= 0 &&
     !coreInfo?.private &&

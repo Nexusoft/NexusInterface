@@ -1,4 +1,4 @@
-import { coreInfoQuery } from 'lib/coreInfo';
+import { freshCoreInfoAtom, syncStateAtom } from 'lib/coreInfo';
 import { openConfirmDialog } from 'lib/dialog';
 import { goToSend } from 'lib/send';
 import { userStatusQuery } from 'lib/session';
@@ -58,13 +58,16 @@ const getActiveModule = () => {
 
 function buildSanitizedContextExtras(moduleName?: string | null) {
   const settings = store.get(settingsAtom);
+  const coreInfo = store.get(freshCoreInfoAtom);
   const { locale, fiatCurrency, addressStyle } = settings;
   const name = moduleName ?? store.get(activeAppModuleNameAtom);
   return {
     walletVersion: typeof APP_VERSION === 'string' ? APP_VERSION : '',
     theme: store.get(themeAtom),
     settings: getSettingsForModules(locale, fiatCurrency, addressStyle),
-    coreInfo: store.get(coreInfoQuery.valueAtom),
+    coreInfo: coreInfo
+      ? { ...coreInfo, synchronized: store.get(syncStateAtom) === 'synchronized' }
+      : undefined,
     userStatus: store.get(userStatusQuery.valueAtom),
     moduleState: name ? store.get(moduleStatesAtom)[name] : null,
   };
@@ -391,7 +394,7 @@ export function prepareWebView() {
     void publishContextUpdate();
   });
 
-  subscribe(coreInfoQuery.valueAtom, () => {
+  subscribe(freshCoreInfoAtom, () => {
     void publishContextUpdate();
   });
 

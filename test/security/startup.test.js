@@ -189,14 +189,8 @@ test('embedded Core start always supplies API auth and probes already-running Co
   );
   assert.doesNotMatch(coreSettings, /await stopCore\(\)/);
   assert.doesNotMatch(coreSettings, /window\.nexusElectron\.settings\.update/);
-  assert.match(
-    embeddedCoreSettings,
-    /await updateSettings\(\{ clearPeers: true \}\);[\s\S]*await restartCore\(\)/
-  );
-  assert.match(
-    embeddedCoreSettings,
-    /await updateSettings\(\{ clearPeers: true \}\);[\s\S]*await resyncLiteCore\(\)/
-  );
+  assert.doesNotMatch(embeddedCoreSettings, /clearPeerConnections|clearPeers/);
+  assert.match(embeddedCoreSettings, /await resyncLiteCore\(\)/);
   assert.match(
     liteModeNotice,
     /await updateSettings\([\s\S]*await restartCore\(\)/

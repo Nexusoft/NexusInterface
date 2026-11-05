@@ -134,6 +134,7 @@ export const stopCore = async (forRestart?: boolean) => {
  * Restart Nexus Core
  */
 export const restartCore = async () => {
+  store.set(coreInfoPausedAtom, true);
   try {
     const restartResult =
       (await window.nexusElectron.core.restart()) as CoreStartResult;

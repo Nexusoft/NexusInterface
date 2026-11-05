@@ -6,7 +6,7 @@ import { animations } from 'styles';
 import Tooltip from 'components/Tooltip';
 import Icon from 'components/Icon';
 import { formatNumber } from 'lib/intl';
-import { useCoreInfo, useSynchronized } from 'lib/coreInfo';
+import { useCoreInfo, useSyncState } from 'lib/coreInfo';
 import checkIcon from 'icons/check.svg';
 import syncingIcon from 'icons/syncing.svg';
 
@@ -19,17 +19,29 @@ const SpinningIcon = styled(Icon)({
 });
 
 export default function SyncStatus() {
-  const synchronized = useSynchronized();
-  return synchronized ? (
+  const syncState = useSyncState();
+  return syncState === 'synchronized' ? (
     <Tooltip.Trigger tooltip={__('Synchronized')}>
       <StatusIcon>
         <Icon icon={checkIcon} />
       </StatusIcon>
     </Tooltip.Trigger>
   ) : (
-    <Tooltip.Trigger tooltip={<SyncTooltip />}>
+    <Tooltip.Trigger
+      tooltip={
+        syncState === 'unknown' ? (
+          __('Synchronization status unknown')
+        ) : (
+          <SyncTooltip />
+        )
+      }
+    >
       <StatusIcon>
-        <SpinningIcon icon={syncingIcon} />
+        {syncState === 'unknown' ? (
+          <Icon icon={syncingIcon} />
+        ) : (
+          <SpinningIcon icon={syncingIcon} />
+        )}
       </StatusIcon>
     </Tooltip.Trigger>
   );
@@ -38,7 +50,9 @@ export default function SyncStatus() {
 function SyncTooltip() {
   const coreInfo = useCoreInfo();
   const { syncing, blocks } = coreInfo || {};
-  if (!syncing) return null;
+  if (!syncing || typeof syncing !== 'object') {
+    return <>{__('Synchronizing')}</>;
+  }
 
   const { networkBlock, completed, secondsRemaining, progress } = syncing;
 
