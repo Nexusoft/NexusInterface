@@ -247,6 +247,10 @@ function requestCore({ method, endpoint, params, config, timeout = 30000 }) {
           if (typeof error === 'object') error.statusCode = response.statusCode;
           fail(error);
         } else if (response.statusCode && response.statusCode >= 200 && response.statusCode < 300) {
+          if (/^finance\/debit\//.test(endpoint) && parsed?.result?.success === false) {
+            fail(new Error('Core rejected the transaction'));
+            return;
+          }
           if (/^finance\/debit\//.test(endpoint) && parsed?.result?.success !== true) {
             fail(new Error('Core response did not confirm the transaction'), true);
             return;

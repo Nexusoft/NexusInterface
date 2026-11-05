@@ -94,7 +94,16 @@ test('module send drafts never truncate amounts or accept unsafe numeric inputs'
     const draft = validateSendDraft({ recipients: [{ address: 'abc', amount }] });
     assert.equal(draft.recipients[0].amount, String(amount));
   }
-  for (const amount of ['1'.repeat(65), Number.MAX_SAFE_INTEGER + 1, Infinity, NaN]) {
+  for (const amount of [
+    '1'.repeat(65),
+    '1e2',
+    '1.000000001',
+    '18446744073709551616',
+    'not-an-amount',
+    Number.MAX_SAFE_INTEGER + 1,
+    Infinity,
+    NaN,
+  ]) {
     assert.throws(() => validateSendDraft({ recipients: [{ address: 'abc', amount }] }));
   }
 });
@@ -242,6 +251,8 @@ test('Core transport terminates truncated, slow and oversized responses and neve
         setTimeout(() => response.destroy(), 20);
       } else if (request.url === '/finance/debit/token') {
         response.end(JSON.stringify({ result: { success: false } }));
+      } else if (request.url === '/finance/debit/token-missing') {
+        response.end(JSON.stringify({ result: {} }));
       } else if (request.url === '/finance/credit/any') {
         response.end('{invalid');
       } else if (request.url === '/system/get/slow') {
@@ -277,6 +288,10 @@ test('Core transport terminates truncated, slow and oversized responses and neve
   assert.equal(received.recipients[0].amount, '9007199254740993');
   await assert.rejects(
     rpc.callCoreRpc({ endpoint: 'finance/debit/token', timeout: 500 }),
+    (error) => error.code !== 'CORE_OUTCOME_UNKNOWN' && /rejected the transaction/.test(error.message)
+  );
+  await assert.rejects(
+    rpc.callCoreRpc({ endpoint: 'finance/debit/token-missing', timeout: 500 }),
     (error) => error.code === 'CORE_OUTCOME_UNKNOWN' && /did not confirm/.test(error.message)
   );
   await assert.rejects(

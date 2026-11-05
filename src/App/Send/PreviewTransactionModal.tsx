@@ -10,7 +10,7 @@ import Form from 'components/Form';
 import { Account, callAPI, Token } from 'lib/api';
 import { coreInfoQuery } from 'lib/coreInfo';
 import { openSuccessDialog } from 'lib/dialog';
-import { accountsQuery } from 'lib/user';
+import { accountsQuery, tokensQuery } from 'lib/user';
 import { transactionsQuery } from 'lib/transactions';
 import { formSubmit, required } from 'lib/form';
 import { timeToText } from 'utils/misc';
@@ -259,6 +259,7 @@ export default function PreviewTransactionModal({
                       setOutcomeUnknown(true);
                       transactionsQuery.refetch();
                       accountsQuery.refetch();
+                      tokensQuery.refetch();
                     }
                     throw error;
                   }

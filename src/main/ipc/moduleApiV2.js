@@ -350,7 +350,10 @@ function validateSendDraft(value) {
       ) {
         fail(ERROR_CODES.VALIDATION_FAILED, 'Recipient amount is invalid');
       }
-      if (typeof recipient.amount === 'number' && recipient.amount !== 0) {
+      if (
+        typeof recipient.amount === 'string' ||
+        (typeof recipient.amount === 'number' && recipient.amount !== 0)
+      ) {
         try {
           validateCoreAmount(recipient.amount);
         } catch {

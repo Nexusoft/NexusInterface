@@ -14,6 +14,10 @@ See [Developer's Guide to Nexus Wallet Module](docs/Modules).
 
 See [Translation Guide](docs/Translation.md).
 
+## Architecture diagrams
+
+See the [repository diagrams](docs/Diagrams/README.md) for architecture and transaction-flow documentation.
+
 ## Build and Dev-server Instructions
 
 To get started, install Node.js 22.12.0 or newer and npm 10.9.0 or newer. This repository currently builds against Electron 43. Clone this repository, cd into the NexusInterface directory, run `npm install`, then run `npm run dev` and the dev server will spin up launching the app for you.
