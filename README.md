@@ -22,6 +22,18 @@ To test a production build run `npm run package` and navigate to the _release_ d
 
 Or use the _BuildStandalone-{platform}.sh_ files that include cleaning out old builds.
 
+## Connection diagnostics
+
+The overview's Connections tooltip reports Core API reachability, peer connectivity,
+and synchronization separately. Core information becomes unknown after 30 seconds
+without a successful refresh, or when a request fails or polling is paused. The
+globe refreshes peer identities independently of the connection count; if the
+peer list or location lookup fails, it removes peer locations and shows an error.
+
+The wallet does not automatically restart Core or reset its peer records. The
+former "Clear peer connections" action has been removed because it did not clear
+them. Peer discovery and recovery are Core responsibilities.
+
 ## License
 
 Nexus is released under the terms of the MIT license. See [COPYING](COPYING.MD) for more
