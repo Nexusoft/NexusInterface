@@ -169,15 +169,20 @@ test('peer refresh observes equal-count replacements and clears errors on recove
   assert.equal(events.length, 4);
 });
 
-test('timed out and stopped peer requests cannot publish stale results', async () => {
+test('timed out peer requests retry independently and cannot publish stale results', async () => {
   const clock = fakeClock();
   const events = [];
-  let resolveRequest;
+  let resolveFirstRequest;
+  let resolveStoppedRequest;
   let calls = 0;
   const refresh = createPeerRefresh({
     load: () => {
       calls++;
-      return new Promise((resolve) => { resolveRequest = resolve; });
+      if (calls === 1) {
+        return new Promise((resolve) => { resolveFirstRequest = resolve; });
+      }
+      if (calls === 2) return Promise.resolve('recovered');
+      return new Promise((resolve) => { resolveStoppedRequest = resolve; });
     },
     onSuccess: (value) => events.push(value),
     onError: (error) => events.push(error.message),
@@ -189,17 +194,21 @@ test('timed out and stopped peer requests cannot publish stale results', async (
   refresh.start();
   clock.advance(8);
   assert.deepEqual(events, ['Peer list request timed out']);
-  clock.advance(100);
-  assert.equal(calls, 1);
-  resolveRequest('stale');
-  await flush();
   clock.advance(10);
+  await flush();
   assert.equal(calls, 2);
+  assert.deepEqual(events, ['Peer list request timed out', 'recovered']);
+  resolveFirstRequest('stale');
+  await flush();
+  assert.deepEqual(events, ['Peer list request timed out', 'recovered']);
+  clock.advance(10);
+  assert.equal(calls, 3);
   refresh.stop();
-  resolveRequest('after stop');
+  resolveStoppedRequest('after stop');
   await flush();
   clock.advance(100);
-  assert.deepEqual(events, ['Peer list request timed out']);
+  assert.equal(calls, 3);
+  assert.deepEqual(events, ['Peer list request timed out', 'recovered']);
 });
 
 test('globe and settings wire failure handling and remove the misleading action', () => {

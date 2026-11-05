@@ -27,6 +27,9 @@ export function createPeerRefresh<T>({
     timeout = schedule(() => {
       if (active && current === generation) {
         timedOut = true;
+        const next = ++generation;
+        timeout = undefined;
+        timer = schedule(() => refresh(next), intervalMs);
         onError(new Error('Peer list request timed out'));
       }
     }, timeoutMs);
