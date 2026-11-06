@@ -94,7 +94,9 @@ await NEXUS.wallet.requestSend({
 ```
 
 This only opens the wallet-owned Send review screen. The user must confirm in
-the wallet UI. Modules never receive a generic sign/broadcast API.
+the wallet UI. Supply amounts as decimal strings to preserve their exact value;
+unsafe numeric amounts and overlong amounts are rejected rather than rounded or
+truncated. Modules never receive a generic sign/broadcast API.
 
 ## Manifest capabilities
 

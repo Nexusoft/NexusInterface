@@ -8,7 +8,7 @@ import { accountsQuery, tokensQuery } from 'lib/user';
 import { timeToObject } from 'utils/misc';
 import { store } from 'lib/store';
 import memoize from 'utils/memoize';
-import { Account, Token } from 'lib/api';
+import { Account, Token, NexusBalance, TokenBalance } from 'lib/api';
 
 interface Recipient {
   nameOrAddress?: string;
@@ -171,3 +171,25 @@ export const useSource = () => {
   const source = getSource(sendFrom, accounts, userTokens);
   return source;
 };
+
+export function getSourcePrecision(
+  source: { account?: Account; token?: Token } | null,
+  balances:
+    | [NexusBalance, TokenBalance[]]
+    | readonly [undefined, undefined]
+    | undefined
+) {
+  const decimals =
+    source?.token?.decimals ??
+    (source?.account?.token === '0'
+      ? balances?.[0]?.decimals
+      : balances?.[1]?.find(
+          (balance) => balance.token === source?.account?.token
+        )?.decimals);
+  return typeof decimals === 'number' &&
+    Number.isInteger(decimals) &&
+    decimals >= 0 &&
+    decimals <= 8
+    ? decimals
+    : undefined;
+}

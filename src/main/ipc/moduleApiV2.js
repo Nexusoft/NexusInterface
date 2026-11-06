@@ -1,5 +1,10 @@
 'use strict';
 
+const {
+  expandExponentialNotation,
+  validateCoreAmount,
+} = require('../../shared/utils/amount');
+
 /**
  * Runtime contract for the isolated NEXUS module API (v2).
  * Pure validators — no Electron/Node privileged APIs — so tests can import it.
@@ -348,7 +353,18 @@ function validateSendDraft(value) {
       ) {
         fail(ERROR_CODES.VALIDATION_FAILED, 'Recipient amount is invalid');
       }
-      amount = String(recipient.amount).slice(0, 64);
+      try {
+        validateCoreAmount(recipient.amount);
+      } catch {
+        fail(ERROR_CODES.VALIDATION_FAILED, 'Recipient amount is invalid');
+      }
+      amount =
+        typeof recipient.amount === 'number'
+          ? expandExponentialNotation(recipient.amount)
+          : recipient.amount;
+      if (amount.length > 64) {
+        fail(ERROR_CODES.VALIDATION_FAILED, 'Recipient amount is too long');
+      }
     }
     let reference;
     if (recipient.reference !== undefined) {

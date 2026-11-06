@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Fragment, useState } from 'react';
 import styled from '@emotion/styled';
 
 import ControlledModal from 'components/ControlledModal';
@@ -10,7 +10,7 @@ import Form from 'components/Form';
 import { Account, callAPI, Token } from 'lib/api';
 import { coreInfoQuery } from 'lib/coreInfo';
 import { openSuccessDialog } from 'lib/dialog';
-import { accountsQuery } from 'lib/user';
+import { accountsQuery, tokensQuery } from 'lib/user';
 import { transactionsQuery } from 'lib/transactions';
 import { formSubmit, required } from 'lib/form';
 import { timeToText } from 'utils/misc';
@@ -105,7 +105,7 @@ function TransactionDetails({
   expires,
 }: {
   source: { account?: Account; token?: Token } | null;
-  recipients: { address_to: string; amount: number; reference?: string }[];
+  recipients: { address_to: string; amount: string; reference?: string }[];
   expires?: number;
 }) {
   return (
@@ -193,7 +193,7 @@ const initialValues = {
 
 interface PreviewTransactionModalProps {
   source: { account?: Account; token?: Token } | null;
-  recipients: { address_to: string; amount: number; reference?: string }[];
+  recipients: { address_to: string; amount: string; reference?: string }[];
   expires?: number;
   resetSendForm: () => void;
 }
@@ -204,6 +204,7 @@ export default function PreviewTransactionModal({
   expires,
   resetSendForm,
 }: PreviewTransactionModalProps) {
+  const [outcomeUnknown, setOutcomeUnknown] = useState(false);
   return (
     <ControlledModal>
       {(closeModal) => (
@@ -225,24 +226,43 @@ export default function PreviewTransactionModal({
               initialValues={initialValues}
               onSubmit={formSubmit({
                 submit: async ({ pin }) => {
+                  if (outcomeUnknown) {
+                    throw new Error(
+                      __('Check transaction history before sending again')
+                    );
+                  }
                   const params = {
                     pin,
                     recipients,
                     expires,
                   };
 
-                  if (source?.token) {
-                    return await callAPI('finance/debit/token', {
+                  try {
+                    if (source?.token) {
+                      return await callAPI('finance/debit/token', {
+                        ...params,
+                        from: source.token.address,
+                      });
+                    }
+                    const from = source?.account?.address;
+                    if (!from) throw new Error('A source account is required');
+                    return await callAPI('finance/debit/any', {
                       ...params,
-                      from: source.token.address,
+                      from,
                     });
+                  } catch (error) {
+                    if (
+                      error instanceof Error &&
+                      'code' in error &&
+                      error.code === 'CORE_OUTCOME_UNKNOWN'
+                    ) {
+                      setOutcomeUnknown(true);
+                      transactionsQuery.refetch();
+                      accountsQuery.refetch();
+                      tokensQuery.refetch();
+                    }
+                    throw error;
                   }
-                  const from = source?.account?.address;
-                  if (!from) throw new Error('A source account is required');
-                  return await callAPI('finance/debit/any', {
-                    ...params,
-                    from,
-                  });
                 },
                 onSuccess: () => {
                   UT.Send(source?.token ? 'token' : 'nexus');
@@ -268,7 +288,20 @@ export default function PreviewTransactionModal({
                   placeholder={__('Enter your PIN to confirm')}
                 />
 
-                <SubmitButton skin="primary" uppercase wide className="mt1">
+                {outcomeUnknown && (
+                  <p>
+                    {__(
+                      'Transaction outcome is unknown. Check transaction history and balances before sending again.'
+                    )}
+                  </p>
+                )}
+                <SubmitButton
+                  skin="primary"
+                  uppercase
+                  wide
+                  className="mt1"
+                  disabled={outcomeUnknown}
+                >
                   {({ submitting }) => (
                     <>
                       <Icon icon={sendIcon} />

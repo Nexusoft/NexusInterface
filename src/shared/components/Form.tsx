@@ -236,13 +236,19 @@ Form.Slider = function ({
 
 Form.SubmitButton = ({
   children,
+  disabled,
   ...rest
 }: Omit<ComponentProps<typeof Button>, 'children'> & {
   children: ReactNode | ((props: { submitting: boolean }) => ReactNode);
 }) => {
   const { submitting } = useFormState({ subscription: { submitting: true } });
   return (
-    <Button type="submit" disabled={submitting} waiting={submitting} {...rest}>
+    <Button
+      type="submit"
+      disabled={submitting || disabled}
+      waiting={submitting}
+      {...rest}
+    >
       {typeof children === 'function' ? children({ submitting }) : children}
     </Button>
   );

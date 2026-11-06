@@ -523,12 +523,12 @@ async function callAPI<
     recipients:
       | {
           address_to: string;
-          amount: number;
+          amount: number | string;
           reference?: number | string;
         }
       | Array<{
           address_to: string;
-          amount: number;
+          amount: number | string;
           reference?: number | string;
         }>;
     reference?: number;
@@ -545,12 +545,12 @@ async function callAPI<
     recipients:
       | {
           address_to: string;
-          amount: number;
+          amount: number | string;
           reference?: number | string;
         }
       | Array<{
           address_to: string;
-          amount: number;
+          amount: number | string;
           reference?: number | string;
         }>;
     reference?: number;

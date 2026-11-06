@@ -40,6 +40,32 @@ Multi-user `session` handling:
   endpoints and must be a single opaque id (`[A-Za-z0-9_-]{8,128}`)
 - arrays/objects/prototype-polluting shapes are rejected
 
+## Money and completion boundaries
+
+The send form validates the entire decimal amount against the selected asset's
+Core-provided precision and the uint64 base-unit limit. It displays and sends
+the original decimal string, without converting it to a JavaScript number.
+Precision must be available before a send can be confirmed. The main-process
+registry also validates recipient strings; legacy numeric inputs are accepted
+only within safe base-unit bounds. Core 5.1.6's `ExtractAmount` explicitly accepts
+strings and parses them with the asset precision; see
+[`extract.cpp`](https://github.com/Nexusoft/LLL-TAO/blob/5.1.6/src/TAO/API/extract.cpp)
+and [`precision.h`](https://github.com/Nexusoft/LLL-TAO/blob/5.1.6/src/Util/types/precision.h).
+
+Core requests have an overall deadline and a 32 MiB response limit; truncated,
+aborted, oversized, or malformed responses fail instead of remaining pending.
+A lost response to a potentially mutating operation does not prove that Core
+rejected it. The bridge reports an unknown outcome and does not retry; for a
+send, the confirmation disables resubmission and directs the user to reconcile
+transaction history and balances before sending again. This is not an
+idempotency guarantee: a user can later initiate another send.
+
+Settings, theme and address-book reads default only when their file is absent;
+other read and parse errors are surfaced without overwriting the original.
+Embedded Core configuration reads have the same missing-file rule. Invalidated
+configuration loads cannot publish their result, and configuration writes are
+serialized and committed only while their generation remains current.
+
 ## Terminal / console exception (`core-rpc:call-by-url`)
 
 The Nexus API console (Terminal → URL syntax) uses
@@ -66,5 +92,5 @@ writing to `electron-log`. Validators never echo secret values in
 
 ## Tests
 
-See `test/security/core-rpc-registry.test.js` and
-`test/security/contracts.test.js`.
+See `test/security/core-rpc-registry.test.js`,
+`test/security/contracts.test.js`, and `test/security/boundary-hardening.test.js`.

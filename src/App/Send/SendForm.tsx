@@ -9,14 +9,16 @@ import Icon from 'components/Icon';
 import Button from 'components/Button';
 import FormField from 'components/FormField';
 import { openModal } from 'lib/ui';
-import { accountsQuery, tokensQuery } from 'lib/user';
+import { accountsQuery, tokensQuery, balancesQuery } from 'lib/user';
 import {
   formName,
   getDefaultRecipient,
   useInitialValues,
   getSource,
+  getSourcePrecision,
 } from 'lib/send';
-import { required } from 'lib/form';
+import { required, handleError } from 'lib/form';
+import { amountUnits } from 'utils/amount';
 import { timing } from 'styles';
 import TokenName from 'components/TokenName';
 import memoize from 'utils/memoize';
@@ -77,15 +79,20 @@ const Separator = styled.div(({ theme }) => ({
 function getRecipientsParams({
   recipients,
   advancedOptions,
+  precision,
 }: {
   recipients: { address: string; amount: string; reference: string }[];
   advancedOptions: boolean;
+  precision: number;
 }) {
-  return recipients.map(({ address, amount, reference }) => ({
-    address_to: address,
-    amount: parseFloat(amount),
-    reference: (!!advancedOptions && reference) || undefined,
-  }));
+  return recipients.map(({ address, amount, reference }) => {
+    amountUnits(amount, precision);
+    return {
+      address_to: address,
+      amount,
+      reference: (!!advancedOptions && reference) || undefined,
+    };
+  });
 }
 
 function getAdvancedParams({
@@ -188,6 +195,7 @@ export default function SendForm() {
   const initialValues = useInitialValues();
   const accounts = accountsQuery.use();
   const userTokens = tokensQuery.use();
+  const balances = balancesQuery.use();
   const accountOptions = getAccountOptions(accounts, userTokens);
 
   return (
@@ -199,12 +207,24 @@ export default function SendForm() {
         // initialValuesEqual={() => true}
         onSubmit={({ sendFrom, recipients, expiry, advancedOptions }, form) => {
           const source = getSource(sendFrom, accounts, userTokens);
-          openModal(PreviewTransactionModal, {
-            source,
-            recipients: getRecipientsParams({ recipients, advancedOptions }),
-            ...getAdvancedParams({ expiry, advancedOptions }),
-            resetSendForm: form.reset,
-          });
+          const precision = getSourcePrecision(source, balances);
+          try {
+            if (!source || precision === undefined) {
+              throw new Error(__('Asset precision is unavailable'));
+            }
+            openModal(PreviewTransactionModal, {
+              source,
+              recipients: getRecipientsParams({
+                recipients,
+                advancedOptions,
+                precision,
+              }),
+              ...getAdvancedParams({ expiry, advancedOptions }),
+              resetSendForm: form.reset,
+            });
+          } catch (error) {
+            handleError(error, __('Invalid amount'));
+          }
         }}
         mutators={{ ...arrayMutators }}
       >

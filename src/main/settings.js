@@ -11,6 +11,7 @@ import {
   themeFilePath,
   walletDataDir,
 } from './paths';
+import { readJson } from './ipc/jsonFile';
 
 const persistedSettingKeys = new Set([
   'locale',
@@ -157,14 +158,6 @@ export function getDefaultSettings() {
     dontAskToStartStaking: false,
     lastCheckForUpdates: undefined,
   };
-}
-
-function readJson(filePath, fallback) {
-  try {
-    return JSON.parse(fs.readFileSync(filePath, 'utf8'));
-  } catch {
-    return fallback;
-  }
 }
 
 function writeJson(filePath, value) {
