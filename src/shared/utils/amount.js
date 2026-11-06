@@ -3,6 +3,22 @@
 const MAX_UNITS = 18446744073709551615n;
 const MAX_SAFE_UNITS = BigInt(Number.MAX_SAFE_INTEGER);
 
+function expandExponentialNotation(value) {
+  const text = String(value);
+  const match = /^([+-]?)(\d+)(?:\.(\d+))?e([+-]?\d+)$/i.exec(text);
+  if (!match) return text;
+  const [, sign, whole, fraction = '', exponentText] = match;
+  const digits = whole + fraction;
+  const decimalPosition = whole.length + Number(exponentText);
+  if (decimalPosition <= 0) {
+    return `${sign}0.${'0'.repeat(-decimalPosition)}${digits}`;
+  }
+  if (decimalPosition >= digits.length) {
+    return `${sign}${digits}${'0'.repeat(decimalPosition - digits.length)}`;
+  }
+  return `${sign}${digits.slice(0, decimalPosition)}.${digits.slice(decimalPosition)}`;
+}
+
 function amountUnits(value, decimals) {
   if (
     typeof value !== 'string' ||
@@ -27,7 +43,7 @@ function amountUnits(value, decimals) {
 
 function validateCoreAmount(value) {
   if (typeof value === 'number') {
-    const text = String(value);
+    const text = expandExponentialNotation(value);
     const decimals = (text.split('.')[1] || '').length;
     if (!Number.isFinite(value) || amountUnits(text, decimals) > MAX_SAFE_UNITS) {
       throw new TypeError('Numeric amount cannot be represented safely');

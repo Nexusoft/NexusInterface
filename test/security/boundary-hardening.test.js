@@ -8,7 +8,7 @@ const path = require('node:path');
 const { createRequire } = require('node:module');
 const test = require('node:test');
 const babel = require('@babel/core');
-const { amountUnits } = require('../../src/shared/utils/amount');
+const { amountUnits, validateCoreAmount } = require('../../src/shared/utils/amount');
 const { validateCoreRpcRequest } = require('../../src/main/ipc/contracts');
 const { validateSendDraft } = require('../../src/main/ipc/moduleApiV2');
 const { createSharedQuerySubscription } = require('../../src/shared/utils/sharedQuerySubscription');
@@ -45,6 +45,9 @@ function temporaryDirectory(t) {
 test('amounts preserve exact strings and enforce asset precision and uint64 units', () => {
   assert.equal(amountUnits('001.2300', 4), 12300n);
   assert.equal(amountUnits('184467440737.09551615', 8), 18446744073709551615n);
+  assert.equal(validateCoreAmount(1e-8), 1e-8);
+  assert.equal(validateCoreAmount(1.2e-7), 1.2e-7);
+  assert.throws(() => validateCoreAmount(1e-9), TypeError);
   for (const [amount, decimals] of [
     ['1,5', 6], ['1e2', 6], ['1.2x', 6], ['1.', 6], ['.1', 6],
     ['-1', 6], ['0', 6], ['1.001', 2], ['184467440737.09551616', 8],
