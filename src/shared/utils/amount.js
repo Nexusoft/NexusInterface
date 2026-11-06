@@ -56,4 +56,4 @@ function validateCoreAmount(value) {
   return value;
 }
 
-module.exports = { amountUnits, validateCoreAmount };
+module.exports = { amountUnits, expandExponentialNotation, validateCoreAmount };

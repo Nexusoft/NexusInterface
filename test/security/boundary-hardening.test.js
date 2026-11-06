@@ -97,6 +97,14 @@ test('module send drafts never truncate amounts or accept unsafe numeric inputs'
     const draft = validateSendDraft({ recipients: [{ address: 'abc', amount }] });
     assert.equal(draft.recipients[0].amount, String(amount));
   }
+  for (const [amount, expected, units] of [
+    [1e-8, '0.00000001', 1n],
+    [1.2e-7, '0.00000012', 12n],
+  ]) {
+    const draft = validateSendDraft({ recipients: [{ address: 'abc', amount }] });
+    assert.equal(draft.recipients[0].amount, expected);
+    assert.equal(amountUnits(draft.recipients[0].amount, 8), units);
+  }
   for (const amount of [
     '1'.repeat(65),
     '1e2',
