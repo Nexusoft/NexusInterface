@@ -12,7 +12,7 @@ import TokenName from 'components/TokenName';
 import { useSource, getSourcePrecision } from 'lib/send';
 import { balancesQuery } from 'lib/user';
 import { marketDataQuery } from 'lib/market';
-import { amountUnits } from 'utils/amount';
+import { amountUnits, expandExponentialNotation } from 'utils/amount';
 
 __ = __context('Send');
 
@@ -84,12 +84,16 @@ export default function AmountField({
   const { price, currency } = marketData || {};
   const form = useForm();
   const fullAmount = (source?.account || source?.token)?.balance;
+  const fullAmountText =
+    typeof fullAmount === 'number'
+      ? expandExponentialNotation(fullAmount)
+      : undefined;
   const amountFieldName = parentFieldName + '.amount';
   const fiatAmountFieldName = parentFieldName + '.fiatAmount';
   let canSendAll = false;
-  if (typeof fullAmount === 'number' && precision !== undefined) {
+  if (fullAmountText !== undefined && precision !== undefined) {
     try {
-      canSendAll = amountUnits(String(fullAmount), precision) <= maxExactBalanceUnits;
+      canSendAll = amountUnits(fullAmountText, precision) <= maxExactBalanceUnits;
     } catch {
       canSendAll = false;
     }
@@ -154,7 +158,7 @@ export default function AmountField({
                 <SendAllLink
                   onClick={(evt) => {
                     evt.preventDefault();
-                    form.change(amountFieldName, String(fullAmount));
+                    form.change(amountFieldName, fullAmountText);
                   }}
                 >
                   {__('All')}

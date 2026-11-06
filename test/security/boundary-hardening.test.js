@@ -8,7 +8,11 @@ const path = require('node:path');
 const { createRequire } = require('node:module');
 const test = require('node:test');
 const babel = require('@babel/core');
-const { amountUnits, validateCoreAmount } = require('../../src/shared/utils/amount');
+const {
+  amountUnits,
+  expandExponentialNotation,
+  validateCoreAmount,
+} = require('../../src/shared/utils/amount');
 const { validateCoreRpcRequest } = require('../../src/main/ipc/contracts');
 const { validateSendDraft } = require('../../src/main/ipc/moduleApiV2');
 const { createSharedQuerySubscription } = require('../../src/shared/utils/sharedQuerySubscription');
@@ -45,6 +49,8 @@ function temporaryDirectory(t) {
 test('amounts preserve exact strings and enforce asset precision and uint64 units', () => {
   assert.equal(amountUnits('001.2300', 4), 12300n);
   assert.equal(amountUnits('184467440737.09551615', 8), 18446744073709551615n);
+  assert.equal(expandExponentialNotation(1e-8), '0.00000001');
+  assert.equal(amountUnits(expandExponentialNotation(1e-8), 8), 1n);
   assert.equal(validateCoreAmount(1e-8), 1e-8);
   assert.equal(validateCoreAmount(1.2e-7), 1.2e-7);
   assert.throws(() => validateCoreAmount(1e-9), TypeError);
@@ -93,7 +99,7 @@ test('send precision follows the selected token or account metadata', () => {
 });
 
 test('module send drafts never truncate amounts or accept unsafe numeric inputs', () => {
-  for (const amount of ['00000001.2300', 1.5, 0]) {
+  for (const amount of ['00000001.2300', 1.5]) {
     const draft = validateSendDraft({ recipients: [{ address: 'abc', amount }] });
     assert.equal(draft.recipients[0].amount, String(amount));
   }
@@ -107,6 +113,8 @@ test('module send drafts never truncate amounts or accept unsafe numeric inputs'
   }
   for (const amount of [
     '1'.repeat(65),
+    '0',
+    0,
     '1e2',
     '1.000000001',
     '18446744073709551616',
