@@ -8,7 +8,7 @@ import path from 'path';
 import { assetsByPlatformDir } from './paths';
 import { loadSettingsFromFile, updateSettingsFile } from './settings';
 import {
-  callCoreRpc,
+  callCoreRpcOnConnectedSocket,
   clearCoreConfigCache,
   getCoreConfiguration,
   probeCoreApi,
@@ -508,6 +508,12 @@ export async function isCoreRunning() {
   return !!pid;
 }
 
+export async function isEmbeddedCoreRunning() {
+  const settings = loadSettingsFromFile();
+  return !settings.manualDaemon &&
+    !!(await getCorePID({ dataDir: settings.coreDataDir }));
+}
+
 /**
  * Start up the core with necessary parameters
  *
@@ -696,22 +702,39 @@ export async function stopEmbeddedCore() {
 
   try {
     const configuration = await getCoreConfiguration();
-    if (await isCoreApiOwnedByProcess(configuration, managedPid)) {
-      // Datadir ownership alone does not establish who owns the API port.
-      await callCoreRpc({ endpoint: 'system/stop', timeout: 5000 });
-    } else {
-      log.warn('core.stop.api_ownership_unconfirmed', { pid: managedPid });
-      processState = await getCoreProcessState(settings.coreDataDir, managedPid);
-      if (process.platform !== 'win32' && processState.managedPid === managedPid) {
-        process.kill(managedPid, 'SIGTERM');
-      }
-    }
+    // Connect first, then verify ownership while this socket is already bound
+    // to the current listener. A replacement Core cannot receive this request.
+    await callCoreRpcOnConnectedSocket({
+      endpoint: 'system/stop',
+      timeout: 5000,
+      config: configuration,
+      assertConnection: async () => {
+        const currentState = await getCoreProcessState(
+          settings.coreDataDir,
+          managedPid
+        );
+        if (
+          currentState.managedPid !== managedPid ||
+          !(await isCoreApiOwnedByProcess(configuration, managedPid))
+        ) {
+          throw new Error('Core API ownership changed before shutdown');
+        }
+      },
+    });
   } catch (error) {
-    log.info(
+    log.warn(
       `Core Manager: Graceful stop request failed (${
         error?.message || error
       }); will force-kill if still running`
     );
+    if (process.platform !== 'win32') {
+      processState = await getCoreProcessState(settings.coreDataDir, managedPid);
+      if (processState.managedPid === managedPid) {
+        process.kill(managedPid, 'SIGTERM');
+      }
+    } else {
+      log.warn('core.stop.api_ownership_unconfirmed', { pid: managedPid });
+    }
   }
 
   for (let attempt = 0; attempt < CORE_STOP_GRACE_ATTEMPTS; attempt += 1) {

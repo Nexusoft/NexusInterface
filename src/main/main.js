@@ -9,6 +9,7 @@ import {
   coreBinaryExists,
   coreBinaryStatus,
   executeCommand,
+  isEmbeddedCoreRunning,
   isCoreRunning,
   killCoreProcess,
   resyncLiteDatabase,
@@ -1079,7 +1080,7 @@ registerOperation(
     }
     const installation = (async () => {
       const coreWasRunning =
-        !getRendererSettings().manualDaemon && (await isCoreRunning());
+        !getRendererSettings().manualDaemon && (await isEmbeddedCoreRunning());
       try {
         await installUpdateWithCoreRecovery(
           coreWasRunning,

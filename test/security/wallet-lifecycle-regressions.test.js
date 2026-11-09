@@ -35,7 +35,11 @@ function coreFixture(options = {}) {
         probes++;
         return options.probe?.(probes) || { ok: false, error: 'API starting' };
       },
-      callCoreRpc: async () => { rpcStops++; running = false; },
+      callCoreRpcOnConnectedSocket: async ({ assertConnection }) => {
+        await assertConnection();
+        rpcStops++;
+        running = false;
+      },
     },
     './coreApiOwnership': { isCoreApiOwnedByProcess: async () => options.apiOwned ?? false },
     'electron-log': { info() {}, warn() {}, error() {} },
@@ -47,12 +51,16 @@ function coreFixture(options = {}) {
       },
       accessSync() {},
       promises: {
-        readFile: async () => Buffer.from('/wallet/nexus\0-datadir=/wallet/data\0'),
+        readFile: async () => Buffer.from(
+          `/wallet/nexus\0-datadir=${options.otherDataDir || '/wallet/data'}\0`
+        ),
       },
     },
     child_process: {
       execFile: (_file, _args, _options, callback) =>
-        callback(null, running ? '1234 /wallet/nexus -datadir=/wallet/data\n' : '', ''),
+        callback(null, running
+          ? `1234 /wallet/nexus -datadir=${options.otherDataDir || '/wallet/data'}\n`
+          : '', ''),
     },
     'cross-spawn': () => {
       spawns++;
@@ -73,6 +81,7 @@ function coreFixture(options = {}) {
     setTimeout: (callback, delay) => { now += delay; queueMicrotask(callback); },
     console: { error() {} },
   });
+
   return {
     core, signals,
     counts: () => ({ probes, spawns, rpcStops }),
@@ -86,6 +95,13 @@ test('existing Core gets readiness retries, not a restart after a transient fail
   assert.equal(result.apiReachable, true);
   assert.deepEqual(fixture.counts(), { probes: 3, spawns: 0, rpcStops: 0 });
   assert.deepEqual(fixture.signals, []);
+});
+
+test('updater recovery tracks the wallet-managed Core, not another Core process', async () => {
+  const managed = coreFixture();
+  const unrelated = coreFixture({ otherDataDir: '/other/data' });
+  assert.equal(await managed.core.isEmbeddedCoreRunning(), true);
+  assert.equal(await unrelated.core.isEmbeddedCoreRunning(), false);
 });
 
 test('an API readiness timeout never kills or replaces an existing managed Core', async () => {
@@ -118,6 +134,47 @@ test('shutdown never sends system/stop to an API port owned by another process',
   assert.equal((await fixture.core.stopEmbeddedCore()).stopped, true);
   assert.equal(fixture.counts().rpcStops, 0);
   assert.deepEqual(fixture.signals, [[1234, 'SIGTERM']]);
+});
+
+test('a connected Core shutdown RPC cannot switch to a replacement listener', async (t) => {
+  let originalRequests = 0;
+  let replacementRequests = 0;
+  const original = http.createServer((_request, response) => {
+    originalRequests++;
+    response.end(JSON.stringify({ result: true }));
+  });
+  let replacement;
+  const closeServer = (server) => new Promise((resolve) => {
+    if (!server?.listening) return resolve();
+    server.close(resolve);
+    server.closeAllConnections();
+  });
+  t.after(async () => {
+    await Promise.all([closeServer(original), closeServer(replacement)]);
+  });
+  original.listen(0, '127.0.0.1');
+  await once(original, 'listening');
+  const port = original.address().port;
+  const rpc = coreRpcFixture();
+  const connected = once(original, 'connection');
+  const result = await rpc.callCoreRpcOnConnectedSocket({
+    endpoint: 'system/stop',
+    config: { ...rpc.config, apiPort: String(port) },
+    timeout: 2000,
+    assertConnection: async () => {
+      await connected;
+      original.close();
+      replacement = http.createServer((_request, response) => {
+        replacementRequests++;
+        response.end(JSON.stringify({ result: true }));
+      });
+      replacement.listen(port, '127.0.0.1');
+      await once(replacement, 'listening');
+    },
+  });
+  assert.equal(result, true);
+  assert.equal(originalRequests, 1);
+  assert.equal(replacementRequests, 0);
 });
 
 test('shutdown preserves the normal graceful API stop when port ownership is confirmed', async () => {
@@ -168,6 +225,35 @@ function updaterFixture(platform = process.platform) {
     './paths': { assetsParentDir: '/assets' },
   }, { APP_VERSION: '3.2.0-beta.3', process: { platform, env: {} } });
   return { ...module, updater, native };
+}
+
+function coreRpcFixture() {
+  const config = {
+    ip: '127.0.0.1',
+    apiSSL: false,
+    apiPort: '8080',
+    apiPortSSL: '8443',
+    apiUser: '',
+    apiPassword: '',
+  };
+  const rpc = loadModule('src/main/coreRpc.js', {
+    './settings': { loadSettingsFromFile: () => ({ manualDaemon: true }) },
+    './ipc/coreTransport': {
+      getCoreTransportOptions: () => ({ apiSSL: false, rejectUnauthorized: true }),
+      validateCoreRpcPath: (value) => value,
+    },
+    './ipc/coreRpcRegistry': { redactSensitiveText: (value) => value },
+    './ipc/configOwner': {
+      createConfigOwner: () => ({ invalidate() {}, get: async () => config }),
+    },
+    './ipc/coreConf': {
+      fromKeyValues: () => ({}),
+      parseBooleanFlag: () => false,
+      resolveEmbeddedCoreConnection: () => ({ connection: config }),
+      updateKeyValues: () => '',
+    },
+  });
+  return { ...rpc, config };
 }
 
 test('prerelease updates keep automatic downloads enabled', () => {

@@ -2,8 +2,10 @@ import fs from 'fs/promises';
 import { renameSync } from 'fs';
 import http from 'http';
 import https from 'https';
+import net from 'net';
 import path from 'path';
 import crypto from 'crypto';
+import tls from 'tls';
 
 import { loadSettingsFromFile } from './settings';
 import {
@@ -135,11 +137,20 @@ export async function getPublicCoreConfiguration() {
   };
 }
 
-function requestCore({ method, endpoint, params, config, timeout = 30000 }) {
+function requestCore({
+  method,
+  endpoint,
+  params,
+  config,
+  timeout = 30000,
+  socket,
+}) {
   const body = params === undefined ? undefined : JSON.stringify(params);
   const { apiSSL, rejectUnauthorized } = getCoreTransportOptions(config);
   const client = apiSSL ? https : http;
   const port = apiSSL ? config.apiPortSSL : config.apiPort;
+  const agent = socket ? new client.Agent() : undefined;
+  if (agent) agent.createConnection = () => socket;
   const options = {
     method,
     hostname: config.ip,
@@ -154,6 +165,7 @@ function requestCore({ method, endpoint, params, config, timeout = 30000 }) {
         ? `${config.apiUser}:${config.apiPassword}`
         : undefined,
     ...(apiSSL ? { rejectUnauthorized } : {}),
+    ...(agent ? { agent } : {}),
     timeout,
   };
 
@@ -166,6 +178,7 @@ function requestCore({ method, endpoint, params, config, timeout = 30000 }) {
       if (settled) return;
       settled = true;
       clearTimeout(deadline);
+      agent?.destroy();
       // Probe/wait loops can fail many times while Core is still binding; keep
       // transport failure logs for non-probe callers (callCoreRpc).
       if (endpoint !== 'system/get/info' || timeout > 2500) {
@@ -258,6 +271,7 @@ function requestCore({ method, endpoint, params, config, timeout = 30000 }) {
           }
           settled = true;
           clearTimeout(deadline);
+          agent?.destroy();
           resolve(parsed?.result);
         } else {
           const error =
@@ -281,6 +295,39 @@ function requestCore({ method, endpoint, params, config, timeout = 30000 }) {
     request.once('error', (error) => fail(error, true));
     if (body) request.write(body);
     request.end();
+  });
+}
+
+function connectCoreApi(config, timeout) {
+  const { apiSSL, rejectUnauthorized } = getCoreTransportOptions(config);
+  const port = apiSSL ? config.apiPortSSL : config.apiPort;
+  const socket = apiSSL
+    ? tls.connect({ host: config.ip, port, rejectUnauthorized })
+    : net.connect({ host: config.ip, port });
+  return new Promise((resolve, reject) => {
+    const connectedEvent = apiSSL ? 'secureConnect' : 'connect';
+    let connectedSuccessfully = false;
+    const timer = setTimeout(() => {
+      socket.destroy(new Error('Core connection deadline exceeded'));
+    }, timeout);
+    const cleanup = () => {
+      clearTimeout(timer);
+      socket.removeListener(connectedEvent, connected);
+      socket.removeListener('error', failed);
+    };
+    const connected = () => {
+      connectedSuccessfully = true;
+      clearTimeout(timer);
+      socket.removeListener(connectedEvent, connected);
+      resolve(socket);
+    };
+    const failed = (error) => {
+      if (connectedSuccessfully) return;
+      cleanup();
+      reject(error);
+    };
+    socket.once(connectedEvent, connected);
+    socket.once('error', failed);
   });
 }
 
@@ -330,6 +377,30 @@ export async function probeCoreApi(
 export async function callCoreRpc({ endpoint, params, timeout }) {
   const config = await getCoreConfiguration();
   return requestCore({ method: 'POST', endpoint, params, config, timeout });
+}
+
+export async function callCoreRpcOnConnectedSocket({
+  endpoint,
+  params,
+  config,
+  timeout,
+  assertConnection,
+}) {
+  const socket = await connectCoreApi(config, timeout);
+  try {
+    await assertConnection();
+    return await requestCore({
+      method: 'POST',
+      endpoint,
+      params,
+      config,
+      timeout,
+      socket,
+    });
+  } catch (error) {
+    socket.destroy();
+    throw error;
+  }
 }
 
 export async function terminateRemoteSessionsOnQuit() {
