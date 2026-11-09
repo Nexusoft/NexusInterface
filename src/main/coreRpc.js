@@ -16,7 +16,7 @@ import {
   fromKeyValues,
   parseBooleanFlag,
   resolveEmbeddedCoreConnection,
-  toKeyValues,
+  updateKeyValues,
 } from './ipc/coreConf';
 
 /**
@@ -30,14 +30,15 @@ const embeddedConfigOwner = createConfigOwner(
   async (settings, assertCurrent) => {
     await fs.mkdir(settings.coreDataDir, { recursive: true });
     const configPath = path.join(settings.coreDataDir, 'nexus.conf');
-    let config = {};
+    let contents = '';
     try {
-      config = fromKeyValues(await fs.readFile(configPath, 'utf8'));
+      contents = await fs.readFile(configPath, 'utf8');
     } catch (error) {
       if (error.code !== 'ENOENT') throw error;
     }
     assertCurrent();
 
+    const config = fromKeyValues(contents);
     const resolved = resolveEmbeddedCoreConnection(config, {
       embeddedCoreUseNonSSL: settings.embeddedCoreUseNonSSL,
       embeddedCoreApiPort: settings.embeddedCoreApiPort,
@@ -52,7 +53,7 @@ const embeddedConfigOwner = createConfigOwner(
       let cleanupTemporary = true;
       try {
         try {
-          await fs.writeFile(temporaryPath, toKeyValues(resolved.conf), {
+          await fs.writeFile(temporaryPath, updateKeyValues(contents, resolved.conf), {
             encoding: 'utf8',
             mode: 0o600,
             flag: 'wx',
@@ -329,6 +330,42 @@ export async function probeCoreApi(
 export async function callCoreRpc({ endpoint, params, timeout }) {
   const config = await getCoreConfiguration();
   return requestCore({ method: 'POST', endpoint, params, config, timeout });
+}
+
+export async function terminateRemoteSessionsOnQuit() {
+  const settings = loadSettingsFromFile();
+  if (!settings.manualDaemon || !settings.manualDaemonLogOutOnClose) return;
+
+  const info = await callCoreRpc({ endpoint: 'system/get/info', timeout: 5000 });
+  if (typeof info?.multiuser !== 'boolean') {
+    throw new Error('Core did not confirm its session mode; logout cancelled');
+  }
+  const sessions = info.multiuser
+    ? await callCoreRpc({ endpoint: 'sessions/list/local', timeout: 5000 })
+    : [null];
+  if (
+    !Array.isArray(sessions) ||
+    (info.multiuser &&
+      sessions.some((session) => typeof session?.session !== 'string'))
+  ) {
+    throw new Error('Core returned an invalid session list; logout cancelled');
+  }
+  await Promise.all(sessions.map(async (session) => {
+    try {
+      const result = await callCoreRpc({
+        endpoint: 'sessions/terminate/local',
+        params: session ? { session: session.session } : undefined,
+        timeout: 5000,
+      });
+      if (result?.success !== true) {
+        throw new Error('Core did not confirm session termination');
+      }
+    } catch (error) {
+      // These responses explicitly mean there is no active session to end.
+      if (error.code !== -11 && error.code !== -234) throw error;
+    }
+  }));
+  return true;
 }
 
 export async function callCoreRpcByUrl(url) {

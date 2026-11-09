@@ -9,7 +9,7 @@ import {
 
 import { store, subscribe } from 'lib/store';
 import { coreInfoPausedAtom, coreConnectedAtom } from 'lib/coreInfo';
-import { logOut, loggedInAtom } from 'lib/session';
+import { loggedInAtom } from 'lib/session';
 import { settingsAtom } from 'lib/settings';
 import nexusEnv from 'lib/nexusEnv';
 import { openErrorDialog } from 'lib/dialog';
@@ -36,7 +36,7 @@ export const loggedOutWhileConnectedAtom = atom(
 );
 
 export const closeWallet = async (beforeExit?: () => void) => {
-  const { manualDaemon, manualDaemonLogOutOnClose } = store.get(settingsAtom);
+  const { manualDaemon } = store.get(settingsAtom);
   store.set(walletClosingAtom, true);
 
   try {
@@ -45,8 +45,6 @@ export const closeWallet = async (beforeExit?: () => void) => {
       // then force-kill). Doing it only there avoids a double 10s wait and still
       // works when the renderer can no longer reach the Core API.
       store.set(coreInfoPausedAtom, true);
-    } else if (manualDaemonLogOutOnClose) {
-      await logOut(); //TODO: Ask for pin/session
     }
 
     beforeExit?.();

@@ -1,5 +1,4 @@
 import { app, clipboard, ipcMain, dialog, shell, webContents } from 'electron';
-import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import { initialize, trackEvent } from '@aptabase/electron/main';
 
@@ -31,6 +30,7 @@ import { openVirtualKeyboard } from './keyboard';
 import { setOpenOnStart } from './autoLaunch';
 import {
   initializeUpdater,
+  installUpdate,
   checkForUpdates,
   getMarketData,
   migrateToMainnet,
@@ -106,6 +106,7 @@ import {
   callCoreRpcByUrl,
   clearCoreConfigCache,
   getPublicCoreConfiguration,
+  terminateRemoteSessionsOnQuit,
 } from './coreRpc';
 
 let mainWindow;
@@ -140,14 +141,21 @@ log.initialize();
 async function ensureEmbeddedCoreStopped() {
   if (!embeddedCoreShutdownPromise) {
     embeddedCoreShutdownPromise = coreLifecycle
-      .shutdown(() => stopEmbeddedCore())
+      .shutdown(async () => {
+        if (await terminateRemoteSessionsOnQuit()) coreRpcSessionPolicy.reset();
+        return stopEmbeddedCore();
+      })
       .catch((error) => {
         log.warn(
           `Core Manager: shutdown during app quit failed: ${
             error?.message || error
           }`
         );
-        return { stopped: false, reason: 'error' };
+        return {
+          stopped: false,
+          reason: 'error',
+          error: error?.message || String(error),
+        };
       });
   }
   return embeddedCoreShutdownPromise;
@@ -160,7 +168,7 @@ async function shutdownEmbeddedCoreAndAllowQuit() {
     global.forceQuit = false;
     embeddedCoreShutdownPromise = null;
     coreLifecycle.cancelShutdown();
-    throw new Error('Nexus Core shutdown could not be confirmed');
+    throw new Error(result?.error || 'Nexus Core shutdown could not be confirmed');
   }
   allowingFinalQuit = true;
 }
@@ -1051,19 +1059,24 @@ registerOperation(
   },
   async ({ isSilent, isForceRunAfter }) => {
     await shutdownEmbeddedCoreAndAllowQuit();
+    allowingFinalQuit = false;
     try {
-      autoUpdater.quitAndInstall(isSilent, isForceRunAfter);
+      await installUpdate(() => {
+        allowingFinalQuit = true;
+        // The installer is ready now, not merely requested. Destroying the
+        // window bypasses renderer close/beforeunload guards during installation.
+        mainWindow?.destroy();
+      }, isSilent, isForceRunAfter);
     } catch (error) {
+      allowingFinalQuit = false;
+      global.forceQuit = false;
+      embeddedCoreShutdownPromise = null;
+      coreLifecycle.cancelShutdown();
       log.error(
         `Updater quitAndInstall failed: ${error?.message || error}`
       );
+      throw error;
     }
-    // Window close is always preventDefault'd; quitAndInstall relies on
-    // app.quit() which cannot destroy the window. Force-exit after giving the
-    // installer a moment to spawn.
-    setTimeout(() => {
-      app.exit(0);
-    }, 1500);
   }
 );
 registerOperation(

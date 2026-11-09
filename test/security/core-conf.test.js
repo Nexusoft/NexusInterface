@@ -9,6 +9,7 @@ const {
   resolveApiPortSSL,
   resolveEmbeddedCoreConnection,
   toKeyValues,
+  updateKeyValues,
 } = require('../../src/main/ipc/coreConf');
 
 test('fromKeyValues trims Windows newlines and ignores comments', () => {
@@ -37,6 +38,29 @@ test('toKeyValues skips undefined and null values', () => {
     apiport: '8080',
   });
   assert.equal(text, 'apiuser=apiserver\napiport=8080');
+});
+
+test('configuration updates preserve comments, repeated directives, BOM and CRLF', () => {
+  const original = '\uFEFF# My peers\r\nconnect=one\r\nconnect=two\r\n\r\n' +
+    '; Keep this\r\n  apissl =0  \r\napiportssl=7080\r\ncustom=original';
+  const resolved = resolveEmbeddedCoreConnection(fromKeyValues(original), {
+    generatedApiPassword: 'new-secret',
+  });
+  const updated = updateKeyValues(original, resolved.conf);
+  assert.ok(updated.startsWith('\uFEFF# My peers\r\nconnect=one\r\nconnect=two\r\n\r\n'));
+  assert.ok(updated.includes('; Keep this\r\n  apissl =1  \r\n'));
+  assert.ok(updated.includes('custom=original\r\n'));
+  assert.ok(updated.includes('apisslport=7080\r\n'));
+  assert.ok(!updated.includes('apiportssl='));
+  assert.ok(!updated.replace(/\r\n/g, '').includes('\n'));
+});
+
+test('configuration updates leave unchanged files byte-for-byte and replace repeated managed scalars', () => {
+  const original = '# note\napiport=8080\napiport=8080\nconnect=one\nconnect=two';
+  assert.equal(updateKeyValues(original, fromKeyValues(original)), original);
+  assert.equal(updateKeyValues(original, { ...fromKeyValues(original), apiport: '9090' }),
+    '# note\napiport=9090\napiport=9090\nconnect=one\nconnect=two');
+  assert.equal(fromKeyValues(updateKeyValues('', { apiuser: 'new' })).apiuser, 'new');
 });
 
 test('resolveApiPortSSL prefers Core apisslport over wallet apiportssl alias', () => {

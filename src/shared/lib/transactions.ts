@@ -171,9 +171,30 @@ export function prepareTransactions() {
 }
 
 export const pageAtom = atom(1);
-export const addressQueryAtom = atom('');
-export const operationAtom = atom<ContractOP | null>(null);
-export const timeSpanAtom = atom<TimeSpan | null>(null);
+const addressQueryValueAtom = atom('');
+const operationValueAtom = atom<ContractOP | null>(null);
+const timeSpanValueAtom = atom<TimeSpan | null>(null);
+export const addressQueryAtom = atom(
+  (get) => get(addressQueryValueAtom),
+  (_get, set, value: string) => {
+    set(addressQueryValueAtom, value);
+    set(pageAtom, 1);
+  }
+);
+export const operationAtom = atom(
+  (get) => get(operationValueAtom),
+  (_get, set, value: ContractOP | null) => {
+    set(operationValueAtom, value);
+    set(pageAtom, 1);
+  }
+);
+export const timeSpanAtom = atom(
+  (get) => get(timeSpanValueAtom),
+  (_get, set, value: TimeSpan | null) => {
+    set(timeSpanValueAtom, value);
+    set(pageAtom, 1);
+  }
+);
 
 export const transactionsQuery = jotaiQuery<Transaction[]>({
   condition: (get) => get(loggedInAtom),

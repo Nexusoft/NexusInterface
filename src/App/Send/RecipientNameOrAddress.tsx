@@ -24,7 +24,6 @@ import { useSource } from 'lib/send';
 import { openModal } from 'lib/ui';
 import { accountsQuery } from 'lib/user';
 import memoize from 'utils/memoize';
-import { debounced } from 'utils/universal';
 
 import RecipientAddress from './RecipientAddress';
 
@@ -130,8 +129,6 @@ const resolveName = async (
   }
 };
 
-const debouncedResolveName = debounced(resolveName, 500);
-
 interface RecipientAddressAdapterProps {
   nameOrAddress: string;
   address: string;
@@ -146,7 +143,18 @@ function RecipientAddressAdapter({
   error,
   justSelected,
 }: RecipientAddressAdapterProps) {
+  const currentInput = useRef(nameOrAddress);
+  currentInput.current = nameOrAddress;
+
   useEffect(() => {
+    let active = true;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const acceptAddress = (resolvedAddress: string | null) => {
+      if (active && currentInput.current === nameOrAddress) {
+        setAddress(resolvedAddress);
+      }
+    };
+
     if (addressRegex.test(nameOrAddress)) {
       // Treat nameOrAddress as an address
       setAddress(nameOrAddress);
@@ -157,15 +165,20 @@ function RecipientAddressAdapter({
       if (nameOrAddress) {
         if (justSelected) {
           // Resolve name immediately if user selected a suggestion
-          debouncedResolveName.cancel();
-          resolveName(nameOrAddress, setAddress);
+          void resolveName(nameOrAddress, acceptAddress);
         } else {
           // Resolve name whenever user stops typing for 0.5s
-          debouncedResolveName(nameOrAddress, setAddress);
+          timer = setTimeout(() => {
+            void resolveName(nameOrAddress, acceptAddress);
+          }, 500);
         }
       }
     }
-  }, [nameOrAddress]);
+    return () => {
+      active = false;
+      clearTimeout(timer);
+    };
+  }, [nameOrAddress, justSelected, setAddress]);
 
   return (
     <div>

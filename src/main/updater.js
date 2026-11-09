@@ -1,6 +1,7 @@
 import path from 'path';
 import fs from 'fs';
 import { autoUpdater } from 'electron-updater';
+import { autoUpdater as nativeUpdater } from 'electron';
 import log from 'electron-log';
 import semver from 'semver';
 
@@ -26,7 +27,6 @@ export function initializeUpdater(settings) {
     autoUpdater.allowPrerelease = true;
     autoUpdater.channel = currentChannel;
     autoUpdater.allowDowngrade = false; // We do not have any mechanism to downgrade, as well as there can be issues with your core's chain.
-    autoUpdater.autoDownload = false;
   }
 
   const updaterEvents = [
@@ -56,6 +56,35 @@ export function initializeUpdater(settings) {
       }
 
     });
+  });
+}
+
+export function installUpdate(onBeforeQuit, isSilent, isForceRunAfter) {
+  return new Promise((resolve, reject) => {
+    const cleanup = () => {
+      nativeUpdater.removeListener('before-quit-for-update', ready);
+      autoUpdater.removeListener('error', failed);
+    };
+    const failed = (error) => {
+      cleanup();
+      reject(error);
+    };
+    const ready = () => {
+      cleanup();
+      try {
+        onBeforeQuit();
+        resolve();
+      } catch (error) {
+        reject(error);
+      }
+    };
+    nativeUpdater.once('before-quit-for-update', ready);
+    autoUpdater.once('error', failed);
+    try {
+      autoUpdater.quitAndInstall(isSilent, isForceRunAfter);
+    } catch (error) {
+      failed(error);
+    }
   });
 }
 

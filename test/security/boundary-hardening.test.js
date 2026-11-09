@@ -5,9 +5,8 @@ const fs = require('node:fs');
 const http = require('node:http');
 const os = require('node:os');
 const path = require('node:path');
-const { createRequire } = require('node:module');
 const test = require('node:test');
-const babel = require('@babel/core');
+const loadModule = require('../helpers/load-module');
 const {
   amountUnits,
   expandExponentialNotation,
@@ -17,28 +16,6 @@ const { validateCoreRpcRequest } = require('../../src/main/ipc/contracts');
 const { validateSendDraft } = require('../../src/main/ipc/moduleApiV2');
 const { createSharedQuerySubscription } = require('../../src/shared/utils/sharedQuerySubscription');
 const { createConfigOwner } = require('../../src/main/ipc/configOwner');
-
-function loadModule(relativePath, overrides) {
-  const filename = path.resolve(__dirname, '../..', relativePath);
-  const source = fs.readFileSync(filename, 'utf8');
-  const compiled = babel.transformSync(source, {
-    babelrc: false,
-    configFile: false,
-    filename,
-    presets: [
-      [require.resolve('@babel/preset-env'), { targets: { node: 'current' } }],
-      ...(filename.endsWith('.ts') ? [require.resolve('@babel/preset-typescript')] : []),
-    ],
-  }).code;
-  const originalRequire = createRequire(filename);
-  const localRequire = (name) =>
-    Object.prototype.hasOwnProperty.call(overrides, name)
-      ? overrides[name]
-      : originalRequire(name);
-  const module = { exports: {} };
-  new Function('require', 'module', 'exports', compiled)(localRequire, module, module.exports);
-  return module.exports;
-}
 
 function temporaryDirectory(t) {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'nexus-boundary-'));
