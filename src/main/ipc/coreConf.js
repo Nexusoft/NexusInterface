@@ -37,6 +37,44 @@ function toKeyValues(config) {
     .join('\n');
 }
 
+function updateKeyValues(contents, config) {
+  const original = String(contents || '');
+  const previous = fromKeyValues(original);
+  const changes = new Map(
+    [...new Set([...Object.keys(previous), ...Object.keys(config)])]
+      .filter((key) => previous[key] !== config[key])
+      .map((key) => [key, config[key]])
+  );
+  const bom = original.startsWith('\uFEFF') ? '\uFEFF' : '';
+  const parts = original.slice(bom.length).split(/(\r?\n)/);
+  const seen = new Set();
+  const lines = [];
+  for (let index = 0; index < parts.length; index += 2) {
+    const line = parts[index];
+    const ending = parts[index + 1] || '';
+    const parsed = fromKeyValues(line);
+    const key = Object.keys(parsed)[0];
+    if (!key || !changes.has(key)) {
+      lines.push(line + ending);
+      continue;
+    }
+    seen.add(key);
+    const value = changes.get(key);
+    if (value !== undefined && value !== null) {
+      const prefix = line.slice(0, line.indexOf('=') + 1);
+      lines.push(`${prefix}${value}${line.match(/\s*$/)[0]}${ending}`);
+    }
+  }
+  const newline = original.includes('\r\n') ? '\r\n' : '\n';
+  let updated = lines.join('');
+  for (const [key, value] of changes) {
+    if (seen.has(key) || value === undefined || value === null) continue;
+    if (updated && !updated.endsWith('\n')) updated += newline;
+    updated += `${key}=${value}${newline}`;
+  }
+  return bom + updated;
+}
+
 function parseBooleanFlag(value, fallback = true) {
   if (value === undefined || value === null || value === '') {
     return fallback;
@@ -196,4 +234,5 @@ module.exports = {
   resolveEmbeddedCoreConnection,
   toKeyValues,
   trimConfValue,
+  updateKeyValues,
 };

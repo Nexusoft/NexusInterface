@@ -8,7 +8,7 @@ import path from 'path';
 import { assetsByPlatformDir } from './paths';
 import { loadSettingsFromFile, updateSettingsFile } from './settings';
 import {
-  callCoreRpc,
+  callCoreRpcOnConnectedSocket,
   clearCoreConfigCache,
   getCoreConfiguration,
   probeCoreApi,
@@ -20,10 +20,8 @@ import {
   normalizeProcessPath,
   splitCommandParts,
 } from './coreProcessPolicy';
+import { isCoreApiOwnedByProcess } from './coreApiOwnership';
 
-// After killing a mismatched Core, wait briefly so OS listen sockets (API/P2P)
-// are released before we spawn a replacement on the same ports.
-const CORE_PORT_RELEASE_DELAY_MS = 750;
 // Fresh Core processes need a moment before the local API accepts connections.
 // Keep this short so renderer bootstrap is not blocked for a full-node cold
 // start; coreInfoQuery continues polling after start returns.
@@ -324,8 +322,8 @@ export function coreBinaryStatus() {
  * @returns {Promise<Array<{ pid: number, command: string }>>}
  */
 async function listCoreProcesses() {
-  const { path: coreBinaryPath, name: resolvedCoreBinaryName } =
-    getExecutableCoreBinary();
+  const coreBinaryPath = getConfiguredCoreBinaryPath();
+  const resolvedCoreBinaryName = getCoreBinaryName(coreBinaryPath);
   const modEnv = { ...process.env, Nexus_Daemon: resolvedCoreBinaryName };
 
   if (process.platform == 'win32') {
@@ -510,12 +508,18 @@ export async function isCoreRunning() {
   return !!pid;
 }
 
+export async function isEmbeddedCoreRunning() {
+  const settings = loadSettingsFromFile();
+  return !settings.manualDaemon &&
+    !!(await getCorePID({ dataDir: settings.coreDataDir }));
+}
+
 /**
  * Start up the core with necessary parameters
  *
  * @memberof Core
  */
-export function startCore(params) {
+export async function startCore(params) {
   const { path: coreBinaryPath } = getExecutableCoreBinary();
   // Never log raw API credentials from the parameter list.
   const redactedParams = (params || []).map((param) =>
@@ -526,35 +530,38 @@ export function startCore(params) {
   log.info('Core Parameters: ' + redactedParams.join(' '));
   log.info('Core Manager: Starting core: ' + coreBinaryPath);
   try {
-    const coreProcess = spawn(coreBinaryPath, params, {
-      shell: false,
-      detached: true,
-      stdio: ['ignore', 'ignore', 'ignore'],
-    });
-    if (coreProcess) {
-      const dataDirParam = (params || []).find((param) =>
-        /^[-/]datadir=/i.test(param)
-      );
-      walletManagedCorePid = coreProcess.pid;
-      walletManagedCoreDataDir = dataDirParam
-        ? dataDirParam.slice(dataDirParam.indexOf('=') + 1)
-        : null;
-      coreProcess.once('exit', () => {
-        if (walletManagedCorePid === coreProcess.pid) {
-          walletManagedCorePid = null;
-          walletManagedCoreDataDir = null;
-        }
+    return await new Promise((resolve, reject) => {
+      const coreProcess = spawn(coreBinaryPath, params, {
+        shell: false,
+        detached: true,
+        stdio: ['ignore', 'ignore', 'ignore'],
       });
-      // Detach fully so the wallet can exit without waiting on Core.
-      coreProcess.unref();
-      log.info(
-        `Core Manager: Core has started (process id: ${coreProcess.pid})`
-      );
-      return coreProcess.pid;
-    } else {
-      throw 'Core failed to start';
-    }
-
+      coreProcess.once('error', (error) => {
+        log.error('core.spawn.failed', { error: error.message });
+        reject(error);
+      });
+      coreProcess.once('spawn', () => {
+        const dataDirParam = (params || []).find((param) =>
+          /^[-/]datadir=/i.test(param)
+        );
+        walletManagedCorePid = coreProcess.pid;
+        walletManagedCoreDataDir = dataDirParam
+          ? dataDirParam.slice(dataDirParam.indexOf('=') + 1)
+          : null;
+        coreProcess.once('exit', () => {
+          if (walletManagedCorePid === coreProcess.pid) {
+            walletManagedCorePid = null;
+            walletManagedCoreDataDir = null;
+          }
+        });
+        // Detach fully so the wallet can exit without waiting on Core.
+        coreProcess.unref();
+        log.info(
+          `Core Manager: Core has started (process id: ${coreProcess.pid})`
+        );
+        resolve(coreProcess.pid);
+      });
+    });
   } catch (err) {
     console.error(err);
     throw err;
@@ -694,14 +701,40 @@ export async function stopEmbeddedCore() {
   let managedPid = processState.managedPid;
 
   try {
-    // Keep quit-path latency bounded; force-kill handles a stuck Core.
-    await callCoreRpc({ endpoint: 'system/stop', timeout: 5000 });
+    const configuration = await getCoreConfiguration();
+    // Connect first, then verify ownership while this socket is already bound
+    // to the current listener. A replacement Core cannot receive this request.
+    await callCoreRpcOnConnectedSocket({
+      endpoint: 'system/stop',
+      timeout: 5000,
+      config: configuration,
+      assertConnection: async () => {
+        const currentState = await getCoreProcessState(
+          settings.coreDataDir,
+          managedPid
+        );
+        if (
+          currentState.managedPid !== managedPid ||
+          !(await isCoreApiOwnedByProcess(configuration, managedPid))
+        ) {
+          throw new Error('Core API ownership changed before shutdown');
+        }
+      },
+    });
   } catch (error) {
-    log.info(
+    log.warn(
       `Core Manager: Graceful stop request failed (${
         error?.message || error
       }); will force-kill if still running`
     );
+    if (process.platform !== 'win32') {
+      processState = await getCoreProcessState(settings.coreDataDir, managedPid);
+      if (processState.managedPid === managedPid) {
+        process.kill(managedPid, 'SIGTERM');
+      }
+    } else {
+      log.warn('core.stop.api_ownership_unconfirmed', { pid: managedPid });
+    }
   }
 
   for (let attempt = 0; attempt < CORE_STOP_GRACE_ATTEMPTS; attempt += 1) {
@@ -808,8 +841,8 @@ export async function stopEmbeddedCore() {
  *
  * If a Core process is already running, the wallet probes the local API with
  * the configured host/port/SSL/credentials. P2P alone is not enough — a Core
- * started with a different datadir, default SSL port 8443, or without API auth
- * will keep the GUI disconnected forever unless we recover here.
+ * started with different API settings may need an explicit restart. An API
+ * timeout alone is not evidence that a running Core is safe to terminate.
  */
 export async function startConfiguredCore() {
   log.info('core.start.requested');
@@ -847,8 +880,8 @@ export async function startConfiguredCore() {
   }
 
   if (await isCoreRunning()) {
-    const probe = await probeCoreApi(configuration);
-    if (probe.ok) {
+    const ready = await waitForCoreApi(configuration);
+    if (ready.ok) {
       log.info(
         `Core Manager: Existing Core API is reachable at ${configuration.ip}:${
           configuration.apiSSL ? configuration.apiPortSSL : configuration.apiPort
@@ -858,50 +891,32 @@ export async function startConfiguredCore() {
       return { started: false, reason: 'already-running', apiReachable: true };
     }
 
-    // getCorePID() without a datadir filter matches by binary name/path only.
-    // Only kill + restart when the process is clearly this wallet's managed
-    // instance (-datadir= matches). Otherwise we risk killing an unrelated
-    // user-managed Core and potentially causing data loss.
     const managedPid = await getCorePID({ dataDir: settings.coreDataDir });
     if (!managedPid) {
       log.warn(
         `Core Manager: A Nexus Core process is running but is not managed by this wallet ` +
-          `(no matching -datadir=${settings.coreDataDir}) and API is unreachable (${probe.error}). ` +
+          `(no matching -datadir=${settings.coreDataDir}) and API is unreachable (${ready.error}). ` +
           'Refusing to kill an unrelated Core instance.'
       );
-      log.warn('core.restart.unmanaged_refused', { error: probe.error });
+      log.warn('core.restart.unmanaged_refused', { error: ready.error });
       return {
         started: false,
         reason: 'unmanaged-core-api-unreachable',
         apiReachable: false,
-        apiError: probe.error,
+        apiError: ready.error,
       };
     }
 
     log.warn(
-      `Core Manager: Wallet-managed Core process is running but API is unreachable (${probe.error}). ` +
-        'Restarting Core with wallet API settings so the GUI can connect.'
+      `Core Manager: Wallet-managed Core API is not ready (${ready.error}). ` +
+        'Leaving Core running; retry the connection or explicitly restart Core.'
     );
-    log.warn('core.restart.mismatched_api', {
-      error: probe.error,
-      pid: managedPid,
-    });
-    if (!(await killCoreProcess())) {
-      const finalState = await getCoreProcessState(
-        settings.coreDataDir,
-        managedPid
-      );
-      if (
-        finalState.trackedPidRunning ||
-        finalState.managedPid ||
-        finalState.ownershipUnknown
-      ) {
-        throw new Error('Nexus Core termination could not be confirmed');
-      }
-    }
-    await new Promise((resolve) =>
-      setTimeout(resolve, CORE_PORT_RELEASE_DELAY_MS)
-    );
+    return {
+      started: false,
+      reason: 'managed-core-api-unreachable',
+      apiReachable: false,
+      apiError: ready.error,
+    };
   }
 
   const { params, lockedTestnet } = buildConfiguredCoreParams(
@@ -928,7 +943,7 @@ export async function startConfiguredCore() {
     }
   }
 
-  const pid = startCore(params);
+  const pid = await startCore(params);
   log.info('core.spawned', { pid, coreDataDir: settings.coreDataDir });
   const ready = await waitForCoreApi(configuration);
   if (!ready.ok) {

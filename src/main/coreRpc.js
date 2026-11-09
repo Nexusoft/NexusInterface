@@ -2,8 +2,10 @@ import fs from 'fs/promises';
 import { renameSync } from 'fs';
 import http from 'http';
 import https from 'https';
+import net from 'net';
 import path from 'path';
 import crypto from 'crypto';
+import tls from 'tls';
 
 import { loadSettingsFromFile } from './settings';
 import {
@@ -16,7 +18,7 @@ import {
   fromKeyValues,
   parseBooleanFlag,
   resolveEmbeddedCoreConnection,
-  toKeyValues,
+  updateKeyValues,
 } from './ipc/coreConf';
 
 /**
@@ -30,14 +32,15 @@ const embeddedConfigOwner = createConfigOwner(
   async (settings, assertCurrent) => {
     await fs.mkdir(settings.coreDataDir, { recursive: true });
     const configPath = path.join(settings.coreDataDir, 'nexus.conf');
-    let config = {};
+    let contents = '';
     try {
-      config = fromKeyValues(await fs.readFile(configPath, 'utf8'));
+      contents = await fs.readFile(configPath, 'utf8');
     } catch (error) {
       if (error.code !== 'ENOENT') throw error;
     }
     assertCurrent();
 
+    const config = fromKeyValues(contents);
     const resolved = resolveEmbeddedCoreConnection(config, {
       embeddedCoreUseNonSSL: settings.embeddedCoreUseNonSSL,
       embeddedCoreApiPort: settings.embeddedCoreApiPort,
@@ -52,7 +55,7 @@ const embeddedConfigOwner = createConfigOwner(
       let cleanupTemporary = true;
       try {
         try {
-          await fs.writeFile(temporaryPath, toKeyValues(resolved.conf), {
+          await fs.writeFile(temporaryPath, updateKeyValues(contents, resolved.conf), {
             encoding: 'utf8',
             mode: 0o600,
             flag: 'wx',
@@ -134,11 +137,20 @@ export async function getPublicCoreConfiguration() {
   };
 }
 
-function requestCore({ method, endpoint, params, config, timeout = 30000 }) {
+function requestCore({
+  method,
+  endpoint,
+  params,
+  config,
+  timeout = 30000,
+  socket,
+}) {
   const body = params === undefined ? undefined : JSON.stringify(params);
   const { apiSSL, rejectUnauthorized } = getCoreTransportOptions(config);
   const client = apiSSL ? https : http;
   const port = apiSSL ? config.apiPortSSL : config.apiPort;
+  const agent = socket ? new client.Agent() : undefined;
+  if (agent) agent.createConnection = () => socket;
   const options = {
     method,
     hostname: config.ip,
@@ -153,6 +165,7 @@ function requestCore({ method, endpoint, params, config, timeout = 30000 }) {
         ? `${config.apiUser}:${config.apiPassword}`
         : undefined,
     ...(apiSSL ? { rejectUnauthorized } : {}),
+    ...(agent ? { agent } : {}),
     timeout,
   };
 
@@ -165,6 +178,7 @@ function requestCore({ method, endpoint, params, config, timeout = 30000 }) {
       if (settled) return;
       settled = true;
       clearTimeout(deadline);
+      agent?.destroy();
       // Probe/wait loops can fail many times while Core is still binding; keep
       // transport failure logs for non-probe callers (callCoreRpc).
       if (endpoint !== 'system/get/info' || timeout > 2500) {
@@ -257,6 +271,7 @@ function requestCore({ method, endpoint, params, config, timeout = 30000 }) {
           }
           settled = true;
           clearTimeout(deadline);
+          agent?.destroy();
           resolve(parsed?.result);
         } else {
           const error =
@@ -280,6 +295,39 @@ function requestCore({ method, endpoint, params, config, timeout = 30000 }) {
     request.once('error', (error) => fail(error, true));
     if (body) request.write(body);
     request.end();
+  });
+}
+
+function connectCoreApi(config, timeout) {
+  const { apiSSL, rejectUnauthorized } = getCoreTransportOptions(config);
+  const port = apiSSL ? config.apiPortSSL : config.apiPort;
+  const socket = apiSSL
+    ? tls.connect({ host: config.ip, port, rejectUnauthorized })
+    : net.connect({ host: config.ip, port });
+  return new Promise((resolve, reject) => {
+    const connectedEvent = apiSSL ? 'secureConnect' : 'connect';
+    let connectedSuccessfully = false;
+    const timer = setTimeout(() => {
+      socket.destroy(new Error('Core connection deadline exceeded'));
+    }, timeout);
+    const cleanup = () => {
+      clearTimeout(timer);
+      socket.removeListener(connectedEvent, connected);
+      socket.removeListener('error', failed);
+    };
+    const connected = () => {
+      connectedSuccessfully = true;
+      clearTimeout(timer);
+      socket.removeListener(connectedEvent, connected);
+      resolve(socket);
+    };
+    const failed = (error) => {
+      if (connectedSuccessfully) return;
+      cleanup();
+      reject(error);
+    };
+    socket.once(connectedEvent, connected);
+    socket.once('error', failed);
   });
 }
 
@@ -329,6 +377,66 @@ export async function probeCoreApi(
 export async function callCoreRpc({ endpoint, params, timeout }) {
   const config = await getCoreConfiguration();
   return requestCore({ method: 'POST', endpoint, params, config, timeout });
+}
+
+export async function callCoreRpcOnConnectedSocket({
+  endpoint,
+  params,
+  config,
+  timeout,
+  assertConnection,
+}) {
+  const socket = await connectCoreApi(config, timeout);
+  try {
+    await assertConnection();
+    return await requestCore({
+      method: 'POST',
+      endpoint,
+      params,
+      config,
+      timeout,
+      socket,
+    });
+  } catch (error) {
+    socket.destroy();
+    throw error;
+  }
+}
+
+export async function terminateRemoteSessionsOnQuit() {
+  const settings = loadSettingsFromFile();
+  if (!settings.manualDaemon || !settings.manualDaemonLogOutOnClose) return;
+
+  const info = await callCoreRpc({ endpoint: 'system/get/info', timeout: 5000 });
+  if (typeof info?.multiuser !== 'boolean') {
+    throw new Error('Core did not confirm its session mode; logout cancelled');
+  }
+  const sessions = info.multiuser
+    ? await callCoreRpc({ endpoint: 'sessions/list/local', timeout: 5000 })
+    : [null];
+  if (
+    !Array.isArray(sessions) ||
+    (info.multiuser &&
+      sessions.some((session) => typeof session?.session !== 'string'))
+  ) {
+    throw new Error('Core returned an invalid session list; logout cancelled');
+  }
+  await Promise.all(sessions.map(async (session) => {
+    try {
+      const result = await callCoreRpc({
+        endpoint: 'sessions/terminate/local',
+        params: session ? { session: session.session } : undefined,
+        timeout: 5000,
+      });
+      if (result?.success !== true) {
+        throw new Error('Core did not confirm session termination');
+      }
+    } catch (error) {
+      // These responses explicitly mean there is no active session to end.
+      if (error.code !== -11 && error.code !== -234) throw error;
+    }
+  }));
+  return true;
 }
 
 export async function callCoreRpcByUrl(url) {

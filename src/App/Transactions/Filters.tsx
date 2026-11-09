@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import styled from '@emotion/styled';
 import { useAtom } from 'jotai';
 
@@ -93,9 +93,13 @@ export default function Filters({ morePadding }: { morePadding?: boolean }) {
   // tokensQuery.use();
   // accountsQuery.use();
 
-  const debouncedSetAddressQuery = debounced(
-    (address) => setAddressQuery(address),
-    500
+  const debouncedSetAddressQuery = useMemo(
+    () => debounced((address: string) => setAddressQuery(address), 500),
+    [setAddressQuery]
+  );
+  useEffect(
+    () => () => debouncedSetAddressQuery.cancel(),
+    [debouncedSetAddressQuery]
   );
 
   return (
@@ -106,7 +110,7 @@ export default function Filters({ morePadding }: { morePadding?: boolean }) {
           value={addressInput}
           onChange={({ target: { value } }) => {
             setAddressInput(value);
-            debouncedSetAddressQuery({ addressQuery: value });
+            debouncedSetAddressQuery(value);
           }}
           left={<Icon icon={SearchIcon} className="mr1" />}
           right={
@@ -117,6 +121,7 @@ export default function Filters({ morePadding }: { morePadding?: boolean }) {
                 onClick={() => {
                   openModal(SelectAddressModal, {
                     onSelect: (address) => {
+                      debouncedSetAddressQuery.cancel();
                       setAddressInput(address);
                       setAddressQuery(address);
                     },

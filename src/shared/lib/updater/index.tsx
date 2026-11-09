@@ -10,6 +10,7 @@ import AutoUpdateBackgroundTask from './AutoUpdateBackgroundTask';
 import { walletClosingAtom } from 'lib/wallet';
 import { coreInfoPausedAtom } from 'lib/coreInfo';
 import { checkForModuleUpdates } from 'lib/modules';
+import { openErrorDialog } from 'lib/dialog';
 
 __ = __context('AutoUpdate');
 
@@ -25,10 +26,19 @@ export const updaterStateAtom = atom<UpdaterState>('idle');
  * Main-process quitAndInstall stops Core and exits; do not also call
  * app.exit via closeWallet or the two paths race and the installer may never run.
  */
-export function quitAndInstall() {
+export async function quitAndInstall() {
   store.set(walletClosingAtom, true);
   store.set(coreInfoPausedAtom, true);
-  void window.nexusElectron.updater.quitAndInstall();
+  try {
+    await window.nexusElectron.updater.quitAndInstall();
+  } catch (error) {
+    store.set(walletClosingAtom, false);
+    store.set(coreInfoPausedAtom, false);
+    openErrorDialog({
+      message: __('Unable to install wallet update'),
+      note: (error as Error)?.message || String(error),
+    });
+  }
 }
 
 export function setAllowPrerelease(value: boolean) {

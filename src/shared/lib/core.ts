@@ -49,9 +49,7 @@ export const startCore = async () => {
       throw new Error(status.status?.error || 'Nexus Core binary not found');
     }
 
-    // Always delegate to main. If a Core process is already running, main probes
-    // the configured local API and restarts Core when P2P is up but the API bind
-    // / auth / port does not match the wallet configuration.
+    // Main waits for a running Core's API without terminating it on a timeout.
     const startResult = (await window.nexusElectron.core.start()) as CoreStartResult;
     console.info('core.start.result', {
       started: !!startResult?.started,
