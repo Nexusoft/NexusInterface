@@ -44,28 +44,9 @@ sequenceDiagram
 
 Invariants: the broker registers intent and reports status only; deposit addresses are shown for explicit user confirmation; a provider change touches the adapter, never the flow.
 
-## 2. Atomic swap end-state (research track, HTLC/adaptor)
+## 2. Direct atomic-swap proposal
 
-Trustless NXS↔LTC settlement. Requires litecoind wallet RPC for the LTC-side HTLC and Nexus contract-side design. The wallet never imports `wallet.dat` — LTC keys stay in LTC Core, driven over authenticated loopback RPC.
-
-```mermaid
-sequenceDiagram
-    autonumber
-    participant A as NexusInterface (initiator)
-    participant NXS as Nexus chain
-    participant LTCD as litecoind (loopback RPC)
-    participant LTC as Litecoin chain
-    participant B as Counterparty
-
-    A->>A: generate secret s, hash h = H(s)
-    A->>NXS: lock NXS in contract, hashlock h, timeout T1
-    B->>LTC: lock LTC in HTLC, hashlock h, timeout T2 < T1
-    A->>LTCD: watch/verify HTLC (frozen RPC allowlist)
-    LTCD-->>A: HTLC confirmed with h, amount, T2
-    A->>LTCD: redeem HTLC revealing s
-    LTCD->>LTC: broadcast redeem tx
-    B->>NXS: claim NXS using revealed s
-    Note over A,B: Refund paths: if unredeemed, B refunds LTC after T2, A refunds NXS after T1
-```
-
-Phasing: this sequence lands only after D2 = 1(a) connectivity (PR #36 resurrection) is stable — see [ROADMAP Phase 6](../ROADMAP.md#phase-6--atomic-swap-research-track-d2-end-state).
+The earlier conceptual sequence assumed a Nexus hashlock and refund were already
+available. They must be proven against the actual consensus and API first; a
+generic Send or provider deposit is not an atomic swap. See the revised
+[protocol sequence, timing rules, and staged plan](../ATOMIC_SWAP_PLAN.md).

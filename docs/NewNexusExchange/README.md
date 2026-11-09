@@ -3,6 +3,7 @@
 > Status: **Accepted** (decisions locked 2026-08-10)
 > Scope: fork-first documentation for the NXS↔LTC exchange track in `NamecoinGithub/NexusInterface`
 > Companion documents: [ROADMAP.md](./ROADMAP.md) · [Diagrams/](./Diagrams/README.md)
+> Direct atomic-swap implementation proposal: [ATOMIC_SWAP_PLAN.md](./ATOMIC_SWAP_PLAN.md). This newer, testnet-first track is independent of the provider-brokered milestones below.
 > Related in-repo spec: [`docs/security/exchange-capability-spec.md`](../security/exchange-capability-spec.md)
 > Related issues/PRs: [#33](https://github.com/NamecoinGithub/NexusInterface/issues/33) (market-data hardening spec), [#34](https://github.com/NamecoinGithub/NexusInterface/issues/34) (exchange capability), [PR #35](https://github.com/NamecoinGithub/NexusInterface/pull/35) (exchange capability broker, closed draft), [PR #36](https://github.com/NamecoinGithub/NexusInterface/pull/36) (LTC loopback monitor, merged→reverted)
 
