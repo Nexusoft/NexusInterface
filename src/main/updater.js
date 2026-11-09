@@ -61,8 +61,9 @@ export function initializeUpdater(settings) {
 
 export function installUpdate(onBeforeQuit, isSilent, isForceRunAfter) {
   return new Promise((resolve, reject) => {
+    const quitUpdater = process.platform === 'darwin' ? nativeUpdater : autoUpdater;
     const cleanup = () => {
-      nativeUpdater.removeListener('before-quit-for-update', ready);
+      quitUpdater.removeListener('before-quit-for-update', ready);
       autoUpdater.removeListener('error', failed);
     };
     const failed = (error) => {
@@ -78,7 +79,7 @@ export function installUpdate(onBeforeQuit, isSilent, isForceRunAfter) {
         reject(error);
       }
     };
-    nativeUpdater.once('before-quit-for-update', ready);
+    quitUpdater.once('before-quit-for-update', ready);
     autoUpdater.once('error', failed);
     try {
       autoUpdater.quitAndInstall(isSilent, isForceRunAfter);
@@ -86,6 +87,21 @@ export function installUpdate(onBeforeQuit, isSilent, isForceRunAfter) {
       failed(error);
     }
   });
+}
+
+export async function installUpdateWithCoreRecovery(
+  coreWasRunning,
+  shutdownCore,
+  install,
+  restartCore
+) {
+  await shutdownCore();
+  try {
+    return await install();
+  } catch (error) {
+    if (coreWasRunning) await restartCore();
+    throw error;
+  }
 }
 
 export async function getMarketData() {

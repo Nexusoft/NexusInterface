@@ -144,17 +144,25 @@ test('embedded Core start always supplies API auth and probes already-running Co
   );
   assert.match(
     main,
-    /shutdownEmbeddedCoreAndAllowQuit\(\)[\s\S]*\.then\(\(\) => app\.exit\(0\)\)[\s\S]*\.catch/
+    /quitAfterUpdateOrShutdown\(\)\s*\.catch/
   );
   assert.doesNotMatch(
     read('src', 'main', 'core.js'),
     /executeCommand[\s\S]*console\.error\(err\)/
   );
-  // Menu/IPC quit must hard-exit: window close is always preventDefault'd so
-  // app.quit() alone cannot terminate after allowingFinalQuit is set.
+  // Menu/IPC quit must wait for an in-progress update before hard-exiting.
   assert.match(
     main,
-    /registerOperation\(\s*CHANNELS\.app\.quit,\s*undefined,\s*async \(\) => \{\s*await shutdownEmbeddedCoreAndAllowQuit\(\);\s*app\.exit\(0\);\s*\}\)/
+    /registerOperation\(\s*CHANNELS\.app\.quit,\s*undefined,\s*async \(\) => \{\s*await quitAfterUpdateOrShutdown\(\);\s*\}\)/
+  );
+  assert.match(main, /pendingUpdateInstallationPromise/);
+  assert.match(
+    main,
+    /installUpdateWithCoreRecovery\(\s*coreWasRunning,[\s\S]*coreLifecycle\.run\(['"]start['"],[\s\S]*startConfiguredCore\(\)/
+  );
+  assert.match(
+    main,
+    /async function quitAfterUpdateOrShutdown\(\)[\s\S]*await pendingUpdateInstallationPromise[\s\S]*if \(allowingFinalQuit\)[\s\S]*app\.exit\(0\)[\s\S]*await shutdownEmbeddedCoreAndAllowQuit\(\)[\s\S]*app\.exit\(0\)/
   );
   // Renderer delegates the complete graceful-stop/kill/confirmation sequence
   // to the serialized main-process lifecycle operation.

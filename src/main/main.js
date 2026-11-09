@@ -31,6 +31,7 @@ import { setOpenOnStart } from './autoLaunch';
 import {
   initializeUpdater,
   installUpdate,
+  installUpdateWithCoreRecovery,
   checkForUpdates,
   getMarketData,
   migrateToMainnet,
@@ -132,6 +133,7 @@ const CORE_TARGET_SETTINGS = new Set([
 let embeddedCoreShutdownPromise = null;
 // Once Core cleanup finished, allow Electron to complete quit/exit/install.
 let allowingFinalQuit = false;
+let pendingUpdateInstallationPromise = null;
 app.setAppUserModelId(APP_ID);
 ensureApplicationDirectories();
 initialize('A-US-0744437796'); // This doesn't send anything so it is safe to fire even if the user has turned tracking off
@@ -171,6 +173,22 @@ async function shutdownEmbeddedCoreAndAllowQuit() {
     throw new Error(result?.error || 'Nexus Core shutdown could not be confirmed');
   }
   allowingFinalQuit = true;
+}
+
+async function quitAfterUpdateOrShutdown() {
+  if (pendingUpdateInstallationPromise) {
+    try {
+      await pendingUpdateInstallationPromise;
+      if (allowingFinalQuit) {
+        app.exit(0);
+        return;
+      }
+    } catch {
+      // A failed update should not block an explicit request to quit.
+    }
+  }
+  await shutdownEmbeddedCoreAndAllowQuit();
+  app.exit(0);
 }
 
 const allowedOpenDialogProperties = new Set([
@@ -651,12 +669,10 @@ registerOperation(CHANNELS.app.isForceQuit, undefined, async () => global.forceQ
 // before-quit hard-exit fallback and leave a stuck process if the renderer
 // never completes closeWallet.
 registerOperation(CHANNELS.app.quit, undefined, async () => {
-  await shutdownEmbeddedCoreAndAllowQuit();
-  app.exit(0);
+  await quitAfterUpdateOrShutdown();
 });
 registerOperation(CHANNELS.app.exit, undefined, async () => {
-  await shutdownEmbeddedCoreAndAllowQuit();
-  app.exit(0);
+  await quitAfterUpdateOrShutdown();
 });
 registerOperation(CHANNELS.app.hideWindow, undefined, async () => mainWindow.hide());
 registerOperation(CHANNELS.app.hideDock, undefined, async () => {
@@ -1058,24 +1074,62 @@ registerOperation(
     };
   },
   async ({ isSilent, isForceRunAfter }) => {
-    await shutdownEmbeddedCoreAndAllowQuit();
-    allowingFinalQuit = false;
+    if (pendingUpdateInstallationPromise) {
+      return pendingUpdateInstallationPromise;
+    }
+    const installation = (async () => {
+      const coreWasRunning =
+        !getRendererSettings().manualDaemon && (await isCoreRunning());
+      try {
+        await installUpdateWithCoreRecovery(
+          coreWasRunning,
+          async () => {
+            await shutdownEmbeddedCoreAndAllowQuit();
+            allowingFinalQuit = false;
+          },
+          () =>
+            installUpdate(() => {
+              allowingFinalQuit = true;
+              // The installer is ready now, not merely requested. Destroying
+              // the window bypasses close guards during installation.
+              mainWindow?.destroy();
+            }, isSilent, isForceRunAfter),
+          async () => {
+            global.forceQuit = false;
+            embeddedCoreShutdownPromise = null;
+            coreLifecycle.cancelShutdown();
+            try {
+              await coreLifecycle.run('start', async () => {
+                const result = await startConfiguredCore();
+                if (result?.started) coreRpcSessionPolicy.reset();
+              });
+            } catch (restartError) {
+              log.error(
+                `Core Manager: restart after failed update installation failed: ${
+                  restartError?.message || restartError
+                }`
+              );
+            }
+          }
+        );
+      } catch (error) {
+        allowingFinalQuit = false;
+        global.forceQuit = false;
+        embeddedCoreShutdownPromise = null;
+        coreLifecycle.cancelShutdown();
+        log.error(
+          `Updater quitAndInstall failed: ${error?.message || error}`
+        );
+        throw error;
+      }
+    })();
+    pendingUpdateInstallationPromise = installation;
     try {
-      await installUpdate(() => {
-        allowingFinalQuit = true;
-        // The installer is ready now, not merely requested. Destroying the
-        // window bypasses renderer close/beforeunload guards during installation.
-        mainWindow?.destroy();
-      }, isSilent, isForceRunAfter);
-    } catch (error) {
-      allowingFinalQuit = false;
-      global.forceQuit = false;
-      embeddedCoreShutdownPromise = null;
-      coreLifecycle.cancelShutdown();
-      log.error(
-        `Updater quitAndInstall failed: ${error?.message || error}`
-      );
-      throw error;
+      await installation;
+    } finally {
+      if (pendingUpdateInstallationPromise === installation) {
+        pendingUpdateInstallationPromise = null;
+      }
     }
   }
 );
@@ -1304,8 +1358,7 @@ if (!gotTheLock) {
       return;
     }
     event.preventDefault();
-    shutdownEmbeddedCoreAndAllowQuit()
-      .then(() => app.exit(0))
+    quitAfterUpdateOrShutdown()
       .catch((error) => {
         log.error('Core Manager: app quit cancelled', {
           error: redactSensitiveText(error?.message || String(error)),

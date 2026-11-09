@@ -158,7 +158,7 @@ for (const platform of ['darwin', 'win32']) {
   });
 }
 
-function updaterFixture() {
+function updaterFixture(platform = process.platform) {
   const updater = new EventEmitter();
   const native = new EventEmitter();
   const module = loadModule('src/main/updater.js', {
@@ -166,7 +166,7 @@ function updaterFixture() {
     'electron-updater': { autoUpdater: updater },
     'electron-log': {},
     './paths': { assetsParentDir: '/assets' },
-  }, { APP_VERSION: '3.2.0-beta.3' });
+  }, { APP_VERSION: '3.2.0-beta.3', process: { platform, env: {} } });
   return { ...module, updater, native };
 }
 
@@ -179,31 +179,65 @@ test('prerelease updates keep automatic downloads enabled', () => {
   assert.equal(fixture.updater.allowDowngrade, false);
 });
 
-test('installation waits for native installer readiness instead of a fixed exit delay', async () => {
-  const fixture = updaterFixture();
-  let ready = false;
-  fixture.updater.quitAndInstall = () => {};
-  const installation = fixture.installUpdate(() => { ready = true; });
-  await Promise.resolve();
-  assert.equal(ready, false);
-  fixture.native.emit('before-quit-for-update');
-  await installation;
-  assert.equal(ready, true);
-  assert.equal(fixture.updater.listenerCount('error'), 0);
-});
+for (const [platform, expectedSource, unexpectedSource] of [
+  ['darwin', 'native', 'updater'],
+  ['win32', 'updater', 'native'],
+  ['linux', 'updater', 'native'],
+]) {
+  test(`${platform} installation waits for its updater readiness event`, async () => {
+    const fixture = updaterFixture(platform);
+    let ready = false;
+    fixture.updater.quitAndInstall = () => {};
+    const installation = fixture.installUpdate(() => { ready = true; });
+    await Promise.resolve();
+    assert.equal(ready, false);
+    fixture[unexpectedSource].emit('before-quit-for-update');
+    assert.equal(ready, false);
+    fixture[expectedSource].emit('before-quit-for-update');
+    await installation;
+    assert.equal(ready, true);
+    assert.equal(fixture.native.listenerCount('before-quit-for-update'), 0);
+    assert.equal(fixture.updater.listenerCount('before-quit-for-update'), 0);
+    assert.equal(fixture.updater.listenerCount('error'), 0);
+  });
+}
 
 test('installation surfaces synchronous and asynchronous installer errors and removes listeners', async () => {
-  for (const synchronous of [true, false]) {
-    const fixture = updaterFixture();
-    const error = new Error('installer failed');
-    fixture.updater.quitAndInstall = () => {
-      if (synchronous) throw error;
-      queueMicrotask(() => fixture.updater.emit('error', error));
-    };
-    await assert.rejects(fixture.installUpdate(() => assert.fail('must not quit')), /installer failed/);
-    assert.equal(fixture.native.listenerCount('before-quit-for-update'), 0);
-    assert.equal(fixture.updater.listenerCount('error'), 0);
+  for (const [platform, source] of [['darwin', 'native'], ['win32', 'updater']]) {
+    for (const synchronous of [true, false]) {
+      const fixture = updaterFixture(platform);
+      const error = new Error('installer failed');
+      fixture.updater.quitAndInstall = () => {
+        if (synchronous) throw error;
+        queueMicrotask(() => fixture.updater.emit('error', error));
+      };
+      await assert.rejects(
+        fixture.installUpdate(() => assert.fail('must not quit')),
+        /installer failed/
+      );
+      assert.equal(fixture[source].listenerCount('before-quit-for-update'), 0);
+      assert.equal(fixture.updater.listenerCount('error'), 0);
+    }
   }
+});
+
+test('installer failure restores an embedded Core that was stopped for the update', async () => {
+  const fixture = updaterFixture();
+  const events = [];
+  const installerError = new Error('installer failed');
+  await assert.rejects(
+    fixture.installUpdateWithCoreRecovery(
+      true,
+      async () => events.push('stop-core'),
+      async () => {
+        events.push('install');
+        throw installerError;
+      },
+      async () => events.push('restart-core')
+    ),
+    (error) => error === installerError
+  );
+  assert.deepEqual(events, ['stop-core', 'install', 'restart-core']);
 });
 
 test('failed update shutdown restores the renderer instead of leaving its closing overlay', async () => {
