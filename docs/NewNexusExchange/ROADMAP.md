@@ -3,6 +3,8 @@
 > Phased checklist implementing the [decision record](./README.md) (D1 = H, D2 = 1a, D3 = E3+E1).
 > Order mirrors [README §8 upstreaming order](./README.md#8-upstreaming-order); each phase is intended to be its own small, reviewable PR (or PR series).
 > Diagrams: [Diagrams/](./Diagrams/README.md)
+>
+> The newer [atomic-swap plan](./ATOMIC_SWAP_PLAN.md) is a parallel, testnet-first implementation track. Neither a custodial provider, module capabilities, nor Overview cards are prerequisites for researching or proving direct NXS↔LTC settlement. The checklist below primarily tracks the earlier provider and module proposal.
 
 ## Phase 1 — Fix B1: Overview layout (unblocks everything visual)
 
@@ -85,7 +87,7 @@ Contract in [README §5](./README.md#5-provider-adapter-contract); flows in [Dia
 
 ## Phase 6 — Atomic-swap research track (D2 end-state)
 
-Sequence in [Diagrams/exchange-sequence.md §2](./Diagrams/exchange-sequence.md#2-atomic-swap-end-state-research-track-htlcadaptor).
+Implementation stages and revised sequence: [ATOMIC_SWAP_PLAN.md](./ATOMIC_SWAP_PLAN.md).
 
 - [ ] Research spike: HTLC vs adaptor-signature designs for NXS↔LTC; document on-chain requirements on the Nexus contract side
 - [ ] Define the litecoind wallet-RPC surface needed for HTLCs; extend the frozen RPC allowlist via its own security review (monitor allowlist stays read-only until then)
