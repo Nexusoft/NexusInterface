@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euxo pipefail
 
-yum install -y perl-core
+yum install -y perl-core zlib-static
 curl -fsSL -o /tmp/db.tar.gz https://download.oracle.com/berkeley-db/db-5.3.28.tar.gz
 echo 'e0a992d740709892e81f9d93f06daf305cf73fb81b545afe72478043172c3628  /tmp/db.tar.gz' | sha256sum -c
 tar -xf /tmp/db.tar.gz -C /tmp
@@ -25,7 +25,7 @@ make -f makefile.cli -j2 \
   BDB_LIB_PATH=/tmp/bdb/lib \
   OPENSSL_INCLUDE_PATH=/tmp/ssl/include \
   OPENSSL_LIB_PATH=/tmp/ssl/lib \
-  LIBS='/tmp/bdb/lib/libdb_cxx.a /tmp/ssl/lib/libssl.a /tmp/ssl/lib/libcrypto.a -ldl -lpthread -lz' \
+  LIBS='/tmp/bdb/lib/libdb_cxx.a /tmp/ssl/lib/libssl.a /tmp/ssl/lib/libcrypto.a -ldl -lpthread -Wl,-Bstatic -lz -Wl,-Bdynamic' \
   LDFLAGS='-static-libstdc++ -static-libgcc'
 mkdir -p core
 cp nexus core/nexus-linux-x64
