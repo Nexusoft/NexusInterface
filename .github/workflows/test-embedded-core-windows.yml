@@ -1,0 +1,54 @@
+name: Test embedded Windows core
+
+on:
+  push:
+    branches:
+      - copilot/refresh-node5-embedded-cores
+    paths:
+      - .github/workflows/test-embedded-core-windows.yml
+
+jobs:
+  smoke:
+    runs-on: windows-latest
+    timeout-minutes: 10
+    steps:
+      - name: Download built core
+        uses: actions/download-artifact@v4
+        with:
+          name: windows-static-core
+          run-id: 42921488015
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Test core startup and API
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $data = Join-Path $env:RUNNER_TEMP 'nexus-smoke'
+          New-Item -ItemType Directory -Force $data | Out-Null
+          $out = Join-Path $env:RUNNER_TEMP 'nexus-stdout.log'
+          $err = Join-Path $env:RUNNER_TEMP 'nexus-stderr.log'
+          $process = Start-Process -FilePath (Join-Path $env:GITHUB_WORKSPACE 'nexus-win32-x64.exe') `
+            -ArgumentList @("-datadir=`"$data`"", '-private=1', '-listen=0', '-manager=0',
+              '-nodns=1', '-apiauth=0', '-apiport=18483') `
+            -RedirectStandardOutput $out -RedirectStandardError $err -PassThru
+          try {
+            for ($i = 0; $i -lt 90; $i++) {
+              if ($process.HasExited) { break }
+              try {
+                $response = Invoke-RestMethod -Uri 'http://127.0.0.1:18483/system/get/info'
+                if ($response.result.version -notlike '*5.1.7-rc6 build 1*') {
+                  throw "Unexpected core version: $($response.result.version)"
+                }
+                Write-Output $response.result.version
+                exit 0
+              } catch [System.Net.Http.HttpRequestException] {
+                Start-Sleep -Seconds 1
+              }
+            }
+            Get-Content $out
+            Get-Content $err
+            throw 'Core did not start its API'
+          } finally {
+            if (-not $process.HasExited) {
+              Stop-Process -Id $process.Id -Force
+            }
+          }
