@@ -19,7 +19,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: NamecoinGithub/LLL-TAO
-          ref: 31e81902427560b48f748dc75ef9b2130dde2b8d
+          ref: 71731cc163496dc62c3f04b9a7238edb802f3b54
           path: core-source
       - name: Build core
         run: |

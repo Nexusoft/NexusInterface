@@ -1,0 +1,45 @@
+name: Build embedded macOS core
+
+on:
+  push:
+    branches:
+      - copilot/refresh-node5-embedded-cores
+    paths:
+      - .github/workflows/build-embedded-core-macos.yml
+
+jobs:
+  build:
+    runs-on: macos-15-intel
+    timeout-minutes: 90
+    steps:
+      - name: Check out core source
+        uses: actions/checkout@v4
+        with:
+          repository: NamecoinGithub/LLL-TAO
+          ref: 71731cc163496dc62c3f04b9a7238edb802f3b54
+      - name: Install dependencies
+        run: brew install berkeley-db@5 openssl@3
+      - name: Build core
+        run: |
+          db="$(brew --prefix berkeley-db@5)"
+          ssl="$(brew --prefix openssl@3)"
+          make -f makefile.cli -j2 \
+            BDB_INCLUDE_PATH="$db/include" \
+            BDB_LIB_PATH="$db/lib" \
+            OPENSSL_INCLUDE_PATH="$ssl/include" \
+            OPENSSL_LIB_PATH="$ssl/lib" \
+            LIBS="$ssl/lib/libssl.a $ssl/lib/libcrypto.a $db/lib/libdb_cxx-5.3.dylib"
+          mkdir -p core
+          cp nexus core/nexus-darwin-x64
+          cp "$db/lib/libdb_cxx-5.3.dylib" core/
+          old_db="$(otool -L core/nexus-darwin-x64 | grep 'libdb_cxx-5.3.dylib' | awk '{print $1}')"
+          install_name_tool -change "$old_db" '@executable_path/libdb_cxx-5.3.dylib' core/nexus-darwin-x64
+          otool -L core/nexus-darwin-x64
+          otool -L core/libdb_cxx-5.3.dylib
+          file core/nexus-darwin-x64
+      - name: Upload core
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-core
+          path: core/
+          if-no-files-found: error
