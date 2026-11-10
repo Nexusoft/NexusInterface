@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -euxo pipefail
 
+yum install -y perl-IPC-Cmd
 curl -fsSL -o /tmp/db.tar.gz https://download.oracle.com/berkeley-db/db-5.3.28.tar.gz
 echo 'e0a992d740709892e81f9d93f06daf305cf73fb81b545afe72478043172c3628  /tmp/db.tar.gz' | sha256sum -c
 tar -xf /tmp/db.tar.gz -C /tmp
