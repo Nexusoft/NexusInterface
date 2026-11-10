@@ -1,11 +1,15 @@
 name: Build embedded Windows core
 
 on:
-  push:
-    branches:
-      - copilot/refresh-node5-embedded-cores
-    paths:
-      - .github/workflows/build-embedded-core-windows.yml
+  workflow_dispatch:
+    inputs:
+      core_ref:
+        description: LLL-TAO commit to build
+        required: true
+        default: 04eb09340bb20852c081b84fdb9c7b2e3de4a7d2
+
+permissions:
+  contents: read
 
 jobs:
   build:
@@ -19,7 +23,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: NamecoinGithub/LLL-TAO
-          ref: 54726c85d1c1a0a12f95212a18e1c72a8fe88ece
+          ref: ${{ inputs.core_ref }}
       - name: Set up MSYS2 MinGW64
         uses: msys2/setup-msys2@v2
         with:

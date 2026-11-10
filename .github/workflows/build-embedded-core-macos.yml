@@ -1,11 +1,15 @@
 name: Build embedded macOS core
 
 on:
-  push:
-    branches:
-      - copilot/refresh-node5-embedded-cores
-    paths:
-      - .github/workflows/build-embedded-core-macos.yml
+  workflow_dispatch:
+    inputs:
+      core_ref:
+        description: LLL-TAO commit to build
+        required: true
+        default: 04eb09340bb20852c081b84fdb9c7b2e3de4a7d2
+
+permissions:
+  contents: read
 
 jobs:
   build:
@@ -16,7 +20,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: NamecoinGithub/LLL-TAO
-          ref: 04eb09340bb20852c081b84fdb9c7b2e3de4a7d2
+          ref: ${{ inputs.core_ref }}
       - name: Build static dependencies
         shell: bash
         run: |
