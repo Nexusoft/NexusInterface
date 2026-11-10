@@ -1,0 +1,69 @@
+name: Build embedded Windows core
+
+on:
+  push:
+    branches:
+      - copilot/refresh-node5-embedded-cores
+    paths:
+      - .github/workflows/build-embedded-core-windows.yml
+
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 90
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - name: Check out core source
+        uses: actions/checkout@v4
+        with:
+          repository: NamecoinGithub/LLL-TAO
+          ref: 54726c85d1c1a0a12f95212a18e1c72a8fe88ece
+      - name: Set up MSYS2 MinGW64
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: >-
+            base-devel
+            curl
+            git
+            make
+            mingw-w64-x86_64-toolchain
+            mingw-w64-x86_64-openssl
+            mingw-w64-x86_64-zlib
+      - name: Build Berkeley DB
+        run: |
+          set -euxo pipefail
+          cd "$(cygpath -u "$RUNNER_TEMP")"
+          curl -fsSL -o db.tar.gz https://download.oracle.com/berkeley-db/db-5.3.28.tar.gz
+          echo 'e0a992d740709892e81f9d93f06daf305cf73fb81b545afe72478043172c3628  db.tar.gz' | sha256sum -c
+          tar -xf db.tar.gz
+          sed -i 's/__atomic_compare_exchange/__atomic_compare_exchange_db/g' db-5.3.28/src/dbinc/atomic.h
+          cd db-5.3.28/build_unix
+          ../dist/configure --prefix=/mingw64 --enable-mingw --enable-cxx \
+            --disable-shared --enable-static
+          make -j2
+          make install
+      - name: Build core
+        run: |
+          set -euxo pipefail
+          make -f makefile.cli -j2 \
+            OPENSSL_LIB_PATH=/mingw64/lib \
+            OPENSSL_INCLUDE_PATH=/mingw64/include \
+            BDB_LIB_PATH=/mingw64/lib \
+            BDB_INCLUDE_PATH=/mingw64/include
+          mkdir -p core
+          cp release/nexus.exe core/nexus-win32-x64.exe
+          objdump -p core/nexus-win32-x64.exe | grep 'DLL Name'
+          if objdump -p core/nexus-win32-x64.exe | grep -iE 'DLL Name: (libdb|libgcc|libstdc|libwinpthread)'; then
+            echo 'Unexpected non-system DLL dependency' >&2
+            exit 1
+          fi
+      - name: Upload core
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-static-core
+          path: core/
+          if-no-files-found: error
