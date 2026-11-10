@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: NamecoinGithub/LLL-TAO
-          ref: 54726c85d1c1a0a12f95212a18e1c72a8fe88ece
+          ref: 04eb09340bb20852c081b84fdb9c7b2e3de4a7d2
       - name: Build static dependencies
         shell: bash
         run: |
@@ -55,6 +55,7 @@ jobs:
           db="$RUNNER_TEMP/bdb"
           ssl="$RUNNER_TEMP/ssl"
           make -f makefile.cli -j3 \
+            MACOS_MIN_VERSION=10.13 \
             BDB_INCLUDE_PATH="$db/include" \
             BDB_LIB_PATH="$db/lib" \
             OPENSSL_INCLUDE_PATH="$ssl/include" \
