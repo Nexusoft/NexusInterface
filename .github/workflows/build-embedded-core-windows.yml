@@ -42,7 +42,7 @@ jobs:
           tar -xf db.tar.gz
           sed -i 's/__atomic_compare_exchange/__atomic_compare_exchange_db/g' db-5.3.28/src/dbinc/atomic.h
           cd db-5.3.28/build_unix
-          ../dist/configure --prefix=/mingw64 --enable-mingw --enable-cxx \
+          CFLAGS='-O2 -std=gnu11' ../dist/configure --prefix=/mingw64 --enable-mingw --enable-cxx \
             --disable-shared --enable-static --disable-replication
           make -j2
           make install
