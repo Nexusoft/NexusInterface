@@ -153,7 +153,9 @@ export interface StakeInfo {
   new: boolean;
   staking: boolean;
   change: boolean;
+  amount?: number;
   pooled?: boolean;
+  stalled?: boolean;
   requested?: number;
   expires?: number;
   onhold?: boolean;

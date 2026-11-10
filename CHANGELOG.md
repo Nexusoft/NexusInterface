@@ -1,3 +1,15 @@
+# 3.2.3-beta.1 (unreleased)
+
+This prerelease is for continued testing, not a production release.
+
+- Correct the displayed pending stake change and the start/stop checks for
+  already-locked stake.
+- The header and staking tab both report the Core's running minter status;
+  the embedded Core's **Enable staking** setting controls whether the minter
+  may start, while **Adjust stake amount** requests a change to the account's
+  locked balance on the next Trust transaction.
+- Show synchronization and, when supported by Core, stalled-minter status.
+
 # 3.2.0 (2025.XX.XX)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v3.2.0)

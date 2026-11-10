@@ -8,7 +8,7 @@ import { updateSettings, settingsAtom } from 'lib/settings';
 import { restartCore } from 'lib/core';
 import { userStatusQuery, stakeInfoQuery } from 'lib/session';
 import { callAPI } from 'lib/api';
-import { useCoreInfo, isSynchronized } from 'lib/coreInfo';
+import { useCoreInfo, useSynchronized, isSynchronized } from 'lib/coreInfo';
 import { openModal, removeModal, showNotification } from 'lib/ui';
 import {
   confirm,
@@ -80,6 +80,7 @@ export default function Staking() {
   useUserTab('Staking');
   const stakeInfo = stakeInfoQuery.use();
   const coreInfo = useCoreInfo();
+  const synchronized = useSynchronized();
   const privateNet = coreInfo?.private;
 
   const startStaking = async () => {
@@ -87,19 +88,24 @@ export default function Staking() {
       const { liteMode, multiUser, enableStaking } = store.get(settingsAtom);
       const synchronized = isSynchronized();
 
-      if (stakeInfo?.balance === 0) {
-        if (stakeInfo?.balance === 0) {
-          openErrorDialog({
-            message: __('Trust balance empty!'),
-            note: __(
-              'You must send some NXS to your <b>trust</b> account first'
-            ),
-          });
-          return;
-        } else if (!stakeInfo?.new) {
-          const cancelled = await promptForStakeAmount();
-          if (cancelled) return;
-        }
+      if (stakeInfo && stakeInfo.balance === 0 && stakeInfo.stake === 0) {
+        openErrorDialog({
+          message: __('Trust balance empty!'),
+          note: __(
+            'You must send some NXS to your <b>trust</b> account first'
+          ),
+        });
+        return;
+      }
+
+      if (
+        stakeInfo &&
+        !stakeInfo.new &&
+        stakeInfo.stake === 0 &&
+        !(stakeInfo.change && (stakeInfo.amount ?? 0) > 0)
+      ) {
+        const cancelled = await promptForStakeAmount();
+        if (cancelled) return;
       }
 
       if (liteMode || !enableStaking || multiUser) {
@@ -153,9 +159,8 @@ export default function Staking() {
         const pin = await confirmPin({
           note: __('Enter your PIN to start staking'),
         });
-        if (pin) {
-          await callAPI('sessions/unlock/local', { pin, staking: true });
-        }
+        if (!pin) return;
+        await callAPI('sessions/unlock/local', { pin, staking: true });
       }
 
       if (!synchronized) {
@@ -189,7 +194,7 @@ export default function Staking() {
     };
     let confirmed = false;
 
-    if (stakeInfo?.balance) {
+    if (!stakeInfo?.stake) {
       confirmed = await confirm({
         question: __('Stop staking?'),
       });
@@ -242,7 +247,11 @@ export default function Staking() {
       <Line bold>
         <div>{__('Status')}</div>
         <div>
-          {stakeInfo.staking ? (
+          {stakeInfo.staking && stakeInfo.stalled ? (
+            __('Staking minter is unresponsive')
+          ) : stakeInfo.staking && !synchronized ? (
+            __('Waiting for synchronization to start staking')
+          ) : stakeInfo.staking ? (
             <span>
               {__('Staking')}
               {!!stakeInfo.pooled && ` (${__('pooled')})`}
@@ -276,8 +285,12 @@ export default function Staking() {
                 />
               </div>
               <div>
-                {stakeInfo.balance > 0 && '+'}
-                {formatNumber(stakeInfo.balance, 6)} NXS
+                {typeof stakeInfo.amount === 'number'
+                  ? `${stakeInfo.amount > 0 ? '+' : ''}${formatNumber(
+                      stakeInfo.amount,
+                      6
+                    )} NXS`
+                  : __('Unavailable')}
               </div>
             </Line>
             {!!stakeInfo.requested && (
