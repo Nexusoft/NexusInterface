@@ -58,12 +58,26 @@ function fixture(t, platform) {
 }
 
 for (const platform of Object.keys(fixtures)) {
-  test(`${platform} release verifies installers, core, updater and metadata`, (t) => {
+  test(`${platform} release verifies installers, core, updater and metadata`, {
+    skip: process.platform === 'win32' && platform !== 'win'
+      ? 'Windows filesystems cannot represent Unix executable bits'
+      : false,
+  }, (t) => {
     const { dir } = fixture(t, platform);
     verifyRelease(platform, dir);
     assert.match(fs.readFileSync(path.join(dir, `SHA256SUMS-${platform}.txt`), 'utf8'), /[a-f0-9]{64}  /);
   });
 }
+
+test('Unix releases reject a non-executable core', {
+  skip: process.platform === 'win32' ? 'Windows filesystems cannot represent Unix executable bits' : false,
+}, (t) => {
+  for (const platform of ['linux', 'mac']) {
+    const { dir, cfg, resources } = fixture(t, platform);
+    fs.chmodSync(path.join(resources, 'assets', cfg.core), 0o644);
+    assert.throws(() => verifyRelease(platform, dir), /not executable/);
+  }
+});
 
 test('release rejects incorrect update hashes and updater repositories', (t) => {
   const { dir, cfg, resources, versioned } = fixture(t, 'win');
