@@ -1,0 +1,37 @@
+name: Build embedded Linux core
+
+on:
+  workflow_dispatch:
+    inputs:
+      core_ref:
+        description: LLL-TAO commit to build
+        required: true
+        default: 04eb09340bb20852c081b84fdb9c7b2e3de4a7d2
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Check out build script
+        uses: actions/checkout@v4
+      - name: Check out core source
+        uses: actions/checkout@v4
+        with:
+          repository: NamecoinGithub/LLL-TAO
+          ref: ${{ inputs.core_ref }}
+          path: core-source
+      - name: Build core
+        run: |
+          docker run --rm -v "$GITHUB_WORKSPACE:/work" -w /work/core-source \
+            quay.io/pypa/manylinux2014_x86_64@sha256:62eeff30ef134a85ec0f97109e008a319b0315ca5e8a6d754ee771556c02622a \
+            bash /work/.github/build-embedded-core-linux.sh
+      - name: Upload core
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-core
+          path: core-source/core/
+          if-no-files-found: error
