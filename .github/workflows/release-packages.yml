@@ -26,12 +26,15 @@ jobs:
           - platform: linux
             runner: ubuntu-latest
             target: --linux deb AppImage snap
+            metadata: beta-linux.yml
           - platform: mac
             runner: macos-15-intel
             target: --mac dmg zip
+            metadata: beta-mac.yml
           - platform: win
             runner: windows-latest
             target: --win nsis
+            metadata: beta.yml
     env:
       CSC_IDENTITY_AUTO_DISCOVERY: 'false'
     steps:
@@ -59,7 +62,7 @@ jobs:
             release/*.dmg
             release/*.zip
             release/*.exe
-            release/*.yml
+            release/${{ matrix.metadata }}
             release/*.blockmap
             release/SHA256SUMS-*.txt
           if-no-files-found: error

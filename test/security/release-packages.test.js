@@ -36,6 +36,7 @@ function fixture(t, platform) {
   const cfg = fixtures[platform];
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'nexus-release-test-'));
   t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
+  fs.writeFileSync(path.join(dir, 'builder-debug.yml'), 'debug output');
   const versioned = (value) => value.replace('VERSION', pkg.version);
   for (const name of cfg.packages) fs.writeFileSync(path.join(dir, versioned(name)), 'installer');
   const digest = crypto.createHash('sha512').update('installer').digest('base64');
@@ -65,7 +66,9 @@ for (const platform of Object.keys(fixtures)) {
   }, (t) => {
     const { dir } = fixture(t, platform);
     verifyRelease(platform, dir);
-    assert.match(fs.readFileSync(path.join(dir, `SHA256SUMS-${platform}.txt`), 'utf8'), /[a-f0-9]{64}  /);
+    const checksums = fs.readFileSync(path.join(dir, `SHA256SUMS-${platform}.txt`), 'utf8');
+    assert.match(checksums, /[a-f0-9]{64}  /);
+    assert.doesNotMatch(checksums, /builder-debug\.yml/);
   });
 }
 

@@ -75,7 +75,7 @@ function verifyRelease(platform, releaseDir = 'release') {
   }
 
   const files = fs.readdirSync(releaseDir).filter((name) =>
-    packages.includes(name) || name.endsWith('.yml') || name.endsWith('.blockmap')
+    packages.includes(name) || name === metadataName || name.endsWith('.blockmap')
   ).sort();
   const checksums = files.map((name) => `${hash(path.join(releaseDir, name), 'sha256', 'hex')}  ${name}`).join('\n') + '\n';
   fs.writeFileSync(path.join(releaseDir, `SHA256SUMS-${platform}.txt`), checksums);
