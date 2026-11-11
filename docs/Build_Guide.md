@@ -41,6 +41,27 @@ Run command `npm run package-platform*`
   This will build the project and place the build in the `release` folder. The file format will depend on the provided formats in the `package.json`
 - macOS should use `npm run package-mac`; this repository sets `mac.identity` to `null`, so notarization is skipped unless you override the signing configuration.
 
+### Release candidates
+
+The **Build release packages** workflow builds x64 installers on Linux, macOS
+and Windows. Run it from the Actions tab with the desired commit selected.
+Download all three `nexus-interface-*-x64` artifacts to obtain the installers,
+update metadata, blockmaps and per-platform SHA-256 files. The workflow never
+publishes a GitHub release; review and upload those files to a draft release.
+Its verification checks the packaged core, notices, update destination and
+update metadata against the built files.
+
+The default macOS build is unsigned and unnotarized; Gatekeeper may block it,
+and macOS automatic updates require a signed application. Windows builds are
+also unsigned and may trigger SmartScreen. Do not enter signing credentials
+in the repository or release workflow; use appropriately scoped secrets and
+configure signing separately before distributing signed builds.
+
+The packaged updater for this fork points at
+`NamecoinGithub/NexusInterface`, not the upstream Nexusoft release feed.
+The metadata and every file it references must be uploaded together before
+publishing a release.
+
 ### FAQ
 
 - If you compile a replacement Nexus core daemon and otherwise keep the upstream NexusInterface unchanged, replace the bundled core binary in `assets/<platform>/cores/` before packaging:
