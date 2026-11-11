@@ -1,0 +1,69 @@
+name: Build release packages
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - .github/workflows/release-packages.yml
+      - internals/scripts/verify-release.js
+      - test/security/release-packages.test.js
+      - package.json
+      - dev-app-update.yml
+      - src/main/updater.js
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    name: Package ${{ matrix.platform }} x64
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux
+            runner: ubuntu-latest
+            target: --linux deb AppImage snap
+            metadata: beta-linux.yml
+          - platform: mac
+            runner: macos-15-intel
+            target: --mac dmg zip
+            metadata: beta-mac.yml
+          - platform: win
+            runner: windows-latest
+            target: --win nsis
+            metadata: beta.yml
+    env:
+      CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+    steps:
+      - uses: actions/checkout@v4.2.2
+      - uses: actions/setup-node@v4.4.0
+        with:
+          node-version: 22.12.0
+          cache: npm
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+      - name: Build application
+        run: npm run build
+      - name: Build installers
+        run: npx electron-builder ${{ matrix.target }} --x64 --publish never
+      - name: Verify packages, metadata and embedded core
+        run: node internals/scripts/verify-release.js ${{ matrix.platform }}
+      - name: Upload release candidates
+        uses: actions/upload-artifact@v4
+        with:
+          name: nexus-interface-${{ matrix.platform }}-x64
+          path: |
+            release/*.deb
+            release/*.AppImage
+            release/*.snap
+            release/*.dmg
+            release/*.zip
+            release/*.exe
+            release/${{ matrix.metadata }}
+            release/*.blockmap
+            release/SHA256SUMS-*.txt
+          if-no-files-found: error
+          retention-days: 14

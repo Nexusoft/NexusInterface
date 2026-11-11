@@ -129,7 +129,7 @@ export async function checkForUpdates() {
 
   if (!fs.existsSync(path.join(assetsParentDir, 'app-update.yml'))) {
     const response = await fetch(
-      'https://api.github.com/repos/Nexusoft/NexusInterface/releases/latest',
+      'https://api.github.com/repos/NamecoinGithub/NexusInterface/releases/latest',
       { headers: { Accept: 'application/vnd.github+json', 'User-Agent': 'NexusInterface' } }
     );
     if (!response.ok) {
