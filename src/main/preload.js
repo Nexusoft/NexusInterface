@@ -107,7 +107,7 @@ const nexusElectron = {
   },
   theme: {
     getInitial: () => invokeSync(CHANNELS.theme.getInitial),
-    update: (updates) => invoke(CHANNELS.theme.update, updates),
+    update: (theme) => invoke(CHANNELS.theme.update, theme),
     selectWallpaper: () => invoke(CHANNELS.theme.selectWallpaper),
     importFromDialog: () => invoke(CHANNELS.theme.importFromDialog),
     exportToDialog: () => invoke(CHANNELS.theme.exportToDialog),
@@ -136,8 +136,8 @@ const nexusElectron = {
       invoke(CHANNELS.core.executeConsoleCommand, command),
   },
   coreRpc: {
-    call: (request) => invoke(CHANNELS.coreRpc.call, request),
-    callByUrl: (url) => invoke(CHANNELS.coreRpc.callByUrl, url),
+    call: (request) => ipcRenderer.invoke(CHANNELS.coreRpc.call, request),
+    callByUrl: (url) => ipcRenderer.invoke(CHANNELS.coreRpc.callByUrl, url),
   },
   bootstrap: {
     start: () => invoke(CHANNELS.bootstrap.start),

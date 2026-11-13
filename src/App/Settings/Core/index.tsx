@@ -97,6 +97,7 @@ const formKeys = [
   'privateTestnet',
   'avatarMode',
   'coreDataDir',
+  'embeddedCoreBinaryPath',
   'allowAdvancedCoreOptions',
   'advancedCoreParams',
   'manualDaemonIP',

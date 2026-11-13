@@ -77,7 +77,9 @@ export default function EmbeddedCoreSettings() {
 }
 
 function CoreBinaryPathField() {
-  const { input } = useField('embeddedCoreBinaryPath');
+  const { input } = useField('embeddedCoreBinaryPath', {
+    parse: (value) => value,
+  });
 
   const pickCoreBinary = async () => {
     const filePaths = await window.nexusElectron.dialogs.selectCoreBinary();
@@ -89,16 +91,19 @@ function CoreBinaryPathField() {
 
   return (
     <div style={{ display: 'flex', width: '100%' }}>
-      <Form.TextField
-        name="embeddedCoreBinaryPath"
-        style={{ flexGrow: 1 }}
-        readOnly
-      />
+      <TextField {...input} style={{ flexGrow: 1, minWidth: 0 }} readOnly />
       <Button
         onClick={pickCoreBinary}
         style={{ height: consts.inputHeightEm + 'em', marginLeft: '0.5em' }}
       >
         {__('Browse')}
+      </Button>
+      <Button
+        onClick={() => input.onChange('')}
+        disabled={!input.value}
+        style={{ height: consts.inputHeightEm + 'em', marginLeft: '0.5em' }}
+      >
+        {__('Use bundled')}
       </Button>
     </div>
   );

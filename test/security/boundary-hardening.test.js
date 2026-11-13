@@ -16,12 +16,168 @@ const { validateCoreRpcRequest } = require('../../src/main/ipc/contracts');
 const { validateSendDraft } = require('../../src/main/ipc/moduleApiV2');
 const { createSharedQuerySubscription } = require('../../src/shared/utils/sharedQuerySubscription');
 const { createConfigOwner } = require('../../src/main/ipc/configOwner');
+const { validateThemeUpdate } = require('../../src/main/ipc/contracts');
 
 function temporaryDirectory(t) {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'nexus-boundary-'));
   t.after(() => fs.rmSync(directory, { recursive: true, force: true }));
   return directory;
 }
+
+test('Core RPC errors retain their code across the isolated preload bridge', async () => {
+  const exposed = {};
+  let response = { ok: false, error: {
+    code: 'CORE_OUTCOME_UNKNOWN',
+    message: 'Check transaction history before retrying',
+  } };
+  loadModule('src/main/preload.js', {
+    electron: {
+      contextBridge: { exposeInMainWorld: (name, value) => { exposed[name] = value; } },
+      ipcRenderer: { invoke: async () => response },
+    },
+  }, {
+    process: { contextIsolated: true, argv: [], platform: 'linux', arch: 'x64' },
+    console: { info() {}, error() {} },
+  });
+  const crossBridge = (method) => async (...args) => {
+    try {
+      return structuredClone(await method(...args));
+    } catch (error) {
+      throw structuredClone(error);
+    }
+  };
+  const rpc = exposed.nexusElectron.coreRpc;
+  const api = loadModule('src/shared/lib/api.ts', {
+    'lib/coreInfo': { coreInfoQuery: { valueAtom: {} } },
+    'lib/session': { activeSessionIdAtom: {} },
+    'lib/store': { store: { get: () => undefined } },
+  }, { window: { nexusElectron: { coreRpc: {
+    call: crossBridge(rpc.call),
+    callByUrl: crossBridge(rpc.callByUrl),
+  } } } });
+
+  await assert.rejects(api.callAPI('finance/debit/any', {}), (error) =>
+    error instanceof Error &&
+    error.code === 'CORE_OUTCOME_UNKNOWN' &&
+    /Check transaction history/.test(error.message)
+  );
+  await assert.rejects(api.callAPIByUrl('finance/get/any'), (error) =>
+    error.code === 'CORE_OUTCOME_UNKNOWN'
+  );
+  response = { ok: true, value: { balance: 42 } };
+  assert.deepEqual(await api.callAPI('finance/get/any'), { balance: 42 });
+  assert.deepEqual(await api.callAPIByUrl('finance/get/any'), { balance: 42 });
+  response = null;
+  await assert.rejects(api.callAPI('finance/get/any'), /Invalid response/);
+});
+
+test('theme persistence batches edits and replaces obsolete preset fields', (t) => {
+  t.mock.timers.enable({ apis: ['setTimeout'] });
+  const { createStore } = require('jotai');
+  const store = createStore();
+  let persisted = { background: '#111111', wallpaperSize: 'cover' };
+  const writes = [];
+  const theme = loadModule('src/shared/lib/theme.ts', {
+    'lib/store': {
+      store,
+      subscribe: (atom, listener) => store.sub(atom, () => listener(store.get(atom))),
+    },
+  }, { window: { nexusElectron: { theme: {
+    getInitial: () => persisted,
+    update: async (value) => {
+      persisted = validateThemeUpdate(value);
+      writes.push(persisted);
+      return persisted;
+    },
+  } } } });
+  theme.updateTheme({ background: '#222222' });
+  theme.updateTheme({ foreground: '#ffffff' });
+  t.mock.timers.tick(0);
+  assert.deepEqual(persisted, {
+    background: '#222222', foreground: '#ffffff', wallpaperSize: 'cover',
+  });
+  assert.equal(writes.length, 1);
+  theme.setTheme(theme.darkTheme);
+  t.mock.timers.tick(0);
+  assert.deepEqual(persisted, theme.darkTheme);
+  assert.equal('wallpaperSize' in persisted, false);
+  theme.setTheme({});
+  t.mock.timers.tick(0);
+  assert.deepEqual(persisted, {});
+  assert.throws(() => validateThemeUpdate({ unsupported: 'value' }));
+  const mainSource = fs.readFileSync(path.join(__dirname, '../../src/main/main.js'), 'utf8');
+  assert.match(mainSource, /registerOperation\(CHANNELS\.theme\.update,\s*validateThemeUpdate,\s*async \(theme\) =>\s*saveTheme\(theme\)/);
+});
+
+test('theme wallpaper downloads enforce streaming size and timeout limits', async () => {
+  let fetchImpl;
+  let timeoutCallback;
+  let writes = [];
+  const url = 'https://github.com/wallpaper.png';
+  const theme = loadModule('src/main/theme.js', {
+    'fs/promises': {
+      readFile: async () => JSON.stringify({ wallpaper: url }),
+      writeFile: async (...args) => { writes.push(args); },
+    },
+    electron: { dialog: { showOpenDialog: async () => ({
+      canceled: false, filePaths: ['/theme.json'],
+    }) } },
+    './paths': { walletDataDir: '/wallet' },
+    './settings': { loadTheme: () => ({}), saveTheme: (value) => value },
+  }, {
+    fetch: (...args) => fetchImpl(...args),
+    setTimeout: (callback) => { timeoutCallback = callback; return 1; },
+    clearTimeout: () => {},
+  });
+  const makeResponse = (body, contentLength) => ({
+    ok: true, body, headers: new Headers(contentLength ? { 'content-length': contentLength } : {}),
+  });
+  let reads = 0;
+  fetchImpl = async () => makeResponse((async function* () {
+    reads++;
+    yield Buffer.alloc(5 * 1024 * 1024);
+    reads++;
+    yield Buffer.alloc(5 * 1024 * 1024);
+  })());
+  const imported = await theme.importTheme({});
+  assert.equal(reads, 2);
+  assert.equal(writes[0][1].length, 10 * 1024 * 1024);
+  assert.match(imported.wallpaper, /^file:.*wallpaper\.png$/);
+
+  writes = [];
+  reads = 0;
+  fetchImpl = async () => makeResponse((async function* () {
+    reads++;
+    yield Buffer.alloc(10 * 1024 * 1024);
+    reads++;
+    yield Buffer.from('x');
+    reads++;
+    yield Buffer.from('never read');
+  })());
+  await assert.rejects(theme.importTheme({}), /exceeds the 10 MB limit/);
+  assert.equal(reads, 2);
+  assert.equal(writes.length, 0);
+
+  fetchImpl = async () => makeResponse((async function* () {
+    throw new Error('body should not be read');
+  })(), String(10 * 1024 * 1024 + 1));
+  await assert.rejects(theme.importTheme({}), /exceeds the 10 MB limit/);
+
+  let started;
+  const reading = new Promise((resolve) => { started = resolve; });
+  fetchImpl = async (_url, { signal }) => makeResponse((async function* () {
+    started();
+    await new Promise((_resolve, reject) =>
+      signal.addEventListener('abort', () => reject(new Error('aborted')), { once: true })
+    );
+    yield Buffer.from('unreachable');
+  })());
+  const pending = theme.importTheme({});
+  await reading;
+  timeoutCallback();
+  await assert.rejects(pending, /download timed out/);
+  assert.equal(writes.length, 0);
+});
 
 test('amounts preserve exact strings and enforce asset precision and uint64 units', () => {
   assert.equal(amountUnits('001.2300', 4), 12300n);

@@ -1,6 +1,6 @@
 import { atom } from 'jotai';
 
-import { store, subscribeWithPrevious } from 'lib/store';
+import { store, subscribe } from 'lib/store';
 
 export interface Theme {
   wallpaper: string;
@@ -74,15 +74,10 @@ export const themeAtom = atom<Theme>((get) => ({
 }));
 
 let timerId: ReturnType<typeof setTimeout> | undefined;
-subscribeWithPrevious(userThemeAtom, (theme, previousTheme) => {
+subscribe(userThemeAtom, (theme) => {
   clearTimeout(timerId);
   timerId = setTimeout(() => {
-    const updates = Object.fromEntries(
-      Object.entries(theme).filter(([key, value]) => previousTheme[key as keyof Theme] !== value)
-    ) as PartialTheme;
-    if (Object.keys(updates).length) {
-      window.nexusElectron.theme.update(updates).catch(console.error);
-    }
+    window.nexusElectron.theme.update(theme).catch(console.error);
   }, 0);
 });
 

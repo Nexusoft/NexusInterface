@@ -25,6 +25,10 @@ interface NexusEnvironment {
   arch: string;
 }
 
+type CoreRpcResult =
+  | { ok: true; value: unknown }
+  | { ok: false; error: { code: string; message: string } };
+
 interface NexusElectronBridge {
   environment: NexusEnvironment;
   paths: {
@@ -43,7 +47,7 @@ interface NexusElectronBridge {
   };
   theme: {
     getInitial(): Record<string, unknown>;
-    update(updates: Record<string, unknown>): Promise<Record<string, unknown>>;
+    update(theme: Record<string, unknown>): Promise<Record<string, unknown>>;
     selectWallpaper(): Promise<string | undefined>;
     importFromDialog(): Promise<Record<string, unknown> | undefined>;
     exportToDialog(): Promise<boolean>;
@@ -78,8 +82,8 @@ interface NexusElectronBridge {
     call(request: {
       endpoint: string;
       params?: Record<string, unknown>;
-    }): Promise<unknown>;
-    callByUrl(url: string): Promise<unknown>;
+    }): Promise<CoreRpcResult>;
+    callByUrl(url: string): Promise<CoreRpcResult>;
   };
   bootstrap: {
     start(): Promise<unknown>;

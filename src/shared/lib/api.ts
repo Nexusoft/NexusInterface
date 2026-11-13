@@ -15,7 +15,20 @@ const SESSION_OVERRIDE_ENDPOINTS = new Set([
  * Send a Tritium API request in GET method
  */
 export async function callAPIByUrl(url: string) {
-  return window.nexusElectron.coreRpc.callByUrl(url);
+  return unwrapCoreRpcResult(await window.nexusElectron.coreRpc.callByUrl(url));
+}
+
+function unwrapCoreRpcResult(result: CoreRpcResult) {
+  if (!result || typeof result !== 'object' || typeof result.ok !== 'boolean') {
+    throw new Error('Invalid response from the Nexus main-process bridge');
+  }
+  if (!result.ok) {
+    throw Object.assign(
+      new Error(result.error?.message || 'Nexus operation failed'),
+      { code: result.error?.code }
+    );
+  }
+  return result.value;
 }
 
 /**
@@ -865,7 +878,9 @@ async function callAPI(
     params['where'] = where;
   }
 
-  return window.nexusElectron.coreRpc.call({ endpoint, params });
+  return unwrapCoreRpcResult(
+    await window.nexusElectron.coreRpc.call({ endpoint, params })
+  );
 }
 export { callAPI };
 

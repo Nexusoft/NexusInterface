@@ -40,7 +40,7 @@ export default function AutoUpdateBackgroundTask(
   const goToGitHub = () => {
     closeTaskRef.current();
     void window.nexusElectron.app.openExternal(
-      `https://github.com/Nexusoft/NexusInterface/releases/tag/${version}`
+      `https://github.com/NamecoinGithub/NexusInterface/releases/tag/${encodeURIComponent(version)}`
     );
   };
 

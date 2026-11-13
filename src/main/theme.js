@@ -8,6 +8,8 @@ import { walletDataDir } from './paths';
 import { loadTheme, saveTheme } from './settings';
 
 const wallpaperExtensions = ['jpg', 'jpeg', 'png', 'webp', 'bmp', 'gif'];
+const maxWallpaperBytes = 10 * 1024 * 1024;
+const wallpaperDownloadTimeoutMs = 30_000;
 
 function toFileUrl(filePath) {
   return pathToFileURL(filePath).toString();
@@ -20,6 +22,45 @@ function getWallpaperFileName(url) {
     throw new Error('Wallpaper URL has an unsupported file type');
   }
   return `wallpaper${extension}`;
+}
+
+async function downloadWallpaper(url) {
+  const controller = new AbortController();
+  let timedOut = false;
+  const timeout = setTimeout(() => {
+    timedOut = true;
+    controller.abort();
+  }, wallpaperDownloadTimeoutMs);
+
+  try {
+    const response = await fetch(url, {
+      redirect: 'error',
+      signal: controller.signal,
+    });
+    if (!response.ok || !response.body) {
+      throw new Error('Unable to download theme wallpaper');
+    }
+    const contentLength = Number(response.headers.get('content-length'));
+    if (contentLength > maxWallpaperBytes) {
+      throw new Error('Theme wallpaper exceeds the 10 MB limit');
+    }
+    const chunks = [];
+    let size = 0;
+    for await (const chunk of response.body) {
+      size += chunk.length;
+      if (size > maxWallpaperBytes) {
+        throw new Error('Theme wallpaper exceeds the 10 MB limit');
+      }
+      chunks.push(chunk);
+    }
+    return Buffer.concat(chunks, size);
+  } catch (error) {
+    if (timedOut) throw new Error('Theme wallpaper download timed out');
+    throw error;
+  } finally {
+    clearTimeout(timeout);
+    controller.abort();
+  }
 }
 
 export async function selectWallpaper(mainWindow) {
@@ -45,13 +86,8 @@ export async function importTheme(mainWindow) {
   const importedTheme = assertRecord(JSON.parse(contents), 'Imported theme');
   if (typeof importedTheme.wallpaper === 'string' && /^https?:/i.test(importedTheme.wallpaper)) {
     const wallpaperUrl = assertExternalUrl(importedTheme.wallpaper, 'Theme wallpaper URL');
-    const response = await fetch(wallpaperUrl, { redirect: 'error' });
-    if (!response.ok) throw new Error('Unable to download theme wallpaper');
-    const wallpaper = Buffer.from(await response.arrayBuffer());
-    if (wallpaper.length > 10 * 1024 * 1024) {
-      throw new Error('Theme wallpaper exceeds the 10 MB limit');
-    }
     const wallpaperPath = path.join(walletDataDir, getWallpaperFileName(wallpaperUrl));
+    const wallpaper = await downloadWallpaper(wallpaperUrl);
     await fs.writeFile(wallpaperPath, wallpaper, { mode: 0o600 });
     importedTheme.wallpaper = toFileUrl(wallpaperPath);
   }

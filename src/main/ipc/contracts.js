@@ -588,7 +588,7 @@ function validateSettingsUpdate(value) {
 function validateThemeUpdate(value) {
   const updates = assertRecord(value, 'Theme update');
   const entries = Object.entries(updates);
-  if (!entries.length || entries.length > ALLOWED_THEME_FIELDS.size) {
+  if (entries.length > ALLOWED_THEME_FIELDS.size) {
     fail('Theme update contains an invalid number of fields');
   }
   const validated = {};

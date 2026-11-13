@@ -1,5 +1,5 @@
 // External
-import { useEffect, useCallback, useRef } from 'react';
+import { useEffect, useCallback, useRef, ChangeEvent } from 'react';
 
 // Internal
 import {
@@ -16,13 +16,15 @@ import { store } from 'lib/store';
 import keyboardIcon from 'icons/keyboard.svg';
 import MaskableTextField from './MaskableTextField';
 
-export interface TextFieldWithKeyboardProps extends TextFieldProps {
+export interface TextFieldWithKeyboardProps extends Omit<TextFieldProps, 'onChange'> {
   maskable?: boolean;
+  onChange?: (value: ChangeEvent<HTMLInputElement> | string) => void;
 }
 
 export interface MultilineTextFieldWithKeyboardProps
-  extends MultilineTextFieldProps {
+  extends Omit<MultilineTextFieldProps, 'onChange'> {
   maskable?: false;
+  onChange?: (value: ChangeEvent<HTMLTextAreaElement> | string) => void;
 }
 
 function useTextFieldProps(props: TextFieldWithKeyboardProps): TextFieldProps;
@@ -35,8 +37,10 @@ function useTextFieldProps(
   const { maskable, ...textFieldProps } = props;
   const { value, onChange, placeholder, skin } = textFieldProps;
   const keyboardUnsubscribe = useRef<(() => void) | undefined>(undefined);
-  const handleInputChange = useCallback((_evt: any, text: any) => {
-    onChange?.(text);
+  const onChangeRef = useRef(onChange);
+  onChangeRef.current = onChange;
+  const handleInputChange = useCallback((text: string) => {
+    onChangeRef.current?.(text);
   }, []);
 
   const openKeyboard = () => {

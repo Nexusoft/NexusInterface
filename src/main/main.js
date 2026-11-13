@@ -893,10 +893,9 @@ registerOperation(
 registerOperation(CHANNELS.settings.getAddressBook, undefined, async () =>
   readAddressBook()
 );
-registerOperation(CHANNELS.theme.update, validateThemeUpdate, async (updates) => {
-  const theme = { ...loadTheme(), ...updates };
-  return saveTheme(theme);
-});
+registerOperation(CHANNELS.theme.update, validateThemeUpdate, async (theme) =>
+  saveTheme(theme)
+);
 registerOperation(
   CHANNELS.theme.selectWallpaper,
   undefined,

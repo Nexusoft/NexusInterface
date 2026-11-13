@@ -20,6 +20,9 @@ function hookHarness() {
       }
       return active.slots[index].value;
     },
+    useCallback(callback, dependencies) {
+      return react.useMemo(() => callback, dependencies);
+    },
     useEffect(callback, dependencies) {
       const index = active.index++;
       const previous = active.slots[index];
@@ -71,6 +74,115 @@ function deferred() {
 }
 
 const flush = async () => { await Promise.resolve(); await Promise.resolve(); };
+
+test('virtual keyboard delivers text to the current field handler and unsubscribes', () => {
+  const hooks = hookHarness();
+  let listener;
+  let closed;
+  let unsubscribed = 0;
+  const received = [];
+  const module = loadModule('src/shared/components/TextFieldWithKeyboard.tsx', {
+    react: hooks.react,
+    'components/TextField': { TextField: 'TextField', MultilineTextField: 'MultilineTextField' },
+    'components/Tooltip': { Trigger: 'Tooltip' },
+    'components/Icon': 'Icon',
+    'components/Button': 'Button',
+    'lib/theme': { themeAtom: {} },
+    'lib/store': { store: { get: () => ({}) } },
+    'icons/keyboard.svg': '',
+    './MaskableTextField': 'MaskableTextField',
+  }, { __: (text) => text, window: { nexusElectron: { app: {
+    onKeyboardInputChange(callback) {
+      listener = callback;
+      return () => { unsubscribed++; };
+    },
+    onceKeyboardClosed(callback) { closed = callback; },
+    openVirtualKeyboard: async () => {},
+  } } } });
+  const instance = hooks.instance();
+  const tree = instance.render(module.TextFieldWithKeyboard, {
+    value: '', onChange: (value) => received.push(['old', value]),
+  });
+  findElement(tree.props.left, (element) => element.type === 'Button').props.onClick();
+  listener('abc');
+  instance.render(module.TextFieldWithKeyboard, {
+    value: 'abc', onChange: (value) => received.push(['new', value]),
+  });
+  listener('abcd');
+  assert.deepEqual(received, [['old', 'abc'], ['new', 'abcd']]);
+  closed();
+  instance.unmount();
+  assert.equal(unsubscribed, 1);
+});
+
+test('Core settings initialize the binary override and allow resetting it to bundled', async () => {
+  const formComponent = Object.assign(() => {}, { SubmitButton: 'SubmitButton' });
+  let settings = { embeddedCoreBinaryPath: '/selected/core', manualDaemon: false };
+  const coreSettings = loadModule('src/App/Settings/Core/index.tsx', {
+    react: { useId: () => 'id', useState: (value) => [value, () => {}] },
+    jotai: { useAtomValue: () => settings },
+    '@emotion/styled': { __esModule: true, default: styled },
+    'components/Form': formComponent,
+    'components/Button': 'Button',
+    'components/Switch': 'Switch',
+    'lib/ui': {}, 'lib/dialog': {}, 'lib/core': {}, 'lib/coreInfo': {},
+    'lib/settings': { settingsAtom: {} },
+    'lib/form': { formSubmit: (value) => value },
+    '../atoms': { useSettingsTab: () => {} },
+    './EmbeddedCoreSettings': 'EmbeddedCoreSettings',
+    './RemoteCoreSettings': 'RemoteCoreSettings',
+  });
+  const initialValues = () => findElement(coreSettings.default(), (element) =>
+    element.type === formComponent).props.initialValues;
+  assert.equal(initialValues().embeddedCoreBinaryPath, '/selected/core');
+  settings = { ...settings, embeddedCoreBinaryPath: '/another/core' };
+  assert.equal(initialValues().embeddedCoreBinaryPath, '/another/core');
+
+  let value = '/another/core';
+  let selected = ['/selected/new-core'];
+  const embedded = loadModule('src/App/Settings/Core/EmbeddedCoreSettings.tsx', {
+    'react-final-form': { useField: (_name, config) => ({ input: {
+      value,
+      onChange: (next) => { value = config.parse(next); },
+    } }) },
+    'components/Form': formComponent,
+    'components/SettingsField': 'SettingsField',
+    'components/Button': 'Button',
+    'components/Switch': 'Switch',
+    'components/TextField': { TextField: 'TextField' },
+    'lib/form': {}, 'lib/dialog': {}, 'lib/core': {},
+    'lib/coreConfig': {}, 'consts/misc': {}, styles: { consts: { inputHeightEm: 2 } },
+  }, { window: { nexusElectron: { dialogs: { selectCoreBinary: async () => selected } } } });
+  const fieldElement = findElement(embedded.default(), (element) =>
+    element.type?.name === 'CoreBinaryPathField');
+  const renderField = () => fieldElement.type();
+  let field = renderField();
+  assert.equal(findElement(field, (element) => element.type === 'TextField').props.readOnly, true);
+  await findElement(field, (element) => element.props?.children === 'Browse').props.onClick();
+  assert.equal(value, '/selected/new-core');
+  selected = undefined;
+  await findElement(field, (element) => element.props?.children === 'Browse').props.onClick();
+  assert.equal(value, '/selected/new-core');
+  field = renderField();
+  findElement(field, (element) => element.props?.children === 'Use bundled').props.onClick();
+  assert.equal(value, '');
+  assert.equal(findElement(renderField(), (element) =>
+    element.props?.children === 'Use bundled').props.disabled, true);
+});
+
+test('fallback update notification opens the release from the configured fork', () => {
+  let opened;
+  const module = loadModule('src/shared/lib/updater/AutoUpdateBackgroundTask.tsx', {
+    react: { useRef: (value) => ({ current: value }) },
+    'components/BackgroundTask': 'BackgroundTask',
+    'lib/ui': {}, 'lib/dialog': {},
+  }, { window: { nexusElectron: { app: {
+    openExternal: async (url) => { opened = url; },
+  } } } });
+  const task = module.default({ gitHub: true, version: 'v3.2.4' });
+  task.props.onClick();
+  assert.equal(opened, 'https://github.com/NamecoinGithub/NexusInterface/releases/tag/v3.2.4');
+});
 
 function recipientFixture() {
   const hooks = hookHarness();
