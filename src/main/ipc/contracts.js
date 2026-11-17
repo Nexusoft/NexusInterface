@@ -132,6 +132,26 @@ const ALLOWED_EXTERNAL_HOSTS = new Set([
   't.me',
 ]);
 
+const ALLOWED_BROWSER_HOSTS = new Set([
+  'api.dex-trade.com',
+  'api.github.com',
+  'babeljs.io',
+  'bootstrap.nexus.io',
+  'creativecommons.org',
+  'crypto.nexus.io',
+  'electronjs.org',
+  'github.com',
+  'ipwho.is',
+  'jotai.org',
+  'nexus-featured-modules.netlify.app',
+  'nexus.io',
+  'raw.githubusercontent.com',
+  'reactjs.org',
+  't.me',
+  'www.flaticon.com',
+  'www.geonames.org',
+]);
+
 const {
   assertRegisteredCoreRpcEndpoint,
   redactSensitiveText,
@@ -309,6 +329,27 @@ function assertExternalUrl(value, name = 'URL', { mailto = false } = {}) {
   }
   if (!ALLOWED_EXTERNAL_HOSTS.has(parsed.hostname.toLowerCase())) {
     fail(`${name} host is not allowed`);
+  }
+  return parsed.toString();
+}
+
+function assertBrowserUrl(value) {
+  const rawUrl = assertString(value, 'External URL', { min: 1, max: 2048 });
+  let parsed;
+  try {
+    parsed = new URL(rawUrl);
+  } catch {
+    fail('External URL must be an absolute URL');
+  }
+  if (parsed.protocol === 'mailto:') return parsed.toString();
+  if (
+    parsed.protocol !== 'https:' ||
+    parsed.username ||
+    parsed.password ||
+    parsed.port ||
+    !ALLOWED_BROWSER_HOSTS.has(parsed.hostname.toLowerCase())
+  ) {
+    fail('External URL is not allowed');
   }
   return parsed.toString();
 }
@@ -818,6 +859,7 @@ module.exports = {
   assertAdvancedCoreParams,
   assertAllowedCoreRpcEndpoint,
   assertBoolean,
+  assertBrowserUrl,
   assertExternalUrl,
   assertRecord,
   assertRelativeModulePath,

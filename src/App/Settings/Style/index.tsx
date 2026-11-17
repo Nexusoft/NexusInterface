@@ -50,7 +50,11 @@ const setAddressStyle = (addressStyle: AddressStyle) =>
   updateSettings({ addressStyle });
 
 async function openPickThemeFileDialog() {
-  await loadCustomTheme();
+  try {
+    await loadCustomTheme();
+  } catch (err: any) {
+    showNotification(err?.message, 'error');
+  }
 }
 
 async function exportThemeFileDialog() {

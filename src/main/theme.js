@@ -3,7 +3,7 @@ import path from 'path';
 import { pathToFileURL } from 'url';
 import { dialog } from 'electron';
 
-import { assertExternalUrl, assertRecord } from './ipc/contracts';
+import { assertExternalUrl, validateThemeUpdate } from './ipc/contracts';
 import { walletDataDir } from './paths';
 import { loadTheme, saveTheme } from './settings';
 
@@ -83,7 +83,7 @@ export async function importTheme(mainWindow) {
   if (result.canceled || !result.filePaths[0]) return undefined;
 
   const contents = await fs.readFile(result.filePaths[0], 'utf8');
-  const importedTheme = assertRecord(JSON.parse(contents), 'Imported theme');
+  const importedTheme = validateThemeUpdate(JSON.parse(contents));
   if (typeof importedTheme.wallpaper === 'string' && /^https?:/i.test(importedTheme.wallpaper)) {
     const wallpaperUrl = assertExternalUrl(importedTheme.wallpaper, 'Theme wallpaper URL');
     const wallpaperPath = path.join(walletDataDir, getWallpaperFileName(wallpaperUrl));
@@ -91,8 +91,7 @@ export async function importTheme(mainWindow) {
     await fs.writeFile(wallpaperPath, wallpaper, { mode: 0o600 });
     importedTheme.wallpaper = toFileUrl(wallpaperPath);
   }
-  const theme = { ...loadTheme(), ...importedTheme };
-  return saveTheme(theme);
+  return saveTheme(importedTheme);
 }
 
 export async function exportTheme(mainWindow) {

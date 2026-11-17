@@ -29,7 +29,6 @@ the past.
 
 ### Step 4 (Development)
 
-Run command `npm run build-dll`
 Run command `npm run dev`
 
 ### Step 4 (Production)

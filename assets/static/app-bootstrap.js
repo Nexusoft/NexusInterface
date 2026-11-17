@@ -1,16 +1,10 @@
 {
   const nexusEnv = window.nexusEnv || {};
-  const scripts = [];
-
-  if (nexusEnv.NODE_ENV === 'development') {
-    scripts.push('renderer.dev.dll.js');
-  }
-
-  scripts.push(
+  const scripts = [
     nexusEnv.NODE_ENV === 'development'
       ? '/renderer.dev.js'
       : './renderer.prod.js'
-  );
+  ];
 
   for (const source of scripts) {
     const script = document.createElement('script');

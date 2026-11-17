@@ -198,17 +198,17 @@ export default function About() {
                 Copyright &copy; 2018 MaxMind, Inc. This work is licensed under
                 the Creative Commons Attribution-ShareAlike 4.0 International
                 License. To view a copy of this license, visit&nbsp;
-                <ExternalLink href="http://creativecommons.org/licenses/by-sa/4.0/">
+                <ExternalLink href="https://creativecommons.org/licenses/by-sa/4.0/">
                   creativecommons.org
                 </ExternalLink>
                 . This database incorporates&nbsp;
-                <ExternalLink href="http://www.geonames.org">
+                <ExternalLink href="https://www.geonames.org">
                   GeoNames
                 </ExternalLink>
                 &nbsp;geographical data, which is made available under the
                 Creative Commons Attribution 3.0 License. To view a copy of this
                 license, visit&nbsp;
-                <ExternalLink href="http://www.creativecommons.org/licenses/by/3.0/us/">
+                <ExternalLink href="https://creativecommons.org/licenses/by/3.0/us/">
                   creativecommons.org
                 </ExternalLink>
                 .

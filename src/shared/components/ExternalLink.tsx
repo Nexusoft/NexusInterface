@@ -16,9 +16,8 @@ export default function ExternalLink(
       {...props}
       onClick={(e) => {
         e.preventDefault();
-        const target = e.target as HTMLAnchorElement;
-        const url = target.href || props.href;
-        if (url) void window.nexusElectron.app.openExternal(url);
+        const url = e.currentTarget.href || props.href;
+        if (url) window.nexusElectron.app.openExternal(url).catch(console.error);
         props.onClick && props.onClick(e);
       }}
     />

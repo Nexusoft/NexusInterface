@@ -24,6 +24,7 @@ function getCoreLogPath() {
 function stopCoreOutput(webContentsId) {
   const subscription = subscriptions.get(webContentsId);
   if (!subscription) return;
+  subscription.stop();
   fs.unwatchFile(subscription.logPath, subscription.listener);
   subscriptions.delete(webContentsId);
   console.info('core.output.stop', {
@@ -37,23 +38,25 @@ function startCoreOutput(webContents) {
   const logPath = getCoreLogPath();
   let position = 0;
   let reading = false;
+  let active = true;
+  let pending = false;
+  let generation = 0;
+  let observed;
   let pathExists = false;
-  const listener = (current, previous) => {
-    if (reading || current.size <= position) {
-      if (current.size < position) position = current.size;
-      return;
-    }
+  const readPending = () => {
+    if (!active || reading || !observed || observed.size <= position) return;
+    pending = false;
     const start = position;
-    position = current.size;
+    const end = observed.size;
+    const readGeneration = generation;
     reading = true;
     const stream = fs.createReadStream(logPath, {
       start,
-      end: current.size - 1,
-      encoding: 'utf8',
+      end: end - 1,
     });
-    let output = '';
+    const chunks = [];
     stream.on('data', (chunk) => {
-      output += chunk;
+      chunks.push(chunk);
     });
     stream.once('error', (error) => {
       reading = false;
@@ -61,17 +64,44 @@ function startCoreOutput(webContents) {
         logPath,
         message: error?.message || String(error),
       });
+      if (pending) readPending();
     });
     stream.once('end', () => {
       reading = false;
-      const lines = output.split(/\r?\n/).filter(Boolean).slice(-1000);
-      if (!lines.length || webContents.isDestroyed()) return;
-      webContents.send(EVENTS.coreOutput, lines);
+      if (active && readGeneration === generation) {
+        const output = Buffer.concat(chunks);
+        position = start + output.length;
+        const lines = output
+          .toString('utf8')
+          .split(/\r?\n/)
+          .filter(Boolean)
+          .slice(-1000);
+        if (lines.length && !webContents.isDestroyed()) {
+          webContents.send(EVENTS.coreOutput, lines);
+        }
+      }
+      if (pending) readPending();
     });
+  };
+  const listener = (current) => {
+    if (
+      observed &&
+      (current.dev !== observed.dev ||
+        current.ino !== observed.ino ||
+        current.size < observed.size ||
+        current.size < position)
+    ) {
+      position = 0;
+      generation++;
+    }
+    observed = current;
+    pending = true;
+    readPending();
   };
 
   try {
-    position = fs.statSync(logPath).size;
+    observed = fs.statSync(logPath);
+    position = observed.size;
     pathExists = true;
   } catch {
     position = 0;
@@ -85,7 +115,13 @@ function startCoreOutput(webContents) {
   }
 
   fs.watchFile(logPath, { interval: 1000 }, listener);
-  subscriptions.set(webContents.id, { logPath, listener });
+  subscriptions.set(webContents.id, {
+    logPath,
+    listener,
+    stop: () => {
+      active = false;
+    },
+  });
   webContents.once('destroyed', () => stopCoreOutput(webContents.id));
 }
 

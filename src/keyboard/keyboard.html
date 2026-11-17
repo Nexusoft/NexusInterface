@@ -13,12 +13,6 @@
         // contextBridge, since contextIsolation:true means this page cannot
         // read process.env directly.
         const nexusEnv = window.nexusEnv || {};
-        if (nexusEnv.NODE_ENV === 'development') {
-          document.write(
-            '<script defer src="../../dll/renderer.dev.dll.js"><\/script>'
-          );
-        }
-
         const port = nexusEnv.PORT || 1212;
         const script =
           nexusEnv.NODE_ENV === 'development'

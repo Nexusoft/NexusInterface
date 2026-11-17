@@ -109,6 +109,29 @@ test('theme persistence batches edits and replaces obsolete preset fields', (t) 
   assert.match(mainSource, /registerOperation\(CHANNELS\.theme\.update,\s*validateThemeUpdate,\s*async \(theme\) =>\s*saveTheme\(theme\)/);
 });
 
+test('importing a theme replaces prior fields and leaves defaults to the renderer', async () => {
+  let persisted = { background: '#111111', wallpaperSize: 'cover', featuredTokenName: 'OLD' };
+  const theme = loadModule('src/main/theme.js', {
+    'fs/promises': { readFile: async () => JSON.stringify({ foreground: '#ffffff' }) },
+    electron: { dialog: { showOpenDialog: async () => ({
+      canceled: false, filePaths: ['/theme.json'],
+    }) } },
+    './paths': { walletDataDir: '/wallet' },
+    './settings': { loadTheme: () => persisted, saveTheme: (value) => { persisted = value; return value; } },
+  });
+  assert.deepEqual(await theme.importTheme({}), { foreground: '#ffffff' });
+  assert.deepEqual(persisted, { foreground: '#ffffff' });
+  const { createStore } = require('jotai');
+  const store = createStore();
+  const rendererTheme = loadModule('src/shared/lib/theme.ts', {
+    'lib/store': { store, subscribe: () => {} },
+  }, { window: { nexusElectron: { theme: { getInitial: () => persisted } } } });
+  assert.deepEqual(store.get(rendererTheme.themeAtom), {
+    ...rendererTheme.darkTheme,
+    foreground: '#ffffff',
+  });
+});
+
 test('theme wallpaper downloads enforce streaming size and timeout limits', async () => {
   let fetchImpl;
   let timeoutCallback;

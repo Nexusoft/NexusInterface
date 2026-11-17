@@ -1,6 +1,8 @@
 import path from 'path';
+import { pathToFileURL } from 'url';
 import { BrowserWindow, screen } from 'electron';
 import { isDevelopment } from './paths';
+import { isTrustedWindowUrl } from './ipc/navigationPolicy';
 
 const randomRange = (min, max) => Math.floor(Math.random() * (max - min) + min);
 
@@ -58,11 +60,16 @@ export async function openVirtualKeyboard(options) {
     }
   });
 
-  const htmlPath =
-    isDevelopment
-      ? '../src/keyboard/keyboard.html'
-      : 'keyboard.html';
-  await bw.loadURL(`file://${path.resolve(__dirname, htmlPath)}`);
+  const htmlUrl = isDevelopment
+    ? `http://localhost:${process.env.PORT || 1212}/keyboard/keyboard.html`
+    : pathToFileURL(path.resolve(__dirname, 'keyboard.html')).toString();
+  const preventUntrustedNavigation = (event, url) => {
+    if (!isTrustedWindowUrl(url, htmlUrl)) event.preventDefault();
+  };
+  bw.webContents.on('will-navigate', preventUntrustedNavigation);
+  bw.webContents.on('will-redirect', preventUntrustedNavigation);
+  bw.webContents.setWindowOpenHandler(() => ({ action: 'deny' }));
+  await bw.loadURL(htmlUrl);
   bw.webContents.send('options', options);
 
   return bw;

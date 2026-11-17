@@ -18,14 +18,28 @@ contextBridge.exposeInMainWorld('nexusEnv', {
   PORT: process.env.PORT || '',
 });
 
+let pendingOptions;
+let optionsListener;
+ipcRenderer.once('options', (_event, options) => {
+  const validated = validateOptions(options);
+  if (optionsListener) {
+    optionsListener(validated);
+  } else {
+    pendingOptions = validated;
+  }
+});
+
 contextBridge.exposeInMainWorld('virtualKeyboard', {
   onOptions(listener) {
     if (typeof listener !== 'function') {
       throw new Error('Keyboard options listener must be a function');
     }
-    ipcRenderer.once('options', (_event, options) =>
-      listener(validateOptions(options))
-    );
+    if (pendingOptions) {
+      listener(pendingOptions);
+      pendingOptions = undefined;
+    } else {
+      optionsListener = listener;
+    }
   },
   inputChanged(text) {
     if (typeof text !== 'string') {

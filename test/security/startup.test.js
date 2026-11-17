@@ -44,6 +44,9 @@ test('window startup configuration keeps wallet and keyboard renderers isolated'
   assert.match(keyboard, /nodeIntegration:\s*false/);
   assert.match(keyboard, /contextIsolation:\s*true/);
   assert.match(keyboard, /sandbox:\s*true/);
+  assert.match(keyboard, /localhost:.*\/keyboard\/keyboard\.html/);
+  assert.match(keyboard, /isTrustedWindowUrl\(url,\s*htmlUrl\)/);
+  assert.match(keyboard, /setWindowOpenHandler\(\(\) => \(\{ action: 'deny' \}\)\)/);
   assert.match(preload, /contextBridge\.exposeInMainWorld/);
   assert.match(preload, /preload\.init/);
   assert.doesNotMatch(preload, /from ['"]electron['"].*clipboard|clipboard.*from ['"]electron['"]/);
@@ -71,16 +74,20 @@ test('renderer build fails rather than externalizing Node or Electron imports', 
     'configs',
     'webpack.config.base.renderer.babel.js'
   );
-  const dllConfig = read('configs', 'webpack.config.dll.dev.babel.js');
+  const devConfig = read('configs', 'webpack.config.renderer.dev.babel.js');
   const bootstrap = read('assets', 'static', 'app-bootstrap.js');
+  const keyboardHtml = read('src', 'keyboard', 'keyboard.html');
+  const textField = read('src', 'shared', 'components', 'TextField.tsx');
 
   assert.match(webpackConfig, /node:\s*false/);
+  assert.match(webpackConfig, /target:\s*['"]web['"]/);
+  assert.match(webpackConfig, /delete rendererBaseConfig\.output\.libraryTarget/);
   assert.match(webpackConfig, /electron:\s*false/);
   assert.match(webpackConfig, /electronRenderer:\s*false/);
   assert.match(webpackConfig, /conditionNames:.*browser/);
-  assert.match(bootstrap, /renderer\.dev\.dll\.js/);
-  assert.match(dllConfig, /devtool:\s*['"]cheap-module-source-map['"]/);
-  assert.doesNotMatch(dllConfig, /devtool:\s*['"]eval/);
+  assert.doesNotMatch(devConfig, /DllReferencePlugin/);
+  assert.doesNotMatch(bootstrap + keyboardHtml, /renderer\.dev\.dll\.js/);
+  assert.match(textField, /from ['"]utils\/refs['"]/);
 });
 
 test('embedded Core start always supplies API auth and probes already-running Core', () => {

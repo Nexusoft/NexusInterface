@@ -42,6 +42,7 @@ import {
   CHANNELS,
   EVENTS,
   assertBoolean,
+  assertBrowserUrl,
   assertAllowedCoreRpcEndpoint,
   assertExternalUrl,
   assertRecord,
@@ -703,11 +704,14 @@ registerOperation(
 registerOperation(
   CHANNELS.app.openVirtualKeyboard,
   (request) => sanitizeKeyboardOptions(request),
-  async (options) => openVirtualKeyboard(options)
+  async (options) => {
+    await openVirtualKeyboard(options);
+    return { opened: true };
+  }
 );
 registerOperation(
   CHANNELS.app.openExternal,
-  (url) => assertExternalUrl(url, 'External URL', { mailto: true }),
+  assertBrowserUrl,
   async (url) => shell.openExternal(url)
 );
 registerOperation(

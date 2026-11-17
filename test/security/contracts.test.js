@@ -6,6 +6,7 @@ const test = require('node:test');
 const {
   assertAdvancedCoreParams,
   assertAbsoluteFilesystemPath,
+  assertBrowserUrl,
   assertExternalUrl,
   assertRelativeModulePath,
   validateClipboardText,
@@ -37,6 +38,33 @@ test('external URLs require an allowlisted HTTPS host', () => {
     'file:///etc/passwd',
   ]) {
     assert.throws(() => assertExternalUrl(value), TypeError);
+  }
+});
+
+test('browser links allow vetted credit sites without broadening network fetches', () => {
+  for (const url of [
+    'https://electronjs.org/',
+    'https://reactjs.org/',
+    'https://jotai.org/',
+    'https://babeljs.io/',
+    'https://creativecommons.org/licenses/by-sa/4.0/',
+    'https://creativecommons.org/licenses/by/3.0/us/',
+    'https://www.geonames.org/',
+    'https://www.flaticon.com/authors/freepik',
+    'https://github.com/Nexusoft',
+    'mailto:security@nexus.io',
+  ]) {
+    assert.equal(assertBrowserUrl(url), url);
+  }
+  assert.throws(() => assertExternalUrl('https://www.flaticon.com/icon.png'), TypeError);
+  for (const url of [
+    'http://www.geonames.org/',
+    'https://www.flaticon.com.evil.example/',
+    'https://user@www.flaticon.com/',
+    'https://www.flaticon.com:8443/',
+    'file:///etc/passwd',
+  ]) {
+    assert.throws(() => assertBrowserUrl(url), TypeError);
   }
 });
 
