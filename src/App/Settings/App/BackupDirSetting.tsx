@@ -1,6 +1,5 @@
 // External
 import { useAtomValue } from 'jotai';
-import { ipcRenderer } from 'electron';
 
 // Internal
 import { updateSettings, settingsAtom } from 'lib/settings';
@@ -14,11 +13,8 @@ export default function SettingsApp() {
   const { backupDirectory } = useAtomValue(settingsAtom);
 
   const browseBackupDir = async () => {
-    const folderPaths = await ipcRenderer.invoke('show-open-dialog', {
-      title: __('Select backup directory'),
-      defaultPath: backupDirectory,
-      properties: ['openDirectory'],
-    });
+    const folderPaths =
+      await window.nexusElectron.dialogs.selectBackupDirectory();
     if (folderPaths && folderPaths.length > 0) {
       updateSettings({ backupDirectory: folderPaths[0] });
     }

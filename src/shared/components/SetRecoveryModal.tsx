@@ -1,5 +1,3 @@
-import fs from 'fs';
-import path from 'path';
 import { useAtomValue } from 'jotai';
 import { useRef, useEffect, useState, ReactNode } from 'react';
 
@@ -17,7 +15,6 @@ import { profileStatusQuery, hasRecoveryPhraseAtom } from 'lib/session';
 import { formSubmit, checkAll, required, minChars } from 'lib/form';
 import { openModal } from 'lib/ui';
 import { openSuccessDialog, openErrorDialog } from 'lib/dialog';
-import { assetsDir } from 'consts/paths';
 import UT from 'lib/usageTracking';
 
 __ = __context('SetRecoveryPhrase');
@@ -51,14 +48,8 @@ export default function SetRecoveryModal() {
 
   useEffect(() => {
     (async () => {
-      const allWords = await fs.promises.readFile(
-        path.join(assetsDir, 'misc', 'wordlist.txt')
-      );
-      wordlistRef.current = allWords
-        .toString()
-        .split('\n')
-        .map((w) => w.trim())
-        .filter((w) => w);
+      wordlistRef.current =
+        await window.nexusElectron.fileAssets.loadRecoveryWords();
     })();
   }, []);
 

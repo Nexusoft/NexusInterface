@@ -25,7 +25,7 @@ import styled from '@emotion/styled';
 // Internal
 import Tooltip from 'components/Tooltip';
 import { timing, consts } from 'styles';
-import { refs } from 'utils/misc';
+import { refs } from 'utils/refs';
 
 export type TextFieldSkin = 'underline' | 'filled' | 'filled-inverted';
 

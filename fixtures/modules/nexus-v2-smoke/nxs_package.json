@@ -1,0 +1,19 @@
+{
+  "name": "nexus_v2_smoke",
+  "displayName": "NEXUS v2 Smoke",
+  "version": "1.0.0",
+  "targetWalletVersion": "3.2.0",
+  "type": "app",
+  "entry": "index.html",
+  "files": ["index.html", "app.js"],
+  "capabilities": [
+    "wallet.context",
+    "ui.notify",
+    "ui.confirm",
+    "ui.openExternal",
+    "ui.copyText",
+    "storage",
+    "state",
+    "wallet.requestSend"
+  ]
+}

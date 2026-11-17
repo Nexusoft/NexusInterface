@@ -14,13 +14,29 @@ See [Developer's Guide to Nexus Wallet Module](docs/Modules).
 
 See [Translation Guide](docs/Translation.md).
 
+## Architecture diagrams
+
+See the [repository diagrams](docs/Diagrams/README.md) for architecture and transaction-flow documentation.
+
 ## Build and Dev-server Instructions
 
-To get started, you will first need to set up node.js (version 10 or higher) and npm (version 6 or higher) they come together as a package and can be found [here](https://nodejs.org). You will then need to clone into this repository, cd into the NexusInterface dir, run `npm install`, then run `npm run dev` and the dev server will spin up launching the app for you.
+To get started, install Node.js 22.12.0 or newer and npm 10.9.0 or newer. This repository currently builds against Electron 43. Clone this repository, cd into the NexusInterface directory, run `npm install`, then run `npm run dev` and the dev server will spin up launching the app for you.
 
 To test a production build run `npm run package` and navigate to the _release_ directory in the root of the project and install as you would any other program.
 
 Or use the _BuildStandalone-{platform}.sh_ files that include cleaning out old builds.
+
+## Connection diagnostics
+
+The overview's Connections tooltip reports Core API reachability, peer connectivity,
+and synchronization separately. Core information becomes unknown after 30 seconds
+without a successful refresh, or when a request fails or polling is paused. The
+globe refreshes peer identities independently of the connection count; if the
+peer list or location lookup fails, it removes peer locations and shows an error.
+
+The wallet does not automatically restart Core or reset its peer records. The
+former "Clear peer connections" action has been removed because it did not clear
+them. Peer discovery and recovery are Core responsibilities.
 
 ## License
 

@@ -9,12 +9,17 @@ import Form from 'components/Form';
 import FormField from 'components/FormField';
 import { NativeLink } from 'components/Link';
 import TokenName from 'components/TokenName';
-import { useSource } from 'lib/send';
+import { useSource, getSourcePrecision } from 'lib/send';
+import { balancesQuery } from 'lib/user';
 import { marketDataQuery } from 'lib/market';
+import { amountUnits, expandExponentialNotation } from 'utils/amount';
 
 __ = __context('Send');
 
-const floatRegex = /^[0-9]+(.[0-9]*)?$/;
+const floatRegex = /^[0-9]+(\.[0-9]+)?$/;
+
+// Balances arrive as JSON numbers; avoid "All" when base units may be rounded.
+const maxExactBalanceUnits = 1n << 51n;
 
 const Wrapper = styled.div({
   display: 'flex',
@@ -57,14 +62,6 @@ const EqualSign = styled.div(({ theme }) => ({
 //   return null;
 // };
 
-function positiveNumber(value: string) {
-  const floatAmount = parseFloat(value);
-  if (!floatAmount || floatAmount < 0) {
-    return __('Invalid amount');
-  }
-  return undefined;
-}
-
 // function FiatValue({ fieldName, source }) {
 //   const value = useFieldValue(fieldName);
 //   const price = useSelector((state) => state.market?.price);
@@ -81,12 +78,26 @@ export default function AmountField({
   parentFieldName: string;
 }) {
   const source = useSource();
+  const balances = balancesQuery.use();
+  const precision = getSourcePrecision(source, balances);
   const marketData = marketDataQuery.use();
   const { price, currency } = marketData || {};
   const form = useForm();
   const fullAmount = (source?.account || source?.token)?.balance;
+  const fullAmountText =
+    typeof fullAmount === 'number'
+      ? expandExponentialNotation(fullAmount)
+      : undefined;
   const amountFieldName = parentFieldName + '.amount';
   const fiatAmountFieldName = parentFieldName + '.fiatAmount';
+  let canSendAll = false;
+  if (fullAmountText !== undefined && precision !== undefined) {
+    try {
+      canSendAll = amountUnits(fullAmountText, precision) <= maxExactBalanceUnits;
+    } catch {
+      canSendAll = false;
+    }
+  }
 
   const prevValuesRef = useRef<Record<string, any>>(null);
   const cascadingRef = useRef(false);
@@ -143,11 +154,11 @@ export default function AmountField({
                     })
                   : __('Amount')}
               </span>
-              {!!fullAmount && (
+              {canSendAll && (
                 <SendAllLink
                   onClick={(evt) => {
                     evt.preventDefault();
-                    form.change(amountFieldName, fullAmount);
+                    form.change(amountFieldName, fullAmountText);
                   }}
                 >
                   {__('All')}
@@ -171,7 +182,17 @@ export default function AmountField({
             //   },
             // }}
             placeholder="0.00000"
-            validate={positiveNumber}
+            validate={(value) => {
+              if (precision === undefined) {
+                return __('Asset precision is unavailable');
+              }
+              try {
+                amountUnits(value, precision);
+                return undefined;
+              } catch {
+                return __('Invalid amount or too many decimal places');
+              }
+            }}
           />
           {/* </Tooltip.Trigger> */}
         </FormField>

@@ -7,15 +7,14 @@ export {
   moduleStatesAtom,
   moduleUpdateCountAtom,
 } from './atoms';
-export { checkForModuleUpdates } from './autoUpdate';
+export { checkForModuleUpdates } from './rendererAutoUpdate';
 export {
   abortModuleDownload,
   addDevModule,
   downloadAndInstall,
-  getDownloadRequest,
   installModule,
-} from './installModule';
-export { isDevModule, prepareModules } from './module';
+} from './rendererInstall';
+export { isDevModule, prepareModules } from './rendererModules';
 export {
   getActiveWebView,
   prepareWebView,
@@ -31,5 +30,5 @@ export type {
   Module,
   ModuleInfo,
   ProductionModule,
-} from './module';
-export type { Repository } from './repo';
+  Repository,
+} from './rendererModules';

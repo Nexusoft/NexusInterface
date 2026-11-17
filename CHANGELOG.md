@@ -1,3 +1,30 @@
+# 3.2.3-beta.3 (2026.11.17)
+
+This prerelease is for continued testing, not a production release.
+
+- Update the embedded Linux, macOS, and Windows x64 nodes to LLL-TAO
+  5.1.7-rc6 build 3, including mining readiness and status-poll fixes.
+
+# 3.2.3-beta.2 (2026.11.13)
+
+This prerelease is for continued testing, not a production release.
+
+- Update the embedded Linux, macOS, and Windows x64 nodes to LLL-TAO
+  5.1.7-rc6 build 2.
+- Fix security and settings regressions in the wallet interface.
+
+# 3.2.3-beta.1 (2026.11.11)
+
+This prerelease is for continued testing, not a production release.
+
+- Correct the displayed pending stake change and the start/stop checks for
+  already-locked stake.
+- The header and staking tab both report the Core's running minter status;
+  the embedded Core's **Enable staking** setting controls whether the minter
+  may start, while **Adjust stake amount** requests a change to the account's
+  locked balance on the next Trust transaction.
+- Show synchronization and, when supported by Core, stalled-minter status.
+
 # 3.2.0 (2025.XX.XX)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v3.2.0)

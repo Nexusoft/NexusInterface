@@ -1,4 +1,4 @@
-import path from 'path';
+import { useField } from 'react-final-form';
 
 import Form from 'components/Form';
 import SettingsField from 'components/SettingsField';
@@ -6,14 +6,11 @@ import Button from 'components/Button';
 import Switch from 'components/Switch';
 import { TextField } from 'components/TextField';
 import { useFieldValue } from 'lib/form';
-import { updateSettings, settingAtoms } from 'lib/settings';
 import { confirm, openErrorDialog } from 'lib/dialog';
-import { restartCore, stopCore, startCore } from 'lib/core';
+import { resyncLiteCore } from 'lib/core';
 import { defaultConfig } from 'lib/coreConfig';
 import { preRelease } from 'consts/misc';
-import { rm as deleteDirectory } from 'fs/promises';
 import { consts } from 'styles';
-import { store } from 'lib/store';
 
 __ = __context('Settings.Core');
 
@@ -60,25 +57,55 @@ export default function EmbeddedCoreSettings() {
         <Form.TextField name="coreDataDir" />
       </SettingsField>
 
+      <SettingsField
+        connectLabel
+        label={__('Core Binary Path')}
+        subLabel={__(
+          'Optional path to a Nexus Core binary to use instead of the bundled binary'
+        )}
+      >
+        <CoreBinaryPathField />
+      </SettingsField>
+
       <TestnetSettings />
 
       <PortSettings />
 
-      <SettingsField
-        connectLabel
-        label={__('Clear peer connections')}
-        subLabel={__('Clear all stored peer connections and restart Nexus')}
-      >
-        <Button
-          onClick={clearPeerConnections}
-          style={{ height: consts.inputHeightEm + 'em' }}
-        >
-          {__('Clear')}
-        </Button>
-      </SettingsField>
-
       <AdvancedOptions />
     </>
+  );
+}
+
+function CoreBinaryPathField() {
+  const { input } = useField('embeddedCoreBinaryPath', {
+    parse: (value) => value,
+  });
+
+  const pickCoreBinary = async () => {
+    const filePaths = await window.nexusElectron.dialogs.selectCoreBinary();
+
+    if (filePaths?.[0]) {
+      input.onChange(filePaths[0]);
+    }
+  };
+
+  return (
+    <div style={{ display: 'flex', width: '100%' }}>
+      <TextField {...input} style={{ flexGrow: 1, minWidth: 0 }} readOnly />
+      <Button
+        onClick={pickCoreBinary}
+        style={{ height: consts.inputHeightEm + 'em', marginLeft: '0.5em' }}
+      >
+        {__('Browse')}
+      </Button>
+      <Button
+        onClick={() => input.onChange('')}
+        disabled={!input.value}
+        style={{ height: consts.inputHeightEm + 'em', marginLeft: '0.5em' }}
+      >
+        {__('Use bundled')}
+      </Button>
+    </div>
   );
 }
 
@@ -394,20 +421,6 @@ function AdvancedOptions() {
 }
 
 /**
- *  Asks to clear Peer Connections. Only for legacy mode.
- */
-async function clearPeerConnections() {
-  const confirmed = await confirm({
-    question: __('Clear peer connections') + '?',
-    note: 'Nexus Core will be restarted. After that, all stored peer connections will be reset.',
-  });
-  if (confirmed) {
-    updateSettings({ clearPeers: true });
-    restartCore();
-  }
-}
-
-/**
  * Asks to resync when using Lite mode
  */
 async function resyncLiteMode() {
@@ -418,15 +431,10 @@ async function resyncLiteMode() {
     ),
   });
   if (confirmed) {
-    updateSettings({ clearPeers: true });
-    await stopCore();
-    const coreDataDir = store.get(settingAtoms.coreDataDir);
-    const clientFolder = path.join(coreDataDir, 'client');
     try {
-      await deleteDirectory(clientFolder, { recursive: true, force: true });
+      await resyncLiteCore();
     } catch (err: any) {
       openErrorDialog({ message: err && err.message });
     }
-    await startCore();
   }
 }

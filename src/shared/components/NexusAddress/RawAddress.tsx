@@ -1,6 +1,5 @@
 // External
 import { useRef, MutableRefObject, HTMLAttributes, ReactNode } from 'react';
-import { clipboard } from 'electron';
 import styled from '@emotion/styled';
 
 // Internal
@@ -41,7 +40,7 @@ function copyAddress(
   address: string,
   inputRef: MutableRefObject<HTMLInputElement | null>
 ) {
-  clipboard.writeText(address);
+  window.nexusElectron.clipboard.writeText(address);
   inputRef.current?.select();
   showNotification(__('Address has been copied to clipboard'), 'success');
 }

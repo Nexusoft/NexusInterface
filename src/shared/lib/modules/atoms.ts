@@ -1,6 +1,6 @@
 import { atom } from 'jotai';
-import { ModuleDownload } from './installModule';
-import { FailedModule, Module } from './module';
+import type { ModuleDownload } from './rendererInstall';
+import type { FailedModule, Module } from './rendererModules';
 
 export const modulesMapAtom = atom<Record<string, Module>>({});
 export const moduleStatesAtom = atom<Record<string, Object>>({});

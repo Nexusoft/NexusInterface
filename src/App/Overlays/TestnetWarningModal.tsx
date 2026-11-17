@@ -1,6 +1,5 @@
 import Button from 'components/Button';
 import Modal, { ModalProps } from 'components/Modal';
-import { shell } from 'electron';
 
 export default function TestnetWarningModal(props: ModalProps) {
   const versionRunning = APP_VERSION.toString();
@@ -28,7 +27,7 @@ export default function TestnetWarningModal(props: ModalProps) {
               <Button
                 skin="plain-link-primary"
                 onClick={() =>
-                  shell.openExternal(
+                  window.nexusElectron.app.openExternal(
                     'https://github.com/Nexusoft/NexusInterface/issues'
                   )
                 }
@@ -40,7 +39,9 @@ export default function TestnetWarningModal(props: ModalProps) {
               <Button
                 skin="plain-link-primary"
                 onClick={() =>
-                  shell.openExternal('https://t.me/joinchat/jrfQGVfaNe03MWM8')
+                  window.nexusElectron.app.openExternal(
+                    'https://t.me/joinchat/jrfQGVfaNe03MWM8'
+                  )
                 }
               >
                 Nexus Testing Telegram group

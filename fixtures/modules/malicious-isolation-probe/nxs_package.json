@@ -1,0 +1,9 @@
+{
+  "name": "malicious_isolation_probe",
+  "displayName": "Malicious Isolation Probe",
+  "version": "1.0.0",
+  "targetWalletVersion": "3.2.0",
+  "type": "app",
+  "entry": "index.html",
+  "files": ["index.html", "probe.js"]
+}

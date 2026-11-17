@@ -399,7 +399,10 @@ const Contract = ({
     <ContractContent>{contractContent(contract)}</ContractContent>
     {!!contract.amount && (
       <ContractDelta sign={getDeltaSign(contract)}>
-        {formatNumber(contract.amount)}{' '}
+        {formatNumber(
+          contract.amount,
+          contract.token && contract.token !== '0' ? 8 : 6
+        )}{' '}
         {contract.token ? <TokenName contract={contract} /> : 'NXS'}
       </ContractDelta>
     )}

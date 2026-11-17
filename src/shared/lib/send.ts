@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router';
-import qs from 'querystring';
 
 import { navigate } from 'lib/wallet';
 import { useFieldValue, getFormInstance } from 'lib/form';
@@ -9,7 +8,7 @@ import { accountsQuery, tokensQuery } from 'lib/user';
 import { timeToObject } from 'utils/misc';
 import { store } from 'lib/store';
 import memoize from 'utils/memoize';
-import { Account, Token } from 'lib/api';
+import { Account, Token, NexusBalance, TokenBalance } from 'lib/api';
 
 interface Recipient {
   nameOrAddress?: string;
@@ -100,22 +99,21 @@ function getFormValues({
 }
 
 export function goToSend(customValues: any) {
-  navigate(`/Send?state=${JSON.stringify(customValues)}`);
+  const search = new URLSearchParams({
+    state: JSON.stringify(customValues),
+  });
+  navigate(`/Send?${search.toString()}`);
 }
 
 export function useInitialValues() {
   const location = useLocation();
-  // React-router's search field has a leading ? mark but
-  // qs.parse will consider it invalid, so remove it
-  const queryParams = qs.parse(location.search.substring(1));
+  const queryParams = new URLSearchParams(location.search);
   const accounts = accountsQuery.use();
 
-  const stateJson = queryParams?.state;
+  const stateJson = queryParams.get('state');
   let customValues = undefined;
   try {
-    if (Array.isArray(stateJson)) {
-      customValues = JSON.parse(stateJson?.join(''));
-    } else if (stateJson) {
+    if (stateJson) {
       customValues = JSON.parse(stateJson);
     }
   } catch (err) {}
@@ -173,3 +171,25 @@ export const useSource = () => {
   const source = getSource(sendFrom, accounts, userTokens);
   return source;
 };
+
+export function getSourcePrecision(
+  source: { account?: Account; token?: Token } | null,
+  balances:
+    | [NexusBalance, TokenBalance[]]
+    | readonly [undefined, undefined]
+    | undefined
+) {
+  const decimals =
+    source?.token?.decimals ??
+    (source?.account?.token === '0'
+      ? balances?.[0]?.decimals
+      : balances?.[1]?.find(
+          (balance) => balance.token === source?.account?.token
+        )?.decimals);
+  return typeof decimals === 'number' &&
+    Number.isInteger(decimals) &&
+    decimals >= 0 &&
+    decimals <= 8
+    ? decimals
+    : undefined;
+}

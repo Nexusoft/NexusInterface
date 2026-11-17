@@ -1,11 +1,7 @@
-import fs from 'fs';
-import path from 'path';
 import { ReactNode } from 'react';
 import Polyglot from 'node-polyglot';
-import { parse } from 'csv-parse/sync';
 
 import { store } from 'lib/store';
-import { assetsDir } from 'consts/paths';
 import { settingAtoms } from 'lib/settings';
 import { escapeRegExp } from 'utils/misc';
 
@@ -48,28 +44,16 @@ export const locales: Locale[] = [
   'hu',
 ];
 
-function loadDict(locale: Locale) {
-  const csv = fs.readFileSync(
-    path.join(assetsDir, 'translations', `${locale}.csv`)
-  );
-  const records: any[] = parse(csv);
-  const dict: Record<string, Record<string, string>> = {};
-  records.forEach(([key, translation, context]) => {
-    if (!dict[context]) {
-      dict[context] = {};
-    }
-    dict[context][key] = translation;
-  });
-  return dict;
-}
-
 type Interpolations = Parameters<typeof Polyglot.transformPhrase>[1];
 
 const locale = (() => {
   const loc = store.get(settingAtoms.locale);
   return locales.includes(loc) ? loc : 'en';
 })();
-const dict = locale === 'en' ? null : loadDict(locale);
+const dict =
+  locale === 'en'
+    ? null
+    : window.nexusElectron.fileAssets.loadTranslation(locale);
 const engTranslate = (_context: string, phrase: string, data: Interpolations) =>
   Polyglot.transformPhrase(phrase, data, 'en');
 

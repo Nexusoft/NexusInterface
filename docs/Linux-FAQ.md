@@ -4,17 +4,15 @@ This document will be a living document about issues and resolutions with differ
 
 For comparison, the Nexus Wallet is build on a 16.04 machine, with testing done on 16.04 and 18.04.
 
-#### Debian Buster Fix 
+#### Debian package build helper
 
-cd NexusInterface
+Prerequisites: `git`, Node.js 22.12+, and npm 10.9+.
 
- Make it executable:
+From a NexusInterface checkout:
+
+```bash
 chmod +x build_deb.sh
+./build_deb.sh
+```
 
-Run it:
-    ./build_deb.sh
-
-
-The resulting .deb should appear in the dist/ directory inside the NexusInterface folder.
-
-
+The resulting `.deb` should appear in the `release/` directory inside the NexusInterface folder.

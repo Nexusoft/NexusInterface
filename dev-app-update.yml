@@ -1,4 +1,4 @@
 provider: github
 repo: NexusInterface
-owner: Nexusoft
+owner: NamecoinGithub
 updaterCacheDirName: nexus_wallet-updater

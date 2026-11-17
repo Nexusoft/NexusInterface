@@ -51,12 +51,12 @@ export const logIn = async ({
 
 export const logOut = async () => {
   const sessions = store.get(sessionsQuery.valueAtom);
-  if (sessions) {
-    await Promise.all([
-      Object.keys(sessions).map((session) => {
-        callAPI('sessions/terminate/local', { session });
-      }),
-    ]);
+  if (sessions?.length) {
+    await Promise.all(
+      sessions.map(({ session }) =>
+        callAPI('sessions/terminate/local', { session })
+      )
+    );
   } else {
     await callAPI('sessions/terminate/local');
   }

@@ -10,8 +10,8 @@
 Install the following
 
 - Code editor of choice (VSCode)
-- Node.js (min v14.0.0)
-- NPM (min v6.14.4)
+- Node.js (min v22.12.0)
+- NPM (min v10.9.0)
 
 ### Step 2
 
@@ -21,9 +21,14 @@ Clone Repo into a empty folder and open that folder in your editor
 
 Run the command `npm install`
 
+For a reproducible install that exactly matches the committed `package-lock.json`
+(recommended for release builds and CI), run `npm ci` instead. `npm ci` will fail
+fast if the lockfile is out of sync rather than silently resolving newer
+transitive dependencies, which has caused build breaks in `electron-builder` in
+the past.
+
 ### Step 4 (Development)
 
-Run command `npm run build-dll`
 Run command `npm run dev`
 
 ### Step 4 (Production)
@@ -31,11 +36,48 @@ Run command `npm run dev`
 Run command `npm run package-platform*`
 
 - replace `platform` with your desired platform
-  Platforms: `win`, `darwin`(Mac OSX), `linux`
+  Platforms: `win`, `darwin`(macOS), `linux`
   This will build the project and place the build in the `release` folder. The file format will depend on the provided formats in the `package.json`
-- Mac OSX should use `npm run package-mac-unsigned` to skip code notarization
+- macOS should use `npm run package-mac`; this repository sets `mac.identity` to `null`, so notarization is skipped unless you override the signing configuration.
+
+### Release candidates
+
+The **Build release packages** workflow builds x64 installers on Linux, macOS
+and Windows. Run it from the Actions tab with the desired commit selected.
+Download all three `nexus-interface-*-x64` artifacts to obtain the installers,
+update metadata, blockmaps and per-platform SHA-256 files. The workflow never
+publishes a GitHub release; review and upload those files to a draft release.
+Its verification checks the packaged core, notices, update destination and
+update metadata against the built files.
+
+The default macOS build is unsigned and unnotarized; Gatekeeper may block it,
+and macOS automatic updates require a signed application. Windows builds are
+also unsigned and may trigger SmartScreen. Do not enter signing credentials
+in the repository or release workflow; use appropriately scoped secrets and
+configure signing separately before distributing signed builds.
+
+The packaged updater for this fork points at
+`NamecoinGithub/NexusInterface`, not the upstream Nexusoft release feed.
+The metadata and every file it references must be uploaded together before
+publishing a release.
 
 ### FAQ
+
+- If you compile a replacement Nexus core daemon and otherwise keep the upstream NexusInterface unchanged, replace the bundled core binary in `assets/<platform>/cores/` before packaging:
+  - Linux x64: `assets/linux/cores/nexus-linux-x64`
+  - macOS x64: `assets/darwin/cores/nexus-darwin-x64`
+  - Windows x64: `assets/win32/cores/nexus-win32-x64.exe`
+- The wallet starts whichever bundled binary matches the current platform and architecture.
+- The embedded x64 cores are based on LLL-TAO NODE5 5.1.7-rc6 build 3,
+  revision `2a3c58e8e90a7c7bad52aa8d59cc25f3c626af1b`. The macOS core
+  targets 10.13 or later. Older macOS releases have not been verified.
+- Back up wallet and core data before upgrading. In particular, test existing
+  Windows legacy wallets before rollout: the embedded Windows build uses
+  Berkeley DB 5.3, and compatibility with data created by other Berkeley DB
+  major versions has not been verified.
+- Embedded core dependency licenses and source locations are packaged under
+  `assets/misc/licenses/`. The `Build embedded ... core` workflows produce
+  candidate binaries; replace the assets only after platform validation.
 
 ## Cores
 

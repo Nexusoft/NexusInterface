@@ -1,5 +1,4 @@
 // External
-import { shell, ipcRenderer } from 'electron';
 
 // Internal
 import { store, subscribe } from 'lib/store';
@@ -27,7 +26,7 @@ import {
   liteModeAtom,
 } from 'lib/coreInfo';
 // import { confirm } from 'lib/dialog';
-import { walletDataDir } from 'consts/paths';
+import nexusEnv, { isDevelopment } from 'lib/nexusEnv';
 import { checkForUpdates, quitAndInstall, updaterStateAtom } from 'lib/updater';
 import AboutModal from 'components/AboutModal';
 
@@ -68,7 +67,7 @@ const preprocess = (
     if (item.click) {
       cleanItem.id = id;
       const handleClick = item.click;
-      ipcRenderer.on('menu-click:' + id, (_event, ...args) => {
+      window.nexusElectron.app.onMenuClick(id, (...args) => {
         handleClick(...args);
       });
       cleanItem.click = true;
@@ -88,13 +87,20 @@ const menuItems = preprocess({
   },
   stopCoreMenu: {
     label: __('Stop Nexus Core'),
-    click: stopCore,
+    click: () => {
+      void stopCore().catch((error) => {
+        showNotification(
+          (error as Error)?.message || __('Unable to stop Nexus Core'),
+          'error'
+        );
+      });
+    },
   },
   quitNexus: {
     label: __('Quit Nexus'),
     accelerator: 'CmdOrCtrl+Q',
     click: () => {
-      ipcRenderer.invoke('quit-app');
+      void window.nexusElectron.app.quit();
     },
   },
   about: {
@@ -176,6 +182,7 @@ const menuItems = preprocess({
   toggleFullScreen: {
     label: __('Toggle FullScreen'),
     accelerator: 'F11',
+    // Electron built-in role is all-lowercase (case-sensitive).
     role: 'togglefullscreen',
   },
   toggleDevTools: {
@@ -207,38 +214,41 @@ const menuItems = preprocess({
   websiteLink: {
     label: __('Nexus Website'),
     click: () => {
-      shell.openExternal('http://nexus.io');
+      void window.nexusElectron.app.openExternal('https://nexus.io');
     },
   },
   gitRepoLink: {
     label: __('Nexus Git Repository'),
     click: () => {
-      shell.openExternal('http://github.com/Nexusoft');
+      void window.nexusElectron.app.openExternal('https://github.com/Nexusoft');
     },
   },
   walletGuideLink: {
     label: __('Nexus Wallet Guide'),
     click: () => {
-      shell.openExternal('https://nexus.io/ResourceHub/wallet-guide');
+      void window.nexusElectron.app.openExternal(
+        'https://nexus.io/ResourceHub/wallet-guide'
+      );
     },
   },
   reportBug: {
     label: __('Report Bug'),
     click: () => {
-      shell.openExternal('https://github.com/Nexusoft/NexusInterface/issues');
+      void window.nexusElectron.app.openExternal(
+        'https://github.com/Nexusoft/NexusInterface/issues'
+      );
     },
   },
   openCoreDataDir: {
     label: __('Open Core Data Folder'),
     click: () => {
-      const { coreDataDir } = store.get(settingsAtom);
-      shell.openPath(coreDataDir);
+      void window.nexusElectron.app.openManagedPath('coreData');
     },
   },
   openInterfaceDataDir: {
     label: __('Open Interface Data Folder'),
     click: () => {
-      shell.openPath(walletDataDir);
+      void window.nexusElectron.app.openManagedPath('walletData');
     },
   },
   updaterIdle: {
@@ -340,9 +350,9 @@ function buildDarwinTemplate() {
     label: __('View'),
     submenu: [menuItems.reloadUI, menuItems.toggleFullScreen],
   };
-  if (process.env.NODE_ENV === 'development' || devMode) {
+  if (isDevelopment || devMode) {
     subMenuWindow.submenu.push(menuItems.toggleDevTools);
-    if (process.env.NODE_ENV === 'development') {
+    if (isDevelopment) {
       subMenuWindow.submenu.push(menuItems.toggleJotaiDevTools);
       subMenuWindow.submenu.push(menuItems.toggleReactQueryDevTools);
     }
@@ -417,9 +427,9 @@ function buildDefaultTemplate() {
     label: __('View'),
     submenu: [menuItems.reloadUI, menuItems.toggleFullScreen],
   };
-  if (process.env.NODE_ENV === 'development' || devMode) {
+  if (isDevelopment || devMode) {
     subMenuView.submenu.push(menuItems.separator, menuItems.toggleDevTools);
-    if (process.env.NODE_ENV === 'development') {
+    if (isDevelopment) {
       subMenuView.submenu.push(menuItems.toggleJotaiDevTools);
       subMenuView.submenu.push(menuItems.toggleReactQueryDevTools);
     }
@@ -452,10 +462,10 @@ function buildDefaultTemplate() {
  */
 function buildMenu() {
   const template =
-    process.platform === 'darwin'
+    nexusEnv.platform === 'darwin'
       ? buildDarwinTemplate()
       : buildDefaultTemplate();
-  ipcRenderer.invoke('set-app-menu', template);
+  void window.nexusElectron.app.setMenu(template);
 }
 
 let rebuildTimerId: NodeJS.Timeout | undefined;

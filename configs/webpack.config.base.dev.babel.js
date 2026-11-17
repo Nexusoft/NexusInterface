@@ -9,7 +9,7 @@ CheckNodeEnv('development');
 export default {
   mode: 'development',
 
-  devtool: 'eval-source-map',
+  devtool: 'cheap-module-source-map',
 
   optimization: {
     moduleIds: 'named',

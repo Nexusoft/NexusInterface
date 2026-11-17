@@ -1,20 +1,5 @@
-import path from 'path';
-import crypto from 'crypto';
-import macaddress from 'macaddress';
-import { homeDir, defaultCoreDataDir } from 'consts/paths';
-import { Locale } from 'lib/intl';
+import type { Locale } from 'lib/intl';
 import { CurrencyTicker } from 'data/currencies';
-
-const defaultBackupDir = path.join(homeDir || '', '/NexusBackups');
-
-const secret =
-  process.platform === 'darwin'
-    ? '' + process.env.USER + process.env.HOME + process.env.SHELL
-    : JSON.stringify(macaddress.networkInterfaces(), null, 2);
-const defaultPassword = crypto
-  .createHmac('sha256', secret)
-  .update('pass')
-  .digest('hex');
 
 export type OverviewDisplay = 'standard' | 'none' | 'miner';
 export type AddressStyle = 'segmented' | 'raw' | 'truncateMiddle';
@@ -48,6 +33,7 @@ export type Settings = {
   avatarMode: boolean;
   ipMineWhitelist: string;
   coreDataDir: string;
+  embeddedCoreBinaryPath: string;
   testnetIteration: number;
   privateTestnet: boolean;
   allowAdvancedCoreOptions: boolean;
@@ -111,7 +97,9 @@ export const defaultSettings: Settings = {
   sendUsageData: true,
   fiatCurrency: 'USD',
   minConfirmations: 3,
-  backupDirectory: defaultBackupDir,
+  // Platform-specific defaults are generated and persisted in the main
+  // process, then provided through the bootstrap bridge.
+  backupDirectory: '',
   devMode: false,
   verifyModuleSource: true,
   fakeTransactions: false,
@@ -129,7 +117,8 @@ export const defaultSettings: Settings = {
   verboseLevel: 0,
   avatarMode: true,
   ipMineWhitelist: '',
-  coreDataDir: defaultCoreDataDir,
+  coreDataDir: '',
+  embeddedCoreBinaryPath: '',
   testnetIteration: 0,
   privateTestnet: false,
   allowAdvancedCoreOptions: false,
@@ -138,7 +127,7 @@ export const defaultSettings: Settings = {
   manualDaemonIP: '127.0.0.1',
   manualDaemonApiSSL: true,
   manualDaemonApiUser: 'apiserver',
-  manualDaemonApiPassword: defaultPassword,
+  manualDaemonApiPassword: '',
   manualDaemonApiIP: '127.0.0.1',
   manualDaemonApiPort: '8080',
   manualDaemonApiPortSSL: '7080',

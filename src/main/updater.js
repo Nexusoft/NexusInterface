@@ -1,7 +1,12 @@
 import path from 'path';
+import fs from 'fs';
 import { autoUpdater } from 'electron-updater';
+import { autoUpdater as nativeUpdater } from 'electron';
 import log from 'electron-log';
 import semver from 'semver';
+
+import { assetsParentDir } from './paths';
+import { EVENTS } from './ipc/contracts';
 
 export function initializeUpdater(settings) {
   autoUpdater.logger = log;
@@ -22,7 +27,6 @@ export function initializeUpdater(settings) {
     autoUpdater.allowPrerelease = true;
     autoUpdater.channel = currentChannel;
     autoUpdater.allowDowngrade = false; // We do not have any mechanism to downgrade, as well as there can be issues with your core's chain.
-    autoUpdater.autoDownload = false;
   }
 
   const updaterEvents = [
@@ -36,10 +40,124 @@ export function initializeUpdater(settings) {
   updaterEvents.forEach((eventName) => {
     autoUpdater.on(eventName, (...args) => {
       if (global.mainWindow) {
-        global.mainWindow.webContents.send('updater:' + eventName, ...args);
+        const eventChannel =
+          eventName === 'error'
+            ? EVENTS.updater.error
+            : eventName === 'checking-for-update'
+            ? EVENTS.updater.checking
+            : eventName === 'update-available'
+            ? EVENTS.updater.available
+            : eventName === 'update-not-available'
+            ? EVENTS.updater.unavailable
+            : eventName === 'download-progress'
+            ? EVENTS.updater.downloadProgress
+            : EVENTS.updater.downloaded;
+        global.mainWindow.webContents.send(eventChannel, ...args);
       }
+
     });
   });
+}
+
+export function installUpdate(onBeforeQuit, isSilent, isForceRunAfter) {
+  return new Promise((resolve, reject) => {
+    const quitUpdater = process.platform === 'darwin' ? nativeUpdater : autoUpdater;
+    const cleanup = () => {
+      quitUpdater.removeListener('before-quit-for-update', ready);
+      autoUpdater.removeListener('error', failed);
+    };
+    const failed = (error) => {
+      cleanup();
+      reject(error);
+    };
+    const ready = () => {
+      cleanup();
+      try {
+        onBeforeQuit();
+        resolve();
+      } catch (error) {
+        reject(error);
+      }
+    };
+    quitUpdater.once('before-quit-for-update', ready);
+    autoUpdater.once('error', failed);
+    try {
+      autoUpdater.quitAndInstall(isSilent, isForceRunAfter);
+    } catch (error) {
+      failed(error);
+    }
+  });
+}
+
+export async function installUpdateWithCoreRecovery(
+  coreWasRunning,
+  shutdownCore,
+  install,
+  restartCore
+) {
+  await shutdownCore();
+  try {
+    return await install();
+  } catch (error) {
+    if (coreWasRunning) await restartCore();
+    throw error;
+  }
+}
+
+export async function getMarketData() {
+  const response = await fetch(
+    'https://api.dex-trade.com/v1/public/ticker?pair=NXSUSDT'
+  );
+  if (!response.ok) {
+    throw new Error(`Market data request failed: ${response.status}`);
+  }
+  const payload = await response.json();
+  const price = Number(payload?.data?.last);
+  const changePct24Hr = Number(
+    payload?.data?.['percent_сhange'] ?? payload?.data?.percent_change ?? 0
+  );
+  if (!payload?.status || !Number.isFinite(price) || !Number.isFinite(changePct24Hr)) {
+    throw new Error('Market data response is invalid');
+  }
+  return { price, changePct24Hr, currency: 'USDT' };
+}
+
+export async function checkForUpdates() {
+  if (process.env.NODE_ENV === 'development') {
+    return { mode: 'disabled' };
+  }
+
+  if (!fs.existsSync(path.join(assetsParentDir, 'app-update.yml'))) {
+    const response = await fetch(
+      'https://api.github.com/repos/NamecoinGithub/NexusInterface/releases/latest',
+      { headers: { Accept: 'application/vnd.github+json', 'User-Agent': 'NexusInterface' } }
+    );
+    if (!response.ok) {
+      throw new Error(`GitHub release request failed: ${response.status}`);
+    }
+    const release = await response.json();
+    if (
+      !release ||
+      typeof release.tag_name !== 'string' ||
+      typeof release.prerelease !== 'boolean'
+    ) {
+      throw new Error('GitHub release response is invalid');
+    }
+    return {
+      mode: 'github',
+      release: {
+        tagName: release.tag_name,
+        prerelease: release.prerelease,
+      },
+    };
+  }
+  const result = await autoUpdater.checkForUpdates();
+  return {
+    mode: 'auto',
+    updateInfo: result?.updateInfo
+      ? { version: result.updateInfo.version }
+      : undefined,
+  };
 }
 
 export function setAllowPrerelease(value) {

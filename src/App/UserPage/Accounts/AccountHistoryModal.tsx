@@ -246,6 +246,7 @@ export default function AccountHistoryModal({ account }: { account: Account }) {
   const [showFiat, setShowFiat] = useAtom(balancesShowFiatAtom);
   const marketData = marketDataQuery.use();
   const { price, currency } = marketData || {};
+  const displayFiat = showFiat && account.token === '0' && !!price;
   const closeModalRef = useRef(() => {});
 
   useEffect(() => {
@@ -306,12 +307,12 @@ export default function AccountHistoryModal({ account }: { account: Account }) {
                     {__('Account balance')} (
                     <Tooltip.Trigger
                       tooltip={__('Show %{tokenName}', {
-                        tokenName: showFiat ? 'NXS' : 'Fiat',
+                        tokenName: displayFiat ? 'NXS' : 'Fiat',
                       })}
                       position="top"
                     >
                       <NativeLink onClick={() => setShowFiat((v) => !v)}>
-                        {showFiat ? currency : 'NXS'}
+                        {displayFiat ? currency : 'NXS'}
                       </NativeLink>
                     </Tooltip.Trigger>
                     )
@@ -330,7 +331,7 @@ export default function AccountHistoryModal({ account }: { account: Account }) {
                     <strong>{__('Total')}</strong>
                   </div>
                   <div>
-                    {showFiat && account.ticker === '0' && price
+                    {displayFiat
                       ? formatCurrency(totalBalance(account) * price, currency)
                       : formatNumber(totalBalance(account), 6)}
                   </div>
@@ -340,7 +341,7 @@ export default function AccountHistoryModal({ account }: { account: Account }) {
                     <strong>{__('Available')}</strong>
                   </div>
                   <div>
-                    {showFiat && account.ticker === '0' && price
+                    {displayFiat
                       ? formatCurrency(account.balance * price, currency)
                       : formatNumber(account.balance, 6)}
                   </div>
@@ -350,7 +351,7 @@ export default function AccountHistoryModal({ account }: { account: Account }) {
                     <strong>{__('Unclaimed')}</strong>
                   </div>
                   <div>
-                    {showFiat && account.ticker === '0' && price
+                    {displayFiat
                       ? formatCurrency(
                           (account.unclaimed || 0) * price,
                           currency
@@ -363,7 +364,7 @@ export default function AccountHistoryModal({ account }: { account: Account }) {
                     <strong>{__('Unconfirmed')}</strong>
                   </div>
                   <div>
-                    {showFiat && account.ticker === '0' && price
+                    {displayFiat
                       ? formatCurrency(
                           (account.unconfirmed || 0) * price,
                           currency
@@ -377,7 +378,7 @@ export default function AccountHistoryModal({ account }: { account: Account }) {
                       <strong>{__('Stake')}</strong>
                     </div>
                     <div>
-                      {showFiat && account.ticker === '0' && price
+                      {displayFiat
                         ? formatCurrency(account.stake * price, currency)
                         : formatNumber(account.stake, 6)}
                     </div>

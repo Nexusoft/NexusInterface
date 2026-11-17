@@ -13,8 +13,6 @@ import { rendererBabelConfig } from './babelLoaderConfig.babel';
 
 const port = process.env.PORT || 1212;
 const publicPath = `http://localhost:${port}/`;
-const dllPath = path.resolve(process.cwd(), 'dll');
-const manifest = path.resolve(dllPath, 'renderer.json');
 
 export default merge(baseRendererConfig, devConfig, {
   entry: {
@@ -44,12 +42,6 @@ export default merge(baseRendererConfig, devConfig, {
   },
 
   plugins: [
-    new webpack.DllReferencePlugin({
-      context: process.cwd(),
-      manifest: require(manifest),
-      sourceType: 'var',
-    }),
-
     new webpack.NoEmitOnErrorsPlugin(),
 
     new ReactRefreshWebpackPlugin(),
@@ -75,9 +67,8 @@ export default merge(baseRendererConfig, devConfig, {
         publicPath: '/assets',
       },
       {
-        directory: path.resolve(process.cwd(), 'dll'),
-
-        publicPath: '/assets',
+        directory: path.resolve(process.cwd(), 'src/keyboard'),
+        publicPath: '/keyboard',
       },
     ],
   },

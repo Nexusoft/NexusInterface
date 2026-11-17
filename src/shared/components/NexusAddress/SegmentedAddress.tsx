@@ -1,6 +1,5 @@
 // External
 import { HTMLAttributes, ReactNode, useRef } from 'react';
-import { clipboard } from 'electron';
 import styled from '@emotion/styled';
 
 // Internal
@@ -53,7 +52,7 @@ const Label = styled.div(({ theme }) => ({
 }));
 
 function copyAddress(address: string) {
-  clipboard.writeText(address);
+  window.nexusElectron.clipboard.writeText(address);
   showNotification(__('Address has been copied to clipboard'), 'success');
 }
 

@@ -6,6 +6,7 @@ import {
   AtomWithQueryResult,
 } from 'jotai-tanstack-query';
 import { store } from 'lib/store';
+import { createSharedQuerySubscription } from './sharedQuerySubscription';
 
 export interface JotaiQueryOptions<TQueryFnData> {
   condition?: (get: Getter) => boolean;
@@ -52,7 +53,6 @@ export default function jotaiQuery<TQueryFnData, TData = TQueryFnData>(
     refetchTriggers,
     alwaysOn = false,
   } = options;
-  const symbols = new Set();
   const turnedOnAtom = atom(false);
 
   const enabledAtom = atom((get) => {
@@ -88,29 +88,22 @@ export default function jotaiQuery<TQueryFnData, TData = TQueryFnData>(
     }
   };
 
+  const subscribe = createSharedQuerySubscription(
+    () => {
+      store.set(turnedOnAtom, true);
+      const unsubs =
+        refetchTriggers?.map((trigger) => store.sub(trigger, refetch)) || [];
+      return () => unsubs.forEach((unsub) => unsub());
+    },
+    () => store.set(turnedOnAtom, false)
+  );
+
   const createUse =
     <T>(valueAtom: Atom<T>) =>
     () => {
       useEffect(() => {
         if (alwaysOn) return;
-        const unsubs: Array<() => void> = [];
-        if (symbols.size === 0) {
-          store.set(turnedOnAtom, true);
-          refetchTriggers?.forEach((triggerAtom) => {
-            unsubs.push(store.sub(triggerAtom, refetch));
-          });
-        }
-        const symbol = Symbol();
-        symbols.add(symbol);
-        return () => {
-          symbols.delete(symbol);
-          if (symbols.size === 0) {
-            store.set(turnedOnAtom, false);
-            unsubs.forEach((unsub) => {
-              unsub();
-            });
-          }
-        };
+        return subscribe();
       }, []);
       const value = useAtomValue(valueAtom);
       return value;

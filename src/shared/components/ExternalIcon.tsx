@@ -1,8 +1,6 @@
 import { HTMLAttributes, useEffect, useState } from 'react';
 import DOMPurify from 'dompurify';
-import { promises } from 'fs';
 import styled from '@emotion/styled';
-import axios from 'axios';
 
 const SvgWrapper = styled.span({
   display: 'inline-flex',
@@ -15,33 +13,33 @@ const SvgWrapper = styled.span({
   },
 });
 
-async function loadSVGContent(path: string) {
-  try {
-    const content = await promises.readFile(path);
-    return content;
-  } catch (err) {
-    return null;
-  }
-}
-
-async function fetchSVGContent(url: string) {
-  try {
-    const { data } = await axios.get(url);
-    return data;
-  } catch (err) {
-    return null;
-  }
-}
-
 const getCachedSVG = (() => {
   const cache: Record<string, string> = {};
-  return async ({ path, url }: { path?: string; url?: string }) => {
-    const key = (path ? path : url) || '';
-    const getContent = path ? loadSVGContent : fetchSVGContent;
+  return async ({
+    moduleName,
+    icon,
+    url,
+  }: {
+    moduleName?: string;
+    icon?: string;
+    url?: string;
+  }) => {
+    const key = moduleName && icon ? `${moduleName}/${icon}` : url || '';
+    if (!key) return '';
     if (cache[key] === undefined) {
-      const content = await getContent(key);
-      // IMPORTANT! MUST sanitize icon content for security
-      return (cache[key] = DOMPurify.sanitize(content));
+      try {
+        const content =
+          moduleName && icon
+            ? (await window.nexusElectron.fileAssets.readModuleIcon(
+                moduleName,
+                icon
+              )).content
+            : await window.nexusElectron.fileAssets.fetchExternalIcon(url || '');
+        // IMPORTANT! MUST sanitize icon content for security
+        return (cache[key] = DOMPurify.sanitize(content));
+      } catch {
+        return (cache[key] = '');
+      }
     } else {
       return cache[key];
     }
@@ -49,21 +47,23 @@ const getCachedSVG = (() => {
 })();
 
 export interface ExternalIconProps extends HTMLAttributes<HTMLSpanElement> {
-  path?: string;
+  moduleName?: string;
+  icon?: string;
   url?: string;
 }
 
 export default function ExternalIcon({
-  path,
+  moduleName,
+  icon,
   url,
   ...rest
 }: ExternalIconProps) {
   const [svgContent, setSvgContent] = useState<string>();
   useEffect(() => {
-    getCachedSVG({ path, url }).then((svg) => {
+    getCachedSVG({ moduleName, icon, url }).then((svg) => {
       setSvgContent(svg);
     });
-  }, []);
+  }, [moduleName, icon, url]);
 
   return (
     <SvgWrapper

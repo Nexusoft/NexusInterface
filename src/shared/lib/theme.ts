@@ -1,14 +1,6 @@
-import https from 'https';
-import fs from 'fs';
 import { atom } from 'jotai';
 
 import { store, subscribe } from 'lib/store';
-import path from 'path';
-import { walletDataDir } from 'consts/paths';
-import { readJson, writeJson } from 'utils/json';
-
-const themeFileName = 'theme.json';
-const themeFilePath = path.join(walletDataDir, themeFileName);
 
 export interface Theme {
   wallpaper: string;
@@ -73,20 +65,7 @@ export const nexusTheme: Theme = {
 
 const defaultTheme = darkTheme;
 
-function readTheme() {
-  if (fs.existsSync(themeFilePath)) {
-    const json = (readJson(themeFilePath) || {}) as PartialTheme;
-    return json;
-  } else {
-    return {} as PartialTheme;
-  }
-}
-
-function writeTheme(theme: PartialTheme) {
-  return writeJson(themeFilePath, theme);
-}
-
-const initialUserTheme = readTheme();
+const initialUserTheme = window.nexusElectron.theme.getInitial() as PartialTheme;
 const userThemeAtom = atom<PartialTheme>(initialUserTheme);
 
 export const themeAtom = atom<Theme>((get) => ({
@@ -94,38 +73,13 @@ export const themeAtom = atom<Theme>((get) => ({
   ...get(userThemeAtom),
 }));
 
-const timerId: NodeJS.Timeout | undefined = undefined;
+let timerId: ReturnType<typeof setTimeout> | undefined;
 subscribe(userThemeAtom, (theme) => {
   clearTimeout(timerId);
-  // Write to file asynchronously to batch multiple consecutive updates into one disk write
-  setTimeout(() => {
-    writeTheme(theme);
+  timerId = setTimeout(() => {
+    window.nexusElectron.theme.update(theme).catch(console.error);
   }, 0);
 });
-
-const downloadWallpaper = (wallpaper: string) =>
-  new Promise((resolve, reject) => {
-    const wallpaperPathSplit = wallpaper.split('.');
-    const fileEnding = wallpaperPathSplit[wallpaperPathSplit.length - 1];
-    const file = fs.createWriteStream(
-      walletDataDir + '/wallpaper.' + fileEnding
-    );
-    file.on('finish', () => {
-      file.close(() => {
-        resolve(file.path);
-      });
-    });
-    https
-      .get(wallpaper)
-      .setTimeout(10000)
-      .on('response', (response) => {
-        response.pipe(file);
-      })
-      .on('error', reject)
-      .on('timeout', () => {
-        reject(new Error('Timeout'));
-      });
-  });
 
 export const updateTheme = (updates: PartialTheme) => {
   store.set(userThemeAtom, (userTheme) => ({ ...userTheme, ...updates }));
@@ -135,19 +89,8 @@ export const setTheme = (theme: PartialTheme) => {
   store.set(userThemeAtom, theme);
 };
 
-export async function loadCustomTheme(path: string) {
-  const theme = readJson(path);
-  if (!theme) {
-    throw new Error('Fail to read json file at ' + path);
-  }
-
-  if (theme.wallpaper && theme.wallpaper.startsWith('http')) {
-    try {
-      theme.wallpaper = await downloadWallpaper(theme.wallpaper);
-    } catch (err) {
-      throw err;
-    }
-  }
-
-  setTheme(theme);
+export async function loadCustomTheme() {
+  const theme = await window.nexusElectron.theme.importFromDialog();
+  if (!theme) return;
+  setTheme(theme as PartialTheme);
 }

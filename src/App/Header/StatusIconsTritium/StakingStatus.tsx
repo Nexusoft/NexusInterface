@@ -14,13 +14,18 @@ import StatusIcon from './StatusIcon';
 __ = __context('Header');
 
 export default function StakingStatus() {
-  const { staking, stakerate, pooled } = stakeInfoQuery.use() || {};
+  const stakeInfo = stakeInfoQuery.use();
+  const { staking, stakerate, pooled, stalled } = stakeInfo || {};
   const synchronized = useSynchronized();
 
   return (
     <Tooltip.Trigger
       tooltip={
-        staking ? (
+        !stakeInfo ? (
+          __('Staking status unavailable')
+        ) : staking && stalled ? (
+          __('Staking minter is unresponsive')
+        ) : staking ? (
           synchronized ? (
             <>
               <div>
@@ -36,7 +41,7 @@ export default function StakingStatus() {
               </div>
             </>
           ) : (
-            __('Waiting for 100% synchronization to start staking...')
+            __('Waiting for synchronization to start staking')
           )
         ) : (
           __('Wallet is not staking')
@@ -49,7 +54,7 @@ export default function StakingStatus() {
           <Icon
             icon={stakingIcon}
             style={{
-              opacity: staking && synchronized ? 1 : 0.7,
+              opacity: staking && synchronized && !stalled ? 1 : 0.7,
             }}
           />
         </Link>
