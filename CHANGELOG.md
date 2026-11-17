@@ -1,3 +1,8 @@
+# Unreleased
+
+- Update the embedded Linux, macOS, and Windows x64 nodes to LLL-TAO
+  5.1.7-rc6 build 3, including mining readiness and status-poll fixes.
+
 # 3.2.3-beta.2 (2026.11.13)
 
 This prerelease is for continued testing, not a production release.

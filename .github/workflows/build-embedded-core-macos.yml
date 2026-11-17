@@ -6,7 +6,7 @@ on:
       core_ref:
         description: LLL-TAO commit to build
         required: true
-        default: f747d6d311403bac3ee6f580c8555353048231c7
+        default: 2a3c58e8e90a7c7bad52aa8d59cc25f3c626af1b
 
 permissions:
   contents: read
