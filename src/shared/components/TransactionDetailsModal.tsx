@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react';
 import ControlledModal from 'components/ControlledModal';
 import InfoField from 'components/InfoField';
 import WaitingMessage from 'components/WaitingMessage';
+import NexusAddress from 'components/NexusAddress';
+import ExplorerLink from 'components/ExplorerLink';
 import { callAPI, Transaction } from 'lib/api';
 import { openErrorDialog } from 'lib/dialog';
 import { formatDateTime } from 'lib/intl';
@@ -53,7 +55,12 @@ export default function TransactionDetailsModal({ txid }: { txid: string }) {
               {transaction.confirmations}
             </InfoField>
             <InfoField label={__('Transaction ID')}>
-              <span className="monospace">{transaction.txid}</span>
+              <NexusAddress
+                type="truncateMiddle"
+                address={transaction.txid}
+                copyable
+              />
+              <ExplorerLink id={transaction.txid} className="mt0_4" />
             </InfoField>
           </>
         ) : (
