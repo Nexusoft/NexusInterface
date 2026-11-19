@@ -10,7 +10,7 @@ __ = __context('Transactions.Balances');
 
 const BalancesColumn = styled.div(({ theme }) => ({
   gridArea: 'balances',
-  padding: '0 30px',
+  padding: '0 20px',
   margin: '20px 0',
   borderRight: `1px solid ${theme.mixer(0.125)}`,
   overflowY: 'auto',
@@ -32,11 +32,10 @@ const BalancesWrapper = styled.div(({ theme }) => ({
 const Line = styled.div<{ bold?: boolean }>(
   {
     marginTop: '.6em',
-    '&::after': {
-      content: '""',
-      display: 'block',
-      clear: 'both',
-    },
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'baseline',
+    gap: '0.6em',
   },
   ({ bold, theme }) =>
     bold && {
@@ -47,12 +46,14 @@ const Line = styled.div<{ bold?: boolean }>(
 
 const Label = styled.div({
   whiteSpace: 'nowrap',
-  float: 'left',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  minWidth: 0,
 });
 
 const Value = styled.div({
   whiteSpace: 'nowrap',
-  float: 'right',
+  flexShrink: 0,
 });
 
 export default function Balances() {
