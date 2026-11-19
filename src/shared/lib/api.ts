@@ -6,6 +6,8 @@ import { coreInfoQuery } from 'lib/coreInfo';
 import { activeSessionIdAtom } from 'lib/session';
 import { store } from 'lib/store';
 
+const requestTimeoutMs = 120000;
+
 const getDefaultOptions = ({
   apiSSL,
   ip,
@@ -71,6 +73,15 @@ function sendRequest({
         res.on('aborted', () => {
           reject(new Error('Aborted'));
         });
+
+        res.on('error', (err) => {
+          reject(err);
+        });
+      });
+
+      //a request the core never answers would stall its query's polling till restart
+      req.setTimeout(requestTimeoutMs, () => {
+        req.destroy(new Error('Request timed out'));
       });
 
       req.on('error', (err) => {
