@@ -1,7 +1,7 @@
 import { useAtomValue } from 'jotai';
 import { ReactNode, useState } from 'react';
 
-import { settingsAtom } from 'lib/settings';
+import { settingsAtom, updateSettings } from 'lib/settings';
 import { walletClosingAtom, walletLockedAtom } from 'lib/wallet';
 import { coreConnectedAtom } from 'lib/coreInfo';
 
@@ -16,12 +16,22 @@ import Wallet from './Wallet';
 import { preRelease } from 'consts/misc';
 
 export default function Overlays({ children }: { children: ReactNode }) {
-  const { locale, liteModeNoticeDisabled, acceptedAgreement } =
-    useAtomValue(settingsAtom);
+  const {
+    locale,
+    liteModeNoticeDisabled,
+    acceptedAgreement,
+    preReleaseNoticeSeenVersion,
+  } = useAtomValue(settingsAtom);
   const closing = useAtomValue(walletClosingAtom);
   const locked = useAtomValue(walletLockedAtom);
   const coreConnected = useAtomValue(coreConnectedAtom);
-  const [prereleaseWarningClosed, setPrereleaseWarningClosed] = useState(false);
+  const [prereleaseWarningClosed, setPrereleaseWarningClosed] = useState(
+    () => preReleaseNoticeSeenVersion === APP_VERSION.toString()
+  );
+  const closePrereleaseWarning = () => {
+    setPrereleaseWarningClosed(true);
+    updateSettings({ preReleaseNoticeSeenVersion: APP_VERSION.toString() });
+  };
   const [testnetWarningClosed, setTestnetWarningClosed] = useState(false);
 
   if (closing) {
@@ -54,7 +64,7 @@ export default function Overlays({ children }: { children: ReactNode }) {
       {preRelease && (
         <PreReleaseWarningModal
           visible={!prereleaseWarningClosed}
-          removeModal={() => setPrereleaseWarningClosed(true)}
+          removeModal={closePrereleaseWarning}
         />
       )}
       {LOCK_TESTNET && prereleaseWarningClosed && (

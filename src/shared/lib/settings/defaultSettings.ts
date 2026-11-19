@@ -81,6 +81,7 @@ export type Settings = {
   acceptedAgreement: boolean;
   bootstrapSuggestionDisabled: boolean;
   liteModeNoticeDisabled: boolean;
+  preReleaseNoticeSeenVersion: string;
   windowWidth: number;
   windowHeight: number;
   windowX: number | undefined;
@@ -163,6 +164,7 @@ export const defaultSettings: Settings = {
   acceptedAgreement: false,
   bootstrapSuggestionDisabled: false,
   liteModeNoticeDisabled: false,
+  preReleaseNoticeSeenVersion: '',
   windowWidth: 1200,
   windowHeight: 800,
   windowX: undefined,
