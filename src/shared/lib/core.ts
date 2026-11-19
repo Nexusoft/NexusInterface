@@ -2,7 +2,12 @@ import { ipcRenderer } from 'electron';
 import log from 'electron-log';
 
 import { store } from 'lib/store';
-import { loadNexusConf, coreConfigAtom } from 'lib/coreConfig';
+import {
+  loadNexusConf,
+  coreConfigAtom,
+  ensureFreeApiPorts,
+  CoreConfig,
+} from 'lib/coreConfig';
 import { coreInfoPausedAtom } from 'lib/coreInfo';
 import { callAPI } from 'lib/api';
 import { updateSettings, settingsAtom } from 'lib/settings';
@@ -30,7 +35,7 @@ export const startCore = async () => {
   }
 
   // Load config
-  const conf = await loadNexusConf();
+  let conf: CoreConfig = await loadNexusConf();
   store.set(coreConfigAtom, conf);
 
   // Check if core's already running
@@ -40,6 +45,10 @@ export const startCore = async () => {
     );
     return;
   }
+
+  // Move the API to free ports if another program holds them
+  conf = await ensureFreeApiPorts(conf);
+  store.set(coreConfigAtom, conf);
   // if (settings.clearPeers) {
   //   if (fs.existsSync(path.join(conf.dataDir, 'addr.bak'))) {
   //     await deleteDirectory(path.join(conf.dataDir, 'addr.bak'));
