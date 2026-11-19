@@ -1064,3 +1064,48 @@ Unstake request is gone,Unstake request is gone,User.Staking
 There are currently no updates available,There are currently no updates available,AutoUpdate
 Wallet update failed,Wallet update failed,AutoUpdate
 Unknown error,Unknown error,AutoUpdate
+Private testnet %{number},Private testnet %{number},Header
+Testnet %{number},Testnet %{number},Header
+Mainnet,Mainnet,Header
+Synced,Synced,Header
+Syncing %{percent}%,Syncing %{percent}%,Header
+Syncing,Syncing,Header
+You are currently running an Alpha version of the wallet.,You are currently running an Alpha version of the wallet.,
+You are currently running a Beta version of the wallet.,You are currently running a Beta version of the wallet.,
+You are currently running a Testnet only version of the wallet.,You are currently running a Testnet only version of the wallet.,
+Transactions,Transactions,Overview
+Available,Available,Overview
+Staked,Staked,Overview
+Incoming,Incoming,Overview
+Tokens,Tokens,Overview
+Log in to see your balance,Log in to see your balance,Overview
+Staking,Staking,Overview
+Open staking,Open staking,Overview
+Staking is not available in private network,Staking is not available in private network,Overview
+Not staking,Not staking,Overview
+Stake rate,Stake rate,Overview
+Trust weight,Trust weight,Overview
+Block weight,Block weight,Overview
+Stake weight,Stake weight,Overview
+No trust account yet,No trust account yet,Overview
+Network,Network,Overview
+Not connected,Not connected,Overview
+Testnet %{number},Testnet %{number},Overview
+Mainnet,Mainnet,Overview
+Sync,Sync,Overview
+Synced,Synced,Overview
+Syncing,Syncing,Overview
+Blocks,Blocks,Overview
+NXS price,NXS price,Overview
+Recent transactions,Recent transactions,Overview
+All transactions,All transactions,Overview
+Log in to see your transactions,Log in to see your transactions,Overview
+Loading transactions...,Loading transactions...,Overview
+No transactions yet,No transactions yet,Overview
+%{smart_count} minute ago |||| %{smart_count} minutes ago,%{smart_count} minute ago |||| %{smart_count} minutes ago,User.Staking
+%{smart_count} hour ago |||| %{smart_count} hours ago,%{smart_count} hour ago |||| %{smart_count} hours ago,User.Staking
+%{smart_count} day ago |||| %{smart_count} days ago,%{smart_count} day ago |||| %{smart_count} days ago,User.Staking
+Recent rewards,Recent rewards,User.Staking
+last one %{time},last one %{time},User.Staking
+No staking rewards yet,No staking rewards yet,User.Staking
+View on explorer,View on explorer,Explorer
