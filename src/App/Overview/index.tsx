@@ -1,13 +1,13 @@
 // External
 import { useEffect, useRef } from 'react';
 import { useAtomValue } from 'jotai';
+import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
 // Internal
 import { webGLAvailable } from 'consts/misc';
 import UT from 'lib/usageTracking';
 import { Settings, settingsAtom } from 'lib/settings';
-import { themeAtom } from 'lib/theme';
 import { useCoreInfo } from 'lib/coreInfo';
 import Globe from './Globe';
 import Stats from './Stats';
@@ -70,7 +70,8 @@ function useUpdateGlobe({
 
 export default function Overview() {
   const settings = useAtomValue(settingsAtom);
-  const theme = useAtomValue(themeAtom);
+  //the active theme, so the testnet colours reach the globe too
+  const theme = useTheme();
   const coreInfo = useCoreInfo();
   const connections = coreInfo?.connections;
   const blocks = coreInfo?.blocks;

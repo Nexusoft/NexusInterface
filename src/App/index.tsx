@@ -49,7 +49,13 @@ export default function App() {
   const indicator = useTestnetIndicator();
   //orange accent so a testnet wallet cannot be mistaken for mainnet
   const theme = indicator.show('color')
-    ? { ...baseTheme, primary: testnetColor }
+    ? {
+        ...baseTheme,
+        primary: testnetColor,
+        globeColor: '#c96a14',
+        globePillarColor: '#ffd27a',
+        globeArchColor: '#ffd27a',
+      }
     : baseTheme;
   return (
     <HashRouter>

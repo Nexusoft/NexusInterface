@@ -190,6 +190,20 @@ export default class Globe extends Component {
       const newColor = new THREE.Color(this.props.globeColor);
       this.globe.children[0].material.color = newColor; // [0] == globe
     }
+    if (this.props.pillarColor !== prevProps.pillarColor) {
+      this.pointRegistry.forEach((point) => {
+        point.params.color = this.props.pillarColor;
+        point.setColor(this.props.pillarColor);
+      });
+      this.selfPoint?.setColor(
+        new Color(this.props.pillarColor).negate().hex()
+      );
+    }
+    if (this.props.archColor !== prevProps.archColor) {
+      this.curveRegistry.forEach((curve) =>
+        curve.arc?.material.color.set(this.props.archColor)
+      );
+    }
     if (this.props.connections !== prevProps.connections) {
       this.pointRegister();
     }
