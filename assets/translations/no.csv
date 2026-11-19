@@ -1125,3 +1125,6 @@
 "outgoing","utgående","Overview"
 "incoming","innkommende","Overview"
 "Latency %{ms} ms","Forsinkelse %{ms} ms","Overview"
+"to %{name}","til %{name}","Overview"
+"from %{name}","fra %{name}","Overview"
+"24h","24 t","Overview"

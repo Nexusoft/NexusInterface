@@ -252,7 +252,7 @@ function BalanceCard() {
     (nxsBalances?.immature || 0);
   const total =
     (nxsBalances?.available || 0) + (nxsBalances?.stake || 0) + incoming;
-  const { price, currency } = marketData || {};
+  const { price, currency, changePct24Hr } = marketData || {};
 
   return (
     <Card area="balance">
@@ -287,6 +287,23 @@ function BalanceCard() {
                 )
               : null}
           </SubValue>
+          {!!price && !!currency && (
+            <SubValue style={{ fontSize: 13 }}>
+              1 NXS = {formatCurrency(price, currency, currency === 'BTC' ? 8 : 4)}
+              {typeof changePct24Hr === 'number' && (
+                <span
+                  className="ml0_4"
+                  style={{
+                    color: changePct24Hr < 0 ? '#e05a47' : '#2dbd6e',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {changePct24Hr > 0 ? '+' : ''}
+                  {formatNumber(changePct24Hr, 2)} % {__('24h')}
+                </span>
+              )}
+            </SubValue>
+          )}
           <Items>
             <Item label={__('Available')}>
               {hidden(`${formatNumber(nxsBalances.available, 6)} NXS`)}
@@ -391,8 +408,6 @@ function NetworkCard() {
   ).size;
   const coreConnected = useCoreConnected();
   const synchronized = useSynchronized();
-  const marketData = marketDataQuery.use();
-  const { price, currency, changePct24Hr } = marketData || {};
 
   return (
     <Card area="network">
@@ -435,23 +450,6 @@ function NetworkCard() {
                 })
               : peers.length
             : '-'}
-        </Row>
-        <Row label={__('NXS price')}>
-          {price && currency
-            ? formatCurrency(price, currency, currency === 'BTC' ? 8 : 4)
-            : '-'}
-          {typeof changePct24Hr === 'number' && (
-            <span
-              className="ml0_4"
-              style={{
-                color: changePct24Hr < 0 ? '#e05a47' : '#2dbd6e',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              {changePct24Hr > 0 ? '+' : ''}
-              {formatNumber(changePct24Hr, 2)} %
-            </span>
-          )}
         </Row>
       </Rows>
     </Card>

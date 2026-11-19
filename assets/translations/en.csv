@@ -1134,3 +1134,6 @@ Unknown location,Unknown location,Overview
 outgoing,outgoing,Overview
 incoming,incoming,Overview
 Latency %{ms} ms,Latency %{ms} ms,Overview
+to %{name},to %{name},Overview
+from %{name},from %{name},Overview
+24h,24h,Overview

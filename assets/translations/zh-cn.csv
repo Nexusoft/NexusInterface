@@ -1128,3 +1128,6 @@
 "outgoing","出站","Overview"
 "incoming","入站","Overview"
 "Latency %{ms} ms","延迟 %{ms} 毫秒","Overview"
+"to %{name}","至 %{name}","Overview"
+"from %{name}","来自 %{name}","Overview"
+"24h","24小时","Overview"

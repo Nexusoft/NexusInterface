@@ -1126,3 +1126,6 @@
 "outgoing","ausgehend","Overview"
 "incoming","eingehend","Overview"
 "Latency %{ms} ms","Latenz %{ms} ms","Overview"
+"to %{name}","an %{name}","Overview"
+"from %{name}","von %{name}","Overview"
+"24h","24 h","Overview"

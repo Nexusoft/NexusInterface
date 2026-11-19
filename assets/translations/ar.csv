@@ -1125,3 +1125,6 @@
 "outgoing","صادر","Overview"
 "incoming","وارد","Overview"
 "Latency %{ms} ms","زمن الاستجابة %{ms} مللي ثانية","Overview"
+"to %{name}","إلى %{name}","Overview"
+"from %{name}","من %{name}","Overview"
+"24h","24 ساعة","Overview"

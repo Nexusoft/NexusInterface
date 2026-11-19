@@ -1133,3 +1133,6 @@
 "outgoing","アウトバウンド","Overview"
 "incoming","インバウンド","Overview"
 "Latency %{ms} ms","レイテンシ %{ms} ms","Overview"
+"to %{name}","宛先 %{name}","Overview"
+"from %{name}","送信元 %{name}","Overview"
+"24h","24時間","Overview"

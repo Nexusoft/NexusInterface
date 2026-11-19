@@ -1133,3 +1133,6 @@
 "outgoing","исходящее","Overview"
 "incoming","входящее","Overview"
 "Latency %{ms} ms","Задержка %{ms} мс","Overview"
+"to %{name}","кому: %{name}","Overview"
+"from %{name}","от: %{name}","Overview"
+"24h","за 24 ч","Overview"

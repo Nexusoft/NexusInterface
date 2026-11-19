@@ -1129,3 +1129,6 @@
 "outgoing","lähtevä","Overview"
 "incoming","saapuva","Overview"
 "Latency %{ms} ms","Viive %{ms} ms","Overview"
+"to %{name}","vastaanottaja %{name}","Overview"
+"from %{name}","lähettäjä %{name}","Overview"
+"24h","24 h","Overview"

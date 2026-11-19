@@ -1126,3 +1126,6 @@
 "outgoing","sortant","Overview"
 "incoming","entrant","Overview"
 "Latency %{ms} ms","Latence %{ms} ms","Overview"
+"to %{name}","à %{name}","Overview"
+"from %{name}","de %{name}","Overview"
+"24h","24 h","Overview"

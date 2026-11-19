@@ -1134,3 +1134,6 @@
 "outgoing","odlazna","Overview"
 "incoming","dolazna","Overview"
 "Latency %{ms} ms","Latencija %{ms} ms","Overview"
+"to %{name}","za %{name}","Overview"
+"from %{name}","od %{name}","Overview"
+"24h","24 h","Overview"

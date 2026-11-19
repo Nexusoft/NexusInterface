@@ -1129,3 +1129,6 @@
 "outgoing","uitgaand","Overview"
 "incoming","inkomend","Overview"
 "Latency %{ms} ms","Latentie %{ms} ms","Overview"
+"to %{name}","aan %{name}","Overview"
+"from %{name}","van %{name}","Overview"
+"24h","24 u","Overview"
