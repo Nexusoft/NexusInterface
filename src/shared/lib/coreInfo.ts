@@ -1,6 +1,6 @@
 import { atom, useAtomValue } from 'jotai';
 import { store } from 'lib/store';
-import { callAPI, CoreInfo } from 'lib/api';
+import { callAPI, CoreInfo, PeerInfo } from 'lib/api';
 import { settingAtoms } from 'lib/settings';
 import jotaiQuery from 'utils/jotaiQuery';
 
@@ -57,4 +57,15 @@ export const blockDateAtom = atom((get) => {
   const blocks = get(blocksAtom);
   if (!blocks) return null;
   return new Date();
+});
+
+/** Connected Tritium peers, used where the node list is shown */
+export const peersQuery = jotaiQuery<PeerInfo[]>({
+  condition: (get) => get(coreConnectedAtom),
+  getQueryConfig: () => ({
+    queryKey: ['peers'],
+    queryFn: () => callAPI('system/list/peers'),
+    staleTime: 30000,
+    refetchInterval: 30000,
+  }),
 });

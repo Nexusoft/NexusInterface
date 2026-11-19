@@ -4,13 +4,24 @@ import { useAtomValue } from 'jotai';
 import styled from '@emotion/styled';
 
 import TokenName from 'components/TokenName';
+import Icon from 'components/Icon';
+import Tooltip from 'components/Tooltip';
+import geoip from 'data/geoip';
+import visibleIcon from 'icons/visible.svg';
+import invisibleIcon from 'icons/invisible.svg';
 import TransactionDetailsModal from 'components/TransactionDetailsModal';
 import { formatNumber, formatCurrency, formatDateTime } from 'lib/intl';
 import { marketDataQuery } from 'lib/market';
-import { settingsAtom } from 'lib/settings';
+import { settingsAtom, updateSettings } from 'lib/settings';
+import { stakeRewardsQuery } from 'lib/staking';
 import { balancesQuery } from 'lib/user';
 import { stakeInfoQuery, loggedInAtom } from 'lib/session';
-import { useCoreInfo, useCoreConnected, useSynchronized } from 'lib/coreInfo';
+import {
+  useCoreInfo,
+  useCoreConnected,
+  useSynchronized,
+  peersQuery,
+} from 'lib/coreInfo';
 import {
   recentTransactionsQuery,
   getBalanceChanges,
@@ -24,7 +35,8 @@ const DashboardPage = styled.div({
   width: '100%',
   height: '100%',
   overflowY: 'auto',
-  padding: '20px 30px',
+  //room for the status line under the header (not logged in, staking warning)
+  padding: '36px 30px 20px',
 });
 
 const Grid = styled.div({
@@ -69,6 +81,23 @@ const CardLink = styled(Link)(({ theme }) => ({
   color: theme.mixer(0.75),
   '&:hover': { color: theme.foreground },
 }));
+
+const EyeButton = styled.span(({ theme }) => ({
+  cursor: 'pointer',
+  fontSize: 15,
+  color: theme.mixer(0.625),
+  '&:hover': { color: theme.foreground },
+}));
+
+const timeAgo = (seconds: number) => {
+  const minutes = Math.max(0, Math.floor((Date.now() / 1000 - seconds) / 60));
+  if (minutes < 60)
+    return __('%{smart_count} minute ago |||| %{smart_count} minutes ago', minutes);
+  const hours = Math.floor(minutes / 60);
+  if (hours < 48)
+    return __('%{smart_count} hour ago |||| %{smart_count} hours ago', hours);
+  return __('%{smart_count} day ago |||| %{smart_count} days ago', Math.floor(hours / 24));
+};
 
 const BigValue = styled.div(({ theme }) => ({
   fontSize: 32,
@@ -156,11 +185,21 @@ const txTimeFormat: Intl.DateTimeFormatOptions = {
   hour12: false,
 };
 
-function Item({ label, children }: { label: ReactNode; children: ReactNode }) {
+function Item({
+  label,
+  children,
+  wrap,
+}: {
+  label: ReactNode;
+  children: ReactNode;
+  wrap?: boolean;
+}) {
   return (
     <div>
       <ItemLabel>{label}</ItemLabel>
-      <ItemValue>{children}</ItemValue>
+      <ItemValue style={wrap ? { whiteSpace: 'normal' } : undefined}>
+        {children}
+      </ItemValue>
     </div>
   );
 }
@@ -183,7 +222,20 @@ function BalanceCard() {
   return (
     <Card>
       <CardTitle>
-        <span>{__('Balance')}</span>
+        <span>
+          {__('Balance')}{' '}
+          <Tooltip.Trigger
+            tooltip={hideOverviewBalances ? __('Show balances') : __('Hide balances')}
+          >
+            <EyeButton
+              onClick={() =>
+                updateSettings({ hideOverviewBalances: !hideOverviewBalances })
+              }
+            >
+              <Icon icon={hideOverviewBalances ? invisibleIcon : visibleIcon} />
+            </EyeButton>
+          </Tooltip.Trigger>
+        </span>
         <CardLink to="/Transactions">{__('Transactions')}</CardLink>
       </CardTitle>
       {nxsBalances ? (
@@ -233,6 +285,13 @@ function BalanceCard() {
 
 function StakingCard() {
   const stakeInfo = stakeInfoQuery.use();
+  const rewards = stakeRewardsQuery.use();
+  const loggedIn = useAtomValue(loggedInAtom);
+  const lastReward = rewards?.[0];
+  const lastRewardAmount = lastReward
+    ? getBalanceChanges(lastReward).reduce((sum, c) => sum + (c.amount || 0), 0)
+    : 0;
+  const { hideOverviewBalances } = useAtomValue(settingsAtom);
   const coreInfo = useCoreInfo();
   const privateNet = coreInfo?.private;
 
@@ -242,7 +301,9 @@ function StakingCard() {
         <span>{__('Staking')}</span>
         <CardLink to="/User/Staking">{__('Open staking')}</CardLink>
       </CardTitle>
-      {privateNet ? (
+      {!loggedIn ? (
+        <Empty>{__('Log in to see your staking')}</Empty>
+      ) : privateNet ? (
         <Empty>{__('Staking is not available in private network')}</Empty>
       ) : stakeInfo ? (
         <>
@@ -251,6 +312,18 @@ function StakingCard() {
             {stakeInfo.staking ? __('Staking') : __('Not staking')}
           </BigValue>
           <Items>
+            <Item label={__('Staked')}>
+              {hideOverviewBalances ? '-' : `${formatNumber(stakeInfo.stake, 2)} NXS`}
+            </Item>
+            <Item label={__('Last reward')}>
+              {lastReward ? (
+                <Tooltip.Trigger tooltip={`+${formatNumber(lastRewardAmount, 6)} NXS`}>
+                  <span>{timeAgo(lastReward.timestamp)}</span>
+                </Tooltip.Trigger>
+              ) : (
+                '-'
+              )}
+            </Item>
             <Item label={__('Stake rate')}>
               {formatNumber(stakeInfo.stakerate, 2)} %
             </Item>
@@ -274,6 +347,12 @@ function StakingCard() {
 
 function NetworkCard() {
   const coreInfo = useCoreInfo();
+  const peers = peersQuery.use();
+  const countries = new Set(
+    (peers || [])
+      .map((peer) => (geoip.get(peer.address.split(':')[0]) as any)?.country?.iso_code)
+      .filter(Boolean)
+  ).size;
   const coreConnected = useCoreConnected();
   const synchronized = useSynchronized();
   const marketData = marketDataQuery.use();
@@ -311,17 +390,30 @@ function NetworkCard() {
             ? coreInfo.connections
             : '-'}
         </Item>
-        <Item label={__('NXS price')}>
+        <Item label={__('Nodes')}>
+          {peers
+            ? countries
+              ? __('%{nodes} in %{smart_count} country |||| %{nodes} in %{smart_count} countries', {
+                  smart_count: countries,
+                  nodes: peers.length,
+                })
+              : peers.length
+            : '-'}
+        </Item>
+        <Item label={__('NXS price')} wrap>
           {price && currency
             ? formatCurrency(price, currency, currency === 'BTC' ? 8 : 4)
             : '-'}
           {typeof changePct24Hr === 'number' && (
             <span
               className="ml0_4"
-              style={{ color: changePct24Hr < 0 ? '#e05a47' : '#2dbd6e' }}
+              style={{
+                color: changePct24Hr < 0 ? '#e05a47' : '#2dbd6e',
+                whiteSpace: 'nowrap',
+              }}
             >
               {changePct24Hr > 0 ? '+' : ''}
-              {formatNumber(changePct24Hr, 2)} %
+              {formatNumber(changePct24Hr, 2)}00a0%
             </span>
           )}
         </Item>
