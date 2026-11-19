@@ -14,7 +14,12 @@ import { alphaRelease, betaRelease } from 'consts/misc';
 import StatusIconsTritium from './StatusIconsTritium';
 import WalletStatus from './WalletStatus';
 import logoFull from 'icons/logo-full.svg';
-import { useTestnetIndicator, testnetColor } from 'lib/testnetIndicator';
+import Tooltip from 'components/Tooltip';
+import {
+  useTestnetIndicator,
+  testnetColor,
+  toggleTestnetColor,
+} from 'lib/testnetIndicator';
 
 __ = __context('Header');
 
@@ -95,6 +100,9 @@ const TestnetTag = styled.div({
   borderRadius: 3,
   color: '#1a1a1a',
   background: testnetColor,
+  cursor: 'pointer',
+  userSelect: 'none',
+  '&:hover': { filter: 'brightness(1.1)' },
 });
 
 const TestnetBanner = styled.div({
@@ -121,7 +129,30 @@ export default function Header() {
         <Logo icon={logoFull} />
         {LOCK_TESTNET && <PreReleaseTag>TESTNET</PreReleaseTag>}
         {preReleaseTag ? <PreReleaseTag>{preReleaseTag}</PreReleaseTag> : null}
-        {indicator.show('tag') && <TestnetTag>TESTNET</TestnetTag>}
+        {indicator.show('tag') && (
+          <Tooltip.Trigger
+            tooltip={
+              indicator.show('color')
+                ? __('%{network} - click for the normal colours', {
+                    network: indicator.label,
+                  })
+                : __('%{network} - click for the testnet colours', {
+                    network: indicator.label,
+                  })
+            }
+          >
+            <TestnetTag
+              onClick={(e) => {
+                //inside the logo link, so do not navigate
+                e.preventDefault();
+                e.stopPropagation();
+                toggleTestnetColor();
+              }}
+            >
+              TESTNET
+            </TestnetTag>
+          </Tooltip.Trigger>
+        )}
       </LogoLink>
 
       <ModeDisplay>

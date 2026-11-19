@@ -1,7 +1,8 @@
 import { useAtomValue } from 'jotai';
 
 import { useCoreInfo } from 'lib/coreInfo';
-import { settingsAtom } from 'lib/settings';
+import { settingsAtom, updateSettings } from 'lib/settings';
+import { store } from 'lib/store';
 
 export type TestnetIndicator = 'tag' | 'color' | 'banner' | 'icon';
 
@@ -21,4 +22,14 @@ export function useTestnetIndicator() {
     show: (kind: TestnetIndicator) =>
       testnet && (testnetIndicator || []).includes(kind),
   };
+}
+
+/** Switch the orange testnet colours on or off (the TESTNET badge stays) */
+export function toggleTestnetColor() {
+  const current = store.get(settingsAtom).testnetIndicator || [];
+  updateSettings({
+    testnetIndicator: current.includes('color')
+      ? current.filter((kind) => kind !== 'color')
+      : [...current, 'color'],
+  });
 }
