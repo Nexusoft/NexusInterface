@@ -11,6 +11,7 @@ import ChineseSimpleFlag from './flags/cn.png';
 import FinnishFlag from './flags/fi.png';
 import ArabicFlag from './flags/arabic.png';
 import HungarianFlag from './flags/hu.png';
+import CroatianFlag from './flags/hr.png';
 import RomanianFlag from './flags/ro.png';
 import NorwegianFlag from './flags/no.png';
 import SerbianFlag from './flags/rs.png';
@@ -57,6 +58,11 @@ const languages: LanguageInfo[] = [
     code: 'fr',
     flag: FranceFlag,
     name: 'Français',
+  },
+  {
+    code: 'hr',
+    flag: CroatianFlag,
+    name: 'Hrvatski',
   },
   {
     code: 'hu',
