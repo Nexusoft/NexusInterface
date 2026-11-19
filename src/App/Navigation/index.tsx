@@ -48,6 +48,16 @@ const AboveNav = styled.div({
   right: 0,
 });
 
+const NavLabel = styled.span({
+  fontSize: 11,
+  lineHeight: 1,
+  marginTop: 4,
+  maxWidth: 76,
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+});
+
 const Badge = styled.div(({ theme }) => ({
   position: 'absolute',
   top: '0.4em',
@@ -75,12 +85,11 @@ const NavItem = ({
   badge,
   ...rest
 }: { icon: SvgIcon; children: string; badge?: number } & NavLinkItemProps) => (
-  <Tooltip.Trigger tooltip={children} position="top">
-    <NavLinkItem {...rest}>
-      <Icon icon={icon} />
-      {!!badge && <Badge>{badge}</Badge>}
-    </NavLinkItem>
-  </Tooltip.Trigger>
+  <NavLinkItem {...rest}>
+    <Icon icon={icon} />
+    <NavLabel>{children}</NavLabel>
+    {!!badge && <Badge>{badge}</Badge>}
+  </NavLinkItem>
 );
 
 /**
@@ -93,6 +102,7 @@ const ModuleNavItem = ({ module }: { module: Module }) => (
   <Tooltip.Trigger tooltip={module.info.displayName} position="top">
     <NavLinkItem to={`/Modules/${module.info.name}`}>
       <ModuleIcon module={module} />
+      <NavLabel>{module.info.displayName}</NavLabel>
     </NavLinkItem>
   </Tooltip.Trigger>
 );

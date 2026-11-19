@@ -30,24 +30,26 @@ const pulseDot = keyframes`
 
 const NavLinkItem = styled(NavLink)(({ theme }) => ({
   display: 'flex',
+  flexDirection: 'column',
   alignItems: 'center',
-  padding: '0 10px',
+  justifyContent: 'center',
+  padding: '0 8px',
   position: 'relative',
   transitionProperties: 'opacity, color, transform',
   transitionDuration: timing.normal,
   transitionTimingFunction: consts.enhancedEaseOut,
   color: theme.foreground,
   opacity: 0.45,
-  fontSize: 36,
+  fontSize: 30,
 
   '&:hover': {
     opacity: 0.9,
-    transform: 'scale(1.15)',
+    transform: 'scale(1.08)',
   },
   '&.active': {
     opacity: 1,
     color: theme.primary,
-    transform: 'scale(1.15)',
+    transform: 'scale(1.08)',
 
     '&::before': {
       content: '""',
@@ -57,7 +59,7 @@ const NavLinkItem = styled(NavLink)(({ theme }) => ({
       background: theme.primary,
       borderRadius: 45,
       position: 'absolute',
-      bottom: 5,
+      bottom: -2,
       left: '50%',
       transform: 'translate(-50%,50%)',
       animation: `${pulseRing} 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite`,
@@ -70,7 +72,7 @@ const NavLinkItem = styled(NavLink)(({ theme }) => ({
       background: theme.foreground,
       borderRadius: '50%',
       position: 'absolute',
-      bottom: 5,
+      bottom: -2,
       left: '50%',
       transform: 'translate(-50%,50%)',
       animation: `${pulseDot} 2s cubic-bezier(0.455, 0.03, 0.515, 0.955) -0.4s infinite`,
