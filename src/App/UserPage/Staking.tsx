@@ -14,7 +14,10 @@ import {
   startStaking,
   stopStaking,
   keepStaking,
+  stakeRewardsQuery,
 } from 'lib/staking';
+import { getBalanceChanges } from 'lib/transactions';
+import TransactionDetailsModal from 'components/TransactionDetailsModal';
 import QuestionCircle from 'components/QuestionCircle';
 
 import { useUserTab } from './atoms';
@@ -42,6 +45,72 @@ const Line = styled.div<{ bold?: boolean }>(
       color: theme.foreground,
     }
 );
+
+const RewardsTitle = styled.div(({ theme }) => ({
+  marginTop: '2em',
+  paddingTop: '1em',
+  borderTop: `1px solid ${theme.mixer(0.125)}`,
+  fontWeight: 'bold',
+  color: theme.foreground,
+}));
+
+const RewardLine = styled(Line)(({ theme }) => ({
+  cursor: 'pointer',
+  '&:hover': { color: theme.foreground },
+}));
+
+const rewardTimeFormat: Intl.DateTimeFormatOptions = {
+  year: 'numeric',
+  month: 'short',
+  day: '2-digit',
+  hour: '2-digit',
+  minute: '2-digit',
+  hour12: false,
+};
+
+function timeSince(seconds: number) {
+  const minutes = Math.floor((Date.now() / 1000 - seconds) / 60);
+  if (minutes < 60) return __('%{smart_count} minute ago |||| %{smart_count} minutes ago', minutes);
+  const hours = Math.floor(minutes / 60);
+  if (hours < 48) return __('%{smart_count} hour ago |||| %{smart_count} hours ago', hours);
+  return __('%{smart_count} day ago |||| %{smart_count} days ago', Math.floor(hours / 24));
+}
+
+function StakeRewards() {
+  const rewards = stakeRewardsQuery.use();
+  if (!rewards) return null;
+  return (
+    <>
+      <RewardsTitle>
+        {__('Recent rewards')}
+        {!!rewards.length && (
+          <span className="dim" style={{ fontWeight: 'normal' }}>
+            {' '}
+            ({__('last one %{time}', { time: timeSince(rewards[0].timestamp) })})
+          </span>
+        )}
+      </RewardsTitle>
+      {rewards.length === 0 ? (
+        <Line>
+          <span className="dim">{__('No staking rewards yet')}</span>
+        </Line>
+      ) : (
+        rewards.map((tx) => {
+          const reward = getBalanceChanges(tx).reduce((sum, c) => sum + (c.amount || 0), 0);
+          return (
+            <RewardLine
+              key={tx.txid}
+              onClick={() => openModal(TransactionDetailsModal, { txid: tx.txid })}
+            >
+              <div>{formatDateTime(tx.timestamp * 1000, rewardTimeFormat)}</div>
+              <div>+{formatNumber(reward, 6)} NXS</div>
+            </RewardLine>
+          );
+        })
+      )}
+    </>
+  );
+}
 
 const Pending = styled.div({
   paddingLeft: '1em',
@@ -281,6 +350,7 @@ export default function Staking() {
           )}
         </div>
       </div>
+      <StakeRewards />
     </TabContentWrapper>
   );
 }

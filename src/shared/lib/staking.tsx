@@ -1,7 +1,7 @@
 import { atom } from 'jotai';
 
 import AdjustStakeModal from 'components/AdjustStakeModal';
-import { StakeInfo, callAPI } from 'lib/api';
+import { StakeInfo, Transaction, callAPI } from 'lib/api';
 import { restartCore } from 'lib/core';
 import { isSynchronized } from 'lib/coreInfo';
 import {
@@ -10,7 +10,14 @@ import {
   openErrorDialog,
   openInfoDialog,
 } from 'lib/dialog';
-import { stakeInfoQuery, userStatusQuery, loggedInAtom } from 'lib/session';
+import {
+  stakeInfoQuery,
+  userStatusQuery,
+  loggedInAtom,
+  userGenesisAtom,
+  txCountAtom,
+} from 'lib/session';
+import jotaiQuery from 'utils/jotaiQuery';
 import { settingsAtom, updateSettings } from 'lib/settings';
 import { store, subscribe } from 'lib/store';
 import { openModal, showNotification } from 'lib/ui';
@@ -20,6 +27,23 @@ import StopStakingModal, {
 } from 'components/StopStakingModal';
 
 __ = __context('User.Staking');
+
+/** Latest staking rewards (Trust and Genesis transactions) */
+export const stakeRewardsQuery = jotaiQuery<Transaction[]>({
+  condition: (get) => get(loggedInAtom),
+  getQueryConfig: (get) => ({
+    queryKey: ['stakeRewards', get(userGenesisAtom)],
+    queryFn: () =>
+      callAPI('profiles/transactions/master', {
+        verbose: 'summary',
+        limit: 5,
+        where: '(results.contracts.OP=TRUST OR results.contracts.OP=GENESIS)',
+      }),
+    staleTime: 300000,
+    refetchOnMount: 'always',
+  }),
+  refetchTriggers: [txCountAtom],
+});
 
 export type StakingAction = 'starting' | 'stopping' | 'unstaking';
 
