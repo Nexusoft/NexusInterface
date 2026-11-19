@@ -7,6 +7,7 @@ import Button from 'components/Button';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import InfoField from 'components/InfoField';
+import ExplorerLink from 'components/ExplorerLink';
 import { formatDateTime } from 'lib/intl';
 import { openModal } from 'lib/ui';
 import { getAssetData } from 'lib/asset';
@@ -86,7 +87,10 @@ export default function AssetDetailsModal({ asset }: { asset: Asset }) {
               <InfoField label={__('Name')}>
                 {asset.name || <span className="dim">N/A</span>}
               </InfoField>
-              <InfoField label={__('Address')}>{asset.address}</InfoField>
+              <InfoField label={__('Address')}>
+                <span className="monospace v-align">{asset.address}</span>
+                <ExplorerLink id={asset.address} className="ml1" />
+              </InfoField>
               <InfoField label={__('Owner')}>{asset.owner}</InfoField>
               {!!asset.ownership && (
                 <InfoField label={__('Ownership')}>

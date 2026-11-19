@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 
 import ControlledModal from 'components/ControlledModal';
 import InfoField from 'components/InfoField';
+import ExplorerLink from 'components/ExplorerLink';
 import QRButton from 'components/QRButton';
 import NewAccountModal from 'components/NewAccountModal';
 import Button from 'components/Button';
@@ -70,6 +71,7 @@ export default function TokenDetailsModal({
                     {token.address || '0'}
                   </span>
                   <QRButton className="ml0_4" address={token.address} />
+                  <ExplorerLink id={token.address} className="ml1" />
                 </InfoField>
                 <InfoField ratio={[1, 2]} label={__('Created at')}>
                   {formatDateTime(token.created * 1000, timeFormatOptions)}
