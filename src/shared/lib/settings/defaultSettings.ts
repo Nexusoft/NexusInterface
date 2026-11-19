@@ -116,7 +116,7 @@ export const defaultSettings: Settings = {
   devMode: false,
   verifyModuleSource: true,
   fakeTransactions: false,
-  overviewDisplay: 'dashboard',
+  overviewDisplay: 'standard',
   hideOverviewBalances: false,
   displayFiatBalance: false,
 
