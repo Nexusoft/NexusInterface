@@ -7,7 +7,7 @@ import Icon from 'components/Icon';
 import HorizontalLine from 'components/HorizontalLine';
 import { consts, timing, animations } from 'styles';
 import * as color from 'utils/color';
-import { useCoreInfo, useCoreConnected } from 'lib/coreInfo';
+import { useCoreInfo, useCoreConnected, useSynchronized } from 'lib/coreInfo';
 import { alphaRelease, betaRelease } from 'consts/misc';
 
 // Internal Local
@@ -88,7 +88,9 @@ const preReleaseTag = alphaRelease ? 'ALPHA' : betaRelease ? 'BETA' : null;
 export default function Header() {
   const coreConnected = useCoreConnected();
   const coreInfo = useCoreInfo();
-  const { testnet, private: privateNet, litemode, hybrid } = coreInfo || {};
+  const { testnet, private: privateNet, litemode, hybrid, syncing } =
+    coreInfo || {};
+  const synchronized = useSynchronized();
 
   return (
     <HeaderComponent>
@@ -98,12 +100,28 @@ export default function Header() {
         {preReleaseTag ? <PreReleaseTag>{preReleaseTag}</PreReleaseTag> : null}
       </LogoLink>
 
-      <ModeDisplay>
-        {__('Tritium Mode')}
-        {litemode && ` [${__('Lite')}]`}
-        {hybrid && ` [${__('Hybrid')}]`}
-        {!!testnet && ` -${privateNet ? ' private' : ''} testnet ${testnet}`}
-      </ModeDisplay>
+      {coreConnected && (
+        <ModeDisplay>
+          {[
+            testnet
+              ? privateNet
+                ? __('Private testnet %{number}', { number: testnet })
+                : __('Testnet %{number}', { number: testnet })
+              : __('Mainnet'),
+            litemode && __('Lite'),
+            hybrid && __('Hybrid'),
+            synchronized
+              ? __('Synced')
+              : syncing
+              ? __('Syncing %{percent}%', {
+                  percent: Math.floor(syncing.progress || 0),
+                })
+              : __('Syncing'),
+          ]
+            .filter(Boolean)
+            .join(' - ')}
+        </ModeDisplay>
+      )}
 
       <UnderHeader>
         <HorizontalLine />
