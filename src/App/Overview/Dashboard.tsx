@@ -25,6 +25,7 @@ import {
 import {
   recentTransactionsQuery,
   getBalanceChanges,
+  getDeltaSign,
 } from 'lib/transactions';
 import { openModal } from 'lib/ui';
 import { Transaction } from 'lib/api';
@@ -44,13 +45,17 @@ const Grid = styled.div({
   margin: '0 auto',
   display: 'grid',
   gridTemplateColumns: 'minmax(0, 3fr) minmax(0, 2fr)',
+  gridTemplateAreas: '"balance staking" "recent network"',
+  alignItems: 'start',
   gap: 16,
   '@media (max-width: 1050px)': {
     gridTemplateColumns: 'minmax(0, 1fr)',
+    gridTemplateAreas: '"balance" "staking" "recent" "network"',
   },
 });
 
-const Card = styled.section<{ wide?: boolean }>(
+const Card = styled.section<{ wide?: boolean; area?: string }>(
+  ({ area }) => (area ? { gridArea: area } : {}),
   ({ theme }) => ({
     background: theme.lower(theme.background, 0.2),
     border: `1px solid ${theme.mixer(0.125)}`,
@@ -111,6 +116,27 @@ const BigValue = styled.div(({ theme }) => ({
 const SubValue = styled.div(({ theme }) => ({
   color: theme.mixer(0.75),
   marginTop: 2,
+}));
+
+const Rows = styled.div({
+  display: 'grid',
+  gridTemplateColumns: 'auto minmax(0, 1fr)',
+  rowGap: 8,
+  columnGap: 16,
+  alignItems: 'baseline',
+});
+
+const RowLabel = styled.div(({ theme }) => ({
+  fontSize: 12,
+  color: theme.mixer(0.625),
+  textTransform: 'uppercase',
+  whiteSpace: 'nowrap',
+}));
+
+const RowValue = styled.div(({ theme }) => ({
+  color: theme.foreground,
+  textAlign: 'right',
+  minWidth: 0,
 }));
 
 const Items = styled.div({
@@ -185,6 +211,15 @@ const txTimeFormat: Intl.DateTimeFormatOptions = {
   hour12: false,
 };
 
+function Row({ label, children }: { label: ReactNode; children: ReactNode }) {
+  return (
+    <>
+      <RowLabel>{label}</RowLabel>
+      <RowValue>{children}</RowValue>
+    </>
+  );
+}
+
 function Item({
   label,
   children,
@@ -220,7 +255,7 @@ function BalanceCard() {
   const { price, currency } = marketData || {};
 
   return (
-    <Card>
+    <Card area="balance">
       <CardTitle>
         <span>
           {__('Balance')}{' '}
@@ -296,7 +331,7 @@ function StakingCard() {
   const privateNet = coreInfo?.private;
 
   return (
-    <Card>
+    <Card area="staking">
       <CardTitle>
         <span>{__('Staking')}</span>
         <CardLink to="/User/Staking">{__('Open staking')}</CardLink>
@@ -346,6 +381,7 @@ function StakingCard() {
 }
 
 function NetworkCard() {
+  //vertical list in the right column, under staking
   const coreInfo = useCoreInfo();
   const peers = peersQuery.use();
   const countries = new Set(
@@ -359,19 +395,19 @@ function NetworkCard() {
   const { price, currency, changePct24Hr } = marketData || {};
 
   return (
-    <Card wide>
+    <Card area="network">
       <CardTitle>
         <span>{__('Network')}</span>
       </CardTitle>
-      <Items style={{ marginTop: 0 }}>
-        <Item label={__('Network')}>
+      <Rows>
+        <Row label={__('Network')}>
           {!coreConnected
             ? __('Not connected')
             : coreInfo?.testnet
             ? __('Testnet %{number}', { number: coreInfo.testnet })
             : __('Mainnet')}
-        </Item>
-        <Item label={__('Sync')}>
+        </Row>
+        <Row label={__('Sync')}>
           {!coreConnected
             ? '-'
             : synchronized
@@ -379,18 +415,18 @@ function NetworkCard() {
             : coreInfo?.syncing
             ? `${Math.floor(coreInfo.syncing.progress || 0)} %`
             : __('Syncing')}
-        </Item>
-        <Item label={__('Blocks')}>
+        </Row>
+        <Row label={__('Blocks')}>
           {typeof coreInfo?.blocks === 'number'
             ? formatNumber(coreInfo.blocks, 0)
             : '-'}
-        </Item>
-        <Item label={__('Connections')}>
+        </Row>
+        <Row label={__('Connections')}>
           {typeof coreInfo?.connections === 'number'
             ? coreInfo.connections
             : '-'}
-        </Item>
-        <Item label={__('Nodes')}>
+        </Row>
+        <Row label={__('Nodes')}>
           {peers
             ? countries
               ? __('%{nodes} in %{smart_count} country |||| %{nodes} in %{smart_count} countries', {
@@ -399,8 +435,8 @@ function NetworkCard() {
                 })
               : peers.length
             : '-'}
-        </Item>
-        <Item label={__('NXS price')} wrap>
+        </Row>
+        <Row label={__('NXS price')}>
           {price && currency
             ? formatCurrency(price, currency, currency === 'BTC' ? 8 : 4)
             : '-'}
@@ -413,25 +449,59 @@ function NetworkCard() {
               }}
             >
               {changePct24Hr > 0 ? '+' : ''}
-              {formatNumber(changePct24Hr, 2)}00a0%
+              {formatNumber(changePct24Hr, 2)} %
             </span>
           )}
-        </Item>
-      </Items>
+        </Row>
+      </Rows>
     </Card>
   );
+}
+
+const shortAddress = (address: string) =>
+  address.length > 16 ? `${address.slice(0, 6)}...${address.slice(-4)}` : address;
+
+const registerLabel = (register: any) => {
+  if (!register) return null;
+  if (typeof register === 'string') return shortAddress(register);
+  if (register.name) {
+    if (register.namespace) return `${register.namespace}::${register.name}`;
+    if (!register.global && register.user) return `${register.user}:${register.name}`;
+    return register.name;
+  }
+  return register.address ? shortAddress(register.address) : null;
+};
+
+//the other side of the first payment in the transaction
+function counterpart(tx: Transaction) {
+  for (const contract of (tx.contracts || []) as any[]) {
+    const sign = getDeltaSign(contract);
+    if (sign === '-' && contract.to) {
+      const label = registerLabel(contract.to);
+      if (label) return __('to %{name}', { name: label });
+    }
+    if (sign === '+' && contract.from) {
+      const label = registerLabel(contract.from);
+      if (label) return __('from %{name}', { name: label });
+    }
+  }
+  return null;
 }
 
 function RecentTransaction({ tx }: { tx: Transaction }) {
   const changes = getBalanceChanges(tx);
   const ops = [...new Set((tx.contracts || []).map((c) => c.OP))].join(', ');
+  const other = counterpart(tx);
   return (
     <TxRow
       onClick={() => openModal(TransactionDetailsModal, { txid: tx.txid })}
       style={{ opacity: tx.confirmations ? 1 : 0.6 }}
     >
       <TxTime>{formatDateTime(tx.timestamp * 1000, txTimeFormat)}</TxTime>
-      <TxOps>{ops}</TxOps>
+      <TxOps>
+        {ops}
+        {!!other && <span className="dim"> {other}</span>}
+      </TxOps>
       <div>
         {changes.map((change) => (
           <TxAmount key={change.token} negative={change.amount < 0}>
@@ -449,7 +519,7 @@ function RecentTransactionsCard() {
   const transactions = recentTransactionsQuery.use();
   const loggedIn = useAtomValue(loggedInAtom);
   return (
-    <Card wide>
+    <Card area="recent">
       <CardTitle>
         <span>{__('Recent transactions')}</span>
         <CardLink to="/Transactions">{__('All transactions')}</CardLink>
