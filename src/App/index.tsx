@@ -9,6 +9,7 @@ import ThemeController from 'components/ThemeController';
 import { showDefaultMenu } from 'lib/contextMenu';
 import { NavigateExporter } from 'lib/wallet';
 import { themeAtom } from 'lib/theme';
+import { useTestnetIndicator, testnetColor } from 'lib/testnetIndicator';
 
 import Overlays from './Overlays';
 import Overview from './Overview';
@@ -44,7 +45,12 @@ const Main = styled.main({
 });
 
 export default function App() {
-  const theme = useAtomValue(themeAtom);
+  const baseTheme = useAtomValue(themeAtom);
+  const indicator = useTestnetIndicator();
+  //orange accent so a testnet wallet cannot be mistaken for mainnet
+  const theme = indicator.show('color')
+    ? { ...baseTheme, primary: testnetColor }
+    : baseTheme;
   return (
     <HashRouter>
       <NavigateExporter />
