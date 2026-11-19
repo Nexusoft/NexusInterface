@@ -118,11 +118,20 @@ export default function AdjustStakeModal({
   onClose?: () => void;
   onComplete?: () => void;
 }) {
-  const { stake: currentStake, balance } = stakeInfoQuery.use() || {};
+  const {
+    stake: currentStake,
+    balance,
+    change,
+    amount: pendingAmount,
+  } = stakeInfoQuery.use() || {};
   const total =
     typeof currentStake === 'number' && typeof balance === 'number'
       ? currentStake + balance
       : 0;
+  const pendingStake =
+    change && typeof pendingAmount === 'number' && currentStake !== undefined
+      ? currentStake + pendingAmount
+      : undefined;
 
   return (
     <ControlledModal maxWidth={600} onClose={onClose}>
@@ -134,7 +143,10 @@ export default function AdjustStakeModal({
           <ControlledModal.Body>
             <Form
               name="adjust_stake"
-              initialValues={getInitialValues(initialStake, currentStake)}
+              initialValues={getInitialValues(
+                initialStake,
+                pendingStake ?? currentStake
+              )}
               onSubmit={formSubmit({
                 submit: async ({ stake }) => {
                   if (currentStake && stake < currentStake) {
@@ -150,10 +162,18 @@ export default function AdjustStakeModal({
 
                   const pin = await confirmPin();
                   if (pin) {
-                    return await callAPI('finance/set/stake', {
-                      pin,
-                      amount: stake,
-                    });
+                    try {
+                      return await callAPI('finance/set/stake', {
+                        pin,
+                        amount: stake,
+                      });
+                    } catch (err: any) {
+                      //the current stake again erases the pending change, the core answers -78
+                      if (err?.code === -78 && change) {
+                        return { cancelled: true };
+                      }
+                      throw err;
+                    }
                   }
                   return undefined;
                 },
@@ -167,8 +187,11 @@ export default function AdjustStakeModal({
                   }
 
                   closeModal();
+                  stakeInfoQuery.refetch();
                   showNotification(
-                    __('Stake amount has been updated'),
+                    'cancelled' in result
+                      ? __('Pending stake change has been cancelled')
+                      : __('Stake amount has been updated'),
                     'success'
                   );
                   onComplete?.();
