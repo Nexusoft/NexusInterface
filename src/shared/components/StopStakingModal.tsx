@@ -25,7 +25,7 @@ export default function StopStakingModal({
 
   return (
     <ControlledModal
-      maxWidth={560}
+      maxWidth={640}
       onClose={() => {
         if (!chosenRef.current) onChoose(null);
       }}
@@ -54,17 +54,19 @@ export default function StopStakingModal({
                 'stops right away. Your coins stay in the trust account as stake (nothing is lost) and become available only after you stake again.'
               )}
             </p>
-            <div className="mt2 flex space-between">
+            <div
+              className="mt2 flex space-between"
+              style={{ flexWrap: 'wrap', gap: '0.6em' }}
+            >
               <Button onClick={() => choose(null, closeModal)}>
                 {__('Cancel')}
               </Button>
-              <div className="flex">
+              <div className="flex" style={{ flexWrap: 'wrap', gap: '0.6em' }}>
                 <Button onClick={() => choose('now', closeModal)}>
                   {__('Stop now')}
                 </Button>
                 <Button
                   skin="primary"
-                  className="ml1"
                   onClick={() => choose('unstake', closeModal)}
                 >
                   {__('Unstake, then stop')}
