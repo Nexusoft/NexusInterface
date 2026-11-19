@@ -12,6 +12,7 @@ import { useCoreInfo } from 'lib/coreInfo';
 import Globe from './Globe';
 import Stats from './Stats';
 import Dashboard from './Dashboard';
+import ModuleNotices from './ModuleNotices';
 
 __ = __context('Overview');
 
@@ -88,7 +89,11 @@ export default function Overview() {
   });
 
   if (settings.overviewDisplay === 'none') {
-    return <OverviewPage />;
+    return (
+      <OverviewPage>
+        <ModuleNotices floating />
+      </OverviewPage>
+    );
   }
 
   if (settings.overviewDisplay === 'dashboard') {
@@ -111,6 +116,7 @@ export default function Overview() {
       )}
 
       <Stats showingGlobe={showingGlobe} />
+      <ModuleNotices floating />
     </OverviewPage>
   );
 }

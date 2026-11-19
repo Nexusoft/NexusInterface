@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
 import { Link } from 'react-router';
+import ModuleNotices from './ModuleNotices';
 import { useAtomValue } from 'jotai';
 import styled from '@emotion/styled';
 
@@ -538,6 +539,7 @@ function RecentTransactionsCard() {
 export default function Dashboard() {
   return (
     <DashboardPage>
+      <ModuleNotices />
       <Grid>
         <BalanceCard />
         <StakingCard />
