@@ -96,7 +96,8 @@ ipcMain.handle('check-for-updates', async () => {
 ipcMain.handle('quit-and-install-update', () => {
   //window close is normally prevented, the updater has to be able to quit the app
   mainWindow?.removeAllListeners('close');
-  autoUpdater.quitAndInstall();
+  //silent install and start the wallet again, so an unattended wallet comes back by itself
+  autoUpdater.quitAndInstall(true, true);
 });
 ipcMain.handle('set-allow-prerelease', (event, value) =>
   setAllowPrerelease(value)
