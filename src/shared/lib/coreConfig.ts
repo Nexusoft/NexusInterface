@@ -153,16 +153,15 @@ export async function loadNexusConf() {
     }
   });
 
-  // Save nexus.conf file if there were changes
+  //the core reads apiuser/apipassword only from this file, so it must be written before the core starts
   if (updated) {
     log.info('Filling up some missing configurations in nexus.conf');
-    fs.writeFile(confPath, toKeyValues(configs), (err) => {
-      if (err) {
-        console.error(err);
-      } else {
-        log.info('nexus.conf has been updated');
-      }
-    });
+    try {
+      await fs.promises.writeFile(confPath, toKeyValues(configs));
+      log.info('nexus.conf has been updated');
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   configs = { ...configs, ...settingsConf };
