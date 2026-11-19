@@ -127,6 +127,16 @@ export function fetchGithubLatestRelease(
   );
 }
 
+export function fetchGithubReleases(
+  repoId: string,
+  options?: Parameters<typeof axios.get>[1]
+) {
+  return axios.get<GitHubRelease[]>(
+    `https://api.github.com/repos/${repoId}/releases?per_page=20`,
+    options
+  );
+}
+
 export function getRepoId(repo: { owner: string; repo: string }) {
   return `${repo.owner}/${repo.repo}`;
 }

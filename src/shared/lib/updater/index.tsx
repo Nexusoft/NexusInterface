@@ -13,7 +13,7 @@ import AutoUpdateBackgroundTask from './AutoUpdateBackgroundTask';
 import { assetsParentDir } from 'consts/paths';
 import { closeWallet } from 'lib/wallet';
 import { checkForModuleUpdates } from 'lib/modules';
-import { fetchGithubLatestRelease } from 'lib/github';
+import { fetchGithubReleases } from 'lib/github';
 
 __ = __context('AutoUpdate');
 
@@ -42,6 +42,28 @@ export function migrateToMainnet() {
 }
 
 /**
+ * Newest GitHub release above the running version, for installs without
+ * app-update.yml. Pre-releases count when running one or when allowed
+ */
+async function findNewerGithubRelease() {
+  const { allowPrerelease } = store.get(settingsAtom);
+  const includePrerelease =
+    allowPrerelease || !!semver.prerelease(APP_VERSION);
+  const { data: releases } = await fetchGithubReleases(
+    'Nexusoft/NexusInterface'
+  );
+  return releases
+    .filter(
+      (release) =>
+        !release.draft &&
+        (includePrerelease || !release.prerelease) &&
+        semver.valid(release.tag_name) &&
+        semver.lt(APP_VERSION, release.tag_name)
+    )
+    .sort((a, b) => semver.rcompare(a.tag_name, b.tag_name))[0];
+}
+
+/**
  * Start automatically checking for updates by interval
  */
 export async function checkForUpdates() {
@@ -56,32 +78,20 @@ export async function checkForUpdates() {
         if (process.env.NODE_ENV === 'development') return;
         let updateAvailable = false;
         if (process.env.NODE_ENV !== 'development' && checkGithubManually) {
-          const response = await fetchGithubLatestRelease(
-            'Nexusoft/NexusInterface'
-          );
-          const latestVerion = response.data.tag_name;
-          if (
-            semver.lt('v' + APP_VERSION, latestVerion) &&
-            response.data.prerelease === false
-          ) {
+          const latestRelease = await findNewerGithubRelease();
+          if (latestRelease) {
             updateAvailable = true;
             showBackgroundTask(AutoUpdateBackgroundTask, {
-              version: response.data.tag_name,
+              version: latestRelease.tag_name,
               gitHub: true,
             });
           }
         } else {
+          //download runs in the main process, progress comes back as updater:* events
           const result = await ipcRenderer.invoke('check-for-updates');
           const version = result?.updateInfo?.version;
-
-          // Not sure if this is the best way to check if there's an update
-          // available because autoUpdater.checkForUpdates() doesn't return
-          // any reliable results like a boolean `updateAvailable` property
           if (version && semver.lt(APP_VERSION, version)) {
             updateAvailable = true;
-            if (result?.downloadPromise) {
-              await result.downloadPromise;
-            }
           }
         }
 
@@ -134,15 +144,15 @@ export function prepareUpdater() {
     });
   });
 
-  ipcRenderer.on('updater:error', (event, err) => {
-    console.error(
-      'Error Downloading Wallet Update:\n',
-      'Event: ',
-      event,
-      '\nError: ',
-      err
-    );
+  ipcRenderer.on('updater:error', (_event, err) => {
+    console.error('Error Downloading Wallet Update:', err);
     store.set(updaterStateAtom, 'idle');
+    showNotification(
+      `${__('Wallet update failed')}: ${
+        typeof err === 'string' ? err : err?.message || __('Unknown error')
+      }`,
+      'error'
+    );
   });
   ipcRenderer.on('updater:checking-for-update', () => {
     store.set(updaterStateAtom, 'checking');

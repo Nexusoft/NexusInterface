@@ -33,7 +33,13 @@ export const loggedOutWhileConnectedAtom = atom(
   (get) => get(coreConnectedAtom) && !get(loggedInAtom)
 );
 
-export const closeWallet = async (beforeExit?: () => void) => {
+const updateQuitFallbackMs = 60000;
+
+/**
+ * Stop the core and exit. With quitInstead the given function quits the app
+ * itself (update install), exit-app only runs if it has not after a while
+ */
+export const closeWallet = async (quitInstead?: () => Promise<unknown>) => {
   const { manualDaemon, manualDaemonLogOutOnClose } = store.get(settingsAtom);
   store.set(walletClosingAtom, true);
 
@@ -43,7 +49,15 @@ export const closeWallet = async (beforeExit?: () => void) => {
     await logOut(); //TODO: Ask for pin/session
   }
 
-  beforeExit?.();
+  if (quitInstead) {
+    try {
+      await quitInstead();
+    } catch (err) {
+      console.error(err);
+    }
+    setTimeout(() => ipcRenderer.invoke('exit-app'), updateQuitFallbackMs);
+    return;
+  }
   ipcRenderer.invoke('exit-app');
 };
 
