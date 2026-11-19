@@ -27,8 +27,9 @@ import { AddressStyle, OverviewDisplay } from 'lib/settings/defaultSettings';
 __ = __context('Settings.Style');
 
 const overviewDisplays = [
-  { value: 'standard', display: 'Standard' },
-  { value: 'miner', display: 'Miner' },
+  { value: 'dashboard', display: 'Dashboard' },
+  { value: 'standard', display: 'Classic' },
+  { value: 'miner', display: 'Classic (miner)' },
   // { value: 'minimalist', display: 'Minimalist' },
   // { value: 'balHidden', display: 'Hidden Balance' },
   { value: 'none', display: 'None' },

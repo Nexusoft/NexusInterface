@@ -11,6 +11,7 @@ import { themeAtom } from 'lib/theme';
 import { useCoreInfo } from 'lib/coreInfo';
 import Globe from './Globe';
 import Stats from './Stats';
+import Dashboard from './Dashboard';
 
 __ = __context('Overview');
 
@@ -88,6 +89,10 @@ export default function Overview() {
 
   if (settings.overviewDisplay === 'none') {
     return <OverviewPage />;
+  }
+
+  if (settings.overviewDisplay === 'dashboard') {
+    return <Dashboard />;
   }
 
   return (

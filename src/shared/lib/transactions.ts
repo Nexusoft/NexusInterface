@@ -26,7 +26,7 @@ interface BalanceChange {
 
 type TimeSpan = 'week' | 'month' | 'year';
 
-const getBalanceChanges = (tx: Transaction) =>
+export const getBalanceChanges = (tx: Transaction) =>
   tx.contracts
     ? tx.contracts.reduce((changes, contract) => {
         const sign = getDeltaSign(contract);
@@ -223,5 +223,23 @@ export const transactionsQuery = jotaiQuery<Transaction[]>({
       refetchOnReconnect: 'always',
     };
   },
+  refetchTriggers: [txCountAtom],
+});
+
+/** Latest transactions for the overview, separate from the paged and filtered list */
+export const recentTransactionsQuery = jotaiQuery<Transaction[]>({
+  condition: (get) => get(loggedInAtom),
+  getQueryConfig: (get) => ({
+    queryKey: ['recentTransactions', get(userGenesisAtom)],
+    queryFn: () =>
+      callAPI('profiles/transactions/master', {
+        verbose: 'summary',
+        limit: 5,
+      }),
+    staleTime: 300000,
+    refetchOnMount: 'always',
+    refetchInterval: ({ state: { data } }) =>
+      data?.some((tx) => !isConfirmed(tx)) ? 5000 : false,
+  }),
   refetchTriggers: [txCountAtom],
 });

@@ -16,7 +16,7 @@ const defaultPassword = crypto
   .update('pass')
   .digest('hex');
 
-export type OverviewDisplay = 'standard' | 'none' | 'miner';
+export type OverviewDisplay = 'dashboard' | 'standard' | 'none' | 'miner';
 export type AddressStyle = 'segmented' | 'raw' | 'truncateMiddle';
 
 export type Settings = {
@@ -116,7 +116,7 @@ export const defaultSettings: Settings = {
   devMode: false,
   verifyModuleSource: true,
   fakeTransactions: false,
-  overviewDisplay: 'standard',
+  overviewDisplay: 'dashboard',
   hideOverviewBalances: false,
   displayFiatBalance: false,
 
