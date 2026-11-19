@@ -268,6 +268,12 @@ function download(
           return;
         }
 
+        if (response.statusCode !== 200) {
+          response.resume();
+          reject(new Error(`Download failed (HTTP ${response.statusCode})`));
+          return;
+        }
+
         const totalSize = parseInt(
           response.headers['content-length'] || '',
           10
@@ -275,6 +281,18 @@ function download(
 
         let downloaded = 0;
         const file = fs.createWriteStream(filePath);
+        //resolve only once the zip is fully on disk, not when the response ends
+        file
+          .on('finish', () => {
+            if (response.complete) {
+              resolve(filePath);
+            } else {
+              reject(new Error('Download was interrupted'));
+            }
+          })
+          .on('error', (err) => {
+            reject(err);
+          });
 
         response
           .on('data', (chunk) => {
@@ -285,9 +303,6 @@ function download(
               totalSize,
               downloadRequest,
             });
-          })
-          .on('close', () => {
-            resolve(filePath);
           })
           .on('error', (err) => {
             reject(err);
@@ -310,6 +325,21 @@ function download(
 interface Asset {
   name: string;
   browser_download_url: string;
+}
+
+const normalizeAssetName = (name: string) =>
+  name.toLowerCase().replace(/[^a-z0-9]/g, '');
+
+//newer module releases name the zip after the repo (nexus-invoice@1.2.0.zip for nexus_invoice)
+export function findModuleArchive(assets: Asset[], moduleName: string) {
+  const zips = assets.filter(({ name }) => name.endsWith('.zip'));
+  return (
+    zips.find(({ name }) => name.startsWith(moduleName)) ||
+    zips.find(({ name }) =>
+      normalizeAssetName(name).startsWith(normalizeAssetName(moduleName))
+    ) ||
+    (zips.length === 1 ? zips[0] : undefined)
+  );
 }
 
 async function downloadAsset({
@@ -377,9 +407,7 @@ export async function downloadAndInstall({
         },
       }
     );
-    const asset = (releaseAssets as Asset[]).find(
-      ({ name }) => name.startsWith(moduleName) && name.endsWith('.zip')
-    );
+    const asset = findModuleArchive(releaseAssets as Asset[], moduleName);
     if (!asset) {
       openErrorDialog({
         message: __('Cannot find module archive file among assets'),
