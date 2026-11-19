@@ -224,7 +224,10 @@ export default function Staking() {
         </div>
         <div>{formatNumber(stakeInfo.balance, 6)} NXS</div>
       </Line>
-      <div className="mt1 flex space-between">
+      <div
+        className="mt1 flex space-between"
+        style={{ flexWrap: 'wrap', gap: '0.6em' }}
+      >
         <div>
           {!stakeInfo.new && (
             <>
@@ -250,10 +253,9 @@ export default function Staking() {
             </>
           )}
         </div>
-        <div className="flex">
+        <div className="flex" style={{ gap: '0.6em' }}>
           {stopStakingAfterUnstake && (
             <Button
-              className="mr1"
               disabled={busy}
               onClick={() => keepStaking(stakeInfo)}
             >
