@@ -171,9 +171,22 @@ export function prepareTransactions() {
 }
 
 export const pageAtom = atom(1);
-export const addressQueryAtom = atom('');
-export const operationAtom = atom<ContractOP | null>(null);
-export const timeSpanAtom = atom<TimeSpan | null>(null);
+
+//changing a filter goes back to page 1, a later page may not exist for the new filter
+function filterAtom<T>(initialValue: T) {
+  const valueAtom = atom(initialValue);
+  return atom(
+    (get) => get(valueAtom),
+    (_get, set, value: T) => {
+      set(valueAtom, value);
+      set(pageAtom, 1);
+    }
+  );
+}
+
+export const addressQueryAtom = filterAtom('');
+export const operationAtom = filterAtom<ContractOP | null>(null);
+export const timeSpanAtom = filterAtom<TimeSpan | null>(null);
 
 export const transactionsQuery = jotaiQuery<Transaction[]>({
   condition: (get) => get(loggedInAtom),
