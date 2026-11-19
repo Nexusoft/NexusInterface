@@ -184,6 +184,7 @@ export default function CreateNameModal() {
                   skin="filled-inverted"
                   className="mt0_4"
                   placeholder={__('Register address that this name points to')}
+                  validate={required()}
                 />
               </FormField>
 

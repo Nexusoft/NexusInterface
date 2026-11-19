@@ -6,7 +6,7 @@ import ControlledModal from 'components/ControlledModal';
 import Form from 'components/Form';
 import FormField from 'components/FormField';
 import Spinner from 'components/Spinner';
-import { formSubmit } from 'lib/form';
+import { formSubmit, required } from 'lib/form';
 import { confirmPin, openSuccessDialog } from 'lib/dialog';
 import { nameRecordsQuery } from 'lib/user';
 import { usernameAtom } from 'lib/session';
@@ -93,6 +93,7 @@ export default function ChangeRegisterAddressModal({
                   ref={inputRef}
                   name="registerAddress"
                   placeholder={__('Register address that this name points to')}
+                  validate={required()}
                 />
               </FormField>
 
