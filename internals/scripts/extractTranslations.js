@@ -50,7 +50,7 @@ const oldEnDict = oldDicts['en'];
  * Extract new strings
  * =============================================================================
  */
-const keys = extractFromFiles('src/**/*.js');
+const keys = extractFromFiles('src/**/*.{js,ts,tsx}');
 const newEnDict = {};
 keys.forEach(({ key, context }) => {
   if (!newEnDict[context]) {
