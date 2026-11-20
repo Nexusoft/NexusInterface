@@ -134,7 +134,11 @@ export function startStaking(stakeInfo: StakeInfo | null | undefined) {
     if (!stakeInfo.stake && !stakeInfo.balance) {
       openErrorDialog({
         message: __('Trust balance empty!'),
-        note: __('You must send some NXS to your <b>trust</b> account first'),
+        note: __(
+          'You must send some NXS to your <b>trust</b> account first',
+          undefined,
+          { b: (text) => <strong>{text}</strong> }
+        ),
       });
       return;
     }
