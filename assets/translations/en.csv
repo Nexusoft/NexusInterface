@@ -47,7 +47,7 @@ You are currenctly running a * version of the wallet. ,You are currenctly runnin
 "Thank you for testing our wallet, please ","Thank you for testing our wallet, please ",
 Click here,Click here,
  To send feedback to the developers. , To send feedback to the developers. ,
-Or join us on the offical ,Or join us on the offical ,
+Or join us on the official ,Or join us on the official ,
 Ok,Ok,
 Testnet Only Mode,Testnet Only Mode,
 You are currenctly running a Testnet only version of the wallet. ,You are currenctly running a Testnet only version of the wallet. ,
@@ -1138,3 +1138,47 @@ to %{name},to %{name},Overview
 from %{name},from %{name},Overview
 24h,24h,Overview
 Open,Open,Overview
+Creating user %{username}...,Creating user %{username}...,NewUser
+Show,Show,NewUser
+Creating your user,Creating your user,NewUser
+Block,Block,NewUser
+next block,next block,NewUser
+your user,your user,NewUser
+Sent to the Nexus network,Sent to the Nexus network,NewUser
+Waiting to be written into the next block,Waiting to be written into the next block,NewUser
+Ready to log in,Ready to log in,NewUser
+Waiting for %{time},Waiting for %{time},NewUser
+last block %{time} ago,last block %{time} ago,NewUser
+"A new block comes about every 50 seconds, so this usually takes 1 to 3 minutes. The login opens by itself when it is done.","A new block comes about every 50 seconds, so this usually takes 1 to 3 minutes. The login opens by itself when it is done.",NewUser
+Waiting for Nexus Core to connect...,Waiting for Nexus Core to connect...,NewUser
+Nexus Core stopped at block %{blocks} while the network is at %{network}.,Nexus Core stopped at block %{blocks} while the network is at %{network}.,NewUser
+Restart Nexus Core on the computer it runs on.,Restart Nexus Core on the computer it runs on.,NewUser
+Restart Nexus Core,Restart Nexus Core,NewUser
+Core output,Core output,NewUser
+Console,Console,NewUser
+Settings,Settings,NewUser
+Stop waiting,Stop waiting,NewUser
+%{m} min %{s} s,%{m} min %{s} s,NewUser
+%{s} s,%{s} s,NewUser
+Waiting for Nexus Core to connect...,Waiting for Nexus Core to connect...,CoreNotReady
+Nexus Core is synchronizing: %{progress} %,Nexus Core is synchronizing: %{progress} %,CoreNotReady
+Block %{blocks} of %{network},Block %{blocks} of %{network},CoreNotReady
+about %{time} left,about %{time} left,CoreNotReady
+Nexus Core stopped at block %{blocks} while the network is at %{network}.,Nexus Core stopped at block %{blocks} while the network is at %{network}.,CoreNotReady
+Restart Nexus Core on the computer it runs on.,Restart Nexus Core on the computer it runs on.,CoreNotReady
+Restart Nexus Core,Restart Nexus Core,CoreNotReady
+User %{username} is still being created on the blockchain.,User %{username} is still being created on the blockchain.,CoreNotReady
+"Creating a user needs a fully synchronized Nexus Core, otherwise it may never be confirmed. The form opens here by itself when the core is ready.","Creating a user needs a fully synchronized Nexus Core, otherwise it may never be confirmed. The form opens here by itself when the core is ready.",CoreNotReady
+"Logging in needs a fully synchronized Nexus Core, otherwise your balances and transactions are not up to date. The form opens here by itself when the core is ready.","Logging in needs a fully synchronized Nexus Core, otherwise your balances and transactions are not up to date. The form opens here by itself when the core is ready.",CoreNotReady
+Nexus Core stopped at block %{blocks} while the network is at %{network}. Restarting the core...,Nexus Core stopped at block %{blocks} while the network is at %{network}. Restarting the core...,CoreHealth
+User %{username} is ready,User %{username} is ready,NewUser
+Your user is ready,Your user is ready,NewUser
+Written into a block,Written into a block,NewUser
+Your user is on the blockchain. Log in to start using it.,Your user is on the blockchain. Log in to start using it.,NewUser
+Close,Close,NewUser
+You have %{summary} waiting to be claimed,You have %{summary} waiting to be claimed,Claimable
+Payments to claim,Payments to claim,Claimable
+You have payments to claim,You have payments to claim,Claimable
+Open Nexus Contracts,Open Nexus Contracts,Claimable
+View,View,Claimable
+Open to claim,Open to claim,Claimable
