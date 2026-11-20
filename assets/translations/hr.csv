@@ -1171,3 +1171,8 @@
 "Creating a user needs a fully synchronized Nexus Core, otherwise it may never be confirmed. The form opens here by itself when the core is ready.","Za stvaranje korisnika potreban je potpuno sinkroniziran Nexus Core, inače možda nikada neće biti potvrđen. Obrazac će se ovdje otvoriti sam kada Core bude spreman.","CoreNotReady"
 "Logging in needs a fully synchronized Nexus Core, otherwise your balances and transactions are not up to date. The form opens here by itself when the core is ready.","Za prijavu je potreban potpuno sinkroniziran Nexus Core, inače vaša stanja i transakcije neće biti ažurni. Obrazac će se ovdje otvoriti sam kada Core bude spreman.","CoreNotReady"
 "Nexus Core stopped at block %{blocks} while the network is at %{network}. Restarting the core...","Nexus Core zaustavio se na bloku %{blocks}, a mreža je na %{network}. Ponovno pokretanje Corea...","CoreHealth"
+"User %{username} is ready","Korisnik %{username} je spreman","NewUser"
+"Your user is ready","Vaš korisnik je spreman","NewUser"
+"Written into a block","Upisano u blok","NewUser"
+"Your user is on the blockchain. Log in to start using it.","Vaš korisnik je na blockchainu. Prijavite se kako biste ga počeli koristiti.","NewUser"
+"Close","Zatvori","NewUser"

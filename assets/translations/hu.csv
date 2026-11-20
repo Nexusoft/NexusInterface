@@ -1171,3 +1171,8 @@
 "Creating a user needs a fully synchronized Nexus Core, otherwise it may never be confirmed. The form opens here by itself when the core is ready.","Felhasználó létrehozásához teljesen szinkronizált Nexus Core szükséges, különben előfordulhat, hogy soha nem lesz megerősítve. Az űrlap automatikusan megnyílik itt, amint a Core készen áll.","CoreNotReady"
 "Logging in needs a fully synchronized Nexus Core, otherwise your balances and transactions are not up to date. The form opens here by itself when the core is ready.","A bejelentkezéshez teljesen szinkronizált Nexus Core szükséges, különben az egyenlegeid és tranzakcióid nem lesznek naprakészek. Az űrlap automatikusan megnyílik itt, amint a Core készen áll.","CoreNotReady"
 "Nexus Core stopped at block %{blocks} while the network is at %{network}. Restarting the core...","A Nexus Core a(z) %{blocks}. blokknál megállt, miközben a hálózat a(z) %{network}. blokknál tart. A Core újraindítása...","CoreHealth"
+"User %{username} is ready","A(z) %{username} felhasználó elkészült","NewUser"
+"Your user is ready","A felhasználód elkészült","NewUser"
+"Written into a block","Blokkba írva","NewUser"
+"Your user is on the blockchain. Log in to start using it.","A felhasználód felkerült a blokkláncra. Jelentkezz be a használatához.","NewUser"
+"Close","Bezárás","NewUser"

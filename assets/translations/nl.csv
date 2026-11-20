@@ -1163,3 +1163,8 @@
 "Creating a user needs a fully synchronized Nexus Core, otherwise it may never be confirmed. The form opens here by itself when the core is ready.","Voor het aanmaken van een gebruiker moet Nexus Core volledig gesynchroniseerd zijn, anders wordt deze mogelijk nooit bevestigd. Het formulier opent hier vanzelf zodra de Core klaar is.","CoreNotReady"
 "Logging in needs a fully synchronized Nexus Core, otherwise your balances and transactions are not up to date. The form opens here by itself when the core is ready.","Voor het inloggen moet Nexus Core volledig gesynchroniseerd zijn, anders zijn je saldi en transacties niet actueel. Het formulier opent hier vanzelf zodra de Core klaar is.","CoreNotReady"
 "Nexus Core stopped at block %{blocks} while the network is at %{network}. Restarting the core...","Nexus Core is gestopt bij blok %{blocks}, terwijl het netwerk op %{network} staat. Core wordt opnieuw gestart...","CoreHealth"
+"User %{username} is ready","Gebruiker %{username} is klaar","NewUser"
+"Your user is ready","Je gebruiker is klaar","NewUser"
+"Written into a block","Opgenomen in een blok","NewUser"
+"Your user is on the blockchain. Log in to start using it.","Je gebruiker staat op de blockchain. Log in om hem te gaan gebruiken.","NewUser"
+"Close","Sluiten","NewUser"

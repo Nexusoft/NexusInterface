@@ -1171,3 +1171,8 @@ User %{username} is still being created on the blockchain.,User %{username} is s
 "Creating a user needs a fully synchronized Nexus Core, otherwise it may never be confirmed. The form opens here by itself when the core is ready.","Creating a user needs a fully synchronized Nexus Core, otherwise it may never be confirmed. The form opens here by itself when the core is ready.",CoreNotReady
 "Logging in needs a fully synchronized Nexus Core, otherwise your balances and transactions are not up to date. The form opens here by itself when the core is ready.","Logging in needs a fully synchronized Nexus Core, otherwise your balances and transactions are not up to date. The form opens here by itself when the core is ready.",CoreNotReady
 Nexus Core stopped at block %{blocks} while the network is at %{network}. Restarting the core...,Nexus Core stopped at block %{blocks} while the network is at %{network}. Restarting the core...,CoreHealth
+User %{username} is ready,User %{username} is ready,NewUser
+Your user is ready,Your user is ready,NewUser
+Written into a block,Written into a block,NewUser
+Your user is on the blockchain. Log in to start using it.,Your user is on the blockchain. Log in to start using it.,NewUser
+Close,Close,NewUser

@@ -1165,3 +1165,8 @@
 "Creating a user needs a fully synchronized Nexus Core, otherwise it may never be confirmed. The form opens here by itself when the core is ready.","创建用户需要完全同步的 Nexus Core，否则可能永远无法确认。Core 就绪后，表单会在此处自动打开。","CoreNotReady"
 "Logging in needs a fully synchronized Nexus Core, otherwise your balances and transactions are not up to date. The form opens here by itself when the core is ready.","登录需要完全同步的 Nexus Core，否则您的余额和交易记录将不是最新的。Core 就绪后，表单会在此处自动打开。","CoreNotReady"
 "Nexus Core stopped at block %{blocks} while the network is at %{network}. Restarting the core...","Nexus Core 停在了区块 %{blocks}，而网络已到 %{network}。正在重启 Core...","CoreHealth"
+"User %{username} is ready","用户 %{username} 已就绪","NewUser"
+"Your user is ready","您的用户已就绪","NewUser"
+"Written into a block","已写入区块","NewUser"
+"Your user is on the blockchain. Log in to start using it.","您的用户已在区块链上。登录即可开始使用。","NewUser"
+"Close","关闭","NewUser"

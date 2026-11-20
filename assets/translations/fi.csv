@@ -1166,3 +1166,8 @@
 "Creating a user needs a fully synchronized Nexus Core, otherwise it may never be confirmed. The form opens here by itself when the core is ready.","Käyttäjän luominen vaatii täysin synkronoidun Nexus Coren, muuten sitä ei ehkä koskaan vahvisteta. Lomake avautuu tähän automaattisesti, kun Core on valmis.","CoreNotReady"
 "Logging in needs a fully synchronized Nexus Core, otherwise your balances and transactions are not up to date. The form opens here by itself when the core is ready.","Kirjautuminen vaatii täysin synkronoidun Nexus Coren, muuten saldosi ja tapahtumasi eivät ole ajan tasalla. Lomake avautuu tähän automaattisesti, kun Core on valmis.","CoreNotReady"
 "Nexus Core stopped at block %{blocks} while the network is at %{network}. Restarting the core...","Nexus Core pysähtyi lohkoon %{blocks}, vaikka verkko on lohkossa %{network}. Käynnistetään Core uudelleen...","CoreHealth"
+"User %{username} is ready","Käyttäjä %{username} on valmis","NewUser"
+"Your user is ready","Käyttäjäsi on valmis","NewUser"
+"Written into a block","Kirjattu lohkoon","NewUser"
+"Your user is on the blockchain. Log in to start using it.","Käyttäjäsi on nyt lohkoketjussa. Kirjaudu sisään aloittaaksesi sen käytön.","NewUser"
+"Close","Sulje","NewUser"
