@@ -1,4 +1,5 @@
 import {
+  useContext,
   useEffect,
   useState,
   ComponentType,
@@ -35,6 +36,29 @@ import Switch from 'components/Switch';
 import Button from 'components/Button';
 import Slider from 'components/Slider';
 import { updateFormInstance, getFormInstance } from 'lib/form';
+import ModalLockContext from 'context/modalLock';
+
+//while a form submits nothing in it can be changed, and its modal stays open
+const plainFieldSet = { border: 0, padding: 0, margin: 0, minWidth: 0 };
+
+function SubmitLock({
+  submitting,
+  children,
+}: {
+  submitting: boolean;
+  children: ReactNode;
+}) {
+  const lockModal = useContext(ModalLockContext);
+  useEffect(() => {
+    lockModal?.(submitting);
+    return () => lockModal?.(false);
+  }, [submitting]);
+  return (
+    <fieldset disabled={submitting} style={plainFieldSet}>
+      {children}
+    </fieldset>
+  );
+}
 
 export interface FormProps<FormValues> extends Config<FormValues> {
   name: string;
@@ -94,15 +118,21 @@ export default function Form<FormValues extends Record<string, any>>({
     <FinalForm subscription={subscription} form={form} {...config}>
       {({ handleSubmit, ...rest }) => (
         <form onSubmit={handleSubmit}>
-          {typeof formContent === 'function'
-            ? formContent({
-                handleSubmit,
-                // passing children to render function if both exist to
-                // replicate original FinalForm's behavior
-                children: render ? children : undefined,
-                ...rest,
-              })
-            : formContent}
+          <FormSpy subscription={{ submitting: true }}>
+            {({ submitting }) => (
+              <SubmitLock submitting={!!submitting}>
+                {typeof formContent === 'function'
+                  ? formContent({
+                      handleSubmit,
+                      // passing children to render function if both exist to
+                      // replicate original FinalForm's behavior
+                      children: render ? children : undefined,
+                      ...rest,
+                    })
+                  : formContent}
+              </SubmitLock>
+            )}
+          </FormSpy>
         </form>
       )}
     </FinalForm>

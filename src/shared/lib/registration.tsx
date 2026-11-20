@@ -21,7 +21,7 @@ let checking = false;
 
 async function check() {
   const pending = store.get(settingsAtom).pendingRegistration;
-  if (!pending || checking || !isCoreConnected()) return;
+  if (!pending || pending.confirmedAt || checking || !isCoreConnected()) return;
   checking = true;
   try {
     const status = await callAPI('profiles/status/master', {
@@ -35,7 +35,10 @@ async function check() {
     ) {
       return;
     }
-    updateSettings({ pendingRegistration: null });
+    //the screen stays and says it is done until the user logs in or closes it
+    updateSettings({
+      pendingRegistration: { ...pending, confirmedAt: Date.now() },
+    });
     log.info(`Registration - ${pending.username} confirmed`);
     showNotification(
       __(
@@ -51,13 +54,19 @@ async function check() {
       ),
       'success'
     );
-    if (!store.get(loggedInAtom) && !isModalOpen(LoginModal)) {
-      openModal(LoginModal);
-    }
+    openRegistrationLogin();
   } catch (err) {
     //not in a block yet: the core does not know the name
   } finally {
     checking = false;
+  }
+}
+
+/** Login for the new user, its name already filled in */
+export function openRegistrationLogin() {
+  const pending = store.get(settingsAtom).pendingRegistration;
+  if (!store.get(loggedInAtom) && !isModalOpen(LoginModal)) {
+    openModal(LoginModal, { username: pending?.username });
   }
 }
 
@@ -74,6 +83,11 @@ export function stopWaitingForRegistration() {
 }
 
 export function prepareRegistration() {
+  subscribe(loggedInAtom, (loggedIn) => {
+    if (loggedIn && store.get(settingsAtom).pendingRegistration?.confirmedAt) {
+      updateSettings({ pendingRegistration: null });
+    }
+  });
   subscribe(blocksAtom, () => {
     check();
   });

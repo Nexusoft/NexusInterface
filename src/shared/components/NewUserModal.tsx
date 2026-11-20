@@ -150,16 +150,18 @@ export default function NewUserModal() {
                       </Note>
                     )}
 
-                    <ExtraSection>
-                      <NativeLink
-                        onClick={() => {
-                          closeModal();
-                          openModal(LoginModal);
-                        }}
-                      >
-                        {__('Log in')}
-                      </NativeLink>
-                    </ExtraSection>
+                    {!submitting && (
+                      <ExtraSection>
+                        <NativeLink
+                          onClick={() => {
+                            closeModal();
+                            openModal(LoginModal);
+                          }}
+                        >
+                          {__('Log in')}
+                        </NativeLink>
+                      </ExtraSection>
+                    )}
                   </>
                 )}
               />

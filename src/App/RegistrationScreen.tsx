@@ -9,7 +9,10 @@ import Spinner from 'components/Spinner';
 import { blocksAtom, coreConnectedAtom, coreStuckAtom } from 'lib/coreInfo';
 import { settingAtoms } from 'lib/settings';
 import { restartStuckCore } from 'lib/coreHealth';
-import { stopWaitingForRegistration } from 'lib/registration';
+import {
+  stopWaitingForRegistration,
+  openRegistrationLogin,
+} from 'lib/registration';
 import { navigate } from 'lib/wallet';
 
 __ = __context('NewUser');
@@ -182,13 +185,18 @@ export default function RegistrationScreen() {
   if (!pending) return null;
 
   const waited = now - pending.startedAt;
+  const done = !!pending.confirmedAt;
   const free = freePaths.some((p) => pathname.startsWith(p));
   if (free) {
     return (
       <Strip>
-        <Spinner />
+        {!done && <Spinner />}
         <span>
-          {__('Creating user %{username}...', { username: pending.username })}
+          {done
+            ? __('User %{username} is ready', { username: pending.username })
+            : __('Creating user %{username}...', {
+                username: pending.username,
+              })}
         </span>
         <Button skin="hyperlink" onClick={() => navigate('/')}>
           {__('Show')}
@@ -209,7 +217,7 @@ export default function RegistrationScreen() {
   return (
     <Shade>
       <Card>
-        <h2>{__('Creating your user')}</h2>
+        <h2>{done ? __('Your user is ready') : __('Creating your user')}</h2>
         <div className="user">{pending.username}</div>
 
         <Chain>
@@ -222,10 +230,17 @@ export default function RegistrationScreen() {
               <Link />
             </span>
           ))}
-          <Block next>
-            <span>{__('next block')}</span>
-            <b>{__('your user')}</b>
-          </Block>
+          {done ? (
+            <Block>
+              <span>&#10003;</span>
+              <b>{__('your user')}</b>
+            </Block>
+          ) : (
+            <Block next>
+              <span>{__('next block')}</span>
+              <b>{__('your user')}</b>
+            </Block>
+          )}
         </Chain>
 
         <Steps>
@@ -234,71 +249,94 @@ export default function RegistrationScreen() {
             {__('Sent to the Nexus network')}
           </li>
           <li>
-            <span className="mark">
-              <Spinner />
-            </span>
-            {__('Waiting to be written into the next block')}
+            <span className="mark">{done ? '✓' : <Spinner />}</span>
+            {done
+              ? __('Written into a block')
+              : __('Waiting to be written into the next block')}
           </li>
-          <li className="todo">
-            <span className="mark">&#9675;</span>
+          <li className={done ? undefined : 'todo'}>
+            <span className="mark">{done ? '●' : '○'}</span>
             {__('Ready to log in')}
           </li>
         </Steps>
 
-        <div className="hint">
-          {__('Waiting for %{time}', { time: elapsedText(waited) })}
-          {lastBlockAt.current
-            ? ` - ${__('last block %{time} ago', {
-                time: elapsedText(now - lastBlockAt.current),
-              })}`
-            : ''}
-        </div>
-        <div className="hint">
-          {__(
-            'A new block comes about every 50 seconds, so this usually takes 1 to 3 minutes. The login opens by itself when it is done.'
-          )}
-        </div>
-
-        {!connected && (
-          <Warn>{__('Waiting for Nexus Core to connect...')}</Warn>
-        )}
-        {connected && stuck && (
-          <Warn>
-            <div>
+        {done ? (
+          <>
+            <div className="hint">
+              {__('Your user is on the blockchain. Log in to start using it.')}
+            </div>
+            <Links>
+              <Button skin="primary" onClick={openRegistrationLogin}>
+                {__('Log in')}
+              </Button>
+              <Button skin="hyperlink" onClick={stopWaitingForRegistration}>
+                {__('Close')}
+              </Button>
+            </Links>
+          </>
+        ) : (
+          <>
+            <div className="hint">
+              {__('Waiting for %{time}', { time: elapsedText(waited) })}
+              {lastBlockAt.current
+                ? ` - ${__('last block %{time} ago', {
+                    time: elapsedText(now - lastBlockAt.current),
+                  })}`
+                : ''}
+            </div>
+            <div className="hint">
               {__(
-                'Nexus Core stopped at block %{blocks} while the network is at %{network}.',
-                { blocks: fmt(stuck.blocks), network: fmt(stuck.network) }
+                'A new block comes about every 50 seconds, so this usually takes 1 to 3 minutes. The login opens by itself when it is done.'
               )}
             </div>
-            {manualDaemon ? (
-              <div>{__('Restart Nexus Core on the computer it runs on.')}</div>
-            ) : (
-              <Button skin="primary" onClick={() => restartStuckCore()}>
-                {__('Restart Nexus Core')}
-              </Button>
-            )}
-          </Warn>
-        )}
 
-        <Links>
-          <Button skin="hyperlink" onClick={() => navigate('/Terminal/Core')}>
-            {__('Core output')}
-          </Button>
-          <Button
-            skin="hyperlink"
-            onClick={() => navigate('/Terminal/Console')}
-          >
-            {__('Console')}
-          </Button>
-          <Button skin="hyperlink" onClick={() => navigate('/Settings')}>
-            {__('Settings')}
-          </Button>
-          {waited > stopAfterMinutes * 60000 && (
-            <Button skin="hyperlink" onClick={stopWaitingForRegistration}>
-              {__('Stop waiting')}
-            </Button>
-          )}
-        </Links>
+            {!connected && (
+              <Warn>{__('Waiting for Nexus Core to connect...')}</Warn>
+            )}
+            {connected && stuck && (
+              <Warn>
+                <div>
+                  {__(
+                    'Nexus Core stopped at block %{blocks} while the network is at %{network}.',
+                    { blocks: fmt(stuck.blocks), network: fmt(stuck.network) }
+                  )}
+                </div>
+                {manualDaemon ? (
+                  <div>
+                    {__('Restart Nexus Core on the computer it runs on.')}
+                  </div>
+                ) : (
+                  <Button skin="primary" onClick={() => restartStuckCore()}>
+                    {__('Restart Nexus Core')}
+                  </Button>
+                )}
+              </Warn>
+            )}
+
+            <Links>
+              <Button
+                skin="hyperlink"
+                onClick={() => navigate('/Terminal/Core')}
+              >
+                {__('Core output')}
+              </Button>
+              <Button
+                skin="hyperlink"
+                onClick={() => navigate('/Terminal/Console')}
+              >
+                {__('Console')}
+              </Button>
+              <Button skin="hyperlink" onClick={() => navigate('/Settings')}>
+                {__('Settings')}
+              </Button>
+              {waited > stopAfterMinutes * 60000 && (
+                <Button skin="hyperlink" onClick={stopWaitingForRegistration}>
+                  {__('Stop waiting')}
+                </Button>
+              )}
+            </Links>
+          </>
+        )}
       </Card>
     </Shade>
   );

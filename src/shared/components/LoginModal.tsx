@@ -40,7 +40,7 @@ const initialValues: LoginFormValues = {
   pin: '',
 };
 
-export default function LoginModal() {
+export default function LoginModal({ username }: { username?: string } = {}) {
   const coreInfo = useCoreInfo();
   const syncing = coreInfo?.syncing;
   const notReady = useCoreNotReady({ allowRegistering: true });
@@ -56,7 +56,9 @@ export default function LoginModal() {
             ) : (
               <Form
                 name="login"
-                initialValues={initialValues}
+                initialValues={
+                  username ? { ...initialValues, username } : initialValues
+                }
                 onSubmit={formSubmit({
                   submit: async ({ username, password, pin }) => {
                     try {
@@ -120,7 +122,7 @@ export default function LoginModal() {
                     name="username"
                     validate={required()}
                     placeholder={__('Enter your username')}
-                    autoFocus
+                    autoFocus={!username}
                   />
                 </FormField>
 
@@ -130,6 +132,7 @@ export default function LoginModal() {
                     validate={required()}
                     maskable
                     placeholder={__('Enter your password')}
+                    autoFocus={!!username}
                   />
                 </FormField>
 

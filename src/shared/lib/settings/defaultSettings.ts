@@ -93,7 +93,11 @@ export type Settings = {
   // modal automatically when core is connected
   firstCreateNewUserShown: boolean;
   //account sent with profiles/create/master, waiting for its first block
-  pendingRegistration: { username: string; startedAt: number } | null;
+  pendingRegistration: {
+    username: string;
+    startedAt: number;
+    confirmedAt?: number;
+  } | null;
   consoleCliSyntax: boolean;
   dontAskToStartStaking: boolean;
   lastCheckForUpdates: number | undefined;
