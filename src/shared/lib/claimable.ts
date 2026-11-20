@@ -12,10 +12,11 @@ import jotaiQuery from 'utils/jotaiQuery';
 
 __ = __context('Claimable');
 
-//one token's balances. The amount sent to your accounts but not yet credited comes back as `unclaimed` on this
-//core (the API doc's `pending` is not returned); keep `pending` as a fallback for other core versions. Normal
-//sends auto-credit so this clears in a block; contract payments (escrow, code, approvals, time-locks,
-//return-if-unclaimed) are not auto-creditable, so they stay until the recipient claims them.
+//one token's balances. The amount received into your accounts but not yet credited is what can be claimed.
+//The core API documents this as `pending` (confirmed debits to your accounts, not yet credited), but this core
+//does not return that field and reports the same amount under `unclaimed` instead, so read `pending` first and
+//fall back to `unclaimed`. Normal sends auto-credit so this clears in a block; contract payments (escrow, code,
+//approvals, time-locks, return-if-unclaimed) are not auto-creditable, so they stay until the recipient claims.
 interface TokenBalances {
   token: string;
   ticker?: string;
@@ -24,8 +25,8 @@ interface TokenBalances {
   unclaimed?: number;
 }
 
-//what can be claimed into your accounts now: unclaimed, or pending on a core that reports it instead
-const claimableOf = (b: TokenBalances) => (b.unclaimed ?? b.pending ?? 0) || 0;
+//prefer `pending` (incoming, per the API doc); fall back to `unclaimed` on a core that reports it there
+const claimableOf = (b: TokenBalances) => (b.pending ?? b.unclaimed ?? 0) || 0;
 
 export const balancesQuery = jotaiQuery<TokenBalances[]>({
   alwaysOn: true,
