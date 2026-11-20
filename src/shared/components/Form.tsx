@@ -39,7 +39,9 @@ import { updateFormInstance, getFormInstance } from 'lib/form';
 import ModalLockContext from 'context/modalLock';
 
 //while a form submits nothing in it can be changed, and its modal stays open
-const plainFieldSet = { border: 0, padding: 0, margin: 0, minWidth: 0 };
+//display:contents means the fieldset adds no box of its own, so wrapping every form in it cannot change any
+//form's layout; a disabled fieldset still disables its descendant controls regardless of display
+const plainFieldSet = { display: 'contents' } as const;
 
 function SubmitLock({
   submitting,

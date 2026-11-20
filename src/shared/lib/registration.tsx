@@ -1,4 +1,3 @@
-import { atom } from 'jotai';
 import log from 'electron-log';
 
 import LoginModal from 'components/LoginModal';
@@ -14,9 +13,6 @@ __ = __context('NewUser');
 
 const checkSeconds = 15;
 
-/** Last time profiles/status/master answered for the pending account */
-export const registrationCheckedAtom = atom<number | null>(null);
-
 let checking = false;
 
 async function check() {
@@ -27,7 +23,6 @@ async function check() {
     const status = await callAPI('profiles/status/master', {
       username: pending.username,
     });
-    store.set(registrationCheckedAtom, Date.now());
     if (!status?.confirmed) return;
     //the user may have stopped waiting meanwhile
     if (
@@ -74,7 +69,6 @@ export function startRegistration(username: string) {
   updateSettings({
     pendingRegistration: { username, startedAt: Date.now() },
   });
-  store.set(registrationCheckedAtom, null);
   navigate('/');
 }
 
@@ -83,8 +77,9 @@ export function stopWaitingForRegistration() {
 }
 
 export function prepareRegistration() {
+  //once a user is logged in, the "creating your user" screen has done its job: clear it
   subscribe(loggedInAtom, (loggedIn) => {
-    if (loggedIn && store.get(settingsAtom).pendingRegistration?.confirmedAt) {
+    if (loggedIn && store.get(settingsAtom).pendingRegistration) {
       updateSettings({ pendingRegistration: null });
     }
   });
