@@ -11,6 +11,7 @@ import { prepareModules, prepareWebView } from 'lib/modules';
 import { prepareUpdater } from 'lib/updater';
 import { prepareSessionInfo } from 'lib/session';
 import { prepareStaking } from 'lib/staking';
+import { prepareClaimable } from 'lib/claimable';
 import UT from 'lib/usageTracking';
 import App from './App';
 
@@ -39,6 +40,7 @@ async function run() {
     prepareWebView();
     prepareSessionInfo();
     prepareStaking();
+    prepareClaimable();
     const { sendUsageData } = store.get(settingsAtom);
     if (sendUsageData) {
       UT.StartAnalytics();

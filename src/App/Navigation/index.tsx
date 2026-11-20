@@ -8,6 +8,7 @@ import Tooltip from 'components/Tooltip';
 import ModuleIcon from 'components/ModuleIcon';
 import { consts, timing } from 'styles';
 import { Module, modulesAtom, moduleUpdateCountAtom } from 'lib/modules';
+import { pendingClaimsAtom, contractsModuleAtom } from 'lib/claimable';
 
 import logoIcon from 'icons/logo.svg';
 import sendIcon from 'icons/send.svg';
@@ -89,19 +90,39 @@ const NavItem = ({
  * @param {*} { module }
  * @memberof Navigation
  */
-const ModuleNavItem = ({ module }: { module: Module }) => (
+const ModuleNavItem = ({
+  module,
+  badge,
+}: {
+  module: Module;
+  badge?: number;
+}) => (
   <Tooltip.Trigger tooltip={module.info.displayName} position="top">
     <NavLinkItem to={`/Modules/${module.info.name}`}>
       <ModuleIcon module={module} />
+      <NavLabel>{module.info.displayName}</NavLabel>
+      {!!badge && <Badge>{badge}</Badge>}
     </NavLinkItem>
   </Tooltip.Trigger>
 );
 
 function ModuleNavItems() {
   const modules = useAtomValue(modulesAtom);
+  const contractsModule = useAtomValue(contractsModuleAtom);
+  const pendingClaims = useAtomValue(pendingClaimsAtom);
   return modules
     .filter((module) => module.enabled && module.info.type === 'app')
-    .map((module) => <ModuleNavItem key={module.info.name} module={module} />);
+    .map((module) => (
+      <ModuleNavItem
+        key={module.info.name}
+        module={module}
+        badge={
+          module === contractsModule && pendingClaims.length
+            ? pendingClaims.length
+            : undefined
+        }
+      />
+    ));
 }
 
 /**

@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import { Link } from 'react-router';
 import ModuleNotices from './ModuleNotices';
+import ClaimableNotice from './ClaimableNotice';
 import { useAtomValue } from 'jotai';
 import styled from '@emotion/styled';
 
@@ -98,11 +99,17 @@ const EyeButton = styled.span(({ theme }) => ({
 const timeAgo = (seconds: number) => {
   const minutes = Math.max(0, Math.floor((Date.now() / 1000 - seconds) / 60));
   if (minutes < 60)
-    return __('%{smart_count} minute ago |||| %{smart_count} minutes ago', minutes);
+    return __(
+      '%{smart_count} minute ago |||| %{smart_count} minutes ago',
+      minutes
+    );
   const hours = Math.floor(minutes / 60);
   if (hours < 48)
     return __('%{smart_count} hour ago |||| %{smart_count} hours ago', hours);
-  return __('%{smart_count} day ago |||| %{smart_count} days ago', Math.floor(hours / 24));
+  return __(
+    '%{smart_count} day ago |||| %{smart_count} days ago',
+    Math.floor(hours / 24)
+  );
 };
 
 const BigValue = styled.div(({ theme }) => ({
@@ -261,7 +268,9 @@ function BalanceCard() {
         <span>
           {__('Balance')}{' '}
           <Tooltip.Trigger
-            tooltip={hideOverviewBalances ? __('Show balances') : __('Hide balances')}
+            tooltip={
+              hideOverviewBalances ? __('Show balances') : __('Hide balances')
+            }
           >
             <EyeButton
               onClick={() =>
@@ -290,7 +299,8 @@ function BalanceCard() {
           </SubValue>
           {!!price && !!currency && (
             <SubValue style={{ fontSize: 13 }}>
-              1 NXS = {formatCurrency(price, currency, currency === 'BTC' ? 8 : 4)}
+              1 NXS ={' '}
+              {formatCurrency(price, currency, currency === 'BTC' ? 8 : 4)}
               {typeof changePct24Hr === 'number' && (
                 <span
                   className="ml0_4"
@@ -366,11 +376,15 @@ function StakingCard() {
           </BigValue>
           <Items>
             <Item label={__('Staked')}>
-              {hideOverviewBalances ? '-' : `${formatNumber(stakeInfo.stake, 2)} NXS`}
+              {hideOverviewBalances
+                ? '-'
+                : `${formatNumber(stakeInfo.stake, 2)} NXS`}
             </Item>
             <Item label={__('Last reward')}>
               {lastReward ? (
-                <Tooltip.Trigger tooltip={`+${formatNumber(lastRewardAmount, 6)} NXS`}>
+                <Tooltip.Trigger
+                  tooltip={`+${formatNumber(lastRewardAmount, 6)} NXS`}
+                >
                   <span>{timeAgo(lastReward.timestamp)}</span>
                 </Tooltip.Trigger>
               ) : (
@@ -404,7 +418,10 @@ function NetworkCard() {
   const peers = peersQuery.use();
   const countries = new Set(
     (peers || [])
-      .map((peer) => (geoip.get(peer.address.split(':')[0]) as any)?.country?.iso_code)
+      .map(
+        (peer) =>
+          (geoip.get(peer.address.split(':')[0]) as any)?.country?.iso_code
+      )
       .filter(Boolean)
   ).size;
   const coreConnected = useCoreConnected();
@@ -420,17 +437,17 @@ function NetworkCard() {
           {!coreConnected
             ? __('Not connected')
             : coreInfo?.testnet
-            ? __('Testnet %{number}', { number: coreInfo.testnet })
-            : __('Mainnet')}
+              ? __('Testnet %{number}', { number: coreInfo.testnet })
+              : __('Mainnet')}
         </Row>
         <Row label={__('Sync')}>
           {!coreConnected
             ? '-'
             : synchronized
-            ? __('Synced')
-            : coreInfo?.syncing
-            ? `${Math.floor(coreInfo.syncing.progress || 0)} %`
-            : __('Syncing')}
+              ? __('Synced')
+              : coreInfo?.syncing
+                ? `${Math.floor(coreInfo.syncing.progress || 0)} %`
+                : __('Syncing')}
         </Row>
         <Row label={__('Blocks')}>
           {typeof coreInfo?.blocks === 'number'
@@ -445,10 +462,13 @@ function NetworkCard() {
         <Row label={__('Nodes')}>
           {peers
             ? countries
-              ? __('%{nodes} in %{smart_count} country |||| %{nodes} in %{smart_count} countries', {
-                  smart_count: countries,
-                  nodes: peers.length,
-                })
+              ? __(
+                  '%{nodes} in %{smart_count} country |||| %{nodes} in %{smart_count} countries',
+                  {
+                    smart_count: countries,
+                    nodes: peers.length,
+                  }
+                )
               : peers.length
             : '-'}
         </Row>
@@ -458,14 +478,17 @@ function NetworkCard() {
 }
 
 const shortAddress = (address: string) =>
-  address.length > 16 ? `${address.slice(0, 6)}...${address.slice(-4)}` : address;
+  address.length > 16
+    ? `${address.slice(0, 6)}...${address.slice(-4)}`
+    : address;
 
 const registerLabel = (register: any) => {
   if (!register) return null;
   if (typeof register === 'string') return shortAddress(register);
   if (register.name) {
     if (register.namespace) return `${register.namespace}::${register.name}`;
-    if (!register.global && register.user) return `${register.user}:${register.name}`;
+    if (!register.global && register.user)
+      return `${register.user}:${register.name}`;
     return register.name;
   }
   return register.address ? shortAddress(register.address) : null;
@@ -505,8 +528,7 @@ function RecentTransaction({ tx }: { tx: Transaction }) {
         {changes.map((change) => (
           <TxAmount key={change.token} negative={change.amount < 0}>
             {change.amount > 0 ? '+' : ''}
-            {formatNumber(change.amount, 6)}{' '}
-            <TokenName contract={change} />
+            {formatNumber(change.amount, 6)} <TokenName contract={change} />
           </TxAmount>
         ))}
       </div>
@@ -539,6 +561,7 @@ function RecentTransactionsCard() {
 export default function Dashboard() {
   return (
     <DashboardPage>
+      <ClaimableNotice />
       <ModuleNotices />
       <Grid>
         <BalanceCard />
