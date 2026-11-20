@@ -47,7 +47,7 @@ You are currenctly running a * version of the wallet. ,You are currenctly runnin
 "Thank you for testing our wallet, please ","Thank you for testing our wallet, please ",
 Click here,Click here,
  To send feedback to the developers. , To send feedback to the developers. ,
-Or join us on the offical ,Or join us on the offical ,
+Or join us on the official ,Or join us on the official ,
 Ok,Ok,
 Testnet Only Mode,Testnet Only Mode,
 You are currenctly running a Testnet only version of the wallet. ,You are currenctly running a Testnet only version of the wallet. ,
@@ -1023,3 +1023,151 @@ Install it later,Install it later,AutoUpdate
 New wallet version %{version} - Click here to download,New wallet version %{version} - Click here to download,AutoUpdate
 New wallet version %{version} - Click here to update,New wallet version %{version} - Click here to update,AutoUpdate
 New wallet version %{version} available. Downloading...,New wallet version %{version} available. Downloading...,AutoUpdate
+Wallet is locked,Wallet is locked,
+Invalid Pin,Invalid Pin,
+Error unlocking wallet,Error unlocking wallet,
+Pooled staking,Pooled staking,Settings.Core
+"Pooled staking is a decentralized and trust-less mechanism allowing you to use the balances of others to increase your chances of finding a stake block. All participants receive their staking rewards and build trust, regardless of which user mines the block. A small portion of each reward is paid to the block finder by all pool participants.","Pooled staking is a decentralized and trust-less mechanism allowing you to use the balances of others to increase your chances of finding a stake block. All participants receive their staking rewards and build trust, regardless of which user mines the block. A small portion of each reward is paid to the block finder by all pool participants.",Settings.Core
+View namespace details,View namespace details,User.Namespaces
+Starting...,Starting...,User.Staking
+Stopping...,Stopping...,User.Staking
+Requesting unstake...,Requesting unstake...,User.Staking
+Core restarting...,Core restarting...,User.Staking
+Unstaking: staking stops by itself after the next Trust transaction returns your stake,Unstaking: staking stops by itself after the next Trust transaction returns your stake,User.Staking
+"Unstake is pending, but it only completes while staking runs. Start staking to finish it","Unstake is pending, but it only completes while staking runs. Start staking to finish it",User.Staking
+Expires,Expires,User.Staking
+Never,Never,User.Staking
+"Expired, will not be applied","Expired, will not be applied",User.Staking
+Keep my stake,Keep my stake,User.Staking
+Stop now,Stop now,User.Staking
+Pending stake change has been cancelled,Pending stake change has been cancelled,AdjustStake
+Not being fully synced may have caused this error. Please wait for synchronization to complete and try again.,Not being fully synced may have caused this error. Please wait for synchronization to complete and try again.,Login
+"<b>Securely store your new recovery phrase in a safe and accessible location, as it cannot be recovered if lost.</b>","<b>Securely store your new recovery phrase in a safe and accessible location, as it cannot be recovered if lost.</b>",SetRecoveryPhrase
+"In the next step, you will be prompted to re-enter it to confirm you have recorded it accurately.","In the next step, you will be prompted to re-enter it to confirm you have recorded it accurately.",SetRecoveryPhrase
+Next,Next,SetRecoveryPhrase
+"%{amount} NXS is locked as stake in your trust account. It only becomes available again with your next Trust transaction, and that only happens while staking runs.","%{amount} NXS is locked as stake in your trust account. It only becomes available again with your next Trust transaction, and that only happens while staking runs.",User.Staking
+"Unstake, then stop","Unstake, then stop",User.Staking
+"requests your whole stake back and keeps staking until the next Trust transaction returns it to your available balance, then stops by itself.","requests your whole stake back and keeps staking until the next Trust transaction returns it to your available balance, then stops by itself.",User.Staking
+stops right away. Your coins stay in the trust account as stake (nothing is lost) and become available only after you stake again.,stops right away. Your coins stay in the trust account as stake (nothing is lost) and become available only after you stake again.,User.Staking
+Toggle Jotai Developer Tools,Toggle Jotai Developer Tools,
+Toggle React Query Developer Tools,Toggle React Query Developer Tools,
+Lock Screen,Lock Screen,
+Staking will start after you log in,Staking will start after you log in,User.Staking
+Enter your PIN to unlock your stake,Enter your PIN to unlock your stake,User.Staking
+Unstake requested,Unstake requested,User.Staking
+Staking continues until your next Trust transaction moves %{amount} NXS back to your available balance. Staking then stops by itself.,Staking continues until your next Trust transaction moves %{amount} NXS back to your available balance. Staking then stops by itself.,User.Staking
+Enter your PIN to keep your stake,Enter your PIN to keep your stake,User.Staking
+Your stake stays and staking continues,Your stake stays and staking continues,User.Staking
+"Your stake is unlocked, stopping staking","Your stake is unlocked, stopping staking",User.Staking
+Unstake request is gone,Unstake request is gone,User.Staking
+"The core no longer has the request to unlock your stake, so it was not applied. Staking continues. Use Stop staking to request it again.","The core no longer has the request to unlock your stake, so it was not applied. Staking continues. Use Stop staking to request it again.",User.Staking
+There are currently no updates available,There are currently no updates available,AutoUpdate
+Wallet update failed,Wallet update failed,AutoUpdate
+Unknown error,Unknown error,AutoUpdate
+Private testnet %{number},Private testnet %{number},Header
+Testnet %{number},Testnet %{number},Header
+Mainnet,Mainnet,Header
+Synced,Synced,Header
+Syncing %{percent}%,Syncing %{percent}%,Header
+Syncing,Syncing,Header
+You are currently running an Alpha version of the wallet.,You are currently running an Alpha version of the wallet.,
+You are currently running a Beta version of the wallet.,You are currently running a Beta version of the wallet.,
+You are currently running a Testnet only version of the wallet.,You are currently running a Testnet only version of the wallet.,
+Transactions,Transactions,Overview
+Available,Available,Overview
+Staked,Staked,Overview
+Incoming,Incoming,Overview
+Tokens,Tokens,Overview
+Log in to see your balance,Log in to see your balance,Overview
+Staking,Staking,Overview
+Open staking,Open staking,Overview
+Staking is not available in private network,Staking is not available in private network,Overview
+Not staking,Not staking,Overview
+Stake rate,Stake rate,Overview
+Trust weight,Trust weight,Overview
+Block weight,Block weight,Overview
+Stake weight,Stake weight,Overview
+No trust account yet,No trust account yet,Overview
+Network,Network,Overview
+Not connected,Not connected,Overview
+Testnet %{number},Testnet %{number},Overview
+Mainnet,Mainnet,Overview
+Sync,Sync,Overview
+Synced,Synced,Overview
+Syncing,Syncing,Overview
+Blocks,Blocks,Overview
+NXS price,NXS price,Overview
+Recent transactions,Recent transactions,Overview
+All transactions,All transactions,Overview
+Log in to see your transactions,Log in to see your transactions,Overview
+Loading transactions...,Loading transactions...,Overview
+No transactions yet,No transactions yet,Overview
+%{smart_count} minute ago |||| %{smart_count} minutes ago,%{smart_count} minute ago |||| %{smart_count} minutes ago,User.Staking
+%{smart_count} hour ago |||| %{smart_count} hours ago,%{smart_count} hour ago |||| %{smart_count} hours ago,User.Staking
+%{smart_count} day ago |||| %{smart_count} days ago,%{smart_count} day ago |||| %{smart_count} days ago,User.Staking
+Recent rewards,Recent rewards,User.Staking
+last one %{time},last one %{time},User.Staking
+No staking rewards yet,No staking rewards yet,User.Staking
+View on explorer,View on explorer,Explorer
+%{network} - click for the normal colours,%{network} - click for the normal colours,Header
+%{network} - click for the testnet colours,%{network} - click for the testnet colours,Header
+%{network} - coins on this network have no value,%{network} - coins on this network have no value,Header
+Classic (globe),Classic (globe),Settings.Style
+Classic with mining stats,Classic with mining stats,Settings.Style
+Dashboard,Dashboard,Settings.Style
+Empty,Empty,Settings.Style
+"Classic shows the globe with the stats around it. Dashboard shows balance, staking, network and recent transactions in cards.","Classic shows the globe with the stats around it. Dashboard shows balance, staking, network and recent transactions in cards.",Settings.Style
+Private testnet %{number},Private testnet %{number},
+Testnet %{number},Testnet %{number},
+%{smart_count} minute ago |||| %{smart_count} minutes ago,%{smart_count} minute ago |||| %{smart_count} minutes ago,Overview
+%{smart_count} hour ago |||| %{smart_count} hours ago,%{smart_count} hour ago |||| %{smart_count} hours ago,Overview
+%{smart_count} day ago |||| %{smart_count} days ago,%{smart_count} day ago |||| %{smart_count} days ago,Overview
+Show balances,Show balances,Overview
+Hide balances,Hide balances,Overview
+Log in to see your staking,Log in to see your staking,Overview
+Last reward,Last reward,Overview
+Nodes,Nodes,Overview
+%{nodes} in %{smart_count} country |||| %{nodes} in %{smart_count} countries,%{nodes} in %{smart_count} country |||| %{nodes} in %{smart_count} countries,Overview
+Your wallet,Your wallet,Overview
+Unknown location,Unknown location,Overview
+%{smart_count} node |||| %{smart_count} nodes,%{smart_count} node |||| %{smart_count} nodes,Overview
+outgoing,outgoing,Overview
+incoming,incoming,Overview
+Latency %{ms} ms,Latency %{ms} ms,Overview
+to %{name},to %{name},Overview
+from %{name},from %{name},Overview
+24h,24h,Overview
+Open,Open,Overview
+Creating user %{username}...,Creating user %{username}...,NewUser
+Show,Show,NewUser
+Creating your user,Creating your user,NewUser
+Block,Block,NewUser
+next block,next block,NewUser
+your user,your user,NewUser
+Sent to the Nexus network,Sent to the Nexus network,NewUser
+Waiting to be written into the next block,Waiting to be written into the next block,NewUser
+Ready to log in,Ready to log in,NewUser
+Waiting for %{time},Waiting for %{time},NewUser
+last block %{time} ago,last block %{time} ago,NewUser
+"A new block comes about every 50 seconds, so this usually takes 1 to 3 minutes. The login opens by itself when it is done.","A new block comes about every 50 seconds, so this usually takes 1 to 3 minutes. The login opens by itself when it is done.",NewUser
+Waiting for Nexus Core to connect...,Waiting for Nexus Core to connect...,NewUser
+Nexus Core stopped at block %{blocks} while the network is at %{network}.,Nexus Core stopped at block %{blocks} while the network is at %{network}.,NewUser
+Restart Nexus Core on the computer it runs on.,Restart Nexus Core on the computer it runs on.,NewUser
+Restart Nexus Core,Restart Nexus Core,NewUser
+Core output,Core output,NewUser
+Console,Console,NewUser
+Settings,Settings,NewUser
+Stop waiting,Stop waiting,NewUser
+%{m} min %{s} s,%{m} min %{s} s,NewUser
+%{s} s,%{s} s,NewUser
+Waiting for Nexus Core to connect...,Waiting for Nexus Core to connect...,CoreNotReady
+Nexus Core is synchronizing: %{progress} %,Nexus Core is synchronizing: %{progress} %,CoreNotReady
+Block %{blocks} of %{network},Block %{blocks} of %{network},CoreNotReady
+about %{time} left,about %{time} left,CoreNotReady
+Nexus Core stopped at block %{blocks} while the network is at %{network}.,Nexus Core stopped at block %{blocks} while the network is at %{network}.,CoreNotReady
+Restart Nexus Core on the computer it runs on.,Restart Nexus Core on the computer it runs on.,CoreNotReady
+Restart Nexus Core,Restart Nexus Core,CoreNotReady
+User %{username} is still being created on the blockchain.,User %{username} is still being created on the blockchain.,CoreNotReady
+"Creating a user needs a fully synchronized Nexus Core, otherwise it may never be confirmed. The form opens here by itself when the core is ready.","Creating a user needs a fully synchronized Nexus Core, otherwise it may never be confirmed. The form opens here by itself when the core is ready.",CoreNotReady
+"Logging in needs a fully synchronized Nexus Core, otherwise your balances and transactions are not up to date. The form opens here by itself when the core is ready.","Logging in needs a fully synchronized Nexus Core, otherwise your balances and transactions are not up to date. The form opens here by itself when the core is ready.",CoreNotReady
+Nexus Core stopped at block %{blocks} while the network is at %{network}. Restarting the core...,Nexus Core stopped at block %{blocks} while the network is at %{network}. Restarting the core...,CoreHealth
