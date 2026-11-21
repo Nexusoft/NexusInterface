@@ -7,6 +7,12 @@ import { contactsAtom, searchQueryAtom } from 'lib/addressBook';
 import { useCoreConnected } from 'lib/coreInfo';
 import Contact from './Contact';
 
+const NoResults = styled.div(({ theme }) => ({
+  padding: '2em 30px',
+  textAlign: 'center',
+  color: theme.mixer(0.5),
+}));
+
 __ = __context('AddressBook');
 
 const ContactListComponent = styled.div(({ theme }) => ({
@@ -35,6 +41,7 @@ const filteredContactsAtom = atom((get) => {
 
 export default function ContactList() {
   const filteredContacts = useAtomValue(filteredContactsAtom);
+  const searchQuery = useAtomValue(searchQueryAtom);
   const coreConnected = useCoreConnected();
 
   return (
@@ -42,6 +49,9 @@ export default function ContactList() {
       {filteredContacts.map((contact) => (
         <Contact key={contact.name} contact={contact} />
       ))}
+      {searchQuery && filteredContacts.length === 0 && (
+        <NoResults>{__('No contacts match your search')}</NoResults>
+      )}
       {coreConnected && (
         <>
           <Separator />

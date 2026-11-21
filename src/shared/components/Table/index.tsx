@@ -151,19 +151,21 @@ const TableCell = styled.div<{
     }
 );
 
-const NoData = styled.div({
+const NoData = styled.div(({ theme }) => ({
   display: 'block',
   position: 'absolute',
   left: '50%',
   top: '50%',
   transform: 'translate(-50%, -50%)',
-  background: 'rgba(255, 255, 255, 0.8)',
+  background: theme.background,
+  border: `1px solid ${theme.mixer(0.25)}`,
+  borderRadius: 4,
   transition: 'all 0.3s ease',
   zIndex: 1,
   pointerEvents: 'none',
   padding: 20,
-  color: 'rgba(0, 0, 0, 0.5)',
-});
+  color: theme.mixer(0.75),
+}));
 
 const HeaderResizer = styled.div({
   display: 'inline-block',

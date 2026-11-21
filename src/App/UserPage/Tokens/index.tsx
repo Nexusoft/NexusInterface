@@ -80,6 +80,14 @@ export default function Tokens() {
         {accountTokens?.map((token) => (
           <Token key={token.address} token={token} />
         ))}
+        {accounts &&
+          ownedTokens &&
+          ownedTokens.length === 0 &&
+          accountTokens.length === 0 && (
+            <div className="text-center dim" style={{ padding: '2em' }}>
+              {__('You do not hold any tokens yet')}
+            </div>
+          )}
       </div>
     </TabContentWrapper>
   );
