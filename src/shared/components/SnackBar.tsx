@@ -31,6 +31,9 @@ const SnackBar = styled.div<{
     left: 0,
     fontSize: 15,
     minHeight: notifHeight,
+    //size to the content but cap the width; without an explicit width an absolutely-positioned box with wrapping
+    //text collapses to one character per line
+    width: 'max-content',
     maxWidth: 420,
     display: 'flex',
     alignItems: 'center',
