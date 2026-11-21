@@ -38,11 +38,14 @@ export default function TokenDetailsModal({
   tokenAddress?: string;
 }) {
   const [tokenState, setTokenState] = useState<Token | null>(null);
+  const [error, setError] = useState<string | null>(null);
   useEffect(() => {
     if (!tokenProp) {
       callAPI('finance/get/token', {
         address: tokenAddress,
-      }).then(setTokenState);
+      })
+        .then(setTokenState)
+        .catch((e: any) => setError(e?.message || String(e)));
     }
   }, []);
   const token = tokenProp || tokenState;
@@ -53,9 +56,15 @@ export default function TokenDetailsModal({
         <>
           <ControlledModal.Header>{__('Token Details')}</ControlledModal.Header>
           <ControlledModal.Body>
-            {!token && (
+            {!token && !error && (
               <div className="text-center">
                 <Spinner size={24} />
+              </div>
+            )}
+
+            {!token && error && (
+              <div className="text-center" style={{ padding: '1em' }}>
+                {__('Could not load this token')}: {error}
               </div>
             )}
 
