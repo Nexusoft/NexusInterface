@@ -5,9 +5,12 @@ import InfoField from 'components/InfoField';
 import WaitingMessage from 'components/WaitingMessage';
 import NexusAddress from 'components/NexusAddress';
 import ExplorerLink from 'components/ExplorerLink';
+import Button from 'components/Button';
+import ContractDetailsModal from 'components/ContractDetailsModal';
 import { callAPI, Transaction } from 'lib/api';
 import { openErrorDialog } from 'lib/dialog';
-import { formatDateTime } from 'lib/intl';
+import { openModal } from 'lib/ui';
+import { formatDateTime, formatNumber } from 'lib/intl';
 
 __ = __context('TransactionDetails');
 
@@ -62,6 +65,28 @@ export default function TransactionDetailsModal({ txid }: { txid: string }) {
               />
               <ExplorerLink id={transaction.txid} className="mt0_4" />
             </InfoField>
+            {!!transaction.contracts?.length && (
+              <InfoField label={__('Contracts')}>
+                {transaction.contracts.map((contract) => (
+                  <div key={contract.id}>
+                    <Button
+                      skin="hyperlink"
+                      onClick={() => {
+                        openModal(ContractDetailsModal, {
+                          contract,
+                          txid: transaction.txid,
+                        });
+                      }}
+                    >
+                      {contract.OP}
+                      {typeof contract.amount === 'number' && contract.amount
+                        ? ' - ' + formatNumber(contract.amount, 6)
+                        : ''}
+                    </Button>
+                  </div>
+                ))}
+              </InfoField>
+            )}
           </>
         ) : (
           <WaitingMessage>

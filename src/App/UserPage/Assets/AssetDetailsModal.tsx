@@ -8,6 +8,7 @@ import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import InfoField from 'components/InfoField';
 import ExplorerLink from 'components/ExplorerLink';
+import QRButton from 'components/QRButton';
 import { formatDateTime } from 'lib/intl';
 import { openModal } from 'lib/ui';
 import { getAssetData } from 'lib/asset';
@@ -89,9 +90,13 @@ export default function AssetDetailsModal({ asset }: { asset: Asset }) {
               </InfoField>
               <InfoField label={__('Address')}>
                 <span className="monospace v-align">{asset.address}</span>
+                <QRButton address={asset.address} className="ml0_4" />
                 <ExplorerLink id={asset.address} className="ml1" />
               </InfoField>
-              <InfoField label={__('Owner')}>{asset.owner}</InfoField>
+              <InfoField label={__('Owner')}>
+                <span className="monospace v-align">{asset.owner}</span>
+                <QRButton address={asset.owner} className="ml0_4" />
+              </InfoField>
               {!!asset.ownership && (
                 <InfoField label={__('Ownership')}>
                   {asset.ownership}%

@@ -111,7 +111,15 @@ const accountLabel = ({
     }
 
     if (local) {
-      const prefix = mine ? '' : <span className="dim">(?):</span>;
+      const prefix = mine ? (
+        ''
+      ) : (
+        <Tooltip.Trigger
+          tooltip={__('Local account name belonging to another user')}
+        >
+          <span className="dim">(?):</span>
+        </Tooltip.Trigger>
+      );
       return (
         <span>
           {prefix}

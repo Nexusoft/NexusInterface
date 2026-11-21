@@ -84,6 +84,7 @@ export default function NameDetailsModal({
             <InfoField label={__('Points to')}>
               <span className="v-align monospace">{nameRecord.register}</span>
               <QRButton className="ml0_4" address={nameRecord.register} />
+              <ExplorerLink id={nameRecord.register} className="ml1" />
             </InfoField>
             <InfoField label={__('Created at')}>
               {formatDateTime(nameRecord.created * 1000, timeFormatOptions)}

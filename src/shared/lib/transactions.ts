@@ -16,7 +16,7 @@ import TokenName from 'components/TokenName';
 
 const isConfirmed = (tx: Transaction) => !!tx.confirmations;
 
-const txCountPerPage = 10;
+export const txCountPerPage = 10;
 
 interface BalanceChange {
   ticker?: string;
