@@ -1,11 +1,7 @@
 import { useAtomValue } from 'jotai';
 import styled from '@emotion/styled';
 
-import {
-  pendingClaimsAtom,
-  contractsModuleAtom,
-  openClaimTarget,
-} from 'lib/claimable';
+import { claimCountAtom, contractsModuleAtom, openClaimTarget } from 'lib/claimable';
 
 __ = __context('Claimable');
 
@@ -30,11 +26,13 @@ const Banner = styled.button(({ theme }) => ({
   fontSize: 14,
   boxShadow: '0 2px 12px rgba(0,0,0,.4)',
   '&:hover': { background: theme.lower(theme.background, 0.1) },
-  '& .dot': {
-    width: 9,
-    height: 9,
-    borderRadius: '50%',
+  '& .count': {
     background: theme.primary,
+    color: theme.primaryAccent,
+    borderRadius: 10,
+    padding: '0 8px',
+    fontWeight: 'bold',
+    fontSize: 12,
     flexShrink: 0,
   },
   '& b': { whiteSpace: 'nowrap' },
@@ -48,17 +46,15 @@ const Banner = styled.button(({ theme }) => ({
 }));
 
 export default function ClaimableNotice() {
-  const claims = useAtomValue(pendingClaimsAtom);
+  //the module's own count of what is actually claimable, so this never promises more than the module can claim
+  const count = useAtomValue(claimCountAtom);
   const module = useAtomValue(contractsModuleAtom);
-  if (!claims.length) return null;
-  const amounts = claims
-    .map((c) => `${Number(c.pending.toFixed(6))} ${c.ticker}`)
-    .join(', ');
+  if (count <= 0) return null;
   return (
     <Banner onClick={openClaimTarget} title={__('Open to claim')}>
-      <span className="dot" />
+      <span className="count">{count}</span>
       <span className="what">
-        <b>{__('You have payments to claim')}</b>: {amounts}
+        <b>{__('You have payments to claim')}</b>
       </span>
       <span className="go">
         {module ? __('Open Nexus Contracts') : __('View')}

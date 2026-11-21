@@ -71,6 +71,8 @@ async function readOverviews(modules: any[]): Promise<ModuleOverview[]> {
   const out: ModuleOverview[] = [];
   for (const m of modules) {
     if (!m.enabled || m.info?.type !== 'app') continue;
+    //the contracts module's claim count is shown on its own prominent banner (ClaimableNotice); don't repeat it here
+    if (/contract/i.test(`${m.info?.name} ${m.info?.displayName || ''}`)) continue;
     const o = (await readModuleStorage(m))?.overview;
     const count = Number(o?.count);
     const fresh = typeof o?.at === 'number' && Date.now() / 1000 - o.at < maxAgeSeconds;
