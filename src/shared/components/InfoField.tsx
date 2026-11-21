@@ -17,6 +17,9 @@ const Label = styled.div(({ theme }) => ({
   gridArea: 'label',
   textAlign: 'right',
   color: theme.mixer(0.875),
+  //a long, unbreakable label (e.g. a user-named asset field) must not widen the label column and stretch the row
+  minWidth: 0,
+  overflowWrap: 'anywhere',
 }));
 
 const Value = styled.div(({ theme }) => ({
