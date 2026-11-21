@@ -242,7 +242,9 @@ interface ContractWithExtraInfo extends Contract {
 }
 
 export default function AccountHistoryModal({ account }: { account: Account }) {
-  const [contracts, setContracts] = useState<ContractWithExtraInfo[]>([]);
+  const [contracts, setContracts] = useState<ContractWithExtraInfo[] | null>(
+    null
+  );
   const [showFiat, setShowFiat] = useAtom(balancesShowFiatAtom);
   const marketData = marketDataQuery.use();
   const { price, currency } = marketData || {};
