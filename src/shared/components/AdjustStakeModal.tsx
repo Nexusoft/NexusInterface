@@ -17,6 +17,11 @@ import UT from 'lib/usageTracking';
 
 __ = __context('AdjustStake');
 
+//Below this a stake is very unlikely to ever produce a stake block, so the coins would sit locked in the trust
+//account with no reward and no way to take them back on demand. Nexus's pooled staking for small holders, which
+//would make small amounts workable, was announced but never shipped. A stopgap warning until that changes.
+const lowStakeWarnBelow = 1000;
+
 const LimitNumber = styled(NativeLink)<{
   align: 'left' | 'right';
 }>(
@@ -160,6 +165,24 @@ export default function AdjustStakeModal({
                     if (!confirmed) return undefined;
                   }
 
+                  //starting or raising into a very small stake: it may never make a stake block and the coins stay locked
+                  if (
+                    stake > 0 &&
+                    stake < lowStakeWarnBelow &&
+                    stake > (currentStake || 0)
+                  ) {
+                    const confirmedLow = await confirm({
+                      question: __('Stake this small amount?'),
+                      note: __(
+                        'Staked NXS are locked in your trust account and only come back when your stake produces a block. A small stake can take a very long time, or never, to produce one, so the coins may stay locked with no reward. Nexus pooled staking for small holders is not available.'
+                      ),
+                      labelYes: __('Stake anyway'),
+                      labelNo: __('Cancel'),
+                      skinYes: 'danger',
+                    });
+                    if (!confirmedLow) return undefined;
+                  }
+
                   const pin = await confirmPin();
                   if (pin) {
                     try {
@@ -214,6 +237,11 @@ export default function AdjustStakeModal({
               <Note>
                 {__(
                   'Note: This change will not take effect immediately but will stay pending until you get the next Trust transaction. The pending change will be recorded locally in this machine, therefore if you switch to another machine for staking, the change will not take effect.'
+                )}
+              </Note>
+              <Note>
+                {__(
+                  'Staking locks your NXS in a trust account until your stake produces a block, so only stake an amount you can leave for a long time. A small stake can take a very long time, or never, to produce a block.'
                 )}
               </Note>
               <div className="mt2 flex space-between">
