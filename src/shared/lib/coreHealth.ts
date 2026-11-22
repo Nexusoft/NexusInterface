@@ -10,14 +10,18 @@ import { showNotification } from 'lib/ui';
 __ = __context('CoreHealth');
 
 //5.1.6 can stop taking blocks while it still says synchronized, a core restart fixes it
-const stuckMinutes = 6;
-const stuckBehindBlocks = 5;
+//slow PCs and bad connections lag behind for minutes, so only a long stall counts
+const stuckMinutes = 15;
+const stuckBehindBlocks = 10;
 const checkSeconds = 30;
+//doubles after each restart that did not help, back to the first gap once blocks move
 const restartGapMinutes = 30;
+const maxRestartGapMinutes = 240;
 
 let lastBlocks: number | undefined;
 let lastChangeAt = Date.now();
 let lastRestartAt = 0;
+let restartGap = restartGapMinutes;
 let checking = false;
 
 async function check() {
@@ -33,12 +37,13 @@ async function check() {
       store.set(coreStuckAtom, null);
       return;
     }
-    //most peers answer height 0, the best one shows the network tip
+    //most peers answer height 0; take the second best so one odd peer cannot trigger a restart
     const peers = await callAPI('system/list/peers').catch(() => []);
-    const network = Math.max(
-      0,
-      ...(Array.isArray(peers) ? peers : []).map((p) => Number(p?.height) || 0)
-    );
+    const heights = (Array.isArray(peers) ? peers : [])
+      .map((p) => Number(p?.height) || 0)
+      .filter((h) => h > 0)
+      .sort((a, b) => b - a);
+    const network = heights.length >= 2 ? heights[1] : 0;
     if (network - info.blocks < stuckBehindBlocks) {
       store.set(coreStuckAtom, null);
       return;
@@ -55,14 +60,16 @@ async function check() {
     }
 
     const { manualDaemon } = store.get(settingsAtom);
-    if (
-      manualDaemon ||
-      Date.now() - lastRestartAt < restartGapMinutes * 60000
-    ) {
+    if (manualDaemon || Date.now() - lastRestartAt < restartGap * 60000) {
       return;
     }
+    if (lastRestartAt) {
+      restartGap = Math.min(restartGap * 2, maxRestartGapMinutes);
+    }
     lastRestartAt = Date.now();
-    log.warn('CoreHealth - restarting the core');
+    log.warn(
+      `CoreHealth - restarting the core, next one not before ${restartGap} min`
+    );
     showNotification(
       __(
         'Nexus Core stopped at block %{blocks} while the network is at %{network}. Restarting the core...',
@@ -87,7 +94,13 @@ export async function restartStuckCore() {
 
 export function prepareCoreHealth() {
   subscribe(blocksAtom, (blocks) => {
+    //no answer from the core (restart, busy) is not a new block
+    if (typeof blocks !== 'number') return;
     if (blocks !== lastBlocks) {
+      if (lastBlocks !== undefined && blocks > lastBlocks) {
+        restartGap = restartGapMinutes;
+        lastRestartAt = 0;
+      }
       lastBlocks = blocks;
       lastChangeAt = Date.now();
       if (store.get(coreStuckAtom)) {
