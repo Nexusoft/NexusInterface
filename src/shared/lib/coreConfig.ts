@@ -1,4 +1,5 @@
 import fs from 'fs';
+import net, { AddressInfo } from 'net';
 import path from 'path';
 import log from 'electron-log';
 import crypto from 'crypto';
@@ -73,6 +74,9 @@ export const defaultConfig = {
   apiUser: 'apiserver',
   apiPassword: generateDefaultPassword(),
 };
+
+const fallbackApiPortsSSL = [8443, 7443, 9443];
+const fallbackApiPorts = [8081, 8088, 8090];
 
 /**
  * Returns either the given config or default Config
@@ -153,16 +157,15 @@ export async function loadNexusConf() {
     }
   });
 
-  // Save nexus.conf file if there were changes
+  //the core reads apiuser/apipassword only from this file, so it must be written before the core starts
   if (updated) {
     log.info('Filling up some missing configurations in nexus.conf');
-    fs.writeFile(confPath, toKeyValues(configs), (err) => {
-      if (err) {
-        console.error(err);
-      } else {
-        log.info('nexus.conf has been updated');
-      }
-    });
+    try {
+      await fs.promises.writeFile(confPath, toKeyValues(configs));
+      log.info('nexus.conf has been updated');
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   configs = { ...configs, ...settingsConf };
@@ -174,6 +177,99 @@ export async function loadNexusConf() {
     apiPort: configs.apiport,
     apiPortSSL: configs.apiportssl,
     txExpiry: parseInt(configs.txexpiry),
+  });
+}
+
+function canListen(port: number, host: string) {
+  return new Promise<boolean>((resolve) => {
+    const server = net.createServer();
+    server.once('error', () => resolve(false));
+    server.once('listening', () => server.close(() => resolve(true)));
+    server.listen(port, host);
+  });
+}
+
+//check both, on Windows a port held on 0.0.0.0 does not always block 127.0.0.1
+async function isPortFree(port: number) {
+  return (
+    (await canListen(port, '0.0.0.0')) && (await canListen(port, '127.0.0.1'))
+  );
+}
+
+function getRandomFreePort() {
+  return new Promise<number>((resolve, reject) => {
+    const server = net.createServer();
+    server.once('error', reject);
+    server.listen(0, '127.0.0.1', () => {
+      const { port } = server.address() as AddressInfo;
+      server.close(() => resolve(port));
+    });
+  });
+}
+
+async function findFreePort(candidates: number[], exclude: number[]) {
+  for (const port of candidates) {
+    if (port && !exclude.includes(port) && (await isPortFree(port))) {
+      return port;
+    }
+  }
+  let port;
+  do {
+    port = await getRandomFreePort();
+  } while (exclude.includes(port));
+  return port;
+}
+
+async function saveNexusConfValues(values: Record<string, string>) {
+  const { coreDataDir } = store.get(settingsAtom);
+  const confPath = path.join(coreDataDir, 'nexus.conf');
+  const content = fs.existsSync(confPath)
+    ? (await fs.promises.readFile(confPath)).toString()
+    : '';
+  await fs.promises.writeFile(
+    confPath,
+    toKeyValues({ ...fromKeyValues(content), ...values })
+  );
+}
+
+/**
+ * Move the embedded core's API ports to free ones when another program
+ * holds them. Ports set by hand in the wallet settings are left alone
+ */
+export async function ensureFreeApiPorts(
+  conf: CoreConfig
+): Promise<CoreConfig> {
+  const { embeddedCoreApiPort, embeddedCoreApiPortSSL } =
+    store.get(settingsAtom);
+  if (embeddedCoreApiPort || embeddedCoreApiPortSSL) return conf;
+
+  const portSSL = Number(conf.apiPortSSL);
+  const port = Number(conf.apiPort);
+  const newPortSSL = await findFreePort(
+    [portSSL, ...fallbackApiPortsSSL],
+    [port]
+  );
+  const newPort = await findFreePort(
+    [port, ...fallbackApiPorts],
+    [newPortSSL]
+  );
+  if (newPortSSL === portSSL && newPort === port) return conf;
+
+  log.warn(
+    `Core Manager: API ports ${port}/${portSSL} are in use, using ${newPort}/${newPortSSL}`
+  );
+  try {
+    await saveNexusConfValues({
+      apiport: String(newPort),
+      apiportssl: String(newPortSSL),
+    });
+  } catch (err) {
+    console.error(err);
+  }
+  return customConfig({
+    ...conf,
+    apiPort: String(newPort),
+    apiPortSSL: String(newPortSSL),
   });
 }
 
