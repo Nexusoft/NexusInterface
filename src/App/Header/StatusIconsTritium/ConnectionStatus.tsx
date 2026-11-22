@@ -221,7 +221,10 @@ function hint(quality: Quality, connected: boolean) {
 
 export default function ConnectionStatus() {
   const status = useAtomValue(connectionQualityAtom);
-  const { manualDaemon, stayLoggedIn } = useAtomValue(settingsAtom);
+  const settings = useAtomValue(settingsAtom);
+  const { manualDaemon } = settings;
+  //stayLoggedIn comes with the stay logged in option, absent = off
+  const stayLoggedIn = !!(settings as { stayLoggedIn?: boolean }).stayLoggedIn;
   const [open, setOpen] = useState(false);
   const [restarting, setRestarting] = useState(false);
   const quality = status?.quality || null;
