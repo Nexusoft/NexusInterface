@@ -239,6 +239,8 @@ export interface StakeInfo {
   new: boolean;
   staking: boolean;
   change: boolean;
+  /** Pending stake change, new stake minus current stake */
+  amount?: number;
   pooled?: boolean;
   requested?: number;
   expires?: number;

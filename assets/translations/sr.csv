@@ -1018,3 +1018,7 @@
 "New wallet version %{version} - Click here to download","Нова верзија новчаника %{version} - Кликни овде за преузимање","AutoUpdate"
 "New wallet version %{version} - Click here to update","Нова верзија новчаника %{version} - Кликни овде за ажурирање","AutoUpdate"
 "New wallet version %{version} available. Downloading...","Нова верзија новчаника %{version} - доступна. Преузимам...","AutoUpdate"
+"Stake this small amount?","Уложити овај мали износ?","AdjustStake"
+"Staked NXS are locked in your trust account and only come back when your stake produces a block. A small stake can take a very long time, or never, to produce one, so the coins may stay locked with no reward. Nexus pooled staking for small holders is not available.","Уложени NXS су закључани на вашем trust налогу и враћају се тек када ваш улог произведе блок. Малом улогу може требати веома дуго, или никада, да произведе блок, па новчићи могу остати закључани без награде. Групни стејкинг у Nexus-у за мале власнике није доступан.","AdjustStake"
+"Stake anyway","Ипак уложи","AdjustStake"
+"Staking locks your NXS in a trust account until your stake produces a block, so only stake an amount you can leave for a long time. A small stake can take a very long time, or never, to produce a block.","Стејкинг закључава ваше NXS на trust налогу док ваш улог не произведе блок, зато улажите само износ који можете оставити на дуже време. Малом улогу може требати веома дуго, или никада, да произведе блок.","AdjustStake"

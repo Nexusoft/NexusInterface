@@ -14,16 +14,16 @@ import blockweight7 from 'icons/BlockWeight-7.svg';
 import blockweight8 from 'icons/BlockWeight-8.svg';
 import blockweight9 from 'icons/BlockWeight-9.svg';
 import trust00 from 'icons/trust00.svg';
-import trust10 from 'icons/trust00.svg';
-import trust20 from 'icons/trust00.svg';
-import trust30 from 'icons/trust00.svg';
-import trust40 from 'icons/trust00.svg';
-import trust50 from 'icons/trust00.svg';
-import trust60 from 'icons/trust00.svg';
-import trust70 from 'icons/trust00.svg';
-import trust80 from 'icons/trust00.svg';
-import trust90 from 'icons/trust00.svg';
-import trust100 from 'icons/trust00.svg';
+import trust10 from 'icons/trust10.svg';
+import trust20 from 'icons/trust20.svg';
+import trust30 from 'icons/trust30.svg';
+import trust40 from 'icons/trust40.svg';
+import trust50 from 'icons/trust50.svg';
+import trust60 from 'icons/trust60.svg';
+import trust70 from 'icons/trust70.svg';
+import trust80 from 'icons/trust80.svg';
+import trust90 from 'icons/trust90.svg';
+import trust100 from 'icons/trust100.svg';
 import interestIcon from 'icons/interest.svg';
 import stakeIcon from 'icons/staking-white.svg';
 
@@ -87,7 +87,15 @@ function StakingStat({ stakeInfo, value, ...props }: StakingStatProps) {
       linkTo="/User/Staking"
       {...props}
     >
-      {value ? formatNumber(value, 2) + '%' : 'N/A'}
+      {!stakeInfo ? (
+        '-'
+      ) : !stakeInfo.staking ? (
+        <span className="dim" style={{ fontSize: '0.7em' }}>
+          {__('Not staking')}
+        </span>
+      ) : (
+        formatNumber(value || 0, 2) + '%'
+      )}
     </Stat>
   );
 }

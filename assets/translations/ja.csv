@@ -1014,3 +1014,7 @@
 "New wallet version %{version} - Click here to download","","AutoUpdate"
 "New wallet version %{version} - Click here to update","","AutoUpdate"
 "New wallet version %{version} available. Downloading...","","AutoUpdate"
+"Stake this small amount?","この少額をステークしますか？","AdjustStake"
+"Staked NXS are locked in your trust account and only come back when your stake produces a block. A small stake can take a very long time, or never, to produce one, so the coins may stay locked with no reward. Nexus pooled staking for small holders is not available.","ステークしたNXSはトラストアカウントにロックされ、ステークがブロックを生成したときにのみ戻ります。少額のステークはブロック生成に非常に長い時間がかかるか、まったく生成しないこともあり、報酬なしでロックされたままになる場合があります。小口保有者向けのNexusプールステーキングは利用できません。","AdjustStake"
+"Stake anyway","それでもステークする","AdjustStake"
+"Staking locks your NXS in a trust account until your stake produces a block, so only stake an amount you can leave for a long time. A small stake can take a very long time, or never, to produce a block.","ステーキングでは、ステークがブロックを生成するまでNXSがトラストアカウントにロックされるため、長期間置いておける金額だけをステークしてください。少額のステークはブロック生成に非常に長い時間がかかるか、まったく生成しないことがあります。","AdjustStake"

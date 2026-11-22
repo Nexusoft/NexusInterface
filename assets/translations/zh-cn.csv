@@ -1017,3 +1017,7 @@
 "New wallet version %{version} - Click here to download","","AutoUpdate"
 "New wallet version %{version} - Click here to update","","AutoUpdate"
 "New wallet version %{version} available. Downloading...","新的钱包版本 %{version} 可用。正在下载...","AutoUpdate"
+"Stake this small amount?","质押这笔小额资金？","AdjustStake"
+"Staked NXS are locked in your trust account and only come back when your stake produces a block. A small stake can take a very long time, or never, to produce one, so the coins may stay locked with no reward. Nexus pooled staking for small holders is not available.","质押的 NXS 会锁定在您的信托账户中，只有在您的质押产生区块时才会返还。小额质押可能需要很长时间才能产生区块，甚至永远无法产生，因此这些币可能一直锁定且没有奖励。Nexus 目前没有面向小额持有者的联合质押。","AdjustStake"
+"Stake anyway","仍然质押","AdjustStake"
+"Staking locks your NXS in a trust account until your stake produces a block, so only stake an amount you can leave for a long time. A small stake can take a very long time, or never, to produce a block.","质押会将您的 NXS 锁定在信托账户中，直到您的质押产生区块，因此只质押您可以长期放置的金额。小额质押可能需要很长时间才能产生区块，甚至永远无法产生。","AdjustStake"

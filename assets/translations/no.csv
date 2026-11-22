@@ -1014,3 +1014,7 @@
 "New wallet version %{version} - Click here to download","","AutoUpdate"
 "New wallet version %{version} - Click here to update","","AutoUpdate"
 "New wallet version %{version} available. Downloading...","Ny versjon av lommeboken %{version} tilgjengelig. Laster ned...","AutoUpdate"
+"Stake this small amount?","Stake dette lille beløpet?","AdjustStake"
+"Staked NXS are locked in your trust account and only come back when your stake produces a block. A small stake can take a very long time, or never, to produce one, so the coins may stay locked with no reward. Nexus pooled staking for small holders is not available.","Stakede NXS låses i tillitskontoen og kommer først tilbake når staken din produserer en blokk. En liten stake kan bruke svært lang tid, eller aldri, på å produsere en, så myntene kan bli låst uten belønning. Pooled staking for små beholdninger finnes ikke i Nexus.","AdjustStake"
+"Stake anyway","Stake likevel","AdjustStake"
+"Staking locks your NXS in a trust account until your stake produces a block, so only stake an amount you can leave for a long time. A small stake can take a very long time, or never, to produce a block.","Staking låser NXS i en tillitskonto til staken din produserer en blokk, så stake bare et beløp du kan la stå lenge. En liten stake kan bruke svært lang tid, eller aldri, på å produsere en blokk.","AdjustStake"
