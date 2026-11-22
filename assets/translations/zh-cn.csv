@@ -1017,3 +1017,8 @@
 "New wallet version %{version} - Click here to download","","AutoUpdate"
 "New wallet version %{version} - Click here to update","","AutoUpdate"
 "New wallet version %{version} available. Downloading...","新的钱包版本 %{version} 可用。正在下载...","AutoUpdate"
+"No contacts match your search","没有与搜索匹配的联系人","AddressBook"
+"No transactions yet","暂无交易","Transactions"
+"Balance that will be staked after the 72 hour holding period, any change to this balance will reset the hold timer","72小时持有期后将被质押的余额，此余额的任何变动都会重置持有计时器","User.Staking"
+"Loading staking information...","正在加载质押信息...","User.Staking"
+"You do not hold any tokens yet","您还没有持有任何代币","User.Tokens"

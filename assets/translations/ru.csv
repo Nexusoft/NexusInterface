@@ -1014,3 +1014,8 @@
 "New wallet version %{version} - Click here to download","","AutoUpdate"
 "New wallet version %{version} - Click here to update","","AutoUpdate"
 "New wallet version %{version} available. Downloading...","","AutoUpdate"
+"No contacts match your search","Нет контактов, соответствующих поиску","AddressBook"
+"No transactions yet","Транзакций пока нет","Transactions"
+"Balance that will be staked after the 72 hour holding period, any change to this balance will reset the hold timer","Баланс, который будет застейкан после 72-часового периода удержания; любое изменение этого баланса сбрасывает таймер","User.Staking"
+"Loading staking information...","Загрузка информации о стейкинге...","User.Staking"
+"You do not hold any tokens yet","У вас пока нет токенов","User.Tokens"

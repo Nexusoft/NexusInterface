@@ -1023,3 +1023,8 @@ Install it later,Install it later,AutoUpdate
 New wallet version %{version} - Click here to download,New wallet version %{version} - Click here to download,AutoUpdate
 New wallet version %{version} - Click here to update,New wallet version %{version} - Click here to update,AutoUpdate
 New wallet version %{version} available. Downloading...,New wallet version %{version} available. Downloading...,AutoUpdate
+No contacts match your search,No contacts match your search,AddressBook
+No transactions yet,No transactions yet,Transactions
+"Balance that will be staked after the 72 hour holding period, any change to this balance will reset the hold timer","Balance that will be staked after the 72 hour holding period, any change to this balance will reset the hold timer",User.Staking
+Loading staking information...,Loading staking information...,User.Staking
+You do not hold any tokens yet,You do not hold any tokens yet,User.Tokens

@@ -1017,3 +1017,8 @@
 "New wallet version %{version} - Click here to download","%{version} versiune nouă portofel - Apasă aici pentru a descărca","AutoUpdate"
 "New wallet version %{version} - Click here to update","%{version} versiune nouă portofel - Apasă aici pentru actualizare","AutoUpdate"
 "New wallet version %{version} available. Downloading...","Versiune nouă %{version} disponibilă. Se descarcă...","AutoUpdate"
+"No contacts match your search","Niciun contact nu corespunde căutării","AddressBook"
+"No transactions yet","Nicio tranzacție încă","Transactions"
+"Balance that will be staked after the 72 hour holding period, any change to this balance will reset the hold timer","Sold care va fi pus în staking după perioada de deținere de 72 de ore; orice modificare a acestui sold resetează cronometrul","User.Staking"
+"Loading staking information...","Se încarcă informațiile despre staking...","User.Staking"
+"You do not hold any tokens yet","Nu deții încă niciun token","User.Tokens"

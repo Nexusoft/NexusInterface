@@ -1015,3 +1015,8 @@
 "New wallet version %{version} - Click here to download","","AutoUpdate"
 "New wallet version %{version} - Click here to update","","AutoUpdate"
 "New wallet version %{version} available. Downloading...","","AutoUpdate"
+"No contacts match your search","Geen contacten gevonden voor je zoekopdracht","AddressBook"
+"No transactions yet","Nog geen transacties","Transactions"
+"Balance that will be staked after the 72 hour holding period, any change to this balance will reset the hold timer","Saldo dat wordt gestaked na de wachtperiode van 72 uur; elke wijziging van dit saldo zet de wachttimer terug","User.Staking"
+"Loading staking information...","Stakinginformatie laden...","User.Staking"
+"You do not hold any tokens yet","Je hebt nog geen tokens","User.Tokens"

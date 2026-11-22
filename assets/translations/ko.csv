@@ -1014,3 +1014,8 @@
 "New wallet version %{version} - Click here to download","","AutoUpdate"
 "New wallet version %{version} - Click here to update","","AutoUpdate"
 "New wallet version %{version} available. Downloading...","","AutoUpdate"
+"No contacts match your search","검색과 일치하는 연락처가 없습니다","AddressBook"
+"No transactions yet","아직 거래가 없습니다","Transactions"
+"Balance that will be staked after the 72 hour holding period, any change to this balance will reset the hold timer","72시간 보유 기간 후 스테이킹될 잔액입니다. 이 잔액이 바뀌면 보유 타이머가 초기화됩니다","User.Staking"
+"Loading staking information...","스테이킹 정보를 불러오는 중...","User.Staking"
+"You do not hold any tokens yet","아직 보유한 토큰이 없습니다","User.Tokens"

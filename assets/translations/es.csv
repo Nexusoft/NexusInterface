@@ -1014,3 +1014,8 @@
 "New wallet version %{version} - Click here to download","Nueva versión de la billetera %{version} - Haga clic aquí para descargar","AutoUpdate"
 "New wallet version %{version} - Click here to update","Nueva versión de la billetera %{version} - Haga clic aquí para actualizar","AutoUpdate"
 "New wallet version %{version} available. Downloading...","Descargando la nueva versión %{version}...","AutoUpdate"
+"No contacts match your search","Ningún contacto coincide con tu búsqueda","AddressBook"
+"No transactions yet","Aún no hay transacciones","Transactions"
+"Balance that will be staked after the 72 hour holding period, any change to this balance will reset the hold timer","Saldo que se pondrá en staking tras el período de retención de 72 horas; cualquier cambio en este saldo reinicia el temporizador","User.Staking"
+"Loading staking information...","Cargando información de staking...","User.Staking"
+"You do not hold any tokens yet","Aún no tienes ningún token","User.Tokens"
