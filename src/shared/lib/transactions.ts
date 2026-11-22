@@ -26,7 +26,7 @@ interface BalanceChange {
 
 type TimeSpan = 'week' | 'month' | 'year';
 
-const getBalanceChanges = (tx: Transaction) =>
+export const getBalanceChanges = (tx: Transaction) =>
   tx.contracts
     ? tx.contracts.reduce((changes, contract) => {
         const sign = getDeltaSign(contract);
