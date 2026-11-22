@@ -33,8 +33,15 @@ export const liteModeAtom = atom(
   (get) => get(coreInfoQuery.valueAtom)?.litemode
 );
 
+/** Set by lib/coreHealth when the core stopped taking blocks while peers are ahead */
+export const coreStuckAtom = atom<{
+  blocks: number;
+  network: number;
+  since: number;
+} | null>(null);
+
 export const synchronizedAtom = atom(
-  (get) => !get(coreInfoQuery.valueAtom)?.syncing
+  (get) => !get(coreInfoQuery.valueAtom)?.syncing && !get(coreStuckAtom)
 );
 
 export const blocksAtom = atom((get) => get(coreInfoQuery.valueAtom)?.blocks);
