@@ -53,6 +53,8 @@ export default function jotaiQuery<TQueryFnData, TData = TQueryFnData>(
     alwaysOn = false,
   } = options;
   const symbols = new Set();
+  //held by the query, not by the first component, so the last unmount always clears them
+  let triggerUnsubs: Array<() => void> = [];
   const turnedOnAtom = atom(false);
 
   const enabledAtom = atom((get) => {
@@ -93,12 +95,12 @@ export default function jotaiQuery<TQueryFnData, TData = TQueryFnData>(
     () => {
       useEffect(() => {
         if (alwaysOn) return;
-        const unsubs: Array<() => void> = [];
         if (symbols.size === 0) {
           store.set(turnedOnAtom, true);
-          refetchTriggers?.forEach((triggerAtom) => {
-            unsubs.push(store.sub(triggerAtom, refetch));
-          });
+          triggerUnsubs =
+            refetchTriggers?.map((triggerAtom) =>
+              store.sub(triggerAtom, refetch)
+            ) || [];
         }
         const symbol = Symbol();
         symbols.add(symbol);
@@ -106,9 +108,10 @@ export default function jotaiQuery<TQueryFnData, TData = TQueryFnData>(
           symbols.delete(symbol);
           if (symbols.size === 0) {
             store.set(turnedOnAtom, false);
-            unsubs.forEach((unsub) => {
+            triggerUnsubs.forEach((unsub) => {
               unsub();
             });
+            triggerUnsubs = [];
           }
         };
       }, []);
