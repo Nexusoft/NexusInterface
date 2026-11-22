@@ -24,8 +24,12 @@ const checkSeconds = 30;
 const restartGapMinutes = 30;
 const maxRestartGapMinutes = 240;
 
-let lastBlocks: number | undefined;
+//highest block seen, a lower height while the core reloads is not progress
+let bestBlocks: number | undefined;
 let lastChangeAt = Date.now();
+//a long gap between checks = the PC slept, that time is not a stuck core
+let lastCheckAt = Date.now();
+const sleepGapMs = 3 * checkSeconds * 1000;
 let lastRestartAt = 0;
 let restartGap = restartGapMinutes;
 let checking = false;
@@ -74,6 +78,12 @@ async function startDeadCore() {
 }
 
 async function check() {
+  const now = Date.now();
+  if (now - lastCheckAt > sleepGapMs) {
+    lastChangeAt = now;
+    log.info('CoreHealth - woke from sleep, waiting for the core to catch up');
+  }
+  lastCheckAt = now;
   if (checking) return;
   checking = true;
   try {
@@ -146,12 +156,12 @@ export function prepareCoreHealth() {
   subscribe(blocksAtom, (blocks) => {
     //no answer from the core (restart, busy) is not a new block
     if (typeof blocks !== 'number') return;
-    if (blocks !== lastBlocks) {
-      if (lastBlocks !== undefined && blocks > lastBlocks) {
+    if (bestBlocks === undefined || blocks > bestBlocks) {
+      if (bestBlocks !== undefined) {
         restartGap = restartGapMinutes;
         lastRestartAt = 0;
       }
-      lastBlocks = blocks;
+      bestBlocks = blocks;
       lastChangeAt = Date.now();
       if (store.get(coreStuckAtom)) {
         store.set(coreStuckAtom, null);
