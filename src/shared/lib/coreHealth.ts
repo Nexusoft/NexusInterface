@@ -1,10 +1,16 @@
+import { ipcRenderer } from 'electron';
 import log from 'electron-log';
 
 import { store, subscribe } from 'lib/store';
 import { callAPI } from 'lib/api';
-import { coreInfoQuery, coreStuckAtom, blocksAtom } from 'lib/coreInfo';
+import {
+  coreInfoQuery,
+  coreStuckAtom,
+  blocksAtom,
+  coreInfoPausedAtom,
+} from 'lib/coreInfo';
 import { settingsAtom } from 'lib/settings';
-import { restartCore } from 'lib/core';
+import { restartCore, startCore } from 'lib/core';
 import { showNotification } from 'lib/ui';
 
 __ = __context('CoreHealth');
@@ -23,6 +29,49 @@ let lastChangeAt = Date.now();
 let lastRestartAt = 0;
 let restartGap = restartGapMinutes;
 let checking = false;
+const restartTimes: number[] = [];
+//the wallet's own core is gone and nobody stopped it (crash, or an old core exiting after an update)
+const deadChecks = 2;
+let deadCount = 0;
+let startingDead = false;
+
+/** When the core last got a new block */
+export const lastBlockAt = () => lastChangeAt;
+
+/** Core restarts by the wallet in the last 24 h */
+export function restartsToday() {
+  const since = Date.now() - 86400000;
+  while (restartTimes.length && restartTimes[0] < since) restartTimes.shift();
+  return restartTimes.length;
+}
+
+async function startDeadCore() {
+  if (startingDead) return;
+  const { manualDaemon } = store.get(settingsAtom);
+  if (
+    manualDaemon ||
+    store.get(coreInfoPausedAtom) ||
+    store.get(coreInfoQuery.valueAtom) ||
+    Date.now() - lastRestartAt < 120000
+  ) {
+    deadCount = 0;
+    return;
+  }
+  if (await ipcRenderer.invoke('check-core-running')) {
+    deadCount = 0;
+    return;
+  }
+  if (++deadCount < deadChecks) return;
+  deadCount = 0;
+  log.warn('CoreHealth - core process is not running, starting it');
+  restartTimes.push(Date.now());
+  startingDead = true;
+  try {
+    await startCore();
+  } finally {
+    startingDead = false;
+  }
+}
 
 async function check() {
   if (checking) return;
@@ -67,6 +116,7 @@ async function check() {
       restartGap = Math.min(restartGap * 2, maxRestartGapMinutes);
     }
     lastRestartAt = Date.now();
+    restartTimes.push(lastRestartAt);
     log.warn(
       `CoreHealth - restarting the core, next one not before ${restartGap} min`
     );
@@ -109,4 +159,11 @@ export function prepareCoreHealth() {
     }
   });
   setInterval(check, checkSeconds * 1000);
+  setInterval(
+    () =>
+      startDeadCore().catch((err) =>
+        log.error('CoreHealth - start of the stopped core failed', err)
+      ),
+    checkSeconds * 1000
+  );
 }
