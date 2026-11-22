@@ -6,6 +6,7 @@ import { formSubmit, checkAll, required, minChars } from 'lib/form';
 import { callAPI } from 'lib/api';
 import { openSuccessDialog, confirmPasswordPin } from 'lib/dialog';
 import UT from 'lib/usageTracking';
+import { readSavedLogin, rememberLogin } from 'lib/savedLogin';
 
 __ = __context('ChangePassword&PIN');
 
@@ -37,12 +38,24 @@ export default function ChangePasswordPinModal() {
                   });
 
                   if (correct) {
-                    return await callAPI('profiles/update/credentials', {
-                      password,
-                      pin,
-                      new_password: newPassword,
-                      new_pin: newPin,
-                    });
+                    const result = await callAPI(
+                      'profiles/update/credentials',
+                      {
+                        password,
+                        pin,
+                        new_password: newPassword,
+                        new_pin: newPin,
+                      }
+                    );
+                    const saved = await readSavedLogin().catch(() => null);
+                    if (saved) {
+                      await rememberLogin({
+                        ...saved,
+                        password: newPassword,
+                        pin: newPin,
+                      }).catch(() => {});
+                    }
+                    return result;
                   }
                   return undefined;
                 },

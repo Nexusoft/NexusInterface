@@ -22,6 +22,12 @@ import {
   setAllowPrerelease,
 } from './updater';
 import { proxyRequest } from './modules';
+import {
+  savedLoginAvailable,
+  writeSavedLogin,
+  readSavedLogin,
+  clearSavedLogin,
+} from './savedLogin';
 
 let mainWindow;
 global.forceQuit = false;
@@ -104,6 +110,22 @@ ipcMain.on('get-file-server-domain', (event) => {
 
 // Modules
 ipcMain.handle('proxy-request', (event, ...params) => proxyRequest(...params));
+
+// Saved login, only for the wallet window, never for module webviews
+const fromWallet = (event) => event.sender === mainWindow?.webContents;
+ipcMain.handle('saved-login-available', (event) =>
+  fromWallet(event) ? savedLoginAvailable() : false
+);
+ipcMain.handle('saved-login-write', (event, login) => {
+  if (!fromWallet(event)) throw new Error('Not allowed');
+  writeSavedLogin(login);
+});
+ipcMain.handle('saved-login-read', (event) =>
+  fromWallet(event) ? readSavedLogin() : null
+);
+ipcMain.handle('saved-login-clear', (event) => {
+  if (fromWallet(event)) clearSavedLogin();
+});
 
 // START RENDERER
 // =============================================================================
