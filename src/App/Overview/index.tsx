@@ -11,6 +11,9 @@ import { themeAtom } from 'lib/theme';
 import { useCoreInfo } from 'lib/coreInfo';
 import Globe from './Globe';
 import Stats from './Stats';
+import Dashboard from './Dashboard';
+import ModuleNotices from './ModuleNotices';
+import ClaimableNotice from './ClaimableNotice';
 
 __ = __context('Overview');
 
@@ -87,7 +90,16 @@ export default function Overview() {
   });
 
   if (settings.overviewDisplay === 'none') {
-    return <OverviewPage />;
+    return (
+      <OverviewPage>
+        <ClaimableNotice />
+        <ModuleNotices floating />
+      </OverviewPage>
+    );
+  }
+
+  if (settings.overviewDisplay === 'dashboard') {
+    return <Dashboard />;
   }
 
   return (
@@ -106,6 +118,8 @@ export default function Overview() {
       )}
 
       <Stats showingGlobe={showingGlobe} />
+      <ClaimableNotice />
+      <ModuleNotices floating />
     </OverviewPage>
   );
 }

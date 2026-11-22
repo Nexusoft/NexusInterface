@@ -27,11 +27,12 @@ import { AddressStyle, OverviewDisplay } from 'lib/settings/defaultSettings';
 __ = __context('Settings.Style');
 
 const overviewDisplays = [
-  { value: 'standard', display: 'Standard' },
-  { value: 'miner', display: 'Miner' },
+  { value: 'standard', display: __('Classic (globe)') },
+  { value: 'miner', display: __('Classic with mining stats') },
+  { value: 'dashboard', display: __('Dashboard') },
   // { value: 'minimalist', display: 'Minimalist' },
   // { value: 'balHidden', display: 'Hidden Balance' },
-  { value: 'none', display: 'None' },
+  { value: 'none', display: __('Empty') },
 ];
 
 const addressStyleOptions = [
@@ -110,7 +111,12 @@ export default function SettingsStyle() {
         />
       </SettingsField>
 
-      <SettingsField label={__('Overview Display')}>
+      <SettingsField
+        label={__('Overview Display')}
+        subLabel={__(
+          'Classic shows the globe with the stats around it. Dashboard shows balance, staking, network and recent transactions in cards.'
+        )}
+      >
         <Select
           value={settings.overviewDisplay}
           onChange={setOverviewDisplay}
