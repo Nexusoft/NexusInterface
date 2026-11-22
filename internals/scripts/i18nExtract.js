@@ -62,6 +62,7 @@ function extractFromCode(code) {
     ast: true,
     plugins: [
       '@babel/plugin-syntax-jsx',
+      ['@babel/plugin-syntax-typescript', { isTSX: true }],
       ['@babel/plugin-syntax-class-properties', { loose: true }],
       // ['@babel/plugin-syntax-decorators', { legacy: true }],
     ],

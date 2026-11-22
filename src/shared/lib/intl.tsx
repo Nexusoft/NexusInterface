@@ -16,6 +16,7 @@ export type Locale =
   | 'es'
   | 'fi'
   | 'fr'
+  | 'hr'
   | 'ja'
   | 'ko'
   | 'no'
@@ -35,6 +36,7 @@ export const locales: Locale[] = [
   'es',
   'fi',
   'fr',
+  'hr',
   'ja',
   'ko',
   'no',
