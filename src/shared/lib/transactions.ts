@@ -205,6 +205,10 @@ export const transactionsQuery = jotaiQuery<Transaction[]>({
           );
           return transactions;
         } catch (err: any) {
+          //-11 session gone or no answer at all: a core restart, the header and login handle it
+          if (err?.code === -11 || (typeof err !== 'string' && !err?.code)) {
+            throw err;
+          }
           openErrorDialog({
             message: __('Error fetching transactions'),
             note:
