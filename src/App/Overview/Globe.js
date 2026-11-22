@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import { createPortal } from 'react-dom';
 import * as THREE from 'three';
 import styled from '@emotion/styled';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
@@ -11,6 +12,29 @@ import { callAPI } from 'lib/api';
 import Color from 'color';
 
 const MaxDisplayPoints = 64;
+const peerRefreshMs = 30000;
+
+__ = __context('Overview');
+
+const placeName = (geo) =>
+  [geo.city?.names?.en, geo.country?.names?.en].filter(Boolean).join(', ') ||
+  geo.location?.time_zone ||
+  '';
+
+const NodeTooltip = styled.div(({ theme }) => ({
+  position: 'fixed',
+  zIndex: 1000,
+  pointerEvents: 'none',
+  padding: '8px 12px',
+  borderRadius: 4,
+  fontSize: 13,
+  lineHeight: 1.5,
+  whiteSpace: 'nowrap',
+  background: theme.lower(theme.background, 0.3),
+  border: `1px solid ${theme.mixer(0.25)}`,
+  color: theme.foreground,
+  boxShadow: '0 2px 10px rgba(0,0,0,.5)',
+}));
 
 const GlobeContainer = styled.div({
   position: 'fixed',
@@ -41,8 +65,13 @@ export default class Globe extends Component {
     this.pointRegister = this.pointRegister.bind(this);
     this.contextLostHandler = this.contextLostHandler.bind(this);
     this.contextRestoredHandler = this.contextRestoredHandler.bind(this);
+    this.onMouseMove = this.onMouseMove.bind(this);
     this.pointRegistry = [];
     this.curveRegistry = [];
+    this.selfPoint = null;
+    this.raycaster = new THREE.Raycaster();
+    this.mouse = new THREE.Vector2();
+    this.state = { hover: null };
   }
 
   /**
@@ -146,6 +175,17 @@ export default class Globe extends Component {
         },
         false
       );
+      context.canvas.addEventListener('mousemove', this.onMouseMove, false);
+      context.canvas.addEventListener(
+        'mouseleave',
+        () => {
+          this.mouseClient = null;
+          this.setState({ hover: null });
+        },
+        false
+      );
+      //peers can change while the connection count stays the same
+      this.refreshTimer = setInterval(this.pointRegister, peerRefreshMs);
       this.threeRootElement.appendChild(renderer.domElement);
       window.addEventListener('resize', this.onWindowResize, false);
       this.start();
@@ -205,6 +245,7 @@ export default class Globe extends Component {
    */
   componentWillUnmount() {
     this.stop();
+    clearInterval(this.refreshTimer);
     window.removeEventListener('resize', this.onWindowResize, false);
     this.controls.dispose();
     if (this.threeRootElement.children.length > 0) {
@@ -213,7 +254,7 @@ export default class Globe extends Component {
   }
 
   /**
-   * Register point/pillar on the globe
+   * Register point/pillar on the globe, one per location with all its peers
    *
    * @returns
    * @memberof Globe
@@ -223,111 +264,100 @@ export default class Globe extends Component {
     try {
       peerInfo = await callAPI('system/list/peers', null);
     } catch (err) {}
-    if (!peerInfo) return;
-    if (peerInfo.length > MaxDisplayPoints) {
-      peerInfo.length = MaxDisplayPoints;
-    }
+    if (!peerInfo || !this.allPoints) return;
 
-    //console.error(peerInfo);
-
-    // take the peerInfo look up the Geo Data in the maxmind DB
-    // and if there are any points that exist and match coords
-    // update the registry entry data
-
-    let newRegistry = peerInfo
-      .map((peer) => {
-        let GeoData = geoip.get(peer.address.split(':')[0]);
-        // TODO: add checks for lisp and change color appropreately
-        //console.log(this.props.pillarColor);
-        if (!GeoData) return {}; //Usecase for private or testnet when there is no outside ip address
-        return {
-          lat: GeoData.location.latitude,
-          lng: GeoData.location.longitude,
-          params: {
-            type: peer.type,
-            outgoing: peer.outgoing,
-            name: GeoData.location.time_zone,
-            color: this.props.pillarColor,
-            peerConnections: 1,
-          },
-        };
-      })
-      .map((peer, i, array) => {
-        ///Find out how many peers will be on pillar
-        let duplicateIndex = array
-          .map(
-            (internalPoint) =>
-              peer.lat === internalPoint.lat && peer.lng === internalPoint.lng
-          )
-          .filter((e) => e);
-
-        return {
-          ...peer,
-          params: {
-            ...peer.params,
-            peerConnections: 1 + duplicateIndex.length,
-          },
-        };
-      })
-      .map((peer, i, array) => {
-        let existIndex = this.pointRegistry.findIndex(
-          (point) => peer.lat === point.lat && peer.lng === point.lng
-        );
-        let duplicateIndex = array.findIndex(
-          (internalPoint) =>
-            peer.lat === internalPoint.lat && peer.lng === internalPoint.lng
-        );
-
-        // if not an internal duplicate and already exists
-        if (existIndex >= 0 && duplicateIndex === i) {
-          return this.pointRegistry[existIndex];
-        } else if (duplicateIndex === i) {
-          let newPoint = new Point(peer.lat, peer.lng, peer.params);
-          this.allPoints.add(newPoint.pillar);
-          return newPoint;
-        }
-      })
-      .filter((e) => e);
-
-    this.pointRegistry.map((point) => {
-      let existIndex = newRegistry.findIndex(
-        (peer) => peer.lat === point.lat && peer.lng === point.lng
-      );
-
-      if (existIndex < 0 && point.params.type !== 'SELF') {
-        this.destroyPoint(point);
+    //group peers by location, peers without a public location are left out
+    const locations = new Map();
+    for (const peer of peerInfo) {
+      const geo = geoip.get(peer.address.split(':')[0]);
+      if (!geo?.location) continue;
+      const key = `${geo.location.latitude},${geo.location.longitude}`;
+      if (!locations.has(key)) {
+        locations.set(key, {
+          lat: geo.location.latitude,
+          lng: geo.location.longitude,
+          place: placeName(geo),
+          peers: [],
+        });
       }
+      locations.get(key).peers.push(peer);
+    }
+    const wanted = [...locations.values()].slice(0, MaxDisplayPoints);
+
+    const newRegistry = wanted.map((location) => {
+      const existing = this.pointRegistry.find(
+        (point) => point.lat === location.lat && point.lng === location.lng
+      );
+      const params = {
+        type: 'PEER',
+        outgoing: location.peers.some((peer) => peer.outgoing),
+        name: location.place,
+        peers: location.peers,
+        color: this.props.pillarColor,
+        peerConnections: location.peers.length,
+      };
+      //same place and size: keep the pillar, only refresh the peer details
+      if (existing && existing.params.peerConnections === params.peerConnections) {
+        existing.params = params;
+        return existing;
+      }
+      if (existing) this.destroyPoint(existing);
+      const point = new Point(location.lat, location.lng, params);
+      point.pillar.userData.point = point;
+      this.allPoints.add(point.pillar);
+      return point;
     });
-    //console.error(newRegistry);
+
+    for (const point of this.pointRegistry) {
+      if (!newRegistry.includes(point) && point.pillar) this.destroyPoint(point);
+    }
     this.pointRegistry = newRegistry;
     this.arcRegister();
   }
 
   /**
-   * Add globe to the renderer
+   * Add the pin for this wallet's own location, once
    *
    * @memberof Globe
    */
-  addSelfPoint() {
-    let selfIndex = this.pointRegistry.indexOf(
-      (point) => point.params.type === 'SELF'
-    );
-
-    if (selfIndex < 0) {
-      fetch('http://ip-api.com/json/?fields=450')
-        .then((response) => response.json())
-        .then((data) => {
-          let self = new Point(parseFloat(data.lat), parseFloat(data.lon), {
-            color: new Color(this.props.pillarColor).negate().hex(),
-            name: data.timezone,
-            type: 'SELF',
-            peerConnections: 1.5,
-          });
-          this.pointRegistry.push(self);
-          this.allPoints.add(self.pillar);
-          this.arcRegister();
-        })
-        .catch((e) => console.error(e));
+  async addSelfPoint() {
+    if (this.selfPoint || this.selfPending) return;
+    this.selfPending = true;
+    try {
+      let lat, lng, place;
+      //the core knows its public address, so the local location database is enough
+      try {
+        const info = await callAPI('system/get/info');
+        const geo = info?.address && geoip.get(String(info.address).split(':')[0]);
+        if (geo?.location) {
+          lat = geo.location.latitude;
+          lng = geo.location.longitude;
+          place = placeName(geo);
+        }
+      } catch (err) {}
+      if (lat === undefined && !this.selfLookupTried) {
+        this.selfLookupTried = true;
+        const response = await fetch('http://ip-api.com/json/?fields=450');
+        const data = await response.json();
+        lat = parseFloat(data.lat);
+        lng = parseFloat(data.lon);
+        place = data.timezone;
+      }
+      if (lat === undefined || Number.isNaN(lat) || !this.allPoints) return;
+      const self = new Point(lat, lng, {
+        color: new Color(this.props.pillarColor).negate().hex(),
+        name: place,
+        type: 'SELF',
+        peerConnections: 1.5,
+      });
+      self.pillar.userData.point = self;
+      this.selfPoint = self;
+      this.allPoints.add(self.pillar);
+      this.arcRegister();
+    } catch (e) {
+      console.error(e);
+    } finally {
+      this.selfPending = false;
     }
   }
 
@@ -337,44 +367,34 @@ export default class Globe extends Component {
    * @memberof Globe
    */
   removeAllPoints() {
-    this.pointRegistry.map((point) => {
-      if (point.params.type === 'SELF') {
-        setTimeout(() => {
-          //this.destroyPoint(point);
-        }, 11000);
-      } else {
-        setTimeout(() => {
-          this.destroyPoint(point);
-        }, Math.random() * 10000);
-      }
+    [...this.pointRegistry].forEach((point, i) => {
+      setTimeout(() => {
+        if (point.pillar) this.destroyPoint(point);
+      }, i * 50);
     });
+    this.pointRegistry = [];
   }
 
   /**
-   * Remove point/pillar from the globe
+   * Removes the point and its arcs
    *
    * @param {*} deadPoint Point to remove
    * @memberof Globe
    */
   destroyPoint(deadPoint) {
-    this.pointRegistry = this.pointRegistry.filter((point) => {
-      if (point.pillar.uuid !== deadPoint.pillar.uuid) return point;
-    });
-
+    this.pointRegistry = this.pointRegistry.filter(
+      (point) => point !== deadPoint
+    );
     this.allPoints.remove(deadPoint.pillar);
     this.curveRegistry
-      .filter((arc) => {
-        if (
+      .filter(
+        (arc) =>
           (arc.pointOne.lat === deadPoint.lat &&
-            arc.pointOne.lat === deadPoint.lat) ||
+            arc.pointOne.lng === deadPoint.lng) ||
           (arc.pointTwo.lat === deadPoint.lat &&
-            arc.pointTwo.lat === deadPoint.lat)
-        )
-          return arc;
-      })
-      .map((arc) => {
-        this.destroyArc(arc);
-      });
+            arc.pointTwo.lng === deadPoint.lng)
+      )
+      .forEach((arc) => this.destroyArc(arc));
 
     deadPoint.pillar.geometry.dispose();
     deadPoint.pillar.material.dispose();
@@ -382,50 +402,65 @@ export default class Globe extends Component {
   }
 
   /**
-   * Register a arc with the globe
+   * Register an arc from every peer location to this wallet
    *
    * @memberof Globe
    */
   arcRegister() {
-    let self =
-      this.pointRegistry[
-        this.pointRegistry.findIndex((element) => {
-          return element.params.type === 'SELF';
-        })
-      ];
-
-    if (self) {
-      this.pointRegistry.forEach((point) => {
-        let existIndex = this.curveRegistry.findIndex((curve) => {
-          if (
-            curve.pointOne.lat === point.lat &&
-            curve.pointOne.lng === point.lng &&
-            curve.pointTwo.lat === self.lat &&
-            curve.pointTwo.lng === self.lng
-          ) {
-            return curve;
-          } else return false;
-        });
-
-        if (
-          (point.lat === self.lat && point.lng === self.lng) ||
-          existIndex >= 0
-        ) {
-          return;
-        } else {
-          let temp = new Curve(point, self, {
-            color: this.props.archColor,
-            forward: point.params.outgoing,
-          });
-          this.allArcs.add(temp.arc);
-          temp.play();
-          this.curveRegistry.push(temp);
-        }
-      });
-    } else {
+    const self = this.selfPoint;
+    if (!self) {
       this.addSelfPoint();
+      return;
     }
+    this.pointRegistry.forEach((point) => {
+      if (point.lat === self.lat && point.lng === self.lng) return;
+      const exists = this.curveRegistry.some(
+        (curve) =>
+          curve.pointOne.lat === point.lat &&
+          curve.pointOne.lng === point.lng &&
+          curve.pointTwo.lat === self.lat &&
+          curve.pointTwo.lng === self.lng
+      );
+      if (exists) return;
+      const arc = new Curve(point, self, {
+        color: this.props.archColor,
+        forward: point.params.outgoing,
+      });
+      this.allArcs.add(arc.arc);
+      arc.play();
+      this.curveRegistry.push(arc);
+    });
   }
+
+  /**
+   * Show which nodes a pillar stands for when the mouse is over it
+   *
+   * @param {MouseEvent} event
+   * @memberof Globe
+   */
+  onMouseMove(event) {
+    this.mouseClient = { x: event.clientX, y: event.clientY };
+    this.updateHover();
+  }
+
+  updateHover() {
+    if (!this.camera || !this.allPoints || !this.mouseClient) return;
+    const { x, y } = this.mouseClient;
+    const rect = this.renderer.domElement.getBoundingClientRect();
+    this.mouse.x = ((x - rect.left) / rect.width) * 2 - 1;
+    this.mouse.y = -((y - rect.top) / rect.height) * 2 + 1;
+    this.raycaster.setFromCamera(this.mouse, this.camera);
+    const hit = this.raycaster.intersectObjects(this.allPoints.children)[0];
+    const point = hit?.object?.userData?.point;
+    if (!point) {
+      if (this.state.hover) this.setState({ hover: null });
+      return;
+    }
+    const hover = this.state.hover;
+    if (hover && hover.point === point && hover.x === x && hover.y === y) return;
+    this.setState({ hover: { x, y, point } });
+  }
+
 
   /**
    * Animate all the Curves on the globe
@@ -515,6 +550,9 @@ export default class Globe extends Component {
    */
   renderScene() {
     this.controls.update();
+    //the globe turns under a still mouse, so check the hover now and then
+    this.frameCount = (this.frameCount || 0) + 1;
+    if (this.mouseClient && this.frameCount % 10 === 0) this.updateHover();
     this.renderer.render(this.scene, this.camera);
   }
 
@@ -528,7 +566,45 @@ export default class Globe extends Component {
     return (
       <GlobeContainer>
         <div ref={(element) => (this.threeRootElement = element)} />
+        {this.state.hover &&
+          createPortal(<NodeInfo {...this.state.hover} />, document.body)}
       </GlobeContainer>
     );
   }
+}
+
+function NodeInfo({ x, y, point }) {
+  const { params } = point;
+  const style = { left: x + 14, top: y + 14 };
+  if (params.type === 'SELF') {
+    return (
+      <NodeTooltip style={style}>
+        <div><strong>{__('Your wallet')}</strong></div>
+        {!!params.name && <div>{params.name}</div>}
+      </NodeTooltip>
+    );
+  }
+  const peers = params.peers || [];
+  const versions = [...new Set(peers.map((peer) => peer.type).filter(Boolean))];
+  const latencies = peers.map((peer) => peer.latency).filter((l) => l > 0 && l < 100000);
+  const latency = latencies.length
+    ? Math.round(latencies.reduce((a, b) => a + b, 0) / latencies.length)
+    : null;
+  return (
+    <NodeTooltip style={style}>
+      <div><strong>{params.name || __('Unknown location')}</strong></div>
+      <div>
+        {__('%{smart_count} node |||| %{smart_count} nodes', peers.length)}
+        {' ('}
+        {params.outgoing ? __('outgoing') : __('incoming')}
+        {')'}
+      </div>
+      {versions.map((version) => (
+        <div key={version} className="dim">{version}</div>
+      ))}
+      {latency !== null && (
+        <div className="dim">{__('Latency %{ms} ms', { ms: latency })}</div>
+      )}
+    </NodeTooltip>
+  );
 }

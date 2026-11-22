@@ -17,6 +17,11 @@ import UT from 'lib/usageTracking';
 
 __ = __context('AdjustStake');
 
+//Below this a stake is very unlikely to ever produce a stake block, so the coins would sit locked in the trust
+//account with no reward and no way to take them back on demand. Nexus's pooled staking for small holders, which
+//would make small amounts workable, was announced but never shipped. A stopgap warning until that changes.
+const lowStakeWarnBelow = 1000;
+
 const LimitNumber = styled(NativeLink)<{
   align: 'left' | 'right';
 }>(
@@ -118,11 +123,20 @@ export default function AdjustStakeModal({
   onClose?: () => void;
   onComplete?: () => void;
 }) {
-  const { stake: currentStake, balance } = stakeInfoQuery.use() || {};
+  const {
+    stake: currentStake,
+    balance,
+    change,
+    amount: pendingAmount,
+  } = stakeInfoQuery.use() || {};
   const total =
     typeof currentStake === 'number' && typeof balance === 'number'
       ? currentStake + balance
       : 0;
+  const pendingStake =
+    change && typeof pendingAmount === 'number' && currentStake !== undefined
+      ? currentStake + pendingAmount
+      : undefined;
 
   return (
     <ControlledModal maxWidth={600} onClose={onClose}>
@@ -134,7 +148,10 @@ export default function AdjustStakeModal({
           <ControlledModal.Body>
             <Form
               name="adjust_stake"
-              initialValues={getInitialValues(initialStake, currentStake)}
+              initialValues={getInitialValues(
+                initialStake,
+                pendingStake ?? currentStake
+              )}
               onSubmit={formSubmit({
                 submit: async ({ stake }) => {
                   if (currentStake && stake < currentStake) {
@@ -148,12 +165,38 @@ export default function AdjustStakeModal({
                     if (!confirmed) return undefined;
                   }
 
+                  //starting or raising into a very small stake: it may never make a stake block and the coins stay locked
+                  if (
+                    stake > 0 &&
+                    stake < lowStakeWarnBelow &&
+                    stake > (currentStake || 0)
+                  ) {
+                    const confirmedLow = await confirm({
+                      question: __('Stake this small amount?'),
+                      note: __(
+                        'Staked NXS are locked in your trust account and only come back when your stake produces a block. A small stake can take a very long time, or never, to produce one, so the coins may stay locked with no reward. Nexus pooled staking for small holders is not available.'
+                      ),
+                      labelYes: __('Stake anyway'),
+                      labelNo: __('Cancel'),
+                      skinYes: 'danger',
+                    });
+                    if (!confirmedLow) return undefined;
+                  }
+
                   const pin = await confirmPin();
                   if (pin) {
-                    return await callAPI('finance/set/stake', {
-                      pin,
-                      amount: stake,
-                    });
+                    try {
+                      return await callAPI('finance/set/stake', {
+                        pin,
+                        amount: stake,
+                      });
+                    } catch (err: any) {
+                      //the current stake again erases the pending change, the core answers -78
+                      if (err?.code === -78 && change) {
+                        return { cancelled: true };
+                      }
+                      throw err;
+                    }
                   }
                   return undefined;
                 },
@@ -167,8 +210,11 @@ export default function AdjustStakeModal({
                   }
 
                   closeModal();
+                  stakeInfoQuery.refetch();
                   showNotification(
-                    __('Stake amount has been updated'),
+                    'cancelled' in result
+                      ? __('Pending stake change has been cancelled')
+                      : __('Stake amount has been updated'),
                     'success'
                   );
                   onComplete?.();
@@ -191,6 +237,11 @@ export default function AdjustStakeModal({
               <Note>
                 {__(
                   'Note: This change will not take effect immediately but will stay pending until you get the next Trust transaction. The pending change will be recorded locally in this machine, therefore if you switch to another machine for staking, the change will not take effect.'
+                )}
+              </Note>
+              <Note>
+                {__(
+                  'Staking locks your NXS in a trust account until your stake produces a block, so only stake an amount you can leave for a long time. A small stake can take a very long time, or never, to produce a block.'
                 )}
               </Note>
               <div className="mt2 flex space-between">
