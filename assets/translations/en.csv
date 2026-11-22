@@ -1023,3 +1023,19 @@ Install it later,Install it later,AutoUpdate
 New wallet version %{version} - Click here to download,New wallet version %{version} - Click here to download,AutoUpdate
 New wallet version %{version} - Click here to update,New wallet version %{version} - Click here to update,AutoUpdate
 New wallet version %{version} available. Downloading...,New wallet version %{version} available. Downloading...,AutoUpdate
+Stay logged in when the core restarts,Stay logged in when the core restarts,Settings.Application
+"Enter your password and PIN once. They are kept encrypted by your operating system, for this computer account only.","Enter your password and PIN once. They are kept encrypted by your operating system, for this computer account only.",Settings.Application
+Wrong password or PIN,Wrong password or PIN,Settings.Application
+You will stay logged in when the core restarts,You will stay logged in when the core restarts,Settings.Application
+Could not save the login,Could not save the login,Settings.Application
+Password,Password,Settings.Application
+Enter your password,Enter your password,Settings.Application
+PIN,PIN,Settings.Application
+Enter your PIN,Enter your PIN,Settings.Application
+Checking,Checking,Settings.Application
+Save,Save,Settings.Application
+Secure storage is not available,Secure storage is not available,Settings.Application
+"Your operating system offers no secure place to keep the login, so this option cannot be turned on.","Your operating system offers no secure place to keep the login, so this option cannot be turned on.",Settings.Application
+"If Nexus Core stops or restarts, log in again by itself so staking goes on. Your password and PIN are kept encrypted by the operating system for this computer account. Anyone who can use this computer account can then use the wallet without a password.","If Nexus Core stops or restarts, log in again by itself so staking goes on. Your password and PIN are kept encrypted by the operating system for this computer account. Anyone who can use this computer account can then use the wallet without a password.",Settings.Application
+The saved login no longer works. Please log in again.,The saved login no longer works. Please log in again.,User
+Logged in again as %{username},Logged in again as %{username},User
