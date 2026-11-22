@@ -10,7 +10,11 @@ import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
 import Switch from 'components/Switch';
 import Icon from 'components/Icon';
-import { confirm } from 'lib/dialog';
+import { confirm, openErrorDialog } from 'lib/dialog';
+import { openModal } from 'lib/ui';
+import { store } from 'lib/store';
+import { loggedInAtom, usernameAtom } from 'lib/session';
+import { savedLoginAvailable, forgetLogin } from 'lib/savedLogin';
 import * as form from 'lib/form';
 import warningIcon from 'icons/warning.svg';
 import {
@@ -23,6 +27,7 @@ import {
 // Internal Local
 import { useSettingsTab } from '../atoms';
 import LanguageSetting from './LanguageSetting';
+import StayLoggedInModal from './StayLoggedInModal';
 
 __ = __context('Settings.Application');
 
@@ -94,6 +99,29 @@ async function toggleVerifyModuleSource(checked: boolean) {
   }
 }
 
+async function toggleStayLoggedIn(checked: boolean) {
+  if (!checked) {
+    updateSettings({ stayLoggedIn: false });
+    await forgetLogin();
+    return;
+  }
+  if (!(await savedLoginAvailable())) {
+    openErrorDialog({
+      message: __('Secure storage is not available'),
+      note: __(
+        'Your operating system offers no secure place to keep the login, so this option cannot be turned on.'
+      ),
+    });
+    return;
+  }
+  const username = store.get(usernameAtom);
+  if (store.get(loggedInAtom) && username) {
+    openModal(StayLoggedInModal, { username });
+  } else {
+    updateSettings({ stayLoggedIn: true });
+  }
+}
+
 /**
  * Handles update Change
  */
@@ -151,6 +179,19 @@ export default function SettingsApp() {
         <Switch
           checked={settings.openOnStart}
           onCheckedChange={toggleOpenOnStart}
+        />
+      </SettingsField>
+
+      <SettingsField
+        connectLabel
+        label={__('Stay logged in when the core restarts')}
+        subLabel={__(
+          'If Nexus Core stops or restarts, log in again by itself so staking goes on. Your password and PIN are kept encrypted by the operating system for this computer account. Anyone who can use this computer account can then use the wallet without a password.'
+        )}
+      >
+        <Switch
+          checked={settings.stayLoggedIn}
+          onCheckedChange={toggleStayLoggedIn}
         />
       </SettingsField>
 

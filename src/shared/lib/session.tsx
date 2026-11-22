@@ -16,8 +16,11 @@ import {
   isModalOpen,
   showBackgroundTask,
   showNotification,
+  modalsAtom,
 } from 'lib/ui';
+import log from 'electron-log';
 import { confirm } from 'lib/dialog';
+import { readSavedLogin, rememberLogin, forgetLogin } from 'lib/savedLogin';
 import { updateSettings, settingsAtom, settingAtoms } from 'lib/settings';
 import jotaiQuery from 'utils/jotaiQuery';
 import LoginModal from 'components/LoginModal';
@@ -45,11 +48,59 @@ export const logIn = async ({
   await userStatusQuery.refetch();
   await unlockUser({ pin, sessionId });
 
+  if (store.get(settingsAtom).stayLoggedIn) {
+    try {
+      await rememberLogin({ username, password, pin });
+    } catch (err) {
+      log.error('SavedLogin - cannot save the login', err);
+    }
+  }
+
   UT.LogIn();
   return { username, sessionId };
 };
 
+const autoLoginRetrySeconds = 30;
+let autoLoginRunning = false;
+
+/** Logs the saved user back in after the core lost its session (restart, crash) */
+async function autoLogIn() {
+  if (autoLoginRunning || !store.get(settingsAtom).stayLoggedIn) return false;
+  autoLoginRunning = true;
+  try {
+    const login = await readSavedLogin();
+    if (!login) return false;
+    try {
+      await logIn(login);
+    } catch (err: any) {
+      //-139 = invalid credentials, the password or PIN was changed
+      if (err?.code === -139) {
+        await forgetLogin();
+        showNotification(
+          __('The saved login no longer works. Please log in again.'),
+          'error'
+        );
+      } else {
+        log.warn('SavedLogin - auto login failed, will retry', err?.message);
+      }
+      return false;
+    }
+    log.info('SavedLogin - logged in again after the core lost the session');
+    store.set(modalsAtom, (modals) =>
+      modals.filter(({ component }) => component !== LoginModal)
+    );
+    showNotification(
+      __('Logged in again as %{username}', { username: login.username }),
+      'success'
+    );
+    return true;
+  } finally {
+    autoLoginRunning = false;
+  }
+}
+
 export const logOut = async () => {
+  await forgetLogin();
   const sessions = store.get(sessionsQuery.valueAtom);
   if (sessions) {
     await Promise.all([
@@ -186,6 +237,16 @@ export const usernameAtom = atom((get) => {
 });
 
 export function prepareSessionInfo() {
+  //the core can answer before it accepts a login, so keep trying while logged out
+  setInterval(() => {
+    if (
+      store.get(coreConnectedAtom) &&
+      store.get(userStatusQuery.valueAtom) === null
+    ) {
+      autoLogIn();
+    }
+  }, autoLoginRetrySeconds * 1000);
+
   subscribe(coreConnectedAtom, async (coreConnected) => {
     if (coreConnected) {
       const userStatus = await queryClient.ensureQueryData({
@@ -194,6 +255,7 @@ export function prepareSessionInfo() {
       });
       // Query has just finished, userStatusQuery and loggedInAtom haven't been updated yet
       const loggedIn = !!userStatus;
+      if (!loggedIn && (await autoLogIn())) return;
       const { locale, firstCreateNewUserShown } = store.get(settingsAtom);
       // The wallet will have to refresh after language is chosen
       // So NewUser modal shouldn't be visible now

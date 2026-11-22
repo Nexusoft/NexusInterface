@@ -94,6 +94,7 @@ export type Settings = {
   firstCreateNewUserShown: boolean;
   consoleCliSyntax: boolean;
   dontAskToStartStaking: boolean;
+  stayLoggedIn: boolean;
   lastCheckForUpdates: number | undefined;
 };
 
@@ -176,6 +177,7 @@ export const defaultSettings: Settings = {
   firstCreateNewUserShown: false,
   consoleCliSyntax: true,
   dontAskToStartStaking: false,
+  stayLoggedIn: false,
   lastCheckForUpdates: undefined,
 };
 
