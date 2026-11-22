@@ -14,6 +14,12 @@ import { alphaRelease, betaRelease } from 'consts/misc';
 import StatusIconsTritium from './StatusIconsTritium';
 import WalletStatus from './WalletStatus';
 import logoFull from 'icons/logo-full.svg';
+import Tooltip from 'components/Tooltip';
+import {
+  useTestnetIndicator,
+  testnetColor,
+  toggleTestnetColor,
+} from 'lib/testnetIndicator';
 
 __ = __context('Header');
 
@@ -83,12 +89,39 @@ const PreReleaseTag = styled.div(({ theme }) => ({
   color: theme.foreground,
 }));
 
+const TestnetTag = styled.div({
+  position: 'absolute',
+  top: 4,
+  right: -84,
+  fontSize: 11,
+  fontWeight: 'bold',
+  letterSpacing: 1,
+  padding: '1px 6px',
+  borderRadius: 3,
+  color: '#1a1a1a',
+  background: testnetColor,
+  cursor: 'pointer',
+  userSelect: 'none',
+  '&:hover': { filter: 'brightness(1.1)' },
+});
+
+const TestnetBanner = styled.div({
+  margin: '4px auto 0',
+  display: 'inline-block',
+  padding: '2px 12px',
+  borderRadius: 3,
+  fontSize: 13,
+  color: '#1a1a1a',
+  background: testnetColor,
+});
+
 const preReleaseTag = alphaRelease ? 'ALPHA' : betaRelease ? 'BETA' : null;
 
 export default function Header() {
   const coreConnected = useCoreConnected();
   const coreInfo = useCoreInfo();
   const { testnet, private: privateNet, litemode, hybrid } = coreInfo || {};
+  const indicator = useTestnetIndicator();
 
   return (
     <HeaderComponent>
@@ -96,6 +129,30 @@ export default function Header() {
         <Logo icon={logoFull} />
         {LOCK_TESTNET && <PreReleaseTag>TESTNET</PreReleaseTag>}
         {preReleaseTag ? <PreReleaseTag>{preReleaseTag}</PreReleaseTag> : null}
+        {indicator.show('tag') && (
+          <Tooltip.Trigger
+            tooltip={
+              indicator.show('color')
+                ? __('%{network} - click for the normal colours', {
+                    network: indicator.label,
+                  })
+                : __('%{network} - click for the testnet colours', {
+                    network: indicator.label,
+                  })
+            }
+          >
+            <TestnetTag
+              onClick={(e) => {
+                //inside the logo link, so do not navigate
+                e.preventDefault();
+                e.stopPropagation();
+                toggleTestnetColor();
+              }}
+            >
+              TESTNET
+            </TestnetTag>
+          </Tooltip.Trigger>
+        )}
       </LogoLink>
 
       <ModeDisplay>
@@ -107,6 +164,13 @@ export default function Header() {
 
       <UnderHeader>
         <HorizontalLine />
+        {indicator.show('banner') && (
+          <TestnetBanner>
+            {__('%{network} - coins on this network have no value', {
+              network: indicator.label,
+            })}
+          </TestnetBanner>
+        )}
         <WalletStatus />
       </UnderHeader>
 
