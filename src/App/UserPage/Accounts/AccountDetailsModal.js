@@ -1,4 +1,6 @@
 import { useSelector } from 'react-redux';
+import { useTheme } from '@emotion/react';
+import ModernAccountDetails from './ModernAccountDetails';
 
 import ControlledModal from 'components/ControlledModal';
 import Button from 'components/Button';
@@ -24,7 +26,9 @@ const timeFormatOptions = {
 };
 
 export default function AccountDetailsModal({ account }) {
+  const { modern } = useTheme();
   const stakeInfo = useSelector((state) => state.user.stakeInfo);
+  if (modern) return <ModernAccountDetails account={account} stakeInfo={stakeInfo} />;
   return (
     <ControlledModal>
       {(closeModal) => (

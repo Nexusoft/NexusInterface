@@ -32,16 +32,24 @@ const ContractComponent = styled.div(({ theme }) => ({
   '&:hover': {
     background: color.lighten(theme.lower(theme.background, 0.1), 0.2),
   },
+  ...(theme.modern && {
+    minWidth: 0, padding: '16px 18px', fontSize: 13, lineHeight: 1.7,
+    gridTemplateColumns: 'minmax(0, 1fr) max-content',
+    '&:hover': { background: color.fade(theme.primary, 0.94) },
+    '& + &': { borderTop: `1px solid ${color.fade(theme.primary, 0.9)}` },
+    '@media (max-width: 700px)': { gridTemplateAreas: '"content" "delta"', gridTemplateColumns: 'minmax(0, 1fr)', gap: 8 },
+  }),
 }));
 
 const ContractContent = styled.div({
   gridArea: 'content',
-});
+}, ({ theme }) => theme.modern && ({ minWidth: 0, overflowWrap: 'anywhere' }));
 
 const ContractDelta = styled.div(({ theme, sign }) => ({
   gridArea: 'delta',
   fontSize: '1.2em',
   justifySelf: 'end',
+  ...(theme.modern && { fontVariantNumeric: 'tabular-nums', overflowWrap: 'anywhere', maxWidth: '100%' }),
   color:
     sign === '+'
       ? theme.primary
@@ -352,6 +360,16 @@ const contractContent = (contract) => {
     }
   }
 };
+
+export function compactContractContent(contract) {
+  if (['CREDIT', 'DEBIT', 'LEGACY'].includes(contract.OP)) {
+    return <>{contract.OP === 'CREDIT' ? creditFrom(contract) : <Register {...contract.from} />} {'\u2192'} <Register {...contract.to} /></>;
+  }
+  if (contract.OP === 'CREATE') {
+    return <Register name={contract.name} address={contract.address} />;
+  }
+  return contractContent(contract);
+}
 
 const Contract = ({ contract, txid }) => (
   <ContractComponent

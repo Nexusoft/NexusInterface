@@ -1,7 +1,11 @@
+import { moduleLayout, modulePanel } from 'utils/moduleStyles';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import UT from 'lib/usageTracking';
 import styled from '@emotion/styled';
+import { useTheme } from '@emotion/react';
+import { fade } from 'utils/color';
+import GridTracers, { modernGridBackground } from 'components/GridTracers';
 
 import Panel from 'components/Panel';
 import WaitingMessage from 'components/WaitingMessage';
@@ -17,8 +21,31 @@ import warningIcon from 'icons/warning.svg';
 import Transaction from './Transaction';
 import Balances from './Balances';
 import Filters from './Filters';
+import ModernHistory from './ModernHistory';
 
 __ = __context('Transactions');
+
+const ModernPage = styled.section(({ theme }) => ({
+  position: 'relative', width: '100%', height: '100%', minWidth: 0,
+  display: 'flex', flexDirection: 'column', overflow: 'hidden',
+  color: theme.foreground, ...modernGridBackground(theme),
+}));
+
+const Body = styled.div({
+  position: 'relative', zIndex: 1, flex: 1, minHeight: 0, display: 'flex',
+  flexDirection: 'column', padding: moduleLayout.pagePadding,
+});
+
+function TransactionsFrame({ children }) {
+  const { modern } = useTheme();
+  if (!modern) return <Panel icon={transactionIcon} title={__('Transactions')}>{children}</Panel>;
+  return (
+    <ModernPage>
+      <GridTracers />
+      <Body>{children}</Body>
+    </ModernPage>
+  );
+}
 
 const PageLayout = styled.div({
   position: 'absolute',
@@ -30,25 +57,44 @@ const PageLayout = styled.div({
   gridTemplateAreas: '"balances filters" "balances list" "balances pagination"',
   gridTemplateRows: 'min-content 1fr min-content',
   gridTemplateColumns: '1fr 2.7fr',
-});
+}, ({ theme }) => theme.modern && ({
+  position: 'relative', flex: 1, minHeight: 0, minWidth: 0,
+  gridTemplateColumns: 'minmax(0, 1fr)',
+  gridTemplateAreas: '"balances" "history"',
+  gridTemplateRows: 'auto minmax(260px, 1fr)', gap: 14, overflowY: 'auto',
+}));
+
+const HistoryPanel = styled.div(({ theme }) => theme.modern ? ({
+  gridArea: 'history', display: 'flex', flexDirection: 'column',
+  minWidth: 0, minHeight: 0, overflow: 'hidden', borderRadius: 16,
+  ...modulePanel(theme),
+}) : ({ display: 'contents' }));
 
 const TransactionsList = styled.div({
   gridArea: 'list',
   overflowY: 'auto',
   padding: '0 20px',
-});
+}, ({ theme }) => theme.modern && ({
+  padding: 12, flex: 1, minWidth: 0, minHeight: 0,
+  '& > div > div:last-child': { marginBottom: 0 },
+}));
 
-const Pagination = styled.div(({ morePadding }) => ({
+const Pagination = styled.div(({ morePadding, theme }) => ({
   gridArea: 'pagination',
   fontSize: '.9em',
   padding: `10px ${morePadding ? '26px' : '20px'} 20px 20px`,
+  ...(theme.modern && {
+    padding: '12px 18px', flexShrink: 0,
+    borderTop: `1px solid ${fade(theme.primary, 0.82)}`,
+    '& > div': { gap: 12, flexWrap: 'wrap' },
+  }),
 }));
 
 const Container = styled.div({
   position: 'relative',
   maxWidth: 650,
   margin: '0 auto',
-});
+}, ({ theme }) => theme.modern && ({ maxWidth: 'none' }));
 
 const PageInput = styled(TextField)({
   width: 40,
@@ -59,7 +105,7 @@ const PageInput = styled(TextField)({
 
 const PaginationButton = styled(Button)({
   minWidth: 150,
-});
+}, ({ theme }) => theme.modern && ({ minWidth: 100, borderRadius: 10 }));
 
 const TransactionLoadingWarningSpinner = styled(Spinner)(({ theme }) => ({
   color: theme.mixer(0.5),
@@ -123,6 +169,7 @@ const ErrorMessage = styled.div(({ theme }) => ({
  * @extends {Component}
  */
 export default function Transactions() {
+  const { modern } = useTheme();
   const { status, transactions, lastPage } = useSelector(
     (state) => state.user.transactions
   );
@@ -141,11 +188,13 @@ export default function Transactions() {
   }, [genesis]);
 
   return (
-    <Panel icon={transactionIcon} title={__('Transactions')}>
+    <TransactionsFrame>
       <RequireLoggedIn>
         <PageLayout>
           <Balances />
+          {modern ? <ModernHistory transactions={transactions} status={status} page={page} lastPage={lastPage} /> : <>
           <Filters /> {/*morePadding={this.state.hasScroll} */}
+          <HistoryPanel>
           <TransactionsList>
             {' '}
             {/*ref={this.listRef} */}
@@ -230,8 +279,10 @@ export default function Transactions() {
               </PaginationButton>
             </Container>
           </Pagination>
+          </HistoryPanel>
+          </>}
         </PageLayout>
       </RequireLoggedIn>
-    </Panel>
+    </TransactionsFrame>
   );
 }

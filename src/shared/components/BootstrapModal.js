@@ -1,3 +1,4 @@
+import { modalSurface } from 'utils/modalStyles';
 // External
 import { useRef, useEffect, useContext } from 'react';
 import { useSelector } from 'react-redux';
@@ -11,13 +12,28 @@ import Button from 'components/Button';
 import { showBackgroundTask, removeModal } from 'lib/ui';
 import { confirm } from 'lib/dialog';
 import Icon from 'components/Icon';
-import Tooltip from 'components/Tooltip';
 import ModalContext from 'context/modal';
 import { bootstrapEvents, abortBootstrap } from 'lib/bootstrap';
 import memoize from 'utils/memoize';
 import { timing } from 'styles';
+import { fade } from 'utils/color';
 import BootstrapBackgroundTask from 'components/BootstrapBackgroundTask';
 import arrowUpLeftIcon from 'icons/arrow-up-left.svg';
+import Tooltip from 'components/Tooltip';
+import themeStyles from 'utils/themeStyles';
+import { useTheme } from '@emotion/react';
+const MinimizeIcon = styled(Icon)(({ theme }) => ({
+  position: 'absolute',
+  top: 10,
+  left: 10,
+  fontSize: 10,
+  cursor: 'pointer',
+  color: theme.mixer(0.5),
+  transition: `color ${timing.normal}`,
+  '&:hover': {
+    color: theme.mixer(0.75),
+  },
+}));
 
 __ = __context('Bootstrap');
 
@@ -50,26 +66,68 @@ const fadeOut = {
   opacity: [1, 0],
 };
 
-const BootstrapModalComponent = styled(ControlledModal)(
-  ({ maximizedFromBackground }) =>
-    maximizedFromBackground && {
-      animation: `${maximizeAnimation} ${timing.quick} linear`,
-    }
-);
+const BootstrapModalComponent = styled(ControlledModal)(themeStyles([({
+  maximizedFromBackground
+}) => maximizedFromBackground && {
+  animation: `${maximizeAnimation} ${timing.quick} linear`
+}], [({
+  theme
+}) => ({
+  width: 'calc(100% - 32px)',
+  maxWidth: 600,
+  maxHeight: 'calc(100% - 32px)',
+  ...modalSurface(theme),
+  '&&:focus-visible': {
+    outline: 'none'
+  }
+}), ({
+  maximizedFromBackground
+}) => maximizedFromBackground && {
+  animation: `${maximizeAnimation} ${timing.quick} linear`
+}]));
 
-const Title = styled.div({
-  fontSize: 28,
+const Title = styled.div(themeStyles([{
+  fontSize: 28
+}], [{
+  fontSize: 20,
+  fontWeight: 600,
+  letterSpacing: '-0.4px',
+  lineHeight: 1.35
+}]));
+
+const Body = styled(ControlledModal.Body)({
+  margin: 0,
+  padding: 28,
+  '@media (max-width: 480px)': { padding: 20 },
 });
 
-const ProgressBar = styled.div(({ percentage, theme }) => ({
+const ProgressSection = styled.div(({ theme }) => ({
+  marginTop: 24,
+  padding: 18,
+  borderRadius: 12,
+  border: `1px solid ${fade(theme.primary, 0.85)}`,
+  background: fade(theme.primary, 0.96),
+  'p': { margin: '0 0 14px', color: theme.mixer(0.8), fontSize: 13, lineHeight: 1.6 },
+}));
+
+const Actions = styled.div({
+  display: 'flex',
+  justifyContent: 'space-between',
+  flexWrap: 'wrap',
+  gap: 12,
+  marginTop: 24,
+  'button': { minHeight: 42, fontSize: 13, borderRadius: 10 },
+});
+
+const ProgressBar = styled.div(themeStyles([({
+  percentage,
+  theme
+}) => ({
   height: 20,
   borderRadius: 10,
   border: `1px solid ${theme.mixer(0.5)}`,
   overflow: 'hidden',
-  animation:
-    percentage >= 100
-      ? `pulse 1.25s infinite cubic-bezier(0.66, 0, 0, 1)`
-      : null,
+  animation: percentage >= 100 ? `pulse 1.25s infinite cubic-bezier(0.66, 0, 0, 1)` : null,
   '&::before': {
     content: '""',
     display: 'block',
@@ -78,22 +136,28 @@ const ProgressBar = styled.div(({ percentage, theme }) => ({
     width: '100%',
     transformOrigin: 'left center',
     transform: `scaleX(${percentage / 100})`,
-    transition: `transform ${timing.normal}`,
-  },
-}));
-
-const MinimizeIcon = styled(Icon)(({ theme }) => ({
-  position: 'absolute',
-  top: 10,
-  left: 10,
-  fontSize: 10,
-  cursor: 'pointer',
-  color: theme.mixer(0.5),
-  transition: `color ${timing.normal}`,
-  '&:hover': {
-    color: theme.mixer(0.75),
-  },
-}));
+    transition: `transform ${timing.normal}`
+  }
+})], [({
+  percentage,
+  theme
+}) => ({
+  height: 8,
+  borderRadius: 10,
+  background: fade(theme.primary, 0.88),
+  overflow: 'hidden',
+  animation: percentage >= 100 ? `pulse 1.25s infinite cubic-bezier(0.66, 0, 0, 1)` : null,
+  '&::before': {
+    content: '""',
+    display: 'block',
+    background: theme.primary,
+    height: '100%',
+    width: '100%',
+    transformOrigin: 'left center',
+    transform: `scaleX(${percentage / 100})`,
+    transition: `transform ${timing.normal}`
+  }
+})]));
 
 const getPercentage = ({ step, details }) => {
   switch (step) {
@@ -172,6 +236,7 @@ async function confirmAbort() {
 }
 
 export default function BootstrapModal(props) {
+  const { modern } = useTheme();
   const statusMsg = useSelector(selectStatusMsg);
   const percentage = useSelector(selectPercentage);
   const modalID = useContext(ModalContext);
@@ -207,7 +272,32 @@ export default function BootstrapModal(props) {
   };
 
   return (
-    <BootstrapModalComponent
+    modern ? (<BootstrapModalComponent
+      modalRef={modalRef}
+      backgroundRef={backgroundRef}
+      onBackgroundClick={minimize}
+      onKeyDown={handleKeyDown}
+      assignClose={(close) => (closeModalRef.current = close)}
+      escToClose={false}
+      {...props}
+    >
+      <Body>
+        <Title>{__('Bootstrap Recent Database')}</Title>
+        <ProgressSection>
+        <p>{statusMsg}</p>
+        <ProgressBar percentage={percentage} role="progressbar" aria-label={__('Downloading the database')} aria-valuemin={0} aria-valuemax={100} aria-valuenow={percentage} aria-valuetext={statusMsg} />
+        </ProgressSection>
+        <Actions>
+          <Button onClick={minimize}>
+            <Icon icon={arrowUpLeftIcon} className="mr0_4" />
+            {__('Minimize')}
+          </Button>
+          <Button skin="danger" onClick={confirmAbort}>
+            {__('Abort')}
+          </Button>
+        </Actions>
+      </Body>
+    </BootstrapModalComponent>) : (<BootstrapModalComponent
       modalRef={modalRef}
       backgroundRef={backgroundRef}
       onBackgroundClick={minimize}
@@ -230,6 +320,6 @@ export default function BootstrapModal(props) {
           <MinimizeIcon onClick={minimize} icon={arrowUpLeftIcon} />
         </Tooltip.Trigger>
       </ControlledModal.Body>
-    </BootstrapModalComponent>
+    </BootstrapModalComponent>)
   );
 }

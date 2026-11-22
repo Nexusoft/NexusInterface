@@ -13,6 +13,7 @@ const themeFilePath = path.join(walletDataDir, themeFileName);
 export const starryNightBackground = ':starry_night';
 export const cosmicLightBackground = ':cosmic_light';
 export const nexusThemeBackground = ':nexus_theme';
+export const blackBackground = ':black';
 
 export const darkTheme = {
   wallpaper: starryNightBackground,
@@ -26,6 +27,12 @@ export const darkTheme = {
   globePillarColor: '#00ffff',
   globeArchColor: '#00ffff',
 };
+
+// Modern shares Dark's palette, with its own layout and component styling.
+export const modernTheme = {
+  ...darkTheme, wallpaper: blackBackground, globePillarColor: '#25FF00', modern: true,
+};
+export const defaultTheme = modernTheme;
 
 export const lightTheme = {
   wallpaper: cosmicLightBackground,
@@ -56,6 +63,15 @@ export const nexusTheme = {
 // TODO: remove this after a few versions
 function transformTheme(theme) {
   let changed = false;
+  // Update the original Modern preset saved before its black wallpaper existed.
+  if (
+    theme.modern &&
+    Object.keys(theme).length === Object.keys(darkTheme).length + 1 &&
+    Object.entries(darkTheme).every(([key, value]) => theme[key] === value)
+  ) {
+    theme.wallpaper = blackBackground;
+    changed = true;
+  }
   if (theme.defaultStyle) {
     changed = true;
     if (theme.defaultStyle?.startsWith('Light')) {
@@ -79,7 +95,7 @@ function readTheme() {
     const json = readJson(themeFilePath) || {};
     return json;
   } else {
-    return darkTheme;
+    return defaultTheme;
   }
 }
 
@@ -139,7 +155,7 @@ export const setTheme = (theme) => {
 
 export const resetColors = () => {
   const theme = readTheme();
-  const newTheme = {};
+  const newTheme = theme.modern ? { ...modernTheme } : { ...darkTheme };
   if (theme.wallpaper) newTheme.wallpaper = theme.wallpaper;
   store.dispatch({ type: TYPE.SET_THEME, payload: newTheme });
   return writeTheme(newTheme);

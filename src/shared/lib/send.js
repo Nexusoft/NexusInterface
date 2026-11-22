@@ -23,7 +23,7 @@ export function getDefaultRecipient() {
   return recipient;
 }
 
-function getDefaultExpiry() {
+export function getDefaultExpiry() {
   const expiry = {
     expireDays: 7,
     expireHours: 0,

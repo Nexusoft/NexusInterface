@@ -269,10 +269,6 @@
     "unzip-stream": "^0.3.1",
     "victory": "^36.6.11"
   },
-  "devEngines": {
-    "node": ">=16.x",
-    "npm": ">=8.x"
-  },
   "overrides": {
     "react-final-form-arrays": {
       "react": "18.2.0"

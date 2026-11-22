@@ -1,5 +1,8 @@
 // External
 import { useEffect } from 'react';
+import styled from '@emotion/styled';
+import { useTheme } from '@emotion/react';
+import Group from '../SettingsGroup';
 import { useSelector } from 'react-redux';
 import { ipcRenderer } from 'electron';
 import fs from 'fs';
@@ -24,6 +27,17 @@ import BackgroundPicker from './BackgroundPicker';
 import ThemePicker from './ThemePicker';
 
 __ = __context('Settings.Style');
+
+const StyleSettings = styled.div(({ theme }) => theme.modern ? {
+  '.app-setting.picker-setting': { flexDirection: 'column', alignItems: 'stretch', gap: 12 },
+  '.app-setting.picker-setting > div': { width: '100%', maxWidth: '100%' },
+  '.picker-setting > div > div:first-child': { display: 'flex', flexWrap: 'wrap', gap: 8 },
+  '.picker-setting button': { margin: '0 !important', maxWidth: '100%', whiteSpace: 'normal', height: 'auto', minHeight: 34, padding: '7px 12px', overflowWrap: 'anywhere' },
+  '.address-setting .mt1': { maxWidth: 480, fontSize: 12, overflowWrap: 'anywhere' },
+  '.address-setting .mt1 div': { whiteSpace: 'pre-wrap' },
+  '.theme-files': { display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 12 },
+  '.theme-files button': { height: 34, padding: '0 12px', fontSize: 12, borderRadius: 8 },
+} : {});
 
 const overviewDisplays = [
   { value: 'standard', display: 'Standard' },
@@ -77,6 +91,7 @@ async function exportThemeFileDialog() {
 }
 
 export default function SettingsStyle() {
+  const { modern } = useTheme();
   const settings = useSelector((state) => state.settings);
   const defaultAddress = useSelector((state) =>
     getTritiumDefaultAddress(state.user.accounts)
@@ -89,13 +104,27 @@ export default function SettingsStyle() {
   }, []);
 
   return (
-    <>
-      <SettingsField
+    <StyleSettings>
+      <Group title={__('Overview and addresses')}>
+      {modern && <SettingsField className="app-setting select-setting"
+        label={__('Overview layout')}
+        subLabel={__('3D Globe preserves the original overview with metrics. Dashboard shows the peer map, wallet summary, and recent activity.')}
+      >
+        <Select className="preference-select" skin="filled-inverted"
+          value={settings.modernOverviewLayout || 'map'}
+          onChange={(modernOverviewLayout) => updateSettings({ modernOverviewLayout })}
+          options={[
+            { value: 'map', display: __('Dashboard') },
+            { value: 'globe', display: __('3D Globe') },
+          ]}
+        />
+      </SettingsField>}
+      <SettingsField className="app-setting"
         connectLabel
-        label={__('Render globe')}
+        label={modern ? __('Render peer visualization') : __('Render globe')}
         subLabel={
           <div>
-            {__('Render the globe on the Overview page.')}
+            {modern ? __('Render the selected 3D layout on the Overview page.') : __('Render the globe on the Overview page.')}
             {!webGLAvailable && (
               <div className="error">
                 {__('Your computer does not support OPENGL 2.0')}
@@ -113,16 +142,16 @@ export default function SettingsStyle() {
         />
       </SettingsField>
 
-      <SettingsField label={__('Overview Display')}>
-        <Select
+      <SettingsField className="app-setting select-setting" label={__('Overview Display')}>
+        <Select className="preference-select" skin={modern ? 'filled-inverted' : 'underline'}
           value={settings.overviewDisplay}
           onChange={setOverviewDisplay}
           options={overviewDisplays}
-          style={{ maxWidth: 260 }}
+          style={modern ? undefined : { maxWidth: 260 }}
         />
       </SettingsField>
 
-      <SettingsField
+      <SettingsField className="app-setting"
         connectLabel
         label={__('Hide Overview balances')}
         subLabel={
@@ -137,12 +166,12 @@ export default function SettingsStyle() {
         />
       </SettingsField>
 
-      <SettingsField
+      <SettingsField className="app-setting picker-setting address-setting"
         label={__('Nexus Addresses format')}
         subLabel={__('Choose your Nexus Address display preference')}
       >
         <div>
-          <Select
+          <Select className="preference-select" skin={modern ? 'filled-inverted' : 'underline'}
             value={settings.addressStyle}
             onChange={setAddressStyle}
             options={addressStyleOptions}
@@ -159,55 +188,76 @@ export default function SettingsStyle() {
         </div>
       </SettingsField>
 
-      <SettingsField label={__('Wallet theme')}>
+      </Group>
+      <Group title={__('Theme and background')}>
+      <SettingsField className="app-setting picker-setting" label={__('Wallet theme')}>
         <ThemePicker />
       </SettingsField>
 
-      <SettingsField
+      {modern && <SettingsField className="app-setting"
+        connectLabel
+        label={__('Auto-hide menu')}
+        subLabel={__('Hide the sidebar until you move the pointer to the left edge. Keyboard focus also reveals the menu.')}
+      >
+        <Switch
+          checked={!!settings.autoHideNavigation}
+          onChange={(e) => updateSettings({ autoHideNavigation: e.target.checked })}
+        />
+      </SettingsField>}
+
+      <SettingsField className="app-setting picker-setting"
         label={__('Background')}
         subLabel={__('Customize your background wallpaper')}
       >
         <BackgroundPicker />
       </SettingsField>
 
-      <SettingsField label={__('Color scheme')} />
+      </Group>
+      <Group title={__('Color scheme')}>
+      {!modern && <SettingsField label={__('Color scheme')} />}
 
-      <SettingsField indent={1} label={__('Background Color')}>
+      <SettingsField className="app-setting" indent={1} label={__('Background Color')}>
         <ColorPicker colorName="background" />
       </SettingsField>
-      <SettingsField indent={1} label={__('Foreground Color')}>
+      <SettingsField className="app-setting" indent={1} label={__('Foreground Color')}>
         <ColorPicker colorName="foreground" />
       </SettingsField>
-      <SettingsField indent={1} label={__('Primary Color')}>
+      <SettingsField className="app-setting" indent={1} label={__('Primary Color')}>
         <ColorPicker colorName="primary" />
       </SettingsField>
-      <SettingsField indent={1} label={__('Primary Color Accent')}>
+      <SettingsField className="app-setting" indent={1} label={__('Primary Color Accent')}>
         <ColorPicker colorName="primaryAccent" />
       </SettingsField>
-      <SettingsField indent={1} label={__('Danger Color')}>
+      <SettingsField className="app-setting" indent={1} label={__('Danger Color')}>
         <ColorPicker colorName="danger" />
       </SettingsField>
-      <SettingsField indent={1} label={__('Danger Color Accent')}>
+      <SettingsField className="app-setting" indent={1} label={__('Danger Color Accent')}>
         <ColorPicker colorName="dangerAccent" />
       </SettingsField>
-      <SettingsField indent={1} label={__('Globe Color')}>
+      <SettingsField className="app-setting" indent={1} label={__('Globe and map color')}
+        subLabel={__('Globe surface and dashboard map land, outlines, and glow.')}>
         <ColorPicker colorName="globeColor" />
       </SettingsField>
-      <SettingsField indent={2} label={__('Globe Pillar Color')}>
+      <SettingsField className="app-setting" indent={2} label={__('Globe and map peer color')}
+        subLabel={__('Peer pillars and new-peer pulses on both the globe and dashboard map.')}>
         <ColorPicker colorName="globePillarColor" />
       </SettingsField>
-      <SettingsField indent={2} label={__('Globe Arch Color')}>
+      {!modern && <SettingsField className="app-setting" indent={2} label={__('Globe connection color')}
+        subLabel={__('Connection arcs between peers on the globe.')}>
         <ColorPicker colorName="globeArchColor" />
-      </SettingsField>
+      </SettingsField>}
 
-      <div style={{ marginTop: '2em' }}>
+      </Group>
+      <Group title={__('Theme files')}>
+      <div className="theme-files" style={modern ? undefined : { marginTop: '2em' }}>
         <Button onClick={openPickThemeFileDialog}>
           {__('Import custom theme')}
         </Button>
-        <Button style={{ marginLeft: '1em' }} onClick={exportThemeFileDialog}>
+        <Button style={modern ? undefined : { marginLeft: '1em' }} onClick={exportThemeFileDialog}>
           {__('Export custom theme')}
         </Button>
       </div>
-    </>
+      </Group>
+    </StyleSettings>
   );
 }

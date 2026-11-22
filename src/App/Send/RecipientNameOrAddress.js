@@ -2,6 +2,7 @@
 import { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
+import { useTheme } from '@emotion/react';
 import { Field, useField } from 'react-final-form';
 
 // Internal
@@ -154,6 +155,7 @@ function RecipientAddressAdapter({
 }
 
 export default function RecipientNameOrAddress({ parentFieldName }) {
+  const { modern } = useTheme();
   const fieldName = `${parentFieldName}.nameOrAddress`;
   const {
     input: { value: nameOrAddress, onChange, ...inputRest },
@@ -173,6 +175,7 @@ export default function RecipientNameOrAddress({ parentFieldName }) {
     <FormField label={__('Send to')}>
       <AutoSuggest
         inputProps={{
+          style: modern ? { borderRadius: 9, minHeight: 42 } : undefined,
           ...inputRest,
           value: nameOrAddress,
           onChange: (...args) => {

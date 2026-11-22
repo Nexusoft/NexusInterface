@@ -26,6 +26,7 @@ const ContactComponent = styled.div(
     transitionProperty: 'background, color',
     transitionDuration: timing.normal,
     cursor: 'pointer',
+    ...(theme.modern && { padding: '14px 12px', marginBottom: 6, borderRadius: 12, borderLeft: '3px solid transparent', fontSize: 14 }),
 
     '&:hover': {
       background: theme.mixer(0.05),
@@ -34,8 +35,9 @@ const ContactComponent = styled.div(
   ({ selected, theme }) =>
     selected && {
       '&, &:hover': {
-        background: color.fade(theme.primary, 0.4),
-        color: theme.primaryAccent,
+        background: color.fade(theme.primary, theme.modern ? 0.88 : 0.4),
+        color: theme.modern ? theme.primary : theme.primaryAccent,
+        ...(theme.modern && { borderLeftColor: theme.primary }),
       },
     }
 );
@@ -51,6 +53,7 @@ const ContactAvatar = styled.div(({ theme }) => ({
   alignItems: 'center',
   flexShrink: 0,
   marginRight: '1em',
+  ...(theme.modern && { background: color.fade(theme.primary, 0.9), color: theme.primary, width: 36, height: 36 }),
 }));
 
 const ContactName = styled.div({
@@ -67,6 +70,7 @@ const AddressesCount = styled.div(({ theme }) => ({
   background: theme.mixer(0.125),
   color: theme.mixer(0.875),
   flexShrink: 0,
+  ...(theme.modern && { borderRadius: 20, padding: '2px 9px', color: theme.primary, background: color.fade(theme.primary, 0.92) }),
 }));
 
 // contact=null -> New Contact button
@@ -113,6 +117,15 @@ export default function Contact({ contact, ...rest }) {
 
   return contact ? (
     <ContactComponent
+      role="button"
+      tabIndex={0}
+      aria-pressed={contact.name === selectedContactName}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          selectContact(contact.name);
+        }
+      }}
       onClick={() => {
         selectContact(contact.name);
       }}
@@ -131,7 +144,9 @@ export default function Contact({ contact, ...rest }) {
       </Tooltip.Trigger>
     </ContactComponent>
   ) : (
-    <ContactComponent {...rest}>
+    <ContactComponent role="button" tabIndex={0} onKeyDown={(event) => {
+      if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); rest.onClick?.(); }
+    }} {...rest}>
       <ContactAvatar>
         <Icon icon={plusIcon} style={{ fontSize: '.8em', opacity: 0.7 }} />
       </ContactAvatar>

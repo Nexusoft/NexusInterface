@@ -1,6 +1,8 @@
 // External
 import { useSelector } from 'react-redux';
 import { ipcRenderer } from 'electron';
+import styled from '@emotion/styled';
+import { fade } from 'utils/color';
 
 // Internal
 import Button from 'components/Button';
@@ -8,10 +10,28 @@ import {
   starryNightBackground,
   cosmicLightBackground,
   nexusThemeBackground,
+  blackBackground,
   updateTheme,
 } from 'lib/theme';
 
 __ = __context('Settings.Style');
+
+const CustomWallpaperButton = styled(Button)(({ theme }) => theme.modern && ({
+  '&&&&&&': {
+    color: theme.primary,
+    background: fade(theme.primary, 0.9),
+    border: '1px solid transparent',
+    transition: 'background 150ms ease, border-color 150ms ease',
+    '&:hover:not(:disabled)': {
+      color: theme.primary,
+      background: fade(theme.primary, 0.82),
+      borderColor: fade(theme.primary, 0.65),
+    },
+    '&:active:not(:disabled)': {
+      background: fade(theme.primary, 0.75),
+    },
+  },
+}));
 
 async function handleFilePick(e) {
   const files = await ipcRenderer.invoke('show-open-dialog', {
@@ -35,14 +55,23 @@ async function handleFilePick(e) {
 
 export default function BackgroundPicker() {
   const wallpaper = useSelector((state) => state.theme.wallpaper);
-  console.log(wallpaper);
   const customWallpaper =
+    wallpaper !== blackBackground &&
     wallpaper !== starryNightBackground &&
     wallpaper !== cosmicLightBackground &&
     wallpaper !== nexusThemeBackground;
 
   return (
     <div>
+      <Button
+        skin={wallpaper === blackBackground ? 'filled-primary' : 'plain'}
+        className="mr1"
+        onClick={() => updateTheme({ wallpaper: blackBackground })}
+        selected={wallpaper === blackBackground}
+        style={{ display: 'inline', marginBottom: '.5em' }}
+      >
+        {__('Tracer')}
+      </Button>
       <Button
         skin={wallpaper === starryNightBackground ? 'filled-primary' : 'plain'}
         className="mr1"
@@ -70,7 +99,7 @@ export default function BackgroundPicker() {
       >
         {__('Nexus.io')}
       </Button>
-      <Button
+      <CustomWallpaperButton
         skin={customWallpaper ? 'filled-primary' : 'plain'}
         className="mr1"
         selected={customWallpaper}
@@ -83,7 +112,7 @@ export default function BackgroundPicker() {
         ) : (
           __('Select a custom wallpaper')
         )}
-      </Button>
+      </CustomWallpaperButton>
     </div>
   );
 }

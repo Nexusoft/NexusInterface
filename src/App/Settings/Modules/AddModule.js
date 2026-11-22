@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import Dropzone from 'react-dropzone';
 import styled from '@emotion/styled';
+import { useTheme } from '@emotion/react';
 import { ipcRenderer } from 'electron';
 
 // Internal
@@ -25,6 +26,14 @@ const AddModuleComponent = styled(FieldSet)(
     outline: 'none',
     transitionProperty: 'color, border-color, background-color',
     transitionDuration: timing.normal,
+    ...(theme.modern && {
+      padding: 20, borderRadius: 12, border: `1px dashed ${color.fade(theme.primary, 0.6)}`,
+      background: color.fade(theme.background, 0.25), fontSize: 12, marginBottom: 16,
+      'legend': { color: theme.primary, fontSize: 12, fontWeight: 600, padding: '0 8px' },
+      '.install-actions': { display: 'flex', justifyContent: 'center', gap: 8, flexWrap: 'wrap', marginBottom: 12 },
+      'button': { height: 34, borderRadius: 8, padding: '0 12px', fontSize: 12 },
+      '&:focus-visible': { outline: `2px solid ${theme.primary}`, outlineOffset: 3 },
+    }),
     '&:hover': {
       color: theme.mixer(0.75),
     },
@@ -44,6 +53,7 @@ const InnerMessage = styled.div(
     alignItems: 'center',
     justifyContent: 'center',
   },
+  ({ theme }) => theme.modern && ({ height: 'auto', minHeight: 86, lineHeight: 1.6 }),
   ({ noPointerEvents }) =>
     noPointerEvents && {
       pointerEvents: 'none',
@@ -68,6 +78,7 @@ function getFilesFromEvent(event) {
  * The Add Module section in Modules Settings tab
  */
 export default function AddModule() {
+  const { modern } = useTheme();
   const [checking, setChecking] = useState(false);
 
   const startInstall = async (path) => {
@@ -132,6 +143,14 @@ export default function AddModule() {
               <div>{__('Checking module')}...</div>
             ) : isDragActive ? (
               <div>{__('Drop here to install')}</div>
+            ) : modern ? (
+              <div>
+                <div className="install-actions">
+                  <Button skin="filled-primary" onClick={browseFiles}>{__('Choose archive')}</Button>
+                  <Button skin="primary" onClick={browseDirectories}>{__('Choose directory')}</Button>
+                </div>
+                <div>{__('or drag and drop it here')}</div>
+              </div>
             ) : (
               <div>
                 <div>

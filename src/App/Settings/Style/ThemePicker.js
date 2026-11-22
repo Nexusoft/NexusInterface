@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 
 //Internal
 import Button from 'components/Button';
-import { darkTheme, lightTheme, nexusTheme, setTheme } from 'lib/theme';
+import { modernTheme, darkTheme, lightTheme, nexusTheme, setTheme } from 'lib/theme';
 
 __ = __context('Settings.Style');
 
@@ -19,6 +19,7 @@ function equals(theme1, theme2) {
 }
 
 function getName(theme) {
+  if (equals(theme, modernTheme)) return 'modern';
   if (equals(theme, darkTheme)) return 'dark';
   if (equals(theme, lightTheme)) return 'light';
   if (equals(theme, nexusTheme)) return 'nexus';
@@ -32,6 +33,17 @@ export default function ThemePicker() {
 
   return (
     <div>
+      <Button
+        skin={themeName === 'modern' ? 'filled-primary' : 'plain'}
+        className="mr1"
+        onClick={themeName !== 'modern' ? () => {
+          if (themeName === 'custom') setCustomTheme(theme);
+          setTheme(modernTheme);
+        } : undefined}
+      >
+        {__('Modern')}
+      </Button>
+
       <Button
         skin={themeName === 'dark' ? 'filled-primary' : 'plain'}
         className="mr1"

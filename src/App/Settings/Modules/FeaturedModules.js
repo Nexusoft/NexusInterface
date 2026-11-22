@@ -3,6 +3,8 @@ import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 import axios from 'axios';
+import { useTheme } from '@emotion/react';
+import Group from '../SettingsGroup';
 
 // Internal
 import store from 'store';
@@ -13,9 +15,7 @@ import SectionSeparator from './SectionSeparator';
 
 __ = __context('Settings.Modules');
 
-const FeaturedModuleList = styled.div({
-  opacity: 0.7,
-});
+const FeaturedModuleList = styled.div(({ theme }) => ({ opacity: theme.modern ? 1 : 0.7 }));
 
 const retryTime = 1000 * 60 * 60 * 6;
 async function loadFeaturedModules() {
@@ -36,6 +36,7 @@ async function loadFeaturedModules() {
 }
 
 export default function FeaturedModules() {
+  const { modern } = useTheme();
   const modules = useSelector((state) => state.modules);
   const featuredModules = useSelector((state) => state.featuredModules);
   const notInstalledFeaturedModules = featuredModules?.filter(
@@ -48,8 +49,8 @@ export default function FeaturedModules() {
 
   return (
     !!notInstalledFeaturedModules?.length && (
-      <>
-        <SectionSeparator label={__('Developed by Nexus')} />
+      <Group title={__('Developed by Nexus')}>
+        {!modern && <SectionSeparator label={__('Developed by Nexus')} />}
         <FeaturedModuleList>
           {notInstalledFeaturedModules.map((featuredModule) => (
             <Module.FeaturedModule
@@ -58,7 +59,7 @@ export default function FeaturedModules() {
             />
           ))}
         </FeaturedModuleList>
-      </>
+      </Group>
     )
   );
 }

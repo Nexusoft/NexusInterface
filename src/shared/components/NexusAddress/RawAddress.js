@@ -1,5 +1,6 @@
 // External
-import { useRef, Component } from 'react';
+import { useRef } from 'react';
+import { useTheme } from '@emotion/react';
 import { clipboard } from 'electron';
 import styled from '@emotion/styled';
 
@@ -12,7 +13,8 @@ import { showNotification } from 'lib/ui';
 import copyIcon from 'icons/copy.svg';
 
 const RawAddressComponent = styled.div({
-  // marginTop: '1em',
+  minWidth: 0,
+  maxWidth: '100%',
 });
 
 const AddressTextField = styled(TextField)(
@@ -32,12 +34,12 @@ const Label = styled.div(({ theme }) => ({
 }));
 
 const CopyButton = styled(Button)(({ theme }) => ({
-  borderLeft: `1px solid ${theme.mixer(0.125)}`,
+  ...(theme.modern ? { flexShrink: 0 } : { borderLeft: `1px solid ${theme.mixer(0.125)}` }),
 }));
 
 function copyAddress(address, inputRef) {
   clipboard.writeText(address);
-  inputRef.current.select();
+  inputRef.current?.select();
   showNotification(__('Address has been copied to clipboard'), 'success');
 }
 
@@ -54,6 +56,7 @@ export default function RawAddress({
   copyable = true,
   ...rest
 }) {
+  const { modern } = useTheme();
   const inputRef = useRef();
 
   return (
@@ -68,12 +71,14 @@ export default function RawAddress({
           !!copyable && (
             <Tooltip.Trigger tooltip={__('Copy to clipboard')}>
               <CopyButton
-                skin="filled-inverted"
-                fitHeight
-                grouped="right"
+                skin={modern ? 'plain' : 'filled-inverted'}
+                square={modern ? 32 : undefined}
+                fitHeight={!modern}
+                grouped={modern ? undefined : 'right'}
+                aria-label={__('Copy to clipboard')}
                 onClick={() => copyAddress(address, inputRef)}
               >
-                <Icon icon={copyIcon} className="mr0_4" />
+                <Icon icon={copyIcon} />
               </CopyButton>
             </Tooltip.Trigger>
           )

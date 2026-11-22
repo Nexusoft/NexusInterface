@@ -1,7 +1,9 @@
+import { moduleLayout, modulePanel } from 'utils/moduleStyles';
 // External Dependencies
 import { useSelector } from 'react-redux';
 import { useRef, useEffect } from 'react';
 import styled from '@emotion/styled';
+import { useTheme } from '@emotion/react';
 import { ipcRenderer } from 'electron';
 import UT from 'lib/usageTracking';
 import memoize from 'utils/memoize';
@@ -29,6 +31,7 @@ import Tooltip from 'components/Tooltip';
 import Icon from 'components/Icon';
 
 import APIDocModal from './APIDocs/ApiDocModal';
+import { fade } from 'utils/color';
 
 __ = __context('Console.NexusAPI');
 
@@ -76,24 +79,35 @@ function censorSecuredFields(cmd, { consoleCliSyntax }) {
   return cmd;
 }
 
-const TerminalContent = styled.div({
+const TerminalContent = styled.div(({ theme }) => ({
   gridArea: 'content',
   overflow: 'visible',
-});
+  ...(theme.modern && { minWidth: 0, minHeight: 0 }),
+}));
 
-const Console = styled.div({
+const Console = styled.div(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   height: '100%',
-});
+  ...(theme.modern && {
+    minWidth: 0, minHeight: 0,
+    '> button': { alignSelf: 'flex-end', marginTop: 12, padding: '0 20px', minHeight: 40, borderRadius: 10, border: `1px solid ${fade(theme.primary, 0.75)}` },
+  }),
+}));
 
-const ConsoleInput = styled.div({
+const ConsoleInput = styled.div(({ theme }) => ({
   marginBottom: '1em',
   position: 'relative',
   display: 'grid',
   gridTemplateColumns: '1fr min-content',
   columnGap: '1em',
-});
+  ...(theme.modern && {
+    gridTemplateColumns: 'minmax(0, 1fr) auto', gap: 12, marginBottom: 16,
+    '> div:first-of-type': { minWidth: 0, minHeight: 48, borderRadius: 12, border: `1px solid ${fade(theme.primary, 0.75)}`, background: fade(theme.background, 0.05) },
+    'textarea': { fontSize: 13, lineHeight: 1.6 },
+    '@media (max-width: 600px)': { gridTemplateColumns: 'minmax(0, 1fr)', '> button': { justifySelf: 'end' } },
+  }),
+}));
 
 const ConsoleOutput = styled.code(({ theme }) => ({
   flexGrow: 1,
@@ -104,14 +118,25 @@ const ConsoleOutput = styled.code(({ theme }) => ({
   whiteSpace: 'pre-wrap',
   background: theme.background,
   border: `1px solid ${theme.mixer(0.125)}`,
+  ...(theme.modern && {
+    minHeight: 0, padding: moduleLayout.panelPadding, ...modulePanel(theme),
+    fontSize: 13, lineHeight: 1.7, color: theme.foreground,
+    wordBreak: 'normal', overflowWrap: 'anywhere',
+  }),
 }));
 
 const ExecuteButton = styled(Button)(({ theme }) => ({
   borderLeft: `1px solid ${theme.mixer(0.125)}`,
+  ...(theme.modern && {
+    borderRadius: '0 10px 10px 0', padding: '0 18px',
+    background: fade(theme.primary, 0.82), color: theme.primary,
+    '&:hover': { background: fade(theme.primary, 0.7) },
+  }),
 }));
 
 const HelpButton = styled(Button)(({ theme }) => ({
   border: `1px solid ${theme.mixer(0.125)}`,
+  ...(theme.modern && { borderRadius: 12, minWidth: 48, color: theme.primary, borderColor: fade(theme.primary, 0.75) }),
 }));
 
 const SyntaxSelect = styled(Select)(({ theme }) => ({
@@ -120,6 +145,7 @@ const SyntaxSelect = styled(Select)(({ theme }) => ({
 }));
 
 export default function NexusApiConsole() {
+  const { modern } = useTheme();
   const inputRef = useRef();
   const outputRef = useRef();
   const consoleInput = useSelector(consoleInputSelector);
@@ -314,13 +340,13 @@ export default function NexusApiConsole() {
             })}
           </ConsoleOutput>
 
-          <Button
+          {!modern && <Button
             skin="filled-inverted"
             grouped="bottom"
             onClick={resetConsole}
           >
             {__('Clear')}
-          </Button>
+          </Button>}
         </Console>
       </TerminalContent>
     </RequireCoreConnected>

@@ -2,73 +2,46 @@ import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 import { Link } from 'react-router-dom';
 
-import { arrowStyles } from 'components/Arrow';
+import Dropdown, { DropdownComponent } from 'components/Dropdown';
 import LoginModal from 'components/LoginModal';
 import NewUserModal from 'components/NewUserModal';
 import SetRecoveryModal from 'components/SetRecoveryModal';
 import { isLoggedIn } from 'selectors';
 import { openModal, showNotification } from 'lib/ui';
-import { timing, animations, consts } from 'styles';
+
 import { logOut, selectUsername } from 'lib/session';
 
 import SwitchUserModal from './SwitchUserModal';
 
+import themeStyles from 'utils/themeStyles';
+
 __ = __context('Header.UserDropdown');
 
-const UserDropdownComponent = styled.div(({ theme }) => ({
-  position: 'fixed',
-  background: theme.background,
-  color: theme.foreground,
-  width: 'max-content',
-  padding: '5px 0',
-  fontSize: 15,
-  borderRadius: 4,
-  boxShadow: '0 0 8px rgba(0,0,0,.7)',
-  animation: `${animations.fadeIn} ${timing.normal} ease-out`,
+const UserDropdownComponent = DropdownComponent;
+const MenuItem = Dropdown.MenuItem;
+const Separator = Dropdown.Separator;
 
-  '&::before': {
-    content: '""',
-    position: 'absolute',
-    bottom: '100%',
-    right: 18,
-    ...arrowStyles({
-      direction: 'up',
-      width: 15,
-      height: 8,
-      color: theme.background,
-    }),
-  },
-}));
-
-const CurrentUser = styled.div({
+const CurrentUser = styled.div(themeStyles([{
   padding: '5px 15px 10px',
-  textAlign: 'center',
-});
+  textAlign: 'center'
+}], [{
+  padding: '12px 12px 10px',
+  textAlign: 'left'
+}]));
 
-const Username = styled.div(({ theme }) => ({
+const Username = styled.div(themeStyles([({
+  theme
+}) => ({
   color: theme.primary,
-  fontWeight: 'bold',
-}));
-
-const MenuItem = styled.div(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  padding: `0 15px`,
-  overflow: 'hidden',
-  cursor: 'pointer',
-  transition: `background-color ${timing.normal}`,
-  whiteSpace: 'nowrap',
-  textOverflow: 'ellipsis',
-  height: consts.inputHeightEm + 'em',
-  '&:hover': {
-    background: theme.mixer(0.125),
-  },
-}));
-
-const Separator = styled.div(({ theme }) => ({
-  margin: '3px 0',
-  borderBottom: `1px solid ${theme.mixer(0.125)}`,
-}));
+  fontWeight: 'bold'
+})], [({
+  theme
+}) => ({
+  color: theme.primary,
+  fontSize: 15,
+  fontWeight: 600,
+  overflowWrap: 'anywhere'
+})]));
 
 function LoggedInDropdown({ closeDropdown }) {
   const currentUser = useSelector(selectUsername);
@@ -114,7 +87,7 @@ function LoggedInDropdown({ closeDropdown }) {
       <Link to="/User/Accounts" onClick={closeDropdown}>
         <MenuItem>{__('Accounts')}</MenuItem>
       </Link>
-      <Link to="/User/Tokens" onClick={closeDropdown}>
+      <Link to="/Registry/Tokens" onClick={closeDropdown}>
         <MenuItem>{__('Tokens')}</MenuItem>
       </Link>
       <Separator />

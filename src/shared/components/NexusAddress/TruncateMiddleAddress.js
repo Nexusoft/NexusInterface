@@ -6,11 +6,11 @@ import styled from '@emotion/styled';
 // Internal
 import Tooltip from 'components/Tooltip';
 import { showNotification } from 'lib/ui';
-import { throttled } from 'utils/universal';
 import { timing, consts } from 'styles';
 
 const TruncateMiddleAddressComponent = styled.div({
-  // marginTop: '1em',
+  minWidth: 0,
+  maxWidth: '100%',
 });
 
 const AddressWrapper = styled.div(
@@ -41,6 +41,8 @@ const AddressWrapper = styled.div(
 
 const Address = styled.div({
   width: '100%',
+  maxWidth: '32ch',
+  minWidth: 0,
   height: '100%',
   display: 'flex',
   alignItems: 'center',
@@ -50,27 +52,21 @@ const Address = styled.div({
 const AddressCopy = styled.div(
   {
     flex: '1 1 0',
+    minWidth: 0,
     overflow: 'hidden',
+    display: 'flex',
   },
-  ({ left, overflown }) =>
-    left && {
-      maskImage:
-        'linear-gradient(to left, transparent 0%, black 10%, black 100%)',
-      maskImage: overflown ? undefined : 'none',
-    },
   ({ right, overflown }) =>
     right && {
-      display: 'flex',
       justifyContent: 'flex-end',
-      maskImage:
-        'linear-gradient(to right, transparent 0%, black 10%, black 100%)',
-      display: overflown ? undefined : 'none',
+      display: overflown ? 'flex' : 'none',
     }
 );
 
 const AddressContent = styled.div({
   whiteSpace: 'nowrap',
   width: 'max-content',
+  flexShrink: 0,
 });
 
 const Ellipsis = styled.div(
@@ -99,27 +95,16 @@ function useCheckOverflow() {
   const contentRef = useRef();
 
   useEffect(() => {
-    const checkOverflow = throttled(() => {
+    const checkOverflow = () => {
       if (!addressRef.current || !contentRef.current) return;
-      const containerWidth = addressRef.current.clientWidth;
-      const contentWidth = contentRef.current.offsetWidth;
-      if (contentWidth > containerWidth && !overflown) {
-        setOverflown(true);
-      }
-      if (contentWidth <= containerWidth && overflown) {
-        setOverflown(false);
-      }
-    }, 500);
+      setOverflown(contentRef.current.offsetWidth > addressRef.current.clientWidth);
+    };
 
     const resizeObserver = new ResizeObserver(checkOverflow);
-    if (addressRef.current) {
-      resizeObserver.observe(addressRef.current);
-    }
-    return () => {
-      if (addressRef.current) {
-        resizeObserver.unobserve(addressRef.current);
-      }
-    };
+    if (addressRef.current) resizeObserver.observe(addressRef.current);
+    if (contentRef.current) resizeObserver.observe(contentRef.current);
+    checkOverflow();
+    return () => resizeObserver.disconnect();
   }, []);
 
   return { overflown, addressRef, contentRef };
@@ -166,7 +151,7 @@ export default function TruncateMiddleAddress({
             </AddressCopy>
             <Ellipsis hidden={!overflown}>...</Ellipsis>
             <AddressCopy right overflown={overflown}>
-              {address}
+              <AddressContent>{address}</AddressContent>
             </AddressCopy>
           </Address>
         </AddressWrapper>

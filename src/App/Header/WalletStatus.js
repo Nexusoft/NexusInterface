@@ -26,13 +26,12 @@ export default function WalletStatus() {
       <CoreStatus />
     </span>
   ) : (
-    (!loggedIn && (
-      <span className="dim">{__("You're not logged in")}. </span>
-    )) ||
-      (!!(isInDanger && staking) && (
+    <>
+      {!!(loggedIn && isInDanger && staking) && (
         <StakingDanger>
           {__('You are staking but have not received a block in 30 minutes!')}
         </StakingDanger>
-      ))
+      )}
+    </>
   );
 }

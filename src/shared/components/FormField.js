@@ -101,7 +101,7 @@ export default function FormField({
   };
 
   return (
-    <FormFieldComponent {...rest}>
+    <FormFieldComponent data-form-field="true" {...rest}>
       <Label
         capitalize={capitalizeLabel}
         htmlFor={connectLabel ? inputId : undefined}

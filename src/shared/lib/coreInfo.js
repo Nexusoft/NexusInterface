@@ -22,7 +22,7 @@ const getSystemInfo = async () => {
     store.dispatch({ type: TYPE.SET_SYSTEM_INFO, payload: systemInfo });
     return systemInfo;
   } catch (err) {
-    store.dispatch({ type: TYPE.DISCONNECT_CORE });
+    store.dispatch({ type: TYPE.DISCONNECT_CORE, connectionFailed: true });
     console.error('system/get/info failed', err);
     // Throws error so getSystemInfo fails and refreshCoreInfo will
     // switch to using dynamic interval.

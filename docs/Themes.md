@@ -12,7 +12,22 @@ Example\
 You may use any text editor you like, save as a `.json` file and import that file using the import function in the style settings.\
 This guide may change and the internal systems may change which will require reworking your theme file.  See Upgrading for details. 
 
+## Built-in themes
+Modern is the default for installations without a saved theme. Select Modern, Dark,
+Light, or Nexus.io in Settings > Style. Dark retains the original layout and styles.
+Existing saved themes keep their selection.
+
+Modern theme files include `"modern": true` to use the modern layout, panels, and
+dialogs. Omit this field for the original styling. Color and wallpaper edits retain
+the selected layout, and resetting colors retains Modern when it is active.
+
 ## Quick Guide
+In Settings > Style > Color scheme, the interface colors have an Opacity slider
+from 0% (transparent) to 100% (opaque). Transparent colors are saved as CSS
+`rgba(...)` values and retained when exporting or importing a theme. Globe and map colors also support opacity, including peer pillars, arrival pulses,
+and globe connection arcs. Built-in presets restore their own colors
+and opacity.
+
 | Descriptor                    | Code                 | Valid Input                       |
 |:----------------------------- |:--------------------:|:---------------------------------:|
 | Background Image              | `"wallpaper"`        | String: Local or Remote File Path |

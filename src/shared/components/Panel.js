@@ -16,6 +16,7 @@ import { keyframes } from '@emotion/react';
 
 // Internal Global Dependencies
 import Icon from 'components/Icon';
+import themeStyles from 'utils/themeStyles';
 
 const intro = keyframes`
   from { 
@@ -28,17 +29,39 @@ const intro = keyframes`
   }
 `;
 
-const borderRadius = 4;
+const borderRadius = 16;
 
-const PanelWrapper = styled.div({
+const PanelWrapper = styled.div(themeStyles([{
   width: '100%',
   height: '100%',
   padding: '30px 10%',
   display: 'flex',
-  alignItems: 'stretch',
-});
+  alignItems: 'stretch'
+}], [{
+  width: '100%',
+  height: '100%',
+  padding: '28px clamp(16px, 4vw, 64px)',
+  minWidth: 0,
+  '@media (max-width: 600px)': {
+    padding: 12
+  },
+  display: 'flex',
+  alignItems: 'stretch'
+}]));
 
-const PanelComponent = styled.div(({ theme }) => ({
+const PanelComponent = styled.div(themeStyles([({
+  theme
+}) => ({
+  display: 'grid',
+  gridTemplateAreas: '"header" "body"',
+  gridTemplateRows: 'min-content 1fr',
+  color: theme.foreground,
+  width: '100%',
+  height: '100%',
+  animation: `${intro} .2s ease-out`
+})], [({
+  theme
+}) => ({
   display: 'grid',
   gridTemplateAreas: '"header" "body"',
   gridTemplateRows: 'min-content 1fr',
@@ -46,32 +69,63 @@ const PanelComponent = styled.div(({ theme }) => ({
   width: '100%',
   height: '100%',
   animation: `${intro} .2s ease-out`,
-}));
+  minHeight: 0,
+  border: `1px solid ${theme.mixer(0.12)}`,
+  borderRadius,
+  boxShadow: '0 16px 48px rgba(0, 0, 0, 0.12)'
+})]));
 
-const PanelHeader = styled.div(({ theme }) => ({
+const PanelHeader = styled.div(themeStyles([({
+  theme
+}) => ({
   gridArea: 'header',
   background: theme.background,
-  borderTopLeftRadius: borderRadius,
-  borderTopRightRadius: borderRadius,
+  borderTopLeftRadius: 4,
+  borderTopRightRadius: 4,
   padding: '10px 30px',
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
-  color: theme.mixer(0.75),
-}));
+  color: theme.mixer(0.75)
+})], [({
+  theme
+}) => ({
+  gridArea: 'header',
+  background: theme.background,
+  borderTopLeftRadius: borderRadius,
+  borderTopRightRadius: borderRadius,
+  padding: '20px 24px',
+  gap: 16,
+  flexWrap: 'wrap',
+  borderBottom: `1px solid ${theme.mixer(0.1)}`,
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  color: theme.mixer(0.75)
+})]));
 
-const PanelTitle = styled.h3(({ theme }) => ({
+const PanelTitle = styled.h3(themeStyles([({
+  theme
+}) => ({
   fontSize: 28,
   fontWeight: 'normal',
   margin: 0,
-  color: theme.primary,
-}));
+  color: theme.primary
+})], [({
+  theme
+}) => ({
+  fontSize: 24,
+  fontWeight: 'bold',
+  letterSpacing: '-0.5px',
+  margin: 0,
+  color: theme.primary
+})]));
 
 const PanelBody = styled.div(({ theme }) => ({
   gridArea: 'body',
   background: theme.lower(theme.background, 0.3),
-  borderBottomLeftRadius: borderRadius,
-  borderBottomRightRadius: borderRadius,
+  borderBottomLeftRadius: theme.modern ? borderRadius : 4,
+  borderBottomRightRadius: theme.modern ? borderRadius : 4,
   padding: '20px 30px',
   position: 'relative',
   overflow: 'auto',

@@ -2,6 +2,8 @@
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
+import { useTheme } from '@emotion/react';
+import Group from '../SettingsGroup';
 import * as AutoLaunch from 'auto-launch';
 
 // Internal Global
@@ -163,6 +165,7 @@ async function handleAutoUpdateChange(e) {
 }
 
 export default function SettingsApp() {
+  const { modern } = useTheme();
   const coreConnected = useSelector(isCoreConnected);
   const settings = useSelector((state) => state.settings);
   useEffect(() => {
@@ -176,9 +179,10 @@ export default function SettingsApp() {
 
   return (
     <>
+      <Group title={__('General')}>
       <LanguageSetting />
 
-      <SettingsField
+      <SettingsField className="app-setting"
         connectLabel
         label={__('Minimize on close')}
         subLabel={__(
@@ -191,15 +195,18 @@ export default function SettingsApp() {
         />
       </SettingsField>
 
-      <SettingsField
+      <SettingsField className="app-setting"
         connectLabel
         label={__('Open on startup')}
-        subLabel={__('Open the wallet when ever the OS starts.')}
+        subLabel={__('Open the wallet when the operating system starts.')}
       >
         <Switch checked={settings.openOnStart} onChange={toggleOpenOnStart} />
       </SettingsField>
 
-      <SettingsField
+      </Group>
+      <Group title={__('Updates')}>
+
+      <SettingsField className="app-setting"
         connectLabel
         label={
           <span>
@@ -225,7 +232,7 @@ export default function SettingsApp() {
         />
       </SettingsField>
 
-      <SettingsField
+      <SettingsField className="app-setting"
         connectLabel
         label={__('Allow Pre-releases')}
         subLabel={
@@ -258,7 +265,9 @@ export default function SettingsApp() {
         )}
       </SettingsField>
 
-      <SettingsField
+      </Group>
+      <Group title={__('Privacy and preferences')}>
+      <SettingsField className="app-setting"
         connectLabel
         label={__('Send anonymous usage data')}
         subLabel={__(
@@ -271,16 +280,20 @@ export default function SettingsApp() {
         />
       </SettingsField>
 
-      <SettingsField label={__('Base currency')}>
+      <SettingsField className="app-setting select-setting" label={__('Base currency')}>
         <Select
+          className="preference-select"
+          skin={modern ? 'filled-inverted' : 'underline'}
           value={settings.fiatCurrency}
           onChange={updateHandlers('fiatCurrency')}
           options={fiatCurrencies}
-          style={{ maxWidth: 260 }}
+          style={modern ? undefined : { maxWidth: 260 }}
         />
       </SettingsField>
 
-      <SettingsField
+      </Group>
+      <Group title={__('Advanced')}>
+      <SettingsField className="app-setting"
         connectLabel
         label={__('Developer mode')}
         subLabel={__(
@@ -294,7 +307,7 @@ export default function SettingsApp() {
       </SettingsField>
 
       <div style={{ display: settings.devMode ? 'block' : 'none' }}>
-        <SettingsField
+        <SettingsField className="app-setting"
           indent={1}
           connectLabel
           label={__('Module open source policy')}
@@ -307,7 +320,7 @@ export default function SettingsApp() {
             onChange={toggleVerifyModuleSource}
           />
         </SettingsField>
-        <SettingsField
+        <SettingsField className="app-setting"
           indent={1}
           connectLabel
           label={__('Allow SymLink')}
@@ -321,6 +334,7 @@ export default function SettingsApp() {
           />
         </SettingsField>
       </div>
+      </Group>
     </>
   );
 }

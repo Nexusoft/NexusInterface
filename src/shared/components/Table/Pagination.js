@@ -1,3 +1,4 @@
+import { modernAction } from 'utils/buttonStyles';
 import styled from '@emotion/styled';
 import { consts } from 'styles';
 
@@ -62,6 +63,7 @@ const PaginationButton = styled.button(({ theme }) => ({
     background: 'rgba(255, 255, 255, 0.2)',
     color: '#fff',
   },
+  ...(theme.modern && { ...modernAction, width: '100%', '&:focus-visible': { outline: `2px solid ${theme.primary}`, outlineOffset: 3 } }),
 }));
 
 const PageInfo = styled.span({

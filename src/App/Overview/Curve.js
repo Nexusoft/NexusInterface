@@ -1,4 +1,6 @@
 import * as THREE from 'three';
+import Color from 'color';
+import { mapX } from './mapProjection';
 import { geoInterpolate } from 'd3-geo';
 
 var millisecondsPerFrame = 40;
@@ -12,6 +14,14 @@ var millisecondsPerFrame = 40;
  * @returns {THREE.CubicBezierCurve3}
  */
 function getSplineFromCoords(pointOne, pointTwo) {
+  if (pointOne.params?.mapLayout) {
+    const start = new THREE.Vector3(mapX(pointOne.lng), 2, -pointOne.lat * 2);
+    const end = new THREE.Vector3(mapX(pointTwo.lng), 2, -pointTwo.lat * 2);
+    const height = clamp(start.distanceTo(end) * 0.3, 15, 150);
+    const mid1 = start.clone().lerp(end, 0.25); mid1.y = height;
+    const mid2 = start.clone().lerp(end, 0.75); mid2.y = height;
+    return new THREE.CubicBezierCurve3(start, mid1, mid2, end);
+  }
   const start = coordinateToPosition(pointOne.lat, pointOne.lng, 125);
   const end = coordinateToPosition(pointTwo.lat, pointTwo.lng, 125);
   const altitude = clamp(start.distanceTo(end) * 0.35, 10, 125);
@@ -71,11 +81,12 @@ export default class Curve {
     this.pointOne = pointOne;
     this.pointTwo = pointTwo;
 
+    const color = Color(params.color || '#00ffff');
     const material = new THREE.LineBasicMaterial({
       blending: THREE.AdditiveBlending,
-      opacity: params.opacity || 0.6,
+      opacity: (params.opacity ?? 0.6) * color.alpha(),
       transparent: true,
-      color: params.color || '#00ffff',
+      color: color.hex(),
       linewidth: params.linewidth || 1.6,
       linejoin: 'bevel',
     });

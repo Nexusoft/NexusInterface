@@ -1,25 +1,34 @@
+import { moduleLayout, modulePanel } from 'utils/moduleStyles';
 // External Dependencies
 import { useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
+import { useTheme } from '@emotion/react';
 
 // Internal Global Dependencies
 import 'lib/coreOutput';
 import { switchConsoleTab, pauseCoreOutput, unpauseCoreOutput } from 'lib/ui';
 import Button from 'components/Button';
+import { fade } from 'utils/color';
 
 __ = __context('Console.CoreOutput');
 
-const TerminalContent = styled.div({
+const TerminalContent = styled.div(({ theme }) => ({
   gridArea: 'content',
   overflow: 'hidden',
-});
+  ...(theme.modern && { minHeight: 0, minWidth: 0 }),
+}));
 
 const TerminalCoreComponent = styled.div(({ theme }) => ({
   height: '100%',
   display: 'flex',
   flexDirection: 'column',
   border: `1px solid ${theme.mixer(0.125)}`,
+  ...(theme.modern && {
+    minHeight: 0, minWidth: 0, border: 0,
+    '> button': { alignSelf: 'flex-end', marginTop: 12, padding: '0 20px', minHeight: 40, borderRadius: 10, border: `1px solid ${fade(theme.primary, 0.75)}` },
+    '> .dim': { padding: 24, borderRadius: 14, border: `1px solid ${fade(theme.primary, 0.75)}`, background: theme.background },
+  }),
 }));
 
 const Output = styled.div(
@@ -32,6 +41,10 @@ const Output = styled.div(
     background: theme.background,
     borderBottom: `1px solid ${theme.mixer(0.125)}`,
     padding: '.5em',
+    ...(theme.modern && {
+    minHeight: 0, padding: moduleLayout.panelPadding, ...modulePanel(theme),
+    fontSize: 13, lineHeight: 1.7,
+    }),
   }),
   ({ reverse }) => ({
     flexDirection: reverse ? 'column-reverse' : 'column',
@@ -41,9 +54,11 @@ const Output = styled.div(
 const OutputLine = styled.code(({ theme }) => ({
   background: theme.background,
   borderColor: theme.background,
+  ...(theme.modern && { background: 'transparent', border: 0, padding: 0, color: theme.foreground, overflowWrap: 'anywhere' }),
 }));
 
 export default function TerminalCore() {
+  const { modern } = useTheme();
   const outputRef = useRef();
   const settings = useSelector((state) => state.settings);
   const output = useSelector((state) => state.ui.console.core.output);
@@ -88,14 +103,14 @@ export default function TerminalCore() {
                 <OutputLine key={i}>{d}</OutputLine>
               ))}
             </Output>
-            <Button
+            {!modern && <Button
               skin="filled-inverted"
               fullWidth
               onClick={paused ? unpauseCoreOutput : pauseCoreOutput}
               style={{ flexShrink: 0 }}
             >
               {paused ? 'Unpause' : 'Pause'}
-            </Button>
+            </Button>}
           </>
         )}
       </TerminalCoreComponent>

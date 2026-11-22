@@ -7,6 +7,7 @@ import styled from '@emotion/styled';
 
 // Internal
 import Form from 'components/Form';
+import Button from 'components/Button';
 import FormField from 'components/FormField';
 import Link from 'components/Link';
 import TokenName from 'components/TokenName';
@@ -19,14 +20,35 @@ const floatRegex = /^[0-9]+(.[0-9]*)?$/;
 const Wrapper = styled.div({
   display: 'flex',
   alignItems: 'flex-start',
+  minWidth: 0,
 });
+
+const DashboardAmount = styled.div({
+  display: 'flex', alignItems: 'flex-start', gap: 18, flexWrap: 'wrap',
+  '> div': { flex: '1 1 100%', minWidth: 0 },
+  '.amount-row': { display: 'grid', gridTemplateColumns: '78px minmax(0, 1fr)', alignItems: 'center', gap: 18, marginTop: 0 },
+  '.amount-row > .relative': { display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) auto', gap: 18, alignItems: 'center' },
+  '.amount-row label': { margin: 0 },
+  '.amount-row button': { minHeight: 42, borderRadius: 9, padding: '0 18px' },
+  '.amount-unit': { padding: '0 12px', fontSize: 13 },
+  '@container send-fields (max-width: 560px)': { '.amount-row, .amount-row > .relative': { gap: 12 } },
+  '@container send-fields (max-width: 380px)': { '.amount-row': { gridTemplateColumns: 'minmax(0, 1fr)' }, '.amount-row button': { padding: '0 12px' }, '.amount-unit': { padding: '0 8px' } },
+});
+
+const AmountInput = styled(Form.TextField)(({ theme }) => theme.modern && ({
+  borderRadius: 9, minHeight: 42,
+  input: { minWidth: 0 },
+  'input:focus-visible': { outline: 'none' },
+}));
 
 const AmountFieldWrapper = styled.div({
   flex: '1 1 100px',
+  minWidth: 0,
 });
 
 const FiatAmountFieldWrapper = styled.div({
   flex: '1 1 100px',
+  minWidth: 0,
 });
 
 const SendAllLink = styled(Link)({
@@ -74,7 +96,7 @@ function positiveNumber(value) {
 //   return fiat ? `≈ ${fiat} ${currency}` : null;
 // }
 
-export default function AmountField({ parentFieldName }) {
+export default function AmountField({ parentFieldName, dashboard = false }) {
   const source = selectSource();
   const fiatCurrency = useSelector((state) => state.settings.fiatCurrency);
   const price = useSelector((state) => state.market?.price);
@@ -127,6 +149,18 @@ export default function AmountField({ parentFieldName }) {
     )
   );
 
+  if (dashboard) return <DashboardAmount>
+    <FormField connectLabel className="amount-row" label={__('Amount')}>
+      {(inputId) => <>
+        <AmountInput id={inputId} name={amountFieldName} skin="filled-inverted" placeholder="0.00000" validate={positiveNumber}
+          config={{ format: (value) => typeof value === 'string' ? value.replace(',', '.') : value }}
+          right={<span className="amount-unit">{source ? TokenName.from(source) : 'NXS'}</span>} />
+        <Button type="button" skin="primary" disabled={!fullAmount} onClick={sendAll}>{__('MAX')}</Button>
+      </>}
+    </FormField>
+    {!!fiatCurrency && !!price && source?.account?.token === '0' && <FormField connectLabel label={__('%{currency} amount', { currency: fiatCurrency })}><AmountInput name={fiatAmountFieldName} skin="filled-inverted" placeholder="0.00" /></FormField>}
+  </DashboardAmount>;
+
   return (
     <Wrapper>
       <AmountFieldWrapper>
@@ -154,7 +188,7 @@ export default function AmountField({ parentFieldName }) {
           {/* <Tooltip.Trigger
             tooltip={<FiatValue fieldName={amountFieldName} source={source} />}
           > */}
-          <Form.TextField
+          <AmountInput
             name={amountFieldName}
             skin="filled-inverted"
             config={{
@@ -187,7 +221,7 @@ export default function AmountField({ parentFieldName }) {
                 </span>
               }
             >
-              <Form.TextField
+              <AmountInput
                 name={fiatAmountFieldName}
                 skin="filled-inverted"
                 placeholder="0.00"

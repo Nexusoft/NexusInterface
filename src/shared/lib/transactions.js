@@ -258,6 +258,45 @@ export async function updatePage(page) {
   return await loadTransactions();
 }
 
+// Read every matching page without changing the visible list or its pagination.
+export async function fetchAllTransactions({ signal, onProgress } = {}) {
+  const initial = store.getState();
+  const genesis = initial.user.status?.genesis;
+  if (!genesis) throw new Error('Please sign in before exporting transactions.');
+  const query = buildQuery({ ...initial.ui.transactionsFilter });
+  const cutoff = `results.timestamp<${Math.floor(Date.now() / 1000) + 1}`;
+  const where = query ? `(${query}) AND ${cutoff}` : cutoff;
+  const result = [];
+  const seen = new Set();
+  const checkActive = () => {
+    if (signal?.aborted) throw new Error('Transaction export cancelled.');
+    if (store.getState().user.status?.genesis !== genesis) {
+      throw new Error('The active user changed. Please start the export again.');
+    }
+  };
+  for (let page = 0; ; page += 1) {
+    checkActive();
+    const batch = await callAPI('profiles/transactions/master', {
+      verbose: 'summary', limit: txCountPerPage, page, where,
+    });
+    checkActive();
+    if (!Array.isArray(batch)) throw new Error('Invalid transaction response.');
+    const previousCount = result.length;
+    for (const tx of batch) {
+      if (!tx.txid) throw new Error('A transaction is missing its ID.');
+      if (!seen.has(tx.txid)) {
+        seen.add(tx.txid);
+        result.push(tx);
+      }
+    }
+    onProgress?.(result.length);
+    if (batch.length < txCountPerPage) return result;
+    if (result.length === previousCount) {
+      throw new Error('Transaction pagination did not advance. Please retry the export.');
+    }
+  }
+}
+
 export const getDeltaSign = (contract) => {
   switch (contract.OP) {
     case 'CREDIT':

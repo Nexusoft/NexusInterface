@@ -17,9 +17,11 @@ const SubHeading = styled.div({
 });
 
 const Option = styled.div(({ theme }) => ({
-  // opacity: 0.9,
-  margin: '0 -50px',
-  padding: '1em 50px',
+  margin: 0,
+  padding: '12px 0',
+  minWidth: 0,
+  maxWidth: '100%',
+  cursor: 'pointer',
   transitionProperty: 'opacity, background-color',
   transitionDuration: timing.normal,
 
@@ -29,15 +31,26 @@ const Option = styled.div(({ theme }) => ({
   },
 }));
 
+const PickerAddress = styled(NexusAddress)({
+  minWidth: 0,
+  maxWidth: '100%',
+  '> div': { maxWidth: '100%', overflowWrap: 'anywhere', whiteSpace: 'pre-wrap' },
+  input: { minWidth: 0 },
+});
+
 const selectKnownTokens = memoize(
   (userTokens, accounts) => {
-    userTokens = userTokens || [];
-    const tokens = [{ address: '0', name: 'NXS' }, ...userTokens];
+    const tokens = [];
+    for (const token of userTokens || []) {
+      if (token.address && token.address !== '0' && !tokens.some((known) => known.address === token.address)) {
+        tokens.push(token);
+      }
+    }
     for (const account of accounts || []) {
       const tokenAddress = account.token;
       if (
-        tokenAddress !== '0' &&
-        !userTokens.some((token) => token.address === tokenAddress)
+        tokenAddress && tokenAddress !== '0' &&
+        !tokens.some((token) => token.address === tokenAddress)
       ) {
         tokens.push({
           name: account.ticker || account.token_name,
@@ -87,7 +100,7 @@ export default function SelectAddressModal({ onSelect }) {
                     closeModal();
                   }}
                 >
-                  <NexusAddress
+                  <PickerAddress
                     label={
                       account.name || (
                         <span className="dim">{__('Unnamed account')}</span>
@@ -111,8 +124,8 @@ export default function SelectAddressModal({ onSelect }) {
                     closeModal();
                   }}
                 >
-                  <NexusAddress
-                    label={<TokenName token={token} />}
+                  <PickerAddress
+                    label={token.name || <TokenName token={{ ...token, token: token.address }} />}
                     address={token.address}
                     copyable={false}
                   />
@@ -131,7 +144,7 @@ export default function SelectAddressModal({ onSelect }) {
                     closeModal();
                   }}
                 >
-                  <NexusAddress
+                  <PickerAddress
                     label={
                       contact.label
                         ? `${contact.name} - ${contact.label}`

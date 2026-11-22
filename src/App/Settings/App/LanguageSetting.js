@@ -1,6 +1,7 @@
 // External
 import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
+import { useTheme } from '@emotion/react';
 
 // Internal
 import languages from 'data/languages';
@@ -27,6 +28,7 @@ const languageOptions = languages.map((lang) => ({
 }));
 
 export default function LanguageSetting() {
+  const { modern } = useTheme();
   const locale = useSelector((state) => state.settings.locale);
 
   const handleChange = async (locale) => {
@@ -50,8 +52,10 @@ export default function LanguageSetting() {
   };
 
   return (
-    <SettingsField label={__('Language')}>
+    <SettingsField className="app-setting select-setting" label={__('Language')}>
       <Select
+        className="preference-select"
+        skin={modern ? 'filled-inverted' : 'underline'}
         options={languageOptions}
         value={locale}
         onChange={handleChange}

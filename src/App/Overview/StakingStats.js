@@ -80,7 +80,7 @@ function StakingStat({ stakeInfo, value, ...props }) {
           'Staking stats not yet available until you get a genesis transaction'
         )
       }
-      linkTo="/User/Staking"
+      linkTo="/Staking"
       {...props}
     >
       {value ? formatNumber(value, 2) + '%' : 'N/A'}
