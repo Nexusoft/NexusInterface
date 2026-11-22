@@ -1176,3 +1176,37 @@ Your user is ready,Your user is ready,NewUser
 Written into a block,Written into a block,NewUser
 Your user is on the blockchain. Log in to start using it.,Your user is on the blockchain. Log in to start using it.,NewUser
 Close,Close,NewUser
+Good,Good,Header.Connection
+Fair,Fair,Header.Connection
+Poor,Poor,Header.Connection
+Bad,Bad,Header.Connection
+%{smart_count} second ago |||| %{smart_count} seconds ago,%{smart_count} second ago |||| %{smart_count} seconds ago,Header.Connection
+%{smart_count} minute ago |||| %{smart_count} minutes ago,%{smart_count} minute ago |||| %{smart_count} minutes ago,Header.Connection
+%{smart_count} hour ago |||| %{smart_count} hours ago,%{smart_count} hour ago |||| %{smart_count} hours ago,Header.Connection
+Core answers in,Core answers in,Header.Connection
+%{ms} ms on average,%{ms} ms on average,Header.Connection
+%{seconds} s on average,%{seconds} s on average,Header.Connection
+Unanswered requests,Unanswered requests,Header.Connection
+%{missed} of %{total},%{missed} of %{total},Header.Connection
+Behind the network,Behind the network,Header.Connection
+%{smart_count} block |||| %{smart_count} blocks,%{smart_count} block |||| %{smart_count} blocks,Header.Connection
+Last new block,Last new block,Header.Connection
+Peers,Peers,Header.Connection
+"%{count} connected, %{ms} ms","%{count} connected, %{ms} ms",Header.Connection
+%{count} connected,%{count} connected,Header.Connection
+Core restarts today,Core restarts today,Header.Connection
+The wallet is not connected to Nexus Core.,The wallet is not connected to Nexus Core.,Header.Connection
+The connection to Nexus Core is good.,The connection to Nexus Core is good.,Header.Connection
+Nexus Core is a bit slow at times. Everything works.,Nexus Core is a bit slow at times. Everything works.,Header.Connection
+"Nexus Core is slow to answer or gets new blocks late. This is usually a busy PC or a slow internet connection. Staking goes on, but may find fewer blocks.","Nexus Core is slow to answer or gets new blocks late. This is usually a busy PC or a slow internet connection. Staking goes on, but may find fewer blocks.",Header.Connection
+"Nexus Core is very slow, does not answer or is stuck. Staking may not work. Check the internet connection, or restart the core.","Nexus Core is very slow, does not answer or is stuck. Staking may not work. Check the internet connection, or restart the core.",Header.Connection
+Checking the connection...,Checking the connection...,Header.Connection
+Not connected to Nexus Core,Not connected to Nexus Core,Header.Connection
+Connection: %{quality},Connection: %{quality},Header.Connection
+Restart Nexus Core?,Restart Nexus Core?,Header.Connection
+The wallet logs you in again when the core is back.,The wallet logs you in again when the core is back.,Header.Connection
+You will have to log in again after the restart.,You will have to log in again after the restart.,Header.Connection
+"Nexus Core is synchronizing, block checks start when it is done","Nexus Core is synchronizing, block checks start when it is done",Header.Connection
+Updated every 10 seconds,Updated every 10 seconds,Header.Connection
+Restart core,Restart core,Header.Connection
+Close,Close,Header.Connection
