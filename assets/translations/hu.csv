@@ -1018,3 +1018,7 @@
 "New wallet version %{version} - Click here to download","","AutoUpdate"
 "New wallet version %{version} - Click here to update","","AutoUpdate"
 "New wallet version %{version} available. Downloading...","Új pénztárca verzió %{version} érhető el. Letöltés...","AutoUpdate"
+"Stake this small amount?","Ezt a kis összeget stakeled?","AdjustStake"
+"Staked NXS are locked in your trust account and only come back when your stake produces a block. A small stake can take a very long time, or never, to produce one, so the coins may stay locked with no reward. Nexus pooled staking for small holders is not available.","A stakelt NXS a bizalmi fiókodban zárolva van, és csak akkor kerül vissza, amikor a stake-ed blokkot hoz létre. Egy kis stake nagyon sokáig, vagy soha nem hoz létre blokkot, így az érmék jutalom nélkül zárolva maradhatnak. Kis tulajdonosoknak szóló közös staking a Nexusban nem érhető el.","AdjustStake"
+"Stake anyway","Stakelés mégis","AdjustStake"
+"Staking locks your NXS in a trust account until your stake produces a block, so only stake an amount you can leave for a long time. A small stake can take a very long time, or never, to produce a block.","A staking a bizalmi fiókban zárolja az NXS-edet, amíg a stake-ed blokkot nem hoz létre, ezért csak olyan összeget stakelj, amelyet hosszú ideig nélkülözni tudsz. Egy kis stake nagyon sokáig, vagy soha nem hoz létre blokkot.","AdjustStake"

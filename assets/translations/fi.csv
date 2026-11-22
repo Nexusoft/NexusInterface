@@ -1018,3 +1018,7 @@
 "New wallet version %{version} - Click here to download","","AutoUpdate"
 "New wallet version %{version} - Click here to update","","AutoUpdate"
 "New wallet version %{version} available. Downloading...","Uusi lompakko versio %{version} saatavilla. Ladataan...","AutoUpdate"
+"Stake this small amount?","Panostetaanko näin pieni summa?","AdjustStake"
+"Staked NXS are locked in your trust account and only come back when your stake produces a block. A small stake can take a very long time, or never, to produce one, so the coins may stay locked with no reward. Nexus pooled staking for small holders is not available.","Panostetut NXS:t lukitaan luottamustilillesi ja palaavat vasta, kun panoksesi tuottaa lohkon. Pieni panos voi tuottaa lohkon hyvin pitkän ajan kuluttua tai ei koskaan, joten kolikot voivat jäädä lukkoon ilman palkkiota. Nexuksen yhteispanostusta pienille haltijoille ei ole saatavilla.","AdjustStake"
+"Stake anyway","Panosta silti","AdjustStake"
+"Staking locks your NXS in a trust account until your stake produces a block, so only stake an amount you can leave for a long time. A small stake can take a very long time, or never, to produce a block.","Panostus lukitsee NXS:si luottamustilille, kunnes panoksesi tuottaa lohkon, joten panosta vain summa, jonka voit jättää pitkäksi aikaa. Pieni panos voi tuottaa lohkon hyvin pitkän ajan kuluttua tai ei koskaan.","AdjustStake"

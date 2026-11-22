@@ -1014,3 +1014,7 @@
 "New wallet version %{version} - Click here to download","","AutoUpdate"
 "New wallet version %{version} - Click here to update","","AutoUpdate"
 "New wallet version %{version} available. Downloading...","نسخة جديدة من المحفظة %{version} متاحة. يتم تحميل...","AutoUpdate"
+"Stake this small amount?","هل تريد تخزين هذا المبلغ الصغير؟","AdjustStake"
+"Staked NXS are locked in your trust account and only come back when your stake produces a block. A small stake can take a very long time, or never, to produce one, so the coins may stay locked with no reward. Nexus pooled staking for small holders is not available.","تُقفل عملات NXS المخزنة في حساب الثقة ولا تعود إلا عندما تنتج حصتك كتلة. قد تستغرق الحصة الصغيرة وقتًا طويلًا جدًا لإنتاج كتلة أو لا تنتجها أبدًا، فقد تبقى العملات مقفلة دون مكافأة. التخزين الجماعي في Nexus لصغار المالكين غير متاح.","AdjustStake"
+"Stake anyway","التخزين على أي حال","AdjustStake"
+"Staking locks your NXS in a trust account until your stake produces a block, so only stake an amount you can leave for a long time. A small stake can take a very long time, or never, to produce a block.","يقفل التخزين عملات NXS في حساب ثقة حتى تنتج حصتك كتلة، لذا لا تخزّن إلا مبلغًا يمكنك تركه لفترة طويلة. قد تستغرق الحصة الصغيرة وقتًا طويلًا جدًا لإنتاج كتلة أو لا تنتجها أبدًا.","AdjustStake"

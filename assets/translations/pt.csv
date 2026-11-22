@@ -1014,3 +1014,7 @@
 "New wallet version %{version} - Click here to download","","AutoUpdate"
 "New wallet version %{version} - Click here to update","","AutoUpdate"
 "New wallet version %{version} available. Downloading...","","AutoUpdate"
+"Stake this small amount?","Fazer staking deste pequeno montante?","AdjustStake"
+"Staked NXS are locked in your trust account and only come back when your stake produces a block. A small stake can take a very long time, or never, to produce one, so the coins may stay locked with no reward. Nexus pooled staking for small holders is not available.","Os NXS em staking ficam bloqueados na sua conta de confiança e só voltam quando o seu stake produz um bloco. Um stake pequeno pode demorar muito tempo, ou nunca, a produzir um, por isso as moedas podem ficar bloqueadas sem recompensa. O staking agrupado da Nexus para pequenos detentores não está disponível.","AdjustStake"
+"Stake anyway","Fazer staking mesmo assim","AdjustStake"
+"Staking locks your NXS in a trust account until your stake produces a block, so only stake an amount you can leave for a long time. A small stake can take a very long time, or never, to produce a block.","O staking bloqueia os seus NXS numa conta de confiança até o seu stake produzir um bloco, por isso faça staking apenas de um montante que possa deixar durante muito tempo. Um stake pequeno pode demorar muito tempo, ou nunca, a produzir um bloco.","AdjustStake"
